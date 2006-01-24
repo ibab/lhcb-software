@@ -73,4 +73,24 @@ extern "C" {
 #endif
 #undef __CXX_CONSTANT
 
+#define FACILITIES__USER 1	    /* User messages (default) */
+#define FACILITIES__SERVER 2	  /* No insertion into WT facility */
+#define FACILITIES__UPI 3	      /* Private remote UPI protocol */
+#define FACILITIES__FSM 4	      /* Protocol used by fsm messages */
+#define FACILITIES__SL_IMMED 2	/* Slow control immed. answer */
+#define FACILITIES__SL_DEFER 5	/* Slow control deferred answer */
+#define FACILITIES__SL_WARN 6	  /* Slow control warning messages */
+#define FACILITIES__SL_RESERV 7	/* Reserved for slow control */
+#define FACILITIES__EXPERT 8	  /* Expert system protocol */
+#define FACILITIES__USER1 10	  /*  */
+#define FACILITIES__USER2 11	  /*  Reserved for user use */
+#define FACILITIES__USER3 12	  /*  */
+#define FACILITIES__USER4 13	  /*  */
+#define FACILITIES__SC_REQ 14	  /*  new slow control request msg */
+#define FACILITIES__SC_ALARM 15	/*  new slow control alarm msg */
+#define FACILITIES__ERRLOG 20	  /*  Error Logger Handshake */
+#define FACILITIES__INCSERV 21	/*  Incident server */
+#define FACILITIES__ZBD 12	    /* ZBD code coincides with USER3 */
+#define FACILITIES__FSM2 22	    /* FSM 2 facility */
+
 #endif

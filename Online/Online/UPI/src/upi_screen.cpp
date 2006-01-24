@@ -13,11 +13,7 @@
 #include <cstdlib>
 //---------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
-static int Fac_wt_scr = WT_FACILITY_SCR;
-static int Fac_wt_upi = WT_FACILITY_UPI;
 
 #ifndef SCREEN
 static char My_name[80];
@@ -47,7 +43,6 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) 
    Param* p;
   int row;
   Page* d;
-   Menu* cur_menu;
 
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
   if (item_id)  {
@@ -89,6 +84,7 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int mark) 
   }
 
 #ifdef SCREEN
+   Menu* cur_menu;
   if ((cur_menu = Sys.menu.cur) && !m->from.menu && cur_menu != m && mark)
   {
     m->from.last = cur_menu->id;
@@ -122,7 +118,7 @@ int upic_save_screen ( int *kbd, int *scr)    {
   Lun_scr = (int) stdout;
 #else
   upir_save_screen ();
-/*  msg_get_mbx_names (Server_name, My_name); */
+/*  upic_net_get_mbx_names (Server_name, My_name); */
   Lun_kbd = (int)fopen (My_name, "r");
   Lun_scr = (int)fopen (Server_name, "w");
 #endif
@@ -297,9 +293,9 @@ void upic_init_screen ()    {
   Sys.pb_cols = 0;
   scrc_create_pasteboard (&Sys.pb, 0, &Sys.pb_rows, &Sys.pb_cols);
   scrc_cursor_off (Sys.pb);
-  wtc_subscribe (Fac_wt_scr, upic_key_rearm, upic_key_action);
+  wtc_subscribe (WT_FACILITY_SCR, upic_key_rearm, upic_key_action);
   upic_set_wakeup();
-/*  wtc_subscribe (Fac_wt_upi, upic_key_rearm, 0);  */
+/*  wtc_subscribe (WT_FACILITY_UPI, upic_key_rearm, 0);  */
   scrc_init_windows (Sys.pb, Sys.pb_rows, Sys.pb_cols);
 //  scrc_set_mouse_handler (Sys.pb, upic_mouse_handler);
 }
@@ -440,6 +436,9 @@ int upic_move_left (Menu* m)    {
     }
   }
   
+  if (Sys.MLCallback) {
+    (*Sys.MLCallback)(m->id, i->id, CALL_ON_MOVE_LEFT, Sys.MLArg);
+  }
   Window* w = m->window;
   while ((w = scrc_prev_window(w)))  {
     m = upic_find_menu_on_window (w);
@@ -485,7 +484,9 @@ int upic_move_right (Menu* m)   {
       return (upic_move_down (m));
     }
   }
-  
+  if (Sys.MRCallback)  {
+    (*Sys.MRCallback)(m->id, i->id, CALL_ON_MOVE_LEFT, Sys.MRArg);
+  }  
   Window* w = m->window;
   while ( (w = scrc_next_window(w)) )  {
     m = upic_find_menu_on_window (w);

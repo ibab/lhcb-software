@@ -180,6 +180,13 @@ int scrc_get_window_position (Window *w, int* row, int* col)    {
   return 1;
 }
 
+/*----------------------------------------------------------------------------*/
+int scrc_get_window_size (Window* w, int* width, int* height)    {
+  *width  = w->width;
+  *height = w->height;
+  return 1;
+}
+
 //----------------------------------------------------------------------------
 static int scrc_drag_result (Display* id, int drow, int dcol)   {
   return scrc_move_window (id->wind, drow, dcol);

@@ -39,8 +39,6 @@ static int Last_item = 0;
 static int Last_param = 0;
 static int Last_index = 0;
 
-static int Fac_wt_upi = WT_FACILITY_UPI;
-
 static int Moving_window = 0;
 static int Moving_display = 0;
 static int Resizing_display = 0;
@@ -73,17 +71,16 @@ int upic_wait (int* input_type)   {
 //---------------------------------------------------------------------------
 int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* list_index)  {
   Item* i;
-  Param* p;
   Routine action;
-  int status;
-  int input_type;
   int c;
 
   do  {
     *menu_id = *item_id = *param_id = *list_index = 0;
 #ifdef SCREEN
+    Param* p;
     if (!Last_menu)  {
-      status = upic_wait (&input_type);
+      int input_type;
+      upic_wait (&input_type);
       if (input_type != UPI_K_OPERATOR) return UPI_SS_ABORTED;
     }
     *menu_id    = Last_menu;
@@ -133,10 +130,7 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
 //---------------------------------------------------------------------------
 int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
   Item* i;
-  Param* p;
   Routine action;
-  int status;
-  int input_type;
   int c;
   int list_index;
 
@@ -144,9 +138,10 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
     *menu_id = *item_id = *param_id = 0;
 
 #ifdef SCREEN
-
+    Param* p;
     if (!Last_menu)   {
-      status = upic_wait (&input_type);
+      int input_type;
+      upic_wait (&input_type);
       if (input_type != UPI_K_OPERATOR) return UPI_SS_ABORTED;
     }
     *menu_id   = Last_menu;
@@ -468,10 +463,8 @@ int upic_key_action (unsigned int /* event */, void*)
             buf_pos = 0;
             buf = p->buf;
           }
-          if (type == BIN_FMT)
-          {
-            if (key != '.' && key != 'l')
-            {
+          if (type == BIN_FMT) {
+            if (key != '.' && key != 'l')  {
               key = *buf;
               if (key == 'l') key = '.';
               else key = 'l';
@@ -543,12 +536,16 @@ int upic_key_action (unsigned int /* event */, void*)
 
   upic_draw_cursor(OFF);
 
-  switch (key)
-  {
+  switch (key)  {
   case CTRL_Z :
-    /*      upic_spawn(); */
+    upic_spawn();
     break;
   case KPD_PF1 :
+#ifdef SCREEN
+        if (Sys.PF1CallBack != 0) {
+          if (Sys.PF1CallBack) (*Sys.PF1CallBack)(m->id, i->id,CALL_ON_PF1, Sys.PF1Arg);
+        }
+#endif /* SCREEN */
   case KPD_0 :
   case KPD_1 :
   case KPD_2 :
@@ -562,18 +559,12 @@ int upic_key_action (unsigned int /* event */, void*)
     if (upic_valid_keypad (key)) upic_branch_on_keypad (key);
     break;
   case RETURN :
-    if (m->type == PARAMETER_PAGE)
-    {
-      if (i->id != -1)
-      {
-        if ((action = i->action))
-        {
-          int item_id, param_id, list_index;
-
-          item_id = i ? i->id : 0;
-          param_id = p ? p->id : 0;
-          list_index = p ? p->list_pos : 0;
-
+    if (m->type == PARAMETER_PAGE)    {
+      if (i->id != -1)   {
+        if ((action = i->action))     {
+          int item_id = i ? i->id : 0;
+          int param_id = p ? p->id : 0;
+          int list_index = p ? p->list_pos : 0;
           upic_update_vars_of_page (m);
           (*action) (m->id, item_id, param_id, list_index);
         }
@@ -613,6 +604,9 @@ int upic_key_action (unsigned int /* event */, void*)
       if (m->type == PARAMETER_PAGE || m->type == DETACHED_MENU)
       {
         if (status == UPI_SS_NORMAL) scrc_hide_window (m->window);
+      }
+      if (Sys.GlobBSCallBack)    {
+        (*Sys.GlobBSCallBack)(m->id, i->id,CALL_ON_ANY_BACKSPACE, Sys.GlobBSArg);
       }
       if ((m->condition & CALL_ON_BACK_SPACE))
       {
@@ -707,7 +701,7 @@ int upic_key_action (unsigned int /* event */, void*)
       Last_item = item_id;
       Last_param = param_id;
       Last_index = list_index;
-      wtc_insert_head (Fac_wt_upi);
+      wtc_insert_head (WT_FACILITY_UPI);
     }
   }
   return WT_SUCCESS;
@@ -728,7 +722,7 @@ void upic_start_recorder (int* list, int size)  {
 
 //---------------------------------------------------------------------------
 int upic_stop_recorder () {
-  int pos;
+  int pos = 0;
 #ifdef SCREEN
   Recorder_on = 0;
   pos = Recorder_pos;
@@ -774,6 +768,7 @@ int upic_replay ()    {
   }
   return (Replay_list[Replay_pos++]);
 #endif
+  return 0;
 }
 
 #ifdef VMS
@@ -827,5 +822,10 @@ static void upic_spawn ()
   if (!(status & 1)) upic_signal_error (status, "SPAWN");
 }
 #else
-static void upic_spawn () {}
+static void upic_spawn () {
+  int status = 0;
+  upic_save_screen(0, 0);
+  upic_restore_screen();
+  if (!(status & 1)) upic_signal_error (status, "SPAWN");
+}
 #endif

@@ -45,7 +45,7 @@ int upic_cancel_notice ()   {
 }
 
 //---------------------------------------------------------------------------
-int upic_show_warning (int lines, char** text)    {
+int upic_show_warning (int lines, const char** text)    {
 #ifdef SCREEN
   int menu, command, param;  
   Menu* m = upic_find_menu (WARNING);
@@ -63,8 +63,7 @@ int upic_show_warning (int lines, char** text)    {
     upic_replace_command (WARNING, i, *text, "");
   for (; i<=lines; i++, text++)
     upic_insert_command (WARNING, 1000, i, *text, "");
-  do
-  {
+  do  {
     upic_set_cursor (WARNING, 1000, 0);
     upic_get_input(&menu, &command, &param);
   } while (menu != WARNING);
@@ -138,21 +137,48 @@ int upic_attach_pf1 (int menu)  {
 
 //---------------------------------------------------------------------------
 int upic_declare_callback (int menu_id,int condition, Routine user_routine, int user_arg) {
-#define CONDITIONS (CALL_ON_BACK_SPACE | CALL_ON_ENTER | CALL_ON_DRAG)
-  Menu* m = upic_find_menu (menu_id);
-  if (!m) return (UPI_SS_INVMENU);
-  /* Check validity of the Condition argument. */
+#define CONDITIONS (CALL_ON_BACK_SPACE | CALL_ON_ENTER | \
+CALL_ON_DRAG | CALL_ON_PF1 | CALL_ON_ANY_BACKSPACE |\
+CALL_ON_MOVE_LEFT | CALL_ON_MOVE_RIGHT)
+#ifdef SCREEN
+  if (condition & CALL_ON_PF1)
+  {
+    Sys.PF1CallBack = user_routine;
+    Sys.PF1Arg  = user_arg;
+    return (UPI_SS_NORMAL);
+  }
+  if (condition & CALL_ON_ANY_BACKSPACE)
+  {
+    Sys.GlobBSCallBack  = user_routine;
+    Sys.GlobBSArg       = user_arg;
+    return (UPI_SS_NORMAL);
+  }
+  if (condition & CALL_ON_MOVE_RIGHT)
+  {
+    Sys.MRCallback      = user_routine;
+    Sys.MRArg           = user_arg;
+    return (UPI_SS_NORMAL);
+  }
+  if (condition & CALL_ON_MOVE_LEFT)
+  {
+    Sys.MLCallback      = user_routine;
+    Sys.MLArg           = user_arg;
+    return (UPI_SS_NORMAL);
+  }
+#endif /* SCREEN */
+  Menu* m;
+  if (!(m = upic_find_menu (menu_id))) return (UPI_SS_INVMENU);
+
   if (!(condition &= CONDITIONS)) return (UPI_SS_INVPARAM);
+  /* Check validity of the Condition argument. */
   m->condition = condition;
   m->callback  = user_routine;
-  m->arg       = user_arg;  
+  m->arg       = user_arg;
 #ifdef REMOTE
   upir_declare_callback (menu_id, condition);
 #endif
   return (UPI_SS_NORMAL);
 }
-
-
 
 #ifdef SCREEN
 //---------------------------------------------------------------------------

@@ -22,16 +22,20 @@ struct Window;
 
 typedef unsigned Unsigned;
 typedef void (*Routine)(int,int,...);
-typedef int  (*WtRoutine)(int,int);
+typedef int  (*WtRoutine)(unsigned int,void*);
 
 #define RETURN_ON_ACCEPT   0
 #define WAKE_UP_ON_CHANGE  1
 
 /*  Callback conditions.  */
-#define CALL_ON_BACK_SPACE 0x01
-#define CALL_ON_ENTER      0x02
-#define CALL_ON_DRAG       0x04
-
+#define CALL_ON_BACK_SPACE    0x01
+#define CALL_ON_ENTER         0x02
+#define CALL_ON_DRAG          0x04
+/*  Callback conditions.  */
+#define CALL_ON_PF1           0x08
+#define CALL_ON_ANY_BACKSPACE 0x10
+#define CALL_ON_MOVE_LEFT     0x20
+#define CALL_ON_MOVE_RIGHT    0x40
 
 /* menu_item.enabled field */
 #define DISABLED   0
@@ -207,16 +211,13 @@ struct PAGE
 
 #define Page_address(aaa) (Page *) ((int)aaa-sizeof(struct PAGE_HEADER))
 
-struct MENU
-{
+struct MENU {
   Menu     Link_items;
-  int      id;
-  
+  int      id;  
   struct {
     Page   Linked_list_items;
     Page  *cur;
   }        page;
-    
   struct {
     int menu;
     int item;
@@ -239,8 +240,7 @@ struct MENU
 };
 
 
-struct ASYNC
-{
+struct ASYNC    {
   Async_line Linked_list_items;
   
   Display*   id;
@@ -263,8 +263,7 @@ struct CONNECTION
   int item;
 };
 
-struct SYSTEM
-{
+struct SYSTEM   {
   System    Link_items;
   int       id;
     
@@ -300,9 +299,21 @@ struct SYSTEM
   Window*   detached_window;
   char      result[8];
   int       items_per_page;
-  Connection pf1;
   Connection keypad[10];
+  Connection pf1;
   Routine    message_callback;
+  int        PF1Arg;
+  Routine    PF1CallBack;
+  Connection global_backspace;
+  Routine    GlobBSCallBack;
+  int        GlobBSArg;
+  Connection ML_Callback ;
+  Routine    MLCallback;
+  int        MLArg ;
+  Connection MR_Callback ;
+  Routine    MRCallback;
+  int        MRArg ;
+
 };
  
 #ifdef REMOTE

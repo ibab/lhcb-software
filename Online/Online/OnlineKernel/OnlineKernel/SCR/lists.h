@@ -79,6 +79,11 @@ Link* list_prev ();
 Link* list_next ();
 Link* list_father ();
 char* list_malloc (unsigned long);
+
+void listr_init (void*);
+void listr_connect_entry (void*,void*);
+void listr_convert (void*);
+
 #endif
 
 #ifdef __cplusplus

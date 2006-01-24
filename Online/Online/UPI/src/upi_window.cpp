@@ -10,13 +10,16 @@ Created           : 23-OCT-1989 by Christian Arnault
 
 //---------------------------------------------------------------------------
 extern System Sys;
+#ifdef REMOTE
+static int Window_id = 0;
+#endif
 
 //---------------------------------------------------------------------------
 int upic_open_window () {
 #ifdef SCREEN
   Sys.window = scrc_open_window (SEQUENTIAL_WINDOW);
 #else
-  Sys.window = ++Window_id;
+  Sys.window = (Window*)(int)++Window_id;
   /*  upir_open_window ();  */
 #endif
   return (UPI_SS_NORMAL);
@@ -67,6 +70,17 @@ int upic_get_window_position (int menu_id, int* col, int* row)    {
   return UPI_SS_NORMAL;
 }
 
+//-------------------------------------------------------------------------
+int upic_get_window_size (int menu_id, int* width, int* height) {
+#ifdef SCREEN
+  Menu* m;
+  if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
+  scrc_get_window_size (m->window, width, height);
+#else
+  upir_get_window_size (menu_id, width, height);
+#endif
+  return UPI_SS_NORMAL;
+}
 
 //---------------------------------------------------------------------------
 int upic_open_detached_window ()    {

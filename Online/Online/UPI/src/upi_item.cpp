@@ -335,7 +335,6 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   int row;
   int width;
   int len;
-  int last;
   int to_the_end = 0;
 
   if ( !m ) return UPI_SS_INVMENU;
@@ -364,8 +363,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   }
   if (upic_find_item (d->item.first, id)) return UPI_SS_INVCOMMAND;
 
-  if (i)
-  {
+  if (i)  {
     d = Page_address(i->father);
     if (to_the_end)
       i = (Item*) list_insert_entry (i, 0, sizeof(Item));
@@ -397,30 +395,26 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   }
   i->action = 0;
 
-  if (Sys.menu.cur == m)
-  {
+  if (Sys.menu.cur == m)  {
     Sys.item.cur = 0;
     upic_wakeup();
   }
 
 #ifdef SCREEN
+  int last;
   scrc_begin_pasteboard_update (Sys.pb);
   width = m->width;
-  if ((len = strlen(i->string)) > m->width)
-  {
+  if ((len = strlen(i->string)) > m->width)  {
     scrc_change_window (m->window, -1, len+2);
     width = len;
   }
-  if (m->items - 1 < Sys.items_per_page)
-  {
+  if (m->items - 1 < Sys.items_per_page)  {
     scrc_change_window (m->window, m->items + 4, -1);
   }
 
   last = 0;  
-  while (d)
-  {
-    if (!d->next && (d->lines != Sys.items_per_page))
-    {
+  while (d)  {
+    if (!d->next && (d->lines != Sys.items_per_page))  {
       /* This is the last Page */
       d->lines++;
       last = 1;
@@ -429,15 +423,12 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
 
     scrc_insert_line (d->id, " ", NORMAL, row+1, MOVE_DOWN);
 
-    if (!last)
-    {
+    if (!last)  {
       /* There is another Page */
-      if (!d->next)
-      {
+      if (!d->next)    {
         upic_open_page (&m->page);
         upic_init_page (m, m->page.last, width);
       }
-
       list_transfer_entry (d->item.last, &d->next->item, 0,
         d->next->item.first);
     }
@@ -445,15 +436,11 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
     upic_change_page (m, d, width);
     upic_draw_item (i, row);
 
-    if (d->cur_line >= row || d->cur_line == 0)
-    {
+    if (d->cur_line >= row || d->cur_line == 0)   {
       if (d->cur_line < d->lines) d->cur_line++;
       else d->item.cur = d->item.last;
     }
-
-    d = d->next;
-    if (d)
-    {
+    if ((d=d->next))  {
       i = d->item.first;
       row = 1;
     }

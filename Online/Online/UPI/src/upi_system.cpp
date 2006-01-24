@@ -249,16 +249,12 @@ unsigned long upic_non_blanks (const char* buf) {
 }
 
 //---------------------------------------------------------------------------
-int upic_save_setup ()
-//---------------------------------------------------------------------------
-{
+int upic_save_setup ()    {
   FILE* f;
-  Async* a;
-  
   if (!(f = fopen ("upi.setup", "w+"))) return UPI_SS_NORMAL;
   fprintf (f, "%d Items_per_page\n", Sys.items_per_page);
   fprintf (f, "%d Mode\n", Sys.mode);
-  a = &Sys.async;
+  Async* a = &Sys.async;
   fprintf (f, "%d Message_window_rows\n", a->rows);
   fprintf (f, "%d Message_window_cols\n", a->cols);
   fprintf (f, "%d Message_window_row\n", a->row);
@@ -268,17 +264,14 @@ int upic_save_setup ()
 }
 
 //---------------------------------------------------------------------------
-int upic_restore_setup ()
-//---------------------------------------------------------------------------
-{
+int upic_restore_setup ()   {
   FILE* f;
-  Async* a;
   static char format[] = {'%','d','%','*','s','\n','\0'};
   
   if (!(f = fopen ("upi.setup", "r"))) return UPI_SS_NORMAL;
   fscanf (f, format, &Sys.items_per_page);
   fscanf (f, format, &Sys.mode);
-  a = &Sys.async;
+  Async* a = &Sys.async;
   fscanf (f, format, &a->rows);
   fscanf (f, format, &a->cols);
   fscanf (f, format, &a->row);
@@ -314,8 +307,9 @@ int upic_signal_error (int, const char* ) {
 #ifdef REMOTE
 int upic_connect_process (const char* name) {
   upir_connect_process (name);
-#endif
+#else
 int upic_connect_process (const char* ) {
+#endif
   return UPI_SS_NORMAL;
 }
 
@@ -324,8 +318,9 @@ int upic_connect_process (const char* ) {
 #ifdef REMOTE
 int upic_disconnect_process (const char* name)  {
   upir_disconnect_process (name);
-#endif
+#else
 int upic_disconnect_process (const char*)  {
+#endif
   return UPI_SS_NORMAL;
 }
 

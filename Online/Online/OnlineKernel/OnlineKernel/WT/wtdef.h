@@ -29,6 +29,7 @@ enum WT_Constants{
   int wtc_insert_head(unsigned int facility, void* parameter DEF_ARG(0));
   int wtc_test_input(void);
   int wtc_wait(unsigned int* facility,void** userparameter,int* sub_status);
+  int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act);
 #ifdef IMPLEMENTING
   struct wt_enabled_fac_header;
   int wtc_create_enable_mask(wt_enabled_fac_header** p);

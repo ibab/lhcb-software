@@ -11,14 +11,9 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
-//---------------------------------------------------------------------------
 
-
-//---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
  
-//---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 static int upic_count_store_bytes (Item* i) {
   int n = 0;
@@ -42,24 +37,20 @@ static int upic_count_store_bytes (Item* i) {
 //---------------------------------------------------------------------------
 static char* upic_store_params_of_line (Item* i,  char* buffer) {
   int* n;
+  double* d;
   for (const Param* p = i->param.first; p; p = p->next)  {
     n = (int*) buffer;
     *n = p->id;
     buffer += sizeof(int);
-    
     switch (p->type)    {
       case ASC_FMT :
         strcpy (buffer, p->val.c);
         buffer += strlen(buffer) + 1;
         break;
       case REAL_FMT :
-        {
-          double* d;
-      
-          d = (double*) buffer;
-          *d = p->val.d;
-          buffer += sizeof(double);
-        }
+        d = (double*) buffer;
+        *d = p->val.d;
+        buffer += sizeof(double);
         break;
       default :
         n = (int*) buffer;

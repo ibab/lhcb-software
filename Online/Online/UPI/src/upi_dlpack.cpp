@@ -29,11 +29,9 @@ static char Text[3];
 static const char* Yes_no[] = { NO, YES };
   
 static int Was_param = 0;
-//---------------------------------------------------------------------------
 
-#ifdef SCREEN
 //---------------------------------------------------------------------------
-static int upic_dlinput ()  {
+int upic_dlinput ()  {
   int menu, command, param;
   return upic_get_input (&menu, &command, &param);
 }
@@ -67,12 +65,12 @@ int upic_dlhead (const char* title, int lines, int cols)  {
 }
 
 //---------------------------------------------------------------------------
-static void upic_dlcheck()  {
+void upic_dlcheck()  {
   if (!Lines) upic_dlhead ("DLPACK", 5, 60);
 }
 
 //---------------------------------------------------------------------------
-static void upic_install_dl_line (const char* text) {
+void upic_install_dl_line (const char* text) {
   upic_replace_command (DLPACK, Cursor, text, " ");
   upic_enable_command (DLPACK, Cursor);
   if (Was_param)  {
@@ -86,7 +84,7 @@ static void upic_install_dl_line (const char* text) {
 }
 
 //---------------------------------------------------------------------------
-static void upic_do_param_line (const char* prompt, int length) {
+void upic_do_param_line (const char* prompt, int length) {
   int p_len = strlen(prompt);
   Buffer = list_malloc (p_len + length + 1);
   strcpy (Buffer, prompt);
@@ -99,7 +97,7 @@ static void upic_do_param_line (const char* prompt, int length) {
 }
 
 //---------------------------------------------------------------------------
-static void upic_dlout_any (const char* text, int var1, int var2, int nvar, const char* format) {
+void upic_dlout_any (const char* text, int var1, int var2, int nvar, const char* format) {
   upic_dlcheck();  
   Buffer = list_malloc (strlen(text) + 1 + nvar * 10);
   strcpy (Buffer, text);
@@ -111,7 +109,6 @@ static void upic_dlout_any (const char* text, int var1, int var2, int nvar, cons
   Was_param = 0;
   free (Buffer);
 }
-#endif
 
 //---------------------------------------------------------------------------
 int upic_dlout (const char* text, int var1, int var2, int nvar)   {
@@ -155,7 +152,7 @@ int upic_dlkey ()   {
 }
 
 //---------------------------------------------------------------------------
-int upic_dltxt (char* prompt, char* def, char* value, int length, int* 
+int upic_dltxt (const char* prompt, char* def, char* value, int length, int* 
 #ifdef SCREEN
 ) {
   char format[12];  
@@ -174,7 +171,7 @@ ret_len) {
 }
 
 //---------------------------------------------------------------------------
-int upic_dldec (char* prompt, int def, int* value, int min, int max)  {
+int upic_dldec (const char* prompt, int def, int* value, int min, int max)  {
   int status;
 #ifdef SCREEN
   char format[12];
@@ -194,7 +191,7 @@ int upic_dldec (char* prompt, int def, int* value, int min, int max)  {
 }
 
 //---------------------------------------------------------------------------
-int upic_dloct (char* prompt, int def, int* value, int min, int max)  {
+int upic_dloct (const char* prompt, int def, int* value, int min, int max)  {
 #ifdef SCREEN
   char format[12];
   int length = 10;  
@@ -212,7 +209,7 @@ int upic_dloct (char* prompt, int def, int* value, int min, int max)  {
 }
 
 //---------------------------------------------------------------------------
-int upic_dlhex (char* prompt, int def, int* value, int min, int max)  {
+int upic_dlhex (const char* prompt, int def, int* value, int min, int max)  {
 #ifdef SCREEN
   char format[12];
   int length = 10;
