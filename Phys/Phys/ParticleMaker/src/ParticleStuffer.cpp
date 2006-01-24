@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.2 2005-11-11 16:26:40 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.3 2006-01-24 07:38:16 pkoppenb Exp $
 // Include files 
 
 // 
@@ -82,10 +82,10 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
 
   double zVtxPos = vtx.position().z();
   // Set the four-momentum.
-  HepLorentzVector lorVec( 0., 0., 0., 0. );
+  //  HepLorentzVector lorVec( 0., 0., 0., 0. );
   HepLorentzVector MotherlorVec( 0., 0., 0., 0. );
   SmartRefVector<Particle>::const_iterator it;  
-  HepSymMatrix meMat( 4, 0 ); 
+  //  HepSymMatrix meMat( 4, 0 ); 
   HepSymMatrix MothermeMat( 4, 0 ); 
 
   Particle transParticle;
@@ -103,17 +103,17 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
       return sctrans;
     }
 
-    lorVec += (*it)->momentum(); 
+    //    lorVec += (*it)->momentum(); 
     MotherlorVec += transParticle.momentum(); 
     // Set the four-momentum error matrix.
     // The slopes+momentum error matrix is set internally.
-    meMat += (*it)->momentumErr();    
+    //    meMat += (*it)->momentumErr();    
     MothermeMat += transParticle.momentumErr();    
   }
-  part.setMomentum( lorVec );
+  //  part.setMomentum( lorVec );
   part.setMomentum( MotherlorVec );
 
-  part.setMomentumErr( meMat );
+  //  part.setMomentumErr( meMat );
   part.setMomentumErr( MothermeMat );
 
   // Set the measured mass.
