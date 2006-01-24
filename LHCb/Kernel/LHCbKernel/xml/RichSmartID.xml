@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.23 2005-12-07 13:51:38 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.24 2006-01-24 12:16:31 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,7 +27,7 @@
         <template name = "VectorDict" t1="THIS"/>
 
         <typedef access="PUBLIC" def="KeyType"    desc="Type for internal key"     type="unsigned long"/>
-        <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt;RichSmartID&gt;"/>
+        <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt;LHCb::RichSmartID&gt;"/>
 
         <attribute 
             desc = "The bit-packed internal data word" 
@@ -55,7 +55,7 @@
             initList = "m_key( id.key() )">
             <arg 
                 name  = "id"  
-                type  = "RichSmartID"
+                type  = "LHCb::RichSmartID"
                 const = "TRUE" 
                 inout = "INOUT" 
             />
@@ -66,7 +66,7 @@
             initList = "m_key( key )">
             <arg 
                 name  = "key" 
-                type  = "RichSmartID::KeyType"
+                type  = "LHCb::RichSmartID::KeyType"
                 const = "TRUE" 
                 inout = "BYVALUE" 
              />
@@ -200,7 +200,7 @@
         </method>
 
         <method 
-            name  = "operator RichSmartID::KeyType" 
+            name  = "operator LHCb::RichSmartID::KeyType" 
             const = "TRUE" 
             desc  = "implicit conversion to internal type" 
             type  = "" >
@@ -212,7 +212,7 @@
         <method
              desc    = "Comparison operator using internal representation"
              name    = "operator=="
-             argList = "const RichSmartID id"
+             argList = "const LHCb::RichSmartID id"
              type    = "bool"
              const   = "TRUE"
              access  = "PUBLIC" >
@@ -390,7 +390,7 @@
             desc  = "Decoding function to strip the sub-pixel information and return a pixel RichSmartID" 
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; ~(pixelSubRowMask+pixelSubRowIsSetMask) );
+               return LHCb::RichSmartID( m_key &amp; ~(pixelSubRowMask+pixelSubRowIsSetMask) );
             </code>
         </method>
 
@@ -400,7 +400,7 @@
             desc  = "Decoding function to strip all the pixel information and return a photon detector RichSmartID"  
             type = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+
+               return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+
                                    richIsSetMask+panelIsSetMask+HPDNumInColIsSetMask+HPDColIsSetMask) );
             </code>
         </method>
@@ -411,7 +411,7 @@
             desc  = "Decoding function to strip the photon-detector information and return a panel RichSmartID"  
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );
+               return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );
             </code>
         </method>
 
@@ -421,7 +421,7 @@
             desc  = "Decoding function to strip all but the RICH information and return a RICH RichSmartID"  
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; (richMask+richIsSetMask) );
+               return LHCb::RichSmartID( m_key &amp; (richMask+richIsSetMask) );
             </code>
         </method>
 
@@ -431,7 +431,7 @@
             desc  = "Returns only the data fields, with the validity bits stripped"  
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+pixelRowMask+pixelColMask+pixelSubRowMask) );
+               return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+pixelRowMask+pixelColMask+pixelSubRowMask) );
             </code>
         </method>
 
