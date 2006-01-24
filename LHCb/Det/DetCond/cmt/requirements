@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2006-01-20 16:36:30 cattanem Exp $
+# $Id: requirements,v 1.46 2006-01-24 14:16:01 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v7r8
@@ -17,6 +17,7 @@ use           CORAL             v*      LCG_Interfaces
 use           DetDesc           v*      Det
 # Needed to resolve references to CoolApplication
 apply_tag   NEEDS_COOL_FACTORY
+apply_tag   NEEDS_CORAL_BASE
 
 # =========== constituents =====================================================
 library       DetCondLib        Lib/*.cpp
