@@ -30,7 +30,7 @@
         ><code/></constructor>
 
       <constructor 
-        argList  = "L0DUFiber::Data fiber, u_int16_t msb , u_int16_t lsb"
+        argList  = "L0DUFiber::Data fiber, unsigned short msb, unsigned short lsb"
         desc     = "Special constructor from  16bit msb + 16bit lsb" 
         initList = "Base ( fiber ), m_word(lsb | (msb &lt;&lt; 16 ))"
         ><code/></constructor>
@@ -49,7 +49,7 @@
       <method
         name      = "lsb"
         desc      = "get 16 bits lsb of L0 word"
-        type      = "u_int16_t"
+        type      = "unsigned short"
         const     = "FALSE" >
         <code>
         return (m_word &amp; 0xFFFF);
@@ -59,7 +59,7 @@
       <method
         name      = "msb"
         desc      = "get  16 bits msb of L0 word"
-        type      = "u_int16_t"
+        type      = "unsigned short"
         const     = "FALSE" >
         <code>
         return ((m_word &gt;&gt; 16) &amp; 0xFFFF);
@@ -71,7 +71,7 @@
         desc      = "update L0 word from MSB+LSB"
         type      = "void"
         const     = "FALSE" 
-        argList   = "u_int16_t msb , u_int16_t lsb">
+        argList   = "unsigned short msb, unsigned short lsb">
         <code>
           m_word = lsb | (msb &lt;&lt; 16 );
         </code>

@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.44 2005-12-20 14:02:24 cattanem Exp $
+$Id: release.notes,v 1.45 2006-01-24 12:53:09 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!======================== L0Event v15r0 2005-12-20 ========================
+!======================== L0Event v15r0 2006-01-24 ========================
+! 2006-01-24 - Marco Cattaneo
+ - Replace u_int16_t gcc type with unsigned short ansi type, for Windows
+
 ! 2005-12-20 - Olivier Callot
  - New version for L0Muon from Julien Cogan.
 
