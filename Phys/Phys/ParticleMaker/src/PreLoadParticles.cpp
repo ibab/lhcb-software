@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.2 2006-01-24 08:09:15 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,7 @@ PreLoadParticles::~PreLoadParticles() {};
 //=============================================================================
 StatusCode PreLoadParticles::initialize() {
 
-  debug() << "==> Initialize" << endreq;
+  debug() << "==> Initialize" << endmsg;
   return StatusCode::SUCCESS;
 };
 
@@ -54,20 +54,20 @@ StatusCode PreLoadParticles::initialize() {
 //=============================================================================
 StatusCode PreLoadParticles::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-
   // Save desktop
   StatusCode scDesktop = desktop()->saveDesktop();
   if( !scDesktop.isSuccess() ) {
-    msg << MSG::ERROR << "Not able to save desktop " << endreq;
+    error() << "Not able to save desktop " << endmsg;
     return StatusCode::FAILURE;
   }
   
   // Log number of vertices and particles
-  msg << MSG::DEBUG << "Number of particles in desktop = " << 
-    desktop()->particles().size() << endreq;
-  msg << MSG::DEBUG << "Number of vertices in desktop = " << 
-      desktop()->vertices().size() << endreq;
+  debug() << "Number of particles in desktop = " << 
+    desktop()->particles().size() << endmsg;
+  debug() << "Number of primary vertices in desktop = " << 
+      desktop()->primaryVertices().size() << endmsg;
+  debug() << "Number of secondary vertices in desktop = " << 
+      desktop()->secondaryVertices().size() << endmsg;
 
   setFilterPassed(true);
   
@@ -79,8 +79,7 @@ StatusCode PreLoadParticles::execute() {
 //=============================================================================
 StatusCode PreLoadParticles::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
   return StatusCode::SUCCESS;
 }

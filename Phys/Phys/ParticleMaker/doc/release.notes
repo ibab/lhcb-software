@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.22 2006-01-24 07:38:16 pkoppenb Exp $ 
+! $Id: release.notes,v 1.23 2006-01-24 08:09:15 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
 ! 2006-01-24 - P. Koppenburg
   - src/ParticleStuffer.cpp
     . Remove double filling of momentum and matrices
+  - src/PreLoadParticles.cpp
+    . Use debug()  
 !========================== ParticleMaker v1r6p1 2005-12-15 ===================
 ! 2005-11-11 - P. Koppenburg for G. Balbi
   - src/ParticleStuffer.h
