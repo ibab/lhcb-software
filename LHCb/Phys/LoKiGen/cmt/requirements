@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2006-01-24 09:54:22 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+# $Id: requirements,v 1.2 2006-01-24 13:26:52 cattanem Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -15,7 +13,7 @@ branches           cmt doc src LoKi
 include_dirs       $(LOKIGENROOT)
 
 # ================ dependencies ===============================================
-use   LoKiCore     v1r*  Phys 
+use   LoKiCore     v*    Phys 
 use   GenEvent     v*    Event
 use   MCEvent      v*    Event
 
@@ -24,9 +22,3 @@ library            LoKiGenLib    ../src/*.cpp
 
 # ================ patterns ===================================================
 apply_pattern      linker_library library=LoKiGenLib
-
-# =============================================================================
-# $Log: not supported by cvs2svn $ 
-# =============================================================================
-# The END
-# =============================================================================

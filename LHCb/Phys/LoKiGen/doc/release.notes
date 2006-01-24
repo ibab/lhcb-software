@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+! $Id: release.notes,v 1.2 2006-01-24 13:26:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,14 +12,9 @@
 !   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
-! 
-!   By usage of this code one clearly states the disagreement 
-!   with the campain of Dr.O.Callot at al.: 
-!   "No Vanya's lines are allowed in LHCb/Gaudi software."
-!
 ! -----------------------------------------------------------------------------
 
-! -----------------------------------------------------------------------------
+!=========================== LoKiGen v1r0 2006-01-24 ==========================
 ! 2006-01-24 - Vanya BELYAEV
  - New import: the parts of LoKi project, 
    directly related to generator information in HepMC format
@@ -30,11 +23,4 @@
      -- basic functors & predicates
      -- helper utilities to manipulate HepMC graphs 
      -- STL-like algorithms for selections of particles 
-! -----------------------------------------------------------------------------
-
-
-! -----------------------------------------------------------------------------
-! $Log: not supported by cvs2svn $ 
-! -----------------------------------------------------------------------------
-! The END 
 ! -----------------------------------------------------------------------------

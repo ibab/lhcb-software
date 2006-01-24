@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2006-01-24 09:39:41 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+! $Id: release.notes,v 1.2 2006-01-24 13:24:15 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,14 +13,9 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
-!   Using this code one desagrees with the campain 
-!   by Dr.O.Callot at al.: 
-!   "No Vanya's lines are allowed in LHCb/Gaudi software."
-!
 ! -----------------------------------------------------------------------------
  
-
-! -----------------------------------------------------------------------------
+!=========================== LoKiCore v1r0 2006-01-24 =========================
 ! 2006-01-23 - Vanya BELYAEV
  - New import: the core part of restructurized LoKi project
 	
@@ -41,6 +34,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
+! New Import: the core part of restructurized LoKi project
+!
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------
