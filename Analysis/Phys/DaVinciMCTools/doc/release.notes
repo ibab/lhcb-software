@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.91 2006-01-23 10:15:02 pkoppenb Exp $
+! $Id: release.notes,v 1.92 2006-01-24 18:14:58 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-1-23 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Added support for ignoring soft photons through propeties UseSoftPhotonCut and SoftPhotonCut.
+  Tool now ignores neutrinos when deciding if final state is correctly reconstructed or not
+  Added categories FromPV and FromSamePV; these represent the primary vertex background (one and all 
+  final state particles from a PV respectively; event not a pileup)   
 
 ! 2006-01-23 - P. Koppenburg
   - src/MCParticleMaker.cpp
