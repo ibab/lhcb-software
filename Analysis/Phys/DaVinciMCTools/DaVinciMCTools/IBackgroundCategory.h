@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.7 2005-12-16 16:33:03 gligorov Exp $
+// $Id: IBackgroundCategory.h,v 1.8 2006-01-24 18:14:42 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -136,9 +136,9 @@ public:
                     PartRecoPhysBkg = 40,
                     LowMassBkg = 50,
                     Ghost = 60,
-                    FromSameNonRecoPV = 70,
-                    FromSamePV = 80,
-                    FromDifferentNonRecoPV = 90,
+                    FromPV = 70,
+                    AllFromSamePV = 80,
+                    //FromDifferentNonRecoPV = 90,
                     FromDifferentPV = 100,
                     bbar = 110 ,
                     ccbar = 120 ,
