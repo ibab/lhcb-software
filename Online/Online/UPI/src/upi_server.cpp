@@ -882,7 +882,7 @@ int message_handler ()  {
     }
   }
   if ((info != UpiBufferNoData) && (info != UpiBufferBadHeader))  {
-    char* infoText = UpiBufferGetInfoText (info);
+    const char* infoText = UpiBufferGetInfoText (info);
     if (infoText) upic_write_message (infoText, "");
   }
   UpiBufferReset (GetBuffer);
