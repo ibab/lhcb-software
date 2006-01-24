@@ -1,4 +1,4 @@
-// $Id: L0Candidate.cpp,v 1.1 2005-12-15 08:35:42 ocallot Exp $
+// $Id: L0Candidate.cpp,v 1.2 2006-01-24 13:14:39 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -6,6 +6,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Bootstrap.h"
 #include "Event/L0Candidate.h"
+#include <valarray>
 
 //-----------------------------------------------------------------------------
 // Auxilliary Implementation file for L0ProcessorsDataContainer Event classes
