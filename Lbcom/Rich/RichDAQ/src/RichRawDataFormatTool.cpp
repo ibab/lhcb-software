@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.19 2006-01-23 13:40:43 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.20 2006-01-24 17:06:53 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -491,7 +491,7 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Vector & smartIDs ) const
 {
 
   // Get the banks for the Rich
-  const RichDAQ::RAWBanks & richBanks = rawEvent()->banks( RawBank::Rich );
+  const LHCb::RawBank::Vector & richBanks = rawEvent()->banks( RawBank::Rich );
 
   // Purge SmartID container
   smartIDs.clear();
@@ -500,7 +500,7 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Vector & smartIDs ) const
   smartIDs.reserve( richBanks.size() * 250 );
 
   // Loop over data banks
-  for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();
+  for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
         iBank != richBanks.end(); ++iBank )
   {
     // get bank
