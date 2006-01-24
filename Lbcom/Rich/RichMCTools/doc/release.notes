@@ -4,10 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r0 2006-01-23 ======================
 ! 2006-01-23 - Chris Jones
  - Updates to MC truth tool
 
-!========================== RichMCTools v3r0 2006-01-19 ======================
 ! 2006-01-19 - Marco Cattaneo
  - Adapt to changed location of RichParticleIDType.h
 
