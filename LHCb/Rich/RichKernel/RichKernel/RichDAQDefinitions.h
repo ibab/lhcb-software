@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.9 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.10 2006-01-24 16:52:33 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,9 +20,6 @@
 
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-
-// Event model
-#include "Event/RawBank.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -285,9 +282,6 @@ namespace RichDAQ
   /// Local definition of a RawBank constructed from 32bit ints
   typedef std::vector< LongType >                           RAWBank;
 
-  /// Container of Rich RawBanks
-  typedef std::vector< LHCb::RawBank* >                     RAWBanks;
-
   /// Vector of HPD Hardware IDs
   typedef std::vector< HPDHardwareID >                      HPDHardwareIDs;
 
@@ -342,12 +336,24 @@ namespace __gnu_cxx
 {
 
   /// Level0ID hash function
+  template <> struct hash<RichDAQ::Level0ID>
+  { size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  /// Level0ID hash function
+  template <> struct hash<RichDAQ::Level0ID&>
+  { size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID>
   { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
   /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID&>
   { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
 
+  /// Level1ID hash function
+  template <> struct hash<RichDAQ::Level1ID>
+  { size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1ID hash function
+  template <> struct hash<RichDAQ::Level1ID&>
+  { size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
   /// Level1ID hash function
   template <> struct hash<const RichDAQ::Level1ID>
   { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
@@ -356,6 +362,12 @@ namespace __gnu_cxx
   { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
 
   /// Level1Input hash function
+  template <> struct hash<RichDAQ::Level1Input>
+  { size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input hash function
+  template <> struct hash<RichDAQ::Level1Input&>
+  { size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input hash function
   template <> struct hash<const RichDAQ::Level1Input>
   { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
   /// Level1Input hash function
@@ -363,12 +375,24 @@ namespace __gnu_cxx
   { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
 
   /// HPDHardwareID hash function
+  template <> struct hash<RichDAQ::HPDHardwareID>
+  { size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  /// HPDHardwareID hash function
+  template <> struct hash<RichDAQ::HPDHardwareID&>
+  { size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID>
   { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
   /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID&>
   { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
 
+  /// HPDL1InputID hash function
+  template <> struct hash<RichDAQ::HPDL1InputID>
+  { size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  /// HPDL1InputID hash function
+  template <> struct hash<RichDAQ::HPDL1InputID&>
+  { size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
   /// HPDL1InputID hash function
   template <> struct hash<const RichDAQ::HPDL1InputID>
   { size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
