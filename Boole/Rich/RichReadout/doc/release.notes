@@ -4,12 +4,12 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r0 2006-01-23 ========================
 ! 2006-01-23 - Chris Jones
  - Split of MCRichSummedDeposit creation from RichSignal into dedicated 
    new algorithm RichSummedDeposits. Allows for additional process inbetween.
  - Add new charge sharing algorithm RichSimpleChargeSharing
 
-!======================== RichReadout v2r0 2006-01-19 ========================
 ! 2006-01-19 - Marco Cattaneo
  - Adapt to changed location of RichParticleIDType.h
 
