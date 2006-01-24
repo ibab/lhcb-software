@@ -23,7 +23,7 @@ UpiBuffer UpiBufferNew ();
 void UpiBufferInit (UpiBuffer buffer, char* data, int dataBytes);
 void UpiBufferReset (UpiBuffer buffer);
 UpiBufferInfo UpiBufferCheckProtocol (UpiBuffer buffer);
-char* UpiBufferGetInfoText (UpiBufferInfo info);
+const char* UpiBufferGetInfoText (UpiBufferInfo info);
 void UpiBufferSetUpdating (UpiBuffer buffer);
 void UpiBufferResetUpdating (UpiBuffer buffer);
 void UpiBufferSetNoSend (UpiBuffer buffer);

@@ -7,7 +7,7 @@
 #include "rtl_internal.h"
 #include "fcntl.h"
 
-#if defined(linux)
+#if defined(__linux)
 #include "unistd.h"
 #include <sys/mman.h>
 #elif defined(_WIN32)
@@ -31,7 +31,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   h->addaux = h.get();
   h->size = siz;
   //::printf("Create global section %s of size:%d\n",h->name, h->size);
-#if defined(linux)
+#if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0644);
@@ -71,7 +71,7 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
   lib_rtl_gbl_desc* dsc = (lib_rtl_gbl_desc*)h;
   int sc = 0;
   if ( dsc )  {
-#ifdef linux
+#ifdef __linux
     sc = ::shm_unlink(dsc->name)==0 ? 1 : 0;
     delete dsc;
     if ( sc == 0 ) sc = 1;
@@ -91,7 +91,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   h->addaux = h.get();
   h->size = siz;
   //::printf("Map global section %s of size:%d\n",h->name, h->size);
-#if defined(linux)
+#if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0644);
@@ -133,7 +133,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
 int lib_rtl_unmap_section(lib_rtl_gbl_t handle)   {
   if ( handle )  {
     lib_rtl_gbl_desc* h = (lib_rtl_gbl_desc*)handle;
-#if defined(linux)
+#if defined(__linux)
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
 #elif defined(_WIN32)
     int sc = (::UnmapViewOfFile(h->address) == 0) ? 0 : 1;
@@ -153,7 +153,7 @@ int lib_rtl_flush_section(lib_rtl_gbl_t handle)   {
     if ( sc == 0 )  {
       return 0;
     }
-#elif defined(linux)
+#elif defined(__linux)
     ::msync(h->address, h->size, MS_INVALIDATE|MS_SYNC);
 #endif
   }

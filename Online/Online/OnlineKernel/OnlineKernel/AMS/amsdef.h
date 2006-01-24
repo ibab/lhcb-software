@@ -43,9 +43,12 @@
 #define AMS_ILLEGAL_LENGTH      (AMS_FAC*256 + 71)
 
 #ifdef __cplusplus
+#include <cstdlib>
+
 #define __CXX_CONSTANT const
 extern "C" {
 #else
+#include <stdlib.h>
 #define __CXX_CONSTANT 
 #endif
   int amsc_init             ( __CXX_CONSTANT char* );

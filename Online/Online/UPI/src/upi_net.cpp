@@ -4,7 +4,6 @@ Created           : 15-DEC-1989 by
 */
 
 //----------------------------------------------------------------------------
-#ifdef REMOTE
 #include "WT/wt_facilities.h"
 #include "WT/wtdef.h"
 #include "AMS/amsdef.h"
@@ -257,6 +256,3 @@ void upic_net_flush_log ()  {
   }
   fclose (f);
 }
-
-
-#endif

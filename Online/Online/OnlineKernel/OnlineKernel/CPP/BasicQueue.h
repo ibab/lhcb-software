@@ -8,7 +8,7 @@
 #define  remqti lib$remqti
 #define  insqhi lib$insqhi
 #define  insqti lib$insqti
-#elif defined(_OSK) || defined(_WIN32) || defined(linux)
+#elif defined(_OSK) || defined(_WIN32) || defined(__linux)
 #include <cstdio>
 #include "RTL/que.h"
 #endif

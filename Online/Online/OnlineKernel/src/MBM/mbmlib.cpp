@@ -102,7 +102,7 @@ void _mbm_check_memory(void* q,int c, size_t s)  {
 #define _mbm_deinstrument_lock(x)
 #else
 void _mbm_instrument_lock(BMID bm)  {
-#ifdef linux
+#ifdef __linux
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
@@ -121,7 +121,7 @@ void _mbm_deinstrument_lock(BMID bm)  {
            bm->_control()->spare1);
     }
     bm->_control()->spare1 = 0;
-#ifdef linux
+#ifdef __linux
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {

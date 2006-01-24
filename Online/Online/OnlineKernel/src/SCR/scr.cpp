@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "SCR/scr.h"
-#ifdef linux
+#ifdef __linux
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <cerrno>
@@ -73,7 +73,7 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
   }
   pb->rows = 24;
   pb->cols = 80;
-#ifdef linux
+#ifdef __linux
   int fd = ::fileno(stdin);
   if ( ::isatty(fd) ) {
     struct winsize wns;

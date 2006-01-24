@@ -407,7 +407,7 @@ void ConvertFLOATtoHost( void* out, const void* in, int s, DataFormat df)   {
       memcpy( out, in, s );
       break;
   }
-#elif defined(WIN32) || defined(linux)
+#elif defined(_WIN32) || defined(__linux)
 void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
 #elif defined(_OSK)
 void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
@@ -432,7 +432,7 @@ void ConvertFLOATfromHost(void* out, const void* in, int s, DataFormat df)   {
       memcpy( out, in, s );
       break;
   }
-#elif defined(WIN32) || defined(linux)
+#elif defined(_WIN32) || defined(__linux)
 void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
 #elif defined(_OSK)
 void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
@@ -456,7 +456,7 @@ void ConvertDOUBLEtoHost( void* out, const void* in, int s, DataFormat df)  {
       memcpy( out, in, s );
       break;
   }
-#elif defined(WIN32) || defined(linux)
+#elif defined(_WIN32) || defined(__linux)
 void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
 #elif defined(_OSK)
 void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
@@ -480,7 +480,7 @@ void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df) {
       memcpy( out, in, s );
       break;
   }
-#elif defined(WIN32) || defined(linux)
+#elif defined(_WIN32) || defined(__linux)
 void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
 #elif defined(_OSK)
 void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {

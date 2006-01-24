@@ -23,7 +23,7 @@
 #include <winsock.h>
 #define socket_close closesocket
 
-#elif defined(linux)
+#elif defined(__linux)
 
 #include <unistd.h>
 #include <cerrno>

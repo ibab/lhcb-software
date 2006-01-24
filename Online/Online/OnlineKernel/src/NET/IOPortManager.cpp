@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdexcept>
 
-#ifdef linux
+#ifdef __linux
 #include <sys/ioctl.h>
 #define ioctlsocket ioctl
 

@@ -213,7 +213,6 @@ void upic_act_on_pop_up (int*,int,int);
 
 /*- From UPI_REMOTE.C -------------------------------------------------*/
 
-#ifdef REMOTE
 void upic_net_close ();
 int  upic_net_init (const char* name, const char** server, WtRoutine handler, WtRoutine broadcast);
 void upic_net_discard_server ();
@@ -229,6 +228,7 @@ void upic_net_flush_log();
 void upic_net_log_spy (int status, int bytes);
 void upic_net_log_last_message (int status, int bytes, const char* buffer);
 
+#ifdef REMOTE
 void upir_init_remote (void);
 int upir_input (int*,int*,int*,int*);
 void upir_delete_command (int,int);

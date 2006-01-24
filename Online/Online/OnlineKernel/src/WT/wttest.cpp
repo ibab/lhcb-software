@@ -21,7 +21,6 @@ static int ast3_count = 0;
 static int ast4_count = 0;
 
 void print_at(int x, int y, const char* fmt, ...)  {
-  static int cnt=0;
   va_list args;
   char buff[256];
   va_start( args, fmt );

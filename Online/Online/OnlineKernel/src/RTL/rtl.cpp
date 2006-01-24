@@ -128,7 +128,7 @@ int lib_rtl_declare_rundown(lib_rtl_rundown_handler_t,void*)   {
 }
 
 int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
-#if defined(_WIN32) || defined(linux)
+#if defined(_WIN32) || defined(__linux)
   static bool first = true;
   if ( first )  {
     first = false;
@@ -144,7 +144,7 @@ int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
 }
 
 int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
-#if defined(_WIN32) || defined(linux)
+#if defined(_WIN32) || defined(__linux)
   RTL::ExitHandler::iterator i=RTL::ExitHandler::exitHandlers().begin();
   RTL::ExitHandler::iterator j=RTL::ExitHandler::exitHandlers().end();
   for(; i!=j; ++i)  {
@@ -160,7 +160,7 @@ int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
 }
 
 int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
-#if defined(_WIN32) || defined(linux)
+#if defined(_WIN32) || defined(__linux)
   if ( astadd )  {
     return (*astadd)(param);
   }
@@ -223,7 +223,7 @@ int lib_rtl_start_debugger()    {
 int lib_rtl_sleep(int millisecs)    {
 #ifdef _WIN32
   ::Sleep(millisecs);
-#elif linux
+#elif __linux
   ::usleep(1000*millisecs);
 #endif
   return 1;
@@ -235,7 +235,7 @@ int lib_rtl_usleep(int microsecs)    {
   tv.tv_sec = microsecs/1000000;
   tv.tv_usec = microsecs%1000000;
   ::select(0,0,0,0,&tv);
-#elif linux
+#elif __linux
   ::usleep(microsecs);
 #endif
   return 1;
@@ -248,7 +248,7 @@ const char* lib_rtl_error_message(int status)  {
 int lib_rtl_default_return()  {
 #if defined(_VMS) || defined(_WIN32)
   return 1;
-#elif defined(linux) || defined(_OSK)
+#elif defined(__linux) || defined(_OSK)
   return 0;
 #else
 #endif
@@ -299,11 +299,11 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
   node[len]='\0';
 #else
 #if defined(_WIN32)
-  char *tmp = (char*)getenv("COMPUTERNAME");
+  const char *tmp = getenv("COMPUTERNAME");
 #elif defined(_OSK)
-  char *tmp = (char*)getenv("NODE");
-#elif defined(linux)
-  char *tmp = (char*)getenv("NODE");
+  const char *tmp = getenv("NODE");
+#else
+  const char *tmp = getenv("NODE");
 #endif
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
