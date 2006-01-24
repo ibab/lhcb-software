@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.3 2005-12-13 17:27:25 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.4 2006-01-24 17:02:04 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -24,6 +24,11 @@
 
 // DAQ
 class RichHPDDataBank;
+
+namespace LHCb 
+{
+  class RawBank;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRawDataFormatTool ( "IRichRawDataFormatTool", 1, 0 );
