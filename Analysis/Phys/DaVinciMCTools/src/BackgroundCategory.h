@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.6 2006-01-13 01:29:47 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.7 2006-01-24 04:23:51 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -59,6 +59,7 @@ private:
   bool condition_H(MCParticleVector,ParticleVector);
   bool condition_I(MCParticleVector);
   bool condition_J(MCParticleVector);
+  int condition_PV(MCParticleVector,MCParticleVector);
 
 private:
   //typedef std::vector<MCParticle*> MCParticleVector;
@@ -68,6 +69,8 @@ private:
   Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
   const MCParticle* m_commonmother;
 
+  int m_useSoftPhotonCut ; //whether to use the ignore soft photons cut
+  double m_softPhotonCut ; //ignore soft photons cut
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
   double m_maxweight; //dummy sorting variable

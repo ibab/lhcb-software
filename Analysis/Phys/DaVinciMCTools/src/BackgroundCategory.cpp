@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.11 2006-01-13 01:29:47 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.12 2006-01-24 04:23:51 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,8 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
 {
   declareInterface<IBackgroundCategory>(this);
   declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
+  declareProperty("SoftPhotonCut", m_softPhotonCut = 300.*MeV) ;
+  declareProperty("UseSoftPhotonCut", m_useSoftPhotonCut = 1) ;
   declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 10.); 
   //Override decision only if match quality for PID correct match is no 
   //no worse than by 1 order of magnitude in weight compared to alternatives.
@@ -228,21 +230,30 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 				//A pileup
 				return FromDifferentPV;
 			} else {
-				verbose() << "Categorising step 19" << endreq;
-				if (condition_I(mc_mothers_final) ){
-					verbose() << "Categorising step 20" << endreq;
-					//This is a bbar event
-					return bbar;
+				verbose() << "Categorising step 18b" << endreq;
+				int numFromPV = condition_PV(mc_mothers_final,mc_particles_linked_to_decay);
+				verbose() << "Categorising step 18c" << endreq;
+				if ( numFromPV > 0) {
+					 verbose() << "Categorising step 18d" << endreq;
+					 if (numFromPV == 1) return FromPV;
+					 else return AllFromSamePV;
 				} else {
-					verbose() << "Categorising step 22" << endreq;
-					if (condition_J(mc_mothers_final) ){
-						verbose() << "Categorising step 23" << endreq;
-						//This is a ccbar event
-						return ccbar;
+					verbose() << "Categorising step 19" << endreq;
+					if (condition_I(mc_mothers_final) ){
+						verbose() << "Categorising step 20" << endreq;
+						//This is a bbar event
+						return bbar;
 					} else {
-						verbose() << "Categorising step 24" << endreq;
-						//This is a light flavour event
-						return uds;
+						verbose() << "Categorising step 22" << endreq;
+						if (condition_J(mc_mothers_final) ){
+							verbose() << "Categorising step 23" << endreq;
+							//This is a ccbar event
+							return ccbar;
+						} else {
+							verbose() << "Categorising step 24" << endreq;
+							//This is a light flavour event
+							return uds;
+						}
 					}
 				}
 			}
@@ -296,13 +307,13 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 {
 	verbose() << "Beginning to check condition B" << endreq;
 	bool carryon;
-  verbose() << "Checking condition B step 1" << endreq;
+  	verbose() << "Checking condition B step 1" << endreq;
 	MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonmother);
-  verbose() << "Checking condition B step 2" << endreq;
+  	verbose() << "Checking condition B step 2" << endreq;
 	MCParticleVector::const_iterator iPP = finalstateproducts.begin();
-  verbose() << "Checking condition B step 3" << endreq;
+  	verbose() << "Checking condition B step 3" << endreq;
 	MCParticleVector::const_iterator iP;
-  verbose() << "Checking condition B step 4" << endreq;
+  	verbose() << "Checking condition B step 4" << endreq;
 	
 	do {
 		carryon = false;
@@ -311,7 +322,12 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 			verbose() << "The MC final state particle has pid : " << (*iPP)->particleID().pid() << endreq;
 			verbose() << "Checking condition B step 6" << endreq;
 			for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
-				if ( *iP == 0 ) continue;
+				if ( *iP == 0) continue; //if no matching MCParticle
+				if ( (*iP)->particleID().abspid() == 12 ) continue; //neutrinos are ignored
+				if ( (*iP)->particleID().abspid() == 14 ) continue; //neutrinos are ignored
+				if ( (*iP)->particleID().abspid() == 16 ) continue; //neutrinos are ignored
+				if ( m_useSoftPhotonCut && (*iP)->particleID().abspid() == 22 && 
+					(*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
 				verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endreq;
 				verbose() << "Checking condition B step 7" << endreq;
 				SmartRefVector<MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
@@ -371,7 +387,7 @@ bool BackgroundCategory::condition_D(const Particle* reconstructed_mother){
 
 	//carryon = (originmatch == *iP);
 
-  return carryon;
+	return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_E()
@@ -386,7 +402,7 @@ bool BackgroundCategory::condition_F(const Particle* candidate)
 	if ( (m_commonmother->virtualMass() - m_lowMassCut) < 
        (m_ppSvc->findByPythiaID(candidate->particleID().pid())->mass()) ) carryon = true;
 
-  return carryon;
+	return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
@@ -442,22 +458,22 @@ bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)
 {
 	verbose() << "Beginning to check condition J" << endreq;
 	bool carryon = false;
-  MCParticleVector::const_iterator iP = mc_mothers_final.begin();
+	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 
 	verbose() << "Checking condition J step 1" << endreq;
 
-  do {
+	do {
 
 		verbose() << "Checking condition J step 2" << endreq;
 
 		if (*iP) 
-      if ( (*iP)->particleID().hasBottom() ) carryon = true;
+		if ( (*iP)->particleID().hasBottom() ) carryon = true;
 
 		verbose() << "Checking condition J step 4" << endreq;
 
-    ++iP;
+		++iP;
 
-  } while (!carryon && iP != mc_mothers_final.end() );
+	} while (!carryon && iP != mc_mothers_final.end() );
 
 	verbose() << "Checking condition J step 5" << endreq;
 
@@ -467,17 +483,53 @@ bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)
 bool BackgroundCategory::condition_J(MCParticleVector mc_mothers_final)
 {
 	bool carryon = false;
-  MCParticleVector::const_iterator iP = mc_mothers_final.begin();
+	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 
-  do {
+	do {
 
 		if (*iP) 
 			if ( (*iP)->particleID().hasCharm() ) carryon = true;
-    ++iP;
+		++iP;
 
-  } while (!carryon && iP != mc_mothers_final.end() );
+	} while (!carryon && iP != mc_mothers_final.end() );
 
-  return carryon;
+	return carryon;
+}
+//=============================================================================
+int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCParticleVector mc_particles_linked_to_decay) 
+{
+	//This function evaluates whether some of the particles in the final state
+	//of the candidate come from the primary vertex. Returns 0 if none, 1 if one,
+	//and 99 if all.
+	int howmanyfinalstate = mc_particles_linked_to_decay.size();
+	int howmanyfromPV = 0;
+	
+	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
+	//MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin();
+
+	for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); iPP != mc_particles_linked_to_decay.end(); ++iPP) {
+
+		if (*iPP) {
+			SmartRefVector<MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
+			if (*iVV) { 
+				if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid()) ) {
+					if (*iP != *iPP) {
+						++iP;
+						continue;
+					} else {
+						++howmanyfromPV;
+					}
+				}
+			}
+		}
+		++iP;
+	}
+
+	if (howmanyfromPV > 0) {
+		if (howmanyfromPV == howmanyfinalstate) {
+			return 99;
+		} else return 1;
+	} else return 0;
 }
 //=============================================================================
 MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector particles_in_decay)
@@ -509,9 +561,9 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                 //verbose() << "Associating step 6a - loop step " << debug << endreq;
 			} else {
 				//New commands to look for a range of particles
-				MCParticle* mc_correctPID;
-				MCParticle* mc_bestQ;
-				MCParticle* mc_TempDeux;
+				MCParticle* mc_correctPID = 0;
+				MCParticle* mc_bestQ = 0;
+				MCParticle* mc_TempDeux = 0;
 				double maximumweight = m_maxweight;
 				double mc_weight;
 				double mc_correctPID_weight = maximumweight;
