@@ -4,11 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r1 2006-01-23 =========================
 ! 2006-01-23 - Chris Jones
  - Update to number tool for new conditions objects
  - Add methods to determine L1 board input number of each HPD
 
-!========================== RichDAQ v3r1 2006-01-20 =========================
 ! 2006-01-20 - Marco Cattaneo
  - Updates for Gaudi v18r1
 
