@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.7 2006-01-16 15:11:33 asarti Exp $
+// $Id: MuonChamberGrid.cpp,v 1.8 2006-01-24 16:42:02 cattanem Exp $
 // Include files 
 
 // local
@@ -8,6 +8,7 @@
 #include "MuonDet/MuonFrontEndID.h"
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 #include "DetDescCnv/XmlUserConditionCnv.h"
 
