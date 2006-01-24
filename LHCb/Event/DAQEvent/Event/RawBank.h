@@ -2,6 +2,7 @@
 #define DAQEVENT_RAWBANK_H 1
 
 #include <stddef.h>
+#include <vector>
 
 /** @class LHCb::RawBank RawBank.h
   *
@@ -30,6 +31,10 @@ namespace LHCb
     ~RawBank() {}
 
   public:   
+
+    // typedef for std::vector of RawBank
+    typedef std::vector<RawBank*> Vector;
+    typedef std::vector<const RawBank*> ConstVector;
 
     /// Define bank types for RawBank
     enum BankType{ L0Calo=0,
@@ -129,6 +134,7 @@ namespace LHCb
     /// Opaque data block
     unsigned int   m_data[1];
   }; // class RawBank
+
 } // namespace LHCb
 
 #endif ///DAQEvent_RawBank_H
