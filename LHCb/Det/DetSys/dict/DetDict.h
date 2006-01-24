@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.9 2005-12-19 16:38:02 mneedham Exp $
+// $Id: DetDict.h,v 1.10 2006-01-24 12:46:42 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -17,6 +17,7 @@
 #include "GaudiKernel/TimePoint.h"
 // ============================================================================
 #include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/ContainedObject.h"
 // ============================================================================
 // DetCond 
@@ -32,7 +33,6 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ITransportSvc.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 // ============================================================================
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/ICalibration.h"
@@ -109,36 +109,32 @@
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeTTDetector.h"
-#include "STDet/DeTTDetector.h"
+#include "STDet/DeITDetector.h"
 #include "STDet/DeSTStation.h"
 #include "STDet/DeTTStation.h"
-#include "STDet/DeTTStation.h"
+#include "STDet/DeITStation.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeTTLayer.h"
-#include "STDet/DeTTLayer.h"
+#include "STDet/DeITLayer.h"
 #include "STDet/DeSTSector.h"
 #include "STDet/DeTTSector.h"
-#include "STDet/DeTTSector.h"
+#include "STDet/DeITSector.h"
 #include "STDet/DeITBox.h"
 #include "STDet/DeTTHalfModule.h"
-
 
 // ============================================================================
 // RichDet 
 // ============================================================================
-#include "RichDet/DeRich.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
-#include "RichDet/DeRichFlatMirror.h"
-#include "RichDet/DeRichSphMirror.h"
+#include "RichDet/DeRich.h"
 #include "RichDet/DeRichHPDPanel.h"
-#include "RichDet/DeRich1HPDPanel.h"
-#include "RichDet/DeRich2HPDPanel.h"
-#include "RichDet/DeRich1CdfHPDPanel.h"
-#include "RichDet/DeRichRadiator.h"
 #include "RichDet/DeRichMultiSolidRadiator.h"
+#include "RichDet/DeRichRadiator.h"
 #include "RichDet/DeRichSingleSolidRadiator.h"
+#include "RichDet/DeRichSphMirror.h"
 #include "RichDet/RichMirrorSegPosition.h"
+
 // ============================================================================
 // MuonDet
 // ============================================================================

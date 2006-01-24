@@ -4,9 +4,15 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-! 2005-12-19
-
- - Changes for new STDetector element
+! 2006-01-20 - Marco Cattaneo
+ - Major new version for backards incompatible DC06 changes
+ - Obsolete packages removed:
+ - Packages added: DetDescSvc
+ - Packages modified: CaloDet v7r0, CaloDetXmlCnv v2r3p2, DetDesc v16r2,
+     DetDescCnv v3r0, Magnet v3r1, RichDet v9r0, VeloDet v10r0, XmlTools v3r9,
+     STDet v2r0, OTDet v6r0, MuonDet v5r0, RichCondition v1r1
+ - Packages temporarily disabled: MuonTools
+ - Changes to lcgdict selection files for new STDetector element
 
 !========================= DetSys v7r7 2005-11-30 =========================
 ! 2005-11-30 - Marco Cattaneo

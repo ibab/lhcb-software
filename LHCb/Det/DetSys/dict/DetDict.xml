@@ -95,12 +95,8 @@
   <class name="DeRich"                    />
   <class name="DeRich1"                   />
   <class name="DeRich2"                   />
-  <class name="DeRich1CdfHPDPanel"        />
-  <class name="DeRichFlatMirror"          />
   <class name="DeRichSphMirror"           />
   <class name="DeRichHPDPanel"            />
-  <class name="DeRich1HPDPanel"           />
-  <class name="DeRich2HPDPanel"           />
   <class name="DeRichRadiator"            />
   <class name="DeRichMultiSolidRadiator"  />
   <class name="DeRichSingleSolidRadiator" />
