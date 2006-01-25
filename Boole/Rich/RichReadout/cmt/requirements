@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.31 2005-12-19 13:06:58 cattanem Exp $
+# $Id: requirements,v 1.32 2006-01-25 14:35:30 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -18,7 +18,6 @@ set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 # ================ dependencies ==============================================
 use MCEvent      v*      Event
 use RichKernel   v*      Rich
-use DAQEvent     v*      Event
 
 #============================================================================
 # Build GOD objects
