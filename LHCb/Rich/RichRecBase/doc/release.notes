@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== RichRecBase v2r0 2006-01-25 ========================
+! 2006-01-25 - Marco Cattaneo
+ - "Fix" wrong ContainedObject forward declaration produced by GOD be explicitly
+   including the header file
+
 ! 2006-01-25 - Chris Jones
  - Remove dependencies on MCEvent and DAQEvent
 
