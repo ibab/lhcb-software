@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.18 2006-01-23 14:08:55 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.19 2006-01-25 10:52:14 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -16,7 +16,10 @@
 
 // Event
 #include "Event/Track.h"
-#include "Event/MCParticle.h"
+namespace LHCb
+{
+  class MCParticle;
+}
 
 namespace Rich 
 {
@@ -175,7 +178,7 @@ public:
    *
    *  @param mcPart Pointer to an MCParticle
    */
-  explicit RichTrackID( const LHCb::MCParticle * mcPart )
+  explicit RichTrackID( const LHCb::MCParticle * )
     : m_tkType     ( Rich::Track::Unknown             ),
       m_parentType ( Rich::TrackParent::MCParticle    ),
       m_unique     ( true                             ) { }
