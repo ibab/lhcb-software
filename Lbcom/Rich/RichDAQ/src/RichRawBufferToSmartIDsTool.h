@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.8 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.9 2006-01-25 10:38:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,6 +33,9 @@
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
+
+// event
+#include "Event/RawBank.h"
 
 // namespaces
 using namespace LHCb; ///< LHCb general namespace
