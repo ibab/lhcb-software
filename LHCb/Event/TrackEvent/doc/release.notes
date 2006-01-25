@@ -4,11 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r0 2006-01-25 ========================
 ! 2006-01-13 - Eduardo Rodrigues
  - re-corrected "bug fix" in error on p calculation
  - added the 7 pre-defined state locations for the calorimeter 
 
-!========================= TrackEvent v2r0 2006-01-11 ========================
 ! 2006-01-11 M.Needham
   - Track states vector needs non-const version
   - bug fix in SHacks.h
