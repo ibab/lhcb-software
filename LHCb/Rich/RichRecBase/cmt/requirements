@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.37 2006-01-25 10:52:14 jonrob Exp $
+# $Id: requirements,v 1.38 2006-01-25 14:41:59 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
@@ -29,18 +29,14 @@ include_dirs $(RICHRECBASEROOT)
 # Build GOD objects
 #============================================================================
 document obj2doth RichRecBase_CommonObj2Doth   ../xml/*.xml
-#document obj2dict RichRecBase_CommonObj2Dict   ../xml/*.xml
 
 #============================================================================
 # Build libraries (including dictionary)
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
-#library RichRecBaseEventDict  ../dict/*.cpp
-
-#apply_pattern component_library library=RichRecBaseEventDict
 apply_pattern linker_library    library=RichRecBase
 
 #============================================================================
 private
 include_dirs $(RICHRECBASEROOT)/Event
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
