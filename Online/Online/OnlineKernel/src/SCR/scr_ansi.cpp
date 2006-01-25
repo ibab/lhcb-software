@@ -1,8 +1,9 @@
 #include <cstdio>
 #include "SCR/scr.h"
+#ifndef _WIN32
 #include <termios.h> 
-
-static  struct termios neu, alt; 
+static struct termios neu, alt; 
+#endif
 
 void scrc_resetANSI()   {
 #define plain()            fputs("\033[0m",stdout)
@@ -14,7 +15,9 @@ void scrc_resetANSI()   {
   fflush (stdout);
   fprintf (stdout, "\033>");
   fflush (stdout);
+#ifndef _WIN32
   tcsetattr(fd, TCSANOW, &alt); 
+#endif
 }
 
 void scrc_setANSI()   {
@@ -28,11 +31,13 @@ void scrc_setANSI()   {
   fflush (stdout);
   fprintf (stdout, "\033=");
   fflush (stdout);
+#ifndef _WIN32
   tcgetattr(fd, &alt); 
   neu = alt; 
   neu.c_lflag &= ~(ICANON|ECHO); 
   neu.c_cc[VMIN] = 1;
   neu.c_cc[VTIME] = 0;
   tcsetattr(fd, TCSANOW, &neu); 
+#endif
 }
 

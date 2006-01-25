@@ -87,10 +87,10 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
   } 
 #else
   if ( ::getenv("COLUMNS") ) {
-    if ( 1 == ::sscanf(::getenv("COLUMNS"),"%d",&n) ) pb->cols = n;
+    if ( 1 != ::sscanf(::getenv("COLUMNS"),"%d",&pb->cols) ) pb->cols = 80;
   }
   if ( ::getenv("LINES") ) {
-    if ( 1 == ::sscanf(::getenv("LINES","%d",&n) ) pb->rows = n;
+    if ( 1 != ::sscanf(::getenv("LINES"),"%d",&pb->rows) ) pb->rows = 24;
   }
 #endif
   scrc_init_screen (pb, *rows, *cols);
