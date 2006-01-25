@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-01-25 - Chris Jones
+ - Add some missing LHCb namespace scopes to RichSmartID.xml
+
 !===================== LHCbKernel v6r1 2006-01-20 =========================
 ! 2006-01-20 - Marco Cattaneo
  - Remove IMagneticFieldSvc.h, use GaudiKernel instead (from GAUDI v18r1)
