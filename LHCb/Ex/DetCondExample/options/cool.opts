@@ -13,6 +13,9 @@ ApplicationMgr.DLLs += { "DetCond" };
 // Access to the ConditionsDB
 //--------------------------------------------------------------
 
+// connection string
+//CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
+
 // name of the database server
 CondDBAccessSvc.HostName = "$CONDDBHOST";
 

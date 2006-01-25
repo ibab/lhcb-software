@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2006-01-20 16:43:21 cattanem Exp $
+# $Id: requirements,v 1.46 2006-01-25 17:18:08 ngilardi Exp $
 package DetCondExample
 version v7r9
 
@@ -74,6 +74,7 @@ private
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # Set default environment variables to use SQLite by default for tests.
+set CONDDBCONNECTIONSTRING "sqlite://;schema=CONDDB.sqlite;dbname=CONDDB;user=none"
 set CONDDBHOST   "none"
 set CONDDBUSER   "none"
 set CONDDBPWD    ""
