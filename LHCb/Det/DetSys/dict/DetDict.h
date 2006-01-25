@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.10 2006-01-24 12:46:42 cattanem Exp $
+// $Id: DetDict.h,v 1.11 2006-01-25 13:39:22 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -13,12 +13,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ITime.h"
-#include "GaudiKernel/TimePoint.h"
-// ============================================================================
-#include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
-#include "GaudiKernel/ContainedObject.h"
 // ============================================================================
 // DetCond 
 // ============================================================================
@@ -240,7 +235,6 @@ namespace DetDescPython
     GaudiPython::Interface<IUpdateManagerSvc>   s2 ;
     GaudiPython::Interface<ICondDBAccessSvc>    s3 ;
     GaudiPython::Interface<ICondDBCnvSvc>       s4 ;
-    GaudiPython::Interface<IDetDataSvc>         s5 ;
 
     SmartRef<Condition> sref_inst1;
     

@@ -3,16 +3,6 @@
   <class pattern="DetDescPython::Interface<*>" />
   <class pattern="GaudiPython::Interface<*>"   />
 
-
-  
-  <class name="IInterface"       />
-  <class name="IService"         />
-
-  <class name="IDetDataSvc"       />
-
-  <class name="ITime"            />
-  <class name="TimePoint"        />
-
   <class name="IDetectorElement"  />
   <class name="IGeometryInfo"     />
   <class name="ILVolume"          />
@@ -126,6 +116,9 @@
     <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const std::basic_string<char>,std::basic_string<char> >" />
     <class name="std::pair<const std::basic_string<char>,SmartRef<Condition> >" />
-  </exclusion>
+    <class name="std::pair<const unsigned int,bool>" />
+    <class name="std::pair<const unsigned int,unsigned int>" />
+    <class name="std::swap<unsigned int,unsigned int>" />
+ </exclusion>
   
 </lcgdict>
