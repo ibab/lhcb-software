@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.12 2006-01-24 04:23:51 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.13 2006-01-25 15:49:11 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -81,24 +81,24 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 	const MCParticle* tmpmother; 
 	//verbose() << "Getting MC-mothers step 1" << endreq;
 
-	int debug = 0;
+	int debugs = 0;
 
 	for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
 
-		++debug;
-		verbose() << "Getting MC-mothers - loop step 1 - loop element " << debug << endreq;
+		++debugs;
+		verbose() << "Getting MC-mothers - loop step 1 - loop element " << debugs << endreq;
 
 		tmpmother = *iP;
-		//verbose() << "Getting MC-mothers - loop step 2 - loop element " << debug << endreq;
+		//verbose() << "Getting MC-mothers - loop step 2 - loop element " << debugs << endreq;
 		//verbose() << "tmpmother = " << tmpmother << endreq;
 		if (tmpmother) {
 			do {
-				//verbose() << "Getting MC-mothers - loop step 3 - loop element " << debug << endreq;
+				//verbose() << "Getting MC-mothers - loop step 3 - loop element " << debugs << endreq;
 				finalmother = tmpmother;
-				//verbose() << "Getting MC-mothers - loop step 4 - loop element " << debug << endreq;
+				//verbose() << "Getting MC-mothers - loop step 4 - loop element " << debugs << endreq;
 				//verbose() << "finalmother = " << finalmother << endreq;
 				tmpmother = finalmother->mother();
-				//verbose() << "Getting MC-mothers - loop step 5 - loop element " << debug << endreq;
+				//verbose() << "Getting MC-mothers - loop step 5 - loop element " << debugs << endreq;
 				//verbose() << "tmpmother = " << tmpmother << endreq;
 			} while (tmpmother != 0 && finalmother->particleID().abspid() != reconstructed_mother->particleID().abspid());
 			mc_mothers.push_back(finalmother);
@@ -107,8 +107,8 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 			verbose() << "finalmother = 0" << endreq;
 			mc_mothers.push_back(0); //Ghosts have no mother!;
 		}
-		//verbose() << "Getting MC-mothers - loop step 6 - loop element " << debug << endreq;
-		//verbose() << "Getting MC-mothers - loop step 7 - loop element " << debug << endreq;
+		//verbose() << "Getting MC-mothers - loop step 6 - loop element " << debugs << endreq;
+		//verbose() << "Getting MC-mothers - loop step 7 - loop element " << debugs << endreq;
 	}
 
 	return mc_mothers;
@@ -501,7 +501,7 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 	//This function evaluates whether some of the particles in the final state
 	//of the candidate come from the primary vertex. Returns 0 if none, 1 if one,
 	//and 99 if all.
-	int howmanyfinalstate = mc_particles_linked_to_decay.size();
+	int howmanyfinalstate = 0; //mc_particles_linked_to_decay.size();
 	int howmanyfromPV = 0;
 	
 	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
@@ -513,6 +513,7 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 			SmartRefVector<MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
 			if (*iVV) { 
 				if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid()) ) {
+					++howmanyfinalstate;
 					if (*iP != *iPP) {
 						++iP;
 						continue;
@@ -539,15 +540,15 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 	ParticleVector::iterator iP;
 
 	//verbose() << "Associating step 1" << endreq;
-	int debug = 0;
+	int debugs = 0;
 
 	for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
-		++debug;
-		verbose() << "Associating step 2 - loop step " << debug << endreq;
+		++debugs;
+		verbose() << "Associating step 2 - loop step " << debugs << endreq;
 		if ( !(*iP)->endVertex() ) {
-			//verbose() << "Associating step 3a - loop step " << debug << endreq;
+			//verbose() << "Associating step 3a - loop step " << debugs << endreq;
 			ProtoParticle* protoTemp = dynamic_cast<ProtoParticle*>((*iP)->origin());
-			//verbose() << "Associating step 4a - loop step " << debug << endreq;
+			//verbose() << "Associating step 4a - loop step " << debugs << endreq;
 			verbose() << "Protoparticle is at " << protoTemp << endreq;
 			MCParticle* mcTemp = m_pCPPAsct->associatedFrom(protoTemp);
 			if (!mcTemp) {
@@ -555,10 +556,10 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				continue;
 			}
 			if (mcTemp->particleID().pid() == (*iP)->particleID().pid()) {
-				//verbose() << "Associating step 5a - loop step " << debug << endreq;
+				//verbose() << "Associating step 5a - loop step " << debugs << endreq;
                                 verbose() << "MCParticle is at " << mcTemp << endreq;
                                 associated_mcparts.push_back(mcTemp);
-                                //verbose() << "Associating step 6a - loop step " << debug << endreq;
+                                //verbose() << "Associating step 6a - loop step " << debugs << endreq;
 			} else {
 				//New commands to look for a range of particles
 				MCParticle* mc_correctPID = 0;
@@ -600,15 +601,15 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				}
 			}
 		} else {
-			//verbose() << "Associating step 3b - loop step " << debug << endreq;
+			//verbose() << "Associating step 3b - loop step " << debugs << endreq;
 			Particle* partTemp = *iP;
-			//verbose() << "Associating step 4b - loop step " << debug << endreq;
+			//verbose() << "Associating step 4b - loop step " << debugs << endreq;
 			verbose() << "Particle is at " << partTemp << endreq;
 			MCParticle* mcTemp = m_pChi2PPAsct->associatedFrom(partTemp);
-			//verbose() << "Associating step 5b - loop step " << debug << endreq;
+			//verbose() << "Associating step 5b - loop step " << debugs << endreq;
 			verbose() << "MCParticle is at " << mcTemp << endreq;
 			associated_mcparts.push_back(mcTemp);
-			//verbose() << "Associating step 6b - loop step " << debug << endreq;
+			//verbose() << "Associating step 6b - loop step " << debugs << endreq;
 		}
 	} 
 
