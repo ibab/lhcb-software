@@ -61,19 +61,20 @@
                   H2Pt,
                   H2IP,
                   H2IPS,
-	          BMass'
+	          BMass,
+	          UserQuantities=100'
         access = 'PUBLIC' />
 
       <constructor 
 	desc     = "Constructor with assigned key" 
-	argList  = "HltSummaryBox::HltBox box"
+	argList  = "int box"
 	initList = "m_box( box ), m_decision(false), m_quantities()">
         <code>
         </code>
       </constructor>
 
       <attribute
-        type = 'HltSummaryBox::HltBox'
+        type = 'int'
         name = 'box'
         desc = 'the type of this boox'
         access = 'PROTECTED' />
@@ -85,7 +86,7 @@
         access = 'PROTECTED' />
 
       <attribute
-        type      = 'std::map&lt; HltSummaryBox::HltQuantity, double &gt;'
+        type      = 'std::map&lt; int, double &gt;'
         name      = 'quantities'
         desc      = 'map of quantities'
         access    = 'PROTECTED'
@@ -114,7 +115,7 @@
         type = 'bool'
         name = 'hasQuantity'
         desc = 'has this quantity?'
-        argList = 'HltSummaryBox::HltQuantity label'
+        argList = 'int label'
         const = 'TRUE'>
         <code>
     return (m_quantities.find(label) != m_quantities.end());
@@ -125,7 +126,7 @@
         type    = 'double'
         name    = 'quantity'
         desc    = 'retrieve the quantity'
-	argList = 'HltSummaryBox::HltQuantity label'    
+        argList = 'int label'	
         const   = 'TRUE'>
         <code>
    if (m_quantities.find(label) == m_quantities.end()) return 0.;
@@ -137,7 +138,7 @@
         type    = 'void'
         name    = 'setQuantity'
 	desc    = 'set the quantity value' 
-        argList = 'HltSummaryBox::HltQuantity label, double value'>
+        argList = 'int label, double value'>
 	<code>
    m_quantities[label] = value;
 	</code>
@@ -197,7 +198,7 @@
       <destructor 
 	desc     = 'destructor' >
         <code>
-   for (std::map&lt;HltSummaryBox::HltBox, HltSummaryBox*&gt;::iterator it = m_boxes.begin(); it != m_boxes.end(); it++) delete it->second;
+   for (std::map&lt;int, HltSummaryBox*&gt;::iterator it = m_boxes.begin(); it != m_boxes.end(); it++) delete it->second;
         </code>
       </destructor>
 
@@ -208,7 +209,7 @@
         access = 'PROTECTED' />
 
       <attribute
-        type      = 'std::map&lt; HltSummaryBox::HltBox, HltSummaryBox* &gt;'
+        type      = 'std::map&lt; int, HltSummaryBox* &gt;'
         name      = 'boxes'
         desc      = 'map of HltSummaryBox es'
         access    = 'PROTECTED'
@@ -216,9 +217,21 @@
 
       <method
         type = 'bool'
+        name = 'decision'
+        desc = 'decision from this trigger box (if not box return false)'
+        argList = 'int box'
+        const = 'TRUE'>
+        <code>
+    if (m_boxes.find(box) == m_boxes.end()) return false;
+    return (m_boxes.find(box)->second)->decision();
+        </code>
+      </method>
+
+      <method
+        type = 'bool'
         name = 'hasBox'
         desc = 'has a summary from this trigger box?'
-        argList = 'HltSummaryBox::HltBox box'
+        argList = 'int box'
         const = 'TRUE'>
         <code>
     return (m_boxes.find(box) != m_boxes.end());
@@ -243,7 +256,7 @@
         type = 'void'
         name = 'setHltSummaryBox'
         desc = 'set the summary box (note: class takes ownership of pointer)'
-        argList = 'const HltSummaryBox::HltBox &amp; box, HltSummaryBox* sbox'
+        argList = 'int box, HltSummaryBox* sbox'
         const = 'FALSE'>
         <code>
    m_boxes[box] = sbox;
@@ -251,13 +264,13 @@
       </method>
 
       <method
-        type = 'std::vector &lt; HltSummaryBox::HltBox &gt;'
-        name = 'boxesNames'
+        type = 'std::vector &lt; int &gt;'
+        name = 'boxIDs'
         desc = 'return the boxes names stored in the summary'
         const = 'TRUE' >
         <code>
-    std::vector&lt;HltSummaryBox::HltBox&gt; names;
-    for (std::map&lt;HltSummaryBox::HltBox,HltSummaryBox*&gt;::const_iterator it = m_boxes.begin(); it != m_boxes.end(); it++) 
+    std::vector&lt;int&gt; names;
+    for (std::map&lt;int,HltSummaryBox*&gt;::const_iterator it = m_boxes.begin(); it != m_boxes.end(); it++) 
           names.push_back(it->first);
     return names;
         </code>
