@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r0 2006-01-25 =====================
+! 2006-01-25 - Marco Cattaneo
+ - Remove unneccessary dependency on Relations
+
 ! 2006-01-23 - Chris Jones
  - Update for LHCb v20r0
 

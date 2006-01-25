@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.12 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.13 2006-01-25 16:50:04 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -28,10 +28,6 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
-
-// Relations
-#include "Relations/IAssociatorWeighted.h"
-#include "Relations/IRelationWeighted.h"
 
 // Event model
 #include "Event/Track.h"

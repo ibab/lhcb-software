@@ -2,7 +2,7 @@
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.19 2006-01-25 10:52:45 jonrob Exp $
+# $Id: requirements,v 1.20 2006-01-25 16:50:04 cattanem Exp $
 #============================================================================
 
 package RichRecMCTools
@@ -15,7 +15,6 @@ include_path none
 # ================ dependencies =============================================
 use  RichDet           v*     Det
 use  RichRecBase       v*     Rich
-use  Relations         v*     Kernel
 use  MCEvent           v*     Event
 use  LinkerEvent       v*     Event
 
