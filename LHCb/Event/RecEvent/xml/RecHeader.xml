@@ -34,7 +34,7 @@
         name="evtNumber"
         type="ulonglong"
        >
-         <code> return abs(m_evtNumber); </code>
+         <code> return (m_evtNumber > 0) ? m_evtNumber:-m_evtNumber; </code>
        </method>
        <method
         const="TRUE"
