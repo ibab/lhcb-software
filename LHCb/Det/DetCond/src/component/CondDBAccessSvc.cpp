@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.15 2006-01-22 16:13:45 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.16 2006-01-25 17:08:49 ngilardi Exp $
 // Include files 
 #include <sstream>
 
@@ -16,6 +16,8 @@
 #include "CoolKernel/IFolderSet.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/Exception.h"
+#include "CoolKernel/ExtendedAttributeListSpecification.h"
+#include "CoolKernel/PredefinedStorageHints.h"
 
 #include "CoolApplication/DatabaseSvcFactory.h"
 
@@ -37,7 +39,7 @@ const ISvcFactory &CondDBAccessSvcFactory = s_factory;
 //-----------------------------------------------------------------------------
 
 // ==== Static data members
-pool::AttributeListSpecification *CondDBAccessSvc::s_XMLstorageAttListSpec = NULL;
+cool::ExtendedAttributeListSpecification *CondDBAccessSvc::s_XMLstorageAttListSpec = NULL;
 unsigned long long CondDBAccessSvc::s_instances = 0;
 
 //=============================================================================
@@ -47,35 +49,42 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc)
 {
 
-  declareProperty("HostName",       m_dbHostName);
-  declareProperty("User",           m_dbUser);
-  declareProperty("Password",       m_dbPassword);
-  declareProperty("HidePassword",   m_hidePasswd);
-  declareProperty("Database",       m_dbName);
-  declareProperty("Schema",         m_dbSchema);
-  declareProperty("TAG",            m_dbTAG);
-  declareProperty("BackEnd",        m_dbBackEnd);
-  declareProperty("RecreateDB",     m_recreateDB);
-  declareProperty("RunTest",        m_test);
-  declareProperty("UseCache",       m_useCache);
-  declareProperty("CacheLowLevel",  m_cacheLL=10);
-  declareProperty("CacheHighLevel", m_cacheHL=100);
-  //declareProperty("CachePreload",   m_cachePreload=3600*1E9); // ns
-  declareProperty("NoDB",           m_noDB);
+  declareProperty("ConnectionString", m_connectionString);
+  declareProperty("HostName",         m_dbHostName);
+  declareProperty("User",             m_dbUser);
+  declareProperty("Password",         m_dbPassword);
+  declareProperty("HidePassword",     m_hidePasswd);
+  declareProperty("Database",         m_dbName);
+  declareProperty("Schema",           m_dbSchema);
+  declareProperty("TAG",              m_dbTAG);
+  declareProperty("BackEnd",          m_dbBackEnd);
+  declareProperty("RecreateDB",       m_recreateDB);
+  declareProperty("RunTest",          m_test);
+  declareProperty("UseCache",         m_useCache);
+  declareProperty("CacheLowLevel",    m_cacheLL=10);
+  declareProperty("CacheHighLevel",   m_cacheHL=100);
+  //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
+  declareProperty("NoDB",             m_noDB);
 
   // default for properties:
+  m_connectionString = "";
+  m_dbHostName = "";
+  m_dbUser     = "";
+  m_dbPassword = "";
   m_hidePasswd = true;
+  m_dbName     = "";
+  m_dbSchema   = "";
+  m_dbTAG      = "";
   m_dbBackEnd  = "mysql";
   m_recreateDB = false;
   m_test       = false;
   m_useCache   = false;
-  m_dbTAG      = "";
   m_noDB       = false;
   
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
-    s_XMLstorageAttListSpec = new pool::AttributeListSpecification();
-    s_XMLstorageAttListSpec->push_back<std::string>("data");
+    s_XMLstorageAttListSpec = new cool::ExtendedAttributeListSpecification();
+    s_XMLstorageAttListSpec->push_back("data", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
   }
   ++s_instances;
 }
@@ -122,33 +131,34 @@ StatusCode CondDBAccessSvc::initialize(){
   
   if ( !m_noDB ) {
     // user, name and password can be specified via authentication.xml
-    if ( m_dbHostName == "" ||
-         // m_dbUser == "" ||
-         m_dbName == "" ||
-         m_dbSchema == "" ||
-         m_dbBackEnd == "" ){
-      log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
-      log << MSG::ERROR << "Check that options 'HostName', 'Schema', 'Database' and 'BackEnd' are set." << endmsg;
-      return StatusCode::FAILURE;
+    if (m_connectionString == ""){
+      if (m_dbHostName == "" ||
+	  // m_dbUser == "" ||
+	  m_dbName == "" ||
+	  m_dbSchema == "" ||
+	  m_dbBackEnd == "" ){
+	log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
+	log << MSG::ERROR << "Check that the option 'ConnectionString' is set." << endmsg;
+	return StatusCode::FAILURE;
+      }
+      else{
+	log << MSG::WARNING << "Properties 'HostName', 'Schema', 'Database' and 'BackEnd' are deprecated." << endmsg;
+	log << MSG::WARNING << "Please use 'ConnectionString' instead." << endmsg;
+	m_connectionString = m_dbBackEnd + 
+	                     "://"        + m_dbHostName + 
+	                     ";schema="   + m_dbSchema + 
+                             ";user="     + m_dbUser + 
+                             ";password=" + m_dbPassword + 
+	                     ";dbname="   + m_dbName;
+      }
     }
-    
-    cool::DatabaseId uri = i_connection_uri();
-    
     log << MSG::DEBUG << "Connection string = \"" ;
-    if (! m_hidePasswd){
-      log << uri;
-    } else {
-      log << m_dbBackEnd << "://" << m_dbHostName
-          << ";schema="   << m_dbSchema
-          << ";user="     << m_dbUser
-          << ";password=" << "**hidden**"
-          << ";dbname="   << m_dbName;
-    }
-    log << "\"" << endmsg;
+    log << m_connectionString << "\"" << endmsg;
 
-    sc = i_openConnention();
+    sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
-  } else {
+  } 
+  else {
     log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
   }
   
@@ -177,20 +187,20 @@ StatusCode CondDBAccessSvc::initialize(){
   } else  if ( !m_noDB ) { // do the test
     log << MSG::DEBUG << "Entering Test" << endmsg;
 
-    pool::AttributeListSpecification BasicStringALSpec;
-    BasicStringALSpec.push_back<int>("type");
-    BasicStringALSpec.push_back<std::string>("str");
+    cool::ExtendedAttributeListSpecification BasicStringALSpec;
+    BasicStringALSpec.push_back("type", "int", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+    BasicStringALSpec.push_back("str", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
 
     std::string m_test_path = "/this/is/a/new/test/Folder";
     
     {
       log << MSG::DEBUG << "Create Folder \"" << m_test_path << "\"" <<endmsg;
       cool::IFolderPtr folder =
-        m_db->createFolder(m_test_path,BasicStringALSpec,
-                           "this is a test folder",
-                           cool::FolderVersioning::SINGLE_VERSION,
-                           true);
-      pool::AttributeList data(BasicStringALSpec);
+        m_db->createFolderExtended(m_test_path,BasicStringALSpec,
+				   "this is a test folder",
+				   cool::FolderVersioning::SINGLE_VERSION,
+				   true);
+      pool::AttributeList data(BasicStringALSpec.attributeListSpecification());
       data["type"].setValue<int>(1);
       data["str"].setValue<std::string>(std::string("Here is the data for ")
                                         +m_test_path);
@@ -204,9 +214,9 @@ StatusCode CondDBAccessSvc::initialize(){
     {
       log << MSG::DEBUG << "*** Second Test ***" << endmsg;
 
-      pool::AttributeListSpecification attListSpec;
-      attListSpec.push_back<long>("storage_type");
-      attListSpec.push_back<std::string>("data");
+      cool::ExtendedAttributeListSpecification attListSpec;
+      attListSpec.push_back("storage_type", "long", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+      attListSpec.push_back("data", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
 
       std::string rootName = "/CONDDB";
 
@@ -225,30 +235,30 @@ StatusCode CondDBAccessSvc::initialize(){
       m_db->createFolderSet( rootName+"/Alignment/Ecal",
                              "this is a test folderset", true );
       
-      m_db->createFolder( rootName+"/pippo", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/scLHCb", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry/LHCb", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry2/LHCb", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Geometry2/lvLHCb", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolder( rootName+"/Alignment/Ecal/alEcal", attListSpec,
-                          "this is a test folder",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/pippo", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/scLHCb", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/Geometry/LHCb", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/Geometry2/LHCb", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/Geometry2/lvLHCb", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
+      m_db->createFolderExtended( rootName+"/Alignment/Ecal/alEcal", attListSpec,
+				  "this is a test folder",
+				  cool::FolderVersioning::SINGLE_VERSION, true );
     }
     
 
@@ -289,24 +299,9 @@ StatusCode CondDBAccessSvc::finalize(){
 }
 
 //=============================================================================
-// prepare the string used to connect to the DB
-//=============================================================================
-std::string CondDBAccessSvc::i_connection_uri() const {
-  std::ostringstream result;
-  
-  result << m_dbBackEnd << "://" << m_dbHostName
-         << ";schema="   << m_dbSchema
-         << ";dbname="   << m_dbName;
-  if ( ! m_dbUser.empty() )     result << ";user="     << m_dbUser;
-  if ( ! m_dbPassword.empty() ) result << ";password=" << m_dbPassword;
-
-  return result.str();
-}
-
-//=============================================================================
 // Connect to the database
 //=============================================================================
-StatusCode CondDBAccessSvc::i_openConnention(){
+StatusCode CondDBAccessSvc::i_openConnection(){
   MsgStream log(msgSvc(), name() );
 
   try {
@@ -322,23 +317,13 @@ StatusCode CondDBAccessSvc::i_openConnention(){
       if (m_recreateDB) { // Recreate the DB if requested
         log << MSG::INFO << "Recreating Database" << endmsg;
         
-        std::string uri = i_connection_uri();
         log << MSG::DEBUG << "drop the database \"";
-        if (! m_hidePasswd){
-          log << uri;
-        } else {
-          log << m_dbBackEnd << "://" << m_dbHostName
-              << ";schema="   << m_dbSchema
-              << ";user="     << m_dbUser
-              << ";password=" << "**hidden**"
-              << ";dbname="   << m_dbName;
-        }
-        log << "\"" << endmsg;
-        dbSvc.dropDatabase(uri,false);
+	log << m_connectionString << "\"" << endmsg;
+        dbSvc.dropDatabase(m_connectionString, false);
         log << MSG::DEBUG << "done" << endmsg;
         
         log << MSG::DEBUG << "create empty the database " << endmsg;
-        m_db = dbSvc.createDatabase(uri);
+        m_db = dbSvc.createDatabase(m_connectionString);
         
         if (m_dbBackEnd == "oracle"){
           // ORA-01466: work-around
@@ -347,7 +332,7 @@ StatusCode CondDBAccessSvc::i_openConnention(){
         }
       } else { // if !recreate => just open
         log << MSG::DEBUG << "Opening connection" << endmsg;
-        m_db = dbSvc.openDatabase(i_connection_uri());
+	m_db = dbSvc.openDatabase(m_connectionString);
       }
     } else {
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
@@ -418,13 +403,13 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-        m_db->createFolder(path,
-                           *s_XMLstorageAttListSpec,
-                           _descr.str(),
-                           (vers == SINGLE)
-                           ?cool::FolderVersioning::SINGLE_VERSION
-                           :cool::FolderVersioning::MULTI_VERSION,
-                           true);
+        m_db->createFolderExtended(path,
+				   *s_XMLstorageAttListSpec,
+				   _descr.str(),
+				   (vers == SINGLE)
+				   ?cool::FolderVersioning::SINGLE_VERSION
+				   :cool::FolderVersioning::MULTI_VERSION,
+				   true);
       }
       break;
     default:
@@ -465,7 +450,7 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
         path << '\"' << endmsg;
       return StatusCode::FAILURE;
     }
-    pool::AttributeList payload(*s_XMLstorageAttListSpec);
+    pool::AttributeList payload(s_XMLstorageAttListSpec->attributeListSpecification());
     payload["data"].setValue<std::string>(data);
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
   } catch (cool::Exception &e){
@@ -718,7 +703,7 @@ StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
   std::ostringstream _descr;
   _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-  return cacheAddFolder(path,_descr.str(),*s_XMLstorageAttListSpec);
+  return cacheAddFolder(path,_descr.str(),s_XMLstorageAttListSpec->attributeListSpecification());
 }
 
 //=========================================================================
@@ -741,7 +726,7 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePo
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
                                               const std::string &data, cool::ChannelId channel) {
-  pool::AttributeList payload(*s_XMLstorageAttListSpec);
+  pool::AttributeList payload(s_XMLstorageAttListSpec->attributeListSpecification());
   payload["data"].setValue<std::string>(data);
   return cacheAddObject(path,since,until,payload,channel);
 }

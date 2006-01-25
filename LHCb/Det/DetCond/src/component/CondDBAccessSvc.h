@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.10 2005-09-20 11:43:44 cattanem Exp $
+// $Id: CondDBAccessSvc.h,v 1.11 2006-01-25 17:08:49 ngilardi Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -9,6 +9,7 @@
 // Forward declarations
 template <class TYPE> class SvcFactory;
 namespace pool { class AttributeListSpecification; }
+namespace cool { class ExtendedAttributeListSpecification; }
 
 class CondDBCache;
 
@@ -111,6 +112,11 @@ protected:
 private:
   // Properties
 
+  /// Property CondDBAccessSvc.ConnectionString: full connection string to open database access.
+  /// Format is: "<BackEnd>://<HostName>;schema=<Schema>;dbname=<Database>;[user=<User>;][password=<Password>;]"
+  /// This will eventually replace the HostName, User, Schema, Database and Password properties.
+  std::string m_connectionString;
+
   /// Property CondDBAccessSvc.HostName: name of the database server
   std::string m_dbHostName;
   
@@ -162,11 +168,8 @@ private:
   /// Pointer to the cache manager
   CondDBCache *m_cache;
 
-  /// Generate the string used to connect to COOL.
-  std::string i_connection_uri() const;
-
   /// Connect to the COOL database. It sets 'm_db'.
-  StatusCode i_openConnention();
+  StatusCode i_openConnection();
 
   /// Check if the TAG set exists in the DB.
   inline StatusCode i_checkTag() const { return i_checkTag(tag()); }
@@ -178,7 +181,7 @@ private:
   friend class SvcFactory<CondDBAccessSvc>;
 
   /// AttributeListSpecification used to sore XML strings
-  static pool::AttributeListSpecification *s_XMLstorageAttListSpec;
+  static cool::ExtendedAttributeListSpecification *s_XMLstorageAttListSpec;
 
   /// Counter used to know how many instances of CondDBAccessSvc are around
   /// (and needing the AttributeListSpecification pointers).
