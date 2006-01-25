@@ -41,10 +41,9 @@ static struct {
 static int MessageLogActive = false;
 static int MessageLogMaxLogs = 100;
 //----------------------------------------------------------------------------
-int upic_net_init (const char* name, const char** server, WtRoutine handler, WtRoutine broadcast)  {
+int upic_net_init (const char* name, const char** /*server*/, WtRoutine handler, WtRoutine broadcast)  {
   if (Opened) upic_net_close();
   Opened = 1;
-
   int status = wtc_init();
   wtc_subscribe (WT_FACILITY_AMS,handler,broadcast);
 
@@ -80,7 +79,7 @@ int upic_net_server_name (char* name)  {
 }
 
 //----------------------------------------------------------------------------
-int upic_net_set_server_name (const char* name)  {
+int upic_net_set_server_name (const char* /*name*/)  {
   return 0;  
 }
 

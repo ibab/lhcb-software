@@ -11,23 +11,21 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
+#define YES "Yes"
+#define NO  "No "
 static size_t Lines = 0;
-static size_t Cols = 0;
 static size_t Cursor = 0;
+#ifdef SCREEN
+static size_t Cols = 0;
 static char Blank[1024] = "\
                                                   \
                                                   \
                                                   \
                                                   ";
-
-
-#define YES "Yes"
-#define NO  "No "
-
-static char* Buffer;
 static char Text[3];
 static const char* Yes_no[] = { NO, YES };
-  
+#endif  
+static char* Buffer;
 static int Was_param = 0;
 
 //---------------------------------------------------------------------------

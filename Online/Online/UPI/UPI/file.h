@@ -2,7 +2,7 @@
 #define __FILE_LOADED   1
 
 #ifdef _WIN32
-
+#include <io.h>
 /*      FILE - V3.0     */
 
 /*
@@ -19,6 +19,9 @@
 # define O_TRUNC        02000
 # define O_EXCL         04000
 
+#else
+#include <unistd.h>
+#include <fcntl.h>
 #endif
 
 #endif                                  /* __FILE_LOADED */

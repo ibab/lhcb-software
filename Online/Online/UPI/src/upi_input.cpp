@@ -13,18 +13,11 @@ Created           : 23-OCT-1989 by Christian Arnault
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-#define UPI_K_MESSAGE  0
-#define UPI_K_OPERATOR 1
-#define UPI_K_USER     2
-
 #define mini(a,b) ((a)<(b)?(a):(b))
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
+#ifdef SCREEN
 static int* Recorder_list = 0;
 static int  Recorder_size = 0;
 static int  Recorder_pos = 0;
@@ -42,11 +35,10 @@ static int Last_index = 0;
 static int Moving_window = 0;
 static int Moving_display = 0;
 static int Resizing_display = 0;
+#endif
 //---------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
-static void upic_spawn ();
-//---------------------------------------------------------------------------
+void upic_spawn ();
 
 //---------------------------------------------------------------------------
 int upic_wait (int* input_type)   {
@@ -680,23 +672,18 @@ int upic_key_action (unsigned int /* event */, void*)
   }
   if (key == RETURN)  {
     int menu_id, item_id, param_id, list_index;
-
     menu_id = m->id;
     item_id = i ? i->id : 0;
     param_id = p ? p->id : 0;
     list_index = p ? p->list_pos : 0;
-
-    if (i && (action = i->action))
-    {
+    if (i && (action = i->action))    {
       (*action) (menu_id, item_id, param_id, list_index);
-      if (m->type == PARAMETER_PAGE && i->id == -1)
-      {
+      if (m->type == PARAMETER_PAGE && i->id == -1)      {
         if (upic_go_backward (m) == UPI_SS_NORMAL)
           scrc_hide_window (m->window);
       }
     }
-    else
-    {
+    else    {
       Last_menu = menu_id;
       Last_item = item_id;
       Last_param = param_id;
@@ -710,13 +697,14 @@ int upic_key_action (unsigned int /* event */, void*)
 #endif
 
 //---------------------------------------------------------------------------
-void upic_start_recorder (int* list, int size)  {
 #ifdef SCREEN
+void upic_start_recorder (int* list, int size)  {
   Recorder_list = list;
   Recorder_size = size;
   Recorder_pos  = 0;
   Recorder_on   = 1;
 #else
+void upic_start_recorder (int*,int)  {
 #endif
 }
 
@@ -732,13 +720,14 @@ int upic_stop_recorder () {
 }
 
 //---------------------------------------------------------------------------
-void upic_start_replay (int* list, int size)  {
 #ifdef SCREEN
+void upic_start_replay (int* list, int size)  {
   Replay_list = list;
   Replay_size = size;
   Replay_pos  = 0;
   Replay_on   = 1;
 #else
+void upic_start_replay (int*, int)  {
 #endif
 }
 
@@ -751,11 +740,13 @@ void upic_stop_replay ()  {
 }
 
 //---------------------------------------------------------------------------
-void upic_record (int key)  {
 #ifdef SCREEN
+void upic_record (int key)  {
   Recorder_list[Recorder_pos] = key;
   if (Recorder_pos == Recorder_size-1) Recorder_on = 0;
   else Recorder_pos++;
+#else
+void upic_record (int)  {
 #endif
 }
 
@@ -777,9 +768,7 @@ int upic_replay ()    {
 #include <prvdef.h>
 
 //---------------------------------------------------------------------------
-static void upic_spawn ()
-//---------------------------------------------------------------------------
-{
+void upic_spawn ()  {
   int status, s;
   $DESCRIPTOR (prompt, "upi> ");
   int current_privs[2];
@@ -822,7 +811,7 @@ static void upic_spawn ()
   if (!(status & 1)) upic_signal_error (status, "SPAWN");
 }
 #else
-static void upic_spawn () {
+void upic_spawn () {
   int status = 0;
   upic_save_screen(0, 0);
   upic_restore_screen();

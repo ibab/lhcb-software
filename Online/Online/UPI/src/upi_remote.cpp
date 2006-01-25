@@ -17,8 +17,6 @@
 
 #define FRAME_SIZE 1500
 
-
-
 typedef struct QUEUE   Queue;
 
 struct QUEUE {
@@ -161,7 +159,7 @@ static void check_buffer (int bytes)  {
 static void fetch_int (int* i)  {
   int* p = (int*) (Get_buffer + Get_pos);
   *i = *p;
-#ifdef OSK
+#ifdef _OSK
   *i = (*p & 0xFF)<<24 | (*p & 0xFF00)<<8 | 
        (*p & 0xFF0000)>>8 | (*p & 0xFF000000)>>24;  
 #endif
@@ -180,10 +178,8 @@ static void fetch_text (char** c)   {
 static void fill_int (int i)    {
   check_buffer (sizeof(int));
   int* p = (int*) (Buffer + Pos);
-#ifdef VAX
   *p = i;
-#endif
-#ifdef OSK
+#ifdef _OSK  // need to byte-swap
   *p = (i & 0xFF)<<24 | (i & 0xFF00)<<8 | 
        (i & 0xFF0000)>>8 | (i & 0xFF000000)>>24;  
 #endif
@@ -192,7 +188,7 @@ static void fill_int (int i)    {
 
 //----------------------------------------------------------------------------
 static void fill_double (double x)  {
-  check_buffer (sizeof(int));
+  check_buffer (sizeof(double));
   double * p = (double*) (Buffer + Pos);
   *p = x;
   Pos += sizeof(double);
@@ -224,12 +220,11 @@ static void fill_list (int type, const char** list, int size)   {
         int *p = (int*) (Buffer + Pos);
         for (i=0; i<size; i++,p++)        {
           int q = *(int*)list[i];
-#ifdef VAX
-          *p = q;
-#endif
-#ifdef OSK
+#ifdef _OSK
           *p = (q & 0xFF)<<24    | (q & 0xFF00)<<8 | 
                (q & 0xFF0000)>>8 | (q & 0xFF000000)>>24;  
+#else
+          *p = q;
 #endif
         }
         Pos += size * sizeof(int);
@@ -320,24 +315,22 @@ static void fill_buffer (const void* buffer, int length)  {
 }
 
 //----------------------------------------------------------------------------
-static int handler (unsigned int fac, void*)    {
+static int handler (unsigned int /* fac */, void* /* para */)    {
   size_t bytes;
   int    length;
   char*  source;
-  Connect* c;
+  Connect* c = 0;
   Menu* m;
   Page* d;
   Item* i;
   Routine action;
   int wakeup = 0;
   Queue* q = (Queue*) list_add_entry (&Header.queue.first, sizeof(Queue));
-  int status = upic_net_read (&Get_buffer, &bytes, &source);
+  upic_net_read (&Get_buffer, &bytes, &source);
   if (source)  {
     c = find_connect (source);
     free (source);
   }
-  else c = (Connect*) 0;
-  
   q->connect = c;
   if (Get_buffer)  {
     if (bytes)  {
@@ -485,9 +478,9 @@ static int handler (unsigned int fac, void*)    {
 }
 
 //----------------------------------------------------------------------------
-static int broadcast (unsigned int fac, void*)  {
+static int broadcast (unsigned int /* fac */, void* /* para */ )  {
   char* source;
-  int status = upic_net_spy (&source);
+  upic_net_spy (&source);
   if (source)  {
     Connect* c = find_connect (source);
     free (source);
@@ -503,7 +496,7 @@ static int broadcast (unsigned int fac, void*)  {
 }
 
 //----------------------------------------------------------------------------
-static int rearm (unsigned int fac, void*)   {
+static int rearm (unsigned int /* fac */ , void* /* para */ )   {
   if (Header.queue.first) return 1;
   upic_end_update();
   fill_int (UPIF_INPUT);
@@ -760,7 +753,7 @@ void upir_open_window ()    {
 }
 
 //----------------------------------------------------------------------------
-void upir_open_old_window (int menu_id) {
+void upir_open_old_window (int /* menu_id */ ) {
   fill_int (UPIF_OPEN_OLD_WINDOW);
   send (0);
 }
@@ -1031,13 +1024,12 @@ int upir_dloct (const char* prompt, int def, int* value, int min, int max)  {
 
 //----------------------------------------------------------------------------
 int upir_dltxt (const char* prompt, const char* def, char* value, 
-                int length, int* ret_len) {
+                int length, int* /* ret_len */) {
   fill_int (UPIF_DLTXT);
   fill_text (prompt);
   fill_text (def);
   fill_int (length);
   send (0);
-
   Queue* q = wait (UPIF_DLTXT);
   if (q)  {
     if (q->b.dltxt.dltxt_value)    {

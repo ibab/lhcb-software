@@ -242,7 +242,6 @@ namespace  {
       upic_add_comment (1001, "---------------------------", "");
       upic_close_menu();
 
-  /*    upic_get_info (&Pb);  */
       /*
       scrc_create_pasteboard (&Pb, 0, &pb_rows, &pb_cols);
       init_timer (show_memory);

@@ -27,6 +27,10 @@ typedef int  (*WtRoutine)(unsigned int,void*);
 #define RETURN_ON_ACCEPT   0
 #define WAKE_UP_ON_CHANGE  1
 
+#define UPI_K_MESSAGE  0
+#define UPI_K_OPERATOR 1
+#define UPI_K_USER     2
+
 /*  Callback conditions.  */
 #define CALL_ON_BACK_SPACE    0x01
 #define CALL_ON_ENTER         0x02

@@ -12,12 +12,7 @@ Created           : 23-OCT-1989 by Christian Arnault
 
 #define MAX_MESSAGE_ENTRIES 200
 //---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
 static char Separator[] = "--------------------------------------";
 //---------------------------------------------------------------------------
 
@@ -25,9 +20,7 @@ static char Separator[] = "--------------------------------------";
 //---------------------------------------------------------------------------
 int upic_scroll_message (int key)    {
   Async* a = &Sys.async;
-  static Async_line* top;
-  static Async_line* bottom;
-
+  static Async_line *top, *bottom;
   scrc_begin_pasteboard_update (Sys.pb);
   switch (key)  {
   case 0 :
@@ -124,13 +117,8 @@ void upic_draw_message ()   {
 }
 
 //---------------------------------------------------------------------------
-void upic_paste_message ()
-//---------------------------------------------------------------------------
-{
-  Async* a;
-
-  a = &Sys.async;
-
+void upic_paste_message ()  {
+  Async* a = &Sys.async;
   upic_refresh_message (a);
   scrc_paste_display (a->id, Sys.pb, a->row, a->col);
   scrc_bring_display_to_back (a->id, Sys.pb);
@@ -139,14 +127,15 @@ void upic_paste_message ()
 //---------------------------------------------------------------------------
 void upic_refresh_message (Async* a)  {
   Async_line* line = a->last;
-  char* c, null = '\0';
+  const char *c, null = '\0';
   for (int i = a->rows; i > 0; i--)  {
     if (line)  {
       c = line->text;
       line = line->prev;
     }
-    else c = &null;
-
+    else {
+      c = &null;
+    }
     scrc_put_chars (a->id, c, INVERSE, i, 1, 1);
   }
 }
@@ -209,9 +198,7 @@ int upic_set_message_window (int rows, int cols, int row, int col)    {
   if (col == -1) col  = a->col ;
 
   scrc_begin_pasteboard_update (Sys.pb);
-
-  if (rows != a->rows || cols != a->cols)
-  {
+  if (rows != a->rows || cols != a->cols)  {
     scrc_change_display (a->id, rows, cols);
     if (rows == 0 || cols == 0)
       scrc_unpaste_display (a->id, Sys.pb);
@@ -223,8 +210,7 @@ int upic_set_message_window (int rows, int cols, int row, int col)    {
     upic_refresh_message (a);
   }
 
-  if (row != a->row || col != a->col)
-  {
+  if (row != a->row || col != a->col)  {
     scrc_move_display (a->id, Sys.pb, row - a->row, col - a->col);
     a->row = row;
     a->col = col;
@@ -252,7 +238,6 @@ int upic_get_message_window (int* rows, int* cols, int* row, int* col)  {
 
 //---------------------------------------------------------------------------
 void upic_drop_async (Async_line* line) {
-  char* c;
-  if ((c = line->text)) free (line);
+  if (line->text) free (line->text);
   list_remove_entry (line);
 }

@@ -7,31 +7,15 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
-#include "UPI/upidef.h"
+#include "RTL/rtl.h"
 #include "SCR/scr.h"
+#include "UPI/upidef.h"
 #ifdef VAX
 #include <descrip.h>
 #endif
 //---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
 System Sys;
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-#ifdef _VMS
-static struct {
-  int link;
-  Routine handler;
-  int args;
-  int arg[7];
-} Exit_block;
-  
-static int Exit_status;
-#endif
 static Routine User_exit_handler = 0;
-//---------------------------------------------------------------------------
-
 
 //---------------------------------------------------------------------------
 static int upic_memory_of_param (Param* p)    {
@@ -94,22 +78,20 @@ static int upic_memory_of_page (Page* d)  {
 //---------------------------------------------------------------------------
 static int upic_memory_of_menu (Menu* m)  {
   int memory = sizeof (Menu);
-  Page* d = m->page.first;
-  while (d)  {
+  for( Page* d = m->page.first; d; d=d->next)
     memory += upic_memory_of_page (d);
-    d = d->next;
-  }
   memory += strlen (m->mn_title) + 1 +
             strlen (m->up_title) + 1 +
             strlen (m->bt_title) + 1;
   return (memory);
 }
 //---------------------------------------------------------------------------
-static void upic_exit_handler (int* /* status */ )  {
+static int upic_exit_handler (void* /* status */ )  {
   if (User_exit_handler) User_exit_handler(0,0);
 #ifndef SCREEN
   upic_quit();
 #endif
+  return 1;
 }
 
 //---------------------------------------------------------------------------
@@ -132,14 +114,7 @@ int upic_attach_terminal ()   {
   Sys.window      = 0;
   Sys.detached_window = 0;
   
-#ifdef VAX
-  Exit_block.link = 0;
-  Exit_block.handler = upic_exit_handler;
-  Exit_block.args = 1;
-  Exit_block.arg[0] = &Exit_status;
-  SYS$DCLEXH (&Exit_block);
-#endif
-  
+  lib_rtl_declare_exit(upic_exit_handler,0);
 #ifdef SCREEN
   upic_init_screen();
   Sys.items_per_page = Sys.pb_rows - 6;
@@ -215,7 +190,6 @@ int upic_get_mode ()    {
   return (Sys.mode);
 #else
   int mode;
-  
   upir_get_mode (&mode);
   return mode;
 #endif
@@ -306,7 +280,7 @@ int upic_signal_error (int, const char* ) {
 /*--------------------------------------------------*/
 #ifdef REMOTE
 int upic_connect_process (const char* name) {
-  upir_connect_process (name);
+  upir_connect_process(name);
 #else
 int upic_connect_process (const char* ) {
 #endif
