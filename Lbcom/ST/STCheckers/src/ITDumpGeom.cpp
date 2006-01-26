@@ -22,6 +22,8 @@
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
 #include "STDet/DeITSector.h"
+#include "STDet/DeITLadder.h"
+
 
 static const AlgFactory<ITDumpGeom> s_Factory;
 const IAlgFactory& ITDumpGeomFactory = s_Factory;
@@ -67,10 +69,10 @@ StatusCode ITDumpGeom::initialize(){
       for (;iterLayer != tBox->layers().end(); ++iterLayer){
         DeITLayer* tLayer = *iterLayer;
 	std::cout << tLayer << std::endl;
-        DeITLayer::Children::const_iterator iterSector = tLayer->sectors().begin();
-        for ( ; iterSector !=  tLayer->sectors().end() ; ++iterSector ){
-          DeSTSector* tSector = *iterSector;
-	  std::cout << tSector << std::endl;
+        DeITLayer::Children::const_iterator iterLadder = tLayer->ladders().begin();
+        for ( ; iterLadder !=  tLayer->ladders().end() ; ++iterLadder ){
+          DeITLadder* tLadder = *iterLadder;
+	  std::cout << tLadder->sector() << std::endl;
 	} //sectors     
       } // half module
     }  // iterLayer

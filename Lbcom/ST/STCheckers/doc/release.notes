@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-01-26 M Needham
+ - Update ITDumpGeom for new ladder layer
+
 !============================ STCheckers v1r0 2005-12-20 =======================
 ! 2005-12-20 - Marco Cattaneo
  - Remove STTools dependency
