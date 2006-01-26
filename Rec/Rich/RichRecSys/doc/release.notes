@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v2r0 2006-01-23 =======================
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0
  - Remove packages now got from other packages (DAQ etc.)
