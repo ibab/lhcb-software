@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2006-01-26 - Vanya BELYAEV
+ - dict/DetDect.h
+   remove unnesessary "casting" helpers *::Interface<*> 
+
 !========================= DetSys v8r0 2006-01-25 =========================
 ! 2006-01-25 - Marco Cattaneo
  - Major new version for backards incompatible DC06 changes

@@ -1,4 +1,8 @@
-// $Id: DetDict.h,v 1.11 2006-01-25 13:39:22 cattanem Exp $
+// $Id: DetDict.h,v 1.12 2006-01-26 15:57:45 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -154,39 +158,8 @@
  *  @date   updated 2005-07-07
  */
 
-namespace GaudiPython 
-{
-  template <class I> struct Interface 
-  {
-    Interface() {}
-    static I* cast ( IInterface* in) 
-    {
-      void* out = 0;
-      if ( 0 == in        ) { return 0 ; }
-      StatusCode sc = in->queryInterface(I::interfaceID(), &out ) ;
-      if ( sc.isFailure() ) { return 0 ; }
-      //
-      return (I*)out;
-    }
-  };
-
-};
-
 namespace DetDescPython
 {
-  
-  template <class I> 
-  struct Interface 
-  {
-    Interface() {}
-    static I* cast ( DataObject* obj ) 
-    { return dynamic_cast<I*> ( obj ) ; };
-    static I* cast ( ISolid*     obj ) 
-    { return dynamic_cast<I*> ( obj ) ; };
-    static I* cast ( IInterface* obj ) 
-    { return dynamic_cast<I*> ( obj ) ; };
-  };
-  
   //--- Templace instantiations
   struct __Instantiations 
   {
@@ -199,47 +172,15 @@ namespace DetDescPython
     ILVolume::Intersections i6 ;
     ISolid::Ticks           i7 ;
     
-    Interface<IDetectorElement>      a1_1  ;
-    Interface<DetectorElement>       a1_2  ;
-    Interface<IGeometryInfo>         a2    ;
-    Interface<ILVolume>              a3_1  ;
-    Interface<LogVolBase>            a3_2  ;
-    Interface<LVolume>               a3_3  ;
-    Interface<LAssembly>             a3_4  ;
-    Interface<IPVolume>              a4    ;
-    
-    Interface<ISolid>                a5    ;
-    Interface<SolidBase>             a5_1  ;
-    Interface<SolidBoolean>          a5_2  ;
-    Interface<SolidBox>              a5_3  ;
-    Interface<SolidChild>            a5_4  ;
-    Interface<SolidCons>             a5_5  ;
-    Interface<SolidIntersection>     a5_6  ;
-    Interface<SolidPolycone>         a5_7  ;
-    Interface<SolidPolycone>         a5_8  ;
-    Interface<SolidPolyHedronHelper> a5_9  ;
-    Interface<SolidSphere>           a5_10 ;
-    Interface<SolidSubtraction>      a5_11 ;
-    Interface<SolidTrap>             a5_12 ;
-    Interface<SolidTrd>              a5_13 ;
-    Interface<SolidTubs>             a5_14 ;
-    Interface<SolidUnion>            a5_15 ;
-    
-    Interface<Material>              a6_1  ;
-    Interface<Mixture>               a6_2  ;
-    Interface<Element>               a6_3  ;
-    Interface<Isotope>               a6_4  ;
-    //
-
-    GaudiPython::Interface<ITransportSvc>       s1 ;
-    GaudiPython::Interface<IUpdateManagerSvc>   s2 ;
-    GaudiPython::Interface<ICondDBAccessSvc>    s3 ;
-    GaudiPython::Interface<ICondDBCnvSvc>       s4 ;
-
     SmartRef<Condition> sref_inst1;
     
   };
   
 };
 
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // DETSYS_DETDICT_H
+// ============================================================================
+
