@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+2006-01-26 M Needham
+  - Adapt to new ST numbering scheme
+
 ! 2006-01-25 - Chris Jones
  - Add some missing LHCb namespace scopes to RichSmartID.xml
 
