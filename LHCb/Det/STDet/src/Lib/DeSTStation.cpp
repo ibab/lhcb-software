@@ -33,8 +33,6 @@ StatusCode DeSTStation::initialize() {
   }
   else {
     m_id = (unsigned int)param<int>("stationID");
-    STChannelID aChan(m_id,0,0,0,0);
-    setElementID(aChan); 
   }
 
   return sc;

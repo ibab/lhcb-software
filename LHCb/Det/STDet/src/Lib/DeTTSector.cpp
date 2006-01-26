@@ -65,7 +65,7 @@ StatusCode DeTTSector::initialize() {
 
     // build the id
     STChannelID parentID = m_parent->elementID();
-    STChannelID chan(parentID.station(),parentID.layer(), 
+    STChannelID chan(STChannelID::typeTT,parentID.station(),parentID.layer(), 
                      parentID.detRegion(),  id(), 0);
     setElementID(chan);
 

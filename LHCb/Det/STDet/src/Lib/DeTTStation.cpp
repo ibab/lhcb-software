@@ -10,7 +10,7 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 
-
+#include "Kernel/STChannelID.h"
 
 using namespace boost::lambda;
 using namespace LHCb;
@@ -51,6 +51,9 @@ StatusCode DeTTStation::initialize() {
   
    // and the parent
    m_parent = getParent<parent_type>();
+
+   STChannelID aChan(STChannelID::typeTT, this->id(),0,0,0,0);
+   setElementID(aChan); 
 
    // get the children 
    m_layers = getChildren<DeTTStation>();

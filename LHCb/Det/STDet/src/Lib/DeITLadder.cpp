@@ -46,7 +46,8 @@ StatusCode DeITLadder::initialize() {
     m_id = param<int>("sectorID");
     m_parent = getParent<DeITLadder>(); 
     STChannelID parentID = m_parent->elementID();
-    STChannelID chan(parentID.station(),parentID.layer(),
+    STChannelID chan(STChannelID::typeIT,
+                     parentID.station(),parentID.layer(),
                      m_id, 0, 0);
     setElementID(chan);
 

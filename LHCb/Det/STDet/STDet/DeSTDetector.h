@@ -30,6 +30,9 @@ namespace DeSTDetLocation {
   /// "short cut" if you know the type, ie TT or IT
   const std::string& location(const std::string& type);
 
+  /// type if you know the location
+  unsigned int detType(const std::string& type);
+
 };
 
 class DeSTDetector : public DetectorElement  {
@@ -117,6 +120,12 @@ public:
   */
   void trajectory(const LHCb::STChannelID& aChan);
 
+  /** get the number of strips in detector*/
+  unsigned int nStrip() const; 
+
+  /** get the number of strips in a sector*/
+  unsigned int nStripPerSector() const; 
+ 
 protected:
 
   /** set the first Station number */
@@ -128,9 +137,6 @@ protected:
   /** set the strip number  */
   void setNstrip(const unsigned int nStrip);
  
-  /** get the number of strips*/
-  unsigned int nStrip() const; 
-
   std::vector<DeSTStation*> m_stations;
 
   std::vector<DeSTSector*> m_sectors;
@@ -149,6 +155,10 @@ private:
 
 inline const std::string& DeSTDetLocation::location(const std::string& type){
   return (type =="TT" ? DeSTDetLocation::TT : DeSTDetLocation::IT);
+}
+
+inline unsigned int DeSTDetLocation::detType(const std::string& type){
+  return (type =="TT" ? LHCb::STChannelID::typeTT : LHCb::STChannelID::typeIT );
 }
 
 #include "STDet/DeSTSector.h"
@@ -181,7 +191,11 @@ inline void DeSTDetector::setPitch(const double pitch) {
 }
 
 inline unsigned int DeSTDetector::nStrip() const{
-  return m_nStripPerSector;
+  return m_nStripPerSector*m_sectors.size();
+}
+
+inline unsigned int DeSTDetector::nStripPerSector() const{
+  return m_nStripPerSector*m_sectors.size();
 }
 
 inline void DeSTDetector::setNstrip(const unsigned int nStrip) {
@@ -211,24 +225,26 @@ inline bool  DeSTDetector::isValidStrip(const unsigned int iStrip) const{
 
 inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID aChannel) const{
 
-  LHCb::STChannelID testChan(aChannel.station(),
+  LHCb::STChannelID testChan(aChannel.type(),
+                       aChannel.station(),
                        aChannel.layer(), 
                        aChannel.detRegion(),
                        aChannel.sector(), 
                        aChannel.strip() - 1u);
 
-  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u)); 
+  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
 }
 
 inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID aChannel) const{
 
-  LHCb::STChannelID testChan(aChannel.station(),
+  LHCb::STChannelID testChan(aChannel.type(),
+                       aChannel.station(),
                        aChannel.layer(), 
                        aChannel.detRegion(),
                        aChannel.sector(), 
                        aChannel.strip() + 1u);
 
-  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u)); 
+  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
 }
 
 inline void DeSTDetector::trajectory(const LHCb::STChannelID& aChan) {

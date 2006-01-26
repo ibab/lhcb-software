@@ -61,7 +61,7 @@ StatusCode DeTTHalfModule::initialize() {
    
     m_parent = getParent<DeTTHalfModule>();
     STChannelID parentID = m_parent->elementID();
-    STChannelID chan(parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
+    STChannelID chan(STChannelID::typeTT, parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
     setElementID(chan);
     m_sectors = getChildren<DeTTHalfModule>();   
     m_sectors.size() == 3u ? m_type = "KLM": m_type = "KL";

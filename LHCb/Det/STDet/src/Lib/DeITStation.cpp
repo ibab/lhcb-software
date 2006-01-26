@@ -10,6 +10,7 @@
 *    @author Matthew Needham
 */
 
+#include "Kernel/STChannelID.h"
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -45,6 +46,8 @@ StatusCode DeITStation::initialize() {
   else {
     // get the children
     m_parent = getParent<DeITStation>();
+    STChannelID aChan(STChannelID::typeIT,this->id(),0,0,0,0);
+    setElementID(aChan); 
     m_boxes = getChildren<DeITStation>(); 
   }
   return sc;

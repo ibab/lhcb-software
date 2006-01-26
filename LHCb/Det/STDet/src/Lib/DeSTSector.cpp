@@ -117,7 +117,10 @@ STChannelID DeSTSector::localUToStrip(const double u) const{
   else {
     strip = m_firstStrip;
   }
-  return STChannelID(elementID().station(), elementID().layer(), elementID().detRegion(),
+  return STChannelID(elementID().type(),
+                     elementID().station(), 
+                     elementID().layer(), 
+                     elementID().detRegion(),
                      elementID().sector(), strip);
 }
 
