@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.4 2006-01-20 14:28:19 cattanem Exp $
+// $Id: ITReadoutTool.cpp,v 1.5 2006-01-26 10:51:27 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -27,8 +27,8 @@ ITReadoutTool::ITReadoutTool(const std::string& type,
 {
   // constructer
 
-  m_conditionLocation = "/dd/Conditions/ReadoutConf/IT/ReadoutMap";
-  declareProperty( "conditionLocation", m_conditionLocation );
+  declareProperty( "conditionLocation", 
+                   m_conditionLocation  = "/dd/Conditions/ReadoutConf/IT/ReadoutMap" );
 
   // need a line here to get the interface correct !!!!
   declareInterface<ISTReadoutTool>(this);
@@ -74,7 +74,9 @@ StatusCode ITReadoutTool::createBoards() {
   Condition* rInfo = getDet<Condition>(m_conditionLocation);
 
   // vector of layer types
-  const std::vector<std::string>& stations = rInfo->paramAsStringVect("stations");
+  const std::vector<std::string>& stations = 
+    rInfo->param<std::vector<std::string> >("stations");
+
   m_hybridsPerBoard = rInfo->param<int>("hybridsPerBoard");
   unsigned int nBoardPerStation = rInfo->param<int>("nBoard");
   unsigned int nStripsPerHybrid =  STDAQ::nStripsPerBoard/m_hybridsPerBoard;
@@ -85,7 +87,7 @@ StatusCode ITReadoutTool::createBoards() {
 
   for (; iterS != stations.end(); ++iterS, ++iReg){
    m_firstBoardInRegion.push_back(m_boards.size());
-   const std::vector<int>& tMap = rInfo->paramAsIntVect(*iterS); 
+   const std::vector<int>& tMap = rInfo->param<std::vector<int> >(*iterS); 
    unsigned int vecLoc = 0;
   
    if ( iterS == stations.begin()){

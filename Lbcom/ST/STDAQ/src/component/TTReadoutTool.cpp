@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.3 2006-01-20 14:28:19 cattanem Exp $
+// $Id: TTReadoutTool.cpp,v 1.4 2006-01-26 10:51:27 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -30,8 +30,8 @@ TTReadoutTool::TTReadoutTool(const std::string& type,
 {
   // constructer
 
-  m_conditionLocation = "/dd/Conditions/ReadoutConf/TT/ReadoutMap";
-  declareProperty( "conditionLocation", m_conditionLocation );
+  declareProperty( "conditionLocation", 
+                    m_conditionLocation  = "/dd/Conditions/ReadoutConf/TT/ReadoutMap");
 
   // need a line here to get the interface correct !!!!
   declareInterface<ISTReadoutTool>(this);
@@ -78,7 +78,8 @@ StatusCode TTReadoutTool::createBoards() {
   Condition* rInfo = getDet<Condition>(m_conditionLocation);
 
   // vector of layer types
-  const std::vector<std::string>& layers = rInfo->paramAsStringVect("layers");
+  // const std::vector<std::string>& layers = rInfo->paramAsStringVect("layers");
+  const std::vector<std::string> layers =  rInfo->param<std::vector<std::string> >("layers");
   const std::vector<int>& nBoards = rInfo->paramAsIntVect("nBoardsPerLayer");
   m_hybridsPerBoard = rInfo->param<int>("hybridsPerBoard");
   m_nRegionA = rInfo->param<int>("nRegionsInTTa");
@@ -89,7 +90,7 @@ StatusCode TTReadoutTool::createBoards() {
    m_firstBoardInRegion.push_back(m_boards.size());
    m_nBoard += nBoards[iReg];   
 
-   const std::vector<int>& tMap = rInfo->paramAsIntVect(layers[iReg]);
+   const std::vector<int>& tMap = rInfo->param<std::vector<int> >(layers[iReg]);
    unsigned int vecLoc = 0;
    if ( iReg == 0){
      STChannelID firstChan = STChannelID(tMap[0]);
