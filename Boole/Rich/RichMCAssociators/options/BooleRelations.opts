@@ -2,10 +2,11 @@
 // DST relations
 RelationsRICHSeq.Members += { "MCRichDigitSummaryAlg" };
 
-// Extended relations
-RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg/MCPToRichTrack",
-                              "MCRichHitToMCRichOpPhotAlg/MCRichHitToPhoton" };
-// if uncommenting the above, add following to DigiContent.opts file in Boole
+// Extended relations. Do nothing if input data is not on Sim file
+RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg",
+                              "MCRichHitToMCRichOpPhotAlg" };
+
+// Following are optional in DigiContent.opts, present for extended Sim input
 //, "/Event/Link/MC#1"
 //, "/Event/Link/MC/Rich#1"
 //, "/Event/Link/MC/Rich/MCPartsToMCRichTracks#1"
