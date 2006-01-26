@@ -4,10 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r0 2006-01-26 ==========================
 ! 2005-12-19 - Olivier Callot
  - Include SmartDataPtr.h in all 4 wrappers.
 
-!====================== LinkerEvent v2r0 2005-12-15 ==========================
 ! 2005-12-15 - Olivier Callot
  - Replace all references to KeyedObject by ContainedObject and similarly
    KeyedContainer to ObjectVector. Replace key() by index() and object( key )
