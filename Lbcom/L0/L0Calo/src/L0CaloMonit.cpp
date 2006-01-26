@@ -1,11 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.8 2005-03-07 16:42:10 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.9 2006-01-26 16:52:13 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "Kernel/SystemOfUnits.h"
 
 // Event/L0Event
 #include "Event/L0CaloCandidate.h"
-#include "Event/L1Event.h"
+#include "Event/RawEvent.h"
+#include "Event/L0Calo.h"
 
 // local
 #include "L0CaloMonit.h"
@@ -61,61 +63,51 @@ StatusCode L0CaloMonit::execute() {
 
   debug() << "Execute" << endreq;
 
-  std::string containerName = L0CaloCandidateLocation::Default;
+  std::string containerName = LHCb::L0CaloCandidateLocation::Default;
   
-  L0CaloCandidates* candidates = get<L0CaloCandidates>( containerName );
+  LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( containerName );
 
-  L0CaloCandidates::const_iterator cand;
+  LHCb::L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
-    if ( L0Calo::Electron == (*cand)->type()  ) {
+    if ( LHCb::L0Calo::Electron == (*cand)->type()  ) {
       m_histElectron  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::Photon == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::Photon == (*cand)->type()  ) {
       m_histPhoton    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::Hadron == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::Hadron == (*cand)->type()  ) {
       m_histHadron    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::Pi0Local == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::Pi0Local == (*cand)->type()  ) {
       m_histPi0Local  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::Pi0Global == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::Pi0Global == (*cand)->type()  ) {
       m_histPi0Global -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::SumEt == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::SumEt == (*cand)->type()  ) {
       m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0Calo::SpdMult == (*cand)->type()  ) {
+    } else if ( LHCb::L0Calo::SpdMult == (*cand)->type()  ) {
       m_histSpdMult   -> fill( (*cand)->etCode(), 1. );
     }
   }
 
   if (  msgLevel() <= MSG::DEBUG  ) {
-    // Get the L1 buffer
-    L1Event* event;
-    if ( exist<L1Event>( L1EventLocation::Default ) ) {
-      event = get<L1Event>( L1EventLocation::Default );
-    } else {      
-      debug() << "Access L1Buffer for decoding" << endreq;
-      L1Buffer* buffer = get<L1Buffer>( L1BufferLocation::Default );
-      event = new L1Event( *buffer );
-      put( event, L1EventLocation::Default );
-    }
-
-    std::vector<L1Bank> banks = event->banks( L1Buffer::L0 );
-    std::vector<L1Bank>::const_iterator itBank;
+    // Get the Raw buffer
+    LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    
+    std::vector<LHCb::RawBank*> banks = raw->banks( LHCb::RawBank::L0Calo );
+    std::vector<LHCb::RawBank*>::const_iterator itBank;
     for ( itBank = banks.begin() ; banks.end() != itBank ; itBank++ ) {
-      if( L1Buffer::L0CaloID != (*itBank).bankSourceID() ) continue;
-      l1_int* ptData = (*itBank).data();
-      int length     = (*itBank).dataSize();
+      unsigned int* ptData = (*itBank)->data();
+      int length           = (*itBank)->size();
       while ( 0 < length ) {
-        int w1 = (*ptData++);
-        int w2 = (*ptData++) & 0xFFFF;
-        length -= 2;
-        int word = ( w1 << 16) | w2;
-        debug() << format( " L1 buffer cand %8x  w1%4x w2%4x", word, w1, w2);
-        int type = (w1 >>8) & 0xf;
-        if ( L0Calo::SpdMult == type ) {
-          debug() << " Spd Mult = " << w2;
-        } else if ( L0Calo::SumEt == type ) {
-          debug() << " Hcal SumEt = " << w2;
+        unsigned int word = *ptData++;
+        length--;
+        
+        debug() << format( " L0Calo cand %8x ", word );
+        int type = (word >>24) & 0xf;
+        if ( LHCb::L0Calo::SpdMult == type ) {
+          debug() << " Spd Mult = " << (word & 0xFFFF);
+        } else if ( LHCb::L0Calo::SumEt == type ) {
+          debug() << " Hcal SumEt = " << (word&0xFFFF);
         } else {
-          double et = w2&0xFF;
-          CaloCellID id( (word >> 8) & 0xFFFF );
+          double et = word&0xFF;
+          LHCb::CaloCellID id( (word >> 8) & 0xFFFF );
           debug() << " Type " << type << " ID " << id << " Et " << et;
         }
         debug() << endreq;

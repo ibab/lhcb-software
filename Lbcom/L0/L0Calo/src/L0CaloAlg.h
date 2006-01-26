@@ -1,10 +1,10 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.14 2005-12-02 14:58:23 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.15 2006-01-26 16:52:13 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
-
+#include "Kernel/Point3DTypes.h"
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
 
@@ -42,38 +42,38 @@ public:
   
   /** update the information on a candidate
    *  @param et Integer transverse energy
-   *  @param ID CaloCellID location of the candidate 
+   *  @param ID LHCb::CaloCellID location of the candidate 
    */
-  void        setCandidate( int et, CaloCellID ID ) ;
+  void        setCandidate( int et, LHCb::CaloCellID ID ) ;
 
   /** Save the candidate in the output container as L0CaloCandidate
    *  @param type : Type of candidate, from L0::L0Type
    *  @param L0Calo : Container of candidates, to which the current object
    *                  is added after being properly formatted.
    */
-  void  saveCandidate( int type, L0CaloCandidates* L0Calo ) {
+  void  saveCandidate( int type, LHCb::L0CaloCandidates* L0Calo ) {
     if ( 0 < m_et ) {
-      L0CaloCandidate* temp = new L0CaloCandidate ( type,
-                                                    m_ID,
-                                                    m_et,
-                                                    m_et * m_etScale,
-                                                    m_center,
-                                                    m_tol );
+      LHCb::L0CaloCandidate* temp = new LHCb::L0CaloCandidate ( type,
+                                                                m_ID,
+                                                                m_et,
+                                                                m_et * m_etScale,
+                                                                m_center,
+                                                                m_tol );
       L0Calo->add( temp );
     }
   }
-  int         et( )        const { return m_et     ; };
-  HepPoint3D  center( )    const { return m_center ; };
-  double      tolerance( ) const { return m_tol    ; };
-  CaloCellID  ID( )        const { return m_ID     ; };
+  int              et( )        const { return m_et     ; };
+  Gaudi::XYZPoint  center( )    const { return m_center ; };
+  double           tolerance( ) const { return m_tol    ; };
+  LHCb::CaloCellID ID( )        const { return m_ID     ; };
 
  private:
-  int            m_et     ;
-  double         m_etScale;
-  CaloCellID     m_ID     ;
-  DeCalorimeter* m_det    ;
-  HepPoint3D     m_center ;
-  double         m_tol    ;
+  int              m_et     ;
+  double           m_etScale;
+  LHCb::CaloCellID m_ID     ;
+  DeCalorimeter*   m_det    ;
+  Gaudi::XYZPoint  m_center ;
+  double           m_tol    ;
 };
 
 
@@ -107,12 +107,11 @@ protected:
   void addPrsData(  );  ///< process the Prs information
   void addSpdData(  );  ///< Produce the Spd data
 
-  void saveInRawBuffer( int, L0Candidate& ); ///< Save in RAW buffers
+  void saveInRawEvent( int, L0Candidate& ); ///< Save in Raw Event.
   
 private:
 
   std::string m_nameOfOutputDataContainer ;   ///< of the output container.
-  std::string m_nameOfGeometryRoot ;          ///< Name of Detector  e.g. /dd/structure/LHCb/
   double      m_etScale;
 
 // Local variables
@@ -134,7 +133,7 @@ private:
   // Validation
   int         m_nbValidation;
 
-  std::vector<raw_int> m_rawOutput; ///< RAW output bank
+  std::vector<unsigned int> m_rawOutput; ///< RAW output bank
 
   bool m_storeFlag;
 

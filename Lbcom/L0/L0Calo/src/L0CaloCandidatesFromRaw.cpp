@@ -1,9 +1,10 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.3 2004-03-30 15:35:27 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.4 2006-01-26 16:52:13 ocallot Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "Event/L0Calo.h"
 
 // local
 #include "L0CaloCandidatesFromRaw.h"
@@ -24,7 +25,7 @@ const        IAlgFactory& L0CaloCandidatesFromRawFactory = s_factory ;
 //=============================================================================
 L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   m_etScale = 20. * MeV;
 
@@ -39,29 +40,15 @@ L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::initialize() {
+ StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
+  debug() << "==> Initialize" << endmsg;
 
-  // Retrieve the ECAL detector element
+  // Retrieve the detector elements
 
-  SmartDataPtr<DeCalorimeter> detEcal( detSvc() ,"/dd/Structure/LHCb/Ecal" ) ;
-  if( 0 == detEcal ) {
-    msg << MSG::ERROR << "Unable to retrieve ECAL Detector Element " << endreq;
-    return StatusCode::FAILURE ;
-  }
-
-  m_ecal = (DeCalorimeter*) detEcal;
-
-  // Retrieve the HCAL detector element
-
-  SmartDataPtr<DeCalorimeter> detHcal( detSvc() , "/dd/Structure/LHCb/Hcal" );
-  if( 0 == detHcal ) {
-    msg << MSG::ERROR << "Unable to retrieve HCAL Detector Element " << endreq;
-    return StatusCode::FAILURE ;
-  }
-  m_hcal = (DeCalorimeter*) detHcal;
-
+  m_ecal = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal );
+  m_hcal = getDet<DeCalorimeter>(DeCalorimeterLocation::Hcal );
 
   return StatusCode::SUCCESS;
 };
@@ -71,74 +58,52 @@ StatusCode L0CaloCandidatesFromRaw::initialize() {
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
-  StatusCode sc;
- 
-  L0CaloCandidates* outFull = new L0CaloCandidates();
-  sc = eventSvc()->registerObject( L0CaloCandidateLocation::Full + m_extension,
-                                   outFull );
-  if( sc.isFailure() ) {
-    if( 0 != outFull ) { delete outFull; }
-    msg << MSG::ERROR << "Unable to register the output container="
-        <<  L0CaloCandidateLocation::Full + m_extension << endreq
-        << "Status is " << sc << endreq;
-    return sc ;
-  }
-  L0CaloCandidates* out = new L0CaloCandidates();
-  sc = eventSvc()->registerObject( L0CaloCandidateLocation::Default + 
-                                   m_extension, out );
-  if( sc.isFailure() ) {
-    if( 0 != out ) { delete out; }
-    msg << MSG::ERROR << "Unable to register the output container="
-        <<  L0CaloCandidateLocation::Default + m_extension << endreq
-        << "Status is " << sc << endreq;
-    return sc ;
-  }
- 
+  LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
+  put( outFull, LHCb::L0CaloCandidateLocation::Full + m_extension );
+  LHCb::L0CaloCandidates* out     = new LHCb::L0CaloCandidates();
+  put( out,     LHCb::L0CaloCandidateLocation::Default + m_extension );
 
-  SmartDataPtr<RawBuffer> buf ( eventSvc(), RawBufferLocation::Default );
-  RawEvent rawEvt( buf );
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
-  const std::vector<RawBank>& data = rawEvt.banks( RawBuffer::L0Calo );
-  std::vector<RawBank>::const_iterator itBnk;
+  const std::vector<LHCb::RawBank*>& data = rawEvt->banks( LHCb::RawBank::L0Calo );
+  std::vector<LHCb::RawBank*>::const_iterator itBnk;
 
-  HepPoint3D dummy( 0., 0., 0.);  
-  HepPoint3D center( 0., 0., 0.);  
-  L0CaloCandidate* myL0Cand;
-  std::vector<L0CaloCandidate*> bestCand;
+  Gaudi::XYZPoint dummy( 0., 0., 0.);  
+  Gaudi::XYZPoint center( 0., 0., 0.);  
+  LHCb::L0CaloCandidate* myL0Cand;
+  std::vector<LHCb::L0CaloCandidate*> bestCand;
   double tol;
   DeCalorimeter* det;
 
   for ( itBnk = data.begin() ; data.end() != itBnk ; itBnk++ ) {
-    raw_int* ptData = (*itBnk).data();
-    int bankSize = (*itBnk).dataSize();
+    unsigned int* ptData = (*itBnk)->data();
+    int bankSize = (*itBnk)->size();
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
       int type = cand>>24 & 0xFF;
       while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
 
-      msg << MSG::VERBOSE 
-          << format( "Data %8x Type %1d", cand, type ) << endreq;
+      verbose() << format( "Data %8x Type %1d", cand, type ) << endreq;
 
-      if ( L0Calo::SumEt == type ) {
+      if ( LHCb::L0Calo::SumEt == type ) {
         int sumEt = cand & 0xFFFFFF;
-        myL0Cand = new L0CaloCandidate ( L0Calo::SumEt, CaloCellID(), 
-                                         sumEt, sumEt * m_etScale, dummy, 0. );
+        myL0Cand = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SumEt, LHCb::CaloCellID(), 
+                                               sumEt, sumEt * m_etScale, dummy, 0. );
         outFull->add( myL0Cand );
         bestCand[type] = myL0Cand;
 
-     } else if ( L0Calo::SpdMult == type ) {
+     } else if ( LHCb::L0Calo::SpdMult == type ) {
         int mult = cand & 0xFFFFFF;
-        myL0Cand = new L0CaloCandidate ( L0Calo::SpdMult, CaloCellID(),
-                                         mult, 0., dummy, 0. );
+        myL0Cand = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SpdMult, LHCb::CaloCellID(),
+                                               mult, 0., dummy, 0. );
         outFull->add( myL0Cand );
         bestCand[type] = myL0Cand;
 
      } else {
        short rawId =  ( cand >>8 ) & 0xFFFF;
-       CaloCellID id ( rawId );
+       LHCb::CaloCellID id ( rawId );
        if ( 3 == id.calo() ) {
          det = m_hcal;
        } else {
@@ -147,18 +112,18 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
        if ( det->valid( id ) ) {
          center = det->cellCenter( id );
          tol    = det->cellSize( id ) * .5;
-         center.setX( center.x() + tol );
-         center.setY( center.y() + tol );
+         center.SetX( center.x() + tol );
+         center.SetY( center.y() + tol );
        } else {
-         CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
+         LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
          center = det->cellCenter( tmp );
          tol    = det->cellSize( tmp ) * .5;
-         center.setX( center.x() - tol );
-         center.setY( center.y() - tol );
+         center.SetX( center.x() - tol );
+         center.SetY( center.y() - tol );
        }
        int et = cand & 0xFF;
-       myL0Cand = new L0CaloCandidate ( type, id, et, et * m_etScale, 
-                                        center, tol );
+       myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, et * m_etScale, 
+                                              center, tol );
        outFull->add( myL0Cand );
        if ( 0 == bestCand[type] ) {
          bestCand[type] = myL0Cand;
@@ -173,13 +138,13 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
   for ( unsigned int type = 0 ; bestCand.size() > type ; type++ ) {
     if ( 0 != bestCand[type] ) {
-      L0CaloCandidate* cand = bestCand[type];
-      myL0Cand = new L0CaloCandidate ( cand->type(),
-                                       cand->id(),
-                                       cand->etCode(),
-                                       cand->et(),
-                                       cand->position(),
-                                       cand->posTol() );
+      LHCb::L0CaloCandidate* cand = bestCand[type];
+      myL0Cand = new LHCb::L0CaloCandidate ( cand->type(),
+                                             cand->id(),
+                                             cand->etCode(),
+                                             cand->et(),
+                                             cand->position(),
+                                             cand->posTol() );
       out->add( myL0Cand );
     }
   }
@@ -187,10 +152,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   
   if ( "" != m_extension ) {
     //== Compare 
-    SmartDataPtr<L0CaloCandidates> ref ( eventSvc(), 
-                                         L0CaloCandidateLocation::Full );
-    L0CaloCandidates::const_iterator itOld = ref->begin();
-    L0CaloCandidates::const_iterator itNew = outFull->begin();
+    LHCb::L0CaloCandidates* ref = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full );
+    LHCb::L0CaloCandidates::const_iterator itOld = ref->begin();
+    LHCb::L0CaloCandidates::const_iterator itNew = outFull->begin();
     while ( ref->end() != itOld && outFull->end() != itNew ) {
       if ( (*itOld)->type()     != (*itNew)->type()   ||
            //(*itOld)->id()       != (*itNew)->id()     ||
@@ -198,11 +162,11 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
            (*itOld)->et()       != (*itNew)->et()     ||
            (*itOld)->posTol()   != (*itNew)->posTol() ||
            (*itOld)->position() != (*itNew)->position() ) {
-        msg << MSG::INFO << "Error : old " << (*itOld) << endreq
-            << "        new " << (*itNew) << endreq;
+        info() << "Error : old " << (*itOld) << endreq
+               << "        new " << (*itNew) << endreq;
       } else {
-        msg << MSG::DEBUG << "Entry OK " << itNew-outFull->begin() 
-            << " type " << (*itNew)->type() << endreq;
+        debug() << "Entry OK " << itNew-outFull->begin() 
+                << " type " << (*itNew)->type() << endreq;
       }
       itOld++;
       itNew++;
@@ -216,11 +180,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::finalize() {
+  debug() << "==> Finalize" << endmsg;
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
-
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

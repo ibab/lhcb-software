@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.h,v 1.1 2003-12-15 14:42:33 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.h,v 1.2 2006-01-26 16:52:13 ocallot Exp $
 #ifndef L0CALOCANDIDATESFROMRAW_H 
 #define L0CALOCANDIDATESFROMRAW_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "CaloDet/DeCalorimeter.h"
 
@@ -20,7 +20,7 @@
  *  @author Olivier Callot
  *  @date   2003-12-15
  */
-class L0CaloCandidatesFromRaw : public Algorithm {
+class L0CaloCandidatesFromRaw : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   L0CaloCandidatesFromRaw( const std::string& name, ISvcLocator* pSvcLocator );

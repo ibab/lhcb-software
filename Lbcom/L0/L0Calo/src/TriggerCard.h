@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.4 2002-12-17 15:43:02 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.5 2006-01-26 16:52:13 ocallot Exp $
 
 #include <vector>
 
@@ -52,7 +52,7 @@ public:
   int rowMax() const { return m_rowMax; };  ///< row of the candidate
   
 /// returns the cel ID at the maximum Et.
-  CaloCellID cellIdMax() const { 
+  LHCb::CaloCellID cellIdMax() const { 
     return m_detElem->cardCellID( m_number, m_rowMax, m_colMax ); 
   };
   
