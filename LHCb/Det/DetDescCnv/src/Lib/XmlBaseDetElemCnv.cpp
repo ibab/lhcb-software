@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.11 2006-01-19 08:33:27 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.12 2006-01-26 10:42:30 marcocle Exp $
 
 // include files
 
@@ -445,10 +445,11 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       for (it = vect.begin();
            vect.end() != it;
            ++it) {
-        double dd = xmlSvc()->eval(*it, false);
         if ("int" == type) {
+          double dd = xmlSvc()->eval(*it, false);
           i_vect.push_back ((int)dd);
         } else if ("double" == type) {
+          double dd = xmlSvc()->eval(*it, false);
           d_vect.push_back (dd);
         }
       }

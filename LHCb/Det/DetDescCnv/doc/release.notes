@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2006-01-26 - Marco Clemencic
+ - Fixed a bug when converting a vector of strings from XML (it was trying
+   to "evaluate" each string of the vector)
+
 !================ DetDescCnv v3r0 2006-01-20 ==========================
 ! - *** Requires MathCore-5_06_02 or higher. ***
 

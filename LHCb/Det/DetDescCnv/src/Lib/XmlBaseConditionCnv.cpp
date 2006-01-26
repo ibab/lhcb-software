@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.8 2005-12-13 09:00:23 marcocle Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.9 2006-01-26 10:42:30 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -231,10 +231,11 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
       for (it = vect.begin();
            vect.end() != it;
            ++it) {
-        double dd = xmlSvc()->eval(*it, false);
         if ("int" == type) {
+          double dd = xmlSvc()->eval(*it, false);
           i_vect.push_back ((int)dd);
         } else if ("double" == type) {
+          double dd = xmlSvc()->eval(*it, false);
           d_vect.push_back (dd);
         }
       }
