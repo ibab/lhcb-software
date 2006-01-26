@@ -17,17 +17,19 @@
 #define visible(p,r,c) (r > 0 && r<=p->rows && c > 0 && c<=p->cols)
 
 #define min(a,b) (a<b?a:b)
-
+#ifdef _WIN32
 #define inverse()          scrc_putes("[7m", pb)
-//#define inverse()          scrc_putes("[41m", pb)
+#define underline()        scrc_putes("[4;30m", pb)
+#define bold()             scrc_putes("[1m", pb)
+#else
+#define inverse()          scrc_putes("[7m", pb)
+#define underline()        scrc_putes("[4;30m", pb)
+#define bold()             scrc_putes("[1m", pb)
+#endif
 #define normal()           scrc_putes("[27m", pb)
 #define clear_screen()     scrc_putes("[2J", pb)
-#define underline()        scrc_putes("[4;30m", pb)
-//#define underline()        scrc_putes("[1;30m", pb)
 #define flash()            scrc_putes("[5m", pb)
 #define plain()            scrc_putes("[0m", pb)
-#define bold()             scrc_putes("[1m", pb)
-//#define bold()             scrc_putes("[1;30m", pb)
 #define beep()             scrc_puti (BELL, pb)
 #define toascii()          scrc_putes("(B", pb)
 #define tographic()        scrc_putes("(0", pb)
