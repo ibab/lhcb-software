@@ -1,5 +1,6 @@
 
 #include "STDet/DeITStation.h"
+#include "STDet/DeITDetector.h"
 #include "STDet/DeITBox.h"
 
 /** @file DeITStation.cpp
@@ -43,7 +44,7 @@ StatusCode DeITStation::initialize() {
   }
   else {
     // get the children
-    //std::cout << "Matt " << this << std::endl;
+    m_parent = getParent<DeITStation>();
     m_boxes = getChildren<DeITStation>(); 
   }
   return sc;

@@ -46,6 +46,8 @@ StatusCode DeTTHalfModule::initialize() {
   MsgStream msg(msgSvc(), name() );
 
   StatusCode sc = DeSTBaseElement::initialize();
+
+  
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
@@ -55,15 +57,16 @@ StatusCode DeTTHalfModule::initialize() {
     m_position = param<std::string>("top_bottom");
     m_column = param<int>("column");
 
-    m_sectors = getChildren<DeTTHalfModule>();   
-    m_sectors.size() == 3u ? m_type = "KLM": m_type = "KL";
-
+   
+   
+    m_parent = getParent<DeTTHalfModule>();
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
     setElementID(chan);
-
+    m_sectors = getChildren<DeTTHalfModule>();   
+    m_sectors.size() == 3u ? m_type = "KLM": m_type = "KL";
   }
-
+ 
   return StatusCode::SUCCESS;
 }
 

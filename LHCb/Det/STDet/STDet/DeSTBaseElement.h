@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.2 2006-01-18 17:03:46 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.3 2006-01-26 09:54:29 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -8,6 +8,7 @@
 #include "STDet/STDetTraits.h"
 #include "Kernel/STChannelID.h"
 #include "DetDesc/DetectorElement.h"
+#include "GaudiKernel/GaudiException.h"
 
 class DeSTBaseElement : public DetectorElement  {
 
@@ -81,7 +82,14 @@ inline Gaudi::XYZPoint DeSTBaseElement::toGlobal(const Gaudi::XYZPoint& point) c
 
 template <typename TYPE>
 inline typename STDetTraits<TYPE>::parent* DeSTBaseElement::getParent() const{
-  return dynamic_cast<typename STDetTraits<TYPE>::parent*>(this->parentIDetectorElement());
+
+  typedef typename STDetTraits<TYPE>::parent parentType;
+  parentType* parent = dynamic_cast<parentType*>(this->parentIDetectorElement());
+  if (parent == 0) {
+    throw GaudiException ("Orphaned detector element", "DeSTBaseElement", 
+                           StatusCode::FAILURE);
+  }
+  return parent;
 }
 
 inline LHCb::STChannelID DeSTBaseElement::elementID() const{
@@ -102,6 +110,11 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
     cType* aChild = dynamic_cast<cType*>(*iChild);
     if (aChild !=0) childVector.push_back(aChild);
   } // iStation
+
+  if (childVector.empty()) {
+    throw GaudiException ("Sterile detector element", "DeSTBaseElement", 
+                           StatusCode::FAILURE);
+  }
 
   return childVector;
 }

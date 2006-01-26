@@ -49,13 +49,11 @@ StatusCode DeTTLayer::initialize() {
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
-    m_modules = getChildren<DeTTLayer>();
     m_parent = getParent<DeTTLayer>();
-
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(parentID.station(), id(), 0, 0, 0);
     setElementID(chan);
-    
+    m_modules = getChildren<DeTTLayer>();
   }
   return sc;
 }

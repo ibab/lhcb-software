@@ -1,4 +1,4 @@
-// $Id: DeITLayer.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeITLayer.h,v 1.2 2006-01-26 09:54:29 mneedham Exp $
 #ifndef _DeITLayer_H_
 #define _DeITLayer_H_
 
@@ -56,11 +56,11 @@ public:
 
   /**  locate half module based on a channel id
   @return  module */
-  DeITSector* findSector(const LHCb::STChannelID aChannel);     
+  DeITLadder* findLadder(const LHCb::STChannelID aChannel);     
 
   /** locate half module  based on a point  
   @return module */
-  DeITSector* findSector(const Gaudi::XYZPoint& point) ;  
+  DeITLadder* findLadder(const Gaudi::XYZPoint& point) ;  
 
   /** check whether contains 
   *  @param channel
@@ -69,18 +69,18 @@ public:
   bool contains(const LHCb::STChannelID aChannel) const; 
 
   /** vector of children */
-  const DeITLayer::Children& sectors() const;
+  const DeITLayer::Children& ladders() const;
 
 private:
   
-   Children m_sectors;
+   Children m_ladders;
    parent_type* m_parent;   
 
 };
 
 
 #include "STDet/DeITBox.h"
-#include "STDet/DeITSector.h"
+#include "STDet/DeITLadder.h"
 
 
 inline bool DeITLayer::contains(const LHCb::STChannelID aChannel) const{
@@ -88,8 +88,8 @@ inline bool DeITLayer::contains(const LHCb::STChannelID aChannel) const{
          (m_parent->contains(aChannel))); 
 }
 
-inline const DeITLayer::Children& DeITLayer::sectors() const{
-  return m_sectors;
+inline const DeITLayer::Children& DeITLayer::ladders() const{
+  return m_ladders;
 }
 
 

@@ -2,7 +2,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
 #include "DetDesc/IGeometryInfo.h"
-
+#include "STDet/DeTTStation.h"
 //STL
 #include <algorithm>
 
@@ -10,6 +10,9 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 
+
+#include <iostream>
+#include <typeinfo>
 
 using namespace boost::lambda;
 using namespace LHCb;
@@ -47,10 +50,19 @@ StatusCode DeSTDetector::initialize() {
     IDetectorElement::IDEContainer::const_iterator iStation;
     for (iStation = this->childBegin(); this->childEnd() != iStation; ++iStation ) {
       DeSTStation* tStation = dynamic_cast<DeSTStation*>(*iStation);
-      m_stations.push_back(tStation);
-      std::cout << "Child " << tStation->name()  << std::endl;
+      if (tStation != 0) { 
+        m_stations.push_back(tStation); 
+      }
     } // iStation
-    setFirstStation(m_stations.front()->id());
+
+    if (!m_stations.empty()) { 
+     setFirstStation(m_stations.front()->id());
+    }
+    else {
+      // no stations - this is an error
+      msg <<   MSG::ERROR << "No child elements !" << endreq;
+      sc = StatusCode::FAILURE; 
+    } // empty
   }
   return sc;
 }

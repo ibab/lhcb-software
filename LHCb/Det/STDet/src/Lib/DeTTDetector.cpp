@@ -43,8 +43,10 @@ StatusCode DeTTDetector::initialize() {
   else {
     // make a flat list of sectors
     flatten();
-    setPitch(m_sectors.front()->pitch());
-    setNstrip(m_sectors.front()->nStrip());
+    if (!m_sectors.empty()) {
+     setPitch(m_sectors.front()->pitch());
+     setNstrip(m_sectors.front()->nStrip());
+    }
   }
   return sc;
 

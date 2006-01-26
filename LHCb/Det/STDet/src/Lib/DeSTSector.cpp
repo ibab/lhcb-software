@@ -77,10 +77,10 @@ StatusCode DeSTSector::initialize() {
     m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
     m_type = param<std::string>("type");
+    unsigned int nSensors = param<int>("nSensors");
 
     // guard ring
-    double vGuard = param<double>("verticalGuardRing");
-    m_deadWidth = 0.5*vGuard;
+    double m_deadWidth = param<double>("verticalGuardRing");  
 
     // geometry: uMin, uMax
     const ILVolume* lv = this->geometry()->lvolume();
@@ -89,13 +89,10 @@ StatusCode DeSTSector::initialize() {
     m_uMinLocal = -m_uMaxLocal;
 
     // and vMin, vMax
-    m_vMaxLocal = 0.5*(mainBox->ysize() -  vGuard);
+    m_vMaxLocal = 0.5*(mainBox->ysize() - m_deadWidth);
     m_vMinLocal = -m_vMaxLocal;
 
-    // get the name
-    std::string detName = name();
-    unsigned char nSensors = (unsigned char)detName[detName.size()-1u];
-
+ 
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
       double vDead = m_vMinLocal - m_deadWidth + (height*(double)iSensor);

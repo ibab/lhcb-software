@@ -48,12 +48,12 @@ StatusCode DeTTStation::initialize() {
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
-   // get the children 
-   
-   m_layers = getChildren<DeTTStation>();
-
+  
    // and the parent
    m_parent = getParent<parent_type>();
+
+   // get the children 
+   m_layers = getChildren<DeTTStation>();
 
   }
   return sc;

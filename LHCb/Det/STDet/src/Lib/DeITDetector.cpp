@@ -5,6 +5,7 @@
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
 #include "STDet/DeITSector.h"
+#include "STDet/DeITLadder.h"
 
 /** @file DeITDetector.cpp
 *
@@ -57,7 +58,10 @@ DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
     if (0 != aBox){
       DeITLayer* aLayer = aBox->findLayer(aPoint);
       if (0 != aLayer){
-        aSector = aLayer->findSector(aPoint);
+        DeITLadder* aLadder = aLayer->findLadder(aPoint);
+        if (0 != aLadder){
+          if (aLadder->isInside(aPoint) == true) aSector=aLadder->sector();
+	}
       } // module   
     } // layer
   }   // station
@@ -74,7 +78,7 @@ DeSTSector* DeITDetector::findSector(const STChannelID aChannel){
     if (0 != aBox){
       DeITLayer* aLayer = aBox->findLayer(aChannel);
       if (0 != aLayer){
-        aSector = aLayer->findSector(aChannel);
+        aSector = aLayer->findLadder(aChannel)->sector();
       } // module   
     } // layer
   }   // station
@@ -93,9 +97,9 @@ void DeITDetector::flatten(){
       for (;iterLayer != tBox->layers().end(); ++iterLayer){
         DeITLayer* tLayer = *iterLayer;
         m_layers.push_back(tLayer);
-        DeITLayer::Children::const_iterator iterSector = tLayer->sectors().begin();
-        for ( ; iterSector !=  tLayer->sectors().end() ; ++iterSector ){
-          DeSTSector* tSector = *iterSector;
+        DeITLayer::Children::const_iterator iterLadder = tLayer->ladders().begin();
+        for ( ; iterLadder !=  tLayer->ladders().end() ; ++iterLadder ){
+          DeSTSector* tSector = (*iterLadder)->sector();
           m_sectors.push_back(tSector);  
 	} //sectors     
       } // half module

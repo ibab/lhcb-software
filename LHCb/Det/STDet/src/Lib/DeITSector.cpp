@@ -11,7 +11,8 @@
 using namespace LHCb;
 
 DeITSector::DeITSector( const std::string& name ) :
-  DeSTSector( name )
+  DeSTSector( name ),
+  m_parent(0)
 { 
   // constructer
 }
@@ -38,13 +39,11 @@ StatusCode DeITSector::initialize() {
     // get the parent
     m_parent = getParent<DeITSector>();
 
-    // build the id
-    unsigned int tid = param<int>("sectorID");
-    setID(tid);
     STChannelID parentID = m_parent->elementID();
-    STChannelID chan(parentID.station(),parentID.layer(), 
-                     parentID.detRegion(),  id(), 0);
-    setElementID(chan);
+    setElementID(parentID);
+
+    // build the id
+    setID(parentID.sector());
 
   }
   return StatusCode::SUCCESS;

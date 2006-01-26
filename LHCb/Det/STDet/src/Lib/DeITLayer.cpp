@@ -1,6 +1,6 @@
 
 #include "STDet/DeITLayer.h"
-#include "STDet/DeITSector.h"
+#include "STDet/DeITLadder.h"
 #include "STDet/DeITBox.h"
 
 /** @file DeITLayer.cpp
@@ -42,28 +42,28 @@ StatusCode DeITLayer::initialize() {
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
-    m_sectors = getChildren<DeITLayer>();
     m_parent = getParent<DeITLayer>();
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(parentID.station(), id(), parentID.detRegion(), 0, 0);
     setElementID(chan);
+    m_ladders = getChildren<DeITLayer>();
   }
 
   return sc;
 }
 
-DeITSector* DeITLayer::findSector(const STChannelID aChannel){
+DeITLadder* DeITLayer::findLadder(const STChannelID aChannel){
 
   // return pointer to the station from channel
-  Children::iterator iter = std::find_if(m_sectors.begin() , m_sectors.end(), bind(&DeSTSector::contains, _1, aChannel));
-  return (iter != m_sectors.end() ? *iter: 0);
+  Children::iterator iter = std::find_if(m_ladders.begin() , m_ladders.end(), bind(&DeITLadder::contains, _1, aChannel));
+  return (iter != m_ladders.end() ? *iter: 0);
 }
 
-DeITSector* DeITLayer::findSector(const Gaudi::XYZPoint& point) {
+DeITLadder* DeITLayer::findLadder(const Gaudi::XYZPoint& point) {
 
   // find the half module 
-  Children::iterator iter = std::find_if(m_sectors.begin(), m_sectors.end(), bind(&DeSTSector::isInside, _1, point)); 
-  return (iter != m_sectors.end() ? *iter: 0);
+  Children::iterator iter = std::find_if(m_ladders.begin(), m_ladders.end(), bind(&DeITLadder::isInside, _1, point)); 
+  return (iter != m_ladders.end() ? *iter: 0);
 }
 
 

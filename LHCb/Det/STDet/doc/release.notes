@@ -2,6 +2,12 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+2006-01-26 M. Needham
+  - check child is correct type in DeSTDetector
+  - Better error handling: check really can find children/parent in 
+    DeSTBaseElement.h
+  - order intialize methods so that children got last  
+
 ! 2006-01-18 M. Needham
   - check that child is of the correct type
                                                                                

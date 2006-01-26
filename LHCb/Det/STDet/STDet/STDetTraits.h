@@ -1,4 +1,4 @@
-// $Id: STDetTraits.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: STDetTraits.h,v 1.2 2006-01-26 09:54:29 mneedham Exp $
 
 #ifndef _STDetTraits_H
 #define _STDetTraits_H
@@ -20,6 +20,7 @@ class DeTTLayer;
 class DeTTHalfModule;
 class DeTTSector;
 class DeITSector;
+class DeITLadder;
 
 template <typename TYPE>
 class STDetTraits {
@@ -60,9 +61,15 @@ template<>
 class STDetTraits<DeITLayer>{
  public:
   typedef DeITBox parent;
-  typedef DeITSector child;
+  typedef DeITLadder child;
 };
 
+template<>
+class STDetTraits<DeITLadder>{
+ public:
+  typedef DeITLadder parent;
+  typedef DeITSector child;
+};
 
 template<>
 class STDetTraits<DeTTHalfModule>{
@@ -70,7 +77,6 @@ class STDetTraits<DeTTHalfModule>{
   typedef DeTTLayer parent;
   typedef DeTTSector child;
 };
-
 
 template<>
 class STDetTraits<DeTTSector>{
@@ -83,7 +89,7 @@ class STDetTraits<DeTTSector>{
 template<>
 class STDetTraits<DeITSector>{
  public:
-  typedef DeITLayer parent;
+  typedef DeITLadder parent;
   typedef DeITSector child;
 };
 
