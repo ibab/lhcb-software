@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.32 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVelo.h,v 1.33 2006-01-26 17:05:50 krinnert Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -107,24 +107,24 @@ public:
   /// return the index of the sensor (assumes sensors are stored 
   unsigned int sensorIndex(unsigned int sensor) const;
 
-  /// Return copy of vector of pointers to all sensors sorted by increasing z
-  inline std::vector<DeVeloSensor*> vpSensors() const {
+  /// Return vector of pointers to all sensors sorted by increasing z
+  inline const std::vector<DeVeloSensor*>& vpSensors() const {
     return m_vpSensor;
   }
 
-  /// Return copy vector of pointers to the R sensors sorted by increasing z
-  inline std::vector<DeVeloRType*> vpRSensors() const {
+  /// Return vector of pointers to the R sensors sorted by increasing z
+  inline const std::vector<DeVeloRType*>& vpRSensors() const {
     return m_vpRSensor;
   }
   
-  /// Return copy of vector of pointers to the Phi sensors 
+  /// Return vector of pointers to the Phi sensors 
   /// sorted by increasing z
-  inline std::vector<DeVeloPhiType*> vpPhiSensors() const {
+  inline const std::vector<DeVeloPhiType*>& vpPhiSensors() const {
     return m_vpPhiSensor;
   }
   
   /// Return vector of pointers to the Pile Up sensors sorted by increasing z
-  inline std::vector<DeVeloRType*> vpPileUpSensors() const {
+  inline const std::vector<DeVeloRType*>& vpPileUpSensors() const {
     return m_vpPUSensor;
   }
   

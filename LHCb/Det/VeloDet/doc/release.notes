@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.91 2006-01-26 15:54:14 krinnert Exp $
+! $Id: release.notes,v 1.92 2006-01-26 17:05:50 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-01-26 - Kurt Rinnert
+ - All methods returning containers by value were changed to return
+   const references instead.  This alway faster and prevents
+   CPU intensive misuse.  
+   Change is completely transparent to client code.
+ - minor cosmetics
 
 ! 2006-01-26 - Kurt Rinnert
  - DeVeloSensor::associatedSensors() now returns a const reference

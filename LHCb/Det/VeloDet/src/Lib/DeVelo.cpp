@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.56 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.57 2006-01-26 17:05:50 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -79,12 +79,12 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
-  unsigned int nextR=this->param<int>("FirstR");
-  unsigned int nextPhi=this->param<int>("FirstPhi");
-  unsigned int nextPileUp=this->param<int>("FirstPileUp");
+  unsigned int nextR=param<int>("FirstR");
+  unsigned int nextPhi=param<int>("FirstPhi");
+  unsigned int nextPileUp=param<int>("FirstPileUp");
 
   // get all of the pointers to the child detector elements
-  std::vector<DeVeloSensor*> veloSensors = this->findVeloSensors();
+  std::vector<DeVeloSensor*> veloSensors = findVeloSensors();
   
   msg << MSG::DEBUG << "Found " << veloSensors.size() 
       << " sensors in the XML" << endreq;
@@ -170,7 +170,7 @@ StatusCode DeVelo::initialize() {
         << " is type " << m_vpSensor[iSensor]->fullType() 
         << " at global z = " << m_vpSensor[iSensor]->z()
         << " and in VELO frame " 
-        << this->geometry()->toLocal(Gaudi::XYZPoint(0,
+        << geometry()->toLocal(Gaudi::XYZPoint(0,
                                                 0,
                                                 m_vpSensor[iSensor]->z())).z()
         << endreq;
@@ -209,7 +209,7 @@ unsigned int DeVelo::sensorNumber(const Gaudi::XYZPoint& point) const {
   double z = point.z();
   for(unsigned int index=0;numberSensors()>index;index++){
     if(0.250*mm > fabs(z - m_sensorZ[index])) {
-      return this->sensorNumber(index);
+      return sensorNumber(index);
     }
   }
   MsgStream msg(msgSvc(), "DeVelo");
@@ -256,8 +256,8 @@ StatusCode DeVelo::pointToChannel(const Gaudi::XYZPoint &point,
                                   LHCb::VeloChannelID &channel,
                                   double &localOffset,
                                   double &pitch) const {
-  unsigned int sensor = this->sensorNumber(point);
-  return this->pointToChannel(point,sensor,channel,localOffset,pitch);
+  unsigned int sensor = sensorNumber(point);
+  return pointToChannel(point,sensor,channel,localOffset,pitch);
 }
 
 // pointToChannel if sensor known (global frame)
@@ -266,7 +266,7 @@ StatusCode DeVelo::pointToChannel(const Gaudi::XYZPoint &point,
                                   LHCb::VeloChannelID &channel,
                                   double &localOffset,
                                   double &pitch) const {
-  unsigned int index=this->sensorIndex(sensor);
+  unsigned int index=sensorIndex(sensor);
   return m_vpSensor[index]->pointToChannel(point,channel,localOffset,pitch);
 }
 
@@ -283,7 +283,7 @@ StatusCode  DeVelo::residual(const Gaudi::XYZPoint &point,
                              const LHCb::VeloChannelID &channel,
                              double &residual,
                              double &chi2) const {
-  unsigned int index=this->sensorIndex(channel.sensor());
+  unsigned int index=sensorIndex(channel.sensor());
   return m_vpSensor[index]->residual(point,channel,residual,chi2);
 }
 
@@ -452,7 +452,7 @@ double DeVelo::rPitchAtLocalR( LHCb::VeloChannelID channel, double radius) const
 
 // returns the local phi of the strip at the specified radius for this sensor.
 double DeVelo::phiOfStrip( LHCb::VeloChannelID channel, double radius) const {
-  return this->phiOfStrip(channel,0.,radius);
+  return phiOfStrip(channel,0.,radius);
 }
 
 // returns the local phi of the strip +fractional distance to strip
@@ -576,7 +576,7 @@ double DeVelo::rMax(unsigned int sensor, unsigned int zone) const {
 
 // Smallest Phi (local frame) of the r strips in the zone
 double DeVelo::phiMin(unsigned int sensor, unsigned int zone) const{
-  if(this->isRSensor(sensor)){
+  if(isRSensor(sensor)){
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     return rPtr->phiMinZone(zone);
@@ -590,7 +590,7 @@ double DeVelo::phiMin(unsigned int sensor, unsigned int zone) const{
 
 // Largest Phi (local frame) of the R strips in the zone
 double DeVelo::phiMax(unsigned int sensor, unsigned int zone) const{
-  if(this->isRSensor(sensor)){
+  if(isRSensor(sensor)){
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     return rPtr->phiMaxZone(zone);
@@ -606,7 +606,7 @@ double DeVelo::phiMax(unsigned int sensor, unsigned int zone) const{
 double DeVelo::phiMin(unsigned int sensor, 
                       unsigned int zone, 
                       double radius) const {
-  if(this->isRSensor(sensor)){
+  if(isRSensor(sensor)){
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     return rPtr->phiMinZone(zone,radius);
@@ -622,7 +622,7 @@ double DeVelo::phiMin(unsigned int sensor,
 double DeVelo::phiMax(unsigned int sensor, 
                       unsigned int zone,
                       double radius) const {
-  if(this->isRSensor(sensor)){
+  if(isRSensor(sensor)){
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     return rPtr->phiMaxZone(zone,radius);
@@ -661,7 +661,7 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor,
                                  double& phiMax )  const {
   z = zSensor(sensor);
   LHCb::VeloChannelID channel(sensor,strip);
-  if(this->isRSensor(sensor) || this->isPileUpSensor(sensor)){    
+  if(isRSensor(sensor) || isPileUpSensor(sensor)){    
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     StatusCode sc=rPtr->stripLimits(strip,radius,phiMin,phiMax);
@@ -747,8 +747,8 @@ StatusCode DeVelo::makeSpacePoint( LHCb::VeloChannelID rChan,
   if(outerRadius+tolPhiBoundary < rAtPhi) return StatusCode::FAILURE;
 
   // Coherence in the Phi detector region, with some tolerance
-  double phiBoundRadius=this->rMin(phiSensor,0);
-  unsigned int nbPhiInner=this->stripsInZone(phiSensor,0);
+  double phiBoundRadius=rMin(phiSensor,0);
+  unsigned int nbPhiInner=stripsInZone(phiSensor,0);
   if(phiBoundRadius+tolPhiBoundary < rAtPhi) {
     if(nbPhiInner > phiChan.strip()) {
       return false;
@@ -759,7 +759,7 @@ StatusCode DeVelo::makeSpacePoint( LHCb::VeloChannelID rChan,
     }
   }
   double phiLocal = phiOfStrip(phiChan, phiFrac, rAtPhi);
-  if(this->isDownstreamSensor(phiSensor)) phiLocal = -phiLocal;
+  if(isDownstreamSensor(phiSensor)) phiLocal = -phiLocal;
   // Test for R compatibility
   double phiMin = phiLocal + 0.02;    // Tolerance for tests
   double phiMax = phiLocal - 0.02;    // tolerance for tests
@@ -914,7 +914,7 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
 
 // returns the phi of the strip at the specified radius for this sensor.
 double DeVelo::trgPhiOfStrip( LHCb::VeloChannelID channel,double radius ) const {
-  return this->trgPhiOfStrip(channel,0.,radius);
+  return trgPhiOfStrip(channel,0.,radius);
 }
 
 // returns the local phi of the strip +fractional distance to strip
@@ -995,7 +995,7 @@ void DeVelo::recalculateZs()
     m_sensorZ.push_back(z);
     msg << MSG::DEBUG << "Sensor number " << (*iDeVeloSensor)->sensorNumber() 
         << " is at z = " << z << "mm"
-        << " sensVolID " << (this->sensitiveVolumeID(Gaudi::XYZPoint(0,0,z)))
+        << " sensVolID " << (sensitiveVolumeID(Gaudi::XYZPoint(0,0,z)))
         << " vector size is " << m_sensorZ.size()
         << " with last entry " << m_sensorZ.back()
         << endmsg;
