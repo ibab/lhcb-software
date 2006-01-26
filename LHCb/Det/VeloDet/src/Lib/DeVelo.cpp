@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.55 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.56 2006-01-26 14:58:43 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -16,6 +16,9 @@
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+
+#include "DetDesc/Condition.h"
 
 // Local
 #include "VeloDet/DeVelo.h"
@@ -26,15 +29,17 @@
  *
  *  @author David Hutchcroft David.Hutchcroft@cern.ch
  *  @author Mark Tobin Mark.Tobin@cern.ch
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  */
 
 
 // **  Standard Constructors
 
-DeVelo::DeVelo( const std::string& name )
-  :  DetectorElement     ( name       )
+DeVelo::DeVelo( const std::string& name ) :  
+  DetectorElement(name),
+  m_tell1ToSensorsConditionName("TELL1ToSensors")
 {
-  
+  ; 
 } 
 
 //
@@ -235,6 +240,12 @@ unsigned int DeVelo::sensorIndex(unsigned int sensor) const
   if(64 > sensor) return m_RIndex[sensor];
   else if(128 > sensor) return m_PhiIndex[sensor-64];
   else return m_PUIndex[sensor-128];
+}
+
+// return pointer to sensor
+const DeVeloSensor* DeVelo::sensor(unsigned int sensorNumber) const
+{
+  return m_vpSensor[sensorIndex(sensorNumber)];
 }
 
 // Gives the VeloChannelID and offset (in fraction of a pitch width) 
@@ -1007,3 +1018,71 @@ void DeVelo::recalculateZ(unsigned int sensor)
   m_vpSensor[index]->cacheGeometry();
   m_sensorZ[index]=m_vpSensor[index]->z();
 }
+
+//=========================================================================
+// members related to condition caching   
+//=========================================================================
+
+const DeVeloSensor* DeVelo::sensorByTell1Id(unsigned int tell1Id) const
+{
+  std::map<unsigned int, const DeVeloSensor*>::const_iterator mi;
+
+  mi =  m_sensorByTell1Id.find(tell1Id);
+
+  if (m_sensorByTell1Id.end() == mi) return 0;
+
+  return (*mi).second;
+}
+
+StatusCode DeVelo::registerConditionCallBacks() 
+{
+  StatusCode sc; 
+  MsgStream msg(msgSvc(), "DeVelo");
+
+  // TELL1 to sensor mapping condition
+  updMgrSvc()->registerCondition(this,
+                                 condition(m_tell1ToSensorsConditionName.c_str()).path(),
+                                 &DeVelo::updateTell1ToSensorsCondition);
+  
+  sc = updMgrSvc()->update(this);
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR 
+        << "Failed to update VELO conditions!"
+        << endreq;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVelo::updateTell1ToSensorsCondition()
+{
+  m_tell1ToSensorsCondition = condition(m_tell1ToSensorsConditionName.c_str());
+  const std::vector<int>& tell1Ids 
+    = m_tell1ToSensorsCondition->paramAsIntVect("Tell1Id");
+  const std::vector<int>& sensorNumbers 
+    = m_tell1ToSensorsCondition->paramAsIntVect("SensorId");
+  
+  m_sensorByTell1Id.clear();
+
+  std::vector<int>::const_iterator i = tell1Ids.begin();
+  std::vector<int>::const_iterator j = sensorNumbers.begin();
+
+  for (; i != tell1Ids.end() && j != sensorNumbers.end(); ++i, ++j) {
+    unsigned int tell1Id      = static_cast<unsigned int>(*i);
+    unsigned int sensorNumber = static_cast<unsigned int>(*j);
+
+    m_sensorByTell1Id[tell1Id] = sensor(sensorNumber);
+  }
+
+  if (i != tell1Ids.end() || j != sensorNumbers.end()) {
+    MsgStream msg(msgSvc(), "DeVelo");
+    msg << MSG::ERROR 
+        << "Number of TELL1 and sensor IDs do not match!"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
+}
+

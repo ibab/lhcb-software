@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.89 2005-12-14 16:38:44 cattanem Exp $
+! $Id: release.notes,v 1.90 2006-01-26 14:58:43 krinnert Exp $
 package VeloDet
 package manager : Velo Group
 
+! 2006-01-26 - Kurt Rinnert
+ - Added caching of conditions for DeVelo and DeVeloSensor, this includes
+   * data members holding the cache
+	 * interface to the cache
+	 * call back functions for update service
+	 * helper code for converting DB entries into cache 
+   These changes are backwards incompatible. XmlDDDB >= v30r0,
+   XmlConditions > v1r4 and geometry > v200511 are required (at the time 
+   of this writing no release with all the requirements was integrated yet)
+ - The DeVeloSensor::stripCapacitance() method is no longer purely virtual. 
+   The implementation in the derived classes was removed and  DeVeloSensor 
+	 now implements the method as an interface to the condition cache.
+ 
 !========================= VeloDet v10r0 2005-12-14 ========================
 ! 2005-12-14 - Mark Tobin
  - Removed all dependencies on CLHEP.

@@ -1,8 +1,11 @@
-// $Id: DeVeloSensor.h,v 1.11 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.12 2006-01-26 14:58:43 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
 // Include files
+#include <algorithm>
+#include <bitset>
+
 // from Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/PhysicalConstants.h"
@@ -23,6 +26,7 @@ static const CLID& CLID_DeVeloSensor = 1008101 ;
  *  
  *
  *  @author Mark Tobin
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  *  @date   2003-01-14
  */
 class DeVeloSensor : public DetectorElement {
@@ -70,9 +74,6 @@ public:
                               const double width,
                               double &residual,
                               double &chi2) const = 0;
-  
-  /// The capacitance of the strip 
-  virtual double stripCapacitance(unsigned int strip) const = 0;
   
   /// The zones number for a given strip
   //  virtual unsigned int zoneOfStrip(const LHCb::VeloChannelID& channel)=0;
@@ -223,6 +224,131 @@ public:
     return (chipChan<m_numberOfStrips && OKStrip(ChipChannelToStrip(chipChan)));
   };
 
+  // condition related forwar daclarations
+
+  class StripInfo;
+
+  // condition related protected types
+
+protected:
+  /** @class DeVeloSensor::ConvertIntToStripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
+   *
+   *  Conversion Functor 
+   *
+   *  Converts integer from CondDB to the type used in the strip info
+   *  condition cache.
+   *
+   *  @author Kurt Rinnert
+   *  @date   2006-01-18
+   */
+  struct ConvertIntToStripInfo : public std::unary_function<int, StripInfo>
+  {
+    StripInfo operator() (int i);
+  };
+
+  // condition related public types
+
+public:
+  /** @class DeVeloSensor::StripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
+   *
+   *  encodes strip information 
+   *
+   *  The internal bit encoding is as follows.
+   *
+   *  bit 0: 0 if strip is read out, 1 if not;
+   *  bit 1: 0 if strip is bonded, 1 if not;
+   *  bit 2: 1 if strip is bonded with next strip, 0 if not;
+   *  bit 3: 1 if strip is bonded with previous strip, 0 if not
+   *
+   *  @author Kurt Rinnert
+   *  @date   2006-01-18
+   */
+  class StripInfo
+  {
+  public:
+    StripInfo() : m_info(0x3) { ; }
+
+  private:
+    enum { 
+      NOT_READ_OUT         = 0,
+      NOT_BONDED           = 1,
+      BONDED_WITH_NEXT     = 2,
+      BONDED_WITH_PREVIOUS = 3
+    };
+
+  public:
+    bool stripIsReadOut() const { return !m_info[NOT_READ_OUT]; }
+    bool stripIsBonded() const { return !m_info[NOT_BONDED]; }
+    bool stripIsBondedWithNext() const { return m_info[BONDED_WITH_NEXT]; }
+    bool stripIsBondedWithPrevious() const { return m_info[BONDED_WITH_PREVIOUS]; }
+
+    int asInt() const;
+
+  private:
+    std::bitset<4> m_info; 
+
+  private:
+    friend class DeVeloSensor::ConvertIntToStripInfo;
+  };
+
+  // condition related public methods
+
+public:
+  /** Check whether this sensor is read out at all (cached condition).
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   */
+  bool isReadOut() const { return m_isReadOut; }
+
+  /** The capacitance of a strip (cached condition).
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   */
+  double stripCapacitance(unsigned int strip) const;
+  
+  /** Get info for this strip (cached condition).
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   *  @see StripInfo
+   */
+  StripInfo stripInfo(unsigned int strip) const;
+
+  /// call back function for strip capacitance condition update
+  StatusCode updateStripCapacitanceCondition();
+
+  /// call back function for strip info condition update
+  StatusCode updateStripInfoCondition();
+
+  /// call back function for readout condition update
+  StatusCode updateReadoutCondition();
+
+  /** direct access to strip capacitance condition.  
+   *  This is for expert/testing purposes only.  All production 
+   *  client code should use the interface to the cached conditions.  
+   */
+  const Condition* stripCapacitanceCondition() const { return m_stripCapacitanceCondition; }
+
+  /** direct access to strip info condition.  
+   *  This is for expert/testing purposes only.  All production 
+   *  client code should use the interface to the cached conditions.  
+   */
+  const Condition* stripInfoCondition() const { return m_stripInfoCondition; }
+
+  /** direct access to sensor readout condition.  
+   *  This is for expert/testing purposes only.  All production 
+   *  client code should use the interface to the cached conditions.  
+   */
+  const Condition* readoutCondition() const { return m_readoutCondition; }
+
+  // condition related private methods
+
+private:
+  /** registers condition call backs
+   *  This has only to be done once.  Method is called once
+   *  from initialize().
+   */
+  StatusCode registerConditionCallBacks();
+
 protected:
 
   unsigned int m_numberOfZones;
@@ -234,7 +360,7 @@ protected:
 private:
 
   void initSensor();
-  
+
   static const unsigned int m_numberOfStrips=2048;
   std::string m_type;
   std::string m_fullType;
@@ -253,5 +379,18 @@ private:
   std::map<unsigned int,bool> m_badStrips;//<Map of all known bad strips
 
   IGeometryInfo* m_geometry;
+
+  // condition cache
+  std::string m_stripCapacitanceConditionName;
+  std::string m_stripInfoConditionName;
+  std::string m_readoutConditionName;
+  
+  const Condition* m_stripCapacitanceCondition;
+  const Condition* m_stripInfoCondition;
+  const Condition* m_readoutCondition;
+
+  std::vector<double> m_stripCapacitance;
+  std::vector<StripInfo> m_stripInfos;
+  bool m_isReadOut;
 };
 #endif // VELODET_DEVELOSENSOR_H

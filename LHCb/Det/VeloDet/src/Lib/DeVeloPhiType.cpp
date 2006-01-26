@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.17 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.18 2006-01-26 14:58:43 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -26,6 +26,7 @@
  *  Implementation of class : DeVeloPhiType
  *
  *  @author Mark Tobin  Mark.Tobin@cern.ch
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  */
 
 //==============================================================================
@@ -469,14 +470,6 @@ double DeVeloPhiType::rMax(const unsigned int zone) const
     rMax = this->outerRadius();
   }
   return rMax;
-}
-//==============================================================================
-/// Return the capacitance of the strip
-//==============================================================================
-double DeVeloPhiType::stripCapacitance(unsigned int /*strip*/) const
-{
-  double C=0.0;
-  return C;
 }
 //=============================================================================
 // Build map of strips to routing line and back

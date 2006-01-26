@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.9 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.10 2006-01-26 14:58:43 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -22,6 +22,7 @@ static const CLID& CLID_DeVeloRType = 1008102 ;
  *  
  *
  *  @author Mark Tobin
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  *  @date   2003-01-14
  */
 class DeVeloRType : public DeVeloSensor {
@@ -65,8 +66,6 @@ public:
                       const double width,
                       double &residual,
                       double &chi2) const;
-  /// The capacitance of the strip 
-  double stripCapacitance(unsigned int strip) const;
   
   /// The number of zones in the detector
   //  inline unsigned int numberOfZones(){return m_numberOfZones;}

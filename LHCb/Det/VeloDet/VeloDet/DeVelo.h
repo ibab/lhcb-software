@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.31 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVelo.h,v 1.32 2006-01-26 14:58:43 krinnert Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -16,6 +16,7 @@
  *
  *  @author David Hutchcroft David.Hutchcroft@cern.ch
  *  @author Mark Tobin Mark.Tobin@cern.ch
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  *  @date 22/4/2003
  */
 
@@ -424,6 +425,37 @@ public:
   /// returns the angle of the strip+frac. distance to strip wrt the x axis 
   double trgPhiDirectionOfStrip( LHCb::VeloChannelID channel, 
                                  double fraction=0. ) const;
+
+  /// give access to sensor for given sensor number
+  const DeVeloSensor* sensor(unsigned int sensorNumber) const;
+
+  // public condition related methods 
+
+  /** The sensor for a given TELL1 Id (cached condition).
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   */
+  const DeVeloSensor* sensorByTell1Id(unsigned int tell1Id) const;
+
+  /// call back function for TELL1 to sensor mapping update
+  StatusCode updateTell1ToSensorsCondition();
+
+  /** direct access to TELL1 map condition.  
+   *  This is for expert/testing purposes only.  All production 
+   *  client code should use the interface to the cached conditions.  
+   */
+  const Condition* tell1ToSensorsCondition() const { return m_tell1ToSensorsCondition; }
+
+   // private condition related methods 
+
+private:
+  /** registers condition call backs
+   *  This has only to be done once.  Method is called once
+   *  from initialize().
+   */
+  StatusCode registerConditionCallBacks();
+
+
   ///========================================================================
 protected: 
 
@@ -488,6 +520,14 @@ private:
   double m_zVertex;
 
   std::map<unsigned int,bool> m_validSensors;//< Map of all valid sensors
+
+  // condition caching
+
+  std::string m_tell1ToSensorsConditionName;
+
+  const Condition* m_tell1ToSensorsCondition;
+
+  std::map<unsigned int, const DeVeloSensor*> m_sensorByTell1Id;
 };
 
 // ============================================================================

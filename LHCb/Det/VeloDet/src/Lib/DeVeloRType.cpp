@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.18 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.19 2006-01-26 14:58:43 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -25,6 +25,7 @@
  *  Implementation of class : DeVeloRType
  *
  *  @author Mark Tobin  Mark.Tobin@cern.ch
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  */
 
 //==============================================================================
@@ -377,14 +378,6 @@ void DeVeloRType::phiZoneLimits()
   m_phiMax.push_back(0);
   m_phiMax.push_back(m_quarterAngle);
   m_phiMax.push_back(phi);
-}
-//==============================================================================
-/// Return the capacitance of the strip
-//==============================================================================
-double DeVeloRType::stripCapacitance(unsigned int /*strip*/) const
-{
-  double C=0.0;
-  return C;
 }
 //==============================================================================
 /// Build up routing line map

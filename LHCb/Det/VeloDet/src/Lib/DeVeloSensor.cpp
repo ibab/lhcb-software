@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.13 2005-12-14 15:28:31 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.14 2006-01-26 14:58:43 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -10,6 +10,9 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+
+#include "DetDesc/Condition.h"
 
 // From Velo 
 #include "VeloDet/DeVeloSensor.h"
@@ -19,14 +22,21 @@
  *  Implementation of class : DeVeloSensor
  *
  *  @author Mark Tobin  Mark.Tobin@cern.ch
+ *  @author Kurt Rinnert kurt.rinnert@cern.ch
  */
 
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloSensor::DeVeloSensor(const std::string& name) : DetectorElement(name){
-  //DeVeloSensor::DeVeloSensor(const std::string& name) : DeVelo(name){
+DeVeloSensor::DeVeloSensor(const std::string& name) : 
+  DetectorElement(name),
+  m_stripCapacitanceConditionName("StripCapacitance"),
+  m_stripInfoConditionName("StripInfo"),
+  m_readoutConditionName("Readout"),
+  m_isReadOut(true)
 
+{
+  ;
 }
 //==============================================================================
 /// Destructor
@@ -167,4 +177,127 @@ void DeVeloSensor::initSensor()
 
   m_xSide = (m_isLeft) ? 1 : -1;
 
+}
+
+//=========================================================================
+// non-inlined condition cache accessors    
+//=========================================================================
+
+double DeVeloSensor::stripCapacitance(unsigned int strip) const
+{
+  if (strip < m_stripCapacitance.size()) {
+    return m_stripCapacitance[strip];
+  } else {
+    return 0.0;
+  }
+}
+
+DeVeloSensor::StripInfo DeVeloSensor::stripInfo(unsigned int strip) const
+{
+  // Defaults to not read out and not bonded if there is no such strip.
+  // This behaviour is handled by the StripInfo default constructor.
+  if (strip >=  m_stripInfos.size()) return DeVeloSensor::StripInfo();
+
+  return m_stripInfos[strip];
+}
+
+//=========================================================================
+// members related to condition caching   
+//=========================================================================
+
+StatusCode DeVeloSensor::registerConditionCallBacks() {
+
+  StatusCode sc;
+  MsgStream msg(msgSvc(), "DeVeloSensor");
+
+  // strip capacitance condition
+  updMgrSvc()->registerCondition(this,
+                                 condition(m_stripCapacitanceConditionName.c_str()).path(),
+                                 &DeVeloSensor::updateStripCapacitanceCondition);
+  
+  // strip info condition 
+  updMgrSvc()->registerCondition(this,
+                                 condition(m_stripInfoConditionName.c_str()).path(),
+                                 &DeVeloSensor::updateStripInfoCondition);
+  
+  // readout flag condition
+  updMgrSvc()->registerCondition(this,
+                                 condition(m_readoutConditionName.c_str()).path(),
+                                 &DeVeloSensor::updateReadoutCondition);
+
+  sc = updMgrSvc()->update(this);
+  if(!sc.isSuccess()) {
+    msg << MSG::ERROR 
+        << "Failed to update sensor conditions!"
+        << endreq;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloSensor::updateStripCapacitanceCondition () {
+
+  m_stripCapacitanceCondition = condition(m_stripCapacitanceConditionName.c_str());
+  m_stripCapacitance = m_stripCapacitanceCondition->paramAsDoubleVect("StripCapacitance");
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloSensor::updateStripInfoCondition () {
+
+  m_stripInfoCondition = condition(m_stripInfoConditionName.c_str());
+  const std::vector<int>& tmpStripInfos 
+    = m_stripInfoCondition->paramAsIntVect("StripInfo");
+  m_stripInfos.clear();
+  m_stripInfos.resize(tmpStripInfos.size());
+  std::transform(tmpStripInfos.begin(),tmpStripInfos.end(),
+                 m_stripInfos.begin(),
+                 ConvertIntToStripInfo());
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeVeloSensor::updateReadoutCondition () {
+
+  m_readoutCondition = condition(m_readoutConditionName.c_str());
+  m_isReadOut = 
+    static_cast<bool>(m_readoutCondition->paramAsInt("ReadoutFlag"));
+
+  return StatusCode::SUCCESS;
+}
+
+DeVeloSensor::StripInfo DeVeloSensor::ConvertIntToStripInfo::operator() (int i) {
+
+  DeVeloSensor::StripInfo stripInfo;
+  
+  stripInfo.m_info.set(DeVeloSensor::StripInfo::NOT_READ_OUT,
+                       (1 << DeVeloSensor::StripInfo::NOT_READ_OUT) & i);
+
+  stripInfo.m_info.set(DeVeloSensor::StripInfo::NOT_BONDED,
+                       (1 << DeVeloSensor::StripInfo::NOT_BONDED) & i);
+
+  stripInfo.m_info.set(DeVeloSensor::StripInfo::BONDED_WITH_NEXT,
+                       (1 << DeVeloSensor::StripInfo::BONDED_WITH_NEXT) & i);
+
+  stripInfo.m_info.set(DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS,
+                       (1 << DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS) & i);
+
+  return stripInfo;
+}
+
+int DeVeloSensor::StripInfo::asInt() const
+{
+  int i=0;
+
+  if (m_info[DeVeloSensor::StripInfo::NOT_READ_OUT]) 
+    i |= (1 << DeVeloSensor::StripInfo::NOT_READ_OUT);
+  if (m_info[DeVeloSensor::StripInfo::NOT_BONDED]) 
+    i |= (1 << DeVeloSensor::StripInfo::NOT_BONDED);
+  if (m_info[DeVeloSensor::StripInfo::BONDED_WITH_NEXT]) 
+    i |= (1 << DeVeloSensor::StripInfo::BONDED_WITH_NEXT);
+  if (m_info[DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS]) 
+    i |= (1 << DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS);
+
+  return i;
 }
