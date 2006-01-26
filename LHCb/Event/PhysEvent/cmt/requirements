@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.54 2006-01-17 16:28:56 cattanem Exp $
+# $Id: requirements,v 1.55 2006-01-26 15:23:04 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -35,7 +35,6 @@ library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 #============================================================================
 apply_pattern component_library library=PhysEventDict
 apply_pattern linker_library    library=PhysEvent
-macro_append PhysEvent_linkopts "" WIN32 "/include:_PhysEvent_loadRef"
 
 private
 use GaudiObjDesc v* -no_auto_imports
