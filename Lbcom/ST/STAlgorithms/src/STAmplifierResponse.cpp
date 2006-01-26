@@ -1,4 +1,4 @@
-// $Id: STAmplifierResponse.cpp,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STAmplifierResponse.cpp,v 1.2 2006-01-26 10:25:16 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,7 @@ STAmplifierResponse::STAmplifierResponse(const std::string& type,
 
   declareProperty("type", m_type = "signal");
   declareProperty("vfs", m_vfs  = 400);
-  declareProperty("",m_capacitance  = 18 * picofarad);
+  declareProperty("capacitance",m_capacitance  = 18 * picofarad);
   
   // need a line here to get the interface correct !!!!
   declareInterface<ISTAmplifierResponse>(this); 
@@ -45,6 +45,9 @@ StatusCode STAmplifierResponse::initialize(){
     return Error("Failed to initialize", sc);
   }
 
+  if ((m_times.size() == 0) || (m_times.size() != m_values.size())){
+    return Error(" no or inconsistant data !", StatusCode::FAILURE);
+  }
   m_tMin = m_times.front();
   m_tMax = m_times.back();
   m_responseSpline = new GSLSpline(m_times,m_values);

@@ -1,6 +1,10 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
+! 2006-01-26 M.Needham
+  - Correct initialization of MCSTDepositCreator
+  - Add some protection in STAmplifierResponse and STChargeSharingTool
+     -> have to find some data to init spline with ! 
 
 !======================= STAlgorithms v1r0 2006-01-06 ==========================
 ! 2006-01-10 - Marco Cattaneo

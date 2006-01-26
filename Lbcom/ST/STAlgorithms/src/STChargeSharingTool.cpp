@@ -34,7 +34,11 @@ StatusCode STChargeSharingTool::initialize(){
     return Error("Failed to initialize", sc);
   }
 
+
   unsigned int nBin = m_sharingFunction.size();
+  if (nBin == 0){
+    return Error("no charge sharing data !" + name(), StatusCode::FAILURE);
+  } 
 
   // bin centers
   m_binCenters.reserve(nBin);  

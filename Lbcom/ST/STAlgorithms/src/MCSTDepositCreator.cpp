@@ -98,12 +98,8 @@ StatusCode MCSTDepositCreator::initialize() {
   // make beetle response functions
   std::vector<std::string>::const_iterator iterType = m_beetleResponseTypes.begin();
   for (; iterType != m_beetleResponseTypes.end() ; ++iterType){
-    std::string nameSignal = "response"+(*iterType)+STAmpliferResponseType::signal;
-    ISTAmplifierResponse* aResponseSig  = tool<ISTAmplifierResponse>("STAmplifierResponse",nameSignal,this);
-    m_AmplifierResponse.push_back(aResponseSig);
-    std::string nameCC = "response"+(*iterType)+STAmpliferResponseType::capCoupling;
-    ISTAmplifierResponse* aResponseCC  = tool<ISTAmplifierResponse>("STAmplifierResponse",nameCC,this);
-    m_AmplifierResponse.push_back(aResponseCC);
+    std::string name = "response"+(*iterType);
+    ISTAmplifierResponse* aResponse = tool<ISTAmplifierResponse>("STAmplifierResponse",name,this);
   }
 
   // construct container names once
