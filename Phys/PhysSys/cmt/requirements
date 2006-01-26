@@ -5,20 +5,14 @@ branches doc cmt
 
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
-use  DaVinciKernel      	v4r0   Phys
-use  VertexFit			v2r0   Phys
-use  DaVinciFilter      	v4r0   Phys
-use  DaVinciTools       	v13r0  Phys
-use  DaVinciTransporter 	v3r0   Phys
-use  ParticleMaker      	v2r0   Phys
+####################################################################
+use  PhysCoreSys      	v2r0   Phys
+#===================================================================
 
-# use  CommonParticles    	v1r5p3   Phys
-# use  DaVinciFilter      	v3r1     Phys
-# use  DaVinciKernel      	v4r0   Phys
-# use  DaVinciTools       	v12r1    Phys
-# use  FlavourTagging     	v6r2     Phys
-# use  KaliCalo            	v1r0     Phys
-# use  Ks2PiPiSel         	v1r7     Phys
-# use  PhysSelections		v6r12    Phys
-# use  DaVinciTransporter 	v2r0p3   Phys
-# use  Tampering                  v1r1p1   Phys
+####################################################################
+use  PhysMCSys      	v2r0   Phys
+#===================================================================
+
+####################################################################
+use  PhysSelSys      	v9r0   PhysSel
+#===================================================================
