@@ -52,7 +52,7 @@ public:
 protected:
 
 private:
-  std::map<int, std::string> m_cat; // temp object, should be defined in IBackgroundCategroy
+  std::map<int, std::string> m_cat; // temp object, should be defined in IBackgroundCategory
   
   StatusCode increment_stats(IBackgroundCategory::categories);
   StatusCode print_stats();

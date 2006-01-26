@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.92 2006-01-24 18:14:58 gligorov Exp $
+! $Id: release.notes,v 1.93 2006-01-26 16:26:05 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-01-26 - Luis Fernandez
+ - src/PrintBackgroundCategory.cpp
+   . Rename string categories according to IBackgroundCategory changes.
+     Warning: a change of the enum in IBackgroundCategory should also be translated 
+     to the strings used by the category map in the PrintBackgroundCategory constructor.
 
 ! 2006-1-23 - V. Gligorov
   - src/BackgroundCategory.cpp

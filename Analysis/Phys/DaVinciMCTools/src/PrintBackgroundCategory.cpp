@@ -41,7 +41,9 @@ PrintBackgroundCategory::PrintBackgroundCategory( const std::string& name,
   , m_candidates(0)
   , m_flipResult(false)
 {
-  // temp. should be defined into the IBackgroundCategory tool.
+  // WARNING!
+  // temp. should be defined in the BackgroundCategory tool.
+  // In the mean time, every change in IBackgroundCategory enum should be made here as well
   m_cat[-1]   = "Undefined";
   m_cat[0]    = "Signal";
   m_cat[10]   = "QuasiSignal";
@@ -50,9 +52,8 @@ PrintBackgroundCategory::PrintBackgroundCategory( const std::string& name,
   m_cat[40]   = "PartRecoPhysBkg";
   m_cat[50]   = "LowMassBkg";
   m_cat[60]   = "Ghost";
-  m_cat[70]   = "FromSameNonRecoPV";
-  m_cat[80]   = "FromSamePV";
-  m_cat[90]   = "FromDifferentNonRecoPV";
+  m_cat[70]   = "FromPV";
+  m_cat[80]   = "AllFromSamePV";
   m_cat[100]  = "FromDifferentPV";
   m_cat[110]  = "bbar";
   m_cat[120]  = "ccbar";
