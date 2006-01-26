@@ -1,0 +1,27 @@
+! $Id: release.notes,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiMC
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : MC-related part of restructurized LoKi project
+! -----------------------------------------------------------------------------
+! 
+!   This file is a part of LoKi project - 
+!     "C++ ToolKit  for Smart and Friendly Physics Analysis"
+! 
+!   The package has been designed with the kind help from
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+!   contributions and advices from G.Raven, J.van Tilburg, 
+!   A.Golutvin, P.Koppenburg have been used in the design.
+!
+! -----------------------------------------------------------------------------
+
+! 2006-01-24 - Vanya BELYAEV  
+ - New import: the basic functors and cuts for MCParticles/MCVertices 
+
+! -----------------------------------------------------------------------------
+! $Log: not supported by cvs2svn $ 
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
