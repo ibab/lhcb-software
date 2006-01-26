@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.14 2005-12-20 10:24:29 mneedham Exp $ 
+! $Id: release.notes,v 1.15 2006-01-26 13:29:38 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -9,10 +9,10 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
-! 2005-12-20 M. Needham
- - Load DetDescCnv dll
+!======================= DetDescChecks v3r0 2006-01-26 =========================
+! 2006-01-26 - Marco Cattaneo
+ - Migrate to envelope volumes and XmlDDDB v30r0
 
-!======================= DetDescChecks v3r0 2005-12-07 =========================
 ! 2005-12-07 - Marco Cattaneo
  - Migrate to MathCore
 

@@ -1,8 +1,6 @@
 #include "$STDOPTS/DetDesc.opts"
 
-ApplicationMgr.DLLs   -= { "DetDescSvc" };
 ApplicationMgr.DLLs   += { "DetDescChecks" };
-ApplicationMgr.DLLs   += { "DetDescCnv" };
 ApplicationMgr.DLLs   += { "RootHistCnv"};
 
 ApplicationMgr.HistogramPersistency = "ROOT";
@@ -12,7 +10,7 @@ HistogramPersistencySvc.OutputFile = "histo.root";
 ApplicationMgr.EvtSel     = "NONE" ;
 ApplicationMgr.EvtMax     = 1 ;
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 
 MessageSvc.OutputLevel = 3;
 
@@ -33,24 +31,27 @@ VolumeCheckAlg.ShotsZX    = 10000;
 
 
 // Choose a master volume to scan.
-// N.B. Some volumes are very slow (Ecal, Hcal, Muon, Prs in this order)
-//VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Velo2Rich1/lvVelo2Rich1";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
-VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
-//VolumeCheckAlg.Volume = "/dd/Geometry/IT/lvITVolume";
-//VolumeCheckAlg.Volume = "/dd/Geometry/OT/lvOT";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Spd/Installation/Spd";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/Converter";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/Installation/Prs";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Ecal/Installation/Ecal";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Hcal/Installation/lvHcal";
+// N.B. Some volumes are very slow (Ecal, Hcal, Muon, Prs, IT)
+//VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo/lvVelo";
+VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo2Rich1/lvVelo2Rich1";
+//VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Master";
+//VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/TT/lvTT";
+//VolumeCheckAlg.Volume = "/dd/Geometry/MagnetRegion/Magnet/Magnet";
+//VolumeCheckAlg.Volume = "/dd/Geometry/AfterMagnetRegion/T/IT/lvIT";
+//VolumeCheckAlg.Volume = "/dd/Geometry/AfterMagnetRegion/T/OT/lvOT";
+//VolumeCheckAlg.Volume = "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Master";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Spd/Installation/Spd";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Prs/Converter";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Prs/Installation/Prs";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
 
 /// Next one scans all the above...
 //VolumeCheckAlg.Volume = "/dd/Geometry/LHCb/lvLHCb";
+
+// Following volumes not yet migrated to new structure, no longer accessible
+//VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
 
 
 ////////////////////////////////////////////////////////////////////
