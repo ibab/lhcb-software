@@ -11,6 +11,8 @@
       desc        = 'Track is the base class for offline and online tracks.'
       id          = '10010'
       location    = 'Rec/Track/Best'
+      keyedContTypeDef = "TRUE"
+      stdVectorTypeDef = "TRUE"
       serializers = 'FALSE'>
 
       <location name="Ideal"   place="Rec/Track/Ideal"/>

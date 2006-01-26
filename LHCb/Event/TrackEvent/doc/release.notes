@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-01-26
+ - Add typedefs
+
 !========================= TrackEvent v2r0 2006-01-25 ========================
 ! 2006-01-13 - Eduardo Rodrigues
  - re-corrected "bug fix" in error on p calculation

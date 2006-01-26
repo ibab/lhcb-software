@@ -12,6 +12,7 @@
       id               = '10011'
       location         = 'Rec/Track/States'
       serializers      = 'FALSE'
+      stdVectorTypeDef = "TRUE"
       keyedContTypeDef = 'TRUE'>
 
 
