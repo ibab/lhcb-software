@@ -1,16 +1,18 @@
 #include <cstdio>
 #include "SCR/scr.h"
-#ifndef _WIN32
-#include <termios.h> 
+
+#ifdef _WIN32
+#elif __linux
+#include "termios.h"
 static struct termios neu, alt; 
-#endif
+#endif 
 
 void scrc_resetANSI()   {
 #define plain()            fputs("\033[0m",stdout)
-#define toascii()          fputs("\033(B",stdout)
+#define changetoascii()    fputs("\033(B",stdout)
   int fd = fileno(stdin); 
   fflush (stdout);
-  toascii();
+  changetoascii();
   plain ();				/* all attribytes off */
   fflush (stdout);
   fprintf (stdout, "\033>");

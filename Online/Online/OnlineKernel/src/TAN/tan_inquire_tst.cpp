@@ -67,12 +67,12 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);
           status = tan_get_address_by_name (buff,&addr);
           num_inq++;
-	  if ( status == AMS_SUCCESS ) {
+          if ( status == AMS_SUCCESS ) {
             _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
               num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
               inet_ntoa(addr.sin_addr) );
           }
-	  else {
+          else {
             nalias++;
             _PRINTERROR(buff,status);
           }
@@ -80,15 +80,15 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
         sprintf(buff,"%s::MYTASK_%02d",host,i);
         status = tan_get_address_by_name (buff,&addr);
         num_inq++;
-	if ( status == AMS_SUCCESS ) {
-	  _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
-		  num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
-		  inet_ntoa(addr.sin_addr) );
-	}
-	else {
-	  nalias++;
-	  _PRINTERROR(buff,status);
-	}
+        if ( status == AMS_SUCCESS ) {
+          _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
+            num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
+            inet_ntoa(addr.sin_addr) );
+        }
+        else {
+          nalias++;
+          _PRINTERROR(buff,status);
+        }
         if ( !continuous ) return 0x1;   // Just stop if non continuous
       }
     }

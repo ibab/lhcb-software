@@ -10,5 +10,6 @@ public:
   int add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param);
   int remove(NetworkChannel::Channel c);
   static int getAvailBytes(int fd);
+  static int getChar(int fd, char* c);
 };
 #endif // ONLINEKERNEL_NET_IOPORTMANAGER_H

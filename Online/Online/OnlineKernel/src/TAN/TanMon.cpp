@@ -42,15 +42,15 @@ extern "C" int tanmon( int argc, char* argv[])   {
     if (*(c = *++argv) == '-') {
       switch (*++c | 0x20)   {
       case 'c':
-	continuous = 1;
-	break;
+        continuous = 1;
+        break;
       case '?':
       default:
-	puts ("Syntax: tanmon [<-opt>]");
-	puts ("Function: tan monitor");
-	puts ("Options:");
-	puts ("    -c                    Continuous mode");
-	return lib_rtl_default_return();
+        puts ("Syntax: tanmon [<-opt>]");
+        puts ("Function: tan monitor");
+        puts ("Options:");
+        puts ("    -c                    Continuous mode");
+        return lib_rtl_default_return();
       }
     }
   }

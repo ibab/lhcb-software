@@ -6,10 +6,11 @@
 #include <cstring>
 #include "SCR/scr.h"
 
-enum {	SEQUENTIAL,
-	DETACHED,
-	ICONIFIED,
-	SCREENS
+enum {
+  SEQUENTIAL,
+  DETACHED,
+  ICONIFIED,
+  SCREENS
 };
  
 typedef struct WINDOW_SYSTEM Window_system;

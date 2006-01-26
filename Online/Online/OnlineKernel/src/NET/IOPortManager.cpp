@@ -10,6 +10,73 @@
 
 #elif _WIN32
 #include <conio.h>
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
+#include <process.h>
+
+extern "C" int console_read_test(int, char**)  {
+  HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
+  DWORD cNumRead, fdwMode, fdwSaveOldMode; 
+  INPUT_RECORD irInBuf; 
+  if (! GetConsoleMode(hStdin, &fdwSaveOldMode) ) 
+    printf("GetConsoleMode"); 
+
+  // Enable the window and mouse input events. 
+  fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT; 
+  if (! SetConsoleMode(hStdin, fdwMode) ) 
+    printf("SetConsoleMode"); 
+  while (1) {
+    // Wait for the events. 
+    if (! ReadConsoleInput( 
+      hStdin,      // input buffer handle 
+      &irInBuf,     // buffer to read into 
+      1,         // size of read buffer 
+      &cNumRead) ) // number of records read 
+      printf("ReadConsoleInput"); 
+    switch(irInBuf.EventType) 
+    { 
+    case KEY_EVENT: // keyboard input 
+      printf("KEY_EVENT\n");
+      break; 
+
+    case MOUSE_EVENT: // mouse input 
+      printf("MOUSE_EVENT\n");
+      break; 
+
+    case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing 
+      printf("WINDOW_BUFFER_SIZE_EVENT\n");
+      break; 
+
+    case FOCUS_EVENT:  // disregard focus events 
+      printf("FOCUS_EVENT\n");
+
+    case MENU_EVENT:   // disregard menu events 
+      printf("MENU_EVENT\n");
+      break; 
+
+    default: 
+      printf("unknown event type"); 
+      break; 
+    } 
+  }
+}
+
+extern "C" int console_read_test2(int, char**)  {
+  char c=0;
+  printf( "do not forget to execute: 'stty -icanon -echo'" );
+  fflush(stdout);
+  int fd = fileno(stdin);
+  printf("Get console IO...type q to quit\n\n\n");
+  fflush(stdout);
+  while(c!='q') {
+    read(fd,&c,1);
+    printf("Got char:%02X\n",c);
+    fflush(stdout);
+  }
+  printf( "do not forget to execute: 'stty icanon echo'" );
+  return 1;
+}
 #endif
 
 namespace {
@@ -17,6 +84,7 @@ namespace {
     int type;
     int (*callback)(void*);
     void* param;
+    int armed;
   };
 
   class EntryMap : public std::map<__NetworkChannel__,PortEntry*> {
@@ -34,21 +102,24 @@ namespace {
   int EntryMap::threadCall(void* param)  {
     return ((EntryMap*)param)->handle();
   }
+  int s_fdPipe[2], s_fdPipeBytes=0;
   int EntryMap::consoleCall(void* param)  {
     EntryMap* m = (EntryMap*)param;
-    int ch;
-    while(1)  {
-      lib_rtl_sleep(10);
+    char ch;
 #ifdef _WIN32
-      ch = getch();
-      ungetch(ch);
+    int status = _pipe(s_fdPipe,1024,O_BINARY);
 #endif
+    while(1)  {
+      ::read(fileno(stdin),&ch,1);
+      write(s_fdPipe[1],&ch,1);
+      s_fdPipeBytes++;
       //printf("Wait for hit...\n");
       if ( ch == -1 ) continue;
       // printf("Got hit:%02X !!\n",ch);
       for(iterator i=m->begin(); i != m->end(); ++i)  {
         PortEntry* e = (*i).second;
-        if ( e )  {
+        if ( e && e->armed )  {
+          e->armed = 0;
           if ( e->callback ) (*e->callback)(e->param);
         }
       }
@@ -92,9 +163,9 @@ namespace {
               int t = e->type, nb = IOPortManager::getAvailBytes(fd);
               // ::printf("got read request: %d bytes!\n",nb);
               if ( e->callback )   {
-		if ( !(nb==0 && fd == fileno(stdin)) )
-		  (*e->callback)(e->param);
-	      }
+                if ( !(nb==0 && fd == fileno(stdin)) )
+                  (*e->callback)(e->param);
+                }
               if ( t == 1 && nb <= 0 )  {
                 k = find(fd);
                 if ( k != end() )  {
@@ -141,8 +212,19 @@ static inline PortMap& portMap()  {
   static PortMap s_map;
   return s_map;
 }
+int IOPortManager::getChar(int fd, char* c)  {
+  if ( fd == fileno(stdin) )  {
+    fd = s_fdPipe[0];
+    if ( 1 == ::read(fd,c,1) ) s_fdPipeBytes--;
+    return 1;
+  }
+  return ::read(fd,c,1);
+}
 
 int IOPortManager::getAvailBytes(int fd)  {
+#ifdef _WIN32
+  return s_fdPipeBytes;
+#else
   unsigned long ret;
   if (ioctlsocket(fd, FIONREAD, &ret) != -1)
     return int(ret);
@@ -151,6 +233,7 @@ int IOPortManager::getAvailBytes(int fd)  {
       return -1;
     return 0;
   }
+#endif
 }
 
 int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param)  {
@@ -166,6 +249,7 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
   }
   e->callback = callback;
   e->param = param;
+  e->armed = 1;
   e->type = typ;
   return em->run();
 }

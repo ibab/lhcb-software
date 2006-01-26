@@ -26,17 +26,14 @@
 //#define underline()        scrc_putes("[1;30m", pb)
 #define flash()            scrc_putes("[5m", pb)
 #define plain()            scrc_putes("[0m", pb)
-//#define bold()             scrc_putes("[1m", pb)
-#define bold()             scrc_putes("[1;30m", pb)
+#define bold()             scrc_putes("[1m", pb)
+//#define bold()             scrc_putes("[1;30m", pb)
 #define beep()             scrc_puti (BELL, pb)
 #define toascii()          scrc_putes("(B", pb)
 #define tographic()        scrc_putes("(0", pb)
 #define tosupp()           scrc_putes("(<", pb)
 #define touser()           scrc_putes("(>", pb)
-#define setfonts()         { scrc_putes("(B", pb);\
-  scrc_putes(")0", pb);\
-  scrc_putes("*<", pb);\
-  scrc_putes("+>", pb); }
+#define setfonts()         { scrc_putes("(B", pb);scrc_putes(")0", pb);scrc_putes("*<", pb);scrc_putes("+>", pb); }
 #define narrow_screen()    scrc_putes("[?3l", pb)
 #define wide_screen()      scrc_putes("[?3h", pb)
 #define cursor_on()        scrc_putes("[?25h", pb)
@@ -79,9 +76,9 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
     struct winsize wns;
     do {
       if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
-	pb->rows = wns.ws_row;
-	pb->cols = wns.ws_col;
-	break;
+        pb->rows = wns.ws_row;
+        pb->cols = wns.ws_col;
+        break;
       }
     } while (errno == EINTR);   
   } 

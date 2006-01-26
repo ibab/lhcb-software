@@ -93,21 +93,16 @@ void list_transfer_entry (Link* _entry, Linked_list* _list,
 {
   Linked_list* list;
   /* syntax check */
-
-  if (_before)
-  {
-  	if (_list != _before->father) return;
-  	if (_before == _entry) return;
+  if (_before)  {
+    if (_list != _before->father) return;
+    if (_before == _entry) return;
   }
-  if (_after)
-  {
-  	if (_list != _after->father) return;
-  	if (_after == _entry) return;
+  if (_after)  {
+    if (_list != _after->father) return;
+    if (_after == _entry) return;
   }
-  if (_before && _after)
-  {
-  	if (_before->next != _after ||
-  	    _before != _after->prev) return;
+  if (_before && _after)  {
+    if (_before->next != _after || _before != _after->prev) return;
   }
 
   list_disconnect_entry (_entry);
@@ -133,23 +128,16 @@ void list_transfer_entry (Link* _entry, Linked_list* _list,
 
 
 /*---------------------------------------------------------------------------*/
-void list_transfer (Linked_list* _from, Linked_list* _to)
-/*---------------------------------------------------------------------------*/
-{
-  Link* l;
-  
-  l = _from->first;
-  if (l)
-  {
-  	if (_to->first) return;
-  	
-    while (l)
-    {
+void list_transfer (Linked_list* _from, Linked_list* _to) {
+  Link* l = _from->first;
+  if (l)  {
+    if (_to->first) return;
+    while (l)    {
       l->father = _to;
       l = l->next;
     }
-  	*_to = *_from;
-  	_from->first = _from->last = (Link*) 0;
+    *_to = *_from;
+    _from->first = _from->last = (Link*) 0;
   }
 }
 

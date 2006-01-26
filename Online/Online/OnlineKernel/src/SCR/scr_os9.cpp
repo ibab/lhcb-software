@@ -48,8 +48,8 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   _ss_ssig(0,Insignal);
 #else 
   typedef int (*_F)(void*);
-  //IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
-  IOPortManager(0).add(0, fileno(stdin), (_F)scrc_handler_keyboard, 0);
+  IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
+  //IOPortManager(0).add(0, fileno(stdin), (_F)scrc_handler_keyboard, 0);
 #endif
   return WT_SUCCESS;
 }
@@ -57,16 +57,12 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
 //----------------------------------------------------------------------------
 int scrc_ast_keyboard (void*)   {
   if (scr_ignore_input == 0)  {
-	      printf("KeyboardAST ... INSERT WT_FACILITY_SCR.\n");
     wtc_insert (WT_FACILITY_KEYBOARD);
     if (User_ast) (* User_ast) ();
   }
-  return 1;
+  return WT_SUCCESS;
 }
 
-int rd_getch();
-int keyboard_buffer_len();
-#include "RTL/rtl.h"
 //----------------------------------------------------------------------------
 int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
   int status = 0;
@@ -74,36 +70,35 @@ int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
     int fd = fileno(stdin);
     status = IOPortManager::getAvailBytes(fd);
     if ( status>0 )  {
-      read(fd,&Last_char,1); // Last_char = rd_getch();
+      IOPortManager::getChar(fd, &Last_char);
       if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,fac,Last_char,Last_char);
       if (Key_ptr >= KEY_BUF_SIZE) status = 0;
       else if (Last_char)      {
-	Key_buffer[Key_ptr] = Last_char;
-	Key_ptr++;
-	Key_buffer[Key_ptr] = 0;
-	Last_key_stroke = scrc_check_key_buffer (Key_buffer);
-	if (Last_key_stroke > 0)        {
-	  Key_ptr = 0;
-	  Key_buffer[Key_ptr] = 0;
-	  
-	  if (Kbd->moving)          {
-	    if (scrc_action_moving_display (Kbd, Last_key_stroke)) {
-	      wtc_insert_head (WT_FACILITY_SCR);  
-	    }
-	    else
-	      Last_key_stroke = -1;
-	  }
-	  else if (Kbd->resizing)          {
-	    if (scrc_action_resizing_display (Kbd, Last_key_stroke)) {
-	      wtc_insert_head (WT_FACILITY_SCR);
-	    }
-	    else
-	      Last_key_stroke = -1;
-	  }
-	  else {
-	    wtc_insert_head (WT_FACILITY_SCR);
-	  }
-	}
+        Key_buffer[Key_ptr] = Last_char;
+        Key_ptr++;
+        Key_buffer[Key_ptr] = 0;
+        Last_key_stroke = scrc_check_key_buffer (Key_buffer);
+        if (Last_key_stroke > 0)        {
+          Key_ptr = 0;
+          Key_buffer[Key_ptr] = 0;          
+          if (Kbd->moving)          {
+            if (scrc_action_moving_display (Kbd, Last_key_stroke)) {
+              wtc_insert_head (WT_FACILITY_SCR);  
+            }
+            else
+              Last_key_stroke = -1;
+          }
+          else if (Kbd->resizing)          {
+            if (scrc_action_resizing_display (Kbd, Last_key_stroke)) {
+              wtc_insert_head (WT_FACILITY_SCR);
+            }
+            else
+              Last_key_stroke = -1;
+          }
+          else {
+            wtc_insert_head (WT_FACILITY_SCR);
+          }
+        }
       }
     }
   } while( status > 0);
