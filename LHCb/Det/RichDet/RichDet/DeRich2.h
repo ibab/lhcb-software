@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.h,v 1.13 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRich2.h,v 1.14 2006-01-26 12:03:48 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2005/12/14 09:34:52  papanest
+ *  Move from CLHEP to MathCore
+ *
  *  Revision 1.12  2004/10/20 22:41:54  jonrob
  *  Tidy up inline and virtual functions (whilst solving a windows problem)
  *
@@ -102,10 +105,10 @@ public:
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point ) const;
 
-private:
+  virtual StatusCode alignSphMirrors();
+  virtual StatusCode alignSecMirrors();
 
-  virtual StatusCode misalignSphMirrors();
-  
+private:
 
   Gaudi::Plane3D m_nominalPlaneLeft;   ///< The left nominal flat mirror plane
   Gaudi::Plane3D m_nominalPlaneRight;  ///< The right nominal flat mirror plane

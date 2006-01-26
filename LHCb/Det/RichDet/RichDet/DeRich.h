@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.15 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRich.h,v 1.16 2006-01-26 12:03:48 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -26,6 +26,7 @@
 #include "Kernel/RichSide.h"
 
 #include "RichDet/RichMirrorSegPosition.h"
+#include "RichDet/DeRichSphMirror.h"
 
 /** @namespace DeRichLocation
  *
@@ -194,10 +195,16 @@ public:
    */
   inline const std::string& myName() const { return m_name; }
 
-protected:
+  virtual StatusCode alignSphMirrors() = 0;
+  virtual StatusCode alignSecMirrors() = 0;
+  
 
-  /// vector of strings
-  typedef std::vector<std::string> strings;
+protected:
+  
+  StatusCode alignMirrors( std::vector<const ILVolume*> mirrorContainer,
+                           const std::string& mirrorID,
+                           const std::string& condID,
+                           const std::string& Rvector ) const;
 
   double m_sphMirrorRadius; ///< The nominal radius of the spherical mirror
 
@@ -206,10 +213,6 @@ protected:
 
   /// The nominal normal vector of the flat mirror plane (positive side)
   Gaudi::XYZVector m_nominalNormal;
-
-  typedef std::vector<std::string> strings;
-  strings m_vectorNames;  ///< the names of the user parameter vectors
-  strings m_paramNames;   ///< the names of the user parameters
 
   int m_sphMirrorSegRows;  ///< number of spherical mirror rows
   int m_sphMirrorSegCols;  ///< number of spherical mirror columns
@@ -232,6 +235,9 @@ protected:
 
   std::string m_name; ///< The name of this detector
 
+  std::string m_sphMirrorAlignCond;
+  std::string m_secMirrorAlignCond;
+  
 };
 
 #endif    // RICHDET_DERICH_H

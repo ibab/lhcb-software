@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.17 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.18 2006-01-26 12:03:48 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,6 +17,7 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // DetDesc
 #include "DetDesc/Material.h"
@@ -148,27 +149,88 @@ StatusCode DeRich1::initialize()
     m_nominalSecMirrorRefl = secMirrorRefl;
     msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
         << secMirrorReflLoc << endmsg;
-  }
+  }  
+  
+  m_sphMirrorAlignCond = "Rich1Mirror1Align";
+  m_secMirrorAlignCond = "Rich1Mirror2Align";
+  
+  IUpdateManagerSvc* ums = updMgrSvc();
+  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich1/"+m_sphMirrorAlignCond,
+                         &DeRich1::alignSphMirrors);
+  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich1/"+m_secMirrorAlignCond,
+                         &DeRich1::alignSecMirrors);
+  ums->update(this);
 
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+//  alignSphMirrors
+//=========================================================================
+StatusCode DeRich1::alignSphMirrors()
+{
+  std::vector<const ILVolume*> mirrorCont;
+  // (mis)align spherical mirrors
+  const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
+  mirrorCont.push_back( lvRich1Gas );
+  StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror1Q",
+                               m_sphMirrorAlignCond, "RichSphMirrorRs");
+  if (sc == StatusCode::FAILURE) return sc;
+
+  // (mis)align spherical mirrors (2nd layer)
+  sc = alignMirrors(mirrorCont, "Rich1Mirror1Be",
+                    m_sphMirrorAlignCond, "RichSphMirrorRs");
+  if (sc == StatusCode::FAILURE) return sc;
+
+  return StatusCode::SUCCESS;  
+}
+
+//=========================================================================
+//  alignSecMirrors
+//=========================================================================
+StatusCode DeRich1::alignSecMirrors()
+{
+  std::vector<const ILVolume*> mirrorCont;
+  const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
+  mirrorCont.push_back( lvRich1Gas );
+
+  // (mis)align secondary mirrors
+  StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror2:",
+                               m_secMirrorAlignCond, "RichSecMirrorRs");
+  if (sc == StatusCode::FAILURE) return sc;
+
+  return StatusCode::SUCCESS;  
+}
+
+
+//=========================================================================
+//  nominalCentreOfCurvature
+//=========================================================================
 const Gaudi::XYZPoint& DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
 {
   return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
            m_nominalCentreOfCurvature );
 }
 
+//=========================================================================
+//  nominalNormal
+//=========================================================================
 const Gaudi::XYZVector& DeRich1::nominalNormal(const Rich::Side side) const
 {
   return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
 }
 
+//=========================================================================
+//  nominalPlane
+//=========================================================================
 const Gaudi::Plane3D& DeRich1::nominalPlane(const Rich::Side side) const
 {
   return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
 }
 
+//=========================================================================
+//  side
+//=========================================================================
 Rich::Side DeRich1::side( const Gaudi::XYZPoint & point) const
 {
   return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );

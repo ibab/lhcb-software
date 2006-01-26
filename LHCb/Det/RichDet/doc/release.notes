@@ -4,7 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v9r0 2005-12-21 =========================
+!========================= RichDet v9r0 2006-01-24 =========================
+
+! 2006-01-24 - Antonis Papanestis
+ - introduced alignment of mirrors in DeRich and DeRichSphMirror
+   requires XmlConditions
+
 ! 2005-12-21 - Antonis Papanestis
  - Redesign of the HPDPanel. Remove Rich1 & Rich2 HPDPanel classes
 

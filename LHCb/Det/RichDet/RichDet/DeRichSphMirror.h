@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.12 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichSphMirror.h,v 1.13 2006-01-26 12:03:48 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2005/12/14 09:34:52  papanest
+ *  Move from CLHEP to MathCore
+ *
  *  Revision 1.11  2005/09/23 15:27:28  papanest
  *  new aerogel and sec mirrors
  *
@@ -169,14 +172,21 @@ public:
   }
 
   /**
-   * Retrieves the normal vector at the centre of the mirror
-   * @return Normal vector at the mirror centre
+   * Retrieves the plane defined by the centre normal and the centre
+   * of the mirror
+   * @return Plane perpendicular to the normal vector
    */
   inline const Gaudi::Plane3D& centreNormalPlane() const
   {
     return m_centreNormalPlane;
   }
 
+  /**
+   * Update the geometrical parameters.
+   * @return SUCCESS if everything OK
+   */
+  StatusCode updateGeometry();
+  
 
 private:
 
@@ -186,8 +196,10 @@ private:
 
   const ISolid* m_solid;             ///< The mirror solid
 
-  Gaudi::XYZPoint m_centreOfCurvature;    ///< The centre of curvature
-  Gaudi::XYZPoint m_mirrorCentre;         ///< The mirror centre
+  Gaudi::XYZPoint m_centreOfCurvature;  ///< The centre of curvature
+  Gaudi::XYZPoint m_mirrorCentre;       ///< The mirror centre
+  Gaudi::XYZPoint m_localOrigin;        ///< The local centre of curvature
+  Gaudi::XYZPoint m_localMirrorCentre;  ///< The local mirror centre
 
   /// Alignment constant for x alignment.  Not used presently
   double m_alignmentConstantX;

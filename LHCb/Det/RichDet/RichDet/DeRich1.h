@@ -3,7 +3,7 @@
  *  Header file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.h,v 1.13 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRich1.h,v 1.14 2006-01-26 12:03:48 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -92,6 +92,9 @@ public:
    * @return The side for this point
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point) const;
+
+  virtual StatusCode alignSphMirrors();
+  virtual StatusCode alignSecMirrors();
 
 private:
 

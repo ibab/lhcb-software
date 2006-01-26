@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.19 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.20 2006-01-26 12:03:48 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,6 +17,7 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // DetDesc
 #include "DetDesc/Material.h"
@@ -133,72 +134,59 @@ StatusCode DeRich2::initialize()
         << secMirrorReflLoc << endmsg;
   }
 
-  misalignSphMirrors();
+  // update mirror alignment
+  m_sphMirrorAlignCond = "Rich2SphMirrorAlign";
+  m_secMirrorAlignCond = "Rich2SecMirrorAlign";
+
+  IUpdateManagerSvc* ums = updMgrSvc();
+  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich2/"+m_sphMirrorAlignCond,
+                         &DeRich2::alignSphMirrors );
+  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich2/"+m_secMirrorAlignCond,
+                         &DeRich2::alignSecMirrors );
+  ums->update(this);
 
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
-//  misalignSphMirrors
+//  alignSphMirrors
 //=========================================================================
-StatusCode DeRich2::misalignSphMirrors ( ) {
+StatusCode DeRich2::alignSphMirrors()
+{
 
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "misalignSphMirrors " <<  endmsg;
-
-  std::vector<IPVolume*> sphMirrors(60);
-
+  std::vector<const ILVolume*> mirrorCont;
+  // (mis)align spherical mirrors
   const IPVolume* pvRich2Gas = geometry()->lvolume()->pvolume(0);
-  const ILVolume* lvRich2Gas = pvRich2Gas->lvolume();
-  const IPVolume* cpvRh2Mirror;
-
-  for (unsigned int i=0; i<lvRich2Gas->noPVolumes(); ++i) {
-    cpvRh2Mirror = lvRich2Gas->pvolume(i);
-    IPVolume* pvRh2Mirror = const_cast<IPVolume*>(cpvRh2Mirror);
-
-    // Spherical mirrors
-    if (pvRh2Mirror->name().find("SphMirror") != std::string::npos )
-      sphMirrors[i] =  pvRh2Mirror;
-  }
-  msg << MSG::DEBUG << "Found " << sphMirrors.size()
-      << " Spherical mirrors" << endmsg;
-
-
-  ConditionMap::const_iterator myConds;
-  for (myConds=conditionBegin(); myConds!=conditionEnd(); ++myConds) {
-    //msg << MSG::DEBUG << (*myConds).first << endmsg;
-    if ( !(*myConds).second ) {
-      msg << MSG::ERROR << (*myConds).first << " does not exist" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    const Condition* thisCond = (*myConds).second;
-    if ( thisCond->clID() != 6 ) {
-      msg << MSG::ERROR << (*myConds).first << " is not AlignmentCond" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    const AlignmentCondition* alignCond = dynamic_cast<const AlignmentCondition*>(thisCond);
-
-    //msg << MSG::DEBUG << (*msph)->name() << " " << alignCond->name() << endmsg;
-    //      if ( (*msph)->name().find( alignCond->name() ) != std::string::npos)
-    // extract mirror number from detector element name
-    const std::string::size_type pos = alignCond->name().find(':');
-    if ( std::string::npos == pos ) {
-      msg << MSG::FATAL << "An alignment condition without a number!" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    int alignNumber = atoi( alignCond->name().substr(pos+1).c_str() );
-    msg << MSG::DEBUG << "Found alignmenr cond for mirror " << sphMirrors[alignNumber]->name()
-        << endmsg;
-
-    //sphMirrors[alignNumber]->applyMisalignment( alignCond->matrix() );
-
-  }
+  mirrorCont.push_back( pvRich2Gas->lvolume() );
+  StatusCode sc = alignMirrors(mirrorCont, "Rich2SphMirror",
+                               m_sphMirrorAlignCond, "RichSphMirrorRs");
+  if (sc == StatusCode::FAILURE) return sc;
 
   return StatusCode::SUCCESS;
-
 }
 
+//=========================================================================
+//  alignSecMirrors
+//=========================================================================
+StatusCode DeRich2::alignSecMirrors()
+{
+
+  std::vector<const ILVolume*> mirrorCont;
+
+  // (mis)align secondary mirrors in both containers
+  const IPVolume* pvRich2SecMirrorCont0 = geometry()->lvolume()->pvolume(0)->
+    lvolume()->pvolume("pvRich2SecMirrorCont0");
+  mirrorCont.push_back( pvRich2SecMirrorCont0->lvolume() );
+  const IPVolume* pvRich2SecMirrorCont1 = geometry()->lvolume()->pvolume(0)->
+    lvolume()->pvolume("pvRich2SecMirrorCont1");
+  mirrorCont.push_back( pvRich2SecMirrorCont1->lvolume() );
+
+  StatusCode sc = alignMirrors(mirrorCont, "Rich2SecMirror",
+                               m_secMirrorAlignCond, "RichSecMirrorRs");
+  if (sc == StatusCode::FAILURE) return sc;
+
+  return StatusCode::SUCCESS;
+}
 
 //=========================================================================
 //  nominalCentreOfCurvature
@@ -209,17 +197,27 @@ const Gaudi::XYZPoint& DeRich2::nominalCentreOfCurvature(const Rich::Side side) 
            m_nominalCentreOfCurvature );
 }
 
+//=========================================================================
+//  nominalNormal
+//=========================================================================
 const Gaudi::XYZVector& DeRich2::nominalNormal(const Rich::Side side) const
 {
   return ( Rich::right == side ? m_nominalNormalRight : m_nominalNormal );
 }
 
+//=========================================================================
+//  nominalPlane
+//=========================================================================
 const Gaudi::Plane3D& DeRich2::nominalPlane(const Rich::Side side) const
 {
   return ( Rich::left == side ? m_nominalPlaneLeft : m_nominalPlaneRight );
 }
 
+//=========================================================================
+//  side
+//=========================================================================
 Rich::Side DeRich2::side( const Gaudi::XYZPoint& point ) const
 {
   return ( point.x() >= 0.0 ? Rich::left : Rich::right );
 }
+
