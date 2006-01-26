@@ -100,6 +100,7 @@ StatusCode MCSTDepositCreator::initialize() {
   for (; iterType != m_beetleResponseTypes.end() ; ++iterType){
     std::string name = "response"+(*iterType);
     ISTAmplifierResponse* aResponse = tool<ISTAmplifierResponse>("STAmplifierResponse",name,this);
+    m_AmplifierResponse.push_back(aResponse); 
   }
 
   // construct container names once
@@ -221,7 +222,8 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
                                             ,STAmpliferResponseType::capCoupling);
 	  }
 
-          STChannelID aChan(elemChan.station(), elemChan.layer(), 
+          STChannelID aChan(DeSTDetLocation::detType(m_detType),
+                            elemChan.station(), elemChan.layer(), 
                             elemChan.detRegion(), elemChan.sector(), iStrip);
 
           double adcCounts = m_scaling *

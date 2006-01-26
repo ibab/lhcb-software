@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.3 2006-01-26 15:31:25 mneedham Exp $
 #include "STDAQ/STTell1Board.h"
 
 
@@ -63,7 +63,8 @@ STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan) const{
   unsigned int index = aDAQChan/m_nStripsPerHybrid;
   unsigned int strip = aDAQChan - (index*m_nStripsPerHybrid) + 1u;
 
-  return STChannelID(m_sectorsVector[index].station(), 
+  return STChannelID(m_sectorsVector[index].type(),
+                     m_sectorsVector[index].station(), 
                      m_sectorsVector[index].layer(),
                      m_sectorsVector[index].detRegion(),
                      m_sectorsVector[index].sector(),

@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.2 2006-01-26 15:29:13 mneedham Exp $
 
  
 // Kernel
@@ -47,7 +47,8 @@ ISTClusterPosition::Measurement STOfflinePosition::estimate(const SmartRefVector
   double stripNum = STFun::position(digits);
   double interStripPos = stripNum - floor(stripNum);
   LHCb::STChannelID firstChan = digits.front()->channelID();
-  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.station(),firstChan.layer(), firstChan.detRegion(),
+  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
+                                    firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), (unsigned int)stripNum);
 
  

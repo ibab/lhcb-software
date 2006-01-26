@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.2 2006-01-26 15:29:13 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -46,8 +46,10 @@ ISTClusterPosition::Measurement STOnlinePosition::estimate(const SmartRefVector<
   double stripNum = STFun::position(digits);
   double interStripPos = stripNum - floor(stripNum);
   LHCb::STChannelID firstChan = digits.front()->channelID();
-  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.station(),firstChan.layer(),
-                                    firstChan.detRegion(),firstChan.sector(), (unsigned int)stripNum);
+  LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
+                                    firstChan.station(),firstChan.layer(),
+                                    firstChan.detRegion(),firstChan.sector(), 
+                                    (unsigned int)stripNum);
 
   // got to 2 bit precision on interstrip position
   double value  = double( LHCbMath::round(4*interStripPos))/4.0;

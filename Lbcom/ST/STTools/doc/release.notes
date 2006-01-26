@@ -2,6 +2,10 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+2006-01-26 M Needham
+  - Adapt to new numbering scheme
+
+
 !=========================== STTools v2r0 2005-12-20 ==========================
 ! 2005-12-20 - Marco Cattaneo
  - Remove STTools directory so package can be in Lbcom. ISTClusterPosition.h

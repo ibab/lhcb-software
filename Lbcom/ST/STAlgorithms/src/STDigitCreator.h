@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: STDigitCreator.h,v 1.2 2006-01-26 15:30:15 mneedham Exp $
 #ifndef _STDigitCreator_H_
 #define _STDigitCreator_H_
 
@@ -71,8 +71,6 @@ private:
   double m_saturation;
 
   std::vector<DeSTSector*> m_sectors;
-  unsigned int m_numSectors;
-  unsigned int m_numStrips;
   unsigned int m_numNoiseStrips;  
 
   // smart interface to generators

@@ -1,4 +1,4 @@
-// $Id: STTell1ID.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STTell1ID.h,v 1.2 2006-01-26 15:31:25 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 
@@ -60,8 +60,8 @@ public:
 
 private:
 
-  enum bits  {subIDBits = 0,  regionBits = 4}; /// Enumeration to store the bit packing offsets
-  enum masks {subIDMask = 0x0000000f, regionMask = 0x00000030};
+  enum bits  {subIDBits = 0,  regionBits = 5}; /// Enumeration to store the bit packing offsets
+  enum masks {subIDMask = 0x000000f1, regionMask = 0x000000e0};
 
   unsigned int m_id; /// STell1ID
 };

@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.2 2005-12-20 15:50:25 cattanem Exp $
+// $Id: STDigitCreator.cpp,v 1.3 2006-01-26 15:30:15 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -37,9 +37,7 @@ const IAlgFactory& STDigitCreatorFactory = s_factory;
 STDigitCreator::STDigitCreator( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm(name, pSvcLocator),
-  m_tracker(0),
-  m_numSectors(0),
-  m_numStrips(0)
+  m_tracker(0)
 {
   //constructer
   declareProperty("effToolName", m_effToolName="STEffCalculator");
@@ -89,7 +87,7 @@ StatusCode STDigitCreator::initialize() {
   // get a Gauss tail
   sc = randSvc()->generator(Rndm::GaussianTail(m_tailStart,1.),m_gaussTailDist.pRef());
 
-  m_numNoiseStrips = (int)(m_fracOfNoiseStrips*m_numStrips);
+  m_numNoiseStrips = (int)(m_fracOfNoiseStrips*m_tracker->nStrip());
 
   return StatusCode::SUCCESS;
 }
@@ -141,10 +139,11 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const{
   noiseCont.reserve(m_numNoiseStrips);
   for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
     // gen a random wafer
-    int iSector = (int)(m_uniformDist->shoot()*m_numSectors);
+    int iSector = (int)(m_uniformDist->shoot()*m_sectors.size());
     DeSTSector* aSector = m_sectors[iSector];
     int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
-    STChannelID aChan = STChannelID(aSector->elementID().station(),
+    STChannelID aChan = STChannelID(aSector->elementID().type(),
+                                    aSector->elementID().station(),
                                     aSector->elementID().layer(),
                                     aSector->elementID().detRegion(),
                                     aSector->elementID().sector(),
@@ -185,7 +184,7 @@ void STDigitCreator::mergeContainers(const std::vector<digitPair>& noiseCont,
                      STDigits* digitsCont){
 
   // trick bit merge the two containers (sort of...)
-  STChannelID prevChan(0u,0u,0u,0u,0u);
+  STChannelID prevChan(0u,0u,0u,0u,0u,0u);
   std::vector<digitPair>::const_iterator iterNoise =  noiseCont.begin();
   while (iterNoise != noiseCont.end()){
     if ((0 == findDigit(iterNoise->second))&&

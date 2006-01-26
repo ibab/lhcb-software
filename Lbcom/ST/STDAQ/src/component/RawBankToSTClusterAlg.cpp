@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.3 2006-01-26 15:31:25 mneedham Exp $
 
 #include <algorithm>
 
@@ -198,7 +198,8 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     return StatusCode::FAILURE;
   }
 
-  STChannelID firstChan = STChannelID(nearestChan.station(),
+  STChannelID firstChan = STChannelID(nearestChan.type(),
+                                      nearestChan.station(),
                                       nearestChan.layer(),
                                       nearestChan.detRegion(), 
                                       nearestChan.sector(),
@@ -206,7 +207,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   SmartRefVector<STDigit> digits; 
   for (unsigned int iDigit = 0; iDigit < adcValues.size() ; ++iDigit){
     STDigit* newDigit = new STDigit(adcValues[iDigit]);
-    STChannelID aChannel = STChannelID(firstChan.station(), 
+    STChannelID aChannel = STChannelID(firstChan.type(), firstChan.station(), 
                                        firstChan.layer(), firstChan.detRegion(),
                                        firstChan.sector(), firstChan.strip()+iDigit);
     digits.push_back(newDigit);
