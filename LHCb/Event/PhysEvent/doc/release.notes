@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.71 2006-01-23 16:36:23 pkoppenb Exp $
+! $Id: release.notes,v 1.72 2006-01-26 12:44:30 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================= PhysEvent v9r0 2006-01-26 ==========================
 ! 2006-01-23 - P. Koppenburg
  - xml/Particle.xml
    . Add setConfLevel and setWeight methods
 
-!======================= PhysEvent v9r0 2006-01-20 ==========================
 ! 2006-01-20 - P. Koppenburg
  - xml/Particle.xml
  - xml/Vertex.xml
