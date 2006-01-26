@@ -1,0 +1,48 @@
+// $Id: LoKiGenMC.h,v 1.1.1.1 2006-01-26 17:35:17 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+#ifndef LOKI_LOKIGENMC_H 
+#define LOKI_LOKIGENMC_H 1
+// ============================================================================
+// Include files
+// ============================================================================
+// LoKiGenMC 
+// ============================================================================
+#include "Kernel/IHepMC2MC.h"
+#include "Kernel/HepMC2MC.h"
+#include "Kernel/HepMC2MC.h"
+// ============================================================================
+#include "LoKi/GenMCParticles.h"
+#include "LoKi/GenMCParticleCuts.h"
+// ============================================================================
+
+// ============================================================================
+/** @file
+ *
+ *  Declaration class for the package LoKiGenMC 
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot at al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2001-01-23 
+ */
+// ============================================================================
+
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // LOKI_LOKIGENMC_H
+// ============================================================================
