@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.12 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.13 2006-01-26 15:54:14 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -169,7 +169,7 @@ public:
   }
 
   /// Return the (phi) sensors associated with this (R) sensor
-  inline std::vector<unsigned int> associatedSensors() const {
+  inline const std::vector<unsigned int>& associatedSensors() const {
     return m_associated;
   }
   
@@ -198,31 +198,36 @@ public:
   /// Convert chip channel to strip number
   unsigned int ChipChannelToStrip(unsigned int chipChan){
     return RoutingLineToStrip(ChipChannelToRoutingLine(chipChan));
-  };
+  }
   /// Convert strip number to chip channel
   unsigned int StripToChipChannel(unsigned int strip){
     return RoutingLineToChipChannel(StripToRoutingLine(strip));
-  };
+  }
 
   /// Convert routing line to strip number
-  unsigned int RoutingLineToStrip(unsigned int routLine){return m_mapRoutingLineToStrip[routLine];};
+  unsigned int RoutingLineToStrip(unsigned int routLine){return m_mapRoutingLineToStrip[routLine];}
   /// Convert strip number to routing line
-  unsigned int StripToRoutingLine(unsigned int strip){return m_mapStripToRoutingLine[strip];};
+  unsigned int StripToRoutingLine(unsigned int strip){return m_mapStripToRoutingLine[strip];}
 
   /// Get the chip number from the routing line
   unsigned int ChipFromRoutingLine(unsigned int routLine){return ChipFromChipChannel(RoutingLineToChipChannel(routLine));};
   /// Get the chip number from the chip channel
-  unsigned int ChipFromChipChannel(unsigned int chipChan){return static_cast<int>(chipChan/128);};
+  unsigned int ChipFromChipChannel(unsigned int chipChan){return static_cast<int>(chipChan/128);}
   /// Get the Chip from the Velo ChannelID
-  unsigned int ChipFromStrip(unsigned int strip){return ChipFromChipChannel(StripToChipChannel(strip));};
+  unsigned int ChipFromStrip(unsigned int strip){return ChipFromChipChannel(StripToChipChannel(strip));}
 
-  /// Return the validity of a strip
-  bool OKStrip(unsigned int strip){return (strip<m_numberOfStrips && !m_badStrips[strip]);};
+  /**  Return the validity of a strip
+   *   Cince this method uses the condition cache, the result
+   *   depends on CondDB.
+   */
+  bool OKStrip(unsigned int strip){
+    return (strip<m_numberOfStrips && stripInfo(strip).stripIsReadOut());
+  }
   
   /// Returns the validity of a given channel
   bool OKChipChannel(unsigned int chipChan){
     return (chipChan<m_numberOfStrips && OKStrip(ChipChannelToStrip(chipChan)));
-  };
+  }
 
   // condition related forwar daclarations
 
@@ -376,7 +381,6 @@ private:
   double m_z;
   double m_innerRadius;
   double m_outerRadius;
-  std::map<unsigned int,bool> m_badStrips;//<Map of all known bad strips
 
   IGeometryInfo* m_geometry;
 

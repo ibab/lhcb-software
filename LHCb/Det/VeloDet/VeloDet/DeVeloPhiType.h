@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.11 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.12 2006-01-26 15:54:14 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -33,7 +33,7 @@ public:
   ~DeVeloPhiType( ); ///< Destructor
 
   /// object identifier (static method)
-  static  const CLID& classID() { return CLID_DeVeloPhiType; };
+  static  const CLID& classID() { return CLID_DeVeloPhiType; }
   /// object identification
   virtual const CLID& clID()     const;
 

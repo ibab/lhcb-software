@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.90 2006-01-26 14:58:43 krinnert Exp $
+! $Id: release.notes,v 1.91 2006-01-26 15:54:14 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-01-26 - Kurt Rinnert
+ - DeVeloSensor::associatedSensors() now returns a const reference
+   to a vector instead of an instance.  This alway faster and prevents
+   CPU intensive misuse.  Change is completely transparent to client code. 
+ - DeVeloSensor::OKStrip() now uses strip information from the condition
+   cache.  The now redundant old 'bad strip' map was removed  
+ - minor cosmetics
 
 ! 2006-01-26 - Kurt Rinnert
  - Added caching of conditions for DeVelo and DeVeloSensor, this includes
