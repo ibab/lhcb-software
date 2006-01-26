@@ -4,10 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r1 2006-01-26 =======================
 ! 2006-01-26 M Needham
  - Use param<> for reading vectors
 
-!=============================== STDAQ v2r1 2006-01-20 =======================
 ! 2006-01-20 - Marco Cattaneo
  - From Gaudi v18r1, IUpdateManagerSvc.h is in GaudiKernel
 
