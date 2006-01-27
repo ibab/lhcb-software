@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v1r5 2006-01-27 ======================
 ! 2006-01-17 - Jeroen van Tilburg
  - Fixed a bug in TrackOTProjector: Elements of the projection matrix,
    m_H[2] and m_H[3], were sometimes calculated incorrectly.
