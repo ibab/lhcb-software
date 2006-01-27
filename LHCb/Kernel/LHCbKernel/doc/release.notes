@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+2006-01-27 M Needham
+  - Remove spare bits from LHCbID
+
 2006-01-26 M Needham
   - Adapt to new ST numbering scheme
 

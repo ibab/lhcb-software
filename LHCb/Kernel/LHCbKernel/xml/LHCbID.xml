@@ -24,17 +24,6 @@
           access = 'PUBLIC'
        />
 
-      <enum
-        name = 'SpecificMask'
-        value = 'veloMask= 0x1FFFFFL,stMask=0xFFFFFFL,otMask=0x3FFFFFFL'
-        desc = 'enumeration of the specific mask'
-        access = 'PROTECTED' />
-
-      <enum
-        name = 'SpecificBits'
-        value = 'veloBits=21,stBits=24,otBits=26'
-        desc = 'enumeration of the specific bits'
-        access = 'PROTECTED' />
 
        <attribute
           desc = "the internal representation" name="lhcbID"
@@ -56,12 +45,10 @@
        </method>
 
        <constructor 
-         desc  = "Constructor from VeloChannelID and optional size" >
+         desc  = "Constructor from VeloChannelID " >
           <arg const="TRUE" name="chanID" type="VeloChannelID" />
-          <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
 m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
-           (size &lt;&lt; veloBits ) +
            chanID;
           </code>
        </constructor>
@@ -82,19 +69,16 @@ m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the VeloChannelID">
 	 <code>
-if ( !isVelo() ) return 0xF0000000;
-return ( m_lhcbID &amp; veloMask );
+return ( isVelo() ? m_lhcbID &amp; IDMask : 0xF0000000);
          </code>
        </method>
 
        <constructor
-         desc     = "Constructor from STChannelID and optional size" >
+         desc     = "Constructor from STChannelID " >
           <arg const="TRUE" name="chanID" type="STChannelID" />
-          <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
 unsigned int stType = ( chanID.isTT() ? TT : IT );
 m_lhcbID = (stType   &lt;&lt; detectorTypeBits) +
-           (size &lt;&lt; stBits ) +
            chanID;
         </code>
       </constructor>
@@ -135,8 +119,7 @@ m_lhcbID = (stType   &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the STChannelID">
 	 <code>
-if ( !isST() ) return 0xF0000000;
-return ( (m_lhcbID &amp; stMask ));
+return ( isST() ? (m_lhcbID &amp; IDMask ) : 0xF0000000);
          </code>
        </method>
 
@@ -164,8 +147,7 @@ return (OT == detectorType());
          const = 'TRUE'
          desc="return the OTChannelID">
 	 <code>
-if ( !isOT() ) return  0xF0000000;
-return m_lhcbID &amp; otMask;
+return (isOT() ? m_lhcbID &amp; IDMask : 0xF0000000 );
          </code>
        </method>
 
@@ -290,54 +272,6 @@ if (isMuon()) return m_lhcbID &amp; IDMask;
 return 0;
         </code>
       </method>
-
-      <method
-        name    = 'setSpareBits'
-        argList = 'unsigned int value'
-        desc    = 'set the spare bits'>
-        <code>
-  if ( !( isVelo() || isOT() || isST() ) ) return;
-  unsigned int mask = IDMask;
-  unsigned int bits = IDBits;
-  if (isVelo()) {
-    mask &amp;= (~veloMask);
-    bits = veloBits;
-  } else if (isST()) {
-    mask &amp;= (~stMask);
-    bits = stBits;
-  } else if (isOT()) {
-    mask &amp;= (~otMask);
-    bits = otBits;
-  }
-  m_lhcbID &amp;= ~mask;
-  m_lhcbID |= ((value &lt;&lt; bits) &amp; mask);
-        </code>
-      </method>
-
-      <method
-        type  = 'unsigned int'
-        name  = 'spareBits'
-        const = 'TRUE'
-        desc  = 'retrieve the spare bits'>
-        <code>
-  if ( !( isVelo() || isOT() || isST()) ) return 0;
-  unsigned int mask = IDMask;
-  unsigned int bits = IDBits;
-  if (isVelo()) {
-     mask &amp;= (~veloMask);	  
-     bits = veloBits;
-  } else if (isST()) {
-    mask &amp;= (~stMask);
-    bits = stBits;
-  } else if (isOT()) {
-     mask &amp;= (~otMask);	  
-     bits = otBits;
-  }
-  unsigned int val = ((m_lhcbID &amp; mask) &gt;&gt; bits);
-  return val;
-         </code>
-       </method>
-    
     </class>
   </package>
 </gdd>
