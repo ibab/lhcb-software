@@ -1,19 +1,28 @@
 package           MuonAssociators
-version           v1r5p1
+version           v2r0
         
 # =============== structure =================================================== 
-branches          MuonAssociators src cmt doc 
+branches          MuonAssociators src cmt doc xml Event
 
 include_dirs $(MUONASSOCIATORSROOT)
 
 # =============== used packages ===============================================
 use MuonEvent     v*    Event 
-use Relations	  v2r*	Kernel
+use MCEvent       v*    Event
+use LinkerEvent   v*    Event
+
+#============================================================================
+#---- Produce Header-Files from XML description
+private
+document obj2doth HltEventObj2Doth ../xml/*.xml
+document obj2dict HltEventObj2Dict ../xml/*.xml
 
 # =============== component library ===========================================
+public
 library           MuonAssociators  ../src/*.cpp
 
 apply_pattern component_library library=MuonAssociators
 
 
-
+private
+use GaudiObjDesc v*

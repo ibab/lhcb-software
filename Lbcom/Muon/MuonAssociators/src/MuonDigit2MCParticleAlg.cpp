@@ -1,154 +1,163 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.6 2002-07-04 16:45:52 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.7 2006-01-27 17:15:59 asarti Exp $
 // Include files 
 
-#include "Event/MuonDigit.h"
-#include "Event/MCMuonDigit.h"
-#include "Event/MCMuonHit.h"
-#include "Event/MCParticle.h"
-
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "MuonDigit2MCParticleAlg.h"
-#include "MuonAssociators/MuonDigit2MCParticleAsct.h"
-
+//#include "Event/LinksByKey.h"
+#include "Linker/LinkerWithKey.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : MuonDigit2MCParticleAlg.cpp
+// Implementation file for class : MuonDigit2MCParticleAlg
 //
-// 12/06/2002 David Hutchcroft
+// 2005-12-29 : Alessia Satta
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MuonDigit2MCParticleAlg>          s_factory ;
-const        IAlgFactory& MuonDigit2MCParticleAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MuonDigit2MCParticleAlg );
 
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 MuonDigit2MCParticleAlg::MuonDigit2MCParticleAlg( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : Algorithm (name,pSvcLocator) 
+                                                  ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
-  // constructor
-  declareProperty( "OutputData", 
-                   m_outputData  = MuonDigit2MCParticleLocation );
+
 }
+//=============================================================================
+// Destructor
+//=============================================================================
+MuonDigit2MCParticleAlg::~MuonDigit2MCParticleAlg() {}; 
 
-MuonDigit2MCParticleAlg::~MuonDigit2MCParticleAlg() {
-  // destructor
-} 
-
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode MuonDigit2MCParticleAlg::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
-}
+};
 
-
+//=============================================================================
+// Main execution
+//=============================================================================
 StatusCode MuonDigit2MCParticleAlg::execute() {
 
-  // retrieve any existing table from the store
-  DataObject *dObj;
-  StatusCode sc = eventSvc()->findObject(outputData(),dObj);
-  MuonDigit2MCParticleAsct::Table* aTable = 
-    dynamic_cast<MuonDigit2MCParticleAsct::Table*>(dObj);    
-  if(0 == aTable){
-    // Need a new table to add to the store
-    aTable = new MuonDigit2MCParticleAsct::Table();
+  debug() << "==> Execute" << endmsg;
 
-    // register table in store
-    sc = eventSvc()->registerObject(outputData(), aTable);
-    if( sc.isFailure() ) {
-      MsgStream log(msgSvc(), name());
-      log << MSG::FATAL << "     *** Could not register " << outputData()
-          << endreq;
-      delete aTable;
-      return StatusCode::FAILURE;
-    }
-    
-  }else{
-    // clear the existing table
-    sc = aTable->clear();
-    if(!sc){
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Could not clear existing table " << outputData()
-          << endreq;
-      return sc;
-    }
-  }
-
-  // get MuonDigits
-  SmartDataPtr<MuonDigits> digits(eventSvc(),MuonDigitLocation::MuonDigit);
-  if (0 == digits){ 
-    MsgStream log(msgSvc(), name());
-    log << MSG::WARNING << "Failed to find MuonDigits" << endreq;
+  LinkerWithKey<LHCb::MCParticle,LHCb::MuonDigit> myLink(eventSvc(),
+                                             msgSvc(),
+                                             LHCb::MuonDigitLocation::MuonDigit);
+  
+  SmartDataPtr<LHCb::MuonDigits> digits(eventSvc(),
+                                        LHCb::MuonDigitLocation::MuonDigit);
+  if (0 == digits){    
+    error() << "Failed to find MuonDigits" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   // loop and link MuonDigits to MC truth
-  MuonDigits::const_iterator iDigit;
+  LHCb::MuonDigits::const_iterator iDigit;
   for(iDigit = digits->begin(); iDigit != digits->end(); iDigit++){
-    associateToTruth(*iDigit,aTable);
-  } 
-
+    const LHCb::MCParticle* mcpart=NULL;
+    
+    associateToTruth(*iDigit,mcpart);
+    if(mcpart!=NULL){
+      myLink.link( *iDigit, mcpart);
+    }    
+  }
   return StatusCode::SUCCESS;
-}
+};
 
+//=============================================================================
+//  Finalize
+//=============================================================================
 StatusCode MuonDigit2MCParticleAlg::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-StatusCode 
-MuonDigit2MCParticleAlg::associateToTruth(const MuonDigit* digit,
-                                          MuonDigit2MCParticleAsct::Table* 
-                                          table) {
-  // get the MCParticles for the event, do not make links to spillover
-  SmartDataPtr<MCParticles> mcParticles(eventSvc(),
-                                        MCParticleLocation::Default);
+//=============================================================================
+StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
+                                                      const LHCb::MCParticle*& 
+                                                      mcpart){
+  mcpart=NULL;  
+  SmartDataPtr<LHCb::MCParticles> mcParticles(eventSvc(),
+                                        LHCb::MCParticleLocation::Default);
   if(!mcParticles){
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "Could not find MCParticles in " 
-        << MCParticleLocation::Default << endreq;
+    error() << "Could not find MCParticles in " 
+        << LHCb::MCParticleLocation::Default << endreq;
     return StatusCode::FAILURE;
   }
 
   // get the MCMuonDigits
-  SmartDataPtr<MCMuonDigits> mcDigits(eventSvc(), 
-                                      MCMuonDigitLocation::MCMuonDigit);
+  SmartDataPtr<LHCb::MCMuonDigits> mcDigits(eventSvc(), 
+                                      LHCb::MCMuonDigitLocation::MCMuonDigit);
   
   // match the MCMuonDigit to the MuonDigit via the Key
-  MCMuonDigit * mcDigit = mcDigits->object(digit->key());
+  LHCb::MCMuonDigit * mcDigit = mcDigits->object(digit->key());
   if(!mcDigit) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "Could not find the match for " << digit->key()
-        << " in " << MCMuonDigitLocation::MCMuonDigit << endreq;
+    error() << "Could not find the match for " << digit->key()
+        << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endreq;
     return StatusCode::FAILURE;
   }
 
-  // loop over MCMuonHits attached to this MCMuonDigit
-  SmartRefVector<MCMuonHit>::const_iterator iHit;
-  for( iHit = mcDigit->mcMuonHits().begin() ;
-       iHit != mcDigit->mcMuonHits().end() ;
+  LHCb::MCMuonDigitInfo digitinfo=mcDigit->DigitInfo();  
+  SmartRefVector<LHCb::MCHit>::const_iterator iHit;
+  std::vector<LHCb::MCMuonHitHistory>::iterator itHistory=
+    mcDigit->HitsHistory().begin();
+  
+  for( iHit = mcDigit->mcHits().begin() ;
+       iHit != mcDigit->mcHits().end() ;
        iHit++ ){
-    const MCMuonHit * mcHit = *iHit;
+    const LHCb::MCHit * mcHit = *iHit;
     // check the MCMuonHit is still available
     if(mcHit) {
-      const MCParticle * mcPart = mcHit->mcParticle();
+      const LHCb::MCParticle * mcPart = mcHit->mcParticle();
       // check found mcParticle
       if(mcPart){
-        // check in the current event container
-        if( mcParticles == mcPart->parent() ){
-          table->relate(digit,mcPart);
-        }
+          // check in the current event container
+        if( mcParticles == mcPart->parent() ){  
+          //check if muon          
+          if(mcPart->particleID().abspid()==13){
+            //if muon then ok and exit
+            mcpart=mcPart;
+            return StatusCode::SUCCESS;
+          }          
+        }        
       }
     }
+    itHistory++;    
   }
-
+  //no muon then check the origin of the digit genat hit in current event?
+  if(digitinfo.isGeantHit()){
+    if(digitinfo.doesFiringHitBelongToCurrentEvent()){
+      itHistory=mcDigit->HitsHistory().begin();
+      for( iHit = mcDigit->mcHits().begin() ;
+           iHit != mcDigit->mcHits().end() ;
+           iHit++ ){
+        const LHCb::MCHit * mcHit = *iHit;
+        if(itHistory->hasFired()){
+          const LHCb::MCParticle * mcPart = mcHit->mcParticle();
+           if(mcPart){
+             mcpart=mcPart;
+             return StatusCode::SUCCESS;
+           }           
+        }         
+        itHistory++;   
+      }       
+    }
+  }
+  mcpart=NULL;  
   return StatusCode::SUCCESS;
-   
 }
+
