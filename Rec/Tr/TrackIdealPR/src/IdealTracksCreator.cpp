@@ -399,9 +399,9 @@ StatusCode IdealTracksCreator::addOTTimes( OTTimes* times,
         // Get the tu from the MCHit
         double angle = module -> stereoAngle();
         double tu = tx * cos(angle) + ty * sin(angle);
-        // Make the TrMeasurement
         OTMeasurement otTim = OTMeasurement( *aTime, *m_otTracker,
                                              ambiguity, tu );
+        track -> addToLhcbIDs( otTim.lhcbID() );
         track -> addToMeasurements( otTim );
         ++nOTMeas;
         debug() << " - added OTMeasurement, ambiguity = "
@@ -432,6 +432,7 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
     ITCluster* aCluster = iClus->to();
     STMeasurement meas =
       STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
+        track -> addToLhcbIDs( meas.lhcbID() );
     track -> addToMeasurements( meas );
     ++nITMeas;
   }
@@ -471,11 +472,13 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
     // Check if velo cluster is r or phi clusters
     if ( m_velo -> isRSensor( aCluster->sensor() ) ) {
       VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
+      track -> addToLhcbIDs( meas.lhcbID() );
       track -> addToMeasurements( meas );
       ++nVeloRMeas;
     }
     else {
       VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo, r );
+      track -> addToLhcbIDs( meas.lhcbID() );
       track -> addToMeasurements( meas );
       ++nVeloPhiMeas;
     }

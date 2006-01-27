@@ -4,6 +4,12 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v1r5 2006-01-27 ========================
+! 2006-01-20 - Eduardo Rodrigues
+ - LHCbIDs first added to the Track before adding the corresponding
+   Measurements (needed since a Measurement is only added if the matching
+   LHCbID is on the Track!)
+
 ! 2006-01-17 - Jeroen van Tilburg
  - minor correction: new name of STClusterPosition tool.
 
