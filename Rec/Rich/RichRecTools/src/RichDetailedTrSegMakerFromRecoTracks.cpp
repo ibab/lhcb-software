@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.1 2006-01-27 09:14:17 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.2 2006-01-27 10:40:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -43,7 +43,8 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_Ext1               ( "TrackHerabExtrapolator"     ),
     m_Ext2               ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
-    m_extrapFromRef      ( false                        )
+    m_extrapFromRef      ( false                        ),
+    m_minZmove           ( 1 * mm                       )
 {
 
   // the interface
@@ -55,6 +56,7 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "BackupTrackExtrapolator",  m_Ext2     );
   declareProperty( "UseRadiators",             m_usedRads );
   declareProperty( "ExtrapolateFromReference", m_extrapFromRef );
+  declareProperty( "MinimumZMove",             m_minZmove );
 
   // Nominal z positions of states at RICHes
   m_nomZstates[0] = 99.0*cm;    // Place to look for Rich1 entry state
@@ -101,7 +103,7 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   m_trExt2 = tool<ITrackExtrapolator>( m_Ext2 );
 
   // Get the RICH tools
-  acquireTool( "RichRayTracing", m_rayTracing );
+  acquireTool( "RichRayTracing",          m_rayTracing   );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   // get Detector elements for RICH1 and RICH2
@@ -521,7 +523,8 @@ void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
   if ( m_radiators[Rich::Aerogel]->intersectionPoints( state->position(),
                                                        state->slopes(),
                                                        dummyPoint,
-                                                       aerogelExitPoint ) ) {
+                                                       aerogelExitPoint ) ) 
+  {
     if ( aerogelExitPoint.z() > state->z() )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting C4F10 entry point" << endreq;
@@ -579,7 +582,8 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove
                                                             const State * refState ) const
 {
   // Check if requested move is big enough to bother with
-  if ( fabs(stateToMove->z() - z) > 1*mm ) {
+  if ( fabs(stateToMove->z() - z) > m_minZmove ) 
+  {
 
     // debug printout
     if ( msgLevel(MSG::VERBOSE) )

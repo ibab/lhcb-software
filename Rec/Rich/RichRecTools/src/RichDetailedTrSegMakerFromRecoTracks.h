@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.1 2006-01-27 09:14:17 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.2 2006-01-27 10:40:18 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -19,7 +19,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -130,12 +129,6 @@ private: // methods
                         const double z,
                         const LHCb::State * refState = 0 ) const;
 
-  /// UMS Update method for Rich1 nominal radius of curvature
-  StatusCode updateR1nomRad();
-
-  /// UMS Update method for Rich2 nominal radius of curvature
-  StatusCode updateR2nomRad();
-
 private: // data
 
   /// Ray tracing tool
@@ -175,6 +168,9 @@ private: // data
 
   /// Flag to indicate if extrapolation should always be done from the reference states
   bool m_extrapFromRef;
+
+  /// Minimum state movement in z to bother with
+  double m_minZmove;
 
 };
 
