@@ -14,17 +14,6 @@
 extern "C" TanInterface* taninterface() {
   return &TanInterface::Instance();
 }
-
-// ----------------------------------------------------------------------------
-// Convert string s2 into s1, all characters lower case
-// ----------------------------------------------------------------------------
-static void strlow (char* s1, const char* s2)   {
-  char c, diff = 'a' - 'A';
-  while (0 != (c = *s2++) )    {
-    *s1++ = c + ((c >= 'A' && c <= 'Z')  ? diff : 0);
-  }
-  *s1 = 0;
-}
 // ----------------------------------------------------------------------------
 // C Interface: Allocate port number from local server
 // ----------------------------------------------------------------------------
@@ -203,9 +192,10 @@ int TanInterface::SetLocalAddress  ( NetworkChannel::Address& sin )       {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
-  int n;
+  int n, s = 0;
   char *p;
   if ( 0 != (p=strstr(name,"::")) )    {      // DECNET STYLE
+    s = 0;
     if (node != 0)  {
       strncpy (node, name, n = p - name);
       node [n] = 0;
@@ -213,6 +203,7 @@ void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
     if (proc!= 0)  strcpy (proc, p + 2);
   }
   else if ( 0 != (p=strchr(name,'@')) )    {
+    s = 1;
     if (node != 0)  {                    // INTERNET STYLE
       strcpy (node, p + 1);
     }
@@ -225,8 +216,8 @@ void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
     if (node != 0) strcpy (node, _pcHostName);
     if (proc != 0) strcpy (proc, name);
   }
-  if (node != 0) strlow (node, node);
-  if (proc != 0) strlow (proc, proc);
+  for(p=node; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
+  for(p=proc; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
 }
 // ----------------------------------------------------------------------------
 //  retrieve network address of a task given his name

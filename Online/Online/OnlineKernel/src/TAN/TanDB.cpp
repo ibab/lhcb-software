@@ -69,15 +69,8 @@ public:
   TanDataBase::Entry  _Entry[NumEntries];
 };
 
-/*    
-**  local variables
-*/
-
-static void strlow (char* s1, const char* s2)   {
-  char c, diff = 'a' - 'A';
-  while ( (c = *s2++) != 0 )    {
-    *s1++ = c + ((c >= 'A' && c <= 'Z')  ? diff : 0);
-  }
+static void strup (char* s1, const char* s2)   {
+  for(; *s2; s2++) *s1++ = ::toupper(*s2);
   *s1 = 0;
 }
 // ----------------------------------------------------------------------------
@@ -253,7 +246,7 @@ NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
     return 0;
   }
   _pData->_ports++;
-  strlow(ce->name, ce->msg.name);                  /* FIND INDEX             */
+  strup(ce->name, ce->msg.name);                  /* FIND INDEX             */
   Entry* entry = _findEntry(ce->name);
   if ( entry != 0 )  {                             /* CHECK IF ENTRY ALREADY EXISTS       */
     _iError = TAN_SS_DUPLNAM;
@@ -368,8 +361,8 @@ int TanDataBase::InsertAlias ( Entry *ce )  {
     return TAN_SS_ERROR;
   }
   e->msg = ce->msg;                          // COPY REQUEST MESSAGE 
-  strlow  (e->name,     ce->msg.name);       // COPY REMOTE ALIAS NAME 
-  strlow  (e->msg.name, ce->msg.name);       // COPY REMOTE ALIAS NAME 
+  strup  (e->name,     ce->msg.name);       // COPY REMOTE ALIAS NAME 
+  strup  (e->msg.name, ce->msg.name);       // COPY REMOTE ALIAS NAME 
   _INSQTI (&e->hl, &_pData->_name_head);     // INSERT ENTRY IN NAME TABLE 
   _INSQTI (&e->al, &ce->al);                 // INSERT ENTRY IN ALIAS TABLE 
   e->port       = ce->port;                  // PORT IS MAIN ENTRIES PORT 
@@ -478,7 +471,7 @@ TanDataBase::Entry* TanDataBase::FindEntry( const char* proc_name)  {
 }
 TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
   char s[64];
-  strlow(s, proc_name);
+  strup(s, proc_name);
   qentry_t *e = (qentry_t*)&_pData->_name_head;
   for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
     a != (Entry*) e && a != 0 && a != last;

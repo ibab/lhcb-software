@@ -18,7 +18,7 @@ enum  {
  AMS_MSG_DATA          =  2,
  AMS_K_COPY_LIMIT      = (8192*2),
  LINGER_VALUE          =  0,
- NAME_LENGTH           =  24,
+ NAME_LENGTH           =  32,
  SAFE_HOST_NAME_LENGTH =  40,
  CHOP_SIZE             = (8192*4),
  LOWER_CHOP            = 4096,
@@ -26,7 +26,7 @@ enum  {
 };
 enum AddressStyles   {
     DECNET_STYLE,
-    INTERNET_STYLE,
+    INTERNET_STYLE
 };
 enum  CONNECTION_FIND_MODES  {
     CREATE_IF,
@@ -36,9 +36,6 @@ enum  CONNECTION_FIND_MODES  {
 static const int SNDBUF_VALUE = 8192;
 static const int RCVBUF_VALUE = CHOP_SIZE;
 
-static qentry_t Message_Q;
-static qentry_t Park_Q;
-static qentry_t TCPams_Q;
 #define DB_SIZE    256
 #define WITHOUT_INTERCEPT(x) lib_rtl_disable_intercept(); \
   x ; \
@@ -59,10 +56,10 @@ struct amsheader_t {
 };
 
 struct amsqueue_t : public qentry_t {
-    unsigned int	size;
-    amsheader_t	*message;
-    amsqueue_t() : qentry_t(), message(0), size(0) {}
-    amsqueue_t(size_t len) : qentry_t()  {
+    unsigned int   size;
+    amsheader_t	  *message;
+    amsqueue_t() : qentry_t(), size(0), message(0) {}
+    amsqueue_t(size_t len) : qentry_t(), size(len)  {
       message  = new (::operator new(len)) amsheader_t;
       size     = len;
     }
@@ -79,26 +76,27 @@ struct amsentry_t : public qentry_t {
     int           del_pending;
     amsqueue_t   *pending;
     amsqueue_t   *msg_ptr;
+    int           sndBuffSize;
     unsigned int  received;
     unsigned int  current_size;
     char          name [NAME_LENGTH];
     char          myName [NAME_LENGTH];
     struct        sockaddr_in address;
-    int           sndBuffSize;
     amsentry_t(const char* dest=0, const char* me=0)  
-    : chan(-1), pending(0), refCount(0), del_pending(0), sndBuffSize(0)    {
+    : chan(-1), refCount(0), del_pending(0), pending(0), msg_ptr(0), sndBuffSize(0)    {
       if ( dest ) strcpy (name,dest);
       if ( me   ) strcpy (myName,me);
     }
     int release()  {
-      (refCount == 0) ? delete this : del_pending = 1;
+      if (refCount == 0) delete this;
+      else del_pending = 1;
       return AMS_SUCCESS;
     }
 };
 
 namespace {
   struct  AMS  {
-    AMS () {
+    AMS () : message_Q(0,0), park_Q(0,0), AMS_Q(0,0) {
       wt_enable_mask=0;
       refCount = 0;
       inited = false;
@@ -106,19 +104,22 @@ namespace {
       msgWaiting = 0;
       lockid = 0;
     }
-    int wt_enable_mask;
-    amsentry_t  me;
-    char  hostName [HOST_NAME_LENGTH];
-    int   hostNameLen;
-    char  name [PROC_NAME_LENGTH];
-    int (*userAst)(void*);
-    void* userPar;
-    amsentry_t* db[DB_SIZE];
-    u_int  inited;
-    u_int  refCount;
-    int  msgWaiting;
-    char reqSource [SAFE_NAME_LENGTH];
-    int  reqFac;
+    int            wt_enable_mask;
+    amsentry_t     me;
+    qentry_t       message_Q;
+    qentry_t       park_Q;
+    qentry_t       AMS_Q;
+    char           name[PROC_NAME_LENGTH];
+    char           hostName[HOST_NAME_LENGTH];
+    int            hostNameLen;
+    int          (*userAst)(void*);
+    void*          userPar;
+    amsentry_t*    db[DB_SIZE];
+    u_int          inited;
+    u_int          refCount;
+    int            msgWaiting;
+    char           reqSource [SAFE_NAME_LENGTH];
+    int            reqFac;
     lib_rtl_lock_t lockid;
   };
   static AMS _ams;
@@ -134,13 +135,13 @@ int AMS_exit_handler(void* ) {
 
 static void _amsc_full_name (char *dest, const char *src, size_t length, int style) {
   char *p, full[SAFE_NAME_LENGTH], proc[PROC_NAME_LENGTH], host[HOST_NAME_LENGTH];
-  if (p = strstr (src, "::"))  {      // found DECNET style source name 
+  if ((p = strstr (src,"::"))) {      // found DECNET style source name 
     int n = p - src;
     strncpy(host, src, n);
     host [n] = '\0';
     strcpy(proc, p + 2);
   }
-  else if (p = strchr (src, '@'))  {  // found INTERNET style source name 
+  else if ((p = strchr(src,'@')))  {  // found INTERNET style source name 
     int n = p - src;
     strncpy(proc, src, n);
     proc [n] = '\0';
@@ -279,7 +280,6 @@ static void _amsc_net_to_host (amsheader_t *amh)  {
 
 static int _amsc_tcp_set_sockopts(amsentry_t *db)  {
   struct linger Linger;
-  int off = 0;
   Linger.l_onoff = 1;
   Linger.l_linger = LINGER_VALUE ;
   setsockopt(db->chan, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
@@ -356,7 +356,7 @@ static int _amsc_tcp_close (int master_port, amsentry_t *e)  {
 }
 
 static int _amsc_tcp_accept (amsentry_t *mydb, amsentry_t *db)   {
-  int n = sizeof (db->address);
+  socklen_t n = sizeof (db->address);
   db->chan = accept (mydb->chan, (sockaddr*)&db->address, &n);
   if (db->chan == -1)  {
     int ret_status  = lib_rtl_get_error();
@@ -370,7 +370,6 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
   const char* buff = (const char*)buffer;
   u_int sent = 0, tosend = siz;
   int sent_now;
-  u_int sndb  = siz;
   u_int Npack = siz / CHOP_SIZE;
   u_int Nrest = siz % CHOP_SIZE;
   u_int this_siz  = siz;
@@ -406,7 +405,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
   }
   return AMS_SUCCESS;
 }
-
+#if 0
 static int _amsc_tcp_recv (amsentry_t *db, void *buff, size_t *sizptr, u_int flag)  {
   WITHOUT_INTERCEPT(int got_now = recv (db->chan, (char*)buff, *sizptr, flag));
   if (got_now == -1)  {
@@ -424,7 +423,7 @@ static int _amsc_tcp_recv (amsentry_t *db, void *buff, size_t *sizptr, u_int fla
   *sizptr = got_now;
   return AMS_SUCCESS;
 }
-
+#endif
 static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsigned int flag)  {
   u_int got = 0;
   int count = 0;
@@ -497,17 +496,17 @@ static int _amsc_remove_duplicate_entry (amsentry_t **db, amsentry_t *e)  {
 
 static int _amsc_test_message (void)  {
   qentry_t *m;
-  if ( !lib_rtl_queue_success(remqhi(&Message_Q,&m)) )    {
+  if ( !lib_rtl_queue_success(remqhi(&_ams.message_Q,&m)) )    {
     return AMS_ERROR;
   }
-  insqhi(m, &Message_Q);
+  insqhi(m, &_ams.message_Q);
   return AMS_SUCCESS;
 }
 
 static int _amsc_stack_next_message(qentry_t *header) {
   qentry_t *e;
   if ( lib_rtl_queue_success(remqhi(header, &e)) )  {
-    insqhi (e, &Park_Q);
+    insqhi (e, &_ams.park_Q);
   }
   return AMS_SUCCESS;
 }
@@ -515,8 +514,8 @@ static int _amsc_stack_next_message(qentry_t *header) {
 static int _amsc_restore_stack(int *cnt)  {
   qentry_t *m;
   *cnt = 0;
-  while ( lib_rtl_queue_success(remqhi (&Park_Q, &m)) )    {
-    insqhi (m, &Message_Q);
+  while ( lib_rtl_queue_success(remqhi (&_ams.park_Q, &m)) )    {
+    insqhi (m, &_ams.message_Q);
     (*cnt)++;
   }
   return AMS_SUCCESS;
@@ -558,7 +557,7 @@ static amsentry_t *_amsc_connect_to_task (char *dest, char *from)  {
 
 static int _amsc_disconnect_from_task (amsentry_t *e)   {
   _amsc_tcp_close(_ams.me.address.sin_port,e);
-  int status = _amsc_db_remove_entry (_ams.db, e);
+  /* int status = */ _amsc_db_remove_entry (_ams.db, e);
   if (e->pending != 0)  {
     e->pending->release();
     e->pending = 0;
@@ -573,7 +572,7 @@ static void _amsc_send_shutdown_message (amsentry_t *e)  {
   if (_ams.userAst != 0)  {
     lib_rtl_run_ast (_ams.userAst, _ams.userPar, 3);
   }
-  insqti (m, &TCPams_Q);
+  insqti (m, &_ams.AMS_Q);
   wtc_insert(WT_FACILITY_TCPAMS, 0);
   _amsc_disconnect_from_task (e);
 }
@@ -621,7 +620,7 @@ static int _amsc_move_to_user (amsqueue_t *m, void *buff, size_t *size,
 
 static int _amsc_spy_last_message (void* buffer, size_t* size, char* from, unsigned int* facility, size_t* tlen) {
   amsqueue_t *m;
-  if ( (remqti (&Message_Q, (qentry_t**)&m) & 1) )    {
+  if ( (remqti (&_ams.message_Q, (qentry_t**)&m) & 1) )    {
     if (facility) *facility = 0;
     if (tlen    ) *tlen = 0;
     *size = 0;
@@ -632,7 +631,7 @@ static int _amsc_spy_last_message (void* buffer, size_t* size, char* from, unsig
   if (tlen != 0)  {
     *tlen = m->size - sizeof (amsheader_t);
   }
-  insqti (m, &Message_Q);
+  insqti (m, &_ams.message_Q);
   _amsc_remove_node_if_mine(from);
   return (status == AMS_SUCCESS) ? status : errno=status;
 }
@@ -683,7 +682,7 @@ static amsentry_t *_amsc_find_connection (char *dest, char *from, CONNECTION_FIN
   return e;
 }
 
-static int _amsc_peek_action (unsigned int fac, void* param)    {
+static int _amsc_peek_action (unsigned int /* fac */, void* param)    {
   RTL::Lock lock(_ams.lockid);
   amsentry_t *e = (amsentry_t*)param;
   amsqueue_t* m;
@@ -759,18 +758,18 @@ static int _amsc_make_accept()   {
   return _amsc_peek_rearm(e);
 }
 
-static int _amsc_accept_ast (void* param)    {
+static int _amsc_accept_ast (void* /* param */)    {
   if (_ams.userAst != 0) lib_rtl_run_ast (_ams.userAst, _ams.userPar, 3);
   int status = _amsc_make_accept();
   IOPortManager(_ams.me.address.sin_port).add(0, _ams.me.chan, _amsc_accept_ast, &_ams.me);
   return status;
 }
 
-int _amsc_timeout_action(unsigned int fac, void* par)  {
+int _amsc_timeout_action(unsigned int /* fac */, void* /* par */ )  {
   amsqueue_t  *m  = new amsqueue_t(sizeof(amsheader_t));
   _amsc_fill_header (m->message,m->size,_ams.me.name,_ams.me.name,0,AMS_TIMEOUT,0);
   _amsc_net_to_host (m->message);
-  insqti (m, &TCPams_Q);
+  insqti (m, &_ams.AMS_Q);
   return wtc_insert (WT_FACILITY_TCPAMS, 0);
 }
 
@@ -796,30 +795,30 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
     unsigned int fac;
     char buff[80];
     size_t tlen, siz = 80;
-    int status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&TCPams_Q);
+    int status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.AMS_Q);
     if (status == AMS_TIMEOUT)    {
-      remqhi (&TCPams_Q, &m);
+      remqhi (&_ams.AMS_Q, &m);
       _amsc_restore_stack (&rcnt);
       for (int i=0;i<rcnt;i++)    {
         wtc_insert_head (WT_FACILITY_AMS, 0);
       }
-      insqhi (m, &Message_Q);
+      insqhi (m, &_ams.message_Q);
       wtc_insert_head (WT_FACILITY_AMSSYNCH, 0);
       _ams.msgWaiting = 0;
     }
     else  {
       if (_amsc_requirements_satisfied(src,fac) == 0)      {
-        _amsc_stack_next_message(&TCPams_Q);
+        _amsc_stack_next_message(&_ams.AMS_Q);
       }
       else  {
         RTL::Lock lock(_ams.lockid);
-        if ( lib_rtl_queue_success(remqhi(&TCPams_Q,&m)) )    {
+        if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
           amsc_restore_stack (&rcnt);
           for (int i=0;i<rcnt;i++)   {
             wtc_insert_head(WT_FACILITY_AMS,0);
           }
           wtc_insert_head(WT_FACILITY_AMSSYNCH,0);
-          insqhi(m,&Message_Q);
+          insqhi(m,&_ams.message_Q);
           _ams.msgWaiting  = 0;
         }
       }
@@ -827,15 +826,15 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
   }
   else  {
     RTL::Lock lock(_ams.lockid);
-    if ( lib_rtl_queue_success(remqhi(&TCPams_Q,&m)) )    {
-      insqti (m, &Message_Q);
+    if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
+      insqti (m, &_ams.message_Q);
       wtc_insert_head (WT_FACILITY_AMS, 0);
     }
   }
   return WT_SUCCESS;
 }
 
-static int _amsc_receive_action (unsigned int fac,void* param)   {
+static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
   RTL::Lock lock(_ams.lockid);
   amsentry_t *e = (amsentry_t*)param;
   amsqueue_t *m = e->msg_ptr;
@@ -881,7 +880,7 @@ static int _amsc_receive_action (unsigned int fac,void* param)   {
   if (_ams.userAst != 0)  {
     lib_rtl_run_ast(_ams.userAst, _ams.userPar, 3);
   }
-  insqti (m, &TCPams_Q);
+  insqti (m, &_ams.AMS_Q);
   _ams.msgWaiting = 1;
   return wtc_insert (WT_FACILITY_TCPAMS, 0);
 }
@@ -894,7 +893,7 @@ static int _amsc_receive_ast (void* param) {
 }
 
 static int _amsc_receive_rearm (amsentry_t* e)  {
-  int size = e->current_size-e->received;
+  size_t size = e->current_size-e->received;
   if (size > CHOP_SIZE)    {
     size = CHOP_SIZE;
   }
@@ -960,7 +959,7 @@ static int _amsc_read_message (void* buffer, size_t* size, char* from, unsigned 
   CheckInitialization();
   int status  = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
-    remqhi (&Message_Q, (qentry_t**)&m);
+    remqhi (&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility);
     m->release();
     _amsc_remove_node_if_mine(from);
@@ -991,23 +990,23 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     _ams.reqFac  = r_facility;
     _ams.msgWaiting  = 1;
     do  {
-      status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&Message_Q);
+      status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.message_Q);
       if (status == AMS_TIMEOUT)  {
-        remqhi (&Message_Q, (qentry_t**)&m);
+        remqhi (&_ams.message_Q, (qentry_t**)&m);
         m->release();
         status  = AMS_SUCCESS;
       }
       else   {
         if (status != AMS_NOPEND)  {
           if (_amsc_requirements_satisfied(src,fac) == 0)   {
-            _amsc_stack_next_message(&Message_Q);
+            _amsc_stack_next_message(&_ams.message_Q);
           }
           else  {
-            remqhi (&Message_Q, (qentry_t**)&m);
+            remqhi (&_ams.message_Q, (qentry_t**)&m);
             do  {
               status  = _amsc_test_message();
               if (status == AMS_SUCCESS)  {
-                _amsc_stack_next_message(&Message_Q);
+                _amsc_stack_next_message(&_ams.message_Q);
               }
             }
             while (status == AMS_SUCCESS);
@@ -1016,7 +1015,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
             for (int i=0;i<rcnt;i++)  {
               wtc_insert_head (WT_FACILITY_AMS, 0);
             }
-            insqhi (m, &Message_Q);
+            insqhi (m, &_ams.message_Q);
             _ams.msgWaiting  = 0;
           }
         }
@@ -1025,7 +1024,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   }
   status  = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
-    remqhi (&Message_Q, (qentry_t**)&m);
+    remqhi (&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility);
     m->release();
     _amsc_remove_node_if_mine(from);
@@ -1051,11 +1050,11 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
       }
       timer_id = 0;
     }
-    remqhi (&Message_Q, (qentry_t**)&m);
+    remqhi (&_ams.message_Q, (qentry_t**)&m);
     do  {
       status  = _amsc_test_message();
       if (status == AMS_SUCCESS)    {
-        _amsc_stack_next_message(&Message_Q);
+        _amsc_stack_next_message(&_ams.message_Q);
       }
     }while (status==AMS_SUCCESS);
     wtc_flush(WT_FACILITY_AMS);  
@@ -1089,8 +1088,6 @@ static int _amsc_disconnect_task(const char* task)   {
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 int amsc_init (const char *inname)   {
-  int on = 1;
-
   if (_ams.inited)  {
     _ams.refCount++;
     return errno=AMS_ALRINITED;
@@ -1098,9 +1095,6 @@ int amsc_init (const char *inname)   {
   _ams.refCount = 0;
   _ams.userAst = 0;
   _ams.userPar = 0;
-  ::memset (&Message_Q, 0, sizeof (Message_Q));
-  ::memset (&TCPams_Q, 0, sizeof (TCPams_Q));
-  ::memset (&Park_Q, 0, sizeof (Park_Q));
   int status = _amsc_tcp_get_host_name (_ams.hostName, sizeof (_ams.hostName));
   if (status != AMS_SUCCESS)  {
     errno = status;
@@ -1183,7 +1177,7 @@ int amsc_close ()   {
 void amsc_flush_message_queue (void) {
   amsqueue_t *m;
   RTL::Lock lock(_ams.lockid);
-  while( lib_rtl_queue_success(remqhi(&Message_Q,(qentry_t**)&m)) )  {
+  while( lib_rtl_queue_success(remqhi(&_ams.message_Q,(qentry_t**)&m)) )  {
     m->release();
   }
 }
@@ -1220,7 +1214,7 @@ int amsc_declare_user_ast (int (*astadd)(void*),void* astpar) {
 int amsc_spy_next_message (void* buffer, size_t* size, char* from, unsigned int* facility, size_t* tlen) {
   CheckInitialization();
   RTL::Lock lock(_ams.lockid);
-  return _amsc_spy_next_message(buffer,size,from,facility,tlen,&Message_Q);
+  return _amsc_spy_next_message(buffer,size,from,facility,tlen,&_ams.message_Q);
 }
 
 int amsc_spy_last_message (void* buffer, size_t* size, char* from, unsigned int* facility, size_t* tlen) {
@@ -1247,7 +1241,7 @@ int amsc_declare_alias (const char* name) {
 int amsc_stack_next_message()   {
   CheckInitialization();
   RTL::Lock lock(_ams.lockid);
-  return _amsc_stack_next_message(&Message_Q);
+  return _amsc_stack_next_message(&_ams.message_Q);
 }
 
 int amsc_restore_stack(int *cnt)  {

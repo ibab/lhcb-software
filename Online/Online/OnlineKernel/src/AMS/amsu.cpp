@@ -91,11 +91,10 @@ int amsuc_subscribe( unsigned int facility, wt_callback_t action, wt_callback_t 
   return AMS_SUCCESS;    
 }
 
-int amsuc_subscribe_death( const char* source,unsigned int facility, void* param)  {
-  amsu_deadfac_entry   *fac;
-  int srclen=strlen(source);
-
+int amsuc_subscribe_death(const char* source, unsigned int facility, void* /* param */)  {
   if ( !inited ) return AMS_NOTINITED;
+  amsu_deadfac_entry   *fac;
+  int srclen = strlen(source);
   fac = find_deadfacility(source);
   if ( fac == (void*)deadfac_list )   {
     fac = new amsu_deadfac_entry;

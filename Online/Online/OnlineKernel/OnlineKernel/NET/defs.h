@@ -50,4 +50,18 @@
 
 #endif
 
+#if defined(_VMS) || defined(VMS)                        /* _VMS   */
+typedef unsigned short __NetworkChannel__;               /* _VMS   */
+#else  // _OSK, WIN32 and linux
+typedef int            __NetworkChannel__;
+#ifdef _WIN32
+typedef int socklen_t;
+#endif
+#endif
+
+typedef unsigned short     __NetworkPort__;
+typedef unsigned short     __NetworkFamily__;
+typedef struct sockaddr_in __NetworkAddress__;
+typedef struct in_addr     __NetworkSubAddress__;
+
 #endif  /* __INTERNET_STUFF_H__ */
