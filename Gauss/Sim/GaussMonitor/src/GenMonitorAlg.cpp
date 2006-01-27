@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.7 2005-12-16 20:13:50 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.8 2006-01-27 19:47:30 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -163,7 +163,8 @@ StatusCode GenMonitorAlg::execute() {
                 ++nParChStabEtaAcc;
               }
               if( produceHistos() ) {
-                m_hStableEta->fill( pseudoRap, hepMCpart->momentum().perp() );
+                m_hStableEta->fill( pseudoRap );
+                m_hStablePt->fill( hepMCpart->momentum().perp() );
               }
             }
           }    

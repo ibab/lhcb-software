@@ -4,7 +4,10 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
-!=================== GaussMonitor v3r0 2005-12-16 ============================
+!=================== GaussMonitor v3r0 2007-01-27 ============================
+! 2006-01-27 - Gloria CORTI
+ - Fix bug resulting in not filling stable Pt histogram
+
 ! 2005-12-16 - Gloria CORTI
  - Adapt to new event model change of method names, LHCb namespace, replacing
    HardInfo with GenCollision
