@@ -282,6 +282,8 @@ InquireNameService::InquireNameService() : NameService(0)  {
   m_port = UdpConnection::servicePort(NAME_SERVICE_NAME);
 #endif
   ::fprintf(stdout,"|         I N Q U I R E            S E R V I C E                       |\n");
+  ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+      m_port, m_port, htons(m_port), htons(m_port));
   ::fprintf(stdout,"+======================================================================+\n");
   ::fflush(stdout);
 }
@@ -293,8 +295,13 @@ void InquireNameService::Handle ()   {
   TanMessage               req, rep;
   TanDataBase::Entry      *ent;
   UdpNetworkChannel        snd;
-  UdpConnection            conn(m_port);
-  NetworkChannel::Address &addr = conn._InAddress();
+  static UdpConnection     conn(m_port);
+  NetworkChannel::Address  addr;
+
+  addr.sin_port = conn._Port();
+  addr.sin_family = conn._Family();
+  addr.sin_addr.s_addr = INADDR_ANY;
+  ::memset(addr.sin_zero,0,sizeof(addr.sin_zero));
 
   int status = conn._RecvChannel()._Recv(&req,sizeof(req),0,0,&addr);
   if ( status != sizeof(req) )  {
@@ -308,6 +315,7 @@ void InquireNameService::Handle ()   {
     // Swap port to reply connection
     addr.sin_port = htons(m_port+1);
 #endif
+    //printf("Send to port:%04X\n",addr.sin_port);
     status = snd._Send(&rep,sizeof(rep),0,0,&addr);
     if ( status != sizeof(rep) )  {
       ::printf("NameService::Handle> Error sending message to [%s] on port 0x%X\n",
@@ -326,6 +334,8 @@ AllocatorNameService::AllocatorNameService() : NameService(_tcp=new TcpConnectio
 #endif
   m_port = _tcp->_Port();
   fprintf(stdout,"|         A L L O C A T I O N      S E R V I C E                       |\n");
+  ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+      m_port, m_port, htons(m_port), htons(m_port));
   fprintf(stdout,"+======================================================================+\n");
   fflush(stdout);
   _pAcceptHandler = new EventHandler(this);

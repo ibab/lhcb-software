@@ -156,6 +156,7 @@ hostent* TanInterface::GetHostByName(const char* name)  {
 int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin, 
                                  NetworkChannel::Address& rin )  
 {
+  static struct servent* se = ::getservbyname(NAME_SERVICE_NAME,"udp");
   struct hostent *rp = GetHostByName (node);
   if ( rp == 0 ) return TAN_SS_ERROR;
 #ifdef _VMS
@@ -167,7 +168,7 @@ int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin,
   memset(sin.sin_zero,0,sizeof(sin.sin_zero));
   sin.sin_port = htons(NAME_SERVICE_PORT);
   rin          = _sinudp;
-  rin.sin_port = (_portAllocated == 0)  ? htons(NAME_SERVICE_PORT+1) : _portAllocated;
+  rin.sin_port = se ? se->s_port : htons(NAME_SERVICE_PORT+1);
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------
@@ -250,7 +251,7 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
       }
       int nbyte = snd._Send(&msg,sizeof(msg),0,0,&sadd);
       if ( nbyte == sizeof(msg) )  {
-        printf("Receive on port: %04X\n",radd.sin_port);
+        // printf("Receive on port: %04X\n",radd.sin_port);
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
 #endif
         if ( nbyte > 0 )  {
@@ -283,7 +284,7 @@ int TanInterface::AllocatePort(const char* name, NetworkChannel::Port *port)  {
             msg.Convert();
             if ( num_byte != int(msg._Length()))return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
             if ( msg._Error() != TAN_SS_SUCCESS)return FatalError( ErrorCode(msg._Error()) );
-            _portAllocated = msg.sin.sin_port;
+            _portAllocated = ntohs(msg.sin.sin_port)+1;
             *port = msg.sin.sin_port;           return ErrorCode( TAN_SS_SUCCESS );
           }                                     // Receive timeout fired
           else if ( m_channel->_IsCancelled())  return FatalError(ErrorCode(TAN_SS_RECV_TMO));
@@ -379,14 +380,15 @@ int TanInterface::DumpDB (const char* node)   {
       if ( !rcv._IsValid() )                    return rcv._Error();
       if ( !snd._IsValid() )                    return snd._Error();
       msg.sin.sin_port = radd.sin_port;
+      for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
+        if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
+        else                       break;       // node...
+        if ( retry == 5 )                     return rcv._Error();
+      }
       int nbyte = snd._Send(&msg,sizeof(msg),0,0,&sadd);
       if ( nbyte == sizeof(msg) )  {
-        for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
-          if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
-          else                       break;       // node...
-          if ( retry == 5 )                     return rcv._Error();
-        }
-        nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO,0,&radd);
+        //printf("Receive on port: %04X\n",radd.sin_port);
+        nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
 #endif
         if ( nbyte > 0 )  {
           msg.Convert();

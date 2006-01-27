@@ -146,6 +146,7 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
       exit (WT_NOROOM);
     }
     int status  = insqti(e,wt_queue);
+    //printf("wtc_insert: Inserted entry: %d %p\n",facility,userpar1);
     if (status == QUE_ONEENTQUE)  {
       lib_rtl_set_event(wt_EventFlag);
     }
@@ -218,12 +219,12 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         entry = (wt_queue_entry*)q_remove_head( wt_queue );
         if( !entry )  {
           lib_rtl_clear_event (wt_EventFlag);
+          lib_rtl_unlock(wt_mutex_id);
           entry = (wt_queue_entry*)q_remove_head( wt_queue );
           if( !entry )   {
-            lib_rtl_unlock(wt_mutex_id);
             lib_rtl_wait_for_event (wt_EventFlag);
-            lib_rtl_lock(wt_mutex_id);
           }
+          lib_rtl_lock(wt_mutex_id);
         }
       } while (!entry);
       *facility   = entry->facility;

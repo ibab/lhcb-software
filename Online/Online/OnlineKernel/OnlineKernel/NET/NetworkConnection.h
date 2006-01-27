@@ -15,9 +15,6 @@ public:
   }
   virtual ~NetworkAddress() {
   }
-  virtual NetworkAddress& operator = (const NetworkAddress& /* copy */)  {
-    return *this;
-  }
 };
 
 /// Defintion of the basic interface of ANY networking connection.

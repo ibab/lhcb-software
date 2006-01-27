@@ -382,6 +382,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)    {
       WITHOUT_INTERCEPT(sent_now = ::send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
+	printf("AMS: Send error errno=%d\n",errno);
         return errno;
       }
       already_sent    += sent_now;
@@ -396,6 +397,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)  {
       WITHOUT_INTERCEPT(sent_now = send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
+	printf("AMS: Send error errno=%d\n",errno);
         return errno;
       }
       already_sent += sent_now;
@@ -432,9 +434,15 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   while (got != siz)  {
     WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
     if (got_now == -1)    {
+      printf("AMS: Receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
         case ESOCK_NOTCONN:
+        case ESOCK_CONNABORTED:
+        case ESOCK_CONNRESET:
+        case ESOCK_NETRESET:
+        case ESOCK_NETDOWN:
+        case ESOCK_SHUTDOWN:
           return AMS_CONNCLOSED;
         case ESOCK_NOTSOCK:
         case ESOCK_FAULT:
@@ -444,8 +452,10 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
         default:
           if (++count == MAX_TCP_ERRORS)
             return AMS_NODATA;
-          else
+          else {
+	    //printf("AMS: Receive error (ignored) errno=%d\n",errno);
             got_now = 0;
+	  }
       }
     }
     got   += got_now;
@@ -573,8 +583,8 @@ static void _amsc_send_shutdown_message (amsentry_t *e)  {
     lib_rtl_run_ast (_ams.userAst, _ams.userPar, 3);
   }
   insqti (m, &_ams.AMS_Q);
-  wtc_insert(WT_FACILITY_TCPAMS, 0);
   _amsc_disconnect_from_task (e);
+  wtc_insert(WT_FACILITY_TCPAMS, 0);
 }
 
 int _amsc_move_msgptr_to_user (amsqueue_t *m, void **buff, size_t *size, 
@@ -639,6 +649,7 @@ static int _amsc_spy_last_message (void* buffer, size_t* size, char* from, unsig
 static int _amsc_spy_next_message (void* buffer, size_t* size, char* from, unsigned int* facility, size_t* tlen, qentry_t* header)   {
   amsqueue_t *m;
   if ( !lib_rtl_queue_success(remqhi(header,(qentry_t**)&m)) )    {
+    _amsc_printf("_amsc_spy_next_message: no entry pending!\n");
     if (facility) *facility = 0;
     if (tlen)     *tlen = 0;
     *size = 0;
@@ -649,8 +660,9 @@ static int _amsc_spy_next_message (void* buffer, size_t* size, char* from, unsig
   if (tlen != 0)  {
     *tlen = m->size - sizeof (amsheader_t);
   }
-  insqhi (m,header);
+  insqhi(m,header);
   _amsc_remove_node_if_mine(from);
+  _amsc_printf("_amsc_spy_next_message: all done: status=%d\n",status);
   return status==AMS_SUCCESS ? status : errno=status;
 }
 
@@ -770,14 +782,16 @@ int _amsc_timeout_action(unsigned int /* fac */, void* /* par */ )  {
   _amsc_fill_header (m->message,m->size,_ams.me.name,_ams.me.name,0,AMS_TIMEOUT,0);
   _amsc_net_to_host (m->message);
   insqti (m, &_ams.AMS_Q);
+  _amsc_printf("AMS: Timeout action called!\n");
   return wtc_insert (WT_FACILITY_TCPAMS, 0);
 }
 
 int _amsc_message_timeout_ast (void* param){
   *(int*)param = 1;
-  wtc_insert (WT_FACILITY_TCPAMS, (void*)-1);
   if (_ams.userAst != 0)
     lib_rtl_run_ast (_ams.userAst, _ams.userPar, 3);
+  _amsc_printf("AMS: Timeout ast called!\n");
+  wtc_insert (WT_FACILITY_TCPAMS, (void*)-1);
   return AMS_SUCCESS;
 }
 
@@ -787,6 +801,7 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
   _amsc_printf("Message action requested.\n");
   if (par == (void**)-1)  {
     _amsc_timeout_action(fac,par);
+    _amsc_printf("Message action: timeout occurred!\n");
     return WT_SUCCESS;
   }
   if (_ams.msgWaiting == 1)  {
@@ -796,35 +811,39 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
     char buff[80];
     size_t tlen, siz = 80;
     int status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.AMS_Q);
+    _amsc_printf("Message action: Spy on next wessage: status=%d\n",status);
     if (status == AMS_TIMEOUT)    {
       remqhi (&_ams.AMS_Q, &m);
       _amsc_restore_stack (&rcnt);
+      insqhi (m, &_ams.message_Q);
+      _ams.msgWaiting = 0;
       for (int i=0;i<rcnt;i++)    {
         wtc_insert_head (WT_FACILITY_AMS, 0);
       }
-      insqhi (m, &_ams.message_Q);
-      wtc_insert_head (WT_FACILITY_AMSSYNCH, 0);
-      _ams.msgWaiting = 0;
+      _amsc_printf("Message action: Spy on next wessage:AMS_TIMEOUT->WT_FACILITY_AMSSYNCH!\n");
+      return wtc_insert_head (WT_FACILITY_AMSSYNCH, 0);
     }
-    else  {
-      if (_amsc_requirements_satisfied(src,fac) == 0)      {
-        _amsc_stack_next_message(&_ams.AMS_Q);
+    else if (_amsc_requirements_satisfied(src,fac) == 0)      {
+      _amsc_printf("Message action: message requirements not satisfied!\n");
+      _amsc_stack_next_message(&_ams.AMS_Q);
+    }
+    else if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
+      _amsc_restore_stack (&rcnt);
+      insqhi(m,&_ams.message_Q);
+      _ams.msgWaiting  = 0;
+      // Queue restore system traps
+      for (int i=0;i<rcnt;i++)   {
+        wtc_insert_head(WT_FACILITY_AMS,0);
       }
-      else  {
-        RTL::Lock lock(_ams.lockid);
-        if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
-          amsc_restore_stack (&rcnt);
-          for (int i=0;i<rcnt;i++)   {
-            wtc_insert_head(WT_FACILITY_AMS,0);
-          }
-          wtc_insert_head(WT_FACILITY_AMSSYNCH,0);
-          insqhi(m,&_ams.message_Q);
-          _ams.msgWaiting  = 0;
-        }
-      }
+      _amsc_printf("Message action: WT_FACILITY_AMSSYNCH!\n");
+      return wtc_insert_head(WT_FACILITY_AMSSYNCH,0);
+    }
+    else {
+      _amsc_printf("Message action: No entry found in AMS_Queue!\n");
     }
   }
   else  {
+    _amsc_printf("Message action: No message pending!\n");
     RTL::Lock lock(_ams.lockid);
     if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
       insqti (m, &_ams.message_Q);
@@ -976,6 +995,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   void* w_par;
   amsqueue_t *m = 0;
   CheckInitialization();
+  _amsc_printf("_amsc_get_message called\n");
   _ams.reqFac = 0;
   ::memset (_ams.reqSource, 0, sizeof(_ams.reqSource));
   if (r_source_in != 0)   {
@@ -1011,7 +1031,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
             }
             while (status == AMS_SUCCESS);
             wtc_flush(WT_FACILITY_AMS);
-            amsc_restore_stack (&rcnt);
+            _amsc_restore_stack (&rcnt);
             for (int i=0;i<rcnt;i++)  {
               wtc_insert_head (WT_FACILITY_AMS, 0);
             }
@@ -1058,7 +1078,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
       }
     }while (status==AMS_SUCCESS);
     wtc_flush(WT_FACILITY_AMS);  
-    amsc_restore_stack (&rcnt);
+    _amsc_restore_stack (&rcnt);
     for (int i=0;i<rcnt;i++) {
       wtc_insert_head (WT_FACILITY_AMS, 0);
     }
