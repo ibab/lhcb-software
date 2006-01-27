@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.h,v 1.5 2006-01-18 09:12:46 gcorti Exp $
+// $Id: GiGaGetHitsAlg.h,v 1.6 2006-01-27 19:28:14 gcorti Exp $
 #ifndef GIGAGETHITSALG_H 
 #define GIGAGETHITSALG_H 1
 
@@ -36,7 +36,8 @@ protected:
 private:
 
   std::string    m_othits      ;      ///< TES path where to look for OT hits 
-  std::string    m_sthits      ;      ///< TES path where to look for ST hits
+  std::string    m_tthits      ;      ///< TES path where to look for TT hits
+  std::string    m_ithits      ;      ///< TES path where to look for IT hits
   std::string    m_velohits    ;      ///< TES path where to look for Velo hits
   std::string    m_puvelohits  ;      ///< TES path where to look for PileUp Veto hits
   std::string    m_muonhits    ;      ///< TES path where to look for Muon hits

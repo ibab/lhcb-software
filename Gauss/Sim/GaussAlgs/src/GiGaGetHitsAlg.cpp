@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.8 2006-01-18 09:12:46 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.9 2006-01-27 19:28:14 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -45,9 +45,9 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   m_caloDet.push_back ( "Hcal" );
 
   declareProperty( "VeloHits",   m_velohits   = LHCb::MCHitLocation::Velo );
-  declareProperty( "PuVeloHits", m_puvelohits = LHCb::MCHitLocation::PuVeto );
-  declareProperty( "TTHits",     m_othits = LHCb::MCHitLocation::TT );
-  declareProperty( "ITHits",     m_sthits = LHCb::MCHitLocation::IT );
+  declareProperty( "PuVetoHits", m_puvelohits = LHCb::MCHitLocation::PuVeto );
+  declareProperty( "TTHits",     m_tthits = LHCb::MCHitLocation::TT );
+  declareProperty( "ITHits",     m_ithits = LHCb::MCHitLocation::IT );
   declareProperty( "OTHits",     m_othits = LHCb::MCHitLocation::OT );
   declareProperty( "CaloHits",   m_caloHits );
   declareProperty( "MuonHits",   m_muonhits = LHCb::MCHitLocation::Muon );
@@ -91,10 +91,10 @@ StatusCode GiGaGetHitsAlg::execute() {
   hitsTracker( "VeloPU", m_puvelohits );
 
   // Trigger Tracker hits
-  hitsTracker( "TT", m_sthits );
+  hitsTracker( "TT", m_tthits );
 
   // Inner Tracker hits
-  hitsTracker( "IT", m_sthits );
+  hitsTracker( "IT", m_ithits );
   
   // Outer Tracker hits
   hitsTracker( "OT", m_othits );  
@@ -150,14 +150,14 @@ void GiGaGetHitsAlg::hitsTracker(const std::string det,
            << endmsg;
     Stat stat( chronoSvc(), "#"+dethits, obj->size() );
     if( msgLevel( MSG::VERBOSE ) ) {
+      int icount = 0;
       for( LHCb::MCHits::const_iterator hiter=obj->begin(); hiter!=obj->end();
            ++hiter ) {
-        verbose() << "Energy of MCHit: "
-                  << (*hiter)->energy()
-                  << "     MCParticle: " 
-                  << (*hiter)->mcParticle()->particleID().pid()
-                  << "     Energy: "
-                  << (*hiter)->mcParticle()-> momentum().e()
+        verbose() << dethits << " " << icount++ << std::endl
+                  << *(*hiter) << std::endl
+                  << " from MCParticle " << (*hiter)->mcParticle()->key()
+                  << "  pdg " << (*hiter)->mcParticle()->particleID().pid()
+                  << "  E " << (*hiter)->mcParticle()-> momentum().e()
                   << endmsg;
       }
     }

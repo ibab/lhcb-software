@@ -4,7 +4,14 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
-!===================== GaussAlgs v2r0 2006-01-18  =========================
+!===================== GaussAlgs v2r0 2006-01-27  =========================
+! 2006-01-27 - Gloria CORTI
+ - src/GenInit.cpp, SimInit.cpp
+   . change output level in execute to verbose
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . change to read separately as from new event model TT and IT hits
+     and change name to property for PuVeto
+
 ! 2006-01-18 - Gloria CORTI
  - src/GenInit.{h,cpp}, SimInit.{h,cpp} 
    . New algorithms derived from LbAppInit to initialize respectively 
