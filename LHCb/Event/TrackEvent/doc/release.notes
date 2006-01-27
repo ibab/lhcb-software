@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-01-27
+ - new clearStates method, remove const accessors
+
 ! 2006-01-26
  - Add typedefs
 
