@@ -4,8 +4,16 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+                                                                                
+! 2006-01-27
+ - no spare bits  
+
+
+
+
 !========================= TrackEvent v2r0 2006-01-27 ========================
 ! 2006-01-27 M.Needham
+
  - new clearStates method, remove const accessors
  - Add typedefs
 

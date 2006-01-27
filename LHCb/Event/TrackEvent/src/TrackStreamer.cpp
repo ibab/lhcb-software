@@ -56,8 +56,7 @@ std::ostream& str::lhcbIDs(const std::vector<LHCbID>& ids, std::ostream& os) {
 
 std::ostream& str::lhcbID(const LHCbID& id, std::ostream& os) {
   os << " ID detector " << id.detectorType() 
-     << " ID " << id.channelID()
-     << " size " << (int) id.spareBits();
+     << " ID " << id.channelID();
   os << std::endl;
   return os;
 }
