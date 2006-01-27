@@ -4,6 +4,12 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v1r2 2006-01-27 =======================
+! 2006-01-26 - Eduardo Rodrigues
+ - using the MeasurementProvider tool, needed since last changes in TrackEvent
+ - added job options to be able to set input Velo and Seed tracks containers
+ - minor corrections: pick up correct tool names, use GSL pow functions
+
 ! 2006-01-16 - Eduardo Rodrigues
  - propagation of changes ITMeasurement -> STMeasurement
 

@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.3 2005-12-01 17:56:01 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.4 2006-01-27 12:57:20 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHVELOSEED_H 
 #define TRACKMATCHING_TRACKMATCHVELOSEED_H 1
 
@@ -10,12 +10,10 @@
 // from STDet
 #include "STDet/DeSTDetector.h"
 
-// from STTools
-#include "STTools/ISTClusterPosition.h"
-
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -55,7 +53,12 @@ private:
   ///Defiintion of vector of TrackMatch pointers
   typedef std::vector<TrackMatch*> TrackMatchVector;
 
-  /// job options
+  // Job options
+  // -----------
+  /// Input Velo tracks
+  std::string m_veloTracks;
+  /// Input Seed tracks
+  std::string m_seedTracks;
   /// Chi2 cut to decide whether to match 2 tracks
   double m_chi2MatchingCut;
   /// Store all combinations smaller than chi2-cut or only the best ones
@@ -106,15 +109,15 @@ private:
    */
   double m_spreadWeight;
 
-  /// ST cluster position tool
-  ISTClusterPosition* m_stPositionTool;    ///< ST cluster position tool
-
   /// The extrapolators
   ITrackExtrapolator* m_extrapolatorVelo;
   ITrackExtrapolator* m_extrapolatorSeed;
 
   /// The chi2 calculator tool
   ITrackChi2Calculator* m_chi2Calculator;
+
+  /// The measurement provider tool
+  IMeasurementProvider* m_measProvider;
 
   // ST geometry
   DeSTDetector* m_itTracker;
