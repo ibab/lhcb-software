@@ -16,7 +16,6 @@
       <attribute 
 	desc="Packed information of the origin of the hit 
 	generating the digit, the earliest, and the fate of the digit" 
-	getMeth="FALSE" 
 	name="DigitInfo" 
 	type="unsigned int"/>
       <method 
