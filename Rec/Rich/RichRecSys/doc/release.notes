@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-01-27 - Christopher Rob Jones
+ - Update track options to new tool name in RichRecTools
+
 !====================== RichRecSys v2r0 2006-01-23 =======================
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0

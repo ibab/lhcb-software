@@ -21,7 +21,7 @@ ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "forward/0/1e10",
 ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
 
 // Configure the RichTrackSegment maker
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromRecoTracks/RichDetTrSegMaker" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/RichDetTrSegMaker" };
 ToolSvc.Offline.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
 ToolSvc.Offline.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
 

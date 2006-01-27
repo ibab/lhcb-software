@@ -31,7 +31,7 @@ ToolSvc.Offline.RichTrackCreatorReco.TrackMomentumCuts = { "forward/0/9999999",
                                                            "velo/999999/9999999" };
 
 // Configure the RichTrackSegment maker for reconstructed tracks
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromRecoTracks/RichDetTrSegMakerReco" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/RichDetTrSegMakerReco" };
 ToolSvc.Offline.RichDetTrSegMakerReco.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
 ToolSvc.Offline.RichDetTrSegMakerReco.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
 // which radiators to use                              Aerogel   C4F10    CF4
