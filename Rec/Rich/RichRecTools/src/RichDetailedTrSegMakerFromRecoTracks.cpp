@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.2 2006-01-27 10:40:18 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.3 2006-01-27 11:01:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -40,8 +40,8 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_minStateDiff       ( Rich::NRadiatorTypes, 0      ),
     m_trExt1             ( 0                            ),
     m_trExt2             ( 0                            ),
-    m_Ext1               ( "TrackHerabExtrapolator"     ),
-    m_Ext2               ( "TrackParabolicExtrapolator" ),
+    m_trExt1Name         ( "TrackHerabExtrapolator"     ),
+    m_trExt2Name         ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
     m_extrapFromRef      ( false                        ),
     m_minZmove           ( 1 * mm                       )
@@ -52,11 +52,11 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
 
   // job options
 
-  declareProperty( "PrimaryTrackExtrapolator", m_Ext1     );
-  declareProperty( "BackupTrackExtrapolator",  m_Ext2     );
-  declareProperty( "UseRadiators",             m_usedRads );
+  declareProperty( "PrimaryTrackExtrapolator", m_trExt1Name    );
+  declareProperty( "BackupTrackExtrapolator",  m_trExt2Name    );
+  declareProperty( "UseRadiators",             m_usedRads      );
   declareProperty( "ExtrapolateFromReference", m_extrapFromRef );
-  declareProperty( "MinimumZMove",             m_minZmove );
+  declareProperty( "MinimumZMove",             m_minZmove      );
 
   // Nominal z positions of states at RICHes
   m_nomZstates[0] = 99.0*cm;    // Place to look for Rich1 entry state
@@ -95,12 +95,11 @@ RichDetailedTrSegMakerFromRecoTracks::~RichDetailedTrSegMakerFromRecoTracks() { 
 StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Get the track state extrapolators for the RICH
-  m_trExt1 = tool<ITrackExtrapolator>( m_Ext1 );
-  m_trExt2 = tool<ITrackExtrapolator>( m_Ext2 );
+  // load primary track extrapolator ( backup is loaded on-demand )
+  m_trExt1 = tool<ITrackExtrapolator>( m_trExt1Name );
 
   // Get the RICH tools
   acquireTool( "RichRayTracing",          m_rayTracing   );
@@ -523,7 +522,7 @@ void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
   if ( m_radiators[Rich::Aerogel]->intersectionPoints( state->position(),
                                                        state->slopes(),
                                                        dummyPoint,
-                                                       aerogelExitPoint ) ) 
+                                                       aerogelExitPoint ) )
   {
     if ( aerogelExitPoint.z() > state->z() )
     {
@@ -582,7 +581,7 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove
                                                             const State * refState ) const
 {
   // Check if requested move is big enough to bother with
-  if ( fabs(stateToMove->z() - z) > m_minZmove ) 
+  if ( fabs(stateToMove->z() - z) > m_minZmove )
   {
 
     // debug printout
@@ -605,16 +604,18 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove
     }
 
     // try first with the primary extrapolator
-    if ( !m_trExt1->propagate(*stateToMove,z) )
+    if ( !primaryExtrapolator()->propagate(*stateToMove,z) )
     {
       // if that fails, try the backup one
-      if ( m_trExt2->propagate(*stateToMove,z) )
+      if ( backupExtrapolator()->propagate(*stateToMove,z) )
       {
-        Warning(m_Ext1+" failed -> reverted to "+m_Ext2,StatusCode::SUCCESS);
+        Warning("'"+m_trExt1Name+"' failed -> successfully reverted to '"+
+                m_trExt2Name+"'",StatusCode::SUCCESS);
       } else
       {
         // Both failed ...
-        Warning("Failed to transport state using "+m_Ext1+" or "+m_Ext2);
+        Warning("Failed to extrapolate state using either '"+
+                m_trExt1Name+"' or '"+m_trExt2Name+"'");
         return StatusCode::FAILURE;
       }
     }

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.2 2006-01-27 10:40:18 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.3 2006-01-27 11:01:57 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -129,6 +129,19 @@ private: // methods
                         const double z,
                         const LHCb::State * refState = 0 ) const;
 
+  /// Access primary track extrapolator tool
+  inline ITrackExtrapolator * primaryExtrapolator() const
+  {
+    return m_trExt1;
+  }
+
+  /// Access on-demand backup track extrapolator tool
+  inline ITrackExtrapolator * backupExtrapolator() const
+  {
+    if ( !m_trExt2 ) { m_trExt2 = tool<ITrackExtrapolator>( m_trExt2Name ); }
+    return m_trExt2;
+  }
+
 private: // data
 
   /// Ray tracing tool
@@ -159,9 +172,9 @@ private: // data
 
   // Track extrapolators
   ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
-  ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
-  std::string m_Ext1; ///< Primary track extrapolation tool name
-  std::string m_Ext2; ///< Secondary track extrapolation tool name
+  mutable ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
+  std::string m_trExt1Name; ///< Primary track extrapolation tool name
+  std::string m_trExt2Name; ///< Secondary track extrapolation tool name
 
   /// Flags to turn on/off individual radiators
   std::vector<bool> m_usedRads;
