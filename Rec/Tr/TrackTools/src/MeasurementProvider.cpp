@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.13 2006-01-20 11:02:32 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.14 2006-01-27 13:17:19 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -63,14 +63,14 @@ StatusCode MeasurementProvider::initialize() {
 
   // Retrieve the Velo, IT and OT detector elements
   m_otDet   = getDet<DeOTDetector>( m_otDetPath );
-  
+
   m_itDet   = getDet<DeSTDetector>( m_itDetPath );
   
   m_veloDet = getDet<DeVelo>( m_veloDetPath );
 
   // Retrieve the STClusterPosition tool
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -91,24 +91,20 @@ void MeasurementProvider::load() {
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) 
 {
-  debug() << "# LHCbIDs = " << track.lhcbIDs().size() << endreq;
-  const std::vector<LHCbID>& allids = track.lhcbIDs();
-//  for ( unsigned int it2 = 0; it2 < allids.size(); ++it2 ) {
-  for ( std::vector<LHCbID>::const_iterator it2 = allids.begin();
+  std::vector<LHCbID>& allids = track.lhcbIDs();
+  for ( std::vector<LHCbID>::iterator it2 = allids.begin();
         it2 != allids.end(); ++it2 ) {
-    const LHCbID& id = *it2;
-    debug() << "LHCbID channelID " << id.channelID()
-				<< " detectorType " << id.detectorType()
-				<< " spareBits " << id.spareBits() << endreq;
+    LHCbID& id = *it2;
+    // HACK necessary so that the equality !isOnTrack(meas.lhcbID()) is true
+    // and the measurement is actually added to the track!
+    // This will become obsolete as soon as the LHCbID is simplified ...
+    id.setSpareBits( 0 );
   }
 
   const std::vector<LHCbID>& ids = track.lhcbIDs();
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
     const LHCbID& id = *it;
-    debug() << "Bef: LHCbID channelID " << id.channelID()
-				<< " detectorType " << id.detectorType()
-				<< " spareBits " << id.spareBits() << endreq;
 	 // First look if the Measurement corresponding to this LHCbID
 	 // is already in the Track, i.e. whether it has already been loaded!
 	 if ( track.isMeasurementOnTrack( id ) ) {
@@ -124,17 +120,16 @@ StatusCode MeasurementProvider::load( Track& track )
 	 // not all measurements loaded OR some skipped OR ...
     if ( meas != NULL ) track.addToMeasurements( *meas );
     delete meas;
-    //if ( meas == NULL ) {
-    //  delete meas;
-    //    return StatusCode::FAILURE;
-    //}
-    //else {
-		//track.addToMeasurements( *meas );
-		//delete meas;
-    //}
+    //if ( meas == NULL ) return StatusCode::FAILURE;
   }
   // Update the status flag of the Track
   track.setStatus( Track::PatRecMeas );
+
+  if ( track.nLHCbIDs() != track.nMeasurements() )
+    warning() << "-> Track (key=" << track.key()
+              << "): loaded successfully only " << track.nMeasurements()
+              << " Measurements out of " << track.nLHCbIDs()
+              << " LHCbIDs!" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -146,10 +141,6 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par0,
                                                 double par1 )
 {
-  debug() << "In : LHCbID channelID " << id.channelID()
-			 << " detectorType " << id.detectorType()
-			 << " spareBits " << id.spareBits() << endreq;
-  
   Measurement* meas = NULL;
   if ( id.isVelo() ) {
     VeloChannelID vid = id.veloID();
@@ -162,7 +153,8 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       }
     }
     else {
-      debug() << "VeloCluster is NULL!" << endreq;
+      error() << "VeloCluster is NULL! No correspondence to VeloChannelID = "
+              << vid << endreq;
     }
   }
   else if ( id.isST() ) {
@@ -171,7 +163,9 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     if (clus != NULL)
       meas = new STMeasurement( *clus, *m_itDet, *m_stPositionTool );
     else {
-      debug() << "ITCluster is NULL!" << endreq;
+      error() << "ITCluster of type " << ( sid.isTT() ? "TT" : "IT" )
+              << " is NULL! No correspondence to ITChannelID = "
+              << sid << endreq;
     }
   }
   else if ( id.isOT() ) {
@@ -183,15 +177,15 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       meas = new OTMeasurement(*clus,*m_otDet, (int) par0, par1);
     }
     else {
-      debug() << "OTTime is NULL!" << endreq;
-    }    
+      error() << "OTTime is NULL! No correspondence to OTChannelID = "
+              << oid << endreq;
+    }
   }
   else {
-    info() << "LHCbID is not of type Velo, OT, or ST"
-           << " (type is " << id.detectorType() << ")" << endreq
-           << " -> do not know how to create a Measurement!" << endreq;
+    error() << "LHCbID is not of type Velo, OT, or ST"
+            << " (type is " << id.detectorType() << ")" << endreq
+            << " -> do not know how to create a Measurement!" << endreq;
   }
-  
 
   if ( meas == NULL )
     error() << "Unable to create measurement!" << endreq;
