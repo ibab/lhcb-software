@@ -4,6 +4,7 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!===================== TrackAssociators v1r5 2006-01-27 ====================
 ! 2006-01-19 - Eduardo Rodrigues
  - removed unnecessary "MinimalZ" property - using instead the track event
    model functionality
