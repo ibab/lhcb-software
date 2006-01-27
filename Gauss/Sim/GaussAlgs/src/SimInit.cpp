@@ -1,4 +1,4 @@
-// $Id: SimInit.cpp,v 1.1 2006-01-18 12:52:15 gcorti Exp $
+// $Id: SimInit.cpp,v 1.2 2006-01-27 19:26:37 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -96,8 +96,8 @@ StatusCode SimInit::execute() {
   mc->setEvtNumber( gen->evtNumber() );
   mc->setEvtTime( 0 ); // need to get it from EventClockSvc
 
-  info() << "GenHeader " << *gen << endmsg;
-  info() << "MCHeader " << *mc << endmsg;
+  verbose() << "GenHeader " << *gen << endmsg;
+  verbose() << "MCHeader " << *mc << endmsg;
 
   put( mc, LHCb::MCHeaderLocation::Default );
 

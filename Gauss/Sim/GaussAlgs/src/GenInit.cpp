@@ -1,4 +1,4 @@
-// $Id: GenInit.cpp,v 1.1 2006-01-18 12:52:15 gcorti Exp $
+// $Id: GenInit.cpp,v 1.2 2006-01-27 19:26:32 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode GenInit::execute() {
   gen->setRunNumber( m_runNumber );
   gen->setEvtNumber( eventNumber );
 
-  info() << "GenHeader " << *gen << endmsg;
+  verbose() << "GenHeader " << *gen << endmsg;
 
   put( gen, LHCb::GenHeaderLocation::Default );    
 
