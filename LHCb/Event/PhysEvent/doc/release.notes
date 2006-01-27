@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.72 2006-01-26 12:44:30 cattanem Exp $
+! $Id: release.notes,v 1.73 2006-01-27 09:45:43 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-!======================= PhysEvent v9r0 2006-01-26 ==========================
+!======================= PhysEvent v9r0 2006-01-27 ==========================
+! 2006-01-27 - Marco Cattaneo
+ - In requirements, add workaround to gccxml bug on Windows when parsing
+   SMatrix header file. Needs GaudiObjDesc v9r3 or greater
+
 ! 2006-01-23 - P. Koppenburg
  - xml/Particle.xml
    . Add setConfLevel and setWeight methods

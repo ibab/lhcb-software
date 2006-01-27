@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.55 2006-01-26 15:23:04 cattanem Exp $
+# $Id: requirements,v 1.56 2006-01-27 09:45:43 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -38,3 +38,5 @@ apply_pattern linker_library    library=PhysEvent
 
 private
 use GaudiObjDesc v* -no_auto_imports
+# Patch for gccxml bug with assert statement on Windows
+macro_append use_obj2dict_gccxmlflags "" WIN32 " -D __CINT__ "
