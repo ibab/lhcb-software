@@ -1,4 +1,4 @@
-// $Id: HltTracking_load.cpp,v 1.1.1.1 2006-01-19 10:11:25 hernando Exp $
+// $Id: HltTracking_load.cpp,v 1.2 2006-01-27 21:50:24 hernando Exp $
 // Include files 
 
 
@@ -6,7 +6,6 @@
 
 DECLARE_FACTORY_ENTRIES(HltTracking) {
 
-  DECLARE_ALGORITHM( HltVeloTT );
-  DECLARE_ALGORITHM( HltForward );
+  DECLARE_TOOL( HltTrackSelector );
 
 }

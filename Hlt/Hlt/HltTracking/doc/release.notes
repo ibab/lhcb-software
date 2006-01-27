@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2006-01-26 Jose A. Hernando
+  - src/ removing HltForward and HltVeloTT algorithms: using HltTrackSelector tool instead
+    src/HltTrackSelector.h .cpp tool to decide when to accpet a track to track
+        use an options with mode: selected, rest, all
+
 ! ======================== 2006-01-19 v1r0 ===================================
 ! 2006-01-19 Jose A. Hernando
 	- cmt/requirements

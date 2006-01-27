@@ -25,9 +25,7 @@ use GaudiAlg            v*
 use HltEvent            v*    Event
 use TrackEvent		v*    Event
 
-use PatTools            v*    Pat
-use PatVeloTT		v*    Pat
-use PatForward		v*    Pat
+use TrackInterfaces       v*    Tr
 
 
 #============================================================================

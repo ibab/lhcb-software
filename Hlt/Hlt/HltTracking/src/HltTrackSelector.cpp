@@ -1,47 +1,53 @@
-// $Id: HltForward.cpp,v 1.1.1.1 2006-01-19 10:11:25 hernando Exp $
-// Include files
+// $Id: HltTrackSelector.cpp,v 1.1 2006-01-27 21:50:24 hernando Exp $
+// Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
-#include "PatTools/PatDataStore.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "HltForward.h"
+#include "HltTrackSelector.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<HltForward>          s_factory ;
-const        IAlgFactory& HltForwardFactory = s_factory ;
+//-----------------------------------------------------------------------------
+// Implementation file for class : TrackSelector
+//
+// 2006-01-26 : Jose Angel Hernando Morata
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( HltTrackSelector );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltForward::HltForward( const std::string& name,
-                        ISvcLocator* pSvcLocator)
-  : PatForward ( name , pSvcLocator )
-
+HltTrackSelector::HltTrackSelector( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+  : GaudiTool ( type, name , parent )
 {
-  // possible modes: "selected", "rest", "all"
-  declareProperty("Mode",m_mode = "all");
-  
-  m_accept.clear();
-  m_noAccept.clear();
-  m_noAccept.push_back(Track::Backward);
-  // declareProperty( "Accept", m_accept);
-  // declareProperty( "NoAccept", m_noAccept);
-  
+  declareInterface<ITrackSelector>(this);
+
+  declareProperty("Mode", m_mode = "all");
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltForward::~HltForward() {};
+HltTrackSelector::~HltTrackSelector() {} 
+
+//=============================================================================
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltForward::initialize() {
-  StatusCode sc =  PatForward::initialize();  
+StatusCode HltTrackSelector::initialize() {
+
+  StatusCode sc = GaudiTool::initialize();
+  
+  m_accept.clear();
+  m_noAccept.clear();
+  m_noAccept.push_back(Track::Backward);
+  m_noAccept.push_back(Track::Invalid);
 
   m_ok = true;  
   if (m_mode == "selected") {
@@ -53,18 +59,18 @@ StatusCode HltForward::initialize() {
     m_noAccept.push_back(Track::PIDSelected);
   }  
 
+  for (std::vector<Track::Flags>::const_iterator it = m_noAccept.begin();
+       it != m_noAccept.end(); it++) 
+    debug() << " No accept Flag " << *it << endreq;
+  for (std::vector<Track::Flags>::const_iterator it2 = m_accept.begin();
+       it2 != m_accept.end(); it2++) 
+    debug() << "    Accept Flag " << *it2 << endreq;
+
   return sc;
 };
 
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode HltForward::execute() {
-  return PatForward::execute();
-}
 
-
-bool HltForward::acceptTrack(const Track& track) const 
+bool HltTrackSelector::accept(const Track& track) const 
 {
   for (std::vector<Track::Flags>::const_iterator it = m_noAccept.begin();
        it != m_noAccept.end(); it++) {
@@ -75,7 +81,6 @@ bool HltForward::acceptTrack(const Track& track) const
     }
     
   }
-
   for (std::vector<Track::Flags>::const_iterator it = m_accept.begin();
        it != m_accept.end(); it++) {
     Track::Flags flag = *it;
@@ -89,11 +94,3 @@ bool HltForward::acceptTrack(const Track& track) const
   return m_ok;  
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltForward::finalize() {
-  return PatForward::finalize();
-}
-
-//=============================================================================
