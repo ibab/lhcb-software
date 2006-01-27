@@ -5,7 +5,13 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!======================= GaussTracker v5r0 2005-12-16 =========================
+!======================= GaussTracker v5r0 2006-01-27 =========================
+! 2006-01-27 - Gloria CORTI
+ - Introduce use of DetectorElement base class to retrieve sensitive detector
+   from x,y,z and set it in MCHit. The properties "MCHitsLocation", 
+   "CollectionName" and "Detector" must be set in the options.
+   . src/GetTrackerHitsAlg.{h,cpp} 
+
 ! 2005-12-16 - Gloria CORTI
  - Remove Velo specific classes since in new event model they use generic
    MCHit:

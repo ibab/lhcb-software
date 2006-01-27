@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.h,v 1.1 2005-10-25 18:52:50 gcorti Exp $
+// $Id: GetTrackerHitsAlg.h,v 1.2 2006-01-27 19:40:43 gcorti Exp $
 #ifndef GETTRACKERHITSALG_H 
 #define GETTRACKERHITSALG_H 1
 
@@ -9,6 +9,8 @@
 // Forward declarations
 class IGiGaSvc;
 class IGiGaKineCnvSvc;
+class DetectorElement;
+
 
 /** @class GetTrackerHitsAlg GetTrackerHitsAlg.h
  *  
@@ -52,6 +54,9 @@ private:
   
   std::string        m_hitsLocation;     ///< Name of TES path for MCHits
   std::string        m_colName;          ///< Name of G4 hits collection
+
+  std::string        m_detName;          ///< Detector PATH
+  const DetectorElement* m_detector;     ///< Pointer to DetectorElement
   
 };
 #endif // GETTRACKERHITSALG_H

@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.3 2005-12-16 19:44:07 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.4 2006-01-27 19:40:43 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,7 @@
 
 // from LHCb
 #include "Event/MCHit.h"
+#include "DetDesc/DetectorElement.h"
 
 // local
 #include "GetTrackerHitsAlg.h"
@@ -43,10 +44,12 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
   , m_gigaSvc      ( 0 )
   , m_gigaKineCnvSvc ( 0 )
 {
-  declareProperty( "GiGaService",    m_gigaSvcName    = "GiGa" );
-  declareProperty( "KineCnvService", m_kineSvcName    = IGiGaCnvSvcLocation::Kine );
-  declareProperty( "MCHitsLocation", m_hitsLocation   = "/Event/MC/BCM/Hits" );
-  declareProperty( "CollectionName", m_colName        = "BCMSDet/Hits" );
+  declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa" );
+  declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
+  declareProperty( "MCHitsLocation", m_hitsLocation = "" );
+  declareProperty( "CollectionName", m_colName = "" );
+  declareProperty( "Detector",       m_detName = "" );
+
 }
 
 //=============================================================================
@@ -64,11 +67,31 @@ StatusCode GetTrackerHitsAlg::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  if( "" == m_hitsLocation ) {
+    fatal() << "Property MCHitsLocation need to be set! " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if( "" == m_colName ) {
+    fatal() << "Property CollectionName need to be set! " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if( "" == m_detName ) {
+    fatal() << "Property Detector need to be set! " << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  info() << " The hits " << m_hitsLocation  << endmsg;
+  info() << " will be taken from G4 collection " << m_colName  << endmsg;
+  info() << " for detector " << m_detName << endmsg;
+
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName ); // GiGa has to already exist!
 
   // get kineCnv service that hold the MCParticle/Geant4 table list
   m_gigaKineCnvSvc = svc<IGiGaKineCnvSvc>( m_kineSvcName );
 
+  // get the detector element
+  m_detector = getDet<DetectorElement>(m_detName);
+  
   return StatusCode::SUCCESS;
 };
 
@@ -118,6 +141,7 @@ StatusCode GetTrackerHitsAlg::execute() {
   // MCParticles* parts = get<MCParticles>( MCParticleLocation::Default );
 
   // Get the Geant4->MCParticle table
+  // Need to get the new one from MCTruthManager
   GiGaKineRefTable& table = kineSvc()->table();
   
   // reserve elements on output container
@@ -137,6 +161,10 @@ StatusCode GetTrackerHitsAlg::execute() {
     mcHit->setDisplacement( exit-entry );
     mcHit->setEnergy( (*hitCollection)[iHit]->GetEdep() );
     mcHit->setTime( (*hitCollection)[iHit]->GetTimeOfFlight() );
+
+    // get sensitive detector identifier
+    int detID = m_detector->sensitiveVolumeID(entry);
+    mcHit->setSensDetID(detID);
 
     // fill reference to MCParticle   
     int trackID = (*hitCollection)[iHit]->GetTrackID();
