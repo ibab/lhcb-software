@@ -2,21 +2,21 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-2006-01-27 M Needham
+!===================== LHCbKernel v6r1 2006-01-27 =========================
+! 2006-01-27 M Needham
   - Remove spare bits from LHCbID
 
-2006-01-26 M Needham
+! 2006-01-26 M Needham
   - Adapt to new ST numbering scheme
 
 ! 2006-01-25 - Chris Jones
  - Add some missing LHCb namespace scopes to RichSmartID.xml
 
-!===================== LHCbKernel v6r1 2006-01-20 =========================
 ! 2006-01-20 - Marco Cattaneo
  - Remove IMagneticFieldSvc.h, use GaudiKernel instead (from GAUDI v18r1)
 
 !===================== LHCbKernel v6r0 2006-01-18 =========================
- 2006-01-18 - Gloria CORTI
+! 2006-01-18 - Gloria CORTI
  - Modify LbAppInit.h and cpp file to introduce retrieval of Application
    name and version. Provide methods to return values of some data members. 
 
