@@ -4,8 +4,15 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-!2006-01-06  - Sajan Easo
+
+!======================== GaussRICH v6r0 2005-12-16 ===========================
+! 2006-01-27 - Gloria CORTI
+ - Temporarly  comment out compilation of RichAnalysis not yet migrated to 
+	 new Event model
+
+! 2006-01-06  - Sajan Easo
  - Richphotelectron particle definition modified to be compatible with G4.8
+
 ! 2005-12-22 - Chris Jones
  - Update converter algorithms for new Gaudi v18r0 and LHCb v20r0 
    (namespaces, CLHEP->MathMore etc)
@@ -13,7 +20,8 @@
  - Introduce RICH specific base class for converter algorithms
  - remove obsolete GiGa Converters
 
-!======================== GaussRICH v5r2 2005-12-16 ============================
+
+!======================== GaussRICH v5r2 2005-12-16 ===========================
 ! 2005-12-16 - Gloria CORTI
  - New options RichExtendedInfo.opts that allow to print info about and write
    on file additional MC classes.
