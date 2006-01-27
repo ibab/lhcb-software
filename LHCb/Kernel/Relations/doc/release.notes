@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.18 2005-10-19 12:50:54 cattanem Exp $ 
+! $Id: release.notes,v 1.19 2006-01-27 13:25:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ 
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-01-27 - Vanya BELYAEV
+
+ - add new methods i_inRange and inRange for all relations with weight
+   to allow the extarction fo relations with the weigth in the given 
+   range: e.g.
+
+     Range links = table->inRange( object , lowCut , highCut ) ;
+
+ - add new methods i_inverse and i_direct for all "2D" relation classes 
+   to allow fast (non-virtual) access to inverse tables 
 
 ! ====================== Relations v2r5 2005-10-19 ============================
 ! 2005-10-19 - Markus Frank

@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.5 2005-02-16 19:59:35 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.6 2006-01-27 13:25:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/02/16 19:59:35  ibelyaev
+//  few minor fixes to enable 'lcgdict' processing
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -180,7 +183,39 @@ namespace Relations
                           Entry( object , To() , threshold )  , Less2()  );
       return flag ?  IP( it , ip.second ) : IP( ip.first , it );
     };
-    
+
+    /** retrive all relations from the object which has weigth
+     *  int he given range 
+     *
+     *    - the CPU performance is proportional to log(N) + log(M)
+     *      where N is the total number of relations and
+     *      M is the mean relation multiplicity
+     *
+     *  @see    IRelationWeighted
+     *  @see    TypeTraits
+     *  @param  object     smart reference to the object
+     *  @param  low        low  threshold value for the weight
+     *  @param  high       high threshold value for the weight
+     *  @return pair of iterators for output relations
+     */
+    inline  IP      i_inRange 
+    (  const From&   object , 
+       const Weight& low    ,
+       const Weight& high   ) const 
+    {
+      if ( low > high ) { return IP() ; }
+      // find all relations from the given object
+      IP ip = i_relations( object );
+      // no relations are found !!!
+      if ( ip.second == ip.first ) { return ip ; }              // RETURN !!!
+      // find the appropriate relations
+      iterator it1 = std::lower_bound 
+        ( ip.first , ip.second , Entry ( object , To() , low  ) , Less2 () ) ;
+      iterator it2 = std::lower_bound 
+        ( it1      , ip.second , Entry ( object , To() , high ) , Less2 () ) ;
+      return IP ( it1 , it2 ) ;
+    };
+
     /** make the relation between 2 objects
      *
      *    - the CPU performance is proportional to log(N) + M

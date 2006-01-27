@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.4 2006-01-27 13:25:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2005/02/16 19:59:35  ibelyaev
+//  few minor fixes to enable 'lcgdict' processing
+// 
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -251,6 +254,13 @@ public:  // major functional methods (fast, 100% inline)
     const  bool       flag      ) const 
   { return m_base.i_relations ( object , threshold , flag ) ;}
   
+  /// retrive all relations from the object (fast,100% inline)
+  inline   Range      i_inRange
+  ( const  From&      object ,
+    const  Weight&    low    ,
+    const  Weight&    high   ) const 
+  { return m_base.i_inRange ( object , low , high ) ;}
+
   /// make the relation between 2 objects (fast,100% inline)
   inline   StatusCode i_relate 
   ( const  From&      object1 , 
@@ -367,7 +377,20 @@ public:  // abstract methods from interface
     const  Weight&    threshold ,
     const  bool       flag      ) const 
   { return i_relations ( object , threshold , flag ) ; }
-  
+
+  /** retrive all relations from the object which has weigth 
+   *  withing the specified range 
+   *  @param  object  the object
+   *  @param  low     low  threshold value for the weight 
+   *  @param  high    high threshold value for the weight 
+   *  @return pair of iterators for output relations   
+   */
+  virtual  Range      inRange 
+  ( const  From&      object ,
+    const  Weight&    low    ,
+    const  Weight&    high   ) const 
+  { return i_inRange ( object , low , high ) ; }
+
   /** make the relation between 2 objects 
    *  @param  object1 the first object
    *  @param  object2 the second object 

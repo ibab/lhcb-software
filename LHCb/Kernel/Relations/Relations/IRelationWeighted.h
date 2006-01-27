@@ -1,23 +1,8 @@
-// $Id: IRelationWeighted.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: IRelationWeighted.h,v 1.2 2006-01-27 13:25:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.7  2004/01/16 15:49:05  cattanem
-// fix inheritance
-//
-// Revision 1.6  2004/01/14 15:13:02  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.5  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.4  2002/05/10 12:29:42  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -164,6 +149,50 @@ public:
   ( const From&      object    ,
     const Weight&    threshold ,
     const bool       flag      ) const = 0 ;
+
+
+  /** retrive all relations from the object which has weigth
+   *  withing teh specified range 
+   *
+   *  - relations are returned in the form of @p Range object 
+   *  @code 
+   *     IRelation<FROM,TO>* irel      = ... ;
+   *     From                object    = ... ;
+   *     Weight              low       =  ... ;
+   *     Weight              high      = ... ;
+   *     Range r = irel->inRange ( object , low , high );
+   *  @endcode 
+   * 
+   *  - the total number of relations is:
+   *  @code 
+   *     const unsigned nRel    = r.size()             ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
+   *
+   *  - the related elements could be retrieved using the explicit loop 
+   *  @code 
+   *     for( iterator it = r.begin() ; r.end() != it ; ++it )
+   *        {
+   *          // extract and use the relation
+   *          To     to     = it->to()     ; // get the object
+   *          // To  to     = *it          ; // the same
+   *          Weight weight = it->weight() ; // "weight" of the relation
+   *          From   from   = it->from()   ; // again "from" object!
+   *        };
+   *  @endcode 
+   *  Here the obtained @p weight will always be larger that @p threshold 
+   *
+   *  @param  object    the object
+   *  @param  threshold threshold value for the weight
+   *  @param  flag      flag for larger/smaller
+   *  @return pair of iterators for output relations
+   */
+  virtual Range      inRange 
+  ( const From&      object  ,
+    const Weight&    low     ,
+    const Weight&    high    ) const = 0 ;
+
 
   /** make the relation between 2 objects
    *

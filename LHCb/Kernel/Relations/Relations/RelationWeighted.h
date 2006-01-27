@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.5 2005-03-14 09:47:14 cattanem Exp $
+// $Id: RelationWeighted.h,v 1.6 2006-01-27 13:25:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/03/14 09:47:14  cattanem
+// fix doxygen warnings
+//
 // Revision 1.4  2005/02/16 19:59:35  ibelyaev
 //  few minor fixes to enable 'lcgdict' processing
 //
@@ -148,6 +151,16 @@ namespace Relations
       const  bool       flag      ) const 
     {
       typename Base::IP ip = m_direct.i_relations( object , threshold , flag );
+      return Range(ip.first, ip.second);
+    };
+    
+    /// retrive all relations from the object (fast,100% inline)
+    inline   Range      i_inRange
+    ( const  From&      object ,
+      const  Weight&    low    ,
+      const  Weight&    high   ) const 
+    {
+      typename Base::IP ip = m_direct.i_inRange ( object , low , high );
       return Range(ip.first, ip.second);
     };
     
@@ -323,6 +336,19 @@ namespace Relations
       const  Weight&    threshold ,
       const  bool       flag      ) const 
     { return i_relations ( object , threshold , flag ) ; }
+    
+    /** retrive all relations from the object which has weigth 
+     *  withing the specified range 
+     *  @param  object  the object
+     *  @param  low     low  threshold value for the weight 
+     *  @param  high    high threshold value for the weight 
+     *  @return pair of iterators for output relations   
+     */
+    virtual  Range      inRange 
+    ( const  From&      object ,
+      const  Weight&    low    ,
+      const  Weight&    high   ) const 
+    { return i_inRange ( object , low , high ) ; }
 
     /** make the relation between 2 objects 
      *  @param  object1 the first object

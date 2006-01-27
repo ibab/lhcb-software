@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.4 2005-03-14 09:47:14 cattanem Exp $
+// $Id: Relation2Weighted.h,v 1.5 2006-01-27 13:25:47 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/03/14 09:47:14  cattanem
+// fix doxygen warnings
+//
 // Revision 1.3  2005/02/16 19:59:35  ibelyaev
 //  few minor fixes to enable 'lcgdict' processing
 //
@@ -172,7 +175,14 @@ namespace Relations
       const  Weight&    threshold ,
       const  bool       flag      ) const 
     { return m_direct.i_relations( object, threshold , flag ) ; }
-    
+
+    /// retrive all relations from the object (fast,100% inline)
+    inline   Range      i_inRange 
+    ( const  From&      object ,
+      const  Weight&    low    ,
+      const  Weight&    high   ) const 
+    { return m_direct.i_inRange ( object, low , high ) ; }
+
     /// make the relation between 2 objects (fast,100% inline)
     inline   StatusCode i_relate 
     ( const  From&      object1 , 
@@ -289,7 +299,20 @@ namespace Relations
       const  Weight&    threshold ,
       const  bool       flag      ) const 
     { return i_relations ( object , threshold , flag ) ; }
-
+    
+    /** retrive all relations from the object which has weigth 
+     *  withing the specified range 
+     *  @param  object  the object
+     *  @param  low     low  threshold value for the weight 
+     *  @param  high    high threshold value for the weight 
+     *  @return pair of iterators for output relations   
+     */
+    virtual  Range      inRange 
+    ( const  From&      object ,
+      const  Weight&    low    ,
+      const  Weight&    high   ) const 
+    { return i_inRange ( object , low , high ) ; }
+    
     /** make the relation between 2 objects 
      *  @param  object1 the first object
      *  @param  object2 the second object 
@@ -387,32 +410,45 @@ namespace Relations
       if( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     };
-
+  public:
+    
+    /// get the "direct" interface 
+    inline       Direct*  i_direct  ()       { return &m_direct ; }
+    
+    /// get the "direct" interface  (const-version)
+    inline const Direct*  i_direct  () const { return &m_direct ; }
+    
+    /// get the "inverse" interface 
+    inline       Inverse* i_inverse ()       { return &m_inverse ; }
+    
+    /// get the "inverse" interface  (const version)
+    inline const Inverse* i_inverse () const { return &m_inverse ; }
+    
   public:
     
     /** get the "direct" interface 
      *  @see IRelationWeighted2D
      *  @return pointer to the 'direct' interface 
      */
-    virtual       DirectType*  direct ()        { return &m_direct ; }
+    virtual       DirectType*  direct ()        { return i_direct () ; }
     
     /** get the "direct" interface  (const-version)
      *  @see IRelationWeighted2D
      *  @return pointer to the 'direct' interface 
      */
-    virtual const DirectType*  direct () const  { return &m_direct  ; }
+    virtual const DirectType*  direct () const  { return i_direct () ; }
     
     /** get the "inverse" interface 
      *  @see IRelationWeighted2D
      *  @return pointer to the 'inverse' interface 
      */
-    virtual       InverseType* inverse ()       { return &m_inverse ; }
+    virtual       InverseType* inverse ()       { return i_inverse() ; }
     
     /** get the "inverse" interface  (const version)
      *  @see IRelationWeighted2D
      *  @return pointer to the 'inverse' interface 
      */
-    virtual const InverseType* inverse () const { return &m_inverse ; }
+    virtual const InverseType* inverse () const { return i_inverse() ;  }
 
   public:
     

@@ -1,8 +1,11 @@
-// $Id: Relation2.h,v 1.4 2005-03-14 09:47:14 cattanem Exp $
+// $Id: Relation2.h,v 1.5 2006-01-27 13:25:47 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/03/14 09:47:14  cattanem
+// fix doxygen warnings
+//
 // Revision 1.3  2005/02/16 19:59:35  ibelyaev
 //  few minor fixes to enable 'lcgdict' processing
 //
@@ -342,32 +345,46 @@ namespace Relations
       if( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     };
- 
+
+  public:
+    
+    /// get the "direct" interface 
+    inline       Direct*  i_direct  ()       { return &m_direct ; }
+    
+    /// get the "direct" interface  (const-version)
+    inline const Direct*  i_direct  () const { return &m_direct ; }
+    
+    /// get the "inverse" interface 
+    inline       Inverse* i_inverse ()       { return &m_inverse ; }
+    
+    /// get the "inverse" interface  (const version)
+    inline const Inverse* i_inverse () const { return &m_inverse ; }
+    
   public:  // abstract methods from interface
     
     /** get the "direct" interface 
      *  @see IRelation2D
      *  @return pointer to the 'direct' interface 
      */
-    virtual       DirectType*  direct ()        { return &m_direct ; }
+    virtual       DirectType*  direct ()        { return i_direct () ; }
     
     /** get the "direct" interface  (const-version)
      *  @see IRelation2D
      *  @return pointer to the 'direct' interface 
      */
-    virtual const DirectType*  direct () const  { return &m_direct ; }
+    virtual const DirectType*  direct () const  { return i_direct () ; }
     
     /** get the "inverse" interface 
      *  @see IRelation2D
      *  @return pointer to the 'inverse' interface 
      */
-    virtual       InverseType* inverse ()       { return &m_inverse ; }
+    virtual       InverseType* inverse ()       { return i_inverse() ; }
     
     /** get the "inverse" interface  (const version)
      *  @see IRelation2D
      *  @return pointer to the 'inverse' interface 
      */
-    virtual const InverseType* inverse () const { return &m_inverse ; }
+    virtual const InverseType* inverse () const { return i_inverse() ;  }
     
   public:
     
