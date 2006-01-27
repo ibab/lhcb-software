@@ -45,7 +45,7 @@ VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo2Rich1/lvVelo2Rich1
 //VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Prs/Installation/Prs";
 //VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal";
 //VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
+//VolumeCheckAlg.Volume = "/dd/Geometry/DownstreamRegion/Muon/lvMuon";
 
 /// Next one scans all the above...
 //VolumeCheckAlg.Volume = "/dd/Geometry/LHCb/lvLHCb";
