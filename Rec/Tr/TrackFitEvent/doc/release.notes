@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v1r5 2006-01-27 ====================
 ! 2006-01-17 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  - Added StateTraj for creating a Trajectory from a State.
  - Added function to get referenceVector from OTMeasurement.
