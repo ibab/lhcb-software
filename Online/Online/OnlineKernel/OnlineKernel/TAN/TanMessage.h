@@ -7,6 +7,7 @@
 #ifndef ONLINEKERNEL_TAN_TANMESSAGE_H
 #define ONLINEKERNEL_TAN_TANMESSAGE_H
 #include "NET/NetworkChannel.h"
+#include "TAN/TanErrno.h"
 
 #define NAME_SERVICE_NAME    "TAN_NAME"
 #define NAME_SERVICE_PORT    6789
@@ -105,7 +106,8 @@ public:
 
 inline TanMessage::TanMessage () {
   length = sizeof (TanMessage);
-  error = function = 0;
+  error  = TAN_SS_SUCCESS;
+  function = 0;
   ::memset  (name,0,sizeof(name));
   ::memset  (&sin, 0, sizeof (sin));
 }
@@ -113,7 +115,7 @@ inline TanMessage::TanMessage () {
 inline TanMessage::TanMessage (u_int func, const char* proc)  {
   size_t i, n;
   length    = htonl (sizeof (TanMessage));
-  error     = htonl (0);
+  error     = htonl (TAN_SS_SUCCESS);
   function  = htonl (func);
   for (i=0, n=::strlen(proc); i<n; i++)
      name[i] = ::tolower(proc[i]);

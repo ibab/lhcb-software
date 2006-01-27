@@ -12,7 +12,7 @@ library       OnlineKernel ../src/WT/*.cpp   \
                            ../src/RTL/*.cpp  \
                            ../src/PUBAREA/*.cpp  \
                            ../src/TAN/*.cpp  \
-#                           ../src/AMS/*.cpp  \
+                           ../src/AMS/*.cpp  \
                            ../src/SCR/*.cpp  \
                            ../src/CPP/*.cpp  \
                            ../src/NET/*.cpp
@@ -25,7 +25,8 @@ macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' \
 apply_pattern ld_library_path
 apply_pattern linker_library   library=OnlineKernel
 apply_pattern linker_library   library=pthread_extern
-application   test ../main/*.cpp
+application   test ../main/wt.cpp
+application   gentest ../main/gentest.cpp
 document      install_includes install_includes
 macro_append  use_linkopts " -ldl " WIN32 ""
 

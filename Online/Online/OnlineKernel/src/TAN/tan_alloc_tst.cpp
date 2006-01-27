@@ -42,7 +42,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
 #define MAXTASKS 20
 #endif
 
-  if ( interf.Status() == 0 ) {
+  if ( interf.Status() == TAN_SS_SUCCESS ) {
     int alloc = 0, dealloc = 0, alias = 0;
     time_t start = time(0);
     do  {
@@ -63,7 +63,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);
           status = tan_declare_alias(buff);
           alias++;
-          if ( !quiet || status != AMS_SUCCESS ) {
+          if ( !quiet || status != TAN_SS_SUCCESS ) {
             ::printf("     DeclareAlias: %s   status:%d\n", buff, status);
             if ( status != TAN_SS_SUCCESS ) lib_signal(status);
           }
@@ -78,7 +78,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
         //       tsleep(5);
 #endif
         dealloc++;
-        if ( !quiet || status != AMS_SUCCESS ) {
+        if ( !quiet || status != TAN_SS_SUCCESS ) {
           printf("DeallocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
           if ( status != TAN_SS_SUCCESS ) lib_signal(status);
         }

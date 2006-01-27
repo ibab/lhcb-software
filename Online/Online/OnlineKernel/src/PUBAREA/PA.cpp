@@ -10,7 +10,7 @@ Created           :  5-AUG-1996 by A.Pacheco
 #include <cstring>
 //#include <process.h>
 #include "RTL/rtl.h"
-//#include "AMS/amsdef.h"
+#include "AMS/amsdef.h"
 #include "CPP/FormatCnv.h" //...................(A_CPP) Needed for format conversion
 
 #include "PA.h" //............. The pubarea class and structure definitions
@@ -32,8 +32,8 @@ PubArea::PubArea(const char* name)   {
   if ( !lib_rtl_is_success(status) )  {
     throw std::runtime_error("PubArea::PubArea: Failed to create lock:"+lck_name);
   }
-  GetProcess(LocalProcess);
-  GetNode(m_node);
+  ::lib_rtl_get_node_name(m_node, 32);
+  ::sprintf(LocalProcess,"PID.%06d",lib_rtl_pid());
   m_locked = 0;
   m_remote = 0;
   //................................................. Initializing data structures
@@ -518,20 +518,6 @@ int PubArea::CheckStamp() {
   return PA_SUCCESS;
 }
 
-// *** PubArea::GetNode ***
-int PubArea::GetNode(char *node)  {
-  ::lib_rtl_get_node_name(node, 32);
-  PubAreaPrint(0,0,"PubArea::GetNode: Node name %s",node);
-  return PA_SUCCESS;
-}
-
-// *** PubArea::GetProcess **
-int PubArea::GetProcess(char *process)  {
-  ::lib_rtl_get_process_name(process, 32);
-  PubAreaPrint(0,0,"PubArea::GetProcess: Process name %s",process);
-  return PA_SUCCESS;
-}
-
 int PubArea::Lock() {
   ::lib_rtl_lock(m_lock);
   m_locked = 1;
@@ -567,12 +553,10 @@ int PubArea::GetSlotofType(int Type, int* context, void* &slot)  {
 
 //*** PubArea::GetSlotType ***
 int PubArea::GetSlotType(void* slot)    {
-  static const char* me="PubArea::GetSlotType:\0";
-  PubAreaPrint(0,0,"%s (SlotPtr=%d) called",me,(void*)slot);
   if (slot == 0) return (-1);
   int Offset = (char*)(slot) - (char*)(m_ptr);
   if (!m_header->NumIndex)  {
-    PubAreaPrint(1,0,"%s No entries in index!",me);
+    PubAreaPrint(1,0,"PubArea::GetSlotType: No entries in index!");
     return(-1);
   }
   PubAreaIndex *ind = m_index;
@@ -581,59 +565,29 @@ int PubArea::GetSlotType(void* slot)    {
       return ind->SlotType;
     }      
   }
-  PubAreaPrint(3,0,"%s Slot: %d not found. Offset: %d", me,(int*)slot,Offset);
+  PubAreaPrint(3,0,"PubArea::GetSlotType: Slot: %d not found. Offset: %d",(int*)slot,Offset);
   return(PA_NOMORE);
 }
 
 //*** PubArea::GetPAfromVMS ***
 int PubArea::GetPAfromVMS(const char *Node)   {
-  //char message[128] = "DUMP\0";
-  //int  mlen = strlen(message);
-  char source[64] = "\0";
-  //char reqsource[64]="\0";
-  //int  timeout = 100;
-  //unsigned int  facility = 0;
-  //unsigned int  reqfacility = 0;
-  char destination[64]="\0";
-  int status = 0;
-  //char alias[64]="PASERVER\0";
+  char source[64] = "";
   size_t buffersize = PA_SIZE_VMS_DEFAULT;
-  static char* tmpbuffer = 0;
-
-  tmpbuffer = (char *)m_remote;
-
-  strcpy(destination,Node);
-  strcat(destination,"::PAGBLSERVER_0\0");
-
-  status = 0;//amsc_send_message(message,mlen,&destination[0],facility,0);
-  if (!(status&1))  { 
-    PubAreaPrint(3,status,
-      "PubArea::GetPAfromVMS: Error sending request to VMS node %s",Node);
-    PubAreaPrint(3,0,
-      "Is running A_PUBAREA$MGR:PUBAREA_GBLSERVER_VMS.COM in %s?",
-      Node);
+  strcpy(source,Node);
+  strcat(source,"::PAGBLSERVER_0\0");
+  int status = amsc_send_message("DUMP",4,source,0,0);
+  if ( status != AMS_SUCCESS )  { 
+    PubAreaPrint(3,status,"PubArea::GetPAfromVMS: Error sending request "
+      "to VMS node %s. Is the server running ?",Node);
     return PA_FAILURE;
   }
-  strcpy(source,"\0");
-  strcpy(destination,"\0");
-  status = 0;/*amsc_get_message(tmpbuffer,
-    &buffersize,
-    &source[0],
-    &reqsource[0],
-    timeout,
-    &facility,
-    reqfacility,
-    &destination[0]);*/
-  if (!(status&1))  { 
-    PubAreaPrint(3,status,
-      "PubArea::GetPAfromVMS: Error receiving data from %s",Node);
+  status = amsc_get_message(m_remote,&buffersize,source,0,100,0,0,0);
+  if ( status != AMS_SUCCESS )  { 
+    PubAreaPrint(3,status,"PubArea::GetPAfromVMS: Error receiving data from %s",Node);
     return PA_FAILURE;
   }
-  PubAreaPrint(0,0,"PubArea::GetPAfromVMS: Received %d bytes from %s",
-    buffersize,Node);
+  PubAreaPrint(0,0,"PubArea::GetPAfromVMS: Received %d bytes from %s",buffersize,Node);
   if (buffersize==0) return  PA_FAILURE;
-  // Removed by M.Frank and A.Pacheco 3-2-97 tmpbuffer is now m_remote();
-  //memcpy(m_remote,tmpbuffer,PA_SIZE_VMS_DEFAULT);
   return PA_SUCCESS;
 }
 

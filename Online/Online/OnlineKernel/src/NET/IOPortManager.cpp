@@ -135,15 +135,18 @@ namespace {
       FD_ZERO(&exc_fds);
       FD_ZERO(&read_fds);
       for(iterator i=begin(); i != end(); ++i)  {
-        __NetworkChannel__ fd = (*i).first;
-        if ( fd > mxsock ) mxsock = fd;
-        FD_SET(fd, &read_fds);
-        FD_SET(fd, &exc_fds);
-        channels[nsock] = fd;
-        nsock++;
+        if ( (*i).second->armed )  {
+          __NetworkChannel__ fd = (*i).first;
+          if ( fd > mxsock ) mxsock = fd;
+          FD_SET(fd, &read_fds);
+          FD_SET(fd, &exc_fds);
+          channels[nsock] = fd;
+          nsock++;
+        }
       }
       if ( nsock > 0 )  {
-        int res = select(mxsock+1, &read_fds, 0, &exc_fds, 0);
+        timeval tv = { 0, 5000 };
+        int res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
         if (res < 0)  {
           return res;
         }
@@ -160,10 +163,11 @@ namespace {
           if ( k != end() )  {
             PortEntry* e = (*k).second;
             if ( e )  {
-              int t = e->type, nb = IOPortManager::getAvailBytes(fd);
+              int t = e->type, nb = IOPortManager(m_port).getAvailBytes(fd);
               // ::printf("got read request: %d bytes!\n",nb);
               if ( e->callback )   {
                 if ( !(nb==0 && fd == fileno(stdin)) )
+                  e->armed = 0;
                   (*e->callback)(e->param);
                 }
               if ( t == 1 && nb <= 0 )  {
@@ -207,24 +211,30 @@ namespace {
   }
 }
 
-typedef std::map<__NetworkPort__,EntryMap* > PortMap;
+extern "C" void* lib_rtl_alloc_int_pointer_map();
+
+typedef std::map<int,EntryMap* > PortMap;
+
+extern "C" void* lib_rtl_alloc_int_pointer_map();
 static inline PortMap& portMap()  {
-  static PortMap s_map;
-  return s_map;
+  static PortMap* s_map = (PortMap*)lib_rtl_alloc_int_pointer_map();
+  return *s_map;
 }
 int IOPortManager::getChar(int fd, char* c)  {
+#ifdef _WIN32
   if ( fd == fileno(stdin) )  {
     fd = s_fdPipe[0];
     if ( 1 == ::read(fd,c,1) ) s_fdPipeBytes--;
     return 1;
   }
+#endif
   return ::read(fd,c,1);
 }
 
 int IOPortManager::getAvailBytes(int fd)  {
 #ifdef _WIN32
-  return s_fdPipeBytes;
-#else
+  if ( fd == fileno(stdin) ) return s_fdPipeBytes;
+#endif
   unsigned long ret;
   if (ioctlsocket(fd, FIONREAD, &ret) != -1)
     return int(ret);
@@ -233,7 +243,6 @@ int IOPortManager::getAvailBytes(int fd)  {
       return -1;
     return 0;
   }
-#endif
 }
 
 int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param)  {

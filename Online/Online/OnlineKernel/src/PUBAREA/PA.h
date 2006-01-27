@@ -37,12 +37,11 @@
 // *** PubAreaHeader ***
 // *********************
 // Structure of the header in the beginning of the public area
-
 struct PubAreaHeader    {
-    int MagicWord; //......... Magic word to determine if byteswapping is needed
-    int PubAreaBufferOffset;//........................ Offset to the buffer area
-    int AreaSize; //.................................. Size of the area in bytes
-    int NumIndex; //...................................... Number of index slots
+    int  MagicWord; //........ Magic word to determine if byteswapping is needed
+    int  PubAreaBufferOffset;//....................... Offset to the buffer area
+    int  AreaSize; //................................. Size of the area in bytes
+    int  NumIndex; //..................................... Number of index slots
     char LockPrcName[32]; //.................................... Locking Process
     char PubAreaStamp[5]; //................. Identifier of the Public Area 'PA'
     char OpSys[4]; //.............................. Operating system: VMS or OS9
@@ -58,8 +57,7 @@ struct PubAreaHeader    {
 // dynamically accumulated after the header file. There is a maximum of 
 // 300 slots which can be increased with no harm by changing PA_MAX_INDEX
 
-struct PubAreaIndex
-{
+struct PubAreaIndex   {
   int SlotType; //...................................  Type of slot to be filled
   int SlotSize; //................................  Size of slot to be allocated
   int SlotOffset; //................................ Pointer to slot buffer area
@@ -110,8 +108,6 @@ public:
   int PrintIndex(); //......................... Prints the contents of the index
   void* GetPubAreaPtr() {return this->m_ptr;}; //. Returns the base pointer
   int CheckStamp(); //.................... Checks the version of the Public Area
-  int GetNode(char *node); //................................ Gets the node name
-  int GetProcess(char *process); //....................... Gets the process name
   int Lock(); //........................... Locks the global section/data module
   int UnLock(); //....................... Unlocks the global section/data module
   int GetSlotType(void* SlotPtr);//..................... Gets the type of a slot

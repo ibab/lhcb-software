@@ -22,6 +22,13 @@
 #include <cerrno>
 #include <winsock.h>
 #define socket_close closesocket
+#define ESOCK_WOULDBLOCK  WSAEWOULDBLOCK
+#define ESOCK_NOTCONN     WSAENOTCONN
+#define ESOCK_CONNREFUSED WSAECONNABORTED
+#define ESOCK_NOTSOCK     WSAENOTSOCK
+#define ESOCK_INVAL       WSAEINVAL
+#define ESOCK_FAULT       WSAEFAULT
+#define ESOCK_BADF        EBADF
 
 #elif defined(__linux)
 
@@ -32,6 +39,15 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #define socket_close close
+
+#define ESOCK_WOULDBLOCK  EWOULDBLOCK
+#define ESOCK_NOTCONN     ENOTCONN
+#define ESOCK_CONNREFUSED ECONNREFUSED
+#define ESOCK_NOTSOCK     ENOTSOCK
+#define ESOCK_INVAL       EINVAL
+#define ESOCK_FAULT       EFAULT
+#define ESOCK_BADF        EBADF
+
 #endif
 
 #endif  /* __INTERNET_STUFF_H__ */

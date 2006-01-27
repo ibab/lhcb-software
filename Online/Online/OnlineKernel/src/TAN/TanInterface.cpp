@@ -241,7 +241,7 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
     GetNodeWithName(name,node,msg._Name());
     SetLocalAddress(msg.sin);
     if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
-#if __USING_TCP_ALLOCATOR
+#if defined(__USING_TCP_ALLOCATOR) || defined(_WIN32)
     TcpNetworkChannel c;
     if ( c._Connect(msg.sin,Connect_TMO) == -1 )  {
       printf("Connect error");
@@ -267,7 +267,7 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
         if ( nbyte > 0 )  {
           msg.Convert();
           if ( nbyte != int(msg._Length()) )    return ErrorCode(TAN_SS_ODDRESPONSE);
-          if ( msg._Error() != 0             )  return ErrorCode(msg._Error());
+          if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
           sad = msg.sin;                        return ErrorCode(TAN_SS_SUCCESS);
         }                                       // Timeout fired!
         else if ( rcv._IsCancelled()         )  return ErrorCode(TAN_SS_RECV_TMO);
@@ -292,12 +292,12 @@ int TanInterface::AllocatePort(const char* name, NetworkChannel::Port *port)  {
           int num_byte = m_channel->_Recv ( &msg, sizeof(msg), Receive_TMO);
           if ( num_byte > 0 )  {
             msg.Convert();
-            if ( num_byte != int(msg._Length()) ) return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
-            if ( msg._Error() != 0 )            return FatalError( ErrorCode(msg._Error()) );
+            if ( num_byte != int(msg._Length()))return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
+            if ( msg._Error() != TAN_SS_SUCCESS)return FatalError( ErrorCode(msg._Error()) );
             _portAllocated = msg.sin.sin_port;
             *port = msg.sin.sin_port;           return ErrorCode( TAN_SS_SUCCESS );
           }                                     // Receive timeout fired
-          else if ( m_channel->_IsCancelled())  return FatalError(TAN_SS_RECV_TMO);
+          else if ( m_channel->_IsCancelled())  return FatalError(ErrorCode(TAN_SS_RECV_TMO));
           else                                  return FatalError(m_channel->_Error() );
         }                                       return FatalError(m_channel->_Error() );
       }                                         // Connect timeout fired
@@ -319,9 +319,9 @@ int TanInterface::DeallocatePort(const char* name)  {
       int num_byte = m_channel->_Send(&msg,sizeof(msg));
       if ( num_byte != sizeof(msg) )            return FatalError(m_channel->_Error());
       num_byte = m_channel->_Recv (&msg,sizeof(msg),Receive_TMO);
-      if      ( m_channel->_IsCancelled() )      return ErrorCode(TAN_SS_RECV_TMO);
+      if      ( m_channel->_IsCancelled() )     return ErrorCode(TAN_SS_RECV_TMO);
       else if ( num_byte == sizeof(msg)  )      return FatalError(TAN_SS_SUCCESS);
-      else                                      return FatalError(TAN_SS_MADSRV);
+      else                                      return FatalError(ErrorCode(TAN_SS_MADSRV));
     }                                           return ErrorCode(TAN_SS_NOTOPEN);
   }                                             return ErrorCode(TAN_SS_ERROR);
 }
@@ -336,13 +336,13 @@ int TanInterface::DeclareAlias ( const char* name )  {
       GetNodeWithName(name, 0, msg._Name());
       SetLocalAddress(msg.sin);
       int num_byte = m_channel->_Send (&msg,sizeof(msg));
-      if ( num_byte != sizeof(msg) )            return FatalError(m_channel->_Error());
+      if ( num_byte != sizeof(msg) )             return FatalError(m_channel->_Error());
       num_byte = m_channel->_Recv (&msg,sizeof(msg),Receive_TMO);
       msg.Convert();
       if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
       else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
       else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != 0 )              return ErrorCode(msg._Error());
+      else if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
       else                                       return ErrorCode(TAN_SS_SUCCESS);
     }                                            return ErrorCode(TAN_SS_NOTOPEN);
   }                                              return ErrorCode(TAN_SS_ERROR);
@@ -364,7 +364,7 @@ int TanInterface::RemoveAlias ( const char* name )  {
       if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
       else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
       else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != 0 )              return ErrorCode(msg._Error());
+      else if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
       else                                       return ErrorCode(TAN_SS_SUCCESS);
     }                                            return ErrorCode(TAN_SS_NOTOPEN);
   }                                              return ErrorCode(TAN_SS_ERROR);
@@ -396,7 +396,7 @@ int TanInterface::DumpDB (const char* node)   {
           msg.Convert();
           if      (rcv._IsCancelled()       )   return ErrorCode(TAN_SS_RECV_TMO);
           else if (nbyte != int(msg._Length())) return ErrorCode(TAN_SS_ODDRESPONSE);
-          else if (msg._Error() != 0        )   return ErrorCode(msg._Error());
+          else if (msg._Error()!=TAN_SS_SUCCESS)return ErrorCode(msg._Error());
           else                                  return ErrorCode(TAN_SS_SUCCESS);
         }                                       return rcv._Error();
       }                                         return snd._Error();

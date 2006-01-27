@@ -159,6 +159,10 @@ int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
 #endif
 }
 
+extern "C" void* lib_rtl_alloc_int_pointer_map()   {
+  return new std::map<int,void*>;
+}
+
 int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
 #if defined(_WIN32) || defined(__linux)
   if ( astadd )  {
@@ -276,14 +280,15 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
     return status;
   }
   process[len]='\0';
+  return 1;
 #else
   char *tmp;
   tmp = (char*)::getenv("UTGID");
   if ( !tmp ) tmp = (char*)::getenv("PROCESSNAME");
-  if ( !tmp ) tmp = (char*)::getenv("$PROCESS");
+  if ( !tmp ) tmp = (char*)::getenv("PROCESS");
   ::strncpy(process, tmp != 0 ? tmp : "UNKNOWN", len);
+  return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
 #endif
-  return 1;
 }
 
 int lib_rtl_get_node_name(char* node, size_t len)  {

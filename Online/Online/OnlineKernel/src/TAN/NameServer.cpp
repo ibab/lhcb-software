@@ -220,7 +220,7 @@ void NameService::HandleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   NetworkChannel::Port port = 0;
 
   if ( &snd_msg != &rec_msg ) snd_msg = rec_msg;
-  snd_msg.error    = 0;
+  snd_msg.error  = TAN_SS_SUCCESS;
   snd_msg.length = sizeof(snd_msg);
   switch ( func )  {
     case TanMessage::ALLOCATE:                                // Allocation service...
@@ -262,7 +262,7 @@ void NameService::HandleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
     snd_msg.sin.sin_family  = rec_msg.sin.sin_family;
     snd_msg.sin.sin_port    = htons(port);
   }
-  else if ( snd_msg.error != 0 )  {
+  else if ( snd_msg.error != TAN_SS_SUCCESS )  {
     snd_msg.sin.sin_family      = 0;
     snd_msg.sin.sin_port        = 0;
     snd_msg.sin.sin_addr.s_addr = 0;
