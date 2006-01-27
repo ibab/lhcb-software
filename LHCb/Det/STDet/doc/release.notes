@@ -2,19 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-
-2006-01-26 M Needham
-  - Adapt to new numbering scheme
-
-2006-01-26 M Needhan
-  - Add ladder
-
-2006-01-26 M. Needham
-
 !========================= STDet v2r0 2006-01-26 =======================
 ! 2006-01-26 M. Needham
+  - Adapt to new numbering scheme
   - Add ITLadder
-
   - check child is correct type in DeSTDetector
   - Better error handling: check really can find children/parent in 
     DeSTBaseElement.h
