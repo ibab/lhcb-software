@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-01-27 - Christopher Rob Jones
+ - Import "Fast" RichTrackSegment creator from RichTrgTools package and update
+   to the new Gaudi version. RichTrgTools is now effectively obsoleted.
+
 !===================== RichRecTools v3r0 2006-01-24 =======================
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0

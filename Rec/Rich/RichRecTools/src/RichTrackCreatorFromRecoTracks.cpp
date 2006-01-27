@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.4 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.5 2006-01-27 09:14:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -88,6 +88,11 @@ const StatusCode RichTrackCreatorFromRecoTracks::newTracks() const
   {
     m_allDone = true;
 
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Found " << nInputTracks() << " Tracks at " << m_trTracksLocation << endreq;
+    }
+
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
     const Tracks * tracks = trTracks();
@@ -152,7 +157,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // unique ?
-  const bool trUnique = trTrack->checkFlag(::Track::Unique);
+  const bool trUnique = trTrack->checkFlag(LHCb::Track::Unique);
 
   if ( msgLevel(MSG::VERBOSE) )
   {
@@ -182,6 +187,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     // count tried tracks
     ++tkCount.triedTracks;
 
+    // New track object pointer
     RichRecTrack * newTrack = NULL;
 
     // Form the RichRecSegments for this track
@@ -265,7 +271,9 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           else
           {
             if ( msgLevel(MSG::VERBOSE) )
+            {
               verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
+            }
             delete newSegment;
             newSegment = NULL;
           }
@@ -274,7 +282,9 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         else
         {
           if ( msgLevel(MSG::VERBOSE) )
+          {
             verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
+          }
           delete newSegment;
           newSegment = NULL;
         }

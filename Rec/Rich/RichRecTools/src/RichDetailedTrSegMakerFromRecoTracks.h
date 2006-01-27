@@ -1,11 +1,11 @@
 
 //---------------------------------------------------------------------------------
-/** @file RichTrSegMakerFromRecoTracks.h
+/** @file RichDetailedTrSegMakerFromRecoTracks.h
  *
- *  Header file for tool : RichTrSegMakerFromRecoTracks
+ *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.2 2006-01-23 16:52:08 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.1 2006-01-27 09:14:17 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -51,13 +51,13 @@
 #include "Kernel/PhysicalConstants.h"
 
 //---------------------------------------------------------------------------------
-/** @class RichTrSegMakerFromRecoTracks RichTrSegMakerFromRecoTracks.h
+/** @class RichDetailedTrSegMakerFromRecoTracks RichDetailedTrSegMakerFromRecoTracks.h
  *
  *  Tool to create RichTrackSegments from Tracks.
  *
  *  Uses the tracking extrapolation tools to access the state information at the
  *  entrance and exit points to the radiators, which is then used to create the
- *  RichTrackSegments.
+ *  RichTrackSegments using a detailed approach.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -67,19 +67,19 @@
  */
 //---------------------------------------------------------------------------------
 
-class RichTrSegMakerFromRecoTracks : public RichToolBase,
-                                     virtual public IRichTrSegMaker
+class RichDetailedTrSegMakerFromRecoTracks : public RichToolBase,
+                                             virtual public IRichTrSegMaker
 {
 
 public: // Methods for Gaudi Framework
 
   /// Standard Constructor
-  RichTrSegMakerFromRecoTracks( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent );
+  RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent );
 
   /// Standard Destructor
-  virtual ~RichTrSegMakerFromRecoTracks( );
+  virtual ~RichDetailedTrSegMakerFromRecoTracks( );
 
   // Initialization of the tool after creation
   virtual StatusCode initialize();

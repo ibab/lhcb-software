@@ -1,11 +1,11 @@
 
 //---------------------------------------------------------------------------------
-/** @file RichTrSegMakerFromRecoTracks.cpp
+/** @file RichDetailedTrSegMakerFromRecoTracks.cpp
  *
- * Implementation file for class : RichTrSegMakerFromRecoTracks
+ * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromRecoTracks.cpp,v 1.1 2006-01-23 14:20:44 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.1 2006-01-27 09:14:17 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -13,7 +13,7 @@
 //---------------------------------------------------------------------------------
 
 // local
-#include "RichTrSegMakerFromRecoTracks.h"
+#include "RichDetailedTrSegMakerFromRecoTracks.h"
 
 // namespaces
 using namespace LHCb;
@@ -21,16 +21,16 @@ using namespace LHCb;
 //---------------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  ToolFactory<RichTrSegMakerFromRecoTracks>          Factory ;
-const        IToolFactory& RichTrSegMakerFromRecoTracksFactory = Factory ;
+static const  ToolFactory<RichDetailedTrSegMakerFromRecoTracks>          Factory ;
+const        IToolFactory& RichDetailedTrSegMakerFromRecoTracksFactory = Factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichTrSegMakerFromRecoTracks::
-RichTrSegMakerFromRecoTracks( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
+RichDetailedTrSegMakerFromRecoTracks::
+RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
   : RichToolBase         ( type, name, parent           ),
     m_rayTracing         ( 0                            ),
     m_richPartProp       ( 0                            ),
@@ -85,12 +85,12 @@ RichTrSegMakerFromRecoTracks( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichTrSegMakerFromRecoTracks::~RichTrSegMakerFromRecoTracks() { }
+RichDetailedTrSegMakerFromRecoTracks::~RichDetailedTrSegMakerFromRecoTracks() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichTrSegMakerFromRecoTracks::initialize()
+StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
   StatusCode sc = RichToolBase::initialize();
@@ -131,7 +131,7 @@ StatusCode RichTrSegMakerFromRecoTracks::initialize()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichTrSegMakerFromRecoTracks::finalize()
+StatusCode RichDetailedTrSegMakerFromRecoTracks::finalize()
 {
   // Execute base class method
   return RichToolBase::finalize();
@@ -140,15 +140,17 @@ StatusCode RichTrSegMakerFromRecoTracks::finalize()
 //=============================================================================
 // Constructs the track segments for a given Track
 //=============================================================================
-int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
-                                                     std::vector<RichTrackSegment*>& segments )
+int
+RichDetailedTrSegMakerFromRecoTracks::
+constructSegments( const ContainedObject * obj,
+                   std::vector<RichTrackSegment*>& segments )
   const {
 
   // Try to cast input data to required type for this implementation
   const Track * track = dynamic_cast<const Track *>(obj);
   if ( !track )
   {
-    Warning("::constructSegments : Input data object is not of type Track");
+    Warning("Input data object is not of type Track");
     return 0;
   }
   if ( msgLevel(MSG::VERBOSE) )
@@ -216,17 +218,21 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "  Found appropriate initial start/end States" << endreq
-                << "   EntryPos : " << Gaudi::XYZPoint(entryPState->x(),entryPState->y(),entryPState->z()) << endreq
-                << "   EntryDir : " << Gaudi::XYZVector(entryPState->tx(),entryPState->ty(),1) << endreq
-                << "   ExitPos  : " << Gaudi::XYZPoint(exitPState->x(),exitPState->y(),exitPState->z()) << endreq
-                << "   ExitDir  : " << Gaudi::XYZVector(exitPState->tx(),exitPState->ty(),1) << endreq;
+                << "   EntryPos : "
+                << entryPState->position() << endreq
+                << "   EntryDir : "
+                << entryPState->slopes() << endreq
+                << "   ExitPos  : "
+                << exitPState->position() << endreq
+                << "   ExitDir  : "
+                << exitPState->slopes() << endreq;
     }
 
     // use state closest to the entry point in radiator
     Gaudi::XYZPoint entryPoint1, exitPoint1;
     bool entryStateOK = false;
-    Gaudi::XYZPoint firstPoint ( entryPState->x(), entryPState->y(), entryPState->z() );
-    Gaudi::XYZVector firstDir  ( entryPState->tx(), entryPState->ty(), 1 );
+    Gaudi::XYZPoint firstPoint ( entryPState->position() );
+    Gaudi::XYZVector firstDir  ( entryPState->slopes()   );
     if ( (*radiator)->nextIntersectionPoint( firstPoint,
                                              firstDir,
                                              entryPoint1 ) )
@@ -238,8 +244,8 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
         if ( entryPState &&
              fabs(entryPState->z() - entryPoint1.z()) < m_zTolerance[rad] )
         {
-          if ( (*radiator)->intersectionPoints( Gaudi::XYZPoint(entryPState->x(),entryPState->y(),entryPState->z()),
-                                                Gaudi::XYZVector(entryPState->tx(),entryPState->ty(),1),
+          if ( (*radiator)->intersectionPoints( entryPState->position(),
+                                                entryPState->slopes(),
                                                 entryPoint1,
                                                 exitPoint1) )
           {
@@ -261,8 +267,8 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     Gaudi::XYZPoint entryPoint2, exitPoint2;
     if ( rad != Rich::Aerogel )
     {
-      Gaudi::XYZPoint lastPoint  ( exitPState->x(), exitPState->y(), exitPState->z() );
-      Gaudi::XYZVector lastDir   ( -exitPState->tx(), -exitPState->ty(), -1 );
+      Gaudi::XYZPoint lastPoint  ( exitPState->position() );
+      Gaudi::XYZVector lastDir   ( -exitPState->slopes()  );
       if ( (*radiator)->nextIntersectionPoint(lastPoint,
                                               lastDir,
                                               entryPoint2) )
@@ -274,10 +280,10 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
           if ( exitPState &&
                fabs(exitPState->z() - entryPoint2.z()) < m_zTolerance[rad] )
           {
-            if ( (*radiator)->intersectionPoints(Gaudi::XYZPoint(exitPState->x(),exitPState->y(),exitPState->z()),
-                                                 Gaudi::XYZVector(exitPState->tx(),exitPState->ty(),1),
-                                                 entryPoint2,
-                                                 exitPoint2) )
+            if ( (*radiator)->intersectionPoints( exitPState->position(),
+                                                  exitPState->slopes(),
+                                                  entryPoint2,
+                                                  exitPoint2 ) )
             {
               exitStateOK = true;
               if ( msgLevel(MSG::VERBOSE) )
@@ -301,9 +307,11 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
                                             << " Zexit=" << exitPoint2.z() << endreq;
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking exit point is at final z=" << exitPoint2.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking exit point is at final z=" << exitPoint2.z() << endreq;
       const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -323,9 +331,11 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       }
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking exit point is at final z= " << exitPoint1.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking exit point is at final z= " << exitPoint1.z() << endreq;
       const StatusCode sc2 = moveState( exitPState, exitPoint1.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -342,9 +352,11 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       if ( !entryPState ) { Warning("Failed to clone State"); delete exitPState; continue; }
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
       const StatusCode sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking exit point is at final z= " << exitPoint2.z() << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "  Checking exit point is at final z= " << exitPoint2.z() << endreq;
       const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -360,7 +372,8 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     {
       delete entryPState;
       delete exitPState;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    --> Failed to use state information. Quitting." << endreq;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << "    --> Failed to use state information. Quitting." << endreq;
       continue;
     }
 
@@ -390,13 +403,12 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       continue;
     }
 
-
     // Create final entry and exit state points and momentum vectors
-    const Gaudi::XYZPoint  entryPoint(entryPState->x(),entryPState->y(),entryPState->z());
-    Gaudi::XYZVector entryStateMomentum( entryPState->tx(),entryPState->ty(), 1 );
+    const Gaudi::XYZPoint  entryPoint( entryPState->position() );
+    Gaudi::XYZVector entryStateMomentum( entryPState->slopes() );
     entryStateMomentum *= entryPState->p()/sqrt(entryStateMomentum.Mag2());
-    const Gaudi::XYZPoint  exitPoint(exitPState->x(),exitPState->y(),exitPState->z());
-    Gaudi::XYZVector exitStateMomentum( exitPState->tx(),exitPState->ty(), 1 );
+    const Gaudi::XYZPoint  exitPoint(exitPState->position());
+    Gaudi::XYZVector exitStateMomentum( exitPState->slopes() );
     exitStateMomentum *= exitPState->p()/sqrt(exitStateMomentum.Mag2());
 
     // Errors for entry and exit states
@@ -432,8 +444,8 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       {
 
         // middle point information
-        const Gaudi::XYZPoint midPoint(entryPState->x(),entryPState->y(),entryPState->z());
-        Gaudi::XYZVector midStateMomentum( entryPState->tx(),entryPState->ty(), 1 );
+        const Gaudi::XYZPoint midPoint(entryPState->position());
+        Gaudi::XYZVector midStateMomentum( entryPState->slopes() );
         midStateMomentum *= entryPState->p() / sqrt(midStateMomentum.Mag2());
 
         // errors for middle state
@@ -501,15 +513,15 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
 
 //====================================================================================================
 // fixup C4F10 entry point
-void RichTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
-                                                       const State * refState ) const
+void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
+                                                               const State * refState ) const
 {
 
   Gaudi::XYZPoint dummyPoint, aerogelExitPoint;
-  if ( m_radiators[Rich::Aerogel]->intersectionPoints(Gaudi::XYZPoint(state->x(),state->y(),state->z()),
-                                                      Gaudi::XYZVector(state->tx(),state->ty(),1),
-                                                      dummyPoint,
-                                                      aerogelExitPoint) ) {
+  if ( m_radiators[Rich::Aerogel]->intersectionPoints( state->position(),
+                                                       state->slopes(),
+                                                       dummyPoint,
+                                                       aerogelExitPoint ) ) {
     if ( aerogelExitPoint.z() > state->z() )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting C4F10 entry point" << endreq;
@@ -521,9 +533,9 @@ void RichTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
 //====================================================================================================
 
 //====================================================================================================
-void RichTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
-                                                         State *& state,
-                                                         const State * refState ) const
+void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
+                                                                 State *& state,
+                                                                 const State * refState ) const
 {
 
   // get rich information
@@ -534,8 +546,8 @@ void RichTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* r
   bool correct = false;
 
   // find mirror intersection using the reflect method
-  Gaudi::XYZPoint intersection(state->x(),state->y(),state->z());
-  Gaudi::XYZVector tempDir(state->tx(),state->ty(),1);
+  Gaudi::XYZPoint intersection( state->position() );
+  Gaudi::XYZVector tempDir(state->slopes());
 
   if ( m_rayTracing->reflectSpherical( intersection,
                                        tempDir,
@@ -553,7 +565,8 @@ void RichTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* r
   }
   else
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "   Failed to correct exit state to spherical mirror" << endreq;
+    if (msgLevel(MSG::VERBOSE))
+      verbose() << "   Failed to correct exit state to spherical mirror" << endreq;
     moveState( state, state->z() + m_mirrShift[rich], refState );
   }
 
@@ -561,9 +574,9 @@ void RichTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* r
 //====================================================================================================
 
 //====================================================================================================
-StatusCode RichTrSegMakerFromRecoTracks::moveState( State *& stateToMove,
-                                                    const double z,
-                                                    const State * refState ) const
+StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove,
+                                                            const double z,
+                                                            const State * refState ) const
 {
   // Check if requested move is big enough to bother with
   if ( fabs(stateToMove->z() - z) > 1*mm ) {
@@ -572,7 +585,7 @@ StatusCode RichTrSegMakerFromRecoTracks::moveState( State *& stateToMove,
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "    --> Extrapolating state from "
-                << Gaudi::XYZPoint(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
+                << stateToMove->position() << endreq;
     }
 
     if ( m_extrapFromRef && refState )
@@ -583,7 +596,7 @@ StatusCode RichTrSegMakerFromRecoTracks::moveState( State *& stateToMove,
       if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "      --> Using reference state  "
-                  << Gaudi::XYZPoint(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
+                  << stateToMove->position() << endreq;
       }
     }
 
@@ -606,7 +619,7 @@ StatusCode RichTrSegMakerFromRecoTracks::moveState( State *& stateToMove,
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "                            to   "
-                << Gaudi::XYZPoint(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
+                << stateToMove->position() << endreq;
     }
 
   }
