@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v1r1 2006-01-27 ====================
+! 2006-01-20 - Eduardo Rodrigues
+ - TrackKalmanFilter: tools made private -> possible to run 2 instances
+   of the fitter with, say, different projectors
+
 ! 2006-01-17 - Jeroen van Tilburg
  - Added the required initialisation of GaudiTool in TrackMasterFitter.cpp and
    TrackKalmanFilter.cpp.

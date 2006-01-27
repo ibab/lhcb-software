@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.4 2006-01-17 15:50:55 jvantilb Exp $
+// $Id: TrackMasterFitter.cpp,v 1.5 2006-01-27 13:30:14 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -112,7 +112,6 @@ StatusCode TrackMasterFitter::failure(const std::string& comment) {
   return StatusCode::FAILURE;
 }
 
-
 //=========================================================================
 // Fit the track
 //=========================================================================
@@ -124,6 +123,10 @@ StatusCode TrackMasterFitter::fit( Track& track )
   if ( track.nStates() == 0 )
     return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
   State seed = seedState( track );
+
+  debug() << "SeedState: z = " << seed.z()
+          << " stateVector = " << seed.stateVector()
+          << " covariance  = " << seed.covariance() << endreq;
 
   // Make the nodes from the measurements
   sc = makeNodes( track );
@@ -158,8 +161,12 @@ StatusCode TrackMasterFitter::fit( Track& track )
 
     // Call the track fit
     sc = m_trackNodeFitter->fit( track );
-    if ( sc.isFailure() ) return failure( "unable to fit the track" );
-    
+    if ( sc.isFailure() ) {
+      std::ostringstream mess;
+      mess << "unable to fit the track # " << track.key();
+      return failure( mess.str() );
+    }
+
     // Prepare for next iteration
     if ( iter < m_numFitIter ) {
       // Outlier removal
@@ -432,6 +439,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
     StatusCode sc = m_measProvider -> load( track );
     if ( sc.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
+    debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
+            << ", " << track.nMeasurements() << endreq;
   }
 
   // reserve some space in node vector

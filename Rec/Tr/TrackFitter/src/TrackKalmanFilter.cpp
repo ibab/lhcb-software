@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.6 2006-01-17 15:50:55 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.7 2006-01-27 13:30:14 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -38,11 +38,11 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 {
   declareInterface<ITrackFitter>( this );
 
-  declareProperty( "Extrapolator"        , m_extrapolatorName =
+  declareProperty( "Extrapolator"  , m_extrapolatorName =
                                            "TrackMasterExtrapolator" );
-  declareProperty( "Projector"           , m_projectorName =
+  declareProperty( "Projector"     , m_projectorName =
                                            "TrackMasterProjector" );
-  declareProperty( "StoreTransport"      , m_storeTransport   = true  );
+  declareProperty( "StoreTransport", m_storeTransport   = true  );
 
 }
 
@@ -60,8 +60,10 @@ StatusCode TrackKalmanFilter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName );
-  m_projector    = tool<ITrackProjector>( m_projectorName );
+  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName,
+                                             "Extrapolator", this );
+  m_projector    = tool<ITrackProjector>( m_projectorName,
+                                          "Projector", this );
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
   return StatusCode::SUCCESS;
@@ -263,7 +265,11 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // invert the covariance matrix
   HepSymMatrix invPrevNodeC = prevNodeC;
   sc = invertMatrix(invPrevNodeC);
-  if ( sc.isFailure() ) return failure("inverting matrix in smoother");
+  if ( sc.isFailure() ) {
+    debug() << "invPrevNodeC = " << invPrevNodeC << endreq;
+    return failure("inverting matrix in smoother");
+  }
+  
 
   // references to _predicted_ state + cov of this node from the first step
   HepVector&    thisNodeX = thisNode.state().stateVector();
