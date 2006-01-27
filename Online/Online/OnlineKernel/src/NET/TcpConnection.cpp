@@ -30,15 +30,8 @@ TcpConnection::TcpConnection ( const char* service )  {
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   m_status = CONNECTION_ERROR;
-  _pcc_service = new char[strlen(service)+1];
-  ::strcpy(_pcc_service,service);
-  struct servent* se = ::getservbyname( Service(), "udp");
-  m_sin._addr.sin_port = 0;
-  if ( se == 0 )   {
-    printf("%s UdpConnection> Error getting service %s!\n",timestr(),Service());
-    return;
-  }
-  Initialize ( m_sin._addr.sin_port = se->s_port );
+  ::strcpy(m_service,service);
+  Initialize ( servicePort(Service()) );
 }
 
 TcpConnection::TcpConnection ( TcpConnection::Port port )  {
@@ -49,8 +42,7 @@ TcpConnection::TcpConnection ( TcpConnection::Port port )  {
   // ----------------------------------------------------------------------------
   char service[32];
   ::sprintf(service,"TCPservice_%d",port);
-  _pcc_service = new char[strlen(service)+1];
-  ::strcpy(_pcc_service,service);
+  ::strcpy(m_service,service);
   Initialize ( htons(port) );
 }
 
@@ -132,38 +124,44 @@ int TcpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
   return CONNECTION_SUCCESS;
 }
 // ----------------------------------------------------------------------------
-/// return Network channel
+// return Network channel
 // ----------------------------------------------------------------------------
 NetworkChannel& TcpConnection::_RecvChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
-/// return Network channel
+// return Network channel
 // ----------------------------------------------------------------------------
 NetworkChannel& TcpConnection::_SendChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
-/// Return name to the service the connection represents
-// ----------------------------------------------------------------------------
-const char* TcpConnection::Service() const  {
-  return _pcc_service;
-}
-// ----------------------------------------------------------------------------
-/// return Port number
+// return Port number
 // ----------------------------------------------------------------------------
 TcpConnection::Port TcpConnection::_Port () const {
   return m_sin._addr.sin_port;
 }
 // ----------------------------------------------------------------------------
-/// Address the connection points to (may be invalid)
+// Address the connection points to (may be invalid)
 // ----------------------------------------------------------------------------
 const NetworkAddress& TcpConnection::_Address () const {
   return m_sin;
 }
 // ----------------------------------------------------------------------------
-/// Return family type
+// Return family type
 // ----------------------------------------------------------------------------
 TcpConnection::Family TcpConnection::_Family () const {
   return m_sin._addr.sin_family;
 }
+// ----------------------------------------------------------------------------
+// Standard constructor with given service name
+// ----------------------------------------------------------------------------
+int TcpConnection::servicePort(const char* service)   {
+  struct servent* se = ::getservbyname( service, "tcp");
+  if ( se == 0 )   {
+    printf("%s TcpConnection> Error getting service %s!\n",timestr(),service);
+    return -1;
+  }
+  return se->s_port;
+}
+

@@ -42,6 +42,8 @@ public:
   int _QueueReceive ( Port port, EventHandler *handler );
   /// Queue Receive call
   int _UnqueueIO ( Port port );
+  /// Standard constructor with given service name
+  static int servicePort(const char* service = "UserService");
 };
 #endif   /*   __cplusplus               */
 #endif   /*   __UdpNetworkChannel_H__   */

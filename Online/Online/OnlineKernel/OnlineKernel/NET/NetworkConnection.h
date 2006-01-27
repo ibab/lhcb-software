@@ -2,10 +2,13 @@
 #define __NETWORKCONNECTION__H__
 #include "RTL/rtl.h"
 #include "CPP/SmartObject.h"
+#include "NET/NetworkChannel.h"
+
+// Forward declarations
 class BasicRequest;
-class NetworkChannel;
 
-
+/**@class NetworkAddress
+  */
 class NetworkAddress  {
 public:
   NetworkAddress() {
@@ -35,19 +38,33 @@ public:
 class NetworkConnection  : public SmartObject<NetworkConnection> {
 public:
   //@Man: Class specific enumerations and typedefs
+  /// Socket  :== NetworkChannel::Channel
+  typedef NetworkChannel::Channel Socket;
+  /// Port    :== NetworkChannel::Port
+  typedef NetworkChannel::Port    Port;
+  /// Family  :== NetworkChannel::Family
+  typedef NetworkChannel::Family  Family;
   /// Status enum of the networking connection
   enum NetConnectionStatus {
     NETCONNECTION_ERROR = 0,
     NETCONNECTION_SUCCESS
   };
+  /// Pointer keeping the name of the service
+  char                m_service[64];
 protected:
 public:
   //@Man: Public member functions
   /// Standard constructor
   NetworkConnection() {
+    m_service[0] = 0;
+    m_status = NETCONNECTION_ERROR;
   }
   /// Standard destructor
   virtual ~NetworkConnection() {
+  }
+  /// Return name to the service the connection represents
+  const char* Service() const   {
+    return m_service;
   }
   /// Address the connection points to (may be invalid)
   virtual const NetworkAddress& _Address () const = 0;

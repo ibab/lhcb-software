@@ -32,16 +32,8 @@ UdpConnection::UdpConnection ( const char* service )  {
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  m_status = CONNECTION_ERROR;
-  _pcc_service = new char[strlen(service)+1];
-  strcpy(_pcc_service,service);
-  struct servent* se = ::getservbyname( Service(), "udp");
-  m_sin._addr.sin_port = 0;
-  if ( se == 0 )   {
-    printf("%s UdpConnection>> Error getting service %s!\n",timestr(),Service());
-    return;
-  }
-  Initialize ( m_sin._addr.sin_port = se->s_port );
+  ::strcpy(m_service,service);
+  Initialize ( servicePort(Service()) );
 }
 
 UdpConnection::UdpConnection ( UdpConnection::Port port )  {
@@ -53,10 +45,7 @@ UdpConnection::UdpConnection ( UdpConnection::Port port )  {
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  char service[32];
-  ::sprintf(service,"UDPservice_%d",port);
-  _pcc_service = new char[strlen(service)+1];
-  ::strcpy(_pcc_service,service);
+  ::sprintf(m_service,"UDPservice_%d",port);
   Initialize ( htons(port) );
 }
 
@@ -144,38 +133,56 @@ int UdpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
   return CONNECTION_SUCCESS;
 }
 // ----------------------------------------------------------------------------
-/// return Network channel
+// return Network channel
 // ----------------------------------------------------------------------------
 NetworkChannel& UdpConnection::_RecvChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
-/// return Network channel
+// return Network channel
 // ----------------------------------------------------------------------------
 NetworkChannel& UdpConnection::_SendChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
-/// Return name to the service the connection represents
+// Return name to the service the connection represents
 // ----------------------------------------------------------------------------
 const char* UdpConnection::Service() const  {
-  return _pcc_service;
+  return m_service;
 }
 // ----------------------------------------------------------------------------
-/// return Port number
+// return Port number
 // ----------------------------------------------------------------------------
 UdpConnection::Port UdpConnection::_Port () const {
   return m_sin._addr.sin_port;
 }
 // ----------------------------------------------------------------------------
-/// Address the connection points to (may be invalid)
+// Address the connection points to (may be invalid)
 // ----------------------------------------------------------------------------
 const NetworkAddress& UdpConnection::_Address () const {
   return m_sin;
 }
 // ----------------------------------------------------------------------------
-/// Return family type
+// Address the connection points to (may be invalid)
+// ----------------------------------------------------------------------------
+NetworkChannel::Address& UdpConnection::_InAddress ()  {
+  return m_sin._addr;
+}
+// ----------------------------------------------------------------------------
+// Return family type
 // ----------------------------------------------------------------------------
 UdpConnection::Family UdpConnection::_Family () const {
   return m_sin._addr.sin_family;
 }
+// ----------------------------------------------------------------------------
+// Standard constructor with given service name
+// ----------------------------------------------------------------------------
+int UdpConnection::servicePort(const char* service)   {
+  struct servent* se = ::getservbyname( service, "udp");
+  if ( se == 0 )   {
+    printf("%s UdpConnection> Error getting service %s!\n",timestr(),service);
+    return -1;
+  }
+  return se->s_port;
+}
+

@@ -45,13 +45,6 @@ class TcpNetworkAddress : public NetworkAddress {
   const char* HostName() const {
     return _cHost;
   }
-  /// Copy operator
-  virtual NetworkAddress& operator = (const NetworkAddress& copy) {
-    TcpNetworkAddress* cp = (TcpNetworkAddress*)&copy;
-    memcpy(_cHost, cp->_cHost,sizeof(_cHost));
-    memcpy(&_addr,&cp->_addr,sizeof(_addr));
-    return *this;
-  }
   void SetHostName();
 };
 
@@ -65,13 +58,7 @@ class TcpConnection  : public NetworkConnection {
 public:
   //@Man: Class specific enumerations and typedefs
   /// Address :== NetworkAddress
-  typedef TcpNetworkAddress  Address;
-  /// Socket  :== TcpNetworkChannel::Channel
-  typedef TcpNetworkChannel::Channel Socket;
-  /// Port    :== TcpNetworkChannel::Port
-  typedef TcpNetworkChannel::Port    Port;
-  /// Family  :== TcpNetworkChannel::Family
-  typedef TcpNetworkChannel::Family  Family;
+  typedef TcpNetworkAddress Address;
   /// Indicate status of the connection request
   enum ConnectionStatus {
     CONNECTION_ERROR   = NetworkConnection::NETCONNECTION_ERROR,
@@ -83,8 +70,6 @@ protected:
   Address	            m_sin;
   /// TCP Network channel
   TcpNetworkChannel   m_channel;
-  /// Pointer keeping the name of the service
-  char               *_pcc_service;
 public:
   //@Man: Public member functions
   /// Standard constructor with given service name
@@ -99,8 +84,6 @@ public:
   virtual NetworkChannel& _SendChannel ();
   /// return Network channel 
   virtual NetworkChannel& _RecvChannel ();
-  /// Return name to the service the connection represents
-  const char* Service() const;
   /// return Port number
   Port _Port () const;
   /// Return family type
@@ -113,5 +96,7 @@ public:
   virtual int Send     (BasicRequest* req, NetworkAddress& to);
   /// Virtual method to listen to the connection socket
   virtual int Listen( EventHandler *handler );
+  /// Standard constructor with given service name
+  static int servicePort(const char* service = "UserService");
 };
 #endif

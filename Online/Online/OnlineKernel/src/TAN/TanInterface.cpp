@@ -166,9 +166,8 @@ int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin,
   sin.sin_family = AF_INET;
   memset(sin.sin_zero,0,sizeof(sin.sin_zero));
   sin.sin_port = htons(NAME_SERVICE_PORT);
-  rin = _sinudp;
-  rin.sin_port = (_portAllocated == 0)  ? htons(NAME_SERVICE_PORT+1)
-    : _portAllocated;
+  rin          = _sinudp;
+  rin.sin_port = (_portAllocated == 0)  ? htons(NAME_SERVICE_PORT+1) : _portAllocated;
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------
@@ -232,29 +231,28 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
     GetNodeWithName(name,node,msg._Name());
     SetLocalAddress(msg.sin);
     if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
-#if defined(__USING_TCP_ALLOCATOR) || defined(_WIN32)
-    TcpNetworkChannel c;
-    if ( c._Connect(msg.sin,Connect_TMO) == -1 )  {
-      printf("Connect error");
-    }
-    TcpNetworkChannel& snd = c;
-    TcpNetworkChannel& rcv = c;
-#else    // Using UDP with INQUIRE service
-      int retry;
+#if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
+      TcpNetworkChannel c;
+      if(c._Connect(msg.sin,Connect_TMO) == -1) return ErrorCode(TAN_SS_NOTOPEN);
+      int nbyte = c._Send(&msg,sizeof(msg));
+      if ( nbyte == sizeof(msg) )  {
+        nbyte = c._Recv(&msg,sizeof(msg),Receive_TMO);
+#else
       UdpNetworkChannel snd, rcv;
+      NetworkChannel::Address sadd = msg.sin;
       if ( !rcv._IsValid() )                    return rcv._Error();
       if ( !snd._IsValid() )                    return snd._Error();
-      if ( snd._Connect(msg.sin,Connect_TMO)<0) return snd._Error();
-      for( retry=0; retry<5; retry++ )  {       // Necessary to avaoid
+      msg.sin.sin_port = radd.sin_port;
+      for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
         if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
         else                       break;       // node...
-      }                                         //
-      if ( retry == 5 )                         return rcv._Error();
-      msg.sin.sin_port = radd.sin_port;
-#endif
-      int nbyte = snd._Send(&msg,sizeof(msg));
+        if ( retry == 5 )                     return rcv._Error();
+      }
+      int nbyte = snd._Send(&msg,sizeof(msg),0,0,&sadd);
       if ( nbyte == sizeof(msg) )  {
+        printf("Receive on port: %04X\n",radd.sin_port);
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
+#endif
         if ( nbyte > 0 )  {
           msg.Convert();
           if ( nbyte != int(msg._Length()) )    return ErrorCode(TAN_SS_ODDRESPONSE);
@@ -369,20 +367,27 @@ int TanInterface::DumpDB (const char* node)   {
     NetworkChannel::Address radd;
     TanMessage msg(TanMessage::DUMP);
     if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
-      int retry;
-      UdpNetworkChannel snd, rcv;
-      if ( !snd._IsValid() )                    return snd._Error();
-      if ( !rcv._IsValid() )                    return rcv._Error();
-      if ( snd._Connect(msg.sin,Connect_TMO)<0) return snd._Error();
-      for( retry=0; retry<5; retry++ )  {       // Necessary to avaoid
-        if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
-        else                       break;       // node...
-      }                                         //
-      if ( retry == 5 )                         return rcv._Error();
-      msg.sin.sin_port = radd.sin_port;
-      int nbyte = snd._Send(&msg,sizeof(msg));
+#if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
+      TcpNetworkChannel c;
+      if(c._Connect(msg.sin,Connect_TMO) == -1) return ErrorCode(TAN_SS_NOTOPEN);
+      int nbyte = c._Send(&msg,sizeof(msg));
       if ( nbyte == sizeof(msg) )  {
-        nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
+        nbyte = c._Recv(&msg,sizeof(msg),Receive_TMO);
+#else
+      UdpNetworkChannel snd, rcv;
+      NetworkChannel::Address sadd = msg.sin;
+      if ( !rcv._IsValid() )                    return rcv._Error();
+      if ( !snd._IsValid() )                    return snd._Error();
+      msg.sin.sin_port = radd.sin_port;
+      int nbyte = snd._Send(&msg,sizeof(msg),0,0,&sadd);
+      if ( nbyte == sizeof(msg) )  {
+        for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
+          if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
+          else                       break;       // node...
+          if ( retry == 5 )                     return rcv._Error();
+        }
+        nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO,0,&radd);
+#endif
         if ( nbyte > 0 )  {
           msg.Convert();
           if      (rcv._IsCancelled()       )   return ErrorCode(TAN_SS_RECV_TMO);

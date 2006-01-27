@@ -56,33 +56,19 @@ class UdpNetworkAddress : public NetworkAddress  {
   }
   /// Store Name of Network host
   void SetHostName();
-  /// Copy operator
-  virtual NetworkAddress& operator = (const NetworkAddress& copy) {
-    UdpNetworkAddress* cp = (UdpNetworkAddress*)&copy;
-    memcpy( _cHost,  cp->_cHost, sizeof(_cHost));
-    memcpy( &_addr, &cp->_addr,  sizeof(_addr) );
-    return *this;
-  }
 };
 
 /// Definition of a network connection based on UDP sockets
 /**
-    {\Large{\bf Class UdpConnection}}
-
- Definition of the UdpConnection class.
-*/
+  *  {\Large{\bf Class UdpConnection}}
+  *
+  *  Definition of the UdpConnection class.
+  */
 class UdpConnection  : public NetworkConnection {
 public:
   //@Man: Class specific enumerations and typedefs
   /// Address :== NetworkAddress
-  typedef UdpNetworkAddress     Address;
-  /// Socket  :== unsigned short
-  typedef unsigned short     Socket;
-  /// Port    :== unsigned short  
-  typedef unsigned short     Port;
-  /// Family  :== short
-  typedef short              Family;
-
+  typedef UdpNetworkAddress Address;
   /// Indicate status of the connection request
   enum ConnectionStatus {
     CONNECTION_ERROR   = NetworkConnection::NETCONNECTION_ERROR,
@@ -91,13 +77,13 @@ public:
 protected:
   //@Man: Protected member variables
   /// Storage for the address
-  Address         m_sin;
+  Address             m_sin;
   /// UDP Network channel 
   UdpNetworkChannel   m_channel;
   /// UDP Network channel for sending
   UdpNetworkChannel   _send_channel;
   /// Pointer keeping the name of the service
-  char               *_pcc_service;
+  char                m_service[64];
 public:
   //@Man: Public member functions
   /// Standard constructor with given service name
@@ -112,6 +98,8 @@ public:
   const char* Service() const;
   /// Return a copy of the address of this connection
   const NetworkAddress& _Address() const;
+  /// Return a copy of the address of this connection
+  NetworkChannel::Address& _InAddress();
   /// return Network channel for Sending
   NetworkChannel& _SendChannel ();
   /// return Network channel for Receiving
@@ -124,5 +112,7 @@ public:
   virtual int Receive  (BasicRequest* req, NetworkAddress& from);
   /// Virtual method to send data to a given UDP address
   virtual int Send     (BasicRequest* req, NetworkAddress& to);
+  /// Standard constructor with given service name
+  static int servicePort(const char* service = "UserService");
 };
 #endif

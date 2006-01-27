@@ -30,16 +30,16 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {
-   case 'q': quiet = true;         break;
-   case 'c': continuous = true;      break;
-   case 'n': strncpy(host,c+2,sizeof(host));   break;
-   default:
-     printf("Usage : inquire -opt <opts>\n");
-     printf("        -c           contious mode\n");
-     printf("        -n           supply host name; default:%s\n",host);
-     printf("        -q           quiet mode(statistics only\n");
-     printf("        -?, -h       get this help\n");
-     exit(0);
+        case 'q': quiet = true;         break;
+        case 'c': continuous = true;      break;
+        case 'n': strncpy(host,c+2,sizeof(host));   break;
+        default:
+          printf("Usage : inquire -opt <opts>\n");
+          printf("        -c           contious mode\n");
+          printf("        -n           supply host name; default:%s\n",host);
+          printf("        -q           quiet mode(statistics only\n");
+          printf("        -?, -h       get this help\n");
+          exit(0);
       }
     }
   }
@@ -56,7 +56,6 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
     sprintf(buff,"%s::IDIOTIC",host);
     status = tan_get_address_by_name(buff,&addr);
     _PRINTERROR(buff,status);
-    status = tan_dump_dbase ( host );
     time_t start = time(0);
     int nalias = 0;
     while ( 1 )    {
@@ -67,6 +66,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
           time(0) - start, tot_inq, nalias, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {
+        //if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host );
         for ( int j = 0; j < i; j++ )           {
           // Now check the aliases
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);
