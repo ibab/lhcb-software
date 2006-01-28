@@ -1,12 +1,12 @@
-// $Id: SVertexABTool.cpp,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: SVertexABTool.cpp,v 1.3 2006-01-28 22:17:56 musy Exp $
 #include "SVertexABTool.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : SVertexABTool v1.3
+// Implementation file for class : SVertexABTool 
 //
-// DO NOT USE YET: only here for development purpose! (still crashing)
+// Returns a vector of two inclusive secondary vertices
 //
-// 2005-06-30 : Julien Babel / Marco Musy
+// 2006-01-28 : Marco Musy
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -22,6 +22,10 @@ SVertexABTool::SVertexABTool( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<ISecondaryVertexTool>(this);
   declareProperty( "SkipTrackPurge", m_SkipTrackPurge = false );
+  declareProperty( "cut_chiA", m_cut_chiA = 25.0 );
+  declareProperty( "cut_chiB", m_cut_chiB = 25.0 );
+  declareProperty( "cut_zA", m_cut_zA     = 0.0 );
+  declareProperty( "cut_zB", m_cut_zB     = 0.0 );
 }
 
 StatusCode SVertexABTool::initialize() {
@@ -65,9 +69,10 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     //FIRST seed particle -----------------------------------
     sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
     if( sc.isFailure() ) continue;
-    if( iperrl > 1.0 ) continue;                                //cut
+    //if( iperrl > 1.0 ) continue;                                //cut
     if( ipl/iperrl < 2.0 ) continue;                            //cut
-    if( ipl/iperrl > 100.0 ) continue;                          //cut
+    //if( ipl/iperrl > 100.0 ) continue;                          //cut
+    if( (*jp)->charge() == 0 ) continue;                      //cut 
 
     double lcs=1000.;
     ContainedObject* contObj = (*jp)->origin();
@@ -85,9 +90,10 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
 
       sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs, ipVec, errMatrix);
       if( sc.isFailure() ) continue;  
-      if( iperrs > 1.0 ) continue;                              //cut 
+      //if( iperrs > 1.0 ) continue;                              //cut 
       if( ips/iperrs < 2.0 ) continue;                          //cut 
-      if( ips/iperrs > 100.0 ) continue;                        //cut 
+      //if( ips/iperrs > 100.0 ) continue;                        //cut 
+      if( (*kp)->charge() == 0 ) continue;                      //cut 
 
       double lcs=1000.;
       ContainedObject* contObj = (*kp)->origin();
@@ -134,38 +140,66 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
       probf = probs/(probs+probb);
-      //if( probf < 0.32 ) continue;                             //cut
-      if( probf < 0.25 ) continue;                             //cut
+      if( probf < 0.32 ) continue;                             //cut
 
       vseeds.push_back(vtx);
       vprobf.push_back(probf);
     }
   }
-  debug()<<"vseeds, vprobf size="<<vseeds.size()<<" " <<vprobf.size()<<endreq;
-  if(vprobf.size()==0) return vtxvect;
+  if(vprobf.size()<2) return vtxvect;
 
   //find best 2 seeds
+  bool VAexist = false ;
   Vertex vfitA(0), vfitB(0);
   vprobf_sorted = vprobf; 
   std::sort(vprobf_sorted.begin(), vprobf_sorted.end()); 
+  int ibestA = vprobf_sorted.size() -1;
   for(unsigned int i=0; i!=vprobf.size(); ++i) {
-    if( vprobf.at(i) == vprobf_sorted.at(0) ) vfitA = vseeds.at(i);
-    if(i>0) if( vprobf.at(i) == vprobf_sorted.at(1) ) vfitB = vseeds.at(i);
-    debug()<<"seed prob="<<vprobf_sorted.at(i)<<endreq;
+    int j = vprobf.size()-i-1;
+    if( vprobf.at(j) == vprobf_sorted.at(ibestA) ) {
+      vfitA = vseeds.at(j);
+      VAexist = true;
+    }
   }
-  bool Bexist = vprobf.size()>1 ? true:false ;
+  if(!VAexist) return vtxvect;
+
+  bool VBexist = false ;
+  int ibestB = ibestA-1;
+  for(unsigned int i=0; i!=vprobf.size(); ++i) {
+    int j = vprobf.size()-i-1;
+    if( j == ibestA ) continue;
+
+    if(ibestB>-1) if( vprobf.at(j) == vprobf_sorted.at(ibestB) ) {
+      vfitB = vseeds.at(j);
+      ParticleVector partsB = toStdVector(vfitB.products());
+      if(isinVtx(vfitA, partsB.at(0) )) { --ibestB; continue; }
+      if(isinVtx(vfitA, partsB.at(1) )) { --ibestB; continue; }
+      
+      VBexist = true;
+    }
+  }
+  if(!VBexist) return vtxvect;
+ 
   
+  debug()<<"check order at seed time:"<<endreq;
+  for(unsigned int i=0; i!=vprobf.size(); ++i) {
+    debug()<<"vertex: "<<vseeds.at(i).position().z()
+	   <<" probf:" <<vprobf.at(i) <<endreq;
+  }
   debug()<<"vfitA ="<<vfitA.position().z()<<endreq;
   debug()<<"vfitB ="<<vfitB.position().z()<<endreq;
+  ParticleVector pfitA = toStdVector(vfitA.products());
+  ParticleVector pfitB = toStdVector(vfitB.products());
 
   //-----
   //add iteratively other tracks to the seeds ----------------------
-  double chiB, zB;
+  double chiA, chiB, zA, zB;
   StatusCode scA, scB;
-  ParticleVector pfitA(0), pfitB(0); 
   ParticleVector::const_iterator jpp;
   for(jpp = vtags.begin(); jpp != vtags.end(); jpp++){
 
+    if( (*jpp)->p()/GeV < 2.0 ) continue;
+    if( (*jpp)->charge() == 0 ) continue;                               //cut 
     double ip, ipe;
     sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe, ipVec, errMatrix);
     if( !sc ) continue;
@@ -181,55 +215,45 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     if( probs/(probs+probb) < 0.2 ) continue;                           //cut
 
     if( isinVtx(vfitA, *jpp) ) continue;
-    if( Bexist ) if( isinVtx(vfitB, *jpp) ) continue;
+    if( isinVtx(vfitB, *jpp) ) continue;
 
     //try to put it in A ------------------
-    pfitA = toStdVector(vfitA.products());
-    debug()<<"xxx0 sizeA="<<pfitA.size()<<" sizeB="<<pfitB.size()<<endreq;
-    pfitA.push_back(*jpp);
-    debug()<<"xxx1 sizeA="<<pfitA.size()<<" sizeB="<<pfitB.size()<<endreq;
-    scA = fitter->fitVertex( pfitA, vfitA );
-    double chiA = vfitA.chi2()/vfitA.nDoF(); 
-    double zA   = vfitA.position().z()/mm - RVz;
+    pfitA = toStdVector(vfitA.products()); pfitA.push_back(*jpp);
+    scA   = fitter->fitVertex( pfitA, vfitA );
+    chiA  = vfitA.chi2()/vfitA.nDoF(); 
+    zA    = vfitA.position().z()/mm - RVz;
 
     //try to put it in B ------------------
-    if(Bexist) {
-      pfitB = toStdVector(vfitB.products());
-      pfitB.push_back(*jpp);
-      scB  = fitter->fitVertex( pfitB, vfitB );
-      chiB = vfitB.chi2()/vfitB.nDoF(); 
-      zB   = vfitB.position().z()/mm - RVz;
-    }
-    debug()<<"xxx2 sizeA="<<pfitA.size()<<" sizeB="<<pfitB.size()<<endreq;
+    pfitB = toStdVector(vfitB.products()); pfitB.push_back(*jpp);
+    scB   = fitter->fitVertex( pfitB, vfitB );
+    chiB  = vfitB.chi2()/vfitB.nDoF(); 
+    zB    = vfitB.position().z()/mm - RVz;
 
     //decide where to put it for real
     bool putinA=false, putinB=false; 
-    if( scA && zA > 1.0 && chiA < 5.0) putinA=true;
-    if(Bexist) {
-      if( scB && zB > 1.0 && chiB < 5.0) putinB=true;
-      if( chiA > chiB ) putinB=false; else putinA=false; 
-      //and make action..
-      if( ! putinA ) { pfitA.pop_back(); fitter->fitVertex( pfitA, vfitA ); }
-      if( ! putinB ) { pfitB.pop_back(); fitter->fitVertex( pfitB, vfitB ); }
-    } else {
-      if( ! putinA ) { pfitA.pop_back(); fitter->fitVertex( pfitA, vfitA ); }
-    }
-    debug()<<"xxx3 sizeA="<<pfitA.size()<<" sizeB="<<pfitB.size()<<endreq;
+    if( scA && zA > m_cut_zA && chiA < m_cut_chiA ) putinA=true;
+    if( scB && zB > m_cut_zB && chiB < m_cut_chiB ) putinB=true;
+    if( putinA && putinB ) if( chiA < chiB ) putinB=false; else putinA=false; 
+    //and make action..
+    if( ! putinA ) { pfitA.pop_back(); fitter->fitVertex( pfitA, vfitA ); }
+    if( ! putinB ) { pfitB.pop_back(); fitter->fitVertex( pfitB, vfitB ); }
 
     //debug
     debug() << "particle to test was:" <<(*jpp)->particleID().pid()
-            << "  pt=" << (*kp)->pt()/GeV <<endreq;
+	    << "  pt=" << (*jpp)->pt()/GeV <<endreq;
     debug() << " zA=" <<zA<< " chiA="<< chiA << " put?"<<putinA<<endreq;
     debug() << " zB=" <<zB<< " chiB="<< chiB << " put?"<<putinB<<endreq;
-    debug() << "vtxA: " << pfitA.size()<<endreq;
-    for(ParticleVector::iterator kp=pfitA.begin(); kp!=pfitA.end(); ++kp){
-      debug()<< "   " << (*kp)->particleID().pid()
-             << " pt="<< (*kp)->pt()/GeV <<endreq;
-    }
-    debug() << "vtxB: " << pfitB.size()<<endreq;
-    for(ParticleVector::iterator kp=pfitB.begin(); kp!=pfitB.end(); ++kp){
-      debug()<< "   " << (*kp)->particleID().pid()
-             << " pt="<< (*kp)->pt()/GeV <<endreq;
+    if( putinA || putinB ) {
+      debug() << "vtxA: " << pfitA.size()<<endreq;
+      for(ParticleVector::iterator kp=pfitA.begin(); kp!=pfitA.end(); ++kp){
+	debug()<< "     " << (*kp)->particleID().pid()
+	       << "   pt="<< (*kp)->pt()/GeV <<endreq;
+      }
+      debug() << "vtxB: " << pfitB.size()<<endreq;
+      for(ParticleVector::iterator kp=pfitB.begin(); kp!=pfitB.end(); ++kp){
+	debug()<< "     " << (*kp)->particleID().pid()
+	       << "   pt="<< (*kp)->pt()/GeV <<endreq;
+      }
     }
 
     //if the part was not added skip the rest
@@ -237,7 +261,7 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
     if( m_SkipTrackPurge ) continue;
 
     //otherwise look what is the part which behaves worse in A
-    if(putinA) if(pfitA.size() > 3 ) {
+    if(putinA) if( pfitA.size() > 3 ) {
       int ikpp = 0;
       double ipmax = -1.0;
       bool worse_exist = false;
@@ -257,20 +281,22 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       }
       //decide if keep it or kill it
       if( worse_exist ) {
-        debug()<< "Worse=" << (*kpp_worse)->particleID().pid()
-               << " P=" << (*kpp_worse)->p()/GeV
+        debug()<< "Worse in A=" << (*kpp_worse)->particleID().pid()
+               << " pt=" << (*kpp_worse)->pt()/GeV
                << " ipmax=" << ipmax ;
-        if ( ipmax > 3.0 ) {
+        if ( ipmax > 3.5 ) {
           pfitA.erase( kpp_worse );
           debug() << " killed." << endreq;	
-        } 
+        } else {
+          debug() << " accepted." << endreq;	
+	}
       }
       sc = fitter->fitVertex( pfitA, vfitA ); //RE-FIT//
       if( !sc ) pfitA.clear();
     }
 
     //same: look what is the part which behaves worse in B
-    if(Bexist) if(putinB) if(pfitB.size() > 3 ) {
+    if(putinB) if(pfitB.size() > 3 ) {
       int ikpp = 0;
       double ipmax = -1.0;
       bool worse_exist = false;
@@ -290,13 +316,15 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
       }
       //decide if keep it or kill it
       if( worse_exist ) {
-        debug()<< "Worse=" << (*kpp_worse)->particleID().pid()
-               << " P=" << (*kpp_worse)->p()/GeV
+        debug()<< "Worse in B=" << (*kpp_worse)->particleID().pid()
+               << " P=" << (*kpp_worse)->pt()/GeV
                << " ipmax=" << ipmax ;
-        if ( ipmax > 3.0 ) {
+        if ( ipmax > 3.5 ) {
           pfitB.erase( kpp_worse );
           debug() << " killed." << endreq;	
-        } 
+        } else {
+          debug() << " accepted." << endreq;	
+	}
       }
       sc = fitter->fitVertex( pfitB, vfitB ); //RE-FIT////////////////////
       if( !sc ) pfitB.clear();
@@ -304,13 +332,13 @@ std::vector<Vertex> SVertexABTool::buildVertex( const Vertex& RecVert,
   }
 
   debug() << "=> Fit Results A: " << pfitA.size() <<endreq;
-  if(Bexist) debug() << "=> Fit Results B: " << pfitB.size() <<endreq;
+  debug() << "=> Fit Results B: " << pfitB.size() <<endreq;
   vfitA.clearProducts();
-  if(Bexist) vfitB.clearProducts();
+  vfitB.clearProducts();
   for( jp=pfitA.begin(); jp!=pfitA.end(); jp++ ) vfitA.addToProducts(*jp);
-  if(Bexist) for(jp=pfitB.begin(); jp!=pfitB.end(); jp++) vfitB.addToProducts(*jp);
-  if(pfitA.size()) vtxvect.push_back(vfitA);
-  if(Bexist) if(pfitB.size()) vtxvect.push_back(vfitB);
+  for( jp=pfitB.begin(); jp!=pfitB.end(); jp++ ) vfitB.addToProducts(*jp);
+  if( pfitA.size() ) vtxvect.push_back(vfitA);
+  if( pfitB.size() ) vtxvect.push_back(vfitB);
 
   return vtxvect;
 }

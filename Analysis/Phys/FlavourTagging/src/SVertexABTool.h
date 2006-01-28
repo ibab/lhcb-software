@@ -1,4 +1,4 @@
-// $Id: SVertexABTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: SVertexABTool.h,v 1.3 2006-01-28 22:17:56 musy Exp $
 #ifndef SVERTEXABTOOL_H 
 #define SVERTEXABTOOL_H 1
 // Include files
@@ -45,6 +45,8 @@ private:
   ParticleVector toStdVector(SmartRefVector<Particle>& );
 
   bool m_SkipTrackPurge;
+  double m_cut_chiA, m_cut_chiB, m_cut_zA, m_cut_zB;
+
   bool isinVtx( Vertex, Particle* );
   double ipprob(double x) ;
   double ptprob(double x);

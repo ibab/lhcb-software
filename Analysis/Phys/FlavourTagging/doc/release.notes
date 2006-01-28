@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.88 2006-01-27 16:39:01 pkoppenb Exp $
+! $Id: release.notes,v 1.89 2006-01-28 22:17:56 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2006-01-28 - Marco Musy
+ - The new DoubleTagging algorithm is introduced to study the correlations
+   between SS/OS taggers. Please refer to the tagging web page for details.
+   Files added are DoubleTagging.*; corresponding changes are in
+   the FlavourTaggingChecker package
+ - Options file DoubleTagging.opts changed to DVDoubleTagging.opts
+ - The SVertexABTool is updated. It returns two inclusive secondary
+   vertices instead of just one.
 
 ! 2006-01-27 - P. Koppenburg for Chris Barnes
   - New tool CombineTaggersOSTDR.

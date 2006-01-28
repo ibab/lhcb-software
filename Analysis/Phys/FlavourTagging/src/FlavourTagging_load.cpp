@@ -11,6 +11,7 @@
 DECLARE_FACTORY_ENTRIES(FlavourTagging) {
 
   DECLARE_ALGORITHM(BTagging);
+  DECLARE_ALGORITHM(DoubleTagging);
   DECLARE_TOOL(BTaggingTool);
   DECLARE_TOOL(TaggerMuonTool);
   DECLARE_TOOL(TaggerElectronTool);
