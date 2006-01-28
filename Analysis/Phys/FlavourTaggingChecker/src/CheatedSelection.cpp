@@ -77,7 +77,7 @@ StatusCode CheatedSelection::execute() {
   MCParticleVector mcdaughter ;
   
   m_BHEPm = mcSignal->momentum().m()/GeV;
-  m_debug -> printTree(mcSignal);
+  //m_debug -> printTree(mcSignal);
 
   SignalTree( mcSignal, mcdaughter, axdaughter ); //fills daughter vectors
 

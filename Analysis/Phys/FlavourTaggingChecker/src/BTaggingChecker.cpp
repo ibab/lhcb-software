@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.2 2005-07-06 09:04:44 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.3 2006-01-28 22:00:50 musy Exp $
 // local
 #include "BTaggingChecker.h"
 
@@ -96,7 +96,7 @@ StatusCode BTaggingChecker::execute() {
 
     if( ! tagdecision ) continue;
 
-    m_debug->printTree( (*ti)->taggedB() );
+    //m_debug->printTree( (*ti)->taggedB() );
   }
 
   //count rights and wrongs
