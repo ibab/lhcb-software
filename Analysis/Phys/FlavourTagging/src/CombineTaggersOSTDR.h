@@ -1,4 +1,4 @@
-// $Id: CombineTaggersOSTDR.h,v 1.1 2006-01-27 16:39:01 pkoppenb Exp $
+// $Id: CombineTaggersOSTDR.h,v 1.2 2006-01-28 22:43:54 musy Exp $
 #ifndef COMBINETAGGERSOSTDR_H 
 #define COMBINETAGGERSOSTDR_H 1
 // Include files
@@ -10,9 +10,9 @@
 
 /** @class CombineTaggersOSTDR CombineTaggersOSTDR.h CombineTaggersOSTDR.h
  *  
- *  v1.3
+ *  Tool to do the combined OS tagging (independently from SS)
  *  @author Chris Barnes
- *  @date   2005-27-09
+ *  @date   2006-01-28
  */
 class CombineTaggersOSTDR : public GaudiTool, 
 	virtual public ICombineTaggersTool {
