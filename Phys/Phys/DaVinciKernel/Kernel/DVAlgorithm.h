@@ -129,8 +129,6 @@ private:
   /// Avoid printing SelResult statistics 
   /// (cannot be switched off by OutputLevel)
   bool m_printSelResult;
-  /// Forced outputLocation. Warning: Usage breaks the algorithmName = location rule.
-  std::string m_imposedOutputLocation;
   
   /// Reference to desktop tool
   mutable IPhysDesktop* m_pDesktop;        

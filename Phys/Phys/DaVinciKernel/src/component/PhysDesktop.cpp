@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.29 2006-01-23 12:31:10 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.30 2006-01-30 15:35:26 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -115,7 +115,10 @@ PhysDesktop::PhysDesktop( const std::string& type,
       IProperty* pp = static_cast<IProperty*>( tmp ) ;
       StringProperty output = StringProperty ( "OutputLocation" , "NOTDEFINED" ) ;
       sc = pp->getProperty( &output ) ;
-      if ( sc.isSuccess() ) { m_outputLocn = output.value() ; }   // NB !!
+      if ( sc.isSuccess() ) { {
+        if ( output.value() != "" )
+          m_outputLocn = output.value() ; }   // NB !!
+      }
       // release the used interface
       pp->release() ;
     }
