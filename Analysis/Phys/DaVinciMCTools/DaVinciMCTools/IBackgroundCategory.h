@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.8 2006-01-24 18:14:42 gligorov Exp $
+// $Id: IBackgroundCategory.h,v 1.9 2006-01-30 02:02:01 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include <map>
 
 // forward declarations
 class Particle;
@@ -155,7 +156,7 @@ public:
   /// For a signal it returns the true signal particle, and for any background with a 
   /// category < 60 it returns the mc_mother of the final state particles
   virtual const MCParticle* origin( const Particle* ) = 0 ;
-                  
+  std::map<int, std::string> m_cat;
 
 protected:
 

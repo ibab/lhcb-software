@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.93 2006-01-26 16:26:05 lfernan Exp $
+! $Id: release.notes,v 1.94 2006-01-30 02:02:07 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-1-30 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Modified category AllFromSamePV to reflect the fact that if a particle has no mothers with
+  a significant lifetime it should be considered as coming from the primary vertex.
+  Added support for map<int,string> in IBackgroundCategory.h
 
 ! 2006-01-26 - Luis Fernandez
  - src/PrintBackgroundCategory.cpp
@@ -13,7 +19,7 @@
   - src/BackgroundCategory.cpp
   Added support for ignoring soft photons through propeties UseSoftPhotonCut and SoftPhotonCut.
   Tool now ignores neutrinos when deciding if final state is correctly reconstructed or not
-  Added categories FromPV and FromSamePV; these represent the primary vertex background (one and all 
+  Added categories FromPV and AllFromSamePV; these represent the primary vertex background (one and all 
   final state particles from a PV respectively; event not a pileup)   
 
 ! 2006-01-23 - P. Koppenburg

@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.13 2006-01-25 15:49:11 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.14 2006-01-30 02:01:53 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,23 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   , m_pChi2PPAsct(0)
   , m_commonmother(0)
 {
+
+  m_cat[-1]   = "Undefined";
+  m_cat[0]    = "Signal";
+  m_cat[10]   = "QuasiSignal";
+  m_cat[20]   = "FullyRecoPhysBkg";
+  m_cat[30]   = "Reflection";
+  m_cat[40]   = "PartRecoPhysBkg";
+  m_cat[50]   = "LowMassBkg";
+  m_cat[60]   = "Ghost";
+  m_cat[70]   = "FromPV";
+  m_cat[80]   = "AllFromSamePV";
+  m_cat[100]  = "FromDifferentPV";
+  m_cat[110]  = "bbar";
+  m_cat[120]  = "ccbar";
+  m_cat[130]  = "uds";
+  m_cat[1000] = "LastGlobal";
+
   declareInterface<IBackgroundCategory>(this);
   declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
   declareProperty("SoftPhotonCut", m_softPhotonCut = 300.*MeV) ;
@@ -515,6 +532,30 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 				if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid()) ) {
 					++howmanyfinalstate;
 					if (*iP != *iPP) {
+						bool fromshortlivedmother = true;
+						const MCParticle* tempdaughter = *iPP;
+						do {
+
+							const MCParticle* tempmother = tempdaughter->mother();
+							if (tempmother) {
+
+								SmartRefVector<MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
+								double motherflighttime = (*iVT)->timeOfFlight();
+
+								//fatal() << "motherflighttime = " << motherflighttime << endreq;
+
+								if (motherflighttime > 10.0e-6) {
+
+									//fatal() << "motherflighttime (>0) = " << motherflighttime << endreq;
+									fromshortlivedmother = false;
+								}
+
+							}
+
+							tempdaughter = tempmother;
+
+						} while (fromshortlivedmother && tempdaughter);
+						if (fromshortlivedmother) ++howmanyfromPV;
 						++iP;
 						continue;
 					} else {
