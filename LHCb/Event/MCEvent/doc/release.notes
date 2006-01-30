@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2006-01-24 08:04:58 cattanem Exp $
+! $Id: release.notes,v 1.21 2006-01-30 08:49:58 gcorti Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
-!========================== MCEvent v1r0 2006-01-23 ==========================
+!========================== MCEvent v1r0 2006-01-27 ==========================
+! 2006-01-27 - Gloria CORTI
+ - Add non-const accessors to relations for MCVertex and MCParticle necessary
+   when filling them in Gauss
+
 ! 2006-01-23 - Chris Jones
  - Add charge sharing field to MCRichDigitHistoryCode
 
