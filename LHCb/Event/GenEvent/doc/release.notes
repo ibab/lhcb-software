@@ -1,7 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
-!================ GenEvent v4r0 2006-01-18 ============================
+!======================== GenEvent v4r0 2006-01-30 ============================
+! 2006-01-30 - Gloria CORTI
+ - Remove attributes fillDuration and fillLifetime from GenHeader since
+   can be retrieved from options setting.
+
 ! 2006-01-18 - Gloria CORTI
  - Introduce new path in Event Store for decay of signal in HepMCEvent.xml
    "HepMCEventsLocation::Signal".
