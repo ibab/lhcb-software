@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.94 2006-01-30 02:02:07 gligorov Exp $
+! $Id: release.notes,v 1.95 2006-01-30 13:50:22 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-01-30 - Luis Fernandez
+ - DaVinciMCTools/IBackgroundCategory.h
+   . Make map protected and added getCategoryMap() to return map between enum 
+     values and names.
+ - src/PrintBackgroundCategory.{h,cpp}
+   . Adapt to above changes.
+ - src/BackgroundCategory.cpp
+   . Minor modification for m_cat member.
 
 ! 2006-1-30 - V. Gligorov
   - src/BackgroundCategory.cpp

@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.10 2006-01-30 10:30:21 pkoppenb Exp $
+// $Id: IBackgroundCategory.h,v 1.11 2006-01-30 13:50:22 lfernan Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -136,6 +136,9 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
 class IBackgroundCategory : virtual public IAlgTool {
 public: 
 
+  /// Destructor
+  virtual ~IBackgroundCategory(){};
+
   /// enum defining categories. From 1000 on, specific tools can add codes.
 
   enum categories { Undefined = -1, 
@@ -148,7 +151,6 @@ public:
                     Ghost = 60,
                     FromPV = 70,
                     AllFromSamePV = 80,
-                    //FromDifferentNonRecoPV = 90,
                     FromDifferentPV = 100,
                     bbar = 110 ,
                     ccbar = 120 ,
@@ -165,9 +167,12 @@ public:
   /// For a signal it returns the true signal particle, and for any background with a 
   /// category < 60 it returns the mc_mother of the final state particles
   virtual const MCParticle* origin( const Particle* ) = 0 ;
-  std::map<int, std::string> m_cat;
+
+  /// Returns the map between enum values and enum names of the categories
+  virtual const std::map<int, std::string>& getCategoryMap(){return m_cat;};
 
 protected:
+  std::map<int, std::string> m_cat;
 
 private:
 

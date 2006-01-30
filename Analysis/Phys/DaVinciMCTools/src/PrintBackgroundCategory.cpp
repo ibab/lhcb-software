@@ -41,40 +41,11 @@ PrintBackgroundCategory::PrintBackgroundCategory( const std::string& name,
   , m_candidates(0)
   , m_flipResult(false)
 {
-  // WARNING!
-  // temp. should be defined in the BackgroundCategory tool.
-  // In the mean time, every change in IBackgroundCategory enum should be made here as well
-  m_cat[-1]   = "Undefined";
-  m_cat[0]    = "Signal";
-  m_cat[10]   = "QuasiSignal";
-  m_cat[20]   = "FullyRecoPhysBkg";
-  m_cat[30]   = "Reflection";
-  m_cat[40]   = "PartRecoPhysBkg";
-  m_cat[50]   = "LowMassBkg";
-  m_cat[60]   = "Ghost";
-  m_cat[70]   = "FromPV";
-  m_cat[80]   = "AllFromSamePV";
-  m_cat[100]  = "FromDifferentPV";
-  m_cat[110]  = "bbar";
-  m_cat[120]  = "ccbar";
-  m_cat[130]  = "uds";
-  m_cat[1000] = "LastGlobal";
-  //end temp.
-
-  // building the map object
-  std::map<int, std::string>::iterator p;
-  bkgStat tmp;
-  for( p=m_cat.begin(); p!=m_cat.end(); ++p ){
-    tmp.name = p->second;
-    m_stats[p->first] = tmp;
-  }
-
   declareProperty( "PrintTree",   m_PrintTree = false );
   declareProperty( "DumpMCEvent", m_DumpMCEvent = false );
   declareProperty( "FlipResult",  m_flipResult = false );
   declareProperty( "FilterCategoryNames",  m_stringCat );
   declareProperty( "FilterCategoryTypes",  m_intCat );
-
 }
 //=============================================================================
 // Destructor
@@ -103,6 +74,16 @@ StatusCode PrintBackgroundCategory::initialize() {
     fatal() << "Unable to retrieve Debug tool" << endreq;
     return StatusCode::FAILURE;
     }
+  }
+
+  // building the map object
+  std::map<int, std::string>::const_iterator p;
+  bkgStat tmp;
+  for(p = m_bkgCategory->getCategoryMap().begin(); 
+      p!=m_bkgCategory->getCategoryMap().end(); 
+      ++p){
+    tmp.name = p->second;
+    m_stats[p->first] = tmp;
   }
 
   // Getting the filtered categories.

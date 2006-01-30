@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.14 2006-01-30 02:01:53 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.15 2006-01-30 13:50:22 lfernan Exp $
 // Include files 
 
 // from Gaudi
@@ -31,22 +31,21 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   , m_pChi2PPAsct(0)
   , m_commonmother(0)
 {
-
-  m_cat[-1]   = "Undefined";
-  m_cat[0]    = "Signal";
-  m_cat[10]   = "QuasiSignal";
-  m_cat[20]   = "FullyRecoPhysBkg";
-  m_cat[30]   = "Reflection";
-  m_cat[40]   = "PartRecoPhysBkg";
-  m_cat[50]   = "LowMassBkg";
-  m_cat[60]   = "Ghost";
-  m_cat[70]   = "FromPV";
-  m_cat[80]   = "AllFromSamePV";
-  m_cat[100]  = "FromDifferentPV";
-  m_cat[110]  = "bbar";
-  m_cat[120]  = "ccbar";
-  m_cat[130]  = "uds";
-  m_cat[1000] = "LastGlobal";
+  IBackgroundCategory::m_cat[-1]   = "Undefined";
+  IBackgroundCategory::m_cat[0]    = "Signal";
+  IBackgroundCategory::m_cat[10]   = "QuasiSignal";
+  IBackgroundCategory::m_cat[20]   = "FullyRecoPhysBkg";
+  IBackgroundCategory::m_cat[30]   = "Reflection";
+  IBackgroundCategory::m_cat[40]   = "PartRecoPhysBkg";
+  IBackgroundCategory::m_cat[50]   = "LowMassBkg";
+  IBackgroundCategory::m_cat[60]   = "Ghost";
+  IBackgroundCategory::m_cat[70]   = "FromPV";
+  IBackgroundCategory::m_cat[80]   = "AllFromSamePV";
+  IBackgroundCategory::m_cat[100]  = "FromDifferentPV";
+  IBackgroundCategory::m_cat[110]  = "bbar";
+  IBackgroundCategory::m_cat[120]  = "ccbar";
+  IBackgroundCategory::m_cat[130]  = "uds";
+  IBackgroundCategory::m_cat[1000] = "LastGlobal";
 
   declareInterface<IBackgroundCategory>(this);
   declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
