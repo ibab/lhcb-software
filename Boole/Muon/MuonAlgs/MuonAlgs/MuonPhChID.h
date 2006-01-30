@@ -2,11 +2,11 @@
 #define MuonAlgs_MuonPhChID_H  1
 
 // Include files
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 #include "MuonAlgs/MuonPhChIDPack.h"
 #include "GaudiKernel/MsgStream.h" 
 
-using namespace MuonPhChIDPack ;
+//using namespace MuonPhChIDPack ;
 class MuonPhChID{
 public:
 
@@ -52,73 +52,74 @@ return m_channelID;
 
 
 inline unsigned int MuonPhChID::getStation() const{
-return getBit(m_channelID,shiftStation,maskStation);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftStation,MuonPhChIDPack::maskStation);
 }
 
 inline unsigned int MuonPhChID::getRegion() const{
-return getBit(m_channelID,shiftRegion,maskRegion);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftRegion,MuonPhChIDPack::maskRegion);
 }
 inline unsigned int MuonPhChID::getQuadrant() const{
-return getBit(m_channelID,shiftQuadrant,maskQuadrant);
+return 
+MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftQuadrant,MuonPhChIDPack::maskQuadrant);
 }
 inline unsigned int MuonPhChID::getChamber() const{
-return getBit(m_channelID,MuonPhChIDPack::shiftChamber,maskChamber);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftChamber,MuonPhChIDPack::maskChamber);
 }
 inline unsigned int MuonPhChID::getPhChIDX() const{
-return getBit(m_channelID,shiftPhChIDX,maskPhChIDX);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftPhChIDX,MuonPhChIDPack::maskPhChIDX);
 }
 inline unsigned int MuonPhChID::getPhChIDY() const{
-return getBit(m_channelID,shiftPhChIDY,maskPhChIDY);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftPhChIDY,MuonPhChIDPack::maskPhChIDY);
 }
 inline unsigned int MuonPhChID::getFrontEnd() const{
-return getBit(m_channelID,shiftFrontEnd,maskFrontEnd);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftFrontEnd,MuonPhChIDPack::maskFrontEnd);
 }
 inline unsigned int MuonPhChID::getReadout() const{
-return getBit(m_channelID,shiftReadout,maskReadout);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftReadout,MuonPhChIDPack::maskReadout);
 }
 inline unsigned int MuonPhChID::getGap() const{
-return getBit(m_channelID,shiftGap,maskGap);
+return MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftGap,MuonPhChIDPack::maskGap);
 }
 
 inline void MuonPhChID::setStation(unsigned int value){
-setBit(m_channelID,shiftStation,maskStation,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftStation,MuonPhChIDPack::maskStation,value);
 }
 
 inline void MuonPhChID::setRegion(unsigned int value){
-setBit(m_channelID,shiftRegion,maskRegion,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftRegion,MuonPhChIDPack::maskRegion,value);
 }
 
 inline void MuonPhChID::setQuadrant(unsigned int value){
-setBit(m_channelID,shiftQuadrant,maskQuadrant,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftQuadrant,MuonPhChIDPack::maskQuadrant,value);
 }
 
 inline void MuonPhChID::setChamber(unsigned int value){
-setBit(m_channelID,shiftChamber,maskChamber,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftChamber,MuonPhChIDPack::maskChamber,value);
 }
 
 inline void MuonPhChID::setPhChIDX(unsigned int value){
-setBit(m_channelID,shiftPhChIDX,maskPhChIDX,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftPhChIDX,MuonPhChIDPack::maskPhChIDX,value);
 }
 
 inline void MuonPhChID::setPhChIDY(unsigned int value){
-setBit(m_channelID,shiftPhChIDY,maskPhChIDY,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftPhChIDY,MuonPhChIDPack::maskPhChIDY,value);
 }
 
 inline void MuonPhChID::setFrontEnd(unsigned int value){
-setBit(m_channelID,shiftFrontEnd,maskFrontEnd,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftFrontEnd,MuonPhChIDPack::maskFrontEnd,value);
 }
 
 inline void MuonPhChID::setReadout(unsigned int value){
-setBit(m_channelID,shiftReadout,maskReadout,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftReadout,MuonPhChIDPack::maskReadout,value);
 }
 
 inline void MuonPhChID::setGap(unsigned int value){
-setBit(m_channelID,shiftGap,maskGap,value);
+MuonPhChIDPack::setBit(m_channelID,MuonPhChIDPack::shiftGap,MuonPhChIDPack::maskGap,value);
 }
 
 inline unsigned int MuonPhChID::getFETile() const{
 //return 1;
-return m_channelID-getBit(m_channelID,shiftGap,maskGap);
+return m_channelID-MuonPhChIDPack::getBit(m_channelID,MuonPhChIDPack::shiftGap,MuonPhChIDPack::maskGap);
 }
 
 // output to std::ostream 

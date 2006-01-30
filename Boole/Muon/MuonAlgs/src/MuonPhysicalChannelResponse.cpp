@@ -61,5 +61,6 @@ int MuonPhysicalChannelResponse::extractXTalkY(double distanceFromBoundary){
 }
 int MuonPhysicalChannelResponse::electronicNoise(){
   return (int) (*p_electronicNoise)() ;
+std::cout<<" che ci faccio qi"<<std::endl;
 }
 #endif

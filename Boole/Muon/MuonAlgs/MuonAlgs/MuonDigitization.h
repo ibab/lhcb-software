@@ -9,8 +9,9 @@
 #include <GaudiKernel/IDataProviderSvc.h>
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "AIDA/IHistogram1D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+//#include "CLHEP/Units/PhysicalConstants.h"
  
 /// Detector description classes
 #include "DetDesc/ILVolume.h"
@@ -23,14 +24,14 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBox.h"  
 #include "DetDesc/IReadOut.h"   
-#include "MuonTools/IMuonTileXYZTool.h"
+//#include "MuonTools/IMuonTileXYZTool.h"
 #include "MuonTools/IMuonGetInfoTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
 #include "MuonAlgs/MuonDigitizationData.h"
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonKernel/MuonTile.h"
-#include "Event/MCMuonHit.h"   
+#include "Event/MCHit.h"   
 #include "Event/MCMuonDigit.h"   
 #include "Event/MuonDigit.h"   
 #include "MuonAlgs/MuonPhChID.h"    
@@ -47,10 +48,12 @@
 #include "GaudiKernel/INTupleSvc.h" 
 #include "GaudiKernel/NTuple.h"
 #include "MuonDet/MuonBasicGeometry.h"
+#include "MuonDet/DeMuonDetector.h"
+#include "MuonDet/MuonChamberGrid.h"
 
 
  
-class MuonDigitization : public Algorithm {
+class MuonDigitization : public GaudiAlgorithm {
 
  
 public:
@@ -76,9 +79,9 @@ public:
                                   PhysicalChannelOutput);
   StatusCode createLogicalChannel(MuonDigitizationData
                                   <MuonPhysicalChannelOutput>& PhyChaOutput,
-                                  MCMuonDigits & mcDigitContainer);
-  StatusCode createRAWFormat(MCMuonDigits & mcDigitContainer, MuonDigits & 
-                             digitContainer);
+                                  LHCb::MCMuonDigits & mcDigitContainer);
+  StatusCode createRAWFormat(LHCb::MCMuonDigits & mcDigitContainer, 
+                                 LHCb::MuonDigits & digitContainer);
   StatusCode addChamberNoise();
   StatusCode addElectronicNoise(MuonDigitizationData<MuonPhysicalChannel>& 
                                 PhysicalChannel);
@@ -96,7 +99,8 @@ private:
   bool m_applyEfficiency;	 
   bool m_applyDeadtime;	 
   bool m_applyTimeAdjustment;	 
-  
+  bool m_registerPhysicalChannelOutput;
+;  
   bool m_verboseDebug;
   int m_stationNumber;
   int m_regionNumber;
@@ -110,7 +114,8 @@ private:
   
   
   MuonDetectorResponse detectorResponse;
-  
+  DeMuonDetector* m_muonDetector;
+
   static std::string spill[6];
   static std::string numreg[4];
   static std::string numsta[5];
@@ -120,7 +125,7 @@ private:
   Rndm::Numbers m_flatDist;
   
   //// move them to monitoring
-  IMuonTileXYZTool* m_pMuonTileXYZ ;
+//  IMuonTileXYZTool* m_pMuonTileXYZ ;
   IMuonGetInfoTool* m_pGetInfo ;
 
   IHistogram1D* m_histoTiming14 ;     

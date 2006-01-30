@@ -2,7 +2,7 @@
 #define  MUONALGS_MUONHITTRACEBACK_H 1
 
 // Include files
-#include "Event/MCMuonHit.h"
+#include "Event/MCHit.h"
 #include "Event/MCMuonHitHistory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "MuonAlgs/MuonHitOrigin.h"
@@ -13,36 +13,36 @@ public:
 MuonHitTraceBack(); 
 ~MuonHitTraceBack(){};
 
-void setMCMuonHit(SmartRef<MCMuonHit> value); 
-const SmartRef<MCMuonHit> getMCMuonHit() const;
-SmartRef<MCMuonHit> getMCMuonHit();
+void setMCHit(SmartRef<LHCb::MCHit> value); 
+const SmartRef<LHCb::MCHit> getMCHit() const;
+SmartRef<LHCb::MCHit> getMCHit();
 
 void setHitArrivalTime(double value);
 double hitArrivalTime() const;
 
-void setMCMuonHistory(MCMuonHitHistory& value);
-MCMuonHitHistory& getMCMuonHistory();
+void setMCMuonHistory(LHCb::MCMuonHitHistory& value);
+LHCb::MCMuonHitHistory& getMCMuonHistory();
 
 MuonHitOrigin& getMCMuonHitOrigin();
 void setCordinate(double value[4]);
 double* getCordinate();
 private:
-  SmartRef<MCMuonHit> m_MCMuonHit;
+  SmartRef<LHCb::MCHit> m_MCMuonHit;
 	double m_hitArrivalTime ;
-	MCMuonHitHistory m_history ;
+	LHCb::MCMuonHitHistory m_history ;
 	MuonHitOrigin m_origin ;
   double m_cordinate[4] ;
 };
 
-inline  void MuonHitTraceBack::setMCMuonHit(SmartRef<MCMuonHit> value){
+inline  void MuonHitTraceBack::setMCHit(SmartRef<LHCb::MCHit> value){
   m_MCMuonHit=value ;
 }
 
-inline  SmartRef<MCMuonHit> MuonHitTraceBack::getMCMuonHit(){
+inline  SmartRef<LHCb::MCHit> MuonHitTraceBack::getMCHit(){
   return m_MCMuonHit ;
 }
 
-inline  const SmartRef<MCMuonHit> MuonHitTraceBack::getMCMuonHit() const {
+inline  const SmartRef<LHCb::MCHit> MuonHitTraceBack::getMCHit() const {
   return m_MCMuonHit ;
 }
 
@@ -54,11 +54,12 @@ inline double MuonHitTraceBack::hitArrivalTime() const{
  return m_hitArrivalTime ;
 }
 
-inline void MuonHitTraceBack::setMCMuonHistory(MCMuonHitHistory& value){
+inline void MuonHitTraceBack::setMCMuonHistory(LHCb::MCMuonHitHistory& 
+value){
  m_history=value ;
 }
 
-inline MCMuonHitHistory& MuonHitTraceBack::getMCMuonHistory(){
+inline LHCb::MCMuonHitHistory& MuonHitTraceBack::getMCMuonHistory(){
   return m_history;
 }
 

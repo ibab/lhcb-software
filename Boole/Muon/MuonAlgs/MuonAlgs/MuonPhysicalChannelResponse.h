@@ -11,7 +11,7 @@
 #include "GaudiKernel/IRndmGenSvc.h" 
 #include "GaudiKernel/RndmGenerators.h"
 #include "AIDA/IHistogram1D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+//#include "CLHEP/Units/PhysicalConstants.h"
  
 /// Detector description classes
 #include "DetDesc/ILVolume.h"
@@ -24,7 +24,7 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBox.h"  
 
-#include "MuonTools/IMuonTileXYZTool.h"
+//#include "MuonTools/IMuonTileXYZTool.h"
  
 #include "MuonKernel/MuonTile.h"
 #include "MuonAlgs/MuonPhChID.h"    
@@ -33,6 +33,7 @@
 #include "MuonDet/MuonParameters.h"
 #include "MuonDet/MuonReadoutCond.h"
 #include "MuonDet/DeMuonGasGap.h"
+#include "MuonDet/DeMuonDetector.h"
  
 #include "Event/MuonOriginFlag.h"
  

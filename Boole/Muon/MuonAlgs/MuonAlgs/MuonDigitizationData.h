@@ -4,6 +4,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"   
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/KeyedContainer.h"
+#include "Event/MCHit.h"
 
 static const int MuonDigitizationData_m_partitionNumber=20;
 
@@ -36,9 +37,9 @@ private:
   
   //static const int m_partitionNumber=20;  !!! windows
   
-  std::string endPathInTES;
+  std::string endPathInTES[20];
   
-  KeyedContainer<T> muonDataPartition[MuonDigitizationData_m_partitionNumber];
+  KeyedContainer<T>* muonDataPartition[MuonDigitizationData_m_partitionNumber];
   
   static std::string s_endPathInTES[MuonDigitizationData_m_partitionNumber];
   
@@ -53,7 +54,7 @@ private:
   IDataProviderSvc*  eventSvc;
 }; 
 
-template<class T> std::string MuonDigitizationData<T>::s_endPathInTES[]=
+/*template<class T> std::string MuonDigitizationData<T>::s_endPathInTES[]=
 {std::string("M1/R1"),std::string("M1/R2"),std::string("M1/R3"),
    std::string("M1/R4"),
    std::string("M2/R1"),std::string("M2/R2"),std::string("M2/R3"),
@@ -63,8 +64,8 @@ template<class T> std::string MuonDigitizationData<T>::s_endPathInTES[]=
    std::string("M4/R1"),std::string("M4/R2"),std::string("M4/R3"),
    std::string("M4/R4"),
    std::string("M5/R1"),std::string("M5/R2"),std::string("M5/R3"),
-   std::string("M5/R4")}; 
-typedef KeyedContainer<MCMuonHit, Containers::HashMap> MCMuonHits;
+   std::string("M5/R4")}; */
+typedef KeyedContainer<LHCb::MCHit, Containers::HashMap> MCMuonHits;
 
 #endif //  MUONALGS_MUONDIGITIZATIONDATA_H
 

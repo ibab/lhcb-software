@@ -1,7 +1,9 @@
-// $Id: MuonPhysicalChannel.cpp,v 1.10 2005-04-05 09:21:08 cattanem Exp $
+#ifndef MUONALGS_MUONPHYSICALCHANNEL_CPP
+#define MUONALGS_MUONPHYSICALCHANNEL_CPP 1 
 
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonAlgs/SortHitsInTime.h"
+
 
 double MuonPhysicalChannel::m_timeGate;
 double MuonPhysicalChannel::m_timeBX;
@@ -22,7 +24,7 @@ void MuonPhysicalChannel::applyTimeJitter(){
       //					if(m_ID.getStation()==1&&m_ID.getRegion()==2)
       //					cout<<" time jitter"<<*(phChID())<< " "<<deltaT<<" "
       //<<" "<<originalTime<<" "<<(*iter).hitArrivalTime()<<endl;
-      if((*iter).getMCMuonHitOrigin().getBX()==MuonBXFlag::CURRENT){
+      if((*iter).getMCMuonHitOrigin().getBX()==LHCb::MuonBXFlag::CURRENT){
         if(originalTime>0.0&&originalTime<m_timeGate){
           if((*iter).hitArrivalTime()<0.||(*iter).hitArrivalTime()>m_timeGate){
             (*iter).getMCMuonHistory().setHitOutByTimeJitter((unsigned int)1);
@@ -78,13 +80,13 @@ void MuonPhysicalChannel::createXTalkChannel(MuonHitTraceBack* iter,
   MuonHitTraceBack* pointerToHit=new MuonHitTraceBack;
   pointerToHit->setHitArrivalTime(time);							
   pointerToHit->
-    getMCMuonHitOrigin().setHitNature(MuonOriginFlag::XTALK);
+    getMCMuonHitOrigin().setHitNature(LHCb::MuonOriginFlag::XTALK);
   pointerToHit->getMCMuonHitOrigin().
     setBX((*iter).getMCMuonHitOrigin().getBX());	
   pointerToHit->getMCMuonHistory().
     setBXOfHit((*iter).getMCMuonHistory().BX());
   pointerToHit->getMCMuonHistory().
-    setNatureOfHit(MuonOriginFlag::XTALK);
+    setNatureOfHit(LHCb::MuonOriginFlag::XTALK);
   
   newPhCh->hitsTraceBack().push_back(*pointerToHit);
   delete pointerToHit;														
@@ -247,7 +249,8 @@ void MuonPhysicalChannel::applyTimeAdjustment(){
       (*iter).setHitArrivalTime(originalTime+deltaT);	
       
       // set the bit flag if needed
-       if((*iter).getMCMuonHitOrigin().getBX()==MuonBXFlag::CURRENT){
+       
+if((*iter).getMCMuonHitOrigin().getBX()==LHCb::MuonBXFlag::CURRENT){
          if((*iter).hitArrivalTime()>0&&(*iter).hitArrivalTime()<m_timeGate){
 				   if((*iter).getMCMuonHistory().hasTimeJittered()){
 					   (*iter).getMCMuonHistory().
@@ -286,6 +289,8 @@ void MuonPhysicalChannel::applyDeadtime(int BX){
   }
   // corrected for the BX(negative)
   timeOfStart=-timeOfStart-BX*(m_timeBX);
+  timeOfStart=-500;  
+
   //	 if(m_ID.getStation()==1&&m_ID.getRegion()==2)cout<<"bx "<<BX
   //<<" "<<m_timeBX<<endl;
   std::vector<MuonHitTraceBack>::iterator iterOnHits;
@@ -312,3 +317,4 @@ void MuonPhysicalChannel::applyDeadtime(int BX){
     }		 
   }	  	
 }
+#endif

@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v6r0 2006-01-30 ========================
+! 2006-01-30 - Alessia Satta
+ - compatible with new event model and MuonDet
+
 !======================== MuonAlgs v5r7 2005-04-05 ========================
 ! 2005-04-05 - Marco Cattaneo
  - Adapt to MuonEvent v4r0 (backward incompatible change to MCMuonHit)

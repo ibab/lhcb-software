@@ -3,14 +3,13 @@
 // Include files
 #include <vector>
 #include <algorithm>
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 #include "GaudiKernel/KeyedObject.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "MuonAlgs/MuonPhChID.h"
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonAlgs/MuonHitTraceBack.h"
 #include "Event/MCMuonDigitInfo.h"
-#include "MuonTools/IMuonGetInfoTool.h"
 
 
 
@@ -35,17 +34,17 @@ origHits):m_ID(origID),m_Hits(origHits){};
 	MuonPhChID* phChID(); 	
 
 	
-  void setMCMuonDigitInfo(MCMuonDigitInfo value);	
-  MCMuonDigitInfo& phChInfo();
+  void setMCMuonDigitInfo(LHCb::MCMuonDigitInfo value);	
+  LHCb::MCMuonDigitInfo& phChInfo();
 	
 	void setFiringTime( double value);
 	double firingTime();
-  void calculateTileID(int & numberOfTileInOutput,MuonTileID phChTileID[2],
-                       IMuonGetInfoTool* usefullPointer);
+  void calculateTileID(int & numberOfTileInOutput,LHCb::MuonTileID phChTileID[2],
+                       DeMuonDetector* muonDetector);
 private:
  MuonPhChID m_ID;
  std::vector<MuonHitTraceBack> m_Hits;
- MCMuonDigitInfo m_phChInfo;
+ LHCb::MCMuonDigitInfo m_phChInfo;
  double m_FiringTime;
 };	
 
@@ -67,11 +66,11 @@ inline   MuonPhChID*
 }
 
 inline   void MuonPhysicalChannelOutput::
-         setMCMuonDigitInfo(MCMuonDigitInfo value){
+         setMCMuonDigitInfo(LHCb::MCMuonDigitInfo value){
 				 m_phChInfo=value ;
 }	 
 
-inline   MCMuonDigitInfo& 
+inline   LHCb::MCMuonDigitInfo& 
          MuonPhysicalChannelOutput::phChInfo(){
 				 return m_phChInfo;
 }

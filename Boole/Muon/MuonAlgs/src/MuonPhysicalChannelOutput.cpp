@@ -20,8 +20,8 @@ MuonPhysicalChannelOutput::MuonPhysicalChannelOutput
 
 
 void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, 
-                                                 MuonTileID phChTileID[2],
-IMuonGetInfoTool *usefullPointer){  
+                                                 LHCb::MuonTileID phChTileID[2],
+DeMuonDetector* muonDetector){  
   
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
@@ -35,54 +35,37 @@ IMuonGetInfoTool *usefullPointer){
   unsigned int idLogX,idLogY;
   int numberOfTileCreated=0;
   unsigned int numberOfPCX, numberOfPCY;
-  int partition=(station)*4+region;
-  //  
-  // reset number of distinct phys chan
-  //
+
   newidX=0;
   newidY=0;
   numberOfPCX=0;
   numberOfPCY=0;
   numberTileOutput=0;
-
-  //    cout<<"calculate "<<station<<" "<<region<<" "<<partition<<" "
-  //<<chamber<<" "<<quadrant<<" "<<idX<<" "<<idY<<endl;
-  
-  unsigned int chamberAbs=chamber;
-  //
-  // get absolute chamber number to use parameters::usefull
-  //
-
-  for(int partit=0; partit<partition; partit++){
-    chamberAbs=chamberAbs+usefullPointer->getChamberPerRegion(partit);
-  }
-  
-  //
   // loop over FE channel readout
   //
-  for (int readoutNumber=0;readoutNumber<(int)usefullPointer->
-         getLogMapPerRegion(partition);readoutNumber++){
+  for (int readoutNumber=0;readoutNumber<(int)muonDetector->
+         readoutInRegion(station,region);readoutNumber++){
     //
     // check if current readout coincides with one of the LogMap readouts
     //
     //    cout<<"logmap type, readout "<<usefull.getLogMapRType
-    //(readoutNumber,partition)<<" "<<readout<<" "<<readoutNumber<<endl;
+    //(readoutNumber,part)<<" "<<readout<<" "<<readoutNumber<<endl;
     
-    if(usefullPointer->getLogMapRType(readoutNumber,partition)==readout)
+    if(muonDetector->getLogMapRType(readoutNumber,station,region)==readout)
       {
         // define order of FE channel according to the MuonTileID 
         //conventions: from 0,0 left,bottom to radial coordinates
         //
         
-        for(int countReadout=0; countReadout<=usefullPointer->
-              getReadoutNumber(partition);countReadout++)
+        for(int countReadout=0; countReadout<=muonDetector->
+              readoutInRegion(station,region);countReadout++)
           {
-            if(  usefullPointer->getLogMapRType(readoutNumber,partition)==
-                 usefullPointer->getReadoutType(countReadout,partition)){
-              numberOfPCX=usefullPointer->
-                getPhChannelNX(countReadout,partition);
-              numberOfPCY=usefullPointer->
-                getPhChannelNY(countReadout,partition);
+            if(  muonDetector->getLogMapRType(readoutNumber,station,region)==
+                 muonDetector->getReadoutType(countReadout,station,region)){
+              numberOfPCX=muonDetector->
+                getPhChannelNX(countReadout,station,region);
+              numberOfPCY=muonDetector->
+                getPhChannelNY(countReadout,station,region);
             }
           }
         // 
@@ -105,31 +88,33 @@ IMuonGetInfoTool *usefullPointer){
         // 
         // FE ch address in the whole quadrant
         //
+        LHCb::MuonTileID chaTile;
+        muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
         
-        idXGlobal=newidX+usefullPointer->getGridX(chamberAbs)*numberOfPCX;
-        idYGlobal=newidY+usefullPointer->getGridY(chamberAbs)*numberOfPCY;
+        idXGlobal=newidX+chaTile.nX()*numberOfPCX;
+        idYGlobal=newidY+chaTile.nY()*numberOfPCY;
         
 
         //
         //  compute Logical Channel address now
         //
-        idLogX=idXGlobal/usefullPointer->
-          getLogMapMergex(readoutNumber,partition);    
-        idLogY=idYGlobal/usefullPointer->
-          getLogMapMergey(readoutNumber,partition);   
+        idLogX=idXGlobal/muonDetector->
+          getLogMapMergex(readoutNumber,station,region);    
+        idLogY=idYGlobal/muonDetector->
+          getLogMapMergey(readoutNumber,station,region);   
         //
         // create the tile of the phys chan
         //  
         ++numberTileOutput;
 
-        MuonLayout layout(usefullPointer->getLayoutX(readoutNumber,partition),
-                          usefullPointer->
-                          getLayoutY(readoutNumber,partition));   
+        MuonLayout layout(muonDetector->getLayoutX(readoutNumber,station,region),
+                          muonDetector->
+                          getLayoutY(readoutNumber,station,region));   
         phChTileID[numberOfTileCreated].setLayout(layout);
         phChTileID[numberOfTileCreated].setStation(station);
-        phChTileID[numberOfTileCreated].setReadout(usefullPointer->
-                                                   getLogMapRType
-                                                   (readoutNumber,partition));
+//        phChTileID[numberOfTileCreated].setReadout(usefullPointer->
+//                                                   getLogMapRType
+//                                                   (readoutNumber,part));
         phChTileID[numberOfTileCreated].setRegion(region);
         phChTileID[numberOfTileCreated].setQuarter(quadrant);
         phChTileID[numberOfTileCreated].setX(idLogX);

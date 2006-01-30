@@ -10,7 +10,7 @@
 class MuonHitOrigin{
 public:
 
-bool getGeantNature();
+bool  getGeantNature();
 bool  getBackgroundNature();
 bool  getFlatSpilloverNature();
 bool  getChamberNoiseNature();
@@ -36,28 +36,33 @@ MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitO
 
 inline bool MuonHitOrigin::getGeantNature(){
 return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)==MuonOriginFlag::GEANT);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)==LHCb::MuonOriginFlag::GEANT);
 }
 inline bool MuonHitOrigin::getBackgroundNature(){
  return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== MuonOriginFlag::BACKGROUND);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== 
+LHCb::MuonOriginFlag::BACKGROUND);
 }
 inline bool MuonHitOrigin::getFlatSpilloverNature(){
 return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== MuonOriginFlag::FLATSPILLOVER);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== 
+LHCb::MuonOriginFlag::FLATSPILLOVER);
  }
 inline bool MuonHitOrigin::getChamberNoiseNature(){
 return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)==  MuonOriginFlag::CHAMBERNOISE);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)==  
+LHCb::MuonOriginFlag::CHAMBERNOISE);
  }
 inline bool MuonHitOrigin::getXTalkNature(){
 return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== MuonOriginFlag::XTALK);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== 
+LHCb::MuonOriginFlag::XTALK);
  }
 
 inline bool MuonHitOrigin::getElectronicNoiseNature(){
 return
-(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== MuonOriginFlag::ELECTRONICNOISE);
+(MuonHitOriginPack::getBit(m_hitOrigin,MuonHitOriginPack::shiftHitOrigin,MuonHitOriginPack::maskHitOrigin)== 
+LHCb::MuonOriginFlag::ELECTRONICNOISE);
  }
 
 

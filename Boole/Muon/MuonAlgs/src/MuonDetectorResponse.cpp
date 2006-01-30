@@ -1,12 +1,14 @@
-// $Id: MuonDetectorResponse.cpp,v 1.10 2005-04-05 09:21:08 cattanem Exp $
+
+// $Id: MuonDetectorResponse.cpp,v 1.10 2005/04/05 09:21:08 cattanem Exp 
+
 #include <vector>
 #include "MuonAlgs/MuonDetectorResponse.h"
-
+#include <iostream.h>
 static std::string spill[] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
 static std::string numreg[] = {"1","2","3","4"};
 static std::string numsta[] = {"1","2","3","4","5"};
 
-static std::string geoBase="/dd/Structure/LHCb/Muon/";
+static std::string geoBase="/dd/Conditions/ReadoutConf/Muon/";
 
 
 
@@ -15,9 +17,13 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
 void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                                       IDataProviderSvc* detSvc, 
                                       IMessageSvc * msgSvc){  
-	MsgStream log(msgSvc, "MuonDetectorResponse");
+  	MsgStream log(msgSvc, "MuonDetectorResponse"); 
+  SmartDataPtr<DeMuonDetector>  mudd(detSvc,"/dd/Structure/LHCb/DownstreamRegion/Muon");
+  m_muonDetector=mudd;
+  
+  
   // MuonGeometryStore::Parameters usefull( toolSvc,detSvc, msgSvc);
-  toolSvc->retrieveTool("MuonGetInfoTool",m_pGetInfo);
+  //  toolSvc->retrieveTool("MuonGetInfoTool",m_pGetInfo);
   //if(sc.isFailure())return StatusCode::FAILURE;
   m_toolSvc=toolSvc;  
   // usefullPointer= 
@@ -39,7 +45,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
   
   for(i=0;i<m_stationNumber;i++){
     for (int k=0;k<m_regionNumber;k++){
-      regionName[i*4+k]=geoBase+numsta[i]+"/R"+numreg[k];
+      regionName[i*4+k]=geoBase+numsta[i]+"R"+numreg[k]+"Readout";
       log<<MSG::DEBUG<<"region name "<<regionName[i*4+k]<<endreq;
     }
   }
@@ -48,24 +54,19 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
   //	bool found=false;
 	double newMean;
   for (int indexRegion=0;indexRegion<m_partition;indexRegion++){    
-    SmartDataPtr<DeMuonRegion>  detRegionPointer(detSvc,
-                                                 regionName[indexRegion]);
-    IDetectorElement::IDEContainer::iterator itChamber = 
-      detRegionPointer->childBegin();
-    SmartDataPtr<DeMuonChamber> muChamberOne(detSvc, (*itChamber)->name());
-    Condition *muCondReadout = muChamberOne->readOut()->condition();
-    MuonReadoutCond *muReadout = dynamic_cast<MuonReadoutCond*>(muCondReadout);
+    std::string pathReadout=regionName[indexRegion];
+    int station=indexRegion/4;
+    int region=indexRegion-station*4;
+    
+    SmartDataPtr<MuonReadoutCond>  muReadout(detSvc,
+                                             pathReadout);
+    log<<MSG::DEBUG<<" detRegionPointer "<<endreq;
+    if(muReadout)log<<MSG::VERBOSE<<" gg "<<endreq;
     newMean=muReadout->chamberNoise(0)/100; //tranform from cm^2 to mm^2
     Rndm::Numbers*	poissonDist=new Rndm::Numbers;
-    int readout=0;
-    double sizeOfChannel = m_pGetInfo->
-      getPhChannelSizeX(readout,indexRegion)*
-      m_pGetInfo->getPhChannelSizeY(readout,indexRegion);
-    int numberOfChannels = m_pGetInfo->
-      getPhChannelNX(readout,indexRegion)*		
-      m_pGetInfo->getPhChannelNY(readout,indexRegion);
-    double areaOfChamber = sizeOfChannel* numberOfChannels;
-    int	 numberOfGaps=m_pGetInfo->getGapPerRegion(indexRegion);
+    int areadout=0;
+    double areaOfChamber =m_muonDetector-> areaChamber(station, region);
+    int	 numberOfGaps=m_muonDetector-> gapsInRegion(station, region);
     double totalArea=areaOfChamber* numberOfGaps;
     double meanOfNoisePerChamber=newMean*totalArea*25*1.0E-9;
     log<<MSG::DEBUG<<"region name "<<regionName[indexRegion]
@@ -76,38 +77,53 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
     MuonChamberResponse* responseOfChamber= new 
       MuonChamberResponse(&m_flatDist,poissonDist,newMean );
     responseChamber[indexRegion]=responseOfChamber;
-    {for(int readout=0;readout<=m_pGetInfo->getReadoutNumber(indexRegion);
-         readout++){
+    log<<MSG::DEBUG<<" stat "<<station<<" "<<region<<
+      " "<<m_muonDetector->readoutInRegion(station,region)<<endreq;
+    
+    
+    for(int readout=0;readout<m_muonDetector->
+          readoutInRegion(station, region);readout++){
       double min,max; 
       std::vector<double> timeJitterPDF=muReadout->
         timeJitter( min, max ,  readout);
+      log<<MSG::VERBOSE<<" time jitter "<<min<<" "<<max<<endreq;
+      
       Rndm::Numbers*	m_time=new Rndm::Numbers;
       m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
       m_timeJitter.push_back(m_time);
-      //				 log<<MSG::INFO<<" time jitter "<<timeJitterPDF<<endreq;
       std::vector<double>::iterator itPDF;
-      for (itPDF=timeJitterPDF.begin();itPDF<timeJitterPDF.end();itPDF++){
-        //				     log<<MSG::INFO<<" time jitter "<<*itPDF<<endreq;
+      for (itPDF=timeJitterPDF.begin();itPDF<timeJitterPDF.end();itPDF++){		
+     	log<<MSG::VERBOSE<<" time jitter "<<*itPDF<<endreq;
       }
       Rndm::Numbers*	p_electronicNoise=new Rndm::Numbers;
       double noiseCounts=muReadout->electronicsNoise(readout)*
-        m_pGetInfo->getPhChannelNX( readout, indexRegion)*
-        m_pGetInfo->getPhChannelNY( readout, indexRegion)*25*1.0E-9;
+        m_muonDetector->getPhChannelNX( readout,station, region)*
+        m_muonDetector->getPhChannelNY( readout,station, region)*25*1.0E-9;
+log<<MSG::VERBOSE<<"noisecounts "<<noiseCounts<<endreq;
       p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
       m_electronicNoise.push_back(p_electronicNoise);	
       MuonPhysicalChannelResponse* response= new
         MuonPhysicalChannelResponse(&m_flatDist,&m_gaussDist,
                                     m_time,p_electronicNoise,min,max,
                                     muReadout, readout );
+log<<MSG::DEBUG<<"inserting "<<readout<<" "<<indexRegion<<endreq;
       responseVector[readout][indexRegion]=response;
-    }} // for loop, fix for w2k											
-  }
-}	 
+log<<MSG::DEBUG<<"inserted "<<endreq;
+    }
+  }  
+  
+}
+
+
+
+
 MuonDetectorResponse::~MuonDetectorResponse(){
   for(int indexRegion=0;indexRegion<m_partition;indexRegion++){
+    int station=indexRegion/4;
+    int region=indexRegion-station*4;
 	  delete responseChamber[indexRegion];
 		delete m_poissonDist[indexRegion];
-    for(int readout=0;readout<=m_pGetInfo->getReadoutNumber(indexRegion);
+    for(int readout=0;readout<=m_muonDetector->readoutInRegion(station, region);
         readout++){
       delete responseVector[readout][indexRegion];      
 		}
@@ -125,33 +141,36 @@ MuonDetectorResponse::~MuonDetectorResponse(){
     (*iterNoise)->finalize();
     delete *iterNoise;
 	}
-   if( m_pGetInfo ) m_toolSvc->releaseTool( m_pGetInfo );
-   // delete m_pGetInfo;
-  
+  //  if( m_pGetInfo ) m_toolSvc->releaseTool( m_pGetInfo );
+   // delete m_pGetInfo;  
 }
+
 
 
 MuonPhysicalChannelResponse* MuonDetectorResponse::getResponse(MuonPhChID& 
                                                                phChID ){
-  int partition=phChID.getStation()*4+phChID.getRegion();
-  unsigned int readoutType=phChID.getReadout();
-  int readout=-1;
-  for(int ireadout=0;ireadout<=m_pGetInfo->
-        getReadoutNumber(partition);ireadout++){
-    if(readoutType==m_pGetInfo->getReadoutType(ireadout, partition)){
+
+//        MsgStream log(msgSvc, "MuonDetectorResponse");
+
+    int station=phChID.getStation();
+    int region=phChID.getRegion(); 
+    int part=station*4+region; 
+    unsigned int readoutType=phChID.getReadout();
+    int readout=-1;
+    for(int ireadout=0;ireadout<m_muonDetector->readoutInRegion(station, region);ireadout++){
+
+    if(readoutType==m_muonDetector->getReadoutType(ireadout,station, region)){
       readout=(int)ireadout;
     }   
   }
-  //	if(partition==4)cout<<" dentro detector response "<<readoutType<<" " 
-  //<< readout<<endl;
+//std::cout<<"deter "<<station<<" "<<region<<" "<<readoutType<<" "<<readout<<std::endl;
+//  	if(part==4)cout<<" dentro detector response "<<readoutType<<" " 
+//  << readout<<" part "<<endl;
   if(readout>=0){    
-    return responseVector[readout][partition]; 
+    return responseVector[readout][part]; 
   }else{
     return 0; }	
 }
 
-MuonPhysicalChannelResponse* MuonDetectorResponse::getResponse(int partition, 
-                                                               int readout  )
-{
- 	return responseVector[readout][partition]; 
-}
+
+
