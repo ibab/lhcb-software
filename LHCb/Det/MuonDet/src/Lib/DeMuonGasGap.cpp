@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.7 2006-01-17 08:55:01 asarti Exp $
+// $Id: DeMuonGasGap.cpp,v 1.8 2006-01-30 10:58:29 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -55,7 +55,7 @@ StatusCode DeMuonGasGap::initialize()
   int sta(0),reg(0),chm(0),gap(0);
   char patt[400]; 
   sprintf(patt,"%s",(this->name()).data());
-  sscanf(patt,"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d/R%d/Cham%d/Gap%d",&sta,&reg,&chm,&gap);
+  sscanf(patt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%d/Gap%d",&sta,&reg,&chm,&gap);
 
   this->setStationNumber(sta-1);
   this->setRegionNumber(reg-1);

@@ -1,4 +1,4 @@
-// $Id: MuonBasicGeometry.cpp,v 1.4 2003-01-17 14:03:55 sponce Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.5 2006-01-30 10:58:29 asatta Exp $
 // Include files
 // local
 #include "MuonDet/MuonBasicGeometry.h"
@@ -16,10 +16,10 @@
 MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                      IMessageSvc * msgSvc ) {
   MsgStream log(msgSvc, "MuonBasicGeometry");
-  std::string muonRootLocation="/dd/Structure/LHCb/Muon";
+  std::string muonRootLocation="/dd/Structure/LHCb/DownstreamRegion/Muon";
   //log << MSG::INFO << "%%% " << "muon geom" << endreq;
   
-  SmartDataPtr<DetectorElement> muonSystem(detSvc,"/dd/Structure/LHCb/Muon"); 
+  SmartDataPtr<DetectorElement> muonSystem(detSvc,muonRootLocation); 
   // log << MSG::INFO << "%%% " << muonSystem->name() << endreq;
   m_stationNumber=0; 
   m_regionNumber=4;   

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.57 2006-01-17 17:41:43 asatta Exp $
+! $Id: release.notes,v 1.58 2006-01-30 10:58:29 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r0 2006-01-16 =========================
+! 2006-01-30 - Alessia Satta
+  - add some features included  in MuonGeometryTool (sm is still 
+    missing..)
+
 ! 2006-01-17 - Alessia Satta
   - fixed to be compatible with LHCb::Packer
 

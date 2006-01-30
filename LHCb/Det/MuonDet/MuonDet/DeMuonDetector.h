@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.11 2006-01-17 17:41:43 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.12 2006-01-30 10:58:29 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -137,7 +137,7 @@ public:
 
   //Fills various geometry related info
   StatusCode fillGeoInfo();
-
+  StatusCode fillGeoArray();
   StatusCode Tile2XYZ(LHCb::MuonTileID tile, 
 		      double & x, double & dx,
 		      double & y, double & dy, 
@@ -171,7 +171,15 @@ public:
                               const int region){
     return  m_phChannelNY[readout][station*4+region];
   };
+  float getPadSizeX(const int station, 
+                              const int region){
+    return m_padSizeX[station*4+region];
+  };
 
+  float getPadSizeY(const int station, 
+                              const int region){
+    return m_padSizeY[station*4+region];
+  };
   unsigned int getReadoutType(const int ireadout,const int station, 
                               const int region){    
     return  m_readoutType[ireadout][station*4+region];
@@ -202,6 +210,20 @@ public:
                            const int region){  
     return m_layoutY[ireadout][station*4+region];
   };
+  float getSensAreaX( const int station, 
+                           const int region){  
+    return m_sensitiveAreaX[station*4+region];
+  };
+  float getSensAreaY( const int station, 
+                           const int region){  
+    return m_sensitiveAreaY[station*4+region];
+  };
+  float getSensAreaZ( const int station, 
+                           const int region){  
+    return m_sensitiveAreaZ[station*4+region];
+  };
+
+
 private:
 
   //My data provider
@@ -232,11 +254,17 @@ private:
   unsigned int m_LogMapMergey[maxReadoutType][partition];
   unsigned int m_phChannelNX[maxReadoutType][partition];
   unsigned int m_phChannelNY[maxReadoutType][partition];
+  float m_padSizeX[partition];
+  float m_padSizeY[partition];
   int m_gapPerFE[partition];
   int m_layoutX[maxReadoutType][partition];
   int m_layoutY[maxReadoutType][partition];
   double  m_areaChamber[partition]; 
-
+  float m_sensitiveAreaX[partition];
+  float m_sensitiveAreaY[partition];
+  float m_sensitiveAreaZ[partition];  
+  double m_stationBox[5][4];
+float m_regionBox[partition][4];  
 };
 
 // -----------------------------------------------------------------------------

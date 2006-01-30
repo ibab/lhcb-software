@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.15 2006-01-16 15:11:33 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.16 2006-01-30 10:58:29 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -671,6 +671,7 @@ StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
   return sc;
 };
 
+
 StatusCode  DeMuonDetector::fillGeoInfo()
 {
   MsgStream msg( msgSvc(), name() );
@@ -704,6 +705,10 @@ StatusCode  DeMuonDetector::fillGeoInfo()
             (geoCh->lvolume()->solid());
           float dx = box->xHalfLength();
           float dy = box->yHalfLength();
+          float dz = box->zHalfLength();
+          m_sensitiveAreaX[station*4+region]=2*dx;
+          m_sensitiveAreaY[station*4+region]=2*dy;
+          m_sensitiveAreaZ[station*4+region]=2*dz;
           area=4*dx*dy;
           m_areaChamber[station*4+region]=area;          
           for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
@@ -723,7 +728,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
               m_phChannelNX[i][station*4+region]=theGrid->getGrid1SizeX();
               m_phChannelNY[i][station*4+region]=theGrid->getGrid1SizeY();
               m_readoutType[i][station*4+region]=
-                (theGrid->getReadoutGrid())[i];
+                (theGrid->getReadoutGrid())[i];             
             }            
             if(i==1){
               m_phChannelNX[i][station*4+region]=theGrid->getGrid2SizeX();
@@ -758,7 +763,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
       }
       station++;      
   }
-  // initialization by hand of the logical layout in th edifferent regions
+  // initialization by hand of the logical layout in the different regions
   m_layoutX[0][0]=24;  
   m_layoutX[0][1]=24;  
   m_layoutX[0][2]=24;  
@@ -828,8 +833,98 @@ StatusCode  DeMuonDetector::fillGeoInfo()
   m_layoutY[1][17]=8;  
   m_layoutY[1][18]=8;  
   m_layoutY[1][19]=8;
+
+  // fill pad sizes
+  
+  for(int stat=0;stat<5;stat++){
+    for(int reg=0;reg<4;reg++){
+      unsigned int part=stat*4+reg;
+      // one readout
+      if( m_readoutNumber[part]==1){
+        //1 map 
+        if(m_LogMapPerRegion[part]==1){
+          //already pads...
+          m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* m_LogMapMergex[0][part];
+          m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[0][part])* m_LogMapMergey[0][part];
+          
+        }else if(m_LogMapPerRegion[part]==2){
+          int mgx=0;          
+          int mgy=0;
+          mgx = (m_LogMapMergex[0][part]>m_LogMapMergex[1][part]) ? m_LogMapMergex[1][part] : m_LogMapMergex[0][part];
+          mgy = (m_LogMapMergey[0][part]>m_LogMapMergey[1][part]) ? m_LogMapMergey[1][part] : m_LogMapMergey[0][part];  
+          m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* mgx;
+          m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[0][part])* mgy;           
+        }        
+      }else  if( m_readoutNumber[part]==2){
+        //the convention is always anode first...
+        int mgx=0;          
+        int mgy=0;
+        mgx = m_LogMapMergex[0][part];
+        mgy = m_LogMapMergey[1][part] ;          
+        m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* mgx;
+        m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[0][part])* mgy;       
+      }
+    }    
+  }
   return sc;
 };
+
+StatusCode  DeMuonDetector::fillGeoArray()
+{
+  MsgStream msg( msgSvc(), name() );
+  bool debug=false;  
+  StatusCode sc = StatusCode::SUCCESS;  
+  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
+  int station=0;
+  int region=0;
+  for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+      IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
+      region=0;      
+      if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
+      for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
+        if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
+        IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+        double maxX=0;
+        double minX=0;
+        double maxY=0;
+        double minY=0;
+        
+        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+          //     DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
+          //IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
+          DeMuonGasGap* 
+            myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
+          //Gap Geometry info  
+          IGeometryInfo*  geoCh=myGap->geometry();
+          
+          //Retrieve the chamber box dimensions  
+          const SolidBox *box = dynamic_cast<const SolidBox *>
+            (geoCh->lvolume()->solid());
+          float dx = box->xHalfLength();
+          float dy = box->yHalfLength();
+
+          Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
+          Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
+          Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
+          Gaudi::XYZPoint glob4= geoCh->toGlobal(Gaudi::XYZPoint(dx,dy,0));
+
+          if(fabs(maxX)<fabs(glob1.x()))maxX=fabs(glob1.x());
+          if(fabs(maxX)<fabs(glob2.x()))maxX=fabs(glob2.x());
+          if(fabs(maxX)<fabs(glob3.x()))maxX=fabs(glob3.x());
+          if(fabs(maxX)<fabs(glob4.x()))maxX=fabs(glob4.x());
+          if(fabs(maxY)<fabs(glob1.y()))maxY=fabs(glob1.y());
+          if(fabs(maxY)<fabs(glob2.y()))maxY=fabs(glob2.y());
+          if(fabs(maxY)<fabs(glob3.y()))maxY=fabs(glob3.y());
+          if(fabs(maxY)<fabs(glob4.y()))maxY=fabs(glob4.y());
+        }     
+        m_regionBox[station*4+region][2]=maxX;
+        m_regionBox[station*4+region][3]=maxY;
+      }
+      
+  }
+
+}
+
 
 
 int DeMuonDetector::sensitiveVolumeID(Gaudi::XYZPoint myPoint)
