@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.14 2005-11-07 13:53:51 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.15 2006-01-30 12:57:07 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -58,6 +58,7 @@ MakeResonances::MakeResonances( const std::string& name,
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
   //  declareProperty( "MakePlots" , m_makePlots = false) ;
   declareProperty( "MotherToNGammas" , m_motherToNGammas = false) ;
+  declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
   setProperty ( "HistoProduce", "0" ) ; // overwrites GaudiHistoAlg.cpp
 }
 //=============================================================================

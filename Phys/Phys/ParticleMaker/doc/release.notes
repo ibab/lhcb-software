@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.23 2006-01-24 08:09:15 pkoppenb Exp $ 
+! $Id: release.notes,v 1.24 2006-01-30 13:00:24 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
+
+! 2006-01-30 - P. Koppenburg
+ - src/PreLoadParticles.{cpp,h}
+   . New option OutputLocation to get non-default outputLocations
 
 ! 2006-01-24 - P. Koppenburg
   - src/ParticleStuffer.cpp

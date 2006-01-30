@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
+// $Id: PreLoadParticles.h,v 1.3 2006-01-30 13:00:24 pkoppenb Exp $
 #ifndef PRELOADPARTICLES_H 
 #define PRELOADPARTICLES_H 1
 
@@ -34,6 +34,7 @@ protected:
   
   
 private:
+  std::string m_outputLocation ;    ///< Non-standard Output location, gets read by PhysDesktop
 
 };
 #endif // PRELOADPARTICLES_H

@@ -1,11 +1,8 @@
-// $Id: PreLoadParticles.cpp,v 1.2 2006-01-24 08:09:15 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.3 2006-01-30 13:00:24 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IToolSvc.h"
-
 
 // from EventSys
 #include "Event/Particle.h"
@@ -33,6 +30,7 @@ PreLoadParticles::PreLoadParticles( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator ) {
   setProperty( "AvoidSelResult", "true");
   setProperty( "DecayDescriptor", "\"null\"");
+  declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
 }
 
 //=============================================================================

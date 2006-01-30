@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.7 2005-11-07 13:46:23 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.8 2006-01-30 12:57:07 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -79,7 +79,7 @@ private:
   int        m_nEvents ;            ///< Number of events
   int        m_nAccepted ;          ///< Number of events accepted
   int        m_nCandidates ;        ///< Number of candidates
-  
+  std::string m_outputLocation ;    ///< Non-standard Output location, gets read by PhysDesktop
 
   typedef std::vector<Decay> Decays;
   Decays m_decays;
