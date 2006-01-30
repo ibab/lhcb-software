@@ -1,9 +1,9 @@
-// $Id: ParticleInfo.h,v 1.2 2005-04-14 13:10:41 cattanem Exp $
+// $Id: ParticleInfo.h,v 1.3 2006-01-30 11:04:47 asatta Exp $
 #ifndef PARTICLEINFO_H 
 #define PARTICLEINFO_H 1
 
 // Forward declarations
-class MCParticle;
+#include "Event/MCParticle.h"
 
 /** @class ParticleInfo ParticleInfo.h
  *  
@@ -14,8 +14,8 @@ class MCParticle;
 class ParticleInfo {
 public:
   /// Standard constructor
-  ParticleInfo(MCParticle* particle, int station, int gaps ); 
-  ParticleInfo(MCParticle* particle);
+  ParticleInfo(const LHCb::MCParticle* particle, int station, int gaps ); 
+  ParticleInfo(const LHCb::MCParticle* particle);
   
   virtual ~ParticleInfo( ); ///< Destructor
   void setHitIn(int station, int gap,int chamber);

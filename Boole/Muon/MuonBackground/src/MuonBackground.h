@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.7 2005-04-14 13:10:41 cattanem Exp $
+// $Id: MuonBackground.h,v 1.8 2006-01-30 11:04:47 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -10,13 +10,18 @@
 // from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "MuonDet/DeMuonDetector.h"
 #include "MuBgDistribution.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 
 // forward declarations
 class IHistogram1D;
 class IHistogram2D;
-class IMuonTileXYZTool;
-class IMuonGetInfoTool;
+//class IMuonTileXYZTool;
+//class IMuonGetInfoTool;
 
 typedef std::vector<std::string> VectorName;   
 
@@ -27,7 +32,7 @@ typedef std::vector<std::string> VectorName;
  *  @date   2003-02-18
  */
 
-class MuonBackground : public Algorithm {
+class MuonBackground : public GaudiAlgorithm {
 public:
   /// Standard constructor
   MuonBackground( const std::string& name, ISvcLocator* pSvcLocator );
@@ -70,7 +75,7 @@ public:
                                             pointerToFlags,double& xmin, 
                                          double& xmax, int& nbinx ,
                                          double &ymin, double& ymax  );
-  StatusCode createHit(KeyedContainer<MCMuonHit>** hitsContainer,
+  StatusCode createHit(LHCb::MCHits** hitsContainer,
                                     int station,int multi , int ispill); 
   StatusCode correctInterceptPosition(float xlow,float xup,float ylow,
                                       float yup,float zlow,float zup,
@@ -82,10 +87,20 @@ public:
   float max(float a,float b);
   float min(float a,float b);
   int howManyHit( float floatHit);
-  
+  int chamberOffset(int sta,int reg);  
 protected:
 
 private:
+
+  StatusCode calculateHitPosInGap(DeMuonChamber* pChamber,int gapNumber,
+                              float xpos,float ypos,float xSlope,float ySlope,
+                               float averageZ, Gaudi::XYZPoint& 
+entryGlobal,Gaudi::XYZPoint& exitGlobal,
+                               DeMuonGasGap*& p_Gap);
+  StatusCode calculateAverageGap(DeMuonChamber* pChamber,
+                                 int gapNumberStart ,
+                                 int  gapNumberStop ,float xpos,float ypos,
+                                 float& zaverage);  
   int m_type;  
   std::string m_typeOfBackground; 
   
@@ -126,12 +141,18 @@ private:
   std::vector<MuBgDistribution*> m_lintimevsradial;
   std::vector<MuBgDistribution*> m_hitgap;
   double m_luminosityFactor; 
-  IMuonTileXYZTool* m_pMuonTileXYZ ;
-  IMuonGetInfoTool* m_pGetInfo ;
+//  IMuonTileXYZTool* m_pMuonTileXYZ ;
+//  IMuonGetInfoTool* m_pGetInfo ;
   //only to test the histos  
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
   Rndm::Numbers* m_flatDistribution;
+  //  SmartDataPtr<DeMuonDetector> m_muonDetector (m_DDS,
+  //                                        "/dd/Structure/LHCb/Muon");
+  
+  DeMuonDetector* m_muonDetector;
+  
+int m_chamberInRegion[20];
   std::string m_persType;
 };
 

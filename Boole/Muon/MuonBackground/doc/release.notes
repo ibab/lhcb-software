@@ -5,6 +5,11 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v2r0 2006-01-29 =====================
+! 2006-01-29 - Alessia Satta
+ - Compatible with new event model, MuonDet . Not finalized, waiting for 
+   the new tool that relates MCHit and collision 
+
 !====================== MuonBackground v1r10p1 2005-04-14 =====================
 ! 2005-04-14 - Marco Cattaneo
  - Fix a memory leak

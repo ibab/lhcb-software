@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.cpp,v 1.4 2005-04-14 13:10:41 cattanem Exp $
+// $Id: ParticleInfo.cpp,v 1.5 2006-01-30 11:04:47 asatta Exp $
 // Include files 
 
 #include <iostream> 
@@ -25,10 +25,14 @@ int ParticleInfo::maxDimension=20;
 //=============================================================================
 
 //=============================================================================
-ParticleInfo::ParticleInfo(MCParticle* particle, int station, int gaps ){
+ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle, int station, 
+int gaps ){
    m_stationNumber=station;
   m_gapsNumber=gaps;
-  m_pileupEventNumber=particle->collision()->key();
+//  m_pileupEventNumber=particle->collision()->key();
+//temp it is  a bug not a feature...  waiting for Gloria 
+ m_pileupEventNumber=0;
+
   maxDimension=station*gaps;  
   m_storagePointer = new std::vector<std::vector<int> >(maxDimension) ;
   m_resultPointer = new std::vector<int>(maxDimension) ;
@@ -36,9 +40,11 @@ ParticleInfo::ParticleInfo(MCParticle* particle, int station, int gaps ){
   
 }
 
-ParticleInfo::ParticleInfo(MCParticle* particle)
+ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle)
 {
-  m_pileupEventNumber=particle->collision()->key();
+//  m_pileupEventNumber=particle->collision()->key();
+//temp it is  a bug not a feature...  waiting for Gloria 
+ m_pileupEventNumber=0;
   
   m_storagePointer = new std::vector<std::vector<int> >(maxDimension) ;
   m_resultPointer = new std::vector<int> (maxDimension) ;
