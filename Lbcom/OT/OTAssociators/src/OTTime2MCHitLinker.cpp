@@ -1,6 +1,15 @@
-// $Id: OTTime2MCHitLinker.cpp,v 1.1 2005-03-22 10:49:29 cattanem Exp $
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
-#include "Linker/LinkerWithKey.h"
+// Linker
+#include "Linker/LinkerTool.h"
+
+// MCEvent
+#include "Event/MCHit.h"
+#include "Event/MCOTDeposit.h"
+
+// Event
+#include "Event/OTTime.h"
 
 // local
 #include "OTTime2MCHitLinker.h"
@@ -14,17 +23,16 @@
  */
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTTime2MCHitLinker>          s_factory ;
-const        IAlgFactory& OTTime2MCHitLinkerFactory = s_factory ; 
+static const  AlgFactory<OTTime2MCHitLinker>   s_factory ;
+const IAlgFactory& OTTime2MCHitLinkerFactory = s_factory ; 
 
 OTTime2MCHitLinker::OTTime2MCHitLinker( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm (name,pSvcLocator) 
+					ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "OTTimes2MCHits" );
-  declareProperty( "SpillOver", m_spillOver  = false );
-  declareProperty( "associatorName", m_nameAsct = "OTTime2MCDepositAsct" );
+  declareProperty( "OutputData", m_outputData  = "OTTime2MCHitLocation" );
+  declareProperty( "SpillOver", m_spillOver = false );
 }
 
 OTTime2MCHitLinker::~OTTime2MCHitLinker() 
@@ -34,69 +42,74 @@ OTTime2MCHitLinker::~OTTime2MCHitLinker()
 
 StatusCode OTTime2MCHitLinker::initialize() 
 {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  m_hAsct = tool<OTTime2MCDepositAsct::IAsct>( m_nameAsct );
-
+  // Get associator tool
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) 
+    {
+      return Error( "Failed to intialize" , sc );
+    }
+  
   return StatusCode::SUCCESS;
 }
-
 
 StatusCode OTTime2MCHitLinker::execute() 
 {
-  // get OTTimes
-  OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
+  // Get OTTimes
+  LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
+    
+  // Get MCHits; no spillover 
+  LHCb::MCHits* mcHits = get<LHCb::MCHits>( "/Event/"+LHCb::MCHitLocation::OT );
+
+  // Create a linker
+  LinkerWithKey<LHCb::MCHit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
   
-  //Get the MCHits for the event, in case you don't want to make links to spill.
-  m_mcHits = get<MCHits>( MCHitLocation::OTHits );
-
-  // create an association table and register table in store
-  LinkerWithKey<MCHit,OTTime> myLink( evtSvc(), msgSvc(), outputData() );
-
   // loop and link OTTimes to MC truth
-  OTTimes::const_iterator iterTime;
+  LHCb::OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
-        iterTime != timeCont->end(); ++iterTime){
-    std::vector<MCHit*> hitVector;
-    associateToTruth(*iterTime, hitVector);
-    std::vector<MCHit*>::iterator iHit = hitVector.begin();
-    while (iHit != hitVector.end()) {
-      myLink.link(*iterTime, *iHit);
+        iterTime != timeCont->end(); ++iterTime ){
+    
+    // Find and link all hits 
+    std::vector<const LHCb::MCHit*> hitVec;
+    associateToTruth( *iterTime, hitVec, mcHits );
+    std::vector<const LHCb::MCHit*>::iterator iHit = hitVec.begin();
+    while ( iHit != hitVec.end() ) {
+      myLink.link( *iterTime , *iHit );
       ++iHit;
-    }
-  } // loop iterTime
+    } // while iHit != hitVec.end()
+  } // for iterTime
 
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode 
-OTTime2MCHitLinker::associateToTruth(const OTTime* aTime,
-                                     std::vector<MCHit*>& hitVector)
- 
+StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
+						 std::vector<const LHCb::MCHit*>& hitVec, 
+						 LHCb::MCHits* mcHits ) 
 {
-  // make link to truth to MCHit and retrieve table
-  OTTime2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
-  if (0 == aTable){
-    return Error ("Failed to find table");
-  }
- 
-  OTTime2MCDepositAsct::MCDeposits range = aTable->relations(aTime);
+  // Make link to MCHit from OTTime
+  typedef LinkerTool<LHCb::OTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
+  typedef OTTime2MCDepositAsct::DirectType Table;
+  typedef Table::Range MCDeposit;
+  typedef Table::iterator MCDepositIter;
+  
+  OTTime2MCDepositAsct associator( evtSvc(), LHCb::OTTimeLocation::Default );
+  const Table* aTable = associator.direct();
+  if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
+
+  MCDeposit range = aTable->relations( aTime );
   if ( !range.empty() ) {
-    OTTime2MCDepositAsct::MCDepositsIterator iterDep;
-    for (iterDep = range.begin(); iterDep != range.end(); ++iterDep) {      
-      MCOTDeposit* aDeposit = iterDep->to();
-      if (0 != aDeposit) {
-        MCHit* aHit = aDeposit->mcHit();
-        if (0 != aHit) {
-          if( m_spillOver || (m_mcHits == aHit->parent()) ) {
-            hitVector.push_back( aHit );
-          }
-        }
-      }
-    }
-  }
+    MCDepositIter iterDep;
+    for ( iterDep = range.begin() ; iterDep != range.end() ; ++iterDep ) {      
+      const LHCb::MCOTDeposit* aDeposit = iterDep->to();
+      if ( 0 != aDeposit ) {
+	const LHCb::MCHit* aHit = aDeposit->mcHit();
+	if ( 0 != aHit ) {
+	  if ( m_spillOver || ( mcHits == aHit->parent() ) ) {
+	    hitVec.push_back( aHit );
+	  } // if  m_spillOver || ( m_mcHits == aHit->parent())
+	} // if 0 != aHit
+      } // if 0 != aDeposit
+    } // for iterDep
+  } // if !MCDeposit.empty()
   
   return StatusCode::SUCCESS;
 }

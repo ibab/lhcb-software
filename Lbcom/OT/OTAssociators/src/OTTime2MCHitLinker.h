@@ -1,23 +1,11 @@
-// $Id: OTTime2MCHitLinker.h,v 1.1 2005-03-22 10:49:29 cattanem Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCHITLINKER_H
 #define OTASSOCIATORS_OTTIME2MCHITLINKER_H 1
 
-// Event
-#include "Event/OTTime.h"
-#include "Event/MCOTTime.h"
-#include "Event/MCOTDeposit.h"
-#include "Event/MCHit.h"
-#include "Event/MCTruth.h"
-
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "OTAssociators/OTTime2MCDepositAsct.h"
 
-class OTTime;
-class MCHit;
+// Event
+//#include "Event/OTTime.h"
 
 /** @class OTTime2MCHitLinker OTTime2MCHitLinker.h
  *  
@@ -29,15 +17,21 @@ class MCHit;
  *  @date   15/06/2004
  */
 
+namespace LHCb
+{
+  class MCHit;
+  class OTTime;
+}
+
 class OTTime2MCHitLinker : public GaudiAlgorithm {
 
   friend class AlgFactory<OTTime2MCHitLinker>;
   
-public:
+ public:
 
   /// Standard constructor
   OTTime2MCHitLinker( const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   /// Destructor
   virtual ~OTTime2MCHitLinker(); 
 
@@ -45,27 +39,24 @@ public:
   virtual StatusCode initialize();    
 
   /// execute
-  virtual StatusCode execute();    
-
-  /// find the MCHit given a OTTime
-  virtual StatusCode associateToTruth(const OTTime* aTime,
-                                      std::vector<MCHit*>& hitVector);
-
+  virtual StatusCode execute();
+  
   /// path to put relation table
   std::string outputData() const;
  
-protected:
+ protected:
+  
+ private:
 
-private:
-
+  /// find the MCHit for a given OTTime
+  virtual StatusCode associateToTruth( const LHCb::OTTime* aTime ,
+				       std::vector<const LHCb::MCHit*>& hitVec , 
+				       LHCb::MCHits* mcHits );
+ 
   // job options:
-  std::string m_outputData; ///< path to put relation table
-  bool m_spillOver;         ///< Flag to store relations with spillover
-  std::string m_nameAsct;   ///< Associator from OTTimes to MCOTDeposits
-  
-  MCHits* m_mcHits;         ///< Container of MCHits used to identify spillover
-  OTTime2MCDepositAsct::IAsct* m_hAsct; ///< pointer to associator
-  
+  bool m_spillOver;          ///< True = Add spillover
+  std::string m_outputData;  ///< path to put relation table
+
 };
 
 inline std::string OTTime2MCHitLinker::outputData() const {

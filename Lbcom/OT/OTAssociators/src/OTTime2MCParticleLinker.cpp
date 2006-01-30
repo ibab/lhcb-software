@@ -1,0 +1,102 @@
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// Linker
+#include "Linker/LinkerTool.h"
+
+// MCEvent
+#include "Event/MCHit.h"
+#include "Event/MCParticle.h"
+
+// Event
+#include "Event/OTTime.h"
+
+// local
+#include "OTTime2MCParticleLinker.h"
+
+/** @file OTTime2MCParticleLinker.cpp 
+ *
+ *  Implementation of the OTTime2MCParticleLinker class
+ *  
+ *  @author J. van Tilburg and Jacopo Nardulli
+ *  @date   15/06/2004
+ */
+
+// Declaration of the Algorithm Factory
+static const  AlgFactory<OTTime2MCParticleLinker> s_factory ;
+const IAlgFactory& OTTime2MCParticleLinkerFactory = s_factory ; 
+
+OTTime2MCParticleLinker::OTTime2MCParticleLinker( const std::string& name,
+						  ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm (name,pSvcLocator) 
+{
+  // constructor
+  declareProperty( "OutputData", m_outputData  = "OTTime2MCParticleLocation" );
+}
+
+OTTime2MCParticleLinker::~OTTime2MCParticleLinker() {
+  // destructor
+}
+
+StatusCode OTTime2MCParticleLinker::initialize() 
+{
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) { 
+    return Error ( "Failed to initialize", sc );
+  }
+    
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTTime2MCParticleLinker::execute() 
+{
+  // get OTTimes
+  LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
+
+  // Create a linker
+  LinkerWithKey<LHCb::MCParticle,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  
+  // loop and link OTTimes to MC truth
+  LHCb::OTTimes::const_iterator iterTime;
+  for ( iterTime = timeCont->begin(); 
+        iterTime != timeCont->end(); ++iterTime ){
+    std::vector<const LHCb::MCParticle*> partVec;
+    associateToTruth( *iterTime, partVec );
+    std::vector<const LHCb::MCParticle*>::iterator iPart = partVec.begin();
+    while ( iPart != partVec.end() ){
+      myLink.link( *iterTime, *iPart );
+      ++iPart;
+    } // while iPart != partVec.end()
+  } // for iterTime
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::OTTime* aTime,
+						      std::vector<const LHCb::MCParticle*>& partVec ){
+  // Make link to MCHit from OTTime
+  typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> OTTime2MCHitAsct;
+  typedef OTTime2MCHitAsct::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
+  
+  OTTime2MCHitAsct associator( evtSvc(), LHCb::OTTimeLocation::Default );
+  const Table* aTable = associator.direct();
+  if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
+
+  Range range = aTable->relations( aTime );
+  if ( !range.empty() ) {
+    iterator iterHit;
+    for ( iterHit = range.begin(); iterHit != range.end(); ++iterHit ) {
+      const LHCb::MCHit* aHit = iterHit->to();
+      if ( 0 != aHit) {
+        const LHCb::MCParticle* aParticle = aHit->mcParticle();
+        if ( 0 != aParticle ) {
+          partVec.push_back( aParticle );
+        }
+      }
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}

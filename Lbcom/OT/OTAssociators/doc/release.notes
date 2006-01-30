@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.30 2005-11-09 16:43:52 jnardull Exp $
+! $Id: release.notes,v 1.31 2006-01-30 13:34:33 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+!===================== OTAssociators v4r0 2006-01-30 =====================
+! 2006-01-30 - Jan Amoraal 
+ - Migrated to LHCb v20r0.
+ - Introduced linkers (needs testing)
+ - Renamed *Alg.* to *Linker.*
+ - Removed tools in OTAssociators. These were used to create the relation 
+   tables and are'nt need anymore.
 
 ! 2005-11-09 - Jacopo Nardulli
  - OTTime2MCDepositAlg correted for modifications related to MCOTDeposit.h

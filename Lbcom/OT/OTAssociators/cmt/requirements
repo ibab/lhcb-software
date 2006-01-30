@@ -1,15 +1,16 @@
 package           OTAssociators
-version           v3r2p1
+version           v4r0
         
 # =============== structure =================================================== 
-branches          OTAssociators src cmt doc options 
+branches          src cmt doc options 
 
 include_dirs $(OTASSOCIATORSROOT)
 
 # =============== used packages ===============================================
-use OTEvent     v*      Event
+use GaudiAlg    v*
 use LinkerEvent v*      Event
-use Relations	v*	Kernel
+use MCEvent     v*      Event
+use OTEvent     v*      Event
 
 # =============== own options =================================================
 set OTASSOCIATORSOPTS  ${OTASSOCIATORSROOT}/options
