@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/18 18:15:21  odescham
+// v2r0 : adapt to the new Event Model + cleaning
+//
 // Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
 // // The new package: code is inported from Calo/CaloMonitor
 //
@@ -117,10 +120,10 @@ StatusCode CaloDigitMonitor::execute() {
     }
     sumMCDigit     *= m_scaleHit / GeV ;
 
-    plot1D(nbHit  , 1102 
+    plot1D(nbMCDigit , 1102 
            ,"MCDigits multiplicity " + m_nameOfDetector
            , 0.,  m_maxMultiplicity , 100 , 1.) ;
-    plot1D(sumHit , 1112 
+    plot1D(sumMCDigit , 1112 
            ,"Total energy (GeV) in MCDigits " + m_nameOfDetector 
            , 0.,  m_maxEnergy       , 100 , 1.) ;
   }
@@ -138,10 +141,10 @@ StatusCode CaloDigitMonitor::execute() {
     }
     sumDigit /= GeV;
   
-    plot1D(nbHit  , 1103
+    plot1D(nbDigit  , 1103
            ,"Digits multiplicity " + m_nameOfDetector
            , 0.,  m_maxMultiplicity , 100 , 1.) ;
-    plot1D(sumHit , 1113
+    plot1D(sumDigit , 1113
            ,"Total energy (GeV) in Digits " + m_nameOfDetector
            , 0.,  m_maxEnergy       , 100 , 1.) ;
   }
