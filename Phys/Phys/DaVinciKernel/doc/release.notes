@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.83 2006-01-23 12:31:09 pkoppenb Exp $
+! $Id: release.notes,v 1.84 2006-01-30 10:53:01 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2006-01-30 - P. Koppenburg
+  - src/Lib/DVAlgorithm.cpp
+    . New option OutputLocation that forces a non-default outputLocation.
+    
 ! 2006-01-23 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Issue primary vertex empty container warning only if primary

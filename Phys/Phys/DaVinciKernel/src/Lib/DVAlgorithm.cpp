@@ -31,6 +31,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
   declareProperty("PrintSelResult", m_printSelResult = false );
   declareProperty("GlobalFitter",m_typeGlobalFit="LagrangeGlobalFitter");
+  declareProperty("OutputLocation",m_imposedOutputLocation="");
 
 };
 //=============================================================================
@@ -86,6 +87,12 @@ StatusCode DVAlgorithm::loadTools() {
 
   msg << MSG::DEBUG << ">>> Retrieving PhysDesktop" << endreq;
   m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
+
+  if ( m_imposedOutputLocation != "" ) {
+    warning() << "Forcing outputLocation to be " << m_imposedOutputLocation << endmsg ;
+    imposeOutputLocation( m_imposedOutputLocation);
+  }
+  
 
   msg << MSG::DEBUG << ">>> Retrieving" << m_typeGlobalFit
       << " as IGlobalFit" << endreq;
