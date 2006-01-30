@@ -5,11 +5,10 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.23 2005-12-17 14:18:15 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.24 2006-01-30 11:44:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
-//#include "RichKernel/RichSmartIDHashFuncs.h"
  */
 //-----------------------------------------------------------------------------
 
