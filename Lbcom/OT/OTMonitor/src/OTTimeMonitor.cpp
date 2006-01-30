@@ -1,25 +1,23 @@
-// $Id: OTTimeMonitor.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
+// $Id: OTTimeMonitor.cpp,v 1.5 2006-01-30 13:42:55 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "GaudiKernel/IHistogramSvc.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
 
-// Event
-#include "Event/OTTime.h"
-
 // OTDet
 #include "OTDet/DeOTDetector.h"
 
+// Event
+#include "Event/OTTime.h"
+
+// MathCore
+#include "Kernel/SystemOfUnits.h"
+
 // local
 #include "OTTimeMonitor.h"
-
-static const AlgFactory<OTTimeMonitor> s_Factory;
-const IAlgFactory& OTTimeMonitorFactory = s_Factory;
 
 /** @file OTTimeMonitor.cpp 
  *
@@ -27,6 +25,11 @@ const IAlgFactory& OTTimeMonitorFactory = s_Factory;
  *  @author J. van Tilburg & Jacopo Nardulli
  *  @date   20-07-2004
  */
+
+using namespace LHCb;
+
+static const AlgFactory<OTTimeMonitor> s_Factory;
+const IAlgFactory& OTTimeMonitorFactory = s_Factory;
 
 OTTimeMonitor::OTTimeMonitor(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
@@ -42,10 +45,8 @@ OTTimeMonitor::~OTTimeMonitor()
 
 StatusCode OTTimeMonitor::initialize()
 {
-  // Loading OT Geometry from XML
- 
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_tracker = tracker;
+  // Get OT Geometry from XML
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_numStations = m_tracker->numStations();
   m_firstOTStation = m_tracker->firstOTStation();
 
@@ -232,7 +233,7 @@ StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime)
       DeOTModule* module = m_tracker->module(channel);
       double channelsPerBin = m_nChannelsPerLayer[iUniqueLayerNum]/50.;
       weight = 100 / ( m_evtMax * channelsPerBin );
-      HepPoint3D hit = module->centerOfStraw(channel.straw());
+      Gaudi::XYZPoint hit = module->centerOfStraw(channel.straw());
       m_occVsxHisto->fill(fabs(hit.x()), weight);
     }
   

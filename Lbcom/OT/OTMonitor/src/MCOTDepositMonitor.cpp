@@ -1,18 +1,23 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.5 2005-11-09 16:41:52 jnardull Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.6 2006-01-30 13:42:55 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+// AIDA
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h" 
 
-//Event
+// MCEvent
 #include "Event/MCHit.h"
+#include "Event/MCOTDeposit.h"
+
+// MathCore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
 
 // local
 #include "MCOTDepositMonitor.h"
@@ -30,8 +35,8 @@ const IAlgFactory& MCOTDepositMonitorFactory = s_Factory;
  *  @date   20-07-2004
  */
 
-MCOTDepositMonitor::MCOTDepositMonitor(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
+MCOTDepositMonitor::MCOTDepositMonitor( const std::string& name, 
+					ISvcLocator* pSvcLocator ) :
   OTMonitorAlgorithm(name, pSvcLocator),
   m_nCrossTalkHits(0)
 {
@@ -45,8 +50,8 @@ MCOTDepositMonitor::~MCOTDepositMonitor()
 
 StatusCode MCOTDepositMonitor::initialize()
 {
-  // Loading OT Geometry from XML
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  // Get OT Geometry from XML
+  DeOTDetector* tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
 
   m_numStations = tracker->numStations();
   m_firstOTStation = tracker->firstOTStation();  
@@ -64,17 +69,17 @@ StatusCode MCOTDepositMonitor::execute()
   m_nCrossTalkHits = 0;
 
   // retrieve MCOTDeposits
-  MCOTDepositVector* depCont = 
-    get<MCOTDepositVector>(MCOTDepositLocation::Default);
+  LHCb::MCOTDeposits* depCont = 
+    get<LHCb::MCOTDeposits>( LHCb::MCOTDepositLocation::Default );
 
 
   // number of deposits
   m_nDepositsHisto->fill((double)depCont->size(),1.0);
 
   // histos per deposit
-  MCOTDepositVector::iterator iterDep;
-  for(iterDep = depCont->begin(); 
-      iterDep != depCont->end(); iterDep++){
+  LHCb::MCOTDeposits::iterator iterDep;
+  for( iterDep = depCont->begin(); 
+       iterDep != depCont->end(); iterDep++ ){
     this->fillHistograms(*iterDep);
   } // loop iterDep
 
@@ -113,8 +118,8 @@ StatusCode MCOTDepositMonitor::initHistograms()
 
     // histograms per station
     int ID;
-    IHistogram1D* aHisto1D;
-    IHistogram2D* aHisto2D;
+    AIDA::IHistogram1D* aHisto1D;
+    AIDA::IHistogram2D* aHisto2D;
     int iStation;
     // drift time spectra
     for (iStation = m_firstOTStation; iStation <= m_numStations; ++iStation) {
@@ -142,7 +147,7 @@ StatusCode MCOTDepositMonitor::initHistograms()
 
 }
 
-StatusCode MCOTDepositMonitor::fillHistograms(MCOTDeposit* aDeposit)
+StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit )
 {
   // histogram by station
   const int iStation = aDeposit->channel().station();
@@ -160,14 +165,14 @@ StatusCode MCOTDepositMonitor::fillHistograms(MCOTDeposit* aDeposit)
   }
   
   // reference to mctruth
-  MCHit* aHit = aDeposit->mcHit();
+  const LHCb::MCHit* aHit = aDeposit->mcHit();
 
   if (0 != aHit) {
     // pointer valid hit deposit is real.....
 
     if ( fullDetail() ) {
       // retrieve entrance + exit points and take average
-      HepPoint3D mcHitPoint = 0.5*(aHit->entry()+aHit->exit());
+      Gaudi::XYZPoint mcHitPoint = ( aHit->entry() ) - 0.5*(aHit->exit() - aHit->entry());
 
       // fill x vs y scatter plots    
       m_xvsyHistos[iStation-m_firstOTStation]->fill(mcHitPoint.x()/cm,

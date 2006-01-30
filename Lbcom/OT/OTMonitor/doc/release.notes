@@ -1,6 +1,10 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
+!==================== OTMonitor v2r0 2006-01-20 =====================
+! 2006-01-20 - Jan Amoraal
+ - Migrated to LHCb v20r0
+
 ! 2005-11-09 - Jacopo Nardulli
  - MCOTDepositMonitor correted for modifications related to MCOTDeposit.h
 

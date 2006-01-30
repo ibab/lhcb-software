@@ -1,4 +1,4 @@
-// $Id: OTMonitorAlgorithm.h,v 1.2 2004-11-10 13:03:42 jnardull Exp $
+// $Id: OTMonitorAlgorithm.h,v 1.3 2006-01-30 13:42:55 janos Exp $
 #ifndef OTMONITOR_OTMONITORALGORITHM_H_
 #define OTMONITOR_OTMONITORALGORITHM_H 1
 
@@ -17,16 +17,13 @@
  *  @date   14/7/2004
  */
 
-class IHistogram1D;
-class IHistogram2D;
-
 class OTMonitorAlgorithm: public GaudiAlgorithm {
-
-public:
+  
+ public:
 
   /// Constructor
-  OTMonitorAlgorithm(const std::string& name, 
-                     ISvcLocator* pSvcLocator); 
+  OTMonitorAlgorithm( const std::string& name, 
+                      ISvcLocator* pSvcLocator ); 
 
   /// Destructor
   virtual ~OTMonitorAlgorithm();
@@ -34,14 +31,14 @@ public:
   /// path for histos
   std::string histoDirPath() const;
   /// convert integer to string
-  std::string intToString(const int id) const;
+  std::string intToString( const int id ) const;
  
   bool fullDetail() const;
 
-private:  
+ private:  
 
- // flag of histos to produce
- bool m_fullDetail;
+  // flag of histos to produce
+  bool m_fullDetail;
 
 };
 

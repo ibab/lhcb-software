@@ -5,11 +5,15 @@ branches cmt doc src options
 
 include_path none
 
-use OTDet               v5r*    Det
-use OTAssociators       v3r*    OT
+use LinkerEvent v*      Event
+use MCEvent     v*      Event
+use OTEvent     v*      Event
+use OTDet       v6r*    Det
 
 # ================= component library ====================
-library OTMonitor ../src/*.cpp -import=AIDA
+library OTMonitor ../src/MCOTDepositMonitor.cpp -import=AIDA
+library OTMonitor ../src/OTTimeMonitor.cpp -import=AIDA
+library OTMonitor ../src/OTTimeChecker.cpp -import=AIDA
 
 apply_pattern component_library library=OTMonitor
 

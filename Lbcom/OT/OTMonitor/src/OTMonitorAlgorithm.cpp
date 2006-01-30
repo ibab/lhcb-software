@@ -1,12 +1,10 @@
-// $Id: OTMonitorAlgorithm.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
+// $Id: OTMonitorAlgorithm.cpp,v 1.5 2006-01-30 13:42:55 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h"
-#include <stdio.h>
 
 // local
 #include "OTMonitorAlgorithm.h"
-
 
 /** @file OTMonitorAlgorithm.cpp 
  *
@@ -18,12 +16,12 @@
  *  @date 20/07/2004
  */
 
-OTMonitorAlgorithm::OTMonitorAlgorithm(const std::string& name,
-			 ISvcLocator* pSvcLocator):
+OTMonitorAlgorithm::OTMonitorAlgorithm( const std::string& name,
+					ISvcLocator* pSvcLocator ):
   GaudiAlgorithm(name, pSvcLocator)
 {
   /// OTMonitorAlgorithm constructor
-  declareProperty("fullDetail", m_fullDetail = false);
+  declareProperty( "fullDetail", m_fullDetail = false );
 }
 
 OTMonitorAlgorithm::~OTMonitorAlgorithm()
@@ -59,7 +57,7 @@ std::string OTMonitorAlgorithm::histoDirPath() const
 }
 
 std::string OTMonitorAlgorithm::intToString(const int id) const {
- 
+  
   // int to string 
   char buffer[32];
   return ::_itoa(id,buffer,10);

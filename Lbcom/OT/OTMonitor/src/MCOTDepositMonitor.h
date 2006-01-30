@@ -1,19 +1,9 @@
-// $Id: MCOTDepositMonitor.h,v 1.2 2004-12-10 08:10:56 jnardull Exp $
+// $Id: MCOTDepositMonitor.h,v 1.3 2006-01-30 13:42:55 janos Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
-// AIDA
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
-// Event
-#include "Event/MCOTDeposit.h"
-
 // local
 #include "OTMonitorAlgorithm.h"
-
-class MCOTDeposit;
-
 
 /** @class MCOTDepositMonitor MCOTDepositMonitor.h \ 
  *         "OTMonitor/MCOTDepositMonitor.h"
@@ -26,13 +16,24 @@ class MCOTDeposit;
  *  @date   20/07/2004
  */
 
+namespace AIDA 
+{
+  class IHistogram1D;
+  class IHistogram2D;
+}
+
+namespace LHCb
+{
+  class MCOTDeposit;
+}
+
 class MCOTDepositMonitor : public OTMonitorAlgorithm {
 
 public:
  
   /// constructor
-  MCOTDepositMonitor(const std::string& name, 
-                     ISvcLocator *svcloc );
+  MCOTDepositMonitor( const std::string& name, 
+		      ISvcLocator *svcloc );
 
   /// destructor
   virtual ~MCOTDepositMonitor();
@@ -49,22 +50,22 @@ private:
   StatusCode initHistograms();
 
   /// fill the histograms
-  StatusCode fillHistograms(MCOTDeposit* aDeposit);
+  StatusCode fillHistograms( LHCb::MCOTDeposit* aDeposit );
 
   int m_nCrossTalkHits;  ///< count the number of XTalk hits
   int m_numStations;     ///< number of stations (from geometry)
   int m_firstOTStation;  ///< first OT station   (from geometry)
 
   /// histograms
-  IHistogram1D* m_nDepositsHisto;       ///< Deposits distribution
-  IHistogram1D* m_nHitsPerStationHisto; ///< Hits per station 
-  IHistogram1D* m_nHitsPerLayerHisto;   ///< Hits per layer
+  AIDA::IHistogram1D* m_nDepositsHisto;       ///< Deposits distribution
+  AIDA::IHistogram1D* m_nHitsPerStationHisto; ///< Hits per station 
+  AIDA::IHistogram1D* m_nHitsPerLayerHisto;   ///< Hits per layer
   /// drift time histo for each station
-  std::vector<IHistogram1D*> m_driftTimeHistos;
+  std::vector<AIDA::IHistogram1D*> m_driftTimeHistos;
   /// x vs y of hits for each station 
-  std::vector<IHistogram2D*> m_xvsyHistos;
-  IHistogram1D* m_driftDistHisto;  ///< drift distance distribution
-  IHistogram1D* m_nCrossTalkHisto; ///< cross talk level
+  std::vector<AIDA::IHistogram2D*> m_xvsyHistos;
+  AIDA::IHistogram1D* m_driftDistHisto;  ///< drift distance distribution
+  AIDA::IHistogram1D* m_nCrossTalkHisto; ///< cross talk level
   
 };
 

@@ -1,10 +1,29 @@
-// $Id: OTTimeChecker.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
+// $Id: OTTimeChecker.cpp,v 1.5 2006-01-30 13:42:55 janos Exp $
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IHistogramSvc.h"
+
+// Linker
+#include "Linker/LinkerTool.h"
+
+// AIDA
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+
+// OT geometry
+#include "OTDet/DeOTDetector.h"
+
+// MCEvent
+#include "Event/MCHit.h"
+
+// OTEvent
+#include "Event/OTTime.h"
+
+// MathCore
+#include "Kernel/SystemOfUnits.h"
 
 // local
 #include "OTTimeChecker.h"
-
-static const AlgFactory<OTTimeChecker> s_Factory;
-const IAlgFactory& OTTimeCheckerFactory = s_Factory;
 
 /** @file OTTimeChecker.cpp 
  *
@@ -14,15 +33,18 @@ const IAlgFactory& OTTimeCheckerFactory = s_Factory;
  *  @date   22-06-2004
  */
 
+using namespace LHCb;
+
+static const AlgFactory<OTTimeChecker> s_Factory;
+const IAlgFactory& OTTimeCheckerFactory = s_Factory;
+
 OTTimeChecker::OTTimeChecker(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
   OTMonitorAlgorithm(name, pSvcLocator)
 {
   // constructor
-  this->declareProperty("hitAssociatorName",
-                        m_nameHitAsct = "OTTime2MCHitAsct" );
   this->declareProperty("doMomentumCut", m_doMomentumCut = false);
-  this->declareProperty("momentumCut", m_momentumCut = 1500);
+  this->declareProperty("momentumCut", m_momentumCut = 1500.*MeV);
 }
 
 OTTimeChecker::~OTTimeChecker()
@@ -35,10 +57,7 @@ StatusCode OTTimeChecker::initialize()
   // intialize histos
   this->initHistograms();
 
-  // associator time to hit tool   
-  m_hitAsct = tool<OTTime2MCHitAsct::IAsct>( m_nameHitAsct );
-
-  // Loading OT Geometry from XML
+  // Get OT Geometry from XML
   DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_tracker = tracker;
 
@@ -53,52 +72,59 @@ StatusCode OTTimeChecker::execute()
   OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
 
   // retrieve hits
-  MCHits* mcHitCont = get<MCHits>( MCHitLocation::OTHits );
+  MCHits* mcHitCont = get<MCHits>( MCHitLocation::OT );
 
-  // retrieve table
-  OTTime2MCHitAsct::DirectType* aTable = m_hitAsct->direct();
+  // Get linker table
+  typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> OTTime2MCHitAsct;
+  typedef OTTime2MCHitAsct::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
 
+  OTTime2MCHitAsct associator( evtSvc(), LHCb::OTTimeLocation::Default );
+  const Table* aTable = associator.direct();
+  if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
+  
   // Calculate efficiencies from MCHits to OTTimes
   // loop over OTTimes, find the MCHit and store multiplicity
-  HitMultVector hitMultCont;
-  PartMultVector partMultCont;
+  HitMultVec hitMultCont;
+  PartMultVec partMultCont;
   int nGhosts = 0;  
   OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); iterTime != timeCont->end(); ++iterTime) {
     // get MC truth for this time
-    OTTime2MCHitAsct::MCHits range = aTable->relations(*iterTime);
+    Range range = aTable->relations(*iterTime);
     if ( range.empty() ) {
       nGhosts++;
       continue;
     }
 
     // fill the non-ghosts in a temporary vector of MCHits
-    std::vector<MCHit*> hitVector;
-    OTTime2MCHitAsct::MCHitsIterator iterHit;    
+    std::vector<const MCHit*> hitVec;
+    iterator iterHit;    
     for (iterHit = range.begin(); iterHit != range.end(); ++iterHit) {
-      MCHit* aHit = iterHit->to();
+      const MCHit* aHit = iterHit->to();
       if ( 0 == aHit ) continue;
       // Check if the hit is in the right spill
       if (mcHitCont != aHit->parent()) continue;
-      hitVector.push_back(aHit);
+      hitVec.push_back( aHit );
     }
-    if (0 == hitVector.size()) {
+    if (0 == hitVec.size()) {
       nGhosts++;
       continue;
     }
 
     // loop over all MCHits in the temporary vector
-    std::vector<MCHit*>::iterator iHit;
-    for (iHit = hitVector.begin(); iHit != hitVector.end(); ++iHit) {
-      MCHit* aHit = (*iHit);
+    std::vector<const MCHit*>::iterator iHit;
+    for (iHit = hitVec.begin(); iHit != hitVec.end(); ++iHit) {
+      const MCHit* aHit = (*iHit);
 
       // Check if it is associated to an MCParticle
-      MCParticle* aPart = aHit->mcParticle();
+      const MCParticle* aPart = aHit->mcParticle();
       if (aPart != 0) {
 
         // calculate momentum
-        Hep3Vector mom3 = (aPart->momentum()).vect();
-        double momentum = mom3.mag();        
+        Gaudi::XYZVector mom3 = (aPart->momentum()).Vect();
+        double momentum = mom3.R();        
 
         // do not fill histograms if momentum is too low
         if (m_doMomentumCut && momentum < m_momentumCut) continue;
@@ -133,7 +159,7 @@ StatusCode OTTimeChecker::execute()
         
           // fill particle multiplicities container
           bool found = false ;
-          PartMultVector::iterator iPart;
+          PartMultVec::iterator iPart;
           for ( iPart = partMultCont.begin() ; 
                 iPart != partMultCont.end() && !found; ++iPart) {
             if ( iPart->mcParticle == aPart ) {
@@ -155,7 +181,7 @@ StatusCode OTTimeChecker::execute()
 
       // fill hit multiplicities container
       bool found = false ;
-      HitMultVector::iterator iHit;
+      HitMultVec::iterator iHit;
       for ( iHit = hitMultCont.begin() ; 
             iHit != hitMultCont.end() && !found; ++iHit) {
         if ( iHit->mcHit == aHit ) {
@@ -170,7 +196,7 @@ StatusCode OTTimeChecker::execute()
         hitMultCont.push_back(hitMult);
       }
     } // loop iHit
-    hitVector.clear();
+    hitVec.clear();
   } // loop iterTime
 
   // loop over hit multiplicity container to count efficiency and fill histo's
@@ -179,7 +205,7 @@ StatusCode OTTimeChecker::execute()
   double doubleHitEff = 0.0;
   double tripleHitEff = 0.0;
   double totalHitEff = 0.0;
-  HitMultVector::const_iterator iHit;
+  HitMultVec::const_iterator iHit;
   
   for ( iHit = hitMultCont.begin(); iHit != hitMultCont.end(); ++iHit) {
     if ( iHit->mult >= 1) totalHitEff += 1.0;
@@ -197,11 +223,10 @@ StatusCode OTTimeChecker::execute()
     numHits = 0;
     MCHits::const_iterator iterHit;
     for (iterHit = mcHitCont->begin(); iterHit != mcHitCont->end(); ++iterHit) {
-      MCParticle* part = (*iterHit)->mcParticle();
+      const MCParticle* part = (*iterHit)->mcParticle();
       if (part == 0) continue;
-      HepLorentzVector mom4 = part->momentum();
-      Hep3Vector mom3 = mom4.vect();
-      double mom = mom3.mag();        
+      Gaudi::XYZVector mom3 = ( part->momentum()).Vect();
+      double mom = mom3.R();        
       if (mom >= m_momentumCut) numHits++;
     }
   }
@@ -235,7 +260,7 @@ StatusCode OTTimeChecker::execute()
 
   // loop over particle multiplicity container to fill histo
   if ( fullDetail() ) {
-    PartMultVector::const_iterator iPart;
+    PartMultVec::const_iterator iPart;
     for ( iPart = partMultCont.begin(); iPart != partMultCont.end() ; ++iPart) {
       m_partMultHisto->fill( (float) iPart->mult );
     }
@@ -297,18 +322,18 @@ StatusCode OTTimeChecker::initHistograms()
 }
 
 
-StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, MCHit* aHit) 
+StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) 
 {
   // get the distance to the wire from MCHit
   const OTChannelID channel = time->channel();
   DeOTModule* module = m_tracker->module( channel );
-  const HepPoint3D entryP = aHit->entry();
-  const HepPoint3D exitP = aHit->exit();
-  const HepPoint3D middleP = (entryP+exitP)/2.;  
-  double deltaZ = exitP.z() - entryP.z();
+  const Gaudi::XYZPoint entryP = aHit->entry();
+  const Gaudi::XYZPoint exitP = aHit->exit();
+  const Gaudi::XYZPoint middleP = entryP + (exitP - entryP)/2.;  
+  double deltaZ = (exitP - entryP).z();
   if (0.0 == deltaZ) return StatusCode::SUCCESS; // curling track inside layer
-  const double tx = (exitP.x() - entryP.x())/ deltaZ;
-  const double ty = (exitP.y() - entryP.y())/ deltaZ;
+  const double tx = (exitP - entryP).x() / deltaZ;
+  const double ty = (exitP - entryP).y() / deltaZ;
   double mcDist = module->distanceToWire(channel.straw(), entryP, tx, ty);
 
   // get the distance to the wire from the measurement

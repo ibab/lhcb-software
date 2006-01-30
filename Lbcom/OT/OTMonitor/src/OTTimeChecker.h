@@ -1,29 +1,12 @@
-// $Id: OTTimeChecker.h,v 1.3 2004-12-10 08:10:56 jnardull Exp $
+// $Id: OTTimeChecker.h,v 1.4 2006-01-30 13:42:55 janos Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
-
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
 
 // base class
 #include "OTMonitorAlgorithm.h"
-
-// from Associators
-#include "OTAssociators/OTTime2MCHitAsct.h"
-
-// geometry
-#include "OTDet/DeOTDetector.h"
-
-// histogramming
-#include "AIDA/IHistogram1D.h"
-
-// forward declarations
-class IOTrtRelation;
-class MCHit;
 
 /** @class OTTimeChecker OTTimeChecker.h "OTMonitor/OTTimeChecker.h"
  *
@@ -40,6 +23,21 @@ class MCHit;
  *  @author J. van Tilburg and Jacopo Nardulli
  *  @date   22-06-2002
  */
+
+// forward declarations
+class IOTrtRelation;
+
+namespace AIDA 
+{
+  class IHistogram1D;
+}
+
+namespace LHCb
+{
+  class MCHit;
+  class MCParticle;
+  class OTTime;
+}
 
 class OTTimeChecker : public OTMonitorAlgorithm {
 
@@ -64,43 +62,38 @@ private:
   StatusCode initHistograms();
 
   /// fill the resolution histograms
-  StatusCode fillResolutionHistos(OTTime* time,
-                                  MCHit* aHit);
+  StatusCode fillResolutionHistos( LHCb::OTTime* time,
+				   const LHCb::MCHit* aHit );
 
   /// Struct for storing the time multiplicity of a MCHit
-  struct HitMultiplicity{int mult ;
-                         MCHit* mcHit; };
+  struct HitMultiplicity{int mult ; const LHCb::MCHit* mcHit; };
 
   /// typedef for a vector of HitMultiplicities
-  typedef std::vector<HitMultiplicity> HitMultVector;
+  typedef std::vector<HitMultiplicity> HitMultVec;
 
   /// Struct for storing the time multiplicity of a MCParticle
-  struct PartMultiplicity{int mult ;
-                          MCParticle* mcParticle; };
+  struct PartMultiplicity{int mult ; const LHCb::MCParticle* mcParticle; };
 
   /// typedef for a vector of PartMultiplicities
-  typedef std::vector<PartMultiplicity> PartMultVector;
+  typedef std::vector<PartMultiplicity> PartMultVec;
   
-  std::string m_nameHitAsct;             ///< name of the associator
-
-  OTTime2MCHitAsct::IAsct* m_hitAsct; ///< pointer to associator
   DeOTDetector* m_tracker;               ///< pointer to geometry
   /// flag to cut on momentum used for resolution plot 
   bool m_doMomentumCut;
   double m_momentumCut;                  ///< value of momentum cut
 
   /// histograms
-  IHistogram1D* m_effHisto;       ///< Overall efficiency of the times
-  IHistogram1D* m_eff1Histo;      ///< Efficiency for only 1 time per MCHit 
-  IHistogram1D* m_eff2Histo;      ///< Efficiency for 2 times per MCHit
-  IHistogram1D* m_eff3Histo;      ///< Efficiency for >3 times per MCHit
-  IHistogram1D* m_ghostRateHisto; ///< Ghost rate 
-  IHistogram1D* m_hitMultHisto;   ///< number of times per mchit
-  IHistogram1D* m_resHisto;       ///< distance resolution (mm)
-  IHistogram1D* m_pdgCodeHisto;   ///< Particle type distribution
-  IHistogram1D* m_momentumHisto;  ///< Momentum distribution (GeV)
-  IHistogram1D* m_nParticlesHisto;///< Number of MCParticles making times
-  IHistogram1D* m_partMultHisto;  ///< Number of times per MCParticle
+  AIDA::IHistogram1D* m_effHisto;       ///< Overall efficiency of the times
+  AIDA::IHistogram1D* m_eff1Histo;      ///< Efficiency for only 1 time per MCHit 
+  AIDA::IHistogram1D* m_eff2Histo;      ///< Efficiency for 2 times per MCHit
+  AIDA::IHistogram1D* m_eff3Histo;      ///< Efficiency for >3 times per MCHit
+  AIDA::IHistogram1D* m_ghostRateHisto; ///< Ghost rate 
+  AIDA::IHistogram1D* m_hitMultHisto;   ///< number of times per mchit
+  AIDA::IHistogram1D* m_resHisto;       ///< distance resolution (mm)
+  AIDA::IHistogram1D* m_pdgCodeHisto;   ///< Particle type distribution
+  AIDA::IHistogram1D* m_momentumHisto;  ///< Momentum distribution (GeV)
+  AIDA::IHistogram1D* m_nParticlesHisto;///< Number of MCParticles making times
+  AIDA::IHistogram1D* m_partMultHisto;  ///< Number of times per MCParticle
 
 };
 
