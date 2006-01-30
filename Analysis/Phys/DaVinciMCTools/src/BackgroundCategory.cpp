@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.15 2006-01-30 13:50:22 lfernan Exp $
+// $Id: BackgroundCategory.cpp,v 1.16 2006-01-30 14:15:04 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -54,6 +54,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 10.); 
   //Override decision only if match quality for PID correct match is no 
   //no worse than by 1 order of magnitude in weight compared to alternatives.
+  declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCmaxWeight", m_maxweight = 1000000.);
 }
 //=============================================================================
@@ -543,7 +544,7 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 
 								//fatal() << "motherflighttime = " << motherflighttime << endreq;
 
-								if (motherflighttime > 10.0e-6) {
+								if (motherflighttime > m_rescut) {
 
 									//fatal() << "motherflighttime (>0) = " << motherflighttime << endreq;
 									fromshortlivedmother = false;

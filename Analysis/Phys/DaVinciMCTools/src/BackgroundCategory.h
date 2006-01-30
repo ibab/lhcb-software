@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.7 2006-01-24 04:23:51 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.8 2006-01-30 14:15:04 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -74,6 +74,7 @@ private:
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
   double m_maxweight; //dummy sorting variable
+  double m_rescut;
 
 };
 #endif // BACKGROUNDCATEGORY_H
