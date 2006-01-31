@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.7 2005-12-16 15:36:59 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.8 2006-01-31 18:33:18 gcorti Exp $ 
 
 /** @file 
  * 
@@ -19,23 +19,23 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor" };
 //---------------------------------------------------------------------------
 // Initialize the application
 //---------------------------------------------------------------------------
-Initialize.Members    = { "LbAppInit/Gauss" };
+Initialize.Members    = { "LbAppInit/GaussRead" };
 
 //---------------------------------------------------------------------------
 // Monitor phase: as in production + user monitor
 //                two separate phase for Generator and Simulation
 //                can be commented separately
 //---------------------------------------------------------------------------
-Monitor.Members       += { "GaudiSequencer/GenMonitor" };
-Monitor.Members       += { "GaudiSequencer/SimMonitor" };     
-Monitor.Members       += { "GaudiSequencer/UserMonitor" };
+Monitor.Members         += { "GaudiSequencer/GenMonitor" };
+Monitor.Members         += { "GaudiSequencer/UserMonitor" };
+Monitor.Members         += { "GaudiSequencer/SimMonitor" };     
 #include "$GAUSSOPTS/Monitor.opts"
 #include "$GAUSSOPTS/MonitorInDetail.opts"
+GenHistos.OutputLevel   = 3;
 Monitor.MeasureTime = true;
 
 // Algorithm in User monitor
 UserMonitor.Members   += { "GiGaGetEventAlg" };
-UserMonitor.Members   += { "GiGaGetHitsAlg" };
 UserMonitor.Members   += { "MCDecayCounter" };
 MCDecayCounter.MCDecayFinder.Decay = "KS0 -> pi+ pi-";
 
@@ -64,8 +64,7 @@ ApplicationMgr.EvtMax      = -1;
 //---------------------------------------------------------------------------
 // Detector used to produce the file read in: uncomment the chosen one
 //---------------------------------------------------------------------------
-//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
 
 
 //---------------------------------------------------------------------------
