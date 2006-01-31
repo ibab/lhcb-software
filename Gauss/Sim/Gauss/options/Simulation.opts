@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.68 2005-12-16 15:36:43 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.69 2006-01-31 17:42:13 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -13,12 +13,15 @@
 // DLLs necessary for any simulation phase
 ApplicationMgr.DLLs  += { "SimSvc" };
 ApplicationMgr.DLLs  += { "GiGa", "GiGaCnv" };
+ApplicationMgr.DLLs  += { "GaussKine" };
 
 // Services necessary for any simulation phase
 ApplicationMgr.ExtSvc += { 
   "GiGa"
 };
-EventPersistencySvc.CnvServices += { "GiGaKine" , "GiGaHits" };
+//GiGa.OutputLevel = 2;
+//EventPersistencySvc.CnvServices += { "GiGaKine" , "GiGaHits" };
+EventPersistencySvc.CnvServices += { "GiGaKine" };
 
 #pragma print on
 // Data store configuration: request GiGaKine and GiGaHits (IGiGaCnvSvc) at
@@ -26,17 +29,22 @@ EventPersistencySvc.CnvServices += { "GiGaKine" , "GiGaHits" };
 // Keep default configuration for 
 // GiGaStore.ConversionServices   =  { "GiGaKine" , "GiGaHits" };
 Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
+GiGaStore.ConversionServices = { "GiGaKine" };
 
 // Define the geometrical setup to simulate, including the magnetic field
 // simulation
+//---------------------------------------------------------------------------
 Simulation.Members += { "GiGaInputStream/Geo" };
+Geo.OutputLevel = 2;
 #include "$GAUSSOPTS/SimGeometry.opts"
 
-// ---> NEW WAY: 
+// Steering of the simulation
+//---------------------------------------------------------------------------
 // Pass the generator event to Geant4
-Simulation.Members += { "GeneratorToG4" };            // NEW algorithm
+Simulation.Members += { "GeneratorToG4" };
 // Perform the Geant4 simulation
 Simulation.Members += { "GiGaFlushAlgorithm" };
+GiGaFlushAlgorithm.OutputLevel = 2;
 // Check the G4Event processing status
 Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES
@@ -44,26 +52,49 @@ Simulation.Members += { "GiGaGetEventAlg" };
 Simulation.Members += { "G4HepMCToMCTruth" };         // With HEPMC internally
 G4HepMCToMCTruth.Particles = "MC/TestParticles";
 G4HepMCToMCTruth.Vertices = "MC/TestVertices";
-// Populate sensitive hits in the TES for ST/OT
-Simulation.Members += { "GetTrackerHitsAlg/GetSTHits" }; // NEW algorithm
-Simulation.Members += { "GetTrackerHitsAlg/GetOTHits" }; // NEW algorithm
-GetSTHits.CollectionName = "ITSDet/Hits";
-GetSTHits.MCHitsLocation = "/Event/MC/IT/Hits";
+// Populate sensitive hits in the TES for 
+// == Velo
+Simulation.Members += { "GetTrackerHitsAlg/GetVeloHits" };
+GetVeloHits.CollectionName = "VeloSDet/Hits";
+GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
+GetVeloHits.Detector       = "/dd/Structure/LHCb/Velo";
+// == PuVelo
+Simulation.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
+GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
+GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
+GetPuVetoHits.Detector       = "/dd/Structure/LHCb/Velo";
+// == TT
+Simulation.Members += { "GetTrackerHitsAlg/GetTTHits" };
+GetTTHits.CollectionName = "TTSDet/Hits";
+GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
+GetTTHits.Detector       = "/dd/Structure/LHCb/IT";
+// == IT
+Simulation.Members += { "GetTrackerHitsAlg/GetITHits" };
+GetITHits.CollectionName = "ITSDet/Hits";
+GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
+GetITHits.Detector       = "/dd/Structure/LHCb/IT";
+// == OT
+Simulation.Members += { "GetTrackerHitsAlg/GetOTHits" };
 GetOTHits.CollectionName = "OTSDet/Hits";
 GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
-// and for the Calorimeters
+GetOTHits.Detector       = "/dd/Structure/LHCb/OT";
+// == Muon
+Simulation.Members += { "GetTrackerHitsAlg/GetMuonHits" };
+GetMuonHits.CollectionName = "MuonSDet/Hits";
+GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
+GetMuonHits.Detector       = "/dd/Structure/LHCb/Muon";
+// == Calorimeters
 Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
 // and for the RICHes
 Simulation.Members += { "GetMCRichHitsAlg" };
-// Uncomment lines below for switching on RICH extended info
+// Uncomment lines below for switching on RICH extended info - STILL to
+// be adapted
 // Simulation.Members += { "GetExtendedMCRichInfoAlg" };
 // #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
-// for the Velo and Muon still old way since will be automatic with new
-// event model
-Simulation.Members += { "GiGaGetHitsAlg" };
+
 // ---> NEW WAY: END
 
 
@@ -96,7 +127,7 @@ GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
-{ "/tracking/verbose 0",
+{ "/tracking/verbose 1",
   "/tracking/storeTrajectory  1",
   "/process/eLoss/verbose -1",
 } ;
@@ -126,10 +157,6 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 // uncomment the following to activate the extended Rich information
 // see http://j.home.cern.ch/j/jonesc/www/OORich for more details
 //#include "$GAUSSRICHROOT/options/RichVerbose.opts"
-
-// specific configuration of calorimeter stuff 
-#include "$GAUSSCALOROOT/options/Calo.opts"
-#pragma print on
 
 //////////////////////////////////////////////////////////////////////
 
