@@ -7,12 +7,12 @@ branches src MuonDAQ cmt doc
 include_dirs      $(MUONDAQROOT)
 
 # ================ used packages ========================================= 
-use MuonTools   v* 	Muon
-use MuonKernel  v*     Muon
-use MuonEvent	v*	Event	
-use DAQEvent    v6r*    Event
-use GaudiAlg v*
+use MuonKernel  v*    Muon
+use MuonDet     v*    Det
+use MuonEvent	v*    Event	
+use DAQEvent    v*    Event
+use GaudiAlg    v*
+
 # build a component library
 library MuonDAQ  *.cpp
-
 apply_pattern component_library library=MuonDAQ
