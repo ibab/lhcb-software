@@ -401,7 +401,7 @@ StatusCode KFFitTool::setEParameter(Particle& part,
   Vertex* endV= part.endVertex();
   if(endV!=0 ) {
    HepVector3D DL=endV->position()-part.pointOnTrack();
-   if(DL.mag()>1.e-10) {
+   if(DL.mag()<1.e-10) {
      endV->setPosition(newPOT);
      endV->setPositionErr(newPOTErr);
    }
@@ -475,7 +475,7 @@ StatusCode KFFitTool::setMParameter(Particle& part,
   Vertex* endV= part.endVertex();
   if(endV!=0 ) {
    HepVector3D DL=endV->position()-part.pointOnTrack();
-   if(DL.mag()>1.e-10) {
+   if(DL.mag()<1.e-10) {
      endV->setPosition(newPOT);
      endV->setPositionErr(newPOTErr);
    }
