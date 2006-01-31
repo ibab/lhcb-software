@@ -1,5 +1,5 @@
-//#printOptions 
-// $Id: Gauss.opts,v 1.75 2006-01-19 14:49:38 gcorti Exp $ 
+#printOptions 
+// $Id: Gauss.opts,v 1.76 2006-01-31 18:31:01 gcorti Exp $ 
 
 /** @file 
  * 
@@ -15,16 +15,15 @@
 //                        i.e. Simulation if running generator in stand-alone
 //                        in which case comment also Simulation.opts below
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg += { "GaudiSequencer/Initialization"  };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
-ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
-ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"  };
+//ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
+ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    }; 
 
 //---------------------------------------------------------------------------
 // Initialize the Phases: set run and first event number,
-//                             hence setting random numbers to start with
+//                        hence setting random numbers to start with
 //---------------------------------------------------------------------------
-Initialization.Members    = { "GenInit/GaussGen" };
+Generator.Members         = { "GenInit/GaussGen" };
 //Simulation.Members        = { "SimInit/GaussSim" };
 GaussGen.FirstEventNumber = 1;
 GaussGen.RunNumber        = 1;
@@ -43,7 +42,6 @@ Generator.MeasureTime = true;
 //                   see there to with modified setup or with special
 //                   simulation conditions
 //---------------------------------------------------------------------------
-// Simulation.Members     add initialization of simulation
 //#include "$GAUSSOPTS/Simulation.opts" 
 Simulation.MeasureTime = true;
 
@@ -54,7 +52,7 @@ Simulation.MeasureTime = true;
 Monitor.Members       += { "GaudiSequencer/GenMonitor" };
 //Monitor.Members       += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
-//#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
+#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 Monitor.MeasureTime    = true;
 GenMonitor.MeasureTime = true;
 SimMonitor.MeasureTime = true;
@@ -63,6 +61,10 @@ SimMonitor.MeasureTime = true;
 // Write an output file (contents listed in GaussTape.opts)
 //---------------------------------------------------------------------------
 ApplicationMgr.OutStream +=  { "GaussTape" };
+GaussTape.OutputLevel = 2;
+// When running Generator stand-alone uncomment the following
+// to write on tape only Generator objects
+#include "$GAUSSOPTS/GenStandAlone.opts"
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -87,8 +89,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-//#include "$GAUSSOPTS/30000000.opts"  // Min Bias
+#include "$GAUSSOPTS/30000000.opts"  // Min Bias
 //#include "$GAUSSOPTS/10000000.opts"  // Generic b-b~ events
 
-#include "$GAUSSOPTS/ParticleGun.opts"          
- 
+//#include "$GAUSSOPTS/ParticleGun.opts"          
+//Generator.Members += {"DumpMC"}; 
