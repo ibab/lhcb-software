@@ -53,7 +53,7 @@ use $(GDMLG4Writer_use)
 #-- Monitoring
 use GaussMonitor        v3r0    Sim
 use CaloMoniSim         v2r0    Calo
-use VeloGauss           v1r0    Velo
+use VeloGauss           v1r1    Velo
 use MuonMoniSim         v2r0    Muon
 
 #=========================================================================
