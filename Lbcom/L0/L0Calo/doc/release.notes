@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v9r0 2006-01-31 =========================
 ! 2006-01-26 - Olivier Callot
  - Full adaptation to the LHCb v20 event model, i.e. add LHCb:: in many places
 
