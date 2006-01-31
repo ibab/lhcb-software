@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.cpp,v 1.2 2005-12-16 17:53:59 odescham Exp $
+// $Id: MCCaloMonitor.cpp,v 1.3 2006-01-31 15:35:00 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/12/16 17:53:59  odescham
+// v2r0 - LHCb v20 migration
+//
 // Revision 1.1.1.1  2004/10/25 08:53:25  ibelyaev
 // // New Package: code imported from Calo/CaloMonitor
 //
@@ -164,7 +167,7 @@ StatusCode MCCaloMonitor::execute() {
   ++m_nEvents;
   m_nEvents  = 1;
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::INFO << "Execute Monitoring " << m_Detector << endreq;
+  msg << MSG::DEBUG << "Execute Monitoring " << m_Detector << endreq;
 
 
   MCCaloHits::const_iterator iHit;

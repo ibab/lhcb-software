@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2005-12-16 17:53:59 odescham Exp $ 
+! $Id: release.notes,v 1.5 2006-01-31 15:35:00 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,14 +7,17 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloMoniSim v2r0 ================================
-! 2005-12-16 - Olivier Deschamps 
+!==================== CaloMoniSim v2r0 2006-01-31 =============================
+! 2006-01-31 - Gloria CORTI
+ - Set "hello" print out in execute in DEBUG level
+
+ 2005-12-16 - Olivier Deschamps 
  - LHCb v20 migration.
  - cmt/requirements
   remove CaloUtils dependancy
   add explicit dependancy to MCEvent and CaloDet
 
-!!========================== CaloMoniSim v1r0 ================================
+!========================== CaloMoniSim v1r0 ================================
 ! 2004-12-14 - Gloria CORTI
  - fix environment variable in requirements
 
