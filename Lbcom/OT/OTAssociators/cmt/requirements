@@ -4,7 +4,7 @@ version           v4r0
 # =============== structure =================================================== 
 branches          src cmt doc options 
 
-include_dirs $(OTASSOCIATORSROOT)
+include_path none
 
 # =============== used packages ===============================================
 use GaudiAlg    v*

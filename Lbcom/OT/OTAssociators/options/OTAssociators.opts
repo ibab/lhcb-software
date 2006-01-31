@@ -1,13 +1,8 @@
-// $Id: OTAssociators.opts,v 1.5 2006-01-30 13:34:33 janos Exp $
+// $Id: OTAssociators.opts,v 1.6 2006-01-31 13:31:05 cattanem Exp $
 ApplicationMgr.DLLs += { "OTAssociators" };
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/OTTimes2MCParticles' 
-//                                 TYPE='OTTime2MCParticleAlg/OTTime2MCParticle'" };
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/OTTimes2MCDeposits' 
-//                                 TYPE='OTTime2MCDepositAlg/OTTime2MCDeposit'" };
-// DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/OTTimes2MCHits'
-//                                 TYPE='OTTime2MCHitAlg/OTTime2MCHit'" };
+DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCParticles' 
+                                TYPE='OTTime2MCParticleLinker/OTTime2MCParticle'" };
+DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCDeposits' 
+                                TYPE='OTTime2MCDepositLinker/OTTime2MCDeposit'" };
 DataOnDemandSvc.Algorithms +={ "DATA='/Event/Link/OTTimes2MCHits'
                                 TYPE='OTTime2MCHitLinker'" };
-ToolSvc.OTTime2MCHitAsct.OutputLevel = 5;
-ToolSvc.OTTime2MCDepositAsct.OutputLevel = 5;
-ToolSvc.OTTime2MCParticleAsct.OutputLevel = 5;
