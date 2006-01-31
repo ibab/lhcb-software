@@ -309,7 +309,7 @@ StatusCode KFFitTool::massConstrain( Particle& part) {
     int er=0;
     Cd.invert(er);
     if (er!=0) {
-       err() << "could not invert matrix Cd in KFFitTool::massConstrain" << endmsg;
+       debug() << "could not invert matrix Cd in KFFitTool::massConstrain" << endmsg;
        return StatusCode::FAILURE;
     }     
     Vm-= Cm*DD.T()*Cd*(DD*Vm+dd);
@@ -397,10 +397,14 @@ StatusCode KFFitTool::setEParameter(Particle& part,
   part.setPosMomCorr(newPosMomCorr);
   part.setMass(mass);
   part.setMassErr(massErr);
+
   Vertex* endV= part.endVertex();
-  if(endV!=0) {
-   endV->setPosition(newPOT);
-   endV->setPositionErr(newPOTErr);
+  if(endV!=0 ) {
+   HepVector3D DL=endV->position()-part.pointOnTrack();
+   if(DL.mag()>1.e-10) {
+     endV->setPosition(newPOT);
+     endV->setPositionErr(newPOTErr);
+   }
   }
   return StatusCode::SUCCESS;
 }
@@ -467,10 +471,14 @@ StatusCode KFFitTool::setMParameter(Particle& part,
   part.setPosMomCorr(newPosMomCorr);
   part.setMass(mass);
   part.setMassErr(massErr);
+
   Vertex* endV= part.endVertex();
-  if(endV!=0) {
-    endV->setPosition(newPOT);
-    endV->setPositionErr(newPOTErr);
+  if(endV!=0 ) {
+   HepVector3D DL=endV->position()-part.pointOnTrack();
+   if(DL.mag()>1.e-10) {
+     endV->setPosition(newPOT);
+     endV->setPositionErr(newPOTErr);
+   }
   }
 
   return StatusCode::SUCCESS;
@@ -645,7 +653,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
            << VD.determinant() <<endreq;
        VD.invert(ier);
        if(ier!=0) {
-         err() << "could not invert matrix VD in KFFitTool::fitWithTwoTrajectories"
+         debug() << "could not invert matrix VD in KFFitTool::fitWithTwoTrajectories"
              <<endreq;
          return StatusCode::FAILURE;
        }
@@ -833,7 +841,7 @@ StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
       << VD.determinant() <<endreq;      
   VD.invert(ier);
   if(ier!=0) {
-    err() << "could not invert matrix VD in KFFitTool::mergeTwoVertices"
+    debug() << "could not invert matrix VD in KFFitTool::mergeTwoVertices"
         <<endreq;
     return StatusCode::FAILURE;
   }
@@ -895,7 +903,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   HepSymMatrix cov1(7,0);
   StatusCode sc=getMParameter(part1, para1, cov1);
   if(sc.isFailure ()) {
-    err() <<"fail to getMParameter!"<<endreq;
+    debug() <<"fail to getMParameter!"<<endreq;
     return sc;
   }
   double z1=para1(3);
@@ -908,7 +916,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
 
   sc=getMParameter(part2, para2, cov2);
   if(sc.isFailure ()) {
-    err() <<"fail to getMParameter!"<<endreq;
+    debug() <<"fail to getMParameter!"<<endreq;
     return sc;
   }
   verbose() <<"para2 : " <<para2<<endreq;
@@ -929,7 +937,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
 
   sc=getMParameter(transParticle, para2, cov2);
   if(sc.isFailure ()) {
-    err() <<"fail to getMParameter!"<<endreq;
+    debug() <<"fail to getMParameter!"<<endreq;
     return sc;
   }
   double z2=para2(3);
@@ -1013,7 +1021,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
         << VD.determinant() <<endreq;
     VD.invert(ier);
     if(ier!=0) {
-      err() << "could not invert matrix VD in KFFitTool::addParticle"
+      debug() << "could not invert matrix VD in KFFitTool::addParticle"
           <<endreq;
       return StatusCode::FAILURE;
     }
@@ -1124,7 +1132,7 @@ StatusCode KFFitTool::addPhoton(Particle& part1, Particle& photon,
 
   StatusCode sc=getEParameter(part1, para1, cov1);
   if(sc.isFailure ()) {
-    err() <<"fail to getEParameter!"<<endreq;
+    debug() <<"fail to getEParameter!"<<endreq;
     return sc;
   }
   verbose() <<"para1= "<< para1<<endreq;
@@ -1135,7 +1143,7 @@ StatusCode KFFitTool::addPhoton(Particle& part1, Particle& photon,
   double zg=-9999.;
   sc=getPhotonParameter(photon, zg, para2, cov2);
   if(sc.isFailure ()) {
-    err() <<"fail to getPhotonParameter!"<<endreq;
+    debug() <<"fail to getPhotonParameter!"<<endreq;
     return sc;
   }
 
@@ -1212,7 +1220,7 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
 
   StatusCode sc=getEParameter(part1, para1, cov1);
   if(sc.isFailure ()) {
-    err() <<"fail to getEParameter!"<<endreq;
+    debug() <<"fail to getEParameter!"<<endreq;
     return sc;
   }
   verbose() <<"para1= "<< para1<<endreq;
@@ -1253,7 +1261,7 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
     double zg=-9999.;
     sc=getPhotonParameter(*daughter, zg, paragm, covgm);
     if(sc.isFailure ()) {
-      err() <<"fail to getPhotonParameter!"<<endreq;
+      debug() <<"fail to getPhotonParameter!"<<endreq;
       return sc;
     }
     if(ig==1) { 
@@ -1416,6 +1424,9 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
   //verbose() << "covNew   "<< covNew << endmsg;
   verbose() << "paraNew   "<< paraNew << endmsg;
 
+  pair.setMass(mpi0);
+  pair.setMassErr(sqrt(covNew(8,8)));
+
   double pairWid = ParticleWidth(pair);
 
   if(m_PhotonPairMassConstraint && pairWid<m_widthCut) {
@@ -1432,7 +1443,7 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
     int er=0;
     Cd.invert(er);
     if (er!=0) {
-      err() << "could not invert matrix Cd in KFFitTool::addPhotonPair" << endmsg;
+      debug() << "could not invert matrix Cd in KFFitTool::addPhotonPair" << endmsg;
       return StatusCode::FAILURE;
     }
     paraNew-= covNew*DD.T()*Cd*(DD*paraNew+dd);
@@ -1624,6 +1635,8 @@ StatusCode KFFitTool::getPhotonParameter(Particle& photon, double& z,
 //==================================================================
 StatusCode KFFitTool::resetTrackParameters(Particle& part)
 {
+  if(part.massErr()!=0)  return StatusCode::SUCCESS;
+
   debug() <<"Now resetTrackParameters "
           << part.particleID().pid()<< endreq;
 
