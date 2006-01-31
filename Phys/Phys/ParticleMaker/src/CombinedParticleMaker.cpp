@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.9 2005-05-18 14:00:19 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.10 2006-01-31 13:00:39 pkoppenb Exp $
 // Include files
 #include <algorithm>
 
@@ -400,7 +400,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
       trkeep = true;
     }
     if( !trkeep ) continue;
-    debug() << "Found a nice track " << endmsg ;
+    verbose() << "Found a nice track " << endmsg ;
     // then loop on all particle types to make and their associated criteria
     for( TypeSelections::const_iterator iSel=m_typeSelections.begin();
          m_typeSelections.end()!=iSel; ++iSel ) {
@@ -415,7 +415,11 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
           sc = fillParticle( *iProto, (*iSel).first, aParticle );
           if( sc.isSuccess() ) {
             debug() << "Making a " << ((*iSel).first)->particle()
-                    << " " << aParticle->particleID().pid() << endmsg ;
+                    << " " << aParticle->particleID().pid() << " with DLLs e: " 
+                    << dllValue(*iProto,ProtoParticle::LkhPIDe) << ", mu: "
+                    << dllValue(*iProto,ProtoParticle::LkhPIDmu) << ", K: "
+                    << dllValue(*iProto,ProtoParticle::LkhPIDK) << ", p: "
+                    << dllValue(*iProto,ProtoParticle::LkhPIDp) << endmsg ;
             parts.push_back(aParticle);
             ++nParticles;
             kept = true;
