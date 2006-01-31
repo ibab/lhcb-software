@@ -4,9 +4,52 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r0 2006-01-19 ============================
+
+!======================== Gauss v24r0 2006-01-31 ============================
    
-                      TEMPORARY! ONLY GENERATOR PHASE!        
+                      TEMPORARY! ONLY GENERATOR PHASE! 
+	               SIMULATION PHASE WORKS WITH BUG FIX in GAUDI       
+
+! 2006-01-31 - Gloria CORTI
+ - Introduce use of varius XXXDet packages to resolve sensitive detector ID.
+   . requirements
+ - Introduce use of XmlConditions v1r4 necessary to produce hits in
+   Calorimeters
+   . requirements
+ - Introduce use of Sim packages adapted to new Event Model
+   . requirements
+ - Temporarly use uniform magnetic filed beacus of problems in retrieving
+   LHCb MagneticFieldSvc, remove loading of CaloEvent dll no longer necessary.
+   . SimGeometry.opts
+ - Adapt steering of simulation to new structure for all detectors,
+   configuring GetTrackerHitsAlg
+   . Simulation.opts
+ - Set data objects to be written out according to new paths. All objects
+   are mandatory since empty containers will be created. 
+   When running in Generator stand-alone will need to overwrite this list
+   including the file GenStandAlone.opts as show in Gauss.opts
+   . GaussTape.opts
+   . GenStandAlone.opts
+ - Generation algorihtm is added to Generator phase to take into account
+   the GenInit algorithm
+   . Generator.opts
+ - Remove algorithm sets in Generator.opts and add ParticleGun in Generator
+   phase
+   . ParticleGun.opts
+ - Turn on all monitoring in simulation for MCTruth and various detectors
+   having adapted them to new code and setup.
+   . Monitor.opts
+   . MonitorInDetails.opts
+ - Load various detectors Dlls
+   . Common.opts
+ - Remove obsolete geometries
+   . v200412.opts, v200506.opts, v200507.opts
+ - Run generator phase in stand-alone for minimum bias as default
+   . Gauss.opts
+ - Modify to follow sequencing in Gauss.opts
+   . GaussRead.opts
+ - By default have User Interface on to provide Geant4 command prompt
+   . GaussVis.opts
 
 ! 2006-01-19 - Gloria CORTI
  - Update ParticleGun.opts to reflect changes in code for its properties 
