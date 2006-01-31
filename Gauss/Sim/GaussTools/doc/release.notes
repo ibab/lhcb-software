@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v11r0 2006-01-31 =======================
+! 2006-01-31 - Gloria CORTI
+ - Adapt to change in interface of IMagneticFieldSvc now returning MathCore
+   quantities while Geant4 expect CLHEP
+   . src/Components/GiGaMagFieldGlobal.cpp
+
 
 !=========================== GaussTools v11r0 ===============================
 ! 2005-11-10 - Gloria CORTI

@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.3 2003-10-30 17:00:27 witoldp Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.4 2006-01-31 11:26:44 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/10/30 17:00:27  witoldp
+// G4cout replaced by std::cout
+//
 // Revision 1.2  2003/10/23 08:49:44  witoldp
 // command track action added
 //
@@ -16,12 +19,19 @@
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+
+// LHCb (MathCore)
+#include "Kernel/CLHEP_Units_defs.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "ClhepTools/MathCore2Clhep.h"
+
 // GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
 // GiGa 
 #include "GiGa/GiGaMACROs.h"
+
 // local 
 #include "GiGaMagFieldGlobal.h"
 
@@ -101,10 +111,13 @@ void GiGaMagFieldGlobal::GetFieldValue
   // check 
   if( 0 == Point ) { Error("GetFieldValue: Point = 0 !"); return ; }
   if( 0 == B     ) { Error("GetFieldValue: B     = 0 !"); return ; }
+
   // point 
-  const HepPoint3D point( Point[0] , Point[1] , Point[2] );
-  
-  StatusCode sc = mfSvc()->fieldVector( point , m_field );
+  //const HepPoint3D point( Point[0] , Point[1] , Point[2] );
+  const Gaudi::XYZPoint point( Point[0] , Point[1] , Point[2] );
+  Gaudi::XYZVector field(0.,0.,0.);
+  StatusCode sc = mfSvc()->fieldVector( point , field );
+  m_field = LHCb::math2clhep::vector3D( field );
 
   if( sc.isFailure() ) 
     { 
