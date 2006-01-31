@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.85 2006-01-30 15:35:26 pkoppenb Exp $
+! $Id: release.notes,v 1.86 2006-01-31 14:40:32 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2006-01-31 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.{cpp,h}
+  - src/Lib/DVAlgorithm.cpp
+    . Make sure each DVAlgorithm always writes out something to TES
+    
 ! 2006-01-30 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Ignore OutputLocation of parent algorithm if it is ""

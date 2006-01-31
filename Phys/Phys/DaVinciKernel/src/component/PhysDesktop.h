@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.15 2005-09-06 12:55:13 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.16 2006-01-31 14:40:32 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -111,6 +111,9 @@ public:
   void imposeOutputLocation(std::string outputLocationString);
 
   std::string getOutputLocation(){ return m_outputLocn ;};
+
+  /// Make sure the PhysDesktop has written out the container
+  StatusCode writeEmptyContainerIfNeeded() ;
   
 private: // methods
 

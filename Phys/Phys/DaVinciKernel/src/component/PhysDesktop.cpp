@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.30 2006-01-30 15:35:26 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.31 2006-01-31 14:40:32 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -485,7 +485,8 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   if ( sc.isFailure() )
   {
     delete particlesToSave;
-    return Error( " Unable to register " + location );
+    Exception( " Unable to register " + location );
+    return StatusCode::FAILURE;
   }
   //else {
   //  verbose() << "Removing particles saved to TES from desktop"
@@ -515,7 +516,8 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   sc = put(verticesToSave,location);
   if ( !sc ) {
     delete verticesToSave;
-    return Error( "Unable to register " + location );
+    Exception( " Unable to register " + location );
+    return StatusCode::FAILURE;
   }
   //else {
   //  verbose() << "Removing vertices saved to TES from desktop"
@@ -751,7 +753,7 @@ StatusCode PhysDesktop::getParticles(){
 
     bool foundpart = exist<Particles>( location ) ;
     if (!foundpart){
-      Warning("No particles at location "+location);
+      //      Warning("No particles at location "+location);
     } else {
       Particles* parts = get<Particles>( location );
       if ( !parts ) {
@@ -907,4 +909,18 @@ void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
     m_outputLocn = outputLocationString;
   }
   return;
+}
+//=============================================================================
+// Write an empty container if needed
+// To make sure each DVAlgorithm always writes out something
+//=============================================================================
+StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
+  StatusCode sc = StatusCode::SUCCESS;
+  if ((!exist<Particles>(m_outputLocn+"/Particles")) || 
+      (!exist<Vertices>(m_outputLocn+"/Vertices"))){
+    ParticleVector pEmpty;
+    VertexVector vEmpty;
+    sc = saveDesktop(pEmpty,vEmpty);
+  }  
+  return sc ;
 }

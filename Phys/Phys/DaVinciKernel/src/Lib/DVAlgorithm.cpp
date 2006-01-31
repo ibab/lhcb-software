@@ -163,7 +163,8 @@ StatusCode DVAlgorithm::sysExecute () {
   // Reset for next event
   m_setFilterCalled = false;
 
-  return sc;
+  // Make sure each DVAlgorithm has written out something
+  return desktop()->writeEmptyContainerIfNeeded();
 
 }
 //=============================================================================

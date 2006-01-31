@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.6 2005-09-07 15:51:43 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.7 2006-01-31 14:40:32 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -89,6 +89,9 @@ public:
     return primaries ;
   };
 
+  /// Make sure the PhysDesktop has written out the container
+  virtual StatusCode writeEmptyContainerIfNeeded() = 0 ;
+  
 protected:
 
 private:
