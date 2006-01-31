@@ -1,20 +1,17 @@
 package OTMonitor
-version v1r1
+version v2r0
 
-branches cmt doc src options
+branches cmt doc src
 
 include_path none
 
 use LinkerEvent v*      Event
 use MCEvent     v*      Event
 use OTEvent     v*      Event
-use OTDet       v6r*    Det
+use OTDet       v*      Det
 
 # ================= component library ====================
-library OTMonitor ../src/MCOTDepositMonitor.cpp -import=AIDA
-library OTMonitor ../src/OTTimeMonitor.cpp -import=AIDA
-library OTMonitor ../src/OTTimeChecker.cpp -import=AIDA
-
+library OTMonitor ../src/*.cpp -import=AIDA
 apply_pattern component_library library=OTMonitor
 
 
