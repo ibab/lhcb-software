@@ -1,0 +1,35 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackSys
+! Responsible : Eduardo Rodrigues
+! Purpose     : Defines the global Track set of packages, for tracking.
+!-----------------------------------------------------------------------------
+
+! 2006-01-31 - Eduardo Rodrigues
+ - First version. For LHCb v19r3 and Brunel v28r2.
+ - Contains a consistent set of tracking packages
+   (pattern recognition packages not included - are in PatSys):
+   TrackEvent, TrackFitEvent, TrackInterfaces,
+   TrackExtrapolators, TrackProjectors, TrackTools, TrackMCTools,
+   TrackFitter,
+   TrackIdealPR, TrackMatching,
+   TrackAssociators, TrackCheckers
+   TrConverters, Seeding
+   (these last 2 are necessary since the Seeding has not yet a version
+    working with the new track event model)
+
+ - The package also contains the following option files for Brunel v28r2:
+   - $TRACKSYSROOT/options/BrunelReco.opts:
+     replaces the standard Reco.opts file called in Brunel
+
+   - $TRACKSYSROOT/options/RecoOldTracking.opts:
+     runs part of the "old Track Event Model" tracking for the Seeding
+
+   - $TRACKSYSROOT/options/RecoTracking.opts:
+     runs the whole tracking: pattern recognition + fitting
+     using only the "new Track Event Model"
+
+   - $TRACKSYSROOT/options/TrackLoad.opts:
+     loads all DLLs necessary for the tracking (called in RecoTracking.opts)
+
+   - $TRACKSYSROOT/options/TrackAssociators.opts:
+     runs the Track-MCParticle associator for all tracks

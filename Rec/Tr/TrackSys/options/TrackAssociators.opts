@@ -1,0 +1,9 @@
+//==============================================================
+// Build the Track - MCParticle associations
+//==============================================================
+ApplicationMgr.DLLs += { "TrackAssociators" };
+
+CheckTrSeq.Members  += { "TrackAssociator" };
+
+TrackAssociator.TracksInContainer = "/Event/Rec/Track/Best";
+TrackAssociator.LinkerOutTable    = "/Event/Link/Rec/Track/Best";

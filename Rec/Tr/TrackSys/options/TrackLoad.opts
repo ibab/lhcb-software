@@ -1,0 +1,21 @@
+//==============================================================
+// Load tracking tools
+//==============================================================
+ApplicationMgr.DLLs += { "TrackTools",
+                         "TrackExtrapolators",
+                         "TrackProjectors",
+                         "TrackFitter",
+                         "TrackMatching"
+                       };
+
+//==============================================================
+// Load libraries for tracking pattern recognition algorithms
+//==============================================================
+ApplicationMgr.DLLs += { "TrackMatching" };
+
+//==============================================================
+// Load general tools necessary for the tracking
+//==============================================================
+ApplicationMgr.DLLs += { "STTools" };
+
+ApplicationMgr.ExtSvc += { "TransportSvc" };

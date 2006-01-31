@@ -1,0 +1,44 @@
+#============================================================================
+# Created    : 2006-01-25
+# Maintainer : Eduardo Rodrigues
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           TrackSys
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   LHCbKernel           v5r15b  Kernel
+
+use   TrackEvent           v1r8    Event
+use   TrackFitEvent        v1r6    Tr
+use   TrackInterfaces      v1r5b   Tr
+
+use   TrackExtrapolators   v1r4    Tr
+use   TrackProjectors      v1r5    Tr
+use   TrackTools           v1r4    Tr
+use   TrackMCTools         v1r4    Tr
+
+use   TrackFitter          v1r1    Tr
+
+use   TrackIdealPR         v1r5    Tr
+use   TrackMatching        v1r2    Tr
+
+use   TrackAssociators     v1r5    Tr
+use   TrackCheckers        v1r1    Tr
+
+use   TrConverters         v1r6    Tr
+use   Seeding              v2r11   Tr
+
+#============================================================================
