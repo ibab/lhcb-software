@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "MuonAlgs/MuonDetectorResponse.h"
-#include <iostream.h>
 static std::string spill[] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
 static std::string numreg[] = {"1","2","3","4"};
 static std::string numsta[] = {"1","2","3","4","5"};
@@ -64,7 +63,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
     if(muReadout)log<<MSG::VERBOSE<<" gg "<<endreq;
     newMean=muReadout->chamberNoise(0)/100; //tranform from cm^2 to mm^2
     Rndm::Numbers*	poissonDist=new Rndm::Numbers;
-    int areadout=0;
+    //int areadout=0;
     double areaOfChamber =m_muonDetector-> areaChamber(station, region);
     int	 numberOfGaps=m_muonDetector-> gapsInRegion(station, region);
     double totalArea=areaOfChamber* numberOfGaps;
