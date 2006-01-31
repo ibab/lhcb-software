@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.16 2006-01-30 10:58:29 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.17 2006-01-31 13:02:26 cattanem Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -873,7 +873,6 @@ StatusCode  DeMuonDetector::fillGeoArray()
 {
   MsgStream msg( msgSvc(), name() );
   bool debug=false;  
-  StatusCode sc = StatusCode::SUCCESS;  
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   int station=0;
   int region=0;
@@ -885,12 +884,10 @@ StatusCode  DeMuonDetector::fillGeoArray()
         if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
         IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
         double maxX=0;
-        double minX=0;
         double maxY=0;
-        double minY=0;
         
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-          //     DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
+          //     DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);
           //IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
           DeMuonGasGap* 
             myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
@@ -922,7 +919,7 @@ StatusCode  DeMuonDetector::fillGeoArray()
       }
       
   }
-
+  return StatusCode::SUCCESS;
 }
 
 
