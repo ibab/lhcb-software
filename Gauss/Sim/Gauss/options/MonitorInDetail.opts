@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.2 2005-10-26 16:59:17 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.3 2006-01-31 18:26:27 gcorti Exp $ 
 
 /** @file 
  * 
@@ -28,16 +28,36 @@ MCTruthMonitor.DetailedHistos = true;
 //------------------------------------------------------------------------
 // Check events
 //------------------------------------------------------------------------
+
+// Dump on screen content of generator full info
+//GenMonitor.Members += {"DumpMC"};
+//GenMonitor.Members += {"DumpMCDecay"};
+
+// Dump on screen content of MCParticles/MCVertices information
+// SimMonitor.Members += {"PrintEventAlg"};
+// SimMonitor.Members += {"PrintEventAlg/PrintEventTest"};
+// PrintEventTest.Particles = "MC/TestParticles";
+// PrintEventTest.Vertices = "MC/TestVertices";
+SimMonitor.Members += {"DumpMCEventAlg"};
+
+// GiGaGetHitsAlg.OutputLevel   = 1;
+// GiGaGetHitsAlg.VeloHits   = "";
+// GiGaGetHitsAlg.PuVetoHits = "";
+// GiGaGetHitsAlg.TTHits = "";
+// GiGaGetHitsAlg.ITHits = "";
+// GiGaGetHitsAlg.OTHits = "";
+// GiGaGetHitsAlg.MuonHits = "";
+// GiGaGetHitsAlg.CaloHits = { };
+// GiGaGetHitsAlg.RichHits = "";
+// GetVeloHits.OutputLevel = 2;
+
 // Check MCSignal info (only for complete production)
 // SimMonitor.Members    += { "MCDecayCounter" };
 MCDecayCounter.DetailedPrintOut          = true;
 //MCDecayCounter.MCDecayFinder.Decay = "[B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) ]cc";
 
 //------------------------------------------------------------------------
-// Dump of event at various phases in text form
-//------------------------------------------------------------------------
-// Dump on screen content of generator full info
-//GenMonitor.Members += {"DumpMC"};
+
 
 
 
