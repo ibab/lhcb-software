@@ -7,12 +7,11 @@ include_path none
 
 # ================ used packages ========================================= 
 use AIDA      v* LCG_Interfaces -no_auto_imports
-#use MuonTools v* Muon
 use MuonEvent v* Event
 use MCEvent v* Event
 use GenEvent v* Event
-use MuonDet   v5r* Det	
+use MuonDet   v* Det	
+
 # build a component library
 library MuonBackground  *.cpp -import=AIDA
-
 apply_pattern component_library library=MuonBackground
