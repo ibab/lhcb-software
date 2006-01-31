@@ -12,22 +12,24 @@
 
 //
 // The available output containers will be 
-//     --- "/Event/Gen/SignalDecay" with the signal decay chain in the signal B rest frame
-//     --- "/Event/Gen/HepMCEvents" with the whole event 
-//     --- "/Event/Gen/BHadronTree" with only the B hadron decay tree in the lab frame.
-// Add those missing from standard output stream
-GaussTape.OptItemList += { 
-  "/Event/Gen/SignalDecay" 
-};
-GaussTape.OptItemList += { 
-  "/Event/Gen/BHadronTree"
+//  --- "/Event/Gen/SignalDecayTree" with the signal decay chain in the 
+//                                   signal B rest frame
+//  --- "/Event/Gen/HepMCEvents" with the whole event 
+
+GaussTape.ItemList = {
+  "/Event#1"      
+  ,"/Event/Gen#1"
+  ,"/Event/Gen/Header#1"
+  ,"/Event/Gen/Collisions#1"
+  ,"/Event/Gen/HepMCEvents#1"
+  // ,"/Event/Gen/SignalDecayTree#1"  
 };
 
 // You can change where you are reading the data from in the monitor by
 // setting the following line:
-// GeneratorFullMonitor.Input = "/Event/Gen/SignalDecay";
-// GenMonitorAlg.Input = "/Event/Gen/SignalDecay";
+// GeneratorFullMonitor.Input = "/Event/Gen/SignalDecayTree";
+// GenMonitorAlg.Input = "/Event/Gen/SignalDecayTree";
 
 //
-// Comment the line below if you do not want "/Event/Gen/BHadronTree"
-EvtDecayAlg.IsolateSignal = true;
+// If you want clean events uncomment the line below
+//Generation.Signal.RepeatedHadronization.Clean = true;
