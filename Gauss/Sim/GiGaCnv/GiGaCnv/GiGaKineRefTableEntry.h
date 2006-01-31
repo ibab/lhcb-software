@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2002/12/07 14:36:25  ibelyaev
+///  see $GIGACNVROOT/doc/release.notes
+///
 /// Revision 1.2  2001/08/12 17:24:50  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -15,7 +18,9 @@
 /// STD & STL 
 #include <utility>
 /// forward declaration
-class MCParticle;
+namespace LHCb {
+  class MCParticle;
+}
 
 /** @class GiGaKineRefTableEntry GiGaKineRefTableEntry.h 
  *  
@@ -27,7 +32,7 @@ class MCParticle;
  *  @date   21/07/2001
  */
 
-class GiGaKineRefTableEntry: private std::pair<MCParticle*,int>
+class GiGaKineRefTableEntry: private std::pair<LHCb::MCParticle*,int>
 {
   
 public:
@@ -36,21 +41,21 @@ public:
    *  @param particle pointer to MCParticle object
    *  @param index    its  position in container of MCParticle
    */ 
-  GiGaKineRefTableEntry( MCParticle* particle =  0 ,
+  GiGaKineRefTableEntry( LHCb::MCParticle* particle =  0 ,
                          const int   index    = -1 )
-    : std::pair<MCParticle*,int>(particle,index){};
+    : std::pair<LHCb::MCParticle*,int>(particle,index){};
   /// destructor 
   ~GiGaKineRefTableEntry(){}
   
   /** accessor to MC particle pointer  
    *  @return  pointer to MCParticle Object 
    */
-  inline       MCParticle*& particle()       { return first  ; }
+  inline       LHCb::MCParticle*& particle()       { return first  ; }
   
   /** accessor to MC particle pointer  (const version)
    *  @return  pointer to MCParticle Object 
    */
-  inline const MCParticle*  particle() const { return first  ; }
+  inline const LHCb::MCParticle*  particle() const { return first  ; }
   
   /** accessor to MCParticle index 
    *  @return index  

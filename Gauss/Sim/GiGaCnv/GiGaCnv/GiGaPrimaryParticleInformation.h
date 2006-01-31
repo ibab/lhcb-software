@@ -1,8 +1,11 @@
-// $Id: GiGaPrimaryParticleInformation.h,v 1.4 2005-01-17 18:14:40 robbep Exp $ 
+// $Id: GiGaPrimaryParticleInformation.h,v 1.5 2006-01-31 10:39:33 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/01/17 18:14:40  robbep
+// Use generator energy instead of Geant4 energy for short lived particles.
+//
 // Revision 1.3  2004/04/07 15:47:55  gcorti
 // signal info, extended collision, new vertex types
 //
@@ -47,7 +50,7 @@ public:
     m_pHepMCEvent  (   0   ) { ; }  
 
   /// Sets link to HepMC Particle
-  GiGaPrimaryParticleInformation( bool sig, int code, HepMCEvent *event ) :
+  GiGaPrimaryParticleInformation( bool sig, int code, LHCb::HepMCEvent *event ) :
     G4VUserPrimaryParticleInformation ( ),
     m_hasOscillated ( false ),
     m_isSignal      (  sig  ),
@@ -67,7 +70,7 @@ public:
   void setSignalBarcode( int code ) { m_signalBarcode = code ; }
 
   /// Sets HepMCEvent pointer
-  void setHepMCPointer( HepMCEvent * event ) { m_pHepMCEvent = event ; }
+  void setHepMCPointer( LHCb::HepMCEvent * event ) { m_pHepMCEvent = event ; }
   
   /// returns true if the particle has oscillated  
   bool hasOscillated( ) { return m_hasOscillated ; }
@@ -79,7 +82,7 @@ public:
   int  signalBarcode( ) { return m_signalBarcode ; }
 
   /// returns a pointer to the HepMC Event containing the signal HepMC particle
-  HepMCEvent * pHepMCEvent ( ) { return m_pHepMCEvent ; }
+  LHCb::HepMCEvent * pHepMCEvent ( ) { return m_pHepMCEvent ; }
   
   /// Print function needed in G4VUserPrimaryParticleInformation   
   virtual void Print( ) const { if ( m_hasOscillated ) 
@@ -97,7 +100,7 @@ private:
   /// Corresponding HepMC Particle barcode (filled for signal particle)
   int m_signalBarcode ;
   /// Pointer to HepMCEvent which the HepMC particle belongs to
-  HepMCEvent * m_pHepMCEvent ;
+  LHCb::HepMCEvent * m_pHepMCEvent ;
 };
 // ============================================================================
 
