@@ -10,7 +10,7 @@ branches src doc options cmt job
 #=========================================================================
 #-- Databases
 use XmlDDDB             v27r1   Det   -no_auto_imports
-use XmlConditions       v1r3    Det   -no_auto_imports
+use XmlConditions       v1r4    Det   -no_auto_imports
 use FieldMap            v4r6          -no_auto_imports
 use DecFiles            v11r2   Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
@@ -31,15 +31,16 @@ use $(LbAcerMC_use)
 macro LbHerwig_use "" Linux&Herwig "LbHerwig v1r1 Gen"
 use $(LbHerwig_use)
 
-#-- Simulation : not yet working
+#-- Simulation
 use GiGa                 v18r0   Sim
-#use GiGaCnv             v15r11  Sim
-#use GaussTools          v11r0 	Sim
-#use GaussTracker        v4r2    Sim
-#use GaussRICH           v5r3    Sim
-#use GaussCalo           v7r4    Sim
-#use GaussPhysics        v4r0    Sim
+use GiGaCnv              v16r0   Sim
+use GaussTools           v11r0 	 Sim
 use GaussAlgs		 v2r0    Sim
+use GaussKine            v1r0    Sim
+use GaussPhysics         v3r2    Sim
+use GaussTracker         v5r0    Sim
+use GaussRICH            v6r0    Sim
+use GaussCalo            v8r0    Sim
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r1 Sim"
@@ -53,9 +54,20 @@ use $(GDMLG4Writer_use)
 use GaussMonitor        v3r0    Sim
 use CaloMoniSim         v2r0    Calo
 use VeloGauss           v1r0    Velo
-#use MuonMoniSim         v1r1    Muon
+use MuonMoniSim         v2r0    Muon
 
 #=========================================================================
+#-- LHCb
+use GaudiConf           v*     
+use LHCbAlgs            v*    Kernel
+use Magnet              v*    Det
+use DetDescSvc          v*    Det
+use VeloDet             v*    Det
+use STDet               v*    Det
+use OTDet               v*    Det
+use MuonDet             v*    Det
+use RichCondition       v*    Rich 
+
 #-- GAUDI framework
 use GaudiAlg            v*
 use GaudiAud            v*
@@ -68,11 +80,6 @@ use GaudiPoolDb         v*
 #use HbookCnv            v*
 use RootHistCnv         v*
 
-#-- LHCb
-use GaudiConf           v*     
-use LHCbAlgs            v*    Kernel
-use Magnet              v*    Det
-#use RichCondition       v*    Rich
 
 #========================================================================
 #== Necessary enviroment variables
