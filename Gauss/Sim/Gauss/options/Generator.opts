@@ -9,7 +9,7 @@
  * 
  */
 
-Generator.Members  = { "Generation" };
+Generator.Members += { "Generation" };
 Generator.Members += { "GenMonitorAlg" };
 ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY-DC06.DEC";
 

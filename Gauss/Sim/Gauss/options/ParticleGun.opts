@@ -3,7 +3,8 @@
 // include this file in Gauss.opts instead of Generator.opts
 // =========================================================================
 
-Generator.Members = {"ParticleGun", "GenMonitorAlg"};
+Generator.Members -= { "Generation", "GenMonitorAlg"};
+Generator.Members += { "ParticleGun", "GenMonitorAlg"};
 
 //Generator.Members += {"DumpMC"};
 
