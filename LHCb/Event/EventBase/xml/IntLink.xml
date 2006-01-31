@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='EventBase'>
+
+    <class 
+      name        = "IntLink" 
+      author      = "Jose A. Hernando" 
+      desc        = "Link to int" 
+      id          = "500">
+      
+      <base name="DataObject"/> 
+      &DataObject;
+
+      <attribute
+	type      = "std::map&lt;int,int&gt;"
+	name      = "link"
+	setMeth   = "TRUE"
+	getMeth   = "TRUE"
+	desc      = "list of linked ints" />
+      
+      <method
+	type    = "void"
+	name    = "setLink"
+	argList = "int key, int value"
+	desc    = "Sets the int value asociated to this key"  >
+      <code>
+          m_link[key] = value;
+        </code>
+      </method>
+      
+      <method
+	type    = "int"
+	name    = "link"
+	argList = "int key"
+	desc    = "Returns the link associated to this key" 
+	const = "TRUE" >
+        <code>
+          if (m_link.find(key) == m_link.end()) return 0;
+          return m_link.find(key)->second;
+        </code>
+      </method>
+      
+      <method
+	type    = "bool"
+	name    = "hasKey"
+	desc    = "Returns the index of the key. True if key exist, else inserting position" 
+	argList = "int key" 
+	const = "TRUE" >
+        <code>
+          return (m_link.find(key) != m_link.end());
+        </code>
+        </method>
+      
+    </class>
+  </package>
+</gdd>
