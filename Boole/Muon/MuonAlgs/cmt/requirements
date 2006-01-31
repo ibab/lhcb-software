@@ -2,19 +2,17 @@ package MuonAlgs
 version v6r0
 
 # ================ structure ===========================================
-branches src cmt MuonAlgs options doc
+branches src cmt options doc
 
 # ================ own includes ========================================== 
-include_dirs      $(MUONALGSROOT)     
+include_path none
 
 # ================ used packages ========================================= 
-use AIDA        v*	LCG_Interfaces -no_auto_imports
-use MuonDet     v5r*    Det
-#use MuonTools   v3r* 	Muon
+use MuonDet     v*      Det
 use MuonEvent	v*	Event	
 use MCEvent	v*	Event	
-use MuonKernel  v4*     Muon
-# build a component library
-library MuonAlgs  *.cpp -import=AIDA
+use MuonKernel  v*      Muon
 
+# build a component library
+library MuonAlgs  *.cpp
 apply_pattern component_library library=MuonAlgs
