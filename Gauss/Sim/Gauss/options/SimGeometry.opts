@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.7 2005-07-12 09:32:44 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.8 2006-01-31 17:22:22 gcorti Exp $
 
 /** @file
  *
@@ -19,6 +19,8 @@
 // Execute only for the first event
 Geo.ExecuteOnce          = true ;
 Geo.ConversionSvcName    = "GiGaGeo"  ;
+//Geo.OutputLevel          = 1;
+//GiGaGeo.OutputLevel      = 2;
 Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 // Geometry to be converted in execute method,
 // This items will be loaded by the DetectorDataSvc and then
@@ -26,7 +28,7 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 // that will triggers the corresponding converter for each one
 ApplicationMgr.DLLs += { "GaussTracker" };
 ApplicationMgr.DLLs += { "GaussRICH"    };
-ApplicationMgr.DLLs += { "GaussCalo", "CaloEvent" };
+ApplicationMgr.DLLs += { "GaussCalo"    };
 Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"};
 // Comment out following line to enable misaligneable VELO
@@ -45,18 +47,20 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Hcal"};
+#include "$GAUSSCALOROOT/options/Calo.opts"           // Specific configuration
 Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
-// sensdet paths (to be moved away at some stage...)
-GiGaGeo.ITSDet.DetectorPath    = "/Tracker/IT";
-GiGaGeo.VeloSDet.DetectorPath  = "/Velo";
-GiGaGeo.OTSDet.DetectorPath    = "/Tracker/OT";
 
 // Magnetic field simulation
 // "Global Field Manager"
 GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
 GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
-GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+// Does not work!
+// GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+// GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
+// Uniform empty field: it works
+GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
+GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
 
 // declare external services needed MAGNETIC FIELD
 ApplicationMgr.DLLs   += { "Magnet" };
