@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.10 2006-01-31 13:00:39 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.11 2006-01-31 13:03:58 pkoppenb Exp $
 // Include files
 #include <algorithm>
 
@@ -690,7 +690,6 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
 double CombinedParticleMaker::dllValue(const ProtoParticle* proto,
                                        const ProtoParticle::detectorPID& det) {
 
-  verbose() << "dllValue" << endmsg ;
   double value = -999.0;
   for( ProtoParticle::PIDDetVector::const_reverse_iterator
          id = proto->pIDDetectors().rbegin();
