@@ -2,7 +2,20 @@
 // $Id: MuonDetectorResponse.cpp,v 1.10 2005/04/05 09:21:08 cattanem Exp 
 
 #include <vector>
-#include "MuonAlgs/MuonDetectorResponse.h"
+#include <cmath>
+
+#include "GaudiKernel/SmartDataPtr.h"       
+#include "GaudiKernel/MsgStream.h"  
+
+#include "MuonDet/MuonBasicGeometry.h"
+#include "MuonDet/MuonReadoutCond.h"  
+#include "MuonDet/DeMuonDetector.h"
+
+#include "MuonChamberResponse.h" 
+#include "MuonDetectorResponse.h"
+#include "MuonPhysicalChannelResponse.h" 
+#include "MuonPhChID.h"
+
 static std::string spill[] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
 static std::string numreg[] = {"1","2","3","4"};
 static std::string numsta[] = {"1","2","3","4","5"};
@@ -170,6 +183,3 @@ MuonPhysicalChannelResponse* MuonDetectorResponse::getResponse(MuonPhChID&
   }else{
     return 0; }	
 }
-
-
-

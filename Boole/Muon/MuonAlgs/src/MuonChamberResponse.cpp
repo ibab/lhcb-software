@@ -1,6 +1,6 @@
 #ifndef MUONALGS_MUONCHAMBERRESPONSE_CPP 
 #define MUONALGS_MUONCHAMBERRESPONSE_CPP 1
-#include "MuonAlgs/MuonChamberResponse.h"
+#include "MuonChamberResponse.h"
 
 
 MuonChamberResponse::MuonChamberResponse(Rndm::Numbers* flat,Rndm::Numbers* 

@@ -1,14 +1,21 @@
-//$Id: MuonDigitization.cpp,v 1.26 2006-01-30 11:37:25 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.27 2006-01-31 16:35:50 cattanem Exp $
 
-#include "GaudiKernel/AlgFactory.h"  
-#include "GaudiKernel/IToolSvc.h"  
-#include "GaudiKernel/IAlgManager.h"
-#include "MuonAlgs/MuonDigitization.h"
-#include "MuonAlgs/ComparePC.h"
-#include "MuonDet/MuonFrontEndID.h"
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <cmath>
+
+#include "GaudiKernel/AlgFactory.h"  
+#include "GaudiKernel/IAlgManager.h"
+
+#include "MuonDet/MuonBasicGeometry.h"
+#include "MuonDet/DeMuonDetector.h"
+
+#include "MuonDigitization.h"
+#include "MuonChamberResponse.h" 
+#include "MuonPhPreInput.h"
+#include "SortPhChID.h" 
+#include "ComparePC.h"
 
 
 static const AlgFactory<MuonDigitization>  Factory;

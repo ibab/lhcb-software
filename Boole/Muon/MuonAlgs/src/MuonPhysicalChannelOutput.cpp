@@ -1,8 +1,11 @@
 #ifndef MuonAlgs_MuonPhysicalChannelOutput_CPP
 #define MuonAlgs_MuonPhysicalChannelOutput_CPP  1
-#include "MuonAlgs/MuonPhysicalChannelOutput.h"
 
 #include <iostream>
+
+#include "MuonDet/DeMuonDetector.h"
+
+#include "MuonPhysicalChannelOutput.h"
 
 // constructor from MuonPhysicalChannel
 MuonPhysicalChannelOutput::MuonPhysicalChannelOutput

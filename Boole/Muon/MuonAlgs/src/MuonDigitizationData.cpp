@@ -1,12 +1,11 @@
 #ifndef MUONALGS_MUONDIGITIZATIONDATA_CPP
 #define MUONALGS_MUONDIGITIZATIONDATA_CPP 1
 
-
-#include "Event/MCHit.h"
-#include "MuonAlgs/MuonDigitizationData.h"    
-#include "MuonAlgs/MuonPhyChannelInput.h"    
-#include "MuonAlgs/MuonPhysicalChannel.h" 
-#include "MuonAlgs/MuonPhysicalChannelOutput.h" 
+#include <string>
+#include "MuonDigitizationData.h"    
+#include "MuonPhyChannelInput.h"    
+#include "MuonPhysicalChannel.h" 
+#include "MuonPhysicalChannelOutput.h" 
 
 template<class T> 
 MuonDigitizationData<T>::MuonDigitizationData(const std::string &path, 
@@ -151,7 +150,6 @@ template<class T> bool MuonDigitizationData<T>::isEmpty(int i){
 }
 
 
-//template   MuonDigitizationData<LHCb::MCHit>;
 template   MuonDigitizationData<MuonPhyChannelInput>;
 template   MuonDigitizationData<MuonPhysicalChannel>;
 template   MuonDigitizationData<MuonPhysicalChannelOutput>;

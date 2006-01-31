@@ -1,5 +1,5 @@
 //local
-#include "MuonAlgs/MuonHitTraceBack.h"
+#include "MuonHitTraceBack.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonHitTraceBack
