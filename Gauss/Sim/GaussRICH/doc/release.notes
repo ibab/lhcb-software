@@ -5,7 +5,11 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
-!======================== GaussRICH v6r0 2005-12-16 ===========================
+!======================== GaussRICH v6r0 2006-01-31 ===========================
+! 2006-01-31 - Gloria CORTI
+ - Need to compile RichG4AnalysisPhotElec and RichG4Counters from RichAnalysis
+   to run Gauss, otherwise there are unresolved symbols
+
 ! 2006-01-27 - Gloria CORTI
  - Temporarly  comment out compilation of RichAnalysis not yet migrated to 
 	 new Event model
