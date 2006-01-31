@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.24 2006-01-30 11:04:47 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.25 2006-01-31 17:04:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -90,7 +90,7 @@ MuonBackground::~MuonBackground() {
 StatusCode MuonBackground::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
-  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegionMuon");
+  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   
 
   //MsgStream msg(msgSvc(), name());
@@ -209,7 +209,7 @@ StatusCode MuonBackground::initialize() {
   algmgr->release();
   //initialize the detector
   m_muonDetector=NULL;
-  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegionMuon");
+  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   return StatusCode::SUCCESS;
 };
 
