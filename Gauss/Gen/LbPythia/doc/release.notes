@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.21 2006-01-19 13:28:18 gcorti Exp $
+! $Id: release.notes,v 1.22 2006-01-31 09:17:07 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
-! ==================== LbPythia v3r0 2006-01-19 ======================
+! ==================== LbPythia v4r0 2006-01-19 ======================
 ! 2005-31-12 - Patrick Robbe
  - Adapt to new event model.
 
