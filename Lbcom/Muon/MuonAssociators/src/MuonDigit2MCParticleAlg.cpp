@@ -1,12 +1,11 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.7 2006-01-27 17:15:59 asarti Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.8 2006-01-31 07:48:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "MuonDigit2MCParticleAlg.h"
-//#include "Event/LinksByKey.h"
 #include "Linker/LinkerWithKey.h"
 
 //-----------------------------------------------------------------------------
@@ -56,12 +55,8 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
                                              msgSvc(),
                                              LHCb::MuonDigitLocation::MuonDigit);
   
-  SmartDataPtr<LHCb::MuonDigits> digits(eventSvc(),
-                                        LHCb::MuonDigitLocation::MuonDigit);
-  if (0 == digits){    
-    error() << "Failed to find MuonDigits" << endreq;
-    return StatusCode::FAILURE;
-  }
+  LHCb::MuonDigits* digits =
+    get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
   
   // loop and link MuonDigits to MC truth
   LHCb::MuonDigits::const_iterator iDigit;

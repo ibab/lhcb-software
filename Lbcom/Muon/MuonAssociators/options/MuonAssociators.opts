@@ -1,8 +1,0 @@
-// $Id: MuonAssociators.opts,v 1.2 2004-11-25 09:14:05 cattanem Exp $
-ApplicationMgr.DLLs += { "MuonAssociators" };
-
-DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/MuonCoords2MCParticles' 
-                                 TYPE='MuonCoord2MCParticleAlg'" };
-// Suppress warnings due to obslete implementation
-ToolSvc.MuonCoord2MCParticleAsct.OutputLevel = 5;
-

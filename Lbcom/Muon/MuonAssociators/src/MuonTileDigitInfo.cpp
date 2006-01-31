@@ -1,8 +1,8 @@
-// $Id: MuonTileDigitInfo.cpp,v 1.1 2006-01-27 17:15:59 asarti Exp $
+// $Id: MuonTileDigitInfo.cpp,v 1.2 2006-01-31 07:48:23 cattanem Exp $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "MuonTileDigitInfo.h"
@@ -53,16 +53,11 @@ StatusCode MuonTileDigitInfo::execute() {
   LHCb::IntLink myIntLink = LHCb::IntLink::IntLink();
   std::map<int,int> mylink; ///< list of linked ints
 
-  SmartDataPtr<LHCb::MuonDigits> digits(eventSvc(),
-                                        LHCb::MuonDigitLocation::MuonDigit);
-  if (0 == digits){    
-    error() << "Failed to find MuonDigits" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  // get the MCMuonDigits
-  SmartDataPtr<LHCb::MCMuonDigits> mcDigits(eventSvc(), 
-					    LHCb::MCMuonDigitLocation::MCMuonDigit);
+  LHCb::MuonDigits* digits = 
+    get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
+
+  LHCb::MCMuonDigits* mcDigits = 
+    get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
 
   // loop and link MuonDigits to MC truth
   LHCb::MuonDigits::const_iterator iDigit;

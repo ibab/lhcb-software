@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.16 2006-01-27 17:15:59 asarti Exp $
+! $Id: release.notes,v 1.17 2006-01-31 07:48:23 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
-!==================== MuonAssociators v1r5p1 2005-04-01 ====================
+!==================== MuonAssociators v2r0 2006-01-31 =--===================
+! 2006-01-31 - Marco Cattaneo
+ - Move the IntLink event model class to EventBase
+
 ! 2006-01-27 - Alessio Sarti
  - Modified the associators in order to use the Linker tool
  - Added the association between MuonTileID and MCMuonDigitInfo
 
+!==================== MuonAssociators v1r5p1 2005-04-01 ====================
 ! 2005-04-01 - Marco Cattaneo
  - Modify requirements for MuonEvent v*
 
