@@ -2,7 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-===============================GaudiObjDesc v9r3============================
+!2006-01-30
+- fix for destructor implementation. An empty code element will result in 
+  an empty inline implementation
+
+=============================GaudiObjDesc v9r3============================
 !2006-01-27 Macro Cattaneo
 - allows tospecify additional flags to be passed to gccxml, by
   defining the macro use_obj2dict_gccxmlflags

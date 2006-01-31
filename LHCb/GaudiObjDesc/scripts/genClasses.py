@@ -191,12 +191,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       scopeName += '::'
     s += '%s~%s()' % (scopeName, godClass['attrs']['name'])
     if ( not scopeName ) :
-      if dest.has_key('code') :
-        if dest['code'][0]['cont'].strip() : s += ';\n\n'
-        else : s += '{} \n\n'
-      else : s += ';\n\n'
+      s += ';\n\n'
     else :
-      s += ' \n{\n%s\n}\n\n' % dest['code'][0]['cont']
+      src = dest['code'][0].get('cont')
+      if src == None : src = ''
+      s += ' \n{\n%s\n}\n\n' % src
     return s
 #--------------------------------------------------------------------------------
   def genDestructors(self,godClass,clname=''):
