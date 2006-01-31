@@ -367,6 +367,9 @@ StatusCode KFFitTool::getEParameter(Particle& part,
 StatusCode KFFitTool::setEParameter(Particle& part,
                                    HepVector& vpara,
                                    HepSymMatrix& cov) {
+
+  HepPoint3D oldPOT=part.pointOnTrack();
+
   HepPoint3D newPOT;
   HepLorentzVector newMom;
   
@@ -400,7 +403,7 @@ StatusCode KFFitTool::setEParameter(Particle& part,
 
   Vertex* endV= part.endVertex();
   if(endV!=0 ) {
-   HepVector3D DL=endV->position()-part.pointOnTrack();
+   HepVector3D DL=endV->position()-oldPOT;
    if(DL.mag()<1.e-10) {
      endV->setPosition(newPOT);
      endV->setPositionErr(newPOTErr);
@@ -438,6 +441,8 @@ StatusCode KFFitTool::setMParameter(Particle& part,
                                    HepVector& vpara,
                                    HepSymMatrix& cov) {
 
+  HepPoint3D oldPOT=part.pointOnTrack();
+
   HepPoint3D newPOT;
   HepLorentzVector newMom;
 
@@ -474,7 +479,7 @@ StatusCode KFFitTool::setMParameter(Particle& part,
 
   Vertex* endV= part.endVertex();
   if(endV!=0 ) {
-   HepVector3D DL=endV->position()-part.pointOnTrack();
+   HepVector3D DL=endV->position()-oldPOT;
    if(DL.mag()<1.e-10) {
      endV->setPosition(newPOT);
      endV->setPositionErr(newPOTErr);
