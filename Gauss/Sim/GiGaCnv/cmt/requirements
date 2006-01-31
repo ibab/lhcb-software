@@ -1,20 +1,18 @@
-# $Id: requirements,v 1.66 2005-04-11 17:37:53 gcorti Exp $ 
+# $Id: requirements,v 1.67 2006-01-31 10:42:07 gcorti Exp $ 
 # =============================================================================
 package          GiGaCnv 
-version          v15r11
+version          v16r0
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 
 
 # ============== explicit dependencies ========================================
-use              GaudiAlg     v*  
-
 use              GenEvent     v*     Event
-use              Event        v*     Event
-use              HepMC        v*     Sim
+use              MCEvent      v*     Event
 use              DetDesc      v*     Det        
    
 use              GiGa         v*     Sim 
+use              ClhepTools   v*     Tools
 
 # ============== standard includes ============================================
 include_dirs     $(GIGACNVROOT)

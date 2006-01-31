@@ -1,10 +1,50 @@
-! $Id: release.notes,v 1.96 2005-04-12 13:08:58 gcorti Exp $ 
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
-! =============================================================================
-Package         : GiGaCnv
-Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+!-----------------------------------------------------------------------------
+! Package     : Sim/GiGaCnv
+! Responsible : Gloria CORTI
+! Purpose     : Hold converters between LHCb and Geant4
+!-----------------------------------------------------------------------------
 
+!======================= GiGaCnv v16r0 2006-01-31 ==========================
+
+! 2006-01-31 - Gloria CORTI
+ - Use new Event/MCEvent package instead of Event and HepMC
+ - Use new Tools/ClhepTools package for geometry converters
+ - Adapt to changes in LHCb geometry which use of MathCore classes. 
+   Since Geant4 uses CLHEP modification to transform from MathCore to CLHEP
+   are introduced making use of MathCore2Clhep.h (in Tools/Clheptool v1r0)
+   Try to keep Clhep as close as possible to construction of Geant4 classes.
+   . GiGaCnv/GiGaAssembly.h
+   . GiGaCnv/GiGaVolumePair.h
+   . src/component/GiGaGeo.cpp
+   . src/component/GiGaInstall.{h,cpp}
+ - Adapt to changes in LHCb Event model in MCParticle and MCVertex classes
+   (introduction of namespaces and different names in methods)
+   . GiGaCnv/GiGaKineRefTableEntry.h
+   . GiGaCnv/GiGaPrimaryParticleInformation.h
+   . src/component/GiGaCnvFunctors.h
+   . src/component/GiGaMCParticleCnv.cpp
+   . src/component/GiGaMCVertexCnv.cpp
+   . src/component/Particle2Definition.{h.cpp}
+   . src/component/Particle2Particle.{h.cpp}
+   . src/component/Point2Vertex.h
+   . src/component/PrimaryVertex2Vertex.h
+   . src/component/Trajectory2Particle.{h,cpp}
+   . src/component/Vertex2Vertex.{h,cpp}   
+ - Remove obsolete method filling contents of Collision, now filled in
+   Generator phase
+   . src/component/GiGaMCParticleCnv.{h.cpp}
+ - Remove creation and filling of GenMCLink class no longer existing
+   in Event Model
+   . src/component/GiGaMCParticleCnv.cpp
+
+ - Remove from src/components obsolete classes
+   . GiGaCollisionCnv.{h,cpp} - GenCollision is now filled in Generator phase
+   . GiGaHepMCCnv.{h,cpp} - Filling of G4 primary event now done by algorithm
+     GeneratorToG4 in Sim/GaussKine
+   . GiGaHits.{h,cpp} - Convertion service for hits no longer necessary since
+     converters have been replaced by algorithms
+   . GiGaCnv_entries.cpp - remove declaration of removed classes
+      
 !=========================== GiGaCnv v15r11 =================================
 ! 2005-04-11 - Gloria Corti
  - src/component/GiGaMCVertexCnv.cpp
