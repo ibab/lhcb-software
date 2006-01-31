@@ -1,8 +1,11 @@
-// $Id: GiGaInstall.h,v 1.2 2005-01-25 15:52:25 gcorti Exp $
+// $Id: GiGaInstall.h,v 1.3 2006-01-31 10:24:59 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/01/25 15:52:25  gcorti
+// adapt to CLHEP 19.0
+//
 // Revision 1.1  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -11,8 +14,8 @@
 #define GIGACNV_GIGAINSTALL_H 1
 // Include files
 #include <string>
-// CLHEP
-#include "CLHEP/Geometry/Transform3D.h"
+// LHCbDefinitions
+#include "Kernel/Transform3DTypes.h"
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 
@@ -54,7 +57,7 @@ namespace GiGaInstall
   StatusCode installVolume
   ( G4LogicalVolume*      volume ,
     const std::string&    name   ,
-    const HepTransform3D& matrix ,
+    const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother , 
     MsgStream&            log    ) ;
   
@@ -79,7 +82,7 @@ namespace GiGaInstall
   StatusCode installVolume
   ( const GiGaAssembly*   volume ,
     const std::string&    name   ,
-    const HepTransform3D& matrix ,
+    const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother ,
     MsgStream&            log    ) ;
   
@@ -104,7 +107,7 @@ namespace GiGaInstall
   StatusCode installVolume
   ( const GiGaVolume&     volume ,
     const std::string&    name   ,
-    const HepTransform3D& matrix ,
+    const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother ,
     MsgStream&            log    ) ;
 

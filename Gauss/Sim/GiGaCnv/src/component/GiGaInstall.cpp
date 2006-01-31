@@ -1,8 +1,11 @@
-// $Id: GiGaInstall.cpp,v 1.2 2003-01-23 09:20:37 ibelyaev Exp $
+// $Id: GiGaInstall.cpp,v 1.3 2006-01-31 10:24:59 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/01/23 09:20:37  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.1  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -11,8 +14,8 @@
 // STD & STL 
 #include <cstdlib>
 #include <string>
-// CLHEP
-#include "CLHEP/Geometry/Transform3D.h"
+// MathCore -> CLHEP
+#include "ClhepTools/MathCore2Clhep.h"
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -59,7 +62,7 @@
 StatusCode GiGaInstall::installVolume
 ( G4LogicalVolume*      volume , 
   const std::string&    name   , 
-  const HepTransform3D& matrix , 
+  const Gaudi::Transform3D& matrix , 
   G4LogicalVolume*      mother ,
   MsgStream&            log    )
 {
@@ -86,8 +89,9 @@ StatusCode GiGaInstall::installVolume
       }
   };
   /// create the placement 
+  HepGeom::Transform3D clhepMatrix = LHCb::math2clhep::transform3D( matrix );
   G4VPhysicalVolume* pv = 
-    new G4PVPlacement( matrix.inverse() ,
+    new G4PVPlacement( clhepMatrix.inverse() ,
                        volume           , 
                        name             , 
                        mother           , 
@@ -127,7 +131,7 @@ StatusCode GiGaInstall::installVolume
 StatusCode GiGaInstall::installVolume
 ( const GiGaAssembly*   volume , 
   const std::string&    name   , 
-  const HepTransform3D& matrix , 
+  const Gaudi::Transform3D& matrix , 
   G4LogicalVolume*      mother , 
   MsgStream&            log    )
 {
@@ -197,7 +201,7 @@ StatusCode GiGaInstall::installVolume
 StatusCode GiGaInstall::installVolume
 ( const GiGaVolume&     volume ,
   const std::string&    name   ,
-  const HepTransform3D& matrix ,
+  const Gaudi::Transform3D& matrix ,
   G4LogicalVolume*      mother ,
   MsgStream&            log    )
 {

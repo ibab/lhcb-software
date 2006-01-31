@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.16 2005-01-13 15:04:41 gcorti Exp $ 
+// $Id: GiGaGeo.cpp,v 1.17 2006-01-31 10:24:59 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2005/01/13 15:04:41  gcorti
+// bug fix giving error in HepTransform3D
+//
 // Revision 1.15  2004/08/02 13:16:59  gcorti
 // adapt to new Gaudi
 //
@@ -46,6 +49,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/GenericAddress.h"
+// MathCore -> CLHEP
+#include "ClhepTools/MathCore2Clhep.h"
 // from DetDesc 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/Solids.h"
@@ -457,18 +462,23 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
       if( 0 == g4child ) 
         { Error("g4BoolSolid, could not convert solid for Boolean solid=" + 
                 Sd->name())  ; return 0; }
+
+      // Get a Clhep matrix to use with Geant4
+      HepGeom::Transform3D clhepMatrix = 
+        LHCb::math2clhep::transform3D( child->matrix() );
+      
       if      ( 0 != sSub    ) 
         {          
           double temp[3][4];
           
           for(int i=0;i<3;i++)
             for(int j=0;j<4;j++)
-              if(fabs((child->matrix())[i][j])<0.0000001)
+              if(fabs(clhepMatrix[i][j])<0.0000001)
                 {
                   temp[i][j]=0.0;
                 }        
               else 
-                temp[i][j]=(child->matrix())[i][j];
+                temp[i][j]=clhepMatrix[i][j];
           
           HepRep3x3 trep(temp[0][0],temp[0][1],temp[0][2],
                          temp[1][0],temp[1][1],temp[1][2],
@@ -489,12 +499,12 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
         { g4total = 
             new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , 
                                       g4total , g4child , 
-                                      child->matrix().inverse() ) ; }
+                                      clhepMatrix.inverse() ) ; }
       else if ( 0 != sUni    )
         { g4total = 
             new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , 
                                       g4total , g4child , 
-                                      child->matrix().inverse() ) ; }
+                                      clhepMatrix.inverse() ) ; }
       else
         { Error("g4BoolSolid, Unknown type of Boolean solid=" + 
                 Sd->typeName()) ; return 0; }
@@ -933,6 +943,11 @@ StatusCode   GiGaGeo::fieldMgr
   // reset the output value 
   mgr = 0 ;
   // locate the magnetic field  
+  
+//   std::cout << "GiGaGeo::fieldMgr Arguments passed " << name << " " << mgr 
+//             << " " << this << std::endl;
+//   StatusCode sc = toolSvc()-> retrieveTool( name, mgr, this, true );
+//   if( sc.isSuccess() ) std::cout << "Success " << std::endl;
   mgr = tool( name , mgr , this );
   if( 0 == mgr ) 
     { return Error( "Could not locate Field Manager'" + name + "'" ) ; }
