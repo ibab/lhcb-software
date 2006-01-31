@@ -10,7 +10,6 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "AIDA/IHistogram1D.h"
 //#include "CLHEP/Units/PhysicalConstants.h"
  
 /// Detector description classes
@@ -123,38 +122,5 @@ private:
   static const int OriginOfHitsContainer[5];
   
   Rndm::Numbers m_flatDist;
-  
-  //// move them to monitoring
-//  IMuonTileXYZTool* m_pMuonTileXYZ ;
-//  IMuonGetInfoTool* m_pGetInfo ;
-
-  IHistogram1D* m_histoTiming14 ;     
-  IHistogram1D* m_histoTiming15 ;     
-  IHistogram1D* m_histoTiming18 ;     
-  IHistogram1D* m_histoTiming19 ;     
-  /*   IHistogram1D* m_histoTimingOne ;     
-       
-       NTuple::Tuple*                  m_ntuple;
-       /// N-tuple items to be written away: Number of tracks
-       NTuple::Item<long>              m_hit1;
-       NTuple::Item<long>              m_hit2;
-       NTuple::Item<long>              m_hit3;
-       NTuple::Item<long>              m_hit4;
-       NTuple::Item<long>              m_hit5;
-       NTuple::Array<float>            m_x1; 
-       NTuple::Array<float>            m_y1; 
-       NTuple::Array<float>            m_z1; 
-       NTuple::Array<float>            m_x2; 
-       NTuple::Array<float>            m_y2; 
-       NTuple::Array<float>            m_z2; 
-       NTuple::Array<float>            m_x3; 
-       NTuple::Array<float>            m_y3; 
-       NTuple::Array<float>            m_z3; 
-       NTuple::Array<float>            m_x4; 
-       NTuple::Array<float>            m_y4; 
-       NTuple::Array<float>            m_z4; 
-       NTuple::Array<float>            m_x5; 
-       NTuple::Array<float>            m_y5; 
-       NTuple::Array<float>            m_z5; */
-};
+  };
 #endif
