@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2006-01-30 18:55:38 odescham Exp $
+! $Id: release.notes,v 1.5 2006-01-31 14:44:35 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,11 +7,11 @@
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
 
-!======================== CaloMoniDigi v2r1 2006-01-30 ========================
-! 2006-01-18 : Olivier Deschamps
+!======================== CaloMoniDigi v2r0 2006-01-30 ========================
+! 2006-01-30 : Olivier Deschamps
   - Bug fix in src/CaloDigitMonitor 
   - cmt/requirements : increase release number
-!======================== CaloMoniDigi v2r0 2006-01-18 ========================
+
 ! 2006-01-18 : Olivier Deschamps
   - Adapt to New Event Model & LHCb v20 change
   - src/CaloDigitMonitor algorithm inheritance from GaudiHistoAlg
