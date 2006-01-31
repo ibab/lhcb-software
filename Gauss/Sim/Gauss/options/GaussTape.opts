@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.21 2006-01-18 09:25:36 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.22 2006-01-31 18:16:40 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -13,87 +13,55 @@
  *  @date: modified 21 Feb 2001
  */
 
+// General
 GaussTape.ItemList = {  
-   "/Event#1"      
-   // Generator output
-  ,"/Event/Gen#1"
+  "/Event#1"      
+};
+
+// Generator output
+GaussTape.ItemList += {
+  "/Event/Gen#1"
   ,"/Event/Gen/Header#1"
-//    ,"/Event/Gen/Collisions#1"
+  ,"/Event/Gen/Collisions#1"
   ,"/Event/Gen/HepMCEvents#1"
 };
 
-// GaussTape.OptItemList = {
-//   // MC Truth  
-//   ,"/Event/MC#1"                     
-//   ,"/Event/MC/Particles#1"         
-//   ,"/Event/MC/Vertices#1"          
-//   // MCHits
-//   ,"/Event/MC/Velo#1"
-//   ,"/Event/MC/Velo/Hits#1"
-//   ,"/Event/MC/Velo/PuHits#1"
-//   ,"/Event/MC/Rich#1"
-//   ,"/Event/MC/Rich/Hits#1"
-//   ,"/Event/MC/OT#1"
-//   ,"/Event/MC/OT/Hits#1"
-//   ,"/Event/MC/IT#1"
-//   ,"/Event/MC/IT/Hits#1"
-//   ,"/Event/MC/Spd#1"
-//   ,"/Event/MC/Spd/Hits#1"
-//   ,"/Event/MC/Prs#1"
-//   ,"/Event/MC/Prs/Hits#1"
-//   ,"/Event/MC/Ecal#1"
-//   ,"/Event/MC/Ecal/Hits#1"
-//   ,"/Event/MC/Hcal#1"
-//   ,"/Event/MC/Hcal/Hits#1"
-//   ,"/Event/MC/Muon#1"          // all the leaves must be explicitely specified in order to trigger the conversion of hits
-//   ,"/Event/MC/Muon/M1#1"
-//   ,"/Event/MC/Muon/M1/R1#1"
-//   ,"/Event/MC/Muon/M1/R2#1"
-//   ,"/Event/MC/Muon/M1/R3#1"
-//   ,"/Event/MC/Muon/M1/R4#1"
-//   ,"/Event/MC/Muon/M1/R1/Hits#1"
-//   ,"/Event/MC/Muon/M1/R2/Hits#1"
-//   ,"/Event/MC/Muon/M1/R3/Hits#1"
-//   ,"/Event/MC/Muon/M1/R4/Hits#1"
-//   ,"/Event/MC/Muon/M2#1"
-//   ,"/Event/MC/Muon/M2/R1#1"
-//   ,"/Event/MC/Muon/M2/R2#1"
-//   ,"/Event/MC/Muon/M2/R3#1"
-//   ,"/Event/MC/Muon/M2/R4#1"
-//   ,"/Event/MC/Muon/M2/R1/Hits#1"
-//   ,"/Event/MC/Muon/M2/R2/Hits#1"
-//   ,"/Event/MC/Muon/M2/R3/Hits#1"
-//   ,"/Event/MC/Muon/M2/R4/Hits#1"
-//   ,"/Event/MC/Muon/M3#1"
-//   ,"/Event/MC/Muon/M3/R1#1"
-//   ,"/Event/MC/Muon/M3/R2#1"
-//   ,"/Event/MC/Muon/M3/R3#1"
-//   ,"/Event/MC/Muon/M3/R4#1"
-//   ,"/Event/MC/Muon/M3/R1/Hits#1"
-//   ,"/Event/MC/Muon/M3/R2/Hits#1"
-//   ,"/Event/MC/Muon/M3/R3/Hits#1"
-//   ,"/Event/MC/Muon/M3/R4/Hits#1"
-//   ,"/Event/MC/Muon/M4#1"
-//   ,"/Event/MC/Muon/M4/R1#1"
-//   ,"/Event/MC/Muon/M4/R2#1"
-//   ,"/Event/MC/Muon/M4/R3#1"
-//   ,"/Event/MC/Muon/M4/R4#1"
-//   ,"/Event/MC/Muon/M4/R1/Hits#1"
-//   ,"/Event/MC/Muon/M4/R2/Hits#1"
-//   ,"/Event/MC/Muon/M4/R3/Hits#1"
-//   ,"/Event/MC/Muon/M4/R4/Hits#1"
-//   ,"/Event/MC/Muon/M5#1"
-//   ,"/Event/MC/Muon/M5/R1#1"
-//   ,"/Event/MC/Muon/M5/R2#1"
-//   ,"/Event/MC/Muon/M5/R3#1"
-//   ,"/Event/MC/Muon/M5/R4#1"
-//   ,"/Event/MC/Muon/M5/R1/Hits#1"
-//   ,"/Event/MC/Muon/M5/R2/Hits#1"
-//   ,"/Event/MC/Muon/M5/R3/Hits#1"
-//   ,"/Event/MC/Muon/M5/R4/Hits#1"
-//   // Link between signal B in MCParticles and HepMC
-//   ,"/Event/MC/Signal#1"
-// };
+// Simulation output
+GaussTape.ItemList += {
+  "/Event/MC#1"
+  ,"/Event/MC/Header#1"
+  ,"/Event/MC/Particles#1"
+  ,"/Event/MC/Vertices#1"
+  ,"/Event/MC/Velo#1"
+  ,"/Event/MC/Velo/Hits#1"
+  ,"/Event/MC/PuVeto#1"
+  ,"/Event/MC/PuVeto/Hits#1"
+  ,"/Event/MC/TT#1"
+  ,"/Event/MC/TT/Hits#1"
+  ,"/Event/MC/IT#1"
+  ,"/Event/MC/IT/Hits#1"
+  ,"/Event/MC/OT#1"
+  ,"/Event/MC/OT/Hits#1"
+  ,"/Event/MC/Rich#1"
+  ,"/Event/MC/Rich/Hits#1"
+  ,"/Event/MC/Spd#1"
+  ,"/Event/MC/Spd/Hits#1"
+  ,"/Event/MC/Prs#1"
+  ,"/Event/MC/Prs/Hits#1"
+  ,"/Event/MC/Ecal#1"
+  ,"/Event/MC/Ecal/Hits#1"
+  ,"/Event/MC/Hcal#1"
+  ,"/Event/MC/Hcal/Hits#1"
+  ,"/Event/MC/Muon#1"
+  ,"/Event/MC/Muon/Hits#1"
+};
+  
+// Temporary
+GaussTape.ItemList += {
+  "/Event/MC/TestParticles#1"
+  ,"/Event/MC/TestVertices#1"
+};
+
 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
