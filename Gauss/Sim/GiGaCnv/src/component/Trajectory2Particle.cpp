@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.9 2005-01-17 19:35:10 robbep Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.10 2006-01-31 10:34:15 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2005/01/17 19:35:10  robbep
+// Fix units
+//
 // Revision 1.8  2005/01/17 18:14:41  robbep
 // Use generator energy instead of Geant4 energy for short lived particles.
 //
@@ -94,7 +97,7 @@ ErrMsg3("GiGaCnv::Trajectory2Particle::G4ParticleDefinition* points to NULL!");
 static const std::string 
 ErrMsg4("GiGaCnv::Trajectory2Particle::ParticleProperty* points to NULL for ");
 // ============================================================================
-MCParticle* 
+LHCb::MCParticle* 
 GiGaCnvFunctors::Trajectory2Particle::operator() 
   ( const GiGaTrajectory* trajectory ) const
 {
@@ -105,7 +108,7 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
   if( 0 == pDef       ) { throw GiGaException( ErrMsg3 );}
   
   // create and fill new MCparticle object 
-  MCParticle* particle = new MCParticle();
+  LHCb::MCParticle* particle = new LHCb::MCParticle();
   // if it is a resonance, take generator properties instead of
   // G4Trajectories information (for broad resonances) 
   if ( ( pDef -> IsShortLived() ) && ( 0 != trajectory -> pHepMCEvent() ) ) {
@@ -116,17 +119,23 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
                               gPart -> momentum().py() * GeV ,
                               gPart -> momentum().pz() * GeV ,
                               gPart -> momentum().e () * GeV ) ;
-    particle -> setMomentum( theFMom ) ;
+    Gaudi::LorentzVector momentum( theFMom );
+    particle -> setMomentum( momentum ) ;
   }
-  else particle->setMomentum     ( trajectory->fourMomentum()           ) ;
+  else {
+    Gaudi::LorentzVector momentum( trajectory->fourMomentum() );    
+    particle->setMomentum( momentum ) ;
+  }
   
-  particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
-  particle->setHasOscillated( trajectory->hasOscillated()          ) ;
+  particle->setParticleID( pDef->GetPDGEncoding() ) ;
+  // the oscillation flag is no longer in the particle but in the 
+  // vertex set it there!
+  // particle->setHasOscillated( trajectory->hasOscillated()          ) ;
   // ions have zero as pdg encoding 
   if( 0 == pDef->GetPDGEncoding() ) {
     ParticleProperty* pProp = ppSvc()->find( pDef->GetParticleName() );
     if( NULL != pProp ) {
-      particle->particleID().setPid( pProp->jetsetID() );
+      particle->setParticleID( pProp->jetsetID() );
     }
   }
   

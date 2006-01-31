@@ -1,8 +1,11 @@
-// $Id: Particle2Definition.cpp,v 1.4 2002-12-04 16:25:19 ibelyaev Exp $ 
+// $Id: Particle2Definition.cpp,v 1.5 2006-01-31 10:34:15 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/04 16:25:19  ibelyaev
+//  remove extra calls for 'addRef'
+//
 // Revision 1.3  2002/04/24 14:50:30  ibelyaev
 //  update for newer versions of Gaudi, LHCb and G4
 //
@@ -84,7 +87,7 @@ ErrMsg5("GiGaCnv::Particle2Definition: G4ParticleDefinition* points to 0 for ");
 // ============================================================================
 G4ParticleDefinition* 
 Particle2Definition::operator() 
-  ( const MCParticle* particle ) const
+  ( const LHCb::MCParticle* particle ) const
 {
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
   if( 0 == ppSvc()  ) { throw GiGaException( ErrMsg2 ) ; }

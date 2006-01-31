@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.29 2005-04-01 11:41:04 gcorti Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.30 2006-01-31 10:34:15 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.29  2005/04/01 11:41:04  gcorti
+// adapt to changes in MCParticle
+//
 // Revision 1.28  2005/01/17 18:14:40  robbep
 // Use generator energy instead of Geant4 energy for short lived particles.
 //
@@ -64,7 +67,6 @@
 /// LHCbEvent
 #include "Event/MCParticle.h" 
 #include "Event/HepMCEvent.h"
-#include "Event/GenMCLink.h"
 /// Geant4 includes
 #include "G4TrajectoryContainer.hh"
 #include "G4ParticleDefinition.hh"
@@ -103,7 +105,7 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Kine ) ; 
   setConverterName              ( "GiGaMCPCnv"              ) ;
   ///
-  declareObject( GiGaLeaf( MCParticleLocation::Default , objType() ) );
+  declareObject( GiGaLeaf( LHCb::MCParticleLocation::Default , objType() ) );
   ///
 }; 
 
@@ -116,7 +118,7 @@ GiGaMCParticleCnv::~GiGaMCParticleCnv(){};
 // Class ID
 // ======================================================================
 const CLID&         GiGaMCParticleCnv::classID     () 
-{ return MCParticles::classID(); }
+{ return LHCb::MCParticles::classID(); }
 
 // ======================================================================
 // StorageType 
@@ -172,7 +174,7 @@ StatusCode GiGaMCParticleCnv::createObj
   if( 0 ==  address  ) 
     { return Error("IOpaqueAddress* points to NULL!" ) ; }
   ///
-  object        = new MCParticles();
+  object        = new LHCb::MCParticles();
   /// 
   StatusCode sc = updateObj( address , object );
   if( sc.isFailure() ) 
@@ -197,7 +199,7 @@ StatusCode GiGaMCParticleCnv::fillObjRefs
 {
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     );}   
-  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
+  LHCb::MCParticles* particles = dynamic_cast<LHCb::MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject* (of type '"       + 
                                         GiGaUtil::ObjTypeName( object ) + 
                                         "*') is not 'Particles*'!"      );}  
@@ -220,7 +222,7 @@ StatusCode GiGaMCParticleCnv::updateObj
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
-  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
+  LHCb::MCParticles* particles = dynamic_cast<LHCb::MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'Particles*'! "   );}  
@@ -253,7 +255,7 @@ StatusCode GiGaMCParticleCnv::updateObj
         {
           const GiGaTrajectory* trajectory = gigaTrajectory(*iTr );
           // convert the trajectory into particle and add it into container 
-          MCParticle* mcp = Cnv( trajectory );
+          LHCb::MCParticle* mcp = Cnv( trajectory );
 
           // Check when pdg encoding is zero
           if( 0 == mcp->particleID().pid() ) {
@@ -265,34 +267,7 @@ StatusCode GiGaMCParticleCnv::updateObj
           // insert the particle to container and fill the reference table 
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
-          table( index )  = GiGaKineRefTableEntry( mcp , index );
-          
-          // if trajectory has signal info print
-          if( trajectory->isSignal() ) {
-            // Create link between signal particle in HepMC and MCParticle
-            GenMCLink* sigLink = new GenMCLink();
-            sigLink->setGenBarCode( trajectory->signalBarcode() );
-            sigLink->setHepMCEvent( trajectory->pHepMCEvent() );
-            sigLink->setSignal( mcp );
-            // Create container in TES where to put signal info if it does
-            // not already exist
-            SmartDataPtr<GenMCLinks> 
-              sigLinks(evtSvc(), GenMCLinkLocation::Default);
-            if( sigLinks ) {
-              sigLinks->insert(sigLink);
-            }
-            else {
-              GenMCLinks* sigLinkVect = new GenMCLinks();
-              StatusCode scLink = evtSvc()->
-                registerObject(GenMCLinkLocation::Default, sigLinkVect);
-              if( !scLink.isSuccess() ) {
-                delete sigLinkVect;
-                delete sigLink;
-                return Error(" Cannot register Link HepMC-MCParticle");
-              }
-              sigLinkVect->insert(sigLink);
-            }
-          }
+          table( index )  = GiGaKineRefTableEntry( mcp , index );          
         }
     }
   catch( const GaudiException& Excp )
@@ -327,7 +302,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
 {
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL " );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"      );}
-  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
+  LHCb::MCParticles* particles = dynamic_cast<LHCb::MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'Particles*'!"    );}  
@@ -349,7 +324,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
     GiGaCnvUtils::parent( address->registry() , evtSvc() );
   if( 0 == parent ) { return Error( " Parent directory is not accessible!"); }
   const std::string verticesPath( parent->identifier() + "/Vertices" ) ;
-  SmartDataPtr<MCVertices> vertices( evtSvc() , verticesPath );
+  SmartDataPtr<LHCb::MCVertices> vertices( evtSvc() , verticesPath );
   if( !vertices ) 
     { return Error("Could not locate Vertices in '" + verticesPath + "'" ); }
   const long refID = object->linkMgr()->addLink( verticesPath ,  vertices ); 
@@ -360,12 +335,12 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
                   particles->begin                     () , 
                   GiGaCnvFunctors::MCParticleResetRefs () ) ;
   //
-  typedef SmartRef<MCVertex>               Ref;
+  typedef SmartRef<LHCb::MCVertex>               Ref;
   typedef GiGaTrajectory::const_iterator   ITG;
   typedef TrajectoryVector::const_iterator ITC;
 
-  MCVertex miscVertex; /// misc
-  MCVertices::iterator iVertex = vertices -> begin();
+  LHCb::MCVertex miscVertex; /// misc
+  LHCb::MCVertices::iterator iVertex = vertices -> begin();
 
   // new version by WP
 
@@ -381,8 +356,8 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
         }
 
       // look at the products of the vertex (outgoing particles)      
-      SmartRefVector<MCParticle>& daughters = (*iVertex)->products();
-      SmartRefVector<MCParticle>::iterator idau;
+      SmartRefVector<LHCb::MCParticle>& daughters = (*iVertex)->products();
+      SmartRefVector<LHCb::MCParticle>::iterator idau;
       for ( idau   = daughters.begin(); idau != daughters.end(); idau++)
       {
         // for each outgoing particle set this vertex to be OriginVertex
@@ -391,101 +366,8 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
       }      
     }
 
-  SmartDataPtr<Collisions> colls(evtSvc(), CollisionLocation::Default);
-  
-  if(!colls)
-     {
-       return Error("Cannot find Collisions!");
-     }
-  else
-     {
-       for(Collisions::const_iterator colit=colls->begin();
-           colls->end()!=colit;colit++)
-         {     
-           HepPoint3D primvtx=(*colit)->primVtxPosition();
-           
-           for(iVertex=vertices->begin();
-               vertices->end()!=iVertex;iVertex++)
-             {
-               // find the MCVertex (primary) corresponding to this collision
-               if((*iVertex)->position()==primvtx && !((*iVertex)->mother()))
-                 {
-                   // set the pointer to the collision in the vertex and 
-                   // in all the daughters
-
-                   PointToCollision(*iVertex, *colit);
-                 }
-             }
-         }
-     }
-
-//TrajectoryVector* tv = trajectories->GetVector();
-//for( ITC iTrajectory = tv->begin(); tv->end() != iTrajectory ; ++iTrajectory )
-//{
-//const G4VTrajectory* vt = *iTrajectory ;
-//if( 0 == vt       ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-//const GiGaTrajectory*  trajectory = gigaTrajectory( vt ) ; 
-//    if( 0 == trajectory ) 
-//         { return Error("G4VTrajectory*(of type '" + 
-//                        GiGaUtil::ObjTypeName(vt)+
-//                        "*') could not be cast to GiGaTrajectory*");}
-//     MCParticle* particle = table( trajectory->trackID() ).particle() ;
-//     if( 0 == particle ) { return Error("MCParticle* points to NULL!"   ) ; } 
-//     for( ITG iPoint = trajectory->begin() ; 
-//            trajectory->end() != iPoint ; ++iPoint )
-//         {
-//           if( 0 == *iPoint ) 
-//             { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; } 
-//           // auxillary vertex 
-//           miscVertex.setPosition    ( (*iPoint)->GetPosition() );
-//           miscVertex.setTimeOfFlight( (*iPoint)->GetTime    () );
-//           // look for vertex 
-//           iVertex = 
-//           std::lower_bound( trajectory -> begin () == iPoint             ?
-//                             vertices   -> begin () : iVertex             , 
-//                           vertices   -> end   () , &miscVertex , Less  ) ;
-//           // vertex is not found! 
-//      if ( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) ) 
-//          {  return Error(" appropriate MCVertex is not found!") ; }
-//           MCVertex* Vertex = *iVertex ;             
-//           if( 0 == Vertex ) { return Error("MCVertex* points to NULL!") ; }
-//           //  it is not the first vertex of the trajectory
-//           if ( trajectory->begin  () != iPoint )           
-//             { 
-//               Ref decay( particle , refID , Vertex->key() , Vertex  ) ;
-//               particle->addToEndVertices ( decay ) ; 
-//             } 
-//           // the first vertex and origin is not yet set   
-//           else if ( !particle->originVertex() )    
-//             {  
-//               Ref origin( particle , refID , Vertex->key() , Vertex ) ;
-//               particle->setOriginVertex( origin ) ;
-//             } 
-//           else { return Error("'OriginVertex' is already set!") ; }
-//         }
-//     }
-///
    
    return StatusCode::SUCCESS;
    ///
-};
-
-StatusCode GiGaMCParticleCnv::PointToCollision(MCVertex* vtx, Collision* collision)
-{
-
-  vtx->setCollision(collision);
-  
-  SmartRefVector<MCParticle>& daughters = vtx->products();
-  SmartRefVector<MCParticle>::iterator idau;  
-  SmartRefVector<MCVertex>::iterator itv;
-  
-  // propagate it to all the vertices in the tree hanging from a primary
-  for (idau=daughters.begin();idau != daughters.end();idau++) {
-    for( itv=((*idau)->endVertices()).begin();
-         ((*idau)->endVertices()).end()!=itv; itv++) {
-      PointToCollision(*itv, collision);
-    }
-  }
-  return StatusCode::SUCCESS;
 };
 

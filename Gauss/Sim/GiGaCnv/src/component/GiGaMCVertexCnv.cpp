@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.36 2005-04-11 17:37:54 gcorti Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.37 2006-01-31 10:34:15 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.36  2005/04/11 17:37:54  gcorti
+// G4 v70r0 process name
+//
 // Revision 1.35  2004/07/05 11:17:28  gcorti
 // add vertex types
 //
@@ -128,7 +131,7 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   setConverterName              ( "GiGaMCVCnv"              ) ;
   //
   //  declare object name for G4->Gaudi conversion 
-  declareObject( GiGaLeaf( MCVertexLocation::Default , objType() ) ); 
+  declareObject( GiGaLeaf( LHCb::MCVertexLocation::Default , objType() ) ); 
   //
   m_hadronicProcesses.push_back ( "KaonPlusInelastic"             ) ;
   m_hadronicProcesses.push_back ( "PionMinusInelastic"            ) ;
@@ -179,7 +182,7 @@ GiGaMCVertexCnv::~GiGaMCVertexCnv()
 // Class ID 
 // ============================================================================
 const CLID&         GiGaMCVertexCnv::classID     () 
-{ return MCVertices::classID(); }
+{ return LHCb::MCVertices::classID(); }
 
 // ============================================================================
 // StorageType 
@@ -227,7 +230,7 @@ StatusCode GiGaMCVertexCnv::createObj
   object = 0 ;
   if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL!" ) ; }
   ///
-  object        = new MCVertices();
+  object        = new LHCb::MCVertices();
   StatusCode sc = updateObj( address , object );
   if( sc.isFailure() ) 
     { 
@@ -251,7 +254,7 @@ StatusCode GiGaMCVertexCnv::fillObjRefs
 {
   if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; } 
-  MCVertices* vertices = dynamic_cast<MCVertices*> ( object ); 
+  LHCb::MCVertices* vertices = dynamic_cast<LHCb::MCVertices*> ( object ); 
   if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
                                       GiGaUtil::ObjTypeName( object)    + 
                                       "*') is not 'Vertices*'!"         ) ; }  
@@ -273,7 +276,7 @@ StatusCode GiGaMCVertexCnv::updateObj
   ///
   if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; }   
-  MCVertices* vertices = dynamic_cast<MCVertices*> ( object ); 
+  LHCb::MCVertices* vertices = dynamic_cast<LHCb::MCVertices*> ( object ); 
   if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
                                       GiGaUtil::ObjTypeName( object )   + 
                                       "*') is not 'Vertices*'!"         ) ; }  
@@ -314,7 +317,7 @@ StatusCode GiGaMCVertexCnv::updateObj
     const G4PrimaryVertex* vertex = event->GetPrimaryVertex();
     while( 0 != vertex ) 
       {
-        MCVertex* mcvertex = Cnv( vertex );
+        LHCb::MCVertex* mcvertex = Cnv( vertex );
         if( 0 != mcvertex ) { vertices->insert( mcvertex ); }
         vertex = vertex->GetNext();
       }
@@ -370,7 +373,7 @@ StatusCode GiGaMCVertexCnv::updateObj
      *  algorithm std::unique. 
      *  Therefore the following ugly lines are used.  
      */
-    typedef MCVertices::iterator IT;
+    typedef LHCb::MCVertices::iterator IT;
     IT     end = vertices->end   () ; /// unsorted garbage iterator
     for( IT it = vertices->begin () ;  end != it ; ++it )
       { 
@@ -387,11 +390,12 @@ StatusCode GiGaMCVertexCnv::updateObj
          *  the public interface of KeyedContainer class is 
          *  too restrictive
          */
-        std::vector<MCVertex*> tmp( vertices->end() - end , (MCVertex *) 0 );
+        std::vector<LHCb::MCVertex*> tmp( vertices->end() - end , 
+                                          (LHCb::MCVertex *) 0 );
         std::copy( end , vertices->end() , tmp.begin() );
         while( !tmp.empty() )
           { 
-            MCVertex* v = tmp.back() ;
+            LHCb::MCVertex* v = tmp.back() ;
             vertices->erase( v ); tmp.pop_back(); 
           }
       }
@@ -413,7 +417,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
 {
   if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; }   
-  MCVertices* vertices = dynamic_cast<MCVertices*> ( object ); 
+  LHCb::MCVertices* vertices = dynamic_cast<LHCb::MCVertices*> ( object ); 
   if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
                                       GiGaUtil::ObjTypeName( object )   + 
                                       "*') is not 'Vertices*'!"         ) ; }  
@@ -433,7 +437,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     GiGaCnvUtils::parent( address->registry() , evtSvc() );
   if( 0 == parent ) { return Error( " Parent directory is not accessible!"); }
   const std::string particlesPath( parent->identifier() + "/Particles" );
-  SmartDataPtr<MCParticles> particles( evtSvc() , particlesPath );
+  SmartDataPtr<LHCb::MCParticles> particles( evtSvc() , particlesPath );
   if( !particles ) 
     { return Error("Could not locate Particles at=" + particlesPath ); }
   const long refID = object->linkMgr()->addLink( particlesPath ,  particles );
@@ -449,13 +453,13 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
   
   // fill relations
   {
-    typedef SmartRef<MCParticle> Ref;
+    typedef SmartRef<LHCb::MCParticle> Ref;
     typedef TrajectoryVector::const_iterator ITT ;
-    typedef GiGaTrajectory::const_iterator        ITG ;
-    typedef MCParticles::iterator                 ITP ;
-    typedef MCVertices::iterator                  ITV ;
+    typedef GiGaTrajectory::const_iterator   ITG ;
+    typedef LHCb::MCParticles::iterator      ITP ;
+    typedef LHCb::MCVertices::iterator       ITV ;
     // auxillary values 
-    MCVertex miscVertex;
+    LHCb::MCVertex miscVertex;
     GiGaCnvFunctors::MCVerticesLess  Less  ; 
     GiGaCnvFunctors::MCVerticesEqual Equal ;
     // get the references between MCParticles and Geant4 TrackIDs
@@ -475,14 +479,14 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                          "*') could not be cast to GiGaTrajectory*" ) ; }
         // own MCParticle 
         int trid=trajectory->trackID();
-        MCParticle* particle  = table( trid ).particle();
+        LHCb::MCParticle* particle  = table( trid ).particle();
         if( 0 == particle ) { return Error("MCParticle* points to NULL!" ) ; } 
 
         // index of mother 
         int parid=trajectory->parentID();
         GiGaKineRefTableEntry& entry = table( parid ) ;
         // mother MCParticle (could be NULL!)
-        MCParticle* mother  = entry.particle () ;        
+        LHCb::MCParticle* mother  = entry.particle () ;        
 
         // loop over trajectory points (vertices)  
         for( ITG iPoint = trajectory->begin() ; 
@@ -491,8 +495,8 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             if( 0 == *iPoint  ) 
               { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; }  
             // fill parameters of auxillary vertex                
-            miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
-            miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
+            miscVertex.setPosition( Gaudi::XYZPoint((*iPoint)->GetPosition()) );
+            miscVertex.setTime( (*iPoint)->GetTime() );
             // look for vertex, special treatment for "first" 
             // vertex. should be quite fast
             
@@ -527,46 +531,51 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               else { return Error("appropriate MCVertex is not found! 2"); }
             }
             
-            MCVertex* vertex = *iVertex ;
+            LHCb::MCVertex* vertex = *iVertex ;
             if( 0 == vertex ) { return Error("MCVertex* points to NULL!") ; }
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
             {
 
               // the creator of the trajectory              
-              if ( MCVertex::Unknown == vertex->type() ) 
+              if ( LHCb::MCVertex::Unknown == vertex->type() ) 
               {
                 const G4VProcess* creator = trajectory->creator() ;
                 if      ( 0 == creator ) {} 
                 else if ( fDecay    == creator->GetProcessType () )
-                { vertex -> setType ( MCVertex::Decay ) ; }
+                { 
+                  vertex -> setType ( LHCb::MCVertex::DecayVertex ) ; 
+                  // here reset in case of oscillation
+                }
                 else if ( fHadronic == creator->GetProcessType () )
-                { vertex -> setType ( MCVertex::Hadronic ) ; }
+                { vertex -> setType ( LHCb::MCVertex::HadronicInteraction ) ; }
                 else  
                 {
                   const std::string& pname = creator->GetProcessName() ;
                   if      ( "conv"  == pname                      ) 
-                  { vertex->setType ( MCVertex::Pair    ) ; }
+                  { vertex->setType ( LHCb::MCVertex::PairProduction ) ; }
                   else if ( "compt" == pname                      ) 
-                  { vertex->setType ( MCVertex::Compton ) ; }
+                  { vertex->setType ( LHCb::MCVertex::Compton ) ; }
                   else if ( "eBrem" == pname || "muBrems" == pname )    
-                  { vertex->setType ( MCVertex::Brem    ) ; }
+                  { vertex->setType ( LHCb::MCVertex::Bremsstrahlung ) ; }
                   else if ( "annihil" == pname )
-                  { vertex->setType ( MCVertex::Annihil ) ; }
+                  { vertex->setType ( LHCb::MCVertex::Annihilation ) ; }
                   else if ( "phot" == pname )
-                  { vertex->setType ( MCVertex::Photo ) ; }
+                  { vertex->setType ( LHCb::MCVertex::PhotoElectric ) ; }
                   else if ( "RichHpdPhotoelectricProcess" == pname ) 
-                  { vertex->setType ( MCVertex::RICHPhoto ) ; }
+                  { vertex->setType ( LHCb::MCVertex::RICHPhotoElectric ) ; }
                   else if ( "RichG4Cerenkov" == pname )
-                  { vertex->setType ( MCVertex::Cerenkov ) ; }
+                  { vertex->setType ( LHCb::MCVertex::Cerenkov ) ; }
                   else 
                   {
                     const bool found = std::binary_search 
                       ( m_hadronicProcesses.begin () , 
                         m_hadronicProcesses.end   () , pname ) ;
-                    if ( found ) { vertex -> setType ( MCVertex::Hadronic ) ; }
+                    if ( found ) { 
+                      vertex -> setType ( LHCb::MCVertex::HadronicInteraction ) ; 
+                    }
                   }
-                  if ( MCVertex::Unknown == vertex -> type() ) 
+                  if ( LHCb::MCVertex::Unknown == vertex -> type() ) 
                   {
                     // here we have an intertsting situation
                     // the process is *KNOWN*, but the vertex type 
@@ -578,7 +587,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 }
               }
               
-              if ( MCVertex::Unknown == vertex -> type () ) 
+              if ( LHCb::MCVertex::Unknown == vertex -> type () ) 
               { Warning ( " GiGaMCVertexCnv: VertexType is still unknown" ) ; };
               
               // deternining the vertex type from the creator process
@@ -616,13 +625,13 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               {
                 MsgStream log( msgSvc(),  name() ) ; 
                 log << MSG::INFO << "While looking at trajectory point "
-                    << (HepPoint3D)((*iPoint)->GetPosition()) 
+                    << (*iPoint)->GetPosition() 
                     << " from the following trajectory: "
                     << trajectory->trackID() << endreq;
                 
                 for( ITG iP = trajectory->begin(); 
                      trajectory->end() != iP; ++iP)
-                  log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                  log << MSG::INFO << (*iP)->GetPosition()
                       << endreq;
                 
                 log << MSG::INFO 
@@ -637,16 +646,16 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 {
                   log << MSG::DEBUG << "trajectoryID " 
                       << (*iT)->GetTrackID() << " motherID " 
-                      << (*iT)->GetParentID() <<
-                    "  pdgID " << (*iT)->GetPDGEncoding() 
-                      << " initial momentum " << 
-                    (HepPoint3D)((*iT)->GetInitialMomentum())
+                      << (*iT)->GetParentID() 
+                      << "  pdgID " << (*iT)->GetPDGEncoding() 
+                      << " initial momentum " 
+                      << (*iT)->GetInitialMomentum()
                       << endreq;
                   
                   for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
                        ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
                   {
-                    log << MSG::DEBUG << (HepPoint3D)((*iP)->GetPosition())
+                    log << MSG::DEBUG << (*iP)->GetPosition()
                         << endreq;
                   }
                 }    
@@ -670,14 +679,14 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
         int mytrid=(*miter).first;
 
         // look for the corresponding MCParticle
-        MCParticle* mcpart  = table( mytrid ).particle();        
+        LHCb::MCParticle* mcpart  = table( mytrid ).particle();        
         
         // create a new end vertex and set (x,t)        
-        SmartRef<MCVertex> endvtx= new MCVertex();
+        SmartRef<LHCb::MCVertex> endvtx= new LHCb::MCVertex();
         GiGaTrajectoryPoint* point=(*miter).second;
         
-        endvtx->setPosition(point->GetPosition());
-        endvtx->setTimeOfFlight(point->GetTime());
+        endvtx->setPosition( Gaudi::XYZPoint( point->GetPosition() ) );
+        endvtx->setTime(point->GetTime());
         
         // add the new vertex to the container
         vertices->insert( endvtx ); 
@@ -696,7 +705,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
           {
             if ((*itra)->GetParentID()==mytrid)
               {
-                MCParticle* outpart=table((*itra)->
+                LHCb::MCParticle* outpart=table((*itra)->
                                           GetTrackID() ).particle();
 
                 // Ref dau( endvtx , refID , outpart->key() , outpart );
@@ -723,7 +732,7 @@ StatusCode GiGaMCVertexCnv::createRep
 {
   address = 0 ; 
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"  ); } 
-  MCVertices* vertices = dynamic_cast<MCVertices*>( object ) ; 
+  LHCb::MCVertices* vertices = dynamic_cast<LHCb::MCVertices*>( object ) ; 
   if( 0 ==  vertices ) { return Error(" DataObject*(of type '"       + 
                                       GiGaUtil::ObjTypeName( object) + 
                                       "*') is not 'Vertices*'!"      ) ; }  
@@ -759,7 +768,7 @@ StatusCode GiGaMCVertexCnv::updateRep
   // chech arguments 
   if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; } 
   if( 0 ==  object   ) { return Error(" DataObject*     points to NULL" ) ; } 
-  MCVertices* vertices = dynamic_cast<MCVertices*>( object ) ;  
+  LHCb::MCVertices* vertices = dynamic_cast<LHCb::MCVertices*>( object ) ;  
   if( 0 ==  vertices ) { return Error("DataObject*(of type '"           + 
                                       GiGaUtil::ObjTypeName( object )   + 
                                       "*') is not 'Vertices*'!"         ) ; }  
@@ -768,11 +777,11 @@ StatusCode GiGaMCVertexCnv::updateRep
   // create the vertex converter
   Vertex2Vertex Cnv( ppSvc() );
   // loop over all vertices, "convert" them and load them into GiGa 
-  typedef MCVertices::const_iterator IT;
+  typedef LHCb::MCVertices::const_iterator IT;
   for( IT pVertex = vertices->begin() ; 
        vertices->end()  != pVertex ; ++pVertex ) 
     {
-      const MCVertex* vertex = *pVertex ; 
+      const LHCb::MCVertex* vertex = *pVertex ; 
       //  skip artificial NULLS 
       if( 0 == vertex                     )             { continue; } 
       // find primary MCVertices (without origin MCparticle) 

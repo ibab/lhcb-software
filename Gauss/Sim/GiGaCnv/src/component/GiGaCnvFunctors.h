@@ -1,8 +1,11 @@
-// $Id: GiGaCnvFunctors.h,v 1.8 2005-01-25 15:52:10 gcorti Exp $
+// $Id: GiGaCnvFunctors.h,v 1.9 2006-01-31 10:34:15 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/01/25 15:52:10  gcorti
+// adapt to CLHEP 19.0
+//
 // Revision 1.7  2002/05/20 13:36:16  ibelyaev
 //  add conversion of primary vertices
 //
@@ -51,8 +54,8 @@ namespace GiGaCnvFunctors
    *  @return true if first vector is "less" than the second vector 
    */
   inline bool operator< 
-  ( const HepPoint3D& vec1 ,
-    const HepPoint3D& vec2 )
+  ( const Gaudi::XYZPoint& vec1 ,
+    const Gaudi::XYZPoint& vec2 )
   {
     if( &vec1 == &vec2 ) { return false ; } ///< the same object
     ///
@@ -75,7 +78,7 @@ namespace GiGaCnvFunctors
    *  @date   xx/xx/xxxx
    */
   class MCVerticesLess:  
-    public std::binary_function<const MCVertex*, const MCVertex* , bool>
+    public std::binary_function<const LHCb::MCVertex*, const LHCb::MCVertex* , bool>
   {
   public:
     
@@ -85,15 +88,15 @@ namespace GiGaCnvFunctors
      *  @return true if verst vertes is "less" than the second one
      */ 
     inline bool operator() 
-      ( const MCVertex* v1 , 
-        const MCVertex* v2 ) const 
+      ( const LHCb::MCVertex* v1 , 
+        const LHCb::MCVertex* v2 ) const 
     {      
       return  
         ( v1 == v2                                   ) ? false :
         ( 0  == v1                                   ) ? true  :
         ( 0  == v2                                   ) ? false :
-        ( v1->timeOfFlight () <  v2->timeOfFlight () ) ? true  : 
-        ( v1->timeOfFlight () >  v2->timeOfFlight () ) ? false : 
+        ( v1->time() <  v2->time() ) ? true  : 
+        ( v1->time() >  v2->time() ) ? false : 
         ( v1->position     () <  v2->position     () ) ? true  : false ;
     }
   };
@@ -108,7 +111,7 @@ namespace GiGaCnvFunctors
    *  @date   xx/xx/xxxx
    */
   class MCVerticesEqual  : 
-    public std::binary_function<const MCVertex*, const MCVertex*,bool>
+    public std::binary_function<const LHCb::MCVertex*, const LHCb::MCVertex*,bool>
   {
   public:
     
@@ -118,13 +121,13 @@ namespace GiGaCnvFunctors
      *  @return true if vertices have the same Time-of-Flight and Position
      */
     inline bool operator() 
-      ( const MCVertex* v1 , 
-        const MCVertex* v2 ) const 
+      ( const LHCb::MCVertex* v1 , 
+        const LHCb::MCVertex* v2 ) const 
     {
       return 
         ( v1 == v2                                   ) ? true  :
         ( 0  == v1 || 0 == v2                        ) ? false :
-        ( v1->timeOfFlight () == v2->timeOfFlight () &&  
+        ( v1->time() == v2->time() &&  
           v1->position     () == v2->position     () ) ? true  : false ;
     };
   };
@@ -137,7 +140,7 @@ namespace GiGaCnvFunctors
    *  @date   22/07/2001
    */
   class MCVertexResetRefs:
-    public std::unary_function<MCVertex*,MCVertex*>
+    public std::unary_function<LHCb::MCVertex*,LHCb::MCVertex*>
   {
   public:
     
@@ -145,12 +148,12 @@ namespace GiGaCnvFunctors
      *  @param vertex reference to MCVertex object
      *  @return pointer to MCVertex object 
      */
-    inline MCVertex* operator() 
-      ( MCVertex* vertex ) const 
+    inline LHCb::MCVertex* operator() 
+      ( LHCb::MCVertex* vertex ) const 
     {
       if( 0 == vertex ) { return 0 ; }  // skip NULLs
       vertex->clearProducts ()    ;     // remove all daughter particles 
-      vertex->setMother( (MCParticle*) 0  ) ; // unset the mother particle
+      vertex->setMother( (LHCb::MCParticle*) 0  ) ; // unset the mother particle
       ///
       return vertex ;
     };
@@ -164,7 +167,7 @@ namespace GiGaCnvFunctors
    *  @date   22/07/2001
    */
   class MCParticleResetRefs:
-    public std::unary_function<MCParticle*,MCParticle*>
+    public std::unary_function<LHCb::MCParticle*,LHCb::MCParticle*>
   {
   public:
     
@@ -172,12 +175,12 @@ namespace GiGaCnvFunctors
      *  @param particle reference to MCParticle object
      *  @return pointer to MCParticle object 
      */
-    inline MCParticle* operator() 
-      ( MCParticle* particle ) const 
+    inline LHCb::MCParticle* operator() 
+      ( LHCb::MCParticle* particle ) const 
     {
       if( 0 == particle ) { return 0 ; }  ///< skip NULLs
       particle->clearEndVertices();   ///< remove all decay vertices  
-      particle->setOriginVertex( (MCVertex*)0 );   ///< remove origin vertex 
+      particle->setOriginVertex( (LHCb::MCVertex*)0 );   ///< remove origin vertex 
       ///
       return particle;
     };

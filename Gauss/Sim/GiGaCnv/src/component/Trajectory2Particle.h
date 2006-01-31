@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/20 13:36:17  ibelyaev
+//  add conversion of primary vertices
+//
 // ============================================================================
 #ifndef GIGACNV_TRAJECTORY2PARTICLE_H 
 #define GIGACNV_TRAJECTORY2PARTICLE_H 1
@@ -28,7 +31,7 @@ namespace GiGaCnvFunctors
    */
   
   class Trajectory2Particle:
-    public std::unary_function<MCParticle*,const GiGaTrajectory*> 
+    public std::unary_function<LHCb::MCParticle*,const GiGaTrajectory*> 
   {
   public:
     
@@ -47,7 +50,7 @@ namespace GiGaCnvFunctors
      *  @param trajectory pointer to G4VTrajectory object 
      *  @return pointer to converted MCParticle object
      */
-    MCParticle* operator()( const GiGaTrajectory* trajectory ) const;
+    LHCb::MCParticle* operator()( const GiGaTrajectory* trajectory ) const;
     
     /** copy constructor 
      *  @param right const reference to object 

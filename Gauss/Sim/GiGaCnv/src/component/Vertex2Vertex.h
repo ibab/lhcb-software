@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 17:24:55  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/24 11:13:57  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 ///
@@ -30,7 +33,7 @@ class G4PrimaryParticle;
 
 
 class Vertex2Vertex: 
-  public std::unary_function<const MCVertex*,G4PrimaryVertex*>
+  public std::unary_function<const LHCb::MCVertex*,G4PrimaryVertex*>
 {
 public:
   
@@ -46,7 +49,7 @@ public:
    *  @param  vertex pointer to MCVertex object 
    *  @return pointer to converted G4PrimaryVertex object
    */
-  G4PrimaryVertex* operator() ( const MCVertex* vertex ) const;
+  G4PrimaryVertex* operator() ( const LHCb::MCVertex* vertex ) const;
 
 protected:
   
@@ -54,7 +57,7 @@ protected:
    *  @param part pointer to MCParticle Object 
    *  @return pointer to converted G4PrimaryParticle object
    */
-  inline G4PrimaryParticle* particle( const MCParticle* part ) const
+  inline G4PrimaryParticle* particle( const LHCb::MCParticle* part ) const
   {  return m_p2p( part ); }
   
 private:

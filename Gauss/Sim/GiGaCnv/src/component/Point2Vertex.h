@@ -1,8 +1,11 @@
-// $Id: Point2Vertex.h,v 1.5 2002-05-20 13:36:17 ibelyaev Exp $ 
+// $Id: Point2Vertex.h,v 1.6 2006-01-31 10:34:15 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/20 13:36:17  ibelyaev
+//  add conversion of primary vertices
+//
 // ============================================================================
 #ifndef GIGACNV_POINT2VERTEX_H 
 #define GICACNV_POINT2VERTEX_H 1
@@ -27,7 +30,7 @@ namespace GiGaCnvFunctors
    */
   
   class Point2Vertex:
-    public std::unary_function<const GiGaTrajectoryPoint*,MCVertex*>
+    public std::unary_function<const GiGaTrajectoryPoint*,LHCb::MCVertex*>
   {
   public:
     
@@ -35,16 +38,16 @@ namespace GiGaCnvFunctors
      *  @param point  pointer to GiGaTrajectoryPoint Object 
      *  @return pointer to converted MCVertex object
      */
-    inline MCVertex* operator() 
+    inline LHCb::MCVertex* operator() 
       ( const GiGaTrajectoryPoint* point ) const 
     {
       /// skip artificial NULLs 
       if( 0 == point ) { return 0 ; }
       /// create new vertex 
-      MCVertex* vertex = new MCVertex();
+      LHCb::MCVertex* vertex = new LHCb::MCVertex();
       /// fill it! 
-      vertex->setPosition     ( point->GetPosition () ) ;
-      vertex->setTimeOfFlight ( point->GetTime     () ) ;
+      vertex->setPosition( Gaudi::XYZPoint(  point->GetPosition() ) ) ;
+      vertex->setTime( point->GetTime () ) ;
       ///
       return vertex ;
     };   

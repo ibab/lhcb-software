@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 17:24:55  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/24 11:13:56  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 /// 
@@ -15,7 +18,7 @@
 #include "Particle2Definition.h"
 /// forward declarations 
 class IParticlePropertySvc;
-class MCParticle;
+class LHCb::MCParticle;
 class G4PrimaryParticle;
 
 /** @class Particle2Particle Particle2Particle.h 
@@ -28,7 +31,7 @@ class G4PrimaryParticle;
  */
 
 class Particle2Particle: 
-  public std::unary_function<const MCParticle*,G4PrimaryParticle*> 
+  public std::unary_function<const LHCb::MCParticle*,G4PrimaryParticle*> 
 {
 public:
   
@@ -44,7 +47,7 @@ public:
    *  @param particle pointer to MCParticle object
    *  @return pointer to new G4Primary particle
    */
-  G4PrimaryParticle* operator() ( const MCParticle* particle ) const ;
+  G4PrimaryParticle* operator() ( const LHCb::MCParticle* particle ) const ;
   
 protected:
   
@@ -53,7 +56,7 @@ protected:
    *  @return Geant4 particle definition 
    */
   inline G4ParticleDefinition* 
-  definition( const MCParticle* particle ) const 
+  definition( const LHCb::MCParticle* particle ) const 
   { return m_p2d( particle ); }
   
 private:

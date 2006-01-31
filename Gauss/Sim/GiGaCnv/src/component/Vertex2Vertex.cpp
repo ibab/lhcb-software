@@ -1,8 +1,11 @@
-// $Id: Vertex2Vertex.cpp,v 1.4 2003-01-23 09:20:38 ibelyaev Exp $
+// $Id: Vertex2Vertex.cpp,v 1.5 2006-01-31 10:34:15 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/01/23 09:20:38  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.3  2002/04/24 14:50:31  ibelyaev
 //  update for newer versions of Gaudi, LHCb and G4
 //
@@ -56,10 +59,10 @@ Vertex2Vertex::~Vertex2Vertex(){};
  */
 // ============================================================================
 static const std::string 
-ErrMsg1("GiGaCnv::Vertex2Vertex: MCVertex* points to NULL!");
+ErrMsg1("GiGaCnv::Vertex2Vertex: LHCb::MCVertex* points to NULL!");
 
 // ============================================================================
-G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
+G4PrimaryVertex* Vertex2Vertex::operator() ( const LHCb::MCVertex* vertex ) const
 {
   if( 0 == vertex ) { throw GiGaException( ErrMsg1 ); }
   /// skip empty vertices 
@@ -68,13 +71,13 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
     new G4PrimaryVertex( vertex->position().x() ,
                          vertex->position().y() ,
                          vertex->position().z() ,
-                         vertex->timeOfFlight() ) ;
+                         vertex->time() ) ;
   ///
-  typedef SmartRefVector<MCParticle>::const_iterator IT;
+  typedef SmartRefVector<LHCb::MCParticle>::const_iterator IT;
   for( IT pParticle = vertex->products().begin() ;
        vertex->products().end() != pParticle ; ++pParticle )
     {
-      const MCParticle* mcp = *pParticle ;
+      const LHCb::MCParticle* mcp = *pParticle ;
       if( 0 == mcp  ) { continue ; }              ///< CONTINUE!
       G4PrimaryParticle* Particle = particle( mcp );
       if( 0 != Particle   ) { Vertex->SetPrimary( Particle ); }

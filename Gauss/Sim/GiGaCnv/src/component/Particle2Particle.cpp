@@ -1,8 +1,11 @@
-// $Id: Particle2Particle.cpp,v 1.5 2003-01-23 09:20:38 ibelyaev Exp $
+// $Id: Particle2Particle.cpp,v 1.6 2006-01-31 10:34:15 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/01/23 09:20:38  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.4  2002/04/24 14:50:30  ibelyaev
 //  update for newer versions of Gaudi, LHCb and G4
 //
@@ -79,7 +82,7 @@ ErrMsg2("GiGaCnv::Particle2Particle: G4ParticleDefinition* points to NULL!");
 // ============================================================================
 G4PrimaryParticle* 
 Particle2Particle::operator() 
-  ( const MCParticle* particle ) const 
+  ( const LHCb::MCParticle* particle ) const 
 { 
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
   G4ParticleDefinition* pDef = definition( particle );
@@ -97,17 +100,17 @@ Particle2Particle::operator()
    *  But it is a current property of Geant4! 
    *  This piece of code should be modified later
    */  
-  typedef SmartRefVector<MCVertex>::const_iterator   ITV;
-  typedef SmartRefVector<MCParticle>::const_iterator ITP;
+  typedef SmartRefVector<LHCb::MCVertex>::const_iterator   ITV;
+  typedef SmartRefVector<LHCb::MCParticle>::const_iterator ITP;
   for( ITV pVertex = particle->endVertices().begin(); 
        particle->endVertices().end() != pVertex ; ++pVertex ) 
     { 
-      const MCVertex* vertex = *pVertex ; 
+      const LHCb::MCVertex* vertex = *pVertex ; 
       if( 0 == vertex )             { continue ; } ///< constinue !
       for( ITP pParticle = vertex->products().begin(); 
            vertex->products().end() != pParticle ; ++pParticle ) 
         {
-          const MCParticle* mcp = *pParticle ;
+          const LHCb::MCParticle* mcp = *pParticle ;
           if( 0 == mcp )     { continue ; } ///< continue !
           /// recursion 
           G4PrimaryParticle* p = (*this)( mcp ) ; 

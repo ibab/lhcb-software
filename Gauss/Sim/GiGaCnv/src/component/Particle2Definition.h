@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2002/04/24 14:50:30  ibelyaev
+///  update for newer versions of Gaudi, LHCb and G4
+///
 /// Revision 1.2  2001/08/12 17:24:54  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -17,7 +20,7 @@
 #include <functional>
 /// forward declarations 
 class IParticlePropertySvc;
-class MCParticle;
+class LHCb::MCParticle;
 class G4ParticleDefinition;
 
 /** @class Particle2Definition Particle2Definition.h 
@@ -29,7 +32,7 @@ class G4ParticleDefinition;
  *  @date   22/07/2001
  */
 class Particle2Definition: 
-  public std::unary_function<const MCParticle*,G4ParticleDefinition*> 
+  public std::unary_function<const LHCb::MCParticle*,G4ParticleDefinition*> 
 {
 public:
   
@@ -52,7 +55,7 @@ public:
    *  @return pointer to Geant4 particel definition 
    */
   G4ParticleDefinition* operator()
-    ( const MCParticle* ) const;
+    ( const LHCb::MCParticle* ) const;
   
 protected:
   
