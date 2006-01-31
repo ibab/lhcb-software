@@ -4,6 +4,7 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v1r0 2006-01-31 ======================
 ! 2006-01-31 - Eduardo Rodrigues
  - First version. For LHCb v19r3 and Brunel v28r2.
  - Contains a consistent set of tracking packages
