@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.17 2006-01-31 07:48:23 cattanem Exp $
+! $Id: release.notes,v 1.18 2006-01-31 17:05:39 asarti Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
 !==================== MuonAssociators v2r0 2006-01-31 =--===================
+! 2006-01-31 - Alessio Sarti
+ - Write the IntLink to the TES in 
+   LHCb::MCMuonDigitLocation::MCMuonDigit + "Info" location
+
 ! 2006-01-31 - Marco Cattaneo
  - Move the IntLink event model class to EventBase
 
