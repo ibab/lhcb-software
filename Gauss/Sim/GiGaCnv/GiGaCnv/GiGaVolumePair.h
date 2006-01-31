@@ -1,14 +1,17 @@
-// $Id: GiGaVolumePair.h,v 1.1 2002-01-22 18:24:42 ibelyaev Exp $
+// $Id: GiGaVolumePair.h,v 1.2 2006-01-31 10:37:47 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:42  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 #ifndef GIGACNV_GIGAVolumePair_H 
 #define GIGACNV_GIGAVolumePair_H 1
 // Include files
-// CLHEP 
-#include "CLHEP/Geometry/Transform3D.h"
+// LHCbDefinitions
+#include "Kernel/Transform3DTypes.h"
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolume.h"
 
@@ -30,7 +33,7 @@ public:
    *  @param matrix transformation matrix 
    */ 
   GiGaVolumePair( const GiGaVolume&     volume = GiGaVolume     () , 
-                  const HepTransform3D& matrix = HepTransform3D () )
+                  const Gaudi::Transform3D& matrix = Gaudi::Transform3D () )
     : m_volume( volume ) 
     , m_matrix( matrix ) 
   {};
@@ -47,7 +50,7 @@ public:
   /** accessor to the transformation matrix 
    *  @return transformation matrix 
    */
-  inline const HepTransform3D& matrix () const { return m_matrix ; }
+  inline const Gaudi::Transform3D& matrix () const { return m_matrix ; }
   
   /** set new value for volume 
    *  @param value new value for the volume 
@@ -58,13 +61,13 @@ public:
   /** set/reset new value for transformation matrix 
    *  @param value new value of transformation matrix  
    */
-  inline void setMatrix( const HepTransform3D& value = HepTransform3D() ) 
+  inline void setMatrix( const Gaudi::Transform3D& value = Gaudi::Transform3D() ) 
   { m_matrix = value ; }
   
 private:
   
   GiGaVolume      m_volume ;
-  HepTransform3D  m_matrix ;
+  Gaudi::Transform3D  m_matrix ;
   
 };
 
