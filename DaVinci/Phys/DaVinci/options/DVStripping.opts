@@ -4,10 +4,10 @@
 #include "$STRIPPINGROOT/options/DVComb.opts" 
 #include "$STRIPPINGROOT/options/OverwriteExclusiveSelection.opts" 
 
-//#include "$DAVINCIROOT/options/DaVinciTestData.opts" 
-#include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts" 
+#include "$DAVINCIROOT/options/DaVinciTestData.opts" 
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts" 
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 50000 ;
 EventSelector.PrintFreq  = 1;
 
 DaVinci.OutputLevel = 2 ;

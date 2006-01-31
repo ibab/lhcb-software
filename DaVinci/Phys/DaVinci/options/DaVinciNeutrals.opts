@@ -1,4 +1,4 @@
-// $Id: DaVinciNeutrals.opts,v 1.17 2005-11-04 06:54:46 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.18 2006-01-31 16:21:08 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -29,6 +29,10 @@ Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
 // Make neutral ProtoParticles
 Neutrals.Members += { "NeutralPPsFromCPsAlg" };
 
+//
+// Pi0 and pair photons on demand
+//
+#include "$COMMONPARTICLESROOT/options/CommonParticles.opts"
 // ============================================================================
 // The END 
 // ============================================================================

@@ -20,3 +20,8 @@ ApplicationMgr.DLLs += { "PrimVtx" };
 #include "$PRIMVTXROOT/options/PrimVtx.opts"
 DaVinciMainSeq.Members += { "PrimVtxFinder" };
 
+//
+// Standard Particles on demand
+//
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+

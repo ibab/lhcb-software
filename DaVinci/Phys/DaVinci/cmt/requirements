@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.288 2006-01-20 16:34:29 pkoppenb Exp $
+# $Id: requirements,v 1.289 2006-01-31 16:21:07 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -46,16 +46,16 @@ use LHCb                        v*
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
-use  CommonParticles    	v1r5p3   Phys
+use  CommonParticles    	v2r0     Phys
 use  DaVinciFilter      	v3r4     Phys
 use  DaVinciKernel      	v3r10    Phys
-use  DaVinciTools       	v12r4p1  Phys
-use  FlavourTagging     	v6r4     Phys
-use  Ks2PiPiSel         	v1r7     Phys
-use  ParticleMaker      	v1r6p1   Phys
+use  DaVinciTools       	v12r5    Phys
+use  FlavourTagging     	v6r5     Phys
+use  Ks2PiPiSel         	v1r8     Phys
+use  ParticleMaker      	v1r7     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
-use  VertexFit			v1r9p1   Phys
+use  VertexFit			v1r10    Phys
 use  Tampering                  v1r4     Phys
 use  TriggerSource              v1r0     Phys
 # Generic tools 
@@ -66,9 +66,8 @@ use  RecoTools          	v1r1     Rec
 # packages included in PhysMCSys
 #=======================================================
 use  DaVinciAssociators 	v5r5p1   Phys
-use  DaVinciEff         	v3r4     Phys
+use  DaVinciEff         	v3r4p1   Phys
 use  DaVinciMCTools     	v5r18    Phys
-use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
 use  PVEff	                v1r0p1   Phys
@@ -103,7 +102,7 @@ use  PhysSelSys			v8r10    PhysSel
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r7     Calo
 # Muon PID
-use  MuonID             	v3r11   Muon
+use  MuonID             	v3r11p1 Muon
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
