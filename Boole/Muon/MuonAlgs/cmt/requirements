@@ -10,7 +10,7 @@ include_dirs      $(MUONALGSROOT)
 # ================ used packages ========================================= 
 use AIDA        v*	LCG_Interfaces -no_auto_imports
 use MuonDet     v5r*    Det
-use MuonTools   v3r* 	Muon
+#use MuonTools   v3r* 	Muon
 use MuonEvent	v*	Event	
 use MCEvent	v*	Event	
 use MuonKernel  v4*     Muon

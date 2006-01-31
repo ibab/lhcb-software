@@ -25,7 +25,7 @@
 #include "DetDesc/SolidBox.h"  
 #include "DetDesc/IReadOut.h"   
 //#include "MuonTools/IMuonTileXYZTool.h"
-#include "MuonTools/IMuonGetInfoTool.h"
+//#include "MuonTools/IMuonGetInfoTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
 #include "MuonAlgs/MuonDigitizationData.h"
@@ -126,7 +126,7 @@ private:
   
   //// move them to monitoring
 //  IMuonTileXYZTool* m_pMuonTileXYZ ;
-  IMuonGetInfoTool* m_pGetInfo ;
+//  IMuonGetInfoTool* m_pGetInfo ;
 
   IHistogram1D* m_histoTiming14 ;     
   IHistogram1D* m_histoTiming15 ;     
