@@ -1,0 +1,80 @@
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" Jpsi
+ * 
+ *  The configuration includes:
+ *  
+ *  @see StandardParticles
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @date 2006-01-30
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose Jpsi->MuMu
+  "DATA='/Event/Phys/StdLooseJpsi2MuMu/Particles'     TYPE='MakeResonances/StdLooseJpsi2MuMu'",
+  "DATA='/Event/Phys/StdLooseJpsi2MuMu/Vertices'      TYPE='MakeResonances/StdLooseJpsi2MuMu'",
+// Loose Jpsi->ee
+  "DATA='/Event/Phys/StdLooseJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseJpsi2ee'",
+  "DATA='/Event/Phys/StdLooseJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseJpsi2ee'",
+// Lifetime-unbiased Jpsi->MuMu
+  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Particles'     TYPE='MakeResonances/StdUnbiasedJpsi2MuMu'",
+  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Vertices'      TYPE='MakeResonances/StdUnbiasedJpsi2MuMu'"
+};
+
+/*************************************************************************
+*  Standard Loose Jpsi->MuMu without any lifetime bias
+*  Re-implementation of Gerhard's preselection
+*/
+StdUnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" };
+StdUnbiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
+// Cuts for daughters
+StdUnbiasedJpsi2MuMu.DaughterFilter.Selections = {"mu+ : KinFilterCriterion"};
+StdUnbiasedJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinPt = 250.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdUnbiasedJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinMomentum = 3000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+// Cuts for combination
+StdUnbiasedJpsi2MuMu.Window = 120.0 * MeV; // hlt presel: 120 * MeV;
+// Cuts for mother
+StdUnbiasedJpsi2MuMu.MotherFilter.Selections = {"J/psi(1S) : KinFilterCriterion, 
+                                                                   VtxFilterCriterion"}; 
+StdUnbiasedJpsi2MuMu.MotherFilter.VtxFilterCriterion.MaxChi2 = 16.0; // hlt presel: 25
+StdUnbiasedJpsi2MuMu.MotherFilter.KinFilterCriterion.MinMomentum = 10*GeV ; // 
+
+
+/*************************************************************************
+*  Standard Loose Jpsi->MuMu
+*/
+StdLooseJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" };
+StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
+// Cuts for daughters
+StdLooseJpsi2MuMu.DaughterFilter.Selections = {"mu+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdLooseJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdLooseJpsi2MuMu.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdLooseJpsi2MuMu.Window = 100.0 * MeV; // hlt presel: 120 * MeV;
+// Cuts for mother
+StdLooseJpsi2MuMu.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"}; 
+StdLooseJpsi2MuMu.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 25
+StdLooseJpsi2MuMu.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
+
+/*************************************************************************
+*  Standard Loose Jpsi->ee
+*/
+StdLooseJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseElectrons" };
+StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+// Cuts for daughters
+StdLooseJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseJpsi2ee.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdLooseJpsi2ee.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdLooseJpsi2ee.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdLooseJpsi2ee.Window = 100.0 * MeV; // hlt presel: 120 * MeV;
+// Cuts for mother
+StdLooseJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"}; 
+StdLooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 25
+StdLooseJpsi2ee.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
+

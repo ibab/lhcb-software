@@ -7,6 +7,10 @@
  */
 
 // ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Phys/ResolvedPi0Alg/Particles'     TYPE='ResolvedPi0Alg'",
+  "DATA='/Event/Phys/ResolvedPi0Alg/Vertices'      TYPE='ResolvedPi0Alg'",
+};
 
 // Configure PhysDesktop Tool with necessary values
 ResolvedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";

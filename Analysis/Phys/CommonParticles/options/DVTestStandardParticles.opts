@@ -1,0 +1,52 @@
+/** @file 
+ *  Test firing of standard Particles
+ *  
+ *  @author P. Koppenburg
+ *  @date 2006-01-30
+ */
+
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+//#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+DaVinciMainSeq.Members += { "PrintTree/PrintD0" };
+PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KPi" } ;
+PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02PiPi" } ;
+PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KK" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintDs" };
+PrintDs.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDs2KKPi" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintDstar" };
+PrintDstar.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDstarWithD02KPi" } ;
+PrintDstar.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDstarWithD02PiPi" } ;
+PrintDstar.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDstarWithD02KK" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintJpsi" };
+PrintJpsi.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseJpsi2MuMu" } ;
+PrintJpsi.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseJpsi2ee" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintJpsiUnbiased" };
+PrintJpsiUnbiased.PhysDesktop.InputLocations += { "/Event/Phys/StdUnbiasedJpsi2MuMu" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintKstar" };
+PrintKstar.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseKstar2KPi" } ;
+
+DaVinciMainSeq.Members += { "PrintTree/PrintPhi" };
+PrintPhi.PhysDesktop.InputLocations += { "/Event/Phys/StdLoosePhi2KK" } ;
+
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+ApplicationMgr.EvtMax    = 1000 ;
+//EventSelector.FirstEvent  = 616 ;
+
+//#include "$HLTSELECTIONSROOT/options/L0TDR-Bd2DstarPi.opts"
+
+DaVinciMainSeq.Members += { "SelResultCorrelations/CorrJpsi" };
+CorrJpsi.Algorithms = { "StdUnbiasedJpsi2MuMu", "StdLooseJpsi2MuMu"  } ;
+                 
+DaVinciMainSeq.Members += { "SelResultCorrelations/CorrDstar" };
+CorrDstar.Algorithms = { "StdLooseD02KPi", "StdLooseD02KK", "StdLooseD02PiPi",
+                          "StdLooseDstarWithD02KPi", "StdLooseDstarWithD02KK", 
+			  "StdLooseDstarWithD02PiPi",
+			   "D02KPiForTDRselBd2DstarPi",
+			   "Dstar2D0PiForTDRselBd2DstarPi" } ;

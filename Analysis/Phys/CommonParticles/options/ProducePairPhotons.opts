@@ -1,4 +1,9 @@
 // produce pair photons from tracks
+// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Phys/ProducePairPhotons/Particles'     TYPE='ProducePairPhotons'",
+  "DATA='/Event/Phys/ProducePairPhotons/Vertices'      TYPE='ProducePairPhotons'",
+};
 
 // default options
 ProducePairPhotons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";

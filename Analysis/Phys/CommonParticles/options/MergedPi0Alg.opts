@@ -6,6 +6,10 @@
  */
 
 // ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Phys/MergedPi0Alg/Particles'     TYPE='MergedPi0Alg'",
+  "DATA='/Event/Phys/MergedPi0Alg/Vertices'      TYPE='MergedPi0Alg'",
+};
 
 // Configure PhysDesktop Tool with necessary values
 MergedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonFromMergedParticleMaker";

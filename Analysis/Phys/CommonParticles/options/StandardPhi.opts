@@ -1,0 +1,37 @@
+// $Id: StandardPhi.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" Phi
+ * 
+ *  The configuration includes:
+ *  
+ *  @see StandardParticles
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @date 2006-01-30
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose Phi->KK
+  "DATA='/Event/Phys/StdLoosePhi2KK/Particles'     TYPE='MakeResonances/StdLoosePhi2KK'",
+  "DATA='/Event/Phys/StdLoosePhi2KK/Vertices'      TYPE='MakeResonances/StdLoosePhi2KK'"
+};
+
+/*************************************************************************
+*  Standard Loose Phi->KK
+*/
+StdLoosePhi2KK.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" };
+StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-";
+// Cuts for daughters
+StdLoosePhi2KK.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdLoosePhi2KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdLoosePhi2KK.Window = 50.0 * MeV; // hlt presel: 50 * MeV;
+// Cuts for mother
+StdLoosePhi2KK.MotherFilter.Selections = {"phi(1020) : VtxFilterCriterion"}; 
+StdLoosePhi2KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100

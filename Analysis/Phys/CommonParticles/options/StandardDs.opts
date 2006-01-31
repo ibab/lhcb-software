@@ -1,0 +1,40 @@
+// $Id: StandardDs.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" Ds
+ * 
+ *  The configuration includes:
+ *  
+ *  @see StandardParticles
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @date 2006-01-30
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose Ds->KKPi
+  "DATA='/Event/Phys/StdLooseDs2KKPi/Particles'     TYPE='MakeResonances/StdLooseDs2KKPi'",
+  "DATA='/Event/Phys/StdLooseDs2KKPi/Vertices'      TYPE='MakeResonances/StdLooseDs2KKPi'"
+};
+
+/*************************************************************************
+*  Standard Loose Ds->KKPi
+*/
+StdLooseDs2KKPi.PhysDesktop.InputLocations = { "Phys/StdLooseKaons", "Phys/StdLoosePions" };
+StdLooseDs2KKPi.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+// Cuts for daughters
+StdLooseDs2KKPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion", 
+                                                 "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseDs2KKPi.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdLooseDs2KKPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdLooseDs2KKPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdLooseDs2KKPi.Window = 40.0 * MeV; // hlt presel: 45 MeV
+StdLooseDs2KKPi.MinPt  = 2000.0 * MeV; // hlt presel: 1750 MeV
+// Cuts for mother
+StdLooseDs2KKPi.MotherFilter.Selections = {"D_s- : VtxFilterCriterion"}; 
+StdLooseDs2KKPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 36
+// The HLT also cuts on the flight significance

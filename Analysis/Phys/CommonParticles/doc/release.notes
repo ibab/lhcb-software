@@ -1,8 +1,31 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
-! Responsible : Richard Beneyton, Olivier Deschamps
+! Responsible : Richard Beneyton, Olivier Deschamps, P. Koppenburg
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2006-01-31 - P. Koppenburg 
+  - options/MergedPi0Alg.opts
+  - options/ResolvedPi0Alg.opts
+  - options/ProducePairPhotons.opts
+    . Make algorithms "on-demand"
+
+! 2006-01-31 - P. Koppenburg and Vanya Belyaev
+  First commit of standard on-demand particles. To be reviewed by the
+  Physics WG.
+  - options/StandardParticles.opts
+    . Particles "on demand" with standard PID cuts, originally by Vanya
+  - options/StandardD0.opts
+  - options/StandardDs.opts
+  - options/StandardDstar.opts
+  - options/StandardJpsi.opts
+  - options/StandardKstar.opts
+  - options/StandardPhi.opts
+    . Some intermediate states with just-tighter-than-HLT cuts
+  - options/StandardOptions.opts
+    . Options to include them all
+  - options/DVTestStandardParticles.opts
+    . File to test all this
 
 !========================== CommonParticles v1r5p3 2004-09-16 ===================
 ! 2004-09-02 - P. Koppenburg

@@ -1,12 +1,12 @@
 #============================================================================
 # Created    : 2003-11-07
-# Maintainer : Richard Beneyton, Olivier Deschamps
+# Maintainer : Richard Beneyton, Olivier Deschamps, P. Koppenburg
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v1r5p3
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

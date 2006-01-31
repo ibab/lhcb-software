@@ -1,0 +1,37 @@
+// $Id: StandardOptions.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  The configuration file for "standard" particles, created "on-demand"
+ * 
+ *  There are a set of standard basic particle and a set
+ *  of standard intermediate states: D0, Ds, D*, J/psi, K*, Phi
+ *  
+ *  The relevant algorithms are fired on demand when one wants to read
+ *  their outputlocation. See the relevant options for a correct list.
+ *
+ *  @see StandardParticles
+ *
+ *  @see StandardD0
+ *  @see StandardDs
+ *  @see StandardDstar
+ *  @see StandardJpsi
+ *  @see StandardKstar
+ *  @see StandardPhi
+ *
+ *  @author P. Koppenburg
+ *  @date 2006-01-30
+ */
+
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+
+#include "$COMMONPARTICLESROOT/options/StandardD0.opts"
+#include "$COMMONPARTICLESROOT/options/StandardDs.opts"
+#include "$COMMONPARTICLESROOT/options/StandardDstar.opts"
+#include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKstar.opts"
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPhi.opts"
