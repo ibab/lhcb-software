@@ -1,4 +1,4 @@
-// $Id: MuonHLTBase.h,v 1.1 2004-08-31 10:06:10 asatta Exp $
+// $Id: MuonHLTBase.h,v 1.2 2006-01-31 15:21:34 asatta Exp $
 #ifndef MUONHLTBASE_H 
 #define MUONHLTBASE_H 1
 
@@ -12,7 +12,7 @@
  */
 namespace MuonHLTBase
 {
-  static const unsigned int BitsAddress   = 12;
+  static const unsigned int BitsAddress   = 8;
   static const unsigned int BitsTime      = 4;
 
   static const unsigned int BitsFirstHalf     = 16;

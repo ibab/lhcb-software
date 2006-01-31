@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.5 2004-08-31 10:06:10 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.6 2006-01-31 15:21:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,11 @@
 #include "GaudiKernel/MsgStream.h" 
 
 // local
-#include "MuonDAQ/SortDigitInL1.h"
+#include "MuonDAQ/SortDigitInODE.h"
 #include "MuonDAQ/MuonDigitToRawBuffer.h"
 #include "MuonDAQ/MuonHLTDigitFormat.h"
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDigitToRawBuffer
@@ -22,13 +24,14 @@ const        IAlgFactory& MuonDigitToRawBufferFactory = s_factory ;
 
 
 
+using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   basePath[0] = "/dd/ReadOut/MuonCabling/M1/";
   basePath[1] = "/dd/ReadOut/MuonCabling/M2/";
@@ -46,70 +49,80 @@ MuonDigitToRawBuffer::~MuonDigitToRawBuffer() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode MuonDigitToRawBuffer::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
 
-  //  std::string cablingBase="/dd/Cabling/Muon/";
+  debug() << "==> Initialise" << endmsg;
+
+
  
   unsigned int ODEStart=0;
   unsigned int ODEEnd=1;  
   m_L1Name.resize(80);  
   m_TotL1Board=0;
+  unsigned int L1Count=0;
   
   for(int station=0;station<5;station++){
-    msg<<MSG::DEBUG<<"station number "<<station<<endreq;
+    debug()<<"station number "<<station<<endmsg;
     
     std::string cablingBasePath=getBasePath(station);    
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(detSvc(),
                                               cablingPath);
     if( 0 == cabling ) {
-      msg << MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      err() << cablingPath << " not found in XmlDDDB" << endmsg;
       return StatusCode::FAILURE;
     }
     
     m_TotL1Board=m_TotL1Board+cabling->getNumberOfL1Board();
+    m_TotODEBoard=0;
     
-    msg<<MSG::DEBUG<<"station path "<<cablingPath<<endreq;
-    
-    msg<<MSG::DEBUG<<"station number "<<station<<" "<<
-      "L1number "<<  cabling->getNumberOfL1Board()<<endreq;
+    debug()<<"station path "<<cablingPath<<endmsg;    
+    debug()<<"station number "<<station<<" "<<
+      "L1number "<<  cabling->getNumberOfL1Board()<<endmsg;
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
     
-      msg<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(L1Board)<<endreq;
+      debug()<<"L1 number "<<cabling->getL1Name(L1Board)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
+      m_TotODEBoard=m_TotODEBoard+l1->numberOfODE();
+    }
+    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){      
+      //info()<<"L1 number "<<L1Board<<" "<<cabling->getL1Name(L1Board)<<endmsg;
+      L1Count++;
+      
+      std::string L1path=cablingBasePath+
+        cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);      
       for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
         std::string ODEpath=cablingBasePath
           +l1->getODEName(ODEBoard);
-        msg<<MSG::DEBUG<<"ODE number "<<l1->getODEName(ODEBoard)<<endreq;
+        //info()<<"ODE number "<<L1Board<<" "<<l1->getODEName(ODEBoard)<<endmsg;
         SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-		if( 0 == ode ) {
-			msg << MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
-			return StatusCode::FAILURE;
-		}
+        if( 0 == ode ) {
+          err() << ODEpath << " not found in XmlDDDB" << endmsg;
+          return StatusCode::FAILURE;
+        }
+        long odenum=ode->getODESerialNumber();
+        m_ODEInL1[L1Count-1].push_back(odenum);        
         long region=ode->region();  
-        msg<<MSG::DEBUG<<"ODE region "<<region<<endreq;
-        
+        debug()<<"ODE region "<<region<<endmsg;        
         for(int quadrant=0;quadrant<4;quadrant++){
           unsigned int index=station*16+region*4+quadrant; 
-          msg<<MSG::DEBUG<<" ode in quarter " <<quadrant 
-            <<" "<<ode->isQuadrantContained(quadrant)<<endreq;
-          
-          if(ode->isQuadrantContained(quadrant)){
-            
-            msg<<MSG::DEBUG<<"quadrant number "<<quadrant<<endreq;
-          m_L1Name[index]=L1path; 
-          msg<<MSG::DEBUG<<"index "<<index<<" "<<L1path<<endreq;
-          }
-          
-        }
-        
+          debug()<<" ode in quarter " <<quadrant 
+                 <<" "<<ode->isQuadrantContained(quadrant)<<endmsg;          
+          if(ode->isQuadrantContained(quadrant)){            
+            debug()<<"quadrant number "<<quadrant<<endmsg;
+            m_L1Name[index]=L1path; 
+            debug()<<"index "<<index<<" "<<L1path<<endmsg;
+          }          
+        }        
       } 
     }    
   }
+  
   
   for(int station=0;station<5;station++){
     std::string cablingBasePath=getBasePath(station);  
@@ -119,41 +132,37 @@ StatusCode MuonDigitToRawBuffer::initialize() {
         unsigned int index=station*16+region*4+quadrant; 
         std::string L1path=m_L1Name[index];
         SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-        msg<<MSG::DEBUG<<"number of L1 "<<l1->numberOfODE()<<endreq;  
-         msg<<MSG::DEBUG<<station<<" "<<region<<" "<<quadrant<<" "<<
-           L1path<<endreq;
+        debug()<<"number of L1 "<<l1->numberOfODE()<<endmsg;  
+         debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
+           L1path<<endmsg;
          
-        for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-          std::string ODEpath=cablingBasePath+
-            l1->getODEName(ODEBoard);
-          msg<<MSG::DEBUG<<" ode path "<<ODEpath<<endreq;          
-          SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);          
-          if(ode->region()==region){
-            msg<<MSG::DEBUG<<" ode quadrant "<<
-              ode->isQuadrantContained(quadrant)<<endreq;            
-            if(ode->isQuadrantContained(quadrant)){
-              msg<<MSG::DEBUG<<station<<" "<<region<<" "<<quadrant<<" "<<
-                ODEpath<<endreq;
-              
-              numODE++;
-              m_ODEName.push_back(ODEpath);               
-            }
-            
-            msg<<MSG::DEBUG<<numODE<<endreq;
-            
-          }           
-        }
-        
-        m_ODENameStart[station][region][quadrant]=ODEStart;      
-        ODEEnd=ODEStart+numODE;
-        m_ODENameEnd[station][region][quadrant]=ODEEnd;
-        ODEStart=ODEEnd;
+         for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
+           std::string ODEpath=cablingBasePath+
+             l1->getODEName(ODEBoard);
+           debug()<<" ode path "<<ODEpath<<endmsg;          
+           SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);          
+           if(ode->region()==region){
+             debug()<<" ode quadrant "<<
+              ode->isQuadrantContained(quadrant)<<endmsg;            
+             if(ode->isQuadrantContained(quadrant)){
+               debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
+                 ODEpath<<endmsg;               
+               numODE++;
+               m_ODEName.push_back(ODEpath);               
+             }            
+             debug()<<numODE<<endmsg;             
+           }           
+         }         
+         m_ODENameStart[station][region][quadrant]=ODEStart;      
+         ODEEnd=ODEStart+numODE;
+         m_ODENameEnd[station][region][quadrant]=ODEEnd;
+         ODEStart=ODEEnd;
       }
       
       
     }    
   }
-  msg<<MSG::DEBUG<<"board number "<<m_TotL1Board<<endreq;
+  debug()<<"board number "<<m_TotL1Board<<endmsg;
   
   
   return StatusCode::SUCCESS;
@@ -163,95 +172,167 @@ StatusCode MuonDigitToRawBuffer::initialize() {
 //=============================================================================
 StatusCode MuonDigitToRawBuffer::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
-  //sia digitTile l'imput
-  SmartDataPtr<MuonDigits> digit(eventSvc(),
-                                 MuonDigitLocation::MuonDigit);
-  MuonDigits::iterator idigit;
+
+  debug() << "==> Execute" << endmsg;
+ 
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+
+  SmartDataPtr<LHCb::MuonDigits> digit(eventSvc(),
+                                 LHCb::MuonDigitLocation::MuonDigit);
+  LHCb::MuonDigits::iterator idigit;
   for(idigit=digit->begin();idigit<digit->end();idigit++){    
-    MuonTileID digitTile=(*idigit)->key();
-    //msg<<MSG::INFO<<digitTile<<endreq;	    
+    LHCb::MuonTileID digitTile=(*idigit)->key();
+    //info()<<digitTile<<endmsg;	    
     unsigned int time=(*idigit)->TimeStamp();    
-    //time=0;
-    
-    
+    //time=0;    
     long L1Number=0;
-    long DigitOutputPosition=DAQaddress(digitTile,L1Number); 
-    msg<<MSG::VERBOSE<<"L1Number "<<L1Number<<endreq;
-    msg<<MSG::VERBOSE<<" digitOutputPosition "<<DigitOutputPosition<<endreq;
-    
+    long ODENumber=0;    
+    long DigitOutputPosition=DAQaddress(digitTile,L1Number,ODENumber); 
+    verbose()<<"L1Number "<<L1Number<<endmsg;
+    verbose()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
     unsigned int digitInDAQ=0;
     MuonHLTDigitFormat temp;
     temp.setAddress(DigitOutputPosition);
     temp.setTime(time);
     digitInDAQ=temp.getWord();
-    msg<<MSG::DEBUG<<" digit word "<<L1Number-1<<" "<<
-      temp.getAddress()<<endreq;
-    
-    m_digitsInL1[L1Number-1].push_back(digitInDAQ);      
-    //}    
+    debug()<<" digit word "<<L1Number-1<<" "<<
+      temp.getAddress()<<endmsg;    
+    m_digitsInODE[ODENumber-1].push_back(digitInDAQ);  
+    firedInODE[ODENumber-1]++;
+ 
   }  
-  for(int i=0;i<m_TotL1Board;i++){
-    // std::stable_sort(m_digitsInL1[i].begin(),
-    //                 m_digitsInL1[i].end(),SortDigitInL1());    
+
+  for(int i=0;i<m_TotODEBoard;i++){
+     std::stable_sort(m_digitsInODE[i].begin(),
+                     m_digitsInODE[i].end(),SortDigitInODE());    
   }
-  // Retrieve the RawBuffer
-  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
-  if ( 0 == rawBuffer ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve Raw buffer from " <<RawBufferLocation::Default
-        << endreq;
-    return StatusCode::FAILURE;
-   }
-  std::vector<int>::iterator itDigit;
-  bool half=false;
+
+  std::vector<unsigned  int>::iterator itDigit;
   
   for(unsigned int i=0;i<(unsigned int) m_TotL1Board;i++){
-
-    std::vector<raw_int> L1Bank;
-
-    half=false;
+    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
+    std::vector<unsigned int>::iterator iODE;    
+    unsigned int totalChInL1=0;
     
- MuonHLTData data;
-    for(itDigit=m_digitsInL1[i].begin();itDigit<m_digitsInL1[i].end();
-        itDigit++){
+    unsigned int odeInTell1=0;
+    
+    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE);
       
-      if(!half){        
-        data.setFirstHalf(*itDigit); 
-        data.setSecondHalf(0);
-        msg<<MSG::VERBOSE<<"first part "<<data.getFirstHalf()<<" "<<i<<endreq;
-        half=true;
-      }else{
-        data.setSecondHalf(*itDigit);
-        msg<<MSG::VERBOSE<<"second part "<<data.getSecondHalf()<<" "<<i<<endreq;
-        half=false;        
-      }
-      //msg<<MSG::DEBUG<<"half "<<half<<endreq;
+      //build header == channels fired for each ode
+      unsigned int firedChannels=firedInODE[odenumber-1];     
+      //fill in bank.....
+      totalChInL1=totalChInL1+firedChannels;
+      odeInTell1++;
       
-      if(!half){L1Bank.push_back((raw_int)data.getWord());
-      }else if(itDigit==m_digitsInL1[i].end()-1){
-        L1Bank.push_back((raw_int)data.getWord());
-      }
-      
-      
-      // msg<<"all word "<<data.getWord()<<endreq;
-            
     }
-    //long buffSize =L1Bank.size();
-    //raw_int * prawBuffer = new raw_int[buffSize];
-    //for (long index=0;index<buffSize;index++)
-    //{prawBuffer[index]=L1Bank[index];}
-    raw_int header=i;
-    if(m_digitsInL1[i].size()%2)header=header+100;
-    rawBuffer->addBank(header,RawBuffer::Muon,L1Bank);    
-    //    rawBuffer->addBank(header,RawBuffer::Muon,prawBuffer,buffSize);
+    // now the dimension of the bank cabne fixed....
+    //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
+    unsigned int bankLen=odeInTell1*8+12*totalChInL1;
+    unsigned int bankLenght=0;
+    //info()<<"ode in Tell1 "<<odeInTell1<<" tot ch "<<totalChInL1<<endmsg  ;
+    
+    if(bankLen%32!=0){
+      bankLenght=bankLen/32+1;
+    }else{
+      bankLenght=bankLen/32;      
+    }
+    //  info()<<"Tell 1 "<<i<<" "<<bankLen<<" "<<bankLenght<<endmsg;
+    
+  
+    LHCb::BankWriter bank(bankLenght);
+    //  info()<<"after creation "<<sizeof(int)<<" "<<sizeof(char)<<endmsg;
+    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE);
+      //build header == channels fired for each ode
+      unsigned int firedChannels=firedInODE[odenumber-1];     
+      //info()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
+      //fill in bank.....
+      unsigned char fired=(unsigned char) firedChannels;
+      bank<<fired;      
+    }
+    //info()<<"after fired "<<bank.dataBank().size()<<endmsg;
+    
+    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE)-1;
+      unsigned int firedChannels=firedInODE[odenumber];
+      for(itDigit=m_digitsInODE[odenumber].begin();
+          itDigit<m_digitsInODE[odenumber].end();
+          itDigit++){            
+        MuonHLTDigitFormat temp(*itDigit);
+        unsigned int adress=temp.getAddress();
+        unsigned char chad=(unsigned char) adress;        
+        bank<< chad;
+//          info()<<"ADDD "<<adress<<" "<<odenumber<<endmsg;
+        
+      }
+    }
+        
+    //info()<<" after address "<<endmsg;
+    bool even=false;
+    unsigned char time=0;
+    unsigned int timetemp=0;
+    
+    for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE)-1;
+      //      unsigned int firedChannels=firedInODE[odenumber];    
+      for(itDigit=m_digitsInODE[odenumber].begin();
+          itDigit<m_digitsInODE[odenumber].end();
+          itDigit++){
+        MuonHLTDigitFormat temp1(*itDigit);        
+        unsigned int time1=temp1.getTime();
+
+        if(even){
+          timetemp=timetemp+(time1<<4);          
+        }else{
+          timetemp=time1;          
+        }
+        //        info()<<" time .."<<even <<" "<<(unsigned int )time1<<" "<<
+        //  (unsigned int)time<<endmsg;
+        time=(unsigned char) timetemp;
+      
+        if(even)bank<<time;  
+        even=!even;
+        //  info()<<" time .."<<even <<" "<<(unsigned int )time1<<" "<<
+        // (unsigned int)time<<endmsg;
+      }
+    }if(even)bank<<time;
+    
+    
+    
+    //    info()<<" ma che sta combinando "<<bank.dataBank().size()<<endmsg;
+    
+
+    //    info()<<"after time "<<endmsg;
+
+    raw->addBank(i,RawBank::Muon,1,bank.dataBank());
+    //    raw->adoptBank(bank.dataBank(),true);
+    
+    //    info()<<"end loop "<<endmsg;
+    
   }
+  
+  
+  
     
   for(int i=0;i<m_TotL1Board;i++){
-     m_digitsInL1[i].resize(0);
+    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
+
+    std::vector<unsigned int>::iterator iODE;    
+    
+     for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE)-1;
+      m_digitsInODE[odenumber].resize(0);
+      //      info()<<odenumber<<" fired "<<firedInODE[odenumber]<<endmsg;
+      
+       firedInODE[odenumber]=0;
+      
+     }
   }
+  
+  
+//  put( raw, RawEventLocation::Default );
+  //info()<<" return "<<endmsg;
   
 
   return StatusCode::SUCCESS;
@@ -262,16 +343,16 @@ StatusCode MuonDigitToRawBuffer::execute() {
 //=============================================================================
 StatusCode MuonDigitToRawBuffer::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
+  
+  debug() << "==> Finalize" << endmsg;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 
 
-MuonTileID  MuonDigitToRawBuffer::findTS(MuonTileID digit)
+LHCb::MuonTileID  MuonDigitToRawBuffer::findTS(LHCb::MuonTileID digit)
 {
   unsigned int station=digit.station();
   
@@ -280,33 +361,34 @@ MuonTileID  MuonDigitToRawBuffer::findTS(MuonTileID digit)
  // get TS layout in region from L1
   unsigned int index=station*16+region*4;  
   std::string L1path=m_L1Name[index];
+  //info()<<L1path<<endmsg;
   SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
   unsigned int TSLayoutX=(unsigned int)l1->getTSLayoutX(region);
   unsigned int TSLayoutY=(unsigned int)l1->getTSLayoutY(region);
   MuonLayout TSLayout(TSLayoutX,TSLayoutY);
-  MuonTileID TSTile=TSLayout.contains(digit);
+  LHCb::MuonTileID TSTile=TSLayout.contains(digit);
   return TSTile;  
 };
 
 
-std::string MuonDigitToRawBuffer::findODEPath(MuonTileID TS)
+std::string MuonDigitToRawBuffer::findODEPath(LHCb::MuonTileID TS)
 {
- MsgStream  msg( msgSvc(), name() );
+ 
   unsigned int station=TS.station();  
   unsigned int region=TS.region();
   unsigned int quadrant=TS.quarter();
   int odeStart=m_ODENameStart[station][region][quadrant];
   int odeEnd=m_ODENameEnd[station][region][quadrant];
-  msg<<MSG::VERBOSE<<station<<" "<<region<<" "<<quadrant<<endreq;
-  msg<<MSG::VERBOSE<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endreq;
+  verbose()<<station<<" "<<region<<" "<<quadrant<<endmsg;
+  verbose()<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endmsg;
   //TilePrintOut(TS);
   
   for(int ode=odeStart;ode<odeEnd;ode++){
     std::string odePath=m_ODEName[ode];
-    msg<<MSG::VERBOSE<<odePath<<endreq;    
+    verbose()<<odePath<<endmsg;    
     //std::cout<<odePath<<std::endl;    
     SmartDataPtr<MuonODEBoard>  odeBoard(detSvc(),odePath);
-    msg<<MSG::VERBOSE<<odeBoard->isTSContained(TS)<<endreq;  
+    verbose()<<odeBoard->isTSContained(TS)<<endmsg;  
     if(odeBoard->isTSContained(TS))return odePath;
   }
   return NULL;
@@ -314,23 +396,23 @@ std::string MuonDigitToRawBuffer::findODEPath(MuonTileID TS)
 };
 
 
-long MuonDigitToRawBuffer::findODENumber(std::string odePath)
+unsigned int MuonDigitToRawBuffer::findODENumber(std::string odePath)
 {
   SmartDataPtr<MuonODEBoard>  ode(detSvc(),odePath);
-  long ODENumber=ode->getODESerialNumber();
+  unsigned int ODENumber=ode->getODESerialNumber();
   return ODENumber;
   
 
 }
 
 
-long MuonDigitToRawBuffer::findODEPosition(std::string L1Path, long odeNumber)
+unsigned int MuonDigitToRawBuffer::findODEPosition(std::string L1Path, long odeNumber)
 {
   SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
   return l1->getODEPosition(odeNumber);
 }
 
-std::string MuonDigitToRawBuffer::findL1(MuonTileID TS)
+std::string MuonDigitToRawBuffer::findL1(LHCb::MuonTileID TS)
 {
   unsigned int station=TS.station();
   unsigned int region=TS.region();
@@ -342,18 +424,18 @@ std::string MuonDigitToRawBuffer::findL1(MuonTileID TS)
 
 
 
-long MuonDigitToRawBuffer::findTSPosition(std::string ODEPath, 
-                                          MuonTileID TSTile)
+unsigned int MuonDigitToRawBuffer::findTSPosition(std::string ODEPath, 
+                                          LHCb::MuonTileID TSTile)
 {
   unsigned int quadrant=TSTile.quarter();
   unsigned int gridx=TSTile.nX();
   unsigned int gridy=TSTile.nY();
-  //   MsgStream msg(msgSvc(), name());
+  
   SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
-  //msg<<MSG::INFO<<gridx<<" "<<gridy<<endreq;
+  //info()<<gridx<<" "<<gridy<<endmsg;
   
   for(int TS=0;TS<ode->getTSNumber();TS++){
-    //  msg<<MSG::INFO<<TS<<" "<<ode->getTSGridX(TS)<<endreq;
+    //  info()<<TS<<" "<<ode->getTSGridX(TS)<<endmsg;
     if((unsigned int)ode->getTSQuadrant(TS)==quadrant){
       if((unsigned int)ode->getTSGridX(TS)==gridx){
         if((unsigned int)ode->getTSGridY(TS)==gridy){
@@ -364,32 +446,32 @@ long MuonDigitToRawBuffer::findTSPosition(std::string ODEPath,
       }      
     }    
   } 
-  MsgStream msg(msgSvc(), name());
-  msg<<MSG::FATAL<<"error in finding TS postion "<<endreq;
   
-  return -1;  
+  err()<<"error in finding TS postion "<<endmsg;
+  
+  return 100000;  
 };
 std::string MuonDigitToRawBuffer::findTSPath(std::string ODEPath, 
                                               long TSPosition,int station){
-  //  MsgStream msg(msgSvc(), name());
+  
   
   SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
   std::string base=getBasePath(station); 
    std::string  TSPath=ode->getTSName(TSPosition);
-  //msg<<MSG::INFO<<TSPosition<<ode->name()<<endreq;
+  //info()<<TSPosition<<ode->name()<<endmsg;
   
   //std::string base="/dd/Cabling/Muon/M4/";
   
-  //msg<<MSG::INFO<<base<<" "<<TSPosition<<TSPath<<endreq;
+  //info()<<base<<" "<<TSPosition<<TSPath<<endmsg;
   std::string out=base+TSPath;    
   return out;
 }; 
 
 
-long MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
-                                         MuonTileID TSTile, 
-                                         MuonTileID digit){
-    MsgStream msg(msgSvc(), name());
+unsigned int MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
+                                         LHCb::MuonTileID TSTile, 
+                                         LHCb::MuonTileID digit){
+    
   SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
   unsigned int TSLayoutX=TSTile.layout().xGrid(); 
   unsigned int TSLayoutY=TSTile.layout().yGrid(); 
@@ -407,10 +489,10 @@ long MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
   unsigned int gridx=digit.nX()- xScaleFactor*TSTile.nX();
   unsigned int gridy=digit.nY()- yScaleFactor*TSTile.nY();
 
-  //   msg<<MSG::INFO<<"ale "<<TSLayoutX<<" "<<layoutX<<" "<<digit.nX()
-  // <<" "<<gridx<<endreq;
-  //msg<<MSG::INFO<<"ale "<<TSLayoutY<<" "<<layoutY<<" "<<digit.nY()
-  //  <<" "<<gridy<<endreq;
+  //  info()<<"ale "<<TSLayoutX<<" "<<layoutX<<" "<<digit.nX()
+  // <<" "<<gridx<<endmsg;
+  //info()<<"ale "<<TSLayoutY<<" "<<layoutY<<" "<<digit.nY()
+  // <<" "<<gridy<<endmsg;
   
   int layout=-1;
 
@@ -423,27 +505,27 @@ long MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
       layout=i;      
     }    
   }
-  //  msg<<MSG::INFO<<"layout "<<layout<<endreq;
+  // info()<<"layout "<<layout<<endmsg;
   
   for(int i=0;i<TS->numberOfOutputSignal();i++){
     if(TS->layoutOutputChannel(i)==layout){
       if((unsigned int)TS->gridXOutputChannel(i)==gridx){
         if((unsigned int)TS->gridYOutputChannel(i)==gridy){
-          //          msg<<MSG::INFO<<"digit in ts "<<i<<endreq;
+          //                 info()<<"digit in ts "<<i<<endmsg;
           return i;
           
         }
       }      
     }    
   }
-  msg<<MSG::FATAL<<" error in findging digit in TS "<<endreq;
-  msg<<MSG::FATAL<<" position in  TS should be "<<gridx<<" "<<
-    gridy<<" "<<layout<<endreq;
-  msg<<MSG::FATAL<<" lauoyt should be  "<<xScaleFactor<<" "<<
-    yScaleFactor<<endreq;
+  err()<<" error in findging digit in TS "<<endmsg;
+  err()<<" position in  TS should be "<<gridx<<" "<<
+    gridy<<" "<<layout<<endmsg;
+  err()<<" lauoyt should be  "<<xScaleFactor<<" "<<
+    yScaleFactor<<endmsg;
 
   
-  return -1;
+  return 100000;
   
 };  
 
@@ -452,18 +534,18 @@ long MuonDigitToRawBuffer::findDigitInTS(std::string TSPath,
 long MuonDigitToRawBuffer::channelsInL1BeforeODE(std::string L1Path,
                                                  long ODENumber)
 {
-  MsgStream msg(msgSvc(), name());
+  
   SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
   long station=l1->getStation();
   
   std::string base=getBasePath(station);  
   long stop=findODEPosition(L1Path, ODENumber);  
   long channels=0;
-  //  msg<<MSG::INFO<<"stop "<<station<<" "<<
-  //stop<<" "<<ODENumber<<l1->getODEName(0)<<endreq;  
+  //  info()<<"stop "<<station<<" "<<
+  //stop<<" "<<ODENumber<<l1->getODEName(0)<<endmsg;  
   for(int ODEBoard=0;ODEBoard<stop;ODEBoard++){    
     std::string ODEpath=base+l1->getODEName(ODEBoard);
-    msg<<MSG::DEBUG<< ODEpath <<endreq;
+    debug()<< ODEpath <<endmsg;
     
     SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
     long TSnumber=ode->getTSNumber();
@@ -471,7 +553,7 @@ long MuonDigitToRawBuffer::channelsInL1BeforeODE(std::string L1Path,
     SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
     long channelInTS=TS->numberOfOutputSignal();
     long channelInODE=channelInTS*TSnumber;   
-    msg<<MSG::DEBUG<<"channel in ODE "<<channelInODE<<endreq;
+    debug()<<"channel in ODE "<<channelInODE<<endmsg;
     
     channels=channels+channelInODE;    
   } 
@@ -488,76 +570,66 @@ std::string MuonDigitToRawBuffer::getBasePath(int station)
 };
 
 
-long MuonDigitToRawBuffer::DAQaddress(MuonTileID digitTile, long& L1Number)
+unsigned int MuonDigitToRawBuffer::DAQaddress(LHCb::MuonTileID digitTile, long& L1Number, 
+                                      long& ODENumber)
 {
-  MsgStream  msg( msgSvc(), name() );
-  msg<<MSG::DEBUG<<"************** start coding a digit "<<endreq; 
-  //digitTile.printOut(msg<<MSG::INFO<<"digit tile ")<<endreq;
+  
+  debug()<<"************** start coding a digit "<<endmsg; 
+  //digitTile.printOut(info()<<"digit tile ")<<endmsg;
   
   bool print=false;
-     if(print)
+   if(print)
   TilePrintOut(digitTile);
   long station=digitTile.station();
-  MuonTileID TS=findTS(digitTile);
-  if(print)msg<<MSG::DEBUG<<"digit is contained in TS "<<endreq;
-  //TS.printOut(msg<<MSG::DEBUG)<<endreq;
-  //  if(print) 
-  //TilePrintOut(TS);
-  
+  LHCb::MuonTileID TS=findTS(digitTile);
+  if(print)debug()<<"digit is contained in TS "<<endmsg;  
   std::string L1Path=findL1(TS);
-  if(print)msg<<MSG::DEBUG<<"the TS is contained in L1 "<<L1Path<<endreq;
+  if(print)debug()<<"the TS is contained in L1 "<<L1Path<<endmsg;
   // return 1;
   SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
-  if(print)msg<<MSG::DEBUG<<"l1 "<<endreq;
+  if(print)debug()<<"l1 "<<endmsg;
   //return 1;
   
-  if(print)msg<<MSG::DEBUG<<" station "<<l1->getStation()<<endreq;
+  if(print)debug()<<" station "<<l1->getStation()<<endmsg;
   //long 
   L1Number=l1->L1Number();
   std::string ODEPath= findODEPath(TS);
 
   if(print)
-    msg<<MSG::DEBUG<<"the TS is contained in ODE "<<ODEPath<<endreq;      
+    debug()<<"the TS is contained in ODE "<<ODEPath<<endmsg;      
   SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
-  long ODENumber=findODENumber(ODEPath);
-  long ODESerialNumber=findODEPosition(L1Path, ODENumber); 
-  if(print)msg<<MSG::DEBUG<<"ODE= "<<ODENumber<<" "<<ODESerialNumber<<endreq;
-  long TSSerialNumber=findTSPosition(ODEPath,TS);
+  ODENumber=findODENumber(ODEPath);
+  unsigned int ODESerialNumber=findODEPosition(L1Path, ODENumber); 
+  if(print)debug()<<"ODE= "<<ODENumber<<" "<<ODESerialNumber<<endmsg;
+  unsigned int TSSerialNumber=findTSPosition(ODEPath,TS);
   if(print)
-    msg<<MSG::DEBUG<<"the TS position is ODE is = "<<TSSerialNumber<<endreq;
+    debug()<<"the TS position is ODE is = "<<TSSerialNumber<<endmsg;
   std::string TSPath= findTSPath(ODEPath,TSSerialNumber,station);  
-  msg<<MSG::DEBUG<<"the TS map is located in  "<<TSPath<<endreq;
-  msg<<MSG::DEBUG<<" station "<<l1->getStation()<<endreq;
+  debug()<<"the TS map is located in  "<<TSPath<<endmsg;
+  debug()<<" station "<<l1->getStation()<<endmsg;
       
-  long DigitPosition=findDigitInTS(TSPath,TS,digitTile); 
-  long addChannels=channelsInL1BeforeODE( L1Path,ODENumber);   
-  if(print)msg<<MSG::DEBUG
-              <<" the digit position in TS is "<<DigitPosition<<endreq;
-  if(print)msg<<MSG::DEBUG<<" the channels in L1 before the ODE are "<<
-    addChannels<<endreq;
+  unsigned int DigitPosition=findDigitInTS(TSPath,TS,digitTile); 
   SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);    
-  long digitInODE=TSSerialNumber*TSMap->numberOfOutputSignal();
-  msg<<MSG::DEBUG<<" the channels in ODE before the TS are "<<
-    digitInODE<<endreq;
-  long DigitOutputPosition=addChannels+digitInODE+DigitPosition;
+  unsigned int digitInODE=TSSerialNumber*TSMap->numberOfOutputSignal();
+  debug()<<" the channels in ODE before the TS are "<<
+    digitInODE<<endmsg;
+  unsigned int DigitOutputPosition=digitInODE+DigitPosition;
   if(print)
-    msg<<MSG::INFO<<" the output position in L1 of the digit is "<<
-    DigitOutputPosition<<endreq;
+    info()<<" the output position in L1 of the digit is "<<
+      DigitOutputPosition<<endmsg;
   return DigitOutputPosition;  
 };
 
 
 
-void MuonDigitToRawBuffer::TilePrintOut(MuonTileID digitTile)
+void MuonDigitToRawBuffer::TilePrintOut(LHCb::MuonTileID digitTile)
 {
-  MsgStream  msg( msgSvc(), name() );
-  msg<<MSG::INFO<< "["  <<  digitTile.layout() << ","
+  
+  info()<< "["  <<  digitTile.layout() << ","
        <<  digitTile.station() << ","
        <<  digitTile.region() << ","
        <<  digitTile.quarter() << ","
        <<  digitTile.nX() << ","
-     <<  digitTile.nY() << "]" <<endreq;
-   msg<<MSG::INFO<< "["  << digitTile.layer()<< " "<<
-    digitTile.readout()<< " ] "<<endreq;
+     <<  digitTile.nY() << "]" <<endmsg;
 };
 
