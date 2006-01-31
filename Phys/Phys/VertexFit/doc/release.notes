@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.44 2005-12-21 16:19:08 pkoppenb Exp $
+! $Id: release.notes,v 1.45 2006-01-31 13:00:29 xieyu Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
+
+! 2006-01-30 - Y. Xie
+  - src/KFFitTool.cpp
+    . replaced some err() with debug()
+    . fixed the problem of wrongly setting resonance vertex position to
+    the state position after transport
+    . call setMass() for photon pair to allow for retrivial 
+    of pi0/eta->gammagamma mass from KFFittool
 
 !========================== VertexFit v1r9p1 2005-12-21 ===================
 ! 2005-12-20 - P. Koppenburg
