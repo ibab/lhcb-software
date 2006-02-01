@@ -10,8 +10,10 @@
    - fixes and improvements to several methods
      (some had inconsistencies with the TEM design choices)
    - addToLhcbIDs now checks whether LHCbID not already present in the track
+ - changes to State class:
+   - re-introduced non-const accessors for stateVector and covariance
+   - corrected errSlopes method in State class
  - minor changes to TrackFunctor
- - corrected errSlopes method in State class
 
 !========================= TrackEvent v2r0 2006-01-27 ========================
 ! 2006-01-27 M.Needham

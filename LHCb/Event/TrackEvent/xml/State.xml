@@ -95,14 +95,16 @@
         name    = 'stateVector'
         desc    = 'the state vector'
         setMeth = 'FALSE'
-        access  = 'PROTECTED' />
+        access  = 'PROTECTED'
+	nonconstaccessor = 'TRUE' />
 
       <attribute
         type    = 'Gaudi::TrackMatrix'
         name    = 'covariance'
         desc    = 'the state covariance matrix (indexes 1,...,5 for x, y, tx, ty, Q/p)'
         setMeth = 'FALSE'
-        access  = 'PROTECTED' />
+        access  = 'PROTECTED'
+	nonconstaccessor = 'TRUE' />
 
       <attribute
         type    = 'double'
@@ -368,7 +370,7 @@
       <method
         name    = 'setState'
         argList = 'double x, double y, double z, double tx, double ty, double qOverP'
-        desc    = 'Update the state vector (presumably of type State::HasMomentum)'
+        desc    = 'Update the state vector'
         virtual = 'TRUE' />
 
       <method
