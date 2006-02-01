@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.12 2005-12-13 18:01:11 papanest Exp $
+ *  $Id: RichSmartIDTool.h,v 1.13 2006-02-01 16:44:27 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -29,6 +29,7 @@
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichSystem.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichSmartIDTool RichSmartIDTool.h
@@ -97,6 +98,8 @@ private:
   /// List of active RichSmartIDs
   mutable LHCb::RichSmartID::Vector m_readoutChannels;
 
+  DeRichSystem* m_richS;
+  
 };
 
 #endif // RICHDETTOOLS_RICHSMARTIDTOOL_H

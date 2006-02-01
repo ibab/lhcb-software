@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.18 2005-12-20 09:38:55 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.19 2006-02-01 16:44:27 papanest Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -44,6 +44,8 @@ StatusCode RichSmartIDTool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  m_richS = getDet<DeRichSystem>(DeRichLocation::RichSystem);
+  
   // HPD panel names
   const std::string pdPanelName[2][2]   ={{ DeRichHPDPanelLocation::Rich1Panel0,
                                             DeRichHPDPanelLocation::Rich1Panel1 },
@@ -128,6 +130,11 @@ StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
                                       LHCb::RichSmartID& smartid ) const
 {
 
+  // check to see if the smartID is set, and if HPD is active
+  if ( smartid.hpdColIsSet() && smartid.hpdNumInColIsSet() )
+    if ( !m_richS->hpdIsActive( smartid ) )
+      return StatusCode::FAILURE;
+  
   try
   {
     if (globalPoint.z() < 8000.0)
