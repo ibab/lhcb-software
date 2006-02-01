@@ -8,6 +8,7 @@
 ! 2006-01-31 - Alessia satta
  - implement the new Muon DAQ format (digit address first +TDC at the end of the bank)	
  - adapt to new event model (mainly LHCb namespace & DAQEvent)
+ - adapt to use /dd/Conditions for readoing the cabling info
 
 !========================= MuonDAQ v1r2p3 2005-09-22 ======================
 ! 2005-09-22 - Marco Cattaneo

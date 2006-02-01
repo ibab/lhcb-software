@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.6 2006-01-31 15:21:34 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.7 2006-02-01 10:21:08 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -33,11 +33,11 @@ MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  basePath[0] = "/dd/ReadOut/MuonCabling/M1/";
-  basePath[1] = "/dd/ReadOut/MuonCabling/M2/";
-  basePath[2] = "/dd/ReadOut/MuonCabling/M3/";
-  basePath[3] = "/dd/ReadOut/MuonCabling/M4/";
-  basePath[4] = "/dd/ReadOut/MuonCabling/M5/";
+  basePath[0] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
+  basePath[1] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
+  basePath[2] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
+  basePath[3] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
+  basePath[4] = "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
 
 }
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.1 2006-01-31 15:22:33 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.2 2006-02-01 10:21:08 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -34,11 +34,11 @@ MuonRawBuffer::MuonRawBuffer( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IMuonRawBuffer>(this);
-  basePath[0]= "/dd/ReadOut/MuonCabling/M1/";
-  basePath[1]= "/dd/ReadOut/MuonCabling/M2/";
-  basePath[2]= "/dd/ReadOut/MuonCabling/M3/";
-  basePath[3]= "/dd/ReadOut/MuonCabling/M4/";
-  basePath[4]= "/dd/ReadOut/MuonCabling/M5/";
+  basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
+  basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
+  basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
+  basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
+  basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
 
 }
 //=============================================================================
