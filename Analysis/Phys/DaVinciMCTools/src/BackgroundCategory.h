@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.8 2006-01-30 14:15:04 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.9 2006-02-01 15:16:55 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -17,7 +17,27 @@
 typedef std::vector<const MCParticle*> MCParticleVector;
 
 /** @class BackgroundCategory BackgroundCategory.h
+ * 
+ *  For further documentation, please see the file IBackgroundCategory.h
+ *  Available properties: 
+ *
+ *  UseSoftPhotonCut - whether to ignore "soft" photons 
  *  
+ *  SoftPhotonCut - the maximum energy of a "soft" photon, if using the cut. (default to 300MeV or less)
+ *
+ *  LowMassBackgroundCut - the mass cut used to classify background as Low Mass. For
+ *			   an explanation of usage, see IBackgroundCategory.h. It 
+ *			   defaults to 100MeV.
+ *
+ *  MCmatchQualityPIDoverrideLevel - At present the tool will occasionally find that
+ *				     one ProtoParticle has more than one MCParticle
+ *				     associated to it. The MCParticle with the "correct"
+ *				     PID is chosen unless the ratio of matching weights 
+ *				     (correctpid_match_weight/best_match_weight) is less
+ *				     than the cut. The default is 10.
+ *  
+ *  ResonanceCut - The maximum lifetime at which a particle is considered a short lived resonance.
+ *  		   Defaults to 10^-6 nanoseconds.
  *
  *  @author Vladimir Gligorov
  *  @date   2005-11-23
@@ -74,7 +94,8 @@ private:
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
   double m_maxweight; //dummy sorting variable
-  double m_rescut;
+  double m_rescut; //A cut on the minimum lifetime for a mother not to be
+			//considered a short-lived resonance
 
 };
 #endif // BACKGROUNDCATEGORY_H

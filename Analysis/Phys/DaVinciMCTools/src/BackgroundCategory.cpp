@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.16 2006-01-30 14:15:04 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.17 2006-02-01 15:16:55 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -74,6 +74,8 @@ const MCParticle* BackgroundCategory::origin(const Particle* reconstructed_mothe
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
+//A cheap and cheerful list of particles considered stable for the purposes of 
+//this tool. Not the cleverest way to do this, but works OK.
 {
 	if ( pid == 11 || //electron
        pid == 22 || //photon
@@ -90,6 +92,9 @@ bool BackgroundCategory::isStable(int pid)
 } 
 //=============================================================================
 MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay, const Particle* reconstructed_mother)
+//This function is responsible for getting the original mother of each MCParticle associated to a final state product of
+//our candidate particle. If there is no such mother, a 0 is entered, and the same is done if there is no matching 
+//MCParticle in the first place (for ghosts)  
 {
 	//verbose() << "About to start getting the MC-mothers" << endreq;
 	MCParticleVector mc_mothers;
@@ -132,6 +137,10 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 }
 //=============================================================================
 MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const MCParticle* topmother)
+//Uses Patrick's tool (ParticleDescendants) to create an array of the final state products of the MCParticle
+//determined to be the joint mother (if indeeed there is one) of the MCParticles associated to the final
+//state particle daughters of the candidate Particle. For obvious reasons, this function is only invoked for
+//background catgegories 0->50.
 {
 	verbose() << "Starting to create the array of final state daughters for the mc mother" << endreq;
 	
@@ -175,6 +184,8 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
 }
 //=============================================================================
 IBackgroundCategory::categories BackgroundCategory::category(const Particle* reconstructed_mother)
+//The big "what is it?" switch. hopefully commented enough downstairs. For additional help with what 
+//all the categories mean, please visit IBackgroundCategory.h 
 {
 	//First of all, we use Patrick's tool to get all the particles in the decay tree
 	verbose() << "About to start processing the categorisation tree" << endreq;
@@ -198,7 +209,6 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 			verbose() << "Categorising step 5" << endreq;
 			if (condition_C(particles_in_decay, mc_particles_linked_to_decay) ) {
 				verbose() << "Categorising step 6" << endreq;
-        //				if (condition_D(mc_mothers_final, reconstructed_mother) ) {
 				if (condition_D(reconstructed_mother) ) {
 					verbose() << "Categorising step 7" << endreq;
 					if (condition_E() ) {
@@ -278,15 +288,12 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 	}
 }
 //=============================================================================
-bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, ParticleVector particles_in_decay) 
+bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, ParticleVector particles_in_decay)
+//This condition checks that all the MCParticles associated to the final-state daughters of our
+//candidate Particle have a common MCParticle mother.   
 {
   MCParticleVector::const_iterator iP = mc_mothers_final.begin();
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
-  /*if ((*iP) == 0) {
-    m_commonmother = 0;
-    return false;
-    } //One of the final state particles has no mother, so no need to go further
-    const MCParticle* tempmother = *iP;*/
   bool carryon = true;
   bool motherassignedyet = false;
   const MCParticle* tempmother = NULL;
@@ -306,11 +313,6 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
 
     }
 
-    /*if (*iP && *iPP) {
-      SmartRefVector<MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
-      if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid() ) ) //final state check
-      carryon = (tempmother != 0) && ( (*iP) == tempmother) ;
-      }*/
     ++iP; ++iPP;
 
   } while (carryon && iP != mc_mothers_final.end() );
@@ -321,6 +323,11 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
 }
 //=============================================================================
 bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_decay)
+//This condition checks that all the final state daughters of the MCparticle
+//returned by condition A match up to the MCParticles associated to the  final state 
+//daughters of the candidate Particle. In effect, condition A checked whether all
+//the particles used to make our B came from on decay, and this checks if there 
+//are any particles coming from said decay which we missed out in our reconstruction. 
 {
 	verbose() << "Beginning to check condition B" << endreq;
 	bool carryon;
@@ -372,6 +379,8 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 }
 //=============================================================================
 bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCParticleVector mc_particles_linked_to_decay)
+//This condition checks if all the final state particles used to make the candidate particle are correctly
+//identified (according to PID).
 {
 	bool carryon = true;
 
@@ -390,8 +399,9 @@ bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCPartic
 	return carryon;
 }
 //=============================================================================
-//bool BackgroundCategory::condition_D(MCParticleVector mc_mothers_final, const Particle* reconstructed_mother){
-bool BackgroundCategory::condition_D(const Particle* reconstructed_mother){
+bool BackgroundCategory::condition_D(const Particle* reconstructed_mother)
+//Checks whether the head of our decay chain has the "correct" PID.
+{
 	bool carryon;
 
 	if (m_ppSvc->findByPythiaID(m_commonmother->particleID().pid())->charge() == 0) 
@@ -399,20 +409,20 @@ bool BackgroundCategory::condition_D(const Particle* reconstructed_mother){
 	else
 		carryon = ( m_commonmother->particleID().pid() == reconstructed_mother->particleID().pid() );
 
-	//MCParticleVector::const_iterator iP = mc_mothers_final.begin();
-	//const MCParticle* originmatch = origin(reconstructed_mother);
-
-	//carryon = (originmatch == *iP);
-
 	return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_E()
+//Not implemented but meant to check whether we missed any resonances
+//in the decay chain. 
 {
   return true;
 }
 //=============================================================================
 bool BackgroundCategory::condition_F(const Particle* candidate)
+//This condtion checks whether the MCParticle head of the decay chain is at most 
+//a given mass (set by the property LowMassBackgroundCut) heavier than the average mass 
+//for a particle of its PID.  
 {
 	bool carryon = false;
 	
@@ -423,6 +433,7 @@ bool BackgroundCategory::condition_F(const Particle* candidate)
 }
 //=============================================================================
 bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
+//Checks if there are any ghosts in our final state Particles used to make the candidate Particle
 {
 	bool carryon = true;
 	MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
@@ -441,16 +452,17 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 }
 //=============================================================================
 bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
+//Checks if the event is a pileup (final state Particles come from at least 2 different collisions) or not.
 {
 	bool carryon = true;
-  MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
-  ParticleVector::const_iterator iPP = particles_in_decay.begin();
+	MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
+	ParticleVector::const_iterator iPP = particles_in_decay.begin();
 	const Collision* tmpcollision = NULL;
 	bool gotacollision = false;
 
-  do {
+	do {
 
-    if ( !(*iPP)->endVertex() ) {
+		if ( !(*iPP)->endVertex() ) {
 
 			if (*iP) {
 
@@ -463,15 +475,18 @@ bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_dec
 			}
 
 		}
-    ++iP;
-    ++iPP;
+		++iP;
+		++iPP;
 
-  } while (carryon && iP != mc_particles_linked_to_decay.end() && iPP != particles_in_decay.end() );
+	} while (carryon && iP != mc_particles_linked_to_decay.end() && iPP != particles_in_decay.end() );
 
 	return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)
+//Checks if at least one of the final state MCParticles associated
+//to the decay products of the candidate Particle had a mother
+//with bottom content.  
 {
 	verbose() << "Beginning to check condition J" << endreq;
 	bool carryon = false;
@@ -498,6 +513,9 @@ bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)
 }
 //=============================================================================
 bool BackgroundCategory::condition_J(MCParticleVector mc_mothers_final)
+//Checks if at least one of the final state MCParticles associated
+//to the decay products of the candidate Particle had a mother
+//with charm content.
 {
 	bool carryon = false;
 	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
@@ -518,11 +536,10 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 	//This function evaluates whether some of the particles in the final state
 	//of the candidate come from the primary vertex. Returns 0 if none, 1 if one,
 	//and 99 if all.
-	int howmanyfinalstate = 0; //mc_particles_linked_to_decay.size();
+	int howmanyfinalstate = 0; 
 	int howmanyfromPV = 0;
 	
 	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
-	//MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin();
 
 	for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); iPP != mc_particles_linked_to_decay.end(); ++iPP) {
 
@@ -542,11 +559,8 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 								SmartRefVector<MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
 								double motherflighttime = (*iVT)->timeOfFlight();
 
-								//fatal() << "motherflighttime = " << motherflighttime << endreq;
-
 								if (motherflighttime > m_rescut) {
 
-									//fatal() << "motherflighttime (>0) = " << motherflighttime << endreq;
 									fromshortlivedmother = false;
 								}
 
@@ -575,6 +589,9 @@ int BackgroundCategory::condition_PV(MCParticleVector mc_mothers_final, MCPartic
 }
 //=============================================================================
 MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector particles_in_decay)
+//Associates all the final state particles daughters of the candidate Particle. For composites, 
+//attempts to use the Chi2 associator, which has to be configured properly for this (utterly
+//non-essential) feature to work.
 {
 	//verbose() << "Beginning to associate descendants" << endreq; 
 	MCParticleVector associated_mcparts;

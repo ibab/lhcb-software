@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.11 2006-01-30 13:50:22 lfernan Exp $
+// $Id: IBackgroundCategory.h,v 1.12 2006-02-01 15:17:11 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -18,7 +18,10 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
 
 /** @class IBackgroundCategory IBackgroundCategory.h pkoppenb/IBackgroundCategory.h
  *
- *  Returns the background category for a reconstructed candidate Particle  
+ *  Returns the background category for a reconstructed candidate Particle. Many thanks
+ *  go to all the users who tested this tool, but especially to Luis Fernandez,
+ *  Patrick Koppenburg and Jeremie Borel for their assistance in the design and extensive
+ *  help in ironing out bugs. 
  *
  *Conditions:
  *
@@ -80,7 +83,7 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *
  *  -  <b>6:   Ghost                   </b>  !A &amp;&amp; G (= G)
  *
- *  -  <b>7:   Pileup                  </b>   !A &amp;&amp; !G &amp;&amp; H (= !E &amp;&amp; H)
+ *  -  <b>7:   Pileup/FromDifferentPV                  </b>   !A &amp;&amp; !G &amp;&amp; H (= !E &amp;&amp; H)
  *
  *  -  <b>8:   bb event                </b>   !A &amp;&amp; !G &amp;&amp; !H &amp;&amp; I
  *
@@ -129,6 +132,15 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *g) A reconstructed Bs -> (Ds -> KKpi) pi+ candidate with all 4 tracks
  *  matched to the true final state particles of a true 
  *  Bs -> (Bs ->KKpi) pi+pi0 decay is classified as a low-mass background. 
+ * 
+ * Please note that there are now two additional categories:
+ * 
+ * FromPV : The candidate particle has at least one final state daughter which
+ *          comes directly from the primary vertex or a short lived resonance,
+ *          and the event is not a pileup. 
+ *
+ * AllFromSamePV : The candidate particle's final state daughters all come from
+ *                 the same PV, or from short lived resonances from the same PV.
  * 
  *  @author Vladimir Gligorov
  *  @date   2005-11-03

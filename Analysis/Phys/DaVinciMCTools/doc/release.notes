@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.96 2006-01-30 14:15:12 gligorov Exp $
+! $Id: release.notes,v 1.97 2006-02-01 15:17:03 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-1-30 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  - src/BackgroundCategory.h
+  - DaVinciMCTools/IBackgroundCategory.h
+    . Considerable extra documentation added in all three files.
 
 ! 2006-1-30 - V. Gligorov
   - src/BackgroundCategory.cpp
