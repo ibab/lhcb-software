@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.3 2006-01-12 13:15:25 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.4 2006-02-01 19:40:26 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -11,17 +11,17 @@ struct Item {
   // ------ Item Cons & Dest
   
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath):since(1),until(-1),path(objPath),db_path(),
+  Item(const std::string &objPath):since(1),until(0),path(objPath),db_path(),
                                    vdo(NULL),ptr(NULL),updateLock(false),user_dest_ptrs() {}
 
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath, BasePtrSetter *dest):since(1),until(-1),path(objPath),db_path(),
+  Item(const std::string &objPath, BasePtrSetter *dest):since(1),until(0),path(objPath),db_path(),
                                    vdo(NULL),ptr(NULL),updateLock(false),user_dest_ptrs() {
     if (dest) user_dest_ptrs.push_back(dest);
   }
 
   /// Constructor for an item representing a generic object.
-  Item(BaseObjectMemberFunction *mf): since(1),until(-1),vdo(mf->castToValidDataObject()),
+  Item(BaseObjectMemberFunction *mf): since(1),until(0),vdo(mf->castToValidDataObject()),
                                       ptr(mf->castToVoid()),updateLock(false),user_dest_ptrs() {
     if (vdo && vdo->registry()) path = vdo->registry()->identifier();
     memFuncs.push_back(MembFunc(mf));
@@ -54,7 +54,7 @@ struct Item {
   /// Used inside Item to identify a registered member function.
   struct MembFunc {
     /// Simple constructor.
-    MembFunc(BaseObjectMemberFunction *mf_p): mf(mf_p),since(1),until(-1) { items = new ItemList; }
+    MembFunc(BaseObjectMemberFunction *mf_p): mf(mf_p),since(1),until(0) { items = new ItemList; }
     /// Simple destructor. The pointers are not deleted because \e owned by the item.
     ~MembFunc() { }
     /// Pointer to the registered member function.
@@ -63,15 +63,15 @@ struct Item {
     ItemList                 *items;
     /// Time points delimiting the interval of validity of the member function
     /// (intersection of the intervals of validity of the used items).
-    TimePoint                since,until;
+    Gaudi::Time              since,until;
     /// Tells if the member function is valid or not at the given time (if not it has to be called).
-    inline bool isValid(const TimePoint &when) {return since <= when && until > when;}
+    inline bool isValid(const Gaudi::Time &when) {return since <= when && until > when;}
     /// Used to reset the interval of validity to (-inf;+inf)
-    inline void resetIOV() { since = time_absolutepast; until = time_absolutefuture; }
+    inline void resetIOV() { since = Gaudi::Time::epoch(); until = Gaudi::Time::max(); }
     /// Set the interval of validity to an empty range (so it is invalid regardless of the time used)
-    inline void invalidate() { since = 1; until = -1; }
+    inline void invalidate() { since = 1; until = 0; }
     /// Restrict the current validity range
-    inline void changeValidity(const TimePoint &new_since, const TimePoint &new_until) {
+    inline void changeValidity(const Gaudi::Time &new_since, const Gaudi::Time &new_until) {
       if ( new_since > since ) {
         since = new_since;
       }
@@ -83,20 +83,20 @@ struct Item {
   /// Type for the list of the registered member functions.
   typedef std::vector<MembFunc> MembFuncList;
 
-  inline bool isValid(const TimePoint &when) {
+  inline bool isValid(const Gaudi::Time &when) {
     return since <= when && until > when;
   }
-  inline void resetIOV() { since = time_absolutepast; until = time_absolutefuture; }
+  inline void resetIOV() { since = Gaudi::Time::epoch(); until = Gaudi::Time::max(); }
 
   inline void invalidate() {
-    since = 1; until = -1;
+    since = 1; until = 0;
     for (ParentList::iterator p = parents.begin(); p != parents.end(); ++p) {
       p->first->find(p->second)->invalidate(); // invalidate m.f. (I'm not checking... let's trust the consitency)
       p->first->invalidate();
     }
   }
 
-  inline void changeValidity(const TimePoint &new_since, const TimePoint &new_until) {
+  inline void changeValidity(const Gaudi::Time &new_since, const Gaudi::Time &new_until) {
     // set the new limits only if within the current IOV
     bool changed = false;
     if ( new_since > since ) {
@@ -120,7 +120,7 @@ struct Item {
 
   /// Time points delimiting the interval of validity of the item
   /// (intersection of the intervals of validity of the member functions).
-  TimePoint since,until;
+  Gaudi::Time since,until;
     
   /// Item parents: the (item,member_function) pairs that depend on this item
   ParentList parents;
@@ -146,13 +146,12 @@ struct Item {
   UserPtrList user_dest_ptrs;
 
   /// Main method. Used to update the object and all the used ones.
-  StatusCode update(IDataProviderSvc *dp,const TimePoint &when, MsgStream *log = NULL){
+  StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL){
     if (log){
       (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
       if (!path.empty()) (*log) << " " << path;
       (*log) << endmsg;
-      (*log) << MSG::VERBOSE << "    initial validity: "
-             << since.absoluteTime() << " -> " << until.absoluteTime() << endmsg;
+      (*log) << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
     }
     if (updateLock) {
       if (log) (*log) << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
@@ -233,11 +232,10 @@ struct Item {
       if (until > mfIt->until) until = mfIt->until;
     }
     updateLock = false;
-    //std::cout << "UMS:      final validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
+    //std::cout << "UMS:      final validity: " << since << " -> " << until << std::endl;
     //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
     if (log){
-      (*log) << MSG::VERBOSE << "    final validity: "
-             << since.absoluteTime() << " -> " << until.absoluteTime() << endmsg;
+      (*log) << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
       (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
       if (!path.empty()) (*log) << " " << path;
       (*log) << endmsg;

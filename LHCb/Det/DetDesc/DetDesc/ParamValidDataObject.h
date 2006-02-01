@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.6 2006-01-19 08:51:54 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.7 2006-02-01 19:39:09 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -28,9 +28,6 @@ class ParamValidDataObject : public ValidDataObject {
   /// Default constructor
   ParamValidDataObject();
 
-  /// Constructor 
-  ParamValidDataObject (const ITime& since, const ITime& till);
-  
   /// Copy constructor 
   ParamValidDataObject (ParamValidDataObject& obj);
   

@@ -1,9 +1,8 @@
-//$Id: Condition.cpp,v 1.9 2005-08-15 13:54:59 marcocle Exp $
+//$Id: Condition.cpp,v 1.10 2006-02-01 19:39:10 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
 
-#include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -11,12 +10,6 @@
 
 /// Default constructor
 Condition::Condition() : ParamValidDataObject() {}; 
-
-//---------------------------------------------------------------------------
-
-/// Constructor
-Condition::Condition (const ITime& since, const ITime& till)
-  : ParamValidDataObject (since, till) {}; 
 
 //---------------------------------------------------------------------------
 

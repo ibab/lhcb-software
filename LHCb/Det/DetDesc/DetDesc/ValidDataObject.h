@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.5 2005-12-14 14:14:01 marcocle Exp $
+//$Id: ValidDataObject.h,v 1.6 2006-02-01 19:39:09 marcocle Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -7,7 +7,7 @@
 // Base classes
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 
 // Unique ID of the class
 #include "DetDesc/CLIDValidDataObject.h"
@@ -35,9 +35,6 @@ class ValidDataObject : public DataObject,
   
   /// Default constructor
   ValidDataObject();
-
-  /// Constructor 
-  ValidDataObject( const ITime& since, const ITime& till );
   
   /// Copy constructor 
   ValidDataObject( ValidDataObject& obj );
@@ -72,22 +69,22 @@ class ValidDataObject : public DataObject,
   virtual bool isValid() const ;
 
   /// Check if the data object is valid at the specified time
-  virtual bool isValid( const ITime& t ) const;
+  virtual bool isValid( const Gaudi::Time& t ) const;
 
   /// Get start of validity
-  virtual const ITime& validSince() const;
+  virtual const Gaudi::Time& validSince() const;
 
   /// Get end of validity
-  virtual const ITime& validTill() const;
+  virtual const Gaudi::Time& validTill() const;
 
   /// Set validity range
-  virtual void setValidity( const ITime& since, const ITime& till );  
+  virtual void setValidity( const Gaudi::Time& since, const Gaudi::Time& till );  
 
   /// Set start of validity
-  virtual void setValiditySince( const ITime& since );  
+  virtual void setValiditySince( const Gaudi::Time& since );  
 
   /// Set end of validity
-  virtual void setValidityTill( const ITime& till );   
+  virtual void setValidityTill( const Gaudi::Time& till );   
   
 // ================================================
 // ValidDataObject methods
@@ -125,9 +122,9 @@ class ValidDataObject : public DataObject,
 
   // IValidity data
   /// Start of validity
-  TimePoint m_validSince;
+  Gaudi::Time m_validSince;
   /// End of validity
-  TimePoint m_validUntil;
+  Gaudi::Time m_validUntil;
   
   /// Flag to force/inhibit the update regardless of the validity
   UpdateModeFlag   m_updateMode;

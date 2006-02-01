@@ -1,7 +1,7 @@
-// $Id: CondDBGenericCnv.cpp,v 1.9 2005-10-18 15:39:33 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.10 2006-02-01 19:42:36 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/DataObject.h"
@@ -78,7 +78,7 @@ StatusCode CondDBGenericCnv::finalize() {
 // Ask the event time to the DetectorDataSvc
 //=========================================================================
 
-StatusCode CondDBGenericCnv::eventTime(TimePoint &time) const {
+StatusCode CondDBGenericCnv::eventTime(Gaudi::Time &time) const {
   if (!m_detDataSvc->validEventTime()){
     return StatusCode::FAILURE;
   }
@@ -89,7 +89,7 @@ StatusCode CondDBGenericCnv::eventTime(TimePoint &time) const {
 //=========================================================================
 // Set the validity of the object
 //=========================================================================
-void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObject *pObject){
+void CondDBGenericCnv::setObjValidity(Gaudi::Time &since, Gaudi::Time &till, DataObject *pObject){
   // Set validity of created object
   IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
 
@@ -113,11 +113,11 @@ void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObj
 //=========================================================================
 StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::ChannelId &channel,
                                         boost::shared_ptr<pool::AttributeList> &data,
-                                        std::string &descr, TimePoint &since, TimePoint &until) {
+                                        std::string &descr, Gaudi::Time &since, Gaudi::Time &until) {
 
   MsgStream log(msgSvc(),"CondDBGenericCnv");
 
-  TimePoint now;
+  Gaudi::Time now;
   StatusCode sc = eventTime(now);
   if (sc.isFailure()) {
     log << MSG::ERROR << "Cannot create DataObject: event time undefined" << endmsg;

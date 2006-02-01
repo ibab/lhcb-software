@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.6 2005-12-05 16:18:43 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.7 2006-02-01 19:39:09 marcocle Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -30,11 +30,6 @@ public:
                      const std::vector<double>& pivot =
                      std::vector<double>(3) ) ;
   
-  /// Constructor
-  AlignmentCondition (const ITime& since, const ITime& till);
-  /// Copy constructor 
-//  AlignmentCondition (Condition& obj);
-
   virtual ~AlignmentCondition( ); ///< Destructor
 
   virtual StatusCode initialize();

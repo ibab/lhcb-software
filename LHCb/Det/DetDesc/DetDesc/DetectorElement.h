@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.33 2005-12-07 14:00:36 jpalac Exp $
+// $Id: DetectorElement.h,v 1.34 2006-02-01 19:39:09 marcocle Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -15,7 +15,6 @@
 #include <vector>
 #include <map>
 
-#include "GaudiKernel/ITime.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/Services.h"
@@ -56,10 +55,6 @@ public:
   /// Constructors 
   DetectorElement (const std::string& name = "NotYetDefined");
   
-  DetectorElement (const std::string& name,
-                   const ITime& iValidSince,
-                   const ITime& iValidTill); 
-
   ///  Destructor 
   virtual ~DetectorElement();
 

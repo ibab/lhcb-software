@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.5 2005-12-07 13:19:07 cattanem Exp $
+// $Id: LAssembly.h,v 1.6 2006-02-01 19:39:09 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -41,34 +41,6 @@ public:
    */
   LAssembly
   ( const std::string& name             , 
-    const std::string& sensitivity = "" ,
-    const std::string& magnetic    = "" );
-  
-  /** constructor 
-   *  @exception LVolumeException wrong parameter value
-   *  @param name         name of logical volume 
-   *  @param validity     validity object 
-   *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic     name of magnetic field object (for simulation)
-   */
-  LAssembly
-  ( const std::string& name             ,
-    const IValidity  & validity         ,
-    const std::string& sensitivity = "" ,
-    const std::string& magnetic    = "" );
-  
-  /** constructor
-   *  @exception LVolumeException wrong paramaters value
-   *  @param name name of logical volume 
-   *  @param validSince  begin of validity range 
-   *  @param validTill  end of validity range 
-   *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic  nam eof magnetic field object (for simulation)
-   */
-  LAssembly
-  ( const std::string& name             , 
-    const ITime&       validSince       , 
-    const ITime&       validTill        , 
     const std::string& sensitivity = "" ,
     const std::string& magnetic    = "" );
   

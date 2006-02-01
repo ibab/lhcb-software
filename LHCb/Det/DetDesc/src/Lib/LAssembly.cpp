@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.8 2005-12-07 13:19:07 cattanem Exp $
+// $Id: LAssembly.cpp,v 1.9 2006-02-01 19:39:10 marcocle Exp $
 
 // Include files
 // DetDesc
@@ -29,51 +29,6 @@ LAssembly::LAssembly
   : LogVolBase( name        , 
                 sensitivity , 
                 magnetic    )
-  , m_coverComputed( false )
-{};
-
-// ============================================================================
-/** constructor 
- *  @exception LVolumeException wrong parameter value
- *  @param name         name of logical volume 
- *  @param validity     validity object 
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic     name of magnetic field object (for simulation)
- */
-// ============================================================================
-LAssembly::LAssembly
-( const std::string& name        ,
-  const IValidity  & validity    ,
-  const std::string& sensitivity ,
-  const std::string& magnetic    )
-  : LogVolBase( name        ,
-                validity    , 
-                sensitivity , 
-                magnetic    )
-  , m_coverComputed( false )
-{};
-
-// ============================================================================
-/** constructor
- *  @exception LVolumeException wrong paramaters value
- *  @param name name of logical volume 
- *  @param validSince  begin of validity range 
- *  @param validTill  end of validity range 
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic  nam eof magnetic field object (for simulation)
- */
-// ============================================================================
-LAssembly::LAssembly
-( const std::string& name        , 
-  const ITime&       validSince  , 
-  const ITime&       validTill   , 
-  const std::string& sensitivity ,
-  const std::string& magnetic    )
-  : LogVolBase ( name        , 
-                 validSince  , 
-                 validTill   , 
-                 sensitivity , 
-                 magnetic    )
   , m_coverComputed( false )
 {};
 

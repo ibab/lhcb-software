@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.10 2005-09-20 11:43:43 cattanem Exp $
+// $Id: CondDBGenericCnv.h,v 1.11 2006-02-01 19:42:36 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -8,7 +8,7 @@
 
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/ClassID.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 
 #include "DetCond/ICondDBAccessSvc.h"
 
@@ -82,12 +82,12 @@ protected:
    * Ask to the DetectorDataSvc the curren event time.
    * @return StatusCode::SUCCESS if the event time was defined.
    */
-  StatusCode eventTime(TimePoint &time) const;
+  StatusCode eventTime(Gaudi::Time &time) const;
 
   /**
    * Set the validity of the DataObject if it inherits from IValidity.
    */
-  void setObjValidity(TimePoint &since, TimePoint &till, DataObject *pObject);
+  void setObjValidity(Gaudi::Time &since, Gaudi::Time &till, DataObject *pObject);
 
   /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
@@ -110,12 +110,12 @@ protected:
    */
   StatusCode getObject(const std::string &path, const cool::ChannelId &channel,
                        boost::shared_ptr<pool::AttributeList> &obj,
-                       std::string &descr, TimePoint &since, TimePoint &until);
+                       std::string &descr, Gaudi::Time &since, Gaudi::Time &until);
 
   /// Method kept for backward compatibility
   inline StatusCode getObject(const std::string &path,
                               boost::shared_ptr<pool::AttributeList> &obj,
-                              std::string &descr, TimePoint &since, TimePoint &until)
+                              std::string &descr, Gaudi::Time &since, Gaudi::Time &until)
   {
     return getObject(path,0,obj,descr,since,until);
   }

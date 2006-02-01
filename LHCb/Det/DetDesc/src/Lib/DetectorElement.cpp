@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.33 2005-12-07 14:00:36 jpalac Exp $
+// $Id: DetectorElement.cpp,v 1.34 2006-02-01 19:39:10 marcocle Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -30,23 +30,6 @@
  * @author Sebastien Ponce
  * @author Marco Clemencic <marco.clemencic@cern.ch>
  */
-DetectorElement::DetectorElement( const std::string&   /*name*/    ,
-                                  const ITime&         validSince  ,   
-                                  const ITime&         validTill   )
-  : ParamValidDataObject      ( validSince, validTill )
-  , m_de_iGeometry       (    0    ) 
-  , m_de_iAlignment      (    0    ) 
-  , m_de_iCalibration    (    0    )   
-  , m_de_iReadOut        (    0    ) 
-  , m_de_iSlowControl    (    0    ) 
-  , m_de_iFastControl    (    0    ) 
-  , m_de_childrensLoaded (  false  )
-  , m_de_childrens       (         ) 
-  , m_services           (    0    )
-{
-  m_services = DetDesc::services();
-};
-
 DetectorElement::DetectorElement( const std::string&   /* name */ )
   : ParamValidDataObject           (         )
   , m_de_iGeometry       (    0    ) 

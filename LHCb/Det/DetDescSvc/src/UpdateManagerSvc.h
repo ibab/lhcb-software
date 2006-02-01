@@ -1,10 +1,10 @@
-// $Id: UpdateManagerSvc.h,v 1.3 2006-01-12 13:15:25 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.4 2006-02-01 19:40:26 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IIncidentListener.h"
@@ -58,12 +58,12 @@ public:
   /// Start a the update loop using the provided time to decide if an item is valid or not.
   /// \warning{The time used to retrieve an object from the condition database is the one obtained from 
   /// the detector data service.}
-  virtual StatusCode newEvent(const ITime &evtTime);
+  virtual StatusCode newEvent(const Gaudi::Time &evtTime);
 
   //virtual StatusCode runAll() const;
 
-  virtual bool getValidity(const std::string path, TimePoint& since, TimePoint &until, bool path_to_db = false);
-  virtual void setValidity(const std::string path, const TimePoint& since, const TimePoint &until, bool path_to_db = false);
+  virtual bool getValidity(const std::string path, Gaudi::Time& since, Gaudi::Time &until, bool path_to_db = false);
+  virtual void setValidity(const std::string path, const Gaudi::Time& since, const Gaudi::Time &until, bool path_to_db = false);
 
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
   virtual void dump();
@@ -139,9 +139,9 @@ private:
   /// List used to record all teh objects without parents. (for fast access)
   Item::ItemList    m_head_items;
   /// Lower bound of intersection of head IOVs.
-  TimePoint         m_head_since;
+  Gaudi::Time       m_head_since;
   /// Higher bound of intersection of head IOVs.
-  TimePoint         m_head_until;
+  Gaudi::Time       m_head_until;
 };
 
 #include "UpdateManagerSvc.icpp"

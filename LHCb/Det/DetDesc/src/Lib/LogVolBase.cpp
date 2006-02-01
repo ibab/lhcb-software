@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.15 2005-12-07 13:19:07 cattanem Exp $
+// $Id: LogVolBase.cpp,v 1.16 2006-02-01 19:39:10 marcocle Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -46,60 +46,6 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName     ( sensitivity ) 
   , m_mfName     ( magnetic    )
   , m_services   ( 0           )
-{
-  // get services
-  m_services = DetDesc::services();
-  /// add volume counter 
-  ++s_volumeCounter ;  
-};
-
-// ============================================================================
-/** constructor
- *  @exception LVolumeException wrong parameters value
- *  @param name name    of logical volume 
- *  @param validSince   begin of validity range 
- *  @param validTill    end of validity range 
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic     name of magnetic field object (for simulation)
- */
-// ============================================================================
-LogVolBase::LogVolBase( const std::string& /*name*/    , 
-                        const ITime&       validSince  , 
-                        const ITime&       validTill   , 
-                        const std::string& sensitivity ,
-                        const std::string& magnetic    )
-  : ValidDataObject ( validSince, validTill )
-  , m_pvolumes (             )
-  , m_surfaces (             ) 
-  , m_sdName   ( sensitivity ) 
-  , m_mfName   ( magnetic    )
-  , m_services ( 0           )
-{
-  // get services
-  m_services = DetDesc::services();
-  /// add volume counter 
-  ++s_volumeCounter ;  
-};
-
-// ============================================================================
-/** constructor 
- *  @exception LVolumeException wrong parameter value
- *  @param name         name of logical volume 
- *  @param validity     validity object 
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic     nam eof magnetic field object (for simulation)
- */
-// ============================================================================
-LogVolBase::LogVolBase( const std::string& /*name*/    ,
-                        const IValidity  & validity    ,
-                        const std::string& sensitivity ,
-                        const std::string& magnetic    )
-  : ValidDataObject ( validity.validSince(), validity.validTill() )
-  , m_pvolumes (             )
-  , m_surfaces (             ) 
-  , m_sdName   ( sensitivity ) 
-  , m_mfName   ( magnetic    )
-  , m_services ( 0           )
 {
   // get services
   m_services = DetDesc::services();

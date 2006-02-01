@@ -1,8 +1,12 @@
-// $Id: SimpleValidity.cpp,v 1.4 2005-04-22 13:10:41 marcocle Exp $
+// $Id: SimpleValidity.cpp,v 1.5 2006-02-01 19:39:10 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/04/22 13:10:41  marcocle
+// Follow (pending) change in GaudiKernel/IValidity.
+// Improvements in ValidDataObject and LogVolBase. (see doc/release.notes)
+//
 // Revision 1.3  2003/06/16 13:42:36  sponce
 // fixes for gcc 3.2 and 3.3
 //
@@ -15,7 +19,7 @@
 // ============================================================================
 // Include files
 // GaudiKernel
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/StatusCode.h"
 // local
 #include "SimpleValidity.h"
@@ -35,12 +39,9 @@
  */
 // ============================================================================
 SimpleValidity::SimpleValidity() 
-  : m_since ( 0 ) 
-  , m_till  ( 0 ) 
-{
-  m_since = new TimePoint( time_absolutepast   ) ;
-  m_till  = new TimePoint( time_absolutefuture ) ;  
-};
+  : m_since ( Gaudi::Time::epoch() ) 
+  , m_till  ( Gaudi::Time::max() ) 
+{}
 
 // ============================================================================
 /** standard (default) constructor 
@@ -48,14 +49,11 @@ SimpleValidity::SimpleValidity()
  *  @param till  "till"  time for validity range 
  */
 // ============================================================================
-SimpleValidity::SimpleValidity( const ITime& since ,
-                                const ITime& till  ) 
-  : m_since ( 0 ) 
-  , m_till  ( 0 ) 
-{
-  m_since = new TimePoint (since) ;
-  m_till  = new TimePoint (till) ;  
-};
+SimpleValidity::SimpleValidity( const Gaudi::Time& since ,
+                                const Gaudi::Time& till  ) 
+  : m_since ( since ) 
+  , m_till  ( till ) 
+{}
 
 // ============================================================================
 /** (explicit) constructor from other 
@@ -64,13 +62,9 @@ SimpleValidity::SimpleValidity( const ITime& since ,
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const IValidity& copy )
-  : m_since ( 0 ) 
-  , m_till  ( 0 ) 
-{
-  IValidity* ival = const_cast<IValidity*> ( &copy );
-  m_since = new TimePoint( ival->validSince () );
-  m_till  = new TimePoint( ival->validTill  () );
-};
+  : m_since ( copy.validSince() ) 
+  , m_till  ( copy.validTill() ) 
+{}
 
 // ============================================================================
 /** copy constructor  (deep copy)
@@ -78,10 +72,9 @@ SimpleValidity::SimpleValidity( const IValidity& copy )
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const SimpleValidity& copy )
-  : IValidity(),
-    m_since ( new TimePoint( *(copy.m_since) ) )
-  , m_till  ( new TimePoint( *(copy.m_till)  ) )
-{};
+  : m_since ( copy.m_since )
+  , m_till  ( copy.m_till  )
+{}
 
 // ============================================================================
 /** assignement from any IValidity object 
@@ -90,18 +83,10 @@ SimpleValidity::SimpleValidity( const SimpleValidity& copy )
 // ============================================================================
 SimpleValidity& SimpleValidity::operator=( const IValidity&      copy )
 {
-  IValidity* im = static_cast<IValidity*> (this);
-  if( &copy == im  ) { return *this; }                         ///< RETURN 
-  /// reset contents  
-  if( 0 != m_since ) { delete m_since ; m_since = 0 ; }
-  if( 0 != m_till  ) { delete m_till  ; m_till  = 0 ; }
-  /// deep copy the contents 
-  IValidity* ival = const_cast<IValidity*> ( &copy );
-  m_since = new TimePoint( ival->validSince () );
-  m_till  = new TimePoint( ival->validTill  () );  
-  ///
+  m_since = copy.validSince();
+  m_till  = copy.validTill();
   return *this;
-};
+}
 
 // ============================================================================
 /** assignement (deep copy)
@@ -111,26 +96,16 @@ SimpleValidity& SimpleValidity::operator=( const IValidity&      copy )
 SimpleValidity& SimpleValidity::operator=( const SimpleValidity& copy )
 {
   if( &copy == this ) { return *this ; }                       ///< RETURN
-  /// reset contents  
-  if( 0 != m_since ) { delete m_since ; m_since = 0 ; }
-  if( 0 != m_till  ) { delete m_till  ; m_till  = 0 ; }
-  /// deep copy the contents 
-  m_since = new TimePoint( *(copy.m_since) );
-  m_till  = new TimePoint( *(copy.m_till)  );
-  ///
+  m_since = copy.m_since;
+  m_till  = copy.m_till;
   return *this;
-};
+}
 
 // ============================================================================
 /** destructor 
  */
 // ============================================================================
-SimpleValidity::~SimpleValidity()
-{
-  /// reset contents  
-  if( 0 != m_since ) { delete m_since ; m_since = 0 ; }
-  if( 0 != m_till  ) { delete m_till  ; m_till  = 0 ; }  
-};
+SimpleValidity::~SimpleValidity() {}
 
 // ============================================================================
 /** is the Object valid? (it can be always invalid)
@@ -138,7 +113,7 @@ SimpleValidity::~SimpleValidity()
  */
 // ============================================================================
 bool SimpleValidity::isValid    () const
-{ return (*m_since) <= (*m_till) ;}
+{ return (m_since) <= (m_till) ;}
 
 // ============================================================================
 /** is the Object valid for a given time?
@@ -147,47 +122,37 @@ bool SimpleValidity::isValid    () const
  */
 // ============================================================================
 bool SimpleValidity::isValid    
-( const ITime&  time ) const
-{ return ( (*m_since) <= time ) && ( time <= (*m_till) ) ; }
+( const Gaudi::Time&  time ) const
+{ return ( (m_since) <= time ) && ( time <= (m_till) ) ; }
 
 // ============================================================================
 /// set the validity range of the Object
 // ============================================================================
 void SimpleValidity::setValidity 
-( const ITime& since , 
-  const ITime& till  ) 
+( const Gaudi::Time& since , 
+  const Gaudi::Time& till  ) 
 {
-  /// reset contents  
-  if( 0 != m_since ) { delete m_since ; m_since = 0 ; }
-  if( 0 != m_till  ) { delete m_till  ; m_till  = 0 ; }
-  /// deep copy the contents 
-  m_since = new TimePoint( since  );
-  m_till  = new TimePoint( till   );  
-};
+  m_since = since;
+  m_till = till;
+}
 
 // ============================================================================
 /// set the validity time of the Object 
 // ============================================================================
 void SimpleValidity::setValiditySince  
-( const ITime& since ) 
+( const Gaudi::Time& since ) 
 {
-  /// reset contents  
-  if( 0 != m_since ) { delete m_since ; m_since = 0 ; }
-  /// deep copy the contents 
-  m_since = new TimePoint( since  );
-};
+  m_since = since;
+}
 
 // ============================================================================
 /// set the validity time of the Object 
 // ============================================================================
 void SimpleValidity::setValidityTill   
-( const ITime& till  ) 
+( const Gaudi::Time& till  ) 
 {
-  /// reset contents  
-  if( 0 != m_till  ) { delete m_till  ; m_till  = 0 ; }
-  /// deep copy the contents 
-  m_till  = new TimePoint( till   );  
-};
+  m_till = till;  
+}
 
 // ============================================================================
 // The End 

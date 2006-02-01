@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.4 2006-01-20 16:37:14 cattanem Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.5 2006-02-01 19:40:26 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -243,7 +243,7 @@ StatusCode UpdateManagerSvc::newEvent(){
 	}
 	return StatusCode::FAILURE;
 }
-StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
+StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   StatusCode sc = StatusCode::SUCCESS;
   // Check head validity
   if ( evtTime >= m_head_since && evtTime < m_head_until ) return sc; // no need to update
@@ -260,8 +260,8 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
     // first I make a copy of the current head
     Item::ItemList head_copy(m_head_items);
     // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
-    TimePoint head_copy_since(time_absolutepast);
-    TimePoint head_copy_until(time_absolutefuture);
+    Gaudi::Time head_copy_since(Gaudi::Time::epoch());
+    Gaudi::Time head_copy_until(Gaudi::Time::max());
     for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
       if ( m_outputLevel <= MSG::DEBUG ) {
         MsgStream item_log(msgSvc(),name()+"::Item");
@@ -367,7 +367,7 @@ void UpdateManagerSvc::dump(){
   log << MSG::DEBUG << "--- Dump" << endmsg;
   log << MSG::DEBUG << "    " << m_all_items.size() << " items registered" << endmsg;
   log << MSG::DEBUG << "     of which " << m_head_items.size() << " in the head" << endmsg;
-  log << MSG::DEBUG << "         head IOV = " << m_head_since.absoluteTime() << " - " << m_head_until.absoluteTime() << endmsg;
+  log << MSG::DEBUG << "         head IOV = " << m_head_since << " - " << m_head_until << endmsg;
   
   size_t cnt = 0, head_cnt = 0;
   for (Item::ItemList::iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
@@ -380,7 +380,7 @@ void UpdateManagerSvc::dump(){
     log << MSG::DEBUG << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
     if ( !(*i)->path.empty() )
       log << MSG::DEBUG << "       path = " << (*i)->path << endmsg;
-    log << MSG::DEBUG << "        IOV = " << (*i)->since.absoluteTime() << " - " << (*i)->until.absoluteTime() << endmsg;
+    log << MSG::DEBUG << "        IOV = " << (*i)->since << " - " << (*i)->until << endmsg;
     if ((*i)->memFuncs.size()){
       log << MSG::DEBUG << "       depend on :" << endmsg;
       for (Item::MembFuncList::iterator mfIt = (*i)->memFuncs.begin(); mfIt != (*i)->memFuncs.end(); ++mfIt){
@@ -404,7 +404,7 @@ void UpdateManagerSvc::dump(){
 //=========================================================================
 //  search the item with the given path and get its validity
 //=========================================================================
-bool UpdateManagerSvc::getValidity(const std::string path, TimePoint& since, TimePoint &until,
+bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, Gaudi::Time &until,
                                    bool path_to_db) {
   // search
   Item *item = findItem(path,path_to_db);
@@ -419,7 +419,7 @@ bool UpdateManagerSvc::getValidity(const std::string path, TimePoint& since, Tim
 //=========================================================================
 //  search the item with the given path and change its validity
 //=========================================================================
-void UpdateManagerSvc::setValidity(const std::string path, const TimePoint& since, const TimePoint &until,
+void UpdateManagerSvc::setValidity(const std::string path, const Gaudi::Time& since, const Gaudi::Time &until,
                                    bool path_to_db) {
   if (!path_to_db) { // the DDS path is unique
     // search

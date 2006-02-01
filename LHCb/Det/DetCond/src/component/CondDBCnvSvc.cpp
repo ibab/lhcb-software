@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.7 2005-10-18 16:25:32 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.8 2006-02-01 19:42:36 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -10,8 +10,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ICnvFactory.h"
-
-#include "GaudiKernel/TimePoint.h"
 
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<CondDBCnvSvc>          CondDBCnvSvc_factory;

@@ -1,4 +1,4 @@
-// $Id: LVolume.cpp,v 1.31 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.32 2006-02-01 19:39:10 marcocle Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
@@ -30,71 +30,6 @@
  *  @author: Sebastien Ponce
  */
 // ===========================================================================
-
-// ===========================================================================
-/** constructor, pointer to ISolid* must be valid!, 
- *  overvise constructor throws LVolumeException!  
- *  @exception LVolumeException wrong paramaters value
- *  @param name         name of logical volume 
- *  @param Solid        pointer to ISolid object 
- *  @param material     name of the material 
- *  @param validity     validity object
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic     name of magnetic field object (for simulation)
- */
-// ===========================================================================
-LVolume::LVolume
-( const std::string& name        , 
-  ISolid*            Solid       ,
-  const std::string& material    ,
-  const IValidity&   validity    , 
-  const std::string& sensitivity ,
-  const std::string& magnetic    )
-  : LogVolBase     ( name        , 
-                     validity    , 
-                     sensitivity , 
-                     magnetic    )
-  , m_solid        ( Solid       )
-  , m_materialName ( material    )
-  , m_material     (    0        )
-{
-  if( 0 == m_solid ) 
-    { throw LogVolumeException("LVolume: ISolid* points to NULL ") ; }
-}; 
-
-// ===========================================================================
-/** constructor, pointer to ISolid* must be valid!, 
- *  overvise constructor throws LVolumeException!  
- *  @exception LVolumeException wrong paramaters value
- *  @param name         name of  logical volume 
- *  @param Solid        pointer to ISolid object 
- *  @param material     name of the material 
- *  @param validSince   begin of validity range 
- *  @param validTill    end of validity range 
- *  @param sensitivity  name of sensitive detector object (for simulation)
- *  @param magnetic     name of magnetic field object (for simulation)
- */
-// =========================================================================== 
-LVolume::LVolume
-( const std::string& name         , 
-  ISolid*            Solid        ,
-  const std::string& material     ,
-  const ITime&       validSince   , 
-  const ITime&       validTill    , 
-  const std::string& sensitivity  ,
-  const std::string& magnetic     )
-  : LogVolBase     ( name        , 
-                     validSince  , 
-                     validTill   , 
-                     sensitivity ,      
-                     magnetic    )
-  , m_solid        ( Solid       )
-  , m_materialName ( material    )
-  , m_material     (    0        )
-{
-  if( 0 == m_solid ) 
-    { throw LogVolumeException("LVolume: ISolid* points to NULL ") ; }
-}; 
 
 // =========================================================================== 
 /** constructor, pointer to ISolid* must be valid!, 

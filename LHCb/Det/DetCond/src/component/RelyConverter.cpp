@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.14 2006-01-22 16:13:45 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.15 2006-02-01 19:42:36 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 
@@ -199,7 +199,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   boost::shared_ptr<pool::AttributeList> data;
   std::string description;
-  TimePoint since,until;
+  Gaudi::Time since,until;
   
   log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
 

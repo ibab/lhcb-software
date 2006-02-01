@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.22 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: LVolume.h,v 1.23 2006-02-01 19:39:09 marcocle Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -23,43 +23,7 @@ class LVolume: public LogVolBase
   friend class DataObjectFactory<LVolume>;
 
 public:
-  
-  /** constructor, pointer to ISolid* must be valid!, 
-   *  overvise constructor throws LogVolumeException!  
-   *  @exception LogVolumeException for wrong paramaters set
-   *  @param name         name of logical volume 
-   *  @param Solid        pointer to ISolid object 
-   *  @param material     name of the material 
-   *  @param validity     validity object
-   *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic     name of magnetic field object (for simulation)
-   */
-  LVolume( const std::string& name             , 
-           ISolid*            Solid            ,
-           const std::string& material         ,
-           const IValidity&   validity         , 
-           const std::string& sensitivity = "" ,
-           const std::string& magnetic    = "" );
-
-  /** constructor, pointer to ISolid* must be valid!, 
-   *  overvise constructor throws LogVolumeException!  
-   *  @exception LVolumeException for wrong parameters set
-   *  @param name         name of  logical volume 
-   *  @param Solid        pointer to ISolid object 
-   *  @param material     name of the material 
-   *  @param validSince   begin of validity range 
-   *  @param validTill    end of validity range 
-   *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic     name of magnetic field object (for simulation)
-   */
-  LVolume( const std::string& name             , 
-           ISolid*            Solid            ,
-           const std::string& material         ,
-           const ITime&       validSince       , 
-           const ITime&       validTill        , 
-           const std::string& sensitivity = "" ,
-           const std::string& magnetic    = "" );
-  
+    
   /** constructor, pointer to ISolid* must be valid!, 
    *  overvise constructor throws LogVolumeException!  
    *  @exception LVolumeException for wrong parameters set

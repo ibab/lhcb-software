@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.16 2006-01-25 17:08:49 ngilardi Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.17 2006-02-01 19:42:36 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 
 #include "CoolKernel/DatabaseId.h"
 #include "CoolKernel/IDatabaseSvc.h"
@@ -433,7 +433,7 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
 }
 
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const TimePoint &since, const TimePoint &until, cool::ChannelId channel) const {
+                                           const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel) const {
   if ( !m_db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the object \"" << path
@@ -463,22 +463,17 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
 }
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
                                            const double since_s, const double until_s, cool::ChannelId channel) const {
-  return storeXMLString(path,data,TimePoint((long long int)(since_s * 1e9)),TimePoint((long long int)(until_s * 1e9)),channel);
+  return storeXMLString(path,data,Gaudi::Time((long long int)(since_s * 1e9)),Gaudi::Time((long long int)(until_s * 1e9)),channel);
 }
 
-cool::ValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
-  // TODO: ValidityKey is an uInt64 of which only 63 bits used (0 -> 9223372036854775807)
-
-  // ValidityKey is uInt64 while time.absoluteTime() is a signed Int64!
-  // I cannot compare them directly (
-  if (time.absoluteTime() < 0) return cool::ValidityKeyMin;
-  if (time.absoluteTime() == time_absolutefuture.absoluteTime()) return cool::ValidityKeyMax; 
-  return time.absoluteTime();
+cool::ValidityKey CondDBAccessSvc::timeToValKey(const Gaudi::Time &time) const {
+  // ValidityKey is an uInt64 of which only 63 bits used (0 -> 9223372036854775807),
+  // while time.nd() is a positive signed Int64! (the same thing)
+  return time.ns();
 }
 
-TimePoint CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
-  TimePoint t(key);
-  return t;
+Gaudi::Time CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
+  return Gaudi::Time(key);
 }
 
 StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
@@ -534,9 +529,9 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
   return StatusCode::SUCCESS;
 }
 
-StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &when,
+StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time &when,
                                       boost::shared_ptr<pool::AttributeList> &data,
-                                      std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel){
+                                      std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel){
 
   try {
     if (m_useCache) {
@@ -709,7 +704,7 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
 //=========================================================================
 //  
 //=========================================================================
-StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                            const pool::AttributeList& payload, cool::ChannelId channel) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
@@ -724,7 +719,7 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePo
 //=========================================================================
 //  
 //=========================================================================
-StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                               const std::string &data, cool::ChannelId channel) {
   pool::AttributeList payload(s_XMLstorageAttListSpec->attributeListSpecification());
   payload["data"].setValue<std::string>(data);

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.11 2006-01-25 17:08:49 ngilardi Exp $
+// $Id: CondDBAccessSvc.h,v 1.12 2006-02-01 19:42:36 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -49,18 +49,18 @@ public:
   
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const TimePoint &since, const TimePoint &until, cool::ChannelId channel = 0) const;
+                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
   
   /// Utility function that simplifies the storage of an XML string.
   /// (Useful for Python, the times are in seconds)
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
                                     const double since_s, const double until_s, cool::ChannelId channel = 0) const;
   
-  /// Convert from TimePoint class to cool::ValidityKey.
-  virtual cool::ValidityKey timeToValKey(const TimePoint &time) const;
+  /// Convert from Gaudi::Time class to cool::ValidityKey.
+  virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const;
    
-  /// Convert from cool::ValidityKey to TimePoint class.
-  virtual TimePoint valKeyToTime(const cool::ValidityKey &key) const;
+  /// Convert from cool::ValidityKey to Gaudi::Time class.
+  virtual Gaudi::Time valKeyToTime(const cool::ValidityKey &key) const;
  
   /// Return the currently set TAG to use.
   virtual const std::string &tag() const;
@@ -75,9 +75,9 @@ public:
 
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
   /// channel and when are ignored and data is set ot NULL.
-  virtual StatusCode getObject (const std::string &path, const TimePoint &when,
+  virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
                                 boost::shared_ptr<pool::AttributeList> &data,
-                                std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel = 0);
+                                std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
@@ -93,11 +93,11 @@ public:
   virtual StatusCode cacheAddXMLFolder(const std::string &path);
   
   ///Add an object to the cache (bypass the DB)
-  virtual StatusCode cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+  virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                     const pool::AttributeList& payload, cool::ChannelId channel = 0);
   
   ///Add an XML object to the cache (bypass the DB)
-  virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+  virtual StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                        const std::string& data, cool::ChannelId channel = 0);
 
   /// Dump the cache (debug)

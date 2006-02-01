@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.9 2005-12-06 18:51:27 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.10 2006-02-01 19:39:10 marcocle Exp $
 // Include files
 #include <algorithm>
 
@@ -6,7 +6,6 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
-#include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/StatusCode.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignmentCondition
@@ -41,24 +40,6 @@ AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,
       << endmsg;
 
   setTransformation(translation, rotation, pivot);
-
-}
-
-//=============================================================================
-// Constructor
-//=============================================================================
-AlignmentCondition::AlignmentCondition(const ITime& since, const ITime& till )
-  :
-  Condition (since, till),
-  m_services(DetDesc::services()),
-  m_translationString("dPosXYZ"),
-  m_rotationString("dRotXYZ"),
-  m_pivotString("pivotXYZ")
-{
-  MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << "Constructing AlignmentCondition classID "
-      << classID()
-      << endmsg;
 
 }
 

@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.6 2006-01-19 08:51:54 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.7 2006-02-01 19:39:10 marcocle Exp $
 #include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -7,13 +7,6 @@
 
 /// Default constructor
 ParamValidDataObject::ParamValidDataObject(): ValidDataObject() {}
-
-//---------------------------------------------------------------------------
-
-/// Constructor
-ParamValidDataObject::ParamValidDataObject (const ITime& since, 
-                                            const ITime& till)
-  :ValidDataObject( since, till ){}
 
 //---------------------------------------------------------------------------
 

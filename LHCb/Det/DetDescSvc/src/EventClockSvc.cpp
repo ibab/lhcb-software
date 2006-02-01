@@ -1,10 +1,11 @@
-// $Id: EventClockSvc.cpp,v 1.2 2005-12-13 09:03:23 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.3 2006-02-01 19:40:26 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Time.h"
 
 // local
 #include "EventClockSvc.h"
@@ -83,7 +84,7 @@ StatusCode EventClockSvc::initialize() {
 
   // Set the first event time at initialization.
   log << MSG::DEBUG << "Initialize event time to " << m_startTime << endmsg;
-  m_detDataSvc->setEventTime(TimePoint(m_startTime));
+  m_detDataSvc->setEventTime(Gaudi::Time(m_startTime));
 
   // register to the incident service for BeginEvent incidents
   sc = service("IncidentSvc", m_incidentSvc, false);
@@ -124,7 +125,7 @@ void EventClockSvc::handle(const Incident &inc) {
   if ( inc.type() == IncidentType::BeginEvent ) {
     log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
     if (m_timeStep) {
-      m_detDataSvc->setEventTime(TimePoint(m_startTime));
+      m_detDataSvc->setEventTime(Gaudi::Time(m_startTime));
       m_startTime += m_timeStep;
     }// else {
     //      log << MSG::WARNING << "!!!Only fake event times implemented!!!" << endmsg;

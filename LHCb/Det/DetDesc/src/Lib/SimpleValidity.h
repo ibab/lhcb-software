@@ -1,8 +1,12 @@
-// $Id: SimpleValidity.h,v 1.2 2005-04-22 13:10:41 marcocle Exp $
+// $Id: SimpleValidity.h,v 1.3 2006-02-01 19:39:10 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/04/22 13:10:41  marcocle
+// Follow (pending) change in GaudiKernel/IValidity.
+// Improvements in ValidDataObject and LogVolBase. (see doc/release.notes)
+//
 // Revision 1.1  2001/11/18 15:32:45  ibelyaev
 //  update for Logical Assemblies
 // 
@@ -33,8 +37,8 @@ public:
    *  @param since "since" time for validity range 
    *  @param till  "till"  time for validity range 
    */
-  SimpleValidity( const ITime& since    ,
-                  const ITime& till     ); 
+  SimpleValidity( const Gaudi::Time& since    ,
+                  const Gaudi::Time& till     ); 
   
   /** (explicit) constructor from other 
    *   IValidity object
@@ -73,36 +77,36 @@ public:
    *  @return true if objetc is valid for given time 
    */
   virtual bool 
-  isValid    ( const ITime&  time ) const; 
+  isValid    ( const Gaudi::Time&  time ) const; 
   
   /** since what time the Objest is valid?
    *  @return time "since"
    */
-  inline virtual const ITime& 
-  validSince () const { return *m_since; }
+  inline virtual const Gaudi::Time& 
+  validSince () const { return m_since; }
   
   /** till  what time the Object is Valid?
    *  @return time "till"
    */
-  inline virtual const ITime&
-  validTill  () const { return *m_till ; }
+  inline virtual const Gaudi::Time&
+  validTill  () const { return m_till ; }
   
   /// set the validity range of the Object
   virtual void 
-  setValidity       ( const ITime& since , 
-                      const ITime& till  ) ; 
+  setValidity       ( const Gaudi::Time& since , 
+                      const Gaudi::Time& till  ) ; 
   /// set the validity time of the Object 
   virtual void
-  setValiditySince  ( const ITime& since ) ; 
+  setValiditySince  ( const Gaudi::Time& since ) ; 
   
   /// set the validity time of the Object 
   virtual void 
-  setValidityTill   ( const ITime& till  ) ;
+  setValidityTill   ( const Gaudi::Time& till  ) ;
   
 private:
   
-  ITime* m_since ;
-  ITime* m_till  ;
+  Gaudi::Time m_since ;
+  Gaudi::Time m_till  ;
   
 };
 

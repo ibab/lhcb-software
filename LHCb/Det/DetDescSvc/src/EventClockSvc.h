@@ -1,10 +1,9 @@
-// $Id: EventClockSvc.h,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+// $Id: EventClockSvc.h,v 1.2 2006-02-01 19:40:26 marcocle Exp $
 #ifndef EVENTCLOCKSVC_H 
 #define EVENTCLOCKSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/IIncidentListener.h"
 
 /** @class EventClockSvc EventClockSvc.h

@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.7 2005-06-20 12:23:43 jpalac Exp $
+//$Id: Condition.h,v 1.8 2006-02-01 19:39:09 marcocle Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -27,9 +27,6 @@ class Condition : public ParamValidDataObject {
   /// Default constructor
   Condition();
 
-  /// Constructor 
-  Condition (const ITime& since, const ITime& till);
-  
   /// Copy constructor 
   Condition (Condition& obj);
   

@@ -1,31 +1,23 @@
-//$Id: ValidDataObject.cpp,v 1.6 2005-04-22 13:10:41 marcocle Exp $
+//$Id: ValidDataObject.cpp,v 1.7 2006-02-01 19:39:10 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
 
-#include "GaudiKernel/TimePoint.h" 
+#include "GaudiKernel/Time.h" 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
 
 //---------------------------------------------------------------------------
 
+static Gaudi::Time local_time_epoch = Gaudi::Time::epoch();
+static Gaudi::Time local_time_max   = Gaudi::Time::max();
+
 /// Default constructor 
 ValidDataObject::ValidDataObject()
   : IValidity(), DataObject()
-  , m_validSince (time_absolutepast)
-  , m_validUntil (time_absolutefuture)
-  , m_updateMode (DEFAULT)
-{}
-
-//---------------------------------------------------------------------------
-
-/// Constructor
-ValidDataObject::ValidDataObject( const ITime& since, 
-				  const ITime& till  )
-  : IValidity(), DataObject()
-  , m_validSince (since)
-  , m_validUntil (till)
+  , m_validSince (Gaudi::Time::epoch())
+  , m_validUntil (Gaudi::Time::max())
   , m_updateMode (DEFAULT)
 {}
 
@@ -73,7 +65,7 @@ bool ValidDataObject::isValid ( ) const {
 //---------------------------------------------------------------------------
 
 /// Check if the data object is valid at the specified time
-bool ValidDataObject::isValid ( const ITime& t ) const {
+bool ValidDataObject::isValid ( const Gaudi::Time& t ) const {
   switch(m_updateMode){
   case DEFAULT: 
     return validSince() <= t &&  t < validTill();
@@ -89,25 +81,25 @@ bool ValidDataObject::isValid ( const ITime& t ) const {
 //---------------------------------------------------------------------------
 
 /// Get start of validity
-const ITime& ValidDataObject::validSince() const {
+const Gaudi::Time& ValidDataObject::validSince() const {
   if (m_updateMode == ALWAYS_VALID)
-    return time_absolutepast;
+    return local_time_epoch;
   return m_validSince; 
 };
 
 //---------------------------------------------------------------------------
 
 /// Get end of validity
-const ITime& ValidDataObject::validTill() const {
+const Gaudi::Time& ValidDataObject::validTill() const {
   if (m_updateMode == ALWAYS_VALID)
-    return time_absolutefuture;
+    return local_time_max;
   return m_validUntil;
 };
 
 //---------------------------------------------------------------------------
 
 /// Set validity range
-void ValidDataObject::setValidity( const ITime& since, const ITime& till )
+void ValidDataObject::setValidity( const Gaudi::Time& since, const Gaudi::Time& till )
 {
   setValiditySince( since );
   setValidityTill ( till  );
@@ -116,7 +108,7 @@ void ValidDataObject::setValidity( const ITime& since, const ITime& till )
 //---------------------------------------------------------------------------
 
 /// Set start of validity
-void ValidDataObject::setValiditySince( const ITime& since ) 
+void ValidDataObject::setValiditySince( const Gaudi::Time& since ) 
 {
   m_validSince = since;
 };
@@ -124,7 +116,7 @@ void ValidDataObject::setValiditySince( const ITime& since )
 //---------------------------------------------------------------------------
 
 /// Set end of validity
-void ValidDataObject::setValidityTill( const ITime& till ) 
+void ValidDataObject::setValidityTill( const Gaudi::Time& till ) 
 {
   m_validUntil = till;
 };
