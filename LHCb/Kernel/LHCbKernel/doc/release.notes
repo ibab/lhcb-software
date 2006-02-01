@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-01 - Antonis Papanestis
+ - Added RichSmartIDHashFuncs.h to LHCbKernel from RichDAQ
+
 ! 2006-02-01 - Chris Jones
  - Add some tricks to RichSmartID.xml to make it fully non-virtual
 
