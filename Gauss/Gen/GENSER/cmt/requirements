@@ -30,7 +30,7 @@ macro lhapdf_native_version "4_2"
 set LHAPDFPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
 macro lhapdf_linkopts "$(GENSER_home)/liblhapdf$(lhapdf_native_version).a "
 
-library lhapdfdummy -no_share ../src/*.f
+library lhapdfdummy -no_share ../src/*.F
 macro_prepend lhapdf_linkopts " $(GENSERROOT)/$(BINDIR)/lhaglue.o "
 
 

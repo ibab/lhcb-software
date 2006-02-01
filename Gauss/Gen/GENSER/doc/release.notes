@@ -4,6 +4,13 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!====================== GENSER v1r121p1 =================================
+! 2006-02-01 - Florence Ranjard
+ - src - move lhaglue.f to lhaglue.F to include lhapdfc.h
+         lhapdfc.h set the LHAPDFC common block and set the length of LHAPATH
+         and LHAPATHNAME
+         enlarge LHAPATH from 132 to 482 characters
+
 !======================= GENSER v1r121p0 ================================
 ! 2005-12-06 - Florence RANJARD
  - requirements - use GENSER_1_2_1 to use Pythia 6_325.2, Photos 215.2
