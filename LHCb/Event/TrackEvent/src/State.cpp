@@ -1,17 +1,18 @@
-// $Id: State.cpp,v 1.13 2006-01-26 16:00:00 mneedham Exp $
+// $Id: State.cpp,v 1.14 2006-02-01 14:00:49 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
 
-// local
-#include "Event/State.h"
-
+// from LHCbDefinitions
 #include "Kernel/TrackTypes.h"
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
-#include "Event/SHacks.h"
+
+// local
+#include "Event/State.h"
 #include "Event/TrackParameters.h"
+#include "Event/SHacks.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -45,7 +46,7 @@ double State::qOverP() const
 //=============================================================================
 double State::p() const
 {
-  return (fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? fabs( 1./m_stateVector[4]) : HUGE_VAL) ;
+  return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? fabs( 1./m_stateVector[4]) : HUGE_VAL );
 };
 
 //=============================================================================
@@ -53,9 +54,9 @@ double State::p() const
 //=============================================================================
 double State::pt() const
 {
-  if (fabs(m_stateVector[4]) > TrackParameters::lowTolerance) {
+  if ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ) {
     const double txy2 =   m_stateVector[2]*m_stateVector[2]
-                  + m_stateVector[3]*m_stateVector[3];
+                        + m_stateVector[3]*m_stateVector[3];
     return sqrt( txy2/(1.+txy2) ) / fabs( m_stateVector[4] );
   }
   return HUGE_VAL;
@@ -69,7 +70,7 @@ SymMatrix6x6 State::posMomCovariance() const
   // Transformation done in 2 steps:
   // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
   const TrackMatrix cov5D = covariance();
-  SymMatrix6x6 cov6Dtmp = SymMatrix6x6();
+  SymMatrix6x6 cov6Dtmp   = SymMatrix6x6();
   cov6Dtmp.Place_at(cov5D.Sub<2,2>(0,0),0,0);
   cov6Dtmp.Place_at(cov5D.Sub<3,3>(0,2),0,3);
   cov6Dtmp.Place_at(cov5D.Sub<3,3>(2,0),3,0);
@@ -134,6 +135,25 @@ SymMatrix6x6 State::posMomCovariance() const
 };
 
 //=============================================================================
+// Retrieve the errors on the 3D-position vector of the state
+//=============================================================================
+Gaudi::SymMatrix3x3 State::errPosition() const
+{
+  const Gaudi::SymMatrix6x6 temp = posMomCovariance();
+  return temp.Sub<3,3>(0,0);
+};
+
+//=============================================================================
+// Retrieve the errors on the slopes of the state
+//=============================================================================
+Gaudi::SymMatrix3x3 State::errSlopes() const
+{
+  Gaudi::SymMatrix3x3 err = Gaudi::SymMatrix3x3();
+  err.Place_at( m_covariance.Sub<2,2>(2,2),0,0 );
+  return err;
+};
+
+//=============================================================================
 // Retrieve the squared error on the charge-over-momentum Q/P of the state
 //=============================================================================
 double State::errQOverP2() const
@@ -147,7 +167,7 @@ double State::errQOverP2() const
 double State::errP2() const
 {
  return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? 
-          errQOverP2() * gsl_pow_4( p()): 0. );
+          errQOverP2() * gsl_pow_4( p() ): 0. );
 };
 
 //=============================================================================
@@ -200,8 +220,8 @@ State* State::clone() const
 // Update the state vector (presumably of type State::HasMomentum)
 //=============================================================================
 void State::setState( double x, double y, double z,
-                        double tx, double ty,
-                        double qOverP )
+                      double tx, double ty,
+                      double qOverP )
 {
   m_stateVector[0] = x;
   m_stateVector[1] = y;
@@ -220,10 +240,3 @@ void State::setQOverP( double value )
 };
 
 //=============================================================================
-
-Gaudi::SymMatrix3x3 State::errPosition() const{
- const Gaudi::SymMatrix6x6 temp = posMomCovariance();
- return temp.Sub<3,3>(0,0);
-};
-
-

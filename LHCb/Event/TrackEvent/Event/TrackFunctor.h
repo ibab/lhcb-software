@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <functional>
 
-// from CLHEP
+// from LHCbDefinitions
 #include "Kernel/Plane3DTypes.h"
 
 // from TrackEvent
@@ -19,7 +19,7 @@
  * - other small classes and things that do not fit (yet)
  *
  *  @author Jose A. Hernando
- *  @author Eduardo Rodrigues (adaptations)
+ *  @author Eduardo Rodrigues
  *  @date   2005-04-05
  *
  * @author Rutger van der Eijk
@@ -138,7 +138,7 @@ namespace TrackFunctor
   };
 
 //=============================================================================
-// 
+// Helper class for checking the existence of a value of a member function
 //=============================================================================
   template <class T>
   class HasKey: public std::unary_function<T*, bool> {
@@ -164,10 +164,10 @@ namespace TrackFunctor
 // Class to delete an element from a vector
 //=============================================================================
   template <class T>
-  void deleteFromList(std::vector<T*>& List, T* value) 
+  void deleteFromList( std::vector<T*>& List, T* value )
   {
     typename std::vector<T*>::iterator it;
-    it = std::find(List.begin(), List.end(), value );
+    it = std::find( List.begin(), List.end(), value );
     delete *it;
     List.erase( it );
   };
@@ -180,8 +180,9 @@ namespace TrackFunctor
   template <class T>
   LHCb::State& closestState( LHCb::Track& track, const T& t )
   {
+    const std::vector<LHCb::State*>& allstates = track.states();
     std::vector<LHCb::State*>::iterator iter = 
-      std::min_element( track.states().begin(), track.states().end(), t );
+      std::min_element( allstates.begin(), allstates.end(), t );
     if ( iter == m_states.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
@@ -194,8 +195,9 @@ namespace TrackFunctor
   template <class T>
   const LHCb::State& closestState( const LHCb::Track& track, const T& t )
   {
+    const std::vector<LHCb::State*>& allstates = track.states();
     std::vector<LHCb::State*>::const_iterator iter = 
-      std::min_element( track.states().begin(), track.states().end(), t );
+      std::min_element( allstates.begin(), allstates.end(), t );
     if ( iter == m_states.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
@@ -222,7 +224,7 @@ namespace TrackFunctor
   {
     const std::vector<LHCb::Measurement*>& meas = track.measurements();
     return std::count_if( meas.begin(), meas.end(), pred );
-  }
+  };
 
 };
 

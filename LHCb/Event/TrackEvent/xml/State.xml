@@ -161,8 +161,8 @@
       <method
         type    = 'double'
         name    = 'x'
-        const   = 'TRUE'
-        desc    = 'Retrieve the x-position of the state'>
+        desc    = 'Retrieve the x-position of the state'
+        const   = 'TRUE'>
         <code>
     return m_stateVector[0];
         </code>
@@ -171,8 +171,8 @@
       <method
         type    = 'double'
         name    = 'y'
-        const   = 'TRUE'
-        desc    = 'Retrieve the y-position of the state'>
+        desc    = 'Retrieve the y-position of the state'
+        const   = 'TRUE'>
         <code>
     return m_stateVector[1];
         </code>
@@ -181,8 +181,8 @@
       <method
         type    = 'double'
         name    = 'z'
-        const   = 'TRUE'
-        desc    = 'Retrieve the z-position of the state'>
+        desc    = 'Retrieve the z-position of the state'
+        const   = 'TRUE'>
         <code>
     return m_z;
         </code>
@@ -191,8 +191,8 @@
       <method
         type    = 'Gaudi::XYZVector'
         name    = 'slopes'
-        const   = 'TRUE'
-        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'>
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'
+        const   = 'TRUE'>
         <code>
     return Gaudi::XYZVector( m_stateVector[2], m_stateVector[3], 1.);
         </code>
@@ -201,8 +201,8 @@
       <method
         type    = 'double'
         name    = 'tx'
-        const   = 'TRUE'
-        desc    = 'Retrieve the Tx=dx/dz slope of the state'>
+        desc    = 'Retrieve the Tx=dx/dz slope of the state'
+        const   = 'TRUE'>
         <code>
     return m_stateVector[2];
         </code>
@@ -211,8 +211,8 @@
       <method
         type    = 'double'
         name    = 'ty'
-        const   = 'TRUE'
-        desc    = 'Retrieve the Ty=dy/dz slope of the state'>
+        desc    = 'Retrieve the Ty=dy/dz slope of the state'
+        const   = 'TRUE'>
         <code>
    return m_stateVector[3];
         </code>
@@ -221,29 +221,29 @@
       <method
         type    = 'double'
         name    = 'qOverP'
-        const   = 'TRUE'
         desc    = 'Retrieve the charge-over-momentum Q/P of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'p'
-        const   = 'TRUE'
         desc    = 'Retrieve the momentum of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'pt'
-        const   = 'TRUE'
         desc    = 'Retrieve the transverse momentum of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'Gaudi::XYZVector'
         name    = 'momentum'
-        const   = 'TRUE'
-        desc    = 'Retrieve the momentum vector of the state'>
+        desc    = 'Retrieve the momentum vector of the state'
+        const   = 'TRUE'>
         <code>
   Gaudi::XYZVector mom = slopes();
   mom *= ( p() / mom.R() );
@@ -254,8 +254,8 @@
       <method
         type    = 'double'
         name    = 'qOverPperp'
-        const   = 'TRUE'
-        desc    = 'Retrieve the Q/Pperp (ratio of the charge to the component of the momentum transverse to the magnetic field) of the state'>
+        desc    = 'Retrieve the Q/Pperp (ratio of the charge to the component of the momentum transverse to the magnetic field) of the state'
+        const   = 'TRUE'>
         <code>
   const double tx2 = tx() * tx();
   return ( qOverP() * sqrt( (1.+ tx2 + ty()*ty()) / (1. + tx2 ) ) );
@@ -265,22 +265,21 @@
       <method
         type    = 'Gaudi::SymMatrix6x6'
         name    = 'posMomCovariance'
-        const   = 'TRUE'
         desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errPosition'
-        const   = 'TRUE'
-        desc    = 'Retrieve the errors on the 3D-position vector of the state'>
-      </method>
+        desc    = 'Retrieve the errors on the 3D-position vector of the state'
+        const   = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'errX2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the squared error on the x-position of the state'>
+        desc    = 'Retrieve the squared error on the x-position of the state'
+        const   = 'TRUE'>
         <code>
   return m_covariance(0,0);
         </code>
@@ -289,8 +288,8 @@
       <method
         type    = 'double'
         name    = 'errY2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the squared error on the y-position of the state'>
+        desc    = 'Retrieve the squared error on the y-position of the state'
+        const   = 'TRUE'>
         <code>
   return m_covariance(1,1);
         </code>
@@ -299,21 +298,14 @@
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errSlopes'
-        const   = 'TRUE'
-        desc    = 'Retrieve the errors on the slopes of the state'>
-        <code>
-   Gaudi::SymMatrix3x3 err = Gaudi::SymMatrix3x3();
-   err(0,0) = errTx2();
-   err(1,1) = errTy2();
-   return err;
-        </code>
-      </method>
+        desc    = 'Retrieve the errors on the slopes of the state'
+        const   = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'errTx2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the squared error on the x-slope Tx=dx/dz of the state'>
+        desc    = 'Retrieve the squared error on the x-slope Tx=dx/dz of the state'
+        const   = 'TRUE'>
         <code>
  return m_covariance(2,2);
         </code>
@@ -322,8 +314,8 @@
       <method
         type    = 'double'
         name    = 'errTy2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the squared error on the y-slope Ty=dy/dz of the state'>
+        desc    = 'Retrieve the squared error on the y-slope Ty=dy/dz of the state'
+        const   = 'TRUE'>
         <code>
   return m_covariance(3,3);
         </code>
@@ -332,29 +324,29 @@
       <method
         type    = 'double'
         name    = 'errQOverP2'
-        const   = 'TRUE'
         desc    = 'Retrieve the squared error on the charge-over-momentum Q/P of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'errP2'
-        const   = 'TRUE'
         desc    = 'Retrieve the squared error on the momentum of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'Gaudi::SymMatrix3x3'
         name    = 'errMomentum'
-        const   = 'TRUE'
         desc    = 'Retrieve the errors on the momentum vector of the stateRetrieve the errors on the momentum vector of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'errQOverPperp2'
-        const   = 'TRUE'
         desc    = 'Retrieve the squared error on the Q/Pperp of the state'
+        const   = 'TRUE'
         virtual = 'TRUE' />
 
       <method
@@ -393,7 +385,7 @@
         argList = 'double value'
         desc    = 'Update the x-position of the state'>
         <code>
- m_stateVector[0] = value;
+  m_stateVector[0] = value;
         </code>
       </method>
 
@@ -402,7 +394,7 @@
         argList = 'double value'
         desc    = 'Update the y-position of the state'>
         <code>
-          m_stateVector[1] = value;
+  m_stateVector[1] = value;
         </code>
       </method>
 
@@ -411,7 +403,7 @@
         argList = 'double value'
         desc    = 'Update the z-position of the state'>
         <code>
-          m_z = value;
+  m_z = value;
         </code>
       </method>
 

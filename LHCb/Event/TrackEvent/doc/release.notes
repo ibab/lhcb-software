@@ -4,6 +4,15 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-01 - Eduardo Rodrigues
+ - changes to Track class:
+   - new methods added (copy, measurement, isMeasurementOnTrack)
+   - fixes and improvements to several methods
+     (some had inconsistencies with the TEM design choices)
+   - addToLhcbIDs now checks whether LHCbID not already present in the track
+ - minor changes to TrackFunctor
+ - corrected errSlopes method in State class
+
 !========================= TrackEvent v2r0 2006-01-27 ========================
 ! 2006-01-27 M.Needham
  - no spare bits  

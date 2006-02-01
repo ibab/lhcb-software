@@ -264,15 +264,6 @@
         setMeth   = 'FALSE' 
         transient = 'TRUE' />
 
-      <method
-        type    = 'void'
-        name    = 'clearStates'
-        desc    = 'clearState vector' >    
-        <code>
-          m_states.clear();
-        </code> 
-      </method>
-
       <attribute
         type      = 'std::vector&lt;LHCb::Measurement*&gt;'
         name      = 'measurements'
@@ -290,13 +281,13 @@
         transient = 'TRUE' />
 
       <relation
-        type      = "LHCb::Track"
-        name      = "ancestors"
-        access    = 'PROTECTED'
-        setMeth   = 'FALSE'
-        desc      = "ancestor Tracks that created this one" 
+        type         = "LHCb::Track"
+        name         = "ancestors"
+        access       = 'PROTECTED'
+        setMeth      = 'FALSE'
+        desc         = "ancestor Tracks that created this one" 
         multiplicity = "N" 
-        serialize = 'FALSE' />
+        serialize    = 'FALSE' />
 
       <method
         type    = 'void'
@@ -323,7 +314,7 @@
         desc    = 'Retrieve the 3D-position vector at the first state'
         const   = 'TRUE'>
         <code>
-          return firstState().position();
+  return firstState().position();
         </code>
       </method>
 
@@ -339,8 +330,8 @@
     <method
         type    = 'Gaudi::XYZVector'
         name    = 'slopes'
-        const   = 'TRUE'
-        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) and errors at the first state'>
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) and errors at the first state'
+        const   = 'TRUE'>
         <code>
    return firstState().slopes();
         </code>
@@ -358,10 +349,10 @@
       <method
         type    = 'Gaudi::XYZVector'
         name    = 'momentum'
-        const   = 'TRUE'
-        desc    = 'Retrieve the momentum vector at the first state'>
+        desc    = 'Retrieve the momentum vector at the first state'
+        const   = 'TRUE'>
         <code>
-          return firstState().momentum();
+  return firstState().momentum();
         </code>
       </method>
 
@@ -412,8 +403,8 @@
       <method
         type    = 'int'
         name    = 'charge'
-        const   = 'TRUE'
-        desc    = 'Retrieve the charge assigned to the Track'>
+        desc    = 'Retrieve the charge assigned to the Track'
+        const   = 'TRUE'>
         <code>
   double qP = firstState().qOverP();
   return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
@@ -423,8 +414,8 @@
       <method
         type    = 'double'
         name    = 'chi2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the Chi^2 of the Track (fit)'>
+        desc    = 'Retrieve the Chi^2 of the Track (fit)'
+        const   = 'TRUE'>
         <code>
   return ( m_chi2PerDoF * double(m_nDoF) );
         </code>
@@ -433,8 +424,8 @@
       <method
         type    = 'unsigned int'
         name    = 'nStates'
-        const   = 'TRUE'
-        desc    = 'Retrieve the number of states on the Track'>
+        desc    = 'Retrieve the number of states on the Track'
+        const   = 'TRUE'>
         <code>
   return m_states.size();
         </code>
@@ -450,6 +441,15 @@
         name    = 'removeFromStates'
         desc    = 'Remove a State from the list of states associated to the Track'
         argList = 'LHCb::State* value'>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'clearStates'
+        desc    = 'Clear the State vector'>
+        <code>
+  m_states.clear();
+        </code> 
       </method>
 
       <method
@@ -550,20 +550,14 @@
         desc    = 'Add an LHCbID to the list of LHCbIDs associated to the Track'
         argList = 'LHCb::LHCbID value'>
         <code>
-  m_lhcbIDs.push_back( value );
+  if ( !isOnTrack( value ) ) m_lhcbIDs.push_back( value );
         </code>
       </method>
 
      <method
         name    = 'removeFromLhcbIDs'
         desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the Track'
-        argList = 'LHCbID value'>
-        <code>
-  std::vector&lt;LHCb::LHCbID&gt;::iterator iter =
-    std::remove( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
-  m_lhcbIDs.erase( iter, m_lhcbIDs.end() );
-        </code>
-      </method>
+        argList = 'LHCbID value' />
 
       <method
         name    = 'addToAncestors'
@@ -577,23 +571,30 @@
       <method
         type    = 'void'
         name    = 'reset'
-	virtual = 'TRUE'
-        desc    = 'Clear the Track before re-use'>
+        desc    = 'Clear the Track before re-use'
+	virtual = 'TRUE'>
       </method>
 
       <method
         type    = 'LHCb::Track*'
         name    = 'cloneWithKey'
         desc    = 'Clone the Track keeping the key (you take ownership of the pointer)'
-	virtual = 'TRUE'
-        const   = 'TRUE' />
+	const   = 'TRUE'
+        virtual = 'TRUE' />
 
       <method
         type    = 'LHCb::Track*'
         name    = 'clone'
         desc    = 'Clone the Track (you take ownership of the pointer)'
-	virtual = 'TRUE'
-        const   = 'TRUE' />
+	const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'void'
+        name    = 'copy'
+        argList = 'const LHCb::Track&amp; track'
+        desc    = 'Copy the info from the argument track into this track'
+	virtual = 'TRUE' />
 
       <method
         type    = 'bool'
@@ -689,6 +690,26 @@
         const   = 'TRUE'>
       </method>
 
+
+      <method
+        type    = 'bool'
+        name    = 'isMeasurementOnTrack'
+        argList = 'const LHCb::LHCbID value'
+        desc    = 'Check whether the Measurement on the Track corresponding to the input LHCbID is present'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'const LHCb::Measurement&amp;'
+        name    = 'measurement'
+        argList = 'const LHCb::LHCbID value'
+        desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'LHCb::Measurement&amp;'
+        name    = 'measurement'
+        argList = 'const LHCb::LHCbID value'
+        desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
     </class>
 
   </package>
