@@ -1,8 +1,11 @@
-// $Id: ExternalGenerator.cpp,v 1.11 2006-01-18 23:00:09 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.12 2006-02-01 21:27:41 robbep Exp $
 // Include files 
 
 // local
 #include "Generators/ExternalGenerator.h"
+
+// SEAL
+#include "SealBase/StringOps.h"
 
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
@@ -14,6 +17,19 @@
 #include "Generators/IGenCutTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
+
+// Calls to FORTRAN routines
+#ifdef WIN32
+extern "C" {
+  void __stdcall LHAPDFGAUSS_INIT( int * ) ;
+  void __stdcall LHAPDFGAUSS_END ( ) ;
+}
+#else
+extern "C" {
+  void lhapdfgauss_init_( int * ) ;
+  void lhapdfgauss_end_ ( ) ;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ExternalGenerator
@@ -54,9 +70,21 @@ StatusCode ExternalGenerator::initialize( ) {
   if ( sc.isFailure() ) return sc ;
 
   // Handle LHAPDF output
-  if ( msgLevel( MSG::DEBUG ) ) 
+  int ival ;
+  if ( msgLevel( MSG::DEBUG ) ) {
+    ival = 1 ;    
     LhaPdf::lhacontrol().setlhaparm( 19 , "DEBUG" ) ;
-  else LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
+  }
+  else {
+    ival = 0 ;
+    LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
+  }
+  
+#ifdef WIN32
+    LHAPDFGAUSS_INIT( &ival ) ;
+#else
+    lhapdfgauss_init_ ( &ival ) ;
+#endif
 
   // Set default LHAPDF parameters:
   sc = parseLhaPdfCommands( m_defaultLhaPdfSettings ) ;
@@ -98,6 +126,12 @@ StatusCode ExternalGenerator::initialize( ) {
   // now debug printout of Production Tool 
   // has to be after all initializations to be sure correct values are printed
   m_productionTool -> printRunningConditions( ) ;
+
+  // set up the name to assign to HepMC events
+  seal::StringList strList = 
+    seal::StringOps::split( m_productionTool -> name() , "." ) ;
+
+  m_hepMCName = seal::StringOps::remove( strList.back() , "Production" ) ;
   
   return StatusCode::SUCCESS ;
 }
@@ -200,7 +234,7 @@ void ExternalGenerator::prepareInteraction( LHCb::HepMCEvents * theEvents ,
     LHCb::GenCollisions * theCollisions , HepMC::GenEvent * & theGenEvent ,  
     LHCb::GenCollision * & theGenCollision ) const {
   LHCb::HepMCEvent * theHepMCEvent = new LHCb::HepMCEvent( ) ;
-  theHepMCEvent -> setGeneratorName( m_productionTool -> name() ) ;
+  theHepMCEvent -> setGeneratorName( m_hepMCName ) ;
   HepMC::GenEvent * theGE = new HepMC::GenEvent( ) ;
   theHepMCEvent -> setPGenEvt( theGE ) ;
 
@@ -265,4 +299,18 @@ StatusCode ExternalGenerator::parseLhaPdfCommands( const CommandVector &
   }
   
   return StatusCode::SUCCESS ;
+}
+//=============================================================================
+// Finalize method
+//=============================================================================
+StatusCode ExternalGenerator::finalize( ) {
+  if ( ! msgLevel( MSG::DEBUG ) ) 
+#ifdef WIN32
+    LHAPDFGAUSS_END( ) ;
+#else
+  lhapdfgauss_end_() ;
+  std::string delcmd( "rm -f lhapdf_init.tmp" ) ;
+  system( delcmd.c_str() ) ;
+#endif
+  return GaudiTool::finalize() ;
 }

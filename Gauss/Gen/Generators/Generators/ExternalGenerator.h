@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.7 2005-12-31 17:30:37 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.8 2006-02-01 21:27:41 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -56,6 +56,12 @@ class ExternalGenerator : public GaudiTool ,
    *     by the decay tool. 
    */ 
   virtual StatusCode initialize( ) ;
+
+  /** Finalization funtion.
+   *  This function closes the file used to redirect LHAPDF output messages
+   *  in case the output is disabled.
+   */
+  virtual StatusCode finalize( ) ;
   
  protected:
   /** Decay heavy excited particles.
@@ -164,5 +170,8 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Optional additional user commands to configure LHAPDF (by job options)
   CommandVector m_userLhaPdfSettings ;
+
+  /// Name assigned to the HepMC event and stored with it
+  std::string m_hepMCName ;
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H
