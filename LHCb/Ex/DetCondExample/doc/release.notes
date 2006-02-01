@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.67 2006-01-20 16:43:21 cattanem Exp $
+! $Id: release.notes,v 1.68 2006-02-01 19:50:30 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-02-01 - Marco Clemencic
+ - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
 !=========== Ex/DetCondExample v7r9 2006-01-19 ===============================
 ! 2006-01-19 - Marco Clemencic

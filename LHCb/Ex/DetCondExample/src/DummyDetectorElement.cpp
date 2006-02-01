@@ -1,4 +1,4 @@
-// $Id: DummyDetectorElement.cpp,v 1.5 2006-01-19 18:32:10 marcocle Exp $
+// $Id: DummyDetectorElement.cpp,v 1.6 2006-02-01 19:50:30 marcocle Exp $
 // Include files 
 
 #include <string>
@@ -23,18 +23,9 @@ DummyDetectorElement::DummyDetectorElement(const std::string& name):
 {
 }
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-DummyDetectorElement::DummyDetectorElement(const std::string& name,
-                                           const ITime& iValidSince,
-                                           const ITime& iValidTill):
-        DetectorElement(name,iValidSince,iValidTill)
-{
-}
-//=============================================================================
 // Destructor
 //=============================================================================
-DummyDetectorElement::~DummyDetectorElement() {}; 
+DummyDetectorElement::~DummyDetectorElement() {}
 
 //=============================================================================
 // Initialization

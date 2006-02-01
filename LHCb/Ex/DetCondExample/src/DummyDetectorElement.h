@@ -1,4 +1,4 @@
-// $Id: DummyDetectorElement.h,v 1.1 2005-04-22 15:17:54 marcocle Exp $
+// $Id: DummyDetectorElement.h,v 1.2 2006-02-01 19:50:30 marcocle Exp $
 #ifndef CMT_DUMMYDETECTORELEMENT_H 
 #define CMT_DUMMYDETECTORELEMENT_H 1
 
@@ -19,10 +19,6 @@ class DummyDetectorElement: public DetectorElement {
 public: 
   /// Standard constructor
   DummyDetectorElement(const std::string& name = "NotYetDefined"); 
-
-  DummyDetectorElement(const std::string& name,
-                       const ITime& iValidSince,
-                       const ITime& iValidTill);
 
   virtual ~DummyDetectorElement( ); ///< Destructor
 

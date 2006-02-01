@@ -1,11 +1,11 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.1.1.1 2005-10-26 15:37:02 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.2 2006-02-01 19:49:06 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 
-#include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/Time.h"
 
 #include "DetCond/ICondDBAccessSvc.h"
 #include "DetCond/ICondDBCnvSvc.h"
@@ -161,7 +161,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   // work-around a path like "conddb:path/to/folder" should be interpreted as "conddb:/path/to/folder"
   if (path[0] != '/') path = "/" + path;
 
-  TimePoint now;
+  Gaudi::Time now;
   if ( m_detDataSvc->validEventTime() ) {
     now =  m_detDataSvc->eventTime();
   } else {
@@ -172,7 +172,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   // outputs
   std::string descr;
   boost::shared_ptr<pool::AttributeList> data;
-  TimePoint since, until;
+  Gaudi::Time since, until;
   
   bool found_object = false;
 

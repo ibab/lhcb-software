@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.7 2006-01-19 18:32:10 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.8 2006-02-01 19:50:30 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -60,15 +60,15 @@ StatusCode MultiDBTest::initialize() {
     m_dbAccSvc1->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                                 "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
                                 "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB1</param>"
-                                "</condition></DDDB>",TimePoint(0), TimePoint(10));
+                                "</condition></DDDB>",Gaudi::Time(0), Gaudi::Time(10));
     m_dbAccSvc2->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                                 "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
                                 "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB2</param>"
-                                "</condition></DDDB>",TimePoint(0), TimePoint(20));
+                                "</condition></DDDB>",Gaudi::Time(0), Gaudi::Time(20));
     m_dbAccSvc2->storeXMLString("/multiDBTest/Folder2","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                                 "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
                                 "<DDDB><condition name=\"Cond2\"><param name=\"Database\" type=\"other\">DB2</param>"
-                                "</condition></DDDB>",TimePoint(0), TimePoint(20));
+                                "</condition></DDDB>",Gaudi::Time(0), Gaudi::Time(20));
 
     info() << "*** register conditions ***" << endreq;
     registerCondition<MultiDBTest>("/dd/multiDBTest/Cond1",m_cond1);

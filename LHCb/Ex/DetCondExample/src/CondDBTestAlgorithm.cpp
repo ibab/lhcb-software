@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.16 2006-01-19 18:32:10 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.17 2006-02-01 19:50:30 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -224,11 +224,11 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 
   if( 0 != pVDO ) {
     info() << "Object is valid in ["
-           << std::dec << pVDO->validSince().absoluteTime()
-      //<< "(0x" << std::hex << pVDO->validSince().absoluteTime() << "),"
+           << std::dec << pVDO->validSince()
+      //<< "(0x" << std::hex << pVDO->validSince() << "),"
            << "," 
-           << std::dec << pVDO->validTill().absoluteTime()
-      //<< "(0x" << std::hex << pVDO->validTill().absoluteTime() << ")"
+           << std::dec << pVDO->validTill()
+      //<< "(0x" << std::hex << pVDO->validTill() << ")"
            << "[" << endmsg;
     
     if ( pVDO->isValid( m_dds->eventTime() ) ) {
