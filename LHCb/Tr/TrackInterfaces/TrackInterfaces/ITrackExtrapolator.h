@@ -14,6 +14,7 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Plane3DTypes.h"
+#include "Kernel/TrackTypes.h"
 
 // Forward declarations
 namespace LHCb {

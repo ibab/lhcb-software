@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-02-01 - Eduardo Rodrigues
+ - added missing TrackTypes.h include in ITrackExtrapolator
+
 !====================== TrackInterfaces v2r0 2006-01-19 ======================
 ! 2006-01-19 M. Needham
  - Bug fixes from Chris Jones - this should allow it to compile!
