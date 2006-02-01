@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.3 2006-01-26 09:54:29 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.4 2006-02-01 11:05:04 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -43,6 +43,11 @@ public:
   */
   Gaudi::XYZPoint toGlobal(const Gaudi::XYZPoint& point) const;
 
+  /** centre in global frame
+  * @return global centre
+  */
+  Gaudi::XYZPoint globalCentre() const;
+
   /** detector element id  - for experts only !*/
   LHCb::STChannelID elementID() const;
 
@@ -63,7 +68,8 @@ public:
 private:
 
   LHCb::STChannelID m_elementID;
- 
+  Gaudi::XYZPoint m_globalCentre; 
+
 };
 
 #include "DetDesc/IGeometryInfo.h"
@@ -78,6 +84,10 @@ inline Gaudi::XYZPoint DeSTBaseElement::toLocal(const Gaudi::XYZPoint& point) co
 
 inline Gaudi::XYZPoint DeSTBaseElement::toGlobal(const Gaudi::XYZPoint& point) const{
   return this->geometry()->toGlobal(point);
+}
+
+inline Gaudi::XYZPoint DeSTBaseElement::globalCentre() const{
+  return m_globalCentre;
 }
 
 template <typename TYPE>

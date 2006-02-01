@@ -34,6 +34,8 @@ StatusCode DeSTBaseElement::initialize() {
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
 
+  m_globalCentre = toGlobal(Gaudi::XYZPoint(0,0,0));
+
   return StatusCode::SUCCESS;
 }
 
