@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRich2PresTempMonitor
  *
  *  CVS Log :-
- *  $Id: IRich2PresTempMonitor.h,v 1.2 2005-10-25 17:25:02 jonrob Exp $
+ *  $Id: IRich2PresTempMonitor.h,v 1.3 2006-02-01 19:46:30 marcocle Exp $
  *
  *  @author Sajan EASO
  *  @date   2005-08-26
@@ -22,7 +22,6 @@
 // forward declarations (no other includes should be in interfaces)
 class IRich2CF4Property;
 class TabulatedProperty;
-class TimePoint;
 
 static const InterfaceID IID_IRich2PresTempMonitor ( "IRich2PresTempMonitor", 1, 0 );
 
