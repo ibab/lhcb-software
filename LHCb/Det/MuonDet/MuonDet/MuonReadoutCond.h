@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.5 2005-10-25 06:55:46 asarti Exp $
+// $Id: MuonReadoutCond.h,v 1.6 2006-02-01 19:45:58 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/10/25 06:55:46  asarti
+// New .h classes
+//
 // Revision 1.4  2002/08/05 18:14:07  asatta
 // few bug fixes for pad edge effect x-talk calculation
 //
@@ -41,9 +44,6 @@ class MuonReadoutCond: public Condition
 public:
   /// Default Constructors
   MuonReadoutCond();
-
-  /// Constructor
-  MuonReadoutCond( const ITime& since, const ITime& till );
 
   /// Copy constructor
   MuonReadoutCond( MuonReadoutCond& obj );
