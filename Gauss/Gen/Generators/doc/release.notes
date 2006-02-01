@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.29 2006-01-19 13:25:08 gcorti Exp $
+! $Id: release.notes,v 1.30 2006-02-01 21:29:33 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-02-01 - Patrick Robbe
+ - ExternalGenerator and src/Lib/EVLCTEQ.F: remove warnings when not in DEBUG 
+     mode for LHAPDF.
+ - Remove includes of CLHEP SystemOfUnits
 
 !=================== Generators v4r0 2006-01-19 ===========================
 ! 2006-01-19 - Gloria CORTI
