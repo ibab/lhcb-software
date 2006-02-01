@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-01 - Chris Jones
+ - Add some tricks to RichSmartID.xml to make it fully non-virtual
+
 !===================== LHCbKernel v6r1 2006-01-27 =========================
 ! 2006-01-27 M Needham
   - Remove spare bits from LHCbID
