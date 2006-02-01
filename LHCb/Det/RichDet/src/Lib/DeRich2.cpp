@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.20 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.21 2006-02-01 16:20:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -135,17 +135,22 @@ StatusCode DeRich2::initialize()
   }
 
   // update mirror alignment
-  m_sphMirrorAlignCond = "Rich2SphMirrorAlign";
-  m_secMirrorAlignCond = "Rich2SecMirrorAlign";
-
+  m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
+  if ( !m_sphMirAlignCond ) {
+    msg << MSG::FATAL << "Cannot load Condition Rich2SphMirrorAlign" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
+  if ( !m_secMirAlignCond ) {
+    msg << MSG::FATAL << "Cannot load Condition Rich2SecMirrorAlign" << endmsg;
+    return StatusCode::SUCCESS;
+  }
   IUpdateManagerSvc* ums = updMgrSvc();
-  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich2/"+m_sphMirrorAlignCond,
-                         &DeRich2::alignSphMirrors );
-  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich2/"+m_secMirrorAlignCond,
-                         &DeRich2::alignSecMirrors );
-  ums->update(this);
+  ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
+  ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
+  StatusCode upsc = ums->update(this);
 
-  return StatusCode::SUCCESS;
+  return upsc;
 }
 
 //=========================================================================
@@ -159,7 +164,7 @@ StatusCode DeRich2::alignSphMirrors()
   const IPVolume* pvRich2Gas = geometry()->lvolume()->pvolume(0);
   mirrorCont.push_back( pvRich2Gas->lvolume() );
   StatusCode sc = alignMirrors(mirrorCont, "Rich2SphMirror",
-                               m_sphMirrorAlignCond, "RichSphMirrorRs");
+                               m_sphMirAlignCond, "RichSphMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;
 
   return StatusCode::SUCCESS;
@@ -182,7 +187,7 @@ StatusCode DeRich2::alignSecMirrors()
   mirrorCont.push_back( pvRich2SecMirrorCont1->lvolume() );
 
   StatusCode sc = alignMirrors(mirrorCont, "Rich2SecMirror",
-                               m_secMirrorAlignCond, "RichSecMirrorRs");
+                               m_secMirAlignCond, "RichSecMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;
 
   return StatusCode::SUCCESS;

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.18 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.19 2006-02-01 16:20:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -151,17 +151,24 @@ StatusCode DeRich1::initialize()
         << secMirrorReflLoc << endmsg;
   }  
   
-  m_sphMirrorAlignCond = "Rich1Mirror1Align";
-  m_secMirrorAlignCond = "Rich1Mirror2Align";
-  
-  IUpdateManagerSvc* ums = updMgrSvc();
-  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich1/"+m_sphMirrorAlignCond,
-                         &DeRich1::alignSphMirrors);
-  ums->registerCondition(this,"/dd/Conditions/Alignment/Rich1/"+m_secMirrorAlignCond,
-                         &DeRich1::alignSecMirrors);
-  ums->update(this);
+  // conditions for mirror alignment
+  m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
+  if ( !m_sphMirAlignCond ) {
+    msg << MSG::FATAL << "Cannot load Condition Rich1Mirror1Align" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  m_secMirAlignCond = condition( "Rich1Mirror2Align" );
+  if ( !m_secMirAlignCond ) {
+    msg << MSG::FATAL << "Cannot load Condition Rich1Mirror2Align" << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
-  return StatusCode::SUCCESS;
+  IUpdateManagerSvc* ums = updMgrSvc();
+  ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
+  ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
+  StatusCode upsc = ums->update(this);
+
+  return upsc;
 }
 
 //=========================================================================
@@ -174,12 +181,12 @@ StatusCode DeRich1::alignSphMirrors()
   const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
   mirrorCont.push_back( lvRich1Gas );
   StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror1Q",
-                               m_sphMirrorAlignCond, "RichSphMirrorRs");
+                               m_sphMirAlignCond, "RichSphMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;
 
   // (mis)align spherical mirrors (2nd layer)
   sc = alignMirrors(mirrorCont, "Rich1Mirror1Be",
-                    m_sphMirrorAlignCond, "RichSphMirrorRs");
+                    m_sphMirAlignCond, "RichSphMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;
 
   return StatusCode::SUCCESS;  
@@ -196,7 +203,7 @@ StatusCode DeRich1::alignSecMirrors()
 
   // (mis)align secondary mirrors
   StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror2:",
-                               m_secMirrorAlignCond, "RichSecMirrorRs");
+                               m_secMirAlignCond, "RichSecMirrorRs");
   if (sc == StatusCode::FAILURE) return sc;
 
   return StatusCode::SUCCESS;  

@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.16 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRich.h,v 1.17 2006-02-01 16:20:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -203,7 +203,7 @@ protected:
   
   StatusCode alignMirrors( std::vector<const ILVolume*> mirrorContainer,
                            const std::string& mirrorID,
-                           const std::string& condID,
+                           SmartRef<Condition> cond,
                            const std::string& Rvector ) const;
 
   double m_sphMirrorRadius; ///< The nominal radius of the spherical mirror
@@ -233,10 +233,11 @@ protected:
   /// flat mirror reflectivity
   const TabulatedProperty* m_nominalSecMirrorRefl;
 
+  SmartRef<Condition> m_sphMirAlignCond;
+  SmartRef<Condition> m_secMirAlignCond;
+
   std::string m_name; ///< The name of this detector
 
-  std::string m_sphMirrorAlignCond;
-  std::string m_secMirrorAlignCond;
   
 };
 

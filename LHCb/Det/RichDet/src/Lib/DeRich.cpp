@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.13 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.14 2006-02-01 16:20:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -34,6 +34,8 @@ DeRich::DeRich()
     m_HPDQuantumEff         ( 0 ),
     m_nominalSphMirrorRefl  ( 0 ),
     m_nominalSecMirrorRefl  ( 0 ),
+    m_sphMirAlignCond       (),
+    m_secMirAlignCond       (),
     m_name                  ( "DeRich" )
 { }
 
@@ -116,7 +118,7 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 //=========================================================================
 StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
                                   const std::string& mirrorID,
-                                  const std::string& condID,
+                                  SmartRef<Condition> mirrorAlignCond,
                                   const std::string& Rvector ) const {
 
   MsgStream msg( msgSvc(), myName() );
@@ -149,28 +151,25 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   }
   msg << MSG::VERBOSE << "Found " << mirrors.size() << " mirrors" << endmsg;
   
-  Condition* mirrorAlignCond = condition( condID );
-  if ( !mirrorAlignCond ) {
-    msg << MSG::FATAL << "Cannot load Condition:" << condID << endmsg;
-    return StatusCode::SUCCESS;
-  }
-  
   std::vector<double> rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
   if ( rotX.size() != rotY.size() ) {
-    msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:" << condID << endmsg;
+    msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:" 
+        << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
   }
   if ( rotX.size() != mirrors.size() ) {
-    msg << MSG::FATAL << "Number of parameters does not match mirrors in:" << condID << endmsg;
+    msg << MSG::FATAL << "Number of parameters does not match mirrors in:" 
+        << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
   }    
 
   std::vector<double> Rs = paramVect<double>(Rvector);
   if ( rotX.size() != Rs.size() ) {
-    msg << MSG::FATAL << "Number of Rs does not match mirrors in:" << condID << endmsg;
+    msg << MSG::FATAL << "Number of Rs does not match mirrors in:" 
+        << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
   }
 

@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.29 2005-12-22 14:29:06 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.30 2006-02-01 16:20:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -31,6 +31,7 @@
 // RichDet
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeRichSystem.h"
 
 /** @namespace DeRichHPDPanelLocation
  *
@@ -53,12 +54,12 @@ namespace DeRichHPDPanelLocation {
   /// Location of Rich2 left panel
   static const std::string& Rich2Panel0_old = "/dd/Structure/LHCb/Rich2/PDPanel0";
   static const std::string& Rich2Panel0 =
-  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel0";
+  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel0";
 
   /// Location of Rich2 right panel
   static const std::string& Rich2Panel1_old = "/dd/Structure/LHCb/Rich2/PDPanel1";
   static const std::string& Rich2Panel1 =
-  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel1";
+  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel1";
 }
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
@@ -318,11 +319,14 @@ private:
 
   Rich::DetectorType m_rich;
   Rich::Side m_side;
+  DeRichSystem* m_deRichS;
+  const ISolid* m_kaptonSolid;
 
   std::vector<const IPVolume*> m_pvHPDMaster;
   std::vector<const IPVolume*> m_pvHPDSMaster;
   std::vector<const IPVolume*> m_pvSilicon;
   std::vector<const IPVolume*> m_pvWindow;
+  std::vector<const IPVolume*> m_pvKapton;
   std::vector<Gaudi::Transform3D> m_trans1;
   std::vector<Gaudi::Transform3D> m_trans2;
 

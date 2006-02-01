@@ -4,8 +4,11 @@
  *  Declaration of objects in the component library RichDet
  *
  *  CVS Log :-
- *  $Id: RichDet_load.cpp,v 1.9 2005-12-21 09:50:54 papanest Exp $
+ *  $Id: RichDet_load.cpp,v 1.10 2006-02-01 16:20:49 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2005/12/21 09:50:54  papanest
+ *  redesign of HPDPanel
+ *
  *  Revision 1.8  2005/12/14 09:34:52  papanest
  *  Move from CLHEP to MathCore
  *
@@ -22,6 +25,7 @@
 DECLARE_FACTORY_ENTRIES(RichDet)
 {
 
+  DECLARE_CONVERTER( XmlDeRichSystemCnv );
   DECLARE_CONVERTER( XmlDeRich2Cnv );
   DECLARE_CONVERTER( XmlDeRich1Cnv );
   DECLARE_CONVERTER( XmlDeRichSphMirrorCnv );
