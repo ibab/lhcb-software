@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.17 2006-02-01 15:16:55 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.18 2006-02-01 16:44:41 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   , m_particleDescendants(0)
   , m_pCPPAsct(0)
   , m_pChi2PPAsct(0)
-  , m_commonmother(0)
+  , m_commonMother(0)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
   IBackgroundCategory::m_cat[0]    = "Signal";
@@ -55,7 +55,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   //Override decision only if match quality for PID correct match is no 
   //no worse than by 1 order of magnitude in weight compared to alternatives.
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
-  declareProperty("MCmaxWeight", m_maxweight = 1000000.);
+  declareProperty("MCmaxWeight", m_maxWeight = 1000000.);
 }
 //=============================================================================
 // Destructor
@@ -70,7 +70,7 @@ const MCParticle* BackgroundCategory::origin(const Particle* reconstructed_mothe
 
 	int backcategory = category(reconstructed_mother);
 
-	if (backcategory < 60) return m_commonmother; else return 0;
+	if (backcategory < 60) return m_commonMother; else return 0;
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
@@ -317,7 +317,7 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
 
   } while (carryon && iP != mc_mothers_final.end() );
 
-  if (carryon) m_commonmother = tempmother; else m_commonmother = 0;
+  if (carryon) m_commonMother = tempmother; else m_commonMother = 0;
 
   return carryon;
 }
@@ -332,7 +332,7 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 	verbose() << "Beginning to check condition B" << endreq;
 	bool carryon;
   	verbose() << "Checking condition B step 1" << endreq;
-	MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonmother);
+	MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
   	verbose() << "Checking condition B step 2" << endreq;
 	MCParticleVector::const_iterator iPP = finalstateproducts.begin();
   	verbose() << "Checking condition B step 3" << endreq;
@@ -404,10 +404,10 @@ bool BackgroundCategory::condition_D(const Particle* reconstructed_mother)
 {
 	bool carryon;
 
-	if (m_ppSvc->findByPythiaID(m_commonmother->particleID().pid())->charge() == 0) 
-		carryon = ( m_commonmother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
+	if (m_ppSvc->findByPythiaID(m_commonMother->particleID().pid())->charge() == 0) 
+		carryon = ( m_commonMother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
 	else
-		carryon = ( m_commonmother->particleID().pid() == reconstructed_mother->particleID().pid() );
+		carryon = ( m_commonMother->particleID().pid() == reconstructed_mother->particleID().pid() );
 
 	return carryon;
 }
@@ -426,7 +426,7 @@ bool BackgroundCategory::condition_F(const Particle* candidate)
 {
 	bool carryon = false;
 	
-	if ( (m_commonmother->virtualMass() - m_lowMassCut) < 
+	if ( (m_commonMother->virtualMass() - m_lowMassCut) < 
        (m_ppSvc->findByPythiaID(candidate->particleID().pid())->mass()) ) carryon = true;
 
 	return carryon;
@@ -623,7 +623,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				MCParticle* mc_correctPID = 0;
 				MCParticle* mc_bestQ = 0;
 				MCParticle* mc_TempDeux = 0;
-				double maximumweight = m_maxweight;
+				double maximumweight = m_maxWeight;
 				double mc_weight;
 				double mc_correctPID_weight = maximumweight;
 				ProtoParticle2MCAsct::ToRange mcPartRange = 

@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.9 2006-02-01 15:16:55 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.10 2006-02-01 16:44:41 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -87,13 +87,13 @@ private:
   IParticleDescendants* m_particleDescendants;
   ProtoParticle2MCAsct::IAsct* m_pCPPAsct;
   Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
-  const MCParticle* m_commonmother;
+  const MCParticle* m_commonMother;
 
   int m_useSoftPhotonCut ; //whether to use the ignore soft photons cut
   double m_softPhotonCut ; //ignore soft photons cut
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
-  double m_maxweight; //dummy sorting variable
+  double m_maxWeight; //dummy sorting variable
   double m_rescut; //A cut on the minimum lifetime for a mother not to be
 			//considered a short-lived resonance
 
