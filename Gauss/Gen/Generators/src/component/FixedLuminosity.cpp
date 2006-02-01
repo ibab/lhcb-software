@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.cpp,v 1.1 2005-12-07 23:03:55 robbep Exp $
+// $Id: FixedLuminosity.cpp,v 1.2 2006-02-01 21:28:58 robbep Exp $
 // Include files 
 
 // local
@@ -8,8 +8,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// From CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// From LHCb
+#include "Kernel/SystemOfUnits.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -55,8 +55,8 @@ StatusCode FixedLuminosity::initialize( ) {
   // Initialize the number generator
   m_randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;  
 
-  info() << "Poisson distribution with 'LHCb mean'. " << endmsg ;
-  info() << "Fixed Luminosity (10^32 / cm^2 s): " 
+  info() << "Poisson distribution with fixed luminosity. " << endmsg ;
+  info() << "Luminosity (10^32 / cm^2 s): " 
          << m_luminosity / 1.e32 * cm2 * s << endmsg ;
   info() << "Bunch crossing rate (MHz): " << m_crossingRate / megahertz 
          << endmsg ;

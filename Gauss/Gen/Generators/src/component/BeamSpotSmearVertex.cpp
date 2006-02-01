@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.3 2005-12-31 17:31:24 robbep Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.4 2006-02-01 21:28:58 robbep Exp $
 // Include files 
 
 // local
@@ -11,8 +11,8 @@
 // from Event
 #include "Event/HepMCEvent.h"
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from LHCb
+#include "Kernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance

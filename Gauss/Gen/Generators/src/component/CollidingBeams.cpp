@@ -1,4 +1,4 @@
-// $Id: CollidingBeams.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
+// $Id: CollidingBeams.cpp,v 1.3 2006-02-01 21:28:58 robbep Exp $
 // Include files 
 
 // local
@@ -8,8 +8,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// From CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// From Kernel
+#include "Kernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CollidingBeams

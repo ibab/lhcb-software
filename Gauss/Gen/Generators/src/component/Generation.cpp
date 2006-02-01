@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.9 2006-01-19 13:24:02 gcorti Exp $
+// $Id: Generation.cpp,v 1.10 2006-02-01 21:28:58 robbep Exp $
 // Include files 
 
 // local
@@ -45,7 +45,10 @@ const        IAlgFactory& GenerationFactory = s_factory ;
 Generation::Generation( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) ,
+    m_pileUpTool           ( 0 ) ,
     m_decayTool            ( 0 ) ,
+    m_sampleGenerationTool ( 0 ) ,
+    m_vertexSmearingTool   ( 0 ) ,
     m_fullGenEventCutTool  ( 0 ) ,
     m_nEvents              ( 0 ) , 
     m_nAcceptedEvents      ( 0 ) ,
@@ -73,14 +76,11 @@ Generation::Generation( const std::string& name,
     declareProperty ( "EventType"          , m_eventType = 30000000 ) ;
 
     // Location of the output of the generation
-    declareProperty ( "HepMCEventLocation" ,
-                      m_hepMCEventLocation = 
+    declareProperty ( "HepMCEventLocation" , m_hepMCEventLocation = 
                       LHCb::HepMCEventLocation::Default ) ;
-    declareProperty ( "GenHeaderLocation"  ,
-                      m_genHeaderLocation = 
+    declareProperty ( "GenHeaderLocation"  , m_genHeaderLocation = 
                       LHCb::GenHeaderLocation::Default ) ;
-    declareProperty ( "GenCollisionLocation" ,
-                      m_genCollisionLocation = 
+    declareProperty ( "GenCollisionLocation" , m_genCollisionLocation = 
                       LHCb::GenCollisionLocation::Default ) ;
     
     // Tool name to generate the event
@@ -117,24 +117,31 @@ StatusCode Generation::initialize() {
   }
 
   // Retrieve pile up tool
-  m_pileUpTool = tool< IPileUpTool >( m_pileUpToolName , this ) ;
+  if ( "" == m_pileUpToolName ) {
+    info() << "No Pile Up Tool is defined. Will generate no pile-up " 
+           << endmsg ;
+    info() << "and fix luminosity to 2e32" << endmsg ;
+  } else m_pileUpTool = tool< IPileUpTool >( m_pileUpToolName , this ) ;
 
   // Retrieve decay tool
   if ( "" != m_decayToolName ) m_decayTool = 
     tool< IDecayTool >( m_decayToolName ) ;
 
   // Retrieve generation method tool
+  if ( "" == m_sampleGenerationToolName ) 
+    return Error( "No Sample Generation Tool is defined. This is mandatory" ) ;
   m_sampleGenerationTool = 
     tool< ISampleGenerationTool >( m_sampleGenerationToolName , this ) ;
   
   // Retrieve generation method tool
-  m_vertexSmearingTool = 
-    tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;
-
+  if ( "" != m_vertexSmearingToolName ) 
+    m_vertexSmearingTool = 
+      tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;
+  
   // Retrieve full gen event cut tool
   if ( "" != m_fullGenEventCutToolName ) m_fullGenEventCutTool =
     tool< IFullGenEventCutTool >( m_fullGenEventCutToolName , this ) ;
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -171,7 +178,12 @@ StatusCode Generation::execute() {
     theEvents -> clear() ; theCollisions -> clear() ;
     
     // Compute the number of pile-up interactions to generate 
-    nPileUp = m_pileUpTool -> numberOfPileUp( currentLuminosity ) ;
+    if ( 0 != m_pileUpTool ) 
+      nPileUp = m_pileUpTool -> numberOfPileUp( currentLuminosity ) ;
+    else { 
+      nPileUp = 1 ;
+      currentLuminosity = 2.e32/cm2/s ;
+    }
     
     // generate a set of Pile up interactions according to the requested type
     // of event
@@ -290,6 +302,7 @@ StatusCode Generation::finalize() {
 // production generator
 //=============================================================================
 StatusCode Generation::decayEvent( LHCb::HepMCEvent * theEvent ) {
+  using namespace LHCb;
   m_decayTool -> disableFlip() ;
   StatusCode sc ;
   
@@ -304,13 +317,16 @@ StatusCode Generation::decayEvent( LHCb::HepMCEvent * theEvent ) {
     HepMC::GenParticle * thePart = (*itp) ;
     unsigned int status = thePart -> status() ;
 
-    if ( ( 1 ==status ) || ( ( 888 == status ) && 
-                             ( 0 == thePart -> end_vertex() ) ) ) {
-
+    if ( ( HepMCEvent::StableInProdGen  == status ) || 
+         ( ( HepMCEvent::DecayedByDecayGenAndProducedByProdGen == status )
+           && ( 0 == thePart -> end_vertex() ) ) ) {
+      
       if ( m_decayTool -> isKnownToDecayTool( thePart -> pdg_id() ) ) {
 
-        if ( 1 == status ) thePart -> set_status( 888 ) ;
-        else thePart -> set_status( 777 ) ;
+        if ( HepMCEvent::StableInProdGen == status ) 
+          thePart -> 
+            set_status( HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
+        else thePart -> set_status( HepMCEvent::DecayedByDecayGen ) ;
 
         sc = m_decayTool -> generateDecay( thePart ) ;
         if ( ! sc.isSuccess() ) return sc ;
@@ -338,7 +354,8 @@ void Generation::updateInteractionCounters( unsigned int & n1b ,
   HepMC::GenEvent::particle_const_iterator iter ;
   for ( iter = theEvent -> particles_begin() ; 
         theEvent -> particles_end() != iter ; ++iter ) {
-    if ( (*iter) -> status() >= 3 ) continue ;
+    if ( (*iter) -> status() >= LHCb::HepMCEvent::DocumentationParticle ) 
+      continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
     LHCb::ParticleID thePid( pdgId ) ;
     if ( 5 == pdgId ) bQuark++ ;

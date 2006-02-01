@@ -1,4 +1,4 @@
-// $Id: Generation.h,v 1.6 2005-12-31 17:32:39 robbep Exp $
+// $Id: Generation.h,v 1.7 2006-02-01 21:28:58 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
@@ -79,11 +79,11 @@ private:
   /// Location where to store HardInfo (set by options)
   std::string  m_genCollisionLocation ;
 
-  ISampleGenerationTool    * m_sampleGenerationTool   ; ///< Sample tool
-
   IPileUpTool              * m_pileUpTool             ; ///< Pile-up tool
 
   IDecayTool               * m_decayTool              ; ///< Decay tool
+
+  ISampleGenerationTool    * m_sampleGenerationTool   ; ///< Sample tool
 
   IVertexSmearingTool      * m_vertexSmearingTool     ; ///< Smearing tool
 
