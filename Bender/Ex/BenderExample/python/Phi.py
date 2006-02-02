@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.11 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: Phi.py,v 1.12 2006-02-02 13:09:25 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.11 $
+# CVS version $Revision: 1.12 $
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
@@ -57,6 +57,7 @@ def configure() :
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
+    gaudi.DLLs += ["HbookCnv"]
     
     # preload algorithm(s)
     gaudi.addAlgorithm ( 'LoKiPreLoad/Hadrons' ) 
@@ -98,6 +99,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2005/08/01 09:50:19  ibelyaev
+#  update for v5r2
+#
 # =============================================================================
 # The END 
 # =============================================================================
