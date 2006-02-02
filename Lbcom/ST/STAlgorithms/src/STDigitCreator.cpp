@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.3 2006-01-26 15:30:15 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.4 2006-02-02 09:06:04 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -42,6 +42,7 @@ STDigitCreator::STDigitCreator( const std::string& name,
   //constructer
   declareProperty("effToolName", m_effToolName="STEffCalculator");
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("inputLocation", m_inputLocation = MCSTDigitLocation::TTDigits);
   declareProperty("outputLocation", m_outputLocation = STDigitLocation::TTDigits); 
   declareProperty("fracNoiseStrips", m_fracOfNoiseStrips = 1.35e-3);
   declareProperty("tailStart", m_tailStart = 3.0);
@@ -49,8 +50,6 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("detType", m_detType = "TT"); 
 
   m_sectors.reserve(300);
-
-  m_outputLocation = STDigitLocation::TTDigits; 
 
 }
 

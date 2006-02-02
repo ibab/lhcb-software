@@ -1,6 +1,9 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+! 2006-02-02 M Needham
+ - correct path for STDigitsCreator
+
 !======================= STAlgorithms v1r0 2006-01-27 ========================
 ! 2006-01-26 M Needham
   - Adapt to new numbering scheme
