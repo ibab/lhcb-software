@@ -26,7 +26,7 @@ class FastClusterContainer : public DataObject  {
 private:
   typedef typename std::vector<VISIBLE>       VD;
 public:
-  typedef typename VISIBLE                    value_type;
+  typedef typename VD::value_type             value_type;
   typedef typename VD::iterator               iterator;
   typedef typename VD::const_iterator         const_iterator;
   typedef typename VD::reverse_iterator       reverse_iterator;
