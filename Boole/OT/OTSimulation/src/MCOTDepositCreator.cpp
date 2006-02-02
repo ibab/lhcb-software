@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.10 2006-01-20 15:44:45 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.11 2006-02-02 15:34:20 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -55,13 +55,13 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   m_spillVector.push_back("/Prev/");
   m_spillVector.push_back("/");
   m_spillVector.push_back("/Next/");
-//  m_spillVector.push_back("/NextNext/");
+  m_spillVector.push_back("/NextNext/");
 
   m_spillTimes.push_back(-50.0*ns);
   m_spillTimes.push_back(-25.0*ns);
   m_spillTimes.push_back(0.0*ns);
   m_spillTimes.push_back(25.0*ns);
-//  m_spillTimes.push_back(50.0*ns);
+  m_spillTimes.push_back(50.0*ns);
 
   declareProperty("spillVector", m_spillVector);
   declareProperty("spillTimes", m_spillTimes);
@@ -273,12 +273,22 @@ StatusCode MCOTDepositCreator::makeDigitizations()
   // retrieve MCTrackinghits and make first list of deposits
   for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
     // retrieve a MCTrackingHits for this spill
-    SmartDataPtr<MCHits> 
-      monteCarloTrackerHits(eventSvc(),m_spillNames[iSpill]);
+    
+    MCHits* monteCarloTrackerHits = new MCHits();
+    if ( iSpill < 4 ) {
+      monteCarloTrackerHits = get<MCHits>( eventSvc(), m_spillNames[iSpill] );
+    }
+    
+    // Location NextNext(4) == Location PrevPrev(0)
+    if ( iSpill == 4 ) {
+      monteCarloTrackerHits = get<MCHits>( eventSvc(), m_spillNames[0] );
+    }
+  
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
       debug() <<"Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
     }
+    
     else {
       // found spill - create some digitizations and add them to deposits
       MCHits::const_iterator iterHit;

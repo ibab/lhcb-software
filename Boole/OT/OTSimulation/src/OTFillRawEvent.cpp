@@ -74,7 +74,7 @@ StatusCode OTFillRawEvent::initialize() {
 StatusCode OTFillRawEvent::execute() 
 {
   // A new RawEvent
-  RawEvent* rawEvent =  new RawEvent();
+  RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
   // Sorting MCTimes into Banks
   this->sortMcTimesIntoBanks();
