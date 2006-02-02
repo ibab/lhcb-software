@@ -1,3 +1,4 @@
+// $Id: ITrackCriteriaSelector.h,v 1.4 2006-02-02 11:16:56 ebos Exp $
 #ifndef TRACKINTERFACES_ITRACKCRITERIASELECTOR_H 
 #define TRACKINTERFACES_ITRACKCRITERIASELECTOR_H 1
 
@@ -30,7 +31,7 @@ public:
   virtual bool select( LHCb::MCParticle* mcParticle ) = 0;
 
   virtual bool selectByTrackType( LHCb::Track* track ) const = 0;
-  virtual bool selectByTrackType( MCParticle* mcParticle ) = 0;
+  virtual bool selectByTrackType( LHCb::MCParticle* mcParticle ) = 0;
 
   virtual unsigned int trackType( LHCb::MCParticle* mcPart ) = 0;
 
