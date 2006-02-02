@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Edwin Bos
+ - Removed all extrapolator methods involving a plane, because they are not
+ - needed anymore, due to the introduction of Trajectories
+
 ! 2006-02-01 - Eduardo Rodrigues
  - added missing TrackTypes.h include in ITrackExtrapolator
 
