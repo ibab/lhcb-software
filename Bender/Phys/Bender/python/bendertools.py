@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertools.py,v 1.4 2005-06-16 20:30:28 ibelyaev Exp $ 
+# $Id: bendertools.py,v 1.5 2006-02-02 13:07:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to locate/cast to different tools
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.4 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.5 $ "
 # =============================================================================
 
 import gaudimodule
@@ -53,6 +53,7 @@ IMCEffReconstructible    = _gbl.IMCEffReconstructible
 IMCParticleSelector      = _gbl.IMCParticleSelector
 IVisPrimVertTool         = _gbl.IVisPrimVertTool 
 IDebugTool               = _gbl.IDebugTool
+IBTaggingTool            = _gbl.IBTaggingTool
 
 Tools = ( IBestParticles           ,
           IFilterCriterion         ,
@@ -85,7 +86,8 @@ Tools = ( IBestParticles           ,
           IMCParticleSelector      ,
           IVisPrimVertTool         ,
           #
-          IDebugTool               )
+          IDebugTool               ,
+          IBTaggingTool            )
 
 Interface = _gbl.Bender.Interface
 
