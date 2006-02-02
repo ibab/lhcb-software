@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.86 2006-01-31 14:40:32 pkoppenb Exp $
+! $Id: release.notes,v 1.87 2006-02-02 12:16:46 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2006-02-02 - P. Koppenburg
+  - Kernel/IBTaggingTool.h
+    . No inclusion of DVAlgorithm
+    
 ! 2006-01-31 - P. Koppenburg
   - Kernel/IPhysDesktop.h
   - src/component/PhysDesktop.{cpp,h}

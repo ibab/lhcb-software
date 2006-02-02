@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.31 2006-01-31 14:40:32 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.32 2006-02-02 12:16:47 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -921,6 +921,7 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
     ParticleVector pEmpty;
     VertexVector vEmpty;
     sc = saveDesktop(pEmpty,vEmpty);
+    debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
   }  
   return sc ;
 }

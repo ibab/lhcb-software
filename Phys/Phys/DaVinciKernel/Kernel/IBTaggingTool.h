@@ -1,4 +1,4 @@
-// $Id: IBTaggingTool.h,v 1.2 2005-07-05 15:40:48 pkoppenb Exp $
+// $Id: IBTaggingTool.h,v 1.3 2006-02-02 12:16:46 pkoppenb Exp $
 #ifndef BTAGGINGTOOL_IBTAGGINGTOOL_H
 #define BTAGGINGTOOL_IBTAGGINGTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/FlavourTag.h"
 
