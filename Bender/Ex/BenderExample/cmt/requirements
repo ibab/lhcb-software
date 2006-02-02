@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.27 2005-09-21 13:40:59 ranjard Exp $ 
+# $Id: requirements,v 1.28 2006-02-02 10:49:28 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.27 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.28 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v5r2
+version          v5r3
 
 # ============== structure ===================================================
 branches         cmt doc src test python options jobs 
@@ -44,6 +44,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.27  2005/09/21 13:40:59  ranjard
+# v5r2 - add comments to show how to use Panoramix or HippoDraw
+#
 # Revision 1.26  2005/09/19 16:10:44  ibelyaev
 #  remove the explicit dependency on XmlDDDB
 #

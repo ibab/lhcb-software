@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.77 2006-02-02 09:44:48 ranjard Exp $ 
+# $Id: requirements,v 1.78 2006-02-02 10:49:29 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,31 +10,25 @@ version       v5r3
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v5r2   Phys 
+use           Bender         v5r3   Phys 
  
 # =========== Bender Libraries ================================================
-use           BenderLibs     v5r2   Tools 
+use           BenderLibs     v5r3   Tools 
 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v5r1   Tools 
+use           BenderDict     v5r3   Tools 
 
 # =========== dictionaries for Relations ======================================
-use           BenderRels     v5r1   Tools 
+use           BenderRels     v5r3   Tools 
   
 # =========== Visualization ===================================================
-use           BenderVis      v5r2   Vis 
+use           BenderVis      v5r3   Vis 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v5r2   Ex
+use           BenderExample  v5r3   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.76  2005/09/19 15:27:37  ibelyaev
-#  v5r2
-#
-# Revision 1.75  2005/08/01 09:51:36  ibelyaev
-#  update for v5r2
-#
 # =============================================================================
 # The END 
 # =============================================================================
