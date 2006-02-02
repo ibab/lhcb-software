@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.22 2006-01-20 16:41:06 cattanem Exp $
+# $Id: requirements,v 1.23 2006-02-02 17:23:41 jonrob Exp $
 #============================================================================
 
 package           RichDAQ
@@ -20,6 +20,7 @@ include_path none
 use   RichKernel     v*      Rich
 use   RichEvent      v*      Event
 use   DAQEvent       v*      Event
+use   RichDet        v*      Det
 
 #============================================================================
 # Component library building rule

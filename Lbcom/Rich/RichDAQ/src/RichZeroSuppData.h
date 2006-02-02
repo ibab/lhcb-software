@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.6 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.7 2006-02-02 17:23:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -22,6 +22,7 @@
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
+#include "RichKernel/RichMap.h"
 #include "RichKernel/IRichDetNumberingTool.h"
 
 // =================================================================================

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.h,v 1.4 2006-01-23 13:40:43 jonrob Exp $
+ *  $Id: RichDetNumberingTool.h,v 1.5 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -33,6 +33,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
+#include "RichKernel/RichHashMap.h"
 
 // Det Desc
 #include "DetDesc/Condition.h"

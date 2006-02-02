@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPDBase.h,v 1.2 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichDAQHeaderPDBase.h,v 1.3 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -18,8 +18,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// Kernel
-#include "RichKernel/RichDAQDefinitions.h"
+// numberings
+#include "RichDet/RichDAQDefinitions.h"
 
 /** @namespace RichDAQHeaderPDBase
  *

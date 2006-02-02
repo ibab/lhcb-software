@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.8 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.9 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -20,7 +20,7 @@
 #include "GaudiKernel/GaudiException.h"
 
 // Kernel
-#include "RichKernel/RichDAQDefinitions.h"
+#include "RichDet/RichDAQDefinitions.h"
 
 // HPD Tool
 #include "RichKernel/IRichDetNumberingTool.h"

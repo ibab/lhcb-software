@@ -3,7 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHPDIdentifier
  *
- *  $Id: RichDAQHPDIdentifier.h,v 1.4 2005-12-16 15:11:33 jonrob Exp $
+ *  $Id: RichDAQHPDIdentifier.h,v 1.5 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -16,7 +16,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // Kernel
-#include "RichKernel/RichDAQDefinitions.h"
+#include "RichDet/RichDAQDefinitions.h"
 
 /** @namespace RichDAQHPDIdentifierV0
  *

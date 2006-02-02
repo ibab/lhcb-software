@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.11 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichZSHitTriplet.h,v 1.12 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -17,8 +17,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
 
-// Kernel
-#include "RichKernel/RichDAQDefinitions.h"
+// numberings
+#include "RichDet/RichDAQDefinitions.h"
 
 /** @namespace RichZSHitTripletCode
  *

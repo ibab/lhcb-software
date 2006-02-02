@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD.h,v 1.16 2006-01-23 13:40:43 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.17 2006-02-02 17:23:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -17,8 +17,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// Kernel
-#include "RichKernel/RichDAQDefinitions.h"
+// numbering
+#include "RichDet/RichDAQDefinitions.h"
 
 // local
 #include "RichDAQHPDIdentifier.h"
