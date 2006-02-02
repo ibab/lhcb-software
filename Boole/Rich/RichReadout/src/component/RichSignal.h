@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.6 2006-01-23 14:05:15 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.7 2006-02-02 10:32:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -28,7 +28,6 @@
 #include "Event/MCParticle.h"
 #include "Event/MCRichHit.h"
 #include "Event/MCRichDeposit.h"
-#include "Event/MCRichSummedDeposit.h"
 
 // from CLHEP
 #include "Kernel/Point3DTypes.h"
@@ -74,7 +73,6 @@ private: // methods
 
 private: // data
 
-  MCRichSummedDeposits* m_mcSummedDeposits;
   MCRichDeposits* m_mcDeposits;
 
   // locations of MCRichHits in TES
@@ -84,7 +82,6 @@ private: // data
   std::string m_RichNextLocation;
   std::string m_RichNextNextLocation;
 
-  std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
   std::string m_lhcBkgLocation;
 

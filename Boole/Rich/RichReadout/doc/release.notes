@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Chris Jones
+ - Bug fixes following first running tests !
+
 !======================== RichReadout v2r0 2006-01-23 ========================
 ! 2006-01-23 - Chris Jones
  - Split of MCRichSummedDeposit creation from RichSignal into dedicated 

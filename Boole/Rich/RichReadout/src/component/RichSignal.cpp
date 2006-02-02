@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.6 2006-01-23 14:05:15 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.7 2006-02-02 10:32:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -23,7 +23,6 @@ const         IAlgFactory& RichSignalFactory = s_factory ;
 RichSignal::RichSignal( const std::string& name,
                         ISvcLocator* pSvcLocator )
   : RichAlgBase        ( name, pSvcLocator ),
-    m_mcSummedDeposits ( 0 ),
     m_mcDeposits       ( 0 )
 {
 
@@ -39,9 +38,6 @@ RichSignal::RichSignal( const std::string& name,
                    m_RichNextNextLocation = "NextNext/" + MCRichHitLocation::Default );
   declareProperty( "LHCBackgroundLocation",
                    m_lhcBkgLocation = "LHCBackground/" + MCRichHitLocation::Default );
-
-  declareProperty( "SummedDepositLocation",
-                   m_RichSummedDepositLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = MCRichDepositLocation::Default );
 
@@ -74,9 +70,7 @@ StatusCode RichSignal::execute()
 {
   debug() << "Execute" << endreq;
 
-  // Form new containers of MCRichSummedDeposits and MCRichDeposits
-  m_mcSummedDeposits = new MCRichSummedDeposits();
-  put( m_mcSummedDeposits, m_RichSummedDepositLocation );
+  // Form new container of MCRichDeposits
   m_mcDeposits = new MCRichDeposits();
   put( m_mcDeposits, m_RichDepositLocation );
 
@@ -100,9 +94,7 @@ StatusCode RichSignal::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Created overall " << m_mcDeposits->size()
-            << " MCRichDeposits at " << m_RichDepositLocation << endreq
-            << "Created overall " << m_mcSummedDeposits->size()
-            << " MCRichSummedDeposits at " << m_RichSummedDepositLocation << endreq;
+            << " MCRichDeposits at " << m_RichDepositLocation << endreq;
   }
 
   return StatusCode::SUCCESS;
