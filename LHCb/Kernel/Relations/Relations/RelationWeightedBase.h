@@ -1,11 +1,8 @@
-// $Id: RelationWeightedBase.h,v 1.6 2006-01-27 13:25:47 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.7 2006-02-02 14:47:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -240,8 +237,8 @@ namespace Relations
       IP ip = i_relations( object1 ) ;
       // does the given relation between object1 and object1 exist ?
       const Entry entry ( object1 , object2 , weight );
-      iterator it = std::find_if( ip.first , ip.second ,
-                                  std::bind2nd( Equal() , entry ) );
+      iterator it = std::find_if ( ip.first , ip.second ,
+                                   std::bind2nd( Equal() , entry ) );
       if( ip.second != it   ) { return StatusCode::FAILURE ; }     // RETURN !!!
       // find the place where to insert the relation and insert it!
       it = std::lower_bound( ip.first , ip.second , entry , Less2() ) ;
@@ -480,7 +477,7 @@ namespace Relations
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
-    { std::stable_sort( m_entries.begin() , m_entries.end() , m_less ) ; };
+    { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; };
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
@@ -488,13 +485,7 @@ namespace Relations
     RelationWeightedBase
     ( const size_t reserve = 0 )
       : m_entries () 
-      , m_less    () 
-      , m_less1   () 
-      , m_less2   () 
-      , m_equal   () 
-      , m_comp1   () 
-      , m_comp2   () 
-    { if( 0 < reserve ) { i_reserve( reserve ) ; } };
+    { if ( 0 < reserve ) { i_reserve ( reserve ) ; } };
     
     /// destructor (virtual)
     virtual ~RelationWeightedBase() {} ;
@@ -505,12 +496,6 @@ namespace Relations
     RelationWeightedBase
     ( const IDirect& copy )
       : m_entries () 
-      , m_less    () 
-      , m_less1   () 
-      , m_less2   () 
-      , m_equal   () 
-      , m_comp1   () 
-      , m_comp2   () 
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
@@ -525,12 +510,6 @@ namespace Relations
     ( const IInverse&    inv    ,
       const int       /* flag*/ )
       : m_entries ()
-      , m_less    () 
-      , m_less1   () 
-      , m_less2   () 
-      , m_equal   () 
-      , m_comp1   () 
-      , m_comp2   () 
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
@@ -549,31 +528,12 @@ namespace Relations
     RelationWeightedBase
     ( const OwnType& copy )
       : m_entries ( copy.m_entries ) 
-      , m_less    () 
-      , m_less1   () 
-      , m_less2   () 
-      , m_equal   () 
-      , m_comp1   () 
-      , m_comp2   () 
     {};
     
   private:
     
     // the actual storage of relations 
     mutable Entries m_entries ; ///< teh actual storage of relations
-    
-    // comparison criteria for full ordering
-    Less            m_less  ; ///< comparison criteria for full ordering
-    // comparison criteria ( "less" by "From" value) 
-    Less1           m_less1 ; ///< comparison criteria ( "less" by "From") 
-    // comparison criteria ( "less" by "Weight" ) 
-    Less2           m_less2 ; ///< comparison criteria ( "less" by "Weight") 
-    // equality criteria   ( "equal" by "To" value)
-    Equal           m_equal ; ///< equality criteria   ( "equal" by "To") 
-    // comparison/ordering criteria using "Weight" and "To" fields
-    Comp1           m_comp1 ;
-    //  comparison/ordering criteria using "Weight" and "To" fields
-    Comp1           m_comp2 ;
     
   };
   

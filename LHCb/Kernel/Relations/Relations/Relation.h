@@ -1,11 +1,8 @@
-// $Id: Relation.h,v 1.5 2005-03-14 09:47:14 cattanem Exp $
+// $Id: Relation.h,v 1.6 2006-02-02 14:47:56 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -96,9 +93,9 @@ namespace Relations
     /// the default constructor
     Relation 
     ( const size_t reserve = 0 )
-      : IBase     (   ) 
-      , m_direct  ( reserve ) 
-      , m_inverse ( 0 ) 
+      : IBase         (   ) 
+      , m_direct      ( reserve ) 
+      , m_inverse_aux ( 0 ) 
     {};
     
     /** constructor from arbitrary "direct" interface 
@@ -107,8 +104,8 @@ namespace Relations
     Relation 
     ( const IDirect& copy ) 
       : IBase() 
-      , m_direct  ( copy ) 
-      , m_inverse ( 0    ) 
+      , m_direct      ( copy ) 
+      , m_inverse_aux ( 0    ) 
     {}
     
     /** constructor from "inverse interface"
@@ -119,9 +116,9 @@ namespace Relations
     Relation 
     ( const IInverse&    inv     , 
       const int          flag  ) 
-      : IBase     (   ) 
-      , m_direct  ( inv , flag ) 
-      , m_inverse ( 0 )  
+      : IBase         (   ) 
+      , m_direct      ( inv , flag ) 
+      , m_inverse_aux ( 0 )  
     {}
     
     /** copy constructor is publc, 
@@ -130,9 +127,9 @@ namespace Relations
      */
     Relation 
     ( const OwnType& copy   ) 
-      : IBase     ( copy          ) 
-      , m_direct  ( copy.m_direct )
-      , m_inverse ( 0             ) 
+      : IBase         ( copy          ) 
+      , m_direct      ( copy.m_direct )
+      , m_inverse_aux ( 0             ) 
     {}
     
     /// destructor (virtual)
@@ -161,8 +158,8 @@ namespace Relations
       const  To&        object2 )
     {
       StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_relate( object2 , object1 ); 
+      if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
+      return m_inverse_aux  -> i_relate( object2 , object1 ); 
     } ;
     
     /// remove the concrete relation between objects (fast,100% inline method)
@@ -171,8 +168,8 @@ namespace Relations
       const  To&        object2 )
     { 
       StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_remove( object2 , object1 );
+      if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
+      return m_inverse_aux  -> i_remove( object2 , object1 );
     };
     
     /// remove all relations FROM the defined object (fast,100% inline method)
@@ -180,8 +177,8 @@ namespace Relations
     ( const  From&      object )
     { 
       StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse-> i_removeTo   ( object ) ; 
+      if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
+      return m_inverse_aux -> i_removeTo   ( object ) ; 
     };
     
     /// remove all relations TO the defined object (fast,100% inline method) 
@@ -189,16 +186,16 @@ namespace Relations
     ( const  To&        object )
     { 
       StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_removeFrom ( object ) ; 
+      if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
+      return m_inverse_aux -> i_removeFrom ( object ) ; 
     };
     
     /// remove ALL relations form ALL  object to ALL objects (fast,100% inline)
     inline  StatusCode i_clear() 
     { 
       StatusCode sc = m_direct.    i_clear () ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_clear () ; 
+      if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
+      return m_inverse_aux -> i_clear () ; 
     };
     
     /// rebuild ALL relations form ALL  object to ALL objects (fast,100% inline)
@@ -231,15 +228,19 @@ namespace Relations
       const  To&        object2 )
     {
       m_direct.i_push( object1 , object2 ) ;
-      if ( 0 != m_inverse ) { m_inverse -> i_push( object2 , object1 ) ; }
+      if ( 0 != m_inverse_aux ) 
+      { m_inverse_aux -> i_push ( object2 , object1 ) ; }
     } ;
 
     /** (re)sort of the table 
      *   mandatory to use after i_push 
      */
     inline void i_sort() 
-    { m_direct.i_sort() ; if ( 0 != m_inverse ) { m_inverse->i_sort() ; } }
-   
+    { 
+      m_direct.i_sort() ; 
+      if ( 0 != m_inverse_aux ) { m_inverse_aux -> i_sort() ; } 
+    }
+    
   public:  // abstract methods from interface
     
     /** retrive all relations from the object
@@ -424,7 +425,8 @@ namespace Relations
     /** set new inverse table 
      *  @attention the method is not for public usage !!!
      */
-    inline void    setInverseBase( Inverse* inverse ) { m_inverse = inverse ; }
+    inline void    setInverseBase( Inverse* inverse ) 
+    { m_inverse_aux = inverse ; }
     
     /** reserve the relations (for efficiency reasons)
      *  @param num number of relations to be reserved
@@ -432,10 +434,10 @@ namespace Relations
      */
     inline StatusCode reserve ( const size_t num ) 
     {
-      if( 0 != m_inverse ) { m_inverse->i_reserve( num ) ; }
+      if ( 0 != m_inverse_aux ) { m_inverse_aux->i_reserve( num ) ; }
       return m_direct.i_reserve( num ) ;
     };
-
+    
   private:
     
     /** assignement operator is private!
@@ -446,7 +448,7 @@ namespace Relations
   private:
     
     Direct   m_direct  ;  ///< the holder of all direct relations
-    Inverse* m_inverse ;  ///< the pointer to inverse table
+    Inverse* m_inverse_aux ;  ///< the pointer to inverse table
   };
 
 }; // end of namespace Relations

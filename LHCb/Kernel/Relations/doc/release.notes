@@ -1,11 +1,95 @@
-! $Id: release.notes,v 1.19 2006-01-27 13:25:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2006-02-02 14:47:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.20 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-02-02 - Vanya BELYAEV ibelyaev@physics.syr.edu 
+
+ - remove all local 'member'-instances of comparison/ordering 
+    criteria (due to *UNKNOWN* reasons I've put all comparison
+    /ordering criteria as "data" members into Relations::Relation*Base 
+    classes. Due to this "feature" one has some difficulties
+    with Reflex dictionaries. Now I've removed all these 
+    artificial "data"-members. It almost halves the numeber of 
+    "active" classes for dictionaries!
+
+ - all "interface" and "dataobject" classes have got the static 
+    methods "GUID", which returns a valid unique POOL identifier 
+    for the class. 
+ 
+ - Home-made dictionaries are removed. 
+    Normal "reflex" dictionaries coudl be built now 
+    from the code itself. Helper structures "a'la Markus" 
+    to provide the nesessary instantiations are provided 
+    in Relations/RelationsDict.h file  
+  
+    //
+    #include "Relations/RelationsDict.h" 
+    //
+    namespace EventAssoc
+    {
+     struct __Instantiations 
+     {    
+       GaudiDict::Relation1DDict<
+         LHCb::Track,float>                                    _1 ;
+       GaudiDict::Relation2DDict<
+         LHCb::Particle,LHCb::MCParticle>                      _2 ;
+       GaudiDict::Relation2DDict<
+         LHCb::Particle,LHCb::FlavourTag>                      _3 ;
+       GaudiDict::Relation2DDict<
+         LHCb::Particle,LHCb::Vertex>                          _4 ;
+       GaudiDict::RelationWeighted2DDict<
+         LHCb::CaloHypo,LHCb::Track,float>                     _5 ;
+       GaudiDict::RelationWeighted2DDict<
+         LHCb::CaloCluster,LHCb::MCParticle,float>             _6 ;
+       GaudiDict::RelationWeighted2DDict<
+         LHCb::ProtoParticle,LHCb::MCParticle, double>         _7 ;
+       GaudiDict::RelationWeighted2DDict<
+         LHCb::Particle,LHCb::MCParticle, double>              _8 ;
+       GaudiDict::RelationWeighted2DDict<
+         LHCb::Particle,LHCb::Vertex,float>                    _9 ;
+     } ; 
+   } ;  
+  
+   The corresponding *UNIVERSAL* selection XML file is :
+    
+  <lcgdict>
+  
+     <class pattern= "LHCb::Relation1D<*>"/>
+     <class pattern= "LHCb::Relation2D<*>"/>
+     <class pattern= "LHCb::RelationWeighted1D<*>"/>
+     <class pattern= "LHCb::RelationWeighted2D<*>"/> 
+
+
+     <class pattern= "Relations::RelationBase<*>"/>
+     <class pattern= "Relations::RelationWeightedBase<*>"/>
+  
+     <class pattern= "Relations::RelationWeighted<*>">
+        <field name="m_inverse_aux" transient="true"/>
+     </class>
+
+     <class pattern= "Relations::Relation<*>">
+       <field name="m_inverse_aux" transient="true"/>
+     </class>
+
+     <class pattern= "Relations::Relation2<*>"/>
+     <class pattern= "Relations::Relation2Weighted<*>" />  
+  
+     <class pattern= "IRela*"/>
+     <class pattern= "*Range"/>
+     <class pattern= "Relations::*Entry"/>
+  
+     <class pattern= "std::vector<*Relation*Entry*>"/>
+     <class pattern= "std::pair<*std::vector*Relations*>"/>
+ 
+  </lcgdict>
+
+
+
 
 ! 2006-01-27 - Vanya BELYAEV
 
@@ -13,7 +97,7 @@
    to allow the extarction fo relations with the weigth in the given 
    range: e.g.
 
-     Range links = table->inRange( object , lowCut , highCut ) ;
+     Range links = table -> inRange( object , lowCut , highCut ) ;
 
  - add new methods i_inverse and i_direct for all "2D" relation classes 
    to allow fast (non-virtual) access to inverse tables 

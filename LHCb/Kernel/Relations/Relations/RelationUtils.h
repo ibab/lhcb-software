@@ -1,4 +1,4 @@
-// $Id: RelationUtils.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationUtils.h,v 1.2 2006-02-02 14:47:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -15,7 +15,8 @@
 
 namespace Relations
 {
-  /**
+  /** @fn interfaceID 
+   * 
    *  funtion to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
    *  
@@ -36,7 +37,8 @@ namespace Relations
                             const unsigned long major   = 0  , 
                             const unsigned long minor   = 0  ) ;
   
-  /**
+  /** @fn clid 
+   *
    *  function to create the uniqie relation 
    *  clid from object name, CLIDs and types 
    *  
@@ -57,6 +59,18 @@ namespace Relations
                             const unsigned long major    = 0 ,
                             const unsigned long minor    = 0 ) ;
 
+  /** @fb guid 
+   *  simple funtion to convers CLID (Gaudi unique class identifier) 
+   *  to GUID (POOL unique class identifier)
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-30
+   *
+   *  @param clid Gaudi unique class identifier 
+   *  @return POOL unique class identifier 
+   */
+  std::string guid ( const CLID& clID ) ;
+  
   ///
   class InstanceCounter
   {

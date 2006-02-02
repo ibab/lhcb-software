@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.2 2005-01-27 14:48:49 cattanem Exp $
+// $Id: RelationUtils.cpp,v 1.3 2006-02-02 14:47:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -179,6 +179,26 @@ Relations::InstanceCounter::instance()
 {
   static Relations::InstanceCounter s_counter ;
   return s_counter ;
+};
+// ============================================================================
+
+// ============================================================================
+/** @fb guid 
+ *  simple funtion to convers CLID (Gaudi unique class identifier) 
+ *  to GUID (POOL unique class identifier)
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-01-30
+ *
+ *  @param clid Gaudi unique class identifier 
+ *  @return POOL unique class identifier 
+ */
+// ============================================================================
+std::string Relations::guid ( const CLID& clID ) 
+{
+  char clid_txt[64];
+  sprintf ( clid_txt ,"%08X-0000-0000-0000-000000000000", (int) clID );
+  return std::string ( clid_txt , 64  ) ;
 };
 // ============================================================================
 

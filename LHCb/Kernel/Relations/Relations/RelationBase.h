@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.5 2005-02-16 19:59:35 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.6 2006-02-02 14:47:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/02/16 19:59:35  ibelyaev
+//  few minor fixes to enable 'lcgdict' processing
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -109,7 +112,7 @@ namespace Relations
     { return std::equal_range( m_entries.begin() , 
                                m_entries.end  () , 
                                Entry ( object  ) , 
-                               m_less1           ) ;};
+                               Less1()           ) ;};
     
     /** make the relation between 2 objects
      * 
@@ -133,12 +136,13 @@ namespace Relations
     ( const From&      object1 , 
       const To&        object2 ) 
     {
+      const Less _less = Less() ;
       // look for existing relations 
       const Entry ent ( object1 , object2 ) ;
       iterator it = std::lower_bound( m_entries.begin () , 
-                                      m_entries.end   () , ent , m_less ) ;
+                                      m_entries.end   () , ent , _less ) ;
       // the relation does exist ! 
-      if( m_entries.end () != it && !m_less( ent , *it ) ) 
+      if( m_entries.end () != it && !_less( ent , *it ) ) 
         { return StatusCode::FAILURE; }
       // insert new relation !
       m_entries.insert( it , ent ) ;
@@ -168,12 +172,13 @@ namespace Relations
     ( const From&      object1 , 
       const To&        object2 ) 
     {
+      const Less _less = Less() ;
       // look for existing relations 
       const Entry ent ( object1 , object2 );
       iterator it  = std::lower_bound( m_entries.begin() , 
-                                       m_entries.end  () , ent , m_less ) ;
+                                       m_entries.end  () , ent , _less ) ;
       // the relation does not exist ! 
-      if( m_entries.end() == it || m_less( ent , *it ) ) 
+      if( m_entries.end() == it || _less( ent , *it ) ) 
         { return StatusCode::FAILURE ; }
       // remove existing relation     
       m_entries.erase( it );
@@ -226,10 +231,10 @@ namespace Relations
     ( const To&        object  ) 
     {
       // use the predicate "Equal"
-      iterator it = 
-        std::remove_if( m_entries.begin () , 
-                        m_entries.end   () , 
-                        std::bind2nd( m_equal , Entry( From() , object ) ) ) ;
+      iterator it = std::remove_if
+        ( m_entries.begin () , 
+          m_entries.end   () , 
+          std::bind2nd( Equal() , Entry( From() , object ) ) ) ;
       // no relations are found!
       if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase the relations 
@@ -280,7 +285,7 @@ namespace Relations
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
-    { std::stable_sort( m_entries.begin() , m_entries.end() , m_less ) ; };
+    { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; };
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
@@ -288,9 +293,6 @@ namespace Relations
     RelationBase
     ( const size_type reserve = 0 ) 
       : m_entries () 
-      , m_less    ()
-      , m_less1   ()
-      , m_equal   ()
     { if ( 0 < reserve ) { i_reserve( reserve ) ; } ; };
     
     /** constructor from any "direct" interface 
@@ -299,9 +301,6 @@ namespace Relations
     RelationBase
     ( const IDirect& copy ) 
       : m_entries () 
-      , m_less    ()
-      , m_less1   ()
-      , m_equal   ()
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
@@ -316,16 +315,14 @@ namespace Relations
     (  const IInverse&   inv     , 
        const int      /* flag */ ) 
       : m_entries ()
-      , m_less    ()
-      , m_less1   ()
-      , m_equal   ()
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
       // reserve the space for relations
       i_reserve ( r.size() );
       // invert all relations    
-      for ( typename IInverse::iterator entry = r.begin() ; r.end() != entry ; ++entry )
+      for ( typename IInverse::iterator entry = r.begin() ; 
+            r.end() != entry ; ++entry )
       { i_push ( entry->to() , entry->from() ) ;  }
       // final sort 
       i_sort() ;      
@@ -337,22 +334,12 @@ namespace Relations
     RelationBase
     ( const OwnType& copy ) 
       : m_entries ( copy.m_entries ) 
-      , m_less    ()
-      , m_less1   ()
-      , m_equal   ()
     {} ;
     
   private:
     
     // the actual storage of references 
     mutable Entries m_entries ; ///< the actual storage of references 
-    
-    // comparison criteria for sorting 
-    Less            m_less  ; ///< comparison criteria for sorting 
-    // comparison criteria ( "less" by "From" field )
-    Less1           m_less1 ; ///< comparison criteria ( "less" by "From" )
-    // equality criteria   ( "equal" by "To" field ) 
-    Equal           m_equal ; ///< equality criteria   ( "equal" by "To"  )
     
   };
   
