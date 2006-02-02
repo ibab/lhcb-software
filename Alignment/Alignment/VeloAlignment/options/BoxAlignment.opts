@@ -1,0 +1,8 @@
+// These options for the second step (primary vertex)
+
+Align.Primary_Z_min    = -250.;
+Align.Primary_Z_max    = 250.;
+Align.minTracks_perPV  = 15;
+Align.PrimZ_window     = 1.;
+Align.Prim_IPmax       = 0.5;
+Align.Track_IPmax      = 0.2;

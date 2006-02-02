@@ -1,0 +1,15 @@
+//Job options defining track selection cuts
+
+ToolSvc.TrackStore.MomentumCut   = 0.0; 
+ToolSvc.TrackStore.LongCut       = false;
+ToolSvc.TrackStore.RDiffMax      = 3.0;
+ToolSvc.TrackStore.RMin          = 0.0;
+ToolSvc.TrackStore.NonzerMin     = 4;
+ToolSvc.TrackStore.MissedHits    = true;
+ToolSvc.TrackStore.TakeOverlap   = true;
+ToolSvc.TrackStore.Option        = 0;
+ToolSvc.TrackStore.OutputLevel   = 3;
+
+// Options for Halo Tracks (Temporary, see code for more details)
+
+Align.Add_Halo = false;

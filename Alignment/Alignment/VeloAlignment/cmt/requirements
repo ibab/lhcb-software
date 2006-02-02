@@ -1,0 +1,41 @@
+# =============================================================================
+package       VeloAlignment
+version       v1r0
+
+# =========== structure =======================================================
+branches      doc cmt src xml
+
+# =========== own includes ====================================================
+include_dirs  $(VELOALIGNMENTROOT)
+
+# =========== dependencies ====================================================
+use           GSL               v*  LCG_Interfaces
+use           GaudiKernel       v*
+use           GaudiSvc          v*
+use           GaudiAlg          v*
+use           GaudiObjDesc      v*
+
+# Tracking
+use TrackEvent          v*    Event
+use TrackInterfaces     v*    Tr
+use TrackExtrapolators  v*    Tr
+use TrackProjectors     v*    Tr
+
+use AlignmentTools      v*    Alignment
+
+use VeloDet             v*  Det
+
+
+document obj2doth VeloAlignmentObj2Doth ../xml/*.xml
+document obj2dict VeloAlignmentObj2Dict ../xml/*.xml
+
+# =========== constituents =====================================================
+library       VeloAlignment           ../src/*.cpp
+library       VeloAlignmentDict       ../$(tag)/dict/VeloAlignment/*.cpp
+
+# =========== standard patterns (the order is essential!) ====================== 
+apply_pattern component_library    library=VeloAlignmentDict
+apply_pattern linker_library       library=VeloAlignment
+macro_append VeloAlignment_linkopts "" WIN32 "/include:_VeloAlignment_loadRef"
+
+set VELOALIGNMENTOPTS  ${VELOALIGNMENTROOT}/options

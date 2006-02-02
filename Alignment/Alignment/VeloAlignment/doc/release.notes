@@ -1,0 +1,19 @@
+! Package     : VeloAlignment
+! Responsible : Sebastien Viret
+
+!=============================================================================
+! 01/02/2006 - Sebastien Viret  ** v1r0 **
+
+  First release of the VELO Alignment package.
+
+  This package uses the Millepede Alignment Tool. To do so it takes Track objects
+  and transform them into AlignTrack which is a 'Millepede-friendly' class of track.
+
+  This transformation is done via a TrackStore tool. Then Millepede is feeded using
+  a MilleConfig object, which makes the interface with Millepede.
+
+  Environment requested to compile: LHCb   v19r3
+                                    Brunel v28r2
+
+
+

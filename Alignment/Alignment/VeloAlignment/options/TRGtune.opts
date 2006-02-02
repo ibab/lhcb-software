@@ -1,0 +1,10 @@
+// tuning for Brunel (SV 2005-11-02)
+BrunelVeloSpaceTracking.Offline = true;
+
+BrunelVeloRTracking.rMatchTol = 1.1;
+BrunelVeloRTracking.rExtraTol = 4.5;
+
+BrunelVeloSpaceTracking.PhiAngularTol = 0.01;
+BrunelVeloSpaceTracking.PhiMatchTol   = 0.6;
+
+BrunelVeloSpaceTracking.MaxChiSq = 15.0;

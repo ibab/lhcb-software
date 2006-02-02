@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="VeloAlignment">
+     <class 
+      author="Sebastien Viret"
+      desc="AlignTrack keyedObject"
+      name="AlignTrack"
+      templateList = "FALSE"
+      templateVector = "TRUE"
+      location="AlignTrackLoc"
+      id="12345"
+     >
+       &KeyedObject;
+       <base name="KeyedObject&lt;int&gt;"/>
+       <import name="DetDesc/ILVolume.h"/>
+
+       <constructor
+        desc = "Constructor with allocation of vector sizes">
+        <code>
+          m_Coords.reserve(42);
+          reset();         
+        </code>
+       </constructor>
+
+       <attribute
+        desc="Event Number"
+        name="nEvent"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="Track Number"
+        name="nTrack"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="Track Type (0=Left 1=Right 2=Overlap)"
+        name="nType"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="Number of valid coordinates"
+        name="nGoodCoordinates"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="Number of the first station with a valid coordinate"
+        name="nFirstStation"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="X slope of the track"
+        name="nSlope_x"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Error on X slope"
+        name="nErrX_x"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Y slope of the track"
+        name="nSlope_y"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Error on Y slope"
+        name="nErrY_y"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="X track value at z=0"
+        name="nXo_x"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Y track value at z=0"
+        name="nYo_y"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Track Z at closest approach"
+        name="nZclos"
+        type="double"
+        init="0."
+       />
+
+       <attribute
+        desc="Track already belongs to a primary vertex"
+        name="nPVtag"
+        type="bool"
+        init="false"
+       />
+
+       <attribute
+        desc="Reference number of the primary vertex"
+        name="nPVnumber"
+        type="int"
+        init="0"
+       />
+
+       <attribute
+        desc="Is the track good or not (acc. to our selection criteria) ?"
+        name="nIsGood"
+        type="bool"
+        init="true"
+       />
+
+       <typedef
+        desc="Pair of HepPoint, valid coordinates in the first and errors and station number in the second"
+        def="alignPoint"
+        type="std::pair&lt;HepPoint3D,HepPoint3D&gt;"
+        access= "PUBLIC"
+       />
+
+
+       <attribute
+        desc="Container with valid alignPoints"
+        name="Coords"
+        type="std::vector&lt;std::pair&lt;HepPoint3D,HepPoint3D&gt; &gt;"
+       />
+
+       <method
+        type="void"
+        name="reset"
+        desc="Clear the AlignTrack before use">
+        <code>
+        m_nEvent = 0;
+        m_nTrack = 0;
+        m_nType = 0;
+        m_nGoodCoordinates = 0;
+        m_nFirstStation = 0;
+        m_nIsGood = true;
+        m_Coords.clear();
+        </code>
+       </method>
+
+
+       <method
+        type="void"
+        name="addCoord"
+        argList="HepPoint3D coord1, HepPoint3D coord2"
+        desc="Add a coordinate to the track">
+        <code>
+        alignPoint my_point(coord1,coord2);
+        m_Coords.push_back(my_point);
+        </code>
+       </method>
+
+     </class>
+  </package>
+</gdd>
