@@ -10,6 +10,7 @@ include_path    none
 
 use GenEvent        v* Event
 use MCEvent         v* Event
+use DAQEvent        v* Event
 use LHCbDefinitions v* Kernel
 use GaudiAlg        v*
 

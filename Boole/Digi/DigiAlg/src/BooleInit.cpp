@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.10 2005-12-21 12:41:36 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.11 2006-02-02 07:43:44 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,9 @@
 
 // from MCEvent
 #include "Event/MCHeader.h"
+
+// from DAQEvent
+#include "Event/RawEvent.h"
 
 // local
 #include "BooleInit.h"
@@ -77,6 +80,10 @@ StatusCode BooleInit::execute() {
   
   // Initialize the random number
   m_initRndmTool->initRndm( evt->runNumber(), evt->evtNumber() );
+
+  // Create an empty RawEvent
+  LHCb::RawEvent* raw = new LHCb::RawEvent();
+  put( raw, LHCb::RawEventLocation::Default );
   
   return StatusCode::SUCCESS;
 };
