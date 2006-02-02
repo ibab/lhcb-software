@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Eduardo Rodrigues
+ - move to LHCb v20r0
+ - removal of usage of non-const accessors
+
 !======================= TrackExtrapolators v1r4 2006-01-27 ==================
 ! 2005-12-14 - Eduardo Rodrigues
  - corrected wrong calls to old extrapolators in selector tools

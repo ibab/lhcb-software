@@ -2,6 +2,10 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IChronoStatSvc.h"
+
+// from GSL
+#include "gsl/gsl_math.h"
 
 // from DetDesc
 #include "DetDesc/ITransportSvc.h"
@@ -15,12 +19,6 @@
 
 // Local 
 #include "TrackMasterExtrapolator.h"
-
-// chrono
-#include "GaudiKernel/IChronoStatSvc.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 // Needed for the creation of TrackMasterExtrapolator objects.
 static const ToolFactory<TrackMasterExtrapolator> s_factory;
@@ -102,7 +100,10 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
   StatusCode sc;
 
   // reset transport matrix
-  m_F = HepMatrix(5, 5, 1);
+  //TODO: remove the work-around as soon as MathCore has something to replace
+  //      m_F = HepMatrix(5, 5, 1);
+  m_F = TransportMatrix();
+  for ( unsigned int ind = 0; ind < 5; ++ind ) m_F(ind,ind) = 1.;
 
   //check not already at current
   double zStart = state.z();
@@ -125,17 +126,17 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
   for ( int step=0 ; nbStep > step ; ++step )
     {
       ILVolume::Intersections intersept;
-      HepVector& tX = state.stateVector();
-      HepPoint3D start( tX[0], tX[1], state.z() );  // Initial position
-      HepVector3D vect( tX[2]*zStep, tX[3]*zStep, zStep );
+      TrackVector& tX = state.stateVector();
+      XYZPoint start( tX[0], tX[1], state.z() );  // Initial position
+      XYZVector vect( tX[2]*zStep, tX[3]*zStep, zStep );
 
       // protect against vertical or looping tracks
       if ( fabs(tX[0]) > maxTransverse )
 	{
 	  double pos = GSL_SIGN(tX[0])* maxTransverse ;
 	  warning() << "Protect against absurd tracks: X " 
-		    << state.x() << " set to " << pos << ", abort. " << endreq;
-	  state.setX(pos);
+              << state.x() << " set to " << pos << ", abort. " << endreq;
+	  state.setX( pos );
 	  return StatusCode::FAILURE;
 	}
     
@@ -143,7 +144,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	{
 	  double pos = GSL_SIGN(tX[1])*maxTransverse;
 	  warning() << "Protect against absurd tracks: Y " 
-		    << state.y() << " set to " << pos << ", abort. " << endreq;
+              << state.y() << " set to " << pos << ", abort. " << endreq;
 	  state.setY(pos);
 	  return StatusCode::FAILURE;
 	}
@@ -152,7 +153,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	{
 	  double slopeX = GSL_SIGN(state.tx())* maxSlope;
 	  warning() << "Protect against looping tracks: Tx " 
-		    << state.tx() << " set to " << slopeX << ", abort. " << endreq;
+              << state.tx() << " set to " << slopeX << ", abort. " << endreq;
 	  state.setTx(slopeX);
 	  return StatusCode::FAILURE;
 	}
@@ -161,7 +162,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	{
 	  double slopeY = GSL_SIGN(state.ty())*maxSlope;
 	  warning() << "Protect against looping tracks: Ty " 
-		    << state.ty() << " set to " << slopeY << ", abort. " << endreq;
+              << state.ty() << " set to " << slopeY << ", abort. " << endreq;
 	  state.setTy(slopeY);
 	  return StatusCode::FAILURE;
 	}
@@ -213,7 +214,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
         // check for success
 	if (sc.isFailure()){
 	  warning() << "Transport to " << zWall
-		     << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+              << "using "+thisExtrapolator->name() << " FAILED" << endreq;
 	}
 	 
 	//update f
@@ -224,7 +225,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	if (fabs(state.tx()) > maxSlope){
 	  double slopeX = GSL_SIGN(  state.tx() )*maxSlope;
 	  warning() << "Protect against looping tracks: Tx " 
-		    << state.tx() << " set to " << slopeX << ", abort. " << endreq;
+              << state.tx() << " set to " << slopeX << ", abort. " << endreq;
 	  state.setTx(slopeX);
 	  return StatusCode::FAILURE;
 	}
@@ -232,7 +233,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	if (fabs(state.ty()) > maxSlope){
 	   double slopeY = GSL_SIGN(state.ty())*maxSlope;
 	   warning() << "Protect against looping tracks: Ty " 
-		     << state.ty() << " set to " << slopeY << ", abort. " << endreq;
+               << state.ty() << " set to " << slopeY << ", abort. " << endreq;
 	    state.setTy(slopeY);
 	    return StatusCode::FAILURE;
 	}
@@ -274,53 +275,6 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Propagate a State to the intersection point with a given plane
-//=============================================================================
-StatusCode TrackMasterExtrapolator::propagate( State& state,
-                                               const HepPlane3D& plane,
-                                               ParticleID pid )
-{
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  // The present point in space
-  HepPoint3D pos = state.position();
-
-  // The distance from the present point to the plane along the predicted parabola
-  double distance = 0.;
-  ITrackExtrapolator* myExtrapolator = m_shortFieldExtrapolator;
-  sc = myExtrapolator->predict( state, plane, distance );
-
-  // Two step extrapolation strategy
-  if( sc == StatusCode::SUCCESS )
-    {
-      // First step: large distance extrapolation using 'm_longFieldExtrapolator'
-      ITrackExtrapolator* longExtrapolator = m_longFieldExtrapolator;
-      while( distance > m_shortDist )
-	{
-	  sc =  longExtrapolator->propagate( state, distance );
-	  longExtrapolator->transportMatrix();
-	  // Check distance along the normal to the plane for speed 
-	  distance = plane.distance( pos );
-	  if( distance > m_shortDist )
-	    {
-	      sc = myExtrapolator->predict( state, plane, distance );
-	    }
-	}
-  
-      if( sc == StatusCode::SUCCESS )
-	{
-	  // Second step: small distance extrapolation using 'm_shortFieldExtrapolator'
-	  sc = myExtrapolator->propagate( state, plane );
-	}
-    }
-
-  debug() << " propagated state at " << state.z() 
-          << " of particle pid " << pid.pid() << endreq;
-  
-  return sc;
-}
-
 //============================================================================
 // apply thick scatter Q/p state
 //============================================================================
@@ -346,14 +300,14 @@ StatusCode TrackMasterExtrapolator::thinScatter( State& state,
   double cnoise = m_fms2 * scatLength/gsl_pow_2(p);
 
   // multiple scattering covariance matrix - initialized to 0
-  HepSymMatrix Q = HepSymMatrix(5,0);
+  TrackMatrix Q = TrackMatrix();
 
-  Q.fast(3,3) = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
-  Q.fast(4,4) = norm2 * (1. + gsl_pow_2(state.ty())) * cnoise;
-  Q.fast(4,3) = norm2 * state.tx() * state.ty() * cnoise;
+  Q(2,2) = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
+  Q(3,3) = norm2 * (1. + gsl_pow_2(state.ty())) * cnoise;
+  Q(3,2) = norm2 * state.tx() * state.ty() * cnoise;
 
   // update covariance matrix C = C + Q
-  HepSymMatrix& tC = state.covariance();
+  TrackMatrix& tC = state.covariance();
   tC += Q;
 
   return StatusCode::SUCCESS;
@@ -390,26 +344,26 @@ StatusCode TrackMasterExtrapolator::thickScatter( State& state,
   //D - depends on whether up or downstream
   double D = (m_upStream) ? -1. : 1. ;
 
-  HepSymMatrix Q(5,0);
+  TrackMatrix Q = TrackMatrix();
 
   double tWall2 = gsl_pow_2(tWall);
 
-  Q.fast(1,1) = covTxTx * tWall2 / 3.;
-  Q.fast(2,1) = covTxTy * tWall2 / 3.;
-  Q.fast(3,1) = 0.5*covTxTx * D * tWall;
-  Q.fast(4,1) = 0.5*covTxTy * D * tWall;
+  Q(0,0) = covTxTx * tWall2 / 3.;
+  Q(1,0) = covTxTy * tWall2 / 3.;
+  Q(2,0) = 0.5*covTxTx * D * tWall;
+  Q(3,0) = 0.5*covTxTy * D * tWall;
 
-  Q.fast(2,2) = covTyTy * tWall2 / 3.;
-  Q.fast(3,2) = 0.5*covTxTy * D * tWall;
-  Q.fast(4,2) = 0.5*covTyTy * D * tWall;
+  Q(1,1) = covTyTy * tWall2 / 3.;
+  Q(2,1) = 0.5*covTxTy * D * tWall;
+  Q(3,1) = 0.5*covTyTy * D * tWall;
 
-  Q.fast(3,3) = covTxTx;
-  Q.fast(4,3) = covTxTy;
+  Q(2,2) = covTxTx;
+  Q(3,2) = covTxTy;
 
-  Q.fast(4,4) = covTyTy;
+  Q(3,3) = covTyTy;
 
   // update covariance matrix C = C + Q
-  HepSymMatrix& tC = state.covariance();
+  TrackMatrix& tC = state.covariance();
   tC += Q;
 
   return StatusCode::SUCCESS;
@@ -431,7 +385,7 @@ StatusCode TrackMasterExtrapolator::energyLoss( State& state,
   if (m_upStream == false) { bbLoss *= -1.0; }
 
   // apply correction - note for now only correct the state vector
-  HepVector& tX = state.stateVector();
+  TrackVector& tX = state.stateVector();
 
   if (tX[4]>0.) { tX[4] = 1./(1./tX[4]+(bbLoss)); }
   else { tX[4] = 1./(1./tX[4]-(bbLoss)); }
@@ -457,10 +411,10 @@ StatusCode TrackMasterExtrapolator::electronEnergyLoss( State& state,
   if (fabs(t)>m_tMax) { t = GSL_SIGN(t)*m_tMax; }
 
   // apply correction
-  HepVector& tX = state.stateVector();
-  HepSymMatrix& tC = state.covariance();
+  TrackVector& tX = state.stateVector();
+  TrackMatrix& tC = state.covariance();
 
-  tC.fast(5,5) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
+  tC(4,4) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
   tX[4] *= exp(-t);
 
   return StatusCode::SUCCESS;

@@ -1,13 +1,13 @@
-// $Id: TrackLongExtraSelector.cpp,v 1.2 2005-12-14 14:16:48 erodrigu Exp $
+// $Id: TrackLongExtraSelector.cpp,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
+// from LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
+
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
-
-// from CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
 
 // Local
 #include "TrackLongExtraSelector.h"

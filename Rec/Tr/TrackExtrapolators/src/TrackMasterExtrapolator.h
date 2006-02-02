@@ -12,6 +12,9 @@ class ITransportSvc;
 class Material;
 class ITrackExtraSelector;
 
+using namespace Gaudi;
+using namespace LHCb;
+
 /** @class TrackMasterExtrapolator TrackMasterExtrapolator.h \
  *         "TrackMasterExtrapolator.h"
  *
@@ -51,11 +54,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   virtual StatusCode propagate( State& state,
                                 double z,
                                 ParticleID partId = ParticleID(211) );
-
-  // Propagate a state to the intersection point with a given plane
-  StatusCode propagate( State& state,
-                        const HepPlane3D& plane,
-                        ParticleID pid = ParticleID(211) );
 
  private:
    
@@ -117,7 +115,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   ITransportSvc* m_transportSvc;  ///< Pointer to the transport service
 
   /// update transport matrix
-  void updateTransportMatrix( const HepMatrix& newStepF );
+  void updateTransportMatrix( const TransportMatrix& newStepF );
 
   /// z scatter
   double zScatter(const double z1,
@@ -130,9 +128,9 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 };
 
 inline void TrackMasterExtrapolator::updateTransportMatrix
-( const HepMatrix& newStepF )
+( const TransportMatrix& newStepF )
 {
-  //update F - after transport step
+  // update F - after transport step
   m_F = newStepF * m_F;
 }
 

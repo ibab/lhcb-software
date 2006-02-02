@@ -1,9 +1,10 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.2 2005-12-14 14:16:47 erodrigu Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-
+// Include files
 #include "GaudiKernel/ToolFactory.h"
+
+// from LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "TrackFastParabolicExtrapolator.h"
@@ -41,8 +42,8 @@ TrackFastParabolicExtrapolator::~TrackFastParabolicExtrapolator()
 void TrackFastParabolicExtrapolator::updateTransportMatrix( const double dz, 
                                                             State& )
 {
+  m_F(0,2) = dz;
+  m_F(0,4) = 0.5 * m_ax * eplus * c_light * dz * dz;
   m_F(1,3) = dz;
-  m_F(1,5) = 0.5 * m_ax * eplus * c_light * dz * dz;
-  m_F(2,4) = dz;
-  m_F(3,5) = m_ax * eplus * c_light * dz;
+  m_F(2,4) = m_ax * eplus * c_light * dz;
 }

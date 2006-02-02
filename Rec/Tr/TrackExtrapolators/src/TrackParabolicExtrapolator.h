@@ -7,6 +7,9 @@
 // Forward declaration
 class IMagneticFieldSvc;
 
+using namespace Gaudi;
+using namespace LHCb;
+
 /** @class TrackParabolicExtrapolator TrackParabolicExtrapolator.h \
  *         "TrackParabolicExtrapolator.h"
  *
@@ -36,20 +39,15 @@ public:
   /// initialize
   virtual StatusCode initialize();
   
-  // Predicts the distance in Z from the state to the plane
-  StatusCode predict( const State& state,
-                      const HepPlane3D& plane,
-                      double& dZ );
-
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
                                 double z,
                                 ParticleID pid = ParticleID(211) );
 
   
-  // Propagate a state to the closest position to the specified point
+  /// Propagate a state to the closest position to the specified point
   StatusCode propagate( State& state,
-                        const HepPoint3D& point,
+                        const XYZPoint& point,
                         ParticleID pid = ParticleID(211) );
 
 protected:
@@ -62,7 +60,7 @@ protected:
 
   double             m_ax;
   double             m_ay;
-  HepVector3D        m_B;
+  XYZVector          m_B;
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service
 
 };

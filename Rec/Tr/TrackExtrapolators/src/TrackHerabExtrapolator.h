@@ -5,8 +5,10 @@
 #include "TrackExtrapolator.h"
 
 // Forward declarations
-
 class IMagneticFieldSvc;
+
+using namespace Gaudi;
+using namespace LHCb;
 
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *
@@ -112,8 +114,8 @@ private:
   int m_extrapolatorID;
 
   double             m_error;  ///< Error
-  HepPoint3D         m_point;  ///< to compute the field
-  HepVector3D        m_B;      ///< returned field
+  XYZPoint           m_point;  ///< to compute the field
+  XYZVector          m_B;      ///< returned field
   IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
 
   // Parameters for Runge-Kutta
@@ -124,8 +126,3 @@ private:
 };
 
 #endif // TRACKHERABEXTRAPOLATOR_H
-
-
-
-
-

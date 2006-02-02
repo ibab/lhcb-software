@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.3 2005-12-14 14:16:48 erodrigu Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.4 2006-02-02 14:28:53 erodrigu Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -6,6 +6,7 @@
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
+#include "Event/SHacks.h"
 
 // Local
 #include "TrackHerabExtrapolator.h"
@@ -52,9 +53,9 @@ StatusCode TrackHerabExtrapolator::initialize() {
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true);
 
  
-  // First querry, to load the field map
+  // First query, to load the field map
   debug() << "Load field map" << endreq;
-  HepPoint3D P( 0., 0., 0. );
+  XYZPoint P( 0., 0., 0. );
   m_pIMF->fieldVector( P, m_B );
 
   return StatusCode::SUCCESS;
@@ -71,10 +72,12 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
                                               ParticleID )
 {
 
-  size_t ndim = state.nParameters();
-  
+  //size_t ndim = state.nParameters();
   // create transport matrix
-  m_F = HepMatrix(ndim, ndim, 1);
+  //TODO: remove the work-around as soon as MathCore has something to replace
+  //      m_F = HepMatrix(ndim, ndim, 1);
+  m_F = TransportMatrix();
+  for ( unsigned int ind = 0; ind < 5; ++ind ) m_F(ind,ind) = 1.;
 
   // check current z-position
   double dz = fabs(zNew - state.z());
@@ -84,25 +87,24 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
   }
 
   // prepare Q/p transport - note RK expects zStart as 1st argument
-  HepVector& tX = state.stateVector();
+  const TrackVector& tX = state.stateVector();
   double pIn[5];
   int i;
-  for (i = 0; i < 5; ++i) {
+  for ( i = 0; i < 5; ++i ) {
     pIn[i] = tX[i];
   }
 
-  //return parameters
+  // return parameters
   double fQp[25];
 
-  for (i = 0; i < 25; ++i) {
+  for ( i = 0; i < 25; ++i ) {
       fQp[i] = 0.;
   }
-  double pOut[5] ={0.,0.,0.,0.,0.};
-  int istat = 0;
+  double zIn     = state.z();
+  double pOut[5] = {0.,0.,0.,0.,0.};
+  int istat      = 0;
 
-  double zIn = state.z();
-
-  //transport
+  // transport
   this->extrapolate(zIn,pIn,zNew,pOut,fQp,istat);
 
   // check for sucess
@@ -112,36 +114,27 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
     return StatusCode::FAILURE;
   }
 
-  //update Qp state
-  for (i = 0; i < 5; ++i) {
-    tX[i] = pOut[i];
-  }
-
-  int j;
-  //update the transport matrix
-  for (i = 0; i < 5; ++i) {
-    for (j = 0; j < 5; ++j) {
-      m_F[i][j] = fQp[(5*j)+i];
+  // update the state ( and transport the covariance matrix)
+  for ( i = 0; i < 5; ++i ) {
+    for ( int j = 0; j < 5; ++j ) {
+      m_F(i,j) = fQp[(5*j)+i];
     }
   }
-
-  //transport the covariance matrix
-  HepSymMatrix& tC = state.covariance();
-  tC = tC.similarity(m_F); // F*C*F.T()
-
-  //update state z
-  state.setZ(zNew);
+  state.setState( pOut[0], pOut[1], zNew, pOut[2], pOut[3], pOut[4] );
+  state.setCovariance( SHacks::Similarity<TransportMatrix,TrackMatrix>
+                       ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;
 }
 
+//===========================================================================
+// Interface to Hera-b code
+//===========================================================================
 void TrackHerabExtrapolator::extrapolate(double& zIn,double pIn[5], 
                                          double& zNew,
                                          double pOut[5], double fQp[25],
-                                         int& istat) {
-
-  // interface to Herab code
-
+                                         int& istat)
+{
   switch ( m_extrapolatorID ) {
 
   case 1:
@@ -253,10 +246,8 @@ void TrackHerabExtrapolator::rk5order(
       }
     }
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     tx = x[2]; ty = x[3]; tx2 = tx * tx; ty2 = ty * ty; txty = tx * ty;
     tx2ty21= 1.0 + tx2 + ty2; I_tx2ty21 = 1.0 / tx2ty21 * qp;
@@ -438,7 +429,6 @@ void TrackHerabExtrapolator::rk5order(
 //===========================================================================
 //-- Author : A.Spiridonov  26.03.98
 //===========================================================================
-
 void TrackHerabExtrapolator::rk5fast(
 
                       double& z_in , // z value for input parameters
@@ -515,10 +505,8 @@ void TrackHerabExtrapolator::rk5fast(
       } // j
     }  //i
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     tx = x[2]; ty = x[3]; tx2 = tx * tx; ty2 = ty * ty; txty = tx * ty;
     tx2ty2 =  sqrt( 1.0 + tx2 + ty2 ) *  hC;
@@ -681,10 +669,8 @@ void TrackHerabExtrapolator::rk5fast(                 // Without derivatives
       } // i
     }  // j
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     tx = x[2];
     ty = x[3];
@@ -866,10 +852,8 @@ void TrackHerabExtrapolator::rk4order(
       }
     }
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     double tx = x[2]; 
     double ty = x[3]; 
@@ -1073,10 +1057,8 @@ void TrackHerabExtrapolator::rk4fast(
       }
     }
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     tx = x[2]; ty = x[3]; tx2 = tx * tx; ty2 = ty * ty; txty = tx * ty;
     tx2ty2 =  sqrt( 1.0 + tx2 + ty2 ) *  hC;
@@ -1194,10 +1176,8 @@ void TrackHerabExtrapolator::rk4fast(                // Without derivatives
       }
     }
 
-    m_point.setX( x[0] );
-    m_point.setY( x[1] );
-    m_point.setZ( z_in  + a[step] * h );
-    m_pIMF->fieldVector( m_point, m_B );
+    m_point.SetXYZ( x[0], x[1], z_in  + a[step] * h );
+    m_pIMF -> fieldVector( m_point, m_B );
 
     tx = x[2]; ty = x[3]; tx2 = tx * tx; ty2 = ty * ty; txty = tx * ty;
     tx2ty2 =  sqrt( 1.0 + tx2 + ty2 ) *  hC;
@@ -1217,3 +1197,5 @@ void TrackHerabExtrapolator::rk4fast(                // Without derivatives
   p_out[4]=p_in[4];
 
 }    // end of rk4fast without derivatives
+
+//===========================================================================

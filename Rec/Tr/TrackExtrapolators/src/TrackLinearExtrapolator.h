@@ -2,7 +2,7 @@
 #define TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 1
 
 // Include files
-
+// -------------
 // from TrackExtrapolators
 #include "TrackExtrapolator.h"
 
@@ -33,20 +33,15 @@ public:
   /// destructor
   virtual ~TrackLinearExtrapolator();
 
-  /// Predict where the plane will be intersected
-  StatusCode predict( const State& state,
-                      const HepPlane3D& plane,
-                      double& dZ );
-
   /// Propagate a state to a given z-position
-  StatusCode propagate( State& state,
+  StatusCode propagate( LHCb::State& state,
                         double z,
-                        ParticleID pid = ParticleID(211) );
+                        LHCb::ParticleID pid = ParticleID(211) );
   
   /// Propagate a state to the closest position to the specified point
-  StatusCode propagate( State& state,
-                        const HepPoint3D& point,
-                        ParticleID pid = ParticleID(211) );
+  StatusCode propagate( LHCb::State& state,
+                        const Gaudi::XYZPoint& point,
+                        LHCb::ParticleID pid = ParticleID(211) );
 
 };
 

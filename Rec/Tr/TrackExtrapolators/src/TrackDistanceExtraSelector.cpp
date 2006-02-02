@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.2 2005-12-14 14:16:47 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
 
 // Include files
 
@@ -8,8 +8,8 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-// from CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// from LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "TrackDistanceExtraSelector.h" 
@@ -72,7 +72,8 @@ StatusCode TrackDistanceExtraSelector::initialize()
 ITrackExtrapolator* TrackDistanceExtraSelector::select( const double zStart,
                                                         const double zEnd ) const
 {
-  return (fabs(zEnd-zStart) < m_shortDist ?  m_shortFieldExtrapolator : m_longFieldExtrapolator );
+  return ( fabs(zEnd-zStart) < m_shortDist ?
+           m_shortFieldExtrapolator : m_longFieldExtrapolator );
 }
 
 //=============================================================================
