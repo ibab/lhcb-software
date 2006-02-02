@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.8 2006-02-02 11:16:06 ebos Exp $
+// $Id: ITrackExtrapolator.h,v 1.9 2006-02-02 13:51:17 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -14,7 +14,6 @@
 #include "Kernel/SymmetricMatrixTypes.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
 #include "Kernel/TrackTypes.h"
 
 // Forward declarations

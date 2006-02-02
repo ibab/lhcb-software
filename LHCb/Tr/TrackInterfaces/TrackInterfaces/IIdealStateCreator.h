@@ -35,7 +35,7 @@ public:
                                   LHCb::State*& pState ) const = 0;
 
   /// create a state at MCParticle vertex
-  virtual StatusCode createStateVertex( LHCb::const MCParticle* mcPart,
+  virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
                                         LHCb::State*& pState ) const = 0;
 };
 

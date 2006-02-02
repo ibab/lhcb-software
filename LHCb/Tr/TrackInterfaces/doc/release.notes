@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Eduardo Rodrigues
+ - minor typo corrected in IIdealStateCreator
+ - remove unnecessary include in ITrackExtrapolator
+
 ! 2006-02-02 - Edwin Bos
  - Removed all extrapolator methods involving a plane, because they are not
  - needed anymore, due to the introduction of Trajectories
