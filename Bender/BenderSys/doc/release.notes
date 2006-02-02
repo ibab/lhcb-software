@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2005-07-24 13:00:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.5 2006-02-02 09:44:48 ranjard Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,11 @@
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 
+!======================= Bender v5r3 =====================================
+! 2006-02-02 - Florence Ranjard
+ - recompile Bender v5r2 with DaVinci v14r5
 
+#==========================================================================
 ! 2005-02-05 - Vanya BELYAEV
  - add new package Tools/BenderRels to make available all C++ 
    relation tables in Python/Bender

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.76 2005-09-19 15:27:37 ibelyaev Exp $ 
+# $Id: requirements,v 1.77 2006-02-02 09:44:48 ranjard Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,7 +6,7 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v5r2
+version       v5r3
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
@@ -29,6 +29,9 @@ use           BenderExample  v5r2   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.76  2005/09/19 15:27:37  ibelyaev
+#  v5r2
+#
 # Revision 1.75  2005/08/01 09:51:36  ibelyaev
 #  update for v5r2
 #
