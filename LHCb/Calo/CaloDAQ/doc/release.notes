@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Olivier Callot
+ - Protect CaloTrigegrBitsFromRaw if DAQ bank is absent.
+
 !========================== CaloDAQ v2r0 2006-01-19 ==========================
 ! 2006-01-19 - Marco Cattaneo
  - Use definitions from CaloDet for detector locations, instead of raw strings
