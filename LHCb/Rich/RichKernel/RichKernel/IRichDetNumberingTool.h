@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: IRichDetNumberingTool.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: IRichDetNumberingTool.h,v 1.4 2006-02-02 17:23:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -18,8 +18,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// Rich DAQ
-#include "RichKernel/RichDAQDefinitions.h"
+// DAQ
+#include "RichDet/RichDAQDefinitions.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichDetNumberingTool ( "IRichDetNumberingTool", 1, 0 );

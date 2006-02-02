@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.5 2006-01-25 10:49:52 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.6 2006-02-02 17:23:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -20,7 +20,9 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDAQDefinitions.h"
+
+// numberings
+#include "RichDet/RichDAQDefinitions.h"
 
 // forward declarations
 class RichHPDDataBank;
