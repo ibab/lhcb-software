@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.9 2005-11-22 22:47:06 cattanem Exp $
+# $Id: requirements,v 1.10 2006-02-02 15:09:15 ibelyaev Exp $
 # Created    : 19/12/2003
 # Maintainer : Marco Cattaneo
 #
 package           EventAssoc
-version           v2r1
+version           v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,9 +13,17 @@ branches          cmt doc src
 #============================================================================
 use L0Event   v* Event
 use PhysEvent v* Event
+use MCEvent   v* Event
 use Relations v* Kernel
+        
+private               
+use GaudiPython v* 
+        
+#-------LCG Dictionaries---------------------------------------------------------
+apply_pattern lcg_dictionary \ 
+                dictionary=EventAssoc \
+                headerfiles=$(EVENTASSOCROOT)/dict/selection.h \
+                selectionfile=../dict/selection.xml \
+                options="--split --reflex " 
 
-# Build the dictionaries
-#============================================================================
-library          EventAssocDict  ../dict/*.cpp
-apply_pattern component_library library=EventAssocDict
+

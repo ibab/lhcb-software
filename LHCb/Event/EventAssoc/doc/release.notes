@@ -4,6 +4,13 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Vanya BELYAEV
+ - remove src/EventAssoc_Associations_dict.cpp fiel with "hand-made" 
+   dictionaries. Replace it with "standard" selection.h/selection.xml
+   files for "normal" Reflex dictionaries. 
+- cmt/rerquirement
+   version increment to v2r2    
+
 !======================= EventAssoc v2r1 2005-10-22 ==========================
 ! 2005-11-22 - Marco Cattaneo
  - Add dictionaries for Track relations (for Calo DST objects)

@@ -1,0 +1,34 @@
+<lcgdict>
+  
+  <class pattern= "LHCb::Relation1D<*>"/>
+  <class pattern= "LHCb::Relation2D<*>"/>
+  <class pattern= "LHCb::RelationWeighted1D<*>"/>
+  <class pattern= "LHCb::RelationWeighted2D<*>"/>
+
+
+  <class pattern= "Relations::RelationBase<*>"/>
+
+  <class pattern= "Relations::RelationWeightedBase<*>"/>
+  
+  <class pattern= "Relations::RelationWeighted<*>">
+  <field name="m_inverse_aux" transient="true"/>
+  </class>
+
+  <class pattern= "Relations::Relation<*>">
+  <field name="m_inverse_aux" transient="true"/>
+  </class>
+
+  <class pattern= "Relations::Relation2<*>"/>
+  <class pattern= "Relations::Relation2Weighted<*>" />  
+
+  
+  <class pattern= "IRela*"/>
+  <class pattern= "*Range"/>
+  <class pattern= "Relations::*Entry"/>
+  
+  <class pattern= "std::vector<*Relation*Entry*>"/>
+  <class pattern= "std::pair<*std::vector*Relations*>"/>
+  
+</lcgdict>
+
+
