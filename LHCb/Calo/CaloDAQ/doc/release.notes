@@ -8,6 +8,8 @@
 ! 2006-02-02 - Olivier Callot
  - Protect CaloTrigegrBitsFromRaw if DAQ bank is absent.
  - Code (CaloFillRawBuffer) from Full CaloADC banks if coding type = 2.
+ - Bank length is in bytes now (CaloTriggerAdcsFromRaw, CaloTriggerBitsFromRaw,
+   CaloEnergyFromRaw)
 
 ! 2006-01-19 - Marco Cattaneo
  - Use definitions from CaloDet for detector locations, instead of raw strings

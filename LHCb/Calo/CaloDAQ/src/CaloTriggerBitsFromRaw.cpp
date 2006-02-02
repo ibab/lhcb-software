@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.4 2006-02-02 13:24:03 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.5 2006-02-02 16:16:50 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -85,7 +85,7 @@ std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs )
     std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
     while ( banks->end() != itB ) {
       unsigned int* data = (*itB)->data();
-      int size           = (*itB)->size();
+      int size           = (*itB)->size()/4;  // size in byte
       int version        = (*itB)->version();
       int sourceID       = (*itB)->sourceID();
       int lastData       = 0;

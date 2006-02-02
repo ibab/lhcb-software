@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.7 2006-01-19 12:18:51 cattanem Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.8 2006-02-02 16:16:50 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -115,7 +115,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
   
   while  ( banks->end() != itB ) {
     unsigned int* data = (*itB)->data();
-    int size           = (*itB)->size();
+    int size           = (*itB)->size()/4;  // Bank size is in bytes
     int version        = (*itB)->version();
     int sourceID       = (*itB)->sourceID();
     itB++;

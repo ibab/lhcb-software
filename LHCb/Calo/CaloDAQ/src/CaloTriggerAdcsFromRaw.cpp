@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.2 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.3 2006-02-02 16:16:50 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -76,7 +76,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
   std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
   while ( banks->end() != itB ) {
     unsigned int* data = (*itB)->data();
-    int size           = (*itB)->size();
+    int size           = (*itB)->size()/4;  // in bytes in the header
     int version        = (*itB)->version();
     int sourceID       = (*itB)->sourceID();
     int lastData = 0;
@@ -151,7 +151,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
         }
         int nSkip = (lenAdc+3)/4;  //== length in byte, skip words
         data     += nSkip;
-        size -= nSkip;
+        size     -= nSkip;
       } // another card ?
     } // another bank ?
   } // 1 MHz coding ?
