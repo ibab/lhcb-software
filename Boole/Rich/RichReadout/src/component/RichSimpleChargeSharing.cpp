@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.2 2006-02-02 08:56:31 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.3 2006-02-02 08:59:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -63,19 +63,20 @@ StatusCode RichSimpleChargeSharing::execute()
         iDep != deps->end(); ++iDep )
   {
 
-    // RichSmartID for this deposit
-    const RichSmartID id = (*iDep)->smartID();
-
-    int col(0), row(0);    
-    bool tryAgain ( true );
-    int nTries = 0; // protect against infinite loops
-    while ( tryAgain && nTries<100 )
+    // do we charge share for this pixel ?
+    const bool chargeShare = ( m_shareFrac > m_rndm() );
+    if ( chargeShare )
     {
-      ++nTries;
 
-      // Toss a coin to see if we are going charge share for this deposit
-      if ( m_shareFrac > m_rndm() )
+      // RichSmartID for this deposit
+      const RichSmartID id = (*iDep)->smartID();
+
+      int col(0), row(0);
+      bool tryAgain ( true );
+      int nTries = 0; // protect against infinite loops
+      while ( tryAgain && nTries<100 )
       {
+        ++nTries;
 
         // get current row and column info from pixel
         col = id.pixelCol();
@@ -95,21 +96,20 @@ StatusCode RichSimpleChargeSharing::execute()
           tryAgain = false;
         }
 
-      } // random charge share
-      else { tryAgain = false; }
+      } // while loop
+      if ( nTries >= 100 ) { Warning( "Charge share loop maxed out !" ); continue; }
 
-    } // while loop
-    if ( nTries >= 100 ) { Warning( "Charge share loop maxed out !" ); continue; }
+      // Create new deposit with same info
+      MCRichDeposit * newDep = new MCRichDeposit( *iDep );
+      depsToAdd.push_back( newDep );
 
-    // Create new deposit with same info
-    MCRichDeposit * newDep = new MCRichDeposit( *iDep );
-    depsToAdd.push_back( newDep );
-    
-    // Update RichSmartID in new deposit
-    RichSmartID newid = id;
-    newid.setPixelRow(row);
-    newid.setPixelCol(col);
-    newDep->setSmartID( newid );
+      // Update RichSmartID in new deposit
+      RichSmartID newid = id;
+      newid.setPixelRow(row);
+      newid.setPixelCol(col);
+      newDep->setSmartID( newid );
+
+    } // do charge sharing
 
   } // loop over segments
 
@@ -121,7 +121,7 @@ StatusCode RichSimpleChargeSharing::execute()
   }
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Created " << depsToAdd.size() 
+    debug() << "Created " << depsToAdd.size()
             << " new charge share MCRichDeposits" << endreq;
 
   return StatusCode::SUCCESS;
