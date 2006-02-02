@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.3 2006-02-02 08:59:35 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.4 2006-02-02 09:02:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -113,11 +113,14 @@ StatusCode RichSimpleChargeSharing::execute()
 
   } // loop over segments
 
-  // Loop over new deposit and add to main container
-  for ( MCRichDeposit::Vector::iterator iDep = depsToAdd.begin();
-        iDep != depsToAdd.end(); ++iDep )
+  if ( !depsToAdd.empty() )
   {
-    deps->insert( *iDep );
+    // Loop over new deposit and add to main container
+    for ( MCRichDeposit::Vector::iterator iDep = depsToAdd.begin();
+          iDep != depsToAdd.end(); ++iDep )
+    {
+      deps->insert( *iDep );
+    }
   }
 
   if ( msgLevel(MSG::DEBUG) )
