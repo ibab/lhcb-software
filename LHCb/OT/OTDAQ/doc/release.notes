@@ -1,12 +1,11 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
-!====================== OTDAQ v4r1 2006-02-02 ======================
+!====================== OTDAQ v4r0 2006-02-02 ======================
 ! 2006-02-02 Jan Amoraal
  - Bug fix, get RawEvent from default location, don't create one
  - Renamed OTFillBufferFromOTTime to OTFillEventFromOTTime
 
-!====================== OTDAQ v4r0 2006-01-18 ======================
 ! 2006-01-18 Jan Amoraal
  - Migrated to LHCb v20r0
  - Split-up OTDAQ.xml into DataWord.xml and GolHeader.xml
