@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.1 2006-01-23 14:05:15 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.2 2006-02-02 08:56:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -96,6 +96,7 @@ StatusCode RichSimpleChargeSharing::execute()
         }
 
       } // random charge share
+      else { tryAgain = false; }
 
     } // while loop
     if ( nTries >= 100 ) { Warning( "Charge share loop maxed out !" ); continue; }
