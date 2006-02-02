@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-02-02 - Marco Cattaneo
+ - Add dependency on RichDet to get round compilation problem with 
+   RichKernel/IRichDetNumberingTool.h
+
 !====================== RichRecBase v2r0 2006-01-25 ========================
 ! 2006-01-25 - Marco Cattaneo
  - "Fix" wrong ContainedObject forward declaration produced by GOD be explicitly
