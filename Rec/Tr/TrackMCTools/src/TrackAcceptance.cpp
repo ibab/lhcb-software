@@ -1,5 +1,6 @@
+// $Id: TrackAcceptance.cpp,v 1.3 2006-02-02 12:38:08 ebos Exp $
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -9,26 +10,20 @@
 #include "OTDet/DeOTDetector.h"
 
 // from Event
-#include "Event/MCVeloHit.h"
+//#include "Event/MCVeloHit.h"
+#include "Event/MCHit.h"
 
 // local
 #include "TrackAcceptance.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackAcceptance
-//
-// 2003-07-04 : J. van Tilburg
-//
-//  3-7-2002: Rutger van der Eijk, Jeroen van Tilburg
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackAcceptance>    s_factory;
 const  IToolFactory& TrackAcceptanceFactory = s_factory;
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+/// Standard constructor, initializes variables
 TrackAcceptance::TrackAcceptance( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
@@ -62,14 +57,10 @@ TrackAcceptance::TrackAcceptance( const std::string& type,
   declareProperty( "minNT3Hits", m_minNT3Hits = 1);
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
+/// Default destructor
 TrackAcceptance::~TrackAcceptance() {};
 
-//=============================================================================
-// Initialization
-//=============================================================================
+/// Initialization
 StatusCode TrackAcceptance::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
@@ -80,23 +71,32 @@ StatusCode TrackAcceptance::initialize()
 
   DeOTDetector* otDet = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
 
-  DeSTDetector* stDet = getDet<DeSTDetector>( DeSTDetectorLocation::Default );
+  DeSTDetector* ttDet = getDet<DeSTDetector>( DeSTDetLocation::location("TT") );
+  DeSTDetector* itDet = getDet<DeSTDetector>( DeSTDetLocation::location("IT") );
 
+  //  DeVeloDetector* veloDet = getDet<DeVeloDetector>( DeVeloDetectorLocation::Default );
   m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/Velo" );
 
   // get pointers to the stations
-  m_TT1Station = stDet -> station( 1 );
-  m_TT2Station = stDet -> station( 2 );
-  m_IT1Station = stDet -> station( 3 );
-  m_IT2Station = stDet -> station( 4 );
-  m_IT3Station = stDet -> station( 5 );
+
+  // CHECK
+  error() << "Number of TTStations is : " << ttDet->nStation() << " and should be 2 !!!" << endreq;
+  error() << "Number of ITStations is : " << itDet->nStation() << " and should be 3 !!!" << endreq;
+
+  std::vector<DeSTStation*> ttStations = ttDet->stations();
+  std::vector<DeSTStation*> itStations = itDet->stations();
+  m_TT1Station = ttStations[0];
+  m_TT2Station = ttStations[1];
+  m_IT1Station = itStations[0];
+  m_IT2Station = itStations[1];
+  m_IT3Station = itStations[2];
   m_OT1Station = otDet -> station( 1 );
   m_OT2Station = otDet -> station( 2 );
   m_OT3Station = otDet -> station( 3 );
 
   // Retrieve MCParticle 2 Velo MCHit associator
-  std::string ascVeloType = "Associator<MCParticle,MCVeloHit>";
-  sc = toolSvc()->retrieveTool(ascVeloType, 
+  std::string ascType = "Associator<MCParticle,MCHit>";
+  sc = toolSvc()->retrieveTool(ascType, 
                                m_p2VeloHitAsctName, m_p2VeloHitAsct);
   if ( sc.isFailure() ) { 
     error() << "Unable to retrieve Velo MCHit Associator " 
@@ -105,7 +105,7 @@ StatusCode TrackAcceptance::initialize()
   }
 
   // Retrieve MCParticle 2 OT MCHit associator
-  std::string ascType = "Associator<MCParticle,MCHit>";
+  //  std::string ascType = "Associator<MCParticle,MCHit>";
   sc = toolSvc()->retrieveTool(ascType, m_p2OTHitAsctName, m_p2OTHitAsct);
   if ( sc.isFailure() ) { 
     error() << "Unable to retrieve OT MCHit Associator " 
@@ -124,27 +124,31 @@ StatusCode TrackAcceptance::initialize()
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Checks if the MCParticle is in the Velo acceptance
-//=============================================================================
+/// Checks if the MCParticle is in the Velo acceptance
 bool TrackAcceptance::hasVelo( MCParticle* mcPart ) 
 {
   int nVeloRHits   = 0;
   int nVeloPhiHits = 0;
   
   // loop over associated Velo MCHits and count # hits
-  MCVeloHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
-  MCVeloHitAsct::ToIterator it;
+  //  MCVeloHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
+  MCHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
+  //  MCVeloHitAsct::ToIterator it;
+  MCHitAsct::ToIterator it;
   for ( it = mcVeloHitsRange.begin(); it != mcVeloHitsRange.end(); ++it) { 
     // retrieve MCHit
-    MCVeloHit* mcVeloHit = it->to();
+    //    MCVeloHit* mcVeloHit = it->to();
+    MCHit* mcVeloHit = it->to();
     if ( !mcVeloHit ) {
       error() << "Failed retrieving Velo MCHit." << endreq;
     }
     else {
       // R or Phi sensor?
       // calculate center point
-      HepPoint3D midPoint = (mcVeloHit->entry() + mcVeloHit->exit())/2.0;
+      XYZPoint midPoint = XYZPoint();
+      midPoint.SetXYZ( ( mcVeloHit->entry().X() + mcVeloHit->exit().X() )/2.0,
+                       ( mcVeloHit->entry().Y() + mcVeloHit->exit().Y() )/2.0,
+                       ( mcVeloHit->entry().Z() + mcVeloHit->exit().Z() )/2.0 );
       int staNr = m_velo -> sensorNumber( midPoint );   
       if ( m_velo -> isRSensor( staNr ) ) {
         ++nVeloRHits;
@@ -163,9 +167,7 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
   return isVeloTrack;
 }
 
-//=============================================================================
-// Checks if the MCParticle is in the TT acceptance
-//=============================================================================
+/// Checks if the MCParticle is in the TT acceptance
 bool TrackAcceptance::hasTT( MCParticle* mcPart ) 
 {  
   int nTTHits = 0;
@@ -181,14 +183,18 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
     }
     else {
       // calculate center point
-      HepPoint3D midPoint = (mcHit->entry() + mcHit->exit())/2.0;
+      XYZPoint midPoint = XYZPoint();
+      midPoint.SetXYZ( ( mcHit->entry().X() + mcHit->exit().X() )/2.0,
+                       ( mcHit->entry().Y() + mcHit->exit().Y() )/2.0,
+                       ( mcHit->entry().Z() + mcHit->exit().Z() )/2.0 );
+      //      XYZPoint midPoint = (mcHit->entry() + mcHit->exit())/2.0;
 
       // TT1 MCHit?
-      if ( m_TT1Station -> isInside( midPoint.z() ) ) {
+      if ( m_TT1Station -> isInside( midPoint ) ) {
         ++nTTHits;
       }
       // TT2 MCHit?
-      if ( m_TT2Station -> isInside( midPoint.z() ) ) {
+      if ( m_TT2Station -> isInside( midPoint ) ) {
         ++nTTHits;
       }
     }
@@ -201,9 +207,7 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
   return isTTTrack;
 }
 
-//=============================================================================
-// Checks if the MCParticle is in the T-station acceptance
-//=============================================================================
+/// Checks if the MCParticle is in the T-station acceptance
 bool TrackAcceptance::hasSeed( MCParticle* mcPart ) 
 {  
   int nOT1Hits = 0;
@@ -224,7 +228,11 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
     }
     else {
       // calculate center point
-      HepPoint3D midPoint = (mcHit->entry() + mcHit->exit())/2.0;
+      XYZPoint midPoint = XYZPoint();
+      midPoint.SetXYZ( ( mcHit->entry().X() + mcHit->exit().X() )/2.0,
+                       ( mcHit->entry().Y() + mcHit->exit().Y() )/2.0,
+                       ( mcHit->entry().Z() + mcHit->exit().Z() )/2.0 );
+      //      XYZPoint midPoint = (mcHit->entry() + mcHit->exit())/2.0;
     
       // OT1 MCHit?
       if ( m_OT1Station -> isInside( midPoint ) ) {
@@ -254,20 +262,24 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
     }
     else {
       // calculate center point
-      HepPoint3D midPoint = (mcHit->entry() + mcHit->exit())/2.0;
+     XYZPoint midPoint = XYZPoint();
+      midPoint.SetXYZ( ( mcHit->entry().X() + mcHit->exit().X() )/2.0,
+                       ( mcHit->entry().Y() + mcHit->exit().Y() )/2.0,
+                       ( mcHit->entry().Z() + mcHit->exit().Z() )/2.0 );
+      //      XYZPoint midPoint = (mcHit->entry() + mcHit->exit())/2.0;
 
       // IT1 MCHit?
-      if ( m_IT1Station->isInside(midPoint.z()) ) {
+      if ( m_IT1Station->isInside(midPoint) ) {
         ++nIT1Hits;
       }
     
       // IT2 MCHit?
-      if ( m_IT2Station->isInside(midPoint.z()) ) {
+      if ( m_IT2Station->isInside(midPoint) ) {
         ++nIT2Hits;
       }
     
       // IT3 MCHit?
-      if ( m_IT3Station->isInside(midPoint.z()) ) {
+      if ( m_IT3Station->isInside(midPoint) ) {
         ++nIT3Hits;
       }
     }
@@ -283,9 +295,7 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
   return isSeedTrack;
 }
 
-//=============================================================================
-// Checks if the MCParticle is in the long-track acceptance
-//=============================================================================
+/// Checks if the MCParticle is in the long-track acceptance
 bool TrackAcceptance::hasVeloAndSeed( MCParticle* mcPart ) 
 {  
   return ( this->hasVelo(mcPart) && this->hasSeed(mcPart) );

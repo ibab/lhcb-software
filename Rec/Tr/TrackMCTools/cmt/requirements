@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackMCTools
-version           v1r5
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -23,9 +23,10 @@ include_path      none
 use   GaudiAlg        v*
 use   Relations       v*     Kernel
 
+use   MCEvent         v*     Event
 use   TrackEvent      v*     Event
 use   OTEvent         v*     Event
-use   ITEvent         v*     Event
+use   STEvent         v*     Event
 use   VeloEvent       v*     Event
 
 use   TrackInterfaces v*     Tr

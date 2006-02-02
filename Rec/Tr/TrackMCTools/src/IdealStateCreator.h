@@ -1,18 +1,19 @@
+// $Id: IdealStateCreator.h,v 1.2 2006-02-02 12:38:00 ebos Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
 // from Event
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
-#include "Event/MCVeloHit.h"
+//#include "Event/MCVeloHit.h"
 
 // from Det
-#include "VeloDet/DeVelo.h"
+//#include "VeloDet/DeVelo.h"
 
 // from LHCbKernel
 #include "Relations/IAssociator.h" 
@@ -23,9 +24,11 @@
 
 class State;
 
+using namespace LHCb;
+
 /** @class IdealStateCreator IdealStateCreator.h "TrackMCTools/IdealStateCreator.h"
  * 
- *  A IdealStateCreator is a IIdealStateCreator tool that creates a
+ *  An IdealStateCreator is an IIdealStateCreator tool that creates a
  *  State. There are two methods: one creates a state at a certain 
  *  z-position using the closest two extry/exit points from a MCParticle, 
  *  and a track extrapolator. The other creates a state at the vertex, using 
@@ -33,6 +36,10 @@ class State;
  *
  *  The diagonal elements of the covariance matrix are set with
  *  the job options. Note that "eP" is dp/p.
+ *
+ *  Moved to LHCb v20r0. Adapted code to use updated Det packages.
+ *  @author Edwin Bos
+ *  @date   2006-02-02
  *
  *  @author Eduardo Rodrigues (adaptations to new track event model)
  *  @date   2005-04-06
@@ -46,7 +53,7 @@ class IdealStateCreator: public GaudiTool,
 public:
   /// Typedefs
   typedef IAssociator<MCParticle, MCHit>     MCHitAsct;
-  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
+//  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
 
   /// Standard constructor
   IdealStateCreator( const std::string& type,
@@ -68,7 +75,7 @@ public:
    */
   virtual StatusCode createState( const MCParticle* mcPart,
                                   double zRec,
-                                  State*& pState ) const;
+                                  LHCb::State*& pState ) const;
 
   /** This method creates a state at the origin vertex from a MCParticle
    *  using the entry/exit points of the MCHits.
@@ -77,15 +84,17 @@ public:
    *  @param  pState The pointer to the State which is created.
    */
   virtual StatusCode createStateVertex( const MCParticle* mcPart,
-                                        State*& pState ) const;
+                                        LHCb::State*& pState ) const;
+
 private:
   
   /// Determine Q/P for a MCParticle
   double qOverP( const MCParticle* mcPart ) const;
 
-  DeVelo* m_velo;                 ///< Velo detector information
+//  DeVelo* m_velo;                 ///< Velo detector information
 
-  MCVeloHitAsct* m_p2VeloHitAsct; ///< MCParticle to Velo MCHit Associator
+//  MCVeloHitAsct* m_p2VeloHitAsct; ///< MCParticle to Velo MCHit Associator
+  MCHitAsct*     m_p2VeloHitAsct; ///< MCParticle to Velo MCHit Associator
   MCHitAsct*     m_p2ITHitAsct;   ///< MCParticle to IT MCHit Associator
   MCHitAsct*     m_p2OTHitAsct;   ///< MCParticle to OT MCHit Associator
 
@@ -102,6 +111,5 @@ private:
   double m_eTy2;                   ///< Error^2 on slope y
   double m_eP;                     ///< dp/p
 };
-
 
 #endif // TRACKMCTOOLS_IDEALSTATECREATOR_H

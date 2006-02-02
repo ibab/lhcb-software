@@ -1,8 +1,9 @@
+// $Id: TrackAcceptance.h,v 1.2 2006-02-02 12:38:12 ebos Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
@@ -12,15 +13,17 @@
 // Event
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
-#include "Event/MCVeloHit.h"
+//#include "Event/MCVeloHit.h"
 
 // Associators
 #include "TrackInterfaces/ITrackReconstructible.h"
 
 // Det
 #include "VeloDet/DeVelo.h"
-#include "STDet/STDetectionStation.h"
+#include "STDet/DeSTStation.h"
 #include "OTDet/DeOTStation.h"
+
+using namespace LHCb;
 
 /** @class TrackAcceptance TrackAcceptance.h "TrackMCTools/TrackAcceptance.h"
  *
@@ -36,6 +39,10 @@
  *   - minNT2Hits = 1
  *   - minNT3Hits = 1
  *
+ *  Moved to LHCb v20r0. Adapted code to use updated Det packages.
+ *  @author Edwin Bos
+ *  @date   2006-02-02
+ *
  *  @author Jeroen van Tilburg
  *  @date   2003-07-04
  */
@@ -43,16 +50,17 @@
 class TrackAcceptance: public GaudiTool,
                        virtual public ITrackReconstructible {
 public:
+
   /// Typedefs
-  typedef IAssociator<MCParticle, MCHit>     MCHitAsct;
-  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
+  typedef IAssociator<MCParticle, MCHit> MCHitAsct;
+  //  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
 
   /// Constructor
   TrackAcceptance( const std::string& type,
                    const std::string& name,
                    const IInterface* parent );
 
-  /// destructor
+  /// Default destructor
   virtual ~TrackAcceptance();
 
   /// Tool initialization
@@ -88,11 +96,11 @@ private:
   DeVelo* m_velo;
 
   // ST Detector information
-  STDetectionStation* m_TT1Station; ///< Pointer to TT Station 1
-  STDetectionStation* m_TT2Station; ///< Pointer to TT Station 2
-  STDetectionStation* m_IT1Station; ///< Pointer to IT Station 1
-  STDetectionStation* m_IT2Station; ///< Pointer to IT Station 2
-  STDetectionStation* m_IT3Station; ///< Pointer to IT Station 3
+  DeSTStation* m_TT1Station; ///< Pointer to TT Station 1
+  DeSTStation* m_TT2Station; ///< Pointer to TT Station 2
+  DeSTStation* m_IT1Station; ///< Pointer to IT Station 1
+  DeSTStation* m_IT2Station; ///< Pointer to IT Station 2
+  DeSTStation* m_IT3Station; ///< Pointer to IT Station 3
 
   // OT Detector information
   DeOTStation* m_OT1Station;        ///< Pointer to OT Station 1
@@ -100,7 +108,8 @@ private:
   DeOTStation* m_OT3Station;        ///< Pointer to OT Station 3
 
   // associators
-  MCVeloHitAsct* m_p2VeloHitAsct;   ///< Pointer to MCParticle 2 VeloMCHit Asct.
+  //  MCVeloHitAsct* m_p2VeloHitAsct;   ///< Pointer to MCParticle 2 VeloMCHit Asct.
+  MCHitAsct* m_p2VeloHitAsct;       ///< Pointer to MCParticle 2 VeloMCHit Asct.
   MCHitAsct* m_p2ITHitAsct;         ///< Pointer to MCParticle 2 IT MCHit Asct.
   MCHitAsct* m_p2OTHitAsct;         ///< Pointer to MCParticle 2 OT MCHit Asct.
 

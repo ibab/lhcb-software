@@ -1,5 +1,6 @@
+// $Id: IdealStateCreator.cpp,v 1.2 2006-02-02 12:37:55 ebos Exp $
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
@@ -12,26 +13,19 @@
 // local
 #include "IdealStateCreator.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : IdealStateCreator
-//
-// 2005-04-06 : Eduardo Rodrigues (adaptations to new track event model)
-//
-//  3-7-2002: Rutger van der Eijk, Jeroen van Tilburg
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<IdealStateCreator>          s_factory;
 const        IToolFactory& IdealStateCreatorFactory = s_factory;
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+/// Standard constructor, initializes variables
 IdealStateCreator::IdealStateCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool( type, name, parent )
-  , m_velo(0)
+//  , m_velo(0)
   , m_p2VeloHitAsct(0)
   , m_p2ITHitAsct(0)
   , m_p2OTHitAsct(0)
@@ -64,14 +58,10 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
   declareProperty( "eP",   m_eP );  // dp/p
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
+/// Destructor
 IdealStateCreator::~IdealStateCreator() {};
 
-//=============================================================================
-// Initialization
-//=============================================================================
+/// Initialization
 StatusCode IdealStateCreator::initialize()
 {
   debug() << "==> Initialize" << endreq;
@@ -80,10 +70,11 @@ StatusCode IdealStateCreator::initialize()
   if ( sc.isFailure() ) return sc;
 
   std::string ascType     = "Associator<MCParticle,MCHit>";
-  std::string ascVeloType = "Associator<MCParticle,MCVeloHit>";
+//  std::string ascVeloType = "Associator<MCParticle,MCVeloHit>";
 
   // Retrieve MCParticle 2 Velo MCHit associator
-  sc = toolSvc() -> retrieveTool( ascVeloType, 
+//  sc = toolSvc() -> retrieveTool( ascVeloType, 
+  sc = toolSvc() -> retrieveTool( ascType, 
                                   m_p2VeloHitAsctName, m_p2VeloHitAsct );
   if ( sc.isFailure() ) { 
     error() << "Unable to retrieve the Velo MCHit Associator " 
@@ -113,16 +104,14 @@ StatusCode IdealStateCreator::initialize()
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Creates a state at a z position,
-// from a MCParticle using the entry/exit points of the MCHits
-//=============================================================================
+/// Creates a state at a z position,
+/// from a MCParticle using the entry/exit points of the MCHits
 StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
                                            double zRec,
-                                           State*& state ) const {
+                                           LHCb::State*& state ) const {
   // First create the state
-  HepSymMatrix stateCov = HepSymMatrix(5, 1);
-  State* pState = new State();
+  TrackMatrix stateCov = TrackMatrix();
+  LHCb::State* pState = new LHCb::State();
   pState -> setZ( zRec );
   pState -> setCovariance( stateCov );
   state = pState;
@@ -140,19 +129,24 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   double secondClosestZ = 10000;
 
   // loop over associated Velo MCHits and find closest hits
-  MCVeloHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
-  MCVeloHitAsct::ToIterator vt;
+//  MCVeloHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
+  MCHitAsct::ToRange mcVeloHitsRange = m_p2VeloHitAsct->rangeFrom(mcPart);
+//  MCVeloHitAsct::ToIterator vt;
+  MCHitAsct::ToIterator vt;
   for ( vt = mcVeloHitsRange.begin(); vt != mcVeloHitsRange.end(); ++vt) { 
     // retrieve MCHit
-    MCVeloHit* mcVeloHit = vt->to();
+//    MCVeloHit* mcVeloHit = vt->to();
+    MCHit* mcVeloHit = vt->to();
     if ( !mcVeloHit )
       return Error( "Failed retrieving Velo MCHit" );
 
     // calculate center point
     // workaround for CLHEP 1.9!
-    HepPoint3D midPointTmp = ( mcVeloHit->entry() + mcVeloHit->exit() ) / 2.0;
-    Hep3Vector midPoint = ( midPointTmp.x(), midPointTmp.y(), midPointTmp.z() );
-    //Hep3Vector midPoint = (mcVeloHit->entry() + mcVeloHit->exit())/2.0;
+    XYZPoint midPoint = XYZPoint();
+    midPoint.SetXYZ( ( mcVeloHit->entry().X() + mcVeloHit->exit().X() ) / 2.0,
+                     ( mcVeloHit->entry().Y() + mcVeloHit->exit().Y() ) / 2.0,
+                     ( mcVeloHit->entry().Z() + mcVeloHit->exit().Z() ) / 2.0 );
+    //XYZVector midPoint = (mcVeloHit->entry() + mcVeloHit->exit())/2.0;
 
     // get the closest and second closest hits
     if ( fabs(midPoint.z() - zRec) < closestZ ) {
@@ -178,9 +172,11 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
 
     // calculate center point
     // workaround for CLHEP 1.9!
-    HepPoint3D midPointTmp = ( mcHit->entry() + mcHit->exit() ) / 2.0;
-    Hep3Vector midPoint = ( midPointTmp.x(), midPointTmp.y(), midPointTmp.z() );
-    //Hep3Vector midPoint = (mcHit->entry() + mcHit->exit())/2.0;
+    XYZPoint midPoint = XYZPoint();
+    midPoint.SetXYZ( ( mcHit->entry().X() + mcHit->exit().X() ) / 2.0,
+                     ( mcHit->entry().Y() + mcHit->exit().Y() ) / 2.0,
+                     ( mcHit->entry().Z() + mcHit->exit().Z() ) / 2.0 );
+    //XYZVector midPoint = (mcHit->entry() + mcHit->exit())/2.0;
 
     // get the closest and second closest hits
     if ( fabs(midPoint.z() - zRec) < closestZ ) {
@@ -206,9 +202,11 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
 
     // calculate center point
     // workaround for CLHEP 1.9!
-    HepPoint3D midPointTmp = ( mcHit->entry() + mcHit->exit() ) / 2.0;
-    Hep3Vector midPoint = ( midPointTmp.x(), midPointTmp.y(), midPointTmp.z() );
-    //Hep3Vector midPoint = (mcHit->entry() + mcHit->exit())/2.0;
+    XYZPoint midPoint = XYZPoint();
+    midPoint.SetXYZ( ( mcHit->entry().X() + mcHit->exit().X() ) / 2.0,
+                     ( mcHit->entry().Y() + mcHit->exit().Y() ) / 2.0,
+                     ( mcHit->entry().Z() + mcHit->exit().Z() ) / 2.0 );
+    //XYZVector midPoint = (mcHit->entry() + mcHit->exit())/2.0;
 
     // get the closest and second closest hits
     if ( fabs(midPoint.z()- zRec) < closestZ ) {
@@ -230,7 +228,7 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   }
   
   // Find beginPoint (smallest z-value)
-  Hep3Vector beginPoint = closestHit->entry();
+  XYZPoint beginPoint = closestHit->entry();
   if ( beginPoint.z() > closestHit->exit().z() )
     beginPoint = closestHit->exit();
   if ( beginPoint.z() > secondClosestHit->entry().z() )
@@ -239,7 +237,7 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
     beginPoint = secondClosestHit->exit();
 
   // Find endPoint (highest z-value)
-  Hep3Vector endPoint = secondClosestHit->exit();
+  XYZPoint endPoint = secondClosestHit->exit();
   if ( endPoint.z() < secondClosestHit->entry().z() )
     endPoint = secondClosestHit->entry();
   if ( endPoint.z() < closestHit->entry().z() )
@@ -262,12 +260,12 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   pState->setState( x, y, z, slopeX, slopeY, this->qOverP(mcPart) );
 
   // set covariance matrix
-  HepSymMatrix cov = HepSymMatrix(5,0);
-  cov.fast(1,1) = m_eX2;
-  cov.fast(2,2) = m_eY2;
-  cov.fast(3,3) = m_eTx2;
-  cov.fast(4,4) = m_eTy2;
-  cov.fast(5,5) = pow(m_eP * pState->qOverP(), 2.);
+  TrackMatrix cov = TrackMatrix();
+  cov(0,0) = m_eX2;
+  cov(1,1) = m_eY2;
+  cov(2,2) = m_eTx2;
+  cov(3,3) = m_eTy2;
+  cov(4,4) = pow(m_eP * pState->qOverP(), 2.);
   pState -> setCovariance( cov );
 
   // extrapolate state to exact z position
@@ -281,16 +279,14 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   return sc;
 }
 
-//=============================================================================
-// Creates a state at the origin vertex
-// from a MCParticle using the entry/exit points of the MCHits
-//=============================================================================
+/// Creates a state at the origin vertex
+/// from a MCParticle using the entry/exit points of the MCHits
 StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
-                                                 State*& state ) const
+                                                 LHCb::State*& state ) const
 {
   /// Create state at track vertex of MCParticle.
-  HepSymMatrix stateCov = HepSymMatrix(5, 1);
-  State* trueState = new State();
+  TrackMatrix stateCov = TrackMatrix();
+  LHCb::State* trueState = new LHCb::State();
   trueState -> setCovariance( stateCov );  
   state = trueState;
 
@@ -298,9 +294,9 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   if ( mcParticle == 0 ) return StatusCode::FAILURE;
 
   // retrieve true MC particle info
-  const MCVertex* mcVertex      = mcParticle -> originVertex();
-  const HepPoint3D mcPos        = mcVertex -> position();
-  const HepLorentzVector mc4Mom = mcParticle -> momentum();
+  const MCVertex* mcVertex = mcParticle -> originVertex();
+  const XYZPoint mcPos     = mcVertex -> position();
+  const LorentzVector mc4Mom = mcParticle -> momentum();
 
   // determine QdivP
   double trueQdivP = this -> qOverP( mcParticle );
@@ -329,24 +325,22 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
                        trueQdivP );
 
   // set covariance matrix
-  HepSymMatrix cov = HepSymMatrix(5,0);
-  cov.fast(1,1) = m_eX2;
-  cov.fast(2,2) = m_eY2;
-  cov.fast(3,3) = m_eTx2;
-  cov.fast(4,4) = m_eTy2;
-  cov.fast(5,5) = pow(m_eP * trueState->qOverP(), 2.);
+  TrackMatrix cov = TrackMatrix();
+  cov(0,0) = m_eX2;
+  cov(1,1) = m_eY2;
+  cov(2,2) = m_eTx2;
+  cov(3,3) = m_eTy2;
+  cov(4,4) = pow(m_eP * trueState->qOverP(), 2.);
   trueState -> setCovariance( cov );
 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Determine Q/P for a MCParticle
-//=============================================================================
+/// Determine Q/P for a MCParticle
 double IdealStateCreator::qOverP( const MCParticle* mcPart ) const
 {
   /// Determine Q/P for a MCParticle
-  double momentum = mcPart -> momentum().vect().mag();
+  double momentum = mcPart -> momentum().M();
   double charge = (mcPart -> particleID().threeCharge())/3.;
   if ( momentum > TrackParameters::lowTolerance) {
     return charge/momentum;
@@ -355,5 +349,3 @@ double IdealStateCreator::qOverP( const MCParticle* mcPart ) const
     return 0.0;
   }
 }
-
-//=============================================================================

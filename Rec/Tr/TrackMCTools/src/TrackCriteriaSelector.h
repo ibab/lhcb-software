@@ -1,3 +1,4 @@
+// $Id: TrackCriteriaSelector.h,v 1.4 2006-02-02 12:38:24 ebos Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
@@ -15,6 +16,8 @@
 // local
 //#include "TrackMCTools/TrackAcceptance.h"
 
+using namespace LHCb;
+
 /** @class TrackCriteriaSelector TrackCriteriaSelector.h "TrackMCTools/TrackCriteriaSelector.h"
  *
  *  This tool selects Tracks and MCParticles based on certain criteria.
@@ -30,6 +33,10 @@
  *                 (e.g. TrackReconstructible or TrackAcceptance)
  *  The type of a track is taken from the available types defined
  *  in Track.h
+ *
+ *  Moved to LHCb v20r0. Adapted code to use updated Det packages.
+ *  @author Edwin Bos
+ *  @date   2006-02-02
  *
  *  2005-05-04 : Eduardo Rodrigues (adaptations to new track event model)
  *
@@ -90,15 +97,13 @@ public:
   virtual StatusCode setTrackType( MCParticle* mcPart,
                                    Track*& track );
 
-protected:
-
 private:
 
   // Reconstructibility tool
   ITrackReconstructible* m_mcParticleJudge; ///< Pointer to MCParticle judge
 
   // Store previously calculated values
-  int         m_previousTrackType;   ///< Previous track type identifier
+  int         m_previousTrackType;  ///< Previous track type identifier
   MCParticle* m_previousMCParticle; ///< Previously requested MCParticle
 
   // Job options
