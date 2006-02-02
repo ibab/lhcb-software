@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.25 2006-01-31 17:04:16 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.26 2006-02-02 16:21:29 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -208,8 +208,7 @@ StatusCode MuonBackground::initialize() {
   // Release interface, no longer needed  
   algmgr->release();
   //initialize the detector
-  m_muonDetector=NULL;
-  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
+
   return StatusCode::SUCCESS;
 };
 
@@ -316,7 +315,7 @@ StatusCode MuonBackground::execute() {
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[station]+
           "/R"+numreg[region]+"/"+m_containerName;
         debug()<<" number of total hit added "<<
-          hitsContainer[station*m_regionNumber+region]->size()<<endreq;
+          hitsContainer[0]->size()<<endreq;
         //   eventSvc()->registerObject(path,
         //                         hitsContainer[station*m_regionNumber
         //                                       +region]);   
@@ -940,7 +939,7 @@ sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
           timeBest+tofOfLight<<" "<<x<<" "<<y<<" "<<endreq;
         debug()<<"chamber "<<chamberIndex	<<endreq;        
         debug()<<" correct "<<correct<<" "<<part<<endreq;        
-        if(correct)(hitsContainer[part])->push_back(pHit);
+        if(correct)(hitsContainer[0])->push_back(pHit);
         if(correct) debug()<<" inserted "<<endreq;
         if(correct){
           debug()<<multi<<endmsg;          
