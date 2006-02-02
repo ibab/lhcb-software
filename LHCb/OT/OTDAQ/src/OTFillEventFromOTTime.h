@@ -1,38 +1,31 @@
-// $Id: OTFillBufferFromOTTime.h,v 1.4 2006-01-18 14:05:21 janos Exp $
-#ifndef OTDAQ_OTFILLBUFFERFROMOTTIME_H 
-#define OTDAQ_OTFILLBUFFERFROMOTTIME_H 1
+// $Id: OTFillEventFromOTTime.h,v 1.1 2006-02-02 15:31:50 janos Exp $
+#ifndef OTDAQ_OTFILLEVENTFROMOTTIME_H 
+#define OTDAQ_OTFILLEVENTFROMOTTIME_H 1
 
-// Include files
-// from STL
-#include <string>
-#include <vector>
-#include <map>
-
-// from Detector
-#include "OTDet/DeOTDetector.h"
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 //local
 #include "Event/GolHeader.h"
 #include "Event/DataWord.h"
 
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
+namespace LHCb 
+{
+  class RawEvent;
+  class OTChannelID;
+  class OTTime;
+}
 
-// Event
-#include "Kernel/OTChannelID.h"
-#include "Event/OTTime.h"
-#include "Event/RawEvent.h"
-
-/** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h 
- * OTDAQ/OTFillBufferFromOTTime.h
+  
+/** @class OTFillEventFromOTTime OTFillEventFromOTTime.h 
+ * OTDAQ/OTFillEventFromOTTime.h
  *  
  *
  *  @author Jacopo Nardulli
  *  @date   2004-08-31
  */
 
-class OTFillBufferFromOTTime : public GaudiAlgorithm 
+class OTFillEventFromOTTime : public GaudiAlgorithm 
 {
   
 
@@ -40,9 +33,9 @@ public:
 
   /// Standard constructor
 
-  OTFillBufferFromOTTime( const std::string& name, ISvcLocator* pSvcLocator );
+  OTFillEventFromOTTime( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~OTFillBufferFromOTTime( ); ///< Destructor
+  virtual ~OTFillEventFromOTTime( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -50,21 +43,14 @@ public:
 
 protected:
 
-private:  
+private:
   
-  std::string m_EventLoc;
-  std::string m_OTTimeLoc;
-  std::string m_otTrackerPath;
-
   typedef std::vector<LHCb::OTTime*> vOTime;
   typedef std::map<int,vOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vOTime*> mGol;// contains the Gol vectors*
   typedef std::vector<unsigned int> dataBank;
   typedef std::vector<dataBank*> dataBuffer;
 
-  // detector geometry
-  DeOTDetector* m_otTracker;
-    
   // global pointer to vectors container
   LHCb::OTTimes* m_Time;
   mBank* dataContainer;
@@ -88,4 +74,4 @@ private:
   StatusCode convertToRAWEmptyBank(dataBank* aBank);
 
 };
-#endif // OTDAQ_OTFILLBUFFERFROMOTTIME_H
+#endif // OTDAQ_OTFILLEVENTFROMOTTIME_H

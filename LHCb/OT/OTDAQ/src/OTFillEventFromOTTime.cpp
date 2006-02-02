@@ -1,60 +1,65 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.8 2006-01-18 14:05:21 janos Exp $
+// $Id: OTFillEventFromOTTime.cpp,v 1.1 2006-02-02 15:31:50 janos Exp $
 // Include files
 
-// local
-#include "OTFillBufferFromOTTime.h"
-#include "Event/OTBankVersion.h"
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // From event model
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 
+// Kernel
+#include "Kernel/OTChannelID.h"
+
+// Event
+#include "Event/RawEvent.h"
+#include "Event/OTTime.h"
+
+// from Detector
+#include "OTDet/DeOTDetector.h"
+
+// local
+#include "OTFillEventFromOTTime.h"
+#include "Event/OTBankVersion.h"
+
+
+
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : OTFillBufferFromOTTime
+// Implementation file for class : OTFillEventFromOTTime
 //
 // 2004-01-09 : Jacopo Nardulli & Bart Hommels
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTFillBufferFromOTTime>          s_factory ;
-const        IAlgFactory& OTFillBufferFromOTTimeFactory = s_factory ; 
+static const  AlgFactory<OTFillEventFromOTTime>          s_factory ;
+const        IAlgFactory& OTFillEventFromOTTimeFactory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OTFillBufferFromOTTime::OTFillBufferFromOTTime( const std::string& name,
+OTFillEventFromOTTime::OTFillEventFromOTTime( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  this->declareProperty( "NumberOfBanks", numberOfBanks );
-  this->declareProperty( "RawEventLocation",   
-                         m_EventLoc = "DAQ/RawEvent" );
-  this->declareProperty( "OTTimeLocation", 
-                         m_OTTimeLoc = OTTimeLocation::Default );
-  this->declareProperty( "OTGeometryName", 
-                         m_otTrackerPath = "/dd/Structure/LHCb/OT"); 
+  // Constructor
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-OTFillBufferFromOTTime::~OTFillBufferFromOTTime(){}; 
+OTFillEventFromOTTime::~OTFillEventFromOTTime(){}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode OTFillBufferFromOTTime::initialize() {
+StatusCode OTFillEventFromOTTime::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  // Loading OT Geometry from XML
-  DeOTDetector* Otracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
-  m_otTracker = Otracker;
-
   //Fixed Numbers of Banks and of Gols
   numberOfBanks = 24;
   numberOfGols = 18;
@@ -71,10 +76,10 @@ StatusCode OTFillBufferFromOTTime::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode OTFillBufferFromOTTime::execute() 
+StatusCode OTFillEventFromOTTime::execute() 
 {
   // Retrieve the RawEvent
-  LHCb::RawEvent* rawEvent = new LHCb::RawEvent();
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
  
   // Retrieve OTTime
   OTTimes* Time = get<OTTimes>( OTTimeLocation::Default );  
@@ -126,7 +131,7 @@ StatusCode OTFillBufferFromOTTime::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode OTFillBufferFromOTTime::finalize() 
+StatusCode OTFillEventFromOTTime::finalize() 
 {      
   delete(dataContainer);
   delete(goldatacontainer);
@@ -134,7 +139,7 @@ StatusCode OTFillBufferFromOTTime::finalize()
   return GaudiAlgorithm::finalize();  // must be called after all other actions 
 }
 //-----------------------------------------------------------------------------
-StatusCode OTFillBufferFromOTTime::sortTimesIntoBanks()
+StatusCode OTFillEventFromOTTime::sortTimesIntoBanks()
 {
   // create the map of OTTime vectors, numberOfBanks entries
   for( int i = 1; i <= numberOfBanks; i++){
@@ -158,7 +163,7 @@ StatusCode OTFillBufferFromOTTime::sortTimesIntoBanks()
   return StatusCode::SUCCESS;
 }
 //-------------------------------------------------------------------------
-StatusCode OTFillBufferFromOTTime::sortTimesIntoGol(vOTime* BankOTime, 
+StatusCode OTFillEventFromOTTime::sortTimesIntoGol(vOTime* BankOTime, 
                                                     dataBank* /* aBank */)
 
 {
@@ -191,7 +196,7 @@ StatusCode OTFillBufferFromOTTime::sortTimesIntoGol(vOTime* BankOTime,
   return StatusCode::SUCCESS;
 }  
 //-----------------------------------------------------------------
-StatusCode OTFillBufferFromOTTime::convertToRAWEmptyBank(dataBank* aBank)
+StatusCode OTFillEventFromOTTime::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 3; i++){
@@ -206,7 +211,7 @@ StatusCode OTFillBufferFromOTTime::convertToRAWEmptyBank(dataBank* aBank)
   return StatusCode::SUCCESS;
 }
 //-----------------------------------------------------------------
-StatusCode OTFillBufferFromOTTime::convertToRAWDataBank(vOTime* vToConvert, 
+StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert, 
                                                         dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
@@ -362,7 +367,7 @@ StatusCode OTFillBufferFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
 // Member functions
 //=============================================================================
 
-int OTFillBufferFromOTTime::chID2Otis(OTChannelID otChannel)
+int OTFillEventFromOTTime::chID2Otis(OTChannelID otChannel)
 
 {    
   int OtisID = 0;
@@ -388,7 +393,7 @@ int OTFillBufferFromOTTime::chID2Otis(OTChannelID otChannel)
 // Member functions
 //=============================================================================
 
-int OTFillBufferFromOTTime::chID2int(OTChannelID otChannel)
+int OTFillEventFromOTTime::chID2int(OTChannelID otChannel)
 
 {    
   int nArray = 0;
