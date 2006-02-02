@@ -1,4 +1,4 @@
-// $Id: DoubleTagging.cpp,v 1.1 2006-01-28 22:21:37 musy Exp $
+// $Id: DoubleTagging.cpp,v 1.2 2006-02-02 09:14:33 pkoppenb Exp $
 // Include files 
 // local
 #include "DoubleTagging.h"
@@ -226,12 +226,12 @@ double DoubleTagging::calculateSigmaWk(int ndt,int nag,double Wtagger,double Sig
   double fcontrvar = fracvariance/(wmfrac*wmfrac);
   double Wmcontrvar = (fracfac*fracfac/(wmfrac*wmfrac*wmfrac*wmfrac))*SigmaWtagger*SigmaWtagger;
 
-  return std::sqrt(Wmcontrvar + fcontrvar);
+  return sqrt(Wmcontrvar + fcontrvar);
 }
 
 //================================================================
 double efferr(double eff, int tot) {
-  return std::sqrt( eff*(1-eff)/tot);
+  return sqrt( eff*(1-eff)/tot);
 }
 
 //================================================================
@@ -247,7 +247,7 @@ void DoubleTagging::combineMeasurements(std::vector<double>& Wks,std::vector<dou
   }
   if(invarsum > 0){
     Wktot = Wktot/invarsum;
-    SigmaWktot = std::sqrt(1/invarsum);
+    SigmaWktot = sqrt(1/invarsum);
   }
   else{
     Wktot = 0;

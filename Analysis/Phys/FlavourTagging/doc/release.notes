@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.89 2006-01-28 22:17:56 musy Exp $
+! $Id: release.notes,v 1.90 2006-02-02 09:14:33 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2006-01-27 - P. Koppenburg
+  - src/DoubleTagging.cpp
+    . std::sqrt -> sqrt for Windows
 
 ! 2006-01-28 - Marco Musy
  - The new DoubleTagging algorithm is introduced to study the correlations
