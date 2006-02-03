@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
+// $Id: AssociatorWeighted.h,v 1.3 2006-02-03 14:14:35 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/11/19 15:01:22  ibelyaev
+//  substitute explict algorithm management by 'Data-On-Demand' service
+//
 // ============================================================================
 #ifndef RELATIONS_AssociatorWeighted_H 
 #define RELATIONS_AssociatorWeighted_H 1
@@ -60,9 +63,9 @@ public:
 protected:
   
   /// shortcut for local representation of direct  table 
-  typedef  RelationWeighted1D<FROM,TO,WEIGHT>  LocalDirectType  ;
+  typedef  LHCb::RelationWeighted1D<FROM,TO,WEIGHT>  LocalDirectType  ;
   /// shortcut for local representation of inverse table 
-  typedef  RelationWeighted1D<TO,FROM,WEIGHT>  LocalInverseType ;
+  typedef  LHCb::RelationWeighted1D<TO,FROM,WEIGHT>  LocalInverseType ;
   /// shortcut for possible 2D-representation
   typedef  IRelationWeighted2D<FROM,TO,WEIGHT> Direct2DType     ;
   

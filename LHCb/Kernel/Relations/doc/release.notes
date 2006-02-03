@@ -1,12 +1,17 @@
-! $Id: release.notes,v 1.21 2006-02-03 08:40:50 cattanem Exp $ 
+! $Id: release.notes,v 1.22 2006-02-03 14:14:35 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-03 - P. Koppenburg
+  - Relations/Associator.h
+  - Relations/AssociatorWeighted.h
+    . Put explicitly LHCb:: in some typedefs. There are probably 
+      more of these missing.
 ! ====================== Relations v3r0 2006-02-03 ============================
 ! 2006-02-02 - Vanya BELYAEV ibelyaev@physics.syr.edu 
 

@@ -1,8 +1,11 @@
-// $Id: Associator.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
+// $Id: Associator.h,v 1.3 2006-02-03 14:14:35 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/11/19 15:01:22  ibelyaev
+//  substitute explict algorithm management by 'Data-On-Demand' service
+//
 // ============================================================================
 #ifndef RELATIONS_ASSOCIATOR_H 
 #define RELATIONS_ASSOCIATOR_H 1
@@ -58,9 +61,9 @@ public:
 protected:
   
   /// shortcut for local representation of direct  table 
-  typedef  Relation1D<FROM,TO>       LocalDirectType  ;
+  typedef  LHCb::Relation1D<FROM,TO>       LocalDirectType  ;
   /// shortcut for local representation of inverse table 
-  typedef  Relation1D<TO,FROM>       LocalInverseType ;
+  typedef  LHCb::Relation1D<TO,FROM>       LocalInverseType ;
   /// shortcut for possible 2D-representation
   typedef  IRelation2D<FROM,TO>      Direct2DType     ;
   
