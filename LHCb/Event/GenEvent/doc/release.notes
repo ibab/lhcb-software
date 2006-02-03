@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!======================== GenEvent v4r1 2006-02-03 ============================
+! 2006-02-03 - Marco Cattaneo
+ - Updates to work with Root reflex in Gaudi v18r2
+
 !======================== GenEvent v4r0 2006-01-30 ============================
 ! 2006-01-30 - Gloria CORTI
  - Remove attributes fillDuration and fillLifetime from GenHeader since

@@ -1,8 +1,5 @@
 // Additional classes to be added to automatically generated lcgdict
 
-// Reflex include files
-#include "Reflex/Builder/ReflexBuilder.h"
-
 // begin include files
 #include "HepMC/GenEvent.h"
 // end include files

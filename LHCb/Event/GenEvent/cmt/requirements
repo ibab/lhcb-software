@@ -1,5 +1,5 @@
 package GenEvent
-version v4r0
+version v4r1
 
 branches cmt doc src xml Event
 
@@ -8,20 +8,20 @@ use EventBase    v*     Event
 
 include_dirs $(GENEVENTROOT)
 
-# Produce Header-Files & dictionary from XML description
+# Produce Header-Files from XML description
 #============================================================================
 document obj2doth GenEventObj2Doth ../xml/*.xml
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict GenEventCustomDict ../src/HepMC_dict.h
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 document obj2dict GenEventObj2Dict ../xml/*.xml
 
-# Make additional custom dictionary (extracted from lcg_dictionary pattern)
+# Make the libraries
 #============================================================================
-document lcg_dictionary_generator GenEventGen $(GENEVENTROOT)/src/HepMC_dict.h dictionary=GenEvent
-macro GenEvent_lcgdict_selection_file "../xml/lcgdict/lcg_selection.xml"
-macro GenEvent_lcgdict_options " --reflex -s $(GenEvent_lcgdict_selection_file) "
-
 library GenEvent      *.cpp
 library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
 
