@@ -4,8 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r2 2006-02-03 =========================
 ! 2006-02-02 - Chris Jones
- - Quick work around for new RichDet. Will be supercedeed soon by a proper update.
+ - Quick work around for new RichDet. Will be superceded soon by a proper update.
 
 !========================== RichDAQ v3r1 2006-01-23 =========================
 ! 2006-01-23 - Chris Jones
