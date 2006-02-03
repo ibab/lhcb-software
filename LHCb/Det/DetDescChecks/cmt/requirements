@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2006-01-26 13:29:38 cattanem Exp $
+# $Id: requirements,v 1.18 2006-02-03 11:13:13 ibelyaev Exp $
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,14 +7,14 @@ package           DetDescChecks
 version           v3r0
 
 # =============== structure ===================================================
-branches          cmt doc src options 
+branches          cmt doc src options python
 
 # =============== dependencies ================================================
-use               DetDesc   v* Det
-use               DetDescSvc   v* Det
-use               GaudiAlg  v*   	
-use               Boost     v* LCG_Interfaces 
-	
+use               DetDesc     v* Det
+use               DetDescSvc  v* Det
+use               GaudiAlg    v*   	
+use               Boost       v* LCG_Interfaces 
+use               GaudiPython v* 	
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA
 
@@ -25,6 +25,9 @@ apply_pattern     component_library library=DetDescChecks
 # Build an application
 # =============================================================================
 application       DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
+
+path_remove  PYTHONPATH "DetDescChecks"
+path_prepend PYTHONPATH "$(DETDESCCHECKSROOT)/python"
 
 private
 use               XmlDDDB       v* Det
