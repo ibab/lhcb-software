@@ -2,10 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r2 2006-02-03 =========================
 2006-02-02 M needham
   - bug fix in fast container
-
-2006-01-27 M Needham
 
 ! 2006-02-01 - Antonis Papanestis
  - Added RichSmartIDHashFuncs.h to LHCbKernel from RichDAQ
@@ -15,7 +14,6 @@ Purpose: LHCb specific Kernel classes
 
 !===================== LHCbKernel v6r1 2006-01-27 =========================
 ! 2006-01-27 M Needham
-
   - Remove spare bits from LHCbID
 
 ! 2006-01-26 M Needham
