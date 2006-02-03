@@ -1,15 +1,15 @@
-// $Id: StandardDstar.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// $Id: StandardDstar.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
  *
  *  Configuration file for "standard" D*
  * 
- *  The configuration includes:
- *  
- *  @see StandardParticles
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardD0.opts for the D0 definition
+ *  @see StandardOptions.opts for other intermediate states
  *
  *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
  *  @date 2006-01-30

@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// $Id: StandardParticles.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -83,6 +83,8 @@
  *
  *  @see PhotonParticleMaker
  *  @see CnvPhotonParticleMaker
+ *
+ *  @see StandardOptions.opts for all intermediate states
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-26

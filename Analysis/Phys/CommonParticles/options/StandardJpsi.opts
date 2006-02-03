@@ -1,14 +1,13 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
  *
  *  Configuration file for "standard" Jpsi
  * 
- *  The configuration includes:
- *  
- *  @see StandardParticles
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardOptions.opts for other intermediate states
  *
  *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
  *  @date 2006-01-30

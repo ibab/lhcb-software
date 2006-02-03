@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.1 2006-01-31 16:15:02 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -8,19 +8,29 @@
  *  The configuration file for "standard" particles, created "on-demand"
  * 
  *  There are a set of standard basic particle and a set
- *  of standard intermediate states: D0, Ds, D*, J/psi, K*, Phi
+ *  of standard intermediate states: D0, Ds, D*, J/psi, K*, Phi.
  *  
  *  The relevant algorithms are fired on demand when one wants to read
- *  their outputlocation. See the relevant options for a correct list.
+ *  their outputlocation. See the relevant options for a complete list.
  *
- *  @see StandardParticles
+ *  The cuts coded in this version are 'just a little tighter' than the 
+ *  ones applied in the exclusive HLT (with the big exception that PID is used
+ *  here but not in the HLT). So hopefully events selected using these particles 
+ *  should also pass HLT. This has not been tested.
  *
- *  @see StandardD0
- *  @see StandardDs
- *  @see StandardDstar
- *  @see StandardJpsi
- *  @see StandardKstar
- *  @see StandardPhi
+ *  The actual definition of the cuts should be defined by the physics WG
+ *  for the DC06 stripping. The present first import should be taken as an example
+ *  more definitions of 'Tight' 'Looser' or 'NoPID' intermediate states could
+ *  be provided if needed.
+ *
+ *  @see StandardParticles.opts : All basic particles 
+ *
+ *  @see StandardD0.opts : The standard D0 
+ *  @see StandardDs.opts : The standard Ds
+ *  @see StandardDstar.opts : The standard D*
+ *  @see StandardJpsi.opts : The standard J/psi -> MuMu
+ *  @see StandardKstar.opts : The standard K*
+ *  @see StandardPhi.opts : The standard Phi
  *
  *  @author P. Koppenburg
  *  @date 2006-01-30
@@ -33,5 +43,4 @@
 #include "$COMMONPARTICLESROOT/options/StandardDstar.opts"
 #include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKstar.opts"
-#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
 #include "$COMMONPARTICLESROOT/options/StandardPhi.opts"
