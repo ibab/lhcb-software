@@ -116,8 +116,6 @@ StatusCode OTFillRawEvent::execute()
     amcTime->erase( amcTime->begin(), amcTime->end() );
   }
 
-  put( rawEvent, "DAQ/RawEvent"  );
-  
   return StatusCode::SUCCESS;
 }
 
