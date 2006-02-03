@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.25 2006-01-31 13:00:39 pkoppenb Exp $ 
+! $Id: release.notes,v 1.26 2006-02-03 07:30:07 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+!========================== ParticleMaker v1r7 2006-02-03 ===================
 ! 2006-01-31 - P. Koppenburg
  - src/CombinedParticleMaker.{cpp,h}
    . Better printout for debugging
