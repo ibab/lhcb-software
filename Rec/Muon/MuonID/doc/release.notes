@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.43 2006-01-26 09:47:17 pkoppenb Exp $
+! $Id: release.notes,v 1.44 2006-02-03 07:14:59 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
+!========================== MuonID v3r11p1 2006-02-03 ===================
 ! 2006-01-26 - P. Koppenburg
   - options/MuonIDDLLTool.opts
-    . REplace X.XXXe-30X values by 0. Windows doesn't like them.
+    . Replace X.XXXe-30X values by 0. Windows doesn't like them.
       Bug reporter by Karl Harrison.
 !========================== MuonID v3r11 2005-12-15 ===================
 ! 2005-12-12 - P. Koppenburg
