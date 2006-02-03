@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.7 2006-02-01 19:40:26 marcocle Exp $ 
+! $Id: release.notes,v 1.8 2006-02-03 11:11:04 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r3 2006-02-01 =========================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
