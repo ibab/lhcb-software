@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-#include "Kernel/TrackMatrix.h"
+#include "Kernel/TrackTypes.h"
 
 // Forward declarations
 namespace LHCb {
@@ -35,7 +35,7 @@ public:
                               LHCb::Measurement& meas ) = 0;
 
   /// Retrieve the projection matrix H of the (last) projection
-  virtual const LHCb::TrackVector& projectionMatrix() const = 0;
+  virtual const Gaudi::TrackVector& projectionMatrix() const = 0;
 
   /// Retrieve the chi squared of the (last) projection
   virtual double chi2() const = 0;
