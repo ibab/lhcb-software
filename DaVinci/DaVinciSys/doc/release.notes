@@ -3,6 +3,639 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r16>2005-02-03 DaVinci v12r16 - DC04v2 re-stripping version</A></H1>
+Main modifications:
+ 
+  - CommonParticles:
+    . Many "standard" particles are provided on-demand. See option files 
+      for details.
+
+  - BackgroundCategory tool: many new improvements
+  
+  - MakeResonances: Make both cc states if requested even if decay products are cc.
+     Example: "[D0 -> pi+pi-]cc" will make both D0 and D~0.
+     Warning: This duplicates all combinations.
+      
+  - Filter: New filter DaughterVertexFilterCriterion and 
+      MassConstrainedChi2FilterCriterion
+      
+  - Preselections: Many new preselections, many changed preselections
+
+  - HLT:
+    . Some more tuning by Luis 
+    . Bug fix in TrgForwardAlg
+
+<PRE>
+#######################################MM#######################################
+#                                DaVinci v12r16                                #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+#################################### EXTERNAL ##################################
+###################################### HLT #####################################
+!========================== HltSelChecker v4r1 2006-02-03 ===================
+! 2006-01-19 - Luis Fernandez
+ - options/NoCuts.opts
+   . Correct typo
+! 2006-01-13 - P. Koppenburg
+ - options/OfflineTracks.opts
+   . Set HLT sequence to offline mode.
+! 2006-01-03 - Luis Fernandez
+ - options/
+   . Truth
+! 2005-12-20 - Luis Fernandez
+ - options/
+   . DebugTool property
+!========================== HltSelections v4r1 2006-02-03 ===================
+! 2006-01-03 - Luis Fernandez
+ - options/
+   . More MB-DC04v2 L0L1 stripped data
+! 2005-12-21 - Luis Fernandez
+ - options/HLTSharedD0.opts
+   . Lower pt cut
+! 2005-12-20 - Luis Fernandez
+ - options/HLTSharedD0.opts
+   . Change pt cut of D0-> pi pi for inclusive D* thanks to new Hlt PV
+
+##################################### KTJET ####################################
+###################################### L0 ######################################
+##################################### MUON #####################################
+!========================== MuonID v3r11p1 2006-02-03 ===================
+! 2006-01-26 - P. Koppenburg
+  - options/MuonIDDLLTool.opts
+    . Replace X.XXXe-30X values by 0. Windows doesn't like them.
+      Bug reporter by Karl Harrison.
+##################################### PHYS #####################################
+!========================== CommonParticles v2r0 2006-02-03 ===================
+! 2006-01-31 - P. Koppenburg 
+  - options/MergedPi0Alg.opts
+  - options/ResolvedPi0Alg.opts
+  - options/ProducePairPhotons.opts
+    . Make algorithms "on-demand"
+
+! 2006-01-31 - P. Koppenburg and Vanya Belyaev
+  First commit of standard on-demand particles. To be reviewed by the
+  Physics WG.
+  - options/StandardParticles.opts
+    . Particles "on demand" with standard PID cuts, originally by Vanya
+  - options/StandardD0.opts
+  - options/StandardDs.opts
+  - options/StandardDstar.opts
+  - options/StandardJpsi.opts
+  - options/StandardKstar.opts
+  - options/StandardPhi.opts
+    . Some intermediate states with just-tighter-than-HLT cuts
+  - options/StandardOptions.opts
+    . Options to include them all
+  - options/DVTestStandardParticles.opts
+    . File to test all this
+!========================== DaVinciAssociators v5r5p1 2005-12-14 ================
+! 2005-12-14 - Marco Cattaneo
+ - Remove unneccessary dependency on CaloAssociators
+!========================== DaVinciEff v3r4p1 2006-02-03 ===================
+! 2006-01-24 - P. Koppenburg
+ - src/EffSelCheck.*
+   . Removed unused DecayFinder
+!========================== DaVinciFilter v3r4 2006-02-03 ===================
+! 2006-02-01 - P. Koppenburg
+ - src/DaughterVertexFilterCriterion..{cpp,h}
+   . New option filter selecting on the distance between the mother and
+     a given daughter. Options are:
+FilterLongDs.Filter.Selections = { "B_s0 : DaughterVertexFilterCriterion" };
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDeltaZ = -1*mm ;               // signed delta z
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MaxDeltaZ = 100*mm ;              // signed delta z
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDistance = 0.01*mm ;           // unsigned distance
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MaxDistance = 100*mm ;            // unsigned distance
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDistanceSignificance = 2.5 ;   // unsigned distance error
+FilterLongDs.Filter.DaughterVertexFilterCriterion.DaughterName = "D_s-" ;           // Name of daughter. Can be "Any"
+  - options/DVDaughterVertexFilterCriterion.opts
+    . Example options
+! 2006-01-30 - P. Koppenburg
+ - src/FilterDesktop.{cpp,h}
+   . New option OutputLocation to get non-default outputLocations
+! 2006-01-17 - P. Koppenburg
+ - src/Particle2VertexAsct.h moved to Kernel in DaVinciKernel
+ - src/Particle2VertexWithIPS.{cpp,h} moved to DaVinciTools
+! 2006-01-05 - M. Patel
+ - src/KinFilterCriterion.{h,cpp}
+   . Added new option for max momentum cut
+! 2005-12-21 - P. Koppenburg for Besma M'charek
+ - src/MassConstrainedChi2FilterCriterion.{h,cpp}
+   . New FilterCriterion that fits a mass constrained vertex and selects the particles
+     according to the chi2 or z position of this vertex. Wraning: The fitted vertex 
+     is not saved anywhere.
+!========================== DaVinciKernel v3r10 2006-02-03 ===================
+! 2006-02-02 - P. Koppenburg
+  - Kernel/IBTaggingTool.h
+    . No inclusion of DVAlgorithm   
+! 2006-01-31 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.{cpp,h}
+  - src/Lib/DVAlgorithm.cpp
+    . Make sure each DVAlgorithm always writes out something to TES   
+! 2006-01-30 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Ignore OutputLocation of parent algorithm if it is ""   
+! 2006-01-23 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Issue primary vertex empty container warning only if primary
+      vertices are requested   
+! 2006-01-17 - P. Koppenburg
+  - Kernel/Particle2VertexAsct.h
+    . Moved from DaVinciFilter.
+!========================== DaVinciMCTools v5r18 2006-02-03 ===================
+! 2006-01-30 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  - src/BackgroundCategory.h
+  - DaVinciMCTools/IBackgroundCategory.h
+    . Considerable extra documentation added in all three files.
+! 2006-01-30 - V. Gligorov
+  - src/BackgroundCategory.cpp
+    . Added property m_rescut controlling the cut at which an MCParticle is 
+      considered a stable resonance or not.
+! 2006-01-30 - Luis Fernandez
+ - DaVinciMCTools/IBackgroundCategory.h
+   . Make map protected and added getCategoryMap() to return map between enum 
+     values and names.
+ - src/PrintBackgroundCategory.{h,cpp}
+   . Adapt to above changes.
+ - src/BackgroundCategory.cpp
+   . Minor modification for m_cat member.
+! 2006-01-30 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Modified category AllFromSamePV to reflect the fact that if a particle has no mothers with
+  a significant lifetime it should be considered as coming from the primary vertex.
+  Added support for map<int,string> in IBackgroundCategory.h
+! 2006-01-26 - Luis Fernandez
+ - src/PrintBackgroundCategory.cpp
+   . Rename string categories according to IBackgroundCategory changes.
+     Warning: a change of the enum in IBackgroundCategory should also be translated 
+     to the strings used by the category map in the PrintBackgroundCategory constructor.
+! 2006-1-23 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Added support for ignoring soft photons through propeties UseSoftPhotonCut and SoftPhotonCut.
+  Tool now ignores neutrinos when deciding if final state is correctly reconstructed or not
+  Added categories FromPV and AllFromSamePV; these represent the primary vertex background (one and all 
+  final state particles from a PV respectively; event not a pileup)   
+! 2006-01-23 - P. Koppenburg
+  - src/MCParticleMaker.cpp
+    . Check momentum before using it to make covariance matrix.
+! 2006-1-12 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Fixed bug which misidentified signal decays where a protoparticle has an association 
+  to more than one particle.
+! 2005-12-24 - Luis Fernandez & Jeremie Borel
+ - src/PrintBackgroundCategory.{h,cpp}
+   . New features: print trees, MC dump, filtering
+ - options/DVBkgCatBs2PhiEtac.opts
+   . Adapt to above.
+ - src/DecayChainNTuple.{h,cpp}
+   . Add background category
+! 2005-12-21 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Fixed bug in decays of excited B states which mis-identified signal as background.  
+! 2005-12-21 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  fixed bug that caused crashing when submitted particle was
+  badly reconstructed (no daughters). The method now returns 
+  the "undefined" category in such cases.
+! 2005-12-20 - P. Koppenburg
+  - src/MCPIDProtoPAlg.cpp
+    . RichPID has methods recTrack in v12 and trSoredTrack in later code.
+  - cmt/requirements  
+    . Added a compilation flag for v12
+! 2005-12-19 - P. Koppenburg for L. Fernandez
+  - src/PrintBackgroundCategory.cpp
+    . New algorithm that prints BackgroundCategory for all particles
+      on input location.
+!========================== DaVinciTools v12r5 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+ - src/MakeResonances.{cpp,h}
+   . Make a both cc states if requested even if decay products are cc. 
+     Example: "[D0 -> pi+pi-]cc" will make both D0 and D~0. 
+     Warning: This duplicates all combinations.
+! 2006-01-30 - P. Koppenburg
+ - src/FilterDesktop.{cpp,h}
+   . New option OutputLocation to get non-default outputLocations
+! 2006-01-20 - P. Koppenburg
+  - src/Particle2VertexWithIPS.*
+    . GaudiAlgorithm
+! 2006-01-18 - P. Koppenburg
+  - src/DaVinciTools_load.cpp
+    . Added CheckVeloOverlap
+!========================== DaVinci v12r16 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+  - options/DaVinci.opts
+    . Remove DaVinciKshortTight.opts that should not be used
+! 2006-01-31 - P. Koppenburg
+  - options/DaVinciKshortLoose.opts
+  - options/DaVinciKshortTight.opts
+    . Duplicates of Ks2PiPiSel. Remove.
+  - options/DVStripping.opts
+  - options/DaVinci.opts
+  - options/DaVinciNeutrals.opts
+  - options/DaVinciReco.opts
+    . Put all algorithms in CommonParticles on-demand
+ ! 2006-01-23 - P. Koppenburg
+  - cmt/requirements
+    . Remove unmaintained DaVinciTest package
+! 2006-01-19 - P. Koppenburg
+  - options/Good-Stripped-DST-DC04v2.opts
+    . DC04v2 Good stripped BB dst
+! 2006-01-17 - P. Koppenburg
+  - options/DVWriteDst.opts
+    . Example options to write a DST of preselected events
+!========================== FlavourTagging v6r5 2006-02-03 ===================
+! 2006-01-27 - P. Koppenburg
+  - src/DoubleTagging.cpp
+    . std::sqrt -> sqrt for Windows
+! 2006-01-28 - Marco Musy
+ - The new DoubleTagging algorithm is introduced to study the correlations
+   between SS/OS taggers. Please refer to the tagging web page for details.
+   Files added are DoubleTagging.*; corresponding changes are in
+   the FlavourTaggingChecker package
+ - Options file DoubleTagging.opts changed to DVDoubleTagging.opts
+ - The SVertexABTool is updated. It returns two inclusive secondary
+   vertices instead of just one.
+! 2006-01-27 - P. Koppenburg for Chris Barnes
+  - New tool CombineTaggersOSTDR.
+  - Options file options/DoubleTagging.opts
+!========================== Ks2PiPiSel v1r8 2006-02-03 ===================
+! 2006-01-25 - Y. Xie 
+  - PreLoadPions.opts
+    . increase the long track kaon veto from dllk>10.0 to dllk>5.0
+  - Ks2PiPi.cpp/.h DDKs2PiPi.opts bestDDKs2PiPi.opts
+    . add requirement of  Ks vxz>0.5mm (10mm for DD Ks)
+!========================== ParticleMaker v1r7 2006-02-03 ===================
+! 2006-01-31 - P. Koppenburg
+ - src/CombinedParticleMaker.{cpp,h}
+   . Better printout for debugging
+! 2006-01-30 - P. Koppenburg
+ - src/PreLoadParticles.{cpp,h}
+   . New option OutputLocation to get non-default outputLocations
+! 2006-01-24 - P. Koppenburg
+  - src/ParticleStuffer.cpp
+    . Remove double filling of momentum and matrices
+  - src/PreLoadParticles.cpp
+    . Use debug()  
+!========================== VertexFit v1r10 2006-02-03 ===================
+! 2006-01-30 - Y. Xie
+  - src/KFFitTool.cpp
+    . replaced some err() with debug()
+    . fixed the problem of wrongly setting resonance vertex position to
+    the state position after transport
+    . call setMass() for photon pair to allow for retrivial 
+    of pi0/eta->gammagamma mass from KFFittool
+#################################### PHYSSEL ###################################
+!========================== B2XGamma v3r2 2006-02-03 ===================
+! 2006-01-30 - Lesya Shchutska
+ - Update for the 2nd round of DC04v2 stripping 
+ - cmt/requirements 
+   version increment to v3r2 
+
+  The preselection is valid for 3 modes 
+     Bd -> K*0  gamma
+     Bd -> rho0 gamma
+     Bs -> phi  gamma
+
+  The Rejection factor for bb-inclusive background is estimated to be 
+  inbetween 1200 and 2200. 
+!========================== Bc2RhoPi v1r1 2006-02-03 ===================
+! 2006-02-01 - Vanya BELYAEV
+
+ - update for the 2nd round of DC04v2 stripping
+   
+    src/PReselBc2RhoPi.cpp - new algorithm
+    options/DVPreselBc2RhoPi.opts - updated configuration file 
+    options/DoPreselBc2RhoPi.opts - new configuration file 
+
+- cmt/requirements
+    version increment to v1r1 
+!========================== Bd2D0Kstar v4r5 2006-02-03 ===================
+! 2006-02-01 - Kirill Igorevich Voronchev
+ - options/DVPreselB2KstarD0viaK0S.opts
+   options/DoPreselB2KstarD0viaK0S.opts
+   		new options file to run new preselection algorithm 
+ - src/PreselB2KstarD0viaK0S.cpp
+      new preselection algorithm for both Kspipi and KsKK modes
+ - options/DVPreselB2DstarX2D02Kshh.opts
+	 options/DoPreselB2DstarX2D02Kshh.opts
+ - src/PreselB2DstarH2D02KsHH.cpp
+	 selection for B->D*(D0(KsPiPi/KsKK)pi)H channel for normalization		
+!========================== Bd2DstarMu v1r0 2006-02-03 ===================
+! 2006-01-26 - P. Koppenburg for Marta Calvi
+  Imported this new preselection. It looks for Bd -> MuNuD*
+!========================== Bd2DstarPi v2r8 2006-02-03 ===================
+! 2006-01-27 - P. Koppenburg for Marta Calvi
+ - src/Dstar2D0Pi.{h,cpp}
+   . Reset histogram flasg to false by default
+! 2006-01-27 - P. Koppenburg for Marta Calvi
+ - src/Dstar2D0Pi.{h,cpp}
+   . Added option m_DstarFake allowing to make fake D*.
+     Used in the Bd2DstarMuNu preselection
+!========================== Bd2EtapKs v1r1 2006-02-03 ===================
+! 20060202 - Y. Xie
+  - rename Rho2PiPi to Rho2PiPiForEtap to avoid conflict with an algorithm
+   called Rho2PiPi in Bd2a1Dstar
+! 20060130 - Bd2EtapKs v1r0
+ - creation of package
+!========================== Bd2MuMuKstar v3r0 2006-02-03 ===================
+! 2006-02-02 - Vanya BELYAEV
+    - options/DVPreselBd2KstarMuMu.opts 
+    - options/DoPreselBd2KstarMuMu.opts
+    - src/PreselBd2KstarMuMu.cpp  
+        one more preselection (a'la Bs-> phi mumu) for 
+        the 2nd round of DC04v2 striopping 
+    - src/Bd2MuMuKstaar_load.cpp 
+        add the factory for new algorithm 
+    - cmt/requirements
+        add LoKi
+        version increment to v2r4
+! 2006-01-31 - P. Koppenburg for Jeremy Dickens
+  - options/CombinedForPreselBd2MuMuKstarNew.opts
+  - options/DVPreselBd2MuMuKstarNew.opts
+  - options/DoPreselBd2MuMuKstarNew.opts
+  - options/FilterParticlesForPreselBd2MuMuKstarNew.opts
+  - options/Kstar2KPiForPreselBd2MuMuKstarNew.opts
+  - options/PreselBd2MuMuKstarNew.opts
+    . New preselection for restripping of DC04v2    
+! 2006-01-31 - P. Koppenburg
+  - options/Bd2MuMuKstar.opts
+  - options/DVBd2MuMuKstar.opts
+  - options/FinalCuts.opts 
+    . Removed pre-TDR selection
+!========================== Bd2PhiKs v4r4 2006-02-03 ===================
+! 2006-01-25 - Y. Xie
+ - options/PreLoadKaon.opts
+   . increase long track kaon dllk cut from -10.0 to 5.0 
+ - src/Phi2KKUoE.cpp  
+   . set default MinImpParamKL and MinImpParamKV to 3.0
+ - options/PreselPhi2KK.opts
+   . require kaon ip significance > 3.0
+! 2005-12-19 - Y. Xie
+ - update on src/BdFillNtp.cpp, the algorithm that is used to fill ntuple 
+   for DC04 analysis. Varibales are added for phi vertex isolation. 
+-  added kumac/ddks.kumac  nddks.kumac
+   . new directory and kumac files for selection cuts in DDKs and non-DDKs categories
+ - added src/LifetimeMonitor.cpp (.h) options/LifetimeMonitor.opts 
+         kumac/time.kumac
+   . new algorithm for decaytime check
+!========================== Bs2DsH v3r5 2006-02-03 ===================
+! 2005-06-29 - P. Koppenburg for Jeremie Borel
+ - src/D?PreselBs2DsHjb.opts
+   . New preselction with different cuts
+!========================== Bs2DsMuX v1r0 2006-02-03 ===================
+! 20060129 - Bs2DsMuX 
+ - options/PreselBs2DsMuX.opts
+   . relax PID cuts for preselection
+! 20051207 - Bs2DsMuX 
+ - creation of package
+   . selection code src/Bs2DsMuX.cpp/.h src/Ds2KKPi.cpp/.h
+   . check code src/CheckBs2DsMu.cpp/.h src/CheckDs.cpp/.h src/VtxTruth.cpp/.h
+!========================== Bs2DsRho v1r0 2006-02-03 ===================
+! 2006-02-01 - P. Koppenburg
+    . First import
+!========================== Bs2JpsiPhi v3r0 2006-02-03 ===================
+! 2006-01-26 - P. Koppenburg
+  - options/CombinedForTDRselBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DVTDRselBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts
+  - options/Phi2KKForTDRselBs2Jpsi2MuMuPhi.opts 
+  - options/TDRselBs2Jpsi2MuMu_Phi2KK.opts
+  - options/TDRselBs2Jpsi2MuMu_Tag.opts
+    . Removed old TDR selection
+! 2006-01-26 - P. Koppenburg for Jan Amoraal
+  - options/DC04Jpsi2MuMuForSelBs2JpsiPhi.opts
+  - options/DC04Phi2KKForSelBs2JpsiPhi.opts
+  - options/DC04combinedForSelBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DVDC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DoDC04selBs2Jpsi2MuMu_Phi2KK.opts
+    . New DC04 selection by Jan Amoraal
+!========================== Bs2MuMu v2r5 2006-02-03 ===================
+! 2006-01-31 - Kirill Igorevich Voronchev
+ - src/PreselBs2MuMu_II.cpp
+    new algorithm for (new) Bs->mu+ mu- preselection 
+ - options/DVPReselBs2MuMu_II.opts
+   options/DoPReselBs2MuMu_II.opts
+   configuration files to run 
+    (new) Bs->mu+ mu- preselection 
+ - cmt/requirements 
+    1) add LoKi 
+    2) increment the version to v2r5 
+!========================== Bs2PhiMuMu v1r0 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+ - Comment all histogramming options in DVPresel file.
+! 2006-02-02 - Vanya BELYAEV
+ - move Bd -> K* mu+ mu- stuff into PhysSel/Bd2MuMuKstar package
+! 2006-02-01 - Andrey Tayduganov
+ - New import : 
+    preselection algorithms for the 2nd round of DC04V2 stripping 
+     src/PreselBs2PhiMuMu.cpp
+     src/PreselBd2KstarMuMu.cpp
+   configuration files:
+    options/DVPreselBs2PhiMuMu.opts   
+    options/DoPreselBs2PhiMuMu.opts   
+    options/DVPreselBd2KstarMuMu.opts   
+    options/DoPreselBd2KstarMuMu.opts   
+!========================== Bs2PhiPhi v2r4 2006-02-03 ===================
+! 2006-01-30 - Sergey Barsuk
+ - The preselection algorithm is updated for 2nd round of DC04v2 stripping 
+   Rejection of bb-inclusive backgroud is ~2k
+ - cmt/requirements 
+     version update to v2r4 
+!========================== Bu2D0K v2r0 2006-02-03 ===================
+! 2006-02-02 - P. Koppenburg
+  - options/*.opts
+    . Batchelor -> Bachelor  
+! 2006-02-02 - P. Koppenburg for Andrew Powell
+  - options/CombinedForPreselBu2D0K_4hnew.opts
+  - options/D02KPiForPreselBu2D0K_4hnew.opts
+  - options/DVPreselBu2D0K_4hnew.opts
+  - options/FilterParticlesForPreselBu2D0K_4hnew.opts
+  - options/PreselBu2D0K_4hnew.opts
+    . New preselection with D0->4hadrons
+   
+! 2006-02-01 - P. Koppenburg
+  - src/D02KsPiPi.cpp
+    . Allow non-histogramming mode    
+! 2006-02-02 - P. Koppenburg for Cristina Lazzeroni
+  - options/DVPreselBu2D0K_KsPiPi.opts
+  - options/PreselBu2D0K_KsPiPi.opts
+    . Updated preselction for Bu2D0K with D0->KsPiPi
+  - options/DVPreselBu2D0K_KsKK.opts
+  - options/PreselBu2D0K_KsKK.opts
+    . New preselction for Bu2D0K with D0->KsPiPi
+! 2006-02-01 - P. Koppenburg for Agnieszka Oblakowska-Mucha
+  - src/Bu2D0K.cpp
+  - src/Bu2D0K.h
+  - src/D02HHForBu2D0K.cpp
+  - src/D02HHForBu2D0K.h
+    . Proper indentation
+  - options/D02HHForBu2D0K.opts
+  - options/DVPreselBu2D0K.opts
+  - options/DoPreselBu2D0K.opts
+  - options/PreselBu2D0K.opts
+  - options/CombinedForPreselBu2D0K.opts
+    . New cuts for re-stripping of DC04v2
+! 2006-01-30 - P. Koppenburg for M. Patel
+  - options/CombinedForDC04selBu2D0Knew.opts
+  - options/CombinedForPreselBu2D0Knew.opts
+  - options/D02KPiForDC04selBu2D0Knew.opts
+  - options/D02KPiForPreselBu2D0Knew.opts
+  - options/DC04selBu2D0Knew.opts
+  - options/DVDC04selBu2D0Knew.opts
+  - options/DVPreselBu2D0Knew.opts
+  - options/FilterParticlesForDC04selBu2D0Knew.opts
+  - options/FilterParticlesForPreselBu2D0Knew.opts
+  - options/PreselBu2D0Knew.opts
+    . New preselection for Bu2D0K
+!========================== Bu2D0Mu v1r0 2006-02-03 ===================
+B+->(D~0->K Pi)Mu+:
+Reconstruction du D~0->K Mu: meme que pour le D~0 Pi
+
+Reconstruction du B+->D~0 mu:
+  . p(muon)>8GeV, 
+  . pT(muon)>2GeV, 
+  . ips(muon)>2, 
+  . PID(muon)>-3.0, (ignored)
+  . pT(D0)>4GeV, 
+  . p(D0)>15GeV,
+  . chi2(D0mu)<10, 
+  . 2GeV<m(D0mu)<6GeV
+!========================== Bu2D0Pi v1r0 2006-02-03 ===================
+B+->(D~0->K Pi)Pi+:
+-----------------
+Reconstruction du D~0->K Pi:
+  . p(kaon)>4GeV, p(pion2)>4GeV, 
+  . pT(kaon)>1GeV, pT(pion2)>1GeV, 
+  . ips(kaon)>2, ips(pion2)>2, 
+  . PID(kaon)>-3.0, PID(pion2)>-3.0, (ignored)
+  . DeltaM(KPi)<60MeV, 1.8GeV<m(KPi)<2GeV (?)
+  . chi2(KPi)<10, 
+  . ips(KPi)>2
+Reconstruction du B+->D~0 Pi+:
+  . p(pion1)>10GeV, 
+  . pT(pion1)>1GeV, 
+  . ips(pion1)>1, 
+  . PID(pion1)>-3.0, (ignored)
+  . pT(D0)>3GeV, 
+  . p(D0)>12GeV,
+  . chi2(D0 Pi)<10, 
+  . DeltaM(D0Pi)<100MeV
+!========================== Bu2JpsiK v1r0p2 2006-02-03 ===================
+! 2006-01-26 - P. Koppenburg
+  - cmt/requirements
+    . Don't use other packges
+!========================== Bu2LLK v2r6 2006-02-03 ===================
+! 2006-01-27 - P. Koppenburg
+  - options/*PreselB2DiMuon,Electron.opts
+    . Tuning of cuts
+! 2006-01-26 - P. Koppenburg
+  - options/*PreselB2DiMuon,Electron.opts
+    . Generic preselections for di-leptons
+!========================== Jpsi v1r2 2006-02-03 ===================
+! 2006-01-31 - P. Koppenburg
+  - options/DVPreselJpsi2*.opts
+    . Cut into options/DoPresel* file and DV file.
+  - options/DoPreselJpsi2MuMu.opts
+    . Use standard J/psi 
+!========================== Lb2LambdaXGamma v1r0 2006-02-03 ===================
+! 2006-02-02 P. Koppenburg
+  - src/*.cpp
+    . fabs(int) -> abs(int) for windows
+  - src/Lb2LambdaXGamma_load.cpp
+    . LmdGammaFitter is a tool, not an algorithm
+! 2006-01-30 P. Koppenburg fopr Federica Legger
+  First import
+!========================== TriggerSel v2r0 2006-02-03 ===================
+! 2006-01-26 - P. Koppenburg
+  - options/DVPreselHltExclusiveSel.opts
+    . New preselection requiring L0xL1xHltExclusive accepted events
+  - options/DVPreselHltDstarSel.opts
+    . New preselection requiring L0xL1xHltDstar accepted events
+  The two other streams are not done as they select much more that 1/1000
+  events in BB inclusive.
+!========================== PhysSelSys v8r11 2006-02-03 ===================
+For DC04v2 restripping
+> use  B2XGamma                   v3r2     PhysSel
+> use  Bc2RhoPi                   v1r1     PhysSel
+> use  Bd2a1Dstar                 v2r4     PhysSel
+> use  Bd2D0Kstar                 v4r5     PhysSel
+> use  Bd2DstarMu                 v1r0     PhysSel
+> use  Bd2DstarPi                 v2r8     PhysSel
+> use  Bd2EtapKs                  v1r1     PhysSel
+> use  Bd2MuMuKstar               v3r0     PhysSel
+> use  Bd2PhiKs                   v4r4     PhysSel
+> use  Bs2DsH                     v3r5     PhysSel
+> use  Bs2DsMuX                   v1r0     PhysSel
+> use  Bs2DsRho                   v1r0     PhysSel
+> use  Bs2JpsiPhi                 v3r0     PhysSel
+> use  Bs2MuMu                    v2r5     PhysSel
+> use  Bs2PhiMuMu                 v1r0     PhysSel
+> use  Bs2PhiPhi                  v2r4     PhysSel
+> use  Bu2D0Pi                    v1r0     PhysSel
+> use  Bu2D0K                     v2r0     PhysSel
+> use  Bu2D0Mu                    v1r0     PhysSel
+> use  Bu2LLK                     v2r6     PhysSel
+> use  Bu2JpsiK                   v1r0p2   PhysSel
+> use  Jpsi                       v1r2     PhysSel
+> use  Lb2LambdaXGamma            v1r0     PhysSel
+> use  TriggerSel                 v2r0     PhysSel
+> use  Stripping                  v3r3     Tools
+
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== Stripping v3r3 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+ - options/Correlations.opts
+   . Make correlations of related selections
+    
+! 2006-01-31 to 2006-02-03 - P. Koppenburg
+ - options/*.opts
+   . New options for DC04v2 re-stripping
+    
+! 2006-01-26 - P. Koppenburg
+ - python/optionparser.py
+ - python/Base.opts
+  . Add Hlt to standard executed algorithms. 
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== TrgForward v4r1 2006-02-03 ===================
+! 2006-01-31 - P. Koppenburg
+ - src/TrgForwardAlg.{cpp,h}
+   . Correction for residual B field. New option ResidualBFieldCorrection
+     with default value 0.09.
+     Bug found by Thomas Ruf. He writes:
+        Following my presentation of today, it had been agreed to put this
+        modification of the xSlope of trgforward tracks into the next release 
+	of DV. The hack which I made is in TrgForwardAlg.cpp :
+	There is a line (~288) saying:
+	        tx0 = tr->newSlopeX();  // correct for momentum dependence
+	This should be replaced by
+	        double qOverPt  = qOverP * sqrt( 1. + 1./(tx0*tx0+ty0*ty0)) ;
+                tx0 = tx0 - 0.09 * qOverPt ;   // correct for residual B-field in Velo
+
+	(I noticed, that state.pt() is not always set, for whatever strange
+	reason, that is why I am computing it myself.)
+
+	The constant 0.09, if this should be set via option, I should say,\
+! 2006-01-24 - P. Koppenburg
+ - new branch v4r0b for DC04. Make it version v4r1.
+ 
+!========================== TrgSys v1r12 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+  - Restore TrgTools v6r6 as v6r7 is not yet fixed
+  
+! 2006-01-31 - P. Koppenburg for Thomas Ruf
+  - TrgForward v4r1
+  
+! 2005-12-19 - P. Koppenburg for Mitesh Patel and Cristina Lazzeroni
+  - TrgTools v6r7
+  
+
+
 </PRE><H1><A NAME=v12r15>2005-12-15 DaVinci v12r15 - Updated DC04 version</A></H1><PRE>
 Main modifications:
  
