@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.87 2006-02-02 12:16:46 pkoppenb Exp $
+! $Id: release.notes,v 1.88 2006-02-03 07:17:28 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r10 2006-02-03 ===================
 ! 2006-02-02 - P. Koppenburg
   - Kernel/IBTaggingTool.h
     . No inclusion of DVAlgorithm
