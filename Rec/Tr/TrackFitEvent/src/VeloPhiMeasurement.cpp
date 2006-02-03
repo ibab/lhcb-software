@@ -1,10 +1,10 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.5 2005-11-21 10:49:20 jvantilb Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.6 2006-02-03 09:16:47 ebos Exp $
 // Include files 
-
-
 
 // local
 #include "Event/VeloPhiMeasurement.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloPhiMeasurement
@@ -14,9 +14,7 @@
 // Created: 13-07-2000
 //-----------------------------------------------------------------------------
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+/// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
                                         DeVelo& det,
                                         double r )
@@ -41,7 +39,7 @@ VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
   int strip    = (*sign.begin()).first;
   VeloChannelID channel(sensor,strip);
   double pitch  = det.phiPitch( channel );
-  for ( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
+  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
     strip      = (*strIt).first;
     m_measure = det.distToOrigin( channel );
     // fix sign convention of d0 of strip
@@ -70,4 +68,3 @@ VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
   // set the LHCbID
   setLhcbID ( LHCbID( channel ) );
 }
-//=============================================================================

@@ -1,8 +1,10 @@
-// $Id: VeloRMeasurement.cpp,v 1.4 2005-11-08 18:16:42 erodrigu Exp $
+// $Id: VeloRMeasurement.cpp,v 1.5 2006-02-03 09:16:53 ebos Exp $
 // Include files
 
 // local
 #include "Event/VeloRMeasurement.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloRMeasurement
@@ -12,9 +14,7 @@
 // Created: 27-06-2000
 //-----------------------------------------------------------------------------
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+/// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
                                     DeVelo& det,
                                     double phi )
@@ -35,7 +35,7 @@ VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
   double radius = det.rOfStrip( channelOne );
   double pitch =   det.rPitch( channelOne );
 
-  for ( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
+  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
     VeloChannelID channel(sensor,(*strIt).first);
     radius= det.rOfStrip( channel );
     sum   += (*strIt).second;
@@ -56,4 +56,3 @@ VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
   // set the LHCbID
   setLhcbID ( LHCbID( channelOne ) );
 }
-//=============================================================================

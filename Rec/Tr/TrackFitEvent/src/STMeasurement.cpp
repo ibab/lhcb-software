@@ -1,11 +1,13 @@
-// $Id: STMeasurement.cpp,v 1.1 2005-12-13 19:04:52 erodrigu Exp $
+// $Id: STMeasurement.cpp,v 1.2 2006-02-03 09:17:05 ebos Exp $
 // Include files 
 
 // from STDet
-#include "STDet/STDetectionLayer.h"
+#include "STDet/DeSTSector.h"
 
 // local
 #include "Event/STMeasurement.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STMeasurement
@@ -15,35 +17,32 @@
 // Created: 07-04-1999
 //-----------------------------------------------------------------------------
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-STMeasurement::STMeasurement( ITCluster& itCluster,
+/// Standard constructor, initializes variables
+STMeasurement::STMeasurement( STCluster& stCluster,
                               DeSTDetector& geom,
-                              ISTClusterPosition& itClusPosTool) {
+                              ISTClusterPosition& stClusPosTool) {
 
-  m_cluster = &itCluster; //pointer to ITCluster
+  m_cluster = &stCluster; //pointer to STCluster
 
-  ITChannelID itChan = m_cluster -> channelID();
+  STChannelID stChan = m_cluster -> channelID();
 
-  m_mtype = ( itChan.isTT() ? Measurement::TT : Measurement::IT );
+  m_mtype = ( stChan.isTT() ? Measurement::TT : Measurement::IT );
 
   // set the LHCbID
-  setLhcbID ( LHCbID( itChan ) );
+  setLhcbID ( LHCbID( stChan ) );
 
-  const STDetectionLayer* itLay = geom.layer( itChan );
+  const DeSTSector* stLay = geom.sectors()[stChan.strip()];
 
   ISTClusterPosition::Measurement measVal =
-    itClusPosTool.estimate( &itCluster );
-  m_measure    = itLay -> U( itChan )
-                 + ( measVal.first.second * itLay -> pitch() );
+    stClusPosTool.estimate( &stCluster );
+  m_measure    = stLay -> localU( stChan.strip() )
+                 + ( measVal.first.second * stLay -> pitch() );
   m_errMeasure = measVal.second;
 
-  m_z            = itLay -> centerZ( itChan );
-//  m_stereoAngle  = itLay->stereoAngle();
+/// ERROR!!!
+  m_z            = 0.;
+//  m_stereoAngle  = stLay->stereoAngle();
 
-//  std::cout << "- stereo angle = " << itLay->stereoAngle() << std::endl;
+//  std::cout << "- stereo angle = " << stLay->stereoAngle() << std::endl;
 
 }
-
-//=============================================================================

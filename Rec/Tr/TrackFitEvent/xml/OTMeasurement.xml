@@ -11,20 +11,39 @@
       desc        = 'OTMeasurement is a measurement made from a OTTime.'
       serializers = 'FALSE'>
 
-      <base name='Measurement' />
+      <base name='LHCb::Measurement'/>
 
-      <import name='CLHEP/Matrix/Vector' />
-      <import name='Event/Measurement' />
-      <import name='Event/OTTime' />
-
-      <import name='OTDet/DeOTDetector' />
+      <import name='Event/Measurement'/>
+      <import name='Event/OTTime'/>
+      <import name='OTDet/DeOTDetector'/>
+      <import name='Kernel/TrackTypes.h'/>
 
       <constructor
-        desc    = 'Constructor from an OTTime'>
-       <arg type='OTTime' name='otTime' />
-       <arg type='DeOTDetector' name='det' />
-       <arg type='int' name='ambiguity = 0' />
-       <arg type='double' name='tu = 999.0' />
+        desc    = 'Constructor from an OTTime'
+        argList = 'LHCb::OTTime otTime, 
+                   DeOTDetector det, 
+                   int ambiguity, 
+                   double tu' >
+	<arg
+	type = 'LHCb::OTTime'
+	name = 'otTime'
+	const = 'FALSE' />
+
+	<arg
+	type = 'DeOTDetector'
+	name = 'det'
+	const = 'FALSE' />
+
+	<arg
+	type = 'int'
+	name = 'ambiguity'
+	const = 'FALSE' />
+	
+	<arg
+	type = 'double'
+	name = 'tu'
+	const = 'FALSE' />
+
       </constructor>
 
       <attribute
@@ -44,38 +63,38 @@
         desc    = 'the slope in u of the measurement (i.e. the reference vector)' />
 
       <attribute
-        type = 'OTTime*'
+        type = 'LHCb::OTTime*'
         name = 'time'
         desc = 'Pointer to the OTTime' />
 
       <method
         name    = 'update'
         desc    = 'Update the Measurement parameters'
-        argList = 'const HepVector refVector'>
+        argList = 'const Gaudi::TrackVector refVector'>
         <code>
-  if ( refVector.num_row() &gt;= 4 ) {
-    m_tu =   refVector[2] * cos( m_stereoAngle )
-           + refVector[3] * sin( m_stereoAngle );
-  }
+          m_tu = refVector(2) * cos( m_stereoAngle ) +
+                 refVector(3) * sin( m_stereoAngle );
         </code>
       </method>
 
       <method
-        type    = 'OTMeasurement*'
+        type    = 'LHCb::OTMeasurement*'
         name    = 'clone'
         desc    = 'Clone the OTMeasurement'
         const   = 'TRUE'>
         <code>
-  OTMeasurement* me = new OTMeasurement(); *me = *this; return me;
+          LHCb::OTMeasurement* me = new LHCb::OTMeasurement();
+          *me = *this; return me;
         </code>
       </method>
 
      <method
-       type    = 'const HepVector'
+       type    = 'const Gaudi::TrackVector'
        name    = 'referenceVector'
        desc    = 'Get the reference vector using a predicted state'
-       argList = 'const HepVector stateVec'
-       const   = 'TRUE'/>
+       argList = 'const Gaudi::TrackVector stateVec'
+       const   = 'TRUE' >
+     </method>
 
     </class>
   </package>

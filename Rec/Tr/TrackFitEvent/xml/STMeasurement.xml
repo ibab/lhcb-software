@@ -8,37 +8,58 @@
     <class
       name        = 'STMeasurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
-      desc        = 'STMeasurement is a measurement made from a IT cluster (of TT or IT).'
+      desc        = 'STMeasurement is a measurement made from a ST cluster (of TT or IT).'
       serializers = 'FALSE'>
 
-      <base name='Measurement' />
-
+      <base name='LHCb::Measurement' />
       <import name='Event/Measurement' />
-      <import name='Event/ITCluster' />
-
+      <import name='Event/STCluster' />
       <import name='STDet/DeSTDetector'/>
-      <import name='STTools/ISTClusterPosition' />
+      <import name='Kernel/ISTClusterPosition' />
 
       <constructor
-        desc = 'Constructor from an ITCluster'>
-        <arg type='ITCluster' name='itCluster' />
-        <arg type='DeSTDetector' name='det' />
-        <arg type='ISTClusterPosition' name='itClusPosTool' />
+        desc = 'Constructor from an ITCluster'
+        argList = 'LHCb::STCluster stCluster,
+                   DeSTDetector det,
+                   ISTClusterPosition stClusPosTool' >
+        <arg
+        type = 'LHCb::STCluster'
+        name = 'stCluster'
+        const = 'FALSE' />
+
+        <arg
+        type = 'DeSTDetector'
+        name = 'det'
+        const = 'FALSE' />
+
+        <arg
+        type = 'ISTClusterPosition'
+        name = 'stClusPosTool'
+        const = 'FALSE' />
+
       </constructor>
 
       <attribute
-        type = 'ITCluster*'
+        type = 'LHCb::STCluster*'
         name = 'cluster'
-        desc = 'Pointer to the ITCluster'/>
+        desc = 'Pointer to the STCluster'/>
 
       <method
-        type    = 'STMeasurement*'
+        type    = 'LHCb::STMeasurement*'
         name    = 'clone'
         desc    = 'Clone the STMeasurement'
+        virtual = 'TRUE'
         const   = 'TRUE'>
         <code>
-  STMeasurement* me = new STMeasurement(); *me = *this; return me;
+  LHCb::STMeasurement* me = new LHCb::STMeasurement(); *me = *this; return me;
         </code>
+      </method>
+
+      <method
+        name    = 'update'
+        desc    = 'Update measurement parameters'
+        argList = 'const Gaudi::TrackVector refVector'
+        virtual = 'TRUE'>
       </method>
 
     </class>

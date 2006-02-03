@@ -11,18 +11,32 @@
       desc        = 'VeloRMeasurement is a measurement made from a VeloRCluster.'
       serializers = 'FALSE'>
 
-      <base name='Measurement' />
+      <base name='LHCb::Measurement' />
 
       <import name='Event/Measurement' />
       <import name='Event/VeloCluster' />
 
       <import name='VeloDet/DeVelo'/>
 
+      <import name='Kernel/TrackTypes.h'/>
+
       <constructor
-        desc = 'Constructor from an VeloRCluster'>
-        <arg type = 'VeloCluster' name = 'cluster'/>
-        <arg type = 'DeVelo' name = 'det'/>
-        <arg type = 'double' name = 'phi = 999.0'/>
+        desc = 'Constructor from an VeloRCluster'
+        argList = 'LHCb::VeloCluster cluster,
+                   DeVelo det,
+                   double phi' >
+        <arg
+        type = 'LHCb::VeloCluster'
+        name = 'cluster'
+        const = 'FALSE' />
+        <arg
+        type = 'DeVelo'
+        name = 'det'
+        const = 'FALSE' />
+       <arg
+        type = 'double'
+        name = 'phi'
+        const = 'FALSE' />
       </constructor>
 
       <attribute
@@ -31,27 +45,26 @@
         desc = 'the phi of the Velo R measurement'/>
 
       <attribute
-        type = 'VeloCluster*'
+        type = 'LHCb::VeloCluster*'
         name = 'cluster'
         desc = 'Pointer to the VeloRCluster'/>
 
       <method
         name    = 'update'
         desc    = 'Update the Measurement parameters'
-        argList = 'const HepVector refVector'>
+        argList = 'const Gaudi::TrackVector refVector'>
         <code>
-  if ( refVector.num_row() &gt;= 2 )
-    m_phi = atan2( refVector[1], refVector[0] );
+    m_phi = atan2( refVector(1), refVector(0) );
         </code>
       </method>
 
       <method
-        type    = 'VeloRMeasurement*'
+        type    = 'LHCb::VeloRMeasurement*'
         name    = 'clone'
         desc    = 'Clone the VeloRMeasurement'
         const   = 'TRUE'>
         <code>
-  VeloRMeasurement* me = new VeloRMeasurement(); *me = *this; return me;
+  LHCb::VeloRMeasurement* me = new LHCb::VeloRMeasurement(); *me = *this; return me;
         </code>
       </method>
 

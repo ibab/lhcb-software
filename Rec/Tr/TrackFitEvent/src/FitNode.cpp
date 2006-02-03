@@ -1,7 +1,14 @@
+// $Id: FitNode.cpp,v 1.8 2006-02-03 09:17:21 ebos Exp $
 // Include files
-// -------------
+
 // local
 #include "Event/FitNode.h"
+
+// Event/TrackEvent
+#include "Event/SHacks.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 /** @file FitNode.cpp
  *
@@ -22,42 +29,36 @@
  *  @date   11-11-1999
  */
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+/// Standard constructor, initializes variables
 FitNode::FitNode()
 {
-  // FitNode default constructer
-  m_transportMatrix = HepMatrix(5, 5, 1);
-  m_transportVector = HepVector(5, 0);
-  m_noiseMatrix     = HepSymMatrix(5, 0);
+  // FitNode default constructor
+  m_transportMatrix = TransportMatrix();
+  m_transportVector = Vector5();
+  m_noiseMatrix     = TransportMatrix();
   m_transportDeltaZ = 0.0;
 }
 
-//=============================================================================
-// Constructor from a z position
-//=============================================================================
+/// Constructor from a z position
 FitNode::FitNode( double zPos )
 {
   //FitNode constructer
-  m_transportMatrix = HepMatrix(5, 5, 1);
-  m_transportVector = HepVector(5, 0);
-  m_noiseMatrix     = HepSymMatrix(5, 0);
+  m_transportMatrix = TransportMatrix();
+  m_transportVector = Vector5();
+  m_noiseMatrix     = TransportMatrix();
   m_transportDeltaZ = 0.0;
   State tempState = State();
   tempState.setZ( zPos );
   m_state = tempState.clone();
 }
 
-//=============================================================================
-// Constructor from a Measurement
-//=============================================================================
+/// Constructor from a Measurement
 FitNode::FitNode(Measurement& aMeas)
 {
   //FitNode constructer
-  m_transportMatrix = HepMatrix(5, 5, 1);
-  m_transportVector = HepVector(5, 0);
-  m_noiseMatrix     = HepSymMatrix(5, 0);
+  m_transportMatrix = TransportMatrix();
+  m_transportVector = Vector5();
+  m_noiseMatrix     = TransportMatrix();
   m_transportDeltaZ = 0.0;
   m_measurement     = &aMeas;
   State tempState = State();
@@ -81,35 +82,24 @@ FitNode::FitNode( const FitNode& rhs ) : Node()
   m_state = rhs.state().clone();
 }
 
-
-
-
-//=============================================================================
-// Destructor
-//=============================================================================
+/// Destructor
 FitNode::~FitNode()
 {
   if (m_state != 0 ) delete m_state;
 }
 
-//=============================================================================
-// Update the State predicted by the Kalman filter
-//=============================================================================
+/// Update the State predicted by the Kalman filter
 void FitNode::setPredictedState( const State& predictedState )
 {  
   m_predictedState = predictedState ;
 }
 
-//=============================================================================
-// Add the transport transformation of prevNode to this node
-//=============================================================================
+/// Add the transport transformation of prevNode to this node
 void FitNode::updateTransport( const FitNode& prevNode )
 {
   // add the transport transformation of prevNode to this node
   m_transportVector += m_transportMatrix * prevNode.transportVector() ;
-  m_noiseMatrix += (prevNode.noiseMatrix()).similarity( m_transportMatrix );
+  m_noiseMatrix += SHacks::Similarity( prevNode.noiseMatrix(), m_transportMatrix );
   m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
   m_transportDeltaZ += prevNode.transportDeltaZ();
 }
-
-//=============================================================================
