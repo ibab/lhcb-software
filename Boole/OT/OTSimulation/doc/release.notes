@@ -1,12 +1,17 @@
-! $Id: release.notes,v 1.21 2006-02-02 16:04:51 cattanem Exp $
+! $Id: release.notes,v 1.22 2006-02-03 16:44:23 janos Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
-!====================== OTSimulation v3r0 2006-02-02 ======================
+!====================== OTSimulation v3r2 2006-02-02 ======================
+! 2006-02-02 Jan Amoraal
+ - Bug fix and typo, moved some headers and a bit of spring cleaning 
+
+!====================== OTSimulation v3r1 2006-02-02 ======================
 ! 2006-02-02 Jan Amoraal
  - Bug fix, get RawEvent from default location, don't create one
  - Added NextNext spill. NextNext location == PrevPrev location
 
+!==================== OTSimulation v3r0 2006-01-20 ======================
 ! 2006-01-20 - Marco Cattaneo
  - Remove unneccesary OTSimulation directory, all includes now in src
  - Update for Gaudi v18r1

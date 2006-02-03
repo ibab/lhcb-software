@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.6 2006-01-20 16:50:38 cattanem Exp $
+// $Id: OTSmearer.cpp,v 1.7 2006-02-03 16:44:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -12,8 +12,12 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
 
+// OTDet
+#include "OTDet/DeOTDetector.h"
+
 // MCEvent
 #include "Event/MCHit.h"
+#include "Event/MCOTDeposit.h"
 
 //OTSimulation
 #include "OTSmearer.h"
@@ -87,8 +91,7 @@ StatusCode OTSmearer::initialize()
     return Error ("Failed to retrieve magnetic field service",sc);
   }
 
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
-  m_tracker = tracker;
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   detSvc->release();
   
 

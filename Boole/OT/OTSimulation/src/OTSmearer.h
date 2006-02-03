@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
+// $Id: OTSmearer.h,v 1.5 2006-02-03 16:44:24 janos Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -6,17 +6,16 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
 
-// OTEvent
-#include "Event/MCOTDeposit.h"
-
-// OTDet
-#include "OTDet/DeOTDetector.h"
-
 // OTSimulation
 #include "IOTSmearer.h"
 
 // Forward declaration
 class IMagneticFieldSvc;
+class DeOTDetector;
+namespace LHCb
+{
+  class MCOTDeposit;
+}
 
 /** @class OTSmearer OTSmearer.h "OTSimulation/OTSmearer.h"
  *

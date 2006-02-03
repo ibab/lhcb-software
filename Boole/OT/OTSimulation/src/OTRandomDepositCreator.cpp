@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.8 2006-01-20 12:57:05 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.9 2006-02-03 16:44:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -39,11 +39,9 @@ OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type,
 					       const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
- 
-  //this->declareProperty("deadTime", m_deadTime = 50.*ns);
-  this->declareProperty("noiseRate", m_noiseRate = 10.0*kilohertz);
-  this->declareProperty("readOutWindowToolName",
-                        m_readoutWindowToolName ="OTReadOutWindow"),
+  this->declareProperty( "noiseRate", m_noiseRate = 10.0*kilohertz );
+  this->declareProperty( "readOutWindowToolName",
+			 m_readoutWindowToolName ="OTReadOutWindow" ),
 
   declareInterface<IOTRandomDepositCreator>(this);
 }
@@ -77,10 +75,9 @@ StatusCode OTRandomDepositCreator::initialize()
     return Error ("Failed to retrieve magnetic field service",sc);
   }
 
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
   detSvc->release();
-  m_tracker = tracker;
-
+ 
   // Get channel deadtime
   m_deadTime = m_tracker->deadTime();
 

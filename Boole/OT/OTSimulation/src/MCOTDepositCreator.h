@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.7 2006-01-20 12:57:05 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.8 2006-02-03 16:44:23 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -7,17 +7,17 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/SmartIF.h"
 
-// MCEvent
-#include "Event/MCOTDeposit.h"
-
-// OTDet
-#include "OTDet/DeOTDetector.h" 
-
 // forward declarations
 class IOTEffCalculator;
 class IOTSmearer;
 class IOTrtRelation;
 class IOTRandomDepositCreator;
+class DeOTDetector;
+namespace LHCb
+{
+  class MCOTDeposit;
+}
+
 
 /** @class MCOTDepositCreator MCOTDepositCreator.h \
  *         "OTSimulation/MCOTDepositCreator.h"
@@ -98,7 +98,7 @@ private:
   IOTRandomDepositCreator* m_noiseTool;
  
   /// temporary deposits vector
-  MCOTDepositVec* m_tempDeposits;
+  MCOTDepositVec* m_tempDeposits;          ///< Vector of tmp deposits
 
   unsigned int m_numStations;              ///< number of stations
   unsigned int m_firstOTStation;           ///< first OT station

@@ -1,13 +1,10 @@
-// $Id: OTEffCalculator.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
+// $Id: OTEffCalculator.h,v 1.5 2006-02-03 16:44:23 janos Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
-
-// MCEvent
-#include "Event/MCOTDeposit.h"
 
 // OTSimulation
 #include "IOTEffCalculator.h"

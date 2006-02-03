@@ -1,20 +1,24 @@
-// $Id: OTrtRelation.cpp,v 1.6 2006-01-20 17:01:08 cattanem Exp $
+// $Id: OTrtRelation.cpp,v 1.7 2006-02-03 16:44:24 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
+// OTDet
+#include "OTDet/DeOTDetector.h"
+
 // MathCore
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
 
+// MCEvent
+#include "Event/MCHit.h"
+#include "Event/MCOTDeposit.h"
+
 // OTSimulation
 #include "OTrtRelation.h"
-
-// Event
-#include "Event/MCHit.h"
 
 /** @file OTrtRelation.cpp 
  *
@@ -52,8 +56,7 @@ StatusCode OTrtRelation::initialize()
     return Error ("Failed to retrieve DetectorDataSvc",sc);
   }
 
-  DeOTDetector* tracker = getDet<DeOTDetector>(  DeOTDetectorLocation::Default );
-  m_tracker = tracker;
+  m_tracker = getDet<DeOTDetector>(  DeOTDetectorLocation::Default );
   detSvc->release();
 
   return StatusCode::SUCCESS;

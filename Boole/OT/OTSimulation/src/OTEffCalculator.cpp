@@ -1,10 +1,13 @@
-// $Id: OTEffCalculator.cpp,v 1.6 2006-01-20 12:57:05 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.7 2006-02-03 16:44:23 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+
+// MCEvent
+#include "Event/MCOTDeposit.h"
 
 // CLHEP
 #include "Kernel/SystemOfUnits.h"

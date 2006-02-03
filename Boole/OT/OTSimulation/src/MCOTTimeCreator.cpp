@@ -1,10 +1,15 @@
-// $Id: MCOTTimeCreator.cpp,v 1.7 2006-01-20 12:57:05 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.8 2006-02-03 16:44:23 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
+
+
+// MCEvent
+#include "Event/MCOTDeposit.h"
+#include "Event/MCOTTime.h"
 
 // local
 #include "MCOTTimeCreator.h"

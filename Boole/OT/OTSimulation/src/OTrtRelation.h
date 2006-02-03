@@ -1,20 +1,15 @@
-// $Id: OTrtRelation.h,v 1.5 2006-01-20 17:01:08 cattanem Exp $
+// $Id: OTrtRelation.h,v 1.6 2006-02-03 16:44:24 janos Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// MCEvent
-#include "Event/MCOTDeposit.h"
-
-// OTDet
-#include "OTDet/DeOTDetector.h"
-
 // OTSimulation
 #include "IOTrtRelation.h"
 
 // Forward declarations
+class DeOTDetector;
 namespace LHCb 
 {
   class MCOTDeposit;

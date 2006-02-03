@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.h,v 1.7 2006-01-20 15:44:45 cattanem Exp $
+// $Id: OTRandomDepositCreator.h,v 1.8 2006-02-03 16:44:24 janos Exp $
 #ifndef OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 1
 
@@ -6,8 +6,8 @@
 #include "GaudiKernel/SmartIF.h"
 #include "IOTRandomDepositCreator.h"
 
-#include <vector>
-#include <string>
+//#include <vector>
+//#include <string>
 
 // Forward declarations
 namespace LHCb 

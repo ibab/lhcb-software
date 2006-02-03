@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.h,v 1.5 2006-01-20 12:57:05 janos Exp $
+// $Id: MCOTTimeCreator.h,v 1.6 2006-02-03 16:44:23 janos Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
@@ -6,9 +6,11 @@
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// MCEvent
-#include "Event/MCOTTime.h"
-
+namespace LHCb 
+{
+  class MCOTDeposit;
+  class MCOTTime;
+}
 
 /** @class MCOTTimeCreator MCOTTimeCreator.h "OTSimulation/MCOTTimeCreator.h"
  *
@@ -17,6 +19,7 @@
  *  @author J. Nardulli and J. van Tilburg 
  *  @date   10/6/2004
  */
+
 class MCOTTimeCreator : public GaudiAlgorithm
 
 {

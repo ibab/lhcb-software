@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.11 2006-02-02 15:34:20 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.12 2006-02-03 16:44:23 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -7,8 +7,15 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
 
+// xml geometry
+#include "DetDesc/IGeometryInfo.h"
+
+// OTDet
+#include "OTDet/DeOTDetector.h" 
+
 // Event
 #include "Event/MCHit.h"
+#include "Event/MCOTDeposit.h"
 
 // MathCore
 #include "Kernel/Point3DTypes.h"
@@ -24,9 +31,6 @@
 #include "OTDataFunctor.h"
 #include "IOTEffCalculator.h"
 #include "IOTRandomDepositCreator.h"
-
-// xml geometry
-#include "DetDesc/IGeometryInfo.h"
 
 /** @file MCOTDepositCreator.cpp 
  *
@@ -102,8 +106,7 @@ StatusCode MCOTDepositCreator::initialize()
   }
   
   // Loading OT Geometry from XML
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_tracker = tracker;
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_numStations = m_tracker->numStations();
   m_firstOTStation = m_tracker->firstOTStation();  
 
@@ -274,21 +277,12 @@ StatusCode MCOTDepositCreator::makeDigitizations()
   for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
     // retrieve a MCTrackingHits for this spill
     
-    MCHits* monteCarloTrackerHits = new MCHits();
-    if ( iSpill < 4 ) {
-      monteCarloTrackerHits = get<MCHits>( eventSvc(), m_spillNames[iSpill] );
-    }
+    SmartDataPtr<MCHits> monteCarloTrackerHits( eventSvc(), m_spillNames[iSpill<4?iSpill:0] );
     
-    // Location NextNext(4) == Location PrevPrev(0)
-    if ( iSpill == 4 ) {
-      monteCarloTrackerHits = get<MCHits>( eventSvc(), m_spillNames[0] );
-    }
-  
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
       debug() <<"Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
     }
-    
     else {
       // found spill - create some digitizations and add them to deposits
       MCHits::const_iterator iterHit;
