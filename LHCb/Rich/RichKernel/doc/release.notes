@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.98 2006-02-02 17:23:24 jonrob Exp $
+! $Id: release.notes,v 1.99 2006-02-03 11:14:02 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r1 2006-02-03 =======================
 ! 2006-02-02 - Chris Jones
- - Quick work around for new RichDet. Will be supercedeed soon by a proper update.
+ - Quick work around for new RichDet. Will be superseded soon by a proper update.
 
 ! 2006-02-01 - Marco Clemencic
  - Removed forward declaration to TimePoint.
