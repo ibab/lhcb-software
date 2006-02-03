@@ -4,11 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v9r0 2006-02-01 =========================
+!========================= RichDet v9r1 2006-02-03 =========================
 ! 2006-02-01 - Antonis Papanestis
  - Added DeRichSystem and RichDAQDefinitions.h to handle the HPD numbering
    schemes
 
+!========================= RichDet v9r0 2006-01-24 =========================
 ! 2006-01-24 - Antonis Papanestis
  - introduced alignment of mirrors in DeRich and DeRichSphMirror
    requires XmlConditions
