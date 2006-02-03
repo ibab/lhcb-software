@@ -4,18 +4,21 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r0 2006-01-26 =========================
+!========================= DetSys v8r0 2006-02-02 =========================
+! 2006-02-02 - Marco Cattaneo
+ - Changes for reflex dictionary generation after migration to ROOT package
+
 ! 2006-01-26 - Vanya BELYAEV
- - dict/DetDect.h
+ - dict/DetDict.h
    remove unnesessary "casting" helpers *::Interface<*> 
 
 ! 2006-01-25 - Marco Cattaneo
  - Major new version for backards incompatible DC06 changes
  - Obsolete package removed: MuonTools
  - Package added:     DetDescSvc
- - Packages modified: CaloDet v7r0, CaloDetXmlCnv v2r3p2, DetDesc v16r2,
-     DetDescCnv v3r0, Magnet v3r1, RichDet v9r0, VeloDet v10r0, XmlTools v3r9,
-     STDet v2r0, OTDet v6r0, MuonDet v5r0, RichCondition v1r1
+ - Packages modified: CaloDet v7r0, CaloDetXmlCnv v2r3p2, DetDesc v16r3,
+     DetDescCnv v3r0, Magnet v3r1, RichDet v9r1, VeloDet v10r1, XmlTools v3r9,
+     STDet v2r0, OTDet v6r0, MuonDet v5r1, RichCondition v1r2
  - Changes to lcgdict selection files to add new STDetector element and remove
    GaudiKernel classes now defined in GaudiKernel lcgdict
 

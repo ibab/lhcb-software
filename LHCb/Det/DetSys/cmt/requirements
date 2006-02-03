@@ -3,26 +3,25 @@ version v8r0
 
 branches cmt doc dict
 
-use DetDesc             v16r2   Det
+use DetDesc             v16r3   Det
 use DetDescCnv		v3r0    Det
-use DetDescSvc          v1r2    Det
+use DetDescSvc          v1r3    Det
 use XmlTools		v3r9    Tools
-use VeloDet        	v10r0   Det
+use VeloDet        	v10r1   Det
 use OTDet               v6r0    Det
 use CaloDet	   	v7r0    Det
 use CaloDetXmlCnv  	v2r3p2	Det
-use MuonDet             v5r0    Det
+use MuonDet             v5r1    Det
 use Magnet              v3r1    Det
-use RichDet	   	v9r0    Det
-use RichCondition       v1r1    Rich
+use RichDet	   	v9r1    Det
+use RichCondition       v1r2    Rich
 use STDet          	v2r0    Det
 
 # =============== LCG Dictionaries ============================================
-apply_pattern     lcg_dictionary                                       \
-                  dictionary=Det                                 \
+apply_pattern     reflex_dictionary                            \
+                  dictionary=Det                               \
                   headerfiles=$(DETSYSROOT)/dict/DetDict.h     \
-                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
-                  options="--split --reflex"
+                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml
 
 # =============== patterns ====================================================
 apply_pattern     component_library    library=DetDict

@@ -92,7 +92,7 @@
   <class name="DeMuonRegion"       />
   <class name="DeMuonGasGap"       />
   <class name="MuonBasicGeometry"  />
-  <class name="MuonReadoutCond"    />
+  <!-- class name="MuonReadoutCond"    /-->
   <class name="MuonTSMap"          />
   <class name="MuonL1Board"        />
   <class name="MuonODEBoard"       />
@@ -103,11 +103,11 @@
   <class pattern="SmartRef<*>"                       />
   <class pattern="SmartRefVector<*>" contid="VECTOR" />
 
-  
   <exclusion>
     <class name="SolidPolycone::CmpZ" />
     <class name="std::vector<MuonReadoutCond::_readoutParameter>" />
     <class name="std::vector<MuonReadoutCond::_clus>"             />
+<!--  
     <class name="std::vector<DeMuonRegion::logMap_>"              />
     <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const std::basic_string<char>,std::basic_string<char> >" />
@@ -115,6 +115,6 @@
     <class name="std::pair<const unsigned int,bool>" />
     <class name="std::pair<const unsigned int,unsigned int>" />
     <class name="std::swap<unsigned int,unsigned int>" />
+-->  
  </exclusion>
-  
 </lcgdict>
