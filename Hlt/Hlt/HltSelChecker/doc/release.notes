@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 %% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
 
+!========================== HltSelChecker v4r1 2006-02-03 ===================
 ! 2006-01-19 - Luis Fernandez
  - options/NoCuts.opts
    . Correct typo
