@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.249 2006-02-01 19:39:09 marcocle Exp $ 
+! $Id: release.notes,v 1.250 2006-02-03 11:10:06 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v16r2 2006-02-03 ========================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
