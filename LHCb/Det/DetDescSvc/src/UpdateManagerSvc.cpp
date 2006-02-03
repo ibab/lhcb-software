@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.5 2006-02-01 19:40:26 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.6 2006-02-03 10:44:45 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -29,7 +29,7 @@ const ISvcFactory &UpdateManagerSvcFactory = s_factory;
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
-  m_head_since(1),m_head_until(-1)
+  m_head_since(1),m_head_until(0)
 {
   declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",      m_detDataSvcName);
@@ -207,7 +207,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
   }
   // a new item means that we need an update
   m_head_since = 1;
-  m_head_until = -1;
+  m_head_until = 0;
 }
 void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
 	MsgStream log(msgSvc(),name());
@@ -230,7 +230,7 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   link(mf_item,mf,cond_item);
   // a new item means that we need an update
   m_head_since = 1;
-  m_head_until = -1;
+  m_head_until = 0;
 }
 StatusCode UpdateManagerSvc::newEvent(){
 	if (detDataSvc() != NULL){
@@ -321,7 +321,7 @@ void UpdateManagerSvc::i_invalidate(void *instance){
   if (item) {
     item->invalidate();
     m_head_since = 1;
-    m_head_until = -1;
+    m_head_until = 0;
   }
 }
 
