@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.8 2005-10-19 12:50:54 cattanem Exp $
+# $Id: requirements,v 1.9 2006-02-03 08:40:50 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v2r6
+version v3r0
 
 # ============== own includes =================================================
 include_dirs     $(RELATIONSROOT)
