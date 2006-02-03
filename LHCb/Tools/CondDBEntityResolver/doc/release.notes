@@ -6,6 +6,7 @@
 ! $ Id: $
 !-----------------------------------------------------------------------------
 
+================= Tools/CondDBEntityResolver v1r1 2006-02-03 =================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
