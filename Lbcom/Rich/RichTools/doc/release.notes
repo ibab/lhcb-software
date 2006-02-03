@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r2 2006-02-03 =======================
+! 2006-02-03 - Antonis Papanestis
+ - In RichSmartIDTool, check to see if the smartID is set, and if HPD is active
+
 !=========================== RichTools v2r1 2006-01-20 =======================
 ! 2006-01-20 - Marco Cattaneo
  - Changes for Gaudi v18r1
