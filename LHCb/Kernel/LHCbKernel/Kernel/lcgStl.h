@@ -1,11 +1,8 @@
-// $Id: lcgStl.h,v 1.16 2005-12-13 12:38:05 cattanem Exp $
+// $Id: lcgStl.h,v 1.17 2006-02-03 08:28:01 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
 // Additional classes to be added to automatically generated lcgdict
-
-// Reflex include files
-#include "Reflex/Builder/ReflexBuilder.h"
 
 // begin include files
 #include <string>
