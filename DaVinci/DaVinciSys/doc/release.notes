@@ -3,7 +3,7 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v12r16>2005-02-03 DaVinci v12r16 - DC04v2 re-stripping version</A></H1>
+</PRE><H1><A NAME=v12r16>2005-02-03 DaVinci v12r16 - DC04v2 re-stripping version</A></H1><PRE>
 Main modifications:
  
   - CommonParticles:
@@ -25,7 +25,6 @@ Main modifications:
     . Some more tuning by Luis 
     . Bug fix in TrgForwardAlg
 
-<PRE>
 #######################################MM#######################################
 #                                DaVinci v12r16                                #
 ################################################################################
