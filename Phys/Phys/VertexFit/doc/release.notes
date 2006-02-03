@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.45 2006-01-31 13:00:29 xieyu Exp $
+! $Id: release.notes,v 1.46 2006-02-03 08:41:16 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+!========================== VertexFit v1r10 2006-02-03 ===================
 ! 2006-01-30 - Y. Xie
   - src/KFFitTool.cpp
     . replaced some err() with debug()
