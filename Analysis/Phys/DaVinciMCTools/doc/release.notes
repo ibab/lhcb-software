@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.97 2006-02-01 15:17:03 gligorov Exp $
+! $Id: release.notes,v 1.98 2006-02-03 07:23:37 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
-! 2006-1-30 - V. Gligorov
+!========================== DaVinciMCTools v5r18 2006-02-03 ===================
+! 2006-01-30 - V. Gligorov
   - src/BackgroundCategory.cpp
   - src/BackgroundCategory.h
   - DaVinciMCTools/IBackgroundCategory.h
     . Considerable extra documentation added in all three files.
 
-! 2006-1-30 - V. Gligorov
+! 2006-01-30 - V. Gligorov
   - src/BackgroundCategory.cpp
     . Added property m_rescut controlling the cut at which an MCParticle is 
       considered a stable resonance or not.
@@ -23,7 +24,7 @@
  - src/BackgroundCategory.cpp
    . Minor modification for m_cat member.
 
-! 2006-1-30 - V. Gligorov
+! 2006-01-30 - V. Gligorov
   - src/BackgroundCategory.cpp
   Modified category AllFromSamePV to reflect the fact that if a particle has no mothers with
   a significant lifetime it should be considered as coming from the primary vertex.
