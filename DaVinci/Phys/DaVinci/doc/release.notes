@@ -4,6 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r16 2006-02-03 ===================
+! 2006-02-03 - P. Koppenburg
+  - options/DaVinci.opts
+    . Remove DaVinciKshortTight.opts that should not be used
 ! 2006-01-31 - P. Koppenburg
   - options/DaVinciKshortLoose.opts
   - options/DaVinciKshortTight.opts

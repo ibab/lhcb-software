@@ -70,8 +70,6 @@
 
 //--- Ks->pi+pi- with all type of tracks loose selection + monitoring
 //#include "$KS2PIPISELROOT/options/DaVinciKshortLoose.opts"
-//--- Ks->pi+pi- with all type of tracks tight selection + monitoring
-//#include "$KS2PIPISELROOT/options/DaVinciKshortTight.opts"
 
 //--- Example of Particle with Assigned pID only for HLT studies
 //#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts"
