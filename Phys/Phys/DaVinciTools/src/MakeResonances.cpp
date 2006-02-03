@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.15 2006-01-30 12:57:07 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.16 2006-02-03 07:26:20 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -159,6 +159,7 @@ StatusCode MakeResonances::createDecays(){
     if ( dsds->is_cc() ){
       // LF : avoid duplication of mothers when using []cc
       strings daughtersBeforecc = daughters; // daughters have been sorted
+      std::string motherBeforecc = mother ;
       debug() << "Sorted before cc daughters to " << daughtersBeforecc << endmsg;
       
       debug() << "Setting up cc for " << dsds->getDescriptor() << endmsg;
@@ -168,12 +169,12 @@ StatusCode MakeResonances::createDecays(){
       debug() << "Sorted cc daughters to " << daughters << endmsg ;
 
       if(daughtersBeforecc == daughters){
-        info() << "Ignoring cc since decay products identical to original decay products" << endmsg;
+        warning() << "You have chosen two charged-conjugated modes with identical final states: " 
+                  << m_decayDescriptors << endmsg ;
+        warning() << "All final state particle will be duplicated as " << motherBeforecc << " and " << mother << endmsg ;
       }
-      else{
-        sc = createDecay(mother, daughters);
-        if (sc.isFailure()) return sc;
-      }
+      sc = createDecay(mother, daughters);
+      if (sc.isFailure()) return sc;
       
     } else verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
   }
