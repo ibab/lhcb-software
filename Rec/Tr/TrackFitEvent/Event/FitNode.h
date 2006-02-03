@@ -1,12 +1,13 @@
+// $Id: FitNode.h,v 1.7 2006-02-03 10:01:04 ebos Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
-
-// from CLHEP
-#include "CLHEP/Matrix/Matrix.h"
 
 // from TrackEvent
 #include "Event/Node.h"
 #include "Event/Measurement.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 /** @class FitNode FitNode.h
  *
@@ -29,6 +30,7 @@
 
 class FitNode: public Node {
 public:
+
   /// Default constructor
   FitNode();
 
@@ -45,29 +47,29 @@ public:
   virtual ~FitNode();
 
   /// retrieve transport matrix
-  const HepMatrix& transportMatrix() const  { return m_transportMatrix; }
+  const TransportMatrix& transportMatrix() const  { return m_transportMatrix; }
 
   /// retrieve transport vector
-  const HepVector& transportVector() const { return m_transportVector; }
+  const Vector5& transportVector() const { return m_transportVector; }
 
   /// retrieve noise matrix
-  const HepSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
+  const TransportMatrix& noiseMatrix() const { return m_noiseMatrix; }
 
   /// retrieve delta z transport
   double transportDeltaZ() const { return m_transportDeltaZ; }
 
   /// set transport matrix
-  void setTransportMatrix( const HepMatrix& transportMatrix ) {
+  void setTransportMatrix( const TransportMatrix& transportMatrix ) {
     m_transportMatrix = transportMatrix;
   }
   
   /// set transport vector
-  void setTransportVector( const HepVector& transportVector ) {
+  void setTransportVector( const Vector5& transportVector ) {
     m_transportVector = transportVector;
   }
   
   /// set noise matrix
-  void setNoiseMatrix( const HepSymMatrix& noiseMatrix ) {
+  void setNoiseMatrix( const TransportMatrix& noiseMatrix ) {
     m_noiseMatrix = noiseMatrix;
   }  
 
@@ -98,11 +100,11 @@ public:
 
 private:
 
-  HepMatrix      m_transportMatrix;  ///< transport matrix
-  HepVector      m_transportVector;  ///< transport vector
-  HepSymMatrix   m_noiseMatrix;      ///< noise matrix
-  double         m_transportDeltaZ;  ///< transport delta z
-  State          m_predictedState;   ///< predicted state from filter step
+  TransportMatrix m_transportMatrix; ///< transport matrix
+  Vector5         m_transportVector; ///< transport vector
+  TransportMatrix m_noiseMatrix;     ///< noise matrix
+  double          m_transportDeltaZ; ///< transport delta z
+  State           m_predictedState;  ///< predicted state from filter step
 };
 
 

@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.1 2006-01-17 09:06:32 ebos Exp $
+// $Id: StateTraj.h,v 1.2 2006-02-03 10:00:51 ebos Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -7,6 +7,12 @@
 
 // from LHCbKernel
 #include "Kernel/Trajectory.h"
+
+// fomr Kernel/LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 /** @class StateTraj StateTraj.h
  *
@@ -30,32 +36,32 @@ public:
 
   /// Constructor from a State and the magnetic field at the State position
   StateTraj( const State& state,
-             const HepVector3D& bField );
+             const XYZVector& bField );
   
   /// Constructor from a StateVector and the magnetic field at State position
-  StateTraj( const HepVector& stateVector,
+  StateTraj( const TrackVector& stateVector,
              const double& z,
-             const HepVector3D& bField );
+             const XYZVector& bField );
 
   /// Point on trajectory where parabolic approximation is made
-  virtual HepPoint3D position( const double& arclength ) const;
+  virtual XYZPoint position( const double& arclength ) const;
     
   /// First derivative of the trajectory at the approximation point
-  virtual HepVector3D direction( const double& arclength ) const;
+  virtual XYZVector direction( const double& arclength ) const;
     
   /// Second derivative of the trajectory at the approximation point,
   /// used as the constant value of the curvature of the parabolic approximation
-  virtual HepVector3D curvature() const;
+  virtual XYZVector curvature() const;
 
   /// Create a parabolic approximation to the trajectory
   virtual void expansion( const double& arclength,
-                          HepPoint3D& p,
-                          HepVector3D& dp,
-                          HepVector3D& ddp ) const;
+                          XYZPoint& p,
+                          XYZVector& dp,
+                          XYZVector& ddp ) const;
 
   /// Retrieve the derivative of the parabolic approximation to the trajectory
   /// with respect to the state parameters
-  virtual const HepMatrix derivative( const double& arclength ) const;
+  virtual const ROOT::Math::SMatrix<double, 3, 5> derivative( const double& arclength ) const;
 
   /// Number of arclengths until deviation of the trajectory from the expansion
   /// reaches the given tolerance (does not account for the curvature).
@@ -74,11 +80,11 @@ public:
 
 private:
 
-  HepPoint3D  m_pos;    ///< the position of the State
-  HepVector3D m_dir;    ///< the unit direction of the State
-  HepVector3D m_curv;   ///< constant value of parabola's curvature
-  double      m_qOverP; ///< the charge-over-momentum Q/P of the State
-  HepVector3D m_bField; ///< the magnetic field vector at the State position
+  XYZPoint  m_pos;    ///< the position of the State
+  XYZVector m_dir;    ///< the unit direction of the State
+  XYZVector m_curv;   ///< constant value of parabola's curvature
+  double    m_qOverP; ///< the charge-over-momentum Q/P of the State
+  XYZVector m_bField; ///< the magnetic field vector at the State position
 
   /// Proportionality factor for calculating equation of motion in B-field
   static const double kappa = 0.3 * GeV / ( c_light * tesla * meter );
