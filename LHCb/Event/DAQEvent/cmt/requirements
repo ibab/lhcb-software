@@ -1,20 +1,21 @@
 package DAQEvent
-version v6r1
+version v6r2
 
 use GaudiAlg  v*
 
 include_dirs $(DAQEVENTROOT)
 
 # ==================== Produce LCG dictionary ===============================
-document lcg_dictionary_generator DAQEventGen $(DAQEVENTROOT)/Event/RawEvent.h dictionary=DAQEvent
-macro_append DAQEvent_lcgdict_options '-s $(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml -c capabilities.cpp --split --reflex --comments $(includes) '
+apply_pattern     reflex_dictionary                            \
+                  dictionary=DAQEvent                               \
+                  headerfiles=$(DAQEVENTROOT)/Event/RawEvent.h     \
+                  selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml
 
 # ==================== linker library =======================================
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================
 library DAQEvent        component/*.cpp
-library DAQEventDict    ../$(tag)/dict/DAQEvent/*.cpp
 
 # ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEventDict
