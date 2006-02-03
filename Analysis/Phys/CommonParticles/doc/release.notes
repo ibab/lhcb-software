@@ -4,6 +4,7 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v2r0 2006-02-03 ===================
 ! 2006-01-31 - P. Koppenburg 
   - options/MergedPi0Alg.opts
   - options/ResolvedPi0Alg.opts
