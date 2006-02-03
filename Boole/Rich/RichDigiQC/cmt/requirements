@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.20 2005-12-17 14:24:15 jonrob Exp $
+# $Id: requirements,v 1.21 2006-02-03 10:33:45 cattanem Exp $
 #============================================================================
 
 package           RichDigiQC
@@ -22,6 +22,7 @@ use MCEvent           v*    Event
 use RichEvent         v*    Event
 use DAQEvent          v*    Event
 use RichKernel        v*    Rich
+use RichDet           v*    Det
 
 # Component library building rule
 #============================================================================
