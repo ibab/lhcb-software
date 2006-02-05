@@ -1,10 +1,14 @@
-// $Id: EvtGenDecay.cpp,v 1.4 2005-12-31 17:31:24 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.5 2006-02-05 21:01:44 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
 // Include files
 #include <iostream>
 #include <fstream>
+
+// from SEAL
+#include "SealBase/ShellEnvironment.h"
+#include "SealBase/TempFile.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -17,6 +21,9 @@
 // from LHCb
 #include "Kernel/ParticleID.h"
 #include "Kernel/SystemOfUnits.h"
+
+// from Event
+#include "Event/HepMCEvent.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -33,13 +40,13 @@
 // Calls to FORTRAN routines
 #ifdef WIN32
 extern "C" {
-  void __stdcall PHOTOS_INIT() ;
+  void __stdcall PHOTOS_INIT( const char* filename, int length ) ;
   void __stdcall PYTHIAOUTPUT_INIT( int * ) ;
   void __stdcall PHOTOS_END () ;
 }
 #else
 extern "C" {
-  void photos_init_() ;
+  void photos_init_( const char* filename , int length ) ;
   void pythiaoutput_init_( int * ) ;
   void photos_end_()  ;
 }
@@ -97,31 +104,32 @@ EvtGenDecay::~EvtGenDecay( ) { }
 // Initialize method
 //=============================================================================
 StatusCode EvtGenDecay::initialize( ) {
+  StatusCode sc = GaudiTool::initialize( ) ;
+  if ( sc.isFailure() ) return sc ;
+
   MsgStream msg ( msgSvc() , name() ) ;
   evtgenStream = new MsgStream( msg ) ;
-  StatusCode sc = GaudiTool::initialize( ) ;
-  if ( sc.isFailure() ) return Error( "Base class is not initalized" , sc ) ;
 
   // Find Generic DECAY.DEC file
   // Default location (if not specified in job options is
   // $DECFILESROOT/dkfiles/DECAY.DEC
-  if ( m_decayFile.empty() || "empty" == m_decayFile ) {
-    if ( 0 != getenv("DECFILESROOT") ) {
-      m_decayFile  = getenv( "DECFILESROOT" ) ;
-      m_decayFile += "/dkfiles/DECAY.DEC" ;
-    }
-  }
-
   if ( m_decayFile.empty() || "empty" == m_decayFile )
-    return Error("DECAY.DEC location name not set. Data will not be found.");
+    if ( seal::ShellEnvironment().has("DECFILESROOT") ) 
+      m_decayFile  = seal::ShellEnvironment().get( "DECFILESROOT" ) + 
+        "/dkfiles/DECAY.DEC" ;
+  
+  // Check if file exists:
+  seal::Filename decayFile( m_decayFile ) ;
+  if ( ! decayFile.exists() ) 
+    return Error( "The specified generic decay table does not exist" ) ;
+  if ( ! decayFile.isReadable() ) 
+    return Error( "The specified generic decay table is not readable" ) ;
 
   // create temporary evt.pdl file filled with Gaudi ParticlePropertySvc
-  std::string tempEvtPdlFile( "tempPdlFile.txt" ) ;
-  sc = createTemporaryEvtFile( tempEvtPdlFile ) ;
-  if ( ! sc.isSuccess() )
-    return Error ( std::string( "unable to create temporary evt.pdl " ) +
-                   std::string( "file from Particle Property Service." ) ,
-                   sc ) ;
+  seal::Filename evtPdlFile( "tempPdlFile.txt" ) ;
+  if ( evtPdlFile.exists() ) seal::Filename::remove( evtPdlFile ) ;
+  sc = createTemporaryEvtFile( evtPdlFile ) ;
+  if ( ! sc.isSuccess() ) return sc ;
 
   // create random engine for EvtGen
   IRndmGenSvc * randSvc( 0 ) ;
@@ -130,31 +138,34 @@ StatusCode EvtGenDecay::initialize( ) {
     Exception( "RndmGenSvc not found to initialize EvtGen random engine" ) ;
   }
 
-  StatusCode resultCode ;
-  m_randomEngine = new EvtGenGaudiRandomEngine( randSvc , resultCode ) ;
-  if ( ! resultCode.isSuccess() )
-    return Error( "Cannot initialize EvtGenGaudiRandomService" , resultCode ) ;
+  m_randomEngine = new EvtGenGaudiRandomEngine( randSvc , sc ) ;
+  if ( ! sc.isSuccess() )
+    return Error( "Cannot initialize EvtGenGaudiRandomService" , sc ) ;
   release( randSvc ) ;
 
   // create EvtGen engine from decay file, evt.pdl file and random engine
-  m_gen = new EvtGen ( m_decayFile.c_str() , tempEvtPdlFile.c_str() ,
+  m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.name() ,
                        m_randomEngine ) ;
   (*evtgenStream) << endreq ;
 
   // Remove temporary file if not asked to keep it
-  if ( ! m_keepTempEvtFile ) {
-    std::string delcmd ( "rm -f " ) ;
-    delcmd += tempEvtPdlFile ;
-#ifndef WIN32
-    system( delcmd.c_str() ) ;
-#endif
-  }
+  if ( ! m_keepTempEvtFile ) seal::Filename::remove( evtPdlFile ) ;
 
   // Read the optional signal decay file
-  if ( ! m_userDecay.empty() && "empty" != m_userDecay )
+  if ( ! m_userDecay.empty() && "empty" != m_userDecay ) {
+    seal::Filename userDecayFile( m_userDecay ) ;
+    if ( ! userDecayFile.exists() ) 
+      return Error( "The specified user decay file does not exist" ) ;
+    if ( ! userDecayFile.isReadable() ) 
+      return Error( "The specified user decay file is not readable" ) ;
     m_gen -> readUDecay( m_userDecay.c_str() ) ;
+  }
+
   (*evtgenStream) << endreq ;
 
+  m_photosTempFile = seal::TempFile::file( m_photosTempFilename ) ;
+  m_photosTempFile -> close() ;
+  
   int arg ;
   if ( msgLevel( MSG::DEBUG ) ) {
     arg = 0 ;
@@ -167,10 +178,12 @@ StatusCode EvtGenDecay::initialize( ) {
     arg = 1 ;
 #ifdef WIN32
     PYTHIAOUTPUT_INIT( &arg ) ;
-    PHOTOS_INIT() ;
+    PHOTOS_INIT( m_photosTempFilename.name() , 
+                 strlen( m_photosTempFilename.name() ) ) ;
 #else
     pythiaoutput_init_( &arg ) ;
-    photos_init_();
+    photos_init_( m_photosTempFilename.name() , 
+                  strlen( m_photosTempFilename.name() ) ) ;
 #endif
   }
   
@@ -201,11 +214,8 @@ StatusCode EvtGenDecay::finalize() {
 #endif
   }  
  
-	std::string delcmd ( "rm -f " ) ;
-	delcmd += "photos_init.tmp" ;
-#ifndef WIN32
-	system( delcmd.c_str() ) ;
-#endif
+  delete m_photosTempFile ;
+  seal::Filename::remove( m_photosTempFilename , false , true ) ;
 	
   delete evtgenStream ;
 
@@ -244,8 +254,9 @@ StatusCode EvtGenDecay::generateDecay( HepMC::GenParticle * theMother ) const {
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
 
-  // Set status to 888
-  theMother -> set_status( 888 ) ;
+  // Set status to "decayed by evtgen"
+  theMother -> 
+    set_status( LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
 
   return StatusCode::SUCCESS ;
 }
@@ -287,8 +298,8 @@ StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenParticle * theMother ,
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
 
-  // Set status to 889
-  theMother -> set_status( 889 ) ;
+  // Set status to "signal in lab frame"
+  theMother -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
 
   return StatusCode::SUCCESS ;
 }
@@ -328,8 +339,9 @@ StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenParticle * theMother ,
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
 
-  // Set particle status to 888
-  theMother -> set_status( 888 ) ;
+  // Set particle status to "decayed by evtgen"
+  theMother ->
+    set_status( LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
 
   return StatusCode::SUCCESS ;
 }
@@ -373,7 +385,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
       double pz = momentum . get( 3 ) ;
       
       int id = EvtPDL::getStdHep( theEvtGenPart->getDaug( it )->getId() ) ;
-      int status = 777 ;
+      int status = LHCb::HepMCEvent::DecayedByDecayGen ;
       
       HepMC::GenParticle * prod_part = new
         HepMC::GenParticle( HepLorentzVector(px,py,pz,e) , id , status ) ;
@@ -391,13 +403,15 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
       else 
         {
           if ( theEvtGenPart->getDaug(it)->getNDaug() > 0 ) 
-            prod_part -> set_status ( 888 ) ;
-          else prod_part -> set_status( 999 ) ;
+            prod_part -> 
+              set_status
+              ( LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
+          else prod_part -> set_status( LHCb::HepMCEvent::StableInDecayGen ) ;
         }
     }
   }
   else {
-    theMother -> set_status( 999 ) ;
+    theMother -> set_status( LHCb::HepMCEvent::StableInDecayGen ) ;
   }
   
   return StatusCode::SUCCESS ;
@@ -417,11 +431,11 @@ bool EvtGenDecay::isKnownToDecayTool( int pdgId ) const {
 // Create a temporary evt.pdl file taking available informations
 // from the Particle Property Service
 //=============================================================================
-StatusCode EvtGenDecay::createTemporaryEvtFile( const std::string& newFile ) 
-const {
+StatusCode EvtGenDecay::createTemporaryEvtFile( const seal::Filename & 
+                                                newFile ) const {
   // Create temporary file
-  std::ofstream g( newFile.c_str() ) ;
-  if ( ! g.is_open() ) return Error( "Cannot create file " + newFile ) ;
+  std::ofstream g( newFile.name() ) ;
+  if ( ! g.is_open() ) return Error( "Cannot create evt.pdl file" ) ;
 
   // Write description of the file columns
   // Lines beginning with * are comments
@@ -679,7 +693,7 @@ const {
   // sets diagonal polarization matrix for unpolarized decays for the
   // moment
   // or generate Polarized Lambda_b if requested
-  if ( ( m_generatePolLambdab) && 
+  if ( ( m_generatePolLambdab ) && 
        ( abs( theHepMCPart -> pdg_id() ) == 5122 ) ) {
     EvtSpinDensity rho ;
     rho.SetDim( 2 ) ;

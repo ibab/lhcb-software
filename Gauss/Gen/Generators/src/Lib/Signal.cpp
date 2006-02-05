@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.8 2005-12-31 17:33:40 robbep Exp $
+// $Id: Signal.cpp,v 1.9 2006-02-05 21:01:44 robbep Exp $
 // Include files 
 
 // local
@@ -175,14 +175,14 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
                             
   // Check if container already exists
-  if ( exist< LHCb::HepMCEvents >( "/Event/Gen/SignalDecayTree" ) ) 
+  if ( exist< LHCb::HepMCEvents >( LHCb::HepMCEventLocation::Signal ) ) 
     return Error( "SignalDecayTree container already exists !" ) ;
   
   LHCb::HepMCEvents * hepVect = new LHCb::HepMCEvents ;
   hepVect -> insert( mcevt ) ;
   
   // Register new location and store HepMC event
-  sc = put( hepVect , "/Event/Gen/SignalDecayTree" ) ;
+  sc = put( hepVect , LHCb::HepMCEventLocation::Signal ) ;
   if ( ! sc.isSuccess() ) 
     return Error( "Could not register SignalDecayTree" ) ;
   

@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.cpp,v 1.1 2005-10-03 10:18:38 robbep Exp $
+// $Id: FixedNInteractions.cpp,v 1.2 2006-02-05 21:01:44 robbep Exp $
 // Include files 
 
 // local
@@ -6,6 +6,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+
+// from LHCb
+#include "Kernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedNInteractions
@@ -27,6 +30,7 @@ FixedNInteractions::FixedNInteractions( const std::string& type,
   : GaudiTool ( type, name , parent ) {
     declareInterface< IPileUpTool >( this ) ;
     declareProperty ( "NInteractions" , m_nInteractions = 1 ) ;
+    declareProperty ( "Luminosity" , m_luminosity = 2.e32 /cm2/s ) ;
 }
 
 //=============================================================================
@@ -53,7 +57,7 @@ StatusCode FixedNInteractions::initialize( ) {
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
 unsigned int FixedNInteractions::numberOfPileUp( double & currentLuminosity ) {
-  currentLuminosity = 0. ;
+  currentLuminosity = m_luminosity ;
   return m_nInteractions ;
 }
 

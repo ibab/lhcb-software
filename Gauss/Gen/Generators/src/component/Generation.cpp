@@ -1,8 +1,11 @@
-// $Id: Generation.cpp,v 1.10 2006-02-01 21:28:58 robbep Exp $
+// $Id: Generation.cpp,v 1.11 2006-02-05 21:01:44 robbep Exp $
 // Include files 
 
 // local
 #include "Generation.h"
+
+// from Boost
+#include <boost/checked_delete.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -54,20 +57,6 @@ Generation::Generation( const std::string& name,
     m_nAcceptedEvents      ( 0 ) ,
     m_nInteractions        ( 0 ) , 
     m_nAcceptedInteractions( 0 ) ,
-    m_n1b                  ( 0 ) ,
-    m_n3b                  ( 0 ) ,
-    m_nPromptB             ( 0 ) ,
-    m_n1c                  ( 0 ) ,
-    m_n3c                  ( 0 ) ,
-    m_nPromptC             ( 0 ) ,
-    m_nbc                  ( 0 ) ,
-    m_n1bAccepted          ( 0 ) ,
-    m_n3bAccepted          ( 0 ) ,
-    m_nPromptBAccepted     ( 0 ) ,
-    m_n1cAccepted          ( 0 ) ,
-    m_n3cAccepted          ( 0 ) ,
-    m_nPromptCAccepted     ( 0 ) ,
-    m_nbcAccepted          ( 0 ) ,
     m_nBeforeFullEvent     ( 0 ) ,
     m_nAfterFullEvent      ( 0 ) {
     // Generation Method
@@ -93,6 +82,27 @@ Generation::Generation( const std::string& name,
     // Tool name to cut on full event
     declareProperty( "FullGenEventCutTool" , 
                      m_fullGenEventCutToolName = "" ) ;
+
+    // Reset counters
+    m_intC.assign( 0 ) ;
+    m_intCAccepted.assign( 0 ) ;
+
+    // setup counter names
+    m_intCName[ Oneb ] = "generated interactions with >= 1b" ;    
+    m_intCName[ Threeb ] = "generated interactions with >= 3b" ;
+    m_intCName[ PromptB ] = "generated interactions with 1 prompt B" ;
+    m_intCName[ Onec ] = "generated interactions with >= 1c" ;
+    m_intCName[ Threec ] = "generated interactions with >= 3c" ;
+    m_intCName[ PromptC ] = "generated interactions with >= prompt C" ;
+    m_intCName[ bAndc ] = "generated interactions with b and c" ;
+
+    m_intCAcceptedName[ Oneb ] = "accepted interactions with >= 1b" ;    
+    m_intCAcceptedName[ Threeb ] = "accepted interactions with >= 3b" ;
+    m_intCAcceptedName[ PromptB ] = "accepted interactions with 1 prompt B" ;
+    m_intCAcceptedName[ Onec ] = "accepted interactions with >= 1c" ;
+    m_intCAcceptedName[ Threec ] = "accepted interactions with >= 3c" ;
+    m_intCAcceptedName[ PromptC ] = "accepted interactions with >= prompt C" ;
+    m_intCAcceptedName[ bAndc ] = "accepted interactions with b and c" ;
 }
 
 //=============================================================================
@@ -156,11 +166,8 @@ StatusCode Generation::execute() {
   double        currentLuminosity ;
   LHCb::HepMCEvents   * theEvents     ; LHCb::HepMCEvents::iterator itEvents ;
   LHCb::GenCollisions * theCollisions ; 
-  LHCb::GenCollisions::iterator  itCollisions ;
 
-  unsigned int n1b( 0 ) , n3b( 0 ) , nPromptB( 0 ) ;
-  unsigned int n1c( 0 ) , n3c( 0 ) , nPromptC( 0 ) ;
-  unsigned int nbc( 0 ) ;
+  interactionCounter theIntCounter ;
 
   // Create containers for this event
   theEvents = new LHCb::HepMCEvents( ) ;
@@ -170,17 +177,17 @@ StatusCode Generation::execute() {
   bool goodEvent = false ;
   while ( ! goodEvent ) {
     // Clear the vectors which will contain the HepMC events and collisions
-    for ( itEvents = theEvents -> begin() ; theEvents -> end() != itEvents ;
-          ++itEvents ) delete (*itEvents) ;
-    for ( itCollisions  = theCollisions -> begin() ; 
-          theCollisions -> end() != itCollisions ; ++itCollisions ) 
-      delete (*itCollisions) ;
-    theEvents -> clear() ; theCollisions -> clear() ;
+    std::for_each( theEvents -> begin() , theEvents -> end() ,
+                   boost::checked_deleter< LHCb::HepMCEvent >() ) ;
+    std::for_each( theCollisions -> begin() , theCollisions -> end() ,
+                   boost::checked_deleter< LHCb::GenCollision >() ) ;
+    theEvents -> clear() ;     theCollisions -> clear() ;
     
     // Compute the number of pile-up interactions to generate 
     if ( 0 != m_pileUpTool ) 
       nPileUp = m_pileUpTool -> numberOfPileUp( currentLuminosity ) ;
     else { 
+      // default set to 1 pile and 2.10^32 luminosity
       nPileUp = 1 ;
       currentLuminosity = 2.e32/cm2/s ;
     }
@@ -190,21 +197,16 @@ StatusCode Generation::execute() {
     goodEvent = m_sampleGenerationTool -> generate( nPileUp , theEvents , 
                                                     theCollisions ) ;
     
-    m_nEvents++ ;
-    m_nInteractions += nPileUp ;
+    // increase event and interactions counters
+    m_nEvents++ ;    m_nInteractions += nPileUp ;
 
     // Update interaction counters
-    n1b = 0 ; n3b = 0 ; nPromptB = 0 ;
-    n1c = 0 ; n3c = 0 ; nPromptC = 0 ;
-    nbc = 0 ;
+    std::fill( theIntCounter.begin() , theIntCounter.end() , 0 ) ;
     for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ; 
-          ++itEvents ) updateInteractionCounters( n1b, n3b, nPromptB, n1c, 
-                                                  n3c, nPromptC, nbc , 
-                                                  *itEvents ) ;
+          ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
     
-    m_n1b += n1b ; m_n3b += n3b ; m_nPromptB += nPromptB ;
-    m_n1c += n1c ; m_n3c += n3c ; m_nPromptC += nPromptC ;
-    m_nbc += nbc ;
+    std::transform( m_intC.begin() , m_intC.end() , theIntCounter.begin() , 
+                    m_intC.begin() , std::plus< unsigned int >( ) ) ;
 
     // Decay the event if it is a good event
     if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
@@ -231,17 +233,16 @@ StatusCode Generation::execute() {
   m_nAcceptedEvents++ ;
   m_nAcceptedInteractions += nPileUp ;
 
-  m_n1bAccepted += n1b ; m_n3bAccepted += n3b ; 
-  m_nPromptBAccepted += nPromptB ;
-  m_n1cAccepted += n1c ; m_n3cAccepted += n3c ; 
-  m_nPromptCAccepted += nPromptC ;
-  m_nbcAccepted += nbc ;
+  std::transform( m_intCAccepted.begin() , m_intCAccepted.end() , 
+                  theIntCounter.begin() , m_intCAccepted.begin() , 
+                  std::plus< unsigned int >( ) ) ;
 
   // Now update the header information and put the event in Gaudi event store
   LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
   theGenHeader -> setLuminosity( currentLuminosity ) ;
   theGenHeader -> setEvType( m_eventType ) ;
   LHCb::GenCollisions::const_iterator it ;
+
   for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
     theGenHeader -> addToCollisions( *it ) ;
 
@@ -266,32 +267,21 @@ StatusCode Generation::finalize() {
   info() << "***********   Generation counters   **************" << std::endl ;
   printCounter( info() , "generated events" , m_nEvents ) ;
   printCounter( info() , "generated interactions" , m_nInteractions ) ;
-  printCounter( info() , "generated interactions with >= 1 b" , m_n1b ) ;
-  printCounter( info() , "generated interactions with >= 3 b" , m_n3b ) ;
-  printCounter( info() , "generated interactions with 1 prompt B" , 
-                m_nPromptB ) ;
-  printCounter( info() , "generated interactions with >= 1 c" , m_n1c ) ;
-  printCounter( info() , "generated interactions with >= 3 c" , m_n3c ) ;
-  printCounter( info() , "accepted interactions with b and c" , m_nbc ) ;
-  printCounter( info() , "generated interactions with 1 prompt C" , 
-                m_nPromptC ) ;
+  
+  for ( unsigned int i = 0 ; i < m_intC.size() ; ++i )
+    printCounter( info() , m_intCName[ i ] , m_intC[ i ] ) ;
   
   printCounter( info() , "accepted events" , m_nAcceptedEvents ) ;
   printCounter( info() , "interactions in accepted events" , 
                 m_nAcceptedInteractions ) ;
-  printCounter( info() , "accepted interactions with >= 1 b", m_n1bAccepted ) ;
-  printCounter( info() , "accepted interactions with >= 3 b", m_n3bAccepted ) ;
-  printCounter( info() , "accepted interactions with 1 prompt B" , 
-                m_nPromptBAccepted ) ;
-  printCounter( info() , "accepted interactions with >= 1 c", m_n1cAccepted ) ;
-  printCounter( info() , "accepted interactions with >= 3 c", m_n3cAccepted ) ;
-  printCounter( info() , "accepted interactions with 1 prompt C" , 
-                m_nPromptCAccepted ) ; 
-  printCounter( info() , "accepted interactions with b and c", m_nbcAccepted );
+  
+  for ( unsigned int j = 0 ; j < m_intCAccepted.size() ; ++j ) 
+    printCounter( info() , m_intCAcceptedName[ j ] , m_intCAccepted[ j ] ) ;
 
   printEfficiency( info() , "full event cut" , m_nAfterFullEvent , 
                    m_nBeforeFullEvent ) ;
   info() << endmsg ;
+
   m_sampleGenerationTool -> printCounters() ;
 
   return GaudiAlgorithm::finalize( ) ; // Finalize base class
@@ -339,13 +329,7 @@ StatusCode Generation::decayEvent( LHCb::HepMCEvent * theEvent ) {
 //=============================================================================
 // Interaction counters
 //=============================================================================
-void Generation::updateInteractionCounters( unsigned int & n1b , 
-                                            unsigned int & n3b ,
-                                            unsigned int & nPromptB ,
-                                            unsigned int & n1c ,
-                                            unsigned int & n3c ,
-                                            unsigned int & nPromptC ,
-                                            unsigned int & nbc ,
+void Generation::updateInteractionCounters( interactionCounter & theCounter ,
                                             const LHCb::HepMCEvent * evt ) 
 {
   const HepMC::GenEvent * theEvent = evt -> pGenEvt() ;
@@ -363,12 +347,13 @@ void Generation::updateInteractionCounters( unsigned int & n1b ,
     if ( thePid.hasBottom() ) bHadron++ ;
     if ( thePid.hasCharm() ) cHadron++ ;
   }
-  if ( bQuark >= 1 ) n1b++ ;
-  if ( bQuark >= 3 ) n3b++ ;
-  if ( cQuark >= 1 ) n1c++ ;
-  if ( cQuark >= 3 ) n3c++ ;
-  if ( ( bQuark >= 1 ) && ( cQuark >= 1 ) ) nbc++ ;
-  if ( ( 0 == bQuark ) && ( bHadron > 0 ) ) nPromptB++ ;
-  if ( ( 0 == cQuark ) && ( 0 == bHadron ) && ( cHadron > 0 ) ) nPromptC++ ;
+  if ( bQuark >= 1 ) theCounter[ Oneb ]++ ;
+  if ( bQuark >= 3 ) theCounter[ Threeb ]++ ;
+  if ( cQuark >= 1 ) theCounter[ Onec ]++ ;
+  if ( cQuark >= 3 ) theCounter[ Threec ]++ ;
+  if ( ( bQuark >= 1 ) && ( cQuark >= 1 ) ) theCounter[ bAndc ]++ ;
+  if ( ( 0 == bQuark ) && ( bHadron > 0 ) ) theCounter[ PromptB ]++ ;
+  if ( ( 0 == cQuark ) && ( 0 == bHadron ) && ( cHadron > 0 ) ) 
+    theCounter[ PromptC ]++;
 }
 

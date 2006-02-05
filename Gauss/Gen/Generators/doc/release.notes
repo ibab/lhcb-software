@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.30 2006-02-01 21:29:33 robbep Exp $
+! $Id: release.notes,v 1.31 2006-02-05 21:01:44 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-02-05 - Patrick Robbe
+ - requirements: use SEAL 
+ - Generation: use arrays to contain counters
+ - Use temporary file class from SEAL to make temporary files.
 
 ! 2006-02-01 - Patrick Robbe
  - ExternalGenerator and src/Lib/EVLCTEQ.F: remove warnings when not in DEBUG 
