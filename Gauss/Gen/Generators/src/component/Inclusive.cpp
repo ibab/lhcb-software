@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.5 2005-12-31 17:32:39 robbep Exp $
+// $Id: Inclusive.cpp,v 1.6 2006-02-05 21:02:45 robbep Exp $
 // Include files 
 
 // local
@@ -29,7 +29,8 @@ struct isRootB : std::unary_function< const HepMC::GenParticle * , bool > {
   bool operator() ( const HepMC::GenParticle * part ) const {
 
     // Do not consider documentation and special particles
-    if ( part -> status() == 3 ) return false ;
+    if ( part -> status() == LHCb::HepMCEvent::DocumentationParticle ) 
+      return false ;
     
     // Check if particle has a b quark
     LHCb::ParticleID thePid( part -> pdg_id() ) ;
@@ -61,7 +62,8 @@ struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
   bool operator() ( const HepMC::GenParticle * part ) const {
 
     // Do not consider documentation and special particles
-    if ( part -> status() == 3 ) return false ;
+    if ( part -> status() == LHCb::HepMCEvent::DocumentationParticle ) 
+      return false ;
 
     // Check if particle has a c quark
     LHCb::ParticleID thePid( part -> pdg_id() ) ;
@@ -93,7 +95,8 @@ struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
   bool operator() ( const HepMC::GenParticle * part ) const {
 
     // Do not look at special particles
-    if ( part -> status() == 3 ) return false ;
+    if ( part -> status() == LHCb::HepMCEvent::DocumentationParticle ) 
+      return false ;
 
     // Test if particle has a b quark
     LHCb::ParticleID thePid( part -> pdg_id() ) ;
@@ -125,7 +128,8 @@ struct isEndD : std::unary_function< const HepMC::GenParticle * , bool > {
   bool operator() ( const HepMC::GenParticle * part ) const {
 
     // Do not look at special particles
-    if ( part -> status() == 3 ) return false ;
+    if ( part -> status() == LHCb::HepMCEvent::DocumentationParticle ) 
+      return false ;
 
     // Check if it has a c quark
     LHCb::ParticleID thePid( part -> pdg_id() ) ;

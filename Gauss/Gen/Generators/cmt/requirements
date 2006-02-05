@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2006-01-13 18:21:42 gcorti Exp $ 
+# $Id: requirements,v 1.9 2006-02-05 21:02:45 robbep Exp $ 
 # =============================================================================
 package       Generators
 version       v4r0
@@ -10,6 +10,7 @@ branches      Generators doc cmt src
 include_dirs  $(GENERATORSROOT)
 
 # =========== dependencies ====================================================
+use           SEAL              v*                LCG_Interfaces
 use           GaudiAlg          v*
 use           GenEvent          v*                Event
 use           HepEvt            v*                Gen

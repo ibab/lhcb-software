@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
+// $Id: FixedNInteractions.h,v 1.3 2006-02-05 21:02:45 robbep Exp $
 #ifndef GENERATORS_FIXEDNINTERACTIONS_H 
 #define GENERATORS_FIXEDNINTERACTIONS_H 1
 
@@ -40,5 +40,7 @@ class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
  private:
   /// Number of interactions to generate (set by job options)
   int m_nInteractions ; 
+  /// Luminosity to use for spill over (set by job options)
+  double m_luminosity ;
 };
 #endif // GENERATORS_FIXEDNINTERACTIONS_H

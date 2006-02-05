@@ -1,8 +1,10 @@
-// $Id: Generation.h,v 1.7 2006-02-01 21:28:58 robbep Exp $
+// $Id: Generation.h,v 1.8 2006-02-05 21:02:45 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
+
+#include <boost/array.hpp>
 
 // Forward declarations
 class ISampleGenerationTool ;
@@ -113,47 +115,31 @@ private:
   /// Number of interactions in accepted events
   unsigned int m_nAcceptedInteractions ;
 
-  /// Counter of generated interactions with more than 1 b quark
-  unsigned int m_n1b ;
+  /// Description of the counter index
+  enum interationCounterType{ Oneb = 0 , ///< interaction with >= 1 b quark
+                              Threeb , ///< interaction with >= 3 b quarks
+                              PromptB , ///< interaction with prompt B
+                              Onec , ///< interaction with >= 1 c quark
+                              Threec , ///< interaction with >= 3 c quarks
+                              PromptC , ///< interaction with prompt C
+                              bAndc ///< interaction with b and c
+  } ;  
 
-  /// Counter of generated interactions with more than 3 b quark
-  unsigned int m_n3b ;
+  /// Type for interaction counter
+  typedef boost::array< unsigned int , 7 > interactionCounter ;
+  typedef boost::array< std::string  , 7 > interactionCNames  ;
 
-  /// Counter of generated interactions with at least one prompt B hadron
-  unsigned int m_nPromptB ;
+  /// Counter of content of generated interactions
+  interactionCounter m_intC ; 
 
-  /// Counter of generated interactions with more than 1 c quark
-  unsigned int m_n1c ;
+  /// Array of counter names
+  interactionCNames  m_intCName ;
 
-  /// Counter of generated interactions with more than 3 c quarks
-  unsigned int m_n3c ;
+  /// Counter of content of accepted interactions
+  interactionCounter m_intCAccepted ;
 
-  /// Counter of generated interactions with at least one prompt charm
-  unsigned int m_nPromptC ;
-
-  /// Counter of generated interactions with primary b and primary c quarks
-  unsigned int m_nbc ;
-
-  /// Counter of accepted interactions with more than 1 b quark
-  unsigned int m_n1bAccepted ;
-
-  /// Counter of accepted interactions with more than 3 b quark
-  unsigned int m_n3bAccepted ;
-
-  /// Counter of accepted interactions with at least one prompt B hadron
-  unsigned int m_nPromptBAccepted ;
-
-  /// Counter of accepted interactions with more than 1 c quark
-  unsigned int m_n1cAccepted ;
-
-  /// Counter of accepted interactions with more than 3 c quarks
-  unsigned int m_n3cAccepted ;
-
-  /// Counter of accepted interactions with at least one prompt charm
-  unsigned int m_nPromptCAccepted ;
-
-  /// Counter of accepted interactions with primary b and primary c quarks
-  unsigned int m_nbcAccepted ;
+  /// Array of accepted counter names
+  interactionCNames  m_intCAcceptedName ;
 
   /// Counter of events before the full event generator level cut  
   unsigned int m_nBeforeFullEvent ;
@@ -163,19 +149,10 @@ private:
 
 
   /** Update the counters counting on interactions.
-   *  @param[in,out] n1b       Counter of events with at least 1 b quark
-   *  @param[in,out] n3b       Counter of events with at least 3 b quarks
-   *  @param[in,out] nPromptB  Counter of events with at least one prompt B
-   *  @param[in,out] n1c       Counter of events with at least 1 c quark
-   *  @param[in,out] n3c       Counter of events with at least 3 c quarks
-   *  @param[in,out] nPromptC  Counter of events with at least one prompt D
-   *  @param[in]     theEvent  The event to study
+   *  @param[in,out] theCounter Counter of events
+   *  @param[in]     theEvent  The interaction to study
    */
-  void updateInteractionCounters( unsigned int & n1b , unsigned int & n3b ,
-                                  unsigned int & nPromptB , 
-                                  unsigned int & n1c , unsigned int & n3c , 
-                                  unsigned int & nPromptC , 
-                                  unsigned int & nbc , 
+  void updateInteractionCounters( interactionCounter & theCounter ,
                                   const LHCb::HepMCEvent * theEvent ) ;
 };
 #endif // GENERATORS_GENERATION_H
