@@ -2,6 +2,14 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-05 - Kurt Rinnert
+ - Changed type of m_value member in ADC word from char to unsigned char.
+   This was necessary to make the encoding work since the accessor has 
+   unsigned int as return type and the cast created binary complement 
+   bit pattern for negative values of m_value (i.e. whenever the new 
+   cluster bit was set).
+ - commented out the unprotected std::cout in ADC word class
+
 !=========================== SiDAQ v1r1 2005-12-21 =====================
 ! 2005-12-19 M. Needham
   Add error flag to header word

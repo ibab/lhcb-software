@@ -1,4 +1,4 @@
-// $Id: SiADCWord.h,v 1.1.1.1 2005-11-22 15:20:18 mneedham Exp $
+// $Id: SiADCWord.h,v 1.2 2006-02-05 20:28:02 krinnert Exp $
 #ifndef _SiADCWord_H
 #define _SiADCWord_H 1
 
@@ -70,7 +70,7 @@ private:
   
   enum mask {adcMask = 0x7f , endMask = 0x80 };
 
-  char m_value; /// Packed word
+  unsigned char m_value; /// Packed word
 };
 
 
@@ -83,7 +83,7 @@ inline SiADCWord::SiADCWord(double adc, bool endCluster)
   unsigned char tADC;
   adc > ((1<<adcPrecision)-1) ? tADC = (1<<adcPrecision) -1 : tADC = char(adc);
 
-  std::cout << (unsigned int )tADC << " " << endC << std::endl;
+//   std::cout << (unsigned int )tADC << " " << endC << std::endl;
      
   m_value  = (tADC << SiADCWord::adcBits) +
              (endC << SiADCWord::endBits);
