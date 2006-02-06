@@ -1,13 +1,14 @@
-// $Id: PoolDicts.opts,v 1.13 2005-10-19 09:34:11 cattanem Exp $
+// $Id: PoolDicts.opts,v 1.14 2006-02-06 09:45:17 cattanem Exp $
 // Job option to tell POOL to load all Event Model dictionaries
 
-PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
-PoolDbCacheSvc.Dlls += {"EventDict" };
+PoolDbCacheSvc.Dlls += {"LHCbKernelDict" };
+PoolDbCacheSvc.Dlls += {"EventBaseDict" };
+PoolDbCacheSvc.Dlls += {"MCEventDict" };
+PoolDbCacheSvc.Dlls += {"RecEventDict" };
 PoolDbCacheSvc.Dlls += {"DAQEventDict" };
 PoolDbCacheSvc.Dlls += {"GenEventDict" };
-PoolDbCacheSvc.Dlls += {"TrEventDict" };
 PoolDbCacheSvc.Dlls += {"TrackEventDict" };
-PoolDbCacheSvc.Dlls += {"ITEventDict" };
+PoolDbCacheSvc.Dlls += {"STEventDict" };
 PoolDbCacheSvc.Dlls += {"OTEventDict" };
 PoolDbCacheSvc.Dlls += {"L0EventDict" };
 PoolDbCacheSvc.Dlls += {"RichEventDict" };
@@ -15,9 +16,8 @@ PoolDbCacheSvc.Dlls += {"CaloEventDict" };
 PoolDbCacheSvc.Dlls += {"VeloEventDict" };
 PoolDbCacheSvc.Dlls += {"MuonEventDict" };
 PoolDbCacheSvc.Dlls += {"PhysEventDict" };
-PoolDbCacheSvc.Dlls += {"EventAssocDict" };
+//PoolDbCacheSvc.Dlls += {"EventAssocDict" };
 PoolDbCacheSvc.Dlls += {"LinkerEventDict" };
-PoolDbCacheSvc.Dlls += {"TrgEventDict" };
-PoolDbCacheSvc.Dlls += {"PackedEventDict" };
-PoolDbCacheSvc.Dlls += {"SealSTLRflx", "SealCLHEPRflx" };
-PoolDbCacheSvc.Dlls += {"DC04HacksDict" };
+//PoolDbCacheSvc.Dlls += {"PackedEventDict" };
+PoolDbCacheSvc.Dlls += {"MathRflx", "STLRflx" };
+PoolDbCacheSvc.Dlls += {"CLHEPRflx" }; // For HepMC
