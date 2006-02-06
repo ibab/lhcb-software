@@ -1,5 +1,5 @@
 package GENSER
-version v1r121p1
+version v1r121p2
 
 branches doc cmt src
 
@@ -31,7 +31,7 @@ set LHAPDFPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
 macro lhapdf_linkopts "$(GENSER_home)/liblhapdf$(lhapdf_native_version).a "
 
 library lhapdfdummy -no_share ../src/*.F
-macro_prepend lhapdf_linkopts " $(GENSERROOT)/$(BINDIR)/lhaglue.o "
+macro_prepend lhapdf_linkopts " $(GENSERROOT)/$(BINDIR)/liblhapdfdummy.a "
 
 
-macro GENSER_linkopts "$(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts)  -lnsl -lcrypt -ldl -lg2c"
+macro GENSER_linkopts "$(lhapdf_linkopts) $(pythia_linkopts) $(photos_linkopts)  -lnsl -lcrypt -ldl -lg2c"

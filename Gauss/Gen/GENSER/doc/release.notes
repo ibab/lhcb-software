@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!====================== GENSER v1r121p2 ================================
+! 2006-02-06 - Florence RANJARD
+ - requirements - link with liblhapdfdummy.a instead of lhaglue.o
+                  put lhapdf_linkopts before pythia_linkopts
+ 
 !====================== GENSER v1r121p1 =================================
 ! 2006-02-01 - Florence Ranjard
  - src - move lhaglue.f to lhaglue.F to include lhapdfc.h
