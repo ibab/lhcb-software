@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-06 - Edwin Bos
+ - Added Trajectory classes
+
 !===================== LHCbKernel v6r2 2006-02-06 =========================
 ! 2006-02-06 - Marco Cattaneo
  - Add Reflex library to LHCbKernel linkopts, to resolve dictionary symbols
