@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.18 2006-02-06 16:30:59 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.19 2006-02-06 17:58:27 cattanem Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -61,14 +61,8 @@ StatusCode PuVetoAlg::initialize() {
   
   debug() << "==> Initialise" << endreq;
 
-  DeVelo *velo = get<DeVelo>( detSvc(), "/dd/Structure/LHCb/Velo" );
-  if ( 0 == velo ) {
-    error() << "Unable to retrieve Velo detector element." 
-            << endreq;
-    return StatusCode::FAILURE;
-  }
+  DeVelo* m_velo = get<DeVelo>( detSvc(), "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
 
-  m_velo = velo;
   m_nbPuSensor = m_velo->numberPileUpSensors();
   m_firstPuSensor = 128;
   
