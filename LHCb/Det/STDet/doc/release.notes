@@ -2,13 +2,13 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-! 2006-02-06 
+!========================= STDet v2r0 2006-02-06 =======================
+! 2006-02-06 M. Needham 
  - Minor bug fixes
 
-! 2006-02-01
+! 2006-02-01 M. Needham
  - Add center method to base class
 
-!========================= STDet v2r0 2006-01-26 =======================
 ! 2006-01-26 M. Needham
   - Adapt to new numbering scheme
   - Add ITLadder
