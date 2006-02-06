@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.24 2006-01-30 11:44:06 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.25 2006-02-06 12:14:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
@@ -185,7 +185,8 @@ bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
 {
   return ( digit && ( digit->history().scatteredHit() ||
                       digit->history().chargedTrack() ||
-                      digit->history().backgroundHit() ) );
+                      digit->history().backgroundHit() ||
+                      digit->history().chargeShareHit() ) );
 }
 
 bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
@@ -200,9 +201,10 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
           iSum != (*iEn).second.end(); ++iSum )
     {
       const MCRichDigitHistoryCode & code = (*iSum)->history();
-      if ( code.scatteredHit() ||
-           code.chargedTrack() ||
-           code.backgroundHit() ) return true;
+      if ( code.scatteredHit()  ||
+           code.chargedTrack()  ||
+           code.backgroundHit() ||
+           code.chargeShareHit() ) return true;
     }
     // if get here, not background
     return false;
@@ -222,7 +224,7 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
 bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
 {
   return ( hit && ( hit->scatteredPhoton() ||
-                    hit->chargedTrack() ||
+                    hit->chargedTrack()    ||
                     hit->backgroundHit() ) );
 }
 
