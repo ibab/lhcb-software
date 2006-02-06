@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.8 2006-01-31 17:22:22 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.9 2006-02-06 13:29:14 gcorti Exp $
 
 /** @file
  *
@@ -55,12 +55,12 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
 GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
 GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
-// Does not work!
-// GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
-// GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
-// Uniform empty field: it works
-GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
-GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
+GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
+GiGaGeo.FieldMgr.OutputLevel = 2;
+// Uniform field (default Bx=By=Bz=0)
+//GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
+//GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
 
 // declare external services needed MAGNETIC FIELD
 ApplicationMgr.DLLs   += { "Magnet" };

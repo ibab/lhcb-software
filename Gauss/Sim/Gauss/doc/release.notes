@@ -14,6 +14,9 @@
    . GaussPoolIO.opts
  - Switch back on simulation phase
    . Gauss.opts
+ - Switch back use of MagneticFieldSvc in GiGaMagField that works with 
+   LHCb v20r0 builf with Gaudi v18r2
+   . SimGeometry.opts
 
 ! 2006-01-31 - Gloria CORTI
  - Introduce use of varius XXXDet packages to resolve sensitive detector ID.
@@ -23,7 +26,7 @@
    . requirements
  - Introduce use of Sim packages adapted to new Event Model
    . requirements
- - Temporarly use uniform magnetic filed beacuss of problems in retrieving
+ - Temporarly use uniform magnetic filed beacuse of problems in retrieving
    LHCb MagneticFieldSvc, remove loading of CaloEvent dll no longer necessary.
    . SimGeometry.opts
  - Adapt steering of simulation to new structure for all detectors,
