@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.12 2006-01-30 10:58:29 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.13 2006-02-06 21:04:38 asatta Exp $
 // Include files 
 
 //Muon
@@ -362,7 +362,8 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
   //myTile.setLayer(0);
 
   myTile.setLayout(MuonLayout(m_cgX.at(reg),m_cgY.at(reg)));
-
+  if(debug)std::cout<<" "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<std::endl;
+  
   //Chamber number is needed to find x,y
   unsigned int chN = chmb->chamberNumber();
   unsigned int mychN;
@@ -371,36 +372,47 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
     for(fy = 0; fy<4*m_cgY.at(reg); fy++){
       enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
       mychN = m_chamberGrid.at(enc);
-      if(chN == mychN) {
+      if(chN == mychN) {	
+        // quarter definition according to D.Hutchcroft
+        //      +y          
+        //    3 | 0
+        //   ---+--- +x
+        //    2 | 1	
 
-	//set X and Y
-	myTile.setX(fx);
-	myTile.setY(fy);
+        int myQuarter = -1;
+        if(fx >= m_cgX.at(reg)*2) {
+          myQuarter = 1;
+          if(fy >= m_cgY.at(reg)*2) {
+            myQuarter = 0;
+          }
+        } else {
+          myQuarter = 2;
+          if(fy >= m_cgY.at(reg)*2) {
+            myQuarter = 3;
+          }
+        }
+
+        if(debug) std::cout<<"X, Y " <<fx<<" "<<fy<<
+                    " for chamber "<<chN<<" "<<reg<<std::endl;
+        if( myQuarter == 0){
+          myTile.setX(fx - m_cgX.at(reg)*2);
+          myTile.setY(fy - m_cgY.at(reg)*2);
+        }else if ( myQuarter == 1){
+          myTile.setX(fx - m_cgX.at(reg)*2);
+          myTile.setY(-1 -fy + m_cgY.at(reg)*2);
+        }else if ( myQuarter == 2){
+          myTile.setX(-1 -fx + m_cgX.at(reg)*2);
+          myTile.setY(-1 -fy + m_cgY.at(reg)*2);
+        }else if ( myQuarter == 3){
+          myTile.setX(-1-fx + m_cgX.at(reg)*2);
+          myTile.setY(fy - m_cgY.at(reg)*2);
+        }
+        myTile.setQuarter(myQuarter);
 	
-	// quarter definition according to D.Hutchcroft
-	//      +y          
-	//    3 | 0
-	//   ---+--- +x
-	//    2 | 1
-	
-	//Why do I need to care about Quarter? Still I implement it
-	int myQuarter = -1;
-	if(fx >= m_cgX.at(reg)*2) {
-	  myQuarter = 3;
-	  if(fy >= m_cgY.at(reg)*2) {
-	    myQuarter = 0;
-	  }
-	} else {
-	  myQuarter = 2;
-	  if(fy >= m_cgY.at(reg)*2) {
-	    myQuarter = 1;
-	  }
-	}
-	myTile.setQuarter(myQuarter);
-	
-	if(debug) std::cout<<"X, Y and Q " <<fx<<" "<<fy<<" "<<myQuarter<<
+        if(debug) std::cout<<"X, Y and Q " <<myTile.nX()<<" "<<
+                    myTile.nY()<<" "<<myQuarter<<
               " for chamber "<<chN<<" "<<reg<<std::endl;
-	return myTile;
+        return myTile;
       }
     }
   }
@@ -412,11 +424,10 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
 
 //Returns the Tile for a given chamber number
 LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum){
-
+  
 
   char pt[200];  LHCb::MuonTileID myTile;
-  sprintf(pt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
-
+  sprintf(pt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);  
   SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
   if(deChmb) {
     myTile = tileChamber(deChmb);

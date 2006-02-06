@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.17 2006-01-31 13:02:26 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.18 2006-02-06 21:04:38 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -140,7 +140,10 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
                      <<y<<" "<<station<<" "<<std::endl;
   //Returning the most likely chamber
   m_chamberLayout.chamberMostLikely(x,y,station,chamberNumber,regNum);
-  if(regNum>=0){
+  if(debug) std::cout<< "dopo  " <<regNum<<" "<<chamberNumber<<std::endl;
+
+
+  if(regNum>=0&&chamberNumber>=0){
     
     //Providing all 3 numbers identifies a chamber
     IGeometryInfo* geoChm = 
@@ -224,7 +227,9 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
       }
     }
   }
+  if(debug) std::cout<< "Hit 2 chamber problems "<<std::endl;
   
+
   if(!isIn) {
     msg << MSG::DEBUG << 
       "Smart seek didn't work. Perform loop on all chambers :( !!! " 
@@ -263,7 +268,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
       }
       msta++;
     }//Stations Loop
-  }  
+  }
+
   return sc;
 }
 
@@ -331,10 +337,12 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
 					     const double y,
 					     const double z,
 					     int & chamberNumber, int& regNum){
+  MsgStream msg( msgSvc(), name() );
+
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
   Gaudi::XYZPoint hitPoint(x,y,z);   int sta = getStation(z);
-
+  msg<<MSG::DEBUG<<" qui "<<x<<" "<<y<<" "<<z<<" "<<sta<<endreq;
   sc = Hit2ChamberNumber(hitPoint,sta,chamberNumber,regNum);
 
   return sc;
@@ -683,86 +691,105 @@ StatusCode  DeMuonDetector::fillGeoInfo()
   int region=0;
   
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-      IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-      region=0;      
-      if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
-      for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-        if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
-        IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-	//        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
-        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-          DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
-          IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
-          int gaps=0;          
-          double area=0;          
-          DeMuonGasGap* 
-            myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
-          //Gap Geometry info  
-          IGeometryInfo*  geoCh=myGap->geometry();
-          
-          //Retrieve the chamber box dimensions  
-          const SolidBox *box = dynamic_cast<const SolidBox *>
-            (geoCh->lvolume()->solid());
-          float dx = box->xHalfLength();
-          float dy = box->yHalfLength();
-          float dz = box->zHalfLength();
-          m_sensitiveAreaX[station*4+region]=2*dx;
-          m_sensitiveAreaY[station*4+region]=2*dy;
-          m_sensitiveAreaZ[station*4+region]=2*dz;
-          area=4*dx*dy;
-          m_areaChamber[station*4+region]=area;          
-          for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
-            gaps++;            
+    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
+    region=0;      
+    if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
+    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
+      if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
+      IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
+      //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
+      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+        DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
+        IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
+        int gaps=0;          
+        double area=0;          
+        DeMuonGasGap* 
+          myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));  
+        //Gap Geometry info  
+        IGeometryInfo*  geoCh=myGap->geometry();
+        
+        //Retrieve the chamber box dimensions  
+        const SolidBox *box = dynamic_cast<const SolidBox *>
+          (geoCh->lvolume()->solid());
+        float dx = box->xHalfLength();
+        float dy = box->yHalfLength();
+        float dz = box->zHalfLength();
+        m_sensitiveAreaX[station*4+region]=2*dx;
+        m_sensitiveAreaY[station*4+region]=2*dy;
+        m_sensitiveAreaZ[station*4+region]=2*dz;
+        area=4*dx*dy;
+        m_areaChamber[station*4+region]=area;          
+        for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
+          gaps++;            
+        }
+        m_gapPerRegion[station*4+region]=gaps;
+        m_gapPerFE[station*4+region]=gaps/2; 
+        
+        Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
+        MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
+        
+        int nreadout=1;
+        if(theGrid->getGrid2SizeY()>1)nreadout=2;
+        m_readoutNumber[station*4+region]=nreadout;
+        for( int i = 0; i<nreadout;i++){
+          if(i==0){
+            m_phChannelNX[i][station*4+region]=theGrid->getGrid1SizeX();
+            m_phChannelNY[i][station*4+region]=theGrid->getGrid1SizeY();
+            m_readoutType[i][station*4+region]=
+              (theGrid->getReadoutGrid())[i];             
+          }            
+          if(i==1){
+            m_phChannelNX[i][station*4+region]=theGrid->getGrid2SizeX();
+            m_phChannelNY[i][station*4+region]=theGrid->getGrid2SizeY();
+            m_readoutType[i][station*4+region]=
+              (theGrid->getReadoutGrid())[i];
           }
-          m_gapPerRegion[station*4+region]=gaps;
-          m_gapPerFE[station*4+region]=gaps/2; 
-
-          Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
-          MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
-
-          int nreadout=1;
-          if(theGrid->getGrid2SizeY()>1)nreadout=2;
-          m_readoutNumber[station*4+region]=nreadout;
-          for( int i = 0; i<nreadout;i++){
-            if(i==0){
-              m_phChannelNX[i][station*4+region]=theGrid->getGrid1SizeX();
-              m_phChannelNY[i][station*4+region]=theGrid->getGrid1SizeY();
-              m_readoutType[i][station*4+region]=
-                (theGrid->getReadoutGrid())[i];             
-            }            
-            if(i==1){
-              m_phChannelNX[i][station*4+region]=theGrid->getGrid2SizeX();
-              m_phChannelNY[i][station*4+region]=theGrid->getGrid2SizeY();
-              m_readoutType[i][station*4+region]=
-                (theGrid->getReadoutGrid())[i];
-            }
-          }
-          int maps=(theGrid->getMapGrid()).size()/2;
-          m_LogMapPerRegion[station*4+region]=maps;
+        }
+        int maps=(theGrid->getMapGrid()).size()/2;
+        m_LogMapPerRegion[station*4+region]=maps;
+        if(debug)msg<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endreq;    
+        if(nreadout==1)
+        {
           for( int i = 0; i<maps;i++){
-            if(nreadout==1&&maps==1)m_LogMapRType[0][station*4+region]=
-                                      m_readoutType[i][station*4+region];
-            if(maps==2){
-              m_LogMapRType[i][station*4+region]=
-                m_readoutType[i][station*4+region];
-              m_LogMapRType[i][station*4+region]=
-                m_readoutType[i][station*4+region];
-            }
+            m_LogMapRType[i][station*4+region]=
+              m_readoutType[0][station*4+region];
             m_LogMapMergex[i][station*4+region]=
               (theGrid->getMapGrid())[i*2];
             m_LogMapMergey[i][station*4+region]=
-              (theGrid->getMapGrid())[i*2+1];            
-          }          
-          break;          
+                (theGrid->getMapGrid())[i*2+1];
+            if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+                       m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;    
+          }            
+        }else if(nreadout==2){ 
+          for( int i = 0; i<maps;i++){
+            m_LogMapRType[i][station*4+region]=
+              m_readoutType[i][station*4+region];
+            m_LogMapMergex[i][station*4+region]=
+                (theGrid->getMapGrid())[i*2];
+            m_LogMapMergey[i][station*4+region]=
+                (theGrid->getMapGrid())[i*2+1];
+             if(debug)msg<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+                       m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;  
+          }            
         }
-        int chamber=0;        
-        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-          chamber++;          
-        }m_chamberPerRegion[station*4+region]=chamber;        
-        region++;
+        
+        break;
+        
       }
-      station++;      
+      
+      
+        
+      int chamber=0;        
+      for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+        chamber++;          
+      }m_chamberPerRegion[station*4+region]=chamber;        
+      region++;
+    }
+    
+    
+    station++;      
   }
+      
   // initialization by hand of the logical layout in the different regions
   m_layoutX[0][0]=24;  
   m_layoutX[0][1]=24;  
@@ -935,8 +962,11 @@ int DeMuonDetector::sensitiveVolumeID(Gaudi::XYZPoint myPoint)
 
   // retrieve station,region,chamber,gap:
   StatusCode sc = StatusCode::FAILURE;
+ nsta=getStation(myPoint.z());
+  
+  
   sc = Hit2GapNumber(myPoint,nsta,ngap,nchm,nreg);
-
+  //  is(sc
   //retrieve the quadrant:
   double xPoi = myPoint.x();
   double yPoi = myPoint.y();
