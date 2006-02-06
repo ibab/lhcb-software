@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.8 2006-01-30 11:04:47 asatta Exp $
+// $Id: MuonBackground.h,v 1.9 2006-02-06 21:04:07 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -75,7 +75,7 @@ public:
                                             pointerToFlags,double& xmin, 
                                          double& xmax, int& nbinx ,
                                          double &ymin, double& ymax  );
-  StatusCode createHit(LHCb::MCHits** hitsContainer,
+  StatusCode createHit(LHCb::MCHits* hitsContainer,
                                     int station,int multi , int ispill); 
   StatusCode correctInterceptPosition(float xlow,float xup,float ylow,
                                       float yup,float zlow,float zup,

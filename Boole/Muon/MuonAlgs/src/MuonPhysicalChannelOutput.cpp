@@ -26,6 +26,8 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
                                                  LHCb::MuonTileID phChTileID[2],
 DeMuonDetector* muonDetector){  
   
+  bool debug=false;
+  
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
   unsigned int chamber=phChID()->getChamber();
@@ -51,8 +53,10 @@ DeMuonDetector* muonDetector){
     //
     // check if current readout coincides with one of the LogMap readouts
     //
-    //    cout<<"logmap type, readout "<<usefull.getLogMapRType
-    //(readoutNumber,part)<<" "<<readout<<" "<<readoutNumber<<endl;
+      if(debug) std::cout<<"logmap type, readout "<<
+                  muonDetector->getLogMapRType(readoutNumber,station,region)<<" "<<
+                  readout<<" "<<readoutNumber<<
+                  std::endl;
     
     if(muonDetector->getLogMapRType(readoutNumber,station,region)==readout)
       {
@@ -60,7 +64,7 @@ DeMuonDetector* muonDetector){
         //conventions: from 0,0 left,bottom to radial coordinates
         //
         
-        for(int countReadout=0; countReadout<=muonDetector->
+        for(int countReadout=0; countReadout<muonDetector->
               readoutInRegion(station,region);countReadout++)
           {
             if(  muonDetector->getLogMapRType(readoutNumber,station,region)==
@@ -69,6 +73,11 @@ DeMuonDetector* muonDetector){
                 getPhChannelNX(countReadout,station,region);
               numberOfPCY=muonDetector->
                 getPhChannelNY(countReadout,station,region);
+              if(debug) std::cout<<"channels "<<countReadout<<" "<<station<<" "<<region<<" "
+                                 <<numberOfPCX<<" "<<
+                          numberOfPCY<<std::endl;
+
+              
             }
           }
         // 
@@ -96,8 +105,10 @@ DeMuonDetector* muonDetector){
         
         idXGlobal=newidX+chaTile.nX()*numberOfPCX;
         idYGlobal=newidY+chaTile.nY()*numberOfPCY;
+        if(debug)std::cout<<"cha tile "<<chaTile.nX()<<" "<<chaTile.nY()<<std::endl;
         
-
+        if(debug)std::cout<< idXGlobal<<" "<< idYGlobal<<std::endl;
+        
         //
         //  compute Logical Channel address now
         //
@@ -108,6 +119,13 @@ DeMuonDetector* muonDetector){
         //
         // create the tile of the phys chan
         //  
+        if(debug)std::cout<<  idLogX <<" "<< idLogY<<std::endl;
+        if(debug)std::cout<< muonDetector->
+                   getLogMapMergex(readoutNumber,station,region)<<" "<<
+                   muonDetector->
+                   getLogMapMergey(readoutNumber,station,region)<<std::endl;
+        
+
         ++numberTileOutput;
 
         MuonLayout layout(muonDetector->getLayoutX(readoutNumber,station,region),

@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.27 2006-01-31 16:35:50 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.28 2006-02-06 21:03:41 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -175,7 +175,7 @@ info()<<" tile "<<tile.quarter()<<endmsg;
     LHCb::MCHits::const_iterator i;
     for (i=(hitPointer)->begin();i<(hitPointer)->end();i++){         
       if(m_verboseDebug){
-        info()<<"muon x , y, z , exit  "<< (*i)->exit().x() <<" " <<
+        /*        info()<<"muon x , y, z , exit  "<< (*i)->exit().x() <<" " <<
           (*i)->exit().y() << "  " <<                          
           (*i)->exit().z() << endreq ;																		
         debug()<<"muon x , y, z entry ,  "<< (*i)->entry().x() <<" " <<
@@ -193,7 +193,7 @@ info()<<" tile "<<tile.quarter()<<endmsg;
         else{
           warning()<<
             "Particle from which it originates is not defined "<< endreq;
-        }
+            }*/
       }	
     }
 	}	
@@ -438,7 +438,7 @@ MuonDigitization::createInput(
       spillTime=(long)(-(ispill-1)*m_BXTime);
     }
      
-    for(int container=0; container<m_container;container++){				
+    for(int container=1; container<m_container;container++){				
       std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
         TESPathOfHitsContainer[container];
       if(m_verboseDebug) {info()<<"hit container path "<<
@@ -462,6 +462,9 @@ MuonDigitization::createInput(
                                                      hitRegion,hitChamber);
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > >::
             iterator itPh;
+          verbose()<<" ga hit "<<hitStation<<" "<<hitRegion<<" "<<hitChamber<<" "
+                <<hitGap<<" "<<hitQuarter<<endmsg;
+          
           for(itPh=listph.begin();itPh<listph.end();itPh++){
             MuonFrontEndID fe=(*itPh).first;
             std::vector<float> dist=(*itPh).second;    
@@ -478,9 +481,10 @@ MuonDigitization::createInput(
            // unsigned int hitQuarter=tile.quarter();
             //             info()<<" hitQuarter "<<hitQuarter<<" "<<hitStation<<" "<<
             //  hitRegion<<" "<<hitChamber<<" "<<hitGap<<endreq;
+            debug()<<" adding pch "<<hitStation<<" "<<
+              hitRegion<<" "<<hitChamber<<" "<<hitQuarter<<"  "<<fe.getReadout()<<endreq;
             
-            inputPointer->phChID()->
-              setStation(hitStation);
+            inputPointer->phChID()->setStation(hitStation);
             inputPointer->phChID()->setRegion(hitRegion);
             inputPointer->phChID()->setQuadrant(hitQuarter);
             inputPointer->phChID()->setChamber(hitChamber);
@@ -1150,7 +1154,8 @@ createRAWFormat(LHCb::MCMuonDigits& mcDigitContainer,
 			debug()<<"new daq word "<<
         gg.layout()<<" "<<gg.station()<<" "<<gg.region()<< 
         " "<<gg.quarter()<<" "<<gg.nX()<<" "<<gg.nY()<<" "<<" "<<time<<endreq;
-      //<<
+      debug()<<gg<<endreq;
+      
       //        " "<<time<<endreq;
  		}
 	}

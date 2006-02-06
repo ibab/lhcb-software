@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.26 2006-02-02 16:21:29 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.27 2006-02-06 21:04:07 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,7 @@
 #include "MuonBackground.h"
 #include "ParticleInfo.h"
 
-#define DIMENSIONMAX 1
+//#define DIMENSIONMAX 1
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBackground
@@ -220,23 +220,13 @@ StatusCode MuonBackground::execute() {
   //MsgStream  msg( msgSvc(), name() );
   debug() << "==> Execute" << endreq;
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
-    calculateNumberOfCollision(ispill);  
-    //    if(!collisions())return  StatusCode::SUCCESS;
-    //	 if(collisions()>1)return  StatusCode::SUCCESS;
-      if(!collisions()) continue;
-
-    debug() << "==> collision " << collisions()<<endreq;
-
- 
-    LHCb::MCHits * 
-    hitsContainer[DIMENSIONMAX]; // fix for 	VC6
-    hitsContainer[0]
-      =new LHCb::MCHits();
-    
+    calculateNumberOfCollision(ispill);    
+    if(!collisions()) continue;
+    verbose() << "==> collision " << collisions()<<endreq; 
+    LHCb::MCHits* hitsContainer=new LHCb::MCHits();    
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
-
+    
     if(m_type==LowEnergy){
-      // m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
       calculateStartingNumberOfHits(ispill);    
       for(int coll=0;coll<collisions();coll++){      
         for(int station=0;station<m_stationNumber;station++){        
@@ -244,7 +234,7 @@ StatusCode MuonBackground::execute() {
             int index=station*m_gaps+multi;
             int startingHits=((*m_resultPointer)[coll])[index];
             debug()<<"station safe start end hits "
-                <<startingHits<<endreq;
+                   <<startingHits<<endreq;
             
             // extract number of hits to be added
             int hitToAdd=0;
@@ -253,9 +243,9 @@ StatusCode MuonBackground::execute() {
               floatHit=float(startingHits*(m_safetyFactor[station]));   
               hitToAdd=howManyHit( floatHit);            
             } else{
-	debug()<<"adding "<<	index <<" "<<startingHits<<endreq;          
+              //debug()<<"adding "<<	index <<" "<<startingHits<<endreq;
               int yy=(int)(m_correlation[index])->
-                         giveRND(startingHits+0.5F);
+                giveRND(startingHits+0.5F);
               
               floatHit=float(m_safetyFactor[station]*(yy));
               hitToAdd=howManyHit( floatHit);
@@ -268,9 +258,9 @@ StatusCode MuonBackground::execute() {
                 " for multiplicity "<<multi<<" and collisions/spill "<<coll
                  <<" "<<ispill<<endreq;
             }            
-		 debug()<<" station "<<station<<endreq;
+            
             for(int hitID=0;hitID< hitToAdd;hitID++){            
-            createHit(hitsContainer, station,multi,ispill);            
+              createHit(hitsContainer, station,multi,ispill);            
             }
             if( m_histos ) {
               m_pointer1D[index]->fill(startingHits+0.00001,1.0);
@@ -282,9 +272,11 @@ StatusCode MuonBackground::execute() {
         }        
       }      
     }else if(m_type==FlatSpillover){
+      //for flat spillover the spill events have no meaning....
+      //thus take care of deleting allocated menory
       if(ispill>0) {
         delete m_resultPointer;
-        delete hitsContainer[0];
+        delete hitsContainer;
         break;
       }
       
@@ -292,14 +284,14 @@ StatusCode MuonBackground::execute() {
         for (int multi=0;multi<m_gaps;multi++){
           int index=station*m_gaps+multi;
           float floatHit = float(m_flatSpilloverHit[index]*m_luminosityFactor
-            *m_safetyFactor[station]);         
+                                 *m_safetyFactor[station]);         
           for (int fspill=0;fspill<=m_numberOfFlatSpill;fspill++){
             int hitToAdd=0;
             hitToAdd=howManyHit( floatHit);          
             debug()<<"adding "<< hitToAdd<<
               " in station "<<station<<
               " for multiplicity "<<multi<<" and spill"
-               <<fspill<<endreq;
+                   <<fspill<<endreq;
             for(int hitID=0;hitID< hitToAdd;hitID++){            
               createHit(hitsContainer, station,multi,fspill);            
             }         
@@ -307,20 +299,12 @@ StatusCode MuonBackground::execute() {
         }        
       }
     }
-    debug()<<" starting saveing the ocntainer "<<endreq;
-    
-    /*    //alessia attenta a rimmetter a posto questo ..//      
-    for(int station=0;station<m_stationNumber;station++){
-      for(int region=0;region<m_regionNumber;region++){
-        std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[station]+
-          "/R"+numreg[region]+"/"+m_containerName;
-        debug()<<" number of total hit added "<<
-          hitsContainer[0]->size()<<endreq;
-        //   eventSvc()->registerObject(path,
-        //                         hitsContainer[station*m_regionNumber
-        //                                       +region]);   
-      }      
-      }*/
+    std::string path="/Event"+spill[ispill]+"/MC/Muon/"+m_containerName;
+    debug()<<" starting saveing the ocntainer "<<path<<endreq;    
+    debug()<<" number of total hit added "<<
+      hitsContainer->size()<<endreq;
+    eventSvc()->registerObject(path,
+                               hitsContainer);    
     delete m_resultPointer;    
   }  
   return StatusCode::SUCCESS;
@@ -355,10 +339,7 @@ StatusCode MuonBackground::finalize() {
     pointDelete=m_hitgap[i];    
     if(pointDelete)delete pointDelete;
   }
-//  if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );    
- // if( m_pGetInfo )     toolSvc()->releaseTool( m_pGetInfo );    
- return GaudiAlgorithm::finalize();
-
+  return GaudiAlgorithm::finalize();
   return StatusCode::SUCCESS;
 }
 
@@ -368,18 +349,14 @@ StatusCode MuonBackground::finalize() {
 //  GeometryInitialization
 //=============================================================================
 StatusCode MuonBackground::initializeGeometry() {
-
   MsgStream msg(msgSvc(), name());
   debug() << "==> initializeGeometry" << endreq;
-
-  int gap=0;
-  
+  int gap=0;  
   for(int i=0;i< (int)m_partition;i++){
     int stat=i/4;
     int reg=i-stat*4;
     gap=(gap>=(int)m_muonDetector->gapsInRegion(stat,reg))?
-      gap:m_muonDetector->gapsInRegion(stat,reg);
-    
+      gap:m_muonDetector->gapsInRegion(stat,reg);    
   }
   
   m_gaps=gap;
@@ -523,8 +500,8 @@ StatusCode MuonBackground::calculateNumberOfCollision(int ispill) {
   int collision=0;
   std::string collisionLocation="/Event"
     +spill[ispill]+"/"+LHCb::GenCollisionLocation::Default;
-  debug()<<"string "<<collisionLocation<<endreq;
-  debug()<<"spill "<<ispill<<endreq;
+  verbose()<<"string "<<collisionLocation<<endreq;
+  verbose()<<"spill "<<ispill<<endreq;
   
   SmartDataPtr<LHCb::GenCollisions> collisionsPointer
     ( eventSvc(), collisionLocation );
@@ -533,8 +510,8 @@ StatusCode MuonBackground::calculateNumberOfCollision(int ispill) {
   if(collisionsPointer){    
     for(itCollision=collisionsPointer->begin();
         itCollision<collisionsPointer->end();itCollision++){
-      debug()<<" --- collision number "
-         << (*itCollision)->key()<<endreq;
+      verbose()<<" --- collision number "
+             << (*itCollision)->key()<<endreq;
       collision++;      
     }
   }  
@@ -552,24 +529,20 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   int preGap,preChamber,preIndex;
 
   std::string particleLocation="/Event"
-    +spill[ispill]+"/"+LHCb::MCParticleLocation::Default;
-  debug()<<"string "<<particleLocation<<endreq;
-  
+    +spill[ispill]+"/"+LHCb::MCParticleLocation::Default;  
   SmartDataPtr<LHCb::MCParticles> particlePointer
     ( eventSvc(),particleLocation  );
   LHCb::MCParticles::iterator itParticle;
-  for(itParticle=particlePointer->begin();
-      itParticle<particlePointer->end();itParticle++){
-  }
+  // for(itParticle=particlePointer->begin();
+  //    itParticle<particlePointer->end();itParticle++){
+  // }
   int numberOfParticles=0;
   numberOfParticles=(*(particlePointer->end()-1))->key()+1;
   debug()<<" --- original number of particles "
          << numberOfParticles<<endreq;
   //create an dimension appropriate vector
   std::vector<ParticleInfo*> particleInfo(numberOfParticles);
-  //loop un hits  
-  
-
+  //loop un hits
   for(int container=0; container<1;container++){				
     std::string path="/Event"+spill[ispill]+LHCb::MCHitLocation::Muon;        
     SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
@@ -580,29 +553,24 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
     if(hitPointer!=0){
       for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++)
       {
-        //correggere con il pezzo che ci dara' Gaia
-        station=0;
-        region=0;
-          gap=0;
-        chamber=0+chamberOffset(station,region);   
-        index=(*iter)->mcParticle()->key();
-        if(station==1){
-          debug()<<" index, chamber, gap "<<index<<" "<<
+        int det=(*iter)->sensDetID();
+        
+        station=m_muonDetector->stationID(det);
+        region=m_muonDetector->regionID(det);
+        gap=m_muonDetector->gapID(det);;
+        chamber=m_muonDetector->chamberID(det)+
+          chamberOffset(station,region);   
+        index=(*iter)->mcParticle()->key();       
+        verbose()<<" index, chamber, gap "<<index<<" "<<
           chamber<<" "<<gap<<endreq;
-          debug()<<" index "<<index<<" in position "<<
-            (*iter)->entry().x()<<" "<<
-            (*iter)->entry().y()<<" "<<
-            (*iter)->entry().z()<<" "<<
-            " out position  "<<            
-            (*iter)->exit().x()<<" "<<
-            (*iter)->exit().y()<<" "<<
-          (*iter)->exit().z()<<endreq;
-        }
-        
-        if(station==1)
-          debug()<<" gap cha ind "<<preGap<<" "<<preChamber<<
-            " "<<preIndex<<endreq;
-        
+        verbose()<<" index "<<index<<" in position "<<
+          (*iter)->entry().x()<<" "<<
+          (*iter)->entry().y()<<" "<<
+          (*iter)->entry().z()<<" "<<
+          " out position  "<<            
+          (*iter)->exit().x()<<" "<<
+          (*iter)->exit().y()<<" "<<
+          (*iter)->exit().z()<<endreq;       
         if(particleInfo[index]){
           if(chamber!=preChamber||gap!=preGap||index!=preIndex)
             particleInfo[index]->setHitIn(station,gap,chamber);            
@@ -614,8 +582,8 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
               new ParticleInfo((*iter)->mcParticle());
           }else{                
             tmpPointer=
-            new ParticleInfo((*iter)->mcParticle(),
-                             m_stationNumber,m_gaps);
+              new ParticleInfo((*iter)->mcParticle(),
+                               m_stationNumber,m_gaps);
             first=false;
           }
           particleInfo[index]=tmpPointer;
@@ -627,8 +595,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
       }       
     }      
   }    
-  int partCollision;
-  
+  int partCollision;  
   for(int i=0;i<collisions();i++){
     (*m_resultPointer)[i].resize(m_maxDimension);      
   }    
@@ -638,8 +605,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   //then count the multiplicity per station  and track lenght   and delete
   std::vector<ParticleInfo*>::iterator itParticleInfo;
   for(itParticleInfo=particleInfo.begin();
-      itParticleInfo<particleInfo.end();itParticleInfo++)      
-  {
+      itParticleInfo<particleInfo.end();itParticleInfo++){
     if(*itParticleInfo){
       (m_particleResult)=(*itParticleInfo)->multiplicityResults(); 
       partCollision=(*itParticleInfo)->getCollision();        
@@ -735,7 +701,7 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
   return StatusCode::SUCCESS;
 }
 
-StatusCode MuonBackground::createHit(LHCb::MCHits** 
+StatusCode MuonBackground::createHit(LHCb::MCHits* 
                                      hitsContainer,int station,
                                      int multi,int ispill)
 {
@@ -743,8 +709,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
   int maxTryR=10;
   int tryR=0;
   int tryPhi=0;
-  bool hitInsideCha=false;
-  
+  bool hitInsideCha=false;  
   //first define all the relevant quantities .. if ok then crete the hit!
   //1) extract the radial position
   int index=station*m_gaps+multi;
@@ -754,49 +719,34 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
   float xpos = 0.F;
   float ypos = 0.F;
   //float zpos = 0.F;
-  debug()<<"new track "<<index<<" "<<hitInsideCha<<endreq;
+  verbose()<<"new track "<<index<<" "<<hitInsideCha<<endreq;
   DeMuonChamber* pChamber=NULL;
   while(!hitInsideCha&&tryR<maxTryR){
-    debug()<<"tryR "<<endreq;
+    verbose()<<"tryR "<<endreq;
     r=(m_radial[index])->giveRND();
     //2) extract the gloabl phi 
     tryPhi=0;  
     while(!hitInsideCha&&tryPhi<maxTryPhi){
-      debug()<<"tryphi "<<endreq;      
+      verbose()<<"tryphi "<<endreq;      
       double globalPhi = ((m_phiglobvsradial[index])->giveRND(r))*pi/180.0;
       //3) test whether the r,phi is inside the sensitive chamber volume      
       //  transform r and phi in x,y
       xpos=float(r*cos(globalPhi)*cm);
       ypos=float(r*sin(globalPhi)*cm);
-      if(multi==3) 
-        debug()<<r<<" "<<globalPhi<<" "<<cos(globalPhi)<<" "<<
-          sin(globalPhi)<<endreq;
-      if(multi==3)debug()<<"xpos, ypos "<<xpos<<" "<<ypos<<endreq;      
       pChamber=NULL;
-      LHCb::MuonTileID tile; 
-      debug()<<"numbers test "<<endmsg;
+      LHCb::MuonTileID tile;
       int chNumber=-1;
       int regNumber=-1;
-      debug()<<" sono nei pa "<<endreq;
       StatusCode sc;
-      debug()<<" sono nei pa "<<m_muonDetector<<endreq;
-      debug()<<"x "<<xpos<<" "<<ypos<<" "<<station<<endreq;
+      verbose()<<"x "<<xpos<<" "<<ypos<<" "<<station<<endreq;
       sc=m_muonDetector->Pos2StChamberNumber(xpos,ypos,station,chNumber,
                                              regNumber);
-      debug()<<" hit "<<xpos<<" "<<ypos<<" "<<station<<" "<<
+      verbose()<<" hit "<<xpos<<" "<<ypos<<" "<<station<<" "<<
         chNumber<<" "<<regNumber<<endmsg;
-      debug()<<"sc "<<sc<<endreq;
-      debug()<<"numbers test "<<chNumber<<" "<<regNumber<<endmsg;
-      //ripartire  da qui alessia 
-      //estraggo la camera
-      //  StatusCode sc=m_pMuonTileXYZ->
-      //   locateChamberTileAndGap(xpos,ypos,zpos,tile,pGasGap);
       if(sc.isFailure()){
         debug()<<" no gap found for muon hit" <<endreq;
       }else{      
-        pChamber=dynamic_cast<DeMuonChamber*> 
-          //DetectorElement pp
-          (m_muonDetector->
+        pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
            ReturnADetElement(station,regNumber,chNumber));
         chamberIndex=(unsigned int)pChamber->chamberNumber();
         regionIndex=(unsigned int)pChamber->regionNumber();
@@ -814,8 +764,8 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
   }
   if(!hitInsideCha){
     debug()<<" could not find a r.phi combination "<<endreq;
-  }  else{    //define the chamber index in the total reference...
-    debug()<<" ciao "<<endreq;
+  }else{
+    //define the chamber index in the total reference...
     //extract the hit gaps
     int allgap=(int)(m_hitgap[index])->giveRND();
     int max=8;    
@@ -826,10 +776,9 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
       int gap=allgap/max;      
       if(gap>1)gap=1;      
       if(gap==1)gapHitTmp.push_back(m_gaps-i-1);
-      allgap=allgap-gap*max;      
-      if(gap==1)
-        debug()<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
-          max<<endreq;
+      allgap=allgap-gap*max;     
+      verbose()<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
+        max<<endreq;
       max=max/2;      
     }
     if(gapHitTmp.size()!=(unsigned int)multi+1) {
@@ -840,7 +789,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
     std::vector<int>::reverse_iterator it;
     for(it=gapHitTmp.rbegin();it<gapHitTmp.rend();it++){      
       gapHit.push_back((*it)); 
-      debug()<<" gap back"<<gapHit.back()<<endreq;      
+      verbose()<<" gap back"<<gapHit.back()<<endreq;      
     }    
     int firstGap=gapHit[0];    
     int lastGap=gapHit[gapHit.size()-1];    
@@ -875,11 +824,10 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
         sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
                                 ySlope,averageZ,entryGlobal,
                                 exitGlobal,p_Gap);
-        debug()<<" exit hit pos "<<sc.isSuccess()<<endmsg;        
         if(sc.isSuccess()){
           unsigned int chamberTmp=(unsigned int)p_Gap->chamberNumber();
           unsigned int regionTmp=(unsigned int)p_Gap->regionNumber();
-          debug()<<chamberTmp<<" "<<regionTmp<<endmsg;
+          verbose()<<chamberTmp<<" "<<regionTmp<<endmsg;
         }else{
           allHitsInsideCha=false;            
         }          
@@ -920,35 +868,29 @@ StatusCode MuonBackground::createHit(LHCb::MCHits**
         pHit->setEntry(entryGlobal);                     
         pHit->setDisplacement(exitGlobal-entryGlobal);
         double tofOfLight=(sqrt(x*x+ y*y+z*z))/300.0;
-        //        float shiftOfTOF=-ispill*m_BXTime;
         if(m_type==FlatSpillover){
           float shiftOfTOF=-ispill*m_BXTime;
           pHit->setTime(timeBest+tofOfLight+shiftOfTOF); 
-          debug()<<"time "<<
-            timeBest+shiftOfTOF<<" spill "<<ispill<<endreq;
-          
+          verbose()<<"time "<<timeBest+shiftOfTOF<<" spill "<<ispill<<endreq;
         } else{
           pHit->setTime(timeBest+tofOfLight);  
-        }          
-		 int 
-sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
-                pHit->setSensDetID(sen);
-
+        }
+        int sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
+        debug()<<" the volume ID is "<<sen<<endreq;     
+        pHit->setSensDetID(sen);
         int part=pChamber->stationNumber()*4+pChamber->regionNumber();        
-        debug()<<"gap , time ,position "<<gapNumber<<" "<<
+        debug()<<"gap, time, position "<<gapNumber<<" "<<chamberIndex<<" "<<
           timeBest+tofOfLight<<" "<<x<<" "<<y<<" "<<endreq;
-        debug()<<"chamber "<<chamberIndex	<<endreq;        
-        debug()<<" correct "<<correct<<" "<<part<<endreq;        
-        if(correct)(hitsContainer[0])->push_back(pHit);
-        if(correct) debug()<<" inserted "<<endreq;
+        if(correct)(hitsContainer)->push_back(pHit);
+        if(correct) debug()<<" hits has been inserted "<<endreq;
         if(correct){
-          debug()<<multi<<endmsg;          
+          debug()<<" multiplicity "<<multi<<endmsg;          
           debug()<<"entry position "<<pHit->entry().x()<<
             " "<<pHit->entry().y()
-                <<" "<<pHit->entry().z()<<endreq;
+                 <<" "<<pHit->entry().z()<<endreq;
           debug()<<"exit position "<<pHit->exit().x()<<
             " "<<pHit->exit().y()
-                <<" "<<pHit->exit().z()<<endreq;          
+                 <<" "<<pHit->exit().z()<<endreq;          
         }        
       }     
     }else{
@@ -1007,14 +949,11 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
                                                 Gaudi::XYZPoint& exitGlobal,
                                                 DeMuonGasGap*& p_Gap)
 {
-  StatusCode sc=StatusCode::FAILURE;
-  
+  StatusCode sc=StatusCode::FAILURE;  
   IDetectorElement::IDEContainer::iterator itGap;
   int countGap=0;
   p_Gap=NULL;
-  
   for(itGap=(pChamber)->childBegin(); itGap<(pChamber)->childEnd(); itGap++){
-    // debug()<<(*itGap)->name()<<endmsg;
     if(countGap==gapNumber){
       p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
       break;
@@ -1027,27 +966,22 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     float zhalfgap= gapBox->zHalfLength() ;
     float xhalfgap= gapBox->xHalfLength() ;
     float yhalfgap= gapBox->yHalfLength() ;
-    debug()<<"half gap size "<< xhalfgap <<" "<<yhalfgap<<" "<<
-      zhalfgap<<endmsg;    
+    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
+             <<endmsg;    
     Gaudi::XYZPoint poslocal= 
-    (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
-//    Gaudi::XYZPoint poslocalGap= 
-//      (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(0,0,0));
+      (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
     float zcenter=poslocal.z();
-    debug()<<" inut data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
-          <<zavegaps<<" "<<endmsg;
-    
-    debug()<<"center gap "<<poslocal.x()<<" "<<
-      poslocal.y()<<" "<<poslocal.z()<<" "<<
-      zcenter<<endmsg;    
-    Gaudi::Transform3D matrixToLocal= (p_Gap->geometry())->matrix();
-    Gaudi::XYZPoint slopelocal=matrixToLocal*
-      Gaudi::XYZPoint(xSlope,ySlope,1.0F);
+    verbose()<<" input data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
+          <<zavegaps<<" "<<endmsg;    
+    verbose()<<"center gap "<<poslocal.x()<<" "<<poslocal.y()<<" "
+             <<poslocal.z()<<" "<<zcenter<<endmsg; 
+    //Gaudi::Transform3D matrixToLocal= (p_Gap->geometry())->matrix();
+    //Gaudi::XYZPoint slopelocal=matrixToLocal*
+    Gaudi::XYZPoint slopelocal=Gaudi::XYZPoint(xSlope,ySlope,1.0F);
     float zinf=-zhalfgap;    
     float zsup=+zhalfgap;
-    debug()<<"local slopes "<<
-      slopelocal.x()<<" "<<slopelocal.y()<<" "<<slopelocal.z()<<endmsg;
-    
+    verbose()<<"local slopes "<<
+      slopelocal.x()<<" "<<slopelocal.y()<<" "<<slopelocal.z()<<endmsg;    
     float xentry=poslocal.x()+(zinf-zcenter)*
       (slopelocal.x()/slopelocal.z());
     float xexit=poslocal.x()+(zsup-zcenter)*
@@ -1057,32 +991,28 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     float yexit=poslocal.y()+
       (zsup-zcenter)*(slopelocal.y()/slopelocal.z());
 
-    //check that gap boundaries have not been crossed 
-    
+    //check that gap boundaries have not been crossed
     float xmin=-xhalfgap;    
     float ymin=-yhalfgap;
     float xmax=xhalfgap;
     float ymax=yhalfgap;
     float zmin=-zhalfgap;
     float zmax=zhalfgap;
-    bool correct=false;    
-    if(xentry<xmin||xentry>xmax)correct=true;
-    if(yentry<ymin||yentry>ymax)correct=true;
-    if(xexit<xmin||xexit>xmax)correct=true;
-    if(yexit<ymin||yexit>ymax)correct=true;
-    debug()<<"partial  "<<xentry<<" "<<yentry<<" "
-           <<xexit<<" "<<yexit<<" "<<correct<<endmsg;
-    
-    debug()<<" correct "<<correct<<" "<<slopelocal.x()<<" "<<
+    bool correct=true;    
+    if(xentry<xmin||xentry>xmax)correct=false;
+    if(yentry<ymin||yentry>ymax)correct=false;
+    if(xexit<xmin||xexit>xmax)correct=false;
+    if(yexit<ymin||yexit>ymax)correct=false;
+    verbose()<<"partial  "<<xentry<<" "<<yentry<<" "
+           <<xexit<<" "<<yexit<<" "<<correct<<endmsg;    
+    verbose()<<" correct "<<correct<<" "<<slopelocal.x()<<" "<<
       slopelocal.y()<<endmsg;
     if(correct){
       float z1,z2;
-      // float zmin,zmax;
       //then x
       if(slopelocal.x()==0)return StatusCode::FAILURE;
       z1=(xmin-poslocal.x())/(slopelocal.x()/slopelocal.z());
       z2=(xmax-poslocal.x())/(slopelocal.x()/slopelocal.z());
-
       float zz1=min(z1,z2);
       float zz2=max(z1,z2);
       zmin=max(zmin,zz1);
@@ -1095,25 +1025,21 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
       zz2=max(z1,z2);
       zmin=max(zmin,zz1);
       zmax=min(zmax,zz2);
-
-      if(zmin>zhalfgap||zmax<-zhalfgap)return StatusCode::FAILURE;
-      
+      if(zmin>zhalfgap||zmax<-zhalfgap)return StatusCode::FAILURE;      
       xentry=poslocal.x()+(slopelocal.x()/slopelocal.z())*(zmin-zcenter);  
       xexit=poslocal.x()+(slopelocal.x()/slopelocal.z())*(zmax-zcenter);  
       yentry=poslocal.y()+(slopelocal.y()/slopelocal.z())*(zmin-zcenter);  
-      yexit=poslocal.y()+(slopelocal.y()/slopelocal.z())*(zmax-zcenter);  
-      // zentry=zmin;
-      //zexit=zmax;     
-    }
-    
-    //back to the global frame    
-    entryGlobal=(p_Gap->geometry())->
-      toGlobal(Gaudi::XYZPoint(xentry,yentry,zmin));
-    exitGlobal=(p_Gap->geometry())->
-      toGlobal(Gaudi::XYZPoint(xexit,yexit,zmax));
-    return StatusCode::SUCCESS;
-    
-}else return sc;  
+      yexit=poslocal.y()+(slopelocal.y()/slopelocal.z())*(zmax-zcenter);
+      //back to the global frame    
+      verbose()<<xentry<<" "<<yentry<<" "<<zmin<<endreq;
+      verbose()<<xexit<<" "<<yexit<<" "<<zmax<<endreq;      
+      entryGlobal=(p_Gap->geometry())->
+        toGlobal(Gaudi::XYZPoint(xentry,yentry,zmin));
+      exitGlobal=(p_Gap->geometry())->
+        toGlobal(Gaudi::XYZPoint(xexit,yexit,zmax));
+      return StatusCode::SUCCESS;
+    }else return StatusCode::FAILURE;    
+  }else return sc;  
 }
 
 
@@ -1124,16 +1050,12 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
                                                float xpos,float ypos,
                                                float& zaverage)
 {
-  StatusCode sc=StatusCode::SUCCESS;
-  
+  StatusCode sc=StatusCode::SUCCESS;  
   IDetectorElement::IDEContainer::iterator itGap;
   int countGap=0;
   DeMuonGasGap*  p_Gap=NULL;
-  zaverage=0;
-  
+  zaverage=0;  
   for(itGap=(pChamber)->childBegin(); itGap<(pChamber)->childEnd(); itGap++){
-    // debug()<<(*itGap)->name()<<endmsg;
-    
     if(countGap>=gapNumberStart&&countGap<=gapNumberStop){
       p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
       //get 3 points to build a plane for the gap center
@@ -1156,8 +1078,7 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
     }    
     countGap++;    
   } 
-  zaverage=zaverage/(gapNumberStop-gapNumberStart+1);
-  
+  zaverage=zaverage/(gapNumberStop-gapNumberStart+1);  
   return sc;
   
 }
