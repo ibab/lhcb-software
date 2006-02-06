@@ -1,4 +1,4 @@
-// $Id: STDetTraits.h,v 1.2 2006-01-26 09:54:29 mneedham Exp $
+// $Id: STDetTraits.h,v 1.3 2006-02-06 10:24:18 mneedham Exp $
 
 #ifndef _STDetTraits_H
 #define _STDetTraits_H
@@ -67,7 +67,7 @@ class STDetTraits<DeITLayer>{
 template<>
 class STDetTraits<DeITLadder>{
  public:
-  typedef DeITLadder parent;
+  typedef DeITLayer parent;
   typedef DeITSector child;
 };
 

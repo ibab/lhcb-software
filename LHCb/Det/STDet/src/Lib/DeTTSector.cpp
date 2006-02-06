@@ -47,7 +47,7 @@ StatusCode DeTTSector::initialize() {
      setID(m_parent->firstSector()+subID-1);
     }
     else {
-      setID(m_parent->firstSector() + m_parent->childIDetectorElements().size() - subID);
+      setID(m_parent->firstSector() + m_parent->sectors().size() - subID);
     }
    
     // row..

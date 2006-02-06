@@ -28,6 +28,7 @@ DeTTLayer::DeTTLayer( const std::string& name ) :
   DeSTLayer( name )
 { 
   // constructer
+  m_modules.clear();
 }
 
 

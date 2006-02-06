@@ -17,9 +17,10 @@
 using namespace LHCb;
 
 DeTTDetector::DeTTDetector( const std::string& name ) :
-  DeSTDetector( name )
+  DeSTDetector( name )  
 { 
   // constructer
+  m_sectors.clear();
 }
 
 DeTTDetector::~DeTTDetector() {
@@ -106,4 +107,6 @@ void DeTTDetector::flatten(){
       } // half module
     }  // iterLayer
   } // iterStation
+
+
 }

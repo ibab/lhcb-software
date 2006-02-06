@@ -29,6 +29,7 @@ DeTTHalfModule::DeTTHalfModule( const std::string& name ) :
   DeSTBaseElement( name )
 { 
   // constructer
+  m_sectors.clear();
 }
 
 DeTTHalfModule::~DeTTHalfModule() {
@@ -46,7 +47,6 @@ StatusCode DeTTHalfModule::initialize() {
   MsgStream msg(msgSvc(), name() );
 
   StatusCode sc = DeSTBaseElement::initialize();
-
   
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
@@ -56,8 +56,6 @@ StatusCode DeTTHalfModule::initialize() {
     m_firstSector = param<int>("firstReadoutSector");
     m_position = param<std::string>("top_bottom");
     m_column = param<int>("column");
-
-   
    
     m_parent = getParent<DeTTHalfModule>();
     STChannelID parentID = m_parent->elementID();

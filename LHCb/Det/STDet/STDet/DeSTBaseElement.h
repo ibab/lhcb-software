@@ -1,9 +1,10 @@
-// $Id: DeSTBaseElement.h,v 1.4 2006-02-01 11:05:04 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.5 2006-02-06 10:24:18 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "STDet/STDetTraits.h"
 #include "Kernel/STChannelID.h"
@@ -67,6 +68,9 @@ public:
 
 private:
 
+  bool duplicate(const std::string& testString, 
+                 const std::vector<std::string>& names) const;
+
   LHCb::STChannelID m_elementID;
   Gaudi::XYZPoint m_globalCentre; 
 
@@ -99,6 +103,7 @@ inline typename STDetTraits<TYPE>::parent* DeSTBaseElement::getParent() const{
     throw GaudiException ("Orphaned detector element", "DeSTBaseElement", 
                            StatusCode::FAILURE);
   }
+
   return parent;
 }
 
@@ -115,10 +120,22 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
 
   typedef typename STDetTraits<TYPE>::child cType;
   std::vector<cType*> childVector;
+  std::vector<std::string> names;
+
   IDetectorElement::IDEContainer::const_iterator iChild;
   for (iChild = this->childBegin(); this->childEnd() != iChild; ++iChild) {
     cType* aChild = dynamic_cast<cType*>(*iChild);
-    if (aChild !=0) childVector.push_back(aChild);
+    if (aChild !=0){
+      if (duplicate(aChild->name(),names) == false) { 
+        names.push_back(aChild->name());
+        childVector.push_back(aChild);
+      }
+      else {
+        MsgStream msg(msgSvc(), name() );
+        msg << MSG::WARNING 
+            << "tried to make duplicate detector element !" << aChild->name()  << endreq;
+      } // if
+    } // if 
   } // iStation
 
   if (childVector.empty()) {
@@ -128,5 +145,11 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
 
   return childVector;
 }
+
+inline bool DeSTBaseElement::duplicate(const std::string& testString, const std::vector<std::string> & names) const{
+  std::vector<std::string >::const_iterator iter = std::find(names.begin(), names.end(), testString);
+  return (iter == names.end() ? false : true); 
+}
+
 
 #endif

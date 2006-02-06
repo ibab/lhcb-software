@@ -15,7 +15,8 @@ using namespace LHCb;
 DeSTStation::DeSTStation( const std::string& name ) :
   DeSTBaseElement( name )
 { 
-  // constructer
+  // constructer 
+  //  m_id = (unsigned int)param<int>("stationID");
 }
 
 DeSTStation::~DeSTStation() {
