@@ -1,9 +1,16 @@
 !Package         : STDet
 !Package manager : M. Needham
+
 !-----------------------------------------------------------------------
+
+
+! 2006-02-06 
+ - bug fix that gets numbering closer to correct
+
 
 !========================= STDet v2r0 2006-02-06 =======================
 ! 2006-02-06 M. Needham 
+
  - Minor bug fixes
 
 ! 2006-02-01 M. Needham
