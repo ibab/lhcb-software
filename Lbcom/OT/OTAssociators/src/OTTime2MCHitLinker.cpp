@@ -9,9 +9,6 @@
 #include "Event/MCOTDeposit.h"
 #include "Event/MCOTTime.h"
 
-// Event
-//#include "Event/OTTime.h"
-
 // local
 #include "OTTime2MCHitLinker.h"
 
@@ -32,7 +29,7 @@ OTTime2MCHitLinker::OTTime2MCHitLinker( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "OTTime2MCHitLocation" );
+  declareProperty( "OutputData", m_outputData  = "Event/Link/OTTimes2MCHits" );
   declareProperty( "SpillOver", m_spillOver = false );
 }
 
@@ -55,26 +52,24 @@ StatusCode OTTime2MCHitLinker::initialize()
 
 StatusCode OTTime2MCHitLinker::execute() 
 {
-  // Get OTTimes
-  //LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
+  // Get MCOTTimes
   LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
     
   // Get MCHits; no spillover 
   LHCb::MCHits* mcHits = get<LHCb::MCHits>( "/Event/"+LHCb::MCHitLocation::OT );
 
   // Create a linker
-  //LinkerWithKey<LHCb::MCHit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
   LinkerWithKey<LHCb::MCHit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
 
   // loop and link OTTimes to MC truth
-  //LHCb::OTTimes::const_iterator iterTime;
   LHCb::MCOTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime ){
     
     // Find and link all hits 
     std::vector<const LHCb::MCHit*> hitVec;
-    associateToTruth( *iterTime, hitVec, mcHits );
+    StatusCode sc = associateToTruth( *iterTime, hitVec, mcHits );
+    if ( !sc.isSuccess() ) return Error( "Failed to associate to truth" , sc );
     std::vector<const LHCb::MCHit*>::iterator iHit = hitVec.begin();
     while ( iHit != hitVec.end() ) {
       myLink.link( *iterTime , *iHit );
@@ -85,21 +80,17 @@ StatusCode OTTime2MCHitLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-// StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
-// 						 std::vector<const LHCb::MCHit*>& hitVec, 
-// 						 LHCb::MCHits* mcHits )
 StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::MCOTTime* aTime,
 						 std::vector<const LHCb::MCHit*>& hitVec, 
 						 LHCb::MCHits* mcHits )
 {
   // Make link to MCHit from OTTime
-  //typedef LinkerTool<LHCb::OTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
   typedef LinkerTool<LHCb::MCOTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
   typedef OTTime2MCDepositAsct::DirectType Table;
   typedef Table::Range MCDeposit;
   typedef Table::iterator MCDepositIter;
   
-  OTTime2MCDepositAsct associator( evtSvc(), LHCb::MCOTTimeLocation::Default );
+  OTTime2MCDepositAsct associator( evtSvc(), "Event/Link/OTTimes2MCOTDeposits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 

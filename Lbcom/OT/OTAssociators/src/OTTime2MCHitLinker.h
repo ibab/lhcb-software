@@ -4,9 +4,6 @@
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// Event
-//#include "Event/OTTime.h"
-
 /** @class OTTime2MCHitLinker OTTime2MCHitLinker.h
  *  
  *  Algorithm which makes the association from OTTimes to MCHits. This
@@ -21,7 +18,6 @@ namespace LHCb
 {
   class MCHit;
   class MCOTTime;
-  //class OTTime;
 }
 
 class OTTime2MCHitLinker : public GaudiAlgorithm {
@@ -49,10 +45,7 @@ class OTTime2MCHitLinker : public GaudiAlgorithm {
   
  private:
 
-  /// find the MCHit for a given OTTime
- /*  virtual StatusCode associateToTruth( const LHCb::OTTime* aTime , */
-/* 				       std::vector<const LHCb::MCHit*>& hitVec ,  */
-/* 				       LHCb::MCHits* mcHits ); */  
+  // associator function
   virtual StatusCode associateToTruth( const LHCb::MCOTTime* aTime ,
 				       std::vector<const LHCb::MCHit*>& hitVec , 
 				       LHCb::MCHits* mcHits );

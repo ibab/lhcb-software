@@ -9,9 +9,6 @@
 #include "Event/MCParticle.h"
 #include "Event/MCOTTime.h"
 
-// Event
-//#include "Event/OTTime.h"
-
 // local
 #include "OTTime2MCParticleLinker.h"
 
@@ -32,7 +29,7 @@ OTTime2MCParticleLinker::OTTime2MCParticleLinker( const std::string& name,
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "OTTime2MCParticleLocation" );
+  declareProperty( "OutputData", m_outputData  = "/Event/Link/Raw/OT/Times" );
 }
 
 OTTime2MCParticleLinker::~OTTime2MCParticleLinker() {
@@ -43,7 +40,7 @@ StatusCode OTTime2MCParticleLinker::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { 
-    return Error ( "Failed to initialize", sc );
+    return Error( "Failed to initialize", sc );
   }
     
   return StatusCode::SUCCESS;
@@ -52,7 +49,6 @@ StatusCode OTTime2MCParticleLinker::initialize()
 StatusCode OTTime2MCParticleLinker::execute() 
 {
   // get OTTimes
-  //LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
   LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
 
   // Create a linker
@@ -63,7 +59,8 @@ StatusCode OTTime2MCParticleLinker::execute()
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime ){
     std::vector<const LHCb::MCParticle*> partVec;
-    associateToTruth( *iterTime, partVec );
+    StatusCode sc=associateToTruth( *iterTime, partVec );
+    if ( !sc.isSuccess() ) return Error( "Failed to associate to truth" , sc );
     std::vector<const LHCb::MCParticle*>::iterator iPart = partVec.begin();
     while ( iPart != partVec.end() ){
       myLink.link( *iterTime, *iPart );
@@ -76,15 +73,13 @@ StatusCode OTTime2MCParticleLinker::execute()
 
 StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::MCOTTime* aTime,
 						      std::vector<const LHCb::MCParticle*>& partVec ){
-  // Make link to MCHit from OTTime
-  //typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> OTTime2MCHitAsct;
+ 
   typedef LinkerTool<LHCb::MCOTTime, LHCb::MCHit> OTTime2MCHitAsct;
   typedef OTTime2MCHitAsct::DirectType Table;
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   
-  //OTTime2MCHitAsct associator( evtSvc(), LHCb::OTTimeLocation::Default );
-  OTTime2MCHitAsct associator( evtSvc(), LHCb::MCOTTimeLocation::Default );
+  OTTime2MCHitAsct associator( evtSvc(), "/Event/Link/OTTimes2MCHits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 
