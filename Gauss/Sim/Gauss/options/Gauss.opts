@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.76 2006-01-31 18:31:01 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.77 2006-02-06 12:59:24 gcorti Exp $ 
 
 /** @file 
  * 
@@ -16,7 +16,7 @@
 //                        in which case comment also Simulation.opts below
 //---------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
-//ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
+ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
 ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    }; 
 
 //---------------------------------------------------------------------------
@@ -24,7 +24,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    };
 //                        hence setting random numbers to start with
 //---------------------------------------------------------------------------
 Generator.Members         = { "GenInit/GaussGen" };
-//Simulation.Members        = { "SimInit/GaussSim" };
+Simulation.Members        = { "SimInit/GaussSim" };
 GaussGen.FirstEventNumber = 1;
 GaussGen.RunNumber        = 1;
 
@@ -42,7 +42,7 @@ Generator.MeasureTime = true;
 //                   see there to with modified setup or with special
 //                   simulation conditions
 //---------------------------------------------------------------------------
-//#include "$GAUSSOPTS/Simulation.opts" 
+#include "$GAUSSOPTS/Simulation.opts" 
 Simulation.MeasureTime = true;
 
 //---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ Simulation.MeasureTime = true;
 //                can be commented separately
 //---------------------------------------------------------------------------
 Monitor.Members       += { "GaudiSequencer/GenMonitor" };
-//Monitor.Members       += { "GaudiSequencer/SimMonitor" };
+Monitor.Members       += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 #include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 Monitor.MeasureTime    = true;
@@ -64,7 +64,7 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 GaussTape.OutputLevel = 2;
 // When running Generator stand-alone uncomment the following
 // to write on tape only Generator objects
-#include "$GAUSSOPTS/GenStandAlone.opts"
+//#include "$GAUSSOPTS/GenStandAlone.opts"
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
