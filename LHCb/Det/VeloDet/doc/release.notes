@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.94 2006-02-06 14:09:14 krinnert Exp $
+! $Id: release.notes,v 1.95 2006-02-06 15:17:04 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r1 2006-02-06 ========================
 ! 2006-02-06 - Kurt Rinnert
  - fixed class<->struct mismatch in friend declaration in
    DeVeloSensor::StripInfo and doxygen comment.
 
-!========================= VeloDet v10r1 2006-02-03 ========================
 ! 2006-01-26 - Kurt Rinnert
  - All methods returning containers by value were changed to return
    const references instead.  This alway faster and prevents
