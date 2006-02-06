@@ -4,6 +4,10 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-02-06 - Chris Jones
+ - Add work arounds for non const accessors in MCEvent.
+   Uses const_cast = Preferable to adding non-const accessors though
+
 !======================= GiGaCnv v16r0 2006-01-31 ==========================
 
 ! 2006-01-31 - Gloria CORTI

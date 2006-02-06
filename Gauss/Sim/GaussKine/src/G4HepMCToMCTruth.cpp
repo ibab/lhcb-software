@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.1.1.1 2006-01-31 11:03:51 gcorti Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.2 2006-02-06 16:05:24 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -54,14 +54,14 @@ G4HepMCToMCTruth::~G4HepMCToMCTruth(){};
 // ============================================================================
 StatusCode G4HepMCToMCTruth::initialize() 
 {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
   
   debug() << "==> Initialize" << endmsg;
   m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
 
-  return StatusCode::SUCCESS; 
-};
+  return sc; 
+}
 
 // ============================================================================
 // Main execution
@@ -72,8 +72,8 @@ StatusCode G4HepMCToMCTruth::execute() {
 
   // Put empty containers in TES
   partcont = new LHCb::MCParticles();
-  vtxcont = new LHCb::MCVertices();
   put(partcont,m_particles);
+  vtxcont = new LHCb::MCVertices();
   put(vtxcont,m_vertices);
 
   particlemap.clear();
@@ -83,8 +83,9 @@ StatusCode G4HepMCToMCTruth::execute() {
   HepMC::GenEvent* ev = mcmanager->GetCurrentEvent();
   std::vector<int> primbar = mcmanager->GetPrimaryBarcodes();
 
-  for( std::vector<int>::const_iterator it=primbar.begin();
-       it!=primbar.end(); ++it ) {
+  for ( std::vector<int>::const_iterator it=primbar.begin();
+        it!=primbar.end(); ++it ) 
+  {
 
     HepMC::GenParticle* genpart = ev->barcode_to_particle(*it);
     HepMC::GenVertex* genprodvtx = genpart->production_vertex();
@@ -92,8 +93,7 @@ StatusCode G4HepMCToMCTruth::execute() {
     LHCb::MCVertex* primvtx = new LHCb::MCVertex();
     vtxcont->insert( primvtx );
 
-    Gaudi::XYZPoint pos( genprodvtx->point3d() );
-    primvtx->setPosition( pos );
+    primvtx->setPosition( Gaudi::XYZPoint(genprodvtx->point3d()) );
     primvtx->setTime( genprodvtx->position().t() );
 
     convert(genpart, primvtx);
@@ -106,15 +106,16 @@ StatusCode G4HepMCToMCTruth::execute() {
 
   //
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // Convert method to fill a MCParticle
 // ============================================================================
 void G4HepMCToMCTruth::convert(HepMC::GenParticle* part, 
-                               LHCb::MCVertex* prodvertex) {
+                               LHCb::MCVertex* prodvertex) 
+{
 
-  LHCb::MCParticle* mcpart;
+  LHCb::MCParticle* mcpart = 0;
   
   if(part->barcode()<100000000) { // normal case
   
@@ -124,10 +125,9 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
     
     partcont->insert( mcpart );
     
-    Gaudi::LorentzVector momentum( part->momentum() );
-    mcpart->setMomentum( momentum );
-    mcpart->setParticleID( part->pdg_id() );
-    mcpart->setOriginVertex( prodvertex );
+    mcpart->setMomentum     ( Gaudi::LorentzVector(part->momentum()) );
+    mcpart->setParticleID   ( part->pdg_id() );
+    mcpart->setOriginVertex ( prodvertex );
 
     prodvertex->addToProducts( mcpart );
   }
@@ -136,7 +136,10 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
     // the same physical partical as its mother; it was due to some
     // interaction that the new GenPart was instanciated
     //
-    mcpart = prodvertex->mother();
+    // Note - const const needed here to allow "addToEndVertices" below
+    // in general this should be avoid but here it provides a quick and 
+    // reasonably neat solution
+    mcpart = const_cast<LHCb::MCParticle*>( prodvertex->mother() );
   }
   
   HepMC::GenVertex* genendvtx = part->end_vertex();
@@ -144,30 +147,29 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
   LHCb::MCVertex* mcendvtx = new LHCb::MCVertex();
   vtxcont->insert( mcendvtx );
 
-  Gaudi::XYZPoint endpos( genendvtx->point3d() );
-  mcendvtx->setPosition( endpos );
-  mcendvtx->setTime( genendvtx->position().t() );
-  mcendvtx->setMother( mcpart );
+  mcendvtx->setPosition ( Gaudi::XYZPoint(genendvtx->point3d()) );
+  mcendvtx->setTime     ( genendvtx->position().t() );
+  mcendvtx->setMother   ( mcpart );
 
   mcpart->addToEndVertices( mcendvtx );
 
   // we loop over daughter and call the same method recursively
-  for(HepMC::GenVertex::particles_out_const_iterator 
-        daughter=genendvtx->particles_out_const_begin();
-      daughter!=genendvtx->particles_out_const_end(); daughter++) 
+  for ( HepMC::GenVertex::particles_out_const_iterator 
+          daughter=genendvtx->particles_out_const_begin();
+        daughter!=genendvtx->particles_out_const_end(); ++daughter ) 
   {
     convert((*daughter), mcendvtx);
   }
+
   return;
 }
 
 // ============================================================================
 //  Finalize
 // ============================================================================
-StatusCode G4HepMCToMCTruth::finalize() { 
-  
+StatusCode G4HepMCToMCTruth::finalize() 
+{   
   debug() << "==> Finalize" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
