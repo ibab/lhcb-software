@@ -107,14 +107,15 @@
     <class name="SolidPolycone::CmpZ" />
     <class name="std::vector<MuonReadoutCond::_readoutParameter>" />
     <class name="std::vector<MuonReadoutCond::_clus>"             />
-<!--  
-    <class name="std::vector<DeMuonRegion::logMap_>"              />
-    <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const std::basic_string<char>,std::basic_string<char> >" />
     <class name="std::pair<const std::basic_string<char>,SmartRef<Condition> >" />
-    <class name="std::pair<const unsigned int,bool>" />
+    <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const unsigned int,unsigned int>" />
-    <class name="std::swap<unsigned int,unsigned int>" />
+    <class name="std::pair<const unsigned int,bool>" />
+    <class name="std::swap<const unsigned int,const unsigned int>" />
+    <class name="std::swap<const std::basic_string<char>,const std::basic_string<char> >" />
+<!--  
+    <class name="std::vector<DeMuonRegion::logMap_>"              />
 -->  
  </exclusion>
 </lcgdict>
