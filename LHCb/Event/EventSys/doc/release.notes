@@ -1,6 +1,20 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v21r0 2006-02-06 ========================
+! 2006-02-03 - Marco Cattaneo
+ - Replace old SEAL dictionaries with new Reflex ones
+
+! 2006-02-03 - Marco Cattaneo
+ - Major new version for backards incompatible DC06 changes
+ - Obsolete packages removed: Event, DC04Hacks, TrEvent, TrgEvent, ITEvent
+ - Packages added: EventBase v1r1, MCEvent v1r0, RecEvent v1r0, STEvent v1r1
+ - Packages modified: CaloEvent v14r0, DAQEvent v6r2, GenEvent v4r1, 
+     L0Event v15r0, LinkerEvent v2r0, RichEvent v9r0, TrackEvent v2r0,
+     OTEvent v15r0, VeloEvent v14r0, MuonEvent v5r0, PhysEvent v9r0,
+     EventAssoc v3r0
+ - Packages temporarily disabled: PackedEvent, EventUtils
+
 !======================== EventSys v20r14 2005-12-19 =======================
 ! 2005-12-19 - Marco Cattaneo
  - Use L0Event v14r3p3, DAQEvent v5r3p2

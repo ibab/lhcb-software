@@ -1,41 +1,25 @@
 package EventSys
-version v20r14
+version v21r0
 
 branches doc cmt
 
 # LHCb Event libraries
 
-use Event       v4r8    Event
-use VeloEvent   v13r2p2 Event
-use ITEvent     v13r3   Event
-use OTEvent     v14r0p2 Event
-use TrEvent     v14r4   Event
-use RichEvent   v8r5    Event
-use CaloEvent   v13r10  Event
-use MuonEvent   v4r1    Event
-use L0Event     v14r3p3 Event
-use PhysEvent   v8r11   Event
-use DAQEvent    v5r3p2  Event
-use GenEvent    v3r5    Event
-use EventAssoc  v2r1    Event
-use LinkerEvent v1r9    Event
-use TrgEvent    v5r8    Event
-use TrackEvent  v1r6    Event
-use PackedEvent v1r2    Event
-use EventUtils  v1r0    Event
-use DC04Hacks   v1r0    Event
-
-private
-
-# Check completeness of LCG dictionaries. Only for Linux debug
-
-pattern dict_check \
-  use GaudiPoolDb v* ; \
-  apply_pattern ld_library_path ; \
-  make_fragment dict_check -header=dict_check_header ; \
-  document dict_check LCG_dict_check
-
-macro apply_check "" \
-      Linux&debug dict_check
-
-# apply_pattern ${apply_check}
+use EventBase   v1r1    Event
+use MCEvent     v1r0    Event
+use RecEvent    v1r0    Event
+use VeloEvent   v14r0   Event
+use STEvent     v1r1    Event
+use OTEvent     v15r0   Event
+use RichEvent   v9r0    Event
+use CaloEvent   v14r0   Event
+use MuonEvent   v5r0    Event
+use L0Event     v15r0   Event
+use PhysEvent   v9r0    Event
+use DAQEvent    v6r2    Event
+use GenEvent    v4r1    Event
+use EventAssoc  v3r0    Event
+use LinkerEvent v2r0    Event
+use TrackEvent  v2r0    Event
+#use PackedEvent v1r2    Event
+#use EventUtils  v1r0    Event
