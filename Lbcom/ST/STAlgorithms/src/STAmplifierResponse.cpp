@@ -1,4 +1,4 @@
-// $Id: STAmplifierResponse.cpp,v 1.2 2006-01-26 10:25:16 mneedham Exp $
+// $Id: STAmplifierResponse.cpp,v 1.3 2006-02-06 10:10:38 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -45,9 +45,14 @@ StatusCode STAmplifierResponse::initialize(){
     return Error("Failed to initialize", sc);
   }
 
-  if ((m_times.size() == 0) || (m_times.size() != m_values.size())){
-    return Error(" no or inconsistant data !", StatusCode::FAILURE);
+  if (m_times.size() == 0){
+    return Error(" no data !", StatusCode::FAILURE);
   }
+
+  if (m_times.size() != m_values.size()){
+    return Error("inconsistant data !", StatusCode::FAILURE);
+  }
+                                                                              
   m_tMin = m_times.front();
   m_tMax = m_times.back();
   m_responseSpline = new GSLSpline(m_times,m_values);
