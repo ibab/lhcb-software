@@ -434,6 +434,12 @@
         virtual = 'TRUE' />
 
       <method
+        name    = 'setErrQOverP2'
+        argList = 'double value'
+        desc    = 'Update the squared error on the Q/P of the state'
+        virtual = 'TRUE' />
+
+      <method
         type    = 'bool'
         name    = 'checkLocation'
         argList = 'unsigned int value'

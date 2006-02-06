@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.14 2006-02-01 14:00:49 erodrigu Exp $
+// $Id: State.cpp,v 1.15 2006-02-06 16:51:34 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -237,6 +237,14 @@ void State::setState( double x, double y, double z,
 void State::setQOverP( double value )
 {
   m_stateVector[4] = value;
+};
+
+//=============================================================================
+// Update the squared error on the Q/P of the state
+//=============================================================================
+void State::setErrQOverP2( double value )
+{
+  m_covariance(4,4) = value;
 };
 
 //=============================================================================

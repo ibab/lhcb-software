@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-06 - Eduardo Rodrigues
+ - added new similarity method to SHacks.h
+ - added setErrQOverP2 method in Track
+
 ! 2006-02-01 - Eduardo Rodrigues
  - changes to Track class:
    - new methods added (copy, measurement, isMeasurementOnTrack)
