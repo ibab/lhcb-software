@@ -4,12 +4,12 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r0 2006-02-06 ========================
 ! 2006-02-06 - Chris Jones
  - Some minor cleaups
  - Add charge sharing to digit history information
  - Update to get numbering information from RichDet instead of RichDAQ tool
 
-!======================== RichReadout v2r0 2006-02-02 ========================
 ! 2006-02-02 - Chris Jones
  - Bug fixes following first running tests !
 

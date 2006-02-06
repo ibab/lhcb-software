@@ -4,10 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r0 2006-02-06 ========================
 ! 2006-02-06 - Chris Jones
  - Update digit monitor to provide more information on background types
 
-!======================== RichDigiQC v3r0 2005-12-19 ========================
 ! 2005-12-16 - Chris Jones
  - Update for LHCb v20r0
  - Add MCEvent usage
