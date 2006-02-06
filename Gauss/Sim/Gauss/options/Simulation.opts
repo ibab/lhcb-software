@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.69 2006-01-31 17:42:13 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.70 2006-02-06 09:07:03 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -34,7 +34,7 @@ GiGaStore.ConversionServices = { "GiGaKine" };
 // Define the geometrical setup to simulate, including the magnetic field
 // simulation
 //---------------------------------------------------------------------------
-Simulation.Members += { "GiGaInputStream/Geo" };
+Simulation.Members += { "GiGaInputStream/Geo" }; 
 Geo.OutputLevel = 2;
 #include "$GAUSSOPTS/SimGeometry.opts"
 
@@ -92,11 +92,10 @@ Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
 Simulation.Members += { "GetMCRichHitsAlg" };
 // Uncomment lines below for switching on RICH extended info - STILL to
 // be adapted
-// Simulation.Members += { "GetExtendedMCRichInfoAlg" };
-// #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
-
-// ---> NEW WAY: END
-
+Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
+                        "GetMCRichSegmentsAlg",
+                        "GetMCRichTracksAlg" };
+#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
