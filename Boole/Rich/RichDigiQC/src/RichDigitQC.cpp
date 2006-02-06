@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.26 2006-01-23 15:50:56 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.27 2006-02-06 12:12:49 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -25,13 +25,16 @@ const        IAlgFactory& RichDigitQCFactory = s_factory ;
 RichDigitQC::RichDigitQC( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : RichHistoAlgBase ( name, pSvcLocator ),
-    m_detNumTool     ( 0                 ),
+    m_richSys        ( 0                 ),
     m_smartIDs       ( 0                 ),
     m_mcTool         ( 0                 ),
     m_evtC           ( 0                 ),
     m_spillDigits    ( Rich::NRiches     ),
     m_totalSpills    ( Rich::NRiches     ),
-    m_bkgHits        ( Rich::NRiches, 0  )
+    m_bkgHits        ( Rich::NRiches, 0  ),
+    m_chrgShrHits    ( Rich::NRiches, 0  ),
+    m_chrgTkHits     ( Rich::NRiches, 0  ),
+    m_scattHits      ( Rich::NRiches, 0  )
 {
 
   // Declare job options
@@ -51,9 +54,11 @@ StatusCode RichDigitQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichDetNumberingTool", m_detNumTool, 0, true );
   acquireTool( "RichSmartIDTool" ,     m_smartIDs,   0, true );
   acquireTool( "RichMCTruthTool",      m_mcTool,     0, true );
+
+  // RichDet
+  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
   // Initialise variables
   m_evtC = 0;
@@ -80,7 +85,7 @@ StatusCode RichDigitQC::execute()
   SpillDetCount spills(Rich::NRiches);
   for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end(); ++iDigit )
-  {    
+  {
     const MCRichDigit * mcDig = *iDigit;
 
     // Get Rich ID
@@ -98,7 +103,14 @@ StatusCode RichDigitQC::execute()
     ++(spills[rich])[location];
 
     // Check if digit is background
-    if ( m_mcTool->isBackground(mcDig) ) { ++m_bkgHits[rich]; ++backs[rich]; }
+    if ( m_mcTool->isBackground(mcDig) )
+    {
+      ++backs[rich];
+      if ( mcDig->history().backgroundHit()  ) { ++m_bkgHits    [rich]; }
+      if ( mcDig->history().chargeShareHit() ) { ++m_chrgShrHits[rich]; }
+      if ( mcDig->history().chargedTrack()   ) { ++m_chrgTkHits [rich]; }
+      if ( mcDig->history().scatteredHit()   ) { ++m_scattHits  [rich]; }
+    }
 
   }
 
@@ -139,13 +151,13 @@ StatusCode RichDigitQC::execute()
       plot1D( (*iHPD).second, RICH+" : Average HPD occupancy (nHits>0)", 0, 150, 75 );
       if ( m_extraHists )
       {
-        const RichDAQ::HPDHardwareID hID ( m_detNumTool->hardwareID( (*iHPD).first ) );
+        const RichDAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
         std::ostringstream title;
         title << RICH << " : HPD " << (*iHPD).first << " " << hID << " occupancy (nHits>0)";
         plot1D( (*iHPD).second, hID.data(), title.str(), 0, 150, 75 );
       }
       (m_nHPD[rich])[(*iHPD).first] += (*iHPD).second;
-      const RichDAQ::Level1ID l1ID = m_detNumTool->level1ID( (*iHPD).first );
+      const RichDAQ::Level1ID l1ID = m_richSys->level1ID( (*iHPD).first );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
     }
@@ -213,10 +225,10 @@ StatusCode RichDigitQC::finalize()
     for ( HPDCounter::const_iterator iHPD = m_nHPD[rich].begin();
           iHPD != m_nHPD[rich].end(); ++iHPD )
     {
-      const RichDAQ::HPDHardwareID hID ( m_detNumTool->hardwareID( (*iHPD).first ) );
-      const RichDAQ::Level1ID l1ID     ( m_detNumTool->level1ID( (*iHPD).first ) );
-      const Gaudi::XYZPoint hpdGlo          ( m_smartIDs->hpdPosition( (*iHPD).first ) );
-      const Gaudi::XYZPoint hpdLoc          ( m_smartIDs->globalToPDPanel( hpdGlo ) );
+      const RichDAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
+      const RichDAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
+      const Gaudi::XYZPoint hpdGlo     ( m_smartIDs->hpdPosition( (*iHPD).first ) );
+      const Gaudi::XYZPoint hpdLoc     ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
       if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
@@ -247,6 +259,12 @@ StatusCode RichDigitQC::finalize()
     }}
     info() << "       : % background hits              "
            << eff(m_bkgHits[rich],totDet) << " % " << endreq;
+    info() << "       : % scattered hits               "
+           << eff(m_scattHits[rich],totDet) << " % " << endreq;
+    info() << "       : % charged track on HPD hits    "
+           << eff(m_chrgTkHits[rich],totDet) << " % " << endreq;
+    info() << "       : % silicon charge share hits    "
+           << eff(m_chrgShrHits[rich],totDet) << " % " << endreq;
 
     int iC = 0;
     for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1, ++iC )
@@ -255,9 +273,9 @@ StatusCode RichDigitQC::finalize()
               << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
     }
 
-    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD.data()) 
+    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD.data())
            << occ(minOcc,m_evtC) << " hits/event" << endreq
-           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD.data()) 
+           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD.data())
            << occ(maxOcc,m_evtC) << " hits/event" << endreq;
 
   }

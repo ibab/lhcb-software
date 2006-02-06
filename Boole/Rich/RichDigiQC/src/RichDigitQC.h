@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.17 2005-12-16 15:12:34 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.18 2006-02-06 12:12:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -35,13 +35,13 @@
 #include "Kernel/RichDetectorType.h"
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichPoissonEffFunctor.h"
-
-// RichKernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 
+// RichDet
+#include "RichDet/DeRichSystem.h"
+
 // RICH Interfaces
-#include "RichKernel/IRichDetNumberingTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
@@ -75,12 +75,13 @@ public:
 
 private: // methods
 
+  /// Returns the location of container for the MCRichHit associated to the given digit
   std::string mchitLocation( const MCRichDigit * digit ) const;
 
 private: // data
 
-  /// Pointer to RICH detector numbering tool
-  const IRichDetNumberingTool * m_detNumTool;
+  /// Pointer to RICH system detector element
+  const DeRichSystem * m_richSys;
 
   /// Pointer to RichSmartID tool
   const IRichSmartIDTool * m_smartIDs;
@@ -113,6 +114,15 @@ private: // data
 
   /// Number of background hits in each RICH
   std::vector< unsigned int > m_bkgHits;
+
+  /// Number of charge shared hits in each RICH
+  std::vector< unsigned int > m_chrgShrHits;
+
+  /// Number of charged track hits in each RICH
+  std::vector< unsigned int > m_chrgTkHits;
+
+  /// Number of charged track hits in each RICH
+  std::vector< unsigned int > m_scattHits;
 
   /// List of event locations to look for MCRichHits in
   typedef Rich::HashMap< std::string, bool > EventLocations;
