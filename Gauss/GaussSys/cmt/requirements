@@ -11,7 +11,7 @@ branches cmt doc
 use Gauss		v24r0	  Sim
 
 # Generator stuff ...
-use GENSER              v1r121p0  Gen
+use GENSER              v1r121p2  Gen
 use HepEvt              v3r126p0  Gen
 use EvtGen              v8r6      Gen
 use Generators          v4r0      Gen
@@ -28,20 +28,21 @@ use SimSvc              v4r2      Sim
 use GiGaVisUI		v3r1	  Sim
 use VisSvc              v3r3      Vis
 #use GiGaGeo            v1r0      Sim
+use ClhepTools          v1r0      Tools
 
 # Gauss stuff...
-#use GaussKine          v1r0      Sim
+use GaussKine           v1r0      Sim
 use GaussAlgs		v2r0      Sim
-use GaussTools	        v11r0	  Sim
-#use GaussRICH		v5r2	  Sim
+use GaussTools	        v12r0	  Sim
+use GaussRICH		v6r0	  Sim
 use GaussTracker	v5r0	  Sim
 use GaussCalo		v8r0	  Sim
 use GaussPhysics	v3r2	  Sim
 use GaussMonitor	v3r0	  Sim
 use CaloMoniSim         v2r0      Calo
-use VeloGauss           v1r0      Velo
-#use MuonMoniSim         v2r0      Muon
+use VeloGauss           v1r1      Velo
+use MuonMoniSim         v2r0      Muon
 
 # GMDL
-#use GDML                v1r210p0  Sim
-#use GDMLG4Writer        v2r0      Sim
+use GDML                v1r240p0  Sim
+use GDMLG4Writer        v2r0      Sim
