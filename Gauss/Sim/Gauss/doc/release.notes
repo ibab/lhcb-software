@@ -4,11 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r0 2006-02-06 ============================
 
-!======================== Gauss v24r0 2006-01-31 ============================
-   
-                      TEMPORARY! ONLY GENERATOR PHASE! 
-	               SIMULATION PHASE WORKS WITH BUG FIX in GAUDI       
+! 2006-02-06 - Gloria CORTI
+ - Introduce sequence of algorithms to have extende Rich information
+   . Simulation.opts
+ - New version of GaussTools v12r0 (MagneticFieldSvc now using MathCore)
+ - Adapt to new disctionaries in LCG using RELAX from LCG_Interfaces
+   . GaussPoolIO.opts
+ - Switch back on simulation phase
+   . Gauss.opts
 
 ! 2006-01-31 - Gloria CORTI
  - Introduce use of varius XXXDet packages to resolve sensitive detector ID.
@@ -18,7 +23,7 @@
    . requirements
  - Introduce use of Sim packages adapted to new Event Model
    . requirements
- - Temporarly use uniform magnetic filed beacus of problems in retrieving
+ - Temporarly use uniform magnetic filed beacuss of problems in retrieving
    LHCb MagneticFieldSvc, remove loading of CaloEvent dll no longer necessary.
    . SimGeometry.opts
  - Adapt steering of simulation to new structure for all detectors,
