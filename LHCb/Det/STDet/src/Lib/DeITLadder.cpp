@@ -48,7 +48,7 @@ StatusCode DeITLadder::initialize() {
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeIT,
                      parentID.station(),parentID.layer(),
-                     m_id, 0, 0);
+                     parentID.detRegion(), m_id, 0);
     setElementID(chan);
 
     std::vector<child_type*> tVector = getChildren<DeITLadder>();
