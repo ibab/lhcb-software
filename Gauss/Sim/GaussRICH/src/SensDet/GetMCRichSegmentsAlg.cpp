@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.2 2005-12-22 17:38:47 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.3 2006-02-06 16:07:19 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -56,6 +56,10 @@ StatusCode GetMCRichSegmentsAlg::execute()
 {
   debug() << "Execute" << endmsg;
 
+  // new container for segments
+  MCRichSegments * segments = new  MCRichSegments ();
+  put( segments, m_richSegmentsLocation);
+
   // Get the G4 necessary hit collections from GiGa
   G4HCofThisEvent* hitscollections = 0;
 
@@ -64,10 +68,6 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
   if ( 0 != hitscollections )
   {
-
-    // new container for segments
-    MCRichSegments * segments = new  MCRichSegments ();
-    put( segments, m_richSegmentsLocation);
 
     // Locate the MCRichOpticalPhotons
     const MCRichOpticalPhotons * photons = get<MCRichOpticalPhotons>( m_richPhotonsLocation ) ;

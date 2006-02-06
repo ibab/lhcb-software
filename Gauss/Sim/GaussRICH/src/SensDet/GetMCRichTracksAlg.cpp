@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.1 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.2 2006-02-06 16:07:19 jonrob Exp $
 // Include files
 
 // local
@@ -55,7 +55,7 @@ StatusCode GetMCRichTracksAlg::execute()
 {
   debug() << "Execute" << endmsg;
 
-  // Create the MCHits and put them in the TES
+  // Create the MCRichTracks and put them in the TES
   MCRichTracks * richTracks = new MCRichTracks();
   put( richTracks, m_richTracksLocation );
 
@@ -78,11 +78,11 @@ StatusCode GetMCRichTracksAlg::execute()
     const GiGaKineRefTable & table = kineSvc()->table();
 
     // Locate the MCRichSegments
-    MCRichSegments * segments = get<MCRichSegments>( MCRichSegmentLocation::Default );
-    if ( segments->empty() ) { return Warning( "Empty MCRichSegments" ); }
+    MCRichSegments * segments   = get<MCRichSegments>( MCRichSegmentLocation::Default );
+    if ( segments->empty() ) { return StatusCode::SUCCESS; }
     // locate MCParticles
     const MCParticles * mcParts = get<MCParticles>( MCParticleLocation::Default );
-    if ( mcParts->empty()  ) { return Warning( "Empty MCParticles" ); }
+    if ( mcParts->empty()  ) { return Warning( "Empty MCParticles", StatusCode::SUCCESS ); }
 
     // loop over trajectories and form links from MCP to trajectories
     typedef std::map<const MCParticle*, const GiGaTrajectory*> MCPartToGiGaTraj;

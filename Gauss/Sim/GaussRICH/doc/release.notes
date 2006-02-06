@@ -5,6 +5,10 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+! 2006-02-06 - Chris Jones
+ - Fix problem with MCRichTrack converter algorithm aborting production if
+   empty MCRichSegment container is found.
+
 !======================== GaussRICH v6r0 2006-01-31 ===========================
 ! 2006-01-31 - Gloria CORTI
  - Need to compile RichG4AnalysisPhotElec and RichG4Counters from RichAnalysis
