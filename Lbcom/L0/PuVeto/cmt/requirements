@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.24 2006-02-06 16:30:59 mzupan Exp $
+# $Id: requirements,v 1.25 2006-02-06 17:28:27 cattanem Exp $
 # Created    : 06/02/2006
 # Maintainer : Marko Zupan
 
@@ -12,11 +12,11 @@ include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use	L0Event		v15r*	Event
-use	VeloEvent	v14r*	Event
-use     DAQEvent        v6r*    Event
-use     VeloDet         v10r*   Det
-use	MCEvent		v1r*	Event
+use L0Event   v* Event
+use VeloEvent v* Event
+use DAQEvent  v* Event
+use VeloDet   v* Det
+use MCEvent   v* Event
 
 # Component library building rule
 #============================================================================
