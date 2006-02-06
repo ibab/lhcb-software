@@ -118,7 +118,7 @@ path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
 #-- For visualization make appropriate engine visible (DAWN)
 path_remove	PATH  "" Linux&Vis "/DAWN/"
-path_append	PATH  "" Linux&Vis " ${OSC_release_area}/DAWN/bin/Linux "
+path_append	PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
 
 #========================================================================
 #-- Set usefull alias : for tests only - use vXXXXXX.opts for geometry
