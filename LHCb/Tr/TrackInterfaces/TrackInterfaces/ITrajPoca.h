@@ -34,17 +34,36 @@ public:
 
   // Find arclengths along trajectories
   // having a distance smaller than tolerance
-  virtual StatusCode minimize( const Trajectory& traj1, const Trajectory& traj2,
-                               double& arclength1, double& arclength2,
-                               Gaudi::XYZVector& distance ) = 0;
-
-  // Retrieve the derivative with respect to the reference point
-  // of the first ("1") trajectory
-  const Gaudi::XYZVector derivative1() const = 0;
+  virtual StatusCode minimize( const LHCb::Trajectory& traj1,
+                               double& arclength1, 
+                               bool restrictRange1,
+                               const LHCb::Trajectory& traj2,
+                               double& arclength2, 
+                               bool restrictRange2,
+                               Gaudi::XYZVector& distance,
+                               double precision ) = 0;
   
-  // Retrieve the derivative with respect to the reference point
-  // of the second ("2") trajectory
-  const Gaudi::XYZVector derivative2() const = 0;
+  virtual StatusCode minimize( const LHCb::Trajectory& traj,
+                               double& arclength,
+                               bool restrictRange,
+                               const Gaudi::XYZPoint& pt,
+                               Gaudi::XYZVector& distance,
+                               double precision ) = 0;
+
+  StatusCode minimize( const LHCb::Trajectory& traj1,
+                       double& arclength1, 
+                       const LHCb::Trajectory& traj2,
+                       double& arclength2,
+                       Gaudi::XYZVector& distance,
+                       double precision )  
+  { return minimize( traj1, arclength1, false,
+                     traj2, arclength2, false,
+                     distance, precision); }
+  
+  StatusCode minimize( const LHCb::Trajectory& traj, double& arclength,
+                       const Gaudi::XYZPoint& pt, Gaudi::XYZVector& distance, 
+                       double precision )
+  { return minimize( traj, arclength, false, pt, distance, precision); }
 
 };
 #endif // TRACKINTERFACES_ITRAJPOCA_H
