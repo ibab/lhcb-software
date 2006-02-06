@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 
 !2006-02-06 M Needham
+ - bug fix in ITClusterCreator jobOptions
+ - Remove itRec.opts 
+
+!2006-02-06 M Needham
  - Changes in joboptions for IT
  - Minor changes in STAmplifierResponse 
 
