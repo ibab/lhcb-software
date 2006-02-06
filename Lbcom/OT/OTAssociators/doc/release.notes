@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.32 2006-01-31 13:31:05 cattanem Exp $
+! $Id: release.notes,v 1.33 2006-02-06 14:59:41 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+!===================== OTAssociators v4r1 2006-02-05 =====================
+! 2006-02-05
+ - Use MCOTTime and not OTTime, assuming there is one to one 
+   correspondence, for truth tables. 		       
 
 !===================== OTAssociators v4r0 2006-01-31 =====================
 ! 2006-01-31 - Marco Cattaneo

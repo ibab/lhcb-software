@@ -20,7 +20,8 @@
 namespace LHCb 
 {
   class MCOTDeposit;
-  class OTTime;
+  class MCOTTime;
+  //class OTTime;
 }
 
 class OTTime2MCDepositLinker : public GaudiAlgorithm {
@@ -49,9 +50,10 @@ class OTTime2MCDepositLinker : public GaudiAlgorithm {
  private:
   
   // associator function
-  virtual StatusCode associateToTruth( const LHCb::OTTime* aTime, 
+/*   virtual StatusCode associateToTruth( const LHCb::OTTime* aTime,  */
+/* 				       std::vector<LHCb::MCOTDeposit*>& depVec ); */
+  virtual StatusCode associateToTruth( const LHCb::MCOTTime* aTime, 
 				       std::vector<LHCb::MCOTDeposit*>& depVec );
-  
   // job options:
   std::string m_outputData; ///< path to put relation table
   double m_acceptTime;      ///< Time window for deposits killed by dead time
