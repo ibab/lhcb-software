@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.61 2006-02-03 11:12:53 cattanem Exp $
+! $Id: release.notes,v 1.62 2006-02-06 21:15:25 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-06 - Alessia Satta
+ - few fixes in DeMuonDetector.cpp and MuonChamberLayout.cpp: in 
+   filleGeo(), sensDetID and tileChamber()
+
 ! 2006-02-01 - Marco Clemencic
  - Removed constructor using ITime (not used anywhere).
 
