@@ -1,34 +1,27 @@
-// $Id: OTTimeCreator.h,v 1.7 2006-01-18 14:05:21 janos Exp $
+// $Id: OTTimeCreator.h,v 1.8 2006-02-06 14:53:29 janos Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
-// Include files
-// from STL
-#include <string>
-#include <vector>
-#include <map>
-
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
+
+// Kernel
+#include "Kernel/OTChannelID.h"
 
 // Event
-#include "Kernel/OTChannelID.h"
-#include "Event/OTTime.h"
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
-
-// from Detector
-#include "OTDet/DeOTDetector.h"
-
-// MathCore
-#include "Kernel/PhysicalConstants.h"
 
 //local
 #include "Event/GolHeader.h"
 #include "Event/DataWord.h"
 
-using namespace LHCb;
+// forward declarations
+class DeOTDetector;
+namespace LHCb 
+{
+  class OTTime;
+}
 
 /** @class OTTimeCreator OTTimeCreator.h OTDAQ/OTTimeCreator.h
  *  
@@ -53,13 +46,13 @@ private:
   
   // From Raw to OTTime
   StatusCode raw2OTTime(int station, int layer, int quarter, int module, 
-                        DataWord dataWord, OTTimes& times);
+                        LHCb::DataWord dataWord, LHCb::OTTimes& times);
 
   /// Make the OTTimes
-  StatusCode createTimes(const OTChannelID aChan, OTTimes& time);
+  StatusCode createTimes(const LHCb::OTChannelID aChan, LHCb::OTTimes& time);
 
   /// t0 calibration
-  double correctedTime(const OTChannelID aChan, 
+  double correctedTime(const LHCb::OTChannelID aChan, 
                        const double unCorrectedTime) const;
   
   // Get address information 

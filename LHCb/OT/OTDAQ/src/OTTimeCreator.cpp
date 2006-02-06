@@ -1,5 +1,16 @@
-// $Id: OTTimeCreator.cpp,v 1.10 2006-01-18 15:39:38 cattanem Exp $
+// $Id: OTTimeCreator.cpp,v 1.11 2006-02-06 14:53:29 janos Exp $
 // Include files
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// from Detector
+#include "OTDet/DeOTDetector.h"
+
+//Event
+#include "Event/OTTime.h"
+
+// MathCore
+#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "OTTimeCreator.h"
@@ -13,6 +24,8 @@
 //
 // 2004-06-06 : Jacopo Nardulli
 //-----------------------------------------------------------------------------
+
+using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<OTTimeCreator>          s_factory ;
@@ -49,9 +62,8 @@ StatusCode OTTimeCreator::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // Loading OT Geometry from XML
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_tracker = tracker;
-  
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+    
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = 0;
   aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
@@ -67,10 +79,10 @@ StatusCode OTTimeCreator::initialize() {
 StatusCode OTTimeCreator::execute() {
 
   // Retrieve the RawEvent:
-  LHCb::RawEvent* event = get<LHCb::RawEvent>("DAQ/RawEvent" );
+  RawEvent* event = get<RawEvent>("DAQ/RawEvent" );
   
   // Get the buffers associated with OT
-  const std::vector<LHCb::RawBank*>& OTBanks = event->banks(LHCb::RawBank::OT );
+  const std::vector<RawBank*>& OTBanks = event->banks(RawBank::OT );
   
   // make OTTime container 
   OTTimes* outputTimes = new OTTimes();
@@ -78,7 +90,7 @@ StatusCode OTTimeCreator::execute() {
   put(outputTimes, m_timeLocation);
 
   // Loop over vector of banks (The Buffer)
-  std::vector<LHCb::RawBank*>::const_iterator ibank;
+  std::vector<RawBank*>::const_iterator ibank;
   unsigned int j = 0;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // Check the bank version
