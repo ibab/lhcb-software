@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.3 2006-02-06 10:42:55 jonrob Exp $
+  * $Id: RichPID.xml,v 1.4 2006-02-06 10:43:49 jonrob Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -58,7 +58,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>  
                 <code>
                    const float dll = particleDeltaLL(type);
-                   return ( dll &gt; 0 ? 1.0 - (float)gsl_sf_erf(sqrt(dll)) : 1.0 );
+                   return (float)( dll &gt; 0 ? 1.0 - (float)gsl_sf_erf(sqrt(dll)) : 1.0 );
                 </code>
         </method>
 
