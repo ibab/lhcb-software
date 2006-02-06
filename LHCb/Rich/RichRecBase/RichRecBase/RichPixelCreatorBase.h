@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.7 2006-02-06 12:28:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -28,12 +28,14 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecGeomTool.h"
-#include "RichKernel/IRichDetNumberingTool.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/BoostArray.h"
+
+// RichDet
+#include "RichDet/DeRichSystem.h"
 
 // Boost
 #include "boost/multi_array.hpp"
@@ -167,8 +169,8 @@ protected: // data
 
 private: // data
 
-  /// Detector numbering information tool
-  const IRichDetNumberingTool * m_hpdTool;
+  /// Pointer to RICH system detector element
+  const DeRichSystem * m_richSys;
 
   /// Reconstruction geometry tool
   const IRichRecGeomTool * m_recGeom;
@@ -256,7 +258,7 @@ inline bool RichPixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
   return (
           //validID &&                 // RichSmartID is valid
           useDetector(id.rich()) &&  // This RICH is in use
-          ( !m_hpdCheck || m_hpdTool->hpdIsActive(id) ) // If required, check HPD is alive
+          ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
           );
 }
 

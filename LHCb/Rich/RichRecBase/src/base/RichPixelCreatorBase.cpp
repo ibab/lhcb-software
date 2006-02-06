@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.8 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.9 2006-02-06 12:28:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -26,7 +26,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
                                             const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_allDone       ( false ),
-    m_hpdTool       ( 0 ),
+    m_richSys       ( 0 ),
     m_recGeom       ( 0 ),
     m_pixels        ( 0 ),
     m_bookKeep      ( false ),
@@ -73,7 +73,7 @@ StatusCode RichPixelCreatorBase::initialize()
   acquireTool( "RichRecGeometry", m_recGeom );
   if ( m_hpdCheck )
   {
-    acquireTool( "RichDetNumberingTool", m_hpdTool, 0, true );
+    m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
              StatusCode::SUCCESS );
   }
