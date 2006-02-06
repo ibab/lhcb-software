@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.h,v 1.2 2006-02-02 10:32:47 jonrob Exp $
+ *  $Id: RichSummedDeposits.h,v 1.3 2006-02-06 12:26:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -32,9 +32,6 @@
 
 // from CLHEP
 #include "Kernel/Point3DTypes.h"
-
-// interfaces
-#include "RichKernel/IRichMCTruthTool.h"
 
 // kernel
 #include "Kernel/ParticleID.h"
@@ -70,9 +67,6 @@ private: // data
 
   std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
-
-  /// Pointer to RichMCTruth tool
-  const IRichMCTruthTool * m_truth;
 
   /// random number generator
   mutable Rndm::Numbers m_rndm;

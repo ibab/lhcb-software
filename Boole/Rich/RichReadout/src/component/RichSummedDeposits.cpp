@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.cpp,v 1.1 2006-01-23 14:05:15 jonrob Exp $
+ *  $Id: RichSummedDeposits.cpp,v 1.2 2006-02-06 12:26:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -44,9 +44,6 @@ StatusCode RichSummedDeposits::initialize()
     return Error( "Unable to create Random generator" );
   }
 
-  // tools
-  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
-
   return sc;
 }
 
@@ -73,7 +70,7 @@ StatusCode RichSummedDeposits::execute()
 
     // Find out if we already have a hit for this super-pixel
     MCRichSummedDeposit * sumDep = sumDeps->object(id);
-    if ( (*iDep)->prevPrevEvent() && sumDep )
+    if ( (*iDep)->history().prevPrevEvent() && sumDep )
     {
       // Toss a coin to see if we add this hit to the existing deposits
       // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
@@ -96,33 +93,8 @@ StatusCode RichSummedDeposits::execute()
     // copy current history to local object to update
     MCRichDigitHistoryCode hist = sumDep->history();
 
-    // store type event type
-    if      ( (*iDep)->signalEvent()   ) { hist.setSignalEvent(true);   }
-    else if ( (*iDep)->prevEvent()     ) { hist.setPrevEvent(true);     }
-    else if ( (*iDep)->prevPrevEvent() ) { hist.setPrevPrevEvent(true); }
-    else if ( (*iDep)->nextEvent()     ) { hist.setNextEvent(true);     }
-    else if ( (*iDep)->nextNextEvent() ) { hist.setNextNextEvent(true); }
-
-    // MCRichHit for this deposit
-    const MCRichHit * hit = (*iDep)->parentHit();
-
-    // store history in summed deposit
-    if ( hit )
-    {
-      if ( !m_truth->isBackground( hit ) )
-      {
-        if      ( Rich::Aerogel == hit->radiator() ) { hist.setAerogelHit(true); }
-        else if ( Rich::C4F10   == hit->radiator() ) { hist.setC4f10Hit(true);   }
-        else if ( Rich::CF4     == hit->radiator() ) { hist.setCf4Hit(true);     }
-      }
-      if ( hit->scatteredPhoton() ) { hist.setScatteredHit(true);  }
-      if ( hit->chargedTrack()    ) { hist.setChargedTrack(true);  }
-      if ( hit->backgroundHit()   ) { hist.setBackgroundHit(true); }
-    }
-    else
-    {
-      Warning( "MCRichDeposit has NULL MCRichHit reference" );
-    }
+    // copy history from deposit
+    hist.setFlags( (*iDep)->history() );
 
     // Update history in sum dep
     sumDep->setHistory( hist );

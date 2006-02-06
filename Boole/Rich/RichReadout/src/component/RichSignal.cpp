@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.7 2006-02-02 10:32:47 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.8 2006-02-06 12:26:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -62,6 +62,7 @@ StatusCode RichSignal::initialize()
 
   // tools
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
 
   return sc;
 }
@@ -126,7 +127,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
     RichSmartID tempID;
     // Is hit in active pixel
     if ( (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess()
-         && tempID.pixelDataAreValid() ) 
+         && tempID.pixelDataAreValid() )
     {
 
       // For the time being strip any sub-pixel information
@@ -152,12 +153,29 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
       dep->setTime( tof );
 
+      // copy current history to local object to update
+      MCRichDigitHistoryCode hist = dep->history();
+
       // store type event type
-      if      (  0 == eventType ) { dep->setSignalEvent(true);   }
-      else if ( -1 == eventType ) { dep->setPrevEvent(true);     }
-      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); }
-      else if (  1 == eventType ) { dep->setNextEvent(true);     }
-      else if (  2 == eventType ) { dep->setNextNextEvent(true); }
+      if      (  0 == eventType ) { hist.setSignalEvent(true);   }
+      else if ( -1 == eventType ) { hist.setPrevEvent(true);     }
+      else if ( -2 == eventType ) { hist.setPrevPrevEvent(true); }
+      else if (  1 == eventType ) { hist.setNextEvent(true);     }
+      else if (  2 == eventType ) { hist.setNextNextEvent(true); }
+
+      // store history
+      if ( !m_truth->isBackground( *iHit ) )
+      {
+        if      ( Rich::Aerogel == (*iHit)->radiator() ) { hist.setAerogelHit(true); }
+        else if ( Rich::C4F10   == (*iHit)->radiator() ) { hist.setC4f10Hit(true);   }
+        else if ( Rich::CF4     == (*iHit)->radiator() ) { hist.setCf4Hit(true);     }
+      }
+      if ( (*iHit)->scatteredPhoton() ) { hist.setScatteredHit(true);  }
+      if ( (*iHit)->chargedTrack()    ) { hist.setChargedTrack(true);  }
+      if ( (*iHit)->backgroundHit()   ) { hist.setBackgroundHit(true); }
+
+      // Update history in dep
+      dep->setHistory( hist );
 
     } // active hit if
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.6 2006-02-06 12:26:24 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -29,7 +29,7 @@ MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : RichAlgBase   ( name, pSvcLocator ),
     m_rawFormatT  ( 0 ),
-    m_level1      ( 0 )
+    m_richSys     ( 0 )
 {
 
   declareProperty( "MCRichDigitsLocation",
@@ -51,17 +51,22 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
 
   // acquire tools
   acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
-  acquireTool( "RichDetNumberingTool",  m_level1,     0, true );
 
-  // create a dummy L1data object with an emtpy vector for each L1 board
+  // RichDet
+  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+
+  // create a dummy L1data object with an empty vector for each L1 board
   m_dummyMap.clear();
-  for ( RichDAQ::Level1IDs::const_iterator iID = m_level1->level1IDs().begin();
-        iID != m_level1->level1IDs().end(); ++iID )
+  for ( RichDAQ::Level1IDs::const_iterator iID = m_richSys->level1IDs().begin();
+        iID != m_richSys->level1IDs().end(); ++iID )
   {
     m_dummyMap[ *iID ];
   }
-  debug() << "Created " << m_dummyMap.size() << " entries in empty L1 map : L1IDs = " 
-          << m_level1->level1IDs() << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Created " << m_dummyMap.size() << " entries in empty L1 map : L1IDs = " 
+            << m_richSys->level1IDs() << endreq;
+  }
 
   info() << "Using RICH Level1 buffer format : " << m_version << endreq;
 
@@ -84,7 +89,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
   {
 
     // Get Level 1 ID number
-    const RichDAQ::Level1ID L1ID = m_level1->level1ID( (*iDigit)->key() );
+    const RichDAQ::Level1ID L1ID = m_richSys->level1ID( (*iDigit)->key() );
 
     // Get reference to L1 group
     RichDAQ::PDMap & PDs = L1Data[ L1ID ];

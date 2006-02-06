@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.4 2006-02-02 09:02:57 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.5 2006-02-06 12:26:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -45,6 +45,9 @@ StatusCode RichSimpleChargeSharing::initialize()
   // tools
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
 
+  // printout
+  info() << "Will add charge sharing at " << 100*m_shareFrac << " % level" << endreq;
+
   return sc;
 }
 
@@ -57,6 +60,7 @@ StatusCode RichSimpleChargeSharing::execute()
 
   // Temporary container of MCRichDeposits to add
   MCRichDeposit::Vector depsToAdd;
+  depsToAdd.clear();
 
   // loop over deposits
   for ( MCRichDeposits::const_iterator iDep = deps->begin();
@@ -109,18 +113,20 @@ StatusCode RichSimpleChargeSharing::execute()
       newid.setPixelCol(col);
       newDep->setSmartID( newid );
 
+      // set charge sharing history
+      MCRichDigitHistoryCode hist = newDep->history();
+      hist.setChargeShareHit(true);
+      newDep->setHistory(hist);
+
     } // do charge sharing
 
   } // loop over segments
 
-  if ( !depsToAdd.empty() )
+  // Loop over new deposit and add to main container
+  for ( MCRichDeposit::Vector::iterator iDep = depsToAdd.begin();
+        iDep != depsToAdd.end(); ++iDep )
   {
-    // Loop over new deposit and add to main container
-    for ( MCRichDeposit::Vector::iterator iDep = depsToAdd.begin();
-          iDep != depsToAdd.end(); ++iDep )
-    {
-      deps->insert( *iDep );
-    }
+    deps->insert( *iDep );
   }
 
   if ( msgLevel(MSG::DEBUG) )
