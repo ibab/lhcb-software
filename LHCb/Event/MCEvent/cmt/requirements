@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.5 2005-12-14 15:12:39 cattanem Exp $
+# $Id: requirements,v 1.6 2006-02-06 16:53:36 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
 package           MCEvent
-version           v1r0
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================

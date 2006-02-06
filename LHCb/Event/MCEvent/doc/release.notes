@@ -1,14 +1,15 @@
-! $Id: release.notes,v 1.23 2006-02-06 16:03:54 jonrob Exp $
+! $Id: release.notes,v 1.24 2006-02-06 16:53:36 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
+!========================== MCEvent v1r1 2006-02-06 ==========================
 ! 2006-02-06 - Chris Jones
  - Remove non const accessors added for MCVertex and MCParticle.
    Work arounds added where needed in GaussKine and GigaCnv instead
 
 ! 2006-02-06 - Chris Jones
- - Update MCRichDigitHistotyCode with new method to import flags from another 
+ - Update MCRichDigitHistoryCode with new method to import flags from another 
    history code.
 
 !========================== MCEvent v1r0 2006-01-27 ==========================
