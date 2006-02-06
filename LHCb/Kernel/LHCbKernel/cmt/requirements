@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.93 2006-02-03 11:24:10 cattanem Exp $
+# $Id: requirements,v 1.94 2006-02-06 07:23:33 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -48,6 +48,8 @@ macro_append LHCbKernel_cppflags "" \
 apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
+macro_append LHCbKernel_linkopts  "-L$(ROOT_home)/lib  -lReflex " \
+             WIN32  "/LIBPATH:$(ROOT_home)/lib libReflex.lib "
 private
 #============================================================================
 use GaudiObjDesc v* -no_auto_imports
