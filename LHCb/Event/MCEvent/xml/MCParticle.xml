@@ -113,14 +113,12 @@
         desc="Pointer to origin vertex"
         name="originVertex"
         type="LHCb::MCVertex"
-        nonconstaccessor="TRUE"
        />
        <relation
         desc="Vector of pointers to decay vertices"
         multiplicity="M"
         name="endVertices"
         type="LHCb::MCVertex"
-        nonconstaccessor="TRUE"
        />
        <method
         const="TRUE"

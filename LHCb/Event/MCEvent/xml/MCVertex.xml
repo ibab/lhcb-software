@@ -53,14 +53,12 @@
         desc="Pointer to parent particle that decay or otherwise end in this vertex"
         name="mother"
         type="LHCb::MCParticle"
-        nonconstaccessor="TRUE"
        />
        <relation
         desc="Pointer to daughter particles"
         multiplicity="N"
         name="products"
         type="LHCb::MCParticle"
-        nonconstaccessor="TRUE"
        />
        <method
         const="TRUE"
