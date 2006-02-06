@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.32 2005-03-07 16:54:30 cattanem Exp $
+! $Id: release.notes,v 1.33 2006-02-06 16:30:59 mzupan Exp $
 ! Package     : L0/PuVeto
-! Responsible : Olivier Callot
+! Responsible : Marko Zupan
+
+!======================== PuVeto v7r0 2006-02-06 ========================
+! 2005-02-06 - Marko Zupan
+ - Completely new code/logic for PU Veto algorithm that mimics the logic
+   in the FPGAs of the Vertex Processor Boards of PUS
+ - Job options now allow user to specify width of masking window (in bins)
+   and to use an external text file to control the binning. The format of 
+   the file should be number of bins (integer) followed by bin widths (double),
+   all delimited by line feeds.
 
 !======================== PuVeto v6r0p1 2005-03-07 ========================
 ! 2005-03-07 - Marco Cattaneo
