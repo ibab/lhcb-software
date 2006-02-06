@@ -2,7 +2,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.1 2006-02-01 16:20:49 papanest Exp $
+ * $Id: DeRichSystem.cpp,v 1.2 2006-02-06 12:05:20 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -28,13 +28,13 @@ const CLID& CLID_DERichSystem = 12005;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichSystem::DeRichSystem(  ) {
+DeRichSystem::DeRichSystem() { }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichSystem::~DeRichSystem() {}
+DeRichSystem::~DeRichSystem() { }
+
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichSystem::classID()
@@ -45,8 +45,8 @@ const CLID& DeRichSystem::classID()
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRichSystem::initialize ( ) {
-
+StatusCode DeRichSystem::initialize ( ) 
+{
   MsgStream msg( msgSvc(), "DeRichSystem" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
@@ -56,10 +56,9 @@ StatusCode DeRichSystem::initialize ( ) {
   SmartRef<Condition> rich2numbers = condition( m_condBDLocs[Rich::Rich2] );
 
   // register condition for updates
-  IUpdateManagerSvc* ums = updMgrSvc();
-  ums->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
-  ums->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
-  StatusCode up = ums->update(this);
+  updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
+  updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
+  const StatusCode up = updMgrSvc()->update(this);
   if ( up.isFailure() )
     msg << MSG::ERROR << "Failed to update mappings" << endmsg;
 
@@ -89,7 +88,6 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_l12hardids.clear();
   m_smartid2L1In.clear();
   m_hardid2L1In.clear();
-
   m_l0hard2soft.clear();
 
   // NB : Currently updating both RICH1 and RICH2 if either changes ...
@@ -200,7 +198,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_hardid2L1In[hardID] = L1IN;
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
-    if ( std::find( m_l1IDs.begin(), m_l1IDs.end(), L1ID ) == m_l1IDs.end() )
+    if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )
     {
       m_l1ToRich[L1ID] = rich;
       m_l1IDs.push_back( L1ID );
@@ -217,7 +215,6 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //  hardwareID
 //=========================================================================
@@ -230,7 +227,8 @@ DeRichSystem::hardwareID( const RichSmartID smartID ) const
   {
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << smartID;
-    throw GaudiException("DeRichSystem::" + mess.str(), "",
+    throw GaudiException("DeRichSystem::" + mess.str(), 
+                         "DeRichSystem::hardwareID",
                          StatusCode::FAILURE );
   }
 
@@ -248,7 +246,8 @@ DeRichSystem::richSmartID( const RichDAQ::HPDHardwareID hID ) const
   HardToSoft::const_iterator id = m_hard2soft.find( hID );
   if ( m_hard2soft.end() == id )
   {
-    throw GaudiException("Unknown HPD hardware ID " + (std::string)hID,"",
+    throw GaudiException("Unknown HPD hardware ID " + (std::string)hID,
+                         "DeRichSystem::richSmartID",
                          StatusCode::FAILURE );
   }
 
@@ -266,7 +265,8 @@ DeRichSystem::richSmartID( const RichDAQ::Level0ID l0ID ) const
   L0HardToSoft::const_iterator id = m_l0hard2soft.find( l0ID );
   if ( m_l0hard2soft.end() == id )
   {
-    throw GaudiException( "Unknown Level0 hardware ID " + (std::string)l0ID, "",
+    throw GaudiException( "Unknown Level0 hardware ID " + (std::string)l0ID, 
+                          "DeRichSystem::richSmartID",
                           StatusCode::FAILURE );
   }
 
@@ -322,7 +322,8 @@ DeRichSystem::level0ID( const RichSmartID smartID ) const
   {
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << smartID;
-    throw GaudiException("DeRichSystem::" + mess.str(), "",
+    throw GaudiException("DeRichSystem::" + mess.str(), 
+                         "DeRichSystem::level0ID",
                          StatusCode::FAILURE );
   }
 
@@ -342,7 +343,8 @@ DeRichSystem::level1ID( const RichSmartID smartID ) const
   {
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << smartID;
-    throw GaudiException("DeRichSystem::" + mess.str(), "",
+    throw GaudiException("DeRichSystem::" + mess.str(), 
+                         "DeRichSystem::level1ID",
                          StatusCode::FAILURE );
   }
 
@@ -363,7 +365,8 @@ DeRichSystem::level1InputNum( const LHCb::RichSmartID smartID ) const
   {
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << smartID;
-    throw GaudiException("DeRichSystem::" + mess.str(), "",
+    throw GaudiException("DeRichSystem::" + mess.str(), 
+                         "DeRichSystem::level1InputNum",
                          StatusCode::FAILURE );
   }
 
@@ -381,7 +384,8 @@ DeRichSystem::level0ID( const RichDAQ::HPDHardwareID hardID ) const
   HardIDToL0::const_iterator id = m_hardid2L0.find( hardID );
   if ( m_hardid2L0.end() == id )
   {
-    throw GaudiException ( "Unknown HPD hardware ID" + (std::string)hardID, "",
+    throw GaudiException ( "Unknown HPD hardware ID" + (std::string)hardID, 
+                           "DeRichSystem::level0ID",
                            StatusCode::FAILURE );
   }
 
@@ -399,7 +403,8 @@ DeRichSystem::level1ID( const RichDAQ::HPDHardwareID hardID ) const
   HardIDToL1::const_iterator id = m_hardid2L1.find( hardID );
   if ( m_hardid2L1.end() == id )
   {
-    throw GaudiException( "Unknown HPD hardware ID" + (std::string)hardID, "",
+    throw GaudiException( "Unknown HPD hardware ID" + (std::string)hardID, 
+                          "DeRichSystem::level1ID",
                           StatusCode::FAILURE );
   }
 
@@ -418,7 +423,8 @@ DeRichSystem::level1InputNum( const RichDAQ::HPDHardwareID hardID ) const
   HardIDToL1In::const_iterator id = m_hardid2L1In.find( hardID );
   if ( m_hardid2L1In.end() == id )
   {
-    throw GaudiException( "Unknown HPD hardware ID" + (std::string)hardID, "",
+    throw GaudiException( "Unknown HPD hardware ID" + (std::string)hardID, 
+                          "DeRichSystem::level1InputNum",
                           StatusCode::FAILURE );
   }
 
@@ -436,8 +442,8 @@ DeRichSystem::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
   RichDAQ::L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
   if ( m_l12smartids.end() == id )
   {
-    throw GaudiException( "Unknown RICH Level 1 board ID " + (std::string)l1ID,
-                          "", StatusCode::FAILURE );
+    throw GaudiException( "Unknown RICH Level1 board ID " + (std::string)l1ID,
+                          "DeRichSystem::l1HPDSmartIDs", StatusCode::FAILURE );
   }
 
   // Found, so return list
@@ -454,8 +460,8 @@ DeRichSystem::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
   RichDAQ::L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
   if ( m_l12hardids.end() == id )
   {
-    throw GaudiException( "Unknown RICH Level 1 board ID " + (std::string)l1ID,
-                          "", StatusCode::FAILURE );
+    throw GaudiException( "Unknown RICH Level1 board ID " + (std::string)l1ID,
+                          "DeRichSystem::l1HPDHardIDs", StatusCode::FAILURE );
   }
 
   // Found, so return list
@@ -463,7 +469,7 @@ DeRichSystem::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
 }
 
 //=========================================================================
-//  l1HPDSmartIDs
+// l1HPDSmartIDs
 // Access mapping between Level 1 IDs and HPD RichSmartIDs
 //=========================================================================
 const RichDAQ::L1ToSmartIDs& DeRichSystem::l1HPDSmartIDs() const
@@ -481,7 +487,7 @@ const RichDAQ::L1ToHardIDs& DeRichSystem::l1HPDHardIDs() const
 }
 
 //=========================================================================
-//  richDetector
+// richDetector
 //=========================================================================
 const Rich::DetectorType
 DeRichSystem::richDetector( const RichDAQ::Level1ID l1ID ) const
@@ -490,8 +496,8 @@ DeRichSystem::richDetector( const RichDAQ::Level1ID l1ID ) const
   L1ToRICH::const_iterator rich = m_l1ToRich.find( l1ID );
   if ( m_l1ToRich.end() == rich )
   {
-    throw GaudiException( "Unknown RICH Level 1 board ID " + (std::string)l1ID,
-                          "", StatusCode::FAILURE );
+    throw GaudiException( "Unknown RICH Level1 board ID " + (std::string)l1ID,
+                          "DeRichSystem::richDetector()", StatusCode::FAILURE );
   }
 
   // Found, so return RICH

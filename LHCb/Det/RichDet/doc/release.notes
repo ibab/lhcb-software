@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-02-06 - Chris Jones
+ - Minor improvements to DeRichSystem (debug messaging etc.)
+
 !========================= RichDet v9r1 2006-02-03 =========================
 ! 2006-02-01 - Antonis Papanestis
  - Added DeRichSystem and RichDAQDefinitions.h to handle the HPD numbering
