@@ -1,6 +1,7 @@
 //--------------------------------------------------------------
 // Standard Options to use the Detector Geometry
 //--------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
 ApplicationMgr.ExtSvc += { "XmlCnvSvc" , "XmlParserSvc" };
 ApplicationMgr.DLLs   += { "XmlTools", "DetDescCnv", "DetDescSvc" };
 

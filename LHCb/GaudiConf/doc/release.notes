@@ -1,7 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r3 2005-12-20 ========================
+!======================== GaudiConf v9r3 2006-02-06 ========================
+! 2006-02-06 - Marco Cattaneo
+ - In DetDesc.opts, create DetDataSvc as ExtSvc, to ensure it is finalized 
+   after ToolSvc
+
 ! 2005-12-20 M. Needham
  - Add picofarad to list of units
 
