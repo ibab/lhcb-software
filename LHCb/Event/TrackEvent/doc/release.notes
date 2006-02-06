@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r0 2006-02-06 ========================
 ! 2006-02-06 - Eduardo Rodrigues
  - added new similarity method to SHacks.h
  - added setErrQOverP2 method in Track
@@ -19,7 +20,6 @@
    - corrected errSlopes method in State class
  - minor changes to TrackFunctor
 
-!========================= TrackEvent v2r0 2006-01-27 ========================
 ! 2006-01-27 M.Needham
  - no spare bits  
  - new clearStates method, remove const accessors
