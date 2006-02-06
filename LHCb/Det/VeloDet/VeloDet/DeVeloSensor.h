@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.13 2006-01-26 15:54:14 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.14 2006-02-06 14:09:14 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -236,7 +236,7 @@ public:
   // condition related protected types
 
 protected:
-  /** @class DeVeloSensor::ConvertIntToStripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
+  /** @struct DeVeloSensor::ConvertIntToStripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
    *
    *  Conversion Functor 
    *
@@ -293,7 +293,7 @@ public:
     std::bitset<4> m_info; 
 
   private:
-    friend class DeVeloSensor::ConvertIntToStripInfo;
+    friend struct DeVeloSensor::ConvertIntToStripInfo;
   };
 
   // condition related public methods

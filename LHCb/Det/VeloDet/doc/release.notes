@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.93 2006-02-03 11:26:07 cattanem Exp $
+! $Id: release.notes,v 1.94 2006-02-06 14:09:14 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-02-06 - Kurt Rinnert
+ - fixed class<->struct mismatch in friend declaration in
+   DeVeloSensor::StripInfo and doxygen comment.
 
 !========================= VeloDet v10r1 2006-02-03 ========================
 ! 2006-01-26 - Kurt Rinnert
