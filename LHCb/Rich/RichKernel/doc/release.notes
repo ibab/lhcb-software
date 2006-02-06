@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.100 2006-02-06 12:13:46 jonrob Exp $
+! $Id: release.notes,v 1.101 2006-02-06 16:57:44 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r1 2006-02-06 =======================
 ! 2006-02-06 - Chris Jones
  - remove IRichDetNumberingTool interface
 
-!======================= RichKernel v6r1 2006-02-03 =======================
 ! 2006-02-02 - Chris Jones
  - Quick work around for new RichDet. Will be superseded soon by a proper update.
 
