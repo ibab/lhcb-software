@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData.cpp,v 1.6 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.cpp,v 1.7 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -19,16 +19,17 @@ using namespace LHCb; ///< LHCb general namespace
 
 // =================================================================================================
 
-namespace RichNonZeroSuppDataV1 {
+namespace RichNonZeroSuppDataV1 
+{
 
   void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Vector & ids,
-                                              const IRichDetNumberingTool * hpdTool ) const
+                                              const DeRichSystem * richSys ) const
   {
     // header word object
     const Header head ( header() );
 
     // Get HPD software ID for this Level 0 ID
-    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
+    const RichSmartID sID = richSys->richSmartID( head.l0ID() );
 
     // Fill with active channels
     for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )

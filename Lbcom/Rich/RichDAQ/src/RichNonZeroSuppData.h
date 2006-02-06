@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.17 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.h,v 1.18 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -90,7 +90,7 @@ namespace RichNonZeroSuppDataV1
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                   const IRichDetNumberingTool * hpdTool ) const;
+                                   const DeRichSystem * richSys ) const;
 
     // Print data bank to messager stream
     virtual void fillMsgStream( MsgStream & os ) const;

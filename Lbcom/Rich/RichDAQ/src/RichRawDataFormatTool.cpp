@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.20 2006-01-24 17:06:53 cattanem Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.21 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -26,7 +26,7 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : RichToolBase    ( type, name , parent ),
-    m_detNumTool    ( 0                   ),
+    m_richSys       ( 0                   ),
     m_rawEvent      ( 0                   ),
     m_evtCount      ( 0                   ),
     m_hasBeenCalled ( false               )
@@ -50,8 +50,8 @@ StatusCode RichRawDataFormatTool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // acquire tools
-  acquireTool( "RichDetNumberingTool", m_detNumTool, 0, true );
+  // RichDet
+  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -102,37 +102,38 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     const RichStatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
 
     // Printout
-    info() << "=========================================================================================================" << endreq
-           << "                              " << title << " : " << m_evtCount << " events" << endreq;
+    info() << "========================================================================================================" << endreq
+           << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
-    debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
+    info() << "--------------------------------------------------------------------------------------------------------" << endreq;
     std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
       const RichDAQ::Level1ID      L1ID   = (*iL1C).first.second;
       const RichDAQ::BankVersion version  = (*iL1C).first.first;
-      const Rich::DetectorType rich       = m_detNumTool->richDetector( L1ID );
+      const Rich::DetectorType rich       = m_richSys->richDetector( L1ID );
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
       const unsigned long words           = (*iL1C).second.second.first;
       totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
       totHits[rich]                      += hits;
-      debug() << "  Board " << format("%3i",L1ID.data()) << " Ver" << version << " | L1 size ="
-              << occ1(nBanks,m_evtCount) << " hpds :"
-              << occ2(words,m_evtCount) << " words :"
-              << occ2(hits,m_evtCount) << " hits / event" << endreq;
+
+      info() << " " << rich << " L1 " << format("%3i",L1ID.data()) << " V" << version << " | L1 size ="
+             << occ1(nBanks,m_evtCount) << " hpds :"
+             << occ2(words,m_evtCount) << " words :"
+             << occ2(hits,m_evtCount) << " hits / event" << endreq;
     }
 
-    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
-    info() << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+    info() << "--------------------------------------------------------------------------------------------------------" << endreq;
+    info() << " Rich1 Average   | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
            << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
            << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
-    info() << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+    info() << " Rich2 Average   | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
            << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
            << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
 
-    info() << "=========================================================================================================" << endreq;
+    info() << "========================================================================================================" << endreq;
 
   } // end stats available
 
@@ -163,7 +164,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     // Third iteration of bank format
 
     // Level 0 ID
-    const RichDAQ::Level0ID l0ID = m_detNumTool->level0ID( smartIDs.front().hpdID() );
+    const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
 
     // First try the ZS format
     RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( l0ID, smartIDs );
@@ -185,7 +186,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     // Second iteration of bank format
 
     // Level 0 ID
-    const RichDAQ::Level0ID l0ID = m_detNumTool->level0ID( smartIDs.front().hpdID() );
+    const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
 
     // Decide to zero suppress or not depending on number of hits
     if ( smartIDs.size() < m_zeroSuppresCut )
@@ -437,7 +438,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[lineHeader],
                                                           lineLast-lineHeader,
                                                           version ) );
-        hpdBank->fillRichSmartIDs( smartIDs, m_detNumTool );
+        hpdBank->fillRichSmartIDs( smartIDs, m_richSys );
         ++nHPDbanks;
         delete hpdBank;
 

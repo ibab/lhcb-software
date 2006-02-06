@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.9 2006-02-02 17:23:41 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.10 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -22,8 +22,8 @@
 // Kernel
 #include "RichDet/RichDAQDefinitions.h"
 
-// HPD Tool
-#include "RichKernel/IRichDetNumberingTool.h"
+// Detector numbering
+#include "RichDet/DeRichSystem.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDDataBank RichHPDDataBank.h
@@ -85,10 +85,10 @@ public:
   /** Decode the data bank to a RichSmartID vector
    *
    *  @param ids     Vector of RichSmartIDs to fill
-   *  @param hpdTool Pointer to the tool to convert hardware to software HPD IDs
+   *  @param richSys Pointer to the DeRichSystem detector element
    */
   virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                 const IRichDetNumberingTool * hpdTool ) const = 0;
+                                 const DeRichSystem * richSys ) const = 0;
 
   /** Fill a RAWBank with the data for this bank
    *

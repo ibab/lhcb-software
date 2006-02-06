@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-02-06 - Chris Jones
+ - Remove RichDetNumbering tool and use new functionality in RichDet instead
+
 !========================== RichDAQ v3r2 2006-02-03 =========================
 ! 2006-02-02 - Chris Jones
  - Quick work around for new RichDet. Will be superceded soon by a proper update.

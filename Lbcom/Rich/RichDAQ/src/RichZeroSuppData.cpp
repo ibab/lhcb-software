@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.7 2006-01-23 13:40:43 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.8 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -49,7 +49,7 @@ namespace RichZeroSuppDataV1 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
-                                            const IRichDetNumberingTool * hpdTool ) const
+                                            const DeRichSystem * richSys ) const
   {
 
     // How many digits do we expect to make
@@ -57,7 +57,7 @@ namespace RichZeroSuppDataV1 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
+    const RichSmartID sID = richSys->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
@@ -163,7 +163,7 @@ namespace RichZeroSuppDataV2 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
-                                            const IRichDetNumberingTool * hpdTool ) const
+                                            const DeRichSystem * richSys ) const
   {
 
     // How many digits do we expect to make
@@ -171,7 +171,7 @@ namespace RichZeroSuppDataV2 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
+    const RichSmartID sID = richSys->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;

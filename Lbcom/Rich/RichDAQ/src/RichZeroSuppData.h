@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.7 2006-02-02 17:23:42 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.8 2006-02-06 12:11:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -23,7 +23,9 @@
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
 #include "RichKernel/RichMap.h"
-#include "RichKernel/IRichDetNumberingTool.h"
+
+// RichDet
+#include "RichDet/DeRichSystem.h"
 
 // =================================================================================
 
@@ -86,7 +88,7 @@ namespace RichZeroSuppDataV1
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                   const IRichDetNumberingTool * hpdTool ) const;
+                                   const DeRichSystem * richSys ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -167,7 +169,7 @@ namespace RichZeroSuppDataV2
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                   const IRichDetNumberingTool * hpdTool ) const;
+                                   const DeRichSystem * richSys ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
