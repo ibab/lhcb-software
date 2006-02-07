@@ -1,67 +1,60 @@
-// $Id: selection.h,v 1.1 2006-02-02 15:09:15 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
-#ifndef EVENTASSOC_EVENTASSOC_H 
-#define EVENTASSOC_EVENTASSOC_H 1
-// ============================================================================
-// Incldue files 
-// ============================================================================
-// Relations 
-// ============================================================================
+// $Id: selection.h,v 1.2 2006-02-07 14:41:50 ibelyaev Exp $
+// ====================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// ====================================================================
+// Incldue files
+// ====================================================================
+// STD & STL
+// ====================================================================
+#include <string>
+#include <vector>
+// ====================================================================
+// Relations
+// ====================================================================
 #include "Relations/RelationsDict.h"
-// ============================================================================
-// Event 
-// ============================================================================
+// ====================================================================
+// Provided include files: 
+// ====================================================================
+//#include "Event/Track.h"
+#include "Event/ProtoParticle.h"
+//#include "Event/Particle.h"
+//#include "Event/Vertex.h"
 #include "Event/MCParticle.h"
-#include "Event/MCHit.h"
-#include "Event/L0CaloCandidate.h"
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "Event/ProtoParticle.h"
-#include "Event/Particle.h"
-#include "Event/FlavourTag.h"
-#include "Event/Vertex.h"
-#include "Event/Track.h"
-// ============================================================================
+// ====================================================================
+// Other include files: put your own includes here:
+// ====================================================================
+//#include ...
+//#include ...
+//#include ...
+// ====================================================================
 
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
+/** @file 
+  *       
+  * Helper file for building Reflex dictionaries for Relations 
+   * @author ibelyaev 
+  * @date  2006-02-07 15:37:05.270000 
+  *       
+  */      
 
-#include "Relations/RelationsDict.h"
-
-namespace EventAssoc
+namespace Dict
 {
   struct __Instantiations 
-  {    
-    GaudiDict::Relation1DDict<
-      LHCb::Track,float>                                    _1 ;
-    GaudiDict::Relation2DDict<
-      LHCb::Particle,LHCb::MCParticle>                      _2 ;
-    GaudiDict::Relation2DDict<
-      LHCb::Particle,LHCb::FlavourTag>                      _3 ;
-    GaudiDict::Relation2DDict<
-      LHCb::Particle,LHCb::Vertex>                          _4 ;
-    GaudiDict::RelationWeighted2DDict<
-      LHCb::CaloHypo,LHCb::Track,float>                     _5 ;
-    GaudiDict::RelationWeighted2DDict<
-      LHCb::CaloCluster,LHCb::MCParticle,float>             _6 ;
-    GaudiDict::RelationWeighted2DDict<
-      LHCb::ProtoParticle,LHCb::MCParticle, double>         _7 ;
-    GaudiDict::RelationWeighted2DDict<
-      LHCb::Particle,LHCb::MCParticle, double>              _8 ;
-    GaudiDict::RelationWeighted2DDict<
-      LHCb::Particle,LHCb::Vertex,float>                    _9 ;
-  } ;
-  
-} ;  
+  {
+    //GaudiDict::Relation2DDict<LHCb::Particle,LHCb::Vertex>	_1 ;
+GaudiDict::RelationWeighted1DDict<LHCb::ProtoParticle,LHCb::MCParticle,double>	_2 ;
+    //GaudiDict::Relation1DDict<LHCb::Particle,LHCb::MCParticle>	_3 ;
+    //GaudiDict::RelationWeighted2DDict<LHCb::Particle,LHCb::MCParticle,double>	_4 ;
+    //GaudiDict::Relation1DDict<LHCb::Track,float>	_5 ;
+GaudiDict::RelationWeighted1DDict<LHCb::CaloDigit,LHCb::MCParticle,float>	_6 ;
+GaudiDict::RelationWeighted1DDict<LHCb::CaloCluster,LHCb::MCParticle,float>	_7 ;
+    //GaudiDict::RelationWeighted2DDict<LHCb::CaloHypo,LHCb::Track,float>	_8 ;
+    //GaudiDict::RelationWeighted2DDict<LHCb::CaloCluster,LHCb::Track,float>	_9 ;
+  };
+};
 
-// ============================================================================
-// The END 
-// ============================================================================
-#endif // DICT_EVENTASSOC_H
-// ============================================================================
-
+// ====================================================================
+// The END ============================================================
+// ====================================================================

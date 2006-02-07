@@ -1,34 +1,72 @@
+<!-- * $Id: selection.xml,v 1.2 2006-02-07 14:41:50 ibelyaev Exp $
+     * ========================================================================
+     * $CVS tag:$, version $Revision: 1.2 $ 
+     * ========================================================================
+-->
+
+<!-- * @file
+     *
+     * The basic selection file to build the Reflex dictionaries
+     * @author ibelyaev 
+     * @date  2006-02-07 15:37:05.270000 
+     * ========================================================================
+--> 
+
+
 <lcgdict>
-  
-  <class pattern= "LHCb::Relation1D<*>"/>
-  <class pattern= "LHCb::Relation2D<*>"/>
-  <class pattern= "LHCb::RelationWeighted1D<*>"/>
-  <class pattern= "LHCb::RelationWeighted2D<*>"/>
+
+   <class pattern="Relations::RelationBase<*>"         />
+   <class pattern="Relations::RelationWeightedBase<*>" />
+
+   <class pattern="Relations::Relation2<*>"            />
+   <class pattern="Relations::Relation2Weighted<*>"    />
+
+   <class pattern="IRelatio*"        />
+   <class pattern="Relations:*Range" />
+   <class pattern="Relations:*Entry" />
+
+   <class pattern="std::vector<*Relation*Entry*>" />
+   <class pattern="std::pair<*std::vector<*Relation*>" />
+
+   <class pattern="Relations::Relation<*>" >
+         <field name="m_inverse_aux" transient="true" />
+   </class>
+
+   <class pattern="Relations::RelationWeighted<*>" >
+         <field name="m_inverse_aux" transient="true" />
+   </class>
 
 
-  <class pattern= "Relations::RelationBase<*>"/>
+    <class name="LHCb::Relation2D<LHCb::Particle,LHCb::Vertex>" 
+           id="61D15EB5-0000-0000-0000-000000000000" />
 
-  <class pattern= "Relations::RelationWeightedBase<*>"/>
-  
-  <class pattern= "Relations::RelationWeighted<*>">
-  <field name="m_inverse_aux" transient="true"/>
-  </class>
+    <class name="LHCb::RelationWeighted1D<LHCb::ProtoParticle,LHCb::MCParticle,double>" 
+           id="6540787E-0000-0000-0000-000000000000" />
 
-  <class pattern= "Relations::Relation<*>">
-  <field name="m_inverse_aux" transient="true"/>
-  </class>
+    <class name="LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>" 
+           id="7B880798-0000-0000-0000-000000000000" />
 
-  <class pattern= "Relations::Relation2<*>"/>
-  <class pattern= "Relations::Relation2Weighted<*>" />  
+    <class name="LHCb::RelationWeighted2D<LHCb::Particle,LHCb::MCParticle,double>" 
+           id="4E59D8E4-0000-0000-0000-000000000000" />
 
-  
-  <class pattern= "IRela*"/>
-  <class pattern= "*Range"/>
-  <class pattern= "Relations::*Entry"/>
-  
-  <class pattern= "std::vector<*Relation*Entry*>"/>
-  <class pattern= "std::pair<*std::vector*Relations*>"/>
-  
+    <class name="LHCb::Relation1D<LHCb::Track,float>" 
+           id="C4411838-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted1D<LHCb::CaloDigit,LHCb::MCParticle,float>" 
+           id="7DB12E44-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted1D<LHCb::CaloCluster,LHCb::MCParticle,float>" 
+           id="41B06333-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted2D<LHCb::CaloHypo,LHCb::Track,float>" 
+           id="86C12D4E-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted2D<LHCb::CaloCluster,LHCb::Track,float>" 
+           id="9F983D0A-0000-0000-0000-000000000000" />
+
 </lcgdict>
 
+<!-- * ===================================================================== -->
+<!-- * The END * =========================================================== -->
+<!-- * ===================================================================== -->
 
