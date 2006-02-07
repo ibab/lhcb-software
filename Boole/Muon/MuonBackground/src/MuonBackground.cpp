@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.27 2006-02-06 21:04:07 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.28 2006-02-07 09:17:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -532,7 +532,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
     +spill[ispill]+"/"+LHCb::MCParticleLocation::Default;  
   SmartDataPtr<LHCb::MCParticles> particlePointer
     ( eventSvc(),particleLocation  );
-  LHCb::MCParticles::iterator itParticle;
+  //  LHCb::MCParticles::iterator itParticle;
   // for(itParticle=particlePointer->begin();
   //    itParticle<particlePointer->end();itParticle++){
   // }
@@ -878,7 +878,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         int sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
         debug()<<" the volume ID is "<<sen<<endreq;     
         pHit->setSensDetID(sen);
-        int part=pChamber->stationNumber()*4+pChamber->regionNumber();        
+        //  int part=pChamber->stationNumber()*4+pChamber->regionNumber();
         debug()<<"gap, time, position "<<gapNumber<<" "<<chamberIndex<<" "<<
           timeBest+tofOfLight<<" "<<x<<" "<<y<<" "<<endreq;
         if(correct)(hitsContainer)->push_back(pHit);
