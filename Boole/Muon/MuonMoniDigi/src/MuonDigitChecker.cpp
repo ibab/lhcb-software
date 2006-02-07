@@ -12,16 +12,12 @@
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// For Muons
-#include "MuonDet/MuonBasicGeometry.h"
-
-//From event
-#include "Event/EventHeader.h"
-#include "Event/MCMuonHit.h"   
-#include "Event/MCMuonDigit.h"   
+//Local
+#include "Event/MCHeader.h"
+#include "Event/MCHit.h"
 #include "Event/MuonDigit.h"
-
-// local
+#include "Event/MCMuonDigit.h"
+#include "MuonDet/DeMuonDetector.h"   
 #include "MuonDigitChecker.h"
 
 static const  AlgFactory<MuonDigitChecker>  s_Factory ;
@@ -57,12 +53,6 @@ StatusCode MuonDigitChecker::initialize() {
     return Error("Failed to initialize", sc);
   }
   
-  m_MuonTileXYZ = tool<IMuonTileXYZTool>("MuonTileIDXYZ");
-
-  MuonBasicGeometry basegeometry(detSvc(),msgSvc());
-  m_regionNumber=basegeometry.getRegions();
-  m_partition=basegeometry.getPartitions();
-
   for(int ix=0; ix<6; ix++) {
     if(ix <4 && m_hitMonitor) {
       for(int i=0; i<5; i++) {
@@ -85,7 +75,8 @@ StatusCode MuonDigitChecker::initialize() {
 //=============================================================================
 StatusCode MuonDigitChecker::execute() {
 
-  const EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
+  const LHCb::MCHeader* evt = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+
   int tnhit[5][4][4];    int tnDhit[5][4][6];  
   for(int ix=0; ix<6; ix++) {
     if(ix <4 && m_hitMonitor) {
@@ -101,13 +92,12 @@ StatusCode MuonDigitChecker::execute() {
       }
     }
   }
-  long m_run = evt->runNum();
-  long m_evt = evt->evtNum();
 
-  long m_digit_run = evt->runNum();
-  long m_digit_evt = evt->evtNum();
+  long m_evt = evt->evtNumber();
+
+  long m_digit_evt = evt->evtNumber();
   
-  std::vector<float> m_sta,m_reg,m_con,m_x,m_y,m_z,m_time, m_id;
+  std::vector<float> m_sta,m_reg,m_cha,m_con,m_x,m_y,m_z,m_time, m_id;
   std::vector<float> m_px,m_py,m_pz,m_E,m_xv,m_yv,m_zv,m_tv, m_mom;
   std::vector<float> m_ple,m_hen,m_dix,m_dxz,m_dyz;
 
@@ -115,107 +105,111 @@ StatusCode MuonDigitChecker::execute() {
   std::vector<float> m_digit_z,m_digit_dx,m_digit_dy,m_digit_dz,m_digit_time;
   std::vector<float> m_digit_origin,m_digit_bx,m_digit_firing,m_digit_multi;
 
+  DeMuonDetector * muonD = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon"); 
+
+
+  std::string spill[5] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
+  std::string TESContainer[4]=
+    {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
+
   // loop over Muon Hits only if required
   if(m_hitMonitor) {
-    for(int iterRegion=0; iterRegion<m_partition; iterRegion++){
-      int station=iterRegion/m_regionNumber;
-      int region=iterRegion%m_regionNumber;    
-      debug()<<" region:: " <<iterRegion<<endmsg;
+
+    // get the MCHits
+    // container :  0 = Geant
+    //              1 = Chamber Noise
+    //              2 = Flat Spill Background
+    //              3 = Low Energy Background
     
-      // loop over Muon Hits type
-      // container :  0 = Geant
-      //              1 = Chamber Noise
-      //              2 = Flat Spill Background
-      //              3 = Low Energy Background
-      for(int container=0; container<4; container++){
+    for(int container=0; container<4; container++){
+      // spill[0] = current event
+      //       n  (n=1,4) = event preceeding the current for n*25 ns 
       
-	// spill[0] = current event
-	//       n  (n=1,4) = event preceeding the current for n*25 ns 
+      std::string path = "/Event" + spill[0] + 
+	LHCb::MCHitLocation::Muon + TESContainer[container];
       
-	char subpath[200];
-	std::string spill[5] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
-	std::string TESContainer[4]=
-	  {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
+      LHCb::MCHits* hits = get<LHCb::MCHits>(LHCb::MCHitLocation::Muon);
 
-	sprintf(subpath,"%s%d%s%d%s","/MC/Muon/M",station+1,"/R",region+1,"/");
-	std::string path="/Event"+spill[0]+subpath+TESContainer[container];
-
-      
-	MCMuonHits * hitPointer = get<MCMuonHits>(path);
-	MCMuonHits::const_iterator iter;	 
-
-	// Loop over Muon Hits of given type
-	if(hitPointer!=0){
-	  for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++){
+      LHCb::MCHits::const_iterator iter;
+      int MyDetID;
+      // Loop over Muon Hits of given type
+      if(hits!=0){
+	for (iter = hits->begin(); iter < hits->end();iter++){
 	  
-	    //          int chamber=(*iter)->chamberID();
-	    float xpos=((*iter)->entry().x()+(*iter)->exit().x())/2.0;
-	    float ypos=((*iter)->entry().y()+(*iter)->exit().y())/2.0;
-	    float zpos=((*iter)->entry().z()+(*iter)->exit().z())/2.0;
-	    float time=(*iter)->timeOfFlight();
-
-	    double tof=time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;
-	    if(tof<0.1)tof=0.1;
-	    float r=sqrt(xpos*xpos+ypos*ypos);
-
-	    m_sta.push_back(station);
-	    m_reg.push_back(region);
-	    m_con.push_back(container);
-
-	    //Temporary monitoring (need to check if already available)
-	    m_ple.push_back((*iter)->pathLength());
-	    m_hen.push_back((*iter)->energy());
-	    m_dix.push_back((*iter)->displacement().x());
-	    m_dxz.push_back((*iter)->dxdz());
-	    m_dyz.push_back((*iter)->dydz());
+	  MyDetID = (*iter)->sensDetID();
+	  
+	  //Needs to extract info from sens ID      
+	  int station = muonD->stationID(MyDetID);  
+	  int region  = muonD->regionID(MyDetID);   
+	  int chamber = muonD->chamberID(MyDetID);        
+	  
+	  debug()<<" region:: " <<region<<endmsg;
+	  
+	  float xpos=((*iter)->entry().x()+(*iter)->exit().x())/2.0;
+	  float ypos=((*iter)->entry().y()+(*iter)->exit().y())/2.0;
+	  float zpos=((*iter)->entry().z()+(*iter)->exit().z())/2.0;
+	  float time=(*iter)->time();
+	  
+	  double tof=time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;
+	  if(tof<0.1)tof=0.1;
+	  float r=sqrt(xpos*xpos+ypos*ypos);
+	  
+	  m_sta.push_back(station);
+	  m_reg.push_back(region);
+	  m_cha.push_back(chamber);
+	  m_con.push_back(container);
+	  
+	  //Temporary monitoring (need to check if already available)
+	  m_ple.push_back((*iter)->pathLength());
+	  m_hen.push_back((*iter)->energy());
+	  m_dix.push_back((*iter)->displacement().x());
+	  m_dxz.push_back((*iter)->dxdz());
+	  m_dyz.push_back((*iter)->dydz());
+	  
+	  m_x.push_back(xpos); m_y.push_back(ypos); m_z.push_back(zpos);
+	  m_time.push_back(time);
+	  
+	  //Fill some histos	  
+	  int hh =station*4+region;
+	  
+	  plot( r, hh+2000, "Radial Multiplicity", 0., 6000.,200 );
+	  plot(tof,hh+1000, "Time multiplicity",   0.,  100.,200 ); 
+	  
+	  //MC truth
+	  const LHCb::MCParticle* particle=(*iter)->mcParticle();
+	  if(particle){            
+	    if(abs(particle->particleID().pid())<100000){
+	      m_id.push_back(particle->particleID().pid());
+	    }
 	    
-	    m_x.push_back(xpos); m_y.push_back(ypos); m_z.push_back(zpos);
-	    m_time.push_back(time);
-
-	    //Fill some histos	  
-	    int hh =station*4+region;
-
-	    plot( r, hh+2000, "Radial Multiplicity", 0., 6000.,200 );
-	    plot(tof,hh+1000, "Time multiplicity",   0.,  100.,200 ); 
-
-	    //MC truth
-	    MCParticle* particle=(*iter)->mcParticle();
-	    if(particle){            
-	      if(abs(particle->particleID().pid())<100000){
-          m_id.push_back(particle->particleID().pid());
-	      }
-
-	      m_px.push_back(particle->momentum().px());
-	      m_py.push_back(particle->momentum().py());
-	      //Pz sign tells you the particle direction
-	      m_pz.push_back(particle->momentum().pz());
-	      m_E.push_back(particle->momentum().e());
-
-	      //Particle Vertex studies	    
-	      m_xv.push_back(particle->originVertex()->position().x());
-	      m_yv.push_back(particle->originVertex()->position().y());
-	      m_zv.push_back(particle->originVertex()->position().z());
-	      m_tv.push_back(particle->originVertex()->timeOfFlight());
+	    m_px.push_back(particle->momentum().px());
+	    m_py.push_back(particle->momentum().py());
+	    //Pz sign tells you the particle direction
+	    m_pz.push_back(particle->momentum().pz());
+	    m_E.push_back(particle->momentum().e());
 	    
-	      const MCParticle * madre=particle->mother();
-	      if(madre && (abs(madre->particleID().pid())<100000)){
-          m_mom.push_back(madre->particleID().pid()); 
-	      } else {
-          m_mom.push_back(0);
-	      }
+	    //Particle Vertex studies	    
+	    m_xv.push_back(particle->originVertex()->position().x());
+	    m_yv.push_back(particle->originVertex()->position().y());
+	    m_zv.push_back(particle->originVertex()->position().z());
+	    m_tv.push_back(particle->originVertex()->time());
+	    
+	    const LHCb::MCParticle * moth=particle->mother();
+	    if(moth && (abs(moth->particleID().pid())<100000)){
+	      m_mom.push_back(moth->particleID().pid()); 
 	    } else {
-	      m_id.push_back(0);	    m_px.push_back(0);	    m_py.push_back(0);
-	      m_pz.push_back(0);	    m_E.push_back(0);	    m_xv.push_back(0);
-	      m_yv.push_back(0);	    m_zv.push_back(0);	    m_tv.push_back(0);
 	      m_mom.push_back(0);
-	    }          
-
-	    tnhit[station][region][container]++;
-	  } 
+	    }
+	  } else {
+	    m_id.push_back(0);	    m_px.push_back(0);	    m_py.push_back(0);
+	    m_pz.push_back(0);	    m_E.push_back(0);	    m_xv.push_back(0);
+	    m_yv.push_back(0);	    m_zv.push_back(0);	    m_tv.push_back(0);
+	    m_mom.push_back(0);
+	  }          
+	  tnhit[station][region][container]++;
 	}
-      }
-    }
-
+      }        
+    }   
     for(int ic=0; ic<4; ic++) {
       for(int r=0; r<4; r++) {
 	for(int s=0; s<5; s++) {
@@ -226,29 +220,30 @@ StatusCode MuonDigitChecker::execute() {
       }  
     }    
   }    
-  
+
   // Loop on Digits (strips)
-  MuonDigits* digit = get<MuonDigits>(MuonDigitLocation::MuonDigit);
-  MCMuonDigits* mcdigit = get<MCMuonDigits>(MCMuonDigitLocation::MCMuonDigit);
+  // get the MCMuonDigits
+  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
+  LHCb::MCMuonDigits* mcdigit = get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
   
-  MuonDigits::const_iterator jdigit;
+  LHCb::MuonDigits::const_iterator jdigit;
   int Dsta, Dreg, Dcon;
   double Dfir;
   bool Deve, Dali;
   double x,y,z;  double dx,dy,dz;  
-
+  
   for(jdigit=digit->begin();jdigit<digit->end();jdigit++){
     Dsta = (*jdigit)->key().station();
     Dreg = (*jdigit)->key().region();
-
+    
     m_digit_s.push_back(Dsta);
     m_digit_r.push_back(Dreg);
     m_digit_time.push_back((*jdigit)->TimeStamp());
-
+    
     // Timestamp is one of the 8 intervals (8 digits) in which
     // the 20ns acceptance window is subdivided after beam crossing
+    muonD->Tile2XYZ((*jdigit)->key(),x,dx,y,dy,z,dz);
     
-    m_MuonTileXYZ->calcTilePos((*jdigit)->key(),x,dx,y,dy,z,dz);
     m_digit_x.push_back(x);
     m_digit_y.push_back(y);
     m_digit_z.push_back(z);
@@ -258,10 +253,14 @@ StatusCode MuonDigitChecker::execute() {
     m_digit_dz.push_back(dz);
     
     //Match with "true" MC digit    
-    ContainedObject* MCd=mcdigit->containedObject((*jdigit)->key());  
-    MCMuonDigit* MCmd=dynamic_cast<MCMuonDigit *> (MCd);       
-
-    MCMuonDigitInfo digInfo = MCmd->DigitInfo();
+    LHCb::MCMuonDigit * MCmd = mcdigit->object((*jdigit)->key());
+    if(!mcdigit) {
+      error() << "Could not find the match for " << (*jdigit)->key()
+	      << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endreq;
+      return StatusCode::FAILURE;
+    }
+    
+    LHCb::MCMuonDigitInfo digInfo = MCmd->DigitInfo();
     
     // Hit orginin (codes in MuonEvent/v2r1/Event/MuonOriginFlag.h)
     // Geant                 = 0
@@ -277,30 +276,29 @@ StatusCode MuonDigitChecker::execute() {
     m_digit_firing.push_back(Dfir);
     m_digit_origin.push_back(Dcon);
     m_digit_bx.push_back(Deve);
-
+    
     // Hits mupltiplicity
-    m_digit_multi.push_back( MCmd->mcMuonHits().size());
+    m_digit_multi.push_back( MCmd->mcHits().size());
     if(Deve) tnDhit[Dsta][Dreg][Dcon]++;
   }
-
+  
   //Looking at mean number of hits
   for(int c=0; c<6; c++) {
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-        Dcnt[s][r][c]++;
-        nDhit[s][r][c]+= tnDhit[s][r][c];
+	Dcnt[s][r][c]++;
+	nDhit[s][r][c]+= tnDhit[s][r][c];
       }  
     }    
-  }    
-  
+  }      
   if(m_hitMonitor) {
     Tuple nt1 = nTuple(41,"MC HITS",CLID_ColumnWiseTuple);
     
-    nt1->column("Run", m_run,0,1000000);
     nt1->column("Event",m_evt,0,10000);
     
     nt1->farray("is", m_sta ,"Nhits",1000);
     nt1->farray("ir", m_reg ,"Nhits",1000);
+    nt1->farray("ch", m_cha ,"Nhits",1000);
     nt1->farray("ic", m_con ,"Nhits",1000);
     nt1->farray("x",  m_x   ,"Nhits",1000);
     nt1->farray("y",  m_y   ,"Nhits",1000);
@@ -324,8 +322,7 @@ StatusCode MuonDigitChecker::execute() {
     nt1->write();  
   }
   Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
-    
-  nt2->column("Run"  , m_digit_run, 0,1000000);
+  
   nt2->column("Event", m_digit_evt, 0,10000);
   nt2->farray("is",    m_digit_s,      "Ndigits",1000);
   nt2->farray("ir",    m_digit_r,      "Ndigits",1000);
@@ -341,13 +338,14 @@ StatusCode MuonDigitChecker::execute() {
   nt2->farray("firing",m_digit_firing, "Ndigits",1000);
   nt2->farray("multip",m_digit_multi,  "Ndigits",1000);
   nt2->write();  
-
+  
   return StatusCode::SUCCESS;
 };
-
+  
 //=============================================================================
 //  Finalize
 //=============================================================================
+
 StatusCode MuonDigitChecker::finalize() {
   info() << "-----------------------------------------------------------------"
 	 << endmsg;

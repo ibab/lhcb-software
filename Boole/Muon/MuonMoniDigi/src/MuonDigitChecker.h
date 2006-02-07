@@ -1,4 +1,4 @@
-// $Id: MuonDigitChecker.h,v 1.6 2005-10-04 17:02:04 asarti Exp $
+// $Id: MuonDigitChecker.h,v 1.7 2006-02-07 17:17:32 asarti Exp $
 #ifndef MuonDigitChecker_H 
 #define MuonDigitChecker_H 1
 
@@ -6,9 +6,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-
-// for Muons
-#include "MuonTools/IMuonTileXYZTool.h"
 
 /** @class MuonDigitChecker MuonDigitChecker.h
  *  
@@ -28,12 +25,7 @@ public:
 
 protected:
 
-  int m_regionNumber;
-  int m_partition;
-
 private:
-  IMuonTileXYZTool* m_MuonTileXYZ ;
-
   int nhit[5][4][4],cnt[5][4][4];
   int nDhit[5][4][6],Dcnt[5][4][6];
 
