@@ -1,34 +1,16 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.2 2006-01-31 15:21:34 asatta Exp $
+// $Id: MuonDigitToRawBuffer.h,v 1.3 2006-02-07 12:12:20 cattanem Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 
 // Include files
 // from STL
 #include <string>
+
 #include "MuonKernel/MuonTile.h"
 #include "Kernel/MuonTileID.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/RndmGenerators.h"
-#include <GaudiKernel/DataSvc.h> 
-#include "MuonDet/MuonBasicGeometry.h"
-#include "MuonDet/MuonL1Board.h"
-#include "MuonDet/MuonStationCabling.h"
-#include "MuonDet/MuonODEBoard.h"
-#include "MuonDet/MuonTSMap.h"
-#include "Event/MuonDigit.h" 
-
-#include "Event/RawEvent.h"
-#include "Event/RawBank.h"
-#include "Event/BankWriter.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "MuonKernel/MuonTile.h"
-#include "MuonHLTDigitFormat.h"
 
 /** @class MuonDigitToRawBuffer MuonDigitToRawBuffer.h
  *  

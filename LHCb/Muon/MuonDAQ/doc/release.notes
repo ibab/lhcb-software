@@ -4,7 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-!========================= MuonDAQ v2r0 2006-01-31 ======================
+!========================= MuonDAQ v2r0 2006-02-07 ===========================
+! 2006-02-07 - Marco Cattaneo
+ - Move algorithm include to src directory and cleanup included files
+
 ! 2006-01-31 - Alessia satta
  - implement the new Muon DAQ format (digit address first +TDC at the end of the bank)	
  - adapt to new event model (mainly LHCb namespace & DAQEvent)
