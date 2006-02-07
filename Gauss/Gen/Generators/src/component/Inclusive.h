@@ -1,4 +1,4 @@
-// $Id: Inclusive.h,v 1.5 2005-12-31 17:32:39 robbep Exp $
+// $Id: Inclusive.h,v 1.6 2006-02-07 00:15:32 robbep Exp $
 #ifndef GENERATORS_INCLUSIVE_H 
 #define GENERATORS_INCLUSIVE_H 1
 
@@ -7,6 +7,10 @@
 #include "GaudiAlg/GaudiTool.h"
 
 #include "Generators/ExternalGenerator.h" 
+
+#include "Generators/GenCounters.h"
+
+#include <boost/array.hpp>
 
 // forward declarations
 
@@ -65,16 +69,6 @@ class Inclusive : public ExternalGenerator {
 
  protected:
 
-  /** Update counters for flavour fractions.
-   *  @param[in] theEvent  The event where to count.
-   */
-  void updateHadronCounters( const HepMC::GenEvent * theEvent ) ;
-
-  /** Update counters for excited states.
-   *  @param[in] theEvent  The event where to count.
-   */
-  void updateExcitedStatesCounters( const HepMC::GenEvent * theEvent ) ;
-
  private:
   /// Mass of lightest hadron in list of particles to produce
   double        m_lightestMass     ; 
@@ -96,63 +90,58 @@ class Inclusive : public ExternalGenerator {
 
   /// Vector to obtain list of PDG Ids from job options
   std::vector< int > m_pidVector   ;
-
-  unsigned int  m_nB0 ; ///< Counter of B0 (after generator level cut)
-
-  unsigned int m_nB0bar ; ///< Counter of B0bar (after cut)
-
-  unsigned int  m_nBp ; ///< Counter of B+ (after cut)
-
-  unsigned int m_nBm ; ///< Counter of B- (after cut)
-
-  unsigned int  m_nBs0 ; ///< Counter of Bs0 (after cut)
-
-  unsigned int m_nBs0bar ; ///< Counter of Bs0bar (after cut)
-
-  unsigned int  m_nbBaryon ; ///< Counter of b-baryons (after cut)
-
-  unsigned int m_nantibBaryon ; ///< Counter of anti-b-baryons (after cut)
-
-  unsigned int  m_nBcp ; ///< Counter of Bc+ (after cut)
-
-  unsigned int m_nBcm  ; ///< Counter of Bc- (after cut)
-
-  unsigned int  m_nbb ; ///< Counter of (bb) (after cut)
   
-  unsigned int  m_nD0 ; ///< Counter of D0 (after cut) 
+  GenCounters::BHadronCounter m_bHadC ;  ///< Counter of B hadron (generated)
+  
+  GenCounters::BHadronCounter m_antibHadC ; ///< Counter of Bbar hadron (gen)
 
-  unsigned int m_nD0bar ; ///< Counter of D0bar (after cut) 
+  /// Counter of B hadron (accepted)
+  GenCounters::BHadronCounter m_bHadCAccepted ;
 
-  unsigned int  m_nDp ; ///< Counter of D+ (after cut) 
+  /// Counter of anti-B hadron (accepted)
+  GenCounters::BHadronCounter m_antibHadCAccepted ;
+  
+  GenCounters::BHadronCNames m_bHadCNames ; ///< Array of B counter names
 
-  unsigned int m_nDm ; ///< Counter of D- (after cut)
+  /// Array of anti-B hadrons names
+  GenCounters::BHadronCNames m_antibHadCNames ; 
 
-  unsigned int  m_nDsp ; ///< Counter of Ds+ (after cut)
+  GenCounters::DHadronCounter m_cHadC ; ///< Counter of D hadron (generated)
 
-  unsigned int m_nDsm ; ///< Counter of Ds- (after cut)
+  GenCounters::DHadronCounter m_anticHadC ; ///< Counter of Dbar hadron (gen)
 
-  unsigned int m_ncBaryon ; ///< Counter of charm baryons (after cut)
+  /// Counter of D hadron (accepted)
+  GenCounters::DHadronCounter m_cHadCAccepted ;
+  
+  /// Counter of D hadron (accepted) 
+  GenCounters::DHadronCounter m_anticHadCAccepted ;
+  
+  /// Array of D counter names
+  GenCounters::DHadronCNames m_cHadCNames ;
 
-  unsigned int m_nanticBaryon ; ///< Counter of anti-charm baryons (after cut)
+  /// Array of anti-D counter names
+  GenCounters::DHadronCNames m_anticHadCNames ;
 
-  unsigned int m_ncc ; ///< Counter of (cc) (after cut)
+  unsigned int m_ccCounter ; ///< Counter for cc quarkonium (generated)
 
-  /// Counter of B (Spin 0, Angular momentum 0)
-  unsigned int  m_n0starB ;
+  unsigned int m_bbCounter ; ///< Counter for bb quarkonium (generated)
 
-  /// Counter of B* (Spin 1, Angular momentum 0)
-  unsigned int m_n1starB ;
+  unsigned int m_ccCounterAccepted ; ///< Counter for cc (accepted)
 
-  /// Counter of B** (Angular momentum 1)
-  unsigned int m_n2starB ;
+  unsigned int m_bbCounterAccepted ; ///<< Counter for bb (accepted)
+  
+  GenCounters::ExcitedCounter m_bExcitedC ; ///< Counter of B(**) (generated)
 
-  /// Counter of D (spin 0, Angular momentum 0)
-  unsigned int  m_n0starC ;
+  GenCounters::ExcitedCounter m_cExcitedC ; ///< Counter of D(**) (generated)
 
-  /// Counter of D* (Spin 1, Angular momentum 0)
-  unsigned int m_n1starC ;
+  /// Counter of B(**) (accepted)
+  GenCounters::ExcitedCounter m_bExcitedCAccepted ;
+  
+  /// Counter of D(**) (accepted)
+  GenCounters::ExcitedCounter m_cExcitedCAccepted ;
+  
+  GenCounters::ExcitedCNames m_bExcitedCNames ; ///< Names excited B counters
 
-  /// Counter of D** (Angular momentum 1)
-  unsigned int m_n2starC ;
+  GenCounters::ExcitedCNames m_cExcitedCNames ; ///< Names excited D counters
 };
 #endif // GENERATORS_INCLUSIVE_H

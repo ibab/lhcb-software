@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.12 2006-02-01 21:27:41 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.13 2006-02-07 00:15:32 robbep Exp $
 // Include files 
 
 // local
@@ -180,7 +180,8 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
         it != theEvent -> particles_end() ; ++it ) 
     if ( std::binary_search( pidList.begin() , pidList.end() ,
                              (*it) -> pdg_id() ) ) 
-      if ( ( 3 != (*it) -> status() ) && ( IsBAtProduction( *it ) ) )
+      if ( ( LHCb::HepMCEvent::DocumentationParticle != (*it) -> status() ) 
+           && ( IsBAtProduction( *it ) ) )
         particleList.push_back( *it ) ;
 
   return ( ! particleList.empty() ) ;
@@ -235,12 +236,10 @@ void ExternalGenerator::prepareInteraction( LHCb::HepMCEvents * theEvents ,
     LHCb::GenCollision * & theGenCollision ) const {
   LHCb::HepMCEvent * theHepMCEvent = new LHCb::HepMCEvent( ) ;
   theHepMCEvent -> setGeneratorName( m_hepMCName ) ;
-  HepMC::GenEvent * theGE = new HepMC::GenEvent( ) ;
-  theHepMCEvent -> setPGenEvt( theGE ) ;
+  theGenEvent = new HepMC::GenEvent( ) ;
+  theHepMCEvent -> setPGenEvt( theGenEvent ) ;
 
-  theGenCollision = new LHCb::GenCollision() ;
-  
-  theGenEvent = theHepMCEvent -> pGenEvt() ;
+  theGenCollision = new LHCb::GenCollision() ;  
   theGenCollision -> setEvent( theHepMCEvent ) ;
 
   theEvents -> insert( theHepMCEvent ) ;

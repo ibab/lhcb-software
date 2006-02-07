@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.11 2006-02-05 21:01:44 robbep Exp $
+// $Id: Generation.cpp,v 1.12 2006-02-07 00:15:32 robbep Exp $
 // Include files 
 
 // local
@@ -176,11 +176,8 @@ StatusCode Generation::execute() {
   // Generate a set of interaction until a good one is found
   bool goodEvent = false ;
   while ( ! goodEvent ) {
-    // Clear the vectors which will contain the HepMC events and collisions
-    std::for_each( theEvents -> begin() , theEvents -> end() ,
-                   boost::checked_deleter< LHCb::HepMCEvent >() ) ;
-    std::for_each( theCollisions -> begin() , theCollisions -> end() ,
-                   boost::checked_deleter< LHCb::GenCollision >() ) ;
+    theEvents -> erase( theEvents -> begin() , theEvents -> end() ) ;
+    theCollisions -> erase(theCollisions -> begin() ,theCollisions -> end() ) ;
     theEvents -> clear() ;     theCollisions -> clear() ;
     
     // Compute the number of pile-up interactions to generate 
@@ -191,17 +188,17 @@ StatusCode Generation::execute() {
       nPileUp = 1 ;
       currentLuminosity = 2.e32/cm2/s ;
     }
-    
+
     // generate a set of Pile up interactions according to the requested type
     // of event
     goodEvent = m_sampleGenerationTool -> generate( nPileUp , theEvents , 
                                                     theCollisions ) ;
-    
+
     // increase event and interactions counters
     m_nEvents++ ;    m_nInteractions += nPileUp ;
 
     // Update interaction counters
-    std::fill( theIntCounter.begin() , theIntCounter.end() , 0 ) ;
+    theIntCounter.assign( 0 ) ;
     for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ; 
           ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
     
