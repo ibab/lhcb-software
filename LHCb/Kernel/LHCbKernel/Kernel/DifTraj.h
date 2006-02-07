@@ -1,4 +1,4 @@
-// $Id: DifTraj.h,v 1.1 2006-02-06 11:11:48 ebos Exp $
+// $Id: DifTraj.h,v 1.2 2006-02-07 11:07:10 erodrigu Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
@@ -17,17 +17,23 @@
  *  @date   2006-02-03
  */
 
-template<unsigned int N>
+namespace LHCb
+{
 
- class DifTraj : public Trajectory {
+  template<unsigned int N>
+  
+  class DifTraj : public Trajectory {
+    
+  public:
+    
+    enum { kSize = N};
+    
+    /// Retrieve the derivative of the parabolic approximation to the trajectory
+    /// with respect to the state parameters
+    virtual ROOT::Math::SMatrix<double,3,N> derivative( const double& arclength ) const = 0;
+    
+  };
+  
+} // namespace LHCb
 
- public:
-
-   enum { kSize = N};
-
-  /// Retrieve the derivative of the parabolic approximation to the trajectory
-  /// with respect to the state parameters
-  virtual ROOT::Math::SMatrix<double,3,N> derivative( const double& arclength ) const = 0;
-
-};
 #endif // KERNEL_DIFTRAJ_H

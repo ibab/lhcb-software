@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-06 - Eduardo Rodrigues
+ - inserted LHCb namespace for all trajectory-related classes
+
 ! 2006-02-06 - Edwin Bos
  - Added Trajectory classes
 

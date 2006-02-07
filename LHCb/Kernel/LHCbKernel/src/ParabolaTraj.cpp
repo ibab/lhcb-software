@@ -1,17 +1,17 @@
-// $Id: ParabolaTraj.cpp,v 1.2 2006-02-06 11:13:20 ebos Exp $
+// $Id: ParabolaTraj.cpp,v 1.3 2006-02-07 11:07:10 erodrigu Exp $
 // Include files
 
 // local
 #include "Kernel/ParabolaTraj.h"
 
 /// Constructor from a (middle) point, a (unit) direction vector and a curvature
-ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& middle,
-                            const Gaudi::XYZVector& dir,
-                            const Gaudi::XYZVector& curv,
-                            const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> endPoints ) 
+LHCb::ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& middle,
+                                  const Gaudi::XYZVector& dir,
+                                  const Gaudi::XYZVector& curv,
+                                  const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> endPoints ) 
 {
-  m_pos = middle;
-  m_dir = dir.Unit();       
+  m_pos  = middle;
+  m_dir  = dir.Unit();       
   m_curv = curv;
 
   double s1 = (-m_dir.X()-sqrt(m_dir.X()*m_dir.X()+2*(endPoints.first).X())*m_curv.X()-2*m_pos.X()*m_curv.X()) / 
@@ -26,45 +26,47 @@ m_curv.X();
   double solB = (s3 > s4) ? s1 : s2;
   std::pair<double,double> range = std::pair<double,double>(solA,solB);
   m_range = range;
-}
+};
 
 /// Point on the trajectory at arclength from the starting point    
-Gaudi::XYZPoint ParabolaTraj::position( const double& arclength ) const
+Gaudi::XYZPoint LHCb::ParabolaTraj::position( const double& arclength ) const
 {
   return m_pos + arclength * m_dir + 0.5 * arclength * arclength * m_curv;
-}
+};
 
 /// First derivative of the trajectory at arclength from the starting point   
-Gaudi::XYZVector ParabolaTraj::direction( const double& arclength ) const
+Gaudi::XYZVector LHCb::ParabolaTraj::direction( const double& arclength ) const
 {
   return m_dir + arclength * m_curv;
-}
+};
 
 /// Second derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector ParabolaTraj::curvature( const double& arclength ) const 
+Gaudi::XYZVector LHCb::ParabolaTraj::curvature( const double& arclength ) const 
 {
   return m_curv;
-}
+};
 
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
-void ParabolaTraj::expansion( const double& arclength,
-                              Gaudi::XYZPoint& p,
-                              Gaudi::XYZVector& dp,
-                              Gaudi::XYZVector& ddp ) const
+void LHCb::ParabolaTraj::expansion( const double& arclength,
+                                    Gaudi::XYZPoint& p,
+                                    Gaudi::XYZVector& dp,
+                                    Gaudi::XYZVector& ddp ) const
 {
-  p = position(arclength);
-  dp = direction(arclength);
+  p   = position(arclength);
+  dp  = direction(arclength);
   ddp = curvature(arclength);
-}
+};
 
 /// Retrieve the derivative of the parabolic approximation to the trajectory
 /// with respect to the state parameters
-ROOT::Math::SMatrix<double,3,ParabolaTraj::kSize> ParabolaTraj::derivative( const double& arclength ) const
+ROOT::Math::SMatrix<double,3,LHCb::ParabolaTraj::kSize>
+LHCb::ParabolaTraj::derivative( const double& arclength ) const
 {
-  ROOT::Math::SMatrix<double,3,ParabolaTraj::kSize> deriv = ROOT::Math::SMatrix<double,3,ParabolaTraj::kSize>();
-
-    deriv(0,0) = 1.0;
+  ROOT::Math::SMatrix<double,3,LHCb::ParabolaTraj::kSize> deriv =
+    ROOT::Math::SMatrix<double,3,LHCb::ParabolaTraj::kSize>();
+  
+  deriv(0,0) = 1.0;
     deriv(1,1) = 1.0;
     deriv(1,1) = 1.0;
     deriv(0,3) = arclength;
@@ -75,41 +77,42 @@ ROOT::Math::SMatrix<double,3,ParabolaTraj::kSize> ParabolaTraj::derivative( cons
     deriv(2,8) = 0.5 * arclength * arclength;
 
   return deriv;       
-}
+};
 
   /// Determine the distance in arclenghts to the
   /// closest point on the trajectory to a given point
-double ParabolaTraj::distanceToPoint( const Gaudi::XYZPoint& point ) const
+double LHCb::ParabolaTraj::distanceToPoint( const Gaudi::XYZPoint& point ) const
 {
 // Not yet implemented
   return 0.;
-}
+};
 
 /// Number of arclengths until deviation of the trajectory from the expansion
 /// reaches the given tolerance.
-double ParabolaTraj::distTo1stError( double& , const double& , int ) const 
+double LHCb::ParabolaTraj::distTo1stError( double& , const double& , int ) const 
 {
 // Not yet implemented
   return 10*km;  
-}
+};
 
 /// Number of arclengths until deviation of the trajectory from the expansion
 /// reaches the given tolerance.
-double ParabolaTraj::distTo2ndError( double& , const double& , int ) const
+double LHCb::ParabolaTraj::distTo2ndError( double& , const double& , int ) const
 {
 // Not yet implemented
   return 10*km;  
-}
+};
 
 /// Range in arclength w.r.t. the starting point
 /// over which the trajectory is valid
-std::pair<double,double> ParabolaTraj::range() const
+std::pair<double,double> LHCb::ParabolaTraj::range() const
 {
   return m_range;
-}
+};
 
 /// Length of trajectory
-double ParabolaTraj::length() const
+double LHCb::ParabolaTraj::length() const
 {
   return 0.;
-}
+};
+
