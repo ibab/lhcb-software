@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.1 2006-02-07 08:47:36 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.2 2006-02-07 15:56:39 mneedham Exp $
 
 
 #include <algorithm>
@@ -96,8 +96,7 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
 
 
 StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
-
-  /*
+ 
   typedef std::pair< std::pair<unsigned int, ByteStream >, STTell1Board*> Data;
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   std::vector<Data> tmpCont = std::vector<Data>();
@@ -147,12 +146,12 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
                                 iter->second->DAQToOffline(aWord.channelID()));
-      fCont[i] = liteCluster.value();
+      fCont->at(i) = liteCluster;
     } // iW
   } // iterData
 
   put(fCont, m_clusterLocation);
-  */ 
+  
   return StatusCode::SUCCESS;
 
 }

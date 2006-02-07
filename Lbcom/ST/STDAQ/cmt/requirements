@@ -16,7 +16,7 @@ use SiDAQ        v*  Si
 #---- link library
 library STDAQLib ../src/Lib/*.cpp 
 
-# macro_append cppflags ' -Weffc++'
+macro_append cppflags ' -g'
 
 #component
 library STDAQ ../src/component/*.cpp -import=GSL

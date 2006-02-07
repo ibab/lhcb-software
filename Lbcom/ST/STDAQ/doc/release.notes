@@ -6,6 +6,9 @@
 
 !=============================== STDAQ v2r2 2006-02-07 =======================
 ! 2006-02-07 M. Needham
+ - fix to get lite clusters working 
+                                                                                             
+! 2006-02-07 M. Needham
  - Changes for new cluster classes
 
 !=============================== STDAQ v2r1 2006-01-26 =======================
