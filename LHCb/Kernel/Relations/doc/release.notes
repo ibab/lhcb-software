@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.25 2006-02-07 14:34:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2006-02-07 15:01:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.25 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.26 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v3r0 2006-02-07 ============================
 ! 2006-02-07 - Vanya BELYAEV
 
  - many tiny changes to simplify the " semiautomated" generation of 
@@ -50,8 +51,6 @@
                      selectionfile=$(MYPACKAGEROOT)/dict/selection.xml
        apply_pattern component_library library=MyPackageDict        
    
-
-! ====================== Relations v3r0 2006-02-03 ============================
 ! 2006-02-03 - P. Koppenburg
   - Relations/Associator.h
   - Relations/AssociatorWeighted.h
