@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.2 2006-02-07 08:46:39 mneedham Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -70,6 +70,9 @@ StatusCode STCluster2MCHitLinker::execute() {
   // get STClusters
   LHCb::STClusters* clusterCont = get<LHCb::STClusters>(m_inputData);
 
+  // get the digits
+  m_digitCont = get<LHCb::STDigits>(m_digitLocation);
+
   // get MCParticles
   LHCb::MCHits* mcHits = get<LHCb::MCHits>("/Event/"+m_hitLocation);
 
@@ -86,7 +89,7 @@ StatusCode STCluster2MCHitLinker::execute() {
     associateToTruth(*iterClus,hitMap);
      
     // total charge = cluster size due to norm
-    double tCharge = (*iterClus)->digits().size();
+    double tCharge = (*iterClus)->size();
 
     // select references to add to table
     std::vector<hitPair> selectedRefs;
@@ -110,7 +113,6 @@ StatusCode STCluster2MCHitLinker::execute() {
 
   return StatusCode::SUCCESS;
 };
-
 
 StatusCode STCluster2MCHitLinker::refsToRelate(std::vector<hitPair>& selectedRefs,
                                             const std::map<const LHCb::MCHit*,double>& hitMap,
@@ -150,25 +152,27 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const LHCb::STCluster* aClust
 
   double foundCharge = 0.;
 
-  SmartRefVector<LHCb::STDigit> digitCont = aCluster->digits();
-  SmartRefVector<LHCb::STDigit>::iterator iterDigit = digitCont.begin();
-  while (iterDigit != digitCont.end()){
+  std::vector<LHCb::STChannelID> chanVector = aCluster->channels();
+  std::vector<LHCb::STChannelID>::iterator iterChan = chanVector.begin();
+  while (iterChan != chanVector.end()){
 
-    Range hitsCont = aTable->relations(*iterDigit);
-    iterator iterHit = hitsCont.begin();   
-    for ( ; iterHit != hitsCont.end(); ++iterHit){
+    LHCb::STDigit* aDigit = m_digitCont->object(*iterChan);
+    if (aDigit !=0){
+      Range hitsCont = aTable->relations(aDigit);
+      iterator iterHit = hitsCont.begin();   
+      for ( ; iterHit != hitsCont.end(); ++iterHit){
 
-      const LHCb::MCHit* aHit = iterHit->to();
-      hitMap[aHit] += iterHit->weight();
-      foundCharge += iterHit->weight();
-    } // iterHit
-
-    ++iterDigit;
+        const LHCb::MCHit* aHit = iterHit->to();
+        hitMap[aHit] += iterHit->weight();
+        foundCharge += iterHit->weight();
+      } // iterHit
+    } // aDigit
+    ++iterChan;
   } // Digit
 
   // difference between depEnergy and total cluster size is noise
   // This is due to the normalization !!!!
-  hitMap[0] = digitCont.size()-foundCharge;
+  hitMap[0] = aCluster->size()-foundCharge;
 
   return StatusCode::SUCCESS;
 }

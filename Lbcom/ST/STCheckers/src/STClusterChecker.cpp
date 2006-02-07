@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.2 2005-12-20 16:08:11 cattanem Exp $
+// $Id: STClusterChecker.cpp,v 1.3 2006-02-07 08:47:25 mneedham Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -100,7 +100,7 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
   // fill histos per digit
 
   // number of deposits that contribute
-  plot((double)aCluster->digits().size(),"num digit per cluster",-0.5,10.5,11);
+  plot((double)aCluster->size(),"num digit per cluster",-0.5,10.5,11);
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
@@ -115,9 +115,7 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
     DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0){
 
-      double totCharge = std::accumulate(aCluster->digits().begin(),aCluster->digits().end(),0.,
-                           STDataFunctor::Accumulate_Charge<const LHCb::STDigit*>());
-      plot(totCharge,aSector->type(), 0., 200., 200);
+      plot(aCluster->totalCharge(),aSector->type(), 0., 200., 200);
       plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type(), 0., 200., 200);
     }  
 

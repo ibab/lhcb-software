@@ -10,55 +10,6 @@
 
 #include <map>
 
-StatusCode STTruthTool::associateToTruth(const LHCb::STCluster* aCluster,
-                                         std::map<const LHCb::MCHit*,double>& hitMap){
-  // make link to truth  to MCHit from cluster
- 
-  double foundCharge = 0.;
-  double totalCharge  =0.;
-
-  SmartRefVector<LHCb::STDigit> digitCont = aCluster->digits();
-  SmartRefVector<LHCb::STDigit>::iterator iterDigit = digitCont.begin();
-  while ((iterDigit != digitCont.end())){
-
-    STTruthTool::associateToTruth(*iterDigit,hitMap,foundCharge);    
-    totalCharge += (*iterDigit)->depositedCharge();
-    ++iterDigit;
-  } // Digit
-
-  // difference between depEnergy and total cluster charge is noise
-  hitMap[0] += (totalCharge-foundCharge);
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode STTruthTool::associateToTruth(const LHCb::STCluster* aCluster,
-                                         std::map<const LHCb::MCParticle*,double>& particleMap){
-
-  // make truth link to LHCb::MCParticle from cluster
-  StatusCode sc = StatusCode::SUCCESS;    
-
-  // first to hit
-  std::map<const LHCb::MCHit*,double> hitMap;
-  sc = STTruthTool::associateToTruth(aCluster,hitMap);
-  
-  if (sc.isSuccess()&&(hitMap.empty() == false)){
-    std::map<const LHCb::MCHit*,double>::iterator iterMap = iterMap = hitMap.begin();
-    while (iterMap != hitMap.end()){
-      const LHCb::MCHit* aHit = (*iterMap).first;
-      double charge = (*iterMap).second;
-      const LHCb::MCParticle* aParticle = 0;
-      if (0 != aHit){
-        aParticle = aHit->mcParticle();
-      }
-      particleMap[aParticle] += charge;
-      ++iterMap;
-    }
-  }
-
-  return sc;
-}
-
 StatusCode STTruthTool::associateToTruth(const LHCb::STDigit* aDigit,
                                          std::map<const LHCb::MCHit*,double>& hitMap,
                                          double& foundCharge){

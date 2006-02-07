@@ -1,8 +1,8 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.2 2006-02-07 08:47:36 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "STDecodingBaseAlg.h"
 #include "Event/RawBank.h"
 #include "STDAQ/STDAQDefinitions.h"
 
@@ -19,19 +19,18 @@
  *  @date   2004-01-07
  */
 
-#include "Event/RawEvent.h"
-#include "Event/ByteStream.h"
 
 #include "STDAQ/STClusterWord.h"
 
 class SiADCWord;
 class STTell1Board;
 
-class ISTReadoutTool;
+namespace LHCb{
+ class STChannelID;
+ class STLiteCluster;
+};
 
-class DeSTDetector;
-
-class RawBankToSTClusterAlg : public GaudiAlgorithm {
+class RawBankToSTClusterAlg : public STDecodingBaseAlg {
 
 public:
 
@@ -45,7 +44,6 @@ public:
 
 private:
 
-
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt, LHCb::STClusters* digitCont ) const;
 
   StatusCode createCluster(const STClusterWord& aWord,
@@ -54,22 +52,12 @@ private:
 		 	   LHCb::STClusters* clusCont) const;
  
   unsigned int mean(const std::vector<SiADCWord>& adcValues) const;
+ 
+  LHCb::STLiteCluster word2LiteCluster(STClusterWord aWord, LHCb::STChannelID chan) const;
 
-  bool goodData(unsigned int version, unsigned int bSize, STDAQ::rawInt* theData) const;
-
-  /// Output location for STDigits
+  /// Output location for STClusters
   std::string m_clusterLocation;
-  std::string m_readoutToolName;
-
-  /// bank type
-  std::string m_detType;
-
-  LHCb::RawBank::BankType m_bankType;
-
-  ISTReadoutTool* m_readoutTool;
-
-  DeSTDetector* m_tracker;
-
+ 
 };
 
 #endif // RAWBUFFERTOSTDIGITALG_H 

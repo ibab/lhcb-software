@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.h,v 1.2 2005-12-20 15:29:32 cattanem Exp $
+// $Id: STOnlinePosition.h,v 1.3 2006-02-07 08:46:28 mneedham Exp $
 #ifndef _STOnlinePosition_H
 #define _STOnlinePosition_H
 
@@ -37,6 +37,8 @@ public:
   virtual double error(const unsigned int nStrips) const;
 
 private:
+
+  double STOnlinePosition::stripFraction(const double interStripPos) const;
 
   std::vector<double> m_ErrorVec;
 

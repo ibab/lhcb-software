@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: STClusterCreator.h,v 1.2 2006-02-07 08:46:20 mneedham Exp $
 #ifndef _STCLUSTERCREATOR_H_
 #define _STCLUSTERCREATOR_H_
 
@@ -54,6 +54,10 @@ private:
   double neighbourSum(LHCb::STDigits::const_iterator start, 
                       LHCb::STDigits::const_iterator stop, 
 		      const LHCb::STDigits* digits) const;
+
+
+  LHCb::STCluster::ADCVector strips(const SmartRefVector<LHCb::STDigit>& clusteredDigits,
+				   const LHCb::STChannelID closestChan) const;
  
   double m_digitSig2NoiseThreshold;
   double m_clusterSig2NoiseThreshold;

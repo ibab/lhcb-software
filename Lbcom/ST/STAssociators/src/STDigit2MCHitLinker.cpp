@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.2 2005-12-19 16:42:47 mneedham Exp $
+// $Id: STDigit2MCHitLinker.cpp,v 1.3 2006-02-07 08:46:39 mneedham Exp $
 
 // Event
 #include "Event/STDigit.h"
@@ -14,7 +14,6 @@
 // local
 #include "STDigit2MCHitLinker.h"
 #include "STTruthTool.h"
-#include "ISTDigitSelector.h"
 
 #include "Kernel/STDetSwitch.h"
 
@@ -38,7 +37,6 @@ STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.05);
   declareProperty("oneRef",m_oneRef = false);
-  declareProperty("selector",m_selectorName = "STSelectFromCluster");
   declareProperty("detType", m_detType = "TT");
 }
 
@@ -53,8 +51,7 @@ StatusCode STDigit2MCHitLinker::initialize() {
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
-  m_selector = tool<ISTDigitSelector>(m_selectorName,"digitSelector", this);
- 
+   
   m_hitLocation = LHCb::MCHitLocation::TT;
 
   STDetSwitch::flip(m_detType,m_hitLocation);
@@ -73,8 +70,6 @@ StatusCode STDigit2MCHitLinker::execute() {
   // get hits
   LHCb::MCHits* mcHits = get<LHCb::MCHits>(m_hitLocation);
  
-  // init selector
-  m_selector->initializeEvent();
 
   // create an association table 
   LinkerWithKey<LHCb::MCHit,LHCb::STDigit> myLink( evtSvc(), msgSvc(), outputData() );
@@ -95,7 +90,7 @@ StatusCode STDigit2MCHitLinker::execute() {
     double tCharge = this->totalCharge(hitMap);
     refsToRelate(selectedRefs,hitMap,tCharge,mcHits);
 
-    if ((selectedRefs.empty() == false)&&((m_selector->execute(*iterDigit) == true))){
+    if ((selectedRefs.empty() == false)){
       if (m_oneRef == false ){
         std::vector<hitPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){

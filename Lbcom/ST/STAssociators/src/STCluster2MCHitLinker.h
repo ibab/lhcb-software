@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.h,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STCluster2MCHitLinker.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
 #ifndef STCLUSTER2MCHITALG_H
 #define STCLUSTER2MCHITALG_H 1
 
@@ -12,6 +12,7 @@
 
 //Event
 #include "Event/MCHit.h"
+#include "Event/STDigit.h"
 
 /** @class STCluster2MCHitAlg STCluster2MCHitLinker.h
  *  
@@ -59,6 +60,8 @@ private:
   bool m_addSpillOverHits;
   double m_minFrac;  
   bool m_oneRef;
+
+  LHCb::STDigits* m_digitCont;
 
   std::string m_inputData;
   std::string m_outputData;

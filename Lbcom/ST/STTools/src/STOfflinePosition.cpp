@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.2 2006-01-26 15:29:13 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.3 2006-02-07 08:46:28 mneedham Exp $
 
  
 // Kernel
@@ -39,35 +39,50 @@ STOfflinePosition::~STOfflinePosition() {
 }
 
 ISTClusterPosition::Measurement STOfflinePosition::estimate(const LHCb::STCluster* aCluster) const{
-  return estimate(aCluster->digits());
+  double stripNum = STFun::position(aCluster->stripValues());
+  
+  LHCb::STChannelID firstChan = aCluster->firstChannel();
+  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
+                                    firstChan.layer(), firstChan.detRegion(),
+                                    firstChan.sector(), (unsigned int)stripNum);
+                                                                             
+  return std::make_pair(std::make_pair(theChan,
+                        stripFraction(stripNum - floor(stripNum),aCluster->size())),
+                        error(aCluster->size()));
 }
 
 ISTClusterPosition::Measurement STOfflinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
   
   double stripNum = STFun::position(digits);
-  double interStripPos = stripNum - floor(stripNum);
+ 
   LHCb::STChannelID firstChan = digits.front()->channelID();
   LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), (unsigned int)stripNum);
-
- 
-  // 'S- shape correction' for non-linear charge sharing
-  const unsigned int nDigits = digits.size();
-  double corStripPos = interStripPos;
-  if ((nDigits>1)&&(nDigits<(unsigned)m_MaxNtoCorr)) {
-     corStripPos = this->chargeSharingCorr(interStripPos);
-  }
                                                                              
-  double errorValue = error(nDigits);
-
-  return std::make_pair(std::make_pair(theChan,corStripPos) ,errorValue);
+  return std::make_pair(std::make_pair(theChan,
+                        stripFraction(stripNum - floor(stripNum),digits.size())),
+                        error(digits.size()));
 }
 
 double STOfflinePosition::error(const unsigned int nStrips) const{
  
  // estimate of error
  return (nStrips < m_ErrorVec.size() ? m_ErrorVec[nStrips-1] : m_ErrorVec.back());
+}
+
+double STOfflinePosition::stripFraction(const double stripNum,
+                                       const unsigned int clusterSize) const{
+
+  // 'S- shape correction' for non-linear charge sharing
+  double interStripPos = stripNum - floor(stripNum);
+  const unsigned int nDigits = clusterSize;
+  double corStripPos = interStripPos;
+  if ((nDigits>1)&&(nDigits<(unsigned)m_MaxNtoCorr)) {
+     corStripPos = this->chargeSharingCorr(interStripPos);
+  }
+
+  return corStripPos;
 }
 
 double STOfflinePosition::chargeSharingCorr(const double origDist) const{
@@ -87,3 +102,5 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const{
 
   return newDist+0.5;
 }
+
+

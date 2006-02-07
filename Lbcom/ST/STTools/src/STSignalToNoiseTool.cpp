@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.2 2006-02-07 08:46:29 mneedham Exp $
 //
 // This File contains the implementation of the STSignalToNoiseTool class
 //
@@ -84,7 +84,7 @@ double STSignalToNoiseTool::signalToNoise(const LHCb::STDigit* aDigit) {
 
 double STSignalToNoiseTool::signalToNoise( const LHCb::STCluster* aCluster ) {
   // calculate S/N of cluster
-  return (signalToNoise(aCluster->digits()));
+  return (aCluster->totalCharge()/noiseInADC(aCluster->channelID()));
 }
 
 double STSignalToNoiseTool::signalToNoise(const SmartRefVector<LHCb::STDigit>& digitCont) {

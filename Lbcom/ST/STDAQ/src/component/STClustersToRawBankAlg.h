@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STClustersToRawBankAlg.h,v 1.2 2006-02-07 08:47:36 mneedham Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -84,7 +84,7 @@ private:
 
   unsigned int m_overflow;
   int m_maxClustersPerPPx;
-  unsigned int m_maxDigits;
+  unsigned int m_maxClusterSize;
 
    
 };

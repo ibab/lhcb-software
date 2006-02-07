@@ -115,11 +115,7 @@ StatusCode STMCTuner::fillHistograms(const STCluster* aCluster,
       DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
         plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type(),0., 50., 100);
-
-        double totCharge = std::accumulate(aCluster->digits().begin(),aCluster->digits().end(),0.,
-                           STDataFunctor::Accumulate_Charge<const LHCb::STDigit*>());
-
-        plot(totCharge,aSector->type(), 0., 200., 200);
+        plot(aCluster->totalCharge(),aSector->type(), 0., 200., 200);
       }
     } 
   } // if

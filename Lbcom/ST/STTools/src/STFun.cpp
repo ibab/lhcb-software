@@ -18,3 +18,21 @@ double STFun::position(const SmartRefVector<LHCb::STDigit>& digits) {
   return (firstMoment/totalCharge);
 }
 
+double STFun::position(const LHCb::STCluster::ADCVector& strips) { 
+  // mean u - weighted according to charge dep
+  double totalCharge = 0.0;
+  double firstMoment = 0.0;
+ 
+  LHCb::STCluster::ADCVector::const_iterator iter = strips.begin();
+  unsigned int i =0;
+  while (iter != strips.end()){
+    totalCharge += iter->second;
+    firstMoment += iter->second
+                   *(double)i;
+    ++iter;
+    ++i;
+  }
+ 
+  // mean u
+  return (firstMoment/totalCharge);
+}

@@ -2,6 +2,10 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+! 2006-02-07 M Needham
+ - Changes for new cluster classes
+ - Remove obsolete selector tool
+
 !======================= STAssociators v1r0 2005-12-20 ========================
 ! 2005/19/12 - M.Needham
   First release of package containing  classes for associating to MC

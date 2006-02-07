@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.h,v 1.2 2005-12-20 15:29:32 cattanem Exp $
+// $Id: STOfflinePosition.h,v 1.3 2006-02-07 08:46:28 mneedham Exp $
 #ifndef _STOfflinePosition_H
 #define _STOfflinePosition_H
 
@@ -37,6 +37,9 @@ public:
   virtual double error(const unsigned int nStrips) const;
 
 private:
+
+  double stripFraction(const double stripNum,
+		       const unsigned int clusterSize) const;
 
   double chargeSharingCorr(const double dist) const;
 

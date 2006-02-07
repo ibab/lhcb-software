@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.2 2006-01-26 15:29:13 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.3 2006-02-07 08:46:28 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -38,7 +38,16 @@ STOnlinePosition::~STOnlinePosition() {
 }
 
 ISTClusterPosition::Measurement STOnlinePosition::estimate(const LHCb::STCluster* aCluster) const{
-  return estimate(aCluster->digits());
+  double stripNum = STFun::position(aCluster->stripValues());
+  double interStripPos = stripNum - floor(stripNum);
+  LHCb::STChannelID firstChan = aCluster->firstChannel();
+  LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
+                                    firstChan.station(),firstChan.layer(),
+                                    firstChan.detRegion(),firstChan.sector(), 
+                                    (unsigned int)stripNum);
+
+  return std::make_pair(std::make_pair(theChan,stripFraction(interStripPos)),
+                        error(aCluster->size()));
 }
 
 ISTClusterPosition::Measurement STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
@@ -50,11 +59,9 @@ ISTClusterPosition::Measurement STOnlinePosition::estimate(const SmartRefVector<
                                     firstChan.station(),firstChan.layer(),
                                     firstChan.detRegion(),firstChan.sector(), 
                                     (unsigned int)stripNum);
-
-  // got to 2 bit precision on interstrip position
-  double value  = double( LHCbMath::round(4*interStripPos))/4.0;
  
-  return std::make_pair(std::make_pair(theChan,value),error(digits.size()));
+  return std::make_pair(std::make_pair(theChan,stripFraction(interStripPos)),
+                                       error(digits.size()));
 }
 
 
@@ -63,3 +70,8 @@ double STOnlinePosition::error(const unsigned int nStrips) const{
  // estimate of error
  return (nStrips < m_ErrorVec.size() ? m_ErrorVec[nStrips-1] : m_ErrorVec.back());
 }
+
+double STOnlinePosition::stripFraction(const double interStripPos) const{
+  return (LHCbMath::round(4*interStripPos))/4.0;
+}
+

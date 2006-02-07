@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.h,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STDigit2MCHitLinker.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
 #ifndef STDIGIT2MCHITLINKER_H
 #define STDIGIT2MCHITLINKER_H 1
 
@@ -10,7 +10,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/MCHit.h"
 
-class ISTDigitSelector;
 
 /** @class STDigit2MCHitLinker STDigit2MCHitLinker.h
  *  
@@ -59,8 +58,7 @@ private:
  
   std::string m_hitLocation;
   std::string m_detType;
-  std::string m_selectorName;
-  ISTDigitSelector* m_selector;
+
 };
 
 inline std::string STDigit2MCHitLinker::outputData() const {

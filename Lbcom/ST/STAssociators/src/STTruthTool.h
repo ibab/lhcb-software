@@ -1,4 +1,4 @@
-// $Id: STTruthTool.h,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STTruthTool.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
 #ifndef STTRUTHTOOL_H
 #define STTRUTHTOOL_H 1
 
@@ -17,17 +17,11 @@
 namespace LHCb{
 class MCHit;
 class MCParticle;
-class STCluster;
 class STDigit;
 };
 
 namespace STTruthTool{
 
-  StatusCode associateToTruth(const LHCb::STCluster* aCluster,
-                              std::map<const LHCb::MCHit*,double>& hitMap);
-  
-  StatusCode associateToTruth(const LHCb::STCluster* aCluster,
-                              std::map<const LHCb::MCParticle*,double>& particleMap);
 
   StatusCode associateToTruth(const LHCb::STDigit* aDigit,
                               std::map<const LHCb::MCHit*,double>& hitMap,

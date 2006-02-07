@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.3 2005-12-20 15:50:25 cattanem Exp $
+// $Id: STClusterCreator.cpp,v 1.4 2006-02-07 08:46:20 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -16,6 +16,8 @@
 #include "Kernel/LHCbMath.h"
 #include "Kernel/LHCbConstants.h"
 #include "Kernel/ISTClusterPosition.h"
+
+#include "Event/STLiteCluster.h"
 
 // ST includes
 #include "STClusterCreator.h"
@@ -162,15 +164,15 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
 	ISTClusterPosition::Measurement measValue = m_positionTool->estimate(clusteredDigits);
       
         STChannelID nearestStrip = measValue.first.first;
-        double distToCenter = measValue.first.second*m_tracker->pitch();
-    
+      
         double nSum = neighbourSum(startCluster,iterDigit,digitCont );
 
         // make cluster +set things
-        STCluster* newCluster = new STCluster(distToCenter, nSum, this->hasHighThreshold(totCharge,aSector));
-     
-        newCluster->setDigits(clusteredDigits);
-
+        STLiteCluster clusterLite(nearestStrip,measValue.first.second,
+                      clusteredDigits.size(),hasHighThreshold(totCharge,aSector));
+        STCluster* newCluster = new STCluster(clusterLite, strips(clusteredDigits,
+                                              nearestStrip),nSum);
+    
         // add to container
         clusterCont->insert(newCluster,nearestStrip);
       }
@@ -253,7 +255,17 @@ double STClusterCreator::neighbourSum(STDigits::const_iterator start,
   return nSum;
 }
 
+STCluster::ADCVector STClusterCreator::strips(const SmartRefVector<STDigit>& clusteredDigits,
+                                              const STChannelID closestChan) const{
+  SmartRefVector<STDigit>::const_iterator iter  = clusteredDigits.begin();
+  STCluster::ADCVector tVec;
+  for (; iter != clusteredDigits.end(); ++iter){
+    int strip = (*iter)->channelID() - closestChan;
+    tVec.push_back(std::make_pair(strip,int((*iter)->depositedCharge())));       
+  } // i
 
+  return tVec;
+}
 
 
 

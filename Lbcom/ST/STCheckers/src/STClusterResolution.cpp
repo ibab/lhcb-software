@@ -154,8 +154,7 @@ StatusCode STClusterResolution::fillHistograms(const STCluster* aCluster,
     
 
     // determine which histos to fill based on cluster size
-    const int clusterSize = (int)aCluster->digits().size();
-    const int id = this->histoId(clusterSize);
+    const int id = this->histoId((int)aCluster->size());
 
     // fill double error = measVal.second;
     double error = measVal.second;

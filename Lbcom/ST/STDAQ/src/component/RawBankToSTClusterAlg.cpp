@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.3 2006-01-26 15:31:25 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.4 2006-02-07 08:47:36 mneedham Exp $
 
 #include <algorithm>
 
@@ -14,6 +14,7 @@
 #include "Event/RawEvent.h"
 #include "Event/ByteStream.h"
 #include "Event/STCluster.h"
+#include "Event/STLiteCluster.h"
 #include "Kernel/STDataFunctor.h"
 
 #include "STDAQ/ISTReadoutTool.h"
@@ -46,13 +47,10 @@ const IAlgFactory& RawBankToSTClusterAlgFactory = s_factory ;
 
 RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
-GaudiAlgorithm (name , pSvcLocator){
+STDecodingBaseAlg (name , pSvcLocator){
  
  // Standard constructor, initializes variables
- declareProperty( "clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
- declareProperty("readoutTool", m_readoutToolName = "STReadoutTool");     
- declareProperty("detType", m_detType = "TT" );
-
+  declareProperty( "clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -62,23 +60,13 @@ RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
 StatusCode RawBankToSTClusterAlg::initialize() {
 
   // Initialization
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = STDecodingBaseAlg::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
 
-  STDetSwitch::flip(m_detType,m_clusterLocation); 
-  STDetSwitch::flip(m_detType,m_readoutToolName);
-
-  // readout tool
-  m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
+  STDetSwitch::flip(detType(),m_clusterLocation); 
   
-  // det element
-  m_tracker = get<DeSTDetector>(DeSTDetLocation::location(m_detType));
- 
-  // bank type
-  m_bankType =  STDAQGeneral::stringToRawBankType(m_detType);
-
   return StatusCode::SUCCESS;
 }
     
@@ -86,7 +74,7 @@ StatusCode RawBankToSTClusterAlg::execute() {
 
   // Retrieve the RawEvent:
   RawEvent* rawEvt = get<RawEvent>(RawEventLocation::Default );
-  
+
   // make a new digits container
   STClusters* clusCont = new STClusters();
   clusCont->reserve(2000);
@@ -114,13 +102,13 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   // create Clusters from this type
 
-  const std::vector<RawBank* >&  tBanks = rawEvt->banks(m_bankType);  
+  const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   std::vector<RawBank* >::const_iterator iterBank;
   // loop over the banks of this type..
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
 
     // get the board and data
-    STTell1Board* aBoard =  m_readoutTool->findByBoardID(STTell1ID((*iterBank)->sourceID()));
+    STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
     STDAQ::rawInt* theData = (*iterBank)->data();
     size_t byteSize = (*iterBank)->size();    
  
@@ -193,31 +181,19 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 
   // decode the channel
   STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID());
-  if (!m_tracker->isValid(nearestChan)){
+  if (!tracker()->isValid(nearestChan)){
     warning() << "invalid channel " << endmsg;
     return StatusCode::FAILURE;
   }
 
-  STChannelID firstChan = STChannelID(nearestChan.type(),
-                                      nearestChan.station(),
-                                      nearestChan.layer(),
-                                      nearestChan.detRegion(), 
-                                      nearestChan.sector(),
-                                      nearestChan.strip() - offset);
-  SmartRefVector<STDigit> digits; 
-  for (unsigned int iDigit = 0; iDigit < adcValues.size() ; ++iDigit){
-    STDigit* newDigit = new STDigit(adcValues[iDigit]);
-    STChannelID aChannel = STChannelID(firstChan.type(), firstChan.station(), 
-                                       firstChan.layer(), firstChan.detRegion(),
-                                       firstChan.sector(), firstChan.strip()+iDigit);
-    digits.push_back(newDigit);
+  STCluster::ADCVector adcs ; 
+  for (unsigned int i = 0; i < adcValues.size() ; ++i){
+    adcs.push_back(std::make_pair(i-offset,adcValues[i]));
   } // iDigit
 
   // make cluster +set things
-  STCluster* newCluster = new STCluster(aWord.interStripPosition(),
-                                        neighbour,
-                                        aWord.hasHighThreshold());
-  newCluster->setDigits(digits);
+  STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, nearestChan),
+                                        adcs,neighbour);
 
   // add to container
   clusCont->insert(newCluster,nearestChan);
@@ -226,13 +202,20 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 }
 
 
-unsigned int RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) const {
-
+unsigned int RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) const
+{
+ 
   double sum = 0;
   for (unsigned int i = 0; i < adcValues.size() ; ++i){
      sum += adcValues[i].adc()*i;
   } // i
-
+                                                                                        
   return (unsigned int)(sum/adcValues.size());
 }
 
+
+STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(STClusterWord aWord,
+                                                      STChannelID chan) const{
+  return STLiteCluster(aWord.fracStripBits(),aWord.pseudoSizeBits(),
+                       aWord.hasHighThreshold() ,chan);
+}

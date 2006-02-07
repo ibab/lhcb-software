@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.2 2006-02-07 08:46:39 mneedham Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -70,6 +70,10 @@ StatusCode STCluster2MCParticleLinker::execute() {
 
   // get STClusters
   LHCb::STClusters* clusterCont = get<LHCb::STClusters>(m_inputData);
+
+  
+  // get the digits
+  m_digitCont = get<LHCb::STDigits>(m_digitLocation);
  
   // get MCParticles
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
@@ -86,7 +90,7 @@ StatusCode STCluster2MCParticleLinker::execute() {
     associateToTruth(*iterClus,partMap);
      
     // total charge = cluster size due to norm
-    double tCharge = (*iterClus)->digits().size();
+    double tCharge = (*iterClus)->size();
 
     // select references to add to table
     std::vector<partPair> selectedRefs;
@@ -147,23 +151,25 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const LHCb::STCluster* a
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 
   double foundCharge = 0.;
-  SmartRefVector<LHCb::STDigit> digitCont = aCluster->digits();
-  SmartRefVector<LHCb::STDigit>::iterator iterDigit = digitCont.begin();
-  while (iterDigit != digitCont.end()){
-  
-    Range hitsCont = aTable->relations(*iterDigit);
-    iterator iterHit = hitsCont.begin();   
-    for ( ; iterHit != hitsCont.end(); ++iterHit){
-      const LHCb::MCParticle* aParticle = iterHit->to()->mcParticle();
-      particleMap[aParticle] += iterHit->weight();
-      foundCharge += iterHit->weight();
-    } // iterHit
+  std::vector<LHCb::STChannelID> chanVector = aCluster->channels();
+  std::vector<LHCb::STChannelID>::iterator iterChan = chanVector.begin();
+  while (iterChan != chanVector.end()){
 
-    ++iterDigit;
-  } // Digit
+    LHCb::STDigit* aDigit = m_digitCont->object(*iterChan);
+    if (aDigit !=0){
+      Range hitsCont = aTable->relations(aDigit);
+      iterator iterHit = hitsCont.begin();   
+      for ( ; iterHit != hitsCont.end(); ++iterHit){
+        const LHCb::MCParticle* aParticle = iterHit->to()->mcParticle();
+        particleMap[aParticle] += iterHit->weight();
+        foundCharge += iterHit->weight();
+      } // iterHit
+    }
+    ++iterChan;
+  } // Chan
 
   // difference between depEnergy and total cluster charge is noise (due to norm)
-  particleMap[0] += digitCont.size()-foundCharge;
+  particleMap[0] += aCluster->size()-foundCharge;
 
   return StatusCode::SUCCESS;
 }

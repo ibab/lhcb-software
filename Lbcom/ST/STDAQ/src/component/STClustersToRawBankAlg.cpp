@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.3 2006-02-07 08:47:36 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,7 +21,6 @@
 
 // Event
 #include "Event/STCluster.h"
-#include "Event/STDigit.h"
 #include "Event/RawEvent.h"
 #include "Event/BankWriter.h"
 
@@ -50,7 +49,7 @@ STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
    m_readoutTool(0),
    m_bankMapping(0),
    m_overflow(0),
-   m_maxDigits(4)
+   m_maxClusterSize(4)
 {
   // constructer
   declareProperty("type", m_detType = "TT");
@@ -221,7 +220,7 @@ unsigned int STClustersToRawBankAlg::bankSize(STClustersOnBoard::ClusterVector& 
   unsigned int nADC = 0;
   for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
     STCluster* aCluster = clusCont[iCluster].first;
-    nADC += aCluster->digits().size();
+    nADC += aCluster->size();
   }
   
   unsigned int nByte = sizeof(short) 
@@ -245,7 +244,7 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
   for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
     STCluster* aCluster = clusCont[iCluster].first;
     STChannelID aChan = aCluster->channelID();
-    STClusterWord  aWord = STClusterWord(clusCont[iCluster].second,aCluster-> onlineDistToStrip(),aCluster->digits().size(),aCluster->secondThreshold());
+    STClusterWord  aWord = STClusterWord(clusCont[iCluster].second,aCluster->interStripFraction() ,aCluster->size(),aCluster->highThreshold());
     bWriter << aWord;
   } // iCluster
 
@@ -261,11 +260,11 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
     double tADC = GSL_MIN(GSL_MAX(aCluster->neighbourSum(),-16),15);
     char neighbourSum = (char)tADC;
     bWriter << neighbourSum;
-    SmartRefVector<STDigit> digits = aCluster->digits();
-    for (unsigned int iDigit = 0; iDigit < m_maxDigits; ++iDigit){
-      bool lastDigit;
-      iDigit = m_maxDigits-1 ? lastDigit = true: lastDigit = false;
-      SiADCWord adcWord = SiADCWord(digits[iDigit]->depositedCharge(), lastDigit);
+    STCluster::ADCVector adcs = aCluster->stripValues();
+    for (unsigned int i = 0; i < m_maxClusterSize; ++i){
+      bool last;
+      i == m_maxClusterSize-1 ? last = true: last = false;
+      SiADCWord adcWord = SiADCWord(adcs[i].second, last);
       bWriter << adcWord;  
     } //iter   
 
