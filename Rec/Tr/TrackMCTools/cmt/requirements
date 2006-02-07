@@ -25,9 +25,6 @@ use   Relations       v*     Kernel
 
 use   MCEvent         v*     Event
 use   TrackEvent      v*     Event
-use   OTEvent         v*     Event
-use   STEvent         v*     Event
-use   VeloEvent       v*     Event
 
 use   TrackInterfaces v*     Tr
 
