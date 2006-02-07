@@ -1,3 +1,3 @@
-MCITDepositChecker =  "IT";
-MCITDigitChecker = "IT";
+MCITDepositChecker.detType =  "IT";
+MCITDigitChecker.detType = "IT";
 ITDigitChecker.detType = "IT";
