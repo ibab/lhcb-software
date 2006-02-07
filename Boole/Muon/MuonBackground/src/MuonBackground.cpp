@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.28 2006-02-07 09:17:50 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.29 2006-02-07 17:24:41 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -745,7 +745,26 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         chNumber<<" "<<regNumber<<endmsg;
       if(sc.isFailure()){
         debug()<<" no gap found for muon hit" <<endreq;
+      }else{
+        sc=StatusCode::FAILURE;
+        //check n ot only that hit is inside chamber but also gap...
+         pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
+           ReturnADetElement(station,regNumber,chNumber));       
+         DeMuonGasGap*  p_Gap=NULL;     
+         IDetectorElement* ptemp= *(pChamber->childBegin());     
+         p_Gap=dynamic_cast<DeMuonGasGap*>(*(ptemp->childBegin()));         
+         IGeometryInfo* geoGap = (p_Gap)->geometry();
+         bool isIn=false;
+         Gaudi::XYZPoint point(xpos,ypos,0);
+         point.SetZ(geoGap->toGlobal(Gaudi::XYZPoint(0,0,0)).z());          
+         isIn = geoGap->isInside(point);
+         if(isIn)sc=StatusCode::SUCCESS;
+          
+      }
+       if(sc.isFailure()){
+        debug()<<" no gap found for muon hit" <<endreq;
       }else{      
+      
         pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
            ReturnADetElement(station,regNumber,chNumber));
         chamberIndex=(unsigned int)pChamber->chamberNumber();
@@ -755,7 +774,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         debug()<<" chamber number "<<pChamber->chamberNumber()
                <<" station number "<<pChamber->stationNumber()
                <<" region number "<<pChamber->regionNumber()<<
-          "position "<<xpos<<" "<<ypos<<" "<<endreq;        
+          " position "<<xpos<<" "<<ypos<<" "<<endreq;        
         hitInsideCha=true;
       } 
       tryPhi++;
@@ -777,8 +796,8 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
       if(gap>1)gap=1;      
       if(gap==1)gapHitTmp.push_back(m_gaps-i-1);
       allgap=allgap-gap*max;     
-      verbose()<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
-        max<<endreq;
+      //verbose()<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
+      //  max<<endreq;
       max=max/2;      
     }
     if(gapHitTmp.size()!=(unsigned int)multi+1) {
@@ -812,10 +831,12 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         xSlope = 1.0F;
         ySlope = 1.0F;
       }
+      verbose()<<" local slope "<<xSlope<<" "<<ySlope<<endreq;
       //define the z of the average gaps position
       float averageZ=0;
       StatusCode sc=calculateAverageGap(pChamber,firstGap,lastGap,xpos,ypos,
                                         averageZ);      
+      verbose()<<sc<<" "<<averageZ<<endreq;
       for(int igap=0;igap<=multi;igap++){
         int gapNumber=gapHit[igap];        
         Gaudi::XYZPoint entryGlobal;        
@@ -824,6 +845,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
                                 ySlope,averageZ,entryGlobal,
                                 exitGlobal,p_Gap);
+        verbose()<<"status code of calhitpos "<<sc<<endreq;
         if(sc.isSuccess()){
           unsigned int chamberTmp=(unsigned int)p_Gap->chamberNumber();
           unsigned int regionTmp=(unsigned int)p_Gap->regionNumber();
@@ -966,8 +988,8 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     float zhalfgap= gapBox->zHalfLength() ;
     float xhalfgap= gapBox->xHalfLength() ;
     float yhalfgap= gapBox->yHalfLength() ;
-    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
-             <<endmsg;    
+    //verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
+    //       <<endmsg;    
     Gaudi::XYZPoint poslocal= 
       (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
     float zcenter=poslocal.z();

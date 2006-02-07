@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== MuonBackground v2r0 2006-01-29 =====================
+! 2006-02-07 - Alessia Satta
+ - fix chamber/gao volume
+
 ! 2006-01-29 - Alessia Satta
  - Compatible with new event model, MuonDet . Not finalized, waiting for 
    the new tool that relates MCHit and collision 
