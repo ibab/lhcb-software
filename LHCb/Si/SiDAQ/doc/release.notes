@@ -2,6 +2,7 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+!=========================== SiDAQ v1r1 2006-02-07 =====================
 ! 2006-02-05 M Needham
  - Make the fracStripBits public in STClusterWord.h
 
@@ -13,7 +14,6 @@ Package manager : Matt Needham
    cluster bit was set).
  - commented out the unprotected std::cout in ADC word class
 
-!=========================== SiDAQ v1r1 2005-12-21 =====================
 ! 2005-12-19 M. Needham
   Add error flag to header word
 
