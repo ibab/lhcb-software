@@ -1,11 +1,8 @@
-// $Id: Generation.cpp,v 1.12 2006-02-07 00:15:32 robbep Exp $
+// $Id: Generation.cpp,v 1.13 2006-02-07 00:20:19 robbep Exp $
 // Include files 
 
 // local
 #include "Generation.h"
-
-// from Boost
-#include <boost/checked_delete.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
