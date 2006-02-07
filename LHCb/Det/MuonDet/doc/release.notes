@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.62 2006-02-06 21:15:25 asatta Exp $
+! $Id: release.notes,v 1.63 2006-02-07 11:32:40 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-07 - Alessio Sarti
+ - a fix in MuonChamberLayout.cpp: in getChamberNumber() propagated
+   yesterday's fix from Alessia
+
 ! 2006-02-06 - Alessia Satta
  - few fixes in DeMuonDetector.cpp and MuonChamberLayout.cpp: in 
    filleGeo(), sensDetID and tileChamber()

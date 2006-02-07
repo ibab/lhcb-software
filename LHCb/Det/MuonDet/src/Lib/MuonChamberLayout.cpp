@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.13 2006-02-06 21:04:38 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.14 2006-02-07 11:32:31 asarti Exp $
 // Include files 
 
 //Muon
@@ -362,7 +362,7 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
   //myTile.setLayer(0);
 
   myTile.setLayout(MuonLayout(m_cgX.at(reg),m_cgY.at(reg)));
-  if(debug)std::cout<<" "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<std::endl;
+  if(debug)std::cout<<"TileChamber:: "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<std::endl;
   
   //Chamber number is needed to find x,y
   unsigned int chN = chmb->chamberNumber();
@@ -558,7 +558,7 @@ sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d"
 
 	DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh ) ;
 
-	if(debug) std::cout<<"Filling chamber Pointer: "<<encode<<" "<<iS<<" "<<iR<<std::endl;
+	if(debug) std::cout<<"Filling chamber Pointer: "<<encode<<" "<<iS<<" "<<iR<<" "<<deChmb<<std::endl;
 	if(deChmb) {
 	  m_ChVec.at(encode) = deChmb;
 	} else {
@@ -611,7 +611,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
                                           double& y, double& deltay,
 					  double& z, double& deltaz){
   
-  bool m_debug = true;
+  bool m_debug = false;
   
   if( 0 == m_logVertGridX.size() ){
     std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<std::endl;
@@ -629,8 +629,8 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
   unsigned int region  = tile.region();
   MsgStream msg(msgSvc(), name());
   
-  std::cout << "Grid details:: regX " <<m_cgX.at(region)<<"; regY "<<m_cgY.at(region)<<
-    "; padX "<<m_padGridX[station*4 + region]<<"; padY "<<m_padGridY[station*4 + region]<<
+  if(m_debug) std::cout << "Grid details:: regX " <<m_cgX.at(region)<<" "<<tile.layout().xGrid()<<"; regY "<<tile.layout().yGrid()<<" "<<m_cgY.at(region)<<
+    " ; padX "<<m_padGridX[station*4 + region]<<"; padY "<<m_padGridY[station*4 + region]<<
     "; logHX "<<m_logHorizGridX[station*4 + region]<<"; logHY "<<m_logHorizGridY[station*4 + region]<<
     std::endl;
 
@@ -638,13 +638,8 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
   // currently chamber, logical channel, pad
   if( m_cgX.at(region) ==  tile.layout().xGrid() && 
       m_cgY.at(region) ==  tile.layout().yGrid() ){
-    // chambers
-    
-    if ( m_debug ) {
-      MsgStream msg(msgSvc(), name());
-      msg << MSG::DEBUG << "Found a tile laying out chambers" << endreq;
-    }
 
+    // chambers
     StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz,true);
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
@@ -863,10 +858,13 @@ StatusCode MuonChamberLayout::getXYZChamberTile(const LHCb::MuonTileID& tile,
   unsigned int station = tile.station();
   unsigned int region  = tile.region();
 
+  MsgStream msg(msgSvc(), name());
+
+  msg << MSG::DEBUG<<" Get XYZ Chamber Tile " <<chamberNum<<" "<<station<<" "<<region<<endreq;
+  
   StatusCode sc = getXYZChamber(station,region,chamberNum,
                                 x,deltax,y,deltay,z,deltaz,toGlob);
   if(!sc.isSuccess()){
-    MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to get chamber " << chamberNum << endreq;
   }
 
@@ -1303,10 +1301,27 @@ int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
   
   unsigned int chamberNumber = 0; // counts from 1 as per TDS
 
-  bool m_debug =true;
+  bool m_debug = false;
   
   //Look inside the grid
-  int enc = tile.nX()+4*m_cgX.at(tile.region())*tile.nY()+m_offSet.at(tile.region());
+  if(m_debug) std::cout<<" chNum  " <<chamberNumber<<" "<<tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<std::endl;
+  int fx,fy;
+  //Correct for quarter information
+  if( tile.quarter() == 0){
+    fx = tile.nX() + m_cgX.at(tile.region())*2;
+    fy = tile.nY() + m_cgY.at(tile.region())*2;
+  } else if ( tile.quarter() == 1){
+    fx = tile.nX() + m_cgX.at(tile.region())*2;
+    fy = - 1 - tile.nY() + m_cgY.at(tile.region())*2;
+  } else if ( tile.quarter() == 2){
+    fx = - 1 - tile.nX() + m_cgX.at(tile.region())*2;
+    fy = - 1 - tile.nY() + m_cgY.at(tile.region())*2;
+  } else if ( tile.quarter() == 3){
+    fx = - 1 - tile.nX() + m_cgX.at(tile.region())*2;
+    fy = tile.nY() + m_cgY.at(tile.region())*2;
+  }
+  
+  int enc = fx+4*m_cgX.at(tile.region())*fy+m_offSet.at(tile.region());
   chamberNumber = m_chamberGrid.at(enc);
 
   if ( m_debug ) {
