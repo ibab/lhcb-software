@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.18 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.19 2006-02-07 13:40:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,6 +31,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
   : RichRecToolBase   ( type, name, parent ),
     m_rayTrace        ( 0 ),
     m_ckAngle         ( 0 ),
+    m_richSys         ( 0 ),
     m_nGeomEff        ( 0 ),
     m_nGeomEffBailout ( 0 ),
     m_pdInc           ( 0 ),
@@ -59,7 +60,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
   if ( m_hpdCheck )
   {
-    acquireTool( "RichDetNumberingTool", m_hpdTool, 0, true );
+    m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
              StatusCode::SUCCESS );
   }
@@ -140,7 +141,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
         {
 
           // Check HPD status
-          if ( m_hpdCheck && !m_hpdTool->hpdIsActive(photon.smartID()) ) continue;
+          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID()) ) continue;
 
           // count detected photons
           ++nDetect;
@@ -235,7 +236,7 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
                                                m_traceMode ) )
         {
           // Check HPD status
-          if ( m_hpdCheck && !m_hpdTool->hpdIsActive(photon.smartID()) ) continue;
+          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID()) ) continue;
           // count detected
           ++nDetect;
         }

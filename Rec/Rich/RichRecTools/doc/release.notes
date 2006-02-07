@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-02-07 - Chris Jones
+ - Use RichDet instead of RichDAQ to get HPD numbering data
+
 ! 2006-01-27 - Christopher Rob Jones
  - Import "Fast" RichTrackSegment creator from RichTrgTools package and update
    to the new Gaudi version. RichTrgTools is now effectively obsoleted.
