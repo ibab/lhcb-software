@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidate.cpp,v 1.1 2005-12-15 08:35:42 ocallot Exp $
+// $Id: L0CaloCandidate.cpp,v 1.2 2006-02-07 09:43:18 ocallot Exp $
 // Include files 
 
 #include "Kernel/SystemOfUnits.h"
@@ -54,11 +54,11 @@ MsgStream& LHCb::L0CaloCandidate::fillStream( MsgStream& msg ) const {
 //=========================================================================
 //  Operators for printing on Gaudi Stream
 //=========================================================================
-MsgStream& operator<<( MsgStream& ms, const LHCb::L0CaloCandidate& cand) {
+MsgStream& LHCb::operator<<( MsgStream& ms, const LHCb::L0CaloCandidate& cand) {
   return cand.fillStream( ms );
 }
 
-MsgStream& operator<<( MsgStream& ms, const LHCb::L0CaloCandidate* cand) {
+MsgStream& LHCb::operator<<( MsgStream& ms, const LHCb::L0CaloCandidate* cand) {
   if ( 0 != cand ) {
     return cand->fillStream( ms );
   }
