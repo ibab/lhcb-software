@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $
+# $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2006/02/07 14:34:25  ibelyaev
+#  fix type
+#
 # =============================================================================
 
 import sys,os,os.path,datetime  
@@ -17,7 +20,7 @@ def _loadDict_ ( name ) :
     if 'win32' != sys.platform and 'lib' != name[:3] : name = 'lib' + name
     return PyCintex.loadDict ( name )
 
-_loadDict_( 'libRelationsDict' )
+_loadDict_( 'RelationsDict' )
 
 _gbl=PyCintex.makeNamespace('')
 
@@ -90,9 +93,9 @@ class RelW2D ( Rel2D ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.3 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.4 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -156,9 +159,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
