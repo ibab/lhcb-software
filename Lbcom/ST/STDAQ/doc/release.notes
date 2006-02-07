@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r2 2006-02-07 =======================
 ! 2006-02-07 M. Needham
  - Changes for new cluster classes
 
