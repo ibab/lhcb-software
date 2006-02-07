@@ -1,6 +1,6 @@
-// $Id: RelationWeighted.h,v 1.7 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.8 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -40,8 +40,9 @@ namespace Relations
  *  @date   28/01/2002
  */
   template<class FROM, class TO, class WEIGHT>
-  class RelationWeighted :
-    public IRelationWeighted<FROM,TO,WEIGHT> 
+  class RelationWeighted 
+    : public BaseWeightedTable  
+    , public IRelationWeighted<FROM,TO,WEIGHT> 
   {
     
   public:
@@ -79,7 +80,8 @@ namespace Relations
     /// the standard/default constructor
     RelationWeighted 
     ( const size_t reserve = 0 ) 
-      : IBase         (         ) 
+      : BaseWeightedTable () 
+      , IBase         (         ) 
       , m_direct      ( reserve ) 
       , m_inverse_aux ( 0       ) 
     {};
@@ -89,7 +91,8 @@ namespace Relations
      */
     RelationWeighted 
     ( const IDirect& copy ) 
-      : IBase() 
+      : BaseWeightedTable () 
+      , IBase() 
       , m_direct      ( copy ) 
       , m_inverse_aux ( 0    ) 
     {} ;
@@ -102,7 +105,8 @@ namespace Relations
     RelationWeighted
     ( const IInverse&    inv     , 
       const int          flag  ) 
-      : IBase         (   ) 
+      : BaseWeightedTable () 
+      , IBase         (   ) 
       , m_direct      ( inv , flag ) 
       , m_inverse_aux ( 0 )  
     {};
@@ -113,7 +117,8 @@ namespace Relations
      */
     RelationWeighted 
     ( const OwnType& copy   ) 
-      : IBase         ( copy          ) 
+      : BaseWeightedTable ( copy ) 
+      , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )
       , m_inverse_aux ( 0             ) 
     {};

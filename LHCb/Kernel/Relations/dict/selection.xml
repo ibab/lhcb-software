@@ -1,0 +1,16 @@
+<lcgdict>
+
+  <function pattern="Relations::*" />
+
+  <class    name="Relations::InstanceCounter" />
+  <class    name="Relations::BaseEntry" /> 
+  <class    name="Relations::BaseRange" /> 
+  <class    name="Relations::BaseTable" /> 
+  <class    name="Relations::BaseWeightedEntry" /> 
+  <class    name="Relations::BaseWeightedRange" /> 
+  <class    name="Relations::BaseWeightedTable" /> 
+
+  <class    name="IRelationBase" />
+  <class    name="IRelationWeightedBase" />
+
+</lcgdict>

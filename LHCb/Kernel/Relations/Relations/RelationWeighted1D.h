@@ -1,14 +1,8 @@
-// $Id: RelationWeighted1D.h,v 1.5 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/01/27 13:25:47  ibelyaev
-//  New methods: inRange/i_inRange and i_direct/i_inverse
-//
-// Revision 1.3  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-// 
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -47,9 +41,10 @@ namespace LHCb
    *  @date   28/01/2002
    */
   template<class FROM, class TO, class WEIGHT>
-  class RelationWeighted1D :
-    public DataObject,
-    public IRelationWeighted<FROM,TO,WEIGHT>
+  class RelationWeighted1D 
+    : public DataObject
+    , public Relations::BaseWeightedTable 
+    , public IRelationWeighted<FROM,TO,WEIGHT>
   {
     
   public:
@@ -81,6 +76,7 @@ namespace LHCb
     RelationWeighted1D 
     ( const size_t reserve = 0 ) 
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      () 
       , m_base     ( reserve ) 
     {
@@ -95,6 +91,7 @@ namespace LHCb
     RelationWeighted1D 
     ( const IDirect& copy  )
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      () 
       , m_base     ( copy )
     {
@@ -112,6 +109,7 @@ namespace LHCb
     ( const IInverse& inv  , 
       const int       flag ) 
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      () 
       , m_base     ( inv  , flag )
     {
@@ -126,6 +124,7 @@ namespace LHCb
     RelationWeighted1D 
     ( const OwnType& copy  )
       : DataObject ( copy         ) 
+      , Relations::BaseWeightedTable ( copy   ) 
       , IBase      ( copy         ) 
       , m_base     ( copy.m_base  )
     {
@@ -157,12 +156,8 @@ namespace LHCb
      */
     static  const CLID& classID() 
     {
-      static const CLID s_clid = 
-        Relations::clid( "RelationWeighted1D"    , 
-                         FromTypeTraits::   id() , 
-                         ToTypeTraits::     id() , 
-                         WeightTypeTraits:: id() ,
-                         TypeTraits::    version , 0 ) ;
+      static const CLID s_clid =
+        Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
     };
     

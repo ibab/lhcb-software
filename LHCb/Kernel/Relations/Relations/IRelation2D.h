@@ -1,14 +1,8 @@
-// $Id: IRelation2D.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: IRelation2D.h,v 1.2 2006-02-07 09:22:23 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/25 08:44:03  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_IRELATION2D_H 
 #define RELATIONS_IRELATION2D_H 1
@@ -80,11 +74,7 @@ public:
   static const InterfaceID& interfaceID()
   {
     static const InterfaceID s_iid  =
-      Relations::interfaceID( "IRelation2D"        ,
-                              FromTypeTraits::id() ,
-                              ToTypeTraits::id  () , 
-                              0                    ,
-                              TypeTraits::version  , 0 );
+      Relations::interfaceID( System::typeinfoName(typeid(OwnType)) );
     return s_iid ;
   };
 

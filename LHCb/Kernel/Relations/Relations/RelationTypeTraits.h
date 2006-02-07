@@ -1,20 +1,8 @@
-// $Id: RelationTypeTraits.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationTypeTraits.h,v 1.2 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2003/05/15 17:21:33  ibelyaev
-//  fix for different ivalid index treatments for Linux and Win
-//
-// Revision 1.13  2003/05/15 15:22:10  ibelyaev
-//  few modification to conform SLT interface for 'Range' types
-//
-// Revision 1.12  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.11  2002/10/29 08:53:29  ibelyaev
-//  add the reverse itereators to relations
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -31,7 +19,11 @@
 
 namespace Relations
 {
-
+  
+  struct BaseEntry {} ;
+  struct BaseRange {} ;
+  struct BaseTable {} ;
+  
   /** @struct RelationTypeTraits RelationTypeTraits.h
    *
    *  Type traits structure for definition of 
@@ -73,13 +65,16 @@ namespace Relations
      *  @date   27/01/2002
      */
     struct Entry:
+      public BaseEntry , 
       public std::pair<From,To>
     {
       /// shortcut to the own base
       typedef std::pair<From,To>  Pair ;
       /// constructor
       Entry( const From& f = From () , 
-             const To&   t = To   () ): Pair( f , t ) {};
+             const To&   t = To   () )
+       : BaseEntry() 
+       , Pair( f , t ) {};
       /// accessor to the "FROM" object ( const     version )
       inline From  from   () const { return Pair::first   ; }
       /// accessor to the "FROM" object ( non-const version )
@@ -158,7 +153,9 @@ namespace Relations
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   27/01/2002
      */
-    struct Range : public RangeBase 
+    struct Range 
+      : public BaseRange 
+      , public RangeBase 
     {
       /// short cut for own base class
       typedef RangeBase Base;
@@ -170,9 +167,10 @@ namespace Relations
       typedef typename Entries::const_reference        const_reference        ;
       typedef typename Entries::value_type             value_type             ;
       /// default constructor
-      Range()                                : Base()              {} ;
+      Range() : BaseRange() , Base()              {} ;
       /// constructor
-      Range( iterator begin , iterator end ) : Base( begin , end ) {} ;
+      Range( iterator begin , iterator end ) 
+	: BaseRange() , Base( begin , end ) {} ;
       /// the aliases for standard "first" and "second"
       /// begin-iterator (    const version)
       inline iterator         begin  () const { return Base::first           ; }

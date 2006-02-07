@@ -1,8 +1,11 @@
-// $Id: RelationsDict.h,v 1.6 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationsDict.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/02 14:47:56  ibelyaev
+//  many changes: see doc/release.notes
+// 
 // ============================================================================
 #ifndef RELATIONS_RELATIONSDICT_H 
 #define RELATIONS_RELATIONSDICT_H 1
@@ -65,8 +68,8 @@ namespace GaudiDict
     typedef typename LHCb::Relation1D<FROM,TO>                    T1 ;
     typedef typename LHCb::Relation1D<FROM,TO>::Range             T2 ;
     typedef typename LHCb::Relation1D<FROM,TO>::Base              T3 ;
-    typedef typename LHCb::Relation1D<FROM,TO>::Base::Base        T4 ;
-    typedef typename LHCb::Relation1D<FROM,TO>::Base::Base::Entry T5 ;
+    typedef typename T3::Base                                     T4 ;
+    typedef typename T4::Entry                                    T5 ;
     //
     T1 m_t1 ;
     T2 m_t3 ;
@@ -81,9 +84,9 @@ namespace GaudiDict
     typedef typename LHCb::Relation2D<TO,FROM>                          T1 ;
     typedef typename LHCb::Relation2D<TO,FROM>::Range                   T2 ;
     typedef typename LHCb::Relation2D<TO,FROM>::Base                    T3 ;
-    typedef typename LHCb::Relation2D<TO,FROM>::Base::Base              T4 ;
-    typedef typename LHCb::Relation2D<TO,FROM>::Base::Base::Base        T5 ;
-    typedef typename LHCb::Relation2D<TO,FROM>::Base::Base::Base::Entry T6 ;
+    typedef typename T3::Base                                           T4 ;
+    typedef typename T4::Base                                           T5 ;
+    typedef typename T5::Entry                                          T6 ;
     //
     T1 m_t1 ;
     T2 m_t2 ;
@@ -100,8 +103,8 @@ namespace GaudiDict
     typedef typename LHCb::RelationWeighted1D<FROM,TO,WEIGHT>                    T1 ;
     typedef typename LHCb::RelationWeighted1D<FROM,TO,WEIGHT>::Range             T2 ;
     typedef typename LHCb::RelationWeighted1D<FROM,TO,WEIGHT>::Base              T3 ;
-    typedef typename LHCb::RelationWeighted1D<FROM,TO,WEIGHT>::Base::Base        T4 ;
-    typedef typename LHCb::RelationWeighted1D<FROM,TO,WEIGHT>::Base::Base::Entry T5 ;
+    typedef typename T3::Base                                                    T4 ;
+    typedef typename T4::Entry                                                   T5 ;
     //
     T1 m_t1 ;
     T2 m_t3 ;
@@ -116,9 +119,9 @@ namespace GaudiDict
     typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>                          T1 ;
     typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>::Range                   T2 ;
     typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>::Base                    T3 ;
-    typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>::Base::Base              T4 ;
-    typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>::Base::Base::Base        T5 ;
-    typedef typename LHCb::RelationWeighted2D<TO,FROM,WEIGHT>::Base::Base::Base::Entry T6 ;
+    typedef typename T3::Base                                                          T4 ;
+    typedef typename T4::Base                                                          T5 ;
+    typedef typename T5::Entry                                                         T6 ;
     //
     T1 m_t1 ;
     T2 m_t2 ;

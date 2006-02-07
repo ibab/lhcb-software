@@ -1,20 +1,8 @@
-// $Id: IRelation.h,v 1.2 2004-11-22 09:05:00 cattanem Exp $
+// $Id: IRelation.h,v 1.3 2006-02-07 09:22:23 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2004/07/21 07:57:25  cattanem
-// first import of Kernel/Relations
-//
-// Revision 1.6  2004/01/14 15:13:02  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.5  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.4  2002/05/10 12:29:42  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_IRELATION_H
 #define RELATIONS_IRELATION_H 1
@@ -199,15 +187,11 @@ public:
    *  @return the uniqie interface identifier
    */
   static const InterfaceID& interfaceID()
-  {
+    {
     static const InterfaceID s_iid  =
-      Relations::interfaceID( "IRelation"          ,
-                              FromTypeTraits::id() ,
-                              ToTypeTraits::id  () , 
-                              0                    ,
-                              TypeTraits::version  , 0 );
+      Relations::interfaceID( System::typeinfoName( typeid(OwnType) ) ) ;
     return s_iid ;
-  };
+    };
 
 protected:
   

@@ -1,14 +1,8 @@
-// $Id: Relation2Weighted.h,v 1.5 2006-01-27 13:25:47 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2005/03/14 09:47:14  cattanem
-// fix doxygen warnings
-//
-// Revision 1.3  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-//
 // =============================================================================
 #ifndef RELATIONS_Relation2Weighted_H 
 #define RELATIONS_Relation2Weighted_H 1
@@ -66,8 +60,9 @@ namespace Relations
    */
   
   template<class FROM,class TO,class WEIGHT>
-  class Relation2Weighted:
-    public IRelationWeighted2D<FROM,TO,WEIGHT> 
+  class Relation2Weighted
+    : public BaseWeightedTable 
+    , public IRelationWeighted2D<FROM,TO,WEIGHT> 
   {  
   public:
     /// short cut for own     type
@@ -101,7 +96,8 @@ namespace Relations
     /// the default constructor
     Relation2Weighted
     ( const size_t reserve = 0  )
-      : IBase     (         )   
+      : BaseWeightedTable () 
+      , IBase     (         )   
       , m_direct  ( reserve ) 
       , m_inverse ( reserve ) 
     {
@@ -115,7 +111,8 @@ namespace Relations
      */
     Relation2Weighted 
     ( const DirectType& copy ) 
-      : IBase     (          ) 
+      : BaseWeightedTable () 
+      , IBase     (          ) 
       , m_direct  ( copy     ) 
       , m_inverse ( copy , 1 ) 
     {
@@ -131,7 +128,8 @@ namespace Relations
     Relation2Weighted
     ( const InverseType& copy , 
       const int          flag ) 
-      : IBase     (             ) 
+      : BaseWeightedTable () 
+      , IBase     (             ) 
       , m_direct  ( copy , flag ) 
       , m_inverse ( copy        ) 
     {
@@ -146,7 +144,8 @@ namespace Relations
      */
     Relation2Weighted 
     ( const OwnType& copy ) 
-      : IBase     ( copy           ) 
+      : BaseWeightedTable ( copy   ) 
+      , IBase     ( copy           ) 
       , m_direct  ( copy.m_direct  )
       , m_inverse ( copy.m_inverse ) 
     {

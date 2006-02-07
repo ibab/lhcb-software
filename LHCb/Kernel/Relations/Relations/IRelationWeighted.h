@@ -1,6 +1,6 @@
-// $Id: IRelationWeighted.h,v 1.2 2006-01-27 13:25:47 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.3 2006-02-07 09:22:23 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -358,11 +358,7 @@ public:
   static const InterfaceID& interfaceID()
   {
     static const InterfaceID s_iid =
-      Relations::interfaceID( "IRelationWeighted"     ,
-                              FromTypeTraits::   id() ,
-                              ToTypeTraits::     id() ,
-                              WeightTypeTraits:: id() ,
-                              TypeTraits::version     , 0 ) ;
+      Relations::interfaceID( System::typeinfoName(typeid(OwnType))) ;
     return s_iid ;
   };
 

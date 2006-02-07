@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.9 2006-02-03 08:40:50 cattanem Exp $
+# $Id: requirements,v 1.10 2006-02-07 09:22:24 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -8,21 +8,35 @@ manager I.Belyaev
 
 version v3r0
 
+# ============= structure =====================================================
+branches      Relations doc cmt src dict python
+
 # ============== own includes =================================================
 include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
 use              GaudiAlg  v*
 
+# ============== Produce LCG dictionary =======================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=Relations                              \
+                  headerfiles=$(RELATIONSROOT)/dict/selection.h     \
+                  selectionfile=$(RELATIONSROOT)/dict/selection.xml
+
 # ============== constituents =================================================
 library          Relations *.cpp
 
 # ============== patterns =====================================================
-apply_pattern    linker_library library=Relations
+apply_pattern    component_library library=RelationsDict
+apply_pattern    linker_library    library=Relations
 
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
+
+private
+use Python v* LCG_Interfaces -no_auto_import 
+use Reflex v* LCG_Interfaces -no_auto_import 
 
 # =============================================================================
 # The END 

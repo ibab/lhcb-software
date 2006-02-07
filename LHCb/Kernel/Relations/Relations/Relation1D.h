@@ -1,11 +1,8 @@
-// $Id: Relation1D.h,v 1.4 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.5 2006-02-07 09:22:24 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-//
 // ============================================================================
 #ifndef RELATIONS_Relation1D_H
 #define RELATIONS_Relation1D_H 1
@@ -62,9 +59,10 @@ namespace LHCb
    */
   
   template<class FROM,class TO>
-  class Relation1D :
-    public  DataObject,
-    public  IRelation<FROM,TO>
+  class Relation1D 
+    : public  DataObject
+    , public  Relations::BaseTable 
+    , public  IRelation<FROM,TO>
   {
     
   public:
@@ -95,8 +93,9 @@ namespace LHCb
     Relation1D 
     ( const size_t reserve = 0 ) 
       : DataObject () 
-        , IBase      () 
-        , m_base     ( reserve )  
+      , Relations::BaseTable  () 
+      , IBase      () 
+      , m_base     ( reserve )  
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
@@ -108,9 +107,10 @@ namespace LHCb
      */
     Relation1D 
     ( const IDirect& copy  )
-      : DataObject () 
-        , IBase      () 
-        , m_base     ( copy )
+      : DataObject ()
+      , Relations::BaseTable  ()  
+      , IBase      () 
+      , m_base     ( copy )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
@@ -126,8 +126,9 @@ namespace LHCb
     ( const IInverse& inv  , 
       const int       flag ) 
       : DataObject () 
-        , IBase      () 
-        , m_base     ( inv  , flag )
+      , Relations::BaseTable  () 
+      , IBase      () 
+      , m_base     ( inv  , flag )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
@@ -139,7 +140,8 @@ namespace LHCb
      */
     Relation1D 
     ( const OwnType& copy  )
-      : DataObject ( copy         ) 
+      : DataObject ( copy         )
+      , Relations::BaseTable  ( copy         )  
       , IBase      ( copy         ) 
       , m_base     ( copy.m_base  )
     {
@@ -172,11 +174,7 @@ namespace LHCb
     static  const CLID& classID()
     {
       static const CLID s_clid =
-        Relations::clid( "Relation1D"             ,
-                         FromTypeTraits:: id()    ,
-                         ToTypeTraits::   id()    ,
-                         0                        ,
-                         TypeTraits::     version , 0 );
+        Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
     };
     

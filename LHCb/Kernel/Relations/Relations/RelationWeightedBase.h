@@ -1,6 +1,6 @@
-// $Id: RelationWeightedBase.h,v 1.7 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.8 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -44,7 +44,7 @@ namespace Relations
    *  @date   27/01/2002
    */
   template<class FROM, class TO, class WEIGHT>
-  class RelationWeightedBase
+    class RelationWeightedBase : public BaseWeightedTable 
   {
   public:
     
@@ -484,7 +484,8 @@ namespace Relations
      */
     RelationWeightedBase
     ( const size_t reserve = 0 )
-      : m_entries () 
+      : BaseWeightedTable () 
+      , m_entries () 
     { if ( 0 < reserve ) { i_reserve ( reserve ) ; } };
     
     /// destructor (virtual)
@@ -495,7 +496,8 @@ namespace Relations
      */
     RelationWeightedBase
     ( const IDirect& copy )
-      : m_entries () 
+      : BaseWeightedTable () 
+      , m_entries         () 
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
@@ -509,7 +511,8 @@ namespace Relations
     RelationWeightedBase
     ( const IInverse&    inv    ,
       const int       /* flag*/ )
-      : m_entries ()
+      : BaseWeightedTable () 
+      , m_entries         ()
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
@@ -527,7 +530,8 @@ namespace Relations
      */
     RelationWeightedBase
     ( const OwnType& copy )
-      : m_entries ( copy.m_entries ) 
+      : BaseWeightedTable ( copy ) 
+      , m_entries         ( copy.m_entries ) 
     {};
     
   private:

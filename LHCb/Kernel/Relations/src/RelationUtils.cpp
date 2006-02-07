@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.3 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.4 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -32,30 +32,13 @@
  *  @date   28/01/2002
  * 
  *  @param id       interface name
- *  @param idFrom   ID for the first ("FROM") object  
- *  @param idTo     ID for teh second("TO")   object
- *  @param weight   ID of weight class 
- *  @param major    interface major version 
- *  @param minor    interface minor version 
  */
 // ============================================================================
 InterfaceID Relations::interfaceID 
-( const std::string&  id       ,
-  const unsigned long idFrom   ,
-  const unsigned long idTo     ,
-  const unsigned long weight   ,
-  const unsigned long major    , 
-  const unsigned long minor    )
+( const std::string&  name     ) 
 {
-  std::string name( id ) ;
-  char a[128];
-  name     += "<" + std::string( a , a + sprintf( a , "%d" , (int) idFrom ) ) ;
-  name     += "," + std::string( a , a + sprintf( a , "%d" , (int) idTo   ) ) ;
-  if( 0 != weight  ) 
-    { name += "," + std::string( a , a + sprintf( a , "%d" , (int) weight ) ) ;}
-  name += ">" ;
-  ///
-  return InterfaceID( name.c_str() , major , minor );
+  //
+  return InterfaceID( name.c_str() , 1 , 0  );
 };
 
 // ============================================================================
@@ -67,30 +50,12 @@ InterfaceID Relations::interfaceID
  *  @date   28/01/2002
  * 
  *  @param id       object name
- *  @param idFrom   ID for the first ("FROM") object  
- *  @param idTo     ID for the second("TO")   object
- *  @param weight   ID of weight class 
- *  @param major    major version 
- *  @param minor    minor version 
- */
+  */
 // ============================================================================
 CLID        Relations::clid        
-( const std::string&  id       ,
-  const unsigned long idFrom   ,
-  const unsigned long idTo     ,
-  const unsigned long weight   , 
-  const unsigned long major    , 
-  const unsigned long minor    ) 
+( const std::string&  name     )
 {
-  std::string name( id ) ;
-  char a[128];
-  name     += "<" + std::string( a , a + sprintf( a , "%d" , (int) idFrom ) ) ;
-  name     += "," + std::string( a , a + sprintf( a , "%d" , (int) idTo   ) ) ;
-  if( 0 != weight  ) 
-    { name += "," + std::string( a , a + sprintf( a , "%d" , (int) weight ) ) ;}
-  name += ">" ;
-  //
-  CLID cl = InterfaceID( name.c_str() , major , minor ).id() ;
+  CLID cl = Relations::interfaceID( name ).id() ;
   // set ObjectVector bit to NULL 
   cl = ~CLID_ObjectVector & cl ;
   // set ObjectList   bit to NULL 
@@ -100,91 +65,8 @@ CLID        Relations::clid
 // ============================================================================
 
 // ============================================================================
-/// constructor 
-// ============================================================================
-Relations::InstanceCounter::InstanceCounter() : m_counters() {}
-// ============================================================================
-
-// ============================================================================
-/// destructor 
-// ============================================================================
-Relations::InstanceCounter::~InstanceCounter() 
-{ report () ; m_counters.clear() ; };
-// ============================================================================
-
-// ============================================================================
-/** make a report 
- *  @return the total number of alive objects 
- */
-// ============================================================================
-Relations::InstanceCounter::counter 
-Relations::InstanceCounter::report () const 
-{
-  counter total = 0 ;
-  for( Counters::iterator record = m_counters.begin() ; 
-       m_counters.end() != record ; ++record ) 
-    {
-      if ( 0 == record->second ) { continue ; }  
-      std::cout << "RelationUtils::InstanceCounter " 
-                << " INFO \t #" 
-                << record->second 
-                << " objects of type \t '"
-                << record->first 
-                << "' \t still alive " << std::endl ;
-      ++total ;
-    }
-  return total ;
-};
-// ============================================================================
-
-// ============================================================================
-/** increment the counter
- *  @param type object type 
- *  @return the current value of counter
- */
-// ============================================================================
-Relations::InstanceCounter::counter 
-Relations::InstanceCounter::increment ( const std::string& type ) 
-{ return ++m_counters[type] ;}    
-// ============================================================================
-
-// ============================================================================
-/** decrement the counter
- *  @param type object type 
- *  @return the current value of counter
- */
-// ============================================================================
-Relations::InstanceCounter::counter 
-Relations::InstanceCounter::decrement ( const std::string& type ) 
-{ return --m_counters[type] ;}    
-// ============================================================================
-
-
-// ============================================================================
-/** get the current value of the counter
- *  @param type object type 
- *  @return the current value of counter
- */
-// ============================================================================
-Relations::InstanceCounter::counter 
-Relations::InstanceCounter::count     ( const std::string& type ) const 
-{ return   m_counters[type] ;}
-// ============================================================================
-
-// ============================================================================
-// the accessor to static instance
-// ============================================================================
-Relations::InstanceCounter&
-Relations::InstanceCounter::instance() 
-{
-  static Relations::InstanceCounter s_counter ;
-  return s_counter ;
-};
-// ============================================================================
-
-// ============================================================================
-/** @fb guid 
- *  simple funtion to convers CLID (Gaudi unique class identifier) 
+/** @fn guid 
+ *  simple funtion to convert CLID (Gaudi unique class identifier) 
  *  to GUID (POOL unique class identifier)
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -201,6 +83,21 @@ std::string Relations::guid ( const CLID& clID )
   return std::string ( clid_txt , 64  ) ;
 };
 // ============================================================================
+/** @fn guid 
+ *  simple funtion to convers CLID (Gaudi unique class identifier) 
+ *  to GUID (POOL unique class identifier)
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-01-30
+ *
+ *  @param clid class name 
+ *  @return POOL unique class identifier 
+ */
+// ============================================================================
+std::string Relations::guid ( const std::string& name  )
+{
+  return Relations::guid( Relations::clid( name ) ) ;
+} ;
 
 // ============================================================================
 // The End 

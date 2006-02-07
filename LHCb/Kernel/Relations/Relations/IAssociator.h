@@ -1,8 +1,11 @@
-// $Id: IAssociator.h,v 1.3 2005-01-27 14:48:48 cattanem Exp $
+// $Id: IAssociator.h,v 1.4 2006-02-07 09:22:23 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/01/27 14:48:48  cattanem
+// v2r2
+//
 // Revision 1.2  2004/11/19 15:01:22  ibelyaev
 //  substitute explict algorithm management by 'Data-On-Demand' service
 //
@@ -199,14 +202,10 @@ public:
    *  @return the uniqie interface identifier
    */
   static const InterfaceID& interfaceID()
-  {
-    static const InterfaceID s_iid  =
-      Relations::interfaceID( "IAssociator"                     ,
-                              DirectType::FromTypeTraits::id () ,
-                              DirectType::ToTypeTraits::id   () , 
-                              0                                 ,
-                              DirectType::TypeTraits::  version , 0 );
-    return s_iid ;
+    {
+      static const InterfaceID s_iid  =
+	Relations::interfaceID( System::typeinfoName( typeid(OwnType) ) ) ;
+      return s_iid ;
   };
   
 protected:

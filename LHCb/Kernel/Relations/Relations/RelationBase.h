@@ -1,11 +1,8 @@
-// $Id: RelationBase.h,v 1.6 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2005/02/16 19:59:35  ibelyaev
-//  few minor fixes to enable 'lcgdict' processing
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -46,7 +43,7 @@ namespace Relations
    *  @date   27/01/2002
    */  
   template<class FROM,class TO>
-  class RelationBase
+  class RelationBase : BaseTable 
   {  
   public:
     
@@ -136,13 +133,13 @@ namespace Relations
     ( const From&      object1 , 
       const To&        object2 ) 
     {
-      const Less _less = Less() ;
+      Less _less_ = Less() ;
       // look for existing relations 
       const Entry ent ( object1 , object2 ) ;
       iterator it = std::lower_bound( m_entries.begin () , 
-                                      m_entries.end   () , ent , _less ) ;
+                                      m_entries.end   () , ent , _less_ ) ;
       // the relation does exist ! 
-      if( m_entries.end () != it && !_less( ent , *it ) ) 
+      if( m_entries.end () != it && !_less_( ent , *it ) ) 
         { return StatusCode::FAILURE; }
       // insert new relation !
       m_entries.insert( it , ent ) ;
@@ -292,7 +289,8 @@ namespace Relations
      */ 
     RelationBase
     ( const size_type reserve = 0 ) 
-      : m_entries () 
+      : BaseTable () 
+      , m_entries () 
     { if ( 0 < reserve ) { i_reserve( reserve ) ; } ; };
     
     /** constructor from any "direct" interface 
@@ -300,7 +298,8 @@ namespace Relations
      */
     RelationBase
     ( const IDirect& copy ) 
-      : m_entries () 
+      : BaseTable () 
+      , m_entries () 
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
@@ -314,7 +313,8 @@ namespace Relations
     RelationBase
     (  const IInverse&   inv     , 
        const int      /* flag */ ) 
-      : m_entries ()
+      : BaseTable ()  
+      , m_entries ()
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
@@ -333,7 +333,8 @@ namespace Relations
      */
     RelationBase
     ( const OwnType& copy ) 
-      : m_entries ( copy.m_entries ) 
+      : BaseTable ( copy ) 
+      , m_entries ( copy.m_entries ) 
     {} ;
     
   private:

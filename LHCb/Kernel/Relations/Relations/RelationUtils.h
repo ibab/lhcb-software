@@ -1,4 +1,4 @@
-// $Id: RelationUtils.h,v 1.2 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.3 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -20,46 +20,40 @@ namespace Relations
    *  funtion to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
    *  
+   *  @code
+   * 
+   *  InterfaceID id = Relations::interfaceID( System::typeinfoName( typeid(TYPE) ) ) ;
+   *
+   *  @endcode 
+   * 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @date   28/01/2002
    * 
-   *  @param name     interface name
-   *  @param idFrom   ID for the first ("FROM") object  
-   *  @param idTo     ID for the second("TO")   object
-   *  @param weight   ID of weight class 
-   *  @param major    interface major version 
-   *  @param minor    interface minor version 
+   *  @param name     class name 
+   *  @return unique(?) interface ID 
    */
-  InterfaceID interfaceID ( const std::string&  id           ,
-                            const unsigned long idFrom       ,
-                            const unsigned long idTo         ,
-                            const unsigned long weight  = 0  ,
-                            const unsigned long major   = 0  , 
-                            const unsigned long minor   = 0  ) ;
+  InterfaceID interfaceID ( const std::string& name ) ;
   
   /** @fn clid 
    *
    *  function to create the uniqie relation 
-   *  clid from object name, CLIDs and types 
+   *  clid from the object name
    *  
+   *  @code
+   * 
+   *  CLID id = Relations::clid( System::typeinfoName( typeid(TYPE) ) ) ;
+   *
+   *  @endcode 
+   * 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @date   28/01/2002
    * 
    *  @param name     object name
-   *  @param idFrom   ID for the first ("FROM") object  
-   *  @param idTo     ID for teh second("TO")   object
-   *  @param weight   ID of weight class 
-   *  @param major    major version 
-   *  @param minor    minor version 
+   *  @return unique(?) interface ID 
    */
-  CLID        clid        ( const std::string&  id           ,
-                            const unsigned long idFrom   = 0 ,
-                            const unsigned long idTo     = 0 ,
-                            const unsigned long weight   = 0 , 
-                            const unsigned long major    = 0 ,
-                            const unsigned long minor    = 0 ) ;
-
-  /** @fb guid 
+  CLID        clid   ( const std::string&  name  ) ;
+  
+  /** @fn guid 
    *  simple funtion to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
@@ -70,23 +64,35 @@ namespace Relations
    *  @return POOL unique class identifier 
    */
   std::string guid ( const CLID& clID ) ;
+
+  /** @fn guid 
+   *  simple funtion to convers CLID (Gaudi unique class identifier) 
+   *  to GUID (POOL unique class identifier)
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-01-30
+   *
+   *  @param clid class name 
+   *  @return POOL unique class identifier 
+   */
+  std::string guid ( const std::string& name ) ;
   
   ///
   class InstanceCounter
-  {
-  public:
-    typedef long                          counter  ;
-    typedef std::map<std::string,counter> Counters ;
-  public:
-    
+    {
+    public:
+      typedef long                          counter  ;
+      typedef std::map<std::string,counter> Counters ;
+    public:
+      
     /// the accessor to static istance 
-    static InstanceCounter& instance() ;
-
-    /** increment the counter
-     *  @param type object type 
-     *  @return the current value of counter
-     */
-    counter increment ( const std::string& type )       ;
+      static InstanceCounter& instance() ;
+      
+      /** increment the counter
+       *  @param type object type 
+       *  @return the current value of counter
+       */
+      counter increment ( const std::string& type )       ;
     
     /** increment the counter
      *  @param type object type 

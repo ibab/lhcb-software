@@ -1,6 +1,6 @@
-// $Id: Relation.h,v 1.6 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: Relation.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
@@ -58,7 +58,7 @@ namespace Relations
    */
   
   template<class FROM,class TO>
-  class Relation : public IRelation<FROM,TO>
+  class Relation : public BaseTable , public IRelation<FROM,TO>
   {  
   public:
   
@@ -93,7 +93,8 @@ namespace Relations
     /// the default constructor
     Relation 
     ( const size_t reserve = 0 )
-      : IBase         (   ) 
+      : BaseTable     (   ) 
+      , IBase         (   ) 
       , m_direct      ( reserve ) 
       , m_inverse_aux ( 0 ) 
     {};
@@ -103,7 +104,8 @@ namespace Relations
      */
     Relation 
     ( const IDirect& copy ) 
-      : IBase() 
+      : BaseTable     (      ) 
+      , IBase         (      ) 
       , m_direct      ( copy ) 
       , m_inverse_aux ( 0    ) 
     {}
@@ -116,7 +118,8 @@ namespace Relations
     Relation 
     ( const IInverse&    inv     , 
       const int          flag  ) 
-      : IBase         (   ) 
+      : BaseTable     (   ) 
+      , IBase         (   ) 
       , m_direct      ( inv , flag ) 
       , m_inverse_aux ( 0 )  
     {}
@@ -127,7 +130,8 @@ namespace Relations
      */
     Relation 
     ( const OwnType& copy   ) 
-      : IBase         ( copy          ) 
+      : BaseTable     ( copy          ) 
+      , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )
       , m_inverse_aux ( 0             ) 
     {}

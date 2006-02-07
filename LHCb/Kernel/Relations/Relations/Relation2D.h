@@ -1,6 +1,6 @@
-// $Id: Relation2D.h,v 1.5 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -43,9 +43,10 @@ namespace LHCb
    */
   
   template< class FROM, class TO>
-  class Relation2D :
-    public DataObject,            
-    public IRelation2D<FROM,TO>
+  class Relation2D 
+   : public DataObject
+   , public Relations::BaseTable             
+   , public IRelation2D<FROM,TO>
   {
   public:
     
@@ -84,6 +85,7 @@ namespace LHCb
     Relation2D 
     ( const size_t reserve  = 0 ) 
       : DataObject () 
+      , Relations::BaseTable  () 
       , IBase      () 
       , m_base     ( reserve ) 
     {
@@ -98,6 +100,7 @@ namespace LHCb
     Relation2D 
     ( const IDirect& copy  )
       : DataObject () 
+      , Relations::BaseTable  () 
       , IBase      () 
       , m_base     ( copy )
     {
@@ -115,6 +118,7 @@ namespace LHCb
     ( const IInverse& inv  , 
       const int       flag ) 
       : DataObject () 
+      , Relations::BaseTable  () 
       , IBase      () 
       , m_base     ( inv  , flag )
     {
@@ -129,6 +133,7 @@ namespace LHCb
     Relation2D 
     ( const OwnType& copy  )
       : DataObject ( copy         ) 
+      , Relations::BaseTable  ( copy         ) 
       , IBase      ( copy         ) 
       , m_base     ( copy.m_base  )
     {
@@ -158,12 +163,8 @@ namespace LHCb
      */ 
     static  const CLID& classID() 
     {
-      static const CLID s_clid = 
-        Relations::clid( "Relation2D"                  , 
-                         IBase1::FromTypeTraits:: id() ,
-                         IBase1::ToTypeTraits::   id() , 
-                         0                             , 
-                         IBase1::TypeTraits:: version  , 0 );
+       static const CLID s_clid =
+        Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
     };
     

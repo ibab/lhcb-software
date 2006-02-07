@@ -1,6 +1,8 @@
-// $Id: RelationWeighted2D.h,v 1.5 2006-02-02 14:47:56 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
@@ -45,9 +47,10 @@ namespace LHCb
    *  @date   28/01/2002
    */
   template<class FROM, class TO, class WEIGHT>
-  class RelationWeighted2D :
-    public DataObject,
-    public IRelationWeighted2D<FROM,TO,WEIGHT>
+  class RelationWeighted2D 
+    : public DataObject
+    , public Relations::BaseWeightedTable 
+    , public IRelationWeighted2D<FROM,TO,WEIGHT>
   {
   public:
     
@@ -88,6 +91,7 @@ namespace LHCb
     RelationWeighted2D 
     ( const size_t reserve  = 0 ) 
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      ()
       , m_base     ( reserve )
     {
@@ -102,6 +106,7 @@ namespace LHCb
     RelationWeighted2D 
     ( const IDirect& copy  )
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      () 
       , m_base     ( copy )
     {
@@ -119,6 +124,7 @@ namespace LHCb
     ( const IInverse& inv  , 
       const int       flag ) 
       : DataObject () 
+      , Relations::BaseWeightedTable () 
       , IBase      () 
       , m_base     ( inv  , flag )
     {
@@ -133,8 +139,9 @@ namespace LHCb
     RelationWeighted2D 
     ( const OwnType& copy  )
       : DataObject ( copy         ) 
-        , IBase      ( copy         ) 
-        , m_base     ( copy.m_base  )
+      , Relations::BaseWeightedTable ( copy  ) 
+      , IBase      ( copy         ) 
+      , m_base     ( copy.m_base  )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
@@ -163,11 +170,7 @@ namespace LHCb
     static  const CLID& classID() 
     {
       static const CLID s_clid = 
-        Relations::clid( "RelationWeighted2D"            ,
-                         IBase1::FromTypeTraits::   id() , 
-                         IBase1::ToTypeTraits::     id() , 
-                         IBase1::WeightTypeTraits:: id() ,
-                         IBase1::TypeTraits::    version , 0 ) ;
+	Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
     };
     

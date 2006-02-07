@@ -1,17 +1,8 @@
-// $Id: IRelationBases.cpp,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: IRelationBases.cpp,v 1.2 2006-02-07 09:22:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/01/22 12:35:32  cattanem
-// fix for windows
-//
-// Revision 1.2  2004/01/15 11:03:12  cattanem
-// fix for windows
-//
-// Revision 1.1  2004/01/14 15:13:04  ibelyaev
-//  few tricks to make POOL/ROOT happy
-// 
 // ============================================================================
 // local
 // ============================================================================
@@ -25,6 +16,14 @@
  *  @date 2004-01-14 
  */
 
+namespace 
+{
+  const InterfaceID IID_IRelationBase ( "IRelationBase", 1, 0 );
+  //  the unique identifier of interface IRelationWeightedBase
+  const InterfaceID IID_IRelationWeightedBase 
+  ( "IRelationWeightedBase", 1, 0 );
+};
+
 // ============================================================================
 /** the unique interface ID (static)
  *  @return the unique interface identifier 
@@ -33,6 +32,11 @@
 const InterfaceID& IRelationBase::interfaceID() 
 { return IID_IRelationBase; } ;
 // ============================================================================
+// destructor 
+// ============================================================================
+IRelationBase::~IRelationBase(){} ;
+// ============================================================================
+
 
 // ============================================================================
 /** the unique interface ID (static)
@@ -41,6 +45,10 @@ const InterfaceID& IRelationBase::interfaceID()
 // ============================================================================
 const InterfaceID& IRelationWeightedBase::interfaceID() 
 { return IID_IRelationWeightedBase; }
+// ============================================================================
+// destructor 
+// ============================================================================
+IRelationWeightedBase::~IRelationWeightedBase(){} ;
 // ============================================================================
 
 // ============================================================================
