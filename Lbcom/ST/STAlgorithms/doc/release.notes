@@ -1,12 +1,10 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+!======================= STAlgorithms v1r0 2006-02-07 ========================
 ! 2006-02-07 M. Needham
  - Changes for new cluster classes
- 
 
-
-!======================= STAlgorithms v1r0 2006-02-06 ========================
 !2006-02-06 M Needham
  - bug fix in ITClusterCreator jobOptions
  - Remove itRec.opts 

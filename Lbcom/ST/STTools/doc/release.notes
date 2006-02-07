@@ -2,10 +2,10 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!=========================== STTools v2r0 2006-02-07 ==========================
 ! 2006-02-07 M Needham
  - Changes for new cluster classes
 
-!=========================== STTools v2r0 2005-12-20 ==========================
 ! 2006-01-26 M Needham
   - Adapt to new numbering scheme
 
