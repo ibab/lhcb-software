@@ -36,7 +36,15 @@
 #include "EvtGenBase/EvtKine.hh"
 #include "EvtGenBase/EvtCGCoefSingle.hh"
 #include <algorithm>
-EvtPartWave::~EvtPartWave() {}
+EvtPartWave::~EvtPartWave() {
+  if ( 0 != _HBC ) {
+    for ( int i = 0 ; i < _nB ; ++i ) {
+      delete [] (_HBC[i]) ;
+    }
+    delete [] _HBC ;
+  }
+  if ( 0 != _evalHelAmp ) delete _evalHelAmp ;
+}
 
 void EvtPartWave::getName(std::string& model_name){
 
@@ -57,7 +65,7 @@ void EvtPartWave::init(){
 
   //find out how many states each particle have
   int _nA=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getParentId()));
-  int _nB=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(0)));
+  _nB=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(0)));
   int _nC=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(1)));
 
   EvtId _idA=getParentId();
@@ -85,7 +93,7 @@ void EvtPartWave::init(){
   int* _lambdaB2=new int[_nB];
   int* _lambdaC2=new int[_nC];
 
-  EvtComplexPtr* _HBC=new EvtComplexPtr[_nB];
+  _HBC=new EvtComplexPtr[_nB];
   int /*ia,*/ib,ic;
   for(ib=0;ib<_nB;ib++){
     _HBC[ib]=new EvtComplex[_nC];
@@ -214,6 +222,9 @@ void EvtPartWave::init(){
 				EvtPDL::getSpinType(getDaug(1)),
 				_HBC);
 
+  delete [] _lambdaA2 ;
+  delete [] _lambdaB2 ;
+  delete [] _lambdaC2 ;
 
 }
 

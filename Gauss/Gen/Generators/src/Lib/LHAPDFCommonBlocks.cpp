@@ -1,4 +1,4 @@
-// $Id: LHAPDFCommonBlocks.cpp,v 1.1 2005-12-07 23:01:32 robbep Exp $
+// $Id: LHAPDFCommonBlocks.cpp,v 1.2 2006-02-07 17:23:25 robbep Exp $
 // access LHAPDF common LHASILENT
 #include "Generators/LHAPDFCommonBlocks.h"
 
@@ -24,8 +24,7 @@ Lhacontrol::~Lhacontrol() { }
 
 // access lhaparm in common
 void Lhacontrol::setlhaparm( int n , const std::string & value ) {
-  //  char * arg = new char[ value.length() + 1 ] ;
-  char * arg = new char[ 3 ] ;
+  char * arg = new char[ 20 ] ; 
   strcpy( arg , value.c_str() ) ;
   if ( n < 1 || n > lenlhaparm() ) return ;
 #ifdef WIN32
@@ -33,7 +32,7 @@ void Lhacontrol::setlhaparm( int n , const std::string & value ) {
 #else
   setlhaparm_( & n , arg , strlen( arg ) ) ;
 #endif
-  delete arg ;
+  delete [] arg ;
 }
 
 void Lhacontrol::getlhaparm( int n , std::string & value ) {
@@ -48,7 +47,7 @@ void Lhacontrol::getlhaparm( int n , std::string & value ) {
   getlhaparm_( &n , arg , strlen( arg ) ) ;
 #endif
   value = arg ;
-  delete arg ;
+  delete [] arg ;
 }
 
 // access lhavalue in common

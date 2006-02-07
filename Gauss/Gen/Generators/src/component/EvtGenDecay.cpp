@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.5 2006-02-05 21:01:44 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.6 2006-02-07 17:23:25 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -200,9 +200,9 @@ StatusCode EvtGenDecay::initialize( ) {
 // Finalize method
 //=============================================================================
 StatusCode EvtGenDecay::finalize() {
+  delete m_randomEngine ;
   delete m_gen ;
   (*evtgenStream) << endreq ;
-  delete m_randomEngine ;
   
   debug() << "EvtGenDecay finalized" << endreq ;
 
@@ -740,5 +740,7 @@ EvtGenGaudiRandomEngine::EvtGenGaudiRandomEngine( IRndmGenSvc* i ,
 //=============================================================================
 // Destructor
 //=============================================================================
-EvtGenGaudiRandomEngine::~EvtGenGaudiRandomEngine( ) { }
+EvtGenGaudiRandomEngine::~EvtGenGaudiRandomEngine( ) { 
+  m_randomgaudi.finalize( ) ;
+}
 

@@ -49,6 +49,9 @@ private:
   void fillHelicity(int* lambda2,int n,int J2);
 
   EvtEvalHelAmp* _evalHelAmp;
+  EvtComplexPtr * _HBC ;
+  int _nB ;
+  
 
 };
 

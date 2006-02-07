@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.32 2006-02-07 00:15:32 robbep Exp $
+! $Id: release.notes,v 1.33 2006-02-07 17:23:25 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-02-07 - Patrick Robbe
+ - EvtGenDecay: finalize random generator at destruction of EvtGenGaudiRandom
+ - LHAPdf interface: fix memoty leaks
 
 ! 2006-02-06 - Patrick Robbe
  - Generation: fix problem with HepMCEvents (crashing for inclusive and 

@@ -29,6 +29,10 @@ public:
 
   virtual double random();
 
+  // PR LHCb Add virtual destructor to be able to destruct correctly
+  // daughter classes
+  virtual ~EvtRandomEngine() {};
+
 private:
 
 };

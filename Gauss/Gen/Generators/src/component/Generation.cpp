@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.13 2006-02-07 00:20:19 robbep Exp $
+// $Id: Generation.cpp,v 1.14 2006-02-07 17:23:25 robbep Exp $
 // Include files 
 
 // local
@@ -173,9 +173,8 @@ StatusCode Generation::execute() {
   // Generate a set of interaction until a good one is found
   bool goodEvent = false ;
   while ( ! goodEvent ) {
-    theEvents -> erase( theEvents -> begin() , theEvents -> end() ) ;
-    theCollisions -> erase(theCollisions -> begin() ,theCollisions -> end() ) ;
-    theEvents -> clear() ;     theCollisions -> clear() ;
+    theEvents -> clear() ;     
+    theCollisions -> clear() ;
     
     // Compute the number of pile-up interactions to generate 
     if ( 0 != m_pileUpTool ) 
@@ -192,15 +191,14 @@ StatusCode Generation::execute() {
                                                     theCollisions ) ;
 
     // increase event and interactions counters
-    m_nEvents++ ;    m_nInteractions += nPileUp ;
+    ++m_nEvents ;    m_nInteractions += nPileUp ;
 
     // Update interaction counters
     theIntCounter.assign( 0 ) ;
     for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ; 
           ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
     
-    std::transform( m_intC.begin() , m_intC.end() , theIntCounter.begin() , 
-                    m_intC.begin() , std::plus< unsigned int >( ) ) ;
+    GenCounters::AddTo( m_intC , theIntCounter ) ;
 
     // Decay the event if it is a good event
     if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
@@ -216,20 +214,18 @@ StatusCode Generation::execute() {
     // Apply generator level cut on full event
     if ( m_fullGenEventCutTool ) {
       if ( goodEvent ) {
-        m_nBeforeFullEvent++ ;
+        ++m_nBeforeFullEvent ;
         goodEvent = m_fullGenEventCutTool -> studyFullEvent( theEvents , 
                                                              theCollisions ) ;
-        if ( goodEvent ) m_nAfterFullEvent++ ;
+        if ( goodEvent ) ++m_nAfterFullEvent ;
       }
     }
   }  
 
-  m_nAcceptedEvents++ ;
+  ++m_nAcceptedEvents ;
   m_nAcceptedInteractions += nPileUp ;
 
-  std::transform( m_intCAccepted.begin() , m_intCAccepted.end() , 
-                  theIntCounter.begin() , m_intCAccepted.begin() , 
-                  std::plus< unsigned int >( ) ) ;
+  GenCounters::AddTo( m_intCAccepted , theIntCounter ) ;
 
   // Now update the header information and put the event in Gaudi event store
   LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
@@ -278,6 +274,12 @@ StatusCode Generation::finalize() {
 
   m_sampleGenerationTool -> printCounters() ;
 
+  if ( 0 != m_pileUpTool ) release( m_pileUpTool ) ;
+  if ( 0 != m_decayTool ) release( m_decayTool ) ;
+  if ( 0 != m_sampleGenerationTool ) release( m_sampleGenerationTool ) ;
+  if ( 0 != m_vertexSmearingTool ) release( m_vertexSmearingTool ) ;
+  if ( 0 != m_fullGenEventCutTool ) release( m_fullGenEventCutTool ) ;
+  
   return GaudiAlgorithm::finalize( ) ; // Finalize base class
 }
 
@@ -336,18 +338,24 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
     LHCb::ParticleID thePid( pdgId ) ;
-    if ( 5 == pdgId ) bQuark++ ;
-    if ( 4 == pdgId ) cQuark++ ;
-    if ( thePid.hasBottom() ) bHadron++ ;
-    if ( thePid.hasCharm() ) cHadron++ ;
+    if ( 5 == pdgId ) ++bQuark ;
+    else if ( 4 == pdgId ) ++cQuark ;
+    else {
+      if ( thePid.hasBottom() ) ++bHadron ;
+      if ( thePid.hasCharm() ) ++cHadron ;
+    }
   }
-  if ( bQuark >= 1 ) theCounter[ Oneb ]++ ;
-  if ( bQuark >= 3 ) theCounter[ Threeb ]++ ;
-  if ( cQuark >= 1 ) theCounter[ Onec ]++ ;
-  if ( cQuark >= 3 ) theCounter[ Threec ]++ ;
-  if ( ( bQuark >= 1 ) && ( cQuark >= 1 ) ) theCounter[ bAndc ]++ ;
-  if ( ( 0 == bQuark ) && ( bHadron > 0 ) ) theCounter[ PromptB ]++ ;
+  if ( bQuark >= 1 ) { 
+    ++theCounter[ Oneb ] ;
+    if ( bQuark >= 3 ) ++theCounter[ Threeb ] ;
+  }
+  if ( cQuark >= 1 ) {
+    ++theCounter[ Onec ] ;
+    if ( cQuark >= 3 ) ++theCounter[ Threec ] ;
+    if ( bQuark >= 1 ) ++theCounter[ bAndc ] ;
+  }
+  if ( ( 0 == bQuark ) && ( bHadron > 0 ) ) ++theCounter[ PromptB ] ;
   if ( ( 0 == cQuark ) && ( 0 == bHadron ) && ( cHadron > 0 ) ) 
-    theCounter[ PromptC ]++;
+    ++theCounter[ PromptC ];
 }
 
