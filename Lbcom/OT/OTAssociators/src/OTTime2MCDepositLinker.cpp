@@ -35,7 +35,7 @@ OTTime2MCDepositLinker::OTTime2MCDepositLinker( const std::string& name,
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "Event/Link/OTTimes2MCDeposits" );
+  declareProperty( "OutputData", m_outputData="/Event/Link/OTTimes2MCDeposits" );
   declareProperty( "acceptTime", m_acceptTime  = 7.8*ns );
 }
 

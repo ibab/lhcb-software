@@ -29,7 +29,7 @@ OTTime2MCHitLinker::OTTime2MCHitLinker( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "Event/Link/OTTimes2MCHits" );
+  declareProperty( "OutputData", m_outputData  = "/Event/Link/OTTimes2MCHits" );
   declareProperty( "SpillOver", m_spillOver = false );
 }
 
@@ -90,7 +90,7 @@ StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::MCOTTime* aTime,
   typedef Table::Range MCDeposit;
   typedef Table::iterator MCDepositIter;
   
-  OTTime2MCDepositAsct associator( evtSvc(), "Event/Link/OTTimes2MCOTDeposits" );
+  OTTime2MCDepositAsct associator( evtSvc(), "/Event/Link/OTTimes2MCDeposits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 

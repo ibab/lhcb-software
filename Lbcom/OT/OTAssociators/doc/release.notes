@@ -1,14 +1,13 @@
-! $Id: release.notes,v 1.34 2006-02-06 17:03:12 janos Exp $
+! $Id: release.notes,v 1.35 2006-02-07 09:01:09 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
 
-!===================== OTAssociators v4r1 2006-02-05 =====================
-! 2006-02-05
+!===================== OTAssociators v4r0 2006-02-07 =====================
+! 2006-02-05 - Jan Amoraal
  - Use MCOTTime and not OTTime, assuming there is one to one 
    correspondence, for truth tables. 		       
  - Bug fix. Use correct paths and check status code associateToTruth 
   
-!===================== OTAssociators v4r0 2006-01-31 =====================
 ! 2006-01-31 - Marco Cattaneo
  - Removed obsolete files and directories. Now a pure component package
 
