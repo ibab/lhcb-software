@@ -1,7 +1,7 @@
 package     EvtGen
 version     v8r6
  
-branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
+branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 
 use         GaudiPolicy  v*
 use         CLHEP        v*  LCG_Interfaces
