@@ -1,4 +1,4 @@
-// $Id: VariableLuminosity.cpp,v 1.3 2005-12-07 22:51:01 robbep Exp $
+// $Id: VariableLuminosity.cpp,v 1.4 2006-02-07 21:46:12 robbep Exp $
 // Include files 
 
 // local
@@ -107,7 +107,8 @@ void VariableLuminosity::printPileUpCounters( ) {
   using namespace GenCounters ;
   info() << "***********   Luminosity counters   **************" << std::endl ;
   printCounter( info() , "all events (including empty events)" , m_nEvents ) ;
-  printCounter( info() , "with 0 interaction" , m_numberOfZeroInteraction ) ;
+  printCounter( info() , "events with 0 interaction" , 
+                m_numberOfZeroInteraction ) ;
   info() << endmsg ;
 }
 

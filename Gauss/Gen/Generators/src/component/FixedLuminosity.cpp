@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.cpp,v 1.2 2006-02-01 21:28:58 robbep Exp $
+// $Id: FixedLuminosity.cpp,v 1.3 2006-02-07 21:46:12 robbep Exp $
 // Include files 
 
 // local
@@ -90,7 +90,8 @@ void FixedLuminosity::printPileUpCounters( ) {
   using namespace GenCounters ;
   info() << "***********   Luminosity counters   **************" << std::endl ;
   printCounter( info() , "all events (including empty events)", m_nEvents ) ;
-  printCounter( info() , "with 0 interaction" , m_numberOfZeroInteraction ) ;
+  printCounter( info() , "events with 0 interaction" , 
+                m_numberOfZeroInteraction ) ;
   info() << endmsg ;
 }
 

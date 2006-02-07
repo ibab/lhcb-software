@@ -1,4 +1,4 @@
-C $Id: LHAPDFUtils.F,v 1.2 2006-02-01 21:28:05 robbep Exp $
+C $Id: LHAPDFUtils.F,v 1.3 2006-02-07 21:46:12 robbep Exp $
       SUBROUTINE GETLHAPARM( INDEX , VALUE ) 
       IMPLICIT NONE 
       
@@ -53,18 +53,19 @@ C $Id: LHAPDFUtils.F,v 1.2 2006-02-01 21:28:05 robbep Exp $
       LHAVALUE( INDEX ) = VALUE
       END
 
-      SUBROUTINE LHAPDFGAUSS_INIT( INDEX ) 
+      SUBROUTINE LHAPDFGAUSS_INIT( INDEX , FILENAME ) 
 *   if INDEX = 0 , SUPPRESS Output. 
 *   if INDEX = 1 , KEEP Output
       IMPLICIT NONE
       INTEGER INDEX
+      CHARACTER*(*) FILENAME
 *
       COMMON /GAUSSLHAPDF/ IPDFUNIT
       INTEGER IPDFUNIT
 *
       IF ( INDEX .EQ. 0 ) THEN
         IPDFUNIT = 74
-        OPEN( UNIT = 74 , FILE = 'lhapdf_init.tmp' ) 
+        OPEN( UNIT = 74 , FILE = FILENAME( 1:LEN(FILENAME) ) ) 
       ELSE
         IPDFUNIT = 6 
       ENDIF

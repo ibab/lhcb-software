@@ -1,21 +1,31 @@
-// $Id: ExternalGenerator.h,v 1.8 2006-02-01 21:27:41 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.9 2006-02-07 21:46:12 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
 // Include files
 #include <set>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/ISampleGenerationTool.h"
+
+// from SEAL
+#include "SealBase/Filename.h"
 
 // forward declarations
 class IProductionTool ;
 class IDecayTool ;
 class IGenCutTool ;
+
 namespace HepMC { 
   class GenEvent ; 
   class GenParticle ;
 }
+
+namespace seal {
+  class File ;
+}
+
 
 /** @class ExternalGenerator ExternalGenerator.h "Generators/ExternalGenerator.h"
  *  
@@ -173,5 +183,11 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Name assigned to the HepMC event and stored with it
   std::string m_hepMCName ;
+
+  /// Temporary filename to redirect LHAPDF output
+  seal::Filename m_lhapdfTempFilename ;
+  
+  /// File for LHAPDF output
+  seal::File * m_lhapdfTempFile ;
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H

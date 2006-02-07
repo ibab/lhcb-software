@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.13 2006-02-07 00:15:32 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.14 2006-02-07 21:46:12 robbep Exp $
 // Include files 
 
 // local
@@ -6,6 +6,7 @@
 
 // SEAL
 #include "SealBase/StringOps.h"
+#include "SealBase/TempFile.h"
 
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
@@ -21,12 +22,13 @@
 // Calls to FORTRAN routines
 #ifdef WIN32
 extern "C" {
-  void __stdcall LHAPDFGAUSS_INIT( int * ) ;
+  void __stdcall LHAPDFGAUSS_INIT( int * , const char * filename , 
+                                   int length ) ;
   void __stdcall LHAPDFGAUSS_END ( ) ;
 }
 #else
 extern "C" {
-  void lhapdfgauss_init_( int * ) ;
+  void lhapdfgauss_init_( int * , const char * filename , int length ) ;
   void lhapdfgauss_end_ ( ) ;
 }
 #endif
@@ -70,6 +72,8 @@ StatusCode ExternalGenerator::initialize( ) {
   if ( sc.isFailure() ) return sc ;
 
   // Handle LHAPDF output
+  m_lhapdfTempFile = seal::TempFile::file( m_lhapdfTempFilename ) ;
+  m_lhapdfTempFile -> close() ;
   int ival ;
   if ( msgLevel( MSG::DEBUG ) ) {
     ival = 1 ;    
@@ -81,9 +85,11 @@ StatusCode ExternalGenerator::initialize( ) {
   }
   
 #ifdef WIN32
-    LHAPDFGAUSS_INIT( &ival ) ;
+  LHAPDFGAUSS_INIT( &ival , m_lhapdfTempFilename.name() , 
+                    strlen( m_lhapdfTempFilename.name() ) ) ;
 #else
-    lhapdfgauss_init_ ( &ival ) ;
+  lhapdfgauss_init_ ( &ival , m_lhapdfTempFilename.name() , 
+                      strlen( m_lhapdfTempFilename.name() ) ) ;
 #endif
 
   // Set default LHAPDF parameters:
@@ -308,8 +314,13 @@ StatusCode ExternalGenerator::finalize( ) {
     LHAPDFGAUSS_END( ) ;
 #else
   lhapdfgauss_end_() ;
-  std::string delcmd( "rm -f lhapdf_init.tmp" ) ;
-  system( delcmd.c_str() ) ;
 #endif
+  delete m_lhapdfTempFile ;
+  seal::Filename::remove( m_lhapdfTempFilename , false , true ) ;
+
+  if ( 0 != m_decayTool ) release( m_decayTool ) ;
+  release( m_productionTool ) ;
+  if ( 0 != m_cutTool ) release( m_cutTool ) ;
+
   return GaudiTool::finalize() ;
 }
