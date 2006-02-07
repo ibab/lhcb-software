@@ -1,11 +1,54 @@
-! $Id: release.notes,v 1.23 2006-02-03 16:34:55 cattanem Exp $ 
+! $Id: release.notes,v 1.24 2006-02-07 13:42:53 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.23 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.24 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
-! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
+! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-02-07 - Vanya BELYAEV
+
+ - many tiny changes to simplify the " semiautomated" generation of 
+   selection (XML&C++) files for building of Reflex dictionaries 
+  
+  now to prepare the corresponding selelctions (XML & C++) files one
+  needs to use the trivial python script:
+
+  ----- >>> cut here <<< ------------
+    # (1) import the module:
+    import Relations 
+  
+    # (2) make a list of classes:
+    classes = [ Relations.Rel1D('LHCb::Particle','LHCb::Vertex'), 
+                Relations.Rel2D('LHCb::Particle','LHCb::Vertex'), 
+                Relations.RelW1D('LHCb::Particle','LHCb::Vertex','double') ,
+                Relations.RelW2D('LHCb::Particle','LHCb::Vertex','double') ]
+
+    # (3) prepare the selection XML & C++ files: selection.xml and selection.h :
+    Relations.prepare ( classes ) 
+  ----- >>> cut here <<< ------------
+
+    one gets in the current directory the files 
+      selection.h
+      selection.xml 
+
+    The C++ file need to be updated by few explicit include files, e.g.
+    for this particular case
+      #include "Event/Particle.h"
+      #include "Event/Vertex.h"
+      
+    Then the files need to be added into some directory, e.g.
+    $(MYPACKAGEROOT)/dict 
+
+    The cmt/requirements of the package looks like:
+
+       apply_pattern reflex_dictionary                             \ 
+                     dictionary=MyPackage                          \
+                     headerfiles=$(MYPACKAGEROOT)/dict/selection.h \
+                     selectionfile=$(MYPACKAGEROOT)/dict/selection.xml
+       apply_pattern component_library library=MyPackageDict        
+   
 
 ! ====================== Relations v3r0 2006-02-03 ============================
 ! 2006-02-03 - P. Koppenburg

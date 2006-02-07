@@ -1,6 +1,6 @@
-// $Id: Relation.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: Relation.h,v 1.8 2006-02-07 13:42:53 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
@@ -376,7 +376,7 @@ namespace Relations
       if( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     };
-    
+
   public:
     
     /** query the interface

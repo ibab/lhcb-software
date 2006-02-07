@@ -1,26 +1,55 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.2 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.3 2006-02-07 13:42:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef RELATIONS_RELATIONWEIGTEDTYPETRAITS_H
 #define RELATIONS_RELATIONWEIGTEDTYPETRAITS_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL
+// ============================================================================
 #include <vector>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/GaudiException.h"
+// ============================================================================
 // Relations
+// ============================================================================
 #include "Relations/ObjectTypeTraits.h"
+// ============================================================================
 
 
 namespace Relations
 {
 
+  /** @struct BaseWeightedEntry 
+   *  helper structure to make easy interactive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseWeightedEntry  : public BaseEntry {} ;
+  
+  /** @struct BaseWeightedRange
+   *  helper structure to make easy interactive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseWeightedRange  : public BaseRange {} ;
+  
+  /** @struct BaseWeightedTable
+   *  helper structure to make easy interacyive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseWeightedTable  : public BaseTable {} ;
 
   /** @struct RelationWeightedTypeTraits RelationWeightedTypeTraits.h
@@ -72,13 +101,15 @@ namespace Relations
       public BaseWeightedEntry , 
       public std::pair<std::pair<From,Weight>,To>
     {
+    public:
       /// shortcut to the own base
       typedef std::pair<From,Weight>  Pair    ;
       typedef std::pair<Pair,To>      Triplet ;
       /// constructor
-      Entry( const From&   f = From   () ,  
-             const To&     t = To     () , 
-             const Weight& w = Weight () )
+      Entry
+      ( const From&   f = From   () ,  
+        const To&     t = To     () , 
+        const Weight& w = Weight () )
         : BaseWeightedEntry() , Triplet( Pair( f , w ) , t )  {};
       /// accessor to the "FROM" object     (     const version )
       inline From     from   () const { return Triplet::first.first  ; }
@@ -105,6 +136,25 @@ namespace Relations
           LessW() ( Triplet::first.second ,    entry.first.second ) ? true  : 
           LessW() ( entry.first.second    , Triplet::first.second ) ? false :
           LessT() (       Triplet::second ,          entry.second )         ; }
+    public:
+      /// get the default value for "From" object
+      static const From&   s_from   ()
+      {
+        static const From   _from   = From   () ;
+        return _from   ;
+      };
+      /// get the default value for "To" object
+      static const To&     s_to     () 
+      {
+        static const To     _to     = To     () ;
+        return _to     ;
+      }
+      /// get the default value for "Weight" object
+      static const Weight& s_weight ()
+      {
+        static const Weight _weight = Weight () ;
+        return _weight ;
+      };
     };
     
     /// "less" function object for "Entry" objects 

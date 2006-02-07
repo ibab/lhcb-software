@@ -1,27 +1,57 @@
-// $Id: RelationTypeTraits.h,v 1.2 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.3 2006-02-07 13:42:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL
+// ============================================================================
 #include <vector>
+// ============================================================================
 // #include <deque>
+// ============================================================================
 #include <functional>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/GaudiException.h"
+// ============================================================================
 // Relations
+// ============================================================================
 #include "Relations/ObjectTypeTraits.h"
+// ============================================================================
 
 namespace Relations
 {
-  
+  /** @struct BaseEntry 
+   *  helper structure to make easy interactive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseEntry {} ;
+
+  /** @struct BaseRange
+   *  helper structure to make easy interactive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseRange {} ;
+
+  /** @struct BaseTable
+   *  helper structure to make easy interacyive manipulations
+   *  with Reflex dictionaries 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-02-06
+   */
   struct BaseTable {} ;
   
   /** @struct RelationTypeTraits RelationTypeTraits.h
@@ -68,13 +98,15 @@ namespace Relations
       public BaseEntry , 
       public std::pair<From,To>
     {
+    public:
       /// shortcut to the own base
       typedef std::pair<From,To>  Pair ;
       /// constructor
-      Entry( const From& f = From () , 
-             const To&   t = To   () )
-       : BaseEntry() 
-       , Pair( f , t ) {};
+      Entry
+      ( const From& f = From () , 
+        const To&   t = To   () )
+        : BaseEntry() 
+        , Pair( f , t ) {};
       /// accessor to the "FROM" object ( const     version )
       inline From  from   () const { return Pair::first   ; }
       /// accessor to the "FROM" object ( non-const version )
@@ -94,6 +126,19 @@ namespace Relations
           LessF() ( Pair::first  , entry.first  ) ? true  :
           LessF() ( entry.first  , Pair::first  ) ? false :
           LessT() ( Pair::second , entry.second )         ; }  
+    public:
+      /// get the default value for "From" object
+      static const From&   s_from   ()
+      {
+        static const From   _from   = From   () ;
+        return _from   ;
+      };
+      /// get the default value for "To" object
+      static const To&     s_to     () 
+      {
+        static const To     _to     = To     () ;
+        return _to     ;
+      }
     };
     
     /// "less" function object for "From" objects 
@@ -167,10 +212,11 @@ namespace Relations
       typedef typename Entries::const_reference        const_reference        ;
       typedef typename Entries::value_type             value_type             ;
       /// default constructor
-      Range() : BaseRange() , Base()              {} ;
+      Range() 
+        : BaseRange() , Base()              {} ;
       /// constructor
       Range( iterator begin , iterator end ) 
-	: BaseRange() , Base( begin , end ) {} ;
+        : BaseRange() , Base( begin , end ) {} ;
       /// the aliases for standard "first" and "second"
       /// begin-iterator (    const version)
       inline iterator         begin  () const { return Base::first           ; }

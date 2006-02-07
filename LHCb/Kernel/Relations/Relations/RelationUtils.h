@@ -1,17 +1,24 @@
-// $Id: RelationUtils.h,v 1.3 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.4 2006-02-07 13:42:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL
+// ============================================================================
 #include <string>
 #include <map>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/IInterface.h"    // definition of type InterfaceID 
 #include "GaudiKernel/ClassID.h"       // definition of type CLID 
+// ============================================================================
 
 namespace Relations
 {
@@ -57,6 +64,8 @@ namespace Relations
    *  simple funtion to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
+   *  The actual code is stollen from Markus Frank's lines 
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-30
    *
@@ -68,6 +77,8 @@ namespace Relations
   /** @fn guid 
    *  simple funtion to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
+   *
+   *  The actual code is stollen from Markus Frank's lines 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-30

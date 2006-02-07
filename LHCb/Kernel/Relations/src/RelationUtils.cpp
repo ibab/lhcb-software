@@ -1,20 +1,27 @@
-// $Id: RelationUtils.cpp,v 1.4 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.5 2006-02-07 13:42:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $name:$
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // Include files
+// ============================================================================
 // STD & STL
+// ============================================================================
 #include <string>
 #include <cstdio>
 #include <iostream>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/IInterface.h"   
 #include "GaudiKernel/ClassID.h"      
+// ============================================================================
 // Relations
+// ============================================================================
 #include "Relations/RelationUtils.h"
+// ============================================================================
 
 // ============================================================================
-/** @file RelationUtils.cpp
+/** @file
  *  
  *  Implementation file for method from namespace Relation
  * 
@@ -36,10 +43,7 @@
 // ============================================================================
 InterfaceID Relations::interfaceID 
 ( const std::string&  name     ) 
-{
-  //
-  return InterfaceID( name.c_str() , 1 , 0  );
-};
+{ return InterfaceID( name.c_str() , 1 , 0  ); };
 
 // ============================================================================
 /**
@@ -69,6 +73,8 @@ CLID        Relations::clid
  *  simple funtion to convert CLID (Gaudi unique class identifier) 
  *  to GUID (POOL unique class identifier)
  *
+ *  The actual code is stollen from Markus Frank's lines 
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-30
  *
@@ -87,6 +93,8 @@ std::string Relations::guid ( const CLID& clID )
  *  simple funtion to convers CLID (Gaudi unique class identifier) 
  *  to GUID (POOL unique class identifier)
  *
+ *  The actual code is stollen from Markus Frank's lines 
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-30
  *
@@ -95,9 +103,7 @@ std::string Relations::guid ( const CLID& clID )
  */
 // ============================================================================
 std::string Relations::guid ( const std::string& name  )
-{
-  return Relations::guid( Relations::clid( name ) ) ;
-} ;
+{ return Relations::guid( Relations::clid( name ) ) ; } ;
 
 // ============================================================================
 // The End 

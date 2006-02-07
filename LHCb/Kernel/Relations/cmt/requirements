@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.10 2006-02-07 09:22:24 ibelyaev Exp $
+# $Id: requirements,v 1.11 2006-02-07 13:42:53 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -15,7 +15,10 @@ branches      Relations doc cmt src dict python
 include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
-use              GaudiAlg  v*
+use              GaudiAlg    v*
+use              Python      v* LCG_Interfaces -no_auto_import 
+use              Reflex      v* LCG_Interfaces -no_auto_import 
+use              Boost       v* LCG_Interfaces -no_auto_import 
 
 # ============== Produce LCG dictionary =======================================
 apply_pattern     reflex_dictionary                                 \
@@ -24,20 +27,25 @@ apply_pattern     reflex_dictionary                                 \
                   selectionfile=$(RELATIONSROOT)/dict/selection.xml
 
 # ============== constituents =================================================
-library          Relations *.cpp
+library          RelationsLib *.cpp
 
 # ============== patterns =====================================================
 apply_pattern    component_library library=RelationsDict
-apply_pattern    linker_library    library=Relations
+apply_pattern    linker_library    library=RelationsLib
 
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
 
-private
-use Python v* LCG_Interfaces -no_auto_import 
-use Reflex v* LCG_Interfaces -no_auto_import 
+path_remove  PYTHONPATH "Relations"
+path_prepend PYTHONPATH "$(RELATIONSROOT)/python"
+path_prepend PYTHONPATH "$(RELATIONSROOT)/$(BINDIR)"
 
+# private
+apply_pattern application_path 
+
+# =============================================================================
+# The END 
 # =============================================================================
 # The END 
 # =============================================================================

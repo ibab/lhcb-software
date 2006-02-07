@@ -1,16 +1,63 @@
+<!-- * $Id: selection.xml,v 1.2 2006-02-07 13:42:53 ibelyaev Exp $ 
+     * ========================================================================
+     * $CVS tag:$, version $Revision: 1.2 $ 
+     * ========================================================================
+     * $Log: not supported by cvs2svn $ 
+     * ==================================================================== -->   
+
+<!-- * @file
+     * 
+     * The basic selection file to build the Reflex dictionaries
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->  
+
 <lcgdict>
 
   <function pattern="Relations::*" />
-
-  <class    name="Relations::InstanceCounter" />
+  
   <class    name="Relations::BaseEntry" /> 
   <class    name="Relations::BaseRange" /> 
   <class    name="Relations::BaseTable" /> 
   <class    name="Relations::BaseWeightedEntry" /> 
   <class    name="Relations::BaseWeightedRange" /> 
   <class    name="Relations::BaseWeightedTable" /> 
-
+  
   <class    name="IRelationBase" />
   <class    name="IRelationWeightedBase" />
 
+  <class pattern="Relations::RelationBase<*>"         />
+  <class pattern="Relations::RelationWeightedBase<*>" />
+  
+  <class pattern="Relations::Relation2<*>"            />
+  <class pattern="Relations::Relation2Weighted<*>"    />
+
+  <class pattern="IRelatio*"        />
+  <class pattern="Relations:*Range" />
+  <class pattern="Relations:*Entry" />
+
+  <class pattern="std::vector<*Relation*Entry*>" />
+  <class pattern="std::pair<*std::vector<*Relation*>" />
+
+  <class pattern="Relations::Relation<*>" >
+     <field name="m_inverse_aux" transient="true" />
+  </class>
+
+  <class pattern="Relations::RelationWeighted<*>" >
+     <field name="m_inverse_aux" transient="true" />
+  </class>
+  
+  <class name="LHCb::Relation1D<int,int>" 
+  id="70710C5A-0000-0000-0000-000000000000" />
+  
+  <class name="LHCb::Relation2D<std::string,int>" 
+  id="B6E8F10F-0000-0000-0000-000000000000" />
+  
 </lcgdict>
+
+<!-- * ===================================================================== -->
+<!-- * The END * =========================================================== -->   
+<!-- * ===================================================================== -->
+
+

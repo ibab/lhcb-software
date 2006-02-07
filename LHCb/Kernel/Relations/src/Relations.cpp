@@ -1,13 +1,15 @@
-// $Id: Relations.cpp,v 1.2 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: Relations.cpp,v 1.3 2006-02-07 13:42:54 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/02 14:57:01  ibelyaev
-//  add src/Relations.cpp file
-// 
 // ============================================================================
 // Include files
+// ====================================================================
+// STD & STL 
+// ====================================================================
+#include <string>
+#include <vector>
 // ============================================================================
 // Relations
 // ============================================================================
@@ -44,9 +46,9 @@ namespace
   Relations::BaseWeightedEntry               _0_1_1 ;
   Relations::BaseWeightedRange               _0_1_2 ;
   Relations::BaseWeightedTable               _0_1_3 ;
-
-  LHCb::Relation1D<int,float>                _1 ;
-  LHCb::Relation2D<int,float>                _2 ;
+  
+  LHCb::Relation1D<int,int>                  _1 ;
+  LHCb::Relation2D<std::string,int>          _2 ;
   LHCb::RelationWeighted1D<int,float,double> _3 ;
   LHCb::RelationWeighted2D<int,float,double> _4 ;
 } ;
