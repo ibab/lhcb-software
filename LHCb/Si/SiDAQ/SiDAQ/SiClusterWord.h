@@ -1,4 +1,4 @@
-// $Id: SiClusterWord.h,v 1.1.1.1 2005-11-22 15:20:18 mneedham Exp $
+// $Id: SiClusterWord.h,v 1.2 2006-02-07 08:48:06 mneedham Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -81,10 +81,14 @@ public:
 
   /** Fill the ASCII output stream */
   virtual std::ostream& fillStream(std::ostream& s) const;
+
+  /** fracStrip Bits  - the actual value in the bits 1,2,3,4,,,*/
+  unsigned int fracStripBits() const; 
+ 
+  /** size Bits  - the actual value in the bits 0,1 */
+  unsigned int pseudoSizeBits() const; 
  
 private:
-
-  unsigned int fracStripBits() const; 
 
   short m_value; /// Packed word
 };
@@ -123,6 +127,11 @@ inline unsigned int SiClusterWord<bitPolicy>::value() const
 template <class bitPolicy>
 inline unsigned int SiClusterWord<bitPolicy>::fracStripBits() const{
   return (m_value & bitPolicy::positionMask) >> bitPolicy::positionBits;
+}
+
+template <class bitPolicy>
+inline unsigned int SiClusterWord<bitPolicy>::pseudoSizeBits() const{
+  return (m_value & bitPolicy::sizeMask) >> bitPolicy::sizeBits;
 }
 
 template <class bitPolicy>

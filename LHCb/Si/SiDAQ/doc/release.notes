@@ -2,6 +2,9 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-05 M Needham
+ - Make the fracStripBits public in STClusterWord.h
+
 ! 2006-02-05 - Kurt Rinnert
  - Changed type of m_value member in ADC word from char to unsigned char.
    This was necessary to make the encoding work since the accessor has 
