@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.1 2006-02-07 13:42:53 ibelyaev Exp $
+# $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1  2006/02/07 13:42:53  ibelyaev
+#  many new changed : see relese.notes
+# 
 # =============================================================================
 
 import sys,os,os.path,datetime  
@@ -90,11 +93,12 @@ class RelW2D ( Rel2D ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.1 2006-02-07 13:42:53 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.1 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.2 $ ']
     lines += ['     * ========================================================================']
-    lines += ['     * $Log: not supported by cvs2svn $']
+    lines += ["""     * $Log: not supported by cvs2svn $
+     *"""]
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -158,11 +162,12 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst ) :
-    lines += ['// $Id: Relations.py,v 1.1 2006-02-07 13:42:53 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ ']
     lines += ['// ====================================================================']
-    lines += ['// $Log: not supported by cvs2svn $']
+    lines += ["""// $Log: not supported by cvs2svn $
+// """]
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
