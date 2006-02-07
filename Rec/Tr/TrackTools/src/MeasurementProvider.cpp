@@ -1,14 +1,14 @@
-// $Id: MeasurementProvider.cpp,v 1.14 2006-01-27 13:17:19 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.15 2006-02-07 11:32:02 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // from TrackFitEvent
-#include "Event/STMeasurement.h"
-#include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/STMeasurement.h"
+#include "Event/OTMeasurement.h"
 
 // local
 #include "MeasurementProvider.h"
@@ -34,18 +34,20 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 {
   declareInterface<IMeasurementProvider>(this);
 
-  declareProperty( "OTGeometryPath",
-                   m_otDetPath = DeOTDetectorLocation::Default );
-  declareProperty( "ITGeometryPath",
-                   m_itDetPath = DeSTDetectorLocation::Default );
-  declareProperty( "VeloGeometryPath",
-                   m_veloDetPath = "/dd/Structure/LHCb/Velo" );
-
   declareProperty( "STPositionTool",
                    m_stPositionToolName = "STOfflinePosition" );
 
-  declareProperty( "MeasLocation" ,
-                   m_measLocation = "/Event/Rec/Track/Measurements" );
+  declareProperty( "VeloGeometryPath",
+                   m_veloDetPath = "/dd/Structure/LHCb/Velo" );
+
+  declareProperty( "TTGeometryPath",
+                   m_ttDetPath = DeSTDetLocation::location("TT") );
+  declareProperty( "ITGeometryPath",
+                   m_itDetPath = DeSTDetLocation::location("IT") );
+
+  declareProperty( "OTGeometryPath",
+                   m_otDetPath = DeOTDetectorLocation::Default );
+
 }
 
 //=============================================================================
@@ -61,27 +63,29 @@ StatusCode MeasurementProvider::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
-  // Retrieve the Velo, IT and OT detector elements
-  m_otDet   = getDet<DeOTDetector>( m_otDetPath );
-
-  m_itDet   = getDet<DeSTDetector>( m_itDetPath );
-  
-  m_veloDet = getDet<DeVelo>( m_veloDetPath );
-
   // Retrieve the STClusterPosition tool
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
+
+  // Retrieve the Velo, ST and OT detector elements
+  m_veloDet = getDet<DeVelo>( m_veloDetPath );
+
+  m_ttDet   = getDet<DeSTDetector>( m_ttDetPath );
+  m_itDet   = getDet<DeSTDetector>( m_itDetPath );
+
+  m_otDet   = getDet<DeOTDetector>( m_otDetPath );
 
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-// Load the necessary VeloClusters, ITClusters and OTTimes
+// Load the necessary VeloClusters, STClusters and OTTimes
 //=============================================================================
 void MeasurementProvider::load() {
   
   m_otTimes      = get<OTTimes>( OTTimeLocation::Default );
   
-  m_itClusters   = get<ITClusters>( ITClusterLocation::Default );
+  m_ttClusters   = get<STClusters>( STClusterLocation::TTClusters );
+  m_itClusters   = get<STClusters>( STClusterLocation::ITClusters );
   
   m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
 } 
@@ -91,16 +95,6 @@ void MeasurementProvider::load() {
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) 
 {
-  std::vector<LHCbID>& allids = track.lhcbIDs();
-  for ( std::vector<LHCbID>::iterator it2 = allids.begin();
-        it2 != allids.end(); ++it2 ) {
-    LHCbID& id = *it2;
-    // HACK necessary so that the equality !isOnTrack(meas.lhcbID()) is true
-    // and the measurement is actually added to the track!
-    // This will become obsolete as soon as the LHCbID is simplified ...
-    id.setSpareBits( 0 );
-  }
-
   const std::vector<LHCbID>& ids = track.lhcbIDs();
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
@@ -157,14 +151,23 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
               << vid << endreq;
     }
   }
-  else if ( id.isST() ) {
-    ITChannelID sid = id.stID();
-    ITCluster* clus = m_itClusters->object(sid);
+  else if ( id.isTT() ) {
+    STChannelID sid = id.stID();
+    STCluster* clus = m_ttClusters->object(sid);
+    if (clus != NULL)
+      meas = new STMeasurement( *clus, *m_ttDet, *m_stPositionTool );
+    else {
+      error() << "STCluster of type TT is NULL! No correspondence to STChannelID = "
+              << sid << endreq;
+    }
+  }
+  else if ( id.isIT() ) {
+    STChannelID sid = id.stID();
+    STCluster* clus = m_itClusters->object(sid);
     if (clus != NULL)
       meas = new STMeasurement( *clus, *m_itDet, *m_stPositionTool );
     else {
-      error() << "ITCluster of type " << ( sid.isTT() ? "TT" : "IT" )
-              << " is NULL! No correspondence to ITChannelID = "
+      error() << "STCluster of type IT is NULL! No correspondence to STChannelID = "
               << sid << endreq;
     }
   }

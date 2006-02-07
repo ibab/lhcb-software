@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.6 2006-01-20 11:02:32 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.7 2006-02-07 11:32:02 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -9,26 +9,25 @@
 
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
-
-// from STTools
-#include "STTools/ISTClusterPosition.h"
+#include "Kernel/ISTClusterPosition.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/IMeasurementProvider.h"            // Interface
+#include "TrackInterfaces/IMeasurementProvider.h"
 
 // from TrackEvent
 #include "Event/Track.h"
 
 // from XxxEvent
 #include "Event/VeloCluster.h"
-#include "Event/ITCluster.h"
+#include "Event/STCluster.h"
 #include "Event/OTTime.h"
 
 // from XxxDet
+#include "VeloDet/DeVelo.h"
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
-#include "VeloDet/DeVelo.h"
 
+using namespace LHCb;
 
 static const InterfaceID IID_MeasurementProvider ( "MeasurementProvider", 1, 0 );
 
@@ -82,19 +81,20 @@ protected:
   std::string         m_stPositionToolName; ///< ST cluster position tool name
 
   // Geometry information
-  DeOTDetector* m_otDet;
-  DeSTDetector* m_itDet;
   DeVelo*       m_veloDet;
+  DeSTDetector* m_ttDet;
+  DeSTDetector* m_itDet;
+  DeOTDetector* m_otDet;
 
-  std::string   m_otDetPath;          ///< Name of the OT XML geom path
-  std::string   m_itDetPath;          ///< Name of the IT XML geom path
   std::string   m_veloDetPath;        ///< Name of the Velo XML geom path
+  std::string   m_ttDetPath;          ///< Name of the TT XML geom path
+  std::string   m_itDetPath;          ///< Name of the IT XML geom path
+  std::string   m_otDetPath;          ///< Name of the OT XML geom path
 
   OTTimes*      m_otTimes;
-  ITClusters*   m_itClusters;
+  STClusters*   m_ttClusters;
+  STClusters*   m_itClusters;
   VeloClusters* m_veloClusters;
 
-  std::string   m_measLocation;
-  
 };
 #endif // TRACKTOOLS_MEASUREMENTPROVIDER_H

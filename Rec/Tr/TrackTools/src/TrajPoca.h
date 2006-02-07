@@ -1,4 +1,4 @@
-// $Id: TrajPoca.h,v 1.2 2006-01-17 09:15:10 ebos Exp $
+// $Id: TrajPoca.h,v 1.3 2006-02-07 11:32:02 erodrigu Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
@@ -7,11 +7,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// from Kernel/LHCbKernel
-#include "Kernel/Trajectory.h"
-
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrajPoca.h"
+
+// from Kernel/LHCbKernel
+#include "Kernel/Trajectory.h"
 
 /** @class TrajPoca TrajPoca.h
  *  
@@ -40,38 +40,36 @@ public:
 
   /// Find arclengths along trajectories
   /// having a distance smaller than tolerance
-  virtual StatusCode minimize( const Trajectory& traj1,
+  virtual StatusCode minimize( const LHCb::Trajectory& traj1,
                                double& arclength1, 
                                bool restrictRange1,
-                               const Trajectory& traj2,
+                               const LHCb::Trajectory& traj2,
                                double& arclength2, 
                                bool restrictRange2, 
-                               HepVector3D& distance,
+                               Gaudi::XYZVector& distance,
                                double precision );
 
   /// Find the minimum distance between a point and a Trajectory
-  virtual StatusCode minimize( const Trajectory& traj,
+  virtual StatusCode minimize( const LHCb::Trajectory& traj,
                                double& arclength,
                                bool restrictRange,
-                               const HepPoint3D& pt,
-                               HepVector3D& distance,
+                               const Gaudi::XYZPoint& pt,
+                               Gaudi::XYZVector& distance,
                                double precision );
-private:
 
-  StatusCode stepTowardPoca( const Trajectory& traj1,
+private:
+  StatusCode stepTowardPoca( const LHCb::Trajectory& traj1,
                              double& arclength1,
                              bool restrictRange1,
-                             const Trajectory& traj2,
+                             const LHCb::Trajectory& traj2,
                              double& arclength2, 
                              bool restrictRange2,
                              double precision ) const;
 
-  double restrictLen( double l, const Trajectory& t, bool restrictRange ) const
-  {
-    return restrictRange ? t.restrictToRange(l) : l ; 
-  }
-  
-  HepVector3D m_distance;
+  double restrictLen( double l, const LHCb::Trajectory& t, bool restrictRange ) const;
+
+private:
+  Gaudi::XYZVector m_distance;
 
   // jobOptions
   int m_maxnOscillStep;
@@ -85,5 +83,3 @@ private:
 };
 
 #endif // TRACKTOOLS_TRAJPOCA_H
-
-

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackTools
-version           v1r4
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -23,16 +23,17 @@ include_path      none
 use     GSL           v*     LCG_Interfaces
 
 use   GaudiAlg        v*
-use   LHCbKernel      v5r*   Kernel
-use   TrackEvent      v1r*   Event
+use   LHCbDefinitions v*     Kernel
+use   LHCbKernel      v*     Kernel
+use   TrackEvent      v*     Event
 use   OTEvent         v*     Event
-use   ITEvent         v*     Event
+use   STEvent         v*     Event
 use   VeloEvent       v*     Event
 
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
 
-use   STTools         v1r*   IT
+######use   STTools         v*     ST
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det

@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-07 - Eduardo Rodrigues
+ - migration to LHCb v20r0
+
 !======================== TrackTools v1r4 2006-01-27 =========================
 ! 2006-01-20 - Eduardo Rodrigues
  - MeasurementProvider: all LHCbIDs spare bits are set to 0 before the

@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.h,v 1.2 2005-09-07 12:32:10 cattanem Exp $
+// $Id: TrackPtKick.h,v 1.3 2006-02-07 11:32:02 erodrigu Exp $
 #ifndef TRACKTOOLS_TRACKPTKICK_H 
 #define TRACKTOOLS_TRACKPTKICK_H 1
 
@@ -7,11 +7,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// from TrackInterfaces
-#include "TrackInterfaces/ITrackPtKick.h"            // Interface
-
 // from LHCbKernel
 #include "Kernel/IBIntegrator.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackPtKick.h"
 
 /** @class TrackPtKick TrackPtKick.h TrackTools/TrackPtKick.h
  *  
@@ -30,7 +30,7 @@ public:
   StatusCode initialize();
 
   // Estimate the momentum P of a State
-  virtual StatusCode calculate( State* State ) const;
+  virtual StatusCode calculate( LHCb::State* State ) const;
 
 protected:
 

@@ -3,11 +3,19 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from LHCbDefinitions
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/GenericVectorTypes.h"
+#include "Kernel/SymmetricMatrixTypes.h"
+#include "Kernel/TrackTypes.h"
+
+// from TrackEvent
+#include "Event/SHacks.h"
 
 // local
 #include "TrackChi2Calculator.h"
+
+using namespace Gaudi;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackChi2Calculator
@@ -30,9 +38,9 @@ TrackChi2Calculator::TrackChi2Calculator( const std::string& type,
   // interfaces
   declareInterface<ITrackChi2Calculator>(this);
 
-  declareProperty( "ScaleVector",   m_scaleVector );
+  declareProperty( "ScaleVector",   m_scaleVector           );
   declareProperty( "MatchInMagnet", m_matchInMagnet = false );
-//  declareProperty( "AddMomentum",   m_addMomentum = false );
+  declareProperty( "AddMomentum",   m_addMomentum   = false );
 }
 
 //=============================================================================
@@ -54,45 +62,88 @@ StatusCode TrackChi2Calculator::initialize() {
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::calculateChi2( const HepVector& trackVector1,
-                                               const HepSymMatrix& trackCov1,
-                                               const HepVector& trackVector2,
-                                               const HepSymMatrix& trackCov2,
+StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
+                                               const TrackMatrix& trackCov1,
+                                               const TrackVector& trackVector2,
+                                               const TrackMatrix& trackCov2,
                                                double& chi2 ) const
 {
+  if ( !m_addMomentum ) { // then the dimension is 4
+    Vector4 vec1            = trackVector1.Sub<4>(0);
+    Vector4 vec2            = trackVector2.Sub<4>(0);
+    SymMatrix4x4 trackCov12 =   trackCov1.Sub<4,4>(0,0)
+                              + trackCov2.Sub<4,4>(0,0);
+    return calculateChi2( vec1, vec2, trackCov12, chi2 );
+  }
+
+  // If momentum information is to be used in the matching
+  // -----------------------------------------------------
   // initialize chi2
   chi2 = 0.0;
 
-  // If momentum information must not be used: take the right
-  // sub-vectors and sub-matrices.
-  //int nParam = 4;
-  int nParam = 5;
-  //if ( m_addMomentum ) nParam = 5;
-  HepVector vec1 = trackVector1.sub(1,nParam);
-  HepVector vec2 = trackVector2.sub(1,nParam);
-  HepSymMatrix trackCinv = trackCov1.sub(1,nParam) + trackCov2.sub(1,nParam);
-
+  // copy tracks info
+  TrackVector vec1      = TrackVector( trackVector1 );
+  TrackVector vec2      = TrackVector( trackVector2 );
+  TrackMatrix trackCinv = trackCov1 + trackCov2;
+  
   // invert the matrix
   StatusCode sc = invertMatrix( trackCinv );
   if ( sc.isFailure() ) return StatusCode::FAILURE;
 
   // Remove Tx from chi2 in case of matching inside the magnet
   if ( m_matchInMagnet ) {
-    vec1(3) = 0.0;
-    vec2(3) = 0.0;
+    vec1[2] = 0.0;
+    vec2[2] = 0.0;
   }
 
   // Re-scale the chi2-contributions in case of error under/over-estimation
-  int scaleVectorSize = m_scaleVector.size() ; 
-  if (scaleVectorSize > 0 ) {
-    for (int i = 1; i <= nParam && i <= scaleVectorSize ; ++i) {
-      vec1(i) *= sqrt( fabs(m_scaleVector[i-1]) ) ;
-      vec2(i) *= sqrt( fabs(m_scaleVector[i-1]) ) ;
+  unsigned int scaleVectorSize = m_scaleVector.size();
+  if ( scaleVectorSize > 0 ) {
+    for ( unsigned int i = 0; i < 5 && i <= scaleVectorSize ; ++i ) {
+      vec1[i] *= sqrt( fabs(m_scaleVector[i]) );
+      vec2[i] *= sqrt( fabs(m_scaleVector[i]) );
     }
   }
 
   // Calculate the chi2 distance between 2 tracks
-  chi2 = trackCinv.similarity(vec1 - vec2);
+  chi2 = SHacks::Similarity<5,TrackMatrix>( vec1-vec2, trackCinv );
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+//
+//=============================================================================
+StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
+                                               Vector4& trackVector2,
+                                               SymMatrix4x4& trackCov12,
+                                               double& chi2 ) const
+{
+  // initialize chi2
+  chi2 = 0.0;
+
+  // invert the matrix
+  StatusCode sc = invertMatrix( trackCov12 );
+  if ( sc.isFailure() ) return StatusCode::FAILURE;
+
+  // Remove Tx from chi2 in case of matching inside the magnet
+  if ( m_matchInMagnet ) {
+    trackVector1[2] = 0.0;
+    trackVector2[2] = 0.0;
+  }
+
+  // Re-scale the chi2-contributions in case of error under/over-estimation
+  int scaleVectorSize = m_scaleVector.size() ; 
+  if ( scaleVectorSize > 0 ) {
+    for ( int i = 0; i < 4 && i <= scaleVectorSize ; ++i ) {
+      trackVector1[i] *= sqrt( fabs(m_scaleVector[i]) ) ;
+      trackVector2[i] *= sqrt( fabs(m_scaleVector[i]) ) ;
+    }
+  }
+
+  // Calculate the chi2 distance between 2 tracks
+  chi2 = SHacks::Similarity<4,SymMatrix4x4>( trackVector1-trackVector2,
+                                             trackCov12 );
 
   return StatusCode::SUCCESS;
 
@@ -101,23 +152,23 @@ StatusCode TrackChi2Calculator::calculateChi2( const HepVector& trackVector1,
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::invertMatrix( HepSymMatrix& invC ) const
+StatusCode TrackChi2Calculator::invertMatrix( TrackMatrix& invC ) const
 {
-  // This routine is taken from TrKalmanSmoother.cpp. It rescales 
+  // This routine is taken from TrKalmanSmoother.cpp. It rescales
   // the matrix before it actually calls the DSINV wrapper.
   
   // Invert previous node covariance matrix
-  // What follows may seem strange - trust me it works - you 
-  // are strongly recommended NOT to change it. It turns out that 
-  // the choice of MeV, mm as units is BAD - the inversion simply fails 
-  // for numerical reasons. Therefore it is necessary to change back to G3 
-  // units, invert then go back to G4 units 
+  // What follows may seem strange - trust me it works - you
+  // are strongly recommended NOT to change it. It turns out that
+  // the choice of MeV, mm as units is BAD - the inversion simply fails
+  // for numerical reasons. Therefore it is necessary to change back to G3
+  // units, invert then go back to G4 units
   // M. Needham 13/6/2000
 
-  // check that the elements are not too large else dsinv will crash 
-  for (int i=0; i<4; ++i){
-    for (int j=0; j<4; ++j){
-      if (invC[i][j] > 1e20){
+  // check that the elements are not too large else dsinv will crash
+  for ( unsigned int i = 0; i < 4; ++i ) {
+    for ( unsigned int j = 0; j < 4; ++j ) {
+      if ( invC(i,j) > 1e20 ) {
         warning() << "old covariance errors too big to invert" << endmsg;
         return StatusCode::FAILURE;
       }
@@ -125,17 +176,14 @@ StatusCode TrackChi2Calculator::invertMatrix( HepSymMatrix& invC ) const
   }
   
   // G3 units 
-  cToG3(invC);
+  cToG3( invC );
   
-  int ifail;
-  invC.invert(ifail);
+  bool OK = invC.Invert();
   
   //G4 units
-  cToG4(invC);
+  cToG4( invC );
   
-  if (ifail !=0){
-    warning() << "failed to invert covariance matrix, failure code=" 
-              << ifail << endmsg; 
+  if ( !OK ) {
     return StatusCode::FAILURE;
   }
   else {
@@ -147,25 +195,65 @@ StatusCode TrackChi2Calculator::invertMatrix( HepSymMatrix& invC ) const
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::cToG3(HepSymMatrix& C) const
+StatusCode TrackChi2Calculator::invertMatrix( SymMatrix4x4& invC ) const
 {
-  // cov matrix
-  C[0][0] /= cm2;
-  C[1][0] /= cm2; 
-  C[0][2] /= cm;
-  C[0][3] /= cm;
- 
-  C[1][1] /= cm2; 
-  C[1][2] /= cm;
-  C[1][3] /= cm;
+  // This routine is taken from TrKalmanSmoother.cpp. It rescales
+  // the matrix before it actually calls the DSINV wrapper.
+  
+  // Invert previous node covariance matrix
+  // What follows may seem strange - trust me it works - you
+  // are strongly recommended NOT to change it. It turns out that
+  // the choice of MeV, mm as units is BAD - the inversion simply fails
+  // for numerical reasons. Therefore it is necessary to change back to G3
+  // units, invert then go back to G4 units
+  // M. Needham 13/6/2000
 
-  if ( C.num_row() > 4 ) {
-    C[0][4] /= cm*GeV;
-    C[1][4] /= cm*GeV;
-    C[2][4] /= GeV;
-    C[3][4] /= GeV;
-    C[4][4] /= GeV*GeV;
-  }  
+  // check that the elements are not too large else dsinv will crash
+  for ( unsigned int i = 0; i < 4; ++i ) {
+    for ( unsigned int j = 0; j < 4; ++j ) {
+      if ( invC(i,j) > 1e20 ) {
+        warning() << "old covariance errors too big to invert" << endmsg;
+        return StatusCode::FAILURE;
+      }
+    }
+  }
+  
+  // G3 units 
+  cToG3( invC );
+  
+  bool OK = invC.Invert();  
+
+  //G4 units
+  cToG4( invC );
+  
+  if ( !OK ) {
+    return StatusCode::FAILURE;
+  }
+  else {
+    return StatusCode::SUCCESS;
+  }
+  
+}
+
+//=============================================================================
+//
+//=============================================================================
+StatusCode TrackChi2Calculator::cToG3( TrackMatrix& C ) const
+{
+  C(0,0) /= cm2;
+  C(1,0) /= cm2; 
+  C(0,2) /= cm;
+  C(0,3) /= cm;
+ 
+  C(1,1) /= cm2; 
+  C(1,2) /= cm;
+  C(1,3) /= cm;
+
+  C(0,4) /= cm*GeV;
+  C(1,4) /= cm*GeV;
+  C(2,4) /= GeV;
+  C(3,4) /= GeV;
+  C(4,4) /= GeV*GeV;
 
   return StatusCode::SUCCESS;
 }
@@ -173,25 +261,56 @@ StatusCode TrackChi2Calculator::cToG3(HepSymMatrix& C) const
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::cToG4(HepSymMatrix& invC) const
+StatusCode TrackChi2Calculator::cToG3( SymMatrix4x4& C ) const
 {
-  // cov matrix
-  invC[0][0] /= cm2;
-  invC[0][1] /= cm2; 
-  invC[0][2] /= cm;
-  invC[0][3] /= cm;
+  C(0,0) /= cm2;
+  C(1,0) /= cm2; 
+  C(0,2) /= cm;
+  C(0,3) /= cm;
+ 
+  C(1,1) /= cm2; 
+  C(1,2) /= cm;
+  C(1,3) /= cm;
 
-  invC[1][1] /= cm2; 
-  invC[1][2] /= cm;
-  invC[1][3] /= cm;
+  return StatusCode::SUCCESS;
+}
 
-  if ( invC.num_row() > 4 ) {
-    invC[0][4] /= cm*GeV;
-    invC[1][4] /= cm*GeV;
-    invC[2][4] /= GeV;
-    invC[3][4] /= GeV;
-    invC[4][4] /= GeV*GeV;
-  }  
+//=============================================================================
+//
+//=============================================================================
+StatusCode TrackChi2Calculator::cToG4( TrackMatrix& invC ) const
+{
+  invC(0,0) /= cm2;
+  invC(0,1) /= cm2; 
+  invC(0,2) /= cm;
+  invC(0,3) /= cm;
+
+  invC(1,1) /= cm2; 
+  invC(1,2) /= cm;
+  invC(1,3) /= cm;
+
+  invC(0,4) /= cm*GeV;
+  invC(1,4) /= cm*GeV;
+  invC(2,4) /= GeV;
+  invC(3,4) /= GeV;
+  invC(4,4) /= GeV*GeV;
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+//
+//=============================================================================
+StatusCode TrackChi2Calculator::cToG4( SymMatrix4x4& invC ) const
+{
+  invC(0,0) /= cm2;
+  invC(0,1) /= cm2; 
+  invC(0,2) /= cm;
+  invC(0,3) /= cm;
+
+  invC(1,1) /= cm2; 
+  invC(1,2) /= cm;
+  invC(1,3) /= cm;
 
   return StatusCode::SUCCESS;
 }

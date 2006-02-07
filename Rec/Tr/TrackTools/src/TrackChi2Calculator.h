@@ -31,7 +31,7 @@ public:
   StatusCode initialize();
 
   /** Calculate the chi2 distance between two track vectors.
-   *  The track vectors must be given in (x,y,tx,ty,q/p).
+   *  The track vectors must be given as (x,y,tx,ty,q/p).
    *  @return StatusCode: Failure if matrix inversion failed  
    *  @param  trackVector1 input 1st track HepVector
    *  @param  trackCov1 input covariance matrix corresponding to 1st vector
@@ -39,22 +39,35 @@ public:
    *  @param  trackCov2 input covariance matrix corresponding to 2nd vector
    *  @param  chi2 output chi2 distance between the two vectors
    */
-  virtual StatusCode calculateChi2( const HepVector& trackVector1,
-                                    const HepSymMatrix& trackCov1,
-                                    const HepVector& trackVector2,
-                                    const HepSymMatrix& trackCov2,
+  virtual StatusCode calculateChi2( const Gaudi::TrackVector& trackVector1,
+                                    const Gaudi::TrackMatrix& trackCov1,
+                                    const Gaudi::TrackVector& trackVector2,
+                                    const Gaudi::TrackMatrix& trackCov2,
                                     double& chi2 ) const;
 
 private:
+  StatusCode calculateChi2( Gaudi::Vector4& trackVector1,
+                            Gaudi::Vector4& trackVector2,
+                            Gaudi::SymMatrix4x4& trackCov12,
+                            double& chi2 ) const;
 
-  /// invert the matrix.
-  StatusCode invertMatrix (HepSymMatrix& invC ) const;
+  /// invert the 5x5 matrix
+  StatusCode invertMatrix( Gaudi::TrackMatrix& invC ) const;
 
-  /// translate the matrix to G3 (=cm, GeV) units.
-  StatusCode cToG3( HepSymMatrix& C ) const;
+  /// invert the 4x4 matrix
+  StatusCode invertMatrix( Gaudi::SymMatrix4x4& invC ) const;
+
+  /// translate the 5x5 matrix to G3 (=cm, GeV) units.
+  StatusCode cToG3( Gaudi::TrackMatrix& C ) const;
+
+  /// translate the 4x4 matrix to G3 (=cm, GeV) units.
+  StatusCode cToG3( Gaudi::SymMatrix4x4& C ) const;
   
-  /// translate the inverse matrix back to G4 units.
-  StatusCode cToG4( HepSymMatrix& invC ) const;
+  /// translate the 5x5 inverse matrix back to G4 units.
+  StatusCode cToG4( Gaudi::TrackMatrix& invC ) const;
+
+  /// translate the 4x4 inverse matrix back to G4 units.
+  StatusCode cToG4( Gaudi::SymMatrix4x4& invC ) const;
 
   // job options
   // -----------
@@ -64,7 +77,7 @@ private:
   /// with straight lines
   bool m_matchInMagnet;
   /// Add momentum information to the matching chi2 criterium
-  //bool m_addMomentum;
+  bool m_addMomentum;
 
 };
 #endif // TRACKTOOLS_TRACKCHI2CALCULATOR_H

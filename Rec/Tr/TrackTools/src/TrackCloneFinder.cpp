@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.1 2005-12-13 18:10:04 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.2 2006-02-07 11:32:02 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -7,17 +7,13 @@
 // from GSL
 #include "gsl/gsl_math.h" 
 
-// from LHCbKernel
-#include "Kernel/LHCbID.h"
-
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 
-// from TrackFitEvent
-#include "Event/Measurement.h"
-
 // local
 #include "TrackCloneFinder.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackCloneFinder
@@ -213,4 +209,3 @@ TrackCloneFinder::lhcbIDsOfType ( const Track& track,
 }
 
 //=============================================================================
-
