@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.14 2006-02-07 11:32:31 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.15 2006-02-07 15:29:57 asarti Exp $
 // Include files 
 
 //Muon
@@ -1305,7 +1305,7 @@ int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
   
   //Look inside the grid
   if(m_debug) std::cout<<" chNum  " <<chamberNumber<<" "<<tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<std::endl;
-  int fx,fy;
+  int fx(0),fy(0);
   //Correct for quarter information
   if( tile.quarter() == 0){
     fx = tile.nX() + m_cgX.at(tile.region())*2;
