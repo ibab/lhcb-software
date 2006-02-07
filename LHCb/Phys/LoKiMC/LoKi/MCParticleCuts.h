@@ -1,8 +1,11 @@
-// $Id: MCParticleCuts.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.2 2006-02-07 17:14:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
+// New Packaage: MC-dependent part of LoKi project 
+//
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -155,6 +158,44 @@ namespace LoKi
      *  @date 2004-03-01
      */
     const LoKi::MCParticles::Energy                        MCE  ;    
+
+    /** @var OSCILLATED
+     *
+     *  It evaluated to 'true' for scilalted particles 
+     * 
+     *  @code
+     * 
+     *   const MCParticle* p  = ...         ;
+     *   const bool oscillated = OSCILLATED (  p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see MCParticle
+     *  @see LoKi::MCParticles::Oscillated
+     *  
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2006-02-05
+     */
+    const LoKi::MCParticles::Oscillated            OSCILLATED ;
+
+    /** @var MCOSCILLATED
+     *
+     *  It evaluated to 'true' for scilalted particles 
+     * 
+     *  @code
+     * 
+     *   const MCParticle* p  = ...         ;
+     *   const bool oscillated = MCOSCILLATED (  p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see MCParticle
+     *  @see LoKi::MCParticles::Oscillated
+     *  
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2006-02-05
+     */
+    const LoKi::MCParticles::Oscillated            MCOSCILLATED ;
 
     /** @var MCPT
      *  MCParticle transverse momentum 

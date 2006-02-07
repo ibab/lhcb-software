@@ -1,8 +1,11 @@
-// $Id: MCVertexCuts.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCVertexCuts.h,v 1.2 2006-02-07 17:14:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
+// New Packaage: MC-dependent part of LoKi project 
+//
 // ============================================================================
 #ifndef LOKI_MCVERTEXCUTS_H 
 #define LOKI_MCVERTEXCUTS_H 1
@@ -180,6 +183,78 @@ namespace LoKi
      */
     const LoKi::MCVertices::VertexPositionZ MCVZ ;
 
+    /** @var MCVTIME
+     *  the "time" of MC vertex 
+     * 
+     *  @code 
+     *
+     *  const LHCb::MCVertex* vertex = ... ; 
+     *  const double time = MCVTIME ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCVertices::VertexTime 
+     *  @see LHCb::MCVertex
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    const LoKi::MCVertices::VertexTime      MCVTIME ;
+
+    /** @var MCPRIMARY
+     *  evaluates to "true" for  primary vertices 
+     * 
+     *  @code 
+     *
+     *  const LHCb::MCVertex* vertex = ... ; 
+     *  const bool primary = MCPRIMARY ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCVertices::Primary
+     *  @see LHCb::MCVertex
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    const LoKi::MCVertices::Primary      MCPRIMARY ;
+    
+    /** @var MCISPRIMARY
+     *  evaluates to "true" for  primary vertices 
+     * 
+     *  @code 
+     *
+     *  const LHCb::MCVertex* vertex = ... ; 
+     *  const bool primary = MCISPRIMARY ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCVertices::Primary
+     *  @see LHCb::MCVertex
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    const LoKi::MCVertices::Primary      MCISPRIMARY ;
+
+    /** @var MCISDECAY
+     *  evaluates to "true" for 'decay' vertices 
+     * 
+     *  @code 
+     *
+     *  const LHCb::MCVertex* vertex = ... ; 
+     *  const bool decay = MCISDECAY ( vertex ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCVertices::Decay
+     *  @see LHCb::MCVertex
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    const LoKi::MCVertices::Decay      MCISDECAY  ;
+    
     /** the distance for MC vertex from given point, 
      *  given (MC)Vertex or collision
      * 

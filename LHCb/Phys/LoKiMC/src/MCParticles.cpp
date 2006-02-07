@@ -1,8 +1,11 @@
-// $Id: MCParticles.cpp,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.2 2006-02-07 17:14:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
+// New Packaage: MC-dependent part of LoKi project 
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -85,11 +88,32 @@ LoKi::MCParticles::Energy::fillStream( std::ostream& s ) const
 // ============================================================================
 
 // ============================================================================
+LoKi::MCParticles::Oscillated::result_type 
+LoKi::MCParticles::Oscillated::operator() 
+  ( LoKi::MCParticles::Oscillated::argument p ) const
+{
+  if ( 0 != p ) { return p -> hasOscillated() ; }          // RETURN 
+  Error (" Invalid Particle, return 'false'");
+  return false ;                     // RETURN 
+};
+// ============================================================================
+LoKi::MCParticles::Oscillated*
+LoKi::MCParticles::Oscillated::clone() const 
+{ return new LoKi::MCParticles::Oscillated(*this) ; }
+// ============================================================================
+
+// ============================================================================
+std::ostream&
+LoKi::MCParticles::Oscillated::fillStream( std::ostream& s ) const 
+{ return s << "MCOSCILLATED" ; }
+// ============================================================================
+
+// ============================================================================
 LoKi::MCParticles::TransverseMomentum::result_type 
 LoKi::MCParticles::TransverseMomentum::operator() 
   ( LoKi::MCParticles::TransverseMomentum::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum().Pt() ; }           // RETURN 
+  if ( 0 != p ) { return p -> momentum().Pt() ; }           // RETURN 
   Error(" Invalid Particle, return 'InvalidMomentum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 };

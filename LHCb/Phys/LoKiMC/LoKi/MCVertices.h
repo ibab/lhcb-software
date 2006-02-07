@@ -1,6 +1,6 @@
-// $Id: MCVertices.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCVertices.h,v 1.2 2006-02-07 17:14:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -132,6 +132,70 @@ namespace LoKi
     {
       /// clone method (mandatory)
       virtual VertexPositionZ* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+    };
+    
+    /** @struct VertexTime 
+     *  evaluator of "vertex time" (?)
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    struct VertexTime :
+      public LoKi::Function<const LHCb::MCVertex*>
+    {
+      /// clone method (mandatory)
+      virtual VertexTime* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+    };
+
+    /** @struct VertexType 
+     *  evaluator of "vertex type" (?)
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    struct VertexType :
+      public LoKi::Function<const LHCb::MCVertex*>
+    {
+      /// clone method (mandatory)
+      virtual VertexType* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+    };
+    
+    /** @struct Primary
+     *  return true for 'primary' vertices 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    struct Primary:
+      public LoKi::Predicate<const LHCb::MCVertex*>
+    {
+      /// clone method (mandatory)
+      virtual Primary* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+    };
+
+    /** @struct Decay
+     *  return true for 'decay' vertices 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     */
+    struct Decay:
+      public LoKi::Predicate<const LHCb::MCVertex*>
+    {
+      /// clone method (mandatory)
+      virtual Decay* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument v ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 

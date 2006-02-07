@@ -1,6 +1,6 @@
-// $Id: MCParticles.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.2 2006-02-07 17:14:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -246,11 +246,31 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier : public LoKi::Function<const LHCb::MCParticle*>
+    class AbsIdentifier : 
+      public LoKi::Function<const LHCb::MCParticle*>
     {      
     public:
       /// clone method (mandatory!)
       virtual AbsIdentifier* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    };
+
+    /** @struct Oscillated
+     *
+     *  It evaluates to 'true' for oscillated particles 
+     *  
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2006-02-05
+     */
+    class Oscillated: 
+      public LoKi::Predicate<const LHCb::MCParticle*>
+    {      
+    public:
+      /// clone method (mandatory!)
+      virtual Oscillated* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 

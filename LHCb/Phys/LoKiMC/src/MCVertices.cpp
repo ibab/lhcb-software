@@ -1,6 +1,6 @@
-// $Id: MCVertices.cpp,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCVertices.cpp,v 1.2 2006-02-07 17:14:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -97,8 +97,8 @@ LoKi::MCVertices::VertexPositionX::operator()
 {
   if ( 0 == v ) 
   { 
-    Error (  " MCVertex* points to NULL, return -100 * km  " ) ;
-    return -100. * km ;
+    Error (  " MCVertex* points to NULL, return 'InvalidDistance'" ) ;
+    return LoKi::Constants::InvalidDistance ;
   }
   return v->position().x() ;
 };
@@ -120,8 +120,8 @@ LoKi::MCVertices::VertexPositionY::operator()
 {
   if ( 0 == v ) 
   { 
-    Error (  " MCVertex* points to NULL, return -100 * km  " ) ;
-    return -100. * km ;
+    Error (  " MCVertex* points to NULL, return 'InvalidDistance'" ) ;
+    return LoKi::Constants::InvalidDistance ;
   }
   return v->position().y() ;
 };
@@ -142,8 +142,8 @@ LoKi::MCVertices::VertexPositionZ::operator()
 {
   if ( 0 == v ) 
   { 
-    Error (  " MCVertex* points to NULL, return -100 * km  " ) ;
-    return -100. * km ;
+    Error (  " MCVertex* points to NULL, return 'InvalidDistance'" ) ;
+    return LoKi::Constants::InvalidDistance ;
   }
   return v->position().z() ;
 };
@@ -151,6 +151,72 @@ LoKi::MCVertices::VertexPositionZ::operator()
 std::ostream& LoKi::MCVertices::VertexPositionZ::fillStream
 ( std::ostream& s ) const
 { return s << "MCVZ" ; } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::MCVertices::VertexTime* 
+LoKi::MCVertices::VertexTime::clone() const 
+{ return new VertexTime(*this) ; }
+// ============================================================================
+LoKi::MCVertices::VertexTime::result_type
+LoKi::MCVertices::VertexTime::operator() 
+  ( LoKi::MCVertices::VertexTime::argument v ) const
+{
+  if ( 0 == v ) 
+  { 
+    Error (  " MCVertex* points to NULL, return 'InvalidTime'" ) ;
+    return LoKi::Constants::InvalidTime ;
+  }
+  return v->time() ;
+};
+// ============================================================================
+std::ostream& LoKi::MCVertices::VertexTime::fillStream
+( std::ostream& s ) const
+{ return s << "MCVTIME" ; } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::MCVertices::Primary* 
+LoKi::MCVertices::Primary::clone() const 
+{ return new Primary(*this) ; }
+// ============================================================================
+LoKi::MCVertices::Primary::result_type
+LoKi::MCVertices::Primary::operator() 
+  ( LoKi::MCVertices::Primary::argument v ) const
+{
+  if ( 0 == v ) 
+  { 
+    Error (  " MCVertex* points to NULL, return 'false' " ) ;
+    return false ;
+  }
+  return v->isPrimary() ;
+};
+// ============================================================================
+std::ostream& LoKi::MCVertices::Primary::fillStream
+( std::ostream& s ) const
+{ return s << "MCISPRIMARY" ; } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::MCVertices::Decay* 
+LoKi::MCVertices::Decay::clone() const 
+{ return new Decay(*this) ; }
+// ============================================================================
+LoKi::MCVertices::Decay::result_type
+LoKi::MCVertices::Decay::operator() 
+  ( LoKi::MCVertices::Primary::argument v ) const
+{
+  if ( 0 == v ) 
+  { 
+    Error (  " MCVertex* points to NULL, return 'false' " ) ;
+    return false ;
+  }
+  return v->isDecay() ;
+};
+// ============================================================================
+std::ostream& LoKi::MCVertices::Decay::fillStream
+( std::ostream& s ) const
+{ return s << "MCISDECAY" ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -167,7 +233,7 @@ LoKi::MCVertices::MCVertexDistance::MCVertexDistance
 {
   if ( 0 == point ) 
   { 
-    Error("MCVertex* points to NULL!") ;
+    Error ( "MCVertex* points to NULL!") ;
     m_point = LoKi::Point3D( -1.0 * km , -1.0 * km , -1.0 * km ) ;
   }
   else { m_point = point->position(); }
