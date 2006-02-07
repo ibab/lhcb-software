@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $
+# $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2006/02/07 13:42:53  ibelyaev
-#  many new changed : see relese.notes
-# 
 # =============================================================================
 
 import sys,os,os.path,datetime  
@@ -93,12 +90,9 @@ class RelW2D ( Rel2D ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.2 $ ']
-    lines += ['     * ========================================================================']
-    lines += ["""     * $Log: not supported by cvs2svn $
-     *"""]
+    lines += ['     * $CVS tag:$, version $Revision: 1.3 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -161,13 +155,10 @@ def _write_xml_( lines , lst ) :
     return lines 
 
 
-def _write_cpp_ ( lines , lst ) :
-    lines += ['// $Id: Relations.py,v 1.2 2006-02-07 13:57:15 ibelyaev Exp $' ] 
+def _write_cpp_ ( lines , lst , includes = [] ) :
+    lines += ['// $Id: Relations.py,v 1.3 2006-02-07 14:34:25 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ ']
-    lines += ['// ====================================================================']
-    lines += ["""// $Log: not supported by cvs2svn $
-// """]
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
@@ -180,7 +171,11 @@ def _write_cpp_ ( lines , lst ) :
     lines += ['// ====================================================================']
     lines += ['#include "Relations/RelationsDict.h"']
     lines += ['// ====================================================================']
-    lines += ['// Other incldue files: put your own includes here:']
+    lines += ['// Provided include files: ']
+    lines += ['// ====================================================================']
+    for file in includes : lines += ['#include "%s"' % file ]
+    lines += ['// ====================================================================']
+    lines += ['// Other include files: put your own includes here:']
     lines += ['// ====================================================================']
     lines += ['//#include ...']
     lines += ['//#include ...']
@@ -212,7 +207,7 @@ def _write_cpp_ ( lines , lst ) :
     _i = 0 
     for o in lst :
         _i+=1 
-        lines += ['      %s _%s ;' %( o.Dict() , _i ) ]
+        lines += ['%s\t_%s ;' %( o.Dict() , _i ) ]
     lines += ['  };']
     lines += ['};']    
     lines += ['']    
@@ -236,15 +231,16 @@ def _backup_ ( file1 , suffix = "_old" ) :
     os.rename( file1 , file2 )
 
 
-def prepare ( classes                   ,
-              xmlname = "selection.xml" ,
-              cppname = "selection.h"   ) :
+def prepare ( classes                    ,
+              includes = []              ,
+              xmlname  = "selection.xml" ,
+              cppname  = "selection.h"   ) :
 
     for o in classes :
         print " Prepare Reflex dictionaries for class %s"% o .name()
         
     xmllines = _write_xml_ ( [] , classes )
-    hlines   = _write_cpp_ ( [] , classes )
+    hlines   = _write_cpp_ ( [] , classes , includes )
 
     # write XML-file
     _backup_( xmlname )
