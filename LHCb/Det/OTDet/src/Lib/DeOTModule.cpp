@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.5 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTModule.cpp,v 1.6 2006-02-07 17:22:37 janos Exp $
 
 
 // Kernel
@@ -245,7 +245,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     }
   } else {  // dz < 0.5 mm 
     // treatment of curling tracks. Code should be made more readable.
-    msg << MSG::INFO << "We've got a curly track :-); z1 = " << z1 << ", z2 = " << z2 << ", and fabs(z1 -z2) = " << fabs(z1-z2) << endreq;
+    //msg << MSG::DEBUG << "We've got a curly track :-); z1 = " << z1 << ", z2 = " << z2 << ", and fabs(z1 -z2) = " << fabs(z1-z2) << endreq;
     double z3Circ,zCirc,uCirc,rCirc;
     double zfrac,zint;
 

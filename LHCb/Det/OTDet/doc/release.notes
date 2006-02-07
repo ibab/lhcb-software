@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.41 2006-01-20 14:32:42 cattanem Exp $
+! $Id: release.notes,v 1.42 2006-02-07 17:22:36 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r0 2006-01-20 ==========================
+! 2006-02-07 - Jan Amoraal
+ - Get rid of anoying debug message
+
 ! 2006-01-20 - Marco Cattaneo
  - Change default detector location to use AfterMagnet/T envelope
 
