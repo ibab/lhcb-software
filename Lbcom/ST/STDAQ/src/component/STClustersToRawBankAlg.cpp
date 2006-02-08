@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.3 2006-02-07 08:47:36 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.4 2006-02-08 09:48:28 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -96,7 +96,7 @@ StatusCode STClustersToRawBankAlg::initialize() {
     return StatusCode::FAILURE;
   }
 
-  // init the maps
+  // init the map
   unsigned int nBoard = m_readoutTool->nBoard();
   for (unsigned int iVal = 0; iVal<nBoard; ++iVal ){
 
@@ -145,16 +145,16 @@ StatusCode STClustersToRawBankAlg::execute() {
   for (unsigned int iBoard = 0u; iBoard < nBoard; ++iBoard){   
     // get the data ....
     STTell1ID aBoardID = m_bankMapping->findBoard(iBoard);
-    STClustersOnBoard::ClusterVector clusCont = m_clusVectors[aBoardID]->clusters();
+    STClustersOnBoard::ClusterVector clusCont = m_clusVectors[iBoard]->clusters();
 
-    if (m_clusVectors[aBoardID]->inOverflow()) ++m_overflow;
+    if ( m_clusVectors[iBoard]->inOverflow() == true) ++m_overflow;
 
     // make the a bankwriter....
     BankWriter bWriter(bankSize(clusCont)); 
 
     writeBank(clusCont,bWriter);
 
-    RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID),m_bankType ,STDAQ::v3, 
+    RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),m_bankType ,STDAQ::v3, 
                                         bWriter.byteSize(), &(bWriter.dataBank()[0]));
     tEvent->adoptBank(tBank,true);
 
@@ -201,8 +201,13 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
     }
     else {
       ClusterMap::iterator iterMap = m_clusMap.find(aPair.first);
-      STClustersOnBoard* tVec = iterMap->second;
-      tVec->addCluster(*iterClus,aPair.second);
+      if (iterMap != m_clusMap.end() ){
+        STClustersOnBoard* tVec = iterMap->second;
+        tVec->addCluster(*iterClus,aPair.second);
+      }
+      else {
+	 warning() << "Failed to find board in map " << endreq;
+      }
     }
      
   } // iterClus

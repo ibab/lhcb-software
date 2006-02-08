@@ -1,4 +1,4 @@
-// $Id: STTell1ID.h,v 1.2 2006-01-26 15:31:25 mneedham Exp $
+// $Id: STTell1ID.h,v 1.3 2006-02-08 09:48:28 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 
@@ -33,7 +33,7 @@ public:
     : m_id(0) {}
 
   /// Destructor
-  virtual ~STTell1ID() {}
+  ~STTell1ID() {}
 
   /// wafer 
   unsigned int region() const; 
@@ -42,7 +42,13 @@ public:
   unsigned int subID() const;
 
   /// cast
-  operator int() const;
+  //  operator int() const;
+
+  /// comparison equality
+  bool operator==(const STTell1ID& testID) const;
+
+  /// comparison <
+  bool operator<(const STTell1ID& testID) const;
  
   /// Retrieve IT Channel ID
   unsigned int id() const;
@@ -54,7 +60,7 @@ public:
   }
 
   // Fill the ASCII output stream
-  virtual std::ostream& fillStream(std::ostream& s) const;
+  std::ostream& fillStream(std::ostream& s) const;
 
   enum General { nullBoard =  0x0000ffff};
 
@@ -66,9 +72,21 @@ private:
   unsigned int m_id; /// STell1ID
 };
 
+/*
 inline STTell1ID::operator int() const
 {
    return m_id;
+}
+*/
+
+inline bool STTell1ID::operator==(const STTell1ID& testID) const
+{
+ return (this->id() == testID.id());
+}
+
+inline bool STTell1ID::operator<(const STTell1ID& testID) const
+{
+ return (this->id() < testID.id());
 }
 
 inline unsigned int STTell1ID::id() const
