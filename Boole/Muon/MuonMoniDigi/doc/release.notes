@@ -1,10 +1,12 @@
-Package         : MuonMoniDigi
-Package manager : A Sarti
+!Package         : MuonMoniDigi
+!Package manager : A Sarti
+!-----------------------------------------------------------------------------
 
-!======================= MuonMoniDigi v1r0 2005-10-04 ========================
+!======================= MuonMoniDigi v2r0 2006-02-07 ========================
 ! 2006-02-07 - A. Sarti
  - Migrated the code to new event model
 
+!======================= MuonMoniDigi v1r0 2005-10-04 ========================
 ! 2005-10-04 - Marco Cattaneo
  - Call the base class finalize()
  - Remove unneccessary includes
