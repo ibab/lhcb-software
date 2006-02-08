@@ -19,31 +19,11 @@
       <import name='Kernel/TrackTypes.h'/>
 
       <constructor
-        desc    = 'Constructor from an OTTime'
-        argList = 'LHCb::OTTime otTime, 
-                   DeOTDetector det, 
-                   int ambiguity, 
-                   double tu' >
-	<arg
-	type = 'LHCb::OTTime'
-	name = 'otTime'
-	const = 'FALSE' />
-
-	<arg
-	type = 'DeOTDetector'
-	name = 'det'
-	const = 'FALSE' />
-
-	<arg
-	type = 'int'
-	name = 'ambiguity'
-	const = 'FALSE' />
-	
-	<arg
-	type = 'double'
-	name = 'tu'
-	const = 'FALSE' />
-
+        desc = 'Constructor from an OTTime'>
+       <arg type='LHCb::OTTime' name='otTime' />
+       <arg type='DeOTDetector' name='det' />
+       <arg type='int' name='ambiguity = 0' />
+       <arg type='double' name='tu = 999.0' />
       </constructor>
 
       <attribute

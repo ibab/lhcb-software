@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.8 2006-02-03 09:17:21 ebos Exp $
+// $Id: FitNode.cpp,v 1.9 2006-02-08 17:35:49 erodrigu Exp $
 // Include files
 
 // local
@@ -34,8 +34,8 @@ FitNode::FitNode()
 {
   // FitNode default constructor
   m_transportMatrix = TransportMatrix();
-  m_transportVector = Vector5();
-  m_noiseMatrix     = TransportMatrix();
+  m_transportVector = TrackVector();
+  m_noiseMatrix     = TrackMatrix();
   m_transportDeltaZ = 0.0;
 }
 
@@ -44,8 +44,8 @@ FitNode::FitNode( double zPos )
 {
   //FitNode constructer
   m_transportMatrix = TransportMatrix();
-  m_transportVector = Vector5();
-  m_noiseMatrix     = TransportMatrix();
+  m_transportVector = TrackVector();
+  m_noiseMatrix     = TrackMatrix();
   m_transportDeltaZ = 0.0;
   State tempState = State();
   tempState.setZ( zPos );
@@ -57,8 +57,8 @@ FitNode::FitNode(Measurement& aMeas)
 {
   //FitNode constructer
   m_transportMatrix = TransportMatrix();
-  m_transportVector = Vector5();
-  m_noiseMatrix     = TransportMatrix();
+  m_transportVector = TrackVector();
+  m_noiseMatrix     = TrackMatrix();
   m_transportDeltaZ = 0.0;
   m_measurement     = &aMeas;
   State tempState = State();
@@ -99,7 +99,7 @@ void FitNode::updateTransport( const FitNode& prevNode )
 {
   // add the transport transformation of prevNode to this node
   m_transportVector += m_transportMatrix * prevNode.transportVector() ;
-  m_noiseMatrix += SHacks::Similarity( prevNode.noiseMatrix(), m_transportMatrix );
+  m_noiseMatrix     += SHacks::Similarity( m_transportMatrix, prevNode.noiseMatrix() );
   m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
   m_transportDeltaZ += prevNode.transportDeltaZ();
 }

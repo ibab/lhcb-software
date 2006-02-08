@@ -18,25 +18,10 @@
       <import name='Kernel/ISTClusterPosition' />
 
       <constructor
-        desc = 'Constructor from an ITCluster'
-        argList = 'LHCb::STCluster stCluster,
-                   DeSTDetector det,
-                   ISTClusterPosition stClusPosTool' >
-        <arg
-        type = 'LHCb::STCluster'
-        name = 'stCluster'
-        const = 'FALSE' />
-
-        <arg
-        type = 'DeSTDetector'
-        name = 'det'
-        const = 'FALSE' />
-
-        <arg
-        type = 'ISTClusterPosition'
-        name = 'stClusPosTool'
-        const = 'FALSE' />
-
+        desc = 'Constructor from an STCluster'>
+        <arg type='LHCb::STCluster' name='stCluster' />
+        <arg type='DeSTDetector' name='det' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' />
       </constructor>
 
       <attribute

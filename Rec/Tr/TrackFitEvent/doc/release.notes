@@ -4,6 +4,12 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-08 - Eduardo Rodrigues
+ - introduced LHCb namespace in StateTraj class
+   and made it inherit from DifTraj instead of Trajectory
+ - corrected bugs in migration of FitNode
+ - put back default values in constructors of XxxMeasurement classes
+
 ! 2006-02-03 - Edwin Bos
  - Moved to LHCb v20r0 & updated the code to comply with latest Det packages
  - and G.O.D.'s xml conventions

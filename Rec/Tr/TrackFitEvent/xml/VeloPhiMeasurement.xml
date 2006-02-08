@@ -18,22 +18,10 @@
       <import name='Kernel/TrackTypes.h'/>
 
       <constructor
-        desc = 'Constructor from an VeloPhiCluster'
-        argList = 'LHCb::VeloCluster cluster,
-                   DeVelo det,
-                   double r' >        
-        <arg
-        type = 'LHCb::VeloCluster'
-        name = 'cluster'
-        const = 'FALSE' />
-        <arg
-        type = 'DeVelo'
-        name = 'det'
-        const = 'FALSE' />
-        <arg
-        type = 'double'
-        name = 'r'
-        const = 'FALSE' />
+        desc = 'Constructor from an VeloPhiCluster'>
+        <arg type = 'VeloCluster' name = 'cluster'/>
+        <arg type = 'DeVelo' name = 'det'/>
+        <arg type = 'double' name = 'r = -999.0'/>
       </constructor>
 
      <attribute
