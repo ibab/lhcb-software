@@ -1,4 +1,6 @@
 createTTRawBuffer.type = "TT";
 createITRawBuffer.type = "IT";
 
+//ToolSvc.ITReadoutTool.printMapping = true;
+//ToolSvc.TTReadoutTool.printMapping = true;
 

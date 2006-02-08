@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.4 2006-02-08 09:48:28 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.5 2006-02-08 17:20:51 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -186,16 +186,16 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
        iterClus != clusCont->end(); ++iterClus ){
 
     // find the online channel and board
-    STChannelID firstChan = (*iterClus)->channelID();
-    STDAQ::chanPair aPair = m_readoutTool->offlineChanToDAQ(firstChan);
+    STChannelID chan = (*iterClus)->channelID();
+    STDAQ::chanPair aPair = m_readoutTool->offlineChanToDAQ(chan);
 
     if (aPair.first.id() == STTell1ID::nullBoard) {
       // screwed
       err()  << "failed to link "   
-             << firstChan.station() 
-             << " " << firstChan.layer()
-             << " " << firstChan.detRegion()  
-             << " " << firstChan.sector() << 
+             << chan.station() 
+             << " " << chan.layer()
+             << " " << chan.detRegion()  
+             << " " << chan.sector() << 
              endreq;
       return StatusCode::FAILURE;
     }
