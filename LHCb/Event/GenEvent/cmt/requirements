@@ -29,4 +29,4 @@ apply_pattern component_library library=GenEventDict
 apply_pattern linker_library    library=GenEvent
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
