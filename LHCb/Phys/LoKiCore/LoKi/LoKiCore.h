@@ -1,8 +1,8 @@
-// $Id: LoKiCore.h,v 1.1.1.1 2006-01-24 09:39:42 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.2 2006-02-08 12:01:14 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,6 +32,7 @@
 #include "LoKi/Kinematics.h"
 #include "LoKi/FuncAdapters.h"
 #include "LoKi/Constants.h"
+#include "LoKi/Objects.h"
 // ============================================================================
 
 // ============================================================================
