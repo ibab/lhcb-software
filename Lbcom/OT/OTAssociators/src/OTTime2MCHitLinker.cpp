@@ -7,7 +7,8 @@
 // MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCOTDeposit.h"
-#include "Event/MCOTTime.h"
+//#include "Event/MCOTTime.h"
+#include "Event/OTTime.h"
 
 // local
 #include "OTTime2MCHitLinker.h"
@@ -53,16 +54,19 @@ StatusCode OTTime2MCHitLinker::initialize()
 StatusCode OTTime2MCHitLinker::execute() 
 {
   // Get MCOTTimes
-  LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  //LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
     
   // Get MCHits; no spillover 
   LHCb::MCHits* mcHits = get<LHCb::MCHits>( "/Event/"+LHCb::MCHitLocation::OT );
 
   // Create a linker
-  LinkerWithKey<LHCb::MCHit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
-
+  //LinkerWithKey<LHCb::MCHit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  LinkerWithKey<LHCb::MCHit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  
   // loop and link OTTimes to MC truth
-  LHCb::MCOTTimes::const_iterator iterTime;
+  //LHCb::MCOTTimes::const_iterator iterTime;
+  LHCb::OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime ){
     
@@ -80,12 +84,16 @@ StatusCode OTTime2MCHitLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::MCOTTime* aTime,
+// StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
+// 						 std::vector<const LHCb::MCHit*>& hitVec, 
+// 						 LHCb::MCHits* mcHits )
+StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
 						 std::vector<const LHCb::MCHit*>& hitVec, 
 						 LHCb::MCHits* mcHits )
 {
   // Make link to MCHit from OTTime
-  typedef LinkerTool<LHCb::MCOTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
+  //typedef LinkerTool<LHCb::MCOTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
+  typedef LinkerTool<LHCb::OTTime, LHCb::MCOTDeposit> OTTime2MCDepositAsct;
   typedef OTTime2MCDepositAsct::DirectType Table;
   typedef Table::Range MCDeposit;
   typedef Table::iterator MCDepositIter;

@@ -7,8 +7,8 @@
 // MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
-#include "Event/MCOTTime.h"
-
+//#include "Event/MCOTTime.h"
+#include "Event/OTTime.h"
 // local
 #include "OTTime2MCParticleLinker.h"
 
@@ -25,7 +25,7 @@ static const  AlgFactory<OTTime2MCParticleLinker> s_factory ;
 const IAlgFactory& OTTime2MCParticleLinkerFactory = s_factory ; 
 
 OTTime2MCParticleLinker::OTTime2MCParticleLinker( const std::string& name,
-						  ISvcLocator* pSvcLocator)
+						  ISvcLocator* pSvcLocator )
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
@@ -49,13 +49,16 @@ StatusCode OTTime2MCParticleLinker::initialize()
 StatusCode OTTime2MCParticleLinker::execute() 
 {
   // get OTTimes
-  LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  //  LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
 
   // Create a linker
-  LinkerWithKey<LHCb::MCParticle,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  //LinkerWithKey<LHCb::MCParticle,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  LinkerWithKey<LHCb::MCParticle,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
   
   // loop and link OTTimes to MC truth
-  LHCb::MCOTTimes::const_iterator iterTime;
+  //LHCb::MCOTTimes::const_iterator iterTime;
+  LHCb::OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime ){
     std::vector<const LHCb::MCParticle*> partVec;
@@ -71,10 +74,14 @@ StatusCode OTTime2MCParticleLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::MCOTTime* aTime,
-						      std::vector<const LHCb::MCParticle*>& partVec ){
+// StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::MCOTTime* aTime,
+// 						      std::vector<const LHCb::MCParticle*>& partVec )
+StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::OTTime* aTime,
+						      std::vector<const LHCb::MCParticle*>& partVec )
+{
  
-  typedef LinkerTool<LHCb::MCOTTime, LHCb::MCHit> OTTime2MCHitAsct;
+  //typedef LinkerTool<LHCb::MCOTTime, LHCb::MCHit> OTTime2MCHitAsct;
+  typedef LinkerTool<LHCb::OTTime, LHCb::MCHit> OTTime2MCHitAsct;
   typedef OTTime2MCHitAsct::DirectType Table;
   typedef Table::Range Range;
   typedef Table::iterator iterator;

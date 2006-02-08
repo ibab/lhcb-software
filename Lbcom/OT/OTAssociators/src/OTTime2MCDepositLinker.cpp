@@ -13,7 +13,7 @@
 #include "Event/MCOTTime.h"
 
 // Event
-//#include "Event/OTTime.h"
+#include "Event/OTTime.h"
 
 // local
 #include "OTTime2MCDepositLinker.h"
@@ -31,7 +31,7 @@ static const  AlgFactory<OTTime2MCDepositLinker>   s_factory ;
 const IAlgFactory& OTTime2MCDepositLinkerFactory = s_factory ; 
 
 OTTime2MCDepositLinker::OTTime2MCDepositLinker( const std::string& name,
-						ISvcLocator* pSvcLocator)
+						ISvcLocator* pSvcLocator )
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
@@ -54,15 +54,25 @@ StatusCode OTTime2MCDepositLinker::initialize() {
 
 StatusCode OTTime2MCDepositLinker::execute() 
 {
-  LHCb::MCOTTimes* timeCont = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  // Get OTTimes
+  LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
+
+  // Get MCOTTimes
+  LHCb::MCOTTimes* mcTime = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
   
-  LinkerWithKey<LHCb::MCOTDeposit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  StatusCode sc;
+  sc = setMCTruth( timeCont, mcTime );
+  if ( !sc.isSuccess() ) return Error( "Failed to set the mc truth link", sc );
+    
+  //LinkerWithKey<LHCb::MCOTDeposit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
+  LinkerWithKey<LHCb::MCOTDeposit,LHCb::OTTime> myLink( evtSvc(), msgSvc(), outputData() );
  
   // loop and link OTTimes to MC truth
-  LHCb::MCOTTimes::const_iterator iterTime;
+  //LHCb::MCOTTimes::const_iterator iterTime;
+  LHCb::OTTimes::const_iterator iterTime;
   for( iterTime = timeCont->begin(); iterTime != timeCont->end(); ++iterTime ) {
     std::vector<LHCb::MCOTDeposit*> depVec;
-    StatusCode sc = associateToTruth( *iterTime, depVec );
+    sc = associateToTruth( *iterTime, depVec );
     if ( !sc.isSuccess() ) return Error( "Failed to associate to truth" , sc );
     std::vector<LHCb::MCOTDeposit*>::iterator iDep = depVec.begin();
     while ( iDep != depVec.end() ) {
@@ -74,24 +84,31 @@ StatusCode OTTime2MCDepositLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::MCOTTime* aTime,
-						     std::vector<LHCb::MCOTDeposit*>& depVec ) {
+// StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::MCOTTime* aTime,
+// 						     std::vector<LHCb::MCOTDeposit*>& depVec )
+StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::OTTime* aTime,
+ 						     std::vector<LHCb::MCOTDeposit*>& depVec ) 
+{  
+  // Link time to truth
+  const LHCb::MCOTTime* mcTime = mcTruth<LHCb::MCOTTime>( aTime );
+
+  if ( 0 != mcTime ) {
+    // link to deposits
+    SmartRefVector<LHCb::MCOTDeposit> depCont = mcTime->deposits();
+    if ( depCont.empty() ){
+      error() << " Deposits Size" << depCont.size() << endreq;
+      return StatusCode::FAILURE;
+    } // if depCont.empty()
   
-  SmartRefVector<LHCb::MCOTDeposit> depCont = aTime->deposits();
-  if ( depCont.empty() ){
-    error() << " Deposits Size" << depCont.size() << endreq;
-    return StatusCode::FAILURE;
-  } // if depCont.empty()
+    unsigned tdcTime = aTime->tdcTime();
   
-  unsigned tdcTime = aTime->tdcTime();
-  
-  SmartRefVector<LHCb::MCOTDeposit>::iterator iterDep;
-  for ( iterDep = depCont.begin(); iterDep != depCont.end(); ++iterDep ) {
-    if( ( (*iterDep)->tdcTime() ) < ( tdcTime + m_acceptTime ) ) {
-      depVec.push_back( *iterDep );
-    } // if ( (*iterDep)->tdcTime() ) < ( tdcTime + m_acceptTime )
-  } // for iterDep
-  
+    SmartRefVector<LHCb::MCOTDeposit>::iterator iterDep;
+    for ( iterDep = depCont.begin(); iterDep != depCont.end(); ++iterDep ) {
+      if( ( (*iterDep)->tdcTime() ) < ( tdcTime + m_acceptTime ) ) {
+	depVec.push_back( *iterDep );
+      } // if ( (*iterDep)->tdcTime() ) < ( tdcTime + m_acceptTime )
+    } // for iterDep
+  }
   return StatusCode::SUCCESS;
 }    
 
