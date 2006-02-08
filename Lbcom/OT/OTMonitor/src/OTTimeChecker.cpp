@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.5 2006-01-30 13:42:55 janos Exp $
+// $Id: OTTimeChecker.cpp,v 1.6 2006-02-08 13:08:25 cattanem Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
@@ -80,7 +80,7 @@ StatusCode OTTimeChecker::execute()
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  OTTime2MCHitAsct associator( evtSvc(), LHCb::OTTimeLocation::Default );
+  OTTime2MCHitAsct associator( evtSvc(), "/Event/Link/OTTimes2MCHits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
   

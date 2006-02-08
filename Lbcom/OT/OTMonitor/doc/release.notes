@@ -1,7 +1,10 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
-!==================== OTMonitor v2r0 2006-01-31 =====================
+!==================== OTMonitor v2r0 2006-02-08 =====================
+! 2006-02-08 - Marco Cattaneo
+ - Fix path of Linker table
+
 ! 2006-01-31 - Marco Cattaneo
  - Fixes to requirements
 
