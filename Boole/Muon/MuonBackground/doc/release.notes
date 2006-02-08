@@ -5,9 +5,9 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!====================== MuonBackground v2r0 2006-01-29 =====================
+!====================== MuonBackground v2r0 2006-02-07 =====================
 ! 2006-02-07 - Alessia Satta
- - fix chamber/gao volume
+ - fix chamber/gap volume
 
 ! 2006-01-29 - Alessia Satta
  - Compatible with new event model, MuonDet . Not finalized, waiting for 
