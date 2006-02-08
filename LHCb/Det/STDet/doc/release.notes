@@ -3,6 +3,16 @@
 
 !-----------------------------------------------------------------------
 
+
+! 2006-02-8
+
+- Get TT Sector numbering init correct
+
+! 2006-02-06 
+ - bug fix that gets numbering closer to correct
+
+
+
 !========================= STDet v2r0 2006-02-06 =======================
 ! 2006-02-06 M. Needham 
  - bug fix that gets numbering closer to correct

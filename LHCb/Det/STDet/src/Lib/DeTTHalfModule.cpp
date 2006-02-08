@@ -56,13 +56,13 @@ StatusCode DeTTHalfModule::initialize() {
     m_firstSector = param<int>("firstReadoutSector");
     m_position = param<std::string>("top_bottom");
     m_column = param<int>("column");
-   
+    m_type = param<std::string>("moduleType");   
+
     m_parent = getParent<DeTTHalfModule>();
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeTT, parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
     setElementID(chan);
     m_sectors = getChildren<DeTTHalfModule>();   
-    m_sectors.size() == 3u ? m_type = "KLM": m_type = "KL";
   }
  
   return StatusCode::SUCCESS;

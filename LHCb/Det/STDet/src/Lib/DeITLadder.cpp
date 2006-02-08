@@ -60,6 +60,7 @@ StatusCode DeITLadder::initialize() {
       return StatusCode::FAILURE;
     }
   }
+
   return sc;
 }
 

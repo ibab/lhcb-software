@@ -39,6 +39,9 @@ StatusCode DeTTSector::initialize() {
     // get the parent
     m_parent = getParent<DeTTSector>();
 
+    unsigned int tSize;
+    m_parent->type() == "KLM" ? tSize = 3 : tSize = 2;
+
     // sub id
     unsigned subID = param<int>("subID");
 
@@ -47,7 +50,7 @@ StatusCode DeTTSector::initialize() {
      setID(m_parent->firstSector()+subID-1);
     }
     else {
-      setID(m_parent->firstSector() + m_parent->sectors().size() - subID);
+      setID(m_parent->firstSector() + tSize - subID);
     }
    
     // row..
@@ -62,6 +65,7 @@ StatusCode DeTTSector::initialize() {
         m_row = id() - m_parent->firstSector() + 3;
       }
     }
+
 
     // build the id
     STChannelID parentID = m_parent->elementID();
