@@ -4,14 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2006-02-07
+!=============================== STDAQ v2r2 2006-02-07 =======================
+! 2006-02-07 M. Needham
  - bug fix to prevent core dump in STClustersToRawBank alg
  - remove cast to int in STTell1ID (the compiler was doing bad things with it)
  - remove virtual functions in STTell1ID
  - remove obsolete daqchannelid file
-
-!=============================== STDAQ v2r2 2006-02-07 =======================
-! 2006-02-07 M. Needham
  - fix to get lite clusters working 
  - Changes for new cluster classes
 
