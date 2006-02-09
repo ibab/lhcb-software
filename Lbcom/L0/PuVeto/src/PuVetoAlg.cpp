@@ -1,10 +1,9 @@
-// $Id: PuVetoAlg.cpp,v 1.19 2006-02-06 17:58:27 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.20 2006-02-09 10:29:32 cattanem Exp $
 // Include files
 #include <fstream>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // from DAQEvent
-//#include "Event/RawBuffer.h"
 #include "Event/RawEvent.h"
 // from VeloEvent
 #include "Event/MCVeloFE.h"
@@ -22,8 +21,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<PuVetoAlg>          s_factory ;
-const        IAlgFactory& PuVetoAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( PuVetoAlg );
 
 
 //=============================================================================
@@ -212,7 +210,7 @@ StatusCode PuVetoAlg::execute() {
   // Apply a threshold on each strip, OR them by 4 and construct the hit bit pattern
   // also store all hits in the RawEvent buffer
 
-  RawEvent *raw =  new RawEvent();
+  RawEvent* raw = get<RawEvent>( RawEventLocation::Default );
   
   std::vector<unsigned short int> rawpudata;
   std::vector<unsigned int> rawdatavec;
@@ -269,7 +267,6 @@ StatusCode PuVetoAlg::execute() {
     *p = rawdatavec[ir];
   }
   raw->adoptBank(bank , true);
-  put (raw , RawEventLocation::Default);
   
 
   fillHisto(m_hitPattern);
@@ -546,7 +543,3 @@ void PuVetoAlg::rawVec (std::vector<unsigned short int> *vecin,
     vecout->push_back(tempraw);
   }
 }
-
-    
-    
-      
