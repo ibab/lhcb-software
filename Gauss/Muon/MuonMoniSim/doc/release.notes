@@ -1,7 +1,7 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
-!============================== MuonMoniSim v1r1 ============================
+!====================== MuonMoniSim v2r0 2006-01-23  ========================
 ! 2006-01-23 - A. Sarti
  - Fixed the call to MCevent in requirements
  - Use MuonDet to retrieve the info from sensDetID!
@@ -12,6 +12,7 @@ Package manager : A Sarti
  - Now getting station, region and other informations from MCHit
    directly
 
+!============================== MuonMoniSim v1r1 ============================
 ! 2005-06-17 - Gloria CORTI
  - Make print out at execute in debug() instead of info()
  - Remove options regarding Gauss jobs.
