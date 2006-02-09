@@ -1,8 +1,11 @@
-// $Id: LoKiMC.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: LoKiMC.h,v 1.2 2006-02-09 15:42:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
+// New Packaage: MC-dependent part of LoKi project 
+// 
 // ============================================================================
 #ifndef LOKI_LOKIMC_H 
 #define LOKI_LOKIMC_H 1
@@ -21,6 +24,7 @@
 #include "LoKi/MCTrees.h"
 #include "LoKi/BuildMCTrees.h"
 #include "LoKi/MCKinematics.h"
+#include "LoKi/MCAlgs.h"
 // ============================================================================
 
 // ============================================================================

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-02-09 15:42:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,11 +17,151 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2006-02-09 - Vanya BELYAEV
+
+ - LoKi/MCAlgs.h
+
+   few trivial, but efficient highly recirsive pseudo-algorithms  
+   to counting/checking the particles from MC-decay trees: 
+
+    /** @fn count_if 
+     *  the trivial algorithm to count number of MC particles
+     *  in the tree, which satisfy the certain criteria 
+     *
+     *  @code 
+     *
+     *  const LHCb::MCParticle* B = .. ;
+     *
+     *  const size_n muons = 
+     *     LoKi::MCAlgs::count_if( B , "mu+" == MCABSID ) ;
+     * 
+     *  @endcode 
+     *
+     *
+     *  @see LHCb::MCParticle
+     *  @see LoKi::Cuts::MCABSID 
+     *
+     *  @param   particle pointer to MC particle  
+     *  @param   predicate criteria 
+     *  @return  number of aprticles which satisfy the criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+    template <class PREDICATE>
+    inline size_t  LoKi::MCAlgs::count_if 
+    ( const LHCb::MCParticle* particle   , 
+      const PREDICATE&        predicate ) ;
+
+
+    /** @fn count_if 
+     *  the trivial algorithm to count number of MC particles
+     *  in the tree, which satisfy the certain criteria 
+     *
+     *  Count number of muons in the decay tree of the B:
+     *
+     *  @code 
+     *
+     *  const LHCb::MCVertex* vx = .. ;
+     *
+     *  const size_n muons = 
+     *     LoKi::MCAlgs::count_if ( vx , "mu+" == MCABSID ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LHCb::MCVertex
+     *  @see LoKi::Cuts::MCABSID 
+     *
+     *  @param   vertex pointer to MC vertex 
+     *  @param   predicate criteria 
+     *  @return  number of aprticles which satisfy the criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+   template <class PREDICATE>
+    inline size_t  LoKi::MCAlgs::count_if 
+    ( const LHCb::MCVertex* vertex    , 
+      const PREDICATE&      predicate ) ;
+
+    /** @fn found 
+     *  trivial algorithm which returns true if 
+     *  the exist at least one particle in the tree which satisfy 
+     *  the certain criteria
+     *
+     *  Check the presence of high-PT muon in the 
+     *   decay tree of the particle:
+     *
+     *  @code 
+     *  
+     *  const LHCb::MCParticle* B = ... ;
+     *  
+     *  MCCut lepton = "mu+" == MCABSID && PT > 2 * GeV ;
+     * 
+     *  const bool good = found ( B , lepton ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LoKi::Types::MCCut
+     *  @see LoKi::Cuts::MCABSID 
+     *  @see LoKi::Cuts::MCPT 
+     *
+     *  @param   particle pointer to MC particle  
+     *  @param   predicate criteria 
+     *  @return  number of aprticles which satisfy the criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+    template <class PREDICATE>
+    inline bool LoKi::MCAlgs::found  
+    ( const LHCb::MCParticle* particle  , 
+      const PREDICATE&        predicate ) ;
+
+    /** @fn found 
+     *  trivial algorithm which returns true if 
+     *  the exist at least one particle in the tree which satisfy 
+     *  the certain criteria
+     *
+     *  @code 
+     *  
+     *  const LHCb::MCVertex* vx = ... ;
+     *  
+     *  MCCut lepton = "mu+" == MCABSID && PT > 2 * GeV ;
+     * 
+     *  const bool good = found ( vx , lepton ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LoKi::Types::MCCut
+     *  @see LoKi::Cuts::MCABSID 
+     *  @see LoKi::Cuts::MCPT 
+     *  
+     *  @param   vertex  pointer to MC vertex 
+     *  @param   predicate criteria 
+     *  @return  number of aprticles which satisfy the criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+     template <class PREDICATE>
+     inline bool LoKi::McAlgs::found  
+    ( const LHCb::MCVertex*   vertex    , 
+      const PREDICATE&        predicate ) ;
+
+
+ - LoKi/MCExtract.h
+ 
+    A bit more efficient, but buch more elegant redesign/reimplementations
+    of funtions  
+        - LoKi::Extract::mcPatricles 
+        - LoKi::Extract::getMCParticles 
+
+
 ! 2006-01-24 - Vanya BELYAEV  
  - New import: the basic functors and cuts for MCParticles/MCVertices 
 
 ! -----------------------------------------------------------------------------
-! $Log: not supported by cvs2svn $ 
+! $Log: not supported by cvs2svn $
+! Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
+! New Packaage: MC-dependent part of LoKi project 
+! 
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------

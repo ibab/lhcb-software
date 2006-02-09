@@ -1,8 +1,8 @@
-// $Id: PrintMCDecay.cpp,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.2 2006-02-09 15:42:07 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -150,7 +150,8 @@ std::ostream& LoKi::printMCDecay
   //
   typedef std::vector<const LHCb::MCParticle*> MCPs ;
   MCPs daugs ;
-  LoKi::Extract::mcDaughters ( particle , std::back_inserter( daugs ) ) ;
+  LoKi::Extract::getMCChildren 
+    ( particle , std::back_inserter( daugs ) ) ;
   // own name 
   const std::string name = 
     LoKi::Particles::nameFromPID ( particle->particleID() ) ;

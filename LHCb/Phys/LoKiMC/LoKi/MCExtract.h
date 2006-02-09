@@ -1,6 +1,6 @@
-// $Id: MCExtract.h,v 1.1.1.1 2006-01-26 16:13:39 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.2 2006-02-09 15:42:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -20,6 +20,7 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
+#include  "LoKi/Objects.h"
 #include  "LoKi/MCTypes.h"
 // ============================================================================
 
@@ -47,6 +48,19 @@ namespace LoKi
 {
   namespace Extract 
   {    
+    
+    template <class MCPARTICLE , class OUTPUT, class PREDICATE>
+    inline OUTPUT getMCParticles 
+    ( MCPARTICLE        begin  , 
+      MCPARTICLE        end    , 
+      OUTPUT            output , 
+      const PREDICATE&  cut    )
+    {
+      for ( ; begin != end ; ++begin ) 
+      { output = getMCParticles ( *begin , output , cut ) ; }
+      return output ;
+    };
+    
     /** @fn getMCParticles 
      *  Simple function to extract (recursively) all Monte Carlo 
      *  particles form the given 
@@ -89,61 +103,38 @@ namespace LoKi
       if ( 0 == particle ) { return output ; } // RETURN 
       // fill and advance the output iterator 
       if ( cut ( particle ) ) 
-      { *output  = const_cast<LHCb::MCParticle*>( particle ) ; ++output ; }
-      // loop over all decay tree 
-      typedef SmartRefVector<LHCb::MCVertex>    MCVs ;
-      typedef SmartRefVector<LHCb::MCParticle>  MCPs ;
-      const MCVs& endVertices = particle->endVertices();
-      for ( MCVs::const_iterator ivx = endVertices.begin() ; 
-            endVertices.end() != ivx ; ++ivx ) 
-      {
-        const LHCb::MCVertex* vx = *ivx ;
-        if ( 0 == vx ) { continue ; }                         // CONTINUE 
-        const MCPs& products = vx->products() ;
-        for ( MCPs::const_iterator ip = products.begin() ; 
-              products.end() != ip ; ++ip ) 
-        {
-          const LHCb::MCParticle* child = *ip ;
-          if ( 0 == child ) { continue ; }                     // CONTINUE
-          // start the recursion 
-          output = getMCParticles ( child , output , cut ) ;   //RECURSION
-        }
+      { 
+        // ATTENTION: const_cast is in use! 
+        *output  = const_cast<LHCb::MCParticle*>( particle ) ; 
+        ++output ;                                              // ADVANCE 
       }
-      //
-      return output ;
+      const SmartRefVector<LHCb::MCVertex>& vs = particle->endVertices();
+      return getMCParticles ( vs.begin() , vs.end() , output , cut ) ;
     };
     
-    template <class MCPARTICLE , class OUTPUT, class PREDICATE>
-    inline OUTPUT getMCParticles 
-    ( MCPARTICLE        begin  , 
-      MCPARTICLE        end    , 
-      OUTPUT            output , 
-      const PREDICATE&  cut    )
+    template <class OUTPUT, class PREDICATE> 
+    inline OUTPUT  getMCParticles 
+    ( const LHCb::MCVertex*   vertex , 
+      OUTPUT                  output , 
+      const PREDICATE&        cut    )
     {
-      for ( ; begin != end ; ++begin ) 
-      { output = getMCParticles ( *begin , output , cut ) ; }
-      return output ;
+      if ( 0 == vertex ) { return output ; } // RETURN 
+      const SmartRefVector<LHCb::MCParticle>& ps = vertex->products() ;
+      return getMCParticles ( ps.begin() , ps.end() , output , cut ) ;
     };
     
     template <class OUTPUT> 
     inline OUTPUT  getMCParticles 
     ( const LHCb::MCParticle* particle , 
       OUTPUT                  output   )
-    { return getMCParticles 
-        ( particle , 
-          output   , 
-          LoKi::BooleanConstant<const LHCb::MCParticle*> ( true )  ) ; }
+    { return getMCParticles ( particle , output , LoKi::Objects::_ALL_ ) ; }
     
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT getMCParticles 
     ( MCPARTICLE        begin  , 
       MCPARTICLE        end    , 
       OUTPUT            output )
-    { return getMCParticles 
-        ( begin  , 
-          end    , 
-          output , 
-          LoKi::BooleanConstant<const LHCb::MCParticle*> ( true )  ) ; }
+    { return getMCParticles ( begin , end , output , LoKi::Objects::_ALL_ ) ; }
     
     /** @fn mcParticles 
      *  Simple function to extract all Monte Carlo particles that 
@@ -195,7 +186,7 @@ namespace LoKi
     inline OUTPUT mcParticles 
     ( const LHCb::MCParticle* particle , 
       OUTPUT            output   )
-    { return getMCparticles ( particle , output ) ; } ;
+    { return getMCParticles ( particle , output ) ; } ;
     
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT mcParticles 
@@ -205,162 +196,84 @@ namespace LoKi
     { return getMCparticles ( begin , end , output ) ; } ;
 
     
-    /** @fn getMCdaugters
-     *  Simple function to extract the daughters from the given 
-     *  Monte Carlo particle
-     * 
+    /** @fn getMCChildren 
+     *  extratc all children particle form the given MC-particle 
+     *  in a form of the flat list 
+     *
      *  @code 
-     *  
-     *  std::vector<const LHCb::MCParticle*> MCPs ;
      *
-     *  const LHCb::MCParticle* particle  = ... ;
+     *  const LHCb::MCParticle* B = ... ;
+     *  // get all first level daughters:
+     *  std::vector<LHCB::MCParticle*> daughters ;
      *
-     *  // daughter particles 
-     *  MCPs              particles       ; 
-     *  LoKi::Extract::getMCdaughters
-     *    ( particle , std::back_inserter( partciles ) ) ;
-     *  
-     *  // only pi0s 
-     *  MCPs  pi0s ; 
-     *  LoKi::Extract::getMCdaughters
-     *    ( particle                        , 
-     *      std::back_inserter( pi0s )      , 
-     *      111 == MCID                     ) ;
+     *  LoKi::Extract::getMCChildren 
+     *      ( B , std::back_inserter( daughters ) ) ;
      *
      *  @endcode 
      *
-     *  @param particle input pointer to MCParticle object
-     *  @param output   output iterator to container of pointer to MCParticle
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
-     *  @date 2003-02-07
+     *  @param particle pointer to the particle 
+     *  @param output   output iterator 
+     *  @return the updated position of the output iterator 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
      */
-    template <class OUTPUT, class PREDICATE> 
-    inline OUTPUT getMCdaughters
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT                  output   , 
-      const PREDICATE&        cut      )
+    template <class OUTPUT>
+    inline OUTPUT getMCChildren 
+    ( const LHCb::MCParticle* particle ,
+      OUTPUT                  output   )
     {
-      if ( 0 == particle ) { return output ; } // RETURN 
-      // loop over daughter particles  
-      typedef SmartRefVector<LHCb::MCVertex>    MCVs ;
-      typedef SmartRefVector<LHCb::MCParticle>  MCPs ;
-      const MCVs& endVertices = particle->endVertices();
-      for ( MCVs::const_iterator ivx = endVertices.begin() ; 
-            endVertices.end() != ivx ; ++ivx ) 
+      if ( 0 == particle ) { return output ; }             // RETURN 
+      typedef SmartRefVector<LHCb::MCVertex>   MCVS ;
+      typedef SmartRefVector<LHCb::MCParticle> MCPS ;
+      const MCVS& vs = particle->endVertices() ;
+      for ( MCVS::const_iterator iv = vs.begin() ; vs.end() != iv ; ++iv )
       {
-        const LHCb::MCVertex* vx = *ivx ;
-        if ( 0 == vx ) { continue ; }           // CONTINUE 
-        const MCPs& products = vx->products() ;
-        for ( MCPs::const_iterator ip = products.begin() ; 
-              products.end() != ip ; ++ip ) 
+        const LHCb::MCVertex* v = *iv ;
+        if ( 0 == v ) { continue ; }                       // CONTINUE 
+        const MCPS& ps = v->products() ;
+        for ( MCPS::const_iterator ip = ps.begin() ; ps.end() != ip ; ++ip ) 
         {
-          const LHCb::MCParticle* child = *ip ;
-          if ( 0 == child || !cut ( child ) ) { continue ; }  // CONTINUE 
-          // fill and advance output iterator 
-          *output  = const_cast<LHCb::MCParticle*>( child ) ;
-          ++output ; 
-        }
+          const LHCb::MCParticle* p = *ip ;
+          if ( 0 == p ) { continue ; }                     // CONTINUE 
+          // ATTENTION: const_cats is in action! 
+          *output = const_cast<LHCb::MCParticle*> ( p ) ;
+          ++output ;                                       // ADVANCE 
+        } 
       }
-      //
-      return output ;
-    };
-    
-    template <class MCPARTICLE , class OUTPUT, class PREDICATE>
-    inline OUTPUT getMCdaughters 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  , 
-      const PREDICATE&  cut     )
-    { 
-      for ( ; begin != end ; ++begin ) 
-      { output = getMCdaughters ( *begin , output , cut ) ; }
       return output ;
     } ;
+
     
-    template <class OUTPUT> 
-    inline OUTPUT getMCdaughters
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT                  output   )
-    { return getMCdaughters 
-        ( particle , 
-          output   , 
-          LoKi::BooleanConstant<const LHCb::MCParticle*> ( true )  ) ; }
-    
-    template <class MCPARTICLE , class OUTPUT>
-    inline OUTPUT getMCdaughters 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  )
-    { return getMCdaughters 
-        ( begin  , 
-          end    ,  
-          output , 
-          LoKi::BooleanConstant<const LHCb::MCParticle*> ( true )  ) ; }
-    
-    /** @fn mcDaughters
-     *  Simple function to extract the daughters from the given 
-     *  Monte Carlo particle
-     * 
+    /** @fn mcChildren 
+     *  extratc all children particle form the given MC-particle 
+     *  in a form of the flat list 
+     *
      *  @code 
-     *  
-     *  std::vector<const LHCb::MCParticle*> MCPs ;
      *
-     *  const LHCb::MCParticle* particle  = ... ;
+     *  const LHCb::MCParticle* B = ... ;
+     *  // get all first level daughters:
+     *  std::vector<LHCB::MCParticle*> daughters ;
      *
-     *  // daughter particles 
-     *  MCPs              particles       ; 
-     *  LoKi::Extract::getMCdaughters
-     *    ( particle , std::back_inserter( partciles ) ) ;
-     *  
-     *  // only pi0s 
-     *  MCPs  pi0s ; 
-     *  LoKi::Extract::getMCdaughters
-     *    ( particle                        , 
-     *      std::back_inserter( pi0s )      , 
-     *      111 == MCID                     ) ;
+     *  LoKi::Extract::mcChildren 
+     *      ( B , std::back_inserter( daughters ) ) ;
      *
      *  @endcode 
      *
-     *  @param particle input pointer to MCParticle object
-     *  @param output   output iterator to container of pointer to MCParticle
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
-     *  @date 2003-02-07
+     *  @param particle pointer to the particle 
+     *  @param output   output iterator 
+     *  @return the updated position of the output iterator 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
      */
-    template <class OUTPUT, class PREDICATE> 
-    inline OUTPUT mcDaughters
-    ( const LHCb::MCParticle* particle , 
-      OUTPUT                  output   , 
-      const PREDICATE&        cut      )
-    { return getMCdaughters( particle , output , cut ) ; }
-    
-    template <class MCPARTICLE , class OUTPUT, class PREDICATE>
-    inline OUTPUT mcDdaughters 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  , 
-      const PREDICATE&  cut     )
-    { return getMCDaughters( begin , end , output , cut ) ; }
-
-    template <class OUTPUT> 
-    inline OUTPUT mcDaughters
-    ( const LHCb::MCParticle* particle , 
+    template <class OUTPUT>
+    inline OUTPUT mcChildren 
+    ( const LHCb::MCParticle* particle ,  
       OUTPUT                  output   )
-    { return getMCdaughters ( particle , output ) ; }
-    
-    template <class MCPARTICLE , class OUTPUT>
-    inline OUTPUT mdDaughters 
-    ( MCPARTICLE        begin   , 
-      MCPARTICLE        end     , 
-      OUTPUT            output  )
-    { return getMCdaughters ( begin , end , output ) ; }
+    { return getMCChildren( particle , output ) ; }
 
-    //
   }; // end of namespace Extract 
   //
-}; // end of namespace LoKi 
-
+}; // end of namespace LoKi
 
 // ============================================================================
 // The END 
