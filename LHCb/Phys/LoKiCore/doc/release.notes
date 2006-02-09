@@ -1,4 +1,6 @@
-! $Id: release.notes,v 1.3 2006-02-08 12:01:14 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2006-02-09 10:06:27 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +16,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-02-09 - Vanya BELYAEV
+ - minor fix in LoKi::Objects namesoace - add 
+   constant objects specicializtaion for <const void*> type
+   to improve a little bit the client code 
+
 
 ! 2006-02-08 - Vanya BELYAEV
 
@@ -43,12 +51,6 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
-! Revision 1.2  2006/01/24 13:24:15  cattanem
-! v1r0
-!
-! Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-! New Import: the core part of restructurized LoKi project
-!
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------

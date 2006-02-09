@@ -1,8 +1,11 @@
-// $Id: Objects.h,v 1.1 2006-02-08 12:01:14 ibelyaev Exp $
+// $Id: Objects.h,v 1.2 2006-02-09 10:06:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/08 12:01:14  ibelyaev
+//  add LoKi/Objects.h file
+// 
 // ============================================================================
 #ifndef LOKI_OBJECTS_H 
 #define LOKI_OBJECTS_H 1
@@ -70,6 +73,14 @@ namespace LoKi
     {
       inline bool operator() ( TYPE /* arg */ ) const { return false  ; }
     };
+    
+    /** @var _ALL_
+     *  helper objects which allows the efficient implementation 
+     *  of selection algorithms 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    const _ALL<const void*> _ALL_ = _ALL<const void*>() ;
     
   } ; // end of the namespace LoKi::Objects 
   
