@@ -10,6 +10,7 @@ apply_pattern     reflex_dictionary                            \
                   dictionary=DAQEvent                               \
                   headerfiles=$(DAQEVENTROOT)/Event/RawEvent.h     \
                   selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml
+macro_append DAQEvent_reflex_options ' --comments '
 
 # ==================== linker library =======================================
 library DAQEventLib     *.cpp
