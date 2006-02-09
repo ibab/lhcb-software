@@ -3,8 +3,7 @@
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version
- *  lhcb-200511.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
- *  Tilted Calorimeters, Tilted Muons, XmlConditions)
+ *  lhcb-200601.opts (DC06 - not complete)
  *
  */
 
@@ -16,12 +15,12 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
 //--------------------------------------------------------------------------
-// Monitor.Members       = { "GaudiSequencer/GenMonitor" };
+// Simulation.Members       -= { "GaudiSequencer/SimMonitor" };
 // GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
  

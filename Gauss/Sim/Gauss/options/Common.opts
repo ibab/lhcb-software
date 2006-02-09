@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.17 2006-01-31 18:27:44 gcorti Exp $ 
+// $Id: Common.opts,v 1.18 2006-02-09 12:28:08 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -58,7 +58,7 @@ ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.Dlls += { "CaloDet" };
 
 // "Default" geometry version: the latest
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;
