@@ -1,8 +1,8 @@
-// $Id: GenMCParticleCuts.h,v 1.1.1.1 2006-01-26 17:35:17 ibelyaev Exp $
+// $Id: GenMCParticleCuts.h,v 1.2 2006-02-09 17:52:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verstion $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , verstion $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLECUTS_H 
 #define LOKI_GENMCPARTICLECUTS_H 1

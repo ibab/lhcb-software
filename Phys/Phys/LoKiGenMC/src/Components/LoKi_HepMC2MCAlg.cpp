@@ -1,11 +1,8 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.2 2006-02-09 17:09:43 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.3 2006-02-09 17:52:35 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
-// New import: Generator/MC related part of LoKi project 
-//
 // ============================================================================
 // Include files  
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: LoKi.cpp,v 1.1.1.1 2006-01-26 17:35:17 ibelyaev Exp $
+// $Id: LoKiGenMC.cpp,v 1.1 2006-02-09 17:52:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
+// New import: Generator/MC related part of LoKi project 
+// 
 // ============================================================================
 // Include files 
 // ============================================================================

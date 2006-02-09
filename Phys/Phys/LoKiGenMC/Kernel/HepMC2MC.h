@@ -1,6 +1,6 @@
-// $Id: HepMC2MC.h,v 1.1.1.1 2006-01-26 17:35:18 ibelyaev Exp $
+// $Id: HepMC2MC.h,v 1.2 2006-02-09 17:52:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================

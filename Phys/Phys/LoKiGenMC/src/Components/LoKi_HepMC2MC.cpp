@@ -1,6 +1,6 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.1.1.1 2006-01-26 17:35:17 ibelyaev Exp $
+// $Id: LoKi_HepMC2MC.cpp,v 1.2 2006-02-09 17:52:35 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
