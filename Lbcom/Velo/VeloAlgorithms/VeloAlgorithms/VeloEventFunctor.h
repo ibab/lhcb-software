@@ -105,9 +105,9 @@ class key_eq: public std::unary_function<TYPE,bool>{
    /** compare the key of an object 
     */
 
-   VeloChannelID aChan;
+   LHCb::VeloChannelID aChan;
 public:
-  explicit key_eq(const VeloChannelID& testChan) : aChan(testChan){}
+  explicit key_eq(const LHCb::VeloChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return (obj->channelID()).key()==aChan.key();}
 };
@@ -120,32 +120,39 @@ class sensor_eq: public std::unary_function<TYPE,bool>{
 
    long m_sensor;
 public:
-  explicit sensor_eq(const VeloChannelID& testChan) : m_sensor(testChan.sensor()){}
-  explicit sensor_eq(const int testChan) : m_sensor(testChan){}
+  explicit sensor_eq(const LHCb::VeloChannelID& testChan) :
+    m_sensor(testChan.sensor())
+   { }
+  explicit sensor_eq(const int testChan) : 
+    m_sensor(testChan)
+   { }
   inline bool operator() (TYPE obj) const{
   return obj->channelID().sensor()==m_sensor;}
 };
 
 template <class TYPE>
-class compBySensor_LB: public std::binary_function<const TYPE, const VeloChannelID, bool>{
+class compBySensor_LB:
+public std::binary_function<const TYPE, const LHCb::VeloChannelID, bool>{
 
    /** compare the sensor number of an object for lower bound
     */
-
 public:
-  inline bool operator() (const TYPE& obj, const VeloChannelID& testID) const{
+  inline bool operator() (const TYPE& obj, 
+                          const LHCb::VeloChannelID& testID) const{
     return ((!obj) ? false : testID.sensor() >obj->channelID().sensor());
   }
 };
 
 template <class TYPE>
-class compBySensor_UB: public std::binary_function<const VeloChannelID,const TYPE ,bool>{
+class compBySensor_UB:
+public std::binary_function<const LHCb::VeloChannelID,const TYPE ,bool>{
 
   /** compare the sensor number of an object for upper bound
     */
 
 public:
-  inline bool operator() (const VeloChannelID& testID, const TYPE& obj) const{
+  inline bool operator() (const LHCb::VeloChannelID& testID, 
+                          const TYPE& obj) const{
     return ((!obj) ? false : testID.sensor() >obj->channelID().sensor());
   }
 };

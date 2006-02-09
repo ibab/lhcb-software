@@ -11,8 +11,12 @@
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
 DECLARE_FACTORY_ENTRIES(VeloAlgorithms) {
-  DECLARE_ALGORITHM( VeloClusterMaker );
+
   DECLARE_ALGORITHM( VeloDataProcessor );
-  DECLARE_ALGORITHM( VeloMonitor );
+  DECLARE_ALGORITHM( VeloClusterMaker );
+  DECLARE_ALGORITHM( VeloDigiMoni );
+  DECLARE_ALGORITHM( VeloClusterMoni );
+
+  DECLARE_TOOL( MCVeloFEType );
 }
 

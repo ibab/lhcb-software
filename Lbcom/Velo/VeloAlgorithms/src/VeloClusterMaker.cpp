@@ -1,24 +1,21 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMaker
 //
-// 02/02/2002 : Chris Parkes 
+// 02/02/2002 : Chris Parkes , update Tomasz Szumlak
 // based on Velo TestBeam version of Mat Charles
 // rewritten to use STL rather than root
 //-----------------------------------------------------------------------------
 
-// Method for making clusters :
-//
-//
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "Kernel/VeloChannelID.h"
 
 // from Detector
 #include "VeloDet/DeVelo.h" 
 // from Event
 #include "Event/MCVeloFE.h"
-#include "Event/VeloCluster.h"
-#include "Event/VeloFullFPGADigit.h"
-#include "Kernel/VeloChannelID.h"
+#include "Event/VeloDigit.h"
+
 // local
 #include "VeloClusterMaker.h"
 #include "VeloAlgorithms/VeloEventFunctor.h"
@@ -32,312 +29,267 @@ const        IAlgFactory& VeloClusterMakerFactory = Factory ;
 //=============================================================================
 VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
-  : GaudiAlgorithm ( name , pSvcLocator )
-  , m_inputContainer                 ( VeloFullFPGADigitLocation::Default )
-  , m_outputContainer                ( VeloClusterLocation::Default )
-  , m_defaultSignalToNoiseCut        (3.0F)
-  , m_defaultClusterSignalToNoiseCut (3.0F)
-  , m_maxClusters                    (10000)   
-  , m_inclusionThreshold             (0.1F)
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_inputContainer ( LHCb::VeloDigitLocation::Default ),
+    m_outputContainer ( LHCb::InternalVeloClusterLocation::Default ),
+    m_defaultSignalToNoiseCut (3.0F),
+    m_defaultClusterSignalToNoiseCut (3.0F),
+    m_maxClusters (10000),
+    m_inclusionThreshold (0.1F),
+    m_velo ( getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" ) )
 {
-  declareProperty( "InputData"           , m_inputContainer  );
-  declareProperty( "OutputData"          , m_outputContainer );
-  declareProperty( "MaxClusters"         , m_maxClusters );
-  declareProperty( "InclusionThreshold"  , m_inclusionThreshold );
+  declareProperty( "InputData", m_inputContainer  );
+  declareProperty( "OutputData", m_outputContainer );
+  declareProperty( "MaxClusters", m_maxClusters );
+  declareProperty( "InclusionThreshold", m_inclusionThreshold );
   declareProperty( "DefaultSignalToNoiseCut", m_defaultSignalToNoiseCut );
   declareProperty( "DefaultClusterSignalToNoiseCut", 
                    m_defaultClusterSignalToNoiseCut );
-
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloClusterMaker::~VeloClusterMaker(){}; 
-
+VeloClusterMaker::~VeloClusterMaker(){};
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode VeloClusterMaker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  //
   debug() << "==> Initialise" << endreq;
-
   // set default signal to noise cuts:
   for (int idet=0; idet<maxVeloSensors; idet++) {
     m_signalToNoiseCut[idet]=m_defaultSignalToNoiseCut;
     m_clusterSignalToNoiseCut[idet]=m_defaultClusterSignalToNoiseCut;
   }
-
-  // get DetectorElement
-  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/Velo" );
-
+  //
   return StatusCode::SUCCESS;
 }
-
 //=========================================================================
 //  Main execution
 //=========================================================================
 StatusCode VeloClusterMaker::execute() {
-  // make clusters from VeloFullFPGADigits
- 
+  // make clusters from VeloDigits
   debug() << "==> Execute" << endreq;
+  //
   makeClusters();
+  //
   debug() << " All clusters made" << endreq;
   StatusCode sc=storeClusters();
   return sc;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 // Accessors and other simple functions
-
+//==============================================================================
 float VeloClusterMaker::signalToNoiseCut(int detID) const
 {
+  //
+  debug()<< " ==> VeloClusterMaker::signalToNoiseCut() " <<endmsg;
   // get Signal to Noise cut of this detector
   int detIndex=m_velo->sensorIndex(detID);
   return detIndex>=0 ? m_signalToNoiseCut[detIndex] : -999;
 }
-
-//  void VeloClusterMaker::setSignalToNoiseCut(int detID, float newSN)
-//  {
-//    // set Signal to Noise cut of this detector
-//    int detIndex=m_velo->sensorArrayIndex(detID);
-//    if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
-//  }
-
+//==============================================================================
 float VeloClusterMaker::clusterSignalToNoiseCut(int detID) const
 {
+  //
+  debug()<< " ==> VeloClusterMaker::clusterSignalToNoiseCut " <<endmsg;
   // set Signal to Noise cut of this detector
   int detIndex=m_velo->sensorIndex(detID);
   return detIndex>=0 ? m_clusterSignalToNoiseCut[detIndex] : -999;
-}
-
-
-//  void VeloClusterMaker::setClusterSignalToNoiseCut(int detID, float newSN)
-//  {
-//    // Accessor for cluster S/N cut (set)
-//    int detIndex=m_velo->sensorArrayIndex(detID);
-//    if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
-//  }
-//=========================================================================
-//  
-//=========================================================================
+}  
+//==============================================================================
 void VeloClusterMaker::makeClusters(){
+  //
+  debug()<< " ==> VeloClusterMaker::makeClusters() " <<endmsg;
   // Creates a new set of clusters for the event.
-
-  bool isDebug   = msgLevel( MSG::DEBUG   );
-  bool isVerbose = msgLevel( MSG::VERBOSE );
-
-  if(isDebug) debug() << "====> making clusters of event" << endreq;
-
+  debug() << "====> making clusters of event" << endreq;
   // make a container that will get stored on the TDS of the clusters
   // even if zero clusters made - the empty container must 
   // still be made and stored
-  m_clusters = new VeloClusters;
+  m_clusters = new LHCb::InternalVeloClusters;
   // get all hits from which the clusters will be made
-  m_digits = get<VeloFullFPGADigits>(m_inputContainer);
-
+  m_digits = get<LHCb::VeloDigits>(m_inputContainer);
+  debug()<< " ==> size of digits " << m_digits->size() <<endmsg;
   std::vector< DeVeloSensor * >::iterator iSens;
   std::vector< DeVeloSensor * > sensors = m_velo->vpSensors();
   for( iSens = sensors.begin() ; iSens != sensors.end() ; iSens++ ){
-
     // ignore the 4 pileup sensors
     if( (*iSens)->isPileUp() ) { continue; }
-
     unsigned int detIndex = iSens-sensors.begin();
     // set all channels not used
     m_sensor=(*iSens)->sensorNumber();;
-    if(isDebug) debug() << "makeClusters:DetectorNumber " << detIndex 
-			<< " Sensor " << m_sensor<< endreq;
+    debug() << "makeClusters:DetectorNumber " << detIndex 
+			      << " Sensor " << m_sensor<< endreq;
     m_channelUsed.clear();
     m_channelUsed.insert( m_channelUsed.begin(), 
                           m_velo->numberStrips(m_sensor), false); 
-    // retrieve hits of detector 
-    std::pair<VeloFullFPGADigits::iterator,VeloFullFPGADigits::iterator> 
-      range=getVeloFullFPGADigitsOfSensor(m_sensor);
-    if(isDebug) debug() << "makeClusters:retrieved digits for det " 
-			<< detIndex << " size " 
-			<< range.second - range.first << endreq;
-    
+    // retrieve hits of detector
+    std::pair<LHCb::VeloDigits::iterator,LHCb::VeloDigits::iterator> 
+      range=getVeloDigitsOfSensor(m_sensor);
+      debug() << "makeClusters:retrieved digits for det "
+			        << detIndex << " size " << range.second - range.first
+              <<endmsg;    
     // sort by increasing ADC value          
-    std::sort(range.first, range.second, 
-	      VeloEventFunctor::Less_by_adcValue<const VeloFullFPGADigit*>());
+    std::sort(range.first, range.second,
+	      VeloEventFunctor::Less_by_adcValue<const LHCb::VeloDigit*>());
     // swap to decreasing ADC
     std::reverse(range.first, range.second);
-
     // iterate over hits
-    
-    for (VeloFullFPGADigits::iterator digIt = range.first; 
+    for(LHCb::VeloDigits::iterator digIt = range.first; 
          digIt!=range.second; digIt++) { 
       // try to make cluster from this hit
       float currentClusterSTN=0;
-      VeloFullFPGADigit* currentDigit=*digIt;    
-      if(isVerbose) verbose()  <<"makeClusters: sorted by ADC  " 
-			       << currentDigit->adcValue(VeloFullFPGADigit::RAW) << " for sensor" 
-			       <<  currentDigit->sensor() << endreq;  
-      VeloCluster* currentCluster=
-	makeClusterFromDigit(currentDigit,currentClusterSTN);
-      if(isVerbose) verbose()  << " made cluster from digit " << endreq;
-    
-      if (NULL!=currentCluster){
-	// global cluster S/N cut:
-        if (checkCluster(currentCluster,currentClusterSTN)){
+      LHCb::VeloDigit* currentDigit=*digIt;    
+      verbose()<< "makeClusters: sorted by ADC  "
+               << currentDigit->adcValue() << " for sensor"
+               << currentDigit->sensor() <<endmsg;
+      LHCb::InternalVeloCluster* currentCluster=
+                   makeClusterFromDigit(currentDigit,currentClusterSTN);
+      verbose()<< " made cluster from digit " << endreq;
+      if(NULL!=currentCluster){
+    	// global cluster S/N cut:
+        if(checkCluster(currentCluster,currentClusterSTN)){
           // Cluster is OK! 
           // set Key and Add it to the event.
-          VeloChannelID channelID( currentCluster->sensor(), 
-                                   currentCluster->strip(0) );
-          m_clusters->insert(currentCluster,channelID);  
-          if(isVerbose) {
-	    verbose()  << "makeClusters:Cluster added S/N " 
-		       << currentClusterSTN << " size " 
-		       << currentCluster->size() 
-		       << " total clusters " << m_clusters->size() << endreq;
-	    verbose()  << "currentCluster key " 
-		       << currentCluster->key() << " size " 
-		       << currentCluster->size() 
-		       << " first strip " << currentCluster->strip(0) 
-		       << " first ADC " << currentCluster->adcValue(0)
-		       << endreq;
-	  }
-        } else {
-	  // Cluster failed its global S/N cut, so unmark channels as being used.
+          LHCb::VeloChannelID channelID( currentCluster->sensor(), 
+                                   currentCluster->strip(0) );          
+          m_clusters->insert(currentCluster,channelID);
+	        verbose()<< "makeClusters:Cluster added S/N " 
+		               << currentClusterSTN << " size " 
+		               << currentCluster->size() 
+		               << " total clusters " << m_clusters->size() <<endmsg;
+	        verbose()<< "currentCluster key " 
+		               << currentCluster->key() << " size " 
+		               << currentCluster->size() 
+		               << " first strip " << currentCluster->strip(0) 
+		               << " first ADC " << currentCluster->adcValue(0)
+		               <<endmsg;
+        }else{
+    	  // Cluster failed its global S/N cut, so unmark channels as being used.
           unmarkCluster(currentCluster);
         }
-        if ( m_clusters->size()>= m_maxClusters ) {
+        if( m_clusters->size()>= m_maxClusters ) {
           // Too many clusters to add more after this one.
-          info() << "Warning: Already have " <<m_maxClusters 
-		 << " clusters.  VeloClusterMaker::MakeClusters "
-		 << "is stopping clusterization while processing "
-		 << "sensor " << m_sensor
-		 << " for this event." << endreq;
+          info()<< "Warning: Already have " <<m_maxClusters 
+                << " clusters.  VeloClusterMaker::MakeClusters "
+		            << "is stopping clusterization while processing "
+		            << "sensor " << m_sensor
+		            << " for this event." <<endmsg;
           return; // **alternate exit point**
         }
       }
     } // loop over Digits
   } // loop over detectors
-  
+  //  
   return;
-}
-
-
-//=========================================================================
-//  
-//=========================================================================
-VeloCluster* 
-VeloClusterMaker::makeClusterFromDigit(VeloFullFPGADigit* currentDigit , 
-				       float& currentClusterSTN){
-
-  bool isVerbose = msgLevel( MSG::VERBOSE );
-
+}  
+//==============================================================================
+LHCb::InternalVeloCluster* 
+VeloClusterMaker::makeClusterFromDigit(LHCb::VeloDigit* currentDigit,
+				                               float& currentClusterSTN){
+  //
+  debug()<< " ==> VeloClusterMaker::makeClusterFromDigit " <<endmsg;
   // make new cluster 
   // - if we decide we don't want it later then it will be deleted
-  VeloCluster* currentCluster = new VeloCluster();
+  LHCb::InternalVeloCluster* currentCluster = new LHCb::InternalVeloCluster();
   // Add the cluster centre:
   bool OK = TryToAddCentralChannel(currentCluster, currentClusterSTN, 
                                    currentDigit);
-  if(isVerbose) verbose()  << "cluster central channel" 
-			   << (OK ? " added ":" rejected") << endreq;
-  if ( !OK ) { 
+  debug()<< "cluster central channel" 
+			   << (OK ? " added ":" rejected") <<endmsg;
+  if( !OK ){ 
     delete currentCluster; 
     return NULL; 
-  }  // Failed to make a cluster centre
-	
+  }  // Failed to make a cluster centre	
   //now consider nearby ones. If they
   // meet the criteria, add them to the cluster
   OK = TryToAddChannel(currentCluster, currentClusterSTN, currentDigit,-1);
   // Strip:  | |1| | | |  (offset -1)
-  if(isVerbose) verbose()  << "cluster -1 channel"
-			   << (OK ? " added ":" rejected") << endreq;
-  if (OK) {
+  debug()<< "cluster -1 channel"
+			   << (OK ? " added ":" rejected") <<endmsg;
+  if(OK){
     //We only add channels two strips away if the channels 1 strip away
     // was also included:
     OK = TryToAddChannel(currentCluster, currentClusterSTN, currentDigit,-2); 
     // Strip:  |0| | | | |  (offset -2)
-    if(isVerbose) verbose()  << "cluster -2 channel"
-			     << (OK ? " added ":" rejected") << endreq;
+    debug()<< "cluster -2 channel"
+			     << (OK ? " added ":" rejected") <<endmsg;
   }
-
   //
   OK = TryToAddChannel(currentCluster, currentClusterSTN, currentDigit,+1); 
   // Strip:  | | | |3| |  (offset +1)
-  if(isVerbose) verbose()  << "cluster +1 channel"
-			   << (OK ? " added ":" rejected") << endreq;
-  if (OK) {
+  debug()<< "cluster +1 channel"
+			   << (OK ? " added ":" rejected") <<endmsg;
+  if(OK){
     //We only add channels two strips away if the channels 1 strip away
     // was also included:
     OK = TryToAddChannel(currentCluster, currentClusterSTN, currentDigit,+2); 
     // Strip:  | | | | |4|  (offset +2)
-    if(isVerbose) verbose()  << "cluster +2 channel" 
+    debug()<< "cluster +2 channel" 
 			     << (OK ? " added ":" rejected") << endreq;
   }
-	
-  currentCluster->setSensorID(VeloChannelID(m_sensor,0));
-  if(isVerbose) verbose()  << " cluster: sensor " <<  currentCluster->sensor() 
+  //	
+  currentCluster->setSensorID(LHCb::VeloChannelID(m_sensor,0));
+  verbose()  
+         << " cluster: sensor " <<  currentCluster->sensor() 
 			   << " first strip " << currentCluster->strip(0) 
 			   << " ADC " <<  currentCluster->adcValue(0) 
-			   << " channelID " << currentCluster->channelID(0) 
-			   << endreq;
-  
-  return currentCluster;
-}
-
-//=========================================================================
-//  
-//=========================================================================
-bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
-                                              float& currentClusterSTN,
-                                              VeloFullFPGADigit*  currentDigit){
-  bool isVerbose = msgLevel( MSG::VERBOSE );
+			   << " channelID " << currentCluster->channelID(0)
+			   <<endmsg;
+  //  
+  return (currentCluster);
+}  
+//==============================================================================
+bool VeloClusterMaker::TryToAddCentralChannel(
+                                 LHCb::InternalVeloCluster * currentCluster,
+                                 float& currentClusterSTN,
+                                 LHCb::VeloDigit*  currentDigit){
+  //
+  debug()<< " ==> VeloClusterMaker::TryToAddCentralChannel " <<endmsg;
   // is this a suitable start for a cluster
-
   int stripId = currentDigit->strip();
-  int stripIndex = stripId;//m_velo->stripArrayIndex(m_sensor, stripId);
-
+  int stripIndex = stripId; //m_velo->stripArrayIndex(m_sensor, stripId);
   if ( m_channelUsed[stripIndex] ) return false;   // Channel already used
-
-  int signAdjust=(currentDigit->adcValue(VeloFullFPGADigit::RAW)<=0.0) ? -1 : +1;
+  int signAdjust=(currentDigit->adcValue()<=0.0) ? -1 : +1;
+  //
+  debug()<< "From try to add, adcValue:" << signAdjust <<endmsg;
+  //
   bool passesDetectorSTNCut = ( signAdjust*currentDigit->signalToNoise() > 
-				signalToNoiseCut(m_sensor) ); 
+				signalToNoiseCut(m_sensor) );
   if ( !passesDetectorSTNCut) {
     // Fails cut
-    return false;
+    return (false);
   }
   // Mark used
   m_channelUsed[stripIndex] = true;
-
   // If we reach here, it's OK to use this channel. Add it to the cluster:
   addDigit(currentCluster,currentClusterSTN,currentDigit,0);
-
-  if(isVerbose) verbose()  << " stripID" << stripId 
-			   << " ADC " << currentDigit->adcValue(VeloFullFPGADigit::RAW) 
-			   << " STN " << currentClusterSTN << endmsg;
+  //
+  debug()<< " stripID" << stripId 
+			     << " ADC " << currentDigit->adcValue() 
+			     << " STN " << currentClusterSTN << endmsg;
   // All done OK
-  return true;
+  return (true);
 }
-
-//=========================================================================
-//  
-//=========================================================================
-bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
+//==============================================================================
+bool VeloClusterMaker::TryToAddChannel(LHCb::InternalVeloCluster * currentCluster,
                                        float& currentClusterSTN, 
-                                       VeloFullFPGADigit*  currentDigit, 
+                                       LHCb::VeloDigit*  currentDigit, 
                                        int offset){
-
-  bool isVerbose = msgLevel( MSG::VERBOSE );
-
+  //
+  debug()<< " ==> VeloClusterMaker::TryToAddChannel " <<endmsg;
   // Tries to add a channel (offset) strips away from currentDigit.
   // If successful, it updates the cluster
-
-  VeloChannelID nearbyStripId;
+  LHCb::VeloChannelID nearbyStripId;
   StatusCode sc = m_velo->neighbour(currentDigit->key(), offset, nearbyStripId);
   if (!sc) return false; // no available neighbour
   int nearbyStripIndex = nearbyStripId.strip();
   if ( m_channelUsed[nearbyStripIndex] ) return false;  // Channel already used
-  VeloFullFPGADigit *nearbyDigit =m_digits->object(nearbyStripId);
-  if ( NULL==nearbyDigit) return false; // no hit on nearby strip
- 
+  LHCb::VeloDigit *nearbyDigit =m_digits->object(nearbyStripId);
+  if( NULL==nearbyDigit) return (false); // no hit on nearby strip 
   // if (A or B) {
   //   [mark channel used]
   //   if (A) {
@@ -373,35 +325,32 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
 
   // This bit is check C above and is only used for strips outside the 
   // central three:
-  int signAdjust=(currentDigit->adcValue(VeloFullFPGADigit::RAW)<=0.0) ? -1 : +1;
-
-  if ( abs(offset)>1 ) {
+  int signAdjust=(currentDigit->adcValue()<=0.0) ? -1 : +1;
+  if( abs(offset)>1 ){
     // Strip is outside the central three - make an extra cut:
     signed int inner_offset; // One strip closer to the centre than (offset)
     inner_offset = (offset<0) ? offset + 1 : offset - 1;
     // One strip closer to centre than nearbyChan
-    VeloChannelID innerStripId;
+    LHCb::VeloChannelID innerStripId;
     StatusCode sc = m_velo->neighbour(currentDigit->key(),inner_offset,
                                       innerStripId);
-    if ( ! sc ) {
+    if( ! sc ){
       // Invalid channel somehow, though this shouldn't happen.
-      return false;
+      return (false);
     }
     // Hit object corresponding to that strip
-    VeloFullFPGADigit* innerDigit = m_digits->object(innerStripId); 
-    if ( NULL==innerDigit ) {
+    LHCb::VeloDigit* innerDigit=m_digits->object(innerStripId); 
+    if( NULL==innerDigit ){
       // Invalid channel somehow, though this shouldn't happen.
       return false;
     }
     bool passesMonotonicDecreasingCut = 
       ( signAdjust*innerDigit->signalToNoise() >= 
-	signAdjust*nearbyDigit->signalToNoise() );
-
+ 	     signAdjust*nearbyDigit->signalToNoise() );
     if ( !passesMonotonicDecreasingCut ) {
-      return false;
+      return (false);
     }
   }
-
   //
   // The following two conditions are A and B respectively:
   bool passesInclusionThreshold = ( signAdjust*nearbyDigit->signalToNoise() > 
@@ -409,68 +358,59 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
                                     m_inclusionThreshold );
   bool passesDetectorSTNCut     = ( signAdjust*nearbyDigit->signalToNoise() > 
                                     signalToNoiseCut(m_sensor) ); 
-  if ( !passesInclusionThreshold && !passesDetectorSTNCut) {
+  if( !passesInclusionThreshold && !passesDetectorSTNCut){
     // Fails (A or B) cut
-    return false;
+    return (false);
   }
   // Mark used
   m_channelUsed[nearbyStripIndex] = true;
-
   if ( !passesInclusionThreshold ) {
     // Fails (A) cut
-    return false;
+    return (false);
   }
-
   // If we reach here, it's OK to use the nearby channel. Add it to the cluster:
-  addDigit(currentCluster,currentClusterSTN,nearbyDigit,offset);
- 
-  if(isVerbose) verbose()  << " stripID" << nearbyStripId.strip() << " ADC " 
-			   << nearbyDigit->adcValue(VeloFullFPGADigit::RAW)
-         << " STN " << currentClusterSTN << endreq;
-
+  addDigit(currentCluster,currentClusterSTN,nearbyDigit,offset); 
+  verbose()<< " stripID" << nearbyStripId.strip() << " ADC " 
+			     << nearbyDigit->adcValue()
+           << " STN " << currentClusterSTN << endreq;
   // All done OK
-  return true;
+  return (true);
 }
-
-
-//=========================================================================
-//  
-//=========================================================================
-void VeloClusterMaker::addDigit(VeloCluster* currentCluster,
+//==============================================================================
+void VeloClusterMaker::addDigit(LHCb::InternalVeloCluster* currentCluster,
                                 float& currentClusterSTN,
-                                VeloFullFPGADigit* nearbyDigit,
+                                LHCb::VeloDigit* nearbyDigit,
                                 signed int offset) {
+  //
+  debug()<< " ==> VeloClusterMaker::addDigit " <<endmsg;
   // add ADC Value to end of cluster
-  std::vector<std::pair<long,double> > signals = currentCluster->stripSignals();
+  std::vector<std::pair<long,double> > signals=currentCluster->stripSignals();
   std::pair<long,double> newpair(nearbyDigit->strip(),
-                                 nearbyDigit->adcValue(VeloFullFPGADigit::RAW)); 
-  if (offset>0) signals.push_back(newpair);
-  else{
+                                 nearbyDigit->adcValue()); 
+  if(offset>0){ 
+    signals.push_back(newpair);
+  }else{
     // add ADC value and this becomes first hit in cluster
-    std::vector<std::pair<long,double> >::iterator sigFirst = signals.begin(); 
+    std::vector<std::pair<long,double> >::iterator sigFirst=signals.begin(); 
     signals.insert(sigFirst,newpair); 
     // update S/N
-    currentClusterSTN += float(nearbyDigit->signalToNoise());
+    currentClusterSTN+=float(nearbyDigit->signalToNoise());
   }
   currentCluster->setStripSignals(signals);
-}
-
-
-//=========================================================================
-//  
-//=========================================================================
-bool VeloClusterMaker::checkCluster( VeloCluster* currentCluster, 
+}  
+//==============================================================================
+bool VeloClusterMaker::checkCluster(LHCb::InternalVeloCluster* currentCluster, 
                                      float& currentClusterSTN) {
+  //
+  debug()<< " ==> VeloClusterMaker::checkCluster " <<endmsg;
   // Now, last of all, we check if the global cluster S/N is above the cut:
-
   return 
     fabs(currentClusterSTN)>clusterSignalToNoiseCut(currentCluster->sensor());
 }
-
-//=========================================================================
-//  
-//=========================================================================
-void VeloClusterMaker::unmarkCluster(VeloCluster* currentCluster) {
+//==============================================================================
+void VeloClusterMaker::unmarkCluster(LHCb::InternalVeloCluster* currentCluster){
+  //
+  debug()<< " ==> VeloClusterMaker::unmarkCluster() " <<endmsg;
   // This cluster has been rejected.
   // unmark its strips that were tagged as being used.
   std::vector<std::pair<long,double> > signals = currentCluster->stripSignals();
@@ -480,63 +420,49 @@ void VeloClusterMaker::unmarkCluster(VeloCluster* currentCluster) {
     m_channelUsed[stripIndex] = false;
   }
   // delete cluster
-  delete currentCluster;
+  delete (currentCluster);
 }
-
-
-
-//=========================================================================
-//  
 //=========================================================================
 StatusCode VeloClusterMaker::storeClusters(){
+  //
+  debug()<< " ==> VeloClusterMaker::storeClusters() " <<endmsg;
   // write clusters to TDS
-
-  bool isDebug   = msgLevel( MSG::DEBUG   );
-
   // sort VeloClusters into order of ascending sensor + strip
   std::stable_sort(m_clusters->begin(),m_clusters->end(),
-		   VeloEventFunctor::Less_by_key<const VeloCluster*>());
-
-  StatusCode sc = eventSvc()->registerObject(m_outputContainer,m_clusters);
-  
+		   VeloEventFunctor::Less_by_key<const LHCb::InternalVeloCluster*>());
+  debug()<< " ==> size of clusters container: " 
+         << m_clusters->size() <<endmsg;  
+  StatusCode sc=put(m_clusters, m_outputContainer);  
   if ( sc ) {
-    if(isDebug) debug() << "Stored " << m_clusters->size() 
-			<< " MCVeloClusters at " 
-			<< m_outputContainer << endreq;
+    debug()<< "Stored " << m_clusters->size() 
+			     << " MCVeloClusters at " 
+			     << m_outputContainer <<endmsg;
   } else {
-    error() << "Unable to store VeloClusters at " 
-	    << m_outputContainer << endreq;
+    error()<< "Unable to store VeloClusters at " 
+	         << m_outputContainer <<endmsg;
   }
-
-  return sc;
-
-}
-
-
-//=========================================================================
-//  
-//=========================================================================
-std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator> 
-VeloClusterMaker::getVeloFullFPGADigitsOfSensor(int sensorId) {
+  //
+  return (sc);
+}  
+//==============================================================================
+std::pair<LHCb::VeloDigits::iterator, LHCb::VeloDigits::iterator> 
+VeloClusterMaker::getVeloDigitsOfSensor(int sensorId) {
+  //
+  debug()<< " ==> VeloClusterMaker::getVeloDigitsOfSensor() " <<endmsg;
   // get position of velo digits in vector for the specified sensor
   // this makes use of fact that Digits from each sensor have already been
   // sorted so that they are adjacent
-
   int idum=0; //dummy strip number
-  VeloFullFPGADigit selObj(VeloChannelID(sensorId,idum,VeloChannelID::Null));
+  LHCb::VeloDigit selObj(
+                  LHCb::VeloChannelID(sensorId,idum,LHCb::VeloChannelID::Null));
   // ensure sorted   
   std::stable_sort(m_digits->begin(),m_digits->end(),
-		   VeloEventFunctor::Less_by_sensor<const VeloFullFPGADigit*>());
-
+		   VeloEventFunctor::Less_by_sensor<const LHCb::VeloDigit*>());
   // get range with required sensor no.
-  std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator>
+  std::pair<LHCb::VeloDigits::iterator, LHCb::VeloDigits::iterator>
     range = std::equal_range(m_digits->begin(),m_digits->end(),&selObj,
-			     VeloEventFunctor::Less_by_sensor<const VeloFullFPGADigit*>());
-
-  return range;
-
+			     VeloEventFunctor::Less_by_sensor<const LHCb::VeloDigit*>());
+  //
+  return (range);
 }
-
-
-
-
+//

@@ -1,0 +1,4 @@
+VeloResolution.PrintInfo=false;
+VeloResolution.TestVeloDet=true;
+VeloResolution.PrintDetInfo=false;
+VeloResolution.DrawSensor=false;

@@ -1,0 +1,9 @@
+// number of counts corresponding to full scale on the ADC
+VeloDataProcessor.ADCFullScale=256.;
+// number of electrons that give full scale deflection on the ADC
+VeloDataProcessor.ElectronsFullScale=200000.;
+VeloDataProcessor.NoiseConstant=500.;
+VeloDataProcessor.NoiseCapacitance=50.;
+VeloDataProcessor.AverageStripCapacitance=20.;
+
+

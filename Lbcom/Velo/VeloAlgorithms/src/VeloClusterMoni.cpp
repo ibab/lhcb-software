@@ -1,0 +1,267 @@
+// $Id: VeloClusterMoni.cpp,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h"
+
+// local
+#include "VeloClusterMoni.h"
+
+// velo
+#include "VeloAlgorithms/IMCVeloFEType.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : VeloClusterMoni
+//
+// 2005-11-30 : Tomasz Szumlak
+//-----------------------------------------------------------------------------
+
+// Declaration of the Algorithm Factory
+//DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
+static const  AlgFactory<VeloClusterMoni>          s_factory ;
+const        IAlgFactory& VeloClusterMoniFactory = s_factory ;
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+VeloClusterMoni::VeloClusterMoni( const std::string& name,
+                                  ISvcLocator* pSvcLocator)
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_clusterCont ( LHCb::InternalVeloClusterLocation::Default ),
+    m_feCont ( LHCb::MCVeloFELocation::Default ),
+    m_printInfo ( false ),
+    m_nVeloClusters ( 0. ),
+    m_nVeloClusters2 ( 0. ),
+    m_nVeloClustersS ( 0. ),
+    m_nVeloClustersN ( 0. ),
+    m_nVeloClustersO ( 0. ),
+    m_numberOfEvents ( 0 )
+{
+  declareProperty("PrintInfo", m_printInfo);
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+VeloClusterMoni::~VeloClusterMoni() {};
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode VeloClusterMoni::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  //
+  debug() << "==> Initialize" << endmsg;
+  m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
+  setHistoTopDir("veloCluster");
+  //
+  return StatusCode::SUCCESS;
+};
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode VeloClusterMoni::execute() {
+
+  debug() << "==> Execute" << endmsg;
+  //
+  m_numberOfEvents++;
+  StatusCode sc=getData();
+  if(sc) veloClusterMonitor();
+  //
+  return StatusCode::SUCCESS;
+};
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode VeloClusterMoni::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+  //
+  m_nVeloClusters/=m_numberOfEvents;
+  m_nVeloClusters2/=m_numberOfEvents;
+  double errnVeloClusters=
+   sqrt((m_nVeloClusters2-(m_nVeloClusters*m_nVeloClusters))/m_numberOfEvents);
+  //
+  info()<< "------------------------------------------------------" <<endmsg;
+  info()<< "              - VeloClusterMoni table -               " <<endmsg;
+  info()<< "------------------------------------------------------" <<endmsg;
+  info()<< "| Number of MCVeloFEs/Event: " << m_nVeloClusters << " +/- " 
+        << errnVeloClusters <<endmsg;
+  double allClusters=m_nVeloClustersS+m_nVeloClustersN+m_nVeloClustersO;
+  if(allClusters>0){
+    info()<< "| Clusters from signal:                      " 
+          << (m_nVeloClustersS/allClusters)*100
+          << "%" <<endmsg;
+    info()<< "| Clusters from noise:                       " 
+          << (m_nVeloClustersN/allClusters)*100
+          << "%" <<endmsg;
+    info()<< "| Clusters from other (spillover/coupling):  " 
+          << (m_nVeloClustersO/allClusters)*100
+          << "%" <<endmsg;
+  }else{
+    info()<< "| ==> No VeloClusters found! " <<endmsg;
+  }
+  info()<< "------------------------------------------------------" <<endmsg;
+  //
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+//=============================================================================
+StatusCode VeloClusterMoni::getData()
+{
+  debug()<< " ==> getData() " <<endmsg;
+  //
+  if(!exist<LHCb::InternalVeloClusters>(m_clusterCont)){
+    error()<< " ==> There are no VeloClusters in TES! " <<endmsg;
+    return (StatusCode::FAILURE);
+  }else{
+    m_veloClusters=get<LHCb::InternalVeloClusters>(m_clusterCont);
+  }
+  if(!exist<LHCb::MCVeloFEs>(m_feCont)){
+    error()<< " ==> There are no MCVeloFEs in TES! " <<endmsg;
+    return (StatusCode::FAILURE);
+  }else{
+    m_veloFEs=get<LHCb::MCVeloFEs>(m_feCont);
+  }
+  //
+  if(m_printInfo){
+    info()<< " ==> Number of clusters found in TES: "
+          << m_veloClusters->size() <<endmsg;
+    info()<< " ==> Number of velo FEs found in TES: "
+          << m_veloFEs->size() <<endmsg;
+  }
+  //
+  return (StatusCode::SUCCESS);
+}
+//==============================================================================
+StatusCode VeloClusterMoni::veloClusterMonitor()
+{
+  debug()<< " ==> veloClusterMonitor() " <<endmsg;
+  //
+  int contSize=m_veloClusters->size();
+  m_nVeloClusters+=double(contSize);
+  m_nVeloClusters2+=double(contSize*contSize);
+  plot(contSize, 100, "Number of VeloClusters/event", 0., 3000., 50);
+  //
+  LHCb::InternalVeloClusters::iterator cluIt;
+  //
+  for(cluIt=m_veloClusters->begin(); cluIt!=m_veloClusters->end(); cluIt++){
+    bool signal=false, noise=false, other=false;
+    LHCb::InternalVeloCluster* cluster=(*cluIt);
+    clusterType(cluster, signal, noise, other);
+    // printout some info about cluster
+    if(m_printInfo){
+      debug()<< " ==> VeloCluster: " << " sensor number: "
+             << (*cluIt)->sensor() << ", first strip in cluster: "
+             << (*cluIt)->strip(0) <<endmsg;
+    }
+    // printout some info about strips
+    int cluSize=(*cluIt)->size();
+    if(m_printInfo){
+      for(int iStrip=0; iStrip<cluSize; iStrip++){
+        debug()<< " ==> VeloCluster: " << " strip: "
+               << (*cluIt)->strip(iStrip) << ", signal on strip: "
+               << (*cluIt)->adcValue(iStrip) <<endmsg;
+      }
+    }
+    //
+    double adcSum=0.;
+    //
+    for(int iStrip=0; iStrip<cluSize; iStrip++){
+      adcSum+=double((*cluIt)->adcValue(iStrip));
+    }
+    plot2D((*cluIt)->sensor(), (*cluIt)->strip(0), 102,
+           "Sensor and first strip number",
+           0., 100., 0., 5000., 100, 50);
+    plot(adcSum, 103,
+         "ADC sum",
+         -0.5, 255.5, 256);
+    //
+    if(signal){
+      plot(adcSum, 104,
+           "Signal dominated - ADC sum",
+           -0.5, 255.5, 256);
+      m_nVeloClustersS++;
+    }
+    if(noise){
+      plot(adcSum, 105,
+           "Noise dominated - ADC sum",
+           -0.5, 255.5, 256);
+      m_nVeloClustersN++;
+    }
+    if(other){
+      plot(adcSum, 106,
+           "SpillOver/couplings dominated - ADC sum",
+           -0.5, 255.5, 256);
+      m_nVeloClustersO++;
+    }
+    //
+    plot(cluSize, 107,
+         "Number of strips in cluster",
+         -0.5, 5.5, 6);
+    if(signal){
+      plot(cluSize, 108,
+           "Number of strips in cluster - signal dominated",
+           -0.5, 5.5, 6);
+    }
+    if(noise){
+      plot(cluSize, 109,
+           "Number of strips in cluster - noise dominated",
+           -0.5, 5.5, 6);
+    }
+    if(other){
+      plot(cluSize, 110,
+           "Number of strips in cluster - spillover/couplings dominated",
+           -0.5, 5.5, 6);
+    }
+  }
+  //
+  plot(m_nVeloClustersS, 111,
+       "Number of velo clusters/event - signal dominated",
+       0., 3000., 50);
+  plot(m_nVeloClustersN, 112,
+       "Number of velo clusters/event - noise dominated",
+       0., 3000., 50);
+  plot(m_nVeloClustersO, 113,
+       "Number of velo clusters/event - spillover/couplings dominated",
+       0., 3000., 50);
+  //
+  return (StatusCode::SUCCESS);
+}
+//==============================================================================
+StatusCode VeloClusterMoni::clusterType(LHCb::InternalVeloCluster* clu,
+                                        bool& s, bool& n, bool& o)
+{
+  LHCb::MCVeloFE* myFE=0;
+  int feType=0;
+  int nOfStrips=clu->size();
+  for(int iStrip=0; iStrip<nOfStrips; iStrip++){
+    LHCb::VeloChannelID chanID=clu->channelID(iStrip);
+    LHCb::MCVeloFE* FE=m_veloFEs->object(chanID);
+    if(0==FE){
+      warning()<< " ==> Not found FE for given ChannelID: " 
+               << chanID <<endmsg;
+    }else{
+      if(iStrip==0) myFE=FE;
+      if(FE->charge()>myFE->charge()) myFE=FE;
+    }
+  }
+  // s - signal, n - noise, o - coupling or spillover
+  if((!s)&&(!n)&&(!o)){
+    m_feTypeTool->FEType(myFE, feType);
+  }else{
+    s=false;
+    n=false;
+    o=false;
+    m_feTypeTool->FEType(myFE, feType);
+  }
+  //
+  switch(feType){
+  case 0: s=true; break;
+  case 1: n=true; break;
+  case 2: o=true; break;
+  default: error()<< " ==> Wrong FE Type flag! " <<endmsg;
+    return (StatusCode::FAILURE);
+  }
+  //
+  return (StatusCode::SUCCESS);
+}

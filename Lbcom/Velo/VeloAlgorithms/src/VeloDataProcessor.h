@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.4 2005-10-24 15:48:43 mtobin Exp $
+// $Id: VeloDataProcessor.h,v 1.5 2006-02-09 12:20:41 szumlat Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -7,21 +7,19 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // local
 
 /** @class VeloDataProcessor VeloDataProcessor.h
  *
- * Fill VeloFullFPGADigit, based on MCVeloFE
  * Emulate Data Processor Board 
- * Currently just a fast test version.
- *  @author Chris Parkes
+ *
+ *  @author Chris Parkes, update Tomasz Szumlak
  *  @date   14/01/02
  */
-class MCVeloFE;
 
-class VeloDataProcessor : public Algorithm {
+class VeloDataProcessor : public GaudiAlgorithm {
 public:
   /// Standard constructor
   VeloDataProcessor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -38,14 +36,15 @@ private:
 
   /// perform digitisation, i.e. convert electrons to ADC counts
   virtual float digitise(float electrons);
-
   // data members
-  std::string m_inputContainer;        ///< Name of input container
-  std::string m_outputVeloFPGADigit;        ///< Name of output container for digi
-  std::string m_outputVeloDigit; ///< And for history object
-
+  std::string m_inputContainer;      ///< Name of input container
+  std::string m_outputVeloDigit; ///< Name of output container for digi
   double noiseSigma();
   double m_noiseConstant;
+  double m_noiseCapacitance;
+  double m_averageStripCapacitance;
+  double m_ADCFullScale;
+  double m_electronsFullScale;
 
 };
 #endif // VELODATAPROC_H

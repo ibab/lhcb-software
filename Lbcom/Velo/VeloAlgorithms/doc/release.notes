@@ -1,8 +1,15 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
+!===================== VeloAlgorithms v5r0 2006-02-08 =====================
+! 2006-02-08 - Tomasz Szumlak
+ - new spillOver estimation based on pulse shape fit
+ - hard coded number of sensor removed
+ - monitor algorithm has been splited into a number of lighter monitors
+   dedicated to each stage of data processing
+ - code is compatible with LHCb v20r0
 
-!===================== VeloAlgorithms v4r0 2005-20-10 =====================
-! 2005-20-10 - Tomasz Szumlak & Chris Parkes
+==================== VeloAlgorithms v4r0 2005-10-20 =====================
+! 2005-10-20 - Tomasz Szumlak & Chris Parkes
 - Move VeloSim.cpp/.h into its own new package (VeloSimulation)
 This is the first part of revised splitting of the Velo software 
 packages

@@ -1,25 +1,35 @@
 # Created    : 08/05/02
-# Maintainer : Chris Parkes
+# Maintainer : Chris Parkes & Tomasz Szumlak
 #
 package           VeloAlgorithms
-version           v4r0
+version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          VeloAlgorithms cmt doc src
+branches          VeloAlgorithms cmt doc src xml
 
 include_dirs $(VELOALGORITHMSROOT)
+#produce dot h files from xml
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v14r* Event
-use  VeloDet    v9r*  Det
-use  VeloKernel v1r*  Velo -no_auto_imports
-use  Relations  v*    Kernel
-use  GSL 	v*    LCG_Interfaces
+use  LHCbKernel     v*   Kernel
+use  VeloEvent    v14r*  Event
+use  VeloDet      v10r*  Det
+use  GSL 	  v*     LCG_Interfaces
+use  LinkerEvent  v*     Event
+use  Relations    v*     Kernel
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms    ../src/*.cpp -import=AIDA -import=VeloKernel
-
+document obj2doth VeloAlgorithmsObj2Doth ../xml/*.xml
+document obj2dict VeloAlgorithmsObj2Dict ../xml/*.xml
+#
+library          VeloAlgorithms      ../src/*.cpp
+library          VeloAlgorithmsDict  ../$(tag)/dict/VeloEvent/*.cpp
+#
 apply_pattern component_library library=VeloAlgorithms
+#macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
+#
+private
+use GaudiObjDesc v* -no_auto_imports

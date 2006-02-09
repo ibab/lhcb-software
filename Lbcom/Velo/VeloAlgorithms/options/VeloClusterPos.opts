@@ -1,0 +1,3 @@
+ToolSvc.clusTool.PrintInfo=false;
+ToolSvc.clusTool.UseWeightedMean=true;
+ToolSvc.clusTool.UseEtaFit=false;

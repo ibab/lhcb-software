@@ -3,7 +3,7 @@
 
 /** @class VeloClusterMaker VeloClusterMaker.h
  *
- * Fill VeloCluster, based on VeloFullFPGADigit
+ * Fill InternalVeloCluster, based on VeloDigit
  * Emulate Data Processor Board 
  * This is a ported version of the testbeam code version by Mat Charles 
  * (originally David Steele)
@@ -15,9 +15,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from Event
-#include "Event/VeloCluster.h"
+#include "Event/InternalVeloCluster.h"
+
 // fwd declarations
-class VeloFullFPGADigit;
 class VeloDigit;
 
 class VeloClusterMaker : public GaudiAlgorithm {
@@ -26,14 +26,12 @@ class VeloClusterMaker : public GaudiAlgorithm {
  public:
   /// Constructor
   VeloClusterMaker(const std::string& name, ISvcLocator* pSvcLocator);
-
   /// Destructor
   virtual ~VeloClusterMaker( ); 
   /// Algorithm initialization
   virtual StatusCode initialize();
   /// Algorithm execution - Make Clusters
   virtual StatusCode execute   ();
-
   /// get S/N cut of individual hits in a detector
   float  signalToNoiseCut(int detID) const;
   /// set S/N cut of individual hits in a detector
@@ -46,67 +44,57 @@ class VeloClusterMaker : public GaudiAlgorithm {
 //////////////////////////////////////////////////////////////////////////////
 // Private member functions
  private:
-  /// make Clusters from VeloFullFPGADigits
+
+  /// make Clusters from VeloDigits
   void    makeClusters();
   /// after making all clusters for the event store them on TDS 
   StatusCode VeloClusterMaker::storeClusters();
-
   /// Try to make a cluster using currentDigit as the central hit
-  VeloCluster* makeClusterFromDigit(VeloFullFPGADigit* currentDigit, 
-                                    float& currentClusterSTN);
+  LHCb::InternalVeloCluster* makeClusterFromDigit(
+           LHCb::VeloDigit* currentDigit, float& currentClusterSTN);
   /// Try to add a neighbouring channel to the cluster
-  bool TryToAddChannel(VeloCluster* currentCluster, 
-                       float& currentClusterSTN, 
-                       VeloFullFPGADigit* currentDigit, 
+  bool TryToAddChannel(LHCb::InternalVeloCluster* currentCluster, 
+                       float& currentClusterSTN,
+                       LHCb::VeloDigit* currentDigit,
                        int offset);
-  bool TryToAddCentralChannel(VeloCluster* currentCluster, 
-                              float& currentClusterSTN, 
-                              VeloFullFPGADigit* currentDigit);
-
-
+  bool TryToAddCentralChannel(LHCb::InternalVeloCluster* currentCluster, 
+                              float& currentClusterSTN,
+                              LHCb::VeloDigit* currentDigit);
   /// increase the size of a cluster by adding an extra digit
-  void addDigit(VeloCluster* currentCluster, 
-                float& currentClusterSTN, 
-                VeloFullFPGADigit* nearbyDigit, 
+  void addDigit(LHCb::InternalVeloCluster* currentCluster, 
+                float& currentClusterSTN,
+                LHCb::VeloDigit* nearbyDigit,
                 signed int offset);
   /// perform final check that cluster is OK (S/N cut)
-  bool checkCluster(VeloCluster* currentCluster, float& currentClusterSTN);
+  bool checkCluster(LHCb::InternalVeloCluster* currentCluster,
+                    float& currentClusterSTN);
   /// rejected a cluster allowing the hits in it to be used in other clusters
-  void unmarkCluster(VeloCluster* currentCluster);
-  /// 
-  std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator> 
-          getVeloFullFPGADigitsOfSensor(int detId);
+  void unmarkCluster(LHCb::InternalVeloCluster* currentCluster);
+  ///
+  std::pair<LHCb::VeloDigits::iterator, LHCb::VeloDigits::iterator> 
+          getVeloDigitsOfSensor(int detId);
 
 private:
 
   // data members
   enum {maxVeloSensors=100};
-
   std::string m_inputContainer;       ///< Name of input container
   std::string m_outputContainer;      ///< Name of output container
-  VeloFullFPGADigits* m_digits; ///< store digits for event considered
+  LHCb::VeloDigits* m_digits; ///< store digits for event considered
   std::vector<bool> m_channelUsed; ///< store channels used on current detector
   int m_sensor; // current sensor
-  VeloClusters* m_clusters; ///< vector to store clusters
+  LHCb::InternalVeloClusters* m_clusters; ///< vector to store clusters
   /// S/N cut to apply to all detectors from job opts
-  float  m_defaultSignalToNoiseCut; 
-
+  float  m_defaultSignalToNoiseCut;
   /// S/N cut for clusters to apply to all detectors from job opts
-  float  m_defaultClusterSignalToNoiseCut; 
-
+  float  m_defaultClusterSignalToNoiseCut;
   /// S/N cut for individual strips for each detector
-  float  m_signalToNoiseCut[maxVeloSensors]; 
-
+  float  m_signalToNoiseCut[maxVeloSensors];
   /// S/N cut for clusters for each detector
   float  m_clusterSignalToNoiseCut[maxVeloSensors];
-
-  DeVelo* m_velo; ///< Detector Element
-
   int m_maxClusters; ///< maximum number of clusters to make per event
   float m_inclusionThreshold; ///< for adding strips to the cluster
+  DeVelo* m_velo;
   
 };
-
-
-
 #endif // VeloClusterMaker_H
