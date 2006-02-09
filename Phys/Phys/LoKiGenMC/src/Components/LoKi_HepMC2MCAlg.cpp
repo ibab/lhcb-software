@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.1.1.1 2006-01-26 17:35:17 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.2 2006-02-09 17:09:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
+// New import: Generator/MC related part of LoKi project 
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -23,13 +26,13 @@
 #include "LoKi/GenParticleCuts.h"
 #include "LoKi/Kinematics.h"
 // ============================================================================
-// LoKiGenMC
-// ============================================================================
-#include "Kernel/HepMC2MC.h"
-// ============================================================================
 // Relations 
 // ============================================================================
 #include "Relations/Relation2D.h"
+// ============================================================================
+// LoKiGenMC
+// ============================================================================
+#include "Kernel/HepMC2MC.h"
 // ============================================================================
 
 // ============================================================================
@@ -206,6 +209,12 @@ namespace
 const   IAlgFactory&LoKi_HepMC2MCAlgFactory =  s_Factory ; 
 // ============================================================================
 
+namespace 
+{
+  // the actual type of relation table 
+  typedef LHCb::Relation2D<HepMC::GenParticle*,LHCb::MCParticle> Table  ;
+} ;
+
 // ============================================================================
 /// execution of the algorithm
 // ============================================================================
@@ -219,8 +228,6 @@ StatusCode LoKi_HepMC2MCAlg::execute()
   typedef std::vector<HepMC::GenParticle*>     HMCPs ;
   typedef std::vector<const LHCb::MCParticle*> MCPs  ;
   typedef std::map<LHCb::ParticleID,MCPs>      MMCPs ;
-  // the actual type of relation table 
-  typedef Relation2D<HepMC::GenParticle*,LHCb::MCParticle> Table  ;
   
   // create the relation table and register it into TES 
   Table* table = new Table() ;
