@@ -1,4 +1,4 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.7 2006-01-19 18:32:11 marcocle Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.8 2006-02-09 08:29:12 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -104,6 +104,17 @@ StatusCode XmlTestAlgorithm::execute() {
     error() << "Could not retrieve Ecal fast control" << endmsg;
     return StatusCode::FAILURE;
   }
+
+  Condition* testCond = getDet<Condition>("/dd/Conditions/TestCondition");
+  if( 0 != testCond ) {
+    info() << "TestCondition has "
+           << testCond->paramNames().size() << " parameters" << std::endl
+           << testCond->printParams() << endmsg;
+  } else {
+    error() << "Could not retrieve TestCondition" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
 
   info() << " ===== test XML string generation =====" << endmsg;
   // Prepare a nice condition

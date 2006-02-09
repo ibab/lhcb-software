@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.69 2006-02-03 11:20:50 cattanem Exp $
+! $Id: release.notes,v 1.70 2006-02-09 08:29:12 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-02-09 - Marco Clemencic
+ - Added a test to retrieve a vector of strings (there was a bug in DetDescCnv)
+ - Added a small algorithm to show simply how to use the U.M.S.
 
 !=========== Ex/DetCondExample v7r10 2006-02-03 ==============================
 ! 2006-02-01 - Marco Clemencic

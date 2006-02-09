@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: dddb-nodb.xml,v 1.1 2005-09-18 16:15:16 marcocle Exp $ -->
+<!-- $Id: dddb-nodb.xml,v 1.2 2006-02-09 08:29:12 marcocle Exp $ -->
 <DDDB> 
   <!--  ***********************************************************  -->
   <!--  * Structure of the main Detector Description Data Base    *  --> 
@@ -36,8 +36,16 @@
       </catalog>
       <catalog name="SlowControl">
       </catalog>
+      <condition name="TestCondition">
+        <paramVector comment="List of layers" name="layers" type="string">TTaXMap TTaUMap TTbVMap TTbXMap</paramVector>
+	<paramVector name="vs" type="string">
+	  str1
+	  str2 str3 str4</paramVector>
+      </condition>
     </catalog>
     <catalogref href="properties.xml#Properties"/>
+
+    
 
   </catalog>
 </DDDB>
