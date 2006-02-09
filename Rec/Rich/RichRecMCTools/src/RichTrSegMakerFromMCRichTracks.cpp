@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.1 2006-01-23 14:09:59 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.2 2006-02-09 17:59:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -83,9 +83,16 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
                                                    std::vector<RichTrackSegment*>& segments )
   const {
 
+  // make sure vector is empty
+  segments.clear();
+
   // get MCRichTrack
   const MCRichTrack * track = mcRichTrack(obj);
-  if ( !track ) { return 0; }
+  if ( !track ) 
+  { 
+    verbose() << "MCRichTrack not available for input data object" << endreq;
+    return 0; 
+  }
 
   // loop over radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
@@ -183,8 +190,6 @@ RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
       track = m_truth->mcRichTrack( m_rectruth->mcParticle(trTrack) );
     }
   }
-
-  if ( !track ) verbose() << "MCRichTrack not available for input data object" << endreq;
 
   // return final object
   return track;
