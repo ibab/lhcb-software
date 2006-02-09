@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.5 2006-01-27 09:14:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.6 2006-02-09 18:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -87,11 +87,6 @@ const StatusCode RichTrackCreatorFromRecoTracks::newTracks() const
   if ( !m_allDone )
   {
     m_allDone = true;
-
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Found " << nInputTracks() << " Tracks at " << m_trTracksLocation << endreq;
-    }
 
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
