@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.37 2006-01-12 09:32:59 cattanem Exp $
+! $Id: release.notes,v 1.38 2006-02-09 13:02:04 szumlat Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
 
-!====================== VeloEvent v14r0 2006-01-12 =======================
+!====================== VeloEvent v14r0 2006-01-07 =======================
+! 2006-02-08 - Tomasz Szumlak
+ - update VeloDigit object
+
 ! 2006-01-12 - Marco Cattaneo
  - Move MCVeloFE to MCEvent package. This removed dependency on MCEvent
 
