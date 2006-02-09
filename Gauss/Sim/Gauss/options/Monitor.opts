@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.16 2006-01-31 18:26:20 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.17 2006-02-09 16:13:51 gcorti Exp $ 
 
 /** @file 
  * 
@@ -19,9 +19,8 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //---------------------------------------------------------------------
 // Note that if you are running GenStandAlone you will also need to 
 // switch on the algorithm:
-GenMonitor.Members       += {"GenMonitorAlg/GenHistos"};
-GenHistos.OutputLevel     = 4;
-GenHistos.HistoProduce    = true;
+GenMonitor.Members         += {"GenMonitorAlg"};
+GenMonitorAlg.HistoProduce  = true;
 
 //---------------------------------------------------------------------
 // Check if event type and events produced correspond to what set
@@ -37,14 +36,14 @@ SimMonitor.Members   += { "MCTruthMonitor" };
 // MC(XXX)Hits summary
 SimMonitor.Members   += { "GiGaGetHitsAlg" };
 
-// VELO :: DOES NOT RUN as is. also does not find hits. Why is execute empty?
+// VELO :  - pre XmlDDDB v30r0 path 
 ApplicationMgr.DLLs += { "VeloGauss" };
-SimMonitor.Members  += { "VeloGaussMoni" };
-VeloGaussMoni.PrintInfo = false;
-VeloGaussMoni.DetailedMonitor = true;
-VeloGaussMoni.TestMCHit = true;
-VeloGaussMoni.TestPileUpMCHit = true;
-//VeloGaussMoni.Print = 2;
+// SimMonitor.Members  += { "VeloGaussMoni" };
+// VeloGaussMoni.PrintInfo = false;
+// VeloGaussMoni.DetailedMonitor = true;
+// VeloGaussMoni.TestMCHit = true;
+// VeloGaussMoni.TestPileUpMCHit = true;
+// VeloGaussMoni.Print = 2;
 
 // Silicon tracker
 SimMonitor.Members  += { "MCHitMonitor/TTHitMonitor" };
@@ -63,11 +62,11 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 // when running the simulation with Geant4 not when reading files!
 // #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
-// Calorimeters
-SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
-SimMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
-SimMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
-SimMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
+// Calorimeters - pre XmlDDDB v30r0 path
+// SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
+// SimMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
+// SimMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
+// SimMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
 #include "$CALOMONISIMOPTS/MoniSim.opts"
 SpdMonitor.OutputLevel = 4;
 PrsMonitor.OutputLevel = 4;
@@ -75,7 +74,7 @@ EcalMonitor.OutputLevel = 4;
 HcalMonitor.OutputLevel = 4;
 
 // Muon system
-// ApplicationMgr.DLLs += { "MuonMoniSim" };
-// SimMonitor.Members  += { "MuonHitChecker" };
-// MuonHitChecker.FullDetail = true;
+ApplicationMgr.DLLs += { "MuonMoniSim" };
+SimMonitor.Members  += { "MuonHitChecker" };
+MuonHitChecker.FullDetail = true;
 
