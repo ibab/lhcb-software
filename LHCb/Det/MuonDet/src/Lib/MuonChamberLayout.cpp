@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.15 2006-02-07 15:29:57 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.16 2006-02-09 17:18:46 asarti Exp $
 // Include files 
 
 //Muon
@@ -558,7 +558,6 @@ sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d"
 
 	DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh ) ;
 
-	if(debug) std::cout<<"Filling chamber Pointer: "<<encode<<" "<<iS<<" "<<iR<<" "<<deChmb<<std::endl;
 	if(deChmb) {
 	  m_ChVec.at(encode) = deChmb;
 	} else {
@@ -573,7 +572,7 @@ sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d"
 	int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
 	m_chamberGrid.at(enc) = deChmb->chamberNumber();
 
-	if(debug)  std::cout<<"Chamber initialization: "<<enc<<" "<<deChmb->chamberNumber()<<std::endl;
+	if(debug)  std::cout<<"Chamber initialization: "<<enc<<" "<<deChmb->chamberNumber()<<" "<<idx<<" "<<idy<<" "<<m_cgX.at(reg)<<" "<<m_offSet.at(reg)<<std::endl;
 
 	//Try to fill also the other relevant quantities
 	//Only when the region changes
@@ -641,6 +640,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
 
     // chambers
     StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz,true);
+
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
@@ -661,6 +661,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     }
 
     StatusCode sc = getXYZPad(tile,x,deltax,y,deltay,z,deltaz);
+
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
@@ -681,6 +682,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     }
 
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
+
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
@@ -701,6 +703,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     }
 
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
+
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
@@ -730,7 +733,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
         <<endreq;
     return StatusCode::FAILURE;
   }
-
+  if(m_debug) std::cout << "Exiting " <<x<<" "<<deltax<<" "<<y<<" "<<deltay<<" "<<z<<" "<<deltaz<<std::endl;
   return StatusCode::SUCCESS;
 
 }
@@ -903,14 +906,13 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     while(re >= 1) {encode += MaxRegions[re-1]; re--;}
   }
   muChamber = m_ChVec.at(encode);
-  
+
   double Dx(0.),Dy(0.),Dz(0.);
   
   if( -1 == gapNum ){ 
 
     //I'm intrested in the Chamber, not the gaps
     IGeometryInfo* cInfo = muChamber->geometry();
-
     Gaudi::Transform3D vTransForm = cInfo->matrixInv();
 
     Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
@@ -1010,7 +1012,6 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
       return StatusCode::FAILURE;
     }
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -1050,7 +1051,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   // initally ignore the "reflectional" nature of the quarters
   int xOffset = tile.nX() - (xRatio * chamTile.nX());
   int yOffset = tile.nY() - (yRatio * chamTile.nY());
-  
+
   // do the reflections of the tileID structure into Cartesian coordinates
   if ( 0 == tile.quarter() ){
     xOffset = xOffset;
@@ -1097,11 +1098,15 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   mytiles.push_back(chamTile);
 
   std::vector<DeMuonChamber*> myChs = createChambers(mytiles,tile.station());
-  DeMuonChamber* muChamber = myChs.at(0);
 
-  IGeometryInfo* cInfo = muChamber->geometry();
-  localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
+  DeMuonChamber* muChamber = NULL;
+  deltax = Dx;  deltaz = Dz;  deltaz = Dz;
+  if(!myChs.empty()) {
+    muChamber = myChs.at(0);
 
+    IGeometryInfo* cInfo = muChamber->geometry();
+    localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
+  }  
   return StatusCode::SUCCESS;
 }  
 
@@ -1324,15 +1329,24 @@ int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
   int enc = fx+4*m_cgX.at(tile.region())*fy+m_offSet.at(tile.region());
   chamberNumber = m_chamberGrid.at(enc);
 
+  if(m_debug) std::cout<<" chNum  "<<chamberNumber<<" "<<enc<<" "<<fx<<" "<<fy<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<std::endl;
+
+  MsgStream msg(msgSvc(), name());
   if ( m_debug ) {
-    MsgStream msg(msgSvc(), name());
     msg << MSG::DEBUG << "Chamber " << chamberNumber 
         << " in R" << tile.region()+1
         << " xIndex " << tile.nX()
         << " yIndex " << tile.nY()
 	<< " was found for tile " << tile << endreq;
   }
-  
+  if(chamberNumber>1380){
+    msg << MSG::DEBUG << "Chamber " << chamberNumber 
+        << " in R" << tile.region()+1
+        << " xIndex " << tile.nX()
+        << " yIndex " << tile.nY()
+	<< " was found for tile " << tile << endreq;
+    chamberNumber = 0;
+  }   
   return chamberNumber;
 }
 
