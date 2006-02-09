@@ -21,15 +21,14 @@
  */
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTTime2MCParticleLinker> s_factory ;
-const IAlgFactory& OTTime2MCParticleLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( OTTime2MCParticleLinker );
 
 OTTime2MCParticleLinker::OTTime2MCParticleLinker( const std::string& name,
 						  ISvcLocator* pSvcLocator )
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "/Event/Link/Raw/OT/Times" );
+  declareProperty( "OutputData", m_outputData = LHCb::OTTimeLocation::Default );
 }
 
 OTTime2MCParticleLinker::~OTTime2MCParticleLinker() {
@@ -86,7 +85,7 @@ StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::OTTime* aTime,
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   
-  OTTime2MCHitAsct associator( evtSvc(), "/Event/Link/OTTimes2MCHits" );
+  OTTime2MCHitAsct associator( evtSvc(), "OTTimes2MCHits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 

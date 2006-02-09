@@ -22,15 +22,14 @@
  */
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTTime2MCHitLinker>   s_factory ;
-const IAlgFactory& OTTime2MCHitLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( OTTime2MCHitLinker );
 
 OTTime2MCHitLinker::OTTime2MCHitLinker( const std::string& name,
 					ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "/Event/Link/OTTimes2MCHits" );
+  declareProperty( "OutputData", m_outputData  = "OTTimes2MCHits" );
   declareProperty( "SpillOver", m_spillOver = false );
 }
 
@@ -58,7 +57,7 @@ StatusCode OTTime2MCHitLinker::execute()
   LHCb::OTTimes* timeCont = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default );
     
   // Get MCHits; no spillover 
-  LHCb::MCHits* mcHits = get<LHCb::MCHits>( "/Event/"+LHCb::MCHitLocation::OT );
+  LHCb::MCHits* mcHits = get<LHCb::MCHits>( LHCb::MCHitLocation::OT );
 
   // Create a linker
   //LinkerWithKey<LHCb::MCHit,LHCb::MCOTTime> myLink( evtSvc(), msgSvc(), outputData() );
@@ -98,7 +97,7 @@ StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
   typedef Table::Range MCDeposit;
   typedef Table::iterator MCDepositIter;
   
-  OTTime2MCDepositAsct associator( evtSvc(), "/Event/Link/OTTimes2MCDeposits" );
+  OTTime2MCDepositAsct associator( evtSvc(), "OTTimes2MCDeposits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 

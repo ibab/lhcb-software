@@ -27,15 +27,14 @@
  */
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTTime2MCDepositLinker>   s_factory ;
-const IAlgFactory& OTTime2MCDepositLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( OTTime2MCDepositLinker );
 
 OTTime2MCDepositLinker::OTTime2MCDepositLinker( const std::string& name,
 						ISvcLocator* pSvcLocator )
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData="/Event/Link/OTTimes2MCDeposits" );
+  declareProperty( "OutputData", m_outputData = "OTTimes2MCDeposits" );
   declareProperty( "acceptTime", m_acceptTime  = 7.8*ns );
 }
 
