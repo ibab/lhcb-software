@@ -4,10 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2006-02-08
+!=============================== STDAQ v2r2 2006-02-08 =======================
+! 2006-02-08 M. Needham
  - Correct Tell1 board numbering scheme
 
-!=============================== STDAQ v2r2 2006-02-07 =======================
 ! 2006-02-07 M. Needham
  - bug fix to prevent core dump in STClustersToRawBank alg
  - remove cast to int in STTell1ID (the compiler was doing bad things with it)
