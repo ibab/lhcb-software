@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.5 2006-02-02 16:16:50 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.6 2006-02-09 08:42:37 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -14,9 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<CaloTriggerBitsFromRaw>          s_factory ;
-const        IToolFactory& CaloTriggerBitsFromRawFactory = s_factory ;
-
+DECLARE_TOOL_FACTORY( CaloTriggerBitsFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,7 +34,7 @@ CaloTriggerBitsFromRaw::CaloTriggerBitsFromRaw( const std::string& type,
 // Destructor
 //=============================================================================
 CaloTriggerBitsFromRaw::~CaloTriggerBitsFromRaw() {
-  std::cout << "Destroy CaloTriggerBitsFromRaw" << std::endl;
+  //  std::cout << "Destroy CaloTriggerBitsFromRaw" << std::endl;
 };
 //=========================================================================
 //  Initialisation
