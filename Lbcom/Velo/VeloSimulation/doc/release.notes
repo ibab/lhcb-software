@@ -5,7 +5,15 @@
 !-----------------------------------------------------------------------------
 
 !===================== VeloSimulation v1r0 2005-02-10 =====================
-! 2005-02-10 - Tomasz Szumlak & Chris Parkes
+! 2006-02-08 - Tomasz Szumlak
+ - migration of the code to LHCb v20r0
+ - spillOver estimation using pulse shape fit coming from data
+   taken during the Beam Tests in 2004
+ - hard coded sensor number removed
+ - new VeloSimMoni algorithm added
+ - some additional code clean-up 
+
+! 2005-11-10 - Tomasz Szumlak & Chris Parkes
  - Newly released package containing VeloSim algorithm previously
    in VeloAlgorithms
 

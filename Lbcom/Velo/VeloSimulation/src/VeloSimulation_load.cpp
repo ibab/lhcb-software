@@ -12,5 +12,6 @@
 
 DECLARE_FACTORY_ENTRIES(VeloSimulation) {
   DECLARE_ALGORITHM( VeloSim );
+  DECLARE_ALGORITHM( VeloSimMoni );
 }
 

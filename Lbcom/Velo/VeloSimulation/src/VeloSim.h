@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.1.1.1 2005-12-01 08:12:21 szumlat Exp $
+#// $Id: VeloSim.h,v 1.2 2006-02-09 11:04:16 szumlat Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -9,24 +9,35 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "Kernel/Point3DTypes.h"
 
 // from Velo
 #include "Event/MCVeloFE.h"
+
+// local
+#include "VeloSimulation/pulseShapeFunctor.h"
+
 class DeVelo;
-class MCVeloHit;
+class MCHit;
 class VeloChannelID;
+class pulseShapeFunctor;
 
 /** @class VeloSim VeloSim.h VeloAlgs/MCVeloSim.h
  *
- * Fill MCVeloDigit, based on MCVeloHit
+ * Fill MCVeloDigit, based on MCHit
  * In general would contain silicon and Front End Chip Simulation
  * and digitisation.
  * Currently just a fast test version.
- *  @author Chris Parkes, based on code of Oliver Callot
+ *  @author Chris Parkes, based on code of Oliver Callot; update Tomasz Szumlak
  *  @date   10/01/02
  */
+
 class VeloSim : public GaudiAlgorithm {
 public:
+  //
+  static const double k_spillOverTime=25.;
+  static const double k_pulseShapePeakTime=30.7848;
+  //
   /// Standard constructor
   VeloSim( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -42,26 +53,21 @@ private:
   StatusCode getInputData();
   StatusCode simulation();
   StatusCode chargeSim(bool spillOver);
-  long simPoints(MCVeloHit* hit);
-  void chargePerPoint(MCVeloHit* hit,
-                      int Npoints,
-                      std::vector<double>& Spoints,
-                      bool SpillOver);
-  void deltaRayCharge(double charge,
-                      double tol,
-                      int Npoints,
-                      std::vector<double>& Spoints);
-  void diffusion(MCVeloHit* hit, int Npoints, std::vector<double>& Spoints, bool SpillOver);
-  void testSim(MCVeloHit* hit, bool SpillOver);
-  void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
-  void fillFE(MCVeloFE* myFE, double charge);
+  long simPoints(LHCb::MCHit* hit);
+  void chargePerPoint(LHCb::MCHit* hit, int Npoints,
+                      std::vector<double>& Spoints, bool SpillOver);
+  void deltaRayCharge(double charge, double tol,
+                      int Npoints, std::vector<double>& Spoints);
+  void diffusion(LHCb::MCHit* hit, int Npoints,
+                 std::vector<double>& Spoints, bool SpillOver);
+  void testSim(LHCb::MCHit* hit, bool SpillOver);
+  void fillFE(LHCb::MCVeloFE* myFE, LHCb::MCHit* hit, double charge);
+  void fillFE(LHCb::MCVeloFE* myFE, double charge);
   StatusCode coupling();
-  MCVeloFE* findOrInsertPrevStrip(MCVeloFEs::iterator FEIt, 
-                                  bool& valid, 
-                                  bool& create);
-  MCVeloFE* findOrInsertNextStrip(MCVeloFEs::iterator FEIt, 
-                                  bool& valid, 
-                                  bool& create);
+  LHCb::MCVeloFE* findOrInsertPrevStrip(LHCb::MCVeloFEs::iterator FEIt, 
+                                        bool& valid, bool& create);
+  LHCb::MCVeloFE* findOrInsertNextStrip(LHCb::MCVeloFEs::iterator FEIt, 
+                                        bool& valid, bool& create);
   StatusCode pedestalSim();
   StatusCode noiseSim();
   double noiseSigma(double stripCapacitance);
@@ -71,38 +77,35 @@ private:
   StatusCode VeloSim::deadStrips();
   StatusCode finalProcess();
   StatusCode storeOutputData();
-  MCVeloFE* findOrInsertFE(VeloChannelID& stripKey);
-
+  LHCb::MCVeloFE* findOrInsertFE(LHCb::VeloChannelID& stripKey);
+  double spillOverReminder(double TOF);
   // data members
   std::string m_inputContainer;       ///< Name of input container  
   std::string m_spillOverInputContainer; ///< Name of spill Over event input container
   std::string m_pileUpInputContainer;  ///< Name of pileUp input container
-  std::string m_pileUpSpillOverInputContainer;  ///< Name of spill Over event input container
-
+  std::string m_pileUpSpillOverInputContainer;  ///< Name of spill Over event input cont
   std::string m_outputContainer;      ///< Name of output container
   std::string m_pileUpOutputContainer;      ///< Name of output container
-
-  DeVelo* m_velo; ///< Detector Element
-  MCVeloHits* m_hits; ///< vector of input hits
-  MCVeloHits* m_spillOverHits; ///< vector of input hits from spill over event
-  MCVeloFEs* m_FEs; ///< vector of FE output  signals
-  MCVeloFEs* m_FEs_coupling; ///< vector of coupled FE output signals
- 
-  MCVeloHits* m_veloHits; // vector of input hits
-  MCVeloHits* m_pileUpHits; // vector of input hits from pileUp
-  MCVeloHits* m_veloSpillOverHits; // vector of input hits
-  MCVeloHits* m_pileUpSpillOverHits; // vector of input hits from pileUp
-  MCVeloFEs* m_veloFEs; ///< vector of FE output  signals
-  MCVeloFEs* m_pileUpFEs; ///< vector of FE output  signals
-
-
-  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
+  //
+  DeVelo* m_veloDet; ///< Detector Element
+  LHCb::MCHits* m_hits; ///< vector of input hits
+  LHCb::MCHits* m_spillOverHits; ///< vector of input hits from spill over event
+  LHCb::MCVeloFEs* m_FEs; ///< vector of FE output  signals
+  LHCb::MCVeloFEs* m_FEs_coupling; ///< vector of coupled FE output signals
+  // 
+  LHCb::MCHits* m_veloHits; // vector of input hits
+  LHCb::MCHits* m_pileUpHits; // vector of input hits from pileUp
+  LHCb::MCHits* m_veloSpillOverHits; // vector of input hits
+  LHCb::MCHits* m_pileUpSpillOverHits; // vector of input hits from pileUp
+  LHCb::MCVeloFEs* m_veloFEs; ///< vector of FE output  signals
+  LHCb::MCVeloFEs* m_pileUpFEs; ///< vector of FE output  signals
+  //
+  //  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
   // control simulation sections
   bool m_chargeSim;
   bool m_inhomogeneousCharge;
   bool m_coupling;
   bool m_noiseSim;
-  double m_noiseConstant;
   bool m_pedestalSim;
   bool m_CMSim;
   double m_stripInefficiency; 
@@ -112,11 +115,8 @@ private:
   bool m_testSim;
   double m_smearPosition;
   // allows resolution to be degraded for robustness studies
-
-  HepPoint3D m_movePosition; // used when degrading resolution
-
+  Gaudi::XYZPoint m_movePosition; // used when degrading resolution
   std::string m_simMode; // velo or pileup
-
   //gaussian random numbers
   Rndm::Numbers m_gaussDist;
   //uniform random numbers
@@ -125,22 +125,22 @@ private:
   double ran_gaussian_tail(const double a, const double sigma);
   /// random numbers from 1/E^2
   double ran_inv_E2(double Emin, double Emax);
-
+  // previously in Velo/VeloKernel package
+  double m_threshold;
+  double m_noiseConstant;
+  double m_kT;
+  double m_biasVoltage;
+  double m_eVPerElectron;
+  long m_simulationPointsPerStrip;
+  double m_chargeUniform;
+  double m_deltaRayMinEnergy;
+  double m_capacitiveCoupling;
+  double m_averageStripCapacitance;
+  double m_noiseCapacitance;
+  double m_baseDiffuseSigma;
+  std::vector<double> m_fitParams;
+  double m_offPeakSamplingTime;
+  
 };
+//
 #endif // VELOSIM_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,8 +1,51 @@
-// JP Palacios Options file for VeloSim algorithm
-VeloSim.NoiseSim = false;
-VeloSim.coupling = false;
-VeloSim.SpillOver = false;
+///
+VeloSim.NoiseSim = true;
+VeloSim.coupling = true;
+VeloSim.SpillOver = true;
 VeloSim.InhomogeneousCharge = true;
 VeloSim.TestSimulation =  false;
-VeloSim.PileUp= false;
-VeloSim.OutputLevel=2;
+VeloSim.PileUp= true;
+VeloSim.OutputLevel=3;
+///
+// in electrons, only MCVeloFEs above this value will be stored on TDS
+// also used in some calculations to decide whether process are worth
+// including (usually if say 10% of this value)
+VeloSim.Threshold=4500.;
+// noise sigma constant in electrons
+// (capacitance term is added to make total sigma)
+VeloSim.NoiseConstant=500.;
+// boltzmann Temp in eV
+VeloSim.kT=0.025;
+// in V, sensor assumed fully depleted
+VeloSim.BiasVoltage=100.;
+// conversion factor between energy in eV and number of electron-hole pairs
+VeloSim.eVPerElectron=3.6;
+// fraction of charge from spillOver event left 25 ns later
+//VeloSim.SpillOverChargeFraction=0.3;
+// number of points per strip to use in diffusion calculation
+VeloSim.SimulationPointsPerStrip=3;
+// amount of charge to distribute uniformly along particle path in
+// electrons/(um of si thickness)
+VeloSim.ChargeUniform=70.;
+// min. energy (eV) of delta rays
+// sensible values will be greater than gaussian stat. fluctuations on
+// energy of a point, but less than typical total
+// delta ray charge/ num.  simulated points on path
+VeloSim.DeltaRayMinEnergy=1000.;
+// capacitive coupling between strips. Neighbouring strips
+// receive this fraction of the charge of the middle strip
+VeloSim.CapacitiveCoupling=0.05;
+// average capacitance of strips
+VeloSim.AverageStripCapacitance=20.;
+// noise sigma in electrons/pF of channel capacitance
+VeloSim.NoiseCapacitance=50.;
+/// fit parameters vector
+VeloSim.FitParams={ 5.265199e-1,   // p0
+                       -1.602129e-1,   // p1
+                        1.811698e-2,   // p2
+                       -6.733501e-4,   // p3
+                        1.125563e-5,   // p4
+                       -8.898185e-8,   // p5
+                        2.726524e-10   // p6
+                       };
+VeloSim.OffPeakSamplingTime=5.;     // ns
