@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.3 2006-02-07 08:46:28 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.4 2006-02-09 18:21:37 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -44,7 +44,7 @@ ISTClusterPosition::Measurement STOnlinePosition::estimate(const LHCb::STCluster
   LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
                                     firstChan.station(),firstChan.layer(),
                                     firstChan.detRegion(),firstChan.sector(), 
-                                    (unsigned int)stripNum);
+                                    (unsigned int)stripNum+firstChan.strip());
 
   return std::make_pair(std::make_pair(theChan,stripFraction(interStripPos)),
                         error(aCluster->size()));

@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.3 2006-02-07 08:46:28 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.4 2006-02-09 18:21:37 mneedham Exp $
 
  
 // Kernel
@@ -44,7 +44,8 @@ ISTClusterPosition::Measurement STOfflinePosition::estimate(const LHCb::STCluste
   LHCb::STChannelID firstChan = aCluster->firstChannel();
   LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
-                                    firstChan.sector(), (unsigned int)stripNum);
+                                    firstChan.sector(), 
+                                    (unsigned int)stripNum+firstChan.strip());
                                                                              
   return std::make_pair(std::make_pair(theChan,
                         stripFraction(stripNum - floor(stripNum),aCluster->size())),
