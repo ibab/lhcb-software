@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.73 2006-02-09 10:21:19 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.74 2006-02-09 16:04:39 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -19,8 +19,6 @@ ApplicationMgr.DLLs  += { "GaussKine" };
 ApplicationMgr.ExtSvc += { 
   "GiGa"
 };
-//GiGa.OutputLevel = 2;
-//EventPersistencySvc.CnvServices += { "GiGaKine" , "GiGaHits" };
 EventPersistencySvc.CnvServices += { "GiGaKine" };
 
 #pragma print on
@@ -35,7 +33,6 @@ GiGaStore.ConversionServices = { "GiGaKine" };
 // simulation
 //---------------------------------------------------------------------------
 Simulation.Members += { "GiGaInputStream/Geo" }; 
-Geo.OutputLevel = 2;
 #include "$GAUSSOPTS/SimGeometry.opts"
 
 // Steering of the simulation
@@ -44,7 +41,6 @@ Geo.OutputLevel = 2;
 Simulation.Members += { "GeneratorToG4" };
 // Perform the Geant4 simulation
 Simulation.Members += { "GiGaFlushAlgorithm" };
-GiGaFlushAlgorithm.OutputLevel = 2;
 // Check the G4Event processing status
 Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES
@@ -57,32 +53,32 @@ G4HepMCToMCTruth.Vertices = "MC/TestVertices";
 Simulation.Members += { "GetTrackerHitsAlg/GetVeloHits" };
 GetVeloHits.CollectionName = "VeloSDet/Hits";
 GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
-GetVeloHits.Detector       = "/dd/Structure/LHCb/Velo";
+GetVeloHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 // == PuVelo
 Simulation.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
 GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
 GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
-GetPuVetoHits.Detector       = "/dd/Structure/LHCb/Velo";
+GetPuVetoHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 // == TT
 Simulation.Members += { "GetTrackerHitsAlg/GetTTHits" };
 GetTTHits.CollectionName = "TTSDet/Hits";
 GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
-GetTTHits.Detector       = "/dd/Structure/LHCb/IT";
+GetTTHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
 // == IT
 Simulation.Members += { "GetTrackerHitsAlg/GetITHits" };
 GetITHits.CollectionName = "ITSDet/Hits";
 GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
-GetITHits.Detector       = "/dd/Structure/LHCb/IT";
+GetITHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
 // == OT
 Simulation.Members += { "GetTrackerHitsAlg/GetOTHits" };
 GetOTHits.CollectionName = "OTSDet/Hits";
 GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
-GetOTHits.Detector       = "/dd/Structure/LHCb/OT";
+GetOTHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
 // == Muon
 Simulation.Members += { "GetTrackerHitsAlg/GetMuonHits" };
 GetMuonHits.CollectionName = "MuonSDet/Hits";
 GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
-GetMuonHits.Detector       = "/dd/Structure/LHCb/Muon";
+GetMuonHits.Detector       = "/dd/Structure/LHCb/DownstreamRegion/Muon";
 // == Calorimeters
 Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" };
@@ -91,10 +87,10 @@ Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
 // and for the RICHes
 Simulation.Members += { "GetMCRichHitsAlg" };
 // Uncomment lines below for switching on RICH extended info
-// Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
-//                         "GetMCRichSegmentsAlg",
-//                         "GetMCRichTracksAlg" };
-// #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
+                        "GetMCRichSegmentsAlg",
+                        "GetMCRichTracksAlg" };
+#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
@@ -115,10 +111,10 @@ GiGa.ModularPL.PhysicsConstructors +=
   { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" } ;
 GiGa.ModularPL.PhysicsConstructors += 
   { "GiGaExtPhysics<IonPhysics>/IonPhysics"         } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaPhysConstructorOp"                         } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaPhysConstructorHpd"                        } ;
+//GiGa.ModularPL.PhysicsConstructors += 
+//  { "GiGaPhysConstructorOp"                         } ;
+//GiGa.ModularPL.PhysicsConstructors += 
+//  { "GiGaPhysConstructorHpd"                        } ;
 
 // Mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
@@ -150,8 +146,8 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 
 // specific RICH options
 #pragma print off
-#include "$GAUSSRICHROOT/options/Rich.opts"
-GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+//#include "$GAUSSRICHROOT/options/Rich.opts"
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 // uncomment the following to activate the extended Rich information
 // see http://j.home.cern.ch/j/jonesc/www/OORich for more details
 //#include "$GAUSSRICHROOT/options/RichVerbose.opts"
@@ -182,7 +178,7 @@ GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 // setting simulation attributes
 SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
-GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
+//GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to save geometry in GDML format
