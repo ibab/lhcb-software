@@ -1,8 +1,11 @@
-// $Id: GenAlgs.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ========================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+// 
 // ========================================================================
 #ifndef LOKI_GENALGS_H 
 #define LOKI_GENALGS_H 1
@@ -152,6 +155,46 @@ namespace LoKi
       { result += count_if ( *iev , cut ) ; }
       return result ;
     } ;
+
+    /** useful helper function (a'la STL) to count a number of 
+     *  (HepMC) particles, which satisfy certain criteria, 
+     *  e.e. count number of beauty particles 
+     * 
+     *  @code
+     *  
+     *  using namespace LoKi::GenAlgs 
+     *  using namespace LoKi::Cuts 
+     *
+     *  // any sequence of objects, convertible to 
+     *  // const LHCb::HepMCEvents*, const LHCb::HepMCEvent*
+     *  // or const HepMC::GenEvent* 
+     *  SEQUENCE objects = ... ; 
+     *
+     *  const size_t nBeauty  = 
+     *    count_if ( objects.begin() , objects.end() , BEAUTY ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::BEAUTY
+     *
+     *  @param  first begin of the sequence  
+     *  @param  last  end of the sequence 
+     *  @param  cut   the predicate 
+     *  @return number of elements which satisfy the criterion
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-01-23
+     */
+    template <class OBJECT,class PREDICATE>
+    inline size_t count_if 
+    ( OBJECT    first , 
+      OBJECT    last  , 
+      PREDICATE cut   )
+    {
+      size_t result = 0 ;
+      for ( ; first != last ; ++first ) 
+      { result += count_if ( *first , cut ) ; }
+      return result ;
+    } ;
     
     /** usefull helper function (a'la STL) to efficiently check the 
      *  presence of at least one (HepMC) particle, which satisfies the 
@@ -261,6 +304,45 @@ namespace LoKi
       { if ( found ( *iev , cut ) ) { return true ; } }
       return false ;
     } ;    
+    
+    /** useful helper function (a'la STL) to efficiently check the 
+     *  presence of at least one (HepMC) particle, which satisfies the 
+     *  certain criteria, e.g. for beauty particles 
+     * 
+     *  @code
+     *  
+     *  using namespace LoKi::GenAlgs 
+     *  using namespace LoKi::Cuts 
+     *
+     *  // any sequence of objects, convertible to 
+     *  // const LHCb::HepMCEvents*, const LHCb::HepMCEvent*
+     *  // or const HepMC::GenEvent* 
+     *  SEQUENCE objects = ... ; 
+     *
+     *  const bool good = 
+     *    found ( objects.begin() , objects.end() , BEAUTY ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::BEAUTY
+     *
+     *  @param  first begin of the sequence  
+     *  @param  last  end of the sequence 
+     *  @param  cut   the predicate 
+     *  @return number of elements which satisfy the criterion
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-01-23
+     */
+    template<class OBJECT,class PREDICATE>
+    inline bool found 
+    ( OBJECT     first ,
+      OBJECT     last  , 
+      PREDICATE  cut   ) 
+    {
+      for ( ; first != last ; ++first ) 
+      { if ( found ( *first , cut ) ) { return true ; } }  // RETURN 
+      return false ;
+    } ;
 
     //
   } ; // end of namespace LoKi::GenAlgs

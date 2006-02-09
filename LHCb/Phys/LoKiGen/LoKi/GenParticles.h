@@ -1,6 +1,6 @@
-// $Id: GenParticles.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -42,7 +42,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-01-23 
  */
 // ============================================================================
 
@@ -57,8 +57,7 @@ namespace LoKi
    *  @date   2005-03-26
    */
   namespace GenParticles 
-  {   
-    
+  {    
     /** @struct BarCode 
      *  the most primitive function - it return the "barcode" 
      *  of HepMC::GenParticle object
@@ -764,6 +763,91 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
+
+    /** @class AdapterToProductionVertex 
+     *
+     *  Simple adapter, which delegates the evaluation of 
+     *  "vertex" funtion to "production vertex" of the particle:
+     *   
+     *  @see LoKi::Cuts::GFAPVX 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    class AdapterToProductionVertex 
+      : LoKi::Function<const HepMC::GenParticle*>
+    {
+    public:
+      /** constructor from vertex function and "bad" value 
+       *  @param fun verted function to be used 
+       *  @param bad the value to be returnedd for invalid vertex 
+       */
+      AdapterToProductionVertex 
+      ( const LoKi::Types::GVFunc& fun , 
+        const double               bad ) ;
+      /// copy constructor 
+      AdapterToProductionVertex 
+      ( const AdapterToProductionVertex& right ) ;
+      /// virtual destructor
+      virtual ~AdapterToProductionVertex();
+      /// clone method (mandatory!)
+      virtual AdapterToProductionVertex* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    private:
+      // default constructor is disabled 
+      AdapterToProductionVertex();
+      // assignement operator is disabled 
+      AdapterToProductionVertex& operator= 
+      ( const AdapterToProductionVertex& ) ;
+    private:
+      LoKi::Types::GVFun    m_fun ;
+      double                m_bad ;
+    };
+    
+    /** @class AdapterToEndVertex 
+     *
+     *  Simple adapter, which delegates the evaluation of 
+     *  "vertex" funtion to "end vertex" of the particle:
+     *   
+     *  @see LoKi::Cuts::GFAEVX 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    class AdapterToEndVertex 
+      : LoKi::Function<const HepMC::GenParticle*>
+    {
+    public:
+      /** constructor from vertex function and "bad" value 
+       *  @param fun verted function to be used 
+       *  @param bad the value to be returnedd for invalid vertex 
+       */
+      AdapterToEndVertex 
+      ( const LoKi::Types::GVFunc& fun , 
+        const double               bad ) ;
+      /// copy constructor 
+      AdapterToEndVertex 
+      ( const AdapterToEndVertex& right ) ;
+      /// virtual destructor
+      virtual ~AdapterToEndVertex();
+      /// clone method (mandatory!)
+      virtual AdapterToEndVertex* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    private:
+      // default constructor is disabled 
+      AdapterToEndVertex();
+      // assignement operator is disabled 
+      AdapterToEndVertex& operator= 
+      ( const AdapterToEndVertex& ) ;
+    private:
+      LoKi::Types::GVFun    m_fun ;
+      double                m_bad ;
+    };
+    
 
   }; // end of namespace GenParticles
   

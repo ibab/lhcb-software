@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.1.1.1 2006-01-24 09:54:22 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:22  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1167,6 +1170,111 @@ LoKi::GenParticles::NominalLifeTime::fillStream
 { return s << "GNLT" ; }
 // ============================================================================
 
+// ============================================================================
+/** constructor from vertex function and "bad" value 
+ *  @param fun verted function to be used 
+ *  @param bad the value to be returnedd for invalid vertex 
+ */
+// ============================================================================
+LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
+( const LoKi::Types::GVFunc& fun , 
+  const double               bad ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_fun ( fun ) 
+  , m_bad ( bad ) 
+{};
+// ============================================================================
+/// copy constructor 
+// ============================================================================
+LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
+( const LoKi::GenParticles::AdapterToProductionVertex& right ) 
+  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , m_fun ( right.m_fun ) 
+  , m_bad ( right.m_bad ) 
+{};
+// ============================================================================
+/// destructor 
+// ============================================================================
+LoKi::GenParticles::AdapterToProductionVertex::~AdapterToProductionVertex(){};
+// ============================================================================
+/// clone method (mandatory!)
+// ============================================================================
+LoKi::GenParticles::AdapterToProductionVertex*
+LoKi::GenParticles::AdapterToProductionVertex::clone() const
+{ return new AdapterToProductionVertex(*this); }
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::AdapterToProductionVertex::fillStream
+( std::ostream& stream ) const 
+{ return stream << "GFAPVX[" << m_fun << "]" ; }
+// ============================================================================
+/// the only one essential method 
+// ============================================================================
+LoKi::GenParticles::AdapterToProductionVertex::result_type 
+LoKi::GenParticles::AdapterToProductionVertex::operator() 
+  ( LoKi::GenParticles::AdapterToProductionVertex::argument p ) const 
+{
+  if ( 0 == p ) { return m_bad ; }
+  HepMC::GenVertex* v = p->production_vertex() ;
+  if ( 0 == v ) { return m_bad ; }
+  return m_fun ( v ) ;
+} ;
+// ============================================================================
+
+// ============================================================================
+/** constructor from vertex function and "bad" value 
+ *  @param fun verted function to be used 
+ *  @param bad the value to be returnedd for invalid vertex 
+ */
+// ============================================================================
+LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
+( const LoKi::Types::GVFunc& fun , 
+  const double               bad ) 
+  : LoKi::Function<const HepMC::GenParticle*>() 
+  , m_fun ( fun ) 
+  , m_bad ( bad ) 
+{};
+// ============================================================================
+/// copy constructor 
+// ============================================================================
+LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
+( const LoKi::GenParticles::AdapterToEndVertex& right ) 
+  : LoKi::Function<const HepMC::GenParticle*>( right ) 
+  , m_fun ( right.m_fun ) 
+  , m_bad ( right.m_bad ) 
+{};
+// ============================================================================
+/// destructor 
+// ============================================================================
+LoKi::GenParticles::AdapterToEndVertex::~AdapterToEndVertex(){};
+// ============================================================================
+/// clone method (mandatory!)
+// ============================================================================
+LoKi::GenParticles::AdapterToEndVertex*
+LoKi::GenParticles::AdapterToEndVertex::clone() const
+{ return new AdapterToEndVertex(*this); }
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::AdapterToEndVertex::fillStream
+( std::ostream& stream ) const 
+{ return stream << "GFAEVX[" << m_fun << "]" ; }
+// ============================================================================
+/// the only one essential method 
+// ============================================================================
+LoKi::GenParticles::AdapterToEndVertex::result_type 
+LoKi::GenParticles::AdapterToEndVertex::operator() 
+  ( LoKi::GenParticles::AdapterToEndVertex::argument p ) const 
+{
+  if ( 0 == p ) { return m_bad ; }
+  HepMC::GenVertex* v = p->end_vertex() ;
+  if ( 0 == v ) { return m_bad ; }
+  return m_fun ( v ) ;
+} ;
+// ============================================================================
 
 // ============================================================================
 // The END 

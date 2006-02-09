@@ -1,8 +1,11 @@
-// $Id: LoKiGen.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+// 
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
 #define LOKI_LOKIGEN_H 1
@@ -11,7 +14,9 @@
 // ============================================================================
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenParticles.h"
+#include "LoKi/GenVertices.h"
 #include "LoKi/GenParticleCuts.h"
+#include "LoKi/GenVertexCuts.h"
 #include "LoKi/GenExtract.h"
 #include "LoKi/GenAlgs.h"
 #include "LoKi/GenKinematics.h"

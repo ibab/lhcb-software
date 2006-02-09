@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+//
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -35,7 +38,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-01-23 
  */
 // ============================================================================
 
@@ -751,7 +754,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    const LoKi::GenParticles::TransverseMomentum GE ;
+    const LoKi::GenParticles::Energy      GE ;
 
     /** @var GM
      *  evaluator of particle mass (in HepMC units)
@@ -791,10 +794,76 @@ namespace LoKi
      *  @date 2006-01-18
      */
     const LoKi::GenParticles::NominalLifeTime GNLT ;
+    
+    /** helper adapter which delegates the evaluation of the 
+     *  "vertex" function to production vertex of the particle
+     *
+     *  Extract all particles, which are produces at |z|<10 
+     *
+     *  @code 
+     * 
+     *  const LHCb::HepMCEvents* events 
+     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+     *  
+     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
+     *  
+     *  PARTICLES parts ;
+     * 
+     *  // create the predicate:
+     *  GCut cut = GFAPVX( abs( GVZ  ) , 0 )  < 10 ;
+     * 
+     *  LoKi::Extract::genParticles 
+     *    ( events , std::back_inserter ( parts )  , cut ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GVZ 
+     *  @see HepMC::GenParticle 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::Extract::genParticles 
+     *  @see LoKi::GenParticles::AdapterToProductionVertex
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    typedef LoKi::GenParticles::AdapterToProductionVertex  GFAPVX ;
 
-  }; // end of namespace Cuts 
+    /** helper adapter which delegates the evaluation of the 
+     *  "vertex" function to end vertex of the particle
+     *
+     *  Extract all particles, which are decayed after z > 1000 
+     *
+     *  @code 
+     * 
+     *  const LHCb::HepMCEvents* events 
+     *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+     *  
+     *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
+     *  
+     *  PARTICLES parts ;
+     * 
+     *  // create the predicate:
+     *  GCut cut = GFAEVX( GVZ  , 10000  ) >  1000 ;
+     * 
+     *  LoKi::Extract::genParticles 
+     *    ( events , std::back_inserter ( parts )  , cut ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GVZ
+     *  @see HepMC::GenParticle 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::Extract::genParticles 
+     *  @see LoKi::GenParticles::AdapterToEndVertex
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    typedef LoKi::GenParticles::AdapterToEndVertex         GFAEVX ;    
+    
+  } ; // end of namespace LoKi::Cuts 
   
-}; // end of namespace LoKi
+} ; // end of namespace LoKi
 
 // ============================================================================
 // The END 

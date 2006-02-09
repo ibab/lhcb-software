@@ -1,8 +1,11 @@
-// $Id: GenTypes.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+//
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1
@@ -16,6 +19,7 @@
 // forward declarations  
 // ============================================================================
 namespace HepMC { class GenParticle ; } ;
+namespace HepMC { class GenVertex   ; } ;
 // ============================================================================
 
 
@@ -51,14 +55,24 @@ namespace LoKi
    */
   namespace GenTypes 
   {
-    /// type of 'cuts' for HepMC::GenParticle       (interface)
+
+    /// type of 'cuts' for HepMC::GenParticle        (interface)
     typedef LoKi::Predicate<const HepMC::GenParticle*>              GCuts ;
-    /// type of 'functions' for HEpMC::GenParticle  (interface)
+    /// type of 'functions' for HEpMC::GenParticle   (interface)
     typedef LoKi::Function<const HepMC::GenParticle*>               GFunc ;
     /// type of 'cuts' for HepMC::GenParticle        (assignable)
     typedef LoKi::PredicateFromPredicate<const HepMC::GenParticle*> GCut  ;
     /// type of 'functions' for HepMC::GenParticle   (assignable)
     typedef LoKi::FunctionFromFunction<const   HepMC::GenParticle*> GFun  ;
+
+    /// type of 'cuts' for HepMC::GenVertex          (interface)
+    typedef LoKi::Predicate<const HepMC::GenVertex*>                GVCuts ;
+    /// type of 'functions' for HepMC::GenVertex     (interface)
+    typedef LoKi::Function<const HepMC::GenVertex*>                 GVFunc ;
+    /// type of 'cuts' for HepMC::GenVertex          (assignable)
+    typedef LoKi::PredicateFromPredicate<const HepMC::GenVertex*>   GVCut  ;
+    /// type of 'functions' for HepMC::GenVertex     (assignable)
+    typedef LoKi::FunctionFromFunction<const   HepMC::GenVertex*>   GVFun  ;
     
   }; // end of namespace GenTypes 
   
@@ -66,12 +80,21 @@ namespace LoKi
   {
     /// type of 'cuts' for HepMC::GenParticle       (interface)
     typedef LoKi::GenTypes::GCuts GCuts ;
-    /// type of 'functions' for HEpMC::GenParticle  (interface)
+    /// type of 'functions' for HepMC::GenParticle  (interface)
     typedef LoKi::GenTypes::GFunc GFunc ;
     /// type of 'cuts' for HepMC::GenParticle       (assignable)
     typedef LoKi::GenTypes::GCut  GCut  ;
     /// type of 'functions' for HepMC::GenParticle  (assignable)
     typedef LoKi::GenTypes::GFun  GFun  ;
+    
+    /// type of 'cuts' for HepMC::GenVertex       (interface)
+    typedef LoKi::GenTypes::GVCuts GVCuts ;
+    /// type of 'functions' for HepMC::GenVertex  (interface)
+    typedef LoKi::GenTypes::GVFunc GVFunc ;
+    /// type of 'cuts' for HepMC::GenVertex       (assignable)
+    typedef LoKi::GenTypes::GVCut  GVCut  ;
+    /// type of 'functions' for HepMC::GenVertex  (assignable)
+    typedef LoKi::GenTypes::GVFun  GVFun  ;
     
   } ; // end of namespace Types 
   

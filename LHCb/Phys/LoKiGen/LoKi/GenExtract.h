@@ -1,8 +1,11 @@
-// $Id: GenExtract.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenExtract.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+//
 // ============================================================================
 #ifndef LOKI_GENEXTRACT_H 
 #define LOKI_GENEXTRACT_H 1
@@ -86,7 +89,7 @@ namespace LoKi
               event->particles_begin() ; 
             event->particles_end() != p ; ++p ) 
       { 
-        if ( !predicate( *p ) ) { continue ; } // CONTINUE 
+        if ( !predicate ( *p ) ) { continue ; } // CONTINUE 
         //
         const HepMC::GenParticle* particle = *p ;
         *output = const_cast<HepMC::GenParticle*> ( particle ) ;
@@ -130,7 +133,7 @@ namespace LoKi
       PREDICATE                predicate )
     {
       if ( 0 == event ) { return output ; }
-      return getGenParticles ( event->pEvtGen() , output , predicate ) ;
+      return getGenParticles ( event->pGenEvt() , output , predicate ) ;
     };
     
     /** @fn getGenParticles 
@@ -169,8 +172,8 @@ namespace LoKi
       PREDICATE                predicate )
     {
       if ( 0 == events ) { return output ; }
-      return getGenParticles ( events->begi() , events->end () ,
-                               output , predicate ) ; 
+      return getGenParticles 
+        ( events->begin() , events->end () , output , predicate ) ; 
     };
     
     /** @fn getGenParticles 
@@ -254,7 +257,7 @@ namespace LoKi
     ( const HepMC::GenEvent* event     , 
       OUTPUT                 output    , 
       PREDICATE              predicate )
-    { return getGenParticle ( event , output , predicate ) ; }
+    { return getGenParticles ( event , output , predicate ) ; }
     
     /** @fn genParticles 
      *  simple function which allows to extract a certain 
@@ -357,10 +360,10 @@ namespace LoKi
      */
     template <class INPUT,class OUTPUT, class PREDICATE> 
     inline OUTPUT genParticles 
-    ( INPUT          first     ,
-      INPUT          last      , 
-      OUTPUT         output    , 
-      PREDICATE      predicate )
+    ( INPUT            first     ,
+      INPUT            last      , 
+      OUTPUT           output    , 
+      PREDICATE        predicate )
     { return getGenParticles ( first , last , output , predicate ) ; } ;    
   };
 };
