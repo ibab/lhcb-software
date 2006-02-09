@@ -4,7 +4,24 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r0 2006-02-06 ============================
+!======================== Gauss v24r0 2006-02-09 ============================
+
+! 2006-02-09 - Gloria CORTI
+ - Switch back requiring the Simulation phase to be successfull to write out
+   the event on file, to account for G4 aborted events
+   . GaussTape.opts
+ - Instead of having initialization, generator, simulation and monitor phase
+   as in previous Gauss versions, there are now separate initializations for
+   the generator and simulation phases. So the initialization phase is now
+   removed as such and the first step of both generator and simulation.
+   The monitor phase is also split and introduced as last part of the generator
+   and simulation phase separately.
+   The sequencing is modified accordingly. The ParticleGun options are modified
+   to remove the Generation algorithm and introduce the ParticleGun instead,
+   the monitor also has to be reset to be in the right sequence.
+   . Generator.opts
+   . ParticleGun.opts
+   . Gauss.opts
 
 ! 2006-02-06 - Gloria CORTI
  - Introduce sequence of algorithms to have extende Rich information
