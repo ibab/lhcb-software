@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.13 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.14 2006-02-09 18:02:53 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -30,6 +30,7 @@ std::string Rich::text( const Rich::TrackParent::Type parent )
   {
   case Rich::TrackParent::Track:          return "Track";
   case Rich::TrackParent::MCParticle:     return "MCParticle";
+  case Rich::TrackParent::MCRichTrack:    return "MCRichTrack";
   default:                                return "SHOULD NEVER SEE THIS";
   }
 }
@@ -99,4 +100,12 @@ Rich::Track::Type Rich::Track::type( const LHCb::Track * track )
 
   // Should not get here either ...
   throw GaudiException( "Null Track pointer", "*Rich::Track::type*", StatusCode::FAILURE );
+}
+
+Rich::Track::Type Rich::Track::type( const LHCb::MCRichTrack * track )
+{
+  if ( track ) 
+  {
+    return Rich::Track::MCRichTrack;
+  }
 }

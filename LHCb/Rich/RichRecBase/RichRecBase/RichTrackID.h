@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.19 2006-01-25 10:52:14 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.20 2006-02-09 18:02:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -19,6 +19,7 @@
 namespace LHCb
 {
   class MCParticle;
+  class MCRichTrack;
 }
 
 namespace Rich 
@@ -56,7 +57,8 @@ namespace Rich
         VeloTT   =  4, ///< Track algorithm type is VeloTT
         KsTrack  =  5, ///< Track algorithm type is KsTrack
         Velo     =  6, ///< Track algorithm type is Velo
-        Trigger  =  7  ///< Track algorithm type Trigger track
+        Trigger  =  7, ///< Track algorithm type Trigger track
+        MCRichTrack = 11 ///< Track algorithm type Trigger track
       };
 
     /** Access the enumerated type for given Track
@@ -66,6 +68,14 @@ namespace Rich
      * @return enumerated type information
      */
     Rich::Track::Type type( const LHCb::Track * track );
+
+    /** Access the enumerated type for given MCRichTrack
+     *
+     * @param track Pointer to an MCRichTrack object
+     *
+     * @return enumerated type information
+     */
+    Rich::Track::Type type( const LHCb::MCRichTrack * track );
 
     /** Converts a string name into the associated type enumeration
      *
@@ -123,7 +133,8 @@ namespace Rich
       {
         Unknown = -1,   ///< Parent type is unknown
         Track,          ///< Track derives from a reconstructed Track object
-        MCParticle      ///< Track derives from Monte Carlo MCParticle information
+        MCParticle,     ///< Track derives from Monte Carlo MCParticle information
+        MCRichTrack     ///< Track derives from Monte Carlo MCRichTrack information
       };
 
   }
@@ -183,6 +194,15 @@ public:
       m_parentType ( Rich::TrackParent::MCParticle    ),
       m_unique     ( true                             ) { }
 
+  /** Constructor from an MCRichTrack
+   *
+   *  @param mcPart Pointer to an MCRichTrack
+   */
+  explicit RichTrackID( const LHCb::MCRichTrack * )
+    : m_tkType     ( Rich::Track::Unknown             ),
+      m_parentType ( Rich::TrackParent::MCParticle    ),
+      m_unique     ( true                             ) { }
+
   ~RichTrackID( ) {} ///< Destructor
 
   /** The track type
@@ -235,6 +255,12 @@ public:
    */
   void initialiseFor( const LHCb::MCParticle * track );
 
+  /** Initialise from a MCRichTrack
+   *
+   *  @param track Pointer to an MCRichTrack from which to initialise
+   */
+  void initialiseFor( const LHCb::MCRichTrack * track );
+
   /** Operator < For sorting
    *
    *  @param id ID object for comparision
@@ -269,6 +295,11 @@ inline void RichTrackID::initialiseFor( const LHCb::Track * track )
 inline void RichTrackID::initialiseFor( const LHCb::MCParticle * )
 {
   setParentType ( Rich::TrackParent::MCParticle );
+}
+
+inline void RichTrackID::initialiseFor( const LHCb::MCRichTrack * )
+{
+  setParentType ( Rich::TrackParent::MCRichTrack );
 }
 
 /// Implement textual ostream << method for Rich::Track::Type enumeration
