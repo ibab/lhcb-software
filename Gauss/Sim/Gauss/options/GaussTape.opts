@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.22 2006-01-31 18:16:40 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.23 2006-02-09 10:09:07 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -67,6 +67,6 @@ GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa!
 GaussTape.OutputLevel = 3;
 
 // Write only events that were succefully processed by the simulation
-// GaussTape.RequireAlgs = { "Simulation" };
+GaussTape.RequireAlgs = { "Simulation" };
 
 #pragma print on

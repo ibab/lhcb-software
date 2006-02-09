@@ -10,7 +10,7 @@
  */
 
 Generator.Members += { "Generation" };
-Generator.Members += { "GenMonitorAlg" };
+//Generator.Members += { "GenMonitorAlg" };
 ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY-DC06.DEC";
 
 // To generate with fixed luminosity of 5.e32 cm-2 s-1

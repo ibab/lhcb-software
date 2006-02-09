@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.8 2006-01-31 18:33:18 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.9 2006-02-09 10:09:07 gcorti Exp $ 
 
 /** @file 
  * 
@@ -40,7 +40,7 @@ UserMonitor.Members   += { "MCDecayCounter" };
 MCDecayCounter.MCDecayFinder.Decay = "KS0 -> pi+ pi-";
 
 // If the file contains also Rich extended information you can uncomment below
-//#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts" 
+#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts" 
 
 //---------------------------------------------------------------------------
 // Must read events (overwrite property of no events input set for 

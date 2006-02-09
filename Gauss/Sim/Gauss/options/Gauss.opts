@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.77 2006-02-06 12:59:24 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.78 2006-02-09 10:09:07 gcorti Exp $ 
 
 /** @file 
  * 
@@ -17,7 +17,7 @@
 //---------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
-ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    }; 
+//ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    }; 
 
 //---------------------------------------------------------------------------
 // Initialize the Phases: set run and first event number,
@@ -49,8 +49,8 @@ Simulation.MeasureTime = true;
 // Monitor phase: two separate phase for Generator and Simulation
 //                can be commented separately
 //---------------------------------------------------------------------------
-Monitor.Members       += { "GaudiSequencer/GenMonitor" };
-Monitor.Members       += { "GaudiSequencer/SimMonitor" };
+Generator.Members       += { "GaudiSequencer/GenMonitor" };
+Simulation.Members      += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 #include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 Monitor.MeasureTime    = true;
@@ -89,8 +89,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-#include "$GAUSSOPTS/30000000.opts"  // Min Bias
+//#include "$GAUSSOPTS/30000000.opts"  // Min Bias
 //#include "$GAUSSOPTS/10000000.opts"  // Generic b-b~ events
 
-//#include "$GAUSSOPTS/ParticleGun.opts"          
-//Generator.Members += {"DumpMC"}; 
+#include "$GAUSSOPTS/ParticleGun.opts"          
+//GenMonitor.Members += {"DumpMC"}; 
