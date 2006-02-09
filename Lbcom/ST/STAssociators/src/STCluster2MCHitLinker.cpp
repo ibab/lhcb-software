@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.3 2006-02-09 15:24:13 mneedham Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -56,6 +56,7 @@ StatusCode STCluster2MCHitLinker::initialize() {
   }
 
   m_hitLocation = LHCb::MCHitLocation::TT;
+  m_inputData = LHCb::STClusterLocation::TT;
 
   STDetSwitch::flip(m_detType,m_hitLocation);
   STDetSwitch::flip(m_detType,m_digitLocation);
