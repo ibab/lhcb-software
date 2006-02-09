@@ -1,19 +1,11 @@
 !Package         : STDet
 !Package manager : M. Needham
-
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r0 2006-02-09 =======================
+! 2006-02-08 M. Needham 
+ - Get TT Sector numbering init correct
 
-! 2006-02-8
-
-- Get TT Sector numbering init correct
-
-! 2006-02-06 
- - bug fix that gets numbering closer to correct
-
-
-
-!========================= STDet v2r0 2006-02-06 =======================
 ! 2006-02-06 M. Needham 
  - bug fix that gets numbering closer to correct
  - Minor bug fixes
@@ -31,8 +23,6 @@
 
 ! 2006-01-18 M. Needham
   - check that child is of the correct type
-                                                                               
-! 2006-01-18 M. Needham
   - set element ids in DeITBox and DeITLayer
 
 ! 2006-01-18 - Marco Cattaneo
