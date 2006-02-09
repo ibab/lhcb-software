@@ -6,6 +6,7 @@
     <class 
       author="Olivier Deschamps"
       desc="This class represents the L0 processors data sent to L0DU"
+      id  = "6009" 
       name="L0ProcessorData">
 
       <base name="KeyedObject&lt;int&gt;"/>
