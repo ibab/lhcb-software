@@ -1,6 +1,12 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v2r0 2006-02-08 ===================
+! 2006-02-08 - Tomasz Szumlak
+ - new package compatible with LHCb v20r0
+ - new linkers objects to create associations between InternalVeloClusters
+   and MCHits
+
 !==================== VeloAssociators v1r14p1 2005-04-21 ===================
 ! 2005-04-21 - Marco Cattaneo
  - Add TestVeloCluster2MCHitRel algorithm from Vanya, to test relation table

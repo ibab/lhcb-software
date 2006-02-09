@@ -1,7 +1,7 @@
 #include "VeloTruthTool.h"
-#include "Event/VeloCluster.h"
+#include "Event/InternalVeloCluster.h"
 #include "Event/MCVeloFE.h"
-#include "Event/MCVeloHit.h"
+#include "Event/MCHit.h"
 
 #include <map>
 #include <vector>
@@ -10,42 +10,39 @@
 //
 // 21/05/2002 : Chris Parkes
 //-----------------------------------------------------------------------------
-StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                                           std::map<MCVeloHit*,double>& hitMap,
-                                           SmartDataPtr<MCVeloFEs> mcfes){
-  MCVeloFEs* mcFEsPtr = mcfes;
-  return VeloTruthTool::associateToTruth( aCluster, hitMap, mcFEsPtr );
+StatusCode VeloTruthTool::associateToTruth(
+                          const LHCb::InternalVeloCluster* aCluster,
+                          std::map<LHCb::MCHit*,double>& hitMap, 
+                          SmartDataPtr<LHCb::MCVeloFEs> mcfes){
+  LHCb::MCVeloFEs* mcFEsPtr = mcfes;
+  //
+  return (VeloTruthTool::associateToTruth( aCluster, hitMap, mcFEsPtr ));
 }
 
-StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                                           std::map<MCVeloHit*,double>& hitMap,
-                                           MCVeloFEs* mcfes){
+StatusCode VeloTruthTool::associateToTruth(
+                          const LHCb::InternalVeloCluster* aCluster,
+                          std::map<LHCb::MCHit*,double>& hitMap,
+                          LHCb::MCVeloFEs* mcfes){
   // make link to truth to MCHit
-
   int NStrips=aCluster->size(); // number of strips in cluster
   for (int iStrip=0; iStrip<NStrips; iStrip++){
-
     // get MCVeloFE for strip
-    VeloChannelID channelID = aCluster->channelID(iStrip);
-    MCVeloFE* anFE = mcfes->object(channelID);
-    
+    LHCb::VeloChannelID channelID = aCluster->channelID(iStrip);
+    LHCb::MCVeloFE* anFE = mcfes->object(channelID);
+    //    
     if (NULL!=anFE){
       // from FE get hits and their deposited charge
-      SmartRefVector<MCVeloHit> aHitVector =  anFE->mcVeloHits();
-      std::vector<double> aHitVectorCharge =  anFE->mcVeloHitsCharge();
-
+      SmartRefVector<LHCb::MCHit> aHitVector =  anFE->mcHits();
+      std::vector<double> aHitVectorCharge =  anFE->mcHitsCharge();
       int size=aHitVector.size();
       for( int i=0; i<size;i++){
         hitMap[aHitVector[i]] += aHitVectorCharge[i];
       }
-
     } // next FE
   } //next strip
-
   // return no link
   if (hitMap.empty()) return StatusCode::FAILURE;
-
-  return StatusCode::SUCCESS;
-
+  //
+  return (StatusCode::SUCCESS);
 }
 
