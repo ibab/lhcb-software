@@ -3,6 +3,9 @@ Package manager : M. Needham
 !------------------------------------------------------------------------------
 
 ! 2007-02-08 M Needham
+ - Modify STCluster2Particle linker
+
+! 2007-02-08 M Needham
  - add location to STClusterLinker
 
 !======================= STAssociators v1r0 2006-02-07 ========================

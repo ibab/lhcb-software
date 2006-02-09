@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.3 2006-02-09 16:13:35 mneedham Exp $
 #ifndef STCLUSTER2MCPARTICLEALG_H
 #define STCLUSTER2MCPARTICLEALG_H 1
 
@@ -9,7 +9,7 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/MCParticle.h"
-#include "Event/STDigit.h"
+
 
 /** @class STCluster2MCParticleAlg STCluster2MCParticleAlg.h
  *  
@@ -55,9 +55,7 @@ private:
   std::string m_inputData;
   std::string m_outputData;
   std::string m_detType;
-  std::string m_digitLocation;
 
-  LHCb::STDigits* m_digitCont;
 
   bool m_addSpillOverHits;
   double m_minFrac;  

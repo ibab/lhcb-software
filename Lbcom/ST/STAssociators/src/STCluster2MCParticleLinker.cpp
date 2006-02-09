@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.3 2006-02-09 16:13:35 mneedham Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -40,7 +40,6 @@ STCluster2MCParticleLinker::STCluster2MCParticleLinker( const std::string& name,
   declareProperty( "addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);
   declareProperty("oneRef",m_oneRef = false);
-  declareProperty("digitLocation", m_digitLocation = LHCb::STDigitLocation::TTDigits );
   declareProperty("detType", m_detType = "TT");
 
 }
@@ -57,7 +56,6 @@ StatusCode STCluster2MCParticleLinker::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  STDetSwitch::flip(m_detType,m_digitLocation);
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
 
@@ -65,15 +63,10 @@ StatusCode STCluster2MCParticleLinker::initialize() {
 
 };
 
-
 StatusCode STCluster2MCParticleLinker::execute() {
 
   // get STClusters
   LHCb::STClusters* clusterCont = get<LHCb::STClusters>(m_inputData);
-
-  
-  // get the digits
-  m_digitCont = get<LHCb::STDigits>(m_digitLocation);
  
   // get MCParticles
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
@@ -141,32 +134,23 @@ StatusCode STCluster2MCParticleLinker::refsToRelate(std::vector<partPair>& selec
 StatusCode STCluster2MCParticleLinker::associateToTruth(const LHCb::STCluster* aCluster,
                                                 std::map<const LHCb::MCParticle*,double>& particleMap){
   // make link to truth  to LHCb::MCHit from cluster
-  typedef LinkerTool<LHCb::STDigit, LHCb::MCHit> AsctTool;
+  typedef LinkerTool<LHCb::STCluster, LHCb::MCHit> AsctTool;
   typedef AsctTool::DirectType Table;
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  AsctTool associator(evtSvc(), m_digitLocation);
+  AsctTool associator(evtSvc(), m_inputData);
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 
-  double foundCharge = 0.;
-  std::vector<LHCb::STChannelID> chanVector = aCluster->channels();
-  std::vector<LHCb::STChannelID>::iterator iterChan = chanVector.begin();
-  while (iterChan != chanVector.end()){
-
-    LHCb::STDigit* aDigit = m_digitCont->object(*iterChan);
-    if (aDigit !=0){
-      Range hitsCont = aTable->relations(aDigit);
-      iterator iterHit = hitsCont.begin();   
-      for ( ; iterHit != hitsCont.end(); ++iterHit){
-        const LHCb::MCParticle* aParticle = iterHit->to()->mcParticle();
-        particleMap[aParticle] += iterHit->weight();
-        foundCharge += iterHit->weight();
-      } // iterHit
-    }
-    ++iterChan;
-  } // Chan
+  double foundCharge = 0;
+  Range hitsCont = aTable->relations(aCluster);
+  iterator iterHit = hitsCont.begin();   
+  for ( ; iterHit != hitsCont.end(); ++iterHit){
+    const LHCb::MCParticle* aParticle = iterHit->to()->mcParticle();
+    particleMap[aParticle] += iterHit->weight();
+    foundCharge += iterHit->weight();
+  } // iterHit
 
   // difference between depEnergy and total cluster charge is noise (due to norm)
   particleMap[0] += aCluster->size()-foundCharge;
