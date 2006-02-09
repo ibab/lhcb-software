@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.79 2006-02-09 10:19:51 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.80 2006-02-09 16:15:25 gcorti Exp $ 
 
 /** @file 
  * 
@@ -59,7 +59,6 @@ SimMonitor.MeasureTime = true;
 // Write an output file (contents listed in GaussTape.opts)
 //---------------------------------------------------------------------------
 ApplicationMgr.OutStream +=  { "GaussTape" };
-GaussTape.OutputLevel = 2;
 // When running Generator stand-alone uncomment the following
 // to write on tape only Generator objects
 //#include "$GAUSSOPTS/GenStandAlone.opts"
@@ -92,3 +91,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 
 //#include "$GAUSSOPTS/ParticleGun.opts"          
 //GenMonitor.Members += {"DumpMC"}; 
+//Geo.OutputLevel = 2;
+//GaussTape.OutputLevel = 2;
+//GiGa.OutputLevel = 2;
+//GiGaGeo.FieldMgr.OutputLevel = 2;
+//GiGaFlushAlgorithm.OutputLevel = 2;
