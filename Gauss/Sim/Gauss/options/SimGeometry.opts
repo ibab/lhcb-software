@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.9 2006-02-06 13:29:14 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.10 2006-02-09 16:13:26 gcorti Exp $
 
 /** @file
  *
@@ -29,26 +29,28 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 ApplicationMgr.DLLs += { "GaussTracker" };
 ApplicationMgr.DLLs += { "GaussRICH"    };
 ApplicationMgr.DLLs += { "GaussCalo"    };
-Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"};
-// Comment out following line to enable misaligneable VELO
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"};  
+
+// Geometry to be simulated Detector by detector
+//----------------------------------------------------------------------------
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
 // Uncomment following line to enable misaligneable VELO
-//#include "$GAUSSOPTS/SimVeloGeometry.opts"
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo2Rich1"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"};
-Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
-Geo.StreamItems         += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/OT"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/IT"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"};
-Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Hcal"};
+//#include "$GAUSSOPTS/SimVeloGeometry.opts" // Must be adapted!!
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
+// Geo.StreamItems      += {"/dd/Geometry/Rich1/Rich1Surfaces"};
+// Geo.StreamItems      += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
+// Geo.StreamItems      += {"/dd/Geometry/Rich2/Rich2Surfaces"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
 #include "$GAUSSCALOROOT/options/Calo.opts"           // Specific configuration
-Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
 
 // Magnetic field simulation
 // "Global Field Manager"
@@ -57,7 +59,6 @@ GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
 GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
-GiGaGeo.FieldMgr.OutputLevel = 2;
 // Uniform field (default Bx=By=Bz=0)
 //GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
 //GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";

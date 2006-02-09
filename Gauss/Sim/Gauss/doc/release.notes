@@ -4,6 +4,25 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-02-09 - Gloria CORTI
+ - Use new detector description lhcb-v200601.xml from XmlDDDB v30r0
+   . requirements
+   . Common.opts - set it as default
+   . v200601.opts - New
+   . v200511.opts - Removed
+ - Adapt GetTrackerHits algorithms instances for the Velo, TT, IT, OT and Muon
+   to set the DeElement paths to new structure with regions
+   . Simulation.opts
+ - Switch off temporarly RICH physics until GaussRIHC has necessary changes
+   . Simulation.opts
+ - Adapt list of detectors to be simulated to use new DeElement paths, comment
+   those that either give a crash or warning messages because still looking at
+   pre-v30r0 XmlDDDb.
+   . SimGeometry.opts
+ - Temporarly switch off monitors depending on detector paths not yet migrated
+   to new structure
+   . Monitor.opts
+
 !======================== Gauss v24r0 2006-02-09 ============================
 
 ! 2006-02-09 - Gloria CORTI
