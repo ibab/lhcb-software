@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackMatching
-version           v1r2
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -23,11 +23,11 @@ include_path      none
 use   GaudiAlg         v*
 use   GSL              v*      LCG_Interfaces
 
-use   STTools          v1r*    IT
+use   STTools          v*      ST
 
-use   TrackEvent       v1r*    Event
-use   TrackFitEvent    v1r*    Tr
-use   TrackInterfaces  v1r*    Tr
+use   TrackEvent       v*      Event
+use   TrackFitEvent    v*      Tr
+use   TrackInterfaces  v*      Tr
 
 #============================================================================
 # Component library building rule

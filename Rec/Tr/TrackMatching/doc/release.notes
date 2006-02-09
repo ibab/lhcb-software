@@ -4,6 +4,13 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-02-09 - Eduardo Rodrigues
+ - migration to LHCb v20r0
+   NOTE: addTTClusters method in main algorithm not completely migrated.
+         It needs to be done by ST experts (old functionality gone)!
+ - functor adapted to new ST detector element
+ - ancestors velo and seed tracks are now set
+
 !======================= TrackMatching v1r2 2006-01-27 =======================
 ! 2006-01-26 - Eduardo Rodrigues
  - using the MeasurementProvider tool, needed since last changes in TrackEvent

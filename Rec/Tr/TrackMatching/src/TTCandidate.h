@@ -1,12 +1,15 @@
-// $Id: TTCandidate.h,v 1.1.1.1 2005-09-09 08:51:16 erodrigu Exp $
+// $Id: TTCandidate.h,v 1.2 2006-02-09 12:55:57 erodrigu Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
 // Include files
 #include "GaudiKernel/KeyedObject.h"
 
-// ITEvent
-#include "Event/ITCluster.h"
+// from GSL
+#include "gsl/gsl_math.h"
+
+// from STEvent
+#include "Event/STCluster.h"
 
 // Namespace for locations in TDS
 namespace TTCandidateLocation {
@@ -31,10 +34,10 @@ class TTCandidate: public KeyedObject<int>
 public: 
 
   /// constructor with arguments
-  TTCandidate( ITCluster* cluster, double distance, unsigned int lastLayer);
+  TTCandidate( STCluster* cluster, double distance, unsigned int lastLayer);
 
   /// constructor with arguments from an old TTCandidate
-  TTCandidate(TTCandidate* candidate, ITCluster* cluster, 
+  TTCandidate(TTCandidate* candidate, STCluster* cluster, 
               double distance, unsigned int lastLayer);
 
   /// Default Constructor 
@@ -48,7 +51,7 @@ public:
   virtual ~TTCandidate() {}
 
   /// get the vector of TT Clusters
-  const std::vector<ITCluster*>& ttClusters() const;
+  const std::vector<STCluster*>& ttClusters() const;
 
   /// get the number of TT Clusters
   unsigned int numTTClusters() const;
@@ -81,7 +84,7 @@ protected:
 
 private:
 
-  std::vector<ITCluster*> m_ttClusters; ///< vector of TT clusters
+  std::vector<STCluster*> m_ttClusters; ///< vector of TT clusters
   std::vector<double> m_distances;      ///< vector of corresponding distances
   double m_averageDistance;             ///< average distance
   bool m_dead;                          ///< candidate is dead (will be removed)
@@ -93,7 +96,7 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline TTCandidate::TTCandidate( ITCluster* cluster, double distance, 
+inline TTCandidate::TTCandidate( STCluster* cluster, double distance, 
                                  unsigned int lastLayer)
   : m_averageDistance( distance )
   , m_dead( false )
@@ -104,7 +107,7 @@ inline TTCandidate::TTCandidate( ITCluster* cluster, double distance,
 }
 
 inline TTCandidate::TTCandidate( TTCandidate* candidate,
-                                 ITCluster* cluster, double distance, 
+                                 STCluster* cluster, double distance, 
                                  unsigned int lastLayer)
   : m_dead( false )
   , m_lastLayer( lastLayer )
@@ -118,7 +121,7 @@ inline TTCandidate::TTCandidate( TTCandidate* candidate,
     ( numClus + 1 );
 }  
 
-inline const std::vector<ITCluster*>& TTCandidate::ttClusters() const 
+inline const std::vector<STCluster*>& TTCandidate::ttClusters() const 
 {
   return m_ttClusters;
 }
@@ -138,7 +141,7 @@ inline double TTCandidate::spread() const
   double spread = 0.0;
   std::vector<double>::const_iterator iDist;
   for ( iDist = m_distances.begin(); iDist != m_distances.end(); ++iDist ) {
-    spread += pow((*iDist) - m_averageDistance, 2.0);
+    spread += gsl_pow_2( (*iDist) - m_averageDistance );
   }  
   spread /= double (this->numTTClusters()-1.0);
 

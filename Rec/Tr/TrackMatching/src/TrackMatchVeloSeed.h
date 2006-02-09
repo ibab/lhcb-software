@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.4 2006-01-27 12:57:20 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.5 2006-02-09 12:55:57 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHVELOSEED_H 
 #define TRACKMATCHING_TRACKMATCHVELOSEED_H 1
 
@@ -7,8 +7,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from LHCbDefinitions
+#include "Kernel/TrackTypes.h"
+
 // from STDet
-#include "STDet/DeSTDetector.h"
+#include "STDet/DeTTDetector.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -22,6 +25,9 @@
 
 // local
 #include "TrackMatch.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 /** @class TrackMatchVeloSeed TrackMatchVeloSeed.h TrackMatching/TrackMatchVeloSeed.h
  *  
@@ -49,8 +55,31 @@ public:
 protected:
 
 private:
+  /// Match velo tracks with seed tracks
+  StatusCode matchTracks( Tracks* veloTracks,
+                          Tracks* seedTracks,
+                          TrackMatches*& matchCont );
 
-  ///Defiintion of vector of TrackMatch pointers
+  /// Add TT clusters to matched tracks
+  StatusCode addTTClusters( TrackMatches*& matchCont );
+
+  /// Store the new tracks made from the seed- and velo track segments
+  StatusCode storeTracks( TrackMatches*& matchCont );
+
+  /// Extrapolate a Track to a z-position starting 
+  /// with the closest State
+  StatusCode extrapolate( Track* track,
+                          ITrackExtrapolator* extrapolator,
+                          double zpos,
+                          TrackVector& trackVector,
+                          TrackMatrix& trackCov );
+
+  /// Calculate the new z
+  StatusCode determineZ( double tX,
+                         double& zNew );
+
+private:
+  ///Definition of vector of TrackMatch pointers
   typedef std::vector<TrackMatch*> TrackMatchVector;
 
   // Job options
@@ -119,35 +148,12 @@ private:
   /// The measurement provider tool
   IMeasurementProvider* m_measProvider;
 
-  // ST geometry
-  DeSTDetector* m_itTracker;
-  std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
+  // TT geometry
+  DeTTDetector* m_ttTracker;
+  std::string   m_ttTrackerPath;   ///< Name of the TT XML geom path
 
   /// use a fixed particle ID for the extrapolator
   ParticleID  m_particleID;
-
-  /// match velo tracks with seed tracks
-  StatusCode matchTracks( Tracks* veloTracks,
-                          Tracks* seedTracks,
-                          TrackMatches*& matchCont );
-
-  /// Add TT clusters to matched tracks
-  StatusCode addTTClusters( TrackMatches*& matchCont );
-
-  /// Store the new tracks made from the seed- and velo track segments
-  StatusCode storeTracks( TrackMatches*& matchCont );
-
-  /// Extrapolate a TrTrack to a z-position starting 
-  /// with the closest TrState.
-  StatusCode extrapolate( Track* track,
-                          ITrackExtrapolator* extrapolator,
-                          double zpos,
-                          HepVector& trackVector,
-                          HepSymMatrix& trackCov );
-
-  /// Calculate the new z
-  StatusCode determineZ( double tX,
-                         double& zNew );
 
 };
 #endif // TRACKMATCHING_TRACKMATCHVELOSEED_H

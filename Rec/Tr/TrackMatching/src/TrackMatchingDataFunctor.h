@@ -1,10 +1,10 @@
-// $Id: TrackMatchingDataFunctor.h,v 1.1.1.1 2005-09-09 08:51:16 erodrigu Exp $
+// $Id: TrackMatchingDataFunctor.h,v 1.2 2006-02-09 12:55:57 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H
 #define TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H 1
 
 #include <functional>
 
-#include "Kernel/ITChannelID.h"
+#include "Kernel/STChannelID.h"
 
 /** namespace TrackMatchingDataFunctor
  *
@@ -40,25 +40,25 @@ namespace TrackMatchingDataFunctor {
 
   template <class TYPE>
   class compByLayer_LB
-    : public std::binary_function<const TYPE, const ITChannelID, bool>
+    : public std::binary_function<const TYPE, const STChannelID, bool>
   {
-    ITChannelID testID;
+    STChannelID testID;
   public:
-    inline bool operator() (const TYPE& obj,const ITChannelID& testID) const{
+    inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
       return ((!obj) ? false : 
               testID.uniqueLayer() > obj->channelID().uniqueLayer());
     }
   };
   
   template <class TYPE>
-  class compByWafer_LB
-    : public std::binary_function<const TYPE, const ITChannelID, bool>
+  class compBySector_LB
+    : public std::binary_function<const TYPE, const STChannelID, bool>
   {
-    ITChannelID testID;
+    STChannelID testID;
   public:
-    inline bool operator() (const TYPE& obj,const ITChannelID& testID) const{
+    inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
       return ((!obj) ? false : 
-              testID.uniqueWafer() > obj->channelID().uniqueWafer());
+              testID.uniqueSector() > obj->channelID().uniqueSector());
     }
   };
   
@@ -66,4 +66,3 @@ namespace TrackMatchingDataFunctor {
 
 
 #endif // TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H
-
