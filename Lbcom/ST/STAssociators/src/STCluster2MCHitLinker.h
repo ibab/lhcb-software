@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STCluster2MCHitLinker.h,v 1.3 2006-02-09 16:41:32 cattanem Exp $
 #ifndef STCLUSTER2MCHITALG_H
 #define STCLUSTER2MCHITALG_H 1
 
@@ -68,6 +68,7 @@ private:
   std::string m_detType;
   std::string m_digitLocation;
   std::string m_hitLocation;
+  std::string m_asctLocation; ///< Location of Digit2MCHit table 
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STDigit2MCParticleLinker.cpp,v 1.2 2006-02-09 16:41:32 cattanem Exp $
 // Include files 
 
 #include "Event/STDigit.h"
@@ -37,8 +37,8 @@ STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
 {
 
   // constructer
-  declareProperty( "OutputData", m_outputData  = "TTDigits2Particles"); 
-  declareProperty("InputData", m_inputData  = LHCb::STDigitLocation::TTDigits);
+  declareProperty("OutputData", m_outputData = LHCb::STDigitLocation::TTDigits);
+  declareProperty("InputData",  m_inputData  = LHCb::STDigitLocation::TTDigits);
 
   declareProperty( "addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);

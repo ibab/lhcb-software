@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.3 2006-02-09 16:13:35 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.4 2006-02-09 16:41:32 cattanem Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -26,8 +26,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<STCluster2MCParticleLinker>          s_factory ;
-const        IAlgFactory& STCluster2MCParticleLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( STCluster2MCParticleLinker );
 
 STCluster2MCParticleLinker::STCluster2MCParticleLinker( const std::string& name,
                                         ISvcLocator* pSvcLocator)
@@ -35,8 +34,8 @@ STCluster2MCParticleLinker::STCluster2MCParticleLinker( const std::string& name,
 {
 
   // constructer
-  declareProperty("InputData" , m_inputData = LHCb::STClusterLocation::TTClusters);
-  declareProperty( "OutputData", m_outputData  = "TTCluster2MCParticles" ); 
+  declareProperty("InputData" , m_inputData  = LHCb::STClusterLocation::TTClusters);
+  declareProperty("OutputData", m_outputData = LHCb::STClusterLocation::TTClusters);
   declareProperty( "addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);
   declareProperty("oneRef",m_oneRef = false);
@@ -157,9 +156,3 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const LHCb::STCluster* a
 
   return StatusCode::SUCCESS;
 }
-
- 
-
-
-
-

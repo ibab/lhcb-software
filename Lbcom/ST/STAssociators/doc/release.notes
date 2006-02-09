@@ -2,13 +2,15 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
-! 2007-02-08 M Needham
- - Modify STCluster2Particle linker
+!======================= STAssociators v1r0 2006-02-09 ========================
+! 2006-02-09 - Marco Cattaneo
+ - Fix the output locations for xx2MCParticle linkers according to convention
+ - Fix location of Digit2MCHit table used by STCluster2MCHitLinker
 
-! 2007-02-08 M Needham
+! 2006-02-09 M Needham
+ - Modify STCluster2Particle linker
  - add location to STClusterLinker
 
-!======================= STAssociators v1r0 2006-02-07 ========================
 ! 2006-02-07 M Needham
  - Changes for new cluster classes
  - Remove obsolete selector tool

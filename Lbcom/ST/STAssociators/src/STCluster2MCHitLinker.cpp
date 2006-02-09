@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.4 2006-02-09 16:13:35 mneedham Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.5 2006-02-09 16:41:32 cattanem Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -26,15 +26,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<STCluster2MCHitLinker>          s_factory ;
-const        IAlgFactory& STCluster2MCHitLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( STCluster2MCHitLinker );
 
 STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructer
-  declareProperty("OutputData", m_outputData  ="TTCluster2MCHits");
+  declareProperty("OutputData", m_outputData  ="TTClusters2MCHits");
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);
   declareProperty("oneRef",m_oneRef = false);
@@ -56,9 +55,11 @@ StatusCode STCluster2MCHitLinker::initialize() {
   }
 
   m_hitLocation = LHCb::MCHitLocation::TT;
-  m_inputData = LHCb::STClusterLocation::TTClusters;
+  m_inputData   = LHCb::STClusterLocation::TTClusters;
+  m_asctLocation= "TTDigits2MCHits";
 
   STDetSwitch::flip(m_detType,m_hitLocation);
+  STDetSwitch::flip(m_detType,m_asctLocation);
   STDetSwitch::flip(m_detType,m_digitLocation);
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
@@ -87,8 +88,9 @@ StatusCode STCluster2MCHitLinker::execute() {
 
     // find all hits
     std::map<const LHCb::MCHit*,double> hitMap;
-    associateToTruth(*iterClus,hitMap);
-     
+    StatusCode sc = associateToTruth(*iterClus,hitMap);
+    if( sc.isFailure() ) return sc;  // error message printed in failed method
+      
     // total charge = cluster size due to norm
     double tCharge = (*iterClus)->size();
 
@@ -147,9 +149,10 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const LHCb::STCluster* aClust
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  AsctTool associator(evtSvc(), m_digitLocation);
+  AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
-  if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
+  if (!aTable) return Error( "Failed to find " + m_asctLocation + " table", 
+                             StatusCode::FAILURE);
 
   double foundCharge = 0.;
 
@@ -177,14 +180,3 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const LHCb::STCluster* aClust
 
   return StatusCode::SUCCESS;
 }
-
- 
-
-
-
-
-
-
-
-
-
