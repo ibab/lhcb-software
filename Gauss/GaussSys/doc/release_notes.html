@@ -5,7 +5,379 @@ Purpose: LHCb Simulation program
 </PRE>
 
 <H1><A NAME="v24r0">2006-02-06 - GaussSys v24r0</A></H1><PRE>
-   Preliminary DC06 version.
+<H2><A NAME="Note"> Preliminary DC06 version.
+   This version works only with modified XmlDDDB v27r1 (for sensdet). </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2 (via GENSER 1_2_1), lhapdf 4.2  
+   DecFiles v11r2, ParamFiles v3r13 
+   Geant4 v71r0p13 (based on geant4.7.1.p01)
+   LHCb v20r0 (and Gaudi v18r2)
+   XmlDDDB v27r1, XmlConditions v1r4, FieldMap v4r6 </A></H3>
+
+!======================== Gauss v24r0 2006-02-09 ============================ 
+! 2006-02-09 - Gloria CORTI
+ - Switch back requiring the Simulation phase to be successfull to write out
+   the event on file, to account for G4 aborted events
+   . GaussTape.opts
+ - Instead of having initialization, generator, simulation and monitor phase
+   as in previous Gauss versions, there are now separate initializations for
+   the generator and simulation phases. So the initialization phase is now
+   removed as such and the first step of both generator and simulation.
+   The monitor phase is also split and introduced as last part of the generator
+   and simulation phase separately.
+   The sequencing is modified accordingly. The ParticleGun options are modified
+   to remove the Generation algorithm and introduce the ParticleGun instead,
+   the monitor also has to be reset to be in the right sequence.
+   . Generator.opts
+   . ParticleGun.opts
+   . Gauss.opts
+ 
+! 2006-02-06 - Gloria CORTI
+ - Introduce sequence of algorithms to have extende Rich information
+   . Simulation.opts
+ - New version of GaussTools v12r0 (MagneticFieldSvc now using MathCore)
+ - Adapt to new disctionaries in LCG using RELAX from LCG_Interfaces
+   . GaussPoolIO.opts
+ - Switch back on simulation phase
+   . Gauss.opts
+ - Switch back use of MagneticFieldSvc in GiGaMagField that works with
+   LHCb v20r0 builf with Gaudi v18r2
+   . SimGeometry.opts
+ 
+! 2006-01-31 - Gloria CORTI
+ - Introduce use of varius XXXDet packages to resolve sensitive detector ID.
+   . requirements
+ - Introduce use of XmlConditions v1r4 necessary to produce hits in
+   Calorimeters
+   . requirements
+ - Introduce use of Sim packages adapted to new Event Model
+   . requirements
+ - Temporarly use uniform magnetic filed beacuse of problems in retrieving
+   LHCb MagneticFieldSvc, remove loading of CaloEvent dll no longer necessary.
+   . SimGeometry.opts
+ - Adapt steering of simulation to new structure for all detectors,
+   configuring GetTrackerHitsAlg
+   . Simulation.opts
+ - Set data objects to be written out according to new paths. All objects
+   are mandatory since empty containers will be created.
+   When running in Generator stand-alone will need to overwrite this list
+   including the file GenStandAlone.opts as show in Gauss.opts
+   . GaussTape.opts
+   . GenStandAlone.opts
+ - Generation algorihtm is added to Generator phase to take into account
+   the GenInit algorithm
+   . Generator.opts
+ - Remove algorithm sets in Generator.opts and add ParticleGun in Generator
+   phase
+   . ParticleGun.opts
+ - Turn on all monitoring in simulation for MCTruth and various detectors
+   having adapted them to new code and setup.
+   . Monitor.opts
+   . MonitorInDetails.opts
+ - Load various detectors Dlls
+   . Common.opts
+ - Remove obsolete geometries
+   . v200412.opts, v200506.opts, v200507.opts
+ - Run generator phase in stand-alone for minimum bias as default
+   . Gauss.opts
+ - Modify to follow sequencing in Gauss.opts
+   . GaussRead.opts
+ - By default have User Interface on to provide Geant4 command prompt
+   . GaussVis.opts
+ 
+! 2006-01-19 - Gloria CORTI
+ - Update ParticleGun.opts to reflect changes in code for its properties
+ 
+! 2006-01-18 - Gloria CORTI
+ - Gauss v24r0 built from v22r0, using Geant3 v71r0p1.
+ - Built it one step at the time to allow tests.
+   Comment all unused options to have a Generator stand-alone phase running.
+   Comment all unsed packages for a stand-alone Generator phase.
+ - Load new package SimComponents used by GaussMonitor
+   
+!====================== GENSER v1r121p2 ================================
+! 2006-02-06 - Florence RANJARD
+ - requirements - link with liblhapdfdummy.a instead of lhaglue.o
+                  put lhapdf_linkopts before pythia_linkopts
+  
+!=================== Generators v4r0 2006-01-19 ===========================
+! 2006-01-19 - Gloria CORTI
+ - Generation: do not create new GenHeader but unpdate info already in TES
+ 
+! 2006-01-18 - Patrick Robbe
+ - ExternalGenerator: create HepMC::GenEvent by hand to store in
+   HepMCEvent
+ 
+! 2005-12-31 - Patrick Robbe
+ - Adapt to new event model and new vector classes.
+ 
+! 2005-12-21 - Patrick Robbe
+ - phocin.F: activate exponentiation in PHOTOS
+ - GenCounters.h: print shorter fractions
+ 
+! ==================== LbPythia v4r0 2006-01-19 ==============================
+! 2005-31-12 - Patrick Robbe
+ - Adapt to new event model.
+ 
+! ==================== LbHerwig temporarly off =============================== 
+
+! ===================== ParticleGuns v2r0 2006-01-19 =======================
+! 2006-01-19 - Gloria CORTI
+ - Modify ParticleGunBaseAlg to remove all unnecessary part regarding
+   physics event generation.
+   Do not create a GenHeader but update the one already in TES.
+ 
+! 2005-12-15 - Gloria CORTI
+ - Modify necessary files to adapt to new event model and LHCb namespace
+   In particular to collapse of HardInfo in GenCollisions.
+   . src/MaterialEvalGun.cpp
+   . src/ParticleGunBaseAlg.{h,cpp}
+ - Remove unnecessary include of PhysicalConstants.h
+   . src/ParticleGun.cpp
+ 
+!======================= GiGa v18r0 2005-12-16 ================================
+! 2005-12-16 - Gloria CORTI
+ - Adapt to LHCb namespaces for forward declaration
+   . GiGa/GiGaTrajectory.h
+ 
+!======================= GiGaCnv v16r0 2006-02-07 ==========================
+ 
+! 2006-02-06 - Chris Jones
+ - Add work arounds for non const accessors in MCEvent.
+   Uses const_cast = Preferable to adding non-const accessors though
+ 
+! 2006-01-31 - Gloria CORTI
+ - Use new Event/MCEvent package instead of Event and HepMC
+ - Use new Tools/ClhepTools package for geometry converters
+ - Adapt to changes in LHCb geometry which use of MathCore classes.
+   Since Geant4 uses CLHEP modification to transform from MathCore to CLHEP
+   are introduced making use of MathCore2Clhep.h (in Tools/Clheptool v1r0)
+   Try to keep Clhep as close as possible to construction of Geant4 classes.
+   . GiGaCnv/GiGaAssembly.h
+   . GiGaCnv/GiGaVolumePair.h
+   . src/component/GiGaGeo.cpp
+   . src/component/GiGaInstall.{h,cpp}
+ - Adapt to changes in LHCb Event model in MCParticle and MCVertex classes
+   (introduction of namespaces and different names in methods)
+   . GiGaCnv/GiGaKineRefTableEntry.h
+   . GiGaCnv/GiGaPrimaryParticleInformation.h
+   . src/component/GiGaCnvFunctors.h
+   . src/component/GiGaMCParticleCnv.cpp
+   . src/component/GiGaMCVertexCnv.cpp
+   . src/component/Particle2Definition.{h.cpp}
+   . src/component/Particle2Particle.{h.cpp}
+   . src/component/Point2Vertex.h
+   . src/component/PrimaryVertex2Vertex.h
+   . src/component/Trajectory2Particle.{h,cpp}
+   . src/component/Vertex2Vertex.{h,cpp}
+ - Remove obsolete method filling contents of Collision, now filled in
+   Generator phase
+   . src/component/GiGaMCParticleCnv.{h.cpp}
+ - Remove creation and filling of GenMCLink class no longer existing
+   in Event Model
+   . src/component/GiGaMCParticleCnv.cpp
+ 
+ - Remove from src/components obsolete classes
+   . GiGaCollisionCnv.{h,cpp} - GenCollision is now filled in Generator phase
+   . GiGaHepMCCnv.{h,cpp} - Filling of G4 primary event now done by algorithm
+     GeneratorToG4 in Sim/GaussKine
+   . GiGaHits.{h,cpp} - Convertion service for hits no longer necessary since
+     converters have been replaced by algorithms
+   . GiGaCnv_entries.cpp - remove declaration of removed classes
+       
+!===================== ClhepTools v1r0 2005-12-13 ============================
+ 
+! 2005-12-13 - Juan PALACIOS
+ - First release of Tools/ClhepTools containing:
+      * Function to go from Gaudi::Transform3D to HepGeom::Transform3D.
+      * Functions to go from and point or vector supporting x(), y(), z() to
+        HepGeom::Point3D<double> and HepGeom::Vector3D<double>
+      * global std::ostream & operator<< for HepGeom::Transform3D
+
+!========================== GaussKine v1r0 2006-02-07 ========================
+! 2006-02-06 - Chris Jones
+ - Add work arounds for non const accessors in MCEvent.
+   Uses const_cast = Preferable to adding non-const accessors though
+ 
+! 2006-01-26 - Gloria CORTI
+ - First version of the package, with code imported from GaussAlgs and
+   modified to adapt to new Event Model
+   . G4HepMCToMCTruth.{h,cpp}
+   . GeneratorToG4.{h,cpp}
+ 
+!===================== GaussAlgs v2r0 2006-01-27  =========================
+! 2006-01-27 - Gloria CORTI
+ - src/GenInit.cpp, SimInit.cpp
+   . change output level in execute to verbose
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . change to read separately as from new event model TT and IT hits
+     and change name to property for PuVeto
+ 
+! 2006-01-18 - Gloria CORTI
+ - src/GenInit.{h,cpp}, SimInit.{h,cpp}
+   . New algorithms derived from LbAppInit to initialize respectively
+     Generator and Simulation phases of Gauss.
+     They also create and partially fill the corresponding GenHeader and
+     MCHeader.
+ 
+! 2006-01-16 - Gloria CORTI
+ - src/GiGaGetEventAlg.cpp
+   src/GiGaGetHitsAlg.cpp
+   src/PrintEventAlg.cpp
+   . Adapt to new Event Model in LHCB v20r0 by introducing LHCb namespace
+   . Use new macro for algorithm factory declaration (GAUDI v18r0)
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . Remove special treatment for Velo, PuVeto and Muon hits: now can use
+     generic method with correct detector as argument.
+     Adapt to split of containers for TT and IT.
+ - src/PrintEventAlg.h
+   . Remove use of MsgStream, use instead predefined methods
+ 
+! 2006-01-16 - Gloria CORTI
+ - src/GeneratorToG4.{h,cpp}
+   src/G4HepMCToMCTruth.{h,cpp}
+   . MOVED to NEW package GaussKine that contains code for transformation
+     from LHCb Event model kinematic classes to Geant4 and vice versa
+ - src/GaussAlgs_load.cpp
+   . remove algorithms GeneratorToG4 and G4HepMCToMCTruth
+ 
+!======================== GaussTools v12r0 2006-01-31 =======================
+! 2006-01-31 - Gloria CORTI
+ - Adapt to change in interface of IMagneticFieldSvc now returning MathCore
+   quantities while Geant4 expect CLHEP
+   . src/Components/GiGaMagFieldGlobal.cpp
+ 
+!======================== GaussRICH v6r0 2006-02-06 ===========================
+! 2006-02-06 - Chris Jones
+ - Fix problem with MCRichTrack converter algorithm aborting production if
+   empty MCRichSegment container is found.
+ 
+! 2006-01-31 - Gloria CORTI
+ - Need to compile RichG4AnalysisPhotElec and RichG4Counters from RichAnalysis
+   to run Gauss, otherwise there are unresolved symbols
+ 
+! 2006-01-27 - Gloria CORTI
+ - Temporarly  comment out compilation of RichAnalysis not yet migrated to
+         new Event model
+ 
+! 2006-01-06  - Sajan Easo
+ - Richphotelectron particle definition modified to be compatible with G4.8
+ 
+! 2005-12-22 - Chris Jones
+ - Update converter algorithms for new Gaudi v18r0 and LHCb v20r0
+   (namespaces, CLHEP->MathMore etc)
+ - Split up GetExtendedMCRichInfoAlg into seperate algorithms for clarity
+ - Introduce RICH specific base class for converter algorithms
+ - remove obsolete GiGa Converters
+
+!======================= GaussTracker v5r0 2006-01-27 =========================
+
+! 2006-01-27 - Gloria CORTI
+ - Introduce use of DetectorElement base class to retrieve sensitive detector
+   from x,y,z and set it in MCHit. The properties "MCHitsLocation",
+   "CollectionName" and "Detector" must be set in the options.
+   . src/GetTrackerHitsAlg.{h,cpp}
+ 
+! 2005-12-16 - Gloria CORTI
+ - Remove Velo specific classes since in new event model they use generic
+   MCHit:
+    . src/VeloHit.{h,cpp}
+    . src/GiGaVeloHitCnv.{h,cpp}
+    . src/GiGaSensDetVelo.{h,cpp}
+ - Remove Muon specific classes since in new event model they use generic
+   MCHit:
+    . src/MuonHit.{h,cpp}
+    . src/GiGaVeloHitCnv.{h,cpp}
+    . src/GiGaSensDetVelo.{h,cpp}
+ - Remove converters for MCHits that is obsolete and was replaced by
+   GetTrackerHitsAlg.cpp
+   . src/GiGaTrackerHitCnv.{h,cpp}
+ - Remove declaration of classes no longer present
+   . src/GaussTracker_load.cpp
+ - Adapt to new event model
+   . src/GetTrackerHitsAlg.cpp
+ - Remove no longer necessary dependence from VeloEvent and MuonEvent
+   . cmt/requirements
+  
+!===================== GaussCalo v8r0 2006-01-31 =============================
+! 2006-17-01 - Olivier Deschamps
+ - Adapt to new Event Model & LHCb v20 migration.
+ - requirement : CaloEvent dependancy replaced by MCEvent
+ - src         : algorithms and tools adapted
+                 GaussSensPlaneHitCnv.cpp/h removed
+ 
+!=================== GaussMonitor v3r0 2007-01-27 ============================
+! 2006-01-27 - Gloria CORTI
+ - Fix bug resulting in not filling stable Pt histogram
+ 
+! 2005-12-16 - Gloria CORTI
+ - Adapt to new event model change of method names, LHCb namespace, replacing
+   HardInfo with GenCollision
+   . src/GeneratorFullMonitor.cpp
+   . src/GenMonitorAlg.cpp
+   . src/MCDecayCounter.cpp
+   . src/MCTruthFullMonitor.cpp
+   . src/MCTruthMonitor.cpp
+ - Make algorithm inherit from GaudiAlgorithm and adapt to it
+   . src/GeneratorFullMonitor.{h,cpp}
+   . src/MCTruthFullMonitor.{h,cpp}
+ - Remove use of obsolete GenMCLink class
+   . src/MCTruthMonitor.cpp
+ - Pick IMCDecayFinder from Kernel
+   . src/MCTruthMonitor.h
+ - Use new macro for algorithm factories
+   . src/GeneratorFullMonitor.cpp
+   . src/GenMonitorAlg.cpp
+   . src/MCTruthFullMonitor.cpp
+   . src/MCTruthMonitor.h
+ - Rename input property Input->HepMCEvents for HepMCEvents TES location
+   and Collisions for GenCollisions replaces HardInfo no longer valid
+   . src/GeneratorFullMonitor.{h,cpp}
+ - use AIDA with -import
+   . cmt/requirements
+ 
+!==================== CaloMoniSim v2r0 2006-01-31 =============================
+! 2006-01-31 - Gloria CORTI
+ - Set "hello" print out in execute in DEBUG level
+ 
+ 2005-12-16 - Olivier Deschamps
+ - LHCb v20 migration.
+ - cmt/requirements
+  remove CaloUtils dependancy
+  add explicit dependancy to MCEvent and CaloDet
+ 
+!========================== VeloGauss v1r1 2006-02-07 ========================
+! 2006-02-07 - Tomasz Szumlak
+ - clean-up of the summary table
+ 
+! 2006-02-01 - Tomasz Szumlak
+ - faulty error message removed
+ 
+! 2006-01-31 - Tomasz Szumlak
+ - wrong filename in VeloGauss_load.cpp removed
+ - new option file added
+ 
+! 2006-01-19 - Tomasz Szumlak
+ - some clean up in the source code (move the data retrieving routine)
+ 
+! 2006-01-11 - Tomasz Szumlak
+ - a new version of the Velo monitoring package for Gauss stage
+ - adapt to the LHCb v20r0
+
+!====================== MuonMoniSim v2r0 2006-01-23  ========================
+! 2006-01-23 - A. Sarti
+ - Fixed the call to MCevent in requirements
+ - Use MuonDet to retrieve the info from sensDetID!
+ 
+! 2006-01-13 - A. Sarti
+ - Moved the code to LHCb v20r0 [LHCb namespace and MChit instead of
+   MCMuonHit]
+ - Now getting station, region and other informations from MCHit
+   directly
+
+!====================== GDML v1r240p0  2006-02-06 ============================
+! 2006-02-06 - Gloria CORTI
+ - Migrate package to use GDML_2_4_0. 
 
 !=============================================================================
 <H1><A NAME="v23r0">2006-01-05 - GaussSys v23r0</A></H1><PRE>
@@ -14,6 +386,11 @@ Purpose: LHCb Simulation program
    it uses GaussRICH v5r3 which is adapted to new geant4.8.0
    it uses GaussPhysics which is adapted to new geant4.8.0
 
+!======================== Gauss v23r0 2006-01-05 ============================
+! 2006-01-05 - Florence RANJARD
+ - Gauss v23r0 is the v22r0 version built on Geant4 v80r0
+   it does not use G4LHCblists but G4hadlists v3r3
+ 
 !=============================================================================
 <H1><A NAME="v22r0">2005-12-09 - GaussSys v22r0</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
