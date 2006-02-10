@@ -4,8 +4,9 @@ version v1r0
 branches cmt doc src options
 include_path none
 
-use STDAQ       v*   ST 
 use MCEvent     v*   Event
+use STEvent     v*   Event
+use STDet       v*   Det
 use LinkerEvent v*   Event
 use Relations   v*   Kernel 
 
