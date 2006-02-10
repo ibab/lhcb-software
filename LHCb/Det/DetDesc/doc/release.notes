@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.251 2006-02-10 08:02:45 mneedham Exp $ 
+! $Id: release.notes,v 1.252 2006-02-10 08:19:21 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v16r2 2006-02-08 ========================
 ! 2006-02-08 M Needham
  - Adapt Isotope to same way of getting nucleons as elements and mixtures
 
-!======================== DetDesc v16r2 2006-02-03 ========================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
