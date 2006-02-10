@@ -2,6 +2,14 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+2006-02-08 M Needham
+ - changes to make component library
+
+2006-02-08 M needham
+ - changes in STChannelID constructer
+
+2006-02-02 M needham
+
 ! 2006-02-06 - Eduardo Rodrigues
  - inserted LHCb namespace for all trajectory-related classes
 
@@ -13,6 +21,7 @@ Purpose: LHCb specific Kernel classes
  - Add Reflex library to LHCbKernel linkopts, to resolve dictionary symbols
 
 ! 2006-02-02 M needham
+>>>>>>> 1.201
   - bug fix in fast container
 
 ! 2006-02-01 - Antonis Papanestis

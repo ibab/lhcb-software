@@ -15,10 +15,12 @@
           access = 'PUBLIC'
        />
 
-      <constructor argList='int iType, int iStation, int iLayer, 
-                            int iDetRegion, int iSector, int iStrip' 
+      <constructor argList='const unsigned int iType, const unsigned int iStation, 
+                            const unsigned int iLayer, const unsigned int iDetRegion, 
+                            const unsigned int iSector, const unsigned int iStrip' 
                    desc='constructor with station, layer, detRegion, sector , strip,'>
         <code>    
+
           m_channelID = (iType &lt;&lt; typeBits) +
                         (iStation &lt;&lt; stationBits) + 
                         (iLayer &lt;&lt; layerBits) + 
