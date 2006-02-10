@@ -1,21 +1,5 @@
 // $Id:
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/01/18 18:15:21  odescham
-// v2r0 : adapt to the new Event Model + cleaning
-//
-// Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
-// // The new package: code is inported from Calo/CaloMonitor
-//
-// Revision 1.3  2003/03/10 14:35:15  ibelyaev
-//  fix a problem
-//
-// Revision 1.2  2002/11/13 20:49:11  ibelyaev
-//  small update of monitoring algorithms
-//
-// ============================================================================
 //CLHEP
 #include "Kernel/SystemOfUnits.h"
 // Gaudi
@@ -30,14 +14,13 @@
 // local
 #include "CaloDigitMonitor.h"
 
-
-static const AlgFactory<CaloDigitMonitor>          Factory ;
-const       IAlgFactory& CaloDigitMonitorFactory = Factory ;
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloDigitMonitor
 //
 // 25/05/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
 
 // Standard creator
 CaloDigitMonitor::CaloDigitMonitor( const std::string& name, 
@@ -51,6 +34,7 @@ CaloDigitMonitor::CaloDigitMonitor( const std::string& name,
   declareProperty( "MaxMultiplicity"  , m_maxMultiplicity);
   declareProperty( "MaxEnergy"        , m_maxEnergy      );
   declareProperty( "ScaleHit"         , m_scaleHit       );
+  setProperty( "HistoTopDir", "Calo/" );
 };
 
 //=============================================================================
