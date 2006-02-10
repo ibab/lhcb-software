@@ -8,6 +8,8 @@
  - Switch back simulation of IT, now working.
    Set path for RICH surfaces as in new detector structure.
    . SimGeometry.opts
+ - Add loading of STDet, OTDet and RichDet
+   . Common.opts
 
 ! 2006-02-09 - Gloria CORTI
  - Use new detector description lhcb-v200601.xml from XmlDDDB v30r0
