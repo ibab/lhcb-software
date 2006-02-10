@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.3 2006-02-08 17:35:49 erodrigu Exp $
+// $Id: StateTraj.cpp,v 1.4 2006-02-10 12:31:04 graven Exp $
 // Include files
 
 // local
@@ -19,7 +19,7 @@ StateTraj::StateTraj( const State& state,
 };
 
 StateTraj::StateTraj( const TrackVector& stateVector,
-                      const double& z,
+                      double z,
                       const XYZVector& bField )
 {
   XYZVector slopes = XYZVector( stateVector(2), stateVector(3), 1. );
@@ -31,33 +31,33 @@ StateTraj::StateTraj( const TrackVector& stateVector,
   m_curv   = kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
 };
 
-XYZPoint StateTraj::position( const double& arclength ) const
+XYZPoint StateTraj::position( double arclength ) const
 {
-  return m_pos + arclength * ( m_dir + 0.5 * arclength * curvature() );
+  return m_pos + arclength * ( m_dir + 0.5 * arclength * curvature(arclength) );
 };
     
-XYZVector StateTraj::direction( const double& arclength ) const
+XYZVector StateTraj::direction( double arclength ) const
 {
-  return (m_dir + arclength * curvature()).unit();
+  return (m_dir + arclength * curvature(arclength)).unit();
 };
 
-XYZVector StateTraj::curvature() const 
+XYZVector StateTraj::curvature(double /*arclength*/) const 
 {
   return m_curv;
 };
 
-void StateTraj::expansion( const double& arclength,
+void StateTraj::expansion( double arclength,
                            XYZPoint& p,
                            XYZVector& dp,
                            XYZVector& ddp ) const 
 {
   p   = position(arclength);
   dp  = direction(arclength);
-  ddp = curvature();
+  ddp = curvature(arclength);
 };
 
 ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize>
-StateTraj::derivative( const double& arclength ) const
+StateTraj::derivative( double arclength ) const
 {
   ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize> deriv =
     ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize>();
@@ -93,21 +93,25 @@ StateTraj::derivative( const double& arclength ) const
 };
 
 // Not yet implemented
-double StateTraj::distTo1stError( double& , const double& , int ) const 
+double StateTraj::distTo1stError( double , double , int ) const 
 {
   return 10*km;  
 };
 
 // Not yet implemented
-double StateTraj::distTo2ndError( double& , const double& , int ) const
+double StateTraj::distTo2ndError( double , double , int ) const
 {
   return 10*km;  
 };
 
 // Not yet implemented  
-std::pair<double,double> StateTraj::range() const
+Trajectory::Range StateTraj::range() const
 {
-  std::pair<double,double> infiniteRange;
-  infiniteRange.first = -10*km;
-  infiniteRange.second = 10*km;
+        //FIXME: worry about this later...
+  return Trajectory::Range(-10*km,10*km);
+};
+
+double StateTraj::length() const
+{
+  return range().second-range().first;
 };
