@@ -2,20 +2,17 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-! 2006-02-9 M. Needham 
-
+!========================= STDet v2r0 2006-02-10 =======================
+! 2006-02-09 M. Needham 
 - Few bug fixes in DeSTSector init 
 
-! 2006-02-8 M. Needham 
-
+! 2006-02-08 M. Needham 
 - Remove pitch and strips per sector from DeSTDetector
 - Add next functionality to DeSTSector
 - return u to strip rather than u to channel 
 
-!========================= STDet v2r0 2006-02-09 =======================
 ! 2006-02-08 M. Needham 
  - Get TT Sector numbering init correct
-
 
 ! 2006-02-06 M. Needham 
  - bug fix that gets numbering closer to correct
