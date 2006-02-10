@@ -47,7 +47,9 @@ private:
   G4int m_PETrackID;          ///< ID of the track(normally a photoelectron)
   G4int m_ChTrackPDG;         ///< PDG code of the mother of the optical photon.
   G4int m_PETrackPDG;          ///< PDG code of the track
-  G4int m_RadiatorNumber;      ///< radiator number (0,1,2) which produced the photon.
+  G4int m_RadiatorNumber;      ///< radiator number which produced the photon.
+                               // c4f10 =1, cf4=2. aerogel=10-25,Gasqw=6-7(rich1,rich2) 
+                               // , hpdqw=8, filter4,nitrogen=30-31(rich1,rich2).   
   G4ThreeVector m_PhotEmisPt;  ///< emiss pt coord of the photon.
   G4double m_PhotEnergyAtProd;  ///< Photon energy in MeV at Ckv Production.
   G4double m_ThetaCkvAtProd;    ///< Cherenkov Angle Theta (rad) at Ckv production.
