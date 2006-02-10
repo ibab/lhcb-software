@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.18 2006-02-09 12:28:08 gcorti Exp $ 
+// $Id: Common.opts,v 1.19 2006-02-10 16:40:34 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -51,8 +51,9 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 // Geometry setup always necessary
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "VeloDet" };
-//ApplicationMgr.DLLs += { "STDet" };
-//ApplicationMgr.DLLs += { "OTDet" };
+ApplicationMgr.DLLs += { "STDet" };
+ApplicationMgr.DLLs += { "OTDet" };
+ApplicationMgr.DLLs += { "RichDet" };
 ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.Dlls += { "CaloDet" };
