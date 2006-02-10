@@ -220,7 +220,7 @@ L0Muon::Unit* L0Muon::Unit::parentByType(std::string utype) {
 
   L0Muon::Unit* uparent = parent();
   if (uparent) {
-    if (m_debug) std::cout << "parentByType: <"<<uparent->type() << ">\n";
+    //if (m_debug) std::cout << "parentByType: <"<<uparent->type() << ">\n";
     if ( uparent->type() != utype ) {
       uparent = uparent->parentByType(utype);
     }

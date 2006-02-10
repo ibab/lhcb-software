@@ -1,4 +1,4 @@
-// $Id: Register.h,v 1.4 2005-12-15 15:08:01 jucogan Exp $
+// $Id: Register.h,v 1.5 2006-02-10 12:25:45 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTER_H
 #define PROCESSORKERNEL_REGISTER_H     1
@@ -73,7 +73,7 @@ namespace L0Muon {
     bool empty() { return m_bitset.none(); }
 
     /// Reset the bitset
-    void reset() {m_bitset.reset();}
+    void reset() {m_bitset.reset(); m_set=false; }
 
     /** Return true if a bit is set
 
@@ -113,6 +113,8 @@ namespace L0Muon {
       return pattern.to_ulong(); 
     }
     
+
+    void print_words(FILE *file, int nwords_per_line=1);
 
     virtual std::string toXML(std::string tab="");
     

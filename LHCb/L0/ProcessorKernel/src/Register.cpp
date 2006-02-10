@@ -50,6 +50,39 @@ void L0Muon::Register::set (unsigned long pattern,int nbits, int shift) {
 }
 
 
+void L0Muon::Register::print_words(FILE *file, int nwords_per_line){
+
+  int ib=15;
+  int word=0;
+  int iw=0;
+  for (boost::dynamic_bitset<>::size_type it =m_bitset.size(); it>0 ;it--){
+    
+    int i = it-1;
+    
+    int val=m_bitset[i] ;
+    if (val>0) {
+      word+= int(pow(2,ib));
+    }
+    
+    ib--;
+    if (ib<0) {
+      ib=15;
+      fprintf(file,"%04x ",word);
+      word=0;
+      iw++;
+      if ((iw%nwords_per_line)==0) {
+        fprintf(file,"\n");
+      }
+    }
+  }
+
+  if(ib!=15) {
+    fprintf(file,"!!!\n");
+  }
+
+
+}
+  
 std::string L0Muon::Register::toXML(std::string tab){
 
   std::string xmlString=tab;

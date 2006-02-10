@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.9 2006-01-19 14:56:52 cattanem Exp $
+// $Id: TileRegister.h,v 1.10 2006-02-10 12:25:45 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -92,8 +92,6 @@ public:
   
   /// Print the tile register for debug
   void print_bits(unsigned int event, FILE *file);
-
-  void print_words(FILE *file, int nwords_per_line=1);
 
   void print_tiles(FILE *file, int ntiles_per_line=4);
   

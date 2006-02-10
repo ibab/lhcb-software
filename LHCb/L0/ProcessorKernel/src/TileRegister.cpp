@@ -51,6 +51,7 @@ void L0Muon::TileRegister::setTile(LHCb::MuonTileID & id){
     if ( m_ids[ind]== id){
       index =ind;
       m_bitset.set(index);
+      m_set = true; 
       break;
     }    
   }  
@@ -138,35 +139,6 @@ void L0Muon::TileRegister::print_bits(unsigned int event, FILE *file){
 }
 
 
-void L0Muon::TileRegister::print_words(FILE *file, int nwords_per_line){
-  int ib=0;
-  int word=0;
-  int iw=0;
-  for (boost::dynamic_bitset<>::size_type i =0; i < m_bitset.size();i++){
-    
-    int val=m_bitset[i] ;
-    if (val>0) {
-      word+= int(pow(2,ib));
-    }
-    
-    ib++;
-    if ((ib%16)==0) {
-      ib=0;
-      fprintf(file,"%04x ",word);
-      //std::cout << "<L0BufferUnit::dump>  iword" << iword << std::endl; 
-      word=0;
-      iw++;
-      if ((iw%nwords_per_line)==0) {
-	fprintf(file,"\n");
-      }
-    }
-  }
-  if(ib!=0) {
-    fprintf(file,"!!!\n");
-  }
-
-}
-  
 
 void L0Muon::TileRegister::print_tiles(FILE *file,int ntiles_per_line){
   int ic=0;

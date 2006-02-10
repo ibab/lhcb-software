@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.6 2005-12-15 15:08:01 jucogan Exp $
+// $Id: Unit.h,v 1.7 2006-02-10 12:25:45 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -73,7 +73,10 @@ namespace L0Muon {
  
     /// Add subunit
     void addUnit(L0Muon::Unit* unit);
- 
+
+    /// Contains sub units or not
+    bool isEmpty() { return m_units.empty();}
+
     /// Set the DEBUG level flag
     virtual void setDebugMode(bool debug = true) ;
   
