@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.17 2006-02-09 16:13:51 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.18 2006-02-10 18:56:52 gcorti Exp $ 
 
 /** @file 
  * 
@@ -38,7 +38,7 @@ SimMonitor.Members   += { "GiGaGetHitsAlg" };
 
 // VELO :  - pre XmlDDDB v30r0 path 
 ApplicationMgr.DLLs += { "VeloGauss" };
-// SimMonitor.Members  += { "VeloGaussMoni" };
+SimMonitor.Members  += { "VeloGaussMoni" };
 // VeloGaussMoni.PrintInfo = false;
 // VeloGaussMoni.DetailedMonitor = true;
 // VeloGaussMoni.TestMCHit = true;
@@ -60,7 +60,7 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 
 // RICH info, because of the way it is setup it will only be executed
 // when running the simulation with Geant4 not when reading files!
-// #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
 // Calorimeters - pre XmlDDDB v30r0 path
 // SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
