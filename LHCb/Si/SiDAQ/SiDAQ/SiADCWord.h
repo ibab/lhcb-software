@@ -1,4 +1,4 @@
-// $Id: SiADCWord.h,v 1.2 2006-02-05 20:28:02 krinnert Exp $
+// $Id: SiADCWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
 #ifndef _SiADCWord_H
 #define _SiADCWord_H 1
 
@@ -35,7 +35,7 @@ public:
     : m_value(0) {}
 
   /** Destructor */
-  virtual ~SiADCWord() {}
+  ~SiADCWord() {}
 
   /** cas to char */
   operator char() const;
@@ -62,7 +62,7 @@ public:
   }
 
   /** Fill the ASCII output stream */
-  virtual std::ostream& fillStream(std::ostream& s) const;
+  std::ostream& fillStream(std::ostream& s) const;
  
 private:
 
@@ -83,8 +83,6 @@ inline SiADCWord::SiADCWord(double adc, bool endCluster)
   unsigned char tADC;
   adc > ((1<<adcPrecision)-1) ? tADC = (1<<adcPrecision) -1 : tADC = char(adc);
 
-//   std::cout << (unsigned int )tADC << " " << endC << std::endl;
-     
   m_value  = (tADC << SiADCWord::adcBits) +
              (endC << SiADCWord::endBits);
  }

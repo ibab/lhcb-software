@@ -1,4 +1,4 @@
-// $Id: SiHeaderWord.h,v 1.2 2005-12-19 16:46:41 mneedham Exp $
+// $Id: SiHeaderWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
 
@@ -36,7 +36,7 @@ public:
   m_value(value){}
 
   /** Destructer **/
-  virtual ~SiHeaderWord(){}
+  ~SiHeaderWord(){}
 
   /** cast to int */ 
   operator int() const; 
@@ -69,7 +69,7 @@ public:
   }
 
   /** Fill the ASCII output stream */
-  virtual std::ostream& fillStream(std::ostream& s) const;
+  std::ostream& fillStream(std::ostream& s) const;
 
 private:
 

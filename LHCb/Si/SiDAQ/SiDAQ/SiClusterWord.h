@@ -1,4 +1,4 @@
-// $Id: SiClusterWord.h,v 1.2 2006-02-07 08:48:06 mneedham Exp $
+// $Id: SiClusterWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -41,7 +41,7 @@ public:
     : m_value(0) {}
 
   /** Destructor */
-  virtual ~SiClusterWord() {}
+  ~SiClusterWord() {}
 
   /** cast to short*/
   operator short() const;
@@ -80,7 +80,7 @@ public:
   }
 
   /** Fill the ASCII output stream */
-  virtual std::ostream& fillStream(std::ostream& s) const;
+  std::ostream& fillStream(std::ostream& s) const;
 
   /** fracStrip Bits  - the actual value in the bits 1,2,3,4,,,*/
   unsigned int fracStripBits() const; 

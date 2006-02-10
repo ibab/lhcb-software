@@ -2,6 +2,9 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-08
+ - Remove not need virtual functions
+
 !=========================== SiDAQ v1r1 2006-02-07 =====================
 ! 2006-02-05 M Needham
  - Make the fracStripBits public in STClusterWord.h
