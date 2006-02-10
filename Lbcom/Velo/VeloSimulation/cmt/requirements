@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           VeloSimulation
-version           v1r0
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -15,7 +15,6 @@ version           v1r0
 #============================================================================
 branches          cmt doc src options
 include_path      none
-#include_dirs $(VELOSIMULATIONROOT)
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
