@@ -31,6 +31,8 @@ L0Muon::RawBufferProcUnit::~RawBufferProcUnit(){
 */
 void L0Muon::RawBufferProcUnit::initialize(){
 
+  L0MUnit::initialize();
+
   char buf[4096];
   char* format ;
 

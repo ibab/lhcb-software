@@ -30,7 +30,9 @@ L0Muon::RawBufferCtrlUnit::~RawBufferCtrlUnit(){
 */
 void L0Muon::RawBufferCtrlUnit::initialize(){
 
-  // Initialize event counters
+  L0MUnit::initialize();
+
+  // Initialize event counter
   m_evtCounter=0;
 
   // Initialize candidate register handlers
@@ -90,7 +92,7 @@ void L0Muon::RawBufferCtrlUnit::execute(){
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute # of output registers= "<<m_outputs.size()  <<"\n";
   std::map<std::string,L0Muon::Register*>::iterator itoutputs =  m_outputs.find(buf);
   if (itoutputs==m_outputs.end()) {
-    std::cout <<"L0Muon::CtrlUnit::initialize key "<<buf  <<" not found in output registers\n";
+    std::cout <<"L0Muon::RawBufferCtrlUnit::initialize key "<<buf  <<" not found in output registers\n";
     return;
   }
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute key= "<< buf <<" found in output registers\n";
@@ -140,8 +142,12 @@ void L0Muon::RawBufferCtrlUnit::execute(){
    PostExecute
 */
 void L0Muon::RawBufferCtrlUnit::postexecute(){
+  // Increment event counter
   m_evtCounter++;
+
+  // Reset output registers (set bits to 0) 
   releaseOutputRegisters();
+  // Clear output register (bitset size set to 0)
   std::map<std::string,L0Muon::Register*>::iterator itoutputs;
   for (itoutputs=m_outputs.begin();itoutputs!=m_outputs.end();itoutputs++) {
     (*itoutputs).second->getBitset().clear();

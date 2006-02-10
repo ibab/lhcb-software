@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.6 2006-01-18 16:49:52 jucogan Exp $
+// $Id: CoreUnit.h,v 1.7 2006-02-10 12:31:20 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -71,9 +71,6 @@ namespace L0Muon {
     Tower  m_tower;
     std::vector<LHCb::MuonTileID> m_pads;
     CandRegisterHandler m_candRegHandlerOut;
-
-    bool m_buildL0Buffer;
-
   
   };
 

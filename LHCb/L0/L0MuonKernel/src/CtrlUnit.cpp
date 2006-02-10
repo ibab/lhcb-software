@@ -19,6 +19,8 @@ L0Muon::CtrlUnit::~CtrlUnit() {}
 
 void L0Muon::CtrlUnit::initialize()
 {
+  L0MUnit::initialize();
+
   char buf[4096];
   char* format ;
 
@@ -46,7 +48,6 @@ void L0Muon::CtrlUnit::execute() {
   
   std::map<int, CandRegisterHandler>::iterator itHandlerMap;
 
-  L0Muon::Unit::execute(); 
   // Fill the board number in the input registers
 
   for (itHandlerMap=m_candRegHandlerIn.begin();itHandlerMap!=m_candRegHandlerIn.end();itHandlerMap++){
@@ -60,4 +61,7 @@ void L0Muon::CtrlUnit::execute() {
   // Select the 2 best candidates and fill the output register
   select();
 
+
+  // Call the execute method of the sub units (after the selection)
+  L0Muon::Unit::execute(); 
 }

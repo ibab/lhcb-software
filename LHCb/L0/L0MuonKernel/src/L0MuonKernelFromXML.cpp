@@ -72,8 +72,8 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
 //   	    << "; name is "<<  XMLString::transcode(root->getNodeName())
 //   	    << std::endl;
 
-  DOMNamedNodeMap* diroot = root->getAttributes();
-  DOMNodeList * liroot = root->getChildNodes ();
+//   DOMNamedNodeMap* diroot = root->getAttributes();
+//   DOMNodeList * liroot = root->getChildNodes ();
 //   std::cout << "<L0Muon::L0MuonKernelFromXML>  root: " 
 //   	    << " size= "<<getAttributeInt(diroot,"size")
 //   	    << " # of children " << liroot->getLength()

@@ -102,6 +102,7 @@ L0Muon::Unit* L0Muon::UnitFactory::createUnit(DOMNode* pNode, std::string type) 
     return pu;
   } else {
     std::cout <<"<L0Muon::UnitFactory::createUnit> ERROR: UNKNOWN UNIT TYPE "<<type<<"\n";
+    return 0;
   }
   
 }

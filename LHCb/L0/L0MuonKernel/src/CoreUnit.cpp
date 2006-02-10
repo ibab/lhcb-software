@@ -127,6 +127,7 @@ bool L0Muon::CoreUnit::makeTower() {
     } // End of Loop over the tiles in M3 granularity 
   } // End of Loop over fired pads
 
+  if (m_debug) std::cout << "*!! Core:makeTower seedFound " <<seedFound<< std::endl;
   return seedFound;
 }
 
@@ -228,10 +229,13 @@ void L0Muon::CoreUnit::initialize() {
   
   Register* reg =(*itout).second;
   m_candRegHandlerOut = CandRegisterHandler(reg) ;    
+
+  L0MUnit::initialize();
   
 }
 
 void L0Muon::CoreUnit::setDebugMode(bool debug) {
+  m_debug = debug;
   if (debug) std::cout <<"*!* "<< type() <<"::setDebugMode" << std::endl;
   m_tower.setDebugMode(debug);  
 }

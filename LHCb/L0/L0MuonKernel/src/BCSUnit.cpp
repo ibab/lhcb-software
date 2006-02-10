@@ -72,6 +72,7 @@ void L0Muon::BCSUnit::initialize()
   Register* reg =(*itoutputs).second;
   m_candRegHandlerOut = CandRegisterHandler(reg) ;
 
+  L0MUnit::initialize();
 }
 
 

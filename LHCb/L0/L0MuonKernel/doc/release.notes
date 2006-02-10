@@ -4,6 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
+! 2006-02-10 - Julien Cogan
+ - Write the L0Buffers
+   o add a new base class L0BufferUnit (methods to write buffer into a file)
+   o implement inheritance relations:
+     L0BufferCtrlUnit, L0BufferSlaveUnit, L0BufferBCSUnit, LOBufferProcUnit
+     now inherites from L0BufferUnit
+   o implement the execute method for the L0BufferXXXUnit to build their 
+     L0Buffers
 !========================= L0MuonKernel v5r0 2006-01-19 ====================
 ! 2006-01-18 - Julien Cogan
  - Adapt to event model changes and LHCb namespace
