@@ -1,11 +1,8 @@
-// $Id: Objects.h,v 1.2 2006-02-09 10:06:27 ibelyaev Exp $
+// $Id: Objects.h,v 1.3 2006-02-10 17:23:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/08 12:01:14  ibelyaev
-//  add LoKi/Objects.h file
-// 
 // ============================================================================
 #ifndef LOKI_OBJECTS_H 
 #define LOKI_OBJECTS_H 1
@@ -74,6 +71,17 @@ namespace LoKi
       inline bool operator() ( TYPE /* arg */ ) const { return false  ; }
     };
     
+    /** @struct _ONE
+     *  trivial class/functor/predicate which always evaluated to "1"
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-08
+     */
+    template <class TYPE>
+    struct _ONE  : public  std::unary_function<TYPE,int>
+    {
+      inline int operator() ( TYPE /* arg */ ) const { return 1 ; }
+    };
+
     /** @var _ALL_
      *  helper objects which allows the efficient implementation 
      *  of selection algorithms 
@@ -81,6 +89,14 @@ namespace LoKi
      *  @date 2006-02-08
      */
     const _ALL<const void*> _ALL_ = _ALL<const void*>() ;
+    
+    /** @var _ONE_
+     *  helper objects which allows the efficient implementation 
+     *  of selection algorithms 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    const _ONE<const void*> _ONE_ = _ONE<const void*>() ;
     
   } ; // end of the namespace LoKi::Objects 
   
