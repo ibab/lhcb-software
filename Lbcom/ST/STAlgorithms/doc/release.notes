@@ -1,10 +1,10 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+!======================= STAlgorithms v1r0 2006-02-10 ========================
 ! 2006-02-08 M. Needham
  - protect against zero charge on strips 
 
-!======================= STAlgorithms v1r0 2006-02-07 ========================
 ! 2006-02-07 M. Needham
  - Changes for new cluster classes
 
