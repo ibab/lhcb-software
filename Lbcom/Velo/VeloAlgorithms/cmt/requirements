@@ -2,34 +2,22 @@
 # Maintainer : Chris Parkes & Tomasz Szumlak
 #
 package           VeloAlgorithms
-version           v5r0
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          VeloAlgorithms cmt doc src xml
+branches          cmt doc src
 
-include_dirs $(VELOALGORITHMSROOT)
-#produce dot h files from xml
+include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  LHCbKernel     v*   Kernel
-use  VeloEvent    v14r*  Event
-use  VeloDet      v10r*  Det
-use  GSL 	  v*     LCG_Interfaces
-use  LinkerEvent  v*     Event
-use  Relations    v*     Kernel
+use  LHCbKernel   v*  Kernel
+use  MCEvent      v*  Event
+use  VeloEvent    v*  Event
+use  VeloDet      v*  Det
 
 # Component library building rule
 #============================================================================
-document obj2doth VeloAlgorithmsObj2Doth ../xml/*.xml
-document obj2dict VeloAlgorithmsObj2Dict ../xml/*.xml
-#
 library          VeloAlgorithms      ../src/*.cpp
-library          VeloAlgorithmsDict  ../$(tag)/dict/VeloEvent/*.cpp
-#
 apply_pattern component_library library=VeloAlgorithms
-#macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
-#
-private
-use GaudiObjDesc v* -no_auto_imports

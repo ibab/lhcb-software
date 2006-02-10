@@ -1,6 +1,16 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
-!===================== VeloAlgorithms v5r0 2006-02-08 =====================
+!--------------------------------------------------------------------------
+
+!===================== VeloAlgorithms v4r0 2006-02-10 =====================
+! 2006-02-10 - Marco Cattaneo
+ - Move event classes to VeloEvent. This avoids coupling to VeloAlgorithms from
+   packages that need these event classes (e.g. VeloAssociators)
+ - Move VeloAlgorithm includes to LHCbKernel. Package now does not export
+   any include path
+ - Remove 'do nothing' initialize and finalize methods of VeloDataProcessor,
+   which were causing the base class methods to not be called 
+
 ! 2006-02-08 - Tomasz Szumlak
  - new spillOver estimation based on pulse shape fit
  - hard coded number of sensor removed
@@ -8,13 +18,11 @@
    dedicated to each stage of data processing
  - code is compatible with LHCb v20r0
 
-==================== VeloAlgorithms v4r0 2005-10-20 =====================
 ! 2005-10-20 - Tomasz Szumlak & Chris Parkes
-- Move VeloSim.cpp/.h into its own new package (VeloSimulation)
-This is the first part of revised splitting of the Velo software 
-packages
-- Update Data Model to include new VeloDigit and VeloFullFPGADigit
-- Old VeloFullDigit is dropped. 
+ - Move VeloSim.cpp/.h into its own new package (VeloSimulation)
+   This is the first part of revised splitting of the Velo software packages
+ - Update Data Model to include new VeloDigit and VeloFullFPGADigit
+ - Old VeloFullDigit is dropped. 
 
 !===================== VeloAlgorithms v3r3 2005-02-10 =====================
 ! 2005-02-10 - Marco Cattaneo

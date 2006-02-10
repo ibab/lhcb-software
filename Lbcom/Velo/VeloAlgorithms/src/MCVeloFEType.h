@@ -1,11 +1,13 @@
-// $Id: MCVeloFEType.h,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: MCVeloFEType.h,v 1.2 2006-02-10 14:02:49 cattanem Exp $
 #ifndef MCVELOFETYPE_H 
 #define MCVELOFETYPE_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "VeloAlgorithms/IMCVeloFEType.h"            // Interface
+
+// LHCbKernel
+#include "Kernel/IMCVeloFEType.h"            // Interface
 
 #include "Event/MCVeloFE.h"
 

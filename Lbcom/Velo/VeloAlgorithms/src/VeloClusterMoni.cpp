@@ -1,14 +1,14 @@
-// $Id: VeloClusterMoni.cpp,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: VeloClusterMoni.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
+
+// LHCbKernel
+#include "Kernel/IMCVeloFEType.h"
 
 // local
 #include "VeloClusterMoni.h"
-
-// velo
-#include "VeloAlgorithms/IMCVeloFEType.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMoni
@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-//DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
-static const  AlgFactory<VeloClusterMoni>          s_factory ;
-const        IAlgFactory& VeloClusterMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
 
 
 //=============================================================================
@@ -39,6 +37,7 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
     m_numberOfEvents ( 0 )
 {
   declareProperty("PrintInfo", m_printInfo);
+  setProperty( "HistoTopDir", "Velo/" );
 }
 //=============================================================================
 // Destructor
@@ -53,7 +52,6 @@ StatusCode VeloClusterMoni::initialize() {
   //
   debug() << "==> Initialize" << endmsg;
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
-  setHistoTopDir("veloCluster");
   //
   return StatusCode::SUCCESS;
 };

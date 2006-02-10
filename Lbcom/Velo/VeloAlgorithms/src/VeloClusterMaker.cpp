@@ -8,7 +8,10 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// from LHCbKernel 
 #include "Kernel/VeloChannelID.h"
+#include "Kernel/VeloEventFunctor.h"
 
 // from Detector
 #include "VeloDet/DeVelo.h" 
@@ -18,11 +21,9 @@
 
 // local
 #include "VeloClusterMaker.h"
-#include "VeloAlgorithms/VeloEventFunctor.h"
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<VeloClusterMaker>          Factory ;
-const        IAlgFactory& VeloClusterMakerFactory = Factory ; 
+DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
 
 //=============================================================================
 // Standard creator, initializes variables

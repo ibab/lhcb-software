@@ -1,8 +1,8 @@
-// $Id: MCVeloFEType.cpp,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: MCVeloFEType.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "MCVeloFEType.h"
@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<MCVeloFEType>          s_factory ;
-const        IToolFactory& MCVeloFETypeFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( MCVeloFEType );
 
 
 //=============================================================================

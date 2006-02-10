@@ -6,8 +6,10 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
+
+// LHCbKernel
 #include "Kernel/VeloChannelID.h"
+#include "Kernel/VeloEventFunctor.h"
 
 // local
 #include "VeloDataProcessor.h"
@@ -15,11 +17,9 @@
 // Velo
 #include "Event/MCVeloFE.h"
 #include "Event/VeloDigit.h"
-#include "VeloAlgorithms/VeloEventFunctor.h"
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<VeloDataProcessor>          Factory ;
-const        IAlgFactory& VeloDataProcessorFactory = Factory ; 
+DECLARE_ALGORITHM_FACTORY( VeloDataProcessor );
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -48,15 +48,7 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
 // Destructor
 //=============================================================================
 VeloDataProcessor::~VeloDataProcessor() {};
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode VeloDataProcessor::initialize() {
-  //
-  debug()<< " ==> VeloDataProcessor::initialize() " <<endmsg;
-  //
-  return (StatusCode::SUCCESS);
-}
+
 //==============================================================================
 // take an MCFE make a FullDigit
 //==============================================================================
@@ -64,12 +56,8 @@ StatusCode VeloDataProcessor::execute(){
   //
   debug()<< " ==> VeloDataProcessor::execute() " <<endmsg;
   // get the input data
-  SmartDataPtr<LHCb::MCVeloFEs>  MCFEs(eventSvc(), m_inputContainer);
-  if(0 == MCFEs) {
-    error() << " ==> Unable to retrieve input data container="
-	          << m_inputContainer <<endmsg;
-    return (StatusCode::FAILURE);
-  }
+  LHCb::MCVeloFEs* MCFEs = get<LHCb::MCVeloFEs>( m_inputContainer );
+
   // make digits
   LHCb::VeloDigits* veloDigitVec=new LHCb::VeloDigits(); 
    debug()<< "Retrieved " << MCFEs->size() << " MCVeloFEs" <<endmsg;
@@ -100,13 +88,7 @@ StatusCode VeloDataProcessor::execute(){
   //
   return (sc);
 }
-//==============================================================================
-StatusCode VeloDataProcessor::finalize() {
-  //
-  debug()<< " ==> VeloDataProcessor::finazlize() " <<endmsg;
-  //
-  return (StatusCode::SUCCESS);
-}
+
 //==============================================================================
 // convert electrons to ADC counts
 //==============================================================================

@@ -1,8 +1,8 @@
-// $Id: VeloDigiMoni.cpp,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: VeloDigiMoni.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "VeloDigiMoni.h"
@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-//DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
-static const  AlgFactory<VeloDigiMoni>          s_factory ;
-const        IAlgFactory& VeloDigiMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,6 +34,7 @@ VeloDigiMoni::VeloDigiMoni( const std::string& name,
 {
   declareProperty("PrintInfo", m_printInfo);
   declareProperty("TestDigits", m_testDigits);
+  setProperty( "HistoTopDir", "Velo/" );
 }
 //=============================================================================
 // Destructor
@@ -49,7 +48,6 @@ StatusCode VeloDigiMoni::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialize" << endmsg;
-  setHistoTopDir("digi");
   //
   return (StatusCode::SUCCESS);
 };

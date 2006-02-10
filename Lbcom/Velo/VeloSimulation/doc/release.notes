@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !===================== VeloSimulation v1r0 2005-02-10 =====================
+! 2006-02-10 - Marco Cattaneo
+ - Remove VeloSimulation directory
+ - Pickup from LHCbKernel interfaces previously in VeloAlgorithms 
+ - Various minor cleanups
+
 ! 2006-02-08 - Tomasz Szumlak
  - migration of the code to LHCb v20r0
  - spillOver estimation using pulse shape fit coming from data

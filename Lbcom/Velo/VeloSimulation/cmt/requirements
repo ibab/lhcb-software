@@ -6,34 +6,29 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           VeloSimulation
-version           v2r0
+version           v1r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          VeloSimulation cmt doc src options
-#include_path      none
-include_dirs $(VELOSIMULATIONROOT)
+branches          cmt doc src options
+include_path      none
+#include_dirs $(VELOSIMULATIONROOT)
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# use   Package      v1r*    Hat
-use  VeloEvent     v15r* Event
-use  DAQEvent      v*    Event
-use  VeloDet       v10r*  Det
-use  Relations     v*    Kernel
-use  GSL 	   v*    LCG_Interfaces
-use VeloAlgorithms v4r*  Velo -no_auto_imports
-use MCEvent v* Event
+use  MCEvent       v* Event
+use  VeloDet       v* Det
+use  GSL 	   v* LCG_Interfaces
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          VeloSimulation    ../src/*.cpp -import=AIDA -import=VeloKernel -import=VeloAlgorithms
+library          VeloSimulation    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================

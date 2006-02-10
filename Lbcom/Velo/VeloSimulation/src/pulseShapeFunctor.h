@@ -1,4 +1,4 @@
-// $Id: pulseShapeFunctor.h,v 1.1 2006-02-09 11:04:16 szumlat Exp $
+// $Id: pulseShapeFunctor.h,v 1.1 2006-02-10 14:03:31 cattanem Exp $
 #ifndef VELOSIMULATION_PULSESHAPEFUNCTOR_H 
 #define VELOSIMULATION_PULSESHAPEFUNCTOR_H 1
 

@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.5 2006-02-09 12:20:41 szumlat Exp $
+// $Id: VeloDataProcessor.h,v 1.6 2006-02-10 14:02:49 cattanem Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -26,9 +26,7 @@ public:
 
   virtual ~VeloDataProcessor( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

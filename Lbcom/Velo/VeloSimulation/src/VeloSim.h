@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.2 2006-02-09 11:04:16 szumlat Exp $
+#// $Id: VeloSim.h,v 1.3 2006-02-10 14:03:31 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -15,7 +15,7 @@
 #include "Event/MCVeloFE.h"
 
 // local
-#include "VeloSimulation/pulseShapeFunctor.h"
+#include "pulseShapeFunctor.h"
 
 class DeVelo;
 class MCHit;

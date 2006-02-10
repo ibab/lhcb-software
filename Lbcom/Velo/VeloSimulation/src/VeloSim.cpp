@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.2 2006-02-09 11:04:16 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.3 2006-02-10 14:03:31 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -21,20 +21,18 @@
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "Kernel/LHCbMath.h"
 
-// from VeloEvent
+// from LHCbKernel
+#include "Kernel/LHCbMath.h"
+#include "Kernel/VeloEventFunctor.h"
+
+// from MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCVeloFE.h"
+#include "Event/MCParticle.h"
 
 // VeloDet
 #include "VeloDet/DeVelo.h"
-
-// from LHCbEvent
-#include "Event/MCParticle.h"
-
-// VeloAlgorithms
-#include "VeloAlgorithms/VeloEventFunctor.h"
 
 // local
 #include "VeloSim.h"
@@ -46,8 +44,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<VeloSim>          Factory ;
-const         IAlgFactory& VeloSimFactory = Factory ;
+DECLARE_ALGORITHM_FACTORY( VeloSim );
 
 struct chargeThreshold : public std::unary_function<LHCb::MCVeloFE*,  bool> {
   bool operator()(LHCb::MCVeloFE* FE) {
@@ -61,69 +58,40 @@ struct chargeThreshold : public std::unary_function<LHCb::MCVeloFE*,  bool> {
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-  m_inputContainer ( LHCb::MCHitLocation::Velo ),
-  m_spillOverInputContainer ( "Prev/" + m_inputContainer ),
-  m_pileUpInputContainer ( LHCb::MCHitLocation::PuVeto ),
-  m_pileUpSpillOverInputContainer ( "Prev/" + m_pileUpInputContainer ),
-  m_outputContainer ( LHCb::MCVeloFELocation::Default ),
-  m_pileUpOutputContainer ( LHCb::MCVeloFELocation::PuVeto ),
-  m_veloDet ( getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo") ),
-  m_chargeSim ( true ),
-  m_inhomogeneousCharge ( true ),
-  m_coupling ( true ),
-  m_noiseSim ( true ),
-  m_pedestalSim ( true ),
-  m_CMSim ( true ),
-  m_stripInefficiency ( 0.0 ),
-  m_spillOver ( true ),
-  m_pileUp ( true ),
-  m_testSim ( false ),
-  m_smearPosition ( 0.0 ),
-  m_threshold ( 4500. ),
-  m_noiseConstant ( 500. ),
-  m_kT ( 0.025 ),
-  m_biasVoltage ( 250. ),
-  m_eVPerElectron ( 3.6 ),
-  m_simulationPointsPerStrip ( 3 ),
-  m_chargeUniform ( 70. ),
-  m_deltaRayMinEnergy ( 1000. ), 
-  m_capacitiveCoupling ( 0.05 ),
-  m_averageStripCapacitance ( 20. ), 
-  m_noiseCapacitance ( 50. ),
+  m_veloDet ( 0 ),
   m_baseDiffuseSigma( sqrt(2*m_kT/m_biasVoltage) ),
-  m_fitParams(7, 0.),
-  m_offPeakSamplingTime(0.)
+  m_fitParams(7, 0.)
 {
-  declareProperty("InputContainer", m_inputContainer  );
-  declareProperty("SpillOverInputData", m_spillOverInputContainer  );
-  declareProperty("PileUpInputContainer", m_pileUpInputContainer  );
-  declareProperty("PileUpSpillOverInputData", m_pileUpSpillOverInputContainer);
-  declareProperty("OutputContainer", m_outputContainer );
-  declareProperty("PileUpOutputContainer", m_pileUpOutputContainer );
-  declareProperty("ChargeSim", m_chargeSim );
-  declareProperty("InhomogeneousCharge", m_inhomogeneousCharge );
-  declareProperty("Coupling", m_coupling );
-  declareProperty("NoiseSim", m_noiseSim );
-  declareProperty("PedestalSim", m_pedestalSim );
-  declareProperty("CMSim", m_CMSim );
-  declareProperty("StripInefficiency", m_stripInefficiency );
-  declareProperty("SpillOver", m_spillOver );
-  declareProperty("PileUp", m_pileUp );
-  declareProperty("TestSimulation", m_testSim );
-  declareProperty("SmearPosition", m_smearPosition );
-  declareProperty("Threshold", m_threshold);
-  declareProperty("NoiseConstant", m_noiseConstant);
-  declareProperty("kT", m_kT);
-  declareProperty("BiasVoltage", m_biasVoltage);
-  declareProperty("eVPerElectron", m_eVPerElectron);
-  declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip);
-  declareProperty("ChargeUniform", m_chargeUniform);
-  declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy);
-  declareProperty("CapacitiveCoupling", m_capacitiveCoupling);
-  declareProperty("AverageStripCapacitance", m_averageStripCapacitance);
-  declareProperty("NoiseCapacitance", m_noiseCapacitance);
-  declareProperty("FitParams", m_fitParams);
-  declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime);
+  declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
+  declareProperty("SpillOverInputData", m_spillOverInputContainer = "Prev/" + m_inputContainer );
+  declareProperty("PileUpInputContainer", m_pileUpInputContainer = LHCb::MCHitLocation::PuVeto );
+  declareProperty("PileUpSpillOverInputData", m_pileUpSpillOverInputContainer = "Prev/" + m_pileUpInputContainer );
+  declareProperty("OutputContainer", m_outputContainer = LHCb::MCVeloFELocation::Default );
+  declareProperty("PileUpOutputContainer", m_pileUpOutputContainer = LHCb::MCVeloFELocation::PuVeto );
+  declareProperty("ChargeSim", m_chargeSim = true );
+  declareProperty("InhomogeneousCharge", m_inhomogeneousCharge = true );
+  declareProperty("Coupling", m_coupling = true );
+  declareProperty("NoiseSim", m_noiseSim = true );
+  declareProperty("PedestalSim", m_pedestalSim = true );
+  declareProperty("CMSim", m_CMSim = true );
+  declareProperty("StripInefficiency", m_stripInefficiency = 0.0 );
+  declareProperty("SpillOver", m_spillOver = true );
+  declareProperty("PileUp", m_pileUp = true );
+  declareProperty("TestSimulation", m_testSim = false );
+  declareProperty("SmearPosition", m_smearPosition = 0.0 );
+  declareProperty("Threshold", m_threshold = 4500. );
+  declareProperty("NoiseConstant", m_noiseConstant = 500. );
+  declareProperty("kT", m_kT = 0.025 );
+  declareProperty("BiasVoltage", m_biasVoltage = 250. );
+  declareProperty("eVPerElectron", m_eVPerElectron = 3.6 );
+  declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3 );
+  declareProperty("ChargeUniform", m_chargeUniform = 70. );
+  declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000. );
+  declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.05 );
+  declareProperty("AverageStripCapacitance", m_averageStripCapacitance = 20. );
+  declareProperty("NoiseCapacitance", m_noiseCapacitance = 50. );
+  declareProperty("FitParams", m_fitParams );
+  declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0. );
   
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -141,6 +109,9 @@ StatusCode VeloSim::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialise" << endmsg;
+
+  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+
   // random number initialisation
   StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
   StatusCode scr2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
@@ -239,7 +210,7 @@ StatusCode VeloSim::getInputData() {
     debug() << "Retrieving MCHits of SpillOver Event from "
 			<< m_spillOverInputContainer <<endmsg;      
     if(!exist<LHCb::MCHits>(m_spillOverInputContainer)){
-      info()<< "Spill over event not present unable to retrieve input container="
+      debug()<<"Spill over event not present unable to retrieve input container="
 	          << m_spillOverInputContainer <<endmsg;
       m_veloSpillOverHits = 0;
     } else { 

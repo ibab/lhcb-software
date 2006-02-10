@@ -1,11 +1,14 @@
-// $Id: VeloSimMoni.cpp,v 1.1 2006-02-09 11:04:16 szumlat Exp $
+// $Id: VeloSimMoni.cpp,v 1.2 2006-02-10 14:03:31 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
 #include "GaudiKernel/SmartRefVector.h"
+
+// from LHCbKernel
 #include "Kernel/VeloChannelID.h"
+#include "Kernel/IMCVeloFEType.h"
 
 // local
 #include "VeloSimMoni.h"
@@ -13,7 +16,6 @@
 // Velo Event classes
 #include "Event/MCHit.h"
 #include "Event/MCVeloFE.h"
-#include "VeloAlgorithms/IMCVeloFEType.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloSimMoni
@@ -22,8 +24,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<VeloSimMoni>          s_factory ;
-const        IAlgFactory& VeloSimMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloSimMoni );
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,10 +33,7 @@ const        IAlgFactory& VeloSimMoniFactory = s_factory ;
 VeloSimMoni::VeloSimMoni( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_printInfo(false),
-    m_detailedMonitor(false),
-    m_veloFEMoni(true),
-    m_veloDet(getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")),
+    m_veloDet(0),
     m_nMCVeloFE(0),
     m_nMCVeloFE2(0.),
     m_nMCVeloFEs(0),
@@ -42,9 +41,10 @@ VeloSimMoni::VeloSimMoni( const std::string& name,
     m_nMCVeloFEo(0),
     m_NumberOfEvents(0)
 {
-  declareProperty("PrintInfo", m_printInfo);
-  declareProperty("DetailedMonitor", m_detailedMonitor);
-  declareProperty("VeloFEMoni", m_veloFEMoni);
+  declareProperty( "PrintInfo",       m_printInfo = false );
+  declareProperty( "DetailedMonitor", m_detailedMonitor = false );
+  declareProperty( "VeloFEMoni",      m_veloFEMoni = true );
+  setProperty( "HistoTopDir", "Velo/" );
 }
 //=============================================================================
 // Destructor
@@ -60,8 +60,9 @@ StatusCode VeloSimMoni::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
-  setHistoTopDir("Sim");
-  //  
+
+  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+
   return StatusCode::SUCCESS;
 };
 
