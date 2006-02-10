@@ -2,8 +2,11 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.37 2006-02-10 09:37:06 seaso Exp $
+# $Id: requirements,v 1.38 2006-02-10 18:37:20 gcorti Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.37  2006/02/10 09:37:06  seaso
+# commit
+#
 # Revision 1.36  2006/02/06 13:56:32  gcorti
 # version in requirements
 #
@@ -62,19 +65,17 @@
 
 # =============================================================================
 package GaussRICH
-version v6r0
+version v6r1
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
-# =============== explicit dependencies =======================================  
+# =============== explicit dependencies =======================================
 use GaussTools    v*     Sim
 use AIDA          v*     LCG_Interfaces
-# CRJ - Not needed, only require interfaces in RichKernel
-#use RichCondition v*     Rich 
+
 # =============== Event =======================================================
-#use RichEvent     v*     Event
-use MCEvent     v*     Event
+use MCEvent       v*     Event
 use RichKernel    v*   Rich
 
 # ============== component library ============================================
@@ -85,8 +86,6 @@ library          GaussRICH    *.cpp             \
                               RichAction/*.cpp \
                               RichAnalysis/*.cpp \
                               RichAnalysis/*.icpp \  
-#			      RichAnalysis/RichG4AnalysisPhotElec.cpp \
-#			      RichAnalysis/RichG4Counters.cpp \
                               Misc/*.cpp   
 
 # ============== standard includes ============================================
@@ -101,6 +100,4 @@ include_dirs     $(GAUSSRICHROOT) \
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussRICH
-# ============================================================================
-# The END 
-# ============================================================================
+
