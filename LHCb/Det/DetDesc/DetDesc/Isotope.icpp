@@ -1,4 +1,4 @@
-// $Id: Isotope.icpp,v 1.3 2003-04-25 08:52:23 sponce Exp $
+// $Id: Isotope.icpp,v 1.4 2006-02-10 08:02:45 mneedham Exp $
 #ifndef      DETDESC_ISOTOPE_ICPP
 #define      DETDESC_ISOTOPE_ICPP
 // detdesc 
@@ -13,8 +13,7 @@ inline void         Isotope::setA( const double value ) { m_A = value; }
 inline const double Isotope::Z() const { return m_Z; }
 inline void         Isotope::setZ( const double value ) { m_Z = value; }
 ///////////////////////////////////////////////////////////////////////////
-inline const double Isotope::N() const { return m_N; }
-inline void         Isotope::setN( const double value ) { m_N = value; }
+inline const double Isotope::N() const { m_A*mole/g; }
 ///////////////////////////////////////////////////////////////////////////
 
 

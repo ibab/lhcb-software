@@ -1,4 +1,4 @@
-// $Id: Isotope.h,v 1.9 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Isotope.h,v 1.10 2006-02-10 08:02:45 mneedham Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -24,7 +24,6 @@ public:
   Isotope( const std::string name    = ""              , 
            const double      a       = 0               , 
            const double      z       = 0               , 
-           const double      n       = 0               , 
            const double      density = 0               ,
            const double      rl      = 0               ,  
            const double      al      = 0               ,
@@ -44,7 +43,6 @@ public:
   
   //        Number of nucleons
   virtual inline const double   N() const;
-  virtual inline void        setN(  const double value );
   
   inline const CLID& clID    () const { return Isotope::classID(); } 
   static const CLID& classID ()       { return CLID_Isotope; } 
@@ -56,9 +54,7 @@ protected:
   
   //        Atomic number
   double m_Z;
-  
-  //        Number of nucleons
-  double m_N;
+ 
   
 };
 ///
