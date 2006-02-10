@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-09 M Needham
+- change the printout from DeSTSector 
+
 !========================= STDet v2r0 2006-02-10 =======================
 ! 2006-02-09 M. Needham 
 - Few bug fixes in DeSTSector init 

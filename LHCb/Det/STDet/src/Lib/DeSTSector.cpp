@@ -29,21 +29,8 @@ DeSTSector::~DeSTSector() {
 
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
-  // stream to cout
-  os << " Sector :  "  << name()
-     << "\n type  " << type() 
-     << "\n pitch " << m_pitch 
-     << "\n strip " << m_nStrip
-     << "\n capacitance " << m_capacitance/picofarad
-     << "\n u min " << m_uMinLocal 
-     << "\n u max " << m_uMaxLocal
-     << "\n v min  " << m_vMinLocal 
-     << "\n  v max " << m_vMaxLocal
-     << "\n dead width " << m_deadWidth
-     << "\n center " << globalCentre()
-     << std::endl; 
+  // stream to cout  
 
-  /*
    const ILVolume* lv = this->geometry()->lvolume();
    const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
 
@@ -59,7 +46,6 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
      << "\n dead width " << m_deadWidth
      << "\n center " << globalCentre()
      << std::endl; 
-  */
   return os;
 }
 
