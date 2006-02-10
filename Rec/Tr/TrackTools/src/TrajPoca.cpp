@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.3 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: TrajPoca.cpp,v 1.4 2006-02-10 12:34:16 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -155,14 +155,16 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
 //=============================================================================
 StatusCode TrajPoca::minimize( const Trajectory& traj,
                                double& arclength,
-                               bool restrictRange,
+                               bool /*restrictRange*/,
                                const XYZPoint& pt,
-                               XYZVector& distance,
+                               XYZVector& /* distance */,
                                double precision )
 {
+        //FIXME: implement properly!!!!
+        //FIXME: implement restrictRange
   // Delegate to the trajectory class
   double prevflt   = arclength;
-  arclength        = traj.distanceToPoint( pt );
+  arclength        = traj.arclength( pt );
   double step      = arclength - prevflt;
   int pathDir      = (step > 0.) ? 1 : -1;
   double distToErr = traj.distTo1stError( prevflt, precision, pathDir );
@@ -171,7 +173,7 @@ StatusCode TrajPoca::minimize( const Trajectory& traj,
   // TODO: Calculate the distance to the point using the expansion function
   //       and neglect the third order term (iterate instead, untill required
   //       precision is reached).
-  //       This is needed in case the distanceToPoint function is not accurate
+  //       This is needed in case the arclength function is not accurate
   //       enough or not implemented)
   if ( !finished ) return StatusCode::FAILURE;
 

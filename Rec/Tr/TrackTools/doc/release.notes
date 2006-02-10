@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-10 - Gerhard Raven & Edwin Bos
+ - update to follow minor changes to Trajectories.
+
 ! 2006-02-07 - Eduardo Rodrigues
  - migration to LHCb v20r0
 
