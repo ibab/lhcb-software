@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.5 2005-12-16 14:53:20 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.6 2006-02-10 15:54:13 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -54,6 +54,8 @@ public:
   
   //Convert tiles in chambers
   std::vector<DeMuonChamber*> createChambers(std::vector<int> mytiles, int station);
+
+  std::vector<DeMuonChamber*> createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles);
 
   //Returns the chamber number for a shift in X and Y direction
   void chamberXY(int sx, int sy, int shx, int shy, int reg, std::vector<int> &chamberNumber);

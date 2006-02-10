@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.18 2006-02-06 21:04:38 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.19 2006-02-10 15:54:13 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -63,8 +63,10 @@ StatusCode DeMuonDetector::initialize()
   for(int dum = 0; dum<4; dum++) {MaxRegions[dum] = myDum[dum];}
 
   //Initializing the Layout
-  m_chamberLayout.initialize();
-  m_chamberLayout.setDataProvider(m_detSvc);
+  MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8); 
+  MuonChamberLayout * tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc);
+  m_chamberLayout = * tLay;
+
   m_ChmbPtr =  m_chamberLayout.fillChambersVector(m_detSvc);
 
   //fill geo info

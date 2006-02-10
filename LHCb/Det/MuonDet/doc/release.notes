@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.63 2006-02-07 11:32:40 asarti Exp $
+! $Id: release.notes,v 1.64 2006-02-10 15:54:13 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-10 - Alessio Sarti
+ - fix in MuonChamberLayout.cpp: now chamber are properly created
+   looking into the ChVec (instead of using new) and an inconsistent
+   use of tiles has been detected and removed
+ - fix in DeMuonDetector: now the MuonChamberLayout is properly initialized
+
 ! 2006-02-07 - Alessio Sarti
  - a fix in MuonChamberLayout.cpp: in getChamberNumber() propagated
    yesterday's fix from Alessia
