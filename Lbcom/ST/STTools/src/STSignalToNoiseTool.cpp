@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.2 2006-02-07 08:46:29 mneedham Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.3 2006-02-10 18:37:16 mneedham Exp $
 //
 // This File contains the implementation of the STSignalToNoiseTool class
 //
@@ -47,8 +47,8 @@ m_tracker(0)
   declareProperty("conversionToADC",m_conversionToADC = 0.0009);
   declareProperty("detType", m_detType = "TT");
 
-  m_paramsInElectron.push_back(700);
-  m_paramsInElectron.push_back(48.0/picofarad);
+  m_paramsInElectron.push_back(776);
+  m_paramsInElectron.push_back(47.9/picofarad);
 
   // to get correct interface
   declareInterface<ISTSignalToNoiseTool>(this);
@@ -71,7 +71,7 @@ StatusCode STSignalToNoiseTool::initialize(){
 
   // convert params to ADC
   for (unsigned int iParam = 0 ; iParam < m_paramsInElectron.size(); ++iParam){
-    m_paramsInADC.push_back(m_paramsInElectron[iParam]);
+    m_paramsInADC.push_back(m_conversionToADC*m_paramsInElectron[iParam]);
   }
 
   return StatusCode::SUCCESS;
@@ -98,26 +98,27 @@ double STSignalToNoiseTool::signalToNoise(const SmartRefVector<LHCb::STDigit>& d
 
 double STSignalToNoiseTool::noiseInADC(const DeSTSector* aSector) {
 
-  // look up noise of Channel in electrons
+  // look up noise of Channel in ADC
+  double value = m_paramsInADC[0] + (aSector->capacitance()* m_paramsInADC[1]);
   return  m_paramsInADC[0] + (aSector->capacitance()* m_paramsInADC[1]);
 }
 
 double STSignalToNoiseTool::noiseInElectrons(const DeSTSector* aSector) {
 
-  // look up noise of channel in ADC
+  // look up noise of channel in electrons
   return m_paramsInElectron[0] + (aSector->capacitance()* m_paramsInElectron[1]);
 }
 
 double STSignalToNoiseTool::noiseInADC(const LHCb::STChannelID& aChan) {
 
-  // look up noise of Channel in electrons
+  // look up noise of Channel in ADC
   DeSTSector* tSector = m_tracker->findSector(aChan);
   return (tSector != 0 ?  noiseInADC(tSector) : 99999. ) ;
 }
 
 double STSignalToNoiseTool::noiseInElectrons(const LHCb::STChannelID& aChan) {
 
-  // look up noise of channel in ADC
+  // look up noise of channel in electrons
   DeSTSector* tSector = m_tracker->findSector(aChan);
   return (tSector != 0 ?  noiseInElectrons(tSector) : 99999. ) ;
 }

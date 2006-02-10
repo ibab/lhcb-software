@@ -2,9 +2,15 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2006-02-09
+- Bug fix in Signal to noise tool
+
+
 !=========================== STTools v2r0 2006-02-10 ==========================
 ! 2006-02-09 M Needham
  - Bug fix in position tool
+
+ 
 
 ! 2006-02-07 M Needham
  - Changes for new cluster classes
