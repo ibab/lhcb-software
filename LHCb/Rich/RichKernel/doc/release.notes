@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.102 2006-02-09 12:19:02 jonrob Exp $
+! $Id: release.notes,v 1.103 2006-02-10 16:44:29 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r1 2006-02-09 =======================
 ! 2006-02-09 - Christopher Rob Jones
  - Add IRich1AerogelMonitor for aerogel updates in RichCondition
 
-!======================= RichKernel v6r1 2006-02-06 =======================
 ! 2006-02-06 - Chris Jones
  - remove IRichDetNumberingTool interface
 
