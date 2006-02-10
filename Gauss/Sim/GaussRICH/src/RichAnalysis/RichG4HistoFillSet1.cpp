@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet1.cpp,v 1.4 2004-02-10 14:24:10 jonesc Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.5 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 // local
@@ -142,7 +142,7 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
 
           G4int aRadnum = aHit-> GetRadiatorNumber();
 
-          if(  aRadnum == 0 ) {
+          if(  aRadnum >= 10 && aRadnum <= 25  ) {
             if(  aHitGlobalPEOriginY > 0.0 ) {
 
               if(hGlobalHitAgelPosXY) hGlobalHitAgelPosXY->

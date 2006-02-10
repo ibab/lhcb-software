@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.7 2005-06-16 11:39:59 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.8 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 
@@ -1253,7 +1253,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
           while(it < (int) TrajIdVectR1Agel.size()) {
 
             if(TrajIdVectR1Agel[it] ==  ChtkId) {
-              if(aRadiatorNum == 0 ) {
+              if(aRadiatorNum >= 10 && aRadiatorNum <= 25) {
 
                 TrajNumHitAgelRich1[it]++;
 
@@ -1493,7 +1493,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               }
 
-            }else if(  aRadiatorNum == 0 ) {
+            }else if(  aRadiatorNum >=  10 &&  aRadiatorNum <= 25 ) {
 
               aRichCounter->bumpNumHitTotRich1Agel();
 

@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet4.cpp,v 1.2 2004-02-10 14:24:11 jonesc Exp $
+// $Id: RichG4HistoFillSet4.cpp,v 1.3 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 
@@ -160,8 +160,9 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   double aCkvRecD3E3 = aReconResult-> ckvAngleD3E3();
 
 
-  if( (curRdet == 0) &&   (curRadiator == 0)) {
-    //    std::cout<< "histo id "<<hCkvRich1Agel<<"   "<<  hCkvRich1Gas<<std::endl;
+  if( (curRdet == 0) &&   (curRadiator >= 10  && curRadiator <= 25 )) {
+    //    std::cout<< "histo id "<<hCkvRich1Agel<<"   "
+    // <<  hCkvRich1Gas<<std::endl;
 
     if(hCkvRich1AgelD3E3)hCkvRich1AgelD3E3->fill(aCkvRecD3E3) ;
     if(hCkvRich1AgelD1E4)hCkvRich1AgelD1E4->fill(aCkvRecD1E4) ;

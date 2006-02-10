@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.7 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.8 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -38,6 +38,7 @@
 #include "RichG4Counters.h"
 #include "RichInfo.h"
 #include "RichPEInfo.h"
+#include "RichPhotInfo.h"
 #include "RichPhotoElectron.h"
 
 //-----------------------------------------------------------------------------
@@ -87,17 +88,35 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
     if(   aParticleKE > 0.0 ) {
 
       //          G4cout<<"Now in Step analysis 3 "<<G4endl;
-
+      G4int aRadiatorNum = -5;
+ 
+     G4VUserTrackInformation* aUserTrackInfo=aTrack->GetUserInformation();
+     GaussTrackInformation* aRichPhotTrackInfo
+        = (GaussTrackInformation*)aUserTrackInfo;
+                                                                                                                                    
+   if( aRichPhotTrackInfo) {
+     if( aRichPhotTrackInfo->detInfo() ){
+  
+       RichInfo* aRichTypeInfo =
+        ( RichInfo*) (aRichPhotTrackInfo->detInfo());
+       if( aRichTypeInfo && aRichTypeInfo->HasUserPhotInfo() ){
+         RichPhotInfo* aRichPhotInfo =
+                    aRichTypeInfo-> RichPhotInformation();
+         if( aRichPhotInfo ) {
+            
+           aRadiatorNum = aRichPhotInfo->PhotProdRadiatorNum() ;
+ 
+	 }}}}
 
       const G4ThreeVector & prePos = aPreStepPoint->GetPosition();
+
 
       if(prePos.z() >= ZUpsRich1Analysis &&
          prePos.z() <= ZDnsRich1Analysis ){
 
         //          G4cout<<"Now in Step analysis 3 inside Rich1 "<<G4endl;
 
-        G4int aRadiatorNum=-1;
-        const G4ThreeVector & aPhotProdPos = aTrack->  GetVertexPosition();
+	//        const G4ThreeVector & aPhotProdPos = aTrack->  GetVertexPosition();
         const G4ThreeVector & postPos=aPostStepPoint->GetPosition();
         //           G4cout<<"Now in Step analysis 3 postPosZ  "
         //      << postPos<< G4endl;
@@ -105,23 +124,6 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
         G4String postPosMaterialName="NoMaterial";
         G4String aPostVolName="NoVolName ";
 
-        if(aPhotProdPos.z()  >=  C4F10ZBeginAnalysis &&
-           aPhotProdPos.z()  <=  C4F10ZEndAnalysis ) {
-          aRadiatorNum=1;
-          //                G4cout<<" Step Analysis radiator num "<<aRadiatorNum<<G4endl;
-
-        }else if (aPhotProdPos.z()  >=  AgelZBeginAnalysis &&
-                  aPhotProdPos.z()  <=  AgelZEndAnalysis &&
-                  aPhotProdPos.x()  >=  AgelXBeginAnalysis &&
-                  aPhotProdPos.x()  <=  AgelXEndAnalysis &&
-                  aPhotProdPos.y()  >=  AgelYBeginAnalysis &&
-                  aPhotProdPos.y()  <=  AgelYEndAnalysis){
-
-          aRadiatorNum=0;
-
-          //                 G4cout<<" Step Analysis radiator num "<<aRadiatorNum<<G4endl;
-
-        }
 
         if(aPostStepPoint->GetPhysicalVolume()) {
           if(  aPostStepPoint->GetPhysicalVolume()-> GetLogicalVolume()) {
@@ -158,7 +160,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
         // Now for the photon production point in c4f10.
 
-        if( aRadiatorNum == 0 || aRadiatorNum == 1 ) {
+        if( ( aRadiatorNum >=10 && aRadiatorNum <=25 )  || aRadiatorNum == 1 ) {
 
           G4int aStepNum = aTrack -> GetCurrentStepNumber() ;
 
@@ -168,7 +170,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
               aRichCounter->bumpNumPhotProdRich1Gas();
 
-            }else if ( aRadiatorNum == 0 ) {
+            }else if ( aRadiatorNum >=10 && aRadiatorNum <=25 ) {
 
               aRichCounter->bumpNumPhotProdRich1Agel();
             }
@@ -192,7 +194,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
             G4String aPreVolNameA =std::string(aPreVolName,0,33);
 
-            if(aRadiatorNum == 0 ) {
+            if(aRadiatorNum >=10 && aRadiatorNum <=25 ) {
 
               if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
                  aPostVolName ==  LogVolC4F10NameAnalysis) {
@@ -223,7 +225,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 aRichCounter->  bumpNumPhotGasOnRich1Mirror1();
 
-              }else if ( aRadiatorNum == 0 ) {
+              }else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
 
                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror1();
 
@@ -241,7 +243,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
               if(aRadiatorNum == 1 ) {
                 aRichCounter->  bumpNumPhotGasOnRich1Mirror2();
-              } else if ( aRadiatorNum == 0 ) {
+              } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
 
                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror2();
 
@@ -257,7 +259,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 if( aRadiatorNum == 1 ) {
                   aRichCounter->  bumpNumPhotGasOnRich1GasQW();
-                } else if ( aRadiatorNum == 0 ) {
+                } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
 
                   aRichCounter->  bumpNumPhotAgelOnRich1GasQW();
 
@@ -274,7 +276,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 if( aRadiatorNum == 1 ) {
                   aRichCounter->  bumpNumPhotGasOnRich1HpdQW();
-                } else if ( aRadiatorNum == 0 ) {
+                } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
 
                   aRichCounter->  bumpNumPhotAgelOnRich1HpdQW();
 
@@ -353,7 +355,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                   aRichCounter-> bumpNumPhotGasRich1SiDet();
 
 
-                }else if( aPeRadiatorNumber == 0 ) {
+                }else if( aPeRadiatorNumber >=10 && aPeRadiatorNumber <= 25  ) {
 
                   aRichCounter-> bumpNumPhotAgelRich1SiDet();
 

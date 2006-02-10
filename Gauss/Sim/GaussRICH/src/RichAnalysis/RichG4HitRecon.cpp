@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.3 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.4 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 // local
@@ -179,7 +179,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             // first for agel saturated  hits
             int itagel=0;
 
-            while (aRadiatornum == 0 && itagel < NumTkIdRich1Agel ) {
+            while ( aRadiatornum >= 10 && aRadiatornum <= 25  && itagel < NumTkIdRich1Agel ) {
 
               if( TkIdVectRich1Agel[itagel] ==  ChtkId ) {
                 // select only those are not rayleigh scattered.
@@ -333,7 +333,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
 
-            if( aRadiatornum == 0 ) {
+            if( (aRadiatornum >= 10) &&  (aRadiatornum <= 25)   ) {
               // emisptReconZ =  m_MidRich1AgelZ;
 
               if( PhotonAerogelExitPosition.z() > 0.0 ) {
@@ -502,7 +502,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E4 ,
                                                                                             EmisPtUseMidPtRadiator ));
 
-            }else if(  aRadiatornum == 0 ) {
+            }else if(  aRadiatornum >= 10 && aRadiatornum <= 25 ) {
 
 
               aReflPointD1E3=  m_RichG4CkvRec->

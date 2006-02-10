@@ -1,4 +1,4 @@
-// $Id: RichG4AnalysisPhotElec.cpp,v 1.2 2004-02-10 14:24:06 jonesc Exp $
+// $Id: RichG4AnalysisPhotElec.cpp,v 1.3 2006-02-10 17:36:00 seaso Exp $
 // Include files
 
 
@@ -16,6 +16,10 @@
 #include "G4PionMinus.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
+#include "GaussTools/GaussTrackInformation.h"
+#include "RichInfo.h"
+#include "RichPhotInfo.h"
+
 
 /// GaudiKernel
 #include "GaudiKernel/Kernel.h"
@@ -32,6 +36,8 @@
 #include "GaudiKernel/Bootstrap.h"
 
 #include <math.h>
+ 
+
 //-----------------------------------------------------------------------------
 //
 // 2003-06-08 : Sajan EASO
@@ -55,47 +61,32 @@ void RichG4AnalysisPhotElecA ( const G4Step& aStep,
 
       G4int aRadiatorNumber = -1;
 
-      const G4ThreeVector & bPhotProdPos =
-        bTrack->GetVertexPosition();
-      if( bPhotProdPos.z()  >=  C4F10ZBeginAnalysis &&
-          bPhotProdPos.z() <=  C4F10ZEndAnalysis ) {
+     G4VUserTrackInformation* aUserTrackInfo=bTrack->GetUserInformation();
+     GaussTrackInformation* aRichPhotTrackInfo
+        = (GaussTrackInformation*)aUserTrackInfo;
+    
+   if( aRichPhotTrackInfo) {
+     if( aRichPhotTrackInfo->detInfo() ){
+ 
+       RichInfo* aRichTypeInfo =
+        ( RichInfo*) (aRichPhotTrackInfo->detInfo());
+       if( aRichTypeInfo && aRichTypeInfo->HasUserPhotInfo() ){
+         RichPhotInfo* aRichPhotInfo =
+                    aRichTypeInfo-> RichPhotInformation();
+         if( aRichPhotInfo ) {
+           
+	   G4int aRadiatorNum = aRichPhotInfo->PhotProdRadiatorNum() ;
+           if(  aRichCounter ) {
 
-        aRadiatorNumber=1;
+              if(    aRadiatorNumber == 1 ) {
+                aRichCounter->bumpNumPhotGasRich1BeforeQE();              
+	      }else if ( aRadiatorNumber >=10 && aRadiatorNumber <= 25 ) {
+                aRichCounter->bumpNumPhotAgelRich1BeforeQE();
+              } 
 
+              } 
 
-      }else if (bPhotProdPos.z()  >=  AgelZBeginAnalysis &&
-                bPhotProdPos.z()  <=  AgelZEndAnalysis &&
-                bPhotProdPos.x()  >=  AgelXBeginAnalysis &&
-                bPhotProdPos.x()  <=  AgelXEndAnalysis &&
-                bPhotProdPos.y()  >=  AgelYBeginAnalysis &&
-                bPhotProdPos.y()  <=  AgelYEndAnalysis){
-
-        aRadiatorNumber=0;
-      }
-
-      //             G4cout<<"RichPhotElecA RadiatorNum "<<aRadiatorNumber <<G4endl;
-
-      if(  aRichCounter ) {
-
-        if(    aRadiatorNumber == 1 ) {
-
-          aRichCounter->bumpNumPhotGasRich1BeforeQE();
-        }else if ( aRadiatorNumber == 0 ) {
-
-          aRichCounter->bumpNumPhotAgelRich1BeforeQE();
-
-        }
-
-
-      }
-
-
-
-
-
-    }
-
-  }
+	 }}}}}}
 
 }
 
@@ -119,41 +110,35 @@ void RichG4AnalysisPhotElecB ( const G4Step& aStep,
 
       G4int aRadiatorNumber = -1;
 
-      const G4ThreeVector & bPhotProdPos = bTrack->GetVertexPosition();
-      if( bPhotProdPos.z()  >=  C4F10ZBeginAnalysis &&
-          bPhotProdPos.z() <=  C4F10ZEndAnalysis ) {
-        aRadiatorNumber = 1;
-      }else if (bPhotProdPos.z()  >=  AgelZBeginAnalysis &&
-                bPhotProdPos.z()  <=  AgelZEndAnalysis &&
-                bPhotProdPos.x()  >=  AgelXBeginAnalysis &&
-                bPhotProdPos.x()  <=  AgelXEndAnalysis &&
-                bPhotProdPos.y()  >=  AgelYBeginAnalysis &&
-                bPhotProdPos.y()  <=  AgelYEndAnalysis){
 
-        aRadiatorNumber=0;
-      }
+     G4VUserTrackInformation* aUserTrackInfo=bTrack->GetUserInformation();
+     GaussTrackInformation* aRichPhotTrackInfo
+        = (GaussTrackInformation*)aUserTrackInfo;
+    
+   if( aRichPhotTrackInfo) {
+     if( aRichPhotTrackInfo->detInfo() ){
+ 
+       RichInfo* aRichTypeInfo =
+        ( RichInfo*) (aRichPhotTrackInfo->detInfo());
+       if( aRichTypeInfo && aRichTypeInfo->HasUserPhotInfo() ){
+         RichPhotInfo* aRichPhotInfo =
+                    aRichTypeInfo-> RichPhotInformation();
+         if( aRichPhotInfo ) {
+           
+	   G4int aRadiatorNum = aRichPhotInfo->PhotProdRadiatorNum() ;
+           if(  aRichCounter ) {
 
-      if(  aRichCounter ) {
+              if(    aRadiatorNumber == 1 ) {
+                aRichCounter->bumpNumPhotGasRich1AfterQE();              
+	      }else if ( aRadiatorNumber >=10 && aRadiatorNumber <= 25 ) {
+                aRichCounter->bumpNumPhotAgelRich1AfterQE();
+              } 
 
-        if(  aRadiatorNumber == 1 ) {
+              } 
 
-          aRichCounter->bumpNumPhotGasRich1AfterQE();
-        } else if (  aRadiatorNumber == 0 ) {
-
-          aRichCounter->bumpNumPhotAgelRich1AfterQE();
-
-        }
-
-
-      }
-
-
-    }
-
-  }
+	 }}}}}}
 
 }
-
 
 
 //=============================================================================
