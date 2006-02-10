@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.2 2006-02-07 11:07:10 erodrigu Exp $
+// $Id: CircleTraj.h,v 1.3 2006-02-10 12:29:04 graven Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -33,58 +33,58 @@ namespace LHCb
     /// Constructor from an origin, a radius
     /// and a range in angle w.r.t. angle of origin point
     CircleTraj( const Gaudi::XYZPoint& origin,
-                const double radius,
-                const std::pair<double,double> angularRange );
+                double radius,
+                const Range& angularRange );
     
     /// Point on the trajectory at arclength from the starting point    
-    virtual Gaudi::XYZPoint position( const double& arclength ) const;
+    virtual Gaudi::XYZPoint position( double arclength ) const;
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( const double& arclength ) const;
+    virtual Gaudi::XYZVector direction( double arclength ) const;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( const double& arclength ) const;
+    virtual Gaudi::XYZVector curvature( double arclength ) const;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
-    virtual void expansion( const double& arclength,
+    virtual void expansion( double arclength,
                             Gaudi::XYZPoint& p,
                             Gaudi::XYZVector& dp,
                             Gaudi::XYZVector& ddp ) const;
     
     /// Retrieve the derivative of the parabolic approximation to the trajectory
     /// with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( const double& arclength ) const;
+    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double distanceToPoint( const Gaudi::XYZPoint& point ) const;
+    virtual double arclength( const Gaudi::XYZPoint& point ) const;
     
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.
-    virtual double distTo1stError( double& arclength,
-                                   const double& tolerance, 
+    virtual double distTo1stError( double arclength,
+                                   double tolerance, 
                                    int pathDirection = +1 ) const;
     
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.
-    virtual double distTo2ndError( double& arclength,
-                                   const double& tolerance, 
+    virtual double distTo2ndError( double arclength,
+                                   double tolerance, 
                                    int pathDirection = +1 ) const;
     
     /// Range in arclength w.r.t. the starting point
     /// over which the trajectory is valid
-    virtual std::pair<double,double> range() const;
+    virtual Range range() const;
     
     /// Length of trajectory
     virtual double length() const;
     
   private:
-    
+    double phi(double arclen) const { return m_angularRange.first + arclen/m_radius; }
     Gaudi::XYZPoint m_origin;
     double m_radius;  
-    std::pair<double,double> m_angularRange;
-    std::pair<double,double> m_range;
+    Range m_angularRange;
+    Range m_range;
     
   }; // class CircleTraj
   

@@ -1,11 +1,11 @@
-// $Id: DifTraj.h,v 1.2 2006-02-07 11:07:10 erodrigu Exp $
+// $Id: DifTraj.h,v 1.3 2006-02-10 12:29:04 graven Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
 // Include files
 
 // local
-#include "Trajectory.h"
+#include "Kernel/Trajectory.h"
 
 /** @class DifTraj DifTraj.h Kernel/DifTraj.h
  *  
@@ -30,7 +30,7 @@ namespace LHCb
     
     /// Retrieve the derivative of the parabolic approximation to the trajectory
     /// with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,N> derivative( const double& arclength ) const = 0;
+    virtual ROOT::Math::SMatrix<double,3,N> derivative( double arclength ) const = 0;
     
   };
   

@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.5 2006-02-07 11:07:10 erodrigu Exp $
+// $Id: LineTraj.h,v 1.6 2006-02-10 12:29:04 graven Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -24,60 +24,57 @@ namespace LHCb
     /// Enum providing number of colums in derivative matrix
     enum { kSize = 6 };
     
-    /// Default Constructor
-    LineTraj() {};
-    
-    /// Default Destructor
+    /// Destructor
     virtual ~LineTraj() {};
     
     /// Constructor from the middle point and a (unit) direction vector
     LineTraj( const Gaudi::XYZPoint& middle,
               const Gaudi::XYZVector& dir,
-              const std::pair<double,double> range );
+              const Range& range );
     
     /// Constructor from a begin and an end point
     LineTraj( const Gaudi::XYZPoint& begPoint,
               const Gaudi::XYZPoint& endPoint );
     
     /// Point on the trajectory at arclength from the starting point    
-    virtual Gaudi::XYZPoint position( const double& arclength ) const;
+    virtual Gaudi::XYZPoint position( double arclength ) const;
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( const double& arclength ) const;
+    virtual Gaudi::XYZVector direction( double arclength ) const;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( const double& arclength ) const;
+    virtual Gaudi::XYZVector curvature( double arclength ) const;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
-    virtual void expansion( const double& arclength,
+    virtual void expansion( double arclength,
                             Gaudi::XYZPoint& p,
                             Gaudi::XYZVector& dp,
                             Gaudi::XYZVector& ddp ) const;
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( const double& arclength ) const;
+    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double distanceToPoint( const Gaudi::XYZPoint& point ) const;
+    virtual double arclength( const Gaudi::XYZPoint& point ) const;
     
     /// Number of arclengths until deviation of the trajectory from the
     /// expansion reaches the given tolerance.
-    virtual double distTo1stError( double& arclength,
-                                   const double& tolerance, 
+    virtual double distTo1stError( double arclength,
+                                   double tolerance, 
                                    int pathDirection = +1 ) const;
     
     /// Number of arclengths until deviation of the trajectory from the
     /// expansion reaches the given tolerance. 
-    virtual double distTo2ndError( double& arclength,
-                                   const double& tolerance, 
+    virtual double distTo2ndError( double arclength,
+                                   double tolerance, 
                                    int pathDirection = +1 ) const;
     
     /// Range in arclength w.r.t. the starting point
     /// over which the trajectory is valid
-    virtual std::pair<double,double> range() const;
+    virtual Range range() const;
     
     /// Length of trajectory
     virtual double length() const;
@@ -86,7 +83,7 @@ namespace LHCb
     
     Gaudi::XYZPoint  m_pos;
     Gaudi::XYZVector m_dir;
-    std::pair<double,double> m_range;
+    Range            m_range;
     
   }; // class LineTraj
   
