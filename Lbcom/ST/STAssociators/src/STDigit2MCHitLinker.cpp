@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.3 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STDigit2MCHitLinker.cpp,v 1.4 2006-02-10 15:27:00 cattanem Exp $
 
 // Event
 #include "Event/STDigit.h"
@@ -24,15 +24,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<STDigit2MCHitLinker>          s_factory ;
-const        IAlgFactory& STDigit2MCHitLinkerFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( STDigit2MCHitLinker );
 
 STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructer
-  declareProperty("OutputDataBase", m_outputData  = "TTDigits2MCHits" );
+  declareProperty("OutputDataBase", m_outputData = LHCb::STDigitLocation::TTDigits + "2MCHits" );
   declareProperty("InputData", m_inputData  = LHCb::STDigitLocation::TTDigits);
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.05);

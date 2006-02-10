@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.5 2006-02-09 16:41:32 cattanem Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.6 2006-02-10 15:27:00 cattanem Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -33,7 +33,7 @@ STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
   : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructer
-  declareProperty("OutputData", m_outputData  ="TTClusters2MCHits");
+  declareProperty("OutputData", m_outputData = LHCb::STClusterLocation::TTClusters + "2MCHits" );
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);
   declareProperty("oneRef",m_oneRef = false);
@@ -56,7 +56,7 @@ StatusCode STCluster2MCHitLinker::initialize() {
 
   m_hitLocation = LHCb::MCHitLocation::TT;
   m_inputData   = LHCb::STClusterLocation::TTClusters;
-  m_asctLocation= "TTDigits2MCHits";
+  m_asctLocation= LHCb::STDigitLocation::TTDigits + "2MCHits";
 
   STDetSwitch::flip(m_detType,m_hitLocation);
   STDetSwitch::flip(m_detType,m_asctLocation);
