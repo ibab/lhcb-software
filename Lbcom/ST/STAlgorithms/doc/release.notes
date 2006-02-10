@@ -1,6 +1,9 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+! 2006-02-08
+ - tune/bug fixes in IT options
+
 !======================= STAlgorithms v1r0 2006-02-10 ========================
 ! 2006-02-08 M. Needham
  - protect against zero charge on strips 

@@ -69,6 +69,7 @@ ITDigitCreator.detType = "IT";
 ITClusterCreator.detType = "IT";
 
 ToolSvc.STSignalToNoiseToolIT.detType = "IT";
-ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0013;
+ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0015;
+
 
 

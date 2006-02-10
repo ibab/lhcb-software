@@ -52,5 +52,5 @@ MCTTDepositCreator.response43capCoupling.values = {0.0, 0.47,  0.8, 1.00, 1.07,
 MCTTDepositCreator.response43capCoupling.capacitance = 55*picofarad;
 
 
-ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.001;
+
 
