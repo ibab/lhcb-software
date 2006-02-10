@@ -5,8 +5,8 @@ Package manager : M. Needham
 !======================= STAssociators v1r0 2006-02-10 ========================
 ! 2006-02-10 - Marco Cattaneo
  - Use consistent convention for output locations of all linkers:
-   '/Event/Link/'+ xxxLocation             for links from xxx to MCParticle
-   '/Event/Link/'+ xxxLocation + '2MCHits' for links from xxx to MCHits
+   ('/Event/Link/'+) xxxLocation             for links from xxx to MCParticle
+   ('/Event/Link/'+) xxxLocation + '2MCHits' for links from xxx to MCHits
 
 ! 2006-02-09 M Needham
  - Modify STCluster2Particle linker
