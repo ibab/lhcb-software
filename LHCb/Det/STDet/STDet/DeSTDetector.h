@@ -39,6 +39,10 @@ class DeSTDetector : public DetectorElement  {
 
 public:
 
+  typedef std::vector<DeSTSector*> Sectors;
+  typedef std::vector<DeSTLayer*> Layers;
+  typedef std::vector<DeSTStation*> Stations;
+
   /** Constructor */
   DeSTDetector ( const std::string& name = "" ) ;
 
@@ -79,18 +83,17 @@ public:
   /** vector of stattions
   * @return vector of stations
   */
-  const std::vector<DeSTStation*> stations() const;
+  const Stations& stations() const;
 
   /** flat vector of sectors
   * @return vector of sectors
   */
-  const std::vector<DeSTSector*> sectors() const;
+  const Sectors& sectors() const;
 
   /** flat vector of layers
   * @return vector of layers
   */
-  const std::vector<DeSTLayer*> layers() const;
-
+  const Layers& layers() const;
 
   /** 
   *  short cut to pick up the wafer corresponding to x,y,z
@@ -110,10 +113,10 @@ public:
   bool isValid(const LHCb::STChannelID aChannel);
 
   /** get the next channel left */
-  LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
+  LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
 
   /** get the next channel right */
-  LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
+  LHCb::STChannelID nextRight(const LHCb::STChannelID testChan);
 
   /** get the trajectory 
    @return trajectory
@@ -123,33 +126,24 @@ public:
   /** get the number of strips in detector*/
   unsigned int nStrip() const; 
 
-  /** get the number of strips in a sector*/
-  unsigned int nStripPerSector() const; 
- 
 protected:
 
   /** set the first Station number */
   void setFirstStation(const unsigned int iStation);
 
-  /** set the detector pitch */
-  void setPitch(const double pitch);
-
   /** set the strip number  */
   void setNstrip(const unsigned int nStrip);
  
-  std::vector<DeSTStation*> m_stations;
+  Stations m_stations;
 
-  std::vector<DeSTSector*> m_sectors;
+  Sectors m_sectors;
 
-  std::vector<DeSTLayer*> m_layers;
+  Layers m_layers;
 
 private:
 
-  bool isValidStrip(const unsigned int aStrip) const;
-
   unsigned int m_firstStation;
-  unsigned int m_nStripPerSector;
-  double m_pitch;
+  unsigned int m_nStrip;
   
 };
 
@@ -182,69 +176,25 @@ inline bool DeSTDetector::contains(const LHCb::STChannelID aChannel) const{
 	  &&(aChannel.station() < lastStation()));
 }
 
-inline double DeSTDetector::pitch() const{
-  return m_pitch;
-}
-
-inline void DeSTDetector::setPitch(const double pitch) {
-  m_pitch = pitch;
-}
 
 inline unsigned int DeSTDetector::nStrip() const{
-  return m_nStripPerSector*m_sectors.size();
-}
-
-inline unsigned int DeSTDetector::nStripPerSector() const{
-  return m_nStripPerSector*m_sectors.size();
+  return m_nStrip;
 }
 
 inline void DeSTDetector::setNstrip(const unsigned int nStrip) {
-  m_nStripPerSector = nStrip;
+  m_nStrip = nStrip;
 }
 
-inline const std::vector<DeSTStation*> DeSTDetector::stations() const{
+inline const DeSTDetector::Stations& DeSTDetector::stations() const{
   return m_stations;
 }
 
-inline const std::vector<DeSTSector*> DeSTDetector::sectors() const{
+inline const DeSTDetector::Sectors&  DeSTDetector::sectors() const{
   return m_sectors;
 }
 
-inline const std::vector<DeSTLayer*> DeSTDetector::layers() const{
+inline const DeSTDetector::Layers& DeSTDetector::layers() const{
   return m_layers;
-}
-
-inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel) {
-  DeSTSector* aSector = findSector(aChannel);
-  return (aSector == 0 ? false : aChannel.strip() > 0 && aChannel.strip() <= aSector->nStrip() );   
-}
-
-inline bool  DeSTDetector::isValidStrip(const unsigned int iStrip) const{
-  return(iStrip < m_nStripPerSector);
-} 
-
-inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID aChannel) const{
-
-  LHCb::STChannelID testChan(aChannel.type(),
-                       aChannel.station(),
-                       aChannel.layer(), 
-                       aChannel.detRegion(),
-                       aChannel.sector(), 
-                       aChannel.strip() - 1u);
-
-  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
-}
-
-inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID aChannel) const{
-
-  LHCb::STChannelID testChan(aChannel.type(),
-                       aChannel.station(),
-                       aChannel.layer(), 
-                       aChannel.detRegion(),
-                       aChannel.sector(), 
-                       aChannel.strip() + 1u);
-
-  return (isValidStrip(aChannel) == true ? testChan : LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
 }
 
 inline void DeSTDetector::trajectory(const LHCb::STChannelID& aChan) {
@@ -253,6 +203,16 @@ inline void DeSTDetector::trajectory(const LHCb::STChannelID& aChan) {
     aSector->trajectory(aChan);
   }
   return;  
+}
+
+inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID aChannel) {
+  DeSTSector* aSector = findSector(aChannel);
+  return (0 != aSector ? aSector->nextLeft(aChannel): LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
+}
+
+inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID aChannel) {
+  DeSTSector* aSector = findSector(aChannel);
+  return (0 != aSector ? aSector->nextRight(aChannel): LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
 }
 
 #endif // _DeSTDetector_H

@@ -45,8 +45,7 @@ StatusCode DeTTDetector::initialize() {
     // make a flat list of sectors
     flatten();
     if (!m_sectors.empty()) {
-     setPitch(m_sectors.front()->pitch());
-     setNstrip(m_sectors.front()->nStrip());
+     setNstrip(m_sectors.front()->nStrip()* m_sectors.size());
     }
   }
   return sc;

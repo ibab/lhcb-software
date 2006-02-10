@@ -41,8 +41,7 @@ StatusCode DeITDetector::initialize() {
   }
   else {
     flatten();
-    setPitch(m_sectors.front()->pitch()); 
-    setNstrip(m_sectors.front()->nStrip());
+    setNstrip(m_sectors.front()->nStrip()*m_sectors.size());
   }
   return sc;
   

@@ -1,9 +1,10 @@
 
 #include "STDet/DeSTSector.h"
 
-
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
+
+#include "Kernel/SystemOfUnits.h"
 
 /** @file DeSTSector.cpp
 *
@@ -29,34 +30,53 @@ DeSTSector::~DeSTSector() {
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
   // stream to cout
-  os << " Sector : "  << name()
-     << "type " << type() 
-     << " pitch " << m_pitch 
-     << "n strip" << m_nStrip
-     << " capacitance " << m_capacitance
-     << " u min " << m_uMinLocal 
-     << " u max " << m_uMaxLocal
-     << " v min " << m_vMinLocal 
-     << " v max " << m_vMaxLocal
-     << "dead width " << m_deadWidth
-     << std::endl;
+  os << " Sector :  "  << name()
+     << "\n type  " << type() 
+     << "\n pitch " << m_pitch 
+     << "\n strip " << m_nStrip
+     << "\n capacitance " << m_capacitance/picofarad
+     << "\n u min " << m_uMinLocal 
+     << "\n u max " << m_uMaxLocal
+     << "\n v min  " << m_vMinLocal 
+     << "\n  v max " << m_vMaxLocal
+     << "\n dead width " << m_deadWidth
+     << "\n center " << globalCentre()
+     << std::endl; 
 
+  /*
+   const ILVolume* lv = this->geometry()->lvolume();
+   const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
+
+   os << " Sector :  "  << name()
+     << "\n type  " << type() 
+     << "\n pitch " << m_pitch 
+     << "\n strip " << m_nStrip
+     << "\n capacitance " << m_capacitance/picofarad
+     << "\n active width" << m_uMaxLocal - m_uMinLocal
+     << "\n total width " << mainBox->xsize()
+     << "\n active height" << m_vMaxLocal - m_vMinLocal
+     << "\n total height " << mainBox->ysize()
+     << "\n dead width " << m_deadWidth
+     << "\n center " << globalCentre()
+     << std::endl; 
+  */
   return os;
 }
 
 MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Sector : "  << name()
-     << "type " << type() 
-     << " pitch " << m_pitch 
-     << "n strip" << m_nStrip
-     << " capacitance " << m_capacitance
-     << " u min " << m_uMinLocal 
-     << " u max " << m_uMaxLocal
-     << " v min " << m_vMinLocal 
-     << " v max " << m_vMaxLocal
-     << "dead width " << m_deadWidth
+  os << " Sector : \n "  << name()
+     << "type \n " << type() 
+     << " pitch \n " << m_pitch 
+     << "n strip \n " << m_nStrip
+     << " capacitance \n " << m_capacitance/picofarad
+     << " u min \n " << m_uMinLocal 
+     << " u max \n " << m_uMaxLocal
+     << " v min \n " << m_vMinLocal 
+     << " v max  \n " << m_vMaxLocal
+     << "dead width \n " << m_deadWidth
+     << "\n center " << globalCentre()
      << std::endl;
 
   return os;
@@ -80,18 +100,19 @@ StatusCode DeSTSector::initialize() {
     unsigned int nSensors = param<int>("nSensors");
 
     // guard ring
-    double m_deadWidth = param<double>("verticalGuardRing");  
+    m_deadWidth = param<double>("verticalGuardRing");  
 
     // geometry: uMin, uMax
     const ILVolume* lv = this->geometry()->lvolume();
     const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
-    m_uMaxLocal = 0.5*(mainBox->xsize() - m_pitch*m_nStrip);
+    m_uMaxLocal = 0.5*(m_pitch*m_nStrip);
     m_uMinLocal = -m_uMaxLocal;
+
+    m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
 
     // and vMin, vMax
     m_vMaxLocal = 0.5*(mainBox->ysize() - m_deadWidth);
     m_vMinLocal = -m_vMaxLocal;
-
  
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
@@ -104,7 +125,7 @@ StatusCode DeSTSector::initialize() {
   return StatusCode::SUCCESS;
 }
 
-STChannelID DeSTSector::localUToStrip(const double u) const{
+unsigned int DeSTSector::localUToStrip(const double u) const{
 
   // convert local u to a strip
   unsigned int strip;
@@ -117,11 +138,7 @@ STChannelID DeSTSector::localUToStrip(const double u) const{
   else {
     strip = m_firstStrip;
   }
-  return STChannelID(elementID().type(),
-                     elementID().station(), 
-                     elementID().layer(), 
-                     elementID().detRegion(),
-                     elementID().sector(), strip);
+  return strip;
 }
 
 bool DeSTSector::localInActive(const Gaudi::XYZPoint& point) const{
@@ -157,5 +174,36 @@ void DeSTSector::trajectory(const STChannelID& aChan) const{
 
   return;
 }
+
+STChannelID DeSTSector::nextLeft(const STChannelID testChan) const{
+
+  if ((contains(testChan))&& (isStrip(testChan.strip()+ 1u) == true)){
+    return STChannelID(testChan.type(),
+                      testChan.station(),
+                      testChan.layer(), 
+                      testChan.detRegion(),
+                      testChan.sector(), 
+                      testChan.strip() - 1u);
+   }
+   else {
+     return LHCb::STChannelID(0u,0u,0u,0u,0u,0u);
+   }
+}
+
+STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const{
+
+  if ((contains(testChan) == true)&& (isStrip(testChan.strip()+ 1u) == true)){
+    return STChannelID(testChan.type(),
+                       testChan.station(),
+                       testChan.layer(), 
+                       testChan.detRegion(),
+                       testChan.sector(), 
+                       testChan.strip() + 1u);
+  }
+  else {
+    return LHCb::STChannelID(0u,0u,0u,0u,0u,0u);
+  }
+}
+
 
 

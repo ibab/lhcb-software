@@ -65,7 +65,7 @@ public:
   * @param local u
   * @return strip 
   **/ 
-  LHCb::STChannelID localUToStrip(const double u) const;
+  unsigned int localUToStrip(const double u) const;
 
   /** convert strip to local U
   * @param strip
@@ -84,11 +84,21 @@ public:
   */
   bool localInActive(const Gaudi::XYZPoint& point) const;
 
-
   /** 
    * @return capacitance
   */ 
   double capacitance() const;
+
+  /** strip length 
+  * @return strip length
+  */
+  double stripLength() const;
+
+  /** get the next channel left */
+  LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
+
+  /** get the next channel right */
+  LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
   /**
   * @return type
@@ -108,6 +118,7 @@ private:
   double m_pitch;
   unsigned int m_nStrip;
   double m_capacitance;
+  double m_stripLength;
 
   double m_uMinLocal;
   double m_uMaxLocal;
@@ -151,6 +162,10 @@ inline double DeSTSector::localU(const unsigned int strip) const{
 
 inline double DeSTSector::capacitance() const{
   return m_capacitance;
+}
+
+inline double DeSTSector::stripLength() const {
+  return m_stripLength;
 }
 
 inline std::string DeSTSector::type() const {
