@@ -1,13 +1,11 @@
-// $Id: TrackMasterFitter.cpp,v 1.5 2006-01-27 13:30:14 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.6 2006-02-10 16:29:23 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from CLHEP
-#include "CLHEP/Matrix/DiagMatrix.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// from LHCbInterfaces
+#include "Kernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -271,11 +269,6 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     }
   }
 
-  // Sort the states in z
-  std::vector<State*>& states = track.states();
-  std::sort( states.begin(), states.end(),
-             TrackFunctor::increasingByZ<State>() );
-
   if ( m_debugLevel ) {
     debug() << "Track " << track.key() << " has " << track.nStates() 
             << " states after fit" << endmsg << "  at z = " ;
@@ -351,7 +344,7 @@ StatusCode TrackMasterFitter::reSeed( State& seed, State& newSeed )
   }
 
   // use the large covariance matrix of the previous seed for new seed
-  HepSymMatrix& tC = newSeed.covariance();
+  TrackMatrix& tC = newSeed.covariance();
   tC = seed.covariance();
   
   return StatusCode::SUCCESS;
@@ -393,7 +386,7 @@ void TrackMasterFitter::clearNodes( std::vector<Node*>& nodes )
 //=========================================================================
 double TrackMasterFitter::closestToBeamLine( State& state ) const
 {
-  HepVector& vec = state.stateVector();
+  TrackVector& vec = state.stateVector();
   double z = state.z();
   // check on division by zero (track parallel to beam line!)
   if ( vec[2] != 0 || vec[3] != 0 ) {
@@ -444,12 +437,12 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   }
 
   // reserve some space in node vector
-  std::vector<Measurement*>& measures = track.measurements();
+  const std::vector<Measurement*>& measures = track.measurements();
   nodes.reserve( measures.size() + m_zPositions.size() );
 
   // Create the nodes and add them to the private copy
-  for ( std::vector<Measurement*>::reverse_iterator it = measures.rbegin(); 
-        it != measures.rend(); ++it ) {
+  for ( std::vector<Measurement*>::const_reverse_iterator it =
+          measures.rbegin(); it != measures.rend(); ++it ) {
     Measurement& meas = *(*it);
     FitNode* node = new FitNode( meas );
     nodes.push_back( node );
@@ -481,3 +474,4 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================

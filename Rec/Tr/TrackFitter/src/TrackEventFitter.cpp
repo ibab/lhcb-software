@@ -1,17 +1,19 @@
-// $Id: TrackEventFitter.cpp,v 1.5 2005-11-28 15:18:24 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.6 2006-02-10 16:29:23 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-// from CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// from LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/Track.h"
 
 // local
 #include "TrackEventFitter.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackEventFitter

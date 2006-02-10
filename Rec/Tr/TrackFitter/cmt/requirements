@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.4 2006-01-27 13:30:14 erodrigu Exp $
+# $Id: requirements,v 1.5 2006-02-10 16:29:22 erodrigu Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
 package           TrackFitter
-version           v1r1
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -11,8 +11,8 @@ branches          cmt doc src
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use     TrackEvent      v1r*    Event
-use     TrackFitEvent	v1r*    Tr
+use     TrackEvent      v*      Event
+use     TrackFitEvent	v*      Tr
 use     TrackInterfaces	v*      Tr
 use     GaudiAlg        v*
 

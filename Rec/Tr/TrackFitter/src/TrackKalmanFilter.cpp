@@ -1,19 +1,22 @@
-// $Id: TrackKalmanFilter.cpp,v 1.7 2006-01-27 13:30:14 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.8 2006-02-10 16:29:23 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from CLHEP
-#include "CLHEP/Matrix/DiagMatrix.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// from LHCbDefinitions
+#include "Kernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
+#include "Event/SHacks.h"
+#include "Event/TrackUnitsConverters.h"
 
 // local
 #include "TrackKalmanFilter.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackKalmanFilter
@@ -138,8 +141,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 //=========================================================================
 StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
 {
-  HepVector prevStateVec = aState.stateVector();
-  HepSymMatrix prevStateCov = aState.covariance();
+  TrackVector prevStateVec = aState.stateVector();
+  TrackMatrix prevStateCov = aState.covariance();
   double z = aNode.z();
   double deltaZ = z - aState.z();
 
@@ -154,21 +157,24 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
 
       // store transport matrix F, noise matrix and vector for next iterations
       if ( m_storeTransport ) {
-        const HepMatrix& F = m_extrapolator->transportMatrix();
+        const TransportMatrix& F = m_extrapolator -> transportMatrix();
         aNode.setTransportMatrix( F );
-        aNode.setTransportVector( aState.stateVector() - F * prevStateVec );    
-        aNode.setNoiseMatrix( aState.covariance() - prevStateCov.similarity(F));
+        aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
+        aNode.setNoiseMatrix( aState.covariance() -
+                              SHacks::Similarity<TransportMatrix,TrackMatrix>
+                              ( F, prevStateCov ) );
         aNode.setTransportDeltaZ( deltaZ );
       }
     }
     // next iterations: update node with transport information 
     // from 1st iteration to save CPU time
     else { 
-      const HepMatrix& F = aNode.transportMatrix();
-      HepVector& stateVec = aState.stateVector();
-      HepSymMatrix& stateCov = aState.covariance();
+      const TransportMatrix& F = aNode.transportMatrix();
+      TrackVector& stateVec = aState.stateVector();
+      TrackMatrix& stateCov = aState.covariance();
       stateVec = F * stateVec + aNode.transportVector();
-      stateCov = stateCov.similarity(F) + aNode.noiseMatrix();
+      stateCov = SHacks::Similarity<TransportMatrix,TrackMatrix>( F, stateCov )
+                 + aNode.noiseMatrix();
       aState.setZ( z );
       aState.setLocation( (aNode.state()).location() );
     }
@@ -183,11 +189,11 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
     StatusCode sc = m_projector -> project( aState, meas );
     if ( sc.isFailure() ) 
       return failure( "not able to project a state into a measurement" );
-    const HepVector& H = m_projector -> projectionMatrix();
+    const TrackVector& H = m_projector -> projectionMatrix();
 
     // calculate predicted residuals
-    double res       = m_projector->residual();
-    double errorRes  = m_projector->errResidual();
+    double res       = m_projector -> residual();
+    double errorRes  = m_projector -> errResidual();
 
     aNode.setProjectionMatrix( H );
     aNode.setResidual( res ) ;
@@ -212,8 +218,8 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   }
 
   // get reference to the state vector and cov
-  HepVector&    tX = state.stateVector();
-  HepSymMatrix& tC = state.covariance();
+  TrackVector& tX = state.stateVector();
+  TrackMatrix& tC = state.covariance();
 
   // get the predicted residuals
   double res        = node.residual();
@@ -221,17 +227,28 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   double errorMeas2 = meas.resolution2();
 
   // calculate gain matrix K
-  const HepVector& H = node.projectionMatrix();
-  HepVector mK = (tC * H) / errorRes2;
+  const TrackVector& H = node.projectionMatrix();
+  TrackVector mK = (tC * H) / errorRes2;
 
-  // update state vector 
+  // update the state vector
   tX += ( mK * res );
 
-  HepMatrix B  = HepDiagMatrix(tC.num_row(), 1) - ( mK * H.T());
-  tC.assign( B * tC * B.T() + ( mK * errorMeas2 * mK.T()));
+  // update the covariance matrix
+  //TODO: remove the work-around as soon as MathCore has something to replace
+  //HepMatrix B  = HepDiagMatrix(tC.num_row(), 1) - ( mK * H.T());
+  //tC.assign( B * tC * B.T() + ( mK * errorMeas2 * mK.T()));
+  //These 2 lines are equal to tC.assign( B * tC ) !
+  //BTW, from the above how does one get tC to be symmetric at the end?
+  TransportMatrix uniDiagMat = TransportMatrix();
+  for ( unsigned int ind = 0; ind < uniDiagMat.kRows; ++ind )
+    uniDiagMat(ind,ind) = 1.;
+  // hack to do the product (5x1) * (1x5) of TrackVectors
+  TransportMatrix B = uniDiagMat - TrackVectorProd( mK, H );
+  tC.Place_at( B * tC, 0, 0 );
 
-  double HK = dot ( H, mK );
-  res     *= (1 - HK);
+  //double HK = dot ( H, mK );
+  double HK = ROOT::Math::Dot( H, mK );
+  res      *= (1 - HK);
   errorRes2 = (1 - HK) * ( errorMeas2 );
 
   node.setResidual( res );
@@ -243,6 +260,21 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+// 
+//=========================================================================
+TransportMatrix TrackVectorProd( TrackVector& vec1, const TrackVector& vec2 )
+{
+  // this is really an ugly hack!
+  TrackMatrix result = TrackMatrix();
+
+  for ( unsigned int i = 0; i < vec1.Dim(); ++i ) {
+    for ( unsigned int j = 0; j < vec2.Dim(); ++j ) {
+      result(i,j) = vec1[i] * vec2[j];
+    }
+  }
+  return result;
+}
 
 //----------------------------------------------------------------
 // smooth a node on a track
@@ -255,45 +287,47 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 {
   // preliminaries, first we need to invert the _predicted_ covariance
   // matrix at k+1
-  const HepVector&    prevNodeX = prevNode.predictedState().stateVector();
-  const HepSymMatrix& prevNodeC = prevNode.predictedState().covariance();
+  const TrackVector& prevNodeX = prevNode.predictedState().stateVector();
+  const TrackMatrix& prevNodeC = prevNode.predictedState().covariance();
 
   // check that the elements are not too large else dsinv will crash
-  StatusCode sc = checkInvertMatrix(prevNodeC);
+  StatusCode sc = checkInvertMatrix( prevNodeC );
   if ( sc.isFailure() ) return failure("not valid matrix in smoother"); 
 
   // invert the covariance matrix
-  HepSymMatrix invPrevNodeC = prevNodeC;
-  sc = invertMatrix(invPrevNodeC);
+  TrackMatrix invPrevNodeC = prevNodeC;
+  sc = invertMatrix( invPrevNodeC );
   if ( sc.isFailure() ) {
     debug() << "invPrevNodeC = " << invPrevNodeC << endreq;
-    return failure("inverting matrix in smoother");
+    return failure( "inverting matrix in smoother" );
   }
   
 
   // references to _predicted_ state + cov of this node from the first step
-  HepVector&    thisNodeX = thisNode.state().stateVector();
-  HepSymMatrix& thisNodeC = thisNode.state().covariance();
+  TrackVector& thisNodeX = thisNode.state().stateVector();
+  TrackMatrix& thisNodeC = thisNode.state().covariance();
 
   // Save filtered state vector
-  HepVector oldNodeX = thisNodeX ;
+  TrackVector oldNodeX = thisNodeX ;
 
   // transport
-  const HepMatrix& F = prevNode.transportMatrix();
+  const TransportMatrix& F = prevNode.transportMatrix();
 
   // calculate gain matrix A
-  HepMatrix A = thisNodeC * F.T() * invPrevNodeC;
+  TransportMatrix A = thisNodeC * ROOT::Math::Transpose( F ) * invPrevNodeC;
 
   // best = smoothed state at prev Node
-  const HepVector&    prevNodeSmoothedX = prevNode.state().stateVector();
-  const HepSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
+  const TrackVector& prevNodeSmoothedX = prevNode.state().stateVector();
+  const TrackMatrix& prevNodeSmoothedC = prevNode.state().covariance();
 
   // smooth state
   thisNodeX += A * (prevNodeSmoothedX - prevNodeX);
 
   // smooth covariance  matrix
-  HepSymMatrix covDiff = prevNodeSmoothedC - prevNodeC;
-  HepSymMatrix covUpDate = covDiff.similarity(A);
+  TrackMatrix covDiff = prevNodeSmoothedC - prevNodeC;
+  TrackMatrix covUpDate =
+    SHacks::Similarity<TransportMatrix,TrackMatrix>( A, covDiff );
+
   thisNodeC += covUpDate;
 
   // check that the cov matrix is positive
@@ -301,12 +335,15 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   if ( sc.isFailure() ) return Warning("non-positive Matrix in smoother");
 
   // No need to update residuals for node w/o measurement
-  if ( thisNode.hasMeasurement() ) { 
+  if ( thisNode.hasMeasurement() ) {
     // update = smooth the residuals
-    const HepVector& H = thisNode.projectionMatrix();
-    double res = thisNode.residual() - dot( H, thisNodeX - oldNodeX ) ;
+    const TrackVector& H = thisNode.projectionMatrix();
+    double res = thisNode.residual()
+                 - ROOT::Math::Dot( H, thisNodeX - oldNodeX ) ;
     thisNode.setResidual( res );
-    double errRes2 = thisNode.errResidual2() - covUpDate.similarity( H );
+    double errRes2 =
+      thisNode.errResidual2()
+      - SHacks::Similarity<5,TrackMatrix>( H, covUpDate );
     if ( errRes2 < 0.) {
       return Warning( "Negative residual error in smoother!" );
     }
@@ -343,12 +380,12 @@ void TrackKalmanFilter::computeChiSq( Track& track )
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkInvertMatrix( const HepSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkInvertMatrix( const TrackMatrix& mat ) 
 {
-  unsigned int nParam = (unsigned int) mat.num_row();
-  for ( unsigned int i = 0; i < nParam; ++i ) {
-    for ( unsigned int j = 0; j < nParam; ++j ) {
-      if ( mat[i][j] > 1e20 )
+  unsigned int nParams = (unsigned int) mat.kRows;
+  for ( unsigned int i = 0; i < nParams; ++i ) {
+    for ( unsigned int j = 0; j < nParams; ++j ) {
+      if ( mat(i,j) > 1e20 )
         return Warning( "Covariance errors too big to invert!" );
     }
   }
@@ -358,11 +395,11 @@ StatusCode TrackKalmanFilter::checkInvertMatrix( const HepSymMatrix& mat )
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkPositiveMatrix( HepSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkPositiveMatrix( TrackMatrix& mat ) 
 {
-  unsigned int nParam = (unsigned int) mat.num_row();
-  for ( unsigned int i=0; i < nParam; ++i ) {
-    if ( mat[i][i] <= 0. )
+  unsigned int nParams = (unsigned int) mat.kRows;
+  for ( unsigned int i=0; i < nParams; ++i ) {
+    if ( mat(i,i) <= 0. )
       return Warning( "Covariance matrix has non-positive elements!" );
   }
 
@@ -379,74 +416,25 @@ StatusCode TrackKalmanFilter::checkPositiveMatrix( HepSymMatrix& mat )
 // M. Needham 13/6/2000
 // J.A. Hernando (we trust you) 15/05/05
 //=========================================================================
-StatusCode TrackKalmanFilter::invertMatrix( HepSymMatrix& invPrevNodeC )
+StatusCode TrackKalmanFilter::invertMatrix( TrackMatrix& invPrevNodeC )
 {
   // Geant3 units
-  cToG3(invPrevNodeC);
+  TrackUnitsConverters::convertToG3( invPrevNodeC );
 
-  HepSymMatrix tempMatrix = invPrevNodeC;
+  //TODO: why is this here? TrackMatrix tempMatrix = invPrevNodeC;
 
-  int ifail;
-  invPrevNodeC.invert(ifail);
+  bool OK = invPrevNodeC.Invert();
 
   // Geant4 units
-  cToG4(invPrevNodeC);
+  TrackUnitsConverters::convertToG4( invPrevNodeC );
 
-  if ( ifail != 0 ) {
+  if ( !OK ) {
     warning() << "Failed to invert covariance matrix, failure code "
-              << ifail << endreq;
+              << OK << endreq;
     return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  Change some units for better matrix invertability
-//=========================================================================
-void TrackKalmanFilter::cToG3( HepSymMatrix& C )
-{
-  // cov matrix
-  C[0][0] /= cm2;
-  C[0][1] /= cm2;
-  C[0][2] /= cm;
-  C[0][3] /= cm;
-  C[0][4]  = C[0][4]*GeV/cm;
-
-  C[1][1] /= cm2;
-  C[1][2] /= cm;
-  C[1][3] /= cm;
-  C[1][4]  = C[1][4]*GeV/cm;
-
-  C[2][4]  = C[2][4]*GeV;
-
-  C[3][4]  = C[3][4]*GeV;
-
-  C[4][4]  = C[4][4]*GeV*GeV;
-}
-
-//=========================================================================
-//  Restore units after inversion. same as cToG3 !
-//=========================================================================
-void TrackKalmanFilter::cToG4( HepSymMatrix& invC )
-{
-  // cov matrix
-  invC[0][0] /= cm2;
-  invC[0][1] /= cm2;
-  invC[0][2] /= cm;
-  invC[0][3] /= cm;
-  invC[0][4]  = invC[0][4]*GeV/cm;
-
-  invC[1][1] /= cm2;
-  invC[1][2] /= cm;
-  invC[1][3] /= cm;
-  invC[1][4]  = invC[1][4]*GeV/cm;
-
-  invC[2][4]  = invC[2][4]*GeV;
-
-  invC[3][4]  = invC[3][4]*GeV;
-
-  invC[4][4]  = invC[4][4]*GeV*GeV;
 }
 
 //=========================================================================
