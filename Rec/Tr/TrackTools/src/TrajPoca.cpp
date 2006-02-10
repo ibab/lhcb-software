@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.4 2006-02-10 12:34:16 graven Exp $
+// $Id: TrajPoca.cpp,v 1.5 2006-02-10 20:38:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -105,8 +105,8 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
           // downgrade to a point poca
           XYZVector dist = XYZVector(0.,0.,0.);
           restrictRange2 ? 
-            minimize(traj1,arclength1,restrictRange1,newPos2,dist,precision)
-            : minimize( traj2,arclength2,restrictRange2,newPos1,dist,precision);
+              minimize(traj1,arclength1,restrictRange1,newPos2,dist,precision)
+            : minimize(traj2,arclength2,restrictRange2,newPos1,dist,precision);
           status = StatusCode::SUCCESS; // "Stuck poca"
           finished = true;
         }
@@ -155,28 +155,13 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
 //=============================================================================
 StatusCode TrajPoca::minimize( const Trajectory& traj,
                                double& arclength,
-                               bool /*restrictRange*/,
+                               bool restrictRange,
                                const XYZPoint& pt,
-                               XYZVector& /* distance */,
+                               XYZVector& distance,
                                double precision )
 {
-        //FIXME: implement properly!!!!
-        //FIXME: implement restrictRange
-  // Delegate to the trajectory class
-  double prevflt   = arclength;
-  arclength        = traj.arclength( pt );
-  double step      = arclength - prevflt;
-  int pathDir      = (step > 0.) ? 1 : -1;
-  double distToErr = traj.distTo1stError( prevflt, precision, pathDir );
-  bool finished    = fabs(step) < distToErr ;
-
-  // TODO: Calculate the distance to the point using the expansion function
-  //       and neglect the third order term (iterate instead, untill required
-  //       precision is reached).
-  //       This is needed in case the arclength function is not accurate
-  //       enough or not implemented)
-  if ( !finished ) return StatusCode::FAILURE;
-
+  arclength = restrictLen(traj.arclength(pt),traj,restrictRange);
+  distance = traj.position(arclength)-pt;
   return StatusCode::SUCCESS;
 };
 
@@ -200,7 +185,7 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
 
   traj1.expansion(arclength1, pos1, dir1, delDir1);
   traj2.expansion(arclength2, pos2, dir2, delDir2);
-  XYZVector delta = pos1 - pos2;
+  XYZVector delta(  pos1 - pos2 );
   double ua  = -delta.Dot(dir1);
   double ub  =  delta.Dot(dir2);
   double caa = dir1.mag2() + delta.Dot(delDir1);
