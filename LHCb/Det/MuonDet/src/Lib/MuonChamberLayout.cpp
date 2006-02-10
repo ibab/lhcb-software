@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.17 2006-02-10 15:54:13 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.18 2006-02-10 21:34:56 asatta Exp $
 // Include files 
 
 //Muon
@@ -102,7 +102,7 @@ void MuonChamberLayout::Copy(MuonChamberLayout &lay) {
 
 
 std::vector<DeMuonChamber*> MuonChamberLayout::
-neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) {
+neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) const{
 
   std::vector<int> myChambers; 
   int sC_idY(0),sC_idX(0),reg(0);
@@ -143,7 +143,7 @@ neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) {
 }
 
 std::vector<DeMuonChamber*> MuonChamberLayout::
-neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) {
+neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) const {
 
   char pt[200]; bool debug = false;
   sprintf(pt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
@@ -159,7 +159,7 @@ neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) {
 }
 
 std::vector<DeMuonChamber*> MuonChamberLayout::
-createChambers(std::vector<int> mytiles, int station){
+createChambers(std::vector<int> mytiles, int station) const {
 
   std::vector<int>::iterator idTile;
   std::vector<DeMuonChamber*> myChambers;
@@ -184,7 +184,7 @@ createChambers(std::vector<int> mytiles, int station){
 }
 
 void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, 
-                                  int reg, std::vector<int> &chamberNumber){
+                                  int reg, std::vector<int> &chamberNumber)const {
 
   int vSize(0); int chN = -1;  bool debug = false;
   int fx = sx + shx;
@@ -304,7 +304,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   return;
 }
 
-int MuonChamberLayout::findRegion(int chamber){
+int MuonChamberLayout::findRegion(int chamber) const {
   int reg(0);
   int offset[4] = {16,48,112,368};
   for(reg=0; reg<4; reg++) {
@@ -319,7 +319,7 @@ int MuonChamberLayout::findRegion(int chamber){
 }
 
 void MuonChamberLayout::chamberMostLikely(float x,float y, int station, 
-int& chmb, int& reg){
+int& chmb, int& reg)const {
   
   int myReg(-1);
   int fx(-1),fy(-1);
@@ -348,7 +348,7 @@ int& chmb, int& reg){
 }
 
 //Returns the Tile for a given chamber
-LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
+LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
 
   bool debug = false;
   LHCb::MuonTileID myTile;
@@ -423,7 +423,7 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
 
 
 //Returns the Tile for a given chamber number
-LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum){
+LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum)const{
   
 
   char pt[200];  LHCb::MuonTileID myTile;
@@ -439,7 +439,7 @@ LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmb
 
 
 void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx, 
-                                     int &idy, int &reg){
+                                     int &idy, int &reg)const {
   
   int myIdx(0),myIdy(0),myReg(-1);
   float rX(0),rY(0);
@@ -594,7 +594,7 @@ sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d"
   return m_ChVec;
 }
 
-bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg){
+bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg) const {
   bool lower = true;
   bool iXnz = (((idX <  (int)m_cgX.at(reg))&&(idX>0)) || 
                ((idX>=3*(int)m_cgX.at(reg))&&(idX<4*(int)m_cgX.at(reg))));

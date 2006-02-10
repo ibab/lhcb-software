@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.12 2006-01-30 10:58:29 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.13 2006-02-10 21:34:56 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -56,52 +56,52 @@ public:
 
   StatusCode Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
 			       int station, 
-			       int & chamberNumber, int& regNum);
+			       int & chamberNumber, int& regNum) const;
   
   StatusCode Hit2GapNumber(Gaudi::XYZPoint myPoint, 
 			   int station, int & gapNumber,
-			   int & chamberNumber, int& regNum);
+			   int & chamberNumber, int& regNum) const ;
   
   StatusCode Pos2ChamberNumber(const double x,
                                const double y,
                                const double z,
-                               int & chamberNumber, int& regNum);
+                               int & chamberNumber, int& regNum) const;
 
   StatusCode Pos2GapNumber(const double x,
 			   const double y,
 			   const double z, int & gapNumber,
-			   int & chamberNumber, int& regNum);
+			   int & chamberNumber, int& regNum) const;
 
   StatusCode Pos2StChamberNumber(const double x,
 				 const double y,
 				 int station ,
-				 int & chamberNumber, int& regNum);
+				 int & chamberNumber, int& regNum) const;
 
   StatusCode Pos2StGapNumber(const double x,
 			     const double y,
 			     int station , int & gapNumber,
-			     int & chamberNumber, int& regNum);
+			     int & chamberNumber, int& regNum) const;
   
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
-                             LHCb::MuonTileID& tile);
+                             LHCb::MuonTileID& tile) const;
 
   StatusCode Pos2StChamberPointer(const double x,
                                 const double y,
                                 int station ,
-                                DeMuonChamber* & chamberPointer);
+                                DeMuonChamber* & chamberPointer) const;
   
   StatusCode Pos2ChamberPointer(const double x,
                                 const double y,
                                 const double z,
-                                DeMuonChamber* & chamberPointer);
+                                DeMuonChamber* & chamberPointer) const;
 
   StatusCode Chamber2Tile(int  chaNum, int station, int region, 
-                          LHCb::MuonTileID& tile);
+                          LHCb::MuonTileID& tile) const ;
 
 
-  int sensitiveVolumeID(Gaudi::XYZPoint  myPoint);
+  const int sensitiveVolumeID(const Gaudi::XYZPoint &  myPoint) const;
   
 
   unsigned int gapID( int sensDetID);
@@ -123,14 +123,14 @@ public:
                          int region,double& xcenter, 
                          double& ycenter, double & zcenter);
   //Returns the station index starting from the z position
-  int getStation(const double z);
+  int getStation(const double z) const;
   
   //Returns a detector element identified by chmb, reg, num
   IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
   
   // Return the chamber pointer from m_ChmbPtr
   DeMuonChamber* getChmbPtr(const int station, const int region,
-			    const int chmb);
+			    const int chmb) const;
 
   //Fills the vector of chamber pointers  
   void fillChmbPtr();
@@ -271,7 +271,7 @@ float m_regionBox[partition][4];
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline int DeMuonDetector::getStation(const double z)
+inline int DeMuonDetector::getStation(const double z) const
 {
   //station index starting from z position (in mm)
   int idX = 0; double s_size(400.);

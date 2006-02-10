@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.6 2006-02-10 15:54:13 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.7 2006-02-10 21:34:56 asatta Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -44,27 +44,27 @@ public:
   std::vector<DeMuonChamber*> fillChambersVector(IDataProviderSvc* detSvc); 
 
   //Find the most likely chamber for a given x,y,station set
-  void chamberMostLikely(float x,float y, int station, int& chmb, int& reg);
+  void chamberMostLikely(float x,float y, int station, int& chmb, int& reg) const;
   
   //Return the tiles of the neighbor Chambers
-  std::vector<DeMuonChamber*> neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction);
+  std::vector<DeMuonChamber*> neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) const;
   
   //Return the tiles of the neighbor Chambers
-  std::vector<DeMuonChamber*> neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir);
+  std::vector<DeMuonChamber*> neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) const;
   
   //Convert tiles in chambers
-  std::vector<DeMuonChamber*> createChambers(std::vector<int> mytiles, int station);
+  std::vector<DeMuonChamber*> createChambers(std::vector<int> mytiles, int station) const ;
 
   std::vector<DeMuonChamber*> createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles);
 
   //Returns the chamber number for a shift in X and Y direction
-  void chamberXY(int sx, int sy, int shx, int shy, int reg, std::vector<int> &chamberNumber);
+  void chamberXY(int sx, int sy, int shx, int shy, int reg, std::vector<int> &chamberNumber) const;
 
   //Returns the Tile for a given chamber
-  LHCb::MuonTileID tileChamber(DeMuonChamber* chmb);
+  LHCb::MuonTileID tileChamber(DeMuonChamber* chmb)const;
 
   //Returns the Tile for a given chamber number
-  LHCb::MuonTileID tileChamberNumber(int sta, int reg, int chmbNum);
+  LHCb::MuonTileID tileChamberNumber(int sta, int reg, int chmbNum) const ;
 
 
   StatusCode Tile2XYZpos(const LHCb::MuonTileID& tile, 
@@ -78,16 +78,16 @@ public:
 
   //Returns the region for a given chamber with numbering scheme 
   //defined in the MuonGeometry.h file
-  int findRegion(int chamber);
+  int findRegion(int chamber) const ;
 
   //Returns the grid indexes for a given X,Y couple
-  void gridPosition(float x, float y, int iS, int &idx, int &idy, int &reg);
+  void gridPosition(float x, float y, int iS, int &idx, int &idy, int &reg) const ;
 
   //Sets the xS, yS reference values (needed for grid computation)
   void setGridStep();
 
   //Checks if a region lowering is needed
-  bool shouldLowReg(int idX, int idY, int reg);
+  bool shouldLowReg(int idX, int idY, int reg) const;
 
   //Returns the layout
   MuonLayout layout(int region);

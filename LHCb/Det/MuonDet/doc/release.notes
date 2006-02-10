@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.64 2006-02-10 15:54:13 asarti Exp $
+! $Id: release.notes,v 1.65 2006-02-10 21:34:56 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-10 - Alessia Satta
+ - fix a wrong header in the MuonDetector::sensitiveVolumeID(), as a 
+   consequences many const attributes have been added in DeMuonDetector 
+   and MuonChamberLayout
+
 ! 2006-02-10 - Alessio Sarti
  - fix in MuonChamberLayout.cpp: now chamber are properly created
    looking into the ChVec (instead of using new) and an inconsistent

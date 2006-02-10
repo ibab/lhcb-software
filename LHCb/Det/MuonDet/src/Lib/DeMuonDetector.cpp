@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.19 2006-02-10 15:54:13 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.20 2006-02-10 21:34:56 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -82,7 +82,7 @@ StatusCode DeMuonDetector::initialize()
 
 StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint, 
 					 int station, int & gapNumber,
-					 int & chamberNumber, int& regNum){
+					 int & chamberNumber, int& regNum) const{
   
   //This methods sets the gap = 0 if only the
   //station is provided [HitPoint.z() = 0]
@@ -129,7 +129,7 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
 
 StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
 					     int station, 
-					     int & chamberNumber, int& regNum){
+					     int & chamberNumber, int& regNum) const{
   
   StatusCode sc = StatusCode::FAILURE;
   bool isIn = false; bool debug = false;
@@ -238,7 +238,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
         <<endreq;
     int msta(0),mreg(0),mchm(0); 
     //Getting stations
-    IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
+    IDetectorElement::IDEContainer::const_iterator itSt;
     for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
       if(msta == station) {
         //Getting regions
@@ -279,7 +279,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
 StatusCode DeMuonDetector::Pos2StChamberNumber(const double x,
 					       const double y,
 					       int station,
-					       int & chamberNumber, int& regNum){
+					       int & chamberNumber, int& regNum) const {
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
@@ -293,7 +293,7 @@ StatusCode DeMuonDetector::Pos2StChamberNumber(const double x,
 StatusCode DeMuonDetector::Pos2StGapNumber(const double x,
                                            const double y,
                                            int station, int & gapNumber,
-                                           int & chamberNumber, int& regNum){
+                                           int & chamberNumber, int& regNum)const {
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
@@ -309,7 +309,7 @@ StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
                                                 const double y,
                                                 int station,
                                                 DeMuonChamber* & 
-                                                chamberPointer){
+                                                chamberPointer)const{
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
@@ -328,7 +328,7 @@ StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
 StatusCode DeMuonDetector::Pos2ChamberPointer(const double x,
                                               const double y,
                                               const double z,
-                                              DeMuonChamber* & chamberPointer){
+                                              DeMuonChamber* & chamberPointer)const{
   //Dummy conversion z <-> station  
   StatusCode sc = Pos2StChamberPointer(x,y,getStation(z),chamberPointer);
   return sc;
@@ -338,7 +338,7 @@ StatusCode DeMuonDetector::Pos2ChamberPointer(const double x,
 StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
 					     const double y,
 					     const double z,
-					     int & chamberNumber, int& regNum){
+					     int & chamberNumber, int& regNum)const{
   MsgStream msg( msgSvc(), name() );
 
   StatusCode sc = StatusCode::FAILURE;
@@ -355,7 +355,7 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
 StatusCode DeMuonDetector::Pos2GapNumber(const double x,
 					 const double y,
 					 const double z, int & gapNumber,
-					 int & chamberNumber, int& regNum){
+					 int & chamberNumber, int& regNum)const{
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
   Gaudi::XYZPoint hitPoint(x,y,z);   int sta = getStation(z);
@@ -369,7 +369,7 @@ StatusCode DeMuonDetector::Pos2GapNumber(const double x,
 StatusCode DeMuonDetector::Pos2ChamberTile(const double x,
 					   const double y,
 					   const double z,
-					   LHCb::MuonTileID& tile){
+					   LHCb::MuonTileID& tile)const{
   StatusCode sc = StatusCode::SUCCESS;
   int dumChmb(-1), reg(-1);
 
@@ -460,7 +460,7 @@ void DeMuonDetector::CountDetEls() {
 }
 
 DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
-			    const int chmb) {
+			    const int chmb) const {
   DeMuonChamber* myPtr;
   int encode, re(0);
   encode = 276*station+chmb;
@@ -673,7 +673,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
 }
 
 StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region, 
-                                         LHCb::MuonTileID& tile)
+                                         LHCb::MuonTileID& tile) const
 {
   StatusCode sc = StatusCode::SUCCESS; 
   //Convert chamber number into a tile
@@ -953,7 +953,8 @@ StatusCode  DeMuonDetector::fillGeoArray()
 
 
 
-int DeMuonDetector::sensitiveVolumeID(Gaudi::XYZPoint myPoint)
+const int DeMuonDetector::sensitiveVolumeID(const Gaudi::XYZPoint & 
+myPoint) const
 {
   int nsta =0;
   int nreg =0;   
@@ -961,7 +962,6 @@ int DeMuonDetector::sensitiveVolumeID(Gaudi::XYZPoint myPoint)
   int ngap =0;
   unsigned int nqua =0;
   
-
   // retrieve station,region,chamber,gap:
   StatusCode sc = StatusCode::FAILURE;
  nsta=getStation(myPoint.z());
