@@ -13,11 +13,12 @@
       author="P. Koppenburg"
       desc="Common base class for all process headers: GenHeader, MCHeader..."
       name="ProcessHeader"
-      location="Dummy"
       id="103"
      >
        &DataObject;
        <base name="DataObject"/>
+       <location name = "Digi" place = "MC/DigiHeader" />
+       <location name = "Rec"  place = "Rec/Header" />
        <attribute
         desc="random number seeds for this step (int or long?)"
         name="randomSeeds"
