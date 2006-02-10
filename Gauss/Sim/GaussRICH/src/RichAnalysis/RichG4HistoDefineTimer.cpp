@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineTimer.cpp,v 1.2 2003-07-16 13:24:06 seaso Exp $
+// $Id: RichG4HistoDefineTimer.cpp,v 1.3 2006-02-10 09:36:04 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +17,11 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+
+// #include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/SystemOfUnits.h"
+#include "globals.hh"
+ 
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4HistoDefineTimer

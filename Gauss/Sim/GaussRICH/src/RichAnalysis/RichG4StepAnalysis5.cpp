@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.2 2004-06-08 08:30:14 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.3 2006-02-10 09:36:04 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -31,6 +31,7 @@
 // local
 #include "RichG4StepAnalysis5.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "RichG4MirrorReflPointTag.h"
 
 //-----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #include "RichPhotInfo.h"
 #include "RichPEInfo.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 
 G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
 {
@@ -18,18 +19,6 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   //     CurPhotonOrigZcoord <= ZDnsRich1Analysis) ||
   //     ( CurPhotonOrigZcoord >= ZUpsRich2Analysis &&
   //     CurPhotonOrigZcoord <= ZDnsRich2Analysis) ) {
-
-  G4int CurRadiatorNumber=-1;
-  if(CurPhotonOrigZcoord >=AgelZBeginAnalysis &&
-     CurPhotonOrigZcoord <= AgelZEndAnalysis) {
-    CurRadiatorNumber=0;
-  }else if(CurPhotonOrigZcoord >= C4F10ZBeginAnalysis &&
-           CurPhotonOrigZcoord <= C4F10ZEndAnalysis) {
-    CurRadiatorNumber=1;
-  }else if(CurPhotonOrigZcoord >= CF4ZBeginAnalysis &&
-           CurPhotonOrigZcoord <= CF4ZEndAnalysis) {
-    CurRadiatorNumber=2;
-  }
 
   RichPEInfo* CurRichPEInfo = new   RichPEInfo();
 
@@ -56,6 +45,8 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
             setCherenkovPhiAtProd(aPhotInfo->CkvAnglePhiAtProd());
           CurRichPEInfo->
             setMotherofPhotonMomAtProd(aPhotInfo->ChTrackMomAtProd() );
+          CurRichPEInfo->  setPhotOriginRadiatorNumber(aPhotInfo->PhotProdRadiatorNum());
+
           // fill the following only for verbose tag mode.
           if( aPhotInfo->  VerbosePhotTagFlag() ) {
 
@@ -91,7 +82,6 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
 
   CurRichPEInfo-> setPhotonEmisPoint(aPhotonTk.GetVertexPosition());
   CurRichPEInfo->  setMotherOfPhotonId(aPhotonTk.GetParentID());
-  CurRichPEInfo->  setPhotOriginRadiatorNumber(CurRadiatorNumber);
   CurRichPEInfo-> setOptPhotonId(aPhotonTk.GetTrackID());
 
   // G4cout<<" RichPEInfo attach: Trackid Chtk photon  "

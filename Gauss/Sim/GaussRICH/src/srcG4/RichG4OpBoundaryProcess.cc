@@ -60,7 +60,7 @@
 #include "G4ios.hh"
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichG4AnalysisConstGauss.h"
-
+#include "RichG4GaussPathNames.h"
 /////////////////////////
 // Class Implementation
 /////////////////////////

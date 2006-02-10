@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.5 2005-06-16 11:39:59 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.6 2006-02-10 09:36:04 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -11,7 +11,8 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
-
+#include "Kernel/Plane3DTypes.h"
+#include "Math/VectorUtil.h"
 // local
 #include "RichG4SvcLocator.h"
 
@@ -22,8 +23,10 @@
 #include "RichG4ReconTransformHpd.h"
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "RichSolveQuarticEqn.h"
 #include <math.h>
+
 // modification made on 30-8-2004 to make windows compatible.
 
 //extern "C" {
@@ -252,7 +255,7 @@ RichG4CkvRecon::~RichG4CkvRecon(  ) { }
 
 
 
-HepPoint3D RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
+Gaudi::XYZPoint RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
                                                      int aPYNum )
 {
 
@@ -261,11 +264,11 @@ HepPoint3D RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
   const double xhit= (aPXNum - (m_HpdSiNumPixelX-1)*0.5  ) * m_HpdSiPixelXSize;
   const double yhit= (aPYNum - (m_HpdSiNumPixelY-1)*0.5  ) * m_HpdSiPixelYSize;
 
-  return  HepPoint3D(xhit,yhit,zhitc);
+  return  Gaudi::XYZPoint(xhit,yhit,zhitc);
 }
 
-HepPoint3D  
-RichG4CkvRecon::ReconPhCoordFromLocalCoord (const HepPoint3D & aLocalHitCoord )
+Gaudi::XYZPoint  
+RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord )
 {
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -275,7 +278,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const HepPoint3D & aLocalHitCoord )
   //                  <<endreq;
 
 
-  HepPoint3D acurGlobalHitPhCath (0.0,0.0,0.0);
+  Gaudi::XYZPoint acurGlobalHitPhCath (0.0,0.0,0.0);
 
   m_curLocalHitCoord = aLocalHitCoord ;
 
@@ -302,7 +305,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const HepPoint3D & aLocalHitCoord )
     // Photocathode.
     RichG4ReconHpd* aRichG4ReconHpd = m_RichG4ReconHpd;
 
-    HepPoint3D curLocalHitPhCath =
+    Gaudi::XYZPoint curLocalHitPhCath =
       aRichG4ReconHpd->ReconHitOnPhCathFromLocalHitCoord(m_curLocalHitCoord);
 
 
@@ -321,7 +324,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const HepPoint3D & aLocalHitCoord )
         m_HpdTransforms[m_CurrentRichDetNum] [m_CurrentHpdNum];
       if(CurHpdTransform) {
 
-        HepTransform3D HpdtoGlobalTransform = CurHpdTransform->HpdLocalToGlobal();
+        Gaudi::Transform3D HpdtoGlobalTransform = CurHpdTransform->HpdLocalToGlobal();
 
         acurGlobalHitPhCath =
           HpdtoGlobalTransform * curLocalHitPhCath;
@@ -349,10 +352,10 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const HepPoint3D & aLocalHitCoord )
 
 }
 
-HepPoint3D RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
+Gaudi::XYZPoint RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
                                              RichG4Hit* bHit )
 {
-  const HepPoint3D aPhotTrueEmitPt(ex,ey,ez);
+  const Gaudi::XYZPoint aPhotTrueEmitPt(ex,ey,ez);
 
   Hep3Vector TrackStepDir(
                           (m_ChTrackPostStepPosition.x()-m_ChTrackPreStepPosition.x()),
@@ -375,51 +378,84 @@ HepPoint3D RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
 
   // aerogel exit plane equation z-1160 =0
 
-  HepPlane3D AgelExitPlane(0,0,1,-AgelZEndAnalysis);
+  Gaudi::Plane3D AgelExitPlane(0,0,1,-AgelZEndAnalysis);
   //  double distEmisToAgelExit= abs( AgelExitPlane.distance(aPhotTrueEmitPt)) ;
-  double distEmisToAgelExit= fabs( AgelExitPlane.distance(aPhotTrueEmitPt)) ;
+  double distEmisToAgelExit= fabs( AgelExitPlane.Distance(aPhotTrueEmitPt)) ;
 
   pDir *= distEmisToAgelExit;
 
-  const HepVector3D PhotonDir ( pDir.x(), pDir.y(),pDir.z());
+  const Gaudi::XYZVector PhotonDir ( pDir.x(), pDir.y(),pDir.z());
   return aPhotTrueEmitPt + PhotonDir;
 }
 
-HepPoint3D
-RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const HepPoint3D & aDetectionPoint,
-                                                 const HepPoint3D & aEmissionPoint)
+Gaudi::XYZPoint
+RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetectionPoint,
+                                                 const Gaudi::XYZPoint & aEmissionPoint,
+                   const Gaudi::XYZPoint & aQwPoint, G4int aRichDetNum, G4int aFlatMirrNum )
 {
+
   m_curEmisPt=aEmissionPoint;
   m_curDetPoint=aDetectionPoint;
+  
+  Gaudi::XYZPoint curFlatMCoC =  m_CurReconFlatMirr-> FlatMirrorCoC(aRichDetNum,aFlatMirrNum);
 
-  return ( m_curReflPt = ReconReflectionPointOnSPhMirrorStdInput() );
+  Gaudi::XYZPoint aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
+  // for now 5 iterations
+
+  for (int aItr=0; aItr<5 ; ++aItr) {
+    Gaudi::XYZPoint aFlatMirrReflPt =  m_CurReconFlatMirr->FlatMirrorIntersection(aSphReflPt,
+										 m_curDetPoint ,
+										  aRichDetNum,
+										  aFlatMirrNum);
+    
+    // create a plane at the flat mirr refl point
+
+    const Gaudi::Plane3D aPlane(Gaudi::XYZVector( curFlatMCoC - aFlatMirrReflPt ).unit(), aFlatMirrReflPt);
+    // find the detection pt wrt this plane
+
+    
+    double adist = aPlane.Distance(aQwPoint);
+
+    Gaudi::XYZPoint  afrelPt = aQwPoint - 2.0*adist * aPlane.Normal();
+    m_curDetPoint =  afrelPt;
+    aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
+
+    ++aItr;
+  
+     
+  }
+
+  return  aSphReflPt ;
 
 }
 
 
-HepPoint3D RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
+Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
 {
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichG4CkvReconlog( msgSvc,"RichG4CkvRecon");
 
-  HepPoint3D ReflPt = HepPoint3D (0.0,0.0,0.0);
-  const HepPoint3D & aEmisPt = m_curEmisPt;
-  const HepPoint3D aMirrCC (m_SphMirrCC[m_CurrentRichSector][0],
+  Gaudi::XYZPoint ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
+  const Gaudi::XYZPoint & aEmisPt = m_curEmisPt;
+  const Gaudi::XYZPoint aMirrCC (m_SphMirrCC[m_CurrentRichSector][0],
                             m_SphMirrCC[m_CurrentRichSector][1],
                             m_SphMirrCC[m_CurrentRichSector][2]) ;
-  const HepPoint3D & aDetPt = m_curDetPoint ;
+  const Gaudi::XYZPoint & aDetPt = m_curDetPoint ;
 
-  HepVector3D evec =  aEmisPt -  aMirrCC;
-  HepVector3D dvec = aDetPt  - aMirrCC ;
-  double gamma     = evec.angle(dvec);
+  Gaudi::XYZVector evec =  aEmisPt -  aMirrCC;
+  const double e2 = evec.Mag2();
+    double e  = pow(e2,0.5);
+
+  Gaudi::XYZVector dvec = aDetPt  - aMirrCC ;
+  const  double d2 = dvec.Mag2();
+    double d  = pow(d2,0.5);
+  
+  double gamma     = acos( evec.Dot(dvec) / (e*d) );
+
   double r  =  m_SphMirrRad[m_CurrentRichDetNum];
   if( r != 0.0 ) {
 
     double r2 = r*r;
-    double e  = evec.mag() ;
-    double d  = dvec.mag();
-    double e2 = e*e;
-    double d2 = d*d;
     double dx = d * cos(gamma);
     double dy = d * sin(gamma);
 
@@ -439,47 +475,32 @@ HepPoint3D RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
       //   qsol(4, std::complex<double> (0.0,100000.0));
       SolveQuartic (qsol, denom, a);
       int nrealsolnum=-1;
-      HepVector3D nvec = evec.cross(dvec); // normal vector to reflection plane
-      HepVector3D delta[2] = { HepVector3D(0.0,0.0,0.0),
-                               HepVector3D(0.0,0.0,0.0) };
+      Gaudi::XYZVector nvec = evec.Cross(dvec); // normal vector to reflection plane
+      Gaudi::XYZVector delta[2] = { Gaudi::XYZVector(0.0,0.0,0.0),
+                               Gaudi::XYZVector(0.0,0.0,0.0) };
 
-      //      if(qsol.size() <= 4 ) {
-      //  for (int isol=0 ; isol< (int) qsol.size(); isol++ ) {
-          // now require real and physical solutions.
-      //    if(std::imag (qsol[isol] ) == 0.0 && std::real(qsol[isol]) <= 1.0  ) {
-      //      nrealsolnum++;
-      //      if(nrealsolnum < 2) {
-      //        double beta = asin(std::real(qsol[isol]));
-      //        delta[ nrealsolnum] = evec;
-      //        delta[ nrealsolnum].setMag(r);
-      //        delta[ nrealsolnum].rotate(beta,nvec);
-      //
-      //      }
-      //
-      //
-      //    }
-      //  }
-
+      
         for (int isol=0 ; isol< 4; isol++ ) {
           // now require real and physical solutions.
           if(GSL_IMAG (qsol[isol] ) == 0.0 && GSL_REAL(qsol[isol]) <= 1.0  ) {
             nrealsolnum++;
             if(nrealsolnum < 2) {
-              double beta = asin(GSL_REAL(qsol[isol]));
-              delta[ nrealsolnum] = evec;
-              delta[ nrealsolnum].setMag(r);
-              delta[ nrealsolnum].rotate(beta,nvec);
-
-            }
+              double beta = asin(GSL_REAL(qsol[isol]));                   
+	      Gaudi::XYZVector aa = evec;
+              aa *= (r/e);
+	      const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec, beta));
+ 	      Gaudi::XYZVector bb = rotn(aa);             
+	      delta[ nrealsolnum] = bb;
+	    }
 
             
-          }
+	  }
           
         }
   
         if( nrealsolnum >= 0 ) {
 
-          const HepVector3D deltaF =
+          const Gaudi::XYZVector deltaF =
             ( (nrealsolnum == 0) ||
               (delta[0].z() > delta[1].z()))? delta[0]:delta[1];
 
@@ -501,7 +522,7 @@ HepPoint3D RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
         }
 
         if( proda == 0.0 ) {
-          ReflPt = HepPoint3D (0.0,0.0,0.0);
+          ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
 
         }
 
@@ -548,26 +569,26 @@ void RichG4CkvRecon::SolveQuartic(  gsl_complex z[4],
 
 
 
-double  RichG4CkvRecon::CherenkovThetaFromReflPt(const HepPoint3D & aReflPoint ,
-                                                 const HepPoint3D & aEmisPt )
+double  RichG4CkvRecon::CherenkovThetaFromReflPt(const Gaudi::XYZPoint & aReflPoint ,
+                                                 const Gaudi::XYZPoint & aEmisPt )
 {
   m_curEmisPt = aEmisPt;
 
-  HepPoint3D PhotDir= (aReflPoint - aEmisPt ).unit();
-  //  const HepVector3D TrackDir = m_curTkMom.unit();
-
-  const HepVector3D TrackDir=
+  Gaudi::XYZVector PhotDir= (aReflPoint - aEmisPt ).unit();
+  //  const Gaudi::XYZVector TrackDir = m_curTkMom.unit();
+  double pmag = pow( PhotDir.Mag2(), 0.5);
+  const Gaudi::XYZVector TrackDir=
     m_ChTrackPostStepPosition-m_ChTrackPreStepPosition;
 
-
-  // double CkvAngle = PhotDir.angle(TrackDir);
-
-  return  PhotDir.angle(TrackDir);
+  double tmag = pow(TrackDir.Mag2(), 0.5);
+  // double CkvAngle = Root::Math::VectorUtil::Angle(PhotDir,TrackDir);
+  double aAngle = acos(PhotDir.Dot(TrackDir))/( pmag* tmag);
+  return  aAngle;
 
 }
 
-double RichG4CkvRecon::CherenkovThetaInAerogel(const HepPoint3D & aReflPoint,
-                                               const HepPoint3D & aEmisPt  )
+double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoint,
+                                               const Gaudi::XYZPoint & aEmisPt  )
 {
 
   m_curEmisPt = aEmisPt;
@@ -576,7 +597,8 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const HepPoint3D & aReflPoint,
   MsgStream RichG4CkvReconlog( msgSvc,"RichG4CkvRecon");
 
 
-  HepPoint3D PhotDir= (aReflPoint - aEmisPt  ).unit();
+  Gaudi::XYZVector PhotDir= (aReflPoint - aEmisPt  ).unit();
+  double pmag = pow( PhotDir.Mag2(), 0.5);
 
   //     RichG4CkvReconlog<<MSG::INFO
   //                    <<" Agel Ckv Phot dir outside "
@@ -586,20 +608,24 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const HepPoint3D & aReflPoint,
 
 
 
-  const HepVector3D TrackDir =
+  const Gaudi::XYZVector TrackDir =
     m_ChTrackPostStepPosition-m_ChTrackPreStepPosition;
+  double tmag = pow(TrackDir.Mag2(), 0.5);
 
-  const double aCkvWithoutCorrection =  PhotDir.angle(TrackDir);
+  const double aCkvWithoutCorrection = acos(PhotDir.Dot(TrackDir))/( pmag* tmag);
+
 
   // for now assume that the plane where photons exit from
   // aerogel is normal to the zaxis.
 
-  HepVector3D  aZaxis(0.0,0.0,1.0);
+  Gaudi::XYZVector  aZaxis(0.0,0.0,1.0);
   // determine the angle the photon direction makes with the
   // plane normal to the aerogel exit plane.
 
 
-  const double aPhotDirAgelExit =  PhotDir.angle(aZaxis);
+  const double aPhotDirAgelExit =  acos(PhotDir.Dot(aZaxis))/pmag;
+
+
 
   // get the refindex of the aergel and c4f10 for the
   // current energy of the photon. Use the nominal ref index for now.
@@ -631,7 +657,7 @@ void  RichG4CkvRecon::SetChTrackPreStepPosition( double xprepos,
                                                  double yprepos,double zprepos)
 {
   m_ChTrackPreStepPosition=
-    HepPoint3D( xprepos,yprepos,zprepos);
+    Gaudi::XYZPoint( xprepos,yprepos,zprepos);
 
 }
 
@@ -640,7 +666,7 @@ void RichG4CkvRecon::SetChTrackPostStepPosition(double xpostpos,
                                                 double zpostpos)
 {
   m_ChTrackPostStepPosition=
-    HepPoint3D( xpostpos, ypostpos,zpostpos);
+    Gaudi::XYZPoint( xpostpos, ypostpos,zpostpos);
 
 }
 

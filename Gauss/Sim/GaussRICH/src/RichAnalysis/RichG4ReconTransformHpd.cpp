@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.3 2005-06-16 11:39:59 seaso Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.4 2006-02-10 09:36:04 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -22,9 +22,12 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
 
-#include <CLHEP/Geometry/Point3D.h>
-#include <CLHEP/Geometry/Vector3D.h>
-#include <CLHEP/Geometry/Transform3D.h>
+//#include <CLHEP/Geometry/Point3D.h>
+//#include <CLHEP/Geometry/Vector3D.h>
+//#include <CLHEP/Geometry/Transform3D.h>
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 
 
 // local
@@ -97,9 +100,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
       const ILVolume* aRich1MasterLogVol=
         Rich1DE->geometry()->lvolume();
-      const HepTransform3D & aRich1MasterTrans =
+      const Gaudi::Transform3D & aRich1MasterTrans =
         Rich1DE->geometry()->matrix();
-      const HepTransform3D & aRich1MasterTransInv =
+      const Gaudi::Transform3D & aRich1MasterTransInv =
         Rich1DE->geometry()->matrixInv();
 
 
@@ -118,8 +121,8 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
         //                          <<apva->lvolume()-> noPVolumes()
         //                          <<endreq;
 
-        const HepTransform3D & apvaTrans = apva->matrix();
-        const HepTransform3D & apvaTransInv = apva->matrixInv();
+        const Gaudi::Transform3D & apvaTrans = apva->matrix();
+        const Gaudi::Transform3D & apvaTransInv = apva->matrixInv();
         // for test print the names of sub volumes
         // RichG4ReconTransformHpdlog<<MSG::INFO
         //                           <<"rich1 test of hpd number "
@@ -153,8 +156,8 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
           //                        <<"  "<<aHpdNumber
           //                        <<endreq;
 
-          const HepTransform3D & apvbTrans= apvb->matrix();
-          const HepTransform3D & apvbTransInv= apvb->matrixInv();
+          const Gaudi::Transform3D & apvbTrans= apvb->matrix();
+          const Gaudi::Transform3D & apvbTransInv= apvb->matrixInv();
 
           const IPVolume* apvc = apvb->lvolume()
             ->pvolume(m_Rich1PhotDetSupPvIndex);
@@ -173,8 +176,8 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
               aHpdIndex = aHpdNumber-m_Rich1HpdArrayMaxH0;
             }
 
-            const HepTransform3D & apvcTrans= apvc->matrix();
-            const HepTransform3D & apvcTransInv= apvc->matrixInv();
+            const Gaudi::Transform3D & apvcTrans= apvc->matrix();
+            const Gaudi::Transform3D & apvcTransInv= apvc->matrixInv();
             const IPVolume* apvd = apvc->lvolume()
               ->pvolume( aHpdIndex);
             if(apvd) {
@@ -186,8 +189,8 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
               //                    <<"  "<< aHpdIndex
               //                    <<endreq;
 
-              const HepTransform3D & apvdTrans= apvd->matrix();
-              const HepTransform3D & apvdTransInv= apvd->matrixInv();
+              const Gaudi::Transform3D & apvdTrans= apvd->matrix();
+              const Gaudi::Transform3D & apvdTransInv= apvd->matrixInv();
               const IPVolume* apvf =  apvd->lvolume()
                 ->pvolume(m_HpdSMasterIndex);
               if(apvf) {
@@ -197,8 +200,8 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
                 //                  <<apvf->lvolumeName()
                 //                  <<endreq;
 
-                const HepTransform3D & apvfTrans= apvf->matrix();
-                const HepTransform3D & apvfTransInv= apvf->matrixInv();
+                const Gaudi::Transform3D & apvfTrans= apvf->matrix();
+                const Gaudi::Transform3D & apvfTransInv= apvf->matrixInv();
 
                 m_HpdGlobalToLocal =
                   apvfTrans* apvdTrans * apvcTrans * apvbTrans *
@@ -262,9 +265,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
       const ILVolume* aRich2MasterLogVol=
         Rich2DE->geometry()->lvolume();
-      const HepTransform3D & aRich2MasterTrans =
+      const Gaudi::Transform3D & aRich2MasterTrans =
         Rich2DE->geometry()->matrix();
-      const HepTransform3D & aRich2MasterTransInv =
+      const Gaudi::Transform3D & aRich2MasterTransInv =
         Rich2DE->geometry()->matrixInv();
 
       const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
@@ -287,19 +290,19 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
         }
 
 
-        const HepTransform3D & bpvaTrans = bpva->matrix();
-        const HepTransform3D & bpvaTransInv = bpva->matrixInv();
+        const Gaudi::Transform3D & bpvaTrans = bpva->matrix();
+        const Gaudi::Transform3D & bpvaTransInv = bpva->matrixInv();
 
         const IPVolume* bpvb =
           bpva->lvolume()->pvolume(aHpdIndexR2);
         if(bpvb) {
-          const HepTransform3D & bpvbTrans = bpvb->matrix();
-          const HepTransform3D & bpvbTransInv = bpvb->matrixInv();
+          const Gaudi::Transform3D & bpvbTrans = bpvb->matrix();
+          const Gaudi::Transform3D & bpvbTransInv = bpvb->matrixInv();
           const IPVolume* bpvf =  bpvb->lvolume()
             ->pvolume(m_HpdSMasterIndex);
           if(bpvf ) {
-            const HepTransform3D & bpvfTrans = bpvf->matrix();
-            const HepTransform3D & bpvfTransInv = bpvf->matrixInv();
+            const Gaudi::Transform3D & bpvfTrans = bpvf->matrix();
+            const Gaudi::Transform3D & bpvfTransInv = bpvf->matrixInv();
 
             m_HpdGlobalToLocal =
               bpvfTrans*  bpvbTrans *

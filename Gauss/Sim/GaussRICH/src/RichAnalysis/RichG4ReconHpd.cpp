@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.4 2005-08-25 12:20:51 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.5 2006-02-10 09:36:04 seaso Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -12,6 +12,8 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
 // local
 #include "RichG4SvcLocator.h"
@@ -240,15 +242,15 @@ RichG4ReconHpd::~RichG4ReconHpd()
 {
 };
 
-HepPoint3D RichG4ReconHpd::ConvertLocalHitToHpdSystem(const HepPoint3D & aLocalHit) 
+Gaudi::XYZPoint RichG4ReconHpd::ConvertLocalHitToHpdSystem(const Gaudi::XYZPoint & aLocalHit) 
 {
   double zloc = aLocalHit.z();
   double ZInHpdSystem = zloc - m_HpdSiDetZLocation;
-  return HepPoint3D(aLocalHit.x(),aLocalHit.y(), ZInHpdSystem);  
+  return Gaudi::XYZPoint(aLocalHit.x(),aLocalHit.y(), ZInHpdSystem);  
 }
 
-HepPoint3D 
-RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const HepPoint3D & aLocalHitCoord)
+Gaudi::XYZPoint 
+RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLocalHitCoord)
 {
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -294,7 +296,7 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const HepPoint3D & aLocalHit
   //         <<delZ<<endreq;
   
   zPhInHpd =   ConvertHpdSiliconZToHpdSystem(zph) ;
-    return HepPoint3D(xph,yph, zPhInHpd);
+    return Gaudi::XYZPoint(xph,yph, zPhInHpd);
 };
 
 

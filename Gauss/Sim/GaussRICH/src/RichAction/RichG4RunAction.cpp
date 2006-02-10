@@ -12,7 +12,8 @@
 #include "RichG4HistoDefineSet4.h"
 #include "RichG4HistoDefineTimer.h"
 #include "RichG4Counters.h"
-
+#include "RichG4GaussPathNames.h"
+#include "RichG4MatRadIdentifier.h"
 // ============================================================================
 // SE 21-8-2002
 // ============================================================================
@@ -102,6 +103,11 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
   // at the first time this BeginRunAction is called.
 
   if(  m_FirstTimeOfBeginRichRun ) {
+
+    // Also set the radiatormaterial numbers
+    
+    RichG4MatRadIdentifier* aRichG4MatRadIdentifier = RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+
   if(m_defineRichG4HistoSet1) {
 
     m_aRichG4HistoSet1 = new RichG4HistoDefineSet1();
@@ -161,6 +167,8 @@ void RichG4RunAction::EndOfRunAction( const G4Run* run )
   //      }
   //  }
 };
+
+
 // ============================================================================
 
 // ============================================================================

@@ -94,6 +94,8 @@ protected:
 
   void setFirstTimeOfBeginRichRun( bool aboolValue) {
     m_FirstTimeOfBeginRichRun=aboolValue;}
+
+
 private:
 
   ///no default constructor

@@ -29,7 +29,9 @@
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
 #include <vector>
-#include "RichG4AnalysisConstGauss.h"
+// #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
+#include "RichG4MatRadIdentifier.h"
 
 // ============================================================================
 /// Factory
@@ -49,6 +51,7 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_MaxPhotonsPerRichCherenkovStepInRich1Agel(900),
     m_MaxPhotonsPerRichCherenkovStepInRich1Gas(40),
     m_MaxPhotonsPerRichCherenkovStepInRich2Gas(40),
+    m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator(5000),
     m_RichRadiatorMaterialName(std::vector<G4String> (3)),
     m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
     m_MaxAllowedPhotStepNumInRayleigh(5000)
@@ -67,7 +70,9 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
                   m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
   declareProperty("RichMaxPhotonsPerCherenkovStepInRich2Gas",
                   m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
-  
+  declareProperty("RichMaxPhotonsPerCherenkovStepInRichQuartzLikeRadiators",
+                  m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator);
+ 
   declareProperty("RichMaxPhotonStepNumInRayleigh",
                   m_MaxAllowedPhotStepNumInRayleigh);
   
@@ -231,34 +236,17 @@ void GiGaPhysConstructorOp::ConstructOp() {
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich1Agel);
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
-  std::vector<G4String> aRichRadiatorMaterialName;
-  aRichRadiatorMaterialName.clear();
-  aRichRadiatorMaterialName.push_back(Rich1AerogelMatName);
-  aRichRadiatorMaterialName.push_back(Rich1C4F10MatName);
-  aRichRadiatorMaterialName.push_back(Rich2CF4MatName);
-  setRichRadiatorMaterialName(aRichRadiatorMaterialName);
-  // the following can possibly be setup as a general function in the future. SE.
-  std::vector<G4int> aRadMatIndex = 
-       FindRichRadiatorMaterialIndices(aRichRadiatorMaterialName);
-  setRichRadiatorMaterialIndex(aRadMatIndex);
-  
-  //  theCerenkovProcess->SetTrackSecondariesFirst(true);
+  aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator);
+
+  RichG4MatRadIdentifier* aRichG4MatRadIdentifier = RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+  aRichG4MatRadIdentifier->InitializeRichCkvMatMaxNumPhot(aMaxPhotLim);
   // the following change made in March 2004 to fix the problem in G4.
   theCerenkovProcess->SetTrackSecondariesFirst(false);
   theCerenkovProcess->SetMaxNumPhotonsPerStep(MaxNumPhotons);
   theCerenkovProcess->
     SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
   theCerenkovProcess->
-    SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);
-  theCerenkovProcess->SetMaxPhotPerStepInRadiator(aMaxPhotLim);
-  theCerenkovProcess->SetRadiatorMaterialIndex(aRadMatIndex);
-  if( ((int) aMaxPhotLim.size () ) != ((int) aRadMatIndex.size ()) ){
-    G4cout<<" GigaPhysConstructorOp : Mismatched array size for  MaxPhotLim and  RadMatIndex  "
-          <<(int) aMaxPhotLim.size () <<"  "
-          << (int) aRadMatIndex.size ()<<G4endl;
-    
-  }
-  
+    SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);  
   
   G4OpticalSurfaceModel themodel = glisur;
   theBoundaryProcess->SetModel(themodel);
@@ -294,11 +282,13 @@ void GiGaPhysConstructorOp::ConstructOp() {
      }
   }
 }
+
+
 std::vector<G4int> GiGaPhysConstructorOp::FindRichRadiatorMaterialIndices
   (std::vector<G4String> aRadiatorMaterialNames)
 {
-  std::vector<G4int> aIndexVect;
-  aIndexVect.clear();
+    std::vector<G4int> aIndexVect;
+   aIndexVect.clear();
   static const G4MaterialTable* theMaterialTable =
     G4Material::GetMaterialTable();
   int numberOfMat= (int) theMaterialTable->size() ;

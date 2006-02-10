@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.6 2005-04-06 12:14:52 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.7 2006-02-10 09:36:38 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -57,6 +57,7 @@
 #include "RichG4Cerenkov.hh"
 // To tag the info regarding photon production.
 #include "RichG4CherenkovPhotProdTag.h"
+#include "RichG4MatRadIdentifier.h"
 // local analysis for RichG4.
 // #include "RichG4CherenkovAnalysis.h"
 
@@ -82,10 +83,7 @@ RichG4Cerenkov::RichG4Cerenkov(const G4String& processName,
                                        G4ProcessType aType)
   : G4VContinuousProcess(processName,aType),
     fRichVerboseInfoTag(false),
-    fMaxPhotonPerRadiatorFlag(false),
-    fMaxPhotPerStepInRadiator(std::vector<G4int> (3)),
-    fRadiatorMaterialIndex(std::vector<G4int> (3))
-
+    fMaxPhotonPerRadiatorFlag(false)
 {
   // In the above the 3 is for the three RICH radiators.
 	fTrackSecondariesFirst = false;
@@ -491,26 +489,16 @@ RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
   // Change by SE to modify the step limit for different
   // radiators if the flag for that is switched on.
   // June 2004.
-  if( fMaxPhotonPerRadiatorFlag) {
-    G4int  fRadiatorMaterialIndexSize= (G4int) fRadiatorMaterialIndex.size();
-    //    if(fRadiatorMaterialIndexSize != 0 && 
-    if( fRadiatorMaterialIndexSize == 
-          (G4int) fMaxPhotPerStepInRadiator.size () ) { 
-          G4int CurMatIndex =  aMaterial-> GetIndex();
-          int ir=0; 
-          bool rFound=false;
-          while(ir<fRadiatorMaterialIndexSize && !( rFound)  ) {
-            if( CurMatIndex == fRadiatorMaterialIndex[ir] ){
-              //              if( fMaxPhotPerStepInRadiator[ir] != 0 ) {
-               StepLimit = fMaxPhotPerStepInRadiator[ir]/MeanNumPhotons;
-               //   }
-               rFound=true;
-            }
-            ir++;
-          } 
+  // modified in Feb 2006 to account for the existance of several radiators.
 
-    }
+  if( fMaxPhotonPerRadiatorFlag) {
+    RichG4MatRadIdentifier* aRichG4MatRadIdentifier = 
+          RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+          G4int CurMaxPhotPerStepLim =  
+               aRichG4MatRadIdentifier-> getRadiatorPhotPerStepLimit(aMaterial-> GetIndex());
+          StepLimit = CurMaxPhotPerStepLim/MeanNumPhotons;    
   }
+  
   // end of modification by SE  
 
 

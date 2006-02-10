@@ -1,5 +1,6 @@
 //local
 #include "RichG4GeomProp.h"
+#include "RichG4GaussPathNames.h"
 
 /// GaudiKernel
 #include "GaudiKernel/Kernel.h"
@@ -24,12 +25,12 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
 
   // Now to get the total number of HPDs and the Z
   MsgStream log( msgSvc , "GeomProp" );
-  SmartDataPtr<DetectorElement> Rich1DESD(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DESD(detSvc,Rich1DeStructurePathName  );
 
   if( !Rich1DESD )
   {
     log << MSG::ERROR
-        << "Can't retrieve /dd/Structure/LHCb/Rich1 from RichGeomProp" << endreq;
+        << "Can't retrieve "+ Rich1DeStructurePathName+ " from RichGeomProp" << endreq;
   }
   else
   {
@@ -94,11 +95,11 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
       <<m_PixelYBoundary[2] <<"   "<<m_PixelYBoundary[16]
       <<"   "<<m_PixelYBoundary[32]<<endreq;
 
-  SmartDataPtr<DetectorElement> Rich2DESD(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich2DESD(detSvc, Rich2DeStructurePathName);
   if( !Rich2DESD )
   {
     log << MSG::ERROR
-        << "Can't retrieve /dd/Structure/LHCb/Rich2 from RichGeomProp" << endreq;
+        << "Can't retrieve " +  Rich2DeStructurePathName + " from RichGeomProp" << endreq;
   }
   else
   {

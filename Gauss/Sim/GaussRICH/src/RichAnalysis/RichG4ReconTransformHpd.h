@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.h,v 1.2 2004-02-10 14:24:15 jonesc Exp $
+// $Id: RichG4ReconTransformHpd.h,v 1.3 2006-02-10 09:36:04 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H
 #define RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H 1
 // Include files
@@ -6,6 +6,8 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
+#include "Kernel/Transform3DTypes.h"
+ 
 
 /** @class RichG4ReconTransformHpd RichG4ReconTransformHpd.h RichAnalysis/RichG4ReconTransformHpd.h
  *
@@ -25,12 +27,12 @@ public:
 
   virtual ~RichG4ReconTransformHpd( ); ///< Destructor
 
-  const HepTransform3D & HpdLocalToGlobal()
+  const Gaudi::Transform3D & HpdLocalToGlobal()
   {
     return m_HpdLocalToGlobal;
   }
 
-  const HepTransform3D & HpdGlobalToLocal()
+  const Gaudi::Transform3D & HpdGlobalToLocal()
   {
     return m_HpdGlobalToLocal;
   }
@@ -39,9 +41,9 @@ protected:
 
 private:
 
-  HepTransform3D m_HpdLocalToGlobal;
+  Gaudi::Transform3D m_HpdLocalToGlobal;
 
-  HepTransform3D m_HpdGlobalToLocal;
+  Gaudi::Transform3D m_HpdGlobalToLocal;
 
   int   m_Rich1SubMasterPvIndex;
 

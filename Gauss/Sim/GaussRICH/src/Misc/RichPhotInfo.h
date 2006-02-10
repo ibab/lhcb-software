@@ -116,6 +116,9 @@ public:
   { m_VerbosePhotTagFlag=aVTFlag;}
 
   
+  G4int PhotProdRadiatorNum() {return m_PhotProdRadiatorNum;}
+  void setPhotProdRadiatorNum(G4int aRadiatorNum ){m_PhotProdRadiatorNum=aRadiatorNum;}
+
 private:
 
   G4int m_MotherChTrackPDGcode;
@@ -134,6 +137,7 @@ private:
   G4int m_Mirror1DetCopyNum;
   G4int m_Mirror2DetCopyNum;
   G4bool m_VerbosePhotTagFlag;
+  G4int m_PhotProdRadiatorNum;
 };
 
 #endif

@@ -207,8 +207,16 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     }
     if(   m_RichG4HitRecon->getRichG4ReconFlatMirr() == 0) {
       m_RichG4HitRecon->setRichG4FlatMirr();
+      
     }
+    if(   m_RichG4HitRecon->getRichG4ReconFlatMirr() != 0) {
+    
+      m_RichG4HitRecon->getRichG4CkvRec()->
+        setCurReconFlatMirr(m_RichG4HitRecon->getRichG4ReconFlatMirr());
+    }
+    
   }
+  
 
 
 

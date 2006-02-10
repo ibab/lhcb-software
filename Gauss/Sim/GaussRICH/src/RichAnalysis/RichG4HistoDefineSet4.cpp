@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineSet4.cpp,v 1.1 2004-02-04 13:53:00 seaso Exp $
+// $Id: RichG4HistoDefineSet4.cpp,v 1.2 2006-02-10 09:36:04 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +18,9 @@
 // #include "AIDA/IProfile.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// #include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/SystemOfUnits.h"
+#include "globals.hh"
 
 // local
 #include "RichG4HistoDefineSet4.h"

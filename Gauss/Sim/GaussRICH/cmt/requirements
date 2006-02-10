@@ -2,8 +2,11 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.36 2006-02-06 13:56:32 gcorti Exp $
+# $Id: requirements,v 1.37 2006-02-10 09:37:06 seaso Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.36  2006/02/06 13:56:32  gcorti
+# version in requirements
+#
 # Revision 1.35  2006/01/31 14:17:41  gcorti
 # temporary fixes to allow to run without RichAnalysis
 #
@@ -80,10 +83,10 @@ library          GaussRICH    *.cpp             \
                               PhysProcess/*.cpp \
                               srcG4/*.cc       \
                               RichAction/*.cpp \
-#                              RichAnalysis/*.cpp \
-#                              RichAnalysis/*.icpp \  
-			      RichAnalysis/RichG4AnalysisPhotElec.cpp \
-			      RichAnalysis/RichG4Counters.cpp \
+                              RichAnalysis/*.cpp \
+                              RichAnalysis/*.icpp \  
+#			      RichAnalysis/RichG4AnalysisPhotElec.cpp \
+#			      RichAnalysis/RichG4Counters.cpp \
                               Misc/*.cpp   
 
 # ============== standard includes ============================================

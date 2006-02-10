@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.6 2005-04-19 16:12:51 seaso Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.7 2006-02-10 09:36:04 seaso Exp $
 // Include files
 
 // local
@@ -169,7 +169,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
 
 
-          if(  aRadiatorNum == 0 ) {
+          if(  aRadiatorNum >= 10 && aRadiatorNum<= 25 ) {
             NumtotAgel++;
 
 

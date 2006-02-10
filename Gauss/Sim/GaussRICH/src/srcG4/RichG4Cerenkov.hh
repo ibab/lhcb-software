@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.hh,v 1.4 2005-04-06 12:14:52 seaso Exp $
+// $Id: RichG4Cerenkov.hh,v 1.5 2006-02-10 09:36:38 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -143,13 +143,6 @@ public: // With description
       (const G4bool aMaxNumPerStepRadiatorFlag)
       {fMaxPhotonPerRadiatorFlag=aMaxNumPerStepRadiatorFlag;}
   
-      void  SetMaxPhotPerStepInRadiator 
-      (const  std::vector<G4int> aMaxPerRichStep )
-      { fMaxPhotPerStepInRadiator = aMaxPerRichStep;}
-    
-      void  SetRadiatorMaterialIndex
-      (const std::vector<G4int> aRadiatorMaterialIndex) 
-      {fRadiatorMaterialIndex = aRadiatorMaterialIndex;}
 
 private:
 
@@ -180,8 +173,7 @@ private:
 	G4int  fMaxPhotons;
         G4bool fRichVerboseInfoTag;
         G4bool fMaxPhotonPerRadiatorFlag;
-        std::vector<G4int> fMaxPhotPerStepInRadiator;
-        std::vector<G4int> fRadiatorMaterialIndex;
+
 };
 
 ////////////////////

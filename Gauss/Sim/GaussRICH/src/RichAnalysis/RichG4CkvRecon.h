@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.h,v 1.3 2005-05-09 12:25:36 seaso Exp $
+// $Id: RichG4CkvRecon.h,v 1.4 2006-02-10 09:36:04 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4CKVRECON_H
 #define RICHANALYSIS_RICHG4CKVRECON_H 1
 
@@ -25,16 +25,25 @@
 
 #include "RichG4SvcLocator.h"
 
-#include <CLHEP/Geometry/Point3D.h>
-#include <CLHEP/Geometry/Plane3D.h>
-#include <CLHEP/Geometry/Vector3D.h>
-#include <CLHEP/Geometry/Transform3D.h>
+//#include <CLHEP/Geometry/Point3D.h>
+//#include <CLHEP/Geometry/Plane3D.h>
+//#include <CLHEP/Geometry/Vector3D.h>
+//#include <CLHEP/Geometry/Transform3D.h>
+
+
+
 #include <CLHEP/Vector/ThreeVector.h>
+
 #include "RichG4ReconTransformHpd.h"
 #include "RichG4ReconHpd.h"
+#include "RichG4ReconFlatMirr.h"
 #include "RichG4Hit.h"
 #include <complex>
 #include "RichSolveQuarticEqn.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 
 class RichG4CkvRecon {
 public:
@@ -48,19 +57,19 @@ public:
   void SetCurrentLocalHitCoord( const double xhit,
                                 const double yhit, const double zhit)
   {
-    m_curLocalHitCoord =  HepPoint3D(xhit,yhit,zhit);
+    m_curLocalHitCoord =  Gaudi::XYZPoint(xhit,yhit,zhit);
   }
 
   void SetCurrentEmissPt( const double xEmiss, const double yEmiss,
                           const double zEmiss)
   {
-    m_curEmisPt= HepPoint3D(xEmiss,yEmiss, zEmiss);
+    m_curEmisPt= Gaudi::XYZPoint(xEmiss,yEmiss, zEmiss);
   }
 
   void SetCurrentTkMom( const double xMom, const double yMom,
                         const double zMom)
   {
-    m_curTkMom=  HepVector3D( xMom, yMom,zMom);
+    m_curTkMom=  Gaudi::XYZVector( xMom, yMom,zMom);
   }
 
   void SetCurrentRichDetNum(const int aRichDetNum)
@@ -83,21 +92,22 @@ public:
     m_CurrentRichSector=  aSectorNum;
   }
 
-  void SetcurDetPoint (const HepPoint3D & aDetPoint )
+  void SetcurDetPoint (const Gaudi::XYZPoint & aDetPoint )
   {
     m_curDetPoint = aDetPoint;
   }
 
-  void SetcurReflPt ( const HepPoint3D & aReflPt )
+  void SetcurReflPt ( const Gaudi::XYZPoint & aReflPt )
   {
     m_curReflPt = aReflPt;
   }
 
-  HepPoint3D ReconPhCoordFromLocalCoord( const HepPoint3D & aLocalHitCoord);
-  HepPoint3D ReconReflectionPointOnSPhMirror(const HepPoint3D & aDetectionPoint,
-                                             const HepPoint3D & aEmissionPoint );
+  Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord);
+  Gaudi::XYZPoint ReconReflectionPointOnSPhMirror(const Gaudi::XYZPoint & aDetectionPoint,
+                                             const Gaudi::XYZPoint & aEmissionPoint , const Gaudi::XYZPoint & aQwPoint,
+                                             int aRichDetNum, int aFlatMirrNum  );
 
-  HepPoint3D ReconReflectionPointOnSPhMirrorStdInput();
+  Gaudi::XYZPoint ReconReflectionPointOnSPhMirrorStdInput();
   //  void SolveQuartic ( std::vector<std::complex<double> > & z,
   //                    double denom,
   //                    double a[4] );
@@ -106,8 +116,8 @@ public:
                       double denom,
                       double a[4] );
 
-  HepPoint3D GetSiHitCoordFromPixelNum(int aPx, int aPy);
-  HepPoint3D getPhotAgelExitZ( double ex, double ey, double ez,
+  Gaudi::XYZPoint GetSiHitCoordFromPixelNum(int aPx, int aPy);
+  Gaudi::XYZPoint getPhotAgelExitZ( double ex, double ey, double ez,
                                RichG4Hit* bHit);
 
 
@@ -130,8 +140,8 @@ public:
     return  m_NumHpdRich;
   }
 
-  double CherenkovThetaFromReflPt(const HepPoint3D & aReflPoint,
-                                  const HepPoint3D & aEmisPt );
+  double CherenkovThetaFromReflPt(const Gaudi::XYZPoint & aReflPoint,
+                                  const Gaudi::XYZPoint & aEmisPt );
 
   RichG4ReconHpd* getRichG4ReconHpd()
   {
@@ -142,7 +152,7 @@ public:
                                   double yprepos,
                                   double zprepos);
 
-  const HepPoint3D & ChTrackPreStepPosition() const
+  const Gaudi::XYZPoint & ChTrackPreStepPosition() const
   {
     return m_ChTrackPreStepPosition;
   }
@@ -151,13 +161,18 @@ public:
                                    double ypostpos,
                                    double zpostpos);
 
-  const HepPoint3D  & ChTrackPostStepPosition() const
+  const Gaudi::XYZPoint  & ChTrackPostStepPosition() const
   {
     return m_ChTrackPostStepPosition;
   }
 
-  double CherenkovThetaInAerogel(const HepPoint3D & aReflPoint,
-                                 const HepPoint3D & aEmisPt );
+  double CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoint,
+                                 const Gaudi::XYZPoint & aEmisPt );
+
+  RichG4ReconFlatMirr* getCurReconFlatMirr() {
+    return m_CurReconFlatMirr;}
+  void setCurReconFlatMirr( RichG4ReconFlatMirr* aCurReconFlatMirr) {
+    m_CurReconFlatMirr = aCurReconFlatMirr;}
 
 protected:
 
@@ -174,13 +189,13 @@ private:
   RichG4ReconHpd* m_RichG4ReconHpd;
 
 
-  HepPoint3D m_curLocalHitCoord;
-  HepPoint3D m_curEmisPt;
-  HepVector3D m_curTkMom;
-  HepVector3D m_curGlobalHitPhCath;
+  Gaudi::XYZPoint m_curLocalHitCoord;
+  Gaudi::XYZPoint m_curEmisPt;
+  Gaudi::XYZVector m_curTkMom;
+  Gaudi::XYZVector m_curGlobalHitPhCath;
 
-  HepPoint3D m_curDetPoint;
-  HepPoint3D m_curReflPt;
+  Gaudi::XYZPoint m_curDetPoint;
+  Gaudi::XYZPoint m_curReflPt;
 
 
   int m_CurrentRichDetNum;
@@ -193,12 +208,12 @@ private:
   double  m_HpdSiPixelYSize;
   int  m_HpdSiNumPixelX;
   int m_HpdSiNumPixelY;
-  HepPoint3D m_ChTrackPreStepPosition;
-  HepPoint3D m_ChTrackPostStepPosition;
+  Gaudi::XYZPoint m_ChTrackPreStepPosition;
+  Gaudi::XYZPoint  m_ChTrackPostStepPosition;
 
   double m_c4f10nominalrefrativeindex;
   double m_agelnominalrefractiveindex;
-  
+  RichG4ReconFlatMirr* m_CurReconFlatMirr;
 };
 
 #endif // RICHANALYSIS_RICHG4CKVRECON_H

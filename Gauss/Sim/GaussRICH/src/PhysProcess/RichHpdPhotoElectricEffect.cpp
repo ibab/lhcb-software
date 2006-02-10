@@ -12,6 +12,9 @@
 #include "RichPhotoElectron.h"
 #include "RichPEInfoAttach.h"
 #include "RichG4AnalysisPhotElec.h"
+#include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
+
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
                                   const G4String& processName, 
                                   G4ProcessType   aType)
@@ -21,10 +24,10 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
   IDataProviderSvc* detSvc;
   if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
 
-    //  m_PrePhotoElectricLogVolName="/dd/Geometry/Rich1/lvRichHPDQuartzWindow";
-    //  m_PostPhotoElectricLogVolName="/dd/Geometry/Rich1/lvRichHPDPhCathode";
+    //  m_PrePhotoElectricLogVolName="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDQuartzWindow";
+    //  m_PostPhotoElectricLogVolName="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDPhCathode";
     //  m_HpdPhElectronKE=20*keV;
-    //  m_PhCathodeToSilDetMaxDist=100.0*mm;
+    //  m_PhCathodeToSilDetMaxDist=111.2*mm;
 
     m_HpdProperty = new RichHpdProperties(detSvc, gigabase->msgSvc()) ;
     m_HpdPhElectronKE=m_HpdProperty->RichHpdHighVoltage();
@@ -35,10 +38,10 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
     if((int) m_numTotHpd.size() != m_NumRichDet )
       m_numTotHpd.resize(m_NumRichDet);
     m_numTotHpd = m_HpdProperty->numHpdTotRich();
-    m_Rich1PhysVolNameA="/dd/Geometry/LHCb/lvLHCb#pvRich1Master";
-    m_Rich2PhysVolNameA="/dd/Geometry/LHCb/lvLHCb#pvRich2Master";
-    m_Rich1PhysVolNameB="/dd/Structure/LHCb/Rich1";
-    m_Rich2PhysVolNameB="/dd/Structure/LHCb/Rich2";
+    m_Rich1PhysVolNameA= Rich1PhysVolGeomName;
+    m_Rich2PhysVolNameA= Rich2PhysVolGeomName;
+    m_Rich1PhysVolNameB= Rich1PhysVolDeName;
+    m_Rich2PhysVolNameB= Rich2PhysVolDeName;
     m_hpdPhCathodeInnerRadius= m_HpdProperty->HpdPhCathodeInnerRadius();
     m_MaxZHitInRich1=  m_HpdProperty->Rich1MaxZHitZCoord();
 

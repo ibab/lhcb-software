@@ -1,9 +1,9 @@
-// $Id: RichG4ReconHpd.h,v 1.3 2005-06-16 11:39:59 seaso Exp $
+// $Id: RichG4ReconHpd.h,v 1.4 2006-02-10 09:36:04 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4RECONHPD_H 
 #define RICHANALYSIS_RICHG4RECONHPD_H 1
 
 // Include files
-
+#include "Kernel/Point3DTypes.h"
 /** @class RichG4ReconHpd RichG4ReconHpd.h RichAnalysis/RichG4ReconHpd.h
  *  
  *
@@ -22,9 +22,9 @@ public:
 
   virtual ~RichG4ReconHpd( ); ///< Destructor
 
-  HepPoint3D ReconHitOnPhCathFromLocalHitCoord( const HepPoint3D & aLocalHitCoord);
+  Gaudi::XYZPoint ReconHitOnPhCathFromLocalHitCoord( const Gaudi::XYZPoint & aLocalHitCoord);
   
-  HepPoint3D ConvertLocalHitToHpdSystem(const HepPoint3D & aLocalHit);
+  Gaudi::XYZPoint ConvertLocalHitToHpdSystem(const Gaudi::XYZPoint & aLocalHit);
   double ConvertHpdSiliconZToHpdSystem(double aZcoord );
   
 protected:

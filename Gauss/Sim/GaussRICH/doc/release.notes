@@ -4,7 +4,9 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2006-02-10 Sajan Easo
+-  Version compatible with xmlddbv30r0 with the envelope volumes.
+- Modified the RichAnalysis to be compatible with LHCB v20r0 onwards which uses MathCore.  
 ! 2006-02-06 - Chris Jones
  - Fix problem with MCRichTrack converter algorithm aborting production if
    empty MCRichSegment container is found.

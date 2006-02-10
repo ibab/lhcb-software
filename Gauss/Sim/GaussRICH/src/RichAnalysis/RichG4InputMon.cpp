@@ -1,4 +1,4 @@
-// $Id: RichG4InputMon.cpp,v 1.1 2005-08-25 12:20:51 seaso Exp $
+// $Id: RichG4InputMon.cpp,v 1.2 2006-02-10 09:36:04 seaso Exp $
 // Include files 
 
 
@@ -6,6 +6,7 @@
 // local
 #include "RichG4InputMon.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "G4Material.hh"
 #include <vector>
  

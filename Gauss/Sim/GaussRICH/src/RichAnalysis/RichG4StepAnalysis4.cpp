@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis4.cpp,v 1.3 2004-06-03 12:44:00 seaso Exp $
+// $Id: RichG4StepAnalysis4.cpp,v 1.4 2006-02-10 09:36:04 seaso Exp $
 // Include files
 
 
@@ -31,6 +31,7 @@
 // local
 #include "RichG4StepAnalysis4.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "RichG4AgelExitTag.h"
 
 //-----------------------------------------------------------------------------

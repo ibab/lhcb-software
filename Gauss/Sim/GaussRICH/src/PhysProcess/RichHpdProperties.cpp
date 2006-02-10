@@ -1,5 +1,6 @@
 #include "RichHpdProperties.h"
-
+#include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -38,14 +39,11 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   // RichHpdlog << MSG::INFO
   //           << " Test of Printout from RichHpdProperties" << endreq;
-  // First get the number of hpds in rich1 and rich2.
-  // following modif to be compatible with recent Detdesc. SE 16-6-2005.
 
-  //  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc,Rich1DeStructurePathName );
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR
-               << "Can't retrieve /dd/Structure/LHCb/Rich1" << endreq;
+               << "Can't retrieve  "<< Rich1DeStructurePathName << endreq;
   }
   else
   {
@@ -64,15 +62,15 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   }
 
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc,Rich2DeStructurePathName );
   if( !Rich2DE )
   {
 
     //    RichHpdlog << MSG::ERROR
-    //              << "Can't retrieve /dd/Structure/LHCb/Rich2" << endreq;
+    //              << "Can't retrieve "<< Rich2DeStructurePathName << endreq;
 
   }else if(!Rich1DE) {
-    RichHpdlog <<MSG::ERROR<<"Can't retrieve /dd/Structure/Rich1 for Rich2"
+    RichHpdlog <<MSG::ERROR<<"Can't retrieve " << Rich1DeStructurePathName<<"   for Rich2"
                <<endreq;
 
   }else {
@@ -113,7 +111,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // converted from percentage to absolute values.
   // the future the following may be transferred to the hpdqe class.
 
-  SmartDataPtr<TabulatedProperty>tabQE(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdQuantumEff");
+  SmartDataPtr<TabulatedProperty>tabQE(detSvc,RichHpdQeffMatTabPropPath);
   std::vector<double>QeSingle;
   std::vector<double>EphotSingle;
   int numQEbin = 0;
@@ -121,7 +119,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
     RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: Can't retrieve "
-               <<"/dd/Materials/RichMaterialTabProperties/HpdQuantumEff " << endreq;
+               << RichHpdQeffMatTabPropPath << endreq;
 
   }else {
 
@@ -146,12 +144,12 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   }
 
   //Now get the PSF values.
-  SmartDataPtr<TabulatedProperty>tabPSF(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction");
+  SmartDataPtr<TabulatedProperty>tabPSF(detSvc,RichHpdPsfMatTabPropPath);
   double HpdPsfSingle = 0.0;
   if(!tabPSF) {
     RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: "
-               <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdPSF "
+               <<" Can't retrieve "+RichHpdPsfMatTabPropPath
                <<endreq;
 
 
@@ -164,11 +162,11 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     RichHpdlog << MSG::INFO <<"Hpd PSF value = "<<HpdPsfSingle<<endreq;
   }
   //Now get the demagnification values
-  SmartDataPtr<TabulatedProperty>tabDemag(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
+  SmartDataPtr<TabulatedProperty>tabDemag(detSvc, RichHpdDemagMatTabPropPath);
   std::vector<double>HpdDemagFac;
   if(!tabDemag) {
     RichHpdlog << MSG::ERROR <<"RichHpdProperties: "
-               <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdDemagnification "<<endreq;
+               <<" Can't retrieve" +RichHpdDemagMatTabPropPath <<endreq;
 
   }else{
     TabulatedProperty::Table tableDem = tabDemag->table();
@@ -217,13 +215,13 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
 
   //Now get the HPD High Voltage
-  SmartDataPtr<TabulatedProperty>tabHV(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdHighVoltage");
+  SmartDataPtr<TabulatedProperty>tabHV(detSvc,RichHpdHVMatTabPropPath);
   double HpdHVSingle = 0.0;
 
   if(!tabHV) {
     RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: "
-               <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdHighVoltage "<<endreq;
+               <<" Can't retrieve "+ RichHpdHVMatTabPropPath <<endreq;
 
 
   }else {
@@ -241,13 +239,13 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   double hpdQwtoSiDist = 0.0;
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR
-               << "Can't retrieve /dd/Structure/LHCb/Rich1 forHpdQw toSiDist "
+               << "Can't retrieve "<< Rich1DeStructurePathName<<"   forHpdQw toSiDist "
                << endreq;
   }else {
 
-    // modif to be compatible with recent Detdesc, SE 16-6-2005.
+
     hpdQwtoSiDist = Rich1DE->param<double>("RichHpdQWToSiMaxDist");
-    //    hpdQwtoSiDist = Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
+
   }
   if(HpdVerboseLevel >0 ){
     RichHpdlog << MSG::INFO
@@ -265,13 +263,13 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   double MaxZHitInRich1 = 0.0;
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR
-               << "Can't retrieve /dd/Structure/LHCb/Rich1 for MaxZhit in Rich1 "
+               << "Can't retrieve "<< Rich1DeStructurePathName << " for MaxZhit in Rich1 "
                << endreq;
   }else {
 
     // modif to to be comaptible with recent Detdesc SE 16-6-2005.
     MaxZHitInRich1 = Rich1DE->param<double>("Rich1MaxDownstreamZHitCoord");
-    //    MaxZHitInRich1 = Rich1DE->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
+
   }
   if ( HpdVerboseLevel >0 ) {
     RichHpdlog << MSG::INFO
@@ -289,10 +287,10 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   std::string hpdQWlvname;
   std::string hpdPhCathlvname;
   double phcathRinn = 0.0;
-  SmartDataPtr<DetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
+  SmartDataPtr<DetectorElement> RichHpdQWDE(detSvc, (Rich1DeStructurePathName+RichHpdQwDeSubPathName));
   if(!RichHpdQWDE) {
     RichHpdlog << MSG::ERROR
-               <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdQW "<<endreq;
+               <<"Can't retrieve "+Rich1DeStructurePathName+RichHpdQwDeSubPathName<<endreq;
 
   }else{
 
@@ -309,10 +307,10 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                <<"Hpd Qw Log Volname =  "<<hpdQWlvname<<endreq;
   }
   m_HpdQWLogVolName = hpdQWlvname;
-  SmartDataPtr<DetectorElement> RichHpdPCDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode");
+  SmartDataPtr<DetectorElement> RichHpdPCDE(detSvc, (Rich1DeStructurePathName+RichHpdPaCathDeSubPathname));
   if(!RichHpdPCDE) {
     RichHpdlog << MSG::ERROR
-               <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode "
+               <<"Can't retrieve " +Rich1DeStructurePathName+RichHpdPaCathDeSubPathname
                <<endreq;
 
   }else{
@@ -328,7 +326,6 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     // modif to be compatible with recent Detdesc. SE 16-6-2005.
     phcathRinn= RichHpdPCDE->param<double>( "HpdPhCathodeRadInner");
 
-    //    phcathRinn= RichHpdPCDE->userParameterAsDouble( "HpdPhCathodeRadInner");
 
   }
   if(HpdVerboseLevel >0 ){

@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.2 2005-06-16 11:40:18 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.3 2006-02-10 09:35:45 seaso Exp $
 // Include files 
 
 /// CLHEP
@@ -25,6 +25,7 @@
 
 /// local
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
 #include "RichG4TrackActionPhotOpt.h"
 #include "RichG4SvcLocator.h"
 //-----------------------------------------------------------------------------
@@ -67,11 +68,10 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
   IDataProviderSvc* detSvc = RichG4SvcLocator:: RichG4detSvc ();
  
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, 
-                                 "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc,Rich1DeStructurePathName  );
      if( !Rich1DE ){
        return Error( 
-      "Can't retrieve /dd/Structure/LHCb/Rich1 in RichG4TrackActionPhotOpt" );
+      "Can't retrieve  " +Rich1DeStructurePathName  +" in RichG4TrackActionPhotOpt" );
      } 
      else {
 

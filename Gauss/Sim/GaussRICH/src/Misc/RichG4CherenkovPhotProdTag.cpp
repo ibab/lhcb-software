@@ -2,11 +2,12 @@
 #include "RichInfo.h"
 #include "RichPhotInfo.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichG4GaussPathNames.h"
+#include "RichG4MatRadIdentifier.h"
 #include <math.h>
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
-
 G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
                                     G4Track* aCkvPhotTrack,
                                     const G4double  CkvCosTheta,
@@ -30,7 +31,9 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   //	<<G4endl; 
   const G4DynamicParticle* aChTrackParticle 
     = aChTrack.GetDynamicParticle(); 
-  
+
+  RichG4MatRadIdentifier* aRichG4MatRadIdentifier = 
+                          RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance(); 
   RichPhotInfo* aPhotInfo = new  RichPhotInfo();
   aPhotInfo->
     setMotherChTrackPDGcode(aChTrackParticle->
@@ -42,7 +45,8 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   aPhotInfo->setVerbosePhotTagFlag(aVerboseTagFlag);
   aPhotInfo->
     setChTrackMomAtProd(aChTrackParticle->GetTotalMomentum());
-  
+ aPhotInfo->
+   setPhotProdRadiatorNum(aRichG4MatRadIdentifier->getRadiatorNumForG4MatIndex(aChTrack.GetMaterial()->GetIndex()));   
   // G4double CurChTrakMom = 
   //       aChTrackParticle->GetTotalMomentum();
   // aPhotInfo->setChTrackMomAtProd( CurChTrakMom);

@@ -61,7 +61,12 @@ public:
   {    return  m_MaxPhotonsPerRichCherenkovStepInRich2Gas;}
   void setMaxPhotonsPerRichCherenkovStepInRich2Gas(int aRich2MaxPhot)
   {m_MaxPhotonsPerRichCherenkovStepInRich2Gas=aRich2MaxPhot;}
+  int MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator() 
+  {    return m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator;}
+  void setMaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator(int aQuartzMaxPhot)
+  {m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator=aQuartzMaxPhot;}
   
+    
   std::vector<G4String> RichRadiatorMaterialName() 
   {    return m_RichRadiatorMaterialName;}
   void setRichRadiatorMaterialName
@@ -91,6 +96,7 @@ private:
   int m_MaxPhotonsPerRichCherenkovStepInRich1Agel;
   int m_MaxPhotonsPerRichCherenkovStepInRich1Gas;
   int m_MaxPhotonsPerRichCherenkovStepInRich2Gas;
+  int m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator;
   std::vector<G4String> m_RichRadiatorMaterialName;
   std::vector<G4int> m_RichRadiatorMaterialIndex;
   int m_MaxAllowedPhotStepNumInRayleigh;

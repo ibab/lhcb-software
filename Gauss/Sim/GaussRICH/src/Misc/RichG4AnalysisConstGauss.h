@@ -1,3 +1,5 @@
+#ifndef MISC_RICHG4ANALYSISCONSTGAUSS_H
+#define MISC_RICHG4ANALYSISCONSTGAUSS_H 1
 #include "globals.hh"
 #include "G4ThreeVector.hh"
 #include "G4Step.hh"
@@ -24,66 +26,7 @@ static const G4double CF4AnalysisDnstrYHalfSize= CF4AnalysisUpstrYHalfSize;
 static const G4double HpdSupPlaneTilt=
                       atan(HpdSupPlaneTiltcosy/HpdSupPlaneTiltcosz);
 static const G4double Rich1ExitWallBeginZAnalysis=2128.0*mm;
-static const G4String CF4MaterialName="/dd/Materials/RichMaterials/CF4";
-static const G4String C4F10MaterialName="/dd/Materials/RichMaterials/C4F10";
-static const G4String AgelMaterialName="/dd/Materials/RichMaterials/Aerogel";
-static const G4String FilterGenericMaterialName="/dd/Materials/RichMaterials/Rich1FilterGenericMaterial";
-static const G4String FilterD263MaterialName="/dd/Materials/RichMaterials/Rich1FilterD263Material";
-static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
-static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
-
-static const G4String LogVolAgelNameAnalysis= 
-                              "/dd/Geometry/Rich1/lvRich1Aerogel";
-static const G4String LogVolC4F10NameAnalysis=
-                               "/dd/Geometry/Rich1/lvRich1SubMaster";
-static const G4String LogVolRich1Mirror1NameAnalysis=
-                              "/dd/Geometry/Rich1/lvRich1Mirror1";
-static const G4String LogVolRich1Mirror2NameAnalysis=
-                             "/dd/Geometry/Rich1/lvRich1Mirror2";
-static const G4String LogVolRich2Mirror1NameAnalysis=
-                              "/dd/Geometry/Rich2/lvRich2SphMirror";
-static const G4String LogVolRich2Mirror2NameAnalysis=
-                              "/dd/Geometry/Rich2/lvRich2FlatMirrorSeg";
-static const G4String LogVolRich1MagShNameAnalysis=
-                             "/dd/Geometry/Rich1/lvRich1MagSh" ;
-static const G4String LogColRich1GasQWNameAnalysis=
-                             "/dd/Geometry/Rich1/lvRich1GQuartzW";
-static const G4String LogVolCF4NameAnalysis=
-                             "/dd/Geometry/Rich2/lvRich2Gas";
-static const G4String LogVolHpdSMasterNameAnalysis =
-                     "/dd/Geometry/Rich1/lvRichHPDSMaster";
-static const G4String LogVolHpdQWindowNameAnalysis =
-                     "/dd/Geometry/Rich1/lvRichHPDQuartzWindow";
-static const G4String LogVolSiDetNameAnalysis =
-                     "/dd/Geometry/Rich1/lvRichHPDSiDet";
-static const G4String Rich1FilterGenericMatName=
-                             "/dd/Materials/RichMaterials/Rich1FilterGenericMaterial" ;
-static const G4String Rich1FilterD263MatName=
-                             "/dd/Materials/RichMaterials/Rich1FilterD263Material" ;
-static const G4String Rich1AerogelMatName=
-                             "/dd/Materials/RichMaterials/Aerogel" ;
-static const G4String Rich1QuartzMatName=
-                             "/dd/Materials/RichMaterials/GasWindowQuartz" ;
-static const G4String Rich2QuartzMatName=
-                             "/dd/Materials/RichMaterials/GasWindowQuartz" ;
-static const G4String RichHpdQWMatName=
-                            "/dd/Materials/RichMaterials/HpdWindowQuartz" ;
-static const G4String RichHpdPhCathMatName=
-                            "/dd/Materials/RichMaterials/HpdS20PhCathode" ;
-static const G4String RichAirMatName=
-                             "/dd/Materials/RichMaterials/RichAir";
-static const G4String Rich1NitrogenMatName=
-                          "/dd/Materials/RichMaterials/Rich1Nitrogen";
-static const G4String Rich2NitrogenMatName=
-                          "/dd/Materials/RichMaterials/Rich2Nitrogen";
-static const G4String Rich1C4F10MatName=
-                          "/dd/Materials/RichMaterials/C4F10";
-static const G4String RichHpdVacName=
-                       "/dd/Materials/RichMaterials/RichHpdVacuum";
-static const G4String Rich2CF4MatName=
-                          "/dd/Materials/RichMaterials/CF4";
-
-
+    
 static const G4double PhotMomCnv=1243.125;
 static const G4double MeVtoeV=1000000;
 static const G4double CF4ZBeginAnalysis=9450.0*mm;
@@ -180,3 +123,4 @@ static const G4double Rich2FiducialYslope= 0.0;
 //static const G4double Rich2FiducialYSlope= 
 //(Rich2FiducialDnstrEndY - Rich2FiducialUpstrEndY)/
 //(Rich2FiducialDnstrZ- Rich2FiducialUpstrZ) ;
+#endif // MISC_RICHG4ANALYSISCONSTGAUSS_H

@@ -16,7 +16,8 @@ RichPhotInfo::RichPhotInfo() :
   m_Mirror2ReflPosition(0),
   m_Mirror1DetCopyNum(-1),
   m_Mirror2DetCopyNum(-1),
-  m_VerbosePhotTagFlag(false)
+  m_VerbosePhotTagFlag(false),
+  m_PhotProdRadiatorNum(-1)
    {; }
 
 RichPhotInfo::~RichPhotInfo() {;}
