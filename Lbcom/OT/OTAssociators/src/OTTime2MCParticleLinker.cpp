@@ -85,7 +85,7 @@ StatusCode OTTime2MCParticleLinker::associateToTruth( const LHCb::OTTime* aTime,
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   
-  OTTime2MCHitAsct associator( evtSvc(), "OTTimes2MCHits" );
+  OTTime2MCHitAsct associator( evtSvc(), LHCb::OTTimeLocation::Default+"2MCHits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 

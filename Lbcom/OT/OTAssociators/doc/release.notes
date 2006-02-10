@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.37 2006-02-09 11:05:05 cattanem Exp $
+! $Id: release.notes,v 1.38 2006-02-10 15:58:05 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
 
 !===================== OTAssociators v4r0 2006-02-09 =====================
-! 2006-02-09 - Marco Cattaneo
- - Fix all the Linker locations 
+! 2006-02-10 - Marco Cattaneo
+ - Use consistent convention for output locations of all linkers:
+   ('/Event/Link/'+) xxxLocation             for links from xxx to MCParticle
+   ('/Event/Link/'+) xxxLocation + '2MCHits' for links from xxx to MCHits
 
 ! 2006-02-08 - Jan Amoraal
  - Use OTTime for truth tables and see what happens 

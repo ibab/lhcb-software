@@ -29,7 +29,7 @@ OTTime2MCHitLinker::OTTime2MCHitLinker( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = "OTTimes2MCHits" );
+  declareProperty( "OutputData", m_outputData = LHCb::OTTimeLocation::Default + "2MCHits" );
   declareProperty( "SpillOver", m_spillOver = false );
 }
 
