@@ -278,7 +278,8 @@
         desc      = 'container of Nodes'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
-        transient = 'TRUE' />
+        transient = 'TRUE'
+	nonconstaccessor = 'TRUE' />
 
       <relation
         type         = "LHCb::Track"
