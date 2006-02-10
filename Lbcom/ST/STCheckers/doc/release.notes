@@ -1,5 +1,9 @@
 ! Package         : ST/STCheckers
 ! Package manager : Matt Needham
+
+! 2006-02-09 M Needham
+ - Make TTDumpGeom more useful
+
 !-------------------------------------------------------------------------------
 
 !============================ STCheckers v1r0 2006-02-10 =======================

@@ -54,26 +54,14 @@ StatusCode TTDumpGeom::initialize(){
 
 
   m_tracker =  getDet<DeTTDetector>(DeSTDetLocation::TT);
+  if (m_tracker != 0 ){
+    DeSTDetector::Sectors tSectors = m_tracker->sectors();
+    DeSTDetector::Sectors::const_iterator iterSector = tSectors.begin();
+    for (; iterSector != tSectors.end() ; ++iterSector ){
+      std::cout << *iterSector <<std::endl; 
+    }
+ }
 
-  std::vector<DeSTStation*>::const_iterator iterStation = m_tracker->stations().begin();
-  for (; iterStation != m_tracker->stations().end() ; ++iterStation){
-    DeTTStation* tStation =  dynamic_cast<DeTTStation*>(*iterStation);
-    DeTTStation::Children::const_iterator iterLayer = tStation->layers().begin();
-    std::cout << tStation << std::endl;
-    for (;iterLayer != tStation->layers().end(); ++iterLayer){
-      DeTTLayer* tLayer = *iterLayer;
-      std::cout << tLayer << std::endl;
-      DeTTLayer::Children::const_iterator iterModule = tLayer->halfModules().begin();
-      for (;iterModule != tLayer->halfModules().end(); ++iterModule){
-        DeTTHalfModule* tModule = *iterModule;
-	std::cout << tModule << std::endl;
-        DeTTHalfModule::Children::const_iterator iterSector = tModule->sectors().begin();
-        for ( ; iterSector !=  tModule->sectors().end() ; ++iterSector ){
-          std::cout << *iterSector << std::endl;
-	} //sectors     
-      } // half module
-    }  // iterLayer
-  } // iterStation
 
   return StatusCode::SUCCESS;
 
