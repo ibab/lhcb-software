@@ -4,7 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v4r0 2005-02-02 =========================
+!========================== DigiAlg v4r0 2006-02-10 =========================
+! 2006-02-10 - Marco Cattaneo
+ - Add ProcessHeader creation to BooleInit
+
 ! 2006-02-02 - Marco Cattaneo
  - Add RawEvent creation to BooleInit
 

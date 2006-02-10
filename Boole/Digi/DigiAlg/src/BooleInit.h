@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.8 2005-12-21 12:41:36 cattanem Exp $
+// $Id: BooleInit.h,v 1.9 2006-02-10 07:17:15 cattanem Exp $
 #ifndef BOOLEINIT_H 
 #define BOOLEINIT_H 1
 
@@ -24,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

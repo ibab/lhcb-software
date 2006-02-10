@@ -1,12 +1,15 @@
-// $Id: BooleInit.cpp,v 1.11 2006-02-02 07:43:44 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.12 2006-02-10 07:17:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // from LHCbKernel
 #include "Kernel/IGenericTool.h"
 #include "Kernel/IRndmTool.h"
+
+// from EventBase
+#include "Event/ProcessHeader.h"
 
 // from MCEvent
 #include "Event/MCHeader.h"
@@ -81,19 +84,18 @@ StatusCode BooleInit::execute() {
   // Initialize the random number
   m_initRndmTool->initRndm( evt->runNumber(), evt->evtNumber() );
 
+  // Create the Boole event header
+  LHCb::ProcessHeader* header = new LHCb::ProcessHeader();
+  header->setApplicationName( this->appName() );
+  header->setApplicationVersion( this->appVersion() );
+  header->setRunNumber( evt->runNumber() );
+  put( header, LHCb::ProcessHeaderLocation::Digi );
+
   // Create an empty RawEvent
   LHCb::RawEvent* raw = new LHCb::RawEvent();
   put( raw, LHCb::RawEventLocation::Default );
   
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode BooleInit::finalize() {
-
-  return LbAppInit::finalize();  // must be called after all other actions
-}
 
 //=============================================================================
