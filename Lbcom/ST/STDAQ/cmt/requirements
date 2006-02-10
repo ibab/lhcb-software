@@ -3,7 +3,6 @@ version v2r2
 
 branches cmt doc src options
 
-include_dirs $(STDAQROOT)
 
 # Use here packages needed by link library and public interface
 use STDet        v*  Det
@@ -13,17 +12,15 @@ use LHCbKernel   v*  Kernel
 use GaudiKernel  v*
 use SiDAQ        v*  Si
 
-#---- link library
-library STDAQLib ../src/Lib/*.cpp 
 
-#macro_append cppflags ' -g'
 
 #component
-library STDAQ ../src/component/*.cpp -import=GSL
+library STDAQ *.cpp -import=GSL -import=AIDA
+
 
 # standard patterns (order is essential!)
 apply_pattern component_library library=STDAQ
-apply_pattern linker_library    library=STDAQLib
+
 
 private
 # Use here packages needed only by component library

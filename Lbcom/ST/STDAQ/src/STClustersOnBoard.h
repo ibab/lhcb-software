@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <boost/array.hpp>
 
-#include "STDAQ/STDAQDefinitions.h"
+#include "STDAQDefinitions.h"
 
 class STClustersOnBoard {
 

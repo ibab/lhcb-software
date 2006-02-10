@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.5 2006-02-08 17:20:51 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,16 +6,16 @@
 // STDAQ
 #include "STClustersToRawBankAlg.h"
 #include "STBoardToBankMap.h"
-#include "STDAQ/STDAQGeneral.h"
-#include "STDAQ/ISTReadoutTool.h"
-#include "STDAQ/STTell1ID.h"
+#include "STDAQGeneral.h"
+#include "ISTReadoutTool.h"
+#include "STTell1ID.h"
 
-#include "STDAQ/STTell1Board.h"
-#include "STDAQ/STDAQDefinitions.h"
-#include "STDAQ/STClusterWord.h" 
+#include "STTell1Board.h"
+#include "STDAQDefinitions.h"
+#include "STClusterWord.h" 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
-#include "STDAQ/STDAQFunctor.h"
+#include "STDAQFunctor.h"
 
 #include "Kernel/STDetSwitch.h"
 

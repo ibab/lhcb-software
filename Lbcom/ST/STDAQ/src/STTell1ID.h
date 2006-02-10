@@ -1,4 +1,4 @@
-// $Id: STTell1ID.h,v 1.4 2006-02-08 17:20:50 mneedham Exp $
+// $Id: STTell1ID.h,v 1.1 2006-02-10 08:59:32 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 

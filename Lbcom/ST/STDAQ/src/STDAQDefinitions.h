@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 

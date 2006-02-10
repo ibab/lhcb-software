@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.4 2006-02-08 17:20:51 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,9 +7,9 @@
 // STDAQ
 #include "STReadoutTool.h"
 
-#include "STDAQ/STTell1Board.h"
-#include "STDAQ/STTell1ID.h"
-#include "STDAQ/STDAQDefinitions.h"
+#include "STTell1Board.h"
+#include "STTell1ID.h"
+#include "STDAQDefinitions.h"
 
 // IT
 #include "Kernel/STChannelID.h"

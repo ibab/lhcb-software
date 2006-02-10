@@ -26,6 +26,7 @@ void STDAQ_load(){
   DLL_DECL_ALGORITHM( STClustersToRawBankAlg );
   DLL_DECL_ALGORITHM( RawBankToSTClusterAlg );
   DLL_DECL_ALGORITHM( RawBankToSTLiteClusterAlg );
+  DLL_DECL_ALGORITHM( STRawBankMonitor );
 
   DLL_DECL_TOOL( ITReadoutTool );
   DLL_DECL_TOOL( TTReadoutTool );

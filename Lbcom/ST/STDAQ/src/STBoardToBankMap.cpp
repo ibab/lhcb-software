@@ -1,5 +1,5 @@
 #include "STBoardToBankMap.h"
-#include "STDAQ/STTell1ID.h"
+#include "STTell1ID.h"
 
 STBoardToBankMap::STBoardToBankMap(){
 

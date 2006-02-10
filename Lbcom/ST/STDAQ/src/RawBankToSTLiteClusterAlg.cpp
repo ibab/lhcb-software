@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.2 2006-02-07 15:56:39 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 
 
 #include <algorithm>
@@ -11,7 +11,7 @@
 
 // local
 #include "RawBankToSTLiteClusterAlg.h"
-#include "STDAQ/ISTReadoutTool.h"
+#include "ISTReadoutTool.h"
 
 // Event
 #include "Event/RawEvent.h"
@@ -19,9 +19,9 @@
 #include "Event/STLiteCluster.h"
 
 
-#include "STDAQ/STTell1Board.h"
-#include "STDAQ/STTell1ID.h"
-#include "STDAQ/STDAQGeneral.h"
+#include "STTell1Board.h"
+#include "STTell1ID.h"
+#include "STDAQGeneral.h"
 #include "SiDAQ/SiHeaderWord.h"
 
 #include "Kernel/STDetSwitch.h"

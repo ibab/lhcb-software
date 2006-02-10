@@ -1,8 +1,8 @@
-// $Id: STTell1Board.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: STTell1Board.h,v 1.1 2006-02-10 08:59:32 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
-#include "STDAQ/STTell1ID.h"
+#include "STTell1ID.h"
 #include "Kernel/STChannelID.h"
 #include <vector>
 #include <iostream>

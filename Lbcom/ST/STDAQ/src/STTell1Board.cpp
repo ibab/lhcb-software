@@ -1,5 +1,5 @@
-// $Id: STTell1Board.cpp,v 1.3 2006-01-26 15:31:25 mneedham Exp $
-#include "STDAQ/STTell1Board.h"
+// $Id: STTell1Board.cpp,v 1.1 2006-02-10 08:59:32 mneedham Exp $
+#include "STTell1Board.h"
 
 
 using namespace LHCb;

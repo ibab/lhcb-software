@@ -4,8 +4,16 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+
+
+! 2006-02-09
+ - changes to make a component library
+
+! 2006-02-08
+
 !=============================== STDAQ v2r2 2006-02-08 =======================
 ! 2006-02-08 M. Needham
+
  - Correct Tell1 board numbering scheme
 
 ! 2006-02-07 M. Needham

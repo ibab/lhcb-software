@@ -1,4 +1,4 @@
-// $Id: STDAQFunctor.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STDAQFunctor.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 #ifndef _ITDataFunctor_H_
 #define _ITDataFunctor_H_
 

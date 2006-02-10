@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -9,9 +9,9 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // STDAQ
-#include "STDAQ/ISTReadoutTool.h"
-#include "STDAQ/STTell1ID.h"
-#include "STDAQ/STDAQDefinitions.h"
+#include "ISTReadoutTool.h"
+#include "STTell1ID.h"
+#include "STDAQDefinitions.h"
 
 // ST
 #include "Kernel/STChannelID.h"

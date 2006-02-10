@@ -1,10 +1,10 @@
-// $Id: STDecodingBaseAlg.h,v 1.1 2006-02-07 08:47:36 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/RawBank.h"
-#include "STDAQ/STDAQDefinitions.h"
+#include "STDAQDefinitions.h"
 
 #include "Event/STCluster.h"
 
@@ -22,7 +22,7 @@
 #include "Event/RawEvent.h"
 #include "Event/ByteStream.h"
 
-#include "STDAQ/STClusterWord.h"
+#include "STClusterWord.h"
 
 #include <string>
 

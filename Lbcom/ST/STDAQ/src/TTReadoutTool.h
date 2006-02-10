@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: TTReadoutTool.h,v 1.1 2006-02-10 08:59:32 mneedham Exp $
 #ifndef _TTReadoutTool_H
 #define _TTReadoutTool_H
 

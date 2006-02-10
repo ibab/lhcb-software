@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.h,v 1.2 2006-02-07 08:47:36 mneedham Exp $
+// $Id: STClustersToRawBankAlg.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -14,7 +14,7 @@
 #include "Event/STCluster.h"
 #include "STClustersOnBoard.h"
 
-#include "STDAQ/STDAQDefinitions.h"
+#include "STDAQDefinitions.h"
 #include "Event/RawBank.h"
 #include "Event/BankWriter.h"
 
