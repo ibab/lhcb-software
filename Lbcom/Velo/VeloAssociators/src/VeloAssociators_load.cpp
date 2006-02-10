@@ -13,7 +13,7 @@
 
 DECLARE_FACTORY_ENTRIES( VeloAssociators ) {
 
-  DECLARE_ALGORITHM( VeloCluster2MCHitLinker );
+  DECLARE_ALGORITHM( InternalVeloCluster2MCHitLinker );
 
 }
 

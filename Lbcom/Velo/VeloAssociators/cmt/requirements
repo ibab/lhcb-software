@@ -6,19 +6,16 @@ version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          VeloAssociators src cmt doc
-
-include_dirs $(VELOASSOCIATORSROOT)
+branches src cmt doc
+include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
+use  MCEvent     v*     Event
 use  VeloEvent   v*     Event
-use  Relations	 v*	Kernel
 use  LinkerEvent v*     Event
-use  VeloAlgorithms v4r* Velo
 
 # Component library building rule
 #============================================================================
 library          VeloAssociators    ../src/*.cpp
-
 apply_pattern component_library library=VeloAssociators

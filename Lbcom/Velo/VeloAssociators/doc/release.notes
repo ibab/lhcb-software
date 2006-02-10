@@ -1,7 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-!==================== VeloAssociators v2r0 2006-02-08 ===================
+!==================== VeloAssociators v2r0 2006-02-10 ===================
+! 2006-02-10 - Marco Cattaneo
+ - Remove obsolete files. They can be added again later if needed
+
 ! 2006-02-08 - Tomasz Szumlak
  - new package compatible with LHCb v20r0
  - new linkers objects to create associations between InternalVeloClusters
