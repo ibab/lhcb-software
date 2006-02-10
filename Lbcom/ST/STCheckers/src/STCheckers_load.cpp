@@ -1,4 +1,4 @@
-// $Id: STCheckers_load.cpp,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: STCheckers_load.cpp,v 1.2 2006-02-10 08:44:55 mneedham Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
@@ -24,7 +24,6 @@ DECLARE_FACTORY_ENTRIES( STCheckers ) {
   DECLARE_ALGORITHM( ITOccupancy );
   DECLARE_ALGORITHM( TTOccupancy );
 
-  DECLARE_ALGORITHM( STRawBankMonitor );
 
 
   DECLARE_ALGORITHM( LandauTest );
