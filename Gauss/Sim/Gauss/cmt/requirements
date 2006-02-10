@@ -1,5 +1,5 @@
 package Gauss
-version v24r0
+version v24r1
 
 #=========================================================================
 #-- Structure
@@ -39,7 +39,7 @@ use GaussAlgs		 v2r0    Sim
 use GaussKine            v1r0    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r0    Sim
-use GaussRICH            v6r0    Sim
+use GaussRICH            v6r1    Sim
 use GaussCalo            v8r0    Sim
 
 #-- Optional visualisation and UI
@@ -53,7 +53,7 @@ use $(GDMLG4Writer_use)
 #-- Monitoring
 use GaussMonitor        v3r0    Sim
 use CaloMoniSim         v2r0    Calo
-use VeloGauss           v1r1    Velo
+use VeloGauss           v1r2    Velo
 use MuonMoniSim         v2r0    Muon
 
 #=========================================================================

@@ -4,9 +4,24 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r1 2006-02-10 =============================
 ! 2006-02-10 - Gloria CORTI
+ - Use GaussRICH v6r1 and VelOGauss v1r2
+   . requirements
+ - Switch on monitoring of Velo and RICH working with the geometry structure
+   (requires VeloGauss v1r2 and GaussRICH v6r1)
+   . Monitor.opts
+ - Remove simulation xml settings for old geometry.
+   . Simulation-v200412.xml - REMOVED
+ - Adapt simulation xml setting to new structure in RICHes, from Sajan EASO
+   . Rich1AerogelRegionDefinition.xml, 
+     RichOverallRegionDefinition.xml,  
+     RichSimulationAttributes.xml
+ - Set paths for RICH surfaces as in new detector structure and switch on 
+   its simulation (requires GaussRICH v6r1)
+   . SimGeometry.opts
+   . Simulation.opts
  - Switch back simulation of IT, now working.
-   Set path for RICH surfaces as in new detector structure.
    . SimGeometry.opts
  - Add loading of STDet, OTDet and RichDet
    . Common.opts
