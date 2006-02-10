@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.4 2006-02-02 09:06:04 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.5 2006-02-10 16:32:30 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -49,8 +49,6 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("saturation",m_saturation = 150.);
   declareProperty("detType", m_detType = "TT"); 
 
-  m_sectors.reserve(300);
-
 }
 
 STDigitCreator::~STDigitCreator() {
@@ -68,9 +66,6 @@ StatusCode STDigitCreator::initialize() {
  
   STDetSwitch::flip(m_detType,m_inputLocation);
   STDetSwitch::flip(m_detType,m_outputLocation);
-
-  // cache sectors
-  m_sectors = m_tracker->sectors();
 
    // eff tool
   m_effTool = tool<ISTEffCalculator>(m_effToolName,this);
@@ -136,10 +131,12 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const{
 
   // random noise strips
   noiseCont.reserve(m_numNoiseStrips);
+  unsigned int nSector = m_tracker->sectors().size();
+  const DeSTDetector::Sectors& tSectors = m_tracker->sectors();
   for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
     // gen a random wafer
-    int iSector = (int)(m_uniformDist->shoot()*m_sectors.size());
-    DeSTSector* aSector = m_sectors[iSector];
+    int iSector = (int)(m_uniformDist->shoot()*nSector);
+    DeSTSector* aSector = tSectors[iSector];
     int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
     STChannelID aChan = STChannelID(aSector->elementID().type(),
                                     aSector->elementID().station(),
@@ -147,6 +144,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const{
                                     aSector->elementID().detRegion(),
                                     aSector->elementID().sector(),
                                     iStrip);
+   
     double ranNoise = m_sigNoiseTool->noiseInADC(aSector) * m_gaussTailDist->shoot();
     noiseCont.push_back(std::make_pair(ranNoise,aChan));
   } // iNoiseStrip    

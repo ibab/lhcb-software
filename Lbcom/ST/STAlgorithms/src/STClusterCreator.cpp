@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.4 2006-02-07 08:46:20 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.5 2006-02-10 16:32:30 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -164,7 +164,7 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
 	ISTClusterPosition::Measurement measValue = m_positionTool->estimate(clusteredDigits);
       
         STChannelID nearestStrip = measValue.first.first;
-      
+     
         double nSum = neighbourSum(startCluster,iterDigit,digitCont );
 
         // make cluster +set things

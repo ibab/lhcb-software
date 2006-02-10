@@ -181,56 +181,60 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
 
 	// correct normalization of charge
         double totWeightedCharge = chargeOnStrips(stripMap);           
+        if (totWeightedCharge > 1e-10){
 
-	// capacitive coupling
-        std::map<unsigned int,double>::iterator firstIter = stripMap.begin();
-        std::map<unsigned int,double>::iterator lastIter = stripMap.end();
-        lastIter--;
-        unsigned int firstStrip = firstIter->first;
-        unsigned int lastStrip = lastIter->first;
+   	  // capacitive coupling
+          std::map<unsigned int,double>::iterator firstIter = stripMap.begin();
+          std::map<unsigned int,double>::iterator lastIter = stripMap.end();
+          lastIter--;
+          unsigned int firstStrip = firstIter->first;
+          unsigned int lastStrip = lastIter->first;
 
-        unsigned int iStrip;
+          unsigned int iStrip;
 
-        STChannelID elemChan = aSector->elementID();
-        for (iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
+          STChannelID elemChan = aSector->elementID();
+          for (iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
 
-          double prevCharge = 0.0;
-          if (iStrip != firstStrip){
-            prevCharge = stripMap[iStrip-1];
-	  }
+            double prevCharge = 0.0;
+            if (iStrip != firstStrip){
+              prevCharge = stripMap[iStrip-1];
+	    }
 
-          double nextCharge = 0.0;
-          if (iStrip != lastStrip){
-            nextCharge = stripMap[iStrip+1];
-	  }
+            double nextCharge = 0.0;
+            if (iStrip != lastStrip){
+              nextCharge = stripMap[iStrip+1];
+	    }
 
-          double xTalkLevel = m_xTalkParams[0] + m_xTalkParams[1]*aSector->capacitance();
+            double xTalkLevel = m_xTalkParams[0] + m_xTalkParams[1]*aSector->capacitance();
 
-          double weightedCharge = ((1.-(2.0*xTalkLevel))*stripMap[iStrip])
-  	                     + (xTalkLevel*(nextCharge+prevCharge)); 
-
-          // amplifier response - fraction of charge it sees
-          double beetleFraction;          
-          if (iStrip != firstStrip && iStrip != lastStrip){
-            beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
+            double weightedCharge = ((1.-(2.0*xTalkLevel))*stripMap[iStrip])
+  	                           + (xTalkLevel*(nextCharge+prevCharge)); 
+  
+            // amplifier response - fraction of charge it sees
+            double beetleFraction;          
+            if (iStrip != firstStrip && iStrip != lastStrip){
+              beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
                                            -aHit->time()-spillTime, aSector->capacitance(),
                                            STAmpliferResponseType::signal);
-	  }
-          else {
-            beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
-                                            -aHit->time()-spillTime, aSector->capacitance()
-                                            ,STAmpliferResponseType::capCoupling);
-	  }
+	    }
+            else {
+              beetleFraction = beetleResponse(m_TOFVector[elemChan.station()-1]  
+                                              -aHit->time()-spillTime, aSector->capacitance()
+                                              ,STAmpliferResponseType::capCoupling);
+	    }
 
-          STChannelID aChan(DeSTDetLocation::detType(m_detType),
-                            elemChan.station(), elemChan.layer(), 
-                            elemChan.detRegion(), elemChan.sector(), iStrip);
+            STChannelID aChan(DeSTDetLocation::detType(m_detType),
+                              elemChan.station(), elemChan.layer(), 
+                              elemChan.detRegion(), elemChan.sector(), iStrip);
 
-          double adcCounts = m_scaling *
-                             m_sigNoiseTool->convertToADC((weightedCharge/totWeightedCharge)*ionization*beetleFraction);
+            double adcCounts = m_scaling *
+                               m_sigNoiseTool->convertToADC((weightedCharge/totWeightedCharge)
+                               *ionization*beetleFraction);
   
-          MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
-          depositCont->insert(newDeposit);
+	 
+             MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
+             depositCont->insert(newDeposit);
+	  } // has to be some charge
         } // loop iStrip
       }  // in active area
     } // hitToDigitize
