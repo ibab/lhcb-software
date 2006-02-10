@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.74 2006-02-09 16:04:39 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.75 2006-02-10 18:54:41 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -111,10 +111,10 @@ GiGa.ModularPL.PhysicsConstructors +=
   { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" } ;
 GiGa.ModularPL.PhysicsConstructors += 
   { "GiGaExtPhysics<IonPhysics>/IonPhysics"         } ;
-//GiGa.ModularPL.PhysicsConstructors += 
-//  { "GiGaPhysConstructorOp"                         } ;
-//GiGa.ModularPL.PhysicsConstructors += 
-//  { "GiGaPhysConstructorHpd"                        } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaPhysConstructorOp"                         } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaPhysConstructorHpd"                        } ;
 
 // Mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
@@ -146,8 +146,8 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 
 // specific RICH options
 #pragma print off
-//#include "$GAUSSRICHROOT/options/Rich.opts"
-//GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+#include "$GAUSSRICHROOT/options/Rich.opts"
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 // uncomment the following to activate the extended Rich information
 // see http://j.home.cern.ch/j/jonesc/www/OORich for more details
 //#include "$GAUSSRICHROOT/options/RichVerbose.opts"
@@ -178,7 +178,7 @@ GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 // setting simulation attributes
 SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
-//GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
+GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to save geometry in GDML format
