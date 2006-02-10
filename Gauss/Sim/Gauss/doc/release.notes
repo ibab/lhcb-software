@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-02-10 - Gloria CORTI
+ - Switch back simulation of IT, now working.
+   Set path for RICH surfaces as in new detector structure.
+   . SimGeometry.opts
+
 ! 2006-02-09 - Gloria CORTI
  - Use new detector description lhcb-v200601.xml from XmlDDDB v30r0
    . requirements

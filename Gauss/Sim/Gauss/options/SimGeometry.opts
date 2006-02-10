@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.10 2006-02-09 16:13:26 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.11 2006-02-10 16:05:57 gcorti Exp $
 
 /** @file
  *
@@ -37,14 +37,14 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
 //#include "$GAUSSOPTS/SimVeloGeometry.opts" // Must be adapted!!
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
-// Geo.StreamItems      += {"/dd/Geometry/Rich1/Rich1Surfaces"};
-// Geo.StreamItems      += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
+// Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
+// Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
-// Geo.StreamItems      += {"/dd/Geometry/Rich2/Rich2Surfaces"};
+// Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};

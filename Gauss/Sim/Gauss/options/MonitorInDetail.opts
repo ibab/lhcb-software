@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.3 2006-01-31 18:26:27 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.4 2006-02-10 16:05:57 gcorti Exp $ 
 
 /** @file 
  * 
@@ -14,7 +14,6 @@
 //------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
 NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
-MuonHitChecker.DetailedMonitor = true;
 
 // Algorithm filling detailed info in an ntuple from HepMC
 GenMonitor.Members       += { "GeneratorFullMonitor" };
@@ -24,6 +23,9 @@ SimMonitor.Members       += { "MCTruthFullMonitor" };
 
 // Add more detail histograms for MCTruth
 MCTruthMonitor.DetailedHistos = true;
+
+// Make ntuples for Muon
+MuonHitChecker.DetailedMonitor = true;
 
 //------------------------------------------------------------------------
 // Check events
@@ -49,7 +51,7 @@ SimMonitor.Members += {"DumpMCEventAlg"};
 // GiGaGetHitsAlg.MuonHits = "";
 // GiGaGetHitsAlg.CaloHits = { };
 // GiGaGetHitsAlg.RichHits = "";
-// GetVeloHits.OutputLevel = 2;
+//GetVeloHits.OutputLevel = 2;
 
 // Check MCSignal info (only for complete production)
 // SimMonitor.Members    += { "MCDecayCounter" };
