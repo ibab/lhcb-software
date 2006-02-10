@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.38 2006-02-09 13:02:04 szumlat Exp $
+! $Id: release.notes,v 1.39 2006-02-10 14:09:26 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
 
-!====================== VeloEvent v14r0 2006-01-07 =======================
+!====================== VeloEvent v14r0 2006-02-10 =======================
+! 2006-02-10 - Marco Cattaneo
+ - Add InternalVeloCluster and VeloFullFPGADigit, to avoid coupling between
+   VeloAlgorithms package and VeloAssociators
+
 ! 2006-02-08 - Tomasz Szumlak
  - update VeloDigit object
 

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Szumlak -->
+<!--- Created : 2005-12-09 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="VeloEvent">
+<!--   -->
+<!-- Updated VeloFullDigit at present as VeloFullFPGADigit -->
+<!-- Comments: Tomasz Szumlak -->
+<!--   -->
+  <class name="VeloFullFPGADigit" 
+   id="4003"
+   author="Chris Parkes, update Tomasz Szumlak" 
+   desc="Full information on a reconstructed single digitised velo channel. 
+   This info. is available inside the data processor but is not normally output 
+   on DAQ stream for all channels. Updated VeloFullDigit object contains 
+   info. about ADC sample througout all stages of FPGA processing"
+	   location="Raw/Velo/FullDigits">
+  <import name="Kernel/VeloChannelID"/>
+  <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
+  <base 
+   name="KeyedObject&lt;LHCb::VeloChannelID&gt;"
+  />
+   &KeyedContainer;
+
+   <constructor desc="Constructor with key" 
+    initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
+    m_processingList(0),
+    m_rawADCValue(0),
+    m_ADCFIRcorrection(0.0),
+    m_subtractedPedestal(0.0),
+    m_subtractedCM(0.0),
+    m_rawNoise(0.0),
+    m_noise(0.0),
+    m_flag()"
+   >
+     <arg 
+      type="LHCb::VeloChannelID" 
+      name="key" 
+      const="TRUE"
+     />              
+   </constructor> 
+  
+   <enum
+    name="processingStages"
+    value="RAW=0, FIR, PedestalSubtracted, CMSubtracted"
+    desc="processing stages performed by FPGA processor"
+    access="PUBLIC"
+   />
+  
+   <enum
+    name="processingListMasks"
+    value="mRAW=0x01, mFIR=0x02, mPedestalSubtracted=0x04, mCMSubtracted=0x08"
+    desc="masks"
+    access="PUBLIC"
+   />
+
+   <method 
+    name="channelID" 
+    type="LHCb::VeloChannelID" 
+    desc="combined sensor and strip number ID" 
+    const="TRUE"
+   >          
+    <code>
+     return key();
+    </code>
+   </method>
+
+   <method 
+    name="sensor" 
+    type="long" 
+    desc="Sensor Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().sensor();
+    </code>
+   </method>
+   
+   <method 
+    name="strip" 
+    type="long" 
+    desc="Strip Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().strip();
+    </code>
+   </method>
+
+   <attribute
+    name="processingList" 
+    type="short int"
+    desc="processing history"
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+    
+
+   <attribute 
+    name="rawADCValue" 
+    type="double"
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+  
+   <attribute 
+    name="ADCFIRcorrection" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="subtractedPedestal" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="subtractedCM" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="rawNoise" 
+    type="double" 
+    desc=" "
+   />
+
+   <attribute 
+    name="noise" 
+    type="double" 
+    desc=" "
+   />
+
+   <attribute
+    name="flag"
+    type="processingStages"
+    desc=" "
+    getMeth="FALSE"
+    setMeth="FALSE"
+   />
+
+   <method
+    desc="Set the value of the Raw ADC and proper flag"
+    name="setRawADCValue"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mRAW;
+      m_flag=RAW;
+      m_rawADCValue=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the value of the FIR corrections"
+    name="setFIRValue"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mFIR;
+      m_flag=FIR;
+      m_ADCFIRcorrection=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the value of the Pedestal"
+    name="setSubtractedPedestal"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mPedestalSubtracted;
+      m_flag=PedestalSubtracted;
+      m_subtractedPedestal=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the value of the Common Mode noise"
+    name="setSubtractedCM"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mCMSubtracted;
+      m_flag=CMSubtracted;
+      m_subtractedCM=value;
+     </code>
+   </method>
+
+   <method
+    desc="Returns processing stage flag as integer"
+    name="processingStageValue"
+    type="int"
+    const="TRUE"
+   >
+    <code>
+     return m_flag;
+    </code>
+   </method>
+
+   <method
+    desc="Returns processing stage flag as name of the processing stage"
+    name="processingStageName"
+    type="std::string"
+    const="TRUE"
+   >
+    <code>
+     switch(m_flag){
+      case RAW: return ("RAW"); break;
+      case FIR: return ("FIR"); break;
+      case PedestalSubtracted: return ("PedestalSubtracted"); break;
+      case CMSubtracted: return ("CMSubtracted"); break;
+      default: return (" " ); break;
+     }
+    </code>
+   </method>
+
+   <method
+    desc="Returns current ADC Value related with appropriate stage of processing"
+    name="adcValue"
+    type="double"
+    const="TRUE"
+   >
+    <arg type="int" name="stage"/>
+     <code>
+      switch(stage){
+       case RAW: return (m_rawADCValue); break;
+       case FIR: return (m_ADCFIRcorrection); break;
+       case PedestalSubtracted: return (m_subtractedPedestal); break;
+       case CMSubtracted: return (m_subtractedCM); break;
+       default: return 0.0; break;
+      }
+     </code>
+   </method> 
+
+   <method
+    desc="returns rawADCValue"
+    name="adcValue"
+    type="double"
+    const="TRUE"
+   >
+    <code>
+     return m_rawADCValue;
+    </code>
+   </method>
+
+   <method
+    desc="returns history of the processing"
+    name="getProcessingList"
+    type="int"
+    const="TRUE"
+   >
+    <code>
+     int temp=0;
+     if(m_processingList&amp;mRAW) temp+=1;
+     if(m_processingList&amp;mFIR) temp+=10;
+     if(m_processingList&amp;mPedestalSubtracted) temp+=100;
+     if(m_processingList&amp;mCMSubtracted) temp+=1000;
+     return temp;
+    </code>
+   </method>
+
+   <method 
+    name="signalToNoise" 
+    type="double" 
+    desc="signal to noise after common mode subtracted" 
+    const="TRUE"
+   >
+    <code>
+     return (noise()>0.)?adcValue()/noise():adcValue();
+    </code>
+   </method>
+  </class>
+ </package>
+</gdd>
