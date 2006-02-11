@@ -79,7 +79,7 @@ HLTBd2DstarPiTree.LinkAsct.OutputLevel = 3;
 
 Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", 
                                             "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", 
-                                            "Phys/HLTDetachedPions/Particles"}; // HLTDetachedPions : soft pion
+                                            "Phys/HLTDetachedPions/Particles", "Phys/SelectBd2DstarPi/Particles"}; // HLTDetachedPions : soft pion
 Particle2MCLinksHLTBd2DstarPi.OutputLevel = 3;
 
 // No D~0 in the HLT, but we form: D0 -> pi+ pi-, K+ pi-, pi+ K- and K+ K-
