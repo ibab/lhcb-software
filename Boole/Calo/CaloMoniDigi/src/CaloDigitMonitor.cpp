@@ -17,6 +17,7 @@
 // 25/05/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
 
+DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
 
 // Standard creator
 CaloDigitMonitor::CaloDigitMonitor( const std::string& name, 
@@ -69,9 +70,8 @@ StatusCode CaloDigitMonitor::execute() {
  */
   double nbHit      = 0.;
   double sumHit     = 0.;
-  //SmartDataPtr< LHCb::MCCaloHits > Hits ( eventDataService() , m_nameOfHits );
-  LHCb::MCCaloHits* Hits = get<LHCb::MCCaloHits> ( m_nameOfHits );
-
+  SmartDataPtr< LHCb::MCCaloHits > Hits ( eventDataService() , m_nameOfHits );
+    
   if( 0 != Hits ) { 
     LHCb::MCCaloHits::const_iterator sig;
     for ( sig = Hits->begin() ; Hits->end() != sig ; ++sig ) {
@@ -92,8 +92,7 @@ StatusCode CaloDigitMonitor::execute() {
  */
   double nbMCDigit    = 0.;
   double sumMCDigit   = 0.;
-  //SmartDataPtr<LHCb::MCCaloDigits> MCDigits ( eventDataService(), m_nameOfMCDigits );
-  LHCb::MCCaloDigits* MCDigits = get<LHCb::MCCaloDigits> ( m_nameOfMCDigits );
+  SmartDataPtr<LHCb::MCCaloDigits> MCDigits ( eventDataService(), m_nameOfMCDigits );
 
   if( 0 != MCDigits ) { 
     LHCb::MCCaloDigits::const_iterator dep;
@@ -115,8 +114,7 @@ StatusCode CaloDigitMonitor::execute() {
  */
   double nbDigit  = 0.;
   double sumDigit = 0.;
-  //SmartDataPtr<LHCb::CaloDigits> digits ( eventDataService() , m_nameOfDigits );
-  LHCb::CaloDigits* digits = get<LHCb::CaloDigits> ( m_nameOfDigits );
+  SmartDataPtr<LHCb::CaloDigits> digits ( eventDataService() , m_nameOfDigits );
 
   if( 0 != digits ) { 
     LHCb::CaloDigits::const_iterator dig;
