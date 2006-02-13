@@ -7,12 +7,12 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
-!===================== GaussCalo v8r0 2006-01-31 =============================
-! 2006-13-02 - Olivier Deschamps
+!===================== GaussCalo v8r0 2006-02-13 =============================
+! 2006-02-13 - Olivier Deschamps
  - Adapt pathes to DownstreamRegion enveloppe in options files.
 
 !===================== GaussCalo v8r0 2006-01-31 =============================
-! 2006-17-01 - Olivier Deschamps
+! 2006-01-17 - Olivier Deschamps
  - Adapt to new Event Model & LHCb v20 migration.
  - requirement : CaloEvent dependancy replaced by MCEvent
  - src         : algorithms and tools adapted
