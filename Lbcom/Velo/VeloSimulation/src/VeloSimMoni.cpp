@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.2 2006-02-10 14:03:31 cattanem Exp $
+// $Id: VeloSimMoni.cpp,v 1.3 2006-02-13 16:21:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -87,10 +87,13 @@ StatusCode VeloSimMoni::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   //
-  m_nMCVeloFE/=m_NumberOfEvents;
-  m_nMCVeloFE2/=m_NumberOfEvents;
-  double errnMCVeloFE=
-         sqrt((m_nMCVeloFE2-(m_nMCVeloFE*m_nMCVeloFE))/m_NumberOfEvents);
+  double errnMCVeloFE = 0;
+  if( 0 != m_NumberOfEvents ) {
+    m_nMCVeloFE/=m_NumberOfEvents;
+    m_nMCVeloFE2/=m_NumberOfEvents;
+      sqrt((m_nMCVeloFE2-(m_nMCVeloFE*m_nMCVeloFE))/m_NumberOfEvents);
+  }
+  
   //
   info()<< "------------------------------------------------------" <<endmsg;
   info()<< "                - VeloSimMoni table -                 " <<endmsg;

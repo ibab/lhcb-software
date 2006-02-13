@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== VeloSimulation v2r0 2006-02-10 =====================
+!===================== VeloSimulation v2r0 2006-02-13 =====================
+! 2006-02-13 - Marco Cattaneo
+ - Protect against divide by zero in VeloSimMoni if zero events processed
+
 ! 2006-02-10 - Marco Cattaneo
  - Remove VeloSimulation directory
  - Pickup from LHCbKernel interfaces previously in VeloAlgorithms 
