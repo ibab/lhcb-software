@@ -1,90 +1,116 @@
-// $Id: CircleTraj.cpp,v 1.3 2006-02-10 12:28:22 graven Exp $
+// $Id: CircleTraj.cpp,v 1.4 2006-02-13 11:00:51 graven Exp $
 // Include files
 
 // local
 #include "Kernel/CircleTraj.h"
-#include "Kernel/Vector3DTypes.h"
+
+#include "Math/GenVector/AxisAngle.h"
+#include <math.h>
 
 using namespace LHCb;
 using namespace ROOT::Math;
+using namespace Gaudi;
 
-  /// Constructor from an origin, a radius
-  /// and a range in angle w.r.t. angle of origin point
-CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
-                        double radius,
-                        const Range& angularRange ) 
+CircleTraj*
+CircleTraj::clone() const
 {
-  m_origin = origin;
-  m_radius = radius;
-  m_angularRange = angularRange;
-  m_range = Range(m_angularRange.first*m_radius,m_angularRange.first*m_radius);
+        return new CircleTraj(*this);
+}
+
+CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
+                        const Gaudi::XYZVector& dir1,
+                        const Gaudi::XYZVector& dir2,
+                        double radius)
+        :m_origin(origin),
+         m_normal(dir1.Cross(dir2).unit()),
+         m_dirStart(dir1.unit()),
+         m_range(0,radius*std::asin(m_dirStart.Cross(dir2.unit()).r())),
+         m_radius(radius)
+{
+};
+
+CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
+                        const Gaudi::XYZVector& normal,
+                        const Gaudi::XYZVector& origin2point,
+                        const Range& range)
+        :m_origin(origin),
+         m_normal(normal.unit()),
+         m_dirStart(origin2point-origin2point.Dot(m_normal)*m_normal),
+         m_range(range),
+         m_radius(m_dirStart.r())
+{
 };
 
 /// Point on the trajectory at arclength from the starting point    
-Gaudi::XYZPoint CircleTraj::position( double arclength ) const
+Gaudi::XYZPoint CircleTraj::position( double s ) const
 {
-  double fi = phi(arclength);
-  return Gaudi::XYZPoint(m_radius*cos(fi)+m_origin.X(),m_radius*sin(fi)+m_origin.Y(),m_origin.Z());
+  return m_origin+m_radius*AxisAngle(m_normal,s/m_radius)(m_dirStart);
 };
 
 /// First derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector CircleTraj::direction( double arclength ) const
+Gaudi::XYZVector CircleTraj::direction( double s ) const
 {
-  double fi = phi(arclength);
-  return Gaudi::XYZVector(-m_radius*sin(fi),m_radius*cos(fi),0.);
+  return m_normal.Cross(AxisAngle(m_normal,s/m_radius)(m_dirStart));
+   
 };
 
 /// Second derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector CircleTraj::curvature( double arclength ) const 
+Gaudi::XYZVector CircleTraj::curvature( double s ) const 
 {
-  double fi = phi(arclength);
-  return Gaudi::XYZVector(-m_radius*sin(fi),-m_radius*sin(fi),0.); // FIXME: sin,sin? should point to center of circle...
+  return (-1.0/m_radius)*AxisAngle(m_normal,s/m_radius)(m_dirStart);
 };
 
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
-void CircleTraj::expansion( double arclength,
-                                  Gaudi::XYZPoint& p,
-                                  Gaudi::XYZVector& dp,
-                                  Gaudi::XYZVector& ddp ) const
+void CircleTraj::expansion( double s,
+                            Gaudi::XYZPoint& p,
+                            Gaudi::XYZVector& dp,
+                            Gaudi::XYZVector& ddp ) const
 {
-  ddp = curvature(arclength);
-  dp  = direction(arclength);
-  p   = position(arclength);
+  Gaudi::XYZVector r(  AxisAngle(m_normal,s/m_radius)(m_dirStart) );
+  ddp =  (-1.0/m_radius)*r;
+  dp  = m_normal.Cross(r);
+  p   = m_origin+m_radius*r;
 };
 
-/// Retrieve the derivative of the parabolic approximation to the trajectory
-/// with respect to the state parameters
-SMatrix<double,3,CircleTraj::kSize>
-CircleTraj::derivative( double/* arclength */) const
+/// Retrieve the derivative of point at fixed arclength 'arclenght'
+/// with respect to the circle parameters
+//CircleTraj::Derivative
+//CircleTraj::derivative( double/* arclength */) const
+//{
+  //Derivative deriv;  
+  //// FIXME: Not done yet!!!
+  //return deriv;       
+//};
+
+/// Determine the closest point on the circle to a
+/// given point, and return the corresponding arclength
+double CircleTraj::arclength( const Gaudi::XYZPoint& point ) const
 {
-  SMatrix<double,3,CircleTraj::kSize> deriv;
-  // FIXME: Not done yet!!!
-  return deriv;       
+  // get vector from origin, to point after projecting it 
+  // into the plane of the circle. (i.e. this vector is normal
+  // to m_normal)
+  Gaudi::XYZVector r( (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin );
+  // determine the delta-phi with the start direction, properly signed!!!
+  double dphi=std::asin( m_dirStart.Cross(r.unit()).Dot(m_normal) );
+  return m_radius*dphi;
 };
 
-/// Determine the distance in arclenghts to the
-/// closest point on the trajectory to a given point
-double CircleTraj::arclength( const Gaudi::XYZPoint& /*point*/ ) const
+/// arclength until deviation of the trajectory from the expansion
+/// reaches the specified tolerance.
+double CircleTraj::distTo1stError( double /*arclen*/, double tolerance, int /*direction*/) const 
 {
-  // FIXME: Not done yet!!!
-  return 0.;
+  // require 2nd order term to be less than tolerance...
+  return std::sqrt(2*tolerance*m_radius);
 };
 
-/// Number of arclengths until deviation of the trajectory from the expansion
-/// reaches the given tolerance.
-double CircleTraj::distTo1stError( double , double , int ) const 
+/// arclength until deviation of the trajectory from the expansion
+/// reaches the specified tolerance.
+double CircleTraj::distTo2ndError( double /*arclen*/, double tolerance , int /*direction*/ ) const
 {
-  // FIXME: Not done yet!!!
-  return 10*km;  
-};
-
-/// Number of arclengths until deviation of the trajectory from the expansion
-/// reaches the given tolerance.
-double CircleTraj::distTo2ndError( double , double , int ) const
-{
-  // FIXME: Not done yet!!!
-  return 10*km;  
+  // require 3rd order term to be less than tolerance
+  // cbrt is in the C99 standard -- hope it is available on all platforms...
+  return cbrt(6*tolerance*m_radius*m_radius);
 };
 
   /// Range in arclength w.r.t. the starting point
@@ -92,10 +118,4 @@ double CircleTraj::distTo2ndError( double , double , int ) const
 Trajectory::Range CircleTraj::range() const
 {
   return m_range;
-};
-
-/// Length of trajectory
-double CircleTraj::length() const
-{
-  return (m_angularRange.second-m_angularRange.first)*m_radius;
 };

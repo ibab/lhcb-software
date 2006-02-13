@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.3 2006-02-10 12:29:04 graven Exp $
+// $Id: CircleTraj.h,v 1.4 2006-02-13 11:00:51 graven Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -17,24 +17,36 @@
 namespace LHCb
 {
   
-  class CircleTraj: public DifTraj<3> {
+  // class CircleTraj: public DifTraj<3> {
+  class CircleTraj: public Trajectory {
     
   public:
-    
-    /// Enum providing number of colums in derivative matrix
-    enum { kSize = 3 };
-    
-    /// Default Constructor
-    CircleTraj() {};
-    
     /// Default Destructor
     virtual ~CircleTraj() {};
+
+    // clone thyself...
+    virtual CircleTraj *clone() const;
+
+    /// Constructor from a center, the normal which defines the plane
+    /// of the circle, a vector from the center to a point on the circle,
+    /// and the range of the circle (radius*phirange, phi=0 corresponds to
+    /// the above point on the circle, phi is the angle which is used to
+    /// rotate this point around the normal)
+    /// Only the component of origin2point perpendicular to normal
+    /// is considered!!!...
+    CircleTraj( const Gaudi::XYZPoint& origin,// center of circle
+                const Gaudi::XYZVector& normal, // direction of end
+                const Gaudi::XYZVector& origin2point, // direction of start
+                const Trajectory::Range& range); // valid range, in radius*deltaphi
     
-    /// Constructor from an origin, a radius
-    /// and a range in angle w.r.t. angle of origin point
-    CircleTraj( const Gaudi::XYZPoint& origin,
-                double radius,
-                const Range& angularRange );
+    /// Constructor from a center, the directions of the
+    /// start and end of the traj wrt. the center, and the radius.
+    /// The Traj goes along the 'short' arc from origin+radius*dir1.unit()
+    /// at arclength=0 to origin+radius*dir2.unit() at the arclen=length().
+    CircleTraj( const Gaudi::XYZPoint& origin,// center of circle
+                const Gaudi::XYZVector& dir1, // direction of start
+                const Gaudi::XYZVector& dir2, // direction of end
+                double radius);
     
     /// Point on the trajectory at arclength from the starting point    
     virtual Gaudi::XYZPoint position( double arclength ) const;
@@ -52,22 +64,23 @@ namespace LHCb
                             Gaudi::XYZVector& dp,
                             Gaudi::XYZVector& ddp ) const;
     
-    /// Retrieve the derivative of the parabolic approximation to the trajectory
-    /// with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
+    /// Retrieve the derivative of the point at the fixed arclength 'arclength'
+    /// with respect to the parameters; when you implement this,
+    //  make this class inherit from DifTraj...
+    // virtual Derivative derivative( double arclength ) const;
     
-    /// Determine the distance in arclenghts to the
-    /// closest point on the trajectory to a given point
+    /// Return arclen at which the trajectory is
+    /// closest to the specified point
     virtual double arclength( const Gaudi::XYZPoint& point ) const;
     
-    /// Number of arclengths until deviation of the trajectory from the expansion
-    /// reaches the given tolerance.
+    /// distance along the trajectory until deviation from the
+    /// 1st order expansion reaches the given tolerance.
     virtual double distTo1stError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
     
-    /// Number of arclengths until deviation of the trajectory from the expansion
-    /// reaches the given tolerance.
+    /// distance along trajectory until deviation from the 
+    /// 2nd order expansion reaches the given tolerance.
     virtual double distTo2ndError( double arclength,
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
@@ -76,16 +89,12 @@ namespace LHCb
     /// over which the trajectory is valid
     virtual Range range() const;
     
-    /// Length of trajectory
-    virtual double length() const;
-    
   private:
-    double phi(double arclen) const { return m_angularRange.first + arclen/m_radius; }
-    Gaudi::XYZPoint m_origin;
+    Gaudi::XYZPoint  m_origin;
+    Gaudi::XYZVector m_normal;
+    Gaudi::XYZVector m_dirStart;
+    Trajectory::Range m_range;
     double m_radius;  
-    Range m_angularRange;
-    Range m_range;
-    
   }; // class CircleTraj
   
 } // namespace LHCb

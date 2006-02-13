@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.6 2006-02-10 12:29:04 graven Exp $
+// $Id: LineTraj.h,v 1.7 2006-02-13 11:00:51 graven Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -26,6 +26,9 @@ namespace LHCb
     
     /// Destructor
     virtual ~LineTraj() {};
+
+    // clone thyself...
+    virtual LineTraj* clone() const;
     
     /// Constructor from the middle point and a (unit) direction vector
     LineTraj( const Gaudi::XYZPoint& middle,
@@ -54,7 +57,7 @@ namespace LHCb
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
+    virtual Derivative derivative( double arclength ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
@@ -75,9 +78,6 @@ namespace LHCb
     /// Range in arclength w.r.t. the starting point
     /// over which the trajectory is valid
     virtual Range range() const;
-    
-    /// Length of trajectory
-    virtual double length() const;
     
   private:
     

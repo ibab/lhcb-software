@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-13 G.Raven 
+ - Add typedef for return type of DifTraj::derivative
+ - make Trajectory::arclength pure virtual, and implement in relevant derived classes
+ - implement Trajectory::length in baseclass, update derived classes
+ - CircleTraj: fully implement
+
 !===================== LHCbKernel v6r2 2006-02-10 =========================
 ! 2006-02-10 - Marco Cattaneo
  - Add IMCVeloFEType.h, IVeloClusterPos.h, VeloEventFunctor.h

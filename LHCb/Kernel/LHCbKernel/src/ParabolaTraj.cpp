@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.4 2006-02-10 12:28:22 graven Exp $
+// $Id: ParabolaTraj.cpp,v 1.5 2006-02-13 11:00:51 graven Exp $
 // Include files
 
 // local
@@ -6,27 +6,19 @@
 using namespace LHCb;
 using namespace ROOT::Math;
 
-/// Constructor from a (middle) point, a (unit) direction vector and a curvature
-ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& middle,
-                                  const Gaudi::XYZVector& dir,
-                                  const Gaudi::XYZVector& curv,
-                                  const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> endPoints ) 
+ParabolaTraj*
+ParabolaTraj::clone() const
 {
-  m_pos  = middle;
-  m_dir  = dir.Unit();       
-  m_curv = curv;
+        return new ParabolaTraj(*this);
+}
 
-  double s1 = (-m_dir.X()-sqrt(m_dir.X()*m_dir.X()+2*(endPoints.first).X())*m_curv.X()-2*m_pos.X()*m_curv.X()) / 
-m_curv.X();
-  double s2 = (-m_dir.X()+sqrt(m_dir.X()*m_dir.X()+2*(endPoints.first).X())*m_curv.X()-2*m_pos.X()*m_curv.X()) / 
-m_curv.X();
-  double solA = (s1 < s2) ? s1 : s2;
-  double s3 = (-m_dir.X()-sqrt(m_dir.X()*m_dir.X()+2*(endPoints.second).X())*m_curv.X()-2*m_pos.X()*m_curv.X()) / 
-m_curv.X();
-  double s4 = (-m_dir.X()+sqrt(m_dir.X()*m_dir.X()+2*(endPoints.second).X())*m_curv.X()-2*m_pos.X()*m_curv.X()) / 
-m_curv.X();
-  double solB = (s3 > s4) ? s1 : s2;
-  m_range = Range(solA,solB);
+/// Constructor from a (middle) point, a (unit) direction vector and a curvature
+ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& point,
+                            const Gaudi::XYZVector& dir,
+                            const Gaudi::XYZVector& curv,
+                            const Range& range)
+        :m_pos(point),m_dir(dir.unit()),m_curv(curv),m_range(range)
+{
 };
 
 /// Point on the trajectory at arclength from the starting point    
@@ -50,9 +42,9 @@ Gaudi::XYZVector ParabolaTraj::curvature( double /* arclength */) const
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
 void ParabolaTraj::expansion( double arclength,
-                                    Gaudi::XYZPoint& p,
-                                    Gaudi::XYZVector& dp,
-                                    Gaudi::XYZVector& ddp ) const
+                              Gaudi::XYZPoint& p,
+                              Gaudi::XYZVector& dp,
+                              Gaudi::XYZVector& ddp ) const
 {
   ddp = m_curv;
   dp  = m_dir + arclength*m_curv;
@@ -61,37 +53,51 @@ void ParabolaTraj::expansion( double arclength,
 
 /// Retrieve the derivative of the parabolic approximation to the trajectory
 /// with respect to the state parameters
-SMatrix<double,3,ParabolaTraj::kSize>
+ParabolaTraj::Derivative
 ParabolaTraj::derivative( double arclength ) const
 {
-  SMatrix<double,3,ParabolaTraj::kSize> deriv;
+  Derivative deriv;
   deriv(0,0) = deriv(1,1) = deriv(1,1) = 1.0;
   deriv(0,3) = deriv(1,4) = deriv(2,5) = arclength;
   deriv(0,6) = deriv(1,7) = deriv(2,8) = 0.5 * arclength * arclength;
   return deriv;       
 };
 
-  /// Determine the distance in arclenghts to the
-  /// closest point on the trajectory to a given point
-double ParabolaTraj::arclength( const Gaudi::XYZPoint& /*point*/ ) const
+  /// Determine the arclenghts of the
+  /// closest point on this trajectory to a given point
+double ParabolaTraj::arclength( const Gaudi::XYZPoint& point ) const
 {
-// FIXME: Not yet implemented
-  return 0.;
+  // for now, return 0th order approximantion, i.e. assume |m_curv|<<|m_dir|
+  return m_dir.Dot(point-m_pos);
+
+// until we are sure that the code below is OK for |m_curv|<<|m_dir|!!
+//
+//  // get vector from m_pos to point projected into plane of parabola
+//  Gaudi::XYZVector normal = m_dir.Cross(m_curv).unit();
+//  Gaudi::XYZPoint r( ( point - normal.Dot(point-m_pos)*normal )-m_pos);
+//  // get normalized 'x' and 'y' coordinates of this vector by projecting onto the
+//  // axis. In terms of these, the parabola is parameterized as (arclen, arclen^2/2)
+//  // (i.e. arclen is actually the distance along the 'x' coordinate!)
+//  double x = m_dir.Dot(r);
+//  double y = m_curv.Dot(r);
+//  //  now we need to minimize the distance between (x,y) and (s,s*s/2)
+//  //  where s is the arclen (well, not quite, but that is what we really
+//  //  use in 'point(arclen)' ;-)
+//  //  This requires solving a 3rd order polynomial, so we assume m_curve<<1
+//  //  and solve a linear equation instead.
+//  return x/(1-y);
 };
 
-/// Number of arclengths until deviation of the trajectory from the expansion
+/// arclengths until deviation of the trajectory from the expansion
 /// reaches the given tolerance.
-double ParabolaTraj::distTo1stError( double , double , int ) const 
+double ParabolaTraj::distTo1stError( double , double tolerance , int ) const 
 {
-// FIXME: Not yet implemented
-  return 10*km;  
+  return std::sqrt(2*tolerance/m_curv.r());
 };
 
-/// Number of arclengths until deviation of the trajectory from the expansion
-/// reaches the given tolerance.
+/// 2nd order is OK everywhere...
 double ParabolaTraj::distTo2ndError( double , double , int ) const
 {
-//FIXME: Not yet implemented
   return 10*km;  
 };
 
@@ -101,10 +107,3 @@ Trajectory::Range ParabolaTraj::range() const
 {
   return m_range;
 };
-
-/// Length of trajectory
-double ParabolaTraj::length() const
-{
-  return m_range.second-m_range.first;
-};
-

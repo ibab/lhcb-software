@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.6 2006-02-10 12:29:04 graven Exp $
+// $Id: ParabolaTraj.h,v 1.7 2006-02-13 11:00:51 graven Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -27,12 +27,15 @@ namespace LHCb
     /// Destructor
     virtual ~ParabolaTraj() {};
     
+    // clone thyself...
+    virtual ParabolaTraj* clone() const;
+    
     /// Constructor from a (middle) point, a (unit) direction vector,
     /// a curvature vector and the pair of begin- and endpoints.
     ParabolaTraj( const Gaudi::XYZPoint& middle,
                   const Gaudi::XYZVector& dir,
                   const Gaudi::XYZVector& curv,
-                  const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> range );
+                  const Trajectory::Range& range );
     
     /// Point on the trajectory at arclength from the starting point    
     virtual Gaudi::XYZPoint position( double arclength ) const;
@@ -52,7 +55,7 @@ namespace LHCb
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
+    virtual Derivative derivative( double arclength ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
@@ -73,9 +76,6 @@ namespace LHCb
     /// Range in arclength w.r.t. the starting point
     /// over which the trajectory is valid
     virtual Range range() const;
-    
-    /// Length of trajectory
-    virtual double length() const;
     
   private:
     

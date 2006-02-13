@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.6 2006-02-10 12:29:04 graven Exp $
+// $Id: Trajectory.h,v 1.7 2006-02-13 11:00:51 graven Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -27,6 +27,9 @@ namespace LHCb
     
   public:
     typedef std::pair<double,double> Range;
+
+    /// Clone a trajectory...
+    virtual Trajectory* clone() const = 0;
     
     /// Point on the trajectory at arclength from the starting point
     virtual Gaudi::XYZPoint position( double arclength ) const = 0;
@@ -46,8 +49,7 @@ namespace LHCb
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double arclength( const Gaudi::XYZPoint& ) const
-    { return 0.0; } // dummy implementation
+    virtual double arclength( const Gaudi::XYZPoint& ) const = 0;
     
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.
@@ -75,11 +77,11 @@ namespace LHCb
     double restrictToRange( double arclength ) const 
     {
       Range r = range(); 
-      return std::max( r.first, std::min(r.second, arclength) );
+      return std::max( r.first, std::min(arclength, r.second ) );
     }
     
     /// Length of trajectory
-    virtual double length() const = 0;
+    double length() const { Range r = range(); return r.second-r.first; };
     
   }; // class Trajectory
   
