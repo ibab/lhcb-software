@@ -41,6 +41,11 @@ DeMuonDetector* muonDetector){
   int numberOfTileCreated=0;
   unsigned int numberOfPCX, numberOfPCY;
 
+if(debug){
+std::cout<<station<<" "<<region<<" "<<chamber<<" "<<quadrant<<" "<<
+idX<<" "<<idY<<std::endl;
+}
+
   newidX=0;
   newidY=0;
   numberOfPCX=0;
@@ -80,6 +85,7 @@ DeMuonDetector* muonDetector){
               
             }
           }
+        
         // 
         // FE ch address relative to the chamber transformed 
         //in quadrant reference system
@@ -131,6 +137,9 @@ DeMuonDetector* muonDetector){
         MuonLayout layout(muonDetector->getLayoutX(readoutNumber,station,region),
                           muonDetector->
                           getLayoutY(readoutNumber,station,region));   
+if(debug)std::cout<<"Layout "<<muonDetector->getLayoutX(readoutNumber,station,region)<<" "
+<<muonDetector->getLayoutY(readoutNumber,station,region)<<std::endl;
+
         phChTileID[numberOfTileCreated].setLayout(layout);
         phChTileID[numberOfTileCreated].setStation(station);
 //        phChTileID[numberOfTileCreated].setReadout(usefullPointer->

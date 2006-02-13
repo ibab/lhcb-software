@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.28 2006-02-06 21:03:41 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.29 2006-02-13 16:41:12 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -438,7 +438,7 @@ MuonDigitization::createInput(
       spillTime=(long)(-(ispill-1)*m_BXTime);
     }
      
-    for(int container=1; container<m_container;container++){				
+    for(int container=0; container<m_container;container++){				
       std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
         TESPathOfHitsContainer[container];
       if(m_verboseDebug) {info()<<"hit container path "<<
