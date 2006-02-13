@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2006-02-13 12:03:00 odescham Exp $ 
+! $Id: release.notes,v 1.7 2006-02-13 16:07:25 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,8 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
-!==================== CaloMoniSim v2r1 2006-01-31 =============================
-! 2006-01-31 - Olivier Deschamps 
+!==================== CaloMoniSim v2r1 2006-02-13 =============================
+! 2006-02-13 - Olivier Deschamps 
  - GaudiHistoAlg migration completed for MCCaloMonitor.{h,cpp}
  - Adapt /dd/Structure/ path to new enveloppe (DownstreamRegion)
 
