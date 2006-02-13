@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r0 2006-02-10 ========================
 ! 2006-02-10 - Eduardo Rodrigues
  - added new symmetrize method to SHacks.h
  - added new file TrackUnitsConverters.h to provide easy units conversions
@@ -12,7 +13,6 @@
 ! 2006-02-09 - Eduardo Rodrigues
  - re-introduced non-const accessor to vector of Nodes in Track
 
-!========================= TrackEvent v2r0 2006-02-06 ========================
 ! 2006-02-06 - Eduardo Rodrigues
  - added new similarity method to SHacks.h
  - added setErrQOverP2 method in Track
