@@ -3,6 +3,7 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r0 2006-02-13 ====================
 ! 2006-02-08 - Eduardo Rodrigues
  - migration to LHCb v20r0
  - Geant3/Geant4 units conversions for matrix inversions done via the new
