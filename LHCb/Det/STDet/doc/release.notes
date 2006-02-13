@@ -1,11 +1,10 @@
 !Package         : STDet
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
-! 2006-02-12 M Needham
-- init trak pointers to zero
 
 !========================= STDet v2r0 2006-02-12 =======================
 ! 2006-02-12 M Needham
+- init track pointers to zero
 - put back valid test
 - Add trajectory and inside functions
 
