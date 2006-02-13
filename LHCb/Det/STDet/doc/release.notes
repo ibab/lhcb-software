@@ -2,12 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-
+!========================= STDet v2r0 2006-02-12 =======================
 ! 2006-02-12 M Needham
 - Add trajectory and inside functions
 
-
-!========================= STDet v2r0 2006-02-10 =======================
 ! 2006-02-09 M. Needham 
 - change the printout from DeSTSector 
 - Few bug fixes in DeSTSector init 
