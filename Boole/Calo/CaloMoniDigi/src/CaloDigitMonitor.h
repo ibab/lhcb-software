@@ -1,8 +1,11 @@
-// $Id: CaloDigitMonitor.h,v 1.2 2006-01-18 18:15:21 odescham Exp $
+// $Id: CaloDigitMonitor.h,v 1.3 2006-02-13 14:39:27 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/18 18:15:21  odescham
+// v2r0 : adapt to the new Event Model + cleaning
+//
 // Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
 // // The new package: code is inported from Calo/CaloMonitor
 //
@@ -18,7 +21,6 @@
 #include <string>
 #include <vector>
 // from Gaudi 
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 

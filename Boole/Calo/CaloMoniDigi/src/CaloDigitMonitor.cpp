@@ -3,10 +3,7 @@
 //CLHEP
 #include "Kernel/SystemOfUnits.h"
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 // Event/CaloEvent
 #include "Event/MCCaloHit.h" 
 #include "Event/MCCaloDigit.h" 
@@ -20,7 +17,6 @@
 // 25/05/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
 
 // Standard creator
 CaloDigitMonitor::CaloDigitMonitor( const std::string& name, 
@@ -46,18 +42,18 @@ CaloDigitMonitor::~CaloDigitMonitor() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode CaloDigitMonitor::initialize() {
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Initialize" << endreq;
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  debug() << " >>> Initialize" << endreq;
   
   m_nameOfHits     = "MC/"  + m_nameOfDetector + "/Hits"   ;
   m_nameOfMCDigits = "MC/"  + m_nameOfDetector + "/Digits" ;
   m_nameOfDigits   = "Raw/" + m_nameOfDetector + "/Digits" ;
   
-  log << MSG::INFO 
-      << "Monitoring Hits " << m_nameOfHits 
-      << "   MC Digit   " << m_nameOfMCDigits
-      << "   Digit   " << m_nameOfDigits
-      << ", Histograms booked" << endreq;
+  info()      << "Monitoring Hits " << m_nameOfHits 
+              << "   MC Digit   " << m_nameOfMCDigits
+              << "   Digit   " << m_nameOfDigits
+              << ", Histograms booked" << endreq;
 
   return StatusCode::SUCCESS; 
 };
@@ -66,15 +62,16 @@ StatusCode CaloDigitMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode CaloDigitMonitor::execute() {
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Execute" << endreq;
+  debug() << " >>> Execute" << endreq;
 
 /**  
  * Counting the MCCaloHit objects.
  */
   double nbHit      = 0.;
   double sumHit     = 0.;
-  SmartDataPtr< LHCb::MCCaloHits > Hits ( eventDataService() , m_nameOfHits );
+  //SmartDataPtr< LHCb::MCCaloHits > Hits ( eventDataService() , m_nameOfHits );
+  LHCb::MCCaloHits* Hits = get<LHCb::MCCaloHits> ( m_nameOfHits );
+
   if( 0 != Hits ) { 
     LHCb::MCCaloHits::const_iterator sig;
     for ( sig = Hits->begin() ; Hits->end() != sig ; ++sig ) {
@@ -95,7 +92,9 @@ StatusCode CaloDigitMonitor::execute() {
  */
   double nbMCDigit    = 0.;
   double sumMCDigit   = 0.;
-  SmartDataPtr<LHCb::MCCaloDigits> MCDigits ( eventDataService(), m_nameOfMCDigits );
+  //SmartDataPtr<LHCb::MCCaloDigits> MCDigits ( eventDataService(), m_nameOfMCDigits );
+  LHCb::MCCaloDigits* MCDigits = get<LHCb::MCCaloDigits> ( m_nameOfMCDigits );
+
   if( 0 != MCDigits ) { 
     LHCb::MCCaloDigits::const_iterator dep;
     for ( dep = MCDigits->begin() ; MCDigits->end() != dep ; ++dep ) {
@@ -116,7 +115,9 @@ StatusCode CaloDigitMonitor::execute() {
  */
   double nbDigit  = 0.;
   double sumDigit = 0.;
-  SmartDataPtr<LHCb::CaloDigits> digits ( eventDataService() , m_nameOfDigits );
+  //SmartDataPtr<LHCb::CaloDigits> digits ( eventDataService() , m_nameOfDigits );
+  LHCb::CaloDigits* digits = get<LHCb::CaloDigits> ( m_nameOfDigits );
+
   if( 0 != digits ) { 
     LHCb::CaloDigits::const_iterator dig;
     for ( dig = digits->begin() ; digits->end() != dig ; ++dig ) {
@@ -133,10 +134,9 @@ StatusCode CaloDigitMonitor::execute() {
            , 0.,  m_maxEnergy       , 100 , 1.) ;
   }
   
-  log << MSG::DEBUG
-      << "#Hits=" << nbHit << " E=" << sumHit << " GeV, " 
-      << "#MCDigit=" << nbMCDigit << " E=" <<  sumMCDigit << " GeV, " 
-      << "#Digits " << nbDigit << " E=" << sumDigit << " GeV" << endreq;
+  debug()      << "#Hits=" << nbHit << " E=" << sumHit << " GeV, " 
+               << "#MCDigit=" << nbMCDigit << " E=" <<  sumMCDigit << " GeV, " 
+               << "#Digits " << nbDigit << " E=" << sumDigit << " GeV" << endreq;
   
   return StatusCode::SUCCESS; 
 };
@@ -145,7 +145,6 @@ StatusCode CaloDigitMonitor::execute() {
 //=============================================================================
 StatusCode CaloDigitMonitor::finalize() {
   
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Finalize" << endreq;
-  return StatusCode::SUCCESS;
+  debug() << " >>> Finalize" << endreq;
+  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
