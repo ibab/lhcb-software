@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r1 2006-02-10 =============================
+!======================== Gauss v24r1 2006-02-13 =============================
+! 2006-02-13 - Gloria CORTI
+ - Switch on simulation of TT that works.
+   . SimGeometry.opts
+
 ! 2006-02-10 - Gloria CORTI
  - Use GaussRICH v6r1 and VelOGauss v1r2
    . requirements

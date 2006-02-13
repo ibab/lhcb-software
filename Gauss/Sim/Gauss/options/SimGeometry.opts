@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.12 2006-02-10 18:54:15 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.13 2006-02-13 11:02:29 gcorti Exp $
 
 /** @file
  *
@@ -39,7 +39,7 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
