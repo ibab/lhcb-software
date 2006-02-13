@@ -4,10 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v2r0 2006-02-06 ======================
 ! 2006-02-06 - Eduardo Rodrigues
  - changes in ITrajPoca to match latest developments in trajectories
 
-!====================== TrackInterfaces v2r0 2006-02-06 ======================
 ! 2006-02-02 - Eduardo Rodrigues
  - minor typo corrected in IIdealStateCreator
  - remove unnecessary include in ITrackExtrapolator
