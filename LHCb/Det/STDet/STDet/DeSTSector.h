@@ -15,6 +15,10 @@
  */
 
 
+namespace LHCb{
+  class Trajectory;
+}
+
 
 class DeSTSector : public DeSTBaseElement  {
 
@@ -76,13 +80,58 @@ public:
   /** trajectory 
   * @return trajectory for the fit 
   */
-  void trajectory(const LHCb::STChannelID& aChan) const;
+  LHCb::Trajectory* trajectory(const LHCb::STChannelID& aChan, 
+                               const double offset) const;
 
   /** 
-  * @param point
+  * @param point in local frame
+  * @param tolerance
   * @return bool in active region 
   */
-  bool localInActive(const Gaudi::XYZPoint& point) const;
+  bool localInActive(const Gaudi::XYZPoint& point, 
+                     Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
+   
+  /** 
+  * @param v in local frame
+  * @param tolerance
+  * @return bool in a bond gap - ie dead region
+  */
+  bool localInBondGap( const double v ,double tol = 0) const;
+  
+  /** 
+  * @param u in local frame
+  * @param v in local frame
+  * @param uTol
+  * @param vTol
+  * @return bool in active region of box 
+  */
+  bool localInBox(const double u, const double v, 
+		  double uTol = 0, double vTol = 0) const;
+
+
+  /** 
+  * @param point in global frame
+  * @param tolerance
+  * @return bool in active region 
+  */
+  bool globalInActive(const Gaudi::XYZPoint& point, 
+                     Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
+   
+  /** 
+  * @param point in global frame
+  * @param tolerance
+  * @return bool in a bond gap - ie dead region
+  */
+  bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
+  
+  /** 
+  * @param point in global frame
+  * @param uTol
+  * @param vTol
+  * @return bool in active region of box 
+  */
+  bool globalInBox(const Gaudi::XYZPoint& gpoint, 
+	 	   Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
   /** 
    * @return capacitance
@@ -112,6 +161,9 @@ public:
   MsgStream& printOut( MsgStream& os) const;
 
 private:
+
+  void DeSTSector::clear();
+  void DeSTSector::cacheTrajectory();
   
   unsigned int m_firstStrip;
   unsigned int m_id;
@@ -125,10 +177,13 @@ private:
   double m_vMinLocal; 
   double m_vMaxLocal;
 
+  LHCb::Trajectory* m_lowerTraj;
+  LHCb::Trajectory* m_upperTraj;
+
   double m_deadWidth;
   std::vector<double> m_deadRegions;
   std::string m_type;
- 
+
 };
 
 inline unsigned int DeSTSector::id() const{

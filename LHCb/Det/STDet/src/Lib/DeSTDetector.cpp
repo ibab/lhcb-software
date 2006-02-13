@@ -3,6 +3,7 @@
 #include "STDet/DeSTStation.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "STDet/DeTTStation.h"
+
 //STL
 #include <algorithm>
 
@@ -11,8 +12,9 @@
 #include <boost/lambda/lambda.hpp>
 
 
-#include <iostream>
-#include <typeinfo>
+#include "GaudiKernel/GaudiException.h"
+
+#include "Kernel/Trajectory.h"
 
 using namespace boost::lambda;
 using namespace LHCb;
@@ -85,4 +87,28 @@ DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) {
   std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(), m_stations.end(), 
                                                         bind(&DeSTStation::isInside, _1, point)); 
   return (iter != m_stations.end() ? *iter: 0);
+}
+
+LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, const double offset) {
+
+  // look up the trajectory
+ 
+  LHCb::Trajectory* tTraj = 0;
+
+  if ( !id.isST()){
+     throw GaudiException( "The LHCbID is not of ST type!",
+                           "DeSTDetector.cpp",
+                           StatusCode::FAILURE );
+  }
+  
+  DeSTSector* aSector = findSector(id.stID());
+  if (aSector != 0){
+    tTraj = aSector->trajectory(id.stID(), offset);
+  }
+  else {
+    throw GaudiException( "Failed to find sector",
+                          "DeSTDetector.cpp",
+			  StatusCode::FAILURE );
+  }
+  return tTraj;  
 }

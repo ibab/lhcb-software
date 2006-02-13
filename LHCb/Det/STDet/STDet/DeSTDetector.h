@@ -5,6 +5,8 @@
 #include <vector>
 
 #include "Kernel/STChannelID.h"
+#include "Kernel/LHCbID.h"
+
 #include "DetDesc/DetectorElement.h"
 
 /** @class DeSTDetector DeSTDetector.h "STDet/DeSTDetector.h"
@@ -17,6 +19,10 @@
 class DeSTStation;
 class DeSTSector;
 class DeSTLayer;
+
+namespace LHCb{
+  class Trajectory;
+}
 
 namespace DeSTDetLocation {
 
@@ -109,9 +115,6 @@ public:
   */
   virtual DeSTSector* findSector(const LHCb::STChannelID aChannel) = 0; 
 
-  /** check channel number is valid */
-  bool isValid(const LHCb::STChannelID aChannel);
-
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
 
@@ -121,7 +124,7 @@ public:
   /** get the trajectory 
    @return trajectory
   */
-  void trajectory(const LHCb::STChannelID& aChan);
+  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset);
 
   /** get the number of strips in detector*/
   unsigned int nStrip() const; 
@@ -195,14 +198,6 @@ inline const DeSTDetector::Sectors&  DeSTDetector::sectors() const{
 
 inline const DeSTDetector::Layers& DeSTDetector::layers() const{
   return m_layers;
-}
-
-inline void DeSTDetector::trajectory(const LHCb::STChannelID& aChan) {
-  DeSTSector* aSector = findSector(aChan);
-  if (aSector != 0){
-    aSector->trajectory(aChan);
-  }
-  return;  
 }
 
 inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID aChannel) {

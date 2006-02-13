@@ -4,7 +4,12 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
+// Kernel
 #include "Kernel/SystemOfUnits.h"
+#include "Kernel/LineTraj.h"
+#include "Kernel/LHCbID.h"
+
+#include "GaudiKernel/GaudiException.h"
 
 /** @file DeSTSector.cpp
 *
@@ -24,8 +29,14 @@ DeSTSector::DeSTSector( const std::string& name ) :
 
 DeSTSector::~DeSTSector() {
   // destructer
+  clear();
 }
 
+void DeSTSector::clear() {
+  
+  if (m_lowerTraj !=0 ) delete m_lowerTraj;
+  if (m_upperTraj !=0 ) delete m_upperTraj;
+}
 
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
@@ -99,12 +110,15 @@ StatusCode DeSTSector::initialize() {
     // and vMin, vMax
     m_vMaxLocal = 0.5*(mainBox->ysize() - m_deadWidth);
     m_vMinLocal = -m_vMaxLocal;
- 
+
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
       double vDead = m_vMinLocal - m_deadWidth + (height*(double)iSensor);
       m_deadRegions.push_back(vDead);
     } //i
+
+    // cache trajectories
+    cacheTrajectory();    
     
   }
 
@@ -127,38 +141,91 @@ unsigned int DeSTSector::localUToStrip(const double u) const{
   return strip;
 }
 
-bool DeSTSector::localInActive(const Gaudi::XYZPoint& point) const{
+bool DeSTSector::localInActive(const Gaudi::XYZPoint& point,
+                               Gaudi::XYZPoint tol) const{
 
   const double u = point.x();
   const double v= point.y();
- 
+  return(localInBox(u,v,tol.X(), tol.Y())&&(!localInBondGap(v, tol.Y())));
+}
+
+bool DeSTSector::globalInActive(const Gaudi::XYZPoint& gpoint,
+                               Gaudi::XYZPoint tol) const{
+
+  Gaudi::XYZPoint lPoint = toLocal(gpoint);
+  return localInActive(lPoint,tol);
+};
+
+
+bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& gpoint, double tol) const{
+
+  Gaudi::XYZPoint lPoint = toLocal(gpoint);
+  return localInBondGap(lPoint.Y(),tol);
+};
+
+
+bool DeSTSector::globalInBox(const Gaudi::XYZPoint& gpoint,Gaudi::XYZPoint tol ) const{
+
+  Gaudi::XYZPoint lPoint = toLocal(gpoint);
+  return localInBox(lPoint.X(), lPoint.Y(),tol.X(), tol.Y());
+};
+
+bool DeSTSector::localInBondGap( const double v, double tol) const{
+
   bool isInside = true;
-  if (u<(m_uMaxLocal+(0.5*m_pitch)) && u>(m_uMinLocal-(0.5*m_pitch)
-      && (v<m_vMaxLocal && v>m_vMinLocal))){
-    std::vector<double>::const_iterator iterD = m_deadRegions.begin();
-    while ((iterD != m_deadRegions.end())&&(isInside == true)){
-      if (fabs(v-*iterD)<m_deadWidth){
-        isInside = false;
-      }
-      ++iterD;
-    } // iterD
+  std::vector<double>::const_iterator iterD = m_deadRegions.begin();
+  while ((iterD != m_deadRegions.end())&&(isInside == true)){
+    if (fabs(v-*iterD)< (tol + m_deadWidth)){
+      isInside = false;
+    }
+    ++iterD;
   }
   return isInside;
 }
 
-void DeSTSector::trajectory(const STChannelID& aChan) const{
-  
+bool DeSTSector::localInBox(const double u, const double v, 
+                            double uTol, double vTol) const{
+
+  return ((u + uTol) <(m_uMaxLocal+(0.5*m_pitch)) 
+	 &&(u - uTol)>(m_uMinLocal-(0.5*m_pitch))
+         &&((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
+}
+
+LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan, 
+                                         const double offset) const{
+
+  LineTraj* traj = 0;  
+
   if (contains(aChan) == true){
-
-    Gaudi::XYZPoint start(localU(aChan.strip()), m_vMinLocal, 0.);
-    Gaudi::XYZPoint stop(localU(aChan.strip()), m_vMaxLocal, 0.);
-
-    Gaudi::XYZPoint globalStart = toGlobal(start);
-    Gaudi::XYZPoint globalStop = toGlobal(stop);
-
+    const double arclen = localU(aChan.strip()) + (offset*m_pitch) - m_uMinLocal;
+    Gaudi::XYZPoint begPoint =  m_lowerTraj->position( arclen );
+    Gaudi::XYZPoint endPoint =  m_upperTraj->position( arclen );
+    traj = new LineTraj(begPoint,endPoint);
   } 
+  else {
+     throw GaudiException( "Failed to make trajectory",
+                           "DeSTSector.cpp", StatusCode::FAILURE );
+  }
 
-  return;
+  return traj;
+}
+
+void DeSTSector::cacheTrajectory() {
+
+  clear();
+
+  Gaudi::XYZPoint p1(m_uMinLocal - 0.5*m_pitch, m_vMinLocal, 0.);
+  Gaudi::XYZPoint p2(m_uMaxLocal + 0.5*m_pitch, m_vMinLocal, 0.);
+  Gaudi::XYZPoint g1 = toGlobal(p1);
+  Gaudi::XYZPoint g2 = toGlobal(p2);
+  m_lowerTraj = new LineTraj(g1,g2);
+ 
+  Gaudi::XYZPoint p3(m_uMinLocal - 0.5*m_pitch, m_vMaxLocal, 0.);
+  Gaudi::XYZPoint p4(m_uMaxLocal + 0.5*m_pitch, m_vMaxLocal, 0.);
+  Gaudi::XYZPoint g3 = toGlobal(p3);
+  Gaudi::XYZPoint g4 = toGlobal(p4);
+  m_lowerTraj = new LineTraj(g3,g4);
+   
 }
 
 STChannelID DeSTSector::nextLeft(const STChannelID testChan) const{

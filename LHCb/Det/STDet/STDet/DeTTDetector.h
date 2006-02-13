@@ -1,4 +1,4 @@
-// $Id: DeTTDetector.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeTTDetector.h,v 1.2 2006-02-13 10:18:24 mneedham Exp $
 #ifndef _DeTTDetector_H_
 #define _DeTTDetector_H_
 
@@ -56,7 +56,7 @@ public:
   * @return sector 
   */
   virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
- 
+  
 private:
 
   /** make flat list of lowest descendents  and also layers */
