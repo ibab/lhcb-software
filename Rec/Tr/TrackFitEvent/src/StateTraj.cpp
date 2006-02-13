@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.4 2006-02-10 12:31:04 graven Exp $
+// $Id: StateTraj.cpp,v 1.5 2006-02-13 11:02:22 graven Exp $
 // Include files
 
 // local
@@ -31,6 +31,11 @@ StateTraj::StateTraj( const TrackVector& stateVector,
   m_curv   = kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
 };
 
+StateTraj* StateTraj::clone() const
+{
+        return new StateTraj(*this);
+}
+
 XYZPoint StateTraj::position( double arclength ) const
 {
   return m_pos + arclength * ( m_dir + 0.5 * arclength * curvature(arclength) );
@@ -56,12 +61,10 @@ void StateTraj::expansion( double arclength,
   ddp = curvature(arclength);
 };
 
-ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize>
+StateTraj::Derivative
 StateTraj::derivative( double arclength ) const
 {
-  ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize> deriv =
-    ROOT::Math::SMatrix<double,3,LHCb::StateTraj::kSize>();
-
+  Derivative deriv;
   double vx  = m_dir.x();
   double vy  = m_dir.y();
   double vz  = m_dir.z();
@@ -92,6 +95,31 @@ StateTraj::derivative( double arclength ) const
   return deriv;        
 };
 
+double StateTraj::arclength( const Gaudi::XYZPoint& point) const
+{
+  // for now assume we're a straight line, i.e. |m_curve|<<|m_dir|
+  // and return our zeroth order approximation..
+  double s = m_dir.Dot(point-m_pos);
+  return s;
+
+  // need to check if the code below is safe for m_curv=0!!!!
+  // get vector from m_pos to point projected into plane of parabola
+  //Gaudi::XYZVector normal = m_dir.Cross(m_curv).unit();
+  //Gaudi::XYZPoint r( ( point - normal.Dot(point-m_pos)*normal )-m_pos);
+  //// get normalized 'x' and 'y' coordinates of this vector by projecting onto the
+  //// axes. In terms of these, the trajectory is parameterized as (arclen, arclen^2/2)
+  //// (i.e. arclen is actually the distance along the 'x' coordinate!)
+  //double x = m_dir.Dot(r);
+  //double y = m_curv.Dot(r);
+  ////  now we need to minimize the distance between (x,y) and (s,s*s/2)
+  ////  where s is the arclen (well, not quite, but that is what we really
+  ////  use in 'point(arclen)' ;-)
+  ////  This requires solving a 3rd order polynomial:
+  ////  1/2 s^3 + (1-y) s - x = 0, so take s = x + epsilon (the solution if m_curv=0),
+  ////  and solve a linear equation instead.
+  //return x/(1-y);
+}
+
 // Not yet implemented
 double StateTraj::distTo1stError( double , double , int ) const 
 {
@@ -109,9 +137,4 @@ Trajectory::Range StateTraj::range() const
 {
         //FIXME: worry about this later...
   return Trajectory::Range(-10*km,10*km);
-};
-
-double StateTraj::length() const
-{
-  return range().second-range().first;
 };

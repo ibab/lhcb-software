@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.4 2006-02-10 12:31:10 graven Exp $
+// $Id: StateTraj.h,v 1.5 2006-02-13 11:02:22 graven Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -32,8 +32,8 @@ namespace LHCb
     /// Enum providing number of colums in derivative matrix
     enum { kSize = 5 };
 
-    /// Default Constructor
-    StateTraj() {}
+    /// get me another one of these!
+    StateTraj *clone() const;
     
     /// Default Destructor
     virtual ~StateTraj() {};
@@ -56,6 +56,7 @@ namespace LHCb
     /// Second derivative of the trajectory at the approximation point,
     /// used as the constant value of the curvature of the parabolic approximation
     virtual Gaudi::XYZVector curvature( double arclength) const;
+
     
     /// Create a parabolic approximation to the trajectory
     virtual void expansion( double arclength,
@@ -65,7 +66,11 @@ namespace LHCb
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual ROOT::Math::SMatrix<double,3,kSize> derivative( double arclength ) const;
+    virtual Derivative derivative( double arclength ) const;
+
+    /// give arclength where this trajectory is closest to the
+    /// specified point
+    virtual double arclength( const Gaudi::XYZPoint& point) const;
     
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance (does not account for the curvature).
@@ -82,8 +87,6 @@ namespace LHCb
     /// Range in arclength over which the trajectory is valid
     virtual Trajectory::Range range() const;
     
-    /// total arclength over which the trajectory is valid
-    virtual double length() const;
   private:
     
     Gaudi::XYZPoint  m_pos;    ///< the position of the State

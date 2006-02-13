@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2006-02-13 - Gerhard Raven
+ - Update StateTraj to follow changes in LHCbKernel
 
 !========================== TrackFitEvent v2r0 2006-02-13 ====================
 ! 2006-02-13 - Marco Cattaneo
