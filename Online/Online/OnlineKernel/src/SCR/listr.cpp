@@ -130,7 +130,7 @@ void listr_transfer_entry (Link* _entry, Linked_list* _list,
   if (!_before && _after) _before = listr_prev(_after);
   if (!_after && _before) _after  = listr_next(_before);
 
-  Linked_list* list = listr_father(_entry);
+  //Linked_list* list = listr_father(_entry);
 
   /* Now put entry back. */
 

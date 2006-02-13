@@ -119,7 +119,6 @@ int amsuc_remove(unsigned int facility) {
 
 int amsuc_remove_death( const char* source)   {
   if ( !inited ) return AMS_NOTINITED;
-  int srclen=strlen(source); 
   amsu_deadfac_entry* fac = find_deadfacility(source);
   if ( fac == deadfac_list )   {
     return AMS_NODATA;

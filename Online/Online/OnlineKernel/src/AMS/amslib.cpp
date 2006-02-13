@@ -262,9 +262,9 @@ static void _amsc_fill_header(amsheader_t *amh, size_t size,
                               int fac, int mtype, const void *buf_ptr)
 {
   ::memset(amh,0,sizeof(amsheader_t));
-  amh->size     = ::htonl(size);
-  amh->facility = ::htonl(fac);
-  amh->msg_type = ::htonl(mtype);
+  amh->size     = htonl(size);
+  amh->facility = htonl(fac);
+  amh->msg_type = htonl(mtype);
   ::strncpy (amh->dest,   dest, sizeof (amh->dest));
   ::strncpy (amh->source, src,  sizeof (amh->source));
   if (buf_ptr)  {
@@ -273,9 +273,9 @@ static void _amsc_fill_header(amsheader_t *amh, size_t size,
 }
 
 static void _amsc_net_to_host (amsheader_t *amh)  {
-  amh->size     = ::ntohl (amh->size);
-  amh->msg_type = ::ntohl (amh->msg_type);
-  amh->facility = ::ntohl (amh->facility);
+  amh->size     = ntohl (amh->size);
+  amh->msg_type = ntohl (amh->msg_type);
+  amh->facility = ntohl (amh->facility);
 }
 
 static int _amsc_tcp_set_sockopts(amsentry_t *db)  {
