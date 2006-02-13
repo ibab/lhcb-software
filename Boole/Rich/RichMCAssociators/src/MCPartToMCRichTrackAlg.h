@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.3 2006-02-13 08:40:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -20,6 +20,8 @@
 
 // Linker
 #include "Linker/LinkerWithKey.h"
+#include "Linker/LinkerTool.h"
+#include "Linker/LinkedTo.h"
 
 // Event model
 #include "Event/MCRichTrack.h"
@@ -55,10 +57,16 @@ public:
 
 private: // definitions
 
-  /// Shortcut to linker name
+  /// typedef for building linker
   typedef LinkerWithKey<LHCb::MCRichTrack,LHCb::MCParticle> MCPartToRichTracks;
 
 private: // methods
+
+  /// Build the linker object for all MCRichTracks
+  StatusCode buildLinks();
+
+  /// Test linker object for all MCRichTracks
+  StatusCode testLinks();
 
   /// Add a given event to the linker object
   StatusCode addEvent( MCPartToRichTracks & links, const std::string & evtLoc );
@@ -67,8 +75,12 @@ private: // data
 
   /// typedef for List of event locations to process
   typedef std::vector<std::string> EventList;
+
   /// List of event locations to process
   EventList m_evtLocs;
+
+  /// Flag to turn on/off testing of linker
+  bool m_testLinker;
 
 };
 
