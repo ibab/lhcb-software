@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.cpp,v 1.3 2006-01-31 15:35:00 gcorti Exp $
+// $Id: MCCaloMonitor.cpp,v 1.4 2006-02-13 12:03:00 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/31 15:35:00  gcorti
+// message in debug mode
+//
 // Revision 1.2  2005/12/16 17:53:59  odescham
 // v2r0 - LHCb v20 migration
 //
@@ -20,19 +23,8 @@
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/Stat.h"
-#include "GaudiKernel/MsgStream.h"
 #include "Kernel/CaloCellID.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 // ============================================================================
 /// from Event
 // ============================================================================
@@ -79,7 +71,7 @@ MCCaloMonitor::MCCaloMonitor( const std::string& name,
 			      ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
     , m_nameOfMCHits              ( "" )
-    , m_GeometryRoot        ( "/dd/Structure/LHCb/" )
+    , m_GeometryRoot        ( "/dd/Structure/LHCb/DownstreamRegion/" )
     , m_DivMonitor                ( false      )
     , m_MaxE                 (  10 * MeV  )
     , m_MinE                 (   0 * MeV  )
@@ -113,9 +105,10 @@ MCCaloMonitor::~MCCaloMonitor() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode MCCaloMonitor::initialize() {
-  
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "==> Initialise Monitoring " << m_Detector << endreq;
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  info() << "==> Initialise Monitoring " << m_Detector << endreq;
 
   m_hDir = m_Detector;
   m_nameOfMCHits = "MC/" + m_Detector + "/Hits";
@@ -166,27 +159,30 @@ StatusCode MCCaloMonitor::execute() {
   
   ++m_nEvents;
   m_nEvents  = 1;
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute Monitoring " << m_Detector << endreq;
+  debug() << "Execute Monitoring " << m_Detector << endreq;
 
 
   MCCaloHits::const_iterator iHit;
   
   // Get the MCHits
-  SmartDataPtr< MCCaloHits > CaloHits (eventSvc(),m_nameOfMCHits);
+  //  SmartDataPtr< MCCaloHits > CaloHits (eventSvc(),m_nameOfMCHits);
+  MCCaloHits* CaloHits = get<MCCaloHits> ( m_nameOfMCHits );
   if( 0 == CaloHits ) {
-    msg << MSG::ERROR << "Cannot locate MCCaloHits in " << m_Detector << endreq;
+    error() << "Cannot locate MCCaloHits in " << m_Detector << endreq;
     return StatusCode::FAILURE ;
   }  
   // Get the MCParticles
-  SmartDataPtr< MCParticles > mcParts (eventSvc(),MCParticleLocation::Default);
+  // SmartDataPtr< MCParticles > mcParts (eventSvc(),MCParticleLocation::Default);
+  MCParticles* mcParts = get<MCParticles>(  MCParticleLocation::Default );
   if( 0 == mcParts ) {
-    msg << MSG::ERROR << "Cannot locate mcParts in "<< m_Detector << endreq;
+    error() << "Cannot locate mcParts in "<< m_Detector << endreq;
     return StatusCode::FAILURE ;
   }
-  SmartDataPtr<DeCalorimeter> detector( detSvc() ,m_GeometryRoot + m_Detector );
+  //SmartDataPtr<DeCalorimeter> detector( detSvc() ,m_GeometryRoot + m_Detector );
+  DeCalorimeter* detector = getDet<DeCalorimeter>( m_GeometryRoot + m_Detector );
+
   if( 0 == detector ) {
-    msg << MSG::ERROR << 
+    error() << 
       "Cannot locate Detector Element ="<< m_GeometryRoot+m_Detector << endreq;
     return StatusCode::FAILURE ;
   }
@@ -221,14 +217,14 @@ StatusCode MCCaloMonitor::execute() {
           plot1D((*iHit)->activeE(),111,m_hName1a,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),121,m_hName2a,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,131,m_hName3a,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
-	}
+        }
       }
       if ( 1 == zone ){
-	if ( detector->valid(ID) ){
+        if ( detector->valid(ID) ){
           plot1D((*iHit)->activeE(),112,m_hName1b,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),122,m_hName2b,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,132,m_hName3b,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
-	}
+        }
       }
       if ( 2 == zone ) {
         if ( detector->valid(ID) ){
@@ -279,9 +275,8 @@ StatusCode MCCaloMonitor::execute() {
 //=============================================================================
 StatusCode MCCaloMonitor::finalize() {
   
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Finalize Monitoring " << m_Detector << endreq;
-  return StatusCode::SUCCESS;
+  info()<< "Finalize Monitoring " << m_Detector << endreq;
+  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

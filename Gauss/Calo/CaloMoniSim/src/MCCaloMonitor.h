@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.h,v 1.2 2005-12-16 17:53:59 odescham Exp $
+// $Id: MCCaloMonitor.h,v 1.3 2006-02-13 12:03:00 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/12/16 17:53:59  odescham
+// v2r0 - LHCb v20 migration
+//
 // Revision 1.1.1.1  2004/10/25 08:53:25  ibelyaev
 // // New Package: code imported from Calo/CaloMonitor
 //
@@ -15,13 +18,8 @@
 #include <cmath>
 #include <string>
 #include <vector>
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/INTuple.h"
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
-#include "AIDA/IAnalysisFactory.h"
 
 /** @class MCCaloMonitor MCCaloMonitor.h 
  *
