@@ -8,6 +8,10 @@
 !-----------------------------------------------------------------------------
 
 !===================== GaussCalo v8r0 2006-01-31 =============================
+! 2006-13-02 - Olivier Deschamps
+ - Adapt pathes to DownstreamRegion enveloppe in options files.
+
+!===================== GaussCalo v8r0 2006-01-31 =============================
 ! 2006-17-01 - Olivier Deschamps
  - Adapt to new Event Model & LHCb v20 migration.
  - requirement : CaloEvent dependancy replaced by MCEvent

@@ -8,14 +8,14 @@
 // ============================================================================
 
 GiGaGeo.Prs.StartVolumes = {
-  "/dd/Geometry/Prs/Modules/InnCell"  ,
-  "/dd/Geometry/Prs/Modules/MidCell"  ,
-  "/dd/Geometry/Prs/Modules/OutCell"
+  "/dd/Geometry/DownstreamRegion/Prs/Modules/InnCell"  ,
+  "/dd/Geometry/DownstreamRegion/Prs/Modules/MidCell"  ,
+  "/dd/Geometry/DownstreamRegion/Prs/Modules/OutCell"
 };
 
-GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/Prs/Installation/Prs" ;
+GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/DownstreamRegion/Prs/Installation/Prs" ;
 GiGaGeo.Prs.CollectionName =  "PrsHits"                            ;
-GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/Prs"             ;
+GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Prs"             ;
 GiGaGeo.Prs.zMin           =  12300. * mm ;
 GiGaGeo.Prs.zMax           =  15000. * mm ;
 

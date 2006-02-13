@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2006-01-17 15:52:57 odescham Exp $ 
+# $Id: requirements,v 1.22 2006-02-13 14:30:24 odescham Exp $ 
 #============================================================================
 # Created    : 2005-12-08
 # Maintainer : Patrick ROBBE
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussCalo
-version           v8r0
+version           v8r1
 
 #============================================================================
 # Structure, i.e. directories to process. 

@@ -8,14 +8,14 @@
 // ============================================================================
 
 GiGaGeo.Hcal.StartVolumes = {
-  "/dd/Geometry/Hcal/Cells/lvHcalInnCellUpScTile"  ,
-  "/dd/Geometry/Hcal/Cells/lvHcalInnCellLowScTile"      , 
-  "/dd/Geometry/Hcal/Cells/lvHcalOutCellScTile"
+  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile"  ,
+  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile"      , 
+  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellScTile"
 };
 
-GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/Hcal/Installation/lvHcal" ;
+GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal" ;
 GiGaGeo.Hcal.CollectionName =  "HcalHits"                            ;
-GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/Hcal"             ;
+GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Hcal"             ;
 GiGaGeo.Hcal.zMin           =  12300. * mm ;
 GiGaGeo.Hcal.zMax           =  15000. * mm ;
 

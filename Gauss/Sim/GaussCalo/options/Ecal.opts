@@ -8,14 +8,14 @@
 // ============================================================================
 
 GiGaGeo.Ecal.StartVolumes = {
-  "/dd/Geometry/Ecal/Modules/InnCell",
-  "/dd/Geometry/Ecal/Modules/MidCell",
-  "/dd/Geometry/Ecal/Modules/OutCell"
+  "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell",
+  "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell",
+  "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell"
 };
 
-GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
+GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal" ;
 GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
-GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
+GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Ecal"             ;
 GiGaGeo.Ecal.zMin           =  12300. * mm ;
 GiGaGeo.Ecal.zMax           =  15000. * mm ;
 

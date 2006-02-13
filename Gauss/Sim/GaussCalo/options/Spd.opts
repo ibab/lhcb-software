@@ -8,14 +8,14 @@
 // ============================================================================
 
 GiGaGeo.Spd.StartVolumes = {
-  "/dd/Geometry/Spd/Modules/InnCell"  ,
-  "/dd/Geometry/Spd/Modules/MidCell"  ,
-  "/dd/Geometry/Spd/Modules/OutCell"
+  "/dd/Geometry/DownstreamRegion/Spd/Modules/InnCell"  ,
+  "/dd/Geometry/DownstreamRegion/Spd/Modules/MidCell"  ,
+  "/dd/Geometry/DownstreamRegion/Spd/Modules/OutCell"
 };
 
-GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/Installation/Spd" ;
+GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/DownstreamRegion/Spd/Installation/Spd" ;
 GiGaGeo.Spd.CollectionName =  "SpdHits"                            ;
-GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/Spd"             ;
+GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Spd"             ;
 GiGaGeo.Spd.zMin           =  12300. * mm ;
 GiGaGeo.Spd.zMax           =  15000. * mm ;
 
