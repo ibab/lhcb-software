@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.cpp,v 1.4 2006-02-13 12:03:00 odescham Exp $
+// $Id: MCCaloMonitor.cpp,v 1.5 2006-02-13 16:13:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/02/13 12:03:00  odescham
+// v2r1 migration to GaudiHistoAlg completed - structure pathes adapted to new enveloppes
+//
 // Revision 1.3  2006/01/31 15:35:00  gcorti
 // message in debug mode
 //
@@ -165,22 +168,20 @@ StatusCode MCCaloMonitor::execute() {
   MCCaloHits::const_iterator iHit;
   
   // Get the MCHits
-  //  SmartDataPtr< MCCaloHits > CaloHits (eventSvc(),m_nameOfMCHits);
-  MCCaloHits* CaloHits = get<MCCaloHits> ( m_nameOfMCHits );
+  SmartDataPtr< MCCaloHits > CaloHits (eventSvc(),m_nameOfMCHits);
   if( 0 == CaloHits ) {
     error() << "Cannot locate MCCaloHits in " << m_Detector << endreq;
     return StatusCode::FAILURE ;
   }  
   // Get the MCParticles
-  // SmartDataPtr< MCParticles > mcParts (eventSvc(),MCParticleLocation::Default);
-  MCParticles* mcParts = get<MCParticles>(  MCParticleLocation::Default );
+  
+  SmartDataPtr< MCParticles > mcParts (eventSvc(),MCParticleLocation::Default);
   if( 0 == mcParts ) {
     error() << "Cannot locate mcParts in "<< m_Detector << endreq;
     return StatusCode::FAILURE ;
   }
-  //SmartDataPtr<DeCalorimeter> detector( detSvc() ,m_GeometryRoot + m_Detector );
-  DeCalorimeter* detector = getDet<DeCalorimeter>( m_GeometryRoot + m_Detector );
-
+  SmartDataPtr<DeCalorimeter> detector( detSvc() ,m_GeometryRoot + m_Detector );
+  
   if( 0 == detector ) {
     error() << 
       "Cannot locate Detector Element ="<< m_GeometryRoot+m_Detector << endreq;
