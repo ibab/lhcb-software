@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.8 2006-01-31 07:48:23 cattanem Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.9 2006-02-13 09:26:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -86,17 +86,11 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
                                                       const LHCb::MCParticle*& 
                                                       mcpart){
   mcpart=NULL;  
-  SmartDataPtr<LHCb::MCParticles> mcParticles(eventSvc(),
-                                        LHCb::MCParticleLocation::Default);
-  if(!mcParticles){
-    error() << "Could not find MCParticles in " 
-        << LHCb::MCParticleLocation::Default << endreq;
-    return StatusCode::FAILURE;
-  }
+  LHCb::MCParticles* mcParticles = 
+    get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
 
-  // get the MCMuonDigits
-  SmartDataPtr<LHCb::MCMuonDigits> mcDigits(eventSvc(), 
-                                      LHCb::MCMuonDigitLocation::MCMuonDigit);
+  LHCb::MCMuonDigits* mcDigits = 
+    get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
   
   // match the MCMuonDigit to the MuonDigit via the Key
   LHCb::MCMuonDigit * mcDigit = mcDigits->object(digit->key());

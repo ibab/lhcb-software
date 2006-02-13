@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.18 2006-01-31 17:05:39 asarti Exp $
+! $Id: release.notes,v 1.19 2006-02-13 09:26:57 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
-!==================== MuonAssociators v2r0 2006-01-31 =--===================
+!==================== MuonAssociators v2r0 2006-02-13 ======================
+! 2006-02-13 - Marco Cattaneo
+ - Use get<> instead of SmartDataPtr
+
 ! 2006-01-31 - Alessio Sarti
  - Write the IntLink to the TES in 
    LHCb::MCMuonDigitLocation::MCMuonDigit + "Info" location
