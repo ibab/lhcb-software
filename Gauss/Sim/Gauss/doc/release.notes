@@ -6,6 +6,12 @@
 
 !======================== Gauss v24r1 2006-02-13 =============================
 ! 2006-02-13 - Gloria CORTI
+ - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1
+   . SimGeometry.opts
+   . Monitor.opts
+   . requirements
+
+! 2006-02-13 - Gloria CORTI
  - Switch on simulation of TT that works.
    . SimGeometry.opts
 

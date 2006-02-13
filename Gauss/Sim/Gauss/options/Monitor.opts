@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.18 2006-02-10 18:56:52 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.19 2006-02-13 16:26:16 gcorti Exp $ 
 
 /** @file 
  * 
@@ -36,14 +36,9 @@ SimMonitor.Members   += { "MCTruthMonitor" };
 // MC(XXX)Hits summary
 SimMonitor.Members   += { "GiGaGetHitsAlg" };
 
-// VELO :  - pre XmlDDDB v30r0 path 
+// VELO
 ApplicationMgr.DLLs += { "VeloGauss" };
 SimMonitor.Members  += { "VeloGaussMoni" };
-// VeloGaussMoni.PrintInfo = false;
-// VeloGaussMoni.DetailedMonitor = true;
-// VeloGaussMoni.TestMCHit = true;
-// VeloGaussMoni.TestPileUpMCHit = true;
-// VeloGaussMoni.Print = 2;
 
 // Silicon tracker
 SimMonitor.Members  += { "MCHitMonitor/TTHitMonitor" };
@@ -62,11 +57,11 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 // when running the simulation with Geant4 not when reading files!
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
-// Calorimeters - pre XmlDDDB v30r0 path
-// SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
-// SimMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
-// SimMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
-// SimMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
+// Calorimeters
+SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
+SimMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
+SimMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
+SimMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
 #include "$CALOMONISIMOPTS/MoniSim.opts"
 SpdMonitor.OutputLevel = 4;
 PrsMonitor.OutputLevel = 4;

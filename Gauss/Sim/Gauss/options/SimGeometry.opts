@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.13 2006-02-13 11:02:29 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.14 2006-02-13 16:26:16 gcorti Exp $
 
 /** @file
  *
@@ -45,10 +45,10 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
 Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
 #include "$GAUSSCALOROOT/options/Calo.opts"           // Specific configuration
 Geo.StreamItems         += {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
 
