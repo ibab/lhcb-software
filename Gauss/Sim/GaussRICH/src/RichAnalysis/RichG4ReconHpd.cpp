@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.5 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.6 2006-02-13 16:30:43 jonrob Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -20,6 +20,9 @@
 
 // local
 #include "RichG4ReconHpd.h"
+
+// RichDet
+#include "RichDet/DeRich.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4ReconHpd
@@ -43,12 +46,12 @@ RichG4ReconHpd::RichG4ReconHpd():
   
   MsgStream RichG4HpdReconlog( msgSvc,"RichG4HpdRecon");
 
-    SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+    SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
 
   if( !Rich1DE ){
     RichG4HpdReconlog << MSG::ERROR 
-               << "Can't retrieve /dd/Structure/LHCb/Rich1 for HpdRecon" 
-               << endreq;
+                      << "Can't retrieve " << DeRichLocation::Rich1 << " for HpdRecon" 
+                      << endreq;
   }else {
 
     m_HpdSiDetXSize=

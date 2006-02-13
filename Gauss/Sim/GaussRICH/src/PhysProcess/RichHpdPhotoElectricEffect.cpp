@@ -16,8 +16,8 @@
 #include "RichG4GaussPathNames.h"
 
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
-                                  const G4String& processName, 
-                                  G4ProcessType   aType)
+                                                       const G4String& processName,
+                                                       G4ProcessType   aType)
   : G4VDiscreteProcess(processName, aType ),
     m_numTotHpd(std::vector<int>(2))
 {
@@ -40,8 +40,8 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
     m_numTotHpd = m_HpdProperty->numHpdTotRich();
     m_Rich1PhysVolNameA= Rich1PhysVolGeomName;
     m_Rich2PhysVolNameA= Rich2PhysVolGeomName;
-    m_Rich1PhysVolNameB= Rich1PhysVolDeName;
-    m_Rich2PhysVolNameB= Rich2PhysVolDeName;
+    m_Rich1PhysVolNameB= Rich1DeStructurePathName;
+    m_Rich2PhysVolNameB= Rich2DeStructurePathName;
     m_hpdPhCathodeInnerRadius= m_HpdProperty->HpdPhCathodeInnerRadius();
     m_MaxZHitInRich1=  m_HpdProperty->Rich1MaxZHitZCoord();
 
@@ -138,11 +138,11 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4String currentRichDetPhysName;
   if( currentRichDetNumber == 0 ) {
     // for rich1
-  // the following modif done for the new G4 version. SE Nov,2005.
+    // the following modif done for the new G4 version. SE Nov,2005.
 
-  //  CurTT -> MoveUpHistory(4);
-  //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
-    
+    //  CurTT -> MoveUpHistory(4);
+    //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+
     currentRichDetPhysName = CurTT -> GetVolume(6)->GetName();
 
     if(currentRichDetPhysName != m_Rich1PhysVolNameA &&
@@ -154,10 +154,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   }
   else if (currentRichDetNumber==1 )
   {
-  // the following modif done for the new G4 version. SE Nov,2005.
+    // the following modif done for the new G4 version. SE Nov,2005.
 
-  //  CurTT -> MoveUpHistory(2);
-  //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+    //  CurTT -> MoveUpHistory(2);
+    //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
 
     currentRichDetPhysName = CurTT -> GetVolume(4)->GetName();
 
@@ -215,7 +215,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     G4double ElecOriginTolerence= 0.004*mm;
     G4ThreeVector LocalElectronOrigin (LocalElectronOriginInit.x(),
                                        LocalElectronOriginInit.y(),
-                 LocalElectronOriginInit.z()- ElecOriginTolerence );
+                                       LocalElectronOriginInit.z()- ElecOriginTolerence );
 
     std::vector<double> CurDemagFactor=
       getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
@@ -234,16 +234,16 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     //  now apply only the linear and quadratic factor of the demag;
     G4double ElectronCathodeRadius = sqrt( pow(LocalElectronOrigin.x(), 2) +
-                                             pow(LocalElectronOrigin.y(), 2) );
-    G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +  
-                                         CurDemagFactor[0]) -1.0 ;
+                                           pow(LocalElectronOrigin.y(), 2) );
+    G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +
+                          CurDemagFactor[0]) -1.0 ;
     // CurDemagFactor[0] is a negative number.
-       
-     G4ThreeVector
+
+    G4ThreeVector
       LocalElectronDirection ( scaleFact * (LocalElectronOrigin.x()) + PsfX,
                                scaleFact * (LocalElectronOrigin.y()) + PsfY,
                                -( m_PhCathodeToSilDetMaxDist-
-                             ( m_hpdPhCathodeInnerRadius-(LocalElectronOrigin.z()))));
+                                  ( m_hpdPhCathodeInnerRadius-(LocalElectronOrigin.z()))));
 
     // test printout
     // G4cout<<"Photoeleceff: Local eln origin dir "<<
@@ -251,14 +251,14 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //   "    "<<      LocalElectronOrigin.z()<<"   "<<
     //    LocalElectronDirection.x()<<"   "<<   LocalElectronDirection.y()<<
     //   "    "<< LocalElectronDirection.z()<<G4endl;
-    
+
     //normalize this vector and then transform back to global coord system.
     LocalElectronDirection = LocalElectronDirection.unit();
 
     //  G4cout<<"Photoeleceff: normalized Local eln  dir "<<
     //   LocalElectronDirection.x()<<"   "<<   LocalElectronDirection.y()<<
     //   "    "<< LocalElectronDirection.z()<<G4endl;
-       
+
     const G4ThreeVector GlobalElectronDirection = theNavigator->
       GetLocalToGlobalTransform().
       TransformAxis(LocalElectronDirection);
@@ -269,46 +269,46 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //   G4double ElecKineEnergy= m_HpdPhElectronKE;
 
     //create the photoelectron
-      G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
+    G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
 
-      // G4DynamicParticle* aElectron=
-      // new G4DynamicParticle (G4Electron::Electron(),
-      //                       GlobalElectronDirection, ElecKineEnergy) ;
+    // G4DynamicParticle* aElectron=
+    // new G4DynamicParticle (G4Electron::Electron(),
+    //                       GlobalElectronDirection, ElecKineEnergy) ;
     //
     // end of temporary fix.
     //   test of number of proc for the photoelectron particle
     // G4cout<<" stat test for photoelectron "<<G4endl;
-    // 
-    //      G4ParticleDefinition* photoelectronDef = 
+    //
+    //      G4ParticleDefinition* photoelectronDef =
     //      RichPhotoElectron::PhotoElectron();
     //    G4cout<<" Now checking if photoelectron def exists "<<G4endl;
     //    G4String pname= photoelectronDef->GetParticleName();
     //    G4cout<<" Now checking if photoelectron def exists "<<
     //      pname<< G4endl;
-    //  
+    //
     //    if( photoelectronDef) {
-    //      
+    //
     //     G4ProcessManager* pmanager =  photoelectronDef->GetProcessManager();
     //     G4cout<< "Check if pmanager exists "<<G4endl;
-    //     if(pmanager) {  
-    //     G4ProcessVector* pVector = 
+    //     if(pmanager) {
+    //     G4ProcessVector* pVector =
     //          pmanager->GetProcessList();
     //      G4cout << "size of ProcList for pe-   "
     //             << (G4int) pVector->size()<< G4endl;
-    //      G4cout << "List of phys proc for pe-   " << G4endl;          
+    //      G4cout << "List of phys proc for pe-   " << G4endl;
     //      pmanager->DumpInfo();
     //     }
-    //     
-    //    }       
+    //
+    //    }
     //      G4cout<<" end test for photoelectron "<<G4endl;
-    //      
-    // end of test of number of proc for photoelectron particle.	   
+    //
+    // end of test of number of proc for photoelectron particle.
     //
     //    G4double ElecKineEnergy= m_HpdPhElectronKE;
 
-           G4DynamicParticle* aElectron=
-             new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-                       GlobalElectronDirection, ElecKineEnergy) ;
+    G4DynamicParticle* aElectron=
+      new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+                             GlobalElectronDirection, ElecKineEnergy) ;
 
     aParticleChange.SetNumberOfSecondaries(1) ;
     //  aParticleChange.AddSecondary( aElectron ) ;
@@ -337,9 +337,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
   } else {
 
-    //photon is not killed if it is not converted to photoelectron                                                              
+    //photon is not killed if it is not converted to photoelectron
 
-                                                      
+
   }
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 

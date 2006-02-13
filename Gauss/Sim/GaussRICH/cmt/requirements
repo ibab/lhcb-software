@@ -2,65 +2,7 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.38 2006-02-10 18:37:20 gcorti Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.37  2006/02/10 09:37:06  seaso
-# commit
-#
-# Revision 1.36  2006/02/06 13:56:32  gcorti
-# version in requirements
-#
-# Revision 1.35  2006/01/31 14:17:41  gcorti
-# temporary fixes to allow to run without RichAnalysis
-#
-# Revision 1.34  2006/01/27 19:35:21  gcorti
-# switch off some code
-#
-# Revision 1.33  2005/12/16 14:55:59  gcorti
-# new options
-#
-# Revision 1.32  2005/12/06 10:55:27  gcorti
-# v5r1
-#
-# Revision 1.31  2005/11/07 15:31:18  jonrob
-# remove redundant use
-#
-# Revision 1.30  2005/09/30 12:14:59  seaso
-# commit
-#
-# Revision 1.29  2005/06/15 15:22:50  gcorti
-# set new version
-#
-# Revision 1.28  2005/04/20 12:49:55  gcorti
-# change version number
-#
-# Revision 1.27  2005/04/12 13:03:53  gcorti
-# switch off set3 histograms
-#
-# Revision 1.26  2005/03/09 16:37:03  gcorti
-# v4r12
-#
-# Revision 1.25  2005/02/22 10:01:33  gcorti
-# v4r11
-#
-# Revision 1.24  2005/02/21 19:01:31  gcorti
-# clean up of debug print out in execute
-#
-# Revision 1.23  2005/02/21 12:53:48  gcorti
-# v4r11
-#
-# Revision 1.22  2004/12/16 09:48:04  gcorti
-# fix to stop eand kill
-#
-# Revision 1.21  2004/12/13 15:18:05  gcorti
-# temporary bug fix for Inadmisible Rich Det Sector
-#
-# Revision 1.20  2004/08/02 13:30:31  gcorti
-# adapt to Gaudi v16
-#
-# Revision 1.19  2004/07/30 13:42:13  jonrob
-# Add doxygen file documentation and CVS information
-#
+# $Id: requirements,v 1.39 2006-02-13 16:30:43 jonrob Exp $
 #============================================================================
 
 # =============================================================================
@@ -75,8 +17,9 @@ use GaussTools    v*     Sim
 use AIDA          v*     LCG_Interfaces
 
 # =============== Event =======================================================
-use MCEvent       v*     Event
+use MCEvent       v*   Event
 use RichKernel    v*   Rich
+use RichDet       v*   Det
 
 # ============== component library ============================================
 library          GaussRICH    *.cpp             \
@@ -85,7 +28,6 @@ library          GaussRICH    *.cpp             \
                               srcG4/*.cc       \
                               RichAction/*.cpp \
                               RichAnalysis/*.cpp \
-                              RichAnalysis/*.icpp \  
                               Misc/*.cpp   
 
 # ============== standard includes ============================================

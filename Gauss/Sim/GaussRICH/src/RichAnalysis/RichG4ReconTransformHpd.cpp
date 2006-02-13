@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.4 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.5 2006-02-13 16:30:43 jonrob Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -21,6 +21,9 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
+
+// RichDet
+#include "RichDet/DeRich.h"
 
 //#include <CLHEP/Geometry/Point3D.h>
 //#include <CLHEP/Geometry/Vector3D.h>
@@ -85,13 +88,13 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
   if(aRichDetNum == 0 ) {
 
     SmartDataPtr<DetectorElement> Rich1DE(detSvc,
-                                           "/dd/Structure/LHCb/Rich1");
+                                          DeRichLocation::Rich1);
 
     if( !Rich1DE ){
 
       RichG4ReconTransformHpdlog << MSG::ERROR
-                                 << "Can't retrieve /dd/Structure/LHCb/Rich1 "
-                                 <<" for RichG4TransformHpd"
+                                 << "Can't retrieve " << DeRichLocation::Rich1
+                                 << " for RichG4TransformHpd"
                                  << endreq;
 
     }else {
@@ -230,13 +233,13 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
   }else if( aRichDetNum == 1){
 
     SmartDataPtr<DetectorElement> Rich2DE(detSvc,
-                                           "/dd/Structure/LHCb/Rich2");
+                                          DeRichLocation::Rich2);
 
     if( !Rich2DE ){
 
       RichG4ReconTransformHpdlog << MSG::ERROR
-                                 << "Can't retrieve /dd/Structure/LHCb/Rich2 "
-                                 <<" for RichG4TransformHpd"
+                                 << "Can't retrieve " << DeRichLocation::Rich2
+                                 << " for RichG4TransformHpd"
                                  << endreq;
 
     }else {

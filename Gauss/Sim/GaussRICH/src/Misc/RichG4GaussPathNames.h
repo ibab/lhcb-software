@@ -1,9 +1,14 @@
+
 #ifndef MISC_RICHG4GAUSSPATHNAMES_H
 #define MISC_RICHG4GAUSSPATHNAMES_H 1
+
 #include "globals.hh"
-static const G4String CF4MaterialName="/dd/Materials/RichMaterials/CF4";
-static const G4String C4F10MaterialName="/dd/Materials/RichMaterials/C4F10";
-static const G4String AgelMaterialName="/dd/Materials/RichMaterials/Aerogel";
+
+#include "RichDet/DeRich.h"
+
+static const G4String CF4MaterialName       = "/dd/Materials/RichMaterials/CF4";
+static const G4String C4F10MaterialName     = "/dd/Materials/RichMaterials/C4F10";
+static const G4String AgelMaterialName      = "/dd/Materials/RichMaterials/Aerogel";
 static const G4String AgelTile0MaterialName = "/dd/Materials/RichMaterials/AerogelT0";
 static const G4String AgelTile1MaterialName = "/dd/Materials/RichMaterials/AerogelT1";
 static const G4String AgelTile2MaterialName = "/dd/Materials/RichMaterials/AerogelT2";
@@ -20,6 +25,7 @@ static const G4String AgelTile12MaterialName = "/dd/Materials/RichMaterials/Aero
 static const G4String AgelTile13MaterialName = "/dd/Materials/RichMaterials/AerogelT13";
 static const G4String AgelTile14MaterialName = "/dd/Materials/RichMaterials/AerogelT14";
 static const G4String AgelTile15MaterialName = "/dd/Materials/RichMaterials/AerogelT15";
+
 static const G4String FilterGenericMaterialName="/dd/Materials/RichMaterials/Rich1FilterGenericMaterial";
 static const G4String FilterD263MaterialName="/dd/Materials/RichMaterials/Rich1FilterD263Material";
 static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
@@ -84,12 +90,15 @@ static const G4String RichHpdVacName=
 static const G4String Rich2CF4MatName=
                           "/dd/Materials/RichMaterials/CF4";
 
-static const G4String Rich1DeStructurePathName ="/dd/Structure/LHCb/BeforeMagnetRegion/Rich1" ;
-static const G4String Rich2DeStructurePathName ="/dd/Structure/LHCb/AfterMagnetRegion/Rich2" ;
 static const G4String Rich1PhysVolGeomName ="/dd/Geometry/LHCb/BeforeMagnetRegion/lvBeforeMagnetRegion#pvRich1Master";
 static const G4String Rich2PhysVolGeomName ="/dd/Geometry/LHCb/AfterMagnetRegion/lvAfterMagnetRegion#pvRich2Master";
-static const G4String Rich1PhysVolDeName ="/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
-static const G4String Rich2PhysVolDeName ="/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
+
+static const G4String Rich1DeStructurePathName = DeRichLocation::Rich1 ;
+static const G4String Rich2DeStructurePathName = DeRichLocation::Rich2 ;
+//static const G4String Rich1PhysVolDeName = DeRichLocation::Rich1 ;
+//static const G4String Rich2PhysVolDeName = DeRichLocation::Rich2 ;
+
 static const G4String RichHpdQwDeSubPathName="/Rich1FirstHpdQW";
 static const G4String RichHpdPaCathDeSubPathname="/Rich1FirstHpdPhCathode";
+
 #endif // MISC_RICHG4GAUSSPATHNAMES_H

@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.5 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.6 2006-02-13 16:30:43 jonrob Exp $
 // Include files
 
 
@@ -16,6 +16,9 @@
 #include "DetDesc/SolidSphere.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h"
+
+// RichDet
+#include "RichDet/DeRich.h"
 
 //#include <CLHEP/Geometry/Point3D.h>
 //#include <CLHEP/Geometry/Vector3D.h>
@@ -78,8 +81,8 @@ RichG4ReconFlatMirr::RichG4ReconFlatMirr(  )
   // the mirror number 0-15 for the rich1 and 16-45 for rich2 in this array.  
   
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, DeRichLocation::Rich2);
   std::string r2mNum [] ={"00:0","01:1","02:2","03:3","34:4","35:5",
                           "36:6","37:7","18:8","19:9","110:10","111:11",
                           "212:12","213:13","214:14","215:15"};
@@ -127,7 +130,7 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
   // modif in the following to be compatible with recent Detdesc. 
   // SE 16-6-2005.
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
   // modif in the following to be compatible with the xml userparameter name.
   // SE 10-5-2005.
   if( Rich1DE) {
@@ -222,7 +225,7 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
 
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, DeRichLocation::Rich2);
 
   if(Rich2DE) {
 
