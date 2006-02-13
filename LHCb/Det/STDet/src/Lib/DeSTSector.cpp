@@ -22,9 +22,11 @@ using namespace LHCb;
 
 DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
-  m_firstStrip(1) 
+  m_firstStrip(1), 
+  m_lowerTraj(0),
+  m_upperTraj(0)
 { 
-  // constructer (first strip means we number from 1)
+    // constructer (first strip means we number from 1)
 }
 
 DeSTSector::~DeSTSector() {

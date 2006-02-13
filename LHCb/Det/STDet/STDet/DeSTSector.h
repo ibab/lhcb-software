@@ -162,7 +162,7 @@ public:
 
 private:
 
-  void DeSTSector::clear();
+  void clear();
   void DeSTSector::cacheTrajectory();
   
   unsigned int m_firstStrip;
