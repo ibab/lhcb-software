@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-12 M Needham
+- put back valid test
+
 !========================= STDet v2r0 2006-02-12 =======================
 ! 2006-02-12 M Needham
 - Add trajectory and inside functions

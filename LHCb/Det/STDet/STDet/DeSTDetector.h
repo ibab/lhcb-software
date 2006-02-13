@@ -83,6 +83,9 @@ public:
   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
+  /** check channel number is valid */
+  bool isValid(const LHCb::STChannelID aChannel);
+
   /** @return detector pitch */
   double pitch() const;
  
@@ -208,6 +211,15 @@ inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID aChannel
 inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID aChannel) {
   DeSTSector* aSector = findSector(aChannel);
   return (0 != aSector ? aSector->nextRight(aChannel): LHCb::STChannelID(0u,0u,0u,0u,0u,0u)); 
+}
+
+inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
+
+  DeSTDetector::Sectors::iterator iter = m_sectors.begin();
+  while((iter != m_sectors.end())&&((*iter)->contains(aChannel) == false)){
+    ++iter;
+  } // iter
+  return (iter != m_sectors.end() ? (*iter)->isStrip(aChannel.strip()) : false );
 }
 
 #endif // _DeSTDetector_H
