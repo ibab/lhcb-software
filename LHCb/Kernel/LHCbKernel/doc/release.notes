@@ -2,7 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r2 2006-02-13 =========================
+!===================== LHCbKernel v6r2 2006-02-14 =========================
+! 2006-02-14 - Marco Cattaneo
+ - Changes to LbAppinit:
+   . Add getSeeds and initRndm methods (code taken from initRndm tool)
+   . Add optional *seeds argument to printEventRun method
+   N.B. these methods are not called in the base class
+
 ! 2006-02-13 G.Raven 
  - Add typedef for return type of DifTraj::derivative
  - make Trajectory::arclength pure virtual, and implement in relevant derived classes
