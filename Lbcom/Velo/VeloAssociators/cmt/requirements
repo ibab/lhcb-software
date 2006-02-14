@@ -14,6 +14,7 @@ include_path none
 use  MCEvent     v*     Event
 use  VeloEvent   v*     Event
 use  LinkerEvent v*     Event
+use  GaudiAlg    v*
 
 # Component library building rule
 #============================================================================
