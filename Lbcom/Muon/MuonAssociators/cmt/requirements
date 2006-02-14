@@ -11,6 +11,7 @@ use MuonEvent     v*    Event
 use MCEvent       v*    Event
 use LinkerEvent   v*    Event
 use EventBase     v*    Event
+use GaudiAlg      v*
 
 # =============== component library ===========================================
 library       MuonAssociators  ../src/*.cpp
