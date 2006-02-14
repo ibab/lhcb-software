@@ -46,19 +46,18 @@ MCSTDepositCreator::MCSTDepositCreator(const std::string& name, ISvcLocator* pSv
   declareProperty("tofVector",m_TOFVector);
   declareProperty("spillVector", m_SpillVector);
   declareProperty("spillTimes", m_spillTimes);
-  declareProperty("minDist", m_minDistance = 4.0e-3*mm);
+  declareProperty("minDist", m_minDistance = 10.0e-3*mm);
 
   declareProperty("chargeSharerName",m_chargeSharerName = "STChargeSharingTool");
   declareProperty("depChargeTool", m_depChargeToolName = "STDepositedCharge");
 
-  declareProperty("tolerance",m_tolerance = 0.2*mm);
   declareProperty("siteSize",m_siteSize = 0.02*mm);
   declareProperty("maxNumSites",m_maxNumSites = 150);
 
   declareProperty("xTalkParams",m_xTalkParams);
 
   m_xTalkParams.push_back(0.08);
-  m_xTalkParams.push_back(0.09/(55*picofarad));
+  m_xTalkParams.push_back(0.092/(55*picofarad));
 
   declareProperty("detType", m_detType = "TT"); 
 
@@ -85,6 +84,7 @@ StatusCode MCSTDepositCreator::initialize() {
 
   m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
   STDetSwitch::flip(m_detType,m_outputLocation);
+  STDetSwitch::flip(m_detType,m_inputLocation);
 
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
@@ -166,6 +166,7 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
       Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
       Gaudi::XYZPoint midPoint = aSector->toLocal(aHit->midPoint());
         
+      //if (aSector->localInBox(midPoint.x(), midPoint.y()) == true){
       if (aSector->localInActive(midPoint) == true){
 
 	// deposited charge on strip calc the ionization
@@ -173,15 +174,17 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
         	    
 	// distribute charge to n sites
 	std::vector<double> chargeSites;
-        this->distributeCharge(entryPoint.x(),exitPoint.y(),chargeSites);
+
+        this->distributeCharge(entryPoint.x(),exitPoint.x(),chargeSites);
 
         // doing charge sharing + go to strips
 	std::map<unsigned int,double> stripMap;
         chargeSharing(chargeSites,aSector,stripMap);
 
 	// correct normalization of charge
-        double totWeightedCharge = chargeOnStrips(stripMap);           
-        if (totWeightedCharge > 1e-10){
+        double totWeightedCharge = chargeOnStrips(stripMap);
+           
+        if (totWeightedCharge > 1e-3 ){
 
    	  // capacitive coupling
           std::map<unsigned int,double>::iterator firstIter = stripMap.begin();
@@ -206,6 +209,7 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
 	    }
 
             double xTalkLevel = m_xTalkParams[0] + m_xTalkParams[1]*aSector->capacitance();
+
 
             double weightedCharge = ((1.-(2.0*xTalkLevel))*stripMap[iStrip])
   	                           + (xTalkLevel*(nextCharge+prevCharge)); 
@@ -339,7 +343,6 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites ,
   if (aSector->isStrip(lastStrip+1)){
     stripMap[lastStrip+1] += 0.0;
   }
-
 }
 
 double MCSTDepositCreator::chargeOnStrips(const std::map<unsigned int,double>& stripMap) const{
@@ -360,7 +363,7 @@ double MCSTDepositCreator::beetleResponse(const double time,
   
   // choose the best spline for our needs...
   ISTAmplifierResponse* bResponse = 0;
-  double testCap = 9999.0;
+  double testCap = 9999.0*picofarad;
   std::vector<ISTAmplifierResponse*>::iterator iter = m_AmplifierResponse.begin();
   for (; iter != m_AmplifierResponse.end(); ++iter){
     ISTAmplifierResponse::Info properties = (*iter)->validity();
@@ -370,6 +373,8 @@ double MCSTDepositCreator::beetleResponse(const double time,
       bResponse = *iter;
     } 
   } // iter
+  if (bResponse == 0) warning() << "Failed to match amplifier response " << endmsg;
+
   return (bResponse !=0 ? bResponse->response(time): 0);
 }
 

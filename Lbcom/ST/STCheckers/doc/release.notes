@@ -2,7 +2,13 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+
+! 2006-02-14
+ - Bug fixes in deposit and mcdigit checking 
+
+
 !============================ STCheckers v1r0 2006-02-10 =======================
+
 ! 2006-02-09 M Needham
  - Make TTDumpGeom more useful
 

@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.2 2006-02-14 16:20:16 mneedham Exp $
 #ifndef _MCITDEPOSITCREATOR_H_
 #define _MCITDEPOSITCREATOR_H_
 
@@ -74,7 +74,6 @@ private:
   std::vector<std::string> m_beetleResponseTypes;
 
   double m_minDistance;
-  double m_tolerance;
   double m_siteSize;
   std::vector<double> m_xTalkParams;
   int m_maxNumSites;

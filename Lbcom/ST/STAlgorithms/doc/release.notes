@@ -1,6 +1,13 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+
+! 2006-02-14 M. Needham
+ - Bug fixes:
+   - options files 
+   - MCSTDepositCreator (stupid errors)
+   - tune digitization parameters
+
 !======================= STAlgorithms v1r0 2006-02-10 ========================
 ! 2006-02-08 M. Needham
  - tune/bug fixes in IT options
