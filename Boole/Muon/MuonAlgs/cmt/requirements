@@ -12,6 +12,7 @@ use MuonDet     v*      Det
 use MuonEvent	v*	Event	
 use MCEvent	v*	Event	
 use MuonKernel  v*      Muon
+use GaudiAlg    v*
 
 # build a component library
 library MuonAlgs  *.cpp

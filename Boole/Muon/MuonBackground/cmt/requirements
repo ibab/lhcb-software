@@ -7,6 +7,7 @@ include_path none
 
 # ================ used packages ========================================= 
 use AIDA      v* LCG_Interfaces -no_auto_imports
+use GaudiAlg  v*
 use MuonEvent v* Event
 use MCEvent v* Event
 use GenEvent v* Event
