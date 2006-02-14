@@ -16,6 +16,7 @@ use  LHCbKernel   v*  Kernel
 use  MCEvent      v*  Event
 use  VeloEvent    v*  Event
 use  VeloDet      v*  Det
+use  GaudiAlg     v*
 
 # Component library building rule
 #============================================================================
