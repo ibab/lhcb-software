@@ -7,6 +7,7 @@ include_dirs $(STDETROOT)
 
 use DetDescCnv	v*	Det
 use LHCbKernel	v* Kernel
+use Boost       v*      LCG_Interfaces
 use GSL		v*	LCG_Interfaces -no_auto_imports
 
 
