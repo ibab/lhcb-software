@@ -9,6 +9,7 @@ use LinkerEvent v*      Event
 use MCEvent     v*      Event
 use OTEvent     v*      Event
 use OTDet       v*      Det
+use GaudiAlg    v*
 
 # ================= component library ====================
 library OTMonitor ../src/*.cpp -import=AIDA
