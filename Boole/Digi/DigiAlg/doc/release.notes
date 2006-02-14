@@ -4,7 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v4r0 2006-02-10 =========================
+!========================== DigiAlg v4r0 2006-02-14 =========================
+! 2006-02-14 - Marco Cattaneo
+ - Adapt to BooleInit to LbAppInit changes and add DAQ bank creation
+
 ! 2006-02-10 - Marco Cattaneo
  - Add ProcessHeader creation to BooleInit
 

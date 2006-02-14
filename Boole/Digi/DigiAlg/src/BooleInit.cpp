@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.12 2006-02-10 07:17:15 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.13 2006-02-14 14:01:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,6 @@
 
 // from LHCbKernel
 #include "Kernel/IGenericTool.h"
-#include "Kernel/IRndmTool.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
@@ -16,6 +15,7 @@
 
 // from DAQEvent
 #include "Event/RawEvent.h"
+#include "Event/RawBank.h"
 
 // local
 #include "BooleInit.h"
@@ -36,8 +36,7 @@ DECLARE_ALGORITHM_FACTORY( BooleInit );
 BooleInit::BooleInit( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator ), 
-    m_memoryTool(0), 
-    m_initRndmTool(0)
+    m_memoryTool(0)
 {
 
 }
@@ -58,9 +57,6 @@ StatusCode BooleInit::initialize() {
   // Private tool to plot the memory usage
   m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
   
-  // Private tool to initialize random number
-  m_initRndmTool = tool<IRndmTool>( "InitRndmTool", "BooleRndm", this, true );
-
   return StatusCode::SUCCESS;
 };
 
@@ -82,18 +78,31 @@ StatusCode BooleInit::execute() {
   this->printEventRun( evt->evtNumber(), evt->runNumber() );
   
   // Initialize the random number
-  m_initRndmTool->initRndm( evt->runNumber(), evt->evtNumber() );
+  std::vector<long int> seeds = getSeeds( evt->runNumber(), evt->evtNumber() );
+  sc = this->initRndm( seeds );
+  if ( sc.isFailure() ) return sc;  // error printed already by initRndm  
+
 
   // Create the Boole event header
   LHCb::ProcessHeader* header = new LHCb::ProcessHeader();
   header->setApplicationName( this->appName() );
   header->setApplicationVersion( this->appVersion() );
   header->setRunNumber( evt->runNumber() );
+  header->setRandomSeeds( seeds );
   put( header, LHCb::ProcessHeaderLocation::Digi );
 
   // Create an empty RawEvent
   LHCb::RawEvent* raw = new LHCb::RawEvent();
   put( raw, LHCb::RawEventLocation::Default );
+
+  // Add a DAQ bank
+  int data[3];
+  data[0] = 0;  // Partition ID
+  data[1] = evt->runNumber();
+  data[2] = 0;  // Number of missing sources
+  
+  LHCb::RawBank* bank = raw->createBank(1, LHCb::RawBank::DAQ, 1, 12, data);
+  raw->adoptBank(bank, true);
   
   return StatusCode::SUCCESS;
 };

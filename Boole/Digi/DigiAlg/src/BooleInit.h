@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.9 2006-02-10 07:17:15 cattanem Exp $
+// $Id: BooleInit.h,v 1.10 2006-02-14 14:01:57 cattanem Exp $
 #ifndef BOOLEINIT_H 
 #define BOOLEINIT_H 1
 
@@ -7,7 +7,6 @@
 #include "Kernel/LbAppInit.h"
 
 class IGenericTool;
-class IRndmTool;
 
 /** @class BooleInit BooleInit.h
  *  First TopAlg for Boole. Initializes random number and fills memory histogram
@@ -29,6 +28,5 @@ protected:
 
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
-  IRndmTool*    m_initRndmTool; ///< Pointer to (private) rndm intialization tool
 };
 #endif // BOOLEINIT_H
