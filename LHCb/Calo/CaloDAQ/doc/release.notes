@@ -4,10 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r0 2006-02-14 ==========================
 ! 2006-02-14 - Olivier Callot
  - Fix improper use of cell.index() instead of cell.all()
 
-!========================== CaloDAQ v2r0 2006-02-02 ==========================
 ! 2006-02-02 - Olivier Callot
  - Protect CaloTrigegrBitsFromRaw if DAQ bank is absent.
  - Code (CaloFillRawBuffer) from Full CaloADC banks if coding type = 2.
