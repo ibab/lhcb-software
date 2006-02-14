@@ -1,6 +1,8 @@
-// $Id: SiHeaderWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
+// $Id: SiHeaderWord.h,v 1.4 2006-02-14 15:49:11 krinnert Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
+
+#include <iostream>
 
 /** @class SiHeaderWord SiHeaderWord.h "STDAQ/SiHeaderWord.h"
  *
@@ -17,23 +19,23 @@ class SiHeaderWord {
 public:
 
   /** constructer 
-  @param number of clusters
-  @param pcn
+      @param number of clusters
+      @param pcn
   */
   SiHeaderWord(unsigned int nClusters,
                unsigned int pcn, 
                unsigned int errorFlag = 0){
 
     m_value = (nClusters<<clusterBits) +
-           (pcn <<pcnBits) +
-           (errorFlag << errorBits);
+      (pcn <<pcnBits) +
+      (errorFlag << errorBits);
   }
 
   /** constructer with int 
-  @param value
+      @param value
   */
   explicit SiHeaderWord(unsigned int value = 0):
-  m_value(value){}
+    m_value(value){}
 
   /** Destructer **/
   ~SiHeaderWord(){}
@@ -42,23 +44,23 @@ public:
   operator int() const; 
 
   /** The actual value 
-  @return value
+      @return value
   */
   unsigned int value() const;
 
   /** number of clusters
-  @return number of clusters
+      @return number of clusters
   */
   unsigned int nClusters() const;
 
   /** pipeline column number
-  @return pcn value 
+      @return pcn value 
   */
   unsigned int pcn() const;
 
 
   /** error bits set 
-  @return true if in error 
+      @return true if in error 
   */
   bool hasError() const;
 
@@ -76,7 +78,7 @@ private:
   enum bits {clusterBits = 0, pcnBits = 16, errorBits = 25};
   enum masks {clusterMask = 0x00ffff , pcnMask =  0xff0000, errorMask = 0x1000000}; 
 
-  int m_value;
+  unsigned int m_value;
 
 };
 

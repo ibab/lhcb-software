@@ -2,6 +2,13 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-14 - Kurt Rinnert
+ - changed m_value type in header word and cluster word to unsigned int
+   and unsigned short, respectively.  This is to avoid binary complement
+   confusion in integer casts. 
+ - added include of iostream in SiHeaderWord (do we really need this 
+	 streamer?).
+
 !=========================== SiDAQ v1r1 2006-02-10 =====================
 ! 2006-02-08 M Needham
  - Remove not need virtual functions

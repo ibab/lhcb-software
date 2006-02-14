@@ -1,4 +1,4 @@
-// $Id: SiClusterWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
+// $Id: SiClusterWord.h,v 1.4 2006-02-14 15:49:10 krinnert Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -90,7 +90,7 @@ public:
  
 private:
 
-  short m_value; /// Packed word
+  unsigned short m_value; /// Packed word
 };
 
 template <class bitPolicy>
