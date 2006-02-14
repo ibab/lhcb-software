@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-14 - Kurt Rinnert
+ - removed obsolete classes
+ - reduced PrepareVeloRawBuffer and DecodeVeloRawBuffer to skeletons,
+   meaningful new implementation coming up soon
+
 !=========================  VeloDAQ v2r3p2 2005-07-08 =====================
 ! 2005-07-08 - Tomasz Szumlak
  - Fix problem of missing last Velo Phi bank in L1Buffer, in cases when this
