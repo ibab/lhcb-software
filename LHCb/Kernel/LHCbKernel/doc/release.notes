@@ -8,6 +8,7 @@ Purpose: LHCb specific Kernel classes
    . Add getSeeds and initRndm methods (code taken from initRndm tool)
    . Add optional *seeds argument to printEventRun method
    N.B. these methods are not called in the base class
+ - Make GaudiAlg dependency private (needed only by LbAppInit)
 
 ! 2006-02-13 G.Raven 
  - Add typedef for return type of DifTraj::derivative
