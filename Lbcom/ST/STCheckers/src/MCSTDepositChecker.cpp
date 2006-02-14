@@ -66,9 +66,8 @@ StatusCode MCSTDepositChecker::initialize(){
       
   // detector element     
   m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
- 
-  m_depositLocation = MCSTDepositLocation::TTDeposits;
 
+  m_depositLocation = MCSTDepositLocation::TTDeposits;
   STDetSwitch::flip(m_detType,m_depositLocation);
 
   // book vectors of histos
@@ -79,7 +78,6 @@ StatusCode MCSTDepositChecker::initialize(){
 
 StatusCode MCSTDepositChecker::execute(){
 
-  // execute once per event
 
   // retrieve Digitizations
   MCSTDeposits* depositsCont = get<MCSTDeposits>(m_depositLocation); 

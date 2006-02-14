@@ -44,10 +44,9 @@ MCSTDigitChecker::~MCSTDigitChecker(){
 StatusCode MCSTDigitChecker::initialize(){
  
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
-
-
+  
   m_digitLocation = MCSTDigitLocation::TTDigits;
-  STDetSwitch::flip(m_detType,m_depositLocation);
+  STDetSwitch::flip(m_detType,m_digitLocation);
 
   return GaudiHistoAlg::initialize();
 }
