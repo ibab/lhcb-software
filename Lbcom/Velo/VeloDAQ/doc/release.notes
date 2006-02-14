@@ -2,6 +2,12 @@
 ! Responsible : Chris Parkes
 
 ! 2006-02-14 - Kurt Rinnert
+ - updated requirements file: removed depency on no longer existing Kernel
+   package, made new public include directory visible
+ - added new public include directory for low level encoding/decoding classes
+ - added new low level encoding/decoding classes
+
+! 2006-02-14 - Kurt Rinnert
  - removed obsolete classes
  - reduced PrepareVeloRawBuffer and DecodeVeloRawBuffer to skeletons,
    meaningful new implementation coming up soon
