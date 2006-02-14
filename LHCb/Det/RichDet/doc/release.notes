@@ -4,7 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v9r1 2006-02-06 =========================
+!========================= RichDet v9r1 2006-02-14 =========================
+! 2006-02-14 - Marco Cattaneo
+ - Add explicit Boost dependency to requirements
+
 ! 2006-02-06 - Chris Jones
  - Minor improvements to DeRichSystem (debug messaging etc.)
 
