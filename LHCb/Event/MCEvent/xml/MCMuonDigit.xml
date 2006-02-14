@@ -37,7 +37,7 @@
       <method
         desc="return digitinfo"
         name="DigitInfo"
-        type="LHCb::MCMuonDigitInfo">
+        type="LHCb::MCMuonDigitInfo &amp;">
        <code>return m_DigitInfo;</code>
       </method>
       <attribute 
