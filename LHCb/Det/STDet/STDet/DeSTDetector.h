@@ -170,7 +170,7 @@ inline unsigned int DeSTDetector::firstStation() const{
 }
 
 inline unsigned int DeSTDetector::lastStation() const{
-  return m_firstStation + m_stations.size();
+  return m_firstStation + m_stations.size()-1u;
 }
 
 inline unsigned int DeSTDetector::nStation() const{

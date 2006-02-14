@@ -2,6 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-14
+ - Bug fixes: station number in DeSTDetector, localInActive/bondGap
+   in DeSTSector
+
 !========================= STDet v2r0 2006-02-14 =======================
 ! 2006-02-14 - Marco Cattaneo
  - Add explicit Boost dependency to requirements

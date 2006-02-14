@@ -174,15 +174,11 @@ bool DeSTSector::globalInBox(const Gaudi::XYZPoint& gpoint,Gaudi::XYZPoint tol )
 
 bool DeSTSector::localInBondGap( const double v, double tol) const{
 
-  bool isInside = true;
   std::vector<double>::const_iterator iterD = m_deadRegions.begin();
-  while ((iterD != m_deadRegions.end())&&(isInside == true)){
-    if (fabs(v-*iterD)< (tol + m_deadWidth)){
-      isInside = false;
-    }
+  while ((iterD != m_deadRegions.end())&&(fabs(v-*iterD)> (tol + m_deadWidth))){
     ++iterD;
   }
-  return isInside;
+  return (iterD != m_deadRegions.end() ? true : false);
 }
 
 bool DeSTSector::localInBox(const double u, const double v, 
