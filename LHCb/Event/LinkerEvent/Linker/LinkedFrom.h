@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.13 2006-02-14 07:23:08 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.14 2006-02-14 10:41:52 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -16,8 +16,7 @@
  *  @date   2004-01-06
  */
 template <class SOURCE, 
-          class TARGET = ContainedObject ,
-          class SOURCECONTAINER = ObjectContainerBase > 
+          class TARGET = ContainedObject>
 class LinkedFrom {
 public: 
   //== Typedefs to please Matt
@@ -129,7 +128,7 @@ protected:
       link->setObject( tmp );
       if ( 0 == tmp ) return NULL;
     }
-    SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       return (SOURCE*)parent->containedObject( key );
     }

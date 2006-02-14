@@ -6,6 +6,10 @@
 
 !====================== LinkerEvent v2r0 2006-02-14 ==========================
 ! 2006-02-14 - Olivier Callot
+ - Remove all SOURCECONTAINER and TARGETCONTAINER template as this is
+   always a ObjectContainerBase. This simplifies the interface...
+
+! 2006-02-14 - Olivier Callot
  - Replace ObjectVector<> by ObjectContainerBase, as KeyedContainer doesn't
    inherit from ObjectVector. 
 

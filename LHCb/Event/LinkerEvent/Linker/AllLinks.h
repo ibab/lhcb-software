@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.6 2006-02-14 07:23:08 ocallot Exp $
+// $Id: AllLinks.h,v 1.7 2006-02-14 10:41:52 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -17,9 +17,7 @@
  */
 
 template < class TARGET, 
-           class SOURCE=ContainedObject,
-           class TARGETCONTAINER=ObjectContainerBase,
-           class SOURCECONTAINER=ObjectContainerBase > 
+           class SOURCE=ContainedObject >
 class AllLinks {
 public: 
   
@@ -85,7 +83,7 @@ protected:
       link->setObject( tmp );
       if ( 0 == tmp ) return NULL;
     }
-   TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
       return myObj;
@@ -103,7 +101,7 @@ protected:
       link->setObject( tmp );
       if ( 0 == tmp ) return NULL;
     }
-    SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       return (SOURCE*)parent->containedObject( key );
     }

@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.5 2006-02-14 07:23:08 ocallot Exp $
+// $Id: LinkerTool.h,v 1.6 2006-02-14 10:41:52 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -18,18 +18,14 @@
  *  @author Olivier Callot
  *  @date   2005-01-19
  */
-template <class SOURCE,
-          class TARGET,
-          class SOURCECONTAINER = ObjectContainerBase,
-          class TARGETCONTAINER = ObjectContainerBase >
-class LinkerTool {
+template <class SOURCE, class TARGET> class LinkerTool {
 
 public: 
 
-  typedef LinkerTable<SOURCE,TARGET,SOURCECONTAINER,TARGETCONTAINER>  DirectType;
-  typedef LinkerTable<TARGET,SOURCE,TARGETCONTAINER,SOURCECONTAINER>  InverseType;
-  typedef typename DirectType::Range                                  Range;
-  typedef typename DirectType::iterator                               iterator;
+  typedef LinkerTable<SOURCE,TARGET>    DirectType;
+  typedef LinkerTable<TARGET,SOURCE>    InverseType;
+  typedef typename DirectType::Range    Range;
+  typedef typename DirectType::iterator iterator;
   friend class DirectType;
 
   /** Standard constructor

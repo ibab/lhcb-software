@@ -1,4 +1,4 @@
-// $Id: LinkerTable.h,v 1.4 2006-02-14 07:23:08 ocallot Exp $
+// $Id: LinkerTable.h,v 1.5 2006-02-14 10:41:52 ocallot Exp $
 #ifndef LINKER_LINKERTABLE_H 
 #define LINKER_LINKERTABLE_H 1
 
@@ -11,11 +11,7 @@
  *  @author Olivier Callot
  *  @date   2005-01-19
  */
-template <class SOURCE,
-          class TARGET,
-          class SOURCECONTAINER = ObjectContainerBase,
-          class TARGETCONTAINER = ObjectContainerBase >
-class LinkerTable {
+template <class SOURCE, class TARGET> class LinkerTable {
 public: 
 
   typedef          LinkerRange<SOURCE,TARGET>           Range;
@@ -114,7 +110,7 @@ protected:
     if ( NULL == m_links ) return NULL;
     int myLinkID = curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
-    TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       TARGET* myObj = (TARGET*)parent->containedObject( curReference.objectKey() );
       return myObj;
@@ -132,7 +128,7 @@ protected:
     int myLinkID = curReference.srcLinkID();
     if ( 0 > myLinkID ) return NULL;
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
-    SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       return (SOURCE*)parent->containedObject( key );
     }

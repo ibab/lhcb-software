@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.10 2006-02-14 07:23:08 ocallot Exp $
+// $Id: LinkedTo.h,v 1.11 2006-02-14 10:41:52 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -18,8 +18,7 @@
 
 
 template < class TARGET, 
-           class SOURCE=ContainedObject,
-           class TARGETCONTAINER=ObjectContainerBase > 
+           class SOURCE=ContainedObject>
 class LinkedTo {
 public: 
   //== Typedefs to please Matt
@@ -129,7 +128,7 @@ protected:
       link->setObject( tmp );
       if ( 0 == tmp ) return NULL;
     }
-    TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
+    ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
       TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
       return myObj;
