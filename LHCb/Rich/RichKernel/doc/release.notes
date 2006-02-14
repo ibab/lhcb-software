@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.103 2006-02-10 16:44:29 cattanem Exp $
+! $Id: release.notes,v 1.104 2006-02-14 10:42:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-02-14 - Chris Jones
+ - Add a fix so derived classes do not need to load Tool registry simply because
+   they were in debug mode.
 
 !======================= RichKernel v6r1 2006-02-09 =======================
 ! 2006-02-09 - Christopher Rob Jones
