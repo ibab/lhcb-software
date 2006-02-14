@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.6 2006-02-10 07:01:29 cattanem Exp $
+! $Id: release.notes,v 1.7 2006-02-14 14:14:17 cattanem Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
 
-!======================== EventBase v1r1 2006-02-09 ========================
+!======================== EventBase v1r1 2006-02-14 ========================
+! 2006-02-14 - Marco Cattaneo
+ - In ProcessHeader, random number seeds are std::vector<long int> to please
+   IRndmEngine interface
+
 ! 2006-02-09 - Marco Cattaneo
  - Add default locations for Digi and Rec to ProcessHeader
 

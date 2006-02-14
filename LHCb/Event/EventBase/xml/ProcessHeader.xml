@@ -20,9 +20,9 @@
        <location name = "Digi" place = "MC/DigiHeader" />
        <location name = "Rec"  place = "Rec/Header" />
        <attribute
-        desc="random number seeds for this step (int or long?)"
+        desc="random number seeds for this step"
         name="randomSeeds"
-        type="std::vector &lt; int &gt;"
+        type="std::vector &lt; long int &gt;"
        />
        <attribute
         desc="Application or Program Name (e.g. Gauss, Boole or Pythia)"
