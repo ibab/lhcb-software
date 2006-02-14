@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.4 2006-02-13 16:30:43 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.5 2006-02-14 14:46:10 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -151,95 +151,101 @@ StatusCode GetMCRichHitsAlg::execute()
         // time of flight
         mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
-        // History flags
         // Rich detector information
         Rich::DetectorType rich = Rich::InvalidDetector;
         if ( g4hit->GetCurRichDetNum() < 0 )
         {
-          mchit->setRichInfoValid( false );
-          Warning( "Found RichG4Hit with invalid RICH flag" );
+          Warning( "Found RichG4Hit with invalid RICH flag. Using z coordinate as fix-up" );
+          rich = ( entry.z() < 4000 ? Rich::Rich1 : Rich::Rich2 );
         }
         else
         {
           rich = static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum());
-          mchit->setRichInfoValid( true );
-          mchit->setRich(rich);
         }
+        mchit->setRichInfoValid( true );
+        mchit->setRich(rich);
 
         // Default radiator information
         Rich::RadiatorType rad = Rich::InvalidRadiator;
         mchit->setRadiatorInfoValid( false );
-
-        // Decode the radiator number in the G4 hit
-        if      ( 1 == g4hit->GetRadiatorNumber() )
+        if ( g4hit->GetRadiatorNumber() >= 0 )
         {
-          // Signal C4F10 CK hit
-          rad = Rich::C4F10;
-        }
-        else if ( 2 == g4hit->GetRadiatorNumber() )
-        {
-          // Signal CF4 CK hit
-          rad = Rich::CF4;
-        }
-        else if ( 9 < g4hit->GetRadiatorNumber() && 26 > g4hit->GetRadiatorNumber() )
-        {
-          // Signal aerogel hit
-          rad = Rich::Aerogel;
-          const int aeroID = g4hit->GetRadiatorNumber() - 10;
-          if ( aeroID < 2*2*2*2*2 )
-          { 
-            mchit->setAerogelTileID( aeroID );
+          // Decode the radiator number in the G4 hit
+          if      ( 1 == g4hit->GetRadiatorNumber() )
+          {
+            // Signal C4F10 CK hit
+            rad = Rich::C4F10;
+          }
+          else if ( 2 == g4hit->GetRadiatorNumber() )
+          {
+            // Signal CF4 CK hit
+            rad = Rich::CF4;
+          }
+          else if ( 9 < g4hit->GetRadiatorNumber() && 26 > g4hit->GetRadiatorNumber() )
+          {
+            // Signal aerogel hit
+            rad = Rich::Aerogel;
+            const int aeroID = g4hit->GetRadiatorNumber() - 10;
+            if ( aeroID < 2*2*2*2*2 )
+            {
+              mchit->setAerogelTileID( aeroID );
+            }
+            else
+            {
+              std::ostringstream mess;
+              mess << "Aerogel ID " << aeroID
+                   << " too large to pack into MCRichHit !!";
+              Warning ( mess.str(), StatusCode::FAILURE );
+            }
+          }
+          else if ( 6 == g4hit->GetRadiatorNumber() )
+          {
+            // background RICH1 Gas Quartz window CK hit
+            mchit->setGasQuartzCK( true );
+            mchit->setBackgroundHit( true );
+          }
+          else if ( 7 == g4hit->GetRadiatorNumber() )
+          {
+            // background RICH2 Gas Quartz window CK hit
+            mchit->setGasQuartzCK( true );
+            mchit->setBackgroundHit( true );
+          }
+          else if ( 8 == g4hit->GetRadiatorNumber() )
+          {
+            // background HPD Quartz window CK hit
+            mchit->setHpdQuartzCK( true );
+            mchit->setBackgroundHit( true );
+          }
+          else if ( 4 == g4hit->GetRadiatorNumber() || 5 == g4hit->GetRadiatorNumber() )
+          {
+            // Aerogel filter CK hit
+            mchit->setAeroFilterCK( true );
+            mchit->setBackgroundHit( true );
+          }
+          else if ( 30 == g4hit->GetRadiatorNumber() )
+          {
+            // RICH1 nitrogen CK hit
+            mchit->setNitrogenCK( true );
+            mchit->setBackgroundHit( true );
+          }
+          else if ( 31 == g4hit->GetRadiatorNumber() )
+          {
+            // RICH2 nitrogen CK hit
+            mchit->setNitrogenCK( true );
+            mchit->setBackgroundHit( true );
           }
           else
           {
             std::ostringstream mess;
-            mess << "Aerogel ID " << aeroID
-                 << " too large to pack into MCRichHit !!";
-            Warning ( mess.str(), StatusCode::FAILURE );
+            mess << "Unknown radiator ID " << g4hit->GetRadiatorNumber()
+                 << " -> MCRichHit history incomplete";
+            Warning ( mess.str(), StatusCode::SUCCESS );
           }
-        }
-        else if ( 6 == g4hit->GetRadiatorNumber() )
-        {
-          // background RICH1 Gas Quartz window CK hit
-          mchit->setGasQuartzCK( true );
-          mchit->setBackgroundHit( true );
-        }
-        else if ( 7 == g4hit->GetRadiatorNumber() )
-        {
-          // background RICH2 Gas Quartz window CK hit
-          mchit->setGasQuartzCK( true );
-          mchit->setBackgroundHit( true );
-        }
-        else if ( 8 == g4hit->GetRadiatorNumber() )
-        {
-          // background HPD Quartz window CK hit
-          mchit->setHpdQuartzCK( true );
-          mchit->setBackgroundHit( true );
-        }
-        else if ( 4 == g4hit->GetRadiatorNumber() )
-        {
-          // Aerogel filter CK hit
-          mchit->setAeroFilterCK( true );
-          mchit->setBackgroundHit( true );
-        }
-        else if ( 30 == g4hit->GetRadiatorNumber() )
-        {
-          // RICH1 nitrogen CK hit
-          mchit->setNitrogenCK( true );
-          mchit->setBackgroundHit( true );
-        }
-        else if ( 31 == g4hit->GetRadiatorNumber() )
-        {
-          // RICH2 nitrogen CK hit
-          mchit->setNitrogenCK( true );
-          mchit->setBackgroundHit( true );
         }
         else
         {
-          std::ostringstream mess;
-          mess << "Unknown radiator ID " << g4hit->GetRadiatorNumber()
-               << " -> MCRichHit history incomplete";
-          Warning ( mess.str(), StatusCode::SUCCESS );
+          Warning( "Radiator ID < 0 -> Radiator history unknown", 
+                   StatusCode::SUCCESS );
         }
 
         // If a signel hit, store info
@@ -286,10 +292,10 @@ StatusCode GetMCRichHitsAlg::execute()
         else
         {
           ++m_hitTally[mchit->rich()];
-         if ( mchit->gasQuartzCK()  ) ++m_gasQzHits[mchit->rich()];
-         if ( mchit->hpdQuartzCK()  ) ++m_hpdQzHits[mchit->rich()];
-         if ( mchit->nitrogenCK()   ) ++m_nitroHits[mchit->rich()];
-         if ( mchit->aeroFilterCK() ) ++m_aeroFilterHits[mchit->rich()];
+          if ( mchit->gasQuartzCK()  ) ++m_gasQzHits[mchit->rich()];
+          if ( mchit->hpdQuartzCK()  ) ++m_hpdQzHits[mchit->rich()];
+          if ( mchit->nitrogenCK()   ) ++m_nitroHits[mchit->rich()];
+          if ( mchit->aeroFilterCK() ) ++m_aeroFilterHits[mchit->rich()];
         }
 
         // radiator counters
@@ -371,23 +377,9 @@ StatusCode GetMCRichHitsAlg::finalize()
          << occ(m_hitTally[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
          << endmsg;
-
   info() << "Av. # MCRichHits           : Aero  = " << occ(m_radHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Charged Track hits   : Aero  = " << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " <<  occ(m_ctkHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   <<  occ(m_ctkHits[Rich::CF4],m_nEvts)
-         << endmsg;
-  info() << "Av. # Scattered hits       : Aero  = " << occ(m_scatHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " <<  occ(m_scatHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   <<  occ(m_scatHits[Rich::CF4],m_nEvts)
-         << endmsg;
-  info() << "Av. # MCParticle-less hits : Aero  = " << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " <<  occ(m_nomcpHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   <<  occ(m_nomcpHits[Rich::CF4],m_nEvts)
          << endmsg;
 
   info() << "Av. # Gas Quartz CK hits   : Rich1 = "
@@ -405,6 +397,19 @@ StatusCode GetMCRichHitsAlg::finalize()
   info() << "Av. # Aero Filter CK hits  : Rich1 = "
          << occ(m_aeroFilterHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
+         << endmsg;
+
+  info() << "Av. # Charged Track hits   : Aero  = " << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
+         << " C4F10 = " <<  occ(m_ctkHits[Rich::C4F10],m_nEvts)
+         << " CF4 = "   <<  occ(m_ctkHits[Rich::CF4],m_nEvts)
+         << endmsg;
+  info() << "Av. # Scattered hits       : Aero  = " << occ(m_scatHits[Rich::Aerogel],m_nEvts)
+         << " C4F10 = " <<  occ(m_scatHits[Rich::C4F10],m_nEvts)
+         << " CF4 = "   <<  occ(m_scatHits[Rich::CF4],m_nEvts)
+         << endmsg;
+  info() << "Av. # MCParticle-less hits : Aero  = " << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
+         << " C4F10 = " <<  occ(m_nomcpHits[Rich::C4F10],m_nEvts)
+         << " CF4 = "   <<  occ(m_nomcpHits[Rich::CF4],m_nEvts)
          << endmsg;
 
   return GetMCRichInfoBase::finalize();  // must be called after all other actions
