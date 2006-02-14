@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.9 2006-02-02 13:36:32 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.10 2006-02-14 16:20:02 ocallot Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -249,7 +249,7 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       for ( std::vector<LHCb::CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
         LHCb::CaloCellID id = *itId;
-        LHCb::L0CaloAdc* trig = trigAdcs->object( id.index() );
+        LHCb::L0CaloAdc* trig = trigAdcs->object( id.all() );
         if ( 0 != trig ) {
           patTrig |= 1<<bNum;
           int adc = trig->adc();
