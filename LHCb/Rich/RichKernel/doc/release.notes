@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.104 2006-02-14 10:42:02 jonrob Exp $
+! $Id: release.notes,v 1.105 2006-02-14 15:18:30 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r1 2006-02-14 =======================
 ! 2006-02-14 - Chris Jones
  - Add a fix so derived classes do not need to load Tool registry simply because
    they were in debug mode.
 
-!======================= RichKernel v6r1 2006-02-09 =======================
 ! 2006-02-09 - Christopher Rob Jones
  - Add IRich1AerogelMonitor for aerogel updates in RichCondition
 
