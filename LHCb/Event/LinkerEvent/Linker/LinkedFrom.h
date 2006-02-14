@@ -1,11 +1,11 @@
-// $Id: LinkedFrom.h,v 1.12 2005-12-19 17:21:37 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.13 2006-02-14 07:23:08 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
@@ -17,7 +17,7 @@
  */
 template <class SOURCE, 
           class TARGET = ContainedObject ,
-          class SOURCECONTAINER = ObjectVector<SOURCE> > 
+          class SOURCECONTAINER = ObjectContainerBase > 
 class LinkedFrom {
 public: 
   //== Typedefs to please Matt

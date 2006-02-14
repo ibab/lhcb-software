@@ -1,11 +1,11 @@
-// $Id: LinkedTo.h,v 1.9 2005-12-19 17:21:37 ocallot Exp $
+// $Id: LinkedTo.h,v 1.10 2006-02-14 07:23:08 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
@@ -19,7 +19,7 @@
 
 template < class TARGET, 
            class SOURCE=ContainedObject,
-           class TARGETCONTAINER=ObjectVector<TARGET> > 
+           class TARGETCONTAINER=ObjectContainerBase > 
 class LinkedTo {
 public: 
   //== Typedefs to please Matt

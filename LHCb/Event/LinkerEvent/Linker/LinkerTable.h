@@ -1,4 +1,4 @@
-// $Id: LinkerTable.h,v 1.3 2005-12-15 10:00:32 ocallot Exp $
+// $Id: LinkerTable.h,v 1.4 2006-02-14 07:23:08 ocallot Exp $
 #ifndef LINKER_LINKERTABLE_H 
 #define LINKER_LINKERTABLE_H 1
 
@@ -13,8 +13,8 @@
  */
 template <class SOURCE,
           class TARGET,
-          class SOURCECONTAINER = ObjectVector<SOURCE>,
-          class TARGETCONTAINER = ObjectVector<TARGET> >
+          class SOURCECONTAINER = ObjectContainerBase,
+          class TARGETCONTAINER = ObjectContainerBase >
 class LinkerTable {
 public: 
 

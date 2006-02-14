@@ -1,11 +1,11 @@
-// $Id: AllLinks.h,v 1.5 2005-12-19 17:21:37 ocallot Exp $
+// $Id: AllLinks.h,v 1.6 2006-02-14 07:23:08 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
@@ -18,8 +18,8 @@
 
 template < class TARGET, 
            class SOURCE=ContainedObject,
-           class TARGETCONTAINER=ObjectVector<TARGET>,
-           class SOURCECONTAINER=ObjectVector<SOURCE> > 
+           class TARGETCONTAINER=ObjectContainerBase,
+           class SOURCECONTAINER=ObjectContainerBase > 
 class AllLinks {
 public: 
   

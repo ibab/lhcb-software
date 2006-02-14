@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-02-14 - Olivier Callot
+ - Replace ObjectVector<> by ObjectContainerBase, as KeyedContainer doesn't
+   inherit from ObjectVector. 
+
 !====================== LinkerEvent v2r0 2006-01-26 ==========================
 ! 2005-12-19 - Olivier Callot
  - Include SmartDataPtr.h in all 4 wrappers.
