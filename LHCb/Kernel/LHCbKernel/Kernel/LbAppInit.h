@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.3 2006-02-14 12:52:40 cattanem Exp $
+// $Id: LbAppInit.h,v 1.4 2006-02-14 15:25:40 cattanem Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -48,11 +48,11 @@ protected:
   }
 
   /** Print the run number, event number and optional vector of seeds
-   *  @param[in] run run number
    *  @param[in] evt event number
+   *  @param[in] run run number
    *  @param[in] seeds (optional) vector of seeds
    */
-  void printEventRun( longlong run, int evt, std::vector<long int> *seeds = 0 );
+  void printEventRun( longlong evt, int run, std::vector<long int> *seeds = 0 );
 
   /** Initialize the random number engine with the given seeds
    *  @param[in] seeds Vector of seeds
