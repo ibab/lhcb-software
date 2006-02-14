@@ -1,10 +1,10 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
-!====================== MuonMoniSim v2r0 2006-02-24  ========================
+!====================== MuonMoniSim v2r0 2006-02-14  ========================
 ! 2006-02-14 - Gloria CORTI
  - Introduce necessary use of GaudiAlg, no longer gotten via LHCbKernel
-   .requirements
+   . requirements
 
 ! 2006-01-23 - A. Sarti
  - Fixed the call to MCevent in requirements
