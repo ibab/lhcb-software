@@ -4,7 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
-!=========================== RichTools v2r2 2006-02-03 =======================
+!=========================== RichTools v2r2 2006-02-15 =======================
+! 2006-02-15 - Marco Cattaneo
+ - Remove obsolete RichEvent dependency
+
 ! 2006-02-03 - Antonis Papanestis
  - In RichSmartIDTool, check to see if the smartID is set, and if HPD is active
 

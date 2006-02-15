@@ -2,7 +2,7 @@
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 #============================================================================
-# $Id: requirements,v 1.19 2006-02-03 10:00:26 cattanem Exp $
+# $Id: requirements,v 1.20 2006-02-15 11:05:22 cattanem Exp $
 #============================================================================
 
 package RichTools
@@ -12,7 +12,6 @@ version v2r2
 branches src cmt doc
 
 # ================ dependencies =============================================    
-use RichEvent   v*  Event
 use RichDet     v*  Det
 use RichKernel  v*  Rich
 
