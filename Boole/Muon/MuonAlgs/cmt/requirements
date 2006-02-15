@@ -9,7 +9,7 @@ include_path none
 
 # ================ used packages ========================================= 
 use MuonDet     v*      Det
-use MuonEvent	v*	Event	
+use DigiEvent   v*      Event	
 use MCEvent	v*	Event	
 use MuonKernel  v*      Muon
 use GaudiAlg    v*

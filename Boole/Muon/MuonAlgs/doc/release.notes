@@ -4,7 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v6r0 2006-01-31 ========================
+!======================== MuonAlgs v6r0 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-01-31 - Marco Cattaneo
  - Major cleanup of includes:
    . Move all package includes to src, MuonAlgs directory not exported

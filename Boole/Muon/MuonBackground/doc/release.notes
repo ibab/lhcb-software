@@ -5,7 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!====================== MuonBackground v2r0 2006-02-07 =====================
+!====================== MuonBackground v2r0 2006-02-15 =====================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-07 - Alessia Satta
  - fix chamber/gap volume
 

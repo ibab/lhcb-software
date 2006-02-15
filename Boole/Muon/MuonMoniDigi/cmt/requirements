@@ -20,7 +20,7 @@ branches src cmt doc
 #============================================================================
 use MuonDet     v*    Det
 use MCEvent     v*    Event
-use MuonEvent   v*    Event
+use DigiEvent   v*    Event
 use GaudiAlg    v*
 
 #============================================================================
