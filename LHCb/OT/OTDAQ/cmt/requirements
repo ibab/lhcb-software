@@ -7,7 +7,7 @@ include_dirs $(OTDAQROOT)
 
 use GaudiAlg    v*
 use DAQEvent	v*      Event
-use OTEvent	v*	Event
+use DigiEvent   v*      Event
 use OTDet	v*	Det
 
 #---- Produce Header-Files from XML description

@@ -1,9 +1,12 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
-!====================== OTDAQ v4r0 2006-02-02 ======================
-! 2006-05-02 Jan Amoraal
- - More cleaunup
+!====================== OTDAQ v4r0 2006-02-15 ======================
+! 2006-02-15 - Marco Cattaneo
+ - requirements migrated to DigiEvent
+
+! 2006-02-05 Jan Amoraal
+ - More cleanup
 
 ! 2006-02-02 Jan Amoraal
  - Bug fix, get RawEvent from default location, don't create one
