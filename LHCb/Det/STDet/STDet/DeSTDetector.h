@@ -86,9 +86,6 @@ public:
   /** check channel number is valid */
   bool isValid(const LHCb::STChannelID aChannel);
 
-  /** @return detector pitch */
-  double pitch() const;
- 
   /** vector of stattions
   * @return vector of stations
   */

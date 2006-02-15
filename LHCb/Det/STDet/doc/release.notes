@@ -2,7 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-!========================= STDet v2r0 2006-02-14 =======================
+!========================= STDet v2r0 2006-02-15 =======================
+! 2006-02-15 - Marco Cattaneo
+ - Remove unimplemented method DeSTDetector::pitch
+
 ! 2006-02-14 - M.Needham
  - Bug fixes: station number in DeSTDetector, localInActive/bondGap
    in DeSTSector
