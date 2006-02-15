@@ -1,7 +1,12 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r3 2006-02-06 ========================
+!======================== GaudiConf v9r3 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Add SimDicts.opts, DigiDicts.opts, DstDicts.opts to load POOL dictionaries
+ - Add PoolCopy.opts to copy a POOL file
+ - Add LHCbApplication.opts to bootstrap standard LHCb applications
+
 ! 2006-02-06 - Marco Cattaneo
  - In DetDesc.opts, create DetDataSvc as ExtSvc, to ensure it is finalized 
    after ToolSvc
