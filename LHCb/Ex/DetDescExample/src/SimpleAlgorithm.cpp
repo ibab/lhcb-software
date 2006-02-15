@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.18 2005-12-08 10:02:43 cattanem Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.19 2006-02-15 14:19:18 cattanem Exp $
 
 /// Include files
 #include <vector>
@@ -16,15 +16,14 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/TabulatedProperty.h"
 
+/// Sub-detector detector elements
+#include "CaloDet/DeCalorimeter.h"
+
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
-#include "DeCalorimeter.h"
-#include "DeMuonRegion.h"
 #include "DetDataAgent.h"
 
-
-static const AlgFactory<SimpleAlgorithm>  Factory;
-const IAlgFactory& SimpleAlgorithmFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( SimpleAlgorithm );
 
 /////////////////////////
 // Default constructor //
@@ -65,7 +64,7 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "This is the list of parameters " 
          << "defined on the Ecal detector element : " << endmsg;
 
-  IDetectorElement* ecal = getDet<IDetectorElement>( "/dd/Structure/LHCb/Ecal" );
+  IDetectorElement* ecal = getDet<IDetectorElement>( DeCalorimeterLocation::Ecal );
 
   std::vector<std::string> parameterList = ecal->params()->paramNames();
   std::vector<std::string>::iterator it2;
@@ -89,11 +88,10 @@ StatusCode SimpleAlgorithm::initialize() {
          << "detector element, but retrieved using directly the DeCalorimeter "
          << "object : " << endmsg;
 
-  DeCalorimeter* ecal2 = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
+  DeCalorimeter* ecal2 = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
 
-  info() << "Ecal->codingBit() = "     << ecal2->codingBit()     << endmsg;
-  info() << "Ecal->etInCenter() = "    << ecal2->etInCenter()    << endmsg;
-  info() << "Ecal->etSlope() = "       << ecal2->etSlope()       << endmsg;
+  info() << "Ecal->maxEtInCenter() = " << ecal2->maxEtInCenter() << endmsg;
+  info() << "Ecal->maxEtSlope() = "    << ecal2->maxEtSlope()    << endmsg;
   info() << "Ecal->adcMax() = "        << ecal2->adcMax()        << endmsg;
   info() << "Ecal->activeToTotal() = " << ecal2->activeToTotal() << endmsg;
   info() << "Ecal->zShowerMax() = "    << ecal2->zShowerMax()    << endmsg;
@@ -101,28 +99,6 @@ StatusCode SimpleAlgorithm::initialize() {
   info() <<
     "///////////////////////////////////////////////////////////////////////////"
          << endmsg;
-  info() <<
-    "// Usage of specific detector elements together with specific converters //"
-         << endmsg;
-  info() << 
-    "///////////////////////////////////////////////////////////////////////////"
-         << endmsg;
-  info() << "In this example, one of the Muon Region is retrieved as a specific "
-         << "object (namely class DeMuonRegion) by using a specific converter "
-         << "(namely class XmlMuonRegionCnv). This provides access to data "
-         << "contained in the <specific> tag of the element" << endmsg;
-  info() << "Here are some parameters of the Muon Region detector element :"
-         << endmsg;
-
-  DeMuonRegion* region = getDet<DeMuonRegion>( "/dd/Structure/LHCb/Muon/M1/R1" );
-
-  info() << "region->chamberNum() = " << region->chamberNum() << endmsg;
-  info() << "region->gapsPerFE() = "  << region->gapsPerFE()  << endmsg;
-  info() << "region->FEAnodeX() = "   << region->FEAnodeX()   << endmsg;
-  info() << "region->FEAnodeY() = "   << region->FEAnodeY()   << endmsg;
-  info() << "region->FECathodeX() = " << region->FECathodeX() << endmsg;
-  info() << "region->FECathodeY() = " << region->FECathodeY() << endmsg;
-
  
   info() << "///////////////////////" << endmsg;
   info() << "// Testing Materials //" << endmsg;
@@ -180,8 +156,8 @@ StatusCode SimpleAlgorithm::initialize() {
   info() << "// Testing the TabulatedProperty feature //" << endmsg;
   info() << "///////////////////////////////////////////" << endmsg;
 
-  std::string path = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/";
-  path += "Rich1Mirror1SurfaceReflectivityPT";
+  std::string path = "/dd/Materials/RichMaterialTabProperties/";
+  path += "MirrorQuartzAbsLengthPT";
   TabulatedProperty* tab = getDet<TabulatedProperty>( path );
 
   TabulatedProperty::Table table = tab->table();

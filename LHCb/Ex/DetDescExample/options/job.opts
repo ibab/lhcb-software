@@ -1,9 +1,9 @@
-// $Id: job.opts,v 1.7 2005-12-08 10:02:43 cattanem Exp $
+// $Id: job.opts,v 1.8 2006-02-15 14:19:18 cattanem Exp $
 // Do not use standard options, as we do not need event input
 
 // Set up the detector description service
 #include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -11,6 +11,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
 ApplicationMgr.TopAlg =  { "SimpleAlgorithm/Simple" };
 ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 0;
+ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.28 2005-12-08 10:27:09 cattanem Exp $
+# $Id: requirements,v 1.29 2006-02-15 14:19:18 cattanem Exp $
 package DetDescExample
-version v6r6
+version v7r0
 
 branches doc src options cmt
 
@@ -9,6 +9,7 @@ use GaudiAlg      v*
 
 # Detector Description and services
 use DetDescCnv    v* Det
+use CaloDet       v* Det
 
 # Build the application
 # =============================================================================
