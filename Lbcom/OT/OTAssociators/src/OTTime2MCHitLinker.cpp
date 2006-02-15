@@ -97,7 +97,7 @@ StatusCode OTTime2MCHitLinker::associateToTruth( const LHCb::OTTime* aTime,
   typedef Table::Range MCDeposit;
   typedef Table::iterator MCDepositIter;
   
-  OTTime2MCDepositAsct associator( evtSvc(), "OTTimes2MCDeposits" );
+  OTTime2MCDepositAsct associator( evtSvc(), LHCb::OTTimeLocation::Default + "2MCDeposits" );
   const Table* aTable = associator.direct();
   if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
 
