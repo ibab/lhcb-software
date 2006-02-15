@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2006-01-27 09:45:43 cattanem Exp $
+# $Id: requirements,v 1.57 2006-02-15 10:53:47 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -16,7 +16,6 @@ include_dirs $(PHYSEVENTROOT)
 # Used packages. 
 #============================================================================
 use RecEvent        v*  Event
-use CaloEvent       v*  Event
 use LHCbKernel      v*  Kernel
 use LHCbDefinitions v*  Kernel
 use GaudiKernel     v*  
