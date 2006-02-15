@@ -20,7 +20,7 @@ include_dirs      $(CALODAQROOT)
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use	DAQEvent	v*	Event
-use	CaloEvent	v*	Event
+use     DigiEvent       v*      Event
 use     CaloDet         v*      Det
 use	L0Event		v*	Event
 use     MCEvent         v*      Event
