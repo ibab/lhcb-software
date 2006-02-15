@@ -1,6 +1,9 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-15 - Kurt Rinnert
+ - removed more obsolete dependencies
+
 ! 2006-02-14 - Kurt Rinnert
  - updated requirements file: removed depency on no longer existing Kernel
    package, made new public include directory visible

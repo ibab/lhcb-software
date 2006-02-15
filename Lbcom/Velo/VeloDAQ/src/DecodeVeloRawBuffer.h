@@ -5,11 +5,6 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "VeloDet/DeVelo.h"
-
-// from Event
-#include "Event/VeloCluster.h"
-
 /** @class DecodeVeloRawBuffer DecodeVeloRawBuffer.h
  *  Decode the Velo data from the 1MHZ Raw buffer.
  *  Completely re-written for the new 1Mhz raw buffer.
