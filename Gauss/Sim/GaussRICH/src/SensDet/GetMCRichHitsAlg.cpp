@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.7 2006-02-15 13:42:43 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.8 2006-02-15 13:46:07 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -263,10 +263,17 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // charged track hitting HPD flag
-        mchit->setChargedTrack( g4hit->GetChTrackID() < 0 );
-
+        if ( g4hit->GetChTrackID() < 0 )
+        {
+          mchit->setChargedTrack( true );
+          mchit->setBackgroundHit( true );
+        }
         // Rayleigh scattered flag
-        mchit->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
+        if ( g4hit->OptPhotRayleighFlag() > 0 )
+        {
+          mchit->setScatteredPhoton( true );
+          mchit->setBackgroundHit( true );
+        }
 
         // get sensitive detector identifier from det elem
         // const int detID = m_richDets[rich]->sensitiveVolumeID( entry );
