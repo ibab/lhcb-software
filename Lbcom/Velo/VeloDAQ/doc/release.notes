@@ -1,6 +1,12 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-15 - Kurt Rinnert, David Jones
+ - introduced typedef for buffer_word, ensuring it is a 32 bit integer
+ - implemented raw buffer encoding from InternalVeloClusters according to EDMS 637676. 
+   Since there currently is no RawBuffer object definition available, the encoded 
+   clusters are not yet put into the TES. Will be fixed soon hopefully.
+
 ! 2006-02-15 - Kurt Rinnert
  - removed more obsolete dependencies
 

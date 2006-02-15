@@ -14,6 +14,7 @@ include_dirs $(VELODAQROOT)
 #============================================================================
 use  VeloDet    v*  Det
 use  DAQEvent   v*  Event
+use  VeloEvent  v*  Event
 use  SiDAQ      v*  Si
 
 # Component library building rule

@@ -1,28 +1,14 @@
-// $Id: VeloRawBankDecoder.h,v 1.1 2006-02-14 18:25:36 krinnert Exp $
+// $Id: VeloRawBankDecoder.h,v 1.2 2006-02-15 15:48:21 krinnert Exp $
 #ifndef VELORAWBANKDECODER_H 
 #define VELORAWBANKDECODER_H 1
 
 #include <vector>
 
-// We want to be able to use this class independent of the
-// Gaudi framework.  The following assures we have the 
-// necessary type definitions available.
-// #ifdef VELO_DAQ_STANDALONE
-#ifdef WIN32
-typedef int   raw_int ;
-typedef short l1_int ;
-#else
-//(See at /usr/include/sys/types.h)
-#include <sys/types.h>
-typedef int32_t raw_int ;
-typedef int16_t l1_int ;
-#endif   // WIN32
-// #else
-// #include "Event/DAQTypes.h"
-// #endif // VELO_DAQ_STANDALONE
 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
+
+#include "VeloDAQ/VeloRawBufferWord.h"
 
 #include "VeloDAQ/VeloClusterWord.h"
 
@@ -69,7 +55,7 @@ public:
    *  it will imediately decode the bank header bytes.  So
    *  if you don't need it, don't create it.
    */
-  VeloRawBankDecoder(const raw_int* bank) :
+  VeloRawBankDecoder(const buffer_word* bank) :
     m_bank(bank),
     m_header(SiHeaderWord(bank[0])),
     m_nClusters(m_header.nClusters()),
@@ -362,7 +348,7 @@ public:
   const posadc_iterator& posAdcEnd() const { return m_posAdcEnd; }
 
 private:
-  const raw_int* m_bank;
+  const buffer_word*  m_bank;
   const SiHeaderWord  m_header;
   const unsigned int m_nClusters;
 
