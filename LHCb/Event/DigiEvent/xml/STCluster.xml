@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : M. Needham -->
+<!--- Created : 2006-01-30 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY liteClusterName "STLiteCluster">
+<!ENTITY channelID "STChannelID">
+<!ENTITY STClusterClass SYSTEM "SiCluster.ent">
+]>
+<gdd>
+ <package name="DigiEvent">
+    <class name="STCluster"
+     id="9004"
+     author="Matthew Needham"
+     desc="A cluster as produced by the TELL1 with full ADC information."
+     serializers="FALSE">
+     <location name="TTClusters"   place="Rec/ST/TTClusters"   />
+     <location name="ITClusters"   place="Rec/ST/ITClusters"   />
+
+     <constructor desc="Constructor" 
+       argList='&liteClusterName; lCluster, 
+                ADCVector strips,
+                double neighbourSum'
+        initList='m_liteCluster(lCluster), m_stripValues(strips),
+                  m_neighbourSum(neighbourSum)' >
+     </constructor>
+
+  &STClusterClass;
+
+ <attribute 
+       name="neighbourSum" 
+       type="double" 
+       desc="sum neighbour channels"
+       setMeth="FALSE" />
+
+   <method
+     name = "firstChannel"
+     type="LHCb::STChannelID"
+     desc="first ST Channel ID"
+     const="TRUE">
+    <code>
+ return STChannelID(channelID().type(),channelID().station(),
+                     channelID().layer(), channelID().detRegion(),
+                     channelID().sector(),channelID().strip()-stripValues().front().first);
+   </code>
+   </method>
+   <method
+     name = "lastChannel"
+     type="LHCb::STChannelID"
+     desc="first ST Channel ID"
+     const="TRUE">
+    <code>
+ return STChannelID(channelID().type(),channelID().station(),
+                    channelID().layer(), channelID().detRegion(),
+                    channelID().sector(),channelID().strip()+stripValues().back().first);    </code>
+  </method>
+
+ <method
+     name = "channels"
+     type="std::vector &lt; LHCb::STChannelID &gt;"
+     desc="channel IDs"
+     const="TRUE">
+      <code>
+  std::vector &lt; LHCb::STChannelID &gt; chanCont;
+  STChannelID first = firstChannel();
+  for (unsigned int i = 0; i &gt; size(); ++i){
+    STChannelID aChan(first.type(), first.station(), first.layer(),
+                      first.detRegion(),first.sector(),first.strip()+i);
+    chanCont.push_back(aChan);
+  }
+  return chanCont;
+      </code>
+ </method>
+
+<method
+ name = "isTT"
+ type = "bool"
+ desc = "check if TT type"
+ const = "TRUE" >
+  <code>
+  return m_liteCluster.channelID().isTT();
+  </code> 
+</method>
+
+<method
+ name = "isIT"
+ type = "bool"
+ desc = "check if IT type"
+ const = "TRUE" >
+  <code>
+  return m_liteCluster.channelID().isIT();
+  </code> 
+</method>
+
+    </class>
+</package>
+</gdd>

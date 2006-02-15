@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='DigiEvent'>
+    <class name='OTTime' 
+	   location='/Event/Raw/OT/Times' 
+	   id='8001' 
+	   author='Jacopo Nardulli' 
+	   desc='For each MCOTTime an OTTime is made'>
+      <base name='KeyedObject&lt; LHCb::OTChannelID&gt; '/>  
+      <import name='Kernel/OTChannelID' />
+      &KeyedContainer;
+      <constructor argList='LHCb::OTChannelID aChannel, double calTime'
+                   initList='m_calibratedTime(calTime)' 
+		   desc='constructor with arguments'>
+        <code>  this->setKey(aChannel);</code>
+      </constructor>
+      <method type='LHCb::OTChannelID' 
+	      name='channel' 
+	      const='TRUE' 
+	      desc='get the OTChannelID from the key'>
+        <code>return key();</code>
+      </method>
+      <method type='unsigned' 
+	      name='tdcTime' 
+	      const='TRUE' 
+	      desc='get the TDC-time from the key'>
+        <code>return channel().tdcTime();</code>
+      </method>
+      <attribute type='double'
+		 name='calibratedTime'  
+		 desc='t0 corrected; calibratedTime=propagationTime+driftTime' />
+    </class>
+  </package>
+</gdd>

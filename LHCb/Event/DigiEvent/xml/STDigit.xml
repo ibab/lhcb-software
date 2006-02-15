@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='DigiEvent'>
+
+  <class author="Matthew Needham" desc="Silicon tracker digitization class" id="9003" name="STDigit">
+      <base name="KeyedObject&lt;LHCb::STChannelID&gt;"/>
+      &KeyedContainer;
+      <location name="TTDigits"   place="MC/Raw/TTDigits"   />
+      <location name="ITDigits"   place="MC/Raw/ITDigits"   />
+      <import name ="Kernel/STChannelID"/>
+       <constructor argList="double charge" 
+                    initList="m_depositedCharge(charge)"
+                    desc="special constructor">
+       <code></code>
+      </constructor>
+      <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited on strip"/>
+      <method type='LHCb::STChannelID' name='channelID' const='TRUE'  desc='channel = key'>
+        <code>return key();</code>
+      </method>
+  </class>
+  
+ </package>
+</gdd>

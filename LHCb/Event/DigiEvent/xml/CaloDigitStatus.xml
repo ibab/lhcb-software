@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="DigiEvent">
+<!-- **************************************************************************
+  * $Id: CaloDigitStatus.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+  *****************************************************************************
+  * CVS tag $Name: not supported by cvs2svn $                            
+  *****************************************************************************
+  * XML-description of CaloDigitStatus namespace                              *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+<namespace 
+ name   = "CaloDigitStatus" 
+ desc   = "@brief Predefined constants for the digit status flags" 
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+<typedef
+ def    = "Status"
+ type   = "unsigned int"
+ desc   = "Digit status (presumably 32 bits)"
+/>
+
+<enum desc="Status mask" name="Mask" value=" Undefined = 0,SeedCell  = 1,LocalMaximum  = 2,CentralCell  = 4 , OwnedCell  = 8, EdgeCell  = 16 , SharedCell  =32 , UseForEnergy  = 64 , UseForPosition  = 128, UseForCovariance  = 256, ModifiedBy3x3Tagger  = 512, ModifiedByMax2x2Tagger  = 1024, ModifiedByNeighbourTagger  = 2048, ModifiedBySwissCrossTagger  = 4096, ModifiedByAllTagger  = 8192 "/>
+
+</namespace>
+</package>
+</gdd>

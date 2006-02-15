@@ -1,0 +1,20 @@
+# $Id: requirements,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+package DigiEvent
+version v1r0
+
+branches Event Kernel xml cmt doc
+
+use LHCbKernel   v* Kernel
+
+include_dirs	 $(DIGIEVENTROOT)
+
+#---- Produce Header-Files and dictionary from XML description
+document obj2doth DigiEventObj2Doth ../xml/*.xml
+document obj2dict DigiEventObj2Dict ../xml/*.xml
+
+# Build dictionary library
+library DigiEventDict  ../$(tag)/dict/DigiEvent/*.cpp
+apply_pattern component_library library=DigiEventDict
+
+private
+use GaudiObjDesc v* -no_auto_imports

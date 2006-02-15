@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2005-12-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+   <package name="DigiEvent">
+    <namespace 
+      desc="bit pattern for DAQ word  in muon digit  (till now only the time stamp)" 
+      name="PackMuonDigit">
+      <attribute 
+	desc="Time stamp in 4 bits inside the BX" 
+	init="4" 
+	name="bitTimeStamp" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" init="0" 
+	name="shiftTimeStamp" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt; bitTimeStamp  ) - 1  ) 
+	&lt;&lt; shiftTimeStamp" 
+	name="maskTimeStamp" 
+	type="static const unsigned int"/>
+    </namespace>
+ </package>
+</gdd>

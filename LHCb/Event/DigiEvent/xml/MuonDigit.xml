@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="DigiEvent">
+    <class author="Alessia Satta" 
+      desc="Information on fired logical channel, this class represents the 
+      information that the DAQ outputs on the real data 
+      The key associated to each object is the channel ID coded as a  
+      MuonTileID object" 
+      id="11021" 
+      name="MuonDigit">
+      <import name="Kernel/MuonTileID"/>
+      <import name="Kernel/Packer"/>
+      <import name="Event/PackMuonDigit"/>      
+      <location 
+	name="MuonDigit" 
+	place="Raw/Muon/Digits"/>
+      <base name="KeyedObject&lt;LHCb::MuonTileID&gt;"/>
+      <template name="KeyedObjectDict" t1="LHCb::MuonTileID"/>
+      &KeyedContainer;
+      <constructor 
+	desc='description of constructor' 
+	argList="LHCb::MuonTileID tileID" 
+	initList=' m_MuonDAQ()'>
+	<code> setKey(tileID);   </code>
+      </constructor>						
+      <attribute 
+	desc="DAQ output bit pattern" 
+	getMeth="FALSE" 
+	name="MuonDAQ" 
+	setMeth="FALSE" 
+	type="unsigned int"/>
+      <method desc="time stamp of the digit inside the BX length  (3 bits reserved -&gt; 3ns resolution)" 
+	name="TimeStamp" 
+	type="unsigned int">
+	<code> return Packer::getBit(m_MuonDAQ,PackMuonDigit::maskTimeStamp,PackMuonDigit::shiftTimeStamp ); </code>
+      </method>
+      <method 
+	argList="unsigned int timeStamp" 
+	desc="set the Time  Stamp in the DAQ word" 
+	name="setTimeStamp" 
+	type="void">
+	<code> Packer::setBit(m_MuonDAQ,PackMuonDigit::shiftTimeStamp,PackMuonDigit::maskTimeStamp,timeStamp); 
+        </code>
+      </method>
+    </class>    
+  </package>
+</gdd>

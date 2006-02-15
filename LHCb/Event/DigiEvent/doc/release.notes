@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/DigiEvent
+! Responsible : Marco Cattaneo
+! Purpose     : Event model classes related to Digitization
+!-----------------------------------------------------------------------------
+
+!========================= DigiEvent v1r0 2006-02-15 =========================
+! 2006-02-15 - Marco Cattaneo
+ - First version, from migration of classes from VeloEvent, STEvent, OTEvent,
+   RichEvent, CaloEvent, MuonEvent

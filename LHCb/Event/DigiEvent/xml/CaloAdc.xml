@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+<!ENTITY CLID_CaloAdc              "2007"                   >
+]>
+<gdd>
+  <package name="DigiEvent">
+<!-- **************************************************************************
+  * $Id: CaloAdc.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+  *****************************************************************************
+  * XML-description of CaloAdc class                                          *
+  * author: Olivier Callot                                                    *
+  * date:   01.12.05                                                          *
+  ************************************************************************* -->
+
+<class
+  name   = "CaloAdc"
+  desc   = "@brief The ADC content for given cell"
+  id     = "&CLID_CaloAdc;"
+  author = "Olivier Callot"
+  >
+  <desc> *
+    *
+    *  The class represents the digitisez value
+    *  in a calorimeter cell
+    *
+    *</desc>
+  <import name = "Kernel/CaloCellIDKeyTraits"    />
+  <template name="KeyedObjectDict" t1="LHCb::CaloCellID"/>
+  <base   name = "KeyedObject&lt;LHCb::CaloCellID&gt;" />
+  &KeyedObject;
+  
+  <location name = "Spd"  place = "Raw/Spd/Adcs"  />
+  <location name = "Prs"  place = "Raw/Prs/Adcs"  />
+  <location name = "Ecal" place = "Raw/Ecal/Adcs" />
+  <location name = "Hcal" place = "Raw/Hcal/Adcs" />
+  <location name = "FullEcal" place = "Raw/Ecal/FullAdcs" />
+  <location name = "FullHcal" place = "Raw/Hcal/FullAdcs" />
+
+  <constructor
+    desc     = "Non-default constructor"
+    argList  = "LHCb::CaloCellID id, int adc "
+    initList = "KeyedObject&lt;LHCb::CaloCellID&gt; ( id ) , m_adc ( adc ) "
+    > <code/> </constructor>
+
+
+  <constructor 
+    desc     = "Copy Constructor" 
+    argList  = "CaloAdc src"
+    initList = "KeyedObject&lt;LHCb::CaloCellID&gt;( src.cellID() ) , m_adc ( src.adc() ) " 
+    > <code/> </constructor>
+
+
+  <attribute
+    name = "adc"
+    desc = "ADC value for the given cell"
+    type = "int"
+    />
+
+  <method
+    desc   = "Retrieve cell identifier/key @attention alias to Base::key() method!"
+    name   = "cellID"
+    type   = "const LHCb::CaloCellID&amp;"
+    const  = "TRUE"
+    access = "PUBLIC">
+    <code> return key (); </code>
+  </method>
+
+</class>
+</package>
+</gdd>

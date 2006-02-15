@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+<!ENTITY CLID_CaloDigit                "2002"                   >
+]>
+<gdd>
+  <package name="DigiEvent">
+<!-- **************************************************************************
+  * $Id: CaloDigit.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+  *****************************************************************************
+  * XML-description of CaloDigit class                                        *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "CaloDigit"
+ desc   = "@brief The energy deposition for given cell"
+ id     = "&CLID_CaloDigit;"
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+<desc> *
+ *
+ *  The class represents the energy deposition
+ *  in the calorimeter cell 
+ *
+ *</desc>
+<import name = "Kernel/CaloCellIDKeyTraits"    />
+<template name="KeyedObjectDict" t1="LHCb::CaloCellID"/>
+<base   name = "KeyedObject&lt;LHCb::CaloCellID&gt;" />
+&KeyedObject;
+
+<typedef
+ def    = "Base"
+ type   = "KeyedObject&lt;LHCb::CaloCellID&gt;"
+ desc   = "Shortcut for own base class "
+ access = "PROTECTED"
+/>
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = "LHCb::CaloCellID id, double e "
+ initList = "Base ( id ) , m_e ( e ) "
+> <code/> </constructor>
+
+<location name = "Spd"  place = "Raw/Spd/Digits"  />
+<location name = "Prs"  place = "Raw/Prs/Digits"  />
+<location name = "Ecal" place = "Raw/Ecal/Digits" />
+<location name = "Hcal" place = "Raw/Hcal/Digits" />
+<location name = "FullSpd"  place = "Raw/Spd/AllDigits"  />
+<location name = "FullPrs"  place = "Raw/Prs/AllDigits"  />
+<location name = "FullEcal" place = "Raw/Ecal/AllDigits" />
+<location name = "FullHcal" place = "Raw/Hcal/AllDigits" />
+
+<constructor
+ desc     = "Default constructor"
+ initList = "Base (    ) , m_e ( 0 ) "
+> <code/> </constructor>
+
+<constructor 
+ desc     = "Copy Constructor" 
+ argList  = "LHCb::CaloDigit right"
+ initList = "Base( right.cellID() ) , m_e ( right.e() ) " 
+> <code/> </constructor>
+
+<attribute
+ name = "e"
+ desc = "Energy deposition in the given cell"
+ type = "double"
+/>
+
+<method
+ desc   = "Retrieve cell identifier/key @attention alias to Base::key() method!"
+ name   = "cellID"
+ type   = "const LHCb::CaloCellID&amp;"
+ const  = "TRUE"
+ access = "PUBLIC">
+ <code> return key ()     ; </code>
+</method>
+
+<method
+ desc   = "update cell identifier/key @attention alias to Base::setKey() method!"
+ name   = "setCellID"
+ access = "PUBLIC">
+ <arg name="CellID" type="LHCb::CaloCellID" const="TRUE"/>
+ <code>  setKey( CellID ) ;  </code>
+</method>
+
+<method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::CaloDigit*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" > 
+<code> return new LHCb::CaloDigit( *this );</code>
+</method>
+
+
+
+</class>
+</package>
+</gdd>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Szumlak -->
+<!--- Created : 2005-12-21 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+ <package name="DigiEvent">
+  <class
+   author="Tomasz Szumlak"
+   desc="VeloDigit is a temporary object to store the ADC value obtained during
+         one of the FPGA processing stages. The object is much more simple than
+         VeloFullFPGADigit (has only one data member)"
+   name="VeloDigit"
+   location="Raw/Velo/Digits"
+  >
+   <import name="Kernel/VeloChannelID"/>
+   <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
+   <base name="KeyedObject&lt;LHCb::VeloChannelID&gt;"/>
+   &KeyedContainer;
+
+  <constructor
+   desc="constructor with key"
+   initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
+   m_ADCValue(0),
+   m_rawNoise(0.0)"
+  >
+   <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
+  </constructor>
+ 
+  <method 
+   name="channelID" 
+   type="LHCb::VeloChannelID" 
+   desc="combined sensor and strip number ID" 
+   const="TRUE"
+  >          
+   <code>
+    return key();
+   </code>
+  </method>
+
+  <method 
+   name="sensor" 
+   type="long" 
+   desc="Sensor Number" 
+   const="TRUE"
+  >
+   <code>
+    return key().sensor();
+   </code>
+  </method>
+   
+  <method
+   name="strip"
+   type="long"
+   desc=" "
+   const="TRUE"
+  >
+   <code>
+    return key().strip();
+   </code>
+  </method>
+
+  <attribute
+   name="ADCValue"
+   type="short int"
+   desc=" "
+   setMeth="TRUE"
+   getMeth="TRUE"
+  />
+     
+  <attribute
+   name="rawNoise"
+   type="double"
+   desc=" "
+  />
+
+  <method
+   name="signalToNoise"
+   type="double"
+   desc="signal to noise after common mode subtracted"
+   const="TRUE"
+  >
+   <code>
+    return (rawNoise()>0.)?adcValue()/rawNoise():adcValue();
+   </code>
+  </method>
+
+  </class>
+ </package> 
+</gdd>

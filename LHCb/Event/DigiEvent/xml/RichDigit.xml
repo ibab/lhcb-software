@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="DigiEvent">
+
+<!-- **************************************************************************
+  * $Id: RichDigit.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $                 *
+  *****************************************************************************
+  * XML-description of RichDigit class                                        *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "RichDigit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "The Rich Digitisation object" 
+        id               = "12407" 
+        location         = "Raw/Rich/Digits"  
+        keyedContTypeDef = "TRUE" 
+        stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;LHCb::RichSmartID&gt;"/>
+        <template name="KeyedObjectDict" t1="LHCb::RichSmartID"/>
+        &KeyedContainer;
+
+        <import name="Kernel/RichSmartID"/>
+
+        <method 
+                name  = "richSmartID" 
+                const = "TRUE" 
+                desc  = "Get the channel identifier for this digit (RichSmartID)" 
+                type  = "LHCb::RichSmartID">
+                <code>
+                    return LHCb::RichSmartID( key() );
+                </code>
+        </method>
+
+</class>
+
+</package>
+</gdd>
