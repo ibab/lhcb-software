@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+<!ENTITY CLID_CaloHypo                 "2004"                   >
+]>
+<gdd>
+  <package name="RecEvent">
+<!-- **************************************************************************
+  * $Id: CaloHypo.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  *****************************************************************************
+  * XML-description of CaloHypo class                                         *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "CaloHypo"
+ desc   = "@brief class Calorimeter Hypotheses"
+ id     = "&CLID_CaloHypo;"
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+<desc> *
+ *
+ *  The class represents the calorimeter hypothesis. 
+ *
+ *</desc>
+<import name = "Event/CaloDigit"      />
+<import name = "Event/CaloCluster"      />
+<import name = "Event/CaloPosition"      />
+<import name = "Event/CaloHypotheses"   />
+<import name = "Kernel/CaloCellID"       />
+<base   name = "KeyedObject&lt;int&gt;"  />
+  
+<location name = "Default"      place = "Rec/Calo/Hypos"        />
+<location name = "Photons"      place = "Rec/Calo/Photons"      />
+<location name = "Electrons"    place = "Rec/Calo/Electrons"    />
+<location name = "MergedPi0s"   place = "Rec/Calo/MergedPi0s"   />
+<location name = "SplitPhotons" place = "Rec/Calo/SplitPhotons" />
+  
+<typedef
+ def    = "Base"
+ type   = "KeyedObject&lt;int&gt;"
+ desc   = "Shortcut for own base class "
+ access = "PROTECTED"
+/>
+&KeyedObject;
+  
+
+<typedef
+ def    = "Likelihood"
+ type   = "double"
+ desc   = "Shortcut for the type of Likelihood of CaloHypo object"
+ access = "PUBLIC"
+/>
+
+
+<typedef
+ def    = "Position"
+ type   = "LHCb::CaloPosition"
+ desc   = "Shortcut for the type of CaloPosition object"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Hypothesis"
+ type   = "LHCb::CaloHypotheses::Hypothesis"
+ desc   = "Shortcut for the hypothesis's ID"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Digits"
+ type   = "SmartRefVector&lt;LHCb::CaloDigit&gt;"
+ desc   = "shortcut for references to Calorimeter Digits"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Clusters"
+ type   = "SmartRefVector&lt;LHCb::CaloCluster&gt;"
+ desc   = "Shortcut for references to Calorimeter Clusters"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Hypos"
+ type   = "SmartRefVector&lt;LHCb::CaloHypo&gt;"
+ desc   = "Shortcut for eferences to Calorimeter Hypothesis"
+ access = "PUBLIC"
+/>
+
+<constructor 
+ desc     = "Copy Constructor" 
+ argList  = "LHCb::CaloHypo right"
+ initList = "Base() , m_hypothesis( right.hypothesis() ) , m_lh( right.lh() ) , m_position( 0 ) , m_digits( right.digits() ) , m_clusters( right.clusters() ) , m_hypos( right.hypos() )">
+<code> 
+      if( 0 != right.position() ){ m_position = right.position()->clone() ; }
+</code> 
+</constructor>
+
+<destructor
+ desc    = "Destructor">
+<code>
+   if( 0 != m_position ) { delete m_position ; m_position = 0 ; } 
+</code>
+</destructor>
+  
+
+<attribute 
+ name = "hypothesis"
+ desc = "The hypothesis's ID"
+ type = "LHCb::CaloHypo::Hypothesis" 
+ init = "CaloHypotheses::Undefined"
+ dictalias = "int"
+/>
+
+
+<attribute 
+ name = "lh"
+ desc = "The Hypothesis's likelihood"
+ type = "LHCb::CaloHypo::Likelihood" 
+ init = "-1."
+ dictalias = "double"
+/>
+
+
+<attribute 
+ name = "position"
+ desc = "The hypothesis's CaloPosition object "
+ type = "LHCb::CaloHypo::Position*" 
+ init = "0"
+ dictalias = "CaloPosition*"
+/>
+
+<relation
+ name = "digits"
+ desc = "References to the Calorimeter Digits"
+ type = "LHCb::CaloDigit"
+ multiplicity = "M"
+/>
+
+<relation
+ name = "clusters"
+ desc = "References to the Calorimeter Clusters"
+ type = "LHCb::CaloCluster"
+ multiplicity = "M"
+/>
+
+<relation
+ name = "hypos"
+ desc = "References to the Calorimeter Hypos"
+ type = "LHCb::CaloHypo"
+ multiplicity = "M"
+/>
+
+<method
+ desc   = "Retrieve the energy @attention it is just a shortcut! "
+ name   = "e"
+ type   = "double"
+ const  = "TRUE"
+ access = "PUBLIC" >
+ <code> 
+ if( 0 != m_position ) { return m_position ->               e () ;}
+ return 0 ;
+</code>
+</method>
+
+
+<method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::CaloHypo*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" >
+<code>
+ CaloHypo* hypo = new CaloHypo( *this ); 
+ if( 0 != position () ) { hypo->setPosition( position() -> clone() ) ;} 
+ return hypo;
+</code>
+</method>
+
+
+</class>
+
+</package>
+</gdd>

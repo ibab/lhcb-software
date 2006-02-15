@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="RecEvent">
+<!-- **************************************************************************
+  * $Id: CaloPosition.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  *****************************************************************************
+  * XML-description of CaloPosition class                                     *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "CaloPosition"
+ desc   = "@brief Position of calorimeter cluster"
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+<desc> *
+ *
+ *  The class represents the position of calorimeter cluster,
+ *  center of gravity, spread and their covariance matrices
+ *
+ *</desc>
+
+<import name = "Kernel/GenericMatrixTypes" />
+<import name = "Kernel/GenericVectorTypes"/>
+<import name = "Kernel/SystemOfUnits" />
+
+<enum  
+ name   = "Index"
+ desc   = "indices to access X,Y and E"
+ value  = "X = 1 , Y = 2 , E = 3"
+ access = "PUBLIC"
+/>
+    
+<typedef
+ def    = "Parameters3"
+ type   = "Gaudi::Vector3"
+ desc   = "3-vector of parameters (E,X,Y)"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Covariance3x3"
+ type   = "Gaudi::Matrix3x3"
+ desc   = "3x3 Covariance matrix (E,X,Y)"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Parameters2"
+ type   = "Gaudi::Vector2"
+ desc   = "2-vector of parameters (X,Y)"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Covariance2x2"
+ type   = "Gaudi::Matrix2x2"
+ desc   = "2x2 Covariance matrix (X,Y)"
+ access = "PUBLIC"
+/>
+
+<attribute
+ name = "z"
+ desc = "Z-position where cluster parameters are estimated"
+ type = "double"
+ init = "-1*km"
+/>
+        
+<attribute
+ name = "parameters"
+ desc = "vector of major cluster parameters"
+ type = "Parameters3"
+ init = "0., 0., 0."
+ dictalias = "Gaudi::Vector3"
+/>
+
+<attribute
+ name = "covariance"
+ desc = "covariance matrix of major cluster parameters (3x3)"
+ type = "Covariance3x3"
+ dictalias = "Gaudi::Matrix3x3"/>
+
+<attribute
+ name = "center"
+ desc = "cluster center of gravity position (2D)"
+ type = "Parameters2"
+ init = "0., 0."
+ dictalias = "Gaudi::Vector2"
+/>
+
+<attribute
+ name = "spread"
+ desc = "cluster spread matrix (2x2)"
+ type = "Covariance2x2"
+ dictalias = "Gaudi::Matrix2x2"/>
+
+<method
+ desc   = "retrieve the x-position @attention alias method!"
+ name   = "x"
+ type   = "double"
+ const  = "TRUE"
+ access = "PUBLIC">
+ <code> return parameters()( X ) ;   </code>
+</method>
+
+<method
+ desc   = "retrieve the y-position @attention alias method!"
+ name   = "y"
+ type   = "double"
+ const  = "TRUE"
+ access = "PUBLIC">
+ <code> return parameters()( Y ); </code>
+</method>
+
+<method
+ desc   = "retrieve the energy @attention alias method!"
+ name   = "e"
+ type   = "double"
+ const  = "TRUE"
+ access = "PUBLIC">
+ <code>  return parameters()( E ); </code>
+ </method>
+      
+ <method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::CaloPosition*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" >
+<code> return new CaloPosition( *this );</code>
+</method>
+
+</class>
+</package>
+</gdd>

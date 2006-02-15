@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="RecEvent">
+    <class name="MuonCoord" 
+      author="David Hutchcroft"
+      desc="Reconstructed muon hit coordinates" 
+      id="11040">
+      <base 
+	name="KeyedObject&lt;LHCb::MuonTileID&gt;"/>
+      <import name="Kernel/MuonTileID"/>
+      &KeyedContainer;
+      <attribute 
+	type="bool" 
+	name="uncrossed"
+        desc="Flag set if this pad should have crossed another logical channel 
+	and did not"/>
+      <attribute 
+	name="digitTile" 
+	type="std::vector&lt;LHCb::MuonTileID&gt;" 
+	desc="list of address of MuonDgit used to cretate this MuonCoord" />
+      <location 
+	name="MuonCoords" 
+	place="Rec/Muon/Coords"/>
+    </class>
+  </package>
+</gdd>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="RecEvent">
+<!-- **************************************************************************
+  * $Id: CaloClusterEntry.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  *****************************************************************************
+  * XML-description of CaloClusterEntry class                                 *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "CaloClusterEntry"
+ desc   = "@brief Cluster Entry: Digit and it's Status in the Cluster"
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+  &StlVector;
+
+<import name = "Event/CaloDigit"       />
+<import name = "Event/CaloDigitStatus" />
+<import name = "GaudiKernel/SmartRef"  />
+
+<desc> *
+ *
+ *  The class represents the entry to the cluster: 
+ *  the reference to CaloDigit objects,
+ *  status of the digit in the cluster and fraction of 
+ *  energy to be used within the cluster 
+ *
+ *</desc>
+
+<typedef
+ def    = "Digit"
+ type   = "SmartRef&lt;LHCb::CaloDigit&gt;"
+ desc   = "Smart Reference to Calorimeter Digit object"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Status"
+ type   = "LHCb::CaloDigitStatus::Status"
+ desc   = "Status of the digit (see the Mask enum in CaloDigitStatus.h)"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Fraction"
+ type   = "double"
+ desc   = "Fraction of energy"
+ access = "PUBLIC"
+/>
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = " Digit d , Status s , Fraction f  "
+ initList = " m_digit( d ) , m_status( s ) , m_fraction( f ) "
+> <code/> </constructor>
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = " Digit d , Status s "
+ initList = " m_digit( d ) , m_status( s ) , m_fraction( 1 ) "
+> <code/> </constructor>
+
+<attribute
+ name = "digit"
+ desc = "(Smart) Reference to the Calorimeter Digit object"
+ type = "Digit"
+ init = ""
+ dictalias = "SmartRef&lt;CaloDigit&gt;"
+/>
+                    
+<attribute
+ name = "status"
+ desc = "The status of Calorimeter Digit object in the Calorimeter Cluster"
+ type = "Status"
+ init = "LHCb::CaloDigitStatus::Undefined"
+ dictalias = "unsigned int"
+/>
+
+<attribute
+ name = "fraction"
+ desc = "The fraction of energy of Calorimeter Digit object"
+ type = "Fraction"
+ init = "1"
+ dictalias = "double"
+/>
+
+<method 
+ name  = "addStatus"
+ desc  = "update the status @attention (add bits!)"
+ type  = "void"
+ const = "FALSE">
+ <arg name = "St" type = "const Status"/>
+ <code> setStatus ( St | status()                 ) ; </code> 
+</method>
+
+<method 
+ name  = "removeStatus"
+ desc  = "update the status @attention (remove bits!)"
+ type  = "void"
+ const = "FALSE">
+ <arg name = "St" type = "const Status"/>
+ <code> setStatus ( (~St) &amp; status()          ) ; </code> 
+</method>
+
+<method 
+ name  = "resetStatus"
+ desc  = "reset the status"
+ type  = "void"
+ const = "FALSE">
+ <code> setStatus ( CaloDigitStatus::Undefined    ) ; </code> 
+</method>
+  
+<method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::CaloClusterEntry*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" > 
+<code>
+return new LHCb::CaloClusterEntry( *this );
+</code>
+</method>
+
+ 
+</class>
+</package>
+</gdd>

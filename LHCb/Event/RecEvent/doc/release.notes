@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.4 2006-01-17 15:46:08 cattanem Exp $
+! $Id: release.notes,v 1.5 2006-02-15 10:43:43 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 
-!========================== RecEvent v1r0 2006-01-17 =========================
+!========================== RecEvent v1r0 2006-02-15 =========================
+! 2006-02-15 - Marco Cattaneo
+ - Add classes from obsolete CaloEvent, MuonEvent, STEvent packages
+
 ! 2006-01-17 - Marco Cattaneo
  - Add MuonPID class
 

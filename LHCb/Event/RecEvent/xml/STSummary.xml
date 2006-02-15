@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='RecEvent'>
+
+  <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary">
+      <base name="DataObject"/>
+      &DataObject;
+      <location name="TTSummary"   place="MC/ST/TTSummary"   />
+      <location name="ITSummary"   place="MC/ST/ITSummary"   />
+       <constructor argList="int nDigits, int nClusters" 
+                    initList="m_nDigits(nDigits),
+                    m_nClusters(nClusters)" desc="special constructor">
+       <code></code>
+      </constructor>
+      <attribute name="nDigits" type="int" setMeth = "FALSE" desc="number of digits"/> 
+      <attribute name="nClusters" type="int" setMeth = "FALSE" desc="number of clusters"/>
+  </class>
+ </package>
+</gdd>

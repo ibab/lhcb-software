@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2006-01-17 14:41:47 cattanem Exp $
+# $Id: requirements,v 1.4 2006-02-15 10:43:43 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
@@ -16,6 +16,7 @@ include_dirs $(RECEVENTROOT)
 # Used packages. 
 #============================================================================
 use EventBase    v*      Event
+use DigiEvent    v*      Event
 # Temporary, whilst Track Event is developed separately
 use TrackEvent   v*      Event
 
