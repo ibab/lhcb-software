@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v2r0 2006-02-13 ====================
+!========================== TrackFitEvent v2r0 2006-02-15 ====================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-13 - Gerhard Raven
  - Update StateTraj to follow changes in LHCbKernel
 

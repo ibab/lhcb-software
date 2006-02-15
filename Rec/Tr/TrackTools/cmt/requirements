@@ -26,9 +26,7 @@ use   GaudiAlg        v*
 use   LHCbDefinitions v*     Kernel
 use   LHCbKernel      v*     Kernel
 use   TrackEvent      v*     Event
-use   OTEvent         v*     Event
-use   STEvent         v*     Event
-use   VeloEvent       v*     Event
+use   DigiEvent       v*     Event
 
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr

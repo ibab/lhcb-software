@@ -22,9 +22,7 @@ include_dirs      $(TRACKFITEVENTROOT)
 use   LHCbKernel      v*      Kernel
 
 use   TrackEvent      v*      Event
-use   OTEvent         v*      Event
-use   STEvent         v*      Event
-use   VeloEvent       v*      Event
+use   DigiEvent       v*      Event
 
 use   OTDet           v*      Det
 use   STDet           v*      Det

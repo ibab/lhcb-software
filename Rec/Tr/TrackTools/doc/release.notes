@@ -4,7 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-!======================== TrackTools v2r0 2006-02-10 =========================
+!======================== TrackTools v2r0 2006-02-15 =========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-10 - Gerhard Raven
  - properly implement point-poca in TrajPoca
 
