@@ -4,7 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
-!========================== RichDAQ v3r2 2006-02-06 =========================
+!========================== RichDAQ v3r2 2006-02-15 =========================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-06 - Chris Jones
  - Remove RichDetNumbering tool and use new functionality in RichDet instead
 

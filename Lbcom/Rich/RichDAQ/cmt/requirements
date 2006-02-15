@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.24 2006-02-03 09:56:20 cattanem Exp $
+# $Id: requirements,v 1.25 2006-02-15 11:04:07 cattanem Exp $
 #============================================================================
 
 package           RichDAQ
@@ -18,7 +18,7 @@ include_path none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   RichKernel     v*      Rich
-use   RichEvent      v*      Event
+use   DigiEvent      v*      Event
 use   DAQEvent       v*      Event
 use   RichDet        v*      Det
 
