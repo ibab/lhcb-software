@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.9 2006-02-15 16:41:23 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.10 2006-02-15 16:41:53 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -370,12 +370,12 @@ StatusCode GetMCRichHitsAlg::finalize()
          << occ(m_hitTally[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
          << endmsg;
+  info() << "Av. # Non CK signal hits   : Rich1 = " << occ(m_invalidRadHits[Rich::Rich1],m_nEvts)
+         << " Rich2 = " << occ(m_invalidRadHits[Rich::Rich2],m_nEvts)
+         << endmsg;
   info() << "Av. # MCRichHits           : Aero  = " << occ(m_radHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
-         << endmsg;
-  info() << "Av. # Non CK signal hits   : Rich1 = " << occ(m_invalidRadHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_invalidRadHits[Rich::Rich2],m_nEvts)
          << endmsg;
 
   info() << "Av. # Gas Quartz CK hits   : Rich1 = "
