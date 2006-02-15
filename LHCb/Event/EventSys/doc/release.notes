@@ -11,6 +11,10 @@ package manager: Marco Cattaneo
      LinkerEvent v2r0, TrackEvent v2r0, PhysEvent v9r0, EventAssoc v3r0
  - Packages temporarily disabled: PackedEvent
 
+! 2006-02-15 - Marco Cattaneo
+ - Remove options directory. PoolDicts.opts and PoolCopy.opts moved and
+   reimplemented in $STDOPTS
+
 ! 2006-02-03 - Marco Cattaneo
  - Replace old SEAL dictionaries with new Reflex ones
 
