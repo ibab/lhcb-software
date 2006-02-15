@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.4 2006-02-10 17:36:00 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.5 2006-02-15 11:10:49 seaso Exp $
 // Include files
 
 // local
@@ -448,6 +448,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                                                   EmisPtUseTrueEmissPt, 
                                aHitOnQwFromPixelNum , aRichDetNum, aSecMirrCopyNum );
 
+
               aReflPointD2E1 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror( aDetPointFromTrueLocalHit  ,
                                                  EmisPtUseTrueEmissPt, aHitOnQwFromTrueLocalHit,aRichDetNum, aSecMirrCopyNum  );
@@ -475,28 +476,35 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
               // calculate the cherenkov angle in gas radiators.
+              // G4cout<<" Now for the gas radaitor ckv D1E1 "<<G4endl;
               m_RichG4ReconResult->setckvAngleD1E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E1,
                                                                                             EmisPtUseTrueEmissPt ));
+              //G4cout<<" Now for the gas radaitor ckv D2E1 "<<G4endl;
 
               m_RichG4ReconResult->setckvAngleD2E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD2E1,
                                                                                             EmisPtUseTrueEmissPt ));
+              //G4cout<<" Now for the gas radaitor ckv D3E1 "<<G4endl;
               m_RichG4ReconResult->setckvAngleD3E1(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
                                                                                             EmisPtUseTrueEmissPt ));
+              //G4cout<<" Now for the gas radaitor ckv D3E2 "<<G4endl;
 
               m_RichG4ReconResult->setckvAngleD3E2(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E2,
                                                                                             EmisPtUseMidPtRadiatorZ ));
 
+              //G4cout<<" Now for the gas radaitor ckv D3E4 "<<G4endl;
               m_RichG4ReconResult->setckvAngleD3E4(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E4,
                                                                                             EmisPtUseMidPtRadiator ));
+              // G4cout<<" Now for the gas radaitor ckv D1E2 "<<G4endl;
 
               m_RichG4ReconResult->setckvAngleD1E2(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E2 ,
                                                                                             EmisPtUseMidPtRadiatorZ ));
+              //G4cout<<" Now for the gas radaitor ckv D1E4 "<<G4endl;
 
               m_RichG4ReconResult->setckvAngleD1E4(
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E4 ,

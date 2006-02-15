@@ -28,8 +28,8 @@ static const G4String AgelTile15MaterialName = "/dd/Materials/RichMaterials/Aero
 
 static const G4String FilterGenericMaterialName="/dd/Materials/RichMaterials/Rich1FilterGenericMaterial";
 static const G4String FilterD263MaterialName="/dd/Materials/RichMaterials/Rich1FilterD263Material";
-static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
-static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
+static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/Rich1GasWindowQuartz";
+static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/Rich2GasWindowQuartz";
 static const G4String RichHpdQuartzWindowMaterialName="/dd/Materials/RichMaterials/HpdWindowQuartz";
 static const G4String Rich1NitrogenMaterialName="/dd/Materials/RichMaterials/Rich1Nitrogen";
 static const G4String Rich2NitrogenMaterialName="/dd/Materials/RichMaterials/Rich2Nitrogen";
@@ -50,7 +50,9 @@ static const G4String LogVolRich1Mirror2NameAnalysis=
 static const G4String LogVolRich2Mirror1NameAnalysis=
                               "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirror";
 static const G4String LogVolRich2Mirror2NameAnalysis=
-                              "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2FlatMirrorSeg";
+                              "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMirrorSeg";
+static const G4String LogVolRich2Mirror2ContainerAnalysis=
+                              "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMirrorCont";
 static const G4String LogVolRich1MagShNameAnalysis=
                              "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagSh" ;
 static const G4String LogColRich1GasQWNameAnalysis=

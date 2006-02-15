@@ -70,10 +70,10 @@ RichHpdSiEnergyLoss::~RichHpdSiEnergyLoss() {; }
 G4bool RichHpdSiEnergyLoss::IsApplicable(const G4ParticleDefinition&
                                          aParticleType) {
 
-  //  return(aParticleType.GetPDGCharge()!= 0.);
-    return(( aParticleType.GetPDGCharge()!= 0.) &&
-         ( (aParticleType.GetParticleName() == "e-") ||
-          (aParticleType.GetParticleName() == "pe-")) );
+   return(aParticleType.GetPDGCharge()!= 0.);
+   //  return(( aParticleType.GetPDGCharge()!= 0.) &&
+   //      ( (aParticleType.GetParticleName() == "e-") ||
+   //       (aParticleType.GetParticleName() == "pe-")) );
   // return(( aParticleType.GetPDGCharge()!= 0.) &&
   //       (aParticleType.GetParticleName() == "e-")) ;
 
@@ -144,12 +144,14 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // if( fMatIndexHpdEnvelopeKovar == 
   //        (G4int) aTrack.GetMaterial() -> GetIndex()) {
   //
-     //     G4String aparticleName= aParticle-> GetDefinition()->GetParticleName();
+  //        G4String aparticleName= aParticle-> GetDefinition()->GetParticleName();
 
-     //  G4cout<<" Hpd energyloss Particle name in Kovar creatorProc energy "
-     //   << aparticleName<<"   "
-     //      << aCreatorProcessName<< "   "<<aKinEnergyInit<< G4endl;
-     
+	//	if(  aCreatorProcessName != "RichHpdPhotoelectricProcess") {
+	  //        G4cout<<" Hpd energyloss Particle name: creatorProc energy "
+	  //    << aparticleName<<" in  "<< aTrack.GetMaterial() ->GetName()
+	  //    <<"   from " << aCreatorProcessName
+          //    << "   "<<aKinEnergyInit<< G4endl;
+	//	}
      //   G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
      //   G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
      //   const G4ThreeVector prePos= pPreStepPoint->GetPosition();
@@ -232,6 +234,8 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       aKinEnergyInit= aKinEnergyInit/100000;
       // EnegydepositMultFactor=10.0;
     }    
+  } else {
+    //    G4cout<<" Now a non pe particle in Hpd Si Det" <<G4endl;
   }
     
   //end of temporary fix.
@@ -262,7 +266,11 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
     aParticleChange.ProposeLocalEnergyDeposit(EnergyTransfer);
   }
 
+   if(  aCreatorProcessName != "RichHpdPhotoelectricProcess") {
+      
+     G4cout<<"EnergyTransfer in sidetEloss for charged particle " << EnergyTransfer<<G4endl;
 
+      }
   if ( (aKinEnergyFinal <= MinKineticEnergy) || 
       (aCreatorProcessName == "RichHpdPhotoelectricProcess") ) {
     aParticleChange.ProposeTrackStatus(fStopAndKill);

@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.8 2006-02-10 17:36:00 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.9 2006-02-15 11:10:48 seaso Exp $
 // Include files
 
 
@@ -11,7 +11,8 @@
 // GiGa
 #include "GiGa/GiGaMACROs.h"
 // local
-#include "../SensDet/RichG4Hit.h"
+#include "RichG4Hit.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -1253,7 +1254,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
           while(it < (int) TrajIdVectR1Agel.size()) {
 
             if(TrajIdVectR1Agel[it] ==  ChtkId) {
-              if(aRadiatorNum >= 10 && aRadiatorNum <= 25) {
+              if(aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum && aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum) {
 
                 TrajNumHitAgelRich1[it]++;
 
@@ -1483,7 +1484,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             }
 
 
-            if(   aRadiatorNum == 1 ){
+            if(   aRadiatorNum == Rich1C4F10CkvRadiatorNum ){
 
               aRichCounter->bumpNumHitTotRich1Gas();
 
@@ -1493,7 +1494,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               }
 
-            }else if(  aRadiatorNum >=  10 &&  aRadiatorNum <= 25 ) {
+            }else if(  aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum  &&  aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich1Agel();
 
@@ -1503,7 +1504,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               }
 
-            } else if (  aRadiatorNum == 2 ) {
+            } else if (  aRadiatorNum == Rich2CF4CkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich2Gas();
 
@@ -1513,9 +1514,25 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               }
 
+            }else if (aRadiatorNum == RichFilterGenericCkvRadiatorNum ) {
 
+	      aRichCounter-> bumpNumHitTotRich1FilterGeneric();
+            }else if ( aRadiatorNum == RichFilterD263CkvRadiatorNum ) {
+	      aRichCounter->bumpNumHitTotRich1FilterD263();
+            }else if ( aRadiatorNum == Rich1GasQWindowCkvRadiatorNum) {
+	      aRichCounter->bumpNumHitTotRich1GasQw();
+            }else if ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) {
+	      aRichCounter->bumpNumHitTotRich2GasQw();
+	    }else if ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum) {
+              
+              if(ihcol == 0 || ihcol == 1 ) {
+	        aRichCounter-> bumpNumHitTotRich1HpdQw();
+	      }else if (ihcol == 2 || ihcol == 3 ) {
+	        aRichCounter-> bumpNumHitTotRich2HpdQw();
+              } 
 
-            } else {
+             } else {
+   
 
 	      aRichCounter->bumpNumHitTotNoRadiator();
              

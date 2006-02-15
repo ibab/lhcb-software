@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.7 2006-02-13 16:30:43 jonrob Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.8 2006-02-15 11:10:48 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -13,12 +13,11 @@
 #include "DetDesc/TabulatedProperty.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Math/VectorUtil.h"
-
-// RichDet
-#include "RichDet/DeRich.h"
-
 // local
 #include "RichG4SvcLocator.h"
+
+
+// local
 #include "RichG4CkvRecon.h"
 #include "RichG4ReconHpd.h"
 #include "RichG4ReconTransformHpd.h"
@@ -81,8 +80,8 @@ RichG4CkvRecon::RichG4CkvRecon()
   //             << endreq;
 
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, DeRichLocation::Rich2);
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1DeStructurePathName);
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, Rich2DeStructurePathName);
 
   m_agelnominalrefractiveindex = 1.0339124;
   m_c4f10nominalrefrativeindex = 1.0014069;
@@ -90,7 +89,7 @@ RichG4CkvRecon::RichG4CkvRecon()
 
   if( !Rich1DE ){
     RichG4CkvReconlog << MSG::ERROR
-                      << "Can't retrieve " << DeRichLocation::Rich1 << " for CkvRecon"
+                      << "Can't retrieve " + Rich1DeStructurePathName+ " for CkvRecon"
                       << endreq;
   }else {
 
@@ -119,13 +118,12 @@ RichG4CkvRecon::RichG4CkvRecon()
     m_HpdTransforms [0].resize( m_NumHpdRich[0]);
     m_HpdTransforms [1].resize( m_NumHpdRich[1]);
 
-    m_SphMirrCC [0] [0]=
-      Rich1DE->param<double>( "Rich1Mirror1NominalCCX");
-    m_SphMirrCC [0] [1]=
-      Rich1DE->param<double>( "Rich1Mirror1NominalCCY");
-    m_SphMirrCC [0] [2]=
-      Rich1DE->param<double>( "Rich1Mirror1NominalCCZ");
+    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
 
+    
+    m_SphMirrCC [0] [0]= r1NominalCoC[0];
+    m_SphMirrCC [0] [1]= r1NominalCoC[1];
+    m_SphMirrCC [0] [2]= r1NominalCoC[2];
     m_SphMirrRad [0] =
       Rich1DE->param<double>( "Rich1Mirror1NominalRadiusC");
 
@@ -176,28 +174,18 @@ RichG4CkvRecon::RichG4CkvRecon()
 
   if( !Rich2DE ){
     RichG4CkvReconlog << MSG::ERROR
-                      << "Can't retrieve " << DeRichLocation::Rich2 << " for CkvRecon"
+                      << "Can't retrieve "+  Rich2DeStructurePathName +" for CkvRecon"
                       << endreq;
   } else {
 
-    m_SphMirrCC [2] [0]=
-      Rich2DE->param<double>( "Rich2NominalCoCX" );
-    m_SphMirrCC [2] [1]=
-      Rich2DE->param<double>( "Rich2NominalCoCY");
-    m_SphMirrCC [2] [2]=
-      Rich2DE->param<double>( "Rich2NominalCoCZ");
+    std::vector<double> r2NominalCoC = Rich2DE->param<std::vector<double> >("Rich2NominalCoC");
+
+    m_SphMirrCC [2] [0]= r2NominalCoC[0];
+    m_SphMirrCC [2] [1]= r2NominalCoC[1];
+    m_SphMirrCC [2] [2]= r2NominalCoC[2];
     m_SphMirrRad [1]=
       Rich2DE->param<double>( "Rich2SphMirrorRadius");
 
-
-    //    m_SphMirrCC [2] [0]=
-    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCX" );
-    //  m_SphMirrCC [2] [1]=
-    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCY");
-    //  m_SphMirrCC [2] [2]=
-    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCZ");
-    //  m_SphMirrRad [1]=
-    //  Rich2DE->userParameterAsDouble( "Rich2SphMirrorRadius");
 
     m_SphMirrCC [3] [0]= -1.0* m_SphMirrCC [2] [0];
     m_SphMirrCC [3] [1]= m_SphMirrCC [2] [1];
@@ -257,7 +245,7 @@ RichG4CkvRecon::~RichG4CkvRecon(  ) { }
 
 
 Gaudi::XYZPoint RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
-                                                          int aPYNum )
+                                                     int aPYNum )
 {
 
   const double zhitc=  m_HpdSiDetThickness/2.0;
@@ -268,7 +256,7 @@ Gaudi::XYZPoint RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
   return  Gaudi::XYZPoint(xhit,yhit,zhitc);
 }
 
-Gaudi::XYZPoint
+Gaudi::XYZPoint  
 RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord )
 {
 
@@ -354,7 +342,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoo
 }
 
 Gaudi::XYZPoint RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
-                                                  RichG4Hit* bHit )
+                                             RichG4Hit* bHit )
 {
   const Gaudi::XYZPoint aPhotTrueEmitPt(ex,ey,ez);
 
@@ -392,29 +380,34 @@ Gaudi::XYZPoint RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double e
 Gaudi::XYZPoint
 RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetectionPoint,
                                                  const Gaudi::XYZPoint & aEmissionPoint,
-                                                 const Gaudi::XYZPoint & aQwPoint, G4int aRichDetNum, G4int aFlatMirrNum )
+                   const Gaudi::XYZPoint & aQwPoint, G4int aRichDetNum, G4int aFlatMirrNum )
 {
 
   m_curEmisPt=aEmissionPoint;
   m_curDetPoint=aDetectionPoint;
+  
 
   Gaudi::XYZPoint curFlatMCoC =  m_CurReconFlatMirr-> FlatMirrorCoC(aRichDetNum,aFlatMirrNum);
 
   Gaudi::XYZPoint aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
+
   // for now 5 iterations
 
   for (int aItr=0; aItr<5 ; ++aItr) {
-    Gaudi::XYZPoint aFlatMirrReflPt =  m_CurReconFlatMirr->FlatMirrorIntersection(aSphReflPt,
-                                                                                  m_curDetPoint ,
-                                                                                  aRichDetNum,
-                                                                                  aFlatMirrNum);
 
+    Gaudi::XYZPoint aFlatMirrReflPt =  m_CurReconFlatMirr->FlatMirrorIntersection(aSphReflPt,
+										 m_curDetPoint ,
+										  aRichDetNum,
+										  aFlatMirrNum);
+    
     // create a plane at the flat mirr refl point
+
 
     const Gaudi::Plane3D aPlane(Gaudi::XYZVector( curFlatMCoC - aFlatMirrReflPt ).unit(), aFlatMirrReflPt);
     // find the detection pt wrt this plane
 
 
+    
     double adist = aPlane.Distance(aQwPoint);
 
     Gaudi::XYZPoint  afrelPt = aQwPoint - 2.0*adist * aPlane.Normal();
@@ -422,9 +415,10 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
     aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
 
     ++aItr;
-
-
+  
+     
   }
+
 
   return  aSphReflPt ;
 
@@ -436,21 +430,22 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichG4CkvReconlog( msgSvc,"RichG4CkvRecon");
 
+
   Gaudi::XYZPoint ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
   const Gaudi::XYZPoint & aEmisPt = m_curEmisPt;
   const Gaudi::XYZPoint aMirrCC (m_SphMirrCC[m_CurrentRichSector][0],
-                                 m_SphMirrCC[m_CurrentRichSector][1],
-                                 m_SphMirrCC[m_CurrentRichSector][2]) ;
+                            m_SphMirrCC[m_CurrentRichSector][1],
+                            m_SphMirrCC[m_CurrentRichSector][2]) ;
   const Gaudi::XYZPoint & aDetPt = m_curDetPoint ;
 
   Gaudi::XYZVector evec =  aEmisPt -  aMirrCC;
   const double e2 = evec.Mag2();
-  double e  = pow(e2,0.5);
+    double e  = pow(e2,0.5);
 
   Gaudi::XYZVector dvec = aDetPt  - aMirrCC ;
   const  double d2 = dvec.Mag2();
-  double d  = pow(d2,0.5);
-
+    double d  = pow(d2,0.5);
+  
   double gamma     = acos( evec.Dot(dvec) / (e*d) );
 
   double r  =  m_SphMirrRad[m_CurrentRichDetNum];
@@ -478,58 +473,59 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
       int nrealsolnum=-1;
       Gaudi::XYZVector nvec = evec.Cross(dvec); // normal vector to reflection plane
       Gaudi::XYZVector delta[2] = { Gaudi::XYZVector(0.0,0.0,0.0),
-                                    Gaudi::XYZVector(0.0,0.0,0.0) };
+                               Gaudi::XYZVector(0.0,0.0,0.0) };
 
+      
+        for (int isol=0 ; isol< 4; isol++ ) {
+          // now require real and physical solutions.
+          if(GSL_IMAG (qsol[isol] ) == 0.0 && GSL_REAL(qsol[isol]) <= 1.0  ) {
+            nrealsolnum++;
+            if(nrealsolnum < 2) {
+              double beta = asin(GSL_REAL(qsol[isol]));                   
+	      Gaudi::XYZVector aa = evec;
+              aa *= (r/e);
+	      const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec, beta));
+ 	      Gaudi::XYZVector bb = rotn(aa);             
+	      delta[ nrealsolnum] = bb;
+	    }
 
-      for (int isol=0 ; isol< 4; isol++ ) {
-        // now require real and physical solutions.
-        if(GSL_IMAG (qsol[isol] ) == 0.0 && GSL_REAL(qsol[isol]) <= 1.0  ) {
-          nrealsolnum++;
-          if(nrealsolnum < 2) {
-            double beta = asin(GSL_REAL(qsol[isol]));
-            Gaudi::XYZVector aa = evec;
-            aa *= (r/e);
-            const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec, beta));
-            Gaudi::XYZVector bb = rotn(aa);
-            delta[ nrealsolnum] = bb;
-          }
+            
+	  }
+          
+        }
+  
+        if( nrealsolnum >= 0 ) {
+
+          const Gaudi::XYZVector deltaF =
+            ( (nrealsolnum == 0) ||
+              (delta[0].z() > delta[1].z()))? delta[0]:delta[1];
+
+          ReflPt = aMirrCC  + deltaF;
+
+        }
+
+        // now verify that the reflection pt is in the
+        // same sector (half) as the detection pt.
+        double proda =0.0;
+
+        if(   m_CurrentRichDetNum == 0 ) {
+          proda = ReflPt.y() * aDetPt.y();
+
+        } else if (  m_CurrentRichDetNum == 1 ) {
+          proda = ReflPt.x() * aDetPt.x();
 
 
         }
 
-      }
+        if( proda == 0.0 ) {
+          ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
 
-      if( nrealsolnum >= 0 ) {
-
-        const Gaudi::XYZVector deltaF =
-          ( (nrealsolnum == 0) ||
-            (delta[0].z() > delta[1].z()))? delta[0]:delta[1];
-
-        ReflPt = aMirrCC  + deltaF;
-
-      }
-
-      // now verify that the reflection pt is in the
-      // same sector (half) as the detection pt.
-      double proda =0.0;
-
-      if(   m_CurrentRichDetNum == 0 ) {
-        proda = ReflPt.y() * aDetPt.y();
-
-      } else if (  m_CurrentRichDetNum == 1 ) {
-        proda = ReflPt.x() * aDetPt.x();
-
-
-      }
-
-      if( proda == 0.0 ) {
-        ReflPt = Gaudi::XYZPoint (0.0,0.0,0.0);
-
-      }
+        }
 
     }
 
   }
+
   return ReflPt;
 
 }
@@ -538,7 +534,7 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
 
 
 void RichG4CkvRecon::SolveQuartic(  gsl_complex z[4],
-                                    double denom,double a[4])
+                                   double denom,double a[4])
 {
   double b[4] =    {0.0,0.0,0.0,0.0  };
   //  double c[8] =  {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -555,16 +551,16 @@ void RichG4CkvRecon::SolveQuartic(  gsl_complex z[4],
     //    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
 
     asol = gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
-                                               &z[0], &z[1], &z[2], &z[3]);
+					       &z[0], &z[1], &z[2], &z[3]);
 
     //    int j=0;
     //  for(int ii=0; ii< 4 ; ++ii) {
     //  z[ii]= std::complex<double> (c[j],c[j+1]);
     //  j +=2;
     // }
-
+    
   }
-
+  
 
 }
 
@@ -576,14 +572,23 @@ double  RichG4CkvRecon::CherenkovThetaFromReflPt(const Gaudi::XYZPoint & aReflPo
   m_curEmisPt = aEmisPt;
 
   Gaudi::XYZVector PhotDir= (aReflPoint - aEmisPt ).unit();
+  // G4cout<<"Phot dir xyz "<<PhotDir.x()<<" "<<PhotDir.y()<<"  "
+  //	<<PhotDir.z()<<G4endl;
   //  const Gaudi::XYZVector TrackDir = m_curTkMom.unit();
   double pmag = pow( PhotDir.Mag2(), 0.5);
   const Gaudi::XYZVector TrackDir=
-    m_ChTrackPostStepPosition-m_ChTrackPreStepPosition;
+    (m_ChTrackPostStepPosition-m_ChTrackPreStepPosition).unit();
+  //  G4cout<<"Track dir xyz "<<TrackDir.x()<<" "<<TrackDir.y()<<"  "
+  //	<<TrackDir.z()<<G4endl;
 
   double tmag = pow(TrackDir.Mag2(), 0.5);
   // double CkvAngle = Root::Math::VectorUtil::Angle(PhotDir,TrackDir);
-  double aAngle = acos(PhotDir.Dot(TrackDir))/( pmag* tmag);
+  //  double aAngle = acos(PhotDir.Dot(TrackDir))/( pmag* tmag);
+  //  double aDotProd=  PhotDir.x()*TrackDir.x()+PhotDir.y()*TrackDir.y()+
+  //  PhotDir.z()*TrackDir.z();
+  double aAngle = acos(PhotDir.Dot(TrackDir)/( pmag* tmag));
+  //  G4cout<<"Reconstructed Ckv Angle= "<<aAngle<<G4endl;
+
   return  aAngle;
 
 }
@@ -613,7 +618,7 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoin
     m_ChTrackPostStepPosition-m_ChTrackPreStepPosition;
   double tmag = pow(TrackDir.Mag2(), 0.5);
 
-  const double aCkvWithoutCorrection = acos(PhotDir.Dot(TrackDir))/( pmag* tmag);
+  const double aCkvWithoutCorrection = acos(PhotDir.Dot(TrackDir)/( pmag* tmag));
 
 
   // for now assume that the plane where photons exit from

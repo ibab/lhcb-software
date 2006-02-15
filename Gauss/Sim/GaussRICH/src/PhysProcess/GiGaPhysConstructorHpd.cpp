@@ -128,20 +128,22 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
         //  new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
         //  G4cout<<"Now HpdSiLoss adding for "<< particle->GetParticleName()<<G4endl;
         
-        if( ( particle->GetParticleName() == "pe-") || ( particle->GetParticleName() =="e-" ))
-          {
+	// add this process for any charged particle.
+
+	//    if( ( particle->GetParticleName() == "pe-") || ( particle->GetParticleName() =="e-" ))
+        //  {
             //            G4cout<<"Now at particle "<< particle->GetParticleName()<<G4endl;
             pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
-          }
+	    //   }
         
-         if(particle->GetParticleName() == "pe-")
-            {
+	    //  if(particle->GetParticleName() == "pe-")
+	    //  {
               //   G4cout<<" All the processes for pe- " <<G4endl;
               //  pmanager->DumpInfo();  
             
             //  (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
             // (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
-            }
+	    //  }
       }
     //    if (theDecayProcess->IsApplicable(*particle)) { 
     //      pmanager ->AddProcess(theDecayProcess);

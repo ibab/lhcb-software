@@ -141,6 +141,42 @@ void RichG4HistoDefineSet3::bookRichG4HistogramsSet3() {
     m_hNumPeAgelSiDetRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet3+"640",
                                         title,100,0.0,1000.0);
 
+    title = "Number of hits from Agel Radiators ";
+    m_hNumAgelRadiator = CurHistoSvc->book(m_RichG4HistoPathSet3+"710",
+					      title, 50, 0.0, 500.0);
+    title = "Number of hits from c4f10 radiator ";
+
+    m_hNumc4f10Radiator=  CurHistoSvc->book(m_RichG4HistoPathSet3+"711",
+					    title, 50, 0.0, 4000.0 );
+
+    title = "Number of hits from cf4 radiator ";
+
+    m_hNumcf4Radiator=  CurHistoSvc->book(m_RichG4HistoPathSet3+"712",
+					    title, 50, 0.0, 4000.0 );
+
+    title = "Number of hits from filter generic radiator ";
+
+    m_hNumfiltergenericRadiator = CurHistoSvc->book(m_RichG4HistoPathSet3+"714",
+						   title,50, 0.0, 500.0 );
+    title = "Number of hits from filter d263 radiator ";
+
+    m_hNumfilterd263Radiator =  CurHistoSvc->book(m_RichG4HistoPathSet3+"715",
+					    title, 50, 0.0, 500.0 );
+
+    title = "Number of hits from rich1 gas qw radiators ";
+    m_hNumRich1GasqwRadiator=  CurHistoSvc->book(m_RichG4HistoPathSet3+"716",
+						 title,50, 0.0, 500.0 );
+    title = "Number of hits from rich2 gas qw radiators ";
+    m_hNumRich2GasqwRadiator=  CurHistoSvc->book(m_RichG4HistoPathSet3+"717",
+						 title,50, 0.0, 500.0 );
+   title = "Number of hits from rich1 hpdqw radiators ";
+   m_hNumRich1HpdqwRadiator = CurHistoSvc->book(m_RichG4HistoPathSet3+"718",
+                      title,50, 0.0, 1000.0 );
+   title = "Number of hits from rich2 hpdqw radiators ";
+   m_hNumRich2HpdqwRadiator = CurHistoSvc->book(m_RichG4HistoPathSet3+"719",
+                      title,50, 0.0, 1000.0 );
+                        
+  
 }
 
 

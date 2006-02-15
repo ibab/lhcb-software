@@ -1,4 +1,4 @@
-// $Id: RichG4Counters.h,v 1.5 2005-04-19 16:12:51 seaso Exp $
+// $Id: RichG4Counters.h,v 1.6 2006-02-15 11:10:48 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4COUNTERS_H
 #define RICHANALYSIS_RICHG4COUNTERS_H 1
 
@@ -49,6 +49,13 @@ private:
   int m_NumHitTotRich1Agel;
   int m_NumHitTotRich2Gas;
   int m_NumHitTotNoRadiator;
+
+  int m_NumHitTotRich1HpdQw;
+  int m_NumHitTotRich2HpdQw;
+  int m_NumHitTotRich1GasQw;
+  int m_NumHitTotRich2GasQw;
+  int m_NumHitTotRich1FilterD263;
+  int m_NumHitTotRich1FilterGeneric;
 
   std::vector<int> m_NumHitPerTrackRich1Gas;
   std::vector<int> m_NumHitPerTrackRich1Agel;

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.3 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.4 2006-02-15 11:10:49 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -117,7 +117,7 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
         { 
 
           // now for mirror1 in rich1.
-            G4String  aPostVolNameM =std::string(aPostVolName,0,33);
+            G4String  aPostVolNameM =std::string(aPostVolName,0,52);
             if(aPreVolName == LogVolC4F10NameAnalysis &&
                aPostVolNameM == LogVolRich1Mirror1NameAnalysis ){
               // the reflection already happened at mirror1 at this point.
@@ -138,14 +138,15 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
             // now for mirror1 in rich2.    
          {
            CurrentRichDetnum=1;
-           G4String  aPostVolNameM2 =std::string(aPostVolName,0,35);
-           if(aPreVolName == LogVolCF4NameAnalysis &&
+           G4String  aPostVolNameM2 =std::string(aPostVolName,0,53);
+           if(aPreVolName ==  LogVolCF4NameAnalysis &&
                aPostVolNameM2 == LogVolRich2Mirror1NameAnalysis ){
               // the reflection happened at mirror1 at this point.
 	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,0, aCurrentCopyNum);
            }
             // now for Mirror2 in rich2
-            if(aPreVolName == LogVolCF4NameAnalysis &&
+           G4String  aPreVolNameSC =std::string(aPreVolName,0,57);
+            if(aPreVolNameSC == LogVolRich2Mirror2ContainerAnalysis &&
                aPostVolName == LogVolRich2Mirror2NameAnalysis ){
               // the reflection  happened at mirror2 at this point.
 	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,1, aCurrentCopyNum);

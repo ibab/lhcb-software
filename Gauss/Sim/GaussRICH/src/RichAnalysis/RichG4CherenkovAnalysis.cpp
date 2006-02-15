@@ -1,5 +1,7 @@
 #include "RichG4CherenkovAnalysis.h"
 #include "RichG4SvcLocator.h"
+#include "RichG4MatRadIdentifier.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 #include "G4Track.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
@@ -204,7 +206,44 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
 
   }
 }
+void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
 
+   RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
+                          RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+   const G4DynamicParticle* aChTrackParticle
+    = aChTrack.GetDynamicParticle();
+ 
+   G4ThreeVector aCurPos = aChTrack.GetStep()->GetPreStepPoint()->GetPosition();
+
+  
+   G4int aRadiatorNum = aRichG4MatRadIdentifier->getRadiatorNumForG4MatIndex(aChTrack.GetMaterial()->GetIndex());
+   if( ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum)  || 
+       ( aRadiatorNum ==  Rich1GasQWindowCkvRadiatorNum)  ||
+      ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) ) {
+    const G4ThreeVector& aChTrackProdPos = aChTrack.GetVertexPosition();
+    const G4ThreeVector& aMomAtProd = aChTrack.GetVertexMomentumDirection();
+    G4String aParticleName = aChTrackParticle->GetDefinition()->GetParticleName();
+    G4double aParticleEnergy = aChTrack.GetTotalEnergy() ;
+    
+     if( aCurPos.z() < ZDnsRich1Analysis ) {
+       // we are in rich1
+       G4cout<<"rich1 cur track pos xyz "<<aCurPos.x()<<"  "<<aCurPos.y()<<"  "<<aCurPos.z()<<G4endl;
+       
+       G4cout<<"rich1 RadNum ProdPos En XYZ PXYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<< aParticleEnergy<<"  "
+             <<aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
+             <<"  "<<aChTrackProdPos.z()<< "  "<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
+             <<"  "<< aMomAtProd.z()<< G4endl;
+
+     }else {
+       // we are in rich2
+       G4cout<<"rich2 aChTrackProdPos XYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<<aParticleEnergy<<"  "
+             << aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
+             <<"  "<<aChTrackProdPos.z()<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
+             <<"  "<< aMomAtProd.z()<< G4endl;
+     }
+   }
+
+}
 
 
 

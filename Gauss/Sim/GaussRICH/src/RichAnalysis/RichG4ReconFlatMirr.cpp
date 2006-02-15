@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.6 2006-02-13 16:30:43 jonrob Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.7 2006-02-15 11:10:49 seaso Exp $
 // Include files
 
 
@@ -17,9 +17,6 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h"
 
-// RichDet
-#include "RichDet/DeRich.h"
-
 //#include <CLHEP/Geometry/Point3D.h>
 //#include <CLHEP/Geometry/Vector3D.h>
 //#include <CLHEP/Geometry/Transform3D.h>
@@ -32,7 +29,7 @@
 
 // local
 #include "RichG4SvcLocator.h"
-
+#include "RichG4GaussPathNames.h"
 
 #include "RichG4ReconFlatMirr.h"
 
@@ -56,8 +53,8 @@ RichG4ReconFlatMirr::RichG4ReconFlatMirr(  )
        m_Rich2NumSecMirror(40),
        m_RichSecMirrCoCRad( m_Rich1NumSecMirror+m_Rich2NumSecMirror,
                              std::vector<double> (m_RichNumSecMirrorCoCParam)),
-       m_Rich1Mirror2CommonPath( "/dd/Structure/LHCb/Rich1/Rich1Mirror2Q"),
-       m_Rich2Mirror2CommonPath( "/dd/Structure/LHCb/Rich2/Rich2SecMirror:"),
+       m_Rich1Mirror2CommonPath(Rich1DeStructurePathName+  "/Rich1Mirror2Q"),
+       m_Rich2Mirror2CommonPath(Rich2DeStructurePathName + "/Rich2SecMirror:"),
        m_Rich1Mirror2IndPathString(std::vector<std::string> (m_Rich1NumSecMirror)),
        m_Rich2Mirror2IndPathString(std::vector<std::string> (m_Rich2NumSecMirror))
 {
@@ -81,8 +78,8 @@ RichG4ReconFlatMirr::RichG4ReconFlatMirr(  )
   // the mirror number 0-15 for the rich1 and 16-45 for rich2 in this array.  
   
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, DeRichLocation::Rich2);
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1DeStructurePathName);
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, Rich2DeStructurePathName);
   std::string r2mNum [] ={"00:0","01:1","02:2","03:3","34:4","35:5",
                           "36:6","37:7","18:8","19:9","110:10","111:11",
                           "212:12","213:13","214:14","215:15"};
@@ -130,22 +127,16 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
   // modif in the following to be compatible with recent Detdesc. 
   // SE 16-6-2005.
 
-  SmartDataPtr<DetectorElement> Rich1DE(detSvc, DeRichLocation::Rich1);
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1DeStructurePathName );
   // modif in the following to be compatible with the xml userparameter name.
   // SE 10-5-2005.
   if( Rich1DE) {
 
-    double r1m2A =
-      Rich1DE->param<double>("Rich1NominalNorX");
-
-    double r1m2B =
-      Rich1DE->param<double>("Rich1NominalNorY");
-
-    double r1m2C =
-      Rich1DE->param<double>("Rich1NominalNorZ");
-
-    double r1m2D =
-      Rich1DE->param<double>("Rich1DParam");
+    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+    double r1m2A = r1m2Nor[0];
+    double r1m2B = r1m2Nor[1];
+    double r1m2C = r1m2Nor[2];
+    double r1m2D = r1m2Nor[3];
 
     m_RichFlatMirrorNominalOrientation[0][0]= r1m2A;
     m_RichFlatMirrorNominalOrientation[0][1]= r1m2B;
@@ -202,7 +193,7 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
       m_RichSecMirrCoCRad[im] [2] = mcoc.z();
       m_RichSecMirrCoCRad[im] [3] =  r2rad;    
 
-      RichG4ReconFlatMirrlog << MSG::INFO<< "Rich1 Mirror2 num CoCxyz rad "<<
+      RichG4ReconFlatMirrlog << MSG::DEBUG<< "Rich1 Mirror2 num CoCxyz rad "<<
                               im<<"  "<< mcoc.x()<<"  "
                               << mcoc.y()<<"  "<< mcoc.z()<<r2rad <<endreq;
      
@@ -225,21 +216,15 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
 
-  SmartDataPtr<DetectorElement> Rich2DE(detSvc, DeRichLocation::Rich2);
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, Rich2DeStructurePathName );
 
   if(Rich2DE) {
 
-    double r2m2A =
-      Rich2DE->param<double>("Rich2NominalNorX");
-
-    double r2m2B =
-      Rich2DE->param<double>("Rich2NominalNorY");
-
-    double r2m2C =
-      Rich2DE->param<double>("Rich2NominalNorZ");
-
-    double r2m2D =
-      Rich2DE->param<double>("Rich2DParam");
+    std::vector<double> r2SecNormPlane =  Rich2DE->param<std::vector<double> >("Rich2NominalSecMirrorPlane");
+    double r2m2A = r2SecNormPlane[0];
+    double r2m2B = r2SecNormPlane[1];
+    double r2m2C = r2SecNormPlane[2];
+    double r2m2D = r2SecNormPlane[3];
 
 
     m_RichFlatMirrorNominalOrientation[2][0]= r2m2A;
@@ -446,21 +431,23 @@ DetectorElement* RichG4ReconFlatMirr::getMirrorDetElem (int aRichDetNum, int aMi
        
   
 }
-Gaudi::XYZPoint RichG4ReconFlatMirr::FlatMirrorCoC( int  RichDetNum, int aMirrorNum ) {
+Gaudi::XYZPoint RichG4ReconFlatMirr::FlatMirrorCoC( int  aRichDetNum, int aMirrorNum ) {
 
   Gaudi::XYZPoint aPoint(0,0,0);
-  if( RichDetNum == 0 ) {
+
+  if( aRichDetNum == 0 ) {
     aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad [aMirrorNum] [0],
                               m_RichSecMirrCoCRad [aMirrorNum] [1],
 			      m_RichSecMirrCoCRad[aMirrorNum] [2]);
 
-  }else if ( RichDetNum == 1 ) {
+  }else if ( aRichDetNum == 1 ) {
 
     aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad [aMirrorNum+m_Rich1NumSecMirror] [0],
                               m_RichSecMirrCoCRad [aMirrorNum+m_Rich1NumSecMirror] [1],
 			      m_RichSecMirrCoCRad[aMirrorNum+m_Rich1NumSecMirror] [2]);
 
   }
+
   return aPoint;
 }
 //=============================================================================

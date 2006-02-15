@@ -96,6 +96,19 @@ inline int NumHitTotNoRadiator() const
 
 }
 
+inline int NumHitTotRich1HpdQw() const
+{return m_NumHitTotRich1HpdQw;}
+inline int NumHitTotRich2HpdQw() const
+{return m_NumHitTotRich2HpdQw;}
+inline int NumHitTotRich1GasQw() const
+{return m_NumHitTotRich1GasQw;}
+inline int NumHitTotRich2GasQw() const
+{return m_NumHitTotRich2GasQw;}
+inline int NumHitTotRich1FilterD263() const 
+{return m_NumHitTotRich1FilterD263;}
+inline int NumHitTotRich1FilterGeneric() const
+{return m_NumHitTotRich1FilterGeneric;}
+
 inline const std::vector<int> & NumHitPerTrackRich1Gas() const
 {
   return  m_NumHitPerTrackRich1Gas;
@@ -254,6 +267,13 @@ inline void bumpNumHitTotNoRadiator()
 {
   ++m_NumHitTotNoRadiator;
 }
+
+inline void bumpNumHitTotRich1HpdQw() {++m_NumHitTotRich1HpdQw;}
+inline void bumpNumHitTotRich2HpdQw() {++m_NumHitTotRich2HpdQw;}
+inline void bumpNumHitTotRich1GasQw() {++m_NumHitTotRich1GasQw;}
+inline void bumpNumHitTotRich2GasQw() {++m_NumHitTotRich2GasQw;}
+inline void bumpNumHitTotRich1FilterD263() {++m_NumHitTotRich1FilterD263;}
+inline void bumpNumHitTotRich1FilterGeneric() {++m_NumHitTotRich1FilterGeneric;}
 
 
 inline void bumpNumHitPerTrackRich1Gas(int ait)

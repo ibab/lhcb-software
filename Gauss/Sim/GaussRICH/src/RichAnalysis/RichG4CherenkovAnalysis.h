@@ -9,3 +9,4 @@ extern void RichG4CherenkovAnalysis1(const G4Step& aStep,
 
 extern void RichG4CherenkovAnalysis2(const G4Step& aStep);
 
+extern void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack); 

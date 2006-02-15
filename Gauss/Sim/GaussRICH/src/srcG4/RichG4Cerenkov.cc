@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.8 2006-02-13 16:30:43 jonrob Exp $
+// $Id: RichG4Cerenkov.cc,v 1.9 2006-02-15 11:11:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -327,6 +327,10 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
                                    cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
+   // test analysis
+   //  RichG4CherenkovProdFeaturesHisto(aTrack);
+    // end of test analysis
+ 
     // end of additions by SE to tag the info on photon production.
     // also the next line is commented out as as result.
     // aParticleChange.AddSecondary(aSecondaryTrack);

@@ -49,6 +49,15 @@ private:
   IHistogram1D*        m_hNumPhotAgelAfterQERich1;
   IHistogram1D*        m_hNumPeAgelSiDetRich1;
 
+  IHistogram1D*        m_hNumAgelRadiator;  
+  IHistogram1D*        m_hNumc4f10Radiator;  
+  IHistogram1D*        m_hNumcf4Radiator;  
+  IHistogram1D*        m_hNumfilterd263Radiator;  
+  IHistogram1D*        m_hNumfiltergenericRadiator;  
+  IHistogram1D*        m_hNumRich1GasqwRadiator;  
+  IHistogram1D*        m_hNumRich2GasqwRadiator;  
+  IHistogram1D*        m_hNumRich1HpdqwRadiator;  
+  IHistogram1D*        m_hNumRich2HpdqwRadiator;  
 
 
 

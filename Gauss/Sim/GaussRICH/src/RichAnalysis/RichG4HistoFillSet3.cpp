@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet3.cpp,v 1.4 2005-04-19 16:12:51 seaso Exp $
+// $Id: RichG4HistoFillSet3.cpp,v 1.5 2006-02-15 11:10:49 seaso Exp $
 // Include files
 
 
@@ -99,6 +99,21 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
                                                         "RICHG4HISTOSET3/620");
   SmartDataPtr<IHistogram1D>  hNumPeAgelSiDetRich1 (CurrentHistoSvc,
                                                     "RICHG4HISTOSET3/640");
+  SmartDataPtr<IHistogram1D> hNumAgelRadiator (CurrentHistoSvc,
+                                                   "RICHG4HISTOSET3/710");
+
+  SmartDataPtr<IHistogram1D> hNumc4f10Radiator(CurrentHistoSvc,
+                                                   "RICHG4HISTOSET3/711");
+
+  SmartDataPtr<IHistogram1D> hNumcf4Radiator(CurrentHistoSvc, "RICHG4HISTOSET3/712");
+
+  SmartDataPtr<IHistogram1D> hNumfiltergenericRadiator(CurrentHistoSvc,"RICHG4HISTOSET3/714");
+  SmartDataPtr<IHistogram1D> hNumfilterd263Radiator(CurrentHistoSvc,"RICHG4HISTOSET3/715");
+  SmartDataPtr<IHistogram1D> hNumRich1GasqwRadiator(CurrentHistoSvc, "RICHG4HISTOSET3/716");
+  SmartDataPtr<IHistogram1D> hNumRich2GasqwRadiator(CurrentHistoSvc, "RICHG4HISTOSET3/717");
+  SmartDataPtr<IHistogram1D> hNumRich1HpdqwRadiator(CurrentHistoSvc,"RICHG4HISTOSET3/718");
+  SmartDataPtr<IHistogram1D>  hNumRich2HpdqwRadiator(CurrentHistoSvc,"RICHG4HISTOSET3/719");
+
 
   double aNumPhotProdRich1Gas = (aRichCounter->NumPhotProdRich1Gas())* 1.0 ;
   double aNumPhotGasOnRich1Mirror1 =
@@ -143,6 +158,16 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
 
   double aNumPeAgelSiDet =
     (aRichCounter->NumPhotAgelRich1SiDet())*1.0;
+
+  double aNumRadc4f10= (aRichCounter->NumHitTotRich1Gas())*1.0;
+  double aNumRadcf4 = (aRichCounter->NumHitTotRich2Gas())*1.0;
+  double aNumRadagel = (aRichCounter->NumHitTotRich1Agel() )*1.0;
+  double aNumRadr1gasqw = (aRichCounter->NumHitTotRich1GasQw() )*1.0;
+  double aNumRadr2gasqw = (aRichCounter->NumHitTotRich2GasQw() )*1.0;
+  double aNumRadr1hpdqw = (aRichCounter->NumHitTotRich1HpdQw() )*1.0;
+  double aNumRadr2hpdqw = (aRichCounter->NumHitTotRich2HpdQw() )*1.0;
+  double aNumRadr1Filterd263 = (aRichCounter->NumHitTotRich1FilterD263() )*1.0;
+  double aNumRadr1FilterGeneric = (aRichCounter->NumHitTotRich1FilterGeneric())*1.0;
 
 
   //   std::cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas 
@@ -207,7 +232,24 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   if( hNumPeAgelSiDetRich1 )
     hNumPeAgelSiDetRich1 ->fill(aNumPeAgelSiDet);
 
-
+  if( hNumAgelRadiator ) 
+    hNumAgelRadiator->fill(aNumRadagel);
+  if(hNumc4f10Radiator)
+    hNumc4f10Radiator->fill(aNumRadc4f10);
+  if(hNumcf4Radiator)
+    hNumcf4Radiator->fill(aNumRadcf4);
+  if(hNumfiltergenericRadiator)
+    hNumfiltergenericRadiator->fill(aNumRadr1FilterGeneric);
+  if(hNumfilterd263Radiator)
+    hNumfilterd263Radiator->fill(aNumRadr1Filterd263);
+  if(hNumRich1GasqwRadiator)
+    hNumRich1GasqwRadiator->fill(aNumRadr1gasqw);
+  if(hNumRich2GasqwRadiator)
+    hNumRich2GasqwRadiator->fill(aNumRadr2gasqw);
+  if(hNumRich1HpdqwRadiator)
+    hNumRich1HpdqwRadiator->fill(aNumRadr1hpdqw);
+  if(hNumRich2HpdqwRadiator)
+    hNumRich2HpdqwRadiator->fill(aNumRadr2hpdqw);
 
   //=============================================================================
 }
