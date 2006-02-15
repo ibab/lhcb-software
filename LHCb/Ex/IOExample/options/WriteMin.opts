@@ -5,12 +5,6 @@ ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax   = 100;
 EventSelector.PrintFreq = 1;
 
-// Job options to set up the POOL persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
-// DLLs that contain the necessary dictionaries
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
-
 // Updates the local POOL catalog with the created file
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
@@ -18,6 +12,6 @@ PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
 // Select an input file type
-#include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST
-//#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI
+//#include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST
+#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI
 //#include "$IOEXAMPLEROOT/options/PoolSim.opts"   // Copy a SIM

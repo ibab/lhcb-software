@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.13 2005-10-21 16:27:25 cattanem Exp $
+// $Id: ReadMin.opts,v 1.14 2006-02-15 14:50:04 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -11,21 +11,15 @@ StoreExplorerAlg.PrintFreq = 1.;
 StoreExplorerAlg.ExploreRelations = 1;
 
 // DumpMCEvent algorithm dumps MC part of main event
-ApplicationMgr.DLLs       += { "MCTools" };
+ApplicationMgr.DLLs       += { "SimComponents" };
 ApplicationMgr.TopAlg     += { "DumpMCEventAlg" };
 DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
 
 ApplicationMgr.EvtMax      = 5;
 
-// Job options to set up the POOL persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
+// Job options to set up the POOL persistency and
 // DLLs that contain the necessary dictionaries
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
-
-// Next file contains relations factories. But in Gaudi v17r1 is needed for
-// browsing *any* dataset. To be understood....
-#include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
+#include "$STDOPTS/DstDicts.opts"
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
@@ -34,17 +28,15 @@ PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 // Configure the DataOnDemand Service to get the event header from RawBuffer
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 EventDataSvc.EnableFaultHandler  = true ;
-ApplicationMgr.DLLs += { "DAQEvent" };
-DataOnDemandSvc.Algorithms += { "DATA='/Event/DAQ/RawEvent' TYPE='CreateRawEvent'",
-                                "DATA='/Event/Header'       TYPE='EventHeaderFromRaw'" };
+
 // Unpack the packed containers on demand
-#include "$PACKEDEVENTROOT/options/UnpackDst.opts"
+//#include "$PACKEDEVENTROOT/options/UnpackDst.opts"
 
 // Input data file can be produced by first running IOMin.exe with WriteMin.opts
 
 // Brunel file
-EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+//EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
 // Boole file
-//EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'" };
 // Gauss file
 //EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};

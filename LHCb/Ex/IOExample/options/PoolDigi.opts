@@ -1,10 +1,10 @@
 // Options to read POOL .digi file and make a copy
 
-// Load associators DLLs as they contain the relations factories
-#include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
+// Set up POOL persisteny and load DLLs that contain the necessary dictionaries
+#include "$STDOPTS/DigiDicts.opts"
 
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r5/0412-11144100.500ev.digi' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r3, Boole v9r5
+   "DATAFILE='PFN:file:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r0/0601-30000000.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // 100 events minimum bias with Gauss v24r1, Boole v11r0
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
