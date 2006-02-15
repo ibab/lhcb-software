@@ -222,7 +222,7 @@ void DeSTSector::cacheTrajectory() {
   Gaudi::XYZPoint p4(m_uMaxLocal + 0.5*m_pitch, m_vMaxLocal, 0.);
   Gaudi::XYZPoint g3 = toGlobal(p3);
   Gaudi::XYZPoint g4 = toGlobal(p4);
-  m_lowerTraj = new LineTraj(g3,g4);
+  m_upperTraj = new LineTraj(g3,g4);
    
 }
 
