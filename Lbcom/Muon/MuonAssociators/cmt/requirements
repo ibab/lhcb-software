@@ -7,7 +7,7 @@ branches          src cmt doc
 include_path none
 
 # =============== used packages ===============================================
-use MuonEvent     v*    Event 
+use DigiEvent     v*    Event 
 use MCEvent       v*    Event
 use LinkerEvent   v*    Event
 use EventBase     v*    Event

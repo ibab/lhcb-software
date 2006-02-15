@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.19 2006-02-13 09:26:57 cattanem Exp $
+! $Id: release.notes,v 1.20 2006-02-15 11:24:38 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
-!==================== MuonAssociators v2r0 2006-02-13 ======================
+!==================== MuonAssociators v2r0 2006-02-15 ======================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-13 - Marco Cattaneo
  - Use get<> instead of SmartDataPtr
 
