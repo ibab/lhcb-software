@@ -57,18 +57,6 @@ private:
   /// invert the 4x4 matrix
   StatusCode invertMatrix( Gaudi::SymMatrix4x4& invC ) const;
 
-  /// translate the 5x5 matrix to G3 (=cm, GeV) units.
-  StatusCode cToG3( Gaudi::TrackMatrix& C ) const;
-
-  /// translate the 4x4 matrix to G3 (=cm, GeV) units.
-  StatusCode cToG3( Gaudi::SymMatrix4x4& C ) const;
-  
-  /// translate the 5x5 inverse matrix back to G4 units.
-  StatusCode cToG4( Gaudi::TrackMatrix& invC ) const;
-
-  /// translate the 4x4 inverse matrix back to G4 units.
-  StatusCode cToG4( Gaudi::SymMatrix4x4& invC ) const;
-
   // job options
   // -----------
   /// Re-scale the track covariance matrices with this vector

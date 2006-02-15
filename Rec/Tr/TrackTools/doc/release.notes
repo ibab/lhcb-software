@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-15 - Eduardo Rodrigues
+ - using TrackUnitsConverters.h in TrackEvent to convert units for
+   safer matrix invertions
+
 !======================== TrackTools v2r0 2006-02-15 =========================
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent

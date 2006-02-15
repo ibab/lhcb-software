@@ -11,6 +11,7 @@
 
 // from TrackEvent
 #include "Event/SHacks.h"
+#include "Event/TrackUnitsConverters.h"
 
 // local
 #include "TrackChi2Calculator.h"
@@ -41,7 +42,7 @@ TrackChi2Calculator::TrackChi2Calculator( const std::string& type,
   declareProperty( "ScaleVector",   m_scaleVector           );
   declareProperty( "MatchInMagnet", m_matchInMagnet = false );
   declareProperty( "AddMomentum",   m_addMomentum   = false );
-}
+};
 
 //=============================================================================
 // Destructor
@@ -57,7 +58,7 @@ StatusCode TrackChi2Calculator::initialize() {
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 //
@@ -96,7 +97,7 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
     vec2[2] = 0.0;
   }
 
-  // Re-scale the chi2-contributions in case of error under/over-estimation
+   // Re-scale the chi2-contributions in case of error under/over-estimation
   unsigned int scaleVectorSize = m_scaleVector.size();
   if ( scaleVectorSize > 0 ) {
     for ( unsigned int i = 0; i < 5 && i <= scaleVectorSize ; ++i ) {
@@ -109,7 +110,7 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
   chi2 = SHacks::Similarity<5,TrackMatrix>( vec1-vec2, trackCinv );
 
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 //
@@ -146,8 +147,7 @@ StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
                                              trackCov12 );
 
   return StatusCode::SUCCESS;
-
-}
+};
 
 //=============================================================================
 //
@@ -176,21 +176,15 @@ StatusCode TrackChi2Calculator::invertMatrix( TrackMatrix& invC ) const
   }
   
   // G3 units 
-  cToG3( invC );
+  TrackUnitsConverters::convertToG3( invC );
   
   bool OK = invC.Invert();
   
   //G4 units
-  cToG4( invC );
-  
-  if ( !OK ) {
-    return StatusCode::FAILURE;
-  }
-  else {
-    return StatusCode::SUCCESS;
-  }
-  
-}
+  TrackUnitsConverters::convertToG4( invC );
+
+  return ( OK ) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+};
 
 //=============================================================================
 //
@@ -219,100 +213,14 @@ StatusCode TrackChi2Calculator::invertMatrix( SymMatrix4x4& invC ) const
   }
   
   // G3 units 
-  cToG3( invC );
+  TrackUnitsConverters::convertToG3( invC );
   
   bool OK = invC.Invert();  
 
   //G4 units
-  cToG4( invC );
+  TrackUnitsConverters::convertToG4( invC );
   
-  if ( !OK ) {
-    return StatusCode::FAILURE;
-  }
-  else {
-    return StatusCode::SUCCESS;
-  }
-  
-}
-
-//=============================================================================
-//
-//=============================================================================
-StatusCode TrackChi2Calculator::cToG3( TrackMatrix& C ) const
-{
-  C(0,0) /= cm2;
-  C(1,0) /= cm2; 
-  C(0,2) /= cm;
-  C(0,3) /= cm;
- 
-  C(1,1) /= cm2; 
-  C(1,2) /= cm;
-  C(1,3) /= cm;
-
-  C(0,4) /= cm*GeV;
-  C(1,4) /= cm*GeV;
-  C(2,4) /= GeV;
-  C(3,4) /= GeV;
-  C(4,4) /= GeV*GeV;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//
-//=============================================================================
-StatusCode TrackChi2Calculator::cToG3( SymMatrix4x4& C ) const
-{
-  C(0,0) /= cm2;
-  C(1,0) /= cm2; 
-  C(0,2) /= cm;
-  C(0,3) /= cm;
- 
-  C(1,1) /= cm2; 
-  C(1,2) /= cm;
-  C(1,3) /= cm;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//
-//=============================================================================
-StatusCode TrackChi2Calculator::cToG4( TrackMatrix& invC ) const
-{
-  invC(0,0) /= cm2;
-  invC(0,1) /= cm2; 
-  invC(0,2) /= cm;
-  invC(0,3) /= cm;
-
-  invC(1,1) /= cm2; 
-  invC(1,2) /= cm;
-  invC(1,3) /= cm;
-
-  invC(0,4) /= cm*GeV;
-  invC(1,4) /= cm*GeV;
-  invC(2,4) /= GeV;
-  invC(3,4) /= GeV;
-  invC(4,4) /= GeV*GeV;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//
-//=============================================================================
-StatusCode TrackChi2Calculator::cToG4( SymMatrix4x4& invC ) const
-{
-  invC(0,0) /= cm2;
-  invC(0,1) /= cm2; 
-  invC(0,2) /= cm;
-  invC(0,3) /= cm;
-
-  invC(1,1) /= cm2; 
-  invC(1,2) /= cm;
-  invC(1,3) /= cm;
-
-  return StatusCode::SUCCESS;
-}
+  return ( OK ) ? StatusCode::SUCCESS : StatusCode::FAILURE;  
+};
 
 //=============================================================================
