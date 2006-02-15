@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.6 2006-02-15 15:48:21 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.7 2006-02-15 15:57:25 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -20,7 +20,7 @@
 // 2003-04-11 : Olivier Callot
 // 2004-04-13 : modified and moved to Velo area Chris Parkes
 // 2004-11-03 : modified to GaudiAlg dependance
-// 2006-02-14 : David Jones, Kuer Rinnert: started complete rewrite
+// 2006-02-14 : David Jones, Kurt Rinnert: started complete rewrite
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
