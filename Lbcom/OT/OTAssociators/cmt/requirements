@@ -10,7 +10,7 @@ include_path none
 use GaudiAlg    v*
 use LinkerEvent v*      Event
 use MCEvent     v*      Event
-use OTEvent     v*      Event
+use DigiEvent   v*      Event
 
 # =============== own options =================================================
 set OTASSOCIATORSOPTS  ${OTASSOCIATORSROOT}/options

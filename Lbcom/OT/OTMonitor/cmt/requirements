@@ -7,7 +7,7 @@ include_path none
 
 use LinkerEvent v*      Event
 use MCEvent     v*      Event
-use OTEvent     v*      Event
+use DigiEvent   v*      Event
 use OTDet       v*      Det
 use GaudiAlg    v*
 

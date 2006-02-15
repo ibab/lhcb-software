@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.38 2006-02-10 15:58:05 cattanem Exp $
+! $Id: release.notes,v 1.39 2006-02-15 11:03:14 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
 
-!===================== OTAssociators v4r0 2006-02-09 =====================
+!===================== OTAssociators v4r0 2006-02-15 =====================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-10 - Marco Cattaneo
  - Use consistent convention for output locations of all linkers:
    ('/Event/Link/'+) xxxLocation             for links from xxx to MCParticle

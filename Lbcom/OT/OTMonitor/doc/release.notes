@@ -1,7 +1,10 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
-!==================== OTMonitor v2r0 2006-02-08 =====================
+!==================== OTMonitor v2r0 2006-02-15 =====================
+! 2006-02-15 - Marco Cattaneo
+ - in requirements, migrate to DigiEvent
+
 ! 2006-02-08 - Marco Cattaneo
  - Fix path of Linker table
 
