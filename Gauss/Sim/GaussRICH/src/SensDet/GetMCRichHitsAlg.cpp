@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.6 2006-02-15 11:37:44 seaso Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.7 2006-02-15 13:42:43 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -134,7 +134,6 @@ StatusCode GetMCRichHitsAlg::execute()
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
-
         // add to container
         hits->push_back( mchit );
         if ( hits->size() != globalKey+1 )
@@ -182,7 +181,7 @@ StatusCode GetMCRichHitsAlg::execute()
             // Signal CF4 CK hit
             rad = Rich::CF4;
           }
-          else if ( Rich1AgelTile0CkvRadiatorNum <= g4hit->GetRadiatorNumber() && 
+          else if ( Rich1AgelTile0CkvRadiatorNum <= g4hit->GetRadiatorNumber() &&
                     Rich1AgelTile15CkvRadiatorNum >= g4hit->GetRadiatorNumber() )
           {
             // Signal aerogel hit
@@ -219,7 +218,7 @@ StatusCode GetMCRichHitsAlg::execute()
             mchit->setBackgroundHit( true );
           }
           else if ( RichFilterGenericCkvRadiatorNum == g4hit->GetRadiatorNumber() ||
-                    RichFilterD263CkvRadiatorNum  == g4hit->GetRadiatorNumber() )
+                    RichFilterD263CkvRadiatorNum    == g4hit->GetRadiatorNumber() )
           {
             // Aerogel filter CK hit
             mchit->setAeroFilterCK( true );
@@ -247,7 +246,12 @@ StatusCode GetMCRichHitsAlg::execute()
         }
         else if ( g4hit->GetChTrackID() > 0 )
         {
-          Warning( "Radiator ID < 0 -> Radiator history unknown and ch track id > 0 ", 
+          Warning( "Radiator ID < 0 and track ID > 0 -> Radiator history unknown",
+                   StatusCode::SUCCESS );
+        }
+        else
+        {
+          Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
                    StatusCode::SUCCESS );
         }
 
@@ -314,26 +318,6 @@ StatusCode GetMCRichHitsAlg::execute()
           if ( !mcPart                  ) ++m_nomcpHits[mchit->radiator()];
         }
 
-        // finally increment key for the container
-        ++globalKey;
-
-        // debug printout
-        /*
-          if ( mchit->chargedTrack() || mchit->scatteredPhoton() ||
-          !mchit->richInfoValid() || !mchit->radiatorInfoValid() ) {
-          debug() << " debug history of a richG4Hit " << " :"
-          << " RichDetNum=" << g4hit->GetCurRichDetNum()
-          << " RadiatorNum=" << g4hit->GetRadiatorNumber()
-          << " TrackID=" << g4hit->GetTrackID()
-          << " ChTrackID=" << g4hit->GetChTrackID()
-          << " OptPhotID=" << g4hit->GetOptPhotID()
-          << " PETrackID=" << g4hit->GetPETrackID()
-          << " ChTrackPDG=" << g4hit->GetChTrackPDG()
-          << " PETrackPDG=" << g4hit->GetPETrackPDG()
-          << " OptPhotRayleighFlag=" << g4hit->OptPhotRayleighFlag()
-          << endmsg;
-          }
-        */
         if ( msgLevel(MSG::DEBUG) )
         {
           debug() << "Created MCRichHit " << entry << " energy " << g4hit->GetEdep()
@@ -341,6 +325,9 @@ StatusCode GetMCRichHitsAlg::execute()
                   << " sensDetID " << detID
                   << " MCParticle " << mcPart << endreq;
         }
+
+        // finally increment key for the container
+        ++globalKey;
 
       } // end loop on hits in the collection
 
