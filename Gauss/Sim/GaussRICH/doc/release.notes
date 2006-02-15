@@ -4,7 +4,12 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2006-02-14 - Sajan Easo
+  -Histograms in RichAnalysis fixed tobe compatible with the xmlv30r0
+  - Minor changes in the MCRichHit convertor
+  - gas quartz window name paths updated for the rich1 and rich2
+  - HpdSiEnergy loss activated for all charged particles. This
+    does nothing except when a particle hits the hpd silicon detector.
 ! 2006-02-13 - Chris Jones
  - Update MCRichHit converter to include
   + Information for new radiator types (requires new MCEvent)

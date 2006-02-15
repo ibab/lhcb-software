@@ -1,7 +1,8 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.5 2006-02-14 14:46:10 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.6 2006-02-15 11:37:44 seaso Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 // namespaces
 using namespace LHCb;
@@ -171,21 +172,22 @@ StatusCode GetMCRichHitsAlg::execute()
         if ( g4hit->GetRadiatorNumber() >= 0 )
         {
           // Decode the radiator number in the G4 hit
-          if      ( 1 == g4hit->GetRadiatorNumber() )
+          if      ( Rich1C4F10CkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // Signal C4F10 CK hit
             rad = Rich::C4F10;
           }
-          else if ( 2 == g4hit->GetRadiatorNumber() )
+          else if ( Rich2CF4CkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // Signal CF4 CK hit
             rad = Rich::CF4;
           }
-          else if ( 9 < g4hit->GetRadiatorNumber() && 26 > g4hit->GetRadiatorNumber() )
+          else if ( Rich1AgelTile0CkvRadiatorNum <= g4hit->GetRadiatorNumber() && 
+                    Rich1AgelTile15CkvRadiatorNum >= g4hit->GetRadiatorNumber() )
           {
             // Signal aerogel hit
             rad = Rich::Aerogel;
-            const int aeroID = g4hit->GetRadiatorNumber() - 10;
+            const int aeroID = g4hit->GetRadiatorNumber() - Rich1AgelTile0CkvRadiatorNum;
             if ( aeroID < 2*2*2*2*2 )
             {
               mchit->setAerogelTileID( aeroID );
@@ -198,37 +200,38 @@ StatusCode GetMCRichHitsAlg::execute()
               Warning ( mess.str(), StatusCode::FAILURE );
             }
           }
-          else if ( 6 == g4hit->GetRadiatorNumber() )
+          else if (Rich1GasQWindowCkvRadiatorNum  == g4hit->GetRadiatorNumber() )
           {
             // background RICH1 Gas Quartz window CK hit
             mchit->setGasQuartzCK( true );
             mchit->setBackgroundHit( true );
           }
-          else if ( 7 == g4hit->GetRadiatorNumber() )
+          else if (Rich2GasQWindowCkvRadiatorNum  == g4hit->GetRadiatorNumber() )
           {
             // background RICH2 Gas Quartz window CK hit
             mchit->setGasQuartzCK( true );
             mchit->setBackgroundHit( true );
           }
-          else if ( 8 == g4hit->GetRadiatorNumber() )
+          else if ( RichHpdQuartzWindowCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // background HPD Quartz window CK hit
             mchit->setHpdQuartzCK( true );
             mchit->setBackgroundHit( true );
           }
-          else if ( 4 == g4hit->GetRadiatorNumber() || 5 == g4hit->GetRadiatorNumber() )
+          else if ( RichFilterGenericCkvRadiatorNum == g4hit->GetRadiatorNumber() ||
+                    RichFilterD263CkvRadiatorNum  == g4hit->GetRadiatorNumber() )
           {
             // Aerogel filter CK hit
             mchit->setAeroFilterCK( true );
             mchit->setBackgroundHit( true );
           }
-          else if ( 30 == g4hit->GetRadiatorNumber() )
+          else if ( Rich1NitrogenCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // RICH1 nitrogen CK hit
             mchit->setNitrogenCK( true );
             mchit->setBackgroundHit( true );
           }
-          else if ( 31 == g4hit->GetRadiatorNumber() )
+          else if ( Rich2NitrogenCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // RICH2 nitrogen CK hit
             mchit->setNitrogenCK( true );
@@ -242,9 +245,9 @@ StatusCode GetMCRichHitsAlg::execute()
             Warning ( mess.str(), StatusCode::SUCCESS );
           }
         }
-        else
+        else if ( g4hit->GetChTrackID() > 0 )
         {
-          Warning( "Radiator ID < 0 -> Radiator history unknown", 
+          Warning( "Radiator ID < 0 -> Radiator history unknown and ch track id > 0 ", 
                    StatusCode::SUCCESS );
         }
 
