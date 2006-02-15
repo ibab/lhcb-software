@@ -9,7 +9,7 @@ include_dirs      $(MUONDAQROOT)
 # ================ used packages ========================================= 
 use MuonKernel  v*    Muon
 use MuonDet     v*    Det
-use MuonEvent	v*    Event	
+use DigiEvent   v*    Event	
 use DAQEvent    v*    Event
 use GaudiAlg    v*
 

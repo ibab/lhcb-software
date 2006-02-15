@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonDAQ v2r0 2006-02-07 ===========================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-07 - Marco Cattaneo
  - Move algorithm include to src directory and cleanup included files
 
