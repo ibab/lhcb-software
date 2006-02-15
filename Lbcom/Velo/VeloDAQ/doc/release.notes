@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-15 - Kurt Rinnert
+ - changed type of buffer_word into u_int32_t
+ - protected reading of InternalVeloClusters from missing bank
+ - added raw event writing
+
 ! 2006-02-15 - Kurt Rinnert, David Jones
  - introduced typedef for buffer_word, ensuring it is a 32 bit integer
  - implemented raw buffer encoding from InternalVeloClusters according to EDMS 637676. 

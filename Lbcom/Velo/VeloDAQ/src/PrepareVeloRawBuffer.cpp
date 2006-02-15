@@ -1,9 +1,11 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.7 2006-02-15 15:57:25 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.8 2006-02-15 18:08:39 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
 
 #include "GaudiKernel/AlgFactory.h"
+
+#include "Event/RawEvent.h"
 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
@@ -20,7 +22,7 @@
 // 2003-04-11 : Olivier Callot
 // 2004-04-13 : modified and moved to Velo area Chris Parkes
 // 2004-11-03 : modified to GaudiAlg dependance
-// 2006-02-14 : David Jones, Kurt Rinnert: started complete rewrite
+// 2006-02-15 : David Jones, Kurt Rinnert: complete rewrite for 1MHz raw buffer
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -32,10 +34,15 @@ const        IAlgFactory& PrepareVeloRawBufferFactory = Factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) 
+                                          ISvcLocator* pSvcLocator) 
+  : 
+  GaudiAlgorithm (name , pSvcLocator),
+  m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
+  m_rawEventLoc(LHCb::RawEventLocation::Default),
+  m_bankVersion(2)
 {
- 
+  declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
+  declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
 }
 
 //=============================================================================
@@ -67,51 +74,54 @@ StatusCode PrepareVeloRawBuffer::execute() {
   
   // Get the input container
   // Get the InternalVeloClusters from their default location 
-  const LHCb::InternalVeloClusters* clusters = get<LHCb::InternalVeloClusters>(LHCb::InternalVeloClusterLocation::Default );
+  const LHCb::InternalVeloClusters* clusters = 0;
+  if(!exist<LHCb::InternalVeloClusters>(m_clusterLoc)){
+    error()<< " ==> There are no VeloClusters in TES! " <<endmsg;
+    return (StatusCode::FAILURE);
+  }else{
+    clusters=get<LHCb::InternalVeloClusters>(m_clusterLoc);
+  }
 
+  m_sortedClusters.clear();
+  m_sortedClusters.resize(clusters->size());
   std::vector<const LHCb::InternalVeloCluster*> sortedClusters(clusters->size());
   std::copy(clusters->begin(),clusters->end(),sortedClusters.begin());
 
   // Then sort the clusters by sensor number and local coordinate
-  std::sort( sortedClusters.begin(), sortedClusters.end(), 
+  std::sort( m_sortedClusters.begin(), m_sortedClusters.end(), 
              PrepareVeloRawBuffer::sortClustersBySensorAndStrip() );
 
   // define the pointer  
-//   RawBuffer* buffer;
-//   // see whether the buffer exits
-//   if( exist<RawBuffer >( RawBufferLocation::Default ) )
-//   {
-//     // the buffer exists get it . 
-//     buffer = get< RawBuffer >(RawBufferLocation::Default );
-//     if(isVerbose) verbose() << "Raw Buffer for output exists" <<endmsg;
-//   }
-//   else
-//   {
-//     // raw buffer doesn't exist. We need to create it 
-//     buffer = new RawBuffer();
-//     eventSvc()->registerObject( RawBufferLocation::Default, buffer );
-
-//     if(isVerbose) verbose() << "Raw Buffer for output doesn't exist...created one" <<endmsg;
-//   }// end else   
+  LHCb::RawEvent* rawEvent;
+  // see whether the raw event exits
+  if(exist<LHCb::RawEvent>(m_rawEventLoc))
+  {
+    rawEvent = get<LHCb::RawEvent>(m_rawEventLoc);
+  }
+  else
+  {
+    // raw rawEvent doesn't exist. We need to create it 
+    rawEvent = new LHCb::RawEvent();
+    eventSvc()->registerObject(m_rawEventLoc, rawEvent);
+  } 
  
  // loop over all clusters and write one bank per sensor
-
   std::vector<const LHCb::InternalVeloCluster*>::const_iterator firstOnSensor, lastOnSensor;
   int currentSensorNumber;
 
-  lastOnSensor = firstOnSensor =  sortedClusters.begin();
-  while (firstOnSensor != sortedClusters.end()) {
+  lastOnSensor = firstOnSensor =  m_sortedClusters.begin();
+  while (firstOnSensor != m_sortedClusters.end()) {
 
     currentSensorNumber = (*firstOnSensor)->sensor();
 
-    while (lastOnSensor != sortedClusters.end() && 
+    while (lastOnSensor != m_sortedClusters.end() && 
            (*lastOnSensor)->sensor() == currentSensorNumber) {
       ++lastOnSensor;
     }
 
     // create new raw buffer in raw data cache, old one is cleared
     makeBank(firstOnSensor, lastOnSensor);
-//     buffer->addBank(currentSensorNumber, RawBuffer::Velo, m_rawData);
+    rawEvent->addBank(currentSensorNumber, LHCb::RawBank::Velo, m_bankVersion, m_rawData);
 
     firstOnSensor = lastOnSensor;
   }
@@ -211,7 +221,6 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     }
     else 
     {
-	 
       // multiple strip cluster
       // calculate weighted average position of cluster 
       const std::vector< std::pair<long,double> >& stripSignals = clu->stripSignals();

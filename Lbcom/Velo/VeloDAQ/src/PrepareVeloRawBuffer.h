@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.4 2006-02-15 15:48:21 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.5 2006-02-15 18:08:39 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -19,6 +19,7 @@
  *  @date   2003-04-11
  *  2004-04-13 : modified and moved to Velo area Chris Parkes
  *  2004-11-04 : modified to use new GaudiAlgorithm by David Hutchcroft
+ *  2006-02-15 : completely rewritten for 1MHz raw buffer, Kurt Rinnert, David Jones
  */
 class PrepareVeloRawBuffer : public GaudiAlgorithm {
 
@@ -45,12 +46,7 @@ public:
       if ( first->sensor() != second->sensor() ) {
         return first->sensor() < second->sensor();
       }
-      int type = first->sensor() % 8;
 
-      //== Reversed Phi sensors: Increasing phi is decreasing strip number
-      if ( 4 == type || 6 == type ) {
-        return first->strip(0) > second->strip(0) ;
-      }
       return first->strip(0) < second->strip(0) ;
     }
   };
@@ -62,10 +58,17 @@ private:
 
 
 private:
-  LHCb::InternalVeloClusters* m_clusters; ///< vector to store clusters
+
+  // configurable locations in the TES
+  std::string m_clusterLoc;
+  std::string m_rawEventLoc;
   
+  // version tag, this strongly tied to the implementatio, hence const
+  const int m_bankVersion;
+
   // long lived containers for performance reasons. Also used to communicate
   // with makeBank() method
+  std::vector<const LHCb::InternalVeloCluster*> m_sortedClusters; 
   std::vector<buffer_word> m_rawData;
   std::vector<buffer_word> m_clusterADCBuffer;
   std::vector<buffer_word> m_clusterPosBuffer;
