@@ -4,6 +4,7 @@
 !======================= STAlgorithms v1r0 2006-02-14 ========================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
+ - Add also dependency on RecEvent, needed by STSummaryCreator...
 
 ! 2006-02-14 M. Needham
  - Bug fixes:
