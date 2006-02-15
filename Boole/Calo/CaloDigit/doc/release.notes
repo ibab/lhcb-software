@@ -4,7 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-!======================== CaloDigit v2r0 2006-01-19 ========================
+!======================== CaloDigit v2r0 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-01-19 - Marco Cattaneo
  - Use definitions from CaloDet for detector locations, instead of raw strings
 

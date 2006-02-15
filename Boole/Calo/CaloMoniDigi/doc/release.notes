@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2006-02-13 14:39:26 odescham Exp $
+! $Id: release.notes,v 1.7 2006-02-15 11:13:05 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,10 @@
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
 
-!======================== CaloMoniDigi v2r0 2006-01-30 ========================
+!======================== CaloMoniDigi v2r0 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-13 : Olivier Deschamps
   - migration to GaudiHistoAlg completed in src/CaloDigitMonitor 
 

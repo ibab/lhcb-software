@@ -20,7 +20,7 @@ include_path     none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use CaloEvent   v*      Event
+use DigiEvent   v*      Event
 use CaloDet     v*      Det
 use L0Event     v*      Event
 use CaloDAQ     v*      Calo
