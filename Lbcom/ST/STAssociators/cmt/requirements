@@ -7,7 +7,7 @@ branches          src cmt doc options
 include_path      none
 
 # =============== used packages ===============================================
-use STEvent     v*     Event 
+use DigiEvent   v*     Event 
 use MCEvent     v*     Event
 use LinkerEvent v*     Event
 use GaudiAlg    v*

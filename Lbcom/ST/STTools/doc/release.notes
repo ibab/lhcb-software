@@ -2,7 +2,10 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
-!=========================== STTools v2r0 2006-02-10 ==========================
+!=========================== STTools v2r0 2006-02-15 ==========================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-09 M.Needham
  - Bug fix in Signal to noise tool
  - Bug fix in position tool

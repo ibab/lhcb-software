@@ -6,7 +6,7 @@ include_path none
 
 # Use here packages needed by link library and public interface
 use STDet        v*  Det
-use STEvent      v*  Event
+use DigiEvent    v*  Event
 use DAQEvent     v*  Event
 use LHCbKernel   v*  Kernel
 use GaudiKernel  v*

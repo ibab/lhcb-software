@@ -2,7 +2,10 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
-!======================= STAssociators v1r0 2006-02-10 ========================
+!======================= STAssociators v1r0 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-10 - Marco Cattaneo
  - Use consistent convention for output locations of all linkers:
    ('/Event/Link/'+) xxxLocation             for links from xxx to MCParticle

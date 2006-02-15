@@ -8,7 +8,7 @@ version           v2r0
 branches          cmt doc src
 include_path      none
 
-use STEvent     v* Event
+use DigiEvent   v* Event
 use STDet       v* Det
 use LHCbKernel  v* Kernel
 use GaudiAlg    v*

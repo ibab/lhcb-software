@@ -2,8 +2,10 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+!============================ STCheckers v1r0 2006-02-15 =======================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
 
-!============================ STCheckers v1r0 2006-02-14 =======================
 ! 2006-02-14 - M.Needham
  - Bug fixes in deposit and mcdigit checking 
 

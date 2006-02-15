@@ -5,7 +5,7 @@ branches cmt doc src options
 include_path none
 
 use MCEvent     v*   Event
-use STEvent     v*   Event
+use DigiEvent   v*   Event
 use STDet       v*   Det
 use LinkerEvent v*   Event
 use Relations   v*   Kernel 

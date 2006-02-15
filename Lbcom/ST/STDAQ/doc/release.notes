@@ -4,7 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-!=============================== STDAQ v2r2 2006-02-10 =======================
+!=============================== STDAQ v2r2 2006-02-15 =======================
+! 2006-02-15 - Marco Cattaneo
+ - In requirements, migrate to DigiEvent
+
 ! 2006-02-09 M. Needham
  - Changes to make a component library
 
