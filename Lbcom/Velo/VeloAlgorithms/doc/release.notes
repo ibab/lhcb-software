@@ -2,7 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
-!===================== VeloAlgorithms v4r0 2006-02-10 =====================
+!===================== VeloAlgorithms v4r0 2006-02-15 =====================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-10 - Marco Cattaneo
  - Move event classes to VeloEvent. This avoids coupling to VeloAlgorithms from
    packages that need these event classes (e.g. VeloAssociators)

@@ -1,7 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-!==================== VeloAssociators v2r0 2006-02-10 ===================
+!==================== VeloAssociators v2r0 2006-02-15 ===================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-10 - Marco Cattaneo
  - Remove obsolete files. They can be added again later if needed
 
