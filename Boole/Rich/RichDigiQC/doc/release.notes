@@ -4,7 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
-!======================== RichDigiQC v3r0 2006-02-06 ========================
+!======================== RichDigiQC v3r0 2006-02-15 ========================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-06 - Chris Jones
  - Update digit monitor to provide more information on background types
 

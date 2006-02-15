@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================= RichMCAssociators v2r0 2006-01-26 ===================
+!======================= RichMCAssociators v2r0 2006-02-15 ===================
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0
 

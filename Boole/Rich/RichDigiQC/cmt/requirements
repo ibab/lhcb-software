@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.21 2006-02-03 10:33:45 cattanem Exp $
+# $Id: requirements,v 1.22 2006-02-15 11:26:20 cattanem Exp $
 #============================================================================
 
 package           RichDigiQC
@@ -19,7 +19,7 @@ set RICHDIGIQCOPTS $(RICHDIGIQCROOT)/options
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use MCEvent           v*    Event
-use RichEvent         v*    Event
+use DigiEvent         v*    Event
 use DAQEvent          v*    Event
 use RichKernel        v*    Rich
 use RichDet           v*    Det

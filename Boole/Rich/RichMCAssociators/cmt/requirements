@@ -15,7 +15,7 @@ include_path      none
 # Used packages
 #============================================================================
 use  RichKernel   v*    Rich
-use  RichEvent    v*    Event
+use  DigiEvent    v*    Event
 use  MCEvent      v*    Event
 use  LinkerEvent  v*    Event
 
