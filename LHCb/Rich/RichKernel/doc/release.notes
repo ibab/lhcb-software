@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.105 2006-02-14 15:18:30 cattanem Exp $
+! $Id: release.notes,v 1.106 2006-02-15 10:56:31 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
-!======================= RichKernel v6r1 2006-02-14 =======================
+!======================= RichKernel v6r1 2006-02-15 =======================
+! 2006-02-15 - Marco Cattaneo
+ - Add RichEvent directory for classes previously in RichEvent
+
 ! 2006-02-14 - Chris Jones
  - Add a fix so derived classes do not need to load Tool registry simply because
    they were in debug mode.
