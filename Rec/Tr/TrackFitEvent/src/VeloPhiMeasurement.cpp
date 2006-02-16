@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.6 2006-02-03 09:16:47 ebos Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.7 2006-02-16 17:04:02 erodrigu Exp $
 // Include files 
 
 // local
@@ -15,8 +15,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
-                                        DeVelo& det,
+VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
+                                        const DeVelo& det,
                                         double r )
 {
   m_mtype = Measurement::VeloPhi;

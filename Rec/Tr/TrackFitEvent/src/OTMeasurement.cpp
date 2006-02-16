@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.7 2006-02-03 09:17:13 ebos Exp $
+// $Id: OTMeasurement.cpp,v 1.8 2006-02-16 17:04:02 erodrigu Exp $
 // Include files
 
 // local
@@ -16,8 +16,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-OTMeasurement::OTMeasurement( LHCb::OTTime& otTime,
-                              DeOTDetector& geom,
+OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
+                              const DeOTDetector& geom,
                               int ambiguity,
                               double tu )
 {

@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.5 2006-02-03 09:16:53 ebos Exp $
+// $Id: VeloRMeasurement.cpp,v 1.6 2006-02-16 17:04:02 erodrigu Exp $
 // Include files
 
 // local
@@ -15,8 +15,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
-                                    DeVelo& det,
+VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
+                                    const DeVelo& det,
                                     double phi )
 {
   m_mtype = Measurement::VeloR;

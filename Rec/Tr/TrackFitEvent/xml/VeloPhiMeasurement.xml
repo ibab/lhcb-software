@@ -19,20 +19,30 @@
 
       <constructor
         desc = 'Constructor from an VeloPhiCluster'>
-        <arg type = 'VeloCluster' name = 'cluster'/>
-        <arg type = 'DeVelo' name = 'det'/>
-        <arg type = 'double' name = 'r = -999.0'/>
+        <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
+        <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'double' name = 'r = -999.0' />
       </constructor>
-
      <attribute
         type = 'double'
         name = 'r'
         desc = 'the r of the Velo Phi measurement'/>
 
       <attribute
-        type = 'LHCb::VeloCluster*'
+        type = 'const LHCb::VeloCluster*'
         name = 'cluster'
-        desc = 'Pointer to the VeloPhiCluster'/>
+        desc = 'Pointer to the VeloPhiCluster'
+	getMeth = 'FALSE' />
+
+      <method
+        type  = 'const LHCb::VeloCluster*'
+        name  = 'cluster'
+        desc  = 'Retrieve const  Pointer to the VeloPhiCluster'
+        const = 'TRUE'>
+        <code>
+  return m_cluster;
+        </code>
+      </method>
 
       <method
         type    = 'double'

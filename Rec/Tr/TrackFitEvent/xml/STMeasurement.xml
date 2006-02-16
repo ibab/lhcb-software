@@ -19,15 +19,26 @@
 
       <constructor
         desc = 'Constructor from an STCluster'>
-        <arg type='LHCb::STCluster' name='stCluster' />
-        <arg type='DeSTDetector' name='det' />
+        <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
+        <arg type='DeSTDetector' name='det' const='TRUE' />
         <arg type='ISTClusterPosition' name='stClusPosTool' />
       </constructor>
 
       <attribute
-        type = 'LHCb::STCluster*'
+        type = 'const LHCb::STCluster*'
         name = 'cluster'
-        desc = 'Pointer to the STCluster'/>
+        desc = 'Pointer to the STCluster'
+        getMeth = 'FALSE' />
+
+      <method
+        type  = 'const LHCb::STCluster*'
+        name  = 'cluster'
+        desc  = 'Retrieve const  Pointer to the STCluster'
+        const = 'TRUE'>
+        <code>
+  return m_cluster;
+        </code>
+      </method>
 
       <method
         type    = 'LHCb::STMeasurement*'

@@ -22,8 +22,8 @@
 
       <constructor
         desc = 'Constructor from a VeloRCluster'>
-        <arg type = 'LHCb::VeloCluster' name = 'cluster'/>
-        <arg type = 'DeVelo' name = 'det'/>
+        <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
+        <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'double' name = 'phi = 999.0'/>
       </constructor>
 
@@ -33,9 +33,20 @@
         desc = 'the phi of the Velo R measurement'/>
 
       <attribute
-        type = 'LHCb::VeloCluster*'
+        type = 'const LHCb::VeloCluster*'
         name = 'cluster'
-        desc = 'Pointer to the VeloRCluster'/>
+        desc = 'Pointer to the VeloRCluster'
+	getMeth = 'FALSE' />
+
+      <method
+        type  = 'const LHCb::VeloCluster*'
+        name  = 'cluster'
+        desc  = 'Retrieve const  Pointer to the VeloRCluster'
+        const = 'TRUE'>
+        <code>
+  return m_cluster;
+        </code>
+      </method>
 
       <method
         name    = 'update'

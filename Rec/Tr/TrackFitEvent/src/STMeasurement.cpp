@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.2 2006-02-03 09:17:05 ebos Exp $
+// $Id: STMeasurement.cpp,v 1.3 2006-02-16 17:04:02 erodrigu Exp $
 // Include files 
 
 // from STDet
@@ -18,8 +18,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-STMeasurement::STMeasurement( STCluster& stCluster,
-                              DeSTDetector& geom,
+STMeasurement::STMeasurement( const STCluster& stCluster,
+                              const DeSTDetector& geom,
                               ISTClusterPosition& stClusPosTool) {
 
   m_cluster = &stCluster; //pointer to STCluster
