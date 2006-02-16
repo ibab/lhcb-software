@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.4 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.h,v 1.5 2006-02-16 16:01:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -15,6 +15,9 @@
 
 #ifndef RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H
 #define RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H 1
+
+// STD
+#include <sstream>
 
 // base class
 #include "RichKernel/RichAlgBase.h"

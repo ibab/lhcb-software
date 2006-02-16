@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.6 2006-02-16 16:01:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -56,6 +56,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   const IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
+  debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
 
@@ -113,10 +114,22 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     }
 
     RichPixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key() );
-    if ( !props ) continue;
+    if ( !props   )
+    {
+      std::ostringstream mess;
+      mess << "ID " << (*iSumDep)->key() << " has no RichPixelProperties";
+      Warning( mess.str(), StatusCode::FAILURE, 0 );
+      continue;
+    }
 
     const RichPixelReadout * readOut = props->Readout();
-    if ( !readOut )  continue;
+    if ( !readOut ) 
+    {
+      std::ostringstream mess;
+      mess << "ID " << (*iSumDep)->key() << " has no RichPixelReadout";
+      Warning( mess.str(), StatusCode::FAILURE, 0 );
+      continue;
+    }
 
     const RichShape* shape = readOut->Shape();
     if ( shape )
@@ -175,6 +188,10 @@ StatusCode RichDetailedFrontEndResponse::Analog()
       } // MCRichDeposit loop
 
     } // if shape
+    else
+    {
+      Warning( "Summed deposit has no associated RichShape" );
+    }
 
   }
 

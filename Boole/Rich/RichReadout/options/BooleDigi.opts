@@ -7,6 +7,7 @@ RichPDSignal.UseLHCBackground = false; // requires "Gauss" LHC events
 
 // charge sharing
 DigiRICHSeq.Members += { "RichSimpleChargeSharing/RichChargeShare" };
+// "tuned" to give 2.5 % on the final digits
 RichChargeShare.ChargeShareFraction = 0.025;
 
 // deposit summation

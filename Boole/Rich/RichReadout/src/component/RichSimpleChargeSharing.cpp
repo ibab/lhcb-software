@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.5 2006-02-06 12:26:24 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.6 2006-02-16 16:01:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -101,7 +101,7 @@ StatusCode RichSimpleChargeSharing::execute()
         }
 
       } // while loop
-      if ( nTries >= 100 ) { Warning( "Charge share loop maxed out !" ); continue; }
+      if ( nTries >= 100 ) { Warning( "Charge sharing loop maxed out !" ); continue; }
 
       // Create new deposit with same info
       MCRichDeposit * newDep = new MCRichDeposit( *iDep );
@@ -113,7 +113,7 @@ StatusCode RichSimpleChargeSharing::execute()
       newid.setPixelCol(col);
       newDep->setSmartID( newid );
 
-      // set charge sharing history
+      // Copy history from original deposit and add charge sharing + background flags
       MCRichDigitHistoryCode hist = newDep->history();
       hist.setChargeShareHit(true);
       newDep->setHistory(hist);

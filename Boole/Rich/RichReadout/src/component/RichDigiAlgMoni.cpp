@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.3 2005-12-16 15:13:33 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.4 2006-02-16 16:01:19 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -174,19 +174,19 @@ StatusCode RichDigiAlgMoni::bookHistograms()
 
     title = rich[iRich]+" digit-hit diff X";
     id = (1+iRich)*richOffset+31;
-    m_digiErrX[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-5,5);
+    m_digiErrX[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-10,10);
 
     title = rich[iRich]+" digit-hit diff Y";
     id = (1+iRich)*richOffset+32;
-    m_digiErrY[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-5,5);
+    m_digiErrY[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-10,10);
 
     title = rich[iRich]+" digit-hit diff Z";
     id = (1+iRich)*richOffset+33;
-    m_digiErrZ[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-5,5);
+    m_digiErrZ[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-10,10);
 
-    title = rich[iRich]+" digit-hit seperation";
+    title = rich[iRich]+" digit-hit separation";
     id = (1+iRich)*richOffset+34;
-    m_digiErrR[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,5);
+    m_digiErrR[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,10);
 
     title = rich[iRich] + " signal MCRichHit TOF";
     id = richOffset*(iRich+1) + 41;
@@ -341,10 +341,13 @@ StatusCode RichDigiAlgMoni::execute()
     {
 
       // Compare digit/hit
-      m_digiErrX[id.rich()]->fill( point.x() - (*iHit)->entry().x() );
-      m_digiErrY[id.rich()]->fill( point.y() - (*iHit)->entry().y() );
-      m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
-      m_digiErrR[id.rich()]->fill( sqrt((point-(*iHit)->entry()).mag2()) );
+      if ( !m_mcTool->isBackground( *iHit ) )
+      {
+        m_digiErrX[id.rich()]->fill( point.x() - (*iHit)->entry().x() );
+        m_digiErrY[id.rich()]->fill( point.y() - (*iHit)->entry().y() );
+        m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
+        m_digiErrR[id.rich()]->fill( sqrt((point-(*iHit)->entry()).Mag2()) );
+      }
 
       // Count beta=1 PEs
       countNPE( ckPhotMapDig, *iHit );

@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.8 2006-02-06 12:26:24 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.9 2006-02-16 16:01:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -100,6 +100,12 @@ private: // data
 
   /// random number generator
   mutable Rndm::Numbers m_rndm;
+
+  // debug counters
+  /// Number of MCRichHits which are outside pixel acceptance
+  mutable std::vector<unsigned int> m_smartIDnotFound;
+  /// Number of MCRichHits which given invalid RichSmartIDs
+  mutable std::vector<unsigned int> m_smartIDInvalid;  
 
 };
 
