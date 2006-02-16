@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.32 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.33 2006-02-16 15:31:26 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -413,8 +413,20 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
   const double inSiliconY =
     m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
 
-  const double inWindowX = -inSiliconX / m_deMagFactor[0];
-  const double inWindowY = -inSiliconY / m_deMagFactor[0];
+  // find the radius and use 2nd order term to convert to radius in window
+  const double inSiliconR = sqrt(inSiliconX*inSiliconX + inSiliconY*inSiliconY);
+  double theta = acos( inSiliconX/inSiliconR );
+  // keep the correct angle
+  if ( inSiliconY < 0.0 ) theta = pi*rad +( pi*rad - theta);
+
+  const double rInWindow = (-m_deMagFactor[0] +
+                            sqrt(m_deMagFactor[0]*m_deMagFactor[0] +
+                                 4*m_deMagFactor[1]*inSiliconR)) / (2*m_deMagFactor[1]);
+
+  // add 180 degrees for the cross focussing
+  const double newTheta = theta + pi*rad;
+  const double inWindowX = rInWindow*cos(newTheta);
+  const double inWindowY = rInWindow*sin(newTheta);
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
 
   return (m_trans1[HPDNumber] * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ));
@@ -539,13 +551,14 @@ DeRichHPDPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
 {
 
   // Square of active radius
-  const double activeRadiusSq = gsl_pow_2(m_activeRadius*m_deMagFactor[0]);
+  const double activeRadiusSq = gsl_pow_2
+    (m_activeRadius*(m_deMagFactor[0]+m_deMagFactor[1]*m_activeRadius) );
 
   for ( unsigned int PD = 0; PD < m_HPDMax; ++PD )
   {
     // Get HPD row and column numbers outside loops.
     const unsigned int pdCol = PD/m_HPDNumInCol;
-    const unsigned int pdPosInCol = PD%m_HPDColumns;
+    const unsigned int pdPosInCol = PD%m_HPDNumInCol;
 
     // Loop over pixels
     for ( unsigned int pixRow = 0; pixRow < m_pixelRows; ++pixRow )
@@ -558,6 +571,7 @@ DeRichHPDPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
         const double xcorn = ( xpix < 0.0 ? xpix+0.5*m_pixelSize : xpix-0.5*m_pixelSize );
         const double ycorn = ( ypix < 0.0 ? ypix+0.5*m_pixelSize : ypix-0.5*m_pixelSize );
         const double radcornSq = xcorn*xcorn + ycorn*ycorn;
+
         if ( radcornSq <= activeRadiusSq )
         {
           // Add a smart ID for this pixel to the vector

@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Antonis Papanestis
+ - Added 2nd order demagnification in the smartID->detectionPoint.
+ - Fixed minor bug in readoutChannelList. Both in DeRichHPDPanel.
+
 !========================= RichDet v9r1 2006-02-14 =========================
 ! 2006-02-14 - Marco Cattaneo
  - Add explicit Boost dependency to requirements
