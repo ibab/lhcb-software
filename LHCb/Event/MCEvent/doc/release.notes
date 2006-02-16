@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.26 2006-02-13 17:29:42 cattanem Exp $
+! $Id: release.notes,v 1.27 2006-02-16 15:46:30 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
+! 2006-02-16 - Chris Jones
+ - General clean up of history information in the RICH MC classes
+  + Add new flags for new background sources in Gauss
+  + Add some simple summary methods
+ - Remove definition of Linker locations from MCRichOpticalPhoton and
+   MCRichTrack
+
 !========================== MCEvent v1r1 2006-02-13 ==========================
 ! 2006-02-13 - Chris Jones
- - Add more history flags to RICH MC objects
+ - Add more history flags to RICH MCRichHit objects
 
 ! 2006-02-06 - Chris Jones
  - Remove non const accessors added for MCVertex and MCParticle.

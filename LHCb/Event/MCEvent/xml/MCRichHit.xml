@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.4 2006-02-13 16:31:42 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -28,6 +28,7 @@
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichRadiatorType"/>
         <import name="Event/MCParticle.h"/>
+        <import name="Event/MCRichDigitHistoryCode.h"/>
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import ignore="TRUE" name="RadiatorType"/>
@@ -52,7 +53,7 @@
                    type = 'int'
                    desc = 'Sensitive detector ID number. Uniquely identifies the HPD the hit is within' />
 
-        <attribute 
+        <attribute
                 desc = "Bit packed field containing RICH specific information" 
                 name = "historyCode" 
                 init = "0" 
@@ -66,10 +67,48 @@
                 <bitfield desc="Hit from a charged track hitting the HPD entrance window"                      length="1"  name="chargedTrack"      />
                 <bitfield desc="CK radiation from charged tracks traversing the Gas quartz windows"            length="1"  name="gasQuartzCK"       />
                 <bitfield desc="CK radiation from charged tracks traversing the HPD quartz windows"            length="1"  name="hpdQuartzCK"       />
-                <bitfield desc="CK radiation from charged tracks traversing the nitrogen volume"               length="1"  name="nitrogenCK"        />
+                <bitfield desc="CK radiation from charged tracks traversing the nitrogen gas"                  length="1"  name="nitrogenCK"        />
                 <bitfield desc="CK radiation from the aerogel filter"                                          length="1"  name="aeroFilterCK"      />
-                <bitfield desc="Summary flag. If set photon is a background (non-Cherenkov) hit"               length="1"  name="backgroundHit"     />
         </attribute>
+
+        <method 
+                name  = "isBackground"
+                const = "TRUE" 
+                desc  = "Returns true if this hit is a background hit. I.e. not from true unscattered Cherenkov radiation from the main radiators" 
+                type  = "bool" >
+                <code>
+                    return ( !radiatorInfoValid() &amp;&amp; ( scatteredPhoton() ||
+                                                       chargedTrack()    ||
+                                                       gasQuartzCK()     ||
+                                                       hpdQuartzCK()     ||
+                                                       nitrogenCK()      ||
+                                                       aeroFilterCK()  ) );
+                </code>
+        </method>
+
+        <method 
+                name  = "mcRichDigitHistoryCode"
+                const = "TRUE" 
+                desc  = "Returns an MCRichDigitHistoryCode object for this hit" 
+                type  = "LHCb::MCRichDigitHistoryCode" >
+                <code>
+        LHCb::MCRichDigitHistoryCode hist;
+        // store history
+        if ( !isBackground() )
+        {
+          if      ( Rich::Aerogel == radiator() ) { hist.setAerogelHit(true); }
+          else if ( Rich::C4F10   == radiator() ) { hist.setC4f10Hit(true);   }
+          else if ( Rich::CF4     == radiator() ) { hist.setCf4Hit(true);     }
+        }
+        if ( scatteredPhoton() ) { hist.setScatteredHit(true);  }
+        if ( chargedTrack()    ) { hist.setChargedTrack(true);  }
+        if ( gasQuartzCK()     ) { hist.setGasQuartzCK(true);   }
+        if ( hpdQuartzCK()     ) { hist.setHpdQuartzCK(true);   }
+        if ( nitrogenCK()      ) { hist.setNitrogenCK(true);    }
+        if ( aeroFilterCK()    ) { hist.setAeroFilterCK(true);  }
+        return hist;
+                </code>
+        </method>
         
 </class>
 

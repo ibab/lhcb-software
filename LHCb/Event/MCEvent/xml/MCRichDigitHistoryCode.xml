@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.4 2006-02-06 12:09:55 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -39,19 +39,66 @@
                 desc = "Bit-packed history information" 
                 init = "0" 
                 type = "bitfield">
+
                 <bitfield desc="Digit is associated to a signal event MCRichHit"    length="1"  name="signalEvent" />
                 <bitfield desc="Digit is associated to a Prev event MCRichHit"      length="1"  name="prevEvent" />
                 <bitfield desc="Digit is associated to a PrevPrev event MCRichHit"  length="1"  name="prevPrevEvent" />
                 <bitfield desc="Digit is associated to a Next event MCRichHit"      length="1"  name="nextEvent" />
                 <bitfield desc="Digit is associated to a NextNext event MCRichHit"  length="1"  name="nextNextEvent" />
-                <bitfield desc="One of the hits contributing to this pixel came from aerogel Cherenkov radiation" length="1"  name="aerogelHit" />
-                <bitfield desc="One of the hits contributing to this pixel came from C4F10 Cherenkov radiation"   length="1"  name="c4f10Hit" />
-                <bitfield desc="One of the hits contributing to this pixel came from CF4 Cherenkov radiation"     length="1"  name="cf4Hit" />
-                <bitfield desc="One of the hits contributing to this pixel came from a background hit"            length="1"  name="backgroundHit" />
-                <bitfield desc="One of the hits contributing to this pixel came from a charged track hitting the HPD window" length="1"  name="chargedTrack" />
-                <bitfield desc="One of the hits contributing to this pixel undergo rayleigh scattering"           length="1"  name="scatteredHit" />
-                <bitfield desc="This digit was produced due to charge sharing"                                    length="1"  name="chargeShareHit" />
+
+                <bitfield desc="One of the contributing hits came from aerogel Cherenkov radiation" length="1"  name="aerogelHit" />
+                <bitfield desc="One of the contributing hits came from C4F10 Cherenkov radiation"   length="1"  name="c4f10Hit" />
+                <bitfield desc="One of the contributing hits came from CF4 Cherenkov radiation"     length="1"  name="cf4Hit" />
+
+                <bitfield desc="One of the contributing hits underwent rayleigh scattering"                                                length="1" name="scatteredHit" />
+                <bitfield desc="One of the contributing hits came from a charged track hitting the HPD window"                             length="1" name="chargedTrack" />
+                <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the Gas quartz windows" length="1" name="gasQuartzCK"  />
+                <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the HPD quartz windows" length="1" name="hpdQuartzCK"  />
+                <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the nitrogen gas"       length="1" name="nitrogenCK"   />
+                <bitfield desc="One of the contributing hits came CK radiation from the aerogel filter"                                    length="1" name="aeroFilterCK" />
+                <bitfield desc="This digit was produced due to charge sharing in the HPD silicon pixel chip"                               length="1" name="chargeShareHit" />
         </attribute>
+
+        <method 
+                name  = "isBackground"
+                const = "TRUE" 
+                desc  = "Returns true if this digit is only due to background. I.e. none of the contributing hits were signal hits" 
+                type  = "bool" >
+                <code>
+    return ( chargeShareHit() || 
+           ( !aerogelHit() &amp;&amp;
+             !c4f10Hit() &amp;&amp;
+             !cf4Hit() &amp;&amp;
+             ( scatteredHit() ||
+               chargedTrack() ||
+               gasQuartzCK() ||
+               hpdQuartzCK() ||
+               nitrogenCK() ||
+               aeroFilterCK() ) ) );
+                </code>
+        </method>
+
+        <method 
+                name  = "hasBackground"
+                const = "TRUE" 
+                desc  = "Returns true if at least one of the hits contributing to this digit came from a background source" 
+                type  = "bool" >
+                <code>
+    return ( chargeShareHit() || scatteredHit() ||
+             chargedTrack() || gasQuartzCK() ||
+             hpdQuartzCK() || nitrogenCK() || aeroFilterCK() );
+                </code>
+        </method>
+
+        <method 
+                name  = "isSignal"
+                const = "TRUE" 
+                desc  = "Returns true if at least one of the hits contributing to this digit came from unscattered Cherenkov radiation from one of the main RICH radiators" 
+                type  = "bool" >
+                <code>
+    return ( ( aerogelHit() || c4f10Hit() || cf4Hit() ) &amp;&amp; !scatteredHit() );
+                </code>
+        </method>
 
 </class>
 

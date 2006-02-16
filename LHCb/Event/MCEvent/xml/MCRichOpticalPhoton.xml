@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.4 2006-02-13 16:31:42 jonrob Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -23,8 +23,6 @@
 
         <base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
-
-        <location name="LinksFromMCRichHits" place="MC/Rich/MCRichHitsToOpPhotons"/>
             
         <import name="Event/MCRichHit"/>   
         <import name="Kernel/Point3DTypes.h"/>
