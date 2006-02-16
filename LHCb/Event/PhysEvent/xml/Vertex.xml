@@ -74,6 +74,14 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         const="TRUE"
        />
        <attribute
+        name="isPrimary"
+        desc="is a primary vertex ?"
+        type="bool"
+	setMeth='FALSE'
+        init="false"
+	access="PROTECTED"
+       /> 
+       <attribute
         name="position"
         desc="Position in LHCb reference system"
         type="Gaudi::XYZPoint"
@@ -122,14 +130,6 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
 	 }
 	 return out;
 	</code>
-       </method>
-       <method
-        name="isPrimary"
-        desc="is a primary vertex ?"
-        argList=""
-        type="bool"
-       > 
-       <code>return false ; </code>
        </method>
        <attribute
         name="extraInfo"

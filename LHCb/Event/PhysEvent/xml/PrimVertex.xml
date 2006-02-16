@@ -20,20 +20,20 @@
        &KeyedObject;
        <import name="Event/Track" soft="TRUE"/>
        <import name="Event/Vertex"/>
-       <relation
+       <constructor
+        desc="Overwritten default constructor"
+       >
+        <code>
+         m_isPrimary = true ;
+         return;
+        </code>
+       </constructor>
+        <relation
         name="tracks"
         desc="Reference to tracks composing the vertex"
         multiplicity="N"
         type="LHCb::Track"
        />
-       <method
-        name="isPrimary"
-        desc="is a primary vertex ?"
-        argList=""
-        type="bool"
-       > 
-       <code>return true ; </code>
-       </method>
      </class>
   </package>
 </gdd>

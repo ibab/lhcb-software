@@ -1,10 +1,31 @@
-! $Id: release.notes,v 1.75 2006-02-16 12:15:46 pkoppenb Exp $
+! $Id: release.notes,v 1.76 2006-02-16 14:53:07 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
 ! 2006-02-16 - P. Koppenburg for Vanya Belyaev
- - Default weight is +1, not -1.
+ - xml/Particle.xml
+   . Default weight is +1, not -1.
+ - xml/Vertex.xml
+ - xml/PrimVertex.xml
+   . Use internal variable isPrimary to know if vertex is primary or not.
+     This way the following code:
+   
+  // Test
+  PrimVertex PV ;
+  PrimVertex* pPV = &PV;
+  Vertex* pV =  &PV;
+  info() << "PrimVertex is primary? " << pPV->isPrimary() << " " << pV->isPrimary() << endmsg 
 
+  Vertex V ;
+  pV =  &V;
+  info() << "    Vertex is primary? " << pV->isPrimary() << endmsg ;
+
+    returns:
+    
+DC06Tests  INFO PrimVertex is primary? 1 1
+DC06Tests  INFO     Vertex is primary? 0
+
+    
 !======================= PhysEvent v9r0 2006-02-15 ==========================
 ! 2006-02-15 - Marco Cattaneo
  - Remove CaloEvent from requirements
