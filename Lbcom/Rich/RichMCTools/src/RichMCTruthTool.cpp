@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.25 2006-02-06 12:14:58 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.26 2006-02-16 15:58:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
@@ -47,6 +47,8 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
   declareProperty( "FollowMCChain", m_followMC = false );
 
 }
+
+RichMCTruthTool::~RichMCTruthTool() { cleanUpLinkers(); }
 
 StatusCode RichMCTruthTool::initialize()
 {
@@ -183,10 +185,7 @@ RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 
 bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
 {
-  return ( digit && ( digit->history().scatteredHit() ||
-                      digit->history().chargedTrack() ||
-                      digit->history().backgroundHit() ||
-                      digit->history().chargeShareHit() ) );
+  return ( !digit ? true : digit->history().isBackground() );
 }
 
 bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
@@ -200,11 +199,7 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
     {
-      const MCRichDigitHistoryCode & code = (*iSum)->history();
-      if ( code.scatteredHit()  ||
-           code.chargedTrack()  ||
-           code.backgroundHit() ||
-           code.chargeShareHit() ) return true;
+      if ( (*iSum)->history().isBackground() ) return true;
     }
     // if get here, not background
     return false;
@@ -223,9 +218,7 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
 
 bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
 {
-  return ( hit && ( hit->scatteredPhoton() ||
-                    hit->chargedTrack()    ||
-                    hit->backgroundHit() ) );
+  return ( !hit ? true : hit->isBackground() );
 }
 
 bool
@@ -264,7 +257,7 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
 }
 
 bool RichMCTruthTool::getMcHistories( const RichSmartID id,
-                                      std::vector<MCRichDigitSummary*> & histories ) const
+                                      std::vector<const MCRichDigitSummary*> & histories ) const
 {
   // clear histories
   histories.clear();
@@ -393,13 +386,11 @@ RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
 {
   if ( !m_mcPhotonLinks )
   {
-    m_mcPhotonLinks =
-      new MCRichHitToPhoton( evtSvc(), msgSvc(),
-                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
+    const std::string loc = MCRichHitLocation::Default+"2MCRichOpticalPhotons";
+    m_mcPhotonLinks = new MCRichHitToPhoton( evtSvc(), msgSvc(), loc );
     if ( m_mcPhotonLinks->notFound() )
     {
-      Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found for '" +
-               MCRichOpticalPhotonLocation::LinksFromMCRichHits + "'" );
+      Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found at '"+loc+"'" );
     }
   }
   return m_mcPhotonLinks;
@@ -409,13 +400,11 @@ RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
 {
   if ( !m_mcTrackLinks )
   {
-    m_mcTrackLinks =
-      new MCPartToRichTracks( evtSvc(), msgSvc(),
-                              MCRichTrackLocation::LinksFromMCParticles );
+    const std::string loc = MCParticleLocation::Default+"2MCRichTracks";
+    m_mcTrackLinks = new MCPartToRichTracks( evtSvc(), msgSvc(), loc );
     if ( m_mcTrackLinks->notFound() )
     {
-      Warning( "Linker for MCParticles to MCRichTracks not found for '" +
-               MCRichTrackLocation::LinksFromMCParticles + "'" );
+      Warning( "Linker for MCParticles to MCRichTracks not found at '"+loc+"'" );
     }
   }
   return m_mcTrackLinks;

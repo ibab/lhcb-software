@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.22 2006-01-23 13:56:10 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.23 2006-02-16 15:58:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -80,6 +80,9 @@ public: // Methods for Gaudi Framework
                    const std::string& name,
                    const IInterface* parent );
 
+  /// Destructor
+  virtual ~RichMCTruthTool();
+
   // Initialization of the tool after creation
   StatusCode initialize();
 
@@ -113,7 +116,7 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Access the bit-pack history object for the given RichSmartID
   bool getMcHistories( const RichSmartID id,
-                       std::vector<MCRichDigitSummary*> & histories ) const;
+                       std::vector<const MCRichDigitSummary*> & histories ) const;
 
   // Checks if the given RichSmartID is the result of a background hit
   bool isBackground ( const RichSmartID id ) const;
@@ -137,7 +140,7 @@ private: // definitions
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
 
   /// Typedef for vector of pointers to MCRichDigitSummaries
-  typedef std::vector<MCRichDigitSummary*> MCRichDigitSummaries;
+  typedef std::vector<const MCRichDigitSummary*> MCRichDigitSummaries;
 
   /// Typedef for map between RichSmartIDs and MCRichDigitSummary objects
   typedef Rich::Map< const RichSmartID, MCRichDigitSummaries > RichSummaryMap;
