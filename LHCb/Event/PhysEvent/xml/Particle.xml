@@ -83,7 +83,7 @@
        />
        <method
         name="confLevel"
-        desc="Confidence Level of the particleID"
+        desc="Confidence Level of the particleID. If not set the default is -1."
         type="double"
         const="TRUE"
        >
@@ -93,7 +93,7 @@
        </method>
        <method
         name="setConfLevel"
-        desc="set confidence Level of the particleID"
+        desc="set confidence Level of the particleID."
         type="void"
 	argList="double cl"
         const="FALSE"
@@ -104,12 +104,12 @@
        </method>
        <method
         name="weight"
-        desc="Weight of the particle, whatever that means."
+        desc="Weight of the particle, whatever that means. If not set the default is 1."
         type="double"
         const="TRUE"
        >
        <code>
-        return info( LHCb::Particle::Weight, -1. ) ;
+        return info( LHCb::Particle::Weight, 1. ) ;
        </code>
        </method>
        <method

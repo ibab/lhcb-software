@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.74 2006-02-15 10:53:47 cattanem Exp $
+! $Id: release.notes,v 1.75 2006-02-16 12:15:46 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+! 2006-02-16 - P. Koppenburg for Vanya Belyaev
+ - Default weight is +1, not -1.
 
 !======================= PhysEvent v9r0 2006-02-15 ==========================
 ! 2006-02-15 - Marco Cattaneo
