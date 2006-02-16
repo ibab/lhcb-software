@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.65 2006-02-10 21:34:56 asatta Exp $
+! $Id: release.notes,v 1.66 2006-02-16 17:50:43 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-16 - Alessio Sarti
+ - MuonChamberLayout.cpp
+	fix the localToglobal method: now returns the correct 
+	deltax,y,z and the getXYZPad method that now correctly
+	returns the global XYZ instead of local ones.
+
 ! 2006-02-10 - Alessia Satta
  - fix a wrong header in the MuonDetector::sensitiveVolumeID(), as a 
    consequences many const attributes have been added in DeMuonDetector 

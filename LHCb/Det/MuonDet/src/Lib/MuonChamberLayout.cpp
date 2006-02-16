@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.18 2006-02-10 21:34:56 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.19 2006-02-16 17:50:35 asarti Exp $
 // Include files 
 
 //Muon
@@ -630,7 +630,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
   
   if(m_debug) std::cout << "Grid details:: regX " <<m_cgX.at(region)<<" "<<tile.layout().xGrid()<<"; regY "<<tile.layout().yGrid()<<" "<<m_cgY.at(region)<<
     " ; padX "<<m_padGridX[station*4 + region]<<"; padY "<<m_padGridY[station*4 + region]<<
-    "; logHX "<<m_logHorizGridX[station*4 + region]<<"; logHY "<<m_logHorizGridY[station*4 + region]<<
+    "; logHX "<<m_logHorizGridX[station*4 + region]<<"; logHY "<<m_logHorizGridY[station*4 + region]<<"; tile readout "<<
     std::endl;
 
   // now compare the layout parameter to possible "levels"
@@ -642,7 +642,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz,true);
 
     if(!sc.isSuccess()){
-      MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;
     }
@@ -654,7 +653,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     
     // muon pads and logical channels with a 1:1 mapping to pads
     if ( m_debug ) {
-      MsgStream msg(msgSvc(), name());
       msg << MSG::DEBUG 
           << "Found a tile laying out pads" 
           << endreq;
@@ -663,7 +661,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     StatusCode sc = getXYZPad(tile,x,deltax,y,deltay,z,deltaz);
 
     if(!sc.isSuccess()){
-      MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;
     }
@@ -675,7 +672,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     // horizontal logical channels            
 
     if ( m_debug ) {
-      MsgStream msg(msgSvc(), name());
       msg << MSG::DEBUG 
           << "Found a tile laying out horizontal logical channels" 
           << endreq;
@@ -684,7 +680,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
 
     if(!sc.isSuccess()){
-      MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;
     }
@@ -696,7 +691,6 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     // vertical logical channels            
 
     if ( m_debug ) {
-      MsgStream msg(msgSvc(), name());
       msg << MSG::DEBUG 
           << "Found a tile laying out vertical logical channels" 
           << endreq;
@@ -705,27 +699,24 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
 
     if(!sc.isSuccess()){
-      MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;
     }
+
   } else if( 1 == tile.layout().xGrid() && 1 == tile.layout().yGrid() ) {
 
     if ( m_debug ) {
-      MsgStream msg(msgSvc(), name());
       msg << MSG::DEBUG 
           << "Found a tile laying out Twelfths" << endreq;
     }
 
     StatusCode sc = getXYZTwelfth(tile,x,deltax,y,deltay,z,deltaz);
     if(!sc.isSuccess()){
-      MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Failed to get xyz from twelfth" << endreq;
       return sc;
     }
 
   } else {
-    MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR 
         << "Did not understand the LHCb::MuonTileID encoding" 
         << " xGrid=" << tile.layout().xGrid() 
@@ -733,7 +724,9 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
         <<endreq;
     return StatusCode::FAILURE;
   }
-  if(m_debug) std::cout << "Exiting " <<x<<" "<<deltax<<" "<<y<<" "<<deltay<<" "<<z<<" "<<deltaz<<std::endl;
+
+  if(m_debug) std::cout << "Output " <<x<<" "<<deltax<<" "<<y<<" "<<deltay<<" "<<z<<" "<<deltaz<<std::endl;
+
   return StatusCode::SUCCESS;
 
 }
@@ -943,7 +936,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     if(toGlob) {
       localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
     } else {
-      x = y = z = 0;
+      x = y = z = 0; 
       deltax = Dx;      deltay = Dy;      deltaz = Dz;
     }
   } else {
@@ -1023,25 +1016,20 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
 
   // to find the x,y,z of the pad one must first find the chamber
   // to find the chamber one must know the tile of the chamber
+  unsigned int station = tile.station();
   unsigned int region  = tile.region();
 
   bool m_debug = false;  
   
   // locate the chamber
   LHCb::MuonTileID chamTile = m_layout[region].contains(tile);
+  unsigned int chamb = getChamberNumber(chamTile);
+
 
   // chamber size in x and y (z is same as pad)
   double cx,cy,cDeltax,cDeltay;
   double Dx(0.),Dy(0.),Dz(0.);
   
-  StatusCode sc = getXYZChamberTile(chamTile,cx,cDeltax,cy,cDeltay,z,Dz,false);
-  if(!sc.isSuccess()){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to get chamber for pad tile: " << tile
-	<< endreq;
-    return sc;
-  }
-
   // number of pads or logical channels in a chamber is : 
   // layout.xGrid() / chamberLayoutX , padLayoutY / chamberLayoutY
   int xRatio = tile.layout().xGrid() / m_cgX.at(region);
@@ -1074,6 +1062,20 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
 	      << std::endl;
   }
   
+
+  //gap num??
+  int gapNum = -1;
+  //Here only gets the right deltas and offsets to current PAD.
+  StatusCode sc = getXYZ(station,region,chamb,gapNum,cx,cDeltax,cy,cDeltay,z,Dz,false);
+  
+  if(!sc.isSuccess()){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to get chamber for pad tile: " << tile
+	<< endreq;
+    return sc;
+  }
+  
+
   // now make the calculations of x,y and z (and dx, dy and dz)
   // in chamber reference frame. 
   x = ( cx - cDeltax ) + 
@@ -1095,32 +1097,35 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   if ( m_debug )   std::cout<<" getXYZPad:: XY info  "<<x<<" "<<Dx<<" "<<y<<" "<<Dy<<std::endl;
 
   Gaudi::XYZPoint cnt(x,y,z);
-  Gaudi::XYZPoint crn(Dx,Dy,Dz);
+  Gaudi::XYZPoint crn(x+Dx,y+Dy,z+Dz);
 
-  std::vector<LHCb::MuonTileID> mytiles;
-  mytiles.push_back(chamTile);
-
-  
+  std::vector<LHCb::MuonTileID> mytiles;  mytiles.push_back(chamTile);
   std::vector<DeMuonChamber*> myChs = createChambersFromTile(mytiles);
 
+  //Correct XYZ and Deltas for local to Global transformation
   deltax = Dx;  deltaz = Dz;  deltaz = Dz;
-  if ( m_debug )   std::cout<<" getXYZPad:: loc to glob "<<Dx<<" "<<Dy<<" "<<Dz<<" "<<myChs.at(0)->name()<<std::endl;
   if(!myChs.empty()) {
 
     DeMuonChamber* muChamber = myChs.at(0);
-
     IGeometryInfo* cInfo = muChamber->geometry();
+    //Those are not used in deltas computation
+    x = cInfo->toGlobal(cnt).x();
+    y = cInfo->toGlobal(cnt).y();
+    z = cInfo->toGlobal(cnt).z();
+
     localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
   }  
+
+  if ( m_debug )   std::cout<<" getXYZPad:: loc to glob "<<Dx<<" "<<Dy<<" "<<Dz<<" "<<myChs.at(0)->name()<<" "<<deltax<<" "<<deltay<<" "<<deltaz<<std::endl;
 
   return StatusCode::SUCCESS;
 }  
 
 
 StatusCode MuonChamberLayout::getXYZLogical(const LHCb::MuonTileID& tile, 
-                                        double& x, double& deltax,
-                                        double& y, double& deltay,
-                                        double& z, double& deltaz){
+					    double& x, double& deltax,
+					    double& y, double& deltay,
+					    double& z, double& deltaz){
 
   // If we get here then the logical strip is potenitally bigger than a chamber
   // if not then we can subcontract to getXYZPad directly
@@ -1301,7 +1306,7 @@ StatusCode MuonChamberLayout::getXYZTwelfth(const LHCb::MuonTileID& tile,
   deltax = (( xMax - xMin ) / 2.) + deltax;
   deltay = (( yMax - yMin ) / 2.) + deltay;
   deltaz = (( zMax - zMin ) / 2.) + deltaz;
-  
+
   return StatusCode::SUCCESS;
 }  
 
@@ -1445,27 +1450,18 @@ void MuonChamberLayout::localToglobal(IGeometryInfo* gInfo,
 				      Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
 				      double &dx, double &dy, double &dz){
   
-  double ctrX(0.),ctrY(0.),ctrZ(0.),crnX(0.),crnY(0.),crnZ(0.),GctrX(0.),GctrY(0.),GctrZ(0.),GcrnX(0.),GcrnY(0.),GcrnZ(0.);
+  double GctrX(0.),GctrY(0.),GctrZ(0.),GcrnX(0.),GcrnY(0.),GcrnZ(0.);
 
-  ctrX = gInfo->toLocal(cent).x();
-  ctrY = gInfo->toLocal(cent).y();
-  ctrZ = gInfo->toLocal(cent).z();
+  GctrX = gInfo->toGlobal(cent).x();
+  GctrY = gInfo->toGlobal(cent).y();
+  GctrZ = gInfo->toGlobal(cent).z();
 
-  crnX = gInfo->toLocal(corn).x();
-  crnY = gInfo->toLocal(corn).y();
-  crnZ = gInfo->toLocal(corn).z();
+  GcrnX = gInfo->toGlobal(corn).x();
+  GcrnY = gInfo->toGlobal(corn).y();
+  GcrnZ = gInfo->toGlobal(corn).z();
 
-  Gaudi::XYZPoint Gctr(ctrX,ctrY,ctrZ);
-  
-  GctrX = gInfo->toGlobal(Gctr).x();
-  GctrY = gInfo->toGlobal(Gctr).y();
-  GctrZ = gInfo->toGlobal(Gctr).z();
-  
-  Gaudi::XYZPoint Gcrn(crnX,crnY,crnZ);
-  
-  GcrnX = gInfo->toGlobal(Gcrn).x();
-  GcrnY = gInfo->toGlobal(Gcrn).y();
-  GcrnZ = gInfo->toGlobal(Gcrn).z();
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Local to Global: gCtr:: "<<GctrX<<" "<<GctrY<<" "<<GctrZ<<" ; gCrn:: "<<GcrnX<<" "<<GcrnY<<" "<<GcrnZ<<endreq;
 
   dx = fabs(GctrX - GcrnX);
   dy = fabs(GctrY - GcrnY);
