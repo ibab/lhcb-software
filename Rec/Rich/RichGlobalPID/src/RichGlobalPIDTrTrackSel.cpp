@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.25 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.26 2006-02-16 15:52:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -62,7 +62,7 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
@@ -143,7 +143,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute()
 
     // Set Track reference
     const Track * trtrack = dynamic_cast<const Track *>((*track)->parentTrack());
-    if ( !trtrack ) Warning( "Input track type is not Track" );
+    if ( !trtrack ) Warning( "Input track type is not Track -> RichPID has null track reference" );
     newPID->setTrack( trtrack );
 
     // Store threshold information
