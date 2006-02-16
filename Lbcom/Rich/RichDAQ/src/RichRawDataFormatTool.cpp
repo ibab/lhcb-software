@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.21 2006-02-06 12:11:51 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.22 2006-02-16 15:50:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -376,9 +376,6 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
 
     // flag the tool as having been used this event
     m_hasBeenCalled = true;
-
-    // Data bank size in words
-    const int bankSize = bank.size() / 4;
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
