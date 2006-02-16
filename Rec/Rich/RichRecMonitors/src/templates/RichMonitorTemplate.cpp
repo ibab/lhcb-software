@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMonitorTemplate
  *
  *  CVS Log :-
- *  $Id: RichMonitorTemplate.cpp,v 1.1 2005-11-07 09:37:20 jonrob Exp $
+ *  $Id: RichMonitorTemplate.cpp,v 1.2 2006-02-16 16:07:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -47,7 +47,7 @@ StatusCode RichMonitorTemplate::initialize()
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 

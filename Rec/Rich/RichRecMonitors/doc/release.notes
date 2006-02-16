@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Updates for new TRack selector interface
+
 !====================== RichRecMonitors v2r0 2006-01-26 ======================
 ! 2006-01-26 - Marco Cattaneo
  - Remove unneccessary dependency on Relations

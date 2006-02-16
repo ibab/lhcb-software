@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.5 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.6 2006-02-16 16:07:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -50,7 +50,7 @@ StatusCode RichTrackResolutionMoni::initialize()
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 

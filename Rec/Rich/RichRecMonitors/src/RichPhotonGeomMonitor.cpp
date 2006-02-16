@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.3 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.4 2006-02-16 16:07:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -52,7 +52,7 @@ StatusCode RichPhotonGeomMonitor::initialize()
   acquireTool( "RichRecGeometry",         m_geomTool    );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
