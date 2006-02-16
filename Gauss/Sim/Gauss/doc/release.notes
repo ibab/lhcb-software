@@ -15,6 +15,9 @@
  - Modify options for Velo detailed geometry to allow for misalignment, from
    Mark TOBIN
    . SimVeloGeometry.opts
+ - Use new options for dictionary from $STDOPTS
+   . Common.opts
+   . GaussPoolIO.opts - REMOVED
 
 ! 2006-02-13 - Gloria CORTI
  - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1

@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.20 2006-02-16 15:28:12 gcorti Exp $ 
+// $Id: Common.opts,v 1.21 2006-02-16 16:04:22 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -69,7 +69,7 @@ EventDataSvc.ForceLeaves         = true ;
 
 // POOL persistency 
 EventPersistencySvc.CnvServices  = {};  
-#include "$GAUSSOPTS/GaussPoolIO.opts"
+#include "$STDOPTS/SimDicts.opts"
 
 // Objects to be written to output file
 #include "$GAUSSOPTS/GaussTape.opts"        
