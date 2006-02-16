@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Various updates to the MC associators
+
 !======================= RichMCAssociators v2r0 2006-02-15 ===================
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent

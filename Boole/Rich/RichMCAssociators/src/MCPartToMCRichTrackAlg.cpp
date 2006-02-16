@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.4 2006-02-13 08:40:17 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.5 2006-02-16 15:57:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -28,7 +28,7 @@ const        IAlgFactory& MCPartToMCRichTrackAlgFactory = s_factory;
 MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : RichAlgBase  ( name , pSvcLocator ),
-    m_testLinker ( true )
+    m_testLinker ( false )
 {
 
   m_evtLocs.clear();
@@ -56,7 +56,7 @@ StatusCode MCPartToMCRichTrackAlg::initialize()
 {
   // Sets up various tools and services
   return RichAlgBase::initialize();
-};
+}
 
 //=============================================================================
 // Main execution
@@ -80,12 +80,12 @@ StatusCode MCPartToMCRichTrackAlg::buildLinks()
 {
   // New linker object
   MCPartToRichTracks links( evtSvc(), msgSvc(),
-                            MCRichTrackLocation::LinksFromMCParticles );
+                            MCParticleLocation::Default+"2MCRichTracks" );
 
   // set the ordering
   links.setDecreasingWeight();
 
-  // Loop over all MCRichTracks in each spillover event
+  // Loop over all MCRichTracks in each event
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
         iEvt != m_evtLocs.end(); ++iEvt ) 
   {
@@ -130,7 +130,7 @@ StatusCode MCPartToMCRichTrackAlg::testLinks()
   typedef MCPartToRichTracksTest::DirectType             Table;
 
   // load linker
-  MCPartToRichTracksTest linker1( evtSvc(), MCRichTrackLocation::LinksFromMCParticles );
+  MCPartToRichTracksTest linker1( evtSvc(), MCParticleLocation::Default+"2MCRichTracks" );
 
   // table
   Table * table = linker1.direct();
@@ -145,7 +145,7 @@ StatusCode MCPartToMCRichTrackAlg::testLinks()
 
   LinkedTo<LHCb::MCRichTrack,LHCb::MCParticle>
     linker2( evtSvc(), msgSvc(),
-             MCRichTrackLocation::LinksFromMCParticles );
+             MCParticleLocation::Default+"2MCRichTracks" );
 
   // loop over MCParticles and test links
   MCParticles * mcps = get<MCParticles>( MCParticleLocation::Default );

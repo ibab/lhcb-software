@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichDigitSummaryAlg
  *
  * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ * $Id: MCRichDigitSummaryAlg.cpp,v 1.3 2006-02-16 15:57:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -109,8 +109,8 @@ StatusCode MCRichDigitSummaryAlg::execute()
         // Set MCParticle
         summary->setMCParticle( (*iH)->mcParticle() );
 
-        // Copy default history from object
-        MCRichDigitHistoryCode hist = summary->history();
+        // Copy history from MCRichHit
+        MCRichDigitHistoryCode hist = (*iH)->mcRichDigitHistoryCode();
 
         // Which event
         if      ( inMainEvent )                            { hist.setSignalEvent(true);   }
@@ -118,17 +118,6 @@ StatusCode MCRichDigitSummaryAlg::execute()
         else if ( hitInSpillEvent(*iH,m_RichPrevPrevLoc) ) { hist.setPrevPrevEvent(true); }
         else if ( hitInSpillEvent(*iH,m_RichNextLoc) )     { hist.setNextEvent(true);     }
         else if ( hitInSpillEvent(*iH,m_RichNextNextLoc) ) { hist.setNextNextEvent(true); }
-        // Is it signal
-        if ( !m_truth->isBackground(*iH) )
-        {
-          if      ( Rich::Aerogel == (*iH)->radiator() ) { hist.setAerogelHit(true); }
-          else if ( Rich::C4F10   == (*iH)->radiator() ) { hist.setC4f10Hit(true);   }
-          else if ( Rich::CF4     == (*iH)->radiator() ) { hist.setCf4Hit(true);     }
-        }
-        // sort of background
-        if ( (*iH)->scatteredPhoton() ) { hist.setScatteredHit(true);  }
-        if ( (*iH)->chargedTrack()    ) { hist.setChargedTrack(true);  }
-        if ( (*iH)->backgroundHit()   ) { hist.setBackgroundHit(true); }
 
         // update history in data object
         summary->setHistory(hist);

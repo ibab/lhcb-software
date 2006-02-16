@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.3 2006-02-16 15:57:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -65,7 +65,7 @@ StatusCode MCRichHitToMCRichOpPhotAlg::execute()
 
   // New linker object
   MCRichHitsToPhotons links( eventSvc(), msgSvc(),
-                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
+                             MCRichHitLocation::Default+"2MCRichOpticalPhotons" );
 
   // set the ordering
   links.setDecreasingWeight();
