@@ -1,6 +1,6 @@
-// $Id: Functions.h,v 1.1.1.1 2006-01-24 09:39:41 ibelyaev Exp $
+// $Id: Functions.h,v 1.2 2006-02-16 18:09:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -325,7 +325,7 @@ namespace LoKi
     virtual result_type operator() ( argument ) const { return m_value ; }
     /// the basic printout method  
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return  s << "[" << ( m_value ? "true" : "false" ) << "]" ; };
+    { return  s << "[" << ( m_value ? "True" : "False" ) << "]" ; };
   private:
     bool m_value ;
   };
@@ -1581,7 +1581,7 @@ namespace LoKi
     { return object ? true : false ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "(Valid)"; };
+    { return s << "(Valid?)"; };
   };
   
 };

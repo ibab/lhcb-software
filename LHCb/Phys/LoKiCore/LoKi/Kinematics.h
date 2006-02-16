@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.2 2006-02-10 17:23:05 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.3 2006-02-16 18:09:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/10 17:23:05  ibelyaev
+//  add more algorithms
+//
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -43,7 +46,7 @@ namespace LoKi
   /// 3D vector 
   typedef Gaudi::XYZVector     ThreeVector   ;
   /// 3D point
-  typedef Gaudi::XYZVector     Point3D       ;
+  typedef Gaudi::XYZPoint      Point3D       ;
 
 
   /** @namespace Kinematics 

@@ -1,8 +1,11 @@
-// $Id: LoKiCore.h,v 1.3 2006-02-10 17:23:05 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.4 2006-02-16 18:09:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/10 17:23:05  ibelyaev
+//  add more algorithms
+//
 // Revision 1.2  2006/02/08 12:01:14  ibelyaev
 //  add LoKi/Objects.h file
 //
@@ -38,6 +41,7 @@
 #include "LoKi/Objects.h"
 #include "LoKi/Algs.h"
 #include "LoKi/CoreTypes.h"
+#include "LoKi/Print.h"
 // ============================================================================
 
 // ============================================================================
