@@ -4,10 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-! 2006-02-16 M Needham
+!========================= DigiEvent v1r0 2006-02-16 =========================
+! 2006-02-16 - M/ Needham
  - Bug fix in STCluster.xml (< instead of >)
 
-!========================= DigiEvent v1r0 2006-02-15 =========================
 ! 2006-02-15 - Marco Cattaneo
  - First version, from migration of classes from VeloEvent, STEvent, OTEvent,
    RichEvent, CaloEvent, MuonEvent
