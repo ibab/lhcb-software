@@ -1,37 +1,44 @@
+// $Id: TrackMasterProjector.h,v 1.4 2006-02-16 10:50:09 ebos Exp $
 #ifndef TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackProjector.h"            // Interface
+#include "TrackInterfaces/ITrackProjector.h"
 
 // from TrackEvent
 #include "Event/State.h"
 #include "Event/Measurement.h"
 
+using namespace Gaudi;
+using namespace LHCb;
+
 /** @class TrackMasterProjector TrackMasterProjector.h TrackProjectors/TrackMasterProjector.h
  *
- *  A TrackMasterProjector is the master projector that delegates the projection
+ *  TrackMasterProjector is the master projector that delegates the projection
  *  to the "measurement-type" projector.
  *
  *  @author Jose Hernando
  *  @author Eduardo Rodrigues
  *  @date   2005-03-12
  */
+
 class TrackMasterProjector : public GaudiTool,
                              virtual public ITrackProjector {
+
 public:
+
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
   StatusCode project( const State& state,
                       Measurement& meas );
   
   /// Retrieve the projection matrix H of the (last) projection
-  const HepVector& projectionMatrix() const;
+  const TrackVector& projectionMatrix() const;
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;
@@ -47,7 +54,8 @@ public:
                         const std::string& name,
                         const IInterface* parent );
 
-  virtual ~TrackMasterProjector( ); ///< Destructor
+  /// Destructor
+  virtual ~TrackMasterProjector( );
 
   StatusCode initialize();
 
@@ -67,5 +75,6 @@ private:
   unsigned int m_selectedMeasType;
 
   ITrackProjector*  m_selectedProjector;
+
 };
 #endif // TRACKPROJECTORS_TRACKMASTERPROJECTOR_H

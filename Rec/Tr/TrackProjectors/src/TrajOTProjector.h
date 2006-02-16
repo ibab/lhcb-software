@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.2 2006-01-17 09:20:46 ebos Exp $
+// $Id: TrajOTProjector.h,v 1.3 2006-02-16 10:51:25 ebos Exp $
 #ifndef TRACKPROJECTORS_TRAJOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRAJOTPROJECTOR_H 1
 
@@ -15,9 +15,10 @@ class DeOTDetector;
 class IMagneticFieldSvc;
 class ITrajPoca;
 
+using namespace LHCb;
+
 /** @class TrajOTProjector TrajOTProjector.h TrajOTProjector.h
  *  
- *
  *  @author Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  *  @date   2005-11-24
  */
@@ -25,6 +26,7 @@ class ITrajPoca;
 class TrajOTProjector : public TrackProjector {
 
 public:
+
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
   virtual StatusCode project( const State& state,
@@ -38,17 +40,15 @@ public:
                    const std::string& name,
                    const IInterface* parent );
 
-  /// Default destructor
+  /// Deestructor
   virtual ~TrajOTProjector();
 
 private:
 
-  DeOTDetector* m_det;
-  std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
-
-  IMagneticFieldSvc* m_pIMF;       ///< Pointer to the magnetic field service
-
-  ITrajPoca*         m_poca;       ///< Pointer to the ITrajPoca interface
+  DeOTDetector*      m_det;
+  std::string        m_otTrackerPath; ///< Name of the OT XML geom path
+  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magnetic field service
+  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

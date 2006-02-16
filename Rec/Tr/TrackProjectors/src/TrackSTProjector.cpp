@@ -1,38 +1,40 @@
+// $Id: TrackSTProjector.cpp,v 1.2 2006-02-16 10:50:38 ebos Exp $
 // Include files 
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "TrackSTProjector.h"
 
-#include "STDet/STDetectionLayer.h"
+#include "STDet/DeSTLayer.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackSTProjector
-//
-// 2005-04-08 : Jose Hernando, Eduardo Rodrigues
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackSTProjector>          s_factory ;
 const        IToolFactory& TrackSTProjectorFactory = s_factory ; 
 
-//=============================================================================
-//  Project a state onto a measurement.
-// It returns the chi squared of the projection
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement
+/// It returns the chi squared of the projection
+//-----------------------------------------------------------------------------
 StatusCode TrackSTProjector::project( const State& state,
                                       Measurement& meas )
 {
-  ITChannelID ITChan = meas.lhcbID().stID();
+  STChannelID STChan = meas.lhcbID().stID();
 
-  const STDetectionLayer* ITLay = m_det -> layer( ITChan );
+  DeSTDetector* mDet;
+  if( STChan.isTT() ) { mDet = m_ttdet; }
+  else { mDet = m_itdet; }
 
-  double stereoAngle  = ITLay->stereoAngle();
+  DeSTLayer* STLay = (mDet -> layers())[STChan.layer()];
 
-  unsigned int n = state.nParameters();
-  m_H = HepVector(n,0);
+  // StereoAngle
+  double stereoAngle = STLay->angle();
+
+  m_H = TrackVector();
   m_H[0] = cos( stereoAngle );
   m_H[1] = sin( stereoAngle );
 
@@ -43,27 +45,26 @@ StatusCode TrackSTProjector::project( const State& state,
 
   computeErrorResidual( state, meas );
 
-  return StatusCode::SUCCESS; 
-
+  return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Initialize
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Initialize
+//-----------------------------------------------------------------------------
 StatusCode TrackSTProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialize!", sc );
+  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
 
-  m_det = getDet<DeSTDetector>( m_itTrackerPath );
+  m_ttdet = getDet<DeSTDetector>( m_ttTrackerPath );
+  m_itdet = getDet<DeSTDetector>( m_itTrackerPath );
 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Standard constructor, initializes variables
+//-----------------------------------------------------------------------------
 TrackSTProjector::TrackSTProjector( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
@@ -71,13 +72,14 @@ TrackSTProjector::TrackSTProjector( const std::string& type,
 {
   declareInterface<ITrackProjector>(this);
 
+  declareProperty( "TTGeometryPath",
+                   m_ttTrackerPath = DeSTDetLocation::TT );
+
   declareProperty( "ITGeometryPath",
-                   m_itTrackerPath = DeSTDetectorLocation::Default );
+                   m_itTrackerPath = DeSTDetLocation::IT );
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackSTProjector::~TrackSTProjector() {}; 
-
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Destructor
+//-----------------------------------------------------------------------------
+TrackSTProjector::~TrackSTProjector() {};

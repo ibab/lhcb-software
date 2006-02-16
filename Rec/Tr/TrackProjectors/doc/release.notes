@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Edwin Bos
+ - Moved to LHCb v20r0
+ - Removed *Ray* due to introduction of Trajectories
+
 !====================== TrackProjectors v1r5 2006-01-27 ======================
 ! 2006-01-17 - Jeroen van Tilburg
  - Fixed a bug in TrackOTProjector: Elements of the projection matrix,

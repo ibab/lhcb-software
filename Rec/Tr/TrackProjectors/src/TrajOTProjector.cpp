@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.2 2006-01-17 09:20:50 ebos Exp $
+// $Id: TrajOTProjector.cpp,v 1.3 2006-02-16 10:51:21 ebos Exp $
 // Include files 
 
 // from Gaudi
@@ -18,76 +18,86 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrajPoca.h"
 
+#include <numeric>
+
 // local
 #include "TrajOTProjector.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrajOTProjector>          s_factory ;
 const        IToolFactory& TrajOTProjectorFactory = s_factory ;
 
-///  Project a state onto a measurement.
+//-----------------------------------------------------------------------------
+///  Project a state onto a measurement
 /// It returns the chi squared of the projection
+//-----------------------------------------------------------------------------
 StatusCode TrajOTProjector::project( const State& state,
                                      Measurement& meas )
 {
-  HepVector3D bfield;
+  XYZVector bfield;
   m_pIMF -> fieldVector( state.position(), bfield );
 
   // Get the reference state trajectory
   OTMeasurement& otmeastmp = *( dynamic_cast<OTMeasurement*>(&meas) );
-  HepVector refVec = HepVector(5,0);
-  refVec = otmeastmp.referenceVector( state.stateVector() ) ;
+  TrackVector refVec = otmeastmp.referenceVector( state.stateVector() );
   StateTraj refTraj = StateTraj( refVec, otmeastmp.z(), bfield );
 
   // Get the measurement trajectory
-  OTChannelID OTChan   = meas.lhcbID().otID();
-  DeOTModule* module   = m_det -> module( OTChan );
-  double stereoAngle   = module -> stereoAngle();
-  HepPoint3D centrePos = module -> centerOfStraw( OTChan.straw() );
+  OTChannelID OTChan = meas.lhcbID().otID();
+  DeOTModule* module = m_det -> module( OTChan );
+  double stereoAngle = module -> stereoAngle();
+  XYZPoint centrePos = module -> centerOfStraw( OTChan.straw() );
   double cosA = cos( stereoAngle );
   double sinA = sin( stereoAngle );
-  HepVector3D dir =  HepVector3D( -sinA, cosA, 0. );
+  XYZVector dir =  XYZVector( -sinA, cosA, 0. );
   //TODO : WHAT WE WANT!!!
   // Trajectory& measTraj = m_det -> trajectory( meas.lhcbID().otID() );
-  LineTraj measTraj = LineTraj( centrePos, dir );
+  const std::pair<double,double> range(-999.,999.);
+  LineTraj measTraj = LineTraj( centrePos, dir, range );
 
   double s1, s2;
-  HepVector3D distance(0.0, 0.0, 0.0);
+  XYZVector distance;
 
   // Determine initial estimates of s1 and s2
   s1 = 0.0; // state is already close to the minimum
-  m_poca -> minimize( measTraj, s2, refTraj.position(s1), distance, 20*mm );
+  m_poca -> minimize( measTraj, s2, refTraj, s1, distance, 20*mm );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm ); 
-
-  //TODO: temporary hack because HepVector3D * HepMatrix not possible in CLHEP!!
-  //m_H =  distance.unit() * ( refTraj.derivative( s1 ) );
-  HepVector3D deriv1 = distance.unit();
-  HepVector deriv1tmp = HepVector(3, 0);
-  deriv1tmp[0] = deriv1[0];
-  deriv1tmp[1] = deriv1[1];
-  deriv1tmp[2] = deriv1[2];
-  m_H = ( refTraj.derivative( s1 ) ).T() * ( deriv1tmp ) ;
+  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
+  ROOT::Math::SMatrix<double,1,3> vec; distance.Unit().GetCoordinates(vec.Array());  
+  ROOT::Math::SMatrix<double,1,5> mat = vec * refTraj.derivative( s1 );
+  m_H = mat.Row(0);
 
   // Calculate the projected OT time
-  double distToWire = distance.mag() + dot(m_H, state.stateVector() - refVec );
-  double sign = ( distance.x() > 0.0 ) ? 1.0 : -1.0 ;
-  double distToReadout = module -> wireLength() - fabs( state.y() ) ;
-  double time = m_det->driftDelay() * sign * distToWire
-    + m_det->propagationDelay() * otmeastmp.ambiguity() * distToReadout;
-  m_H *= sign * m_det->driftDelay();
- 
-  // Calculate the residual
-  m_residual = meas.measure() - time;
+  // ROOT::Math::SVector<double,5> dstate = state.stateVector()-refVec;
+  // double distToWire = sqrt(distance.Mag2()) + std::inner_product(m_H.begin(),m_H.end(),dstate.begin(),0.0);
+  double distToWire = sqrt(distance.Mag2());
+  double distToReadout = measTraj.length() - fabs( refTraj.position(s1).Y() ); // FIXME: not all wires start at y=0!!!
 
+  double t_calib = otmeastmp.measure()*otmeastmp.ambiguity();
+  double t_drift = t_calib - m_det->propagationDelay()*distToReadout;
+  double d_drift = t_drift*m_det->driftDelay();
+  
+  int ambig_track = (refTraj.position( s1 ).x()>measTraj.position(s2).x())?+1:-1;
+
+  // Calculate the residual
+  m_residual = distToWire - (ambig_track*otmeastmp.ambiguity() )*d_drift;
+
+  // Compensate for using a Trajectory at the wire in stead of at the driftradius
+  if (m_residual<0) m_H *=-1;
+  
   // TODO: use the reference trajectory again.
   computeErrorResidual( state, meas );
 
   return StatusCode::SUCCESS;
 }
 
+//-----------------------------------------------------------------------------
 /// Initialize
+//-----------------------------------------------------------------------------
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
@@ -101,11 +111,13 @@ StatusCode TrajOTProjector::initialize()
   return sc;
 }
 
+//-----------------------------------------------------------------------------
 /// Standard constructor, initializes variables
+//-----------------------------------------------------------------------------
 TrajOTProjector::TrajOTProjector( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : TrackProjector ( type, name , parent )
+  : TrackProjector( type, name , parent )
 {
   declareInterface<ITrackProjector>(this);
 
@@ -113,5 +125,7 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
                    m_otTrackerPath = DeOTDetectorLocation::Default );
 }
 
+//-----------------------------------------------------------------------------
 /// Destructor
-TrajOTProjector::~TrajOTProjector() {}; 
+//-----------------------------------------------------------------------------
+TrajOTProjector::~TrajOTProjector() {};

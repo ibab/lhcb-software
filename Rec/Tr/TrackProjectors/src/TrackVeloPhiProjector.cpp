@@ -1,26 +1,26 @@
+// $Id: TrackVeloPhiProjector.cpp,v 1.5 2006-02-16 10:50:48 ebos Exp $
 // Include files 
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "TrackVeloPhiProjector.h"
+
+// from Tr/TrackFitEvent
 #include "Event/VeloPhiMeasurement.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackVeloPhiProjector
-//
-// 2005-04-13 : Jose Hernando, Eduardo Rodrigues
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackVeloPhiProjector>          s_factory ;
 const        IToolFactory& TrackVeloPhiProjectorFactory = s_factory ; 
 
-//=============================================================================
-//  Project a state onto a measurement.
-// It returns the chi squared of the projection
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement
+/// It returns the chi squared of the projection
+//-----------------------------------------------------------------------------
 StatusCode TrackVeloPhiProjector::project( const State& state,
                                            Measurement& meas )
 {
@@ -49,7 +49,7 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   std::vector< std::pair<long,double> >::const_iterator strIt;
   int strip    = (*sign.begin()).first;
   VeloChannelID channel(sensor,strip);
-  for ( strIt = sign.begin() ; sign.end() != strIt ; strIt++ ) {
+  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
     strip  = (*strIt).first;
     phi    =  m_det -> trgPhiDirectionOfStrip( channel );
     second = (*strIt).second;
@@ -63,8 +63,7 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
     sinPhi = sin( phi );
   }
 
-  unsigned int n = state.nParameters();
-  m_H = HepVector(n,0);
+  m_H = TrackVector();
 
   m_H[0] = - sinPhi;
   m_H[1] = cosPhi;
@@ -77,23 +76,22 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   return StatusCode::SUCCESS ; 
 }
 
-//=============================================================================
-// Initialize
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Initialize
+//-----------------------------------------------------------------------------
 StatusCode TrackVeloPhiProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialize!", sc );
+  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
 
   m_det = getDet<DeVelo>( m_veloPath );
 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Standard constructor, initializes variables
+//-----------------------------------------------------------------------------
 TrackVeloPhiProjector::TrackVeloPhiProjector( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
@@ -104,9 +102,8 @@ TrackVeloPhiProjector::TrackVeloPhiProjector( const std::string& type,
   declareProperty( "VeloGeometryPath",
                    m_veloPath = "/dd/Structure/LHCb/Velo" );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackVeloPhiProjector::~TrackVeloPhiProjector() {}; 
 
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Destructor
+//-----------------------------------------------------------------------------
+TrackVeloPhiProjector::~TrackVeloPhiProjector() {};

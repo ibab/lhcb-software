@@ -1,6 +1,6 @@
-// $Id: TrackOTProjector.cpp,v 1.5 2006-01-17 15:58:08 jvantilb Exp $
+// $Id: TrackOTProjector.cpp,v 1.6 2006-02-16 10:50:16 ebos Exp $
 // Include files 
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -9,22 +9,21 @@
 
 // local
 #include "TrackOTProjector.h"
+
+// from Tr/TrackFitEvent
 #include "Event/OTMeasurement.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackOTProjector
-//
-// 2005-04-08 : Jose Hernando, Eduardo Rodrigues
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackOTProjector>          s_factory ;
 const        IToolFactory& TrackOTProjectorFactory = s_factory ; 
 
-//=============================================================================
-//  Project a state onto a measurement.
-// It returns the chi squared of the projection
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement.
+/// It returns the chi squared of the projection
+//-----------------------------------------------------------------------------
 StatusCode TrackOTProjector::project( const State& state,
                                   Measurement& meas )
 {
@@ -39,10 +38,10 @@ StatusCode TrackOTProjector::project( const State& state,
   DeOTModule* module = m_det -> module( OTChan );
   double stereoAngle = module -> stereoAngle();
 
-  double driftVelocity = m_det -> driftDelay(); // ns/mm
-  double wireVelocity  = m_det -> propagationDelay();      // ns/mm
+  double driftVelocity = m_det -> driftDelay();       // ns/mm
+  double wireVelocity  = m_det -> propagationDelay(); // ns/mm
 
-  HepPoint3D VwirePos = module->centerOfStraw( OTChan.straw() );
+  XYZPoint VwirePos = module->centerOfStraw( OTChan.straw() );
   double wirePos      =  VwirePos.x() * cos(stereoAngle) 
                          + VwirePos.y() * sin(stereoAngle);
 
@@ -58,13 +57,12 @@ StatusCode TrackOTProjector::project( const State& state,
   double time     = driftVelocity * wireDist
                     + wireVelocity * otmeas.ambiguity() * (wireLength-fabs(y));
 
-  unsigned int n = state.nParameters();
-  m_H = HepVector(n,0);  
-  m_H[0] = cosA * cosU * driftVelocity;
-  m_H[1] = sinA * cosU * driftVelocity
+  m_H = TrackVector();  
+  m_H(0) = cosA * cosU * driftVelocity;
+  m_H(1) = sinA * cosU * driftVelocity
            - otmeas.ambiguity() * wireVelocity * y/fabs(y);
-  m_H[2] = -du * tu * gsl_pow_3( cosU ) * cosA;
-  m_H[3] = -du * tu * gsl_pow_3( cosU ) * sinA;
+  m_H(2) = -du * tu * gsl_pow_3( cosU ) * cosA;
+  m_H(3) = -du * tu * gsl_pow_3( cosU ) * sinA;
 
   // this shouls be ~ equivalent to : computeResidual(state,meas);
   m_residual = meas.measure() - time;
@@ -74,23 +72,22 @@ StatusCode TrackOTProjector::project( const State& state,
   return StatusCode::SUCCESS; 
 }
 
-//=============================================================================
-// Initialize
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Initialize
+//-----------------------------------------------------------------------------
 StatusCode TrackOTProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialize!", sc );
-
+  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
+  
   m_det = getDet<DeOTDetector>( m_otTrackerPath );
-
+  
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Standard constructor, initializes variables
+//-----------------------------------------------------------------------------
 TrackOTProjector::TrackOTProjector( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
@@ -101,9 +98,8 @@ TrackOTProjector::TrackOTProjector( const std::string& type,
   declareProperty( "OTGeometryPath",
                    m_otTrackerPath = DeOTDetectorLocation::Default );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackOTProjector::~TrackOTProjector() {}; 
 
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Destructor
+//-----------------------------------------------------------------------------
+TrackOTProjector::~TrackOTProjector() {};

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackProjectors
-version           v1r5
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -23,13 +23,16 @@ include_path      none
 use   GaudiAlg        v*
 use   GSL             v*     LCG_Interfaces
 
-use   TrackEvent      v1r*   Event
-use   TrackFitEvent   v1r*   Tr
+use   TrackEvent      v*     Event
+use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
+
+use   RecEvent	      v*     Event
 
 use   OTDet           v*     Det
 use   STDet           v*     Det
 use   VeloDet         v*     Det
+
 #============================================================================
 # Component library building rule
 #============================================================================

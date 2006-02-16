@@ -1,26 +1,26 @@
+// $Id: TrackVeloRProjector.cpp,v 1.5 2006-02-16 10:51:04 ebos Exp $
 // Include files 
-// -------------
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "TrackVeloRProjector.h"
+
+// Tr/TrackFitEvent
 #include "Event/VeloRMeasurement.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackVeloRProjector
-//
-// 2005-04-13 : Jose Hernando, Eduardo Rodrigues
-//-----------------------------------------------------------------------------
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackVeloRProjector>          s_factory ;
 const        IToolFactory& TrackVeloRProjectorFactory = s_factory ; 
 
-//=============================================================================
-//  Project a state onto a measurement.
-// It returns the chi squared of the projection
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Project a state onto a measurement
+/// It returns the chi squared of the projection
+//-----------------------------------------------------------------------------
 StatusCode TrackVeloRProjector::project( const State& state,
                                          Measurement& meas )
 {
@@ -31,12 +31,11 @@ StatusCode TrackVeloRProjector::project( const State& state,
 
   double phi = veloRMeas.phi();
 
-  unsigned int n = state.nParameters();
-  m_H = HepVector(n,0);
+  m_H = TrackVector();
   
   // calculate h (predicted R)
   double h = 0;
-  if ( phi > 990.0 ) {
+  if( phi > 990.0 ) {
     h      = sqrt( x*x + y*y );
     m_H[0] = x / h;
     m_H[1] = y / h;
@@ -56,23 +55,22 @@ StatusCode TrackVeloRProjector::project( const State& state,
   return StatusCode::SUCCESS; 
 }
 
-//=============================================================================
-// Initialize
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Initialize
+//-----------------------------------------------------------------------------
 StatusCode TrackVeloRProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialize!", sc );
+  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
 
   m_det = getDet<DeVelo>( m_veloPath );
 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Standard constructor, initializes variables
+//-----------------------------------------------------------------------------
 TrackVeloRProjector::TrackVeloRProjector( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
@@ -83,9 +81,8 @@ TrackVeloRProjector::TrackVeloRProjector( const std::string& type,
   declareProperty( "VeloGeometryPath",
                    m_veloPath = "/dd/Structure/LHCb/Velo" );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackVeloRProjector::~TrackVeloRProjector() {}; 
 
-//=============================================================================
+//-----------------------------------------------------------------------------
+/// Destructor
+//-----------------------------------------------------------------------------
+TrackVeloRProjector::~TrackVeloRProjector() {};

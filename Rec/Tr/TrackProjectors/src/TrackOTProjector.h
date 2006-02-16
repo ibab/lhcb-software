@@ -1,22 +1,31 @@
+// $Id: TrackOTProjector.h,v 1.2 2006-02-16 10:50:20 ebos Exp $
 #ifndef TRACKPROJECTORS_TRACKOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKOTPROJECTOR_H 1
 
 // Include files
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackProjector.h"            // Interface
+#include "TrackProjector.h"
 
 // from OTDet
 #include"OTDet/DeOTDetector.h"
 
+using namespace LHCb;
+
 /** @class TrackOTProjector TrackOTProjector.h TrackProjectors/TrackOTProjector.h
  *  
+ *  Projects into the OT measurement space
+ *
  *  @author Jose Hernando
  *  @author Eduardo Rodrigues
  *  @date   2005-04-08
  */
+
 class TrackOTProjector : public TrackProjector {
+
 public:
+
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
   virtual StatusCode project( const State& state,
@@ -28,15 +37,16 @@ public:
   /// Standard constructor
   TrackOTProjector( const std::string& type, 
                     const std::string& name,
-                    const IInterface* parent);
+                    const IInterface* parent );
 
-  virtual ~TrackOTProjector( ); ///< Destructor
-
-protected:
+ /// Destructor
+  virtual ~TrackOTProjector();
 
 private:
+
   DeOTDetector* m_det;
 
-  std::string m_otTrackerPath;   ///< Name of the OT XML geom path
+  std::string m_otTrackerPath; ///< Name of the OT XML geom path
+
 };
 #endif // TRACKPROJECTORS_TRACKOTPROJECTOR_H
