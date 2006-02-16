@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Update DeRichSystem for improved treatment of inactive HPDs.
+   Requires update to XmlConditions
+
 ! 2006-02-16 - Antonis Papanestis
  - Added 2nd order demagnification in the smartID->detectionPoint.
  - Fixed minor bug in readoutChannelList. Both in DeRichHPDPanel.

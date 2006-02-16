@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.1 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRichSystem.h,v 1.2 2006-02-16 15:41:40 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -178,8 +178,14 @@ private: // data
   /// List of all active HPD RichSmartIDs
   RichSmartID::Vector m_smartIDs;
 
+  /// List of all inactive HPD RichSmartIDs
+  RichSmartID::Vector m_inactiveSmartIDs;
+
   /// List of all active HPD hardware IDs
   RichDAQ::HPDHardwareIDs m_hardIDs;
+
+  /// List of all inactive HPD hardware IDs
+  RichDAQ::HPDHardwareIDs m_inactiveHardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
   typedef GaudiUtils::HashMap< const RichSmartID, RichDAQ::Level0ID > SmartIDToL0;
