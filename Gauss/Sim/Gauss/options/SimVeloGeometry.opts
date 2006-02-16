@@ -1,72 +1,73 @@
-// $Id: SimVeloGeometry.opts,v 1.1 2005-07-12 09:32:38 gcorti Exp $
+// $Id: SimVeloGeometry.opts,v 1.2 2006-02-16 15:50:39 gcorti Exp $
 
 /** @file
  *
  *  File containing the list of detector element to explicitely set
  *  to have misalignement in the VELO.
  *  Should be included from SimGeometry.opts instead of line
- *    Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"};  
+ *    Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
  *
  *  The misaligned VELO requires to use XmlDDDB v26r0 or higher
  * 
  *  @author J.Palacio
- *  @date 2005-07-12
+ *  @author M.Tobin
+ *  @date 2006-02-14
  */
 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/ModulePU00"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/ModulePU02"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module00"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module02"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module04"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module06"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module08"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module10"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module12"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module14"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module16"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module18"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module20"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module22"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module24"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module26"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module28"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module20"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module22"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module24"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module26"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module28"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module30"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module32"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module34"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module36"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module38"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/Module40"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/ModulePU01"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/ModulePU03"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module01"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module03"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module05"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module07"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module09"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module11"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module13"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module15"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module17"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module19"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module21"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module23"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module25"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module27"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module29"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module31"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module33"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module35"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module37"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module39"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/Module41"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU00"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU02"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module00"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module02"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module04"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module06"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module08"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module10"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module12"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module14"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module16"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module18"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module20"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module22"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module24"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module26"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module28"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module20"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module22"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module24"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module26"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module28"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module30"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module32"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module34"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module36"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module38"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module40"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU01"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU03"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module01"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module03"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module05"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module07"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module09"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module11"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module13"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module15"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module17"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module19"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module21"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module23"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module25"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module27"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module29"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module31"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module33"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module35"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module37"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module39"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module41"};
 //
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/WakeFieldCone"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/UpStreamVacTank"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/DownStreamVacTank"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloRight/RFFoilRight"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo/VeloLeft/RFFoilLeft"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/WakeFieldCone"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamVacTank"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamVacTank"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFFoilRight"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFFoilLeft"};

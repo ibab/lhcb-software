@@ -12,6 +12,9 @@
  - Modify ParticleGuns.opts to fix problem obserbed by S.Easo of wrongly 
    re-sequencing GenMonitor
    . ParticleGuns.opts
+ - Modify options for Velo detailed geometry to allow for misalignment, from
+   Mark TOBIN
+   . SimVeloGeometry.opts
 
 ! 2006-02-13 - Gloria CORTI
  - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1
