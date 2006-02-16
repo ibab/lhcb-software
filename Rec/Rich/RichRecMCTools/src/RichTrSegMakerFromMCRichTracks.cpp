@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.2 2006-02-09 17:59:00 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.3 2006-02-16 16:06:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -94,6 +94,9 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     return 0; 
   }
 
+  verbose() << "Trying MCRichTrack " << track->key() << " with " 
+            << track-> mcSegments().size() << " MCRichSegments" << endreq;
+
   // loop over radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
@@ -130,14 +133,16 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
       // printout
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Found MCRichSegment for " << rad << endreq
-                  << " Entry Point : " << entryPoint << endreq
-                  << " Entry Mom.  : " << entryStateMomentum << endreq
-                  << " Exit Point  : " << exitPoint << endreq
-                  << " Exit Mom.   : " << exitStateMomentum << endreq;
+        verbose() << " -> Found MCRichSegment for " << rad << endreq
+                  << "    Entry Point : " << entryPoint << endreq
+                  << "    Entry Mom.  : " << entryStateMomentum << endreq
+                  << "    Exit Point  : " << exitPoint << endreq
+                  << "    Exit Mom.   : " << exitStateMomentum << endreq;
       }
 
-    } else {
+    } 
+    else 
+    {
 
       // Get middle point information
       const Gaudi::XYZPoint midPoint          = segment->bestPoint(0.5);
@@ -154,13 +159,13 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
       // printout
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Found MCRichSegment for " << rad << endreq
-                  << " Entry Point : " << entryPoint << endreq
-                  << " Entry Mom.  : " << entryStateMomentum << endreq
-                  << " Mid Point   : " << midPoint << endreq
-                  << " Mid Mom.    : " << midStateMomentum << endreq
-                  << " Exit Point  : " << exitPoint << endreq
-                  << " Exit Mom.   : " << exitStateMomentum << endreq;
+        verbose() << " -> Found MCRichSegment for " << rad << endreq
+                  << "    Entry Point : " << entryPoint << endreq
+                  << "    Entry Mom.  : " << entryStateMomentum << endreq
+                  << "    Mid Point   : " << midPoint << endreq
+                  << "    Mid Mom.    : " << midStateMomentum << endreq
+                  << "    Exit Point  : " << exitPoint << endreq
+                  << "    Exit Mom.   : " << exitStateMomentum << endreq;
       }
 
     }
@@ -168,6 +173,7 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
   }
 
   // return value is number of segments formed
+  verbose() << "Created " << segments.size() << " RichTrackSegments" << endreq;
   return segments.size();
 }
 

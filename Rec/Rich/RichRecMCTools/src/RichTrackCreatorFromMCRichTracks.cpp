@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.1 2006-02-09 17:59:00 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.2 2006-02-16 16:06:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,15 +39,20 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
     m_mcrTracksLocation    ( MCRichTrackLocation::Default     ),
     m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks" ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false )
+    m_buildHypoRings       ( false ),
+    m_fakeRecoTracks       ( true  ),
+    m_fakeTrLoc            ( "Rec/Rich/MCFakedTracks" ),
+    m_fakeTracks           ( 0 )
 {
   // declare interface for this tool
   declareInterface<IRichTrackCreator>(this);
 
   // job options
-  declareProperty( "TracksLocation",           m_mcrTracksLocation   );
+  declareProperty( "TracksLocation",           m_mcrTracksLocation  );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
+  declareProperty( "FakeRecoTracks",           m_fakeRecoTracks     );
+  declareProperty( "TrackLocation",            m_fakeTrLoc          );
 }
 
 StatusCode RichTrackCreatorFromMCRichTracks::initialize()
@@ -118,7 +123,81 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
       debug() << "located " << m_mcrTracks->size() << " MCRichTracks at "
               << m_mcrTracksLocation << endreq;
     }
-  }
+
+    if ( m_fakeRecoTracks )
+    {
+
+      // crate MC linker
+      TrackToMCP linker( evtSvc(), msgSvc(), m_fakeTrLoc );
+      linker.setDecreasingWeight();
+
+      // clear map
+      m_mcToFakeMap.clear();
+
+      // loop over input tracks
+      for ( MCRichTracks::const_iterator track = m_mcrTracks->begin();
+            track != m_mcrTracks->end(); ++track )
+      {
+
+        // Pointer to underlying MCParticle
+        const MCParticle * mcPart = (*track)->mcParticle();
+        if ( !mcPart )
+        {
+          Warning( "MCRichTrack has null MCParticle reference" );
+          continue;
+        }
+
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "Trying in fake loop MCRichTrack " << (*track)->key() << endreq;
+        }
+
+        // track type
+        const Rich::Track::Type trType = getTrType( *track );
+        // momentum and charge
+        const double ptot   = mcPart->p();
+        const double charge = mcPart->particleID().threeCharge()/3;
+
+        // Track selection
+        if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
+
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << " -> Creating fake Track for MCRichTrack " << (*track)->key() << endreq;
+        }
+
+        // new fake Track
+        Track * newFake = new Track();
+
+        // add to container
+        fakedTracks()->insert( newFake );
+
+        // set momentum and charge info
+        State fakeState;
+        fakeState.setQOverP( ptot>0 ? charge/ptot : 0 );
+        newFake->addToStates( fakeState );
+
+        // pretend these are forward unique tracks
+        newFake->setFlag    ( Track::Unique, true );
+        newFake->setType    ( Track::Long         );
+        newFake->setHistory ( Track::CnvForward   );
+
+        // store MC link
+        linker.link( newFake, mcPart );
+
+        // add to map
+        m_mcToFakeMap[*track] = newFake;
+
+      } // loop over tracks
+
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Created " << fakedTracks()->size() << " fake Tracks for MCRichTracks" << endreq;
+      }
+
+    } // build fake if
+
+  } // first time for each event if
 
   return m_mcrTracks;
 }
@@ -148,15 +227,8 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   m_hasBeenCalled = true;
 
   // track type
-  Rich::Track::Type trType = Rich::Track::Unknown;
-  try { trType = Rich::Track::type(mcrTrack); }
-  // Catch exceptions ( track type unknown )
-  catch ( const GaudiException & expt )
-  {
-    Error( expt.message() );
-    return 0;
-  }
-
+  const Rich::Track::Type trType = getTrType( mcrTrack );
+   
   // unique ( by definition for MC ... )
   const bool trUnique = true;
 
@@ -168,8 +240,12 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   // Is track a usable type
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
+  // momentum and charge
+  const double ptot   = mcPart->p();
+  const double charge = mcPart->particleID().threeCharge()/3;
+
   // Track selection
-  //if ( !trackSelector().trackSelected(mcrTrack) ) return NULL;
+  if ( !trackSelector().trackSelected(trType,ptot,charge,trUnique) ) return NULL;
 
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
@@ -197,10 +273,6 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     }
     if ( 0 < Nsegs )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << " Ptot = " << mcPart->p()/GeV << " passed cut" << endreq;
-      }
 
       // Form a new RichRecTrack
       newTrack = new RichRecTrack();
@@ -212,7 +284,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
       for ( std::vector<RichTrackSegment*>::iterator iSeg = segments.begin();
             iSeg != segments.end(); ++iSeg )
       {
-        if ( !(*iSeg) ) continue;
+        if ( !(*iSeg) ) { Error( "Null RichTrackSegment pointer" ); continue; }
 
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* : (*iSeg) is responsible for deletion
@@ -270,7 +342,8 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
           {
             if ( msgLevel(MSG::VERBOSE) )
             {
-              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
+              verbose() << " TrackSegment in " << (*iSeg)->radiator()
+                        << " rejected : Has no RICH info" << endreq;
             }
             delete newSegment;
             newSegment = NULL;
@@ -281,7 +354,8 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         {
           if ( msgLevel(MSG::VERBOSE) )
           {
-            verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
+            verbose() << " TrackSegment in " << (*iSeg)->radiator()
+                      << " rejected : Failed to project to detector plane" << endreq;
           }
           delete newSegment;
           newSegment = NULL;
@@ -299,13 +373,22 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         newTrack->setVertexMomentum( mcPart->p() );
 
         // track charge
-        newTrack->setCharge( mcPart->particleID().threeCharge()/3 );
-
-        // Set parent information
-        newTrack->setParentTrack( mcrTrack );
+        newTrack->setCharge( (float)charge );
 
         // Count selected tracks
         ++tkCount.selectedTracks;
+
+        // Set parent information
+        if ( m_fakeRecoTracks )
+        {
+          const Track * faketrack = m_mcToFakeMap[mcrTrack];
+          if (!faketrack) Warning( "MCRichTrack has no fake Track !" );
+          newTrack->setParentTrack( faketrack );
+        }
+        else
+        {
+          newTrack->setParentTrack( mcrTrack );
+        }
 
       }
       else
@@ -314,6 +397,10 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         newTrack = NULL;
       }
 
+    }
+    else if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "  --> No TrackSegments created" << endreq;
     } // end segments if
 
     // Add to reference map
@@ -327,6 +414,28 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 void RichTrackCreatorFromMCRichTracks::InitNewEvent()
 {
   RichTrackCreatorBase::InitNewEvent();
-  m_allDone  = false;
-  m_mcrTracks = 0;
+  m_allDone    = false;
+  m_mcrTracks  = 0;
+  m_fakeTracks = 0;
+}
+
+void RichTrackCreatorFromMCRichTracks::FinishEvent()
+{
+  RichTrackCreatorBase::FinishEvent();
+  if ( m_fakeTracks )
+  {
+    debug() << "Created " << m_fakeTracks->size() << " fake Tracks at "
+            << m_fakeTrLoc << endreq;
+  }
+}
+
+LHCb::Tracks *
+RichTrackCreatorFromMCRichTracks::fakedTracks() const
+{
+  if ( !m_fakeTracks )
+  {
+    m_fakeTracks = new LHCb::Tracks();
+    put ( m_fakeTracks, m_fakeTrLoc );
+  }
+  return m_fakeTracks;
 }

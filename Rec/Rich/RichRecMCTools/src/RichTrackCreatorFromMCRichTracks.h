@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.1 2006-02-09 17:59:00 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.2 2006-02-16 16:06:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,6 +30,13 @@
 
 // Event
 #include "Event/MCRichTrack.h"
+#include "Event/Track.h"
+
+// kernel
+#include "RichKernel/RichMap.h"
+
+// Linker
+#include "Linker/LinkerWithKey.h"
 
 //-------------------------------------------------------------------------------------
 /** @class RichTrackCreatorFromMCRichTracks RichTrackCreatorFromMCRichTracks.h
@@ -78,10 +85,24 @@ protected: // methods
   /// Initialise for a new event
   virtual void InitNewEvent();
 
+  /// Finalise current event
+  virtual void FinishEvent();
+
+private: // defintions
+
+  /// typedef of the Linker object for Tracks to MCParticle
+  typedef LinkerWithKey<LHCb::MCParticle,LHCb::Track> TrackToMCP;
+
 private: // methods
 
   /// Returns a pointer to the MCRichTracks
   const LHCb::MCRichTracks * trTracks() const;
+
+  /// Returns a pointer to the faked Tracks
+  LHCb::Tracks * fakedTracks() const;
+
+  /// Returns track type for given MCRichTrack
+  Rich::Track::Type getTrType( const LHCb::MCRichTrack * track ) const;
 
 private: // data
 
@@ -118,6 +139,32 @@ private: // data
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
 
+  /// Create fake reconstructed tracks
+  bool m_fakeRecoTracks;
+
+  /// Fake Reco track location
+  std::string m_fakeTrLoc;
+
+  /// Pointer to faked Tracks
+  mutable LHCb::Tracks * m_fakeTracks;
+
+  /// Map linking MCRichTracks to fake reconstructed tracks
+  mutable Rich::Map<const LHCb::MCRichTrack*,const LHCb::Track*> m_mcToFakeMap;
+
 };
+
+inline Rich::Track::Type 
+RichTrackCreatorFromMCRichTracks::getTrType( const LHCb::MCRichTrack * track ) const
+{
+  Rich::Track::Type trType = Rich::Track::Unknown;
+  try { trType = Rich::Track::type(track); }
+  // Catch exceptions ( track type unknown )
+  catch ( const GaudiException & expt )
+  {
+    Error( expt.message() );
+  }
+  return trType;
+}
+
 
 #endif // RICHRECMCTOOLS_RichTrackCreatorFromMCRichTracks_H

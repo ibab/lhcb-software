@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Improvements to the usage of the Track->MCParticle linkers
+ - Updates to MCRichTrack track creator
+
 !====================== RichRecMCTools v2r0 2006-01-25 =====================
 ! 2006-01-25 - Marco Cattaneo
  - Remove unneccessary dependency on Relations

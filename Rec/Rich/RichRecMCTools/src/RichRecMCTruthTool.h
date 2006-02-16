@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.13 2006-01-25 16:50:04 cattanem Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.14 2006-02-16 16:06:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -45,6 +45,7 @@
 
 // Linkers
 #include "Linker/LinkedTo.h"
+#include "Linker/LinkerTool.h"
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
@@ -75,6 +76,9 @@ public: // methods for Gaudi framework
   RichRecMCTruthTool( const std::string& type,
                       const std::string& name,
                       const IInterface* parent );
+
+  /// Destructor
+  virtual ~RichRecMCTruthTool();
 
   // Initialize method
   StatusCode initialize();
@@ -175,7 +179,12 @@ public: // Public interface methods
 private: // definitions
 
   /// typedef of the Linker object for Tracks to MCParticles
-  typedef LinkedTo<LHCb::MCParticle,LHCb::Track> TrackToMCP;
+  //typedef LinkedTo<LHCb::MCParticle,LHCb::Track> TrackToMCP;
+
+  typedef LinkerTool<LHCb::Track,LHCb::MCParticle> TrackToMCP;
+  typedef TrackToMCP::DirectType                   Table;
+  typedef Table::Range                             Range;
+  typedef Table::iterator                          iterator;
 
 private: // methods
 
@@ -198,6 +207,9 @@ private: // private data
 
   /// Linker for Tracks to MCParticles
   mutable TrackToMCP * m_trToMCPLinks;
+
+  /// Location of Tracks in TES
+  std::string m_trLoc;
 
 };
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.18 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.19 2006-02-16 16:06:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,11 +30,16 @@ RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
                                         const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_truth         ( 0 ),
-    m_trToMCPLinks  ( 0 )
+    m_trToMCPLinks  ( 0 ),
+    m_trLoc         ( TrackLocation::Default )
 {
   // interface
   declareInterface<IRichRecMCTruthTool>(this);
+  // job options
+  declareProperty( "TrackLocation", m_trLoc );
 }
+
+RichRecMCTruthTool::~RichRecMCTruthTool() { cleanUpLinkers(); }
 
 StatusCode RichRecMCTruthTool::initialize()
 {
@@ -71,12 +76,17 @@ RichRecMCTruthTool::trackToMCPLinks() const
 {
   if ( !m_trToMCPLinks )
   {
-    m_trToMCPLinks =
-      new TrackToMCP( evtSvc(), msgSvc(), TrackLocation::Default );
-    if ( m_trToMCPLinks->notFound() )
+    debug() << "Loading TrackToMCP Linker for " << m_trLoc << endreq;
+    m_trToMCPLinks = new TrackToMCP( evtSvc(), m_trLoc );
+    if ( !m_trToMCPLinks->direct() )
     {
       Warning( "Linker for Tracks to MCParticles not found for '" +
-               TrackLocation::Default + "'" );
+               m_trLoc + "'" );
+    }
+    else
+    {
+      debug() << "Found " << m_trToMCPLinks->direct()->relations().size() 
+             << " Track to MCParticle associations" << endreq;
     }
   }
   return m_trToMCPLinks;
@@ -86,9 +96,16 @@ const MCParticle *
 RichRecMCTruthTool::mcParticle( const Track * track ) const
 {
   // Try with linkers
-  if ( trackToMCPLinks() && !trackToMCPLinks()->notFound() )
+  if ( trackToMCPLinks() && trackToMCPLinks()->direct() )
   {
-    return trackToMCPLinks()->first(track->key());
+    Range range = trackToMCPLinks()->direct()->relations(track);
+    const MCParticle * mcp = ( range.empty() ? 0 : (*range.begin()).to() );
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Found " << range.size() << " association(s) for Track " << track->key()
+              << " : MCParticle = " << mcp << endreq;
+    }
+    return mcp;
   }
   // If get here MC association failed
   Warning( "No MC association available for Tracks" );
