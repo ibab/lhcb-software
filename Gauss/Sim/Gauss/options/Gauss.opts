@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.80 2006-02-09 16:15:25 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.81 2006-02-16 15:28:05 gcorti Exp $ 
 
 /** @file 
  * 
@@ -26,6 +26,8 @@ Generator.Members         = { "GenInit/GaussGen" };
 Simulation.Members        = { "SimInit/GaussSim" };
 GaussGen.FirstEventNumber = 1;
 GaussGen.RunNumber        = 1;
+EventClockSvc.StartTime   = 0;
+EventClockSvc.TimeStep    = 25*ns;
 
 //---------------------------------------------------------------------------
 // Generator phase: see there how to modify to run generator 

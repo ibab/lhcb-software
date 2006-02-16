@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.19 2006-02-10 16:40:34 gcorti Exp $ 
+// $Id: Common.opts,v 1.20 2006-02-16 15:28:12 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -19,7 +19,8 @@
 // External services that will be always used
 ApplicationMgr.ExtSvc = { "ToolSvc" ,
                           "ParticlePropertySvc" ,
-                          "EventSelector" };
+                          "EventSelector",
+                          "EventClockSvc" };
 
 // Configuration of various services that are used: 
 RndmGenSvc.Engine.SetSingleton   = true;
@@ -53,6 +54,8 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
+// ApplicationMgr.DLLs += { "RichDet", "RichCondition" }; // RichConditions in 
+// Rich.opts
 ApplicationMgr.DLLs += { "RichDet" };
 ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
