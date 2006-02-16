@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.10 2006-02-15 16:41:53 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.11 2006-02-16 16:17:23 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -30,12 +30,10 @@ GetMCRichHitsAlg::GetMCRichHitsAlg( const std::string& name,
   , m_invalidRichHits     ( 0                       )
   , m_ctkHits             ( Rich::NRadiatorTypes, 0 )
   , m_scatHits            ( Rich::NRadiatorTypes, 0 )
-
   , m_gasQzHits           ( Rich::NRiches, 0 )
   , m_hpdQzHits           ( Rich::NRiches, 0 )
   , m_nitroHits           ( Rich::NRiches, 0 )
   , m_aeroFilterHits      ( Rich::NRiches, 0 )
-
   , m_nomcpHits           ( Rich::NRadiatorTypes, 0 )
   , m_richDets            ( Rich::NRiches           )
   , m_richDetsLoc         ( Rich::NRiches           )
@@ -203,38 +201,32 @@ StatusCode GetMCRichHitsAlg::execute()
           {
             // background RICH1 Gas Quartz window CK hit
             mchit->setGasQuartzCK( true );
-            mchit->setBackgroundHit( true );
           }
           else if (Rich2GasQWindowCkvRadiatorNum  == g4hit->GetRadiatorNumber() )
           {
             // background RICH2 Gas Quartz window CK hit
             mchit->setGasQuartzCK( true );
-            mchit->setBackgroundHit( true );
           }
           else if ( RichHpdQuartzWindowCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // background HPD Quartz window CK hit
             mchit->setHpdQuartzCK( true );
-            mchit->setBackgroundHit( true );
           }
           else if ( RichFilterGenericCkvRadiatorNum == g4hit->GetRadiatorNumber() ||
                     RichFilterD263CkvRadiatorNum    == g4hit->GetRadiatorNumber() )
           {
             // Aerogel filter CK hit
             mchit->setAeroFilterCK( true );
-            mchit->setBackgroundHit( true );
           }
           else if ( Rich1NitrogenCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // RICH1 nitrogen CK hit
             mchit->setNitrogenCK( true );
-            mchit->setBackgroundHit( true );
           }
           else if ( Rich2NitrogenCkvRadiatorNum == g4hit->GetRadiatorNumber() )
           {
             // RICH2 nitrogen CK hit
             mchit->setNitrogenCK( true );
-            mchit->setBackgroundHit( true );
           }
           else
           {
@@ -266,13 +258,11 @@ StatusCode GetMCRichHitsAlg::execute()
         if ( g4hit->GetChTrackID() < 0 )
         {
           mchit->setChargedTrack( true );
-          mchit->setBackgroundHit( true );
         }
         // Rayleigh scattered flag
         if ( g4hit->OptPhotRayleighFlag() > 0 )
         {
           mchit->setScatteredPhoton( true );
-          mchit->setBackgroundHit( true );
         }
 
         // get sensitive detector identifier from det elem
