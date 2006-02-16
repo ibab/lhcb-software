@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-16 - Kurt Rinnert
+ - bug fix: adc value for one strip clusters was not limited to 127
+ - overflow bit in cluster word is now set correctly when an adc overflow
+   is detected
+
 ! 2006-02-15 - Kurt Rinnert
  - changed type of buffer_word into u_int32_t
  - protected reading of InternalVeloClusters from missing bank

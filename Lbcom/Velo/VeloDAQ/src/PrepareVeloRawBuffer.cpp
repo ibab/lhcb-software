@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.8 2006-02-15 18:08:39 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.9 2006-02-16 15:55:13 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -194,7 +194,14 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     if( numStrips == 1 )  
     {
       // single strip cluster
-      VeloClusterWord vcw(clu->strip(0),0.0,1, false);
+      double adcCount = clu->adcValue(0);
+      bool overflow = false;
+      if (adcCount > 127)
+      {
+        adcCount = 127;
+        overflow = true;
+      }
+      VeloClusterWord vcw(clu->strip(0),0.0,1, overflow);
       packedCluster = static_cast<buffer_word>(vcw.value());
       if ( isVerbose )
 	    {
@@ -202,7 +209,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
                   << ",ADC: " << clu->adcValue( 0) << endmsg;
 	    }
 
-      SiADCWord aw(clu->adcValue(0),true);
+      SiADCWord aw(adcCount,true);
       rowData |= (aw.value() << ((nAdc % 4) << 3));
 
       ++nAdc;
@@ -228,14 +235,17 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       double sumADCWeightedeStrip = 0.;
 
       // loop over all strip signals 
-      unsigned int i;
-      for ( i=0 ; i<stripSignals.size(); ++i) 
+      bool overflow = false;
+      unsigned int i = 0;
+      for (; i<stripSignals.size(); ++i) 
 	    {
         unsigned int stripNumber = stripSignals[i].first;
         double adcCount = stripSignals[i].second;
-     
-        // ...
-        adcCount = (adcCount>127 ? 127 : adcCount);
+        if (adcCount > 127)
+        {
+          adcCount = 127;
+          overflow = true;
+        }
 	   
 	      if(isVerbose)
         {
@@ -269,7 +279,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       double cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
       unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
       double interStripPos = cPos - channelPos; // fractional part
-      VeloClusterWord vcw(channelPos, interStripPos, numStrips, false);
+      VeloClusterWord vcw(channelPos, interStripPos, numStrips, overflow);
       packedCluster = static_cast<buffer_word>(vcw.value());
 
       if(isVerbose)
