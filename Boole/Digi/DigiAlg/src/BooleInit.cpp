@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.13 2006-02-14 14:01:57 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.14 2006-02-16 13:53:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -95,15 +95,31 @@ StatusCode BooleInit::execute() {
   LHCb::RawEvent* raw = new LHCb::RawEvent();
   put( raw, LHCb::RawEventLocation::Default );
 
-  // Add a DAQ bank
-  int data[3];
-  data[0] = 0;  // Partition ID
-  data[1] = evt->runNumber();
-  data[2] = 0;  // Number of missing sources
+  // Add the DAQ bank
+  unsigned int daq[3];
+  daq[0] = 0;  // Partition ID
+  daq[1] = evt->runNumber();
+  daq[2] = 0;  // Number of missing sources
   
-  LHCb::RawBank* bank = raw->createBank(1, LHCb::RawBank::DAQ, 1, 12, data);
-  raw->adoptBank(bank, true);
+  LHCb::RawBank* daqBank = raw->createBank(1, LHCb::RawBank::DAQ, 1, 8+12, daq);
+  raw->adoptBank(daqBank, true);
+
+  // Add the ODIN bank (EDMS 704084)
+  unsigned int odin[10];
+  odin[0] = evt->runNumber();
+  odin[1] = 0xFFFFFFFF & evt->evtNumber();
+  odin[2] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
+  odin[3] = 0; // Orbit number
+  odin[4] = 0; // BunchID (bits 0:11)
+  odin[5] = 0xFFFFFFFF & evt->evtTime();
+  odin[6] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
+  odin[7] = 0; // error bits, BX type, Trigger type
+  odin[8] = 0; // Detector status
+  odin[9] = 0; // Bunch Current
   
+  LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+40, odin);
+  raw->adoptBank(odinBank, true);
+
   return StatusCode::SUCCESS;
 };
 
