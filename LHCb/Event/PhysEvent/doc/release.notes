@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.76 2006-02-16 14:53:07 pkoppenb Exp $
+! $Id: release.notes,v 1.77 2006-02-16 15:20:37 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-! 2006-02-16 - P. Koppenburg for Vanya Belyaev
+! 2006-02-16 - P. Koppenburg
+ - xml/Vertex.xml
+ - xml/PrimVertex.xml
+   . More elegant way of getting the same result without the internal variable.
+   
+! 2006-02-16 - P. Koppenburg
  - xml/Particle.xml
    . Default weight is +1, not -1.
  - xml/Vertex.xml

@@ -73,14 +73,16 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         type="Vertex*"
         const="TRUE"
        />
-       <attribute
+       <method
         name="isPrimary"
         desc="is a primary vertex ?"
         type="bool"
-	setMeth='FALSE'
-        init="false"
-	access="PROTECTED"
-       /> 
+	virtual="TRUE"
+       >
+       <code>
+         return false;
+       </code>
+       </method> 
        <attribute
         name="position"
         desc="Position in LHCb reference system"

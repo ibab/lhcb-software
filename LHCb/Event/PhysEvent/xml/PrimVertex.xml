@@ -20,14 +20,16 @@
        &KeyedObject;
        <import name="Event/Track" soft="TRUE"/>
        <import name="Event/Vertex"/>
-       <constructor
-        desc="Overwritten default constructor"
+       <method
+        name="isPrimary"
+        desc="is a primary vertex ?"
+        type="bool"
+	virtual="TRUE"
        >
-        <code>
-         m_isPrimary = true ;
-         return;
-        </code>
-       </constructor>
+       <code>
+         return true;
+       </code>
+       </method> 
         <relation
         name="tracks"
         desc="Reference to tracks composing the vertex"
