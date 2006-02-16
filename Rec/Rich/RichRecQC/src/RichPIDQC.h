@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.22 2005-10-13 15:52:48 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.23 2006-02-16 16:09:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -24,17 +24,12 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
-// Relations
-#include "Relations/IAssociatorWeighted.h"
-#include "Relations/IRelationWeighted.h"
-
 // RichRecBase
 #include "RichRecBase/RichTrackSelector.h"
 
 // Event model
 #include "Event/RichPID.h"
 #include "Event/Track.h"
-#include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
 
 // RichKernel
@@ -44,14 +39,11 @@
 #include "RichRecBase/RichDetParams.h"
 
 // interfaces
-#include "RichKernel/IRichMCTruthTool.h"
+#include "RichRecBase/IRichRecMCTruthTool.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -83,9 +75,6 @@ public:
 
 private: // definitions
 
-  /// tracking MC truth definition
-  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackFitAsct;
-
 private: // methods
 
   /// Loads the PID data from configured location
@@ -97,37 +86,8 @@ private: // methods
   /// Book MCTruth histograms
   StatusCode bookMCHistograms();
 
-  /** Perform C++ gymnastics to get momentum state for a given track
-   *
-   *  @return Pointer to TrStateP at the requested z position
-   */
-  const TrStateP * getTrStateP ( const TrStoredTrack * track, ///< Pointer to a TrStoredTrack
-                                 const double zPos = -999999  ///< z position at which to get the state
-                                 ) const;
-
   /// Count all Tracks in given location passing the selection criteria
   void countTracks( const std::string & location );
-
-  /// Count all TrStoredTracks in given location passing the selection criteria
-  void countTrStoredTracks( const std::string & location );
-
-  /// Count all TrgTracks in given location passing the selection criteria
-  void countTrgTracks( const std::string & location );
-
-  /// Does this RichPID object pass the selection criteria
-  bool pidIsSelected( const RichPID * pid ) const;
-
-  /// Get the momentum for the track associated to the PID object
-  double momentum( const RichPID * pid ) const;
-
-  /// Get the track type associated to the PID object
-  Rich::Track::Type trackType( const RichPID * pid ) const;
-
-  /// Get the MC type for the track associated to the PID object
-  Rich::ParticleIDType trueMCType( const RichPID * pid ) const;
-
-  /// Get the associated track key
-  int tkNumber( const RichPID * pid ) const;
 
 private: // data
 
@@ -151,7 +111,7 @@ private: // data
 
   RichTrackSelector m_trSelector;  ///< Track selector
 
-  const IRichMCTruthTool * m_mcTruth;    ///< MC Truth tool
+  const IRichRecMCTruthTool * m_mcTruth;    ///< MC Truth tool
 
   // Summary information
   double m_sumTab[6][6];
@@ -161,11 +121,11 @@ private: // data
   int m_multiplicity;
   int m_totalSelTracks;
 
-  typedef RichMap<Rich::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
+  typedef Rich::Map<Rich::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
   /// Count the number of PID objects by track type
   TkCount m_trackCount;
 
-  typedef RichMap<std::string,std::pair<unsigned int,unsigned int> > PIDsByType;
+  typedef Rich::Map<std::string,std::pair<unsigned int,unsigned int> > PIDsByType;
   /// Count the number of PID objects by PID type
   PIDsByType m_pidPerTypeCount;
 
@@ -202,11 +162,5 @@ private: // data
   IHistogram1D* m_eventRate;        ///< Events with/without PID results
 
 };
-
-inline const TrStateP * RichPIDQC::getTrStateP( const TrStoredTrack * track,
-                                                const double zPos ) const
-{
-  return ( track ? dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
-}
 
 #endif // RICHRECQC_RICHPIDQC_H

@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.19 2005-12-01 08:05:20 jonrob Exp $
+# $Id: requirements,v 1.20 2006-02-16 16:09:45 jonrob Exp $
 #============================================================================
 
 package           RichRecQC
@@ -18,9 +18,10 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use GaudiPI       v*
+# use GaudiPI       v*
+use MCEvent       v*    Event
 use RichRecBase   v*    Rich
-use Relations     v*    Kernel
+
 
 # Component library building rule
 #============================================================================

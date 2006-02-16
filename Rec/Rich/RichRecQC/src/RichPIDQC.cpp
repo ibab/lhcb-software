@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.44 2005-11-03 14:37:34 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.45 2006-02-16 16:09:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPIDQC.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -57,7 +60,7 @@ StatusCode RichPIDQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Check momentum cuts make sense
-  if ( m_pMinCut >= m_pMaxCut ) 
+  if ( m_pMinCut >= m_pMaxCut )
   {
     err() << "Invalid Min/Max momentum cuts "
           << m_pMinCut << "/" << m_pMaxCut << endreq;
@@ -65,7 +68,7 @@ StatusCode RichPIDQC::initialize()
   }
 
   // Retrieve MC tool, if needed
-  if ( m_truth ) acquireTool( "RichMCTruthTool", m_mcTruth );
+  if ( m_truth ) acquireTool( "RichRecMCTruthTool", m_mcTruth );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -79,7 +82,7 @@ StatusCode RichPIDQC::initialize()
   m_nTracks[1] = 0;
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes(msg()) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( debug() );
 
@@ -143,13 +146,13 @@ StatusCode RichPIDQC::bookMCHistograms()
                                   6, 0.5, 6.5, 6, 0.5, 6.5 );
 
   {for ( int iTrue = 0; iTrue < Rich::NParticleTypes+1; ++iTrue ) {
-    for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
-      title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
-      id = 10*(1+iTrue) + (1+iID) + 100;
-      m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
-                                                 m_bins, m_pMinCut, m_pMaxCut );
-    }
-  }}
+      for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
+        title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
+        id = 10*(1+iTrue) + (1+iID) + 100;
+        m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
+                                                   m_bins, m_pMinCut, m_pMaxCut );
+      }
+    }}
 
   if ( m_extraHistos ) {
 
@@ -206,29 +209,40 @@ StatusCode RichPIDQC::execute()
   // Count tracks
   m_totalSelTracks = 0;
   m_multiplicity = 0;
-  RichMap<std::string,bool> locs;
+  Rich::Map<std::string,bool> locs;
   for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
-        iC != m_richPIDs.end(); ++iC ) 
+        iC != m_richPIDs.end(); ++iC )
   {
     // create pointer to pid object
     RichPID * fPID = dynamic_cast<RichPID*>(*iC);
 
-    // get location of associated track container
-    const std::string contLoc = objectLocation( fPID->associatedTrack()->parent() );
-
-    // if new, count all tracks in this container
-    if ( locs.end() == locs.find(contLoc) )
+    // check track is OK
+    if ( fPID->track() )
     {
-      locs[contLoc] = true;
-      try {
-        if      ( fPID->isTrackPID() )         { countTracks(contLoc);         }
-        else if ( fPID->isTrStoredTrackPID() ) { countTrStoredTracks(contLoc); }
-        else if ( fPID->isTrgTrackPID()      ) { countTrgTracks(contLoc);      }
-        else    { return Error( "Unknown Track Type in RichPIDs" ); }
+
+      // get location of associated track container
+      const std::string contLoc = objectLocation( fPID->track()->parent() );
+
+      // if new, count all tracks in this container
+      if ( locs.end() == locs.find(contLoc) )
+      {
+        locs[contLoc] = true;
+        try 
+        {
+          countTracks(contLoc);
+        }
+        catch ( const GaudiException & exp )
+        {
+          error() << exp << endreq;
+          return Warning( "Failed to load tracking objects at "+contLoc,
+                          StatusCode::SUCCESS );
+        }
       }
-      catch ( const GaudiException & exp ) {
-        return Warning("Exception caught : Failed to load tracking objects",StatusCode::SUCCESS);
-      }
+
+    } // track OK
+    else
+    {
+      Warning( "RichPID has null Track SmartRef" );
     }
 
   }
@@ -246,15 +260,19 @@ StatusCode RichPIDQC::execute()
           iC != m_richPIDs.end(); ++iC ) {
       RichPID * iPID = dynamic_cast<RichPID*>(*iC);
 
+      // Track for this PID
+      const Track * track = iPID->track();
+
       // Track selection
-      if ( !pidIsSelected( iPID ) ) continue;
+      if ( !m_trSelector.trackSelected( track ) ) continue;
 
       // Track momentum in GeV/C
-      const double tkPtot = momentum( iPID );
+      const State* state = &(track)->firstState();
+      const double tkPtot = ( state ? state->p()/GeV : 0 );
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Track type
-      const Rich::Track::Type tkType = trackType(iPID);
+      const Rich::Track::Type tkType = Rich::Track::type(track);
 
       // Count PIDs and tracks
       ++m_trackCount[tkType].first;
@@ -283,17 +301,17 @@ StatusCode RichPIDQC::execute()
         verbose() << endreq
                   << "  Threshold   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          verbose() << iPID->isAboveThreshold(pid) << " ";
-        }}
+            const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+            verbose() << iPID->isAboveThreshold(pid) << " ";
+          }}
         verbose() << endreq
                   << "  Dlls        = " << iPID->particleLLValues() << endreq
                   << "  Prob(r/n)   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
-        }}
-        verbose() << endreq << "  RecoPID     = " << pid;
+            const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+            verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
+          }}
+        verbose() << endreq << "  RecoPID     = " << pid << endreq;
       }
 
       // Fill histos for deltaLLs and probabilities
@@ -312,11 +330,11 @@ StatusCode RichPIDQC::execute()
       if ( m_truth ) {
 
         // Get true track type from MC
-        Rich::ParticleIDType mcpid = trueMCType( iPID );
+        Rich::ParticleIDType mcpid = m_mcTruth->mcParticleType(track);
         if ( mcpid != Rich::Unknown &&
              !m_ignoreThres &&
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "  MCID        = " << mcpid << endreq;
 
         // Count track and PID types
         if ( Rich::Unknown != mcpid ) {
@@ -365,8 +383,6 @@ StatusCode RichPIDQC::execute()
 
         } // extra histos
 
-      } else {
-        verbose() << endreq;
       }
 
     } // end PID loop
@@ -544,7 +560,8 @@ StatusCode RichPIDQC::loadPIDData()
   DataObject *pObject;
   if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) ) {
     if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
-         static_cast<KeyedContainer<RichPID, Containers::HashMap>*>(pObject) ) {
+         static_cast<KeyedContainer<RichPID, Containers::HashMap>*>(pObject) )
+    {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
       debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endreq;
@@ -561,7 +578,7 @@ void RichPIDQC::countTracks( const std::string & location )
   Tracks * tracks = get<Tracks>( location );
   debug() << "Found " << tracks->size() << " Tracks at " << location << endreq;
   for ( Tracks::const_iterator iTrk = tracks->begin();
-        iTrk != tracks->end(); ++iTrk ) 
+        iTrk != tracks->end(); ++iTrk )
   {
     if ( (*iTrk)->checkFlag(::Track::Unique ) ) ++m_multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
@@ -572,140 +589,3 @@ void RichPIDQC::countTracks( const std::string & location )
   }
 }
 
-void RichPIDQC::countTrStoredTracks( const std::string & location )
-{
-  TrStoredTracks * tracks = get<TrStoredTracks>( location );
-  debug() << "Found " << tracks->size() << " TrStoredTracks at " << location << endreq;
-  for ( TrStoredTracks::const_iterator iTrk = tracks->begin();
-        iTrk != tracks->end(); ++iTrk ) 
-  {
-    if ( (*iTrk)->unique() ) ++m_multiplicity;
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const TrStateP* pState = getTrStateP( *iTrk );
-    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
-    ++m_totalSelTracks;
-  }
-}
-
-void RichPIDQC::countTrgTracks( const std::string & location )
-{
-  TrgTracks * tracks = get<TrgTracks>( location );
-  debug() << "Found " << tracks->size() << " TrgTracks at " << TrgTrackLocation::Long << endreq;
-  m_multiplicity = tracks->size();
-  for ( TrgTracks::const_iterator iTrk = tracks->begin();
-        iTrk != tracks->end(); ++iTrk ) 
-  {
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const double tkPtot = fabs((*iTrk)->firstState().momentum())/GeV;
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
-    ++m_totalSelTracks;
-  }
-}
-
-bool RichPIDQC::pidIsSelected( const RichPID * pid ) const
-{
-  if ( const Track * track = pid->track() ) 
-  {
-    return m_trSelector.trackSelected( track );
-  } 
-  else if ( const TrStoredTrack * trTrack = pid->trStoredTrack() ) 
-  {
-    return m_trSelector.trackSelected( trTrack );
-  } 
-  else if ( const TrgTrack * trgTrack = pid->trgTrack() ) 
-  {
-    return m_trSelector.trackSelected( trgTrack );
-  } 
-  else 
-  {
-    Exception( "Unknown RichPID track type" );
-    return false;
-  }
-}
-
-double RichPIDQC::momentum( const RichPID * pid ) const
-{
-  if ( const Track * track = pid->track() ) 
-  {
-    const State* state = &(track)->firstState();
-    return ( state ? state->p()/GeV : 0 );
-  } 
-  else if ( const TrStoredTrack * trTrack = pid->trStoredTrack() ) 
-  {
-    const TrStateP* pState = getTrStateP( trTrack );
-    return ( pState ? pState->p()/GeV : 0 );
-  } 
-  else if ( const TrgTrack * trgTrack = pid->trgTrack() ) 
-  {
-    return fabs( trgTrack->firstState().momentum())/GeV;
-  } 
-  else 
-  {
-    Exception( "Unknown RichPID track type" );
-    return 0;
-  }
-}
-
-Rich::Track::Type RichPIDQC::trackType( const RichPID * pid ) const
-{
-  if ( const Track * track = pid->track() ) 
-  {
-    return Rich::Track::type(track);
-  } 
-  else if ( const TrStoredTrack * trTrack = pid->trStoredTrack() ) 
-  {
-    return Rich::Track::type(trTrack);
-  } 
-  else if ( const TrgTrack * trgTrack = pid->trgTrack() ) 
-  {
-    return Rich::Track::type(trgTrack);
-  } 
-  else 
-  {
-    Exception( "Unknown RichPID track type" );
-    return  Rich::Track::Unknown;
-  }
-}
-
-Rich::ParticleIDType RichPIDQC::trueMCType( const RichPID * pid ) const
-{
-  if ( const Track * track = pid->track() ) 
-  {
-    return m_mcTruth->mcParticleType(track);
-  } 
-  else if ( const TrStoredTrack * trTrack = pid->trStoredTrack() ) 
-  {
-    return m_mcTruth->mcParticleType(trTrack);
-  } 
-  else if ( const TrgTrack * trgTrack = pid->trgTrack() ) 
-  {
-    return m_mcTruth->mcParticleType(trgTrack);
-  } 
-  else 
-  {
-    Exception( "Unknown RichPID track type" );
-    return Rich::Unknown;
-  }
-}
-
-int RichPIDQC::tkNumber( const RichPID * pid ) const
-{
-  if ( const Track * track = pid->track() ) 
-  {
-    return track->key();
-  } 
-  if ( const TrStoredTrack * trTrack = pid->trStoredTrack() ) 
-  {
-    return trTrack->key();
-  } 
-  else if ( const TrgTrack * trgTrack = pid->trgTrack() ) 
-  {
-    return trgTrack->key();
-  } 
-  else 
-  {
-    Exception( "Unknown RichPID track type" );
-    return -1;
-  }
-}

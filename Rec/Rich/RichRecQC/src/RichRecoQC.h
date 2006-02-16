@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.11 2005-12-01 08:05:25 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.12 2006-02-16 16:09:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -39,7 +39,7 @@
 #include "RichKernel/RichStatDivFunctor.h"
 
 // GaudiPI
-#include "AIDA_Proxy/AIDA_Proxy.h"
+//#include "AIDA_Proxy/AIDA_Proxy.h"
 
 // boost
 #include <boost/assign/list_of.hpp>
@@ -71,9 +71,9 @@ public:
 private: // methods
 
   /// Fit a Gaussian to the given distribution
-  AIDA::IFitResult * fitHisto( AIDA::IHistogram1D * histo,
-                               const std::pair<double,double> & range,
-                               const std::vector<double> & params );
+  //AIDA::IFitResult * fitHisto( AIDA::IHistogram1D * histo,
+  //                             const std::pair<double,double> & range,
+  //                             const std::vector<double> & params );
 
 private: // data
 
