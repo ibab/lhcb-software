@@ -1,19 +1,15 @@
-// $Id: GenInit.cpp,v 1.2 2006-01-27 19:26:32 gcorti Exp $
+// $Id: GenInit.cpp,v 1.3 2006-02-16 15:23:22 gcorti Exp $
 // Include files 
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/SmartIF.h"
 
 // from LHCbKernel
 #include "Kernel/IGenericTool.h"
-#include "Kernel/IRndmTool.h"
 
 // from GenEvent
 #include "Event/GenHeader.h"
-
-// from MCEvent
-#include "Event/MCHeader.h"
 
 // local
 #include "GenInit.h"
@@ -34,8 +30,7 @@ DECLARE_ALGORITHM_FACTORY( GenInit );
 GenInit::GenInit( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator ),
-    m_memoryTool(0), 
-    m_initRndmTool(0)
+    m_memoryTool(0)
 {
   declareProperty( "FirstEventNumber", m_firstEvent = 1 );
   declareProperty( "RunNumber",        m_runNumber  = 1 );
@@ -58,10 +53,6 @@ StatusCode GenInit::initialize() {
   // Private tool to plot the memory usage
   std::string toolName = name()+"Memory";
   m_memoryTool = tool<IGenericTool>( "MemoryTool", toolName, this, true );
-  
-  // Private tool to initialize random number
-  toolName = name()+"Rndm";
-  m_initRndmTool = tool<IRndmTool>( "InitRndmTool", toolName, this, true );
 
   return StatusCode::SUCCESS;
 };
@@ -81,21 +72,19 @@ StatusCode GenInit::execute() {
 
   // Initialize the random number
   longlong eventNumber = m_firstEvent - 1 + this->eventCounter();
-  m_initRndmTool->initRndm( m_runNumber, eventNumber );
-  this->printEventRun( eventNumber, m_runNumber );
+  std::vector<long int> seeds = getSeeds( m_runNumber, eventNumber );
+  sc = this->initRndm( seeds );
+  if ( sc.isFailure() ) return sc;  // error printed already by initRndm
+  this->printEventRun( eventNumber, m_runNumber, &seeds);
   
-  // Create GenHeader (running Generator phase) and partially fill it
-  // - updated during execution
-  LHCb::GenHeader* gen = new LHCb::GenHeader();
-
-  gen->setApplicationName( this->appName() );
-  gen->setApplicationVersion( this->appVersion() );
-  gen->setRunNumber( m_runNumber );
-  gen->setEvtNumber( eventNumber );
-
-  verbose() << "GenHeader " << *gen << endmsg;
-
-  put( gen, LHCb::GenHeaderLocation::Default );    
+  // Create GenHeader and partially fill it - updated during phase execution
+  LHCb::GenHeader* header = new LHCb::GenHeader();
+  header->setApplicationName( this->appName() );
+  header->setApplicationVersion( this->appVersion() );
+  header->setRunNumber( m_runNumber );
+  header->setEvtNumber( eventNumber );
+  header->setRandomSeeds( seeds );
+  put( header, LHCb::GenHeaderLocation::Default );    
 
   return StatusCode::SUCCESS;
 };

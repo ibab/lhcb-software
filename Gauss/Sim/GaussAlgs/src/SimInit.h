@@ -1,4 +1,4 @@
-// $Id: SimInit.h,v 1.1 2006-01-18 12:52:15 gcorti Exp $
+// $Id: SimInit.h,v 1.2 2006-02-16 15:23:22 gcorti Exp $
 #ifndef SIMINIT_H 
 #define SIMINIT_H 1
 
@@ -7,8 +7,7 @@
 #include "Kernel/LbAppInit.h"
 
 class IGenericTool;
-class IRndmTool;
-
+class IDetDataSvc;
 
 /** @class SimInit SimInit.h
  *  
@@ -34,7 +33,7 @@ protected:
 
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
-  IRndmTool*    m_initRndmTool; ///< Pointer to (private) rndm intialization too  
+  IDetDataSvc*  m_detDataSvc;   ///< Pointer to (private) detector service
 
 };
 #endif // SIMINIT_H

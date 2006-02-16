@@ -1,4 +1,4 @@
-// $Id: GenInit.h,v 1.1 2006-01-18 12:52:15 gcorti Exp $
+// $Id: GenInit.h,v 1.2 2006-02-16 15:23:22 gcorti Exp $
 #ifndef GENINIT_H 
 #define GENINIT_H 1
 
@@ -7,8 +7,6 @@
 #include "Kernel/LbAppInit.h"
 
 class IGenericTool;
-class IRndmTool;
-
 
 /** @class GenInit GenInit.h
  *  
@@ -40,7 +38,6 @@ private:
   int           m_runNumber;
 
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
-  IRndmTool*    m_initRndmTool; ///< Pointer to (private) rndm intialization too  
 
 };
 #endif // GENINIT_H

@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.9 2006-01-27 19:28:14 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.10 2006-02-16 15:23:22 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -179,18 +179,20 @@ void GiGaGetHitsAlg::infoRICH()
            << obj->size()
            << endmsg ;
     unsigned int nHitsRich1 = 0, nHitsRich2 = 0;
+    int icount = 0;
     for( LHCb::MCRichHits::const_iterator hiter=obj->begin(); 
          hiter!=obj->end(); ++hiter ) {
       if( (*hiter)->rich() == Rich::Rich1 ) nHitsRich1++;
       if( (*hiter)->rich() == Rich::Rich2 ) nHitsRich2++;
-      verbose() << "Rich: " << (*hiter)->rich() 
-                << " Radiator: " << (*hiter)->radiator()
-                << "  Entry point: " << (*hiter)->entry();
+      verbose() << "MCRichHit " << icount++ << std::endl
+                << *(*hiter) << std::endl;
+//       verbose() << "Rich: " << (*hiter)->rich() 
+//                 << " Radiator: " << (*hiter)->radiator()
+//                 << "  Entry point: " << (*hiter)->entry();
       if( (*hiter)->mcParticle() != NULL ) {
-        verbose() << "   MCParticle: "
-                  << (*hiter)->mcParticle()->particleID().pid()
-                  << "     Energy: " 
-                  << (*hiter)->mcParticle()-> momentum().e()
+        verbose() << " from MCParticle: " << (*hiter)->mcParticle()->key()
+                  << "  pdg " << (*hiter)->mcParticle()->particleID().pid()
+                  << "  E " << (*hiter)->mcParticle()-> momentum().e()
                   <<  endmsg;
       } else {
         verbose() << "   No MCParticle " << endmsg;
@@ -210,6 +212,10 @@ void GiGaGetHitsAlg::infoRICH()
             << m_richop << "' \t"
             << obj->size()
             << endmsg;
+    for( LHCb::MCRichOpticalPhotons::const_iterator hiter=obj->begin();
+         hiter!=obj->end();  ++hiter ) {
+      verbose() << "MCRichOpPhotons " << std::endl << *(*hiter) << endmsg;
+    }
     Stat stat( chronoSvc() , "#MCRichOpPhotons" , obj->size() );
   }
 
@@ -221,6 +227,10 @@ void GiGaGetHitsAlg::infoRICH()
            << m_richsegments << "' \t"
            << obj->size()
            << endmsg;
+    for( LHCb::MCRichSegments::const_iterator hiter=obj->begin();
+         hiter!=obj->end();  ++hiter ) {
+      verbose() << "MCRichSegments " << std::endl << *(*hiter) << endmsg;
+    }
     Stat stat( chronoSvc(), "#MCRichSegments", obj->size() );
   }
   
@@ -236,7 +246,6 @@ void GiGaGetHitsAlg::infoRICH()
     Stat stat( chronoSvc(), "#MCRichTracks", obj->size() );
   }
 
-  
   return;
 }
 

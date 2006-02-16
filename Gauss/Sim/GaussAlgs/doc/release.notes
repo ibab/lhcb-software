@@ -4,7 +4,18 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
-!===================== GaussAlgs v2r0 2006-01-27  =========================
+!===================== GaussAlgs v2r0 2006-02-16  =========================
+! 2006-02-16 - Gloria CORTI
+ - src/GenInit.{h,cpp}
+   src/SimInit.{h,cpp}
+   . Adapt to changes in LbAppInit and remove use of IRndmTool
+   . set vector of seed in {Gen,MC}Header
+ - src/SimInit.{h,cpp}
+   . Introduce use of DetectorDataSvc to access eventTime and fill
+     corresponding entry in MCHeader
+ - src/GiGaGetHitsAlg.cpp
+   . change verbose printint of Rich extened info
+
 ! 2006-01-27 - Gloria CORTI
  - src/GenInit.cpp, SimInit.cpp
    . change output level in execute to verbose
