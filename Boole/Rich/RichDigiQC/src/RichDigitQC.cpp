@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.27 2006-02-06 12:12:49 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.28 2006-02-16 15:51:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -31,10 +31,14 @@ RichDigitQC::RichDigitQC( const std::string& name,
     m_evtC           ( 0                 ),
     m_spillDigits    ( Rich::NRiches     ),
     m_totalSpills    ( Rich::NRiches     ),
-    m_bkgHits        ( Rich::NRiches, 0  ),
-    m_chrgShrHits    ( Rich::NRiches, 0  ),
+    m_scattHits      ( Rich::NRiches, 0  ),
     m_chrgTkHits     ( Rich::NRiches, 0  ),
-    m_scattHits      ( Rich::NRiches, 0  )
+    m_gasQCK         ( Rich::NRiches, 0  ),
+    m_hpdQCK         ( Rich::NRiches, 0  ),
+    m_nitroQCK       ( Rich::NRiches, 0  ),
+    m_aeroFiltQCK    ( Rich::NRiches, 0  ),
+    m_bkgHits        ( Rich::NRiches, 0  ),
+    m_chrgShrHits    ( Rich::NRiches, 0  )
 {
 
   // Declare job options
@@ -91,25 +95,30 @@ StatusCode RichDigitQC::execute()
     // Get Rich ID
     const Rich::DetectorType rich = mcDig->key().rich();
 
-    // count in each HPD for this event
-    ++(nHPD[rich])[mcDig->key().hpdID()];
-
     // Location of parent MCHit
     const std::string location = mchitLocation( mcDig );
     m_evtLocs[location] = true;
-
-    // Count hits
-    ++(m_spillDigits[rich])[location];
-    ++(spills[rich])[location];
 
     // Check if digit is background
     if ( m_mcTool->isBackground(mcDig) )
     {
       ++backs[rich];
-      if ( mcDig->history().backgroundHit()  ) { ++m_bkgHits    [rich]; }
-      if ( mcDig->history().chargeShareHit() ) { ++m_chrgShrHits[rich]; }
-      if ( mcDig->history().chargedTrack()   ) { ++m_chrgTkHits [rich]; }
-      if ( mcDig->history().scatteredHit()   ) { ++m_scattHits  [rich]; }
+      ++m_bkgHits[rich];
+      // tally up the different background sources
+      if ( mcDig->history().scatteredHit()   ) { ++m_scattHits   [rich]; }
+      if ( mcDig->history().chargedTrack()   ) { ++m_chrgTkHits  [rich]; }
+      if ( mcDig->history().gasQuartzCK()    ) { ++m_gasQCK      [rich]; }
+      if ( mcDig->history().hpdQuartzCK()    ) { ++m_hpdQCK      [rich]; }
+      if ( mcDig->history().nitrogenCK()     ) { ++m_nitroQCK    [rich]; }
+      if ( mcDig->history().aeroFilterCK()   ) { ++m_aeroFiltQCK [rich]; }
+      if ( mcDig->history().chargeShareHit() ) { ++m_chrgShrHits [rich]; }
+    }
+    else
+    {
+      // Count signal hits
+      ++(nHPD[rich])[mcDig->key().hpdID()];
+      ++(m_spillDigits[rich])[location];
+      ++(spills[rich])[location];
     }
 
   }
@@ -124,7 +133,10 @@ StatusCode RichDigitQC::execute()
       MCRichHits * hits = get<MCRichHits>( iC->first );
       for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
-        ++(m_totalSpills[(*iH)->rich()])[iC->first];
+        if ( !m_mcTool->isBackground(*iH) )
+        {
+          ++(m_totalSpills[(*iH)->rich()])[iC->first];
+        }
       }
       if ( msgLevel(MSG::DEBUG) )
       {
@@ -203,8 +215,8 @@ StatusCode RichDigitQC::finalize()
 {
 
   // Statistical calculators
-  RichStatDivFunctor    occ("%8.2f +-%5.2f");
-  RichPoissonEffFunctor eff("%6.2f +-%5.2f");
+  const RichStatDivFunctor    occ("%8.2f +-%5.2f");
+  const RichPoissonEffFunctor eff("%6.2f +-%5.2f");
 
   info() << "===============================================================================================" << endreq
          << "                            RICH Digitisation Simulation Summary" << endreq;
@@ -255,15 +267,23 @@ StatusCode RichDigitQC::finalize()
       std::string loc = iC->first;
       loc.resize(28,' ');
       info() << "       :   " << loc << " " << eff(iC->second,totDet) << " % of total, "
-             << eff(iC->second,(m_totalSpills[rich])[iC->first]) << " % event eff." << endreq;
+             << eff(iC->second,(m_totalSpills[rich])[iC->first]) << " % signal eff." << endreq;
     }}
-    info() << "       : % background hits              "
-           << eff(m_bkgHits[rich],totDet) << " % " << endreq;
-    info() << "       : % scattered hits               "
-           << eff(m_scattHits[rich],totDet) << " % " << endreq;
-    info() << "       : % charged track on HPD hits    "
-           << eff(m_chrgTkHits[rich],totDet) << " % " << endreq;
-    info() << "       : % silicon charge share hits    "
+    info() << "       : % overall background hits      "
+           << eff(m_bkgHits[rich],totDet) << " % " << endreq
+           << "       :   % rayleigh scattered hits    "
+           << eff(m_scattHits[rich],totDet) << " % " << endreq
+           << "       :   % charged track on HPD hits  "
+           << eff(m_chrgTkHits[rich],totDet) << " % " << endreq
+           << "       :   % gas quartz window CK hits  "
+           << eff(m_gasQCK[rich],totDet) << " % " << endreq
+           << "       :   % hpd quartz window CK hits  "
+           << eff(m_hpdQCK[rich],totDet) << " % " << endreq
+           << "       :   % nitrogen CK hits           "
+           << eff(m_nitroQCK[rich],totDet) << " % " << endreq
+           << "       :   % aerogel filter CK hits     "
+           << eff(m_aeroFiltQCK[rich],totDet) << " % " << endreq
+           << "       :   % silicon charge share hits  "
            << eff(m_chrgShrHits[rich],totDet) << " % " << endreq;
 
     int iC = 0;
