@@ -8,6 +8,6 @@ PoolDbCacheSvc.Dlls += {"LHCbKernelDict"};
 PoolDbCacheSvc.Dlls += {"EventBaseDict" };
 PoolDbCacheSvc.Dlls += {"GenEventDict" };
 PoolDbCacheSvc.Dlls += {"MCEventDict" };
-//PoolDbCacheSvc.Dlls += {"PackedEventDict" }; // Not yet migrated
+PoolDbCacheSvc.Dlls += {"PackedEventDict" };
 PoolDbCacheSvc.Dlls += {"MathRflx", "STLRflx" };
 PoolDbCacheSvc.Dlls += {"CLHEPRflx" }; // For HepMC
