@@ -18,6 +18,9 @@
  - Use new options for dictionary from $STDOPTS
    . Common.opts
    . GaussPoolIO.opts - REMOVED
+ - Use new version of ParamFiles v4r1 to get ParticleData.txt with changes 
+   of B** masses
+   . requirements
 
 ! 2006-02-13 - Gloria CORTI
  - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1
