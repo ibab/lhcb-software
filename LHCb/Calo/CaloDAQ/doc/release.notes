@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Olivier Callot
+ - Use ODIN bank to get the event number for CaloTriggerBitsFromRaw.
+
 !========================== CaloDAQ v2r0 2006-02-15 ==========================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent

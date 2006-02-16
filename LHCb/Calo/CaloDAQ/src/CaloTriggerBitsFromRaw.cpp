@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.6 2006-02-09 08:42:37 cattanem Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.7 2006-02-16 16:04:04 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -55,8 +55,8 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 //=========================================================================
 bool CaloTriggerBitsFromRaw::eventHasChanged ( ) {
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>* data = &rawEvt->banks( LHCb::RawBank::DAQ );
-  if ( data->empty() ) return true;  //== In case there is no DAQ bank.
+  const std::vector<LHCb::RawBank*>* data = &rawEvt->banks( LHCb::RawBank::ODIN );
+  if ( data->empty() ) return true;  //== In case there is no ODIN bank.
   unsigned int* evhData = (*(data->begin()))->data();
   long evtNum = (*evhData++);
   long runNum = (*evhData++);
