@@ -6,40 +6,28 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           PackedEvent
-version           v1r2
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src Event xml
+branches          cmt doc Event xml
 include_dirs      $(PACKEDEVENTROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use	GaudiAlg	v*
-use	TrEvent		v*	Event
-use     Event           v*      Event
-use     LHCbKernel      v*      Kernel
-#============================================================================
-# Component library building rule
-#============================================================================
-library          PackedEvent    ../src/*.cpp 
-#============================================================================
-# define component library link options
-#============================================================================
-apply_pattern    component_library library=PackedEvent
+use	GaudiKernel     v*
 
 #============================================================================
 # Produce lcg dictionary for stl containers used in PackedEvent
 #============================================================================
-apply_pattern     lcg_dictionary                                         \
+apply_pattern     reflex_dictionary                                         \
                   dictionary=PackedEvent                                 \
                   headerfiles=$(PACKEDEVENTROOT)/Event/*.h               \
-                  selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml \
-                  options="--split --reflex"
+                  selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml
 
 library PackedEventDict    ../$(tag)/dict/PackedEvent/*.cpp
 apply_pattern component_library library=PackedEventDict

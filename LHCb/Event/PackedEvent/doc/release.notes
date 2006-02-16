@@ -4,6 +4,17 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================== PackedEvent v1r2 2006-02-16 ========================
+! 2006-02-16 - Marco Cattaneo
+ - Major spring cleaning for use with LHCb v20r0:
+   . Remove PackedCollision - not worthwhile to pack
+   . Remove PackedTrStateP, PackedTrStateL - to be migrated to new State
+   . Remove PackedTrack - to be reimplemented for new Track
+   . Put remaining classes in LHCb:: namespace, generate reflex dictionary
+   . Remove all code/decode/compare algorithms (to be moved to SimComponents 
+     for MCParticle/MCVertex and a REC package for Track/State)
+   . Remove DataOnDemand options
+
 !======================== PackedEvent v1r2 2005-10-11 ========================
 ! 2005-10-11 - Marco Cattaneo
  - Update requirements to build reflex dictionaries
