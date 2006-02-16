@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.20 2006-02-09 18:02:53 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.21 2006-02-16 16:04:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -36,7 +36,7 @@ namespace Rich
   {
 
     /// Number of Track types
-    static const unsigned int NTrTypes = 8;
+    static const unsigned int NTrTypes = 9;
 
     /** @enum Rich::Track::Type
      *
@@ -48,17 +48,17 @@ namespace Rich
      */
     enum Type
       {
-        Unknown  = -2, ///< Track algorithm type is not known
-        Unusable = -1, ///< Track type is known, but is not usable by the RICH
-        Forward  =  0, ///< Track algorithm type is Forward
-        Match    =  1, ///< Track algorithm type is Match
-        Follow   =  2, ///< Track algorithm type is Follow
-        Seed     =  3, ///< Track algorithm type is Seed
-        VeloTT   =  4, ///< Track algorithm type is VeloTT
-        KsTrack  =  5, ///< Track algorithm type is KsTrack
-        Velo     =  6, ///< Track algorithm type is Velo
-        Trigger  =  7, ///< Track algorithm type Trigger track
-        MCRichTrack = 11 ///< Track algorithm type Trigger track
+        Unknown     = -2, ///< Track algorithm type is not known
+        Unusable    = -1, ///< Track type is known, but is not usable by the RICH
+        Forward     =  0, ///< Track algorithm type is Forward
+        Match       =  1, ///< Track algorithm type is Match
+        Follow      =  2, ///< Track algorithm type is Follow
+        Seed        =  3, ///< Track algorithm type is Seed
+        VeloTT      =  4, ///< Track algorithm type is VeloTT
+        KsTrack     =  5, ///< Track algorithm type is KsTrack
+        Velo        =  6, ///< Track algorithm type is Velo
+        Trigger     =  7, ///< Track algorithm type Trigger track
+        MCRichTrack =  8  ///< MCRichTrack track
       };
 
     /** Access the enumerated type for given Track
@@ -199,8 +199,8 @@ public:
    *  @param mcPart Pointer to an MCRichTrack
    */
   explicit RichTrackID( const LHCb::MCRichTrack * )
-    : m_tkType     ( Rich::Track::Unknown             ),
-      m_parentType ( Rich::TrackParent::MCParticle    ),
+    : m_tkType     ( Rich::Track::MCRichTrack         ),
+      m_parentType ( Rich::TrackParent::MCRichTrack   ),
       m_unique     ( true                             ) { }
 
   ~RichTrackID( ) {} ///< Destructor
@@ -295,11 +295,15 @@ inline void RichTrackID::initialiseFor( const LHCb::Track * track )
 inline void RichTrackID::initialiseFor( const LHCb::MCParticle * )
 {
   setParentType ( Rich::TrackParent::MCParticle );
+  setTrackType  ( Rich::Track::Unknown          );
+  setUnique     ( true                          );
 }
 
 inline void RichTrackID::initialiseFor( const LHCb::MCRichTrack * )
 {
   setParentType ( Rich::TrackParent::MCRichTrack );
+  setTrackType  ( Rich::Track::MCRichTrack       );
+  setUnique     ( true                           );
 }
 
 /// Implement textual ostream << method for Rich::Track::Type enumeration

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.5 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.6 2006-02-16 16:04:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -64,7 +64,7 @@ StatusCode RichTrackCreatorBase::initialize()
   }
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() )
+  if ( !m_trSelector.configureTrackTypes( msg() ) )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
@@ -110,29 +110,29 @@ void RichTrackCreatorBase::printStats() const
     RichStatDivFunctor occ("%8.2f +-%5.2f");
 
     // Print out final track stats
-    info() << "================================================================================" << endreq
-           << "                    Track Selection Summary : " << m_Nevts << " events" << endreq
-           << "--------------------------------------------------------------------------------" << endreq;
+    info() << "=================================================================================" << endreq
+           << "                     Track Selection Summary : " << m_Nevts << " events" << endreq
+           << "---------------------------------------------------------------------------------" << endreq;
     for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
           i != m_nTracksAll.end(); ++i )
     {
       std::string name =
         ( (*i).first.second ? "Unique " : "NonUnique " ) + Rich::text( (*i).first.first );
-      name.resize(17,' ');
+      name.resize(18,' ');
       info() << "  " << name << " :" << occ((*i).second.selectedTracks,m_Nevts)
              << " tracks/event : RICH eff " << eff((*i).second.selectedTracks,(*i).second.triedTracks)
              << " % " << endreq;
       if ( (*i).second.aeroSegs>0 )
-        info() << "                    :"
+        info() << "                     :"
                << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endreq;
       if ( (*i).second.c4f10Segs>0 )
-        info() << "                    :"
+        info() << "                     :"
                << occ((*i).second.c4f10Segs,m_Nevts) << " C4F10    segments/event" << endreq;
       if ( (*i).second.cf4Segs>0 )
-        info() << "                    :"
+        info() << "                     :"
                << occ((*i).second.cf4Segs,m_Nevts)   << " CF4      segments/event" << endreq;
     }
-    info() << "================================================================================" << endreq;
+    info() << "=================================================================================" << endreq;
 
   }
 

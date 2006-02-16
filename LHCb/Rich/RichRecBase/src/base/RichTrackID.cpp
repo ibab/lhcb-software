@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.14 2006-02-09 18:02:53 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.15 2006-02-16 16:04:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -50,22 +50,24 @@ std::string Rich::text( const Rich::Track::Type track )
   case Rich::Track::Velo:         return "velo";
   case Rich::Track::Unknown:      return "unknown";
   case Rich::Track::Unusable:     return "unusable";
+  case Rich::Track::MCRichTrack:  return "MCRichTrack";
   default:                        return "SHOULD NEVER SEE THIS";
   }
 }
 
 Rich::Track::Type Rich::Track::type( const std::string & name )
 {
-  if      ( "trigger"  == name )   { return Rich::Track::Trigger;  }
-  else if ( "forward"  == name )   { return Rich::Track::Forward;  }
-  else if ( "match"    == name )   { return Rich::Track::Match;    } 
-  else if ( "KsTrack"  == name )   { return Rich::Track::KsTrack;  }
-  else if ( "veloTT"   == name )   { return Rich::Track::VeloTT;   }
-  else if ( "seed"     == name )   { return Rich::Track::Seed;     }
-  else if ( "follow"   == name )   { return Rich::Track::Follow;   }
-  else if ( "velo"     == name )   { return Rich::Track::Velo;     }
-  else if ( "unknown"  == name )   { return Rich::Track::Unknown;  }
-  else if ( "unusable" == name )   { return Rich::Track::Unusable; }
+  if      ( "trigger"  == name )    { return Rich::Track::Trigger;  }
+  else if ( "forward"  == name )    { return Rich::Track::Forward;  }
+  else if ( "match"    == name )    { return Rich::Track::Match;    } 
+  else if ( "KsTrack"  == name )    { return Rich::Track::KsTrack;  }
+  else if ( "veloTT"   == name )    { return Rich::Track::VeloTT;   }
+  else if ( "seed"     == name )    { return Rich::Track::Seed;     }
+  else if ( "follow"   == name )    { return Rich::Track::Follow;   }
+  else if ( "velo"     == name )    { return Rich::Track::Velo;     }
+  else if ( "unknown"  == name )    { return Rich::Track::Unknown;  }
+  else if ( "unusable" == name )    { return Rich::Track::Unusable; }
+  else if ( "MCRichTrack" == name ) { return Rich::Track::MCRichTrack;}
   else 
   { // Should not get here ...
     throw GaudiException( "Unknown track string name '"+name+"'",
@@ -108,4 +110,6 @@ Rich::Track::Type Rich::Track::type( const LHCb::MCRichTrack * track )
   {
     return Rich::Track::MCRichTrack;
   }
+  // Should not get here either ...
+  throw GaudiException( "Null Track pointer", "*Rich::Track::type*", StatusCode::FAILURE );
 }

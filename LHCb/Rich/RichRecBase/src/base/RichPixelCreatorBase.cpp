@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.9 2006-02-06 12:28:19 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.10 2006-02-16 16:04:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -123,7 +123,6 @@ void RichPixelCreatorBase::printStats() const
   {
     Warning( "No pixels produced", StatusCode::SUCCESS );
   }
-
 }
 
 void RichPixelCreatorBase::fillIterators() const
@@ -133,6 +132,9 @@ void RichPixelCreatorBase::fillIterators() const
   resetIterators();
 
   // if there are some pixels, compute iterators
+  // Should eventually look into if this can be done
+  // whilst filling, avoiding the need for the "after-the -fact" loop
+
   if ( !richPixels()->empty() )
   {
 

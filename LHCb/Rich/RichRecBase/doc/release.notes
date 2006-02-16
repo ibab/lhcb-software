@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Bug fixes for "MC" running modes
+
 !====================== RichRecBase v2r0 2006-02-06 ========================
 ! 2006-02-06 - Chris Jones
  - Update to get numbering information from RichDet instead of DAQ tools

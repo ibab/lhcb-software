@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.14 2006-01-23 14:08:55 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.15 2006-02-16 16:04:58 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -23,7 +23,8 @@
 #include "Event/Track.h"
 #include "Event/RichRecTrack.h"
 
-// Kernel
+// RichKernel
+#include "RichKernel/RichHashMap.h"
 #include "RichKernel/BoostArray.h"
 
 //--------------------------------------------------------------------------------
@@ -36,7 +37,7 @@
  */
 //--------------------------------------------------------------------------------
 
-class RichTrackSelector 
+class RichTrackSelector
 {
 
 public: // definitions
@@ -93,6 +94,22 @@ public:
    */
   bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
+  /** Test it the given track information is selected
+   *
+   *  @param type Track type
+   *  @param ptot Track momentum
+   *  @param charge Track charge
+   *  @param unique Track unique flag
+   *
+   *  @return Boolean indicating if the track is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
+  bool trackSelected( const Rich::Track::Type type,
+                      const double ptot,
+                      const double charge,
+                      const bool unique ) const;
+
   /** Access to selected track type name (non-const)
    *
    *  @return Reference to vector of track type names
@@ -121,7 +138,7 @@ public:
    *  @retval true  Selection is configured successfully
    *  @retval false Selection configuration failed
    */
-  bool configureTrackTypes();
+  bool configureTrackTypes( MsgStream & stream );
 
   /// Print to the requested MsgStream the track selection criteria
   void printTrackSelection( MsgStream & stream ) const;
@@ -132,7 +149,7 @@ public:
 private: // methods
 
   /// Configure the momentum cuts
-  bool configureMomentumCuts();
+  bool configureMomentumCuts( MsgStream & stream );
 
 private: // private data
 
@@ -143,8 +160,10 @@ private: // private data
   /// Unique tracks only ?
   bool m_uniqueTrOnly;
 
-  /// Track type selection array
+  /// Track type selection map
+  //typedef Rich::HashMap<Rich::Track::Type,bool> TrackTypesSel;
   typedef boost::array<bool,Rich::Track::NTrTypes> TrackTypesSel;
+
   /// Track types to select
   TrackTypesSel m_tkTypeSel;
 
@@ -202,6 +221,21 @@ inline bool RichTrackSelector::trackSelected( const LHCb::RichRecTrack * track )
            ( m_chargeSel*track->charge() >= 0 )  &&           // track charge
            ( track->vertexMomentum()/GeV > minMomentum(type) ) &&  // Momentum cut
            ( track->vertexMomentum()/GeV < maxMomentum(type) )     // Momentum cut
+           );
+}
+
+inline bool RichTrackSelector::trackSelected( const Rich::Track::Type type,
+                                              const double ptot,
+                                              const double charge,
+                                              const bool unique ) const
+{
+  return ( type != Rich::Track::Unknown  &&         // track type is known
+           type != Rich::Track::Unusable &&         // track type is usable
+           (!m_uniqueTrOnly || unique)   &&         // Unique tracks
+           m_tkTypeSel[type] &&       // tracking algorithm type
+           ( m_chargeSel*charge >= 0 )  &&          // track charge
+           ( ptot > minMomentum(type) ) &&          // Momentum cut
+           ( ptot < maxMomentum(type) )             // Momentum cut
            );
 }
 
