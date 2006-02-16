@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.7 2005-10-17 08:57:18 jonrob Exp $
+ *  $Id: RichRadiatorType.h,v 1.8 2006-02-16 15:48:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -15,7 +15,7 @@
 #ifndef LHCBKERNEL_RICHRADIATORTYPE_H
 #define LHCBKERNEL_RICHRADIATORTYPE_H 1
 
-// Include files
+// STL
 #include <string>
 #include <vector>
 #include <iostream>
@@ -54,7 +54,16 @@ namespace Rich {
   std::string text( const Rich::RadiatorType radiator );
 
   /// Std Vector typedef
-  typedef std::vector<RadiatorType> RadiatorTypeVector;
+  typedef std::vector<Rich::RadiatorType> RadiatorTypeVector;
+
+  /// Std const Vector typedef
+  typedef std::vector<const Rich::RadiatorType> RadiatorTypeConstVector;
+
+  /// Std vector typedef
+  typedef RadiatorTypeVector Radiators;
+
+  /// Access a vector of all radiator types
+  //const Rich::Radiators & radiators();
 
 }
 

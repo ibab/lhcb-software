@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.8 2005-12-07 13:27:50 jonrob Exp $
+ *  $Id: RichSmartID.cpp,v 1.9 2006-02-16 15:48:37 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
@@ -28,7 +28,7 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
   {
     // If so, print out only the explicitly set fields
     s << "{";
-    if ( richIsSet()          ) s << " "            << rich();
+    if ( richIsSet()          ) s << " "            << Rich::text( rich() );
     if ( panelIsSet()         ) s << " Panel "      << static_cast<unsigned int>(panel());
     if ( hpdColIsSet()        ) s << " HPDCol"      << format("%3i",hpdCol());
     if ( hpdNumInColIsSet()   ) s << " HPDNumInCol" << format("%3i",hpdNumInCol());

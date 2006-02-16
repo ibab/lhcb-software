@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-02-16 - Chris Jones
+ - Minor fix to RichSmartID (printing)
+ - MInor update to RichRadiatorType
+
 !===================== LHCbKernel v6r2 2006-02-14 =========================
 ! 2006-02-14 - Marco Cattaneo
  - Changes to LbAppinit:
