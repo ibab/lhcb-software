@@ -1,4 +1,4 @@
-// $Id: VeloBitsPolicy.h,v 1.1 2006-02-14 18:25:36 krinnert Exp $
+// $Id: VeloBitsPolicy.h,v 1.2 2006-02-16 18:25:10 krinnert Exp $
 #ifndef VELOBITSPOLICY_H 
 #define VELOBITSPOLICY_H 1
 
@@ -23,7 +23,7 @@ public:
   enum bits {
     positionBits        =  0,
     channelBits         =  3,
-    sizeBits            =  4,
+    sizeBits            = 14,
     thresBits           = 15,
     interStripPrecision =  3 
   };

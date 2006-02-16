@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 
 ! 2006-02-16 - Kurt Rinnert
+ - bug fix: sizeBits in VeloBitsPolicy was wrong after silly editing mistake
+   during cosmetic reformatting
+
+! 2006-02-16 - Kurt Rinnert
  - bug fix: adc value for one strip clusters was not limited to 127
  - overflow bit in cluster word is now set correctly when an adc overflow
    is detected
