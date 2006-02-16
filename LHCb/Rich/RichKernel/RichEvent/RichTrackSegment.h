@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.1 2006-02-15 10:56:31 cattanem Exp $
+ *  $Id: RichTrackSegment.h,v 1.2 2006-02-16 15:54:33 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -587,18 +587,28 @@ namespace LHCb
 
 } // end LHCb namespace
 
-inline void LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
-                                                      double & theta,
-                                                      double & phi ) const
+inline void LHCb::RichTrackSegment::computeRotationMatrix() const
 {
-  const Gaudi::XYZVector rotDirection = rotationMatrix() * direction;
-  theta = rotDirection.theta();
-  phi   = rotDirection.phi();
-  if ( phi < 0 ) phi += 2*M_PI;
+  m_rotation = new Gaudi::Rotation3D( rotationMatrix2().Inverse() );
 }
 
-inline Gaudi::XYZVector LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
-                                                                  const double phi ) const
+inline void
+LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
+                                          double & theta,
+                                          double & phi ) const
+{
+  // create vector in track reference frame
+  const Gaudi::XYZVector rotDirection = rotationMatrix() * direction;
+  // get the angles
+  theta = rotDirection.theta();
+  phi   = rotDirection.phi();
+  // correct phi
+  if ( phi < 0 ) phi += 2.0*M_PI;
+}
+
+inline Gaudi::XYZVector
+LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
+                                          const double phi ) const
 {
   const double sinTheta = sin(theta);
   return rotationMatrix2() * Gaudi::XYZVector( sinTheta*cos(phi),

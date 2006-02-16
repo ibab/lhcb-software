@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.106 2006-02-15 10:56:31 cattanem Exp $
+! $Id: release.notes,v 1.107 2006-02-16 15:54:33 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-02-16 - Chris Jones
+ - Fixes to RIchTrackSegment to work around problems with ROOT math
+ - Update MC truth tool interface
 
 !======================= RichKernel v6r1 2006-02-15 =======================
 ! 2006-02-15 - Marco Cattaneo

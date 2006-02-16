@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.16 2006-01-19 08:43:37 cattanem Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.17 2006-02-16 15:54:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -116,7 +116,7 @@ public:
    */
   virtual bool 
   getMcHistories( const LHCb::RichSmartID id,
-                  std::vector<LHCb::MCRichDigitSummary*> & histories ) const = 0;
+                  std::vector<const LHCb::MCRichDigitSummary*> & histories ) const = 0;
 
   /** Checks if the given RichSmartID is the result of a background
    *  hit, i.e. not a true Cherenkov hit
