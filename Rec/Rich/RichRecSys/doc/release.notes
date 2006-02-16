@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Add new initialisation algorithm to reconstruction sequence
+ - Various options fixes and improvements
+
 ! 2006-01-27 - Christopher Rob Jones
  - Update track options to new tool name in RichRecTools
 

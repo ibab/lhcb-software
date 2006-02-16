@@ -7,6 +7,9 @@
 // Set offline mode
 RecoRICHSeq.Context = "Offline";
 
+// Initialisation
+RecoRICHSeq.Members += { "RichRecInit" };
+
 // Fast Global PID
 //===========================================================================
 RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPIDOff" };

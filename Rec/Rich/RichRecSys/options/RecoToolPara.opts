@@ -13,6 +13,9 @@
 // at the level of the tracking algorithm.
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedRecoTracks.opts"
 
+// RichTrackCreator using only MC information
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
+
 // ============================ Track Creators - Old Model ====================================
 
 // RichTrackCreator using full reconstructed information : Old track model
@@ -166,7 +169,7 @@ ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracingAllSph/RichRayTracing" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
 ToolSvc.Offline.RichRayTracing.HistoProduce = false;
 
 // mirror segment finder

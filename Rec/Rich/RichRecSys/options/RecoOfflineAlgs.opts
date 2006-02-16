@@ -7,6 +7,9 @@
 // Set offline mode
 RecoRICHSeq.Context = "Offline";
 
+// Initialisation
+RecoRICHSeq.Members += { "RichRecInit" };
+
 // Run the Local PID algorithm first
 RecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
@@ -44,6 +47,7 @@ RecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
 
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
+//RichLocPID.TrackSelection += { "MCRichTrack" }; // for debugging
 RichLocPID.MinimumPtot                       = 0.0*GeV;
 RichLocPID.MaxUsedTracks                     = 300;
 RichLocPID.MaxInputTracks                    = 700;
@@ -61,6 +65,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
+//RichGloPIDTrSel.TrackSelection += { "MCRichTrack" }; // for debugging
 RichGloPIDTrSel.MaxUsedTracks             = 300;
 RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
@@ -107,7 +112,7 @@ RichRingRefit.nDistKshort    = 2.20;
 RichRingRefit.NSigmaCut      = 3.00;
 
 // PID merging
-MergeRichPIDs.UseRingRefitPIDs = false;
+//MergeRichPIDs.UseRingRefitPIDs = false; // disabled for the moment
 MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";

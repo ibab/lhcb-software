@@ -1,0 +1,26 @@
+
+// Options to create RichRecTracks from MCRichTracks
+
+// Define the primary RichTrackCreator to be the delegator tool
+// This tool sends the real work to other tools depending on the configuration
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromMCRichTracks/RichTrackCreator" };
+
+// track selection
+ToolSvc.Offline.RichTrackCreator.TrackSelection =
+  {
+    "unique","positive","negative","MCRichTrack"
+  };
+ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "MCRichTrack/2/1e10" };
+
+// define the RichTrackSegment nickname to use
+ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
+
+// Configure the RichTrackSegment maker for reconstructed tracks
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMaker" };
+
+// which radiators to use                          Aerogel   C4F10    CF4
+ToolSvc.Offline.RichDetTrSegMaker.UseRadiators = { true,     true,    true };
+
+// track location
+ToolSvc.Offline.RichRecMCTruthTool.TrackLocation = "Rec/Rich/MCFakedTracks";
+ToolSvc.Offline.RichTrackCreator.TrackLocation   = "Rec/Rich/MCFakedTracks";

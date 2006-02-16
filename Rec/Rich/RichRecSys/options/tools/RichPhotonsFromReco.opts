@@ -36,8 +36,7 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
-//ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSolnAllSph/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons     = false;
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment = true;
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 1,1,1 };
