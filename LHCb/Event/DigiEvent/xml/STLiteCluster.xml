@@ -6,6 +6,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd" [
 <!ENTITY channelIDName "STChannelID">
 <!ENTITY className "STLiteCluster">
+<!ENTITY posBits "2">
 <!ENTITY STLiteClusterClass SYSTEM "SiLiteCluster.ent">
 ]>
 <gdd>
