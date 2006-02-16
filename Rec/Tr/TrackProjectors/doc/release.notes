@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r0 2006-02-16 ======================
 ! 2006-02-16 - Edwin Bos
  - Moved to LHCb v20r0
  - Removed *Ray* due to introduction of Trajectories
