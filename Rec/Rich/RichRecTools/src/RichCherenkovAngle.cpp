@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.17 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.18 2006-02-16 16:15:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -87,6 +87,13 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
 
     // total unscattered signal
     const double unscat = m_signal->nSignalPhotons( segment, id );
+
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "RichRecSegment " << segment->key() << " " << id 
+              << " calculating avgCK theta : unscat = " << unscat << endreq;
+    }
+
     if ( unscat > 0 )
     {
 

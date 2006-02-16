@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.4 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.5 2006-02-16 16:15:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -31,19 +31,23 @@ RichFunctionalCKResVpForRecoTracks::
 RichFunctionalCKResVpForRecoTracks ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecHistoToolBase ( type, name, parent      ),
-    m_ckAngle       ( 0                       ),
-    m_refIndex      ( 0                       ),
-    m_chromFact     ( Rich::NRadiatorTypes, 0 ),
-    m_matThickness  ( Rich::NRadiatorTypes, 0 ),
-    m_curvX         ( Rich::NRadiatorTypes, 0 ),
-    m_curvY         ( Rich::NRadiatorTypes, 0 )
+  : RichRecHistoToolBase ( type, name, parent  ),
+    m_ckAngle       ( 0                        ),
+    m_refIndex      ( 0                        ),
+    m_trExt         ( 0                        ),
+    m_Ext           ( "TrackHerabExtrapolator" ),
+    m_transSvc      ( 0                        ),
+    m_chromFact     ( Rich::NRadiatorTypes, 0  ),
+    m_matThickness  ( Rich::NRadiatorTypes, 0  ),
+    m_scatt         ( 13.6e-03                 ) // should be used with p in GeV 
 {
 
   // define interface
   declareInterface<IRichCherenkovResolution>(this);
 
   // job options
+
+  declareProperty( "TrackExtrapolator", m_Ext );
 
   m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Track::NTrTypes, 0.00249 );
   (m_asmpt[Rich::Aerogel])[Rich::Track::Forward] = 0.00177;
@@ -93,8 +97,6 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   // scattering factors
   // ---------------------------------------------------------------------------------------------
 
-  m_scatt = 13.6e-03; // should be used with p in GeV (CRJ : where does this come from ?)
-
   // aero thickness
   m_matThickness[Rich::Aerogel] = m_scatt * sqrt(1e-2); // ?
 
@@ -106,17 +108,6 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   const double thickCF4       = 2.04e-02; // rad length
   const double thickT3        = 0; // rad length
   m_matThickness[Rich::CF4] = thickWindowCF4 + thickCF4 + thickT3;
-
-  // Track curvature
-  // ---------------------------------------------------------------------------------------------
-
-  m_curvX[Rich::Aerogel] = 0;
-  m_curvX[Rich::C4F10]   = 5.770e-3;
-  m_curvX[Rich::CF4]     = 4.702e-3;
-
-  m_curvY[Rich::Aerogel] = 0;
-  m_curvY[Rich::C4F10]   = 0.154e-3;
-  m_curvY[Rich::CF4]     = 0.272e-3;
 
   // Printouts
   //---------------------------------------------------------------------------------------------
@@ -147,27 +138,22 @@ ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is Track
-    if ( Rich::TrackParent::Track != tkID.parentType() )
-    {
-      Exception( "Track parent type is not Track" );
-    }
+    // Check track parent type is Track or TrStoredTrack
+    //if ( Rich::TrackParent::Track != tkID.parentType() )
+    //{
+    //  Exception( "Track parent type is not Track or TrStoredTrack" );
+    //}
 
     // Expected Cherenkov theta angle
     const double ckExp = m_ckAngle->avgCherenkovTheta( segment, id );
     if ( ckExp > 1e-6 )
     {
 
-      // Histo stuff
-      const RichHistoID hid;
-      MAX_CKTHETA_RAD;
-      MIN_CKTHETA_RAD;
-
       // track type
       const Rich::Track::Type tkType = tkID.trackType();
 
       // track segment shortcut
-      RichTrackSegment & tkSeg = segment->trackSegment();
+      const RichTrackSegment & tkSeg = segment->trackSegment();
 
       // radiator
       const Rich::RadiatorType rad = tkSeg.radiator();
@@ -179,7 +165,8 @@ ckThetaResolution( RichRecSegment * segment,
       const double tanCkExp = tan(ckExp);
 
       // asymtopic error
-      const double asymptotErr = gsl_pow_2( (m_asmpt[rad])[tkType] );
+      //const double asymptotErr = gsl_pow_2( (m_asmpt[rad])[tkType] );
+      const double asymptotErr = 0;
       res2 += asymptotErr;
 
       // chromatic error
@@ -191,12 +178,24 @@ ckThetaResolution( RichRecSegment * segment,
       const double tx = ( fabs(entV.z())>0 ? entV.x() / entV.z() : 0 );
       const double ty = ( fabs(entV.z())>0 ? entV.y() / entV.z() : 0 );
       const double effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
+      // should actually be material between last measured point and exit point
+      // should also cache this information in the RichRecSegment class ?
+      //HepPoint3D startPoint;
+      //findLastMeasuredPoint( segment, startPoint );
+      //const double effectiveLength = transSvc()->distanceInRadUnits( startPoint,
+      //                                                              tkSeg.exitPoint() );
+      //const double effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
+      //                                                              tkSeg.exitPoint() );
       const double multScattCoeff  = m_scatt * sqrt(effectiveLength)*(1+0.038*log(effectiveLength));
       const double scattErr        = 2 * gsl_pow_2(multScattCoeff/ptot);
       res2 += scattErr;
 
+      // CRJ : Should consider moving the pure geometry errors into the RichTrackSegment
+
       // track curvature in the radiator volume
-      const double curvErr = (gsl_pow_2(m_curvX[rad]) + gsl_pow_2(m_curvY[rad]))/(ptot*ptot);
+      const double curvErr = 
+        ( Rich::Aerogel == rad ? 0 :
+          gsl_pow_2(Rich::Geom::AngleBetween(tkSeg.entryMomentum(),tkSeg.exitMomentum())/4) );
       res2 += curvErr;
 
       // tracking direction errors
@@ -213,6 +212,10 @@ ckThetaResolution( RichRecSegment * segment,
       // Histos
       if ( produceHistos() )
       {
+        // Histo stuff
+        const RichHistoID hid;
+        MAX_CKTHETA_RAD;
+        MIN_CKTHETA_RAD;
         // Versus CK theta
         profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVc"),
                    "Asymptotic CK theta error V CK theta",
@@ -255,8 +258,9 @@ ckThetaResolution( RichRecSegment * segment,
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "Track " << segment->richRecTrack()->key() << " " << id
+        debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << id
                 << " : ptot " << ptot << " ckExp " << ckExp << endreq;
+        debug() << "  Rad length " << effectiveLength << endreq;
         debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
                 << scattErr << " curv " << curvErr << " dir " << dirErr
                 << " mom " << momErr << " : " << sqrt(res2) << endreq;
@@ -275,3 +279,35 @@ ckThetaResolution( RichRecSegment * segment,
 
   return segment->ckThetaResolution( id );
 }
+
+/*
+bool
+RichFunctionalCKResVpForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
+                                                           HepPoint3D & point ) const
+{
+  // pointer to underlying track
+  const Track * trTrack =
+    dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
+  if ( !trTrack ) Exception( "Null Track pointer" );
+
+  // track segment shortcut
+  const RichTrackSegment & tkSeg = segment->trackSegment();
+
+  // get z position of last measurement before start of track segment
+  // a better search could perhaps be used here ?
+  const Measurement * lastMeas = 0;
+  const std::vector<Measurement *> & measurements = trTrack->measurements();
+  for ( std::vector<Measurement *>::const_iterator iM = measurements.begin();
+        iM != measurements.end(); ++iM )
+  {
+    if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
+    else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
+  }
+  if ( !lastMeas ) return false;
+
+  // get the track position at this z
+  trackExtrap()->position( *trTrack, lastMeas->z(), point );
+
+  return true;
+}
+*/

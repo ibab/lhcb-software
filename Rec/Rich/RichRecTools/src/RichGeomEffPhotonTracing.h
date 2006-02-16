@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.15 2006-02-07 13:40:06 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.16 2006-02-16 16:15:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,6 +43,9 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+
+// RichKernel
+#include "RichKernel/RichGeomFunctions.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichGeomEffPhotonTracing RichGeomEffPhotonTracing.h

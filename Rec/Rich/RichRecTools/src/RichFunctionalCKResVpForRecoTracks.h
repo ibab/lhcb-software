@@ -5,7 +5,7 @@
  *  Header file for tool : RichFunctionalCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.3 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.4 2006-02-16 16:15:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -23,12 +23,19 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichParticleProperties.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
+
+// DetDesc
+#include "DetDesc/ITransportSvc.h"
 
 // GSL
 #include "gsl/gsl_math.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
+
+// kernel
+#include "RichKernel/RichGeomFunctions.h"
 
 //----------------------------------------------------------------------------------------
 /** @class RichFunctionalCKResVpForRecoTracks RichFunctionalCKResVpForRecoTracks.h
@@ -69,7 +76,28 @@ public: // methods (and doxygen comments) inherited from public interface
   double ckThetaResolution( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
-private:
+private: // methods
+
+  /// find the position of the last measured point
+  //bool findLastMeasuredPoint( LHCb::RichRecSegment * segment,
+  //                            Gaudi::XYZPoint & point ) const;
+
+
+  /// Access transport service on-demand
+  ITransportSvc * transSvc() const
+  {
+    if (!m_transSvc) { m_transSvc = svc<ITransportSvc>( "TransportSvc", true  ); }
+    return m_transSvc;
+  }
+
+  /// Access track extrapolator on-demand
+  ITrackExtrapolator * trackExtrap() const
+  {
+    if (!m_trExt) { m_trExt = tool<ITrackExtrapolator>( m_Ext ); }
+    return m_trExt;
+  }
+
+private: // data
 
   /// Pointer to RichCherenkovAngle interface
   const IRichCherenkovAngle * m_ckAngle;
@@ -80,14 +108,17 @@ private:
   /// Pointer to RichParticleProperties interface
   const IRichParticleProperties * m_richPartProp;
 
+  mutable ITrackExtrapolator * m_trExt; ///< Track extrapolation tool
+  std::string m_Ext; ///< Track extrapolation tool name
+
+  /// Transport Service
+  mutable ITransportSvc * m_transSvc;
+
   std::vector<double> m_chromFact; ///< Chromatic error factor for each radiator
 
   std::vector<double> m_matThickness; ///< Material thickness infront of each radiator
 
   double m_scatt; ///< Scattering coefficent
-
-  std::vector<double> m_curvX; ///< x curvature error parameter
-  std::vector<double> m_curvY; ///< y curvature error parameter
 
   /// Asymtopic Errors
   std::vector<double> m_asmpt[Rich::NRadiatorTypes];

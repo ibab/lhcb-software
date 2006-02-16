@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.19 2006-02-07 13:40:06 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.20 2006-02-16 16:15:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -117,19 +117,28 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
     if ( ckTheta > 0 )
     {
 
-      int nDetect  = 0;
-      int iPhot = 0;
+      int nDetect(0), iPhot(0);
       for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
       {
 
         // Photon emission point is random between segment start and end points
-        //const Gaudi::XYZPoint emissionPt = trackSeg.bestPoint( m_uniDist() );
+        // const Gaudi::XYZPoint emissionPt = trackSeg.bestPoint( m_uniDist() );
         // Photon emission point is half-way between segment start and end points
         const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
 
         // Photon direction around loop
         const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
+
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "CK angle " << ckTheta << " track Dir " 
+                    << segment->trackSegment().bestMomentum()
+                    << " fake photon " << photDir 
+                    << " testAng " 
+                    << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir ) 
+                    << endreq;
+        }
 
         // Ray trace through detector, using fast circle modelling of HPDs
         RichGeomPhoton photon;
@@ -179,7 +188,11 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
       // compute the final eff
       eff = static_cast<double>(nDetect)/static_cast<double>(m_nGeomEff);
 
-    } // CK theta IF
+    }
+    //else
+    //{
+    //  Warning( "RichRecSegment expected CK theta <= 0" );
+    //}
 
     // store result
     segment->setGeomEfficiency( id, eff );

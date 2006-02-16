@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.15 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.16 2006-02-16 16:15:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,6 +86,12 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
 
     }
 
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "RichRecSegment " << segment->key() << " " << id
+              << " nEmittedPhotons = " << signal << endreq;
+    }
+
     segment->setNEmittedPhotons( id, signal );
   }
 
@@ -113,6 +119,13 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
       const double gasQuartzWinTrans =
         m_gasQuartzWin->photonTransProb(segment,emitSpectra.binEnergy(iEnBin));
       signal += ( (detSpectra.energyDist(id))[iEnBin] = sig*gasQuartzWinTrans );
+    }
+
+
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "RichRecSegment " << segment->key() << " " << id
+              << " nDetectablePhotons = " << signal << endreq;
     }
 
     segment->setNDetectablePhotons( id, signal );
@@ -159,6 +172,13 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
 
     }
 
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "RichRecSegment " << segment->key() << " " << id
+              << " nSignalPhotons = " << signal
+              << " nScatteredPhotons = " << scatter << endreq;
+    }
+
     segment->setNSignalPhotons( id, signal );
     segment->setNScatteredPhotons( id, scatter );
   }
@@ -191,6 +211,12 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
 
   }
 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecSegment " << segment->key() << " " << id
+            << " avgSignalPhotEnergy = " << avgEnergy << endreq;
+  }
+
   return avgEnergy;
 }
 
@@ -216,6 +242,12 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
     } // energy bin loop
     avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
 
+  }
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecSegment " << segment->key() << " " << id
+            << " avgEmitPhotEnergy = " << avgEnergy << endreq;
   }
 
   return avgEnergy;
@@ -398,9 +430,21 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
     // see if any mass hypothesis is detectable
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 ) return true;
+      if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 )
+      {
+        return true;
+      }
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "RichRecSegment has zero GeomEfficiency" << endreq;
     }
   }
+  else if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecSegment is below threshold" << endreq;
+  }
+
   return false;
 }
 

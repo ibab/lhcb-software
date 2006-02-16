@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-02-16 - Chris Jones
+ - Improved debug printouts
+ - Update to function CK resolution tool
+
 ! 2006-02-07 - Chris Jones
  - Use RichDet instead of RichDAQ to get HPD numbering data
 

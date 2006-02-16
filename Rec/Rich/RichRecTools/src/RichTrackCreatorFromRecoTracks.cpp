@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.6 2006-02-09 18:10:40 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.7 2006-02-16 16:15:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -194,10 +194,6 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     }
     if ( 0 < Nsegs )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << " Ptot = " << trTrack->p()/GeV << " passed cut" << endreq;
-      }
 
       // Form a new RichRecTrack
       newTrack = new RichRecTrack();
