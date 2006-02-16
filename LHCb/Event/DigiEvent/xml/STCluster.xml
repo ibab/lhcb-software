@@ -64,7 +64,7 @@
       <code>
   std::vector &lt; LHCb::STChannelID &gt; chanCont;
   STChannelID first = firstChannel();
-  for (unsigned int i = 0; i &gt; size(); ++i){
+  for (unsigned int i = 0; i &lt; size(); ++i){
     STChannelID aChan(first.type(), first.station(), first.layer(),
                       first.detRegion(),first.sector(),first.strip()+i);
     chanCont.push_back(aChan);
