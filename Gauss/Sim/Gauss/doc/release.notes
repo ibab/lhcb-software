@@ -4,7 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r1 2006-02-13 =============================
+!======================== Gauss v24r1 2006-02-16 =============================
+! 2006-02-16 - Gloria CORTI
+ - Introduce setting of Event time and step in EventClockSvc to get information
+   for simulated event 
+   . Common.opts
+ - Modify ParticleGuns.opts to fix problem obserbed by S.Easo of wrongly 
+   re-sequencing GenMonitor
+   . ParticleGuns.opts
+
 ! 2006-02-13 - Gloria CORTI
  - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1
    . SimGeometry.opts
