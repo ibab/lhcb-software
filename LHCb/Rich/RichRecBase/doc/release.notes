@@ -4,11 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r0 2006-02-16 ========================
 ! 2006-02-16 - Chris Jones
  - Bug fixes for "MC" running modes
  - Improvements to the RichTrackSelector
 
-!====================== RichRecBase v2r0 2006-02-06 ========================
 ! 2006-02-06 - Chris Jones
  - Update to get numbering information from RichDet instead of DAQ tools
  - Makes dependency on RichDet permanent.
