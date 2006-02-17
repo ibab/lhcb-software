@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.20 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.21 2006-02-17 16:57:49 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -127,7 +127,6 @@ StatusCode DeRichSphMirror::initialize()
   double hexRadius = 510.0*mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
     hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
-  //const double flatToCentre = hexRadius*sin(60*degree);
 
   m_solid = geometry()->lvolume()->solid();
   const std::string type = m_solid->typeName();
@@ -149,7 +148,6 @@ StatusCode DeRichSphMirror::initialize()
       for (iter=compSolid->childBegin(); iter!=compSolid->childEnd(); ++iter) {
         if ( (*iter)->solid()->typeName() == "SolidSphere")
           sphereSolid = dynamic_cast<const SolidSphere*>((*iter)->solid());
-
       }
     }
     if ( !sphereSolid) {
@@ -163,7 +161,7 @@ StatusCode DeRichSphMirror::initialize()
   m_radius = sphereSolid->insideRadius();
 
   // and its centre
-  const Gaudi::XYZPoint m_localOrigin(0.0, 0.0, 0.0);
+  m_localOrigin = Gaudi::XYZVector(0.0, 0.0, 0.0);
   Gaudi::Polar3DVector toSphCentre(1.0, 0.0, 0.0);
   if ( 0.0 != sphereSolid->startThetaAngle() ) {
     toSphCentre.SetCoordinates( 1.0,
@@ -174,15 +172,19 @@ StatusCode DeRichSphMirror::initialize()
 
   }
 
+  // convert to XYZ
+  const Gaudi::XYZVector toSphCentreXYZ( toSphCentre );
+
   ISolid::Ticks sphTicks;
   const unsigned int sphTicksSize = sphereSolid->
-    intersectionTicks(m_localOrigin, Gaudi::XYZVector( toSphCentre ), sphTicks);
+    intersectionTicks(m_localOrigin, toSphCentreXYZ, sphTicks);
   if (sphTicksSize != 2) {
     msg << MSG::FATAL << "Problem getting mirror radius, noTicks: "
         << sphTicksSize << endmsg;
     return StatusCode::FAILURE;
   }
-  const Gaudi::XYZPoint m_localMirrorCentre(sphTicks[0]*toSphCentre);
+
+  m_localMirrorCentre = Gaudi::XYZPoint( sphTicks[0]*toSphCentreXYZ );
   m_mirrorCentre = geometry()->toGlobal(m_localMirrorCentre);
   m_centreOfCurvature = geometry()->toGlobal(m_localOrigin);
 
@@ -192,6 +194,7 @@ StatusCode DeRichSphMirror::initialize()
 
   // the following lines can be uncommented for debug
   // right and left middle points are for verification of the hex segment position
+  //const double flatToCentre = hexRadius*sin(60*degree);
   //const Gaudi::XYZPoint middleRightSide
   //  (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,flatToCentre);
   //const Gaudi::XYZPoint middleLeftSide
