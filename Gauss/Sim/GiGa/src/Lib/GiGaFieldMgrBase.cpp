@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.9 2005-10-25 17:21:32 gcorti Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.10 2006-02-17 14:34:18 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2005/10/25 17:21:32  gcorti
+// new properties
+//
 // Revision 1.8  2004/07/05 16:06:19  gcorti
 // introduce property DeltaChord
 //
@@ -76,7 +79,7 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
     , m_manager       ( 0 )
     , m_minStep       ( 0.01*mm )
     , m_deltaChord    ( 0.25 * mm )
-    , m_deltaintersection ( 0.001*mm )
+    , m_deltaintersection ( 1e-05*mm )
     , m_deltaonestep      ( 0.001*mm )
     , m_minimumEpsilonStep( 5e-05*mm )
     , m_maximumEpsilonStep( 0.001*mm )

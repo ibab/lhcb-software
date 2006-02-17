@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldBase.cpp,v 1.10 2003-04-06 18:49:47 ibelyaev Exp $
+// $Id: GiGaMagFieldBase.cpp,v 1.11 2006-02-17 14:34:18 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/04/06 18:49:47  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 //  ===========================================================================
 #define GIGA_GIGAMAGFIELDBASE_CPP 1 
 ///  ===========================================================================
@@ -79,7 +82,7 @@ StatusCode GiGaMagFieldBase::initialize ()
     { return Error("Could not initialize base class!", sc); }
   if( !m_nameMFSvc.empty() ) 
     {
-      sc = svcLoc()->service( m_nameMFSvc, m_mfSvc );
+      sc = svcLoc()->service( m_nameMFSvc, m_mfSvc, true );
       if( sc.isFailure() ) 
         { return Error("Could not locate MagneticField Service!", sc ) ; }
       if( 0 == mfSvc()   ) 

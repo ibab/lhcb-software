@@ -1,12 +1,22 @@
-! $Id: release.notes,v 1.110 2005-12-16 19:50:27 gcorti Exp $
+! $Id: release.notes,v 1.111 2006-02-17 14:34:18 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!======================= GiGa v18r0 2005-02-17 ================================
+! 2006-02-17 - Gloria CORTI
+ - GiGaMagFieldBase.cpp
+   . When requiring MagneticFieldSvc create if it does not exist already
+ - GiGaFieldMgrBase.cpp
+   . Change default setting of delta_intersection to 1e-05mm (see T.Ruf
+     presentation at T-Rec of 2006-01-23
+     http://indico.cern.ch/conferenceDisplay.py?confId=a06540)
+
 !======================= GiGa v18r0 2005-12-16 ================================
 ! 2005-12-16 - Gloria CORTI
- - Adapt to LHCb namespaces for forward declaration
-   . GiGa/GiGaTrajectory.h
+ - GiGa/GiGaTrajectory.h
+   . Adapt to LHCb namespaces for forward declaration
+  
 
 !======================= GiGa v17r4 =====================================
 ! 2005-12-09 - Gloria CORTI

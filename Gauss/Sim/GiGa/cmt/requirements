@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.71 2005-12-16 19:50:27 gcorti Exp $ 
+# $Id: requirements,v 1.72 2006-02-17 14:34:18 gcorti Exp $ 
 #============================================================================
 # Created    : 2001-01-22
 # Maintainer : Gloria CORTI
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package          GiGa
-version          v18r0
+version          v18r1
 
 #============================================================================
 branches         cmt src doc GiGa
