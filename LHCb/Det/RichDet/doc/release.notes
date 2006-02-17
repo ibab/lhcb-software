@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v9r1 2006-02-16 =========================
 ! 2006-02-16 - Chris Jones
  - Update DeRichSystem for improved treatment of inactive HPDs.
    Requires update to XmlConditions
@@ -12,7 +13,6 @@
  - Added 2nd order demagnification in the smartID->detectionPoint.
  - Fixed minor bug in readoutChannelList. Both in DeRichHPDPanel.
 
-!========================= RichDet v9r1 2006-02-14 =========================
 ! 2006-02-14 - Marco Cattaneo
  - Add explicit Boost dependency to requirements
 
