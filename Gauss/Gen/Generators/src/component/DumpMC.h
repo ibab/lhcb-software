@@ -1,4 +1,4 @@
-// $Id: DumpMC.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $ 
+// $Id: DumpMC.h,v 1.2 2006-02-17 13:24:45 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -57,7 +57,14 @@ private:
 private:
   
   Addresses  m_addresses ;
-  
+
+  /// Print HepMC::GenEvent ordering particles according to barcodes
+  void orderedPrint( const HepMC::GenEvent * theEvent , 
+                     std::ostream & ostr ) const ;
+
+  /// Print HepMC::GenVertex ordering particles according to barcodes
+  void orderedVertexPrint( HepMC::GenVertex * theVertex , 
+                           std::ostream & ostr ) const ;
 };
 
 // ============================================================================
