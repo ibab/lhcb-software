@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 
 ! 2006-02-17 - Kurt Rinnert
+ - removed obsolete algorithm declaration
+
+! 2006-02-17 - Kurt Rinnert
  - fixed crash in PrepareVeloRawBuffer related to incorrect
    resizing of the vector holding the sorted clusters
 

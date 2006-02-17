@@ -13,6 +13,5 @@
 DECLARE_FACTORY_ENTRIES(VeloDAQ) {
   DECLARE_ALGORITHM( PrepareVeloRawBuffer );
   DECLARE_ALGORITHM( DecodeVeloRawBuffer );
-  DECLARE_ALGORITHM( PrepareVeloL1BufferFPGA );
 }
 
