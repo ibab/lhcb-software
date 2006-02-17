@@ -25,6 +25,7 @@
         desc="is a primary vertex ?"
         type="bool"
 	virtual="TRUE"
+        const="TRUE"
        >
        <code>
          return true;

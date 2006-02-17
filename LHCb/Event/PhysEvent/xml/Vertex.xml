@@ -78,6 +78,7 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         desc="is a primary vertex ?"
         type="bool"
 	virtual="TRUE"
+        const="TRUE"
        >
        <code>
          return false;
