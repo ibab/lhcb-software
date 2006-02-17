@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.14 2006-02-07 17:23:25 robbep Exp $
+// $Id: Generation.cpp,v 1.15 2006-02-17 13:25:50 robbep Exp $
 // Include files 
 
 // local
@@ -25,6 +25,7 @@
 #include "Generators/IVertexSmearingTool.h"
 #include "Generators/IFullGenEventCutTool.h"
 #include "Generators/GenCounters.h"
+#include "Generators/HepMCUtils.h"
 
 // Gaudi Common Flat Random Number generator
 extern Rndm::Numbers randgaudi ;
@@ -293,27 +294,30 @@ StatusCode Generation::decayEvent( LHCb::HepMCEvent * theEvent ) {
   StatusCode sc ;
   
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
-  HepMC::GenEvent::particle_iterator itp ;
 
   // We must use particles_begin to obtain an ordered iterator of GenParticles
   // according to the barcode: this allows to reproduce events !
-  for ( itp = pEvt -> particles_begin() ; itp != pEvt -> particles_end() ; 
-        ++itp ) {
+  HepMCUtils::ParticleSet pSet( pEvt -> particles_begin() , 
+                                pEvt -> particles_end() ) ;
 
+  HepMCUtils::ParticleSet::iterator itp ;
+
+  for ( itp = pSet.begin() ; itp != pSet.end() ; ++itp ) {
+    
     HepMC::GenParticle * thePart = (*itp) ;
     unsigned int status = thePart -> status() ;
-
+    
     if ( ( HepMCEvent::StableInProdGen  == status ) || 
          ( ( HepMCEvent::DecayedByDecayGenAndProducedByProdGen == status )
            && ( 0 == thePart -> end_vertex() ) ) ) {
       
       if ( m_decayTool -> isKnownToDecayTool( thePart -> pdg_id() ) ) {
-
+        
         if ( HepMCEvent::StableInProdGen == status ) 
           thePart -> 
             set_status( HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
         else thePart -> set_status( HepMCEvent::DecayedByDecayGen ) ;
-
+        
         sc = m_decayTool -> generateDecay( thePart ) ;
         if ( ! sc.isSuccess() ) return sc ;
       }
