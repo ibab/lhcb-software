@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r6 2006-02-17  ==========================
 ! 2006-02-07 - Patrick Robbe
  - EvtGenBase/EvtRandomEngine.hh, EvtPartWave and EvtCGCoefSingle:
     fix memory leaks
