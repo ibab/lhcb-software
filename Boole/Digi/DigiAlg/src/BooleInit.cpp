@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.14 2006-02-16 13:53:13 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.15 2006-02-17 14:50:59 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -105,19 +105,17 @@ StatusCode BooleInit::execute() {
   raw->adoptBank(daqBank, true);
 
   // Add the ODIN bank (EDMS 704084)
-  unsigned int odin[10];
-  odin[0] = evt->runNumber();
+  unsigned int odin[8];
+  odin[0] = 0; // Orbit number
   odin[1] = 0xFFFFFFFF & evt->evtNumber();
   odin[2] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
-  odin[3] = 0; // Orbit number
-  odin[4] = 0; // BunchID (bits 0:11)
-  odin[5] = 0xFFFFFFFF & evt->evtTime();
-  odin[6] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
-  odin[7] = 0; // error bits, BX type, Trigger type
-  odin[8] = 0; // Detector status
-  odin[9] = 0; // Bunch Current
+  odin[3] = 0xFFFFFFFF & evt->evtTime();
+  odin[4] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
+  odin[5] = evt->runNumber();
+  odin[6] = 0; // Error bits [31-24], Detector status [23-0]
+  odin[7] = 0; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
   
-  LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+40, odin);
+  LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+32, odin);
   raw->adoptBank(odinBank, true);
 
   return StatusCode::SUCCESS;
