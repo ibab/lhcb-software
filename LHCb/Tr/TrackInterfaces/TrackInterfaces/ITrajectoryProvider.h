@@ -1,4 +1,4 @@
-// $Id: ITrajectoryProvider.h,v 1.1 2006-02-17 15:34:05 erodrigu Exp $
+// $Id: ITrajectoryProvider.h,v 1.2 2006-02-17 16:52:43 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRAJECTORYPROVIDER_H 
 #define TRACKINTERFACES_ITRAJECTORYPROVIDER_H 1
 
@@ -7,13 +7,14 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// from LHCbDefinitions
+#include "Kernel/TrackTypes.h"
+
 // Forward declarations
-namespace Gaudi {
-  class TrackVector;
-};
 namespace LHCb {
   class LHCbID;
   class Trajectory;
+  class Measurement;
   class State;
 };
 
@@ -43,7 +44,7 @@ public:
    *  @param  id:     input LHCbID
    *  @param  offset: input offset
    */
-  virtual LHCb::Trajectory* trajectory( LHCb::LHCbID& id,
+  virtual LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
                                         double offset = 0 ) = 0;
   
   /// Return a "State Trajectory" from a State
