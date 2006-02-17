@@ -1,8 +1,11 @@
-// $Id: LoKi.cpp,v 1.1.1.1 2006-01-24 09:39:41 ibelyaev Exp $
+// $Id: LoKiCore.cpp,v 1.1 2006-02-17 19:12:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
+// New Import: the core part of restructurized LoKi project
+// 
 // ============================================================================
 // Include files 
 // ============================================================================

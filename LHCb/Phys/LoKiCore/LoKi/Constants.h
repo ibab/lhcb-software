@@ -1,8 +1,11 @@
-// $Id: Constants.h,v 1.1.1.1 2006-01-24 09:39:41 ibelyaev Exp $
+// $Id: Constants.h,v 1.2 2006-02-17 19:12:53 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
+// New Import: the core part of restructurized LoKi project
+//
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
@@ -71,6 +74,8 @@ namespace LoKi
     const double InvalidMass         =  -100 * CLHEP::TeV ;    
     /// representation of invalid sine/cosine/angle, etc 
     const double InvalidAngle        =  -1000      ;
+    /// representation of HUGE chi2 
+    const double HugeChi2            = 1.e+10      ;
     
   }; // end of namespace Constants
 }; // end of namespace LoKi  

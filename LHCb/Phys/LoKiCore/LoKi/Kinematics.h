@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.3 2006-02-16 18:09:37 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.4 2006-02-17 19:12:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/16 18:09:37  ibelyaev
+//  add utilities for the easy printouts
+//
 // Revision 1.2  2006/02/10 17:23:05  ibelyaev
 //  add more algorithms
 //
@@ -43,8 +46,12 @@ namespace LoKi
 {
   /// Lorentz vector 
   typedef Gaudi::LorentzVector LorentzVector ;
+  /// Lorentz vector 
+  typedef LorentzVector        Vector4D      ;
   /// 3D vector 
   typedef Gaudi::XYZVector     ThreeVector   ;
+  /// 3D vector 
+  typedef ThreeVector          Vector3D      ;
   /// 3D point
   typedef Gaudi::XYZPoint      Point3D       ;
 
