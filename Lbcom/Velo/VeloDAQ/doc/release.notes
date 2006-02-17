@@ -1,6 +1,10 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-17 - Kurt Rinnert
+ - fixed crash in PrepareVeloRawBuffer related to incorrect
+   resizing of the vector holding the sorted clusters
+
 ! 2006-02-16 - Kurt Rinnert
  - bug fix: sizeBits in VeloBitsPolicy was wrong after silly editing mistake
    during cosmetic reformatting

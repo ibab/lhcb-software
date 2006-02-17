@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.9 2006-02-16 15:55:13 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.10 2006-02-17 14:17:39 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -84,8 +84,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
   m_sortedClusters.clear();
   m_sortedClusters.resize(clusters->size());
-  std::vector<const LHCb::InternalVeloCluster*> sortedClusters(clusters->size());
-  std::copy(clusters->begin(),clusters->end(),sortedClusters.begin());
+  std::copy(clusters->begin(),clusters->end(),m_sortedClusters.begin());
 
   // Then sort the clusters by sensor number and local coordinate
   std::sort( m_sortedClusters.begin(), m_sortedClusters.end(), 
