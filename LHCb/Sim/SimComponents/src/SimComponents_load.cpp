@@ -1,4 +1,4 @@
-// $Id: SimComponents_load.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: SimComponents_load.cpp,v 1.2 2006-02-17 17:38:43 cattanem Exp $
 // Include files 
 
 
@@ -18,6 +18,14 @@ DECLARE_FACTORY_ENTRIES(SimComponents) {
   DECLARE_ALGORITHM( DumpMCEventAlg );
   DECLARE_ALGORITHM( EvtTypeChecker );
   DECLARE_ALGORITHM( MCHitMonitor );
+
+  DECLARE_ALGORITHM( PackMCParticle );
+  DECLARE_ALGORITHM( UnpackMCParticle );
+  DECLARE_ALGORITHM( CompareMCParticle );
+
+  DECLARE_ALGORITHM( PackMCVertex );
+  DECLARE_ALGORITHM( UnpackMCVertex );
+  DECLARE_ALGORITHM( CompareMCVertex );
 
   DECLARE_SERVICE( EvtTypeSvc );
 

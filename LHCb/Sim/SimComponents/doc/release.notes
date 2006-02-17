@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== SimComponents v1r0 2005-12-15 ========================
+! 2006-02-17 - Marco Cattaneo
+ - Add algorithms to pack, unpack and compare MCParticles and MCVertices
+
 ! 2005-12-16 - Gloria CORTI
  - Uncomment lines left inadvertently commented in EvtTypeChecker.cpp
 

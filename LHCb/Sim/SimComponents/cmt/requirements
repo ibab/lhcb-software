@@ -20,6 +20,7 @@ include_path      none
 use   GaudiAlg     v*
 use   GenEvent     v*    Event
 use   MCEvent      v*    Event
+use   PackedEvent  v*    Event
 
 #============================================================================
 # Component library building rule
