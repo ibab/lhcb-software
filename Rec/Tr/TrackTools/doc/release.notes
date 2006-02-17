@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-17 - Eduardo Rodrigues
+ - introduced new trajectory provider tool TrajectoryProvider
+   (all implemented apart from Velo - need trajectory method in det. elem.)
+ - changes to IMeasurementProvider propagated to MeasurementProvider
+
 !======================== TrackTools v2r0 2006-02-15 =========================
 ! 2006-02-15 - Eduardo Rodrigues
  - using TrackUnitsConverters.h in TrackEvent to convert units for

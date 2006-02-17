@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.15 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.16 2006-02-17 17:23:25 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -110,8 +110,6 @@ StatusCode MeasurementProvider::load( Track& track )
 		continue;
     }
     Measurement* meas = measurement( id );
-	 // TODO: use the StatusCode to return more information on what happened:
-	 // not all measurements loaded OR some skipped OR ...
     if ( meas != NULL ) track.addToMeasurements( *meas );
     delete meas;
     //if ( meas == NULL ) return StatusCode::FAILURE;
@@ -132,8 +130,7 @@ StatusCode MeasurementProvider::load( Track& track )
 // Construct a Measurement of the type of the input LHCbID
 //=============================================================================
 Measurement* MeasurementProvider::measurement ( const LHCbID& id,
-                                                double par0,
-                                                double par1 )
+                                                double par )
 {
   Measurement* meas = NULL;
   if ( id.isVelo() ) {
@@ -141,9 +138,9 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
       if (vid.isRType()) {
-        meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
+        meas = new VeloRMeasurement( *clus, *m_veloDet, par );
       } else {
-        meas = new VeloPhiMeasurement(*clus,*m_veloDet);
+        meas = new VeloPhiMeasurement( *clus, *m_veloDet );
       }
     }
     else {
@@ -176,8 +173,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     OTTime* clus = m_otTimes->object(oid);
     debug() << "Looking for OTTime of key = " << oid << endreq;
     if (clus != NULL) {
-      if (par0 == 999.) par0 = 0.;
-      meas = new OTMeasurement(*clus,*m_otDet, (int) par0, par1);
+      meas = new OTMeasurement( *clus, *m_otDet, (int) par );
     }
     else {
       error() << "OTTime is NULL! No correspondence to OTChannelID = "
@@ -195,7 +191,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   else
     debug() << "Creating measurement of type " << meas -> type()
             << " channel " << id.channelID() 
-            << " pars : " << par0 << ","<< par1 << endreq;
+            << " parameter : " << par << endreq;
 
   return meas;  
 }
