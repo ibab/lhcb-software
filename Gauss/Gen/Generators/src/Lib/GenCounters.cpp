@@ -1,8 +1,11 @@
-// $Id: GenCounters.cpp,v 1.1 2006-02-07 00:16:06 robbep Exp $
+// $Id: GenCounters.cpp,v 1.2 2006-02-17 13:24:07 robbep Exp $
 // Include files
 
 // local
 #include "Generators/GenCounters.h"
+
+// Generators
+#include "Generators/HepMCUtils.h"
 
 // Boost
 #include <boost/array.hpp>
@@ -99,7 +102,10 @@ struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
     if ( ! thePid.hasBottom() ) return false ;
 
     // Test if the B has daughters
-    if ( 0 == part -> end_vertex() ) return true ;
+    if ( 0 == part -> end_vertex() ) {
+      if ( HepMCUtils::IsBAtProduction( part ) ) return true ;
+      return false ;
+    }
 
     // Loop over daughters to check if they are B hadrons
     HepMC::GenVertex::particles_out_const_iterator children ;
@@ -107,7 +113,10 @@ struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
     for ( children = theEV -> particles_out_const_begin() ;
           children != theEV -> particles_out_const_end() ; ++children ) {
       LHCb::ParticleID childID( (*children) -> pdg_id() ) ;
-      if ( childID.hasBottom() ) return false ;
+      if ( childID.hasBottom() ) {
+        if ( (*children) -> pdg_id() == - part -> pdg_id() ) return true ;
+        return false ;
+      }
     }
 
     // If not, then it is a end B
@@ -204,6 +213,9 @@ void GenCounters::setupExcitedCountersNames( ExcitedCNames & B ,
 void GenCounters::updateExcitedStatesCounters
 ( const HepMC::GenEvent * theEvent , ExcitedCounter & thebExcitedC ,
   ExcitedCounter & thecExcitedC ) {
+  // Signal Vertex
+  HepMC::GenVertex * signalV = theEvent -> signal_process_vertex() ;
+
   // Count B :
   std::vector< HepMC::GenParticle * > rootB ;
   HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
@@ -212,6 +224,12 @@ void GenCounters::updateExcitedStatesCounters
   std::vector< HepMC::GenParticle * >::const_iterator iter ;
 
   for ( iter = rootB.begin() ; iter != rootB.end() ; ++iter ) {
+    if ( 0 != signalV ) {
+      if ( ! HepMCUtils::commonTrees( signalV ,
+                                      (*iter) -> end_vertex() ) ) 
+        continue ;
+    }
+
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
 
     if ( thePid.isMeson() ) {
@@ -228,6 +246,12 @@ void GenCounters::updateExcitedStatesCounters
                   std::back_inserter( rootD ) , isRootD() ) ;
 
   for ( iter = rootD.begin() ; iter != rootD.end() ; ++iter ) {
+    if ( 0 != signalV ) {
+      if ( ! HepMCUtils::commonTrees( signalV , 
+                                      (*iter) -> end_vertex() ) ) 
+        continue ;
+    }
+    
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     if ( thePid.isMeson() ) {
       if ( 0 == thePid.lSpin() ) {
@@ -248,6 +272,9 @@ void GenCounters::updateHadronCounters( const HepMC::GenEvent * theEvent ,
                                         DHadronCounter & theanticHadC ,
                                         unsigned int & thebbCounter ,
                                         unsigned int & theccCounter ) {
+  // Signal vertex
+  HepMC::GenVertex * signalV = theEvent -> signal_process_vertex() ;
+
   // Count B:
   std::vector< HepMC::GenParticle * > endB ;
   HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
@@ -255,6 +282,12 @@ void GenCounters::updateHadronCounters( const HepMC::GenEvent * theEvent ,
   std::vector< HepMC::GenParticle * >::const_iterator iter ;
   
   for ( iter = endB.begin() ; iter != endB.end() ; ++iter ) {
+    if ( 0 != signalV ) {
+      if ( HepMCUtils::commonTrees( signalV , 
+                                    (*iter) -> end_vertex() ) )
+        continue ;
+    }
+    
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     
     if ( thePid.isMeson() ) {
@@ -272,7 +305,7 @@ void GenCounters::updateHadronCounters( const HepMC::GenEvent * theEvent ,
         else ++thebbCounter ;
       }
     } else if ( thePid.isBaryon() ) {
-      if ( thePid.pid() > 0 ) ++thebHadC[ bBaryon ] ;
+      if ( thePid.pid() < 0 ) ++thebHadC[ bBaryon ] ;
       else ++theantibHadC[ bBaryon ] ;
     }
   }
@@ -282,6 +315,12 @@ void GenCounters::updateHadronCounters( const HepMC::GenEvent * theEvent ,
                   std::back_inserter( endD ) , isEndD() ) ;
   
   for ( iter = endD.begin() ; iter != endD.end() ; ++iter ) {
+    if ( 0 != signalV ) {
+      if ( HepMCUtils::commonTrees( signalV ,
+                                    (*iter) -> end_vertex() ) ) ;
+      continue ;
+    }
+    
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     
     if ( thePid.isMeson() ) {
