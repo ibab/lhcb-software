@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.77 2006-02-16 15:20:37 pkoppenb Exp $
+! $Id: release.notes,v 1.78 2006-02-17 09:52:08 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================= PhysEvent v9r0 2006-02-16 ==========================
 ! 2006-02-16 - P. Koppenburg
  - xml/Vertex.xml
  - xml/PrimVertex.xml
@@ -29,9 +30,7 @@
     
 DC06Tests  INFO PrimVertex is primary? 1 1
 DC06Tests  INFO     Vertex is primary? 0
-
     
-!======================= PhysEvent v9r0 2006-02-15 ==========================
 ! 2006-02-15 - Marco Cattaneo
  - Remove CaloEvent from requirements
 
