@@ -67,6 +67,7 @@ use STDet               v*    Det
 use OTDet               v*    Det
 use MuonDet             v*    Det
 use RichCondition       v*    Rich
+use PackedEvent         v*    Event
 
 #-- GAUDI framework
 use GaudiAlg            v*

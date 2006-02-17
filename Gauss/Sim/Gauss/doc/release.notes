@@ -7,8 +7,8 @@
 !======================== Gauss v24r1 2006-02-17 =============================
 ! 2006-02-17 - Gloria CORTI
  - Use GiGa v18r1 for new setting of field
-   . requirements
- - Use modification for Generators (v4r1) allowing to produce b inclusive 
+   Use modification for Generators (v4r1) allowing to produce b inclusive 
+   Use PackedEvent
    . requirement
 
 ! 2006-02-16 - Gloria CORTI
