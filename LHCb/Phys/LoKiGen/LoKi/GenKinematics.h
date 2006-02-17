@@ -1,8 +1,11 @@
-// $Id: GenKinematics.h,v 1.1.1.1 2006-01-24 09:54:23 ibelyaev Exp $
+// $Id: GenKinematics.h,v 1.2 2006-02-17 19:13:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
+// New Import: Generator/HepMC-dependent part of LoKi project
+//
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -42,9 +45,39 @@
 // ============================================================================
 namespace LoKi 
 {
+  
   namespace Kinematics 
-  {
-
+  { 
+    /** @fn momentum
+     *  The most trivial function.
+     *  It seems to be almost useless from the first sight, but 
+     *  effectivel it is useful in conjunction with 
+     *  algorithms, acting as "converter" of the particle 
+     *  into the 4-momentum 
+     *  @param p particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    inline LoKi::LorentzVector momentum
+    ( const HepMC::GenParticle* p )
+    {
+      if ( 0 == p ) { return LoKi::LorentzVector() ; }
+      return LoKi::LorentzVector ( p->momentum () ) ;
+    };
+    
+    /** @struct Gen4Momentum 
+     *  the simple object which acts as a converter of HepMC::GenPartile
+     *  to LoKi::LorentzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    struct Gen4Momentum : 
+      public std::unary_function<const HepMC::GenParticle*,LoKi::LorentzVector>
+    {
+      inline LoKi::LorentzVector operator() 
+        ( const HepMC::GenParticle* p ) const { return momentum ( p ) ; }  
+    };
+    
     /** @fn mass 
      *  trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p particle 

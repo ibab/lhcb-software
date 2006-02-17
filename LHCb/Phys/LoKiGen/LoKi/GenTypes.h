@@ -1,11 +1,8 @@
-// $Id: GenTypes.h,v 1.2 2006-02-09 09:54:49 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.3 2006-02-17 19:13:57 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
-// New Import: Generator/HepMC-dependent part of LoKi project
-//
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1
@@ -14,6 +11,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/CoreTypes.h"
 #include "LoKi/Functions.h"
 // ============================================================================
 // forward declarations  
