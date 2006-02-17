@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.6 2006-02-07 17:23:25 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.7 2006-02-17 13:25:16 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -29,7 +29,7 @@
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenEvent.h"
-
+ 
 // from EvtGen
 #include "EvtGen/EvtGen.hh"
 #include "EvtGenModels/EvtPythia.hh"
@@ -146,7 +146,6 @@ StatusCode EvtGenDecay::initialize( ) {
   // create EvtGen engine from decay file, evt.pdl file and random engine
   m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.name() ,
                        m_randomEngine ) ;
-  (*evtgenStream) << endreq ;
 
   // Remove temporary file if not asked to keep it
   if ( ! m_keepTempEvtFile ) seal::Filename::remove( evtPdlFile ) ;
@@ -158,10 +157,8 @@ StatusCode EvtGenDecay::initialize( ) {
       return Error( "The specified user decay file does not exist" ) ;
     if ( ! userDecayFile.isReadable() ) 
       return Error( "The specified user decay file is not readable" ) ;
-    m_gen -> readUDecay( m_userDecay.c_str() ) ;
+    m_gen -> readUDecay( m_userDecay.c_str() ) ; 
   }
-
-  (*evtgenStream) << endreq ;
 
   m_photosTempFile = seal::TempFile::file( m_photosTempFilename ) ;
   m_photosTempFile -> close() ;
@@ -189,9 +186,8 @@ StatusCode EvtGenDecay::initialize( ) {
   
   // Initialize Pythia
   EvtPythia::pythiaInit( 0 ) ;
-  (*evtgenStream) << endreq ;
 
-  debug() << "EvtGenDecay initialized" << endreq ;
+  debug() << "EvtGenDecay initialized" << endmsg ;
   
   return StatusCode::SUCCESS ;
 }
@@ -202,9 +198,8 @@ StatusCode EvtGenDecay::initialize( ) {
 StatusCode EvtGenDecay::finalize() {
   delete m_randomEngine ;
   delete m_gen ;
-  (*evtgenStream) << endreq ;
   
-  debug() << "EvtGenDecay finalized" << endreq ;
+  debug() << "EvtGenDecay finalized" << endmsg ;
 
   if ( ! msgLevel( MSG::DEBUG ) ) {
 #ifdef WIN32
@@ -708,9 +703,7 @@ const {
 
   // Generate decay tree of part with EvtGen  
   m_gen -> generateDecay( thePart ) ;
-  (*evtgenStream) << endreq ;
-  thePart -> printTree() ;
-  (*evtgenStream) << endreq ;
+  if ( msgLevel( MSG::DEBUG ) ) thePart -> printTree() ;
 
   return StatusCode::SUCCESS ;
 }
