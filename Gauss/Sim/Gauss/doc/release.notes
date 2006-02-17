@@ -8,6 +8,8 @@
 ! 2006-02-17 - Gloria CORTI
  - Use GiGa v18r1 for new setting of field
    . requirements
+ - Use modification for Generators (v4r1) allowing to produce b inclusive 
+   . requirement
 
 ! 2006-02-16 - Gloria CORTI
  - Introduce setting of Event time and step in EventClockSvc to get information

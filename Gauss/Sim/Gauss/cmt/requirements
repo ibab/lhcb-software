@@ -20,7 +20,7 @@ use Geant4Files		v71r0	      -no_auto_imports
 #========================================================================
 #-- Generator
 use ParticleGuns        v2r0    Gen
-use Generators          v4r0    Gen
+use Generators          v4r1    Gen
 use LbPythia            v4r0    Gen
 
 #-- Optional AcerMC : not yet ported
