@@ -32,7 +32,7 @@ macro LbHerwig_use "" Linux&Herwig "LbHerwig v1r1 Gen"
 use $(LbHerwig_use)
 
 #-- Simulation
-use GiGa                 v18r0   Sim
+use GiGa                 v18r1   Sim
 use GiGaCnv              v16r0   Sim
 use GaussTools           v12r0 	 Sim
 use GaussAlgs		 v2r0    Sim
@@ -66,7 +66,7 @@ use VeloDet             v*    Det
 use STDet               v*    Det
 use OTDet               v*    Det
 use MuonDet             v*    Det
-use RichCondition       v*    Rich 
+use RichCondition       v*    Rich
 
 #-- GAUDI framework
 use GaudiAlg            v*
