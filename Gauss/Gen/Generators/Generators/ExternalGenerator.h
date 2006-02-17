@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.9 2006-02-07 21:46:12 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.10 2006-02-17 13:18:44 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -11,6 +11,9 @@
 
 // from SEAL
 #include "SealBase/Filename.h"
+
+// from LHCb
+#include "Kernel/ParticleID.h"
 
 // forward declarations
 class IProductionTool ;
@@ -95,7 +98,8 @@ class ExternalGenerator : public GaudiTool ,
    *                                decay table).
    */
   StatusCode decayHeavyParticles( HepMC::GenEvent * theEvent , 
-                                  const double mass , const int pid ) const ;
+                                  const LHCb::ParticleID::Quark theQuark , 
+                                  const int signalPid ) const ;
   
   
   /** Find particles of given PIDs in an event
@@ -146,15 +150,7 @@ class ExternalGenerator : public GaudiTool ,
   /// Generator level cut tool to apply to generated interactions
   IGenCutTool     * m_cutTool        ;
   
- private:
-  /** Check if a particle is before or after oscillation.
-   *  In HepMC description, the mixing is seen as a decay B0 -> B0bar. In this
-   *  case, the B0 is said to be the BAtProduction contrary to the B0bar.
-   *  @param[in] thePart  Particle to check.
-   *  @return true if the particle is the particle before osillation.
-   */
-  bool IsBAtProduction( const HepMC::GenParticle * thePart ) const ;
-  
+ private:  
   /** Decode commands (given by job options) to configure LHAPDF library.
    *  @param[in] theCommandVector  Vector of string to configure LHAPDF. The
    *                               syntax of the command is "lhacontrol block

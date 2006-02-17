@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.14 2006-02-07 21:46:12 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.15 2006-02-17 13:18:55 robbep Exp $
 // Include files 
 
 // local
@@ -18,6 +18,7 @@
 #include "Generators/IGenCutTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
+#include "Generators/HepMCUtils.h"
 
 // Calls to FORTRAN routines
 #ifdef WIN32
@@ -145,31 +146,54 @@ StatusCode ExternalGenerator::initialize( ) {
 //=============================================================================
 // Decay heavy excited particles
 //=============================================================================
-StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent, 
-                                                   const double mass ,
-                                                   const int pid ) const {
+StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
+     const LHCb::ParticleID::Quark theQuark , const int signalPid ) const {
   StatusCode sc ;
   
   m_decayTool -> disableFlip() ;
 
+  HepMCUtils::ParticleSet particleSet ;  
+
   HepMC::GenEvent::particle_iterator it ;
-  for ( it = theEvent -> particles_begin() ; 
-        it != theEvent -> particles_end() ; ++ it ) {
+  switch ( theQuark ) {
     
-    if ( ( (*it) -> momentum().m() * GeV > mass ) &&
-         ( LHCb::HepMCEvent::StableInProdGen == (*it) -> status() ) && 
-         ( pid != abs( (*it) -> pdg_id() ) ) ) {
+  case LHCb::ParticleID::bottom: // decay only B
+    for ( it = theEvent -> particles_begin() ; 
+          it != theEvent -> particles_end() ; ++it )
+      if ( LHCb::ParticleID( (*it) -> pdg_id() ).hasQuark( theQuark ) ) 
+        particleSet.insert( *it ) ;
+    break ;
+    
+  case LHCb::ParticleID::charm: // decay B + D
+    for ( it = theEvent -> particles_begin() ;
+          it != theEvent -> particles_end() ; ++it ) {
+      LHCb::ParticleID pid( (*it) -> pdg_id() ) ;
+      if ( ( pid.hasQuark( theQuark ) ) || 
+           ( pid.hasQuark( LHCb::ParticleID::bottom ) ) ) 
+        particleSet.insert( *it ) ;
+    }
+    break ;
+    
+  default:
+    return Error( "This case in not implemented yet" ) ;
+    break ;
+
+  }
+  
+  for ( HepMCUtils::ParticleSet::iterator itHeavy = particleSet.begin() ; 
+        itHeavy != particleSet.end() ; ++itHeavy ) 
+    
+    if ( ( LHCb::HepMCEvent::StableInProdGen == (*itHeavy) -> status() ) && 
+         ( signalPid != abs( (*itHeavy) -> pdg_id() ) ) ) {
       
-      if ( m_decayTool -> isKnownToDecayTool( (*it) -> pdg_id() ) ) {
-        sc = m_decayTool -> generateDecayWithLimit( *it , pid ) ;
+      if ( m_decayTool -> isKnownToDecayTool( (*itHeavy) -> pdg_id() ) ) {
+        sc = m_decayTool -> generateDecayWithLimit( *itHeavy , signalPid ) ;
         if ( ! sc.isSuccess() ) return sc ;
         // if excited particle is unknown to EvtGen give error to oblige
         // us to define it in EvtGen decay table
       } else return Error( "Unknown undecayed excited particle !" ) ;
-      
     }
-  }  
-
+  
   return StatusCode::SUCCESS ;
 }
 
@@ -187,7 +211,7 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
     if ( std::binary_search( pidList.begin() , pidList.end() ,
                              (*it) -> pdg_id() ) ) 
       if ( ( LHCb::HepMCEvent::DocumentationParticle != (*it) -> status() ) 
-           && ( IsBAtProduction( *it ) ) )
+           && ( HepMCUtils::IsBAtProduction( *it ) ) )
         particleList.push_back( *it ) ;
 
   return ( ! particleList.empty() ) ;
@@ -250,22 +274,6 @@ void ExternalGenerator::prepareInteraction( LHCb::HepMCEvents * theEvents ,
 
   theEvents -> insert( theHepMCEvent ) ;
   theCollisions -> insert( theGenCollision ) ;
-}
-
-//=============================================================================
-// Returns true if B is first B (removing oscillation B)
-//=============================================================================
-bool ExternalGenerator::IsBAtProduction( const HepMC::GenParticle * thePart ) 
-  const {
-  if ( ( abs( thePart -> pdg_id() ) != 511 ) && 
-       ( abs( thePart -> pdg_id() ) != 531 ) ) return true ;
-  if ( 0 == thePart -> production_vertex() ) return true ;
-  HepMC::GenVertex * theVertex = thePart -> production_vertex() ;
-  if ( 1 != theVertex -> particles_in_size() ) return true ;
-  HepMC::GenParticle * theMother = 
-    (* theVertex -> particles_in_const_begin() ) ;
-  if ( theMother -> pdg_id() == - thePart -> pdg_id() ) return false ;
-  return true ;
 }
 
 //=============================================================================
