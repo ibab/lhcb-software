@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.9 2006-02-02 13:51:17 erodrigu Exp $
+// $Id: ITrackExtrapolator.h,v 1.10 2006-02-17 15:34:05 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -62,7 +62,7 @@ public:
                                 const Gaudi::XYZPoint& point,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
-  //--------- ACCESS METHOD ---------------------------------------
+  //--------- ACCESS METHODS ---------------------------------------
 
   /// Retrieve the position and momentum vectors and the corresponding
   /// 6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position

@@ -60,8 +60,10 @@ public:
                      traj2, arclength2, false,
                      distance, precision); }
   
-  StatusCode minimize( const LHCb::Trajectory& traj, double& arclength,
-                       const Gaudi::XYZPoint& pt, Gaudi::XYZVector& distance, 
+  StatusCode minimize( const LHCb::Trajectory& traj,
+                       double& arclength,
+                       const Gaudi::XYZPoint& pt,
+                       Gaudi::XYZVector& distance, 
                        double precision )
   { return minimize( traj, arclength, false, pt, distance, precision); }
 

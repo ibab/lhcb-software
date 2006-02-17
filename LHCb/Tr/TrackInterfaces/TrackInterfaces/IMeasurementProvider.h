@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.4 2006-01-12 15:24:26 erodrigu Exp $
+// $Id: IMeasurementProvider.h,v 1.5 2006-02-17 15:34:05 erodrigu Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -32,13 +32,29 @@ public:
 
   virtual StatusCode initialize() = 0;
 
+  /** Load the necessary VeloClusters, ITClusters and OTTimes.
+   *  Note: this method should be called for each event
+   *        before any call to load( Track& track )!
+   */
   virtual void load() = 0;
 
+  /** Load (=create) all the Measurements from the list of LHCbIDs
+   *  on the input Track
+   */
   virtual StatusCode load( LHCb::Track& track ) = 0;
 
+  /** Construct a Measurement of the type of the input LHCbID
+   *  Note: this method is not for general use. A user should preferably call
+   *  the "load( Track& track )" method to load=create "in one go" all the
+   *  Measurements from the list of LHCbIDs on the Track.
+   *  This method is in fact called internally by "load( Track& track )".
+   *  @return Pointer the the Measurement created
+   *  @param  id:  input LHCbID
+   *  @param  par: extra parameter for the XxxMeasurement constructor
+   *               (refer to XxxMeasurement.h for details)
+   */
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID&, 
-                                    double par0 = 999.,
-                                    double par1 = 999.) = 0;
+                                          double par = 0. ) = 0;
 
 protected:
 

@@ -29,12 +29,12 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IIdealStateCreator; }
   
-  /// create a state at z-position from MCParticle entry/exit points
+  /// Create a state at a z-position from an MCParticle's entry/exit points
   virtual StatusCode createState( const LHCb::MCParticle* mcPart,
                                   double zrec,
                                   LHCb::State*& pState ) const = 0;
 
-  /// create a state at MCParticle vertex
+  /// Create a state at an MCParticle's vertex
   virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
                                         LHCb::State*& pState ) const = 0;
 };

@@ -27,12 +27,12 @@ public:
 
   /** Calculate the chi2 distance between two track vectors.
    *  The track vectors must be given in (x,y,tx,ty,q/p).
-   *  @return StatusCode: Failure if matrix inversion failed  
-   *  @param  trackVector1 input 1st track HepVector
-   *  @param  trackCov1 input covariance matrix corresponding to 1st vector
-   *  @param  trackVector2 input 2nd track HepVector
-   *  @param  trackCov2 input covariance matrix corresponding to 2nd vector
-   *  @param  chi2 output chi2 distance between the two vectors
+   *  @return StatusCode:   Failure if matrix inversion failed  
+   *  @param  trackVector1: input 1st track HepVector
+   *  @param  trackCov1:    input covariance matrix corresponding to 1st vector
+   *  @param  trackVector2: input 2nd track HepVector
+   *  @param  trackCov2:    input covariance matrix corresponding to 2nd vector
+   *  @param  chi2:         output chi2 distance between the two vectors
    */
   virtual StatusCode calculateChi2( const Gaudi::TrackVector& trackVector1,
                                     const Gaudi::TrackMatrix& trackCov1,

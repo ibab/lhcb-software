@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-02-17 - Eduardo Rodrigues
+ - introduced new interface for the trajectory provider tool
+ - changes to IMeasurementProvider to match simplified LHCbID class
+
 !====================== TrackInterfaces v2r0 2006-02-06 ======================
 ! 2006-02-06 - Eduardo Rodrigues
  - changes in ITrajPoca to match latest developments in trajectories
