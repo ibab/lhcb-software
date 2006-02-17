@@ -1,8 +1,11 @@
-// $Id: GenVertices.cpp,v 1.1 2006-02-09 09:54:49 ibelyaev Exp $
+// $Id: GenVertices.cpp,v 1.2 2006-02-17 20:46:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $,
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/09 09:54:49  ibelyaev
+//  add plenty of new (vertex&adapter)functions
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,9 +45,9 @@
 // ============================================================================
 /// MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
-LoKi::GenVertices::BarCode::BarCode*
-LoKi::GenVertices::BarCode:: clone() const 
-{ return new BarCode(*this); }
+LoKi::GenVertices::BarCode*
+LoKi::GenVertices::BarCode::clone() const 
+{ return new LoKi::GenVertices::BarCode(*this); }
 // ============================================================================
 /// MANDATORY: virtual destructor 
 // ============================================================================
