@@ -11,7 +11,7 @@
       the origin of the hit that has fired it or the reason why 
       the digit was not fired (inefficiency, time resolution, deadtime etc.). 
       In the latter case the correspondig MuonDigit does not exist." 
-      name="MC/Muon/Digit" 
+      name="MCMuonDigit" 
       id="11022">
       <import name="Kernel/MuonTileID"/>
       <import name="Event/PackMCMuonDigitInfo"/>
