@@ -1,4 +1,4 @@
-// $Id: Inclusive.h,v 1.6 2006-02-07 00:15:32 robbep Exp $
+// $Id: Inclusive.h,v 1.7 2006-02-17 13:26:44 robbep Exp $
 #ifndef GENERATORS_INCLUSIVE_H 
 #define GENERATORS_INCLUSIVE_H 1
 
@@ -70,11 +70,8 @@ class Inclusive : public ExternalGenerator {
  protected:
 
  private:
-  /// Mass of lightest hadron in list of particles to produce
-  double        m_lightestMass     ; 
-
-  /// PDG Id of lightest hadron in list of particles to produce
-  unsigned int  m_lightestPID      ;
+  /// Type of lightest quark in list of particles to produce
+  LHCb::ParticleID::Quark      m_lightestQuark     ; 
 
   /// Counter of events before applying generator level cut
   unsigned int  m_nEventsBeforeCut ;

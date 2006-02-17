@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.7 2005-12-31 17:31:24 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.8 2006-02-17 13:27:28 robbep Exp $
 // Include files 
 
 // local
@@ -59,7 +59,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
 
     if ( ! result ) {
       // Decay particles heavier than the particles to look at
-      decayHeavyParticles( theGenEvent , m_signalMass , m_signalPID ) ;
+      decayHeavyParticles( theGenEvent , m_signalQuark , m_signalPID ) ;
       
       // Check if one particle of the requested list is present in event
       ParticleVector theParticleList ;
@@ -97,7 +97,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
               if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
             }
             theGenEvent -> 
-              set_signal_process_vertex( theSignal -> production_vertex() ) ;
+              set_signal_process_vertex( theSignal -> end_vertex() ) ;
             
             result = true ;
           }

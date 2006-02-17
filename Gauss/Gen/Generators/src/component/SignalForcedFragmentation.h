@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.h,v 1.3 2005-12-31 17:33:12 robbep Exp $
+// $Id: SignalForcedFragmentation.h,v 1.4 2006-02-17 13:27:28 robbep Exp $
 #ifndef GENERATORS_SIGNALFORCEDFRAGMENTATION_H 
 #define GENERATORS_SIGNALFORCEDFRAGMENTATION_H 1
 
@@ -50,6 +50,8 @@ class SignalForcedFragmentation : public Signal {
   StatusCode boostTree( HepMC::GenParticle * theSignal , 
                         const HepMC::GenParticle * theSignalAtRest ,
                         const Gaudi::LorentzRotation & theBoost ) const ;
+
+  double m_signalMass ; ///< Mass of the signal particle
 };
 
 

@@ -1,11 +1,8 @@
-// $Id: Inclusive.cpp,v 1.7 2006-02-07 00:15:32 robbep Exp $
+// $Id: Inclusive.cpp,v 1.8 2006-02-17 13:26:44 robbep Exp $
 // Include files 
 
 // local
 #include "Inclusive.h"
-
-// standard
-#include <cfloat>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -33,8 +30,6 @@ const        IToolFactory& InclusiveFactory = s_factory ;
 Inclusive::Inclusive( const std::string& type, const std::string& name,
                       const IInterface* parent )
   : ExternalGenerator  ( type, name , parent ) ,
-    m_lightestMass     ( DBL_MAX ) ,
-    m_lightestPID      ( 0 ) ,
     m_nEventsBeforeCut ( 0 ) , m_nEventsAfterCut ( 0 ) ,
     m_nInvertedEvents  ( 0 ) ,
     m_ccCounter        ( 0 ) , m_bbCounter( 0 ) ,
@@ -80,14 +75,20 @@ StatusCode Inclusive::initialize( ) {
   
   info() << "Generating Inclusive events of " ;
   PIDs::const_iterator it ;
+  bool bottom( false ) , charm( false ) ;
+  
   for ( it = m_pids.begin() ; it != m_pids.end() ; ++it ) {
     ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
     info() << prop -> particle() << " " ;
-    if ( prop -> mass() < m_lightestMass ) {
-      m_lightestMass = prop -> mass() ;
-      m_lightestPID = prop -> pdgID() ;
-    }
+    
+    if ( LHCb::ParticleID( prop -> pdgID() ).hasBottom() ) bottom = true ;
+    if ( LHCb::ParticleID( prop -> pdgID() ).hasCharm()  ) charm  = true ;
   }
+
+  if ( bottom && ! charm ) m_lightestQuark = LHCb::ParticleID::bottom ;
+  else if ( charm ) m_lightestQuark = LHCb::ParticleID::charm ;
+  else return Error( "This case is not yet implemented" ) ;
+
   info() << endmsg ;  
   release( ppSvc ) ;
 
@@ -120,7 +121,7 @@ bool Inclusive::generate( const unsigned int nPileUp ,
 
     if ( ! result ) {
       // Decay particles heavier than the particles to look at
-      decayHeavyParticles( theGenEvent , m_lightestMass , m_lightestPID ) ;
+      decayHeavyParticles( theGenEvent , m_lightestQuark , 0 ) ;
       
       // Check if one particle of the requested list is present in event
       ParticleVector theParticleList ;

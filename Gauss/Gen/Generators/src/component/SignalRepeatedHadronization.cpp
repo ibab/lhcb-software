@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.cpp,v 1.6 2005-12-31 17:32:39 robbep Exp $
+// $Id: SignalRepeatedHadronization.cpp,v 1.7 2006-02-17 13:27:28 robbep Exp $
 // Include files 
 
 // local
@@ -108,7 +108,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
       
       while ( nRepetitions < m_maxNumberOfRepetitions ) {
         // Decay heavy particles
-        decayHeavyParticles( theGenEvent , m_signalMass , m_signalPID ) ;
+        decayHeavyParticles( theGenEvent , m_signalQuark , m_signalPID ) ;
 
         // Check if one particle of the requested list is present in event
         ParticleVector theParticleList ;
@@ -119,6 +119,8 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
 
             m_nEventsBeforeCut++ ;
 
+            // Count particles and anti-particles of Signal type before 
+            // the cut in all directions
             updateCounters( theParticleList , m_nParticlesBeforeCut , 
                             m_nAntiParticlesBeforeCut , false ) ;
 
@@ -130,9 +132,13 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
             if ( passCut && ( ! theParticleList.empty() ) ) {
               m_nEventsAfterCut++ ;
 
+              // Count particles and anti-particles of Signal type with
+              // pz>0, after generator level cut
               updateCounters( theParticleList , m_nParticlesAfterCut , 
                               m_nAntiParticlesAfterCut , true ) ;
-              
+
+              // If there are several particles passing the cuts, choose
+              // one and revert the event if it has pz<0              
               theSignal = chooseAndRevert( theParticleList ) ;
               
               flip = false ;
@@ -147,8 +153,19 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                     Exception( "Cannot isolate signal" ) ;
                 }
                 theGenEvent -> 
-                  set_signal_process_vertex( theSignal -> 
-                                             production_vertex() ) ;
+                  set_signal_process_vertex( theSignal -> end_vertex() ) ;
+
+                if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
+                else ++m_nSigBar ;
+
+                // Update counters
+                GenCounters::updateHadronCounters( theGenEvent , m_bHadC ,
+                                                   m_antibHadC , m_cHadC , 
+                                                   m_anticHadC , m_bbCounter ,
+                                                   m_ccCounter ) ;
+                GenCounters::updateExcitedStatesCounters( theGenEvent , 
+                                                          m_bExcitedC , 
+                                                          m_cExcitedC ) ;
               }
             }
             // if the interaction is not kept, we must re-hadronize it

@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.5 2005-12-31 17:33:12 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.6 2006-02-17 13:27:28 robbep Exp $
 // Include files
 
 // local
@@ -6,6 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // from LHCb
 #include "Kernel/Vector4DTypes.h"
@@ -34,7 +36,7 @@ const        IToolFactory& SignalForcedFragmentationFactory = s_factory ;
 //=============================================================================
 SignalForcedFragmentation::SignalForcedFragmentation(
   const std::string& type, const std::string& name, const IInterface* parent )
-  : Signal( type, name , parent ) { 
+  : Signal( type, name , parent ) , m_signalMass( 0. ) { 
   }
 
 //=============================================================================
@@ -48,6 +50,13 @@ SignalForcedFragmentation::~SignalForcedFragmentation( ) { ; }
 StatusCode SignalForcedFragmentation::initialize( ) {
   StatusCode sc = Signal::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
+
+  IParticlePropertySvc * ppSvc = 
+    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+  ParticleProperty * prop = ppSvc -> findByStdHepID( *m_pids.begin() ) ;
+  m_signalMass = prop -> mass() ;
+
+  release( ppSvc ) ;
   
   return sc ;
 }
@@ -155,7 +164,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           }
 
           theGenEvent -> 
-            set_signal_process_vertex( theSignal -> production_vertex() ) ;
+            set_signal_process_vertex( theSignal -> end_vertex() ) ;
           
           result = true ;
         }
