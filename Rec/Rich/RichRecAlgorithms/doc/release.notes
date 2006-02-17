@@ -4,12 +4,12 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r0 2006-02-17 =====================
 ! 2006-02-16 - Chris Jones
  - Add overall reconstruction initialisation algorithm.
    Handles things when certain items needed by the RICH are missing, in some
    processing arrangements (eg the ProcStat data object)
 
-!===================== RichRecAlgorithms v2r0 2005-01-23 =====================
 ! 2006-01-23 - Chris Jones
  - Updates for LHCb v20r0
 
