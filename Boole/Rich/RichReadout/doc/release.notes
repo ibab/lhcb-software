@@ -4,11 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r0 2006-02-17 ========================
 ! 2006-02-16 - Chris Jones
  - Various bug fixes
  - Improvements following changes to MC history flags
 
-!======================== RichReadout v2r0 2006-02-06 ========================
 ! 2006-02-06 - Chris Jones
  - Some minor cleaups
  - Add charge sharing to digit history information
