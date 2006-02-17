@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.66 2006-02-16 17:50:43 asarti Exp $
+! $Id: release.notes,v 1.67 2006-02-17 17:50:01 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-17 - Alessio Sarti
+ - DeMuonDetector.cpp
+   	Fix the Hit2GapNumber method. Now the hits is correctly
+	searched inside the Gas Gap Volume instead of Gap volume.
+        Also removed the z test that is now wrong with tilted
+	chambers
+
 ! 2006-02-16 - Alessio Sarti
  - MuonChamberLayout.cpp
 	fix the localToglobal method: now returns the correct 

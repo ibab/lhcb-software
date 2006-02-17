@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.20 2006-02-10 21:34:56 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.21 2006-02-17 17:50:01 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -97,30 +97,29 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
   //Set SC to failure until gap is found
   sc = StatusCode::FAILURE;
 
-  double zPoi = myPoint.z(); int Igap;
-  double zChmb = (theChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).z();  
-  for (Igap = 0; Igap <4; Igap++) {
-    //Use z information to catch the gap.
-    if((zPoi-zChmb)<-20+Igap*16) break;
-  }
-  if(debug)   std::cout<<"Z difference: "<<zPoi<<" "<<
-                zChmb<<" "<<zPoi-zChmb<<" "<<Igap<<std::endl;
-  if(Igap <4) { 	
-    sc = StatusCode::SUCCESS;
-    gapNumber = Igap; 
-  } else {
-    //Is the chamber returned containing the hit?
-    IDetectorElement::IDEContainer::iterator itGap= theChmb->childBegin();
-    for(itGap=theChmb->childBegin(); itGap<theChmb->childEnd(); itGap++){
-      IGeometryInfo* geoGap = (*itGap)->geometry();  
-      isIn = geoGap->isInside(myPoint);
+  //Is the chamber returned containing the hit?
+  IDetectorElement::IDEContainer::iterator itGap= theChmb->childBegin();
+  for(itGap=theChmb->childBegin(); itGap<theChmb->childEnd(); itGap++){
+    
+    
+    //Check the Gas Volume
+    IDetectorElement::IDEContainer::iterator itGVol= (*itGap)->childBegin();
+    for(itGVol=(*itGap)->childBegin(); itGVol<(*itGap)->childEnd(); itGVol++){
+      IGeometryInfo* geoGVol = (*itGVol)->geometry();  
+      
+      isIn = geoGVol->isInside(myPoint);
       if(isIn) {
-        DeMuonGasGap*  myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
-        gapNumber = myGap->gasGapNumber();
-        sc = StatusCode::SUCCESS;
-        break;
+	DeMuonGasGap*  myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
+	gapNumber = myGap->gasGapNumber();
+	sc = StatusCode::SUCCESS;
+	break;
       }
     }
+    if(isIn) break;
+  }
+
+  if(!isIn) {
+    msg << MSG::ERROR << "Gap not found! " <<endreq;
   }
   
   return sc;
@@ -545,13 +544,17 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   for(itGap=myChPtr->childBegin(); itGap<myChPtr->childEnd(); itGap++){
     myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
 
-    //Providing all 3 numbers identifies a chamber
-    IGeometryInfo* geoGap = (*itGap)->geometry();  
-    
-    //Is the gap containing the hit?
-    isIn = geoGap->isInside(my_entry);
-    if(isIn) break;
 
+    //Check the Gas Volume
+    IDetectorElement::IDEContainer::iterator itGVol= (*itGap)->childBegin();
+    for(itGVol=(*itGap)->childBegin(); itGVol<(*itGap)->childEnd(); itGVol++){
+      IGeometryInfo* geoGVol = (*itGVol)->geometry();  
+      
+      isIn = geoGVol->isInside(my_entry);
+      if(isIn) break;
+    }
+    if(isIn) break;
+    
     gapCnt++;
   }
 
@@ -560,7 +563,9 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     return tmpPair;
   }
 
-  //Gap Geometry info  
+  //Gap Geometry info 
+  //This is OK ONLY if you want to access x and y informations.
+  //Otherwise you need to go down to the volume of gas gap inside 
   IGeometryInfo*  geoCh=myGap->geometry();
 
   //Retrieve the chamber box dimensions  
