@@ -4,10 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r0 2006-02-16 ======================
 ! 2006-02-16 - Chris Jones
  - Update MC truth tool for new MC history flags
 
-!========================== RichMCTools v3r0 2006-02-06 ======================
 ! 2006-02-06 - Chris Jones
  - Update definition of background digits in MC truth tool
 
