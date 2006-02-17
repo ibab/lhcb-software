@@ -6,8 +6,8 @@
     <class author="Matthew Needham" desc="This class turns represents charge deposited on a strip by a single MCHit" id="9001" name="MCSTDeposit">
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-      <location name="TTDeposits"   place="MC/ST/TTDeposits"   />
-      <location name="ITDeposits"   place="MC/ST/ITDeposits"   />
+      <location name="TTDeposits"   place="MC/TT/Deposits"   />
+      <location name="ITDeposits"   place="MC/IT/Deposits"   />
 
       <import name ="Kernel/STChannelID"/>
       <import name="Event/MCHit" /> 

@@ -7,8 +7,8 @@
       <base name="KeyedObject&lt;LHCb::STChannelID&gt;"/>
       <template name="KeyedObjectDict" t1="LHCb::STChannelID"/>
       &KeyedContainer;
-      <location name="TTDigits"   place="MC/ST/TTDigits"   />
-      <location name="ITDigits"   place="MC/ST/ITDigits"   />
+      <location name="TTDigits"   place="MC/TT/Digits"   />
+      <location name="ITDigits"   place="MC/IT/Digits"   />
       <import name ="Kernel/STChannelID"/>
       <import name="MCSTDeposit" soft="TRUE"/>
       <relation name="mcDeposit" multiplicity="M" type="LHCb::MCSTDeposit" desc="vector of MCSTDeposits"/>

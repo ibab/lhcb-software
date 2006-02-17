@@ -18,17 +18,8 @@
      &KeyedObject;
      <base name="KeyedObject&lt;int&gt;"/> 
 
-     <location
-            name="Phys"
-            place="/Event/Phys/MCEffTrees"
-     />
- 
-     <location
-            name="Trg"
-            place="/Event/Trg/MCEffTrees"
-     />
-
-    
+     <location name="Phys" place="MC/Phys/EffTrees" />
+     <location name="Trg"  place="MC/Trg/EffTrees"  />
  
      <attribute
              name="decay"

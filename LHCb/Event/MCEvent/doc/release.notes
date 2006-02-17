@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.27 2006-02-16 15:46:30 jonrob Exp $
+! $Id: release.notes,v 1.28 2006-02-17 09:29:06 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+
+!========================== MCEvent v1r1 2006-02-17 ==========================
+! 2006-02-17 - Marco Cattaneo
+ - Fix default locations to all follow the same convention
 
 ! 2006-02-16 - Chris Jones
  - General clean up of history information in the RICH MC classes
@@ -10,7 +14,6 @@
  - Remove definition of Linker locations from MCRichOpticalPhoton and
    MCRichTrack
 
-!========================== MCEvent v1r1 2006-02-13 ==========================
 ! 2006-02-13 - Chris Jones
  - Add more history flags to RICH MCRichHit objects
 
