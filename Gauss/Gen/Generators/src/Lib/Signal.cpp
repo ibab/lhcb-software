@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.9 2006-02-05 21:01:44 robbep Exp $
+// $Id: Signal.cpp,v 1.10 2006-02-17 13:22:38 robbep Exp $
 // Include files 
 
 // local
@@ -12,12 +12,7 @@
 // from Generators
 #include "Generators/IDecayTool.h"
 #include "Generators/GenCounters.h"
-
-// Function to sort HepMC::GenParticles according to their barcode
-bool compareHepMCParticles( const HepMC::GenParticle * part1 ,
-                            const HepMC::GenParticle * part2 ) {
-  return ( part1->barcode() < part2->barcode() ) ;
-}
+#include "Generators/HepMCUtils.h"
 
 // Function to test if a HepMC::GenParticle is Particle (or antiParticle) 
 struct isParticle : std::unary_function< const HepMC::GenParticle * , bool > {
@@ -58,12 +53,29 @@ Signal::Signal( const std::string& type,
     m_nParticlesBeforeCut( 0 ) , m_nAntiParticlesBeforeCut( 0 ) ,
     m_nParticlesAfterCut ( 0 ) , m_nAntiParticlesAfterCut ( 0 ) ,
     m_nInvertedEvents ( 0 ) ,
-    m_signalMass      ( 0.) ,
     m_signalPID       ( 0 ) ,
+    m_bbCounter       ( 0 ) ,
+    m_ccCounter       ( 0 ) ,
+    m_nSig            ( 0 ) ,
+    m_nSigBar         ( 0 ) ,
+    m_sigName        ( "" ) ,
+    m_sigBarName     ( "" ) ,
     m_cpMixture       ( true ) { 
-  declareProperty( "SignalPIDList" , m_pidVector ) ;
-  declareProperty( "Clean" , m_cleanEvents ) ;
-}
+    declareProperty( "SignalPIDList" , m_pidVector ) ;
+    declareProperty( "Clean" , m_cleanEvents ) ;    
+    
+    m_bHadC.assign( 0 ) ;  m_antibHadC.assign( 0 ) ;
+    m_cHadC.assign( 0 ) ;  m_anticHadC.assign( 0 ) ;
+    
+    m_bExcitedC.assign( 0 ) ;
+    m_cExcitedC.assign( 0 ) ;
+    
+    GenCounters::setupBHadronCountersNames( m_bHadCNames , m_antibHadCNames ) ;
+    GenCounters::setupDHadronCountersNames( m_cHadCNames , m_anticHadCNames ) ;
+
+    GenCounters::setupExcitedCountersNames( m_bExcitedCNames , "B" ) ;
+    GenCounters::setupExcitedCountersNames( m_cExcitedCNames , "D" ) ;    
+  }
 
 //=============================================================================
 // Destructor
@@ -100,8 +112,15 @@ StatusCode Signal::initialize( ) {
   for ( it = m_pids.begin() ; it != m_pids.end() ; ++it ) {
     ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
     info() << prop -> particle() << " " ;
-    m_signalMass = prop -> mass() ;
+
+    LHCb::ParticleID pid( prop -> pdgID() ) ;
+    if ( pid.hasCharm() ) m_signalQuark = LHCb::ParticleID::charm ;
+    else if ( pid.hasBottom() ) m_signalQuark = LHCb::ParticleID::bottom ;
+    else return Error( "This case is not implemented yet" ) ;
+    
     m_signalPID  = abs( prop -> pdgID() ) ;
+    if ( prop -> pdgID() > 0 ) m_sigName = prop -> particle() ;
+    else m_sigBarName = prop -> particle() ;
   }
 
   m_cpMixture = false ;
@@ -133,8 +152,35 @@ void Signal::printCounters( ) const {
 
   printEfficiency( info() , "particle generator level cut" , 
                    m_nParticlesAfterCut ,  m_nParticlesBeforeCut ) ;
-  printEfficiency( info() , "anti-particle generator level cut" , 
+  printEfficiency( info() , "anti-particle generator level cut" ,
                    m_nAntiParticlesAfterCut , m_nAntiParticlesBeforeCut ) ;
+  info() << std::endl ;
+
+  if ( "" != m_sigName ) printFraction( info() , "signal " + m_sigName + 
+                                        " in sample" , m_nSig , m_nSig + 
+                                        m_nSigBar ) ;
+  if ( "" != m_sigBarName ) printFraction( info() , "signal " + m_sigBarName + 
+                                           " in sample" , m_nSigBar , m_nSig + 
+                                           m_nSigBar ) ;  
+
+  info() << std::endl ;
+
+  printArray( info() , m_bHadC , m_bHadCNames , "accepted tag side" ) ;
+  printArray( info() , m_antibHadC , m_antibHadCNames , "accepted tag side" ) ;
+  printCounter( info() , "accepted tag side (bb)" , m_bbCounter ) ;
+  info() << std::endl ;
+  
+  printArray( info() , m_cHadC , m_cHadCNames , "accepted tag side" ) ;
+  printArray( info() , m_anticHadC , m_anticHadCNames , "accepted tag side" ) ;
+  printCounter( info() , "accepted tag side (cc)" , m_ccCounter ) ;
+  info() << std::endl ;
+  
+  printArray( info() , m_bExcitedC , m_bExcitedCNames , 
+              "accepted signal side" ) ;
+  info() << std::endl ;
+  
+  printArray( info() , m_cExcitedC , m_cExcitedCNames , 
+              "accepted signal side" ) ;
   info() << endmsg ;
 }
 
@@ -211,7 +257,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
     std::list< const HepMC::GenParticle * > outParticles ;
     std::copy( oVertex -> particles_out_const_begin() , 
                oVertex -> particles_out_const_end() , outParticles.begin() ) ;
-    outParticles.sort( compareHepMCParticles ) ;
+    outParticles.sort( HepMCUtils::compareHepMCParticles ) ;
 
     std::list< const HepMC::GenParticle * >::const_iterator child ;
     for ( child = outParticles.begin( ) ; child != outParticles.end( ) ; 

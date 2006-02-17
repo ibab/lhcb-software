@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.5 2005-12-11 23:21:47 robbep Exp $
+// $Id: Signal.h,v 1.6 2006-02-17 13:22:22 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -8,6 +8,10 @@
 #include "GaudiKernel/RndmGenerators.h" 
 
 #include "Generators/ExternalGenerator.h" 
+
+#include "Generators/GenCounters.h"
+
+#include <boost/array.hpp>
 
 // Forward declarations
 namespace HepMC {
@@ -77,10 +81,51 @@ protected:
   /// Number of events parity-flipped. (z -> -z, pz -> -pz)
   unsigned int  m_nInvertedEvents  ;
 
-  double        m_signalMass       ; ///< Mass of the signal particle
+  /// Heavier quark of the signal particle
+  LHCb::ParticleID::Quark m_signalQuark ; 
 
   unsigned int  m_signalPID        ; ///< PDG Id of the signal particles
 
+  unsigned int  m_bbCounter        ; ///< Counter of (bb) states in tag side
+
+  unsigned int  m_ccCounter        ; ///< Counter of (cc) states in tag side
+
+  unsigned int  m_nSig             ; ///< Counter of generated signal
+
+  unsigned int  m_nSigBar          ; ///< Counter of generated anti-signal
+
+  std::string   m_sigName          ; ///< Name of signal
+
+  std::string   m_sigBarName       ; ///< Name of anti-signal
+
+  GenCounters::BHadronCounter m_bHadC ; ///< Counter of B hadron (tag side)
+
+  /// Counter of Bbar hadron (tag side)
+  GenCounters::BHadronCounter m_antibHadC ; 
+
+  GenCounters::DHadronCounter m_cHadC ; ///< Counter of D hadron (tag side)
+
+  /// Counter of Dbar hadron (tag side)
+  GenCounters::DHadronCounter m_anticHadC ;
+
+  GenCounters::BHadronCNames m_bHadCNames ; ///< Array of B counter names
+
+  /// Array of Bbar hadron names
+  GenCounters::BHadronCNames m_antibHadCNames ;
+  
+  GenCounters::DHadronCNames m_cHadCNames ; ///< Array of D counter names
+
+  /// Array of Dbar hadron counter names
+  GenCounters::DHadronCNames m_anticHadCNames ;
+
+  GenCounters::ExcitedCounter m_bExcitedC ; ///< Counter of B(**) (signal side)
+
+  GenCounters::ExcitedCounter m_cExcitedC ; ///< Counter of D(**) (signal side)
+
+  GenCounters::ExcitedCNames m_bExcitedCNames ; ///< Names excited B couters
+  
+  GenCounters::ExcitedCNames m_cExcitedCNames ; ///< Names excited D counters
+  
   /// Flag to indicate that a mixture of signal particles and anti-particles.
   bool          m_cpMixture        ;
 
