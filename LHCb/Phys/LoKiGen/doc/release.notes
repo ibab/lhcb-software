@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.3 2006-02-09 09:54:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2006-02-17 12:13:17 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,8 +14,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiGen v1r0 2006-02-17 ==========================
 ! 2006-02-09 - Vanya BELYAEV
-
  - new set of functions:
 
    A) adapter functions  
@@ -99,7 +99,6 @@
     - LoKi/GenVertexCuts.h
     - src/GenVertoces.cpp
 
-!=========================== LoKiGen v1r0 2006-01-24 ==========================
 ! 2006-01-24 - Vanya BELYAEV
  - New import: the parts of LoKi project, 
    directly related to generator information in HepMC format

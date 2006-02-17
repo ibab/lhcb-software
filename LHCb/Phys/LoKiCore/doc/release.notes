@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.5 2006-02-16 18:09:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2006-02-17 12:11:29 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v1r0 2006-01-24 =========================
 ! 2006-02-16 - Vanya BELYAEV
  - LoKi/Print.h
    src/Print.cpp
@@ -24,23 +25,18 @@
    print maps/hashmaps/container/SmartRef/SmartRefVector and 
    to convert them into the strings  
 
-
 ! 2006-02-09 - Vanya BELYAEV
  - minor fix in LoKi::Objects namespace - add 
    constant objects specicializtaion for <const void*> type
    to improve a little bit the client code 
 
-
 ! 2006-02-08 - Vanya BELYAEV
-
  - LoKi/Objects.h
    new file with contains new trivial objects for VERY efficient 
    implementation of LoKi::Extract functions 
  - LoKi/LokiCore.h
    add new incldue 
 
- 
-!=========================== LoKiCore v1r0 2006-01-24 =========================
 ! 2006-01-23 - Vanya BELYAEV
  - New import: the core part of restructurized LoKi project
 	
@@ -59,6 +55,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.5  2006/02/16 18:09:38  ibelyaev
+!  add utilities for the easy printouts
+!
 ! Revision 1.4  2006/02/09 10:06:27  ibelyaev
 !  minor improvements
 !
