@@ -16,8 +16,8 @@
      author="M Needham" 
      desc="A cluster as produced by the TELL1 but without full ADC information"
      serializers = "FALSE">
-     <location name="TTClusters"   place="Rec/ST/TTLiteClusters"   />
-     <location name="ITClusters"   place="Rec/ST/ITLiteClusters"   />
+     <location name="TTClusters"   place="Raw/TT/LiteClusters"   />
+     <location name="ITClusters"   place="Raw/IT/LiteClusters"   />
 
   &STLiteClusterClass;
 

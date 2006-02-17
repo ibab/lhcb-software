@@ -15,8 +15,8 @@
      author="Matthew Needham"
      desc="A cluster as produced by the TELL1 with full ADC information."
      serializers="FALSE">
-     <location name="TTClusters"   place="Rec/ST/TTClusters"   />
-     <location name="ITClusters"   place="Rec/ST/ITClusters"   />
+     <location name="TTClusters"   place="Raw/TT/Clusters"   />
+     <location name="ITClusters"   place="Raw/IT/Clusters"   />
 
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 

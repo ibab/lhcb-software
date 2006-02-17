@@ -4,16 +4,13 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v1r0 2006-02-17 =========================
+! 2006-02-17 - Marco Cattaneo
+ - Fix various default locations to all follow the same convention
 
 ! 2006-02-16 M Needham
  - More bug fixes in the light cluster class
  - also allow the velo to have 3 bits precision
-
-! 2006-02-16 M Needham
-
-!========================= DigiEvent v1r0 2006-02-16 =========================
-! 2006-02-16 - M/ Needham
-
  - Bug fix in STCluster.xml (< instead of >)
 
 ! 2006-02-15 - Marco Cattaneo

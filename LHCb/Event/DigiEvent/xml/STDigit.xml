@@ -6,8 +6,8 @@
   <class author="Matthew Needham" desc="Silicon tracker digitization class" id="9003" name="STDigit">
       <base name="KeyedObject&lt;LHCb::STChannelID&gt;"/>
       &KeyedContainer;
-      <location name="TTDigits"   place="MC/Raw/TTDigits"   />
-      <location name="ITDigits"   place="MC/Raw/ITDigits"   />
+      <location name="TTDigits"   place="Raw/TT/Digits"   />
+      <location name="ITDigits"   place="Raw/IT/Digits"   />
       <import name ="Kernel/STChannelID"/>
        <constructor argList="double charge" 
                     initList="m_depositedCharge(charge)"
