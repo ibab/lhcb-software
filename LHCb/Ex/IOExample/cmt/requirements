@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2006-02-15 14:49:34 cattanem Exp $
+# $Id: requirements,v 1.23 2006-02-17 15:46:16 cattanem Exp $
 package IOExample
 version v2r0
 
@@ -15,6 +15,7 @@ use MCEvent		v* Event	-no_auto_imports
 use DigiEvent		v* Event	-no_auto_imports
 use RecEvent		v* Event	-no_auto_imports
 use EventSys            v* Event        -no_auto_imports
+use RELAX             v* LCG_Interfaces -no_auto_imports
 
 #==> IO example
 application IOMin    "$(GAUDICONFROOT)/src/GaudiMain.cpp"
