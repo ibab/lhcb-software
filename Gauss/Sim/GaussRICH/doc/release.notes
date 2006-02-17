@@ -5,6 +5,7 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v6r1 2006-02-17 ===========================
 ! 2006-02-16 - Chris Jones
  - Update GetMCRichHitsAlg for new MC flags
 
@@ -21,8 +22,6 @@
   + SensDet ID set from RichG4Hit
  - Also start clean up process for hard coded strings, by using instead RichDet
    definition.
-
-!======================== GaussRICH v6r1 2006-02-10 ===========================
 
 ! 2006-02-10 - Gloria CORTI
  - Remove commented lines in requirements and set version v6r1
