@@ -6,8 +6,8 @@
   <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary">
       <base name="DataObject"/>
       &DataObject;
-      <location name="TTSummary"   place="MC/ST/TTSummary"   />
-      <location name="ITSummary"   place="MC/ST/ITSummary"   />
+      <location name="TTSummary"   place="Rec/TT/Summary"   />
+      <location name="ITSummary"   place="Rec/IT/Summary"   />
        <constructor argList="int nDigits, int nClusters" 
                     initList="m_nDigits(nDigits),
                     m_nClusters(nClusters)" desc="special constructor">
