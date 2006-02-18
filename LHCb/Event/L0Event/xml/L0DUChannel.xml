@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+    <namespace
+      desc="L0DU counter attributes"
+      name="L0DUCounter"
+      author="O. Deschamps">
+      <attribute
+        desc="Scale of the downscaling counter" 
+        name="Scale" 
+        type="static const unsigned int" 
+        init="100"/>
+    </namespace>
+    
+
+    <class 
+      author="Olivier Deschamps"
+      desc="This class represents individual L0DU Channel"
+      name="L0DUChannel"
+      serializers="FALSE">
+
+      <base name="ContainedObject"/>
+       &ContainedObject;
+
+      <location name = "Default"   place = "/Event/Trig/L0/L0Channel"  />
+      <import name="Event/L0DUElementaryCondition"/>
+      <import ignore = 'TRUE' name="L0DUElementaryConditions" />
+      <import name="Event/L0DUCounter"/>
+
+
+
+      <typedef def    = "count" type   = "unsigned int" desc   = "counter type" access = "PUBLIC" />
+      <typedef def    = "Map" 
+        desc   = "std::map Container "
+        type   = "std::map&lt;std::string,L0DUChannel* &gt;" 
+        access = "PUBLIC"/>
+
+
+
+      <attribute name = "name" desc = " L0DU Channel name " 
+        type = "std::string" setMeth="FALSE"/>
+
+      <attribute name = "elementaryConditions" desc = " L0DU Elementary condition" 
+        type = "LHCb::L0DUElementaryCondition::Map" />
+
+      <attribute name = "counter" desc = " counter value" 
+        type = "unsigned int" init = "0" setMeth="FALSE"/>
+      
+
+      <attribute name = "acceptRate"  desc = "Accept rate"    
+        type = "unsigned int" init = "L0DUCounter::Scale" setMeth="FALSE"/>
+
+      <attribute name = "decision" desc = "L0DU Channel decision"
+        type = "bool" init = "false" setMeth="FALSE"/>
+      
+      <attribute name = "fired" desc = "L0DU Channel"
+        type = "bool" init = "false" setMeth="FALSE"/>
+      
+
+
+
+      <method name      = "addElementaryCondition" desc = "push_back Elementary Condition"
+        type  = "void" argList   = "LHCb::L0DUElementaryCondition* condition">
+        <code> m_elementaryConditions[condition->name()]=condition; </code>
+      </method>
+
+      <method name      = "resetElementaryConditions" desc = "Clear Elementary Conditions "
+        type  = "void" >
+        <code> m_elementaryConditions.clear(); </code>
+      </method>
+
+      <method name  = "clone" desc = "clone this channel" type  = "LHCb::L0DUChannel*" virtual = "TRUE">
+        <code>
+          L0DUChannel* channel = new L0DUChannel( *this ); 
+          return channel;
+        </code>
+      </method>
+
+      <method name      = "init" desc = "Set-up the channel " type  = "void" 
+        argList   = "const std::string name, const count rate" >
+        <code>
+          m_name    = name ;
+          m_counter = 0 ;
+          m_acceptRate = rate;
+          m_fired = false;
+          m_decision = false;
+        </code>
+      </method>
+
+      <method name      = "process" desc = "Process Channel decision" type  = "void" >
+      </method>
+
+      <method name  = "summary" desc = "L0DUChannel summary" type  = "std::string" >
+      </method>
+      
+    </class>
+
+
+
+  </package>
+</gdd>
+
+
+

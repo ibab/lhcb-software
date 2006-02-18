@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+
+    <class 
+      author="Olivier Deschamps"
+      desc="This class represents the L0DU Condition"
+      name="L0DUElementaryCondition">
+
+      <base name="ContainedObject"/>
+       &ContainedObject;
+
+      <location name = "Default"   place = "/Event/Trig/L0/L0Condition"  />
+      <import name="Event/L0DUElementaryData"/>
+
+      <typedef def    = "Map" 
+        desc   = "std::map Container "
+        type   = "std::map&lt;std::string, LHCb::L0DUElementaryCondition* &gt;" 
+        access = "PUBLIC"/>
+
+
+
+      <attribute name = "name" desc = " L0DU condition name "  type = "std::string" />
+
+      <attribute name = "data" desc = " L0DU Elementary data"  type = "LHCb::L0DUElementaryData*" />
+
+      <attribute name = "comparator" desc = " comparator symbol"  type = "std::string" />
+
+      <attribute name = "threshold" desc = "threshold value" type = "double" />
+      
+
+      <method name      = "value" 
+        desc = "Condition value = comparion(data,comparator,threshold)" type  = "bool" >
+        <code> return comparison( m_data->value()  ,m_comparator , m_threshold); </code>
+      </method>
+
+
+      <method name      = "init" desc = "Set-up the channel " type  = "void" 
+        argList   = "const std::string name, LHCb::L0DUElementaryData* data ,const std::string comparator, const double threshold" >
+        <code>
+          m_name       = name ;
+          m_data       = data;
+          m_comparator = comparator;
+          m_threshold  = threshold;
+        </code>
+      </method>
+
+      <method name  = "summary" desc = "L0DUElementaryCondition summary" type  = "std::string" >
+      </method>
+
+      <method name      = "comparison" desc = "Comparison method" type  = "bool" 
+        argList   = "double a, const std::string comparator, double b">
+      </method>
+      
+    </class>
+
+
+
+  </package>
+</gdd>
+
+
+

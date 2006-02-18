@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
+  <import name="Kernel/SerializeStl"/>
   <package name="L0Event">
     
    <class author="Olivier Deschamps" 
-     desc = "L0DU summary class" 
-     name = "L0DUReport"
-     id   = "6004">
+     desc="L0DU summary class" 
+     name="L0DUReport"
+     id="6004">
       
-     <base name="DataObject"/>
+      <base name="DataObject"/>
       &DataObject;
-      <location name = "Default"  place = "/Event/Trig/L0/L0DU"  />     
+      <location name = "Default"  place = "/Event/Trig/L0/L0DU"  />
+                   
+
+           
         
       <constructor 
-        desc     = "Default constructor" 
-	initList = "m_report(0), m_channelNames(), m_conditionPattern(0),m_conditionNames()" > 
+        desc = "Default constructor" 
+      initList="m_report(0), m_channelNames(), m_conditionPattern(0),m_conditionNames()" > 
       </constructor>
         
       <constructor 
-        desc     = "Special constructor" 
-        argList  = "long report   , std::vector&lt;std::string&gt; channelNames, long conditionPattern, std::vector&lt;std::string&gt; conditionNames"
-      initList   = "m_report(report) , m_channelNames(channelNames), m_conditionPattern(conditionPattern),m_conditionNames(conditionNames)" > 
+        desc = "Special constructor" 
+        argList="unsigned int report   , std::vector&lt;std::string&gt; channelNames, unsigned int conditionPattern, std::vector&lt;std::string&gt; conditionNames"
+      initList="m_report(report) , m_channelNames(channelNames), m_conditionPattern(conditionPattern),m_conditionNames(conditionNames)" > 
       </constructor>
+
+      <attribute 
+        desc="Pattern of channel decisions" 
+        name="report" 
+        type="unsigned int"/>
+      <attribute 
+        desc="Vector of Channel names" 
+        name="channelNames"  
+        type="std::vector&lt;std::string&gt;"/>
+      <attribute 
+        desc="Pattern of conditions values" 
+        name="conditionPattern" 
+        type="unsigned int"/>
+      <attribute 
+        desc="Vector of Condition names" 
+        name="conditionNames"  
+        type="std::vector&lt;std::string&gt;"/>
       
-      <attribute 
-        desc = "Pattern of channel decisions" 
-        name = "report" 
-        type = "long"/>
-      <attribute 
-        desc = "Vector of Channel names" 
-        name = "channelNames"  
-        type = "std::vector&lt;std::string&gt;"/>
-      <attribute 
-        desc = "Pattern of conditions values" 
-        name = "conditionPattern" 
-        type = "long"/>
-      <attribute 
-        desc = "Vector of Condition names" 
-        name = "conditionNames"  
-        type = "std::vector&lt;std::string&gt;"/>
                                                           
       <method
-        name    = "setChannel"
-        desc    = "set channel name and decision"
-        argList = "std::string name , bool decision"
-        type    = "void">
+        name="setChannel"
+        desc="set channel name and decision"
+        argList="std::string name , bool decision"
+        type="void">
         <code> 
-          if(m_channelNames.size() &lt; L0Decision::Size -1){
+          if(m_channelNames.size() &lt; L0DUPattern::Size -1){
           m_channelNames.push_back(name);
           if(decision){
           m_report |= 1;
@@ -57,12 +62,12 @@
       </method>
 
       <method
-        name    = "setCondition"
-        desc    = "set condition name and value"
-        argList = "std::string name , bool value"
-        type    = "void">
+        name="setCondition"
+        desc="set condition name and value"
+        argList="std::string name , bool value"
+        type="void">
         <code> 
-          if(m_channelNames.size() &lt; L0Decision::Size ){
+          if(m_channelNames.size() &lt; L0DUPattern::Size ){
           m_conditionNames.push_back(name);
           if(value)m_conditionPattern |= ( 1 &lt;&lt; (m_conditionNames.size()-1) ) ;
           }
@@ -70,9 +75,9 @@
       </method>
 
       <method
-        name = "decision"
-        desc = "return L0DU global decision"
-        type = "bool">
+        name="decision"
+        desc="return L0DU global decision"
+        type="bool">
         <code> 
           return ((m_report != 0) ? true : false) ;
         </code>
@@ -80,20 +85,20 @@
 
 
       <method
-        name    = "channelDecision"
-        argList = "L0Decision::Bit channel"
-        desc    = "return channel decision by channel number"
-        type    = "bool">
+        name="channelDecision"
+        argList="unsigned int channel"
+        desc="return channel decision by channel number"
+        type="bool">
         <code> 
           return ((((m_report >> channel ) &amp; 1) !=0) ? true : false );
         </code>
       </method>
 
       <method
-        name    = "conditionValue"
-        argList = "L0Condition::Bit cond"
-        desc    = "return condition value by condition number"
-        type    = "bool">
+        name="conditionValue"
+        argList="unsigned int cond"
+        desc="return condition value by condition number"
+        type="bool">
         <code> 
           return ((((m_conditionPattern >> cond ) &amp; 1) !=0) ? true : false );
         </code>
@@ -101,10 +106,10 @@
 
 
       <method
-        name    = "channelDecisionByName"
-        argList = "std::string name"
-        desc    = "return channel decision by channel name"
-        type    = "bool">
+        name="channelDecisionByName"
+        argList="std::string name"
+        desc="return channel decision by channel name"
+        type="bool">
         <code> 
           for(unsigned int ichan = 0 ; ichan != m_channelNames.size();ichan++){
           if(name == m_channelNames[ichan]){
@@ -117,10 +122,10 @@
       </method>
 
       <method
-        name    = "conditionValueByName"
-        argList = "std::string name"
-        desc    = "return condition value by condition name"
-        type    = "bool">
+        name="conditionValueByName"
+        argList="std::string name"
+        desc="return condition value by condition name"
+        type="bool">
         <code> 
           for(unsigned int icond = 0 ; icond != m_conditionNames.size();icond++){
           if(name == m_conditionNames[icond]){
@@ -133,33 +138,33 @@
       </method>
 
       <method
-        name    = "channelName"
-        argList = "L0Decision::Bit channel"
-        desc    = "return channel name"
-        type    = "std::string">
+        name="channelName"
+        argList="unsigned int channel"
+        desc="return channel name"
+        type="std::string">
         <code> 
-          if(channel == L0Decision::Decision){
-            return "Global L0 Decision";
-          }else if(channel &lt; int(m_channelNames.size()+1) ){
-            return m_channelNames[channel-1];
+          if(channel == 0){
+          return "Global L0 Decision";
+          }else if(channel &lt; (m_channelNames.size()+1) ){
+          return m_channelNames[channel-1];
           }else{
-            std::string message = &quot; Channel &quot; ;
-            std::stringstream os(&quot; &quot;);
-            os &lt;&lt; channel;
-            message += os.str();
-            message += &quot; (name not specified) &quot; ;
-            return message;
+          std::string message = &quot; Channel &quot; ;
+          std::stringstream os(&quot; &quot;);
+          os &lt;&lt; channel;
+          message += os.str();
+          message += &quot; (name not specified) &quot; ;
+          return message;
           }
         </code>
       </method>
 
       <method
-        name    = "conditionName"
-        argList = "L0Condition::Bit cond"
-        desc    = "return condition name"
-        type    = "std::string">
+        name="conditionName"
+        argList="unsigned int cond"
+        desc="return condition name"
+        type="std::string">
         <code> 
-          if(cond &lt; int(m_conditionNames.size()) ){
+          if(cond &lt; (m_conditionNames.size()) ){
           return m_conditionNames[cond];
           }else{
           std::string message = &quot; Condition &quot; ;
@@ -172,34 +177,22 @@
         </code>
       </method>
 
-    <import name="Event/L0Decision"/>
-    <import name="Event/L0Condition"/>
+       <import name="Event/L0DUPattern"/>
+
     </class>
 
-    <namespace
-    desc   = "Describes the L0DU decision pattern and size" 
-    name   = "L0Decision"
-    author = "OLIVIER Deschamps">
-    <enum desc="L0DU report - decision pattern bit field" 
-      name="Bit" 
-      value="Decision=0,Channel1,Channel2,Channel3,Channel4,Channel5,Channel6,Channel7,Channel8,Channel9,Channel10,Channel11,Channel12,Channel13,Channel14,Channel15,Channel16,Channel17,Channel18,Channel19,Channel20,Channel21,Channel22,Channel23,Channel24,Channel25,Channel26,Channel27,Channel28,Channel29,Channel30,Channel31"/>
-
-      <attribute desc="number of bits" type="static const unsigned int" name="Size" init="32" />
-
-    </namespace>
 
 
-    <namespace
+   <namespace
     desc   = "Describes the L0DU condition pattern and size" 
-    name   = "L0Condition"
+    name   = "L0DUPattern"
     author = "Olivier Deschamps">
-    <enum 
-      desc="L0DU report - condition pattern bit field" 
-      name="Bit" value="Condition0=0,Condition1,Condition2,Condition3,Condition4,Condition5,Condition6,Condition7,Condition8,Condition9,Condition10,Condition11,Condition12,Condition13,Condition14,Condition15,Condition16,Condition17,Condition18,Condition19,Condition20,Condition21,Condition22,Condition23,Condition24,Condition25,Condition26,Condition27,Condition28,Condition29,Condition30,Condition31"/>
   
       <attribute desc="number of bits" type="static const unsigned int" name="Size" init="32" />
 
     </namespace>  
+   
+ 
 
   </package>
 </gdd>

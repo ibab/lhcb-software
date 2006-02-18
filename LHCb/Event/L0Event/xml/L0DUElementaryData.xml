@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+
+    <class 
+      author="Olivier Deschamps"
+      desc="This class represents the L0DU Data"
+      name="L0DUElementaryData">
+
+      <base name="ContainedObject"/>
+       &ContainedObject;
+
+      <location name = "Default"   place = "/Event/Trig/L0/L0Data"  />
+      <import name="Kernel/SerializeStl"/>
+      <import name="Event/L0DUElementaryData"/>
+
+      <typedef def    = "Map" 
+        desc   = "std::map Container "
+        type   = "std::map&lt;std::string, L0DUElementaryData* &gt;" 
+        access = "PUBLIC"/>
+
+
+
+      <attribute name = "name" desc = " L0DU cata name "  type = "std::string" />
+
+      <attribute name = "operandsName" desc = " Operands name"  type = " std::vector&lt;std::string&gt;"  />
+
+      <attribute name = "operands" desc = " Operands value"  type = "std::vector&lt;double&gt;"
+        nonconstaccessor='TRUE' />
+
+      <attribute name = "operator" desc = " Operator symbol"  type = "std::string" getMeth = 'FALSE'/>
+
+
+
+      <method name      = "setOperand" desc = "push_back a single operand value" type  = "void" 
+        argList   = "double operand">
+        <code> 
+          m_operands.clear(); 
+          m_operands.push_back(operand);
+        </code>
+      </method>
+
+      <method name      = "addOperand" desc = "add a single operand value" type  = "void" 
+        argList   = "double operand">
+        <code> 
+          m_operands.push_back(operand);
+        </code>
+      </method>
+
+
+
+      <method name      = "value" desc = "L0DU data value = operation(operands,operator)" type  = "double" >
+        <code> return operation(m_operator,m_operands); </code>
+      </method>
+
+
+      <method name      = "init" desc = "Set-up the channel " type  = "void" 
+        argList   = "const std::string name, const std::string v_operator , const std::vector&lt;std::string&gt; operandsName" >
+        <code>
+          m_name = name;
+          m_operator = v_operator;
+          m_operandsName = operandsName ;
+        </code>
+      </method>
+
+
+      <method name      = "init" desc = "Set-up the channel " type  = "void" 
+        argList   = "const std::string name, const std::string v_operator, std::string operandName1" >
+        <code>
+          m_name = name;
+          m_operator = v_operator;
+          m_operandsName.clear();
+          m_operandsName.push_back(operandName1) ;
+        </code>
+      </method>
+
+      <method name      = "init" desc = "Set-up the channel " type  = "void" 
+        argList   = "const std::string name, const std::string v_operator, std::string operandName1, std::string operandName2" >
+        <code>
+          m_name = name;
+          m_operator = v_operator;
+          m_operandsName.clear();
+          m_operandsName.push_back(operandName1) ;
+          m_operandsName.push_back(operandName2) ;
+        </code>
+      </method>
+
+
+
+      <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string" >
+      </method>
+
+      <method name      = "operation" desc = "Operation method" type  = "double" 
+        argList   = "std::string v_operator , std::vector&lt;double&gt; v_operands">
+      </method>
+      
+
+    </class>
+
+  </package>
+</gdd>
+
+
+

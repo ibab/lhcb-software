@@ -3,19 +3,23 @@
 <gdd>
   <package name="L0Event">
 
+
     <class 
       author="Olivier Deschamps"
       desc="This class represents the L0 processors data sent to L0DU"
-      id  = "6009" 
       name="L0ProcessorData">
 
       <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
 
-      <location name = "Calo"      place = "/Event/Trig/L0/Calo"    />
-      <location name = "Muon"      place = "/Event/Trig/L0/Muon"    />
-      <location name = "PileUp"    place = "/Event/Trig/L0/PileUp"  />
-      <location name = "All"       place = "/Event/Trig/L0/All"  />
+
+      <location name = "Calo"      place = "/Event/Trig/L0/L0DUCaloData"    />
+      <location name = "Muon"      place = "/Event/Trig/L0/L0DUMuonData"    />
+      <location name = "PileUp"    place = "/Event/Trig/L0/LDUPusData"  />
+      <location name = "All"       place = "/Event/Trig/L0/L0DUData"  />
+
+
+
 
       <typedef
         def    = "Base"
@@ -24,46 +28,48 @@
         access = "PROTECTED"
         />
 
+
       <constructor 
-        argList  = "L0DUFiber::Data fiber, unsigned long word"
-        desc     = "Special constructor from 32 bit word" 
-        initList = "Base ( fiber ), m_word(word)"
+        argList="L0DUBase::Fiber::Type fiber, unsigned int word"
+        desc="Special constructor from 32 bit word" 
+        initList="Base ( fiber ), m_word(word)"
         ><code/></constructor>
 
       <constructor 
-        argList  = "L0DUFiber::Data fiber, unsigned short msb, unsigned short lsb"
-        desc     = "Special constructor from  16bit msb + 16bit lsb" 
-        initList = "Base ( fiber ), m_word(lsb | (msb &lt;&lt; 16 ))"
+        argList="L0DUBase::Fiber::Type fiber, unsigned int msb , unsigned int lsb"
+        desc="Special constructor from  16bit msb + 16bit lsb" 
+        initList="Base ( fiber ), m_word(lsb | (msb &lt;&lt; 16 ))"
         ><code/></constructor>
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( ), m_word(0x10000)"
+        initList="Base ( ), m_word(0x10000)"
         > <code/> </constructor>
 
       <attribute
         name = "word"
         desc = "32 bit L0 word produced by the processor"
-        type = "unsigned long" 
+        type = "unsigned int" 
         />
+
       
       <method
         name      = "lsb"
         desc      = "get 16 bits lsb of L0 word"
-        type      = "unsigned short"
+        type      = "unsigned int"
         const     = "FALSE" >
         <code>
-        return (m_word &amp; 0xFFFF);
+        return (unsigned int)(m_word &amp; 0xFFFF);
         </code>
       </method>
 
       <method
         name      = "msb"
         desc      = "get  16 bits msb of L0 word"
-        type      = "unsigned short"
+        type      = "unsigned int"
         const     = "FALSE" >
         <code>
-        return ((m_word &gt;&gt; 16) &amp; 0xFFFF);
+        return (unsigned int)((m_word >> 16) &amp; 0xFFFF);
         </code>
       </method>
 
@@ -72,26 +78,17 @@
         desc      = "update L0 word from MSB+LSB"
         type      = "void"
         const     = "FALSE" 
-        argList   = "unsigned short msb, unsigned short lsb">
+        argList   = "unsigned int msb , unsigned int lsb">
         <code>
           m_word = lsb | (msb &lt;&lt; 16 );
         </code>
       </method>
       
 
-    <import name="Event/L0DUFiber"/>
+    <import name="Event/L0DUBase"/>
     </class>
 
 
-    <namespace
-      desc="Enum the L0 processors output" 
-      name="L0DUFiber"
-      author="Olivier Deschamps">
-      <enum 
-        desc  = "L0DUProcessor " 
-        name  = "Data" 
-        value ="CaloElectron = 0, CaloPhoton, CaloHadron, CaloPi0Local, CaloPi0Global, CaloSumEt, CaloSpdMult, MuonCU0, MuonSU0, MuonCU1, MuonSU1, MuonCU2, MuonSU2, MuonCU3, MuonSU3, Pu1, Pu2, Last"/>
-    </namespace>
 
   </package>
 </gdd>
