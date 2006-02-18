@@ -1,8 +1,11 @@
-// $Id: LoKiCore.h,v 1.5 2006-02-17 19:12:53 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.6 2006-02-18 18:06:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/02/17 19:12:53  ibelyaev
+//  add Cast and some other minor changes
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -52,7 +55,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot at al.: 
+ *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

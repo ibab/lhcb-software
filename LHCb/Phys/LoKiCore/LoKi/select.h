@@ -1,8 +1,11 @@
-// $Id: select.h,v 1.1.1.1 2006-01-24 09:39:42 ibelyaev Exp $
+// $Id: select.h,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
+// New Import: the core part of restructurized LoKi project
+//
 // ============================================================================
 #ifndef LOKI_SELECT_H 
 #define LOKI_SELECT_H 1
@@ -22,7 +25,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot at al.: 
+ *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
