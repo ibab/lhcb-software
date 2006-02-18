@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.20 2006-02-09 10:29:32 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.21 2006-02-18 11:15:52 ocallot Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -9,7 +9,6 @@
 #include "Event/MCVeloFE.h"
 // from L0Event
 #include "Event/L0ProcessorData.h"
-#include "Event/L0DUFiber.h"
 // local
 #include "PuVetoAlg.h"
 
@@ -321,12 +320,12 @@ StatusCode PuVetoAlg::execute() {
   unsigned int tmt = Saturate((unsigned int)m_totMult);
 
 
-  PuWord1 = PuWord1 | (((unsigned int) height1) << 1);
-  PuWord1 = PuWord1 | (((unsigned int) bin1) << 17);
-  PuWord2 = PuWord2 | (((unsigned int) sum2) << 1);
-  PuWord2 = PuWord2 | (((unsigned int) bin2) << 17);
-  PuWord2 = PuWord2 | ((tmt & 3) << 9);
-  PuWord2 = PuWord2 | ((tmt >> 2) << 25);
+  PuWord1 = PuWord1 | (((unsigned int) height1) << L0DUBase::L0Pu::Peak::Shift    );
+  PuWord1 = PuWord1 | (((unsigned int) bin1)    << L0DUBase::L0Pu::Address::Shift );
+  PuWord2 = PuWord2 | (((unsigned int) sum2)    << L0DUBase::L0Pu::Peak::Shift    );
+  PuWord2 = PuWord2 | (((unsigned int) bin2)    << L0DUBase::L0Pu::Address::Shift );
+  PuWord2 = PuWord2 | ((tmt & 3)                << L0DUBase::L0Pu::HitsLSB::Shift );
+  PuWord2 = PuWord2 | ((tmt >> 2)               << L0DUBase::L0Pu::HitsMSB::Shift );
   
   debug() << "== Decision " << decision << endreq;
   debug() << " Peak1 z,h,s " << bin1 << " " << height1 << " " << sum1 << endreq;
@@ -334,8 +333,8 @@ StatusCode PuVetoAlg::execute() {
   debug() << " TotMult " << m_totMult << endreq;
   debug() << " PuWord1 = " << PuWord1 << " PuWord2 = " << PuWord2 << endreq;
 
-  L0ProcessorData* l0PuData1 = new L0ProcessorData( L0DUFiber::Pu1 , PuWord1);
-  L0ProcessorData* l0PuData2 = new L0ProcessorData( L0DUFiber::Pu2 , PuWord2);
+  L0ProcessorData* l0PuData1 = new L0ProcessorData( L0DUBase::Fiber::Pu1 , PuWord1);
+  L0ProcessorData* l0PuData2 = new L0ProcessorData( L0DUBase::Fiber::Pu2 , PuWord2);
   L0ProcessorDatas* l0PuDatas = new L0ProcessorDatas();
   l0PuDatas->insert( l0PuData1 ) ;
   l0PuDatas->insert( l0PuData2 ) ;

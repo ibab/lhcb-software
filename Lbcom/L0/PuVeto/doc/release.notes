@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.35 2006-02-15 11:01:16 cattanem Exp $
+! $Id: release.notes,v 1.36 2006-02-18 11:15:52 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-02-18 - Olivier Callot
+ - Use new definition of L0DU packing from L0DUBase.h
 
 !======================== PuVeto v7r0 2006-02-15 ========================
 ! 2006-02-15 - Marco Cattaneo
