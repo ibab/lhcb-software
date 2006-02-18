@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.15 2006-01-26 16:52:13 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.16 2006-02-18 11:20:41 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -14,6 +14,7 @@
 
 // from DAQEvent
 #include "Event/RawEvent.h"
+#include "Event/L0ProcessorData.h"
 
 // Local classes
 #include "TriggerCard.h"
@@ -31,11 +32,9 @@ public:
    * @param det : The detector element pointer
    * @param scale : et scale
    */
-  L0Candidate( DeCalorimeter* det, double scale ) : m_ID() {
+  L0Candidate( DeCalorimeter* det ) : m_ID() {
     m_det     = det ;
     m_et      = 0   ;
-    m_etScale = scale ;
-    m_tol     = 0   ;
   };
 
   ~L0Candidate()                           { };
@@ -46,34 +45,25 @@ public:
    */
   void        setCandidate( int et, LHCb::CaloCellID ID ) ;
 
-  /** Save the candidate in the output container as L0CaloCandidate
-   *  @param type : Type of candidate, from L0::L0Type
+  /** Save the candidate in the output container as L0ProcessorData
+   *  @param type : Type of candidate, from L0DUFiber
    *  @param L0Calo : Container of candidates, to which the current object
    *                  is added after being properly formatted.
    */
-  void  saveCandidate( int type, LHCb::L0CaloCandidates* L0Calo ) {
-    if ( 0 < m_et ) {
-      LHCb::L0CaloCandidate* temp = new LHCb::L0CaloCandidate ( type,
-                                                                m_ID,
-                                                                m_et,
-                                                                m_et * m_etScale,
-                                                                m_center,
-                                                                m_tol );
-      L0Calo->add( temp );
-    }
+  void  saveCandidate( L0DUBase::Fiber::Type type, LHCb::L0ProcessorDatas* L0Calo ) {
+    unsigned int word = ( 0x10000 | 
+                          (m_ID.all() << L0DUBase::Calo::Address::Shift) | 
+                          (m_et << L0DUBase::Calo::Et::Shift)      );  // According to EDMS 525625      
+    LHCb::L0ProcessorData* temp = new LHCb::L0ProcessorData ( type, word );
+    L0Calo->add( temp );
   }
   int              et( )        const { return m_et     ; };
-  Gaudi::XYZPoint  center( )    const { return m_center ; };
-  double           tolerance( ) const { return m_tol    ; };
   LHCb::CaloCellID ID( )        const { return m_ID     ; };
 
  private:
   int              m_et     ;
-  double           m_etScale;
   LHCb::CaloCellID m_ID     ;
   DeCalorimeter*   m_det    ;
-  Gaudi::XYZPoint  m_center ;
-  double           m_tol    ;
 };
 
 

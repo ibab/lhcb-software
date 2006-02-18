@@ -1,11 +1,10 @@
-// $Id: L0CaloAlg.cpp,v 1.31 2006-01-26 16:52:13 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.32 2006-02-18 11:20:41 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
 /// L0Event
-#include "Event/L0CaloCandidate.h"
 #include "Event/L0Calo.h"
 
 /// CaloKernel
@@ -29,14 +28,9 @@ const       IAlgFactory& L0CaloAlgFactory = Factory ;
 
 L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm              ( name , pSvcLocator            )
-  , m_nameOfOutputDataContainer ( LHCb::L0CaloCandidateLocation::Default  )
+  , m_nameOfOutputDataContainer ( LHCb::L0ProcessorDataLocation::Calo  )
 {
-
-  // Declare the algorithm's properties which can be set at run time and their
-  // default values
-
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
-
   declareProperty("StoreInBuffer"   , m_storeFlag      = true );
 };
 
@@ -232,22 +226,24 @@ StatusCode L0CaloAlg::execute() {
 
   // Loop on ECAL cards. Get the candidates, select the highest
 
-  L0Candidate electron  ( m_ecal, m_etScale );
-  L0Candidate photon    ( m_ecal, m_etScale );
-  L0Candidate pi0Local  ( m_ecal, m_etScale );
-  L0Candidate pi0Global ( m_ecal, m_etScale );
+  L0Candidate electron  ( m_ecal );
+  L0Candidate photon    ( m_ecal );
+  L0Candidate pi0Local  ( m_ecal );
+  L0Candidate pi0Global ( m_ecal );
 
   std::vector<L0Candidate> allElectrons;
   std::vector<L0Candidate> allPhotons;
   std::vector<L0Candidate> allPi0Local;
   std::vector<L0Candidate> allPi0Global;
 
-  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    allElectrons.push_back( L0Candidate( m_ecal, m_etScale ) );
-    allPhotons.push_back(   L0Candidate( m_ecal, m_etScale ) );
-    allPi0Local.push_back(  L0Candidate( m_ecal, m_etScale ) );
-    allPi0Global.push_back( L0Candidate( m_ecal, m_etScale ) );
-  }}
+  int kk;
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allElectrons.push_back( L0Candidate( m_ecal ) );
+    allPhotons.push_back(   L0Candidate( m_ecal ) );
+    allPi0Local.push_back(  L0Candidate( m_ecal ) );
+    allPi0Global.push_back( L0Candidate( m_ecal ) );
+  }
 
   int eCard;
   for( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
@@ -345,8 +341,7 @@ StatusCode L0CaloAlg::execute() {
 
   // Now add the highest ECAL energy in matching cards
 
-  L0Candidate hadron ( m_hcal, m_etScale );
-  L0Candidate hadron2( m_hcal, m_etScale );
+  L0Candidate hadron ( m_hcal );
   int sumEt = 0;
   int cardMax = -1;
 
@@ -374,126 +369,75 @@ StatusCode L0CaloAlg::execute() {
     } // card not empty
   } // hCard
 
-  if ( 0 <= cardMax ) {
-    int maxArea = m_hcal->cardArea(cardMax);
-    int maxCol  = m_hcal->cardFirstColumn(cardMax) + hcalFe[cardMax].colMax();
-    int maxRow  = m_hcal->cardFirstRow(cardMax) + hcalFe[cardMax].rowMax();
-
-    for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
-      if ( !hcalFe[hCard].empty() &&
-           hCard != cardMax          ) {
-        int hCol = m_hcal->cardFirstColumn(hCard) + hcalFe[hCard].colMax();
-        int hRow = m_hcal->cardFirstRow(hCard) + hcalFe[hCard].rowMax();
-        // ** Ghost cleaning
-        if ( (maxArea != m_hcal->cardArea(hCard))   ||
-             (1 < hCol-maxCol) || (1 < maxCol-hCol) ||
-             (1 < hRow-maxRow) || (1 < maxRow-hRow)   ) {
-
-          int etMax = hcalFe[hCard].etMax();
-          if( hadron2.et() < etMax ) {
-            hadron2.setCandidate( etMax, hcalFe[hCard].cellIdMax() );
-          }
-        } // not a ghost
-      } // card not empty
-    } // loop hCard
-  } // 0 < cardMax
-
   //===========================================================================
   // Prepare the output container, register it and then fill it.
   //===========================================================================
 
   m_rawOutput.clear();
     
-  LHCb::L0CaloCandidates* L0Calo = new LHCb::L0CaloCandidates();
+  LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
   put( L0Calo, m_nameOfOutputDataContainer );
   
   // Store the various candidates
 
-  electron.saveCandidate(  LHCb::L0Calo::Electron,  L0Calo );
-  photon.saveCandidate(    LHCb::L0Calo::Photon,    L0Calo );
-  hadron.saveCandidate(    LHCb::L0Calo::Hadron,    L0Calo );
-  hadron2.saveCandidate(   LHCb::L0Calo::Hadron2,   L0Calo );
-  pi0Local.saveCandidate(  LHCb::L0Calo::Pi0Local,  L0Calo );
-  pi0Global.saveCandidate( LHCb::L0Calo::Pi0Global, L0Calo );
+  electron.saveCandidate(  L0DUBase::Fiber::CaloElectron,  L0Calo );
+  photon.saveCandidate(    L0DUBase::Fiber::CaloPhoton,    L0Calo );
+  hadron.saveCandidate(    L0DUBase::Fiber::CaloHadron,    L0Calo );
+  pi0Local.saveCandidate(  L0DUBase::Fiber::CaloPi0Local,  L0Calo );
+  pi0Global.saveCandidate( L0DUBase::Fiber::CaloPi0Global, L0Calo );
 
-  Gaudi::XYZPoint dummy( 0., 0., 0.);
-  if ( 0 < sumEt ) {
-    LHCb::L0CaloCandidate* hsum = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SumEt, 
-                                                              LHCb::CaloCellID(),
-                                                              sumEt,
-                                                              sumEt * m_etScale,
-                                                              dummy,
-                                                              0. );
-    L0Calo->add( hsum );
-  }
+  unsigned int code = 0x10000 + (sumEt << L0DUBase::Calo::Sum::Shift);    
+  LHCb::L0ProcessorData* hsum = new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSumEt, code );
+  L0Calo->add( hsum );
 
   // Spd multiplicity counter
 
-  LHCb::L0CaloCandidate* spdMult = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SpdMult, 
-                                                               LHCb::CaloCellID(),
-                                                               m_spdMult, 0.,
-                                                               dummy,
-                                                               0. );
+  code = 0x10000 + (m_spdMult << L0DUBase::Calo::Sum::Shift);
+  LHCb::L0ProcessorData* spdMult = new LHCb::L0ProcessorData ( L0DUBase::Fiber::CaloSpdMult, code );
   L0Calo->add( spdMult);
 
   // Debug now the L0 candidates
 
-  LHCb::L0CaloCandidates::const_iterator item;
+  LHCb::L0ProcessorDatas::const_iterator item;
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << "== L0CaloCandidate Summary: "
+    debug() << "== L0ProcessorData Summary: "
             << L0Calo->size() << " entries." << endreq;
     for( item = L0Calo->begin() ; L0Calo->end() != item ; ++item ) {
-      LHCb::L0CaloCandidate* cand = (*item);
-      debug() << *cand << endreq;
+      LHCb::L0ProcessorData* cand = (*item);
+      debug() << format( "Key %2d Word %8x", cand->key(), cand->word() ) << endreq;
     }
   }
   
-  //=== Store the perValidation candidates
-
-  LHCb::L0CaloCandidates* L0FullCalo = new LHCb::L0CaloCandidates();
-  put( L0FullCalo, LHCb::L0CaloCandidateLocation::Full );
-  int kk;
+  //=== Store the perValidation candidates, only in Raw Event
 
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
-    allElectrons[kk].saveCandidate( LHCb::L0Calo::Electron,  L0FullCalo );
-    saveInRawEvent(  LHCb::L0Calo::Electron, allElectrons[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloElectron, allElectrons[kk] );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
-    allPhotons[kk].saveCandidate(   LHCb::L0Calo::Photon,    L0FullCalo );
-    saveInRawEvent(  LHCb::L0Calo::Photon, allPhotons[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk] );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
-    hadron.saveCandidate( LHCb::L0Calo::Hadron, L0FullCalo );
-    saveInRawEvent(  LHCb::L0Calo::Hadron, hadron );
+    saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
-    allPi0Local[kk].saveCandidate(  LHCb::L0Calo::Pi0Local,  L0FullCalo );
-    saveInRawEvent(  LHCb::L0Calo::Pi0Local, allPi0Local[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Local, allPi0Local[kk] );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
-    allPi0Global[kk].saveCandidate( LHCb::L0Calo::Pi0Global, L0FullCalo );
-    saveInRawEvent(  LHCb::L0Calo::Pi0Global, allPi0Global[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Global, allPi0Global[kk] );
   }
 
   if ( 0 < sumEt ) {
-    int word = ( LHCb::L0Calo::SumEt << 24 ) + sumEt;
+    int word = ( L0DUBase::Fiber::CaloSumEt << 24 ) + sumEt;
     m_rawOutput.push_back( word );
   }
-  int word = ( LHCb::L0Calo::SpdMult << 24 ) + m_spdMult;
+  int word = ( L0DUBase::Fiber::CaloSpdMult << 24 ) + m_spdMult;
   m_rawOutput.push_back( word );
 
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() <<"== L0CaloFullCandidate Summary: "
-            << L0FullCalo->size() << " entries." << endreq;
-
-    for( item = L0FullCalo->begin() ; L0FullCalo->end() != item ; ++item ) {
-      LHCb::L0CaloCandidate* cand = (*item);
-      debug() << *cand << endreq;
-    }
-    debug() << " Raw Output size = " << m_rawOutput.size()
-            << endreq;
+            << m_rawOutput.size() << " entries." << endreq;
   }  
 
   //== Store in the  RAW buffer if required.
@@ -716,17 +660,8 @@ void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
   // If the cluster is identified by a non-existent cell, one uses the other
   // corner of the cluster (+1,+1) to compute the position. This should exist.
 
-  if ( m_det->valid( ID ) ) {
-    m_center = m_det->cellCenter( ID );
-    m_tol    = m_det->cellSize( ID ) * .5;
-    m_center.SetX( m_center.x() + m_tol );
-    m_center.SetY( m_center.y() + m_tol );
-  } else {
+  if ( !m_det->valid( ID ) ) {
     LHCb::CaloCellID tmp( ID.calo(), ID.area(), ID.row()+1, ID.col()+1);
-    m_center = m_det->cellCenter( tmp );
-    m_tol    = m_det->cellSize( tmp ) * .5;
-    m_center.SetX( m_center.x() - m_tol );
-    m_center.SetY( m_center.y() - m_tol );
   }
 };
 
