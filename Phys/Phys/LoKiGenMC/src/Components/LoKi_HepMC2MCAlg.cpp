@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.3 2006-02-09 17:52:35 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.4 2006-02-18 18:15:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/09 17:52:35  ibelyaev
+//  regular update: add *.opts configuration files
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -46,7 +49,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot at al.: 
+ *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
