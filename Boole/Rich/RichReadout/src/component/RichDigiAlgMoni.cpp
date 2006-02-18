@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.5 2006-02-18 15:17:27 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.6 2006-02-18 16:04:06 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -347,6 +347,7 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap, const std::string & pl
 {
   // count for each RICH
   std::vector<unsigned int> nHPDs(Rich::NRiches,0);
+
   // plots for each HPD
   for ( PartMap::const_iterator iP = pmap.begin(); iP != pmap.end(); ++iP )
   {
@@ -354,6 +355,9 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap, const std::string & pl
     const RichSmartID hpdID = (*iP).first.first;
     // increment count for RICH
     ++nHPDs[hpdID.rich()];
+    // plot number of hits
+    plot1D( (*iP).second.size(), plotsTitle+"/nHitsPerHPD", 
+            "# HPD Quartz window hits per HPD", 0.5, 200.5, 100 );
     if ( m_ID < m_maxID )
     {
       // Centre point of HPD in local coords
@@ -362,7 +366,6 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap, const std::string & pl
       // create histo title
       std::ostringstream HPD;
       HPD << hpdID << " " << hpdGlo;
-      const std::string title = HPD.str();
       // histo ID
       std::string hid = plotsTitle+"/"+boost::lexical_cast<std::string>( m_ID++ );
       // loop over deposits
@@ -373,16 +376,16 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap, const std::string & pl
         const Gaudi::XYZVector hitP
           = m_smartIDTool->globalToPDPanel((*iD)->parentHit()->entry()) - hpdLoc;
         // fill plot
-        plot2D( hitP.X(), hitP.Y(), hid, title, -8*mm, 8*mm, -8*mm, 8*mm, 32, 32 );
+        plot2D( hitP.X(), hitP.Y(), hid, HPD.str(), -8*mm, 8*mm, -8*mm, 8*mm, 32, 32 );
       }
     }
   }
+
   // number of affected HPD plots
   plot1D( nHPDs[Rich::Rich1], plotsTitle+"/nHPDsRich1",
-          "# RICH1 HPDs per event with Quartz Window CK", -0.5, 20.5, 21 );
+          "# RICH1 HPDs per event with HPD Quartz Window CK", -0.5, 20.5, 21 );
   plot1D( nHPDs[Rich::Rich2], plotsTitle+"/nHPDsRich2",
-          "# RICH2 HPDs per event with Quartz Window CK", -0.5, 20.5, 21 );
-
+          "# RICH2 HPDs per event with HPD Quartz Window CK", -0.5, 20.5, 21 );
 }
 
 void RichDigiAlgMoni::countNPE( PhotMap & photMap,

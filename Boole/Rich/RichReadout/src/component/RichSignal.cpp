@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.9 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.10 2006-02-18 16:04:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -140,7 +140,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
 
     // debug - turn off background hits
     //if ( (*iHit)->backgroundHit() ) continue;
-    //if ( (*iHit)->hpdQuartzCK() && (*iHit)->gasQuartzCK() ) continue;
+    //if ( (*iHit)->hpdQuartzCK() || (*iHit)->gasQuartzCK() ) continue;
 
     // Is hit in active pixel
     RichSmartID tempID;
