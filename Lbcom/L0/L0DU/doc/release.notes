@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.38 2005-12-20 11:57:50 cattanem Exp $
+$Id: release.notes,v 1.39 2006-02-18 11:29:36 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2006-02-18 - Olivier Dechamps
+ - Completely new implementation, close to hardware.
 
 !========================== L0DU v6r10 2005-12-19 ========================
 ! 2005-12-19 - Marco Cattaneo, Andrei Tsaregorodtsev

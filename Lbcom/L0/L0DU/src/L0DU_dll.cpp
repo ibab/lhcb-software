@@ -1,4 +1,4 @@
-// $Id: L0DU_dll.cpp,v 1.2 2002-04-05 15:20:45 ocallot Exp $
+// $Id: L0DU_dll.cpp,v 1.3 2006-02-18 11:29:37 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/LoadFactoryEntries.h"

@@ -1,0 +1,83 @@
+// Run L0DU algorithm :  "exotic" channels are added to the default algorithm
+//
+// - 27 elementary data are predefined to construct the elementary condition, i.e :
+//
+// From Calo Et & Addresses :  Electron(Et) , Photon(Et) , Hadron(Et) , LocalPi0(Et) , GlobalPi0(Et) , Sum(Et), SPD(Mult)
+//                             Electron(Add), Photon(Add), Hadron(Add), LocalPi0(Add), GlobalPi0(Add)
+//
+// From Muon Pt & Addresses :  Muon1(Pt) , Muon2(Pt) , Muon3(Pt), Muon1(Pt)+Muon2(Pt)
+//                             Muon1(Add), Muon2(Add), Muon3(Add) 
+//                             Muon1(Sgn), Muon2(Sgn), Muon3(Sgn)
+//
+// From PU system           :  PuPeak1(Cont), PUPeak2(Cont), PUHits(Mult)
+//                             PuPeak1(Add),  PuPeak2(Add)
+
+// - 18 Elementary condition are predefined (if not reset with L0DU.ResetConfiguration = true;)
+// see L0DU-reconfigure.opts to have the name of the conditions
+//
+//  - 14 L0DU channels are predefined (if not reset with L0DU.ResetConfiguration = true;)
+// see L0DU-reconfigure.opts to have the name of the channels
+
+
+
+//L0DU.ResetConfiguration = true;    // Reset the hardcoded configuration & parametrisation if you want to run your "exotic channel(s)" alone
+L0DU.ADCconvert = true;       // Calo(Et) and Muon(Pt) converted into MeV Unit (default) - thresholds has to be set accordingly
+
+
+//-------------------------------------------------------
+//----------------------- example : three-muon trigger !!
+
+// Built sum3Mu data using predefined "Muon1(Pt)+Muon2(Pt)" + "Muon3(Pt)"
+
+L0DU.Data = { "Sum3Mu" };                                        // The Data name you prefer
+L0DU.Sum3Mu.Operands = { "Muon1(Pt)+Muon2(Pt)"  , "Muon3(Pt)" }; // The elementary data (among predefined one and  previously built)
+L0DU.Sum3Mu.Operator = "+" ;                                     // The operation ( only '+' , '-', and 'Id'=identity are defined so far )
+
+
+//-----------------------------------------------
+// Set-up L0DU Elementary Conditions  (18 for the default algorithm)
+L0DU.Conditions          = { "ThreeMuon"  }; //  The Condition name you prefer
+L0DU.ThreeMuon.Data        = "Sum3Mu";     // The Data
+L0DU.ThreeMuon.Comparator  = ">";          // The comparator ( only '>', '<' , '>=' , '<=' , '==' and '!=' are allowed)
+L0DU.ThreeMuon.Threshold   = 2.0 * GeV;    // The threshold (the unit has to be set accordingly to ADCconvert flag)
+
+
+//-----------------------------------------------
+// Set-up the corresponding L0DU Channels (you can re-use predefined global conditions if not reset)
+
+L0DU.Channels   = { "L0ThreeMuon" }; // The Channel name you prefer 
+L0DU.L0ThreeMuon.Conditions      = { "ThreeMuon"  , "Global_SPD","Global_PU","Total_Et","Peak2_Sum" }; // The elementary condition(s) list
+L0DU.L0ThreeMuon.AcceptRate   =  100   ;   // The downscaling rate (fraction of accepted channel trigger - base is 100)
+
+
+//-------------------------------------------------------
+//----------------------- 2nd example : add "extended pi0"  trigger  ( Pi0Local(Pt) - Photon(Pt) ) > threshold if addresses are identical
+
+L0DU.Data += { "DiffEt" };                                 // dont forget the += to push_back into the data list
+L0DU.DiffEt.Operands = { "LocalPi0(Et)"  , "Photon(Et)" }; // Data = A-B
+L0DU.DiffEt.Operator = "-" ;
+L0DU.Data += { "DiffAdd" };
+L0DU.DiffAdd.Operands = { "LocalPi0(Add)"  , "Photon(Add)" };
+L0DU.DiffAdd.Operator = "-" ;
+
+
+//-----------------------------------------------
+// Set-up L0DU Elementary Conditions  (18 for the default algorithm)
+L0DU.Conditions          += { "Photon2" , "SameFE"  };   // dont forget the += to push_back into the conditions list
+
+L0DU.Photon2.Data          = "DiffEt";
+L0DU.Photon2.Comparator   = ">";
+L0DU.Photon2.Threshold    = 1.0 * GeV;
+
+L0DU.SameFE.Data        = "DiffAdd";
+L0DU.SameFE.Comparator  = "=";
+L0DU.SameFE.Threshold   = 0;
+
+
+//-----------------------------------------------
+// Set-up the corresponding L0DU Channels 
+
+L0DU.Channels   += { "L0DiPhoton" };                  // dont forget the += to push_back into the channel list
+L0DU.L0DiPhoton.Conditions      = { "Photon2"  , "SameFE"};
+L0DU.L0DiPhoton.AcceptRate   =  100   ;   // Fraction of accepted channel trigger
+

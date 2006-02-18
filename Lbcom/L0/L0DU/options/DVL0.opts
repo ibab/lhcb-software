@@ -1,0 +1,15 @@
+//*************************************************************
+//   Options to re-run the Level 0 trigger decision in DaVinci
+//=============================================================
+// run L0 decision unit
+ApplicationMgr.DLLs    += { "L0DU" };
+ApplicationMgr.TopAlg +={ "L0DU" };
+L0DU.WriteOnTES = true; // Write L0DUChannel on TES for monitoring purpose
+
+// some example of options file for configuration & parametrisation of the L0 Decision Unit
+//#include "$L0DUROOT/options/L0DU-reparametrize.opts"
+//#include "$L0DUROOT/options/L0DU-reconfigure.opts"
+//#include "$L0DUROOT/options/L0DU-extended.opts"
+
+L0DU.OutputLevel=3;
+
