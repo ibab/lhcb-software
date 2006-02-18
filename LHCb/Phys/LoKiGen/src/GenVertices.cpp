@@ -1,8 +1,11 @@
-// $Id: GenVertices.cpp,v 1.2 2006-02-17 20:46:44 ibelyaev Exp $
+// $Id: GenVertices.cpp,v 1.3 2006-02-18 17:13:53 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $,
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/17 20:46:44  ibelyaev
+//  bug fix for Win32
+//
 // Revision 1.1  2006/02/09 09:54:49  ibelyaev
 //  add plenty of new (vertex&adapter)functions
 // 
@@ -34,7 +37,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot at al.: 
+ *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
