@@ -1,22 +1,14 @@
-// $Id: VertexHolder.cpp,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: VertexHolder.cpp,v 1.2 2006-02-19 21:49:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Vertex.h"
-// ============================================================================
-// DaVinciKernel
-// ============================================================================
-#include "Kernel/IGeomDispCalculator.h"
-// ============================================================================
-// LHCbKernel
-// ============================================================================
-#include "Kernel/InstanceCounter.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -50,16 +42,6 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-
-namespace
-{
-#ifdef LOKI_DEBUG 
-  static InstanceCounter<LoKi::Vertices::ImpactParamTool> s_IPTCounter ;
-  static InstanceCounter<LoKi::Vertices::ImpParBase>      s_IPBCounter ;  
-#endif 
-};
-
 
 // ============================================================================
 /// constructor from the 3Dpoint
@@ -111,242 +93,6 @@ LoKi::Vertices::VertexHolder::position() const
   Error ( s_print ) ;
   return s_error ;                                            // RETURN 
 } ;
-// ============================================================================
-
-// ============================================================================
-LoKi::Vertices::ImpactParamTool::ImpactParamTool 
-( IGeomDispCalculator* tool ) 
-  : LoKi::AuxFunBase () 
-  , m_tool           ( tool )
-{
-  if ( 0 == m_tool ) 
-  { throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
-                          StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> addRef  ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.increment();
-#endif 
-  //
-};
-// ============================================================================
-
-// ============================================================================
-/// copy 
-// ============================================================================
-LoKi::Vertices::ImpactParamTool::ImpactParamTool
-( const LoKi::Vertices::ImpactParamTool& tool ) 
-  : LoKi::AuxFunBase ( tool ) 
-  , m_tool           ( tool.m_tool )
-{
-  if( 0 == m_tool ) 
-    { throw LoKi::Exception
-        ("ImpactParamTool( copy ):  Tool* points to NULL ",
-         StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> addRef  ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.increment();
-#endif 
-  //
-};
-// ============================================================================
-/// assignement 
-// ============================================================================
-LoKi::Vertices::ImpactParamTool& 
-LoKi::Vertices::ImpactParamTool::operator=
-( const LoKi::Vertices::ImpactParamTool& right ) 
-{
-  if ( &right == this ) { return *this ; }
-  IGeomDispCalculator* _tmp = m_tool ;
-  m_tool = right.m_tool ;
-  if ( 0 != m_tool ) { m_tool -> addRef  () ; }
-  if ( 0 !=  _tmp  ) { _tmp   -> release () ;}
-  //
-  if ( 0 == m_tool ) 
-  { throw LoKi::Exception 
-      ("ImpactParamTool&operator=: Tool* points to NULL "  ,
-       StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  //
-  return *this ;
-} ;
-// ============================================================================
-
-// ============================================================================
-/// destructor 
-// ============================================================================
-LoKi::Vertices::ImpactParamTool::~ImpactParamTool()
-{
-  if ( 0 == m_tool ) 
-  { throw LoKi::Exception 
-      ("~ImpactParamTool(): Tool* points to NULL "  ,
-       StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> release ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.decrement();
-#endif 
-  //
-};
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::Vertex*  vertex ,   
-  IGeomDispCalculator* tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool    ) 
-  , LoKi::Vertices::VertexHolder    ( vertex  )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Point3D&    point  ,   
-  IGeomDispCalculator* tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool  ) 
-  , LoKi::Vertices::VertexHolder    ( point )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Vertices::VertexHolder& holder ,   
-  IGeomDispCalculator*                tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool   ) 
-  , LoKi::Vertices::VertexHolder    ( holder )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::Vertex*                    vertex ,   
-  const LoKi::Vertices::ImpactParamTool& tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool    ) 
-  , LoKi::Vertices::VertexHolder    ( vertex  )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Point3D&                   point  ,   
-  const LoKi::Vertices::ImpactParamTool& tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool  ) 
-  , LoKi::Vertices::VertexHolder    ( point )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Vertices::VertexHolder&    holder ,   
-  const LoKi::Vertices::ImpactParamTool& tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool   ) 
-  , LoKi::Vertices::VertexHolder    ( holder )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::Vertex*               vertex ,   
-  const LoKi::Vertices::ImpParBase& tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool    ) 
-  , LoKi::Vertices::VertexHolder    ( vertex  )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Point3D&              point  ,   
-  const LoKi::Vertices::ImpParBase& tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool  ) 
-  , LoKi::Vertices::VertexHolder    ( point )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Vertices::VertexHolder& holder ,   
-  const LoKi::Vertices::ImpParBase&   tool   )
-  : LoKi::Vertices::ImpactParamTool ( tool   ) 
-  , LoKi::Vertices::VertexHolder    ( holder )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-/// constructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Vertices::ImpParBase&   tool )
-  : LoKi::Vertices::ImpactParamTool ( tool ) 
-  , LoKi::Vertices::VertexHolder    ( tool )
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.increment();
-#endif 
-} ;
-// ============================================================================
-/// destructor 
-// ============================================================================
-LoKi::Vertices::ImpParBase::~ImpParBase() 
-{
-#ifdef LOKI_DEBUG
-  s_IPBCounter.decrement();
-#endif 
-  //
-};
 // ============================================================================
 
 // ============================================================================

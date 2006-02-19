@@ -1,6 +1,6 @@
-// $Id: VertexHolder.h,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: VertexHolder.h,v 1.2 2006-02-19 21:49:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -18,8 +18,27 @@
 // ============================================================================
 #include "Event/Vertex.h"
 // ============================================================================
-class IGeomDispCalculator ;
+
 // ============================================================================
+/** @file
+ *
+ * Implementation file for class LoKi::Vertices::ImpParBase
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-02-16 
+ */
 
 namespace LoKi
 {
@@ -54,11 +73,17 @@ namespace LoKi
       /// accessor to the point 
       const LoKi::Point3D& point  () const { return m_point  ; }
       /// change the vertex (and switch the case!)
-      void setVertex ( const LHCb::Vertex*  vx  ) const 
+      inline void setVertex ( const LHCb::Vertex*  vx  ) const 
       { m_vertex = vx ;                m_type = _vertex ; }      
       /// change the vertex (and switch the case!)
-      void setPoint  ( const LoKi::Point3D& pnt ) const 
+      inline void setPoint  ( const LoKi::Point3D& pnt ) const 
       { m_point = pnt ; m_vertex = 0 ; m_type = _point  ; }      
+      /// change the vertex (and switch the case!)
+      inline void setVertex ( const LoKi::Point3D& pnt ) const 
+      { setPoint  ( pnt ) ; }
+      /// change the vertex (and switch the case!)
+      inline void setPoint  ( const LHCb::Vertex* vx   ) const 
+      { setVertex ( vx  ) ; }      
       /// return 'position'
       const LoKi::Point3D& position() const ;
       /// valid information 
@@ -70,89 +95,6 @@ namespace LoKi
       mutable       LoKi::Point3D  m_point  ;
     };
     
-    class ImpactParamTool : 
-      virtual public LoKi::AuxFunBase 
-    {    
-    public:
-      /// accessor to the tool itself 
-      inline IGeomDispCalculator*  tool     () const { return m_tool ; }
-    protected:
-      /// constructor 
-      ImpactParamTool 
-      ( IGeomDispCalculator*   tool  ) ;
-      /// copy constructor 
-      ImpactParamTool     
-      ( const ImpactParamTool& tool  ) ;
-      /// virtual destructor 
-      virtual ~ImpactParamTool();
-      /// assignement 
-      ImpactParamTool& 
-      operator=( const ImpactParamTool& right ) ;
-    private:
-      /// default constructor is private 
-      ImpactParamTool();
-    private:
-      IGeomDispCalculator* m_tool;
-    } ;
-
-    
-    /** @class ImpParBase
-     *  helper FunB class for evaluation 
-     *  impact parameters, distances, and so on.
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    class ImpParBase : 
-      public virtual LoKi::Vertices::ImpactParamTool , 
-      public virtual LoKi::Vertices::VertexHolder    
-    {
-    public:
-      /// constructor 
-      ImpParBase 
-      ( const LHCb::Vertex*    vertex ,   
-        IGeomDispCalculator*   tool   );
-      /// constructor 
-      ImpParBase 
-      ( const LoKi::Point3D&   point  ,   
-        IGeomDispCalculator*   tool   );
-      /// constructor 
-      ImpParBase 
-      ( const VertexHolder&    holder ,   
-        IGeomDispCalculator*   tool   );
-      /// constructor 
-      ImpParBase 
-      ( const LHCb::Vertex*    vertex ,   
-        const ImpactParamTool& tool   );
-      /// constructor 
-      ImpParBase 
-      ( const LoKi::Point3D&   point  ,   
-        const ImpactParamTool& tool   );
-      /// constructor 
-      ImpParBase 
-      ( const VertexHolder&    holder ,   
-        const ImpactParamTool& tool   );
-      /// constructor 
-      ImpParBase 
-      ( const LoKi::Point3D&   point  ,   
-        const ImpParBase&      tool   );
-      /// constructor 
-      ImpParBase 
-      ( const LHCb::Vertex*    vertex ,   
-        const ImpParBase&      tool   );
-      /// constructor 
-      ImpParBase 
-      ( const VertexHolder&    holder ,   
-        const ImpParBase&      tool   );
-      /// copy constructor 
-      ImpParBase 
-      ( const ImpParBase&      base   );
-      /// the destructor is virtual 
-      virtual ~ImpParBase () ;
-    private:
-      /// default constructor is private 
-      ImpParBase();
-    };
-
   }; // end of namespace LoKi::Vertices;
 }; // end of namespace LoKi
 
