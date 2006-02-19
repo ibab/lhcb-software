@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : C. Parkes -->
+<!--- Created : 2006-02-13 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY channelIDName "VeloChannelID">
+<!ENTITY className "VeloLiteCluster">
+<!ENTITY posBits "2">
+<!ENTITY VeloLiteClusterClass SYSTEM "SiLiteCluster.ent">
+]>
+<gdd>
+
+<package name="VeloEvent">
+    <class name="&className;" 
+     author="C Parkes" 
+     desc="A cluster as produced by the TELL1 but without full ADC information"
+     serializers = "FALSE">
+     <location name="VeloClusters"   place="Rec/Velo/VeloLiteClusters"   />
+
+  &VeloLiteClusterClass;
+
+<method
+ name = "isRType"
+ type = "bool"
+ desc = "check if R type"
+ const = "TRUE" >
+  <code>
+  return channelID().isRType();
+  </code>
+</method>
+
+
+<method
+ name = "isPhiType"
+ type = "bool"
+ desc = "check if Phi type"
+ const = "TRUE" >
+  <code>
+  return channelID().isPhiType();
+  </code>
+</method>
+
+<method
+ name = "isPileUp"
+ type = "bool"
+ desc = "check if PileUp"
+ const = "TRUE" >
+  <code>
+  return channelID().isPileUp();
+  </code>
+</method>
+
+  </class>
+</package>
+</gdd>
+
+

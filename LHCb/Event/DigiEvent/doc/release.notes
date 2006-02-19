@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= DigiEvent v1r0 2006-02-17 =========================
+! 2006-02-17 - Chris Parkes
+ - new VeloCluster, VeloLiteCluster added 
+
 ! 2006-02-17 - Marco Cattaneo
  - Fix various default locations to all follow the same convention
 

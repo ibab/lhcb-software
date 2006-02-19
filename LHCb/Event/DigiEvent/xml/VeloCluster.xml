@@ -1,114 +1,96 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--- $Id: -->
-<!--- Author  : Tomasz Szumlak -->
-<!--- Created : 2005-12-21 -->
+<!--- Author  : C. Parkes -->
+<!--- Created : 2006-02-13 -->
 
-<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY liteClusterName "VeloLiteCluster">
+<!ENTITY channelID "VeloChannelID">
+<!ENTITY VeloClusterClass SYSTEM "SiCluster.ent">
+]>
 <gdd>
- <package name="DigiEvent">
-    <class name="VeloCluster" 
-     id="4004"
-     author="Chris Parkes, update Tomasz Szumlak" 
-     desc="A cluster as on the DAQ output, after the data processor and 
-     without applying any additional processing. It contains no simulation 
-     info."
-     location="Raw/Velo/Clusters">
-      <import name="Kernel/VeloChannelID"/>
-      <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
-      <base name="KeyedObject&lt;LHCb::VeloChannelID&gt;"/>
-        &KeyedContainer;
+ <package name="VeloEvent">
+    <class name="VeloCluster"
+     id="4006"
+     author="Chris Parkes"
+     desc="A cluster as produced by the TELL1 with full ADC information."
+     serializers="FALSE">
+     <location name="VeloClusters"   place="Rec/Velo/VeloClusters"   />
+     
+     <constructor desc="Constructor" 
+       argList='&liteClusterName; lCluster, 
+                ADCVector strips'
+        initList='m_liteCluster(lCluster), m_stripValues(strips)' >
+     </constructor>
 
-      <constructor desc="Constructor with key" 
-       initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
-	m_sensorID(0),
-	m_stripSignals()"
-      >
-       <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
-        <code/>  
-      </constructor> 
+  &VeloClusterClass;
 
-      <attribute 
-       name="sensorID" 
-       type="LHCb::VeloChannelID" 
-       desc="Sensor number stored as VeloChannelID"
-      />
+   <method
+     name = "firstChannel"
+     type="LHCb::VeloChannelID"
+     desc="first Velo Channel ID"
+     const="TRUE">
+    <code>
+ return VeloChannelID(channelID().sensor(),channelID().strip()-stripValues().front().first,channelID().type());
 
-      <attribute 
-       name="stripSignals" 
-       type="std::vector&lt;std::pair&lt;long,double&gt; &gt;" 
-       desc="strip numbers and their signals"
-      />
+   </code>
+   </method>
+   <method
+     name = "lastChannel"
+     type="LHCb::VeloChannelID"
+     desc="first Velo Channel ID"
+     const="TRUE">
+    <code>
+ return VeloChannelID(channelID().sensor(),channelID().strip()+stripValues().back().first,channelID().type());    </code>
+  </method>
 
-      <method 
-       name="size" 
-       type="long" 
-       desc="number of strips in cluster" 
-       const="TRUE"
-      >
-       <code>
-        return stripSignals().size();
-       </code>
-      </method>
+ <method
+     name = "channels"
+     type="std::vector &lt; LHCb::VeloChannelID &gt;"
+     desc="channel IDs"
+     const="TRUE">
+      <code>
+  std::vector &lt; LHCb::VeloChannelID &gt; chanCont;
+  VeloChannelID first = firstChannel();
+  for (unsigned int i = 0; i &gt; size(); ++i){
+    VeloChannelID aChan(first.sensor(),first.strip()+i,first.type());
+    chanCont.push_back(aChan);
+  }
+  return chanCont;
+      </code>
+ </method>
 
-      <method 
-       name="adcValue" 
-       type="double" 
-       argList="long num" 
-       desc="adc value of strips in cluster" 
-       const="TRUE"
-      >
-       <code>
-        return stripSignals()[num].second;
-       </code>
-      </method>
+<method
+ name = "isRType"
+ type = "bool"
+ desc = "check if R type"
+ const = "TRUE" >
+  <code>
+  return m_liteCluster.channelID().isRType();
+  </code> 
+</method>
 
-      <method 
-       name="sensor" 
-       type="long" 
-       desc="Sensor number" 
-       const="TRUE"
-      >
-       <code>
-        return m_sensorID.sensor();
-       </code>
-      </method>
+<method
+ name = "isPhiType"
+ type = "bool"
+ desc = "check if Phi type"
+ const = "TRUE" >
+  <code>
+  return m_liteCluster.channelID().isPhiType();
+  </code> 
+</method>
 
-      <method 
-       name="strip" 
-       type="long" 
-       argList="long num" 
-       desc="strip number of strip in cluster" 
-       const="TRUE"
-      >
-       <code>
-        return stripSignals()[num].first;
-       </code>
-      </method>
+<method
+ name = "isPileUp"
+ type = "bool"
+ desc = "check if Pile UP "
+ const = "TRUE" >
+  <code>
+  return m_liteCluster.channelID().isPileUp();
+  </code> 
+</method>
 
-      <method 
-       name="setSensor" 
-       type="void" 
-       argList="long num" 
-       desc="Set the sensor number (overrides default)"
-       const="FALSE"
-      >           
-       <code>
-        m_sensorID.setSensor(num);
-       </code>
-      </method>
-
-      <method 
-       name="channelID" 
-       type="LHCb::VeloChannelID" 
-       argList="long num" 
-       desc="combined sensor and strip number ID (key) of strip in cluster" 
-       const="TRUE"
-      >
-       <code>
-        return VeloChannelID(m_sensorID.sensor(),strip(num),m_sensorID.type());
-       </code>
-      </method>
 
     </class>
-  </package>
+</package>
 </gdd>
