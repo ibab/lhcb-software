@@ -266,11 +266,11 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
     aParticleChange.ProposeLocalEnergyDeposit(EnergyTransfer);
   }
 
-   if(  aCreatorProcessName != "RichHpdPhotoelectricProcess") {
+  //  if(  aCreatorProcessName != "RichHpdPhotoelectricProcess") {
       
-     G4cout<<"EnergyTransfer in sidetEloss for charged particle " << EnergyTransfer<<G4endl;
+     //  G4cout<<"EnergyTransfer in sidetEloss for charged particle " << EnergyTransfer<<G4endl;
 
-      }
+  // }
   if ( (aKinEnergyFinal <= MinKineticEnergy) || 
       (aCreatorProcessName == "RichHpdPhotoelectricProcess") ) {
     aParticleChange.ProposeTrackStatus(fStopAndKill);
