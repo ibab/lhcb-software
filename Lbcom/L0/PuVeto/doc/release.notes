@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.36 2006-02-18 11:15:52 ocallot Exp $
+! $Id: release.notes,v 1.37 2006-02-20 09:28:02 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
 
+!======================== PuVeto v7r0 2006-02-20 ========================
 ! 2006-02-18 - Olivier Callot
  - Use new definition of L0DU packing from L0DUBase.h
 
-!======================== PuVeto v7r0 2006-02-15 ========================
 ! 2006-02-15 - Marco Cattaneo
  - Remove obsolete VeloEvent in requirements
 
