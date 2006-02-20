@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.14 2006-02-15 14:50:04 cattanem Exp $
+$Id: release.notes,v 1.15 2006-02-20 08:17:04 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
 
-!====================== IOExample v2r0 2006-02-15 =========================
+!====================== IOExample v2r0 2006-02-20 =========================
+! 2006-02-20 - Marco Cattaneo
+ - Add TestPack.opts to test PackedEvent classes
+
 ! 2006-02-15 - Marco Cattaneo
  - Updates for LHCb v20r0. Input data files to be updated when test data exists
 
