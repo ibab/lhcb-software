@@ -1,4 +1,4 @@
-// $Id: TrackOTProjector.cpp,v 1.6 2006-02-16 10:50:16 ebos Exp $
+// $Id: TrackOTProjector.cpp,v 1.7 2006-02-20 18:37:31 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -52,20 +52,20 @@ StatusCode TrackOTProjector::project( const State& state,
   double tu = ( otmeas.tu() > 990.0 ) ? 
     (tx * cosA + ty * sinA) : tu = otmeas.tu();
   double cosU     = 1./sqrt( 1.+ tu*tu );
-  double du       = (x * cosA + y * sinA - wirePos) * driftVelocity;
+  double du       = (x * cosA + y * sinA - wirePos) ;
   double wireDist = ( x * cosA + y * sinA - wirePos ) * cosU;
-  double time     = driftVelocity * wireDist
-                    + wireVelocity * otmeas.ambiguity() * (wireLength-fabs(y));
+  double dDrift = meas.measure() - 
+     (wireLength-fabs(y)) * wireVelocity / driftVelocity ;
 
   m_H = TrackVector();  
-  m_H(0) = cosA * cosU * driftVelocity;
-  m_H(1) = sinA * cosU * driftVelocity
-           - otmeas.ambiguity() * wireVelocity * y/fabs(y);
+  m_H(0) = cosA * cosU ;
+  m_H(1) = sinA * cosU 
+           - otmeas.ambiguity() * wireVelocity/driftVelocity * y/fabs(y);
   m_H(2) = -du * tu * gsl_pow_3( cosU ) * cosA;
   m_H(3) = -du * tu * gsl_pow_3( cosU ) * sinA;
 
   // this shouls be ~ equivalent to : computeResidual(state,meas);
-  m_residual = meas.measure() - time;
+  m_residual = otmeas.ambiguity() * dDrift - wireDist;
 
   computeErrorResidual( state, meas );  
 

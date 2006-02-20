@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.3 2006-02-16 10:51:21 ebos Exp $
+// $Id: TrajOTProjector.cpp,v 1.4 2006-02-20 18:37:31 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -41,9 +41,9 @@ StatusCode TrajOTProjector::project( const State& state,
   m_pIMF -> fieldVector( state.position(), bfield );
 
   // Get the reference state trajectory
-  OTMeasurement& otmeastmp = *( dynamic_cast<OTMeasurement*>(&meas) );
-  TrackVector refVec = otmeastmp.referenceVector( state.stateVector() );
-  StateTraj refTraj = StateTraj( refVec, otmeastmp.z(), bfield );
+  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
+  TrackVector refVec = otmeas.referenceVector( state.stateVector() );
+  StateTraj refTraj = StateTraj( refVec, otmeas.z(), bfield );
 
   // Get the measurement trajectory
   OTChannelID OTChan = meas.lhcbID().otID();
@@ -53,41 +53,43 @@ StatusCode TrajOTProjector::project( const State& state,
   double cosA = cos( stereoAngle );
   double sinA = sin( stereoAngle );
   XYZVector dir =  XYZVector( -sinA, cosA, 0. );
-  //TODO : WHAT WE WANT!!!
-  // Trajectory& measTraj = m_det -> trajectory( meas.lhcbID().otID() );
   const std::pair<double,double> range(-999.,999.);
   LineTraj measTraj = LineTraj( centrePos, dir, range );
+  // TODO : WHAT WE WANT!!!
+  // Trajectory& measTraj = m_det -> trajectory( meas.lhcbID().otID() );
 
   double s1, s2;
   XYZVector distance;
 
   // Determine initial estimates of s1 and s2
   s1 = 0.0; // state is already close to the minimum
-  m_poca -> minimize( measTraj, s2, refTraj, s1, distance, 20*mm );
+  m_poca -> minimize( measTraj, s2, refTraj.position(s1), distance, 20*mm );
 
   // Determine the actual minimum with the Poca tool
   m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
-  ROOT::Math::SMatrix<double,1,3> vec; distance.Unit().GetCoordinates(vec.Array());  
-  ROOT::Math::SMatrix<double,1,5> mat = vec * refTraj.derivative( s1 );
-  m_H = mat.Row(0);
 
-  // Calculate the projected OT time
-  // ROOT::Math::SVector<double,5> dstate = state.stateVector()-refVec;
-  // double distToWire = sqrt(distance.Mag2()) + std::inner_product(m_H.begin(),m_H.end(),dstate.begin(),0.0);
-  double distToWire = sqrt(distance.Mag2());
-  double distToReadout = measTraj.length() - fabs( refTraj.position(s1).Y() ); // FIXME: not all wires start at y=0!!!
+  // Calculate the projection matrix
+  ROOT::Math::SVector< double, 3 > unitDistance;
+  distance.Unit().GetCoordinates( unitDistance.Array() );
+  m_H = unitDistance * refTraj.derivative( s1 ) ;
 
-  double t_calib = otmeastmp.measure()*otmeastmp.ambiguity();
-  double t_drift = t_calib - m_det->propagationDelay()*distToReadout;
-  double d_drift = t_drift*m_det->driftDelay();
-  
-  int ambig_track = (refTraj.position( s1 ).x()>measTraj.position(s2).x())?+1:-1;
+  // Calculate the projected drift distance
+  double distToWire = distance.R() + Dot(m_H, state.stateVector() - refVec) ;
+
+  // Get the sign of the distance
+  int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
+
+  // Get the distance to the readout
+  double distToReadout = measTraj.length() - fabs( refTraj.position(s1).Y() ); 
+  // TODO: use the arclength s1 to get the distance to readout
+
+  // Correct measure for the propagation along the wire
+  double dDrift = otmeas.measure() - 
+    distToReadout * m_det->propagationDelay()/ m_det->driftDelay() ;
 
   // Calculate the residual
-  m_residual = distToWire - (ambig_track*otmeastmp.ambiguity() )*d_drift;
-
-  // Compensate for using a Trajectory at the wire in stead of at the driftradius
-  if (m_residual<0) m_H *=-1;
+  m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
+  m_H *= signDist; // Correct for the sign of the distance
   
   // TODO: use the reference trajectory again.
   computeErrorResidual( state, meas );

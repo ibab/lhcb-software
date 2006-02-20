@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-20 - Jeroen van Tilburg
+ - TrackOTProjector: Moved from time to distance domain.
+ - TrajOTProjector: some simplifications, corrected the sign of m_H and of
+   m_residual introduced by previous cvs release. Movement to distance domain
+   was already made in the previous cvs release.
+
 !====================== TrackProjectors v2r0 2006-02-16 ======================
 ! 2006-02-16 - Edwin Bos
  - Moved to LHCb v20r0

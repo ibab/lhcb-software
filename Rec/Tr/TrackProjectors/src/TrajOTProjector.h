@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.3 2006-02-16 10:51:25 ebos Exp $
+// $Id: TrajOTProjector.h,v 1.4 2006-02-20 18:37:31 jvantilb Exp $
 #ifndef TRACKPROJECTORS_TRAJOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRAJOTPROJECTOR_H 1
 
@@ -47,7 +47,7 @@ private:
 
   DeOTDetector*      m_det;
   std::string        m_otTrackerPath; ///< Name of the OT XML geom path
-  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magnetic field service
+  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
 };
