@@ -1,14 +1,9 @@
-// $Id: L0CandidateTool.cpp,v 1.1 2006-02-18 11:29:36 ocallot Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
-//
+// $Id: L0CandidateTool.cpp,v 1.2 2006-02-20 11:11:28 cattanem Exp $
 // ============================================================================
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
+
 // Detector Element
 #include "CaloDet/DeCalorimeter.h"
 #include "DetDesc/Condition.h"
@@ -24,12 +19,6 @@
  * 2006-02-17 : Olivier Deschamps
  */
 
-
-// ============================================================================
-/*
- *   Declaration of the Tool Factory, needed for instantiation
- */
-// ============================================================================
 DECLARE_TOOL_FACTORY( L0CandidateTool )
 
 // ============================================================================
@@ -60,6 +49,10 @@ L0CandidateTool::~L0CandidateTool () {} ;
 
 StatusCode L0CandidateTool::initialize () 
 {
+
+  // Intialize the base class!
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   m_muonPtScale = 40.*MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
   //  m_caloEtScale = 20.*MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
