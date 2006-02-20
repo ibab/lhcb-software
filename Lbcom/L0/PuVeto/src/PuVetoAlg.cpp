@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.21 2006-02-18 11:15:52 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.22 2006-02-20 10:46:47 cattanem Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -55,6 +55,8 @@ PuVetoAlg::~PuVetoAlg() {};
 //=============================================================================
 StatusCode PuVetoAlg::initialize() {
 
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   debug() << "==> Initialise" << endreq;
 
@@ -349,18 +351,6 @@ StatusCode PuVetoAlg::execute() {
 
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PuVetoAlg::finalize() {
-
- 
- debug() << "==> Finalize" << endreq;
-
-  return StatusCode::SUCCESS;
-}
-
 
 //=========================================================================
 //  Fill the histogram

@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.11 2006-02-06 16:30:59 mzupan Exp $
+// $Id: PuVetoAlg.h,v 1.12 2006-02-20 10:46:48 cattanem Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -31,7 +31,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   /// fill the histogram
