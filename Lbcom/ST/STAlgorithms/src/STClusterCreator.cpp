@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.5 2006-02-10 16:32:30 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.6 2006-02-20 16:42:46 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -45,7 +45,7 @@ STClusterCreator::STClusterCreator(const std::string& name,
   // STClusterCreator constructor
   //read in DataCard Value
  
-  this->declareProperty("digitSignal2Noise",m_digitSig2NoiseThreshold = 3.0);
+  this->declareProperty("digitSignal2Noise",m_digitSig2NoiseThreshold = 2.5);
   this->declareProperty("clusterSignal2Noise",m_clusterSig2NoiseThreshold = 3.6);
   this->declareProperty("highSignal2Noise",m_highThreshold = 6.0);
   this->declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
@@ -55,7 +55,7 @@ STClusterCreator::STClusterCreator(const std::string& name,
   this->declareProperty("outputLocation",  m_outputLocation = STClusterLocation::TTClusters);
  
   this->declareProperty("outputVersion", m_outputVersion = 1);
-  this->declareProperty("size", m_maxSize = 32);
+  this->declareProperty("size", m_maxSize = 4);
   this->declareProperty("detType", m_detType = "TT");
   this->declareProperty("byBeetle", m_byBeetle = true);
   
@@ -90,7 +90,7 @@ StatusCode STClusterCreator::initialize()
     double adc =  m_sigNoiseTool->noiseInADC(*iterS);
     m_digitSig2NoiseCut[*iterS] = m_digitSig2NoiseThreshold*adc;
     m_clusterSig2NoiseCut[*iterS] = m_clusterSig2NoiseThreshold*adc; 
-     m_highSig2NoiseCut[*iterS] = m_highThreshold*adc;
+    m_highSig2NoiseCut[*iterS] = m_highThreshold*adc;
   } // iterS
 
  
@@ -170,6 +170,7 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
         // make cluster +set things
         STLiteCluster clusterLite(nearestStrip,measValue.first.second,
                       clusteredDigits.size(),hasHighThreshold(totCharge,aSector));
+	//std::cout << measValue.first.second << std::endl;
         STCluster* newCluster = new STCluster(clusterLite, strips(clusteredDigits,
                                               nearestStrip),nSum);
     
@@ -216,7 +217,7 @@ bool STClusterCreator::keepClustering(const STDigit* firstDigit, const STDigit* 
  if (aboveDigitSignalToNoise(secondDigit, aSector) == true){
    const STChannelID firstChan = firstDigit->channelID();
    const STChannelID secondChan = secondDigit->channelID();
-   if (m_tracker->nextRight(firstChan) == secondChan){
+   if (aSector->nextRight(firstChan) == secondChan){
      if ((m_byBeetle == false)||(sameBeetle(firstChan,secondChan) == true)) clusFlag = true;  
    }
  }
@@ -248,7 +249,7 @@ double STClusterCreator::neighbourSum(STDigits::const_iterator start,
     STDigits::const_iterator iter = stop;
     ++iter;
     if (iter != digits->end() && 
-	((*iter)->channelID() == m_tracker->nextLeft((*start)->channelID()))) {
+	((*iter)->channelID() == m_tracker->nextRight((*start)->channelID()))) {
       nSum += (*iter)->depositedCharge();
     }
   }
@@ -260,8 +261,8 @@ STCluster::ADCVector STClusterCreator::strips(const SmartRefVector<STDigit>& clu
   SmartRefVector<STDigit>::const_iterator iter  = clusteredDigits.begin();
   STCluster::ADCVector tVec;
   for (; iter != clusteredDigits.end(); ++iter){
-    int strip = (*iter)->channelID() - closestChan;
-    tVec.push_back(std::make_pair(strip,int((*iter)->depositedCharge())));       
+    int strip = (*iter)->channelID().strip() - closestChan.strip();
+    tVec.push_back(std::make_pair(strip,(unsigned int)((*iter)->depositedCharge())));       
   } // i
 
   return tVec;

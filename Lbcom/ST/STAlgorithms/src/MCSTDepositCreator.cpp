@@ -166,7 +166,6 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
       Gaudi::XYZPoint exitPoint = aSector->toLocal(aHit->exit());
       Gaudi::XYZPoint midPoint = aSector->toLocal(aHit->midPoint());
         
-      //if (aSector->localInBox(midPoint.x(), midPoint.y()) == true){
       if (aSector->localInActive(midPoint) == true){
 
 	// deposited charge on strip calc the ionization
@@ -236,8 +235,8 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
                                *ionization*beetleFraction);
   
 	 
-             MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
-             depositCont->insert(newDeposit);
+	    MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
+	    depositCont->insert(newDeposit);
 	  } // has to be some charge
         } // loop iStrip
       }  // in active area

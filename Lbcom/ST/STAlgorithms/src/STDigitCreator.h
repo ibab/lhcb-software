@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.3 2006-02-10 16:32:30 mneedham Exp $
+// $Id: STDigitCreator.h,v 1.4 2006-02-20 16:42:46 mneedham Exp $
 #ifndef _STDigitCreator_H_
 #define _STDigitCreator_H_
 
@@ -51,6 +51,9 @@ private:
   void createDigits(LHCb::MCSTDigits* mcDigitCont,LHCb::STDigits* digitCont);
   void mergeContainers(const std::vector<digitPair>& noiseCont, 
 		       LHCb::STDigits* digitsCont);
+  
+  void addNeighbours(LHCb::STDigits* digitsCont) const;
+  double genInverseTail() const;
   LHCb::MCSTDigit* findDigit(const LHCb::STChannelID& aChan);
  
   std::string m_sigNoiseToolName;
