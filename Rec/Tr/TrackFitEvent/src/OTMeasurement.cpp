@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.8 2006-02-16 17:04:02 erodrigu Exp $
+// $Id: OTMeasurement.cpp,v 1.9 2006-02-20 18:34:01 jvantilb Exp $
 // Include files
 
 // local
@@ -34,8 +34,8 @@ OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
   double driftVelocity = geom.driftDelay(); // ns/mm
   // double wireVelocity  = geom.propagationDelay();      // ns/mm
 
-  m_measure      = m_time->calibratedTime() * m_ambiguity;
-  m_errMeasure   = geom.resolution() * driftVelocity;
+  m_measure      = m_time->calibratedTime() / driftVelocity;
+  m_errMeasure   = geom.resolution() ;
 
   OTChannelID OTChan = m_time->channel();
   DeOTModule* module = geom.module( OTChan );
