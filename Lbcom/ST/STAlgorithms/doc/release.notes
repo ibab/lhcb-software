@@ -1,12 +1,12 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+!======================= STAlgorithms v1r0 2006-02-20 ========================
 ! 2006-02-20
  - some minor bug fixes and tuning
  - also add functionality to STDigitCreator to ensure always have neighbours
    (not used yet) 
 
-!======================= STAlgorithms v1r0 2006-02-14 ========================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
  - Add also dependency on RecEvent, needed by STSummaryCreator...
