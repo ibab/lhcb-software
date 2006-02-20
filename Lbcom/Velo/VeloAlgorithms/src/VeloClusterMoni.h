@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.h,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: VeloClusterMoni.h,v 1.2 2006-02-20 12:45:24 cattanem Exp $
 #ifndef VELOCLUSTERMONI_H 
 #define VELOCLUSTERMONI_H 1
 
@@ -8,7 +8,7 @@
 
 // velo
 #include "Event/MCVeloFE.h"
-#include "Event/InternalVeloCluster.h"
+#include "VeloEvent/InternalVeloCluster.h"
 /** @class VeloClusterMoni VeloClusterMoni.h
  *  
  *

@@ -18,6 +18,7 @@
 // from Event
 #include "Event/MCVeloFE.h"
 #include "Event/VeloDigit.h"
+#include "VeloEvent/InternalVeloCluster.h"
 
 // local
 #include "VeloClusterMaker.h"

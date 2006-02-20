@@ -14,11 +14,14 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-// from Event
-#include "Event/InternalVeloCluster.h"
 
 // fwd declarations
-class VeloDigit;
+namespace LHCb 
+{
+  class VeloDigit;
+  class InternalVeloCluster;
+}
+
 
 class VeloClusterMaker : public GaudiAlgorithm {
 
