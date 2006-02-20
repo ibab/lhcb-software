@@ -1,9 +1,8 @@
-! $Id: release.notes,v 1.36 2006-02-17 17:49:13 robbep Exp $
+! $Id: release.notes,v 1.37 2006-02-20 18:34:17 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
-!=================== Generators v4r0 2006-02-17 ===========================
-
+!=================== Generators v4r1 2006-02-20 ===========================
 ! 2006-02-17 - Patrick Robbe
  - HepMCUtils: add utility functions to help with HepMC structures.
  - ExternalGenerator: change decay heavy particle methods to be able
