@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: STClusterResolution.h,v 1.2 2006-02-20 16:44:32 mneedham Exp $
 #ifndef _STClusterResolution_H
 #define _STClusterResolution_H
 
@@ -63,6 +63,7 @@ private:
 
   std::string m_detType;
   std::string m_clusterLocation;
+  std::string m_asctLocation;
   DeSTDetector* m_tracker;
 
   // selector

@@ -1,4 +1,4 @@
-// $Id: STEffMonitor.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: STEffMonitor.h,v 1.2 2006-02-20 16:44:32 mneedham Exp $
 #ifndef _STEffMonitor_H
 #define _STEffMonitor_H
 
@@ -8,10 +8,9 @@
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// from Associators
-#include "Relations/IAssociator.h" 
 
-
+// LHCbKernel
+#include "Relations/IRelation.h" 
 
 // linkers
 #include "Linker/LinkerTool.h"
@@ -41,8 +40,6 @@ class AIDA::IHistogram2D;
 class STEffMonitor : public GaudiHistoAlg {
 
 public:
-
-  typedef IAssociator<LHCb::MCParticle, LHCb::MCHit> MCHitAsct;
  
   /// constructer
   STEffMonitor(const std::string& name, 
@@ -81,18 +78,21 @@ private:
   
 
   std::string m_detType;
+  std::string m_asctLocation;
   DeSTDetector* m_tracker;
   std::string m_clusterLocation;
  
 
-  // pointer to p to hit associator
-  std::string m_p2STHitAsctName;
-  MCHitAsct* m_p2STHitAsct;
+  // pointer to p to hit associaton
+  typedef IRelation<LHCb::MCParticle,LHCb::MCHit> HitTable;
+  HitTable* m_hitTable;
 
   // selector
   std::string m_selectorName;
   IMCParticleSelector* m_selector;
 
+  std::string m_hitTableLocation;
+ 
   // mapping
   std::map<unsigned int,int> m_Mapping;
 

@@ -25,6 +25,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeITLadder.h"
 
 #include "ITOccupancy.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
@@ -53,6 +54,7 @@ ITOccupancy::ITOccupancy(const std::string& name,
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("binSize", m_binSize = 32);
   declareProperty("dataLocation",m_dataLocation = STDigitLocation::ITDigits);
+  declareProperty("detType", m_detType = "IT");
 
   m_Threshold.reserve(3);
   for (int iThres=0;iThres<3;++iThres){
@@ -67,7 +69,7 @@ ITOccupancy::~ITOccupancy(){
 StatusCode ITOccupancy::initialize(){
 
   //
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType);
+  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
@@ -131,8 +133,8 @@ StatusCode ITOccupancy::initHistograms()
    // uniquely id using station and layer
    int id = this->uniqueInt((*iterLayer)->elementID()); 
 
-   IDetectorElement::IDEContainer children = (*iterLayer)->childIDetectorElements();
-   unsigned int nStripInLayer = nstrip*children.size();
+   const DeITLayer* tLayer = dynamic_cast<const DeITLayer*>(*iterLayer);
+   unsigned int nStripInLayer = nstrip*tLayer->ladders().size();
 
    // add to map
    m_Mapping[id] = numInVector;
@@ -154,7 +156,7 @@ StatusCode ITOccupancy::initHistograms()
 
    IHistogram1D* layerOccHisto = book(histID,
 				   "layer  occupancy."+boost::lexical_cast<std::string>(histID),
-				    0.0, 0.2, 50);
+				    0.0, 0.2, 100);
    m_layerOccHistos.push_back(layerOccHisto);
  
    ++numInVector;

@@ -49,8 +49,10 @@ STClusterResolution::STClusterResolution(const std::string& name,
  
 {
   // constructer
+  this->declareProperty("positionToolName", m_positionToolName = "STOnlinePosition");
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
+  this->declareProperty("asctLocation", m_asctLocation = "TTClusters2MCHits");
 }
 
 STClusterResolution::~STClusterResolution(){
@@ -77,6 +79,8 @@ StatusCode STClusterResolution::initialize(){
 
   m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
+  m_asctLocation = m_clusterLocation+"2MCHits";
+
 
   // intialize histos
   this->initHistograms();
@@ -92,7 +96,7 @@ StatusCode STClusterResolution::execute(){
   STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
-  AsctTool associator(evtSvc(), m_clusterLocation);
+  AsctTool associator(evtSvc(), m_clusterLocation+"2MCHits");
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 

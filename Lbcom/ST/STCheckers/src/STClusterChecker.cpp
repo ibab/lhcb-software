@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.3 2006-02-07 08:47:25 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.4 2006-02-20 16:44:32 mneedham Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -46,7 +46,7 @@ STClusterChecker::STClusterChecker(const std::string& name,
 {
   // constructer
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
- 
+  declareProperty("detType", m_detType = "TT"); 
 }
 
 STClusterChecker::~STClusterChecker(){
@@ -58,7 +58,7 @@ StatusCode STClusterChecker::initialize(){
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
 
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()){
+ if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
  
@@ -99,8 +99,14 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
 
   // fill histos per digit
 
-  // number of deposits that contribute
+  // cluster Size 
   plot((double)aCluster->size(),"num digit per cluster",-0.5,10.5,11);
+
+  // high threshold
+  plot((double)aCluster->highThreshold(),"high threshold",-0.5,1.5,2);
+
+  // neighbour sum
+  plot(aCluster->neighbourSum(),"nSum", -16.5, 16.5, 33);
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
@@ -111,12 +117,15 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
   plot((double)(100*iStation+iLayer),"n clus per layer",-0.5,600.5,601);
 
   if (fullDetail() == true){
+ 
+    plot((double)aCluster->pseudoSize(),"pseudo size",-0.5,10.5,11);
+    //   std::cout << aCluster->pseudoSize() <<  " "<< aCluster->size() << std::endl;
+    plot((double)aCluster->interStripFraction(),"interstrip frac",-0.125,1.125,5);
 
-    DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
+    const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0){
-
-      plot(aCluster->totalCharge(),aSector->type(), 0., 200., 200);
-      plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type(), 0., 200., 200);
+      plot(aCluster->totalCharge(),aSector->type()+"_charge", 0., 200., 200);
+      plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type()+"_sn", 0., 200., 200);
     }  
 
   }

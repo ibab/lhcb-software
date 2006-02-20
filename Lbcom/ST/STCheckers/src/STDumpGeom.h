@@ -1,15 +1,14 @@
-// $Id: ITDumpGeom.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
-#ifndef _ITDumpGeom_H
-#define _ITDumpGeom_H
-
+// $Id: STDumpGeom.h,v 1.1 2006-02-20 16:44:32 mneedham Exp $
+#ifndef _STDumpGeom_H
+#define _STDumpGeom_H
 
 #include <string>
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-class DeITDetector;
+class DeSTDetector;
 
-/** @class ITDumpGeom ITDumpGeom.h
+/** @class STDumpGeom STDumpGeom.h
  *
  *  Class for printing out geometry
  *
@@ -17,16 +16,16 @@ class DeITDetector;
  *  @date   21/4/2001
  */
 
-class ITDumpGeom : public GaudiAlgorithm {
+class STDumpGeom : public GaudiAlgorithm {
 
 public:
  
   /// constructer
-  ITDumpGeom(const std::string& name, 
+  STDumpGeom(const std::string& name, 
                  ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~ITDumpGeom();
+  virtual ~STDumpGeom();
 
   /// initialize
   StatusCode initialize();
@@ -35,14 +34,14 @@ public:
   StatusCode execute();
 
 
-
 private:
 
-  DeITDetector* m_tracker;
+  std::string m_detType;
+  DeSTDetector* m_tracker;
  
 };
 
-#endif // _ITDumpGeom_H
+#endif // _STDumpGeom_H
 
 
 

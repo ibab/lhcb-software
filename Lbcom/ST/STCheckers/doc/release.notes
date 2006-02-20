@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-02-20 
+ - Minor bug fixes - mainly in paths
+
 !============================ STCheckers v1r0 2006-02-15 =======================
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent

@@ -54,13 +54,13 @@ STEffMonitor::STEffMonitor(const std::string& name,
   m_tracker(0)
 {
  
-  this->declareProperty( "MCP2STMCHitAscName", 
-                          m_p2STHitAsctName = "MCP2TTMCHitAsc");
+  this->declareProperty( "hitTableLocation", 
+                         m_hitTableLocation = "/Event/Rec/Relations/MCP2TTMCHit");
+
+
 
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
-
   this->declareProperty("detType", m_detType = "TT");
-
 }
 
 STEffMonitor::~STEffMonitor(){
@@ -69,7 +69,7 @@ STEffMonitor::~STEffMonitor(){
 
 StatusCode STEffMonitor::initialize(){
 
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType);
+  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
 
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()){
@@ -81,13 +81,14 @@ StatusCode STEffMonitor::initialize(){
 
   m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
-  STDetSwitch::flip(m_detType,m_p2STHitAsctName);
+  STDetSwitch::flip(m_detType,m_hitTableLocation);
 
   // Retrieve MCParticle 2 ST MCHit associator
-  m_p2STHitAsct = tool<MCHitAsct >("Associator<MCParticle,MCHit>" ,m_p2STHitAsctName);
 
   // selector
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
+
+  m_asctLocation = m_clusterLocation+"2MCHits";
 
   // init histos
   initHistograms();
@@ -104,7 +105,23 @@ StatusCode STEffMonitor::execute(){
   AsctTool associator(evtSvc(), m_clusterLocation);
   m_table = associator.inverse();
   if (!m_table) return Error("Failed to find table", StatusCode::FAILURE);
-  
+
+  m_hitTable = get<HitTable>(m_hitTableLocation);
+  if (!m_hitTable) return Error("Failed to find hit table", StatusCode::FAILURE);
+  /*
+  MCHits* hits  = get<MCHits>(MCHitLocation::TT);
+  MCHits::iterator tIter = hits->begin();  
+  while (tIter != hits->end()){
+    Range range = m_table->relations(*tIter);
+    if (range.empty() == true) {
+     std::cout << "empty" << std::endl;
+    }
+    else {
+      std::cout << "not empty" << std::endl;
+    } // tIter
+    ++tIter;
+  }
+  */
   MCParticles::const_iterator iterPart = particles->begin(); 
   for ( ; iterPart != particles->end(); ++iterPart){
     if (m_selector->accept(*iterPart)){
@@ -249,65 +266,63 @@ StatusCode STEffMonitor::initHistograms(){
  return StatusCode::SUCCESS;
 }
 
-
-
 StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
 
   // find all MC hitsts
-  MCHitAsct::ToRange hits = m_p2STHitAsct->rangeFrom(aParticle);
+
+  HitTable::Range hits = m_hitTable->relations( aParticle) ;
   if (hits.empty()){
      return StatusCode::FAILURE;
   }
 
+ 
   std::vector<DeSTLayer*>::const_iterator iterLayer = m_tracker->layers().begin();
   for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
  
      // look for MCHit in this layer.....
-     MCHitAsct::ToIterator iterHit = hits.begin();
+     HitTable::Range::iterator iterHit = hits.begin();
      std::vector<MCHit*> layerHits;  
      while (iterHit != hits.end()){
        MCHit* aHit = iterHit->to(); 
-       Gaudi::XYZPoint aPoint = aHit->midPoint();
-       if ((*iterLayer)->isInside(0.5*aPoint)){
+       if ((*iterLayer)->isInside(aHit->midPoint())){
 	 layerHits.push_back(aHit);
        }
        ++iterHit;
      } // iterHit
 
-     bool found = false;
      if (layerHits.size() != 0){
+       bool found = false;
        std::vector<MCHit*>::iterator tIter = layerHits.begin();  
        while ((tIter != layerHits.end())&&(found == false)){
          Range range = m_table->relations(*tIter);
-         if (range.empty()  == true) {
-           ++tIter;  
+         if (range.empty() == true) {
+            ++tIter;  
 	 }
          else {
-           found = false; 
+	    found = true; 
 	 }
-         
-        }
-     } // iterHit
-   
-     int iHistoId = findHistoId(uniqueHistoID((*iterLayer)->elementID()));
-     MCHit* aHit = layerHits.front(); 
-     const Gaudi::XYZPoint midPoint = aHit->midPoint();
+       } // tIter
+       
+       int iHistoId = findHistoId(uniqueHistoID((*iterLayer)->elementID()));
+       MCHit* aHit = layerHits.front(); 
+       const Gaudi::XYZPoint midPoint = aHit->midPoint();
 
-     // histo vs x
-     m_xLayerHistos[iHistoId]->fill(midPoint.x()/cm);    
+       // histo vs x
+       m_xLayerHistos[iHistoId]->fill(midPoint.x()/cm);    
 
-     // histo vs y
-     m_yLayerHistos[iHistoId]->fill(midPoint.y()/cm); 
+       // histo vs y
+       m_yLayerHistos[iHistoId]->fill(midPoint.y()/cm); 
 
-     //  xy 
-     m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
+       //  xy 
+       m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
 
-     if (found == true){
-       m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
-       m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
-       m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
-     }
+       if (found == true){
+         m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
+         m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
+         m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
+       }
   
+     } //if
   } // iterLayer
 
   return StatusCode::SUCCESS;

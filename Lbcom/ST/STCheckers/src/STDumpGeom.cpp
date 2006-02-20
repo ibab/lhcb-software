@@ -12,39 +12,36 @@
 #include "GaudiKernel/AlgFactory.h"
 
 
-#include "TTDumpGeom.h"
+#include "STDumpGeom.h"
 
 // xml geometry
 #include "DetDesc/IGeometryInfo.h"
-#include "STDet/DeTTDetector.h"
-#include "STDet/DeTTStation.h"
-#include "STDet/DeSTStation.h"
-#include "STDet/DeTTLayer.h"
-#include "STDet/DeTTHalfModule.h"
-#include "STDet/DeTTSector.h"
+#include "STDet/DeSTDetector.h"
+#include "STDet/DeSTSector.h"
 
-static const AlgFactory<TTDumpGeom> s_Factory;
-const IAlgFactory& TTDumpGeomFactory = s_Factory;
+static const AlgFactory<STDumpGeom> s_Factory;
+const IAlgFactory& STDumpGeomFactory = s_Factory;
 
 //--------------------------------------------------------------------
 //
-//  TTDumpGeom : Check digitization procedure for the outer tracker
+//  STDumpGeom : Check digitization procedure for the outer tracker
 //
 //--------------------------------------------------------------------
 
-TTDumpGeom::TTDumpGeom(const std::string& name, 
+STDumpGeom::STDumpGeom(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
   GaudiAlgorithm(name, pSvcLocator),
   m_tracker(0)
 {
   // constructer
+  declareProperty("detType", m_detType="TT");
 }
 
-TTDumpGeom::~TTDumpGeom(){
+STDumpGeom::~STDumpGeom(){
   // destructer
 }
 
-StatusCode TTDumpGeom::initialize(){
+StatusCode STDumpGeom::initialize(){
 
   // initialize  
   StatusCode sc = GaudiAlgorithm::initialize();
@@ -53,7 +50,7 @@ StatusCode TTDumpGeom::initialize(){
   }
 
 
-  m_tracker =  getDet<DeTTDetector>(DeSTDetLocation::TT);
+  m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
   if (m_tracker != 0 ){
     DeSTDetector::Sectors tSectors = m_tracker->sectors();
     DeSTDetector::Sectors::const_iterator iterSector = tSectors.begin();
@@ -67,7 +64,7 @@ StatusCode TTDumpGeom::initialize(){
 
 }
 
-StatusCode TTDumpGeom::execute(){
+StatusCode STDumpGeom::execute(){
 
   // execute once per event
   return StatusCode::SUCCESS;
