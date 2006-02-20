@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.39 2006-02-10 14:09:26 cattanem Exp $
+! $Id: release.notes,v 1.40 2006-02-20 12:23:18 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
 
-!====================== VeloEvent v14r0 2006-02-10 =======================
+!====================== VeloEvent v14r0 2006-02-20 =======================
+! 2006-02-20 - Marco Cattaneo
+ - Remove all "public" VeloEvent classes. Package now contains only Velo 
+   internal classes, and does not produce a dictionary. To distinguish from
+   public classes, header files are produced in VeloEvent sub-directory
+
 ! 2006-02-10 - Marco Cattaneo
  - Add InternalVeloCluster and VeloFullFPGADigit, to avoid coupling between
    VeloAlgorithms package and VeloAssociators
