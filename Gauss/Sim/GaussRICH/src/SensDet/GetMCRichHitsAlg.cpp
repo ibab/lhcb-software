@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.11 2006-02-16 16:17:23 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.12 2006-02-20 15:52:43 seaso Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -241,11 +241,16 @@ StatusCode GetMCRichHitsAlg::execute()
           Warning( "Radiator ID < 0 and track ID > 0 -> Radiator history unknown",
                    StatusCode::SUCCESS );
         }
-        else
-        {
-          Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
-                   StatusCode::SUCCESS );
-        }
+        // the following case is when a non-pe charged track passes through 
+	// a Silicon detector and creates a MIP signal  like in  a tracking det.
+        // In this case there is no radiator history, since there was 
+        // no cherenkov radiation at all. hece the 'warning' flag is commeted out.
+        // SE 20-2-06.
+	//        else
+	// {
+	  //   Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
+          //         StatusCode::SUCCESS );
+	// }
 
         // If a signel hit, store info
         if ( rad != Rich::InvalidRadiator )
