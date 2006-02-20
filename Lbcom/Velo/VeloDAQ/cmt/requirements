@@ -2,13 +2,13 @@
 # Maintainer : Chris Parkes
 #
 package VeloDAQ
-version v2r3p2
+version v3r0
 
 # Structure, i.e. directories to process. 
 #===========================================================================
 branches cmt doc src
 
-include_dirs $(VELODAQROOT)
+include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
@@ -19,7 +19,7 @@ use  SiDAQ      v*  Si
 
 # Component library building rule
 #============================================================================
-library          VeloDAQ    ../src/*.cpp -import=AIDA -import=VeloKernel
+library          VeloDAQ    ../src/*.cpp
 
 apply_pattern component_library library=VeloDAQ
 

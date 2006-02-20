@@ -1,4 +1,4 @@
-// $Id: VeloRawBankDecoder.h,v 1.2 2006-02-15 15:48:21 krinnert Exp $
+// $Id: VeloRawBankDecoder.h,v 1.1 2006-02-20 15:29:34 cattanem Exp $
 #ifndef VELORAWBANKDECODER_H 
 #define VELORAWBANKDECODER_H 1
 
@@ -8,9 +8,9 @@
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
 
-#include "VeloDAQ/VeloRawBufferWord.h"
+#include "VeloRawBufferWord.h"
 
-#include "VeloDAQ/VeloClusterWord.h"
+#include "VeloClusterWord.h"
 
 // forward declaration needed for friendship with iterators
 class VeloRawBankDecoder;

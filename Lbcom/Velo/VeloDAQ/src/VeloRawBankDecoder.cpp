@@ -1,6 +1,6 @@
-// $Id: VeloRawBankDecoder.cpp,v 1.1 2006-02-14 18:25:36 krinnert Exp $
+// $Id: VeloRawBankDecoder.cpp,v 1.2 2006-02-20 15:29:33 cattanem Exp $
 
-#include "VeloDAQ/VeloRawBankDecoder.h"
+#include "VeloRawBankDecoder.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloRawBankDecoder
