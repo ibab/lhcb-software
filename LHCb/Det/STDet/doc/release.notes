@@ -2,13 +2,13 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r0 2006-02-20 =======================
 ! 2006-02-20
  - Bug fix in next left and right
 
 ! 2006-02-16 M Needham
  - Bug fix in trajectory calc
 
-!========================= STDet v2r0 2006-02-15 =======================
 ! 2006-02-15 - Marco Cattaneo
  - Remove unimplemented method DeSTDetector::pitch
 
