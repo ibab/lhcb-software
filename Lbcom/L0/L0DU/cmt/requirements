@@ -1,20 +1,19 @@
 package		L0DU
-version 	v8r0
+version 	v7r0
 
 # ================ structure =============================================
-branches	src cmt doc options L0DU
-include_dirs    $(L0DUROOT)
+branches	src cmt doc options
 include_path none
 
 # ================ options ===============================================
 set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v15*    Event
+use L0Event     v*    Event
 use DAQEvent    v*    Event
-use CaloDet     v*      Det
+use CaloDet     v*    Det
 # ================ component library =====================================
-library		L0DU  ../src/*.cpp ../src/component/*.cpp ../src/pattern/*.cpp
+library		L0DU  *.cpp
 
 apply_pattern component_library library=L0DU
 

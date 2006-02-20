@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.1 2006-02-18 11:29:37 ocallot Exp $
+// $Id: L0DU.cpp,v 1.2 2006-02-20 09:38:46 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 // local
 #include "L0DU.h"
 // Interface
-#include "L0DU/IL0Candidate.h"
+#include "IL0Candidate.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0DU
