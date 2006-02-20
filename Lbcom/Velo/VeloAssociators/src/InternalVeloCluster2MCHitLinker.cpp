@@ -5,7 +5,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 // Event model
-#include "Event/InternalVeloCluster.h"
+#include "VeloEvent/InternalVeloCluster.h"
 #include "Event/MCVeloFE.h"
 #include "Event/MCHit.h"
 
@@ -22,10 +22,7 @@
 // 2006-02-07 : Tomasz Szumlak
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-
-static const  AlgFactory<InternalVeloCluster2MCHitLinker>          s_factory ;
-const        IAlgFactory& InternalVeloCluster2MCHitLinkerFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( InternalVeloCluster2MCHitLinker );
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -12,13 +12,13 @@
 #include "GaudiKernel/StatusCode.h"
 #include "Event/MCVeloFE.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/SmartRef.h"
-#include "Event/InternalVeloCluster.h"
 #include <map>
 
-class MCHit;
-class MCParticle;
-class InternalVeloCluster;
+namespace LHCb 
+{
+  class MCHit;
+  class InternalVeloCluster;
+}
 
 namespace VeloTruthTool{
 

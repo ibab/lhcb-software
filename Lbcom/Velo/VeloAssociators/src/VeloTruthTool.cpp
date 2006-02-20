@@ -1,5 +1,5 @@
 #include "VeloTruthTool.h"
-#include "Event/InternalVeloCluster.h"
+#include "VeloEvent/InternalVeloCluster.h"
 #include "Event/MCVeloFE.h"
 #include "Event/MCHit.h"
 
