@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.15 2006-02-17 14:50:59 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.16 2006-02-20 09:55:38 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -106,12 +106,12 @@ StatusCode BooleInit::execute() {
 
   // Add the ODIN bank (EDMS 704084)
   unsigned int odin[8];
-  odin[0] = 0; // Orbit number
-  odin[1] = 0xFFFFFFFF & evt->evtNumber();
-  odin[2] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
-  odin[3] = 0xFFFFFFFF & evt->evtTime();
-  odin[4] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
-  odin[5] = evt->runNumber();
+  odin[0] = evt->runNumber();
+  odin[1] = 0; // Orbit number
+  odin[2] = 0xFFFFFFFF & evt->evtNumber();
+  odin[3] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
+  odin[4] = 0xFFFFFFFF & evt->evtTime();
+  odin[5] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
   odin[6] = 0; // Error bits [31-24], Detector status [23-0]
   odin[7] = 0; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
   
