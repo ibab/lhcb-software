@@ -11,12 +11,12 @@
 ]>
 <gdd>
 
-<package name="VeloEvent">
+<package name="DigiEvent">
     <class name="&className;" 
      author="C Parkes" 
      desc="A cluster as produced by the TELL1 but without full ADC information"
      serializers = "FALSE">
-     <location name="VeloClusters"   place="Rec/Velo/VeloLiteClusters"   />
+     <location name="VeloClusters"   place="Raw/Velo/LiteClusters"   />
 
   &VeloLiteClusterClass;
 

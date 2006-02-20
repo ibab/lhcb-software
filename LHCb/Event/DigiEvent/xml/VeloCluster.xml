@@ -9,13 +9,13 @@
 <!ENTITY VeloClusterClass SYSTEM "SiCluster.ent">
 ]>
 <gdd>
- <package name="VeloEvent">
+ <package name="DigiEvent">
     <class name="VeloCluster"
      id="4006"
      author="Chris Parkes"
      desc="A cluster as produced by the TELL1 with full ADC information."
      serializers="FALSE">
-     <location name="VeloClusters"   place="Rec/Velo/VeloClusters"   />
+     <location name="VeloClusters"   place="Raw/Velo/Clusters"   />
      
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
