@@ -48,6 +48,7 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
    const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
 
    os << " Sector :  "  << name()
+      << "\n ID " << id() 
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
@@ -66,6 +67,7 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 
   // stream to Msg service
   os << " Sector : \n "  << name()
+     << "\n ID " << id() 
      << "type \n " << type() 
      << " pitch \n " << m_pitch 
      << "n strip \n " << m_nStrip
@@ -228,7 +230,7 @@ void DeSTSector::cacheTrajectory() {
 
 STChannelID DeSTSector::nextLeft(const STChannelID testChan) const{
 
-  if ((contains(testChan))&& (isStrip(testChan.strip()+ 1u) == true)){
+  if ((contains(testChan))&& (isStrip(testChan.strip()- 1u) == true)){
     return STChannelID(testChan.type(),
                       testChan.station(),
                       testChan.layer(), 
