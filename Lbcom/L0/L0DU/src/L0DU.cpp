@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.2 2006-02-20 09:38:46 cattanem Exp $
+// $Id: L0DU.cpp,v 1.3 2006-02-20 10:43:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -292,7 +292,7 @@ StatusCode L0DU::finalize() {
   m_channelsCont.clear();
   m_conditionsCont.clear();
 
-  return StatusCode::SUCCESS; 
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 
