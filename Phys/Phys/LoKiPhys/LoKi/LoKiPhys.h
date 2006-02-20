@@ -1,8 +1,11 @@
-// $Id: LoKiPhys.h,v 1.3 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: LoKiPhys.h,v 1.4 2006-02-20 09:46:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_LOKIPHYS_H 
 #define LOKI_LOKIPHYS_H 1
@@ -23,6 +26,7 @@
 #include "LoKi/PhysCnv.h"
 #include "LoKi/PhysCnv.h"
 #include "LoKi/PhysRangeTypes.h"
+#include "LoKi/PhysHelpers.h"
 // ============================================================================
 
 // ============================================================================

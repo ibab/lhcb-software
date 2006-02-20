@@ -1,13 +1,20 @@
-// $Id: Helpers.h,v 1.1 2006-02-19 21:49:11 ibelyaev Exp $
+// $Id: PhysHelpers.h,v 1.1 2006-02-20 09:46:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:11  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
-#ifndef LOKI_HELPERS_H 
-#define LOKI_HELPERS_H 1
+#ifndef LOKI_PHYSHELPERS_H 
+#define LOKI_PHYSHELPERS_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/Helpers.h"
 // ============================================================================
 
 // ============================================================================
@@ -121,45 +128,11 @@ namespace LoKi
       return found ;
     };
 
-    /** @fn _First 
-     *  trivial helper which returns either the first element 
-     *  of the container, or its default" value (for empty 
-     *  container)
-     *  @param cnt the container itself 
-     *  @return the front element (or its defualt value)
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-19
-     */
-    template <class CONTAINER> 
-    inline typename CONTAINER::value_type _First
-    ( const CONTAINER& cnt ) 
-    {
-      if ( !cnt.empty() ) { return *(cnt.begin()) ; }
-      return typename CONTAINER::value_type() ;
-    } ;
-    
-    /** @fn _First 
-     *  trivial helper which returns either the first element 
-     *  of the container, or its default" value (for empty 
-     *  or invalid container)
-     *  @param cnt pointer to the the container
-     *  @return the front element (or its defualt value)
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-02-19
-     */
-    template <class CONTAINER> 
-    inline typename CONTAINER::value_type _First
-    ( const CONTAINER* cnt ) 
-    { 
-      if ( 0 != cnt ) { return _First(*cnt) ; }
-      return typename CONTAINER::value_type() ; 
-    }
-    
   }; // end of namespace LoKi::Helpers 
 } ; // end of namespace LoKi 
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_HELPERS_H
+#endif // LOKI_PHYSHELPERS_H
 // ============================================================================
