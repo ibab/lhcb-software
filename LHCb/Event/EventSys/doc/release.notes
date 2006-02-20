@@ -1,14 +1,15 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v21r0 2006-02-15 ========================
-! 2006-02-15 - Marco Cattaneo
+!======================== EventSys v21r0 2006-02-20 ========================
+! 2006-02-20 - Marco Cattaneo
  - Major new version for backards incompatible DC06 changes
  - Obsolete packages removed: Event, DC04Hacks, TrEvent, TrgEvent, ITEvent
-     CaloEvent, RichEvent, OTEvent, VeloEvent, MuonEvent, EventUtils
+     CaloEvent, RichEvent, OTEvent, MuonEvent, EventUtils
  - Packages added: EventBase v1r1, MCEvent v1r1, DigiEvent v1r0, RecEvent v1r0
  - Packages modified: DAQEvent v6r2, GenEvent v4r1, L0Event v15r0, 
-     LinkerEvent v2r0, TrackEvent v2r0, PhysEvent v9r0, EventAssoc v3r0
+     LinkerEvent v2r0, TrackEvent v2r0, PhysEvent v9r0, EventAssoc v3r0,
+     VeloEvent v14r0
  - Packages temporarily disabled: PackedEvent
 
 ! 2006-02-15 - Marco Cattaneo
