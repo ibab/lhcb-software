@@ -17,17 +17,18 @@
 #include "Event/MCHit.h"
 
 // local
-#include "Associators/MCParticle2MCHitAlg.h"
+#include "MCParticle2MCHitAlg.h"
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<MCParticle2MCHitAlg>          s_factory ;
 const        IAlgFactory& MCParticle2MCHitAlgFactory = s_factory ; 
 
+using namespace LHCb;
 
 MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator):
   GaudiAlgorithm ( name , pSvcLocator ),
-  m_inputData( MCHitLocation::OTHits),
+  m_inputData(),
   m_outputData( "Rec/Relations/MCParticle2MCHit" )
 {
   // Standard constructor, initializes variables
@@ -53,12 +54,14 @@ StatusCode MCParticle2MCHitAlg::execute()
   /// typedef
   typedef Relation1D<MCParticle, MCHit> LocalDirectType;
 
+  std::cout << "Matt: got herw " << std::endl;
+
   // create an association table
   LocalDirectType* table = new LocalDirectType();
 
   // loop over MCHits
   for(MCHits::const_iterator itHit = mcHits->begin();
-      itHit != mcHits->end(); itHit++) {
+      itHit != mcHits->end(); ++itHit) {
     // retrieve MCHit
     MCHit* mcHit = *itHit ;
     if (!mcHit) {
@@ -66,7 +69,7 @@ StatusCode MCParticle2MCHitAlg::execute()
     }
     
     // retrieve associated MCParticle
-    MCParticle* mcPart = mcHit->mcParticle();
+    const MCParticle* mcPart = mcHit->mcParticle();
 
     // relate in table 
     table->relate(mcPart, mcHit);
@@ -74,6 +77,8 @@ StatusCode MCParticle2MCHitAlg::execute()
   
   // Register the table on the TES
   put( table, outputData() );
+
+  std::cout << "Matt: got herw " << std::endl;
 
   return StatusCode::SUCCESS ;
 };

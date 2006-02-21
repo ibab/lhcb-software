@@ -3,19 +3,15 @@
 package Associators
 version v2r4p1
 
-branches Associators src cmt doc
+branches src cmt doc
 
-include_dirs $(ASSOCIATORSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use VeloEvent   v* Event
-use L0Event	v* Event
-use CaloEvent   v* Event
-use TrEvent	v* Event
+use MCEvent	v* Event
 
-use Relations   v2r* Kernel 
+use Relations   v3r* Kernel 
 
 # default library
 #============================================================================

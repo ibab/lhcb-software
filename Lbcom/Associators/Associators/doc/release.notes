@@ -1,6 +1,9 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! 2006-02-21
+ - Move to LHCb v20r0
+
 !====================== Associators v2r4p1 2005-01-20 ======================
 ! 2005-01-20 - Marco Cattaneo
  - Add explicit use of TrEvent, no longer inherited from CaloEvent

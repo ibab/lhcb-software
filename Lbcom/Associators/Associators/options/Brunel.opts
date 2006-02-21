@@ -1,23 +1,29 @@
 // MCPArticle to Velo MCHits association
 ToolSvc.MCP2VeloMCHitAsc.Location      = "Rec/Relations/MCP2VeloMCHit";
 DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2VeloMCHit'
-                                 TYPE = 'MCParticle2MCVeloHitAlg/MCP2VeloMCHitAlg' " };
+                                 TYPE = 'MCParticle2MCHitAlg/MCP2VeloMCHitAlg' " };
 MCP2VeloMCHitAlg.MCHitPath  = "MC/Velo/Hits"; // MCVeloHitLocation::Default
-MCP2VeloMCHitAlg.OutputData  = "Rec/Relations/MCP2VeloMCHit";
-ToolSvc.MCP2VeloMCHitAsc.OutputLevel = 5;
+MCP2VeloMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2VeloMCHit";
 
 // MCParticle to OT MCHits association
 ToolSvc.MCP2OTMCHitAsc.Location      = "Rec/Relations/MCP2OTMCHit";
 DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2OTMCHit'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2OTMCHitAlg' " };
 MCP2OTMCHitAlg.MCHitPath  = "MC/OT/Hits"; // MCHitLocation::OTHits
-MCP2OTMCHitAlg.OutputData  = "Rec/Relations/MCP2OTMCHit";
-ToolSvc.MCP2OTMCHitAsc.OutputLevel = 5;
+MCP2OTMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2OTMCHit";
+
+
+// MCParticle to TT MCHits association
+DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2TTMCHit'
+                                 TYPE = 'MCParticle2MCHitAlg/MCP2TTMCHitAlg' " };
+MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::ITHits
+MCP2TTMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2TTMCHit";
+
 
 // MCParticle to IT MCHits association
-ToolSvc.MCP2ITMCHitAsc.Location      = "Rec/Relations/MCP2ITMCHit";
 DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2ITMCHit'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2ITMCHitAlg' " };
 MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::ITHits
-MCP2ITMCHitAlg.OutputData  = "Rec/Relations/MCP2ITMCHit";
-ToolSvc.MCP2ITMCHitAsc.OutputLevel = 5;
+MCP2ITMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2ITMCHit";
+
+
