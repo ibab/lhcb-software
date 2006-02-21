@@ -1,6 +1,6 @@
-// $Id: TrajOTProjector.h,v 1.4 2006-02-20 18:37:31 jvantilb Exp $
-#ifndef TRACKPROJECTORS_TRAJOTPROJECTOR_H 
-#define TRACKPROJECTORS_TRAJOTPROJECTOR_H 1
+// $Id: TrajOTProjector.h,v 1.5 2006-02-21 18:28:25 jvantilb Exp $
+#ifndef TRAJOTPROJECTOR_H 
+#define TRAJOTPROJECTOR_H 1
 
 // Include files
 

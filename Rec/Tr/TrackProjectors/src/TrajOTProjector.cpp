@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.4 2006-02-20 18:37:31 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.5 2006-02-21 18:28:25 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -10,15 +10,15 @@
 // from OTDet
 #include"OTDet/DeOTDetector.h"
 
+// from LHCbKernel
+#include "Kernel/LineTraj.h"
+
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
-#include "Kernel/LineTraj.h"
 #include "Event/StateTraj.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrajPoca.h"
-
-#include <numeric>
 
 // local
 #include "TrajOTProjector.h"
@@ -53,7 +53,9 @@ StatusCode TrajOTProjector::project( const State& state,
   double cosA = cos( stereoAngle );
   double sinA = sin( stereoAngle );
   XYZVector dir =  XYZVector( -sinA, cosA, 0. );
-  const std::pair<double,double> range(-999.,999.);
+  if ( module->bottomModule() ) dir *= -1.;
+  double halfWireLength = module -> wireLength() / 2.;
+  const std::pair<double,double> range( -halfWireLength, halfWireLength );
   LineTraj measTraj = LineTraj( centrePos, dir, range );
   // TODO : WHAT WE WANT!!!
   // Trajectory& measTraj = m_det -> trajectory( meas.lhcbID().otID() );
@@ -62,8 +64,8 @@ StatusCode TrajOTProjector::project( const State& state,
   XYZVector distance;
 
   // Determine initial estimates of s1 and s2
-  s1 = 0.0; // state is already close to the minimum
-  m_poca -> minimize( measTraj, s2, refTraj.position(s1), distance, 20*mm );
+  s1 = 0.0; // Assume state is already close to the minimum
+  s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
   m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
@@ -80,8 +82,7 @@ StatusCode TrajOTProjector::project( const State& state,
   int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
   // Get the distance to the readout
-  double distToReadout = measTraj.length() - fabs( refTraj.position(s1).Y() ); 
-  // TODO: use the arclength s1 to get the distance to readout
+  double distToReadout = measTraj.length() / 2. - s2;  
 
   // Correct measure for the propagation along the wire
   double dDrift = otmeas.measure() - 
@@ -91,7 +92,9 @@ StatusCode TrajOTProjector::project( const State& state,
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
   m_H *= signDist; // Correct for the sign of the distance
   
-  // TODO: use the reference trajectory again.
+  // TODO: when error on the measurement depends on the position of the
+  //       track use the reference trajectory again. This will be the case
+  //       when the error depends on the drift distance.
   computeErrorResidual( state, meas );
 
   return StatusCode::SUCCESS;

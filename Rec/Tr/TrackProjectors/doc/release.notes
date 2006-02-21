@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-21 - Jeroen van Tilburg
+ - Added TrajSTProjector class.
+ - TrajOTProjector: Implemented correctly length of a wire.
+
 !====================== TrackProjectors v2r0 2006-02-21 ======================
 ! 2006-02-21 - David Hutchcroft
  - Updated VeloPhiProjector to work with new VeloClusters
