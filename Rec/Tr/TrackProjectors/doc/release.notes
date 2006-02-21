@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r0 2006-02-21 ======================
 ! 2006-02-21 - David Hutchcroft
  - Updated VeloPhiProjector to work with new VeloClusters
 
@@ -13,7 +14,6 @@
    m_residual introduced by previous cvs release. Movement to distance domain
    was already made in the previous cvs release.
 
-!====================== TrackProjectors v2r0 2006-02-16 ======================
 ! 2006-02-16 - Edwin Bos
  - Moved to LHCb v20r0
  - Removed *Ray* due to introduction of Trajectories
