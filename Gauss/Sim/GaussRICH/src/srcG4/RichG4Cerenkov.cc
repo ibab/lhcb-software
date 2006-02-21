@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.10 2006-02-21 17:06:12 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.11 2006-02-21 17:50:38 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -335,11 +335,11 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
   }
    // test analysis by SE. Not needed for regular production running.
-  //RichG4CherenkovProdFeaturesHisto(aTrack);
-  RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
-  if( aRichG4QwAnalysis->qwAnalysisNtupleBooked() ) {
-    aRichG4QwAnalysis ->FillQwAnalysisHisto(aTrack);
-  }
+  // RichG4CherenkovProdFeaturesHisto(aTrack);
+  // RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
+  // if( aRichG4QwAnalysis->qwAnalysisNtupleBooked() ) {
+  //  aRichG4QwAnalysis ->FillQwAnalysisHisto(aTrack);
+  // }
     // end of test analysis by SE
 
   if (verboseLevel>0) {

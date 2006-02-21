@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussRICH v6r1 2006-02-17 ===========================
+! 2006-02-21  Sajan Easo
+ - The Flag for MC particle creation for the case of charged particle hitting
+  the HPD Si Det activated in SensDet.cpp. 
+ - Some histograms updated 
 ! 2006-02-16 - Chris Jones
  - Update GetMCRichHitsAlg for new MC flags
 
