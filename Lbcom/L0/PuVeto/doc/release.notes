@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.37 2006-02-20 09:28:02 cattanem Exp $
+! $Id: release.notes,v 1.38 2006-02-21 15:58:56 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-02-21 - Olivier Callot
+ - If no peaks, avoid coding -1 in the L0DU data, this just sets wrong bits.
 
 !======================== PuVeto v7r0 2006-02-20 ========================
 ! 2006-02-18 - Olivier Callot

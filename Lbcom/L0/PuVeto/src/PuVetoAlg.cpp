@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.22 2006-02-20 10:46:47 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.23 2006-02-21 15:58:56 ocallot Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -323,9 +323,11 @@ StatusCode PuVetoAlg::execute() {
 
 
   PuWord1 = PuWord1 | (((unsigned int) height1) << L0DUBase::L0Pu::Peak::Shift    );
+  if(0 < bin1 )
   PuWord1 = PuWord1 | (((unsigned int) bin1)    << L0DUBase::L0Pu::Address::Shift );
   PuWord2 = PuWord2 | (((unsigned int) sum2)    << L0DUBase::L0Pu::Peak::Shift    );
-  PuWord2 = PuWord2 | (((unsigned int) bin2)    << L0DUBase::L0Pu::Address::Shift );
+  if(0 < bin2 )
+    PuWord2 = PuWord2 | (((unsigned int) bin2)    << L0DUBase::L0Pu::Address::Shift );
   PuWord2 = PuWord2 | ((tmt & 3)                << L0DUBase::L0Pu::HitsLSB::Shift );
   PuWord2 = PuWord2 | ((tmt >> 2)               << L0DUBase::L0Pu::HitsMSB::Shift );
   
