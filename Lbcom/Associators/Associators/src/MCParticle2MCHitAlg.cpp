@@ -29,7 +29,7 @@ MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator):
   GaudiAlgorithm ( name , pSvcLocator ),
   m_inputData(),
-  m_outputData( "Rec/Relations/MCParticle2MCHit" )
+  m_outputData( "Relations/" + LHCb::MCParticleLocation::Default + "2MCHits" )
 {
   // Standard constructor, initializes variables
   declareProperty( "MCHitPath", m_inputData );

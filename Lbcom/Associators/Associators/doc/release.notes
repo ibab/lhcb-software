@@ -1,7 +1,12 @@
 ! Package     : Associators
-! Responsible : Rutger Hierck
+! Responsible : Matt Needham
+!---------------------------------------------------------------------------
 
-! 2006-02-21
+!====================== Associators v3r0 2006-02-21 ========================
+! 2006-02-21 - Marco Cattaneo
+ - Adapt output paths to agreed convention
+
+! 2006-02-21 - Matt Needham
  - Move to LHCb v20r0
 
 !====================== Associators v2r4p1 2005-01-20 ======================

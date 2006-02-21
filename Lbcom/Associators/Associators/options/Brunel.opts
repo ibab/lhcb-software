@@ -1,29 +1,27 @@
-// MCPArticle to Velo MCHits association
-ToolSvc.MCP2VeloMCHitAsc.Location      = "Rec/Relations/MCP2VeloMCHit";
-DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2VeloMCHit'
+// MCParticle to Velo MCHits association
+DataOnDemandSvc.Algorithms += { "DATA = '/Event/Relations/MC/Particles2MCVeloHits'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2VeloMCHitAlg' " };
-MCP2VeloMCHitAlg.MCHitPath  = "MC/Velo/Hits"; // MCVeloHitLocation::Default
-MCP2VeloMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2VeloMCHit";
+MCP2VeloMCHitAlg.MCHitPath  = "MC/Velo/Hits"; // MCHitLocation::Velo
+MCP2VeloMCHitAlg.OutputData  = "/Event/Relations/MC/Particles2MCVeloHits";
 
 // MCParticle to OT MCHits association
-ToolSvc.MCP2OTMCHitAsc.Location      = "Rec/Relations/MCP2OTMCHit";
-DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2OTMCHit'
+DataOnDemandSvc.Algorithms += { "DATA = '/Event/Relations/MC/Particles2MCOTHits'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2OTMCHitAlg' " };
-MCP2OTMCHitAlg.MCHitPath  = "MC/OT/Hits"; // MCHitLocation::OTHits
-MCP2OTMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2OTMCHit";
+MCP2OTMCHitAlg.MCHitPath  = "MC/OT/Hits"; // MCHitLocation::OT
+MCP2OTMCHitAlg.OutputData  = "/Event/Relations/MC/Particles2MCOTHits";
 
 
 // MCParticle to TT MCHits association
-DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2TTMCHit'
+DataOnDemandSvc.Algorithms += { "DATA = 'Relations/MC/Particles2MCTTHits'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2TTMCHitAlg' " };
-MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::ITHits
-MCP2TTMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2TTMCHit";
+MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
+MCP2TTMCHitAlg.OutputData  = "/Event/Relations/MC/Particles2MCTTHits";
 
 
 // MCParticle to IT MCHits association
-DataOnDemandSvc.Algorithms += { "DATA = '/Event/Rec/Relations/MCP2ITMCHit'
+DataOnDemandSvc.Algorithms += { "DATA = 'Relations/MC/Particles2MCITHits'
                                  TYPE = 'MCParticle2MCHitAlg/MCP2ITMCHitAlg' " };
-MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::ITHits
-MCP2ITMCHitAlg.OutputData  = "/Event/Rec/Relations/MCP2ITMCHit";
+MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
+MCP2ITMCHitAlg.OutputData  = "/Event/Relations/MC/Particles2MCITHits";
 
 
