@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.2 2006-02-21 10:04:46 odescham Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.3 2006-02-21 11:17:17 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/21 10:04:46  odescham
+// update for new Event Model
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -165,7 +168,7 @@ DECLARE_ALGORITHM_FACTORY(CaloDigitMCTruth);
 // ============================================================================
 StatusCode CaloDigitMCTruth::execute    () 
 {
-  using namespace CaloDataFunctor ;
+  using namespace LHCb::CaloDataFunctor ;
   using namespace CaloMCTools     ;
   
   /// calorimeter digit 

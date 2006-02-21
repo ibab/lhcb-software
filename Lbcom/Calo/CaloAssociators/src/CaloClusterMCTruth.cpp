@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.2 2006-02-21 10:04:45 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.3 2006-02-21 11:17:17 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/21 10:04:45  odescham
+// update for new Event Model
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -103,7 +106,7 @@ DECLARE_ALGORITHM_FACTORY(CaloClusterMCTruth);
 // ============================================================================
 StatusCode CaloClusterMCTruth::execute    () 
 {
-  using namespace CaloDataFunctor ;
+  using namespace LHCb::CaloDataFunctor ;
   using namespace CaloMCTools     ;
   
   /// the actual type of Digit  
