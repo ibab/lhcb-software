@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.19 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.20 2006-02-21 15:17:25 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -168,6 +168,7 @@ StatusCode DeRich1::initialize()
   ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   StatusCode upsc = ums->update(this);
 
+  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return upsc;
 }
 

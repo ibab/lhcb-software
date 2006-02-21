@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.33 2006-02-16 15:31:26 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.34 2006-02-21 15:17:25 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -338,6 +338,8 @@ StatusCode DeRichHPDPanel::initialize()
   }
 
   msg << MSG::VERBOSE << "----------  End ---------------------------" << endmsg;
+
+  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return StatusCode::SUCCESS;
 }
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.13 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.14 2006-02-21 15:17:25 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -61,7 +61,9 @@ StatusCode DeRichRadiator::initialize()
   // Trick to load up the RichConditions tool for this detector element
   // need to make sure it is created before this object is initialised
   const std::string richConName =
-    ( Rich::Rich1 ==  rich() ? "Rich1PresTempMonitor" : "Rich2PresTempMonitor" );
+    ( Rich::Rich2 == rich() ? "Rich2PresTempMonitor" 
+      : Rich::C4F10 == radiatorID() ? "Rich1PresTempMonitor" : "Rich1AerogelMonitor" );
+
   StatusCode sc = StatusCode::FAILURE;
   // get the Gaudi service locator
   static ISvcLocator * svcLoc = Gaudi::svcLocator();
