@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.2 2006-02-21 10:12:51 odescham Exp $
+// $Id: CaloDataFunctor.h,v 1.3 2006-02-21 11:18:32 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -25,12 +25,10 @@
 // ============================================================================
 // forward declaration 
 // ============================================================================
-namespace LHCb
-{
-  class CaloDigit        ;   // CaloEvent/Event
-  class CaloCluster      ;   // CaloEvent/Event 
-  class CaloClusterEntry ;   // CaloEvent/Event 
-};
+class LHCb::CaloDigit        ;   // CaloEvent/Event
+class LHCb::CaloCluster      ;   // CaloEvent/Event 
+class LHCb::CaloClusterEntry ;   // CaloEvent/Event 
+
 template <class TYPE> 
 class SmartRef  ;     // GaudiKernel
 
@@ -43,6 +41,8 @@ class SmartRef  ;     // GaudiKernel
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date    26/11/1999
  */
+namespace LHCb
+{
 namespace CaloDataFunctor
 {
   // ==========================================================================
@@ -1078,6 +1078,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
 }; // end of namespace CaloDataFunctor
+};// end of namespace LHCb
 // ============================================================================
 // The End 
 // ============================================================================
