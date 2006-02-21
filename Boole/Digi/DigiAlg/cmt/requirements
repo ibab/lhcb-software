@@ -15,6 +15,12 @@ use EventBase       v* Event
 use LHCbDefinitions v* Kernel
 use GaudiAlg        v*
 
+use STDet           v* Det
+use OTDet           v* Det
+use VeloDet         v* Det
+use DigiEvent       v* Event
+use LinkerEvent     v* Event
+
 library         DigiAlg    ../src/*.cpp
 
 apply_pattern component_library library=DigiAlg
