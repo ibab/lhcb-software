@@ -1,8 +1,8 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.1 2005-05-08 09:19:50 ibelyaev Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.2 2006-02-21 10:04:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,18 +15,16 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h" 
 // ============================================================================
 // Event 
 // ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
-#include "Event/CaloMCTools.h"
 #include "Event/MCParticle.h"
+// Local
+#include "CaloMCTools.h"
 // ============================================================================
 
 /** @class CaloClusterMCTruth CaloClusterMCTruth.cpp
@@ -41,18 +39,19 @@
  *      The default value is "Rec/Relations/CaloDigits2MCParticles" 
  *      The name of relation table CaloDigit->MCParticle 
  *
- *    - "Inputs"
- *      The default value is CaloClusterLocation :: Ecal  + EcalSplit 
- *      list of addresses fro CaloClusters containers 
- *
  *    - "Output"
  *      The default value "Rec/Relations/CaloClusters2MCParticles"
  *      The name of (output) relation table CaloCluster->MCParticle
+ *
+ *    - "Clusters"
+ *      The default value is CaloClusterLocation :: Ecal  + EcalSplit 
+ *      list of addresses fro CaloClusters containers 
+ *
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr 
  *  @date   2005-05-03
  */
-class CaloClusterMCTruth: public CaloAlgorithm
+class CaloClusterMCTruth: public GaudiAlgorithm
 {
   friend class AlgFactory<CaloClusterMCTruth> ;
 public:
@@ -66,15 +65,16 @@ protected:
   CaloClusterMCTruth
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
-    : CaloAlgorithm ( name , pSvc ) 
-  {
-    // set the appropriate default values for input data (linker)
-    setInputData  ( "Rec/Relations/CaloDigits2MCParticles"   ) ;
-    // set the appropriate default values for input data (clusters)
-    addToInputs   ( CaloClusterLocation :: Ecal      ) ;
-    addToInputs   ( CaloClusterLocation :: EcalSplit ) ;
-    // set the appropriate default value  for output data
-    setOutputData ( "Rec/Relations/CaloClusters2MCParticles" ) ;
+    : GaudiAlgorithm ( name , pSvc ) 
+    , m_inputRelations    ( "Rec/Relations/CaloDigits2MCParticles"   )
+    , m_outputRelations   ( "Rec/Relations/CaloClusters2MCParticles" )
+    , m_clusterContainers ()
+  {    // set the appropriate default values for input data (linker)
+    declareProperty ( "Clustes", m_clusterContainers);
+    declareProperty ( "Input"  , m_inputRelations  ) ;
+    declareProperty ( "Output" , m_outputRelations ) ;
+    m_clusterContainers.push_back( LHCb::CaloClusterLocation :: Ecal      ) ; 
+    m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplit ) ;    
   };
   /// virtual destructor (protected)
   virtual ~CaloClusterMCTruth() {}
@@ -85,35 +85,17 @@ private:
   CaloClusterMCTruth ( const CaloClusterMCTruth& ) ;
   // assignement operator is disabled  
   CaloClusterMCTruth& operator=( const CaloClusterMCTruth& ) ;
+private:
+  // set the appropriate default values for input data 
+  std::string m_inputRelations ;
+  std::string m_outputRelations ;
+  typedef std::vector<std::string> Inputs ;
+  Inputs      m_clusterContainers; 
 };
 // ============================================================================
 
 // ============================================================================
-/// anonymous namespace to prevent an export of concrete factory
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  (local) concrete algorithm factory for instantiaton of 
-   *   objects of type CaloClusterMCTruth 
-   *  @see CaloClusterMCTruth
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-03
-   */
-  // ==========================================================================
-  const  AlgFactory<CaloClusterMCTruth>         s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var CaloClusterMCTruthFactory
- *  (exported) abstract algorithm factory for instantiaton of 
- *  objects of type CaloClusterMCTruth 
- *  @see CaloClusterMCTruth
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-05-03
- */
-const   IAlgFactory&CaloClusterMCTruthFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY(CaloClusterMCTruth);
 // ============================================================================
 
 // ============================================================================
@@ -125,37 +107,38 @@ StatusCode CaloClusterMCTruth::execute    ()
   using namespace CaloMCTools     ;
   
   /// the actual type of Digit  
-  typedef const CaloDigit                                     Digit    ;
+  typedef const LHCb::CaloDigit                               Digit    ;
   /// the actual type of Cluster 
-  typedef const CaloCluster                                   Cluster  ;
+  typedef const LHCb::CaloCluster                             Cluster  ;
   /// the actual type of Cluster container 
-  typedef const CaloClusters                                  Clusters ;
+  typedef const LHCb::CaloClusters                            Clusters ;
   /// the actual type of relation table 
-  typedef RelationWeighted1D<CaloCluster,MCParticle,float>    Table    ;
+  typedef LHCb::RelationWeighted1D<LHCb::CaloCluster,LHCb::MCParticle,float> Table ;
   /// the relation table CaloDigit->MCParticle
-  typedef const IRelationWeighted<CaloDigit,MCParticle,float> DigTable ;
+  typedef const IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> DigTable ;
   /// shot cut for Calo cluster entries 
-  typedef CaloCluster::Entries                                Entries  ;
+  typedef Cluster::Entries                                    Entries  ;
   
   // create and register the relation table 
   Table* table = new Table( 1000 ) ;
-  StatusCode sc = put( table , outputData() ) ;
+  StatusCode sc = put( table , m_outputRelations ) ;
   if ( sc.isFailure() ) { return sc ; }
   
-  if ( inputs().empty() ) 
+  
+  if ( m_inputRelations.empty() ) 
   { return Error ( "No inputs are specified!" ) ; }
   
   // get CaloDigit->MCParticle relation from TES 
-  DigTable* digTable = get<DigTable> ( inputData() ) ;
+  DigTable* digTable = get<DigTable> ( m_inputRelations ) ;
   if ( 0 == digTable ) { return StatusCode::FAILURE ; }
   
   // loop over all containers of clusters 
-  for ( Inputs::const_iterator input = inputs().begin() ; 
-        inputs().end() != input ; ++input ) 
+  for ( Inputs::const_iterator container = m_clusterContainers.begin() ; 
+        m_clusterContainers.end() != container ; ++container ) 
   {
     
     // get the container of clusters 
-    Clusters* clusters = get<Clusters> ( *input ) ;
+    Clusters* clusters = get<Clusters> ( *container ) ;
     if ( 0 == clusters ) { return StatusCode::FAILURE ; }
     
     // loop over all clusters in the container  
@@ -183,7 +166,7 @@ StatusCode CaloClusterMCTruth::execute    ()
         for ( DigTable::iterator item = range.begin() ; 
               range.end() != item ; ++item ) 
         {
-          const MCParticle* particle = item -> to     () ;
+          const LHCb::MCParticle* particle = item -> to     () ;
           const double      energy   = item -> weight () ;
           // accumulate the energy from the same particle 
           mcMap[particle] += energy ;
@@ -199,7 +182,7 @@ StatusCode CaloClusterMCTruth::execute    ()
             mcMap.end() != imap ; ++imap ) 
       {
         // MC particle  
-        const MCParticle* particle = imap -> first  ;
+        const LHCb::MCParticle* particle = imap -> first  ;
         if ( 0 == particle  ) { continue ; }
         // its cumulative energy deposition to the cluster 
         const double      energy   = imap -> second ;
@@ -213,15 +196,17 @@ StatusCode CaloClusterMCTruth::execute    ()
   
   // mandatory after "i_push" ;
   table->i_sort()  ;                                     // NB: "i_sort"
+
+  
+  // count number of links 
+  counter ( "#CC2MC links" ) + table->relations().size() ;
   
   if ( table->relations().empty() ) 
-  { Warning ( " The relations table '"+outputData() + "' is empty!") ; }
+  { Warning ( " The relations table '"+ m_outputRelations + "' is empty!") ; }
   
   if ( msgLevel ( MSG::DEBUG )  ) 
-  {
-    debug() << " Number of established relations are #"
-            << table->relations().size() << endreq ;
-  }
+  { debug() << " Number of established relations are #"
+            << table->relations().size() << endreq ; }
 
   return StatusCode::SUCCESS ;  
 };

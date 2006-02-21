@@ -1,8 +1,8 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.1 2005-05-08 09:19:50 ibelyaev Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.2 2006-02-21 10:04:46 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,16 +15,16 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
 // ============================================================================
-// CaloKernel
+// GaudiAlg 
 // ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // Event 
 // ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
-#include "Event/CaloMCTools.h"
 #include "Event/MCParticle.h"
+#include "CaloMCTools.h"
 // ============================================================================
 // LinkerEvent
 // ============================================================================
@@ -56,7 +56,7 @@
  *  @date 2004-05-03
  */
 // ============================================================================
-class CaloDigit2MCLinks2Table : public CaloAlgorithm
+class CaloDigit2MCLinks2Table : public GaudiAlgorithm
 {
   friend class AlgFactory<CaloDigit2MCLinks2Table> ;
 public:
@@ -70,13 +70,10 @@ protected:
   CaloDigit2MCLinks2Table
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
-    : CaloAlgorithm ( name , pSvc ) 
-  {    
-    // set the appropriate default values for input data (linker)
-    addToInputs   ( CaloDigitLocation :: Ecal              ) ;
-    // set the appropriate default value  for output data
-    setOutputData ( "Rec/Relations/CaloDigits2MCParticles" ) ;
-  } ;
+    : GaudiAlgorithm ( name , pSvc ) 
+    , m_inputs ( 1 , LHCb::CaloDigitLocation::Ecal      ) 
+    , m_output ( "Rec/Relations/CaloDigits2MCParticles" ) 
+  { } ;
   /// virtual destructor (protected)
   virtual ~CaloDigit2MCLinks2Table() {};
 private:
@@ -88,35 +85,17 @@ private:
   // assignement operator is disabled
   CaloDigit2MCLinks2Table& operator=
   ( const CaloDigit2MCLinks2Table& ) ;
+private:
+  typedef std::vector<std::string>  Inputs ;
+  Inputs      m_inputs ;
+  std::string m_output ;
 };
 // ============================================================================
 
 // ============================================================================
-/// anonymous namespace to prevent an export of concrete factory
+// declare the factory
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  (local) concrete algorithm factory for instantiaton of 
-   *   objects of type CaloDigitMCTruth 
-   *  @see CaloDigit2MCLinks2Table
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-03
-   */
-  // ==========================================================================
-  const  AlgFactory<CaloDigit2MCLinks2Table>         s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var CaloDigit2MCLinks2TableFactory
- *  (exported) abstract algorithm factory for instantiaton of 
- *  objects of type CaloDigitMCTruth 
- *  @see CaloDigit2MCLinks2Table
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-05-03
- */
-const   IAlgFactory&CaloDigit2MCLinks2TableFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY(CaloDigit2MCLinks2Table);
 // ============================================================================
 
 // ============================================================================
@@ -125,26 +104,28 @@ const   IAlgFactory&CaloDigit2MCLinks2TableFactory = s_Factory ;
 StatusCode CaloDigit2MCLinks2Table::execute    () 
 {
   /// the actual type of calorimeter digit 
-  typedef const CaloDigit                                Digit  ;
+  typedef const LHCb::CaloDigit                      Digit  ;
   /// the actual type of container
-  typedef const CaloDigits                               Digits ;
+  typedef const LHCb::CaloDigits                     Digits ;
   /// the actual type of relation table 
-  typedef RelationWeighted1D<CaloDigit,MCParticle,float> Table  ;
+  typedef LHCb::RelationWeighted1D
+    <LHCb::CaloDigit,LHCb::MCParticle,float>         Table  ;
   //  the actual tyep of idiotic linker 
-  typedef LinkedTo<MCParticle,CaloDigit>                 Linker ;
-  //typedef LinkedFrom<MCParticle,CaloDigit>                 Linker ;
-
+  typedef LinkedTo<LHCb::MCParticle,LHCb::CaloDigit> Linker ;
+  //typedef LinkedFrom<LHCb::MCParticle,LHCB::CaloDigit> Linker ;
+  
   // create and register the relation table 
   Table* table = new Table( 1000 ) ;
-  StatusCode sc = put( table , outputData() ) ;
-  if ( sc.isFailure() ) { return sc ; }
   
-  if ( inputs().empty() ) 
+  StatusCode sc = put( table , m_output ) ;
+  if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+  
+  if ( m_inputs.empty() ) 
   { return Error ( "No Linker object are specified" ) ; }
   
   // loop over all input linkers 
-  for ( Inputs::const_iterator input = inputs().begin() ; 
-        inputs().end() != input ; ++input ) 
+  for ( Inputs::const_iterator input = m_inputs.begin() ; 
+        m_inputs.end() != input ; ++input ) 
   {
     
     // get the container of digits
@@ -157,9 +138,8 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
                     (*input)     ) ;
     
     if ( linker.notFound() ) 
-    { return Error ( "No Linker object is Found '" + (*input) + "'" ) ; }
-
-
+    { return Error ( "No Linker object is Found '" + (*input) + "' " ) ;}
+    
     // loop over all digits 
     for ( Digits::const_iterator idigit = digits->begin() ; 
           digits->end() != idigit ; ++idigit ) 
@@ -168,7 +148,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
       if ( 0 == digit ) { continue ; }
       
       // use Linker
-      const MCParticle* particle = linker.first( digit ) ;
+      const LHCb::MCParticle* particle = linker.first( digit ) ;
       if ( 0 == particle ) { continue ; }
       
       // use the auxillary container to be immune agains 
@@ -191,13 +171,13 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
       for ( CaloMCTools::CaloMCMap::iterator entry = mcMap.begin() ; 
             mcMap.end() != entry ; ++entry ) 
       {
-        const MCParticle* particle = entry -> first  ;
-        const double      energy   = entry -> second ;
+        const LHCb::MCParticle* particle = entry -> first  ;
+        const double            energy   = entry -> second ;
         // use fast i_push method! 
         table->i_push ( digit , particle , energy ) ; // NB !!
       }
       
-    };
+    }; // end of the loop over digits in the container 
     
   }; // end of loop over all input containers
   

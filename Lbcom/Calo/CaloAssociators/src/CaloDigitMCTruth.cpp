@@ -1,8 +1,8 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.1 2005-05-08 09:19:50 ibelyaev Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.2 2006-02-21 10:04:46 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,9 +10,9 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 // ============================================================================
-// CaloKernel
+// GaudiAlg
 // ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -23,8 +23,11 @@
 //  CaloEvent 
 // ============================================================================
 #include "Event/CaloDataFunctor.h"
-#include "Event/CaloMCTools.h"
-#include "Event/CaloCellIDKeyTraits.h"
+#include "CaloMCTools.h"
+// ============================================================================
+// LHCbKernel
+// ============================================================================
+#include "Kernel/CaloCellIDKeyTraits.h"
 // ============================================================================
 // CaloDet
 // ============================================================================
@@ -79,7 +82,7 @@
  *  @date 2005-05-03 
  */
 
-class CaloDigitMCTruth : public CaloAlgorithm 
+class CaloDigitMCTruth : public GaudiAlgorithm 
 {
   // friend factory for instantiation 
   friend class AlgFactory<CaloDigitMCTruth> ;
@@ -94,7 +97,7 @@ protected:
   CaloDigitMCTruth
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
-    : CaloAlgorithm ( name , pSvc ) 
+    : GaudiAlgorithm ( name , pSvc ) 
     // Digit energy thresholds 
     , m_cellET (   1 * MeV     ) 
     , m_cellE  (  50 * MeV     ) 
@@ -104,6 +107,9 @@ protected:
     , m_minFr  (   1 * perCent ) 
     // particle minimum energy
     , m_minPE  (  50 * MeV     ) 
+    //
+    , m_input     ( LHCb::CaloDigitLocation:: Ecal ) 
+    , m_detector  ( DeCalorimeterLocation::   Ecal ) 
   {
     //
     declareProperty ( "MinDigitET"            , m_cellET ) ;
@@ -115,10 +121,9 @@ protected:
     //
     declareProperty ( "MinParticleEnergy"     , m_minPE  ) ;
     
-    // set the appropriate default values for input data (linker)
-    setInputData    ( CaloDigitLocation      :: Ecal     ) ;
-    // set the appropriate default values for detector data 
-    setDetData      ( DeCalorimeterLocation  :: Ecal     ) ;
+    // 
+    declareProperty ( "Input"    , m_input    ) ;
+    declareProperty ( "Detector" , m_detector ) ;
   };
   /// virtual destructor (protected)
   virtual ~CaloDigitMCTruth() {}
@@ -142,35 +147,17 @@ private:
   double m_minFr   ;  
   // minimal particle energy 
   double m_minPE   ;  
+  // input data
+  std::string  m_input    ; ///< input data
+  // detector data 
+  std::string  m_detector ; ///< detector data
 };
 // ============================================================================
 
 // ============================================================================
-/// anonymous namespace to prevent an export of concrete factory
+// declare algorithm factory
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  (local) concrete algorithm factory for instantiaton of 
-   *   objects of type CaloDigitMCTruth 
-   *  @see CaloDigitMCTruth
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-03
-   */
-  // ==========================================================================
-  const  AlgFactory<CaloDigitMCTruth>         s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var CaloDigitMCTruthFactory
- *  (exported) abstract algorithm factory for instantiaton of 
- *  objects of type CaloDigitMCTruth 
- *  @see CaloDigitMCTruth
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-05-03
- */
-const   IAlgFactory&CaloDigitMCTruthFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY(CaloDigitMCTruth);
 // ============================================================================
 
 // ============================================================================
@@ -182,46 +169,43 @@ StatusCode CaloDigitMCTruth::execute    ()
   using namespace CaloMCTools     ;
   
   /// calorimeter digit 
-  typedef const CaloDigit                      Digit     ;
+  typedef const LHCb::CaloDigit                      Digit     ;
   /// container of calorimeter digit 
-  typedef const CaloDigits                     Digits    ;
+  typedef const LHCb::CaloDigits                     Digits    ;
   /// detector element 
-  typedef const DeCalorimeter                  Detector  ;
+  typedef const DeCalorimeter                        Detector  ;
   /// helper class for idiotic linker  
-  typedef LinkerWithKey<MCParticle,CaloDigit>  Linker    ;
+  typedef LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit>  Linker    ;
   /// simple predicate for find digits  with large energy
-  typedef Over_E_Threshold<Digit*>             OverE     ;
+  typedef Over_E_Threshold<Digit*>                   OverE     ;
   /// simple predicate for find digits  with large transverse energy
-  typedef Over_Et_Threshold<Digit*,Detector*>  OverET    ;
+  typedef Over_Et_Threshold<Digit*,Detector*>        OverET    ;
   /// helper class to build MC history tree 
-  typedef MCCaloHistory<CaloDigit>             MCHistory ;
+  typedef MCCaloHistory<LHCb::CaloDigit>             MCHistory ;
   /// auxillary structure for conversion  "CaloCellID" -> "int"
-  typedef Containers::key_traits<CaloCellID>   Key       ;
-
+  typedef Containers::key_traits<LHCb::CaloCellID>   Key       ;
+  
   // get the detector from TDS 
-  Detector* detector = getDet<Detector>( detData() ) ;
+  Detector* detector = getDet<Detector>( m_detector ) ;
   if ( 0 == detector ) { return StatusCode::FAILURE ; }
   
   // scale factor for recalculation of eActive into eTotal 
   const double activeToTotal = detector->activeToTotal() ;
   
   // get digits from TES  
-  Digits*   digits   = get<Digits>     ( inputData() ) ;
+  Digits*   digits   = get<Digits>     ( m_input ) ;
   if ( 0 == digits   ) { return StatusCode::FAILURE ; }
   
   // create the linker table 
   
   // create the idiotic Linker object 
-  LinkerWithKey<MCParticle,CaloDigit> linker ( eventSvc  () , 
-                                               msgSvc    () , 
-                                               inputData () ) ;
-  
+  LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit> 
+    linker ( eventSvc () , msgSvc () , m_input ) ;
   
   // evaluates to "true" for digits over E  threshold 
   OverE  overE  (            m_cellE  ) ;
   // evaluates to "true" for digits over Et threshold 
   OverET overET ( detector , m_cellET ) ;
-  
   
   // counter for number of links
   unsigned long nLinks = 0 ;
@@ -234,8 +218,7 @@ StatusCode CaloDigitMCTruth::execute    ()
     if ( 0 == digit ) { continue ; } // skip invalid 
     
     // skip extra small energy depositions 
-    if ( !overE  ( digit ) && 
-         !overET ( digit ) ) { continue ; }
+    if ( !overE  ( digit ) && !overET ( digit ) ) { continue ; }
     
     // coefficient to transform energy to transverse energy
     const double sinTheta = detector->cellSine( digit->cellID() ) ;
@@ -254,8 +237,8 @@ StatusCode CaloDigitMCTruth::execute    ()
       for ( CaloMCMap::iterator entry = map1.begin() ; 
             map1.end() != entry ; ++entry ) 
       { 
-        const MCParticle* particle = entry -> first  ;
-        const double      energy   = entry -> second ;
+        const LHCb::MCParticle* particle = entry -> first  ;
+        const double            energy   = entry -> second ;
         updateCaloMCMap ( particle , energy , map2 ) ; 
       }
     }
@@ -267,7 +250,7 @@ StatusCode CaloDigitMCTruth::execute    ()
     for ( CaloMCMap::iterator entry = map2.begin() ; 
           map2.end() != entry ; ++entry ) 
     {
-      const MCParticle* particle = entry ->  first ;
+      const LHCb::MCParticle* particle = entry -> first ;
       if ( 0 == particle                       ) { continue ; }
       
       // use only more or less  "energetic" particles 
@@ -282,13 +265,16 @@ StatusCode CaloDigitMCTruth::execute    ()
       
       // fill actual relations 
       linker.link ( digit , particle , energy ) ;
-
+      
       // increment the counter 
       ++nLinks ;
-
+      
     }; // end of loop over all MC-entries for given digit 
     
   }; // end of loop over all digits
+  
+  // count number of links 
+  counter ("#CD2MC links") += nLinks ;
   
   if ( 0 == nLinks ) { Warning ( "No MC-links are set" ) ; }
   

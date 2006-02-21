@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.25 2005-05-08 09:19:06 ibelyaev Exp $
+# $Id: requirements,v 1.26 2006-02-21 10:04:45 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.25 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.26 $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -8,18 +8,19 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v5r0
+version           v6r0
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
 include_path      none
+use GaudiAlg      v*
+use RecEvent      v*   Event 
+use DigiEvent     v*   Event 
+use MCEvent       v*   Event 
+use CaloDet       v*   Det
+use Relations	  v*   Kernel
+use LinkerEvent   v*   Event 
 
-# =============== used packages ===============================================
-use CaloEvent     v13r*  Event 
-use TrgEvent      v5r*   Event
-use CaloDet       v6r*   Det
-use Relations	  v2r*   Kernel
-use LinkerEvent   v1r*   Event 
 
 # =============== own options =================================================
 set CALOASSOCIATORSOPTS  ${CALOASSOCIATORSROOT}/options
@@ -31,7 +32,10 @@ library           CaloAssociators  *.cpp
 apply_pattern     component_library library=CaloAssociators 
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.25  2005/05/08 09:19:06  ibelyaev
+#  new relation ables and linkers
+# 
 # =============================================================================
 # The END 
 # =============================================================================
