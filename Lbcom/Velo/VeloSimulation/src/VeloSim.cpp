@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.3 2006-02-10 14:03:31 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.4 2006-02-21 17:24:17 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -21,18 +21,20 @@
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-
-// from LHCbKernel
 #include "Kernel/LHCbMath.h"
-#include "Kernel/VeloEventFunctor.h"
 
-// from MCEvent
+// from VeloEvent
 #include "Event/MCHit.h"
 #include "Event/MCVeloFE.h"
-#include "Event/MCParticle.h"
 
 // VeloDet
 #include "VeloDet/DeVelo.h"
+
+// from LHCbEvent
+#include "Event/MCParticle.h"
+
+// Kernel
+#include "Kernel/VeloEventFunctor.h"
 
 // local
 #include "VeloSim.h"
@@ -44,7 +46,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSim );
+static const  AlgFactory<VeloSim>          Factory ;
+const         IAlgFactory& VeloSimFactory = Factory ;
 
 struct chargeThreshold : public std::unary_function<LHCb::MCVeloFE*,  bool> {
   bool operator()(LHCb::MCVeloFE* FE) {
@@ -58,40 +61,69 @@ struct chargeThreshold : public std::unary_function<LHCb::MCVeloFE*,  bool> {
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-  m_veloDet ( 0 ),
+  m_inputContainer ( LHCb::MCHitLocation::Velo ),
+  m_spillOverInputContainer ( "Prev/" + m_inputContainer ),
+  m_pileUpInputContainer ( LHCb::MCHitLocation::PuVeto ),
+  m_pileUpSpillOverInputContainer ( "Prev/" + m_pileUpInputContainer ),
+  m_outputContainer ( LHCb::MCVeloFELocation::Default ),
+  m_pileUpOutputContainer ( LHCb::MCVeloFELocation::PuVeto ),
+  m_veloDet ( getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo") ),
+  m_chargeSim ( true ),
+  m_inhomogeneousCharge ( true ),
+  m_coupling ( true ),
+  m_noiseSim ( true ),
+  m_pedestalSim ( true ),
+  m_CMSim ( true ),
+  m_stripInefficiency ( 0.0 ),
+  m_spillOver ( true ),
+  m_pileUp ( true ),
+  m_testSim ( false ),
+  m_smearPosition ( 0.0 ),
+  m_threshold ( 4500. ),
+  m_noiseConstant ( 500. ),
+  m_kT ( 0.025 ),
+  m_biasVoltage ( 250. ),
+  m_eVPerElectron ( 3.6 ),
+  m_simulationPointsPerStrip ( 3 ),
+  m_chargeUniform ( 70. ),
+  m_deltaRayMinEnergy ( 1000. ), 
+  m_capacitiveCoupling ( 0.05 ),
+  m_averageStripCapacitance ( 20. ), 
+  m_noiseCapacitance ( 50. ),
   m_baseDiffuseSigma( sqrt(2*m_kT/m_biasVoltage) ),
-  m_fitParams(7, 0.)
+  m_fitParams(7, 0.),
+  m_offPeakSamplingTime(0.)
 {
-  declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
-  declareProperty("SpillOverInputData", m_spillOverInputContainer = "Prev/" + m_inputContainer );
-  declareProperty("PileUpInputContainer", m_pileUpInputContainer = LHCb::MCHitLocation::PuVeto );
-  declareProperty("PileUpSpillOverInputData", m_pileUpSpillOverInputContainer = "Prev/" + m_pileUpInputContainer );
-  declareProperty("OutputContainer", m_outputContainer = LHCb::MCVeloFELocation::Default );
-  declareProperty("PileUpOutputContainer", m_pileUpOutputContainer = LHCb::MCVeloFELocation::PuVeto );
-  declareProperty("ChargeSim", m_chargeSim = true );
-  declareProperty("InhomogeneousCharge", m_inhomogeneousCharge = true );
-  declareProperty("Coupling", m_coupling = true );
-  declareProperty("NoiseSim", m_noiseSim = true );
-  declareProperty("PedestalSim", m_pedestalSim = true );
-  declareProperty("CMSim", m_CMSim = true );
-  declareProperty("StripInefficiency", m_stripInefficiency = 0.0 );
-  declareProperty("SpillOver", m_spillOver = true );
-  declareProperty("PileUp", m_pileUp = true );
-  declareProperty("TestSimulation", m_testSim = false );
-  declareProperty("SmearPosition", m_smearPosition = 0.0 );
-  declareProperty("Threshold", m_threshold = 4500. );
-  declareProperty("NoiseConstant", m_noiseConstant = 500. );
-  declareProperty("kT", m_kT = 0.025 );
-  declareProperty("BiasVoltage", m_biasVoltage = 250. );
-  declareProperty("eVPerElectron", m_eVPerElectron = 3.6 );
-  declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3 );
-  declareProperty("ChargeUniform", m_chargeUniform = 70. );
-  declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000. );
-  declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.05 );
-  declareProperty("AverageStripCapacitance", m_averageStripCapacitance = 20. );
-  declareProperty("NoiseCapacitance", m_noiseCapacitance = 50. );
-  declareProperty("FitParams", m_fitParams );
-  declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0. );
+  declareProperty("InputContainer", m_inputContainer  );
+  declareProperty("SpillOverInputData", m_spillOverInputContainer  );
+  declareProperty("PileUpInputContainer", m_pileUpInputContainer  );
+  declareProperty("PileUpSpillOverInputData", m_pileUpSpillOverInputContainer);
+  declareProperty("OutputContainer", m_outputContainer );
+  declareProperty("PileUpOutputContainer", m_pileUpOutputContainer );
+  declareProperty("ChargeSim", m_chargeSim );
+  declareProperty("InhomogeneousCharge", m_inhomogeneousCharge );
+  declareProperty("Coupling", m_coupling );
+  declareProperty("NoiseSim", m_noiseSim );
+  declareProperty("PedestalSim", m_pedestalSim );
+  declareProperty("CMSim", m_CMSim );
+  declareProperty("StripInefficiency", m_stripInefficiency );
+  declareProperty("SpillOver", m_spillOver );
+  declareProperty("PileUp", m_pileUp );
+  declareProperty("TestSimulation", m_testSim );
+  declareProperty("SmearPosition", m_smearPosition );
+  declareProperty("Threshold", m_threshold);
+  declareProperty("NoiseConstant", m_noiseConstant);
+  declareProperty("kT", m_kT);
+  declareProperty("BiasVoltage", m_biasVoltage);
+  declareProperty("eVPerElectron", m_eVPerElectron);
+  declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip);
+  declareProperty("ChargeUniform", m_chargeUniform);
+  declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy);
+  declareProperty("CapacitiveCoupling", m_capacitiveCoupling);
+  declareProperty("AverageStripCapacitance", m_averageStripCapacitance);
+  declareProperty("NoiseCapacitance", m_noiseCapacitance);
+  declareProperty("FitParams", m_fitParams);
+  declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime);
   
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -109,9 +141,6 @@ StatusCode VeloSim::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialise" << endmsg;
-
-  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
-
   // random number initialisation
   StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
   StatusCode scr2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
@@ -210,7 +239,7 @@ StatusCode VeloSim::getInputData() {
     debug() << "Retrieving MCHits of SpillOver Event from "
 			<< m_spillOverInputContainer <<endmsg;      
     if(!exist<LHCb::MCHits>(m_spillOverInputContainer)){
-      debug()<<"Spill over event not present unable to retrieve input container="
+      info()<< "Spill over event not present unable to retrieve input container="
 	          << m_spillOverInputContainer <<endmsg;
       m_veloSpillOverHits = 0;
     } else { 
@@ -261,11 +290,11 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
     }
     hits=m_spillOverHits;
   }
-  debug()<< "Number of hits to simulate=" << hits->size() << endmsg;
+  verbose()<< "Number of hits to simulate=" << hits->size() << endmsg;
   //loop over input hits
   for(LHCb::MCHits::const_iterator hitIt = hits->begin();
       hits->end() != hitIt ; hitIt++ ){
-    LHCb::MCHit* hit = (*hitIt);
+    LHCb::MCHit* hit = (*hitIt);    
     // degrade resolution for April 2003 Robustness Test
     if (m_smearPosition>0) {
       m_movePosition.SetX(m_gaussDist()*m_smearPosition);
@@ -358,6 +387,7 @@ long VeloSim::simPoints(LHCb::MCHit* hit){
   }else{
     // either entry or exit or both are invalid, ignore this hit
     NPoints=0.;
+    //
     if((EntryValid!=ExitValid)){
       verbose()<< "simPoints: only one of entry and exit point of hit are in "
              	 << "silicon - hit ignored " <<endmsg;
@@ -375,6 +405,7 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
   debug()<< " ==> chargePerPoint() " <<endmsg;
   // total charge in electrons
   double charge=(hit->energy()/eV)/m_eVPerElectron;
+  debug()<< "Number of electron-hole pairs: " << charge <<endmsg;  
   if(spillOver){ 
     charge*=spillOverReminder(hit->time()/ns);
     //
@@ -406,22 +437,29 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
     // gaussian fluctuations
     if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(chargeEqualN);
     Spoints[i]=chargeEqualN+fluctuate;
-      verbose() << "charge for pt" << i << " is " << Spoints[i] 
+    verbose()<< "charge for pt" << i << " is " << Spoints[i] 
              << endmsg;
-  // inhomogeneous charge dist from delta rays
-  if (m_inhomogeneousCharge){
-    deltaRayCharge(charge-chargeEqual, 0.001*charge, Npoints, Spoints);
-    // ensure total charge is allocated
-    double total=0.;
-    for (int i=0; i<Npoints; i++){total+=Spoints[i];}
-    if( 1.e-10 < total ) {
-      double adjust=charge/total;
-      for (int j=0; j<Npoints; j++){Spoints[j]*=adjust;}
+   // inhomogeneous charge dist from delta rays
+    if (m_inhomogeneousCharge){
+      deltaRayCharge(charge-chargeEqual, 0.001*charge, Npoints, Spoints);
+      // ensure total charge is allocated
+      double total=0.;
+      for (int i=0; i<Npoints; i++){total+=Spoints[i];}
+      verbose()<< "charge distributed: " << total <<endmsg;
+      if( charge < total ) {
+       double adjust=charge/total;
+       for (int j=0; j<Npoints; j++){Spoints[j]*=adjust;}
+      }
     }
   }
+  double totalCharge=0.;
+  for(unsigned int i=0; i<Spoints.size(); i++){
+    totalCharge+=Spoints[i];
+  }
+  verbose()<< "total charge after correction: " << totalCharge <<endmsg;
+  
   //
   return;
-  }
 }
 //=========================================================================
 // allocate remaining charge from delta ray distribution
@@ -499,7 +537,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
 		           << fraction << " pitch " << pitch << " valid " 
                << valid <<endmsg;
       //
-      const int neighbs=1; // only consider =/- this many neighbours
+      const int neighbs=1; // only consider +/- this many neighbours
       double chargeFraction[2*neighbs+1];
       double totalFraction=0.;
       // loop over neighbours per point
@@ -507,6 +545,9 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
       for(iNg=-neighbs; iNg<=+neighbs; iNg++){
         double diffuseDist1=((iNg-0.5)-fraction)*pitch/micrometer;
         double diffuseDist2=((iNg+0.5)-fraction)*pitch/micrometer;
+        verbose()<< "dif1: " << diffuseDist1 << ", dif2: "
+              << diffuseDist2 <<endmsg;
+        
         //      double diffuseDist1=((iNg)-fraction)*pitch/micrometer;
         //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micrometer;
         double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
@@ -521,11 +562,11 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
         //
         verbose() << " prob1+2 " <<  prob1 << " " << prob2 <<endmsg;
         //
-        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
+        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;        
         chargeFraction[i]=fabs(prob1-prob2);
         totalFraction+= fabs(prob1-prob2);
         //
-        verbose()<< i << " iNg " << iNg << " cfrac "
+        verbose()<< " iNg " << iNg << " cfrac "
                  << chargeFraction[i]  << " tot " << totalFraction <<endmsg;
       }
       // renormalise allocated fractions to 1., and update strip signals
@@ -558,6 +599,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
     } // valid point
     point+=2*path; // update to look at next point on path
     ZDiffuse-=2.*dz;
+    
   } // loop over points
   //
   return;
@@ -856,7 +898,6 @@ StatusCode VeloSim::noiseSim(){
         int(LHCbMath::round(2.*gsl_sf_erf_Q(m_threshold/noiseSig)
 			  *float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
-    //    info() << " poisson" << poisson() << endmsg;
     hitNoiseTotal = int(poisson());
     //
     verbose()<< "Number of strips to add noise to "
@@ -902,6 +943,7 @@ double VeloSim::noiseSigma(double stripCapacitance){
   //
   double noiseSigma=stripCapacitance*m_noiseCapacitance+
     m_noiseConstant;
+  //  
   return noiseSigma;
 }
 //=========================================================================
@@ -1004,9 +1046,21 @@ StatusCode VeloSim::storeOutputData(){
   //
   StatusCode sc;
   // velo FEs
-  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
+  // update FEs container adding the pileup FEs
+  //  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
+  info()<< " size of m_veloFE before update: "
+        << m_veloFEs->size() <<endmsg;
+  
+  LHCb::MCVeloFEs::const_iterator feIt;
+  for(feIt=m_pileUpFEs->begin(); feIt!=m_pileUpFEs->end(); feIt++){
+    m_veloFEs->insert(*feIt);
+  }
+  info()<< " size after update: " << m_veloFEs->size() <<endmsg;
+  
+  //
+  sc=put(m_veloFEs, m_outputContainer);
   if( sc ){
-    debug()<< "Stored " << m_veloFEs->size() << " MCVeloFEs at "
+    info()<< "Stored " << m_veloFEs->size() << " MCVeloFEs at "
 			     << m_outputContainer <<endmsg;
   }else{
     error()<< "Unable to store MCVeloFEs at "
@@ -1014,13 +1068,14 @@ StatusCode VeloSim::storeOutputData(){
   }
   // pileup FEs
   if (m_pileUp){
-    sc = eventSvc()->registerObject(m_pileUpOutputContainer,m_pileUpFEs);
+    //    sc = eventSvc()->registerObject(m_pileUpOutputContainer,m_pileUpFEs);
+    sc=put(m_pileUpFEs, m_pileUpOutputContainer);
     if( sc ){
-      debug()<< "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
+      info()<< "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
 			       << m_pileUpOutputContainer << endmsg;
     }else{
-      error() << "Unable to store MCVeloFEs at "
-	      << m_pileUpOutputContainer << endmsg;
+      error()<< "Unable to store MCVeloFEs at "
+   	         << m_pileUpOutputContainer << endmsg;
     }
   }
   //
