@@ -89,6 +89,16 @@ DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) {
   return (iter != m_stations.end() ? *iter: 0);
 }
 
+DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
+
+  // find the layer - slightly dirty and non-standard implementation for now
+  Layers::iterator iter = m_layers.begin();
+  while (iter != m_layers.end()&&((*iter)->isInside(point) == false )) {
+    ++iter;
+  }
+  return (iter != m_layers.end() ? *iter: 0 );
+}
+
 LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, const double offset) {
 
   // look up the trajectory

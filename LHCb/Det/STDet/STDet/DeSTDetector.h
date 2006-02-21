@@ -76,6 +76,10 @@ public:
   /** locate station based on a point  
   @return station */
   DeSTStation* findStation(const Gaudi::XYZPoint & point) ;     
+
+  /** locate layer based on a point 
+   *return layer */
+  DeSTLayer* findLayer(const Gaudi::XYZPoint& point);
     
   /** check contains channel
   *  @param channel
