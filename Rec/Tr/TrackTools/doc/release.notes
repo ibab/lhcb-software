@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-21 M Needham
+ - Implementations of Track calorimeter matching tool and 
+   also the Track selector
+
 ! 2006-02-17 - Eduardo Rodrigues
  - introduced new trajectory provider tool TrajectoryProvider
    (all implemented apart from Velo - need trajectory method in det. elem.)

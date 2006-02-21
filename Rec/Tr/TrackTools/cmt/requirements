@@ -30,6 +30,7 @@ use   DigiEvent       v*     Event
 
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
+use   Relations       v*     Kernel
 
 ######use   STTools         v*     ST
 use   STDet           v*     Det
