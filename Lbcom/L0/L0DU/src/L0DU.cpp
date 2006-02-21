@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.3 2006-02-20 10:43:08 cattanem Exp $
+// $Id: L0DU.cpp,v 1.4 2006-02-21 15:56:49 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -8,8 +8,9 @@
 #include "Event/RawEvent.h"
 // local
 #include "L0DU.h"
+
 // Interface
-#include "IL0Candidate.h"
+#include "Event/IL0Candidate.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0DU
@@ -39,6 +40,7 @@ L0DU::L0DU( const std::string& name,
     , m_reconfigure()
     , m_reparametrize()
     , m_writeOnTES()
+    , m_fillRaw()
 {    
   declareProperty( "CaloData"                , m_CaloDataLocation   );
   declareProperty( "MuonData"                , m_MuonDataLocation   );
@@ -232,6 +234,9 @@ StatusCode L0DU::execute() {
     LHCb::L0DUChannel* channel = m_channelsCont[ (*ichan).second ];
     channel -> process( );
     report -> setChannel(channel->name(), channel->decision() );
+    // Print full output for debugging
+    debug() << channel->summary() << endreq;
+
     if(m_writeOnTES){
       LHCb::L0DUChannel* channelOnTES = channel->clone();
       m_channelsOnTES->push_back( channelOnTES );
@@ -245,6 +250,7 @@ StatusCode L0DU::execute() {
     report -> setCondition(condition->name(), condition->value() );
   }
 
+  debug() << "L0DU report = " << report->report() << endreq;
 
   if(m_fillRaw){
     //-------------------------------- // 
@@ -292,7 +298,7 @@ StatusCode L0DU::finalize() {
   m_channelsCont.clear();
   m_conditionsCont.clear();
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize();
 }
 
 
@@ -516,7 +522,7 @@ void L0DU::printOut()
   info() << "=================================================="<< endreq;   
   info() << "  "<< endreq;
   if( m_reconfigure ){
-    info() << " Configuration & parametrisation are set through options file.  "<< endreq;     
+    info() << " Configuration & parametrisation are set via options file.  "<< endreq;     
   }else {
     info() << " Hardcoded configuration is used. "<< endreq;     
     if( m_reparametrize ){ 
@@ -532,13 +538,13 @@ void L0DU::printOut()
     LHCb::L0DUChannel* channel = (*iL0).second;
     info() << "    - "  << channel->name() 
         <<"  - accept rate = " << channel->acceptRate() << " / " << LHCb::L0DUCounter::Scale << endreq;
-    info() << "     " 
+    debug() << "     " 
            <<"  - # of conditions = " << channel->elementaryConditions().size()<< " : " << endreq;
     LHCb::L0DUElementaryCondition::Map conditions =  channel->elementaryConditions();
     for (LHCb::L0DUElementaryCondition::Map::iterator 
            icond = conditions.begin();icond != conditions.end() ; icond++){
       LHCb::L0DUElementaryCondition* condition = (*icond).second;     
-      info() 
+      debug() 
           << "           + "   
           << condition->data()->name() << " " << condition->comparator() << " " <<  condition->threshold() 
           << endreq;       

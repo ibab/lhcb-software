@@ -1,12 +1,18 @@
-// $Id: L0CandidateTool.h,v 1.2 2006-02-20 09:38:46 cattanem Exp $
+// $Id: L0CandidateTool.h,v 1.3 2006-02-21 15:56:49 ocallot Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+//
 // ============================================================================
 #ifndef L0DU_L0CANDIDATETOOL_H
 #define L0DU_L0CANDIDATETOOL_H
 
 // from GaudiKernel
 #include "GaudiAlg/GaudiTool.h"
-// Interface
-#include  "IL0Candidate.h"
+// Event
+#include  "Event/IL0Candidate.h"
 
 class L0CandidateTool : public GaudiTool, virtual public IL0Candidate {
  public:

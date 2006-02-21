@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.40 2006-02-20 09:38:46 cattanem Exp $
+$Id: release.notes,v 1.41 2006-02-21 15:56:49 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2006-02-21 - Olivier Deschamps
+ - Reduce verbosity of L0DU initialisation.
+ - IL0Candidate inteface now in L0Event Event directory.
 
 !========================== L0DU v7r0 2006-02-20 =========================
 ! 2006-02-18 - Olivier Dechamps
