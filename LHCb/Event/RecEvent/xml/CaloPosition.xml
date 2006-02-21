@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloPosition.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  * $Id: CaloPosition.xml,v 1.2 2006-02-21 10:12:51 odescham Exp $
   *****************************************************************************
   * XML-description of CaloPosition class                                     *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -29,7 +29,7 @@
 <enum  
  name   = "Index"
  desc   = "indices to access X,Y and E"
- value  = "X = 1 , Y = 2 , E = 3"
+ value  = "X = 0 , Y = 1 , E = 2"
  access = "PUBLIC"
 />
     

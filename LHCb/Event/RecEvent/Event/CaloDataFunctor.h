@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+// $Id: CaloDataFunctor.h,v 1.2 2006-02-21 10:12:51 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -12,22 +12,25 @@
 // ============================================================================
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/GenericVectorTypes.h"
+#include "Kernel/Point3DTypes.h"
 // ============================================================================
 // Event 
+// ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloClusterEntry.h"
 #include "Kernel/CaloCellID.h"
-
 // ============================================================================
 #include "Event/CaloDigitStatus.h"
 // ============================================================================
 // forward declaration 
 // ============================================================================
-class LHCb::CaloCellID       ;   // LHCbKernel
-class LHCb::CaloDigit        ;   // CaloEvent/Event
-class LHCb::CaloCluster      ;   // CaloEvent/Event 
-class LHCb::CaloClusterEntry ;   // CaloEvent/Event 
+namespace LHCb
+{
+  class CaloDigit        ;   // CaloEvent/Event
+  class CaloCluster      ;   // CaloEvent/Event 
+  class CaloClusterEntry ;   // CaloEvent/Event 
+};
 template <class TYPE> 
 class SmartRef  ;     // GaudiKernel
 
@@ -40,9 +43,6 @@ class SmartRef  ;     // GaudiKernel
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date    26/11/1999
  */
-namespace LHCb
-{
-  
 namespace CaloDataFunctor
 {
   // ==========================================================================
@@ -59,39 +59,45 @@ namespace CaloDataFunctor
    */
   // ==========================================================================
   template<class TYPE> 
-  class CellID : public std::unary_function<const TYPE,LHCb::CaloCellID>
+  class CellID : 
+    public std::unary_function<const TYPE,LHCb::CaloCellID>
   {
   public:
-    LHCb::CaloCellID operator() ( const TYPE& obj ) const { return obj.cellID() ; }
+    LHCb::CaloCellID operator() ( const TYPE& obj ) const 
+    { return obj.cellID() ; }
   };
   // ==========================================================================  
   template <class TYPE> 
   class CellID<const TYPE> : public CellID<TYPE> {};
   // ==========================================================================
   template <class TYPE> 
-  class CellID<TYPE*> : public std::unary_function<const TYPE*,LHCb::CaloCellID>
+  class CellID<TYPE*> : 
+    public std::unary_function<const TYPE*,LHCb::CaloCellID>
   {
   public:
     LHCb::CaloCellID operator() ( const TYPE* obj ) const 
-    { return 0 == obj ? CaloCellID() : m_eval( *obj ) ; };
+    { return 0 == obj ? LHCb::CaloCellID() : m_eval( *obj ) ; };
   private:
     CellID<const TYPE> m_eval ;
   };
   // ==========================================================================
   template <class TYPE>
-  class CellID<SmartRef<TYPE> >       : public CellID<const TYPE*>     {} ;
+  class CellID<SmartRef<TYPE> >       : 
+    public CellID<const TYPE*>     {} ;
   // ==========================================================================
   template <class TYPE>
-  class CellID<const SmartRef<TYPE> > : public CellID<SmartRef<TYPE> > {} ;
+  class CellID<const SmartRef<TYPE> > : 
+    public CellID<SmartRef<TYPE> > {} ;
   // ==========================================================================
   
   // ==========================================================================
   template <>
-  class CellID<CaloCellID>
+  class CellID<LHCb::CaloCellID>
     : public std::unary_function<const LHCb::CaloCellID,LHCb::CaloCellID>
   {
   public:
-    LHCb::CaloCellID operator() ( const LHCb::CaloCellID& id ) const { return id ; } ;
+    LHCb::CaloCellID operator() ( const LHCb::CaloCellID& id ) const
+    { return id ; } ;
   };
   // ==========================================================================
   
@@ -209,8 +215,9 @@ namespace CaloDataFunctor
      *  @param detector  "DETECTOR" object
      *  @param deltaZ    z-correction to position of shower maximum
      */
-    EnergyTransverse( DETECTOR detector     , 
-                      double   deltaZ   = 0 )
+    EnergyTransverse
+    ( DETECTOR detector     , 
+      double   deltaZ   = 0 )
       : m_det ( detector ) 
       , m_dz  ( deltaZ   ) 
       , m_cell(          ) {};
@@ -224,9 +231,10 @@ namespace CaloDataFunctor
       if ( !obj ) { return 0; }               
       const LHCb::CaloCellID cell  = m_cell( obj )  ;
       // cell center 
-      const Gaudi::Vector2 point = m_det->cellCenter ( cell ) ;
+      // const Gaudi::Vector2 
+      const Gaudi::XYZPoint& point = m_det->cellCenter ( cell ) ;
       // 
-      return obj->e() * sin ( point.theta() )  ;  
+      return obj->e() * sin ( point.Theta() )  ;  
     };
   private:
     mutable DETECTOR m_det  ;  ///< detector element 
@@ -356,8 +364,9 @@ namespace CaloDataFunctor
      *  @param obj2   second object
      *  @return  result of energy comparison 
      */
-    inline bool operator() ( const LHCb::CaloClusterEntry& obj1 , 
-                             const LHCb::CaloClusterEntry& obj2 ) const 
+    inline bool operator() 
+      ( const LHCb::CaloClusterEntry& obj1 , 
+        const LHCb::CaloClusterEntry& obj2 ) const 
     { 
       return
         ( !obj1.digit() ) ? true  :
@@ -418,8 +427,9 @@ namespace CaloDataFunctor
      *  @param Detector "DETECTOR" object 
      *  @param DeltaZ   z-correction to position of shower maximum
      */
-    Less_by_TransverseEnergy ( DETECTOR Detector     , 
-                               double   DeltaZ   = 0 ) 
+    Less_by_TransverseEnergy 
+    ( DETECTOR Detector     , 
+      double   DeltaZ   = 0 ) 
       : m_et ( Detector , DeltaZ )
       , m_et2( Detector , DeltaZ ) {};
     /** compare the transverse energy of one object with the 
@@ -588,15 +598,15 @@ namespace CaloDataFunctor
   inline  double clusterEnergy( IT begin , IT end )
   {     
     double energy = 0 ;
-    for( ;begin != end ; ++begin )
-      {           
-        // get the digit 
+    for ( ; begin != end ; ++begin )
+    {           
+      // get the digit 
         const LHCb::CaloDigit*       digit  = begin->digit()  ;
         /// skip nulls 
         if( 0 == digit                         ) { continue ; }
         /// check the status and skip useless digits 
-        if( !( begin->status() & 
-               CaloDigitStatus::UseForEnergy ) ) { continue ; }
+        if( !( begin->status() & LHCb::CaloDigitStatus::UseForEnergy ) ) 
+        { continue ; }
         // accumulate the energy 
         energy +=  digit->e() * begin->fraction() ; 
       }
@@ -846,7 +856,8 @@ namespace CaloDataFunctor
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date 31/03/2002 
    */
-  class DigitFromCalo : public std::unary_function<const CaloDigit*,bool>
+  class DigitFromCalo : 
+    public std::unary_function<const LHCb::CaloDigit*,bool>
   { 
   public:    
     /** constructor
@@ -863,7 +874,7 @@ namespace CaloDataFunctor
      *  @param digit pointer to CaloDigit object 
      *  @return true if digit belongs to the predefined calorimeter 
      */
-    inline bool operator() ( const CaloDigit* digit ) const 
+    inline bool operator() ( const LHCb::CaloDigit* digit ) const 
     {
       if( 0 == digit ) { return false ; }
       return (int) digit->cellID().calo() == m_calo ;
@@ -1067,7 +1078,6 @@ namespace CaloDataFunctor
   // ==========================================================================
   
 }; // end of namespace CaloDataFunctor
-};  // end of namespace LHCb
 // ============================================================================
 // The End 
 // ============================================================================
