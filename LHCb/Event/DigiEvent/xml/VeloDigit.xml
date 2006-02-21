@@ -5,7 +5,7 @@
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
- <package name="DigiEvent">
+ <package name="VeloEvent">
   <class
    author="Tomasz Szumlak"
    desc="VeloDigit is a temporary object to store the ADC value obtained during
@@ -22,8 +22,7 @@
   <constructor
    desc="constructor with key"
    initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
-   m_ADCValue(0),
-   m_rawNoise(0.0)"
+   m_ADCValue(0)"
   >
    <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
   </constructor>
@@ -68,23 +67,6 @@
    setMeth="TRUE"
    getMeth="TRUE"
   />
-     
-  <attribute
-   name="rawNoise"
-   type="double"
-   desc=" "
-  />
-
-  <method
-   name="signalToNoise"
-   type="double"
-   desc="signal to noise after common mode subtracted"
-   const="TRUE"
-  >
-   <code>
-    return (rawNoise()>0.)?adcValue()/rawNoise():adcValue();
-   </code>
-  </method>
 
   </class>
  </package> 
