@@ -15,7 +15,7 @@
 
       <location name = "Calo"      place = "/Event/Trig/L0/L0DUCaloData"    />
       <location name = "Muon"      place = "/Event/Trig/L0/L0DUMuonData"    />
-      <location name = "PileUp"    place = "/Event/Trig/L0/LDUPusData"  />
+      <location name = "PileUp"    place = "/Event/Trig/L0/L0DUPusData"  />
       <location name = "All"       place = "/Event/Trig/L0/L0DUData"  />
 
 

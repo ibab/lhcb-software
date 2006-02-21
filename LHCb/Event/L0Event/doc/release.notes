@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.48 2006-02-09 08:23:33 cattanem Exp $
+$Id: release.notes,v 1.49 2006-02-21 16:00:34 ocallot Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2006-02-21 - Olivier Callot
+ - Add IL0Candidate.h in Event. Interface to decode L0ProcessorData.
+ - Fix a typo in the location of PuVeto data.
 
 !======================== L0Event v15r0 2006-02-09 ========================
 ! 2006-02-09 - Marco Cattaneo
