@@ -1,10 +1,10 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.7 2006-02-21 07:22:57 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.8 2006-02-21 07:27:22 cattanem Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
 #include <string>
 
-#include "Event/InternalVeloCluster.h"
+#include "VeloEvent/InternalVeloCluster.h"
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 

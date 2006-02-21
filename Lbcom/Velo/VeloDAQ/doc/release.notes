@@ -2,8 +2,9 @@
 ! Responsible : Chris Parkes
 
 !=========================  VeloDAQ v3r0 2006-02-21 =======================
-! 2006-02-20 - Marco Cattaneo
+! 2006-02-21 - Marco Cattaneo
  - Cleaned up requirements
+ - Adapt to new location of InternalVeloCluster
 
 ! 2006-02-17 - Kurt Rinnert
  - removed obsolete algorithm declaration
