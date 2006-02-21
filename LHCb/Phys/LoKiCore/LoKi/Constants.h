@@ -1,13 +1,20 @@
-// $Id: Constants.h,v 1.4 2006-02-21 14:45:51 ibelyaev Exp $
+// $Id: Constants.h,v 1.5 2006-02-21 17:20:07 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/02/21 14:45:51  ibelyaev
+//  add LoKi::Keeepr class : safe pseudo-container of valid pointer
+//
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
 // ============================================================================
 // include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <climits> 
 // ============================================================================
 // LHCbDEfinitions
 // ============================================================================
@@ -74,9 +81,10 @@ namespace LoKi
     /// representation of HUGE chi2 
     const double HugeChi2            = 1.e+10      ;
     /// represetnation of positive INFINITY 
-    const double PositiveInfinity    =  DBL_MAX    ;
+    const double PositiveInfinity    =  
+    std::numeric_limits<double>::max() ;
     /// represetnation of positive INFINITY 
-    const double NegativeInfinity    = -DBL_MAX    ;
+    const double NegativeInfinity    = -PositiveInfinity ;
   }; // end of namespace Constants
 }; // end of namespace LoKi  
 
