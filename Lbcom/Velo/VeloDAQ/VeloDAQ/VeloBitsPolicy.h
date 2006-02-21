@@ -1,4 +1,4 @@
-// $Id: VeloBitsPolicy.h,v 1.1 2006-02-20 15:29:33 cattanem Exp $
+// $Id: VeloBitsPolicy.h,v 1.4 2006-02-21 07:22:57 cattanem Exp $
 #ifndef VELOBITSPOLICY_H 
 #define VELOBITSPOLICY_H 1
 

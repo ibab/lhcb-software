@@ -2,7 +2,7 @@
 #define VELOCLUSTERWORD_H 1
 
 #include "SiDAQ/SiClusterWord.h"
-#include "VeloBitsPolicy.h"
+#include "VeloDAQ/VeloBitsPolicy.h"
 
 /** Decodes/encodes velo clusterword
  *

@@ -1,4 +1,4 @@
-// $Id: VeloRawBufferWord.h,v 1.1 2006-02-20 15:29:34 cattanem Exp $
+// $Id: VeloRawBufferWord.h,v 1.4 2006-02-21 07:22:57 cattanem Exp $
 #ifndef VELODAQ_VELORAWBUFFERWORD_H 
 #define VELODAQ_VELORAWBUFFERWORD_H 1
 

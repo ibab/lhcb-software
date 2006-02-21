@@ -1,9 +1,8 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
-!=========================  VeloDAQ v3r0 2006-02-20 =======================
+!=========================  VeloDAQ v3r0 2006-02-21 =======================
 ! 2006-02-20 - Marco Cattaneo
- - Removed VeloDAQ directory, moved all header files to src
  - Cleaned up requirements
 
 ! 2006-02-17 - Kurt Rinnert

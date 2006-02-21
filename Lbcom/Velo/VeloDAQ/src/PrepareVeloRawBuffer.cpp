@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.11 2006-02-20 15:29:33 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.12 2006-02-21 07:22:57 cattanem Exp $
 
 #include <vector>
 #include <algorithm>
@@ -10,8 +10,8 @@
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
 
-#include "VeloClusterWord.h"
-#include "VeloRawBufferWord.h"
+#include "VeloDAQ/VeloClusterWord.h"
+#include "VeloDAQ/VeloRawBufferWord.h"
 
 #include "PrepareVeloRawBuffer.h"
 
@@ -25,7 +25,10 @@
 // 2006-02-15 : David Jones, Kurt Rinnert: complete rewrite for 1MHz raw buffer
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PrepareVeloRawBuffer );
+// Declaration of the Algorithm Factory
+static const  AlgFactory<PrepareVeloRawBuffer>          Factory ;
+const        IAlgFactory& PrepareVeloRawBufferFactory = Factory ; 
+
 
 //=============================================================================
 // Standard constructor, initializes variables
