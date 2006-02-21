@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= GaussTracker v5r0 2006-01-27 =========================
+! 2006-02-21 - Alessia Satta
+ - define middle=(entry+exit)/2 as hit position to search for detectorID , 
+   previous it was entry which causes some rounding problems  
 ! 2006-01-27 - Gloria CORTI
  - Introduce use of DetectorElement base class to retrieve sensitive detector
    from x,y,z and set it in MCHit. The properties "MCHitsLocation", 

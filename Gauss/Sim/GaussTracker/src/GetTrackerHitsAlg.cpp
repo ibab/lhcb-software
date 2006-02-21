@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.4 2006-01-27 19:40:43 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.5 2006-02-21 11:05:45 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -163,7 +163,13 @@ StatusCode GetTrackerHitsAlg::execute() {
     mcHit->setTime( (*hitCollection)[iHit]->GetTimeOfFlight() );
 
     // get sensitive detector identifier
-    int detID = m_detector->sensitiveVolumeID(entry);
+    //using (entry+exit)/2 as  hit point
+    float xmi=(exit.x()+entry.x())/2;
+    float ymi=(exit.y()+entry.y())/2;
+    float zmi=(exit.z()+entry.z())/2;
+
+    Gaudi::XYZPoint middle(xmi,ymi,zmi);
+    int detID = m_detector->sensitiveVolumeID(middle);
     mcHit->setSensDetID(detID);
 
     // fill reference to MCParticle   
