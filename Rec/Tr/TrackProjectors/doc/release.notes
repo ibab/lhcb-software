@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-21 - David Hutchcroft
+ - Updated VeloPhiProjector to work with new VeloClusters
+
 ! 2006-02-20 - Jeroen van Tilburg
  - TrackOTProjector: Moved from time to distance domain.
  - TrajOTProjector: some simplifications, corrected the sign of m_H and of

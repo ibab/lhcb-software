@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.cpp,v 1.5 2006-02-16 10:50:48 ebos Exp $
+// $Id: TrackVeloPhiProjector.cpp,v 1.6 2006-02-21 12:25:41 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -34,28 +34,19 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
     veloPhiMeas.setR( sqrt( x*x + y*y ) );
   }  
 
-  int sensor = veloPhiMeas.cluster() -> sensor();
-
   double sum    = 0.;
-  double sum2   = 0.;
   double sums   = 0.;
-  double second = 0.;
-  double phi    = -999.;
   double cosPhi = 0.;
   double sinPhi = 0.;
 
-  std::vector< std::pair<long,double> > sign = 
-    veloPhiMeas.cluster()->stripSignals();
-  std::vector< std::pair<long,double> >::const_iterator strIt;
-  int strip    = (*sign.begin()).first;
-  VeloChannelID channel(sensor,strip);
-  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
-    strip  = (*strIt).first;
-    phi    =  m_det -> trgPhiDirectionOfStrip( channel );
-    second = (*strIt).second;
-    sum    += second;
-    sum2   += second * second;
-    sums   += second * phi ;
+  std::vector < VeloChannelID > channels = veloPhiMeas.cluster()->channels();
+  std::vector< VeloChannelID >::const_iterator iChan;
+  for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
+    double phi    =  m_det -> trgPhiDirectionOfStrip( *iChan );
+    double adc = static_cast<double>(veloPhiMeas.cluster()->
+				     adcValue(iChan-channels.begin()));
+    sum    += adc;
+    sums   += adc * phi ;
   }
   if ( 0 < sum ) {
     double phi = sums / sum;
