@@ -9,3 +9,4 @@ use MuonDAQ     v2r0    Muon
 use OTDAQ       v4r0    OT
 use CaloDAQ     v2r0    Calo
 use SiDAQ       v1r1    Si
+use VeloDAQ     v3r0    Velo

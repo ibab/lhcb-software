@@ -7,9 +7,9 @@
 !========================== DAQSys v2r0 2006-02-20 ===========================
 ! 2006-02-20 - Marco Cattaneo
  - Major new version for backards incompatible DC06 changes
- - Packages removed: RichDAQ, STDAQ, VeloDAQ (moved to Lbcom)
+ - Packages removed: RichDAQ, STDAQ (moved to Lbcom)
  - Packages added:   SiDAQ v1r1
- - Packages modified: CaloDAQ v2r0, OTDAQ v4r0, MuonDAQ v2r0
+ - Packages modified: CaloDAQ v2r0, OTDAQ v4r0, MuonDAQ v2r0, VeloDAQ v3r0
 
  - Remove obsolete RawBuffer.opts. A new file, RawEvent.opts, will be provided
    in GaudiConf
