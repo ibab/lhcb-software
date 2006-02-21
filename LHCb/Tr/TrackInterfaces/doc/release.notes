@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-02-21
+ - add ITrackSelector and ITrackCaloMatch
+
 ! 2006-02-17 - Eduardo Rodrigues
  - introduced new interface for the trajectory provider tool
  - changes to IMeasurementProvider to match simplified LHCbID class
