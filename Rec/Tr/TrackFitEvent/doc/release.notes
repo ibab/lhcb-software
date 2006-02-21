@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-21 - David Hutchcroft
+ - Updated VeloRMeasurement and VeloPhiMeasurement to work with new 
+   VeloClusters
+
 ! 2006-02-20 - Jeroen van Tilburg
  - OTMeasurement.cpp: Moved from time to distance domain.
 

@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.7 2006-02-16 17:04:02 erodrigu Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.8 2006-02-21 10:58:09 dhcroft Exp $
 // Include files 
 
 // local
@@ -24,47 +24,39 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
   m_r = r ;
   m_cluster = &cluster;
   
-  int sensor = m_cluster -> sensor();
+  int sensor = m_cluster->channelID().sensor();
+  m_z = det.zSensor( sensor );
+
+  // Store only the 'position', which is the signed distance from strip to
+  // the origin.
+  m_measure = det.distToOrigin(  m_cluster->channelID() );
+  // fix sign convention of d0 of strip
+  if( ! det.isDownstreamSensor(sensor) ) {
+    m_measure = -m_measure;
+  }
+
+  // get error on that
   double sum   = 0.;
   double sum2  = 0.;
-  double sums  = 0.;
-  double phi   = -999.;
-
-  // Compute the average phi direction, and the total width in phi unit
-  // Store also the 'position', which is the signed distance from strip to
-  // the origin.
-
-  std::vector< std::pair<long,double> > sign = m_cluster->stripSignals();
-  std::vector< std::pair<long,double> >::const_iterator strIt;
-  int strip    = (*sign.begin()).first;
-  VeloChannelID channel(sensor,strip);
-  double pitch  = det.phiPitch( channel );
-  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
-    strip      = (*strIt).first;
-    m_measure = det.distToOrigin( channel );
-    // fix sign convention of d0 of strip
-    if( ! det.isDownstreamSensor(sensor)   ) {
-      m_measure = -m_measure;
-    }
-    phi        =  det.trgPhiDirectionOfStrip( channel );
-    sum       += (*strIt).second;
-    sum2      += pow((*strIt).second,2) ;
-    sums      += (*strIt).second * phi ;
+  std::vector < VeloChannelID > channels = m_cluster->channels();
+  std::vector< VeloChannelID >::const_iterator iChan;
+  for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
+    double adc = static_cast<double>(m_cluster->
+				     adcValue(iChan-channels.begin()));
+    sum  += adc;
+    sum2 += adc * adc;
   }
 
   if ( 0 < sum ) {
-    // double phi = sums / sum;
-    // m_cosPhi = cos( phi );
-    // m_sinPhi = sin( phi );
     // MM+
     // m_errMeasure  = ( pitch / sum) * sqrt( sum2 / 12 );
+    double pitch =   det.phiPitch( m_cluster->channelID() );
     m_errMeasure  = 0.8 * ( pitch / sum) * sqrt( sum2 / 12 );
     // m_errMeasure = 0.254*pitch - 0.0049*mm;
     // MM-
   }
 
-  m_z = det.zSensor( m_cluster->sensor() );
 
   // set the LHCbID
-  setLhcbID ( LHCbID( channel ) );
+  setLhcbID ( LHCbID( m_cluster->channelID() ) );
 }

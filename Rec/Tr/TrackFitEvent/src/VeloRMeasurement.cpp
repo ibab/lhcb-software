@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.6 2006-02-16 17:04:02 erodrigu Exp $
+// $Id: VeloRMeasurement.cpp,v 1.7 2006-02-21 10:58:09 dhcroft Exp $
 // Include files
 
 // local
@@ -24,35 +24,34 @@ VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
   m_phi = phi;
   m_cluster = &cluster;
   
-  int sensor = m_cluster->sensor();
+  int sensor = m_cluster->channelID().sensor();
+  m_z = det.zSensor( sensor );
+
   double sum   = 0.;
   double sum2  = 0.;
   double sums  = 0.;
 
-  std::vector< std::pair<long,double> > sign = m_cluster->stripSignals();
-  std::vector< std::pair<long,double> >::const_iterator strIt;
-  VeloChannelID channelOne(sensor,(*sign.begin()).first);
-  double radius = det.rOfStrip( channelOne );
-  double pitch =   det.rPitch( channelOne );
-
-  for( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
-    VeloChannelID channel(sensor,(*strIt).first);
-    radius= det.rOfStrip( channel );
-    sum   += (*strIt).second;
-    sum2  += pow((*strIt).second,2) ;
-    sums  += (*strIt).second * radius ;
+  std::vector < VeloChannelID > channels = m_cluster->channels();
+  std::vector< VeloChannelID >::const_iterator iChan;
+  for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
+    double radius= det.rOfStrip( *iChan );
+    double adc = static_cast<double>(m_cluster->
+				     adcValue(iChan-channels.begin()));
+    sum   += adc;
+    sum2  += adc * adc;
+    sums  += adc * radius ;
   }
   if ( 0 < sum ) {
     m_measure = sums / sum;
     // MM+
     // m_measure    = ( pitch / sum ) * sqrt( sum2 / 12 );
+  // use center strip as representative
+    double pitch =   det.rPitch( m_cluster->channelID() );
     m_errMeasure    = 0.8 * ( pitch / sum ) * sqrt( sum2 / 12 );
     // m_errMeasure = 0.254*pitch - 0.0049*mm;
     // MM-
   }
 
-  m_z = det.zSensor( m_cluster->sensor() );
-
   // set the LHCbID
-  setLhcbID ( LHCbID( channelOne ) );
+  setLhcbID ( LHCbID( m_cluster->channelID() ) );
 }
