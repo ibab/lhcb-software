@@ -1,8 +1,11 @@
-// $Id: Algs.h,v 1.2 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: Algs.h,v 1.3 2006-02-21 14:45:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:03  ibelyaev
+//  fix a typo
+//
 // Revision 1.1  2006/02/10 17:23:05  ibelyaev
 //  add more algorithms
 //
@@ -104,6 +107,30 @@ namespace LoKi
       return result ;
     } ;
     // ========================================================================
+    
+    /** @fn copy_if 
+     *  The missing "copy_if" algorithm from STL 
+     *
+     *  @param first 'begin'-iterator for the input sequence of objects
+     *  @param last  'end'-iterator for the input sequence of objects
+     *  @param output the position fo output iterator 
+     *  @param cut    the condition
+     *  @return the updated position of output itrator 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-20
+     */
+    template <class OBJECT,class OUTPUT,class PREDICATE>
+    inline OUTPUT copy_if 
+    ( OBJECT    first  , 
+      OBJECT    last   , 
+      OUTPUT    output , 
+      PREDICATE cut    ) 
+    {
+      for ( ; first != last ; ++first ) 
+      { if ( cut( *first ) ) { *output = *first ; ++output ; } }
+      return output ;
+    }
 
   } ; // end of namespace LoKi::Algs 
   
