@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.6 2006-02-20 16:42:46 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.7 2006-02-21 15:05:18 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -48,7 +48,7 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("inputLocation", m_inputLocation = MCSTDigitLocation::TTDigits);
   declareProperty("outputLocation", m_outputLocation = STDigitLocation::TTDigits); 
   declareProperty("tailStart", m_tailStart = 2.5);
-  declareProperty("saturation",m_saturation = 150.);
+  declareProperty("saturation",m_saturation = 127.);
   declareProperty("detType", m_detType = "TT"); 
 
   

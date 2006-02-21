@@ -1,7 +1,12 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
+
+! 2006-02-21
+ - Saturate ADC at 127
+
 !======================= STAlgorithms v1r0 2006-02-20 ========================
+
 ! 2006-02-20
  - some minor bug fixes and tuning
  - also add functionality to STDigitCreator to ensure always have neighbours
