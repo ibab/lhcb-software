@@ -1,14 +1,15 @@
-// $Id: VeloClusterMoni.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
+// $Id: VeloClusterMoni.cpp,v 1.3 2006-02-21 17:18:06 szumlat Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
-// LHCbKernel
-#include "Kernel/IMCVeloFEType.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "VeloClusterMoni.h"
+
+// velo
+#include "Kernel/IMCVeloFEType.h"
+#include "VeloDet/DeVelo.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMoni
@@ -17,7 +18,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
+//DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
+static const  AlgFactory<VeloClusterMoni>          s_factory ;
+const        IAlgFactory& VeloClusterMoniFactory = s_factory ;
 
 
 //=============================================================================
@@ -34,10 +37,14 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
     m_nVeloClustersS ( 0. ),
     m_nVeloClustersN ( 0. ),
     m_nVeloClustersO ( 0. ),
-    m_numberOfEvents ( 0 )
+    m_nOneStrip ( 0. ),
+    m_nTwoStrip ( 0. ),
+    m_nThreeStrip ( 0. ),
+    m_nFourStrip ( 0. ),
+    m_numberOfEvents ( 0 ),
+    m_veloDet ( getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo") ) 
 {
   declareProperty("PrintInfo", m_printInfo);
-  setProperty( "HistoTopDir", "Velo/" );
 }
 //=============================================================================
 // Destructor
@@ -52,6 +59,7 @@ StatusCode VeloClusterMoni::initialize() {
   //
   debug() << "==> Initialize" << endmsg;
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
+  setHistoTopDir("Velo/");
   //
   return StatusCode::SUCCESS;
 };
@@ -80,26 +88,54 @@ StatusCode VeloClusterMoni::finalize() {
   double errnVeloClusters=
    sqrt((m_nVeloClusters2-(m_nVeloClusters*m_nVeloClusters))/m_numberOfEvents);
   //
-  info()<< "------------------------------------------------------" <<endmsg;
+  m_nOneStrip/=m_numberOfEvents;
+  m_nTwoStrip/=m_numberOfEvents;
+  m_nThreeStrip/=m_numberOfEvents;
+  m_nFourStrip/=m_numberOfEvents;
+  double all=m_nOneStrip+m_nTwoStrip+m_nThreeStrip+m_nFourStrip;
+  //
+  info()<< "======================================================" <<endmsg;
   info()<< "              - VeloClusterMoni table -               " <<endmsg;
   info()<< "------------------------------------------------------" <<endmsg;
-  info()<< "| Number of MCVeloFEs/Event: " << m_nVeloClusters << " +/- " 
+  info()<< "| Number of Clusters/Event: " << m_nVeloClusters << " +/- " 
         << errnVeloClusters <<endmsg;
   double allClusters=m_nVeloClustersS+m_nVeloClustersN+m_nVeloClustersO;
   if(allClusters>0){
+    info().precision(4);
     info()<< "| Clusters from signal:                      " 
           << (m_nVeloClustersS/allClusters)*100
           << "%" <<endmsg;
+    info().precision(4);
     info()<< "| Clusters from noise:                       " 
           << (m_nVeloClustersN/allClusters)*100
           << "%" <<endmsg;
+    info().precision(4);
     info()<< "| Clusters from other (spillover/coupling):  " 
           << (m_nVeloClustersO/allClusters)*100
           << "%" <<endmsg;
+    info()<< "------------------------------------------------------" <<endmsg;
+    info()<< "              - Size of clusters (all)-               " <<endmsg;
+    info()<< "------------------------------------------------------" <<endmsg;
+    info().precision(4);
+    info()<< "| 1 strip clusters/event:     "
+          << m_nOneStrip << " (" << (m_nOneStrip/all)*100 << "%)"
+          <<endmsg;
+    info().precision(4);
+    info()<< "| 2 strip clusters/event:     "
+          << m_nTwoStrip << " (" << (m_nTwoStrip/all)*100 << "%)"
+          <<endmsg;
+    info().precision(3);
+    info()<< "| 3 strip clusters/event:     "
+          << m_nThreeStrip << " (" << (m_nThreeStrip/all)*100 << "%)"
+          <<endmsg;
+    info().precision(3);
+    info()<< "| 4 strip clusters/event:     "
+          << m_nFourStrip << " (" << (m_nFourStrip/all)*100 << "%)"
+          <<endmsg;
   }else{
     info()<< "| ==> No VeloClusters found! " <<endmsg;
   }
-  info()<< "------------------------------------------------------" <<endmsg;
+  info()<< "======================================================" <<endmsg;
   //
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -143,6 +179,16 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
   LHCb::InternalVeloClusters::iterator cluIt;
   //
   for(cluIt=m_veloClusters->begin(); cluIt!=m_veloClusters->end(); cluIt++){
+    //
+    double strips=(*cluIt)->size();
+    switch(int(strips)){
+    case 1: m_nOneStrip++; break;
+    case 2: m_nTwoStrip++; break;
+    case 3: m_nThreeStrip++; break;
+    case 4: m_nFourStrip++; break;
+    default : debug()<< " ==> cluster has more than four strips!" <<endmsg;
+    }
+    //
     bool signal=false, noise=false, other=false;
     LHCb::InternalVeloCluster* cluster=(*cluIt);
     clusterType(cluster, signal, noise, other);
@@ -167,9 +213,16 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     for(int iStrip=0; iStrip<cluSize; iStrip++){
       adcSum+=double((*cluIt)->adcValue(iStrip));
     }
+    //
+    unsigned int sensor=(*cluIt)->sensor();
+    if(m_veloDet->isPileUpSensor(sensor))
+    info()<< "sensor number: " << sensor <<endmsg;
+    double zPosOfClu=m_veloDet->zSensor(sensor);
+    debug()<< " z pos: " << zPosOfClu <<endmsg;
+    //
     plot2D((*cluIt)->sensor(), (*cluIt)->strip(0), 102,
            "Sensor and first strip number",
-           0., 100., 0., 5000., 100, 50);
+           0., 102., 0., 2050., 102, 50);
     plot(adcSum, 103,
          "ADC sum",
          -0.5, 255.5, 256);
@@ -179,18 +232,28 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
            "Signal dominated - ADC sum",
            -0.5, 255.5, 256);
       m_nVeloClustersS++;
+      plot2D(zPosOfClu/cm, sensor, 114,
+             "Z position and sensor number for signal dominated clusters",
+             -50., 100., 0., 135, 150, 135);
     }
     if(noise){
       plot(adcSum, 105,
            "Noise dominated - ADC sum",
            -0.5, 255.5, 256);
       m_nVeloClustersN++;
+      plot2D(zPosOfClu/cm, sensor, 115,
+             "Z position and sensor number for noise dominated clusters",
+             -50., 100., 0., 135, 150, 135);
     }
     if(other){
       plot(adcSum, 106,
            "SpillOver/couplings dominated - ADC sum",
            -0.5, 255.5, 256);
       m_nVeloClustersO++;
+      plot2D(zPosOfClu, sensor, 116,
+             "Z position and sensor number for spillOver/couplings"
+             " dominated clusters",
+             -50., 100., 0., 135, 150, 135);
     }
     //
     plot(cluSize, 107,

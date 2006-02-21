@@ -1,8 +1,8 @@
-// $Id: VeloDigiMoni.cpp,v 1.2 2006-02-10 14:02:49 cattanem Exp $
+// $Id: VeloDigiMoni.cpp,v 1.3 2006-02-21 17:18:06 szumlat Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "VeloDigiMoni.h"
@@ -17,7 +17,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
+//DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
+static const  AlgFactory<VeloDigiMoni>          s_factory ;
+const        IAlgFactory& VeloDigiMoniFactory = s_factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,7 +36,6 @@ VeloDigiMoni::VeloDigiMoni( const std::string& name,
 {
   declareProperty("PrintInfo", m_printInfo);
   declareProperty("TestDigits", m_testDigits);
-  setProperty( "HistoTopDir", "Velo/" );
 }
 //=============================================================================
 // Destructor
@@ -48,6 +49,8 @@ StatusCode VeloDigiMoni::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialize" << endmsg;
+  setHistoTopDir("Velo/");
+  
   //
   return (StatusCode::SUCCESS);
 };
@@ -121,7 +124,6 @@ StatusCode VeloDigiMoni::testVeloDigit()
       info()<< " Sensor number: " << (*digIt)->sensor() <<endmsg;
       info()<< " Strip number: " << (*digIt)->strip() <<endmsg;
       info()<< " ADC value: " << (*digIt)->adcValue() <<endmsg;
-      info()<< " Noise: " << (*digIt)->rawNoise() <<endmsg;
     }
     plot2D((*digIt)->sensor(), (*digIt)->strip(), 201,
            "Sensor and strip number",
@@ -129,9 +131,6 @@ StatusCode VeloDigiMoni::testVeloDigit()
     plot((*digIt)->adcValue(), 202,
          "Raw ADC counts",
          0., 256., 256);
-    plot((*digIt)->rawNoise(), 203,
-         "Raw noise",
-         0., 1024., 100);
   }
   //
   return (StatusCode::SUCCESS);

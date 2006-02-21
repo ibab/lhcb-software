@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.6 2006-02-10 14:02:49 cattanem Exp $
+// $Id: VeloDataProcessor.h,v 1.7 2006-02-21 17:18:06 szumlat Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -26,7 +26,9 @@ public:
 
   virtual ~VeloDataProcessor( ); ///< Destructor
 
+  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
@@ -37,10 +39,6 @@ private:
   // data members
   std::string m_inputContainer;      ///< Name of input container
   std::string m_outputVeloDigit; ///< Name of output container for digi
-  double noiseSigma();
-  double m_noiseConstant;
-  double m_noiseCapacitance;
-  double m_averageStripCapacitance;
   double m_ADCFullScale;
   double m_electronsFullScale;
 

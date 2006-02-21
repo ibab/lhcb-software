@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.h,v 1.2 2006-02-20 12:45:24 cattanem Exp $
+// $Id: VeloClusterMoni.h,v 1.3 2006-02-21 17:18:06 szumlat Exp $
 #ifndef VELOCLUSTERMONI_H 
 #define VELOCLUSTERMONI_H 1
 
@@ -9,6 +9,7 @@
 // velo
 #include "Event/MCVeloFE.h"
 #include "VeloEvent/InternalVeloCluster.h"
+
 /** @class VeloClusterMoni VeloClusterMoni.h
  *  
  *
@@ -17,6 +18,7 @@
  */
 
 class IMCVeloFEType;
+class DeVelo;
 
 class VeloClusterMoni : public GaudiTupleAlg {
 public: 
@@ -48,7 +50,12 @@ private:
   double m_nVeloClustersS;
   double m_nVeloClustersN;
   double m_nVeloClustersO;
+  double m_nOneStrip;
+  double m_nTwoStrip;
+  double m_nThreeStrip;
+  double m_nFourStrip;
   int m_numberOfEvents;
-  
+  DeVelo* m_veloDet;
+
 };
 #endif // VELOCLUSTERMONI_H

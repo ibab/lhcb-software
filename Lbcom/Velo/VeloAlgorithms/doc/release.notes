@@ -3,6 +3,12 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r0 2006-02-15 =====================
+! 2006-02-21 - Tomasz Szumlak
+ - Noise assignment for the VeloDigit removed from VeloDataProcessor
+ - Modification of the VeloClusterAlgorithm behaviour that allows to produce
+   clusters using MCVeloFEs from PileUp sensors
+ - VeloClusterMoni - new histograms for PileUp clusters monitoring
+
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent
 
