@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.38 2006-02-21 15:58:56 ocallot Exp $
+! $Id: release.notes,v 1.39 2006-02-21 17:29:19 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
 
+!======================== PuVeto v7r0 2006-02-21 ========================
 ! 2006-02-21 - Olivier Callot
  - If no peaks, avoid coding -1 in the L0DU data, this just sets wrong bits.
 
-!======================== PuVeto v7r0 2006-02-20 ========================
 ! 2006-02-18 - Olivier Callot
  - Use new definition of L0DU packing from L0DUBase.h
 
