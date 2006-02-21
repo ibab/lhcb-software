@@ -15,8 +15,9 @@
     <class name="&className;" 
      author="C Parkes" 
      desc="A cluster as produced by the TELL1 but without full ADC information"
-     serializers = "FALSE">
-     <location name="VeloClusters"   place="Raw/Velo/LiteClusters"   />
+     location="Raw/Velo/LiteClusters"
+     serializers="FALSE"
+    >
 
   &VeloLiteClusterClass;
 

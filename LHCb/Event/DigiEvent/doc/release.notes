@@ -4,7 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-!========================= DigiEvent v1r0 2006-02-17 =========================
+!========================= DigiEvent v1r0 2006-02-21 =========================
+! 2006-02-21 - Marco Cattaneo
+ - Change name of default location for Velo classes to ::Default
+
 ! 2006-02-17 - Chris Parkes
  - new VeloCluster, VeloLiteCluster added 
 

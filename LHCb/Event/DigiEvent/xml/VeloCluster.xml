@@ -14,9 +14,9 @@
      id="4006"
      author="Chris Parkes"
      desc="A cluster as produced by the TELL1 with full ADC information."
-     serializers="FALSE">
-     <location name="VeloClusters"   place="Raw/Velo/Clusters"   />
-     
+     location="Raw/Velo/Clusters"
+     serializers="FALSE"
+    >
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips'
