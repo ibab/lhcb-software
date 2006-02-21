@@ -22,8 +22,13 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/INTupleSvc.h"
+#include "GaudiKernel/INTuple.h"
+#include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Bootstrap.h"
+
+
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
@@ -208,6 +213,45 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
 }
 void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
 
+  //  INTupleSvc* CurrentNtupleSvc=RichG4SvcLocator::RichG4NtupleSvc();
+
+  //    NTuple::Item <long> m_nPartQw ;
+    
+  //  int m_nPartMax=100000;
+  //  NTuple::Array <float> m_ChTkProdX, m_ChTkProdY, m_ChTkProdZ ;
+
+       
+    IHistogramSvc* CurrentHistoSvc=RichG4SvcLocator::RichG4HistoSvc();
+
+
+ 
+  //   NTuplePtr nt ( CurrentNtupleSvc , "/NTUPLES/FILE1/1001" ) ;
+  //     if(! nt ) {
+        
+	 //        NTupleFilePtr file ( CurrentNtupleSvc , "/NTUPLES/FILERICH" ) ;
+	 //if(file) {
+  //	 m_nPartQw=0;
+  //     	 nt = CurrentNtupleSvc ->book (  "/NTUPLES/FILE1/1001",
+  //                                       CLID_ColumnWiseTuple ,"HpdQwNt");
+  //	 StatusCode sc = nt->addItem("Npartqw", m_nPartQw, 0, m_nPartMax);
+  //       sc = nt->addIndexedItem("chProdX", m_nPartQw,  m_ChTkProdX);
+  //       sc = nt->addIndexedItem("chProdY", m_nPartQw,  m_ChTkProdY);
+  //       sc = nt->addIndexedItem("chProdZ", m_nPartQw,  m_ChTkProdZ);
+
+
+	 // }else {
+	 //  G4cout <<"Not ntuple file pointer "<<G4endl;
+	 //  }
+
+  //    } else {
+ 
+  //	 if( m_nPartQw <m_nPartMax ) { 
+
+    SmartDataPtr<IHistogram2D> hHpdQwOrigXZR1 (CurrentHistoSvc,"RICHG4HISTOSET1/1001");
+    SmartDataPtr<IHistogram2D> hHpdQwOrigXZR2 (CurrentHistoSvc,"RICHG4HISTOSET1/1002");
+    SmartDataPtr<IHistogram2D> hHpdQwOrigYZR1 (CurrentHistoSvc,"RICHG4HISTOSET1/1010");
+    SmartDataPtr<IHistogram2D> hHpdQwOrigYZR2 (CurrentHistoSvc,"RICHG4HISTOSET1/1011");
+       
    RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
                           RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
    const G4DynamicParticle* aChTrackParticle
@@ -226,24 +270,40 @@ void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
     G4double aParticleEnergy = aChTrack.GetTotalEnergy() ;
     
      if( aCurPos.z() < ZDnsRich1Analysis ) {
+       if(hHpdQwOrigXZR1) hHpdQwOrigXZR1->fill(aChTrackProdPos.z(),aChTrackProdPos.x(),1.0);
+       if(hHpdQwOrigYZR1) hHpdQwOrigYZR1->fill(aChTrackProdPos.z(),aChTrackProdPos.y(),1.0);
        // we are in rich1
-       G4cout<<"rich1 cur track pos xyz "<<aCurPos.x()<<"  "<<aCurPos.y()<<"  "<<aCurPos.z()<<G4endl;
+       // G4cout<<"rich1 cur track pos xyz "<<aCurPos.x()<<"  "<<aCurPos.y()<<"  "<<aCurPos.z()<<G4endl;
+
+       //    m_ChTkProdX[ m_nPartQw ]= aCurPos.x();
+       // m_ChTkProdY[ m_nPartQw ]= aCurPos.y();
+       // m_ChTkProdY[ m_nPartQw ]= aCurPos.z();
+
+       // we are in rich1
+       //       G4cout<<"rich1 cur track pos xyz "<<aCurPos.x()<<"  "<<aCurPos.y()<<"  "<<aCurPos.z()<<G4endl;
        
-       G4cout<<"rich1 RadNum ProdPos En XYZ PXYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<< aParticleEnergy<<"  "
-             <<aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
-             <<"  "<<aChTrackProdPos.z()<< "  "<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
-             <<"  "<< aMomAtProd.z()<< G4endl;
+       //   G4cout<<"rich1 RadNum ProdPos En XYZ PXYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<< aParticleEnergy<<"  "
+       //      <<aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
+       //      <<"  "<<aChTrackProdPos.z()<< "  "<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
+       //      <<"  "<< aMomAtProd.z()<< G4endl;
+       
 
      }else {
+
+       if(hHpdQwOrigXZR2) hHpdQwOrigXZR2->fill(aChTrackProdPos.z(),aChTrackProdPos.x(),1.0);
+       if(hHpdQwOrigYZR2) hHpdQwOrigYZR2->fill(aChTrackProdPos.z(),aChTrackProdPos.y(),1.0);
+
        // we are in rich2
-       G4cout<<"rich2 aChTrackProdPos XYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<<aParticleEnergy<<"  "
-             << aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
-             <<"  "<<aChTrackProdPos.z()<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
-             <<"  "<< aMomAtProd.z()<< G4endl;
+       //       G4cout<<"rich2 aChTrackProdPos XYZ  "<<aRadiatorNum<<"  "<<aParticleName<<"  "<<aParticleEnergy<<"  "
+       //     << aChTrackProdPos.x()<<"  "<<aChTrackProdPos.y()
+       //     <<"  "<<aChTrackProdPos.z()<<aMomAtProd.x()<<"  "<<aMomAtProd.y()
+       //     <<"  "<< aMomAtProd.z()<< G4endl;
      }
    }
-
+   //	 m_nPartQw++;
+   //	 }
 }
+
 
 
 

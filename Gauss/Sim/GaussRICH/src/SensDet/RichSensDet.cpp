@@ -219,14 +219,17 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int aRichVerboseFlag=0;
   G4int CurOptPhotID =0;
 
+  G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
+  GaussTrackInformation* aRichPETrackInfo
+      = (GaussTrackInformation*)aUserTrackinfo;
 
   if( ( (aTrack->GetDefinition() == G4Electron::Electron()) ||
         (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
       (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
 
-    G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
-    GaussTrackInformation* aRichPETrackInfo
-      = (GaussTrackInformation*)aUserTrackinfo;
+    //    G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
+    // GaussTrackInformation* aRichPETrackInfo
+    //  = (GaussTrackInformation*)aUserTrackinfo;
 
     if(aRichPETrackInfo)
     {
@@ -327,10 +330,15 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // if the mother of the corresponding optical photon exists it is set
   // as the trackid. Otherwise the track creating the
   // hit is set as the track id/
+    // following line and the if block modified on Feb 21, 2006.
+  if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
   if ( CurOptPhotMotherChTrackID >=0 ) {
+    // Charged track -> Cherenkov photon -> photoelectron-> hit 
     newHit ->setTrackID(CurOptPhotMotherChTrackID);
   } else {
+    // Charged track -> hit
     newHit ->setTrackID(CurPETrackID);
+    if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
   }
 
   int CurrentRichCollectionSet=-1;

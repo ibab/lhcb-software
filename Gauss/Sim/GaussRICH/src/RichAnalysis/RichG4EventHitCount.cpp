@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.9 2006-02-15 11:10:48 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.10 2006-02-21 17:05:27 seaso Exp $
 // Include files
 
 
@@ -1515,10 +1515,11 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
               }
 
             }else if (aRadiatorNum == RichFilterGenericCkvRadiatorNum ) {
-
 	      aRichCounter-> bumpNumHitTotRich1FilterGeneric();
+
             }else if ( aRadiatorNum == RichFilterD263CkvRadiatorNum ) {
 	      aRichCounter->bumpNumHitTotRich1FilterD263();
+
             }else if ( aRadiatorNum == Rich1GasQWindowCkvRadiatorNum) {
 	      aRichCounter->bumpNumHitTotRich1GasQw();
             }else if ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) {

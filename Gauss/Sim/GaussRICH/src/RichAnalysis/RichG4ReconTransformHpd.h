@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.h,v 1.3 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconTransformHpd.h,v 1.4 2006-02-21 17:05:27 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H
 #define RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H 1
 // Include files
@@ -37,6 +37,7 @@ public:
     return m_HpdGlobalToLocal;
   }
 
+  void initialise();
 protected:
 
 private:

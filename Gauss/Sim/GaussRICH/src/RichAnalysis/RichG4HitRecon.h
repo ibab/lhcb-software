@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.h,v 1.2 2004-02-10 14:24:13 jonesc Exp $
+// $Id: RichG4HitRecon.h,v 1.3 2006-02-21 17:05:27 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4HITRECON_H
 #define RICHANALYSIS_RICHG4HITRECON_H 1
 
@@ -7,6 +7,7 @@
 #include "RichG4CkvRecon.h"
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4HistoFillSet4.h"
+#include "RichG4HitCoordResult.h"
 
 #include "G4Event.hh"
 
@@ -70,8 +71,15 @@ public:
     m_useMidRadiatorZEmisPt = useMidRadiatorEmis;
 
   }
-
-
+  RichG4HitCoordResult* getRichG4HitCoordResult() 
+  {
+    return m_RichG4HitCoordResult;
+  }
+  
+  void setRichG4HitCoordResult(RichG4HitCoordResult* ar ) 
+  {m_RichG4HitCoordResult= ar;}
+  
+    
 protected:
 
 private:
@@ -80,7 +88,8 @@ private:
   RichG4ReconFlatMirr* m_RichG4ReconFlatMirr;
   RichG4HistoFillSet4* m_RichG4HistoFillSet4Ckv;
   RichG4ReconResult* m_RichG4ReconResult;
-
+  RichG4HitCoordResult* m_RichG4HitCoordResult;
+  
   double m_agelnominalrefindex;
   double m_c4f10nominalrefindex;
   double m_MidRich1AgelZ;

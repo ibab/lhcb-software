@@ -6,6 +6,7 @@
 #include "../SensDet/RichG4Hit.h"
 #include "RichG4Counters.h"
 #include "RichG4EventHitCount.h"
+#include "RichG4QwAnalysis.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -64,9 +65,11 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichEventActionHistoFillActivateTimer(false),
     m_RichG4EventHitActivateCount(false),
     m_RichG4EventActivateCkvRecon(false),
+    m_RichG4HistoActivateQw(false),
     m_RichG4HitReconUseSatHit(true),
     m_RichG4HitReconUseMidRadiator(false),
-    m_RichG4InputMonActivate(false)
+    m_RichG4InputMonActivate(false),
+    m_IsRichG4FirstEvent(true)
 {
   declareProperty( "RichEventActionVerbose",
                    m_RichEventActionVerboseLevel );
@@ -92,6 +95,9 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
                   m_RichG4HitReconUseSatHit);
   declareProperty("RichG4EventHitReconUseMidRadiator",
                   m_RichG4HitReconUseMidRadiator);
+
+  declareProperty("RichG4QuartzWindowCkvHistoActivate",
+		  m_RichG4HistoActivateQw);
 
   declareProperty("RichG4InputMonitorActivate",
 		  m_RichG4InputMonActivate);
@@ -216,9 +222,16 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     }
     
   }
-  
 
+  if( m_IsRichG4FirstEvent ) {
+    if( m_RichG4HistoActivateQw ) {
 
+      RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
+      aRichG4QwAnalysis->InitQwAnalysis();
+    }
+
+    m_IsRichG4FirstEvent = false;
+  }
 
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction");
 };

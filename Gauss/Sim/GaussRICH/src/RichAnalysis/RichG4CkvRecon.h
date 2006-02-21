@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.h,v 1.4 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4CkvRecon.h,v 1.5 2006-02-21 17:05:27 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4CKVRECON_H
 #define RICHANALYSIS_RICHG4CKVRECON_H 1
 
@@ -35,6 +35,7 @@
 #include <CLHEP/Vector/ThreeVector.h>
 
 #include "RichG4ReconTransformHpd.h"
+#include "RichG4TransformPhDet.h"
 #include "RichG4ReconHpd.h"
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4Hit.h"
@@ -173,7 +174,11 @@ public:
     return m_CurReconFlatMirr;}
   void setCurReconFlatMirr( RichG4ReconFlatMirr* aCurReconFlatMirr) {
     m_CurReconFlatMirr = aCurReconFlatMirr;}
-
+  RichG4TransformPhDet* getCurPhDetTrans(int aSect) 
+  {
+    return m_PhDetTransforms[aSect];
+  }
+  
 protected:
 
 private:
@@ -184,6 +189,8 @@ private:
 
   std::vector<std::vector<RichG4ReconTransformHpd*> > m_HpdTransforms;
 
+  std::vector<RichG4TransformPhDet*>  m_PhDetTransforms;
+  
   std::vector<std::vector<double> > m_SphMirrCC;
   std::vector<double> m_SphMirrRad;
   RichG4ReconHpd* m_RichG4ReconHpd;

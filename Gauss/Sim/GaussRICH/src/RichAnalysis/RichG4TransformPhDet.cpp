@@ -1,5 +1,5 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.6 2006-02-21 17:05:27 seaso Exp $
-// Include files
+// $Id: RichG4TransformPhDet.cpp,v 1.1 2006-02-21 17:05:27 seaso Exp $
+// Include files 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -9,98 +9,84 @@
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/RegistryEntry.h"
-
-
+ 
 #include "GaudiKernel/MsgStream.h"
-
+ 
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
-
+ 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
-
+ 
 // RichDet
 #include "RichDet/DeRich.h"
-
+ 
 //#include <CLHEP/Geometry/Point3D.h>
 //#include <CLHEP/Geometry/Vector3D.h>
 //#include <CLHEP/Geometry/Transform3D.h>
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
+ 
+#include "RichG4SvcLocator.h"
+ 
+
 
 
 // local
-#include "RichG4ReconTransformHpd.h"
-#include "RichG4SvcLocator.h"
+#include "RichG4TransformPhDet.h"
+
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichG4ReconTransformHpd
+// Implementation file for class : RichG4TransformPhDet
 //
-// 2003-09-09 : Sajan EASO
+// 2006-02-17 : Sajan EASO
 //-----------------------------------------------------------------------------
-//
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichG4ReconTransformHpd::RichG4ReconTransformHpd(  ) {
+RichG4TransformPhDet::RichG4TransformPhDet(  ) {
+
 
 }
-RichG4ReconTransformHpd::~RichG4ReconTransformHpd(  ) {
-}
 
-void RichG4ReconTransformHpd::initialise() {
-
+void RichG4TransformPhDet::initialise() 
+{
  m_Rich1SubMasterPvIndex=0;
   m_Rich1MagShPvName0 = "pvRich1MagShH0:0";
   m_Rich1MagShPvName1 = "pvRich1MagShH1:1";
   m_Rich1PhotDetSupPvIndex=1;
   m_HpdSMasterIndex=0;
-  m_Rich2HpdPanelName0="pvRich2HPDPanel:0";
-  m_Rich2HpdPanelName1="pvRich2HPDPanel:1";
   m_Rich2HpdPanelIndex0=3;
   m_Rich2HpdPanelIndex1=4;
-  m_Rich1HpdArrayMaxH0=111;
-  m_Rich2HpdArrayMaxH0=135;
-
-  // the following 2 not used for now.
-  m_Rich1MagShPvIndexH0=20;
-  m_Rich1MagShPvIndexH1=21;
-
-
+  m_Rich2HpdPanelName0="pvRich2HPDPanel:0";
+  m_Rich2HpdPanelName1="pvRich2HPDPanel:1";
+ 
+  
 }
 
-RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
-                                                  int aHpdNumber )
-{
+RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
 
   initialise();
+  
   IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
-  MsgStream RichG4ReconTransformHpdlog( msgSvc,"RichG4TransformHpd");
+  MsgStream RichG4TransformPhDetlog( msgSvc,"RichG4TransformPhDet");
 
-   //
-
-  // RichG4ReconTransformHpdlog<<MSG::INFO
-  //                <<"Now creating Hpd transform "
-  //                <<  aRichDetNum
-  //                              << "  "<<aHpdNumber <<endreq;
-
-
-  if(aRichDetNum == 0 ) {
+ if(aRichDetNum == 0 ) {
 
     SmartDataPtr<DetectorElement> Rich1DE(detSvc,
                                           DeRichLocation::Rich1);
 
     if( !Rich1DE ){
 
-      RichG4ReconTransformHpdlog << MSG::ERROR
+      RichG4TransformPhDetlog << MSG::ERROR
                                  << "Can't retrieve " << DeRichLocation::Rich1
-                                 << " for RichG4TransformHpd"
+                                 << " for RichG4TransformPhDet"
                                  << endreq;
 
     }else {
@@ -118,12 +104,12 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
       const IPVolume* apva =
         aRich1MasterLogVol->pvolume(m_Rich1SubMasterPvIndex);
 
-      //   RichG4ReconTransformHpdlog<<MSG::INFO
+      //   RichG4TransformPhDetlog<<MSG::INFO
       //  <<"Now creating Hpd transform for rich1 hpd "
       //                          <<aHpdNumber<<endreq;
 
       if(apva) {
-        //  RichG4ReconTransformHpdlog<<MSG::INFO
+        //  RichG4TransformPhDetlog<<MSG::INFO
         //         << " Rich1SubMaster pvol lvol num sub vol"
         //                          <<apva->name() <<"   "
         //                          <<apva->lvolumeName()<<"  "
@@ -133,12 +119,12 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
         const Gaudi::Transform3D & apvaTrans = apva->matrix();
         const Gaudi::Transform3D & apvaTransInv = apva->matrixInv();
         // for test print the names of sub volumes
-        // RichG4ReconTransformHpdlog<<MSG::INFO
+        // RichG4TransformPhDetlog<<MSG::INFO
         //                           <<"rich1 test of hpd number "
         //                           <<aHpdNumber<<endreq;
 
         //  for (int it=0;it< (int) apva->lvolume()-> noPVolumes(); it++) {
-        //  RichG4ReconTransformHpdlog<<MSG::INFO
+        //  RichG4TransformPhDetlog<<MSG::INFO
         //                         <<"daughter pv index name "
         //                         <<it<<"  "
         //                         <<  apva->lvolume()->
@@ -148,21 +134,19 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
         // }
 
-        //   RichG4ReconTransformHpdlog<<MSG::INFO
-        //                     <<"IN rich1 current hpd num = "
-        //                     <<aHpdNumber<<endreq;
 
-        const IPVolume* apvb = (aHpdNumber < m_Rich1HpdArrayMaxH0) ?
+      if( aSectorNum ==0 || aSectorNum == 1 ) {
+
+        const IPVolume* apvb = (aSectorNum== 0) ?
           apva->lvolume()->pvolume(m_Rich1MagShPvName0):
           apva->lvolume()->pvolume(m_Rich1MagShPvName1);
 
         if(apvb ) {
 
-          // RichG4ReconTransformHpdlog<<MSG::INFO
+          // RichG4TransformPhDetlog<<MSG::INFO
           //             << " Rich1Magsh pvol lvol hpdnum "
           //                        <<apvb->name() <<"   "
-          //                        <<apvb->lvolumeName()
-          //                        <<"  "<<aHpdNumber
+          //                        <<apvb->lvolumeName
           //                        <<endreq;
 
           const Gaudi::Transform3D & apvbTrans= apvb->matrix();
@@ -172,7 +156,7 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
             ->pvolume(m_Rich1PhotDetSupPvIndex);
           if(apvc) {
 
-            //   RichG4ReconTransformHpdlog<<MSG::INFO
+            //   RichG4TransformPhDetlog<<MSG::INFO
             //         << " Rich1PhotDetSup pvol lvol "
             //                      <<apvc->name() <<"   "
             //                      <<apvc->lvolumeName()
@@ -180,91 +164,40 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
             // now account for the fact that the index is
             // restarted int he bottom ph det sup vol.
 
-            int aHpdIndex =  aHpdNumber;
-            if( aHpdNumber >= m_Rich1HpdArrayMaxH0 ){
-              aHpdIndex = aHpdNumber-m_Rich1HpdArrayMaxH0;
-            }
-
             const Gaudi::Transform3D & apvcTrans= apvc->matrix();
             const Gaudi::Transform3D & apvcTransInv= apvc->matrixInv();
 
 
 
-	    //            m_PhDetSupGlobalToLocal = apvdTrans * apvcTrans * apvbTrans *
-	    //       apvaTrans * aRich1MasterTrans;
-	    // m_PhDetSupLocalToGlobal = aRich1MasterTransInv*apvaTransInv*
-            //                          apvbTransInv* apvcTransInv*
-            //                          apvdTransInv;
+	      m_PhDetGlobalToLocal =  apvcTrans * apvbTrans *
+	                                apvaTrans * aRich1MasterTrans;
+	      m_PhDetLocalToGlobal = aRich1MasterTransInv*apvaTransInv*
+                                  apvbTransInv* apvcTransInv;
+        
 
 
-            const IPVolume* apvd = apvc->lvolume()
-              ->pvolume( aHpdIndex);
-            if(apvd) {
-              // RichG4ReconTransformHpdlog<<MSG::INFO
-              //         << " Rich1hpdmaster pvol lvol num index "
-              //                    <<apvd->name() <<"   "
-              //                    <<apvd->lvolumeName()
-              //                    <<"  "<< aHpdNumber
-              //                    <<"  "<< aHpdIndex
-              //                    <<endreq;
+          }}}}}
+    
+ 
+     }else if( aRichDetNum == 1){
 
-              const Gaudi::Transform3D & apvdTrans= apvd->matrix();
-              const Gaudi::Transform3D & apvdTransInv= apvd->matrixInv();
-              const IPVolume* apvf =  apvd->lvolume()
-                ->pvolume(m_HpdSMasterIndex);
-              if(apvf) {
-                // RichG4ReconTransformHpdlog<<MSG::INFO
-                //      << " Rich1hpdsubmaster pvol lvol "
-                //                  <<apvf->name() <<"   "
-                //                  <<apvf->lvolumeName()
-                //                  <<endreq;
-
-                const Gaudi::Transform3D & apvfTrans= apvf->matrix();
-                const Gaudi::Transform3D & apvfTransInv= apvf->matrixInv();
-
-                m_HpdGlobalToLocal =
-                  apvfTrans* apvdTrans * apvcTrans * apvbTrans *
-                  apvaTrans * aRich1MasterTrans;
-                m_HpdLocalToGlobal =
-                  aRich1MasterTransInv*apvaTransInv*
-                  apvbTransInv* apvcTransInv*
-                  apvdTransInv* apvfTransInv;
-
-              }
-
-            }
-
-
-          }
-
-
-        }
-
-
-
-      }
-
-
-    }
-  }else if( aRichDetNum == 1){
-
-    SmartDataPtr<DetectorElement> Rich2DE(detSvc,
+       SmartDataPtr<DetectorElement> Rich2DE(detSvc,
                                           DeRichLocation::Rich2);
 
-    if( !Rich2DE ){
+       if( !Rich2DE ){
 
-      RichG4ReconTransformHpdlog << MSG::ERROR
+         RichG4TransformPhDetlog << MSG::ERROR
                                  << "Can't retrieve " << DeRichLocation::Rich2
-                                 << " for RichG4TransformHpd"
+                                 << " for RichG4TransformPhDet"
                                  << endreq;
 
-    }else {
+          }else {
 
-      //       RichG4ReconTransformHpdlog<<MSG::INFO
+      //       RichG4TransformPhDetlog<<MSG::INFO
       //                       <<"Now creating Hpd transform for rich2 "
       //                       <<endreq;
 
-      //  RichG4ReconTransformHpdlog<<MSG::INFO
+      //  RichG4TransformPhDetlog<<MSG::INFO
       //        << " Rich2Master lvol num sub vol "
       //                         <<Rich2DE->geometry()->lvolume()->name()
       //              <<"  "<<Rich2DE->geometry()->lvolume()-> noPVolumes()
@@ -272,7 +205,7 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
       // for (int it2=0;it2< (int) Rich2DE->geometry()->lvolume()
       //               -> noPVolumes(); it2++) {
-      // RichG4ReconTransformHpdlog<<MSG::INFO
+      // RichG4TransformPhDetlog<<MSG::INFO
       //                         <<"rich2 daughter pv index name "
       //                         <<it2<<"  "
       //                         << Rich2DE->geometry() ->lvolume()->
@@ -289,70 +222,36 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
       const Gaudi::Transform3D & aRich2MasterTransInv =
         Rich2DE->geometry()->matrixInv();
 
-      const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
-        aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelIndex0):
-        aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelIndex1);
+      if( aSectorNum ==2 || aSectorNum == 3 ) {
+        
+       const IPVolume* bpva = (aSectorNum ==2 )?
+         aRich2MasterLogVol->
+         pvolume(m_Rich2HpdPanelIndex0):
+         aRich2MasterLogVol->
+         pvolume(m_Rich2HpdPanelIndex1);
 
 
 
       if(bpva) {
-        // RichG4ReconTransformHpdlog<<MSG::INFO
+        // RichG4ReconTransformPhDetlog<<MSG::INFO
         //                  <<" hpd num hpdpanel name "
-        //                  <<aHpdNumber<<"   "
         //                  << bpva->name()<<endreq;
-        int aHpdIndexR2=  aHpdNumber;
-        if(  aHpdNumber >= m_Rich2HpdArrayMaxH0) {
-          aHpdIndexR2 = aHpdNumber - m_Rich2HpdArrayMaxH0;
-
-        }
-
 
         const Gaudi::Transform3D & bpvaTrans = bpva->matrix();
         const Gaudi::Transform3D & bpvaTransInv = bpva->matrixInv();
 
-        const IPVolume* bpvb =
-          bpva->lvolume()->pvolume(aHpdIndexR2);
-        if(bpvb) {
-          const Gaudi::Transform3D & bpvbTrans = bpvb->matrix();
-          const Gaudi::Transform3D & bpvbTransInv = bpvb->matrixInv();
-          const IPVolume* bpvf =  bpvb->lvolume()
-            ->pvolume(m_HpdSMasterIndex);
-          if(bpvf ) {
-            const Gaudi::Transform3D & bpvfTrans = bpvf->matrix();
-            const Gaudi::Transform3D & bpvfTransInv = bpvf->matrixInv();
+	      m_PhDetGlobalToLocal = bpvaTrans * aRich2MasterTrans;
 
-            m_HpdGlobalToLocal =
-              bpvfTrans*  bpvbTrans *
-              bpvaTrans * aRich2MasterTrans;
-            m_HpdLocalToGlobal =
-              aRich2MasterTransInv*bpvaTransInv*
-              bpvbTransInv* bpvfTransInv;
+	      m_PhDetLocalToGlobal = aRich2MasterTransInv*bpvaTransInv;        
 
-          }
-
-
-        }
-
-
-
-      }
-
-
-
-    }
-
-
-
+      }}}
   }
-
-
 
 }
 
-
-
-
+//=============================================================================
+// Destructor
+//=============================================================================
+RichG4TransformPhDet::~RichG4TransformPhDet() {} 
 
 //=============================================================================

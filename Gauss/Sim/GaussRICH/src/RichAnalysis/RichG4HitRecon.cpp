@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.5 2006-02-15 11:10:49 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.6 2006-02-21 17:05:27 seaso Exp $
 // Include files
 
 // local
@@ -20,6 +20,7 @@
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4Counters.h"
+#include "RichG4HitCoordResult.h";
 
 // local
 #include "RichG4SvcLocator.h"
@@ -52,7 +53,8 @@ RichG4HitRecon::RichG4HitRecon( ):  m_RichG4CkvRec (0) ,
   m_useMidRadiatorZEmisPt = false;
 
   m_RichG4ReconResult= new RichG4ReconResult();
-
+  m_RichG4HitCoordResult = new RichG4HitCoordResult();
+  
 
 }
 RichG4HitRecon::~RichG4HitRecon(  ) {
@@ -101,6 +103,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
   int NumTkIdRich2Gas =  TkIdVectRich2Gas.size();
 
   int irichdet=-1;
+
 
 
   G4HCofThisEvent * HCE;
@@ -407,6 +410,27 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
             Gaudi::XYZPoint aDetPointFromGlobalPhCathode =  aFlatMirr->
               FlatMirrorReflect( aHitOnQwFromGlobalPhCathode,aFlatMirrtype);
+
+            // test to plot the hit coord
+
+            m_RichG4HitCoordResult->setDetPtFromPixelNum(aDetPointFromPixelNum );
+            m_RichG4HitCoordResult->setDetPtInPhDetFromTrueLocalHit(aDetPointFromTrueLocalHit);
+            m_RichG4HitCoordResult->setDetPtInPhDetFromGlobalPhCathode(aDetPointFromGlobalPhCathode);
+            const Gaudi::Transform3D aPhDetGlobalToLocal = m_RichG4CkvRec->
+                                                            getCurPhDetTrans(ihcol)->
+                                                            PhDetGlobalToLocal();
+            
+            Gaudi::XYZPoint aDetPointFromPixelNumInPhDet = aPhDetGlobalToLocal*aDetPointFromPixelNum;
+            
+            Gaudi::XYZPoint aDetPointFromTrueLocalHitInPhDet = aPhDetGlobalToLocal*aDetPointFromTrueLocalHit;
+            Gaudi::XYZPoint  aDetPointFromGlobalPhCathodeInPhDet = aPhDetGlobalToLocal*aDetPointFromGlobalPhCathode;
+            m_RichG4HitCoordResult->setDetPtInPhDetFromPixelNum(aDetPointFromPixelNumInPhDet);
+            m_RichG4HitCoordResult->setDetPtInPhDetFromTrueLocalHit(aDetPointFromGlobalPhCathodeInPhDet);
+            m_RichG4HitCoordResult->setDetPtInPhDetFromGlobalPhCathode(aDetPointFromGlobalPhCathodeInPhDet);
+            m_RichG4HitCoordResult->setradiatorNum( aRadiatornum);
+            
+
+            // end of test to plot the hit coord
 
             //  Now there are three options for getting the detection point
             //  and two options for getting the emission point. In aerogel

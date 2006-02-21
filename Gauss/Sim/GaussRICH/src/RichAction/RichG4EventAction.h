@@ -112,9 +112,13 @@ public:
   {
     return m_RichG4HitRecon;
   }
+
   bool RichG4EventActivateCkvRecon()
   {
     return  m_RichG4EventActivateCkvRecon;    
+  }
+  bool  RichG4HistoActivateQw() {
+    return m_RichG4HistoActivateQw;
   }
 
   RichG4InputMon* getRichG4InputMon() 
@@ -125,7 +129,7 @@ public:
   {
     return m_RichG4InputMonActivate;
   } 
- 
+  bool IsRichG4FirstEvent() {return m_IsRichG4FirstEvent;}
 private:
  
   RichG4EventAction() ; ///< no default constructor
@@ -160,12 +164,14 @@ private:
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
   bool m_RichG4EventActivateCkvRecon;
+  bool m_RichG4HistoActivateQw;
 
   bool m_RichG4HitReconUseSatHit;
   bool m_RichG4HitReconUseMidRadiator;
 
   bool m_RichG4InputMonActivate;
   
+  bool m_IsRichG4FirstEvent;
 };
 // ============================================================================
 

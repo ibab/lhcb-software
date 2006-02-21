@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.9 2006-02-15 11:11:44 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.10 2006-02-21 17:06:12 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -59,8 +59,9 @@
 #include "RichG4CherenkovPhotProdTag.h"
 #include "RichG4MatRadIdentifier.h"
 // local analysis for RichG4.
-// #include "RichG4CherenkovAnalysis.h"
-
+//#include "RichG4CherenkovAnalysis.h"
+#include "RichG4QwAnalysis.h"
+// end of include localanalysis
 using namespace std;
 
 /////////////////////////
@@ -327,15 +328,19 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
                                    cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
-   // test analysis
-   //  RichG4CherenkovProdFeaturesHisto(aTrack);
-    // end of test analysis
  
     // end of additions by SE to tag the info on photon production.
     // also the next line is commented out as as result.
     // aParticleChange.AddSecondary(aSecondaryTrack);
 
   }
+   // test analysis by SE. Not needed for regular production running.
+  //RichG4CherenkovProdFeaturesHisto(aTrack);
+  RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
+  if( aRichG4QwAnalysis->qwAnalysisNtupleBooked() ) {
+    aRichG4QwAnalysis ->FillQwAnalysisHisto(aTrack);
+  }
+    // end of test analysis by SE
 
   if (verboseLevel>0) {
     G4cout << "\n Exiting from RichG4Cerenkov::DoIt -- NumberOfSecondaries = "

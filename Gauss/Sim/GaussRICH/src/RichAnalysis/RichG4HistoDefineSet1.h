@@ -54,6 +54,11 @@ private:
   IHistogram2D*         m_hGlobalPEOriginC4F10XY;
   IHistogram2D*         m_hGlobalPEOriginCF4XY;
 
+  IHistogram2D*         M_hHpdQwOrigXZR1;
+  IHistogram2D*         M_hHpdQwOrigXZR2;
+  IHistogram2D*         M_hHpdQwOrigYZR1;
+  IHistogram2D*         M_hHpdQwOrigYZR2;
+  
   //  IHistogram2D*         m_hGlobalPEOriginAgelTopXY;
   // IHistogram2D*         m_hGlobalPEOriginC4F10TopXY;
   // IHistogram2D*         m_hGlobalPEOriginAgelBotXY;

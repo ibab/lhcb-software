@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.8 2006-02-15 11:10:48 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.9 2006-02-21 17:05:26 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -21,6 +21,7 @@
 #include "RichG4CkvRecon.h"
 #include "RichG4ReconHpd.h"
 #include "RichG4ReconTransformHpd.h"
+#include "RichG4TransformPhDet.h"
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
@@ -52,6 +53,7 @@
 RichG4CkvRecon::RichG4CkvRecon()
   :m_NumRichDet(2),m_NumHpdRich(std::vector<int> (2)),
    m_HpdTransforms(2,std::vector<RichG4ReconTransformHpd*>(300)),
+   m_PhDetTransforms(std::vector<RichG4TransformPhDet*> (4)),
    m_SphMirrCC(4,std::vector<double>(3)),
    m_SphMirrRad( std::vector<double>(2)),
    m_RichG4ReconHpd(0),
@@ -68,7 +70,8 @@ RichG4CkvRecon::RichG4CkvRecon()
   // correspond to the 0,1,2,3 respectively. For  m_SphMirrCCRad,
   // the 2 is for the
   // the x,y, z coord of the center of curvature of each mirror.
-
+  // 4 is the number of sectors corresponding to rich1 top,bootom
+  // rich2 left right. 
 
 
 
@@ -220,13 +223,17 @@ RichG4CkvRecon::RichG4CkvRecon()
         m_HpdTransforms[idet][ih] = new RichG4ReconTransformHpd (idet, ih);
 
       }
-
+      
+      for (int is=0 ;is < 2 ; is ++) {
+        
+        int isect = idet*2 + is;
+        m_PhDetTransforms[isect] = new RichG4TransformPhDet(idet, isect );
+      }     
+      
     }
-
-
-
-
+    
   }
+  
 
 
   m_RichG4ReconHpd = new RichG4ReconHpd();

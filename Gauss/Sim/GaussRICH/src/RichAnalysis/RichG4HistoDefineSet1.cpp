@@ -295,6 +295,27 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
   //  }
 
+  //  title = "Hpd Qw Hits Rich1 : Track prod X vs Z ";
+  //  M_hHpdQwOrigXZR1= CurHistoSvc->book(m_RichG4HistoPathSet1+"1001", title,
+  //				      100, 0.0, 2500.0, 100, -1000., 1000. );
+
+  //  title = "Hpd Qw Hits Rich2 : Track prod X vs Z ";
+  // M_hHpdQwOrigXZR2= CurHistoSvc->book(m_RichG4HistoPathSet1+"1002", title,
+  //				      100, 5000., 13000.0, 100, -5000., 5000. );
+
+
+
+  //  title = "Hpd Qw Hits Rich1 : Track prod Y vs Z ";
+
+  //  M_hHpdQwOrigYZR1= CurHistoSvc->book(m_RichG4HistoPathSet1+"1010", title,
+  //				      100, 0.0, 2500.0, 100, -3000., 3000. );
+
+
+  //  title = "Hpd Qw Hits Rich2 : Track prod Y vs Z ";
+
+  //  M_hHpdQwOrigYZR2= CurHistoSvc->book(m_RichG4HistoPathSet1+"1011", title,
+	//			      100, 5000., 13000.0, 100, -3000., 3000. );
+
   
 
 }

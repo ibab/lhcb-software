@@ -14,6 +14,7 @@
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/INTupleSvc.h"
 
 //local
 #include "RichG4SvcLocator.h"
@@ -110,3 +111,32 @@ IHistogramSvc*   RichG4SvcLocator::RichG4HistoSvc()
 };
 
 
+INTupleSvc*   RichG4SvcLocator::RichG4NtupleSvc()
+{
+  static INTupleSvc* a_NtupleSvc = 0 ;
+  //  locate the service 
+  if( 0 == a_NtupleSvc ) 
+    {
+      ISvcLocator* svcLoc = Gaudi::svcLocator();
+      if( 0 == svcLoc ) 
+        { throw GaudiException("RichG4SvcLocator::ISvcLocator* points to NULL!",
+                               "*RichG4Exception*" , 
+                               StatusCode::FAILURE  ); }
+      StatusCode sc = 
+        svcLoc->service( RichG4SvcLocator::a_RichG4NtupSvcName , a_NtupleSvc,true  );
+      if( sc.isFailure() ) 
+        { throw GaudiException("RichG4SvcLocator::Could not locate INtupleSvc='" 
+                               + RichG4SvcLocator::a_RichG4NtupSvcName  + "'",
+                               "*RichG4Exception*" , 
+                               StatusCode::FAILURE); }
+      if( 0 == a_NtupleSvc ) 
+        { throw GaudiException("RichG4SvcLocator::INtupleSvc*(" 
+                               +RichG4SvcLocator::a_RichG4NtupSvcName + 
+                               "') points to NULL!" ,
+                               "*DetDescException*" , 
+                               StatusCode::FAILURE  ); }
+      a_NtupleSvc->addRef();
+    }
+  ///
+  return a_NtupleSvc ;
+};
