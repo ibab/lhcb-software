@@ -1,11 +1,57 @@
-! $Id: release.notes,v 1.27 2006-02-22 18:45:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2006-02-22 19:51:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.27 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.28 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-02-22 - Vanya BELYAEV
+
+ - ******************** REMOVE ALL ASSOCIATORS/TOOLS ************************
+	
+   The initial proposal, design and the first implementation of relation 
+   tables has no concept of "associator tool". Instead it has been based
+   on direct manipulaiton with relation tables *AND* *FORCED* execution 
+   of "builder" algorithm. The concept of "associator tool" has been 
+   introduced a bit later after long discussions to simplify the dealing 
+   with forced execution of algorithm. In addition at those time is has 
+   been thought that "associator tool" could be specialized and enhanced 
+   to provide soem additional fucntionality. 
+   As practice has shown the addiitonal functionality has never been used, 
+   and the basic "associator tool" has been used just to force the execution
+   of the algorithm "on-demand". Soon after very nice Gaudi feature - 
+   "Data-On-Demand Service" has been appeared in GaudiSvc. Professional 
+   and efficient high quality design and implementation of this service 
+   by Markus FRANK has the natural consequence to declare the "hand-made" 
+   "associator tools" to be deprecated. Soon after the associator tools 
+   has been drastically simplified to allow the parallel coexistence 
+   with much better functionality, provided by Data-On-Demand Service. 
+   At the same time the "associator tool" has been declared as "deprecated" 
+   and I've made a strong recommendation to use the relation tables 
+   *DIRECTLY* (without intermediate "tool") providing with the proper 
+   configurtaion of "Data-On-Demand Service".
+
+   Now it is a good and right moment to *REMOVE* the associator tools 
+   from the model completely
+
+	 ============
+   BOTTOM LINE:
+   ============
+
+    ******  Removed files: ***********************************************
+      Relations/Associator.h            ******* REMOVED  *****************
+      Relations/AssociatorBase.h        ******* REMOVED  *****************
+      Relations/AssociatorMACROs.h      ******* REMOVED  *****************
+      Relations/AssociatorWeighted.h    ******* REMOVED  *****************
+      Relations/IAssociator.h           ******* REMOVED  *****************
+      Relations/IAssociatorWeighted.h   ******* REMOVED  *****************
+      Relations/RelationMACROs.h        ******* REMOVED  *****************
+      src/AssociatorBase.cpp            ******* REMOVED  *****************
+      src/IRelationBases.cpp            ******* REMOVED  *****************
+    **********************************************************************
+
 
 ! 2006-02-22 - Vanya BELYAEV
 
