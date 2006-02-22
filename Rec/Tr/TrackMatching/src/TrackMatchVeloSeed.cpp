@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.8 2006-02-09 12:55:57 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.9 2006-02-22 14:34:24 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -15,11 +15,16 @@
 
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
+#include "Event/StateTraj.h"
 
 // local
 #include "TrackMatchVeloSeed.h"
 #include "TTCandidate.h"
 #include "TrackMatchingDataFunctor.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrajPoca.h"
+#include "Kernel/Trajectory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackMatchVeloSeed
@@ -69,7 +74,6 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
   declareProperty( "TTClusterCut",     m_ttClusterCut = 10.0 );
   declareProperty( "MinTTHits",        m_minTTHits = 3 );
-  declareProperty( "NumTTLayers",      m_numTTLayers = 4 );
   declareProperty( "InterStationCut",  m_interStationCut = 2.0 );
   declareProperty( "IntraStationCut",  m_intraStationCut = 1.0 );
   declareProperty( "SpreadWeight",     m_spreadWeight = 7.0 );
@@ -82,7 +86,6 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "TTGeometryPath",
                    m_ttTrackerPath = DeSTDetLocation::location("TT") );
 
-  m_particleID = 211;   // track->particleID();
 }
 //=============================================================================
 // Destructor
@@ -112,6 +115,15 @@ StatusCode TrackMatchVeloSeed::initialize()
 
   // Get TT silicon tracker geometry
   m_ttTracker = getDet<DeTTDetector>( m_ttTrackerPath );
+
+  // Retrieve the STClusterPosition tool
+  m_stPositionTool = tool<ISTClusterPosition>( "STOfflinePosition" );
+
+  // Magnetic field
+  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
+
+  // Poca tool to calculate distance of closest approach
+  m_poca = tool<ITrajPoca>( "TrajPoca" );
 
   return StatusCode::SUCCESS;
 };
@@ -283,7 +295,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 
   // Sort the list by chi2 and make new list with the best combinations
   std::stable_sort( matchVector.begin(), matchVector.end(),
-                    TrackMatchingDataFunctor::Less_by_Chi2<const TrackMatch*>() );
+                  TrackMatchingDataFunctor::Less_by_Chi2<const TrackMatch*>());
 
   int numCombinations = 0;
   for ( TrackMatches::const_iterator ipair = matchVector.begin() ;
@@ -313,10 +325,6 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 //=============================================================================
 StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
 {
-/*
-/////////////////////////////////////////
-NEEDS TO BE MIGRATED TO THE NEW STDET !!!
-/////////////////////////////////////////
   // This function will add TT clusters to the matched tracks
   // First a velo track is extrapolated using the momentum of the
   // seed track. Then the closest TT clusters are found.
@@ -324,48 +332,35 @@ NEEDS TO BE MIGRATED TO THE NEW STDET !!!
   // Get the TT Clusters
   STClusters* clusters = get<STClusters>( STClusterLocation::TTClusters );
 
-  // cache the first TT cluster of each wafer
-  std::vector<STClusters::iterator> cachedFirst(5000);
-  STClusters::iterator clusIter = clusters -> begin();
-  STClusters::iterator cachedIter = clusIter;
-  unsigned int uniqueWafer = 0;
-  STChannelID aChan;
-  unsigned int iStation;
-  for ( iStation = 1; iStation <= 2; ++iStation ) {
-    unsigned int iLayer;
-    for ( iLayer = 1; iLayer <= 2; ++iLayer) {
-      // find the first TT cluster of each layer
-      aChan = ITChannelID(iStation,iLayer,0,0);
-      clusIter = std::lower_bound( cachedIter, clusters->end(), aChan,
-                     TrackMatchingDataFunctor::compByLayer_LB<const STCluster*>() );
-      cachedFirst[ uniqueWafer + 1 ] = clusIter;
-      STDetectionLayer* aLayer = m_ttTracker -> layer( aChan );
-      unsigned int numWafers = aLayer -> numWafers();
-      unsigned int iWafer;
-      for ( iWafer = 1; iWafer <= numWafers; ++iWafer ) {
-        // find the first TT cluster of each wafer
-        aChan = ITChannelID(iStation,iLayer,iWafer,0);
-        clusIter = std::lower_bound( cachedIter, clusters->end(), aChan,
-                     TrackMatchingDataFunctor::compByWafer_LB<const STCluster*>() );
-        // calculate the unique wafer ID. Should be done by STChannelID!
-        uniqueWafer = (aChan.uniqueWafer() >> 16) + 1;
-        cachedFirst[ uniqueWafer ] = clusIter;
-        cachedIter = clusIter;
-      }
-    }
+  // Loop over the clusters and make a trajectory for each cluster
+  // TODO: maybe put this functionality in STMeasurement and use projectors
+  typedef std::pair<STCluster*, Trajectory*> STClusterTrajectory;
+  typedef std::vector<STClusterTrajectory> STClusterTrajectories;
+  STClusterTrajectories clusterTrajectories;
+  STClusters::iterator iClus = clusters -> begin();
+  for ( ; iClus != clusters -> end(); ++iClus ) {
+
+    // Get the cluster and STChannelID
+    STCluster* stCluster = (*iClus) ;
+    STChannelID stChan = stCluster -> channelID() ; 
+    ISTClusterPosition::Measurement measVal =
+      m_stPositionTool -> estimate( stCluster );
+
+    // Create a trajectory for this cluster
+    Trajectory* traj = m_ttTracker -> trajectory( LHCbID( stChan ), 
+                                                  measVal.first.second ) ;
+    // Add this combination to the vector
+    STClusterTrajectory thisClusTraj ;
+    thisClusTraj.first  = stCluster ;
+    thisClusTraj.second = traj ;
+    clusterTrajectories.push_back( thisClusTraj ) ;
   }
-  // cache the last TT cluster
-  aChan = STChannelID(3,1,0,0);
-  aChan = STChannelID( LHCb::STChannelID::typeTT, 3, 1, 0, 0, 0 );
-  clusIter = std::lower_bound( cachedIter, clusters->end(), aChan,
-                     TrackMatchingDataFunctor::compByLayer_LB<const STCluster*>());
-  cachedFirst[ uniqueWafer + 1 ] = clusIter;
+
 
   // Loop over matched tracks
   debug() << "Looping over the matches tracks ..." << endmsg;
-  TrackMatches::const_iterator iterMatch;
-  for ( iterMatch = matchCont->begin() ;
-        iterMatch != matchCont->end(); ++iterMatch) {
+  TrackMatches::const_iterator iterMatch = matchCont->begin();  
+  for ( ; iterMatch != matchCont->end(); ++iterMatch) {
 
     // Make a new State from the velo state plus momentum from seed track
     const Track* veloTrack = (*iterMatch) -> veloTrack();
@@ -386,98 +381,87 @@ NEEDS TO BE MIGRATED TO THE NEW STDET !!!
     // The vector of pointers to TT candidate hit-clusters
     TTCandidates candidates;
 
-    // loop over layers in TT and find the wafer which is hit
-    std::vector<STCluster*> clusVector;
-    unsigned int iStation;
-    for ( iStation = 1; iStation <= 2; ++iStation) {
-      unsigned int iLayer;
-      for ( iLayer = 1; iLayer <= 2; ++iLayer) {
+    // loop over layers in TT and find which sector is hit
+    const DeSTDetector::Layers& ttLayers = m_ttTracker->layers();
+    const unsigned int numTTLayers = ttLayers.size();
+    DeSTDetector::Layers::const_iterator iLayer = ttLayers.begin();
+    for ( ; iLayer != ttLayers.end(); ++iLayer) {
 
-        // For this TT layer: extrapolate the new State to the z of the layer
-        aChan = STChannelID( iStation, iLayer, 0, 0 );
-        STDetectionLayer* aLayer = m_ttTracker->layer( aChan );
-        StatusCode sc =
-          m_extrapolatorSeed -> propagate( *state, aLayer -> z(), m_particleID );
-        if ( sc.isFailure() ) { 
-          debug() << "extrapolation of state to z=" << aLayer->z()
-              << " failed" << endmsg;
-          continue;
+      // For this TT layer: extrapolate the new State to the z of the layer
+      DeSTLayer* aLayer = *iLayer;
+      double zLayer = (aLayer->globalCentre()).z() ;
+      StatusCode sc =
+        m_extrapolatorSeed -> propagate( *state, zLayer );
+      if ( sc.isFailure() ) { 
+        debug() << "extrapolation of state to z=" << zLayer
+                << " failed" << endmsg;
+        continue;
+      }
+
+      // calculate the layer number (0-3)
+      unsigned int layerNum = iLayer - ttLayers.begin();
+
+      // Get the state trajectory
+      XYZVector bfield(0,0,0);
+      m_pIMF -> fieldVector( state->position(), bfield );
+      StateTraj stateTraj = StateTraj( state->stateVector(), zLayer, bfield );
+  
+      STClusterTrajectories::iterator iClusTraj = clusterTrajectories.begin();
+      for ( ; iClusTraj != clusterTrajectories.end(); ++iClusTraj ) {
+        Trajectory* measTraj = (*iClusTraj).second;
+
+        // Determine the distance between track state and measurement
+        double s1, s2;
+        XYZVector distance3D;
+        s1 = 0.0;
+        s2 = measTraj->arclength( stateTraj.position(s1) );
+        m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 50*mm );
+        int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
+        double distance = signDist * distance3D.R();
+
+        if ( fabs( distance ) < m_ttClusterCut ) {
+          bool clusterUsed = false;
+          unsigned int iCand = 0;
+          unsigned int numCandidates = candidates.size();
+          while ( iCand < numCandidates ) {
+            TTCandidate* cand = candidates[iCand];
+            if ( cand->lastLayer() < layerNum ) {
+              // TODO: Remove geometry assumptions
+              bool interStation = layerNum == 2 || 
+                (layerNum == 3 && cand->lastLayer() != 2 );
+              double delta = fabs(cand->lastDistance() - distance);
+              if ( (interStation && delta < m_interStationCut) ||
+                   (!interStation && delta < m_intraStationCut) ) {
+                // if cluster compatible: make new set of clusters
+                // using the old one and flag the old as dead.
+                TTCandidate* newCand = new TTCandidate(cand,*iClus,
+                                                       distance,layerNum);
+                candidates.push_back( newCand );
+                cand->setDead(true);
+                clusterUsed = true;
+              } 
+            }
+            ++iCand;
+          } 
+          if ( !clusterUsed ) {
+            TTCandidate* newCand = new TTCandidate( *iClus, distance, 
+                                                    layerNum);
+            candidates.push_back( newCand );
+          }
         }
+      } // loop iClusTraj
 
-        // calculate the layer number (0-3)
-        unsigned int layerNum = 2*iStation+iLayer-3;
-
-        // calculate the u and v coordinates
-        double x = state->x();
-        double y = state->y();
-        const double layerSin = aLayer->sinAngle();
-        const double layerCos = aLayer->cosAngle();
-        double u = x*layerCos + y*layerSin;
-        double v = y*layerCos - x*layerSin;
-
-        // loop over all wafer and check if prediction is inside wafer
-        unsigned int iWafer = 1;
-        while ( iWafer <= aLayer->numWafers() ) {
-          const STWafer* aWafer = aLayer->wafer( iWafer );
-          if ( aWafer->isInside(u,v) ) {
-            // loop over all clusters using the cached cluster vector
-            aChan = STChannelID(iStation, iLayer, iWafer, 0 );
-            uniqueWafer = (aChan.uniqueWafer() >> 16) + 1;
-            STClusters::iterator iClus;
-            for ( iClus = cachedFirst[uniqueWafer]; 
-                  iClus != cachedFirst[uniqueWafer+1]; ++iClus ) {
-              // calculate the distance
-              STChannelID clusID = (*iClus)->channelID();
-              double uClus = aWafer->U( clusID.strip() ) +
-                (*iClus)->distToStripCenter();
-              double distance = uClus - u;
-              
-              if ( fabs( distance ) < m_ttClusterCut ) {
-                bool clusterUsed = false;
-                unsigned int iCand = 0;
-                unsigned int numCandidates = candidates.size();
-                while ( iCand < numCandidates ) {
-                  TTCandidate* cand = candidates[iCand];
-                  if ( cand->lastLayer() < layerNum ) {
-                    bool interStation = layerNum == 2 || 
-                      (layerNum == 3 && cand->lastLayer() != 2 );
-                    double delta = fabs(cand->lastDistance() - distance);
-                    if ( (interStation && delta < m_interStationCut) ||
-                         (!interStation && delta < m_intraStationCut) ) {
-                      // if cluster compatible: make new set of clusters
-                      // using the old one and flag the old as dead.
-                      TTCandidate* newCand = new TTCandidate(cand,*iClus,
-                                                             distance,layerNum);
-                      candidates.push_back( newCand );
-                      cand->setDead(true);
-                      clusterUsed = true;
-                    } 
-                  }
-                  ++iCand;
-                } 
-                if ( !clusterUsed ) {
-                  TTCandidate* newCand = new TTCandidate( *iClus, distance, 
-                                                          layerNum);
-                  candidates.push_back( newCand );
-                }
-              }
-            } // loop iClus
-          } // isInside
-          ++iWafer;
-        } // loop iWafer
-
-        // delete all dead candidates and those with too few hits
-        TTCandidates::iterator iCand = candidates.begin();
-        while ( iCand != candidates.end() ) {
-          bool tooFewHits = int( (*iCand)->numTTClusters() - m_minTTHits + 
-                                 m_numTTLayers - layerNum ) < 1;
-          if ( (*iCand)->isDead() || tooFewHits ) {
-            delete *iCand;
-            iCand = candidates.erase( iCand );
-          } else ++iCand;
-        }
-      } // loop iLayer
-    } // loop iStation
+      // delete all dead candidates and those with too few hits
+      TTCandidates::iterator iCand = candidates.begin();
+      while ( iCand != candidates.end() ) {
+        bool tooFewHits = int( (*iCand)->numTTClusters() - m_minTTHits + 
+                               numTTLayers - layerNum ) < 1;
+        if ( (*iCand)->isDead() || tooFewHits ) {
+          delete *iCand;
+          iCand = candidates.erase( iCand );
+        } else ++iCand;
+      }
+    } // loop iLayer
     delete state;
 
     // find the best TT candidate
@@ -506,7 +490,11 @@ NEEDS TO BE MIGRATED TO THE NEW STDET !!!
 
   } // loop TrackMatches
 
-*/
+  // delete trajectories
+  STClusterTrajectories::iterator iClusTraj = clusterTrajectories.begin();
+  for ( ; iClusTraj != clusterTrajectories.end(); ++iClusTraj ) {
+    delete (*iClusTraj).second;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -592,7 +580,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
 
      const State& closestState = seedTrack -> closestState( (*lastMeas)->z() );
     State* aState = closestState.clone();
-    sc = m_extrapolatorSeed -> propagate( *aState, (*lastMeas)->z(), m_particleID );
+    sc = m_extrapolatorSeed -> propagate( *aState, (*lastMeas)->z() );
     if ( sc.isFailure() ) {
       debug() << "extrapolation of state to z = "
               << (*lastMeas)->z() << " failed" << endmsg;
@@ -639,7 +627,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
         << "    * chi2, nDoF    = "
         << aTrack -> chi2() << " , " << aTrack -> nDoF() << endreq
         << "    * # States       = " << aTrack -> states().size() << endreq
-        << "    * # measurements = " << aTrack -> measurements().size() << endreq;
+        << "    * # measurements = " << aTrack -> measurements().size() 
+        << endreq;
         }
   } // iterMatch
 
@@ -671,10 +660,7 @@ StatusCode TrackMatchVeloSeed::extrapolate( Track* track,
                                             TrackMatrix& trackCov )
 {
   State tmpState;
-  StatusCode sc = extrapolator -> propagate( *track,
-                                             zpos,
-                                             tmpState,
-                                             m_particleID );
+  StatusCode sc = extrapolator -> propagate( *track, zpos, tmpState );
   if ( sc.isFailure() ) return sc;
   trackVector = tmpState.stateVector();
   trackCov    = tmpState.covariance();

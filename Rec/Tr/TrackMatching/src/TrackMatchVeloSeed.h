@@ -1,14 +1,20 @@
-// $Id: TrackMatchVeloSeed.h,v 1.5 2006-02-09 12:55:57 erodrigu Exp $
-#ifndef TRACKMATCHING_TRACKMATCHVELOSEED_H 
-#define TRACKMATCHING_TRACKMATCHVELOSEED_H 1
+// $Id: TrackMatchVeloSeed.h,v 1.6 2006-02-22 14:34:24 jvantilb Exp $
+#ifndef TRACKMATCHVELOSEED_H 
+#define TRACKMATCHVELOSEED_H 1
 
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from GaudiKernel
+#include "GaudiKernel/IMagneticFieldSvc.h"
+
 // from LHCbDefinitions
 #include "Kernel/TrackTypes.h"
+
+// from LHCbKernel
+#include "Kernel/ISTClusterPosition.h"
 
 // from STDet
 #include "STDet/DeTTDetector.h"
@@ -17,6 +23,7 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrajPoca.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -29,8 +36,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-/** @class TrackMatchVeloSeed TrackMatchVeloSeed.h TrackMatching/TrackMatchVeloSeed.h
- *  
+/** @class TrackMatchVeloSeed TrackMatchVeloSeed.h  
  *
  *  A TrackMatchVeloSeed is a Gaudi top level Algorithm that matches
  *  the tracks from the seeding with the ones from the Velo.
@@ -38,9 +44,11 @@ using namespace LHCb;
  *  chi2-distance. Matched tracks with a chi2 higher than a certain maximum
  *  value are rejected.
  *
- *  @author:  Jeroen van Tilburg jtilburg@nikhef.nl
+ *  @author:  Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
  *  @date:    16-05-2001
+ *  @modified:14-01-2006
  */
+
 class TrackMatchVeloSeed : public GaudiAlgorithm {
 public: 
   /// Standard constructor
@@ -126,8 +134,6 @@ private:
   double m_ttClusterCut;
   /// Minimum number of TT clusters
   unsigned int m_minTTHits;
-  /// Number of TT layers
-  unsigned int m_numTTLayers;
   /// maximum distance difference between TT clusters of different stations
   double m_interStationCut;
   /// maximum distance difference between TT clusters of same station
@@ -149,11 +155,10 @@ private:
   IMeasurementProvider* m_measProvider;
 
   // TT geometry
-  DeTTDetector* m_ttTracker;
-  std::string   m_ttTrackerPath;   ///< Name of the TT XML geom path
-
-  /// use a fixed particle ID for the extrapolator
-  ParticleID  m_particleID;
-
+  DeTTDetector* m_ttTracker;             ///< Pointer to the TT XML geom
+  std::string   m_ttTrackerPath;         ///< Name of the TT XML geom path
+  ISTClusterPosition* m_stPositionTool;  ///< STClusterPosition tool
+  IMagneticFieldSvc* m_pIMF;             ///< Pointer to the magn. field service
+  ITrajPoca*         m_poca;             ///< Pointer to the ITrajPoca interface
 };
-#endif // TRACKMATCHING_TRACKMATCHVELOSEED_H
+#endif // TRACKMATCHVELOSEED_H

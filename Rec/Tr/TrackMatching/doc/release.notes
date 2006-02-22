@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-02-22 - Jeroen van Tilburg
+ - addTTClusters method updated to work with trajectories and new STDet.
+
 ! 2006-02-09 - Eduardo Rodrigues
  - migration to LHCb v20r0
    NOTE: addTTClusters method in main algorithm not completely migrated.
