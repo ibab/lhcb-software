@@ -4,6 +4,13 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-02-22 - Eduardo Rodrigues
+ - migration to LHCb v20r0
+ - adaptation to new associators and detector elements
+ - output relations table replaced by linkers table
+ - code clean-up
+ - update of options file
+
 !======================= TrackIdealPR v1r5 2006-01-27 ========================
 ! 2006-01-20 - Eduardo Rodrigues
  - LHCbIDs first added to the Track before adding the corresponding

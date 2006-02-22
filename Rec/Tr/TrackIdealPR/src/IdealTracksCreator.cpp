@@ -1,10 +1,21 @@
 // Include files
 // -------------
-// from LHCbKernel
-#include "Relations/RelationWeighted2D.h"
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
-// from LHCbEvent
-#include "Event/EventHeader.h"
+// from LHCbDefinitions
+#include "Kernel/TrackTypes.h"
+
+//from XxxDet
+#include "VeloDet/DeVelo.h"
+#include "STDet/DeSTDetector.h"
+#include "OTDet/DeOTDetector.h"
+
+// from MCEvent
+#include "Event/MCHit.h"
+
+// from RecEvent
+#include "Event/RecHeader.h"
 
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
@@ -12,8 +23,15 @@
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
+// from LinkerEvent
+#include "Linker/LinkerWithKey.h"
+#include "Linker/LinkerTool.h"
+
 // Local
 #include "IdealTracksCreator.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 static const AlgFactory<IdealTracksCreator>    s_factory;
 const IAlgFactory& IdealTracksCreatorFactory = s_factory;
@@ -22,7 +40,7 @@ const IAlgFactory& IdealTracksCreatorFactory = s_factory;
  *
  *  Implementation of IdealTracksCreator.
  *
- *  @author Eduardo Rodrigues (adaptations to new track event model, 18-04-2005)
+ *  @author Eduardo Rodrigues (adaptations to new track event model)
  *  @author M. Needham
  *  @author R.M. van der Eijk (28-5-2002) 
  *  @author J. van Tilburg (02-07-2003)
@@ -35,41 +53,42 @@ const IAlgFactory& IdealTracksCreatorFactory = s_factory;
 IdealTracksCreator::IdealTracksCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name, pSvcLocator )
-  , m_otTim2MCHit(0)
-  , m_itClus2MCP(0)
-  , m_veloClus2MCP(0)
-  , m_otTracker(0)
-  , m_itTracker(0)
+//  , m_otTim2MCHit(0)
+//  , m_itClus2MCP(0)
+//  , m_veloClus2MCP(0)
   , m_velo(0)
+  , m_ttTracker(0)
+  , m_itTracker(0)
+  , m_otTracker(0)
   , m_trackSelector(0)
   , m_stateCreator(0)
 {
   /// default job Options
-  declareProperty( "AddOTTimes",      m_addOTTimes = true );
-  declareProperty( "AddITClusters",   m_addITClusters = true );
+  declareProperty( "AddOTTimes",      m_addOTTimes      = true );
+  declareProperty( "AddSTClusters",   m_addSTClusters   = true );
   declareProperty( "AddVeloClusters", m_addVeloClusters = true );
-  declareProperty( "InitState",       m_initState = true );
+  declareProperty( "InitState",       m_initState       = true );
   declareProperty( "InitStateUpstream",    m_initStateUpstream = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
-  declareProperty( "TracksTESPath",
-                   m_tracksTESPath = "Rec/Track/Ideal" );
-  declareProperty( "RelationTable",
-                   m_relationTablePath = "Rec/Relations/IdealTrack2MCP" );
-  declareProperty( "OTGeometryPath",
-                   m_otTrackerPath = DeOTDetectorLocation::Default );
-  declareProperty( "ITGeometryPath",
-                   m_itTrackerPath = DeSTDetectorLocation::Default );
+  declareProperty( "TracksOutContainer",
+                   m_tracksOutContainer = TrackLocation::Ideal );
   declareProperty( "VeloGeometryPath",
                    m_veloPath = "/dd/Structure/LHCb/Velo" );
+  declareProperty( "TTGeometryPath",
+                   m_ttTrackerPath = DeSTDetLocation::location("TT") );
+  declareProperty( "ITGeometryPath",
+                   m_itTrackerPath = DeSTDetLocation::location("IT") );
+  declareProperty( "OTGeometryPath",
+                   m_otTrackerPath = DeOTDetectorLocation::Default );
   declareProperty( "STPositionTool",
                    m_stPositionToolName = "STOfflinePosition" );
-  declareProperty( "MinNHits", m_minNHits = 6 );
-  declareProperty( "ErrorX2",  m_errorX2  = 4.0 );
+  declareProperty( "MinNHits", m_minNHits = 6     );
+  declareProperty( "ErrorX2",  m_errorX2  = 4.0   );
   declareProperty( "ErrorY2",  m_errorY2  = 400.0 );
   declareProperty( "ErrorTx2", m_errorTx2 = 6.e-5 );
   declareProperty( "ErrorTy2", m_errorTy2 = 1.e-4 );
-  declareProperty( "ErrorP",   m_errorP   = 0.15 );
-}
+  declareProperty( "ErrorP",   m_errorP   = 0.15  );
+};
 
 //=============================================================================
 // Destructor
@@ -84,24 +103,16 @@ StatusCode IdealTracksCreator::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  // Retrieve the MC associators
-  // ---------------------------
-  typedef OTTime2MCHitAsct::IAsct           OTTimAsct ;
-  typedef ITCluster2MCParticleAsct::IAsct   ITClusAsct ;
-  typedef VeloCluster2MCParticleAsct::IAsct VeloClusAsct ;
-  m_otTim2MCHit  = tool<OTTimAsct>(    "OTTime2MCHitAsct"      );
-  m_itClus2MCP   = tool<ITClusAsct>(   "ITCluster2MCParticleAsct"   );
-  m_veloClus2MCP = tool<VeloClusAsct>( "VeloCluster2MCParticleAsct" );
-  debug() << "Associators retrieved." << endreq;
+  info() << "==> Initialize" << endreq;
 
   // Load Geometry from XmlDDDB
   // --------------------------
-  m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
+  m_velo      = getDet<DeVelo>( m_veloPath );
 
+  m_ttTracker = getDet<DeSTDetector>( m_ttTrackerPath );
   m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
 
-  m_velo      = getDet<DeVelo>( m_veloPath );
-  debug() << "Geometry read in." << endreq;
+  m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
 
   // Retrieve the STClusterPosition tool
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
@@ -113,10 +124,8 @@ StatusCode IdealTracksCreator::initialize()
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
-  info() << "initialized succesfully" << endreq;
-
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 // Main execution
@@ -125,34 +134,25 @@ StatusCode IdealTracksCreator::execute()
 {
   debug() << "==> Execute" << endreq;
 
+  StatusCode sc;
+
   // Event header info
-  EventHeader* evtHdr = get<EventHeader>( EventHeaderLocation::Default );
-  debug() << "Run " << evtHdr -> runNum()
-          << "\tEvent " << evtHdr -> evtNum() << endreq;
+  const RecHeader* recHdr = get<RecHeader>( RecHeaderLocation::Default );
+  debug() << "Event " << recHdr -> evtNumber() << endreq;
 
   // Retrieve the MCParticle container
-  MCParticles* particles = get<MCParticles>( MCParticleLocation::Default );
+  const MCParticles* particles = get<MCParticles>( MCParticleLocation::Default );
 
-  /// Retrieve the Containers for Clusters and Times
-  OTTimes* otTimes           = get<OTTimes>( OTTimeLocation::Default );
+  /// Retrieve the container for the OTTimes
+  const OTTimes* otTimes = get<OTTimes>( OTTimeLocation::Default );
   debug() << "- retrieved " <<  otTimes -> size() << " OTTimes." << endreq;
 
   // Make container for tracks
   Tracks* tracksCont = new Tracks();
 
-  // create relation table and register it in the event transient store
-  typedef RelationWeighted2D<Track, MCParticle, float> Table;
-  Table* table = new Table();
-  StatusCode sc = eventSvc() -> registerObject( m_relationTablePath, table );
-  if( sc.isFailure() ) {
-    error() << "Unable to register the relation container = "
-            << m_relationTablePath << " status = " << sc << endreq;
-    return sc ;
-  }
-  else {
-    debug() << "Relations container " << m_relationTablePath
-              << " registered" << endreq;
-  }
+  // create the association (linker) table and register it in the TES
+  LinkerWithKey<Track,MCParticle> linkTable( evtSvc(), msgSvc(),
+                                             m_tracksOutContainer );
 
   debug() << "Starting loop over the "
           << particles -> size() << " MCParticles ... " << endreq;
@@ -160,7 +160,7 @@ StatusCode IdealTracksCreator::execute()
   // loop over MCParticles
   // =====================
   MCParticles::const_iterator iPart;
-  for ( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
+  for ( iPart = particles -> begin(); particles -> end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
     verbose() << endreq
               << "- MCParticle of type "
@@ -168,7 +168,7 @@ StatusCode IdealTracksCreator::execute()
               << " , (key # " << mcParticle -> key() << ")" << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV" 
               << endreq
-              << "    - P        = " << mcParticle -> momentum().vect().mag()
+              << "    - P        = " << mcParticle -> momentum().Vect().R()
               << " MeV" <<endreq
               << "    - charge   = "
               << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
@@ -179,7 +179,7 @@ StatusCode IdealTracksCreator::execute()
               << " , (key # " << mcParticle -> key() << ")" << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV"
               << endreq
-              << "    - P        = " << mcParticle -> momentum().vect().mag()
+              << "    - P        = " << mcParticle -> momentum().Vect().R()
               << " MeV" <<endreq
               << "    - charge   = "
               << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
@@ -207,11 +207,11 @@ StatusCode IdealTracksCreator::execute()
         }
       }
 
-      // Add IT clusters
+      // Add ST clusters
       // ---------------
-      if ( m_addITClusters == true ) {
-        debug() << "... adding ITClusters" << endreq;
-        sc = addITClusters( mcParticle, track );
+      if ( m_addSTClusters == true ) {
+        debug() << "... adding STClusters" << endreq;
+        sc = addSTClusters( mcParticle, track );
         if ( sc.isFailure() ) {
           error() << "Unable to add inner tracker clusters" << endreq;
           return StatusCode::FAILURE;
@@ -301,10 +301,10 @@ StatusCode IdealTracksCreator::execute()
       }
       debug() << endreq;
 
-      // Add the track to the Tracks container and fill the relations table
-      // ------------------------------------------------------------------
+      // Add the track to the Tracks container and fill the associatin table
+      // -------------------------------------------------------------------
       tracksCont -> add( track );
-      table -> relate( track, mcParticle, 1.0 );
+      linkTable.link( mcParticle, track, 1. );
 
       // debugging Track ...
       // -------------------
@@ -349,8 +349,8 @@ StatusCode IdealTracksCreator::execute()
 
   // Store the Tracks in the TES
   // ===========================
-  return put( tracksCont, m_tracksTESPath );
-}
+  return put( tracksCont, m_tracksOutContainer );
+};
 
 //=============================================================================
 // Finalize
@@ -360,40 +360,46 @@ StatusCode IdealTracksCreator::finalize()
   debug() << "==> Finalize" << endreq;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
+};
 
 //=============================================================================
-//  
+// Add outer tracker clusters
 //=============================================================================
-StatusCode IdealTracksCreator::addOTTimes( OTTimes* times,
+StatusCode IdealTracksCreator::addOTTimes( const OTTimes* times,
                                            MCParticle* mcPart,
                                            Track* track )
 {
   unsigned int nOTMeas = 0;
 
+  typedef LinkerTool<OTTime,MCHit> asctTool;
+  typedef asctTool::DirectType     table;
+
+  asctTool associator( evtSvc(), OTTimeLocation::Default+"2MCHits" );
+
+  const table* tbl = associator.direct();
+  if( !tbl )
+    return Error( "Empty table with associations" );
+
   // Loop over outer tracker clusters
   OTTimes::const_iterator itOTTime = times -> begin();
   while ( itOTTime != times->end() ) {
-    OTTime* aTime = *itOTTime;
-
+    const OTTime* aTime = *itOTTime;
     // retrieve MCHit associated with this cluster
-    OTTime2MCHitAsct::ToRange range = m_otTim2MCHit -> rangeFrom(aTime);
-    OTTime2MCHitAsct::ToIterator iTim;
-    for ( iTim = range.begin(); iTim != range.end(); ++iTim ) {
-      MCHit* aMCHit = iTim -> to();
-      MCParticle* aParticle = aMCHit -> mcParticle();
+    table::Range range = tbl -> relations( aTime );
+    for( table::iterator iTim = range.begin(); iTim != range.end(); ++iTim ) {
+      const MCHit* aMCHit = iTim -> to();
+      const MCParticle* aParticle = aMCHit -> mcParticle();
       if ( aParticle == mcPart ) {
         // get the ambiguity from the MCHit
         const OTChannelID channel = aTime -> channel();
-        DeOTModule* module = m_otTracker -> module( channel );
-        const HepPoint3D entryP = aMCHit -> entry();
-        const HepPoint3D exitP = aMCHit -> exit();
-        double deltaZ = exitP.z() - entryP.z();
-        if (0.0 == deltaZ) continue; // curling track inside layer
-        const double tx = (exitP.x() - entryP.x()) / deltaZ;
-        const double ty = (exitP.y() - entryP.y()) / deltaZ;
-        double mcDist = module -> distanceToWire( channel.straw(),
-                                                  entryP, tx, ty );
+        const DeOTModule* module  = m_otTracker -> module( channel );
+        const XYZPoint entryP     = aMCHit -> entry();
+        if ( aMCHit -> displacement().z() == 0. ) continue; // curling track
+        const double tx = aMCHit -> dxdz();
+        const double ty = aMCHit -> dydz();
+        // input in global frame: entryP, tx, ty
+        double mcDist   = module -> distanceToWire( channel.straw(),
+                                                    entryP, tx, ty );
         int ambiguity = 1;
         if ( mcDist < 0.0 ) ambiguity = -1;
         // Get the tu from the MCHit
@@ -415,32 +421,56 @@ StatusCode IdealTracksCreator::addOTTimes( OTTimes* times,
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
 
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 //  
 //=============================================================================
-StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
+StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
                                               Track* track )
 {
-  unsigned int nITMeas = 0;
+  unsigned int nSTMeas = 0;
 
-  /// Retrieve ITClusters from inverse relation 
-  ITCluster2MCParticleAsct::FromRange range = m_itClus2MCP -> rangeTo( mcPart );
-  ITCluster2MCParticleAsct::FromIterator iClus;
-  for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
-    ITCluster* aCluster = iClus->to();
+  // Retrieve STClusters from inverse relation
+  typedef LinkerTool<STCluster,MCParticle> asctTool;
+
+  typedef asctTool::InverseType invTable;
+
+  asctTool ttAssociator( evtSvc(), STClusterLocation::TTClusters );
+  asctTool itAssociator( evtSvc(), STClusterLocation::ITClusters );
+
+  // for the STClusters in TT
+  const invTable* invTTTable = ttAssociator.inverse();
+  if( !invTTTable )
+    return Error( "Empty table with associations STCluster(TT)-MCParticle " );
+  invTable::Range ttRange = invTTTable -> relations( mcPart );
+  for( invTable::iterator it = ttRange.begin(); it != ttRange.end(); ++it ) {
+    const STCluster* aCluster = it -> to();
     STMeasurement meas =
       STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
         track -> addToLhcbIDs( meas.lhcbID() );
     track -> addToMeasurements( meas );
-    ++nITMeas;
+    ++nSTMeas;
   }
 
-  debug() << "- " << nITMeas << " STMeasurements added" << endreq;
+  // for the STClusters in IT
+  const invTable* invITTable = itAssociator.inverse();
+  if( !invITTable )
+    return Error( "Empty table with associations STCluster(IT)-MCParticle " );
+  invTable::Range itRange = invITTable -> relations( mcPart );
+  for( invTable::iterator it = itRange.begin(); it != itRange.end(); ++it ) {
+    const STCluster* aCluster = it -> to();
+    STMeasurement meas =
+      STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
+        track -> addToLhcbIDs( meas.lhcbID() );
+    track -> addToMeasurements( meas );
+    ++nSTMeas;
+  }
+
+  debug() << "- " << nSTMeas << " STMeasurements added" << endreq;
 
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 //  
@@ -451,26 +481,36 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
   unsigned int nVeloRMeas   = 0;
   unsigned int nVeloPhiMeas = 0;
 
-  /// Retrieve VeloClusters from inverse relation 
-  VeloCluster2MCParticleAsct::FromRange range = m_veloClus2MCP->rangeTo(mcPart);
-  VeloCluster2MCParticleAsct::FromIterator iClus;
-  for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
-    VeloCluster* aCluster = iClus->to();
+  // Retrieve VeloClusters from inverse relation
+  typedef LinkerTool<VeloCluster,MCParticle> asctTool;
 
-    double z = m_velo -> zSensor( aCluster -> sensor() );
-    double phi = 999.0;
-    double r = -999.0;
+  typedef asctTool::InverseType invTable;
+
+  asctTool associator( evtSvc(), VeloClusterLocation::Default );
+  const invTable* invTbl = associator.inverse();
+  if( !invTbl )
+    return Error( "Empty table with associations" );
+
+  invTable::Range range = invTbl -> relations( mcPart );
+
+  for( invTable::iterator it = range.begin(); it != range.end(); ++it ) {
+    const VeloCluster* aCluster = it -> to();
+
+    double z = m_velo -> zSensor( aCluster -> channelID().sensor() );
+
+    double phi = 999.;
+    double r   = -999.;
     State* tempState;
     StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
     if ( sc.isSuccess() ) {
-      HepVector vec = tempState -> stateVector();
-      r = sqrt( vec[0]*vec[0] + vec[1]*vec[1]);
+      TrackVector vec = tempState -> stateVector();
+      r = sqrt( vec[0]*vec[0] + vec[1]*vec[1] );
       phi = atan2( vec[1], vec[0] );
     }
     delete tempState;
 
-    // Check if velo cluster is r or phi clusters
-    if ( m_velo -> isRSensor( aCluster->sensor() ) ) {
+    // Check if VeloCluster is of type R or Phi
+    if ( m_velo -> isRSensor( aCluster -> channelID().sensor() ) ) {
       VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
       track -> addToLhcbIDs( meas.lhcbID() );
       track -> addToMeasurements( meas );
@@ -483,12 +523,12 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       ++nVeloPhiMeas;
     }
   }
-
+  
   debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
           << " Velo R/Phi Measurements added" << endreq;
-
+  
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================
 // Initialize seed state
@@ -501,12 +541,12 @@ StatusCode IdealTracksCreator::initializeState( double z,
   StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
   if ( sc.isSuccess() ) {
     // set covariance matrix to a somewhat larger value for the fit
-    HepSymMatrix& cov = state -> covariance();
-    cov.fast(1,1) = m_errorX2;
-    cov.fast(2,2) = m_errorY2;
-    cov.fast(3,3) = m_errorTx2;
-    cov.fast(4,4) = m_errorTy2;
-    cov.fast(5,5) = pow( m_errorP * state->qOverP(), 2. );
+    TrackMatrix& cov = state -> covariance();
+    cov(0,0) = m_errorX2;
+    cov(1,1) = m_errorY2;
+    cov(2,2) = m_errorTx2;
+    cov(3,3) = m_errorTy2;
+    cov(4,4) = pow( m_errorP * state->qOverP(), 2. );
 
     track -> addToStates( *state );
 
@@ -525,7 +565,7 @@ StatusCode IdealTracksCreator::initializeState( double z,
   }
   
   return sc;
-}
+};
 
 //=============================================================================
 // Delete all states on the track
@@ -539,6 +579,6 @@ StatusCode IdealTracksCreator::deleteStates( Track* track )
   }
   
   return StatusCode::SUCCESS;
-}
+};
 
 //=============================================================================

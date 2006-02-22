@@ -6,26 +6,28 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from LHCbKernel
+#include "Kernel/ISTClusterPosition.h"
+
+// from MCEvent
+#include "Event/MCParticle.h"
+
+// from OTEvent
+#include "Event/OTTime.h"
+
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
-
-// from STTools
-#include "STTools/ISTClusterPosition.h"
-
-// from XxxAssociators
-#include "OTAssociators/OTTime2MCHitAsct.h"
-#include "ITAssociators/ITCluster2MCParticleAsct.h"
-#include "VeloAssociators/VeloCluster2MCParticleAsct.h"
+#include "Event/Measurement.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IIdealStateCreator.h"
 #include "TrackInterfaces/ITrackCriteriaSelector.h"
 
 // Forward declarations
+class DeVelo;
 class DeOTDetector;
 class DeSTDetector;
-class DeVelo;
 
 /** @class IdealTracksCreator IdealTracksCreator.h
  *
@@ -35,7 +37,7 @@ class DeVelo;
  *  automatically filled.
  *  Currently the following types of measurements can be added:
  *   @li Outer Tracker OTTimes (OTMeasurement)
- *   @li Inner Tracker clusters (ITMeasurement)
+ *   @li Silicon Tracker clusters (STMeasurement)
  *   @li Velo r clusters (VeloRMeasurement)
  *   @li Velo phi clusters (VeloPhiMeasurement)
  *  For the OTTimes the relation table with MCHits is needed, since the
@@ -69,42 +71,35 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  void sortMeasurements( Track* track ) {
-    std::sort( track->measurements().begin(),
-               track->measurements().end(),
-               TrackFunctor::increasingByZ<Measurement>() );
-  };
-
 private:
   /// Add outer tracker clusters
-  StatusCode addOTTimes( OTTimes* times,
-                         MCParticle* mcPart,
-                         Track* track );
+  StatusCode addOTTimes( const LHCb::OTTimes* times,
+                         LHCb::MCParticle* mcPart,
+                         LHCb::Track* track );
 
-  /// Add inner tracker clusters
-  StatusCode addITClusters( MCParticle* mcPart, Track* track );
+  /// Add silicon tracker (IT and TT) clusters
+  StatusCode addSTClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
 
   /// Add velo r and phi clusters
-  StatusCode addVeloClusters( MCParticle* mcPart, Track* track );
+  StatusCode addVeloClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
 
   /// Initialize seed state
-  StatusCode initializeState( double z, Track* track, MCParticle* mcPart );
+  StatusCode initializeState( double z,
+                              LHCb::Track* track, LHCb::MCParticle* mcPart );
 
   /// Delete all states on the track
-  StatusCode deleteStates( Track* track );
+  StatusCode deleteStates( LHCb::Track* track );
 
-  // MC associators
-  OTTime2MCHitAsct::IAsct*           m_otTim2MCHit;
-  ITCluster2MCParticleAsct::IAsct*   m_itClus2MCP;
-  VeloCluster2MCParticleAsct::IAsct* m_veloClus2MCP;
-
+private:
   // Geometry information
-  DeOTDetector* m_otTracker;       ///< Pointer to OT detector element
-  DeSTDetector* m_itTracker;       ///< Pointer to ST detector element
   DeVelo*       m_velo;            ///< Pointer to VELO detector element
-  std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
-  std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
+  DeSTDetector* m_ttTracker;       ///< Pointer to TT detector element
+  DeSTDetector* m_itTracker;       ///< Pointer to IT detector element
+  DeOTDetector* m_otTracker;       ///< Pointer to OT detector element
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
+  std::string   m_ttTrackerPath;   ///< Name of the TT XML geom path
+  std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
+  std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
 
   // Interfaces
   ISTClusterPosition*     m_stPositionTool;///< ST cluster position tool
@@ -113,15 +108,14 @@ private:
 
   // job options
   bool m_addOTTimes;         ///< true if OT clusters should be put on track
-  bool m_addITClusters;      ///< true if IT clusters should be put on track
+  bool m_addSTClusters;      ///< true if ST clusters should be put on track
   bool m_addVeloClusters;    ///< true if Velo R clusters should be put on track
   bool m_initState;          ///< initialize seed state
   bool m_initStateUpstream;  ///< seed state created upstream/downstream
   bool m_trueStatesAtMeas;   ///< Store true states at each measurement position
   std::string m_stPositionToolName;
-  std::string m_tracksTESPath;     ///< TrTracks container path in EvDS
-  std::string m_relationTablePath; ///< Location of the associator table
-  int m_minNHits;         ///< Minimum number of hits on the track
+  std::string m_tracksOutContainer;  ///< Tracks output container path in the TES
+  int    m_minNHits;      ///< Minimum number of hits on the track
   double m_errorX2;       ///< Error^2 on x
   double m_errorY2;       ///< Error^2 on y
   double m_errorTx2;      ///< Error^2 on slope x

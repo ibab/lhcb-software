@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackIdealPR
-version           v1r5
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,18 +21,15 @@ include_path      none
 #============================================================================
 use   GaudiAlg        v*
 
-use   TrackEvent      v1r* Event
-use   TrackFitEvent   v1r* Tr
-use   Event           v*   Event
+use   RecEvent        v*    Event
 
-use   OTAssociators   v* OT
-use   ITAssociators   v* IT
-use   VeloAssociators v* Velo
+use   TrackEvent      v*    Event
+use   TrackFitEvent   v*    Tr
 
-use   STTools         v* IT
+use   LinkerEvent     v*    Event
 
-use   TrackInterfaces v* Tr
-use   TrackMCTools    v* Tr
+use   TrackInterfaces v*    Tr
+use   TrackMCTools    v*    Tr
 
 #============================================================================
 # Component library building rule

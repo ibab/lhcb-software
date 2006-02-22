@@ -12,17 +12,13 @@ BrunelCheck.DetectorList    = { "Tr" };
 BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 
 //IdealTracksCreator.AddOTTimes      = true;
-//IdealTracksCreator.AddITClusters   = true;
+//IdealTracksCreator.AddSTClusters   = true;
 //IdealTracksCreator.AddVeloClusters = true;
 
 //IdealTracksCreator.InitState   = true;
-//IdealTracksCreator.FitTracks   = true;
-//IdealTracksCreator.FitUpstream = true;
 //IdealTracksCreator.TrueStatesAtMeasZPos = false;
 
-//IdealTracksCreator.TracksTESPath = "Rec/Track/Ideal";
-
-//IdealTracksCreator.RelationTable = "Rec/Relations/IdealTr2MCP";
+//IdealTracksCreator.TracksOutContainer = "Rec/Track/Ideal";
 
 //IdealTracksCreator.OTGeometryPath   = DeOTDetectorLocation::Default ;
 //IdealTracksCreator.ITGeometryPath"  = DeSTDetectorLocation::Default ;
