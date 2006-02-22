@@ -1,11 +1,142 @@
-! $Id: release.notes,v 1.26 2006-02-07 15:01:09 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2006-02-22 18:45:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.26 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.27 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-02-22 - Vanya BELYAEV
+
+ - Relations/Get.h
+
+   The new file with few useful technical utilities for manipulations 
+   with relation tables and ranges 
+ 
+    ---  Relations::getTo
+    new utility/function/algorihtm, which allows to represent a "range" 
+    of relations as a plain list of "TO" objects, e.g.: 
+   
+    ***************************************************************************   
+    *
+    *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
+    *
+    *  // (1) get the relation table:   
+    *  const ITable* table = ...  ;
+    *  
+    *  const LCHb::CaloDigit* digit = ... ;
+    *
+    *  // (2) get all links from the given LHCb::CaloDigit obejct:
+    *  Table::Range links = table->relations( digit ) ;
+    *  
+    *  // (3) get all MC-particles into one plain container: 
+    *  typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;
+    *  MCPARTICLES mcparticles ;
+    * 
+    *  Relations::getTo ( links.begin () , 
+    *                     links.end   () ,
+    *                     std::back_inserter( mcparticles ) ) ;
+    *
+    *  // (3') the same, but with slightly different semantics:
+    *  // Relations::getTo ( links , std::back_inserter( mcparticles ) ) ;
+    * 
+    ***************************************************************************   
+
+
+    --- Relations::getWeight
+    new utility/function/algorihtm, which allows to represent a "range" 
+    of "weighted" relations as a plain list of "WEIGHT" objects, e.g.: 
+
+
+    ***************************************************************************   
+    *
+    *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
+    *
+    *  // (1) get the relation table:   
+    *  const ITable* table = ...  ;
+    *  
+    *  const LCHb::CaloDigit* digit = ... ;
+    *
+    *  // (2) get all links from the given LHCb::CaloDigit obejct:
+    *  Table::Range links = table->relations( digit ) ;
+    *  
+    *  // (3) get all weights in one plain container 
+    *  typedef std:vector<double> WEIGHTS ;
+    *  WEIGHT weight ;
+    * 
+    *  Relations::getWeigh ( links.begin () , 
+    *                        links.end   () ,
+    *                        std::back_inserter ( weights ) ) ;
+    *
+    *  // (3') the same, but with slightly different semantics:
+    *  // Relations::getWeight ( links , std::back_inserter ( weights ) ) ;
+    * 
+    ***************************************************************************   
+
+    --- Relations::sumWeight
+    new utility/function/algorihtm, which allows to accumulate all 
+    "weights" from the range of "weighted" relations:
+
+    ***************************************************************************   
+    *
+    *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
+    *
+    *  // (1) get the relation table:   
+    *  const ITable* table = ...  ;
+    *  
+    *  const LCHb::CaloDigit* digit = ... ;
+    *
+    *  // (2) get all links from the given LHCb::CaloDigit obejct:
+    *  Table::Range links = table->relations( digit ) ;
+    *  
+    *  // (3) get the SUM of all weigths: 
+    * 
+    *  const double weights = 
+    *    Relations::sumWeigh ( links.begin () , links.end () , 0.0 ) ;
+    *
+    *  // (3') the same, but with slightly different semantics:
+    *  //const double weights = 
+    *  //  Relations::sumWeigh ( links , 0.0 ) ;
+    * 
+    ***************************************************************************   
+
+    --- Relations::getUniqueTo 
+    new utility/function/algorithm to get the *UNIQUE* "TO" objcts 
+    form the specified range of relations:
+
+    ***************************************************************************   
+    *
+    *  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,float> Table ;
+    *  // (1) get the relation table:   
+    *  const ITable* table = ...  ;
+    *  
+    *  // (2) get ALL links 
+    *  Table::Range links = table->relations() ;
+    *  
+    *  // (3) get all *UNIQUE* MC-particles into one plain container 
+    *
+    *  /// not very efficient: 
+    *  // typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;  
+    *  /// efficient: 
+    *  typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;  
+    *
+    *  MCPARTICLES mcparticles ;
+    *  Relations::getUniqueTo ( links.begin () , 
+    *                           links.end   () ,
+    *                           mcparticles    ) ;
+    *
+    *  // (3') the same, but with slightly different semantics:
+    *  Relations::getUniqueTo ( links , mcparticles    ) ;
+    *
+    * // ///////////////////////////////////////////////////////////////////////
+    * // IMPORTANT!!!
+    * // This utility/function/algorihtm is not very efficient for 
+    * // "std::vector" conatiners. but it is efficient for std::set 
+    * // containers:
+    * // //////////////////////////////////////////////////////////////////////
+    ***************************************************************************   
+  
 
 ! ====================== Relations v3r0 2006-02-07 ============================
 ! 2006-02-07 - Vanya BELYAEV
