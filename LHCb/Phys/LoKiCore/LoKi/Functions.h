@@ -1,11 +1,8 @@
-// $Id: Functions.h,v 1.3 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: Functions.h,v 1.4 2006-02-22 20:58:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/16 18:09:37  ibelyaev
-//  add utilities for the easy printouts
-//
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -1556,8 +1553,8 @@ namespace LoKi
   };
   
   /** @class Valid 
-   *  Trivial function to chech the validity of argument.
-   *  It forw for any pointer-like types or for types with
+   *  The trivial predicate to check the validity of argument.
+   *  It is OK for any pointer-like types or for types with
    *  implemented implicit conversion to "bool" 
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date 2004-02-11
@@ -1585,6 +1582,49 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(Valid?)"; };
+  };
+  
+  /** @class TheSame 
+   *  Trivial predicate to check if the argument 
+   *  is equal to some predefined value. 
+   *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+   *  @date 2004-02-11
+   */
+  template <class TYPE>
+  class TheSame : public LoKi::Predicate<TYPE>
+  {
+  public:
+    typedef typename LoKi::Predicate<TYPE>::argument    argument     ;
+    typedef typename LoKi::Predicate<TYPE>::result_type result_type  ;
+  public:
+    /// constructor form the value 
+    TheSame 
+    ( const argument value ) 
+      : LoKi::Predicate<TYPE>() 
+      , m_value ( value ) 
+    {}
+    /// copy constructor 
+    TheSame
+    ( const TheSame& right ) 
+      : LoKi::Predicate<TYPE>( right )
+      , m_value              ( right.m_value )
+    {}
+    /// virtual destructor 
+    virtual ~TheSame() {}
+    /// MANDATORY: clone method ("virtual constructor")
+    virtual  TheSame* clone() const { return new TheSame( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual result_type operator() ( argument object ) const 
+    { return m_value == object ? true : false ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << "(SAME?)"; };
+  private :
+    // the default contructor is disabled
+    TheSame();
+  private:
+    // the predefined value 
+    const typename LoKi::Predicate<TYPE>::argument m_value ;
   };
   
 };

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.6 2006-02-17 12:11:29 cattanem Exp $ 
+! $Id: release.notes,v 1.7 2006-02-22 20:58:50 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,22 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-02-22 - Vanya BELYAEV
+ - LoKi/Keeper.h
+   LoKi/UniqueKeeper.h
+   two new templated container adapters, 
+   which are useful to keep valid 
+   pointer "const OBJECT*"
+   The containers implements rudimentaty STL interface 
+   which is simultaneously "vector"-like and "set"-like
+   By construction, the containers hold *ONLY* valid objects.
+   The difference: UniqueKeeper<OBBJECT> contains no duplicates 
+   (it is based on std::set), while Keeper<OBJECT> may contains 
+   duplicates. From technicla point of view UniqueKeeper is always 
+   sorted, thats why std::binary_search could be efficiently  
+   applied  
+
 
 !=========================== LoKiCore v1r0 2006-01-24 =========================
 ! 2006-02-16 - Vanya BELYAEV
@@ -55,6 +71,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.6  2006/02/17 12:11:29  cattanem
+! move tag
+!
 ! Revision 1.5  2006/02/16 18:09:38  ibelyaev
 !  add utilities for the easy printouts
 !
