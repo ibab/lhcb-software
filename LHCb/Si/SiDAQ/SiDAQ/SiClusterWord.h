@@ -1,4 +1,4 @@
-// $Id: SiClusterWord.h,v 1.4 2006-02-14 15:49:10 krinnert Exp $
+// $Id: SiClusterWord.h,v 1.5 2006-02-22 17:21:16 krinnert Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -16,6 +16,10 @@
 
 template <class bitPolicy>
 class SiClusterWord{
+
+public:
+
+  typedef typename bitPolicy::adc_bank_type adc_bank_type;
 
 public:
 
