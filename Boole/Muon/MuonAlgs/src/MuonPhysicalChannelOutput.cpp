@@ -53,8 +53,10 @@ idX<<" "<<idY<<std::endl;
   numberTileOutput=0;
   // loop over FE channel readout
   //
+if(debug)std::cout<<muonDetector->readoutInRegion(station,region)<<std::endl;
+
   for (int readoutNumber=0;readoutNumber<(int)muonDetector->
-         readoutInRegion(station,region);readoutNumber++){
+        getLogMapInRegion(station,region);readoutNumber++){
     //
     // check if current readout coincides with one of the LogMap readouts
     //
