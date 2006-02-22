@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.28 2006-02-22 19:51:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2006-02-22 19:58:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.28 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.29 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
@@ -49,7 +49,6 @@
       Relations/IAssociatorWeighted.h   ******* REMOVED  *****************
       Relations/RelationMACROs.h        ******* REMOVED  *****************
       src/AssociatorBase.cpp            ******* REMOVED  *****************
-      src/IRelationBases.cpp            ******* REMOVED  *****************
     **********************************************************************
 
 
