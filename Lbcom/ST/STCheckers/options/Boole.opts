@@ -1,3 +1,5 @@
 MCITDepositChecker.detType =  "IT";
 MCITDigitChecker.detType = "IT";
 ITDigitChecker.detType = "IT";
+ITClusterChecker.detType = "IT";
+ITEffMonitor.detType = "IT";

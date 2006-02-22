@@ -54,10 +54,8 @@ STEffMonitor::STEffMonitor(const std::string& name,
   m_tracker(0)
 {
  
-  this->declareProperty( "hitTableLocation", 
-                         m_hitTableLocation = "/Event/Rec/Relations/MCP2TTMCHit");
-
-
+  this->declareProperty( "hitTableLocation", m_hitTableLocation =
+                "Relations/" + LHCb::MCParticleLocation::Default + "2MCTTHits" );
 
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
