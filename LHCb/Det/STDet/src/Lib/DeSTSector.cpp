@@ -101,7 +101,8 @@ StatusCode DeSTSector::initialize() {
     unsigned int nSensors = param<int>("nSensors");
 
     // guard ring
-    m_deadWidth = param<double>("verticalGuardRing");  
+    double guardRing = param<double>("verticalGuardRing");  
+    double m_deadWidth = guardRing + 0.5*param<double>("bondGap");
 
     // geometry: uMin, uMax
     const ILVolume* lv = this->geometry()->lvolume();
@@ -112,7 +113,7 @@ StatusCode DeSTSector::initialize() {
     m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
 
     // and vMin, vMax
-    m_vMaxLocal = 0.5*(mainBox->ysize() - m_deadWidth);
+    m_vMaxLocal = 0.5*mainBox->ysize() - guardRing;
     m_vMinLocal = -m_vMaxLocal;
 
     double height = mainBox->ysize()/nSensors;
