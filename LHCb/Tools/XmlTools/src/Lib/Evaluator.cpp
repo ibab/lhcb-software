@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: Evaluator.cpp,v 1.1 2005-12-07 15:08:51 jpalac Exp $
+// $Id: Evaluator.cpp,v 1.2 2006-02-22 17:53:05 marcocle Exp $
 // ---------------------------------------------------------------------------
 
 #include "XmlTools/Evaluator.h"
@@ -569,6 +569,11 @@ Evaluator::Evaluator() {
 
 //---------------------------------------------------------------------------
 Evaluator::~Evaluator() {
+  Struct * s = (Struct *)(p);
+  if (s->theExpression != 0) {
+    delete[] s->theExpression;
+    s->theExpression = 0;
+  }
   delete (Struct *)(p);
 }
 
