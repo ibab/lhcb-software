@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- =============== TrajMeasurement class definition =============== -->
+
+    <class
+      name        = 'TrajMeasurement'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'TrajMeasurement is a Measurement supplemented with a Trajectory.'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::Measurement'/>
+
+      <import name='Event/Measurement'/>
+      <import name='Kernel/Trajectory.h'/>
+
+      <constructor
+        desc     = "Constructor from a Trajectory and an LHCbID"
+        argList  = "LHCb::Trajectory* traj, const LHCb::LHCbID&amp; id"
+        initList = "m_trajectory(traj)">
+	<code>
+  m_z = traj -> position( traj->range().first + 0.5 * traj->length() ).z();
+  m_lhcbID = id;
+	</code>
+      </constructor>
+      
+      <destructor
+	desc = "Destructor">
+	<code>
+    if ( m_trajectory != 0 ) delete m_trajectory;
+	</code>
+      </destructor>
+
+      <constructor
+        desc     = "Constructor from a Trajectory"
+        argList  = "LHCb::Trajectory* traj"
+        initList = "m_trajectory(traj)">
+	<code>
+  m_z = traj -> position( traj->range().first + 0.5 * traj->length() ).z();
+	</code>
+      </constructor>
+      
+      <destructor
+	desc    = "Destructor"
+	virtual = 'TRUE'>
+	<code>
+    if ( m_trajectory != 0 ) delete m_trajectory;
+	</code>
+      </destructor>
+
+      <attribute
+        type    = 'LHCb::Trajectory*'
+        name    = 'trajectory'
+        setMeth = 'FALSE'
+        getMeth = 'FALSE'
+        desc    = 'pointer to the Trajectory (owner)'
+        access  = 'PROTECTED' />
+
+      <method
+        name    = 'update'
+        desc    = 'Update the Measurement parameters'
+        argList = 'const Gaudi::TrackVector refVector'
+        virtual = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'LHCb::Trajectory &amp;'
+        name    = 'trajectory'
+        desc    = 'Retrieve the reference to the Trajectory'>
+        <code>
+  return *m_trajectory;
+        </code>
+      </method>
+
+      <method
+        type    = 'const LHCb::Trajectory &amp;'
+        name    = 'trajectory'
+        desc    = 'Retrieve const the reference to the Trajectory'
+        const   = 'TRUE'>
+        <code>
+  return *m_trajectory;
+        </code>
+      </method>
+
+      <method
+        name    = 'setTrajectory'
+        argList = 'LHCb::Trajectory traj'
+        desc    = 'Update the trajectory'>
+        <code>
+  if ( m_trajectory != 0 ) delete m_trajectory;
+  m_trajectory = traj.clone();
+        </code>
+      </method>
+
+      <method
+        type    = 'LHCb::TrajMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the TrajMeasurement'
+        const   = 'TRUE'
+	virtual = 'TRUE'>
+        <code>
+  LHCb::TrajMeasurement* me = new LHCb::TrajMeasurement( trajectory().clone() );
+  return me;
+        </code>
+      </method>
+
+    </class>
+  </package>
+</gdd>
