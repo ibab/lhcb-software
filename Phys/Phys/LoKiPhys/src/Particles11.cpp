@@ -1,8 +1,11 @@
-// $Id: Particles11.cpp,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles11.cpp,v 1.2 2006-02-22 21:02:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -344,59 +347,6 @@ LoKi::Particles::IsAParticleFromTree::operator()
   return false ;                                               // RETURN 
 } ;
 // ============================================================================
-
-
-#include "Relations/Relation2D.h"
-#include "Relations/RelationWeighted2D.h"
-#include "Relations/Get.h"
-#include <set>
-
-void test ( const LHCb::Particle* p ) 
-{
-  
-  typedef std::set<const LHCb::Vertex*>    SET      ;
-  typedef std::vector<const LHCb::Vertex*> VERTICES ;
-  typedef std::vector<double>              DOUBLES  ;
-  
-  {
-    typedef LHCb::Relation2D<LHCb::Particle,LHCb::Vertex> Table ;
-    
-    Table table ;
-    Table::Range links = table.relations( p  ) ;
-    
-    VERTICES vs ;
-    Relations::getTo ( links , std::back_inserter( vs ) ) ;
-    
-    Relations::getUniqueTo ( links , vs  ) ;
-    SET vvs ;
-    Relations::getUniqueTo ( links , vvs ) ;  
-  };
-  
-  
-  {
-    typedef LHCb::RelationWeighted2D<LHCb::Particle,LHCb::Vertex,float> Table ;
-    
-    Table table ;
-    Table::Range links = table.relations( p  ) ;
-    
-    VERTICES vs ;
-    Relations::getTo     ( links , std::back_inserter( vs ) ) ;
-    
-    DOUBLES ds ;
-    Relations::getWeight ( links , std::back_inserter( ds ) ) ;
-    
-    const double sum = Relations::sumWeight ( links , 0.0 ) ;
-
-    Relations::getUniqueTo ( links , vs  ) ;
-    SET vvs ;
-    Relations::getUniqueTo ( links , vvs ) ;  
-  
-  }
-  
-  
-} ;
-
-  
 
 // ============================================================================
 // The END 
