@@ -3,6 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 !===================== LHCbKernel v6r2 2006-02-16 =========================
+! 2006-02-22 - Tomasz Szumlak
+ - minor changes inside the velo tool interface
+
 ! 2006-02-21 - Tomasz Szumlak
  - IVeloClusterPos removed and new IVeloClusterPosition interface added
 

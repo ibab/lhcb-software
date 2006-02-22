@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.2 2006-02-22 11:27:03 szumlat Exp $
+// $Id: IVeloClusterPosition.h,v 1.3 2006-02-22 15:41:54 szumlat Exp $
 #ifndef VELOALGORITHMS_IVELOCLUSTERPOSITION_H 
 #define VELOALGORITHMS_IVELOCLUSTERPOSITION_H 1
 
@@ -48,6 +48,9 @@ public:
   // (depending on sensor zone)
   virtual toolPair position(const LHCb::VeloCluster* cluster,
                             Pair& userInfo)=0;
+  virtual toolPair position(const LHCb::VeloCluster* cluster)=0;
+  virtual toolPair position(const LHCb::VeloCluster* cluster,
+                            double radiusOfCluster)=0;
   // the method calculate the position using linear charge sharing
   // approximation
   virtual Pair fractionalPosMean(
