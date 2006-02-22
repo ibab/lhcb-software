@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.7 2006-02-22 22:18:09 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.8 2006-02-22 22:24:51 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -45,8 +45,5 @@ DECLARE_FACTORY_ENTRIES(Generators) {
 
   // Full event cut tools
   DECLARE_TOOL( LeptonInAcceptance ) ;
-
-
-  DECLARE_TOOL( PythiaProduction ) ;
 }
   
