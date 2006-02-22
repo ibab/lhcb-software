@@ -1,4 +1,4 @@
-// $Id: L0DU_load.cpp,v 1.6 2006-02-18 11:29:37 ocallot Exp $
+// $Id: L0DU_load.cpp,v 1.7 2006-02-22 15:25:17 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/ContainerFactoryDefs.h"
@@ -14,7 +14,7 @@
 
 DECLARE_FACTORY_ENTRIES(L0DU) {
   DECLARE_ALGORITHM( L0DU );
+  DECLARE_ALGORITHM( L0Monitor );
   DECLARE_TOOL( L0DUMakerTools );
   DECLARE_TOOL( L0CandidateTool );
-  DECLARE_TOOL( L0Monitor );
 }
