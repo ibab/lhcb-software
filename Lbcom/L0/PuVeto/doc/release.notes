@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.39 2006-02-21 17:29:19 cattanem Exp $
+! $Id: release.notes,v 1.40 2006-02-22 15:45:48 mzupan Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
 
 !======================== PuVeto v7r0 2006-02-21 ========================
+
+! 2006-02-22 - Marko Zupan
+- Extra protection added by bit masking values passed to L0ProcessorData
+- if (bin > 0) changed to if (bin >=0) to allow events with hits in bin 0 to pass
+
 ! 2006-02-21 - Olivier Callot
  - If no peaks, avoid coding -1 in the L0DU data, this just sets wrong bits.
 
