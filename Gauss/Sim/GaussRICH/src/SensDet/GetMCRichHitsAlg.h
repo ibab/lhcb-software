@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.3 2006-02-13 16:30:43 jonrob Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.4 2006-02-22 14:30:26 papanest Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -9,8 +9,7 @@
 #include "GetMCRichInfoBase.h"
 
 // RichDet
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
+#include "RichDet/DeRich.h"
 
 /** @class GetMCRichHitsAlg GetMCRichHitsAlg.h
  *

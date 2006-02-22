@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.12 2006-02-20 15:52:43 seaso Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.13 2006-02-22 14:30:26 papanest Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -59,8 +59,8 @@ StatusCode GetMCRichHitsAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get RichDet objects
-  m_richDets[Rich::Rich1] = getDet<DeRich1>( m_richDetsLoc[Rich::Rich1] );
-  m_richDets[Rich::Rich2] = getDet<DeRich2>( m_richDetsLoc[Rich::Rich2] );
+  m_richDets[Rich::Rich1] = getDet<DeRich>( m_richDetsLoc[Rich::Rich1] );
+  m_richDets[Rich::Rich2] = getDet<DeRich>( m_richDetsLoc[Rich::Rich2] );
 
   return sc;
 }
@@ -271,9 +271,9 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // get sensitive detector identifier from det elem
-        // const int detID = m_richDets[rich]->sensitiveVolumeID( entry );
+        const int detID = m_richDets[rich]->sensitiveVolumeID( entry );
         // get HPD number from hit
-        const int detID = g4hit->GetCurHpdNum();
+        //const int detID = g4hit->GetCurHpdNum();
         // Photon detector number
         mchit->setSensDetID( detID );
 
