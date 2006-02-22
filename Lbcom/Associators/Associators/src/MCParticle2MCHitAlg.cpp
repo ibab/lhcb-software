@@ -54,8 +54,6 @@ StatusCode MCParticle2MCHitAlg::execute()
   /// typedef
   typedef Relation1D<MCParticle, MCHit> LocalDirectType;
 
-  std::cout << "Matt: got herw " << std::endl;
-
   // create an association table
   LocalDirectType* table = new LocalDirectType();
 
@@ -77,8 +75,6 @@ StatusCode MCParticle2MCHitAlg::execute()
   
   // Register the table on the TES
   put( table, outputData() );
-
-  std::cout << "Matt: got herw " << std::endl;
 
   return StatusCode::SUCCESS ;
 };
