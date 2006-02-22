@@ -1,4 +1,4 @@
-// $Id: STTools_load.cpp,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STTools_load.cpp,v 1.2 2006-02-22 17:25:52 cattanem Exp $
 // Include files 
 
 
@@ -17,7 +17,5 @@ DECLARE_FACTORY_ENTRIES(STTools) {
   DECLARE_TOOL( STSignalToNoiseTool );
   DECLARE_TOOL( STOfflinePosition );
   DECLARE_TOOL( STOnlinePosition );
-  
-  DECLARE_TOOL( DotDump ) ;
 
 }
