@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.24 2006-02-22 15:45:48 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.25 2006-02-22 16:36:42 mzupan Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -317,8 +317,8 @@ StatusCode PuVetoAlg::execute() {
 
   // Pass values to L0DU (untested as of 03/02/2006)
 
-  unsigned int PuWord1 = 0;
-  unsigned int PuWord2 = 0;
+  unsigned int PuWord1 = 0x10000;
+  unsigned int PuWord2 = 0x10000;
   unsigned int tmt = Saturate((unsigned int)m_totMult);
 
 
