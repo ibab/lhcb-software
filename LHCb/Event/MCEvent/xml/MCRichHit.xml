@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.6 2006-02-22 13:27:34 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,6 +27,7 @@
         <import name="Kernel/Point3DTypes.h"/>
         <import name="Kernel/RichDetectorType"/>
         <import name="Kernel/RichRadiatorType"/>
+        <import name="Kernel/RichSmartID"/>
         <import name="Event/MCParticle.h"/>
         <import name="Event/MCRichDigitHistoryCode.h"/>
         <import ignore="TRUE" name="Rich"/>
@@ -50,8 +51,8 @@
                    desc = 'Time of flight (ns)'/>
 
         <attribute name = 'sensDetID'
-                   type = 'int'
-                   desc = 'Sensitive detector ID number. Uniquely identifies the HPD the hit is within' />
+                   type = 'LHCb::RichSmartID'
+                   desc = 'Sensitive detector ID number. Uniquely identifies the hit using the RichSmartID channel encoding' />
 
         <attribute
                 desc = "Bit packed field containing RICH specific information" 

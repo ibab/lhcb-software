@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.28 2006-02-17 09:29:06 cattanem Exp $
+! $Id: release.notes,v 1.29 2006-02-22 13:27:34 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+
+! 2006-02-22 - Chris Jones
+ - Update sensDetID member in MCRichHit to be of type RichSmartID
 
 !========================== MCEvent v1r1 2006-02-17 ==========================
 ! 2006-02-17 - Marco Cattaneo
