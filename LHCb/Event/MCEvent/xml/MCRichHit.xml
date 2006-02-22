@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.6 2006-02-22 13:27:34 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.7 2006-02-22 13:31:38 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -52,7 +52,7 @@
 
         <attribute name = 'sensDetID'
                    type = 'LHCb::RichSmartID'
-                   desc = 'Sensitive detector ID number. Uniquely identifies the hit using the RichSmartID channel encoding' />
+                   desc = 'Sensitive detector ID number. Uniquely identifies the hit HPD pixel using the RichSmartID channel encoding' />
 
         <attribute
                 desc = "Bit packed field containing RICH specific information" 
