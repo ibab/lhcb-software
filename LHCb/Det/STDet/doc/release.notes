@@ -2,10 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r0 2006-02-21 =======================
 ! 2006-02-21 M. Needham
  - Tune treatment of guard rings
 
-!========================= STDet v2r0 2006-02-21 =======================
 ! 2006-02-20 M.Needham
  - Add find layer
  - Bug fix in next left and right
