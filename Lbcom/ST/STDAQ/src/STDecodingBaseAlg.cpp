@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.2 2006-02-22 09:25:42 cattanem Exp $
 
 #include <algorithm>
 
@@ -42,7 +42,7 @@ STDecodingBaseAlg::STDecodingBaseAlg( const std::string& name,
 GaudiAlgorithm (name , pSvcLocator){
  
  // Standard constructor, initializes variables
- declareProperty("readoutTool", m_readoutToolName = "STReadoutTool");     
+ declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");     
  declareProperty("detType", m_detType = "TT" );
 }
 
