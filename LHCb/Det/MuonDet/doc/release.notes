@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.67 2006-02-17 17:50:01 asarti Exp $
+! $Id: release.notes,v 1.68 2006-02-22 10:09:02 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-16 - Alessio Sarti
+ - MuonChamberLayout.cpp
+	fix the choice of volume to access to return deltax,y and z.
+	now used the gas volume instead of chamberbox
+
 ! 2006-02-17 - Alessio Sarti
  - DeMuonDetector.cpp
    	Fix the Hit2GapNumber method. Now the hits is correctly

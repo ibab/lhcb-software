@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.19 2006-02-16 17:50:35 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.20 2006-02-22 10:09:02 asarti Exp $
 // Include files 
 
 //Muon
@@ -927,8 +927,21 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
       return StatusCode::FAILURE;
     }
 
-    Dx   = box->xHalfLength();
-    Dy   = box->yHalfLength();
+
+    const ISolid *GVso = (*(muChamber->childBegin()))->geometry()->lvolume()->solid();
+    // check these really are boxes (they ought to be!)
+    const SolidBox *GVbox = dynamic_cast<const SolidBox *>(GVso);
+    if( !GVbox ){
+      msg << MSG::ERROR << "Could not cast gas gap solid to box" 
+	  << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    //Take the deltax and deltay from
+    //Gas volume dimension
+    Dx   = GVbox->xHalfLength();
+    Dy   = GVbox->yHalfLength();
+    //While take the deltaz from the whole chamber dimensions
     Dz   = box->zHalfLength();
 
     Gaudi::XYZPoint cnt(0,0,0);
@@ -984,8 +997,20 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 	  return StatusCode::FAILURE;
 	}
 
-	Dx   = box->xHalfLength();
-	Dy   = box->yHalfLength();
+	const ISolid *GVso = (*(muGap->childBegin()))->geometry()->lvolume()->solid();
+	// check these really are boxes (they ought to be!)
+	const SolidBox *GVbox = dynamic_cast<const SolidBox *>(GVso);
+	if( !GVbox ){
+	  msg << MSG::ERROR << "Could not cast gas gap solid to box" 
+	      << endreq;
+	  return StatusCode::FAILURE;
+	}
+	
+	//Take the deltax and deltay from
+	//Gas volume dimension
+	Dx   = GVbox->xHalfLength();
+	Dy   = GVbox->yHalfLength();
+	//While take the deltaz from the whole chamber dimensions
 	Dz   = box->zHalfLength();
 
 	Gaudi::XYZPoint cnt(0,0,0);
@@ -1117,7 +1142,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   }  
 
   if ( m_debug )   std::cout<<" getXYZPad:: loc to glob "<<Dx<<" "<<Dy<<" "<<Dz<<" "<<myChs.at(0)->name()<<" "<<deltax<<" "<<deltay<<" "<<deltaz<<std::endl;
-
+    
   return StatusCode::SUCCESS;
 }  
 
