@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.15 2006-02-17 13:25:50 robbep Exp $
+// $Id: Generation.cpp,v 1.16 2006-02-22 22:18:09 robbep Exp $
 // Include files 
 
 // local
@@ -140,7 +140,7 @@ StatusCode Generation::initialize() {
     return Error( "No Sample Generation Tool is defined. This is mandatory" ) ;
   m_sampleGenerationTool = 
     tool< ISampleGenerationTool >( m_sampleGenerationToolName , this ) ;
-  
+   
   // Retrieve generation method tool
   if ( "" != m_vertexSmearingToolName ) 
     m_vertexSmearingTool = 
@@ -185,7 +185,6 @@ StatusCode Generation::execute() {
       nPileUp = 1 ;
       currentLuminosity = 2.e32/cm2/s ;
     }
-
     // generate a set of Pile up interactions according to the requested type
     // of event
     goodEvent = m_sampleGenerationTool -> generate( nPileUp , theEvents , 
@@ -203,9 +202,11 @@ StatusCode Generation::execute() {
 
     // Decay the event if it is a good event
     if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
+      unsigned short iPile( 0 ) ;
       for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ;
             ++itEvents ) {
         sc = decayEvent( *itEvents ) ;
+        (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
         if ( ! sc.isSuccess() ) return sc ;
         sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
         if ( ! sc.isSuccess() ) return sc ;

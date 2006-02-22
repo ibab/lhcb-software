@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.11 2006-02-17 17:48:42 robbep Exp $
+// $Id: Signal.cpp,v 1.12 2006-02-22 22:18:09 robbep Exp $
 // Include files 
 
 // local
@@ -212,11 +212,11 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
                             theSignal -> status() ) ;
   
   newVertex -> add_particle_out( theNewParticle ) ;
-  hepMCevt -> set_signal_process_vertex( theSignal -> production_vertex() ) ;
   
   // Associate the new particle to the HepMC event
   // and copy all tree to the new HepMC event
   sc = fillHepMCEvent( theNewParticle , theSignal ) ;
+  hepMCevt -> set_signal_process_vertex( theNewParticle -> end_vertex() ) ;
   
   if ( ! sc.isSuccess( ) ) 
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
@@ -251,8 +251,8 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
     // Create decay vertex and associate it to theNewParticle
     HepMC::GenVertex * newVertex =
       new HepMC::GenVertex( oVertex -> position() ) ;
-    theNewParticle -> parent_event() -> add_vertex( newVertex ) ;
     newVertex -> add_particle_in( theNewParticle ) ;
+    theNewParticle -> parent_event() -> add_vertex( newVertex ) ;
 
     // loop over child particle of this vertex after sorting them
     std::list< const HepMC::GenParticle * > outParticles ;
@@ -309,8 +309,8 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
 bool Signal::ensureMultiplicity( const unsigned int nSignal ) {
   if ( ! m_cpMixture ) return true ;
   if ( nSignal > 1 ) return true ;
-  return (m_flatGenerator() >= ( ( 1. - m_signalBr ) / 
-                                 ( 2. - m_signalBr ) ) ) ;
+  return ( m_flatGenerator() >= ( ( 1. - m_signalBr ) / 
+                                  ( 2. - m_signalBr ) ) ) ;
 }
 
 //=============================================================================

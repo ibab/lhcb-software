@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.37 2006-02-20 18:34:17 gcorti Exp $
+! $Id: release.notes,v 1.38 2006-02-22 22:18:09 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-02-22 - Patrick Robbe
+ - requirements: use names with double underscore
+ - ExternalGenerator: use names with __
+ - GenCounters: fix counter when there is a B oscillating
 
 !=================== Generators v4r1 2006-02-20 ===========================
 ! 2006-02-17 - Patrick Robbe

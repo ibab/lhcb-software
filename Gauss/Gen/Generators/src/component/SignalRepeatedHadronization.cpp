@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.cpp,v 1.7 2006-02-17 13:27:28 robbep Exp $
+ // $Id: SignalRepeatedHadronization.cpp,v 1.8 2006-02-22 22:18:09 robbep Exp $
 // Include files 
 
 // local
@@ -88,8 +88,9 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                         theGenCollision ) ;
 
     if ( ! gotSignalInteraction ) m_productionTool -> turnOffFragmentation( ) ;
-
+ 
     sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
+ 
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     if ( ! gotSignalInteraction ) {
@@ -182,7 +183,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
             // not to bias things
             break ;
           }
-        } 
+        }
         
         if ( ! partonEventWithSignalQuarks ) break ;
 
@@ -209,10 +210,12 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
 //=============================================================================
 void SignalRepeatedHadronization::Clear( HepMC::GenEvent * theEvent ) const {
   if ( ! theEvent -> vertices_empty() ) {
-    HepMC::GenEvent::vertex_iterator iter ;
-    for ( iter = theEvent -> vertices_begin() ; 
-          iter != theEvent -> vertices_end()  ; ++iter ) {
-      theEvent -> remove_vertex( *iter ) ;
+    std::vector< HepMC::GenVertex * > tempList( theEvent -> vertices_begin() ,
+                                                theEvent -> vertices_end() ) ;
+    std::vector< HepMC::GenVertex * >::iterator iter ;
+    for ( iter = tempList.begin() ; iter != tempList.end() ; ++iter ) {
+      if ( ! theEvent -> remove_vertex( *iter ) ) 
+        Exception( "Could not remove vertex !" ) ;
       delete (*iter) ;
     }
   }

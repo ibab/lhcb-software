@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.8 2006-02-17 13:26:44 robbep Exp $
+// $Id: Inclusive.cpp,v 1.9 2006-02-22 22:18:09 robbep Exp $
 // Include files 
 
 // local
@@ -82,7 +82,7 @@ StatusCode Inclusive::initialize( ) {
     info() << prop -> particle() << " " ;
     
     if ( LHCb::ParticleID( prop -> pdgID() ).hasBottom() ) bottom = true ;
-    if ( LHCb::ParticleID( prop -> pdgID() ).hasCharm()  ) charm  = true ;
+    else if ( LHCb::ParticleID( prop -> pdgID() ).hasCharm()  ) charm  = true ;
   }
 
   if ( bottom && ! charm ) m_lightestQuark = LHCb::ParticleID::bottom ;

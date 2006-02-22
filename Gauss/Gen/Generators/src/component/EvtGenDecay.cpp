@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.7 2006-02-17 13:25:16 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.8 2006-02-22 22:18:09 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -46,9 +46,9 @@ extern "C" {
 }
 #else
 extern "C" {
-  void photos_init_( const char* filename , int length ) ;
-  void pythiaoutput_init_( int * ) ;
-  void photos_end_()  ;
+  void photos_init__( const char* filename , int length ) ;
+  void pythiaoutput_init__( int * ) ;
+  void photos_end__()  ;
 }
 #endif
 
@@ -169,7 +169,7 @@ StatusCode EvtGenDecay::initialize( ) {
 #ifdef WIN32
     PYTHIAOUTPUT_INIT( &arg ) ;
 #else
-    pythiaoutput_init_( &arg ) ;
+    pythiaoutput_init__( &arg ) ;
 #endif
   } else {
     arg = 1 ;
@@ -178,9 +178,9 @@ StatusCode EvtGenDecay::initialize( ) {
     PHOTOS_INIT( m_photosTempFilename.name() , 
                  strlen( m_photosTempFilename.name() ) ) ;
 #else
-    pythiaoutput_init_( &arg ) ;
-    photos_init_( m_photosTempFilename.name() , 
-                  strlen( m_photosTempFilename.name() ) ) ;
+    pythiaoutput_init__( &arg ) ;
+    photos_init__( m_photosTempFilename.name() , 
+                   strlen( m_photosTempFilename.name() ) ) ;
 #endif
   }
   
@@ -205,7 +205,7 @@ StatusCode EvtGenDecay::finalize() {
 #ifdef WIN32
     PHOTOS_END() ;
 #else
-    photos_end_() ;
+    photos_end__() ;
 #endif
   }  
  
