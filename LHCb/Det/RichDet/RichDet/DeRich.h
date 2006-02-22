@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.17 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRich.h,v 1.18 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -27,6 +27,11 @@
 
 #include "RichDet/RichMirrorSegPosition.h"
 #include "RichDet/DeRichSphMirror.h"
+
+// boost
+#include "boost/array.hpp"
+
+class DeRichHPDPanel;
 
 /** @namespace DeRichLocation
  *
@@ -198,6 +203,8 @@ public:
   virtual StatusCode alignSphMirrors() = 0;
   virtual StatusCode alignSecMirrors() = 0;
   
+  /// sensitive volume identifier
+  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
 protected:
   
@@ -233,12 +240,15 @@ protected:
   /// flat mirror reflectivity
   const TabulatedProperty* m_nominalSecMirrorRefl;
 
+  /// Condition for the alignment of the spherical mirrors
   SmartRef<Condition> m_sphMirAlignCond;
+  /// Condition for the alignment of the secondary mirrors
   SmartRef<Condition> m_secMirAlignCond;
 
   std::string m_name; ///< The name of this detector
 
-  
+  /// Pointers to the HPD panels of this Rich detector
+  boost::array<DeRichHPDPanel*, 2> m_HPDPanels;  
 };
 
 #endif    // RICHDET_DERICH_H

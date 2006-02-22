@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.20 2006-02-21 15:17:25 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.21 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -13,6 +13,7 @@
 
 // Include files
 #include "RichDet/DeRich1.h"
+#include "RichDet/DeRichHPDPanel.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -151,6 +152,12 @@ StatusCode DeRich1::initialize()
         << secMirrorReflLoc << endmsg;
   }  
   
+  // get pointers to HPD panels
+  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich1Panel0);
+  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich1Panel1);
+  m_HPDPanels[panel0->side()] = panel0;
+  m_HPDPanels[panel1->side()] = panel1;
+
   // conditions for mirror alignment
   m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
   if ( !m_sphMirAlignCond ) {

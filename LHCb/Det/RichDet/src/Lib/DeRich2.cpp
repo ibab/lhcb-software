@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.22 2006-02-21 15:17:25 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.23 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -13,6 +13,7 @@
 
 // Include files
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeRichHPDPanel.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -133,7 +134,13 @@ StatusCode DeRich2::initialize()
     msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
         << secMirrorReflLoc << endmsg;
   }
-
+  
+  // get pointers to HPD panels
+  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich2Panel0);
+  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich2Panel1);
+  m_HPDPanels[panel0->side()] = panel0;
+  m_HPDPanels[panel1->side()] = panel1;
+  
   // update mirror alignment
   m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
   if ( !m_sphMirAlignCond ) {

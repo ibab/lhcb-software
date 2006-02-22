@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-02-22 - Antonis Papanestis
+ - added functionality for sensitiveVolumeID
+
 ! 2006-02-21 - Chris Jones
  - Add loading of Rich1AerogelMonitor tool when creating aerogel DeRadiator
 

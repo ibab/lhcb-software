@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.30 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.31 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -29,8 +29,8 @@
 #include "DetDesc/ISolid.h"
 
 // RichDet
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
+//#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
 
 /** @namespace DeRichHPDPanelLocation
@@ -231,6 +231,9 @@ public:
   /// Access the HPD panel side
   inline Rich::Side side() const { return m_side; }
 
+  /// sensitive volume identifier
+  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+
 protected:
 
   /**
@@ -319,6 +322,7 @@ private:
 
   Rich::DetectorType m_rich;
   Rich::Side m_side;
+  LHCb::RichSmartID m_panelRichID;
   DeRichSystem* m_deRichS;
   const ISolid* m_kaptonSolid;
 

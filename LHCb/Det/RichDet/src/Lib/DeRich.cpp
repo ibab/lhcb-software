@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.14 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.15 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,6 +18,7 @@
 
 // local
 #include "RichDet/DeRich.h"
+#include "RichDet/DeRichHPDPanel.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DeRich
@@ -186,9 +187,18 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     mirrors[mNum]->applyMisAlignment( matrix );
   }
   
-  msg << MSG::DEBUG << "Aligned " << mirrors.size() << " " << mirrorID << endmsg;
+  msg << MSG::INFO << "Aligned " << mirrors.size() << " " << mirrorID << endmsg;
   return StatusCode::SUCCESS;
 
+}
+
+
+//=========================================================================
+//  
+//=========================================================================
+const int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
+{
+  return ( m_HPDPanels[side(globalPoint)]->sensitiveVolumeID( globalPoint ) );
 }
 
 //=============================================================================

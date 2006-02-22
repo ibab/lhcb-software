@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.34 2006-02-21 15:17:25 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.35 2006-02-22 14:29:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -36,7 +36,14 @@
 const CLID& CLID_DeRichHPDPanel = 12010;  // User defined
 
 // Standard Constructor
-DeRichHPDPanel::DeRichHPDPanel() {}
+DeRichHPDPanel::DeRichHPDPanel() :
+  m_rich       ( Rich::InvalidDetector ),
+  m_side       ( Rich::InvalidSide     ),
+  m_panelRichID( LHCb::RichSmartID()   )
+
+
+
+{}
 
 // Standard Destructor
 DeRichHPDPanel::~DeRichHPDPanel() {}
@@ -58,30 +65,27 @@ StatusCode DeRichHPDPanel::initialize()
 
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
 
+  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
+  const Gaudi::XYZPoint centreGlobal(geometry()->toGlobal( zero ));
+
   // Work out what Rich/panel I am
-  m_rich = Rich::InvalidDetector;
-  m_side = Rich::InvalidSide;
   if      ( name().find("Rich1") != std::string::npos )
   {
     m_rich = Rich::Rich1;
-    if      ( name().find("PDPanel0") != std::string::npos )
-    {
+    if ( centreGlobal.y() > 0.0 ) {
       m_side = Rich::top;
     }
-    else if ( name().find("PDPanel1") != std::string::npos )
-    {
+    else {
       m_side = Rich::bottom;
     }
   }
   else if ( name().find("Rich2") != std::string::npos )
   {
     m_rich = Rich::Rich2;
-    if      ( name().find("PDPanel0") != std::string::npos )
-    {
+    if ( centreGlobal.x() > 0.0 ) {
       m_side = Rich::left;
     }
-    else if ( name().find("PDPanel1") != std::string::npos )
-    {
+    else {
       m_side = Rich::right;
     }
   }
@@ -95,6 +99,11 @@ StatusCode DeRichHPDPanel::initialize()
 
   msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
       << " Panel" << (int)side() << " -------" << endmsg;
+
+  // prepare a smartID for this panel
+  m_panelRichID.setRich( rich() );
+  m_panelRichID.setPanel( side() );
+  
 
   std::string rich1Location;
   if ( name().find("Magnet") == std::string::npos )
@@ -207,8 +216,6 @@ StatusCode DeRichHPDPanel::initialize()
   // assume same size for all silicon detectors
   m_siliconHalfLengthX = siliconBox->xHalfLength();
   m_siliconHalfLengthY = siliconBox->yHalfLength();
-
-  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
 
   // HPD #0 coordinates
   m_HPD0Centre = pvHPDMaster0->toMother(zero);
@@ -353,8 +360,9 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   const Gaudi::XYZPoint inPanel = geometry()->toLocal(globalPoint);
 
   // find the HPD row/col of this point if not set
-  if ( !id.hpdColIsSet() )
+  if ( !id.hpdColIsSet() || !id.hpdNumInColIsSet() ) {
     if ( !findHPDColAndPos(inPanel, id) ) return StatusCode::FAILURE;
+  }  
 
   // check if the HPD is active or dead
   if ( !m_deRichS->hpdIsActive( id ) ) return StatusCode::FAILURE;
@@ -690,5 +698,15 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
     y = localPoint.y();
   }
   return (geometry()->toGlobal(Gaudi::XYZPoint(x, y, z) ) );
+
+}
+
+//=========================================================================
+//  sensitiveVolumeID
+//=========================================================================
+const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const 
+{
+  LHCb::RichSmartID id( m_panelRichID );
+  return ( smartID( globalPoint, id ) ) ? id : LHCb::RichSmartID();
 
 }
