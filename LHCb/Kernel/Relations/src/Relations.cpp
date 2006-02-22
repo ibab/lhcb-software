@@ -1,8 +1,11 @@
-// $Id: Relations.cpp,v 1.3 2006-02-07 13:42:54 ibelyaev Exp $
+// $Id: Relations.cpp,v 1.4 2006-02-22 19:19:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/07 13:42:54  ibelyaev
+//  many new changed : see relese.notes
+//
 // ============================================================================
 // Include files
 // ====================================================================
@@ -23,6 +26,7 @@
 #include "Relations/RelationWeighted2D.h"
 #include "Relations/RelationUtils.h"
 #include "Relations/RelationsDict.h"
+#include "Relations/Get.h"
 // ============================================================================
 
 // ============================================================================

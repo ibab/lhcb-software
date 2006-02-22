@@ -1,8 +1,11 @@
-// $Id: Get.h,v 1.1 2006-02-22 18:45:58 ibelyaev Exp $
+// $Id: Get.h,v 1.2 2006-02-22 19:19:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 18:45:58  ibelyaev
+//  add Relations/Get.h file, see release.notes
+// 
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -77,8 +80,8 @@ namespace Relations
   {
     for ( ; first != last ; ++first ) 
     {
-      *output = first->to() ;   // FILL THE OUTPUT ITERATOR 
-      ++output;                 // ADVANCE OUTPUT ITERATOR
+      *output =  first->to()  ;   // FILL THE OUTPUT ITERATOR 
+      ++output;                   // ADVANCE OUTPUT ITERATOR
     }
     return output ;
   } ;
@@ -161,7 +164,7 @@ namespace Relations
   {
     for ( ; first != last ; ++first ) 
     {
-      *output = first->weight() ;   // FILL THE OUTPUT ITERATOR 
+      *output = first->weight()  ;   // FILL THE OUTPUT ITERATOR 
       ++output;                     // ADVANCE OUTPUT ITERATOR
     }
     return output ;
@@ -185,9 +188,7 @@ namespace Relations
    *  // get all weight into one plain container 
    *  typedef std:vector<double> WEIGHTS ;
    *  WEIGHTS weight ;
-   *  Relations::getWeight ( links.begin () , 
-   *                         links.end   () ,
-   *                         std::back_inserter( weights ) ) ;
+   *  Relations::getWeight ( links , std::back_inserter( weights ) ) ;
    *
    *  @endcode 
    *  
@@ -292,9 +293,9 @@ namespace Relations
     CONTAINER& cont   ) 
   {
     // store the current size 
-    const typename CONTAINER::size_type size = cont.size() ;
+    const size_t size = cont.size() ;
     for ( ; first != last ; ++first ) 
-    { cont.push_back ( first->to() ) ; }
+    { cont.push_back ( first->to() ) ;  }
     typename CONTAINER::iterator begin = cont.begin () ;
     typename CONTAINER::iterator end   = cont.end   () ;
     // sort the subsequence 
