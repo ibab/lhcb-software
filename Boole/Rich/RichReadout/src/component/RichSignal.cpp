@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.10 2006-02-18 16:04:06 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.11 2006-02-22 19:29:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -24,10 +24,9 @@ RichSignal::RichSignal( const std::string& name,
                         ISvcLocator* pSvcLocator )
   : RichAlgBase        ( name, pSvcLocator ),
     m_mcDeposits       ( 0 ),
+    m_testSmartIDs     ( false ),
     m_smartIDTool      ( 0 ),
-    m_truth            ( 0 ),
-    m_smartIDnotFound  ( Rich::NRiches, 0 ),
-    m_smartIDInvalid   ( Rich::NRiches, 0 )
+    m_truth            ( 0 )
 {
 
   declareProperty( "HitLocation",
@@ -47,6 +46,7 @@ RichSignal::RichSignal( const std::string& name,
 
   declareProperty( "UseSpillover",     m_doSpillover = true );
   declareProperty( "UseLHCBackground", m_doLHCBkg = true );
+  declareProperty( "CheckSmartIDs", m_testSmartIDs );
 
 }
 
@@ -79,12 +79,6 @@ StatusCode RichSignal::execute()
   m_mcDeposits = new MCRichDeposits();
   put( m_mcDeposits, m_RichDepositLocation );
 
-  // initialise debug counters
-  m_smartIDnotFound[Rich::Rich1] = 0;
-  m_smartIDnotFound[Rich::Rich2] = 0;
-  m_smartIDInvalid[Rich::Rich1]  = 0;
-  m_smartIDInvalid[Rich::Rich2]  = 0;
-
   // Process main event
   // must be done first (so that first associated hit is signal)
   ProcessEvent( m_RichHitLocation, 0, 0 );
@@ -104,11 +98,7 @@ StatusCode RichSignal::execute()
   // Debug Printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Found in Rich(1/2) " << m_smartIDnotFound[Rich::Rich1] << "/"
-            << m_smartIDnotFound[Rich::Rich2] << " hits outside active pixels" << endreq
-            << "Found in Rich(1/2) " << m_smartIDInvalid[Rich::Rich1] << "/"
-            << m_smartIDInvalid[Rich::Rich2] << " hits with invalid RichSmartIDs" << endreq
-            << "Created overall " << m_mcDeposits->size()
+    debug() << "Created overall " << m_mcDeposits->size()
             << " MCRichDeposits at " << m_RichDepositLocation << endreq;
   }
 
@@ -142,55 +132,51 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
     //if ( (*iHit)->backgroundHit() ) continue;
     //if ( (*iHit)->hpdQuartzCK() || (*iHit)->gasQuartzCK() ) continue;
 
-    // Is hit in active pixel
-    RichSmartID tempID;
-    if ( (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess() )
+    // Get RichSmartID from MCRichHit (stripping sub-pixel info for the moment)
+    const RichSmartID id = (*iHit)->sensDetID().pixelID();
+
+    if ( m_testSmartIDs )
     {
-      // is smart ID "valid"
-      if ( tempID.pixelDataAreValid() )
-      {
+      RichSmartID tempID;
+      const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
+      if      (!ok)          
+      { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ); }
+      else if (id != tempID.pixelID()) 
+      { Warning( "RichSmartID mis-match" ); } 
+    }
 
-        // For the time being strip any sub-pixel information
-        const RichSmartID id = tempID.pixelID();
+    // Create a new deposit
+    MCRichDeposit* dep = new MCRichDeposit();
+    m_mcDeposits->insert( dep );
+    ++nDeps;
 
-        // Create a new deposit
-        MCRichDeposit* dep = new MCRichDeposit();
-        m_mcDeposits->insert( dep );
-        ++nDeps;
+    // Set RichSmartID
+    dep->setSmartID( id );
 
-        // Set RichSmartID
-        dep->setSmartID( id );
+    // set parent hit
+    dep->setParentHit( *iHit );
 
-        // set parent hit
-        dep->setParentHit( *iHit );
+    // Hit energy
+    dep->setEnergy( (*iHit)->energy() );
 
-        // Hit energy
-        dep->setEnergy( (*iHit)->energy() );
+    // TOF
+    double tof = tofOffset + (*iHit)->timeOfFlight();
+    // Global shift for Rich2.
+    if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
+    dep->setTime( tof );
 
-        // TOF
-        double tof = tofOffset + (*iHit)->timeOfFlight();
-        // Global shift for Rich2.
-        if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
-        dep->setTime( tof );
+    // get history from hit
+    MCRichDigitHistoryCode hist = (*iHit)->mcRichDigitHistoryCode();
 
-        // get history from hit
-        MCRichDigitHistoryCode hist = (*iHit)->mcRichDigitHistoryCode();
+    // add event type to history
+    if      (  0 == eventType ) { hist.setSignalEvent(true);   }
+    else if ( -1 == eventType ) { hist.setPrevEvent(true);     }
+    else if ( -2 == eventType ) { hist.setPrevPrevEvent(true); }
+    else if (  1 == eventType ) { hist.setNextEvent(true);     }
+    else if (  2 == eventType ) { hist.setNextNextEvent(true); }
 
-        // add event type to history
-        if      (  0 == eventType ) { hist.setSignalEvent(true);   }
-        else if ( -1 == eventType ) { hist.setPrevEvent(true);     }
-        else if ( -2 == eventType ) { hist.setPrevPrevEvent(true); }
-        else if (  1 == eventType ) { hist.setNextEvent(true);     }
-        else if (  2 == eventType ) { hist.setNextNextEvent(true); }
-
-        // Update history in dep
-        dep->setHistory( hist );
-
-      } // valid smart ID
-      else { ++m_smartIDInvalid[(*iHit)->rich()]; }
-
-    } // active hit if
-    else { ++m_smartIDnotFound[(*iHit)->rich()]; }
+    // Update history in dep
+    dep->setHistory( hist );
 
   } // hit loop
 

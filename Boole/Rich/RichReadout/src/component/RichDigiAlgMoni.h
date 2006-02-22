@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.7 2006-02-18 15:17:27 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.8 2006-02-22 19:29:30 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -99,7 +99,9 @@ private: // methods
   bool trueCKHit(  const MCRichHit * hit );
 
   /// Fill histograms for each HPD silicon wafer background plots
-  void fillHPDPlots( const PartMap & pmap, const std::string & plotsTitle );
+  void fillHPDPlots( const PartMap & pmap, 
+                     const std::string & plotsDir,
+                     const std::string & plotsName );
 
 private: // data
 

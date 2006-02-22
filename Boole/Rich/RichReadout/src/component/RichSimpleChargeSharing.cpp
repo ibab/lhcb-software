@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.6 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.7 2006-02-22 19:29:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -60,7 +60,6 @@ StatusCode RichSimpleChargeSharing::execute()
 
   // Temporary container of MCRichDeposits to add
   MCRichDeposit::Vector depsToAdd;
-  depsToAdd.clear();
 
   // loop over deposits
   for ( MCRichDeposits::const_iterator iDep = deps->begin();
@@ -68,8 +67,7 @@ StatusCode RichSimpleChargeSharing::execute()
   {
 
     // do we charge share for this pixel ?
-    const bool chargeShare = ( m_shareFrac > m_rndm() );
-    if ( chargeShare )
+    if ( m_shareFrac > m_rndm() )
     {
 
       // RichSmartID for this deposit

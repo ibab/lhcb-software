@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.9 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.10 2006-02-22 19:29:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -51,7 +51,8 @@ using namespace LHCb;
  *  @date   2003-11-06
  */
 
-class RichSignal : public RichAlgBase {
+class RichSignal : public RichAlgBase 
+{
 
 public:
 
@@ -92,6 +93,9 @@ private: // data
   /// Flag to turn on the use of the LHC backgrounde events
   bool m_doLHCBkg;
 
+  /// Flag to turn on testing on smartIDs from Gauss
+  bool m_testSmartIDs;
+
   /// Pointer to RichSmartID tool
   const IRichSmartIDTool * m_smartIDTool;
 
@@ -100,12 +104,6 @@ private: // data
 
   /// random number generator
   mutable Rndm::Numbers m_rndm;
-
-  // debug counters
-  /// Number of MCRichHits which are outside pixel acceptance
-  mutable std::vector<unsigned int> m_smartIDnotFound;
-  /// Number of MCRichHits which given invalid RichSmartIDs
-  mutable std::vector<unsigned int> m_smartIDInvalid;  
 
 };
 
