@@ -1,4 +1,4 @@
-// $Id: GenCounters.cpp,v 1.2 2006-02-17 13:24:07 robbep Exp $
+// $Id: GenCounters.cpp,v 1.3 2006-02-22 22:13:19 robbep Exp $
 // Include files
 
 // local
@@ -101,12 +101,12 @@ struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
     LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasBottom() ) return false ;
 
-    // Test if the B has daughters
-    if ( 0 == part -> end_vertex() ) {
-      if ( HepMCUtils::IsBAtProduction( part ) ) return true ;
-      return false ;
-    }
+    // test oscillation
+    if ( ! HepMCUtils::IsBAtProduction( part ) ) return false ;
 
+    // Test if the B has daughters (here we are sure it has not oscillated)
+    if ( 0 == part -> end_vertex() ) return true ;
+    
     // Loop over daughters to check if they are B hadrons
     HepMC::GenVertex::particles_out_const_iterator children ;
     const HepMC::GenVertex * theEV = part -> end_vertex() ;
