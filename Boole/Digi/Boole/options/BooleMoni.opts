@@ -8,28 +8,54 @@ RootHistCnv.ForceAlphaIds = true;
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "MUON", "L0" };
+Moni.DetectorList = { 
+                      "VELO",
+                      "IT",
+                      "TT", 
+                      "OT",
+                      "RICH",
+                      "CALO",
+                      "MUON",
+                      "L0"
+                    };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 
 // L0 Trigger
-ApplicationMgr.DLLs += {"L0Checker"};
 MoniL0Seq.Members += { "L0CaloMonit" };
-//MoniL0Seq.Members += { "L0Monitor" };
-MoniL0Seq.Members += { "L0Check" };
+MoniL0Seq.Members += { "L0Monitor" };
+//ApplicationMgr.DLLs += {"L0Checker"};
+//MoniL0Seq.Members += { "L0Check" };   - no code
 
 // Velo
-MoniVELOSeq.Members += { "VeloMonitor" };
+MoniVELOSeq.Members += {
+                         "VeloSimMoni",
+                         "VeloDigiMoni",
+                         "InternalVeloCluster2MCHitLinker",
+                         "VeloClusterMoni"
+                        };
 
-// IT digitisation
-ApplicationMgr.DLLs += {"ITCheckers"};
-MoniITSeq.Members += { "MCITDepositChecker" };
-MoniITSeq.Members += { "MCITDigitChecker" };
-MoniITSeq.Members += { "ITDigitChecker" };
+// IT and TT
+ApplicationMgr.DLLs += {"STCheckers"};
+#include "$STCHECKERSROOT/options/Boole.opts"
+MoniITSeq.Members += { "MCSTDepositChecker/MCITDepositChecker" };
+MoniITSeq.Members += { "MCSTDigitChecker/MCITDigitChecker" };
+MoniITSeq.Members += { "STDigitChecker/ITDigitChecker" };
+MoniITSeq.Members += { "STClusterChecker/ITClusterChecker" };
+                                                     
+MoniTTSeq.Members += { "MCSTDepositChecker/MCTTDepositChecker" };
+MoniTTSeq.Members += { "MCSTDigitChecker/MCTTDigitChecker" };
+MoniTTSeq.Members += { "STDigitChecker/TTDigitChecker" };
+MoniTTSeq.Members += { "STClusterChecker/TTClusterChecker" };
 
-// OT digitisation
+ApplicationMgr.DLLs   += { "Associators" };
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+MoniITSeq.Members += { "STEffMonitor/ITEffMonitor" };
+MoniTTSeq.Members += { "STEffMonitor/TTEffMonitor" };
+
+// OT
 ApplicationMgr.DLLs += {"OTMonitor"};
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
 MoniOTSeq.Members += { "OTTimeMonitor" };
@@ -37,23 +63,16 @@ MoniOTSeq.Members += { "OTTimeChecker" };
 
 // Rich
 ApplicationMgr.DLLs += { "RichDigiQC" };
-#include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
+#include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"
 
 // Calorimeters
 ApplicationMgr.DLLs += { "CaloMoniDigi" };
+#include "$CALOMONIDIGIOPTS/MoniDigi.opts"
 MoniCALOSeq.Members += { "CaloDigitMonitor/SpdMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
-#include "$CALOMONIDIGIOPTS/MoniDigi.opts"
 
 // Muon
 ApplicationMgr.DLLs += { "MuonMoniDigi" };
 MoniMUONSeq.Members += { "MuonDigitChecker" };
-
-// Uncomment following options to print a line before and after every algorithm
-// Useful to debug sequencing problems, or segmentation faults
-// (need also to use GaudiAud v* in requirements)
-//ApplicationMgr.DLLs += { "GaudiAud" };
-//AuditorSvc.Auditors += { "NameAuditor" };
-//NameAuditor.Enable  = true;

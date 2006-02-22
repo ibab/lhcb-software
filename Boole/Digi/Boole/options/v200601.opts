@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v20r0 or greater and   //
-//  geometry lhcb-200507 (Tilted Calo and Muon, latest Velo)                 //
+//  Job options for Boole, for data produced by Gauss v24r0 or greater and   //
+//  geometry lhcb-200601 (DC06)                                              //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
@@ -8,15 +8,16 @@
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
-// #include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
-// InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Removes spillover
-// ApplicationMgr.OutStream -= { "DigiWriter" };    // Switches off event output
+#include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
+InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Removes spillover
+//ApplicationMgr.OutStream -= { "DigiWriter" };    // Switches off event output
 
 //---------------------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------------------- 
 #pragma print on
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field046.cdf";
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
@@ -30,7 +31,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files. 
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "0507-11144100.root"; // Monitoring histos
+HistogramPersistencySvc.OutputFile = "0601-11144100.root"; // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -50,10 +51,11 @@ SpilloverSelector.Input = {
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v20r0/11144100.500ev.tilt.sim' TYP='POOL_ROOT' OPT='READ'" 
+  //   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.100ev.all.sim' TYP='POOL_ROOT' OPT='READ'" 
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.100ev.rich.sim' TYP='POOL_ROOT' OPT='READ'" 
 };  // 500 events B->J/Psi(mumu)Ks with Gauss v20r0
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:0507-11144100.500ev.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:0601-30000000.500ev.digi' TYP='POOL_ROOTTREE' OPT='REC'";

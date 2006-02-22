@@ -4,41 +4,60 @@
 //
 // This file defines, sequences and configures the algorithms to be executed
 //==============================================================
-#include "$LHCBROOT/options/LHCbApplication.opts"
+#include "$STDOPTS/LHCbApplication.opts"
 
 // POOL Persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
+#include "$STDOPTS/DigiDicts.opts"
 
-// Unpack MCParticles etc
-#include "$PACKEDEVENTROOT/options/UnpackSim.opts"
+// Unpack MCParticles and MCVertices if not existing on input file
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
+DataOnDemandSvc.Algorithms += {
+   , "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'"
+   , "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
+};
 
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
 
 // Phases to be executed
-ApplicationMgr.TopAlg += { "ProcessPhase/Init",
-                           "ProcessPhase/Digi",
-                           "ProcessPhase/Trigger",
-                           "ProcessPhase/Relations", 
-                           "ProcessPhase/Moni",
-                           "ProcessPhase/Output" };
+ApplicationMgr.TopAlg += { "ProcessPhase/Init"
+                         , "ProcessPhase/Digi"
+                         , "ProcessPhase/Trigger"
+                         , "ProcessPhase/Relations" 
+                         , "ProcessPhase/Moni"
+                         , "ProcessPhase/Output"
+                         };
 #include "$BOOLEOPTS/BooleMoni.opts"
 
 // Detectors to be processed in each phase
 Init.DetectorList += { "Boole", "Data" };
-Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
-Trigger.DetectorList = { "L0" };
-Relations.DetectorList = { "Velo", "IT", "OT", "RICH", "L0", "Links" };
+Digi.DetectorList += { 
+                        "VELO"
+                      , "TT"
+                      , "IT"
+                      , "OT"
+                      , "RICH"
+                      , "CALO"
+                      , "MUON"
+                      , "L0"
+                     };
+Relations.DetectorList = { 
+                           "VELO"
+                         , "TT"
+                         , "IT"
+                         , "OT"
+                         , "RICH"
+                           // , "CALO"
+                         , "MUON"
+                         , "L0"
+                         };
 
 // Initialization
-ApplicationMgr.DLLs += { "DAQEvent" };
-InitBooleSeq.Members += { "LbAppInit/Boole" };
-InitBooleSeq.Members += { "CreateL1Buffer" };
-InitBooleSeq.Members += { "CreateRawBuffer" };
+ApplicationMgr.DLLs += { "DigiAlg" };
+InitBooleSeq.Members += { "BooleInit/Boole" };
 
 // Spillover
-ApplicationMgr.DLLs += { "DigiAlg" };
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 #include "$DIGIALGROOT/options/Spillover.opts"
 
@@ -46,16 +65,14 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 //--------------------------------------------------------------
 // L0 trigger
 ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
-TriggerL0Seq.Members += { "CreateRawEvent", "L0CaloAlg/L0Calo" };
+DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
-TriggerL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
-TriggerL0Seq.Members += { "L0MuonCandidatesFromRaw" };
-TriggerL0Seq.Members += { "PuVetoAlg" };
-TriggerL0Seq.Members += { "DecisionUnit" };
-TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
+DigiL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
+DigiL0Seq.Members += { "PuVetoAlg" };
+DigiL0Seq.Members += { "L0DU" };
 
 // Calorimeter digitisation
-ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent", "CaloDAQ" };
+ApplicationMgr.DLLs += { "CaloDigit", "CaloDAQ" };
 DigiCALOSeq.Members = {
   "CaloSignalAlg/SpdSignal",
   "CaloSignalAlg/PrsSignal",
@@ -65,14 +82,15 @@ DigiCALOSeq.Members = {
   "CaloDigitAlg/PrsDigit",
   "CaloDigitAlg/EcalDigit",
   "CaloDigitAlg/HcalDigit",
-  "CaloZSupAlg/SpdZSup",
-  "CaloZSupAlg/PrsZSup",
-  "CaloZSupAlg/EcalZSup",
-  "CaloZSupAlg/HcalZSup",
-  "CaloFillPrsSpdRawBuffer",
-  "CaloFillRawBuffer/EcalFillRawBuffer",
-  "CaloFillRawBuffer/HcalFillRawBuffer"
+  "CaloFillPrsSpdRawBuffer"
+ ,"CaloFillRawBuffer/EcalFillRawBuffer"
+ ,"CaloFillRawBuffer/HcalFillRawBuffer"
 };
+// set the coding type for TELL1: 
+EcalFillRawBuffer.DataCodingType = 2;
+HcalFillRawBuffer.DataCodingType = 2;
+CaloFillPrsSpdRawBuffer.DataCodingType = 3;
+
 
 // Rich digitisation
 ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ", "RichMCTools" };
@@ -80,7 +98,7 @@ ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ", "RichMCTools" };
 #include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 
 // Muon digitisation
-ApplicationMgr.DLLs += { "MuonTools", "MuonAlgs", "MuonBackground", "MuonDAQ" };
+ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground", "MuonDAQ" };
 DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
 #include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
 DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
@@ -89,35 +107,37 @@ DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
 // Silicon Tracker digitisation
-ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ", "STTools" };
-DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
-DigiITSeq.Members += { "ITDigitCreator" };
-DigiITSeq.Members += { "STL1ClusterCreator" };
-#include "$STDAQROOT/options/stDAQ-v2.opts"
-#include "$ITALGORITHMSROOT/options/itDigi.opts"
-// Switch off LHC background until it can be done in Gauss
-MCITDepositCreator.spillVector = { "/", "/Prev/", "/PrevPrev/" };
-MCITDepositCreator.spillTimes  = { 0., -25., -50. };
+ApplicationMgr.DLLs   += { "STAlgorithms", "STDAQ", "STTools" };
+#include "$STALGORITHMSROOT/options/itDigi.opts"
+#include "$STALGORITHMSROOT/options/ttDigi.opts"
+#include "$STDAQROOT/options/stDAQ.opts"
 
-// Fill L1+RAW buffers for ST
-DigiITSeq.Members += { "STL1ClustersToL1BufferAlg/createTTL1Buffer" };
-DigiITSeq.Members += { "ITClusterCreator/dcSim" };
-DigiITSeq.Members += { "STDAQInitialization" };
-DigiITSeq.Members += { "STClustersToRawBufferAlg/createTTRawBuffer" };
-DigiITSeq.Members += { "STClustersToRawBufferAlg/createITRawBuffer" };
+DigiITSeq.Members += { "MCSTDepositCreator/MCITDepositCreator" };
+DigiITSeq.Members += { "MCSTDigitCreator/MCITDigitCreator" };
+DigiITSeq.Members += { "STDigitCreator/ITDigitCreator" };
+DigiITSeq.Members += { "STClusterCreator/ITClusterCreator" };
+DigiITSeq.Members += { "STClustersToRawBankAlg/createITRawBuffer" };
+
+DigiTTSeq.Members += { "MCSTDepositCreator/MCTTDepositCreator" };
+DigiTTSeq.Members += { "MCSTDigitCreator/MCTTDigitCreator" };
+DigiTTSeq.Members += { "STDigitCreator/TTDigitCreator" };
+DigiTTSeq.Members += { "STClusterCreator/TTClusterCreator" };
+DigiTTSeq.Members += { "STClustersToRawBankAlg/createTTRawBuffer" };
 
 // Outer tracker digitisation
 ApplicationMgr.DLLs   += { "OTSimulation", "OTDAQ" };
-DigiOTSeq.Members += { "MCOTDepositCreator",
-                       "MCOTTimeCreator",
-                       "OTFillRawBuffer" };
+DigiOTSeq.Members += { "MCOTDepositCreator"
+                      ,"MCOTTimeCreator"
+                      ,"OTFillRawEvent"
+                     };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
-ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDAQ" };
+#include "$VELOSIMULATIONROOT/options/VeloSim.opts"
+#include "$VELOALGORITHMSROOT/options/VeloAlgorithms.opts"
+ApplicationMgr.DLLs += { "VeloSimulation", "VeloAlgorithms", "VeloDAQ" };
 DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
-DigiVELOSeq.Members += { "PrepareVeloL1BufferFPGA" };
 DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
 // Modify printout defaults
@@ -126,25 +146,40 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
-                           "DATA='/Event/Rec/Relations' TYPE='DataObject'" };
+ApplicationMgr.DLLs += { "VeloAssociators" };
+//RelationsVeloSeq.Members += { "VeloTruthFromCluster" }; - missing code
 
-#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
-#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
-#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
-#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
+ApplicationMgr.DLLs += { "STAssociators" };
+ITDigitLinker.detType   = "IT";
+ITClusterLinker.detType = "IT";
+ITTruthLinker.detType   = "IT";
+RelationsITSeq.Members += { "STDigit2MCHitLinker/ITDigitLinker" };
+RelationsITSeq.Members += { "STCluster2MCHitLinker/ITClusterLinker" };
+RelationsITSeq.Members += { "STCluster2MCParticleLinker/ITTruthLinker" };
+
+RelationsTTSeq.Members += { "STDigit2MCHitLinker/TTDigitLinker" };
+RelationsTTSeq.Members += { "STCluster2MCHitLinker/TTClusterLinker" };
+RelationsTTSeq.Members += { "STCluster2MCParticleLinker/TTTruthLinker" };
+
+ApplicationMgr.DLLs += { "OTAssociators" };
+RelationsOTSeq.Members += { "OTTimeCreator" };
+RelationsOTSeq.Members += { "OTTime2MCDepositLinker/OTTime2MCDeposit" };
+RelationsOTSeq.Members += { "OTTime2MCHitLinker" };
+RelationsOTSeq.Members += { "OTTime2MCParticleLinker" };
+
+ApplicationMgr.DLLs += { "RichMCAssociators" };
 #include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
 
-RelationsVeloSeq.Members += { "VeloTruthFromCluster" };
-ApplicationMgr.DLLs += { "MCTools" };
-RelationsITSeq.Members += { "ITTruthFromDigit" };
-RelationsOTSeq.Members += { "OTTimeCreator", "OTTruthFromOTTime" };
-ApplicationMgr.DLLs += { "RichMCAssociators" };
+ApplicationMgr.DLLs += { "CaloAssociators" };
+RelationsCaloSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
+RelationsCaloSeq.Members += { "CaloDigitMCTruth" };
+
+//#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
+
+ApplicationMgr.DLLs += { "MuonAssociators" };
+RelationsMuonSeq.Members += { "MuonDigit2MCParticleAlg" };
+RelationsMuonSeq.Members += { "MuonTileDigitInfo" };
 
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
 L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
-
-ApplicationMgr.DLLs += { "AsctToLinker" };
-RelationsLinksSeq.Members += { "BuildMCTrackInfo" };

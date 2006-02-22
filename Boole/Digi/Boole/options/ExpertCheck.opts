@@ -3,7 +3,11 @@
 //------------------------------------------------------------------------------
 
 // Velo detailed monitoring options are described in the file below
-#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
+//#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts" - no code
+
+// IT+TT detailed monitoring
+TTEffMonitor.fullDetail = true;
+ITEffMonitor.fullDetail = true;
 
 // Rich detailed monitoring
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts"
