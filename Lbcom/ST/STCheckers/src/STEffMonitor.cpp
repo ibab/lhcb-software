@@ -100,7 +100,7 @@ StatusCode STEffMonitor::execute(){
   // histos per particle
   MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
 
-  AsctTool associator(evtSvc(), m_clusterLocation);
+  AsctTool associator(evtSvc(), m_asctLocation);
   m_table = associator.inverse();
   if (!m_table) return Error("Failed to find table", StatusCode::FAILURE);
 
