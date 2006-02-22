@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $
+# $Id: Relations.py,v 1.5 2006-02-22 18:52:31 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/02/07 14:42:16  ibelyaev
+#  fix for Win32
+#
 # Revision 1.3  2006/02/07 14:34:25  ibelyaev
 #  fix type
 #
@@ -93,9 +96,9 @@ class RelW2D ( Rel2D ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.5 2006-02-22 18:52:31 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.4 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.5 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -131,8 +134,9 @@ def _write_xml_( lines , lst ) :
     lines += ['   <class pattern="Relations:*Range" />']
     lines += ['   <class pattern="Relations:*Entry" />']
     lines += ['']
-    lines += ['   <class pattern="std::vector<*Relation*Entry*>" />']
-    lines += ['   <class pattern="std::pair<*std::vector<*Relation*>" />']
+    lines += ['   <class pattern="std::vector<*Relation*Entry*>" />           ']
+    lines += ['   <class pattern="std::pair<*std::vector<*Relation*>" />      ']
+    lines += ['   <class pattern="*std::vector<*Relation*Entry*>*iterator" /> ']
     lines += ['']
     lines += ['   <class pattern="Relations::Relation<*>" >']    
     lines += ['         <field name="m_inverse_aux" transient="true" />']    
@@ -159,9 +163,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.4 2006-02-07 14:42:16 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.5 2006-02-22 18:52:31 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
