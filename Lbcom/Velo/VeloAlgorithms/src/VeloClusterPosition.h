@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.1 2006-02-21 17:18:06 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.2 2006-02-22 15:36:27 szumlat Exp $
 #ifndef VELOCLUSTERPOS_H 
 #define VELOCLUSTERPOS_H 1
 
@@ -51,7 +51,10 @@ public:
                        const IInterface* parent);
 
   virtual ~VeloClusterPosition( ); ///< Destructor
-  
+
+  virtual toolPair position(const LHCb::VeloCluster* cluster);
+  virtual toolPair position(const LHCb::VeloCluster* cluster,
+                            double radiusOfCluster);
   virtual toolPair position(const LHCb::VeloCluster* cluster,
                             Pair& userInfo);
   virtual Pair fractionalPosMean(

@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.1 2006-02-21 17:18:06 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.2 2006-02-22 15:36:27 szumlat Exp $
 // Include files
 
 // from Gaudi
@@ -467,4 +467,20 @@ void VeloClusterPosition::setSensType(std::string type)
 {
   m_sensType=type;
 }
+//==============================================================================
+//==============================================================================
+toolPair VeloClusterPosition::position(const LHCb::VeloCluster* cluster)
+{
+  //return position using default error parametrizations and radii
+  Pair temp=std::make_pair(0., 0.);
+  return ( position(cluster, temp) );
+}
+//==============================================================================
+toolPair VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
+                                       double radiusOfCluster)
+{
+  Pair temp=std::make_pair(0., radiusOfCluster);
+  return ( position(cluster, temp) );
+}
 //
+
