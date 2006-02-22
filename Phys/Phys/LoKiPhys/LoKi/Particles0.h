@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Particles0.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -852,7 +855,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+
     /** @struct HasVertex
      *  Trivial predicate which evaluates to true 
      *  for particles with the valid endVertex
@@ -874,75 +877,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    };
-    
-    /** @class VFunAsPFun
-     *  The simple adapter of "Vertex function"
-     *  as "Particle function"
-     *
-     *  e.g. return z-position of particle endVertex:
-     *
-     *  @code 
-     *
-     *  const LHCb::Particle* particle = ... ;
-     *  
-     *  // create teh function
-     *  Fun vz = VFuncAsFun( VZ ) ;
-     *
-     *  // use it 
-     *  double z  = vz ( particle ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Cuts::VFASPF 
-     *  @see LHCb::Particle
-     *  @see LHCb::Vertex
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2004-02-27
-     */
-    class VFunAsPFun 
-      : public LoKi::Function<const LHCb::Particle*>
-    {
-    public:
-      /** constructor form "Vertex function"
-       *  
-       *  @code 
-       *
-       *  Fun fun = VFunAsPFun( VCHI2 ) ;
-       *  const Particle* particle = ... ;
-       *
-       *  // evaluat evertex chi2 
-       *  double vxchi2 = fun( particle ) ;
-       *
-       *  @endcode 
-       *
-       *  @param vfun reference to "Vertex function"
-       *  @param bad the error valeu to be retirned for invalid particle 
-       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-       *  @date   2004-02-27
-       */
-      VFunAsPFun           
-      ( const LoKi::Types::VFunc& vfun           , 
-        const double              bad  = -1000.0 ) ;
-      /// copy constructor 
-      VFunAsPFun ( const VFunAsPFun&  fun ) ;
-      /// virtual destructor
-      virtual ~VFunAsPFun();
-      /// clone: virtual constructor ;
-      virtual VFunAsPFun* clone() const ;
-      /// the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
-      /// the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // default constructor is private 
-      VFunAsPFun() ;
-      // assigenement operator 
-      VFunAsPFun& operator=( const VFunAsPFun&  fun );
-    private:
-      LoKi::Types::VFun m_vfun ;
-      double            m_bad  ;
     };
       
   } ; // end of namespace LoKi::Particles

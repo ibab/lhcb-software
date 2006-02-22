@@ -1,8 +1,11 @@
-// $Id: Vertices1.cpp,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Vertices1.cpp,v 1.2 2006-02-22 20:53:48 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,6 +27,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Vertices1.h"
+#include "LoKi/PhysHelpers.h"
 #include "LoKi/Print.h"
 // ============================================================================
 
@@ -248,130 +252,67 @@ LoKi::Vertices::VertexChi2Distance::fillStream
 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::Vertex* vertex ) 
-  : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( 1 , vertex      )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( 1 )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::Vector& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const SmartRefVector<LHCb::Vertex>& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::PrimVertex::Vector& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::PrimVertex::ConstVector& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const SmartRefVector<LHCb::PrimVertex>& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::PrimVertices* vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs->begin() , vs->end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs->size()      )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs->begin() , vs->end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::PhysTypes::VRange& vs ) 
   : LoKi::Function<const LHCb::Vertex*>()
-  , m_vertices  ( vs.begin() , vs.end() )
-  , m_evaluator ( LoKi::Point3D() )
-  , m_results   ( vs.size()       )
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-} ;
+  , LoKi::Keeper<LHCb::Vertex> ( vs.begin() , vs.end() )
+  , m_fun                      ( LoKi::Point3D()       )
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LoKi::Vertices::MinVertexChi2Distance& right ) 
-  : LoKi::Function<const LHCb::Vertex*> ( right ) 
-  , m_vertices  ( right.m_vertices  ) 
-  , m_evaluator ( right.m_evaluator ) 
-  , m_results   ( right.m_results   ) 
-{
-  Vrtxs::iterator end = std::remove
-    ( m_vertices.begin() , m_vertices.end() , (const LHCb::Vertex*) 0 ) ;
-  m_vertices.erase( end , m_vertices.end() ) ;
-}
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::~MinVertexChi2Distance(){};
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance*
-LoKi::Vertices::MinVertexChi2Distance::clone() const 
-{ return new MinVertexChi2Distance(*this) ; }
+  : LoKi::Function<const LHCb::Vertex*> ( right        ) 
+  , LoKi::Keeper<LHCb::Vertex>          ( right        )
+  , m_fun                               ( right.m_fun  ) 
+{} ;
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::result_type 
 LoKi::Vertices::MinVertexChi2Distance::operator() 
@@ -380,26 +321,18 @@ LoKi::Vertices::MinVertexChi2Distance::operator()
   if     ( 0 == v    ) 
   {
     Error ( " Invalid Vertex, return 'InvalidChi2'") ;
-    return LoKi::Constants::InvalidChi2;                  // RETURN 
+    return LoKi::Constants::InvalidChi2;                     // RETURN 
   }
-  if ( m_vertices.empty() ) 
-  {
-    Error ( " Empty list of vertices, return 'InvalidChi2'") ;
-    return LoKi::Constants::InvalidChi2;                   // RETURN 
-  }
-  if ( m_vertices.size() != m_results.size() ) 
-  { m_results = Results ( m_vertices.size() ) ; }
   
-  // 1) reconfigure the evaluator 
-  m_evaluator.setVertex( v ) ;
-  // evaluate the chi2  
-  m_evaluator.evaluate 
-    ( m_vertices.begin() , m_vertices.end() , m_results.begin() ) ;
-  // find the minimum
-  Results::const_iterator imin = 
-    std::min_element( m_results.begin() , m_results.end() ) ;
+  result_type result =  LoKi::Constants::InvalidChi2 ;
+  if ( end() == LoKi::Helpers::_Min_vertex 
+       ( begin() , end() , m_fun  , v , result ) ) 
+  {
+    Error ( "Invalid evaluation; return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;               // RETURN 
+  }
   //
-  return (*imin) ;
+  return result ;                                           // RETURN 
 };
 // ============================================================================
 std::ostream& 

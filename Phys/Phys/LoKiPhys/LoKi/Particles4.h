@@ -1,6 +1,6 @@
-// $Id: Particles4.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Particles4.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -12,6 +12,12 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/Vertex.h"
+#include "Event/PrimVertex.h"
+// ============================================================================
+// LoKiCore 
+// ============================================================================
+#include "LoKi/Keeper.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -174,8 +180,9 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MinImpPar : 
-      public    LoKi::Function<const LHCb::Particle*> 
+    class MinImpPar 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Keeper<LHCb::Vertex> 
     {
     public:
       /// constructor from vertices and the tool
@@ -254,11 +261,9 @@ namespace LoKi
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
         : LoKi::Function<const LHCb::Particle*> ()
-        , m_vertices ( first , last )
+        , LoKi::Keeper<LHCb::Vertex>( first , last )
         , m_fun      ( (const LHCb::Vertex*) 0 , tool )
-      { 
-        removeVertex() ; 
-      } ;
+      {}
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
        *  @param tool  helper tool 
@@ -271,12 +276,9 @@ namespace LoKi
         VERTEX                                 first , 
         VERTEX                                 last  ) 
         : LoKi::Function<const LHCb::Particle*> ()
-        , m_vertices ( first , last )
+        , LoKi::Keeper<LHCb::Vertex>( first , last )
         , m_fun      ( (const LHCb::Vertex*) 0 , tool )
-      { 
-        removeVertex() ; 
-      } ;
-      
+      {};
       /// copy constructor 
       MinImpPar ( const LoKi::Particles::MinImpPar& right ) ;
       /// MANDATORY: virtual destructor 
@@ -290,46 +292,151 @@ namespace LoKi
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
     public:
-      /** add the vertex the list of vertices 
-       *  @param v vertex to be added 
-       *  @return the actual size of the list 
-       */
-      size_t addVertex    ( const LHCb::Vertex* v     ) 
-      { 
-        // append 
-        m_vertices.push_back ( v ) ; 
-        // remove NULLs
-        removeVertex() ; 
-        return m_vertices.size() ;
-      } ;
-      /** add the vertices to the list 
-       *  @param first 'begin'-iterator for the sequence of vertices  
-       *  @param end   'end'-iterator for the sequence of vertices  
-       *  @return the actual size of the list 
-       */
-      template <class VERTEX>
-      size_t  addVertices  ( VERTEX first , VERTEX last ) 
-      { 
-        // append to the end 
-        m_vertices.insert ( m_vertices.end() , first , last ) ; 
-        // remove NULLs 
-        removeVertex() ; 
-        return m_vertices.size() ;
-      } ;
-      /** remove the vertex from the list
-       *  @param  v vertex to be removed 
-       *  @return number of removoed vertices
-       */
-      size_t removeVertex ( const LHCb::Vertex* v = 0 ) ;
-    private:
       // default constructor is private 
       MinImpPar();
     private:
       // the actual IP evaluator 
       LoKi::Particles::ImpPar m_fun ; ///< the actual IP evaluator 
-      typedef std::vector<const LHCb::Vertex*> VERTICES ;
-      // the list of vertices 
-      VERTICES  m_vertices ; ///< the list of vertices 
+    };
+
+    /** @class MinImpParChi2
+     *  class for evaluation of minimal value of 
+     *  chi2 of impact parameter of 
+     *  particle with respect to seevral vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpParChi2 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MIPCHI2
+     *  @see LoKi::Cuts::CHI2MIP
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    class MinImpParChi2 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Keeper<LHCb::Vertex> 
+    {
+    public:
+      /// constructor from vertices and the tool
+      MinImpParChi2
+      ( const LHCb::Vertex::Vector& vertices         , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LHCb::Vertex::ConstVector& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const SmartRefVector<LHCb::Vertex>& vertices , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::PhysTypes::VRange& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LHCb::PrimVertex::Vector& vertices         , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LHCb::PrimVertex::ConstVector& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const SmartRefVector<LHCb::PrimVertex>& vertices , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LHCb::PrimVertices* vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LHCb::Vertex::Vector& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LHCb::Vertex::ConstVector& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const SmartRefVector<LHCb::Vertex>& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::PhysTypes::VRange& vertices   ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool , 
+        const LHCb::PrimVertex::Vector& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool , 
+        const LHCb::PrimVertex::ConstVector& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool&  tool     ,
+        const SmartRefVector<LHCb::PrimVertex>& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool     , 
+        const LHCb::PrimVertices*              vertices ) ;
+      /** templated constructor from arbitrary sequence 
+       *  of objects, convertible to "const LHCb::Vertex*"
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       *  @param tool  helper tool 
+       */
+      template <class VERTEX>
+      MinImpParChi2 
+      ( VERTEX                                 first , 
+        VERTEX                                 last  , 
+        const LoKi::Vertices::ImpactParamTool& tool  ) 
+        : LoKi::Function<const LHCb::Particle*> ()
+        , LoKi::Keeper<LHCb::Vertex>( first , last )
+        , m_fun      ( (const LHCb::Vertex*) 0 , tool )
+      {}
+      /** templated constructor from arbitrary sequence 
+       *  of objects, convertible to "const LHCb::Vertex*"
+       *  @param tool  helper tool 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class VERTEX>
+      MinImpParChi2 
+      ( const LoKi::Vertices::ImpactParamTool& tool  ,
+        VERTEX                                 first , 
+        VERTEX                                 last  ) 
+        : LoKi::Function<const LHCb::Particle*> ()
+        , LoKi::Keeper<LHCb::Vertex>( first , last )
+        , m_fun      ( (const LHCb::Vertex*) 0 , tool )
+      {};
+      /// copy constructor 
+      MinImpParChi2 ( const LoKi::Particles::MinImpParChi2& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinImpParChi2(){} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinImpParChi2* clone() const 
+      { return new MinImpParChi2(*this) ; };
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const 
+      { return mipchi2( p ) ; }
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      /// the actual evaluator 
+      result_type mipchi2 ( argument p ) const ;
+    public:
+      // default constructor is private 
+      MinImpParChi2();
+    private:
+      // the actual IP evaluator 
+      LoKi::Particles::ImpParChi2 m_fun ; ///< the actual IP evaluator 
     };
     
   } ; // end of namespace LoKi::Particles

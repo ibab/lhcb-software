@@ -1,8 +1,11 @@
-// $Id: Particles3.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Particles3.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -12,6 +15,10 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/UniqueKeeper.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -159,42 +166,59 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class MinClosestApproach : 
-      public LoKi::Function<const LHCb::Particle*>
+    class MinClosestApproach 
+      : public LoKi::Function<const LHCb::Particle*>
+      , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LHCb::Particle::Vector&          particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      ( const LHCb::Particle::Vector&             particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LHCb::Particle::ConstVector&     particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      ( const LHCb::Particle::ConstVector&        particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const SmartRefVector<LHCb::Particle>&  particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      ( const SmartRefVector<LHCb::Particle>&     particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::PhysTypes::Range&          particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      ( const LoKi::PhysTypes::Range&             particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool& tool      ,
-        const LHCb::Particle::Vector&          particles ) ;
+      ( const LoKi::Keeper<LHCb::Particle>&       particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool& tool      ,
-        const LHCb::Particle::ConstVector&     particles ) ;
+      ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
+        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool& tool      , 
-        const SmartRefVector<LHCb::Particle>&  particles ) ;
+      ( const LoKi::Vertices::ImpactParamTool&    tool      ,
+        const LHCb::Particle::Vector&             particles ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool& tool      , 
-        const LoKi::PhysTypes::Range&          particles ) ;
+      ( const LoKi::Vertices::ImpactParamTool&    tool      ,
+        const LHCb::Particle::ConstVector&        particles ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproach 
+      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
+        const SmartRefVector<LHCb::Particle>&     particles ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproach 
+      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
+        const LoKi::PhysTypes::Range&             particles ) ;   
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproach 
+      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
+        const LoKi::Keeper<LHCb::Particle>&       particles ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproach 
+      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
+        const LoKi::UniqueKeeper<LHCb::Particle>& particles ) ;
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param first 'begin'-iterator for the sequence 
@@ -207,9 +231,9 @@ namespace LoKi
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
       : LoKi::Function<const LHCb::Particle*> ()
-      , m_particles ( first , last ) 
+      , LoKi::Keeper<LHCb::Particle>( first , last ) 
       , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      { removeParticle() ; } ;
+      {} ;
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param helper tool needed for evaluation
@@ -222,9 +246,9 @@ namespace LoKi
         PARTICLE                               first , 
         PARTICLE                               last  )
         : LoKi::Function<const LHCb::Particle*> ()
-        , m_particles ( first , last ) 
+        , LoKi::Keeper<LHCb::Particle>( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      { removeParticle() ; } ;
+      {} ;
       /// copy constructor 
       MinClosestApproach 
       ( const MinClosestApproach& right    ) ;
@@ -240,40 +264,10 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluation
       result_type distance( argument p ) const ;
-    public:
-      /** add the particle to the list
-       *  @param p particle to be added 
-       *  @return the actual number of particles in the list
-       */
-      size_t addParticle ( const LHCb::Particle* p ) 
-      { 
-        m_particles.push_back( p ) ;
-        removeParticle() ;
-        return m_particles.size() ;
-      } ;
-      /** add the particles to the list
-       *  @param first 'begin'-itrator for the sequence of  particles
-       *  @param last  'end'-itrator for the sequence of  particles
-       *  @return the actual number of particles in the list
-       */
-      template <class PARTICLE>
-      size_t addParticles ( PARTICLE first , PARTICLE last ) 
-      {
-        m_particles.insert( m_particles.end() , first , last ) ;
-        removeParticle() ;
-        return m_particles.size() ;        
-      } ;
-      /** remove the particle form the list
-       *  @param p particle to be removed 
-       *  @return the actual number of particles in the list
-       */
-      size_t removeParticle ( const LHCb::Particle* p = 0 ) ;      
     private:
       // default constructor is private 
       MinClosestApproach();
     private:
-      typedef std::vector<const LHCb::Particle*> PARTICLES ;
-      PARTICLES                        m_particles ;
       LoKi::Particles::ClosestApproach m_fun ;
     } ;
 
@@ -293,8 +287,9 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class MinClosestApproachChi2 : 
-      public LoKi::Function<const LHCb::Particle*>
+    class MinClosestApproachChi2 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Keeper<LHCb::Particle>
     {
     public:
       /// constructor from the particle(s) and the tool  
@@ -341,9 +336,9 @@ namespace LoKi
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
         : LoKi::Function<const LHCb::Particle*> ()
-          , m_particles ( first , last ) 
-          , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      { removeParticle() ; };
+        , LoKi::Keeper<LHCb::Particle> ( first , last ) 
+        , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
+      {};
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param tool helepr tool needed for evaluations 
@@ -356,9 +351,9 @@ namespace LoKi
         PARTICLE                               first , 
         PARTICLE                               last  )
         : LoKi::Function<const LHCb::Particle*> ()
-        , m_particles ( first , last ) 
-          , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      { removeParticle() ; };
+        , LoKi::Keeper<LHCb::Particle> ( first , last ) 
+        , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
+      {} ;
       /// copy constructor 
       MinClosestApproachChi2 
       ( const MinClosestApproachChi2& right    ) ;
@@ -374,40 +369,10 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluation
       result_type chi2 ( argument p ) const ;
-    public:
-      /** add the particle to the list
-       *  @param p particle to be added 
-       *  @return the actual number of particles in the list
-       */
-      size_t addParticle ( const LHCb::Particle* p ) 
-      { 
-        m_particles.push_back( p ) ;
-        removeParticle() ;
-        return m_particles.size() ;
-      } ;
-      /** add the particles to the list
-       *  @param first 'begin'-itrator for the sequence of  particles
-       *  @param last  'end'-itrator for the sequence of  particles
-       *  @return the actual number of particles in the list
-       */
-      template <class PARTICLE>
-      size_t addParticles ( PARTICLE first , PARTICLE last ) 
-      {
-        m_particles.insert( m_particles.end() , first , last ) ;
-        removeParticle() ;
-        return m_particles.size() ;        
-      } ;
-      /** remove the particle form the list
-       *  @param p particle to be removed 
-       *  @return the actual number of particles in the list
-       */
-      size_t removeParticle ( const LHCb::Particle* p = 0 ) ;
     private:
       // default constructor is private 
       MinClosestApproachChi2();
     private:
-      typedef std::vector<const LHCb::Particle*> PARTICLES ;
-      PARTICLES                            m_particles ;
       LoKi::Particles::ClosestApproachChi2 m_fun       ;
     } ;    
 

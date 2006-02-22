@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1110,43 +1113,6 @@ std::ostream&
 LoKi::Particles::HasVertex::fillStream
 ( std::ostream& s ) const 
 { return s << "HASVERTEX" ; }
-// ============================================================================
-
-// ============================================================================
-LoKi::Particles::VFunAsPFun::VFunAsPFun
-( const LoKi::Types::VFunc& vfun , 
-  const double              bad  ) 
-  : LoKi::Function<const LHCb::Particle*> () 
-  , m_vfun ( vfun ) 
-  , m_bad  ( bad  ) 
-{}
-// ===========================================================================
-LoKi::Particles::VFunAsPFun::VFunAsPFun
-( const LoKi::Particles::VFunAsPFun& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right ) 
-  , m_vfun ( right.m_vfun ) 
-  , m_bad  ( right.m_bad  ) 
-{}
-// ===========================================================================
-LoKi::Particles::VFunAsPFun::~VFunAsPFun(){}
-// ===========================================================================
-LoKi::Particles::VFunAsPFun*
-LoKi::Particles::VFunAsPFun::clone() const
-{ return new VFunAsPFun(*this) ; }
-// ===========================================================================
-LoKi::Particles::VFunAsPFun::result_type
-LoKi::Particles::VFunAsPFun::operator() 
-  ( const LoKi::Particles::VFunAsPFun::argument p ) const 
-{
-  if ( 0 != p ) { return m_vfun ( p->endVertex() ) ; }      // RETURN 
-  Error ( " Invalid Particle, return " + LoKi::Print::print( m_bad ) ) ;
-  return m_bad;                                              // RETURN 
-};
-// ===========================================================================
-std::ostream& 
-LoKi::Particles::VFunAsPFun::fillStream
-( std::ostream& s ) const 
-{ return s << "VFASPF[" << m_vfun << "," << m_bad << "]" ; }
 // ============================================================================
 
 // ============================================================================

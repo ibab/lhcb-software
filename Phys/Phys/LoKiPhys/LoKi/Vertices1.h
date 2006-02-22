@@ -1,8 +1,11 @@
-// $Id: Vertices1.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/19 21:49:12  ibelyaev
+//  restructirisation + new funtions
+//
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -13,6 +16,10 @@
 // ============================================================================
 #include "Event/Vertex.h"
 #include "Event/PrimVertex.h"
+// ============================================================================
+// LoKiCore 
+// ============================================================================
+#include "LoKi/Keeper.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -196,17 +203,10 @@ namespace LoKi
      *  @date   2004-07-08
      */
     class MinVertexChi2Distance :
-      public    LoKi::Function<const LHCb::Vertex*> 
+      public LoKi::Function<const LHCb::Vertex*> , 
+      public LoKi::Keeper<LHCb::Vertex>
     {
-    protected:
-      typedef std::vector<const LHCb::Vertex*> Vrtxs    ;
-      typedef FunB::vector_result              Results  ;
     public:
-      /** constructor from only vertex 
-       *  @param vertex the vertex 
-       */
-      MinVertexChi2Distance 
-      ( const LHCb::Vertex* vertex ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -257,22 +257,18 @@ namespace LoKi
       ( VERTEX                          first , 
         VERTEX                          last  )
         : LoKi::Function<const LHCb::Vertex*> () 
-        , m_vertices  ( first , last    )
-        , m_evaluator ( LoKi::Point3D() )
-        , m_results   ( last - first    )
+        , LoKi::Keeper<LHCb::Vertex> ( first , last    )
+        , m_fun                      ( LoKi::Point3D() )
       {}
       /// copy  constructor
       MinVertexChi2Distance 
       ( const MinVertexChi2Distance& right ) ;
-      // destructor 
-      virtual ~MinVertexChi2Distance();
-      /// clone method (mandatory!)
-      virtual  MinVertexChi2Distance* clone() const ;
-      /** the only one essential method 
-       *  @param p pointer to the particle 
-       *  @return evaluation of impact parameters 
-       *          with respect to point/vertex 
-       */
+      /// MANDATORY: destructor 
+      virtual ~MinVertexChi2Distance() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinVertexChi2Distance* clone() const 
+      { return new MinVertexChi2Distance(*this) ; }
+      /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
@@ -280,9 +276,7 @@ namespace LoKi
       // default constructor is disabled 
       MinVertexChi2Distance () ;
     private:
-      Vrtxs                                      m_vertices  ;
-      mutable LoKi::Vertices::VertexChi2Distance m_evaluator ;
-      mutable Results                            m_results   ;
+      LoKi::Vertices::VertexChi2Distance m_fun  ;
     };
 
   } ; // end of namespace LoKi::Vertices 
