@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.3 2006-02-06 16:07:19 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.4 2006-02-22 19:27:36 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -28,7 +28,7 @@ GetMCRichSegmentsAlg::GetMCRichSegmentsAlg( const std::string& name,
   declareProperty( "MCRichOpticalPhotonsLocation",
                    m_richPhotonsLocation  = MCRichOpticalPhotonLocation::Default );
   declareProperty( "MCRichSegmentsLocation",
-                   m_richSegmentsLocation=MCRichSegmentLocation::Default);
+                   m_richSegmentsLocation = MCRichSegmentLocation::Default);
 }
 
 //=============================================================================
@@ -44,7 +44,12 @@ StatusCode GetMCRichSegmentsAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // add custom initialisations here if needed
+  info() << "Filling MCRichSegments at " << m_richSegmentsLocation << " from G4 collections";
+  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
+  {
+    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
+  }
+  info() << endreq;
 
   return sc;
 }

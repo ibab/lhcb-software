@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.2 2006-02-06 16:07:19 jonrob Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.3 2006-02-22 19:27:36 jonrob Exp $
 // Include files
 
 // local
@@ -43,7 +43,12 @@ StatusCode GetMCRichTracksAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
-  // add custom initialisations here if needed
+  info() << "Filling MCRichTracks at " << m_richTracksLocation << " from G4 collections";
+  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
+  {
+    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
+  }
+  info() << endreq;
 
   return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.13 2006-02-22 14:30:26 papanest Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.14 2006-02-22 19:27:36 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -61,6 +61,13 @@ StatusCode GetMCRichHitsAlg::initialize()
   // Get RichDet objects
   m_richDets[Rich::Rich1] = getDet<DeRich>( m_richDetsLoc[Rich::Rich1] );
   m_richDets[Rich::Rich2] = getDet<DeRich>( m_richDetsLoc[Rich::Rich2] );
+
+  info() << "Filling MCRichHits at " << m_richHitsLocation << " from G4 collections";
+  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
+  {
+    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
+  }
+  info() << endreq;
 
   return sc;
 }
@@ -241,16 +248,16 @@ StatusCode GetMCRichHitsAlg::execute()
           Warning( "Radiator ID < 0 and track ID > 0 -> Radiator history unknown",
                    StatusCode::SUCCESS );
         }
-        // the following case is when a non-pe charged track passes through 
-	// a Silicon detector and creates a MIP signal  like in  a tracking det.
-        // In this case there is no radiator history, since there was 
-        // no cherenkov radiation at all. hece the 'warning' flag is commeted out.
+        // the following case is when a non-pe charged track passes through
+        // a Silicon detector and creates a MIP signal  like in  a tracking det.
+        // In this case there is no radiator history, since there was
+        // no cherenkov radiation at all. hence the 'warning' flag is commeted out.
         // SE 20-2-06.
-	//        else
-	// {
-	  //   Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
-          //         StatusCode::SUCCESS );
-	// }
+        //        else
+        // {
+        //   Warning( "Radiator ID < 0 and track ID < 0 -> Radiator history unknown",
+        //         StatusCode::SUCCESS );
+        // }
 
         // If a signel hit, store info
         if ( rad != Rich::InvalidRadiator )
@@ -271,14 +278,18 @@ StatusCode GetMCRichHitsAlg::execute()
         }
 
         // get sensitive detector identifier from det elem
-        const int detID = m_richDets[rich]->sensitiveVolumeID( entry );
-        // get HPD number from hit
-        //const int detID = g4hit->GetCurHpdNum();
-        // Photon detector number
+        const RichSmartID detID = m_richDets[rich]->sensitiveVolumeID( entry );
+        if ( !detID.isValid() ) 
+        {
+          std::ostringstream mess;
+          mess << "Invalid RichSmartID returned for silicon point " << entry;
+          Warning( mess.str() );
+        }
+        // Fill value into hit
         mchit->setSensDetID( detID );
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
-        const int trackID = const_cast<RichG4Hit*>(g4hit)->GetTrackID();
+        const int trackID = (const_cast<RichG4Hit*>(g4hit))->GetTrackID();
         const MCParticle * mcPart = table[trackID].particle();
         if ( mcPart )
         {

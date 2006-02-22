@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.2 2005-12-22 17:38:47 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.3 2006-02-22 19:27:36 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -27,7 +27,7 @@ GetMCRichOpticalPhotonsAlg::GetMCRichOpticalPhotonsAlg( const std::string& name,
 {
   declareProperty( "MCRichHitsLocation", m_richHitsLocation = MCRichHitLocation::Default );
   declareProperty( "MCRichOpticalPhotonsLocation",
-                   m_richPhotonsLocation  = MCRichOpticalPhotonLocation::Default );
+                   m_richPhotonsLocation = MCRichOpticalPhotonLocation::Default );
 }
 
 //=============================================================================
@@ -43,7 +43,12 @@ StatusCode GetMCRichOpticalPhotonsAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
-  // add custom initialisations here if needed
+  info() << "Filling MCRichOpticalPhotons at " << m_richPhotonsLocation << " from G4 collections";
+  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
+  {
+    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
+  }
+  info() << endreq;
 
   return sc;
 }
