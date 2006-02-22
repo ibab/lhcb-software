@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.15 2006-02-17 13:18:55 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.16 2006-02-22 22:12:27 robbep Exp $
 // Include files 
 
 // local
@@ -29,8 +29,8 @@ extern "C" {
 }
 #else
 extern "C" {
-  void lhapdfgauss_init_( int * , const char * filename , int length ) ;
-  void lhapdfgauss_end_ ( ) ;
+  void lhapdfgauss_init__( int * , const char * filename , int length ) ;
+  void lhapdfgauss_end__ ( ) ;
 }
 #endif
 
@@ -89,8 +89,8 @@ StatusCode ExternalGenerator::initialize( ) {
   LHAPDFGAUSS_INIT( &ival , m_lhapdfTempFilename.name() , 
                     strlen( m_lhapdfTempFilename.name() ) ) ;
 #else
-  lhapdfgauss_init_ ( &ival , m_lhapdfTempFilename.name() , 
-                      strlen( m_lhapdfTempFilename.name() ) ) ;
+  lhapdfgauss_init__ ( &ival , m_lhapdfTempFilename.name() , 
+                       strlen( m_lhapdfTempFilename.name() ) ) ;
 #endif
 
   // Set default LHAPDF parameters:
@@ -321,7 +321,7 @@ StatusCode ExternalGenerator::finalize( ) {
 #ifdef WIN32
     LHAPDFGAUSS_END( ) ;
 #else
-  lhapdfgauss_end_() ;
+  lhapdfgauss_end__() ;
 #endif
   delete m_lhapdfTempFile ;
   seal::Filename::remove( m_lhapdfTempFilename , false , true ) ;

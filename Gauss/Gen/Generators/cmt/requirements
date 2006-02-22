@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2006-02-17 16:11:33 gcorti Exp $ 
+# $Id: requirements,v 1.11 2006-02-22 22:11:10 robbep Exp $ 
 # =============================================================================
 package       Generators
 version       v4r1
@@ -17,14 +17,11 @@ use           HepEvt            v*                Gen
 use           EvtGen            v*                Gen
 
 # =========== constituents ====================================================
-library       GeneratorsLib     Lib/*.cpp Lib/*.F
-library       Generators        component/*.cpp
+library       GeneratorsLib  Lib/*.cpp Lib/*.F
+library       Generators     component/*.cpp
 
 # =========== standard patterns (the order is essential!) =====================
 apply_pattern component_library library=Generators 
 apply_pattern linker_library    library=GeneratorsLib 
 apply_pattern library_stamps    library=GeneratorsLib 
 
-macro Generators_fflags " -fno-second-underscore " \
-      WIN32 ""
-  
