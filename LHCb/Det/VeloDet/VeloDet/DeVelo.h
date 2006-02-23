@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.33 2006-01-26 17:05:50 krinnert Exp $
+// $Id: DeVelo.h,v 1.34 2006-02-23 17:07:04 dhcroft Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -9,6 +9,9 @@
 #include "VeloDet/DeVeloSensor.h"
 #include "VeloDet/DeVeloRType.h"
 #include "VeloDet/DeVeloPhiType.h"
+
+// get LHCbID for trajectory
+#include "Kernel/LHCbID.h"
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
  *
@@ -21,6 +24,11 @@
  */
 
 static const CLID& CLID_DeVelo = 8100; 
+
+// forward declaration of LHCb::Trajectory
+namespace LHCb{
+  class Trajectory;
+}
 
 class DeVelo: public DetectorElement {
 
@@ -291,7 +299,7 @@ public:
                            double& z, 
                            double& radius, 
                            double& phiMin, 
-                           double& phiMax ) const ;
+                           double& phiMax ) const ;  
   
   /** from strip number and phi sensor number, returns the two end points
       in local frame */
@@ -300,6 +308,9 @@ public:
                              Gaudi::XYZPoint& begin, 
                              Gaudi::XYZPoint& end ) const;
 
+  /// Return a trajectory (for track fit) from strip + offset
+  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset);
+  
   /// Return the side of the detector. (+1 for +ve x, -1 for -ve x.)
   inline int xSide(unsigned int sensor)  const
   {

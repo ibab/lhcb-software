@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.57 2006-01-26 17:05:50 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.58 2006-02-23 17:07:04 dhcroft Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -9,6 +9,9 @@
 // from Kernel
 #include "Kernel/SystemOfUnits.h"
 #include "Kernel/PhysicalConstants.h"
+// trajectory class from LHCbKernel
+#include "Kernel/CircleTraj.h"
+#include "Kernel/LineTraj.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -19,6 +22,7 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
 #include "DetDesc/Condition.h"
+
 
 // Local
 #include "VeloDet/DeVelo.h"
@@ -1086,3 +1090,90 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
   return StatusCode::SUCCESS;
 }
 
+LHCb::Trajectory* DeVelo::trajectory(const LHCb::LHCbID& lID, 
+				     const double offset) {
+
+  // look up the trajectory
+ 
+  LHCb::Trajectory* tTraj = 0;
+
+  if ( !lID.isVelo()){
+     throw GaudiException( "The LHCbID is not of VELO type!",
+                           "DeVELO.cpp",StatusCode::FAILURE );
+  }
+  
+  LHCb::VeloChannelID id = lID.veloID();
+
+  if( id.isRType() || id.isPileUp() ){
+    // r type is a circle
+    double z = 0.;
+    double radius = 0.;
+    double phiMin = 0.;
+    double phiMax = 0.;
+    StatusCode sc = this->stripLimitsR( id.sensor(), id.strip(), z, 
+					radius, phiMin, phiMax );
+    if(!sc){
+      throw GaudiException( "The trajectory could not be made",
+			    "DeVELO.cpp",StatusCode::FAILURE );
+    }
+    // offset is offset on R
+    radius += rPitch(id) * offset;
+
+    // start with coords of center and both ends in local frame
+    Gaudi::XYZPoint lOrigin(0.,0.,0.);
+    Gaudi::XYZPoint lEnd1(radius*cos(phiMin),radius*sin(phiMin),z);
+    Gaudi::XYZPoint lEnd2(radius*cos(phiMax),radius*sin(phiMax),z);
+    
+    // move to global frame
+    Gaudi::XYZPoint gOrigin, gEnd1, gEnd2;
+    localToGlobal(id.sensor(), lOrigin, gOrigin);
+    localToGlobal(id.sensor(), lEnd1, gEnd1);
+    localToGlobal(id.sensor(), lEnd2, gEnd2);
+
+    // put into trajectory
+    tTraj = new LHCb::CircleTraj(gOrigin,gEnd1-gOrigin,gEnd2-gOrigin,radius);
+
+  }else{
+
+    // phi type is a line
+    Gaudi::XYZPoint lEnd1, lEnd2;
+    StatusCode sc = this->stripLimitsPhi(id.sensor(), id.strip(),
+					 lEnd1,lEnd2);
+    if(!sc){
+      throw GaudiException( "The trajectory could not be made",
+			    "DeVELO.cpp",StatusCode::FAILURE );
+    }
+
+    // need to also grab next strip in local frame to get offset effect
+    Gaudi::XYZPoint lNextEnd1, lNextEnd2;
+    // check direction of offset
+    if(offset >= 0.){
+      sc = this->stripLimitsPhi(id.sensor(), id.strip()+1,
+				lNextEnd1,lNextEnd2);
+      if(!sc){
+	throw GaudiException( "The trajectory could not be made",
+			      "DeVELO.cpp",StatusCode::FAILURE );
+      }
+      lEnd1 += (lNextEnd1-lEnd1)*offset;
+      lEnd2 += (lNextEnd2-lEnd2)*offset;
+    }else{
+      sc = this->stripLimitsPhi(id.sensor(), id.strip()-1,
+				lNextEnd1,lNextEnd2);
+      if(!sc){
+	throw GaudiException( "The trajectory could not be made",
+			      "DeVELO.cpp",StatusCode::FAILURE );
+      }
+      lEnd1 += (lEnd1-lNextEnd1)*offset;
+      lEnd2 += (lEnd2-lNextEnd2)*offset;
+    }
+
+    Gaudi::XYZPoint gEnd1, gEnd2;
+    localToGlobal(id.sensor(), lEnd1, gEnd1);
+    localToGlobal(id.sensor(), lEnd2, gEnd2);
+
+    // put into trajectory
+    tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
+  }
+    
+  return tTraj;  
+}
