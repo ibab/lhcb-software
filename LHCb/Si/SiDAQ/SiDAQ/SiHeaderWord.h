@@ -1,4 +1,4 @@
-// $Id: SiHeaderWord.h,v 1.5 2006-02-23 10:26:09 mneedham Exp $
+// $Id: SiHeaderWord.h,v 1.6 2006-02-23 10:36:10 mneedham Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
 
@@ -93,7 +93,7 @@ inline unsigned int SiHeaderWord::value() const
 }
 
 inline bool SiHeaderWord::hasError() const{
-  return static_cast<bool>((m_value & errorMask) >> errorBits);
+  return (((m_value & errorMask) >> errorBits  != 0 ) ? true :false);
 }
 
 inline unsigned int SiHeaderWord::nClusters() const{
