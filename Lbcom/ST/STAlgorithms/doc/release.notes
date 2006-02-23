@@ -2,8 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v1r0 2006-02-23 ========================
+! 2006-02-23 - Marco Cattaneo
+ - Modernize STAlgorithms_load.cpp, and add missing factories
 
-!======================= STAlgorithms v1r0 2006-02-21 ========================
 ! 2006-02-20
  - Saturate ADC at 127
  - some minor bug fixes and tuning
