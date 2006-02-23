@@ -1,4 +1,4 @@
-// $Id: SiRawBankDecoder.h,v 1.1 2006-02-22 17:21:16 krinnert Exp $
+// $Id: SiRawBankDecoder.h,v 1.2 2006-02-23 19:28:40 krinnert Exp $
 #ifndef SIRAWBANKDECODER_H 
 #define SIRAWBANKDECODER_H 1
 
@@ -62,9 +62,32 @@ public:
     m_posEnd(pos_iterator(m_nClusters,this)), 
     m_posAdcBegin(posadc_iterator(0,this)),
     m_posAdcEnd(posadc_iterator(m_nClusters,this))
-  { 
-    ;
-  } 
+  { ; } 
+
+  /// Copy construction   
+  SiRawBankDecoder(const SiRawBankDecoder& ini) :
+    m_bank(ini.m_bank),
+    m_header(ini.m_header),
+    m_nClusters(ini.m_nClusters),
+    m_posBegin(pos_iterator(0,this)),
+    m_posEnd(pos_iterator(m_nClusters,this)), 
+    m_posAdcBegin(posadc_iterator(0,this)),
+    m_posAdcEnd(posadc_iterator(m_nClusters,this))
+  { ; }
+
+  /// Assignment
+  const SiRawBankDecoder& operator= (const SiRawBankDecoder& rhs) 
+  {
+    m_bank        = rhs.m_bank;
+    m_header      = rhs.m_header;
+    m_nClusters   = rhs.m_nClusters;
+    m_posBegin    = pos_iterator(0,this);
+    m_posEnd      = pos_iterator(m_nClusters,this); 
+    m_posAdcBegin = posadc_iterator(0,this);
+    m_posAdcEnd   = posadc_iterator(m_nClusters,this);
+
+    return *this;
+  }
 
   ~SiRawBankDecoder() { ; } 
 
@@ -347,6 +370,13 @@ public:
    */
   const SiHeaderWord& header() const { return m_header; }
 
+  /** Shortcut to error condition  
+   *  Simply parrots the error flag from the header word  
+   *
+   * @see SiHeaderWord
+   */
+  bool hasError() const { return m_header.hasError(); }
+
   /** Access number of clusters  
    *  Yields the total number of clusters encoded
    *  in the raw bank.
@@ -369,14 +399,13 @@ public:
 
 private:
   const SiDAQ::buffer_word*  m_bank;
-  const SiHeaderWord  m_header;
-  const unsigned int m_nClusters;
-
-  const pos_iterator    m_posBegin;
-  const pos_iterator    m_posEnd;
-  const posadc_iterator m_posAdcBegin;
-  const posadc_iterator m_posAdcEnd;
-
+  SiHeaderWord  m_header;
+  unsigned int m_nClusters;
+  
+  pos_iterator    m_posBegin;
+  pos_iterator    m_posEnd;
+  posadc_iterator m_posAdcBegin;
+  posadc_iterator m_posAdcEnd;
 };
 
 

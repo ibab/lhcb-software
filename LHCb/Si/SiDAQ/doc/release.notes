@@ -2,6 +2,11 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-23 - Kurt Rinnert
+ - added proper copy constructor and assignment operator. This allows caching
+   of decoder instances in vectors, a feature needed by ST decoding.
+ - added convenience accessor for error flag in bank header
+
 
 !=========================== SiDAQ v1r1 2006-02-23 =====================
 ! 2006-02-23 - M Needham
