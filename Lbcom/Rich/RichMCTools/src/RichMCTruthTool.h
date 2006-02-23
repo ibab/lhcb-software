@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.23 2006-02-16 15:58:20 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.24 2006-02-23 12:54:02 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,7 +27,6 @@
 #include "RichKernel/RichToolBase.h"
 
 // Relations
-#include "Relations/IAssociatorWeighted.h"
 #include "Relations/IRelationWeighted.h"
 
 // Kernel
