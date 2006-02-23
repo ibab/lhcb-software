@@ -1,6 +1,9 @@
-// $Id: VeloBitsPolicy.h,v 1.4 2006-02-21 07:22:57 cattanem Exp $
+// $Id: VeloBitsPolicy.h,v 1.5 2006-02-23 08:40:37 mneedham Exp $
 #ifndef VELOBITSPOLICY_H 
 #define VELOBITSPOLICY_H 1
+
+#include "SiDAQ/SiADCBankTraits.h"
+ 
 
 /** Velo raw bank bit pattern
  *
@@ -19,6 +22,8 @@
 class VeloBitsPolicy
 {
 public:
+
+  typedef SiDAQ::adc_neighboursum_bank_tag adc_bank_type;
 
   enum bits {
     positionBits        =  0,
