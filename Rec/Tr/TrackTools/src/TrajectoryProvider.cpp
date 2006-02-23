@@ -7,6 +7,8 @@
 #include "Event/StateTraj.h"
 
 // from TrackFitEvent
+#include "Event/VeloRMeasurement.h"
+#include "Event/VeloPhiMeasurement.h"
 #include "Event/STMeasurement.h"
 
 // local
@@ -35,6 +37,9 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
 {
   declareInterface<ITrajectoryProvider>(this);
 
+  declareProperty( "VeloPositionTool",
+                   m_veloPositionToolName = "VeloClusterPosition" );
+
   declareProperty( "STPositionTool",
                    m_stPositionToolName = "STOfflinePosition" );
 
@@ -51,6 +56,8 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
   
   declareProperty( "MagneticFieldService",
                    m_magsvcname = "MagneticFieldSvc" );
+
+  m_dets.clear();
 };
 
 //=============================================================================
@@ -66,10 +73,18 @@ StatusCode TrajectoryProvider::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
+  // Retrieve the Cluster Position tools
+  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
+  m_stPositionTool   = tool<ISTClusterPosition>( m_stPositionToolName );
 
   // Retrieve the Velo, ST and OT detector elements
+  //TODO: useful in trajectory( const LHCbID& id, double offset )
+  //      once some new stuff is implemented (see comments in this method)
+  //m_dets[LHCbID::Velo] = getDet<DeVelo>( m_veloDetPath );
+  //m_dets[LHCbID::TT]   = getDet<DeSTDetector>( m_ttDetPath );
+  //m_dets[LHCbID::IT]   = getDet<DeSTDetector>( m_itDetPath );
+  //m_dets[LHCbID::OT]   = getDet<DeOTDetector>( m_otDetPath );
+
   m_veloDet = getDet<DeVelo>( m_veloDetPath );
   
   m_ttDet   = getDet<DeSTDetector>( m_ttDetPath );
@@ -93,13 +108,73 @@ Trajectory* TrajectoryProvider::trajectory( Measurement& meas )
   switch ( meas.type() )
   {
   case Measurement::VeloR :
-    //TODO: needs trajectory implementation in Velo detector element
-		break;
+    {
+      //TODO: this is not complete ...
+      // Get the reference to the STMeasurement
+      VeloRMeasurement& vmeas = *( dynamic_cast<VeloRMeasurement*>(&meas) );
+      // User defined part of the tool input, first position
+      // corresponds to projected angle of the track, the second
+      // to the radius of the cluster on the Phi sensor (could be
+      // set to 0., in that case error will be calculated for the
+      // default radius depending on sensor zone), while there are
+      // still no good tuning for the angled track available set the
+      // angle value to zero and use default error parametrization
+      // for the mean LHCb track angle
+      IVeloClusterPosition::Pair input( 0., 0. );
+      // VeloCluster* cluster
+      // the tool pair is < <VeloChannelID, fracPos>, error >
+      IVeloClusterPosition::toolPair pos =
+        m_veloPositionTool -> position( vmeas.cluster(), input );
+      // Channel for the closest strip to the cluster centre:
+      //   LHCb::VeloChannelID channel = pos.first.first
+      // Fractional distance to the closest strip to the cluster centre
+      // expressed in the units of strip distance (local pitch):
+      //   double dist = pos.first.second
+      // Position error in the units of strip distance (local pitch):
+      //   double posErr = pos.second
+      //traj = m_veloDet -> trajectory( pos.first.first,
+      //                                pos.first.second );
+      break;
+    }
   case Measurement::VeloPhi :
-    //TODO: needs trajectory implementation in Velo detector element
-		break;
+    {
+      //TODO: this is not complete ...
+      // Get the reference to the STMeasurement
+      VeloPhiMeasurement& vmeas = *( dynamic_cast<VeloPhiMeasurement*>(&meas) );
+      // User defined part of the tool input, first position
+      // corresponds to projected angle of the track, the second
+      // to the radius of the cluster on the Phi sensor (could be
+      // set to 0., in that case error will be calculated for the
+      // default radius depending on sensor zone), while there are
+      // still no good tuning for the angled track available set the
+      // angle value to zero and use default error parametrization
+      // for the mean LHCb track angle
+      IVeloClusterPosition::Pair input( 0., vmeas.r() );
+      // VeloCluster* cluster
+      // the tool pair is < <VeloChannelID, fracPos>, error >
+      IVeloClusterPosition::toolPair pos =
+        m_veloPositionTool -> position( vmeas.cluster(), input );
+      // Channel for the closest strip to the cluster centre:
+      //   LHCb::VeloChannelID channel = pos.first.first
+      // Fractional distance to the closest strip to the cluster centre
+      // expressed in the units of strip distance (local pitch):
+      //   double dist = pos.first.second
+      // Position error in the units of strip distance (local pitch):
+      //   double posErr = pos.second
+      //traj = m_veloDet -> trajectory( pos.first.first,
+      //                                pos.first.second );
+      break;
+    }
   case Measurement::TT :
     {
+      //TODO: have an interface in the Cluster Position tools
+      // ISTClusterPosition::Measurement estimate( const LHCb::LHCbID& id ) const 
+      // so that the dynamic_cast become unnecessary!
+      // if this is not possible then this method may need to be removed
+      // eventually ...
+      //BTW, such a signature of estimate might be crucial/handy for trigger
+      // applications, in particular when using the STOnlinePosition!
+      //
       // Get the reference to the STMeasurement
       STMeasurement& stmeas = *( dynamic_cast<STMeasurement*>(&meas) );
       // get all the ST measurement info
@@ -112,6 +187,7 @@ Trajectory* TrajectoryProvider::trajectory( Measurement& meas )
   case Measurement::IT :
     {
       // Get the reference to the STMeasurement
+      //TODO: same comments as above
       STMeasurement& stmeas = *( dynamic_cast<STMeasurement*>(&meas) );
       // get all the ST measurement info
       ISTClusterPosition::Measurement measVal =
@@ -122,8 +198,6 @@ Trajectory* TrajectoryProvider::trajectory( Measurement& meas )
     }
   case Measurement::OT :
     traj = trajectory( meas.lhcbID() );
-		break;
-  case Measurement::Muon :
 		break;
   default:
 		error() << "Measurement is of unknown type!"
@@ -150,6 +224,12 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
 {
   Trajectory* traj = NULL;
   
+  //TODO: the following switch block could be replaced by this very simple
+  //      and single line if the DetectorElement class had
+  // LHCb::Trajectory* trajectory( const LHCb::LHCbID& id, double offset);
+  // inline  conditionBegin() const
+  //m_dets[ id.detectorType() ] -> trajectory( id, offset );
+
   switch ( id.detectorType() )
   {
   case LHCbID::Velo :
@@ -157,20 +237,13 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
 		//traj = m_veloDet -> trajectory( id.veloID(), offset );
 		break;
   case LHCbID::TT :
-		traj = m_ttDet -> trajectory( id.stID(), offset );
+		traj = m_ttDet -> trajectory( id, offset );
 		break;
   case LHCbID::IT :
-		traj = m_itDet -> trajectory( id.stID(), offset );
+		traj = m_itDet -> trajectory( id, offset );
 		break;
   case LHCbID::OT :
-    //TODO: needs trajectory implementation in OT detector element
-		//traj = m_otDet -> trajectory( id.otID(), offset );
-		break;
-  case LHCbID::Rich :
-		break;
-  case LHCbID::Calo :
-		break;
-  case LHCbID::Muon :
+		traj = m_otDet -> trajectory( id.otID(), offset );
 		break;
   default:
 		error() << "LHCbID is of unknown type!"
@@ -192,7 +265,7 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
 //=============================================================================
 // Return a "State trajectory" from a State
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( State& state )
+Trajectory* TrajectoryProvider::trajectory( const State& state )
 {
   XYZVector bField;
   m_magsvc -> fieldVector( state.position(), bField );
@@ -203,7 +276,7 @@ Trajectory* TrajectoryProvider::trajectory( State& state )
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( TrackVector& stateVector,
+Trajectory* TrajectoryProvider::trajectory( const TrackVector& stateVector,
                                             double z )
 {
   XYZVector bField;

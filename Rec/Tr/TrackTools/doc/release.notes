@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-23 - Eduardo Rodrigues
+ - added new TrajMeasurementProvider tool (inherits from IMeasurementProvider)
+ - TrajectoryProvider tool now uses new VeloClusterPosition tool
+
 !======================== TrackTools v2r0 2006-02-21 =========================
 ! 2006-02-21 M Needham
  - Implementations of Track calorimeter matching tool and 

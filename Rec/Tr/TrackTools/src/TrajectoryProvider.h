@@ -10,6 +10,7 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from LHCbKernel
+#include "Kernel/IVeloClusterPosition.h"
 #include "Kernel/ISTClusterPosition.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/Trajectory.h"
@@ -59,22 +60,26 @@ public:
                                         double offset = 0 );
   
   /// Return a "State Trajectory" from a State
-  virtual LHCb::Trajectory* trajectory( LHCb::State& state );
+  virtual LHCb::Trajectory* trajectory( const LHCb::State& state );
   
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual LHCb::Trajectory* trajectory( Gaudi::TrackVector& stateVector,
+  virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
                                         double z );
   
 protected:
   // Interfaces
-  ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
-  std::string         m_stPositionToolName; ///< ST cluster position tool name
+  IVeloClusterPosition* m_veloPositionTool;   ///< Velo cluster position tool
+  ISTClusterPosition*   m_stPositionTool;     ///< ST cluster position tool
+  std::string           m_stPositionToolName; ///< ST cluster position tool name
+  std::string           m_veloPositionToolName; ///< Velo cluster position tool name
 
   // Geometry information
   DeVelo*       m_veloDet;
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
   DeOTDetector* m_otDet;
+
+  std::map<unsigned int,DetectorElement*> m_dets;
   
   std::string   m_veloDetPath;        ///< Name of the Velo XML geom path
   std::string   m_ttDetPath;          ///< Name of the TT XML geom path
