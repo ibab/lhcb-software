@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.38 2006-02-23 14:08:51 ibelyaev Exp $
+! $Id: release.notes,v 1.39 2006-02-23 16:38:49 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!===================== CaloAssociators v6r0 2006-02-23 =====================
 ! 2006-02-23 - Vanya BELYAEV
  - src/CaloDigitMCTruth.cpp 
      tiny fix 
  - options/CaloAssociators.cpp 
      instrument Data-On-Demand Servcie properly  
 
-!===================== CaloAssociators v6r0 2006-02-13 =====================
 ! 2006-02-13 - Olivier DESCHAMPS & Vanya BELYAEV
  - adaptation of the package to new event model 
    - essentially only 3 algorithms are active for a time  

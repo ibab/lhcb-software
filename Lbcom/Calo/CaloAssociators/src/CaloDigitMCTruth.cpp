@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.4 2006-02-23 14:08:51 ibelyaev Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.5 2006-02-23 16:38:49 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/02/23 14:08:51  ibelyaev
+//  fiz to please MCTruth
+//
 // Revision 1.3  2006/02/21 11:17:17  odescham
 // adapt to CaloDataFunctor moved to LHCb namespace
 //
@@ -295,7 +298,7 @@ StatusCode CaloDigitMCTruth::execute    ()
   // count number of links 
   counter ("#Digit->MC links") += nLinks ;
   
-  if ( 0 == nLinks ) { Warning ( "No MC-links are set" ) ; }
+  if ( 0 == nLinks ) { counter("Evts w/o links") += 1; }
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << "Number of MC-links #" << nLinks << endreq ; }
