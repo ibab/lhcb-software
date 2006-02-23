@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r1 2006-02-17 =============================
+!======================== Gauss v24r1 2006-02-23 =============================
+! 2006-02-23 - Gloria CORTI
+ - Use latest DecFiles v11r3 (temporarly in GAUSS project to switch off
+   use of PHOTOS in all decays, since it give problems to reproduce events)
+
 ! 2006-02-17 - Gloria CORTI
  - Use GiGa v18r1 for new setting of field
    Use modification for Generators (v4r1) allowing to produce b inclusive 
