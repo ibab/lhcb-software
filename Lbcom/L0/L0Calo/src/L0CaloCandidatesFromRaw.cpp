@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.4 2006-01-26 16:52:13 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.5 2006-02-23 15:21:19 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -79,7 +79,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
   for ( itBnk = data.begin() ; data.end() != itBnk ; itBnk++ ) {
     unsigned int* ptData = (*itBnk)->data();
-    int bankSize = (*itBnk)->size();
+    int bankSize = (*itBnk)->size()/4;  //== is in bytes...
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
       int type = cand>>24 & 0xFF;
