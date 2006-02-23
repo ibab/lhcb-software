@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-02-23 - Kurt Rinnert
+ - reorganised package, no headers expoerted anymore
+ - made changes necessary to take advantage of the generic decoder in SiDAQ.
+   This also fixes a problem on windows reported by Marco.
+
 !=========================  VeloDAQ v3r0 2006-02-23 =======================
 ! 2006-02-23 - M Needham
  - Add missing velo policy trait

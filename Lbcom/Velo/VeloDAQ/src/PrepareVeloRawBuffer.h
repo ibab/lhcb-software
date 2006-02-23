@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.8 2006-02-21 07:27:22 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.9 2006-02-23 15:41:50 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -69,8 +69,8 @@ private:
   // long lived containers for performance reasons. Also used to communicate
   // with makeBank() method
   std::vector<const LHCb::InternalVeloCluster*> m_sortedClusters; 
-  std::vector<buffer_word> m_rawData;
-  std::vector<buffer_word> m_clusterADCBuffer;
-  std::vector<buffer_word> m_clusterPosBuffer;
+  std::vector<SiDAQ::buffer_word> m_rawData;
+  std::vector<SiDAQ::buffer_word> m_clusterADCBuffer;
+  std::vector<SiDAQ::buffer_word> m_clusterPosBuffer;
 };
 #endif // PREPAREVELORAWBUFFER_H

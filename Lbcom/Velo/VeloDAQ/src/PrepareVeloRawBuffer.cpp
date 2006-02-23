@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.12 2006-02-21 07:22:57 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.13 2006-02-23 15:41:50 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -9,9 +9,9 @@
 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
+#include "SiDAQ/SiRawBufferWord.h"
 
-#include "VeloDAQ/VeloClusterWord.h"
-#include "VeloDAQ/VeloRawBufferWord.h"
+#include "VeloClusterWord.h"
 
 #include "PrepareVeloRawBuffer.h"
 
@@ -150,29 +150,29 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   // work out number of clusters for this sensor uses 1st 16 bits
   int numClu = end - begin;
 
+  if(isVerbose) 
+  {
+    verbose() <<"Number of clusters:" << numClu  <<endmsg;
+  }  
+
   // pcn is next 8 bits: set to zero here (never any errors in sim)
   SiHeaderWord hw(numClu,0,0); 
-  buffer_word pcnAndNumClu = hw.value();
+  SiDAQ::buffer_word pcnAndNumClu = hw.value();
 
   // clear temporary buffers
   m_clusterPosBuffer.clear();
   m_clusterADCBuffer.clear();
 
   // for storing 32 bit 'rows' of adc values and cluster positions
-  buffer_word rowData   = 0x0; 
-  buffer_word cluRowData = 0x0;
+  SiDAQ::buffer_word rowData   = 0x0; 
+  SiDAQ::buffer_word cluRowData = 0x0;
 
   // loop over clusters in range defined by iterator 
   unsigned int nClu = 0;  // cluster counter
   unsigned int nAdc = 0 ; 
-  std::vector<const LHCb::InternalVeloCluster*>::const_iterator iC;
 
-  if(isVerbose) 
-  {
-    verbose() <<"Number of clusters:" << numClu  <<endmsg;
-  }  
-
-  for ( iC = begin ; iC != end ; ++iC) // 
+  std::vector<const LHCb::InternalVeloCluster*>::const_iterator iC = begin;
+  for ( ; iC != end ; ++iC) // 
   {
     // get a cluster 
     const LHCb::InternalVeloCluster* clu = *iC;
@@ -186,7 +186,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         numStrips << " strips." <<endmsg;
     }
 
-    buffer_word packedCluster;
+    SiDAQ::buffer_word packedCluster;
 
     // case of one strip cluster is handled here
     // 
@@ -201,7 +201,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         overflow = true;
       }
       VeloClusterWord vcw(clu->strip(0),0.0,1, overflow);
-      packedCluster = static_cast<buffer_word>(vcw.value());
+      packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
       if ( isVerbose )
 	    {
 	      verbose() <<"STRIP: " << clu->strip(0)
@@ -279,7 +279,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
       double interStripPos = cPos - channelPos; // fractional part
       VeloClusterWord vcw(channelPos, interStripPos, numStrips, overflow);
-      packedCluster = static_cast<buffer_word>(vcw.value());
+      packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
 
       if(isVerbose)
 	    {
@@ -330,8 +330,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   m_rawData.push_back ( pcnAndNumClu  );
 
   // add clusters positions  
-  std::vector<buffer_word>::iterator tmpCp;
-  for ( tmpCp = m_clusterPosBuffer.begin() ; tmpCp != m_clusterPosBuffer.end() ; ++tmpCp )
+  std::vector<SiDAQ::buffer_word>::iterator tmpCp = m_clusterPosBuffer.begin();
+  for ( ; tmpCp != m_clusterPosBuffer.end() ; ++tmpCp )
   {      
     if ( isVerbose  ) 
     {
@@ -343,8 +343,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   }
   
   // add adc values 
-  std::vector<buffer_word>::iterator tmpAdc;
-  for ( tmpAdc = m_clusterADCBuffer.begin() ; tmpAdc != m_clusterADCBuffer.end() ; ++tmpAdc )
+  std::vector<SiDAQ::buffer_word>::iterator tmpAdc = m_clusterADCBuffer.begin();
+  for ( ; tmpAdc != m_clusterADCBuffer.end() ; ++tmpAdc )
   {
     if ( isVerbose ) 
     {
