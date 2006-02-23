@@ -1,4 +1,4 @@
-// $Id: SiADCWord.h,v 1.3 2006-02-10 10:00:39 mneedham Exp $
+// $Id: SiADCWord.h,v 1.4 2006-02-23 10:26:09 mneedham Exp $
 #ifndef _SiADCWord_H
 #define _SiADCWord_H 1
 
@@ -102,7 +102,7 @@ inline double SiADCWord::adc() const{
 }
 
 inline bool SiADCWord::endCluster() const{
-  return ((m_value & endMask) >> endBits);
+  return static_cast<bool>((m_value & endMask) >> endBits);
 }
 
 inline std::ostream& SiADCWord::fillStream(std::ostream& s) const

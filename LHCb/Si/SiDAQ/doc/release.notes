@@ -2,7 +2,13 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+
+! 2006-02-23 M Needham
+ - Try to please the windows compiler by casting u int to bool
+
+
 !=========================== SiDAQ v1r1 2006-02-23 =====================
+
 ! 2006-02-22 - Kurt Rinnert
  - added generic raw bank decoder template. This allows to share all
    common low-level code with the ST
