@@ -2,6 +2,7 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+!=========================== SiDAQ v1r1 2006-02-23 =====================
 ! 2006-02-22 - Kurt Rinnert
  - added generic raw bank decoder template. This allows to share all
    common low-level code with the ST
@@ -9,7 +10,6 @@ Package manager : Matt Needham
    live in the namespace SiDAQ
  - added buffer_word typedef to SiDAQ namespace  
 
-!=========================== SiDAQ v1r1 2006-02-20 =====================
 ! 2006-02-14 - Kurt Rinnert
  - changed m_value type in header word and cluster word to unsigned int
    and unsigned short, respectively.  This is to avoid binary complement
