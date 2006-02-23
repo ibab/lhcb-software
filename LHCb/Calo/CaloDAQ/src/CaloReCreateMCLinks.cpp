@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.5 2005-12-20 13:35:28 ocallot Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.6 2006-02-23 14:03:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/12/20 13:35:28  ocallot
+// Fixes due to fault CaloEvent release
+//
 // Revision 1.4  2005/12/19 19:29:14  ocallot
 // First adaptation to LHCb v20
 //
@@ -94,18 +97,18 @@ protected:
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
-    , m_raw    ()
-    , m_mc     () 
-    , m_ignore ( false  )
+    , m_raw    ( )
+    , m_mc     ( ) 
+    , m_ignore ( true )
   {
-    m_raw   .push_back (    LHCb::CaloDigitLocation::Spd   ) ;
-    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Spd   ) ;
-    m_raw   .push_back (    LHCb::CaloDigitLocation::Prs   ) ;
-    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Prs   ) ;
+    //m_raw   .push_back (    LHCb::CaloDigitLocation::Spd   ) ;
+    //m_mc    .push_back (  LHCb::MCCaloDigitLocation::Spd   ) ;
+    //m_raw   .push_back (    LHCb::CaloDigitLocation::Prs   ) ;
+    //m_mc    .push_back (  LHCb::MCCaloDigitLocation::Prs   ) ;
     m_raw   .push_back (    LHCb::CaloDigitLocation::Ecal  ) ;
     m_mc    .push_back (  LHCb::MCCaloDigitLocation::Ecal  ) ;
-    m_raw   .push_back (    LHCb::CaloDigitLocation::Hcal  ) ;
-    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Hcal  ) ;
+    //m_raw   .push_back (    LHCb::CaloDigitLocation::Hcal  ) ;
+    //m_mc    .push_back (  LHCb::MCCaloDigitLocation::Hcal  ) ;
     //
     declareProperty ( "Digits"     , m_raw     ) ;
     declareProperty ( "MCDigits"   , m_mc      ) ;
@@ -207,6 +210,11 @@ StatusCode CaloReCreateMCLinks::execute()
       return Error ( " setMCTruth: unable to set MC-link between '" + 
                      addr1 + "' and '" + addr2 + "'" , sc ) ; 
     }
+    
+    // check the link:
+    if ( 0 == mcTruth<LHCb::MCCaloDigits>( raw ) )
+    { return Error("EXTRACTED LINK is NULL for '" + addr1 + "'") ; }
+    
   }
   //
   return StatusCode::SUCCESS ;
