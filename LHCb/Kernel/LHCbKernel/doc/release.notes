@@ -2,14 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r2 2006-02-23 =========================
 ! 2006-02-23 - Ivan BELYAEV
  - Event/CaloCellIDKeyTraights.h
    - The creation of the key=CaloCellID form the integer by KeyedContainer
      is allowed now..  :-((( 
      The modification is forced by usage of MCTruth utility. 
-  
 
-!===================== LHCbKernel v6r2 2006-02-16 =========================
 ! 2006-02-22 - Tomasz Szumlak
  - minor changes inside the velo tool interface
 
