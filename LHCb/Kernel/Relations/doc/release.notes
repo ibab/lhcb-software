@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.29 2006-02-22 19:58:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2006-02-23 13:07:42 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.29 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.30 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v3r0 2006-02-23 ============================
 ! 2006-02-22 - Vanya BELYAEV
 
  - ******************** REMOVE ALL ASSOCIATORS/TOOLS ************************
@@ -181,9 +182,6 @@
     * // containers:
     * // //////////////////////////////////////////////////////////////////////
     ***************************************************************************   
-  
-
-! ====================== Relations v3r0 2006-02-07 ============================
 ! 2006-02-07 - Vanya BELYAEV
 
  - many tiny changes to simplify the " semiautomated" generation of 
