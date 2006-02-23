@@ -2,7 +2,14 @@
 ! Responsible : Chris Parkes
 
 ! 2006-02-23 - Kurt Rinnert
- - reorganised package, no headers expoerted anymore
+ - finished implementation of decoding algorithm. The algorithm DecodeVeloRawBuffer
+   can decode the raw buffer into VeloLiteClusters or VeloClusters (or both).
+   The locations of the containers in the TES are fully configurable.
+   The default is to decode into VeloLiteCluster, all locations their respective defaults.
+ - fixed requirements file according to removed include directory
+
+! 2006-02-23 - Kurt Rinnert
+ - reorganised package, no headers exported anymore
  - made changes necessary to take advantage of the generic decoder in SiDAQ.
    This also fixes a problem on windows reported by Marco.
 
