@@ -1,8 +1,11 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.2 2006-02-21 10:04:46 odescham Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.3 2006-02-23 21:30:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/21 10:04:46  odescham
+// update for new Event Model
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,6 +34,8 @@
 #include "Linker/LinkedTo.h"
 #include "Linker/LinkedFrom.h"
 // ============================================================================
+//
+#include "Calo2MC.h"
 
 // ============================================================================
 /** @class  CaloDigit2MCLinks2Table  CaloDigit2MCLinks2Table.cpp
@@ -46,7 +51,7 @@
  *    List of Linker objects for CaloDigit->MCParticle links 
  * 
  *  - "Output"
- *    Teh default value is "Rec/Relations/CaloDigits2MCParticles"
+ *    Teh default value is "Relations/" + LHCb::CaloDigitLocation::Default
  *    Name of (output) relation table for CaloDigit->MCParticle 
  *
  *  @see CaloDigit
@@ -72,7 +77,7 @@ protected:
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
     , m_inputs ( 1 , LHCb::CaloDigitLocation::Ecal      ) 
-    , m_output ( "Rec/Relations/CaloDigits2MCParticles" ) 
+    , m_output ( "Relations/" + LHCb::CaloDigitLocation::Default ) 
   { } ;
   /// virtual destructor (protected)
   virtual ~CaloDigit2MCLinks2Table() {};
@@ -108,12 +113,8 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   /// the actual type of container
   typedef const LHCb::CaloDigits                     Digits ;
   /// the actual type of relation table 
-  typedef LHCb::RelationWeighted1D
-    <LHCb::CaloDigit,LHCb::MCParticle,float>         Table  ;
-  //  the actual tyep of idiotic linker 
-  typedef LinkedTo<LHCb::MCParticle,LHCb::CaloDigit> Linker ;
-  //typedef LinkedFrom<LHCb::MCParticle,LHCB::CaloDigit> Linker ;
-  
+  typedef LHCb::Calo2MC::DigitTable Table  ;
+
   // create and register the relation table 
   Table* table = new Table( 1000 ) ;
   
@@ -133,9 +134,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
     if ( 0 == digits ) { return StatusCode::FAILURE ; }
     
     // get linker 
-    Linker linker ( eventSvc  () ,
-                    msgSvc    () , 
-                    (*input)     ) ;
+    LHCb::Calo2MC::DigitLinkTo linker( eventSvc() , msgSvc() , (*input)     ) ;
     
     if ( linker.notFound() ) 
     { return Error ( "No Linker object is Found '" + (*input) + "' " ) ;}

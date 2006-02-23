@@ -1,8 +1,11 @@
-// $Id: CaloTrgClusterMTruth.cpp_,v 1.2 2006-02-21 11:17:17 odescham Exp $
+// $Id: CaloTrgClusterMTruth.cpp_,v 1.3 2006-02-23 21:30:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/21 11:17:17  odescham
+// adapt to CaloDataFunctor moved to LHCb namespace
+//
 // Revision 1.1  2006/02/21 10:04:46  odescham
 // update for new Event Model
 //
@@ -35,6 +38,8 @@
 #include "Event/TrgCaloCluster.h"
 // ============================================================================
 #include "CaloMCTools.h"
+//
+#include "Calo2MC.h"
 
 /** @class CaloTrgClusterMCTruth CaloTrgClusterMCTruth.cpp
  *  
@@ -45,7 +50,7 @@
  *  The important  properties of algorithm:
  *  
  *    - "Input"
- *      The defautl value is "Rec/Relations/CaloDigits2MCParticles"
+ *      The default value is  "Relations/" + LHCb::CaloDigitLocation::Default
  *      Name of relation table for CaloDigit->MCParticle relations 
  *
  *    - "Inputs"
@@ -57,7 +62,7 @@
  *      Name of container of CaloDigits 
  *
  *    - "Output"
- *      The default valeu is "Rec/Relations/TrgCaloClusters2MCParticles" 
+ *      The default valeu is  "Relations/" + LHCb::TrgCaloClusterLocation::Default
  *      Name of (output) relation table TrgCaloCluster->MCParticle
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr 
@@ -82,11 +87,11 @@ protected:
   {
     declareProperty ( "Digits"               , m_digits           ) ;
     // set the appropriate default values for input data 
-    setInputData    ( "Rec/Relations/CaloDigits2MCParticles"      ) ;
+    setInputData    (  "Relations/" + LHCb::CaloDigitLocation::Default ) ;
     // set the appropriate default values for input data (clusters)
     addToInputs     ( TrgCaloClusterLocation :: Ecal              ) ;
     // set the appropriate default value  for output data
-    setOutputData   ( "Rec/Relations/TrgCaloClusters2MCParticles" ) ;
+    setOutputData   (  "Relations/" + LHCb::TrgCaloClusterLocation::Default ) ;
   };
   /// virtual destructor (protected)
   virtual ~CaloTrgClusterMCTruth() {}
@@ -147,9 +152,9 @@ StatusCode CaloTrgClusterMCTruth::execute    ()
   /// the actual type of Cluster container 
   typedef const TrgCaloClusters                               Clusters ;
   /// the actual type of relation table 
-  typedef RelationWeighted1D<TrgCaloCluster,MCParticle,float> Table    ;
+  typedef LHCb::Calo2MC::TrgClusterTable                      Table    ;
   /// the relation table CaloDigit->MCParticle
-  typedef const IRelationWeighted<CaloDigit,MCParticle,float> DigTable ;
+  typedef const LHCb::Calo2MC::IDigitTable                    DigTable ;
   /// the actual type of cluster entries 
   typedef const TrgCaloCluster::TrgClusterCells               Entries  ;
   

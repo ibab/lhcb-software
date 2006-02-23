@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.9 2006-02-21 10:04:45 odescham Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.10 2006-02-23 21:30:45 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -31,6 +31,8 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "CaloMCTools.h"
+//
+#include "Calo2MC.h"
 // ============================================================================
 
 /** @class CaloClustersMCTruthAlg CaloClustersMCTruthAlg.h
@@ -92,9 +94,9 @@ protected:
     , m_threshold       ( 2 * perCent                 ) 
     // location(s) of clusters 
     , m_inputs          ()
-    , m_output          ( "Rec/Relations/CaloClusters2MCParticles" )
-    , m_detector        ( DeCalorimeterLocation::Ecal              ) 
-    , m_particles       ( LHCb::MCParticleLocation::Default        )
+    , m_output          ( "Relations/" + LHCb::CaloClusterLocation::Default + "CCs2MCPs")
+    , m_detector        ( DeCalorimeterLocation::Ecal              )  
+    , m_particles       ( LHCb::MCParticleLocation::Default        ) 
   { 
     declareProperty     ( "Threshold"   , m_threshold  ) ;
     //
@@ -170,8 +172,7 @@ StatusCode CaloClustersMCTruthAlg::execute()
   typedef const LHCb::CaloClusters                 Clusters  ;
   typedef const DeCalorimeter                      Detector  ;
   typedef const LHCb::MCParticles                  Particles ;
-  typedef LHCb::RelationWeighted1D
-    <LHCb::CaloCluster,LHCb::MCParticle,float>     Table     ;
+  typedef LHCb::Calo2MC::ClusterTable              Table     ;
   
   // get mc particles 
   Particles*  particles = get<Particles>        ( m_particles ) ;

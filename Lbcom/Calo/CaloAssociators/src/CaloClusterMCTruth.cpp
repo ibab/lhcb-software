@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.3 2006-02-21 11:17:17 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.4 2006-02-23 21:30:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/21 11:17:17  odescham
+// adapt to CaloDataFunctor moved to LHCb namespace
+//
 // Revision 1.2  2006/02/21 10:04:45  odescham
 // update for new Event Model
 //
@@ -28,6 +31,8 @@
 #include "Event/MCParticle.h"
 // Local
 #include "CaloMCTools.h"
+//
+#include "Calo2MC.h"
 // ============================================================================
 
 /** @class CaloClusterMCTruth CaloClusterMCTruth.cpp
@@ -39,11 +44,11 @@
  *  The important  properties of algorithm:
  *  
  *    - "Input"
- *      The default value is "Rec/Relations/CaloDigits2MCParticles" 
+ *      The default value is "Relations/" + LHCb::CaloDigitLocation::Default
  *      The name of relation table CaloDigit->MCParticle 
  *
  *    - "Output"
- *      The default value "Rec/Relations/CaloClusters2MCParticles"
+ *      The default value "Relations/" + LHCb::CaloClusterLocation::Default
  *      The name of (output) relation table CaloCluster->MCParticle
  *
  *    - "Clusters"
@@ -69,8 +74,8 @@ protected:
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
-    , m_inputRelations    ( "Rec/Relations/CaloDigits2MCParticles"   )
-    , m_outputRelations   ( "Rec/Relations/CaloClusters2MCParticles" )
+    , m_inputRelations    ( "Relations/" + LHCb::CaloDigitLocation::Default )
+    , m_outputRelations   ( "Relations/" + LHCb::CaloClusterLocation::Default )
     , m_clusterContainers ()
   {    // set the appropriate default values for input data (linker)
     declareProperty ( "Clustes", m_clusterContainers);
@@ -116,9 +121,9 @@ StatusCode CaloClusterMCTruth::execute    ()
   /// the actual type of Cluster container 
   typedef const LHCb::CaloClusters                            Clusters ;
   /// the actual type of relation table 
-  typedef LHCb::RelationWeighted1D<LHCb::CaloCluster,LHCb::MCParticle,float> Table ;
+  typedef    LHCb::Calo2MC::ClusterTable                      Table ;
   /// the relation table CaloDigit->MCParticle
-  typedef const IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> DigTable ;
+  typedef    const LHCb::Calo2MC::IDigitTable                 DigTable ;
   /// shot cut for Calo cluster entries 
   typedef Cluster::Entries                                    Entries  ;
   

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2006-02-23 16:38:49 cattanem Exp $
+! $Id: release.notes,v 1.40 2006-02-23 21:30:45 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,6 +6,12 @@
 ! =============================================================================
 
 !===================== CaloAssociators v6r0 2006-02-23 =====================
+! 2006-02-23 - Olivier Deschamps
+ - Standardize TES path for relations
+		: "/Relations" + LHCb::CaloXXXLoation::Default
+ - Some shortcuts defined in new header : Calo2MC.h
+ - Adapt and clean options files
+
 ! 2006-02-23 - Vanya BELYAEV
  - src/CaloDigitMCTruth.cpp 
      tiny fix 

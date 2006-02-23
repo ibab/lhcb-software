@@ -1,8 +1,11 @@
-// $Id: CCs2MCPs.opts,v 1.7 2003-04-02 14:46:53 ibelyaev Exp $ 
+// $Id: CCs2MCPs.opts,v 1.8 2006-02-23 21:30:45 odescham Exp $ 
 // ============================================================================
 // CVS tag $Nam:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/04/02 14:46:53  ibelyaev
+//  add new MC truth association algorithms
+//
 // ============================================================================
 
 // ============================================================================
@@ -10,7 +13,6 @@
  *
  *  options for associator.
  * 
- *  3 algorithms could be used: 
  *  <ul>
  *  <li> 
  *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg" </tt>
@@ -20,45 +22,11 @@
  *  It uses @p EnergyFromMCParticle<CaloCluster,MCParticle> evaluator
  *  </li> 
  *  <li> 
- *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg" </tt> 
- *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
- *  have the largest contribution to the cluster. 
- *  It uses @p LargestDeposition<CaloCluster> evaluator
- *  </li>
- *  <li> 
- *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth3Alg" </tt> 
- *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
- *  has TOTAL (through *ALL* descendents) deposition into the cluster 
- *  in excess to some threshols value.
- *  It uses @p AllEnergyFromMCParticle<CaloCluster,MCParticle> evaluator
- *  </li>
- *  <li> 
- *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth4Alg" </tt> 
- *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
- *  has TOTAL (through AL descendents) deposition into the cluster 
- *  in excess to some threshols value.
- *  It uses @p AllEnergyFromMCParticle<CaloCluster,MCParticle> evaluator
- *  </li>
- *  <li> 
- *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth5Alg" </tt> 
- *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
- *  has TOTAL (through AL descendents) deposition into the cluster 
- *  in excess to some threshols value.
- *  It uses @p MCCaloHistory<CaloCluster> evaluator
- *  </li>
- *  </ul>
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 08 Apr 2002 
  */
 // ============================================================================
 
-// #include "$CALOASSOCIATORSOPTS/CCs2MCPs_Alg1.opts"
-// #include "$CALOASSOCIATORSOPTS/CCs2MCPs_Alg2.opts"
-// #include "$CALOASSOCIATORSOPTS/CCs2MCPs_Alg3.opts"
-// #include "$CALOASSOCIATORSOPTS/CCs2MCPs_Alg4.opts"
-#include "$CALOASSOCIATORSOPTS/CCs2MCPs_Alg5.opts"
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Relations/Rec/Calo/Clusters/CCs2MCPs/'
+                                 TYPE='CaloClustersMCTruthAlg/CCs2MCPs'"      };
 
-// ============================================================================
-// The END 
-// ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloAssociators.opts,v 1.8 2006-02-23 14:08:51 ibelyaev Exp $ 
+// $Id: CaloAssociators.opts,v 1.9 2006-02-23 21:30:45 odescham Exp $ 
 // ============================================================================
-// CVS tag $Nam:$ , version $Revision: 1.8 $
+// CVS tag $Nam:$ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/02/23 14:08:51  ibelyaev
+//  fiz to please MCTruth
+//
 // ============================================================================
 
 // ============================================================================
@@ -25,16 +28,14 @@ DataOnDemandSvc.Algorithms +=
     // relation table for LHCb::CaloDigit -> LHCb::MCParticle relations
     //  ( actual   type LHCb::RelationWeighted1D<LHCb::CaloDigit,LHCb::MCParticle,float>, 
     //   "visible" type IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float>)
-    ,"DATA='/Event/Rec/Relations/CaloDigits2MCParticles' 
+    ,"DATA='/Event/Relations/Raw/Calo/Digits' 
       TYPE='CaloDigit2MCLinks2Table'"    
     // relation table for LHCb::CaloCluster -> LHCb::MCParticle relations 
     //  (actual type LHCb::RelationWeighted1D<LHCb::CaloCluster,LHCB::MCParticle,float>)
     //   "visible" type IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,float>)
-    ,"DATA='/Event/Rec/Relations/CaloClusters2MCParticles' 
+    ,"DATA='/Event/Relations/Rec/Calo/Clusters'
       TYPE='CaloClusterMCTruth'"         
   }; 
-
-
 SeqCaloDigitMCTruth.Members = 
 {  "CaloReCreateMCLinks" , "CaloDigitMCTruth"  } ;
 

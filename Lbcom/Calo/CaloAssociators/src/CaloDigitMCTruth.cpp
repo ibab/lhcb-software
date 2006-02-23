@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.5 2006-02-23 16:38:49 cattanem Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.6 2006-02-23 21:30:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/02/23 16:38:49  cattanem
+// fix warning and move tag
+//
 // Revision 1.4  2006/02/23 14:08:51  ibelyaev
 //  fiz to please MCTruth
 //
@@ -47,12 +50,13 @@
 #include "Linker/LinkerWithKey.h"
 // ============================================================================
 #include "Kernel/CaloCellIDKeyTraits.h"
+//
+#include "Calo2MC.h"
 // ============================================================================
 
 /** @class CaloDigitMCTruth CaloDigitMCTruth.h
  *
- *  Simple algorithm to build idiotic 
- *  Linkers for CaloDigit -> MCParticle relations 
+ *  Simple algorithm to build Linkers for CaloDigit -> MCParticle relations 
  *
  *  Algorithm has following important properties 
  * 
@@ -186,8 +190,6 @@ StatusCode CaloDigitMCTruth::execute    ()
   typedef const LHCb::CaloDigits                     Digits    ;
   /// detector element 
   typedef const DeCalorimeter                        Detector  ;
-  /// helper class for idiotic linker  
-  typedef LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit>  Linker    ;
   /// simple predicate for find digits  with large energy
   typedef Over_E_Threshold<Digit*>                   OverE     ;
   /// simple predicate for find digits  with large transverse energy
@@ -213,9 +215,8 @@ StatusCode CaloDigitMCTruth::execute    ()
     if ( 0 == _mc ) { Error ( "MCCaloDigits* point to NULL" ) ; }
   }
   
-  // create the idiotic Linker object 
-  LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit> 
-    linker ( eventSvc () , msgSvc () , m_input ) ;
+  // create the Linker object 
+  LHCb::Calo2MC::DigitLink linker ( eventSvc () , msgSvc () , m_input ) ;
   
   // evaluates to "true" for digits over E  threshold 
   OverE  overE  (            m_cellE  ) ;
