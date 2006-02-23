@@ -1,4 +1,4 @@
-// $Id: CaloCellIDKeyTraits.h,v 1.1 2005-12-14 15:13:30 cattanem Exp $
+// $Id: CaloCellIDKeyTraits.h,v 1.2 2006-02-23 13:56:38 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_CALOCELLIDKEYTRAITS_H 
 #define KERNEL_CALOCELLIDKEYTRAITS_H 1
@@ -65,8 +65,10 @@ namespace Containers
      */
     static key_type makeKey(long k) 
     {
-      errorMakeCaloCellIDKey();
-      return key_type(k); 
+      // errorMakeCaloCellIDKey();
+      key_type _key;
+      _key.setAll( k ) ;
+      return _key ; 
     };
     
     /// Full unhashed key identifier
