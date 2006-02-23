@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.7 2006-02-23 14:23:40 ebos Exp $
+// $Id: DeOTModule.cpp,v 1.8 2006-02-23 17:30:00 ebos Exp $
 
 // Kernel
 #include "Kernel/SystemOfUnits.h"
@@ -397,12 +397,19 @@ LHCb::Trajectory* DeOTModule::trajectory( const OTChannelID& aChan,
 {
   LineTraj* traj = 0;
   if( contains( aChan) == true ) {
-    Gaudi::XYZVector dir( -m_sinAngle, m_cosAngle, 0.);
+    double halfSizeModule = m_ySizeModule/2.;
     // Trajectory points from beamline towards readout.
-    if( bottomModule() ) dir *= -1.;
-    // Correct as long as wireLength == m_ySizeModule
-    const std::pair<double,double> range( -m_ySizeModule/2., m_ySizeModule/2. );    
-    traj = new LineTraj( centerOfStraw( aChan.straw() ), dir, range );
+    if( bottomModule() ) halfSizeModule *= -1.;
+    const unsigned int straw = aChan.straw();
+    Gaudi::XYZPoint lowerLocal( this->localUOfStraw(straw),
+                                -halfSizeModule,
+                                this->localZOfStraw(straw) );
+    Gaudi::XYZPoint upperLocal( this->localUOfStraw(straw),
+                                halfSizeModule,
+                                this->localZOfStraw(straw) );
+    Gaudi::XYZPoint lowerGlobal = (this->geometry())->toGlobal(lowerLocal);
+    Gaudi::XYZPoint upperGlobal = (this->geometry())->toGlobal(upperLocal);
+    traj = new LineTraj( lowerGlobal, upperGlobal );
   }
   else { throw GaudiException( "Failed to make trajectory!", "DeOTModule.cpp",
                                StatusCode::FAILURE ); 
