@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r0 2006-02-23 ========================
 ! 2006-02-22 - Eduardo Rodrigues
  - migration to LHCb v20r0
  - adaptation to new associators and detector elements

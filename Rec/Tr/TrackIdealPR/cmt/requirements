@@ -22,6 +22,7 @@ include_path      none
 use   GaudiAlg        v*
 
 use   RecEvent        v*    Event
+use   MCEvent         v*    Event
 
 use   TrackEvent      v*    Event
 use   TrackFitEvent   v*    Tr
@@ -29,12 +30,11 @@ use   TrackFitEvent   v*    Tr
 use   LinkerEvent     v*    Event
 
 use   TrackInterfaces v*    Tr
-use   TrackMCTools    v*    Tr
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          TrackIdealPR    ../src/*.cpp -import=AIDA
+library          TrackIdealPR    ../src/*.cpp
 
 #============================================================================
 # define component library link options
