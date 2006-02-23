@@ -1,4 +1,4 @@
-// $Id: MuonTileDigitInfo.cpp,v 1.3 2006-01-31 17:12:16 asarti Exp $
+// $Id: MuonTileDigitInfo.cpp,v 1.4 2006-02-23 07:45:51 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode MuonTileDigitInfo::initialize() {
 StatusCode MuonTileDigitInfo::execute() {
 
   debug() << "==> Execute" << endmsg;
-  LHCb::IntLink * myIntLink = new LHCb::IntLink::IntLink();
+  LHCb::IntLink * myIntLink = new LHCb::IntLink();
   std::map<int,int> mylink; ///< list of linked ints
 
   LHCb::MuonDigits* digits = 
