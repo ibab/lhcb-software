@@ -4,14 +4,16 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-!========================= DigiEvent v1r0 2006-02-21 =========================
+!========================= DigiEvent v1r0 2006-02-17 =========================
+! 2006-02-23 - Olivier Deschamps
+ - add CaloDigitLocation::Default in CaloDigit.xml
+
 ! 2006-02-21 - Tomasz Szumlak
  - noise data member has been removed from VeloDigit.xml as well as setters,
    getters and signalToNoise() methods
 
 ! 2006-02-21 - Marco Cattaneo
  - Change name of default location for Velo classes to ::Default
-
 ! 2006-02-17 - Chris Parkes
  - new VeloCluster, VeloLiteCluster added 
 

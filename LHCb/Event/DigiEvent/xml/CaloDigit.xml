@@ -5,7 +5,7 @@
 <gdd>
   <package name="DigiEvent">
 <!-- **************************************************************************
-  * $Id: CaloDigit.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+  * $Id: CaloDigit.xml,v 1.2 2006-02-23 21:42:24 odescham Exp $
   *****************************************************************************
   * XML-description of CaloDigit class                                        *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -42,6 +42,7 @@
  initList = "Base ( id ) , m_e ( e ) "
 > <code/> </constructor>
 
+<location name = "Default"  place = "Raw/Calo/Digits"  />
 <location name = "Spd"  place = "Raw/Spd/Digits"  />
 <location name = "Prs"  place = "Raw/Prs/Digits"  />
 <location name = "Ecal" place = "Raw/Ecal/Digits" />
