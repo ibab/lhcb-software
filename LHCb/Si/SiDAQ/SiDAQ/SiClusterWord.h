@@ -1,4 +1,4 @@
-// $Id: SiClusterWord.h,v 1.5 2006-02-22 17:21:16 krinnert Exp $
+// $Id: SiClusterWord.h,v 1.6 2006-02-23 15:27:07 mneedham Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -162,7 +162,7 @@ inline unsigned int SiClusterWord<bitPolicy>::pseudoSize() const{
 
 template <class bitPolicy>
 inline bool SiClusterWord<bitPolicy>::hasHighThreshold() const{
-  return ((m_value & bitPolicy::thresMask) >>bitPolicy::thresBits);
+  return (((m_value & bitPolicy::thresMask) >>bitPolicy::thresBits != 0)  ? true : false);
 }
 
 template <class bitPolicy>
