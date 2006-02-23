@@ -1,10 +1,10 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
-! 2006-02-23 M Needham
+!=========================  VeloDAQ v3r0 2006-02-23 =======================
+! 2006-02-23 - M Needham
  - Add missing velo policy trait
 
-!=========================  VeloDAQ v3r0 2006-02-21 =======================
 ! 2006-02-21 - Marco Cattaneo
  - Cleaned up requirements
  - Adapt to new location of InternalVeloCluster
