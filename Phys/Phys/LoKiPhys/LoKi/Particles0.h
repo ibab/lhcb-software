@@ -1,11 +1,8 @@
-// $Id: Particles0.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles0.h,v 1.3 2006-02-23 21:14:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -49,6 +46,126 @@ namespace LoKi
   namespace Particles 
   {
     
+    /** @struct HasKey 
+     *  The trivial predicate, it relies on Particle::hasKey method 
+     *
+     *  @see LHCb::Particle
+     *  @see Particle::hasKey
+     *  @see KeyedObject::hasKey
+     *  @see LoKi::Cuts::HASKEY 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */
+    struct HasKey 
+      : public LoKi::Predicate<const LHCb::Particle*>
+    {
+      /// clone method (mandatory!)
+      virtual HasKey* clone() const { return new HasKey(*this); }
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;      
+    } ;
+    
+    /** @class Key 
+     *  The trivial function, it relies on Particle::key method 
+     *
+     *  @see LHCb::Particle
+     *  @see Particle::key
+     *  @see KeyedObject::key
+     *  @see LoKi::Cuts::KEY 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */
+    class  Key 
+      : public LoKi::Function<const LHCb::Particle*>
+    {
+    public:
+      /** constructor from "bad" value, to be returned 
+       *  in the case of invalid argument
+       *  @param bad value to be returned for invalid argument 
+       */
+      Key ( const LHCb::Particle::key_type bad  = -1 ) ;
+      /** constrtuctor from "bad" value, to be returned 
+       *  in the case of invalid argument and "nokey"
+       *  value to be returned in the case of "!hasKey"
+       *  @param bad value to be returned for invalid argument 
+       *  @param nokey value to be returned for invalid argument 
+       */
+      Key ( const LHCb::Particle::key_type bad   , 
+            const LHCb::Particle::key_type nokey ) ;
+      /// copy constructor 
+      Key ( const Key& right ) ;
+      /// MANDATORY virtual destrutor 
+      virtual ~Key(){} ;
+      /// clone method (mandatory!)
+      virtual Key* clone() const { return new Key(*this); }
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;      
+    private :
+      LHCb::Particle::key_type m_bad    ;
+      LHCb::Particle::key_type m_nokey  ;
+    } ;
+    
+    /** @class InTES 
+     *
+     *  The trivial predicate which evaluates 
+     *  to true for particles, registered in TES 
+     *  in the container with the given name 
+     * 
+     *  @see LHCb::Particle
+     *  @see ContainedObject
+     *  @see ContainedObject::parent 
+     *  @see DataObject 
+     *  @see DataObject::registry
+     *  @see IRegistry
+     *  @see IRegistry::ideintifier 
+     *  @see LoKi::Cuts::InTES 
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */
+    class InTES
+      : public LoKi::Predicate<const LHCb::Particle*>
+    {
+    public:
+      /** constructor fomr the location and the flag
+       *  @param location container name 
+       *         (the leading "/Event" could be omitted 
+       *  @param fullpath  the logical flag. if it set 
+       *         to "true", the full path to be compared 
+       */
+      InTES
+      ( const std::string& location        , 
+        const bool         fullpath = true ) ;
+      ///copy constructor 
+      InTES ( const  InTES& right ) ;
+      /// MANDATORY: virtual destrcutor 
+      virtual ~InTES() {}
+      /// clone method (mandatory!)
+      virtual  InTES* clone() const 
+      { return new InTES(*this); }
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;        
+    public:
+      /// location in TES 
+      const  std::string& location () const { return m_location ; }
+      /// operation mode flag 
+      inline bool         fullpath () const{ return m_fullpath ; }        
+    private:
+      // the defuult constructor is disabled 
+      InTES() ;
+    private:
+      std::string m_location ;
+      bool        m_fullpath  ;
+    } ;
+
     /** @struct Momentum 
      *  evaluator of the momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru

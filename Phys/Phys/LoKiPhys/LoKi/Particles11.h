@@ -1,6 +1,6 @@
-// $Id: Particles11.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles11.h,v 1.2 2006-02-23 21:14:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -97,7 +97,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     private:
       // The default costructor is disabled 
       IsAParticle();
@@ -152,7 +152,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     public:
       bool   empty () const { return m_cut.empty () ; }
       size_t size  () const { return m_cut.size  () ; }
@@ -215,7 +215,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     private:
       // The defualt costructor is disabled 
       IsAParticleFromTree();

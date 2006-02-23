@@ -1,14 +1,8 @@
-// $Id: ParticleCuts.h,v 1.3 2006-02-22 20:53:46 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.4 2006-02-23 21:14:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
-//  Revision 1.2  2006/02/18 18:09:14  ibelyaev
-//   fix a typo
-//
-//  Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-//  New package: "Phys"-part of restructurized LoKi project  
-// 
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -197,7 +191,122 @@ namespace LoKi
      */
     const LoKi::Valid<const LHCb::Particle*>                   VALID ;
     // ========================================================================
+    
+    // ========================================================================
+    /** @var HASKEY
+     *  The trivial predicate, it relies on Particle::hasKey method 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p =  ... ;
+     *  const bool good = HASKEY( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see Particle::hasKey
+     *  @see KeyedObject::hasKey
+     *  @see LoKi::Particles::HasKey
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */   
+    const LoKi::Particles::HasKey                              HASKEY ;
+    // ========================================================================
 
+    // ========================================================================
+    /** The trivial function, it relies on Particle::key method 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p =  ... ;
+     *  Fun key = PKEY( -1 , -3 ) ;
+     *
+     *  const bool good = 1335 == key( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see Particle::key
+     *  @see KeyedObject::key
+     *  @see LoKi::Particles::Key
+     *  @see LoKi::Cuts::KEY
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */   
+    typedef LoKi::Particles::Key                              PKEY ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var KEY
+     *  The trivial predicate, it relies on Particle::hasKey method 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p =  ... ;
+     *  const bool good = 1335 == KEY( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see Particle::key
+     *  @see KeyedObject::key
+     *  @see LoKi::Particles::Key
+     *  @see LoKi::Cuts::PKEY
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */   
+    const LoKi::Particles::Key                              KEY ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** simple predicate to check if the particle is 
+     *  registered in TES at the certain location 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  Cut ksLL = INTES( "LLKs2PiPi" , false )
+     *
+     *  const double llK0S = ksLL( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::InTES
+     *  @see LoKi::Cuts::PINTES 
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */   
+    typedef LoKi::Particles::InTES                               INTES ;
+    // ========================================================================
+
+    // ========================================================================
+    /** simple predicate to check if the particle is 
+     *  registered in TES at the certain location 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  Cut ksLL = PINTES( "LLKs2PiPi" , false )
+     *
+     *  const double llK0S = ksLL( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::InTES
+     *  @see LoKi::Cuts::INTES 
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */   
+    typedef INTES                                               PINTES ;
+    // ========================================================================
+    
     // ========================================================================
     /** @var PVALID
      *  the trivial functor which evaluayed the "validity" of the argument
@@ -213,7 +322,7 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** the trivial predicate whoch check the identity of 2 particles
+    /** the trivial predicate which check the identity of 2 particles
      * 
      *  @code 
      *
@@ -1336,7 +1445,220 @@ namespace LoKi
     const LoKi::Particles::HasVertex                          HASVERTEX ;
     // ========================================================================
     
+    // ========================================================================
+    /** Evaluator of the GEOMETRY 
+     *  distance between the particle 
+     *  "endVertex" and "the vertex". 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertex* pv = ... ;
+     * 
+     *  Fun dist = VD( pv ) ;
+     * 
+     *  const double flight = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::VertexDistance      VD ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** Evaluator of the GEOMETRY distance between the particle 
+     *  "endVertex" and "the vertex". The distance is signed according 
+     *  to the sign of (Zv-Z0)
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertex* pv = ... ;
+     * 
+     *  Fun dist = VDSIGN( pv ) ;
+     * 
+     *  const double flight = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::VertexSignedDistance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::VertexSignedDistance      VDSIGN ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** Evaluator of the distance between the particle 
+     *  "endVertex" and "the vertex" along the particle momentum
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertex* pv = ... ;
+     * 
+     *  Fun dist = VDDOT( pv ) ;
+     * 
+     *  const double flight = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::VertexDotDistance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::VertexDotDistance      VDDOT ;
+    // ========================================================================
 
+    // ========================================================================
+    /** Evaluator of the chi2 of GEOMETRY distance between the particle 
+     *  "endVertex" and "the vertex" 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertex* pv = ... ;
+     * 
+     *  Fun dist = VDCHI2( pv ) ;
+     * 
+     *  const double chi2 = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::VertexChi2Distance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::VertexChi2Distance      VDCHI2 ;
+    // ========================================================================
+
+    // ========================================================================
+    /** Evaluator of the minimal GEOMETRY distance between the particle 
+     *  "endVertex" and some set of vertices  
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertex* pv = ... ;
+     * 
+     *  Fun dist = VDMIN( pv ) ;
+     * 
+     *  const double minDistance = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::MinVertexDistance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::VertexChi2Distance      VDMIN ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** Evaluator of the minimal GEOMETRY distance between the particle 
+     *  "endVertex" and some set of vertices  
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertices* pv = ... ;
+     * 
+     *  Fun dist = MINVD( pv ) ;
+     * 
+     *  const double minDistance = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi:Cuts::MinVertexDistance
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     *  @see LoKi:Cuts::VDMIN
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef VDMIN                                          MINVD ;
+    // ========================================================================
+
+    // ========================================================================
+    /** Evaluator of the minimal chi2 for distance between the particle 
+     *  "endVertex" and some set of vertices  
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertices* pv = ... ;
+     * 
+     *  Fun dist = VDMINCHI2( pv ) ;
+     * 
+     *  const double chi2  = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::MinVertexChi2Distance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinVertexChi2Distance      VDMINCHI2 ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** Evaluator of the minimal chi2 for distance between the particle 
+     *  "endVertex" and some set of vertices  
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  const LHCb::PrimVertices* pv = ... ;
+     * 
+     *  Fun dist = MINVDCHI2( pv ) ;
+     * 
+     *  const double chi2  = dist( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::MinVertexChi2Distance 
+     *  @see LHCb::Vertex
+     *  @see LHCb::Particle
+     *  @see LoKi::Cuts::VDMINCHI2 
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef VDMINCHI2                          MINVDCHI2 ;
+    // ========================================================================
+
+    
+    
   } ; // end of namespace LoKi::Cuts 
   
 } ; // end of namespace LoKi
