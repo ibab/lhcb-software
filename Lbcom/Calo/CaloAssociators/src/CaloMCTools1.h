@@ -1,4 +1,4 @@
-// $Id: CaloMCTools1.h,v 1.2 2006-02-23 08:35:34 ibelyaev Exp $
+// $Id: CaloMCTools1.h,v 1.3 2006-02-23 14:08:51 ibelyaev Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -437,7 +437,7 @@ namespace CaloMCTools
     const LHCb::MCCaloDigit* mcdigit = mcTruth<LHCb::MCCaloDigit>( digit );
     
     // truth is available? 
-    if( 0 == mcdigit  ) { return StatusCode ( 907 ) ; }      // RETURN
+    if ( 0 == mcdigit  ) { return StatusCode ( 907 ) ; }      // RETURN
     
     // create the evaluator 
     MCCaloHistory<LHCb::MCCaloDigit> evaluator( mcmap() ) ;

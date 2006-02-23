@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.37 2006-02-21 10:04:45 odescham Exp $
+! $Id: release.notes,v 1.38 2006-02-23 14:08:51 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2006-02-23 - Vanya BELYAEV
+ - src/CaloDigitMCTruth.cpp 
+     tiny fix 
+ - options/CaloAssociators.cpp 
+     instrument Data-On-Demand Servcie properly  
 
 !===================== CaloAssociators v6r0 2006-02-13 =====================
 ! 2006-02-13 - Olivier DESCHAMPS & Vanya BELYAEV

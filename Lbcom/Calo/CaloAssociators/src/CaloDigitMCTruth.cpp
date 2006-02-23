@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.3 2006-02-21 11:17:17 odescham Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.4 2006-02-23 14:08:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/21 11:17:17  odescham
+// adapt to CaloDataFunctor moved to LHCb namespace
+//
 // Revision 1.2  2006/02/21 10:04:46  odescham
 // update for new Event Model
 //
@@ -39,6 +42,8 @@
 // Linker 
 // ============================================================================
 #include "Linker/LinkerWithKey.h"
+// ============================================================================
+#include "Kernel/CaloCellIDKeyTraits.h"
 // ============================================================================
 
 /** @class CaloDigitMCTruth CaloDigitMCTruth.h
@@ -123,10 +128,11 @@ protected:
     declareProperty ( "MinParticleFraction"   , m_minFr  ) ;
     //
     declareProperty ( "MinParticleEnergy"     , m_minPE  ) ;
-    
     // 
-    declareProperty ( "Input"    , m_input    ) ;
-    declareProperty ( "Detector" , m_detector ) ;
+    declareProperty ( "Input"     , m_input    ) ;
+    declareProperty ( "Detector"  , m_detector ) ;
+    //
+    setProperty     ( "StatPrint" , "true"     ) ;
   };
   /// virtual destructor (protected)
   virtual ~CaloDigitMCTruth() {}
@@ -199,7 +205,10 @@ StatusCode CaloDigitMCTruth::execute    ()
   Digits*   digits   = get<Digits>     ( m_input ) ;
   if ( 0 == digits   ) { return StatusCode::FAILURE ; }
   
-  // create the linker table 
+  { // check the availability of the global MC truth 
+    LHCb::MCCaloDigits* _mc = mcTruth<LHCb::MCCaloDigits>( digits ) ;
+    if ( 0 == _mc ) { Error ( "MCCaloDigits* point to NULL" ) ; }
+  }
   
   // create the idiotic Linker object 
   LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit> 
@@ -212,13 +221,14 @@ StatusCode CaloDigitMCTruth::execute    ()
   
   // counter for number of links
   unsigned long nLinks = 0 ;
-  
+
   // loop over all digits 
   for ( Digits::const_iterator idigit = digits->begin() ; 
         digits->end() != idigit ; ++idigit ) 
   {
     Digit* digit = *idigit ;
-    if ( 0 == digit ) { continue ; } // skip invalid 
+    if ( 0 == digit ) { continue ; } // skip invalid
+
     
     // skip extra small energy depositions 
     if ( !overE  ( digit ) && !overET ( digit ) ) { continue ; }
@@ -231,8 +241,14 @@ StatusCode CaloDigitMCTruth::execute    ()
     MCHistory history( &map1 ) ;
     
     // build the history
-    history( digit ) ;
+    StatusCode _sc = history( digit ) ;
+    //always() 
+    //  << " code is " << _sc.getCode() << endreq ;
+
     
+    //if ( 0 != map1.size() ) 
+    //{ always() <<  " map1 size " << map1.size() << endreq ; }
+
     // copy history map into the separate container 
     CaloMCMap map2( map1 ) ;
     
@@ -277,7 +293,7 @@ StatusCode CaloDigitMCTruth::execute    ()
   }; // end of loop over all digits
   
   // count number of links 
-  counter ("#CD2MC links") += nLinks ;
+  counter ("#Digit->MC links") += nLinks ;
   
   if ( 0 == nLinks ) { Warning ( "No MC-links are set" ) ; }
   

@@ -1,6 +1,6 @@
-// $Id: CaloAssociators.opts,v 1.7 2006-02-21 10:04:45 odescham Exp $ 
+// $Id: CaloAssociators.opts,v 1.8 2006-02-23 14:08:51 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Nam:$ , version $Revision: 1.7 $
+// CVS tag $Nam:$ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -21,7 +21,7 @@ DataOnDemandSvc.Algorithms +=
     // Linker object for LHCb::CaloDigit -> LHCb::MCParticle relations 
     //  (created with LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit>) 
     "DATA='/Event/Link/Raw/Ecal/Digits' 
-     TYPE='CaloDigitMCTruth'"            
+     TYPE='GaudiSequencer/SeqCaloDigitMCTruth'"            
     // relation table for LHCb::CaloDigit -> LHCb::MCParticle relations
     //  ( actual   type LHCb::RelationWeighted1D<LHCb::CaloDigit,LHCb::MCParticle,float>, 
     //   "visible" type IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float>)
@@ -33,6 +33,10 @@ DataOnDemandSvc.Algorithms +=
     ,"DATA='/Event/Rec/Relations/CaloClusters2MCParticles' 
       TYPE='CaloClusterMCTruth'"         
   }; 
+
+
+SeqCaloDigitMCTruth.Members = 
+{  "CaloReCreateMCLinks" , "CaloDigitMCTruth"  } ;
 
 // ============================================================================
 // The END
