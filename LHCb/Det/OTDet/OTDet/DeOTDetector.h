@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.21 2006-01-20 14:37:05 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.22 2006-02-23 14:23:15 ebos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -13,6 +13,7 @@
 
 // Kernel
 #include "Kernel/OTChannelID.h"
+#include "Kernel/LHCbID.h"
 
 // MathCore
 #include "Kernel/Point3DTypes.h"
@@ -28,6 +29,8 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   26-05-2002
  */
+
+namespace LHCb{ class Trajectory; }
 
 namespace DeOTDetectorLocation{
   static const std::string& Default="/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
@@ -139,6 +142,11 @@ public:
 
   /// get the total number of readout channels in the OT
   unsigned int nChannels()  { return m_nChannels; }
+
+  /// Returns a Trajectory representing the wire identified by the LHCbID
+  /// The offset is zero for all OT Trajectories
+  LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
+                                const double /*offset*/ ) const;
 
 private:
 

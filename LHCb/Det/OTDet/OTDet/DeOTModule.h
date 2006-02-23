@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.4 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTModule.h,v 1.5 2006-02-23 14:23:21 ebos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -53,6 +53,8 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   05-03-2003
  */
+
+namespace LHCb{ class Trajectory; }
 
 static const CLID& CLID_DeOTModule = 8105;
 
@@ -157,6 +159,11 @@ public:
   
   /// get the global z-coordinate of the module
   double z() const;
+
+  /// Returns a Trajectory representing the wire identified by the LHCbID
+  /// The offset is zero for all OT Trajectories
+  LHCb::Trajectory* trajectory( const LHCb::OTChannelID& aChan,
+                                const double /*offset*/ ) const;
 
 private:
 

@@ -1,8 +1,8 @@
-// $Id: DeOTModule.cpp,v 1.6 2006-02-07 17:22:37 janos Exp $
-
+// $Id: DeOTModule.cpp,v 1.7 2006-02-23 14:23:40 ebos Exp $
 
 // Kernel
 #include "Kernel/SystemOfUnits.h"
+#include "Kernel/LineTraj.h"
 
 // DetDesc
 #include "DetDesc/SolidBox.h"
@@ -390,3 +390,23 @@ double DeOTModule::z() const
   return centerPoint.z();
 }
 
+/// Returns a Trajectory representing the wire identified by the LHCbID
+/// The offset is zero for all OT Trajectories
+LHCb::Trajectory* DeOTModule::trajectory( const OTChannelID& aChan,
+                                          const double /*offset*/ ) const 
+{
+  LineTraj* traj = 0;
+  if( contains( aChan) == true ) {
+    Gaudi::XYZVector dir( -m_sinAngle, m_cosAngle, 0.);
+    // Trajectory points from beamline towards readout.
+    if( bottomModule() ) dir *= -1.;
+    // Correct as long as wireLength == m_ySizeModule
+    const std::pair<double,double> range( -m_ySizeModule/2., m_ySizeModule/2. );    
+    traj = new LineTraj( centerOfStraw( aChan.straw() ), dir, range );
+  }
+  else { throw GaudiException( "Failed to make trajectory!", "DeOTModule.cpp",
+                               StatusCode::FAILURE ); 
+  }
+  
+  return traj;
+}

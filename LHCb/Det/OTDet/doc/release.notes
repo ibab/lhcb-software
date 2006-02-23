@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.42 2006-02-07 17:22:36 janos Exp $
+! $Id: release.notes,v 1.43 2006-02-23 14:22:59 ebos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-02-23 Edwin Bos
+ - Introduction of Trajectories in DeOTDetector and DeOTModule.
 
 !========================== OTDet v6r0 2006-01-20 ==========================
 ! 2006-02-07 - Jan Amoraal

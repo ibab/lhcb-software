@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.16 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.17 2006-02-23 14:23:34 ebos Exp $
 
 // MathCore
 #include "Kernel/Point3DTypes.h"
@@ -6,6 +6,12 @@
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
+
+// GaudiKernel
+#include "GaudiKernel/GaudiException.h"
+
+// Kernel/LHCbKernel
+#include "Kernel/Trajectory.h"
 
 /** @file DeOTDetector.cpp
  *
@@ -313,4 +319,27 @@ double DeOTDetector::driftDistance( const double driftTime,
 
   // inverse r-t relation
   return driftTime * m_cellRadius / maxDriftTime;  
+}
+
+/// Returns a Trajectory representing the wire identified by the LHCbID
+/// The offset is zero for all OT Trajectories
+LHCb::Trajectory* DeOTDetector::trajectory( const LHCb::LHCbID& id,
+                                            const double /*offset*/ ) const 
+{
+  LHCb::Trajectory* traj = 0;
+  if( !id.isOT() ) {
+    throw GaudiException( "The LHCbID is not of OT type!", "DeOTDetector.cpp",
+                          StatusCode::FAILURE );
+  }
+  DeOTModule* aModule = module( id.otID() );
+  if( aModule != 0 ) {
+    // Offset hardcoded to 0. to eliminate warning about unused parameter
+    traj = aModule->trajectory( id.otID(), 0. );
+  }
+  else {
+    throw GaudiException( "Failed to find module", "DeOTDetector.cpp",
+                          StatusCode::FAILURE );
+  }
+
+  return traj;  
 }
