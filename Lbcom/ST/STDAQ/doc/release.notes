@@ -4,11 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r3 2006-02-22 =======================
 ! 2006-02-22 - Kurt Rinnert
  - added traits typedef to STBitsPlociy. This is needed to pick the correct ADC
    decoding algorithm at compile time when using SiRawBankDecoder<STClusterWord>.
 
-!=============================== STDAQ v2r3 2006-02-15 =======================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
 
