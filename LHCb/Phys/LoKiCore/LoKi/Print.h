@@ -1,8 +1,11 @@
-// $Id: Print.h,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: Print.h,v 1.3 2006-02-23 21:10:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:04  ibelyaev
+//  fix a typo
+//
 // Revision 1.1  2006/02/16 18:09:37  ibelyaev
 //  add utilities for the easy printouts
 //
@@ -65,7 +68,10 @@ namespace LoKi
     std::string print ( const long   value ) ;
     /// convert boolean value to string 
     std::string print ( const bool   value ) ;
-    
+    /// convert integer value to string 
+    inline std::string print ( const int value ) 
+    { return print( long(value) ) ; }
+
     /** @fn toStream 
      *  Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
