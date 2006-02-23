@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.29 2006-02-07 17:24:41 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.30 2006-02-23 11:20:07 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -393,7 +393,7 @@ StatusCode MuonBackground::initializeParametrization()
   if(numName!=numCode)return StatusCode::FAILURE;
   // the first station is without background!!!!!
   for(int station=0;station<m_stationNumber;station++){
-    gap=m_numberOfGaps[station*m_gaps];
+    //    gap=m_numberOfGaps[station*m_gaps];
     for(int mult=0;mult<m_gaps;mult++){
       int index=station*m_gaps+mult;      
       for(int i=0;i<numCode;i++)
