@@ -1,4 +1,4 @@
-// $Id: CaloMCTools1.h,v 1.1 2006-02-21 10:04:46 odescham Exp $
+// $Id: CaloMCTools1.h,v 1.2 2006-02-23 08:35:34 ibelyaev Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -12,26 +12,6 @@
  *  Calorimeter Event Object
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  */
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-namespace std
-#else
-namespace __gnu_cxx
-#endif
-{
-  /** hashing function for MCParticle object 
-   *  it uses <tt>key</tt> method 
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   */
-#ifndef WIN32
-  template<> 
-  struct hash<const LHCb::MCParticle*>
-  {
-    size_t operator()(const LHCb::MCParticle* p ) const
-    { return 0 == p ? size_t ( 0 ) : size_t( p -> key() ) ; }
-  };
-#endif
-  
-}; // end of namespace std 
 
 namespace GaudiUtils 
 {
@@ -43,10 +23,21 @@ namespace GaudiUtils
   struct Hash<const LHCb::MCParticle*>
     : public std::unary_function<const LHCb::MCParticle*,size_t>
   {
+    // Needed to behave like VC++'s hash_compare
+    enum { // parameters for hash table
+      bucket_size = 4,    // 0 < bucket_size
+      min_buckets = 8};   // min_buckets = 2 ^^ N, 0 < N
+  
     size_t operator() ( const LHCb::MCParticle* p ) const
     { return 0 == p ? size_t ( 0 ) : size_t( p -> key() ) ; }
+
+    inline bool operator() ( const LHCb::MCParticle* p1 , 
+                             const LHCb::MCParticle* p2 ) const 
+    { return m_less ( p1 , p2 ) ; }
+    private:
+      std::less<const LHCb::MCParticle*> m_less;
   };
-};
+} ;
 
 
 namespace CaloMCTools 
