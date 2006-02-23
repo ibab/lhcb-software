@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.4 2006-02-21 17:24:17 szumlat Exp $
+#// $Id: VeloSim.h,v 1.5 2006-02-23 12:58:16 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -34,9 +34,6 @@ class pulseShapeFunctor;
 
 class VeloSim : public GaudiAlgorithm {
 public:
-  //
-  static const double k_spillOverTime=25.;
-  static const double k_pulseShapePeakTime=30.7848;
   //
   /// Standard constructor
   VeloSim( const std::string& name, ISvcLocator* pSvcLocator );

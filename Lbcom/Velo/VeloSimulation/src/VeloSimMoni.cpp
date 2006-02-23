@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.4 2006-02-21 17:24:17 szumlat Exp $
+// $Id: VeloSimMoni.cpp,v 1.5 2006-02-23 12:58:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -31,10 +31,7 @@ const        IAlgFactory& VeloSimMoniFactory = s_factory ;
 VeloSimMoni::VeloSimMoni( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_printInfo(false),
-    m_detailedMonitor(false),
-    m_veloFEMoni(true),
-    m_veloDet(getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")),
+    m_veloDet(0),
     m_nMCVeloFE(0),
     m_nMCVeloFE2(0.),
     m_nMCVeloFEs(0),
@@ -42,9 +39,9 @@ VeloSimMoni::VeloSimMoni( const std::string& name,
     m_nMCVeloFEo(0),
     m_NumberOfEvents(0)
 {
-  declareProperty("PrintInfo", m_printInfo);
-  declareProperty("DetailedMonitor", m_detailedMonitor);
-  declareProperty("VeloFEMoni", m_veloFEMoni);
+  declareProperty("PrintInfo",       m_printInfo = false );
+  declareProperty("DetailedMonitor", m_detailedMonitor = false );
+  declareProperty("VeloFEMoni",      m_veloFEMoni = true );
 }
 //=============================================================================
 // Destructor
@@ -60,6 +57,9 @@ StatusCode VeloSimMoni::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
+
+  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+
   setHistoTopDir("Velo/");
   //  
   return StatusCode::SUCCESS;
@@ -86,10 +86,13 @@ StatusCode VeloSimMoni::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   //
-  m_nMCVeloFE/=m_NumberOfEvents;
-  m_nMCVeloFE2/=m_NumberOfEvents;
-  double errnMCVeloFE=
-         sqrt((m_nMCVeloFE2-(m_nMCVeloFE*m_nMCVeloFE))/m_NumberOfEvents);
+  double errnMCVeloFE = 0;
+  if( 0 != m_NumberOfEvents ) {
+    m_nMCVeloFE/=m_NumberOfEvents;
+    m_nMCVeloFE2/=m_NumberOfEvents;
+    errnMCVeloFE=
+      sqrt((m_nMCVeloFE2-(m_nMCVeloFE*m_nMCVeloFE))/m_NumberOfEvents);
+  }
   //
   info()<< "------------------------------------------------------" <<endmsg;
   info()<< "                - VeloSimMoni table -                 " <<endmsg;

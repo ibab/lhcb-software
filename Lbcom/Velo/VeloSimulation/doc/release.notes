@@ -4,7 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== VeloSimulation v2r0 2006-02-13 =====================
+!===================== VeloSimulation v2r0 2006-02-23 =====================
+! 2006-02-23 - Marco Cattaneo
+ - Put back changes of 13th February that were removed on 21st February
+ - Fix Windows compilation problem
+
 ! 2006-02-21 - Tomasz Szumlak
  - Modification of the VeloSim that allows to process all MCVeloFEs
    includeing the created on the PileUp sensors
