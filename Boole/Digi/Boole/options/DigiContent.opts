@@ -45,9 +45,9 @@ DigiWriter.ItemList =
 , "/Event/Link/Raw/TT/Clusters#1"
 , "/Event/Link/Raw/IT/Clusters#1"
 , "/Event/Link/Raw/OT/Times#1"
-  //, "/Event/Link/Raw/Ecal/Digits#1"
+, "/Event/Link/Raw/Ecal/Digits#1"
 , "/Event/Link/Raw/Muon/Digits#1"
-  //, "/Event/MC/MCTrackInfo#1"
+  //, "/Event/MC/MCTrackInfo#1" - needs Velo Links
 
   // Links to MCHits
   //, "/Event/Link/Raw/Velo/Clusters2MCHits#1"

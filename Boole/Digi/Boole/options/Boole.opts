@@ -48,7 +48,7 @@ Relations.DetectorList = {
                          , "IT"
                          , "OT"
                          , "RICH"
-                           // , "CALO"
+                         , "CALO"
                          , "MUON"
                          , "L0"
                          };
@@ -172,9 +172,8 @@ ApplicationMgr.DLLs += { "RichMCAssociators" };
 
 ApplicationMgr.DLLs += { "CaloAssociators" };
 RelationsCaloSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
+RelationsCaloSeq.Members += { "CaloReCreateMCLinks" };
 RelationsCaloSeq.Members += { "CaloDigitMCTruth" };
-
-//#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
 
 ApplicationMgr.DLLs += { "MuonAssociators" };
 RelationsMuonSeq.Members += { "MuonDigit2MCParticleAlg" };
