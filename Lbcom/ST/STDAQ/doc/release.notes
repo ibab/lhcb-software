@@ -4,7 +4,13 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+
+! 2006-02-24 M Needham
+ - Update to use Si decoding tools
+
+
 !=============================== STDAQ v2r3 2006-02-22 =======================
+
 ! 2006-02-22 - Kurt Rinnert
  - added traits typedef to STBitsPlociy. This is needed to pick the correct ADC
    decoding algorithm at compile time when using SiRawBankDecoder<STClusterWord>.
