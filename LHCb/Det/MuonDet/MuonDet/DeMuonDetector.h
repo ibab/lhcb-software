@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.13 2006-02-10 21:34:56 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.14 2006-02-24 11:29:06 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -233,7 +233,7 @@ private:
   std::vector<DeMuonChamber*> m_ChmbPtr;
 
   //Chamber Layout
-  MuonChamberLayout m_chamberLayout;
+  MuonChamberLayout *m_chamberLayout;
 
   //Maximum number of chambers allowed per region
   int MaxRegions[4];

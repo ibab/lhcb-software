@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.20 2006-02-22 10:09:02 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.21 2006-02-24 11:29:06 asarti Exp $
 // Include files 
 
 //Muon
@@ -176,6 +176,7 @@ createChambers(std::vector<int> mytiles, int station) const {
       DeMuonChamber * myChmb = new DeMuonChamber(station,region,
                                                  cTile-m_offSet.at(region)-1);
       myChambers.push_back(myChmb);
+      delete myChmb;
     }
   }
   if(debug)  std::cout<<"Exiting from chamber creation "<<std::endl;
@@ -626,21 +627,22 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
   // first locate the station and region from the tile
   unsigned int station = tile.station();
   unsigned int region  = tile.region();
+
   MsgStream msg(msgSvc(), name());
   
-  if(m_debug) std::cout << "Grid details:: regX " <<m_cgX.at(region)<<" "<<tile.layout().xGrid()<<"; regY "<<tile.layout().yGrid()<<" "<<m_cgY.at(region)<<
-    " ; padX "<<m_padGridX[station*4 + region]<<"; padY "<<m_padGridY[station*4 + region]<<
-    "; logHX "<<m_logHorizGridX[station*4 + region]<<"; logHY "<<m_logHorizGridY[station*4 + region]<<"; tile readout "<<
+  if(m_debug) std::cout << "Tile det: " <<tile.layout().xGrid()<<", "<<tile.layout().yGrid()<<" in station "<<station<<" and region "<<region<< ";Grid details. Reg "<<m_cgX.at(region)<<", "<<m_cgY.at(region)<<
+    " ; Pad "<<m_padGridX[station*4 + region]<<", "<<m_padGridY[station*4 + region]<<
+    " ; LogH "<<m_logHorizGridX[station*4 + region]<<", "<<m_logHorizGridY[station*4 + region]<<
+    " ; LogV "<<m_logVertGridX[station*4 + region]<<", "<<m_logVertGridY[station*4 + region]<<
     std::endl;
 
   // now compare the layout parameter to possible "levels"
   // currently chamber, logical channel, pad
   if( m_cgX.at(region) ==  tile.layout().xGrid() && 
       m_cgY.at(region) ==  tile.layout().yGrid() ){
-
+    
     // chambers
     StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz,true);
-
     if(!sc.isSuccess()){
       msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;

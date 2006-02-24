@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.68 2006-02-22 10:09:02 asarti Exp $
+! $Id: release.notes,v 1.69 2006-02-24 11:29:06 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-03 =========================
+! 2006-02-16 - Alessio Sarti
+ - MuonChamberLayout.cpp, DeMuonDetector.cpp
+	fix a memory leak by properly deleting objects
+	created by new...
+
 ! 2006-02-16 - Alessio Sarti
  - MuonChamberLayout.cpp
 	fix the choice of volume to access to return deltax,y and z.

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.21 2006-02-17 17:50:01 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.22 2006-02-24 11:29:06 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -39,6 +39,7 @@ DeMuonDetector::DeMuonDetector() {
 /// Standard Destructor
 DeMuonDetector::~DeMuonDetector()
 {
+  delete m_chamberLayout; 
 }
   
 const CLID& DeMuonDetector::clID () const 
@@ -65,16 +66,16 @@ StatusCode DeMuonDetector::initialize()
   //Initializing the Layout
   MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8); 
   MuonChamberLayout * tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc);
-  m_chamberLayout = * tLay;
+  m_chamberLayout = tLay;
 
-  m_ChmbPtr =  m_chamberLayout.fillChambersVector(m_detSvc);
+  m_ChmbPtr =  m_chamberLayout->fillChambersVector(m_detSvc);
 
   //fill geo info
   fillGeoInfo();
 
   //Initialize vectors containing Detector informations
   CountDetEls();
-
+  //  delete tLay;
   return sc;
 }
 
@@ -140,7 +141,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
   if(debug) std::cout<< "Hit 2 chamber problems " <<x<<" "
                      <<y<<" "<<station<<" "<<std::endl;
   //Returning the most likely chamber
-  m_chamberLayout.chamberMostLikely(x,y,station,chamberNumber,regNum);
+  m_chamberLayout->chamberMostLikely(x,y,station,chamberNumber,regNum);
   if(debug) std::cout<< "dopo  " <<regNum<<" "<<chamberNumber<<std::endl;
 
 
@@ -179,7 +180,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
         y_sgn<<endreq;    
       
       
-      myChams = m_chamberLayout.neighborChambers(chamberNumber,
+      myChams = m_chamberLayout->neighborChambers(chamberNumber,
                                                  station,regNum,x_sgn,
                                                  y_sgn);
       
@@ -376,7 +377,7 @@ StatusCode DeMuonDetector::Pos2ChamberTile(const double x,
   sc = Pos2ChamberNumber(x,y,z,dumChmb,reg);
 
   //Convert chamber number into a tile
-  tile = m_chamberLayout.tileChamberNumber(getStation(z),reg,dumChmb);
+  tile = m_chamberLayout->tileChamberNumber(getStation(z),reg,dumChmb);
 
   return sc;
 }
@@ -635,7 +636,7 @@ StatusCode DeMuonDetector::Tile2XYZ(LHCb::MuonTileID tile,
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endreq; 
 
-  sc = m_chamberLayout.Tile2XYZpos(tile,x,dx,y,dy,z,dz);
+  sc = m_chamberLayout->Tile2XYZpos(tile,x,dx,y,dy,z,dz);
 
   return sc;
 }
@@ -682,7 +683,7 @@ StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
 {
   StatusCode sc = StatusCode::SUCCESS; 
   //Convert chamber number into a tile
-  tile = m_chamberLayout.tileChamberNumber(station,region,chaNum);  
+  tile = m_chamberLayout->tileChamberNumber(station,region,chaNum);  
   return sc;
 };
 
