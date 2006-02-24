@@ -3,6 +3,9 @@ Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
 ! 2006-02-24 - Kurt Rinnert
+ - fixed off-by-one error in calculation of byte count
+
+! 2006-02-24 - Kurt Rinnert
  - added new method SiRawBankDecoder::posadc_iterator::bytesRead().  The purpose
    of this method is to compare its return value to RawBank::size()-8 after 
    reading the whole bank as a consistency check.

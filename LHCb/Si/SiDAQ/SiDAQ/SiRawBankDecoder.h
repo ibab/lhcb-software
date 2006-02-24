@@ -1,4 +1,4 @@
-// $Id: SiRawBankDecoder.h,v 1.3 2006-02-24 14:30:21 krinnert Exp $
+// $Id: SiRawBankDecoder.h,v 1.4 2006-02-24 14:46:27 krinnert Exp $
 #ifndef SIRAWBANKDECODER_H 
 #define SIRAWBANKDECODER_H 1
 
@@ -547,6 +547,6 @@ SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::operator++() const
 template<class CLUSTERWORD>
 inline int SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::bytesRead() const
 {
-  return static_cast<int>( m_pos ? m_pos*2+m_nADC+(m_decoder->m_nClusters%2)*2 : 0 );
+  return static_cast<int>( m_pos ? (m_pos+1)*2+m_nADC+(m_decoder->m_nClusters%2)*2 : 0 );
 }
 #endif // SIRAWBANKDECODER_H
