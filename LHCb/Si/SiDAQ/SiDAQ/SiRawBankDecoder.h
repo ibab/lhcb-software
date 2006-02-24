@@ -1,4 +1,4 @@
-// $Id: SiRawBankDecoder.h,v 1.2 2006-02-23 19:28:40 krinnert Exp $
+// $Id: SiRawBankDecoder.h,v 1.3 2006-02-24 14:30:21 krinnert Exp $
 #ifndef SIRAWBANKDECODER_H 
 #define SIRAWBANKDECODER_H 1
 
@@ -227,8 +227,11 @@ public:
    *  This smart iterator allows you to traverse a the cluster
    *  positions and ADC counts in the raw bank and decode them at the same
    *  time.  Use this only if you really need the ADC counts an speed
-   *  is not a concern.
+   *  is not a concern. This iterator also keeps track of the number of
+   *  32 bit words read from the bank, useful to compare to the size in
+   *  real bank header as accessed with RawBank::size(). 
    *
+   *  @see RawBank
    *  @see SiDecodedCluster
    *  @see SiClusterWord
    *  @see SiADCWord
@@ -242,7 +245,11 @@ public:
     
     // live and death
     
-    posadc_iterator() { ; }
+    posadc_iterator() : 
+      m_pos(0),
+      m_nADC(0)
+    { ; }
+
     posadc_iterator(const posadc_iterator& init) : 
       m_pos(init.m_pos),
       m_nADC(init.m_nADC),
@@ -259,12 +266,12 @@ public:
     /// assignment
     const posadc_iterator& operator=(const posadc_iterator& rhs) 
     { 
-      m_pos     = rhs.m_pos; 
-      m_nADC    = rhs.m_nADC;
-      m_ADC32   = rhs.m_ADC32;
-      m_offset  = rhs.m_offset; 
-      m_decoder = rhs.m_decoder;
-      m_cluster = rhs.m_cluster; 
+      m_pos         = rhs.m_pos; 
+      m_nADC        = rhs.m_nADC;
+      m_ADC32       = rhs.m_ADC32;
+      m_offset      = rhs.m_offset; 
+      m_decoder     = rhs.m_decoder;
+      m_cluster     = rhs.m_cluster; 
 
       return *this;
     }
@@ -310,6 +317,23 @@ public:
      */
     const SiDecodedCluster* operator->() const { return &m_cluster; } 
 
+    /** Number of bytes read   
+     *  Returns the number of bytes (of 8 bit size) read by this 
+     *  iterator so far.  The purpose is to compare this to 
+     *  RawBank::size()-8 after reading the whole bank as a
+     *  consistency check.
+     *  For a newly constructed iterator that did not yet
+     *  read anything the returned number guaranteed to be 0.
+     *  However, after reading the first cluster it always includes 
+     *  the number of padding bytes between the cluster position and 
+     *  ADC part of the bank.  This means this method can return the 
+     *  actual number of bytes read or this number plus two, depending 
+     *  on whether the number of clusters in the bank is even or odd.
+     *
+     *  @see RawBank
+     */
+    int bytesRead() const;
+
   private:
 
     /**  Construct with position in raw bank and reference to decoder
@@ -348,11 +372,11 @@ public:
     void doDecodeCommon() const;
 
 
-
   private:
     mutable unsigned int m_pos;
     mutable unsigned int m_nADC;
     mutable unsigned int m_ADC32;
+    mutable unsigned int m_n32BitWords;
     unsigned int m_offset;
     const SiRawBankDecoder* m_decoder;
     mutable  SiDecodedCluster m_cluster; 
@@ -381,7 +405,7 @@ public:
    *  Yields the total number of clusters encoded
    *  in the raw bank.
    * 
-   * @return numbert of clusters in raw bank
+   * @return number of clusters in raw bank
    */
   unsigned int nClusters() const { return m_nClusters; }
 
@@ -520,4 +544,9 @@ SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::operator++() const
   return *this; 
 }
 
+template<class CLUSTERWORD>
+inline int SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::bytesRead() const
+{
+  return static_cast<int>( m_pos ? m_pos*2+m_nADC+(m_decoder->m_nClusters%2)*2 : 0 );
+}
 #endif // SIRAWBANKDECODER_H

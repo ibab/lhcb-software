@@ -2,6 +2,11 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-24 - Kurt Rinnert
+ - added new method SiRawBankDecoder::posadc_iterator::bytesRead().  The purpose
+   of this method is to compare its return value to RawBank::size()-8 after 
+   reading the whole bank as a consistency check.
+
 ! 2006-02-23 - Kurt Rinnert
  - added proper copy constructor and assignment operator. This allows caching
    of decoder instances in vectors, a feature needed by ST decoding.
