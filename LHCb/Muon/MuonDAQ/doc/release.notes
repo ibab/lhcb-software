@@ -4,7 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-!========================= MuonDAQ v2r0 2006-02-07 ===========================
+!========================= MuonDAQ v2r0 2006-02-24 ===========================
+! 2006-02-24 - Alessia Satta
+ -fix a non intialized variable
+
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
 

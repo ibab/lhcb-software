@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.10 2006-02-07 12:12:20 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.11 2006-02-24 16:21:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -167,6 +167,16 @@ StatusCode MuonDigitToRawBuffer::initialize() {
       
     }    
   }
+  for(int i=0;i<m_TotL1Board;i++){
+    std::vector<unsigned int> listOfODE=m_ODEInL1[i];
+    std::vector<unsigned int>::iterator iODE;    
+     for(iODE=listOfODE.begin();iODE<listOfODE.end();iODE++){
+      unsigned int odenumber=(*iODE)-1;
+      m_digitsInODE[odenumber].resize(0);
+      firedInODE[odenumber]=0;
+     }
+  }
+
   debug()<<"board number "<<m_TotL1Board<<endmsg;
   
   
