@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!  2006-02-24 - P. Koppenburg
+  - options/ChargedProtoPAlg.opts
+    . Correction of comment: default in ProtoParticle making is 
+      VTT = true, Downstream = true ;
+      Error reported by Jose Helder Lopes
+
 !========================== GlobalReco v5r1 2005-11-21 ===================
 ! 2005-11-21 - Marco Cattaneo
  - Adapt to change in RichPID interface
