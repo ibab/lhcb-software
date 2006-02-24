@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-24 - Eduardo Rodrigues
+ - improvements to MeasurementProvider:
+   - possible to ignore Velo/TT/IT/OT info via options
+   - measurements of "type to ignore" will not be made
+   This is particularly useful e.g. when no STClusters are made
+
 ! 2006-02-23 - Eduardo Rodrigues
  - added new TrajMeasurementProvider tool (inherits from IMeasurementProvider)
  - TrajectoryProvider tool now uses new VeloClusterPosition tool

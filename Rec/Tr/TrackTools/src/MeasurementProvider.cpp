@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.16 2006-02-17 17:23:25 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.17 2006-02-24 16:32:47 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -48,6 +48,11 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "OTGeometryPath",
                    m_otDetPath = DeOTDetectorLocation::Default );
 
+  declareProperty( "IgnoreVelo", m_ignoreVelo = false );
+  declareProperty( "IgnoreTT",   m_ignoreTT   = false );
+  declareProperty( "IgnoreIT",   m_ignoreIT   = false );
+  declareProperty( "IgnoreOT",   m_ignoreOT   = false );
+
 }
 
 //=============================================================================
@@ -67,12 +72,12 @@ StatusCode MeasurementProvider::initialize() {
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
 
   // Retrieve the Velo, ST and OT detector elements
-  m_veloDet = getDet<DeVelo>( m_veloDetPath );
+  if ( !m_ignoreVelo ) m_veloDet = getDet<DeVelo>( m_veloDetPath );
 
-  m_ttDet   = getDet<DeSTDetector>( m_ttDetPath );
-  m_itDet   = getDet<DeSTDetector>( m_itDetPath );
+  if ( !m_ignoreTT ) m_ttDet   = getDet<DeSTDetector>( m_ttDetPath );
+  if ( !m_ignoreIT ) m_itDet   = getDet<DeSTDetector>( m_itDetPath );
 
-  m_otDet   = getDet<DeOTDetector>( m_otDetPath );
+  if ( !m_ignoreOT ) m_otDet   = getDet<DeOTDetector>( m_otDetPath );
 
   return StatusCode::SUCCESS;
 }
@@ -80,15 +85,38 @@ StatusCode MeasurementProvider::initialize() {
 //=============================================================================
 // Load the necessary VeloClusters, STClusters and OTTimes
 //=============================================================================
-void MeasurementProvider::load() {
+void MeasurementProvider::load()
+{
+  if ( !m_ignoreVelo ) {
+    if ( exist<VeloClusters>( VeloClusterLocation::Default ) )
+      m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
+    else
+      error() << "VeloClusters asked to be loaded but not present!" << endreq;
+  }
   
-  m_otTimes      = get<OTTimes>( OTTimeLocation::Default );
+  if ( !m_ignoreTT ) {
+    if ( exist<STClusters>( STClusterLocation::TTClusters ) )
+      m_ttClusters = get<STClusters>( STClusterLocation::TTClusters );
+    else
+      error() << "STClusters in TT asked to be loaded but not present!"
+              << endreq;
+  }
   
-  m_ttClusters   = get<STClusters>( STClusterLocation::TTClusters );
-  m_itClusters   = get<STClusters>( STClusterLocation::ITClusters );
+  if ( !m_ignoreIT ) {
+    if ( exist<STClusters>( STClusterLocation::ITClusters ) )
+      m_itClusters = get<STClusters>( STClusterLocation::ITClusters );
+    else
+      error() << "STClusters in IT asked to be loaded but not present!"
+              << endreq;
+  }
   
-  m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
-} 
+  if ( !m_ignoreOT ) {
+    if ( exist<OTTimes>( OTTimeLocation::Default ) )
+      m_otTimes = get<OTTimes>( OTTimeLocation::Default );
+    else
+      error() << "OTTimes asked to be loaded but not present!" << endreq;
+  }
+}
 
 //=============================================================================
 // Load all the Measurements from the list of LHCbIDs on the input Track
@@ -133,7 +161,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par )
 {
   Measurement* meas = NULL;
-  if ( id.isVelo() ) {
+  if ( id.isVelo() && !m_ignoreVelo ) {
     VeloChannelID vid = id.veloID();
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
@@ -147,8 +175,10 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       error() << "VeloCluster is NULL! No correspondence to VeloChannelID = "
               << vid << endreq;
     }
+    if ( meas == NULL )
+      error() << "Unable to create Velo measurement!" << endreq;
   }
-  else if ( id.isTT() ) {
+  else if ( id.isTT() && !m_ignoreTT ) {
     STChannelID sid = id.stID();
     STCluster* clus = m_ttClusters->object(sid);
     if (clus != NULL)
@@ -157,8 +187,10 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       error() << "STCluster of type TT is NULL! No correspondence to STChannelID = "
               << sid << endreq;
     }
+    if ( meas == NULL )
+      error() << "Unable to create TT measurement!" << endreq;
   }
-  else if ( id.isIT() ) {
+  else if ( id.isIT() && !m_ignoreIT ) {
     STChannelID sid = id.stID();
     STCluster* clus = m_itClusters->object(sid);
     if (clus != NULL)
@@ -167,8 +199,10 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       error() << "STCluster of type IT is NULL! No correspondence to STChannelID = "
               << sid << endreq;
     }
+    if ( meas == NULL )
+      error() << "Unable to create IT measurement!" << endreq;
   }
-  else if ( id.isOT() ) {
+  else if ( id.isOT() && !m_ignoreOT ) {
     OTChannelID oid = id.otID();
     OTTime* clus = m_otTimes->object(oid);
     debug() << "Looking for OTTime of key = " << oid << endreq;
@@ -179,6 +213,8 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
       error() << "OTTime is NULL! No correspondence to OTChannelID = "
               << oid << endreq;
     }
+    if ( meas == NULL )
+      error() << "Unable to create OT measurement!" << endreq;
   }
   else {
     error() << "LHCbID is not of type Velo, OT, or ST"
@@ -186,9 +222,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
             << " -> do not know how to create a Measurement!" << endreq;
   }
 
-  if ( meas == NULL )
-    error() << "Unable to create measurement!" << endreq;
-  else
+  if ( meas != NULL )
     debug() << "Creating measurement of type " << meas -> type()
             << " channel " << id.channelID() 
             << " parameter : " << par << endreq;

@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.8 2006-02-17 17:23:25 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.9 2006-02-24 16:32:47 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -90,10 +90,15 @@ protected:
   std::string   m_itDetPath;          ///< Name of the IT XML geom path
   std::string   m_otDetPath;          ///< Name of the OT XML geom path
 
-  OTTimes*      m_otTimes;
+  VeloClusters* m_veloClusters;
   STClusters*   m_ttClusters;
   STClusters*   m_itClusters;
-  VeloClusters* m_veloClusters;
+  OTTimes*      m_otTimes;
+
+  bool m_ignoreVelo;    ///< Ignore Velo information
+  bool m_ignoreTT;      ///< Ignore TT information
+  bool m_ignoreIT;      ///< Ignore IT information
+  bool m_ignoreOT;      ///< Ignore OT information
 
 };
 #endif // TRACKTOOLS_MEASUREMENTPROVIDER_H
