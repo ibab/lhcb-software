@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.2 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.3 2006-02-24 07:35:01 ocallot Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -31,11 +31,7 @@ public:
   
 protected:
 
-  bool eventHasChanged();
-
 private:
-  int      m_runNum;
-  int      m_evtNum;
   CaloReadoutTool* m_roTool;
   std::vector<LHCb::CaloCellID> m_prsCells;
   std::vector<LHCb::CaloCellID> m_spdCells;

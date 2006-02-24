@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-02-24 - Olivier Callot
+ - Remove the detection of 'same event' in CaloTriggerBitsFromRaw as ODIN bank
+   is not yet very stable... This means decoding twice to get SPD and PRS bits.
+ - Put proper parenthesese to fix precedence problem in CaloTriggerBitsFromRaw
+
 !========================== CaloDAQ v2r0 2006-02-23 ==========================
 ! 2006-02-23 - Vanya BELYAEV
  - change the default options for CaloReCreateMCLinks algorithm 
