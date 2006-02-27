@@ -154,6 +154,13 @@ extern "C" {
   /// Cancel I/O request
   int lib_rtl_cancel_io(int channel);
 
+
+  /** Utility routines  */
+  /// Allocate std::map<int, void*> for usage in static 
+  /// storage with properly sequenced exit handler
+  void* lib_rtl_alloc_int_pointer_map();
+
+
 #ifdef __cplusplus
 }
 

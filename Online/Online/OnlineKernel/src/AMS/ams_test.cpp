@@ -3,8 +3,8 @@
 #include <cstdio>
 #include <cstdlib>
 
-extern "C" int amsc_test(int ac, char** av)  {
-  char *amsname = "testing";
+extern "C" int amsc_test(int /* ac  */, char** /* av */)  {
+  const char *amsname = "testing";
   int loop;
 
   printf ("Starting test task \n");

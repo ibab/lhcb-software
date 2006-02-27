@@ -95,7 +95,7 @@ namespace {
     static int threadCall(void* param);
     static int consoleCall(void* param);
     EntryMap(__NetworkPort__ p);
-    virtual int handle();
+    int handle();
     int run();
   };
 
@@ -211,11 +211,8 @@ namespace {
   }
 }
 
-extern "C" void* lib_rtl_alloc_int_pointer_map();
-
 typedef std::map<int,EntryMap* > PortMap;
 
-extern "C" void* lib_rtl_alloc_int_pointer_map();
 static inline PortMap& portMap()  {
   static PortMap* s_map = (PortMap*)lib_rtl_alloc_int_pointer_map();
   return *s_map;

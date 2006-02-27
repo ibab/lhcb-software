@@ -4,7 +4,6 @@
 #include "RTL/que.h"
 #include "WT/wtdef.h"
 #include "AMS/amsdef.h"
-#include "WT/wt_facilities.h"
 
 struct amsu_fac_entry : public qentry_t {
   unsigned int  facility;

@@ -1,6 +1,6 @@
 #include "MBM/Requirement.h"
 #include "MBM/bmdef.h"
-#include <ctype.h>
+#include <cctype>
 #include <cstdio>
 
 /// Default constructor

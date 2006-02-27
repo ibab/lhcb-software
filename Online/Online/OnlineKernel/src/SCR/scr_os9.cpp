@@ -8,7 +8,6 @@
 #include <cstring>
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
-#include "WT/wt_facilities.h"
 #include "NET/IOPortManager.h"
 static Pasteboard *Kbd = 0;
 

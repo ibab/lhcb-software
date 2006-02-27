@@ -1,4 +1,5 @@
 #include "RTL/strdef.h"
+#include <cctype>
 #include <cstring>
 #include <cstdlib>
 
@@ -6,8 +7,9 @@ enum { STR_NOMATCH, STR_MATCH };
 
 int str_upcase(const char* src, char* dst, size_t dest_len)  {
   if ( dst )  {
-    for(char* s1=dst, *p=dst+dest_len; *src && s1<p; s1++) {
-      *s1 = ::toupper(*src++);
+    char* s1=dst, *p=dst+dest_len;
+    while(*src && s1<p) {
+      *s1++ = ::toupper(*src++);
     }
     *s1 = 0;
     return 1;
@@ -17,8 +19,9 @@ int str_upcase(const char* src, char* dst, size_t dest_len)  {
 
 int str_lowcase(const char* src, char* dst, size_t dest_len)  {
   if ( dst )  {
-    for(char* s1=dst, *p=dst+dest_len; *src && s1<p; s1++) {
-      *s1 = ::tolower(*src++);
+    char* s1=dst, *p=dst+dest_len;
+    while(*src && s1<p) {
+      *s1++ = ::tolower(*src++);
     }
     *s1 = 0;
     return 1;

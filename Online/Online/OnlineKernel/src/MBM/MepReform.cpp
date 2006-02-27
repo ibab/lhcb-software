@@ -2,8 +2,7 @@
 #include "MBM/Producer.h"
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
-#include "WT/wt_facilities.h"
-#include <ctype.h>
+#include <cctype>
 
 namespace {
   static void help()  {

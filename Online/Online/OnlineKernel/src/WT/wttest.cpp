@@ -2,7 +2,6 @@
 /*    ALEPH WAIT FACILITY TEST PROGRAM                                  */
 /*----------------------------------------------------------------------*/
 #include "WT/wtdef.h"
-#include "WT/wt_facilities.h"
 #include "RTL/rtl.h"
 #include "RTL/screen.h"
 #include <cstdlib>

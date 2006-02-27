@@ -5,7 +5,6 @@
 #include "RTL/que.h"
 #include "RTL/Lock.h"
 #include "WT/wtdef.h"
-#include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
 #include "NET/IOPortManager.h"
