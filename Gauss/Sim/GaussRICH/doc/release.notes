@@ -4,7 +4,13 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2006-02-27  Sajan Easo
+ - Improved the RichAnalysis for histogramming the hpd QW hits info
+ - As part of the 'extended output info' , the calculation for the location of
+    exit point of the photon from aerogel fixed using the raidator numbers.
+ - Introduced the flags to have the HpdMagnetic field distortions read in
+   from the conditions database. The current default is not to read these distortion info
+   and just use a quadratic law.
 ! 2006-02-22 - Chris Jones
  - Update the setting of the sensDetID in the MCRichHits
  - Add some initialisation printout from the converter algs
