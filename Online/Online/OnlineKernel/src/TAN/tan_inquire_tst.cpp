@@ -66,7 +66,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
           time(0) - start, tot_inq, nalias, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {
-        //if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host );
+        if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host );
         for ( int j = 0; j < i; j++ )           {
           // Now check the aliases
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);

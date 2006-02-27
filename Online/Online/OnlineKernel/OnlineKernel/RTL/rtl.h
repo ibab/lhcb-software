@@ -58,9 +58,9 @@ extern "C" {
   /// Get system node name
   int lib_rtl_get_node_name(char* node, size_t len);
 
-  /// Disable intercepts
+  /// disable intercepts
   int lib_rtl_disable_intercept();
-  /// Enable intercpets
+  /// enable intercpets
   int lib_rtl_enable_intercept();
 
   /// Declare exit handler

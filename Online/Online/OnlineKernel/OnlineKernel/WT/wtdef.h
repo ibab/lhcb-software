@@ -1,3 +1,8 @@
+#ifndef ONLINEKERNEL_WTDEF_H
+#define ONLINEKERNEL_WTDEF_H 1
+
+#include "WT/wt_facilities.h"
+
 enum WT_Constants{
   WT_FAC=114,
   WT_SUCCESS        =1,
@@ -49,3 +54,5 @@ enum WT_Constants{
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* ONLINEKERNEL_WTDEF_H  */
