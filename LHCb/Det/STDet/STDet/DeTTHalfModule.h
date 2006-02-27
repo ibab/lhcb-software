@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeTTHalfModule.h,v 1.2 2006-02-27 16:32:21 mneedham Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -77,6 +77,11 @@ public:
   */
   unsigned int firstSector() const;
 
+  /** last readout sector on module
+  * @return m_firstSector
+  */
+  unsigned int lastSector() const;
+
   /** test whether contains channel
   * @param test channel
   * @return bool 
@@ -132,6 +137,10 @@ inline std::string DeTTHalfModule::type() const {
 
 inline std::string DeTTHalfModule::position() const {
   return m_position;
+}
+
+inline unsigned int DeTTHalfModule::lastSector() const {
+  return firstSector()+m_sectors.size()-1u;
 }
 
 inline unsigned int DeTTHalfModule::firstSector() const {

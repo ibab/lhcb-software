@@ -212,7 +212,7 @@ inline bool DeSTSector::isStrip(const unsigned int strip) const {
 
 inline double DeSTSector::localU(const unsigned int strip) const{
   // strip to local U is this needed ?
-  return (isStrip(strip) ? m_uMinLocal + (double)(strip - m_firstStrip)*m_pitch  : 0  );
+  return (isStrip(strip) ? m_uMinLocal + ((strip - m_firstStrip+0.5)*m_pitch)  : 0  );
 }
 
 inline double DeSTSector::capacitance() const{

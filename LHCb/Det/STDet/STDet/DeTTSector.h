@@ -53,6 +53,9 @@ public:
   /** row Number.... */
   unsigned int row() const;
 
+  /** above or below the beam-pipe **/
+  std::string position() const;
+
 private:
 
   parent_type* m_parent;
@@ -65,6 +68,11 @@ private:
 inline unsigned int DeTTSector::column() const {
   return m_parent->column();
 }
+
+inline std::string DeTTSector::position() const {
+  return m_parent->position();
+}
+
 inline unsigned int DeTTSector::row() const {
   return m_row;
 }

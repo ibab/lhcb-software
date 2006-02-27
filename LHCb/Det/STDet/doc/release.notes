@@ -2,7 +2,13 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+
+! 2006-02-26 M Needham
+ - Minor bug fixes
+
+
 !========================= STDet v2r0 2006-02-21 =======================
+
 ! 2006-02-21 M. Needham
  - Tune treatment of guard rings
 

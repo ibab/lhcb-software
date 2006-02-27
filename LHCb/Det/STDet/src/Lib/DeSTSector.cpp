@@ -49,6 +49,7 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
    os << " Sector :  "  << name()
       << "\n ID " << id() 
+      << "\n layer " << elementID().layer()
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
@@ -102,7 +103,7 @@ StatusCode DeSTSector::initialize() {
 
     // guard ring
     double guardRing = param<double>("verticalGuardRing");  
-    double m_deadWidth = guardRing + 0.5*param<double>("bondGap");
+    m_deadWidth = guardRing + 0.5*param<double>("bondGap");
 
     // geometry: uMin, uMax
     const ILVolume* lv = this->geometry()->lvolume();

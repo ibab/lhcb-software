@@ -55,7 +55,12 @@ StatusCode DeTTSector::initialize() {
    
     // row..
     if (m_parent->type() == "KLM"){
-      m_row = id() - m_parent->firstSector() + 1;
+      if (m_parent->position() == "B"){
+        m_row = id() - m_parent->firstSector() + 1;
+      }
+      else {
+        m_row = id() - m_parent->firstSector() + 4;
+      }  
     } 
     else {
       if (m_parent->position() == "B"){
@@ -65,7 +70,6 @@ StatusCode DeTTSector::initialize() {
         m_row = id() - m_parent->firstSector() + 3;
       }
     }
-
 
     // build the id
     STChannelID parentID = m_parent->elementID();
