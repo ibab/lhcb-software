@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.58 2006-02-23 17:07:04 dhcroft Exp $
+// $Id: DeVelo.cpp,v 1.59 2006-02-27 19:32:51 jvantilb Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -1091,7 +1091,7 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 }
 
 LHCb::Trajectory* DeVelo::trajectory(const LHCb::LHCbID& lID, 
-				     const double offset) {
+                                     const double offset) const {
 
   // look up the trajectory
  

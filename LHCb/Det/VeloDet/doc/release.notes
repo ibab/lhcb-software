@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.96 2006-02-23 17:07:04 dhcroft Exp $
+! $Id: release.notes,v 1.97 2006-02-27 19:32:51 jvantilb Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-02-27 - Jeroen van Tilburg
+ - Added const to the trajectory method.
 
 ! 2006-02-23 - David Hutchcroft
  - Added the trajectory as a return type for a channelID + offset

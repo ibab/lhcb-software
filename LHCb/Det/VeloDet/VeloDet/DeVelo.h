@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.34 2006-02-23 17:07:04 dhcroft Exp $
+// $Id: DeVelo.h,v 1.35 2006-02-27 19:32:51 jvantilb Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -309,7 +309,7 @@ public:
                              Gaudi::XYZPoint& end ) const;
 
   /// Return a trajectory (for track fit) from strip + offset
-  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset);
+  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset) const;
   
   /// Return the side of the detector. (+1 for +ve x, -1 for -ve x.)
   inline int xSide(unsigned int sensor)  const
