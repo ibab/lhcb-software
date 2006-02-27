@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.5 2006-02-21 18:28:25 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.6 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,9 +9,6 @@
 
 // from OTDet
 #include"OTDet/DeOTDetector.h"
-
-// from LHCbKernel
-#include "Kernel/LineTraj.h"
 
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
@@ -40,35 +37,25 @@ StatusCode TrajOTProjector::project( const State& state,
   XYZVector bfield;
   m_pIMF -> fieldVector( state.position(), bfield );
 
+  // Set refVector in case it was not set before
+  if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
+
   // Get the reference state trajectory
-  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
-  TrackVector refVec = otmeas.referenceVector( state.stateVector() );
-  StateTraj refTraj = StateTraj( refVec, otmeas.z(), bfield );
+  const TrackVector& refVec = meas.refVector();
+  StateTraj refTraj = StateTraj( refVec, meas.z(), bfield );
 
   // Get the measurement trajectory
-  OTChannelID OTChan = meas.lhcbID().otID();
-  DeOTModule* module = m_det -> module( OTChan );
-  double stereoAngle = module -> stereoAngle();
-  XYZPoint centrePos = module -> centerOfStraw( OTChan.straw() );
-  double cosA = cos( stereoAngle );
-  double sinA = sin( stereoAngle );
-  XYZVector dir =  XYZVector( -sinA, cosA, 0. );
-  if ( module->bottomModule() ) dir *= -1.;
-  double halfWireLength = module -> wireLength() / 2.;
-  const std::pair<double,double> range( -halfWireLength, halfWireLength );
-  LineTraj measTraj = LineTraj( centrePos, dir, range );
-  // TODO : WHAT WE WANT!!!
-  // Trajectory& measTraj = m_det -> trajectory( meas.lhcbID().otID() );
+  const Trajectory* measTraj = meas.trajectory();
 
   double s1, s2;
   XYZVector distance;
 
   // Determine initial estimates of s1 and s2
   s1 = 0.0; // Assume state is already close to the minimum
-  s2 = measTraj.arclength( refTraj.position(s1) );
+  s2 = measTraj->arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
+  m_poca -> minimize( refTraj, s1, *measTraj, s2, distance, 20*mm );
 
   // Calculate the projection matrix
   ROOT::Math::SVector< double, 3 > unitDistance;
@@ -82,13 +69,14 @@ StatusCode TrajOTProjector::project( const State& state,
   int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
   // Get the distance to the readout
-  double distToReadout = measTraj.length() / 2. - s2;  
+  double distToReadout = measTraj->length() / 2. - s2;  
 
   // Correct measure for the propagation along the wire
-  double dDrift = otmeas.measure() - 
+  double dDrift = meas.measure() - 
     distToReadout * m_det->propagationDelay()/ m_det->driftDelay() ;
 
   // Calculate the residual
+  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
   m_H *= signDist; // Correct for the sign of the distance
   
@@ -106,11 +94,10 @@ StatusCode TrajOTProjector::project( const State& state,
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
+  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
 
   m_det = getDet<DeOTDetector>( m_otTrackerPath );
-
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
-
   m_poca = tool<ITrajPoca>( "TrajPoca" );
 
   return sc;

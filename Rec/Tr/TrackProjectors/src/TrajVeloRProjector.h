@@ -1,6 +1,6 @@
-// $Id: TrajSTProjector.h,v 1.2 2006-02-27 19:56:04 jvantilb Exp $
-#ifndef TRAJSTPROJECTOR_H 
-#define TRAJSTPROJECTOR_H 1
+// $Id: TrajVeloRProjector.h,v 1.1 2006-02-27 19:56:04 jvantilb Exp $
+#ifndef TRAJVELORPROJECTOR_H 
+#define TRAJVELORPROJECTOR_H 1
 
 // Include files
 
@@ -13,15 +13,15 @@ class ITrajPoca;
 
 using namespace LHCb;
 
-/** @class TrajSTProjector TrajSTProjector.h TrajSTProjector.h
+/** @class TrajVeloRProjector TrajVeloRProjector.h TrajVeloRProjector.h
  *  
- *  Projects into the ST measurement space
+ *  Projects into the Velo r measurement space
  *
  *  @author Jeroen van Tilburg
  *  @date   2006-02-21
  */
 
-class TrajSTProjector : public TrackProjector {
+class TrajVeloRProjector : public TrackProjector {
 
 public: 
 
@@ -34,11 +34,11 @@ public:
   virtual StatusCode initialize();
 
   /// Standard constructor
-  TrajSTProjector( const std::string& type, 
+  TrajVeloRProjector( const std::string& type, 
                    const std::string& name,
                    const IInterface* parent );
   /// Destructor
-  virtual ~TrajSTProjector();
+  virtual ~TrajVeloRProjector();
 
 private:
 
@@ -46,4 +46,4 @@ private:
   ITrajPoca*         m_poca; ///< Pointer to the ITrajPoca interface
 
 };
-#endif // TRAJSTPROJECTOR_H
+#endif // TRAJVELORPROJECTOR_H

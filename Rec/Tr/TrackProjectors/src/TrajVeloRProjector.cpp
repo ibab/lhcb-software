@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.2 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrajVeloRProjector.cpp,v 1.1 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,21 +14,21 @@
 #include "TrackInterfaces/ITrajPoca.h"
 
 // local
-#include "TrajSTProjector.h"
+#include "TrajVeloRProjector.h"
 
 using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrajSTProjector>          s_factory ;
-const        IToolFactory& TrajSTProjectorFactory = s_factory ;
+static const  ToolFactory<TrajVeloRProjector>          s_factory ;
+const        IToolFactory& TrajVeloRProjectorFactory = s_factory ;
 
 //-----------------------------------------------------------------------------
 ///  Project a state onto a measurement
 /// It returns the chi squared of the projection
 //-----------------------------------------------------------------------------
-StatusCode TrajSTProjector::project( const State& state,
-                                     Measurement& meas )
+StatusCode TrajVeloRProjector::project( const State& state,
+                                        Measurement& meas )
 {
   // Get the reference state trajectory
   XYZVector bfield;
@@ -36,8 +36,6 @@ StatusCode TrajSTProjector::project( const State& state,
 
   // Set refVector in case it was not set before
   if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
-
-  // Get the reference state trajectory
   const TrackVector& refVec = meas.refVector();
   const StateTraj refTraj = StateTraj( refVec, meas.z(), bfield ) ; 
 
@@ -62,8 +60,8 @@ StatusCode TrajSTProjector::project( const State& state,
   // Calculate the projected distance to the centre of gravity
   double projDist = distance.R() + Dot(m_H, state.stateVector() - refVec) ;
 
-  // Get the sign of the distance
-  int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
+  // Get the sign of the distance (negative is inside, positive outside)
+  int signDist = (distance.Cross(measTraj->direction(s2)).z() > 0.0) ? 1 : -1 ;
  
   // Calculate the residual
   m_residual = - signDist * projDist ;  
@@ -78,7 +76,7 @@ StatusCode TrajSTProjector::project( const State& state,
 //-----------------------------------------------------------------------------
 /// Initialize
 //-----------------------------------------------------------------------------
-StatusCode TrajSTProjector::initialize()
+StatusCode TrajVeloRProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
@@ -92,9 +90,9 @@ StatusCode TrajSTProjector::initialize()
 //-----------------------------------------------------------------------------
 /// Standard constructor, initializes variables
 //-----------------------------------------------------------------------------
-TrajSTProjector::TrajSTProjector( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+TrajVeloRProjector::TrajVeloRProjector( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
   : TrackProjector( type, name , parent )
 {
   declareInterface<ITrackProjector>(this);
@@ -103,4 +101,4 @@ TrajSTProjector::TrajSTProjector( const std::string& type,
 //-----------------------------------------------------------------------------
 /// Destructor
 //-----------------------------------------------------------------------------
-TrajSTProjector::~TrajSTProjector() {};
+TrajVeloRProjector::~TrajVeloRProjector() {};

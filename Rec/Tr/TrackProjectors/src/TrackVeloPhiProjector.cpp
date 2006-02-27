@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.cpp,v 1.6 2006-02-21 12:25:41 dhcroft Exp $
+// $Id: TrackVeloPhiProjector.cpp,v 1.7 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,21 +24,15 @@ const        IToolFactory& TrackVeloPhiProjectorFactory = s_factory ;
 StatusCode TrackVeloPhiProjector::project( const State& state,
                                            Measurement& meas )
 {
-  double x  = state.x();
-  double y  = state.y();
-
-  VeloPhiMeasurement& veloPhiMeas = *(dynamic_cast<VeloPhiMeasurement*>(&meas));
-
-  // Set r in case it was not set before (= unphysical value)
-  if ( veloPhiMeas.r() <= 0.0 ) {
-    veloPhiMeas.setR( sqrt( x*x + y*y ) );
-  }  
+  // Set refVector in case it was not set before
+  if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
   double sum    = 0.;
   double sums   = 0.;
   double cosPhi = 0.;
   double sinPhi = 0.;
 
+  VeloPhiMeasurement& veloPhiMeas= *(dynamic_cast<VeloPhiMeasurement*>(&meas));
   std::vector < VeloChannelID > channels = veloPhiMeas.cluster()->channels();
   std::vector< VeloChannelID >::const_iterator iChan;
   for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
@@ -60,7 +54,7 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   m_H[1] = cosPhi;
   m_H[2] = 0.;
 
-  m_residual = meas.measure() - ( y * cosPhi - x * sinPhi );
+  m_residual = meas.measure() - ( state.y() * cosPhi - state.x() * sinPhi );
 
   computeErrorResidual( state, meas );
 

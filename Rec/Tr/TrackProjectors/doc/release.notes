@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-27 - Jeroen van Tilburg
+ - TrackSTProjector: stereoangle is now correctly filled.
+ - Projectors now use the reference vectors from the Measurement base class.
+ - Added TrajVeloRProjector and TrajVeloPhiProjector tools.
+ - TrajXxxProjector: retrieve Trajectory pointer from measurement.
+
 ! 2006-02-21 - Jeroen van Tilburg
  - Added TrajSTProjector class.
  - TrajOTProjector: Implemented correctly length of a wire.

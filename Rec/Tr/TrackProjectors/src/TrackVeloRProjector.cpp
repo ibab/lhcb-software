@@ -1,4 +1,4 @@
-// $Id: TrackVeloRProjector.cpp,v 1.5 2006-02-16 10:51:04 ebos Exp $
+// $Id: TrackVeloRProjector.cpp,v 1.6 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,31 +24,22 @@ const        IToolFactory& TrackVeloRProjectorFactory = s_factory ;
 StatusCode TrackVeloRProjector::project( const State& state,
                                          Measurement& meas )
 {
-  double x = state.x();
-  double y = state.y();
+  // Set refVector in case it was not set before
+  if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
-  VeloRMeasurement& veloRMeas = *( dynamic_cast<VeloRMeasurement*>(&meas) );
+  // Determine "phi"
+  const TrackVector& refVector = meas.refVector();
+  double phi = atan2( refVector(1), refVector(0) );;
 
-  double phi = veloRMeas.phi();
-
+  // Calculate the projection matrix
   m_H = TrackVector();
-  
-  // calculate h (predicted R)
-  double h = 0;
-  if( phi > 990.0 ) {
-    h      = sqrt( x*x + y*y );
-    m_H[0] = x / h;
-    m_H[1] = y / h;
-  }
-  else {
-    h = x * cos( phi ) + y * sin( phi );
-    m_H[0] = cos( phi );
-    m_H[1] = sin( phi );
-  }
+  m_H[0] = cos( phi );
+  m_H[1] = sin( phi );
   m_H[2] = 0.;
   m_H[3] = 0.;
-
-  m_residual = meas.measure() - h;
+  
+  // calculate the residual
+  m_residual = meas.measure() - (state.x() * cos(phi) + state.y() * sin(phi));
 
   computeErrorResidual( state, meas );
 

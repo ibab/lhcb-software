@@ -1,4 +1,4 @@
-// $Id: TrackSTProjector.cpp,v 1.2 2006-02-16 10:50:38 ebos Exp $
+// $Id: TrackSTProjector.cpp,v 1.3 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -23,16 +23,19 @@ const        IToolFactory& TrackSTProjectorFactory = s_factory ;
 StatusCode TrackSTProjector::project( const State& state,
                                       Measurement& meas )
 {
-  STChannelID STChan = meas.lhcbID().stID();
+  STChannelID stChan = meas.lhcbID().stID();
 
   DeSTDetector* mDet;
-  if( STChan.isTT() ) { mDet = m_ttdet; }
+  if( stChan.isTT() ) { mDet = m_ttdet; }
   else { mDet = m_itdet; }
 
-  DeSTLayer* STLay = (mDet -> layers())[STChan.layer()];
+  DeSTLayer* stLayer = mDet -> findLayer( stChan );
+
+  if ( stLayer == 0 ) 
+    return Error( "Could't find layer from STChannelID.", StatusCode::FAILURE);
 
   // StereoAngle
-  double stereoAngle = STLay->angle();
+  double stereoAngle = stLayer->angle() ;
 
   m_H = TrackVector();
   m_H[0] = cos( stereoAngle );

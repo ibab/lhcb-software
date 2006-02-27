@@ -1,4 +1,4 @@
-// $Id: TrackOTProjector.cpp,v 1.7 2006-02-20 18:37:31 jvantilb Exp $
+// $Id: TrackOTProjector.cpp,v 1.8 2006-02-27 19:56:04 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,36 +27,39 @@ const        IToolFactory& TrackOTProjectorFactory = s_factory ;
 StatusCode TrackOTProjector::project( const State& state,
                                   Measurement& meas )
 {
-  double x  = state.x();
-  double y  = state.y();
-  double tx = state.tx();
-  double ty = state.ty();
+  // Set refVector in case it was not set before
+  if ( !meas.refIsSet() ) meas.setRefVector( state.stateVector() );
 
-  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
-
+  // Get the stereo angle
   OTChannelID OTChan = meas.lhcbID().otID();
   DeOTModule* module = m_det -> module( OTChan );
   double stereoAngle = module -> stereoAngle();
 
+  // Get the required velocities
   double driftVelocity = m_det -> driftDelay();       // ns/mm
   double wireVelocity  = m_det -> propagationDelay(); // ns/mm
 
-  XYZPoint VwirePos = module->centerOfStraw( OTChan.straw() );
-  double wirePos      =  VwirePos.x() * cos(stereoAngle) 
-                         + VwirePos.y() * sin(stereoAngle);
-
+  XYZPoint vWirePos = module->centerOfStraw( OTChan.straw() );
+  double wirePos =  vWirePos.x() * cos(stereoAngle) 
+                  + vWirePos.y() * sin(stereoAngle);
   double wireLength = module -> wireLength();
 
+  double x  = state.x();
+  double y  = state.y();
   double cosA = cos( stereoAngle );
   double sinA = sin( stereoAngle );
-  double tu = ( otmeas.tu() > 990.0 ) ? 
-    (tx * cosA + ty * sinA) : tu = otmeas.tu();
+
+  // Determine "tu" from the reference vector
+  const TrackVector& refVector = meas.refVector();
+  double tu = (refVector(2) * cosA + refVector(3) * sinA) ;
+
   double cosU     = 1./sqrt( 1.+ tu*tu );
   double du       = (x * cosA + y * sinA - wirePos) ;
   double wireDist = ( x * cosA + y * sinA - wirePos ) * cosU;
   double dDrift = meas.measure() - 
      (wireLength-fabs(y)) * wireVelocity / driftVelocity ;
 
+  OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
   m_H = TrackVector();  
   m_H(0) = cosA * cosU ;
   m_H(1) = sinA * cosU 
