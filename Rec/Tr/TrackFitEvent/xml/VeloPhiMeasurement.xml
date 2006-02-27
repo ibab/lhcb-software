@@ -18,15 +18,24 @@
       <import name='Kernel/TrackTypes.h'/>
 
       <constructor
-        desc = 'Constructor from an VeloPhiCluster'>
+        desc = 'Constructor from an VeloPhiCluster and a refVector'>
         <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
-        <arg type = 'double' name = 'r = -999.0' />
+        <arg type = 'Gaudi::TrackVector' name='refVector' const='TRUE'/>
       </constructor>
-     <attribute
-        type = 'double'
-        name = 'r'
-        desc = 'the r of the Velo Phi measurement'/>
+
+      <constructor
+        desc = 'Constructor from an VeloPhiCluster without a refVector'>
+        <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
+        <arg type = 'DeVelo' name = 'det' const='TRUE' />
+      </constructor>
+
+     <destructor
+        desc = 'Destructor to delete m_trajectory'>
+        <code>
+          delete m_trajectory;
+        </code>
+      </destructor>
 
       <attribute
         type = 'const LHCb::VeloCluster*'
@@ -35,41 +44,41 @@
 	getMeth = 'FALSE' />
 
       <method
+        name   = 'init'
+        desc   = 'Initialize the data members'
+        access = 'PRIVATE'>
+        <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
+        <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'bool' name='refIsSet'/>
+      </method>
+
+      <method
         type  = 'const LHCb::VeloCluster*'
         name  = 'cluster'
         desc  = 'Retrieve const  Pointer to the VeloPhiCluster'
         const = 'TRUE'>
         <code>
-  return m_cluster;
+          return m_cluster;
         </code>
       </method>
 
       <method
         type    = 'double'
         name    = 'resolution'
-        desc    = 'Retrieve the measurement error (TODO: method can be removed when measure is in cilindrical coordinates)'
+        desc    = 'Retrieve the measurement error'
         const   = 'TRUE'>
         <code>
-          return m_r * m_errMeasure;
+          return sqrt( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure;
         </code>
       </method>
 
       <method
         type    = 'double'
         name    = 'resolution2'
-        desc    = 'Retrieve the measurement error squared (TODO: method can be removed when measure is in cilindrical coordinates)'
+        desc    = 'Retrieve the measurement error squared'
         const   = 'TRUE'>
         <code>
-          return m_r * m_r * m_errMeasure * m_errMeasure;
-        </code>
-      </method>
-
-      <method
-        name    = 'update'
-        desc    = 'Update the Measurement parameters'
-        argList = 'const Gaudi::TrackVector refVector'>
-        <code>
-          m_r = sqrt( refVector(0)*refVector(0) + refVector(1)*refVector(1) );
+          return ( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure * m_errMeasure;
         </code>
       </method>
 
@@ -79,7 +88,8 @@
         desc    = 'Clone the VeloPhiMeasurement'
         const   = 'TRUE'>
         <code>
-  LHCb::VeloPhiMeasurement* me = new LHCb::VeloPhiMeasurement(); *me = *this; return me;
+          LHCb::VeloPhiMeasurement* me = new LHCb::VeloPhiMeasurement();
+          *me = *this; return me;
         </code>
       </method>
 

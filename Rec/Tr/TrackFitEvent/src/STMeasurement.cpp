@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.3 2006-02-16 17:04:02 erodrigu Exp $
+// $Id: STMeasurement.cpp,v 1.4 2006-02-27 19:54:02 jvantilb Exp $
 // Include files 
 
 // from STDet
@@ -20,29 +20,48 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
-                              ISTClusterPosition& stClusPosTool) {
+                              ISTClusterPosition& stClusPosTool,
+                              const Gaudi::TrackVector& refVector)
+{
+  m_refVector = refVector; // reference trajectory
+  this->init( stCluster, geom, stClusPosTool, true );
+}
 
+/// Standard constructor, without the reference vector
+STMeasurement::STMeasurement( const STCluster& stCluster,
+                              const DeSTDetector& geom,
+                              ISTClusterPosition& stClusPosTool )
+{
+  m_refVector = Gaudi::TrackVector(); // reference trajectory
+  this->init(  stCluster, geom, stClusPosTool, false );
+}
+
+void STMeasurement::init( const STCluster& stCluster,
+                          const DeSTDetector& geom,
+                          ISTClusterPosition& stClusPosTool,
+                          bool refIsSet ) 
+{
+  // Fill the data members
   m_cluster = &stCluster; //pointer to STCluster
-
   STChannelID stChan = m_cluster -> channelID();
-
   m_mtype = ( stChan.isTT() ? Measurement::TT : Measurement::IT );
+  m_lhcbID = LHCbID( stChan ) ;
+  m_refIsSet  = refIsSet;
 
-  // set the LHCbID
-  setLhcbID ( LHCbID( stChan ) );
+  // Get the corresponding sensor
+  // TODO: Add const functions in STDet
+  DeSTDetector* tmpGeom = const_cast<DeSTDetector*>(&geom);
+  DeSTSector* stSector = tmpGeom->findSector( stChan );
 
-  const DeSTSector* stLay = geom.sectors()[stChan.strip()];
-
+  // Get the centre of gravity and the measurement error
   ISTClusterPosition::Measurement measVal =
     stClusPosTool.estimate( &stCluster );
-  m_measure    = stLay -> localU( stChan.strip() )
-                 + ( measVal.first.second * stLay -> pitch() );
+  m_measure    = stSector -> localU( stChan.strip() )
+                 + ( measVal.first.second * stSector -> pitch() );
   m_errMeasure = measVal.second;
+  m_trajectory = tmpGeom->trajectory( m_lhcbID, measVal.first.second ) ;
 
-/// ERROR!!!
-  m_z            = 0.;
-//  m_stereoAngle  = stLay->stereoAngle();
-
-//  std::cout << "- stereo angle = " << stLay->stereoAngle() << std::endl;
+  // Use the z of the centre of the strip
+  m_z = m_trajectory->position(0.0).z();
 
 }

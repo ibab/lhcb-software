@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-27 - Jeroen van Tilburg
+ - Created constructors for the reference vectors.
+ - Fill m_trajectory in the derived Measurement classes.
+
 ! 2006-02-22 - Eduardo Rodrigues
  - added new class TrajMeasurement: a Measurement supplemented with
    a Trajectory

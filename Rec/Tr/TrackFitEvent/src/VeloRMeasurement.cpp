@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.7 2006-02-21 10:58:09 dhcroft Exp $
+// $Id: VeloRMeasurement.cpp,v 1.8 2006-02-27 19:54:02 jvantilb Exp $
 // Include files
 
 // local
@@ -17,15 +17,31 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
                                     const DeVelo& det,
-                                    double phi )
+                                    const Gaudi::TrackVector& refVector )
 {
+  m_refVector = refVector; // reference trajectory
+  this->init( cluster, det, true );
+}
+
+/// Standard constructor, initializes variables
+VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
+                                    const DeVelo& det ) 
+{
+  m_refVector = Gaudi::TrackVector(); // reference trajectory
+  this->init( cluster, det, false );
+}
+
+void VeloRMeasurement::init( const VeloCluster& cluster,
+                             const DeVelo& det,
+                             bool refIsSet ) 
+{
+  // Fill the data members
   m_mtype = Measurement::VeloR;
-  
-  m_phi = phi;
+  m_refIsSet  = refIsSet;
   m_cluster = &cluster;
-  
-  int sensor = m_cluster->channelID().sensor();
-  m_z = det.zSensor( sensor );
+  m_lhcbID = LHCbID( m_cluster->channelID() );
+  m_z = det.zSensor( m_cluster->channelID().sensor() );
+  m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
   double sum   = 0.;
   double sum2  = 0.;
@@ -51,7 +67,6 @@ VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
     // m_errMeasure = 0.254*pitch - 0.0049*mm;
     // MM-
   }
-
-  // set the LHCbID
-  setLhcbID ( LHCbID( m_cluster->channelID() ) );
 }
+
+

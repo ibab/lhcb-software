@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.9 2006-02-20 18:34:01 jvantilb Exp $
+// $Id: OTMeasurement.cpp,v 1.10 2006-02-27 19:54:02 jvantilb Exp $
 // Include files
 
 // local
@@ -19,54 +19,48 @@ using namespace LHCb;
 OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
                               const DeOTDetector& geom,
                               int ambiguity,
-                              double tu )
+                              const Gaudi::TrackVector& refVector)
 {
-  m_mtype = Measurement::OT;
+  m_refVector = refVector;                     // reference trajectory
+  this->init( otTime, geom, ambiguity, true );
+}
 
-  m_time      = &otTime;        // pointer to hit
-  m_ambiguity = ambiguity;      // drift ambiguity
-  m_tu        = tu;             // reference trajectory
-
-  // set the LHCbID and ambiguity
-  setLhcbID( LHCbID( m_time -> channel() ) );
+/// Standard constructor, without the reference vector
+OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
+                              const DeOTDetector& geom,
+                              int ambiguity )
+{
+  m_refVector = Gaudi::TrackVector(); 
+  this->init( otTime, geom, ambiguity, false );
+}
+ 
+void OTMeasurement::init( const LHCb::OTTime& otTime,
+                          const DeOTDetector& geom,
+                          int ambiguity,
+                          bool refIsSet ) 
+{
+  // Fill the data members
+  m_mtype     = Measurement::OT;
+  m_time      = &otTime;                       // pointer to hit
+  m_ambiguity = ambiguity;                     // drift ambiguity
+  m_refIsSet  = refIsSet;
+  m_lhcbID    = LHCbID( m_time -> channel() ); // set the LHCbID
 
   // some constants...
   double driftVelocity = geom.driftDelay(); // ns/mm
-  // double wireVelocity  = geom.propagationDelay();      // ns/mm
 
+  // Calculate the drift distance (includes the propagation along wire)
   m_measure      = m_time->calibratedTime() / driftVelocity;
   m_errMeasure   = geom.resolution() ;
+  m_trajectory   = geom.trajectory( m_lhcbID );
 
-  OTChannelID OTChan = m_time->channel();
-  DeOTModule* module = geom.module( OTChan );
-  XYZPoint wirePos = module->centerOfStraw( OTChan.straw() );
-
-  m_stereoAngle = module->stereoAngle();
-  // double mwirePos =  wirePos.x() * cos(stereoAngle) +
-  //   wirePos.y() * sin(stereoAngle);
+  // Get the z of the measurement (centre of the wire)
+  OTChannelID otChan = m_time->channel();
+  DeOTModule* module = geom.module( otChan );
+  XYZPoint wirePos = module->centerOfStraw( otChan.straw() );
   m_z = wirePos.z();
-  //  m_wireLength       = module->wireLength();
 
-}
+  // (almost) Obsolete
+  m_stereoAngle = module->stereoAngle();
 
-/// Get the reference vector from a estimated state vector
-const TrackVector OTMeasurement::referenceVector( const TrackVector& 
-                                                  stateVec ) const 
-{
-  // Initialize reference vector
-  TrackVector refVec = TrackVector();
-
-  // Check if the reference slope tu is set. If it is set: use it
-  if ( m_tu > 990.0 ) {
-    refVec = stateVec;
-  } else {
-    double tv = - stateVec(2) * sin( m_stereoAngle )
-      + stateVec(3) * cos( m_stereoAngle );
-    refVec[0] = stateVec(0);
-    refVec[1] = stateVec(1);
-    refVec[2] = m_tu * cos( m_stereoAngle ) - tv * sin( m_stereoAngle );
-    refVec[3] = m_tu * sin( m_stereoAngle ) + tv * cos( m_stereoAngle );
-    refVec[4] = stateVec(4);
-  }
-  return refVec;
 }

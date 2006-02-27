@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.8 2006-02-21 10:58:09 dhcroft Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.9 2006-02-27 19:54:02 jvantilb Exp $
 // Include files 
 
 // local
@@ -17,21 +17,37 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
                                         const DeVelo& det,
-                                        double r )
+                                        const Gaudi::TrackVector& refVector )
 {
-  m_mtype = Measurement::VeloPhi;
+  m_refVector = refVector; // reference trajectory
+  this->init( cluster, det, true );
+}
 
-  m_r = r ;
+/// Standard constructor, initializes variables
+VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
+                                        const DeVelo& det)
+{
+  m_refVector = Gaudi::TrackVector(); // reference trajectory
+  this->init( cluster, det, false );
+}
+
+void VeloPhiMeasurement::init( const VeloCluster& cluster,
+                               const DeVelo& det,
+                               bool refIsSet ) 
+{
+  // Fill the data members
+  m_mtype = Measurement::VeloPhi;
+  m_refIsSet  = refIsSet;
   m_cluster = &cluster;
-  
-  int sensor = m_cluster->channelID().sensor();
-  m_z = det.zSensor( sensor );
+  m_lhcbID = LHCbID( m_cluster->channelID() );
+  m_z = det.zSensor( m_cluster->channelID().sensor() );
+  m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
   m_measure = det.distToOrigin(  m_cluster->channelID() );
   // fix sign convention of d0 of strip
-  if( ! det.isDownstreamSensor(sensor) ) {
+  if( ! det.isDownstreamSensor( m_cluster->channelID().sensor() ) ) {
     m_measure = -m_measure;
   }
 
@@ -56,7 +72,4 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
     // MM-
   }
 
-
-  // set the LHCbID
-  setLhcbID ( LHCbID( m_cluster->channelID() ) );
 }
