@@ -54,7 +54,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator(5000),
     m_RichRadiatorMaterialName(std::vector<G4String> (3)),
     m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
-    m_MaxAllowedPhotStepNumInRayleigh(5000)
+    m_MaxAllowedPhotStepNumInRayleigh(5000),
+    m_UseHpdMagDistortions(false)
 {
   // in the above 3 is for the three radiators.
 
@@ -75,7 +76,11 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
  
   declareProperty("RichMaxPhotonStepNumInRayleigh",
                   m_MaxAllowedPhotStepNumInRayleigh);
+
+  declareProperty("RichUseHpdMagDistortions",
+                  m_UseHpdMagDistortions);
   
+
 };
 // ============================================================================
 
@@ -209,7 +214,10 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theAbsorptionProcess->SetVerboseLevel(0);
   theRayleighScatteringProcess->SetVerboseLevel(0);
   theBoundaryProcess->SetVerboseLevel(0);
-  
+
+  theRichHpdPhotoElectricProcess->setUsingHpdMagDistortion( (G4bool) m_UseHpdMagDistortions);
+  theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
+
   //  G4int MaxNumPhotons = 300;
   // The following is now input from options file. SE 2-2-2004
   // the default value was 900. now changed the default to 40.

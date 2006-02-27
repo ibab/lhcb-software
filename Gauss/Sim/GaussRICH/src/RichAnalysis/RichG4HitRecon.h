@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.h,v 1.3 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4HitRecon.h,v 1.4 2006-02-27 14:10:30 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4HITRECON_H
 #define RICHANALYSIS_RICHG4HITRECON_H 1
 
@@ -79,7 +79,12 @@ public:
   void setRichG4HitCoordResult(RichG4HitCoordResult* ar ) 
   {m_RichG4HitCoordResult= ar;}
   
-    
+  bool  useOnlyStdRadiatorHits() {
+    return m_useOnlyStdRadiatorHits;
+  } 
+  void setuseOnlyStdRadiatorHits( bool afl ) {
+    m_useOnlyStdRadiatorHits= afl;
+  }
 protected:
 
 private:
@@ -99,7 +104,7 @@ private:
   bool m_useOnlySaturatedHits;
   bool m_useMidRadiatorZEmisPt;
   double m_chtkBetaSaturatedCut;
-
+  bool m_useOnlyStdRadiatorHits;
 
 };
 #endif // RICHANALYSIS_RICHG4HITRECON_H

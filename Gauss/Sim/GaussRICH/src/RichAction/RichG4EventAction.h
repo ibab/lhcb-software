@@ -128,7 +128,12 @@ public:
   bool RichG4InputMonActivate() 
   {
     return m_RichG4InputMonActivate;
-  } 
+  }
+  bool RichG4HitReconUseStdRadHit() {
+    return m_RichG4HitReconUseStdRadHit;}
+  void setRichG4HitReconUseStdRadHit( bool afl ) {
+    m_RichG4HitReconUseStdRadHit= afl;}
+ 
   bool IsRichG4FirstEvent() {return m_IsRichG4FirstEvent;}
 private:
  
@@ -167,6 +172,7 @@ private:
   bool m_RichG4HistoActivateQw;
 
   bool m_RichG4HitReconUseSatHit;
+  bool m_RichG4HitReconUseStdRadHit;
   bool m_RichG4HitReconUseMidRadiator;
 
   bool m_RichG4InputMonActivate;

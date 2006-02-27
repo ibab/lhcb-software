@@ -21,15 +21,24 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
   : G4VDiscreteProcess(processName, aType ),
     m_numTotHpd(std::vector<int>(2))
 {
-  IDataProviderSvc* detSvc;
-  if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
 
-    //  m_PrePhotoElectricLogVolName="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDQuartzWindow";
-    //  m_PostPhotoElectricLogVolName="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDPhCathode";
-    //  m_HpdPhElectronKE=20*keV;
-    //  m_PhCathodeToSilDetMaxDist=111.2*mm;
+
+    //  G4cout << GetProcessName() << " is created " << G4endl;
+    m_UsingHpdMagDistortion = false;
+   IDataProviderSvc* detSvc;
+   if ( gigabase->svcLoc()->service( "DetectorDataSvc", detSvc, true) ) {
 
     m_HpdProperty = new RichHpdProperties(detSvc, gigabase->msgSvc()) ;
+
+   }
+}
+
+RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
+
+
+void RichHpdPhotoElectricEffect::setHpdPhElecParam() {
+
+    m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UsingHpdMagDistortion );
     m_HpdPhElectronKE=m_HpdProperty->RichHpdHighVoltage();
     m_PhCathodeToSilDetMaxDist=m_HpdProperty->RichHpdQWToSiDist();
     m_PrePhotoElectricLogVolName=m_HpdProperty->HpdQWLogVolName();
@@ -44,17 +53,11 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
     m_Rich2PhysVolNameB= Rich2DeStructurePathName;
     m_hpdPhCathodeInnerRadius= m_HpdProperty->HpdPhCathodeInnerRadius();
     m_MaxZHitInRich1=  m_HpdProperty->Rich1MaxZHitZCoord();
-
     m_MaxAnyHpdQEff =   m_HpdProperty-> HpdMaxQuantumEff();
 
-    //  G4cout << GetProcessName() << " is created " << G4endl;
-  }
+
 
 }
-
-RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
-
-
 
 G4VParticleChange*
 RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,

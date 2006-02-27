@@ -1,9 +1,10 @@
-// $Id: RichG4AgelExitTag.cpp,v 1.3 2004-06-03 12:42:34 seaso Exp $
+// $Id: RichG4AgelExitTag.cpp,v 1.4 2006-02-27 14:09:12 seaso Exp $
 // Include files
 
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
 #include "RichPhotInfo.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 
 // local
@@ -37,9 +38,16 @@ void RichG4AgelExitTag(const G4Track* aPhotonTk,
           // only if the verbose tag is activated.
 	  // G4cout<<"AgelExit Tag "<<aRichPhotInfo -> VerbosePhotTagFlag()
           //      <<G4endl;
+          G4int CurPhotProdRadiator =aRichPhotInfo-> PhotProdRadiatorNum();
+          
+          if( CurPhotProdRadiator >= Rich1AgelTile0CkvRadiatorNum && 
+              CurPhotProdRadiator <= Rich1AgelTile15CkvRadiatorNum) {
+            
           if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
             aRichPhotInfo -> setAerogelExitPosition(aAgelExitPos);
           }
+          }
+          
 
         }
 

@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.6 2006-02-13 16:30:43 jonrob Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.7 2006-02-27 14:10:30 seaso Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -265,8 +265,14 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double ysi = aLocalHitCoord.y();
   
   double zsi = aLocalHitCoord.z();
+  double rsi =0.0;
   double xph =0.0;
   double yph =0.0;
+  double rph =0.0;
+  double rphtest =0.0;
+  double xphLin =0.0;
+  double yphLin =0.0;
+  double rphLin = 0.0;
   double zph =0.0;
   double rphsq=0.0;
   double phCSq=0.0;
@@ -274,8 +280,18 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double zPhInHpd=0.0;
   
   if(m_HpdCrossFocusParameters[0] !=0.0 ) {
-    xph= xsi/m_HpdCrossFocusParameters[0];
-    yph= ysi/m_HpdCrossFocusParameters[0];
+     rsi = pow( (xsi*xsi + ysi*ysi), 0.5);
+    double c= -1.0*rsi;
+    double b = m_HpdCrossFocusParameters[0];
+    double a = m_HpdCrossFocusParameters[1];
+    rph = (-b - pow((b*b - 4*a*c),0.5))/(2*a);
+    //  rphtest = (-b + pow((b*b - 4*a*c),0.5))/(2*a);
+    xph = (rph/rsi)*xsi;
+    yph = (rph/rsi)*ysi;
+
+    xphLin= xsi/m_HpdCrossFocusParameters[0];
+    yphLin= ysi/m_HpdCrossFocusParameters[0];
+    rphLin = rsi/m_HpdCrossFocusParameters[0];   
   }
 
   rphsq = xph*xph + yph*yph;
@@ -291,12 +307,15 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   
   zph= m_HpdPhCathodeToSiDetMaxDist-m_HpdPhCathodeRad+ delZ;
 
-  //  RichG4HpdReconlog<<MSG::VERBOSE
-  //        <<" ReconHitOnPhCathFromLocalHitCoord "
-  //         <<"  xph yph zph phcathrad delZ "
-  //         <<xph<<"  "<<yph<<"  "
+  //  RichG4HpdReconlog<<MSG::INFO<<" ReconHitOnPhCathFromLocalHitCoord rsi rph rphLin rphtest"
+  //		   << rsi<<"  "<< rph<<"   "<<rphLin<<"  "<< endreq;
+               // rphtest<<endreq;
+  // RichG4HpdReconlog<<MSG::INFO
+  //       <<" ReconHitOnPhCathFromLocalHitCoord "
+  //         <<"  xsi ysi xph yph xphlin yphlin zph phcathrad delZ "
+  //		    <<xsi<< " " <<ysi<<" "<<xph<<"  "<<yph<<"  "<< xphLin<<"  "<<  yphLin<<"  "
   //         <<zph<<"  "<<m_HpdPhCathodeRad<<"  "
-  //         <<delZ<<endreq;
+		//          <<delZ<<endreq;
   
   zPhInHpd =   ConvertHpdSiliconZToHpdSystem(zph) ;
     return Gaudi::XYZPoint(xph,yph, zPhInHpd);

@@ -67,6 +67,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichG4EventActivateCkvRecon(false),
     m_RichG4HistoActivateQw(false),
     m_RichG4HitReconUseSatHit(true),
+    m_RichG4HitReconUseStdRadHit(true),
     m_RichG4HitReconUseMidRadiator(false),
     m_RichG4InputMonActivate(false),
     m_IsRichG4FirstEvent(true)
@@ -93,6 +94,10 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
 
   declareProperty("RichG4EventHitReconUseSaturatedHit" ,
                   m_RichG4HitReconUseSatHit);
+
+  declareProperty("RichG4EventHitReconUseStdRadiatorHit",
+		  m_RichG4HitReconUseStdRadHit);
+          
   declareProperty("RichG4EventHitReconUseMidRadiator",
                   m_RichG4HitReconUseMidRadiator);
 
@@ -200,6 +205,7 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 
     m_RichG4HitRecon ->setSatHitUse( m_RichG4HitReconUseSatHit);
     m_RichG4HitRecon ->setMidRadiatorUse(m_RichG4HitReconUseMidRadiator);
+    m_RichG4HitRecon ->setuseOnlyStdRadiatorHits(m_RichG4HitReconUseStdRadHit);
     if(m_RichEventActionHistoFillActivateSet4) {
       m_RichG4HistoFillSet4= new RichG4HistoFillSet4();
       m_RichG4HitRecon->setRichG4HistoFillSet4Ckv( m_RichG4HistoFillSet4 );
@@ -231,6 +237,12 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     }
 
     m_IsRichG4FirstEvent = false;
+  } else {
+    if( m_RichG4HistoActivateQw ) {
+      RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
+      aRichG4QwAnalysis->reset_NumPartInQwHisto();
+
+    }
   }
 
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction");
@@ -310,6 +322,11 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
   }
 
 
+    if( m_RichG4HistoActivateQw ) {
+
+      RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
+      aRichG4QwAnalysis->WriteOutQwNtuple();
+    }
 
   //get the trajectories
   G4TrajectoryContainer* trajectoryContainer=anEvent->GetTrajectoryContainer();

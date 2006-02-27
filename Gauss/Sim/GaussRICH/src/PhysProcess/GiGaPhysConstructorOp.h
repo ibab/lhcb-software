@@ -84,6 +84,15 @@ public:
   void setMaxAllowedPhotStepNumInRayleigh(int aMaxRayleighLimit)
   { m_MaxAllowedPhotStepNumInRayleigh=aMaxRayleighLimit;}
   
+  
+  bool  UseHpdMagDistortions() 
+  {
+    return m_UseHpdMagDistortions;
+  }
+  void setUseHpdMagDistortions(bool afla) 
+  { m_UseHpdMagDistortions= afla;
+  }
+  
     
 private:
   ///
@@ -100,6 +109,8 @@ private:
   std::vector<G4String> m_RichRadiatorMaterialName;
   std::vector<G4int> m_RichRadiatorMaterialIndex;
   int m_MaxAllowedPhotStepNumInRayleigh;
+  bool m_UseHpdMagDistortions;
+  
   
 };
 // ============================================================================

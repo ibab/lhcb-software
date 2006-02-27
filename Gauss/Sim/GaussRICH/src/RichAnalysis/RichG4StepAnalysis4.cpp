@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis4.cpp,v 1.4 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4StepAnalysis4.cpp,v 1.5 2006-02-27 14:10:30 seaso Exp $
 // Include files
 
 
@@ -33,6 +33,8 @@
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4AgelExitTag.h"
+#include "RichG4MatRadIdentifier.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4StepAnalysis4
@@ -72,36 +74,36 @@ void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
         if( prePos.z() >= ZUpsRich1Analysis &&
             prePos.z() <= ZDnsRich1Analysis  )
         {
+        RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
+                          RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
 
-          if (prePos.z()  >=  AgelZBeginAnalysis &&
-              prePos.z()  <=  AgelZEndAnalysis &&
-              prePos.x()  >=  AgelXBeginAnalysis &&
-              prePos.x()  <=  AgelXEndAnalysis &&
-              prePos.y()  >=  AgelYBeginAnalysis &&
-              prePos.y()  <=  AgelYEndAnalysis){
+        G4int CurMatIndex =  aTrack->GetMaterial() ->GetIndex();
+        G4int CurAgelIndex =aRichG4MatRadIdentifier -> getRadiatorNumForG4MatIndex ( CurMatIndex);
+        if(CurAgelIndex >= Rich1AgelTile0CkvRadiatorNum && 
+           CurAgelIndex <= Rich1AgelTile15CkvRadiatorNum) { 
+         
+          //            G4String aPreVolName= aPreStepPoint->GetPhysicalVolume()
+          //    ->GetLogicalVolume()->GetName();
+          //  G4String aPostVolName= aPostStepPoint->GetPhysicalVolume()
+          //    ->GetLogicalVolume()->GetName();
+            //  G4String  aPreVolNameA =std::string(aPreVolName,0,33);
+            // if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
+            // if(aPostVolName ==  LogVolC4F10NameAnalysis) {
 
+            //  const G4ThreeVector & aPhotProdPos = aTrack->  GetVertexPosition();
 
-            G4String aPreVolName= aPreStepPoint->GetPhysicalVolume()
-              ->GetLogicalVolume()->GetName();
-            G4String aPostVolName= aPostStepPoint->GetPhysicalVolume()
-              ->GetLogicalVolume()->GetName();
-            G4String  aPreVolNameA =std::string(aPreVolName,0,33);
-            if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
-               aPostVolName ==  LogVolC4F10NameAnalysis) {
-              const G4ThreeVector & aPhotProdPos = aTrack->  GetVertexPosition();
-
-              if (aPhotProdPos.z()  >=  AgelZBeginAnalysis &&
-                  aPhotProdPos.z()  <=  AgelZEndAnalysis &&
-                  aPhotProdPos.x()  >=  AgelXBeginAnalysis &&
-                  aPhotProdPos.x()  <=  AgelXEndAnalysis &&
-                  aPhotProdPos.y()  >=  AgelYBeginAnalysis &&
-                  aPhotProdPos.y()  <=  AgelYEndAnalysis){
+            //  if (aPhotProdPos.z()  >=  AgelZBeginAnalysis &&
+            //      aPhotProdPos.z()  <=  AgelZEndAnalysis &&
+            //      aPhotProdPos.x()  >=  AgelXBeginAnalysis &&
+            //      aPhotProdPos.x()  <=  AgelXEndAnalysis &&
+            //      aPhotProdPos.y()  >=  AgelYBeginAnalysis &&
+            //      aPhotProdPos.y()  <=  AgelYEndAnalysis){
 
                 // now store the exit point from aerogel into c4f10
                 // in the photon user track info.
 
-                const G4ThreeVector & aPhotAgelExitPos =
-                  aPostStepPoint->GetPosition();
+              const G4ThreeVector & aPhotAgelExitPos =
+                 aPostStepPoint->GetPosition();
                 //               G4cout<<"Now in Rich Step Analysis 4 at Agel exit "
                 //      <<aPhotAgelExitPos.x()<<"  "
                 //      <<aPhotAgelExitPos.y()<<"   "
@@ -109,20 +111,26 @@ void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
 
                 RichG4AgelExitTag(aTrack,aPhotAgelExitPos);
 
-              }
+                //}
 
 
-            }
-          }
-
+                // }
         }
+        
+        
+        }
+        
 
-
+        
       }
+      
     }
+    
   }
+  
   //      G4cout<<"Now end of Rich Step Analysis 4 " <<G4endl;
-
+  
 }
+
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.6 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.7 2006-02-27 14:10:30 seaso Exp $
 // Include files
 
 // local
@@ -51,7 +51,7 @@ RichG4HitRecon::RichG4HitRecon( ):  m_RichG4CkvRec (0) ,
 
   m_useOnlySaturatedHits = true;
   m_useMidRadiatorZEmisPt = false;
-
+  m_useOnlyStdRadiatorHits = true;
   m_RichG4ReconResult= new RichG4ReconResult();
   m_RichG4HitCoordResult = new RichG4HitCoordResult();
   
@@ -175,7 +175,16 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
           bool SelectThisHit = false;
           if(!(m_useOnlySaturatedHits) ) {
+	    if( ! m_useOnlyStdRadiatorHits ) {
             SelectThisHit= true;
+            }else {
+	      if( ( aRadiatornum == 1 ) || ( aRadiatornum == 2 ) || 
+                  ( aRadiatornum >= 10 && aRadiatornum <= 25 ) ) {
+
+                SelectThisHit= true;
+
+              }
+            }
 
           }else {
 

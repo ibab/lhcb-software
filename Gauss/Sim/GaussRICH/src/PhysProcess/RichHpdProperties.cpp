@@ -21,7 +21,8 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   : m_numHpdTotRich(std::vector<int>(2)),
     m_RichHpdQEList(2,std::vector<RichHpdQE*>(200)),
     m_RichHpdPSFList(2,std::vector<RichHpdPSF*>(200)),
-    m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200))
+    m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200)),
+    m_UsingHpdMagneticFieldDistortion(false)
 {
 
   MsgStream RichHpdlog( msgSvc, "RichHpdProperties" );

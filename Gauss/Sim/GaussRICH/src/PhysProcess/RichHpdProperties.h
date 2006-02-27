@@ -91,6 +91,13 @@ public:
     return  m_HpdMaxQuantumEff;
   }
 
+  bool UsingHpdMagneticFieldDistortion () {
+    return m_UsingHpdMagneticFieldDistortion;
+   
+  }
+  void setUsingHpdMagneticFieldDistortion (bool aflgb ) {
+    m_UsingHpdMagneticFieldDistortion = aflgb;
+  }
 private:
 
   //here the first vector has a dimension of 2
@@ -108,6 +115,7 @@ private:
   double m_HpdPhCathodeInnerRadius;
   int HpdVerboseLevel;
   double m_HpdMaxQuantumEff;
+  bool m_UsingHpdMagneticFieldDistortion;
 
 };
 

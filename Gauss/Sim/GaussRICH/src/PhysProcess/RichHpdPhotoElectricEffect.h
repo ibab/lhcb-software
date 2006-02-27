@@ -104,6 +104,12 @@ public:
     return m_MaxAnyHpdQEff;
   }
 
+  G4bool  UsingHpdMagDistortion() {
+    return  m_UsingHpdMagDistortion;
+  }
+  
+  void setUsingHpdMagDistortion(G4bool aflg ) { m_UsingHpdMagDistortion= aflg;}
+  void setHpdPhElecParam();
 
 private:
 
@@ -121,6 +127,7 @@ private:
   double m_hpdPhCathodeInnerRadius;
   double m_MaxZHitInRich1;
   double  m_MaxAnyHpdQEff;
+  G4bool m_UsingHpdMagDistortion;
 
 
 };

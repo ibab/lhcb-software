@@ -1,4 +1,4 @@
-// $Id: RichG4QwAnalysis.h,v 1.1 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4QwAnalysis.h,v 1.2 2006-02-27 14:10:30 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4QWANALYSIS_H 
 #define RICHANALYSIS_RICHG4QWANALYSIS_H 1
 
@@ -20,7 +20,12 @@ public:
   static RichG4QwAnalysis* getRichG4QwAnalysisInstance();
   void InitQwAnalysis();
   void FillQwAnalysisHisto(const G4Track& aChTrack);
-  
+  void reset_NumPartInQwHisto() {
+    m_qPart=0;
+  }
+  void WriteOutQwNtuple() {
+    m_qNtuple->write();
+  }
   bool qwAnalysisNtupleBooked() {return m_qwAnalysisNtupleBooked;}
 
 protected:
