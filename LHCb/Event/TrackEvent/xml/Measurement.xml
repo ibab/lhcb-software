@@ -13,6 +13,7 @@
 
       <import name='Kernel/TrackTypes.h' />
       <import name='Kernel/LHCbID' />
+      <import name='Kernel/Trajectory' />
 
       &StlPtrVector;
 
@@ -70,6 +71,32 @@
         desc    = 'the measurement error'
         access  = 'PROTECTED' />
 
+      <attribute
+        type    = 'LHCb::Trajectory*'
+        name    = 'trajectory'
+        desc    = 'the trajectory representing the measurement (owner)'
+        access  = 'PROTECTED' />
+
+      <attribute
+        type    = 'LHCb::LHCbID'
+        name    = 'lhcbID'
+        desc    = 'the corresponding LHCbID'
+        access  = 'PROTECTED' />
+
+      <attribute
+        type    = 'Gaudi::TrackVector'
+        name    = 'refVector'
+        desc    = 'the reference vector'
+        access  = 'PROTECTED' 
+        setMeth = 'FALSE' />
+
+      <attribute
+        type    = 'bool'
+        name    = 'refIsSet'
+        desc    = 'flag for the reference vector'
+        access  = 'PROTECTED'
+        setMeth = 'FALSE' />
+
       <method
         type    = 'double'
         name    = 'errMeasure2'
@@ -83,7 +110,7 @@
       <method
         type    = 'double'
         name    = 'resolution'
-        desc    = 'Retrieve the measurement error (Added temporarily to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        desc    = 'Retrieve the measurement error (Added to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
@@ -94,19 +121,13 @@
       <method
         type    = 'double'
         name    = 'resolution2'
-        desc    = 'Retrieve the measurement error squared (Added temporarily to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        desc    = 'Retrieve the measurement error squared (Added to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
           return m_errMeasure * m_errMeasure;
         </code>
       </method>
-
-      <attribute
-        type    = 'LHCb::LHCbID'
-        name    = 'lhcbID'
-        desc    = 'the corresponding LHCbID'
-        access  = 'PROTECTED' />
 
       <method
         type    = 'unsigned int'
@@ -134,10 +155,23 @@
       </method>
 
       <method
+        name    = 'setRefVector'
+        desc    = 'Update the reference vector'
+        argList = 'const Gaudi::TrackVector refVector'>
+        <code>
+          m_refIsSet  = true;
+          m_refVector = refVector;
+        </code>
+      </method>
+
+      <method
         name    = 'update'
         desc    = 'Update measurement parameters'
-        argList = 'const Gaudi::TrackVector refVector'
-        virtual = 'PURE'>
+        argList = 'const Gaudi::TrackVector refVector'>
+        <code>
+          m_refIsSet  = true;
+          m_refVector = refVector;
+        </code>
       </method>
 
     </class>
