@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.22 2006-02-23 14:23:15 ebos Exp $
+// $Id: DeOTDetector.h,v 1.23 2006-02-27 19:33:38 jvantilb Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -146,7 +146,7 @@ public:
   /// Returns a Trajectory representing the wire identified by the LHCbID
   /// The offset is zero for all OT Trajectories
   LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
-                                const double /*offset*/ ) const;
+                                const double = 0 /*offset*/ ) const;
 
 private:
 

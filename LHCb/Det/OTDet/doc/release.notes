@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.43 2006-02-23 14:22:59 ebos Exp $
+! $Id: release.notes,v 1.44 2006-02-27 19:33:38 jvantilb Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-02-27 - Jeroen van Tilburg
+ - Minor change: Trajectory method can also take only LHCbID.
 
 ! 2006-02-23 Edwin Bos
  - Introduction of Trajectories in DeOTDetector and DeOTModule.

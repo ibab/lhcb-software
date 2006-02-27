@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.5 2006-02-23 14:23:21 ebos Exp $
+// $Id: DeOTModule.h,v 1.6 2006-02-27 19:33:38 jvantilb Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -163,7 +163,7 @@ public:
   /// Returns a Trajectory representing the wire identified by the LHCbID
   /// The offset is zero for all OT Trajectories
   LHCb::Trajectory* trajectory( const LHCb::OTChannelID& aChan,
-                                const double /*offset*/ ) const;
+                                const double = 0 /*offset*/ ) const;
 
 private:
 
