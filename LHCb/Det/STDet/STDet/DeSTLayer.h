@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.2 2006-02-27 19:50:54 jvantilb Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -59,6 +59,12 @@ public:
   /** print to stream */
   MsgStream& printOut( MsgStream& os) const;
 
+  /** check contains channel
+  *  @param channel
+  *  @return bool
+  */
+  bool contains(const LHCb::STChannelID aChannel) const;
+
 private:
 
   unsigned int m_id;
@@ -105,6 +111,10 @@ inline MsgStream& operator<<( MsgStream& os , const DeSTLayer* aLayer )
 { return aLayer->printOut( os ); }
 
 
+inline bool DeSTLayer::contains(const LHCb::STChannelID aChannel) const
+{ 
+  return  (aChannel.uniqueLayer() == elementID().uniqueLayer());
+}
 
 #endif // _DeSTLayer_H
 

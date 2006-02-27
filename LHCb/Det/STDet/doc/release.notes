@@ -2,10 +2,11 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-02-27 - Jeroen van Tilburg
+ - Added findLayer method in DeSTDetector.
 
 ! 2006-02-26 M Needham
  - Minor bug fixes
-
 
 !========================= STDet v2r0 2006-02-21 =======================
 

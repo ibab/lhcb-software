@@ -1,3 +1,4 @@
+// $Id: DeSTDetector.h,v 1.13 2006-02-27 19:50:54 jvantilb Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -76,6 +77,10 @@ public:
   /** locate station based on a point  
   @return station */
   DeSTStation* findStation(const Gaudi::XYZPoint & point) ;     
+
+  /**  locate the layer based on a channel id
+  @return  layer */
+  DeSTLayer* findLayer(const LHCb::STChannelID aChannel);     
 
   /** locate layer based on a point 
    *return layer */
