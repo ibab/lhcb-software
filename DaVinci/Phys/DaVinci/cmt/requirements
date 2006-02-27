@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.291 2006-02-03 10:25:36 pkoppenb Exp $
+# $Id: requirements,v 1.292 2006-02-27 13:01:21 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r16
+version           v12r17
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -46,12 +46,10 @@ use LHCb                        v*
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
-use  CommonParticles    	v2r0     Phys
 use  DaVinciFilter      	v3r4     Phys
 use  DaVinciKernel      	v3r10    Phys
 use  DaVinciTools       	v12r5    Phys
 use  FlavourTagging     	v6r5     Phys
-use  Ks2PiPiSel         	v1r8     Phys
 use  ParticleMaker      	v1r7     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
@@ -86,13 +84,14 @@ use  KtJet	             	v1r0     External
 # packages included in HltSys
 #=======================================================
 use HltGeneric                  v2r8     Hlt
-use HltSelections               v4r1     Hlt
-use HltInclusive                v1r0     Hlt
+use HltSelections               v4r1p1   Hlt
+use HltInclusive                v1r1     Hlt
 use HltSelChecker               v4r1     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r11    PhysSel
+use  PhysSelSys			v8r12    PhysSel
 #=======================================================
+use  Stripping			v3r4     Tools
 
 ########################################################
 # NON-Phys stuff
@@ -110,7 +109,7 @@ use RichRecQC                   v1r10    Rich
 use RichTools                   v1r2p2 Rich
 
 # Final Reconstruction
-use  GlobalReco         	v4r8p1   Rec
+use  GlobalReco         	v4r8p2   Rec
 use  PrimVtx            	v2r1p1   Rec
 
 # Utility tools
@@ -125,7 +124,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r12    Trg
+use TrgSys                      v1r13    Trg
 
 
 #-- LHCbAgs
