@@ -75,7 +75,8 @@
         type    = 'LHCb::Trajectory*'
         name    = 'trajectory'
         desc    = 'the trajectory representing the measurement (owner)'
-        access  = 'PROTECTED' />
+        access  = 'PROTECTED'
+        getMeth = 'FALSE' />
 
       <attribute
         type    = 'LHCb::LHCbID'
@@ -173,6 +174,18 @@
           m_refVector = refVector;
         </code>
       </method>
+
+      <method
+        type    = 'const LHCb::Trajectory&amp;'
+        name    = 'trajectory'
+        desc    = 'Retrieve the trajectory representing the measurement'
+        const   = 'TRUE'>
+        <code>
+          return *m_trajectory;
+        </code>
+      </method>
+
+ 
 
     </class>
 

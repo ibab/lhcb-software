@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-02-28 - Jeroen van Tilburg
+ - Measurement.xml: A reference to the Trajectory is returned (was a pointer).
+
 ! 2006-02-27 - Jeroen van Tilburg
  - Introduced the reference vector to the Measurement base class.
  - Introduced the Trajectory to the Measurement base class.
