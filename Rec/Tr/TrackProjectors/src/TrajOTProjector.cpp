@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.6 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.7 2006-02-28 19:13:33 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,17 +45,17 @@ StatusCode TrajOTProjector::project( const State& state,
   StateTraj refTraj = StateTraj( refVec, meas.z(), bfield );
 
   // Get the measurement trajectory
-  const Trajectory* measTraj = meas.trajectory();
+  const Trajectory& measTraj = meas.trajectory();
 
   double s1, s2;
   XYZVector distance;
 
   // Determine initial estimates of s1 and s2
   s1 = 0.0; // Assume state is already close to the minimum
-  s2 = measTraj->arclength( refTraj.position(s1) );
+  s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, *measTraj, s2, distance, 20*mm );
+  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
 
   // Calculate the projection matrix
   ROOT::Math::SVector< double, 3 > unitDistance;
@@ -69,7 +69,7 @@ StatusCode TrajOTProjector::project( const State& state,
   int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
   // Get the distance to the readout
-  double distToReadout = measTraj->length() / 2. - s2;  
+  double distToReadout = measTraj.length() / 2. - s2;  
 
   // Correct measure for the propagation along the wire
   double dDrift = meas.measure() - 

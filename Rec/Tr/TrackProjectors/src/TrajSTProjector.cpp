@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.2 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrajSTProjector.cpp,v 1.3 2006-02-28 19:13:33 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -42,17 +42,17 @@ StatusCode TrajSTProjector::project( const State& state,
   const StateTraj refTraj = StateTraj( refVec, meas.z(), bfield ) ; 
 
   // Get the measurement trajectory representing the centre of gravity
-  const Trajectory* measTraj = meas.trajectory();  
+  const Trajectory& measTraj = meas.trajectory();  
 
   double s1, s2;
   XYZVector distance;
 
   // Determine initial estimates of s1 and s2
   s1 = 0.0; // Assume state is already close to the minimum
-  s2 = measTraj->arclength( refTraj.position(s1) );
+  s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, *measTraj, s2, distance, 20*mm );
+  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
 
   // Calculate the projection matrix
   ROOT::Math::SVector< double, 3 > unitDistance;

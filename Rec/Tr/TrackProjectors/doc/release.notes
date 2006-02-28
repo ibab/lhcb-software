@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-02-28 - Jeroen van Tilburg
+ - TrajXxxProjectors: Measurement returns a reference instead of pointer.
+
 ! 2006-02-27 - Jeroen van Tilburg
  - TrackSTProjector: stereoangle is now correctly filled.
  - Projectors now use the reference vectors from the Measurement base class.
