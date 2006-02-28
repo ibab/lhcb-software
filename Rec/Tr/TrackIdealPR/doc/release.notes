@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-02-28 - Jeroen van Tilburg
+ - IdealTracksCreator fills the reference vector in the measurement.
+ - Updated the calculation of the ambiguity.
+
 !======================= TrackIdealPR v2r0 2006-02-23 ========================
 ! 2006-02-22 - Eduardo Rodrigues
  - migration to LHCb v20r0

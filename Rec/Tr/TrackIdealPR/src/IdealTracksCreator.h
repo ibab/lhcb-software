@@ -28,6 +28,8 @@
 class DeVelo;
 class DeOTDetector;
 class DeSTDetector;
+class IMagneticFieldSvc;
+class ITrajPoca;
 
 /** @class IdealTracksCreator IdealTracksCreator.h
  *
@@ -73,9 +75,7 @@ public:
 
 private:
   /// Add outer tracker clusters
-  StatusCode addOTTimes( const LHCb::OTTimes* times,
-                         LHCb::MCParticle* mcPart,
-                         LHCb::Track* track );
+  StatusCode addOTTimes( LHCb::MCParticle* mcPart, LHCb::Track* track );
 
   /// Add silicon tracker (IT and TT) clusters
   StatusCode addSTClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
@@ -104,17 +104,19 @@ private:
   // Interfaces
   ISTClusterPosition*     m_stPositionTool;///< ST cluster position tool
   ITrackCriteriaSelector* m_trackSelector; ///< Track selection tool
-  IIdealStateCreator*     m_stateCreator;  ///< Create 'seed' state at last meas
+  IIdealStateCreator*     m_stateCreator;  ///< Create 'seed'state at last meas
+  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
+  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
   // job options
-  bool m_addOTTimes;         ///< true if OT clusters should be put on track
-  bool m_addSTClusters;      ///< true if ST clusters should be put on track
-  bool m_addVeloClusters;    ///< true if Velo R clusters should be put on track
-  bool m_initState;          ///< initialize seed state
-  bool m_initStateUpstream;  ///< seed state created upstream/downstream
-  bool m_trueStatesAtMeas;   ///< Store true states at each measurement position
+  bool m_addOTTimes;        ///< true if OT clusters should be put on track
+  bool m_addSTClusters;     ///< true if ST clusters should be put on track
+  bool m_addVeloClusters;   ///< true if Velo R clusters should be put on track
+  bool m_initState;         ///< initialize seed state
+  bool m_initStateUpstream; ///< seed state created upstream/downstream
+  bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
   std::string m_stPositionToolName;
-  std::string m_tracksOutContainer;  ///< Tracks output container path in the TES
+  std::string m_tracksOutContainer;///< Tracks output container path in the TES
   int    m_minNHits;      ///< Minimum number of hits on the track
   double m_errorX2;       ///< Error^2 on x
   double m_errorY2;       ///< Error^2 on y

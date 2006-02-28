@@ -1,3 +1,4 @@
+// $Id: IdealTracksCreator.cpp,v 1.12 2006-02-28 19:14:17 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -5,6 +6,9 @@
 
 // from LHCbDefinitions
 #include "Kernel/TrackTypes.h"
+
+// from GaudiKernel
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 //from XxxDet
 #include "VeloDet/DeVelo.h"
@@ -22,10 +26,14 @@
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/StateTraj.h"
 
 // from LinkerEvent
 #include "Linker/LinkerWithKey.h"
 #include "Linker/LinkerTool.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrajPoca.h"
 
 // Local
 #include "IdealTracksCreator.h"
@@ -124,6 +132,10 @@ StatusCode IdealTracksCreator::initialize()
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
+  // Retrieve the magnetic field and the poca tool
+  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
+  m_poca = tool<ITrajPoca>( "TrajPoca" );
+
   return StatusCode::SUCCESS;
 };
 
@@ -141,11 +153,7 @@ StatusCode IdealTracksCreator::execute()
   debug() << "Event " << recHdr -> evtNumber() << endreq;
 
   // Retrieve the MCParticle container
-  const MCParticles* particles = get<MCParticles>( MCParticleLocation::Default );
-
-  /// Retrieve the container for the OTTimes
-  const OTTimes* otTimes = get<OTTimes>( OTTimeLocation::Default );
-  debug() << "- retrieved " <<  otTimes -> size() << " OTTimes." << endreq;
+  const MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
 
   // Make container for tracks
   Tracks* tracksCont = new Tracks();
@@ -220,9 +228,9 @@ StatusCode IdealTracksCreator::execute()
       
       // Add OTTimes
       // -----------
-      if ( m_addOTTimes == true && otTimes != 0 ) {
+      if ( m_addOTTimes == true ) {
         debug() << "... adding OTTimes" << endreq;
-        sc = addOTTimes( otTimes, mcParticle, track );
+        sc = addOTTimes( mcParticle, track );
         if ( sc.isFailure() ) {
           error() << "Unable to add outer tracker OTTimes" << endreq;
           return StatusCode::FAILURE;
@@ -365,58 +373,47 @@ StatusCode IdealTracksCreator::finalize()
 //=============================================================================
 // Add outer tracker clusters
 //=============================================================================
-StatusCode IdealTracksCreator::addOTTimes( const OTTimes* times,
-                                           MCParticle* mcPart,
-                                           Track* track )
+StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
 {
   unsigned int nOTMeas = 0;
 
-  typedef LinkerTool<OTTime,MCHit> asctTool;
-  typedef asctTool::DirectType     table;
+  // Retrieve OTTimes from inverse relation
+  typedef LinkerTool<OTTime,MCParticle> asctTool;
+  typedef asctTool::InverseType invTable;
 
-  asctTool associator( evtSvc(), OTTimeLocation::Default+"2MCHits" );
+  asctTool associator( evtSvc(), OTTimeLocation::Default );
 
-  const table* tbl = associator.direct();
-  if( !tbl )
-    return Error( "Empty table with associations" );
+  // Get the inverse relation
+  const invTable* table = associator.inverse();
+  if( !table )
+    return Error( "Empty table with associations OTTime-MCParticle " );
+  invTable::Range range = table -> relations( mcPart );
+  for( invTable::iterator it = range.begin(); it != range.end(); ++it ) {
+    const OTTime* aTime = it -> to();
+    OTMeasurement meas = OTMeasurement( *aTime, *m_otTracker );
+    track -> addToLhcbIDs( meas.lhcbID() );
 
-  // Loop over outer tracker clusters
-  OTTimes::const_iterator itOTTime = times -> begin();
-  while ( itOTTime != times->end() ) {
-    const OTTime* aTime = *itOTTime;
-    // retrieve MCHit associated with this cluster
-    table::Range range = tbl -> relations( aTime );
-    for( table::iterator iTim = range.begin(); iTim != range.end(); ++iTim ) {
-      const MCHit* aMCHit = iTim -> to();
-      const MCParticle* aParticle = aMCHit -> mcParticle();
-      if ( aParticle == mcPart ) {
-        // get the ambiguity from the MCHit
-        const OTChannelID channel = aTime -> channel();
-        const DeOTModule* module  = m_otTracker -> module( channel );
-        const XYZPoint entryP     = aMCHit -> entry();
-        if ( aMCHit -> displacement().z() == 0. ) continue; // curling track
-        const double tx = aMCHit -> dxdz();
-        const double ty = aMCHit -> dydz();
-        // input in global frame: entryP, tx, ty
-        double mcDist   = module -> distanceToWire( channel.straw(),
-                                                    entryP, tx, ty );
-        int ambiguity = 1;
-        if ( mcDist < 0.0 ) ambiguity = -1;
-        // Get the tu from the MCHit
-        double angle = module -> stereoAngle();
-        double tu = tx * cos(angle) + ty * sin(angle);
-        OTMeasurement otTim = OTMeasurement( *aTime, *m_otTracker,
-                                             ambiguity, tu );
-        track -> addToLhcbIDs( otTim.lhcbID() );
-        track -> addToMeasurements( otTim );
-        ++nOTMeas;
-        debug() << " - added OTMeasurement, ambiguity = "
-                << ambiguity << endreq;
-      }
+    // Set the reference vector
+    State* tempState;
+    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+    if ( sc.isSuccess() ) {
+      meas.setRefVector( tempState -> stateVector() ); 
+
+      // Get the ambiguity using the Poca tool
+      double s1, s2;
+      XYZVector distance;
+      XYZVector bfield;
+      m_pIMF -> fieldVector( tempState->position(), bfield );
+      StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+      m_poca->minimize( stateTraj, s1, meas.trajectory(), s2, distance, 20*mm);
+      int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+      meas.setAmbiguity( ambiguity );
     }
-    // next cluster
-    ++itOTTime;
-  } // loop over outer tracker clusters
+    delete tempState;
+
+    track -> addToMeasurements( meas );
+    ++nOTMeas;
+  }
 
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
 
@@ -448,7 +445,14 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
     const STCluster* aCluster = it -> to();
     STMeasurement meas =
       STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
-        track -> addToLhcbIDs( meas.lhcbID() );
+    track -> addToLhcbIDs( meas.lhcbID() );
+
+    // Set the reference vector
+    State* tempState;
+    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+    if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+    delete tempState;
+
     track -> addToMeasurements( meas );
     ++nSTMeas;
   }
@@ -462,7 +466,14 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
     const STCluster* aCluster = it -> to();
     STMeasurement meas =
       STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
-        track -> addToLhcbIDs( meas.lhcbID() );
+    track -> addToLhcbIDs( meas.lhcbID() );
+
+    // Set the reference vector
+    State* tempState;
+    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+    if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+    delete tempState;
+
     track -> addToMeasurements( meas );
     ++nSTMeas;
   }
@@ -496,33 +507,27 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
   for( invTable::iterator it = range.begin(); it != range.end(); ++it ) {
     const VeloCluster* aCluster = it -> to();
 
+    // Get the reference vector
     double z = m_velo -> zSensor( aCluster -> channelID().sensor() );
-
-    double phi = 999.;
-    double r   = -999.;
     State* tempState;
     StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
-    if ( sc.isSuccess() ) {
-      TrackVector vec = tempState -> stateVector();
-      r = sqrt( vec[0]*vec[0] + vec[1]*vec[1] );
-      phi = atan2( vec[1], vec[0] );
-    }
-    delete tempState;
 
     // Check if VeloCluster is of type R or Phi
     if ( m_velo -> isRSensor( aCluster -> channelID().sensor() ) ) {
-      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
+      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo );
+      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
       track -> addToLhcbIDs( meas.lhcbID() );
       track -> addToMeasurements( meas );
       ++nVeloRMeas;
-    }
-    else {
-      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo, r );
+    } else {
+      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
+      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
       track -> addToLhcbIDs( meas.lhcbID() );
       track -> addToMeasurements( meas );
       ++nVeloPhiMeas;
     }
-  }
+    delete tempState;
+  }    
   
   debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
           << " Velo R/Phi Measurements added" << endreq;
