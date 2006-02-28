@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.4 2006-02-27 19:54:02 jvantilb Exp $
+// $Id: STMeasurement.cpp,v 1.5 2006-02-28 16:01:04 mneedham Exp $
 // Include files 
 
 // from STDet
@@ -54,12 +54,12 @@ void STMeasurement::init( const STCluster& stCluster,
   DeSTSector* stSector = tmpGeom->findSector( stChan );
 
   // Get the centre of gravity and the measurement error
-  ISTClusterPosition::Measurement measVal =
+  ISTClusterPosition::Info measVal =
     stClusPosTool.estimate( &stCluster );
   m_measure    = stSector -> localU( stChan.strip() )
-                 + ( measVal.first.second * stSector -> pitch() );
-  m_errMeasure = measVal.second;
-  m_trajectory = tmpGeom->trajectory( m_lhcbID, measVal.first.second ) ;
+                 + ( measVal.fractionalPosition* stSector -> pitch() );
+  m_errMeasure = measVal.fractionalError*stSector -> pitch();
+  m_trajectory = tmpGeom->trajectory( m_lhcbID, measVal.fractionalPosition) ;
 
   // Use the z of the centre of the strip
   m_z = m_trajectory->position(0.0).z();
