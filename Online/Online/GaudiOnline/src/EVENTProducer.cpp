@@ -99,7 +99,7 @@ namespace  {
 extern "C" int mep2event_prod(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   int partID = 0x103;
-  int refCount = 0;
+  int refCount = 1;
   std::string name = "evtgenerator";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
