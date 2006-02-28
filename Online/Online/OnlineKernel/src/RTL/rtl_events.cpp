@@ -5,7 +5,7 @@
 #include <vector>
 #include <cerrno>
 #include <fcntl.h>
-
+#include <cstdio>
 inline int rtl_printf(const char* , ...)  {
   //inline int rtl_printf(const char* fmt, ...)  {
   //  va_list args;
@@ -30,7 +30,18 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     h->name[sizeof(h->name)-1] = 0;
   }
 #if defined(USE_PTHREADS)
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0644, 1) : &h->handle2;
+  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0777, 1) : &h->handle2;
+  if (h->name[0] && !h->handle) {
+      ::perror("SEVERE: sem_open: ");
+      return 0;
+  }
+  if ( h->name[0] ) {
+      std::string nn="/dev/shm/sem.";
+      nn+=name;
+      int scc = chmod(nn.c_str(),0666);
+      printf("Settint protection of %s\n",nn.c_str());
+      if ( 0 != scc ) ::perror("chmod.");
+  }
   int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
   if ( sc != 0 )  {
     h->handle = 0;

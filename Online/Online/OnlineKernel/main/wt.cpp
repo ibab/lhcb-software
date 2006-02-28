@@ -23,7 +23,7 @@ typedef long (*func)(int, char**);
 #else
   #include <dlfcn.h>
   #include <unistd.h>
-  #define LOAD_LIB(x)  ::dlopen( "lib" #x ".so" , RTLD_NOW)
+  #define LOAD_LIB(x)  ::dlopen( "lib" #x ".so" , RTLD_LAZY)
   inline void* GETPROC(void* h, const char* x) {  return ::dlsym(h,x); }
   #define DLERROR      ::dlerror()
 #endif
