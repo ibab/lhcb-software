@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.4 2006-02-09 18:21:37 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.5 2006-02-28 15:37:05 mneedham Exp $
 
  
 // Kernel
@@ -22,10 +22,10 @@ STOfflinePosition::STOfflinePosition(const std::string& type, const std::string&
 {
   // constructer
   m_ErrorVec.resize(4);
-  m_ErrorVec[0] = 0.04;
-  m_ErrorVec[1] = 0.02;
-  m_ErrorVec[2] = 0.044;
-  m_ErrorVec[3] = 0.039;
+  m_ErrorVec[0] = 0.22;
+  m_ErrorVec[1] = 0.12;
+  m_ErrorVec[2] = 0.24;
+  m_ErrorVec[3] = 0.21;
   this->declareProperty("errorVec",m_ErrorVec);
 
   this->declareProperty("sharingCorr",m_sharingCorr = 112.);
@@ -38,7 +38,8 @@ STOfflinePosition::~STOfflinePosition() {
   //destructer
 }
 
-ISTClusterPosition::Measurement STOfflinePosition::estimate(const LHCb::STCluster* aCluster) const{
+ISTClusterPosition::Info STOfflinePosition::estimate(const LHCb::STCluster* aCluster) const{
+
   double stripNum = STFun::position(aCluster->stripValues());
   
   LHCb::STChannelID firstChan = aCluster->firstChannel();
@@ -46,13 +47,16 @@ ISTClusterPosition::Measurement STOfflinePosition::estimate(const LHCb::STCluste
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), 
                                     (unsigned int)stripNum+firstChan.strip());
+  
+  ISTClusterPosition::Info theInfo; 
+  theInfo.strip = theChan;
+  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),aCluster->size());
+  theInfo.fractionalError = error(aCluster->size());
                                                                              
-  return std::make_pair(std::make_pair(theChan,
-                        stripFraction(stripNum - floor(stripNum),aCluster->size())),
-                        error(aCluster->size()));
+  return theInfo;
 }
 
-ISTClusterPosition::Measurement STOfflinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
+ISTClusterPosition::Info STOfflinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
   
   double stripNum = STFun::position(digits);
  
@@ -61,9 +65,12 @@ ISTClusterPosition::Measurement STOfflinePosition::estimate(const SmartRefVector
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), (unsigned int)stripNum);
                                                                              
-  return std::make_pair(std::make_pair(theChan,
-                        stripFraction(stripNum - floor(stripNum),digits.size())),
-                        error(digits.size()));
+  ISTClusterPosition::Info theInfo; 
+  theInfo.strip = theChan;
+  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),digits.size());
+  theInfo.fractionalError = error(digits.size());
+
+  return theInfo;
 }
 
 double STOfflinePosition::error(const unsigned int nStrips) const{

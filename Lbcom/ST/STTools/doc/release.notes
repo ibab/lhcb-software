@@ -2,6 +2,9 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2006-02-28 - M Needham
+ - Move to new position tool interface
+
 !=========================== STTools v2r0 2006-02-15 ==========================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent

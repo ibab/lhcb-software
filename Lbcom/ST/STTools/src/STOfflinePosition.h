@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.h,v 1.3 2006-02-07 08:46:28 mneedham Exp $
+// $Id: STOfflinePosition.h,v 1.4 2006-02-28 15:37:05 mneedham Exp $
 #ifndef _STOfflinePosition_H
 #define _STOfflinePosition_H
 
@@ -30,9 +30,9 @@ public:
   virtual ~STOfflinePosition();
 
   /// method
-  virtual ISTClusterPosition::Measurement estimate(const LHCb::STCluster* aCluster) const;
+  virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* aCluster) const;
 
-  virtual ISTClusterPosition::Measurement estimate(const SmartRefVector<LHCb::STDigit>& digits) const;
+  virtual ISTClusterPosition::Info estimate(const SmartRefVector<LHCb::STDigit>& digits) const;
 
   virtual double error(const unsigned int nStrips) const;
 

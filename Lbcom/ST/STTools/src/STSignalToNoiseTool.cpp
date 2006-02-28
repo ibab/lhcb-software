@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.3 2006-02-10 18:37:16 mneedham Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.4 2006-02-28 15:37:05 mneedham Exp $
 //
 // This File contains the implementation of the STSignalToNoiseTool class
 //
@@ -99,7 +99,6 @@ double STSignalToNoiseTool::signalToNoise(const SmartRefVector<LHCb::STDigit>& d
 double STSignalToNoiseTool::noiseInADC(const DeSTSector* aSector) {
 
   // look up noise of Channel in ADC
-  double value = m_paramsInADC[0] + (aSector->capacitance()* m_paramsInADC[1]);
   return  m_paramsInADC[0] + (aSector->capacitance()* m_paramsInADC[1]);
 }
 

@@ -23,8 +23,8 @@ double STFun::position(const LHCb::STCluster::ADCVector& strips) {
   double totalCharge = 0.0;
   double firstMoment = 0.0;
  
-  LHCb::STCluster::ADCVector::const_iterator iter = strips.begin();
   unsigned int i =0;
+  LHCb::STCluster::ADCVector::const_iterator iter = strips.begin();
   while (iter != strips.end()){
     totalCharge += iter->second;
     firstMoment += iter->second
