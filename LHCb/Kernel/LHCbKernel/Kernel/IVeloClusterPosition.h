@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.3 2006-02-22 15:41:54 szumlat Exp $
+// $Id: IVeloClusterPosition.h,v 1.4 2006-02-28 14:01:15 szumlat Exp $
 #ifndef VELOALGORITHMS_IVELOCLUSTERPOSITION_H 
 #define VELOALGORITHMS_IVELOCLUSTERPOSITION_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include "SiPositionInfo.h"
 
 static const InterfaceID IID_IVeloClusterPos ("IVeloClusterPos", 1, 0);
 
@@ -27,15 +28,11 @@ namespace LHCb
 class IVeloClusterPosition : virtual public IAlgTool{
 public:
 
+  // a new tool interface, common for Velo and ST 
+  // (defined inside Kernel/SiPositonInfo.h)
+  typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
   typedef std::pair<double, double> Pair;
-  // stripPair keeps the closest channel assigned to strip that is
-  // the closest one to the calculated cluster centre and fractional
-  // distance to the strip
-  typedef std::pair<LHCb::VeloChannelID, double> stripPair;
-  // object that is returned from the tool, consists of strip
-  // info and error estimate of the cluster position in the
-  // units of strip distance (local pitch)
-  typedef std::pair<stripPair, double> toolPair;
+  
   // Return the interface ID
   static const InterfaceID& interfaceID() {return IID_IVeloClusterPos;}
   // the main method to retrieve the cluster position and error
@@ -46,10 +43,10 @@ public:
   // for clusters on the Phi sensor; the radius also could be
   // set to 0., in that case default radius will be used 
   // (depending on sensor zone)
-  virtual toolPair position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* cluster,
                             Pair& userInfo)=0;
-  virtual toolPair position(const LHCb::VeloCluster* cluster)=0;
-  virtual toolPair position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* cluster)=0;
+  virtual toolInfo position(const LHCb::VeloCluster* cluster,
                             double radiusOfCluster)=0;
   // the method calculate the position using linear charge sharing
   // approximation
@@ -67,19 +64,17 @@ public:
                    const LHCb::VeloCluster* cluster,
                    double fracPosTrue)=0;
   // helper method
-  virtual std::string sensType()=0;
-  virtual void setSensType(std::string type)=0;
   
 protected:
 
   // algorithm to calculate the centre position of the cluster
   // based on linear approximation
-  virtual toolPair weightedMeanPos(
+  virtual toolInfo weightedMeanPos(
                    const LHCb::VeloCluster* cluster,
                    Pair& userInfo)=0;
   // algorithm to calculate cluster centre position using eta
   // variable 
-  virtual toolPair etaFitPos(
+  virtual toolInfo etaFitPos(
                    const LHCb::VeloCluster* cluster,
                    Pair& userInfo)=0;
   // determination of the VeloChannelID and error (the same code for
