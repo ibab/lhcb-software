@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.2 2006-02-28 15:40:19 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -48,7 +48,7 @@ private:
 
   StatusCode createCluster(const STClusterWord& aWord,
                            const STTell1Board* aBoard,
-                           LHCb::ByteStream& stream,
+                           const std::vector<SiADCWord>& adcValues,
 		 	   LHCb::STClusters* clusCont) const;
  
   unsigned int mean(const std::vector<SiADCWord>& adcValues) const;

@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.2 2006-02-28 15:40:19 mneedham Exp $
 
 #include <algorithm>
 
@@ -12,7 +12,6 @@
 
 // Event
 #include "Event/RawEvent.h"
-#include "Event/ByteStream.h"
 #include "Event/STCluster.h"
 #include "Event/STLiteCluster.h"
 #include "Kernel/STDataFunctor.h"
@@ -23,7 +22,7 @@
 
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQGeneral.h"
-#include "SiDAQ/SiHeaderWord.h"
+#include "STDecoder.h"
 
 #include "Kernel/STDetSwitch.h"
 
@@ -108,45 +107,29 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
 
     // get the board and data
-    STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
-    STDAQ::rawInt* theData = (*iterBank)->data();
-    size_t byteSize = (*iterBank)->size();    
- 
-    // make a SmartBank of shorts...
-    ByteStream stream(theData,byteSize);    
-   
-    // get number of clusters..
-    SiHeaderWord aHeader; stream >> aHeader; 
-    if (aHeader.hasError() == true){
+    STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
+    // make a decoder
+    STDecoder decoder((*iterBank)->data());    
+    
+    if (decoder.hasError() == true){
       warning() << "bank has errors - skip event" << endmsg;
       return StatusCode::FAILURE;
     }
-
-    unsigned int nClus = aHeader.nClusters();
-   
-    // read in the first half of the bank
-    std::vector<STClusterWord> clusVector(nClus);
-    for (unsigned int iW = 0; iW < nClus; ++iW){
-      stream >> clusVector[iW];
-    } // iW
-
-    // there is padding between the 2 halves
-    if ((nClus % 2) == 1) stream.seek(2);     
-    
-    // loop again and make clusters
-    for (unsigned int iW = 0 ; iW < nClus ; ++iW){
-      StatusCode sc = createCluster(clusVector[iW],aBoard,stream,clusCont);
+  
+    // iterator over the data....
+    STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
+    for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
+      StatusCode sc = createCluster(iterDecoder->first,aBoard,iterDecoder->second,clusCont);
       if (sc.isFailure()) {
         return StatusCode::FAILURE;
       }
-    } // iW
+    } // iterDecoder
 
-    if (stream.nRead() != byteSize ){
-      warning() << "Inconsistant byte count Read: "  << stream.nRead() 
-                << " Expected: " << byteSize << endmsg;
+    if (iterDecoder.bytesRead() != ((*iterBank)->size() - 8)){
+      warning() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
+                << " Expected: " << (*iterBank)->size() << endmsg;
       return StatusCode::FAILURE;
     }
-
   } // iterBank
    
   return StatusCode::SUCCESS;
@@ -155,23 +138,16 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
 StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
                                                 const STTell1Board* aBoard,
-                                                LHCb::ByteStream& stream,
+                                                const std::vector<SiADCWord>& adcValues,
                                                 STClusters* clusCont) const{
   // stream the neighbour sum
-  char neighbour;  stream >> neighbour;  
+  std::vector<SiADCWord>::const_iterator iterADC = adcValues.begin();
+  char neighbour = *iterADC;  
+  ++iterADC;
 
-  // and now get the digits
-  std::vector<SiADCWord> adcValues;
-  do {
-    SiADCWord tWord;
-    stream >> tWord;
-    adcValues.push_back(tWord);
-  } while((adcValues.back().endCluster() == false )
-         &&(adcValues.size() < 4u));
-  
   // make some consistancy checks
-  unsigned int pseudoSize = GSL_MIN(adcValues.size(),3u);
-  if ((adcValues.back().endCluster() == false) || (pseudoSize != aWord.pseudoSize())) {
+  unsigned int pseudoSize = GSL_MIN(adcValues.size()-1u,3u);
+  if ((pseudoSize != aWord.pseudoSize())) {
     warning() << "adc values do not match !" << std::endl;
     return StatusCode::FAILURE;
   }
@@ -187,7 +163,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   }
 
   STCluster::ADCVector adcs ; 
-  for (unsigned int i = 0; i < adcValues.size() ; ++i){
+  for (unsigned int i = 1; i < adcValues.size() ; ++i){
     adcs.push_back(std::make_pair(i-offset,adcValues[i]));
   } // iDigit
 
@@ -206,7 +182,8 @@ unsigned int RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues
 {
  
   double sum = 0;
-  for (unsigned int i = 0; i < adcValues.size() ; ++i){
+  // note the first is the neighbour sum..
+  for (unsigned int i = 1; i < adcValues.size() ; ++i){
      sum += adcValues[i].adc()*i;
   } // i
                                                                                         

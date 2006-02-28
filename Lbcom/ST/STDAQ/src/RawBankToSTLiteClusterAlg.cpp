@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.2 2006-02-28 15:40:19 mneedham Exp $
 
 
 #include <algorithm>
@@ -15,14 +15,15 @@
 
 // Event
 #include "Event/RawEvent.h"
-#include "Event/ByteStream.h"
 #include "Event/STLiteCluster.h"
 
 
 #include "STTell1Board.h"
 #include "STTell1ID.h"
 #include "STDAQGeneral.h"
-#include "SiDAQ/SiHeaderWord.h"
+
+//#include "SiDAQ/SiHeaderWord.h"
+#include "STDecoder.h"
 
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDataFunctor.h"
@@ -76,9 +77,6 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
   // Retrieve the RawEvent:
   RawEvent* rawEvt = get<RawEvent>(RawEventLocation::Default );
 
-  // make a new digits container
-  //  STClusters* clusCont = new STClusters();
-  //clusCont->reserve(2000);
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt);   
@@ -86,68 +84,61 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
     return Error("Problems in decoding event skipped", sc);
   }
 
-  // sort
- 
-  // store
-  //put(clusCont, m_clusterLocation);
-
+  
   return sc;
 };
 
 
 StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
  
-  typedef std::pair< std::pair<unsigned int, ByteStream >, STTell1Board*> Data;
+  typedef std::pair< STDecoder , STTell1Board* > Data;
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   std::vector<Data> tmpCont = std::vector<Data>();
   tmpCont.reserve(tBanks.size());
-  unsigned int i = 0;
   unsigned int nClus = 0;
 
   // loop over the banks of this type..
   std::vector<RawBank* >::const_iterator iterBank =  tBanks.begin();
-  for (; iterBank != tBanks.end() ; ++iterBank, ++i){
+  for (; iterBank != tBanks.end() ; ++iterBank){
 
     // get the board and data
-    STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
-    STDAQ::rawInt* theData = (*iterBank)->data();
-    size_t byteSize = (*iterBank)->size();    
+    STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
  
     // make a SmartBank of shorts...
-    ByteStream stream(theData,byteSize);    
+    STDecoder decoder((*iterBank)->data());
    
     // get number of clusters..
-    SiHeaderWord aHeader; stream >> aHeader; 
-    if (aHeader.hasError() == true){
+
+    if (decoder.hasError() == true){
       warning() << "bank has errors - skip event" << endmsg;
       return StatusCode::FAILURE;
     }
-
-    nClus+= aHeader.nClusters();
+				     
+    nClus+= decoder.nClusters();
      
-    tmpCont.push_back(std::make_pair(
-                      std::make_pair(aHeader.nClusters(),stream),aBoard));
+    tmpCont.push_back(std::make_pair(decoder,aBoard));
 
   } // iterBank
 
   STLiteCluster::FastContainer* fCont = new STLiteCluster::FastContainer();
   fCont->resize(nClus);  
 
-  i = 0;
+  unsigned int i = 0;
   for (std::vector<Data>::iterator iter = tmpCont.begin(); 
        iter !=  tmpCont.end(); ++iter){
 
     // read in the first half of the bank
-    STClusterWord aWord; 
-        
-    for (unsigned int iW = 0; iW < iter->first.first; ++iW, ++i){
-      iter->first.second >> aWord;
+    STDecoder::pos_iterator iterDecoder = iter->first.posBegin();
+    for ( ;iterDecoder != iter->first.posEnd(); ++iterDecoder){
+     
+      STClusterWord aWord = *iterDecoder; 
       STLiteCluster liteCluster(aWord.fracStripBits(),
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
                                 iter->second->DAQToOffline(aWord.channelID()));
-      fCont->at(i) = liteCluster;
-    } // iW
+      fCont->at(i) = liteCluster; 
+     
+    } //iter
   } // iterData
 
   put(fCont, m_clusterLocation);
