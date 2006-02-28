@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.17 2006-02-24 16:32:47 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.18 2006-02-28 19:12:14 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -166,7 +166,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
       if (vid.isRType()) {
-        meas = new VeloRMeasurement( *clus, *m_veloDet, par );
+        meas = new VeloRMeasurement( *clus, *m_veloDet );
       } else {
         meas = new VeloPhiMeasurement( *clus, *m_veloDet );
       }
@@ -184,8 +184,8 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     if (clus != NULL)
       meas = new STMeasurement( *clus, *m_ttDet, *m_stPositionTool );
     else {
-      error() << "STCluster of type TT is NULL! No correspondence to STChannelID = "
-              << sid << endreq;
+      error() << "STCluster of type TT is NULL! No correspondence to "
+              << "STChannelID = " << sid << endreq;
     }
     if ( meas == NULL )
       error() << "Unable to create TT measurement!" << endreq;
@@ -196,8 +196,8 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     if (clus != NULL)
       meas = new STMeasurement( *clus, *m_itDet, *m_stPositionTool );
     else {
-      error() << "STCluster of type IT is NULL! No correspondence to STChannelID = "
-              << sid << endreq;
+      error() << "STCluster of type IT is NULL! No correspondence to "
+              << "STChannelID = " << sid << endreq;
     }
     if ( meas == NULL )
       error() << "Unable to create IT measurement!" << endreq;

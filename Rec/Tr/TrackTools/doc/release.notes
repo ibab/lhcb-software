@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-02-28 - Jeroen van Tilburg
+ - TrajectoryProvider: Extracts the Trajectory directly from the Measurement.
+ - MeasurementProvider: VeloRMeasurement does not require radius anymore.
+ - minor cosmetics.
+
 ! 2006-02-24 - Eduardo Rodrigues
  - improvements to MeasurementProvider:
    - possible to ignore Velo/TT/IT/OT info via options

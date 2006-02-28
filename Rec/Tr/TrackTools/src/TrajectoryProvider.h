@@ -1,3 +1,4 @@
+// $Id: TrajectoryProvider.h,v 1.3 2006-02-28 19:12:14 jvantilb Exp $
 #ifndef TRACKTOOLS_TRAJECTORYPROVIDER_H 
 #define TRACKTOOLS_TRAJECTORYPROVIDER_H 1
 
@@ -60,18 +61,18 @@ public:
                                         double offset = 0 );
   
   /// Return a "State Trajectory" from a State
-  virtual LHCb::Trajectory* trajectory( const LHCb::State& state );
+  virtual LHCb::Trajectory* trajectory( LHCb::State& state );
   
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
+  virtual LHCb::Trajectory* trajectory( Gaudi::TrackVector& stateVector,
                                         double z );
   
 protected:
   // Interfaces
-  IVeloClusterPosition* m_veloPositionTool;   ///< Velo cluster position tool
-  ISTClusterPosition*   m_stPositionTool;     ///< ST cluster position tool
-  std::string           m_stPositionToolName; ///< ST cluster position tool name
-  std::string           m_veloPositionToolName; ///< Velo cluster position tool name
+  IVeloClusterPosition* m_veloPositionTool;    ///< Velo cluster position tool
+  ISTClusterPosition*   m_stPositionTool;      ///< ST cluster position tool
+  std::string           m_stPositionToolName;  ///< ST position tool name
+  std::string           m_veloPositionToolName;///< Velo position tool name
 
   // Geometry information
   DeVelo*       m_veloDet;

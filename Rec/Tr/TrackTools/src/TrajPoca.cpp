@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.5 2006-02-10 20:38:10 graven Exp $
+// $Id: TrajPoca.cpp,v 1.6 2006-02-28 19:12:14 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -132,8 +132,8 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
           // we might be oscillating, but we could also just have
           // stepped over the minimum. choose a solution `in
           // between'.
-          arclength1 = restrictLen( prevflt1+0.5*step1, traj1, restrictRange1 );
-          arclength2 = restrictLen( prevflt2+0.5*step2, traj2, restrictRange2 );
+          arclength1 = restrictLen( prevflt1+0.5*step1, traj1, restrictRange1);
+          arclength2 = restrictLen( prevflt2+0.5*step2, traj2, restrictRange2);
           newPos1    = traj1.position( arclength1 );
           newPos2    = traj2.position( arclength2 );
           distance   = (newPos1 - newPos2); 
@@ -158,7 +158,7 @@ StatusCode TrajPoca::minimize( const Trajectory& traj,
                                bool restrictRange,
                                const XYZPoint& pt,
                                XYZVector& distance,
-                               double precision )
+                               double /*precision*/ )
 {
   arclength = restrictLen(traj.arclength(pt),traj,restrictRange);
   distance = traj.position(arclength)-pt;
@@ -199,7 +199,7 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
     det = caa * cbb - cab * cab;
   }
   // If they are parallel (in quadratic approximation) give up
-  if ( det < 1.e-8 ) return StatusCode::FAILURE; // "Parallel in quadratic approx"
+  if ( det < 1.e-8 ) return StatusCode::FAILURE;
 
   double df1   = (ua * cbb - ub * cab) / det;
   int pathDir1 = (df1 > 0) ? 1 : -1;
