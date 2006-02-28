@@ -123,11 +123,17 @@ StatusCode STClusterResolution::initHistograms(){
    
    AIDA::IHistogram1D* resHisto = book(id+10,
 		 "resolution"+boost::lexical_cast<std::string>(id+10),
-		 -0.5, 0.5, 200);
+		 -2.5, 2.5, 200);
     
    m_resHistoVector.push_back(resHisto); 
+
       
-  
+   AIDA::IHistogram1D* onlineResHisto = book(id+30,
+		 "online resolution"+boost::lexical_cast<std::string>(id+30),
+		 -2.5, 2.5, 200);
+    
+   m_onlineResHistoVector.push_back(onlineResHisto); 
+
    AIDA::IHistogram1D* pullHisto = book(id+20,
 		  "pull"+boost::lexical_cast<std::string>(id+20),
 		 -10.,10., 200);
@@ -152,18 +158,22 @@ StatusCode STClusterResolution::fillHistograms(const STCluster* aCluster,
     const DeSTSector* aSector = m_tracker->findSector(aChan);
     const double uTrue = this->calculateUTrue(aHit,aSector);
     
-    // rec u
-    ISTClusterPosition::Measurement measVal = m_positionTool->estimate(aCluster);
-    double uRec = (measVal.first.second * aSector->pitch()) + aSector->localU(aChan);
+    // rec u - offline
+    ISTClusterPosition::Info measVal = m_positionTool->estimate(aCluster);
+    double uRec = (measVal.fractionalPosition * aSector->pitch()) + aSector->localU(measVal.strip.strip());
     
-
     // determine which histos to fill based on cluster size
     const int id = this->histoId((int)aCluster->size());
 
     // fill double error = measVal.second;
-    double error = measVal.second;
+    const double error = measVal.fractionalError * aSector->pitch();
     m_resHistoVector[id]->fill(uRec-uTrue);
     m_pullHistoVector[id]->fill((uRec-uTrue)/error);
+
+    // now the online version
+    double uOnline = (aCluster->interStripFraction() * aSector->pitch()) 
+                   + aSector->localU(aChan.strip());
+    m_onlineResHistoVector[id]->fill(uOnline-uTrue);
    
   } // aHit
 
@@ -175,7 +185,7 @@ StatusCode STClusterResolution::fillHistograms(const STCluster* aCluster,
 int STClusterResolution::histoId(const int clusterSize) const{
 
  // determine which histogram to fill
- return (clusterSize < 4 ?  clusterSize - 1 : 3);
+ return (clusterSize <= 4 ?  clusterSize - 1 : 3);
 
 }
 

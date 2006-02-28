@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: TTOccupancy.h,v 1.2 2006-02-28 15:38:58 mneedham Exp $
 #ifndef _TTOccupancy_H
 #define _TTOccupancy_H
 
@@ -45,19 +45,12 @@ public:
 
 private:
 
-  virtual StatusCode initHistograms();
   virtual StatusCode fillHistograms(const LHCb::STDigit* aDigit);
 
-  int uniqueInt(unsigned int iStation, unsigned int iLayer, 
-                unsigned int iCol) const;
-
-    
   double binValue(const unsigned int strip) const;
 
   std::string m_dataLocation;
   
-  std::map<int,int> m_Mapping;
-  std::vector<AIDA::IHistogram1D*> m_stripOccVector;
   
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
@@ -65,7 +58,9 @@ private:
   DeSTDetector* m_tracker;
   std::vector<double> m_Threshold;   
   int m_binSize;
-  
+  int m_nBins;
+  int m_hMax;  
+
 };
 
 #endif // _TTOccupancy_H

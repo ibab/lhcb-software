@@ -2,6 +2,11 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-02-28 M Needham
+ - Move to new position tool interface
+ - Bug fixes in STMCTuner, STClusterResolution, STEffMonitor
+ - Modify TTOccupancy
+
 !============================ STCheckers v1r0 2006-02-20 =======================
 ! 2006-02-22 - Marco Cattaneo
  - Fix relations path in STEffMonitor

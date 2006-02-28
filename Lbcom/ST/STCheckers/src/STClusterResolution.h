@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.2 2006-02-20 16:44:32 mneedham Exp $
+// $Id: STClusterResolution.h,v 1.3 2006-02-28 15:38:58 mneedham Exp $
 #ifndef _STClusterResolution_H
 #define _STClusterResolution_H
 
@@ -75,7 +75,7 @@ private:
 
   std::vector<AIDA::IHistogram1D*> m_resHistoVector;
   std::vector<AIDA::IHistogram1D*> m_pullHistoVector;
-
+  std::vector<AIDA::IHistogram1D*> m_onlineResHistoVector;
 
 };
 

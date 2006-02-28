@@ -59,6 +59,7 @@ STEffMonitor::STEffMonitor(const std::string& name,
 
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
+  this->declareProperty("includeGuardRings", m_includeGuardRings = false);
 }
 
 STEffMonitor::~STEffMonitor(){
@@ -106,20 +107,6 @@ StatusCode STEffMonitor::execute(){
 
   m_hitTable = get<HitTable>(m_hitTableLocation);
   if (!m_hitTable) return Error("Failed to find hit table", StatusCode::FAILURE);
-  /*
-  MCHits* hits  = get<MCHits>(MCHitLocation::TT);
-  MCHits::iterator tIter = hits->begin();  
-  while (tIter != hits->end()){
-    Range range = m_table->relations(*tIter);
-    if (range.empty() == true) {
-     std::cout << "empty" << std::endl;
-    }
-    else {
-      std::cout << "not empty" << std::endl;
-    } // tIter
-    ++tIter;
-  }
-  */
   MCParticles::const_iterator iterPart = particles->begin(); 
   for ( ; iterPart != particles->end(); ++iterPart){
     if (m_selector->accept(*iterPart)){
@@ -272,7 +259,6 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
   if (hits.empty()){
      return StatusCode::FAILURE;
   }
-
  
   std::vector<DeSTLayer*>::const_iterator iterLayer = m_tracker->layers().begin();
   for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
@@ -282,9 +268,7 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
      std::vector<MCHit*> layerHits;  
      while (iterHit != hits.end()){
        MCHit* aHit = iterHit->to(); 
-       if ((*iterLayer)->isInside(aHit->midPoint())){
-	 layerHits.push_back(aHit);
-       }
+       if (isInside(*iterLayer,aHit) == true) layerHits.push_back(aHit);
        ++iterHit;
      } // iterHit
 
@@ -314,7 +298,7 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
        //  xy 
        m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
 
-       if (found == true){
+       if (found == false){
          m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
          m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
          m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
@@ -335,6 +319,22 @@ int STEffMonitor::uniqueHistoID(const STChannelID aChan) const{
   return m_detType == "TT" ? aChan.station()*100 + aChan.layer()  :
                              aChan.station()*100 + aChan.detRegion()*10 + aChan.layer();
 } 
+
+bool STEffMonitor::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const{
+
+  // check if expect hit to make cluster
+  bool isFound = false;
+  if (aLayer->isInside(aHit->midPoint()) == true){
+    if (m_includeGuardRings == false){
+      DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
+      isFound = aSector->globalInActive(aHit->midPoint());
+    }
+    else {
+      isFound = true;
+    }
+  }
+  return isFound;
+}
 
 void STEffMonitor::unBookHistos(){
 
@@ -358,4 +358,7 @@ void STEffMonitor::eraseHistos(){
   HistFun::eraseVector(m_effYLayerHistos);
   HistFun::eraseVector(m_effXYLayerHistos);
 }
+
+
+
 

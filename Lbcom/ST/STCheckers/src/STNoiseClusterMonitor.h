@@ -1,4 +1,4 @@
-// $Id: STNoiseClusterMonitor.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: STNoiseClusterMonitor.h,v 1.2 2006-02-28 15:38:58 mneedham Exp $
 #ifndef _STNoiseClusterMonitor_H
 #define _STNoiseClusterMonitor_H
 
@@ -66,6 +66,7 @@ private:
   DeSTDetector* m_tracker;
   std::string m_detType;
 
+  std::string m_asctLocation;
   std::string m_clusterLocation;
   std::string m_hitLocation; 
 

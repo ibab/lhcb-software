@@ -46,6 +46,7 @@ STNoiseClusterMonitor::STNoiseClusterMonitor(const std::string& name,
 {
   // constructer
   this->declareProperty("spillVector", m_SpillVector);
+  this->declareProperty("detType", m_detType = "TT");
 
 }
 
@@ -65,7 +66,10 @@ StatusCode STNoiseClusterMonitor::initialize(){
   m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   m_hitLocation = MCHitLocation::TT;
+  m_clusterLocation = STClusterLocation::TTClusters;
+  STDetSwitch::flip(m_detType,m_clusterLocation);
   STDetSwitch::flip(m_detType,m_hitLocation);
+  m_asctLocation = m_clusterLocation + "2MCHits";
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_SpillVector.begin() ;
@@ -89,7 +93,7 @@ StatusCode STNoiseClusterMonitor::execute(){
   STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
-  AsctTool associator(evtSvc(), m_clusterLocation);
+  AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 
@@ -124,11 +128,11 @@ StatusCode STNoiseClusterMonitor::fillHistograms(const MCHit* aHit, const STClus
     plot(spill,"spill histo"+aSector->type(), -0.5, 10.5, 11);
     if (spill == m_eventIndex){
       // hit from event spill
-      plot(0.,"case"+aSector->type(),-0.5,10.5 ,11);
+      plot(0.,"case "+ aSector->type(),-0.5,10.5 ,11);
     }
     else {
       // hit from another spill
-      plot(1.,"case"+aSector->type(),-0.5,10.5 ,11);
+      plot(1.,"case"+ aSector->type(),-0.5,10.5 ,11);
     } 
 
   }

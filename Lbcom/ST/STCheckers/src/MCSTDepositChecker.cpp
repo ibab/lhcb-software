@@ -1,4 +1,4 @@
-//
+
 // This File contains the definition of the OTSmearer -class
 //
 // C++ code for 'LHCb Tracking package(s)'

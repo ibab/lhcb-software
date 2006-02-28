@@ -81,8 +81,8 @@ StatusCode TTOccupancy::initialize(){
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName + "TT");
 
-  // intialize histos
-  this->initHistograms();
+  m_hMax = 512*8;
+  m_nBins = m_hMax/m_binSize;
 
   return StatusCode::SUCCESS;
 
@@ -107,44 +107,6 @@ StatusCode TTOccupancy::execute(){
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode TTOccupancy::initHistograms()
-{
-
- int numInVector = 0;
- unsigned int nstrip = m_tracker->sectors().front()->nStrip();
-
- std::vector<DeSTLayer*>::const_iterator iterLayer = m_tracker->layers().begin();
- for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
-   DeSTLayer* aLayer = *iterLayer;
-
-   for (unsigned int iCol = 1; iCol<= aLayer->childIDetectorElements().size(); ++iCol){
-
-      IDetectorElement::IDEContainer children = aLayer->childIDetectorElements();
-      int ttId = this->uniqueInt(aLayer->elementID().station(),
-                                 aLayer->elementID().layer(),iCol); 
-
-      // add to map
-      m_Mapping[ttId] = numInVector;
-
-      unsigned int numStripsInCol = children.size()*2*nstrip; 
-      unsigned int ttBins = numStripsInCol/m_binSize;
-      int ttHistoId = ttId+10000;
-
-      AIDA::IHistogram1D* ttStripOccHisto = book(ttHistoId,
-		       "Number of hits on strips"+boost::lexical_cast<std::string>(ttHistoId),
-		       -0.5, ttBins*m_binSize, ttBins );
-
-      m_stripOccVector.push_back(ttStripOccHisto);
-
-      ++numInVector;
-   } // iCol
- } // iStation
-
- return StatusCode::SUCCESS;
-
-}
-
 StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
 
   // retrieve geom info
@@ -160,20 +122,30 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
     const unsigned int nstrips = ttSector->nStrip();
 
     // TT layer
-    int iCol = ttSector->column();
-    int ttId = uniqueInt(aChan.station(),aChan.layer(),iCol);
-    int numInVector = m_Mapping[ttId];
-    int offset = aChan.sector() - ttSector->getParent<DeTTSector>()->firstSector();
-    m_stripOccVector[numInVector]->fill(binValue(aChan.strip())+(nstrips*offset));
+    int iRow = ttSector->row();
+
+    // construct the histogram id...
+    std::string histo = "occ_st"+boost::lexical_cast<std::string>(aChan.station())
+                         + "_lay"+boost::lexical_cast<std::string>(aChan.layer())
+                         + "_dr"+boost::lexical_cast<std::string>(aChan.detRegion())
+                         +"_row"+boost::lexical_cast<std::string>(ttSector->row());
+    
+    int offset;
+    if (aChan.detRegion() == 1) {
+      offset = ttSector->column();
+    }
+    else if (aChan.detRegion() == 2){
+      aChan.station() == 1 ? offset = ttSector->column() - 6: offset = ttSector->column() - 7;
+    }
+    else if (aChan.detRegion() == 3){
+      aChan.station() == 1 ? offset = ttSector->column() - 9: offset = ttSector->column() - 10;
+    }
+  
+    plot(binValue(aChan.strip())+(nstrips*offset),histo, 0., m_hMax, m_nBins);
 
   } // if above threshold
 
   return StatusCode::SUCCESS;
-}
-
-int TTOccupancy::uniqueInt(unsigned int iStation, unsigned int iLayer, 
-                             unsigned int iCol) const {
-  return ((iStation*1000)+(iLayer*100)+iCol);
 }
 
 double TTOccupancy::binValue(const unsigned int strip) const{

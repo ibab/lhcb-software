@@ -146,7 +146,7 @@ StatusCode ITOccupancy::initHistograms()
 
    IHistogram1D* stripOccHisto = book(histID,
                                     "Number of hits on strips"+boost::lexical_cast<std::string>(histID),
-				    bins*m_binSize, bins);
+				    0., bins*m_binSize, bins);
    m_stripOccVector.push_back(stripOccHisto);
 		       
    histID = id + 2000;      
@@ -183,6 +183,7 @@ StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit){
     const unsigned int nstrips = aSector->nStrip();
 
     m_stripOccVector[numInVector]->fill(binValue(aChan.strip())+(nstrips*(aChan.sector()-1)));
+    ++m_layerOccVector[numInVector];
 
   } // if above threshold
 

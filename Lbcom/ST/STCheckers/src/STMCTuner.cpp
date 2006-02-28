@@ -71,7 +71,7 @@ StatusCode STMCTuner::initialize(){
 
   m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
-
+  m_asctLocation = m_clusterLocation + "2MCHits";
   return StatusCode::SUCCESS;
 }
 
@@ -83,7 +83,7 @@ StatusCode STMCTuner::execute(){
   STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
   // linker
-  AsctTool associator(evtSvc(), m_clusterLocation);
+  AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 
@@ -114,8 +114,8 @@ StatusCode STMCTuner::fillHistograms(const STCluster* aCluster,
     if (betaGamma> 500.){
       DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
-        plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type(),0., 50., 100);
-        plot(aCluster->totalCharge(),aSector->type(), 0., 200., 200);
+        plot(m_sigNoiseTool->signalToNoise(aCluster),"SN_"+aSector->type(),0., 50., 100);
+        plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
       }
     } 
   } // if
