@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.6 2006-02-20 16:42:46 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.7 2006-02-28 15:53:16 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -146,36 +146,31 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
       double totCharge = (*iterDigit)->depositedCharge(); 
 
       // clustering loop
-      int isize = 1;
       while ((jterDigit != digitCont->end())
 	     &&(iterDigit !=digitCont->end())
-             &&(isize<m_maxSize)
+             &&(clusteredDigits.size()<(unsigned int)m_maxSize)
              &&(this->keepClustering(*iterDigit,*jterDigit, aSector) == true)){
         clusteredDigits.push_back(*jterDigit);
         totCharge +=  (*jterDigit)->depositedCharge(); 
         ++iterDigit;
         ++jterDigit;
-        ++isize;
       } // clustering loop
  
   
       if (this->aboveClusterSignalToNoise(totCharge, aSector)){
 
-	ISTClusterPosition::Measurement measValue = m_positionTool->estimate(clusteredDigits);
+	ISTClusterPosition::Info measValue = m_positionTool->estimate(clusteredDigits);
       
-        STChannelID nearestStrip = measValue.first.first;
-     
         double nSum = neighbourSum(startCluster,iterDigit,digitCont );
 
         // make cluster +set things
-        STLiteCluster clusterLite(nearestStrip,measValue.first.second,
+        STLiteCluster clusterLite(measValue.strip,measValue.fractionalPosition,
                       clusteredDigits.size(),hasHighThreshold(totCharge,aSector));
-	//std::cout << measValue.first.second << std::endl;
         STCluster* newCluster = new STCluster(clusterLite, strips(clusteredDigits,
-                                              nearestStrip),nSum);
+                                              measValue.strip),nSum);
     
         // add to container
-        clusterCont->insert(newCluster,nearestStrip);
+        clusterCont->insert(newCluster,measValue.strip);
       }
     
     } // if found cluster seed

@@ -1,6 +1,10 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
+
 !-----------------------------------------------------------------------------
+
+! 2006-02-28
+ - Update for new position tool
 
 !======================= STAlgorithms v1r0 2006-02-23 ========================
 ! 2006-02-23 - Marco Cattaneo
