@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.70 2006-02-28 10:33:12 asatta Exp $
+! $Id: release.notes,v 1.71 2006-02-28 17:26:43 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-28 =========================
+
+! 2006-02-28 - Alessia Satta
+ - removed unused variable from DeMuonDetector.cpp
 
 ! 2006-02-28 - Alessia Satta
  - Add method to get stations inner and outer dimensions ( required by MuonID) 

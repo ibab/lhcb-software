@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.23 2006-02-28 10:33:12 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.24 2006-02-28 17:26:43 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -908,7 +908,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
 StatusCode  DeMuonDetector::fillGeoArray()
 {
   MsgStream msg( msgSvc(), name() );
-  bool debug=false;  
+
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   
   MuonLayout layoutInner=m_chamberLayout->layout(0);
