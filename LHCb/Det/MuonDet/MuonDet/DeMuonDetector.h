@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.14 2006-02-24 11:29:06 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.15 2006-02-28 10:33:12 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -223,6 +223,18 @@ public:
     return m_sensitiveAreaZ[station*4+region];
   };
 
+  float getInnerX(const int station){
+    return m_stationBox[station][0];
+  };
+  float getInnerY(const int station){
+    return m_stationBox[station][1];
+  };
+  float getOuterX(const int station){
+    return m_stationBox[station][2];
+  };
+  float getOuterY(const int station){
+    return m_stationBox[station][3];
+  };
 
 private:
 
@@ -264,7 +276,6 @@ private:
   float m_sensitiveAreaY[partition];
   float m_sensitiveAreaZ[partition];  
   double m_stationBox[5][4];
-float m_regionBox[partition][4];  
 };
 
 // -----------------------------------------------------------------------------
