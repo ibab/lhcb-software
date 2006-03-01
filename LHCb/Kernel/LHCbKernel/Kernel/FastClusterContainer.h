@@ -62,11 +62,11 @@ public:
   /// return iterator for beginning of mutable sequence
   iterator begin()                           { return m_r.ext->begin();       }
   /// return iterator for end of mutable sequence
-  iterator end()                             { return m_r.ext->begin();       }
+  iterator end()                             { return m_r.ext->end();         }
   /// return iterator for beginning of nonmutable sequence
   const_iterator begin() const               { return m_r.ext->begin();       }
   /// return iterator for end of nonmutable sequence
-  const_iterator end() const                 { return m_r.ext->begin();       }
+  const_iterator end() const                 { return m_r.ext->end();         }
   /// return iterator for beginning of reversed mutable sequence
   reverse_iterator rbegin()                  { return m_r.ext->rbegin();      }
   /// return iterator for beginning of reversed nonmutable sequence
@@ -74,7 +74,7 @@ public:
   /// return iterator for end of reversed mutable sequence
   reverse_iterator rend()                    { return m_r.ext->rend();        }
   /// return iterator for end of reversed nonmutable sequence
-	const_reverse_iterator rend() const        { return m_r.ext->rend();        }
+  const_reverse_iterator rend() const        { return m_r.ext->rend();        }
   /// subscript mutable sequence
   reference operator[](size_type i)          { return m_r.ext->operator[](i); }
   /// subscript nonmutable sequence
