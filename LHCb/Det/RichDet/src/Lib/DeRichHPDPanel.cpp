@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.35 2006-02-22 14:29:46 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.36 2006-03-01 09:33:14 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -434,7 +434,7 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
                                  4*m_deMagFactor[1]*inSiliconR)) / (2*m_deMagFactor[1]);
 
   // add 180 degrees for the cross focussing
-  const double newTheta = theta + pi*rad;
+  const double newTheta  = theta + pi*rad;
   const double inWindowX = rInWindow*cos(newTheta);
   const double inWindowY = rInWindow*sin(newTheta);
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);

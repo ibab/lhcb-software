@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.1 2006-02-01 16:20:49 papanest Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.2 2006-03-01 09:33:14 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -290,17 +290,20 @@ namespace RichDAQ
   /// Vector of Level 1 IDs
   typedef std::vector< Level1ID >                           Level1IDs;
 
-  /// Container for RICH HPD data, sorted by HPD number
-  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, LHCb::RichSmartID::Vector > PDMap;
+  /// Hash Map for RICH HPD data, sorted by HPD number
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, LHCb::RichSmartID::Vector > PDHashMap;
 
-  /// Container for RICH HPD data, sorted by Level1 board number
-  typedef GaudiUtils::HashMap< const Level1ID, PDMap >                            L1Map;
+  /// Map for RICH HPD data, sorted by HPD number
+  typedef std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >            PDMap;
+
+  /// Hash Map for RICH HPD data, sorted by Level1 board number
+  typedef GaudiUtils::HashMap< const Level1ID, PDHashMap >                          L1Map;
 
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
   typedef GaudiUtils::HashMap< const RichDAQ::Level1ID, LHCb::RichSmartID::Vector > L1ToSmartIDs;
 
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
-  typedef GaudiUtils::HashMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs > L1ToHardIDs;
+  typedef GaudiUtils::HashMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs >   L1ToHardIDs;
 
   /// Maximum data block size
   static const RichDAQ::ShortType MaxDataSize = 32;

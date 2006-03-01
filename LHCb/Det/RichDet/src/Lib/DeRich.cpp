@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.15 2006-02-22 14:29:46 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.16 2006-03-01 09:33:14 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -187,7 +187,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     mirrors[mNum]->applyMisAlignment( matrix );
   }
   
-  msg << MSG::INFO << "Aligned " << mirrors.size() << " " << mirrorID << endmsg;
+  msg << MSG::DEBUG << "Aligned " << mirrors.size() << " " << mirrorID << endmsg;
   return StatusCode::SUCCESS;
 
 }
