@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.2 2006-02-22 15:36:27 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.3 2006-03-01 13:52:08 szumlat Exp $
 // Include files
 
 // from Gaudi
@@ -23,14 +23,13 @@ static const  ToolFactory<VeloClusterPosition>          s_factory ;
 const        IToolFactory& VeloClusterPositionFactory = s_factory ; 
 
 typedef std::pair<double, double> Pair;
-typedef std::pair<LHCb::VeloChannelID, double> stripPair;
-typedef std::pair<stripPair, double> toolPair;
+//typedef std::pair<LHCb::VeloChannelID, double> stripPair;
+//typedef std::pair<stripPair, double> toolPair;
+typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-typedef std::pair<double, double> Pair;
-
 VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
@@ -43,8 +42,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_defaultResOneStrip ( 2, 0. ),
     m_defaultResTwoStrip ( 2, 0. ),
     m_defaultEtaPar ( 3, 0. ),
-    m_resParameters ( 12, 0. ),
-    m_sensType ( "" )
+    m_resParameters ( 12, 0. )
 {
   declareInterface<IVeloClusterPosition>(this);
   declareProperty("PrintInfo", m_printInfo);
@@ -68,7 +66,7 @@ VeloClusterPosition::~VeloClusterPosition() {};
 // position calculation, depending on sensor type the clusterPos
 // is radial or angular variable
 //=============================================================================
-toolPair VeloClusterPosition::weightedMeanPos(
+toolInfo VeloClusterPosition::weightedMeanPos(
                          const LHCb::VeloCluster* cluster,
                          Pair& userInfo)
 {
@@ -76,8 +74,7 @@ toolPair VeloClusterPosition::weightedMeanPos(
   //
   Pair tempPair;
   Pair fPair;
-  stripPair sPair;
-  toolPair localPair;
+  toolInfo myInfo;
   int intDistance=0;
   double fractionalPos=0.;
   // calculate fractional position in units of 'strip'
@@ -92,28 +89,31 @@ toolPair VeloClusterPosition::weightedMeanPos(
   //
     if(sc){
       posAndError(cluster, intDistanceID, fractionalPos, userInfo, tempPair);
-      sPair=std::make_pair(intDistanceID, fractionalPos);
-      localPair=std::make_pair(sPair, tempPair.second);
+      // fill the new wrapper object
+      myInfo.strip=intDistanceID;
+      myInfo.fractionalPosition=fractionalPos;
+      myInfo.fractionalError=tempPair.second;
       //
-      return (localPair);
+      return ( myInfo );
     }else{
       info()<< "Given cluster is invalid!" <<endmsg;
-      sPair=std::make_pair(LHCb::VeloChannelID(0), 0.);
-      localPair=std::make_pair(sPair, 0.);
+      // return dummy object for nvalid cluster
+      myInfo.strip=LHCb::VeloChannelID(0);
+      myInfo.fractionalPosition=0.;
+      myInfo.fractionalError=0.;
       //
-      return (localPair);
+      return ( myInfo );
     }
 }
 //=========================================================================
-toolPair VeloClusterPosition::etaFitPos(
+toolInfo VeloClusterPosition::etaFitPos(
                          const LHCb::VeloCluster* cluster,
                          Pair& userInfo)
 {
   debug()<< " ==> VeloClusterPosition::etaFitPos" <<endmsg;
   //
   Pair fPair;
-  stripPair sPair;
-  toolPair localPair;
+  toolInfo myInfo;
   Pair tempPair;
   int intDistance=0;
   double fractionalPos=0.;
@@ -127,16 +127,20 @@ toolPair VeloClusterPosition::etaFitPos(
   sc=m_veloDet->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
   if(sc){
     posAndError(cluster, intDistanceID, fractionalPos, userInfo, tempPair);
-    sPair=std::make_pair(intDistanceID, fractionalPos);
-    localPair=std::make_pair(sPair, tempPair.second);
+    // fill the wrapper object
+    myInfo.strip=intDistanceID;
+    myInfo.fractionalPosition=fractionalPos;
+    myInfo.fractionalError=tempPair.second;
     //
-    return (localPair);
+    return ( myInfo );
   }else{
     info()<< "Given cluster is invalid!" <<endmsg;
-    sPair=std::make_pair(LHCb::VeloChannelID(0), 0.);
-    localPair=std::make_pair(sPair,0.);
+    // fill dummy object for invalid cluster
+    myInfo.strip=LHCb::VeloChannelID(0);
+    myInfo.fractionalPosition=0.;
+    myInfo.fractionalError=0.;
     //
-    return (localPair);
+    return ( myInfo );
   }
 }
 //=========================================================================
@@ -169,20 +173,20 @@ double VeloClusterPosition::resolution(const double& pitch,
   }  
 }
 //=========================================================================
-toolPair VeloClusterPosition::position(
+toolInfo VeloClusterPosition::position(
                          const LHCb::VeloCluster* cluster,
                          Pair& userInfo)
 {
   debug()<< " ==> VeloClusterPosition::position" <<endmsg;
   
   if(m_useWeightedMean){
-    // if user failed to provide required info fill the container
+    // if user do not provide required info fill the container
     if(0==userInfo.first){
       userInfo=std::make_pair(0., 0.);
     }
     return (weightedMeanPos(cluster, userInfo));
   }else if(m_useEtaFit){
-    // if user did not provide required info fill the container 
+    // if user do not provide required info fill the container 
     if(0==userInfo.first){
       userInfo=std::make_pair(0., 0.);
     }
@@ -193,10 +197,13 @@ toolPair VeloClusterPosition::position(
     }
   }else{
     info()<< " ==> The Tool has been unproperly configured!" <<endmsg;
-    stripPair sPair=std::make_pair(LHCb::VeloChannelID(0), 0.);
-    toolPair localPair=std::make_pair(sPair, 0.);
+    // create and fill dummy object if something wrong with ini.
+    toolInfo myInfo;
+    myInfo.strip=LHCb::VeloChannelID(0);
+    myInfo.fractionalPosition=0.;
+    myInfo.fractionalError=0.;
     //
-    return (localPair);
+    return ( myInfo );
   } 
 }
 //=========================================================================
@@ -279,7 +286,6 @@ void VeloClusterPosition::posAndError(
   Pair resInfo=std::make_pair(alphaOfTrack, cluSize);
   //
   if(m_veloDet->isRSensor(sensor)||m_veloDet->isPileUpSensor(sensor)){
-    setSensType("RSensor");
     clusterPos=m_veloDet->rOfStrip(intDistanceID, fractionalPos);
     if(m_printInfo)
       info()<< " ==> The given cluster is on RType sensor" <<endmsg;
@@ -295,7 +301,6 @@ void VeloClusterPosition::posAndError(
       }
   }
   else if(m_veloDet->isPhiSensor(sensor)){
-    setSensType("PhiSensor");
     if(!(userInfo.first+userInfo.second)){
       double minRadius=0., maxRadius=0.;
       unsigned int zoneOfCluster=0;
@@ -458,25 +463,14 @@ void VeloClusterPosition::createEtaParTable()
   }
 }
 //==============================================================================
-std::string VeloClusterPosition::sensType()
-{
-  return (m_sensType);
-}
-//==============================================================================
-void VeloClusterPosition::setSensType(std::string type)
-{
-  m_sensType=type;
-}
-//==============================================================================
-//==============================================================================
-toolPair VeloClusterPosition::position(const LHCb::VeloCluster* cluster)
+toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster)
 {
   //return position using default error parametrizations and radii
   Pair temp=std::make_pair(0., 0.);
   return ( position(cluster, temp) );
 }
 //==============================================================================
-toolPair VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
+toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        double radiusOfCluster)
 {
   Pair temp=std::make_pair(0., radiusOfCluster);

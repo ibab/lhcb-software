@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.2 2006-02-22 15:36:27 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.3 2006-03-01 13:52:08 szumlat Exp $
 #ifndef VELOCLUSTERPOS_H 
 #define VELOCLUSTERPOS_H 1
 
@@ -8,7 +8,7 @@
 #include "Kernel/IVeloClusterPosition.h"            // Interface
 #include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
-
+#include "Kernel/SiPositionInfo.h"
 
 /** @class VeloClusterPos VeloClusterPos.h
  *  
@@ -25,9 +25,10 @@ class VeloClusterPosition : public GaudiTool, virtual public IVeloClusterPositio
 public:
 
   // typedefs for object returned by tool
-    typedef std::pair<double, double> Pair;
-    typedef std::pair<LHCb::VeloChannelID, double> stripPair;
-    typedef std::pair<stripPair, double> toolPair;
+  typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
+  typedef std::pair<double, double> Pair;
+  //    typedef std::pair<LHCb::VeloChannelID, double> stripPair;
+  //    typedef std::pair<stripPair, double> toolPair;
   // create structure to keep resolution parametrisations needed to
   // calculate error of the R or Phi cluster position; the structure
   // is a vector of pairs, first component of each pair holds value
@@ -52,10 +53,10 @@ public:
 
   virtual ~VeloClusterPosition( ); ///< Destructor
 
-  virtual toolPair position(const LHCb::VeloCluster* cluster);
-  virtual toolPair position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* cluster);
+  virtual toolInfo position(const LHCb::VeloCluster* cluster,
                             double radiusOfCluster);
-  virtual toolPair position(const LHCb::VeloCluster* cluster,
+  virtual toolInfo position(const LHCb::VeloCluster* cluster,
                             Pair& userInfo);
   virtual Pair fractionalPosMean(
                    const LHCb::VeloCluster* cluster);
@@ -65,15 +66,13 @@ public:
   virtual Pair etaFrac(
                    const LHCb::VeloCluster* cluster,
                    double fracPosTrue=0.);
-  virtual std::string sensType();
-  virtual void setSensType(std::string type);
   
 protected:
 
-  virtual toolPair weightedMeanPos(
+  virtual toolInfo weightedMeanPos(
                    const LHCb::VeloCluster* cluster,
                    Pair& userInfo);
-  virtual toolPair etaFitPos(
+  virtual toolInfo etaFitPos(
                    const LHCb::VeloCluster* cluster,
                    Pair& userInfo);
   virtual void posAndError(
@@ -101,7 +100,6 @@ private:
   std::vector<double> m_etaParameters;
   ResTable m_resTable;
   EtaTable m_etaTable;
-  std::string m_sensType;
   
 };
 #endif // VELOCLUSTERPOS_H
