@@ -5,14 +5,7 @@
  *  Header file to define hash functions for RichSmartIDs
  *
  *  CVS Log :-
- *  $Id: RichSmartIDHashFuncs.h,v 1.1 2006-02-01 14:59:21 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/12/13 17:27:25  jonrob
- *  another update
- *
- *  Revision 1.1  2005/01/13 12:21:18  jonrob
- *  Add new files to CVS
- *
+ *  $Id: RichSmartIDHashFuncs.h,v 1.2 2006-03-01 09:41:46 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11

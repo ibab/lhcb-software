@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-03-01 - Chris Jones
+ - Add new background radiator types to enum in RichRadiatorType.{h,cpp}
+
 ! 2006-03-01 - David Hutchcroft
  - Fixed a bug in FastClusterContainer.h so that end() worked properly
 
