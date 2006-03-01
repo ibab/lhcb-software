@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.6 2006-02-06 12:26:24 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.7 2006-03-01 09:53:54 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -28,13 +28,12 @@ const        IAlgFactory& MCRichDigitsToRawBufferAlgFactory = s_factory ;
 MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : RichAlgBase   ( name, pSvcLocator ),
-    m_rawFormatT  ( 0 ),
-    m_richSys     ( 0 )
+    m_rawFormatT  ( 0 )
 {
 
   declareProperty( "MCRichDigitsLocation",
                    m_digitsLoc = MCRichDigitLocation::Default );
-  declareProperty( "DataVersion", m_version = 1 );
+  declareProperty( "DataVersion", m_version = RichDAQ::LHCb2 );
 
 }
 
@@ -52,22 +51,6 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
   // acquire tools
   acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
 
-  // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
-
-  // create a dummy L1data object with an empty vector for each L1 board
-  m_dummyMap.clear();
-  for ( RichDAQ::Level1IDs::const_iterator iID = m_richSys->level1IDs().begin();
-        iID != m_richSys->level1IDs().end(); ++iID )
-  {
-    m_dummyMap[ *iID ];
-  }
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << m_dummyMap.size() << " entries in empty L1 map : L1IDs = " 
-            << m_richSys->level1IDs() << endreq;
-  }
-
   info() << "Using RICH Level1 buffer format : " << m_version << endreq;
 
   return sc;
@@ -80,34 +63,18 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
   // Retrieve MCRichDigits
   const MCRichDigits * digits = get<MCRichDigits>( m_digitsLoc );
 
-  // new rich data map
-  RichDAQ::L1Map L1Data = m_dummyMap;
+  // new vector of smart IDs
+  LHCb::RichSmartID::Vector smartIDs;
 
-  // Loop over digits and sort according to L1 and HPD
+  // Loop over digits and fill smartIDs into vector
   for ( MCRichDigits::const_iterator iDigit = digits->begin();
-        iDigit != digits->end(); ++iDigit ) 
+        iDigit != digits->end(); ++iDigit )
   {
-
-    // Get Level 1 ID number
-    const RichDAQ::Level1ID L1ID = m_richSys->level1ID( (*iDigit)->key() );
-
-    // Get reference to L1 group
-    RichDAQ::PDMap & PDs = L1Data[ L1ID ];
-
-    // Finally, insert this pixel into correct place
-    PDs[ (*iDigit)->key().hpdID() ].push_back( (*iDigit)->key() );
-
+    smartIDs.push_back( (*iDigit)->key() );
   }
 
   // Fill raw buffer
-  m_rawFormatT->createDataBank( L1Data, (RichDAQ::BankVersion)m_version );
-
-  // debug printout
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << L1Data.size() << " RICH L1 bank(s) for "
-            << digits->size() << " MCRichDigits" << endreq;
-  }
+  m_rawFormatT->fillRawEvent( smartIDs, (RichDAQ::BankVersion)m_version );
 
   return StatusCode::SUCCESS;
 }

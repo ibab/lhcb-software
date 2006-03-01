@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-03-01 - Chris Jones
+ - Adapt to new RichDAQ interface
+
 ! 2006-02-22 - Chris Jones
  - Adapt to new sensDetID info in the mchits
  - Some additions to the monitor code

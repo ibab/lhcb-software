@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.11 2006-02-22 19:29:30 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.12 2006-03-01 09:53:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -30,7 +30,7 @@ RichSignal::RichSignal( const std::string& name,
 {
 
   declareProperty( "HitLocation",
-                   m_RichHitLocation =  MCRichHitLocation::Default );
+                   m_RichHitLocation = MCRichHitLocation::Default );
   declareProperty( "PrevLocation",
                    m_RichPrevLocation = "Prev/" + MCRichHitLocation::Default );
   declareProperty( "PrevPrevLocation",

@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.8 2006-02-22 19:29:30 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.9 2006-03-01 09:53:54 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -37,6 +37,9 @@
 
 // boost
 #include "boost/lexical_cast.hpp"
+
+// RichDet
+#include "RichDet/DeRichSystem.h"
 
 // temporary histogramming numbers
 #include "RichDetParams.h"
@@ -80,7 +83,7 @@ private: // methods
   typedef Rich::Map< PhotPair, int >                      PhotMap;
 
   // PD occupancies
-  typedef Rich::Map<RichSmartID,int> PDMulti;
+  typedef Rich::Map<const RichSmartID,unsigned int> PDMulti;
 
   /// Particle mass
   double mass( const MCParticle * mcPart );
@@ -110,6 +113,9 @@ private: // data
 
   /// Pointer to MC truth tool
   const IRichMCTruthTool * m_mcTool;
+
+  /// Pointer to RICH system detector element
+  const DeRichSystem * m_richSys;
 
   // job options
   std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES

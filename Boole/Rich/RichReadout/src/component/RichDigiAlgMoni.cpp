@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.7 2006-02-22 19:29:30 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.8 2006-03-01 09:53:54 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -19,6 +19,7 @@ RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
   : RichHistoAlgBase ( name, pSvcLocator ),
     m_smartIDTool    ( 0   ),
     m_mcTool         ( 0   ),
+    m_richSys        ( 0   ),
     m_ID             ( 0   ),
     m_maxID          ( 300 )
 {
@@ -42,6 +43,9 @@ StatusCode RichDigiAlgMoni::initialize()
   // get tools
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
   acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
+
+  // RichDet
+  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
   // Retrieve particle property service
   IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
@@ -84,6 +88,8 @@ StatusCode RichDigiAlgMoni::execute()
   std::vector<unsigned int> hpdCKMult(Rich::NRiches,0);
   std::vector<unsigned int> nChargedTracks(Rich::NRiches,0);
 
+  Rich::Map<const RichSmartID,bool> hasHPDQuartzCKBkg;
+
   // Histogramming
   PD_GLOBAL_POSITIONS;
   const double maxMult[] = { 5000, 2000 };
@@ -95,9 +101,9 @@ StatusCode RichDigiAlgMoni::execute()
   {
 
     // Smart ID
-    const RichSmartID id = (*iMcDigit)->key();
+    const RichSmartID id          = (*iMcDigit)->key();
     // position for this ID
-    const Gaudi::XYZPoint point = m_smartIDTool->globalPosition( id );
+    const Gaudi::XYZPoint point   = m_smartIDTool->globalPosition( id );
     // RICH
     const Rich::DetectorType rich = id.rich();
 
@@ -106,7 +112,11 @@ StatusCode RichDigiAlgMoni::execute()
 
     // increment PD multiplicity count
     ++pdMult[id.hpdID()];
-    if ( (*iMcDigit)->history().hpdQuartzCK() ) { ++hpdCKMult[id.rich()]; }
+    if ( (*iMcDigit)->history().hpdQuartzCK() ) 
+    { 
+      ++hpdCKMult[id.rich()]; 
+      hasHPDQuartzCKBkg[id.hpdID()] = true;
+    }
 
     // Position plots
     plot1D( point.x(), hid(rich,"digitXglo"), "digits x global", xMinPDGlo[rich], xMaxPDGlo[rich] );
@@ -170,11 +180,25 @@ StatusCode RichDigiAlgMoni::execute()
   plot1D( hpdCKMult[Rich::Rich2], hid(Rich::Rich2,"hpdQCKDigMult"),
           "HPD Quartz CK Digit RICH2 Occupancy", 0, maxMult[Rich::Rich2] );
 
-  // Fill PD occupancy plots
+  // Fill HPD occupancy plots
   for ( PDMulti::const_iterator iOcc = pdMult.begin();
         iOcc != pdMult.end(); ++iOcc )
   {
-    plot1D( (*iOcc).second, hid(((*iOcc).first).rich(),"digPerPD"), "Digits per PD", -0.5, 200.5, 201 );
+    plot1D( (*iOcc).second, hid(((*iOcc).first).rich(),"digPerPD"), "Digits per HPD (nDigits>0)", 
+            -0.5, 200.5, 201 );
+    std::ostringstream HPD;
+    HPD << (*iOcc).first; 
+    plot1D( (*iOcc).second, 
+            hid(((*iOcc).first).rich(),"hpdOcc/"+(std::string)m_richSys->hardwareID((*iOcc).first)), 
+            HPD.str() + " Digits (nDigits>0)", 
+            -0.5, 200.5, 201 );
+    if ( hasHPDQuartzCKBkg[(*iOcc).first] )
+    {
+      plot1D( (*iOcc).second, 
+              hid(((*iOcc).first).rich(),"hpdOccWithHPDQCK/"+(std::string)m_richSys->hardwareID((*iOcc).first)), 
+              HPD.str() + " Digits (nDigits>0 and nHPDQCK>0)", 
+              -0.5, 200.5, 201 );
+    }
   }
 
   // Locate MCRichDeposits
