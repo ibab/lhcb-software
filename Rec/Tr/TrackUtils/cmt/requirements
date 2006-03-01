@@ -1,0 +1,34 @@
+#============================================================================
+# Created    : 2006-03-01
+# Maintainer : Eduardo Rodrigues
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           TrackUtils
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   GaudiAlg           v*
+
+use   TrackEvent         v*    Event
+use   TrackInterfaces    v*    Tr
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TrackUtils    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TrackUtils

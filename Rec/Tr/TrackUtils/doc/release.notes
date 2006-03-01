@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackUtils
+! Responsible : Eduardo Rodrigues
+! Purpose     : Package for general utility algorithms
+!-----------------------------------------------------------------------------
+
+! 2006-03-01 - Eduardo Rodrigues
+ - first release of the package.
+   Contains the event clone killer algorithm TrackEventCloneKiller

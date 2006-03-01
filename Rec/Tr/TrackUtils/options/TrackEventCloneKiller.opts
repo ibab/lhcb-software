@@ -1,0 +1,6 @@
+//TrackEventCloneKiller.TracksInContainers  = { "Rec/Track/Match" };
+//TrackEventCloneKiller.TracksOutContainer  = "Rec/Track/AllMatch";
+//TrackEventCloneKiller.IgnoredTrackTypes   = { 3 };
+//TrackEventCloneKiller.StoreCloneTracks    = true;
+//TrackEventCloneKiller.CloneFinderToolName = "TrackCloneFinder";
+//TrackEventCloneKiller.OutputLevel         = 2;
