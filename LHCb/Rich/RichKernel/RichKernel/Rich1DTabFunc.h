@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.9 2006-01-23 13:48:35 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.10 2006-03-01 09:57:25 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -204,6 +204,9 @@ public:
   /// clear the interpolator
   void clearInterpolator();
 
+  /// Returns the type of interpolator used
+  std::string interpType() const;
+
 protected: // data
 
   /// the data points
@@ -316,6 +319,14 @@ inline bool Rich1DTabFunc::withinInputRange( const double x ) const
 inline unsigned int Rich1DTabFunc::nDataPoints() const
 {
   return m_data.size();
+}
+
+//============================================================================
+
+inline std::string Rich1DTabFunc::interpType() const
+{
+  return std::string( m_mainDistSpline ? 
+                      gsl_interp_name(m_mainDistSpline->interp) : "" );
 }
 
 //============================================================================

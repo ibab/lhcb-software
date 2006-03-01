@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.2 2006-02-16 15:54:33 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.3 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -32,6 +32,9 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
+// richkernel
+#include "RichKernel/BoostMemPoolAlloc.h"
+
 /// General LHCb namespace
 namespace LHCb
 {
@@ -49,7 +52,7 @@ namespace LHCb
    */
   //-----------------------------------------------------------------------------
 
-  class RichTrackSegment
+  class RichTrackSegment : public Rich::BoostMemPoolAlloc<RichTrackSegment>
   {
 
   public: // helper classes

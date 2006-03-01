@@ -5,7 +5,7 @@
  *  Header file for utility hash map for the RICH : RichHashMap
  *
  *  CVS Log :-
- *  $Id: RichHashMap.h,v 1.5 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: RichHashMap.h,v 1.6 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -17,6 +17,9 @@
 
 // GaudiKernel
 #include "GaudiKernel/HashMap.h"
+
+// Include here to make sure always use defined hash functions for RichSmartIDs
+#include "Kernel/RichSmartIDHashFuncs.h"
 
 namespace Rich
 {

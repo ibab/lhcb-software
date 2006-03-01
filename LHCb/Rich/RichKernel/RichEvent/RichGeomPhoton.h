@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.1 2006-02-15 10:56:31 cattanem Exp $
+ *  $Id: RichGeomPhoton.h,v 1.2 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -21,6 +21,9 @@
 
 // from Kernel
 #include "Kernel/RichSmartID.h"
+
+// RichKernel
+#include "RichKernel/BoostMemPoolAlloc.h"
 
 /// General LHCb namespace
 namespace LHCb
@@ -77,7 +80,8 @@ namespace LHCb
    *  @date   2002-05-30
    */
 
-  class RichGeomPhoton {
+  class RichGeomPhoton : public Rich::BoostMemPoolAlloc<RichGeomPhoton>
+{
 
   public:
 

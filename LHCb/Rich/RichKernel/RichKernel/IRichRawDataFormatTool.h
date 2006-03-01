@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.6 2006-02-02 17:23:24 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.7 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -52,40 +52,13 @@ public:
    */
   static const InterfaceID& interfaceID() { return IID_IRichRawDataFormatTool; }
 
-  /** Creates a bank data of a given version from the given RichSmartID vector
+  /** Fills the RICH RawEvent from a vector of RichSmartIDs
    *
-   *  NOTE : Ownership of the data object passes to the caller.
-   *         It is their responsibility to delete when no longer needed.
-   *
-   *  @param smartIDs Vector of RichSmartIDs to use to create the data bank
-   *  @param version   The RICH DAQ data bank version
-   */
-  virtual const RichHPDDataBank * createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
-                                                  const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
-
-  /** Creates a bank data from the given raw block of data
-   *
-   *  NOTE : Ownership of the data object passes to the caller.
-   *         It is their responsibility to delete when no longer needed.
-   *
-   *  @param dataStart Pointer to the start of the raw data
-   *  @param dataSize  The length of the data block (excluding header HPD word)
-   *  @param version   The RICH DAQ data bank version
-   */
-  virtual const RichHPDDataBank * createDataBank( const RichDAQ::LongType * dataStart,
-                                                  const unsigned int dataSize,
-                                                  const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
-
-  /** Creates a bank data from RichSmartIDs, sorted by Level 1 ID
-   *
-   *  NOTE : Ownership of the data object passes to the caller.
-   *         It is their responsibility to delete when no longer needed.
-   *
-   *  @param L1Data  Vector of level 1 sorted RichSmartIDs
+   *  @param smartIDs  Vector of RichSmartIDs
    *  @param version The RICH DAQ data bank version
    */
-  virtual void createDataBank( const RichDAQ::L1Map & L1Data,
-                               const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
+  virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
+                             const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
 
   /** Decode a single RawBank into RichSmartID identifiers
    *
@@ -93,13 +66,13 @@ public:
    *  @param smartIDs Vector of RichSmartIDs to fill
    */
   virtual void decodeToSmartIDs( const LHCb::RawBank & bank,
-                                 LHCb::RichSmartID::Vector & smartIDs ) const = 0;
+                                 RichDAQ::PDMap & smartIDs ) const = 0;
 
   /** Decode all RICH RawBanks into RichSmartID identifiers
    *
    *  @param smartIDs Vector of RichSmartIDs to fill
    */
-  virtual void decodeToSmartIDs( LHCb::RichSmartID::Vector & smartIDs ) const = 0;
+  virtual void decodeToSmartIDs( RichDAQ::PDMap & smartIDs ) const = 0;
 
 };
 

@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.6 2006-01-23 13:48:36 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.7 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -104,18 +104,23 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   clearInterpolator();
 
   // Needs at least 2 points to work...
-  const int size = m_data.size();
-  if ( size < 2 ) return false;
-
+  const unsigned int size = m_data.size();
+  if ( size < 2 ) 
+  {
+    throw GaudiException( "Must supply at least two data points",
+                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+    return false;
+  }
   // Copy data to temporary initialisation arrays
   double * x  = new double[size];
   double * y  = new double[size];
   double * xy = new double[size];
   unsigned int i = 0;
   for ( Rich::Map<double,double>::const_iterator iD = m_data.begin();
-        iD != m_data.end(); ++iD, ++i ) {
-    x[i] = (*iD).first;
-    y[i] = (*iD).second;
+        iD != m_data.end(); ++iD, ++i )
+  {
+    x[i]  = (*iD).first;
+    y[i]  = (*iD).second;
     xy[i] = x[i]*y[i];
   }
 
@@ -127,12 +132,22 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   const int err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  size );
   const int err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, size );
 
+  // Check min size for given interpolator type
+  const unsigned int minSize = gsl_interp_min_size ( m_mainDistSpline->interp );
+  if ( minSize > size )
+  {
+    throw GaudiException( "Not enough data point to create requested interpolator "+interpType(),
+                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+    return false;
+  }
+
   // delete temporary arrays
   delete[] x;
   delete[] y;
   delete[] xy;
 
-  if ( err1 || err2 ) {
+  if ( err1 || err2 ) 
+  {
     throw GaudiException( "Error whilst initialising GSL interpolators",
                           "*Rich1DTabFunc*", StatusCode::FAILURE );
     return false;
@@ -147,19 +162,23 @@ void Rich1DTabFunc::clearInterpolator()
 {
 
   // Free GSL components
-  if ( m_mainDistSpline ) {
+  if ( m_mainDistSpline ) 
+  {
     gsl_spline_free( m_mainDistSpline );
     m_mainDistSpline = 0;
   }
-  if ( m_mainDistAcc ) {
+  if ( m_mainDistAcc ) 
+  {
     gsl_interp_accel_free( m_mainDistAcc );
     m_mainDistAcc = 0;
   }
-  if ( m_weightedDistSpline ) {
+  if ( m_weightedDistSpline ) 
+  {
     gsl_spline_free( m_weightedDistSpline );
     m_weightedDistSpline = 0;
   }
-  if ( m_weightedDistAcc ) {
+  if ( m_weightedDistAcc ) 
+  {
     gsl_interp_accel_free( m_weightedDistAcc );
     m_weightedDistAcc = 0;
   }

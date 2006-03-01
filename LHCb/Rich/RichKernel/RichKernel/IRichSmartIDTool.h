@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichSmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.12 2005-12-13 17:23:28 papanest Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.13 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -35,7 +35,8 @@ static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
-class IRichSmartIDTool : virtual public IAlgTool {
+class IRichSmartIDTool : virtual public IAlgTool 
+{
 
 public:
 

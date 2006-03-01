@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.2 2005-10-17 09:08:58 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.3 2006-03-01 09:57:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -101,8 +101,16 @@ public:
                                   const IInterface * parent = 0,
                                   const bool commonTool = false ) const
   {
+
+    // Check consistency
+    if ( parent && commonTool )
+    {
+      Error( "Tool " + tName + " cannot be common and private !" );
+      return NULL;
+    }
+
     // Construct name
-    const std::string fullname = 
+    const std::string fullname =
       ( commonTool || parent ? tName : toolRegistry()->toolName(tName) );
     // If private tool - Check Context option
     if ( !parent )
@@ -110,10 +118,11 @@ public:
       if ( !setContext( toolRegistry()->toolName(tName) ) )
       {
         Error( "Problem setting Context for '"+fullname+"'" );
+        return NULL;
       }
     }
     // get tool
-    pTool = 
+    pTool =
       this -> template tool<TOOL>( toolRegistry()->toolType(tName),
                                    fullname,
                                    parent );
