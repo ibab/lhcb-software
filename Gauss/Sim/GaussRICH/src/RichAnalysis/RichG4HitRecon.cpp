@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.7 2006-02-27 14:10:30 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.8 2006-03-01 10:01:58 seaso Exp $
 // Include files
 
 // local
@@ -20,7 +20,7 @@
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4Counters.h"
-#include "RichG4HitCoordResult.h";
+#include "RichG4HitCoordResult.h"
 
 // local
 #include "RichG4SvcLocator.h"
@@ -346,7 +346,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
             if( (aRadiatornum >= 10) &&  (aRadiatornum <= 25)   ) {
-              // emisptReconZ =  m_MidRich1AgelZ;
+                emisptReconZ =  m_MidRich1AgelZ;
 
               if( PhotonAerogelExitPosition.z() > 0.0 ) {
 
@@ -366,10 +366,10 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
               }
 
             }else if( aRadiatornum == 1 ) {
-              //  emisptReconZ =   m_MidRich1GasZ;
+                emisptReconZ =   m_MidRich1GasZ;
 
             } else if ( aRadiatornum == 2 ) {
-              //  emisptReconZ = m_MidRich2GasZ;
+                emisptReconZ = m_MidRich2GasZ;
 
             }
 
@@ -390,7 +390,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             // First get the pixel local coord on sidet from the
             // pixel x y num (column row num) or as the true  localhit coord.
             // Now reconstruct the hit coord onto the hpd Ph cathode plane.
-            // option 1
+            // option 1: D1
 
             Gaudi::XYZPoint aLocalHitFromPixelNum =
               m_RichG4CkvRec->
@@ -401,7 +401,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             Gaudi::XYZPoint aDetPointFromPixelNum =  aFlatMirr->
               FlatMirrorReflect(aHitOnQwFromPixelNum ,aFlatMirrtype);
 
-            // option2
+            // option2: D2
 
             Gaudi::XYZPoint aTrueLocalHit( LocalHitCoord.x(),
                                       LocalHitCoord.y(), LocalHitCoord.z());
@@ -411,7 +411,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             Gaudi::XYZPoint aDetPointFromTrueLocalHit =  aFlatMirr->
               FlatMirrorReflect( aHitOnQwFromTrueLocalHit ,aFlatMirrtype);
 
-            // option3
+            // option3: D3
 
             Gaudi::XYZPoint  aHitOnQwFromGlobalPhCathode (GlobalPhcathCoord.x(),
                                                      GlobalPhcathCoord.y(),
@@ -419,6 +419,19 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
             Gaudi::XYZPoint aDetPointFromGlobalPhCathode =  aFlatMirr->
               FlatMirrorReflect( aHitOnQwFromGlobalPhCathode,aFlatMirrtype);
+
+            // test printout
+
+	    //   G4cout<<" det pont HpdQw D1XYZ" << aHitOnQwFromPixelNum.x()<<"  "
+            //      <<aHitOnQwFromPixelNum.y()<<"  "<<aHitOnQwFromPixelNum.z()<<G4endl;
+
+	    //  G4cout<<" det pont at HPDQW D2XYZ "<< aHitOnQwFromTrueLocalHit.x()<<"   "
+            //      << aHitOnQwFromTrueLocalHit.y()<<"  "<< aHitOnQwFromTrueLocalHit.z()<<G4endl;
+	    // G4cout<<" det pont at HPDQW D3XYZ "<<GlobalPhcathCoord.x() <<"   "
+            //      << GlobalPhcathCoord.y()<<"  "<< GlobalPhcathCoord.z()<<G4endl;
+            
+
+            // end of test printout
 
             // test to plot the hit coord
 
@@ -484,28 +497,34 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
               aReflPointD2E1 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror( aDetPointFromTrueLocalHit  ,
-                                                 EmisPtUseTrueEmissPt, aHitOnQwFromTrueLocalHit,aRichDetNum, aSecMirrCopyNum  );
+                                                 EmisPtUseTrueEmissPt, aHitOnQwFromTrueLocalHit,
+                                                 aRichDetNum, aSecMirrCopyNum  );
 
               aReflPointD3E1 =m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode  ,
-                                                  EmisPtUseTrueEmissPt,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum  );
+                                                  EmisPtUseTrueEmissPt,aHitOnQwFromGlobalPhCathode,
+                                                  aRichDetNum, aSecMirrCopyNum  );
 
               aReflPointD3E2 =
                 m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode  ,
-                                                  EmisPtUseMidPtRadiatorZ,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum  );
+                                                  EmisPtUseMidPtRadiatorZ,aHitOnQwFromGlobalPhCathode,
+                                                  aRichDetNum, aSecMirrCopyNum  );
 
               aReflPointD3E4 =
                 m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromGlobalPhCathode  ,
-                                                  EmisPtUseMidPtRadiator,aHitOnQwFromGlobalPhCathode,aRichDetNum, aSecMirrCopyNum  );
+                                                  EmisPtUseMidPtRadiator,aHitOnQwFromGlobalPhCathode,
+                                                  aRichDetNum, aSecMirrCopyNum  );
 
               aReflPointD1E2 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
-                                                EmisPtUseMidPtRadiatorZ ,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum );
+                                                EmisPtUseMidPtRadiatorZ ,aHitOnQwFromPixelNum,
+                                                aRichDetNum, aSecMirrCopyNum );
               aReflPointD1E4 =  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum ,
-                                                  EmisPtUseMidPtRadiator ,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum );
+                                                  EmisPtUseMidPtRadiator ,aHitOnQwFromPixelNum,
+                                                  aRichDetNum, aSecMirrCopyNum );
 
 
               // calculate the cherenkov angle in gas radiators.

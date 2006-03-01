@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.9 2006-02-21 17:05:26 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.10 2006-03-01 10:01:58 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -305,7 +305,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoo
       aRichG4ReconHpd->ReconHitOnPhCathFromLocalHitCoord(m_curLocalHitCoord);
 
 
-    //   RichG4CkvReconlog << MSG::INFO
+    //    RichG4CkvReconlog << MSG::INFO
     //                  <<" Local Hit coord on PhCathode after mag "
     //                  <<curLocalHitPhCath.x()
     //              <<"   "<<curLocalHitPhCath.y()
@@ -327,7 +327,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoo
 
         m_curGlobalHitPhCath = acurGlobalHitPhCath;
 
-        //  RichG4CkvReconlog << MSG::VERBOSE
+        //   RichG4CkvReconlog << MSG::INFO
         //                <<" Global Hit coord on PhCathode  "
         //                <<acurGlobalHitPhCath.x()
         //            <<"   "<<acurGlobalHitPhCath.y()

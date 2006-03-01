@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.6 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.7 2006-03-01 10:01:58 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -64,8 +64,8 @@ void RichG4ReconTransformHpd::initialise() {
   m_Rich2HpdPanelName1="pvRich2HPDPanel:1";
   m_Rich2HpdPanelIndex0=3;
   m_Rich2HpdPanelIndex1=4;
-  m_Rich1HpdArrayMaxH0=111;
-  m_Rich2HpdArrayMaxH0=135;
+  m_Rich1HpdArrayMaxH0=98;
+  m_Rich2HpdArrayMaxH0=144;
 
   // the following 2 not used for now.
   m_Rich1MagShPvIndexH0=20;
@@ -289,12 +289,17 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
       const Gaudi::Transform3D & aRich2MasterTransInv =
         Rich2DE->geometry()->matrixInv();
 
-      const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
-        aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelIndex0):
-        aRich2MasterLogVol->
-        pvolume(m_Rich2HpdPanelIndex1);
+      //        const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
+      //  aRich2MasterLogVol->
+      //  pvolume(m_Rich2HpdPanelIndex0):
+      //  aRich2MasterLogVol->
+      //  pvolume(m_Rich2HpdPanelIndex1);
 
+        const IPVolume* bpva = (aHpdNumber< m_Rich2HpdArrayMaxH0)?
+        aRich2MasterLogVol->
+        pvolume(m_Rich2HpdPanelName0):
+        aRich2MasterLogVol->
+        pvolume(m_Rich2HpdPanelName1);
 
 
       if(bpva) {
