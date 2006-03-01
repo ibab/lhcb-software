@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.8 2006-02-06 12:11:51 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.9 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -28,14 +28,16 @@ namespace RichZeroSuppDataV1 {
 
     // Loop over digits and form groups of three
     RichSmartID::Vector::const_iterator iDigit = pdHits.begin();
-    while ( iDigit != pdHits.end() ) {
-
+    while ( iDigit != pdHits.end() ) 
+    {
       const RichSmartID *one(&*iDigit), *two(NULL), *three(NULL);
       ++iDigit;
-      if ( iDigit != pdHits.end() ) {
+      if ( iDigit != pdHits.end() ) 
+      {
         two = &(*iDigit);
         ++iDigit;
-        if ( iDigit != pdHits.end() ) {
+        if ( iDigit != pdHits.end() ) 
+        {
           three = &(*iDigit);
           ++iDigit;
         }
@@ -49,7 +51,7 @@ namespace RichZeroSuppDataV1 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
-                                            const DeRichSystem * richSys ) const
+                                            const LHCb::RichSmartID hpdID ) const
   {
 
     // How many digits do we expect to make
@@ -57,7 +59,7 @@ namespace RichZeroSuppDataV1 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = richSys->richSmartID( head.l0ID() );
+    //const RichSmartID sID = richSys->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
@@ -67,28 +69,38 @@ namespace RichZeroSuppDataV1 {
       const RichZSHitTriplet triplet( data()[iData] );
 
       // Make first smartid from triplet
-      ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.hpdNumInCol(), sID.hpdCol(),
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
                                   triplet.row0(), triplet.col0() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make second smartid from triplet
-      ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.hpdNumInCol(), sID.hpdCol(),
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
                                   triplet.row1(), triplet.col1() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make third smartid from triplet
-      ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.hpdNumInCol(), sID.hpdCol(),
+      ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
                                   triplet.row2(), triplet.col2() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
     }
 
+  }
+
+  RichDAQ::Level0ID RichZeroSuppData::level0ID() const
+  {
+    return Header(header()).l0ID();
+  }
+
+  RichDAQ::ShortType RichZeroSuppData::hitCount() const
+  {
+    return Header(header()).hitCount();
   }
 
   void RichZeroSuppData::fillMsgStream( MsgStream & os ) const
@@ -163,7 +175,7 @@ namespace RichZeroSuppDataV2 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
-                                            const DeRichSystem * richSys ) const
+                                            const LHCb::RichSmartID hpdID ) const
   {
 
     // How many digits do we expect to make
@@ -171,7 +183,7 @@ namespace RichZeroSuppDataV2 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = richSys->richSmartID( head.l0ID() );
+    //const RichSmartID sID = richSys->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
@@ -188,8 +200,8 @@ namespace RichZeroSuppDataV2 {
         {
           if ( isBitOn(bits,iB) )
           {
-            ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.hpdNumInCol(), sID.hpdCol(),
+            ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                        hpdID.hpdNumInCol(), hpdID.hpdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;
@@ -206,8 +218,8 @@ namespace RichZeroSuppDataV2 {
         {
           if ( isBitOn(bits,iB) )
           {
-            ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.hpdNumInCol(), sID.hpdCol(),
+            ids.push_back( RichSmartID( hpdID.rich(), hpdID.panel(),
+                                        hpdID.hpdNumInCol(), hpdID.hpdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;
@@ -218,6 +230,16 @@ namespace RichZeroSuppDataV2 {
 
     }
 
+  }
+
+  RichDAQ::Level0ID RichZeroSuppData::level0ID() const
+  {
+    return Header(header()).l0ID();
+  }
+
+  RichDAQ::ShortType RichZeroSuppData::hitCount() const
+  {
+    return Header(header()).hitCount();
   }
 
   void RichZeroSuppData::fillMsgStream( MsgStream & os ) const

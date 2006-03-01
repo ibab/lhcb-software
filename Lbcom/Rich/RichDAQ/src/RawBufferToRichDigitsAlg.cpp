@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.14 2005-12-16 15:11:33 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.15 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -61,7 +61,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     debug() << "Execute" << endreq;
 
   // Get RichSmartIDs decoded from RawEvent
-  const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
+  const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
 
   if ( !m_decodeOnly )
   {
@@ -70,12 +70,16 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     put( digits, m_richDigitsLoc );
     
     // Create a RichDigit for each SmartID
-    for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
-          iID != smartIDs.end(); ++iID )
+    for ( RichDAQ::PDMap::const_iterator iPD = smartIDs.begin();
+          iPD != smartIDs.end(); ++iPD )
     {
-      digits->insert( new RichDigit(), *iID );
+      for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iPD).second.begin();
+            iID != (*iPD).second.end(); ++iID )
+      {
+        digits->insert( new RichDigit(), *iID );
+      }
     }
-
+    
     // Final printout
     if ( msgLevel(MSG::DEBUG) )
     {

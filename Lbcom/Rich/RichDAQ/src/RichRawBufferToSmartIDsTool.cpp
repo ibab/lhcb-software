@@ -5,7 +5,7 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.13 2005-12-16 15:11:34 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.14 2006-03-01 09:56:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -25,15 +25,11 @@ RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& typ
                                                           const IInterface* parent )
   : RichToolBase       ( type, name, parent ),
     m_rawFormatT       ( 0     ),
-    m_sortIDs          ( true  ),
     m_newEvent         ( true  )
 {
 
   // Defined interface
   declareInterface<IRichRawBufferToSmartIDsTool>(this);
-
-  // job options
-  declareProperty( "SortRichSmartIDs", m_sortIDs );
 
 }
 
@@ -48,15 +44,6 @@ StatusCode RichRawBufferToSmartIDsTool::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-
-  if (m_sortIDs) 
-  {
-    info() << "Data will be sorted according to RICH and HPD panel" << endreq;
-  }
-  else
-  {
-    info() << "Data will NOT be sorted according to RICH and HPD panel" << endreq;
-  }
 
   return sc;
 }
@@ -73,7 +60,7 @@ void RichRawBufferToSmartIDsTool::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-const RichSmartID::Vector & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
+const RichDAQ::PDMap & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent )
   {
@@ -89,21 +76,21 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   // Use raw format tool to decode event
   m_rawFormatT->decodeToSmartIDs( m_smartIDs );
 
-  // Sort into order of Rich/Panel/HPD/Pixel if required
-  if ( m_sortIDs )
-  {
-    m_sorter.sortByRegion( m_smartIDs );
-  }
-
   // Printout the RichSmartIDs...
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "RichSmartIDs :-" << endreq;
-    for ( RichSmartID::Vector::const_iterator iID = m_smartIDs.begin(); 
-          iID != m_smartIDs.end(); ++iID )
+    for ( RichDAQ::PDMap::const_iterator iPD = m_smartIDs.begin();
+          iPD != m_smartIDs.end(); ++iPD )
     {
-      verbose() << "   " << *iID << " " << (*iID).key() << endreq;
+      verbose() << "  HPD " << (*iPD).first << " :-" << endreq;
+      for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iPD).second.begin();
+            iID != (*iPD).second.end(); ++iID )
+      {
+        verbose() << "   " << *iID << " " << (*iID).key() << endreq;
+      }
     }
+
   }
 
 }

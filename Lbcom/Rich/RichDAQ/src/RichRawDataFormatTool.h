@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.12 2006-02-06 12:11:51 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.13 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -14,6 +14,9 @@
 
 #ifndef RICHDAQ_RICHRAWDATAFORMATTOOL_H
 #define RICHDAQ_RICHRAWDATAFORMATTOOL_H 1
+
+// STD
+#include <sstream>
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -99,25 +102,16 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from interface
 
-  // Creates a bank data of a given version from the given RichSmartID vector
-  const RichHPDDataBank * createDataBank( const RichSmartID::Vector & smartIDs,
-                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
-
-  // Creates a bank data from the given raw block of data
-  const RichHPDDataBank * createDataBank( const RichDAQ::LongType * dataStart,
-                                          const unsigned int dataSize,
-                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
-
-  // Creates a bank data from RichSmartIDs, sorted by Level 1 ID
-  void createDataBank( const RichDAQ::L1Map & L1Data,
-                       const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
+  // Creates a bank data from a vector of RichSmartIDs
+  void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
+                     const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
 
   // Decode a RawBank into RichSmartID identifiers
   void decodeToSmartIDs( const RawBank & bank,
-                         RichSmartID::Vector & smartIDs ) const;
+                         RichDAQ::PDMap & smartIDs ) const;
 
   // Decode all RICH RawBanks into RichSmartID identifiers
-  void decodeToSmartIDs( RichSmartID::Vector & smartIDs ) const;
+  void decodeToSmartIDs( RichDAQ::PDMap & smartIDs ) const;
 
 private: // definitions
 
@@ -127,6 +121,30 @@ private: // definitions
   typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
 
 private: // methods
+
+  /** Creates a bank data of a given version from the given RichSmartID vector
+   *
+   *  NOTE : Ownership of the data object passes to the caller.
+   *         It is their responsibility to delete when no longer needed.
+   *
+   *  @param smartIDs Vector of RichSmartIDs to use to create the data bank
+   *  @param version   The RICH DAQ data bank version
+   */
+  const RichHPDDataBank * createDataBank( const RichSmartID::Vector & smartIDs,
+                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
+
+  /** Creates a bank data from the given raw block of data
+   *
+   *  NOTE : Ownership of the data object passes to the caller.
+   *         It is their responsibility to delete when no longer needed.
+   *
+   *  @param dataStart Pointer to the start of the raw data
+   *  @param dataSize  The length of the data block (excluding header HPD word)
+   *  @param version   The RICH DAQ data bank version
+   */
+  const RichHPDDataBank * createDataBank( const RichDAQ::LongType * dataStart,
+                                          const unsigned int dataSize,
+                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
 
   /// Initialise for each event
   void InitEvent();
@@ -170,6 +188,12 @@ private: // data
 
   /// Flag to indicate if the tool has been used in a given event
   mutable bool m_hasBeenCalled;
+
+  /// starting map
+  RichDAQ::L1Map m_dummyMap;
+
+  /// Max HPD Occupancy Cut
+  unsigned int m_maxHPDOc;
 
 };
 

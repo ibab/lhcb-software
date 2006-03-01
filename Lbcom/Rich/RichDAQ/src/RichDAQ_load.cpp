@@ -5,7 +5,7 @@
  *  Declaration file for objects in component library RichDAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_load.cpp,v 1.10 2006-02-06 12:11:51 jonrob Exp $
+ *  $Id: RichDAQ_load.cpp,v 1.11 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -25,5 +25,9 @@ DECLARE_FACTORY_ENTRIES ( RichDAQ )
 
   // Tool to create HPD bank bank objects from Raw Buffer
   DECLARE_TOOL( RichRawDataFormatTool );
+
+  // Pixel suppression tools
+  DECLARE_TOOL( RichHighOccHPDSuppressionTool );
+  DECLARE_TOOL( RichHPDPixelClusterSuppressionTool );
 
 }

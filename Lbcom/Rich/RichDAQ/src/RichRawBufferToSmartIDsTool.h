@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.10 2006-01-25 14:26:55 cattanem Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.11 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,9 +27,6 @@
 // RichDAQ utility classes
 #include "RichHPDDataBank.h"
 
-// from RichKernel
-#include "RichKernel/RichSmartIDSorter.h"
-
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
@@ -41,13 +38,12 @@ using namespace LHCb; ///< LHCb general namespace
 /** @class RichRawBufferToSmartIDsTool RichRawBufferToSmartIDsTool.h
  *
  *  Tool to create RichSmartIDs from the raw buffer.
- *  Uses the raw decoding tool and performs verious post processing tasks,
- *  such as sorting.
+ *  Uses the raw decoding tool and performs verious post processing tasks.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  *
- *  @todo Add missing sorting and partitioning functionality for reconstruction
+ *  @todo Review if this tool is really needed
  */
 //-----------------------------------------------------------------------------
 
@@ -79,7 +75,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Access all RichSmartIDs for the current Event
-  const RichSmartID::Vector & allRichSmartIDs() const;
+  const RichDAQ::PDMap & allRichSmartIDs() const;
 
 private: // private methods
 
@@ -95,16 +91,13 @@ private: // private data
   const IRichRawDataFormatTool * m_rawFormatT;
 
   /// Flag to turn on the sorting of the RichSmartIDs
-  bool m_sortIDs;
+  //bool m_sortIDs;
 
   /// RichSmartIDs
-  mutable RichSmartID::Vector m_smartIDs;
+  mutable RichDAQ::PDMap m_smartIDs;
 
   /// New event flag
   mutable bool m_newEvent;
-
-  /// RichSmartID sorting utility object
-  RichSmartIDSorter m_sorter;
 
 };
 

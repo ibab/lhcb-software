@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.8 2006-02-06 12:11:51 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.9 2006-03-01 09:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -24,9 +24,6 @@
 #include "RichKernel/BoostMemPoolAlloc.h"
 #include "RichKernel/RichMap.h"
 
-// RichDet
-#include "RichDet/DeRichSystem.h"
-
 // =================================================================================
 
 /** @namespace RichZeroSuppDataV1
@@ -36,7 +33,7 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichZeroSuppDataV1 
+namespace RichZeroSuppDataV1
 {
 
   /** @class RichZeroSuppData RichZeroSuppData.h
@@ -83,12 +80,20 @@ namespace RichZeroSuppDataV1
                                const RichDAQ::ShortType dataSize )
       : RichHPDDataBank ( data, dataSize ) { }
 
-    // Destructor
+    /// Destructor
     virtual ~RichZeroSuppData() { }
 
-    // Fill a vector with RichSmartIDs for hit pixels
+    /// Returns the L0ID
+    virtual RichDAQ::Level0ID level0ID() const;
+
+    /// Returns the hit count for this HPD
+    RichDAQ::ShortType hitCount() const;
+
+    /// Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                   const DeRichSystem * richSys ) const;
+                                   const LHCb::RichSmartID hpdID ) const;
+
+  protected: // methods
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -113,7 +118,7 @@ namespace RichZeroSuppDataV1
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichZeroSuppDataV2 
+namespace RichZeroSuppDataV2
 {
 
   /** @class RichZeroSuppData RichZeroSuppData.h
@@ -126,7 +131,7 @@ namespace RichZeroSuppDataV2
    */
   class RichZeroSuppData : public RichHPDDataBank,
                            public Rich::BoostMemPoolAlloc<RichZeroSuppDataV2::RichZeroSuppData>
-{
+  {
 
   public: // Definitions
 
@@ -136,8 +141,8 @@ namespace RichZeroSuppDataV2
   public:
 
     /// Default constructor
-    RichZeroSuppData() 
-      : RichHPDDataBank ( 0, 0, 0 ), 
+    RichZeroSuppData()
+      : RichHPDDataBank ( 0, 0, 0 ),
         m_tooBig        ( false   ) { }
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -164,21 +169,29 @@ namespace RichZeroSuppDataV2
         m_tooBig        ( false          )
     { }
 
-    // Destructor
+    /// Destructor
     virtual ~RichZeroSuppData() { }
 
-    // Fill a vector with RichSmartIDs for hit pixels
-    virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                   const DeRichSystem * richSys ) const;
+    /// Returns the L0ID
+    virtual RichDAQ::Level0ID level0ID() const;
 
-    // Print data bank to message stream
-    virtual void fillMsgStream( MsgStream & os ) const;
+    /// Returns the hit count for this HPD
+    RichDAQ::ShortType hitCount() const;
+
+    /// Fill a vector with RichSmartIDs for hit pixels
+    virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
+                                   const LHCb::RichSmartID hpdID ) const;
 
     /// Test if this bank would be too big ( i.e. greater than 32 words )
     inline bool tooBig() const
     {
       return m_tooBig;
     }
+
+  protected: // methods
+
+    // Print data bank to message stream
+    virtual void fillMsgStream( MsgStream & os ) const;
 
   private: // methods
 
@@ -191,7 +204,7 @@ namespace RichZeroSuppDataV2
     {
       return ( row*4 + col/RichZSPackedCode::BitsField );
     }
-    
+
     /// Get bit number from column information
     inline RichDAQ::ShortType bitFromCol( const RichDAQ::ShortType col ) const
     {

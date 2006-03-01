@@ -12,3 +12,6 @@ ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDeco
 ToolSvc.RichToolRegistry.Tools += { "RichDetNumberingTool/RichDetNumberingTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRawDataFormatTool/RichRawDataFormatTool" };
 
+// Suppress HPDs with high occupancy
+// CRJ : FOr the moment, set high to disable whilst testing
+ToolSvc.RichRawDataFormatTool.MaxHPDOccupancy = 999999;
