@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.10 2006-01-20 16:34:27 cattanem Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.11 2006-03-01 17:12:26 papanest Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,12 +31,12 @@
 
 // RichKernel
 #include "RichKernel/IRichDetParameters.h"
-#include "RichKernel/Rich1DTabProperty.h"
 #include "RichKernel/BoostArray.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
+#include "RichDet/Rich1DTabProperty.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
@@ -120,7 +120,7 @@ private: // Private data
   std::vector<DeRichRadiator *> m_deRads;
 
   /// typdef for container of Pointers to refractive indices for each radiator type
-  typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
+  typedef boost::array<const Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
   /// Pointers to refractive indices for each radiator type
   RefractiveIndices m_refIndex;
 

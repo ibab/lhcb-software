@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.18 2005-12-19 17:15:59 cattanem Exp $
+ *  $Id: RichRayTracing.h,v 1.19 2006-03-01 17:12:25 papanest Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -25,7 +25,6 @@
 // RichKernel
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/BoostArray.h"
-#include "RichKernel/Rich1DTabProperty.h"
 
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
@@ -45,6 +44,7 @@
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/Rich1DTabProperty.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRayTracing RichRayTracing.h

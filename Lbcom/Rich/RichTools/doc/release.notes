@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-03-01 - Antonis Papanestis
+ - update for Rich1DTabProperty moving to RichDet
+ - added RichRadiatorTool
+
 !=========================== RichTools v2r2 2006-02-15 =======================
 ! 2006-02-15 - Marco Cattaneo
  - Remove obsolete RichEvent dependency

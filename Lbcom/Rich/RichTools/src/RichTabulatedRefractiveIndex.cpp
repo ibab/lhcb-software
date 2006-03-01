@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.9 2006-03-01 09:59:16 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.10 2006-03-01 17:12:25 papanest Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -102,7 +102,7 @@ RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
   // create new interpolation object
   if ( m_refIndex[rad] ) { delete m_refIndex[rad]; }
-  m_refIndex[rad] = new Rich1DTabProperty( m_deRads[rad]->refIndex() );
+  m_refIndex[rad] = m_deRads[rad]->refIndex();
 
   // average refractive index
   m_refI[rad] = refractiveIndex( rad,
@@ -114,7 +114,7 @@ RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 
   // printout
   info() << "Updated " << rad << " refractive index '"
-         << m_deRads[rad]->refIndex()->name() << "' with "
+         << m_deRads[rad]->refIndex()->tabProperty()->name() << "' with "
          << m_refIndex[rad]->nDataPoints() << " data points" << endreq;
 
   return StatusCode::SUCCESS;
