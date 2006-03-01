@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.24 2006-02-23 12:54:02 cattanem Exp $
+ *  $Id: RichMCTruthTool.h,v 1.25 2006-03-01 09:48:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -119,12 +119,6 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Checks if the given RichSmartID is the result of a background hit
   bool isBackground ( const RichSmartID id ) const;
-
-  // Checks if the given MCRichDigit is the result of a background hit
-  bool isBackground ( const MCRichDigit * digit ) const;
-
-  // Checks if the given MCRichHit is the result of a background hit
-  bool isBackground( const MCRichHit * hit ) const;
 
   // Checks if the given RichSmartID is the result of true Cherenkov
   bool isCherenkovRadiation( const RichSmartID id,

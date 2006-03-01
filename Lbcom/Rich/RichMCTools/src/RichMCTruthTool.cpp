@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.26 2006-02-16 15:58:20 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.27 2006-03-01 09:48:59 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
@@ -183,11 +183,6 @@ RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
   return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : 0 );
 }
 
-bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
-{
-  return ( !digit ? true : digit->history().isBackground() );
-}
-
 bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
 {
 
@@ -209,16 +204,11 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
   if ( m_followMC )
   {
     const MCRichDigit * mcDig = mcRichDigit( id );
-    return ( mcDig ? isBackground(mcDig) : true );
+    return ( mcDig ? mcDig->history().isBackground() : true );
   }
 
   // if all else fails, assume background
   return true;
-}
-
-bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
-{
-  return ( !hit ? true : hit->isBackground() );
 }
 
 bool
