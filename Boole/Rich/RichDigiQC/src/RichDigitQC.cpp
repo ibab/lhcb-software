@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.28 2006-02-16 15:51:35 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.29 2006-03-01 09:44:57 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -100,7 +100,7 @@ StatusCode RichDigitQC::execute()
     m_evtLocs[location] = true;
 
     // Check if digit is background
-    if ( m_mcTool->isBackground(mcDig) )
+    if ( mcDig->history().isBackground() )
     {
       ++backs[rich];
       ++m_bkgHits[rich];
@@ -133,7 +133,7 @@ StatusCode RichDigitQC::execute()
       MCRichHits * hits = get<MCRichHits>( iC->first );
       for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
-        if ( !m_mcTool->isBackground(*iH) )
+        if ( !(*iH)->isBackground()  )
         {
           ++(m_totalSpills[(*iH)->rich()])[iC->first];
         }
@@ -179,7 +179,7 @@ StatusCode RichDigitQC::execute()
       plot1D( backs[rich], RICH+" : # Background hits", 0, 5000, 50 );
       for ( SpillCount::iterator iC = spills[rich].begin(); iC != spills[rich].end(); ++iC )
       {
-        plot1D( iC->second, RICH+" : # Spillover hits "+iC->first,  0, 5000, 50 );
+        plot1D( iC->second, RICH+" : # Spillover hits "+iC->first,  0, 5000, 100 );
       }
     }
     for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1 )
