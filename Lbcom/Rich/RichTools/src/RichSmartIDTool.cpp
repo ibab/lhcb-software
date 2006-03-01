@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.19 2006-02-01 16:44:27 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.20 2006-03-01 09:58:45 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -94,7 +94,7 @@ Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const LHCb::RichSmartID smartI
 }
 
 //=============================================================================
-// Returns the global position of a local corrdinate, in the given RICH panel
+// Returns the global position of a local coordinate, in the given RICH panel
 //=============================================================================
 Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
                                                   const Rich::DetectorType rich,
