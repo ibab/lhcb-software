@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.8 2006-01-20 16:34:27 cattanem Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.9 2006-03-01 09:59:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -56,24 +56,21 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   // Nominal HPD QE
   m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
 
-  // Update Manager
-  IUpdateManagerSvc * ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
-
   // Register dependencies on DeRichRadiator objects to UMS
   // aerogel
-  ums->registerCondition( this,
-                          DeRichRadiatorLocation::Aerogel,
-                          &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
+  updMgrSvc()->registerCondition( this,
+                                  DeRichRadiatorLocation::Aerogel,
+                                  &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
   // C4F10
-  ums->registerCondition( this,
-                           DeRichRadiatorLocation::C4F10,
-                           &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
+  updMgrSvc()->registerCondition( this,
+                                  DeRichRadiatorLocation::C4F10,
+                                  &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
   // CF4
-  ums->registerCondition( this,
-                          DeRichRadiatorLocation::CF4,
-                          &RichTabulatedRefractiveIndex::updateCF4RefIndex );
+  updMgrSvc()->registerCondition( this,
+                                  DeRichRadiatorLocation::CF4,
+                                  &RichTabulatedRefractiveIndex::updateCF4RefIndex );
   // force first updates
-  sc = ums->update(this);
+  sc = updMgrSvc()->update(this);
   if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
 
   return sc;
@@ -100,7 +97,7 @@ StatusCode RichTabulatedRefractiveIndex::updateCF4RefIndex()
   return sc;
 }
 
-StatusCode 
+StatusCode
 RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
   // create new interpolation object
@@ -117,7 +114,7 @@ RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 
   // printout
   info() << "Updated " << rad << " refractive index '"
-         << m_deRads[rad]->refIndex()->name() << "' with " 
+         << m_deRads[rad]->refIndex()->name() << "' with "
          << m_refIndex[rad]->nDataPoints() << " data points" << endreq;
 
   return StatusCode::SUCCESS;
