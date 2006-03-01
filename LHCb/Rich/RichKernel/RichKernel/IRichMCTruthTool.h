@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.17 2006-02-16 15:54:33 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.18 2006-03-01 09:49:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -128,28 +128,6 @@ public:
    *  @retval false RichSmartID originated from Cherenkov Radiation
    */
   virtual bool isBackground ( const LHCb::RichSmartID id ) const = 0;
-
-  /** Checks if the given MCRichDigit is the result of a background
-   *  hit, i.e. not a true Cherenkov hit
-   *
-   *  @param digit Pointer to an MCRichDigit
-   *
-   *  @return Boolean indicating if the digit is background
-   *  @retval true  MCRichDigit originated from a background hit
-   *  @retval false MCRichDigit originated from Cherenkov Radiation
-   */
-  virtual bool isBackground ( const LHCb::MCRichDigit * digit ) const = 0;
-
-  /** Checks if the given MCRichHit is the result of a background
-   *  hit, i.e. not a true Cherenkov hit
-   *
-   *  @param hit Pointer to an MCRichHit
-   *
-   *  @return Boolean indicating if the hit is background
-   *  @retval true  MCRichHit originated from a background hit
-   *  @retval false MCRichHit originated from Cherenkov Radiation
-   */
-  virtual bool isBackground ( const LHCb::MCRichHit * hit ) const = 0;
 
   /** Checks if the given RichSmartID is the result of true Cherenkov
    *  radiation from the given radiator
