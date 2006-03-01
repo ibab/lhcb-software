@@ -381,7 +381,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)    {
       WITHOUT_INTERCEPT(sent_now = ::send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-	printf("AMS: Send error errno=%d\n",errno);
+        printf("AMS: Send error errno=%d\n",errno);
         return errno;
       }
       already_sent    += sent_now;
@@ -396,7 +396,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)  {
       WITHOUT_INTERCEPT(sent_now = send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-	printf("AMS: Send error errno=%d\n",errno);
+        printf("AMS: Send error errno=%d\n",errno);
         return errno;
       }
       already_sent += sent_now;
@@ -432,8 +432,8 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   char* buff = (char*)buffer;
   while (got != siz)  {
     WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
-    if (got_now == -1)    {
-      printf("AMS: Receive error errno=%d\n",errno);
+    if (got_now <= 0)    {
+      //printf("AMS: Receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
         case ESOCK_NOTCONN:
@@ -452,9 +452,9 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
           if (++count == MAX_TCP_ERRORS)
             return AMS_NODATA;
           else {
-	    //printf("AMS: Receive error (ignored) errno=%d\n",errno);
+            //printf("AMS: Receive error (ignored) errno=%d\n",errno);
             got_now = 0;
-	  }
+          }
       }
     }
     got   += got_now;
@@ -606,22 +606,28 @@ int _amsc_move_msgptr_to_user (amsqueue_t *m, void **buff, size_t *size,
     break;
   }
   if (facility) *facility = h->facility;
-  ::memcpy (from, h->source, sizeof (h->source));
-  if (dest) ::memcpy (dest, h->dest, sizeof (h->dest));
+  if ( from ) ::memcpy (from, h->source, sizeof (h->source));
+  if ( dest ) ::memcpy (dest, h->dest,   sizeof (h->dest));
   return status;
 }
 
 static int _amsc_move_to_user (amsqueue_t *m, void *buff, size_t *size, 
-                        char *from, char *dest, unsigned int *facility)    
+                        char *from, char *dest, unsigned int *facility, bool partial=false)    
 {
   size_t s = 0;
   void* ptr = 0;
   int status = _amsc_move_msgptr_to_user(m, &ptr, &s, from, dest, facility);
   if ( status == AMS_SUCCESS )  {
-    if ( *size > s )  {
+    if ( *size >= s )  {
       ::memcpy (buff, ptr, *size=s);
       return status;
     }
+    else if ( partial && *size > 0 )  {
+      ::memcpy (buff, ptr, s < *size ? s : *size);
+      *size = s;
+      return status;
+    }
+    // lib_rtl_start_debugger();
     return AMS_TERRIBLE;
   }
   return status;
@@ -636,7 +642,7 @@ static int _amsc_spy_last_message (void* buffer, size_t* size, char* from, unsig
     *from = '\0';
     return errno = AMS_NOPEND;
   }
-  int status = _amsc_move_to_user (m, buffer, size, from, 0, facility);
+  int status = _amsc_move_to_user (m, buffer, size, from, 0, facility, true);
   if (tlen != 0)  {
     *tlen = m->size - sizeof (amsheader_t);
   }
@@ -655,7 +661,7 @@ static int _amsc_spy_next_message (void* buffer, size_t* size, char* from, unsig
     *from = '\0';
     return errno = AMS_NOPEND;
   }
-  int status = _amsc_move_to_user (m, buffer, size, from, 0, facility);
+  int status = _amsc_move_to_user (m, buffer, size, from, 0, facility, true);
   if (tlen != 0)  {
     *tlen = m->size - sizeof (amsheader_t);
   }
@@ -899,7 +905,7 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
     lib_rtl_run_ast(_ams.userAst, _ams.userPar, 3);
   }
   insqti (m, &_ams.AMS_Q);
-  _ams.msgWaiting = 1;
+  // _ams.msgWaiting = 1;
   return wtc_insert (WT_FACILITY_TCPAMS, 0);
 }
 
@@ -915,8 +921,9 @@ static int _amsc_receive_rearm (amsentry_t* e)  {
   if (size > CHOP_SIZE)    {
     size = CHOP_SIZE;
   }
-  IOPortManager(_ams.me.address.sin_port).add(1, e->chan, _amsc_receive_ast, e);
-  return WT_SUCCESS;
+  //IOPortManager(_ams.me.address.sin_port).add(1, e->chan, _amsc_receive_ast, e);
+  //return WT_SUCCESS;
+  return _amsc_receive_ast(e);
 }
 
 static void _amsc_send_close_message(amsentry_t *e)  {
@@ -978,7 +985,7 @@ static int _amsc_read_message (void* buffer, size_t* size, char* from, unsigned 
   int status  = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
     remqhi (&_ams.message_Q, (qentry_t**)&m);
-    status = _amsc_move_to_user (m, buffer, size, from, dest, facility);
+    status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
     _amsc_remove_node_if_mine(from);
     return (status == AMS_SUCCESS) ? status : errno=status;
@@ -1044,7 +1051,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   status  = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
     remqhi (&_ams.message_Q, (qentry_t**)&m);
-    status = _amsc_move_to_user (m, buffer, size, from, dest, facility);
+    status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
     _amsc_remove_node_if_mine(from);
     return (status == AMS_SUCCESS) ? status : errno=status;
@@ -1081,7 +1088,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     for (int i=0;i<rcnt;i++) {
       wtc_insert_head (WT_FACILITY_AMS, 0);
     }
-    status = _amsc_move_to_user (m, buffer, size, from, dest, facility);
+    status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
     _amsc_remove_node_if_mine(from);
     return (status == AMS_SUCCESS) ? status : errno=status;
@@ -1146,6 +1153,7 @@ int amsc_init (const char *inname)   {
   status = _amsc_tcp_init (&_ams.me);
   if ( status != WT_SUCCESS )  {
     wtc_remove(WT_FACILITY_TCPAMS);
+    wtc_remove(WT_FACILITY_TIMEOUT);
     return errno = status;
   }
   status  = wtc_create_enable_mask(&_ams.wt_enable_mask);

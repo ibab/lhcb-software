@@ -37,8 +37,6 @@ protected:
     NetworkChannel::Port _portAllocated;
     /// Pointer to nameserver connection on local node
     TcpNetworkChannel* m_channel;
-    /// Pointer to Instance object
-    static TanInterface* __instance;
     //@Man: Protected member functions
     /// Protected constructor
     TanInterface();
@@ -73,10 +71,6 @@ public:
     /// De-Alloctae port entry on local name server
     int      DeallocatePort   (const char* name);
 };
-
-#ifdef _TanInterface_C_
-TanInterface* TanInterface::__instance = 0;
-#endif
 
 #endif     /*   __cplusplus          */
 

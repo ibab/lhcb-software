@@ -44,13 +44,21 @@
 
 #ifdef __cplusplus
 #include <cstdlib>
-
 #define __CXX_CONSTANT const
 extern "C" {
 #else
 #include <stdlib.h>
 #define __CXX_CONSTANT 
 #endif
+
+struct amsuc_info  {
+  char message[80];
+  char source[64];
+  unsigned int  facility;
+  size_t length;
+  int  status;
+};
+
   int amsc_init             ( __CXX_CONSTANT char* );
   int amsc_close            ( void );
   int amsc_send_message     ( __CXX_CONSTANT void*, size_t, __CXX_CONSTANT char*, int, __CXX_CONSTANT char* );
@@ -70,7 +78,8 @@ extern "C" {
   void amsc_flush_message_queue (void);
   int amsc_disconnect_task  ( __CXX_CONSTANT char* );
 
-  int amsuc_init      		( void );  int amsuc_subscribe 		( unsigned int, int (*action)(unsigned int, void*), int (*broad)(unsigned int, void*), void* param);  int amsuc_dispatch  		( unsigned int, void* );  int amsuc_remove    		( int );  int amsuc_subscribe_death 	( __CXX_CONSTANT char*, unsigned int, void* param );  int amsuc_remove_death    	( __CXX_CONSTANT char* );
+  typedef int (*amsuc_callback_t)(__CXX_CONSTANT amsuc_info*, void*);
+  int amsuc_init      		( void );  int amsuc_subscribe 		( unsigned int, amsuc_callback_t action, amsuc_callback_t broadcast, void* param);  int amsuc_dispatch  		( unsigned int, void* );  int amsuc_remove    		( unsigned int );  int amsuc_subscribe_death 	( __CXX_CONSTANT char*, unsigned int, void* param );  int amsuc_remove_death    	( __CXX_CONSTANT char* );
 #ifdef __cplusplus
 }
 #endif

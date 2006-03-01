@@ -1,0 +1,7 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable";
+ApplicationMgr.DLLs                  = { "GaudiOnline"};
+ApplicationMgr.TopAlg                = { "LHCb::MDFNetworkReceiveAlg/Receiver" };
+Receiver.Buffer                      = "EVENT";
+Receiver.PartitionID                 = 259;

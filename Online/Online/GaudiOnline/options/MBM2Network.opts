@@ -1,0 +1,10 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable";
+ApplicationMgr.DLLs                  = { "GaudiOnline"};
+ApplicationMgr.TopAlg                = { "LHCb::MDFNetworkSendAlg/Sender" };
+Sender.Recipients                    = { "NetRead_0", "NetRead_1", "NetRead_2"};
+Sender.Buffer                        = "RAW";
+Sender.Requirements                  = {
+  "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+};

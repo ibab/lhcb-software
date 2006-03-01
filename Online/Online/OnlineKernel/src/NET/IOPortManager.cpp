@@ -145,9 +145,12 @@ namespace {
         }
       }
       if ( nsock > 0 )  {
-        timeval tv = { 0, 5000 };
+        timeval tv = { 0, 1000 };
         int res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
-        if (res < 0)  {
+        if ( res == 0 )  {
+          continue;
+        }
+        else if (res < 0)  {
           return res;
         }
       }

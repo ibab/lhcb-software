@@ -6,10 +6,10 @@
 #include "AMS/amsdef.h"
 
 struct amsu_fac_entry : public qentry_t {
-  unsigned int  facility;
-  wt_callback_t broadcast;
-  wt_callback_t action;
-  void*         param;
+  unsigned int     facility;
+  amsuc_callback_t broadcast;
+  amsuc_callback_t action;
+  void*            param;
 }; 
 
 struct amsu_deadfac_entry : public qentry_t {
@@ -75,8 +75,7 @@ int amsuc_init( )   {
   return status != WT_SUCCESS ? status : AMS_SUCCESS;    
 }
 
-int amsuc_subscribe( unsigned int facility, wt_callback_t action, wt_callback_t broadcast, void* param)  {
-  if ( !inited ) return AMS_NOTINITED;
+int amsuc_subscribe(unsigned int facility, amsuc_callback_t action, amsuc_callback_t broadcast, void* param)  {  if ( !inited ) return AMS_NOTINITED;
   amsu_fac_entry *fac = find_facility(facility);
   if ( fac == (void*)fac_list )   {
     fac = new amsu_fac_entry;
@@ -128,50 +127,51 @@ int amsuc_remove_death( const char* source)   {
 }
 
 int amsuc_dispatch( unsigned int, void* )  {
-  char mess[80];
-  char source[32];
+  amsuc_info info;
   char dest[32];
-  unsigned int  fac;
   size_t tlen;
-  size_t len = sizeof(mess);
-  int status = amsc_spy_next_message(mess,&len,source,&fac,&tlen);
-  if (status == AMS_SUCCESS)    {
-    amsu_fac_entry* entry = find_facility(fac);
+  info.length = sizeof(info.message);
+  info.status = amsc_spy_next_message(info.message,&info.length,info.source,&info.facility,&tlen);
+  if (info.status == AMS_SUCCESS)    {
+    amsu_fac_entry* entry = find_facility(info.facility);
     if (entry != fac_list)    {
       if (entry->action)  {
-        return (*entry->action)(fac, entry->param);
+        return (*entry->action)(&info, entry->param);
       }
     }
     return AMS_ERROR;
   }
-  else if (status == AMS_NOPEND) {
+  else if (info.status == AMS_NOPEND) {
     return AMS_SUCCESS;
   }
-  else if (fac == 0)    {
+  else if (info.facility == 0)    {
     amsu_deadfac_entry *deadentry;
-    deadentry = find_deadfacility(source);
+    deadentry = find_deadfacility(info.source);
     if (deadentry == (amsu_deadfac_entry*)deadfac_list)  {
       start_fac_scan();
       amsu_fac_entry* entry   = next_fac();
       while (entry != fac_list)  {
         if (entry->broadcast)   {
-          status  = (*entry->broadcast)(fac, entry->param);
+          info.status  = (*entry->broadcast)(&info, entry->param);
         }
         entry	= next_fac();
       }
-      return status;
     }
     else  {
       amsu_fac_entry* entry = find_facility(deadentry->conv_fac);
       if (entry != fac_list)  {
         if (entry->broadcast)  {
-          status  = (*entry->broadcast)(deadentry->conv_fac,entry->param);
+          unsigned int fac = info.facility;
+          info.facility = deadentry->conv_fac;
+          info.status  = (*entry->broadcast)(&info,entry->param);
+          info.facility = fac;
         }
       }
     }
-    len = sizeof(mess);
-    return amsc_read_message(mess,&len,source,&fac,dest);
+    info.length = sizeof(info.message);
+    amsc_read_message(info.message,&info.length,info.source,&info.facility,dest);
+    return AMS_SUCCESS;
   }
-  return status;
+  return info.status;
 }
 

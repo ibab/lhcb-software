@@ -53,11 +53,16 @@ const char* errorString(int status)  {
     (LPTSTR) &lpMessageBuffer,
     0,
     0 );
-  strncpy(s, (const char*)lpMessageBuffer, len);
-  s[len] = 0;
-  size_t l = strlen(s);
-  if ( l > 0 ) s[l-1] = 0;
-  ::LocalFree( lpMessageBuffer ); 
+  if ( lpMessageBuffer )  {
+    strncpy(s, (const char*)lpMessageBuffer, len);
+    s[len] = 0;
+    size_t l = strlen(s);
+    if ( l > 0 ) s[l-1] = 0;
+    ::LocalFree( lpMessageBuffer ); 
+  }
+  else {
+    sprintf(s,"RTL Error: Unknown error code: %08X",status);
+  }
   return s;
 }
 
@@ -282,11 +287,12 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   process[len]='\0';
   return 1;
 #else
-  char *tmp;
+  char *tmp, buff[32];
   tmp = (char*)::getenv("UTGID");
   if ( !tmp ) tmp = (char*)::getenv("PROCESSNAME");
   if ( !tmp ) tmp = (char*)::getenv("PROCESS");
-  ::strncpy(process, tmp != 0 ? tmp : "UNKNOWN", len);
+  if ( !tmp ) sprintf(tmp=buff,"P%06d",lib_rtl_pid());
+  ::strncpy(process, tmp != 0 ? tmp : tmp="UNKNOWN", len);
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
 #endif
 }

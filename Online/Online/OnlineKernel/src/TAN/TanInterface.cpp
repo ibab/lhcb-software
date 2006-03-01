@@ -58,7 +58,8 @@ extern "C" int tan_dump_dbase (const char* node)   {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 TanInterface& TanInterface::Instance()   {
-  return (__instance == 0) ? (*(new TanInterface())) : *(__instance);
+  static TanInterface s_instance;
+  return s_instance;
 }
 // ----------------------------------------------------------------------------
 // Constructor: initialise the service
@@ -87,7 +88,6 @@ TanInterface::TanInterface()  {
 #endif
   m_channel          = 0;
   m_status           = TAN_SS_SUCCESS;
-  __instance         = this;
   return;
 Error:
   m_status = TAN_SS_ERROR;

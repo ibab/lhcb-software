@@ -1,6 +1,6 @@
 set test_exe=%ONLINEKERNELROOT%\win32_vc71_dbg\test.exe
 set gaudi_exe=%GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe
-start "Install"      %test_exe% mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=200 -e=200 -u=20 -i=EVENT -c -s=200 -e=200 -u=20 -i=RESULT
+start "Install"      %test_exe% mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=400 -e=400 -u=14 -i=EVENT -c -s=400 -e=400 -u=14 -i=RESULT
 sleep 1
 start "Monitor"       %test_exe% mbm_mon
 start "Bitmaps"       %test_exe% mep_dump_bitmap -b1=MEP -b2=EVENT -b3=RESULT -c
