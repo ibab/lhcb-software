@@ -1,8 +1,10 @@
-// $Id: VeloDigiMoni.cpp,v 1.3 2006-02-21 17:18:06 szumlat Exp $
+// $Id: VeloDigiMoni.cpp,v 1.4 2006-03-01 13:48:55 szumlat Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiAlg/Tuples.h"
+#include "Event/MCHit.h"
 
 // local
 #include "VeloDigiMoni.h"
@@ -49,8 +51,7 @@ StatusCode VeloDigiMoni::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialize" << endmsg;
-  setHistoTopDir("Velo/");
-  
+  setHistoTopDir("Velo/");  
   //
   return (StatusCode::SUCCESS);
 };
@@ -131,6 +132,27 @@ StatusCode VeloDigiMoni::testVeloDigit()
     plot((*digIt)->adcValue(), 202,
          "Raw ADC counts",
          0., 256., 256);
+  // Test the VeloDigits2MCHits associator (linker)
+    asctTool associator(evtSvc(), "VeloDigit2MCHit");
+    const Table* table=associator.direct();
+    if(!table){
+      error()<< "Empty table with associations" <<endmsg;
+      return ( StatusCode::FAILURE );
+    }
+    Range range1=table->relations(*digIt);
+    iterator it;
+    if(range1.size()!=0){
+      debug()<< "Hit(s) associated to VeloDigit from strip: "
+            << (*digIt)->strip() <<endmsg;
+    }
+    for(it=range1.begin(); it!=range1.end(); it++){
+      const LHCb::MCHit* aHit=it->to();
+      double energy=aHit->energy();
+      plot(energy, 203,
+           "Energy deposited in Si [eV] from VeloDigit2MCHitLinker",
+           0., 300000., 100);
+      debug()<< "energy from hit" << energy <<endmsg;
+    }
   }
   //
   return (StatusCode::SUCCESS);

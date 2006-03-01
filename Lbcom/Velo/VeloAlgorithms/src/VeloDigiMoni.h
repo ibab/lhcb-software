@@ -1,4 +1,4 @@
-// $Id: VeloDigiMoni.h,v 1.1 2006-02-09 12:20:41 szumlat Exp $
+// $Id: VeloDigiMoni.h,v 1.2 2006-03-01 13:48:55 szumlat Exp $
 #ifndef VELODIGIMONI_H 
 #define VELODIGIMONI_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "Event/VeloDigit.h"
+#include "Linker/LinkerTool.h"
 
 /** @class VeloDigiMoni VeloDigiMoni.h
  *  
@@ -18,6 +19,7 @@ class VeloDigit;
 
 class VeloDigiMoni : public GaudiTupleAlg {
 public: 
+
   /// Standard constructor
   VeloDigiMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -32,6 +34,11 @@ public:
 
 protected:
 
+  typedef LinkerTool<LHCb::VeloDigit, LHCb::MCHit> asctTool;
+  typedef asctTool::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
+  
 private:
 
   std::string m_digitContainer;
