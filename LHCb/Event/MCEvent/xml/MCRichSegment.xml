@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSegment.xml,v 1.4 2005-12-22 16:58:31 jonrob Exp $
+  * $Id: MCRichSegment.xml,v 1.5 2006-03-01 09:38:42 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichSegment class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -140,9 +140,55 @@
                 name = "historyCode" 
                 init = "0" 
                 type = "bitfield">
-                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                length="1" name="rich"     type="Rich::DetectorType" />
-                <bitfield desc="The radiator medium. Either Rich::Aerogel, Rich::C4F10 or Rich::CF4" length="2" name="radiator" type="Rich::RadiatorType" />
+                <bitfield desc="The Rich detector"   length="2" name="rich"     type="Rich::DetectorType" getMeth="FALSE" setMeth="FALSE" />
+                <bitfield desc="The radiator medium" length="5" name="radiator" type="Rich::RadiatorType" getMeth="FALSE" setMeth="FALSE" />
         </attribute>
+
+       <method 
+                name  = "rich" 
+                const = "TRUE" 
+                type  = "Rich::DetectorType"
+                desc  = "The RICH detector">
+                <code>
+                   // Shift by -1 to convert packed representation to Rich::DetectorType
+                   return (Rich::DetectorType)( ((m_historyCode &amp; richMask) &gt;&gt; richBits) - 1 );
+                </code>
+        </method>
+          
+        <method 
+                desc = "set the RICH type" 
+                name = "setRich">
+                <arg const="TRUE" inout="BYVALUE" name="value" type="Rich::DetectorType"/>
+                <code>
+                  // Shift bit-packed representation by +1 to start numbering from 0 
+                  const unsigned int val = (unsigned int)value + 1;
+                  m_historyCode &amp;= ~richMask;
+                  m_historyCode |= ((((unsigned int)val) &lt;&lt; richBits) &amp; richMask);
+                </code>
+        </method>
+
+        <method 
+                name  = "radiator" 
+                const = "TRUE" 
+                type  = "Rich::RadiatorType"
+                desc  = "If Cherenkov radiation, the radiator medium">
+                <code>
+                   // Shift by -1 to convert packed representation to Rich::RadiatorType
+                   return (Rich::RadiatorType)(((m_historyCode &amp; radiatorMask) &gt;&gt; radiatorBits) - 1);
+                </code>
+        </method>
+          
+        <method 
+                desc = "set the radiator type" 
+                name = "setRadiator">
+                <arg const="TRUE" inout="BYVALUE" name="value" type="Rich::RadiatorType"/>
+                <code>
+                  // Shift bit-packed representation by +1 to start numbering from 0 
+                  const unsigned int val = (unsigned int)value + 1;
+                  m_historyCode &amp;= ~radiatorMask;
+                  m_historyCode |= ((((unsigned int)val) &lt;&lt; radiatorBits) &amp; radiatorMask);
+                </code>
+        </method>
         
         <attribute 
                 name = "trajectoryPoints"

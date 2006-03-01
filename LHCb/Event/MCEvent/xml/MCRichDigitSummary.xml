@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitSummary.xml,v 1.2 2005-12-20 10:58:11 cattanem Exp $                 *
+  * $Id: MCRichDigitSummary.xml,v 1.3 2006-03-01 09:38:42 jonrob Exp $                 *
   *****************************************************************************
   * XML-description of MCRichDigitSummary class                               *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -23,6 +23,7 @@
         <base name="ContainedObject"/>
         &ContainedObject;
 
+        <import name="Event/MCParticle"/>
         <import name="Kernel/RichSmartID"/>
         <import name="Event/MCRichDigitHistoryCode"/>
 

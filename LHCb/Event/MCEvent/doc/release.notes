@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.29 2006-02-22 13:27:34 jonrob Exp $
+! $Id: release.notes,v 1.30 2006-03-01 09:38:42 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+
+! 2006-03-01 - Chris Jones
+ - Improvements to RICH MC classes
+  + MCRichDigitHistoryCode has more background types
+  + Add missing include for MCParticle in MCRichDigitSummary
+  + MCRichHit can store more background types
+  + Update history flags in MCRichOpticalPhoton to match those in the hit
+    Add refraction point (for aerogel) and remove unused data members
+  + MCRichSegment now support other radiator types
+ 
 
 ! 2006-02-22 - Chris Jones
  - Update sensDetID member in MCRichHit to be of type RichSmartID

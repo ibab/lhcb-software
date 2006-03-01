@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.6 2006-03-01 09:38:42 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -32,13 +32,6 @@
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import ignore="TRUE" name="RadiatorType"/>
-
-        <attribute 
-                name = "energyDeposited" 
-                type = "float" 
-                desc = "Energy deposited in HPD silicon detector"
-                init = "0"
-        />
             
         <attribute 
                 name = "pdIncidencePoint" 
@@ -61,6 +54,12 @@
         <attribute 
                 name = "flatMirrorReflectPoint"
                 desc = "Flat mirror reflection point"  
+                type = "Gaudi::XYZPoint"
+        />
+
+       <attribute 
+                name = "aerogelExitPoint"
+                desc = "If applicable, exit point of the photon from the aerogel radiator"  
                 type = "Gaudi::XYZPoint"
         />
 
@@ -96,25 +95,6 @@
                 desc = "The momentum of the photon parent at production"  
                 type = "Gaudi::XYZVector"
         />
-            
-        <attribute 
-                desc = "Bit packed field containing RICH specific information" 
-                name = "historyCode" 
-                init = "0" 
-                type = "bitfield">
-                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                          length="1"  name="rich"     type="Rich::DetectorType" />
-                <bitfield desc="If true Cherenkov radiation, the radiator medium. Either Rich::Aerogel (0), Rich::C4F10(1) or Rich::CF4(2)" length="2"  name="radiator" type="Rich::RadiatorType" />
-                <bitfield desc="Flag to verify if the radiator information is valid. I.e. this is a true Cherenkov hit" length="1" name="radiatorInfoValid" />
-                <bitfield desc="Flag to verify if the RICH detector information have been set"                 length="1"  name="richInfoValid"     />
-                <bitfield desc="If an aerogel hit, store the aerogel tile ID number. ID is adjusted from the G4 number to run from zero" length="5"  name="aerogelTileID" />
-                <bitfield desc="Did the photon undergo Rayleigh scattering"                                    length="1"  name="scatteredPhoton"   />
-                <bitfield desc="Hit from a charged track hitting the HPD entrance window"                      length="1"  name="chargedTrack"      />
-                <bitfield desc="CK radiation from charged tracks traversing the Gas quartz windows"            length="1"  name="gasQuartzCK"       />
-                <bitfield desc="CK radiation from charged tracks traversing the HPD quartz windows"            length="1"  name="hpdQuartzCK"       />
-                <bitfield desc="CK radiation from charged tracks traversing the nitrogen volume"               length="1"  name="nitrogenCK"        />
-                <bitfield desc="CK radiation from the aerogel filter"                                          length="1"  name="aeroFilterCK"      />
-                <bitfield desc="Summary flag. If set photon is a background (non-Cherenkov) hit"               length="1"  name="backgroundHit"     />
-        </attribute>
             
         <relation 
                 name = "mcRichHit"

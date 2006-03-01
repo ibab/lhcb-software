@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.5 2006-02-16 15:46:32 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.6 2006-03-01 09:38:42 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -55,7 +55,8 @@
                 <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the Gas quartz windows" length="1" name="gasQuartzCK"  />
                 <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the HPD quartz windows" length="1" name="hpdQuartzCK"  />
                 <bitfield desc="One of the contributing hits came from CK radiation from charged tracks traversing the nitrogen gas"       length="1" name="nitrogenCK"   />
-                <bitfield desc="One of the contributing hits came CK radiation from the aerogel filter"                                    length="1" name="aeroFilterCK" />
+                <bitfield desc="One of the contributing hits came from CK radiation from the aerogel filter"                               length="1" name="aeroFilterCK" />
+                <bitfield desc="One of the contributing hits came from a dark hit (I.e. a red photon)"                                     length="1" name="darkHit"      />
                 <bitfield desc="This digit was produced due to charge sharing in the HPD silicon pixel chip"                               length="1" name="chargeShareHit" />
         </attribute>
 
@@ -74,7 +75,9 @@
                gasQuartzCK() ||
                hpdQuartzCK() ||
                nitrogenCK() ||
-               aeroFilterCK() ) ) );
+               aeroFilterCK() ||
+               darkHit()
+               ) ) );
                 </code>
         </method>
 
@@ -86,7 +89,9 @@
                 <code>
     return ( chargeShareHit() || scatteredHit() ||
              chargedTrack() || gasQuartzCK() ||
-             hpdQuartzCK() || nitrogenCK() || aeroFilterCK() );
+             hpdQuartzCK() || nitrogenCK() || aeroFilterCK() ||
+             darkHit()
+           );
                 </code>
         </method>
 
