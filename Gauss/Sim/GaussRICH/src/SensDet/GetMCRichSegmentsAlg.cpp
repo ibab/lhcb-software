@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.4 2006-02-22 19:27:36 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.5 2006-03-01 09:31:26 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -22,13 +22,12 @@ const        IAlgFactory& GetMCRichSegmentsAlgFactory = s_factory ;
 GetMCRichSegmentsAlg::GetMCRichSegmentsAlg( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GetMCRichInfoBase ( name , pSvcLocator )
-  , m_nEvts                   ( 0 )
-  , m_hitTally                ( Rich::NRiches, 0 )
+  , m_nEvts           ( 0 )
 {
   declareProperty( "MCRichOpticalPhotonsLocation",
                    m_richPhotonsLocation  = MCRichOpticalPhotonLocation::Default );
   declareProperty( "MCRichSegmentsLocation",
-                   m_richSegmentsLocation = MCRichSegmentLocation::Default);
+                   m_dataToFill = MCRichSegmentLocation::Default);
 }
 
 //=============================================================================
@@ -44,12 +43,7 @@ StatusCode GetMCRichSegmentsAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Filling MCRichSegments at " << m_richSegmentsLocation << " from G4 collections";
-  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
-  {
-    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
-  }
-  info() << endreq;
+  // add custom initialisations here
 
   return sc;
 }
@@ -63,7 +57,8 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
   // new container for segments
   MCRichSegments * segments = new  MCRichSegments ();
-  put( segments, m_richSegmentsLocation);
+  put( segments, dataLocationInTES() );
+  segments->reserve( 100 );
 
   // Get the G4 necessary hit collections from GiGa
   G4HCofThisEvent* hitscollections = 0;
@@ -87,7 +82,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
     // note this key is needed for consistency with MCRichHit converter
     int globalKey = 0;
     ++m_nEvts; // Count events
-    for ( int iii=0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii )
+    for ( int iii = 0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii )
     {
       std::string colName = RichG4HitCollectionName()->RichHCName(iii);
 
@@ -113,8 +108,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
         if ( g4hit->GetRadiatorNumber() >= 0 )
         {
-          const Rich::RadiatorType rad =
-            static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber());
+          const Rich::RadiatorType rad = g4hit->radiatorType();
 
           // get MCParticle information
           const int traid = const_cast<RichG4Hit*>(g4hit)->GetTrackID();
@@ -132,7 +126,9 @@ StatusCode GetMCRichSegmentsAlg::execute()
           HitDataType data(g4hit,globalKey);
           sortedHits[key].push_back( data );
 
-        } else {
+        } 
+        else 
+        {
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "RichG4Hit " << ihit << " has no radiator information !"
@@ -167,8 +163,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
               << " in " << rad << endreq;
 
       // Count segments
-      if      ( Rich::Rich1 == mcSeg->rich() ) ++m_hitTally[Rich::Rich1];
-      else if ( Rich::Rich2 == mcSeg->rich() ) ++m_hitTally[Rich::Rich2];
+      ++m_hitTally[rad];
 
       // loop over hits
       MomentaAtZ momenta;
@@ -232,10 +227,14 @@ StatusCode GetMCRichSegmentsAlg::finalize()
 {
   const RichStatDivFunctor occ;
 
-  info() << "Av. # MCRichSegments       : Rich1 = "
-         << occ(m_hitTally[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
-         << endreq;
+  for ( RadMap::const_iterator iM = m_hitTally.begin(); iM != m_hitTally.end(); ++iM )
+  {
+    std::string name = Rich::text((*iM).first);
+    name.resize(' ',20);
+    info() << "Av. # MCRichSegments       : " << name << " = " 
+           << occ((*iM).second,m_nEvts) << " / event" << endreq;
+  }
+
 
   return GetMCRichInfoBase::finalize();  // must be called after all other actions
 }

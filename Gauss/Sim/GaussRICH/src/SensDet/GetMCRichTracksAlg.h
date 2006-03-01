@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.h,v 1.1 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichTracksAlg.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
 #ifndef SENSDET_GetMCRichTracksAlg_H
 #define SENSDET_GetMCRichTracksAlg_H 1
 
@@ -28,8 +28,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-
-  std::string  m_richTracksLocation;   ///< Name of TES path for MCRichTrackss
 
   // now the variables used for the local monitoring. This may eventually
   // go into GaussMonitor. SE Nov 2005.

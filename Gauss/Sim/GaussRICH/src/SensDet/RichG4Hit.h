@@ -6,17 +6,23 @@
 #include "G4THitsCollection.hh"
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
+#include "RichG4RadiatorMaterialIdValues.h"
+
+// From Kernel
+#include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichDetectorType.h"
 
 // This is the Geant4 hit class for the LHCb-RICH.
 // The coordinates of the PreStepPoint at the entrance to the
 // SiDet sensitive detector are stored as the Rich hit coordinates
 // in this class.
 
-class RichG4Hit : public  GaussHitBase {
+class RichG4Hit : public GaussHitBase 
+{
 
 public:
 
-  RichG4Hit();
+  RichG4Hit() {}
   virtual ~RichG4Hit();
   RichG4Hit(const RichG4Hit &right);
 
@@ -74,7 +80,6 @@ private:
 
   G4ThreeVector m_OptPhotAgelExitPos;   ///< Position where photon exited from Aerogel.
   // Only with RichVerboseTag mode and RichStepAnalysis4
-
 
   G4ThreeVector m_Mirror1PhotonReflPosition; ///< Photon Reflection Point on Spherical mirror which is mirror1.
   // Only with RichVerboseTag mode and RichStepAnalysis5
@@ -274,6 +279,15 @@ public:
   inline void setRichVerboseHitInfo( const G4int aVerboseValue )
   {m_RichVerboseHitInfo = aVerboseValue; }
   inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
+
+  inline Rich::DetectorType detectorType() const
+  {
+    return ( GetCurRichDetNum() < 0 ? 
+             (GetGlobalPos().z() < 4000 ? Rich::Rich1 : Rich::Rich2) :
+             static_cast<Rich::DetectorType>(GetCurRichDetNum()) );
+  }
+
+  Rich::RadiatorType radiatorType() const;
 
 };
 

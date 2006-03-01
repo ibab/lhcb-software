@@ -1,4 +1,4 @@
-// $Id: GetMCRichInfoBase.h,v 1.1 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichInfoBase.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
 #ifndef SENSDET_GetMCRichInfoBase_H
 #define SENSDET_GetMCRichInfoBase_H 1
 
@@ -98,6 +98,9 @@ protected:
     return m_RichG4HitCollectionName;
   }
 
+  /// data location in TES (const)
+  const std::string & dataLocationInTES() const { return m_dataToFill; }
+
 private:
 
   /// Fill collection data
@@ -111,6 +114,10 @@ private:
   mutable IGiGaKineCnvSvc*   m_gigaKineCnvSvc;           ///< Pointer to GiGaKine Service
   mutable RichG4HitCollName* m_RichG4HitCollectionName;  ///< G4 hit collections for RICH
   std::vector<int> m_colRange;                           ///< Collection data
+
+protected:
+
+  std::string      m_dataToFill;                         ///< Data location in TES to fill
 
 };
 

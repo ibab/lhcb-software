@@ -11,6 +11,8 @@
     and detector sources and  "invalid" radiators and detectors. 
   + Improvements to monitoring
   + Additions to RichG4Hit, so it can now return the enum types itself.
+  + SensDetID now set as the pixel RichSmartID
+  + Requires latest version of RichDet and MCEvent
 
 ! 2006-02-27  Sajan Easo
  - Improved the RichAnalysis for histogramming the hpd QW hits info

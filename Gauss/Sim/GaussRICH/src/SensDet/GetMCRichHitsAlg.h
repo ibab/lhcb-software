@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.4 2006-02-22 14:30:26 papanest Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.5 2006-03-01 09:31:26 jonrob Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -11,10 +11,13 @@
 // RichDet
 #include "RichDet/DeRich.h"
 
+// RichKernel
+#include "RichKernel/RichMap.h"
+
 /** @class GetMCRichHitsAlg GetMCRichHitsAlg.h
  *
  *  Algorithm to create MCRichHit objects from Gauss G4 information
- *  
+ *
  *  @author Sajan EASO
  *  @date   2005-12-06
  */
@@ -35,42 +38,46 @@ public:
 
 private:
 
-  std::string m_richHitsLocation;   ///< Name of TES path for MCRichHits
-
-  // now the variables used for the local monitoring. This may eventually
-  // go into GaussMonitor. SE Nov 2005.
   /// Count number of events processed
   unsigned long int m_nEvts;
+
+  /// map for counting detector tallies
+  typedef Rich::Map< const Rich::DetectorType, unsigned long int > DMap;
+  /// map for counting radiator tallies
+  typedef Rich::Map< const Rich::RadiatorType, unsigned long int > RMap;
+
   /// overall count hits in each RICH detector
-  std::vector< unsigned long int > m_hitTally;
+  DMap m_hitTally;
+
   /// overall hit count in each radiator
-  std::vector< unsigned long int > m_radHits;
+  RMap m_radHits;
   /// overall number of invalid radiator flag hits per event
-  std::vector< unsigned long int > m_invalidRadHits;
+  DMap m_invalidRadHits;
   /// number of hits with invalid RICH flag
   unsigned long int m_invalidRichHits;
   /// overall charged track hit count in each radiator
-  std::vector< unsigned long int > m_ctkHits;
+  RMap m_ctkHits;
   /// overall scattered hit count in each radiator
-  std::vector< unsigned long int > m_scatHits;
+  RMap m_scatHits;
 
   /// overall gas quartz window CK hit count in each radiator
-  std::vector< unsigned long int > m_gasQzHits;
+  DMap m_gasQzHits;
   /// overall HPD quartz window CK hit count in each radiator
-  std::vector< unsigned long int > m_hpdQzHits;
+  DMap m_hpdQzHits;
   /// overall nitrogen CK hit count in each radiator
-  std::vector< unsigned long int > m_nitroHits;
+  DMap m_nitroHits;
   /// overall aerogel filter CK hit count in each radiator
-  std::vector< unsigned long int > m_aeroFilterHits;
+  DMap m_aeroFilterHits;
 
   /// overall MCParticle-less hit count in each radiator
-  std::vector< unsigned long int > m_nomcpHits;
+  RMap m_nomcpHits;
+
+  /// Number of hits in each aerogel tile
+  typedef Rich::Map<int,unsigned int> AeroTileMap;
+  AeroTileMap m_aeroTileHits;
 
   /// Pointers to RICH detector elements
   std::vector<const DeRich *> m_richDets;
-
-  /// Locations of RICH detector objects in TES
-  std::vector<std::string> m_richDetsLoc;
 
 };
 

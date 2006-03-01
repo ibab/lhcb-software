@@ -8,9 +8,7 @@
 
 G4Allocator<RichG4Hit> RichG4HitAllocator;
 
-RichG4Hit::RichG4Hit() {;}
-
-RichG4Hit::~RichG4Hit() {;}
+RichG4Hit::~RichG4Hit() { }
 
 RichG4Hit::RichG4Hit(const RichG4Hit &right)
   : GaussHitBase(right),
@@ -202,6 +200,27 @@ void RichG4Hit::Print()
   }
 
 }
+
+Rich::RadiatorType RichG4Hit::radiatorType() const
+{
+  // default invalid radiator type
+  Rich::RadiatorType rad = Rich::InvalidRadiator;
+  // fill if known ID
+  if      ( GetRadiatorNumber() == Rich1C4F10CkvRadiatorNum )          { rad = Rich::C4F10; }
+  else if ( GetRadiatorNumber() == Rich2CF4CkvRadiatorNum   )          { rad = Rich::CF4; }
+  else if ( Rich1AgelTile0CkvRadiatorNum <= GetRadiatorNumber() &&
+            Rich1AgelTile15CkvRadiatorNum >= GetRadiatorNumber() )     { rad = Rich::Aerogel; }
+  else if ( RichHpdQuartzWindowCkvRadiatorNum == GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin; }
+  else if ( Rich1GasQWindowCkvRadiatorNum == GetRadiatorNumber() ||
+            Rich2GasQWindowCkvRadiatorNum == GetRadiatorNumber() )     { rad = Rich::GasQuartzWin; }
+  else if ( RichFilterGenericCkvRadiatorNum == GetRadiatorNumber() ||
+            RichFilterD263CkvRadiatorNum    == GetRadiatorNumber() )   { rad = Rich::AerogelFilter; }
+  else if ( Rich1NitrogenCkvRadiatorNum == GetRadiatorNumber() ||
+            Rich2NitrogenCkvRadiatorNum == GetRadiatorNumber() )       { rad = Rich::Nitrogen; }
+  // return final type
+  return rad;
+}
+
 // This is a forward declaration of an instantiated G4Allocator<Type> object.
 // It has been added in order to make code portable for the GNU g++
 // (release 2.7.2) compiler.

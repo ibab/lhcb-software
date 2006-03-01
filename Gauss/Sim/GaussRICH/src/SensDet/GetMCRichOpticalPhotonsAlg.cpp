@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.3 2006-02-22 19:27:36 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.4 2006-03-01 09:31:26 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -22,12 +22,11 @@ const        IAlgFactory& GetMCRichOpticalPhotonsAlgFactory = s_factory ;
 GetMCRichOpticalPhotonsAlg::GetMCRichOpticalPhotonsAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator)
   : GetMCRichInfoBase ( name , pSvcLocator )
-  , m_nEvts                   ( 0 )
-  , m_hitTally                ( Rich::NRiches, 0 )
+  , m_nEvts           ( 0 )
 {
   declareProperty( "MCRichHitsLocation", m_richHitsLocation = MCRichHitLocation::Default );
   declareProperty( "MCRichOpticalPhotonsLocation",
-                   m_richPhotonsLocation = MCRichOpticalPhotonLocation::Default );
+                   m_dataToFill = MCRichOpticalPhotonLocation::Default );
 }
 
 //=============================================================================
@@ -43,12 +42,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
-  info() << "Filling MCRichOpticalPhotons at " << m_richPhotonsLocation << " from G4 collections";
-  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
-  {
-    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
-  }
-  info() << endreq;
+  // add custom initialisations here
 
   return sc;
 }
@@ -62,7 +56,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
   // Create the photons and put them in the TES
   MCRichOpticalPhotons * photons = new MCRichOpticalPhotons();
-  put( photons, m_richPhotonsLocation );
+  put( photons, dataLocationInTES() );
 
   // Get the G4 necessary hit collections from GiGa
   G4HCofThisEvent* hitscollections = 0;
@@ -72,6 +66,9 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
   {
     // Get MCRichHits
     const MCRichHits * mcHits = get<MCRichHits>( MCRichHitLocation::Default );
+
+    // reserve space in photon container
+    photons->reserve( mcHits->size() );
 
     // note this key is need for consistency with MCRichHit converter
     unsigned int globalKey = 0;
@@ -90,8 +87,6 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
       if ( 0 == myCollection ) return StatusCode::SUCCESS;
 
       const int numberofhits = myCollection->entries();
-      // reserve space
-      photons->reserve( numberofhits );
 
       //convert hits
       for ( int ihit = 0; ihit < numberofhits; ++ihit ) 
@@ -137,12 +132,11 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
         // Flat mirror reflection point
         mcPhoton->setFlatMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror2PhotonReflPosition()) );
 
-        // copy history flags from MCRichHit
-        mcPhoton->setHistoryCode( mchit->historyCode() );
+        // exit point from aerogel (only meaningful for aerogel photons)
+        mcPhoton->setAerogelExitPoint( Gaudi::XYZPoint(g4hit->OptPhotAgelExitPos()) );
 
         // Count photons
-        if      ( Rich::Rich1 == mcPhoton->rich() ) { ++m_hitTally[Rich::Rich1]; }
-        else if ( Rich::Rich2 == mcPhoton->rich() ) { ++m_hitTally[Rich::Rich2]; }
+        ++m_hitTally[mchit->radiator()];
 
         // finally, increment the key
         ++globalKey;
@@ -176,10 +170,13 @@ StatusCode GetMCRichOpticalPhotonsAlg::finalize()
 {
   const RichStatDivFunctor occ;
 
-  info() << "Av. # MCRichOpticalPhotons : Rich1 = "
-         << occ(m_hitTally[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
-         << endreq;
+  for ( RadMap::const_iterator iM = m_hitTally.begin(); iM != m_hitTally.end(); ++iM )
+  {
+    std::string name = Rich::text((*iM).first);
+    name.resize(' ',20);
+    info() << "Av. # MCRichOpticalPhotons : " << name << " = " 
+           << occ((*iM).second,m_nEvts) << " / event" << endreq;
+  }
 
   return GetMCRichInfoBase::finalize();  // must be called after all other actions
 }

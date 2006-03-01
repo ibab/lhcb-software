@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.3 2006-02-22 19:27:36 jonrob Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.4 2006-03-01 09:31:26 jonrob Exp $
 // Include files
 
 // local
@@ -27,7 +27,7 @@ GetMCRichTracksAlg::GetMCRichTracksAlg( const std::string& name,
   , m_hitTally        ( 0 )
 {
   declareProperty( "MCRichTracksLocation",
-                   m_richTracksLocation = MCRichTrackLocation::Default );
+                   m_dataToFill = MCRichTrackLocation::Default );
 }
 
 //=============================================================================
@@ -43,12 +43,7 @@ StatusCode GetMCRichTracksAlg::initialize()
   const StatusCode sc = GetMCRichInfoBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
-  info() << "Filling MCRichTracks at " << m_richTracksLocation << " from G4 collections";
-  for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
-  {
-    info() << " " << RichG4HitCollectionName()->RichHCName(iii);
-  }
-  info() << endreq;
+  // add custom initialisations here
 
   return sc;
 }
@@ -62,7 +57,8 @@ StatusCode GetMCRichTracksAlg::execute()
 
   // Create the MCRichTracks and put them in the TES
   MCRichTracks * richTracks = new MCRichTracks();
-  put( richTracks, m_richTracksLocation );
+  put( richTracks, dataLocationInTES() );
+  richTracks->reserve( 100 );
 
   // Get the G4 necessary hit collections from GiGa
   G4HCofThisEvent* hitscollections = 0;
