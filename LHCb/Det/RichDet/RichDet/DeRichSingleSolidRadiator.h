@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.8 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.9 2006-03-01 14:53:00 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -97,6 +97,17 @@ public:
   unsigned int intersectionPoints(const Gaudi::XYZPoint& pGlobal,
                                   const Gaudi::XYZVector& vGlobal,
                                   std::vector<Gaudi::XYZPoint>& points) const;
+
+  /**
+   * Finds the intersections (entry/exit) with radiator. For boolean solids there
+   * can be more than one intersections
+   *
+   * @return The number of intersections.
+   * @retval Zero if there is no intersction.
+   */
+  virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
+                                      const Gaudi::XYZVector& vGlobal,
+                                      std::vector<RichRadIntersection>& intersections ) const;
 
 
 private:

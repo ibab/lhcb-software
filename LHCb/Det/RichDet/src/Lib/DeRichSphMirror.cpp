@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.21 2006-02-17 16:57:49 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.22 2006-03-01 14:53:01 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -296,8 +296,10 @@ StatusCode DeRichSphMirror::initialize()
     updMgrSvc()->registerCondition(this, rich2,
                                    &DeRichSphMirror::updateGeometry );
 
-  updMgrSvc()->update(this);
+  StatusCode update = updMgrSvc()->update(this);
+  if ( !update ) return update;
 
+  msg << MSG::DEBUG << "Completed initialize" << endmsg;
   return StatusCode::SUCCESS;
 }
 

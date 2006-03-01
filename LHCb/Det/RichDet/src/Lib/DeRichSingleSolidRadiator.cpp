@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.13 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.14 2006-03-01 14:53:01 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -23,7 +23,6 @@
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"
-#include "DetDesc/SolidTrd.h"
 
 //----------------------------------------------------------------------------
 
@@ -33,10 +32,13 @@ const CLID& CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator() {}
 
 // Standard Destructor
-DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() {}
+DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() {
+  if ( !m_refIndex ) delete m_refIndex;
+  if ( !m_rayleigh) delete m_rayleigh;
+}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichSingleSolidRadiator::classID() 
+const CLID& DeRichSingleSolidRadiator::classID()
 {
   return CLID_DeRichSingleSolidRadiator;
 }
@@ -56,10 +58,12 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter ) {
     if ( (*matIter) ) {
       if ( (*matIter)->type() == "RINDEX" ) {
-        m_refIndex = (*matIter);
+        m_refIndexTabProp = (*matIter);
+        m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
       }
       if ( (*matIter)->type() == "RAYLEIGH" ) {
-        m_rayleigh = (*matIter);
+        m_rayleighTabProp = (*matIter);
+        m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
       }
     }
   }
@@ -71,11 +75,11 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG << "Found TabProp " << m_refIndex->name() << " type "
-      << m_refIndex->type() << endmsg;
+  log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
+      << m_refIndexTabProp->type() << endmsg;
   if ( m_rayleigh )
-    log << MSG::DEBUG << "Found TabProp " << m_rayleigh->name() << " type "
-        << m_rayleigh->type() << endmsg;
+    log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
+        << m_rayleighTabProp->type() << endmsg;
   log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
 
   return StatusCode::SUCCESS;
@@ -96,10 +100,9 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
   if (0 == noTicks) {
     return StatusCode::FAILURE;
   }
-  else {
-    returnPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
-    return StatusCode::SUCCESS;
-  }
+
+  returnPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
+  return StatusCode::SUCCESS;
 
 }
 
@@ -148,8 +151,35 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
     for (ISolid::Ticks::iterator tick_it = ticks.begin();
          tick_it != ticks.end();
          ++tick_it) {
-      points.push_back( Gaudi::XYZPoint( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) ) );
+      points.push_back( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) );
     }
   }
   return noTicks;
+}
+
+
+//=========================================================================
+//  intersections
+//=========================================================================
+unsigned int DeRichSingleSolidRadiator::
+intersections( const Gaudi::XYZPoint& pGlobal,
+               const Gaudi::XYZVector& vGlobal,
+               std::vector<RichRadIntersection>& intersections ) const
+{
+
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
+  const Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
+
+  ISolid::Ticks ticks;
+  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+
+  if (noTicks != 0) {
+    for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
+      intersections.push_back(RichRadIntersection
+                              (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
+                               geometry()->toGlobal(pLocal + ticks[tick+1]*vLocal),
+                               this ) );
+    }
+  }
+  return (noTicks/2);
 }

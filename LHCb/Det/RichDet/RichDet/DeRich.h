@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.18 2006-02-22 14:29:46 papanest Exp $
+ *  $Id: DeRich.h,v 1.19 2006-03-01 14:52:59 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -26,7 +26,6 @@
 #include "Kernel/RichSide.h"
 
 #include "RichDet/RichMirrorSegPosition.h"
-#include "RichDet/DeRichSphMirror.h"
 
 // boost
 #include "boost/array.hpp"
@@ -248,7 +247,7 @@ protected:
   std::string m_name; ///< The name of this detector
 
   /// Pointers to the HPD panels of this Rich detector
-  boost::array<DeRichHPDPanel*, 2> m_HPDPanels;  
+  boost::array<DeRichHPDPanel*, 2> m_HPDPanels;
 };
 
 #endif    // RICHDET_DERICH_H

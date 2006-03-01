@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-03-01 - Antonis Papanestis
+ - added Rich1DTabFunc, Rich1DTabProperty and RichRadIntersection
+ - new method intersections in DeRichRadiator
+
 ! 2006-02-22 - Antonis Papanestis
  - added functionality for sensitiveVolumeID
 

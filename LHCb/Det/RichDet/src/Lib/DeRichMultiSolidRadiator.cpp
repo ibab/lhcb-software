@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.11 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.12 2006-03-01 14:53:01 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -16,13 +16,13 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // MathCore files
 #include "Kernel/Vector3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"
-#include "DetDesc/SolidTrd.h"
 
 //----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ DeRichMultiSolidRadiator::DeRichMultiSolidRadiator() {}
 DeRichMultiSolidRadiator::~DeRichMultiSolidRadiator() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichMultiSolidRadiator::classID() 
+const CLID& DeRichMultiSolidRadiator::classID()
 {
   return CLID_DeRichMultiSolidRadiator;
 }
@@ -43,7 +43,7 @@ const CLID& DeRichMultiSolidRadiator::classID()
 StatusCode DeRichMultiSolidRadiator::initialize()
 {
   if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
- 
+
   MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
   log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator "
       << name() << endmsg;
@@ -55,42 +55,31 @@ StatusCode DeRichMultiSolidRadiator::initialize()
   const IPVolume* contR = topLV->pvolume("pvRich1AerogelContainerRight:0");
   if ( contR )
     if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix() ) ) return StatusCode::FAILURE;
-  
+
   // look for Aerogel container right
   const IPVolume* contL = topLV->pvolume("pvRich1AerogelContainerLeft:1");
   if ( contL ) {
     if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix() ) ) return StatusCode::FAILURE;
   }
   // old geometry with aerogel quarters
-  else 
+  else
     if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) return StatusCode::FAILURE;
-  
-  if ( m_refIndices.empty() ) 
-  {
-    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
-        << endmsg;
-    return StatusCode::FAILURE;
-  }
-  // for the time being use the refIndex of the first volume for the whole 
-  // radiator
-  m_refIndex = m_refIndices[0];
 
-  if ( !m_rayleighVector.empty() ) m_rayleigh = m_rayleighVector[0];
-  
+
   return StatusCode::SUCCESS;
 }
 
 
 //=========================================================================
-// add physical volumes to multi solid radiator  
+// add physical volumes to multi solid radiator
 //=========================================================================
-StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv, 
+StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
                                                  const std::string volName,
                                                  const Gaudi::Transform3D& toLowerLevel) {
 
   MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
 
-  // while string volumes also store the total transformation to 
+  // while string volumes also store the total transformation to
   // get to/from the low level volume to the top level volume
   ILVolume::PVolumes::const_iterator pviter;
   for (pviter=lv->pvBegin(); pviter!=lv->pvEnd(); ++pviter) {
@@ -101,23 +90,24 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
       m_solids.push_back( (*pviter)->lvolume()->solid() );
       log << MSG::DEBUG << "Storing pvolume " << (*pviter)->name();
 
-      const Material::Tables& myTabProp = (*pviter)->lvolume()->material()->
-        tabulatedProperties();
-      Material::Tables::const_iterator tabIter;
-      for (tabIter=myTabProp.begin(); tabIter!=myTabProp.end(); ++tabIter) {
-        if( (*tabIter) ){
-          if ( (*tabIter)->type() == "RINDEX" ) {
-            log << MSG::DEBUG << " with property " << (*tabIter)->name()
-                << endreq;
-            m_refIndices.push_back( (*tabIter) );
-          }
-          if ( (*tabIter)->type() == "RAYLEIGH" ) {
-            log << MSG::DEBUG << " and with property " << (*tabIter)->name()
-                << endreq;
-            m_rayleighVector.push_back( (*tabIter) );
-          }
-        }
+      // get the volume number
+      const std::string::size_type numPos = (*pviter)->name().find(':');
+      if ( numPos == std::string::npos ) {
+        log << MSG::ERROR << "Cannot find aerogel tile number "
+            << (*pviter)->name() << endmsg;
+        return StatusCode::FAILURE;
       }
+      // get a pointer to DeRichRadiator
+      std::string tileNumStr = (*pviter)->name().substr(numPos+1);
+      std::string radLoc = DeRichRadiatorLocation::Aerogel+"T"+tileNumStr+":"+tileNumStr;
+      SmartDataPtr<DeRichRadiator> deRad( dataSvc(), radLoc );
+      if ( !deRad ) {
+        log << MSG::ERROR << "Cannot find DeRichRadiator " << radLoc
+            << (*pviter)->name() << endmsg;
+        return StatusCode::FAILURE;
+      }
+      log << MSG::DEBUG << "Loading " << radLoc << endmsg;
+      m_radiators.push_back( deRad );
     }
   }
 
@@ -170,7 +160,7 @@ StatusCode
 DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
                                               const Gaudi::XYZVector& direction,
                                               Gaudi::XYZPoint& entryPoint,
-                                              Gaudi::XYZPoint& exitPoint ) const 
+                                              Gaudi::XYZPoint& exitPoint ) const
 {
 
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
@@ -187,7 +177,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
     Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
     Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal );
-    
+
     if ( m_solids[solid]->
          intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
       Gaudi::XYZPoint localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
@@ -220,7 +210,7 @@ unsigned int
 DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
                                               const Gaudi::XYZVector& vGlobal,
                                               std::vector<Gaudi::XYZPoint>&
-                                              points) const 
+                                              points) const
 {
 
   const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
@@ -250,3 +240,42 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
 
   return totalTicks;
 }
+
+//=========================================================================
+//  intersections
+//=========================================================================
+unsigned int DeRichMultiSolidRadiator::
+intersections( const Gaudi::XYZPoint& pGlobal,
+               const Gaudi::XYZVector& vGlobal,
+               std::vector<RichRadIntersection>& intersections ) const
+{
+  const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
+  const Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
+
+  ISolid::Ticks ticks;
+  unsigned int noTicks;
+  unsigned int totalTicks(0);
+
+  for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
+    Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
+    Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
+    noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
+                                                 solidLocalVector,
+                                                 ticks);
+    if (noTicks != 0) {
+      totalTicks += noTicks;
+      for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
+        intersections.push_back(RichRadIntersection
+                                (geometry()->toGlobal(m_toTopLevel[solid]*
+                                                      (solidLocalPoint+solidLocalVector*ticks[tick])),
+                                 geometry()->toGlobal(m_toTopLevel[solid]*
+                                                      (solidLocalPoint+solidLocalVector*ticks[tick+1])),
+                                 m_radiators[solid]) );
+      }
+    }
+  }
+  return totalTicks/2;
+}
+
+
+                            

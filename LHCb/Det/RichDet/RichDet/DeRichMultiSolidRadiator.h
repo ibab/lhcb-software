@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.9 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.10 2006-03-01 14:52:59 papanest Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -97,6 +97,17 @@ public:
                                   const Gaudi::XYZVector& vGlobal,
                                   std::vector<Gaudi::XYZPoint>& points) const;
 
+  /**
+   * Finds the intersections (entry/exit) with radiator. For boolean solids there
+   * can be more than one intersections
+   *
+   * @return The number of intersections.
+   * @retval Zero if there is no intersction.
+   */
+  virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
+                                      const Gaudi::XYZVector& vGlobal,
+                                      std::vector<RichRadIntersection>& intersections ) const;
+
 
 private:
 
@@ -111,15 +122,15 @@ private:
   typedef std::vector<const IPVolume*> PVolumes;
   /// vector of transformation matrices
   typedef std::vector<Gaudi::Transform3D> Transforms;
-   /// vector of tabulated properties
-  typedef std::vector<const TabulatedProperty*> TabProps;
 
   Solids m_solids;        ///< The solids that make up this radiator
   PVolumes m_pVolumes;    ///< The physical volumes
   Transforms m_toTopLevel; ///< Tranforms to top level of the detector element
   Transforms m_toLowLevel; ///< Tranforms to low (solid) level of the detector element
-  TabProps m_refIndices;  ///< refractive indices (for each solid)
-  TabProps m_rayleighVector; ///< Rayleigh scattering properties
+
+  /// The DeRichRadiators that make up this radiator
+  std::vector<DeRichRadiator*> m_radiators;
+  
 };
 
 #endif    // RICHDET_DERICHMULTISOLIDRADIATOR_H

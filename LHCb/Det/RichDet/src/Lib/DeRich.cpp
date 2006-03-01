@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.16 2006-03-01 09:33:14 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.17 2006-03-01 14:53:01 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -49,7 +49,7 @@ DeRich::~DeRich() {}
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRich::initialize ( ) 
+StatusCode DeRich::initialize ( )
 {
   if ( exists( "SphMirrorSegRows" ) )
   {
@@ -64,7 +64,7 @@ StatusCode DeRich::initialize ( )
   } else if ( exists( "FlatMirrorSegRows" ) ){
     m_secMirrorSegRows = param<int>( "FlatMirrorSegRows" );
     m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
-  }  
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -77,7 +77,7 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 
   RichMirrorSegPosition mirrorPos;
 
-  if ( m_positionInfo ) 
+  if ( m_positionInfo )
   {
     int row = mirrorNumber / m_sphMirrorSegCols;
     if ( row >= m_sphMirrorSegRows ) row -= m_sphMirrorSegRows;
@@ -123,7 +123,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
                                   const std::string& Rvector ) const {
 
   MsgStream msg( msgSvc(), myName() );
-  msg << MSG::VERBOSE << "Misaligning " << mirrorID << " in " 
+  msg << MSG::VERBOSE << "Misaligning " << mirrorID << " in "
       << myName() <<  endmsg;
 
   std::map<int, IPVolume*> mirrors;
@@ -135,7 +135,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i) {
       cpvMirror = (*contIter)->pvolume(i);
       IPVolume* pvMirror = const_cast<IPVolume*>(cpvMirror);
-      
+
       // find mirrors that match mirrorID
       std::string mirrorName = pvMirror->name();
       if (mirrorName.find(mirrorID) != std::string::npos ) {
@@ -151,31 +151,31 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     }
   }
   msg << MSG::VERBOSE << "Found " << mirrors.size() << " mirrors" << endmsg;
-  
+
   std::vector<double> rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
   if ( rotX.size() != rotY.size() ) {
-    msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:" 
+    msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:"
         << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
   }
   if ( rotX.size() != mirrors.size() ) {
-    msg << MSG::FATAL << "Number of parameters does not match mirrors in:" 
+    msg << MSG::FATAL << "Number of parameters does not match mirrors in:"
         << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
-  }    
+  }
 
   std::vector<double> Rs = paramVect<double>(Rvector);
   if ( rotX.size() != Rs.size() ) {
-    msg << MSG::FATAL << "Number of Rs does not match mirrors in:" 
+    msg << MSG::FATAL << "Number of Rs does not match mirrors in:"
         << mirrorAlignCond->name() << endmsg;
     return StatusCode::SUCCESS;
   }
 
   for (unsigned int mNum=0; mNum<rotX.size(); ++mNum) {
-    
+
     // create transformation matrix to rotate the mirrors around their centre
     Gaudi::TranslationXYZ pivot( -Rs[mNum], 0.0, 0.0 );
     Gaudi::Transform3D transl( pivot );
@@ -186,15 +186,15 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 
     mirrors[mNum]->applyMisAlignment( matrix );
   }
-  
-  msg << MSG::DEBUG << "Aligned " << mirrors.size() << " " << mirrorID << endmsg;
+
+  msg << MSG::DEBUG << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
   return StatusCode::SUCCESS;
 
 }
 
 
 //=========================================================================
-//  
+//
 //=========================================================================
 const int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.16 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichRadiator.h,v 1.17 2006-03-01 14:52:59 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -28,6 +28,10 @@
 // Kernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
+
+// RichDet
+#include "RichDet/RichRadIntersection.h"
+#include "RichDet/Rich1DTabProperty.h"
 
 // GaudiKernel
 class IAlgTool;
@@ -70,13 +74,15 @@ public:
 
   /// Default constructor
   DeRichRadiator()
-    : DetectorElement (),
-      m_radiatorID    ( Rich::InvalidRadiator ),
-      m_rich          ( Rich::InvalidDetector ),
-      m_refIndex      ( 0                     ),
-      m_rayleigh      ( 0                     ),
-      m_name          ( "UnInitialized"       ),
-      m_condTool      ( 0                     ) { }
+    : DetectorElement  (),
+      m_radiatorID     ( Rich::InvalidRadiator ),
+      m_rich           ( Rich::InvalidDetector ),
+      m_refIndex       ( 0                     ),
+      m_refIndexTabProp( 0                     ),
+      m_rayleigh       ( 0                     ),
+      m_rayleighTabProp( 0                     ),
+      m_name           ( "UnInitialized"       ),
+      m_condTool       ( 0                     ) { }
 
   /// Destructor
   virtual ~DeRichRadiator();
@@ -111,9 +117,18 @@ public:
    * Retrieves the refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
-  inline const TabulatedProperty* refIndex() const
+  inline const Rich1DTabProperty* refIndex() const
   {
     return m_refIndex;
+  }
+
+  /**
+   * Retrieves the refractive index of the radiator
+   * @return A pointer to the refractive index of the radiator
+   */
+  inline const TabulatedProperty* refIndexTabProp() const
+  {
+    return m_refIndexTabProp;
   }
 
   /**
@@ -121,9 +136,19 @@ public:
    * @return A pointer to the Rayleigh tab property
    * @retval NULL No Rayleigh tab property
    */
-  inline const TabulatedProperty* rayleigh() const
+  inline const Rich1DTabProperty* rayleigh() const
   {
     return m_rayleigh;
+  }
+
+  /**
+   * Retrieves the Rayleigh properties of the radiator
+   * @return A pointer to the Rayleigh tab property
+   * @retval NULL No Rayleigh tab property
+   */
+  inline const TabulatedProperty* rayleighTabProp() const
+  {
+    return m_rayleighTabProp;
   }
 
   /**
@@ -158,6 +183,17 @@ public:
                                            std::vector<Gaudi::XYZPoint>& points ) const = 0;
 
 
+  /**
+   * Finds the intersections (entry/exit) with radiator. For boolean solids there
+   * can be more than one intersections
+   *
+   * @return The number of intersections.
+   * @retval Zero if there is no intersction.
+   */
+  virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
+                                      const Gaudi::XYZVector& vGlobal,
+                                      std::vector<RichRadIntersection>& intersections ) const = 0;
+
   /** Returns the name of this particular radiator medium
    *  @return radiator name
    */
@@ -169,10 +205,16 @@ protected:
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
 
   /// pointer to the refractive index of the material
-  const TabulatedProperty* m_refIndex;
+  const Rich1DTabProperty* m_refIndex;
+
+  /// pointer to the refractive index of the material
+  const TabulatedProperty* m_refIndexTabProp;
 
   /// pointer to the Rayleigh scattering properties
-  const TabulatedProperty* m_rayleigh;
+  const Rich1DTabProperty* m_rayleigh;
+
+  /// pointer to the Rayleigh scattering properties
+  const TabulatedProperty* m_rayleighTabProp;
 
 private:
 
