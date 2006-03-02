@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichPixelMonitor.h
+/** @file RichPixelPositionMonitor.h
  *
- *  Header file for algorithm class : RichPixelMonitor
+ *  Header file for algorithm class : RichPixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelMonitor.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.1 2006-03-02 15:26:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECMONITOR_RICHPIXELMONITOR_H
-#define RICHRECMONITOR_RICHPIXELMONITOR_H 1
+#ifndef RICHRECMONITOR_RichPixelPositionMonitor_H
+#define RICHRECMONITOR_RichPixelPositionMonitor_H 1
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
@@ -31,25 +31,25 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPixelMonitor RichPixelMonitor.h
+/** @class RichPixelPositionMonitor RichPixelPositionMonitor.h
  *
- *  Monitor class for RichRecPixels.
+ *  Monitor class for general position and geometry of RichRecPixels
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-class RichPixelMonitor : public RichRecHistoAlgBase
+class RichPixelPositionMonitor : public RichRecHistoAlgBase
 {
 
 public:
 
   /// Standard constructor
-  RichPixelMonitor( const std::string& name,
-                    ISvcLocator* pSvcLocator );
+  RichPixelPositionMonitor( const std::string& name,
+                            ISvcLocator* pSvcLocator );
 
-  virtual ~RichPixelMonitor( ); ///< Destructor
+  virtual ~RichPixelPositionMonitor( ); ///< Destructor
 
   virtual StatusCode initialize();    // Algorithm initialization
   virtual StatusCode execute   ();    // Algorithm execution
@@ -67,4 +67,4 @@ private: // data
 
 };
 
-#endif // RICHRECMONITOR_RICHPIXELMONITOR_H
+#endif // RICHRECMONITOR_RichPixelPositionMonitor_H

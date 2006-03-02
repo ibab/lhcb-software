@@ -1,0 +1,27 @@
+
+RichTkGeom.Members += { "RichTrackGeomMoni/RiRecMCRTkGeomMoni" };
+RiRecMCRTkGeomMoni.TrackSelection = { "unique","MCRichTrack" };
+
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkCKResMoni" };
+RiRecMCRTkCKResMoni.TrackSelection = { "unique","MCRichTrack" };
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkPosCKResMoni" };
+RiRecMCRTkPosCKResMoni.TrackSelection = { "unique","positive","MCRichTrack" };
+RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkNegCKResMoni" };
+RiRecMCRTkNegCKResMoni.TrackSelection = { "unique","negative","MCRichTrack" };
+
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkPosResMoni" };
+RiRecMCRTkPosResMoni.TrackSelection = { "unique","positive","MCRichTrack" };
+RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkNegResMoni" };
+RiRecMCRTkNegResMoni.TrackSelection = { "unique","negative","MCRichTrack" };
+
+RichPhotSig.Members += { "RichPhotonSignalMonitor/RiRecPhotSigMCRTkMoni" };
+RiRecPhotSigMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+
+RichPhotAng.Members += { "RichCherenkovAngleMonitor/RiRecPhotAngMCRTkMoni" };
+RiRecPhotAngMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+
+RichPhotGeom.Members += { "RichPhotonGeomMonitor/RiRecPhotGeomMCRTkMoni" };
+RiRecPhotGeomMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };
+
+RichPhotEff.Members += { "RichPhotonRecoEffMonitor/RiRecPhotEffMCRTkMoni" };
+RiRecPhotEffMCRTkMoni.TrackSelection = { "unique","MCRichTrack" };

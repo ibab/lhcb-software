@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.7 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.8 2006-03-02 15:26:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -83,16 +83,13 @@ StatusCode RichTrackGeomMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Make sure all tracks and segments have been formed
-  if ( richTracks()->empty() ) {
+  if ( richTracks()->empty() )
+  {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endreq;
   }
-
-  // Tally number of segments
-  unsigned int nSegs[Rich::NRadiatorTypes]   = { 0, 0, 0 };
-  unsigned int nMCSegs[Rich::NRadiatorTypes] = { 0, 0, 0 };
 
   // Histogramming
   const RichHistoID hid;
@@ -119,9 +116,8 @@ StatusCode RichTrackGeomMoni::execute()
     // track segment
     const RichTrackSegment & trackSeg = segment->trackSegment();
 
-    const Rich::DetectorType iRich = trackSeg.rich();    // which rich detector
-    const Rich::RadiatorType iRad = trackSeg.radiator(); // which radiator
-    ++nSegs[iRad]; // count segments per radiator
+    const Rich::DetectorType rich = trackSeg.rich();    // which rich detector
+    const Rich::RadiatorType rad  = trackSeg.radiator(); // which radiator
 
     // HPD panel impact points (ray traced)
     const Gaudi::XYZPoint & pdPoint    = segment->pdPanelHitPoint();
@@ -135,84 +131,99 @@ StatusCode RichTrackGeomMoni::execute()
     const Gaudi::XYZVector & trackDir = trackSeg.bestMomentum();
 
     // entry/exit point histograms
-    plot1D( trackSeg.entryPoint().z(), hid(iRad,"zEntry"), "Track entrance z",
-            zRadEntGlo[iRad],zRadExitGlo[iRad] );
-    plot1D( trackSeg.exitPoint().z(), hid(iRad,"zExit"), "Track exit z",
-            zRadEntGlo[iRad],zRadExitGlo[iRad] );
+    plot1D( trackSeg.entryPoint().z(), hid(rad,"entryZ"), "Track entrance z",
+            zRadEntGlo[rad],zRadExitGlo[rad] );
+    plot1D( trackSeg.exitPoint().z(), hid(rad,"exitZ"), "Track exit z",
+            zRadEntGlo[rad],zRadExitGlo[rad] );
     plot2D( trackSeg.entryPoint().x(),trackSeg.entryPoint().y(),
-            hid(iRad,"xyEntry"), "Track entrance yVx",
-            -xRadEntGlo[iRad],xRadEntGlo[iRad],-yRadEntGlo[iRad],yRadEntGlo[iRad] );
+            hid(rad,"entryXY"), "Track entrance yVx",
+            -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
     plot2D( trackSeg.exitPoint().x(),trackSeg.exitPoint().y(),
-            hid(iRad,"xyExit"), "Track exit yVx",
-            -xRadExitGlo[iRad],xRadExitGlo[iRad],-yRadExitGlo[iRad],yRadExitGlo[iRad] );
-    plot1D( trackSeg.pathLength(), hid(iRad,"pathL"), "Path length",
-            zRadLenMin[iRad],zRadLenMax[iRad] );
+            hid(rad,"exitXY"), "Track exit yVx",
+            -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
+    plot1D( trackSeg.pathLength(), hid(rad,"pathL"), "Path length",
+            zRadLenMin[rad],zRadLenMax[rad] );
+    plot3D( trackSeg.entryPoint().z(), trackSeg.entryPoint().x(), trackSeg.entryPoint().y(),
+            hid(rad,"entryXYZ"), "Track entrance xVyVz",
+            zRadEntGlo[rad],zRadExitGlo[rad],
+            -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
+    plot3D( trackSeg.exitPoint().z(), trackSeg.exitPoint().x(), trackSeg.exitPoint().y(),
+            hid(rad,"exitXYZ"), "Track exit xVyVz",
+            zRadEntGlo[rad],zRadExitGlo[rad],
+            -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
 
     // Ray traced hit point on PDPanel
-    plot1D( pdPoint.x(), hid(iRich,"xTkPDpan"), "Projected track PDPanel hits x global",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich] );
-    plot1D( pdPoint.y(), hid(iRich,"yTkPDpan"), "Projected track PDPanel hits y global",
-            yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-    plot1D( pdPoint.z(), hid(iRich,"zTkPDpan"), "Projected track PDPanel hits z global",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+    plot1D( pdPoint.x(), hid(rich,"xTkPDpan"), "Projected track PDPanel hits x global",
+            xMinPDGlo[rich], xMaxPDGlo[rich] );
+    plot1D( pdPoint.y(), hid(rich,"yTkPDpan"), "Projected track PDPanel hits y global",
+            yMinPDGlo[rich], yMaxPDGlo[rich] );
+    plot1D( pdPoint.z(), hid(rich,"zTkPDpan"), "Projected track PDPanel hits z global",
+            zMinPDGlo[rich], zMaxPDGlo[rich] );
 
     plot2D( pdPoint.x(), pdPoint.y(),
-            hid(iRich,"xyTkPDpan"), "Projected track PDPanel hits yVx global",
-            xMinPDGlo[iRich],xMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+            hid(rich,"xyTkPDpan"), "Projected track PDPanel hits yVx global",
+            xMinPDGlo[rich],xMaxPDGlo[rich],yMinPDGlo[rich],yMaxPDGlo[rich] );
     plot2D( pdPoint.z(), pdPoint.x(),
-            hid(iRich,"xzTkPDpan"), "Projected track PDPanel hits xVz global",
-            zMinPDGlo[iRich],zMaxPDGlo[iRich],xMinPDGlo[iRich],xMaxPDGlo[iRich] );
+            hid(rich,"xzTkPDpan"), "Projected track PDPanel hits xVz global",
+            zMinPDGlo[rich],zMaxPDGlo[rich],xMinPDGlo[rich],xMaxPDGlo[rich] );
     plot2D( pdPoint.z(), pdPoint.y(),
-            hid(iRich,"yzTkPDpan"), "Projected track PDPanel hits yVz global",
-            zMinPDGlo[iRich],zMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+            hid(rich,"yzTkPDpan"), "Projected track PDPanel hits yVz global",
+            zMinPDGlo[rich],zMaxPDGlo[rich],yMinPDGlo[rich],yMaxPDGlo[rich] );
 
-    plot1D( pdPointLoc.x(), hid(iRich,"xTkPDpanLoc"), "Projected track PD hits x local",
-            xMinPDLoc[iRich],xMaxPDLoc[iRich] );
-    plot1D( pdPointLoc.y(), hid(iRich,"yTkPDpanLoc"), "Projected track PD hits y local",
-            yMinPDLoc[iRich],yMaxPDLoc[iRich] );
-    plot1D( pdPointLoc.z(), hid(iRich,"zTkPDpanLoc"), "Projected track PD hits z local",
-            zMinPDLoc[iRich],zMaxPDLoc[iRich] );
+    plot1D( pdPointLoc.x(), hid(rich,"xTkPDpanLoc"), "Projected track PD hits x local",
+            xMinPDLoc[rich],xMaxPDLoc[rich] );
+    plot1D( pdPointLoc.y(), hid(rich,"yTkPDpanLoc"), "Projected track PD hits y local",
+            yMinPDLoc[rich],yMaxPDLoc[rich] );
+    plot1D( pdPointLoc.z(), hid(rich,"zTkPDpanLoc"), "Projected track PD hits z local",
+            zMinPDLoc[rich],zMaxPDLoc[rich] );
 
     plot2D( pdPointLoc.x(), pdPointLoc.y(),
-            hid(iRich,"xyTkPDpanLoc"), "Projected track PD hits yVx local",
-            xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+            hid(rich,"xyTkPDpanLoc"), "Projected track PD hits yVx local",
+            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
 
     // HPD panel acceptance
     const double hpdPanAcc = m_geomTool->hpdPanelAcceptance(segment,Rich::Electron);
     plot2D( pdPointLoc.x(), hpdPanAcc,
-            hid(iRad,"hpdPanAccX"), "HPD panel acceptance (electron) V x",
-            1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],0,1.05 );
+            hid(rad,"hpdPanAccX"), "HPD panel acceptance (electron) V x",
+            1.1*xMinPDLoc[rich],1.1*xMaxPDLoc[rich],0,1.05 );
     plot2D( pdPointLoc.y(), hpdPanAcc,
-            hid(iRad,"hpdPanAccY"), "HPD panel acceptance (electron) V y",
-            1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],0,1.05 );
+            hid(rad,"hpdPanAccY"), "HPD panel acceptance (electron) V y",
+            1.1*yMinPDLoc[rich],1.1*yMaxPDLoc[rich],0,1.05 );
 
     // HPD panel acceptance
     const double hpdAcc = m_geomEffic->geomEfficiency(segment,Rich::Electron);
     plot2D( pdPointLoc.x(), hpdAcc,
-            hid(iRad,"hpdGeomEffX"), "HPD geom. eff. (electron) V x",
-            1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],0,1.05 );
+            hid(rad,"hpdGeomEffX"), "HPD geom. eff. (electron) V x",
+            1.1*xMinPDLoc[rich],1.1*xMaxPDLoc[rich],0,1.05 );
     plot2D( pdPointLoc.y(), hpdAcc,
-            hid(iRad,"hpdGeomEffY"), "HPD geom. eff. (electron) V y",
-            1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],0,1.05 );
+            hid(rad,"hpdGeomEffY"), "HPD geom. eff. (electron) V y",
+            1.1*yMinPDLoc[rich],1.1*yMaxPDLoc[rich],0,1.05 );
 
     // Get associated RichMCSegment
     const MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSegment )
     {
-      ++nMCSegs[iRad]; // count MC segments per radiator
       // entry/exit coordinates
-      plot1D( mcSegment->entryPoint().z(), hid(iRad,"mcEntryZ"), "MC Track entrance z",
-              zRadEntGlo[iRad],zRadExitGlo[iRad] );
-      plot1D( mcSegment->exitPoint().z(),  hid(iRad,"mcExitZ"),  "MC Track exit z",
-              zRadEntGlo[iRad],zRadExitGlo[iRad] );
+      plot1D( mcSegment->entryPoint().z(), hid(rad,"mcEntryZ"), "MC Track entrance z",
+              zRadEntGlo[rad],zRadExitGlo[rad] );
+      plot1D( mcSegment->exitPoint().z(),  hid(rad,"mcExitZ"),  "MC Track exit z",
+              zRadEntGlo[rad],zRadExitGlo[rad] );
       plot2D( mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
-              hid(iRad,"mcEntryXY"),  "MC Track entrance yVx",
-              -xRadEntGlo[iRad],xRadEntGlo[iRad],-yRadEntGlo[iRad],yRadEntGlo[iRad] );
+              hid(rad,"mcEntryXY"),  "MC Track entrance yVx",
+              -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
       plot2D( mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
-              hid(iRad,"mcExitXY"),  "MC Track exit yVx",
-              -xRadExitGlo[iRad],xRadExitGlo[iRad],-yRadExitGlo[iRad],yRadExitGlo[iRad] );
-      plot1D( mcSegment->pathLength(), hid(iRad,"mcPathL"), "MC Track length",
-              zRadLenMin[iRad],zRadLenMax[iRad] );
+              hid(rad,"mcExitXY"),  "MC Track exit yVx",
+              -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
+      plot1D( mcSegment->pathLength(), hid(rad,"mcPathL"), "MC Track length",
+              zRadLenMin[rad],zRadLenMax[rad] );
+      plot3D( mcSegment->entryPoint().z(), mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
+              hid(rad,"mcEntryXYZ"), "MC Track entrance xVyVz",
+              zRadEntGlo[rad],zRadExitGlo[rad],
+              -xRadEntGlo[rad],xRadEntGlo[rad],-yRadEntGlo[rad],yRadEntGlo[rad] );
+      plot3D( mcSegment->exitPoint().z(), mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
+              hid(rad,"mcExitXYZ"), "MC Track exit xVyVz",
+              zRadEntGlo[rad],zRadExitGlo[rad],
+              -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
     }
 
     // Project track direction to active detector plane and histogram hits
@@ -226,68 +237,68 @@ StatusCode RichTrackGeomMoni::execute()
 
       // Ray traced hit point on PDs, global
       const Gaudi::XYZPoint & photPoint = photon.detectionPoint();
-      plot1D( photPoint.x(), hid(iRich,"xTkPD"), "Projected track PD hits x global",
-              xMinPDGlo[iRich], xMaxPDGlo[iRich] );
-      plot1D( photPoint.y(), hid(iRich,"yTkPD"), "Projected track PD hits y global",
-              yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-      plot1D( photPoint.z(), hid(iRich,"zTkPD"), "Projected track PD hits z global",
-              zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+      plot1D( photPoint.x(), hid(rich,"xTkPD"), "Projected track PD hits x global",
+              xMinPDGlo[rich], xMaxPDGlo[rich] );
+      plot1D( photPoint.y(), hid(rich,"yTkPD"), "Projected track PD hits y global",
+              yMinPDGlo[rich], yMaxPDGlo[rich] );
+      plot1D( photPoint.z(), hid(rich,"zTkPD"), "Projected track PD hits z global",
+              zMinPDGlo[rich], zMaxPDGlo[rich] );
       plot2D( photPoint.x(), photPoint.y(),
-              hid(iRich,"xyTkPD"), "Projected track PD hits yVx global",
-              xMinPDGlo[iRich],xMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+              hid(rich,"xyTkPD"), "Projected track PD hits yVx global",
+              xMinPDGlo[rich],xMaxPDGlo[rich],yMinPDGlo[rich],yMaxPDGlo[rich] );
       plot2D( photPoint.z(), photPoint.x(),
-              hid(iRich,"xzTkPD"), "Projected track PD hits xVz global",
-              zMinPDGlo[iRich],zMaxPDGlo[iRich],xMinPDGlo[iRich],xMaxPDGlo[iRich] );
+              hid(rich,"xzTkPD"), "Projected track PD hits xVz global",
+              zMinPDGlo[rich],zMaxPDGlo[rich],xMinPDGlo[rich],xMaxPDGlo[rich] );
       plot2D( photPoint.z(), photPoint.y(),
-              hid(iRich,"yzTkPD"), "Projected track PD hits yVz global",
-              zMinPDGlo[iRich],zMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+              hid(rich,"yzTkPD"), "Projected track PD hits yVz global",
+              zMinPDGlo[rich],zMaxPDGlo[rich],yMinPDGlo[rich],yMaxPDGlo[rich] );
 
       // Ray traced hit point on PDs, local
-      plot1D( pdPointLoc.x(), hid(iRich,"xTkPDLoc"), "Projected track PD hits x local",
-              xMinPDLoc[iRich], xMaxPDLoc[iRich] );
-      plot1D( pdPointLoc.y(), hid(iRich,"yTkPDLoc"), "Projected track PD hits y local",
-              yMinPDLoc[iRich], yMaxPDLoc[iRich] );
-      plot1D( pdPointLoc.z(), hid(iRich,"zTkPDLoc"), "Projected track PD hits z local",
-              zMinPDLoc[iRich], zMaxPDLoc[iRich] );
+      plot1D( pdPointLoc.x(), hid(rich,"xTkPDLoc"), "Projected track PD hits x local",
+              xMinPDLoc[rich], xMaxPDLoc[rich] );
+      plot1D( pdPointLoc.y(), hid(rich,"yTkPDLoc"), "Projected track PD hits y local",
+              yMinPDLoc[rich], yMaxPDLoc[rich] );
+      plot1D( pdPointLoc.z(), hid(rich,"zTkPDLoc"), "Projected track PD hits z local",
+              zMinPDLoc[rich], zMaxPDLoc[rich] );
       plot2D( pdPointLoc.x(), pdPointLoc.y(),
-              hid(iRich,"xyTkPDLoc"), "Projected track PD hits yVx local",
-              xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+              hid(rich,"xyTkPDLoc"), "Projected track PD hits yVx local",
+              xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
 
       // Ray traced reflection point on spherical mirror
       const Gaudi::XYZPoint & photSpeMir = photon.sphMirReflectionPoint();
-      plot1D( photSpeMir.x(), hid(iRich,"xTkPD"), "Projected track SpheMir hits x global",
-              xMinSpheGlo[iRich],xMaxSpheGlo[iRich] );
-      plot1D( photSpeMir.y(), hid(iRich,"yTkPD"), "Projected track SpheMir hits y global",
-              yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
-      plot1D( photSpeMir.z(), hid(iRich,"zTkPD"), "Projected track SpheMir hits z global",
-              zMinSpheGlo[iRich],zMaxSpheGlo[iRich] );
+      plot1D( photSpeMir.x(), hid(rich,"xTkPD"), "Projected track SpheMir hits x global",
+              xMinSpheGlo[rich],xMaxSpheGlo[rich] );
+      plot1D( photSpeMir.y(), hid(rich,"yTkPD"), "Projected track SpheMir hits y global",
+              yMinSpheGlo[rich],yMaxSpheGlo[rich] );
+      plot1D( photSpeMir.z(), hid(rich,"zTkPD"), "Projected track SpheMir hits z global",
+              zMinSpheGlo[rich],zMaxSpheGlo[rich] );
       plot2D( photSpeMir.x(), photSpeMir.y(),
-              hid(iRich,"xyTkPD"), "Projected track SpheMir hits yVx global",
-              xMinSpheGlo[iRich],xMaxSpheGlo[iRich],yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
+              hid(rich,"xyTkPD"), "Projected track SpheMir hits yVx global",
+              xMinSpheGlo[rich],xMaxSpheGlo[rich],yMinSpheGlo[rich],yMaxSpheGlo[rich] );
       plot2D( photSpeMir.z(), photSpeMir.x(),
-              hid(iRich,"xzTkPD"), "Projected track SpheMir hits xVz global",
-              zMinSpheGlo[iRich],zMaxSpheGlo[iRich],xMinSpheGlo[iRich],xMaxSpheGlo[iRich] );
+              hid(rich,"xzTkPD"), "Projected track SpheMir hits xVz global",
+              zMinSpheGlo[rich],zMaxSpheGlo[rich],xMinSpheGlo[rich],xMaxSpheGlo[rich] );
       plot2D( photSpeMir.z(), photSpeMir.y(),
-              hid(iRich,"yzTkPD"), "Projected track SpheMir hits yVz global",
-              zMinSpheGlo[iRich],zMaxSpheGlo[iRich],yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
+              hid(rich,"yzTkPD"), "Projected track SpheMir hits yVz global",
+              zMinSpheGlo[rich],zMaxSpheGlo[rich],yMinSpheGlo[rich],yMaxSpheGlo[rich] );
 
       // Ray traced reflection point on flat mirror
       const Gaudi::XYZPoint & photFlatMir = photon.flatMirReflectionPoint();
-      plot1D( photFlatMir.x(), hid(iRich,"xTkPD"), "Projected track FlatMir hits x global",
-              xMinFlatGlo[iRich],xMaxFlatGlo[iRich] );
-      plot1D( photFlatMir.y(), hid(iRich,"yTkPD"), "Projected track FlatMir hits y global",
-              yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
-      plot1D( photFlatMir.z(), hid(iRich,"zTkPD"), "Projected track FlatMir hits z global",
-              zMinFlatGlo[iRich],zMaxFlatGlo[iRich] );
+      plot1D( photFlatMir.x(), hid(rich,"xTkPD"), "Projected track FlatMir hits x global",
+              xMinFlatGlo[rich],xMaxFlatGlo[rich] );
+      plot1D( photFlatMir.y(), hid(rich,"yTkPD"), "Projected track FlatMir hits y global",
+              yMinFlatGlo[rich],yMaxFlatGlo[rich] );
+      plot1D( photFlatMir.z(), hid(rich,"zTkPD"), "Projected track FlatMir hits z global",
+              zMinFlatGlo[rich],zMaxFlatGlo[rich] );
       plot2D( photFlatMir.x(), photFlatMir.y(),
-              hid(iRich,"xyTkPD"), "Projected track FlatMir hits yVx global",
-              xMinFlatGlo[iRich],xMaxFlatGlo[iRich],yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
+              hid(rich,"xyTkPD"), "Projected track FlatMir hits yVx global",
+              xMinFlatGlo[rich],xMaxFlatGlo[rich],yMinFlatGlo[rich],yMaxFlatGlo[rich] );
       plot2D( photFlatMir.z(), photFlatMir.x(),
-              hid(iRich,"xzTkPD"), "Projected track FlatMir hits xVz global",
-              zMinFlatGlo[iRich],zMaxFlatGlo[iRich],xMinFlatGlo[iRich],xMaxFlatGlo[iRich] );
+              hid(rich,"xzTkPD"), "Projected track FlatMir hits xVz global",
+              zMinFlatGlo[rich],zMaxFlatGlo[rich],xMinFlatGlo[rich],xMaxFlatGlo[rich] );
       plot2D( photFlatMir.z(), photFlatMir.y(),
-              hid(iRich,"yzTkPD"), "Projected track FlatMir hits yVz global",
-              zMinFlatGlo[iRich],zMaxFlatGlo[iRich],yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
+              hid(rich,"yzTkPD"), "Projected track FlatMir hits yVz global",
+              zMinFlatGlo[rich],zMaxFlatGlo[rich],yMinFlatGlo[rich],yMaxFlatGlo[rich] );
 
       // find out pd positions
       m_xHits[photon.smartID().hpdID()] += photPoint.x();
@@ -300,7 +311,7 @@ StatusCode RichTrackGeomMoni::execute()
     // Finally, some debug printout
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Segment " << segment->key() << " " << iRad << " : "
+      debug() << "Segment " << segment->key() << " " << rad << " : "
               << rad << " : TrTrackType " << trType << " : pTot "
               << sqrt(segment->trackSegment().bestMomentum().Mag2())
               << " pthLen " << segment->trackSegment().pathLength()

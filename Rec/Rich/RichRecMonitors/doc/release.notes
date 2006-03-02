@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-03-02 - Chris Jones
+ - Update pixel monitors with new plots for suppression efficiencies etc.
+ - Add reconstruction test alg, with "fixed" photons to reconstruct
+
 !====================== RichRecMonitors v2r0 2006-02-17 ======================
 ! 2006-02-16 - Chris Jones
  - Updates for new TRack selector interface

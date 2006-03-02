@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.4 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.5 2006-03-02 15:26:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -187,8 +187,10 @@ double RichMCMassHypoRingsAlg::ckTheta( const MCRichSegment * segment ) const
   if ( photons.empty() ) return 0;
   double angle = 0;
   for ( SmartRefVector<MCRichOpticalPhoton>::const_iterator iPhot = photons.begin();
-        iPhot != photons.end(); ++iPhot ) {
-    if ( *iPhot && !m_truth->isBackground( (*iPhot)->mcRichHit() ) ) {
+        iPhot != photons.end(); ++iPhot ) 
+  {
+    if ( *iPhot && !(*iPhot)->mcRichHit()->isBackground() ) 
+    {
       angle += (*iPhot)->cherenkovTheta();
     }
   }

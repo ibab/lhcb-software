@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.5 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.6 2006-03-02 15:26:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -60,7 +60,7 @@ StatusCode RichRecTimeMonitor::initialize()
 
   // do any init things here ...
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 // Main execution
@@ -80,7 +80,7 @@ StatusCode RichRecTimeMonitor::execute()
   {
     time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
-  const double timePerPID = time/static_cast<double>(nPIDs);
+  const double timePerPID = ( nPIDs>0 ? time/static_cast<double>(nPIDs) : 0 );
 
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -95,8 +95,8 @@ StatusCode RichRecTimeMonitor::execute()
 
   // Fill histograms
 
-  const int maxTracks  = 150;
-  const int maxPixels  = 5000;
+  const int maxTracks = 150;
+  const int maxPixels = 5000;
 
   plot1D( time, "totTime", m_name+" total processing time (ms)", 0, m_maxTime );
   plot1D( timePerPID, "pidTime", m_name+" processing time per PID (ms)",0,m_maxTimePerPID );

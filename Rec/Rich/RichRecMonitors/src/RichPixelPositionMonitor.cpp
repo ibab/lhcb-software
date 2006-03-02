@@ -1,10 +1,10 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichPixelMonitor.cpp
+/** @file RichPixelPositionMonitor.cpp
  *
- *  Implementation file for algorithm class : RichPixelMonitor
+ *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelMonitor.cpp,v 1.4 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.1 2006-03-02 15:26:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,7 +14,7 @@
 #include <fstream>
 
 // local
-#include "RichPixelMonitor.h"
+#include "RichPixelPositionMonitor.h"
 
 // namespace
 using namespace LHCb;
@@ -22,22 +22,22 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichPixelMonitor>          s_factory ;
-const        IAlgFactory& RichPixelMonitorFactory = s_factory ;
+static const  AlgFactory<RichPixelPositionMonitor>          s_factory ;
+const        IAlgFactory& RichPixelPositionMonitorFactory = s_factory ;
 
 
 // Standard constructor, initializes variables
-RichPixelMonitor::RichPixelMonitor( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
+                                                    ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator )
 {
 }
 
 // Destructor
-RichPixelMonitor::~RichPixelMonitor() {};
+RichPixelPositionMonitor::~RichPixelPositionMonitor() {};
 
 //  Initialize
-StatusCode RichPixelMonitor::initialize()
+StatusCode RichPixelPositionMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -56,7 +56,7 @@ StatusCode RichPixelMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPixelMonitor::execute()
+StatusCode RichPixelPositionMonitor::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -87,8 +87,8 @@ StatusCode RichPixelMonitor::execute()
     const RichRecPixel * pixel = *iPix;
 
     // Which detector ?
-    const Rich::DetectorType iRich = pixel->detector();
-    ++nPixs[iRich];
+    const Rich::DetectorType rich = pixel->detector();
+    ++nPixs[rich];
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "  -> Pixel         " << pixel->smartID() << endreq
@@ -96,66 +96,65 @@ StatusCode RichPixelMonitor::execute()
               << "     local         " << pixel->localPosition() << endreq
               << "     local Aerogel " << pixel->localPosition(Rich::Aerogel) << endreq
               << "     local C4F10   " << pixel->localPosition(Rich::C4F10) << endreq
-              << "     local CF4     " << pixel->localPosition(Rich::CF4) << endreq
-        ;
+              << "     local CF4     " << pixel->localPosition(Rich::CF4) << endreq;
     }
 
     // global position
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
-    plot1D( gPos.x(), hid(iRich,"obsXglo"), "Observed hits x global",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich] );
-    plot1D( gPos.y(), hid(iRich,"obsYglo"), "Observed hits y global",
-            yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-    plot1D( gPos.z(), hid(iRich,"obsZglo"), "Observed hits z global",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich] );
-    plot2D( gPos.x(), gPos.y(), hid(iRich,"obsXYglo"), "Observed hits yVx global",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-    plot2D( gPos.x(), gPos.z(), hid(iRich,"obsXZglo"), "Observed hits zVx global",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich], zMinPDGlo[iRich], zMaxPDGlo[iRich] );
-    plot2D( gPos.y(), gPos.z(), hid(iRich,"obsYZglo"), "Observed hits yVz global",
-            yMinPDGlo[iRich], yMaxPDGlo[iRich], zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+    plot1D( gPos.x(), hid(rich,"obsXglo"), "Observed hits x global",
+            xMinPDGlo[rich], xMaxPDGlo[rich] );
+    plot1D( gPos.y(), hid(rich,"obsYglo"), "Observed hits y global",
+            yMinPDGlo[rich], yMaxPDGlo[rich] );
+    plot1D( gPos.z(), hid(rich,"obsZglo"), "Observed hits z global",
+            zMinPDGlo[rich], zMaxPDGlo[rich] );
+    plot2D( gPos.x(), gPos.y(), hid(rich,"obsXYglo"), "Observed hits yVx global",
+            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], 100,100 );
+    plot2D( gPos.x(), gPos.z(), hid(rich,"obsXZglo"), "Observed hits zVx global",
+            xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+    plot2D( gPos.y(), gPos.z(), hid(rich,"obsYZglo"), "Observed hits yVz global",
+            yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
     // local position on HP panels
     const Gaudi::XYZPoint & lPos = pixel->localPosition();
-    plot1D( lPos.x(), hid(iRich,"obsXloc"), "Observed hits x local",
-            xMinPDLoc[iRich], xMaxPDLoc[iRich] );
-    plot1D( lPos.y(), hid(iRich,"obsYloc"), "Observed hits y local",
-            yMinPDLoc[iRich], yMaxPDLoc[iRich] );
-    plot1D( lPos.z(), hid(iRich,"obsZloc"), "Observed hits z local",
-            zMinPDLoc[iRich], zMaxPDLoc[iRich] );
-    plot2D( lPos.x(), lPos.y(), hid(iRich,"obsXYloc"), "Observed hits yVx local",
-            xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+    plot1D( lPos.x(), hid(rich,"obsXloc"), "Observed hits x local",
+            xMinPDLoc[rich], xMaxPDLoc[rich] );
+    plot1D( lPos.y(), hid(rich,"obsYloc"), "Observed hits y local",
+            yMinPDLoc[rich], yMaxPDLoc[rich] );
+    plot1D( lPos.z(), hid(rich,"obsZloc"), "Observed hits z local",
+            zMinPDLoc[rich], zMaxPDLoc[rich] );
+    plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYloc"), "Observed hits yVx local",
+            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
 
     // Background plots
     if ( m_richRecMCTruth->isBackground(pixel) )
     {
       // global position
-      plot1D( gPos.x(), hid(iRich,"obsXgloB"), "Observed background hits x global",
-              xMinPDGlo[iRich], xMaxPDGlo[iRich] );
-      plot1D( gPos.y(), hid(iRich,"obsYgloB"), "Observed background hits y global",
-              yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-      plot1D( gPos.z(), hid(iRich,"obsZgloB"), "Observed background hits z global",
-              zMinPDGlo[iRich], zMaxPDGlo[iRich] );
-      plot2D( gPos.x(), gPos.y(), hid(iRich,"obsXYgloB"), "Observed background hits yVx global",
-              xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich] );
-      plot2D( gPos.x(), gPos.z(), hid(iRich,"obsXZgloB"), "Observed background hits zVx global",
-              xMinPDGlo[iRich], xMaxPDGlo[iRich], zMinPDGlo[iRich], zMaxPDGlo[iRich] );
-      plot2D( gPos.y(), gPos.z(), hid(iRich,"obsYZgloB"), "Observed background hits yVz global",
-              yMinPDGlo[iRich], yMaxPDGlo[iRich], zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+      plot1D( gPos.x(), hid(rich,"obsXgloB"), "Observed background hits x global",
+              xMinPDGlo[rich], xMaxPDGlo[rich] );
+      plot1D( gPos.y(), hid(rich,"obsYgloB"), "Observed background hits y global",
+              yMinPDGlo[rich], yMaxPDGlo[rich] );
+      plot1D( gPos.z(), hid(rich,"obsZgloB"), "Observed background hits z global",
+              zMinPDGlo[rich], zMaxPDGlo[rich] );
+      plot2D( gPos.x(), gPos.y(), hid(rich,"obsXYgloB"), "Observed background hits yVx global",
+              xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], 100,100 );
+      plot2D( gPos.x(), gPos.z(), hid(rich,"obsXZgloB"), "Observed background hits zVx global",
+              xMinPDGlo[rich], xMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
+      plot2D( gPos.y(), gPos.z(), hid(rich,"obsYZgloB"), "Observed background hits yVz global",
+              yMinPDGlo[rich], yMaxPDGlo[rich], zMinPDGlo[rich], zMaxPDGlo[rich], 100,100 );
       // local position on HP panels
-      plot1D( lPos.x(), hid(iRich,"obsXlocB"), "Observed background hits x local",
-              xMinPDLoc[iRich], xMaxPDLoc[iRich] );
-      plot1D( lPos.y(), hid(iRich,"obsYlocB"), "Observed background hits y local",
-              yMinPDLoc[iRich], yMaxPDLoc[iRich] );
-      plot1D( lPos.z(), hid(iRich,"obsZlocB"), "Observed background hits z local",
-              zMinPDLoc[iRich], zMaxPDLoc[iRich] );
-      plot2D( lPos.x(), lPos.y(), hid(iRich,"obsXYlocB"), "Observed background hits yVx local",
-              xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+      plot1D( lPos.x(), hid(rich,"obsXlocB"), "Observed background hits x local",
+              xMinPDLoc[rich], xMaxPDLoc[rich] );
+      plot1D( lPos.y(), hid(rich,"obsYlocB"), "Observed background hits y local",
+              yMinPDLoc[rich], yMaxPDLoc[rich] );
+      plot1D( lPos.z(), hid(rich,"obsZlocB"), "Observed background hits z local",
+              zMinPDLoc[rich], zMaxPDLoc[rich] );
+      plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYlocB"), "Observed background hits yVx local",
+              xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
     }
 
     // background value distribution
     const double logPixBkg =
       ( pixel->currentBackground() > 1e-20 ? log(pixel->currentBackground()) : -20 );
-    plot1D( logPixBkg, hid(iRich,"pixLogBkg"), "Pixel log(background)",-20,0);
+    plot1D( logPixBkg, hid(rich,"pixLogBkg"), "Pixel log(background)",-20,0);
 
     // find out pd positions
     const RichSmartID pdID = pixel->smartID().hpdID();
@@ -172,7 +171,7 @@ StatusCode RichPixelMonitor::execute()
       if ( mcP )
       {
         plot2D( lPos.x(), lPos.y(), hid(rad,"signalHits"), "True Cherenkov signal hits",
-                xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+                xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100,100 );
       }
     }
 
@@ -210,7 +209,7 @@ StatusCode RichPixelMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichPixelMonitor::finalize()
+StatusCode RichPixelPositionMonitor::finalize()
 {
 
   // Histogramming
@@ -228,28 +227,27 @@ StatusCode RichPixelMonitor::finalize()
     const double avZ = ( hits>0 ? m_zHits[pdID]/hits : 0 );
     debug() << "PD " << pdID << " Pos. " << Gaudi::XYZPoint(avX,avY,avZ)
             << " Hits " << hits << endreq;
-    const Rich::DetectorType iRich = ( avZ>5000 ? Rich::Rich2 : Rich::Rich1 );
+    const Rich::DetectorType rich = ( avZ>5000 ? Rich::Rich2 : Rich::Rich1 );
 
     plot2D( avX, avY, "hpdNumbers/pdColXY", "HPD column numbers yVx",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
+            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
             50, 50, pdID.hpdCol() );
     plot2D( avZ, avX, "hpdNumbers/pdColZX", "HPD column numbers xVz",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich], xMinPDGlo[iRich], xMaxPDGlo[iRich],
+            zMinPDGlo[rich], zMaxPDGlo[rich], xMinPDGlo[rich], xMaxPDGlo[rich],
             50, 50, pdID.hpdCol() );
     plot2D( avZ, avY, "hpdNumbers/pdColZY", "HPD column numbers yVz",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
+            zMinPDGlo[rich], zMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
             50, 50, pdID.hpdCol() );
 
     plot2D( avX, avY, "hpdNumbers/pdRowXY", "HPD row numbers yVx",
-            xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
+            xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
             50, 50, pdID.hpdNumInCol() );
     plot2D( avZ, avX, "hpdNumbers/pdRowZX", "HPD row numbers xVz",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich], xMinPDGlo[iRich], xMaxPDGlo[iRich],
+            zMinPDGlo[rich], zMaxPDGlo[rich], xMinPDGlo[rich], xMaxPDGlo[rich],
             50, 50, pdID.hpdNumInCol() );
     plot2D( avZ, avY, "hpdNumbers/pdRowZY", "HPD row numbers yVz",
-            zMinPDGlo[iRich], zMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
+            zMinPDGlo[rich], zMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich],
             50, 50, pdID.hpdNumInCol() );
-
   }
 
   // Execute base class method
