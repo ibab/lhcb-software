@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.4 2006-02-23 18:56:35 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.5 2006-03-02 14:11:39 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -106,6 +106,8 @@ StatusCode DecodeVeloRawBuffer::finalize() {
 
 void DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const
 {
+  LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
+
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
        bi != banks.end();
        ++bi) {
@@ -113,16 +115,17 @@ void DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBa
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>((*bi)->data());
     unsigned int sensorNumber = static_cast<unsigned int>((*bi)->sourceID());
    
-    LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
     VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensorNumber,fastCont);
-    put(fastCont,m_veloLiteClusterLocation);
   }
+  put(fastCont,m_veloLiteClusterLocation);
  
   return;
 }
 
 void DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) const 
 {
+
+  LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
        bi != banks.end();
        ++bi) {
@@ -130,10 +133,9 @@ void DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::RawBank*>
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>((*bi)->data());
     unsigned int sensorNumber = static_cast<unsigned int>((*bi)->sourceID());
    
-    LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
     VeloDAQ::decodeRawBankToClusters(rawBank,sensorNumber,clusters);
-    put(clusters,m_veloClusterLocation);
   }
+  put(clusters,m_veloClusterLocation);
    
   return;
 }

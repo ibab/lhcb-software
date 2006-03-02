@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToLiteClusters.cpp,v 1.1 2006-02-23 18:56:35 krinnert Exp $
+// $Id: DecodeRawBankToLiteClusters.cpp,v 1.2 2006-03-02 14:11:39 dhcroft Exp $
 
 #include "VeloRawBankDecoder.h"
 #include "DecodeRawBankToLiteClusters.h"
@@ -19,7 +19,7 @@ unsigned int VeloDAQ::decodeRawBankToLiteClusters (const SiDAQ::buffer_word* ban
   for (VeloRawBankDecoder::pos_iterator cpi = decoder.posBegin();
        cpi != decoder.posEnd(); 
        ++cpi) {
-    clusters->push_back(LHCb::VeloLiteCluster(cpi->hasHighThreshold(),
+    clusters->push_back(LHCb::VeloLiteCluster(cpi->fracStripBits(),
                                              cpi->pseudoSizeBits(),
                                              cpi->hasHighThreshold(),
                                              LHCb::VeloChannelID(sensorNumber,cpi->channelID())));

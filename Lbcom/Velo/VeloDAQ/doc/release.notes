@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-03-02 - David Hutchcroft
+ - fixed a bug in DecodeVeloRawBuffer where containers were generated and 
+   placed many times
+ - Fixed a bug in creation of VeloLiteClusters to set fracStripBits
+
 ! 2006-02-23 - Kurt Rinnert
  - finished implementation of decoding algorithm. The algorithm DecodeVeloRawBuffer
    can decode the raw buffer into VeloLiteClusters or VeloClusters (or both).
