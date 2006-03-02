@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.23 2006-02-22 14:29:46 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.24 2006-03-02 09:35:23 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,7 +32,14 @@ const CLID& CLID_DERich2 = 12002;  // User defined
 DeRich2::DeRich2() { m_name = "DeRich2"; }
 
 // Standard Destructor
-DeRich2::~DeRich2() {}
+DeRich2::~DeRich2() {
+
+  if ( !m_gasWinRefIndex )       delete m_gasWinRefIndex;
+  if ( !m_gasWinAbsLength )      delete m_gasWinAbsLength;
+  if ( !m_HPDQuantumEff )        delete m_HPDQuantumEff;
+  if ( !m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
+  if ( !m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
+}
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich2::classID()
@@ -93,10 +100,10 @@ StatusCode DeRich2::initialize()
     for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
       if( (*matIter) ){
         if ( (*matIter)->type() == "RINDEX" ) {
-          m_gasWinRefIndex = (*matIter);
+          m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
         }
         if ( (*matIter)->type() == "ABSLENGTH" ) {
-          m_gasWinAbsLength = (*matIter);
+          m_gasWinAbsLength = new Rich1DTabProperty( *matIter );
         }
       }
     }
@@ -118,7 +125,7 @@ StatusCode DeRich2::initialize()
   if ( !sphMirrorRefl )
     msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
   else {
-    m_nominalSphMirrorRefl = sphMirrorRefl;
+    m_nominalSphMirrorRefl = new Rich1DTabProperty( sphMirrorRefl );
     msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
   }
@@ -130,17 +137,17 @@ StatusCode DeRich2::initialize()
   if ( !secMirrorRefl )
     msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
   else {
-    m_nominalSecMirrorRefl = secMirrorRefl;
+    m_nominalSecMirrorRefl = new Rich1DTabProperty( secMirrorRefl );
     msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
         << secMirrorReflLoc << endmsg;
   }
-  
+
   // get pointers to HPD panels
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich2Panel0);
   SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich2Panel1);
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
-  
+
   // update mirror alignment
   m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
   if ( !m_sphMirAlignCond ) {

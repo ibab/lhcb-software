@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.12 2006-03-01 14:53:01 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.13 2006-03-02 09:35:23 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,7 +88,7 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
       m_toLowLevel.push_back( toLowerLevel*(*pviter)->matrix() );
       m_toTopLevel.push_back( toLowerLevel.Inverse()*(*pviter)->matrixInv() );
       m_solids.push_back( (*pviter)->lvolume()->solid() );
-      log << MSG::DEBUG << "Storing pvolume " << (*pviter)->name();
+      log << MSG::DEBUG << "Storing pvolume " << (*pviter)->name() << endmsg;
 
       // get the volume number
       const std::string::size_type numPos = (*pviter)->name().find(':');

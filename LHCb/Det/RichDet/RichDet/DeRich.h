@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.19 2006-03-01 14:52:59 papanest Exp $
+ *  $Id: DeRich.h,v 1.20 2006-03-02 09:35:23 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,7 +15,7 @@
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/TabulatedProperty.h"
+#include "RichDet/Rich1DTabProperty.h"
 
 // Mathcore
 #include "Kernel/Point3DTypes.h"
@@ -130,7 +130,7 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline const TabulatedProperty* gasWinRefIndex() const
+  inline const Rich1DTabProperty* gasWinRefIndex() const
   {
     return m_gasWinRefIndex;
   }
@@ -141,7 +141,7 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline const TabulatedProperty* gasWinAbsLength() const
+  inline const Rich1DTabProperty* gasWinAbsLength() const
   {
     return m_gasWinAbsLength;
   }
@@ -152,7 +152,7 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const TabulatedProperty* nominalHPDQuantumEff() const
+  inline const Rich1DTabProperty* nominalHPDQuantumEff() const
   {
     return m_HPDQuantumEff;
   }
@@ -163,7 +163,7 @@ public:
    *
    * @return Pointer to nominal spherical mirror reflectivity
    */
-  inline const TabulatedProperty* nominalSphMirrorRefl() const
+  inline const Rich1DTabProperty* nominalSphMirrorRefl() const
   {
     return m_nominalSphMirrorRefl;
   }
@@ -174,7 +174,7 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const TabulatedProperty* nominalSecMirrorRefl() const
+  inline const Rich1DTabProperty* nominalSecMirrorRefl() const
   {
     return m_nominalSecMirrorRefl;
   }
@@ -201,12 +201,12 @@ public:
 
   virtual StatusCode alignSphMirrors() = 0;
   virtual StatusCode alignSecMirrors() = 0;
-  
+
   /// sensitive volume identifier
   virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
 protected:
-  
+
   StatusCode alignMirrors( std::vector<const ILVolume*> mirrorContainer,
                            const std::string& mirrorID,
                            SmartRef<Condition> cond,
@@ -229,15 +229,15 @@ protected:
   bool m_positionInfo;
 
   /// refractive index of the quartz gas window
-  const TabulatedProperty* m_gasWinRefIndex;
+  const Rich1DTabProperty* m_gasWinRefIndex;
   /// absorption length of the quartz gas window
-  const TabulatedProperty* m_gasWinAbsLength;
+  const Rich1DTabProperty* m_gasWinAbsLength;
   /// HPD quantum efficiency
-  const TabulatedProperty* m_HPDQuantumEff;
+  const Rich1DTabProperty* m_HPDQuantumEff;
   /// spherical mirror reflectivity
-  const TabulatedProperty* m_nominalSphMirrorRefl;
+  const Rich1DTabProperty* m_nominalSphMirrorRefl;
   /// flat mirror reflectivity
-  const TabulatedProperty* m_nominalSecMirrorRefl;
+  const Rich1DTabProperty* m_nominalSecMirrorRefl;
 
   /// Condition for the alignment of the spherical mirrors
   SmartRef<Condition> m_sphMirAlignCond;
