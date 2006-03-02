@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.11 2006-03-01 17:12:26 papanest Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.12 2006-03-02 15:29:52 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,7 +34,8 @@
 #include "RichKernel/BoostArray.h"
 
 // RichDet
-#include "RichDet/DeRich.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 #include "RichDet/DeRichRadiator.h"
 #include "RichDet/Rich1DTabProperty.h"
 
@@ -50,6 +51,7 @@
  *
  *  @todo Fix RMS calculations
  *  @todo Update UMS dependencies to be more 'fine grained'
+ *  @todo Figure out how to properly deal with multiple aerogel volumes
  */
 //-----------------------------------------------------------------------------
 
@@ -111,18 +113,16 @@ private: // methods
 private: // Private data
 
   /// Quantum Efficiency function.
-  Rich1DTabProperty * m_QE;
+  //Rich1DTabProperty * m_QE;
+
+  /// Pointers to RICHes
+  std::vector<const DeRich*> m_riches;
 
   /// Detector parameters tool
   const IRichDetParameters * m_detParams;
 
   /// Pointers to RICH radiator detector elements
   std::vector<DeRichRadiator *> m_deRads;
-
-  /// typdef for container of Pointers to refractive indices for each radiator type
-  typedef boost::array<const Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
-  /// Pointers to refractive indices for each radiator type
-  RefractiveIndices m_refIndex;
 
   /// refractive index RMS values
   std::vector<double> m_refI;

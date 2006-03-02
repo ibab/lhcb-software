@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.10 2006-03-01 17:12:25 papanest Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.11 2006-03-02 15:29:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -24,16 +24,13 @@ RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& 
                                                              const std::string& name,
                                                              const IInterface* parent )
   : RichToolBase ( type, name, parent ),
+    m_riches     ( Rich::NRiches ),
     m_deRads     ( Rich::NRadiatorTypes    ),
     m_refI       ( Rich::NRadiatorTypes, 0 ),
     m_refRMS     ( Rich::NRadiatorTypes, 0 )
 {
   // interface
   declareInterface<IRichRefractiveIndex>(this);
-  // initialize
-  m_refIndex[Rich::Aerogel] = 0;
-  m_refIndex[Rich::C4F10]   = 0;
-  m_refIndex[Rich::CF4]     = 0;
 }
 
 StatusCode RichTabulatedRefractiveIndex::initialize()
@@ -46,21 +43,18 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   acquireTool( "RichDetParameters", m_detParams );
 
   // Get the RICH radiators
-  m_deRads[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
+  // for aero, get the "0" file, as the multisolid does not have any properties
+  // this whole scheme needs reworking to cope properly with different aerogel tiles.
+  m_deRads[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
   m_deRads[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
   m_deRads[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
 
-  // Get Rich1
-  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-
-  // Nominal HPD QE
-  m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
+  // Rich1 and Rich2
+  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocation::Rich1 );
+  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Register dependencies on DeRichRadiator objects to UMS
-  // aerogel
-  updMgrSvc()->registerCondition( this,
-                                  DeRichRadiatorLocation::Aerogel,
-                                  &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
+
   // C4F10
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::C4F10,
@@ -69,6 +63,11 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::CF4,
                                   &RichTabulatedRefractiveIndex::updateCF4RefIndex );
+  // aerogel
+  updMgrSvc()->registerCondition( this,
+                                  DeRichRadiatorLocation::Aerogel,
+                                  &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
+
   // force first updates
   sc = updMgrSvc()->update(this);
   if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
@@ -100,36 +99,31 @@ StatusCode RichTabulatedRefractiveIndex::updateCF4RefIndex()
 StatusCode
 RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
-  // create new interpolation object
-  if ( m_refIndex[rad] ) { delete m_refIndex[rad]; }
-  m_refIndex[rad] = m_deRads[rad]->refIndex();
+
+  if ( !m_deRads[rad]->refIndex() )
+  {
+    error() << "Null refractive index for " << rad << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // average refractive index
   m_refI[rad] = refractiveIndex( rad,
                                  m_detParams->meanPhotonEnergy(rad) );
 
   // RMS values
-  m_refRMS[rad] = m_refIndex[rad]->rms(m_refIndex[rad]->minX(),
-                                       m_refIndex[rad]->maxX(),100);
+  m_refRMS[rad] = m_deRads[rad]->refIndex()->rms(m_deRads[rad]->refIndex()->minX(),
+                                                 m_deRads[rad]->refIndex()->maxX(),100);
 
   // printout
   info() << "Updated " << rad << " refractive index '"
          << m_deRads[rad]->refIndex()->tabProperty()->name() << "' with "
-         << m_refIndex[rad]->nDataPoints() << " data points" << endreq;
+         << m_deRads[rad]->refIndex()->nDataPoints() << " data points" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichTabulatedRefractiveIndex::finalize()
 {
-  // Tidy up
-  for ( RefractiveIndices::iterator iRef = m_refIndex.begin();
-        iRef != m_refIndex.end(); ++iRef )
-  {
-    if ( *iRef ) { delete *iRef; *iRef = 0; }
-  }
-  if ( m_QE ) { delete m_QE; m_QE = 0; }
-
   // base class finalize
   return RichToolBase::finalize();
 }
@@ -137,14 +131,16 @@ StatusCode RichTabulatedRefractiveIndex::finalize()
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                       const double energy ) const
 {
-  return (*m_refIndex[rad])[energy*eV];
+  return (*(m_deRads[rad]->refIndex()))[energy*eV];
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                       const double energyBot,
                                                       const double energyTop ) const
 {
-  return refractiveIndex( rad, m_QE->meanX(energyBot,energyTop)/eV );
+  const Rich::DetectorType rich = ( rad == Rich::CF4 ? Rich::Rich2 : Rich::Rich1 );
+  return refractiveIndex( rad, 
+                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop)/eV );
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad ) const
