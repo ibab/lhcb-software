@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.22 2006-02-16 16:09:45 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.23 2006-03-02 15:27:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -205,7 +205,7 @@ StatusCode RichRecoQC::finalize()
          << endreq;
 
   // track selection
-  info() << "Track Selection : " << m_trSelector.selectedTracksAsString() << endreq;
+  info() << " Track Selection : " << m_trSelector.selectedTracksAsString() << endreq;
 
   // loop over radiators
   //for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
@@ -221,7 +221,7 @@ StatusCode RichRecoQC::finalize()
     // photon count
     if ( m_truePhotCount[rad]>0 )
     {
-      info() << radName << " Av. # CK photons = "
+      info() << " " << radName << " Av. # CK photons = "
              << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endreq;
 
       /*
@@ -232,16 +232,16 @@ StatusCode RichRecoQC::finalize()
         AIDA::IFitResult * fit = fitHisto( hRes, ckResRange[rad], ckResParams[rad] );
         if ( fit && fit->isValid() )
         {
-          info() << radName << "CK res  : fit status=" << fit->fitStatus()
+          info() << " " << radName << "CK res  : fit status=" << fit->fitStatus()
                  << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
-                 << "                : " << fit->fittedParameterNames()[0] << " = "
+                 << "                 : " << fit->fittedParameterNames()[0] << " = "
                  << 100*fit->fittedParameters()[0] << " +- " << 100*fit->errors()[0] << " mrad" << endreq;
-          info() << "                : " << fit->fittedParameterNames()[1] << " = "
+          info() << "                 : " << fit->fittedParameterNames()[1] << " = "
                  << 100*fit->fittedParameters()[1] << " +- " << 100*fit->errors()[1] << " mrad" << endreq;
         }
         else
         {
-          info() << radName << "CK res fit FAILED" << endreq;
+          info() << " " << radName << "CK res fit FAILED" << endreq;
         }
       }
       // CK pull
@@ -251,16 +251,16 @@ StatusCode RichRecoQC::finalize()
         AIDA::IFitResult * fit = fitHisto( hPull, ckPullRange[rad], ckPullParams[rad] );
         if ( fit && fit->isValid() )
         {
-          info() << radName << "CK pull : fit status=" << fit->fitStatus()
+          info() << " " << radName << "CK pull : fit status=" << fit->fitStatus()
                  << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
-                 << "                : " << fit->fittedParameterNames()[0] << " = "
+                 << "                 : " << fit->fittedParameterNames()[0] << " = "
                  << fit->fittedParameters()[0] << " +- " << fit->errors()[0] << endreq;
-          info() << "                : " << fit->fittedParameterNames()[1] << " = "
+          info() << "                 : " << fit->fittedParameterNames()[1] << " = "
                  << fit->fittedParameters()[1] << " +- " << fit->errors()[1] << endreq;
         }
         else
         {
-          info() << radName << "CK pull fit FAILED" << endreq;
+          info() << " " << radName << "CK pull fit FAILED" << endreq;
         }
       }
 

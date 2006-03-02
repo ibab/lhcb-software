@@ -44,3 +44,10 @@ CheckRICHSeq.Members += { "RichRecoQC/RiCKResSeed" };
 RiCKResSeed.TrackSelection  = { "unique","positive","negative","seed" };
 RiCKResSeed.HistoPrint      = false;
 //RiCKResSeed.HistoProduce    = false;
+// MCRichTracks
+CheckRICHSeq.Members += { "RichRecoQC/RiCKResMCRichTrack" };
+RiCKResMCRichTrack.TrackSelection  = { "unique","positive","negative","MCRichTrack" };
+RiCKResMCRichTrack.HistoPrint      = true;
+
+// pixel monitor
+CheckRICHSeq.Members += { "RichRecPixelQC" };
