@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.9 2006-02-22 14:34:24 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.10 2006-03-02 11:05:22 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -343,12 +343,12 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     // Get the cluster and STChannelID
     STCluster* stCluster = (*iClus) ;
     STChannelID stChan = stCluster -> channelID() ; 
-    ISTClusterPosition::Measurement measVal =
+    ISTClusterPosition::Info measVal =
       m_stPositionTool -> estimate( stCluster );
 
     // Create a trajectory for this cluster
     Trajectory* traj = m_ttTracker -> trajectory( LHCbID( stChan ), 
-                                                  measVal.first.second ) ;
+                                                  measVal.fractionalPosition ) ;
     // Add this combination to the vector
     STClusterTrajectory thisClusTraj ;
     thisClusTraj.first  = stCluster ;
