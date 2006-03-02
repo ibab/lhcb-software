@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.7 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichPixelCreator.h,v 1.8 2006-03-02 15:24:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -117,6 +117,26 @@ public:
    */
   virtual LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
                                              const Rich::Side         panel ) const = 0;
+
+  /** Access the begin iterator for the pixels in the given RICH HPD
+   *
+   *  @param hpdID The HPD identifier
+   *
+   *  @return The begin iterator for the given RICH HPD
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const = 0;
+
+  /** Access the end iterator for the pixels in the given RICH HPD
+   *
+   *  @param hpdID The HPD identifier
+   *
+   *  @return The end iterator for the given RICH HPD
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const = 0;
 
 };
 

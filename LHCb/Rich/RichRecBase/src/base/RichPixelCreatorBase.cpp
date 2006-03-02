@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.10 2006-02-16 16:04:59 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.11 2006-03-02 15:24:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -28,6 +28,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
     m_allDone       ( false ),
     m_richSys       ( 0 ),
     m_recGeom       ( 0 ),
+    m_hpdOcc        ( 0 ),
     m_pixels        ( 0 ),
     m_bookKeep      ( false ),
     m_hpdCheck      ( false ),
@@ -36,7 +37,8 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
     m_begins        ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
     m_ends          ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
     m_Nevts         ( 0 ),
-    m_hasBeenCalled ( false )
+    m_hasBeenCalled ( false ),
+    m_moniHPDOcc    ( true  )
 {
 
   // Define the interface
@@ -52,9 +54,10 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   }
 
   // Define job option parameters
-  declareProperty( "DoBookKeeping",      m_bookKeep  );
-  declareProperty( "UseDetectors",       m_usedDets  );
-  declareProperty( "CheckHPDsAreActive", m_hpdCheck  );
+  declareProperty( "DoBookKeeping",       m_bookKeep  );
+  declareProperty( "UseDetectors",        m_usedDets  );
+  declareProperty( "CheckHPDsAreActive",  m_hpdCheck  );
+  declareProperty( "ApplyPixelSuppression", m_moniHPDOcc );
 
 }
 
@@ -78,6 +81,8 @@ StatusCode RichPixelCreatorBase::initialize()
              StatusCode::SUCCESS );
   }
 
+  if ( m_moniHPDOcc ) acquireTool( "RichPixelSuppress", m_hpdOcc, this );
+
   // Check which detectors to use
   if ( !m_usedDets[Rich::Rich1] )
     Warning( "Pixels for RICH1 are disabled", StatusCode::SUCCESS );
@@ -91,6 +96,8 @@ StatusCode RichPixelCreatorBase::initialize()
   // Intialise counts
   m_hitCount[Rich::Rich1] = 0;
   m_hitCount[Rich::Rich2] = 0;
+  m_suppressedHitCount[Rich::Rich1] = 0;
+  m_suppressedHitCount[Rich::Rich2] = 0;
 
   return sc;
 }
@@ -108,16 +115,21 @@ void RichPixelCreatorBase::printStats() const
 {
   if ( m_Nevts > 0
        && !( m_hitCount[Rich::Rich1] == 0 &&
-             m_hitCount[Rich::Rich2] == 0 ) )
+             m_hitCount[Rich::Rich2] == 0 &&
+             m_suppressedHitCount[Rich::Rich1] == 0 &&
+             m_suppressedHitCount[Rich::Rich2] == 0
+             ) )
   {
-    RichStatDivFunctor occ("%8.2f +-%7.2f");
-    info() << "================================================" << endreq
-           << "  Pixel summary for " << m_Nevts << " events :-" << endreq
-           << "     Rich1  "
-           << occ(m_hitCount[Rich::Rich1],m_Nevts) << "  pixels/event" << endreq
-           << "     Rich2  "
-           << occ(m_hitCount[Rich::Rich2],m_Nevts) << "  pixels/event" << endreq
-           << "================================================" << endreq;
+    const RichStatDivFunctor occ("%8.2f +-%7.2f");
+    info() << "======================================================================================" << endreq
+           << "                       Pixel Creator Summary for " << m_Nevts << " events :-" << endreq
+           << "  Selected   :  RICH1 = " << occ(m_hitCount[Rich::Rich1],m_Nevts)
+           << "  RICH2 = " << occ(m_hitCount[Rich::Rich2],m_Nevts)
+           << "  pixels/event" << endreq
+           << "  Rejected   :  RICH1 = " << occ(m_suppressedHitCount[Rich::Rich1],m_Nevts)
+           << "  RICH2 = " << occ(m_suppressedHitCount[Rich::Rich2],m_Nevts)
+           << "  pixels/event" << endreq
+           << "======================================================================================" << endreq;
   }
   else
   {
@@ -141,8 +153,10 @@ void RichPixelCreatorBase::fillIterators() const
     RichRecPixels::iterator iPix = richPixels()->begin();
     Rich::DetectorType rich      = (*iPix)->smartID().rich();
     Rich::Side        panel      = (*iPix)->smartID().panel();
+    RichSmartID       hpd        = (*iPix)->smartID().hpdID();
     Rich::DetectorType lastrich  = rich;
     Rich::Side        lastpanel  = panel;
+    RichSmartID       lasthpd    = hpd;  
     ++iPix; // skip first pixel
 
     // loop over remaining pixels
@@ -162,11 +176,19 @@ void RichPixelCreatorBase::fillIterators() const
         m_richEnd[lastrich] = iPix;
         lastrich            = rich;
       }
+      if ( hpd != (*iPix)->smartID().hpdID() )
+      {
+        hpd                 = (*iPix)->smartID().hpdID();
+        m_hpdBegin[hpd]     = iPix;
+        m_hpdEnd[lasthpd]   = iPix;
+        lasthpd             = hpd;
+      }
     }
 
     // Set final iterators
     m_richEnd[rich]     = iPix;
     m_ends[rich][panel] = iPix;
+    m_hpdEnd[hpd]       = iPix;
 
   }
 
@@ -244,6 +266,22 @@ RichPixelCreatorBase::end( const Rich::DetectorType rich,
                            const Rich::Side         panel ) const
 {
   return m_ends[rich][panel];
+}
+
+RichRecPixels::iterator
+RichPixelCreatorBase::begin( const LHCb::RichSmartID hpdID ) const
+{
+  HPDItMap::iterator i = m_hpdBegin.find(hpdID);
+  // If not found, default to first pixel
+  return ( i == m_hpdBegin.end() ? richPixels()->begin() : (*i).second );
+}
+
+RichRecPixels::iterator
+RichPixelCreatorBase::end( const LHCb::RichSmartID hpdID ) const
+{
+  HPDItMap::iterator i = m_hpdEnd.find(hpdID);
+  // If not found, default to first pixel
+  return ( i == m_hpdEnd.end() ? richPixels()->begin() : (*i).second );
 }
 
 void RichPixelCreatorBase::handle ( const Incident& incident )

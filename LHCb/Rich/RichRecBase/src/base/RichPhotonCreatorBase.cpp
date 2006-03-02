@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.9 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.10 2006-03-02 15:24:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -123,7 +123,7 @@ StatusCode RichPhotonCreatorBase::finalize()
 }
 
 // Method that handles various Gaudi "software events"
-void RichPhotonCreatorBase::handle ( const Incident& incident )
+void RichPhotonCreatorBase::handle ( const Incident & incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
   if ( IncidentType::BeginEvent == incident.type() )
@@ -187,6 +187,9 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
     if ( !track->allPhotonsDone() )
     {
 
+      verbose() << "Trying track " << track->key() << endreq
+                << " -> Found " << track->richRecSegments().size() << " RichRecSegments" << endreq;
+
       // Iterate over segments
       for ( RichRecTrack::Segments::const_iterator iSegment =
               track->richRecSegments().begin();
@@ -194,6 +197,9 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
             ++iSegment)
       {
         RichRecSegment * segment = *iSegment;
+
+        verbose() << " -> Trying segment " << segment->key() << " " 
+                  << segment->trackSegment().radiator() << endreq;
 
         if ( !segment->allPhotonsDone() )
         {
@@ -203,6 +209,8 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
           RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
           for ( ; iPixel != endPix; ++iPixel )
           {
+            //verbose() << " -> Trying pixel " << (*iPixel)->key() 
+            //         << " " << (*iPixel)->detector() << endreq;
             reconstructPhoton( segment, *iPixel );
           } // pixel loop
 

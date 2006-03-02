@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.7 2006-02-06 12:28:19 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.8 2006-03-02 15:24:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -28,9 +28,11 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecGeomTool.h"
+#include "RichKernel/IRichPixelSuppressionTool.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/BoostArray.h"
 
@@ -52,8 +54,8 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
  *
- *  @todo Keep an eye on the restting of the iterators to default values. Need to define
- *        better where is the most appropriate place to do this.
+ *  @todo Find a better way to handle the filling of the pixel iterators, that avoids a
+ *        seperate loop and if possible maps
  */
 //---------------------------------------------------------------------------------------
 
@@ -100,6 +102,12 @@ public: // methods from interface
   // Access the end iterator for the pixels in the given RICH detector
   LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
                                      const Rich::Side         panel ) const;
+
+  // Access the begin iterator for the pixels in the given RICH HPD
+  LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const;
+
+  //
+  LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const;
 
 protected: // methods
 
@@ -156,6 +164,19 @@ protected: // methods
    */
   void computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const;
 
+  /** Apply HPD pixel suppression, if configured to do so
+   *
+   *  @param hpdID    RichSmartID for HPD
+   *  @param smartIDs Vector of pixel smartIDs for this HPD
+   *
+   *  @return boolean indicating if any suppression occured
+   *  @retval true Some (or all) pixels have been suppressed. In the case the vector of
+   *               pixel RichSmartIDs is changed
+   *  @retval false No pixels are suppressed
+   */
+  bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
+                              LHCb::RichSmartID::Vector & smartIDs ) const;
+
 protected: // data
 
   /// Flag to signify all pixels have been formed
@@ -174,6 +195,9 @@ private: // data
 
   /// Reconstruction geometry tool
   const IRichRecGeomTool * m_recGeom;
+
+  /// HPD occupancy tool
+  const IRichPixelSuppressionTool * m_hpdOcc;
 
   /// Pointer to RichRecPixels
   mutable LHCb::RichRecPixels * m_pixels;
@@ -202,14 +226,28 @@ private: // data
   /// End iterators for each RICH
   mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
 
+  typedef Rich::Map<const RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
+
+  /// Begin iterators for each HPD
+  mutable HPDItMap m_hpdBegin; 
+
+  /// End iterators for each HPD
+  mutable HPDItMap m_hpdEnd; 
+
   /// Hit count tally
   mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
+
+  /// Suppressed hit count tally
+  mutable boost::array<unsigned int, Rich::NRiches> m_suppressedHitCount;
 
   /// Event count
   unsigned int m_Nevts;
 
   /// Flag to indicate if the tool has been used in a given event
   mutable bool m_hasBeenCalled;
+
+  /// Should HPD occupancy be monitored
+  bool m_moniHPDOcc;
 
 private: // methods
 
@@ -288,6 +326,10 @@ inline void RichPixelCreatorBase::resetIterators() const
   m_richEnd[Rich::Rich1]   = richPixels()->begin();
   m_richEnd[Rich::Rich2]   = richPixels()->begin();
 
+  // HPD
+  m_hpdBegin.clear();
+  m_hpdEnd.clear();
+
 }
 
 inline void
@@ -302,6 +344,17 @@ RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel )
   {
     pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::CF4),Rich::CF4);
   }
+}
+
+inline bool 
+RichPixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
+                                             LHCb::RichSmartID::Vector & smartIDs ) const
+{
+  const unsigned int startSize = smartIDs.size();
+  const bool suppressed = 
+    ( !m_moniHPDOcc ? false : m_hpdOcc->applyPixelSuppression(hpdID,smartIDs) );
+  m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
+  return suppressed;
 }
 
 #endif // RICHRECBASE_RICHPIXELCREATORBASE_H
