@@ -47,7 +47,7 @@ RecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
 
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-//RichLocPID.TrackSelection += { "MCRichTrack" }; // for debugging
+RichLocPID.TrackSelection += { "MCRichTrack" }; // for debugging
 RichLocPID.MinimumPtot                       = 0.0*GeV;
 RichLocPID.MaxUsedTracks                     = 300;
 RichLocPID.MaxInputTracks                    = 700;
@@ -65,7 +65,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-//RichGloPIDTrSel.TrackSelection += { "MCRichTrack" }; // for debugging
+RichGloPIDTrSel.TrackSelection += { "MCRichTrack" }; // for debugging
 RichGloPIDTrSel.MaxUsedTracks             = 300;
 RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;

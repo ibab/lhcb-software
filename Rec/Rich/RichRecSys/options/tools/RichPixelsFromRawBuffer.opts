@@ -11,3 +11,4 @@ ToolSvc.Offline.RichPixelCreator.DoBookKeeping = false;
 // Random HPD killing options
 ToolSvc.Offline.RichHPDInfoTool.KillRandomHPDs         = false;
 ToolSvc.Offline.RichHPDInfoTool.FractionToRandomlyKill = 0.0;
+

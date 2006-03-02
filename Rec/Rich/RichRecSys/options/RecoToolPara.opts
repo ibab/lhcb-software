@@ -6,7 +6,7 @@
 // ============================ Track Creators - New Model ====================================
 
 // RichTrackCreator using full reconstructed information : New track model (Default)
-#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
 
 // RichTrackCreator using TrStoredTracks but cheating the tracking information by
 // using the associated MCRichTrack. In the include file below the cheating can be tuned
@@ -14,21 +14,7 @@
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedRecoTracks.opts"
 
 // RichTrackCreator using only MC information
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
-
-// ============================ Track Creators - Old Model ====================================
-
-// RichTrackCreator using full reconstructed information : Old track model
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
-
-// RichTrackCreator using full reconstructed information
-// Uses new experimental optical extrapolators
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracksUsingOpticalExtrapolators.opts"
-
-// RichTrackCreator using TrStoredTracks but cheating the tracking information by
-// using the associated MCRichTrack. In the include file below the cheating can be tuned
-// at the level of the tracking algorithm.
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedTrStoredTracks.opts"
+#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
 
 // ================================== Pixel Creators ==========================================
 
@@ -59,6 +45,16 @@
 // This cache is then used to add a specified number of background particles to each event
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromRichDigitsWithBg.opts"
 
+// Common pixel options
+//---------------------------------------------------------------------------------------------
+
+// HPD pixel suppression tool
+ToolSvc.RichRawDataFormatTool.MaxHPDOccupancy = 999999;
+ToolSvc.Offline.RichPixelCreator.ApplyPixelSuppression = true;
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/RichPixelSuppress" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/RichHPDSuppress" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/RichPixelSuppress" };
+
 // ================================== Photon Creators ==========================================
 
 // Photon reconstruction using full reconstructed information (Default)
@@ -74,6 +70,7 @@
 
 // Photon reconstruction that uses only true Cherenkov information from the MCRichOpticalPhotons
 // I.e cheat the emission, detection and mirror reflection points, and the cherenkov angles
+// and only reconstruct true photons
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
 
 // Photon reconstruction using full reconstructed information, but applying an additional
@@ -179,5 +176,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFi
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
 
 // RichCondition
-ToolSvc.Rich1C4F10Property.PhotonEnergyBins = 50;
-ToolSvc.Rich2CF4Property.PhotonEnergyBins   = 50;
+ToolSvc.Rich1AerogelProperty.PhotonEnergyBins = 50;
+ToolSvc.Rich1C4F10Property.PhotonEnergyBins   = 50;
+ToolSvc.Rich2CF4Property.PhotonEnergyBins     = 50;
