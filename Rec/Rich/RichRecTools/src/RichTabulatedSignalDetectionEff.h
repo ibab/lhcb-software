@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.9 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.10 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,8 +26,6 @@
 
 // Kernel
 #include "Kernel/RichDetectorType.h"
-#include "RichKernel/Rich1DTabProperty.h"
-#include "RichKernel/BoostArray.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
@@ -37,6 +35,7 @@
 
 // RichDet
 #include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichTabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
@@ -47,6 +46,7 @@
  *  @date   15/03/2002
  *
  *  @todo Add support for different QE curves for each HPD
+ *  @todo Use RICH2 nominal HPD when available
  */
 //-----------------------------------------------------------------------------
 
@@ -78,24 +78,14 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private:  // Private data
 
-  /// Tabulated properties for each rich detector
-  typedef boost::array<Rich1DTabProperty*,Rich::NRiches> TabProps;
-
-  /// Flat mirror reflectivities
-  TabProps m_flatMirRefl;
-
-  /// Spherical mirror reflectivities
-  TabProps m_sphMirRefl;
+  /// Pointers to RICHes
+  std::vector<const DeRich*> m_riches;
 
   /// quartz window losses efficiency
   double m_quartzWinEff;
 
   /// Digitisation pedestal loss
   double m_pedLoss;
-
-  /// Quantum Efficiency function.
-  /// For time being assume only one reference curve for all HPDs
-  Rich1DTabProperty * m_QE;
 
 };
 

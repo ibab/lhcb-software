@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.1 2006-01-27 09:14:17 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.2 2006-03-02 15:29:19 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -37,7 +37,6 @@
 
 // RichKernel
 #include "RichKernel/BoostArray.h"
-#include "RichKernel/Rich1DTabProperty.h"
 #include "RichKernel/IRichRayTracing.h"
 
 // RichDet

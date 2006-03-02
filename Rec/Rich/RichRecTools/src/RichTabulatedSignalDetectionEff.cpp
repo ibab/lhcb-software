@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.9 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.10 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,14 +30,12 @@ RichTabulatedSignalDetectionEff ( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
+    m_riches         ( Rich::NRiches ),
     m_quartzWinEff   ( 0 ),
-    m_pedLoss        ( 0 ),
-    m_QE             ( 0 )
+    m_pedLoss        ( 0 )
 {
-
   // interface
   declareInterface<IRichSignalDetectionEff>(this);
-
 }
 
 StatusCode RichTabulatedSignalDetectionEff::initialize()
@@ -47,23 +45,14 @@ StatusCode RichTabulatedSignalDetectionEff::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Rich1 and Rich2
-  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  const DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-
-  // QE Curve
-  m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
-
-  // mirror reflectivities
-  m_flatMirRefl[Rich::Rich1] = new Rich1DTabProperty( rich1->nominalSecMirrorRefl() );
-  m_flatMirRefl[Rich::Rich2] = new Rich1DTabProperty( rich2->nominalSecMirrorRefl() );
-  m_sphMirRefl[Rich::Rich1]  = new Rich1DTabProperty( rich1->nominalSphMirrorRefl() );
-  m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( rich2->nominalSphMirrorRefl() );
+  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocation::Rich1 );
+  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Quartz window eff
-  m_quartzWinEff = rich1->param<double>( "HPDQuartzWindowEff" );
+  m_quartzWinEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
 
   // Digitisation pedestal loss
-  m_pedLoss =      rich1->param<double>( "HPDPedestalDigiEff" );
+  m_pedLoss =      m_riches[Rich::Rich1]->param<double>( "HPDPedestalDigiEff" );
 
   // Informational Printout
   debug() << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
@@ -74,15 +63,6 @@ StatusCode RichTabulatedSignalDetectionEff::initialize()
 
 StatusCode RichTabulatedSignalDetectionEff::finalize()
 {
-  // Tidy up
-  for ( TabProps::iterator iF = m_flatMirRefl.begin(); iF != m_flatMirRefl.end(); ++iF ) {
-    if ( *iF ) { delete *iF; *iF = 0; }
-  }
-  for ( TabProps::iterator iS = m_sphMirRefl.begin();  iS != m_sphMirRefl.end();  ++iS ) {
-    if ( *iS ) { delete *iS; *iS = 0; }
-  }
-  if ( m_QE ) { delete m_QE; m_QE = 0; }
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -93,6 +73,11 @@ RichTabulatedSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
 {
   // which detector
   const Rich::DetectorType det = segment->trackSegment().rich();
-  return ( (*m_QE)[energy*eV]/100 * m_quartzWinEff * m_pedLoss *
-           (*m_flatMirRefl[det])[energy*eV] * (*m_sphMirRefl[det])[energy*eV] );
+  
+  // Note - Only using nominal HPD from Rich1 until Rich2 also has this defined
+  return ( (*(m_riches[Rich::Rich1]->nominalHPDQuantumEff()))[energy*eV]/100 * 
+           m_quartzWinEff * m_pedLoss *
+           (*(m_riches[det]->nominalSecMirrorRefl()))[energy*eV] *
+           (*(m_riches[det]->nominalSphMirrorRefl()))[energy*eV]
+           );
 }

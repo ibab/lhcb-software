@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.11 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.12 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -107,18 +107,32 @@ StatusCode RichPixelCreatorFromRawBuffer::newPixels() const
     m_allDone = true; // only once per event
 
     // Obtain RichSmartIDs
-    const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
+    const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
 
     // Reserve space
     richPixels()->reserve( smartIDs.size() );
 
-    // Loop over RichSmartIDs and create working pixels
-    for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
-          iID != smartIDs.end(); ++iID )
+    // Loop over HPDs and RichSmartIDs and create working pixels
+    for ( RichDAQ::PDMap::const_iterator iHPD = smartIDs.begin();
+          iHPD != smartIDs.end(); ++iHPD )
     {
-      // Make a Pixel for this RichSmartID
-      buildPixel(*iID);
-    }
+
+      // apply HPD pixel suppression
+      // NB : taking a copy of the smartIDs here since we might remove
+      // some, and we cannot change the raw data from m_decoder
+      LHCb::RichSmartID::Vector smartIDs = (*iHPD).second;
+      applyPixelSuppression( (*iHPD).first, smartIDs );
+
+      // create working pixels from suppressed smart IDs
+      for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
+            iID != smartIDs.end(); ++iID )
+      {
+        // Make a Pixel for this RichSmartID
+        buildPixel(*iID);
+      }
+
+
+    } // loop over HPDs
 
     // find iterators
     // note : we are relying on the sorting of the input RichSmartIDs here, so we

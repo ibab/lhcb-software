@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.9 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,12 +28,10 @@ const        IToolFactory& RichTabulatedRayleighScatterFactory = s_factory ;
 RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& type,
                                                              const std::string& name,
                                                              const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_rayScatL( 0 ) 
+  : RichRecToolBase( type, name, parent )
 {
-
+  // interface
   declareInterface<IRichRayleighScatter>(this);
-
 }
 
 StatusCode RichTabulatedRayleighScatter::initialize() 
@@ -44,19 +42,15 @@ StatusCode RichTabulatedRayleighScatter::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Get aerogel radiator
-  const DeRichRadiator * aero = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
-
-  // Get the rayleigh scattering length
-  m_rayScatL = new Rich1DTabProperty( aero->rayleigh() );
+  // for aero, get the "0" file, as the multisolid does not have any properties
+  // this whole scheme needs reworking to cope properly with different aerogel tiles.
+  m_aero = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
 
   return sc;
 }
 
 StatusCode RichTabulatedRayleighScatter::finalize() 
 {
-  // clean up
-  if ( m_rayScatL ) { delete m_rayScatL; m_rayScatL = 0; }
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -65,7 +59,6 @@ double
 RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
                                                    const double energy ) const 
 {
-
   // check this is aerogel
   if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;
 
@@ -77,6 +70,6 @@ RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segmen
   if ( path <= 0 ) return 0;
 
   // compute and return prob
-  const double scatLeng = (*m_rayScatL)[energy*eV];
+  const double scatLeng = (*(m_aero->rayleigh()))[energy*eV];
   return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
 }

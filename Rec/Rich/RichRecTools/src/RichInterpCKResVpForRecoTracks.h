@@ -5,7 +5,7 @@
  *  Header file for tool : RichInterpCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForRecoTracks.h,v 1.2 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichInterpCKResVpForRecoTracks.h,v 1.3 2006-03-02 15:29:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,8 +21,8 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// RichKernel
-#include "RichKernel/Rich1DTabFunc.h"
+// RichDet
+#include "RichDet/Rich1DTabFunc.h"
 
 // CLHEP
 #include "Kernel/PhysicalConstants.h"

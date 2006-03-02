@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-03-02 - Chris Jones
+ - Adapt to changes in RichDet, to delegate more work to RichDet
+ - Adpat to changes in RichDAQ
+
 !===================== RichRecTools v3r0 2006-02-17 =======================
 ! 2006-02-16 - Chris Jones
  - Improved debug printouts

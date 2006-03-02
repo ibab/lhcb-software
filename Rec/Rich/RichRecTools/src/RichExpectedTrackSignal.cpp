@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.16 2006-02-16 16:15:35 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.17 2006-03-02 15:29:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -120,7 +120,6 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
         m_gasQuartzWin->photonTransProb(segment,emitSpectra.binEnergy(iEnBin));
       signal += ( (detSpectra.energyDist(id))[iEnBin] = sig*gasQuartzWinTrans );
     }
-
 
     if ( msgLevel(MSG::DEBUG) )
     {

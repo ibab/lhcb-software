@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.6 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.7 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,9 +27,6 @@
 
 // Detector Description
 #include "DetDesc/DetectorElement.h"
-
-// RichKernel
-#include "RichKernel/Rich1DTabProperty.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
@@ -80,8 +77,8 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private:  // Private data
 
-  /// Tabulated Rayleigh scattering length
-  Rich1DTabProperty * m_gasQWin[Rich::NRiches];
+  /// Pointers to RICHes
+  std::vector<const DeRich*> m_riches;
 
   /// Thickness of windows
   double m_qWinZSize[Rich::NRiches];

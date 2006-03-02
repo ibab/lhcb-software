@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.9 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,9 +28,6 @@
 // Detector Description
 #include "DetDesc/DetectorElement.h"
 
-// RichKernel
-#include "RichKernel/Rich1DTabProperty.h"
-
 // Event model
 #include "Event/RichRecSegment.h"
 
@@ -48,6 +45,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Figure out how to properly deal with multiple aerogel volumes
  */
 //-----------------------------------------------------------------------------
 
@@ -79,8 +78,8 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private:  // Private data
 
-  /// Tabulated Rayleigh scattering length
-  Rich1DTabProperty * m_rayScatL;
+  /// Pointer to aerogel detector element
+  const DeRichRadiator * m_aero;
 
 };
 

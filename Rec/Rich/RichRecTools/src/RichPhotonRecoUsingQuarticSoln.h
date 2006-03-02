@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.1 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -31,7 +31,6 @@
 
 // RichKernel
 #include "RichKernel/BoostArray.h"
-#include "RichKernel/Rich1DTabProperty.h"
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 

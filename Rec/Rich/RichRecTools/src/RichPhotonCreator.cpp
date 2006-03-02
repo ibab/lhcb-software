@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.29 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.30 2006-03-02 15:29:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -82,7 +82,7 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
     // check photon signal probability
     if ( checkPhotonProb( newPhoton ) )
     {
-      // save this photons to TES
+      // save this photon to TES
       savePhoton( newPhoton, key );
 
       // Build cross-references between objects
