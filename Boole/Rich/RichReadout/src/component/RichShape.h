@@ -7,7 +7,9 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-#include "RichKernel/Rich1DTabFunc.h"
+
+// richdet
+#include "RichDet/Rich1DTabFunc.h"
 
 class RichShape {
 
