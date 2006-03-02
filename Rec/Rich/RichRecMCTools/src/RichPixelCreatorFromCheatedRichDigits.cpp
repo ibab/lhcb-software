@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.18 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.19 2006-03-02 15:25:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -72,7 +72,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
 {
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
-  if ( !digit ) 
+  if ( !digit )
   {
     Warning("Parent not of type RichDigit");
     return NULL;
@@ -80,7 +80,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
 
   // Find the MCRichDigit for this RichDigit
   const MCRichDigit * mcDigit = m_mcTool->mcRichDigit( digit->richSmartID() );
-  if ( !mcDigit ) 
+  if ( !mcDigit )
   {
     Warning("Failed to find MCRichDigit for given RichDigit"); return NULL;
   }
@@ -88,7 +88,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
   // Loop over all MCRichHits for this MCRichDigit and make RichRecPixels
   RichRecPixel * returnPix = NULL;
   for ( SmartRefVector<MCRichHit>::const_iterator hit = mcDigit->hits().begin();
-        hit != mcDigit->hits().end(); ++hit ) 
+        hit != mcDigit->hits().end(); ++hit )
   {
     returnPix = newPixelFromHit( digit, *hit );
   }
@@ -110,58 +110,58 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
   //else
   //{
 
-    RichRecPixel * newPixel = NULL;
+  RichRecPixel * newPixel = NULL;
 
-    // Check if we are using this radiator
-    if ( m_usedRads[hit->radiator()] )
+  // Check if we are using this radiator
+  if ( m_usedRads[hit->radiator()] )
+  {
+
+    // Check this hit is OK
+    if ( pixelIsOK(digit->key()) )
     {
 
-      // Check this hit is OK
-      if ( pixelIsOK(digit->key()) )
-      {
+      // Find associated MCRichOpticalPhoton
+      const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+      if ( mcPhot ) {
 
-        // Find associated MCRichOpticalPhoton
-        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
-        if ( mcPhot ) {
+        // Make a new RichRecPixel
+        newPixel = new RichRecPixel();
 
-          // Make a new RichRecPixel
-          newPixel = new RichRecPixel();
+        // Positions
+        newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+        //newPixel->localPosition() =
+        //  m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+        newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
 
-          // Positions
-          newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-          //newPixel->localPosition() =
-          //  m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
-          newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
+        // compute corrected local coordinates
+        computeRadCorrLocalPositions( newPixel );
 
-          // compute corrected local coordinates
-          computeRadCorrLocalPositions( newPixel );
+        // Set smartID
+        newPixel->setSmartID( digit->key() );
 
-          // Set smartID
-          newPixel->setSmartID( digit->key() );
+        // Set parent information
+        // Note - we are pretending to be RichDigits here ...
+        newPixel->setParentPixel( digit );
+        newPixel->setParentType( Rich::PixelParent::Digit );
 
-          // Set parent information
-          // Note - we are pretending to be RichDigits here ...
-          newPixel->setParentPixel( digit );
-          newPixel->setParentType( Rich::PixelParent::Digit );
-
-          // save the pixel
-          savePixel( newPixel );
-
-        }
+        // save the pixel
+        savePixel( newPixel );
 
       }
 
     }
 
-    // Add to reference map
-    //if ( bookKeep() )
-    //{
-    //  m_pixelExists [ hit->key() ] = newPixel;
-    //  m_pixelDone   [ hit->key() ] = true;
-    //}
+  }
 
-    return newPixel;
-    //}
+  // Add to reference map
+  //if ( bookKeep() )
+  //{
+  //  m_pixelExists [ hit->key() ] = newPixel;
+  //  m_pixelDone   [ hit->key() ] = true;
+  //}
+
+  return newPixel;
+  //}
 
 }
 

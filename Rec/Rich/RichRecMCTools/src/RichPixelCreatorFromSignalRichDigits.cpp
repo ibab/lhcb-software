@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.10 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.11 2006-03-02 15:25:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -82,7 +82,7 @@ RichPixelCreatorFromSignalRichDigits::newPixel( const ContainedObject * obj ) co
   if ( !mcDigit ) return NULL;
 
   // Test if this is a background hit
-  if ( m_mcTool->isBackground( mcDigit ) ) return NULL;
+  if ( mcDigit->history().isBackground() ) return NULL;
 
   // if requested, filter trackless hits
   if ( m_trackFilter ) {

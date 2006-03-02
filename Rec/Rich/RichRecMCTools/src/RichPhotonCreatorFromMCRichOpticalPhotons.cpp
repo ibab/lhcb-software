@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.10 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.11 2006-03-02 15:25:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -39,7 +39,7 @@ StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool", m_mcRecTool    );
+  acquireTool( "RichRecMCTruthTool", m_mcRecTool );
 
   return sc;
 }

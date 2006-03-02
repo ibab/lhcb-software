@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.3 2006-02-16 16:06:42 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.4 2006-03-02 15:25:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -112,6 +112,7 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     // See if there is an MCRichSegment for this radiator
     const MCRichSegment * segment = track->segmentInRad(rad);
     if ( !segment ) continue;
+
     // Get entry information
     const Gaudi::XYZPoint & entryPoint          = segment->entryPoint();
     const Gaudi::XYZVector & entryStateMomentum = segment->entryMomentum();

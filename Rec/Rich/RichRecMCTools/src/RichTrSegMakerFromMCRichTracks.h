@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.1 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.2 2006-03-02 15:25:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -27,7 +27,6 @@
 
 // RichKernel
 #include "RichKernel/BoostArray.h"
-#include "RichKernel/Rich1DTabProperty.h"
 #include "RichKernel/RichToolBase.h"
 
 // interfaces
