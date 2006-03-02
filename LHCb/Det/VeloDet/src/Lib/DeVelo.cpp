@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.59 2006-02-27 19:32:51 jvantilb Exp $
+// $Id: DeVelo.cpp,v 1.60 2006-03-02 14:21:29 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -83,10 +83,6 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
-  unsigned int nextR=param<int>("FirstR");
-  unsigned int nextPhi=param<int>("FirstPhi");
-  unsigned int nextPileUp=param<int>("FirstPileUp");
-
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = findVeloSensors();
   
@@ -95,14 +91,6 @@ StatusCode DeVelo::initialize() {
 
   std::vector<DeVeloSensor*>::iterator iDESensor;
   int detElemCount=0;
-  m_sensorZ.clear();
-  m_vpSensor.clear();
-  m_vpRSensor.clear();
-  m_vpPhiSensor.clear();
-  m_vpPUSensor.clear();
-  m_RIndex.clear();
-  m_PhiIndex.clear();
-  m_PUIndex.clear();
   m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
 
   // JPP sensors no longer pre-sorted by Z in XML so sort them before
@@ -120,25 +108,19 @@ StatusCode DeVelo::initialize() {
         << " PHI " << (*iDESensor)->isPhi()
         << " PU " << (*iDESensor)->isPileUp() << endmsg;
     if((*iDESensor)->isR()){
-      //      m_vpSensor[index]->sensorNumber(nextR);
       m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nRSensors++;
       m_RIndex.push_back(index);
-      nextR++;
     } else if((*iDESensor)->isPhi()){
-      //      m_vpSensor[index]->sensorNumber(nextPhi);
       m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
       m_nPhiSensors++;
       m_PhiIndex.push_back(index);
-      nextPhi++;
     } else if((*iDESensor)->isPileUp()){
-      //      m_vpSensor[index]->sensorNumber(nextPileUp);
       m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nPileUpSensors++;
       m_PUIndex.push_back(index);
-      nextPileUp++;
     } else {
-      msg << MSG::ERROR << "Sensor type is unknown\n";
+      msg << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
     m_validSensors[m_vpSensor[index]->sensorNumber()]=true;
     msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
@@ -224,16 +206,20 @@ unsigned int DeVelo::sensorNumber(const Gaudi::XYZPoint& point) const {
 
 // return the sensitive volume if for a point in the global frame
 const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
-  double z = point.z();
+  MsgStream msg(msgSvc(), "DeVelo");
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
-    if(0.250*mm > fabs(z - (*iDeVeloSensor)->z())) {
-      return ((*iDeVeloSensor)->sensorNumber());
+    Gaudi::XYZPoint localPoint;
+    StatusCode sc=(*iDeVeloSensor)->globalToLocal(point,localPoint);
+    if(sc.isSuccess()) {
+      double z = localPoint.z();
+      if(0.20*mm > fabs(z)) {
+        return ((*iDeVeloSensor)->sensorNumber());
+      }
     }
   }
-  MsgStream msg(msgSvc(), "DeVelo");
   msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
-      << z << endmsg;
+      << point.z() << endmsg;
   return -999;
 }
 
