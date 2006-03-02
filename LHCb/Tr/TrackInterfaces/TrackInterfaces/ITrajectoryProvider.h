@@ -1,4 +1,4 @@
-// $Id: ITrajectoryProvider.h,v 1.2 2006-02-17 16:52:43 erodrigu Exp $
+// $Id: ITrajectoryProvider.h,v 1.3 2006-03-02 10:49:47 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRAJECTORYPROVIDER_H 
 #define TRACKINTERFACES_ITRAJECTORYPROVIDER_H 1
 
@@ -48,10 +48,10 @@ public:
                                         double offset = 0 ) = 0;
   
   /// Return a "State Trajectory" from a State
-  virtual LHCb::Trajectory* trajectory( LHCb::State& state ) = 0;
+  virtual LHCb::Trajectory* trajectory( const LHCb::State& state ) = 0;
 
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual LHCb::Trajectory* trajectory( Gaudi::TrackVector& stateVector,
+  virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
                                         double z ) = 0;
   
 protected:
