@@ -1,11 +1,11 @@
-// $Id: ISTClusterPosition.h,v 1.1 2005-12-20 15:10:05 cattanem Exp $
+// $Id: ISTClusterPosition.h,v 1.2 2006-03-02 07:40:01 mneedham Exp $
 #ifndef _ISTClusterPosition_H
 #define _ISTClusterPosition_H
 
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/SmartRefVector.h"
 
-#include <utility>
+#include "SiPositionInfo.h"
 
 namespace LHCb{
 class STChannelID;
@@ -28,20 +28,19 @@ class  ISTClusterPosition: virtual public IAlgTool {
 
 public: 
 
-  typedef std::pair<LHCb::STChannelID,double> StripData;
-  typedef std::pair<StripData,double> Measurement;
+  typedef LHCb::SiPositionInfo<LHCb::STChannelID> Info;
 
    /// Static access to interface id
   static const InterfaceID& interfaceID() { return IID_ISTClusterPosition; }
    
   /** calc position
   * @param cluster
-  * @return Measurement (pair of pairs) 
-  * first.first = floored nearest channel
-  * first.second = interstrip position (in fraction of strip)
-  * second = estimate of the error 
+  * @return Info (simple struct) 
+  * strip = floored nearest channel
+  * fractionStrip = interstrip position (in fraction of strip)
+  * error = estimate of the error 
   */
-  virtual Measurement estimate(const LHCb::STCluster* aCluster) const=0;
+  virtual Info estimate(const LHCb::STCluster* aCluster) const=0;
 
   /** calc position
   * @param vector of digits
@@ -50,7 +49,7 @@ public:
   * first.second = interstrip position (in fraction of strip)
   * second = estimate of the error 
   */
-  virtual Measurement estimate(const SmartRefVector<LHCb::STDigit>& digits) const=0;
+  virtual Info estimate(const SmartRefVector<LHCb::STDigit>& digits) const=0;
 
   /** error parameterized as cluster size
   * @param number of strips
