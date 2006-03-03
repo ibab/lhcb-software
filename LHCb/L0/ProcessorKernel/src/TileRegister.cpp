@@ -114,39 +114,51 @@ void L0Muon::TileRegister::makePads(){
 
 void L0Muon::TileRegister::print_bits(unsigned int event, FILE *file){
 
+  if (file==0) file= stdout;
   // Loop over the bits of the register 
   for (boost::dynamic_bitset<>::size_type i =0; i < m_bitset.size();i++){
     int val=m_bitset[i] ;
     LHCb::MuonTileID  mid= tile(i);
-    if (mid.isValid()){
-      fprintf(file,"%5u %3d ( %2d,%2d ) Q%1d M%1d R%1d %2d %2d  %d\n"
-	      ,event ,i 
-	      ,mid.layout().xGrid()
-	      ,mid.layout().yGrid()
-	      ,mid.quarter()+1 
-	      ,mid.station()+1 
-	      ,mid.region()+1 
-	      ,mid.nX()
-	      ,mid.nY()
-	      ,val
-	      ); 
-    } else {
-      fprintf(file,"%5u %3d                           %d\n",event,i,val);
+    if (val) {
+      
+      if (mid.isValid()){
+        fprintf(file,"%5u %3d ( %2d,%2d ) Q%1d M%1d R%1d %2d %2d  %d\n"
+                ,event ,i 
+                ,mid.layout().xGrid()
+                ,mid.layout().yGrid()
+                ,mid.quarter()+1 
+                ,mid.station()+1 
+                ,mid.region()+1 
+                ,mid.nX()
+                ,mid.nY()
+                ,val
+                ); 
+      } else {
+        fprintf(file,"%5u %3d                           %d\n",event,i,val);
+      }
     }
+    
 
   }
-  fprintf(file,"-----------------------------------\n");
 }
 
 
 
 void L0Muon::TileRegister::print_tiles(FILE *file,int ntiles_per_line){
+  if (file==0) file= stdout;  
   int ic=0;
   for (std::vector<LHCb::MuonTileID> ::iterator im = m_ids.begin();im!=m_ids.end();im++) {
-    if ((ic % ntiles_per_line)==0)  fprintf(file,"\n\t");
-    fprintf(file," M%d(%2d,%2d)Q%dR%d %2d-%2d ;",
-            im->station()+1,im->layout().xGrid(),im->layout().yGrid(),
-            im->quarter()+1,im->region()+1,im->nX(),im->nY());
+    if ((ic % ntiles_per_line)==0)  {
+      if (ic>0) fprintf(file,"\n");
+      fprintf(file,"\t%3d: ",ic);
+    }
+    if (im->isValid())
+      fprintf(file," M%1d(%2d,%2d)Q%1dR%1d %2d-%2d ;",
+              im->station()+1,im->layout().xGrid(),im->layout().yGrid(),
+              im->quarter()+1,im->region()+1,im->nX(),im->nY());
+    else 
+      fprintf(file," M.(..,..)Q.R. ..-.. ;");
+      
     ic++;
   }
   fprintf(file,"\n");
