@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.23 2006-02-01 14:00:49 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.24 2006-03-03 18:23:37 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -256,11 +256,16 @@ void Track::removeFromMeasurements( Measurement* meas )
 //=============================================================================
 void Track::removeFromNodes( Node* node )
 {
-  Measurement& meas = node -> measurement();
-  TrackFunctor::deleteFromList<Node>(m_nodes,node);
   // Also delete from the Track the Measurement corresponding
-  // to the deleted Node!
-  removeFromMeasurements( &meas );
+  // to the deleted Node, if present!
+  if ( node -> hasMeasurement() ) {
+    Measurement& meas = node -> measurement();
+    TrackFunctor::deleteFromList<Node>(m_nodes,node);
+    removeFromMeasurements( &meas );
+  }
+  else {
+    TrackFunctor::deleteFromList<Node>(m_nodes,node);
+  }
 };
 
 //=============================================================================

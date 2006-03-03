@@ -24,7 +24,7 @@
 	argList  = "State* state, Measurement* meas"
 	initList = "m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
         <code>
-          m_state = state->clone();
+  m_state = state -> clone();
         </code>
       </constructor>
  
@@ -138,8 +138,8 @@
         virtual = 'TRUE'>
         <code>
   LHCb::Node* me = new LHCb::Node(state().clone(), (LHCb::Measurement*) &amp;measurement()); 
-  me->setResidual(residual());
-  me->setErrResidual(errResidual());
+  me->setResidual( residual() );
+  me->setErrResidual( errResidual() );
   return me;
         </code>
       </method>
@@ -170,7 +170,7 @@
 	const   = 'TRUE'
         desc    = 'Return true if this Node has a valid pointer to measurement'>
         <code>
-          return ( m_measurement != 0 ) ;
+  return ( m_measurement != 0 );
         </code>
       </method>
 
@@ -178,7 +178,10 @@
         name    = 'removeMeasurement'
         desc    = 'Remove measurement from the node'>
         <code>
-          m_measurement = 0 ;
+  m_measurement = 0;
+  // for a node without measurement the chi2 = 0 ;-)
+  m_residual    = 0.;
+  m_errResidual = 0.;
         </code>
       </method>
 
