@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.h,v 1.3 2006-02-28 19:12:14 jvantilb Exp $
+// $Id: TrajectoryProvider.h,v 1.4 2006-03-03 10:57:23 erodrigu Exp $
 #ifndef TRACKTOOLS_TRAJECTORYPROVIDER_H 
 #define TRACKTOOLS_TRAJECTORYPROVIDER_H 1
 
@@ -11,8 +11,6 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from LHCbKernel
-#include "Kernel/IVeloClusterPosition.h"
-#include "Kernel/ISTClusterPosition.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/Trajectory.h"
 
@@ -49,7 +47,7 @@ public:
   StatusCode initialize();
   
   /// Return a "Measurement Trajectory" from a Measurement
-  virtual LHCb::Trajectory* trajectory( LHCb::Measurement& meas );
+  virtual LHCb::Trajectory* trajectory( const LHCb::Measurement& meas );
   
   /** Return a "Measurement Trajectory" from an LHCbID
    *  Note: the meaning of the offset input depends on the sub-detector type
@@ -58,22 +56,16 @@ public:
    *  @param  offset: input offset
    */
   virtual LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
-                                        double offset = 0 );
+                                        const double offset = 0 );
   
   /// Return a "State Trajectory" from a State
-  virtual LHCb::Trajectory* trajectory( LHCb::State& state );
+  virtual LHCb::Trajectory* trajectory( const LHCb::State& state );
   
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual LHCb::Trajectory* trajectory( Gaudi::TrackVector& stateVector,
-                                        double z );
+  virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
+                                        const double z );
   
 protected:
-  // Interfaces
-  IVeloClusterPosition* m_veloPositionTool;    ///< Velo cluster position tool
-  ISTClusterPosition*   m_stPositionTool;      ///< ST cluster position tool
-  std::string           m_stPositionToolName;  ///< ST position tool name
-  std::string           m_veloPositionToolName;///< Velo position tool name
-
   // Geometry information
   DeVelo*       m_veloDet;
   DeSTDetector* m_ttDet;

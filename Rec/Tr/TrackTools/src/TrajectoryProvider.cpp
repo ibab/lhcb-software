@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.3 2006-02-28 19:12:14 jvantilb Exp $
+// $Id: TrajectoryProvider.cpp,v 1.4 2006-03-03 10:57:23 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -38,12 +38,6 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
 {
   declareInterface<ITrajectoryProvider>(this);
 
-  declareProperty( "VeloPositionTool",
-                   m_veloPositionToolName = "VeloClusterPosition" );
-
-  declareProperty( "STPositionTool",
-                   m_stPositionToolName = "STOfflinePosition" );
-
   declareProperty( "VeloGeometryPath",
                    m_veloDetPath = "/dd/Structure/LHCb/Velo" );
   
@@ -74,10 +68,6 @@ StatusCode TrajectoryProvider::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Retrieve the Cluster Position tools
-  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
-  m_stPositionTool   = tool<ISTClusterPosition>( m_stPositionToolName );
-
   // Retrieve the Velo, ST and OT detector elements
   //TODO: useful in trajectory( const LHCbID& id, double offset )
   //      once some new stuff is implemented (see comments in this method)
@@ -102,7 +92,7 @@ StatusCode TrajectoryProvider::initialize() {
 //=============================================================================
 // Return a "Measurement Trajectory" from a Measurement
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( Measurement& meas )
+Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 {
   const Trajectory& traj = meas.trajectory();
   return traj.clone();
@@ -112,7 +102,7 @@ Trajectory* TrajectoryProvider::trajectory( Measurement& meas )
 // Return a "Measurement trajectory" from an LHCbID and an offset
 //=============================================================================
 Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
-                                            double offset )
+                                            const double offset )
 {
   Trajectory* traj = NULL;
 
@@ -156,7 +146,7 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
 //=============================================================================
 // Return a "State trajectory" from a State
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( State& state )
+Trajectory* TrajectoryProvider::trajectory( const State& state )
 {
   XYZVector bField;
   m_magsvc -> fieldVector( state.position(), bField );
@@ -167,8 +157,8 @@ Trajectory* TrajectoryProvider::trajectory( State& state )
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( TrackVector& stateVector,
-                                            double z )
+Trajectory* TrajectoryProvider::trajectory( const TrackVector& stateVector,
+                                            const double z )
 {
   XYZVector bField;
   m_magsvc -> fieldVector( XYZPoint( stateVector(0),stateVector(1), z ),
