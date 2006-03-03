@@ -1,4 +1,4 @@
-// $Id: L0MuonKernelFromXML.h,v 1.1 2005-07-01 12:42:42 jucogan Exp $
+// $Id: L0MuonKernelFromXML.h,v 1.2 2006-03-03 15:13:39 jucogan Exp $
 
 #ifndef L0MUONKERNEL_L0MUONKERNELFROMXML_H
 #define L0MUONKERNEL_L0MUONKERNELFROMXML_H     1
@@ -29,34 +29,6 @@ namespace L0Muon {
 
   int getAttributeInt(DOMNamedNodeMap* di, const char* key);
   std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
-
-/*   class L0MUONKERNELFROMXML { */
-
-/*   protected: */
-
-/*     /// Constructor */
-/*     L0MUONKERNELFROMXML(); */
-
-/*     /// Constructor */
-/*     L0MUONKERNELFROMXML(std::string XmlFileName); */
-/*   public: */
-
-/*     /// Destructor */
-/*     virtual ~L0MUONKERNELFROMXML(); */
-  
-/*     /// Get the pointer to the top unit */
-/*     Unit* top(){return m_top;} */
-
-/*   private: */
-
-/*     Unit* m_top; */
-
-/*     DOMDocument*  m_doc;      //The DOM document */
-/*     DOMElement*   m_root;     //The root element */
-/*     DOMBuilder*   m_parser;   //The XML parser */
-
-
-/*   }; */
 
 };  // namespace L0Muon
 

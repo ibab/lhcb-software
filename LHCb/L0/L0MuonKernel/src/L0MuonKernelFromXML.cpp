@@ -28,68 +28,24 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
 
   // Initialize the XML4C system
   XMLPlatformUtils::Initialize();
-  
-//   std::cout << "L0Muon::L0MuonKernelFromXML XMLPlatformUtils::Initialize done\n";
 
   // Instantiate the DOM parser.
   static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
-  
-//   std::cout << "L0Muon::L0MuonKernelFromXML  gLS[] initialized \n";
-
-  DOMImplementation *impl = 
-    DOMImplementationRegistry::getDOMImplementation(gLS);
-
-//   std::cout << "L0Muon::L0MuonKernelFromXML impl  initialized \n";
-  
-  parser = 
-    ((DOMImplementationLS*)impl)->
+  DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);  
+  parser = ((DOMImplementationLS*)impl)->
     createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
-
-
-//   std::cout << "L0Muon::L0MuonKernelFromXML  parser initialized \n";
 
   parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
   parser->setFeature(XMLUni::fgXercesSchema, doSchema);
   parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
   parser->setFeature(XMLUni::fgDOMDatatypeNormalization, dtNormalization);
-  
-//   std::cout << "L0Muon::L0MuonKernelFromXML  parser features initialized\n";
 
-  //parse the document and get the root element
+  // Parse the document and get the root element
   doc  = parser->parseURI(xmlFileName.c_str());
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  doc initialized\n" ;
-
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  doc: " 
-//   	    << "  has children ? "<< doc->hasChildNodes()
-//   	    << "; has attributes ? "<< doc->hasAttributes()
-//   	    << "; name is "<< XMLString::transcode(doc->getNodeName())
-//   	    <<std::endl;
   root = doc->getDocumentElement();
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  root: " 
-//   	    << "  tag name is "<< XMLString::transcode(root->getTagName())
-//   	    << "  has children ? "<< root->hasChildNodes() 
-//   	    << "; has attributes ? "<< root->hasAttributes() 
-//   	    << "; name is "<<  XMLString::transcode(root->getNodeName())
-//   	    << std::endl;
-
-//   DOMNamedNodeMap* diroot = root->getAttributes();
-//   DOMNodeList * liroot = root->getChildNodes ();
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  root: " 
-//   	    << " size= "<<getAttributeInt(diroot,"size")
-//   	    << " # of children " << liroot->getLength()
-//   	    << std::endl;
-  
-//   for (int inode=0; inode < liroot->getLength() ; inode++) {
-//     std::cout << "<L0Muon::L0MuonKernelFromXML>    * "
-//     	      << " " <<inode
-//     	      << " " <<XMLString::transcode(liroot->item(inode)->getNodeName())
-//     	      <<" " <<liroot->item(inode)->getNodeType()
-//     	      << std::endl;
-//   }
  
   //Get the RegisterFactory node
   xmlStr = XMLString::transcode("RegisterFactory");
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  xmlStr= "<<XMLString::transcode(xmlStr)<< std::endl;
   li = root->getElementsByTagName(xmlStr);
   XMLString::release(&xmlStr);
   //Consistency check
@@ -104,23 +60,14 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
     std::cout << "<L0Muon::L0MuonKernelFromXML>  Too many nodes found ... exiting" << std::endl;
     exit(-1);    
   }
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  DOMNodeList done" << std::endl;
   
   // Decode the node
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  child... " << std::endl;
   child = li->item(0);
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  child = "
-//   	    <<" " <<XMLString::transcode(child->getNodeName()) 
-//   	    <<" " <<child->getNodeType()
-//   	    << std::endl;
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  register factory ... " << std::endl;
   rfactory->fromXML(child);
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  register factory done " << std::endl;
 
   // Get the UnitFactory node
   xmlStr = XMLString::transcode("UnitFactory");
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  xmlStr= "<<XMLString::transcode(xmlStr)<< std::endl;
   li = root->getElementsByTagName(xmlStr);
   XMLString::release(&xmlStr);
   //Consistency check
@@ -135,36 +82,22 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
     std::cout << "<L0Muon::L0MuonKernelFromXML>  Too many nodes found ... exiting" << std::endl;
     exit(-1);    
   }
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  DOMNodeList done" << std::endl;
   
   // Decode the node
-  Unit* top;
-  //  std::cout << "<L0Muon::L0MuonKernelFromXML>  child... " << std::endl;
+  Unit* top=0;
   child = li->item(0);
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  child = "
-//   	    <<" " <<XMLString::transcode(child->getNodeName()) 
-//   	    <<" " <<child->getNodeType()
-//   	    << std::endl;
   child = li->item(0)->getFirstChild ();
   while(child){
-//     std::cout << "<L0Muon::L0MuonKernelFromXML>  grand child = "
-//     	      <<" " <<XMLString::transcode(child->getNodeName()) 
-//     	      <<" " <<child->getNodeType() 
-//     	      << std::endl;
     if (child->getNodeType()==3) {
       child = child->getNextSibling();
       continue;
     }
     L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
-//     std::cout << "<L0Muon::L0MuonKernelFromXML>  top unit..." << std::endl;
     DOMNamedNodeMap* di = child->getAttributes();
     std::string type = getAttributeStr(di, "type");
-//     std::cout << "<L0Muon::L0MuonKernelFromXML>  top unit type is " << type <<std::endl;
     top = ufactory->createUnit(child,type);
-//     std::cout << "<L0Muon::L0MuonKernelFromXML>  top unit done " << std::endl;
     break;
   }
-//   std::cout << "<L0Muon::L0MuonKernelFromXML>  OUT " << std::endl;
 
   parser->release();
   XMLPlatformUtils::Terminate();
@@ -209,11 +142,3 @@ std::string L0Muon::getAttributeStr(DOMNamedNodeMap* di, const char* key){
   return valS;
   
 }
-
-// L0Muon::L0MUONKERNELFROMXML::L0MUONKERNELFROMXML() {
-// }
-
-// L0Muon::L0MUONKERNELFROMXML::L0MUONKERNELFROMXML(std::string XMLFileName) {
-// }
-
-// L0Muon::L0MUONKERNELFROMXML::~L0MUONKERNELFROMXML() {}
