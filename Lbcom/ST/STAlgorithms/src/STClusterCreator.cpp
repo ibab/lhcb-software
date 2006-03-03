@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.8 2006-03-03 16:00:16 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.9 2006-03-03 17:47:41 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -137,8 +137,6 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
     ++jterDigit;
 
     DeSTSector* aSector= m_tracker->findSector((*iterDigit)->channelID()); ;
-    //    std::cout << " value " << (*iterDigit)->channelID().sector() << " " 
-    //          <<   (*iterDigit)->channelID().strip() <<  " " << (*iterDigit)->depositedCharge() << std::endl; 
     if (aboveDigitSignalToNoise(*iterDigit, aSector)) {
 
       // make a cluster !
@@ -168,10 +166,7 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
         // make cluster +set things
         STLiteCluster clusterLite(measValue.strip,measValue.fractionalPosition,
                       clusteredDigits.size(),hasHighThreshold(totCharge,aSector));
-<<<<<<< STClusterCreator.cpp
 
-=======
->>>>>>> 1.7
         STCluster* newCluster = new STCluster(clusterLite, strips(clusteredDigits,
                                               measValue.strip),nSum);
     
