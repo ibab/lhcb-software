@@ -21,10 +21,10 @@ include_path      none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   GaudiAlg        v*
-use   Relations       v*     Kernel
 
 use   MCEvent         v*     Event
 use   TrackEvent      v*     Event
+use   LinkerEvent     v*     Event
 
 use   TrackInterfaces v*     Tr
 
