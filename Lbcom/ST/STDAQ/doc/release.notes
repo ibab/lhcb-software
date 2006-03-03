@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-03-03 M Needham
+  - inconsistant adc problem fixed
+
+! 2006-03-03 M Needham
   - bug fix in decoding 
 
 ! 2006-02-24 M Needham

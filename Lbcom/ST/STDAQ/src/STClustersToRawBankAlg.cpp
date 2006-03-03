@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.2 2006-03-03 20:24:22 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -266,9 +266,11 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
     char neighbourSum = (char)tADC;
     bWriter << neighbourSum;
     STCluster::ADCVector adcs = aCluster->stripValues();
-    for (unsigned int i = 0; i < m_maxClusterSize; ++i){
+    unsigned int nToWrite = GSL_MIN(aCluster->size(), 
+                                    m_maxClusterSize);
+    for (unsigned int i = 0; i < nToWrite; ++i){
       bool last;
-      i == m_maxClusterSize-1 ? last = true: last = false;
+      i == nToWrite-1 ? last = true: last = false;
       SiADCWord adcWord = SiADCWord(adcs[i].second, last);
       bWriter << adcWord;  
     } //iter   
