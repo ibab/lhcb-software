@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-03-03 - Eduardo Rodrigues
+ - outliers removal improved: when an outlier measurement is removed from
+   the node it is also removed from the track (needed for consistency)
+
 !=========================== TrackFitter v2r0 2006-02-13 ====================
 ! 2006-02-08 - Eduardo Rodrigues
  - migration to LHCb v20r0

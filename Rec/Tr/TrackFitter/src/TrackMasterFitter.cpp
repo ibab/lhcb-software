@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.6 2006-02-10 16:29:23 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.7 2006-03-03 18:24:46 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -321,7 +321,10 @@ bool TrackMasterFitter::outlierRemoved( Track& track )
                               << " removed." << endmsg;
 
     // Remove measurement from node (node still exists w/o measurement)
-    (*iWorstNode)->removeMeasurement();
+    // One also needs to delete the measurement from the track!
+    Measurement& meas = (*iWorstNode) -> measurement();
+    (*iWorstNode) -> removeMeasurement();
+    track.removeFromMeasurements( &meas );
 
     outlierWasRemoved = true;
   }

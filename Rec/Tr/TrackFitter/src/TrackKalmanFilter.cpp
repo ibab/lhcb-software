@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.8 2006-02-10 16:29:23 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.9 2006-03-03 18:24:46 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -126,8 +126,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     ++iPrevNode;
   }
 
-  // Compute the chi2 and dof
-  computeChiSq( track );
+  // Compute the chi2 and degrees of freedom
+  computeChi2( track );
 
   // set the HistoryFit flag to "Kalman fit done"
   track.setHistoryFit( Track::Kalman );
@@ -359,7 +359,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 //=========================================================================
 // 
 //=========================================================================
-void TrackKalmanFilter::computeChiSq( Track& track ) 
+void TrackKalmanFilter::computeChi2( Track& track ) 
 {
   double chi2 = 0.;
   int ndof = -( track.firstState().nParameters() );
@@ -368,11 +368,12 @@ void TrackKalmanFilter::computeChiSq( Track& track )
   const std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::const_iterator it = nodes.begin();
   for ( ; it != nodes.end(); ++it ) {
+    // a node without a measurement has chi2 = 0 ;-)
     chi2 += (*it)->chi2();
-    if ( (*it)->hasMeasurement() ) ++ndof; 
+    if ( (*it)->hasMeasurement() ) ++ndof;
   }
 
-  double chi2Norma = (ndof != 0 ) ? chi2/((double) (ndof)) : 0.0;
+  double chi2Norma = ( ndof != 0 ) ? chi2/((double) (ndof)) : 0.0;
   track.setChi2PerDoF( chi2Norma );
   track.setNDoF( ndof );
 }

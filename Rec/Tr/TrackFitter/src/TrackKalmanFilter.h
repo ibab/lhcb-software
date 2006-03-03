@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.5 2006-02-10 16:29:23 erodrigu Exp $
+// $Id: TrackKalmanFilter.h,v 1.6 2006-03-03 18:24:46 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -52,7 +52,7 @@ public:
   StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 );
   
   //! compute the chi2
-  void computeChiSq( LHCb::Track& track );
+  void computeChi2( LHCb::Track& track );
 
 protected:
 
