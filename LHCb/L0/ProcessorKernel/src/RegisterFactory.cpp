@@ -170,7 +170,8 @@ void L0Muon::RegisterFactory::fromXML(DOMNode* pNode){
   DOMNamedNodeMap* di = pNode->getAttributes();
   unsigned int size   = getAttributeInt(di, "size");
 
-  //Fill the internal dictionary with puNode
+  //Fill the internal dictionary with puNode, 
+  //objects pointed to should be released after usage²
   XMLCh* REGISTER      = XMLString::transcode(XMLRegister.c_str());
   XMLCh* TILEREGISTER  = XMLString::transcode(XMLTileRegister.c_str());
   XMLCh* REGISTERALIAS = XMLString::transcode(XMLRegisterAlias.c_str());
