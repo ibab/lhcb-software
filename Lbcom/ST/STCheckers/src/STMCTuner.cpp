@@ -28,6 +28,9 @@
 
 #include "Kernel/STDataFunctor.h"
 
+// STTools interfaces from LHCbKernel
+#include "Kernel/IMCParticleSelector.h"
+
 #include "Kernel/PhysicalConstants.h"
 static const AlgFactory<STMCTuner> s_Factory;
 const IAlgFactory& STMCTunerFactory = s_Factory;
@@ -48,6 +51,7 @@ STMCTuner::STMCTuner(const std::string& name,
   // constructer
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   this->declareProperty("detType", m_detType = "TT");
+  this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
 }
 
 STMCTuner::~STMCTuner(){
@@ -68,6 +72,8 @@ StatusCode STMCTuner::initialize(){
 
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
+
+  m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
 
   m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
@@ -110,24 +116,19 @@ StatusCode STMCTuner::fillHistograms(const STCluster* aCluster,
   // fill histograms
   if (0 != aHit){ 
     // histo cluster size for physics tracks
-    double betaGamma = this->betaGamma(aHit->mcParticle());
-    if (betaGamma> 500.){
+    if (m_selector->accept(aHit->mcParticle()) == true){
       DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
         plot(m_sigNoiseTool->signalToNoise(aCluster),"SN_"+aSector->type(),0., 50., 100);
-        plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
+	plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
       }
     } 
   } // if
-
   // end
   return StatusCode::SUCCESS;
 }
 
-double STMCTuner::betaGamma(const MCParticle* aParticle) const{
 
- return (aParticle->beta()*aParticle->gamma());
-}
 
 
 

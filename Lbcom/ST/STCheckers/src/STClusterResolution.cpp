@@ -123,7 +123,7 @@ StatusCode STClusterResolution::initHistograms(){
    
    AIDA::IHistogram1D* resHisto = book(id+10,
 		 "resolution"+boost::lexical_cast<std::string>(id+10),
-		 -2.5, 2.5, 200);
+		 -250., 250., 200);
     
    m_resHistoVector.push_back(resHisto); 
 

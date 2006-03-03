@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.4 2006-02-20 16:44:32 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.5 2006-03-03 16:01:21 mneedham Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -107,6 +107,12 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
 
   // neighbour sum
   plot(aCluster->neighbourSum(),"nSum", -16.5, 16.5, 33);
+  plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum", -1.02, 1.02, 51);
+
+  if (aCluster->size() < 3){
+    plot(aCluster->neighbourSum(),"nSum2", -16.5, 16.5, 33);
+    plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum2", -1.02, 1.02, 51);
+  }
 
   // histogram by station
   const int iStation = aCluster->channelID().station();

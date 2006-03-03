@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-03-03 M Needha
+ - bug fixes + minor changes
+
 ! 2006-02-28 M Needham
  - Move to new position tool interface
  - Bug fixes in STMCTuner, STClusterResolution, STEffMonitor

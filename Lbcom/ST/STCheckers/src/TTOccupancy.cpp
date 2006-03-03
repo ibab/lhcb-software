@@ -141,7 +141,7 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
       aChan.station() == 1 ? offset = ttSector->column() - 9: offset = ttSector->column() - 10;
     }
   
-    plot(binValue(aChan.strip())+(nstrips*offset),histo, 0., m_hMax, m_nBins);
+    plot(binValue(aChan.strip())+(nstrips*(offset-1)),histo, 0., m_hMax, m_nBins);
 
   } // if above threshold
 

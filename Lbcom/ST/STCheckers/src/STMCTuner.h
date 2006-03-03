@@ -1,4 +1,4 @@
-// $Id: STMCTuner.h,v 1.2 2006-02-28 15:38:58 mneedham Exp $
+// $Id: STMCTuner.h,v 1.3 2006-03-03 16:01:22 mneedham Exp $
 #ifndef _STMCTuner_H
 #define _STMCTuner_H
 
@@ -19,6 +19,7 @@ namespace LHCb{
   class MCParticle;
 };
 
+class IMCParticleSelector;
 class ISTSignalToNoiseTool;
 
 /** @class STMCTuner STMCTuner.h
@@ -64,6 +65,10 @@ private:
 
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
+
+  // selector
+  std::string m_selectorName;
+  IMCParticleSelector* m_selector;
 
 };
 
