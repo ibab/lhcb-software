@@ -7,7 +7,7 @@ L0Muon::Register::Register(int bits, unsigned long pattern) :
     m_bitset(bits,pattern) {m_set = false;}
     
 L0Muon::Register::Register(int bits) :
-    m_bitset(bits) {m_set = false;}   
+    m_bitset(bits) {m_set = false;m_bitset.reset();}   
     
 L0Muon::Register::~Register() {}    
 
@@ -30,21 +30,18 @@ void L0Muon::Register::set (unsigned long pattern) {
   m_set=true;
 }
 
-void L0Muon::Register::set (boost::dynamic_bitset<> bitpattern,int nbits, int shift) { 
+void L0Muon::Register::set (boost::dynamic_bitset<> bitpattern, unsigned int nbits, unsigned int shift) { 
   
-  //bitpattern.resize(nbits,false);
-  unsigned int newSize = (int)m_bitset.size() > nbits+shift ?  (int)m_bitset.size() : nbits+shift ;
-  bitpattern.resize(newSize,false);
-  if (m_bitset.size()<newSize) {
-    m_bitset.resize(newSize,false);  
+  if (m_bitset.size()<nbits+shift)  m_bitset.resize(nbits+shift,false);  
+  
+  for (boost::dynamic_bitset<>::size_type it =0; it< nbits;it++){
+    m_bitset[it+shift]=bitpattern[it];
   }
-
-  m_bitset|=bitpattern<<shift;
 
   m_set=true;
 }
 
-void L0Muon::Register::set (unsigned long pattern,int nbits, int shift) { 
+void L0Muon::Register::set (unsigned long pattern,unsigned int nbits, unsigned int shift) { 
   boost::dynamic_bitset<> bitpattern = boost::dynamic_bitset<>(nbits,pattern); 
   set(bitpattern,nbits,shift);
 }
@@ -82,6 +79,7 @@ void L0Muon::Register::print_words(FILE *file, int nwords_per_line){
 
 
 }
+
   
 std::string L0Muon::Register::toXML(std::string tab){
 

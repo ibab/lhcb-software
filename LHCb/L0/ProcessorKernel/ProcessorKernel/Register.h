@@ -1,4 +1,4 @@
-// $Id: Register.h,v 1.5 2006-02-10 12:25:45 jucogan Exp $
+// $Id: Register.h,v 1.6 2006-03-03 14:09:45 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTER_H
 #define PROCESSORKERNEL_REGISTER_H     1
@@ -63,17 +63,23 @@ namespace L0Muon {
     void set (unsigned long pattern);
     
     /// Set the nbits wide pattern at the position shift
-    void set (unsigned long pattern,int nbits, int shift);
-    void set (boost::dynamic_bitset<> pattern,int nbits, int shift);
+    void set (unsigned long pattern,unsigned int nbits,unsigned  int shift);
+    void set (boost::dynamic_bitset<> pattern,unsigned int nbits, unsigned int shift);
 
     /// Return the number of bits
     int size() { return m_bitset.size(); }
+  
+    /// Resize the bit set
+    void resize(int n) { m_bitset.resize(n); }
   
     /// Test if the register is empty
     bool empty() { return m_bitset.none(); }
 
     /// Reset the bitset
     void reset() {m_bitset.reset(); m_set=false; }
+
+    /// Clear the bitset
+    void clear() {m_bitset.clear(); m_set=false; }
 
     /** Return true if a bit is set
 
