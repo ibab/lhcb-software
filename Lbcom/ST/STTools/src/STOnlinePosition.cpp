@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.5 2006-02-28 15:37:05 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.6 2006-03-03 15:55:36 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,6 +29,7 @@ STOnlinePosition::STOnlinePosition(const std::string& type, const std::string& n
   m_ErrorVec[2] = 0.25;
 
   this->declareProperty("errorVec",m_ErrorVec);
+  declareProperty("nBits",m_nBits = 2);
 
   declareInterface<ISTClusterPosition>(this);
 }
@@ -39,7 +40,13 @@ STOnlinePosition::~STOnlinePosition() {
 
 ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aCluster) const{
   double stripNum = STFun::position(aCluster->stripValues());
-  double interStripPos = stripNum - floor(stripNum);
+  double interStripPos = stripFraction(stripNum - floor(stripNum));
+
+  if (fabs(interStripPos -1 ) < 1e-3) { 
+    stripNum +=1; 
+    interStripPos = 0;
+  }
+
   LHCb::STChannelID firstChan = aCluster->firstChannel();
   LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
                                     firstChan.station(),firstChan.layer(),
@@ -57,13 +64,17 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aClus
 ISTClusterPosition::Info STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
   
   double stripNum = STFun::position(digits);
-  double interStripPos = stripNum - floor(stripNum);
+  double interStripPos = stripFraction(stripNum - floor(stripNum));
   LHCb::STChannelID firstChan = digits.front()->channelID();
   LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
                                     firstChan.station(),firstChan.layer(),
                                     firstChan.detRegion(),firstChan.sector(), 
                                     (unsigned int)stripNum);
  
+  if (fabs(interStripPos -1 ) < 1e-3) { 
+    stripNum +=1; 
+    interStripPos = 0;
+  }
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
   theInfo.fractionalPosition = interStripPos;
@@ -79,6 +90,6 @@ double STOnlinePosition::error(const unsigned int nStrips) const{
 }
 
 double STOnlinePosition::stripFraction(const double interStripPos) const{
-  return (LHCbMath::round(4*interStripPos))/4.0;
+  return (LHCbMath::round((1<<m_nBits)*interStripPos))/double(1<<m_nBits);
 }
 

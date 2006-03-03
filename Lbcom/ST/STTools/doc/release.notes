@@ -2,6 +2,9 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2006-03-03 M Needham
+ - Make sure online strip fraction is in range 0- 0.75
+
 ! 2006-02-28 - M Needham
  - Move to new position tool interface
 

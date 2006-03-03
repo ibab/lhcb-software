@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.5 2006-02-28 15:37:05 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.6 2006-03-03 15:55:36 mneedham Exp $
 
  
 // Kernel
@@ -29,7 +29,7 @@ STOfflinePosition::STOfflinePosition(const std::string& type, const std::string&
   this->declareProperty("errorVec",m_ErrorVec);
 
   this->declareProperty("sharingCorr",m_sharingCorr = 112.);
-  this->declareProperty("maxNtoCorr",m_MaxNtoCorr = 4);
+  this->declareProperty("maxNtoCorr",m_MaxNtoCorr = 3);
 
   declareInterface<ISTClusterPosition>(this);
 }
@@ -80,14 +80,12 @@ double STOfflinePosition::error(const unsigned int nStrips) const{
 }
 
 double STOfflinePosition::stripFraction(const double stripNum,
-                                       const unsigned int clusterSize) const{
+                                        const unsigned int clusterSize) const{
 
   // 'S- shape correction' for non-linear charge sharing
-  double interStripPos = stripNum - floor(stripNum);
-  const unsigned int nDigits = clusterSize;
-  double corStripPos = interStripPos;
-  if ((nDigits>1)&&(nDigits<(unsigned)m_MaxNtoCorr)) {
-     corStripPos = this->chargeSharingCorr(interStripPos);
+  double corStripPos = stripNum - floor(stripNum);
+  if ((clusterSize>1)&&(clusterSize<(unsigned)m_MaxNtoCorr)) {
+     corStripPos = this->chargeSharingCorr(corStripPos);
   }
 
   return corStripPos;
