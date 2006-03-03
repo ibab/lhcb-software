@@ -11,6 +11,8 @@
 
 #include "GaudiKernel/StatusCode.h"
 #include "Event/MCVeloFE.h"
+#include "Event/MCHit.h"
+#include "Event/VeloDigit.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include <map>
 
@@ -18,21 +20,33 @@ namespace LHCb
 {
   class MCHit;
   class InternalVeloCluster;
+  class VeloDigit;
 }
 
 namespace VeloTruthTool{
 
-  /// make link between VeloCluster and MCVeloHit
+  /// make link between VeloCluster and MCHit
   StatusCode associateToTruth(
              const LHCb::InternalVeloCluster* aCluster,
              std::map<LHCb::MCHit*,double>& hitMap,
              SmartDataPtr<LHCb::MCVeloFEs> mcfes);
 
-  /// make link between VeloCluster and MCVeloHit
+  /// make link between VeloCluster and MCHit
   StatusCode associateToTruth(
              const LHCb::InternalVeloCluster* aCluster,
              std::map<LHCb::MCHit*,double>& hitMap,
              LHCb::MCVeloFEs* mcfes);
 
+  /// make link between VeloDigits and MCHits
+  StatusCode associateToTruth(
+             const LHCb::VeloDigit* aDigit,
+             std::map<LHCb::MCHit*, double>& hitMap,
+             SmartDataPtr<LHCb::MCVeloFEs> mcfes);
+  //
+  StatusCode associateToTruth(
+             const LHCb::VeloDigit* aDigit,
+             std::map<LHCb::MCHit*, double>& hitMap,
+             LHCb::MCVeloFEs* mcfes);
+  
 }; // VELOTRUTHTOOL_H
 #endif

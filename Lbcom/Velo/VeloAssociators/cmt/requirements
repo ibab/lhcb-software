@@ -1,5 +1,5 @@
 # Created    : 21/05/02
-# Maintainer : Chris Parkes
+# Maintainer : Chris Parkes & Tomasz Szumlak
 #
 package           VeloAssociators
 version           v2r0
@@ -8,6 +8,7 @@ version           v2r0
 #============================================================================
 branches src cmt doc
 include_path none
+include_dirs $(VELOASSOCIATORSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================

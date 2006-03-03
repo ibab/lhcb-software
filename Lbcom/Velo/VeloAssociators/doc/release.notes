@@ -2,6 +2,11 @@
 ! Responsible : Chris Parkes
 
 !==================== VeloAssociators v2r0 2006-02-15 ===================
+! 2006-03-03 - Tomasz Szumlak
+ - VeloAssociators directory added with a new tool interface
+ - new linker VeloDigits2MCHitLinker added
+ - new tool VeloCluster2VeloDigitTool added
+
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent
 
