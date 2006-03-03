@@ -43,7 +43,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   size_t rsize;
   std::string amsname, target;
   char node[20], source[80];
-  int wsize, length=256, loop=100000, substatus;
+  int  length=256, loop=100000, substatus;
   char wmessage [SIZE], rmessage [SIZE];
   unsigned int facility;
 
@@ -70,9 +70,9 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   amsc_get_node( node );
 
   // Receive some messages and bounce them
+  int  wsize =  length;
   if (fanout)  {
-    srand (length);
-    wsize =  length;
+    srand(length);
     fill (wmessage, wsize);
     ams_status = amsc_send_message (wmessage, wsize, source, 0, 0);
     if (ams_status != AMS_SUCCESS)

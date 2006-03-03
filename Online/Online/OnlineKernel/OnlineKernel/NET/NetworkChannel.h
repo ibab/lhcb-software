@@ -21,6 +21,9 @@ public:
   typedef __NetworkPort__    Port;
   /// Address  == __NetworkAddress__;
   typedef __NetworkAddress__ Address;
+
+  enum { READ=1<<1, WRITE=1<<2, EXCEPT=1<<3 };
+
 protected:
   //@Man: protected member variables
   /// Boolean indicating that the timer fired and the I/O go cancelled
@@ -76,6 +79,8 @@ public:
   virtual int _Send   (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
   /// Abstract method: receive data from network.
   virtual int _Recv   (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0) = 0;
+  ///  Set Select TMO on receive.
+  virtual int selectTmo(int flags, int tmo);
 };
 #endif  /* __cplusplus           */
 #endif   /* __NetworkChannel_H__  */

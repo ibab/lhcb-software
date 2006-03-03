@@ -91,10 +91,12 @@ namespace {
   protected:
     lib_rtl_thread_t m_thread;
     __NetworkPort__  m_port;
+    bool             m_dirty;
   public:
     static int threadCall(void* param);
     static int consoleCall(void* param);
     EntryMap(__NetworkPort__ p);
+    void setDirty() { m_dirty = true; }
     int handle();
     int run();
   };
@@ -134,6 +136,7 @@ namespace {
       fd_set read_fds, exc_fds;
       FD_ZERO(&exc_fds);
       FD_ZERO(&read_fds);
+      m_dirty = false;
       for(iterator i=begin(); i != end(); ++i)  {
         if ( (*i).second->armed )  {
           __NetworkChannel__ fd = (*i).first;
@@ -145,18 +148,26 @@ namespace {
         }
       }
       if ( nsock > 0 )  {
-        timeval tv = { 0, 1000 };
-        int res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
-        if ( res == 0 )  {
-          continue;
-        }
-        else if (res < 0)  {
-          return res;
-        }
+        timeval tv = { 0, 100 };
+        int res = 0;
+	//        while ( res == 0 && !m_dirty ) {
+	  res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
+          if ( res == 0 )  {
+            continue;
+          }
+          else if (res < 0)  {
+            return res;
+          }
+	  // }
+	  // if ( res == 0 && m_dirty ) {
+	  // continue;
+	  //}
       }
-      else  {
-        timeval tv = { 0, 1000 };
-        ::select(nsock, 0, 0, 0, &tv);
+      else  {        
+        timeval tv = { 0, 100 };
+        //while(!m_dirty) {
+          ::select(nsock, 0, 0, 0, &tv);
+	//}
         continue;
       }
       for ( int j=0; j<nsock; ++j )  {
@@ -187,7 +198,7 @@ namespace {
     }
   }
 
-  EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p) {
+  EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p), m_dirty(false) {
   }
 
   int EntryMap::run()  {
@@ -251,6 +262,7 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     //printf("Install port watcher for %d\n",m_port);
     portMap()[m_port] = em = new EntryMap(m_port);
   }
+  em->setDirty();
   PortEntry* e = (*em)[c];
   if ( !e ) {
     //printf("Install channel watcher for %d\n",c);
@@ -270,6 +282,7 @@ int IOPortManager::remove(NetworkChannel::Channel c)  {
     if ( i != em->end() )  {
       if ( (*i).second ) delete (*i).second;
       em->erase(i);
+      em->setDirty();
     }
   }
   return 1;

@@ -225,6 +225,10 @@ int lib_rtl_signal_message(int,int,int) {
 int lib_rtl_start_debugger()    {
 #ifdef _WIN32
   _asm int 3
+#else
+  char txt[128];
+  sprintf(txt,"ddd --pid=%d",lib_rtl_pid()); 
+  system(txt);
 #endif
   return 1;
 }
@@ -287,11 +291,12 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   process[len]='\0';
   return 1;
 #else
-  char *tmp, buff[32];
-  tmp = (char*)::getenv("UTGID");
-  if ( !tmp ) tmp = (char*)::getenv("PROCESSNAME");
-  if ( !tmp ) tmp = (char*)::getenv("PROCESS");
-  if ( !tmp ) sprintf(tmp=buff,"P%06d",lib_rtl_pid());
+  const char *tmp;
+  char buff[32];
+  tmp = ::getenv("UTGID");
+  if ( !tmp ) tmp = ::getenv("PROCESSNAME");
+  if ( !tmp ) tmp = ::getenv("PROCESS");
+  if ( !tmp ) { sprintf(buff,"P%06d",lib_rtl_pid()); tmp=buff;}
   ::strncpy(process, tmp != 0 ? tmp : tmp="UNKNOWN", len);
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
 #endif

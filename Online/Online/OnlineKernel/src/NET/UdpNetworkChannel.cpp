@@ -63,15 +63,15 @@ int UdpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int UdpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
-  int status;
   socklen_t siz = sizeof(Address);
-  StartTimer(tmo);
-  if ( addr == 0 )
-    status = ::recv(m_socket, (char*)buff, len, flags);  
-  else
-    status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &siz);  
-  StopTimer();
-  m_errno = (status < 0 || status != len) ? ::lib_rtl_get_error() : 0;
+  int status = selectTmo(READ|EXCEPT,tmo);
+  if ( status == 1 ) {
+    if ( addr == 0 )
+      status = ::recv(m_socket, (char*)buff, len, flags);  
+    else
+      status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &siz);  
+    m_errno = (status < 0 || status != len) ? ::lib_rtl_get_error() : 0;
+  }
   return status;
 }
 

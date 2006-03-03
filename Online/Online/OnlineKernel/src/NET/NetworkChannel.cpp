@@ -41,6 +41,34 @@ NetworkChannel::~NetworkChannel()  {
 const char* NetworkChannel::_ErrMsg()  {
   return lib_rtl_error_message(m_errno);
 }
+
+// ----------------------------------------------------------------------------
+//  Set Select TMO on receive.
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int NetworkChannel::selectTmo(int flags, int tmo) {
+  if ( tmo ) {
+    timeval tv = { tmo, 0 };
+    fd_set write_fds, read_fds, exc_fds;
+    fd_set *w_fds = flags&WRITE  ? &write_fds : 0;
+    fd_set *r_fds = flags&READ   ? &read_fds  : 0;
+    fd_set *e_fds = flags&EXCEPT ? &exc_fds   : 0;
+    if ( w_fds ) { FD_ZERO(w_fds); FD_SET(m_socket,w_fds); }
+    if ( r_fds ) { FD_ZERO(r_fds); FD_SET(m_socket,r_fds); }
+    if ( e_fds ) { FD_ZERO(e_fds); FD_SET(m_socket,e_fds); }
+    int res = select(m_socket+1, r_fds, w_fds, e_fds, &tv);
+    if ( res < 0 ) {
+      m_errno = ::lib_rtl_get_error();
+      return -1;
+    }
+    else if ( res == 0 ) {
+      m_bCancel = true;
+      return -1;
+    }
+  }
+  return 1;
+}
+
 // ----------------------------------------------------------------------------
 //  AST called on timeout for receiving data on socket
 //                                      M.Frank

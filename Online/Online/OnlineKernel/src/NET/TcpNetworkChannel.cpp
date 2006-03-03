@@ -131,15 +131,15 @@ int TcpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TcpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
-  int status;
   socklen_t addr_len = sizeof(Address);
-  StartTimer(tmo);
-  if ( addr == 0 )
-    status = ::recv(m_socket, (char*)buff, len, flags );
-  else
-    status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &addr_len);
-  StopTimer();
-  if ( !m_bCancel ) m_errno = (status <= 0) ? TCP_errno : 0;
+  int status = selectTmo(READ|EXCEPT,tmo);
+  if ( status == 1 ) {
+    if ( addr == 0 )
+      status = ::recv(m_socket, (char*)buff, len, flags );
+    else
+      status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &addr_len);
+    if ( !m_bCancel ) m_errno = (status <= 0) ? TCP_errno : 0;
+  }
   return status;
 }
 // ----------------------------------------------------------------------------

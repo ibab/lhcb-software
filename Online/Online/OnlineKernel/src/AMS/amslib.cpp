@@ -83,8 +83,8 @@ struct amsentry_t : public qentry_t {
     struct        sockaddr_in address;
     amsentry_t(const char* dest=0, const char* me=0)  
     : chan(-1), refCount(0), del_pending(0), pending(0), msg_ptr(0), sndBuffSize(0)    {
-      if ( dest ) strcpy (name,dest);
-      if ( me   ) strcpy (myName,me);
+      if ( dest ) strcpy (name,dest ? dest : "");
+      if ( me   ) strcpy (myName,me ? me : "");
     }
     int release()  {
       if (refCount == 0) delete this;
@@ -333,6 +333,7 @@ static int _amsc_tcp_open (amsentry_t *db)   {
       return lib_rtl_get_error();
     }
     lib_rtl_disable_intercept();
+    _amsc_printf("Task: %s has port: %d - %d\n",db->name, db->address.sin_port, ntohl(db->address.sin_port));
     status = connect (db->chan, (struct sockaddr*)&db->address,sizeof(struct sockaddr_in));
     lib_rtl_enable_intercept();
     if (status == -1)  {
@@ -381,10 +382,12 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)    {
       WITHOUT_INTERCEPT(sent_now = ::send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-        printf("AMS: Send error errno=%d\n",errno);
+        lib_rtl_signal_message(LIB_RTL_OS,"AMS: Send error [%s] size:%d/%d/%d errno=%d",
+                               db->name,siz,already_sent,tosend,errno);
+        // lib_rtl_start_debugger();
         return errno;
       }
-      already_sent    += sent_now;
+      already_sent += sent_now;
       sent += sent_now;
       tosend -= sent_now;
     }
@@ -396,7 +399,9 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)  {
       WITHOUT_INTERCEPT(sent_now = send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-        printf("AMS: Send error errno=%d\n",errno);
+        lib_rtl_signal_message(LIB_RTL_OS,"AMS: Send error [%s] size:%d/%d/%d errno=%d",
+                               db->name,siz,already_sent,tosend,errno);
+        // lib_rtl_start_debugger();
         return errno;
       }
       already_sent += sent_now;
@@ -406,6 +411,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
   }
   return AMS_SUCCESS;
 }
+
 #if 0
 static int _amsc_tcp_recv (amsentry_t *db, void *buff, size_t *sizptr, u_int flag)  {
   WITHOUT_INTERCEPT(int got_now = recv (db->chan, (char*)buff, *sizptr, flag));
@@ -433,7 +439,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   while (got != siz)  {
     WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
     if (got_now <= 0)    {
-      //printf("AMS: Receive error errno=%d\n",errno);
+      _amsc_printf("AMS: Receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
         case ESOCK_NOTCONN:
@@ -452,7 +458,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
           if (++count == MAX_TCP_ERRORS)
             return AMS_NODATA;
           else {
-            //printf("AMS: Receive error (ignored) errno=%d\n",errno);
+            _amsc_printf("AMS: Receive error (ignored) errno=%d\n",errno);
             got_now = 0;
           }
       }
@@ -701,34 +707,32 @@ static amsentry_t *_amsc_find_connection (char *dest, char *from, CONNECTION_FIN
 
 static int _amsc_peek_action (unsigned int /* fac */, void* param)    {
   RTL::Lock lock(_ams.lockid);
-  amsentry_t *e = (amsentry_t*)param;
-  amsqueue_t* m;
+  amsentry_t* e = (amsentry_t*)param;
+  amsqueue_t* m = e ? e->pending : 0;
   if ( e->pending == 0 )  {  // brand new message: get its length (net_to_hosted)
     int length, status;
     status  = _amsc_tcp_recv_exact(e,&length,sizeof(int),0);
     length  = ntohl (length);
+    _amsc_printf("amsc_peek_action: %d\n",status);
     switch (status)  {
     case AMS_SUCCESS:        // allocate memory for message
       m = new amsqueue_t(length);
       e->received = sizeof(int);
       break;
     case AMS_CONNCLOSED:
-      _amsc_send_shutdown_message (e);
+      _amsc_send_shutdown_message(e);
       return AMS_SUCCESS;
     case AMS_NODATA:
       return AMS_SUCCESS;
     default:
-      _amsc_send_shutdown_message (e);
+      _amsc_send_shutdown_message(e);
       return AMS_SUCCESS;
     }
-  }
-  else  {
-    m = e->pending;
   }
   // read some more data
   e->msg_ptr      = m;
   e->current_size = m->size;
-  e->refCount    += 1;
+  e->refCount++;
   return _amsc_receive_rearm(e);
 }
 
@@ -865,6 +869,8 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
   size_t length = m->size - e->received;
   int status = _amsc_tcp_recv_exact(e, (char*)m->message + e->received, length, 0);
   //int status = _amsc_tcp_recv (e, (char*)m->message + e->received, &length, 0);
+  _amsc_printf("Receive action: recv_exect:%d\n",status);
+
   switch (status)  {
   case AMS_SUCCESS:
     e->pending = m;
@@ -895,7 +901,7 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
     e->received = 0;
     _amsc_disconnect_from_task (e);
   }
-  if (m->message->msg_type == AMS_MSG_DATA)  {
+  else if (m->message->msg_type == AMS_MSG_DATA)  {
     m->message->size = m->size-sizeof(int);
     e->pending  = 0;
     e->received = 0;
@@ -921,9 +927,9 @@ static int _amsc_receive_rearm (amsentry_t* e)  {
   if (size > CHOP_SIZE)    {
     size = CHOP_SIZE;
   }
-  //IOPortManager(_ams.me.address.sin_port).add(1, e->chan, _amsc_receive_ast, e);
-  //return WT_SUCCESS;
-  return _amsc_receive_ast(e);
+  IOPortManager(_ams.me.address.sin_port).add(1, e->chan, _amsc_receive_ast, e);
+  return WT_SUCCESS;
+  //return _amsc_receive_ast(e);
 }
 
 static void _amsc_send_close_message(amsentry_t *e)  {
@@ -951,7 +957,7 @@ static int _amsc_send_message (const void* buff, size_t size, const char* dest, 
   else  {
     ::strcpy (full_from, _ams.me.name);
   }
-  _amsc_printf("Sending message [%ld bytes] to: %s [%s]\n", size, full_dest, full_from);
+  _amsc_printf("Sending message [%ld bytes] to: %s [%s]\n", long(size), full_dest, full_from);
   do   {
     size_t len = size+sizeof (amsheader_t);
     amsentry_t *e = _amsc_find_connection(full_dest,full_from,CREATE_IF);
