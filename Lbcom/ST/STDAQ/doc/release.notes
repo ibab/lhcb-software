@@ -4,6 +4,8 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2006-03-03 M Needham
+  - bug fix in decoding 
 
 ! 2006-02-24 M Needham
  - Update to use Si decoding tools
