@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.3 2006-03-03 19:26:34 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.4 2006-03-03 19:44:48 mneedham Exp $
 
 #include <algorithm>
 
@@ -146,9 +146,9 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   ++iterADC;
 
   // make some consistancy checks
-  unsigned int pseudoSize = GSL_MIN(adcValues.size(),3u);
+  unsigned int pseudoSize = GSL_MIN(adcValues.size()-1u,3u);
   if ((pseudoSize != aWord.pseudoSize())) {
-    warning() << "adc values do not match !" << std::endl;
+    warning() << "adc values do not match ! " << adcValues.size() << " " <<  aWord.pseudoSize()<< << "chan " << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
     return StatusCode::FAILURE;
   }
 
