@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.4 2006-02-09 16:41:32 cattanem Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.5 2006-03-03 17:01:11 mneedham Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -55,8 +55,11 @@ StatusCode STCluster2MCParticleLinker::initialize() {
     return Error("Failed to initialize", sc);
   }
 
+  m_asctLocation= LHCb::STDigitLocation::TTDigits + "2MCHits";
+
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
+  STDetSwitch::flip(m_detType,m_asctLocation);
 
   return StatusCode::SUCCESS;
 
@@ -138,7 +141,7 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const LHCb::STCluster* a
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  AsctTool associator(evtSvc(), m_inputData);
+  AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
 

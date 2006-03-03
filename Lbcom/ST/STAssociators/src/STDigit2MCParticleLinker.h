@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.h,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STDigit2MCParticleLinker.h,v 1.2 2006-03-03 17:01:11 mneedham Exp $
 #ifndef STDigit2MCPARTICLELINKER_H
 #define STDigit2MCPARTICLELINKER_H 1
 
@@ -52,6 +52,7 @@ private:
   std::string m_hitLocation;
   std::string m_outputData;
   std::string m_inputData;
+  
   std::string m_detType;
   bool m_addSpillOverHits;
   double m_minFrac;  

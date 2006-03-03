@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.2 2006-02-09 16:41:32 cattanem Exp $
+// $Id: STDigit2MCParticleLinker.cpp,v 1.3 2006-03-03 17:01:11 mneedham Exp $
 // Include files 
 
 #include "Event/STDigit.h"
@@ -54,6 +54,7 @@ StatusCode STDigit2MCParticleLinker::initialize() {
     return Error("Failed to initialize", sc);
   }
 
+
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
 
@@ -94,6 +95,7 @@ StatusCode STDigit2MCParticleLinker::execute() {
         std::vector<partPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           myLink.link(*iterDigit,iterPair->first,iterPair->second);
+	  // std::cout << "link it" << std::endl;
           ++iterPair;
         } //iterPair
       }

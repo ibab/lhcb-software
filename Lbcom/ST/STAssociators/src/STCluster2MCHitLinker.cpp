@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.6 2006-02-10 15:27:00 cattanem Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.7 2006-03-03 17:01:11 mneedham Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -35,7 +35,7 @@ STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
   // constructer
   declareProperty("OutputData", m_outputData = LHCb::STClusterLocation::TTClusters + "2MCHits" );
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.3);
+  declareProperty("minfrac", m_minFrac = 0.1);
   declareProperty("oneRef",m_oneRef = false);
   declareProperty("digitLocation", m_digitLocation = LHCb::STDigitLocation::TTDigits );
   declareProperty("detType", m_detType = "TT");
@@ -103,7 +103,8 @@ StatusCode STCluster2MCHitLinker::execute() {
         std::vector<hitPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){ 
           myLink.link(*iterClus,iterPair->first,iterPair->second);
-          ++iterPair;
+	  //std::cout << "Added links " << std::endl;
+	  ++iterPair;
         } //iterPair
       }
       else{
@@ -159,13 +160,11 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const LHCb::STCluster* aClust
   std::vector<LHCb::STChannelID> chanVector = aCluster->channels();
   std::vector<LHCb::STChannelID>::iterator iterChan = chanVector.begin();
   while (iterChan != chanVector.end()){
-
     LHCb::STDigit* aDigit = m_digitCont->object(*iterChan);
     if (aDigit !=0){
       Range hitsCont = aTable->relations(aDigit);
       iterator iterHit = hitsCont.begin();   
       for ( ; iterHit != hitsCont.end(); ++iterHit){
-
         const LHCb::MCHit* aHit = iterHit->to();
         hitMap[aHit] += iterHit->weight();
         foundCharge += iterHit->weight();

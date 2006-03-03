@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.3 2006-02-09 16:13:35 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.4 2006-03-03 17:01:11 mneedham Exp $
 #ifndef STCLUSTER2MCPARTICLEALG_H
 #define STCLUSTER2MCPARTICLEALG_H 1
 
@@ -55,6 +55,7 @@ private:
   std::string m_inputData;
   std::string m_outputData;
   std::string m_detType;
+  std::string m_asctLocation;
 
 
   bool m_addSpillOverHits;
