@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.2 2006-02-02 12:38:00 ebos Exp $
+// $Id: IdealStateCreator.h,v 1.3 2006-03-03 14:18:25 ebos Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -7,22 +7,16 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// from Event
-#include "Event/MCParticle.h"
-#include "Event/MCHit.h"
-//#include "Event/MCVeloHit.h"
-
-// from Det
-//#include "VeloDet/DeVelo.h"
-
-// from LHCbKernel
-#include "Relations/IAssociator.h" 
-
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/IIdealStateCreator.h"
 
-class State;
+namespace LHCb
+{ 
+  class State;
+  class MCParticle;
+  class MCHit;
+}
 
 using namespace LHCb;
 
@@ -51,9 +45,6 @@ using namespace LHCb;
 class IdealStateCreator: public GaudiTool,
                          virtual public IIdealStateCreator {
 public:
-  /// Typedefs
-  typedef IAssociator<MCParticle, MCHit>     MCHitAsct;
-//  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
 
   /// Standard constructor
   IdealStateCreator( const std::string& type,
@@ -75,7 +66,7 @@ public:
    */
   virtual StatusCode createState( const MCParticle* mcPart,
                                   double zRec,
-                                  LHCb::State*& pState ) const;
+                                  State*& pState ) const;
 
   /** This method creates a state at the origin vertex from a MCParticle
    *  using the entry/exit points of the MCHits.
@@ -84,26 +75,16 @@ public:
    *  @param  pState The pointer to the State which is created.
    */
   virtual StatusCode createStateVertex( const MCParticle* mcPart,
-                                        LHCb::State*& pState ) const;
+                                        State*& pState ) const;
 
 private:
   
   /// Determine Q/P for a MCParticle
   double qOverP( const MCParticle* mcPart ) const;
 
-//  DeVelo* m_velo;                 ///< Velo detector information
-
-//  MCVeloHitAsct* m_p2VeloHitAsct; ///< MCParticle to Velo MCHit Associator
-  MCHitAsct*     m_p2VeloHitAsct; ///< MCParticle to Velo MCHit Associator
-  MCHitAsct*     m_p2ITHitAsct;   ///< MCParticle to IT MCHit Associator
-  MCHitAsct*     m_p2OTHitAsct;   ///< MCParticle to OT MCHit Associator
-
   ITrackExtrapolator* m_extrapolator; ///< Extrapolator Tool
 
   // Job options:
-  std::string m_p2VeloHitAsctName; ///< Name of MCParticle to Velo MCHit Asc.
-  std::string m_p2ITHitAsctName;   ///< Name of MCParticle to IT MCHit Asc.
-  std::string m_p2OTHitAsctName;   ///< Name of MCParticle to OT MCHit Asc.
   std::string m_extrapolatorName;  ///< Name of track state extrapolator.
   double m_eX2;                    ///< Error^2 on x
   double m_eY2;                    ///< Error^2 on y

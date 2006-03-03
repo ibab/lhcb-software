@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.2 2006-02-02 12:38:12 ebos Exp $
+// $Id: TrackAcceptance.h,v 1.3 2006-03-03 14:18:25 ebos Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -7,21 +7,19 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// LHCbKernel
-#include "Relations/IAssociator.h" 
-
-// Event
-#include "Event/MCParticle.h"
-#include "Event/MCHit.h"
-//#include "Event/MCVeloHit.h"
-
-// Associators
+// Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackReconstructible.h"
 
 // Det
 #include "VeloDet/DeVelo.h"
 #include "STDet/DeSTStation.h"
 #include "OTDet/DeOTStation.h"
+
+namespace LHCb
+{
+  class MCParticle;
+  class MCHit;
+}
 
 using namespace LHCb;
 
@@ -52,8 +50,7 @@ class TrackAcceptance: public GaudiTool,
 public:
 
   /// Typedefs
-  typedef IAssociator<MCParticle, MCHit> MCHitAsct;
-  //  typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
+  //  typedef IAssociator<MCParticle, MCHit> MCHitAsct;
 
   /// Constructor
   TrackAcceptance( const std::string& type,
@@ -107,22 +104,14 @@ private:
   DeOTStation* m_OT2Station;        ///< Pointer to OT Station 2
   DeOTStation* m_OT3Station;        ///< Pointer to OT Station 3
 
-  // associators
-  //  MCVeloHitAsct* m_p2VeloHitAsct;   ///< Pointer to MCParticle 2 VeloMCHit Asct.
-  MCHitAsct* m_p2VeloHitAsct;       ///< Pointer to MCParticle 2 VeloMCHit Asct.
-  MCHitAsct* m_p2ITHitAsct;         ///< Pointer to MCParticle 2 IT MCHit Asct.
-  MCHitAsct* m_p2OTHitAsct;         ///< Pointer to MCParticle 2 OT MCHit Asct.
-
   // job options
-  std::string m_p2VeloHitAsctName; ///< name of the MCParticle 2 VeloMCHit Asct.
-  std::string m_p2ITHitAsctName;   ///< name of the MCParticle 2 IT MCHit Asct.
-  std::string m_p2OTHitAsctName;   ///< name of the MCParticle 2 OT MCHit Asct.
   int m_minNVeloRHits;             ///< Minimum number of r velo hits 
   int m_minNVeloPhiHits;           ///< Minimum number of phi velo hits
   int m_minNTTHits;                ///< Minimum number of TT hits
   int m_minNT1Hits;                ///< Minimum number of T1 hits
   int m_minNT2Hits;                ///< Minimum number of T2 hits
   int m_minNT3Hits;                ///< Minimum number of T3 hits
+
 };
 
 #endif // TRACKMCTOOLS_TRACKACCEPTANCE_H
