@@ -1,4 +1,4 @@
-// $Id: MuonKernelWrapper.cpp,v 1.2 2005-02-21 09:41:54 atsareg Exp $
+// $Id: MuonKernelWrapper.cpp,v 1.3 2006-03-03 13:32:58 jucogan Exp $
 // Include files
 
 #include <iostream>
@@ -16,10 +16,10 @@
 #include "boost/python/str.hpp"
 #include "boost/python/tuple.hpp"
 
-#include "MuonKernel/MuonLayout.h"
+#include "Kernel/MuonTileID.h"
+#include "Kernel/MuonLayout.h"
 #include "MuonKernel/MuonStationLayout.h"
 #include "MuonKernel/MuonSystemLayout.h"
-#include "MuonKernel/MuonTileID.h"
 
 #include "STLContainerWrapper.h"
 
@@ -38,12 +38,12 @@ using namespace boost::python;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-long hash_MuonTileID(const MuonTileID & m) {return long(m);}
+long hash_MuonTileID(const LHCb::MuonTileID & m) {return long(m);}
 
 /** 
     Return a string with the name of the MuonTileID: R321 
 */
-boost::python::str compactName_MuonTileID(const MuonTileID & m) {
+boost::python::str compactName_MuonTileID(const LHCb::MuonTileID & m) {
   return boost::python::str(
          "R%s%s%s" % make_tuple(m.region()+1, m.nX(), m.nY()));
 }
@@ -51,7 +51,7 @@ boost::python::str compactName_MuonTileID(const MuonTileID & m) {
 /** 
     Return a string with the name of the MuonTileID: [(2,2),M1,Q1,R3,2,1] 
 */
-boost::python::str fullName_MuonTileID(const MuonTileID & m) {
+boost::python::str fullName_MuonTileID(const LHCb::MuonTileID & m) {
   return boost::python::str(
          "[(%s,%s),M%s,R%s,Q%s,%s,%s]" % make_tuple(m.layout().xGrid(),
                                                     m.layout().yGrid(),
@@ -65,7 +65,7 @@ boost::python::str fullName_MuonTileID(const MuonTileID & m) {
 /** 
     Return a string with the name of the MuonTileID: (R3, 2, 1) 
 */
-boost::python::str name_MuonTileID(const MuonTileID & m) {
+boost::python::str name_MuonTileID(const LHCb::MuonTileID & m) {
   return boost::python::str(
          "(R%1s,%2s,%2s)" % make_tuple(m.region()+1, m.nX(), m.nY()));
 }
@@ -73,7 +73,7 @@ boost::python::str name_MuonTileID(const MuonTileID & m) {
 /** 
     Return a string with the name of the MuonTileID: (M2,R3,2,1) 
 */
-boost::python::str name2_MuonTileID(const MuonTileID & m) {
+boost::python::str name2_MuonTileID(const LHCb::MuonTileID & m) {
   return boost::python::str("(M%s,R%s,%s,%s)" % make_tuple(m.station()+1,
                                                            m.region()+1, 
                                                            m.nX(), 
@@ -83,7 +83,7 @@ boost::python::str name2_MuonTileID(const MuonTileID & m) {
 /**   
     Return a string with the name of the MuonTileID: [(2,2),1,0,2,2,1] 
 */
-boost::python::str rawName_MuonTileID(const MuonTileID & m) {
+boost::python::str rawName_MuonTileID(const LHCb::MuonTileID & m) {
   return boost::python::str(
          "[(%s,%s),%s,%s,%s,%s,%s]" % make_tuple(m.layout().xGrid(),
                                                  m.layout().yGrid(),
@@ -109,13 +109,13 @@ int equal_layout(const MuonLayout& ml1, const MuonLayout& ml2)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-inline std::ostream& operator<< ( std::ostream& os , std::vector<MuonTileID>& li ) 
+inline std::ostream& operator<< ( std::ostream& os , std::vector<LHCb::MuonTileID>& li ) 
 {
   os << "[";
-  std::vector<MuonTileID>::iterator it;
+  std::vector<LHCb::MuonTileID>::iterator it;
   for( it = li.begin(); it != li.end(); it++)
   {
-    MuonTileID m = *it;
+    LHCb::MuonTileID m = *it;
     os << "[" 
        << m.layout()  << ","
        << "M" << m.station()+1 << ","
@@ -153,35 +153,35 @@ BOOST_PYTHON_MODULE(libMuonKernelW)
     .def("xGrid", &MuonLayout::xGrid)
     .def("yGrid", &MuonLayout::yGrid)
     .def("isDefined", &MuonLayout::isDefined)
-    .def("tiles", (std::vector<MuonTileID> (MuonLayout::*) () const)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonLayout::*) () const)
                   &MuonLayout::tiles )
-    .def("tiles", (std::vector<MuonTileID> (MuonLayout::*) (int) const)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonLayout::*) (int) const)
                   &MuonLayout::tiles )
-    .def("tiles", (std::vector<MuonTileID> (MuonLayout::*) (int,int) const)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonLayout::*) (int,int) const)
                   &MuonLayout::tiles )
-    .def("tiles", (std::vector<MuonTileID> (MuonLayout::*) (const MuonTileID&) 
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonLayout::*) (const LHCb::MuonTileID&) 
                   const) &MuonLayout::tiles )
-    .def("tilesInArea",(std::vector<MuonTileID> (MuonLayout::*) 
-                       (const MuonTileID&,int,int) const)
+    .def("tilesInArea",(std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                       (const LHCb::MuonTileID&,int,int) const)
                        &MuonLayout::tilesInArea )
-    .def("neighbours", (std::vector<MuonTileID> (MuonLayout::*) 
-                       (const MuonTileID&) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                       (const LHCb::MuonTileID&) const)
                        &MuonLayout::neighbours )
-    .def("neighbours", (std::vector<MuonTileID> (MuonLayout::*) 
-                       (const MuonTileID&,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                       (const LHCb::MuonTileID&,int,int) const)
                        &MuonLayout::neighbours )
-    .def("neighbours", (std::vector<MuonTileID> (MuonLayout::*) 
-                       (const MuonTileID&,int,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                       (const LHCb::MuonTileID&,int,int,int) const)
                        &MuonLayout::neighbours )
-    .def("neighboursInArea", (std::vector<MuonTileID> (MuonLayout::*) 
-                             (const MuonTileID&,int,int,int,int) const)
+    .def("neighboursInArea", (std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                             (const LHCb::MuonTileID&,int,int,int,int) const)
                              &MuonLayout::neighboursInArea )
-    .def("contains",  (MuonTileID (MuonLayout::*) (const MuonTileID&) const)
+    .def("contains",  (LHCb::MuonTileID (MuonLayout::*) (const LHCb::MuonTileID&) const)
                       &MuonLayout::contains )
-    .def("tilesInRegion", (std::vector<MuonTileID> (MuonLayout::*) 
-                          (const MuonTileID&,int) const)
+    .def("tilesInRegion", (std::vector<LHCb::MuonTileID> (MuonLayout::*) 
+                          (const LHCb::MuonTileID&,int) const)
                           &MuonLayout::tilesInRegion )
-    .def("isValidID", (bool (MuonLayout::*) (const MuonTileID&) const)
+    .def("isValidID", (bool (MuonLayout::*) (const LHCb::MuonTileID&) const)
                       &MuonLayout::isValidID )
     ; 
 
@@ -205,37 +205,37 @@ BOOST_PYTHON_MODULE(libMuonKernelW)
     .def("xGrid", &MuonStationLayout::xGrid)
     .def("yGrid", &MuonStationLayout::yGrid)
     
-    .def("tiles", (std::vector<MuonTileID> (MuonStationLayout::*) () const)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) () const)
                   &MuonStationLayout::tiles)
-    .def("tiles", (std::vector<MuonTileID> (MuonStationLayout::*) 
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
                   (int) const) &MuonStationLayout::tiles)
-    .def("tiles", (std::vector<MuonTileID> (MuonStationLayout::*) 
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
                   (int, int) const) &MuonStationLayout::tiles)
-    .def("tiles", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                  (const MuonTileID&) const) &MuonStationLayout::tiles)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                  (const LHCb::MuonTileID&) const) &MuonStationLayout::tiles)
                   
-    .def("tilesInArea", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                        (const MuonTileID&,int,int) const) 
+    .def("tilesInArea", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                        (const LHCb::MuonTileID&,int,int) const) 
                         &MuonStationLayout::tilesInArea)
-    .def("neighbours", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                       (const MuonTileID&) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                       (const LHCb::MuonTileID&) const)
                        &MuonStationLayout::neighbours)
-    .def("neighbours", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                       (const MuonTileID&,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                       (const LHCb::MuonTileID&,int,int) const)
                        &MuonStationLayout::neighbours)
-    .def("neighbours", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                       (const MuonTileID&,int,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                       (const LHCb::MuonTileID&,int,int,int) const)
                        &MuonStationLayout::neighbours)
-    .def("neighboursInArea", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                             (const MuonTileID&,int,int,int,int) const)
+    .def("neighboursInArea", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                             (const LHCb::MuonTileID&,int,int,int,int) const)
                              &MuonStationLayout::neighboursInArea)
-    .def("contains", (MuonTileID (MuonStationLayout::*) 
-                     (const MuonTileID&) const)
+    .def("contains", (LHCb::MuonTileID (MuonStationLayout::*) 
+                     (const LHCb::MuonTileID&) const)
                      &MuonStationLayout::contains)
-    .def("tilesInRegion", (std::vector<MuonTileID> (MuonStationLayout::*) 
-                          (const MuonTileID&,int) const)
+    .def("tilesInRegion", (std::vector<LHCb::MuonTileID> (MuonStationLayout::*) 
+                          (const LHCb::MuonTileID&,int) const)
                           &MuonStationLayout::tilesInRegion)
-    .def("isValidID", (bool (MuonStationLayout::*) (const MuonTileID&) const)
+    .def("isValidID", (bool (MuonStationLayout::*) (const LHCb::MuonTileID&) const)
                       &MuonStationLayout::isValidID)
     ;
     
@@ -259,32 +259,32 @@ BOOST_PYTHON_MODULE(libMuonKernelW)
     .def("xGrid", &MuonSystemLayout::xGrid)
     .def("yGrid", &MuonSystemLayout::yGrid)
     
-    .def("tiles", (std::vector<MuonTileID> (MuonSystemLayout::*) () const)
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) () const)
                   &MuonSystemLayout::tiles)
-    .def("tiles", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                  (const MuonTileID&) const) &MuonSystemLayout::tiles)
-    .def("tilesInArea", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                        (const MuonTileID&,int,int) const) 
+    .def("tiles", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                  (const LHCb::MuonTileID&) const) &MuonSystemLayout::tiles)
+    .def("tilesInArea", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                        (const LHCb::MuonTileID&,int,int) const) 
                         &MuonSystemLayout::tilesInArea)
-    .def("neighbours", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                       (const MuonTileID&) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                       (const LHCb::MuonTileID&) const)
                        &MuonSystemLayout::neighbours)
-    .def("neighbours", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                       (const MuonTileID&,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                       (const LHCb::MuonTileID&,int,int) const)
                        &MuonSystemLayout::neighbours)
-    .def("neighbours", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                       (const MuonTileID&,int,int,int) const)
+    .def("neighbours", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                       (const LHCb::MuonTileID&,int,int,int) const)
                        &MuonSystemLayout::neighbours)
-    .def("neighboursInArea", (std::vector<MuonTileID> (MuonSystemLayout::*)
-                             (const MuonTileID&,int,int,int,int) const)
+    .def("neighboursInArea", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*)
+                             (const LHCb::MuonTileID&,int,int,int,int) const)
                              &MuonSystemLayout::neighboursInArea)
-    .def("contains", (MuonTileID (MuonSystemLayout::*) 
-                     (const MuonTileID&) const)
+    .def("contains", (LHCb::MuonTileID (MuonSystemLayout::*) 
+                     (const LHCb::MuonTileID&) const)
                      &MuonSystemLayout::contains)
-    .def("tilesInRegion", (std::vector<MuonTileID> (MuonSystemLayout::*) 
-                          (const MuonTileID&,int) const)
+    .def("tilesInRegion", (std::vector<LHCb::MuonTileID> (MuonSystemLayout::*) 
+                          (const LHCb::MuonTileID&,int) const)
                           &MuonSystemLayout::tilesInRegion)
-    .def("isValidID", (bool (MuonSystemLayout::*) (const MuonTileID&) const)
+    .def("isValidID", (bool (MuonSystemLayout::*) (const LHCb::MuonTileID&) const)
                       &MuonSystemLayout::isValidID)
     ;
   
@@ -294,49 +294,45 @@ BOOST_PYTHON_MODULE(libMuonKernelW)
   //
   /////////////////////////////////////////////////////////////////////////////
 
-  class_<MuonTileID>("MuonTileID")
+  class_<LHCb::MuonTileID>("MuonTileID")
     .def(init<>())
-    .def(init<const MuonTileID&>())
-    .def(init<int, int, int, const MuonLayout&, int, int, int, int>()) //IMuonLayout...
-    .def(init<const MuonTileID&, int, int, int, int>())
-    .def(init<const MuonTileID&, const MuonLayout&, int, int>())       //IMuonLayout...
+    .def(init<const LHCb::MuonTileID&>())
+    .def(init<int, const MuonLayout&, int, int, int, int>()) //IMuonLayout...
+    .def(init<const LHCb::MuonTileID&, int, int, int, int>())
+    .def(init<const LHCb::MuonTileID&, const MuonLayout&, int, int>())       //IMuonLayout...
     .def(init<const long int&>())
   
     .def("__hash__", &hash_MuonTileID)
-    .def("station", &MuonTileID::station)
-    .def("readout", &MuonTileID::readout)	
-    .def("layer", &MuonTileID::layer)
-    .def("quarter", &MuonTileID::quarter)
-    .def("region", &MuonTileID::region)
-    .def("nX", &MuonTileID::nX)
-    .def("nY", &MuonTileID::nY)
-    .def("index", &MuonTileID::index)
-    .def("key", &MuonTileID::key)
-    .def("layout", &MuonTileID::layout)
-    .def("setStation", (void (MuonTileID::*) (int) ) &MuonTileID::setStation)
-    .def("setReadout", (void (MuonTileID::*) (int) ) &MuonTileID::setReadout)	
-    .def("setLayer", (void (MuonTileID::*) (int) ) &MuonTileID::setLayer)
-    .def("setQuarter", (void (MuonTileID::*) (int) ) &MuonTileID::setQuarter)
-    .def("setRegion", (void (MuonTileID::*) (int) ) &MuonTileID::setRegion)
-    .def("setX", (void (MuonTileID::*) (int) ) &MuonTileID::setX)    
-    .def("setY", (void (MuonTileID::*) (int) ) &MuonTileID::setY)
-    .def("setLayout", (void (MuonTileID::*) (const MuonLayout&) ) 
-                      &MuonTileID::setLayout)
-    .def("deltaX", &MuonTileID::deltaX)    
-    .def("deltaY", &MuonTileID::deltaY)
-    .def("isValid",&MuonTileID::isValid )
-    .def("isDefined", &MuonTileID::isDefined)
+    .def("station", &LHCb::MuonTileID::station)
+    .def("quarter", &LHCb::MuonTileID::quarter)
+    .def("region", &LHCb::MuonTileID::region)
+    .def("nX", &LHCb::MuonTileID::nX)
+    .def("nY", &LHCb::MuonTileID::nY)
+    .def("index", &LHCb::MuonTileID::index)
+    .def("key", &LHCb::MuonTileID::key)
+    .def("layout", &LHCb::MuonTileID::layout)
+    .def("setStation", (void (LHCb::MuonTileID::*) (int) ) &LHCb::MuonTileID::setStation)
+    .def("setQuarter", (void (LHCb::MuonTileID::*) (int) ) &LHCb::MuonTileID::setQuarter)
+    .def("setRegion", (void (LHCb::MuonTileID::*) (int) ) &LHCb::MuonTileID::setRegion)
+    .def("setX", (void (LHCb::MuonTileID::*) (int) ) &LHCb::MuonTileID::setX)    
+    .def("setY", (void (LHCb::MuonTileID::*) (int) ) &LHCb::MuonTileID::setY)
+    .def("setLayout", (void (LHCb::MuonTileID::*) (const MuonLayout&) ) 
+                      &LHCb::MuonTileID::setLayout)
+    .def("deltaX", &LHCb::MuonTileID::deltaX)    
+    .def("deltaY", &LHCb::MuonTileID::deltaY)
+    .def("isValid",&LHCb::MuonTileID::isValid )
+    .def("isDefined", &LHCb::MuonTileID::isDefined)
     
-    .def("intercept", (MuonTileID (MuonTileID::*) (const MuonTileID&) )
-                      &MuonTileID::intercept )	
-    .def("containerID", (MuonTileID (MuonTileID::*) (const MuonLayout&) ) //IMuonLayout...
-                        &MuonTileID::containerID)	   
-    .def("localX", (int (MuonTileID::*) (const MuonLayout&) )             //IMuonLayout...
-                   &MuonTileID::localX )	    
-    .def("localY", (int (MuonTileID::*) (const MuonLayout&) )             //IMuonLayout...
-                   &MuonTileID::localY )
-    .def("neighbourID", (MuonTileID (MuonTileID::*) (int,int) )
-                        &MuonTileID::neighbourID )	     
+    .def("intercept", (LHCb::MuonTileID (LHCb::MuonTileID::*) (const LHCb::MuonTileID&) )
+                      &LHCb::MuonTileID::intercept )	
+    .def("containerID", (LHCb::MuonTileID (LHCb::MuonTileID::*) (const MuonLayout&) ) //IMuonLayout...
+                        &LHCb::MuonTileID::containerID)	   
+    .def("localX", (int (LHCb::MuonTileID::*) (const MuonLayout&) )             //IMuonLayout...
+                   &LHCb::MuonTileID::localX )	    
+    .def("localY", (int (LHCb::MuonTileID::*) (const MuonLayout&) )             //IMuonLayout...
+                   &LHCb::MuonTileID::localY )
+    .def("neighbourID", (LHCb::MuonTileID (LHCb::MuonTileID::*) (int,int) )
+                        &LHCb::MuonTileID::neighbourID )	     
         						
     .def("__str__", &fullName_MuonTileID)
     .def(self <  self)
@@ -350,28 +346,28 @@ BOOST_PYTHON_MODULE(libMuonKernelW)
   //
   /////////////////////////////////////////////////////////////////////////////
 
-  class_<std::vector<MuonTileID> >("std::vector<MuonTileID>")
+  class_<std::vector<LHCb::MuonTileID> >("std::vector<MuonTileID>")
     .def(init<>())
-    .def(init<std::vector<MuonTileID> >())
+    .def(init<std::vector<LHCb::MuonTileID> >())
   
-    .def("__contains__",  &std_item<std::vector<MuonTileID> >::in)
-    .def("__delitem__",   &std_item<std::vector<MuonTileID> >::del)
-    .def("__getitem__",   &std_item<std::vector<MuonTileID> >::get, 
+    .def("__contains__",  &std_item<std::vector<LHCb::MuonTileID> >::in)
+    .def("__delitem__",   &std_item<std::vector<LHCb::MuonTileID> >::del)
+    .def("__getitem__",   &std_item<std::vector<LHCb::MuonTileID> >::get, 
                           return_internal_reference<>() )
-    .def("__len__",       &std::vector<MuonTileID>::size)
-    .def("__setitem__",   &std_item<std::vector<MuonTileID> >::set, 
+    .def("__len__",       &std::vector<LHCb::MuonTileID>::size)
+    .def("__setitem__",   &std_item<std::vector<LHCb::MuonTileID> >::set, 
                           with_custodian_and_ward<1,2>())
-    .def("__iter__",      iterator<std::vector<MuonTileID>, return_internal_reference<> >())
-    .def("append",        &std::vector<MuonTileID>::push_back, 
+    .def("__iter__",      iterator<std::vector<LHCb::MuonTileID>, return_internal_reference<> >())
+    .def("append",        &std::vector<LHCb::MuonTileID>::push_back, 
                           with_custodian_and_ward<1,2>() )
-    .def("count",         &std_item<std::vector<MuonTileID> >::count)
-    .def("index",         &std_item<std::vector<MuonTileID> >::index)
-    .def("insert",        &std_item<std::vector<MuonTileID> >::insert)
-    .def("pop",           &std_item<std::vector<MuonTileID> >::pop)
-    .def("remove",        &std_item<std::vector<MuonTileID> >::remove)
-    .def("reverse",       &std_item<std::vector<MuonTileID> >::reverse)
-    .def("sort",          &std_item<std::vector<MuonTileID> >::sort)
-    .def("unique",        &std_item<std::vector<MuonTileID> >::unique)
+    .def("count",         &std_item<std::vector<LHCb::MuonTileID> >::count)
+    .def("index",         &std_item<std::vector<LHCb::MuonTileID> >::index)
+    .def("insert",        &std_item<std::vector<LHCb::MuonTileID> >::insert)
+    .def("pop",           &std_item<std::vector<LHCb::MuonTileID> >::pop)
+    .def("remove",        &std_item<std::vector<LHCb::MuonTileID> >::remove)
+    .def("reverse",       &std_item<std::vector<LHCb::MuonTileID> >::reverse)
+    .def("sort",          &std_item<std::vector<LHCb::MuonTileID> >::sort)
+    .def("unique",        &std_item<std::vector<LHCb::MuonTileID> >::unique)
     //.def(str(self))
     ;
   

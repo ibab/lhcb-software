@@ -1,13 +1,33 @@
 package MuonKernel
-
 version v3r0
 
 branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
-use LHCbKernel	v* Kernel
+use LHCbKernel	v*     Kernel
+use Python      v1*    LCG_Interfaces
+use Boost       v1*    LCG_Interfaces
 
+#======= Applications and Libraries ===========================================
 library MuonKernelLib  ../src/*.cpp
-apply_pattern linker_library    library=MuonKernelLib
 
+library MuonKernelW  -import=Python -import=Boost ../python_wrapper/MuonKernelWrapper.cpp
+
+path_append PYTHONPATH "$(MUONKERNELROOT)/$(BINDIR)"
+
+#======= Running Options ======================================================
+apply_pattern linker_library    library=MuonKernelLib
+apply_pattern ld_library_path
+
+#==============================================================================
+private
+
+macro MuonKernel_linkopts ""
+macro GaudiKernel_linkopts ""
+macro muonkernelopts "-L$(MUONKERNELROOT)/$(BINDIR) -lMuonKernelLib"
+macro Boost_linkopts "-L$(Boost_home)/lib $(Boost_linkopts_python)" 
+macro MuonKernelW_shlibflags    "$(use_linkopts) $(muonkernelopts) $(Boost_linkopts) $(libraryshr_linkopts)"
+macro_append MuonKernelW_cppflags    "-DMUONKERNEL_LOCAL" gcc-2.95.2 "-DMUONKERNEL_LOCAL -ftemplate-depth-64"
+
+#==============================================================================
