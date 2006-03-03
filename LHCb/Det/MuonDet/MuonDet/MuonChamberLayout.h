@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.7 2006-02-10 21:34:56 asatta Exp $
+// $Id: MuonChamberLayout.h,v 1.8 2006-03-03 11:22:01 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -47,14 +47,12 @@ public:
   void chamberMostLikely(float x,float y, int station, int& chmb, int& reg) const;
   
   //Return the tiles of the neighbor Chambers
-  std::vector<DeMuonChamber*> neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) const;
+  std::vector<int> neighborChambers(float myX, float myY, int stat, int x_direction, int y_direction) const;
   
   //Return the tiles of the neighbor Chambers
-  std::vector<DeMuonChamber*> neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) const;
+  void returnChambers(int sta, float st_x, float st_y, int x_dir, int y_dir, std::vector<int>& regs, std::vector<int>& chs) const;
   
   //Convert tiles in chambers
-  std::vector<DeMuonChamber*> createChambers(std::vector<int> mytiles, int station) const ;
-
   std::vector<DeMuonChamber*> createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles);
 
   //Returns the chamber number for a shift in X and Y direction

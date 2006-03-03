@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.24 2006-02-28 17:26:43 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.25 2006-03-03 11:22:02 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -89,10 +89,10 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
   //This methods sets the gap = 0 if only the
   //station is provided [HitPoint.z() = 0]
   StatusCode sc = StatusCode::FAILURE;
-  bool isIn = false; bool debug = false;
+  bool isIn = false; 
 
   MsgStream msg( msgSvc(), name() );
-  if(debug)   std::cout<<"My station: "<<station<<std::endl;
+
   sc = Hit2ChamberNumber(myPoint,station,chamberNumber,regNum);
   DeMuonChamber * theChmb = getChmbPtr(station,regNum,chamberNumber);
 
@@ -139,12 +139,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
 
   double x = myPoint.x();  double y = myPoint.y(); double z = myPoint.z();
 
-  if(debug) std::cout<< "Hit 2 chamber problems " <<x<<" "
-                     <<y<<" "<<station<<" "<<std::endl;
   //Returning the most likely chamber
   m_chamberLayout->chamberMostLikely(x,y,station,chamberNumber,regNum);
-  if(debug) std::cout<< "dopo  " <<regNum<<" "<<chamberNumber<<std::endl;
-
 
   if(regNum>=0&&chamberNumber>=0){
     
@@ -159,15 +155,14 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
     isIn = geoChm->isInside(myPoint);
     
     if(isIn) {
-      msg << MSG::DEBUG << "Hit found" <<endreq;
       sc = StatusCode::SUCCESS;
     } else {
       
-      msg << MSG::DEBUG <<"Starting point::  "
-          <<station<<" "<<chamberNumber<<" "<<regNum<<endreq;
+      if(debug) std::cout <<"Starting point::  "
+      <<station<<" "<<chamberNumber<<" "<<regNum<<std::endl;
       
       //Find the vector of chambers near the one under investigation
-      double x_ref(0),y_ref(0); std::vector<DeMuonChamber*> myChams;
+      float x_ref(0),y_ref(0);
       x_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
       y_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
       
@@ -176,26 +171,24 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
       if(fabs(x-x_ref)>0.01) {x_sgn = (int)((x-x_ref)/fabs(x-x_ref));}
       if(fabs(y-y_ref)>0.01) {y_sgn = (int)((y-y_ref)/fabs(y-y_ref));}
       
-      msg << MSG::DEBUG << "Hit not found Try to look in corner "
+      if(debug) std::cout<< "Hit not found Try to look in corner "
           <<x_ref<< " "<<x<<" "<<x_sgn<<" "<<y_ref<<" "<<y<<" "<<
-        y_sgn<<endreq;    
+        y_sgn<<std::endl;    
       
+      std::vector<int> regs; std::vector<int> myChams;
+      m_chamberLayout->returnChambers(station, x_ref,y_ref,
+				      x_sgn,y_sgn,regs, myChams);
       
-      myChams = m_chamberLayout->neighborChambers(chamberNumber,
-                                                 station,regNum,x_sgn,
-                                                 y_sgn);
-      
-      if(debug) std::cout<< "Neighborh chamber problems" <<std::endl;
-      
-      std::vector<DeMuonChamber*>::iterator aChamber;
+      std::vector<int>::iterator aChamber;
       //Loops on found chambers
+      int idx = 0;
       for(aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
         
-        int tmpChn(0), tmpRen(0), tmpStn(0);
-        tmpChn = (*aChamber)->chamberNumber();
-        tmpRen = (*aChamber)->regionNumber();
-        tmpStn = (*aChamber)->stationNumber();
-        
+        int tmpChn = *aChamber;
+        int tmpRen = regs.at(idx);
+        int tmpStn = station;
+
+	idx++;
         //Accessing Geometry Info
         IGeometryInfo* geoOthChm = (getChmbPtr(tmpStn,tmpRen,tmpChn))
           ->geometry();  
@@ -208,8 +201,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
           if(isIn) {
             sc = StatusCode::SUCCESS;
             //Returns the correct region and chamber number
-            chamberNumber = (*aChamber)->chamberNumber();
-            regNum = (*aChamber)->regionNumber();
+            chamberNumber = tmpChn;
+            regNum = tmpRen;
             break;
           }
         } else {
@@ -219,19 +212,17 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
         }
       }
       
-    //Debug the chambers returned
+      //Debug the chambers returned
       if(debug) {
         std::cout<<"Chmb test n.  :"<<chamberNumber+1<<"  ";
         std::cout<<"Chmb ret.  : ";
         for(aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
-          std::cout<<(*aChamber)->chamberNumber()+1<<" ";
+          std::cout<<*aChamber<<" ";
         }
         std::cout<<" "<<std::endl;
       }
     }
   }
-  if(debug) std::cout<< "Hit 2 chamber problems "<<std::endl;
-  
 
   if(!isIn) {
     msg << MSG::DEBUG << 

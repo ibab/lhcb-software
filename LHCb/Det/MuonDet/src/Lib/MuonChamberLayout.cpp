@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.21 2006-02-24 11:29:06 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.22 2006-03-03 11:22:02 asarti Exp $
 // Include files 
 
 //Muon
@@ -101,20 +101,14 @@ void MuonChamberLayout::Copy(MuonChamberLayout &lay) {
 
 
 
-std::vector<DeMuonChamber*> MuonChamberLayout::
-neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) const{
+std::vector<int> MuonChamberLayout::
+neighborChambers(float myX, float myY, int stat, int x_direction, int y_direction) const{
 
   std::vector<int> myChambers; 
   int sC_idY(0),sC_idX(0),reg(0);
   bool debug = false;
 
-  if(debug) std::cout<<"My Chamber under test. "<<Chmb->chamberNumber()<<
-              " "<<Chmb->regionNumber()<<" "<<Chmb->stationNumber()<<std::endl;
-  
-  float myX = (Chmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
-  float myY = (Chmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
-
-  gridPosition(myX,myY,Chmb->stationNumber(),sC_idX,sC_idY,reg);
+  gridPosition(myX,myY,stat,sC_idX,sC_idY,reg);
 
   if(debug) std::cout<<"Position in the grid "<<sC_idX<<" "<<sC_idY<<" "<<
               reg<<" "<<x_direction<<" "<<y_direction<<std::endl;
@@ -134,54 +128,33 @@ neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) const{
   }
 
   if(debug) std::cout<<"Returning chambers: "<<myChambers<<std::endl;
+  return myChambers;
 
+}
+
+void MuonChamberLayout::returnChambers(int sta, float st_x, float st_y, int x_dir, int y_dir, std::vector<int>& regs, std::vector<int>& chs) const {
+  
+  std::vector<int> myChambers;
+  myChambers = neighborChambers(st_x,st_y,sta,x_dir,y_dir);
+  
   //Now get the chambers
-  std::vector<DeMuonChamber*> myChams;
-  myChams = createChambers(myChambers,Chmb->stationNumber());
-  return myChams;
-
-}
-
-std::vector<DeMuonChamber*> MuonChamberLayout::
-neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) const {
-
-  char pt[200]; bool debug = false;
-  sprintf(pt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
-  SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
-  std::vector<DeMuonChamber*> myChams;
-  //Create a chamber * Chmb.
-  if(deChmb) {
-    myChams = neighborChambers(deChmb,x_dir,y_dir);
-  } else {
-    if(debug)  std::cout<<"Not found chamber! "<<std::endl;
-  }
-  return myChams;
-}
-
-std::vector<DeMuonChamber*> MuonChamberLayout::
-createChambers(std::vector<int> mytiles, int station) const {
-
   std::vector<int>::iterator idTile;
-  std::vector<DeMuonChamber*> myChambers;
-
   bool debug = false;
-  for(idTile = mytiles.begin(); idTile<mytiles.end(); idTile++){
+  for(idTile = myChambers.begin(); idTile<myChambers.end(); idTile++){
     const long int cTile = *idTile;
     //Added protection against non existing chamber
     if(cTile>0) {
       int region = findRegion(cTile);
-      if(debug)  std::cout<<"Returned chambers:: "<<station+1<<" "
+      if(debug)  std::cout<<"Returned chambers:: "<<sta+1<<" "
                           <<region+1<<" "<<cTile-m_offSet.at(region)<<
-                   std::endl;
-      DeMuonChamber * myChmb = new DeMuonChamber(station,region,
-                                                 cTile-m_offSet.at(region)-1);
-      myChambers.push_back(myChmb);
-      delete myChmb;
+	std::endl;
+      
+      regs.push_back(region);  chs.push_back(cTile-m_offSet.at(region)-1);
     }
   }
   if(debug)  std::cout<<"Exiting from chamber creation "<<std::endl;
-  
-  return myChambers;
+
+  return;
 }
 
 void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, 
@@ -1162,7 +1135,7 @@ StatusCode MuonChamberLayout::getXYZLogical(const LHCb::MuonTileID& tile,
 
   unsigned int station = tile.station();
   unsigned int region  = tile.region();
-  bool m_debug = true;  
+  bool m_debug = false;  
 
   if( tile.layout().xGrid() >= m_layout[region].xGrid() && 
       tile.layout().yGrid() >= m_layout[region].yGrid() ) {

@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.71 2006-02-28 17:26:43 asarti Exp $
+! $Id: release.notes,v 1.72 2006-03-03 11:22:02 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r1 2006-02-28 =========================
+
+! 2006-02-28 - Alessio Sarti
+ - Fixed a memory leak problem in MuonChamberLayout.cpp
+	Methods used to navigate the chambers have been 
+	also simplified and unnecessary call to smartDataPtr
+	and new have been removed
 
 ! 2006-02-28 - Alessia Satta
  - removed unused variable from DeMuonDetector.cpp
