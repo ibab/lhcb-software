@@ -3,6 +3,11 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 
+! 2006-03-03 - Julien Cogan
+ - MuonTileID: proper initialization in the constructor from a string.
+   Bits were left undefined after the reduction of the MuonTileID
+   from 32 to 28 bits
+
 ! 2006-02-03
  - Update interface
 

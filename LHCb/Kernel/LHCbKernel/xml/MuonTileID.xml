@@ -58,8 +58,10 @@
       </constructor>
       <constructor
         desc="Constructor from a string representation of the MuonTileID"
-        argList="std::string strid" >
+        argList="std::string strid" 
+        initList="m_muonid(0)">
 	<code>
+
     const char * str = strid.c_str()+1;
     char * endptr;
 
