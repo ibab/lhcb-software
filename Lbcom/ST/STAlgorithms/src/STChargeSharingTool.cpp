@@ -48,6 +48,10 @@ StatusCode STChargeSharingTool::initialize(){
     m_binCenters.push_back(binCenter);
   } //iBin
 
+  if (m_binCenters.size() != nBin){
+    return Error("inconsistant charge sharing data !" + name(), StatusCode::FAILURE);
+  }
+
   // the spline...
   m_responseSpline = new GSLSpline(m_binCenters,m_sharingFunction,gsl_interp_linear);
 

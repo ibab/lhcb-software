@@ -64,7 +64,7 @@ MCSTDepositCreator::MCSTDepositCreator(const std::string& name, ISvcLocator* pSv
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("responseTypes", m_beetleResponseTypes);
 
-  declareProperty("scaling", m_scaling = 1.2);
+  declareProperty("scaling", m_scaling = 1.0);
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
@@ -182,7 +182,7 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
 
 	// correct normalization of charge
         double totWeightedCharge = chargeOnStrips(stripMap);
-           
+      
         if (totWeightedCharge > 1e-3 ){
 
    	  // capacitive coupling
@@ -193,6 +193,9 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
           unsigned int lastStrip = lastIter->first;
 
           unsigned int iStrip;
+
+          const double xTalkLevel = m_xTalkParams[0] + m_xTalkParams[1]*aSector->capacitance();
+	  const double scaling = m_scaling * (1.0+(2.0*xTalkLevel));
 
           STChannelID elemChan = aSector->elementID();
           for (iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
@@ -206,10 +209,7 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
             if (iStrip != lastStrip){
               nextCharge = stripMap[iStrip+1];
 	    }
-
-            double xTalkLevel = m_xTalkParams[0] + m_xTalkParams[1]*aSector->capacitance();
-
-
+           
             double weightedCharge = ((1.-(2.0*xTalkLevel))*stripMap[iStrip])
   	                           + (xTalkLevel*(nextCharge+prevCharge)); 
   
@@ -230,15 +230,14 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
                               elemChan.station(), elemChan.layer(), 
                               elemChan.detRegion(), elemChan.sector(), iStrip);
 
-            double adcCounts = m_scaling *
-                               m_sigNoiseTool->convertToADC((weightedCharge/totWeightedCharge)
-                               *ionization*beetleFraction);
-  
-	 
+            double electrons = ionization*beetleFraction*scaling*weightedCharge/totWeightedCharge;
+
+            double adcCounts = m_sigNoiseTool->convertToADC(electrons);
+
 	    MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
 	    depositCont->insert(newDeposit);
-	  } // has to be some charge
-        } // loop iStrip
+	  } // loop strip
+        } // if has some charge
       }  // in active area
     } // hitToDigitize
   } // iterHit

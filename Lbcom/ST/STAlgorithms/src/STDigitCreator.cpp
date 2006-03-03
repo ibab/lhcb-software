@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.7 2006-02-21 15:05:18 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.8 2006-03-03 16:00:16 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -47,11 +47,9 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("inputLocation", m_inputLocation = MCSTDigitLocation::TTDigits);
   declareProperty("outputLocation", m_outputLocation = STDigitLocation::TTDigits); 
-  declareProperty("tailStart", m_tailStart = 2.5);
+  declareProperty("tailStart", m_tailStart = 3.0);
   declareProperty("saturation",m_saturation = 127.);
   declareProperty("detType", m_detType = "TT"); 
-
-  
 
 }
 
@@ -87,6 +85,7 @@ StatusCode STDigitCreator::initialize() {
 
   m_fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
   m_numNoiseStrips = (int)(m_fracOfNoiseStrips*m_tracker->nStrip());
+  m_numNoiseStrips =0u;
 
   return StatusCode::SUCCESS;
 }
@@ -116,7 +115,7 @@ StatusCode STDigitCreator::execute() {
                    STDataFunctor::Less_by_Channel<const STDigit*>());
 
   // Ensure that there is neighbours for all strips
-  //  addNeighbours(digitsCont);
+  addNeighbours(digitsCont);
 
   // and finally resort
   std::stable_sort(digitsCont->begin(),
@@ -230,33 +229,33 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const{
 
   STDigits::iterator curDigit = digitsCont->begin();
   std::vector<digitPair> tmpCont;
-  for( ; curDigit != digitsCont->end(); ++curDigit){
-
+  for( ; curDigit != digitsCont->end(); ++curDigit){ 
     if (curDigit != digitsCont->begin()){
       STDigits::iterator prevDigit = curDigit;
       --prevDigit; 
       STChannelID leftChan = m_tracker->nextLeft((*curDigit)->channelID());
-      if (( (*prevDigit)->channelID() != leftChan) &&(leftChan != 0u)){        
+      if (( (*prevDigit)->channelID() != leftChan) &&(leftChan != 0u)){
          tmpCont.push_back(std::make_pair(genInverseTail(),leftChan));
       } // prev test
     }
 
-    /*
     STDigits::iterator nextDigit = curDigit;
     ++nextDigit;
     if ((nextDigit != digitsCont->end())){
       STChannelID rightChan = m_tracker->nextRight((*curDigit)->channelID());
-      if ( ((*nextDigit)->channelID() != rightChan) && ((rightChan != 0u))){        
+      if ( ((*nextDigit)->channelID() != rightChan) && ((rightChan != 0u))){
          tmpCont.push_back(std::make_pair(genInverseTail(),rightChan));
       } // prev test
     }
-    */
- 
+
   } //iterDigit 
 
   for ( std::vector<digitPair>::iterator iterP = tmpCont.begin(); iterP != tmpCont.end(); ++iterP){
     STDigit* aDigit = new STDigit(GSL_MIN(floor(iterP->first),m_saturation));
-    digitsCont->insert(aDigit,iterP->second);
+    if (!digitsCont->object(iterP->second)){
+      // do better sometimes we can make twice ie we start with 101
+      digitsCont->insert(aDigit,iterP->second);
+    }
   } //iterP
 
 }
