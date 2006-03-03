@@ -107,8 +107,20 @@ createAlias(std::string name, std::string alias) {
   }
 }
 
-void L0Muon::RegisterFactory::dump() {
+void L0Muon::RegisterFactory::dump(bool full) {
   std::cout << "RegisterFactory: " << m_registers.size() << " registers" << std::endl;
+  if (full) {
+    std::map<std::string,Register*>::iterator itreg;
+    for (itreg = m_registers.begin(); itreg!=m_registers.end(); itreg++) {
+      std::cout << "RegisterFactory:  "
+                << " " << itreg->first 
+                << " " << (itreg->second)->name()
+                << " " << (itreg->second)->type()
+                << " " << (itreg->second)->size()
+                << "\n";
+    }
+  }
+  
 }
 
 
@@ -178,8 +190,15 @@ void L0Muon::RegisterFactory::fromXML(DOMNode* pNode){
   if (m_registers.size()!=size) {
     std::cout <<"L0Muon::RegisterFactory::fillFactory "<<m_registers.size()<<" != "<<size <<std::endl;
     std::cout << "Please raise a proper exception"<<std::endl;
+    XMLString::release(&REGISTER     );
+    XMLString::release(&TILEREGISTER );
+    XMLString::release(&REGISTERALIAS);
     exit(-1);
   }
+  XMLString::release(&REGISTER     );
+  XMLString::release(&TILEREGISTER );
+  XMLString::release(&REGISTERALIAS);
+
 } 
 
 void L0Muon::RegisterFactory::registerFromNode(DOMNode* pNode){
@@ -218,6 +237,9 @@ void L0Muon::RegisterFactory::tileRegisterFromNode(DOMNode* pNode){
   preg->setTileVector(ids);
   preg->setTilesTagVector(tilestag);
   preg->setStripsTagVector(stripstag);
+
+  XMLString::release(&TILE);
+
 }
 
 void L0Muon::RegisterFactory::registerAliasFromNode(DOMNode* pNode){
@@ -228,9 +250,9 @@ void L0Muon::RegisterFactory::registerAliasFromNode(DOMNode* pNode){
 }
 
 void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode, 
-					   std::vector<LHCb::MuonTileID> * mids, 
-					   boost::dynamic_bitset<> * tilestag, 
-					   boost::dynamic_bitset<> * stripstag){
+                                           std::vector<LHCb::MuonTileID> * mids, 
+                                           boost::dynamic_bitset<> * tilestag, 
+                                           boost::dynamic_bitset<> * stripstag){
 
   DOMNamedNodeMap* di = pNode->getAttributes();
   

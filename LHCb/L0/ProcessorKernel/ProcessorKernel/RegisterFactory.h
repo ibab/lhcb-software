@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.5 2006-01-18 16:47:17 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.6 2006-03-03 14:11:01 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -73,7 +73,7 @@ namespace L0Muon {
     bool found(){ return m_found;}
   
     /// Dump the factory state
-    void dump();  
+    void dump(bool full=false);  
 
     /// Write out the XML file describing the registers
     std::string toXML(std::string tab="");
