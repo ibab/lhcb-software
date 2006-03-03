@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.292 2006-02-27 13:01:21 pkoppenb Exp $
+# $Id: requirements,v 1.293 2006-03-03 16:53:43 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -35,8 +35,8 @@ use RootHistCnv         v*
 
 #-- Database
 use XmlDDDB             v22r2     Det
-use FieldMap            v*
-use ParamFiles          v*    -no_auto_imports
+use FieldMap            v4r5
+use ParamFiles          v3r6    -no_auto_imports
 
 # TMP:
 use TrgEvent                    v5r3p2  Event
