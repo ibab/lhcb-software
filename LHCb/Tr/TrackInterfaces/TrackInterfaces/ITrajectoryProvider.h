@@ -1,4 +1,4 @@
-// $Id: ITrajectoryProvider.h,v 1.3 2006-03-02 10:49:47 erodrigu Exp $
+// $Id: ITrajectoryProvider.h,v 1.4 2006-03-03 10:54:55 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRAJECTORYPROVIDER_H 
 #define TRACKINTERFACES_ITRAJECTORYPROVIDER_H 1
 
@@ -36,7 +36,7 @@ public:
   virtual StatusCode initialize() = 0;
 
   /// Return a "Measurement Trajectory" from a Measurement
-  virtual LHCb::Trajectory* trajectory( LHCb::Measurement& meas ) = 0;
+  virtual LHCb::Trajectory* trajectory( const LHCb::Measurement& meas ) = 0;
 
   /** Return a "Measurement Trajectory" from an LHCbID
    *  Note: the meaning of the offset input depends on the sub-detector type
@@ -45,14 +45,14 @@ public:
    *  @param  offset: input offset
    */
   virtual LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
-                                        double offset = 0 ) = 0;
+                                        const double offset = 0 ) = 0;
   
   /// Return a "State Trajectory" from a State
   virtual LHCb::Trajectory* trajectory( const LHCb::State& state ) = 0;
 
   /// Return a "State Trajectory" from a State vector and a z-position
   virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
-                                        double z ) = 0;
+                                        const double z ) = 0;
   
 protected:
   

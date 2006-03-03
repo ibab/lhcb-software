@@ -4,7 +4,7 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-! 2006-03-02 - Eduardo Rodrigues
+! 2006-03-03 - Eduardo Rodrigues
  - const arguments in ITrajectoryProvider
 
 !====================== TrackInterfaces v2r0 2006-02-21 ======================
