@@ -4,6 +4,8 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
+#include <algorithm>
+
 // Kernel
 #include "Kernel/SystemOfUnits.h"
 #include "Kernel/LineTraj.h"
@@ -24,7 +26,9 @@ DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
   m_firstStrip(1), 
   m_lowerTraj(0),
-  m_upperTraj(0)
+  m_upperTraj(0),
+  m_xInverted(false),
+  m_yInverted(false)
 { 
     // constructer (first strip means we number from 1)
 }
@@ -108,6 +112,7 @@ StatusCode DeSTSector::initialize() {
     // geometry: uMin, uMax
     const ILVolume* lv = this->geometry()->lvolume();
     const SolidBox* mainBox = dynamic_cast<const SolidBox*>(lv->solid());
+
     m_uMaxLocal = 0.5*(m_pitch*m_nStrip);
     m_uMinLocal = -m_uMaxLocal;
 
@@ -122,6 +127,9 @@ StatusCode DeSTSector::initialize() {
       double vDead = m_vMinLocal - m_deadWidth + (height*(double)iSensor);
       m_deadRegions.push_back(vDead);
     } //i
+
+    // sense in x and y...
+    determineSense();
 
     // cache trajectories
     cacheTrajectory();    
@@ -144,8 +152,16 @@ unsigned int DeSTSector::localUToStrip(const double u) const{
   else {
     strip = m_firstStrip;
   }
-  return strip;
+  return (m_xInverted == false ? strip : invertStripNumber(strip) ) ;
 }
+
+double DeSTSector::localU(const unsigned int strip) const{
+  // strip to local 
+  unsigned int tStrip = strip;
+  if (m_xInverted == true) tStrip = invertStripNumber(strip);
+  return (isStrip(tStrip) ? m_uMinLocal + ((tStrip - m_firstStrip+0.5)*m_pitch)  : 0  );
+}
+
 
 bool DeSTSector::localInActive(const Gaudi::XYZPoint& point,
                                Gaudi::XYZPoint tol) const{
@@ -199,7 +215,10 @@ LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan,
   LineTraj* traj = 0;  
 
   if (contains(aChan) == true){
-    const double arclen = localU(aChan.strip()) + (offset*m_pitch) - m_uMinLocal;
+    const double lU = localU(aChan.strip());
+    double arclen;
+    m_xInverted == false ? arclen = lU - m_uMinLocal - (offset*m_pitch) : 
+                           arclen = m_uMaxLocal - lU + (offset*m_pitch);
     Gaudi::XYZPoint begPoint =  m_lowerTraj->position( arclen );
     Gaudi::XYZPoint endPoint =  m_upperTraj->position( arclen );
     traj = new LineTraj(begPoint,endPoint);
@@ -212,20 +231,34 @@ LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan,
   return traj;
 }
 
+void DeSTSector::determineSense(){
+
+  Gaudi::XYZPoint g1 = globalPoint(m_uMinLocal , m_vMinLocal, 0.);
+  Gaudi::XYZPoint g2 = globalPoint(m_uMaxLocal , m_vMinLocal, 0.);
+  if (g1.x() > g2.x()) { m_xInverted = true;}
+
+  Gaudi::XYZPoint g3 = globalPoint(m_uMinLocal , m_vMaxLocal, 0.);
+  if (g1.y() > g3.y()) {m_yInverted = true;}
+}
+
 void DeSTSector::cacheTrajectory() {
 
   clear();
 
-  Gaudi::XYZPoint p1(m_uMinLocal - 0.5*m_pitch, m_vMinLocal, 0.);
-  Gaudi::XYZPoint p2(m_uMaxLocal + 0.5*m_pitch, m_vMinLocal, 0.);
-  Gaudi::XYZPoint g1 = toGlobal(p1);
-  Gaudi::XYZPoint g2 = toGlobal(p2);
+  double yUpper =  m_vMaxLocal;
+  double yLower =  m_vMinLocal;
+  if (yLower > yUpper) std::swap(yUpper,yLower);
+
+  double xUpper =  m_uMaxLocal;
+  double xLower =  m_uMinLocal;
+  if (xLower > xUpper) std::swap(xUpper,xLower);
+
+  Gaudi::XYZPoint g1 = globalPoint(xLower - 0.5*m_pitch, yLower, 0.);
+  Gaudi::XYZPoint g2 = globalPoint(xUpper + 0.5*m_pitch, yLower, 0.);
   m_lowerTraj = new LineTraj(g1,g2);
- 
-  Gaudi::XYZPoint p3(m_uMinLocal - 0.5*m_pitch, m_vMaxLocal, 0.);
-  Gaudi::XYZPoint p4(m_uMaxLocal + 0.5*m_pitch, m_vMaxLocal, 0.);
-  Gaudi::XYZPoint g3 = toGlobal(p3);
-  Gaudi::XYZPoint g4 = toGlobal(p4);
+
+  Gaudi::XYZPoint g3 = globalPoint(xLower - 0.5*m_pitch, yUpper, 0.);
+  Gaudi::XYZPoint g4 = globalPoint(xUpper + 0.5*m_pitch, yUpper, 0.);
   m_upperTraj = new LineTraj(g3,g4);
    
 }
@@ -261,4 +294,8 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const{
 }
 
 
-
+Gaudi::XYZPoint DeSTSector::globalPoint(const double x, const double y, const double z) const{
+  Gaudi::XYZPoint lPoint(x,y,z);
+  Gaudi::XYZPoint gPoint = toGlobal(lPoint);
+  return gPoint;
+}

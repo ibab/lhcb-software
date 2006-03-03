@@ -162,9 +162,13 @@ public:
 
 private:
 
+  unsigned int invertStripNumber(const unsigned int strip) const;
   void clear();
-  void DeSTSector::cacheTrajectory();
-  
+  void determineSense();
+  void cacheTrajectory();
+  Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
+ 
+
   unsigned int m_firstStrip;
   unsigned int m_id;
   double m_pitch;
@@ -177,14 +181,22 @@ private:
   double m_vMinLocal; 
   double m_vMaxLocal;
 
+
   LHCb::Trajectory* m_lowerTraj;
   LHCb::Trajectory* m_upperTraj;
+
+  bool m_xInverted;
+  bool m_yInverted;
 
   double m_deadWidth;
   std::vector<double> m_deadRegions;
   std::string m_type;
 
 };
+
+inline unsigned int DeSTSector::invertStripNumber(const unsigned int strip) const {
+  return (nStrip() + 1u - strip);
+}
 
 inline unsigned int DeSTSector::id() const{
   return m_id;
@@ -208,11 +220,6 @@ inline unsigned int DeSTSector::nStrip() const{
 
 inline bool DeSTSector::isStrip(const unsigned int strip) const {
   return (strip >= m_firstStrip && strip < m_firstStrip + m_nStrip);
-}
-
-inline double DeSTSector::localU(const unsigned int strip) const{
-  // strip to local U is this needed ?
-  return (isStrip(strip) ? m_uMinLocal + ((strip - m_firstStrip+0.5)*m_pitch)  : 0  );
 }
 
 inline double DeSTSector::capacitance() const{

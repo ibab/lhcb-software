@@ -2,6 +2,11 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+
+! 2006-03-03 M Needham
+ - Changes in DeSTSector to ensure
+   strips always number in +x
+
 ! 2006-02-27 - Jeroen van Tilburg
  - Added findLayer method in DeSTDetector.
 
