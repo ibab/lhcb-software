@@ -1,14 +1,8 @@
-// $Id: GenParticles.cpp,v 1.3 2006-02-18 17:13:53 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.4 2006-03-03 09:43:57 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 09:54:49  ibelyaev
-//  add plenty of new (vertex&adapter)functions
-//
-// Revision 1.1.1.1  2006/01/24 09:54:22  ibelyaev
-// New Import: Generator/HepMC-dependent part of LoKi project
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -265,6 +259,117 @@ std::ostream&
 LoKi::GenParticles::Mass::fillStream 
 ( std::ostream& s ) const { return s << "GM" ; };
 // ============================================================================
+
+
+// ============================================================================
+/// MANDATORY: clone method ("virtual" constructor")
+// ============================================================================
+LoKi::GenParticles::MomentumX* 
+LoKi::GenParticles::MomentumX::clone() const
+{ return new LoKi::GenParticles::MomentumX ( *this ) ; };
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::MomentumX::~MomentumX() {};
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::MomentumX::result_type 
+LoKi::GenParticles::MomentumX::operator() 
+  ( LoKi::GenParticles::Identifier:: argument p ) const 
+{
+  if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).X() ; }
+  Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
+  return LoKi::Constants::InvalidMomentum ;
+};
+// ============================================================================
+
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::MomentumX::fillStream 
+( std::ostream& s ) const { return s << "GPX" ; };
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: clone method ("virtual" constructor")
+// ============================================================================
+LoKi::GenParticles::MomentumY* 
+LoKi::GenParticles::MomentumY::clone() const
+{ return new LoKi::GenParticles::MomentumY ( *this ) ; };
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::MomentumY::~MomentumY() {};
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::MomentumY::result_type 
+LoKi::GenParticles::MomentumY::operator() 
+  ( LoKi::GenParticles::Identifier:: argument p ) const 
+{
+  if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).Y() ; }
+  Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
+  return LoKi::Constants::InvalidMomentum ;
+};
+// ============================================================================
+
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::MomentumY::fillStream 
+( std::ostream& s ) const { return s << "GPY" ; };
+// ============================================================================
+
+
+
+// ============================================================================
+/// MANDATORY: clone method ("virtual" constructor")
+// ============================================================================
+LoKi::GenParticles::MomentumZ* 
+LoKi::GenParticles::MomentumZ::clone() const
+{ return new LoKi::GenParticles::MomentumZ ( *this ) ; };
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenParticles::MomentumZ::~MomentumZ() {};
+// ============================================================================
+
+// ============================================================================
+/// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::MomentumZ::result_type 
+LoKi::GenParticles::MomentumZ::operator() 
+  ( LoKi::GenParticles::Identifier:: argument p ) const 
+{
+  if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).Z() ; }
+  Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
+  return LoKi::Constants::InvalidMomentum ;
+};
+// ============================================================================
+
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::MomentumZ::fillStream 
+( std::ostream& s ) const { return s << "GPZ" ; };
+// ============================================================================
+
+
+
 
 // ============================================================================
 /// MANDATORY: clone method ("virtual" constructor")

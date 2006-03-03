@@ -1,14 +1,8 @@
-// $Id: GenParticleCuts.h,v 1.3 2006-02-18 17:13:53 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.4 2006-03-03 09:43:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 09:54:49  ibelyaev
-//  add plenty of new (vertex&adapter)functions
-//
-// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
-// New Import: Generator/HepMC-dependent part of LoKi project
-//
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -724,7 +718,6 @@ namespace LoKi
      *  @date 2006-01-18
      */
     const  LoKi::GenParticles::IsNucleus GNUCLEUS ;
-    
 
     /** @var GP 
      *  evaluator of particle momentum (in HepMC units)
@@ -769,6 +762,37 @@ namespace LoKi
      *  @date 2006-01-18
      */
     const LoKi::GenParticles::Mass GM ;
+
+
+    /** @var GPX 
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumX
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumX GPX ;
+
+    /** @var GPY
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumY
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumY GPY ;
+
+    /** @var GPZ
+     *  evaluator of particle momentum (in HepMC units)
+     *
+     *  @see LoKi::GenParticles::MomentumZ
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-18
+     */
+    const LoKi::GenParticles::MomentumZ GPZ ;
 
     /** @var GTIME 
      *  evaluator of particle proper lifetime c*tau (in HepMC units)

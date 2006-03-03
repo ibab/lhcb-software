@@ -1,11 +1,8 @@
-// $Id: GenParticles.h,v 1.3 2006-02-18 17:13:53 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.4 2006-03-03 09:43:57 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 09:54:49  ibelyaev
-//  add plenty of new (vertex&adapter)functions
-//
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -289,6 +286,70 @@ namespace LoKi
       /// "SHORT" representation, see @LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
+
+    /** @struct MomentumX
+     *  evaluator of the X-component of particle momentum
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GPX
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-03-03
+     */
+    struct MomentumX : 
+      public LoKi::Function<const HepMC::GenParticle*>
+    {      
+      /// clone method (mandatory!)
+      virtual  MomentumX* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MomentumX();
+      /// the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    };
+    
+    /** @struct MomentumY
+     *  evaluator of the Y-component of particle momentum
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GPY
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-03-03
+     */
+    struct MomentumY : 
+      public LoKi::Function<const HepMC::GenParticle*>
+    {      
+      /// clone method (mandatory!)
+      virtual  MomentumY* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MomentumY();
+      /// the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    };
+
+    /** @struct MomentumZ
+     *  evaluator of the Z-component of particle momentum
+     *  
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GPZ
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-03-03
+     */
+    struct MomentumZ : 
+      public LoKi::Function<const HepMC::GenParticle*>
+    {      
+      /// clone method (mandatory!)
+      virtual  MomentumZ* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MomentumZ();
+      /// the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    };
+
 
     /** @struct ValidEndVertex 
      *  primitive predicate to test the validity of 
