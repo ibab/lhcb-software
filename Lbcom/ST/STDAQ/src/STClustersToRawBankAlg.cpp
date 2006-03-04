@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.2 2006-03-03 20:24:22 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.3 2006-03-04 15:27:08 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -156,6 +156,7 @@ StatusCode STClustersToRawBankAlg::execute() {
 
     RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),m_bankType ,STDAQ::v3, 
                                         bWriter.byteSize(), &(bWriter.dataBank()[0]));
+
     tEvent->adoptBank(tBank,true);
 
   } // iBoard

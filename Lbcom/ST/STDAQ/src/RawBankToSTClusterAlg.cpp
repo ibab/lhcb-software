@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.5 2006-03-03 19:51:00 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.6 2006-03-04 15:27:08 mneedham Exp $
 
 #include <algorithm>
 
@@ -124,10 +124,11 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
         return StatusCode::FAILURE;
       }
     } // iterDecoder
+    
 
-    if (iterDecoder.bytesRead() != ((*iterBank)->size() - 8)){
+    if (iterDecoder.bytesRead() != ((*iterBank)->size() - 4)){
       warning() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
-                << " Expected: " << (*iterBank)->size() << endmsg;
+                << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       return StatusCode::FAILURE;
     }
   } // iterBank
@@ -146,9 +147,8 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   ++iterADC;
 
   // make some consistancy checks
-  unsigned int pseudoSize = GSL_MIN(adcValues.size()-1u,3u);
-  if ((pseudoSize != aWord.pseudoSize())) {
-    warning() << "adc values do not match ! " << adcValues.size() << " " <<  aWord.pseudoSize() << "chan " << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
+  if ((adcValues.size() - 1u  < aWord.pseudoSize())) {
+    warning() << "adc values do not match ! " << adcValues.size()-1 << " " <<  aWord.pseudoSize() << " chan " << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
     return StatusCode::FAILURE;
   }
 
