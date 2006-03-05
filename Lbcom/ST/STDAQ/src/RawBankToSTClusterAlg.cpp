@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.6 2006-03-04 15:27:08 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.7 2006-03-05 14:36:00 mneedham Exp $
 
 #include <algorithm>
 
@@ -126,7 +126,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     } // iterDecoder
     
 
-    if (iterDecoder.bytesRead() != ((*iterBank)->size() - 4)){
+    if (iterDecoder.bytesRead() != ((*iterBank)->size())){
       warning() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       return StatusCode::FAILURE;
@@ -164,7 +164,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 
   STCluster::ADCVector adcs ; 
   for (unsigned int i = 1; i < adcValues.size() ; ++i){
-    adcs.push_back(std::make_pair(i-offset,adcValues[i]));
+    adcs.push_back(std::make_pair(i-offset,adcValues[i].adc()));
   } // iDigit
 
   // make cluster +set things
