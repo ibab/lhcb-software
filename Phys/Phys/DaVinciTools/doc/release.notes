@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.188 2006-02-03 07:26:20 pkoppenb Exp $
+! $Id: release.notes,v 1.189 2006-03-06 13:59:49 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2006-03-06 - P. Koppenburg
+ - src/CheckPV.cpp
+   . Check if PVLocation exists.
 !========================== DaVinciTools v12r5 2006-02-03 ===================
 ! 2006-02-03 - P. Koppenburg
  - src/MakeResonances.{cpp,h}

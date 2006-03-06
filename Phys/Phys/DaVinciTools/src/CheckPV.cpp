@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.7 2005-10-17 12:28:42 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.8 2006-03-06 13:59:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -75,28 +75,35 @@ StatusCode CheckPV::execute() {
   debug() << "==> Execute" << endmsg;
 
   std::string m_PVContainer = m_OnOfflineTool->getPVLocation() ;
+  int n = 0 ;
+  bool ok = 0 ;
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
-  Vertices* PV = get<Vertices>(m_PVContainer);
-
-  if ( !PV ) { err() << "Could not find primary vertex location " 
-                     <<  m_PVContainer << endreq;
-    return StatusCode::FAILURE ;
+  if ( !exist<Vertices>(m_PVContainer)){
+    info() << m_PVContainer << " not found" << endmsg ;
+    ok = (m_minPV<=0) ; // Ok if no PV required
+  } else {  
+    Vertices* PV = get<Vertices>(m_PVContainer);
+    if ( !PV ) { 
+      err() << "Could not find primary vertex location " 
+            <<  m_PVContainer << endreq;
+      return StatusCode::FAILURE ;
+    }
+    n =  PV->size() ;
+    verbose() << "There are " << n << " primary vertices." << endreq ;
+    m_nPV = m_nPV+n ;
+    ++m_nEvent ;
+    
+    ok = ( n >= m_minPV );      // more than m_minPV
+    if ( m_maxPV >= 0 ){              // some maximum?
+      ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
+    }
   }
-  int n =  PV->size() ;
-  verbose() << "There are " << n << " primary vertices." << endreq ;
-  m_nPV = m_nPV+n ;
-  ++m_nEvent ;
-
-  bool ok = ( n >= m_minPV );      // more than m_minPV
-  if ( m_maxPV >= 0 ){              // some maximum?
-    ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
-  }
-
+  
   setFilterPassed(ok);
   if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
   else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
-
+  
   return StatusCode::SUCCESS;
 };
 

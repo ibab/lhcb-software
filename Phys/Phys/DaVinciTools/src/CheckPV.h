@@ -1,4 +1,4 @@
-// $Id: CheckPV.h,v 1.4 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: CheckPV.h,v 1.5 2006-03-06 13:59:49 pkoppenb Exp $
 #ifndef CHECKPV_H 
 #define CHECKPV_H 1
 
@@ -9,6 +9,7 @@
 
 /** @class CheckPV CheckPV.h
  *  
+ *  Checks the number of PVs
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-18
