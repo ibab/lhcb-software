@@ -1,0 +1,5 @@
+// checking
+ApplicationMgr.DLLs    += { "L0Checker" };
+ApplicationMgr.TopAlg  += { "L0Check"};
+L0Check.HistogramFlag = false;
+

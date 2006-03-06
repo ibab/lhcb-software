@@ -9,7 +9,6 @@ DstWriter.OptItemList =
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
 , "/Event/MC/Signal#1"
-, "/Event/Trig/AlgUsedTimes#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -25,6 +24,7 @@ DstWriter.ItemList =
 , "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
+, "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
@@ -36,10 +36,6 @@ DstWriter.ItemList =
 // as they might not be in the transient store
 // and hence not written out (usecase: L0xL1 stripping)
 , "/Event/Raw#2"
-, "/Event/Raw/Velo#1"
-, "/Event/Raw/Ecal#1"
-, "/Event/Raw/Prs#1"
-, "/Event/Raw/Spd#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
