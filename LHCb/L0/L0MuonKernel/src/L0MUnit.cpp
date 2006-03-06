@@ -44,6 +44,10 @@ L0Muon::L0MUnit::L0MUnit(DOMNode* pNode):Unit() {
     // // //std::cout << "<L0MUnit::L0MUnit> next child ..."<<std::endl;
     child = child->getNextSibling();
   }
+  XMLString::release(&PROPERTY       ); //Release memory used by the transcode method
+  XMLString::release(&INPUTREGISTERS ); //Release memory used by the transcode method
+  XMLString::release(&OUTPUTREGISTERS); //Release memory used by the transcode method
+  XMLString::release(&UNIT           ); //Release memory used by the transcode method
 
 }
 
