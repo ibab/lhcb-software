@@ -222,24 +222,34 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     std::vector<double> CurDemagFactor=
       getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
-    //  G4cout<<"Current demag factors "
+    //  G4cout<<"Current demag factors  in ph elec effect "
     // <<CurDemagFactor[0]<<"  "<< CurDemagFactor[1]<<G4endl;
     // now get the Point Spread function.
+    // the radius obtained by the following sigma, is halved
+    // to take care of the fact that required width is for the
+    // total of the +r and -r directions on the plane of the silicon.
+    // (ie +x,-x and  +y ,-y directions). Typical width in r =0.2 mm
+    // which means for example for +x side it is (0.1 mm)*cos(phi) and -x side it is
+    // also (0.1 mm)*cos(phi) giving a total of (0.2 mm) *cos(phi). 
     G4double PSFsigma=
       getCurrentHpdPSFSigma(currentHpdNumber,currentRichDetNumber);
 
     G4double PsfRandomAzimuth = twopi*G4UniformRand();
     G4double PsfRandomRad= G4RandGauss::shoot(0.0,PSFsigma);
-    G4double PsfX= PsfRandomRad*cos( PsfRandomAzimuth);
-    G4double PsfY= PsfRandomRad*sin( PsfRandomAzimuth);
-    // G4cout<<" Photoelec: Current psfSigma psfX psfY "<<PSFsigma
-    //      <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
+    G4double PsfX= fabs(0.5*PsfRandomRad)*cos( PsfRandomAzimuth);
+    G4double PsfY= fabs(0.5*PsfRandomRad)*sin( PsfRandomAzimuth);
+    //  G4cout<<" Photoelec: Current psfSigma psfrad psfazimuth psfX psfY "<<PSFsigma
+    // 	  <<"  "<< PsfRandomRad <<"  "<<PsfRandomAzimuth <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
 
     //  now apply only the linear and quadratic factor of the demag;
     G4double ElectronCathodeRadius = sqrt( pow(LocalElectronOrigin.x(), 2) +
                                            pow(LocalElectronOrigin.y(), 2) );
-    G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +
-                          CurDemagFactor[0]) -1.0 ;
+
+
+
+     G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +
+                        CurDemagFactor[0]) -1.0 ;
+
     // CurDemagFactor[0] is a negative number.
 
     G4ThreeVector

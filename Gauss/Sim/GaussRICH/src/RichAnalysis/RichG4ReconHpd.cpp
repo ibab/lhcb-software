@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.8 2006-03-01 10:01:58 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.9 2006-03-06 17:42:19 seaso Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -278,27 +278,84 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double phCSq=0.0;
   double delZ=0.0;
   double zPhInHpd=0.0;
+
+  double inverseR = 0.0;
   
+  double inverseRtest = 0.0;
+  
+
+
+  // RichG4HpdReconlog<<MSG::INFO<<" Current demag fact in recon "
+  //	<<   m_HpdCrossFocusParameters[0] <<"  "
+  //		   << m_HpdCrossFocusParameters[1] <<endreq;
+
   if(m_HpdCrossFocusParameters[0] !=0.0 ) {
      rsi = pow( (xsi*xsi + ysi*ysi), 0.5);
     xphLin= xsi/m_HpdCrossFocusParameters[0];
     yphLin= ysi/m_HpdCrossFocusParameters[0];
     rphLin = rsi/m_HpdCrossFocusParameters[0];   
-    double c= -1.0*rsi;
-    double b = m_HpdCrossFocusParameters[0];
-    double a = m_HpdCrossFocusParameters[1];
-    if( a !=0.0 ) {
-    rph = (-b - pow((b*b - 4*a*c),0.5))/(2*a);
+
+    //    double c= -1.0*rsi;
+    //  double b = -1.0* m_HpdCrossFocusParameters[0];
+    // double a = m_HpdCrossFocusParameters[1];
+    // for test try linear law.
+    //   if( a !=0.0) {
+    //   rph = (-b + pow((b*b - 4*a*c),0.5))/(2*a);
+    //  }else {
+    //  rph = rphLin;
+
+    //   } 
+      //rphtest = (-b + pow((b*b - 4*a*c),0.5))/(2*a);
+    //  rphtest = (-b - pow((b*b - 4*a*c),0.5))/(2*a);
+
+
+    //   xph = -1.0*(rph/rsi)*xsi;
+    // yph = -1.0*(rph/rsi)*ysi;
+    // do a solution in 1/R
+    if(rsi == 0.0 ) {
+      rph = 0.0;
+      xph=0.0;
+      yph=0.0;
     }else {
-      rph = rphLin;
-    } 
-    rphtest = (-b + pow((b*b - 4*a*c),0.5))/(2*a);
-    xph = (rph/rsi)*xsi;
-    yph = (rph/rsi)*ysi;
+      double a = -1.0/(2.0*rsi);
+      double b = m_HpdCrossFocusParameters[0];
+      double c = -1.0*m_HpdCrossFocusParameters[1];
+      if(c !=0.0 ) {
+        
+      inverseR = a* ( (-1.0*b)  + pow((b*b+ 4.0*rsi*c), 0.5) ); 
+      inverseRtest = a* ( (-1.0*b)  - pow((b*b+ 4.0*rsi*c), 0.5) );
+      
+      }else {
+
+        inverseR =  m_HpdCrossFocusParameters[0]/rsi;
+        inverseRtest =  inverseR;
+        
+      }
+      
+      
+      if( inverseR == 0.0 ) {
+        rph=0.0;
+        xph=0.0;
+        yph=0.0; 
+      }else {
+      	rph= 1.0/inverseR;
+        xph = (rph/rsi)*xsi;
+        yph = (rph/rsi)*ysi;
+      }
+    
+    if( inverseRtest == 0.0 ) {
+      rphtest=0.0;
+    }else {
+      rphtest = 1.0/inverseRtest;
+    }
+    }
+
 
   }
 
+
   rphsq = xph*xph + yph*yph;
+
   phCSq = m_HpdPhCathodeRad*m_HpdPhCathodeRad;
   if( ( phCSq -  rphsq) > 0.0  ) {
      
@@ -313,9 +370,9 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
 
 
   //   RichG4HpdReconlog<<MSG::INFO<<" ReconHitOnPhCathFromLocalHitCoord rsi rph rphLin rphtest"
-  //                  << rsi<<"  "<< rph<<"   "<<rphLin<<"  "<< rphtest<<endreq;
+  //                 << rsi<<"  "<< rph<<"   "<<rphLin<<"  "<< rphtest<<endreq;
                // rphtest<<endreq;
-  //RichG4HpdReconlog<<MSG::INFO
+  //  RichG4HpdReconlog<<MSG::INFO
   //         <<" ReconHitOnPhCathFromLocalHitCoord "
   //         <<"  xsi ysi xph yph xphlin yphlin zph phcathrad delZ "
   // 		    <<xsi<< " " <<ysi<<" "<<xph<<"  "<<yph<<"  "<< xphLin<<"  "<<  yphLin<<"  "

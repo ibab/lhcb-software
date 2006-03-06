@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.10 2006-03-01 10:01:58 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.11 2006-03-06 17:42:19 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -452,7 +452,9 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
   Gaudi::XYZVector dvec = aDetPt  - aMirrCC ;
   const  double d2 = dvec.Mag2();
     double d  = pow(d2,0.5);
-  
+
+    if( (e*d) != 0.0 ) {  
+
   double gamma     = acos( evec.Dot(dvec) / (e*d) );
 
   double r  =  m_SphMirrRad[m_CurrentRichDetNum];
@@ -530,8 +532,9 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
         }
 
     }
-
   }
+
+    }
 
   return ReflPt;
 

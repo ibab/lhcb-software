@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.8 2006-03-01 10:01:58 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.9 2006-03-06 17:42:19 seaso Exp $
 // Include files
 
 // local
@@ -338,6 +338,41 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             double emisptReconZ=
               (aChTrackPreStepPos.z()+aChTrackPostStepPos.z())*.5;
 
+              double testmidx = (aChTrackPreStepPos.x()+aChTrackPostStepPos.x())*.5;
+              double testmidy = (aChTrackPreStepPos.y()+aChTrackPostStepPos.y())*.5;
+            // now to get the mid point xy of the radiator.
+
+
+            double aXdiff = aChTrackPostStepPos.x()-aChTrackPreStepPos.x();
+            double aZDiff = aChTrackPostStepPos.z()- aChTrackPreStepPos.z();
+            double aZdiffWrtRich1MidZ = 0.0;
+            double aZdiffWrtRich2MidZ = 0.0;
+            double aslpLocalX = 0.0;
+            double aMidRadX = aChTrackPreStepPos.x();
+
+            double aYdiff = aChTrackPostStepPos.y()-aChTrackPreStepPos.y();
+            double aslpLocalY = 0.0;
+            double aMidRadY = aChTrackPreStepPos.y();
+
+            if ( aZDiff != 0.0 ) {
+              aslpLocalX = aXdiff/aZDiff;
+              aslpLocalY =aYdiff/aZDiff; 
+            }
+
+              if(aRadiatornum == 1) {
+                aZdiffWrtRich1MidZ= m_MidRich1GasZ- aChTrackPreStepPos.z();
+                aMidRadX =  aChTrackPreStepPos.x() + aslpLocalX *  aZdiffWrtRich1MidZ;
+                aMidRadY = aChTrackPreStepPos.y() +  aslpLocalY * aZdiffWrtRich1MidZ;
+              } else if ( aRadiatornum == 2 ) {
+                
+               aZdiffWrtRich2MidZ=  m_MidRich2GasZ- aChTrackPreStepPos.z();
+               aMidRadX =  aChTrackPreStepPos.x() + aslpLocalX *  aZdiffWrtRich2MidZ;
+               aMidRadY = aChTrackPreStepPos.y() +  aslpLocalY * aZdiffWrtRich2MidZ;
+              
+              }
+             
+            
+            
             // bool setMidPtRadiator = true;
             //  bool setMidPtRadiator = false;
 
@@ -366,10 +401,25 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
               }
 
             }else if( aRadiatornum == 1 ) {
-                emisptReconZ =   m_MidRich1GasZ;
-
+              emisptReconZ =   m_MidRich1GasZ;
+              emisptReconX  =  aMidRadX;
+              emisptReconY  =  aMidRadY;
+              
+	      //  G4cout<<"Rich1 emis pt prestepZ post stepz midradiatorZ trueZ "<< aChTrackPreStepPos.z()
+	      //     <<"   "<<aChTrackPostStepPos.z()<<" "<< m_MidRich1GasZ<<"  "<<EmissPt.z()<<G4endl;
+	      //  G4cout<<"Rich1emis X true X Y trueY "<<  emisptReconX <<"  "<<testmidx<<"  "
+              //      << emisptReconY<<"  "<<testmidy<<G4endl;
+              
+              
             } else if ( aRadiatornum == 2 ) {
-                emisptReconZ = m_MidRich2GasZ;
+              emisptReconZ = m_MidRich2GasZ;
+              emisptReconX  =  aMidRadX;
+              emisptReconY  =  aMidRadY;
+
+	      //  G4cout<<"Rich2 emis pt prestepZ post stepz midradiatorZ trueZ "<< aChTrackPreStepPos.z()
+              //      <<"   "<<aChTrackPostStepPos.z()<<" "<<m_MidRich2GasZ<<"  "<<EmissPt.z()<<G4endl;
+	      //  G4cout<<"Rich1emis X true X Y trueY "<<  emisptReconX <<"  "<<testmidx<<"  "
+              //      << emisptReconY<<"  "<<testmidy<<G4endl;
 
             }
 

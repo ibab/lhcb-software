@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineSet4.cpp,v 1.2 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4HistoDefineSet4.cpp,v 1.3 2006-03-06 17:42:19 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -208,7 +208,7 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
     
       m_hCkvRich1GasResPsf = CurHistoSvc->book(m_RichG4HistoPathSet4+"1550",
                                            title, 1000,-0.01,0.01);
-      title="Rich1Gas ReconsD2E3- Recons D3E3 psf error";
+      title="Rich1Agel ReconsD2E3- Recons D3E3 psf error";
     
       m_hCkvRich1AgelResPsf = CurHistoSvc->book(m_RichG4HistoPathSet4+"1650",
                                            title, 1000,-0.01,0.01);
