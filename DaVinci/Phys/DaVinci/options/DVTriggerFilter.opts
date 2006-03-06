@@ -30,22 +30,27 @@
 //--------------------------------------------------------------
 // Run HLT generic and HLT selections
 #include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+// Uncomment to add Inclusive high-IP dilepton
+//#include "$HLTINCLUSIVEROOT/options/HLTselB2DiLepton.opts"
+// Uncomment to add Inclusive Phi and RICH
+//#include "$HLTINCLUSIVEROOT/options/HLTselPhiIncl.opts"
+// Uncomment following line to get looser cuts for Phi
+// #include "$HLTINCLUSIVEROOT/options/HLTselPhiInclLoose.opts"
 
-//#include "$TRGSYSROOT/options/TrgChecking.opts"
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
 TriggerSeq.Members = { "TrgL0Filter", "PrintHeader/PassedL0" };
 TriggerSeq.Members += { "TrgL1Filter", "PrintHeader/PassedL1" };
 TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
 PassedL0.OutputLevel = 3 ;
-PassedL1.OutputLevel = 2 ;
+PassedL1.OutputLevel = 3 ;
 PassedHlt.OutputLevel = 2 ;
 
 //==============================================================
 // CHECKING
 //--------------------------------------------------------------
 // Checking of L0
-//#include "$DAVINCIROOT/options/L0Checking.opts" 
+// #include "$L0CHECKERROOT/options/L0Checker.opts"
 //--------------------------------------------------------------
 // Checking of L1 and/or HLT reconstruction:
 //#include "$HLTSELCHECKERROOT/options/TrgChecking.opts"  
@@ -80,7 +85,8 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/OneMillionMB.opts"
-ApplicationMgr.EvtMax    = 1000000 ;
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts"
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.PrintFreq  = 1000;
 
 //---------------------------------------------------------------
@@ -91,6 +97,9 @@ ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
 StagerSvc.BlockSize = 50 ; // n: the number of files in each block
 StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
 
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVTrigger.hbook";
+//ApplicationMgr.DLLs += { "RootHistCnv" };
+// ApplicationMgr.HistogramPersistency = "HBOOK";
+// HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+// or if you prefer ROOT:
 
+StagerSvc.OutputLevel = 2 ;

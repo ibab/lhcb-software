@@ -1,11 +1,12 @@
 /** @file 
  *  Options to execute the MuonID with new tuning.
  *  
- *  @author G.Corti
- *  @date 2003-05-16
+ *  @author E. Polycarpo
+ *  @date 2005-12-09
  */
 
 DaVinciMainSeq.Members += { "MuonIDFOI" };
+
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
 MuonIDFOI.IDLocation = "/Event/Rec/Muon/NewMuonID";

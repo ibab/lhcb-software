@@ -4,6 +4,29 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r15 2005-12-15 ===================
+! 2005-12-12 - P. Koppenburg
+  - options/DaVinciReco.opts
+    . Add MuonIDRetuning by default. This will get the better tuning for the
+      MuonID, but will change all muon efficiencies. See Erica's talk at
+      http://agenda.cern.ch/fullAgenda.php?ida=a055058#2005-12-08
+    
+! 2005-11-09 - P. Koppenburg
+  - options/*.opts
+    . Use ROOT everywhere for histogram/Ntuples persistency
+    
+! 2005-11-04 - P. Koppenburg
+  - options/DstContents.opts
+    . Add Raw/Ecal
+    
+! 2005-11-02 - P. Koppenburg
+  - options/L0Checking.opts
+    . Removed. Replaced by L0CHECKERROOT/options/L0Checker.opts
+      Because of a bug noticed by Krzysztof Syryczynski
+  - options/DaVinci.opts
+  - options/DVTriggerFilter.opts
+    . Corrected accordingly
+    
 !========================== DaVinci v12r14 2005-10-19 ===================
 ! 2005-09-01 - P. Koppenburg
   - options/DaVinciCommon.opts

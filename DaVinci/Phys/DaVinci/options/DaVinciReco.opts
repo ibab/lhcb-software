@@ -6,6 +6,12 @@
  *  @date 2004-02-03
  */
 
+//
+// New tuning by E. Polycarpo et al.
+//
+#include "$DAVINCIROOT/options/MuonIDReTuning.opts"
+
+//
 // Charged ProtoParticles
 DaVinciMainSeq.Members += { "ChargedProtoPAlg" };
 

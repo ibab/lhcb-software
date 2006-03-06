@@ -17,7 +17,7 @@
 
 //--------------------------------------------------------------
 // Re-run L0 and L1 Trigger with DC04 tuning
-//#include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L0.opts"
 //#include "$TRGSYSROOT/options/L1.opts"
 //--------------------------------------------------------------
 // High luminosity: Include two of                
@@ -30,7 +30,7 @@
 // HLT: include this line
 //#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
 
-// #include "$DAVINCIROOT/options/L0Checking.opts"  // for L0 checks
+// #include "$L0CHECKERROOT/options/L0Checker.opts"  // for L0 checks
 // #include "$TRGSYSROOT/options/TrgChecking.opts"  // for L1 & HlT checks
 
 //--------------------------------------------------------------
@@ -110,13 +110,12 @@
 // Hbook or Root are available, uncomment the one you want to use
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
+//ApplicationMgr.DLLs += { "RootHistCnv" };
 // ApplicationMgr.HistogramPersistency = "HBOOK";
 // HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 // or if you prefer ROOT:
-//ApplicationMgr.HistogramPersistency = "ROOT";
-//HistogramPersistencySvc.OutputFile = "DVHistos.root";
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
