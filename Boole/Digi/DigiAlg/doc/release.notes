@@ -4,11 +4,11 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r0 2006-03-06 =========================
 ! 2006-02-21 - Olivier Callot
  - Import BuildMCTrackInfo, which was in Phys/MCTools. Adapt to STDetectorElement,
    wait for Velo Associators to get the complete picture.
 
-!========================== DigiAlg v4r0 2006-02-16 =========================
 ! 2006-02-16 - Marco Cattaneo
  - Adapt to BooleInit to LbAppInit changes and add DAQ and ODIN bank creation
 
