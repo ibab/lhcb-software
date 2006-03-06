@@ -4,6 +4,13 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-03-03 - P. Koppenburg for Thomas Ruf
+  Force the use of the correct FieldMap
+
+! 2006-02-27 - P. Koppenburg
+  Changes in tree structure for Stripping:
+  - Move Ks2PiPiSel and CommonParticles to PhysSelSys
+  - Move Stripping from PhysSelSys
 !========================== DaVinci v12r16 2006-02-03 ===================
 ! 2006-02-03 - P. Koppenburg
   - options/DaVinci.opts
