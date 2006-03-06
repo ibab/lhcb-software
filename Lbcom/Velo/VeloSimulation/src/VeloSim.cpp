@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.5 2006-02-23 12:58:16 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.6 2006-03-06 11:04:46 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -63,7 +63,6 @@ VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
   m_veloDet ( 0 ),
-  m_baseDiffuseSigma( sqrt(2*m_kT/m_biasVoltage) ),
   m_fitParams(7, 0.)
 {
   declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
@@ -115,7 +114,8 @@ StatusCode VeloSim::initialize() {
   debug() << "==> Initialise" << endmsg;
 
   m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
-
+  m_baseDiffuseSigma=( 2*m_kT/m_biasVoltage );
+  
   // random number initialisation
   StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
   StatusCode scr2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
@@ -165,6 +165,8 @@ StatusCode VeloSim::execute() {
       sc = simulation();
     }
   }
+  info() << "let's go to the output data" << endmsg;
+  
   if (sc) sc= storeOutputData(); // add MCFEs to TDS
   //
   return (sc);
@@ -200,7 +202,7 @@ StatusCode VeloSim::getInputData() {
   debug() << "Retrieving MCHits from " << m_inputContainer <<endmsg;
   m_veloHits=get<LHCb::MCHits>( m_inputContainer );
   //
-  debug() << m_veloHits->size() << " hits retrieved" <<endmsg;
+  info() << m_veloHits->size() << " hits retrieved" <<endmsg;
   // get the pile-up input data
   if (m_pileUp) {
     debug()<< "Retrieving MCHits from " << m_pileUpInputContainer <<endmsg;
@@ -334,6 +336,8 @@ long VeloSim::simPoints(LHCb::MCHit* hit){
   double EntryFraction=0.,ExitFraction=0.;
   double pitch=0.;
   StatusCode EntryValid, ExitValid;
+  info()<< "hit entry: " << hit->entry() <<endmsg;
+  
   LHCb::VeloChannelID entryChan, exitChan;
   EntryValid=m_veloDet->pointToChannel(hit->entry(),entryChan,EntryFraction,
                                       pitch);
@@ -1017,21 +1021,22 @@ StatusCode VeloSim::finalProcess(){
 //=========================================================================
 StatusCode VeloSim::storeOutputData(){
   //
-  debug()<< " ==> storeOutputData() " <<endmsg;
+  info()<< " ==> storeOutputData() " <<endmsg;
   //
   StatusCode sc;
   // velo FEs
   // update FEs container adding the pileup FEs
   //  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
-  debug()<< " size of m_veloFE before update: "
+  info()<< " size of m_veloFE before update: "
         << m_veloFEs->size() <<endmsg;
-  
-  LHCb::MCVeloFEs::const_iterator feIt;
-  for(feIt=m_pileUpFEs->begin(); feIt!=m_pileUpFEs->end(); feIt++){
-    m_veloFEs->insert(*feIt);
+  //  
+  if(m_pileUp){
+    LHCb::MCVeloFEs::const_iterator feIt;
+    for(feIt=m_pileUpFEs->begin(); feIt!=m_pileUpFEs->end(); feIt++){
+      m_veloFEs->insert(*feIt);
+    }
+    debug()<< " size after update: " << m_veloFEs->size() <<endmsg;
   }
-  debug()<< " size after update: " << m_veloFEs->size() <<endmsg;
-  
   //
   sc=put(m_veloFEs, m_outputContainer);
   if( sc ){
