@@ -1,8 +1,8 @@
-// $Id: VeloClusterMoni.cpp,v 1.3 2006-02-21 17:18:06 szumlat Exp $
+// $Id: VeloClusterMoni.cpp,v 1.4 2006-03-06 10:50:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "VeloClusterMoni.h"
@@ -18,9 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-//DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
-static const  AlgFactory<VeloClusterMoni>          s_factory ;
-const        IAlgFactory& VeloClusterMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloClusterMoni );
 
 
 //=============================================================================
@@ -31,7 +29,6 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_clusterCont ( LHCb::InternalVeloClusterLocation::Default ),
     m_feCont ( LHCb::MCVeloFELocation::Default ),
-    m_printInfo ( false ),
     m_nVeloClusters ( 0. ),
     m_nVeloClusters2 ( 0. ),
     m_nVeloClustersS ( 0. ),
@@ -42,9 +39,9 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
     m_nThreeStrip ( 0. ),
     m_nFourStrip ( 0. ),
     m_numberOfEvents ( 0 ),
-    m_veloDet ( getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo") ) 
+    m_veloDet ( 0 ) 
 {
-  declareProperty("PrintInfo", m_printInfo);
+  declareProperty( "PrintInfo", m_printInfo = false );
 }
 //=============================================================================
 // Destructor
@@ -58,6 +55,7 @@ StatusCode VeloClusterMoni::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialize" << endmsg;
+  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
   setHistoTopDir("Velo/");
   //
@@ -216,7 +214,7 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     //
     unsigned int sensor=(*cluIt)->sensor();
     if(m_veloDet->isPileUpSensor(sensor))
-    info()<< "sensor number: " << sensor <<endmsg;
+    debug()<< "sensor number: " << sensor <<endmsg;
     double zPosOfClu=m_veloDet->zSensor(sensor);
     debug()<< " z pos: " << zPosOfClu <<endmsg;
     //

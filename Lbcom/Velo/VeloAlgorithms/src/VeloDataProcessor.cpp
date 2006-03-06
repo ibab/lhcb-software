@@ -66,7 +66,7 @@ StatusCode VeloDataProcessor::execute(){
   }
   // make digits
   LHCb::VeloDigits* veloDigitVec=new LHCb::VeloDigits(); 
-   info()<< "Retrieved " << MCFEs->size() << " MCVeloFEs" <<endmsg;
+   debug()<< "Retrieved " << MCFEs->size() << " MCVeloFEs" <<endmsg;
    int icount=0;
    for(LHCb::MCVeloFEs::const_iterator MCFEIt = MCFEs->begin() ; 
         MCFEs->end() != MCFEIt ; MCFEIt++){

@@ -1,8 +1,8 @@
-// $Id: VeloDigiMoni.cpp,v 1.4 2006-03-01 13:48:55 szumlat Exp $
+// $Id: VeloDigiMoni.cpp,v 1.5 2006-03-06 10:50:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
 #include "Event/MCHit.h"
 
@@ -19,9 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-//DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
-static const  AlgFactory<VeloDigiMoni>          s_factory ;
-const        IAlgFactory& VeloDigiMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloDigiMoni );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,14 +28,12 @@ VeloDigiMoni::VeloDigiMoni( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_digitContainer ( LHCb::VeloDigitLocation::Default ),
-    m_printInfo ( false ),
-    m_testDigits ( true ),
     m_numberOfEvents ( 0. ),
     m_nVeloDigits ( 0. ),
     m_nVeloDigits2 ( 0. )
 {
-  declareProperty("PrintInfo", m_printInfo);
-  declareProperty("TestDigits", m_testDigits);
+  declareProperty( "PrintInfo",  m_printInfo = false );
+  declareProperty( "TestDigits", m_testDigits = true );
 }
 //=============================================================================
 // Destructor
