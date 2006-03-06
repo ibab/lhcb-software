@@ -1,7 +1,11 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-!==================== VeloAssociators v2r0 2006-02-15 ===================
+!==================== VeloAssociators v2r0 2006-03-06 ===================
+! 2006-03-06 - Marco Cattaneo
+ - Move tool interface to DigiEvent Kernel directory, and remove VeloAssociators
+   directory
+
 ! 2006-03-03 - Tomasz Szumlak
  - VeloAssociators directory added with a new tool interface
  - new linker VeloDigits2MCHitLinker added

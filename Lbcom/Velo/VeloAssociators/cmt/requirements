@@ -8,7 +8,6 @@ version           v2r0
 #============================================================================
 branches src cmt doc
 include_path none
-include_dirs $(VELOASSOCIATORSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================

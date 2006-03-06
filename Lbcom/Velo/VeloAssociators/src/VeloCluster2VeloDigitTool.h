@@ -1,14 +1,14 @@
-// $Id: VeloCluster2VeloDigitTool.h,v 1.1 2006-03-03 12:33:03 szumlat Exp $
+// $Id: VeloCluster2VeloDigitTool.h,v 1.2 2006-03-06 09:17:45 cattanem Exp $
 #ifndef VELOCLUSTER2VELODIGITTOOL_H 
 #define VELOCLUSTER2VELODIGITTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "VeloAssociators/IVeloCluster2VeloDigitTool.h"            // Interface
 
 // from Event Model
 #include "Event/VeloCluster.h"
+#include "Kernel/IVeloCluster2VeloDigitTool.h"            // Interface
 
 /** @class VeloCluster2VeloDigitTool VeloCluster2VeloDigitTool.h
  *  
