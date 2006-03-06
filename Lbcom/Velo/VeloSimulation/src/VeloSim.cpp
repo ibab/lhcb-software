@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.6 2006-03-06 11:04:46 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.7 2006-03-06 13:01:05 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -165,7 +165,7 @@ StatusCode VeloSim::execute() {
       sc = simulation();
     }
   }
-  info() << "let's go to the output data" << endmsg;
+  debug() << "let's go to the output data" << endmsg;
   
   if (sc) sc= storeOutputData(); // add MCFEs to TDS
   //
@@ -202,7 +202,7 @@ StatusCode VeloSim::getInputData() {
   debug() << "Retrieving MCHits from " << m_inputContainer <<endmsg;
   m_veloHits=get<LHCb::MCHits>( m_inputContainer );
   //
-  info() << m_veloHits->size() << " hits retrieved" <<endmsg;
+  debug() << m_veloHits->size() << " hits retrieved" <<endmsg;
   // get the pile-up input data
   if (m_pileUp) {
     debug()<< "Retrieving MCHits from " << m_pileUpInputContainer <<endmsg;
@@ -336,7 +336,7 @@ long VeloSim::simPoints(LHCb::MCHit* hit){
   double EntryFraction=0.,ExitFraction=0.;
   double pitch=0.;
   StatusCode EntryValid, ExitValid;
-  info()<< "hit entry: " << hit->entry() <<endmsg;
+  verbose()<< "hit entry: " << hit->entry() <<endmsg;
   
   LHCb::VeloChannelID entryChan, exitChan;
   EntryValid=m_veloDet->pointToChannel(hit->entry(),entryChan,EntryFraction,
@@ -1021,14 +1021,13 @@ StatusCode VeloSim::finalProcess(){
 //=========================================================================
 StatusCode VeloSim::storeOutputData(){
   //
-  info()<< " ==> storeOutputData() " <<endmsg;
+  debug()<< " ==> storeOutputData() " <<endmsg;
   //
   StatusCode sc;
   // velo FEs
   // update FEs container adding the pileup FEs
   //  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
-  info()<< " size of m_veloFE before update: "
-        << m_veloFEs->size() <<endmsg;
+  debug() << " size of m_veloFE before update: " << m_veloFEs->size() << endmsg;
   //  
   if(m_pileUp){
     LHCb::MCVeloFEs::const_iterator feIt;
