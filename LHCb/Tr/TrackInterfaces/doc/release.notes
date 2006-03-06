@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-03-06 - Eduardo Rodrigues
+ - moved to new package Tr/TrackMCInterfaces the interfaces accessing
+   Monte Carlo information: IIdealStateCreator.h, ITrackReconstructible.h,
+   ITrackCriteriaSelector.h
+
 ! 2006-03-03 - Eduardo Rodrigues
  - const arguments in ITrajectoryProvider
 
