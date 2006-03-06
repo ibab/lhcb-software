@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2006-03-06 M Needham
+ - remove warning
+
 !=============================== STDAQ v2r3 2006-03-06 =======================
 ! 2006-03-03 M Needham
  - inconsistent adc problem fixed, plus bug fix in decoding 
