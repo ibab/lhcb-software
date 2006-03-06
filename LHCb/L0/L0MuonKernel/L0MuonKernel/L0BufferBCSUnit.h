@@ -89,7 +89,7 @@ namespace L0Muon {
     L0BufferBCSUnit();
 
     /// Constructor
-    L0BufferBCSUnit(LHCb::MuonTileID id);
+    L0BufferBCSUnit(LHCb::MuonTileID id, int l0BufferMode=0);
 
     /// Constructor
     L0BufferBCSUnit(DOMNode* pNode);

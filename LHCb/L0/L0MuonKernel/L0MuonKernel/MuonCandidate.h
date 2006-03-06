@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.h,v 1.3 2006-01-18 16:49:53 jucogan Exp $
+// $Id: MuonCandidate.h,v 1.4 2006-03-06 09:56:00 jucogan Exp $
 
 #ifndef L0MUONKERNEL_MUONCANDIDATE_H
 #define L0MUONKERNEL_MUONCANDIDATE_H     1
@@ -12,6 +12,7 @@ of a Muon trigger candidate
 
 #include "boost/shared_ptr.hpp"
 #include <math.h>
+#include <string>
 
 namespace L0Muon {
 
@@ -40,6 +41,12 @@ namespace L0Muon {
     const int offM1() const
     {
       return m_offM1 ;
+    }
+    
+    /// Get the quarter
+    const int quarter() const
+    {
+      return m_quarter ;
     }
     
     /// Get the pu number
@@ -85,10 +92,17 @@ namespace L0Muon {
     }
     
     /// Set the pu number
+    void setQuarter(int quarter)
+    {
+      m_quarter = quarter;
+    }   
+
+    /// Set the pu number
     void setPu(int pu)
     {
       m_pu = pu;
     }   
+
     /// Set the board number
     void setBoard(int board)
     {
@@ -127,6 +141,8 @@ namespace L0Muon {
     {
       m_charge =  pT>0. ? +1:0;      
     }
+
+    std::string dump();
     
     
   private:
@@ -137,6 +153,7 @@ namespace L0Muon {
     int m_charge ;
     int m_pu;
     int m_board;
+    int m_quarter;
     
   };
 

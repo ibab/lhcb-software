@@ -81,7 +81,7 @@ class L0BufferSlaveUnit : public L0BufferUnit {
     L0BufferSlaveUnit();
 
     /// Constructor
-    L0BufferSlaveUnit(LHCb::MuonTileID id);
+    L0BufferSlaveUnit(LHCb::MuonTileID id, int l0BufferMode=0);
 
     /// Constructor
     L0BufferSlaveUnit(DOMNode* pNode);

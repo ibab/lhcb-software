@@ -10,16 +10,18 @@ L0Muon::L0BufferProcUnit::L0BufferProcUnit(){
 /**
    Constructor.
 */
-L0Muon::L0BufferProcUnit::L0BufferProcUnit(LHCb::MuonTileID id):L0BufferUnit(id){
-  char buf[4096];
-  char* format ;
-  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-  // Create the output TileRegister
-  format = "%s_Q%dR%d%d%d";
-  sprintf(buf,format,type().c_str(),id.quarter()+1,id.region()+1,id.nX(),id.nY());
-  Register* reg = rfactory->createRegister(buf,bufferSize());
-  reg->setType("L0Buffer");
-  addOutputRegister(reg);
+L0Muon::L0BufferProcUnit::L0BufferProcUnit(LHCb::MuonTileID id, int l0BufferMode):L0BufferUnit(id){
+  if (l0BufferMode==1) {
+    char buf[4096];
+    char* format ;
+    L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
+    // Create the output TileRegister
+    format = "%s_Q%dR%d%d%d";
+    sprintf(buf,format,type().c_str(),id.quarter()+1,id.region()+1,id.nX(),id.nY());
+    Register* reg = rfactory->createRegister(buf,bufferSize());
+    reg->setType("L0Buffer");
+    addOutputRegister(reg);
+  }
 };
 
 /**
@@ -84,21 +86,21 @@ void L0Muon::L0BufferProcUnit::execute() {
   TileRegister* formattedReg = dynamic_cast<TileRegister*>(itformatted->second);
 
   // If not already done, fill the formatted register
-  if (! formattedReg->isSet()) {
-    // Loop over the raw input registers 
-    for (unsigned int count=0; count<m_inputs.size(); count++) { 
-      format = "RAW_%d";
-      sprintf(buf,format,count);
-      std::map<std::string,L0Muon::Register*>::iterator itraw =  m_inputs.find(buf);
-      if (itraw==m_inputs.end()) break;
-      TileRegister* rawReg = dynamic_cast<TileRegister*>(itraw->second);
-      std::vector<LHCb::MuonTileID> firedTiles = rawReg->firedTiles();
-      for (std::vector<LHCb::MuonTileID>::iterator ittile = firedTiles.begin();ittile<firedTiles.end();ittile++){
-        formattedReg->setTile(*ittile);
-      }
-    } // End of Loop over the raw input registers
-  }
-
+  if (formattedReg->isSet()) formattedReg->reset();
+  
+  // Loop over the raw input registers 
+  for (unsigned int count=0; count<m_inputs.size(); count++) { 
+    format = "RAW_%d";
+    sprintf(buf,format,count);
+    std::map<std::string,L0Muon::Register*>::iterator itraw =  m_inputs.find(buf);
+    if (itraw==m_inputs.end()) break;
+    TileRegister* rawReg = dynamic_cast<TileRegister*>(itraw->second);
+    std::vector<LHCb::MuonTileID> firedTiles = rawReg->firedTiles();
+    for (std::vector<LHCb::MuonTileID>::iterator ittile = firedTiles.begin();ittile<firedTiles.end();ittile++){
+      formattedReg->setTile(*ittile);
+    }
+  } // End of Loop over the raw input registers
+  
   // Set the output register
   outputreg->set(formattedReg->getBitset(),
                  BitsL0BufProcINPUTDATA ,ShiftL0BufProcINPUTDATA );

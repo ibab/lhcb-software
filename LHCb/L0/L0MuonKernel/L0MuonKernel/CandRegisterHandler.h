@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.3 2006-01-19 16:04:12 cattanem Exp $
+// $Id: CandRegisterHandler.h,v 1.4 2006-03-06 09:56:00 jucogan Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -121,7 +121,11 @@ namespace L0Muon {
     PMuonCandidate getMuonCandidate(int icand);
 
     int numberOfCandidates(){
-      return m_candRegister->getulong(BitsCandNumber ,ShiftCandNumber);
+      int ncand=0;
+      for (int icand=0; icand<2; icand++){
+        if (!isEmpty(icand)) ncand++;
+      }
+      return ncand;
     }  
 
     // Return true if the cand is empty (no bit set)

@@ -96,7 +96,7 @@ namespace L0Muon {
     L0BufferProcUnit();
 
     /// Constructor
-    L0BufferProcUnit(LHCb::MuonTileID id);
+    L0BufferProcUnit(LHCb::MuonTileID id, int l0BufferMode=0);
 
     /// Constructor
     L0BufferProcUnit(DOMNode* pNode);

@@ -17,26 +17,32 @@ L0Muon::FormattingUnit::~FormattingUnit() {}
 
 
 void L0Muon::FormattingUnit::preexecute(){
-  if (m_debug) std::cout << "*!* Formatting::preexecute: registers in ouput"  << std::endl;
+  if (m_debug) std::cout << "*!* Formatting::preexecute IN"  << std::endl;
    
   std::vector<LHCb::MuonTileID> firedPads;
-  firedPads.clear();
 
   std::map<std::string,Register*>::iterator ir;
 
   if (m_debug) std::cout << "*!* Formatting::preexecute: registers in input"  << std::endl;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
+    if (m_debug) std::cout << "*!* Formatting::preexecute:    "
+                           << " register is "<<ir->first  
+                   //<< " add: "<< itr
+                           << " size: "<<itr->size()  
+                           << std::endl;
+    //if (m_debug) itr->print_tiles(0);
+    if (m_debug) itr->print_bits(0,0);
+    
     
     std::vector<LHCb::MuonTileID> tmp = itr->firedTiles();
 
-    if (m_debug) std::cout <<"*!* Formatting::preexecute:   "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
+    if (m_debug) std::cout <<"*!* Formatting::preexecute:    "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
     itr->makePads();
       
     std::vector<LHCb::MuonTileID> pads = itr->Pads();
     std::vector<LHCb::MuonTileID>::iterator  ipads ;
     for (ipads = pads.begin(); ipads != pads.end(); ipads++){
-       
       firedPads.push_back(*ipads);
     }    
   }  

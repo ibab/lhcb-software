@@ -8,14 +8,14 @@ L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(){
 /**
    Constructor.
 */
-L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(LHCb::MuonTileID id):L0MUnit(id){
+L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(LHCb::MuonTileID id):RawBufferUnit(id){
   m_evtCounter=0;
 };
 
 /**
    Constructor.
 */
-L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(DOMNode* pNode):L0MUnit(pNode){
+L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(DOMNode* pNode):RawBufferUnit(pNode){
 };
 
 
@@ -30,7 +30,7 @@ L0Muon::RawBufferCtrlUnit::~RawBufferCtrlUnit(){
 */
 void L0Muon::RawBufferCtrlUnit::initialize(){
 
-  L0MUnit::initialize();
+  RawBufferUnit::initialize();
 
   // Initialize event counter
   m_evtCounter=0;
@@ -81,7 +81,6 @@ void L0Muon::RawBufferCtrlUnit::execute(){
 
   char buf[4096];
   char* format ;
-  std::map<int, CandRegisterHandler>::iterator itHandlerMap;
   int nCandidates;
   int shift;
   
@@ -97,146 +96,94 @@ void L0Muon::RawBufferCtrlUnit::execute(){
   }
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute key= "<< buf <<" found in output registers\n";
   Register* outputreg =(*itoutputs).second;
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute START "<< std::endl;
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() << std::endl;
 
   // Set the Global ID
+  // -----------------
   outputreg->set(m_evtCounter , BitsRawBufCtrlL0EVTNUM  , ShiftRawBufCtrlL0EVTNUM  );
   outputreg->set(m_evtCounter , BitsRawBufCtrlL0BID     , ShiftRawBufCtrlL0BID     );
+
+  // Errors
+  // ------
   outputreg->set(           0 , BitsRawBufCtrlIDCUERROR , ShiftRawBufCtrlIDCUERROR );
   outputreg->set(           0 , BitsRawBufCtrlIDSUERROR , ShiftRawBufCtrlIDSUERROR );
   
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute AFTER HEADER "<< std::endl;
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() << std::endl;
-  // Candidates from Control Units
+
+
+  // Output candidates from Control Units
+  // ------------------------------------
   shift=ShiftRawBufCtrlFIRSTCAND;
   nCandidates=0;
   // Loop over controler candidate registers
-  for (itHandlerMap=m_candRegHandlerCtrl.begin();itHandlerMap!=m_candRegHandlerCtrl.end();itHandlerMap++){
+  std::map<int, CandRegisterHandler>::iterator itHandlerCtrl;
+  for (itHandlerCtrl=m_candRegHandlerCtrl.begin();itHandlerCtrl!=m_candRegHandlerCtrl.end();itHandlerCtrl++){
     // Loop over input candidates in register
+    int quarter = (*itHandlerCtrl).first;
     for (int icand = 0;icand<2;icand++) {
-      int quarter = (*itHandlerMap).first;
       //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute quarter= "<< quarter <<" icand= "<<icand << std::endl;
       if (m_candRegHandlerCtrl[quarter].isEmpty(icand)) continue;
       unsigned long ucandidate = formattedCandidate(m_candRegHandlerCtrl[quarter],icand,quarter);
-      outputreg->set(ucandidate,BitsRawBufCtrlCAND,shift);
+      //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute CTRL cand."
+      //                              <<" quarter= "<< quarter 
+      //                              <<" icand= "<<icand 
+      //                              <<" ucandidate= "<<ucandidate
+      //                              << std::endl;
+      outputreg->set(ucandidate,BitsRawBufCAND,shift);
+      //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute AFTER CTRL CANDIDATE # "<<nCandidates << std::endl;
       //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute add new candidate ->outputreg= "
       //                              << outputreg->getBitset() << std::endl;
       nCandidates++;
-      shift+=RelShiftRawBufCtrlCAND;
+      shift+=RelShiftRawBufCAND;
+      
+    } // End of Loop over input candidates in register
+  } // End of Loop over controler candidate registers
+  outputreg->set( nCandidates , BitsRawBufCtrlNCTRLCAND , ShiftRawBufCtrlNCTRLCAND );
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute AFTER N CTRL CANDIDATE"<< std::endl;
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() << std::endl;
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() 
+  //                          << " ("<<outputreg->size()<<")"<< std::endl;
+
+  // Candidates from Best Candidates Selection Units
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute ... done " << std::endl;
+
+
+  // Output candidates from Best Candidates Selection Units
+  // ------------------------------------------------------
+  int shiftBcsuCandidate = shift;
+  shift+=BitsRawBufCtrlNBCSUCAND;
+  nCandidates=0;
+  // Loop over controler candidate registers
+  std::map<std::pair<int,int>, CandRegisterHandler>::iterator itHandlerBCSU;
+  for (itHandlerBCSU=m_candRegHandlerBCSU.begin();itHandlerBCSU!=m_candRegHandlerBCSU.end();itHandlerBCSU++){
+    // Loop over input candidates in register
+    std::pair<int,int> index = (*itHandlerBCSU).first;
+    int quarter = index.first;
+    for (int icand = 0;icand<2;icand++) {
+      //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute quarter= "<< quarter <<" icand= "<<icand << std::endl;
+      if (m_candRegHandlerBCSU[index].isEmpty(icand)) continue;
+      unsigned long ucandidate = formattedCandidate(m_candRegHandlerBCSU[index],icand,quarter);
+      //       if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute BCSU cand."
+      //                              <<" quarter= "<< quarter 
+      //                              <<" icand= "<<icand 
+      //                              <<" ucandidate= "<<ucandidate
+      //                              << std::endl;
+      outputreg->set(ucandidate,BitsRawBufCAND,shift);
+      //      if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute AFTER BCSU CANDIDATE # "<<nCandidates << std::endl;
+      //      if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute add new candidate ->outputreg= "
+      //                             << outputreg->getBitset() << std::endl;
+      nCandidates++;
+      shift+=RelShiftRawBufCAND;
       
     } // End of Loop over input candidates in register
   } // End of Loop over controler candidate registers
   //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() << std::endl;
-  outputreg->set( nCandidates , BitsRawBufCtrlNCTRLCAND , ShiftRawBufCtrlNCTRLCAND );
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() 
-  //                          << " ("<<outputreg->size()<<")"<< std::endl;
+  outputreg->set( nCandidates , BitsRawBufCtrlNBCSUCAND , shiftBcsuCandidate );
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute AFTER N BCSU CANDIDATE"<< std::endl;
+  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute outputreg= "<< outputreg->getBitset() << std::endl;
   
-
-  // Errors
-
-  // Candidates from Best Candidates Selection Units
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::execute ... done " << std::endl;
-  
-}
-
-/**
-   PostExecute
-*/
-void L0Muon::RawBufferCtrlUnit::postexecute(){
-  // Increment event counter
-  m_evtCounter++;
-
-  // Reset output registers (set bits to 0) 
-  releaseOutputRegisters();
-  // Clear output register (bitset size set to 0)
-  std::map<std::string,L0Muon::Register*>::iterator itoutputs;
-  for (itoutputs=m_outputs.begin();itoutputs!=m_outputs.end();itoutputs++) {
-    (*itoutputs).second->getBitset().clear();
-  }
-  
-
-}
-
-unsigned long  L0Muon::RawBufferCtrlUnit::formattedCandidate(CandRegisterHandler candRegHandler, int icand, int quarter)
-{
-  
-  unsigned long cand=0;
-  if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate IN "<<std::endl;
-
-  int  pt      = candRegHandler.getCandPT(icand)     ;
-  int  charge  = candRegHandler.getCandCharge(icand) ;
-  int  addM3   = candRegHandler.getCandAddM3(icand)  ;
-  int  offM2   = candRegHandler.getCandOffM2(icand)  ;
-  int  offM1   = candRegHandler.getCandOffM1(icand)  ;
-  int  pu      = candRegHandler.getCandPU(icand)     ;
-  int  board   = candRegHandler.getCandBoard(icand)  ;
-
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate pt    = "<< pt    
-  //                          << " = " << (unsigned long) ((pt     << RelShiftRawBufCtrlPT)     &  RelMaskRawBufCtrlPT)
-  //                          << " = " << (unsigned long) ((pt     << RelShiftRawBufCtrlPT)    )
-  //                          <<" ; bits: "  << BitsRawBufCtrlPT   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlPT   
-  //                          <<" ; shift: " << RelShiftRawBufCtrlPT 
-  //                          <<std::endl;  
-  cand +=  (pt     << RelShiftRawBufCtrlPT)     &  RelMaskRawBufCtrlPT;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate charge= "<< charge
-  //                          << " = " << (unsigned long) ((charge << RelShiftRawBufCtrlCHARGE) & RelMaskRawBufCtrlCHARGE)
-  //                          << " = " << (unsigned long) ((charge << RelShiftRawBufCtrlCHARGE) )
-  //                          <<" ; bits: "  << BitsRawBufCtrlCHARGE   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlCHARGE   
-  //                          <<" ; shift: " << RelShiftRawBufCtrlCHARGE 
-  //                          <<std::endl;
-  cand +=  (charge << RelShiftRawBufCtrlCHARGE) & RelMaskRawBufCtrlCHARGE;                             
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate addM3 = "<< addM3 
-  //                          << " = " <<  (unsigned long) ((addM3  << RelShiftRawBufCtrlADDM3)  & RelMaskRawBufCtrlADDM3)
-  //                          << " = " <<  (unsigned long) ((addM3  << RelShiftRawBufCtrlADDM3) )
-  //                          <<" ; bits: "  << BitsRawBufCtrlADDM3   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlADDM3  
-  //                          <<" ; shift: " << RelShiftRawBufCtrlADDM3 
-  //                          <<std::endl;
-  cand +=  (addM3  << RelShiftRawBufCtrlADDM3)  & RelMaskRawBufCtrlADDM3;                             
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate offM2 = "<< offM2 
-  //                          << " = " << (unsigned long) ((offM2  << RelShiftRawBufCtrlOFFM2)  & RelMaskRawBufCtrlOFFM2)
-  //                          << " = " << (unsigned long) ((offM2  << RelShiftRawBufCtrlOFFM2)  )
-  //                          <<" ; bits: "  << BitsRawBufCtrlOFFM2   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlOFFM2   
-  //                          <<" ; shift: " << RelShiftRawBufCtrlOFFM2 
-  //                          <<std::endl;
-  cand +=  (offM2  << RelShiftRawBufCtrlOFFM2)  & RelMaskRawBufCtrlOFFM2;                             
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate offM1 = "<< offM1 
-  //                          << " = " << (unsigned long) ((offM1  << RelShiftRawBufCtrlOFFM1)  & RelMaskRawBufCtrlOFFM1)
-  //                          << " = " << (unsigned long) ((offM1  << RelShiftRawBufCtrlOFFM1)  )
-  //                          <<" ; bits: "  << BitsRawBufCtrlOFFM1   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlOFFM1   
-  //                          <<" ; shift: " << RelShiftRawBufCtrlOFFM1 
-  //                          <<std::endl;
-  cand +=  (offM1  << RelShiftRawBufCtrlOFFM1)  & RelMaskRawBufCtrlOFFM1;                             
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate pu    = "<< pu     
-  //                          << " = " << (unsigned long) ((pu     << RelShiftRawBufCtrlPU)     & RelMaskRawBufCtrlPU)
-  //                          << " = " << (unsigned long) ((pu     << RelShiftRawBufCtrlPU)     )
-  //                          <<" ; bits: "  << BitsRawBufCtrlPU   
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlPU   
-  //                          <<" ; shift: " << RelShiftRawBufCtrlPU 
-  //                          <<std::endl;
-  cand +=  (pu     << RelShiftRawBufCtrlPU)     & RelMaskRawBufCtrlPU;                             
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate board = "<< board  
-  //                          << " = " <<  (unsigned long) ((board  << RelShiftRawBufCtrlBOARD)  &RelMaskRawBufCtrlBOARD)
-  //                          << " = " <<  (unsigned long) ((board  << RelShiftRawBufCtrlBOARD)  )
-  //                          <<" ; bits: "  << BitsRawBufCtrlBOARD 
-  //                          <<" ; mask: "  << RelMaskRawBufCtrlBOARD 
-  //                          <<" ; shift: " << RelShiftRawBufCtrlBOARD
-  //                          <<std::endl;
-  cand +=  (board  << RelShiftRawBufCtrlBOARD)  &RelMaskRawBufCtrlBOARD;
-  //   if (m_debug) std::cout << "*!* RawBufferCtrlUnit::formattedCandidate cand    = "<< cand  <<std::endl;
-  cand +=  (quarter  << RelShiftRawBufCtrlQUARTER)  &RelMaskRawBufCtrlQUARTER;
-
-      
-  return cand;
-  
+  RawBufferUnit::execute();
 }
 
