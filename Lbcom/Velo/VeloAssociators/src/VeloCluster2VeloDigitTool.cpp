@@ -1,4 +1,4 @@
-// $Id: VeloCluster2VeloDigitTool.cpp,v 1.1 2006-03-03 12:33:03 szumlat Exp $
+// $Id: VeloCluster2VeloDigitTool.cpp,v 1.2 2006-03-06 10:41:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ VeloCluster2VeloDigitTool::VeloCluster2VeloDigitTool( const std::string& type,
 VeloCluster2VeloDigitTool::~VeloCluster2VeloDigitTool() {} 
 
 //=============================================================================
-SmartRefVector<LHCb::VeloDigit> getDigits(
+SmartRefVector<LHCb::VeloDigit> VeloCluster2VeloDigitTool::getDigits(
                                 LHCb::VeloCluster* cluster,
                                 LHCb::VeloDigits* digitCont)
 {
