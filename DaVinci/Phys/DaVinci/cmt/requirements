@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.297 2006-03-06 08:28:22 pkoppenb Exp $
+# $Id: requirements,v 1.298 2006-03-06 08:29:02 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r13
+version           v12r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -26,6 +26,8 @@ apply_pattern DaVinciVersion
 use GaudiSys            v*
 # Event persistency
 use GaudiPoolDb         v*
+# Stager Service
+use GaudiSiteSvc        v*
 
 # Histogram persistency 
 use HbookCnv            v*
@@ -44,18 +46,18 @@ use LHCb                        v*
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v3r1p1   Phys
-use  DaVinciKernel      	v3r6     Phys
-use  DaVinciTools       	v12r1    Phys
-use  FlavourTagging     	v6r2     Phys
+use  DaVinciFilter      	v3r2     Phys
+use  DaVinciKernel      	v3r8     Phys
+use  DaVinciTools       	v12r2    Phys
+use  FlavourTagging     	v6r3     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
-use  DaVinciTransporter 	v2r0p3   Phys
-use  VertexFit			v1r6p1   Phys
-use  Tampering                  v1r2     Phys
+use  DaVinciTransporter 	v2r1     Phys
+use  VertexFit			v1r8     Phys
+use  Tampering                  v1r3     Phys
 # Generic tools 
-use  Utilities          	v2r1     Tools
+use  Utilities          	v2r1p1   Tools
 use  RecoTools          	v1r1     Rec
 
 #=======================================================
@@ -63,10 +65,11 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r15    Phys
+use  DaVinciMCTools     	v5r16    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
+use  PVEff	                v1r0     Phys
 
 #=======================================================
 # packages included in LoKiSys
@@ -80,12 +83,12 @@ use  KtJet	             	v1r0     External
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r6     Hlt
-use HltSelections               v3r7     Hlt
-use HltSelChecker               v3r6     Hlt
+use HltGeneric                  v2r7     Hlt
+use HltSelections               v3r9     Hlt
+use HltSelChecker               v3r8     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r7     PhysSel
+use  PhysSelSys			v8r9     PhysSel
 #=======================================================
 
 ########################################################
@@ -96,7 +99,7 @@ use  PhysSelSys			v8r7     PhysSel
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r7     Calo
 # Muon PID
-use  MuonID             	v3r7p1   Muon
+use  MuonID             	v3r9     Muon
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
@@ -111,15 +114,15 @@ use  PrimVtx            	v2r1p1   Rec
 use  TrExtrapolator     	v2r14    Tr
 
 # L0 Trigger packages
-use  L0DU               	v6r7p5   L0
+use  L0DU               	v6r7p6   L0
 use  L0Calo             	v7r6     L0
-use  L0Checker          	v3r0     L0
+use  L0Checker          	v3r2     L0
 use  L0MuonKernel 		v2r4     L0
 use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r8     Trg
+use TrgSys                      v1r10    Trg
 
 use GaudiPython v*
 
