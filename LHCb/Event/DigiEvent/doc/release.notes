@@ -4,7 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-!========================= DigiEvent v1r0 2006-02-17 =========================
+!========================= DigiEvent v1r0 2006-03-06 =========================
+! 2006-03-06 - Marco Cattaneo
+ - Add Kernel/IVeloCluster2VeloDigitTool.h interface
+
 ! 2006-02-23 - Olivier Deschamps
  - add CaloDigitLocation::Default in CaloDigit.xml
 
