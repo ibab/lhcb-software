@@ -1,4 +1,4 @@
-// $Id: STEffMonitor.h,v 1.3 2006-02-28 15:38:58 mneedham Exp $
+// $Id: STEffMonitor.h,v 1.4 2006-03-06 13:10:33 mneedham Exp $
 #ifndef _STEffMonitor_H
 #define _STEffMonitor_H
 
@@ -84,7 +84,7 @@ private:
   DeSTDetector* m_tracker;
   std::string m_clusterLocation;
   bool m_includeGuardRings; 
-
+  bool m_pEff;
 
   // pointer to p to hit associaton
   typedef IRelation<LHCb::MCParticle,LHCb::MCHit> HitTable;

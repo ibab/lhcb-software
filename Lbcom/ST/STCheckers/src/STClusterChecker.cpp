@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.5 2006-03-03 16:01:21 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.6 2006-03-06 13:10:33 mneedham Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -47,6 +47,7 @@ STClusterChecker::STClusterChecker(const std::string& name,
   // constructer
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("detType", m_detType = "TT"); 
+  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
 }
 
 STClusterChecker::~STClusterChecker(){
@@ -66,7 +67,6 @@ StatusCode STClusterChecker::initialize(){
   // detector element     
   m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
-  m_clusterLocation = STClusterLocation::TTClusters;
   STDetSwitch::flip(m_detType,m_clusterLocation);
  
   // sig to noise tool

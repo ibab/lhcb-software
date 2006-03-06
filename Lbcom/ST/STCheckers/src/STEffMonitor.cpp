@@ -60,6 +60,7 @@ STEffMonitor::STEffMonitor(const std::string& name,
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
   this->declareProperty("includeGuardRings", m_includeGuardRings = false);
+  this->declareProperty("printEfficiency", m_pEff = true);
 }
 
 STEffMonitor::~STEffMonitor(){
@@ -122,7 +123,12 @@ StatusCode STEffMonitor::finalize(){
   // Finalize
 
   // init the message service
-  info() << " -------Efficiency %--------- " << endmsg;
+  if (m_pEff == true){
+    info() << " -------Efficiency %--------- " << endmsg;
+  }
+  else {
+    info() << " -------InEfficiency %--------- " << endmsg;
+  }
 
   // print out efficiencys
 
@@ -141,6 +147,7 @@ StatusCode STEffMonitor::finalize(){
     if (nAcc > 0){
       eff = 100.0*(double)nFound/(double)nAcc;
       err = sqrt((eff*(100.0-eff))/(double)nAcc);
+      if (m_pEff = false) eff = 1-eff;
     }
 
     if (m_detType == "TT"){
@@ -298,7 +305,7 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
        //  xy 
        m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
 
-       if (found == false){
+       if (found == true){
          m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
          m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
          m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
