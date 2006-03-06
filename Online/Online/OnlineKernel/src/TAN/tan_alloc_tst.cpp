@@ -16,11 +16,11 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
   //
   //                                      M.Frank
   // ----------------------------------------------------------------------------
-  TanInterface& interf = TanInterface::Instance();
+  TanInterface& interf = TanInterface::instance();
   int status;
   bool continuous = false, quiet = false;
   char *c, buff[64], host[32];
-  gethostname(host,sizeof(host));
+  tan_host_name(host,sizeof(host));
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {

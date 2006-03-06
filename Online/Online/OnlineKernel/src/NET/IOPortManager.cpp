@@ -1,4 +1,5 @@
 #include "RTL/rtl.h"
+#include "RTL/Lock.h"
 #include "NET/IOPortManager.h"
 #include <map>
 #include <vector>
@@ -89,13 +90,16 @@ namespace {
 
   class EntryMap : public std::map<__NetworkChannel__,PortEntry*> {
   protected:
+    friend class IOPortManager;
     lib_rtl_thread_t m_thread;
     __NetworkPort__  m_port;
     bool             m_dirty;
+    void*            m_mutex_id;
   public:
     static int threadCall(void* param);
     static int consoleCall(void* param);
     EntryMap(__NetworkPort__ p);
+    ~EntryMap();
     void setDirty() { m_dirty = true; }
     int handle();
     int run();
@@ -137,18 +141,21 @@ namespace {
       FD_ZERO(&exc_fds);
       FD_ZERO(&read_fds);
       m_dirty = false;
-      for(iterator i=begin(); i != end(); ++i)  {
-        if ( (*i).second->armed )  {
-          __NetworkChannel__ fd = (*i).first;
-          if ( fd > mxsock ) mxsock = fd;
-          FD_SET(fd, &read_fds);
-          FD_SET(fd, &exc_fds);
-          channels[nsock] = fd;
-          nsock++;
+      {
+	RTL::Lock lock(m_mutex_id);
+        for(iterator i=begin(); i != end(); ++i)  {
+          if ( (*i).second->armed )  {
+            __NetworkChannel__ fd = (*i).first;
+            if ( fd > mxsock ) mxsock = fd;
+            FD_SET(fd, &read_fds);
+            FD_SET(fd, &exc_fds);
+            channels[nsock] = fd;
+            nsock++;
+          }
         }
       }
       if ( nsock > 0 )  {
-        timeval tv = { 0, 100 };
+        timeval tv = { 0, 10 };
         int res = 0;
 	//        while ( res == 0 && !m_dirty ) {
 	  res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
@@ -164,7 +171,7 @@ namespace {
 	  //}
       }
       else  {        
-        timeval tv = { 0, 100 };
+        timeval tv = { 0, 10 };
         //while(!m_dirty) {
           ::select(nsock, 0, 0, 0, &tv);
 	//}
@@ -173,6 +180,7 @@ namespace {
       for ( int j=0; j<nsock; ++j )  {
         __NetworkChannel__ fd = channels[j];      
         if (FD_ISSET(fd, &read_fds))  {
+          RTL::Lock lock(m_mutex_id);
           iterator k=find(fd);
           if ( k != end() )  {
             PortEntry* e = (*k).second;
@@ -182,8 +190,11 @@ namespace {
               if ( e->callback )   {
                 if ( !(nb==0 && fd == fileno(stdin)) )
                   e->armed = 0;
-                  (*e->callback)(e->param);
-                }
+		int (*callback)(void*) = e->callback;
+		void* param = e->param;
+		RTL::Lock lock(m_mutex_id, true);
+		(*callback)(param);
+	      }
               if ( t == 1 && nb <= 0 )  {
                 k = find(fd);
                 if ( k != end() )  {
@@ -198,9 +209,12 @@ namespace {
     }
   }
 
-  EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p), m_dirty(false) {
+  EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p), m_dirty(false), m_mutex_id(0) {
+    lib_rtl_create_lock(0, &m_mutex_id);
   }
-
+  EntryMap::~EntryMap() {
+    lib_rtl_delete_lock(m_mutex_id);
+  }
   int EntryMap::run()  {
     if ( !m_thread )  {
       int (*call)(void*);
@@ -263,15 +277,18 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     portMap()[m_port] = em = new EntryMap(m_port);
   }
   em->setDirty();
-  PortEntry* e = (*em)[c];
-  if ( !e ) {
-    //printf("Install channel watcher for %d\n",c);
-    (*em)[c] = e = new PortEntry;
+  RTL::Lock lock(em->m_mutex_id);
+  {
+    PortEntry* e = (*em)[c];
+    if ( !e ) {
+      //printf("Install channel watcher for %d\n",c);
+      (*em)[c] = e = new PortEntry;
+    }
+    e->callback = callback;
+    e->param = param;
+    e->armed = 1;
+    e->type = typ;
   }
-  e->callback = callback;
-  e->param = param;
-  e->armed = 1;
-  e->type = typ;
   return em->run();
 }
 
@@ -280,9 +297,13 @@ int IOPortManager::remove(NetworkChannel::Channel c)  {
   if ( em ) {
     EntryMap::iterator i = em->find(c);
     if ( i != em->end() )  {
-      if ( (*i).second ) delete (*i).second;
-      em->erase(i);
-      em->setDirty();
+      RTL::Lock lock(em->m_mutex_id);
+      i = em->find(c);
+      if ( i != em->end() )  {
+        if ( (*i).second ) delete (*i).second;
+        em->erase(i);
+        em->setDirty();
+      }
     }
   }
   return 1;

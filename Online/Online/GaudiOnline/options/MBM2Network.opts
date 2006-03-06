@@ -17,6 +17,16 @@ Sender.Recipients                    = {
                                         ,"lxplus051::NetRead_4"
 //                                        ,"lxplus051::NetRead_5"
                                        };
+Sender.Recipients                    = { 
+                                         "farm0131d::NetRead_0"
+                                        ,"farm0131d::NetRead_1"
+                                        ,"farm0131d::NetRead_2"
+//                                        ,"farm0131d::NetRead_3"
+//                                        ,"farm0131d::NetRead_4"
+//                                        ,"farm0131::NetRead_5"
+//                                        ,"farm0131::NetRead_6"
+//                                        ,"farm0131::NetRead_7"
+                                       };
 Sender.Buffer                        = "RAW";
 Sender.Requirements                  = {
   "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"

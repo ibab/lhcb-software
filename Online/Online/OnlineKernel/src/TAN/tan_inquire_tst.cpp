@@ -16,7 +16,7 @@
 #endif
 
 extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
-  TanInterface& interf = TanInterface::Instance();
+  TanInterface& interf = TanInterface::instance();
   int status, num_inq = 0, tot_inq = 0, succ = 0, fail = 0, notfnd = 0;
 #ifdef _WIN32
   int inc = 50;
@@ -26,7 +26,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
   bool continuous = false, quiet = false;
   char *c, buff[64], host[32];
   sockaddr_in addr;
-  gethostname(host,sizeof(host));
+  tan_host_name(host,sizeof(host));
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {

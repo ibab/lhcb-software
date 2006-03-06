@@ -8,6 +8,7 @@
 #include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
 #include "NET/IOPortManager.h"
+#define _USE_FULL_WT
 
 enum  {
  SAFE_NAME_LENGTH      =  64,
@@ -471,8 +472,8 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
 
 static int _amsc_tcp_get_host_name (char *nodename,int length) {
   char name [SAFE_HOST_NAME_LENGTH];
-  WITHOUT_INTERCEPT(int status=gethostname (name, sizeof (name)));
-  if (status != 0) {
+  WITHOUT_INTERCEPT(int status=tan_host_name(name, sizeof (name)));
+  if (status != AMS_SUCCESS) {
     return AMS_HOSTNOTFOUND;
   }
   char* p = ::strchr (name, '\0');
@@ -737,7 +738,8 @@ static int _amsc_peek_action (unsigned int /* fac */, void* param)    {
 }
 
 static int _amsc_peek_ast (void* param)  {
-  return _amsc_peek_action(WT_FACILITY_TCP_PEEK, param);
+  return wtc_insert(WT_FACILITY_TCP_PEEK, param);
+  //return _amsc_peek_action(WT_FACILITY_TCP_PEEK, param);
 }
 
 static int _amsc_peek_rearm (amsentry_t* e) {
@@ -814,7 +816,9 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
     return WT_SUCCESS;
   }
   if (_ams.msgWaiting == 1)  {
+#ifdef _USE_FULL_WT
     RTL::Lock lock(_ams.lockid);
+#endif
     char src[64];
     unsigned int fac;
     char buff[80];
@@ -853,7 +857,9 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
   }
   else  {
     _amsc_printf("Message action: No message pending!\n");
+#ifdef _USE_FULL_WT
     RTL::Lock lock(_ams.lockid);
+#endif
     if ( lib_rtl_queue_success(remqhi(&_ams.AMS_Q,&m)) )    {
       insqti (m, &_ams.message_Q);
       wtc_insert_head (WT_FACILITY_AMS, 0);
@@ -863,7 +869,9 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
 }
 
 static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
+#ifdef _USE_FULL_WT
   RTL::Lock lock(_ams.lockid);
+#endif
   amsentry_t *e = (amsentry_t*)param;
   amsqueue_t *m = e->msg_ptr;
   size_t length = m->size - e->received;
@@ -911,8 +919,11 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
     lib_rtl_run_ast(_ams.userAst, _ams.userPar, 3);
   }
   insqti (m, &_ams.AMS_Q);
-  // _ams.msgWaiting = 1;
+#ifdef _USE_FULL_WT
   return wtc_insert (WT_FACILITY_TCPAMS, 0);
+#else
+  return _amsc_mess_action(WT_FACILITY_TCPAMS,0);
+#endif
 }
 
 static int _amsc_receive_ast (void* param) {
@@ -927,9 +938,12 @@ static int _amsc_receive_rearm (amsentry_t* e)  {
   if (size > CHOP_SIZE)    {
     size = CHOP_SIZE;
   }
+#ifdef _USE_FULL_WT
   IOPortManager(_ams.me.address.sin_port).add(1, e->chan, _amsc_receive_ast, e);
   return WT_SUCCESS;
-  //return _amsc_receive_ast(e);
+#else
+  return _amsc_receive_ast(e);
+#endif
 }
 
 static void _amsc_send_close_message(amsentry_t *e)  {
@@ -1147,6 +1161,7 @@ int amsc_init (const char *inname)   {
   if ( (status=wtc_init()) != WT_SUCCESS )  {
     return errno = status;
   }
+  status = wtc_subscribe(WT_FACILITY_TCP_PEEK,0,_amsc_peek_action);
   status = wtc_subscribe(WT_FACILITY_TCPAMS,0,_amsc_mess_action);
   if ( status != WT_SUCCESS )  {
     return errno = status;

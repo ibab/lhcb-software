@@ -12,43 +12,43 @@
 #include <map>
 #include <string>
 extern "C" TanInterface* taninterface() {
-  return &TanInterface::Instance();
+  return &TanInterface::instance();
 }
 // ----------------------------------------------------------------------------
 // C Interface: Allocate port number from local server
 // ----------------------------------------------------------------------------
 extern "C" int tan_allocate_port_number (const char *name, TanMessage::Port *port)  {
-  return TanInterface::Instance().AllocatePort(name,port);
+  return TanInterface::instance().allocatePort(name,port);
 }
 // ----------------------------------------------------------------------------
 // C Interface: Deallocate port number on local nameserver
 // ----------------------------------------------------------------------------
 extern "C" int tan_deallocate_port_number (const char *name) {
-  return TanInterface::Instance().DeallocatePort(name);
+  return TanInterface::instance().deallocatePort(name);
 }
 // ----------------------------------------------------------------------------
 // C Interface: Get remote address by name
 // ----------------------------------------------------------------------------
 extern "C" int tan_get_address_by_name ( const char* name, TanMessage::Address *sad)  {
-  return TanInterface::Instance().GetAddressByName(name,*sad);
+  return TanInterface::instance().addressByName(name,*sad);
 }
 // ----------------------------------------------------------------------------
 // C Interface:
 // ----------------------------------------------------------------------------
 extern "C" int tan_declare_alias (const char* name)   {
-  return TanInterface::Instance().DeclareAlias(name);
+  return TanInterface::instance().declareAlias(name);
 }
 // ----------------------------------------------------------------------------
 // C Interface:
 // ----------------------------------------------------------------------------
 extern "C" int tan_remove_alias (const char* name)   {
-  return TanInterface::Instance().RemoveAlias(name);
+  return TanInterface::instance().removeAlias(name);
 }
 // ----------------------------------------------------------------------------
 // C Interface:
 // ----------------------------------------------------------------------------
-extern "C" int tan_dump_dbase (const char* node)   {
-  return TanInterface::Instance().DumpDB(node);
+extern "C" int tan_host_name(char* node, size_t siz)   {
+  return TanInterface::instance().hostName(node,siz);
 }
 // ----------------------------------------------------------------------------
 // C Interface:
@@ -57,7 +57,7 @@ extern "C" int tan_dump_dbase (const char* node)   {
 // Instantiator: create object
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-TanInterface& TanInterface::Instance()   {
+TanInterface& TanInterface::instance()   {
   static TanInterface s_instance;
   return s_instance;
 }
@@ -67,24 +67,27 @@ TanInterface& TanInterface::Instance()   {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 TanInterface::TanInterface()  {
-  int status = gethostname (_pcHostName, sizeof (_pcHostName));
-  char *dot  = strchr(_pcHostName,'.');
-  _portAllocated = 0;
-  if ( dot != 0   )  *dot = 0;
-  if ( status < 0 )  status = gethostname (_pcHostName, sizeof (_pcHostName));
+  char* dot;
+  const char* tan_host = ::getenv("TAN_NODE");
+  int status = gethostname (m_pcHostName, sizeof (m_pcHostName));
+  m_portAllocated = 0;
   if ( status < 0 )                                                  goto Error;
-  _pLocalHost = GetHostByName(_pcHostName);
-  if ( _pLocalHost == 0 )                                            goto Error;
-  SetLocalAddress(_sinudp);
-  SetLocalAddress(_sintcp);
+  if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
+  m_pLocalHost = hostByName(m_pcHostName);
+  if ( m_pLocalHost == 0 )                                           goto Error;
+  dot  = strchr(m_pcHostName,'.');
+  if ( dot != 0   )  *dot = 0;
+  printf("Tan interface: Host=%s\n",m_pcHostName);
+  setLocalAddress(m_sinudp);
+  setLocalAddress(m_sintcp);
 #ifdef _SERVICE
-  _pServiceUDP       = ::getservbyname (NAME_SERVICE_NAME, "udp");
-  _pServiceTCP       = ::getservbyname (NAME_SERVICE_NAME, "tcp");
-  if ( _pServiceUDP == 0 || _pServiceTCP == 0 )                      goto Error;
-  _sinudp.sin_port   = htons(_pServiceUDP->s_port);
-  _sintcp.sin_port   = htons(_pServiceTCP->s_port);
+  m_pServiceUDP       = ::getservbyname (NAME_SERVICE_NAME, "udp");
+  m_pServiceTCP       = ::getservbyname (NAME_SERVICE_NAME, "tcp");
+  if ( m_pServiceUDP == 0 || m_pServiceTCP == 0 )                    goto Error;
+  m_sinudp.sin_port   = htons(m_pServiceUDP->s_port);
+  m_sintcp.sin_port   = htons(m_pServiceTCP->s_port);
 #else
-  _sintcp.sin_port   = _sinudp.sin_port = NAME_SERVICE_PORT;
+  m_sintcp.sin_port   = m_sinudp.sin_port = NAME_SERVICE_PORT;
 #endif
   m_channel          = 0;
   m_status           = TAN_SS_SUCCESS;
@@ -102,7 +105,7 @@ TanInterface::~TanInterface()  {
 // Convert TAN error codes to operating system specific ones
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::ErrorCode(int tan_error)  {
+int TanInterface::errorCode(int tan_error)  {
   switch ( tan_error )    {
     case TAN_SS_TASKNOTFOUND:     return  AMS_TASKNOTFOUND;
     case TAN_SS_HOSTNOTFOUND:     return  AMS_HOSTNOTFOUND;
@@ -126,7 +129,7 @@ int TanInterface::ErrorCode(int tan_error)  {
 // Fatal nameserver connection error: close channel and return given error code
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::FatalError(int code)  {
+int TanInterface::fatalError(int code)  {
   delete m_channel;
   m_channel = 0;
   return code;
@@ -135,7 +138,7 @@ int TanInterface::FatalError(int code)  {
 //  get hostentry from inet db by host name
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-hostent* TanInterface::GetHostByName(const char* name)  {
+hostent* TanInterface::hostByName(const char* name)  {
   hostent *h = 0;
 #ifdef _OSK
   h = _gethostbyname((char*)name);
@@ -144,13 +147,21 @@ hostent* TanInterface::GetHostByName(const char* name)  {
   return h;
 }
 // ----------------------------------------------------------------------------
+//  get local host name
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int TanInterface::hostName(char* name, size_t size)  const  {
+  ::strncpy(name, m_pcHostName, size);
+  return TAN_SS_SUCCESS;
+}
+// ----------------------------------------------------------------------------
 // given a node name, fill the socket address from the inet db.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin, 
+int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin, 
                                  NetworkChannel::Address& rin )  
 {
-  struct hostent *rp = GetHostByName (node);
+  struct hostent *rp = hostByName (node);
   if ( rp == 0 ) return TAN_SS_ERROR;
 #ifdef _VMS
   memcpy (&sin.sin_addr, *rp->h_addr_list, rp->h_length);
@@ -166,7 +177,7 @@ int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin,
   rin          = sin;
 #else
   static struct servent* se = ::getservbyname(NAME_SERVICE_NAME,"udp");
-  rin          = _sinudp;
+  rin          = m_sinudp;
 #endif
   rin.sin_port = se ? se->s_port : htons(NAME_SERVICE_PORT+1);
   // To use only ONE nameserver and no predefined service 
@@ -178,15 +189,15 @@ int TanInterface::SetInquireAddr(const char* node, NetworkChannel::Address& sin,
 //  Fill local address
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::SetLocalAddress  ( NetworkChannel::Address& sin )       {
+int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
 #ifdef _VMS
-  memcpy (&sin.sin_addr, *_pLocalHost->h_addr_list, _pLocalHost->h_length);
+  memcpy (&sin.sin_addr, *m_pLocalHost->h_addr_list, m_pLocalHost->h_length);
 #else
-  memcpy (&sin.sin_addr, _pLocalHost->h_addr, _pLocalHost->h_length);
+  memcpy (&sin.sin_addr, m_pLocalHost->h_addr, m_pLocalHost->h_length);
 #endif
   sin.sin_family = AF_INET;
   memset(sin.sin_zero,0,sizeof(sin.sin_zero));
-  sin.sin_port = htons(_sintcp.sin_port);
+  sin.sin_port = htons(m_sintcp.sin_port);
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------
@@ -194,7 +205,7 @@ int TanInterface::SetLocalAddress  ( NetworkChannel::Address& sin )       {
 // task - and node name 
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
+void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
   int n, s = 0;
   char *p;
   if ( 0 != (p=strstr(name,"::")) )    {      // DECNET STYLE
@@ -216,7 +227,7 @@ void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
     }
   }
   else    {
-    if (node != 0) strcpy (node, _pcHostName);
+    if (node != 0) strcpy (node, m_pcHostName);
     if (proc != 0) strcpy (proc, name);
   }
   for(p=node; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
@@ -227,18 +238,18 @@ void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
 //  -- accesses the local/remote nameserver task.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sad)  {
+int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad)  {
   if ( Status() == TAN_SS_SUCCESS )  {
     char node[32];
     NetworkChannel::Address radd;
     TanMessage msg(TanMessage::INQUIRE);
-    GetNodeWithName(name,node,msg._Name());
-    SetLocalAddress(msg.sin);
-    if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
+    nodeWithName(name,node,msg._Name());
+    setLocalAddress(msg.sin);
+    if ( setInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
 #if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
       TcpNetworkChannel c;
       TcpNetworkChannel &rcv = c, &snd = c;
-      if(c._Connect(radd,Connect_TMO) == -1) return ErrorCode(TAN_SS_NOTOPEN);
+      if(c._Connect(radd,Connect_TMO) == -1) return errorCode(TAN_SS_NOTOPEN);
       int nbyte = snd._Send(&msg,sizeof(msg));
 #else
       UdpNetworkChannel snd, rcv;
@@ -258,122 +269,122 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
-          if ( nbyte != int(msg._Length()) )    return ErrorCode(TAN_SS_ODDRESPONSE);
-          if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
-          sad = msg.sin;                        return ErrorCode(TAN_SS_SUCCESS);
+          if ( nbyte != int(msg._Length()) )    return errorCode(TAN_SS_ODDRESPONSE);
+          if ( msg._Error() != TAN_SS_SUCCESS ) return errorCode(msg._Error());
+          sad = msg.sin;                        return errorCode(TAN_SS_SUCCESS);
         }                                       // Timeout fired!
-        else if ( rcv._IsCancelled()         )  return ErrorCode(TAN_SS_RECV_TMO);
+        else if ( rcv._IsCancelled()         )  return errorCode(TAN_SS_RECV_TMO);
         else                                    return rcv._Error();
       }                                         return snd._Error();
-    }                                           return ErrorCode(TAN_SS_HOSTNOTFOUND);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+    }                                           return errorCode(TAN_SS_HOSTNOTFOUND);
+  }                                             return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 // Allocate port number from local name server
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::AllocatePort(const char* name, NetworkChannel::Port *port)  {
+int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
   if ( Status() == TAN_SS_SUCCESS )  {
     if ( m_channel == 0 )  {
       m_channel = new TcpNetworkChannel;
       TanMessage msg(TanMessage::ALLOCATE);
-      SetLocalAddress(msg.sin);
+      setLocalAddress(msg.sin);
       if ( m_channel->_Connect(msg.sin,Connect_TMO) != -1 )  {
-        GetNodeWithName(name, 0 , msg._Name());
+        nodeWithName(name, 0 , msg._Name());
         if ( m_channel->_Send(&msg,sizeof(msg)) == sizeof(msg) )  {
           int num_byte = m_channel->_Recv ( &msg, sizeof(msg), Receive_TMO);
           if ( num_byte > 0 )  {
             msg.Convert();
-            if ( num_byte != int(msg._Length()))return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
-            if ( msg._Error() != TAN_SS_SUCCESS)return FatalError( ErrorCode(msg._Error()) );
-            _portAllocated = ntohs(msg.sin.sin_port)+1;
-            *port = msg.sin.sin_port;           return ErrorCode( TAN_SS_SUCCESS );
+            if ( num_byte != int(msg._Length()))return fatalError( errorCode(TAN_SS_ODDRESPONSE) );
+            if ( msg._Error() != TAN_SS_SUCCESS)return fatalError( errorCode(msg._Error()) );
+            m_portAllocated = ntohs(msg.sin.sin_port)+1;
+            *port = msg.sin.sin_port;           return errorCode( TAN_SS_SUCCESS );
           }                                     // Receive timeout fired
-          else if ( m_channel->_IsCancelled())  return FatalError(ErrorCode(TAN_SS_RECV_TMO));
-          else                                  return FatalError(m_channel->_Error() );
-        }                                       return FatalError(m_channel->_Error() );
+          else if ( m_channel->_IsCancelled())  return fatalError(errorCode(TAN_SS_RECV_TMO));
+          else                                  return fatalError(m_channel->_Error() );
+        }                                       return fatalError(m_channel->_Error() );
       }                                         // Connect timeout fired
-      else if ( m_channel->_IsCancelled() )     return FatalError(m_channel->_Error());
-      else                                      return FatalError(m_channel->_Error());
-    }                                           return ErrorCode(TAN_SS_OPEN);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+      else if ( m_channel->_IsCancelled() )     return fatalError(m_channel->_Error());
+      else                                      return fatalError(m_channel->_Error());
+    }                                           return errorCode(TAN_SS_OPEN);
+  }                                             return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 // Deallocate port number from local name server
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::DeallocatePort(const char* name)  {
+int TanInterface::deallocatePort(const char* name)  {
   if ( Status() == TAN_SS_SUCCESS )  {
     if ( m_channel != 0 )  {
       TanMessage msg(TanMessage::DEALLOCATE);
-      GetNodeWithName(name, 0 ,msg._Name() );
-      SetLocalAddress(msg.sin);
+      nodeWithName(name, 0 ,msg._Name() );
+      setLocalAddress(msg.sin);
       int num_byte = m_channel->_Send(&msg,sizeof(msg));
-      if ( num_byte != sizeof(msg) )            return FatalError(m_channel->_Error());
+      if ( num_byte != sizeof(msg) )            return fatalError(m_channel->_Error());
       num_byte = m_channel->_Recv (&msg,sizeof(msg),Receive_TMO);
-      if      ( m_channel->_IsCancelled() )     return ErrorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte == sizeof(msg)  )      return FatalError(TAN_SS_SUCCESS);
-      else                                      return FatalError(ErrorCode(TAN_SS_MADSRV));
-    }                                           return ErrorCode(TAN_SS_NOTOPEN);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+      if      ( m_channel->_IsCancelled() )     return errorCode(TAN_SS_RECV_TMO);
+      else if ( num_byte == sizeof(msg)  )      return fatalError(TAN_SS_SUCCESS);
+      else                                      return fatalError(errorCode(TAN_SS_MADSRV));
+    }                                           return errorCode(TAN_SS_NOTOPEN);
+  }                                             return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 //  Declare alias to nameserver
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::DeclareAlias ( const char* name )  {
+int TanInterface::declareAlias ( const char* name )  {
   if ( Status() == TAN_SS_SUCCESS )  {
     if ( m_channel != 0 )  {
       TanMessage msg(TanMessage::ALIAS);
-      GetNodeWithName(name, 0, msg._Name());
-      SetLocalAddress(msg.sin);
+      nodeWithName(name, 0, msg._Name());
+      setLocalAddress(msg.sin);
       int num_byte = m_channel->_Send (&msg,sizeof(msg));
-      if ( num_byte != sizeof(msg) )             return FatalError(m_channel->_Error());
+      if ( num_byte != sizeof(msg) )             return fatalError(m_channel->_Error());
       num_byte = m_channel->_Recv (&msg,sizeof(msg),Receive_TMO);
       msg.Convert();
-      if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
-      else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
-      else                                       return ErrorCode(TAN_SS_SUCCESS);
-    }                                            return ErrorCode(TAN_SS_NOTOPEN);
-  }                                              return ErrorCode(TAN_SS_ERROR);
+      if      ( m_channel->_IsCancelled()  )     return errorCode(TAN_SS_RECV_TMO);
+      else if ( num_byte < 0              )      return fatalError(m_channel->_Error());
+      else if ( num_byte != int(msg._Length()) ) return errorCode(TAN_SS_ODDRESPONSE);
+      else if ( msg._Error() != TAN_SS_SUCCESS ) return errorCode(msg._Error());
+      else                                       return errorCode(TAN_SS_SUCCESS);
+    }                                            return errorCode(TAN_SS_NOTOPEN);
+  }                                              return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 //  Remove alias from nameserver
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::RemoveAlias ( const char* name )  {
+int TanInterface::removeAlias ( const char* name )  {
   if ( Status() == TAN_SS_SUCCESS )  {
     if ( m_channel != 0 )  {
       TanMessage msg(TanMessage::DEALIAS);
-      GetNodeWithName(name, 0, msg._Name());
-      SetLocalAddress(msg.sin);
+      nodeWithName(name, 0, msg._Name());
+      setLocalAddress(msg.sin);
       int num_byte = m_channel->_Send ( &msg, sizeof(msg));
-      if ( num_byte != sizeof(msg) )             return FatalError(m_channel->_Error());
+      if ( num_byte != sizeof(msg) )             return fatalError(m_channel->_Error());
       num_byte = m_channel->_Recv ( &msg, sizeof(msg), Receive_TMO);
       msg.Convert();
-      if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
-      else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != TAN_SS_SUCCESS ) return ErrorCode(msg._Error());
-      else                                       return ErrorCode(TAN_SS_SUCCESS);
-    }                                            return ErrorCode(TAN_SS_NOTOPEN);
-  }                                              return ErrorCode(TAN_SS_ERROR);
+      if      ( m_channel->_IsCancelled()  )     return errorCode(TAN_SS_RECV_TMO);
+      else if ( num_byte < 0              )      return fatalError(m_channel->_Error());
+      else if ( num_byte != int(msg._Length()) ) return errorCode(TAN_SS_ODDRESPONSE);
+      else if ( msg._Error() != TAN_SS_SUCCESS ) return errorCode(msg._Error());
+      else                                       return errorCode(TAN_SS_SUCCESS);
+    }                                            return errorCode(TAN_SS_NOTOPEN);
+  }                                              return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 //  Dump remote database...
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanInterface::DumpDB (const char* node)   {
+int TanInterface::dumpDB (const char* node)   {
   if ( Status() == TAN_SS_SUCCESS )  {
     NetworkChannel::Address radd;
     TanMessage msg(TanMessage::DUMP);
-    if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
+    if ( setInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
 #if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
       TcpNetworkChannel c;
       TcpNetworkChannel &rcv = c, &snd = c;
-      if(c._Connect(radd,Connect_TMO) == -1) return ErrorCode(TAN_SS_NOTOPEN);
+      if(c._Connect(radd,Connect_TMO) == -1) return errorCode(TAN_SS_NOTOPEN);
       int nbyte = c._Send(&msg,sizeof(msg));
 #else
       UdpNetworkChannel snd, rcv;
@@ -393,12 +404,12 @@ int TanInterface::DumpDB (const char* node)   {
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
-          if      (rcv._IsCancelled()       )   return ErrorCode(TAN_SS_RECV_TMO);
-          else if (nbyte != int(msg._Length())) return ErrorCode(TAN_SS_ODDRESPONSE);
-          else if (msg._Error()!=TAN_SS_SUCCESS)return ErrorCode(msg._Error());
-          else                                  return ErrorCode(TAN_SS_SUCCESS);
+          if      (rcv._IsCancelled()       )   return errorCode(TAN_SS_RECV_TMO);
+          else if (nbyte != int(msg._Length())) return errorCode(TAN_SS_ODDRESPONSE);
+          else if (msg._Error()!=TAN_SS_SUCCESS)return errorCode(msg._Error());
+          else                                  return errorCode(TAN_SS_SUCCESS);
         }                                       return rcv._Error();
       }                                         return snd._Error();
-    }                                           return ErrorCode(TAN_SS_HOSTNOTFOUND);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+    }                                           return errorCode(TAN_SS_HOSTNOTFOUND);
+  }                                             return errorCode(TAN_SS_ERROR);
 }

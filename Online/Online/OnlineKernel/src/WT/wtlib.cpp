@@ -3,12 +3,15 @@
 #include "RTL/Lock.h"
 #define IMPLEMENTING
 #include "WT/wtdef.h"
+#include <unistd.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <cerrno>
 
 enum Booleans { FALSE, TRUE };
+
+static int file_desc[2];
 
 /*----------------------------DEFINITIONS-------------------------------*/
 #define WT_PATTERN 0xfeadbabe
@@ -83,6 +86,9 @@ int wtc_init()    {
         wt_fired = new qentry(0,0);
         fac_list = new qentry(0,0);
         wt_stack = new qentry(0,0);
+        if ( 0 != pipe(file_desc) ) {
+	  printf("WT: failed to create pipe...\n");
+	}
         return WT_SUCCESS;    
       }
       return lock.status();
@@ -137,6 +143,9 @@ int wtc_remove(unsigned int facility)    {
   return lock.status();
 }
 /*----------------------------------------------------------------------*/
+            static int rd_bytes = 0;
+            static int wr_bytes = 0;
+
 int wtc_insert(unsigned int facility, void* userpar1)    {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -148,7 +157,8 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
     int status  = insqti(e,wt_queue);
     //printf("wtc_insert: Inserted entry: %d %p\n",facility,userpar1);
     if (status == QUE_ONEENTQUE)  {
-      lib_rtl_set_event(wt_EventFlag);
+      //lib_rtl_set_event(wt_EventFlag);
+      wr_bytes += write(file_desc[1],e,sizeof(e));
     }
     return WT_SUCCESS;
   }
@@ -165,7 +175,8 @@ int wtc_insert_head(unsigned int facility, void* userpar1)   {
     }
     int status  = insqhi(e,wt_queue);
     if (status == QUE_ONEENTQUE)    {
-      lib_rtl_set_event (wt_EventFlag);
+      //lib_rtl_set_event (wt_EventFlag);
+      wr_bytes += write(file_desc[1],e,sizeof(e));
     }
     return WT_SUCCESS;
   }
@@ -220,9 +231,16 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         if( !entry )  {
           lib_rtl_clear_event (wt_EventFlag);
           lib_rtl_unlock(wt_mutex_id);
-          entry = (wt_queue_entry*)q_remove_head( wt_queue );
+          //entry = (wt_queue_entry*)q_remove_head( wt_queue );
+	  int cnt = 0;
           if( !entry )   {
-            lib_rtl_wait_for_event (wt_EventFlag);
+            //lib_rtl_wait_for_event (wt_EventFlag);            
+            void* p = 0;
+	    cnt = read(file_desc[0],&p,sizeof(p));
+	    if ( cnt == -1 ) {
+	      lib_rtl_signal_message(LIB_RTL_OS,"Error reading WT pipe!");
+	    }
+	    else  rd_bytes += cnt;
           }
           lib_rtl_lock(wt_mutex_id);
         }
