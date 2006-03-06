@@ -2,5 +2,5 @@
 #include "$VELOALGORITHMSROOT/options/VeloClusterMaker.opts"
 #include "$VELOALGORITHMSROOT/options/VeloDigiMoni.opts"
 #include "$VELOALGORITHMSROOT/options/VeloClusterMoni.opts"
-#include "$VELOALGORITHMSROOT/options/VeloClusterPos.opts"
+#include "$VELOALGORITHMSROOT/options/VeloClusterPosition.opts"
 #include "$VELOALGORITHMSROOT/options/VeloResolution.opts"
