@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.7 2006-03-06 13:01:05 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.8 2006-03-06 13:44:04 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -6,13 +6,13 @@
 #include <vector>
 #include <math.h>
 
-// clhep
+// Mathcore
 #include "Kernel/PhysicalConstants.h"
 #include "Kernel/SystemOfUnits.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
-//GSL
+// GSL
 #include "gsl/gsl_sf_erf.h"
 
 // from Gaudi
@@ -63,7 +63,7 @@ VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
   m_veloDet ( 0 ),
-  m_fitParams(7, 0.)
+  m_fitParams( 7, 0. )
 {
   declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
   declareProperty("SpillOverInputData", m_spillOverInputContainer = "Prev/" + m_inputContainer );
@@ -114,7 +114,7 @@ StatusCode VeloSim::initialize() {
   debug() << "==> Initialise" << endmsg;
 
   m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
-  m_baseDiffuseSigma=( 2*m_kT/m_biasVoltage );
+  m_baseDiffuseSigma=sqrt(2*m_kT/m_biasVoltage);
   
   // random number initialisation
   StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
