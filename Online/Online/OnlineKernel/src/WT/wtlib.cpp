@@ -3,17 +3,23 @@
 #include "RTL/Lock.h"
 #define IMPLEMENTING
 #include "WT/wtdef.h"
-#include <unistd.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <cerrno>
 
+#define WT_USE_PIPES 1
+#ifdef WT_USE_PIPES
+  #ifdef _WIN32
+    #include <io.h>
+    #include <fcntl.h>
+  #else
+    #include <unistd.h> 
+  #endif
+#endif
+
+//----------------------------DEFINITIONS-------------------------------
 enum Booleans { FALSE, TRUE };
-
-static int file_desc[2];
-
-/*----------------------------DEFINITIONS-------------------------------*/
 #define WT_PATTERN 0xfeadbabe
 
 struct wt_fac_entry : public qentry  {
@@ -41,54 +47,75 @@ wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head);
 static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,wt_fac_entry* fac);
 void _wtc_print_entry(wt_queue_entry *e);
 
-/*----------------------------STATIC STORAGE----------------------------*/
+//----------------------------STATIC STORAGE----------------------------
 
 static qentry    *fac_list;
 static qentry    *wt_queue;
 static qentry    *wt_stack;
 static qentry    *wt_fired;
 static int        inited = FALSE;
-static lib_rtl_event_t wt_EventFlag;
 static void*      wt_mutex_id = 0;
+
+#ifdef WT_USE_PIPES
+static int        pipe_rd_bytes = 0;
+static int        pipe_wr_bytes = 0;
+static int        pipe_desc[2];
+#else
+static lib_rtl_event_t wt_EventFlag;
+#endif
+
 typedef RTL::Lock WTLock;
 
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 static inline qentry *q_remove_head(qentry *head )   {
   qentry *entry = 0;
   remqhi (head, &entry);
   return entry;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 static inline qentry *q_remove( qentry *entry )  {
   qentry* head = (qentry*)((char*)entry+(long)entry->prev);
   return q_remove_head(head);
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_exit(void*)  {
+#ifdef WT_USE_PIPES
+  if ( pipe_desc[0] ) ::close(pipe_desc[0]);
+  if ( pipe_desc[1] ) ::close(pipe_desc[1]);
+  pipe_desc[1] = pipe_desc[0] = 0;
+#endif
   return lib_rtl_delete_lock(wt_mutex_id);
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_init()    {
   if ( !inited )  {
     int status = lib_rtl_create_lock(0, &wt_mutex_id);
     if ( lib_rtl_is_success(status) )  {
       if ( !inited ) {
         inited = TRUE;
-        lib_rtl_declare_exit(wtc_exit, &wt_EventFlag);
+        lib_rtl_declare_exit(wtc_exit, 0);
       }
       WTLock lock(wt_mutex_id);
       if ( lock )  {
+#ifdef WT_USE_PIPES
+#ifdef _WIN32
+        status = pipe(pipe_desc, 1024, _O_BINARY);
+#else
+        status = pipe(pipe_desc);
+#endif
+        if ( 0 != pipe(pipe_desc) ) {
+	  printf("WT: failed to create pipe...\n");
+	}
+#else
         int status = lib_rtl_create_event(0, &wt_EventFlag);
         if ( !lib_rtl_is_success(status) )  {
           return WT_NOEF;
         }
+#endif
         wt_queue = new qentry(0,0);
         wt_fired = new qentry(0,0);
         fac_list = new qentry(0,0);
         wt_stack = new qentry(0,0);
-        if ( 0 != pipe(file_desc) ) {
-	  printf("WT: failed to create pipe...\n");
-	}
         return WT_SUCCESS;    
       }
       return lock.status();
@@ -97,7 +124,7 @@ int wtc_init()    {
   }
   return WT_SUCCESS;    
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void* par)   {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -119,7 +146,7 @@ int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_remove(unsigned int facility)    {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -142,10 +169,7 @@ int wtc_remove(unsigned int facility)    {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
-            static int rd_bytes = 0;
-            static int wr_bytes = 0;
-
+//----------------------------------------------------------------------
 int wtc_insert(unsigned int facility, void* userpar1)    {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -157,14 +181,17 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
     int status  = insqti(e,wt_queue);
     //printf("wtc_insert: Inserted entry: %d %p\n",facility,userpar1);
     if (status == QUE_ONEENTQUE)  {
-      //lib_rtl_set_event(wt_EventFlag);
-      wr_bytes += write(file_desc[1],e,sizeof(e));
+#ifdef WT_USE_PIPES
+      pipe_wr_bytes += write(pipe_desc[1],e,sizeof(e));
+#else
+      lib_rtl_set_event(wt_EventFlag);
+#endif
     }
     return WT_SUCCESS;
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_insert_head(unsigned int facility, void* userpar1)   {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -175,14 +202,17 @@ int wtc_insert_head(unsigned int facility, void* userpar1)   {
     }
     int status  = insqhi(e,wt_queue);
     if (status == QUE_ONEENTQUE)    {
-      //lib_rtl_set_event (wt_EventFlag);
-      wr_bytes += write(file_desc[1],e,sizeof(e));
+#ifdef WT_USE_PIPES
+      pipe_wr_bytes += write(pipe_desc[1],e,sizeof(e));
+#else
+      lib_rtl_set_event (wt_EventFlag);
+#endif
     }
     return WT_SUCCESS;
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_test_input()    {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -195,7 +225,7 @@ int wtc_test_input()    {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status, wt_enabled_fac_header* mask_ptr) {
   wt_queue_entry  *entry;
   wt_fac_entry    *fac;
@@ -229,19 +259,22 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       do    {
         entry = (wt_queue_entry*)q_remove_head( wt_queue );
         if( !entry )  {
+#ifdef WT_USE_PIPES
+          void* p = 0;
+          lib_rtl_unlock(wt_mutex_id);
+          int cnt = read(pipe_desc[0],&p,sizeof(p));
+          if ( cnt == -1 ) {
+            lib_rtl_signal_message(LIB_RTL_OS,"Error reading WT pipe!");
+          }
+          else  pipe_rd_bytes += cnt;
+#else
           lib_rtl_clear_event (wt_EventFlag);
           lib_rtl_unlock(wt_mutex_id);
           //entry = (wt_queue_entry*)q_remove_head( wt_queue );
-	  int cnt = 0;
-          if( !entry )   {
-            //lib_rtl_wait_for_event (wt_EventFlag);            
-            void* p = 0;
-	    cnt = read(file_desc[0],&p,sizeof(p));
-	    if ( cnt == -1 ) {
-	      lib_rtl_signal_message(LIB_RTL_OS,"Error reading WT pipe!");
-	    }
-	    else  rd_bytes += cnt;
-          }
+          //if( !entry )   {
+            lib_rtl_wait_for_event (wt_EventFlag);            
+	  //}
+#endif
           lib_rtl_lock(wt_mutex_id);
         }
       } while (!entry);
@@ -294,7 +327,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_flush (unsigned int facility ) {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -313,7 +346,7 @@ int wtc_flush (unsigned int facility ) {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_flushp (unsigned int facility, void* param )   {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -333,12 +366,16 @@ int wtc_flushp (unsigned int facility, void* param )   {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_get_wait_ef(lib_rtl_event_t* ef)  {
+#ifdef WT_USE_PIPES
+  *ef = pipe_desc;
+#else
   *ef = wt_EventFlag;
+#endif
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_spy_next_entry(unsigned int* fac,void** par)   {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -353,12 +390,12 @@ int wtc_spy_next_entry(unsigned int* fac,void** par)   {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_create_enable_mask(wt_enabled_fac_header** p)  {
   *p = new wt_enabled_fac_header(WT_PATTERN);
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
   if (h->facility == WT_PATTERN)  {
     WTLock lock(wt_mutex_id);
@@ -371,7 +408,7 @@ int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
   }
   return WT_BADACTIONSTAT;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act) {
   WTLock lock(wt_mutex_id);
   if ( lock )  {
@@ -389,17 +426,17 @@ int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act) {
   }
   return lock.status();
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_wait(unsigned int* facility,void** userpar1,int* sub_status)   {
   return wtc_wait_with_mask(facility,userpar1,sub_status,0);
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 void wtc_print_space()   {
   for (wt_queue_entry *fac = (wt_queue_entry*)((char*)wt_queue->next+(long)wt_queue);
     fac != (void*)wt_queue ; fac = (wt_queue_entry*)((char*)fac->next+(long)fac))
     _wtc_print_entry(fac);
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_error(int status)  {
   switch(status)  {
     case WT_SUCCESS:
@@ -418,14 +455,14 @@ int wtc_error(int status)  {
   }
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_add_stack(unsigned int fac,void* param)   {
   if ( !inited ) return (WT_NOTINIT);
   wt_queue_entry *e = new wt_queue_entry(fac, param);
   insqhi(e, wt_stack);
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 int wtc_restore_stack() {
   qentry  *entry;
   while ( 0 != (entry = q_remove_head(wt_stack)) )  {
@@ -433,7 +470,7 @@ int wtc_restore_stack() {
   }
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
   wt_fac_entry *fac = 0;
   for(fac = (wt_fac_entry*)((char*)fac_head->next+(long)fac_head);
@@ -441,7 +478,7 @@ wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
     if( fac->facility == facility ) break;
   return fac;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,wt_fac_entry* fac)  {
   int mask_ok   = 0;
   if (mask_ptr != 0)  {
@@ -473,7 +510,7 @@ static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,
   }
   return WT_SUCCESS;
 }
-/*----------------------------------------------------------------------*/
+//----------------------------------------------------------------------
 void _wtc_print_entry(wt_queue_entry *e)  {
   ::printf(" Entry facility: %8X  parameter:%p\n",e->facility, e->userpar1);
 }
