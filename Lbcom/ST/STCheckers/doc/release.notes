@@ -2,7 +2,8 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
-! 2006-03-03 M Needha
+!============================ STCheckers v1r0 2006-03-06 =======================
+! 2006-03-03 M Needham
  - bug fixes + minor changes
 
 ! 2006-02-28 M Needham
@@ -10,7 +11,6 @@
  - Bug fixes in STMCTuner, STClusterResolution, STEffMonitor
  - Modify TTOccupancy
 
-!============================ STCheckers v1r0 2006-02-20 =======================
 ! 2006-02-22 - Marco Cattaneo
  - Fix relations path in STEffMonitor
  - Add ITClusterChecker and ITEffMonitor to Boole.opts

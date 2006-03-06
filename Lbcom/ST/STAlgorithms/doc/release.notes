@@ -1,14 +1,10 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 
-
-! - Bug fixes
-
-
+!======================= STAlgorithms v1r0 2006-03-06 ========================
 ! 2006-02-28
- - Update for new position tool
+ - Update for new position tool, plus bug fixes
 
-!======================= STAlgorithms v1r0 2006-02-23 ========================
 ! 2006-02-23 - Marco Cattaneo
  - Modernize STAlgorithms_load.cpp, and add missing factories
 
