@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-03-06 - Julien Cogan
+ - Implement the methods to write and decode the L0Buffers and the RawBuffers.
+ - Externalize the ptcalc and xyFromPad methods of Tower.
  - BUG FIX; in L0MUnit, release objects created with the XMLString::transcode
    of xerces.
 ! 2006-03-03 - Julien Cogan
