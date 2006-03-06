@@ -1,9 +1,6 @@
 /** @file 
  * 
- *  This file executes reconstruction of particles
- *  and writes them to a mini DST. 
- *  Make sure to uncomment the DstWriter.
- *  Use options/DVReadMiniDst.opts to read them back
+ *  This file runs the trigger and writes selected events to DST
  *
  *  @author P. Koppenburg
  *  @date 2004-05-04

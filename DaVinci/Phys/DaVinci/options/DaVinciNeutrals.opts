@@ -1,5 +1,6 @@
-// $Id: DaVinciNeutrals.opts,v 1.24 2006-03-06 08:29:27 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.25 2006-03-06 08:29:52 pkoppenb Exp $
 // ============================================================================
+ 
 /** @file 
  * 
  *  Configuration file to produce Neutral ProtoParticles
@@ -26,6 +27,10 @@ Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
 // Make neutral ProtoParticles
 Neutrals.Members += { "NeutralPPsFromCPsAlg" };
 
+//
+// Pi0 and pair photons on demand
+//
+#include "$COMMONPARTICLESROOT/options/CommonParticles.opts"
 // ============================================================================
 // The END 
 // ============================================================================
