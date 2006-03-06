@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "L0MuonKernel/Tower.h"
+#include "L0MuonKernel/Utilities.h"
 
 L0Muon::Tower::Tower() {
 
@@ -349,7 +350,7 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
        // Compute PT
         if (m_debug) std::cout <<"--- Tower::processTower: padM1= "<<padM1.toString()<< std::endl;
         if (m_debug) std::cout <<"--- Tower::processTower: padM2= "<<padM2.toString()<< std::endl;
-        double pt = ptcalc(padM1,padM2);
+        double pt = L0Muon::ptcalc(padM1,padM2,m_ptparam,m_debug)[0];
         if (m_debug) std::cout <<"--- Tower::processTower: pt= "<<pt<< std::endl;
 
         // Create MuonCandidate (without the pu and board info)
@@ -375,112 +376,6 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
 }
 
 
-
-void L0Muon::Tower::xyFromPad(LHCb::MuonTileID pad, double& x, double& y)  {
-
-  double dx = 1.0;
-  double dy = 2.5;
-  double l1 = m_ptparam[4]; //Z position of M1 = 1210.;
-  double l2 = m_ptparam[5]; //Z position of M2 = 1527.;
-  double l3 = m_ptparam[6]; //Z position of M3 = 1647.;
-    
-  int ns = pad.station();
-  int nq = pad.quarter();
-  int nr = pad.region();
-  int nx = pad.nX();
-  int ny = pad.nY();
-    
-  double nreg = 1.;
-  if ( nr == 1) {
-    nreg = 2.;
-  } else if ( nr == 2) {
-    nreg = 4.;
-  } else if ( nr == 3) {
-    nreg = 8.;
-  }
-  
-  double factorX, factorY;
-  factorX = 24./double(pad.layout().xGrid());
-  factorY = 8./double(pad.layout().yGrid());
-  
-  x = dx*(nx+0.5)*nreg*factorX;
-  y = dy*(ny+0.5)*nreg*factorY;
-  if ( ns == 1 ) {
-    x *= l2/l1;
-    y *= l2/l1;
-  } else if ( ns == 2 ) {
-    x *= l3/l1;
-    y *= l3/l1;
-  }
-  if ( nq == 1 ) {
-    y = -y;
-  } else if ( nq == 2 ) {
-    x = -x;
-    y = -y;
-  } else if ( nq == 3 ) {
-    x = -x;
-  }    
-    
-}
-
-
-double L0Muon::Tower::ptcalc(LHCb::MuonTileID p1, LHCb::MuonTileID p2) {
-
-  double d1    = m_ptparam[0]; // Z(MAG)-Z(VTX) =  545.
-  double d2    = m_ptparam[1]; // Z(M1)-Z(MAG)  =  665.5
-  double d3    = m_ptparam[2]; // Z(M2)-Z(M1)   =  309.5
-  double alpha = m_ptparam[3]; // alpha (KICK?) = 1.39
-
-  double x1=0., y1=0.;
-  double x2=0., y2=0. ;  
- 
-  xyFromPad(p1,x1,y1);
-  xyFromPad(p2,x2,y2);
-        
-  double sq = (d1+d2)*x2-(d1+d2+d3)*x1;
-  if(sq == 0.) {
-    sq = 0.0001;
-  } else {
-    sq = 1./((d1+d2)*x2-(d1+d2+d3)*x1);
-  }
-
-  double sr = sqrt(((d2+d3)*x1 - d2*x2)*((d2+d3)*x1 - d2*x2) +
-                   (d1*d3*y1/(d1+d2))*(d1*d3*y1/(d1+d2))   );
-  double sc = sqrt((d1+d2)*(d1+d2)+y1*y1)/(d1+d2);
-  double st = (d1*d3*d3+2.*(x1*(d3+d2)-x2*d2)*(x2-x1))/(d1*d3*d3);
-  double ptm = fabs(alpha*sq*sr*sc*st);		     
-
-  double xslope = (x2 - x1)/d3;
-  double xin = x2 - xslope*(d1+d2+d3);
-  if(xin < 0.) ptm = -ptm;
-
-  // Pt should be in MeV
-  double pt = ptm*1000.;
-
-  if (m_debug) std::cout <<"--- Tower::ptcalc "
-                         << " p1 = " <<   p1.toString() 
-                         << " p2 = " <<   p2.toString()  
-                         << " d1 = " <<   d1 
-                         << " d2 = " <<   d2 
-                         << " d3 = " <<   d3 
-                         << " alpha= " << alpha
-                         << " x1 = " <<   x1 
-                         << " y1 = " <<   y1 
-                         << " x2 = " <<   x2 
-                         << " y2 = " <<   y2 
-                         << " sq= " <<    sq 
-                         << " sr= " <<    sr 
-                         << " sc= " <<    sc 
-                         << " st= " <<    st 
-                         << " ptm= " <<   ptm
-                         << " xslope= " <<xslope 
-                         << " xin= " <<   xin
-                         << " pt= " <<    pt 
-                         << std::endl;
-
-  return pt;
-  
-}
 
 void L0Muon::Tower::cleanSeed(L0Muon::Tower::StationMap & map) {
 

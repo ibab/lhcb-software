@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.13 2006-01-18 16:49:53 jucogan Exp $
+// $Id: Tower.h,v 1.14 2006-03-06 09:54:38 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -138,9 +138,6 @@ namespace L0Muon {
 
     IDMap m_idmap[5];// Map relating the local coordinates and the MuonTileID of every fired pad
     
-    double ptcalc(LHCb::MuonTileID padM1, LHCb::MuonTileID padM2);
-    void xyFromPad(LHCb::MuonTileID pad, double& x, double& y) ;
-
     bool m_debug; // Debug flag
 
 };
