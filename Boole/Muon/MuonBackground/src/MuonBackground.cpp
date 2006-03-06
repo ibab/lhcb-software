@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.30 2006-02-23 11:20:07 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.31 2006-03-06 11:38:47 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -544,8 +544,12 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   std::vector<ParticleInfo*> particleInfo(numberOfParticles);
   //loop un hits
   for(int container=0; container<1;container++){				
-    std::string path="/Event"+spill[ispill]+LHCb::MCHitLocation::Muon;        
+    std::string path="/Event"+spill[ispill]+"/"+LHCb::MCHitLocation::Muon;        
     SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
+    verbose()<<" container in path "<<path<<" "<<endreq;
+if(hitPointer!=0)verbose()<<"found "<<endreq;
+else verbose()<<" not found "<<endreq;
+
     LHCb::MCHits::const_iterator iter;	 
     preGap=-1;
     preIndex=-1;
@@ -553,8 +557,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
     if(hitPointer!=0){
       for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++)
       {
-        int det=(*iter)->sensDetID();
-        
+        int det=(*iter)->sensDetID();        
         station=m_muonDetector->stationID(det);
         region=m_muonDetector->regionID(det);
         gap=m_muonDetector->gapID(det);;
@@ -652,7 +655,7 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
     total=total+(int)histoPointer->binHeight(i);    
   }  
   Rndm::Numbers* pdf=new Rndm::Numbers; 
-  //info()<<"total "<<total<<endreq;
+  debug()<<"total "<<total<<endreq;
   
   if(total==0){
     pointerToFlags.push_back(false);
