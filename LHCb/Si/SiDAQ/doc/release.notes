@@ -2,6 +2,7 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+!=========================== SiDAQ v1r1 2006-02-24 =====================
 ! 2006-02-24 - Kurt Rinnert
  - fixed off-by-one error in calculation of byte count
 
@@ -15,8 +16,6 @@ Package manager : Matt Needham
    of decoder instances in vectors, a feature needed by ST decoding.
  - added convenience accessor for error flag in bank header
 
-
-!=========================== SiDAQ v1r1 2006-02-23 =====================
 ! 2006-02-23 - M Needham
  - Try to please the windows compiler by casting u int to bool
 
