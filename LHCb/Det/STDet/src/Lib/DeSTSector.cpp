@@ -143,25 +143,35 @@ unsigned int DeSTSector::localUToStrip(const double u) const{
 
   // convert local u to a strip
   unsigned int strip;
-  if (u<m_uMaxLocal && u>m_uMinLocal) {
-    strip = m_firstStrip + (unsigned int)floor((u - m_uMinLocal)/m_pitch);
-  }
-  else if (u>=m_uMaxLocal) {
-    strip = m_firstStrip + m_nStrip - 1u;
+  if (m_xInverted == true){
+    strip = (unsigned int)floor(((m_uMaxLocal-u)/m_pitch) + 0.5);
   }
   else {
-    strip = m_firstStrip;
+    strip = (unsigned int)floor(((u-m_uMinLocal)/m_pitch) + 0.5 );
   }
-  return (m_xInverted == false ? strip : invertStripNumber(strip) ) ;
+
+  return (isStrip(strip) ? strip : 0);
+
 }
 
-double DeSTSector::localU(const unsigned int strip) const{
+double DeSTSector::localU(const unsigned int strip, 
+                          const double offset) const{
   // strip to local 
-  unsigned int tStrip = strip;
-  if (m_xInverted == true) tStrip = invertStripNumber(strip);
-  return (isStrip(tStrip) ? m_uMinLocal + ((tStrip - m_firstStrip+0.5)*m_pitch)  : 0  );
-}
+  
+  double u = -999.;
+  if (isStrip(strip) == true){
+    double tStrip = strip + offset;
+    if (m_xInverted  == true){
+      u = m_uMaxLocal + m_pitch*(0.5 - tStrip );
+    }
+    else {
+      u = m_uMinLocal + m_pitch*( tStrip - 0.5);
 
+    }
+  } // strip
+  
+  return u;
+}
 
 bool DeSTSector::localInActive(const Gaudi::XYZPoint& point,
                                Gaudi::XYZPoint tol) const{
@@ -215,16 +225,15 @@ LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan,
   LineTraj* traj = 0;  
 
   if (contains(aChan) == true){
-    const double lU = localU(aChan.strip());
-    double arclen;
-    m_xInverted == false ? arclen = lU - m_uMinLocal - (offset*m_pitch) : 
-                           arclen = m_uMaxLocal - lU + (offset*m_pitch);
+    double arclen = (offset + aChan.strip())*m_pitch ;
     Gaudi::XYZPoint begPoint =  m_lowerTraj->position( arclen );
     Gaudi::XYZPoint endPoint =  m_upperTraj->position( arclen );
     traj = new LineTraj(begPoint,endPoint);
   } 
   else {
-     throw GaudiException( "Failed to make trajectory",
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::ERROR << "Failed to link " << aChan.uniqueSector() << " " << elementID().uniqueSector() << endmsg; 
+    throw GaudiException( "Failed to make trajectory",
                            "DeSTSector.cpp", StatusCode::FAILURE );
   }
 
@@ -235,7 +244,9 @@ void DeSTSector::determineSense(){
 
   Gaudi::XYZPoint g1 = globalPoint(m_uMinLocal , m_vMinLocal, 0.);
   Gaudi::XYZPoint g2 = globalPoint(m_uMaxLocal , m_vMinLocal, 0.);
-  if (g1.x() > g2.x()) { m_xInverted = true;}
+  if (g1.x() > g2.x()) { 
+    m_xInverted = true;
+  }
 
   Gaudi::XYZPoint g3 = globalPoint(m_uMinLocal , m_vMaxLocal, 0.);
   if (g1.y() > g3.y()) {m_yInverted = true;}

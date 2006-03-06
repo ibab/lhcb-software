@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-0306
+ - correct flipping of the sensors
+ - correct find method for DeITLadder
 
 ! 2006-03-03 M Needham
  - Changes in DeSTSector to ensure

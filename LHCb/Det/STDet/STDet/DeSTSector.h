@@ -75,7 +75,7 @@ public:
   * @param strip
   * @return local u
   */
-  double localU(const unsigned int strip) const;
+  double localU(const unsigned int strip, double offset = 0.) const;
 
   /** trajectory 
   * @return trajectory for the fit 
@@ -162,7 +162,6 @@ public:
 
 private:
 
-  unsigned int invertStripNumber(const unsigned int strip) const;
   void clear();
   void determineSense();
   void cacheTrajectory();
@@ -193,10 +192,6 @@ private:
   std::string m_type;
 
 };
-
-inline unsigned int DeSTSector::invertStripNumber(const unsigned int strip) const {
-  return (nStrip() + 1u - strip);
-}
 
 inline unsigned int DeSTSector::id() const{
   return m_id;

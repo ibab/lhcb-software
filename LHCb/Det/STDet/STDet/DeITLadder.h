@@ -1,4 +1,4 @@
-// $Id: DeITLadder.h,v 1.2 2006-02-06 10:24:18 mneedham Exp $
+// $Id: DeITLadder.h,v 1.3 2006-03-06 16:57:19 mneedham Exp $
 #ifndef _DeITLadder_H_
 #define _DeITLadder_H_
 
@@ -89,8 +89,7 @@ inline DeITLadder::child_type* DeITLadder::sector() const{
 }
 
 inline bool DeITLadder::contains(const LHCb::STChannelID aChannel) const{
-  return ((aChannel.detRegion() == elementID().detRegion()) 
-         && m_parent->contains(aChannel)) ;
+  return (aChannel.uniqueSector() == elementID().uniqueSector());
 }
 
 
