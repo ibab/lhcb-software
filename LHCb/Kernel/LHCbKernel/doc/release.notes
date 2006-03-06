@@ -2,15 +2,14 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-
+!===================== LHCbKernel v6r2 2006-03-03 =========================
 ! 2006-03-03 - Julien Cogan
  - MuonTileID: proper initialization in the constructor from a string.
    Bits were left undefined after the reduction of the MuonTileID
    from 32 to 28 bits
 
-! 2006-02-03
- - Update interface
-
+! 2006-02-03 - Tomasz Szumlat
+ - Add SiPositionInfo.h and update IVeloClusterPosition interface
 
 ! 2006-03-01 - Chris Jones
  - Add new background radiator types to enum in RichRadiatorType.{h,cpp}
@@ -18,8 +17,6 @@ Purpose: LHCb specific Kernel classes
 ! 2006-03-01 - David Hutchcroft
  - Fixed a bug in FastClusterContainer.h so that end() worked properly
 
-
-!===================== LHCbKernel v6r2 2006-02-23 =========================
 ! 2006-02-23 - Ivan BELYAEV
  - Event/CaloCellIDKeyTraights.h
    - The creation of the key=CaloCellID form the integer by KeyedContainer
