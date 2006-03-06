@@ -4,21 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r3 2006-03-06 =======================
 ! 2006-03-03 M Needham
-  - inconsistant ADC problem really fixed
-
-
-! 2006-03-03 M Needham
-  - inconsistant adc problem fixed
-
-! 2006-03-03 M Needham
-  - bug fix in decoding 
+ - inconsistent adc problem fixed, plus bug fix in decoding 
 
 ! 2006-02-24 M Needham
  - Update to use Si decoding tools
-
-
-!=============================== STDAQ v2r3 2006-02-22 =======================
 
 ! 2006-02-22 - Kurt Rinnert
  - added traits typedef to STBitsPlociy. This is needed to pick the correct ADC
