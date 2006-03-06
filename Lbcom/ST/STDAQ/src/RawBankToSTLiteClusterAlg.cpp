@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.3 2006-03-06 12:29:41 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.4 2006-03-06 14:36:25 mneedham Exp $
 
 
 #include <algorithm>
@@ -129,7 +129,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = iter->first.posBegin();
-    for ( ;iterDecoder != iter->first.posEnd(); ++iterDecoder){
+    for ( ;iterDecoder != iter->first.posEnd(); ++iterDecoder, ++i){
      
       STClusterWord aWord = *iterDecoder; 
       STLiteCluster liteCluster(aWord.fracStripBits(),
@@ -142,7 +142,11 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   } // iterData
 
   // sort
+
+ 
   std::sort(fCont->begin(),fCont->end(), Less_by_Channel());
+
+  
 
   put(fCont, m_clusterLocation);
   
