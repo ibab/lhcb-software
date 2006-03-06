@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.2 2006-02-28 15:40:19 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.3 2006-03-06 12:29:41 mneedham Exp $
 
 
 #include <algorithm>
@@ -140,6 +140,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
      
     } //iter
   } // iterData
+
+  // sort
+  std::sort(fCont->begin(),fCont->end(), Less_by_Channel());
 
   put(fCont, m_clusterLocation);
   
