@@ -1,4 +1,4 @@
-// $Id: VeloDigiMoni.cpp,v 1.5 2006-03-06 10:50:32 cattanem Exp $
+// $Id: VeloDigiMoni.cpp,v 1.6 2006-03-06 11:01:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -129,7 +129,7 @@ StatusCode VeloDigiMoni::testVeloDigit()
          "Raw ADC counts",
          0., 256., 256);
   // Test the VeloDigits2MCHits associator (linker)
-    asctTool associator(evtSvc(), "VeloDigit2MCHit");
+    asctTool associator(evtSvc(), LHCb::VeloDigitLocation::Default + "2MCHits" );
     const Table* table=associator.direct();
     if(!table){
       error()<< "Empty table with associations" <<endmsg;

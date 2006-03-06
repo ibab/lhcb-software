@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( InternalVeloCluster2MCHitLinker );
 InternalVeloCluster2MCHitLinker::InternalVeloCluster2MCHitLinker(
  const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_asctName ( "InternalVeloClusters2MCHits" ),
+    m_asctName ( LHCb::InternalVeloClusterLocation::Default + "2MCHits" ),
     m_inputClusters ( LHCb::InternalVeloClusterLocation::Default ),
     m_inputFEs ( LHCb::MCVeloFELocation::Default )
 { }

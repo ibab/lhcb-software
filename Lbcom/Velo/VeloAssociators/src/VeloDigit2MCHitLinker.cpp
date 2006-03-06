@@ -1,4 +1,4 @@
-// $Id: VeloDigit2MCHitLinker.cpp,v 1.1 2006-03-01 14:11:14 szumlat Exp $
+// $Id: VeloDigit2MCHitLinker.cpp,v 1.2 2006-03-06 10:57:36 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( VeloDigit2MCHitLinker );
 VeloDigit2MCHitLinker::VeloDigit2MCHitLinker( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_asctName ( "VeloDigit2MCHit" ),
+    m_asctName ( LHCb::VeloDigitLocation::Default + "2MCHits" ),
     m_inputDigits ( LHCb::VeloDigitLocation::Default ),
     m_inputFEs ( LHCb::MCVeloFELocation::Default )
 {
