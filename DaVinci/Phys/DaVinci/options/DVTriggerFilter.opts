@@ -7,7 +7,6 @@
  *
  *  @author P. Koppenburg
  *  @date 2004-05-04
- *  @date 2004-05-04
  */
 //--------------------------------------------------------------
 // Standard Gaudi configuration and additional DLLs are in
@@ -23,13 +22,25 @@
 // Run L1 Trigger
 #include "$TRGSYSROOT/options/L1.opts"
 //--------------------------------------------------------------
-// Run HLT
-#include "$HLTGENERICROOT/options/HltGeneric.opts"
+// High luminosity: Include two of                
+//#include "$L0DUROOT/options/L0-lumi3e32.opts"
+//#include "$L0DUROOT/options/L0-lumi5e32.opts"
+//#include "$L1DECISIONROOT/options/L1-lumi3e32.opts"
+//#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
+//--------------------------------------------------------------
+// Run HLT generic and HLT selections
 #include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+// Include this is you need to do some offline stuff:
+//ApplicationMgr.TopAlg += { "ResetOnOffline/SetOffline" } ; // Reset to offline  (see below).
+//SetOffline.ResetToOffline = true ;
+
+//#include "$TRGSYSROOT/options/TrgChecking.opts"
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
-TriggerSeq.Members = { "TrgL1Filter", "PrintHeader/PassedL1" };
-TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
+TriggerSeq.Members = { "TrgL0Filter", "PrintHeader/PassedL0" };
+TriggerSeq.Members += { "TrgL1Filter", "PrintHeader/PassedL1" };
+//TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
+PassedL0.OutputLevel = 3 ;
 PassedL1.OutputLevel = 2 ;
 PassedHlt.OutputLevel = 2 ;
 
@@ -72,6 +83,6 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.PrintFreq  = 1;
 

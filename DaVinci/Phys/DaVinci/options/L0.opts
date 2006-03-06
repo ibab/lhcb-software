@@ -13,5 +13,7 @@
 #include "$DAVINCIROOT/options/L0Calo.opts"
 //=============================================================
 // run L0 decision unit
-ApplicationMgr.DLLs    += { "L0DU" };
-ApplicationMgr.TopAlg  += { "DecisionUnit"};
+#include "$L0DUROOT/options/L0.opts"
+// For high luminosities use one of:
+//#include "$L0DUROOT/options/L0-lumi3e32.opts"
+//#include "$L0DUROOT/options/L0-lumi5e32.opts"
