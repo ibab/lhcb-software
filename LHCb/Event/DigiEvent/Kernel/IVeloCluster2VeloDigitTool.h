@@ -1,4 +1,4 @@
-// $Id: IVeloCluster2VeloDigitTool.h,v 1.1 2006-03-06 09:08:14 cattanem Exp $
+// $Id: IVeloCluster2VeloDigitTool.h,v 1.2 2006-03-06 09:49:53 cattanem Exp $
 #ifndef KERNEL_IVELOCLUSTER2VELODIGITTOOL_H 
 #define KERNEL_IVELOCLUSTER2VELODIGITTOOL_H 1
 
@@ -35,7 +35,7 @@ public:
 
   virtual SmartRefVector<LHCb::VeloDigit> getDigits(
                                           LHCb::VeloCluster* cluster,
-                                          LHCb::VeloDigits* digitCont);
+                                          LHCb::VeloDigits* digitCont) = 0;
 
 protected:
 
