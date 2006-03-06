@@ -20,17 +20,19 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   GaudiAlg        v*
+use   GaudiAlg          v*
 
-use   MCEvent         v*     Event
-use   TrackEvent      v*     Event
-use   LinkerEvent     v*     Event
+use   MCEvent           v*   Event
+use   TrackEvent        v*   Event
+use   LinkerEvent       v*   Event
 
-use   TrackInterfaces v*     Tr
+use   TrackMCInterfaces v*   Tr
+use   TrackInterfaces   v*   Tr
 
-use   STDet           v*     Det
-use   OTDet           v*     Det
-use   VeloDet         v*     Det
+use   STDet             v*   Det
+use   OTDet             v*   Det
+use   VeloDet           v*   Det
+
 #============================================================================
 # Component library building rule
 #============================================================================

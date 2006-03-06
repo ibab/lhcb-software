@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.h,v 1.4 2006-02-02 12:38:24 ebos Exp $
+// $Id: TrackCriteriaSelector.h,v 1.5 2006-03-06 18:58:17 erodrigu Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
@@ -9,12 +9,9 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 
-// from TrackInterfaces
-#include "TrackInterfaces/ITrackCriteriaSelector.h"
-#include "TrackInterfaces/ITrackReconstructible.h"
-
-// local
-//#include "TrackMCTools/TrackAcceptance.h"
+// from TrackMCInterfaces
+#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
+#include "TrackMCInterfaces/ITrackReconstructible.h"
 
 using namespace LHCb;
 

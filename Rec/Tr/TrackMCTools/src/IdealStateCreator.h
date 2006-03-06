@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.3 2006-03-03 14:18:25 ebos Exp $
+// $Id: IdealStateCreator.h,v 1.4 2006-03-06 18:58:17 erodrigu Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -7,9 +7,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
+// from TrackMCInterfacces
+#include "TrackMCInterfaces/IIdealStateCreator.h"
+
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/IIdealStateCreator.h"
 
 namespace LHCb
 { 

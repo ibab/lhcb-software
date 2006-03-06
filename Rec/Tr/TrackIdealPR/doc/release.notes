@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-03-06 - Eduardo Rodrigues
+ - adapted since MC interfaces moved from TrackInterfaces to TrackMCInterfaces
+
 ! 2006-02-28 - Jeroen van Tilburg
  - IdealTracksCreator fills the reference vector in the measurement.
  - Updated the calculation of the ambiguity.

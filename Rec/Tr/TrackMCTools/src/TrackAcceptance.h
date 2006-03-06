@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.3 2006-03-03 14:18:25 ebos Exp $
+// $Id: TrackAcceptance.h,v 1.4 2006-03-06 18:58:17 erodrigu Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -7,8 +7,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// Tr/TrackInterfaces
-#include "TrackInterfaces/ITrackReconstructible.h"
+// Tr/TrackMCInterfaces
+#include "TrackMCInterfaces/ITrackReconstructible.h"
 
 // Det
 #include "VeloDet/DeVelo.h"

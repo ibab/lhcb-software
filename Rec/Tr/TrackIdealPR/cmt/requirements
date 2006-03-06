@@ -19,17 +19,18 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   GaudiAlg        v*
+use   GaudiAlg          v*
 
-use   RecEvent        v*    Event
-use   MCEvent         v*    Event
+use   RecEvent          v*    Event
+use   MCEvent           v*    Event
 
-use   TrackEvent      v*    Event
-use   TrackFitEvent   v*    Tr
+use   TrackEvent        v*    Event
+use   TrackFitEvent     v*    Tr
 
-use   LinkerEvent     v*    Event
+use   LinkerEvent       v*    Event
 
-use   TrackInterfaces v*    Tr
+use   TrackInterfaces   v*    Tr
+use   TrackMCInterfaces v*    Tr
 
 #============================================================================
 # Component library building rule

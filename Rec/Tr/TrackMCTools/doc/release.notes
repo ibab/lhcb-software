@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-03-06 - Eduardo Rodrigues
+ - adaptations because of move of MC interfaces from TrackInterfaces to
+   TrackMCInterfaces
+
 ! 2006-03-03 - Edwin Bos
  - Moved to linkers.
 
