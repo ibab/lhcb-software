@@ -4,10 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r0 2006-03-07 ======================
 ! 2006-03-01 - Chris Jones
  - Update MC history access for additions to MCEvent
 
-!========================== RichMCTools v3r0 2006-02-16 ======================
 ! 2006-02-16 - Chris Jones
  - Update MC truth tool for new MC history flags
 

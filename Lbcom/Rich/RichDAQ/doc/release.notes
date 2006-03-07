@@ -4,11 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r2 2006-03-07 =========================
 ! 2006-03-01 - Chris Jones
  - Update decoding interface to provide RichSmartIDs sorted by HPD
  - Add some prototype HPD and pixel suppression tools
 
-!========================== RichDAQ v3r2 2006-02-15 =========================
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
 
