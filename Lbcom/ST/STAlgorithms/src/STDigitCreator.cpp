@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.8 2006-03-03 16:00:16 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.9 2006-03-07 07:21:57 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -250,10 +250,10 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const{
 
   } //iterDigit 
 
-  for ( std::vector<digitPair>::iterator iterP = tmpCont.begin(); iterP != tmpCont.end(); ++iterP){
-    STDigit* aDigit = new STDigit(GSL_MIN(floor(iterP->first),m_saturation));
+  for ( std::vector<digitPair>::iterator iterP = tmpCont.begin(); iterP != tmpCont.end(); ++iterP){   
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
+      STDigit* aDigit = new STDigit(GSL_MIN(floor(iterP->first),m_saturation));
       digitsCont->insert(aDigit,iterP->second);
     }
   } //iterP

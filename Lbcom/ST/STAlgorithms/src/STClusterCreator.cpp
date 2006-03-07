@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.9 2006-03-03 17:47:41 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.10 2006-03-07 07:21:57 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -169,7 +169,7 @@ StatusCode STClusterCreator::createClusters(const STDigits* digitCont,
 
         STCluster* newCluster = new STCluster(clusterLite, strips(clusteredDigits,
                                               measValue.strip),nSum);
-    
+
         // add to container
         clusterCont->insert(newCluster,measValue.strip);
       }
@@ -218,7 +218,6 @@ bool STClusterCreator::keepClustering(const STDigit* firstDigit, const STDigit* 
    }
  }
 
- // std::cout << secondDigit->channelID().strip() << " " << firstDigit->channelID().strip()  << " " << clusFlag << std::endl;
 
  return clusFlag;
 }

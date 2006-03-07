@@ -307,16 +307,13 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites ,
 
     // closest strips to site
     firstStrip = aSector->localUToStrip(*iterSite);
-    if ((*iterSite)<=aSector->localU(firstStrip)){
-      secondStrip = firstStrip-1;
-    }
-    else {
-      secondStrip = firstStrip+1;
-    }
-
+    secondStrip = firstStrip+1;
+  
     // do the sharing  first Strip!
-    frac = m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(firstStrip))/aSector->pitch());
-    stripMap[firstStrip] += frac*chargeOnSite;
+    if (aSector->isStrip(firstStrip)){
+      frac = m_chargeSharer->sharing(fabs(*iterSite-aSector->localU(firstStrip))/aSector->pitch());
+      stripMap[firstStrip] += frac*chargeOnSite;
+    }
 
     // second strip - if there is one
     if (aSector->isStrip(secondStrip)){
