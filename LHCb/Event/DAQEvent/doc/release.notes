@@ -2,12 +2,12 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+!================ DAQEvent v6r2 2006-03-06 ============================
 ! 2006-03-06 - Markus Frank
  - Fix RawBank according to EDMS note. UI is backwards compatible,
    but stored bank length was without the size of the header
  - Add accessor totalSize to RawBank returning the full padded length
 
-!================ DAQEvent v6r2 2006-02-09 ============================
 ! 2006-02-09 - Markus Frank
  - Add flag in requirements to correctly process RawEvent dictionary 
 
