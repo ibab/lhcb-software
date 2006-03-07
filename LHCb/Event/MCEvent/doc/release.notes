@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.30 2006-03-01 09:38:42 jonrob Exp $
+! $Id: release.notes,v 1.31 2006-03-07 12:41:52 gcorti Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+
+! 2006-03-07 - Gloria CORTI
+ - Add new data member to MCHit, i.e. the absolute momentum of the particle
+   when producing the hit.
 
 ! 2006-03-01 - Chris Jones
  - Improvements to RICH MC classes

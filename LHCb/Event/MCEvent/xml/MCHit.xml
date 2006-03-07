@@ -52,6 +52,12 @@
        type="double" 
        init="0.0"
       />
+      <attribute
+       desc="|P| of particle at the entry point (MeV)"
+       name="p"
+       type="double"
+       init="0.0"
+      />
       <method
        desc="Exit point in LHCb reference system (mm)"
        name="exit"
