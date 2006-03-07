@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.111 2006-03-02 15:22:11 jonrob Exp $
+! $Id: release.notes,v 1.112 2006-03-07 15:58:36 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v6r1 2006-03-07 =======================
 ! 2006-03-01 - Chris Jones
  - Remove classes Rich1DTabFunc and Rich1DTabProperty, which have been
    moved into RichDet to allow them to be used there without introducing a
@@ -15,7 +16,6 @@
  - Updates to DAQ interfaces
  - Other minor updates
 
-!======================= RichKernel v6r1 2006-02-16 =======================
 ! 2006-02-16 - Chris Jones
  - Fixes to RichTrackSegment to work around problems with ROOT math
  - Update MC truth tool interface
