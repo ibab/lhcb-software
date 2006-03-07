@@ -1,14 +1,8 @@
-// $Id: Kinematics.cpp,v 1.4 2006-02-21 17:20:07 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.5 2006-03-07 16:28:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/18 18:06:04  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/10 17:23:05  ibelyaev
-//  add more algorithms
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,6 +16,10 @@
 #include "LoKi/Kinematics.h"
 #include "LoKi/Constants.h"
 #include "LoKi/Report.h"
+// ============================================================================
+// ROOT 
+// ============================================================================
+#include "Math/Boost.h"
 // ============================================================================
 
 // ============================================================================
@@ -125,130 +123,92 @@ double LoKi::Kinematics::transverseMomentumDir
 } ;
 // ============================================================================
 
-// ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass of 4-vector 
- *  @param mom lorenz vector
- *  @return invariant mass 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-17
- */
-// ============================================================================
-double LoKi::Kinematics::mass 
-( const LoKi::LorentzVector& mom ) { return mom.M() ; }
-// ============================================================================
 
 // ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass of 4-vectors  
- *  @param v1  the first lorenz vector 
- *  @param v2  the second lorenz vector
- *  @return invariant mass 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-17
+/** @fn decayAngle 
+ *  
+ *  This routine returns the cosine angle theta 
+ *  The decay angle calculated  is that between 
+ *  the flight direction of the daughter neson, "D",
+ *  in the rest frame of "M" (the parent of "D"), 
+ *  with respect to the boost direction from 
+ *  "M"'s rest frame 
+ *  
+ *  @param D 4-momentum of the daughetr particle 
+ *  @param M 4-momentum of mother particle 
+ *  @return cosine of decay angle 
+ *
+ *  @see LoKi::LorentzVector.h
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-12-03
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
-( const LoKi::LorentzVector& v1 , 
-  const LoKi::LorentzVector& v2 ) { return (v1+v2).M(); } ;
-// ============================================================================
-
-// ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass of 4-vectors  
- *  @param v1  the first  lorenz vector 
- *  @param v2  the second lorenz vector
- *  @param v3  the third  lorenz vector
- *  @return invariant mass 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-17
- */
-// ============================================================================
-double LoKi::Kinematics::mass 
-( const LoKi::LorentzVector& v1 , 
-  const LoKi::LorentzVector& v2 ,
-  const LoKi::LorentzVector& v3 ) 
+double LoKi::Kinematics::decayAngle
+( const LoKi::LorentzVector& D , 
+  const LoKi::LorentzVector& M ) 
 {
-  LoKi::LorentzVector v ( v1 )  ;
-  v += v2 ;
-  v += v3 ;
-  return v.M() ;
+  
+  // boost the daugter particles to mother center of mass 
+  ROOT::Math::Boost   boost ( M.BoostToCM() ) ;
+  const LoKi::LorentzVector pD = boost( D ) ;
+  
+  // diretcion of 3-momentum of daughter in this rest frame 
+  const LoKi::ThreeVector v3D =  LoKi::ThreeVector(pD).Unit() ;
+  
+  // mother direction
+  const LoKi::ThreeVector v3M =  LoKi::ThreeVector( M).Unit()  ;  
+  
+  // cosine 
+  return v3D.Dot( v3M ) ;
 } ;
 // ============================================================================
 
 // ============================================================================
-/** @fn mass 
- *  trivial function to evaluate the mass of 4-vectors  
- *  @param v1  the first  lorenz vector 
- *  @param v2  the second lorenz vector
- *  @param v3  the third  lorenz vector
- *  @param v4  the fourth  lorenz vector
- *  @return invariant mass 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-17
+/** @fn decayAngle 
+ *  This routine returns the cosine angle theta 
+ *  The decay angle calculated  is that between 
+ *  the flight direction of the daughter neson, "D",
+ *  in the rest frame of "Q" (the parent of "D"), 
+ *  with respect to "Q"'s fligth direction in "P"'s
+ *  (the parent of "Q") rest frame
+ * 
+ *  it is a EvtDecayAngle(P,Q,D) routine form EvtGen package
+ *  
+ *  @param D 4-momentum of the daughetr particle 
+ *  @param Q 4-momentum of mother particle 
+ *  @param P "rest frame system"
+ *  @return cosine of decay angle 
+ * 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-12-03
  */
 // ============================================================================
-double LoKi::Kinematics::mass 
-( const LoKi::LorentzVector& v1 , 
-  const LoKi::LorentzVector& v2 ,
-  const LoKi::LorentzVector& v3 , 
-  const LoKi::LorentzVector& v4 ) 
+double LoKi::Kinematics::decayAngle
+( const LoKi::LorentzVector& P , 
+  const LoKi::LorentzVector& Q ,
+  const LoKi::LorentzVector& D ) 
 {
-  LoKi::LorentzVector v ( v1 ) ;
-  v += v2 ;
-  v += v3 ;
-  v += v4 ;
-  return v.M() ;
-} ;
+  const double pd  = P.Dot  ( D ) ;
+  const double pq  = P.Dot  ( Q ) ;
+  const double qd  = Q.Dot  ( D ) ;
+  const double mq2 = Q.M2   () ;
+  const double mp2 = P.M2   () ;
+  const double md2 = D.M2   () ;
+  
+  const double value = 
+    ( pq * pq - mq2 * mp2 ) * ( qd * qd - mq2 * md2 ) ;
+  
+  if ( 0 > value ) 
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::decayAngle():: invalid 4-momenta " );
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  return ( pd * mq2 - pq * qd ) / sqrt( value ) ;
+};
 // ============================================================================
-  
-
-
-// // ============================================================================
-// /** @fn decayAngle 
-//  *  This routine returns the cosine angle theta 
-//  *  The decay angle calculated  is that between 
-//  *  the flight direction of the daughter neson, "D",
-//  *  in the rest frame of "Q" (the parent of "D"), 
-//  *  with respect to "Q"'s fligth direction in "P"'s
-//  *  (the parent of "Q") rest frame
-//  * 
-//  *  it is a EvtDecayAngle(P,Q,D) routine form EvtGen package
-//  *  
-//  *  @param D 4-momentum of the daughetr particle 
-//  *  @param Q 4-momentum of mother particle 
-//  *  @param P "rest frame system"
-//  *  @return cosine of decay angle 
-//  * 
-//  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-//  *  @date 2004-12-03
-//  */
-// // ============================================================================
-// double LoKi::Kinematics::decayAngle
-// ( const LoKi::LorentzVector& P , 
-//   const LoKi::LorentzVector& Q ,
-//   const LoKi::LorentzVector& D ) 
-// {
-//   const double pd  = P * D    ;
-//   const double pq  = P * Q    ;
-//   const double qd  = Q * D    ;
-//   const double mq2 = Q.mag2() ;
-//   const double mp2 = P.mag2() ;
-//   const double md2 = D.mag2() ;
-  
-//   const double value = 
-//     ( pq * pq - mq2 * mp2 ) * ( qd * qd - mq2 * md2 ) ;
-  
-//   if ( 0 > value ) 
-//   {
-//     LoKi::Report::Error 
-//       ( "LoKi::Kinematics::decayAngle():: invalid 4-momenta " );
-//     return LoKi::Constants::InvalidAngle ;
-//   }
-//   //
-//   return ( pd * mq2 - pq * qd ) / sqrt( value ) ;
-// };
-// // ============================================================================
 
 // // ============================================================================
 // /** @fn transversityAngle 

@@ -1,17 +1,8 @@
-// $Id: LoKiCore.h,v 1.8 2006-02-21 14:45:52 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.9 2006-03-07 16:28:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/02/20 09:44:24  ibelyaev
-//  add LoKi/Helpers.h file
-//
-// Revision 1.6  2006/02/18 18:06:03  ibelyaev
-//  fix a typo
-//
-// Revision 1.5  2006/02/17 19:12:53  ibelyaev
-//  add Cast and some other minor changes
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -49,6 +40,7 @@
 #include "LoKi/Cast.h"
 #include "LoKi/Helpers.h"
 #include "LoKi/Keeper.h"
+#include "LoKi/FuncCast.h"
 // ============================================================================
 
 // ============================================================================

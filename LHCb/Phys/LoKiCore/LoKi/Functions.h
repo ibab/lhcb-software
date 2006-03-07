@@ -1,6 +1,6 @@
-// $Id: Functions.h,v 1.4 2006-02-22 20:58:49 ibelyaev Exp $
+// $Id: Functions.h,v 1.5 2006-03-07 16:28:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================

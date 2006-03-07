@@ -1,11 +1,8 @@
-// $Id: FuncAdapters.h,v 1.2 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: FuncAdapters.h,v 1.3 2006-03-07 16:28:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 #ifndef LOKI_FUNCADAPTERS_H 
 #define LOKI_FUNCADAPTERS_H 1

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.7 2006-02-22 20:58:50 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2006-03-07 16:28:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-03-07 - Vanya BELYAEV
+ - LoKi/Kinematics.h
+   src/Kinematics.cpp
+      minor polishing and  reshuffling inbetween *.h and *.cpp files 
+ - LoKi/FuncCast.h 
+      4 new adapter functions, which *COULD* be very useful later 
+      in generic Bender/Python loops (and almost useless in C++ code)
+
 
 ! 2006-02-22 - Vanya BELYAEV
  - LoKi/Keeper.h
@@ -71,6 +80,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.7  2006/02/22 20:58:50  ibelyaev
+!  add Keeper/UniqueKeeper container adapters
+!
 ! Revision 1.6  2006/02/17 12:11:29  cattanem
 ! move tag
 !

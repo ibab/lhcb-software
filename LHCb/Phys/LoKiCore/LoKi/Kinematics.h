@@ -1,17 +1,8 @@
-// $Id: Kinematics.h,v 1.5 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.6 2006-03-07 16:28:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/02/17 19:12:53  ibelyaev
-//  add Cast and some other minor changes
-//
-// Revision 1.3  2006/02/16 18:09:37  ibelyaev
-//  add utilities for the easy printouts
-//
-// Revision 1.2  2006/02/10 17:23:05  ibelyaev
-//  add more algorithms
-//
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -125,8 +116,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
-    ( const LoKi::LorentzVector& mom ) ;
+    inline double mass 
+    ( const LoKi::LorentzVector& mom ) { return mom.M() ; }
     
     /** @fn mass 
      *  trivial function to evaluate the mass of 4-vectors  
@@ -136,10 +127,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    inline double mass 
     ( const LoKi::LorentzVector& v1 , 
-      const LoKi::LorentzVector& v2 ) ;
-
+      const LoKi::LorentzVector& v2 ) { return mass ( v1 + v2 ) ; }
+    
     /** @fn mass 
      *  trivial function to evaluate the mass of 4-vectors  
      *  @param v1  the first  lorenz vector 
@@ -149,11 +140,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    inline double mass 
     ( const LoKi::LorentzVector& v1 , 
       const LoKi::LorentzVector& v2 ,
-      const LoKi::LorentzVector& v3 ) ;
-
+      const LoKi::LorentzVector& v3 ) 
+    { 
+      LoKi::LorentzVector v0( v1 ) ;
+      v0 += v2 ;
+      v0 += v3 ;      
+      return mass ( v0 ) ; 
+    } ;
+    
     /** @fn mass 
      *  trivial function to evaluate the mass of 4-vectors  
      *  @param v1  the first  lorenz vector 
@@ -164,12 +161,19 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    inline double mass 
     ( const LoKi::LorentzVector& v1 , 
       const LoKi::LorentzVector& v2 ,
       const LoKi::LorentzVector& v3 , 
-      const LoKi::LorentzVector& v4 ) ;
-    
+      const LoKi::LorentzVector& v4 ) 
+    {
+      LoKi::LorentzVector v0( v1 ) ;
+      v0 += v2 ;
+      v0 += v3 ;      
+      v0 += v4 ;      
+      return mass ( v0 ) ; 
+    } ;
+
     /** the simple function which adds a 4-momenta of all (MC)Particles
      *  from a sequence [begin,end).
      *  The actual type of elements is irrelevant, 
@@ -230,15 +234,15 @@ namespace LoKi
     template <class OBJECT>
     inline LoKi::LorentzVector 
     addMomenta
-    ( OBJECT begin , 
-      OBJECT end   ) 
+    ( OBJECT              begin                          , 
+      OBJECT              end                            , 
+      LoKi::LorentzVector result = LoKi::LorentzVector() ) 
     { 
-      LoKi::LorentzVector result = LoKi::LorentzVector() ;
       for ( ; begin != end ; ++begin ) 
       { if ( 0 != (*begin) ) { result += (*begin)->momentum() ; } }
       return result ;
     };
-
+    
     /** the simple function which adds a 4-momenta of all (MC)Particles
      *  from a sequence [begin,end).
      *  The actual type of elements is irrelevant, 
@@ -274,11 +278,11 @@ namespace LoKi
     template <class OBJECT, class PREDICATE>
     inline LoKi::LorentzVector 
     addMomenta
-    ( OBJECT    first , 
-      OBJECT    last  , 
-      PREDICATE cut   ) 
+    ( OBJECT              first                          , 
+      OBJECT              last                           , 
+      PREDICATE           cut                            , 
+      LoKi::LorentzVector result = LoKi::LorentzVector() )
     { 
-      LoKi::LorentzVector result = LoKi::LorentzVector() ;
       for ( ; first != last ; ++first ) 
       { 
         if ( 0 != (*first) && predicate ( *first ) ) 
@@ -322,33 +326,56 @@ namespace LoKi
      */
     template <class OBJECTS>
     inline LoKi::LorentzVector addMomenta
-    ( const OBJECTS& seq ) 
-    { return addMomenta ( seq.begin() , seq.end() ) ; };
+    ( const OBJECTS&             seq                            ,
+      const LoKi::LorentzVector& result = LoKi::LorentzVector() ) 
+    { return addMomenta ( seq.begin() , seq.end() , result ) ; };
     
-//     /** @fn decayAngle 
-//      *  This routine returns the cosine angle theta 
-//      *  The decay angle calculated  is that between 
-//      *  the flight direction of the daughter neson, "D",
-//      *  in the rest frame of "Q" (the parent of "D"), 
-//      *  with respect to "Q"'s fligth direction in "P"'s
-//      *  (the parent of "Q") rest frame
-//      * 
-//      *  it is a EvtDecayAngle(P,Q,D) routine form EvtGen package
-//      *  
-//      *  @param D 4-momentum of the daughetr particle 
-//      *  @param Q 4-momentum of mother particle 
-//      *  @param P "rest frame system"
-//      *  @return cosine of decay angle 
-//      *
-//      *  @see LoKi::LorentzVector.h
-//      *
-//      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-//      *  @date 2004-12-03
-//      */
-//     double decayAngle
-//     ( const LoKi::LorentzVector& P , 
-//       const LoKi::LorentzVector& Q ,
-//       const LoKi::LorentzVector& D ) ;
+    /** @fn decayAngle 
+     *  
+     *  This routine returns the cosine angle theta 
+     *  The decay angle calculated  is that between 
+     *  the flight direction of the daughter neson, "D",
+     *  in the rest frame of "M" (the parent of "D"), 
+     *  with respect to the boost direction from 
+     *  "M"'s rest frame 
+     *  
+     *  @param D 4-momentum of the daughetr particle 
+     *  @param M 4-momentum of mother particle 
+     *  @return cosine of decay angle 
+     *
+     *  @see LoKi::LorentzVector.h
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2004-12-03
+     */
+    double decayAngle
+    ( const LoKi::LorentzVector& D , 
+      const LoKi::LorentzVector& M ) ;
+
+    /** @fn decayAngle 
+     *  This routine returns the cosine angle theta 
+     *  The decay angle calculated  is that between 
+     *  the flight direction of the daughter neson, "D",
+     *  in the rest frame of "Q" (the parent of "D"), 
+     *  with respect to "Q"'s fligth direction in "P"'s
+     *  (the parent of "Q") rest frame
+     * 
+     *  it is a EvtDecayAngle(P,Q,D) routine form EvtGen package
+     *  
+     *  @param D 4-momentum of the daughetr particle 
+     *  @param Q 4-momentum of mother particle 
+     *  @param P "rest frame system"
+     *  @return cosine of decay angle 
+     *
+     *  @see LoKi::LorentzVector.h
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2004-12-03
+     */
+    double decayAngle
+    ( const LoKi::LorentzVector& P , 
+      const LoKi::LorentzVector& Q ,
+      const LoKi::LorentzVector& D ) ;
     
 //     /** @fn transversityAngle 
 //      *  This routine evaluates the cosine of "transversity angle", 
