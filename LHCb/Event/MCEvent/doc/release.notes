@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.31 2006-03-07 12:41:52 gcorti Exp $
+! $Id: release.notes,v 1.32 2006-03-07 15:55:20 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
+!========================== MCEvent v1r1 2006-03-07 ==========================
 ! 2006-03-07 - Gloria CORTI
  - Add new data member to MCHit, i.e. the absolute momentum of the particle
    when producing the hit.
@@ -16,11 +17,9 @@
     Add refraction point (for aerogel) and remove unused data members
   + MCRichSegment now support other radiator types
  
-
 ! 2006-02-22 - Chris Jones
  - Update sensDetID member in MCRichHit to be of type RichSmartID
 
-!========================== MCEvent v1r1 2006-02-17 ==========================
 ! 2006-02-17 - Marco Cattaneo
  - Fix default locations to all follow the same convention
 
