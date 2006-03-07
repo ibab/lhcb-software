@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.9 2006-03-07 12:32:02 frankb Exp $
+// $Id: RawEvent.cpp,v 1.10 2006-03-07 13:42:06 cattanem Exp $
 #include "Event/RawEvent.h"
 
 namespace {
@@ -6,7 +6,7 @@ namespace {
     size_t mem_len = LHCb::RawEvent::paddedBankLength(len);
     char* mem = (char*)::operator new(mem_len);
     if ( mem_len != len )  {
-      size_t l = sizeof(LHCb::RawBank)-sizeof(unsigned int);
+      // size_t l = sizeof(LHCb::RawBank)-sizeof(unsigned int);
       *(unsigned int*)(mem+mem_len-sizeof(unsigned int)) = 0;
       // above should be faster .... ::memset(mem+len+l,0,mem_len-len-l);
     }
