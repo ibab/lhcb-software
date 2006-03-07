@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r0 2006-03-07 ========================
 ! 2006-03-01 - Chris Jones
  - Adapt to new RichDAQ interface
 
@@ -11,7 +12,6 @@
  - Adapt to new sensDetID info in the mchits
  - Some additions to the monitor code
 
-!======================== RichReadout v2r0 2006-02-17 ========================
 ! 2006-02-16 - Chris Jones
  - Various bug fixes
  - Improvements following changes to MC history flags
