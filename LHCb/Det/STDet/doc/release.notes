@@ -2,8 +2,15 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+
+! 2006-03-07 M Needham
+ - fix bug in findSector in DeTTHalfModule 
+
+! 2006-0306 M Needham
+
 !========================= STDet v2r0 2006-03-06 =======================
 ! 2006-03-06 M.Needham
+
  - correct flipping of the sensors
  - correct find method for DeITLadder
 

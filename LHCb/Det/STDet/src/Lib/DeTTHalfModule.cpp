@@ -97,11 +97,17 @@ MsgStream& DeTTHalfModule::printOut( MsgStream& os ) const{
 DeTTSector* DeTTHalfModule::findSector(const STChannelID aChannel){
 
   // return pointer to the station from channel
+  /*
   int sectorNum = -1;
   if ((m_detRegion == aChannel.detRegion()) && ((m_parent->contains(aChannel) == true))) {
     sectorNum = aChannel.sector() - m_firstSector;    
   }
   return ((sectorNum >= 0 && (unsigned int) sectorNum < m_sectors.size()) ? m_sectors[sectorNum]: 0  );
+  */
+
+
+  Children::iterator iter = std::find_if(m_sectors.begin() , m_sectors.end(), bind(&DeSTSector::contains, _1, aChannel));
+  return (iter != m_sectors.end() ? *iter: 0);
 }
 
 DeTTSector* DeTTHalfModule::findSector(const Gaudi::XYZPoint& point) {
