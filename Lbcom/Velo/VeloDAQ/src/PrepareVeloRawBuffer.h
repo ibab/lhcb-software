@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.9 2006-02-23 15:41:50 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.10 2006-03-07 15:53:00 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -63,7 +63,7 @@ private:
   std::string m_clusterLoc;
   std::string m_rawEventLoc;
   
-  // version tag, this strongly tied to the implementatio, hence const
+  // version tag, this strongly tied to the implementation, hence const
   const int m_bankVersion;
 
   // long lived containers for performance reasons. Also used to communicate
@@ -72,5 +72,9 @@ private:
   std::vector<SiDAQ::buffer_word> m_rawData;
   std::vector<SiDAQ::buffer_word> m_clusterADCBuffer;
   std::vector<SiDAQ::buffer_word> m_clusterPosBuffer;
+
+  // size of raw bank in bytes, inclding the 4 byte header but
+  // *without* the padding bytes at the end
+  unsigned int m_bankSizeInBytes;
 };
 #endif // PREPAREVELORAWBUFFER_H

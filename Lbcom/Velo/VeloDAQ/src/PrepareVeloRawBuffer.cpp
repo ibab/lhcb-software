@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.13 2006-02-23 15:41:50 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.14 2006-03-07 15:53:00 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -12,6 +12,8 @@
 #include "SiDAQ/SiRawBufferWord.h"
 
 #include "VeloClusterWord.h"
+#include "VeloRawBankVersions.h"
+#include "VeloRawWordSizes.h"
 
 #include "PrepareVeloRawBuffer.h"
 
@@ -39,7 +41,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   GaudiAlgorithm (name , pSvcLocator),
   m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
-  m_bankVersion(2)
+  m_bankVersion(VeloDAQ::v2)
 {
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
@@ -120,7 +122,15 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
     // create new raw buffer in raw data cache, old one is cleared
     makeBank(firstOnSensor, lastOnSensor);
-    rawEvent->addBank(currentSensorNumber, LHCb::RawBank::Velo, m_bankVersion, m_rawData);
+
+    LHCb::RawBank* newBank = rawEvent->createBank(static_cast<SiDAQ::buffer_word>(currentSensorNumber),
+                                                  LHCb::RawBank::Velo,
+                                                  m_bankVersion,
+                                                  m_bankSizeInBytes, 
+                                                  &(m_rawData[0]));
+
+    // add new bank and pass memory ownership to raw event
+    rawEvent->adoptBank(newBank,true);
 
     firstOnSensor = lastOnSensor;
   }
@@ -169,7 +179,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 
   // loop over clusters in range defined by iterator 
   unsigned int nClu = 0;  // cluster counter
-  unsigned int nAdc = 0 ; 
+  unsigned int nAdc = 0;  // ADC word counter, used to to determine
+                          // number of padding bytes at end of raw bank 
 
   std::vector<const LHCb::InternalVeloCluster*>::const_iterator iC = begin;
   for ( ; iC != end ; ++iC) // 
@@ -193,14 +204,19 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     if( numStrips == 1 )  
     {
       // single strip cluster
+
+      // currently we have no way of retrieving the high theshold
+      // information since the VeloInternalCluster does not
+      // provide an interface.
+      bool highThresh = false;
+
       double adcCount = clu->adcValue(0);
-      bool overflow = false;
+
       if (adcCount > 127)
       {
         adcCount = 127;
-        overflow = true;
       }
-      VeloClusterWord vcw(clu->strip(0),0.0,1, overflow);
+      VeloClusterWord vcw(clu->strip(0),0.0,1, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
       if ( isVerbose )
 	    {
@@ -209,10 +225,10 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 	    }
 
       SiADCWord aw(adcCount,true);
-      rowData |= (aw.value() << ((nAdc % 4) << 3));
+      rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
 
       ++nAdc;
-      if (nAdc % 4 == 0)
+      if (nAdc % VeloDAQ::adc_per_buffer == 0)
 	    {
 	      m_clusterADCBuffer.push_back ( rowData );
 	      //reset rowData
@@ -234,7 +250,12 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       double sumADCWeightedeStrip = 0.;
 
       // loop over all strip signals 
-      bool overflow = false;
+
+      // currently we have no way of retrieving the high theshold
+      // information since the VeloInternalCluster does not
+      // provide an interface.
+      bool highThresh = false; 
+
       unsigned int i = 0;
       for (; i<stripSignals.size(); ++i) 
 	    {
@@ -243,7 +264,6 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         if (adcCount > 127)
         {
           adcCount = 127;
-          overflow = true;
         }
 	   
 	      if(isVerbose)
@@ -259,10 +279,10 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         bool endOfCluster = (stripSignals.size() == i+1);
         SiADCWord aw(adcCount,endOfCluster);
 
-        rowData |= (aw.value() << ((nAdc % 4) << 3));
+        rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
 
         ++nAdc;
-        if (nAdc % 4 == 0)
+        if (nAdc % VeloDAQ::adc_per_buffer == 0)
         {
           m_clusterADCBuffer.push_back ( rowData );
           //reset rowData
@@ -278,7 +298,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       double cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
       unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
       double interStripPos = cPos - channelPos; // fractional part
-      VeloClusterWord vcw(channelPos, interStripPos, numStrips, overflow);
+      VeloClusterWord vcw(channelPos, interStripPos, numStrips, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
 
       if(isVerbose)
@@ -293,9 +313,9 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     }// end else 
    
     // store the cluster position
-    cluRowData |= (packedCluster << ((nClu % 2) << 4));
+    cluRowData |= (packedCluster << ((nClu % VeloDAQ::clu_per_buffer) << VeloDAQ::clu_shift));
     ++nClu;
-    if ( nClu % 2 == 0 ) 
+    if ( nClu % VeloDAQ::clu_per_buffer == 0 ) 
     {
       m_clusterPosBuffer.push_back( cluRowData );
       // clear the cluster buffer 
@@ -303,8 +323,6 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     }
     
   }// end for 
-
-  // finished loooping over clusters 
 
   // if the cluster row isn't empty add the contents to the vector 
   if ( cluRowData != 0x0 )
@@ -354,6 +372,13 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 
     m_rawData.push_back ( *tmpAdc ) ;
   }
+
+  // Find number of padding bytes at the end of bank an compute
+  // raw bank size in bytes, including the 4 byte header but
+  // *without* the padding bytes at the end. 
+  // The number of padding bytes is completely determined by
+  // the number of ADC words in the raw bank.
+  m_bankSizeInBytes = sizeof(SiDAQ::buffer_word)*m_rawData.size() - (nAdc%VeloDAQ::adc_per_buffer);
 
   if ( isVerbose) 
   {

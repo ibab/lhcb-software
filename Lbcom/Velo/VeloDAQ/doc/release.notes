@@ -1,6 +1,20 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-03-07 - Kurt Rinnert
+ - in the encoding, the high threshold bit is explicitely *not* handled
+  anymore. This reflects the fact that this inforamtion can currently not
+  be retrieved from the VeloLiteCluster.   As soon as VeloLiteCluster
+  provides it, the encoding will handle it properly.
+ - introduced enumeration type for bank version, similar to the ST
+  implementation
+ - introduced some constants with meaningful names for raw word sizes etc. 
+  to avoid hardcoding this several times in the preparation of the raw buffer
+ - the raw buffer is now added to the raw event using RawEvent::createBank() and
+  RawEvent::adoptBank().  This allows to set the correct bank size in bytes. 
+  The number of bytes in the bank is counted including the four header bytes but
+  without the padding bytes at the end of the bank.
+
 ! 2006-03-02 - David Hutchcroft
  - fixed a bug in DecodeVeloRawBuffer where containers were generated and 
    placed many times
