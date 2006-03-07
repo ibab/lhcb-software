@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.4 2006-03-03 09:43:57 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.5 2006-03-07 14:11:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/03 09:43:57  ibelyaev
+//  add GP<*> functions
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1383,6 +1386,29 @@ LoKi::GenParticles::AdapterToEndVertex::operator()
   return m_fun ( v ) ;
 } ;
 // ============================================================================
+
+
+// ============================================================================
+/// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::ThreeCharge::result_type 
+LoKi::GenParticles::ThreeCharge::operator() 
+  ( LoKi::GenParticles::ThreeCharge::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error(" Invalid Particle, return 'InvalidCharge'");
+    return LoKi::Constants::InvalidCharge;                     // RETURN 
+  }
+  return LHCb::ParticleID( p->pdg_id() ).threeCharge() ;  
+};
+// ============================================================================
+/// "SHORT" representation, @see LoKi::AuxFunBase
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::ThreeCharge::fillStream
+( std::ostream& stream ) const 
+{ return stream << "G3Q" ; }
 
 // ============================================================================
 // The END 

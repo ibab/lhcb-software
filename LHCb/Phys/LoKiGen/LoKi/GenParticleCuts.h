@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.4 2006-03-03 09:43:56 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.5 2006-03-07 14:11:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/03 09:43:56  ibelyaev
+//  add GP<*> functions
+//
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -888,6 +891,26 @@ namespace LoKi
      */
     typedef LoKi::GenParticles::AdapterToEndVertex         GFAEVX ;    
     
+    /** @var G3Q
+     *  The trivial evaluator of 3*chareg of the particle 
+     *
+     *  @code 
+     *
+     *  const HepMC::GenParticle* p = ... ;
+     *  
+     *  const bool positive = 0 < G3Q( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  Algorithm: 
+     *
+     *   HepMC::GenParticle:pdg_id -> LHCb::ParticleID -> threeCharge 
+     *
+     *  @author Vanya BELYAVE ibelyaev@physics.syr.edu
+     *  @date 2006-03-07
+     */
+    const LoKi::GenParticles::ThreeCharge                  G3Q    ;    
+
   } ; // end of namespace LoKi::Cuts 
   
 } ; // end of namespace LoKi

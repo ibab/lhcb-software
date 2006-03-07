@@ -1,6 +1,6 @@
-// $Id: GenParticles.h,v 1.4 2006-03-03 09:43:57 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.5 2006-03-07 14:11:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -912,6 +912,34 @@ namespace LoKi
       double                m_bad ;
     };
     
+
+    /** @struct ThreeCharge
+     *  primitive function to extract the 3*charge from HepMC::GenParticle
+     *  
+     *   Algorithm: 
+     *
+     *   pdg_id -> LHCb::ParticleID -> threeCharge 
+     *
+     *  @see ParticleID 
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::G3Q
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-03-07
+     */
+    struct ThreeCharge : 
+      public LoKi::Function<const HepMC::GenParticle*> 
+    {
+    public:
+      /// MANDATORY: clone method ("virtual" constructor")
+      virtual  ThreeCharge* clone() const { return new ThreeCharge(*this) ; }
+      /// MANDATORY: virtual destructor 
+      virtual ~ThreeCharge(){} ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    };
 
   }; // end of namespace GenParticles
   
