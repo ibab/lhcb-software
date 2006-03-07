@@ -1,18 +1,13 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
+!-----------------------------------------------------------------------------
 
-
+!======================= STAlgorithms v1r0 2006-03-07 ========================
 ! 2006-03-07 M Needham
-  - fix memory leak/ clean-up charge sharing code
+  - fix memory leak/ clean-up charge sharing code, plus other bug fixes
 
-! - Bug fixes M Needham
-
-
-
-!======================= STAlgorithms v1r0 2006-03-06 ========================
-! 2006-02-28
+! 2006-02-28 Matt Needham
  - Update for new position tool, plus bug fixes
-
 
 ! 2006-02-23 - Marco Cattaneo
  - Modernize STAlgorithms_load.cpp, and add missing factories
