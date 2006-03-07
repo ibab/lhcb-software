@@ -1,19 +1,14 @@
-// $Id: RawEvent.cpp,v 1.8 2006-01-10 09:33:39 frankb Exp $
+// $Id: RawEvent.cpp,v 1.9 2006-03-07 12:32:02 frankb Exp $
 #include "Event/RawEvent.h"
 
 namespace {
-  inline size_t memLength(size_t len)  {
-    size_t mem_len = len+sizeof(LHCb::RawBank)-sizeof(unsigned int);
-    if ( mem_len%sizeof(unsigned int) )  {    // Need padding
-      mem_len = (mem_len/sizeof(unsigned int) + 1)*sizeof(unsigned int);
-    }
-    return mem_len;
-  }
   inline LHCb::RawBank* allocateBank(size_t len)  {
-    size_t mem_len = memLength(len);
+    size_t mem_len = LHCb::RawEvent::paddedBankLength(len);
     char* mem = (char*)::operator new(mem_len);
     if ( mem_len != len )  {
-      ::memset(mem+len,0,mem_len-len);
+      size_t l = sizeof(LHCb::RawBank)-sizeof(unsigned int);
+      *(unsigned int*)(mem+mem_len-sizeof(unsigned int)) = 0;
+      // above should be faster .... ::memset(mem+len+l,0,mem_len-len-l);
     }
     return (LHCb::RawBank*)mem;
   }
@@ -37,7 +32,11 @@ LHCb::RawEvent::~RawEvent() {
 }
 
 size_t LHCb::RawEvent::paddedBankLength(size_t len)   {
-  return memLength(len);
+  size_t mem_len = len+sizeof(LHCb::RawBank)-sizeof(unsigned int);
+  if ( mem_len%sizeof(unsigned int) )  {    // Need padding
+    mem_len = (mem_len/sizeof(unsigned int) + 1)*sizeof(unsigned int);
+  }
+  return mem_len;
 }
 
 const std::vector<LHCb::RawBank*>& LHCb::RawEvent::mapBanks(RawBank::BankType bankType)  {
@@ -54,7 +53,7 @@ void LHCb::RawEvent::addBank( int srcID,
                               LHCb::RawBank::BankType typ, 
                               int vsn, 
                               const std::vector<unsigned int>& data)  {
-  adoptBank( createBank( srcID, typ, vsn, data.size()*sizeof(unsigned int), &(*data.begin()) ), true );
+  adoptBank( createBank(srcID, typ, vsn, data.size()*sizeof(unsigned int), &(*data.begin())), true );
 }
 
 LHCb::RawBank* LHCb::RawEvent::createBank( int srcID, 
@@ -76,15 +75,15 @@ LHCb::RawBank* LHCb::RawEvent::createBank( int srcID,
 
 /// For offline use only: copy data into a bank, adding bank header internally.
 void LHCb::RawEvent::addBank(RawBank* data)     {
-  size_t len = data->size() + sizeof(LHCb::RawBank) - sizeof(unsigned int);
-  LHCb::RawBank* bank = allocateBank(len);
+  size_t len = data->totalSize();
+  LHCb::RawBank* bank = (LHCb::RawBank*)::operator new(len);
   ::memcpy(bank, data, len);
   adoptBank(bank, true);
 }
 
 /// Take ownership of a bank, including the header
 void LHCb::RawEvent::adoptBank(LHCb::RawBank* bank, bool adopt_memory)     {
-  size_t len = memLength(bank->size());
+  size_t len = bank->totalSize();
   if ( !m_mapped ) mapBanks(bank->type());
   m_eventMap[bank->type()].push_back(bank);
   m_banks.push_back(Bank(len/sizeof(unsigned int), adopt_memory, (unsigned int*)bank));

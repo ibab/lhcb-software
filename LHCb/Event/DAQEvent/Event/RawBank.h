@@ -9,7 +9,18 @@
   * Raw data bank sent by the TELL1 boards of the LHCb DAQ.
   *
   * For a detailed description of the raw bank format,
-  * see EDMS note "565851 v.3  Raw-data format"
+  * see EDMS note "565851 v.5  Raw-data format"
+  *
+  * Note concerning the changes done 06/03/2006:
+  * - The bank size is in BYTES
+  * - The full size of a bank in memory is long word (32 bit) aligned
+  *   ie. a bank of 17 Bytes length actually uses 20 Bytes in memory.
+  * - The bank length accessors size() and setSize() do not contain
+  *   the bank header, ie. size() = (total size) - (header size).
+  * - The length passed to the RawEvent::createBank should NOT
+  *   contain the size of the header !
+  * - If the full padded bank size is required use the utility
+  *   function RawBank::totalSize = size + header size + padding size.
   *
   * @author Helder Lopes
   * @author Markus Frank
@@ -78,14 +89,22 @@ namespace LHCb
     /// Set magic word
     void setMagic()                 {    m_magic = MagicPattern;    }
 
+    /// Header size
+    int hdrSize()  const            {    return sizeof(RawBank)-sizeof(m_data);}
+
     /// Return size of the data body part of the bank
-    int size() const                {    return m_length;           }
+    int size() const                {    return m_length-hdrSize();            }
 
     /// Set data size of the bank in bytes
-    void setSize(size_t val)        {    m_length = (val&0xFFFF);   }
+    void setSize(size_t val)        {    m_length = (val&0xFFFF)+hdrSize();    }
 
+    /// Access the full (padded) size of the bank
+    int totalSize() const           { 
+      typedef unsigned int T;
+      return m_length%sizeof(T)==0 ? m_length : (m_length/sizeof(T)+1)*sizeof(T);
+    }
     /// Return bankType of this bank 
-    BankType type() const           {    return BankType(int(m_type)); }
+    BankType type() const           {    return BankType(int(m_type));         }
 
     /// Set data size of the bank in bytes
     void setType(BankType val)      {    m_type = (int(val)&0xFF);  }
@@ -112,18 +131,18 @@ namespace LHCb
     template <typename T> T* begin(){    return (T*)m_data;         }
 
     /// End iterator 
-    template <typename T> T* end()  {    return ((T*)m_data) + m_length/sizeof(T);  }
+    template <typename T> T* end()  {    return ((T*)m_data) + size()/sizeof(T);  }
 
     /// Begin iterator over const iteration
     template <typename T> const T* begin() const {return (T*)m_data;}
 
     /// End iterator of const iteration
-    template <typename T>  const T* end() const  {return ((T*)m_data) + m_length/sizeof(T);  }
+    template <typename T>  const T* end() const  {return ((T*)m_data) + size()/sizeof(T);  }
 
   private:
     /// Magic word (by definition 0xCBCB)
     unsigned short m_magic;
-    /// Bank length (must be >= 0)
+    /// Bank length in bytes (must be >= 0)
     unsigned short m_length;
     /// Bank type (must be >= 0)
     unsigned char  m_type;

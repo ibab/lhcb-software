@@ -40,6 +40,10 @@ namespace LHCb
      * to support the storage of variable size C-arrays in order
      * to avoid a copy of the data.
      *
+     * Note:
+     * - The length passed to the RawEvent::createBank should NOT
+     *   contain the size of the header !
+     *
      * @author  M.Frank
      * @version 1.0
      */
