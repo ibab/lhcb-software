@@ -50,7 +50,7 @@ class Property{
    /**
      Convert to bool.
   */
-  operator const bool() const {return bool(atoi(m_value.c_str()));}
+  operator const bool() const {return (( atoi(m_value.c_str()) != 0 ) ? true : false );}
 
   /**
      Convert to int.

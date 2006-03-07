@@ -44,7 +44,7 @@ const std::vector<float> L0Muon::Property::getVectorOfFloat() const{
   char * endptr;
 
   for (int k=0;k<length;k++){
-    float f = strtod(str,&endptr);
+    float f = (float)strtod(str,&endptr);
     if (endptr==str) {
       break;
     }

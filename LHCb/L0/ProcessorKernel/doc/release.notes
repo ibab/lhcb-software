@@ -3,6 +3,11 @@
 ! Responsible : A. Tsaregorodtsev
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
+
+!======================== ProcessorKernel v3r0 2006-01-19 ====================
+! 2006-03-03 - Marco Cattaneo
+ - Fixes to remove Windows compilation warnings
+ 
 ! 2006-03-03 - Julien Cogan
  - BUG FIX. In RegisterFactory: objects created with the XMLString::transcode 
    method of xerces were not deleted (causing memory leak)
