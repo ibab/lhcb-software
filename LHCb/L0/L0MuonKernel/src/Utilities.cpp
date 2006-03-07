@@ -1,4 +1,5 @@
 #include "L0MuonKernel/Utilities.h"
+#include <math.h>
 
 void L0Muon::xyFromPad(LHCb::MuonTileID pad, double& x, double& y,
                        std::vector<double> ptparam)  {

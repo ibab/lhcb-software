@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= L0MuonKernel v5r0 2006-03-06 ====================
+! 2006-03-06 - Marco Cattaneo
+ - Fixes to compile on Windows
+
 ! 2006-03-06 - Julien Cogan
  - Implement the methods to write and decode the L0Buffers and the RawBuffers.
  - Externalize the ptcalc and xyFromPad methods of Tower.

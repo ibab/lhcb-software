@@ -7,11 +7,11 @@
 
 namespace L0Muon {
 
-  void L0Muon::xyFromPad(LHCb::MuonTileID pad, double& x, double& y,
+  void xyFromPad(LHCb::MuonTileID pad, double& x, double& y,
                          std::vector<double> ptparam);
   
   
-  std::vector<double> L0Muon::ptcalc(LHCb::MuonTileID p1, LHCb::MuonTileID p2,
+  std::vector<double> ptcalc(LHCb::MuonTileID p1, LHCb::MuonTileID p2,
                         std::vector<double> ptparam, bool debug=false);
 
   
