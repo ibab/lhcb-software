@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.25 2006-03-03 11:22:02 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.26 2006-03-07 13:20:04 cattanem Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -905,10 +905,10 @@ StatusCode  DeMuonDetector::fillGeoArray()
   MuonLayout layoutInner=m_chamberLayout->layout(0);
   MuonLayout layoutOuter=m_chamberLayout->layout(3);
   int station=0;
-  msg<<MSG::INFO<< "layout inner "<<
+  msg<<MSG::DEBUG<< "layout inner "<<
     layoutInner.xGrid()<<" "<<  layoutInner.yGrid()<<endreq;
 
-  msg<<MSG::INFO<< "layout outer "<<
+  msg<<MSG::DEBUG<< "layout outer "<<
     layoutOuter.xGrid()<<" "<<  layoutOuter.yGrid()<<endreq;
   
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
@@ -1028,7 +1028,7 @@ StatusCode  DeMuonDetector::fillGeoArray()
     m_stationBox[station][3]=maxY;
 
 
-    msg<<MSG::INFO<<" station  inner "<<station<<" "<< 
+    msg<<MSG::DEBUG<<" station  inner "<<station<<" "<< 
       m_stationBox[station][0]<<
       " "<<m_stationBox[station][1]<<
       " station  outer "<<station<<" "<< 
