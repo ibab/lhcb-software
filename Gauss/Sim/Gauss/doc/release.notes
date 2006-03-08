@@ -4,15 +4,23 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r1 2006-02-23 =============================
+!======================== Gauss v24r1 2006-03-08 =============================
+! 2006-03-08 - Gloria CORTI
+ - Use new field map as scaled to agree with measurements (FieldMap v4r7)
+ - Use new version of GaussTracker (v5r1) to fill |P| in MCHit  
+ - Use new version of GaussRICH (v6r2) to adapt to changes in MCRichHit
+ - Introduce example for generating fixed number of interactions
+   . FixedNInteractions.opts  - NEW
+   . Generator.opts
+
 ! 2006-02-23 - Gloria CORTI
- - Use latest DecFiles v11r3 (temporarly in GAUSS project to switch off
+ - Use latest DecFiles v11r4 (temporarly in GAUSS project to switch off
    use of PHOTOS in all decays, since it give problems to reproduce events)
 
 ! 2006-02-17 - Gloria CORTI
  - Use GiGa v18r1 for new setting of field
    Use modification for Generators (v4r1) allowing to produce b inclusive 
-   Use PackedEvent
+   Use PackedEvent to be able to use options from 
    . requirement
 
 ! 2006-02-16 - Gloria CORTI
