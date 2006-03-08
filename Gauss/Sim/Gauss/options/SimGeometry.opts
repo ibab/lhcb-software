@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.14 2006-02-13 16:26:16 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.15 2006-03-08 17:01:28 gcorti Exp $
 
 /** @file
  *
@@ -30,11 +30,24 @@ ApplicationMgr.DLLs += { "GaussTracker" };
 ApplicationMgr.DLLs += { "GaussRICH"    };
 ApplicationMgr.DLLs += { "GaussCalo"    };
 
+
+// Geometry to be simulated as a whole
+//----------------------------------------------------------------------------
+// Geo.StreamItems      += {"/dd/Structure/LHCb"};  
+
+// Geometry to be simulated Region by region
+//----------------------------------------------------------------------------
+// Geo.StreamItems      += {"/dd/Structure/LHCb/UpstreamRegion"};  
+// Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion"};  
+// Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion"};
+
 // Geometry to be simulated Detector by detector
 //----------------------------------------------------------------------------
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
 // Uncomment following line to enable misaligneable VELO
-//#include "$GAUSSOPTS/SimVeloGeometry.opts" // Must be adapted!!
+//#include "$GAUSSOPTS/SimVeloGeometry.opts"
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
