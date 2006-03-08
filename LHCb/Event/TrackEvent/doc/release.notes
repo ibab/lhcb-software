@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r0 2006-03-03 ========================
 ! 2006-03-03 - Eduardo Rodrigues
  - added check in removeFromNodes method in Track (a node may exist without
    a measurement)
@@ -16,7 +17,6 @@
  - Introduced the reference vector to the Measurement base class.
  - Introduced the Trajectory to the Measurement base class.
 
-!========================= TrackEvent v2r0 2006-02-10 ========================
 ! 2006-02-10 - Eduardo Rodrigues
  - added new symmetrize method to SHacks.h
  - added new file TrackUnitsConverters.h to provide easy units conversions
