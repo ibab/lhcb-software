@@ -84,6 +84,16 @@ m_increasing = false;
 	setMeth   = "FALSE"
         desc      = "List of references" />
 
+      <attribute
+	type      = "unsigned int"
+	name      = "sourceClassID"
+	desc      = "Class ID of the source of the Link"/>
+
+      <attribute
+	type      = "unsigned int"
+	name      = "targetClassID"
+	desc      = "Class ID of the target of the Link"/>
+
       <method
         type      = "void"
         name      = "setIncreasing"

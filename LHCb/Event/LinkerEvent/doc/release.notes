@@ -4,6 +4,13 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-03-08 - Olivier Callot
+ - Add a check on the class ID of the objects related by the Linker.
+   This changes the object LinksByKey (store the two class IDs).
+ - Add a check of the class ID in the wrapper tools (LinkerTool,
+   LinkedFrom, LinkedTo, AllLinks) with exception thrown in case the class ID
+   of the declared template doesn't match the one stored in the object.
+
 !====================== LinkerEvent v2r0 2006-02-14 ==========================
 ! 2006-02-14 - Olivier Callot
  - Remove all SOURCECONTAINER and TARGETCONTAINER template as this is

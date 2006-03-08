@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.7 2006-02-14 10:41:52 ocallot Exp $
+// $Id: AllLinks.h,v 1.8 2006-03-08 17:38:49 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h"
 #include "Event/LinksByKey.h"
 
 /** @class AllLinks AllLinks.h Linker/AllLinks.h
@@ -16,8 +17,7 @@
  *  @date   2004-01-06
  */
 
-template < class TARGET, 
-           class SOURCE=ContainedObject >
+template < class TARGET, class SOURCE >
 class AllLinks {
 public: 
   
@@ -41,6 +41,18 @@ public:
     m_links = links;
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
+
+    SOURCE src;
+    TARGET tgt;
+    if ( links->sourceClassID() != src.clID() ) {
+      throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+                            "LinkedTo", StatusCode::FAILURE);
+    }
+    if ( links->targetClassID() != tgt.clID() ) {
+      throw GaudiException( "Incompatible TARGET type for location " + containerName,
+                            "LinkedTo", StatusCode::FAILURE);
+    }
+
   }; 
             
   virtual ~AllLinks( ) {}; ///< Destructor

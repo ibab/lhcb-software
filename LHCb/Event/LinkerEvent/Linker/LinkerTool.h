@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.6 2006-02-14 10:41:52 ocallot Exp $
+// $Id: LinkerTool.h,v 1.7 2006-03-08 17:38:49 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectContainerBase.h"
+#include "GaudiKernel/GaudiException.h"
 
 #include "Event/LinksByKey.h"
 
@@ -50,6 +51,17 @@ public:
 
   DirectType* direct ( ) {
     SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_location );
+    SOURCE src;
+    TARGET tgt;
+    if ( links->sourceClassID() != src.clID() ) {
+      throw GaudiException( "Incompatible SOURCE type for location " + m_location,
+                            "LinkerTool", StatusCode::FAILURE);
+    }
+    if ( links->targetClassID() != tgt.clID() ) {
+      throw GaudiException( "Incompatible TARGET type for location " + m_location,
+                            "LinkerTool", StatusCode::FAILURE);
+    }
+    
     if ( 0 != links ) links->resolveLinks( m_evtSvc );
     const LHCb::LinksByKey* linkPtr = links;
     m_table.load( linkPtr );
@@ -63,6 +75,21 @@ public:
 
   InverseType* inverse ( ) {
     SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_invLocation );
+    SOURCE src;
+    TARGET tgt;
+    if ( links->sourceClassID() != src.clID() ) {
+      std::cout << "LinkerTool : Incompatible SOURCE type for location " << m_location
+                << " SOURCE has class ID " << src.clID()
+                << " expect " << links->sourceClassID() << std::endl;
+      return 0;
+    }
+    if ( links->targetClassID() != tgt.clID() ) {
+      std::cout << "LinkerTool : Incompatible TARGET type for location " << m_location
+                << " TARGET has class ID " << tgt.clID()
+                << " expect " << links->sourceClassID() << std::endl;
+      return 0;
+    }
+    
     LHCb::LinksByKey* linkPtr = links;
     if ( 0 == linkPtr ) {
       //== Invert the table...

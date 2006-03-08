@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.11 2006-02-14 10:41:52 ocallot Exp $
+// $Id: LinkedTo.h,v 1.12 2006-03-08 17:38:49 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedTo LinkedTo.h Linker/LinkedTo.h
@@ -17,8 +18,7 @@
  */
 
 
-template < class TARGET, 
-           class SOURCE=ContainedObject>
+template < class TARGET, class SOURCE>
 class LinkedTo {
 public: 
   //== Typedefs to please Matt
@@ -45,6 +45,18 @@ public:
     m_links = links;
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
+
+    SOURCE src;
+    TARGET tgt;
+    if ( links->sourceClassID() != src.clID() ) {
+      throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+                            "LinkedTo", StatusCode::FAILURE);
+    }
+    if ( links->targetClassID() != tgt.clID() ) {
+      throw GaudiException( "Incompatible TARGET type for location " + containerName,
+                            "LinkedTo", StatusCode::FAILURE);
+    }
+    
   }; 
             
   virtual ~LinkedTo( ) {}; ///< Destructor
