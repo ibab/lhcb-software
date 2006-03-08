@@ -4,7 +4,7 @@
 #include "$STDOPTS/DigiDicts.opts"
 
 EventSelector.Input = {
-   "DATAFILE='PFN:file:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r0/0601-30000000.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+   "DATAFILE='PFN:file:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r0/0601-11144100.100ev.digi' TYP='POOL_ROOT' OPT='READ'"
 };  // 100 events minimum bias with Gauss v24r1, Boole v11r0
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";

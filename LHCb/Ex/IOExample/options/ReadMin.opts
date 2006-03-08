@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.14 2006-02-15 14:50:04 cattanem Exp $
+// $Id: ReadMin.opts,v 1.15 2006-03-08 10:16:35 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -30,7 +30,7 @@ ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 EventDataSvc.EnableFaultHandler  = true ;
 
 // Unpack the packed containers on demand
-//#include "$PACKEDEVENTROOT/options/UnpackDst.opts"
+#include "$STDOPTS/UnpackDigi.opts"
 
 // Input data file can be produced by first running IOMin.exe with WriteMin.opts
 
