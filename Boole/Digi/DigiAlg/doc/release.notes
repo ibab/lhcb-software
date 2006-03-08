@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-03-08 - Olivier Callot
+ - Adapt BuildMCTrackInfo to use VeloDigit linkers to MCParticles.
+
 !========================== DigiAlg v4r0 2006-03-06 =========================
 ! 2006-02-21 - Olivier Callot
  - Import BuildMCTrackInfo, which was in Phys/MCTools. Adapt to STDetectorElement,

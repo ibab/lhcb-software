@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.1 2006-02-21 17:17:18 ocallot Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.2 2006-03-08 15:10:09 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
-#include "Event/VeloCluster.h"
+#include "Event/VeloDigit.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 
@@ -77,8 +77,8 @@ StatusCode BuildMCTrackInfo::initialize() {
 StatusCode BuildMCTrackInfo::execute() {
   debug() << "==> Execute" << endreq;
   
-  //LinkedTo<LHCb::MCParticle> veloLink( eventSvc(), msgSvc(), 
-  //                                     LHCb::VeloClusterLocation::VeloClusters );
+  LinkedTo<LHCb::MCParticle> veloLink( eventSvc(), msgSvc(), 
+                                       LHCb::VeloDigitLocation::Default );
   
   LinkedTo<LHCb::MCParticle> ttLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::TTClusters );
@@ -106,47 +106,74 @@ StatusCode BuildMCTrackInfo::execute() {
   debug() << "Highest MCParticle number " << nbMcPart << endreq;
 
   std::vector<int> veloR   ( nbMcPart, 0 );
+  std::vector<int> lastVelo ( nbMcPart, -1 );
   std::vector<int> veloPhi ( nbMcPart, 0 );
   std::vector<int> station ( nbMcPart, 0 );
   
   LHCb::MCParticle* part;
   unsigned int MCNum;
-  /*
-  //== particle->cluster Velo links
-  LHCb::VeloClusters* veloClus = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::VeloClusters);
-  for ( LHCb::VeloClusters::const_iterator cluIt = veloClus->begin() ;
-        veloClus->end() != cluIt ; cluIt++ ) {
-    int myKey = (*cluIt)->channelID();
-    part = veloLink.first( myKey );
+  
+  //== particle-> VeloDigit links
+  LHCb::VeloDigits* veloDigs = get<LHCb::VeloDigits>( LHCb::VeloDigitLocation::Default);
+  
+  for ( LHCb::VeloDigits::const_iterator vIt = veloDigs->begin() ;
+        veloDigs->end() != vIt ; vIt++ ) {
+    int sensor = (*vIt)->channelID().sensor();
+    part = veloLink.first( *vIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {
         MCNum = part->key();
         if ( veloR.size() > MCNum ) {
-          if ( m_velo->isRSensor( (*cluIt)->channelID().sensor() ) ) {
-            veloR[MCNum]++;
-          } else {
-            veloPhi[MCNum]++;
+          if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
+            lastVelo[MCNum] = sensor;
+            if ( m_velo->isRSensor( sensor ) ) {
+              veloR[MCNum]++;
+              verbose() << "MC " << MCNum << " Velo R sensor " << sensor << " nbR " << veloR[MCNum] << endreq;
+            } else if ( m_velo->isPhiSensor( sensor ) ) {
+              veloPhi[MCNum]++;
+              verbose() << "MC " << MCNum << " Velo Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endreq;
+            }
           }
         }
       }
       part = veloLink.next() ;
     }
   }
-  */
 
-  //== IT cluster -> particle associaton
-  LHCb::STClusters* ITDig = get<LHCb::STClusters>( LHCb::STClusterLocation::TTClusters);
-  for ( LHCb::STClusters::const_iterator digIt = ITDig->begin() ;
-        ITDig->end() != digIt ; digIt++ ) {
-    int sta   = (*digIt)->channelID().station() - 1;
-    int lay   = ((*digIt)->channelID().layer() - 1)%4;
+  //== TT cluster -> particle associaton
+  LHCb::STClusters* TTDig = get<LHCb::STClusters>( LHCb::STClusterLocation::TTClusters);
+  for ( LHCb::STClusters::const_iterator tIt = TTDig->begin() ;
+        TTDig->end() != tIt ; tIt++ ) {
+    int sta   = (*tIt)->channelID().station() - 1;  // 0-1 from 1-2
+    int lay   = ((*tIt)->channelID().layer() - 1)%4;
     bool isX  = (0==lay) || (3==lay);
-    part = itLink.first( (*digIt)->channelID() );
+    part = ttLink.first( *tIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
+          verbose() << "MC " << MCNum << " TT Sta " << sta << " lay " << lay << endreq;
+        }
+      }
+      part = ttLink.next() ;
+    }
+  }
+  
+  //== IT cluster -> particle associaton
+  LHCb::STClusters* ITDig = get<LHCb::STClusters>( LHCb::STClusterLocation::ITClusters);
+  for ( LHCb::STClusters::const_iterator iIt = ITDig->begin() ;
+        ITDig->end() != iIt ; iIt++ ) {
+    int sta   = (*iIt)->channelID().station() + 1; // 2-4 from 1-3
+    int lay   = ((*iIt)->channelID().layer() - 1)%4;
+    bool isX  = (0==lay) || (3==lay);
+    part = itLink.first( *iIt );
+    while ( NULL != part ) {
+      if ( mcParts == part->parent() ) {
+        MCNum = part->key();
+        if ( station.size() > MCNum ) {
+          updateBit( station[MCNum], sta, isX );
+          verbose() << "MC " << MCNum << " IT Sta " << sta << " lay " << lay << endreq;
         }
       }
       part = itLink.next() ;
@@ -168,6 +195,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
+          verbose() << "MC " << MCNum << " OT Sta " << sta << " lay " << lay << endreq;
         }
       }
       part = otLink.next() ;
@@ -187,13 +215,24 @@ StatusCode BuildMCTrackInfo::execute() {
     int mask = station[MCNum];
     if ( 2 < veloR[MCNum] )    mask |= MCTrackInfoBits::maskVeloR;
     if ( 2 < veloPhi[MCNum] )  mask |= MCTrackInfoBits::maskVeloPhi;
+    if ( 15 < veloR[MCNum]   ) veloR[MCNum]   = 15;
+    if ( 15 < veloPhi[MCNum] ) veloPhi[MCNum] = 15;
+    
     mask |= (veloR[MCNum]  <<MCTrackInfoBits::multVeloR );
     mask |= (veloPhi[MCNum]<<MCTrackInfoBits::multVeloPhi );
     
 
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
-      debug() << format( "Track %4d mask %8x", MCNum, mask ) << endreq;
+      debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
+                         MCNum, mask, veloR[MCNum], veloPhi[MCNum] );
+      if ( MCTrackInfoBits::maskHasVelo == (mask & MCTrackInfoBits::maskHasVelo ) )
+        debug() << " hasVelo ";
+      if ( MCTrackInfoBits::maskHasTT   == (mask & MCTrackInfoBits::maskHasTT ) )
+        debug() << " hasTT ";
+      if ( MCTrackInfoBits::maskHasT    == (mask & MCTrackInfoBits::maskHasT   ) )
+        debug() << " hasT ";
+      debug() << endreq;
     }
   }
 
@@ -270,12 +309,6 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
     int  sta = ttLay->elementID().station() -1;
     bool isX = ttLay->angle() == 0;
     updateAccBit( station[MCNum], sta, isX );
-
-    debug() << format( "TT Hit x %8.2f y%8.2f z%9.2f Sta %1d Lay %1d ang %5.1f",
-                       midPoint.x(), midPoint.y(), midPoint.z(), 
-                       ttLay->elementID().station(),
-                       ttLay->elementID().layer(),
-                       ttLay->angle()/degree ) << endreq;
   }
 
   //== IT
@@ -301,13 +334,6 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
                          midPoint.x(), midPoint.y(), midPoint.z() ) << endreq;
       continue;
     }
-    
-    debug() << format( "IT Hit x %8.2f y%8.2f z%9.2f Sta %1d Lay %1d ang %5.1f",
-                       midPoint.x(), midPoint.y(), midPoint.z(), 
-                       itLay->elementID().station(),
-                       itLay->elementID().layer(),
-                       itLay->angle()/degree ) << endreq;
-
     int  sta = itLay->elementID().station() +1;  // want 2,3,4
     bool isX = itLay->angle() == 0;
     updateAccBit( station[MCNum], sta, isX );    
