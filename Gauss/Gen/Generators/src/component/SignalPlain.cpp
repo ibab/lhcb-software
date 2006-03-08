@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.8 2006-02-17 13:27:28 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.9 2006-03-08 08:52:27 robbep Exp $
 // Include files 
 
 // local
@@ -98,6 +98,19 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             }
             theGenEvent -> 
               set_signal_process_vertex( theSignal -> end_vertex() ) ;
+
+            // Count signal B and signal Bbar
+            if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
+            else ++m_nSigBar ;
+            
+            // Update counters
+            GenCounters::updateHadronCounters( theGenEvent , m_bHadC , 
+                                               m_antibHadC , m_cHadC , 
+                                               m_anticHadC , m_bbCounter ,
+                                               m_ccCounter ) ;
+            GenCounters::updateExcitedStatesCounters( theGenEvent , 
+                                                      m_bExcitedC , 
+                                                      m_cExcitedC ) ;
             
             result = true ;
           }
