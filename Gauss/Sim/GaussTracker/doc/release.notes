@@ -5,7 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!!======================= GaussTracker v5r0 2006-03-09 ========================
+!======================= GaussTracker v5r1 2006-03-09 ========================
  2006-03-08 - Gloria CORTI
  - Introduce filling of new variable in MCHit (absolute momentum)
    . src/TrackerHit.{h,cpp}
@@ -19,6 +19,7 @@
  - define middle=(entry+exit)/2 as hit position to search for detectorID , 
    previous it was entry which causes some rounding problems  
 
+!======================= GaussTracker v5r0 2006-01-27 ========================
 ! 2006-01-27 - Gloria CORTI
  - Introduce use of DetectorElement base class to retrieve sensitive detector
    from x,y,z and set it in MCHit. The properties "MCHitsLocation", 
