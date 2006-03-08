@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.8 2006-03-07 16:28:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2006-03-08 21:32:34 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,21 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-03-08 - Vanya BELYAEV
+ - LoKi/WrongMass.h, src/WrongMass.cpp
+   few useful functions LoKi::Kinematics::WorngMass, which 
+   allows to use "wrong" mass hypothesis for 
+   evaluation of kinematical quantities.
+ 
+   const LHCb::Particle* p1 = ... ; 
+   const LHCb::Particle* p2 = ... ;
+  
+   // evaluate the invariant mass using the muon hypotheses:
+   const double mass =  
+      LoKi::Kinematics::wrongMass ( p1->momentum() , "mu+" , 
+                                    p2->momentum() , "mu-" ) ;
+
 
 ! 2006-03-07 - Vanya BELYAEV
  - LoKi/Kinematics.h
@@ -80,6 +95,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.8  2006/03/07 16:28:49  ibelyaev
+!  add LoKi/FuncCast.h file
+!
 ! Revision 1.7  2006/02/22 20:58:50  ibelyaev
 !  add Keeper/UniqueKeeper container adapters
 !

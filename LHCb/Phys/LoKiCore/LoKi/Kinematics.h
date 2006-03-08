@@ -1,11 +1,8 @@
-// $Id: Kinematics.h,v 1.7 2006-03-08 14:14:07 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.8 2006-03-08 21:32:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/03/07 16:28:49  ibelyaev
-//  add LoKi/FuncCast.h file
-//
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
