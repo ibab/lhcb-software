@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.25 2006-02-22 16:36:42 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.26 2006-03-08 07:08:45 ocallot Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -213,8 +213,8 @@ StatusCode PuVetoAlg::execute() {
 
   RawEvent* raw = get<RawEvent>( RawEventLocation::Default );
   
-  std::vector<unsigned short int> rawpudata;
-  std::vector<unsigned int> rawdatavec;
+  std::vector<unsigned short int> rawPuData;
+  std::vector<unsigned int> rawDataVec;
   
   for ( MCVeloFEs::const_iterator itFe = fes->begin();
         fes->end() != itFe ; itFe++  ) {
@@ -231,7 +231,7 @@ StatusCode PuVetoAlg::execute() {
       VeloChannelID fired(sensor,sfired);
       sensor-=m_firstPuSensor;
       unsigned short int rawhit = rawEncode(sensor,(*itFe)->strip());
-      rawpudata.push_back(rawhit);
+      rawPuData.push_back(rawhit);
       
       verbose() << sensor << " " << (*itFe)->strip() << " " 
              << rawhit << endreq;
@@ -259,17 +259,9 @@ StatusCode PuVetoAlg::execute() {
   
 
   unsigned int header = 0;
-  rawVec(&rawpudata,&rawdatavec);
-  int len = rawdatavec.size() * 32;
-  RawBank *bank = raw->createBank(header,RawBank::L0PU,1,len,0);
-  int ir = 0;
-  for (unsigned int *p=bank->begin<unsigned int>();
-       p!=bank->end<unsigned int>();++p,ir++) {
-    *p = rawdatavec[ir];
-  }
-  raw->adoptBank(bank , true);
+  rawVec(&rawPuData,&rawDataVec);
+  raw->addBank(header,RawBank::L0PU,1,rawDataVec);
   
-
   fillHisto(m_hitPattern);
 
   // We have filled the 'histogram'. Search for maximum.

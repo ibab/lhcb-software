@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.40 2006-02-22 15:45:48 mzupan Exp $
+! $Id: release.notes,v 1.41 2006-03-08 07:08:45 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-03-08 - Olivier Callot
+ - Use the addBank method to create the bank.
+ - Change a few variable names to conform to LHCb coding conventions
 
 !======================== PuVeto v7r0 2006-02-21 ========================
 
