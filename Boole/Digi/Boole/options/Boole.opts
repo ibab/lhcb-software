@@ -149,7 +149,7 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "VeloAssociators" };
 RelationsVeloSeq.Members += { "VeloDigit2MCHitLinker" };
-//RelationsVeloSeq.Members += { "VeloTruthFromCluster" }; - missing code
+RelationsVeloSeq.Members += { "VeloDigit2MCParticleLinker" };
 
 ApplicationMgr.DLLs += { "STAssociators" };
 ITDigitLinker.detType   = "IT";
