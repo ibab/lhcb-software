@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.2 2006-03-08 15:10:09 ocallot Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.3 2006-03-08 17:49:07 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -77,16 +77,16 @@ StatusCode BuildMCTrackInfo::initialize() {
 StatusCode BuildMCTrackInfo::execute() {
   debug() << "==> Execute" << endreq;
   
-  LinkedTo<LHCb::MCParticle> veloLink( eventSvc(), msgSvc(), 
+  LinkedTo<LHCb::MCParticle, LHCb::VeloDigit> veloLink( eventSvc(), msgSvc(), 
                                        LHCb::VeloDigitLocation::Default );
   
-  LinkedTo<LHCb::MCParticle> ttLink( eventSvc(), msgSvc(), 
+  LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::TTClusters );
   
-  LinkedTo<LHCb::MCParticle> itLink( eventSvc(), msgSvc(), 
+  LinkedTo<LHCb::MCParticle, LHCb::STCluster> itLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::ITClusters );
   
-  LinkedTo<LHCb::MCParticle> otLink( eventSvc(), msgSvc(), 
+  LinkedTo<LHCb::MCParticle, LHCb::OTTime> otLink( eventSvc(), msgSvc(), 
                                      LHCb::OTTimeLocation::Default );
   
   LHCb::MCProperty* trackInfo = new LHCb::MCProperty();
