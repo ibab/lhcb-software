@@ -1,7 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-!==================== VeloAssociators v2r0 2006-03-06 ===================
+!==================== VeloAssociators v2r0 2006-03-08 ===================
+! 2006-03-08 - Marco Cattaneo
+ - Fix default location of new linker
+
 ! 2006-03-08 - Tomasz Szumlak
  - new linker form VeloDigits to MCParticles
 

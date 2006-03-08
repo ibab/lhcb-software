@@ -1,4 +1,4 @@
-// $Id: VeloDigit2MCParticleLinker.cpp,v 1.1 2006-03-08 11:19:01 szumlat Exp $
+// $Id: VeloDigit2MCParticleLinker.cpp,v 1.2 2006-03-08 12:13:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( VeloDigit2MCParticleLinker );
 VeloDigit2MCParticleLinker::VeloDigit2MCParticleLinker( const std::string& name,
                                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_asctName ( LHCb::VeloDigitLocation::Default + "2MCParticles" ),
+    m_asctName ( LHCb::VeloDigitLocation::Default ),
     m_inputDigits ( LHCb::VeloDigitLocation::Default ),
     m_inputParts ( LHCb::MCParticleLocation::Default )
 { }
