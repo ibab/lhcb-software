@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.15 2006-03-08 10:16:35 cattanem Exp $
+// $Id: ReadMin.opts,v 1.16 2006-03-08 10:20:47 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -11,7 +11,6 @@ StoreExplorerAlg.PrintFreq = 1.;
 StoreExplorerAlg.ExploreRelations = 1;
 
 // DumpMCEvent algorithm dumps MC part of main event
-ApplicationMgr.DLLs       += { "SimComponents" };
 ApplicationMgr.TopAlg     += { "DumpMCEventAlg" };
 DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
 
