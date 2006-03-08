@@ -4,6 +4,8 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+!======================== GaussRICH v6r2 2006-03-09 ===========================
 ! 2006-03-06  Sajan Easo
  - Use of PSF in Hpd Photoelectric effect improved.
  - RichAnalysis improved in RichHpdRecon.cpp  to reconstruct the quadratic law.
@@ -28,11 +30,12 @@
  - Update the setting of the sensDetID in the MCRichHits
  - Add some initialisation printout from the converter algs
 
-!======================== GaussRICH v6r1 2006-02-17 ===========================
 ! 2006-02-21  Sajan Easo
  - The Flag for MC particle creation for the case of charged particle hitting
   the HPD Si Det activated in SensDet.cpp. 
  - Some histograms updated 
+
+!======================== GaussRICH v6r1 2006-02-17 ===========================
 ! 2006-02-16 - Chris Jones
  - Update GetMCRichHitsAlg for new MC flags
 
