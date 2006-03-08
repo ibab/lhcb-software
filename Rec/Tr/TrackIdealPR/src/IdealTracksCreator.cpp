@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.12 2006-02-28 19:14:17 jvantilb Exp $
+// $Id: IdealTracksCreator.cpp,v 1.13 2006-03-08 14:50:51 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -16,10 +16,8 @@
 #include "OTDet/DeOTDetector.h"
 
 // from MCEvent
+#include "Event/MCHeader.h"
 #include "Event/MCHit.h"
-
-// from RecEvent
-#include "Event/RecHeader.h"
 
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
@@ -81,7 +79,7 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "TracksOutContainer",
                    m_tracksOutContainer = TrackLocation::Ideal );
   declareProperty( "VeloGeometryPath",
-                   m_veloPath = "/dd/Structure/LHCb/Velo" );
+                   m_veloPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
   declareProperty( "TTGeometryPath",
                    m_ttTrackerPath = DeSTDetLocation::location("TT") );
   declareProperty( "ITGeometryPath",
@@ -149,8 +147,8 @@ StatusCode IdealTracksCreator::execute()
   StatusCode sc;
 
   // Event header info
-  const RecHeader* recHdr = get<RecHeader>( RecHeaderLocation::Default );
-  debug() << "Event " << recHdr -> evtNumber() << endreq;
+  const MCHeader* mcHdr = get<MCHeader>( MCHeaderLocation::Default );
+  debug() << "Event " << mcHdr -> evtNumber() << endreq;
 
   // Retrieve the MCParticle container
   const MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);

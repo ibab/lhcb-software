@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-03-08 - Eduardo Rodrigues
+ - update to new VeloDet path
+
 ! 2006-02-28 - Jeroen van Tilburg
  - TrajXxxProjectors: Measurement returns a reference instead of pointer.
 

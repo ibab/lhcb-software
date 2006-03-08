@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.cpp,v 1.7 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrackVeloPhiProjector.cpp,v 1.8 2006-03-08 14:49:19 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -85,7 +85,7 @@ TrackVeloPhiProjector::TrackVeloPhiProjector( const std::string& type,
   declareInterface<ITrackProjector>(this);
 
   declareProperty( "VeloGeometryPath",
-                   m_veloPath = "/dd/Structure/LHCb/Velo" );
+                   m_veloPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
 }
 
 //-----------------------------------------------------------------------------
