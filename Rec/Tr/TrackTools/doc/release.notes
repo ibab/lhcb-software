@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r0 2006-03-08 =========================
 ! 2006-03-08 - Eduardo Rodrigues
  - update to new VeloDet path
  - TrajMeasurementProvider tool removed - no more needed
@@ -28,7 +29,6 @@
  - added new TrajMeasurementProvider tool (inherits from IMeasurementProvider)
  - TrajectoryProvider tool now uses new VeloClusterPosition tool
 
-!======================== TrackTools v2r0 2006-02-21 =========================
 ! 2006-02-21 M Needham
  - Implementations of Track calorimeter matching tool and 
    also the Track selector

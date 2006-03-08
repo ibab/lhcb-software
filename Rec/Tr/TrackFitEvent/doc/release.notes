@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r0 2006-03-08 ====================
 ! 2006-03-08 - Eduardo Rodrigues
  - removed TrajMeasurement class - no more needed
 
@@ -18,7 +19,6 @@
  - added new class TrajMeasurement: a Measurement supplemented with
    a Trajectory
 
-!========================== TrackFitEvent v2r0 2006-02-21 ====================
 ! 2006-02-21 - David Hutchcroft
  - Updated VeloRMeasurement and VeloPhiMeasurement to work with new 
    VeloClusters

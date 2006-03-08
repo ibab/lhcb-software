@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r0 2006-03-08 ========================
 ! 2006-03-08 - Eduardo Rodrigues
  - update to new VeloDet path
  - using MCHeader instead of RecHeader, as latter not yet available
@@ -15,7 +16,6 @@
  - IdealTracksCreator fills the reference vector in the measurement.
  - Updated the calculation of the ambiguity.
 
-!======================= TrackIdealPR v2r0 2006-02-23 ========================
 ! 2006-02-22 - Eduardo Rodrigues
  - migration to LHCb v20r0
  - adaptation to new associators and detector elements
