@@ -1,6 +1,6 @@
-// $Id: Particles11.h,v 1.2 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles11.h,v 1.3 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -46,7 +46,20 @@
 namespace LoKi
 {
   namespace Particles 
-  {    
+  { 
+    /** @class IsAParticle
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle 
+     *  is in the list of particles 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Cuts::IS 
+     *  @see LoKi::Cuts::IN
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class IsAParticle 
       : public LoKi::Predicate<const LHCb::Particle*>
       , public LoKi::UniqueKeeper<LHCb::Particle>
@@ -103,6 +116,18 @@ namespace LoKi
       IsAParticle();
     } ;
     
+    /** @class IsAParticleInTree
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle or any of dauhter particles 
+     *  is in the list of particles 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Cuts::ISINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class IsAParticleInTree
       : public LoKi::Predicate<const LHCb::Particle*>
     {
@@ -163,8 +188,20 @@ namespace LoKi
       // the evaluator 
       LoKi::Particles::IsAParticle m_cut ;
     } ;
-
     
+    /** @class IsAParticleFromTree
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle comes from the 
+     *  decay trees of other particles from the list 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Cuts::FROMTREE
+     *  @see LoKi::Cuts::FROM
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class IsAParticleFromTree
       : public LoKi::Predicate<const LHCb::Particle*>
       , public LoKi::UniqueKeeper<LHCb::Particle>

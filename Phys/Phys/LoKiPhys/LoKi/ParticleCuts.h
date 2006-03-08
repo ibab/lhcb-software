@@ -1,6 +1,6 @@
-// $Id: ParticleCuts.h,v 1.4 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.5 2006-03-08 14:14:50 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
 // ============================================================================
@@ -193,6 +193,67 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
+    /** @typedef EQUALTO 
+     *  The trivial prodicate which tests the value of some function 
+     *  against some predefinied value 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *
+     *  @see LoKi::EqualToValue 
+     *
+     *  @date 2006-02-24
+     */
+    typedef LoKi::EqualToValue<const LHCb::Particle*>      EQUALTO   ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef SWITCH 
+     *  Simple function, which acts as 
+     *   result = condition ? function1 : function2 ;
+     * 
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  Fun fun = SWITCH( VALID , P , -1 * GeV ) ;
+     *
+     *  const double value = fun ( p ) ;
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *  @see LoKi::Switch 
+     *  @see LoKi::Cuts::PSWITCH
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */
+    typedef LoKi::Switch<const LHCb::Particle*>                  SWITCH ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef PSWITCH 
+     *  Simple function, which acts as 
+     *   result = condition ? function1 : function2 ;
+     * 
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  Fun fun = PSWITCH( VALID , P , -1 * GeV ) ;
+     *
+     *  const double value = fun ( p ) ;
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *  @see LoKi::Switch 
+     *  @see LoKi::Cuts::SWITCH
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23
+     */
+    typedef SWITCH                                                  PSWITCH ;
+    // ========================================================================
+
+    // ========================================================================
     /** @var HASKEY
      *  The trivial predicate, it relies on Particle::hasKey method 
      *
@@ -262,7 +323,9 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** simple predicate to check if the particle is 
+    /** @typedef INTES 
+     *
+     *  Simple predicate to check if the particle is 
      *  registered in TES at the certain location 
      *
      *  @code 
@@ -285,7 +348,9 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** simple predicate to check if the particle is 
+    /** @typedef PINTES 
+     *
+     *  Simple predicate to check if the particle is 
      *  registered in TES at the certain location 
      *
      *  @code 
@@ -322,7 +387,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** the trivial predicate which check the identity of 2 particles
+    /** @typedef SAME 
+     *  The trivial predicate which check the identity of 2 particles
      * 
      *  @code 
      *
@@ -345,7 +411,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** the trivial predicate whoch check the identity of 2 particles
+    /** @typedef PSAME 
+     *  The trivial predicate whoch check the identity of 2 particles
      * 
      *  @code 
      *
@@ -598,7 +665,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** invariant mass of subcombination of dauhter particles 
+    /** @typedef MASSS 
+     *  Invariant mass of subcombination of dauhter particles 
      *  
      *  @code 
      *
@@ -749,7 +817,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Delta Mass 
+    /** @typedef DMASS 
+     *  Delta Mass 
      *
      *  @code 
      *
@@ -797,7 +866,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Absolute value for delta Mass 
+    /** @typedefADMASS 
+     *  Absolute value for delta Mass 
      *
      *  @code 
      *
@@ -845,7 +915,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Delta Measured Mass 
+    /** @typedef DMMASS 
+     *  Delta Measured Mass 
      *
      *  @code 
      *
@@ -893,7 +964,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Absolute value of delta Measured Mass 
+    /** @typedef ADMMASS 
+     *  Absolute value of delta Measured Mass 
      *
      *  @code 
      *
@@ -941,7 +1013,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Delta Measured Mass in chi2 units 
+    /** @typedef CHI2M 
+     *  Delta Measured Mass in chi2 units 
      *
      *  @code 
      *
@@ -996,7 +1069,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Delta Measured Mass in chi2 units 
+    /** @typedef CHI2MASS 
+     *  Delta Measured Mass in chi2 units 
      *
      *  @code 
      *
@@ -1266,7 +1340,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Trivial predicate which evaluates LHCb::Particle::hasInfo
+    /** @typedef HASINFO 
+     *  Trivial predicate which evaluates LHCb::Particle::hasInfo
      *  function
      *
      *  It relies on the method LHCb::Particle::hasInfo
@@ -1291,7 +1366,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Trivial predicate which evaluates LHCb::Particle::hasInfo
+    /** @typedef HASPINFO
+     *  Trivial predicate which evaluates LHCb::Particle::hasInfo
      *  function
      *
      *  It relies on the method LHCb::Particle::hasInfo
@@ -1316,7 +1392,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Trivial predicate which evaluates LHCb::Particle::hasInfo
+    /** @typedef PHASINFO 
+     *  Trivial predicate which evaluates LHCb::Particle::hasInfo
      *  function
      *
      *  It relies on the method LHCb::Particle::hasInfo
@@ -1341,7 +1418,8 @@ namespace LoKi
     // ========================================================================
    
     // ========================================================================
-    /** Trivial function which evaluates LHCb::Particle::info
+    /** @typedef INFO
+     *  Trivial function which evaluates LHCb::Particle::info
      *  
      *  It relies on the method LHCb::Particle::info
      *
@@ -1368,7 +1446,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Trivial function which evaluates LHCb::Particle::info
+    /** @typedef PINFO 
+     *  Trivial function which evaluates LHCb::Particle::info
      *  
      *  It relies on the method LHCb::Particle::info
      *
@@ -1446,7 +1525,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Evaluator of the GEOMETRY 
+    /** @typedef VD 
+     *  Evaluator of the GEOMETRY 
      *  distance between the particle 
      *  "endVertex" and "the vertex". 
      *
@@ -1473,7 +1553,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Evaluator of the GEOMETRY distance between the particle 
+    /** @typedef VDSIGN 
+     *  Evaluator of the GEOMETRY distance between the particle 
      *  "endVertex" and "the vertex". The distance is signed according 
      *  to the sign of (Zv-Z0)
      *
@@ -1500,7 +1581,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Evaluator of the distance between the particle 
+    /** @typedef VDDOT 
+     *  Evaluator of the distance between the particle 
      *  "endVertex" and "the vertex" along the particle momentum
      *
      *  @code 
@@ -1526,7 +1608,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Evaluator of the chi2 of GEOMETRY distance between the particle 
+    /** @typedef VDCHI2 
+     *  Evaluator of the chi2 of GEOMETRY distance between the particle 
      *  "endVertex" and "the vertex" 
      *
      *  @code 
@@ -1552,7 +1635,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Evaluator of the minimal GEOMETRY distance between the particle 
+    /** @typedef VDMIN 
+     *  Evaluator of the minimal GEOMETRY distance between the particle 
      *  "endVertex" and some set of vertices  
      *
      *  @code 
@@ -1578,7 +1662,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Evaluator of the minimal GEOMETRY distance between the particle 
+    /** @typedef MINVD 
+     *  Evaluator of the minimal GEOMETRY distance between the particle 
      *  "endVertex" and some set of vertices  
      *
      *  @code 
@@ -1605,7 +1690,8 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /** Evaluator of the minimal chi2 for distance between the particle 
+    /** @typedef VDMINCHI2 
+     *  Evaluator of the minimal chi2 for distance between the particle 
      *  "endVertex" and some set of vertices  
      *
      *  @code 
@@ -1631,7 +1717,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Evaluator of the minimal chi2 for distance between the particle 
+    /** @typedef MINVDCHI2 
+     *  Evaluator of the minimal chi2 for distance between the particle 
      *  "endVertex" and some set of vertices  
      *
      *  @code 
@@ -1657,10 +1744,2102 @@ namespace LoKi
     typedef VDMINCHI2                          MINVDCHI2 ;
     // ========================================================================
 
+    // ========================================================================
+    /** @typedef TIMEDIST 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TIMEDIST( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::CTAU
+     *  @see LoKi::Cuts::TDIST
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::TimeDistance                  TIMEDIST ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef CTAU
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = CTAU( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TIMEDIST
+     *  @see LoKi::Cuts::TDIST
+     *  @see LoKi::Cuts::TD
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TIMEDIST                                      CTAU     ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TDIST 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TDIST( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TIMEDIST
+     *  @see LoKi::Cuts::CTAU
+     *  @see LoKi::Cuts::TD
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TIMEDIST                                      TDIST ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TD
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TD( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TIMEDIST
+     *  @see LoKi::Cuts::TDIST
+     *  @see LoKi::Cuts::CTAU
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TIMEDIST                                      TD ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TSIGND 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TSIGND( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeSignedDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::CTAUSIGN
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::TimeSignedDistance           TSIGND ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TDSIGN 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TDSIGN( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeSignedDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TSIGND 
+     *  @see LoKi::Cuts::CTAUSIGN
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TSIGND           TDSIGN ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef CTAUSIGN 
+     *  simple evaluator of the (signed) proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex
+     *
+     *  LoKi::Particles::VertexSignedDistance is used to estimate the 
+     *  signed 3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = CTAUSIGN( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeSignedDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TSIGND
+     *  @see LoKi::Cuts::TDSIGN
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TSIGND                                    CTAUSIGN ;
+    // ========================================================================
+    
+
+    // ========================================================================
+    /** @typedef TDOT 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex along 
+     *  the partile momentum
+     *
+     *  LoKi::Particles::VertexDotDistance is used to estimate the 
+     *  3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = TDOT( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDotDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::CTAUDOT
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::TimeDotDistance               TDOT ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef CTAUDOT 
+     *  Simple evaluator of the proper lifetime 
+     *  distance (c*tau) of the particle between 
+     *  the "endVertex" and the other vertex along the particle momentum
+     *
+     *  LoKi::Particles::VertexDotDistance is used to estimate the 
+     *  signed 3D-distance 
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* B   = ... ;
+     *  const LHCb::Vertex*   pv  = ... ;
+     *
+     *  Fun cTau = CTAUDOT( pv ) ;
+     * 
+     *  const double ctau = cTau( B ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LoKi::Particles::TimeDotDistance 
+     *  @see LoKi::Particles::VertexDistance 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::TDOT
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef TDOT                                      CTAUDOT;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef CLAPP 
+     *  Evaluator of the closest approach 
+     *  distance between 2 particles 
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  const LHCb:Particle* K2 = ... ;
+     * 
+     *  Cun clapp = CLAPP( K1 , geo() ) ;
+     *  
+     *  const double closestApproach = clapp( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ClosestApproach
+     *  @see LHCb::Particle
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ClosestApproach          CLAPP ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef CLAPPCHI2 
+     *  Evaluator of the closest approach chi2 
+     *  distance between 2 particles 
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  const LHCb:Particle* K2 = ... ;
+     * 
+     *  Cun clapp = CLAPPCHI2( K1 , geo() ) ;
+     *  
+     *  const double chi2 = clapp( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ClosestApproachChi2
+     *  @see LHCb::Particle
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ClosestApproachChi2        CLAPPCHI2 ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MINCLAPP 
+     *  Evaluator of the minimal closest approach 
+     *  distance between the particle and sequence of other particles  
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  
+     *  SEQUENCE parts = ... ;
+     * 
+     *  Cun clappr = MINCLAPP( parts , geo() ) ;
+     *  
+     *  const double minclApp  = clappr( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinClosestApproach
+     *  @see LHCb::Particle
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinClosestApproach          MINCLAPP ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MINCLAPPCHI2 
+     *  Evaluator of the minimal closest approach chi2  
+     *  distance between the particle and sequence of other particles  
+     *  
+     *  The tool IGeomDispCalculator is used 
+     *  for evaluation
+     *
+     *  @code 
+     *
+     *  const LHCb:Particle* K1 = ... ;
+     *  
+     *  SEQUENCE parts = ... ;
+     * 
+     *  Cun clappr = MINCLAPPCHI2( parts , geo() ) ;
+     *  
+     *  const double chi2 = clappr( K2 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinClosestApproachChi2
+     *  @see LHCb::Particle
+     *  @see IGeomDispCalculator
+     * 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinClosestApproachChi2       MINCLAPPCHI2 ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef IP 
+     *  Evaluator of impact parameter of 
+     *  the particle with respect to vertex/point 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  const LHCb::Vertex*   v = ... ;
+     * 
+     *  Fun ip = IP( v , geo() ) ;
+     * 
+     *  const double value = ip( p ) ;
+     *  
+     *  @endcode 
+     *  
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Particles::ImpPar 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ImpPar                       IP ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef IPCHI2 
+     *  Evaluator of chi2 for the impact parameter of 
+     *  the particle with respect to vertex/point 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  const LHCb::Vertex*   v = ... ;
+     * 
+     *  Fun chi2 = IPCHI2( v , geo() ) ;
+     * 
+     *  const double value = chi2( p ) ;
+     *  
+     *  @endcode 
+     *  
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Particles::ImpParChi2 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::ImpParChi2                       IPCHI2 ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef IPMIN 
+     *  Evaluation of minimal valeu of the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = IPMIN( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpPar
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MINIP
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinImpPar                        IPMIN  ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef MIP 
+     *  Evaluation of minimal valeu of the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = MIP( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpPar
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MINIP
+     *  @see LoKi::Cuts::IPMIN
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinImpPar                        MIP  ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef MINIP 
+     *  Evaluation of minimal valeu of the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = MINIP( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpPar
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::IPMIN
+     *  @see LoKi::Cuts::MIP
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef MIP                                             MINIP  ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef IPMIN 
+     *  Evaluation of minimal valeu of the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = IPMIN( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpPar
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MINIP
+     *  @see LoKi::Cuts::MIP
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef MIP                                             IPMIN  ;
+    // ========================================================================
+
+
+    // ========================================================================
+    /** @typedef MIPCHI2 
+     *  Evaluation of minimal valeu of chi2 for the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = MIPCHI2 ( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpParChi2
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::CHI2MIP
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef LoKi::Particles::MinImpParChi2                      MIPCHI2 ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef MIPCHI2 
+     *  Evaluation of minimal valeu of chi2 for the impact parameter of 
+     *  particle with respect to several vertices 
+     *
+     *  The tool IGeomDispCalculator is used 
+     *
+     *  @code 
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   SEQUENCE vertices  ;
+     * 
+     *   Fun ipMin = CHI2MIP ( vertices , geo() ) ;
+     *   
+     *   const double value = ipMin ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::MinImpParChi2
+     *  @see IGeomDispCalculator
+     *  @see LoKi::Vertices::ImpParBase
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see LoKi::Vertices::ImpPar 
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MIPCHI2
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef MIPCHI2                                             CHI2MIP ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef INTREE 
+     *  The trivial predicate which evaluates to true 
+     *  if there is at least one particle in the decay 
+     *  tree of the given particle which satisfies the 
+     *  certain criteria
+     *
+     *  The function uses the algorithm LoKi::PhysAlgs::found 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // does the particle has in the decay tree 
+     *  // the "phi" with the large transvese momentum?
+     *  Cut cut =  INTREE ( ( PT > 1 * GeV ) && ( "phi(1020)" == ID ) ) ;
+     *  
+     *  const bool hasGoodPhi = cut ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::InTree 
+     *  @see LoKi::PhysAlgs::found 
+     *  @see LoKi::Cuts::INTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::InTree                               INTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef NINTREE 
+     *  The simple function which evaluates the number 
+     *  of particle in decay tree which satisfies the certan criteria 
+     * 
+     *  The function uses the algorithm LoKi::PhysAlgs::count_if 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // does the particle has in the decay tree 
+     *  // pion with the large transvese momentum?
+     *  Fun fun =  ( PT > 1 * GeV ) && ( "pi+" == ABSID ) ;
+     *  
+     *  const bool good = fun( B ) == 2 ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::NinTree 
+     *  @see LoKi::PhysAlgs::count_if 
+     *  @see LoKi::Cuts::NINTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::NinTree                             NINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef SUMTREE 
+     *  The simple function which accumulated the 
+     *  value of certain function over the decay 
+     *  tree of the particle for the articles which 
+     *  satisfy the certain selection criteria
+     *  Accumulation is done throught summation
+     *
+     *  The function uses the algorithm LoKi::PhysAlgs::accumulate
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // get the sum of the transverse moemntum of all pions in the tree
+     *  Fun fun = SUMTREE( PT , "pi+" == ABSID , 0.0 ) ;
+     *  
+     *  const double sumPT = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::PhysAlgs::accumulate
+     *  @see LoKi::Cuts::SUMTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::SumTree                             SUMTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MULTTREE 
+     *  The simple function which accumulated the 
+     *  value of certain function over the decay 
+     *  tree of the particle for the articles which 
+     *  satisfy the certain selection criteria
+     *  Accumulation is done throught summation
+     *
+     *  The function uses the algorithm LoKi::PhysAlgs::accumulate
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // get the product of "weight" 
+     *  // for all non-basic particles in the tree 
+     *  Fun fun = MULTTREE( W , !BASIC , 1.0 ) ;
+     *  
+     *  const double weight = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::PhysAlgs::accumulate
+     *  @see LoKi::Cuts::MULTTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::MultTree                            MULTTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MINTREE 
+     *  The trivial algorithm which scans the decay 
+     *  tree of the particle and searches for the the 
+     *  minimal value for some functions for
+     *  particles which satisfy the certain criteria 
+     *
+     *  The function uses the algorithm LoKi::PhysAlgs::min_value 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* B = ... ;
+     * 
+     *  // minimal transverse momentum of the track in the decay tree:
+     *  Fun fun = MINTREE( HASTRACK , PT ) ;
+     * 
+     *  const double minPT = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::PhysAlgs::min_value  
+     *  @see LoKi::Cuts::MINTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::MinTree                             MINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MAXTREE 
+     *  The trivial algorithm which scans the decay 
+     *  tree of the particle and searches for the the 
+     *  minimal value for some functions for
+     *  particles which satisfy the certain criteria 
+     *
+     *  The function uses the algorithm LoKi::PhysAlgs::max_value 
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* B = ... ;
+     *  
+     *  // the maximal valeu of chi2 of vertex fit  in the decay tree
+     *  Fun fun = MAXTREE ( VFUNASPFUN( VCHI2 ) , HASVERTEX ) ;
+     * 
+     *  const double maxChi2 = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::PhysAlgs::max_value  
+     *  @see LoKi::Cuts::MAXTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    typedef LoKi::Particles::MaxTree                             MAXTREE ;
+    // ========================================================================
+
+    
+    // ========================================================================
+    /** @typedef CHILD 
+     *  Simple adapter function which 
+     *  apply the function to a daughter  particle
+     * 
+     *  @code
+     *
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // the transverse momentum of the first daughter particle:
+     *  Fun fun = CHILD( PT , 1 ) ;
+     *  const double pt1 = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ChildFunction
+     *  @see LoKi::Cuts::CHILDFUN
+     *  @see LoKi::Child::child 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-21
+     */
+    typedef LoKi::Particles::ChildFunction                      CHILD    ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef CHILDFUN 
+     *  Simple adapter function which 
+     *  apply the function to a daughter  particle
+     * 
+     *  @code
+     *
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // the transverse momentum of the first daughter particle:
+     *  Fun fun = CHILDFUN( PT , 1 ) ;
+     *  const double pt1 = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ChildFunction
+     *  @see LoKi::Cuts::CHILD
+     *  @see LoKi::Child::child 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-21
+     */
+    typedef CHILD                                               CHILDFUN ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef CHILDCUT 
+     *  Simple adapter predicate  which 
+     *  apply the predicate to a daughter  particle
+     * 
+     *  @code
+     *
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // ask if the first daughter is pi+
+     *  Cut cut = CHILDCUT( "pi+" == ID  , 1 ) ;
+     *  const bool pion = cut ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ChildPredicate
+     *  @see LoKi::Child::child 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-21
+     */
+    typedef LoKi::Particles::ChildPredicate                     CHILDCUT ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef VFASPF 
+     *  The simple adapter of "Vertex function"
+     *  as "Particle function"
+     *
+     *  e.g. return z-position of particle endVertex:
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* particle = ... ;
+     *  
+     *  // create teh function
+     *  Fun vz = VFASPF ( VZ ) ;
+     *
+     *  // use it 
+     *  double z  = vz ( particle ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::VFunAsPFun
+     *  @see LoKi::Cuts::VFUNASPFUN
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2004-02-27
+     */  
+    typedef LoKi::Particles::VFunAsPFun                       VFASPF ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef VFUNASPFUN 
+     *  The simple adapter of "Vertex function"
+     *  as "Particle function"
+     *
+     *  e.g. return z-position of particle endVertex:
+     *
+     *  @code 
+     *
+     *  const LHCb::Particle* particle = ... ;
+     *  
+     *  // create teh function
+     *  Fun vz = VFASPF ( VZ ) ;
+     *
+     *  // use it 
+     *  double z  = vz ( particle ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::VFunAsPFun
+     *  @see LoKi::Cuts::VFASPF
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2004-02-27
+     */  
+    typedef VFASPF                                            VFUNASPFUN ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef HASPROTOS 
+     *  Trivial class which check if the particle has a 
+     *  protoparticle from the list 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE protos = ... ;
+     *  
+     *  Cut hasProtos = HASPROTOS ( protos.begin() , protos.end() ) ;
+     *
+     *  const bool good = hasProtos( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::HasProtos
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LoKi::Cuts::PROTOS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */ 
+    typedef LoKi::Particles::HasProtos                             HASPROTOS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef PROTOS 
+     *  Trivial class which check if the particle has a 
+     *  protoparticle from the list 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE protos = ... ;
+     *  
+     *  Cut hasProtos = PROTOS ( protos.begin() , protos.end() ) ;
+     *
+     *  const bool good = hasProtos( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::HasProtos
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LoKi::Cuts::HASPROTOS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */ 
+    typedef HASPROTOS                                                 PROTOS ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef HASPROTOSINTREE
+     *  Trivial class which check if the particle (or any of its 
+     *  daughter particle) has a 
+     *  protoparticle from the list 
+     *  
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE protos = ... ;
+     *  
+     *  Cut hasProtos = HASPROTOSINTREE ( protos.begin() , protos.end() ) ;
+     *
+     *  const bool good = hasProtos( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     * 
+     *  @see LoKi::Particles::HasProtosInTree
+     *  @see LoKi::Cuts::PROTOSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::HasProtosInTree                 HASPROTOSINTREE ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef PROTOSINTREE
+     *  Trivial class which check if the particle (or any of its 
+     *  daughter particle) has a 
+     *  protoparticle from the list 
+     *  
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE protos = ... ;
+     *  
+     *  Cut hasProtos = PROTOSINTREE ( protos.begin() , protos.end() ) ;
+     *
+     *  const bool good = hasProtos( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     * 
+     *  @see LoKi::Particles::HasProtosInTree
+     *  @see LoKi::Cuts::HASPROTOSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef HASPROTOSINTREE                                     PROTOSINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef HASTRACKS 
+     *  The simple predicate which checks if the particle 
+     *  has a track from the specified list of tracks 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE  tracks = ... ;
+     *
+     *  Cut hasTracks = HASTRACKS ( tracks.begin() , tracks.end() ) ;
+     *  
+     *  const bool good = hasTrack ( p ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Particles::HasTracks
+     *  @see LoKi::Cuts::TRACKS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::HasTracks                            HASTRACKS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TRACKS 
+     *  The simple predicate which checks if the particle 
+     *  has a track from the specified list of tracks 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE  tracks = ... ;
+     *
+     *  Cut hasTracks = TRACKS ( tracks.begin() , tracks.end() ) ;
+     *  
+     *  const bool good = hasTrack ( p ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Particles::HasTracks
+     *  @see LoKi::Cuts::HASTRACKS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef HASTRACKS                                                TRACKS ;
+    // ========================================================================
+    
+
+    // ========================================================================
+    /** @typedef HASTRACKSINTREE
+     *  The simple predicate which checks if the particle 
+     *  has a track from the specified list of tracks 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE  tracks = ... ;
+     *
+     *  Cut hasTracks = HASTRACKSINTREE ( tracks.begin() , tracks.end() ) ;
+     *  
+     *  const bool good = hasTrack ( p ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Particles::HasTracksInTree
+     *  @see LoKi::Cuts::TRACKSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::HasTracksInTree                  HASTRACKSINTREE ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TRACKSINTREE
+     *  The simple predicate which checks if the particle 
+     *  has a track from the specified list of tracks 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE  tracks = ... ;
+     *
+     *  Cut hasTracks = TRACKSINTREE ( tracks.begin() , tracks.end() ) ;
+     *  
+     *  const bool good = hasTrack ( p ) ;
+     * 
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Particles::HasTracksInTree
+     *  @see LoKi::Cuts::HASTRACKSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef HASTRACKSINTREE                                      TRACKSINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef PVTRACK
+     *  The simple predicate which evaluates to 'true' for 
+     *  the particle which *DIRECTLY* participates in to 
+     *  the primary vertex reconstruction
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle*   p  = ... ;
+     *  const LHCb::PrimVertex* pv = ... ;
+     *  
+     *  Cut fromPV = PVTRACK ( pv ) ;
+     * 
+     *  const bool OK = fromPV( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LHCb::PrimVertex
+     *  @see LoKi::Particles::HasTracks
+     *
+     *  @see LoKi::Particles::HasTracksFromPV
+     *  @see LoKi::Cuts::TRACKFROMPV 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22
+     */
+    typedef LoKi::Particles::HasTracksFromPV                         PVTRACK ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TRACKFROMPV 
+     *  The simple predicate which evaluates to 'true' for 
+     *  the particle which *DIRECTLY* participates in to 
+     *  the primary vertex reconstruction
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle*   p  = ... ;
+     *  const LHCb::PrimVertex* pv = ... ;
+     *  
+     *  Cut fromPV = TRACKFROMPV ( pv ) ;
+     * 
+     *  const bool OK = fromPV( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LHCb::PrimVertex
+     *  @see LoKi::Particles::HasTracks
+     *
+     *  @see LoKi::Particles::HasTracksFromPV
+     *  @see LoKi::Cuts::PVTRACK
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22
+     */
+    typedef PVTRACK                                            TRACKFROMPV ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef PVTRACKINTREE
+     *  The simple predicate which evaluates to 'true' for 
+     *  the particle which has in the decay tree at least 
+     *  one particle which participates into 
+     *  the primary vertex reconstruction
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle*   p  = ... ;
+     *  const LHCb::PrimVertex* pv = ... ;
+     *  
+     *  Cut fromPV = PVTRACKINTREE ( pv ) ;
+     * 
+     *  const bool OK = fromPV( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LHCb::PrimVertex
+     *  @see LoKi::Particles::HasTracksFromPV 
+     *
+     *  @see LoKi::Particles::HasTracksInTreeFromPV 
+     *  @see LoKi::Cuts::TRACKFROMPVINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22
+     */
+    typedef LoKi::Particles::HasTracksInTreeFromPV             PVTRACKINTREE ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef TRACKFORMPVINTREE
+     *  The simple predicate which evaluates to 'true' for 
+     *  the particle which has in the decay tree at least 
+     *  one particle which participates into 
+     *  the primary vertex reconstruction
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle*   p  = ... ;
+     *  const LHCb::PrimVertex* pv = ... ;
+     *  
+     *  Cut fromPV = TRACKFROMPVINTREE ( pv ) ;
+     * 
+     *  const bool OK = fromPV( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Vertex
+     *  @see LHCb::PrimVertex
+     *  @see LoKi::Particles::HasTracksFromPV 
+     *
+     *  @see LoKi::Particles::HasTracksInTreeFromPV 
+     *  @see LoKi::Cuts::PVTRACKINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22
+     */
+    typedef PVTRACKINTREE                                  TRACKFROMPVINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef IS 
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle 
+     *  is in the list of particles 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE particles = ... ;
+     * 
+     *  Cut cut = IS( particles ) ;
+     *  
+     *  const bool inList = cut( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Particles::IsAParticle
+     *  @see LoKi::Cuts::IN
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::IsAParticle                                 IS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef IS 
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle 
+     *  is in the list of particles 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE particles = ... ;
+     * 
+     *  Cut cut = IN( particles ) ;
+     *  
+     *  const bool inList = cut( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Particles::IsAParticle
+     *  @see LoKi::Cuts::IS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef IS                                                         IN ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef ISINTREE 
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle or any of dauhter particles 
+     *  is in the list of particles 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE particles = ... ;
+     * 
+     *  Cut cut = ISINTREE ( particles ) ;
+     *  
+     *  const bool inList = cut( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Particles::IsAParticelInTree
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::IsAParticleInTree                   ISINTREE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef FROMTREE 
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle comes from the 
+     *  decay trees of other particles from the list 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE particles = ... ;
+     * 
+     *  Cut cut = FROMTREE ( particles ) ;
+     *  
+     *  const bool inList = cut( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Particles::IsAParticleFromTree 
+     *  @see LoKi::Cuts::FROM
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef LoKi::Particles::IsAParticleFromTree                 FROMTREE ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef FROM
+     *  The trivial predicate which 
+     *  evalautes to "true" if particle comes from the 
+     *  decay trees of other particles from the list 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  SEQUENCE particles = ... ;
+     * 
+     *  Cut cut = FROM ( particles ) ;
+     *  
+     *  const bool inList = cut( p ) ;
+     *
+     *  @endcode 
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Particles::IsAParticleFromTree 
+     *  @see LoKi::Cuts::FROMTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
+    typedef FROMTREE                                                 FROM ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef PPHASINFO 
+     *  The trivial predicate whcii evaluated for true 
+     *  if the protoparticle "hasInfo".
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  Cut hasPhotonID = PPHASINFO( LHCb::ProtoParticle::PhotonID ) ;
+     * 
+     *  const bool OK = hasPhotonID( p ) ;
+     *  
+     *  @endcode 
+     *
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::hasInfo
+     *
+     *  @see LoKi::Particles::ProtoHasInfo 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    typedef LoKi::Particles::ProtoHasInfo                       PPHASINFO ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef PPINFO 
+     *  Trivial function which evaluates LHCb::Particle::info
+     *  
+     *  It relies on the method LHCb::Particle::info
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  Fun richPi = PPINFO( LHCb::ProtoParticle::RichPion , -500 , -1000 ) ;
+     * 
+     *  const  double pion = richPi ( p ) ;
+     *  
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LoKi::Cuts::PPINFO 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    typedef LoKi::Particles::ProtoInfo                             PPINFO ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var PIDe 
+     *  Combined delta log-likelihood  for electron hypothesis 
+     *  
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  conds double DLL = PIDe ( p ) ;
+     *
+     *  @endcode  
+     *  
+     *  @see LoKi::Cuts::PPINFO
+     *  @see LoKi::Particles::ProtoInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LHCb::ProtoParticle::LkhPIDe 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const PPINFO PIDe =  PPINFO ( LHCb::ProtoParticle::LkhPIDe  , 0 , -1000 ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var PIDmu
+     *  Combined delta log-likelihood  for muon hypothesis 
+     *
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double DLL = PIDmu ( p ) ;
+     *
+     *  @endcode  
+     *  
+     *  @see LoKi::Cuts::PPINFO
+     *  @see LoKi::Particles::ProtoInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LHCb::ProtoParticle::LkhPIDmu
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const PPINFO PIDmu = PPINFO ( LHCb::ProtoParticle::LkhPIDmu , 0 , -1000 ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var PIDpi
+     *  Combined delta log-likelihood  for pion hypothesis 
+     *
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double DLL = PIDpi ( p ) ;
+     *
+     *  @endcode  
+     *  
+     *  @see LoKi::Cuts::PPINFO
+     *  @see LoKi::Particles::ProtoInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LHCb::ProtoParticle::LkhPIDmu
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const PPINFO PIDpi = PPINFO ( LHCb::ProtoParticle::LkhPIDpi , 0 , -1000 ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var PIDK
+     *  Combined delta log-likelihood  for kaon hypothesis 
+     *
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double DLL = PIDK ( p ) ;
+     *
+     *  @endcode  
+     *  
+     *  @see LoKi::Cuts::PPINFO
+     *  @see LoKi::Particles::ProtoInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LHCb::ProtoParticle::LkhPIDK
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const PPINFO PIDK  = PPINFO ( LHCb::ProtoParticle::LkhPIDK  , 0 , -1000 ) ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var PIDp
+     *  Combined delta log-likelihood  for proton hypothesis 
+     *
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double DLL = PIDp ( p ) ;
+     *
+     *  @endcode  
+     *  
+     *  @see LoKi::Cuts::PPINFO
+     *  @see LoKi::Particles::ProtoInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LHCb::ProtoParticle::additionalInfo
+     *  @see LHCb::ProtoParticle::LkhPIDp
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const PPINFO PIDp  = PPINFO ( LHCb::ProtoParticle::LkhPIDp  , 0 , -1000 ) ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var PPHASRICH
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::richPID 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = PPHASRICH ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::richPID 
+     *  @see LHCb::RichPID 
+     *  @see LoKi::Particles::ProtoHasRichPID 
+     *  @see LoKi::Cuts::HASRICH 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasRichPID                     PPHASRICH ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var PPHASRICH
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::richPID 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = HASRICH ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::richPID 
+     *  @see LHCb::RichPID 
+     *  @see LoKi::Particles::ProtoHasRichPID 
+     *  @see LoKi::Cuts::PPHASRICH 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasRichPID                       HASRICH ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var PPHASMUON
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::muonPID 
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = PPHASMUON ( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::muonPID 
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::ProtoHasMuonPID 
+     *  @see LoKi::Cuts::HASMUON
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasMuonPID                     PPHASMUON ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var HASMUON
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::muonPID 
+     * 
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = HASMUON ( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::muonPID 
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::ProtoHasMuonPID 
+     *  @see LoKi::Cuts::PPHASMUON
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasMuonPID                       HASMUON ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var PPHASCALOS 
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::calo() 
+     * 
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = PPHASCALOS( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::calo
+     *  @see LHCb::CaloHypo
+     *  @see LoKi::Particles::ProtoHasCaloHypos
+     *  @see LoKi::Cuts::HASCALOS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasCaloHypos                     PPHASCALOS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var HASCALOS 
+     *  the trivial predicate wich tests the validity of 
+     *  ProtoParticle::calo() 
+     * 
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const bool OK = HASCALOS( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::calo
+     *  @see LHCb::CaloHypo
+     *  @see LoKi::Particles::ProtoHasCaloHypos
+     *  @see LoKi::Cuts::PPHASCALOS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    const LoKi::Particles::ProtoHasCaloHypos                       HASCALOS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var TRCHI2 
+     *  The trivial funtion which evaluates LHCb::Track::chi2
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double chi2  = TRCHI2 ( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::chi2 
+     *  @see LoKi::Particles::TrackChi2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const LoKi::Particles::TrackChi2                                  TRCHI2 ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var TRCHI2DOF 
+     *  The trivial funtion which evaluates LHCb::Track::chi2PerDoF
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double chi2  = TRCHI2DOF ( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::chi2 
+     *  @see LoKi::Particles::TrackChi2PerDof
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const LoKi::Particles::TrackChi2PerDoF                         TRCHI2DOF ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef HASSTATE 
+     *  The trivial funtion which evaluates LHCb::Track::hasStateAt
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  Cut atTT = HASSTATE( LHCb::State::AtTT ) ;  
+     * 
+     *  const bool OK = atTT ( p ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::hasStateAt
+     *  @see LHCb::State
+     *  @see LHCb::State::Location
+     *  @see LoKi::Particles::TrackHasState
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    typedef LoKi::Particles::TrackHasState                          HASSTATE ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var TRTYPE 
+     *  The trivial function which evaluates LHCb::Track::type
+     *
+     *  @code 
+     *  
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  const bool Long = LHCb::Track::Long == TRTYPE( p ) ;
+     *
+     *  @endcode 
+     
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::Type
+     *  @see LHCb::Track::type 
+     *  @see LoKi::Cuts::TRTYPE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    // ========================================================================
+    const LoKi::Particles::TrackType                                 TRTYPE ;
+    
+    // ========================================================================
+    /** @var ISLONG 
+     *  The trivial predicate whoch evalauted to true for particles, 
+     *  made from "Long" tracks 
+     * 
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ; 
+     *  
+     *  const bool isLong = ISLONG( p ) ;
+     *  
+     *  @endcode 
+     *   
+     *  @see LoKi:Particle
+     *  @see LoKi:Track
+     *  @see LoKi:Track::Types 
+     *  @see LoKi:Track::Long
+     *  @see LoKi::Cuts::EQUALTO
+     *  @see LoKi::Cuts::TRTYPE  
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const EQUALTO                ISLONG ( TRTYPE , LHCb::Track::Long ) ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var ISUP
+     *  The trivial predicate whoch evalauted to true for particles, 
+     *  made from "Upstream" tracks 
+     * 
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ; 
+     *  
+     *  const bool isLong = ISUP ( p ) ;
+     *  
+     *  @endcode 
+     *   
+     *  @see LoKi:Particle
+     *  @see LoKi:Track
+     *  @see LoKi:Track::Types 
+     *  @see LoKi:Track::Upstream
+     *  @see LoKi::Cuts::EQUALTO
+     *  @see LoKi::Cuts::TRTYPE  
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const EQUALTO                ISUP ( TRTYPE , LHCb::Track::Upstream ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var ISDOWN
+     *  The trivial predicate whoch evalauted to true for particles, 
+     *  made from "Dowstream" tracks 
+     * 
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ; 
+     *  
+     *  const bool isLong = ISDOWN( p ) ;
+     *  
+     *  @endcode 
+     *   
+     *  @see LoKi:Particle
+     *  @see LoKi:Track
+     *  @see LoKi:Track::Types 
+     *  @see LoKi:Track::Downstream
+     *  @see LoKi::Cuts::EQUALTO
+     *  @see LoKi::Cuts::TRTYPE  
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const EQUALTO              ISDOWN ( TRTYPE , LHCb::Track::Downstream ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var ISTRACK
+     *  The trivial predicate whoch evalauted to true for particles, 
+     *  made from "Ttrack" tracks 
+     * 
+     *  @code 
+     *   
+     *  const LHCb::Particle* p = ... ; 
+     *  
+     *  const bool isLong = ISTTRACK( p ) ;
+     *  
+     *  @endcode 
+     *   
+     *  @see LoKi:Particle
+     *  @see LoKi:Track
+     *  @see LoKi:Track::Types 
+     *  @see LoKi:Track::Ttrack
+     *  @see LoKi::Cuts::EQUALTO
+     *  @see LoKi::Cuts::TRTYPE  
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const EQUALTO              ISTTRACK ( TRTYPE , LHCb::Track::Ttrack ) ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var TRHISTORY 
+     *  The trivial function which evaluates LHCb::Track::history
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::History
+     *  @see LHCb::Track::history
+     *  @see LoKi::Particles::TrackHistory
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */    
+    const LoKi::Particles::TrackHistory TRHISTORY ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var TRHISTFIT 
+     *  The trivial function which evaluates LHCb::Track::historyFit
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::HistoryFit
+     *  @see LHCb::Track::historyFit
+     *  @see LoKi::Particles::TrackHistoryFit 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const LoKi::Particles::TrackHistoryFit TRHISTFIT ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var TRSTATUS 
+     *  The trivial function which evaluates LHCb::Track::status
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @see LHCb::Track::Status
+     *  @see LHCb::Track::status
+     *  @see LoKi::Particles::TrackStatus
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-23 
+     */
+    const LoKi::Particles::TrackStatus TRSTATUS ;
+    // ========================================================================
     
     
-  } ; // end of namespace LoKi::Cuts 
-  
+  } ; // end of namespace LoKi::Cuts  
 } ; // end of namespace LoKi
 
 // ============================================================================

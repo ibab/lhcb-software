@@ -1,6 +1,6 @@
-// $Id: Particles6.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles6.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================

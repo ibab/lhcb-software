@@ -1,11 +1,11 @@
-// $Id: Particles7.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles14.h,v 1.1 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef LOKI_PARTICLES7_H 
-#define LOKI_PARTICLES7_H 1
+#ifndef LOKI_PARTICLES14_H 
+#define LOKI_PARTICLES14_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -34,91 +34,69 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-02-21 
+ *  @date 2006-02-24 
  */
 // ============================================================================
+
 
 namespace LoKi
 {
   namespace Particles 
-  {
+  {   
     
-    /** @class VFunAsPFun
-     *  The simple adapter of "Vertex function"
-     *  as "Particle function"
+    /** @struct DecayAngle
      *
-     *  e.g. return z-position of particle endVertex:
-     *
-     *  @code 
-     *
-     *  const LHCb::Particle* particle = ... ;
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between daughter's 
+     *  momentum and mother flight direction in the rest 
+     *  system of mother particle. For 2-body decays it is just 
+     *  a polarization angle of mother particle.
      *  
-     *  // create teh function
-     *  Fun vz = VFuncAsFun( VZ ) ;
+     *  It corresponds to a predefined variable <tt>LV0..</tt> from 
+     *  H.Albrecht's KAL language used in ARGUS collaboaration
      *
-     *  // use it 
-     *  double z  = vz ( particle ) ;
+     *  @see LoKi::Cuts::LV0 
+     *  @see LoKi::Cuts::LV01
+     *  @see LoKi::Cuts::LV02
+     *  @see LoKi::Cuts::LV03
+     *  @see LoKi::Cuts::LV04
      *
-     *  @endcode 
-     *
-     *  @see LoKi::Cuts::VFASPF 
-     *  @see LoKi::Cuts::VFUNASPFUN
-     *  @see LHCb::Particle
-     *  @see LHCb::Vertex
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2004-02-27
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-11-02
      */
-    class VFunAsPFun 
+    class DecayAngle
       : public LoKi::Function<const LHCb::Particle*>
     {
     public:
-      /** constructor form "Vertex function"
-       *  
-       *  @code 
-       *
-       *  Fun fun = VFunAsPFun( VCHI2 ) ;
-       *  const Particle* particle = ... ;
-       *
-       *  // evaluat evertex chi2 
-       *  double vxchi2 = fun( particle ) ;
-       *
-       *  @endcode 
-       *
-       *  @param vfun reference to "Vertex function"
-       *  @param bad the error valeu to be retirned for invalid particle 
-       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-       *  @date   2004-02-27
+      /** constructor with daughter index (starts from 1).
+       *  E.g. for 2-body decays it could be 1 or 2 
+       *  @param index of daughter particles
        */
-      VFunAsPFun           
-      ( const LoKi::Types::VFunc& vfun           , 
-        const double              bad  = -1000.0 ) ;
+      DecayAngle ( size_t child ) ;
       /// copy constructor 
-      VFunAsPFun ( const VFunAsPFun&  fun ) ;
-      /// virtual destructor
-      virtual ~VFunAsPFun();
-      /// clone: virtual constructor ;
-      virtual VFunAsPFun* clone() const ;
-      /// the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
-      /// the specific printout 
+      DecayAngle ( const DecayAngle& rigth) ;
+      /// MANDATORY: virual destructor
+      virtual ~DecayAngle(){};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecayAngle* clone() const { return new DecayAngle(*this) ; }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     private:
-      // default constructor is private 
-      VFunAsPFun() ;
-      // assigenement operator 
-      VFunAsPFun& operator=( const VFunAsPFun&  fun );
+      // the default constructor is disabled 
+      DecayAngle();
     private:
-      LoKi::Types::VFun m_vfun ;
-      double            m_bad  ;
+      // index of the daughter particle
+      size_t m_child ;
     };
-      
-  } ; // end of namespace LoKi::Particles
+
+  } ; // end of namespace Particles
 } ; // end of namespace LoKi 
 
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_PARTICLES7_H
+#endif // LOKI_PARTICLES12_H
 // ============================================================================

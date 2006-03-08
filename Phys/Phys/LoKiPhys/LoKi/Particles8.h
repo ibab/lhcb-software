@@ -1,8 +1,11 @@
-// $Id: Particles8.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles8.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES8_H 
 #define LOKI_PARTICLES8_H 1
@@ -48,6 +51,20 @@ namespace LoKi
   namespace Particles 
   {
     
+    /** @class HasProtos
+     *  Trivial class which check if the particle has a 
+     *  protoparticle from the list 
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     * 
+     *  @see LoKi::Cuts::HASPROTOS
+     *  @see LoKi::Cuts::PROTOS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */     
     class HasProtos
       : public LoKi::Predicate<const LHCb::Particle*>
       , public LoKi::UniqueKeeper<LHCb::ProtoParticle>
@@ -83,9 +100,24 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
     
+    /** @class HasProtosInTree
+     *  Trivial class which check if the particle (or any of its 
+     *  daughter particle) has a 
+     *  protoparticle from the list 
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     * 
+     *  @see LoKi::Cuts::HASPROTOSINTREE
+     *  @see LoKi::Cuts::PROTOSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class HasProtosInTree
       : public LoKi::Predicate<const LHCb::Particle*>
     {

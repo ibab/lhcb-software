@@ -1,8 +1,11 @@
-// $Id: Particles12.h,v 1.1 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles12.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/23 21:14:09  ibelyaev
+//   add new fuctors/predicates
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -44,6 +47,13 @@ namespace LoKi
   { 
     
     /** @class ProtoHasInfo
+     *  The trivial predicate whcii evaluated for true 
+     *  if the protoparticle "hasInfo".
+     *  
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::hasInfo
      *
      *  @see LoKi::Cuts::PPHASINFO 
      *
@@ -81,7 +91,10 @@ namespace LoKi
      *  It relies on the method LHCb::Particle::info
      *
      *  @see LHCb::Particle
-     *  @see LoKi::Cuts::INFO 
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::ProtoParticle::info
+     *  @see LoKi::Cuts::PPINFO 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
@@ -138,6 +151,7 @@ namespace LoKi
      *  @see LHCb::ProtoParticle::richPID 
      *  @see LHCb::RichPID 
      *  @see LoKi::Cuts::PPHASRICH 
+     *  @see LoKi::Cuts::HASRICH 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
@@ -165,6 +179,7 @@ namespace LoKi
      *  @see LHCb::ProtoParticle::muonPID 
      *  @see LHCb::MuonPID 
      *  @see LoKi::Cuts::PPHASMUON
+     *  @see LoKi::Cuts::HASMUON
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15

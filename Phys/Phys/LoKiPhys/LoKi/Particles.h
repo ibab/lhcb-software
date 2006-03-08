@@ -1,11 +1,8 @@
-// $Id: Particles.h,v 1.4 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles.h,v 1.5 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
 // ============================================================================
 #ifndef LOKI_PARTICLES_H 
 #define LOKI_PARTICLES_H 1
@@ -26,6 +23,8 @@
 #include "LoKi/Particles9.h"
 #include "LoKi/Particles10.h"
 #include "LoKi/Particles11.h"
+#include "LoKi/Particles12.h"
+#include "LoKi/Particles13.h"
 // ============================================================================
 
 // ============================================================================

@@ -1,6 +1,6 @@
-// $Id: Particles4.cpp,v 1.3 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.4 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -76,6 +76,13 @@ LoKi::Particles::ImpPar::ImpPar
 {}
 // ============================================================================
 LoKi::Particles::ImpPar::ImpPar
+( const LoKi::Vertices::VertexHolder& vertex , 
+  const LoKi::Vertices::ImpactParamTool& tool   )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Vertices::ImpParBase( vertex , tool ) 
+{}
+// ============================================================================
+LoKi::Particles::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
   const LHCb::Vertex*                    vertex )
   : LoKi::Function<const LHCb::Particle*> ()
@@ -85,6 +92,13 @@ LoKi::Particles::ImpPar::ImpPar
 LoKi::Particles::ImpPar::ImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
   const LoKi::Point3D&                   vertex )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Vertices::ImpParBase( vertex , tool ) 
+{}
+// ============================================================================
+LoKi::Particles::ImpPar::ImpPar
+( const LoKi::Vertices::ImpactParamTool& tool   ,
+  const LoKi::Vertices::VertexHolder& vertex )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
 {}
@@ -150,7 +164,11 @@ LoKi::Particles::ImpPar::ip
   return impact ;
 }
 // ============================================================================
-
+std::ostream&
+LoKi::Particles::ImpPar::fillStream
+( std::ostream& stream ) const 
+{ return stream <<  "IP" ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -169,6 +187,13 @@ LoKi::Particles::ImpParChi2::ImpParChi2
 {}
 // ============================================================================
 LoKi::Particles::ImpParChi2::ImpParChi2
+( const LoKi::Vertices::VertexHolder&  vertex , 
+  const LoKi::Vertices::ImpactParamTool& tool   )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Vertices::ImpParBase( vertex , tool ) 
+{}
+// ============================================================================
+LoKi::Particles::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
   const LHCb::Vertex*                    vertex )
   : LoKi::Function<const LHCb::Particle*> ()
@@ -178,6 +203,13 @@ LoKi::Particles::ImpParChi2::ImpParChi2
 LoKi::Particles::ImpParChi2::ImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool   ,
   const LoKi::Point3D&                   vertex )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Vertices::ImpParBase( vertex , tool ) 
+{}
+// ============================================================================
+LoKi::Particles::ImpParChi2::ImpParChi2
+( const LoKi::Vertices::ImpactParamTool& tool   ,
+  const LoKi::Vertices::VertexHolder& vertex )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Vertices::ImpParBase( vertex , tool ) 
 {}
@@ -249,6 +281,11 @@ LoKi::Particles::ImpParChi2::chi2
   return impact * impact / error / error ;
 }
 // ============================================================================
+std::ostream&
+LoKi::Particles::ImpParChi2::fillStream
+( std::ostream& stream ) const 
+{ return stream <<  "IPCHI2" ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -295,6 +332,26 @@ LoKi::Particles::MinImpPar::MinImpPar
 /// constructor from the vertices and the tool
 // ============================================================================
 LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Keeper<LHCb::Vertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::UniqueKeeper<LHCb::Vertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
 ( const LHCb::PrimVertex::Vector& vertices         , 
   const LoKi::Vertices::ImpactParamTool& tool ) 
   : LoKi::Function<const LHCb::Particle*> ()
@@ -328,7 +385,30 @@ LoKi::Particles::MinImpPar::MinImpPar
 ( const LHCb::PrimVertices* vertices   , 
   const LoKi::Vertices::ImpactParamTool& tool ) 
   : LoKi::Function<const LHCb::Particle*> ()
-  , LoKi::Keeper<LHCb::Vertex>( vertices->begin() , vertices->end() )
+  , LoKi::Keeper<LHCb::Vertex>()
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{
+  if ( 0 != vertices ) 
+  { addObjects ( vertices->begin() , vertices->end() ) ; }
+};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Keeper<LHCb::PrimVertex>& vertices ,
+  const LoKi::Vertices::ImpactParamTool& tool )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices ,
+  const LoKi::Vertices::ImpactParamTool& tool )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
@@ -375,6 +455,26 @@ LoKi::Particles::MinImpPar::MinImpPar
 /// constructor from the vertices and the tool
 // ============================================================================
 LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::Keeper<LHCb::Vertex>& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::UniqueKeeper<LHCb::Vertex>& vertices ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool , 
   const LHCb::PrimVertex::Vector& vertices ) 
   : LoKi::Function<const LHCb::Particle*> ()
@@ -408,7 +508,30 @@ LoKi::Particles::MinImpPar::MinImpPar
 ( const LoKi::Vertices::ImpactParamTool& tool , 
   const LHCb::PrimVertices* vertices ) 
   : LoKi::Function<const LHCb::Particle*> ()
-  , LoKi::Keeper<LHCb::Vertex>( vertices->begin() , vertices->end() )
+  , LoKi::Keeper<LHCb::Vertex>()
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{
+  if ( 0 != vertices ) 
+  { addObjects ( vertices->begin() , vertices->end() ) ; }
+};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::Keeper<LHCb::PrimVertex>& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpPar::MinImpPar
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
@@ -443,6 +566,12 @@ LoKi::Particles::MinImpPar::mip
   
 } ;
 // ============================================================================
+std::ostream&
+LoKi::Particles::MinImpPar::fillStream
+( std::ostream& stream ) const 
+{ return stream <<  "MIP" ; }
+// ============================================================================
+
 
 
 // ============================================================================
@@ -489,6 +618,26 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 /// constructor from the vertices and the tool
 // ============================================================================
 LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Keeper<LHCb::Vertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::UniqueKeeper<LHCb::Vertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
 ( const LHCb::PrimVertex::Vector& vertices         , 
   const LoKi::Vertices::ImpactParamTool& tool ) 
   : LoKi::Function<const LHCb::Particle*> ()
@@ -522,7 +671,30 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 ( const LHCb::PrimVertices* vertices   , 
   const LoKi::Vertices::ImpactParamTool& tool ) 
   : LoKi::Function<const LHCb::Particle*> ()
-  , LoKi::Keeper<LHCb::Vertex>( vertices->begin() , vertices->end() )
+  , LoKi::Keeper<LHCb::Vertex>()
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{
+  if ( 0 != vertices ) 
+  { addObjects ( vertices->begin() , vertices->end() ) ; }
+};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Keeper<LHCb::PrimVertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices   , 
+  const LoKi::Vertices::ImpactParamTool& tool ) 
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
@@ -569,18 +741,28 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 /// constructor from the vertices and the tool
 // ============================================================================
 LoKi::Particles::MinImpParChi2::MinImpParChi2
-( const LoKi::Vertices::ImpactParamTool& tool , 
-  const LHCb::PrimVertex::Vector& vertices ) 
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::Keeper<LHCb::Vertex>& vertices )
   : LoKi::Function<const LHCb::Particle*> ()
-  , LoKi::Keeper<LHCb::Vertex>( vertices.begin() , vertices.end() )
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
 /// constructor from the vertices and the tool
 // ============================================================================
 LoKi::Particles::MinImpParChi2::MinImpParChi2
-( const LoKi::Vertices::ImpactParamTool& tool , 
-  const LHCb::PrimVertex::ConstVector& vertices ) 
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::UniqueKeeper<LHCb::Vertex>& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LHCb::PrimVertex::ConstVector& vertices )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::Vertex>( vertices.begin() , vertices.end() )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
@@ -590,7 +772,7 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 // ============================================================================
 LoKi::Particles::MinImpParChi2::MinImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool ,
-  const SmartRefVector<LHCb::PrimVertex>& vertices ) 
+  const SmartRefVector<LHCb::PrimVertex>& vertices )
   : LoKi::Function<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::Vertex>( vertices.begin() , vertices.end() )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
@@ -602,7 +784,30 @@ LoKi::Particles::MinImpParChi2::MinImpParChi2
 ( const LoKi::Vertices::ImpactParamTool& tool , 
   const LHCb::PrimVertices* vertices ) 
   : LoKi::Function<const LHCb::Particle*> ()
-  , LoKi::Keeper<LHCb::Vertex>( vertices->begin() , vertices->end() )
+  , LoKi::Keeper<LHCb::Vertex>()
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{
+  if ( 0 != vertices ) 
+  { addObjects ( vertices->begin() , vertices->end() ) ; }
+};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::Keeper<LHCb::PrimVertex>& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
+  , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
+{};
+// ============================================================================
+/// constructor from the vertices and the tool
+// ============================================================================
+LoKi::Particles::MinImpParChi2::MinImpParChi2
+( const LoKi::Vertices::ImpactParamTool& tool ,
+  const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices )
+  : LoKi::Function<const LHCb::Particle*> ()
+  , LoKi::Keeper<LHCb::Vertex>( vertices )
   , m_fun      ( LoKi::Helpers::_First( vertices ) , tool )
 {};
 // ============================================================================
@@ -635,6 +840,11 @@ LoKi::Particles::MinImpParChi2::mipchi2
   
   return result ;
 } ;
+// ============================================================================
+std::ostream&
+LoKi::Particles::MinImpParChi2::fillStream
+( std::ostream& stream ) const 
+{ return stream <<  "MIPCHI2" ; }
 // ============================================================================
 
 

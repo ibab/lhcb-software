@@ -1,8 +1,11 @@
-// $Id: Particles8.cpp,v 1.1 2006-02-22 20:53:48 ibelyaev Exp $
+// $Id: Particles8.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:48  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -102,7 +105,11 @@ LoKi::Particles::HasProtos::operator()
   return std::binary_search ( begin() , end() , p->proto() ) ;
 } ;
 // ============================================================================
-
+std::ostream& 
+LoKi::Particles::HasProtos::fillStream
+( std::ostream& stream ) const 
+{ return stream << "PROTOS" ; }
+// ============================================================================
 
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
@@ -158,6 +165,11 @@ LoKi::Particles::HasProtosInTree::operator()
   // scan the tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
 } ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::HasProtosInTree::fillStream
+( std::ostream& stream ) const 
+{ return stream << "PROTOSINTREE" ; }
 // ============================================================================
 
 // ============================================================================

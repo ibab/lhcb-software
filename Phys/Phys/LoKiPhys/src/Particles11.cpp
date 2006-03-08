@@ -1,11 +1,8 @@
-// $Id: Particles11.cpp,v 1.2 2006-02-22 21:02:09 ibelyaev Exp $
+// $Id: Particles11.cpp,v 1.3 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/22 20:53:47  ibelyaev
-//  add a lot of new functions (without fillStream)
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -146,6 +143,11 @@ LoKi::Particles::IsAParticle::operator()
   return std::binary_search ( begin() , end() , p ) ;
 } ;
 // ============================================================================
+std::ostream&
+LoKi::Particles::IsAParticle::fillStream
+( std::ostream& stream ) const
+{ return stream << "IS" ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -240,6 +242,11 @@ LoKi::Particles::IsAParticleInTree::operator()
   // scan the tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
 } ;
+// ============================================================================
+std::ostream&
+LoKi::Particles::IsAParticleInTree::fillStream
+( std::ostream& stream ) const
+{ return stream << "ISINTREE" ; }
 // ============================================================================
 
 
@@ -346,6 +353,11 @@ LoKi::Particles::IsAParticleFromTree::operator()
   
   return false ;                                               // RETURN 
 } ;
+// ============================================================================
+std::ostream&
+LoKi::Particles::IsAParticleFromTree::fillStream
+( std::ostream& stream ) const
+{ return stream << "FROM" ; }
 // ============================================================================
 
 // ============================================================================

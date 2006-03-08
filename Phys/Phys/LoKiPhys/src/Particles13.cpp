@@ -1,8 +1,11 @@
-// $Id: Particles13.cpp,v 1.1 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/23 21:14:09  ibelyaev
+//   add new fuctors/predicates
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -158,7 +161,7 @@ LoKi::Particles::TrackHasState::operator()
 std::ostream& 
 LoKi::Particles::TrackHasState::fillStream ( std::ostream& s ) const 
 { 
-  s << "TRHASSTATE['" ;
+  s << "HASSTATE['" ;
   switch ( m_location) 
   {
   case LHCb::State::LocationUnknown  : s << "LocationUnknown"  ; break ;

@@ -1,8 +1,11 @@
-// $Id: Particles9.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles9.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES9_H 
 #define LOKI_PARTICLES9_H 1
@@ -48,7 +51,20 @@ namespace LoKi
 {
   namespace Particles 
   {
-    
+    /** @class HasTracks 
+     *  The simple predicate which checks if the particle 
+     *  has a track from the specified list of tracks 
+     *  
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Cuts::HASTRACKS
+     *  @see LoKi::Cuts::TRACKS
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class HasTracks
       : public LoKi::Predicate<const LHCb::Particle*>
       , public LoKi::UniqueKeeper<LHCb::Track>
@@ -60,6 +76,8 @@ namespace LoKi
       HasTracks ( const LHCb::Track::Vector& ts ) ;
       /// constructor from vector of tracks 
       HasTracks ( const LHCb::Track::ConstVector& ts ) ;
+      /// constructor from vector of tracks 
+      HasTracks ( const SmartRefVector<LHCb::Track>& ts ) ;
       /// constructor from container of tracks 
       HasTracks ( const LoKi::Keeper<LHCb::Track>& ps ) ;
       /// constructor from container of tracks 
@@ -84,7 +102,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     private:
       // the default constructor is disabled 
       HasTracks();
@@ -92,6 +110,21 @@ namespace LoKi
       LoKi::Extract::Particle2Track  m_extract ;
     } ;
     
+    /** @class HasTracksInTree
+     *  The simple predicate which checks if the particle 
+     *  (or any of the daughter particle) 
+     *  has a track from the specified list of tracks 
+     *  
+     *  @see LHCb::Particle
+     *  @see LoKi::Extract::Particle2Track
+     *  @see LHCb::Track
+     * 
+     *  @see LoKi::Cuts::HASTRACKSINTREE
+     *  @see LoKi::Cuts::TRACKSINTREE
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-22 
+     */
     class HasTracksInTree
       : public LoKi::Predicate<const LHCb::Particle*>
     {
@@ -102,6 +135,8 @@ namespace LoKi
       HasTracksInTree ( const LHCb::Track::Vector& ts ) ;
       /// constructor from vector of tracks 
       HasTracksInTree ( const LHCb::Track::ConstVector& ts ) ;
+      /// constructor from vector of tracks 
+      HasTracksInTree ( const SmartRefVector<LHCb::Track>& ts ) ;
       /// constructor from container of tracks 
       HasTracksInTree ( const LoKi::Keeper<LHCb::Track>& ps ) ;
       /// constructor from container of tracks 
@@ -128,7 +163,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     private:
       // the defualt constructor is private 
       HasTracksInTree() ;

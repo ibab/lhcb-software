@@ -1,6 +1,6 @@
-// $Id: Particles13.h,v 1.1 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles13.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -101,12 +101,12 @@ namespace LoKi
 
     
     /** @class TrackHasState
-     *  The trivial funtion which evaluates LHCb::Track::hasSatteAt(...)
+     *  The trivial funtion which evaluates LHCb::Track::hasStateAt
      *
      *  @see LHCb::Particle
      *  @see LHCb::Track
      *  @see LHCb::Track::hasStateAt
-     *  @see LoKi::Cuts::TRNSTATES
+     *  @see LoKi::Cuts::HASSTATE
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 

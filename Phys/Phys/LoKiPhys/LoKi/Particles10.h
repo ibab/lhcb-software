@@ -1,6 +1,6 @@
-// $Id: Particles10.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles10.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -55,6 +55,9 @@ namespace LoKi
      *  @see LHCb::PrimVertex
      *  @see LoKi::Particles::HasTracks
      *
+     *  @see LoKi::Cuts::PVTRACK
+     *  @see LoKi::Cuts::TRACKFROMPV
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
@@ -107,7 +110,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     public:
       /** add the vertex 
        *  @param vertex vertex to be added 
@@ -155,6 +158,9 @@ namespace LoKi
      *  @see LHCb::Vertex
      *  @see LHCb::PrimVertex
      *  @see LoKi::Particles::HasTracksFromPV 
+     *
+     *  @see LoKi::Cuts::PVTRACKINTREE
+     *  @see LoKi::Cuts::TRACKFROMPVINTREE
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
@@ -220,7 +226,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& filStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
     public:
       /** add the vertex 
        *  @param vertex vertex to be added 

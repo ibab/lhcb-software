@@ -1,8 +1,11 @@
-// $Id: Particles12.cpp,v 1.1 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/23 21:14:09  ibelyaev
+//   add new fuctors/predicates
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -177,7 +180,7 @@ LoKi::Particles::ProtoHasRichPID::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::ProtoHasRichPID::fillStream ( std::ostream& s ) const 
-{ return s << "PPHASRICH" ; }
+{ return s << "HASRICH" ; }
 // ============================================================================
 
 // ============================================================================
@@ -209,7 +212,7 @@ LoKi::Particles::ProtoHasMuonPID::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::ProtoHasMuonPID::fillStream ( std::ostream& s ) const 
-{ return s << "PPHASMUON" ; }
+{ return s << "HASMUON" ; }
 // ============================================================================
 
 // ============================================================================
@@ -241,7 +244,7 @@ LoKi::Particles::ProtoHasCaloHypos::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::ProtoHasCaloHypos::fillStream ( std::ostream& s ) const 
-{ return s << "PPHASCALO" ; }
+{ return s << "HASCALOS" ; }
 // ============================================================================
 
 

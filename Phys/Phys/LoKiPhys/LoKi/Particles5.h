@@ -1,6 +1,6 @@
-// $Id: Particles5.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles5.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -306,7 +306,7 @@ namespace LoKi
      *  minimal value for some functions for
      *  particles which satisfy the certain criteria 
      *
-     *  The function uses the algorithm LoKi::PhysAlgs::min_value 
+     *  The function uses the algorithm LoKi::PhysAlgs::max_value 
      *
      *  @see LoKi::PhysAlgs::max_value  
      *  @see LoKi::Cuts::MAXTREE 
@@ -357,8 +357,6 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
     };
-
-
 
 
   } ; // end of namespace LoKi::Particles

@@ -1,11 +1,8 @@
-// $Id: Particles3.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles3.h,v 1.3 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -62,19 +59,24 @@ namespace LoKi
      *
      *  @see LHCb::Particle
      *  @see IGeomDispCalculator
-     * 
+     *  @see LoKi::Cuts::CLAPP
+     *
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class ClosestApproach : 
-      public LoKi::Function<const LHCb::Particle*> , 
-      public LoKi::Vertices::ImpactParamTool 
+    class ClosestApproach 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Vertices::ImpactParamTool 
     {
     public:
       /// constructor from the particle and the tool  
       ClosestApproach 
       ( const LHCb::Particle*                  particle , 
         const LoKi::Vertices::ImpactParamTool& tool     ) ;
+      /// constructor from the particle and the tool  
+      ClosestApproach 
+      ( const LoKi::Vertices::ImpactParamTool& tool     ,
+        const LHCb::Particle*                  particle ) ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  ClosestApproach* clone() const 
       { return new ClosestApproach(*this) ; }
@@ -112,6 +114,7 @@ namespace LoKi
      *
      *  @see LHCb::Particle
      *  @see IGeomDispCalculator
+     *  @see LoKi::Cuts::CLAPPCHI2 
      * 
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -289,7 +292,7 @@ namespace LoKi
      */
     class MinClosestApproachChi2 
       : public LoKi::Function<const LHCb::Particle*> 
-      , public LoKi::Keeper<LHCb::Particle>
+      , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
       /// constructor from the particle(s) and the tool  
@@ -310,6 +313,14 @@ namespace LoKi
         const LoKi::Vertices::ImpactParamTool& tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
+      ( const LoKi::Keeper<LHCb::Particle>&    particles ,
+        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproachChi2 
+      ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
+        const LoKi::Vertices::ImpactParamTool& tool      ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproachChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool      ,
         const LHCb::Particle::Vector&          particles ) ;
       /// constructor from the particle(s) and the tool  
@@ -324,6 +335,14 @@ namespace LoKi
       MinClosestApproachChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool      , 
         const LoKi::PhysTypes::Range&          particles ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproachChi2 
+      ( const LoKi::Vertices::ImpactParamTool& tool      ,
+        const LoKi::Keeper<LHCb::Particle>&    particles ) ;
+      /// constructor from the particle(s) and the tool  
+      MinClosestApproachChi2 
+      ( const LoKi::Vertices::ImpactParamTool&    tool      ,
+        const LoKi::UniqueKeeper<LHCb::Particle>& particles ) ;
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param first 'begin'-iterator for the sequence 
@@ -336,7 +355,7 @@ namespace LoKi
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
         : LoKi::Function<const LHCb::Particle*> ()
-        , LoKi::Keeper<LHCb::Particle> ( first , last ) 
+        , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {};
       /** templated contructor 
@@ -351,7 +370,7 @@ namespace LoKi
         PARTICLE                               first , 
         PARTICLE                               last  )
         : LoKi::Function<const LHCb::Particle*> ()
-        , LoKi::Keeper<LHCb::Particle> ( first , last ) 
+        , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
       {} ;
       /// copy constructor 

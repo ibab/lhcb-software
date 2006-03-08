@@ -1,6 +1,6 @@
-// $Id: Particles2.cpp,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -143,10 +143,11 @@ LoKi::Particles::TimeDistance::time
   return distance / betagamma ;
 } ;
 // ============================================================================
-
-
-
-
+std::ostream&
+LoKi::Particles::TimeDistance::fillStream
+( std::ostream& s ) const 
+{ return s << "TDIST" ; }
+// ============================================================================
 
 // ============================================================================
 /// constructor 
@@ -246,6 +247,11 @@ LoKi::Particles::TimeSignedDistance::time
   return distance / betagamma ;
 } ;
 // ============================================================================
+std::ostream&
+LoKi::Particles::TimeSignedDistance::fillStream
+( std::ostream& s ) const 
+{ return s << "TDSIGN" ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -337,6 +343,11 @@ LoKi::Particles::TimeDotDistance::time
   //
   return distance / betagamma ;
 } ;
+// ============================================================================
+std::ostream&
+LoKi::Particles::TimeDotDistance::fillStream
+( std::ostream& s ) const 
+{ return s << "TDOT" ; }
 // ============================================================================
 
 // ============================================================================

@@ -1,6 +1,6 @@
-// $Id: Particles10.cpp,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles10.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -157,6 +157,11 @@ LoKi::Particles::HasTracksFromPV::operator()
   return m_cut ( p ) ;
 } ;
 // ============================================================================
+std::ostream& 
+LoKi::Particles::HasTracksFromPV::fillStream
+( std::ostream& stream ) const
+{ return stream << "PVTRACK" ; }
+// ============================================================================
 
 
 
@@ -239,6 +244,11 @@ LoKi::Particles::HasTracksInTreeFromPV::operator()
   // scan the decay tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
 } ; 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::HasTracksInTreeFromPV::fillStream
+( std::ostream& stream ) const
+{ return stream << "PVTRACKINTREE" ; }
 // ============================================================================
 
 

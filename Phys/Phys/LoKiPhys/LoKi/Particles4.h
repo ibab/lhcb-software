@@ -1,6 +1,6 @@
-// $Id: Particles4.h,v 1.2 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: Particles4.h,v 1.3 2006-03-08 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -66,9 +66,9 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ImpPar : 
-      public    LoKi::Function<const LHCb::Particle*> , 
-      public    LoKi::Vertices::ImpParBase 
+    class ImpPar 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Vertices::ImpParBase 
     {
     public:
       /// constructor 
@@ -81,12 +81,20 @@ namespace LoKi
         const LoKi::Vertices::ImpactParamTool&   tool   ) ;
       /// constructor 
       ImpPar 
+      ( const LoKi::Vertices::VertexHolder&     vertex ,   
+        const LoKi::Vertices::ImpactParamTool&  tool   ) ;
+      /// constructor 
+      ImpPar 
       ( const LoKi::Vertices::ImpactParamTool&   tool   ,
         const LHCb::Vertex*                      vertex ) ;
       /// constructor 
       ImpPar 
       ( const LoKi::Vertices::ImpactParamTool&   tool   , 
         const LoKi::Point3D&                     point  ) ;
+      /// constructor 
+      ImpPar 
+      ( const LoKi::Vertices::ImpactParamTool&   tool   ,
+        const LoKi::Vertices::VertexHolder&      vertex ) ;
       /// constructor 
       ImpPar ( const LoKi::Vertices::ImpParBase& tool   ) ;
       /// copy constructor 
@@ -121,9 +129,9 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ImpParChi2 : 
-      public    LoKi::Function<const LHCb::Particle*> , 
-      public    LoKi::Vertices::ImpParBase 
+    class ImpParChi2 
+      : public LoKi::Function<const LHCb::Particle*> 
+      , public LoKi::Vertices::ImpParBase 
     {
     public:
       /// constructor 
@@ -135,6 +143,10 @@ namespace LoKi
       ( const LoKi::Point3D&                   point  ,   
         const LoKi::Vertices::ImpactParamTool& tool   ) ;
       /// constructor 
+      ImpParChi2  
+      ( const LoKi::Vertices::VertexHolder&     vertex ,   
+        const LoKi::Vertices::ImpactParamTool&  tool   ) ;
+      /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   ,
         const LHCb::Vertex*                    vertex ) ;
@@ -142,6 +154,10 @@ namespace LoKi
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   , 
         const LoKi::Point3D&                   point  ) ;
+      /// constructor 
+      ImpParChi2 
+      ( const LoKi::Vertices::ImpactParamTool&   tool   ,
+        const LoKi::Vertices::VertexHolder&      vertex ) ;
       /// constructor 
       ImpParChi2 ( const LoKi::Vertices::ImpParBase&  tool  ) ;
       /// copy constructor 
@@ -174,6 +190,7 @@ namespace LoKi
      *  @see LoKi::Vertices::ImpPar 
      *  @see LHCb::Particle
      *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::MIP
      *  @see LoKi::Cuts::MINIP
      *  @see LoKi::Cuts::IPMIN
      *
@@ -202,6 +219,14 @@ namespace LoKi
       ( const LoKi::PhysTypes::VRange& vertices   , 
         const LoKi::Vertices::ImpactParamTool& tool ) ;
       /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Keeper<LHCb::Vertex>&  vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::UniqueKeeper<LHCb::Vertex>&  vertices , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
       MinImpPar
       ( const LHCb::PrimVertex::Vector& vertices         , 
         const LoKi::Vertices::ImpactParamTool& tool ) ;
@@ -216,6 +241,14 @@ namespace LoKi
       /// constructor from the vertices and the tool
       MinImpPar
       ( const LHCb::PrimVertices* vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Keeper<LHCb::PrimVertex>&  vertices ,
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::UniqueKeeper<LHCb::PrimVertex>&  vertices ,
         const LoKi::Vertices::ImpactParamTool& tool ) ;
       /// constructor from the vertices and the tool
       MinImpPar
@@ -234,6 +267,14 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool ,
         const LoKi::PhysTypes::VRange& vertices   ) ;
       /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::Keeper<LHCb::Vertex>&  vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::UniqueKeeper<LHCb::Vertex>&  vertices ) ;
+      /// constructor from the vertices and the tool
       MinImpPar
       ( const LoKi::Vertices::ImpactParamTool& tool , 
         const LHCb::PrimVertex::Vector& vertices ) ;
@@ -249,6 +290,14 @@ namespace LoKi
       MinImpPar
       ( const LoKi::Vertices::ImpactParamTool& tool     , 
         const LHCb::PrimVertices*              vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::Keeper<LHCb::PrimVertex>&  vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpPar 
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::UniqueKeeper<LHCb::PrimVertex>&  vertices ) ;
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
        *  @param first 'begin'-iterator of the sequence 
@@ -341,6 +390,14 @@ namespace LoKi
         const LoKi::Vertices::ImpactParamTool& tool ) ;
       /// constructor from the vertices and the tool
       MinImpParChi2
+      ( const LoKi::Keeper<LHCb::Vertex>& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::UniqueKeeper<LHCb::Vertex>& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
       ( const LHCb::PrimVertex::Vector& vertices         , 
         const LoKi::Vertices::ImpactParamTool& tool ) ;
       /// constructor from the vertices and the tool
@@ -354,6 +411,14 @@ namespace LoKi
       /// constructor from the vertices and the tool
       MinImpParChi2
       ( const LHCb::PrimVertices* vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Keeper<LHCb::PrimVertex>& vertices   , 
+        const LoKi::Vertices::ImpactParamTool& tool ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices   , 
         const LoKi::Vertices::ImpactParamTool& tool ) ;
       /// constructor from the vertices and the tool
       MinImpParChi2
@@ -373,6 +438,14 @@ namespace LoKi
         const LoKi::PhysTypes::VRange& vertices   ) ;
       /// constructor from the vertices and the tool
       MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::Keeper<LHCb::Vertex>& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::UniqueKeeper<LHCb::Vertex>& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
       ( const LoKi::Vertices::ImpactParamTool& tool , 
         const LHCb::PrimVertex::Vector& vertices ) ;
       /// constructor from the vertices and the tool
@@ -387,6 +460,14 @@ namespace LoKi
       MinImpParChi2
       ( const LoKi::Vertices::ImpactParamTool& tool     , 
         const LHCb::PrimVertices*              vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::Keeper<LHCb::PrimVertex>& vertices ) ;
+      /// constructor from the vertices and the tool
+      MinImpParChi2
+      ( const LoKi::Vertices::ImpactParamTool& tool ,
+        const LoKi::UniqueKeeper<LHCb::PrimVertex>& vertices ) ;
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
        *  @param first 'begin'-iterator of the sequence 

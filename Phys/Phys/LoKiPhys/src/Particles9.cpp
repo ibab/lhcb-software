@@ -1,8 +1,11 @@
-// $Id: Particles9.cpp,v 1.1 2006-02-22 20:53:48 ibelyaev Exp $
+// $Id: Particles9.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:48  ibelyaev
+//  add a lot of new functions (without fillStream)
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -68,6 +71,12 @@ LoKi::Particles::HasTracks::HasTracks
 {};
 // ============================================================================
 LoKi::Particles::HasTracks::HasTracks
+( const SmartRefVector<LHCb::Track>& pp ) 
+  : LoKi::Predicate<const LHCb::Particle*>  () 
+  , LoKi::UniqueKeeper<LHCb::Track> ( pp.begin() , pp.end() ) 
+{};
+// ============================================================================
+LoKi::Particles::HasTracks::HasTracks
 ( const LoKi::Keeper<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  (    ) 
   , LoKi::UniqueKeeper<LHCb::Track> ( pp ) 
@@ -102,6 +111,11 @@ LoKi::Particles::HasTracks::operator()
   return std::binary_search ( begin() , end() , m_extract( p ) ) ;
 } ;
 // ============================================================================
+std::ostream& 
+LoKi::Particles::HasTracks::fillStream
+( std::ostream& stream ) const 
+{ return stream << "TRACKS" ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -119,6 +133,12 @@ LoKi::Particles::HasTracksInTree::HasTracksInTree
 // ============================================================================
 LoKi::Particles::HasTracksInTree::HasTracksInTree
 ( const LHCb::Track::ConstVector& pp ) 
+  : LoKi::Predicate<const LHCb::Particle*>  () 
+  , m_cut ( pp )  
+{};
+// ============================================================================
+LoKi::Particles::HasTracksInTree::HasTracksInTree
+( const SmartRefVector<LHCb::Track>& pp ) 
   : LoKi::Predicate<const LHCb::Particle*>  () 
   , m_cut ( pp )  
 {};
@@ -158,6 +178,11 @@ LoKi::Particles::HasTracksInTree::operator()
   // scan the tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
 } ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::HasTracksInTree::fillStream
+( std::ostream& stream ) const 
+{ return stream << "TRACKSINTREE" ; }
 // ============================================================================
 
 // ============================================================================
