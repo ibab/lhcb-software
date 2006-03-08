@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-03-08 - Olivier Callot
+ - Fixed a typo in LinkedFrom, 'key' left while it should have been 'index'
+
+! 2006-03-08 - Olivier Callot
  - Add a check on the class ID of the objects related by the Linker.
    This changes the object LinksByKey (store the two class IDs).
  - Add a check of the class ID in the wrapper tools (LinkerTool,

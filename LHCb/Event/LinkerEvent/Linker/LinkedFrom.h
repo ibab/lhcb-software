@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.15 2006-03-08 17:38:49 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.16 2006-03-08 17:43:26 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -140,7 +140,7 @@ protected:
     }
     ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
     if ( 0 != parent ) {
-      return (SOURCE*)parent->containedObject( key );
+      return (SOURCE*)parent->containedObject( index );
     }
     return NULL;
   }  
