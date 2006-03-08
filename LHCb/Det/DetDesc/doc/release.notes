@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.253 2006-03-08 11:05:25 jpalac Exp $ 
+! $Id: release.notes,v 1.254 2006-03-08 12:31:39 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v16r3 2006-03-08 ========================
 ! 2006-03-08 Juan Palacios
  - Fix some memory leaks in AlignmentCondition private methods.
 
-!======================== DetDesc v16r2 2006-02-08 ========================
 ! 2006-02-08 M Needham
  - Adapt Isotope to same way of getting nucleons as elements and mixtures
 
