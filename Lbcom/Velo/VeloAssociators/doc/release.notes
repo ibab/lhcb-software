@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 
 !==================== VeloAssociators v2r0 2006-03-06 ===================
+! 2006-03-08 - Tomasz Szumlak
+ - new linker form VeloDigits to MCParticles
+
 ! 2006-03-06 - Marco Cattaneo
  - Move tool interface to DigiEvent Kernel directory, and remove VeloAssociators
    directory
