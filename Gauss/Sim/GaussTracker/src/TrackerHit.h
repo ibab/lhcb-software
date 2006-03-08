@@ -35,6 +35,7 @@ public:
   G4ThreeVector entryPos;
   G4ThreeVector exitPos;
   G4double timeOfFlight;
+  G4double momentum;
 
 public:
 
@@ -46,6 +47,8 @@ public:
   G4ThreeVector GetExitPos();
   void SetTimeOfFlight(G4double tof);
   G4double GetTimeOfFlight();
+  void SetMomentum(G4double momentum);
+  G4double GetMomentum();
 };
 
 typedef G4THitsCollection<TrackerHit> TrackerHitsCollection;

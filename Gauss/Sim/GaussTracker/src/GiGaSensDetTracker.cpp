@@ -85,13 +85,16 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
 //                     << " calculated dir " << (postpos-prepos).unit() 
 //                     << std::endl;
       
-      int trid = track->GetTrackID();          
+      int trid = track->GetTrackID(); 
+      double mom = track->GetMomentum().mag();
+
       ///
       TrackerHit* newHit = new TrackerHit();
       newHit->SetEdep( edep );
       newHit->SetEntryPos( prepos );
       newHit->SetExitPos( postpos );
-      newHit->SetTimeOfFlight( timeof );  
+      newHit->SetTimeOfFlight( timeof );
+      newHit->SetMomentum( mom );
       newHit->SetTrackID( trid );
       ///
       G4VUserTrackInformation* ui = track->GetUserInformation(); 

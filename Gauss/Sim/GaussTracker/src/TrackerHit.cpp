@@ -27,6 +27,7 @@ TrackerHit::TrackerHit(const TrackerHit &right):GaussHitBase(right)
   entryPos = right.entryPos;
   exitPos = right.exitPos;
   timeOfFlight = right.timeOfFlight;
+  momentum = right.momentum;
 }
 
 void* TrackerHit::operator new(size_t)
@@ -47,6 +48,7 @@ const TrackerHit& TrackerHit::operator=(const TrackerHit &right)
   entryPos = right.entryPos;
   exitPos = right.exitPos;
   timeOfFlight = right.timeOfFlight;
+  momentum = right.momentum;
   return *this;
 }
 
@@ -77,6 +79,12 @@ int TrackerHit::operator==(const TrackerHit &right) const
 
   G4double TrackerHit::GetTimeOfFlight()
   { return timeOfFlight; }
+
+  void TrackerHit::SetMomentum(G4double p)
+  { momentum = p; }
+ 
+  G4double TrackerHit::GetMomentum()
+  { return momentum; } 
 
 
 void TrackerHit::Draw()
