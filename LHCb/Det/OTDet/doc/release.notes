@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.44 2006-02-27 19:33:38 jvantilb Exp $
+! $Id: release.notes,v 1.45 2006-03-08 12:57:14 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
+!========================== OTDet v6r0 2006-03-08 ==========================
 ! 2006-02-27 - Jeroen van Tilburg
  - Minor change: Trajectory method can also take only LHCbID.
 
 ! 2006-02-23 Edwin Bos
  - Introduction of Trajectories in DeOTDetector and DeOTModule.
 
-!========================== OTDet v6r0 2006-01-20 ==========================
 ! 2006-02-07 - Jan Amoraal
  - Get rid of anoying debug message
 
