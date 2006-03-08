@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.39 2006-02-22 22:25:48 robbep Exp $
+! $Id: release.notes,v 1.40 2006-03-08 08:53:24 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-03-07 - Patrick Robbe
+ - phocin: set up PHOTOS to work with more than 2 charged tracks
+   and interferences
+ - SignalPlain: add counters
 
 ! 2006-02-22 - Patrick Robbe
  - requirements: use names with double underscore
