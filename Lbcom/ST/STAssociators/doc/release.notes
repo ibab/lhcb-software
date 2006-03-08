@@ -2,6 +2,9 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+! 2006-03-06 M. Needham
+ - Yet another bug fix of a silent error from the linker
+
 !======================= STAssociators v1r0 2006-02-15 ========================
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent

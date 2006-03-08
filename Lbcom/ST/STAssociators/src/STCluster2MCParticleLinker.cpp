@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.5 2006-03-03 17:01:11 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.6 2006-03-08 14:41:23 mneedham Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -55,7 +55,7 @@ StatusCode STCluster2MCParticleLinker::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  m_asctLocation= LHCb::STDigitLocation::TTDigits + "2MCHits";
+  m_asctLocation= LHCb::STClusterLocation::TTDigits + "2MCHits";
 
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
