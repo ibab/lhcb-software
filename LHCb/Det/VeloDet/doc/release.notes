@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.98 2006-03-02 14:21:29 mtobin Exp $
+! $Id: release.notes,v 1.99 2006-03-08 12:32:23 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r1 2006-03-02 ========================
 ! 2006-03-02 - Mark Tobin
  - Modified sensitiveVolumeID to work with misaligned sensors
  - Tidied up DeVelo::initialize method
@@ -12,7 +13,6 @@ package manager : Velo Group
 ! 2006-02-23 - David Hutchcroft
  - Added the trajectory as a return type for a channelID + offset
 
-!========================= VeloDet v10r1 2006-02-06 ========================
 ! 2006-02-06 - Kurt Rinnert
  - fixed class<->struct mismatch in friend declaration in
    DeVeloSensor::StripInfo and doxygen comment.
