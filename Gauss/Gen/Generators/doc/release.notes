@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.40 2006-03-08 08:53:24 robbep Exp $
+! $Id: release.notes,v 1.41 2006-03-08 16:31:45 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v4r1 2006-03-08 ===========================
 ! 2006-03-07 - Patrick Robbe
  - phocin: set up PHOTOS to work with more than 2 charged tracks
    and interferences
@@ -14,7 +15,6 @@
  - Signal: use end vertex as signal process
  - Generation: number HepMC::GenEvent with pile up number
 
-!=================== Generators v4r1 2006-02-20 ===========================
 ! 2006-02-17 - Patrick Robbe
  - HepMCUtils: add utility functions to help with HepMC structures.
  - ExternalGenerator: change decay heavy particle methods to be able
