@@ -1,4 +1,4 @@
-C $Id: phocin.F,v 1.4 2005-12-21 15:47:36 robbep Exp $
+C $Id: phocin.F,v 1.5 2006-03-08 08:51:13 robbep Exp $
       SUBROUTINE PHOCIN
 C.----------------------------------------------------------------------
 C.
@@ -75,7 +75,7 @@ C--   Interference weight now universal.
       INTERF=.TRUE.
 C--   (2)
 C--   Second order - double photon switch
-      ISEC=.TRUE.
+      ISEC=.FALSE.
 C--   Third/fourth order - triple (or quatric) photon switch, 
 C--                        see dipswitch ifour
       ITRE=.FALSE.
@@ -92,8 +92,9 @@ CCC   LHCb Change Enable exponentiation
       ENDIF
 C--   (3)
 C--   Emision in the hard process g g (q qbar) --> t tbar 
-C--                                 t          --> W b
-      IFTOP=.TRUE.
+C--                                t          --> W b
+CCCC  LHCb Change: set to false for the moment
+      IFTOP=.FALSE.
 C--
 C--   further initialization done automatically
 C--   see places with - VARIANT A - VARIANT B - all over
@@ -105,7 +106,9 @@ C --- modes of operation
 C--   best choice is if FINT=2**N where N+1 is maximal number 
 C--   of charged daughters
 C--   see report on overweihted events
-        FINT=2.0D0
+CCC        FINT=2.0D0
+CC LHCb Change for max number of charged tracks = 6
+        FINT = 64.0D0
       ELSE
         FINT=1.0D0
       ENDIF
@@ -122,8 +125,9 @@ C      ENDIF
 C----------END VARIANTS A B -----------------------	
 
 C--   Effects of initial state charge (in leptonic W decays)
-C--   
-      IFW=.TRUE.
+C--  
+CCC   LHCb Change: switch off for the moment 
+      IFW=.FALSE.
 C--   Initialise status counter for warning messages
       DO 20 I=1,PHOMES
    20 STATUS(I)=0
