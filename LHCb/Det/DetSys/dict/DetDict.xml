@@ -112,6 +112,7 @@
     <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const unsigned int,unsigned int>" />
     <class name="std::pair<const unsigned int,bool>" />
+    <class name="std::pair<const double,double>" />
     <class name="std::swap<const unsigned int,const unsigned int>" />
     <class name="std::swap<const std::basic_string<char>,const std::basic_string<char> >" />
 <!--  
