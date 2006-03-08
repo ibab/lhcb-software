@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-03-08 - Eduardo Rodrigues
+ - update to new VeloDet path
+ - TrajMeasurementProvider tool removed - no more needed
+
 ! 2006-03-03 - Eduardo Rodrigues
  - TrajectoryProvider:
    - all arguments const, as in interface

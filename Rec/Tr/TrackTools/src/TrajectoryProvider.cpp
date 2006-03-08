@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.4 2006-03-03 10:57:23 erodrigu Exp $
+// $Id: TrajectoryProvider.cpp,v 1.5 2006-03-08 14:48:11 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -39,7 +39,7 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
   declareInterface<ITrajectoryProvider>(this);
 
   declareProperty( "VeloGeometryPath",
-                   m_veloDetPath = "/dd/Structure/LHCb/Velo" );
+                   m_veloDetPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
   
   declareProperty( "TTGeometryPath",
                    m_ttDetPath = DeSTDetLocation::location("TT") );

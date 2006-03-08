@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.18 2006-02-28 19:12:14 jvantilb Exp $
+// $Id: MeasurementProvider.cpp,v 1.19 2006-03-08 14:48:11 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -38,7 +38,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
                    m_stPositionToolName = "STOfflinePosition" );
 
   declareProperty( "VeloGeometryPath",
-                   m_veloDetPath = "/dd/Structure/LHCb/Velo" );
+                   m_veloDetPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
 
   declareProperty( "TTGeometryPath",
                    m_ttDetPath = DeSTDetLocation::location("TT") );
