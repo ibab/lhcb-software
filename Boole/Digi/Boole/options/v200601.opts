@@ -52,7 +52,7 @@ SpilloverSelector.Input = {
 //---------------------------------------------------------------------------
 EventSelector.Input = {
   //   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.100ev.all.sim' TYP='POOL_ROOT' OPT='READ'" 
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.100ev.rich.sim' TYP='POOL_ROOT' OPT='READ'" 
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.10ev.MCHit.sim' TYP='POOL_ROOT' OPT='READ'" 
 };  // 500 events B->J/Psi(mumu)Ks with Gauss v20r0
 
 //---------------------------------------------------------------------------

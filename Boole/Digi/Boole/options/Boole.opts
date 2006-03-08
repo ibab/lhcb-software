@@ -47,6 +47,7 @@ Relations.DetectorList = {
                          , "TT"
                          , "IT"
                          , "OT"
+                         , "Tr"
                          , "RICH"
                          , "CALO"
                          , "MUON"
@@ -147,6 +148,7 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "VeloAssociators" };
+RelationsVeloSeq.Members += { "VeloDigit2MCHitLinker" };
 //RelationsVeloSeq.Members += { "VeloTruthFromCluster" }; - missing code
 
 ApplicationMgr.DLLs += { "STAssociators" };
@@ -166,6 +168,8 @@ RelationsOTSeq.Members += { "OTTimeCreator" };
 RelationsOTSeq.Members += { "OTTime2MCDepositLinker/OTTime2MCDeposit" };
 RelationsOTSeq.Members += { "OTTime2MCHitLinker" };
 RelationsOTSeq.Members += { "OTTime2MCParticleLinker" };
+
+RelationsTrSeq.Members += { "BuildMCTrackInfo" };
 
 ApplicationMgr.DLLs += { "RichMCAssociators" };
 #include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"

@@ -33,7 +33,6 @@ MoniL0Seq.Members += { "L0Monitor" };
 MoniVELOSeq.Members += {
                          "VeloSimMoni",
                          "VeloDigiMoni",
-                         "InternalVeloCluster2MCHitLinker",
                          "VeloClusterMoni"
                         };
 

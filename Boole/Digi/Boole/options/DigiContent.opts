@@ -47,10 +47,10 @@ DigiWriter.ItemList =
 , "/Event/Link/Raw/OT/Times#1"
 , "/Event/Link/Raw/Ecal/Digits#1"
 , "/Event/Link/Raw/Muon/Digits#1"
-  //, "/Event/MC/MCTrackInfo#1" - needs Velo Links
+, "/Event/MC/TrackInfo#1" // Incomplete, needs Link/Raw/Velo/Clusters
 
   // Links to MCHits
-  //, "/Event/Link/Raw/Velo/Clusters2MCHits#1"
+, "/Event/Link/Raw/Velo/Digits2MCHits#1"
 , "/Event/Link/Raw/TT/Clusters2MCHits#1"
 , "/Event/Link/Raw/IT/Clusters2MCHits#1"
 , "/Event/Link/Raw/OT/Times2MCHits#1"
