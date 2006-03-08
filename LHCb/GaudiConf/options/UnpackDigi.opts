@@ -1,0 +1,7 @@
+// Job options to set up DataOnDemandSvc for unpacking Digi objects
+ApplicationMgr.DLLs += { "SimComponents" };
+DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/MC/Particles'   TYPE='UnpackMCParticle'"
+, "DATA='/Event/MC/Vertices'    TYPE='UnpackMCVertex'"
+};

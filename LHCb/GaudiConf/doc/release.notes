@@ -1,7 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r3 2006-02-22 ========================
+!======================== GaudiConf v9r3 2006-03-08 ========================
+! 2006-03-08 - Marco Cattaneo
+ - Add UnpackDigi.opts to decode on demand packed Digi objects
+
 ! 2006-02-22 - Marco Cattaneo
  - Add DecodeRawEvent.opts to decode on demand the RawEvent banks
 
