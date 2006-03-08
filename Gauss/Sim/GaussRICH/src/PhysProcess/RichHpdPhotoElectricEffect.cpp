@@ -236,8 +236,8 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     G4double PsfRandomAzimuth = twopi*G4UniformRand();
     G4double PsfRandomRad= G4RandGauss::shoot(0.0,PSFsigma);
-    G4double PsfX= fabs(0.5*PsfRandomRad)*cos( PsfRandomAzimuth);
-    G4double PsfY= fabs(0.5*PsfRandomRad)*sin( PsfRandomAzimuth);
+    G4double PsfX= fabs(PsfRandomRad)*cos( PsfRandomAzimuth);
+    G4double PsfY= fabs(PsfRandomRad)*sin( PsfRandomAzimuth);
     //  G4cout<<" Photoelec: Current psfSigma psfrad psfazimuth psfX psfY "<<PSFsigma
     // 	  <<"  "<< PsfRandomRad <<"  "<<PsfRandomAzimuth <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
 
