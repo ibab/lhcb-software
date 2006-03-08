@@ -1,4 +1,4 @@
-C $Id: LHAPDFUtils.F,v 1.3 2006-02-07 21:46:12 robbep Exp $
+C $Id: LHAPDFUtils.F,v 1.4 2006-03-08 08:50:27 robbep Exp $
       SUBROUTINE GETLHAPARM( INDEX , VALUE ) 
       IMPLICIT NONE 
       
@@ -62,6 +62,8 @@ C $Id: LHAPDFUtils.F,v 1.3 2006-02-07 21:46:12 robbep Exp $
 *
       COMMON /GAUSSLHAPDF/ IPDFUNIT
       INTEGER IPDFUNIT
+*
+      EXTERNAL LHAPDFSET
 *
       IF ( INDEX .EQ. 0 ) THEN
         IPDFUNIT = 74
