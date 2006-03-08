@@ -1,4 +1,4 @@
-C $Id: pythiaoutput_utils.F,v 1.3 2005-11-04 10:55:41 robbep Exp $
+C $Id: pythiaoutput_utils.F,v 1.4 2006-03-08 08:51:54 robbep Exp $
       SUBROUTINE pythiaoutput_init( IVAL )
 C-----------------------------------------------------------------------
 C  Purpose   : Initialize Pythia output (suppress output)
@@ -25,10 +25,17 @@ C-----------------------------------------------------------------------
         MSTU( 25 ) = 1
         MSTP( 122 ) = 1
       ELSEIF ( IVAL.EQ.1 ) THEN
-        MSTU( 12 ) = 12345
-        MSTU( 13 ) = 0
-        MSTU( 25 ) = 0
-        MSTP( 122 ) = 0
+        IF (MSTU(11).NE.49) THEN
+          MSTU( 12 ) = 12345
+          MSTU( 13 ) = 0
+          MSTU( 25 ) = 0
+          MSTP( 122 ) = 0
+        ELSE
+          MSTU( 12 ) = 1 
+          MSTU( 13 ) = 1
+          MSTU( 25 ) = 1
+          MSTP( 122 ) = 1
+        ENDIF
       ENDIF
       
   999 RETURN
