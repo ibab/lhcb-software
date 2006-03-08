@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.78 2006-02-17 09:52:08 cattanem Exp $
+! $Id: release.notes,v 1.79 2006-03-08 13:43:11 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-!======================= PhysEvent v9r0 2006-02-16 ==========================
+!======================= PhysEvent v9r0 2006-03-08 ==========================
+! 2006-03-08 - Marco Cattaneo
+ - Move ProtoParticle.xml to RecEvent
+
 ! 2006-02-16 - P. Koppenburg
  - xml/Vertex.xml
  - xml/PrimVertex.xml
