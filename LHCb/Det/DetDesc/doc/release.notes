@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.252 2006-02-10 08:19:21 cattanem Exp $ 
+! $Id: release.notes,v 1.253 2006-03-08 11:05:25 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-03-08 Juan Palacios
+ - Fix some memory leaks in AlignmentCondition private methods.
 
 !======================== DetDesc v16r2 2006-02-08 ========================
 ! 2006-02-08 M Needham

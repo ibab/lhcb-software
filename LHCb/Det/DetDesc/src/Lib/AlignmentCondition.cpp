@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.10 2006-02-01 19:39:10 marcocle Exp $
+// $Id: AlignmentCondition.cpp,v 1.11 2006-03-08 11:05:25 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -57,23 +57,22 @@ StatusCode AlignmentCondition::initialize() {
 }
 
 //=============================================================================
-const Gaudi::Transform3D* AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
+const Gaudi::Transform3D AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
 {
   Gaudi::TranslationXYZ trans = (coefficients.size()==3) ? 
     Gaudi::TranslationXYZ(coefficients[0], coefficients[1], coefficients[2]) :
     Gaudi::TranslationXYZ();
-  
-    return new Gaudi::Transform3D( trans );
+  return Gaudi::Transform3D( trans );
 }
 //=============================================================================
-const Gaudi::Transform3D* AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
+const Gaudi::Transform3D AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
 {
-  if (coefficients.size()!=3) return new Gaudi::Transform3D();
+  if (coefficients.size()!=3) return Gaudi::Transform3D();
 
   Gaudi::Rotation3D rot = Gaudi::RotationX(coefficients[0])*
     Gaudi::RotationY(coefficients[1]) *
     Gaudi::RotationZ(coefficients[2]);
-  return new Gaudi::Transform3D(rot);
+  return Gaudi::Transform3D(rot);
   
 }
 //=============================================================================
@@ -92,11 +91,9 @@ StatusCode AlignmentCondition::makeMatrices()
   
   if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
 
-    m_matrixInv =  
-      ( *XYZTranslation( translations ) ) *
-      ( ( *XYZTranslation( pivot )).Inverse() *
-      ( ( *XYZRotation( rotations )       ) *
-        ( *XYZTranslation( pivot )        ) ));
+    m_matrixInv = XYZTranslation( translations ) *
+      (   XYZTranslation( pivot ).Inverse() *
+          ( XYZRotation( rotations ) * XYZTranslation( pivot ) )  );
 
     m_matrix = m_matrixInv.Inverse();
     return StatusCode::SUCCESS;
