@@ -10,9 +10,10 @@
  */
 
 Generator.Members += { "Generation" };
-//Generator.Members += { "GenMonitorAlg" };
 ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY-DC06.DEC";
 
 // To generate with fixed luminosity of 5.e32 cm-2 s-1
 //#include "$GAUSSOPTS/FixedLumi-5.opts"
 
+// To generate single interactions
+//#include "$GAUSSOPTS/FixedNInteractions.opts"
