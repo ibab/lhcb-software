@@ -1,6 +1,6 @@
-// $Id: Functions.h,v 1.5 2006-03-07 16:28:49 ibelyaev Exp $
+// $Id: Functions.h,v 1.6 2006-03-08 14:14:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -630,12 +630,12 @@ namespace LoKi
       m_fun = newf ;
       return *this ;
     };  
-  protected:
-    /// accessor to the function 
-    inline const function&   fun ()             const { return *m_fun ; }
+  public:
     /// evaluate the function
     inline       result_type fun ( argument p ) const 
     { return (*m_fun) ( p )  ; }
+    /// accessor to the function 
+    inline const function&   fun ()             const { return *m_fun ; }
   private:
     /// default constructor is private 
     FunctionFromFunction();
@@ -643,6 +643,64 @@ namespace LoKi
     const function* m_fun        ;
   };
   
+  /** @struct PredicateFromFunctionAndValue
+   *  The helper structure to implement predicates 
+   *  from the function and 2 values 
+   *
+   *  It is used by LoKi for implementation of comparison 
+   *  operations between 2 functions
+   *  @see LoKi::Less 
+   *  @see LoKi::Equal
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   2002-07-15
+   */
+  template <class TYPE>
+  struct PredicateFromFunctionAndValue 
+    : public Predicate<TYPE> 
+  {
+  public:
+    /// define all nesessary types 
+    typedef           LoKi::Predicate<TYPE>   _Predicate ;
+    typedef           LoKi::Function<TYPE>     _Function ;
+    typedef typename _Predicate::result_type result_type ;
+    typedef typename _Predicate::argument       argument ;
+    typedef typename _Function::result_type   value_type ;
+  public:
+    /// constructor 
+    PredicateFromFunctionAndValue
+    ( const _Function&  fun ,  
+      const value_type& val )
+      : _Predicate() 
+      , m_fun   ( fun ) 
+      , m_value ( val ) 
+    {};
+    /// deep copy  
+    PredicateFromFunctionAndValue
+    ( const PredicateFromFunctionAndValue& right   )
+      : _Predicate( right ) 
+      , m_fun   ( right.m_fun   )
+      , m_value ( right.m_value )
+    {};
+    /// MANDATORY: virtual destructor 
+    virtual ~PredicateFromFunctionAndValue() {}
+  protected:
+    /// accessor to the function 
+    const _Function& fun   ()             const { return m_fun.fun (   ) ; }
+    /// evaluate the value of the function 
+    value_type       fun   ( argument a ) const { return m_fun.fun ( a ) ; }
+    /// get the value 
+    value_type       value ()             const { return m_value         ; }
+  private:
+    /// default constructor is disabled 
+    PredicateFromFunctionAndValue();
+    /// assignement is disabled
+    PredicateFromFunctionAndValue& operator=
+    ( const PredicateFromFunctionAndValue& );
+  private:
+    LoKi::FunctionFromFunction<TYPE> m_fun   ;
+    value_type                       m_value ;
+  } ;
+
   /** @struct And 
    *  helper function to implement logical AND of 2 predicates 
    *  
@@ -1627,8 +1685,62 @@ namespace LoKi
     const typename LoKi::Predicate<TYPE>::argument m_value ;
   };
   
-};
+  /** @class EqualToValue 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-04-07
+   */
+  template <class TYPE>
+  class EqualToValue 
+    : public PredicateFromFunctionAndValue<TYPE>
+  {
+  public:
+    typedef PredicateFromFunctionAndValue<TYPE> _Base ;
+    typedef typename _Base::_Function       _Function ;
+    typedef typename _Base::value_type     value_type ;
+    typedef typename _Base::result_type   result_type ;
+    typedef typename _Base::argument         argument ;
+  public:
+    /** constructor fro the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     */
+    EqualToValue 
+    ( const _Function&  fun , 
+      const value_type& val ) 
+      : PredicateFromFunctionAndValue<TYPE>( fun , val ) 
+    {};
+    /** constructor fro the function and the value 
+     *  @param val the reference value 
+     */
+    EqualToValue 
+    ( const value_type& val ,
+      const _Function&  fun )
+      : PredicateFromFunctionAndValue<TYPE>( fun , val ) 
+    {};
+    /// copy contructor 
+    EqualToValue 
+    ( const EqualToValue& right )
+      : PredicateFromFunctionAndValue<TYPE>( right )
+    {};
+    /// MANDATORY: virtual destructor 
+    virtual ~EqualToValue(){} ;
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  EqualToValue* clone() const { return new EqualToValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return value() == fun( a )  ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << fun() << "==" << value() << ")" ; }
+  private:
+    /// The default constructor is disabled 
+    EqualToValue();
+    /// The assignement operator is disabled 
+    EqualToValue& operator=( const  EqualToValue& ) ;
+  };
+  
 
+}; // end of namespace LoKi
 
 // ============================================================================
 // LoKi

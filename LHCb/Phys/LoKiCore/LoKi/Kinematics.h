@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.6 2006-03-07 16:28:49 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.7 2006-03-08 14:14:07 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/07 16:28:49  ibelyaev
+//  add LoKi/FuncCast.h file
+//
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -339,7 +342,7 @@ namespace LoKi
      *  with respect to the boost direction from 
      *  "M"'s rest frame 
      *  
-     *  @param D 4-momentum of the daughetr particle 
+     *  @param D 4-momentum of the daughter particle 
      *  @param M 4-momentum of mother particle 
      *  @return cosine of decay angle 
      *
