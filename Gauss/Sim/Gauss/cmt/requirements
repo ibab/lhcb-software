@@ -11,8 +11,8 @@ branches src doc options cmt job
 #-- Databases
 use XmlDDDB             v30r0   Det   -no_auto_imports
 use XmlConditions       v1r4    Det   -no_auto_imports
-use FieldMap            v4r6          -no_auto_imports
-use DecFiles            v11r3   Gen   -no_auto_imports
+use FieldMap            v4r7          -no_auto_imports
+use DecFiles            v11r4   Gen   -no_auto_imports
 use ParamFiles          v4r1          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
@@ -38,8 +38,8 @@ use GaussTools           v12r0 	 Sim
 use GaussAlgs		 v2r0    Sim
 use GaussKine            v1r0    Sim
 use GaussPhysics         v3r2    Sim
-use GaussTracker         v5r0    Sim
-use GaussRICH            v6r1    Sim
+use GaussTracker         v5r1    Sim
+use GaussRICH            v6r2    Sim
 use GaussCalo            v8r1    Sim
 
 #-- Optional visualisation and UI
