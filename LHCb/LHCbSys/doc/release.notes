@@ -5,6 +5,22 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v20r0>2006-03-10 LHCbSys v20r0</A></H1><PRE>
+This version uses Gaudi v18r2 and is the first release for commissioning of the 
+software for DC06. 
+
+It breaks all backward compatibility and introduces many new features, including
+a major redesign of event model classes following the review in Autumn 2006,
+changes for the 1MHz readout, changes to the geometry to introduce detector
+tilts and capability for misalignement, and changes to change replace CLHEP with
+MathCore.
+
+All packages have been touched. Please look at release notes of the individual
+packages for details.
+
+Many packages have been removed, either because they are obsolete, or because of
+repackaging.
+
 </PRE><H1><A NAME=v19r4>2005-12-20 LHCbSys v19r4</A></H1><PRE>
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
 
