@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.35 2006-02-27 19:32:51 jvantilb Exp $
+// $Id: DeVelo.h,v 1.36 2006-03-09 15:03:17 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -28,6 +28,10 @@ static const CLID& CLID_DeVelo = 8100;
 // forward declaration of LHCb::Trajectory
 namespace LHCb{
   class Trajectory;
+}
+
+namespace DeVeloLocation{
+  static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 }
 
 class DeVelo: public DetectorElement {

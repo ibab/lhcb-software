@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.99 2006-03-08 12:32:23 cattanem Exp $
+! $Id: release.notes,v 1.100 2006-03-09 15:03:17 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v10r1 2006-03-02 ========================
+! 2006-09-02 - Mark Tobin
+ - Added namespace DeVeloLocation for xml path
+
 ! 2006-03-02 - Mark Tobin
  - Modified sensitiveVolumeID to work with misaligned sensors
  - Tidied up DeVelo::initialize method
