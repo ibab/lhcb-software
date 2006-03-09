@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-03-09 - Edwin Bos
+ - Moved to LHCb v20r0
+
 !======================= TrackCheckers v1r1 2006-01-27 =======================
 ! 2005-12-14 - Eduardo Rodrigues
  - propagation of changes in Measurement base class

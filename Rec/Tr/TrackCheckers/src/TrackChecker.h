@@ -1,3 +1,4 @@
+// $Id: TrackChecker.h,v 1.2 2006-03-09 14:40:13 ebos Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -6,24 +7,22 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// from Velo/VeloAssociators/VeloAssociators
-#include "VeloAssociators/VeloCluster2MCParticleAsct.h"
-
-// from  IT/ITAssociators/ITAssociators
-#include "ITAssociators/ITCluster2MCParticleAsct.h"
-
-// from OT/OTAssociators/OTAssociators
-#include "OTAssociators/OTTime2MCParticleAsct.h"
+// from Tr/TrackMCInterfaces
+#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
+#include "TrackMCInterfaces/IIdealStateCreator.h"
 
 // from Tr/TrackInterfaces
-#include "TrackInterfaces/ITrackCriteriaSelector.h"
-#include "TrackInterfaces/IIdealStateCreator.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 // Forward declarations
 
-class Track;
-class MCParticle;
+namespace LHCb
+{
+  class Track;
+  class MCParticle;
+}
+
+using namespace LHCb;
 
 /** @class TrackChecker TrackChecker.h
  *  
@@ -74,16 +73,6 @@ private:
   // Helper function
   StatusCode resolutionHistos( Track* track, MCParticle* mcPart );
   StatusCode purityHistos( Track* track, MCParticle* mcPart );
-
-  // Typedefs for readability
-  typedef ITCluster2MCParticleAsct::IAsct   ITClusAsct;
-  typedef OTTime2MCParticleAsct::IAsct      OTTimAsct;
-  typedef VeloCluster2MCParticleAsct::IAsct VeloClusAsct;
-  
-  // Member pointers to retrieved associator tools
-  VeloClusAsct* m_veloClusToMCP;
-  ITClusAsct*   m_itClusToMCP;
-  OTTimAsct*    m_otTimToMCP;
 
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector

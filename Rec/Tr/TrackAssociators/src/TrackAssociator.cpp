@@ -1,3 +1,4 @@
+// $Id: TrackAssociator.cpp,v 1.7 2006-03-09 14:37:18 ebos Exp $
 // Include files
 
 // local
@@ -8,6 +9,7 @@
 
 // from Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
+#include "Linker/LinkedTo.h"
 
 // from Event/TrackEvent
 #include "Event/Track.h"
@@ -18,8 +20,8 @@
 // from Event/VeloEvent
 #include "Event/VeloCluster.h"
 
-// from Event/ITEvent
-#include "Event/ITCluster.h"
+// from Event/STEvent
+#include "Event/STCluster.h"
 
 // from Event/OTEvent
 #include "Event/OTTime.h"
@@ -33,6 +35,8 @@
 // from Event/Event
 #include "Event/MCVertex.h"
 
+using namespace LHCb;
+
 // Declaration of the Algorithm Factory
 static const  AlgFactory<TrackAssociator>          s_factory ;
 const        IAlgFactory& TrackAssociatorFactory = s_factory ;
@@ -44,17 +48,14 @@ TrackAssociator::TrackAssociator( const std::string& name,
                                   ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm( name, pSvcLocator ),
   m_fractionOK(0.),
-  m_veloClusToMCP(0),
-  m_itClusToMCP(0),
-  m_otTimToMCP(0),
   m_nTotVelo(0.),
   m_nTotTT1(0.),
   m_nTotSeed(0.)
 {
   declareProperty( "TracksInContainer" ,
-                   m_tracksInContainer = "/Event/Rec/Track/Best" );
+                   m_tracksInContainer = TrackLocation::Default );
   declareProperty( "LinkerOutTable"    ,
-                   m_linkerOutTable = "/Event/Link/Rec/Track/Best" );
+                   m_linkerOutTable = "Link/" + TrackLocation::Default );
   declareProperty( "FractionOK"        ,
                    m_fractionOK = 0.70 );
 }
@@ -73,15 +74,8 @@ StatusCode TrackAssociator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) { return sc; }
 
-  // Retrieve Associator tools of subdetectors
-  m_veloClusToMCP = tool<VeloClusAsct> ( "VeloCluster2MCParticleAsct" );
-
-  m_itClusToMCP = tool<ITClusAsct> ( "ITCluster2MCParticleAsct" );
-
-  m_otTimToMCP = tool<OTTimAsct> ( "OTTime2MCParticleAsct" );
- 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -97,36 +91,36 @@ StatusCode TrackAssociator::execute() {
   // Create the Linker table from Track to MCParticle
   // Linker table is stored in "Link/" + m_linkerOutTable
   // Sorted by decreasing weight, so first retrieved has highest weight
-  LinkerWithKey< MCParticle, Track > myLinker ( evtSvc(), msgSvc(),
-                                                m_linkerOutTable );
+  LinkerWithKey<MCParticle,Track> myLinker( evtSvc(),msgSvc(),m_linkerOutTable );
 
-  // Get the association VeloCluster => MCParticle
-  VeloClusAsct::DirectType* dirTable = m_veloClusToMCP->direct();
-  if( 0 == dirTable ) {
-    error() << "Failure to retrieve the Velo Cluster Table" << endreq;
+  // Get the linker table VeloCluster => MCParticle
+  LinkedTo<MCParticle,VeloCluster> veloLink(evtSvc(),msgSvc(),
+                                            LHCb::VeloClusterLocation::Default);
+  if( veloLink.notFound() ) {
+    error() << "Unable to retrieve VeloCluster to MCParticle linker table." << endreq;
     return StatusCode::FAILURE;
   }
   
-  // Get the association ITCluster => MCParticle
-  ITClusAsct::DirectType* itTable = m_itClusToMCP->direct();
-  if( 0 == itTable ) {
-    error() << "Failure to retrieve the IT Cluster Table" << endreq;
+  // Get the linker table TTCluster => MCParticle
+  LinkedTo<MCParticle,STCluster> ttLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::TTClusters);
+  if( ttLink.notFound() ) {
+    error() << "Unable to retrieve TTCluster to MCParticle linker table." << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // Get the association OTCluster => MCParticle
-  OTTimAsct::DirectType* otTable = m_otTimToMCP->direct();
-  if( 0 == otTable ) {
-    error() << "Failure to retrieve the OT Cluster Table" << endreq;
+
+  // Get the linker table ITCluster => MCParticle
+  LinkedTo<MCParticle,STCluster> itLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::ITClusters);
+  if( itLink.notFound() ) {
+    error() << "Unable to retrieve ITCluster to MCParticle linker table." << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // Declare usefull entities
-  const VeloCluster* clu;
-  VeloClusAsct::DirectType::iterator itv;
-  MCParticle* part;
-  ITClusAsct::DirectType::iterator itr;
-  OTTimAsct::DirectType::iterator otr;
+
+  // Get the linker table OTCluster => MCParticle
+  LinkedTo<MCParticle,OTTime> otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
+  if( veloLink.notFound() ) {
+    error() << "Unable to retrieve OTCluster to MCParticle linker table." << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // Loop over the Tracks
   Tracks::const_iterator it;
@@ -139,11 +133,14 @@ StatusCode TrackAssociator::execute() {
     m_nVelo.clear();
     m_nTT1.clear();
     m_nSeed.clear();
+
+    const VeloCluster* clu;
     
     // Loop over the Measurements of the Track
     std::vector<Measurement*>::const_iterator itm;
     for( itm = tr->measurements().begin();
          tr->measurements().end() != itm; ++itm ) {
+
       clu = 0;
       VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*> ( *itm );
       if( 0 != meas ) { clu = meas->cluster(); }
@@ -154,69 +151,86 @@ StatusCode TrackAssociator::execute() {
       if( 0 != clu ) {
         // Count number of Velo hits
         m_nTotVelo += 1.;
-        // Loop over the MCparticles associated to the VeloMeasurement
-        VeloClusAsct::DirectType::Range range = dirTable->relations ( clu );
-        for( itv = range.begin(); range.end() != itv; ++itv ) {
-          part = itv->to();
-          if( 0 == part ) {
-            error() << "Null pointer associated to a Velo cluster" << endreq;
+        // Loop over the MCparticles linked to the VeloMeasurement
+        MCParticle* mcParticle = veloLink.first( clu );
+        if( 0 == mcParticle ) {
+          error() << "No MCParticle linked with this VeloCluster." << endreq;
+        }
+        while( 0 != mcParticle ) {
+          if( mcParts != mcParticle->parent() ) {
+            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
           }
-          else if( mcParts != part->parent() ) {
-            debug() << " (other BX " <<  part->key() << ")" << endreq;
-          }
-          else { countMCPart( part, 1., 0., 0. ); }
+          else { countMCPart( mcParticle, 1., 0., 0. ); }
+          mcParticle = veloLink.next();
         }
         // In case it was a Velo Measurement, go to the end of the for-loop
         continue;
       }
+
       else {
         bool inTT1 = (*itm) -> lhcbID().isTT();
         // Note that both IT and TT hits are STMeasurements!
         STMeasurement* itc = dynamic_cast<STMeasurement*> ( *itm );
         if( 0 != itc ) {
-          ITCluster* itCl = itc->cluster();
+          const STCluster* itCl = itc->cluster();
           // Count number of TT hits
-          if( inTT1 ) { m_nTotTT1 += 1.; }
+          if( inTT1 ) {
+            m_nTotTT1 += 1.;
+            // Loop over the MCparticles associated to the TTMeasurement
+            MCParticle* mcParticle = ttLink.first( itCl );
+            if( 0 == mcParticle ) {
+              error() << "No MCParticle linked with this TTCluster." << endreq;
+            }
+            while( 0 != mcParticle ) {
+              if( mcParts != mcParticle->parent() ) {
+                debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+              }
+              else { countMCPart( mcParticle, 0., 1., 0. ); }
+              mcParticle = ttLink.next();
+            }
+          }
           // Count number of IT+OT hits
-          else { m_nTotSeed += 1.; }
-          // Loop over the MCparticles associated to the STMeasurement
-          ITClusAsct::DirectType::Range itRange = itTable->relations( itCl );
-          for( itr = itRange.begin(); itRange.end() != itr; ++itr ) {
-            part = itr->to();
-            if( 0 == part ) {
-              error() << "Null pointer associated to an IT cluster" << endreq;
+          else {
+            m_nTotSeed += 1.;
+            // Loop over the MCparticles associated to the STMeasurement
+            MCParticle* mcParticle = itLink.first( itCl );
+            if( 0 == mcParticle ) {
+              error() << "No MCParticle linked with this ITCluster." << endreq;
             }
-            else if( mcParts != part->parent() ) {
-              debug() << " (other BX " <<  part->key() << ")" << endreq;
-            }
-            else {
-              if( inTT1 ) { countMCPart( part, 0., 1., 0. ); }
-              else { countMCPart( part, 0., 0., 1. ); }
+            while( 0 != mcParticle ) {
+              if( mcParts != mcParticle->parent() ) {
+                debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+              }
+              else { countMCPart( mcParticle, 0., 0., 1. ); }
+              mcParticle = itLink.next();
             }
           }
           // In case it was a TT/IT Measurement, go to the end of the for-loop
           continue;
         }
+        
+
         OTMeasurement* otc = dynamic_cast<OTMeasurement*>(*itm);
         if( 0 != otc ) {
-          OTTime* otTim = otc->time();
+          const OTTime* otTim = otc->time();
           // Count number of IT+OT hits
           m_nTotSeed += 1.;
-          // Loop over the MCparticles associated to the OTMeasurement
-          OTTimAsct::DirectType::Range otRange = otTable->relations( otTim );
-          for( otr = otRange.begin(); otRange.end() != otr; ++otr ) {
-            part = otr->to();
-            if( 0 == part ) {
-              error() << "Null pointer associated to an OT cluster" << endreq;
+          // Loop over the MCparticles associated to the STMeasurement
+          MCParticle* mcParticle = otLink.first( otTim );
+          if( 0 == mcParticle ) {
+            error() << "No MCParticle linked with this OTTime." << endreq;
+          }
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            else if( mcParts != part->parent() ) {
-              debug() << " (other BX " <<  part->key() << ")" << endreq;
-            }
-            else { countMCPart( part, 0., 0., 1. ); }
+            else { countMCPart( mcParticle, 0., 0., 1. ); }
+            mcParticle = otLink.next();
           }
         }
-      }
-    }
+      } // end else
+
+    } // end for
 
     //== For ST match, count also parents hits if in VELO !
     // If the Track has total # Velo hits > 2 AND total # IT+OT hits > 2
@@ -292,9 +306,7 @@ StatusCode TrackAssociator::execute() {
       if( 2 < m_nTotVelo ) {
         veloOK = false;
         ratio = m_nVelo[jj] / m_nTotVelo;
-        if( m_fractionOK <= ratio ) {
-          veloOK = true;
-        }
+        if( m_fractionOK <= ratio ) { veloOK = true; }
       }
       bool seedOK = true;
       if( 2 < m_nTotSeed ) {
@@ -320,7 +332,7 @@ StatusCode TrackAssociator::execute() {
   } // End loop over Tracks
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -329,8 +341,6 @@ StatusCode TrackAssociator::finalize() {
 
   return GaudiAlgorithm::finalize();
 }
-
-//=============================================================================
 
 //=============================================================================
 // Adjust the counters for this MCParticle, create one if needed

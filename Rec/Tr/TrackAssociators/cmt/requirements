@@ -4,19 +4,19 @@
 #
 #============================================================================
 package           TrackAssociators
-version           v1r5
+version           v2r0
 
 #============================================================================
 branches          cmt doc src
 include_path none
 
 #============================================================================
-use     LHCbKernel      v5r*    Kernel  # added temporarily
-
-use	VeloAssociators	v*	Velo
-use	ITAssociators	v*	IT
-use	OTAssociators	v*	OT
-use	TrackFitEvent	v1r*    Tr
+use	GaudiAlg	v*
+use     LHCbKernel      v*    	Kernel
+use	LinkerEvent	v*	Event
+use	MCEvent		v*	Event
+use	DigiEvent	v*	Event
+use	TrackFitEvent	v*    	Tr
 
 #============================================================================
 # Component library building rule

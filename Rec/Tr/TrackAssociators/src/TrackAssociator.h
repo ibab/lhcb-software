@@ -1,3 +1,4 @@
+// $Id: TrackAssociator.h,v 1.6 2006-03-09 14:37:18 ebos Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -6,18 +7,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// from Velo/VeloAssociators/VeloAssociators
-#include "VeloAssociators/VeloCluster2MCParticleAsct.h"
-
-// from  IT/ITAssociators/ITAssociators
-#include "ITAssociators/ITCluster2MCParticleAsct.h"
-
-// from OT/OTAssociators/OTAssociators
-#include "OTAssociators/OTTime2MCParticleAsct.h"
-
 // Forward declarations
 
-class MCParticle;
+namespace LHCb{ class MCParticle; }
+
+using namespace LHCb;
 
 /** @class TrackAssociator TrackAssociator.h
  *  
@@ -62,20 +56,10 @@ private:
                     double incTT1,
                     double incSeed );
 
-  // Typedefs for readability
-  typedef ITCluster2MCParticleAsct::IAsct   ITClusAsct;
-  typedef OTTime2MCParticleAsct::IAsct      OTTimAsct;
-  typedef VeloCluster2MCParticleAsct::IAsct VeloClusAsct;
-  
   // jobOptions
   std::string m_tracksInContainer;  //< Name of the input Tracks container
   std::string m_linkerOutTable;     //< Name of the output Linker table
   double      m_fractionOK;         //< minimal good matching fraction
-
-  // Member pointers to retrieved associator tools
-  VeloClusAsct* m_veloClusToMCP;
-  ITClusAsct*   m_itClusToMCP;
-  OTTimAsct*    m_otTimToMCP;
 
   // Vector containing the MCParticles which
   // have a Measurement of any type associated to them
