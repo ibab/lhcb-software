@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r0 2006-03-08 ==========================
 ! 2006-03-08 - Olivier Callot
  - Fixed a typo in LinkedFrom, 'key' left while it should have been 'index'
 
@@ -14,7 +15,6 @@
    LinkedFrom, LinkedTo, AllLinks) with exception thrown in case the class ID
    of the declared template doesn't match the one stored in the object.
 
-!====================== LinkerEvent v2r0 2006-02-14 ==========================
 ! 2006-02-14 - Olivier Callot
  - Remove all SOURCECONTAINER and TARGETCONTAINER template as this is
    always a ObjectContainerBase. This simplifies the interface...
