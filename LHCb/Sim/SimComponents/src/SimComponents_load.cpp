@@ -1,4 +1,4 @@
-// $Id: SimComponents_load.cpp,v 1.2 2006-02-17 17:38:43 cattanem Exp $
+// $Id: SimComponents_load.cpp,v 1.3 2006-03-09 10:06:18 cattanem Exp $
 // Include files 
 
 
@@ -30,5 +30,6 @@ DECLARE_FACTORY_ENTRIES(SimComponents) {
   DECLARE_SERVICE( EvtTypeSvc );
 
   DECLARE_TOOL( MCDecayFinder );
+  DECLARE_TOOL( MCParticleSelector );
    
 }
