@@ -24,13 +24,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
 
-// temporary data needed to calculate signalToNoise
-static const double k_noiseConstant=500.;
-static const double k_noiseCapacitance=50.;
-static const double k_stripCapacitance=20.;
-static const double k_electronsFullScale=200000.;
-static const double k_ADCFullScale=256.;
-
 //=============================================================================
 // Standard creator, initializes variables
 //=============================================================================
@@ -46,6 +39,11 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
   declareProperty( "DefaultSignalToNoiseCut", m_defaultSignalToNoiseCut = 3.0F );
   declareProperty( "DefaultClusterSignalToNoiseCut", 
                    m_defaultClusterSignalToNoiseCut = 3.0F );
+  declareProperty( "NoiseConstant", m_noiseConstant=500. );
+  declareProperty( "NoiseCapacitance", m_noiseCapacitance=50. );
+  declareProperty( "StripCapacitance", m_stripCapacitance=20. );
+  declareProperty( "ElectronsFullScale", m_electronsFullScale=200000. );
+  declareProperty( "ADCFullScale", m_ADCFullScale=256. );
 }
 
 //=============================================================================
@@ -479,11 +477,11 @@ double VeloClusterMaker::signalToNoise(int adcValue)
   //
   debug()<< " ==> signalToNoise() " <<endmsg;
   //
-  double stripNoise=k_stripCapacitance*k_noiseCapacitance;
-  double totalNoise=stripNoise+k_noiseConstant;
+  double stripNoise=m_stripCapacitance*m_noiseCapacitance;
+  double totalNoise=stripNoise+m_noiseConstant;
   //
-  double noiseADC=totalNoise*(k_ADCFullScale/k_electronsFullScale);
-  if(noiseADC>(k_ADCFullScale-1)) noiseADC=k_ADCFullScale-1;
+  double noiseADC=totalNoise*(m_ADCFullScale/m_electronsFullScale);
+  if(noiseADC>(m_ADCFullScale-1)) noiseADC=m_ADCFullScale-1;
   //
   return (double(adcValue/noiseADC));
 }

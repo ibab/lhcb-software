@@ -98,6 +98,11 @@ private:
   int m_maxClusters; ///< maximum number of clusters to make per event
   float m_inclusionThreshold; ///< for adding strips to the cluster
   DeVelo* m_velo;
+  double m_noiseConstant;
+  double m_noiseCapacitance;
+  double m_stripCapacitance;
+  double m_electronsFullScale;
+  double m_ADCFullScale;
   
 };
 #endif // VeloClusterMaker_H

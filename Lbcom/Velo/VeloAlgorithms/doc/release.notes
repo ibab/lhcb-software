@@ -3,8 +3,10 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r0 2006-03-09 =====================
-! 2006-03-09 - Marco Cattaneo
+! 2006-03-09 - Marco Cattaneo/Tomasz Szumlak
  - move static definitions outside of class and into implementation file
+   redefine the static variable as algorithm's private members, the variabels
+   will be removed one the condition DB will be available
  
 ! 2006-02-22 - Tomasz Szumlak
  - minor changes to the tool interface a new overloaded position method
