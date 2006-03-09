@@ -4,6 +4,14 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v5r0 2006-03-09 ========================
+! 2006-02-03 - Marco Cattaneo
+ - Major new version for backards incompatible DC06 changes
+ - Obsolete packages removed: TrKernel, L0mConf, VeloKernel
+ - Packages added: LHCbDefinitions v1r3
+ - Packages modified: LHCbKernel v6r1, CaloKernel v4r0, RichKernel v6r0,
+     MuonKernel v5r0, ProcessorKernel v3r0, L0MuonKernel v5r0, Relations v3r0
+
 !======================== KernelSys v4r18 2005-12-19 =======================
 ! 2005-12-19 - Marco Cattaneo
  - Use LHCbKernel v5r16, ProcessorKernel v2r0, L0MuonKernel v4r0
