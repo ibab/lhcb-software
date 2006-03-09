@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 
 !==================== VeloAssociators v2r0 2006-03-08 ===================
+! 2006-03-09 - Tomasz Szumlak
+ - code optymization (move linker instantiation out the main loop)
+
 ! 2006-03-08 - Marco Cattaneo
  - Fix default location of new linker
 

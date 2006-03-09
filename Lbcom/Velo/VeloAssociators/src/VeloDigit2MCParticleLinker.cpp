@@ -1,4 +1,4 @@
-// $Id: VeloDigit2MCParticleLinker.cpp,v 1.2 2006-03-08 12:13:05 cattanem Exp $
+// $Id: VeloDigit2MCParticleLinker.cpp,v 1.3 2006-03-09 08:37:29 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -67,15 +67,14 @@ StatusCode VeloDigit2MCParticleLinker::execute() {
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   //
+  asctTool associator(evtSvc(), LHCb::VeloDigitLocation::Default+"2MCHits");
+  const Table* table=associator.direct();
+  if(!table){
+    error()<< "Empty table with associations" <<endmsg;
+    return ( StatusCode::FAILURE );
+  }
+  //
   for(digIt=digits->begin(); digIt!=digits->end(); digIt++){
-    debug()<< " ==> digit loop " <<endmsg;
-    //
-    asctTool associator(evtSvc(), LHCb::VeloDigitLocation::Default+"2MCHits");
-    const Table* table=associator.direct();
-    if(!table){
-      error()<< "Empty table with associations" <<endmsg;
-      return ( StatusCode::FAILURE );
-    }
     //
     Range range1=table->relations(*digIt);
     iterator asctIt;
