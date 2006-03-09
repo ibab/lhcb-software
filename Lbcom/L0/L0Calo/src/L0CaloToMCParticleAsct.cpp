@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.5 2006-01-26 16:52:13 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.6 2006-03-09 12:34:42 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode L0CaloToMCParticleAsct::execute() {
   
   LHCb::L0CaloCandidates* candidates = get<LHCb::L0CaloCandidates>( m_inputContainer );
 
-  LinkerWithKey< LHCb::MCParticle > myLink( eventSvc(), msgSvc(), m_inputContainer );
+  LinkerWithKey< LHCb::MCParticle, LHCb::L0CaloCandidate > myLink( eventSvc(), msgSvc(), m_inputContainer );
 
   LHCb::MCCaloDigits* mcEcalDigs = get<LHCb::MCCaloDigits>( LHCb::MCCaloDigitLocation::Ecal );
   LHCb::MCCaloDigits* mcHcalDigs = get<LHCb::MCCaloDigits>( LHCb::MCCaloDigitLocation::Hcal );

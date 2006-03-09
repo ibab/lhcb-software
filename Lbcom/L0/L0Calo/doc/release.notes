@@ -1,7 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
-!========================= L0Calo v9r0 2006-06-07 =========================
+!========================= L0Calo v9r0 2006-03-09 =========================
+! 2006-03-09 - Marco Cattaneo
+ - Adapt to new LinkerWithKey interface
+
 ! 2006-02-23 - Olivier Callot
  - Fix bug in decoding L0CaloCandidateFromRaw: Bank size is in bytes...
 
