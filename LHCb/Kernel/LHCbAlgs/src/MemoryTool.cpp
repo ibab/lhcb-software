@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.2 2006-03-09 12:24:33 cattanem Exp $
+// $Id: MemoryTool.cpp,v 1.3 2006-03-09 12:31:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_TOOL_FACTORY( MemoryTool );
 MemoryTool::MemoryTool( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent ), m_bins(0), m_counter(0)
+  : GaudiHistoTool ( type, name , parent ), m_counter(0), m_bins(0)
 {
   declareProperty( "HistoSize", m_bins = 500 );
   declareInterface<IGenericTool>(this);
