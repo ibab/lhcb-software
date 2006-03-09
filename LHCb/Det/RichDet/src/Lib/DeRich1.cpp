@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.22 2006-03-02 09:35:23 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.23 2006-03-09 11:37:35 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,15 +32,7 @@ const CLID& CLID_DERich1 = 12001;  // User defined
 DeRich1::DeRich1() { m_name = "DeRich1"; }
 
 // Standard Destructor
-DeRich1::~DeRich1() {
-
-  if ( !m_gasWinRefIndex )       delete m_gasWinRefIndex;
-  if ( !m_gasWinAbsLength )      delete m_gasWinAbsLength;
-  if ( !m_HPDQuantumEff )        delete m_HPDQuantumEff;
-  if ( !m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
-  if ( !m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
-
-}
+DeRich1::~DeRich1() {}
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich1::classID()
@@ -104,6 +96,8 @@ StatusCode DeRich1::initialize()
       if( (*matIter) ){
         if ( (*matIter)->type() == "RINDEX" ) {
           m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
+          msg << MSG::DEBUG << "Loaded gas window refIndex from: " << (*matIter)->name()  
+              << endmsg;
         }
         if ( (*matIter)->type() == "ABSLENGTH" ) {
           m_gasWinAbsLength = new Rich1DTabProperty( *matIter );

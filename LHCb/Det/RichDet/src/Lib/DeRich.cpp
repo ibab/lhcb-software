@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.17 2006-03-01 14:53:01 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.18 2006-03-09 11:37:35 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -43,7 +43,15 @@ DeRich::DeRich()
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich() {}
+DeRich::~DeRich() {
+
+  if ( m_gasWinRefIndex )       delete m_gasWinRefIndex;
+  if ( m_gasWinAbsLength )      delete m_gasWinAbsLength;
+  if ( m_HPDQuantumEff )        delete m_HPDQuantumEff;
+  if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
+  if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
+
+}
 
 
 //=========================================================================

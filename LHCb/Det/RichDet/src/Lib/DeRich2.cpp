@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.24 2006-03-02 09:35:23 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.25 2006-03-09 11:37:35 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,14 +32,7 @@ const CLID& CLID_DERich2 = 12002;  // User defined
 DeRich2::DeRich2() { m_name = "DeRich2"; }
 
 // Standard Destructor
-DeRich2::~DeRich2() {
-
-  if ( !m_gasWinRefIndex )       delete m_gasWinRefIndex;
-  if ( !m_gasWinAbsLength )      delete m_gasWinAbsLength;
-  if ( !m_HPDQuantumEff )        delete m_HPDQuantumEff;
-  if ( !m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
-  if ( !m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
-}
+DeRich2::~DeRich2() {}
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich2::classID()
