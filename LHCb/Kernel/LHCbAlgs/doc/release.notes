@@ -4,7 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
-!======================== LHCbAlgs v2r0 2005-12-14 =======================
+!======================== LHCbAlgs v2r0 2006-03-09 =======================
+! 2006-03-09 - Marco Cattaneo
+ - Fix uninitialized variable in MemoryTool
+ - Remove obsolete InitRndmTool, use methods in LbAppInit base class instead
+
 ! 2005-12-14 - Marco Cattaneo
  - Remove LbAppInit. Replaced by two tools: InitRndmTool, MemoryTool
 

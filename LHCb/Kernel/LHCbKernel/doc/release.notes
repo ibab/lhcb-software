@@ -2,7 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r2 2006-03-03 =========================
+!===================== LHCbKernel v6r2 2006-03-09 =========================
+! 2006-03-09 - Marco Cattaneo
+ - Remove obsolete IRndmTool.h interface
+
 ! 2006-03-03 - Julien Cogan
  - MuonTileID: proper initialization in the constructor from a string.
    Bits were left undefined after the reduction of the MuonTileID
