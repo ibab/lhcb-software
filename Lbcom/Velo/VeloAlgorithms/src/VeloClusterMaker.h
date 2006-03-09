@@ -79,12 +79,6 @@ class VeloClusterMaker : public GaudiAlgorithm {
   
 private:
 
-  // temporary data needed to calculate signalToNoise
-    static const double k_noiseConstant=500.;
-    static const double k_noiseCapacitance=50.;
-    static const double k_stripCapacitance=20.;
-    static const double k_electronsFullScale=200000.;
-    static const double k_ADCFullScale=256.;
   // data members
   enum {maxVeloSensors=100};
   std::string m_inputContainer;       ///< Name of input container

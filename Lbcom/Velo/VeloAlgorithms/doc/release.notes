@@ -2,7 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
-!===================== VeloAlgorithms v4r0 2006-02-15 =====================
+!===================== VeloAlgorithms v4r0 2006-03-09 =====================
+! 2006-03-09 - Marco Cattaneo
+ - move static definitions outside of class and into implementation file
+ 
 ! 2006-02-22 - Tomasz Szumlak
  - minor changes to the tool interface a new overloaded position method
 

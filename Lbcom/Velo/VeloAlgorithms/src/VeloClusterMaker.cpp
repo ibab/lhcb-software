@@ -22,8 +22,14 @@
 #include "VeloClusterMaker.h"
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<VeloClusterMaker>          Factory ;
-const        IAlgFactory& VeloClusterMakerFactory = Factory ; 
+DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
+
+// temporary data needed to calculate signalToNoise
+static const double k_noiseConstant=500.;
+static const double k_noiseCapacitance=50.;
+static const double k_stripCapacitance=20.;
+static const double k_electronsFullScale=200000.;
+static const double k_ADCFullScale=256.;
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -31,21 +37,15 @@ const        IAlgFactory& VeloClusterMakerFactory = Factory ;
 VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputContainer ( LHCb::VeloDigitLocation::Default ),
-    m_outputContainer ( LHCb::InternalVeloClusterLocation::Default ),
-    m_defaultSignalToNoiseCut (3.0F),
-    m_defaultClusterSignalToNoiseCut (3.0F),
-    m_maxClusters (10000),
-    m_inclusionThreshold (0.1F),
-    m_velo ( getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" ) )
+    m_velo( 0 )
 {
-  declareProperty( "InputData", m_inputContainer  );
-  declareProperty( "OutputData", m_outputContainer );
-  declareProperty( "MaxClusters", m_maxClusters );
-  declareProperty( "InclusionThreshold", m_inclusionThreshold );
-  declareProperty( "DefaultSignalToNoiseCut", m_defaultSignalToNoiseCut );
+  declareProperty( "InputData",  m_inputContainer  = LHCb::VeloDigitLocation::Default );
+  declareProperty( "OutputData", m_outputContainer = LHCb::InternalVeloClusterLocation::Default );
+  declareProperty( "MaxClusters", m_maxClusters = 10000 );
+  declareProperty( "InclusionThreshold", m_inclusionThreshold = 0.1F );
+  declareProperty( "DefaultSignalToNoiseCut", m_defaultSignalToNoiseCut = 3.0F );
   declareProperty( "DefaultClusterSignalToNoiseCut", 
-                   m_defaultClusterSignalToNoiseCut );
+                   m_defaultClusterSignalToNoiseCut = 3.0F );
 }
 
 //=============================================================================
@@ -60,6 +60,9 @@ StatusCode VeloClusterMaker::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialise" << endreq;
+  
+  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+
   // set default signal to noise cuts:
   for (int idet=0; idet<maxVeloSensors; idet++) {
     m_signalToNoiseCut[idet]=m_defaultSignalToNoiseCut;
@@ -476,7 +479,7 @@ double VeloClusterMaker::signalToNoise(int adcValue)
   //
   debug()<< " ==> signalToNoise() " <<endmsg;
   //
-  double stripNoise=VeloClusterMaker::k_stripCapacitance*k_noiseCapacitance;
+  double stripNoise=k_stripCapacitance*k_noiseCapacitance;
   double totalNoise=stripNoise+k_noiseConstant;
   //
   double noiseADC=totalNoise*(k_ADCFullScale/k_electronsFullScale);
