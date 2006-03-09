@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2006-02-03 11:13:13 ibelyaev Exp $
+# $Id: requirements,v 1.19 2006-03-09 14:36:37 cattanem Exp $
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -10,11 +10,12 @@ version           v3r0
 branches          cmt doc src options python
 
 # =============== dependencies ================================================
-use               DetDesc     v* Det
-use               DetDescSvc  v* Det
-use               GaudiAlg    v*   	
-use               Boost       v* LCG_Interfaces 
-use               GaudiPython v* 	
+use               DetDesc   v* Det
+use               DetDescSvc   v* Det
+use               GaudiAlg  v*   	
+use               Boost     v* LCG_Interfaces 
+use               SEAL      v* LCG_Interfaces 
+
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA
 

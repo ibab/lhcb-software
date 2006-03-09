@@ -32,8 +32,8 @@ VolumeCheckAlg.ShotsZX    = 10000;
 
 // Choose a master volume to scan.
 // N.B. Some volumes are very slow (Ecal, Hcal, Muon, Prs, IT)
-//VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo/lvVelo";
-VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo2Rich1/lvVelo2Rich1";
+VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo/lvVelo";
+//VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Velo2Rich1/lvVelo2Rich1";
 //VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Master";
 //VolumeCheckAlg.Volume = "/dd/Geometry/BeforeMagnetRegion/TT/lvTT";
 //VolumeCheckAlg.Volume = "/dd/Geometry/MagnetRegion/Magnet/Magnet";
