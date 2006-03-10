@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !===================== VeloSimulation v2r0 2006-03-07 =====================
+! 2006-03-10 - Tomasz Szumlak
+ - new DeVeloLocation namespace
+
 ! 2006-03-07 - Tomasz Szumlak
  - clean-up of the initialization list
 

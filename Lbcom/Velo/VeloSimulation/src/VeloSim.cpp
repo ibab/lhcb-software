@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.8 2006-03-06 13:44:04 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.9 2006-03-10 10:37:10 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -113,7 +113,7 @@ StatusCode VeloSim::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialise" << endmsg;
 
-  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   m_baseDiffuseSigma=sqrt(2*m_kT/m_biasVoltage);
   
   // random number initialisation

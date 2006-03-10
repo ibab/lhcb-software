@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.5 2006-02-23 12:58:16 cattanem Exp $
+// $Id: VeloSimMoni.cpp,v 1.6 2006-03-10 10:37:10 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +58,7 @@ StatusCode VeloSimMoni::initialize() {
   debug() << "==> Initialize" << endmsg;
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
 
-  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
 
   setHistoTopDir("Velo/");
   //  
