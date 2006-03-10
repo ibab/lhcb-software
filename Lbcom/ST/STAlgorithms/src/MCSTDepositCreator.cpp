@@ -253,7 +253,14 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const{
   // check if it goes through some Si ....
   if (aHit->pathLength() < m_minDistance ) return false; 
 
-    // check hit too steep - can't digitize yet....
+
+  // some hits have a zero p...
+  if (aHit->p() < 1e-3){
+    warning() << "Hit with zero p - not digitized" << endmsg;
+    return false;
+  }
+
+  // check hit too steep - can't digitize yet....
   if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCbMath::lowTolerance) { 
     warning() << "Too steep hit - not digitized" << endmsg;
     return false;

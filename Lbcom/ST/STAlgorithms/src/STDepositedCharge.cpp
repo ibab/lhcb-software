@@ -66,11 +66,12 @@ double STDepositedCharge::charge(const MCHit* aHit) const{
 
   // calculate - deposited charge Landau convolved with Gauss
   // see for example Bichsel '88 
-
   double pathLength = m_scalingFactor*aHit->pathLength();
-  double beta = GSL_MAX(0.2,aHit->mcParticle()->beta());
-  double betaGamma = beta*aHit->mcParticle()->gamma();
-
+  const MCParticle* aParticle = aHit->mcParticle();
+  double beta = aHit->p()/sqrt(gsl_pow_2(aParticle->virtualMass())+gsl_pow_2(aHit->p()));
+  beta = GSL_MAX(0.2,beta);
+  double betaGamma = betaGamma = aHit->p()/aParticle->virtualMass();
+ 
   // calculate scale of landau
   double scale = landauScale(beta,pathLength);  
 
