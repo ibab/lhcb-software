@@ -97,12 +97,17 @@ private:
   float  m_clusterSignalToNoiseCut[maxVeloSensors];
   int m_maxClusters; ///< maximum number of clusters to make per event
   float m_inclusionThreshold; ///< for adding strips to the cluster
+  double m_highThreshold; ///< Spillover Threshold 
   DeVelo* m_velo;
   double m_noiseConstant;
   double m_noiseCapacitance;
   double m_stripCapacitance;
   double m_electronsFullScale;
   double m_ADCFullScale;
+
+  // output control
+  bool m_isDebug;
+  bool m_isVerbose;
   
 };
 #endif // VeloClusterMaker_H

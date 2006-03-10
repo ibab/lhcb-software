@@ -2,6 +2,12 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-03-09 - David Hutchcroft
+ - Added code to set new hasHighThreshold bit in InternalVeloCluster, now
+   set at total ADC is >= 15 (to match old PatVelo cut), should be tuned.
+ - Added a test on debug level before printing out debug and verbose messages
+   in VeloClusterMaker
+
 !===================== VeloAlgorithms v4r0 2006-03-09 =====================
 ! 2006-03-10 - Tomasz Szumlak
  - using DeVeloLocation namespace to initialize the DeVelo
