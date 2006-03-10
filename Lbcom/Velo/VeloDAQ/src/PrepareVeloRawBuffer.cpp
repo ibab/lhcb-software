@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.14 2006-03-07 15:53:00 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.15 2006-03-10 15:55:04 dhcroft Exp $
 
 #include <vector>
 #include <algorithm>
@@ -208,7 +208,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       // currently we have no way of retrieving the high theshold
       // information since the VeloInternalCluster does not
       // provide an interface.
-      bool highThresh = false;
+      bool highThresh = clu->hasHighThreshold();
 
       double adcCount = clu->adcValue(0);
 

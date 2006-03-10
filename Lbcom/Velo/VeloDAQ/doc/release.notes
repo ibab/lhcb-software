@@ -1,6 +1,9 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-03-09 - David Hutchcroft
+ - Added retrieval of threshold from VeloLiteCluster to set bit
+
 ! 2006-03-07 - Kurt Rinnert
  - in the encoding, the high threshold bit is explicitely *not* handled
   anymore. This reflects the fact that this inforamtion can currently not
