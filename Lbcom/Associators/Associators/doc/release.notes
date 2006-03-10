@@ -2,6 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2006-03-10 - Eduardo Rodrigues
+ - added possibility to create in addition the linker table
+
 !====================== Associators v3r0 2006-02-21 ========================
 ! 2006-02-21 - Marco Cattaneo
  - Adapt output paths to agreed convention

@@ -12,9 +12,12 @@
 // LHCbKernel
 #include "Relations/Relation1D.h" 
 
-// Event
+// from Event/MCEvent
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
+
+// from Event/LinkerEvent
+#include "Linker/LinkerWithKey.h"
 
 // local
 #include "MCParticle2MCHitAlg.h"
@@ -32,8 +35,9 @@ MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
   m_outputData( "Relations/" + LHCb::MCParticleLocation::Default + "2MCHits" )
 {
   // Standard constructor, initializes variables
-  declareProperty( "MCHitPath", m_inputData );
-  declareProperty( "OutputData", m_outputData );
+  declareProperty( "MCHitPath",   m_inputData );
+  declareProperty( "OutputData",  m_outputData );
+  declareProperty( "MakeLinker" , m_makeLinker = false );
 }
 
 
@@ -51,7 +55,7 @@ StatusCode MCParticle2MCHitAlg::execute()
   // get MCHits
   MCHits* mcHits = get<MCHits>( m_inputData );
 
-  /// typedef
+  // typedef
   typedef Relation1D<MCParticle, MCHit> LocalDirectType;
 
   // create an association table
@@ -75,7 +79,22 @@ StatusCode MCParticle2MCHitAlg::execute()
   
   // Register the table on the TES
   put( table, outputData() );
-
+  
+  // Produce also the Linker table if requested
+  if ( m_makeLinker ) {
+    std::string linkPath = outputData();
+    if ( "/Event/Relations/" == linkPath.substr(0,17) )
+      linkPath = "Link/" + linkPath.substr(17);
+    else if ( "Relations/" == linkPath.substr(0,10) )
+      linkPath = "Link/" + linkPath.substr(10);
+    LinkerWithKey<MCParticle,MCHit> myLink( eventSvc(), msgSvc(), linkPath );
+    LocalDirectType::Range ran = table->relations();
+    for( LocalDirectType::Range::const_iterator it = ran.begin();
+         it != ran.end(); ++it ) {
+      myLink.link( it->to(), it->from(), 1. );
+    }
+    debug() << "Linker table stored at " << linkPath << endreq;
+  }
+  
   return StatusCode::SUCCESS ;
 };
-

@@ -10,6 +10,7 @@ branches src cmt doc options
 #============================================================================
 use MCEvent	v* Event
 use Relations   v* Kernel 
+use LinkerEvent v* Event
 
 include_path none
 
