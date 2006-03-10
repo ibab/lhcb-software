@@ -39,6 +39,12 @@
        desc="strip numbers and their signals"
       />
 
+      <attribute
+       name="hasHighThreshold"
+       type="bool"
+       desc="Is cluster over spillover threshold"
+      />
+
       <method 
        name="size" 
        type="long" 
