@@ -3,6 +3,9 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r0 2006-03-09 =====================
+! 2006-03-10 - Tomasz Szumlak
+ - using DeVeloLocation namespace to initialize the DeVelo
+
 ! 2006-03-09 - Marco Cattaneo/Tomasz Szumlak
  - move static definitions outside of class and into implementation file
    redefine the static variable as algorithm's private members, the variabels

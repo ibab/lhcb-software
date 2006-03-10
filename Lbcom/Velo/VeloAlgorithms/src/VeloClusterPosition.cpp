@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.3 2006-03-01 13:52:08 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.4 2006-03-10 10:27:38 szumlat Exp $
 // Include files
 
 // from Gaudi
@@ -34,7 +34,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
   : GaudiTool(type, name, parent),
-    m_veloDet ( getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo") ),
+    m_veloDet ( getDet<DeVelo>( DeVeloLocation::Default ) ),
     m_printInfo ( false ),
     m_useWeightedMean ( false ),
     m_useEtaFit ( false ),

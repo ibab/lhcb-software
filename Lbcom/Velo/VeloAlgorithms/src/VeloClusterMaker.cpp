@@ -59,7 +59,7 @@ StatusCode VeloClusterMaker::initialize() {
   //
   debug() << "==> Initialise" << endreq;
   
-  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   // set default signal to noise cuts:
   for (int idet=0; idet<maxVeloSensors; idet++) {

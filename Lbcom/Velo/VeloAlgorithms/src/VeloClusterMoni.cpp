@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.4 2006-03-06 10:50:32 cattanem Exp $
+// $Id: VeloClusterMoni.cpp,v 1.5 2006-03-10 10:27:38 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode VeloClusterMoni::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
   debug() << "==> Initialize" << endmsg;
-  m_veloDet = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   m_feTypeTool=tool<IMCVeloFEType>("MCVeloFEType/feTypeTool");
   setHistoTopDir("Velo/");
   //
