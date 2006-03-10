@@ -2,6 +2,13 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2006-03-10 - Kurt Rinnert
+ - byte count for full cluster decoding iterator now contains the 4
+  header bytes and is well defined under all circumstances.
+ - corrected documentation of posadc_iterator::bytesRead() method according
+  to the latest changes (now posadc_iterator::bytesRead() == RawBank::size()
+  should always be true after the whole bank was decoded to full clusters). 
+
 !=========================== SiDAQ v1r1 2006-02-24 =====================
 ! 2006-02-24 - Kurt Rinnert
  - fixed off-by-one error in calculation of byte count

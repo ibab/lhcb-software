@@ -1,4 +1,4 @@
-// $Id: SiRawBankDecoder.h,v 1.4 2006-02-24 14:46:27 krinnert Exp $
+// $Id: SiRawBankDecoder.h,v 1.5 2006-03-10 14:48:26 krinnert Exp $
 #ifndef SIRAWBANKDECODER_H 
 #define SIRAWBANKDECODER_H 1
 
@@ -247,11 +247,13 @@ public:
     
     posadc_iterator() : 
       m_pos(0),
+      m_nClu(0),
       m_nADC(0)
     { ; }
 
     posadc_iterator(const posadc_iterator& init) : 
       m_pos(init.m_pos),
+      m_nClu(init.m_nClu),
       m_nADC(init.m_nADC),
       m_ADC32(init.m_ADC32),
       m_offset(init.m_offset),
@@ -267,6 +269,7 @@ public:
     const posadc_iterator& operator=(const posadc_iterator& rhs) 
     { 
       m_pos         = rhs.m_pos; 
+      m_nClu        = rhs.m_nClu;
       m_nADC        = rhs.m_nADC;
       m_ADC32       = rhs.m_ADC32;
       m_offset      = rhs.m_offset; 
@@ -320,11 +323,12 @@ public:
     /** Number of bytes read   
      *  Returns the number of bytes (of 8 bit size) read by this 
      *  iterator so far.  The purpose is to compare this to 
-     *  RawBank::size()-8 after reading the whole bank as a
+     *  RawBank::size() after reading the whole bank as a
      *  consistency check.
      *  For a newly constructed iterator that did not yet
-     *  read anything the returned number guaranteed to be 0.
-     *  However, after reading the first cluster it always includes 
+     *  read anything the returned number is 4, corresponding to the number
+     *  of bytes in the bank header.
+     *  Aafter reading the first cluster it always includes 
      *  the number of padding bytes between the cluster position and 
      *  ADC part of the bank.  This means this method can return the 
      *  actual number of bytes read or this number plus two, depending 
@@ -374,6 +378,7 @@ public:
 
   private:
     mutable unsigned int m_pos;
+    mutable unsigned int m_nClu;
     mutable unsigned int m_nADC;
     mutable unsigned int m_ADC32;
     mutable unsigned int m_n32BitWords;
@@ -474,6 +479,7 @@ template<class CLUSTERWORD>
 inline SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::posadc_iterator
 (unsigned int pos, const SiRawBankDecoder<CLUSTERWORD>* decoder) : 
       m_pos(pos),
+      m_nClu(0),
       m_nADC(0),
       m_ADC32(0),
       m_offset(1+ decoder->m_nClusters/2 + decoder->m_nClusters%2),
@@ -528,6 +534,7 @@ void SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::doDecodeCommon() const
 
   // get cluster position
   m_cluster.first = CLUSTERWORD((m_decoder->m_bank[1+m_pos/2] >> ((m_pos%2) << 4)) & 0x0000FFFF);
+  ++m_nClu;
 
   return;
 }
@@ -547,6 +554,6 @@ SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::operator++() const
 template<class CLUSTERWORD>
 inline int SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::bytesRead() const
 {
-  return static_cast<int>( m_pos ? (m_pos+1)*2+m_nADC+(m_decoder->m_nClusters%2)*2 : 0 );
+  return static_cast<int>(4 + (m_nClu  + m_nClu%2)*2 + m_nADC);
 }
 #endif // SIRAWBANKDECODER_H
