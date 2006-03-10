@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.40 2006-02-20 12:23:18 cattanem Exp $
+! $Id: release.notes,v 1.41 2006-03-10 15:56:14 dhcroft Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
+
+! 2006-03-09 - David Hutchcroft
+ - Added hasHighThreshold bool to InternalVeloCluster
 
 !====================== VeloEvent v14r0 2006-02-20 =======================
 ! 2006-02-20 - Marco Cattaneo
