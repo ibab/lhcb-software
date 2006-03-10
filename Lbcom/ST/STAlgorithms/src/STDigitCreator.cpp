@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.9 2006-03-07 07:21:57 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.10 2006-03-10 20:26:09 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -85,12 +85,13 @@ StatusCode STDigitCreator::initialize() {
 
   m_fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
   m_numNoiseStrips = (int)(m_fracOfNoiseStrips*m_tracker->nStrip());
-  m_numNoiseStrips =0u;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode STDigitCreator::execute() {
+
+ 
 
   // Retrieve digit 
   MCSTDigits* mcDigitCont  = get<MCSTDigits>(m_inputLocation);
