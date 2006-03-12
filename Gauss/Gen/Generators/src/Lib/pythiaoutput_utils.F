@@ -1,4 +1,4 @@
-C $Id: pythiaoutput_utils.F,v 1.4 2006-03-08 08:51:54 robbep Exp $
+C $Id: pythiaoutput_utils.F,v 1.5 2006-03-12 19:04:20 robbep Exp $
       SUBROUTINE pythiaoutput_init( IVAL )
 C-----------------------------------------------------------------------
 C  Purpose   : Initialize Pythia output (suppress output)
@@ -18,6 +18,7 @@ C-----------------------------------------------------------------------
       INTEGER MSTP,MSTI
       DOUBLE PRECISION PARP,PARI
       COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
+      EXTERNAL PYDATA
 
       IF ( IVAL.EQ.0 ) THEN
         IF (MSTU(12).NE.12345) MSTU( 12 ) = 1
