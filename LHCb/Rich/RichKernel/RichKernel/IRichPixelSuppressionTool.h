@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichPixelSuppressionTool
  *
  *  CVS Log :-
- *  $Id: IRichPixelSuppressionTool.h,v 1.1 2006-03-02 15:22:11 jonrob Exp $
+ *  $Id: IRichPixelSuppressionTool.h,v 1.2 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -14,6 +14,9 @@
 
 #ifndef RICHKERNEL_IRichPixelSuppressionTool_H
 #define RICHKERNEL_IRichPixelSuppressionTool_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"

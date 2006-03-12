@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.5 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.6 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -14,6 +14,9 @@
 
 #ifndef RICHKERNEL_IRICHRAWBUFFERTOSMARTIDSTOOL_H
 #define RICHKERNEL_IRICHRAWBUFFERTOSMARTIDSTOOL_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"

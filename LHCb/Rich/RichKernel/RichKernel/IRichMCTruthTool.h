@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.18 2006-03-01 09:49:38 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.19 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -14,6 +14,9 @@
 
 #ifndef RICHKERNEL_IRICHMCTRUTHTOOL_H
 #define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Kernel
 #include "Kernel/RichParticleIDType.h"

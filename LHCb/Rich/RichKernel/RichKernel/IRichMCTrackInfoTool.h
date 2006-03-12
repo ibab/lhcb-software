@@ -4,7 +4,7 @@
  *  Header file for tool interface : IRichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.6 2005-12-17 14:14:37 jonrob Exp $
+ *  $Id: IRichMCTrackInfoTool.h,v 1.7 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -12,6 +12,9 @@
 
 #ifndef RICHKERNEL_IRICHMCTRACKINFOTOOL_H
 #define RICHKERNEL_IRICHMCTRACKINFOTOOL_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Event Model
 namespace LHCb

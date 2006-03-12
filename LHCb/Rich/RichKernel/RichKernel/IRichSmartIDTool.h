@@ -1,12 +1,15 @@
+
+//---------------------------------------------------------------------------------
 /** @file IRichSmartIDTool.h
  *
  *  Header file for tool interface : IRichSmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.13 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.14 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
+//---------------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_IRICHSMARTIDTOOL_H
 #define RICHKERNEL_IRICHSMARTIDTOOL_H 1
@@ -24,10 +27,10 @@
 // from MathCore
 #include "Kernel/Point3DTypes.h"
 
-
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
 
+//---------------------------------------------------------------------------------
 /** @class IRichSmartIDTool IRichSmartIDTool.h RichKernel/IRichSmartIDTool.h
  *
  *  Interface to tools providing manipulation of RichSmartID channel identifiers
@@ -35,6 +38,8 @@ static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
+//---------------------------------------------------------------------------------
+
 class IRichSmartIDTool : virtual public IAlgTool 
 {
 

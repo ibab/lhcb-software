@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.112 2006-03-07 15:58:36 cattanem Exp $
+! $Id: release.notes,v 1.113 2006-03-12 16:12:37 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+! 2006-03-12 - Chris Jones
+ - Add missing includes for IAlgTool in tool interfaces
+
 !======================= RichKernel v6r1 2006-03-07 =======================
+
 ! 2006-03-01 - Chris Jones
  - Remove classes Rich1DTabFunc and Rich1DTabProperty, which have been
    moved into RichDet to allow them to be used there without introducing a

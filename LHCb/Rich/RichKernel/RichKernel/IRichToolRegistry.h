@@ -5,7 +5,7 @@
  *  Header file for utility class : IRichToolRegistry
  *
  *  CVS Log :-
- *  $Id: IRichToolRegistry.h,v 1.5 2005-10-13 15:03:41 jonrob Exp $
+ *  $Id: IRichToolRegistry.h,v 1.6 2006-03-12 16:12:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHKERNEL_IRICHTOOLREGISTRY_H
 #define RICHKERNEL_IRICHTOOLREGISTRY_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichToolRegistry( "IRichToolRegistry" , 1 , 0 );
