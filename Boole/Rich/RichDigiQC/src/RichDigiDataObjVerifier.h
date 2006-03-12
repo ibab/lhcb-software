@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.9 2005-12-17 14:11:34 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.10 2006-03-12 12:09:26 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -7,27 +7,18 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
-#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
+#include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichHit.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichDetectorType.h"
 
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
 // Constants
 #include "Kernel/PhysicalConstants.h"
-
-// LHCb namespace
-using namespace LHCb;
 
 /** @class RichDigiDataObjVerifier RichDigiDataObjVerifier.h RichDigiQC/RichDigiDataObjVerifier.h
  *
@@ -37,7 +28,8 @@ using namespace LHCb;
  *  @date   2003-09-08
  */
 
-class RichDigiDataObjVerifier : public RichAlgBase {
+class RichDigiDataObjVerifier : public RichAlgBase 
+{
 
 public:
 
@@ -52,16 +44,19 @@ public:
 
 private: // methods
 
-  void printHitsAt( const std::string & location ) const;
+  /// Check the MCRichHits at the given location
+  void checkHitsAt( const std::string & location ) const;
+
+  /// Check the MCRichOpticalPhotons at the given location
+  void checkPhotsAt( const std::string & location ) const;
 
 private: // data
 
   // job options
-  bool m_bdDigits;        ///< Flag to turn on/off the printing of RichDigits
-  bool m_bdMcDigits;      ///< Flag to turn on/off the printing of MCRichDigits
-  bool m_bdMCDeposits;    ///< Flag to turn on/off the printing of MCRichDeposits
-  bool m_bdMCSumDeposits; ///< Flag to turn on/off the printing of MCRichSummedDeposits
-  bool m_bdMCHits;        ///< Flag to turn on/off the printing of MCRichHits
+  bool m_bdMcDigits;      ///< Flag to turn on/off the checking and printing of MCRichDigits
+  bool m_bdMCHits;        ///< Flag to turn on/off the checking and printing of MCRichHits
+  bool m_bdMCPhots;       ///< Flag to turn on/off the checking and printing of MCRichOpticalPhotons
 
 };
+
 #endif // RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H

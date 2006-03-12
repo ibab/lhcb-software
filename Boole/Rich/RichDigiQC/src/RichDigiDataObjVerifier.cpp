@@ -1,7 +1,10 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.10 2005-12-17 14:11:34 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.11 2006-03-12 12:09:26 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
+
+// LHCb namespace
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichDigiDataObjVerifier
@@ -20,11 +23,9 @@ RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,
 {
 
   // Declare job options
-  declareProperty( "CheckRichDigits", m_bdDigits = true );
-  declareProperty( "CheckMCRichDigits", m_bdMcDigits = true );
-  declareProperty( "CheckMCRichDeposits", m_bdMCDeposits = true );
-  declareProperty( "CheckMCRichSummedDeposits", m_bdMCSumDeposits = true );
-  declareProperty( "CheckMCRichHits", m_bdMCHits = true );
+  declareProperty( "CheckMCRichDigits",           m_bdMcDigits = true );
+  declareProperty( "CheckMCRichHits",             m_bdMCHits   = true );
+  declareProperty( "CheckMCRichOpticalPhotons",   m_bdMCPhots  = true );
 
 }
 
@@ -34,106 +35,135 @@ RichDigiDataObjVerifier::~RichDigiDataObjVerifier() {};
 // Initialisation
 StatusCode RichDigiDataObjVerifier::initialize()
 {
-  debug() << "Initialize" << endreq;
 
   // Initialize base class
-  return RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // add custom initialisations here
+
+  return sc;
 }
 
-void RichDigiDataObjVerifier::printHitsAt( const std::string & location ) const
+void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
 {
   // MCRichHits
-  if ( !exist<MCRichHits>(location) ) {
+  if ( !exist<MCRichHits>(location) )
+  {
     debug() << "Cannot locate MCRichHits at " << location << endreq;
-  } else {
-    MCRichHits * mcHits = get<MCRichHits>(location);
+  }
+  else
+  {
+    const MCRichHits * mcHits = get<MCRichHits>(location);
     debug() << "Successfully located " << mcHits->size()
             << " MCRichHits at " << location << endreq;
+    unsigned int nHit(0);
     for ( MCRichHits::const_iterator iHit = mcHits->begin();
-          iHit != mcHits->end(); ++iHit )
+          iHit != mcHits->end(); ++iHit, ++nHit )
     {
-      debug() << "MCRichHit " << endreq;
+      debug() << "MCRichHit " << nHit << " " << *iHit          
+              << " location = " << location << endreq;
       const MCParticle * mcPart = (*iHit)->mcParticle();
-      if ( mcPart ) {
-        debug() << "  Parent MCParticle key= " << mcPart->key() << endreq;
-      } else {
-        debug() << "  No parent MCParticle found !!" << endreq;
+      if ( mcPart )
+      {
+        const std::string mcploc = objectLocation(mcPart->parent());
+        debug() << "  Parent MCParticle " << mcPart->key() << " " << mcPart 
+                << " container = " << mcploc << endreq;
       }
-      std::cout << "   Data members " << **iHit << std::endl;
+      else
+      {
+        Warning( "NULL pointer to parent MCParticle" );
+      }
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        std::cout << "   Data members " << **iHit << std::endl;
+      }
+    }
+  }
+
+}
+
+void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
+{
+  // MCRichHits
+  if ( !exist<MCRichOpticalPhotons>(location) )
+  {
+    debug() << "Cannot locate MCRichOpticalPhotons at " << location << endreq;
+  }
+  else
+  {
+    const MCRichOpticalPhotons * mcPhots = get<MCRichOpticalPhotons>(location);
+    debug() << "Successfully located " << mcPhots->size()
+            << " MCRichOpticalPhotons at " << location << endreq;
+    for ( MCRichOpticalPhotons::const_iterator iP = mcPhots->begin();
+          iP != mcPhots->end(); ++iP )
+    {
+      debug() << "MCRichOpticalPhoton " << (*iP)->key() << " " << *iP 
+              << " location = " << location
+              << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        std::cout << "   Data members " << **iP << std::endl;
+      }
+      // get associated MCRichHit
+      const MCRichHit * mchit = (*iP)->mcRichHit();
+      if ( mchit )
+      {
+        const std::string mchloc = objectLocation(mchit->parent());
+        debug() << "  Associated MCRichHit " << mchit 
+                << " container = " << mchloc << endreq;
+      }
+      else
+      {
+        Warning( "NULL pointer to associated MCRichHit" );
+      }
+
     }
   }
 
 }
 
 // Main execution
-StatusCode RichDigiDataObjVerifier::execute() {
-
+StatusCode RichDigiDataObjVerifier::execute()
+{
   debug() << "Execute" << endreq;
 
   // MCRichHits
-  if ( m_bdMCHits ) {
-    printHitsAt (               MCRichHitLocation::Default );
-    printHitsAt ( "Prev/"     + MCRichHitLocation::Default );
-    printHitsAt ( "PrevPrev/" + MCRichHitLocation::Default );
-    printHitsAt ( "Next/"     + MCRichHitLocation::Default );
-    printHitsAt ( "NexNext/"  + MCRichHitLocation::Default );
+  if ( m_bdMCHits )
+  {
+    checkHitsAt (               MCRichHitLocation::Default );
+    checkHitsAt ( "Prev/"     + MCRichHitLocation::Default );
+    checkHitsAt ( "PrevPrev/" + MCRichHitLocation::Default );
+    checkHitsAt ( "Next/"     + MCRichHitLocation::Default );
+    checkHitsAt ( "NexNext/"  + MCRichHitLocation::Default );
   }
 
-  /*
-  // MCRichDeposits
-  if ( m_bdMCDeposits ) {
-  SmartDataPtr<MCRichDeposits> mcDeps( eventSvc(), MCRichDepositLocation::Default );
-  if ( !mcDeps ) {
-  Warning("Cannot locate MCRichDeposits at "+MCRichDepositLocation::Default);
-  } else {
-  debug() << "Successfully located " << mcDeps->size()
-  << " MCRichDeposits at " << MCRichDepositLocation::Default << endreq;
-  for ( MCRichDeposits::const_iterator iDep = mcDeps->begin();
-  iDep != mcDeps->end(); ++iDep ) {
-  debug() << "MCRichDeposit key= " << (long)(*iDep)->key() << " : "
-  << (*iDep)->key() << endreq;
-  debug() << "  Parent MCRichHit key= "
-  << (long)(*iDep)->parentHit()->key() << endreq;
-  std::cout << "   Data members " << **iDep << std::endl;
+  // MCRichOpticalPhotons
+  if ( m_bdMCPhots )
+  {
+    checkPhotsAt (               MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "Prev/"     + MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "PrevPrev/" + MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "Next/"     + MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "NexNext/"  + MCRichOpticalPhotonLocation::Default );
   }
-  }
-  } // end MCRichDeposits print
-
-    // MCRichSummedDeposits
-    if ( m_bdMCSumDeposits ) {
-    if ( !exist<MCRichSummedDeposits>(MCRichSummedDepositLocation::Default) ) {
-    Warning("Cannot locate MCRichSummedDeposits at "+MCRichSummedDepositLocation::Default);
-    } else {
-    MCRichSummedDeposits * mcSumDeps = get<MCRichSummedDeposits>(MCRichSummedDepositLocation::Default);
-    debug() << "Successfully located " << mcSumDeps->size()
-    << " MCRichSummedDeposits at " << MCRichSummedDepositLocation::Default << endreq;
-    for ( MCRichSummedDeposits::const_iterator iSumDep = mcSumDeps->begin();
-    iSumDep != mcSumDeps->end(); ++iSumDep ) {
-    debug() << "MCRichSummedDeposit key= " << (long)(*iSumDep)->key() << " : "
-    << (*iSumDep)->key() << endreq;
-    debug() << "  MCRichDeposits(" << (*iSumDep)->deposits().size() << ") keys= ";
-    for ( SmartRefVector<MCRichDeposit>::const_iterator iDep = (*iSumDep)->deposits().begin();
-    iDep != (*iSumDep)->deposits().end(); ++iDep ) {
-    debug() << (long)(*iDep)->key() << " ";
-    }
-    debug() << endreq;
-    std::cout << "   Data members " << **iSumDep << std::endl;
-    }
-    }
-    } // end MCRichSummedDeposits print
-  */
 
   // MCRichDigits
   MCRichDigits * richMcDigits( 0 );
-  if ( m_bdMcDigits ) {
-    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) ) {
+  if ( m_bdMcDigits ) 
+  {
+    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) ) 
+    {
       Warning("Cannot locate MCRichDigits at "+MCRichDigitLocation::Default);
-    } else {
+    } 
+    else 
+    {
       richMcDigits = get<MCRichDigits>(MCRichDigitLocation::Default);
       debug() << "Successfully located " << richMcDigits->size()
               << " MCRichDigits at " << MCRichDigitLocation::Default << endreq;
       for ( MCRichDigits::const_iterator imcDigit = richMcDigits->begin();
-            imcDigit != richMcDigits->end(); ++imcDigit ) {
+            imcDigit != richMcDigits->end(); ++imcDigit ) 
+      {
         debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
         debug() << "  MCRichHits(" << (*imcDigit)->hits().size() << ") keys= ";
         //for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
@@ -145,45 +175,12 @@ StatusCode RichDigiDataObjVerifier::execute() {
     }
   } // end MCRichDigit print
 
-    // RichDigits
-  if ( m_bdDigits ) {
-    if ( !exist<RichDigits>(RichDigitLocation::Default) ) {
-      Warning("Cannot locate RichDigits at "+RichDigitLocation::Default);
-    } else {
-      RichDigits * richDigits = get<RichDigits>( RichDigitLocation::Default );
-      debug() << "Successfully located " << richDigits->size()
-              << " RichDigits at " << RichDigitLocation::Default << endreq;
-
-      if ( richMcDigits && richDigits->size() != richMcDigits->size() ) {
-        warning() << "Found " << richDigits->size() << " RichDigits and "
-                  << richMcDigits->size() << " MCRichDigits" << endreq;
-      }
-
-      for ( RichDigits::const_iterator iDigit = richDigits->begin();
-            iDigit != richDigits->end(); ++iDigit ) {
-        debug() << "RichDigit " << (*iDigit)->key() << endreq;
-        // locate associated MCRichDigit
-        MCRichDigit * mcDig = ( richMcDigits ? richMcDigits->object( (*iDigit)->key() ) : 0 );
-        if ( !mcDig ) {
-          warning() << " -> Failed to locate associated MCRichDigit for RichDigit " << (*iDigit)->key() << endreq;
-        } else {
-          debug() << " -> Found MCRichDigit " << mcDig->key() << endreq;
-        }
-
-      }
-
-    }
-
-    // Compare to MCRichDigits
-
-  } // end RichDigit print
-
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichDigiDataObjVerifier::finalize() {
-
+StatusCode RichDigiDataObjVerifier::finalize()
+{
   debug() << "Finalize" << endreq;
 
   // finalize base class

@@ -8,12 +8,8 @@ RiDigitQC.HistoOffSet = 10000;
 // MC tools
 ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 
-/*
 // Low level data object debugger
 MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
-RichDigiEventCheck.CheckRichDigits           = true;
-RichDigiEventCheck.CheckMCRichDigits         = true;
-RichDigiEventCheck.CheckMCRichDeposits       = false;
-RichDigiEventCheck.CheckMCRichSummedDeposits = false;
-RichDigiEventCheck.CheckMCRichHits           = false;
-*/
+RichDigiEventCheck.CheckMCRichDigits         = false;
+RichDigiEventCheck.CheckMCRichHits           = true;
+RichDigiEventCheck.CheckMCRichOpticalPhotons = true;
