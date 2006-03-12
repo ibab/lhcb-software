@@ -10,11 +10,15 @@ use         GENSER       v*  Gen
 
 include_dirs  $(EVTGENROOT) 
 
-library       EvtGen -no_share *.cpp *.F
+library       EvtGen *.cpp *.F
 
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 
-apply_pattern package_linkopts
+apply_pattern linker_library  library=EvtGen
+apply_pattern linker_stamps   library=EvtGen
 
 macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
+
+macro_remove fflags "-O"
+macro_append fflags " -O2 "
 
