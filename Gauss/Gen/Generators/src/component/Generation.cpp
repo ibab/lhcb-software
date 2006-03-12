@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.16 2006-02-22 22:18:09 robbep Exp $
+// $Id: Generation.cpp,v 1.17 2006-03-12 20:09:53 robbep Exp $
 // Include files 
 
 // local
@@ -336,6 +336,7 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
   const HepMC::GenEvent * theEvent = evt -> pGenEvt() ;
   unsigned int bQuark( 0 ) , bHadron( 0 ) , cQuark( 0 ) , cHadron( 0 ) ;
   int pdgId ;
+  
   HepMC::GenEvent::particle_const_iterator iter ;
   for ( iter = theEvent -> particles_begin() ; 
         theEvent -> particles_end() != iter ; ++iter ) {
@@ -343,11 +344,43 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
     LHCb::ParticleID thePid( pdgId ) ;
-    if ( 5 == pdgId ) ++bQuark ;
+    if ( 5 == pdgId ) { 
+      if ( 1 != (*iter) -> production_vertex() -> particles_in_size() ) {
+        ++bQuark ;
+      } else {
+        const HepMC::GenParticle * par = 
+          *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+        if ( ( par -> status() == LHCb::HepMCEvent::DocumentationParticle ) ||
+             ( par -> pdg_id() != (*iter) -> pdg_id() ) ) { 
+          ++bQuark ;
+        }
+      }
+    }
     else if ( 4 == pdgId ) ++cQuark ;
     else {
-      if ( thePid.hasBottom() ) ++bHadron ;
-      if ( thePid.hasCharm() ) ++cHadron ;
+      if ( thePid.hasBottom() ) { 
+        // Count B from initial proton as a quark
+        if ( 0 != (*iter) -> production_vertex() ) {
+          const HepMC::GenParticle * par = 
+            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+          if ( 0 != par -> production_vertex() ) {
+            if ( 0 == par -> production_vertex() -> particles_in_size() ) 
+              ++bQuark ;
+          }
+        }
+        ++bHadron ;
+      } else if ( thePid.hasCharm() ) {
+        // Count D from initial proton as a quark
+        if ( 0 != (*iter) -> production_vertex() ) {
+          const HepMC::GenParticle * par = 
+            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+          if ( 0 != par -> production_vertex() ) {
+            if ( 0 == par -> production_vertex() -> particles_in_size() ) 
+              ++cQuark ;
+          }
+        }
+        ++cHadron ;
+      }
     }
   }
   if ( bQuark >= 1 ) { 
