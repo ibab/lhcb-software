@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.8 2005-12-31 17:35:36 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.9 2006-03-12 20:13:37 robbep Exp $
 // Include files 
 
 // local
@@ -330,9 +330,13 @@ StatusCode PythiaProduction::parsePythiaCommands( const CommandVector &
       else if ( "pyliste" == entry ) m_eventListingLevel          = int1  ; 
       else if ( "pystatf" == entry ) m_finalizationListingLevel   = int1  ; 
       else if ( "output"  == entry ) {
-        m_pythiaListingFileName = str                 ;
-        m_pythiaListingUnit     = 49                  ;
+        m_pythiaListingFileName         = str                 ;
+        m_pythiaListingUnit             = 49                  ;
         Pythia::pydat1().mstu(11)       = m_pythiaListingUnit ; 
+        Pythia::pydat1().mstu( 12 )     = 1                   ;
+        Pythia::pydat1().mstu( 13 )     = 1                   ;
+        Pythia::pydat1().mstu( 25 )     = 1                   ;
+        Pythia::pypars().mstp( 122 )    = 1                   ;
       }
       else return Error(std::string("PYTHIA ERROR, entry PYINIT has PBAR ")+
                         std::string("PYLISTI PYLISTE OUTPUT DUMPR AND WIN: ")+ 
