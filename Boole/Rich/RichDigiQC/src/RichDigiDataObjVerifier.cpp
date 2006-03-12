@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.11 2006-03-12 12:09:26 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.12 2006-03-12 16:34:17 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -62,7 +62,7 @@ void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
           iHit != mcHits->end(); ++iHit, ++nHit )
     {
       debug() << "MCRichHit " << nHit << " " << *iHit          
-              << " location = " << location << endreq;
+              << " container = " << location << endreq;
       const MCParticle * mcPart = (*iHit)->mcParticle();
       if ( mcPart )
       {
@@ -99,7 +99,7 @@ void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
           iP != mcPhots->end(); ++iP )
     {
       debug() << "MCRichOpticalPhoton " << (*iP)->key() << " " << *iP 
-              << " location = " << location
+              << " container = " << location
               << endreq;
       if ( msgLevel(MSG::DEBUG) )
       {
