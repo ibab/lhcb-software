@@ -4,7 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-03-12 - Chris Jones
+ - Add missing includes for IAlgTool in tool interfaces
+ - Add missing include in RichRecRing for RichRecPixel
+
 !====================== RichRecBase v2r0 2006-02-16 ========================
+
 ! 2006-02-16 - Chris Jones
  - Bug fixes for "MC" running modes
  - Improvements to the RichTrackSelector

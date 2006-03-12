@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: IRichPhotonCreator.h,v 1.7 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichPhotonCreator.h,v 1.8 2006-03-12 16:13:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECTOOLS_IRICHPHOTONCREATOR_H
 #define RICHRECTOOLS_IRICHPHOTONCREATOR_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Event
 #include "Event/RichRecTrack.h"

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: IRichSellmeirFunc.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichSellmeirFunc.h,v 1.7 2006-03-12 16:13:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECTOOLS_IRICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_IRICHSELLMEIRFUNC_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Event model
 namespace LHCb

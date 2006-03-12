@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovAngle.h,v 1.5 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichCherenkovAngle.h,v 1.6 2006-03-12 16:13:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 #ifndef RICHRECTOOLS_IRICHCHERENKOVANGLE_H
 #define RICHRECTOOLS_IRICHCHERENKOVANGLE_H 1
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
 
 // Event model
 namespace LHCb
@@ -34,7 +37,8 @@ static const InterfaceID IID_IRichCherenkovAngle( "IRichCherenkovAngle", 1, 0 );
  */
 //-----------------------------------------------------------------------------
 
-class IRichCherenkovAngle : public virtual IAlgTool {
+class IRichCherenkovAngle : public virtual IAlgTool 
+{
 
 public:
 
