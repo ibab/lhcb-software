@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-03-13 - Chris Jones
+ - Suppress creation of linker objects for extended data objects when objects
+   not available in SIM files
+
 !======================= RichMCAssociators v2r0 2006-02-17 ===================
 ! 2006-02-16 - Chris Jones
  - Various updates to the MC associators

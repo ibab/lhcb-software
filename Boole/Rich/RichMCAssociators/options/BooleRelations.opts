@@ -1,14 +1,8 @@
 
-// DST relations
+// standard DST relations
 RelationsRICHSeq.Members += { "MCRichDigitSummaryAlg" };
 
 // Extended relations. Do nothing if input data is not on Sim file
 RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg",
                               "MCRichHitToMCRichOpPhotAlg" };
-
-// Following are optional in DigiContent.opts, present for extended Sim input
-//, "/Event/Link/MC#1"
-//, "/Event/Link/MC/Rich#1"
-//, "/Event/Link/MC/Rich/MCPartsToMCRichTracks#1"
-//, "/Event/Link/MC/Rich/MCRichHitsToOpPhotons#1"
 
