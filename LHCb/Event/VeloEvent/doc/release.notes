@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.41 2006-03-10 15:56:14 dhcroft Exp $
+! $Id: release.notes,v 1.42 2006-03-13 07:18:31 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
 
+!====================== VeloEvent v14r0 2006-03-13 =======================
 ! 2006-03-09 - David Hutchcroft
  - Added hasHighThreshold bool to InternalVeloCluster
 
-!====================== VeloEvent v14r0 2006-02-20 =======================
 ! 2006-02-20 - Marco Cattaneo
  - Remove all "public" VeloEvent classes. Package now contains only Velo 
    internal classes, and does not produce a dictionary. To distinguish from
