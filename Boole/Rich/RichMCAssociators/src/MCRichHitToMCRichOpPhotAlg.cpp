@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.4 2006-03-13 13:15:03 jonrob Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.5 2006-03-13 19:38:50 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -69,18 +69,21 @@ StatusCode MCRichHitToMCRichOpPhotAlg::execute()
 {
   debug() << "Execute" << endreq;
 
+  StatusCode sc = StatusCode::SUCCESS;
+
   // Loop over all MCRichOpticalPhotons in each spillover event
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
         iEvt != m_evtLocs.end(); ++iEvt )
   {
-    const StatusCode sc = addEvent(*iEvt);
-    if ( sc.isFailure() ) return sc;
+    sc = addEvent(*iEvt);
+    if ( sc.isFailure() ) break;
   }
 
   // force a new linker for next event
   resetLinker();
 
-  return StatusCode::SUCCESS;
+  // return final status code
+  return sc;
 }
 
 //=============================================================================

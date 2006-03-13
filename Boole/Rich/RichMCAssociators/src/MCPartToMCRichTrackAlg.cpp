@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.7 2006-03-13 13:18:53 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.8 2006-03-13 19:38:50 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -53,7 +53,12 @@ MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
 StatusCode MCPartToMCRichTrackAlg::initialize()
 {
   // Sets up various tools and services
-  return RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // add custom initialisations here
+
+  return sc;
 }
 
 //=============================================================================
@@ -63,18 +68,21 @@ StatusCode MCPartToMCRichTrackAlg::execute()
 {
   debug() << "Execute" << endreq;
 
+  StatusCode sc = StatusCode::SUCCESS;
+
   // Loop over all event locations
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
         iEvt != m_evtLocs.end(); ++iEvt )
   {
-    if ( !addEvent(*iEvt) ) return StatusCode::FAILURE;
+    sc = addEvent(*iEvt);
+    if ( sc.isFailure() ) break;
   }
 
   // force a new linker for next event
   resetLinker();
 
-  // return
-  return StatusCode::SUCCESS;
+  // return final status code
+  return sc;
 }
 
 //=============================================================================
