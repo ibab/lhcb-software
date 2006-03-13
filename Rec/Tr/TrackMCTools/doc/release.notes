@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-03-08 - Eduardo Rodrigues
+ - using new linkers tables for MCParticle-MCHit association
+ - update to new VeloDet path
+ - some clean-up
+
 ! 2006-03-06 - Eduardo Rodrigues
  - adaptations because of move of MC interfaces from TrackInterfaces to
    TrackMCInterfaces

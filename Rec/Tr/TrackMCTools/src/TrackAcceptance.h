@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.4 2006-03-06 18:58:17 erodrigu Exp $
+// $Id: TrackAcceptance.h,v 1.5 2006-03-13 16:26:46 erodrigu Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -88,7 +88,6 @@ public:
   virtual bool hasVeloAndSeed ( MCParticle* mcPart );
 
 private:
-
   /// Velo Detector information
   DeVelo* m_velo;
 
