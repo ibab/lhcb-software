@@ -2,11 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v1r0 2006-03-13 ========================
 ! 2006-03-10 M Needham
  - Use p from MCHit in digization
  - Sometimes p is zero - I print a warning: Bug reported to Gauss experts
 
-!======================= STAlgorithms v1r0 2006-03-07 ========================
 ! 2006-03-07 M Needham
   - fix memory leak/ clean-up charge sharing code, plus other bug fixes
 

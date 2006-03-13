@@ -256,13 +256,13 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const{
 
   // some hits have a zero p...
   if (aHit->p() < 1e-3){
-    warning() << "Hit with zero p - not digitized" << endmsg;
+    Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS, 1 );
     return false;
   }
 
   // check hit too steep - can't digitize yet....
   if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCbMath::lowTolerance) { 
-    warning() << "Too steep hit - not digitized" << endmsg;
+    Warning( "Too steep hit - not digitized", StatusCode::SUCCESS, 1 );
     return false;
   }
 
