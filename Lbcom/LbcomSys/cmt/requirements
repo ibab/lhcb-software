@@ -1,5 +1,5 @@
 package LbcomSys
-version v3r3
+version v4r0
 
 branches doc cmt
 
@@ -7,24 +7,36 @@ branches doc cmt
 # LHCb packages shared by Boole and other applications
 #===============================================================
 
-# L0 trigger simulation          # Maintainer
-use L0Calo          v8r2    L0   # Olivier Callot
-use L0DU            v6r10   L0   # Eduardo Rodrigues   
-use L0MuonTrigger   v4r0    L0   # Andrei Tsaregorodtsev
-use PuVeto          v6r0p1  L0   # N.N.
-use L0Checker       v3r2p2  L0   # Eduardo Rodrigues
+# L0 trigger simulation                 # Maintainer
+use L0Calo            v9r0  L0          # Olivier Callot
+use L0DU              v7r0  L0          # Olivier Deschamps   
+use L0MuonTrigger     v5r0  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use PuVeto            v7r0  L0          # Marko Zupan
+#use L0Checker         v3r2p1 L0         # Eduardo Rodrigues
 
 # Outer tracker
-use OTMonitor       v1r1    OT   # Jacopo Nardulli
+use OTMonitor         v2r0  OT          # Jan Amoraal
+use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
-use RichTools         v1r8  Rich # Chris Jones
-use RichMCTools       v2r7  Rich # Chris Jones
-use RichMCAssociators v1r0  Rich # Chris Jones
+use RichDAQ           v3r2  Rich        # Chris Jones
+use RichTools         v2r2  Rich        # Chris Jones
+use RichMCTools       v3r0  Rich        # Chris Jones
 
-# Inner Tracker
-use ITAlgorithms    v15r1   IT   # Matt Needham
-use ITCheckers      v2r5    IT   # Matt Needham
+# Silicon Tracker
+use STDAQ             v2r3  ST          # Matt Needham
+use STTools           v2r0  ST          # Matt Needham
+use STAlgorithms      v1r0  ST          # Matt Needham
+use STAssociators     v1r0  ST          # Matt Needham
+use STCheckers        v1r0  ST          # Matt Needham
 
-# Calorimeter calibration
-use KaliMisCalo     v1r0    Calo # Ivan Belyaev
+# Calorimeter
+use CaloAssociators   v6r0  Calo        # Olivier Deschamps
+#use KaliMisCalo       v1r0  Calo        # Ivan Belyaev
+
+# Velo
+use VeloDAQ           v3r0  Velo        # Kurt Rinnert
+use VeloAssociators   v2r0  Velo        # Tomasz Szumlak
+
+# Common
+use Associators       v3r0  Associators # Matt Needham

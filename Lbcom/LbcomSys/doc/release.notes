@@ -6,7 +6,20 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v3r2>2005-12-20 LbcomSys v3r3</A></H1><PRE>
+</PRE><H1><A NAME=v4r0>2006-03-13 LbcomSys v4r0</A></H1><PRE>
+This version uses Gaudi v18r2 and LHCb v20r0.
+It is the first release for commissioning of the software for DC06.
+
+It breaks all backward compatibility and introduces many new features, including
+a major redesign of event model classes following the review in Autumn 2006,
+changes for the 1MHz readout, changes to the geometry to introduce detector
+tilts and capability for misalignement, and changes to change replace CLHEP with
+MathCore.
+
+All packages have been touched. Please look at release notes of the individual
+packages for details.
+
+</PRE><H1><A NAME=v3r3>2005-12-20 LbcomSys v3r3</A></H1><PRE>
 This version is built against LHCb v19r4 and Gaudi v17r2.
 
 - Packages modified: L0MuonTrigger v4r0, L0DU v6r10, L0Checker v3r2p2
