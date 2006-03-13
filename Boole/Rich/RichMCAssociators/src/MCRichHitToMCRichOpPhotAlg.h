@@ -4,14 +4,14 @@
  *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
  *
  *  CVS Log :-
- *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.3 2006-03-13 13:15:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
  */
 
-#ifndef RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H
-#define RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H  1
+#ifndef RICHMCASSOCIATORS_MCRICHHITTOMCRICHOPPHOTALG_H
+#define RICHMCASSOCIATORS_MCRICHHITTOMCRICHOPPHOTALG_H  1
 
 // from STL
 #include <string>
@@ -66,15 +66,30 @@ private: // definitions
 private: // methods
 
   /// Add a given event to the linker object
-  StatusCode addEvent( MCRichHitsToPhotons & links, const std::string & evtLoc );
+  StatusCode addEvent( const std::string & evtLoc );
+
+  /// Return a pointer to the linker for this event
+  MCRichHitsToPhotons * linker();
+
+  /// Reset linker object for new event
+  void resetLinker();
 
 private: // data
 
   /// typedef of event locations to process
   typedef std::vector<std::string> EventList;
+
   /// event locations to process
   EventList m_evtLocs;
 
+  /// Pointer to linker object
+  MCRichHitsToPhotons * m_linker;
+
 };
 
-#endif // RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H
+inline void MCRichHitToMCRichOpPhotAlg::resetLinker()
+{
+  if ( m_linker ) { delete m_linker; m_linker = NULL; }
+}
+
+#endif // RICHMCASSOCIATORS_MCRICHHITTOMCRICHOPPHOTALG_H

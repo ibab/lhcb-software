@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.3 2006-02-16 15:57:39 jonrob Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.4 2006-03-13 13:15:03 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -27,7 +27,8 @@ const        IAlgFactory& MCRichHitToMCRichOpPhotAlgFactory = s_factory;
 //=============================================================================
 MCRichHitToMCRichOpPhotAlg::MCRichHitToMCRichOpPhotAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name , pSvcLocator )
+  : RichAlgBase ( name , pSvcLocator ),
+    m_linker    ( NULL )
 {
 
   // Event locations to process
@@ -53,7 +54,12 @@ MCRichHitToMCRichOpPhotAlg::~MCRichHitToMCRichOpPhotAlg() {};
 StatusCode MCRichHitToMCRichOpPhotAlg::initialize()
 {
   // Sets up various tools and services
-  return RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // add custom initialisations here
+
+  return sc;
 }
 
 //=============================================================================
@@ -63,43 +69,84 @@ StatusCode MCRichHitToMCRichOpPhotAlg::execute()
 {
   debug() << "Execute" << endreq;
 
-  // New linker object
-  MCRichHitsToPhotons links( eventSvc(), msgSvc(),
-                             MCRichHitLocation::Default+"2MCRichOpticalPhotons" );
-
-  // set the ordering
-  links.setDecreasingWeight();
-
   // Loop over all MCRichOpticalPhotons in each spillover event
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
         iEvt != m_evtLocs.end(); ++iEvt )
   {
-    if ( !addEvent(links,*iEvt) ) return StatusCode::FAILURE;
+    const StatusCode sc = addEvent(*iEvt);
+    if ( sc.isFailure() ) return sc;
   }
+
+  // force a new linker for next event
+  resetLinker();
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( MCRichHitsToPhotons & links,
-                                                 const std::string & evtLoc )
+//=============================================================================
+// Create linker object
+//=============================================================================
+MCRichHitToMCRichOpPhotAlg::MCRichHitsToPhotons *
+MCRichHitToMCRichOpPhotAlg::linker()
+{
+  if ( !m_linker )
+  {
+    // New linker object
+    m_linker =
+      new MCRichHitsToPhotons( evtSvc(), msgSvc(),
+                               MCRichHitLocation::Default+"2MCRichOpticalPhotons" );
+    // set the ordering
+    m_linker->setDecreasingWeight();
+  }
+  return m_linker;
+}
+
+//=============================================================================
+// Process a single event location
+//=============================================================================
+StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( const std::string & evtLoc )
 {
 
   // load MCRichTracks in this event
   SmartDataPtr<MCRichOpticalPhotons> mcPhotons( eventSvc(), evtLoc );
   if ( !mcPhotons )
   {
-    debug() << "Cannot locate MCRichOpticalPhotons at " << evtLoc << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+    { debug() << "Cannot locate MCRichOpticalPhotons at " << evtLoc << endreq; }
     return StatusCode::SUCCESS;
   }
-  debug() << "Successfully located " << mcPhotons->size()
-          << " MCRichOpticalPhotons at " << evtLoc << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  { debug() << "Successfully located " << mcPhotons->size()
+            << " MCRichOpticalPhotons at " << evtLoc << endreq; }
 
   // add links to linker
   for ( MCRichOpticalPhotons::const_iterator iPhot = mcPhotons->begin();
         iPhot != mcPhotons->end(); ++iPhot )
   {
-    links.link( (*iPhot)->mcRichHit(), *iPhot );
+    const MCRichOpticalPhoton * mcPhot = *iPhot;
+    if ( mcPhot )
+    {
+      const MCRichHit * mchit = mcPhot->mcRichHit();
+      if ( mchit )
+      {
+        if ( msgLevel(MSG::VERBOSE) )
+        { verbose() << "Linking MCRichHit " << mchit->sensDetID()
+                    << " to MCRichOpticalPhoton " << mcPhot->key() << endreq; }
+        linker()->link( mchit, *iPhot );
+      }
+      else
+      {
+        Warning( "MCRichOpticalPhoton has NULL MCRichHit reference" );
+      }
+    }
+    else
+    {
+      Warning( "NULL MCRichOpticalPhoton in container" );
+    }
   }
+
+  if ( msgLevel(MSG::DEBUG) )
+  { debug() << "Finished processing MCRichOpticalPhotons at " << evtLoc << endreq; }
 
   return StatusCode::SUCCESS;
 }

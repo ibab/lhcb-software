@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.6 2006-03-13 13:15:03 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.7 2006-03-13 13:18:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -130,7 +130,7 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
       }
       else
       {
-        Warning( "MCRichTrack has null MCParticle reference" );
+        //Warning( "MCRichTrack has null MCParticle reference" );
       }
     }
     else

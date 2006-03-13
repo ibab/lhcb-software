@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.3 2006-02-13 08:40:17 jonrob Exp $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.4 2006-03-13 13:15:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -62,14 +62,14 @@ private: // definitions
 
 private: // methods
 
-  /// Build the linker object for all MCRichTracks
-  StatusCode buildLinks();
-
-  /// Test linker object for all MCRichTracks
-  StatusCode testLinks();
-
   /// Add a given event to the linker object
-  StatusCode addEvent( MCPartToRichTracks & links, const std::string & evtLoc );
+  StatusCode addEvent( const std::string & evtLoc );
+
+  /// Return a pointer to the linker for this event
+  MCPartToRichTracks * linker();
+
+  /// Reset linker object for new event
+  void resetLinker();
 
 private: // data
 
@@ -79,9 +79,14 @@ private: // data
   /// List of event locations to process
   EventList m_evtLocs;
 
-  /// Flag to turn on/off testing of linker
-  bool m_testLinker;
+  /// Pointer to linker object
+  MCPartToRichTracks * m_linker;
 
 };
+
+inline void MCPartToMCRichTrackAlg::resetLinker()
+{
+  if ( m_linker ) { delete m_linker; m_linker = NULL; }
+}
 
 #endif // RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H
