@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.10 2006-03-07 15:53:00 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.11 2006-03-13 18:58:46 krinnert Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -33,26 +33,10 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize();    ///< Algorithm finalisation
 
-public:
-
-  class sortClustersBySensorAndStrip {
-  public:
-
-    bool operator () ( const LHCb::InternalVeloCluster* first, 
-                       const LHCb::InternalVeloCluster* second ) const {
-      if ( 0==first  ) return true;
-      if ( 0==second ) return false;
-
-      if ( first->sensor() != second->sensor() ) {
-        return first->sensor() < second->sensor();
-      }
-
-      return first->strip(0) < second->strip(0) ;
-    }
-  };
-
 private:
   
+  void dumpInputClusters() const;
+
   unsigned int makeBank (std::vector<const LHCb::InternalVeloCluster*>::const_iterator begin, 
                          std::vector<const LHCb::InternalVeloCluster*>::const_iterator end);
 
@@ -63,6 +47,9 @@ private:
   std::string m_clusterLoc;
   std::string m_rawEventLoc;
   
+  // configurable cluster dump flag
+  bool m_dumpInputClusters;
+
   // version tag, this strongly tied to the implementation, hence const
   const int m_bankVersion;
 

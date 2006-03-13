@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.15 2006-03-10 15:55:04 dhcroft Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.16 2006-03-13 18:58:46 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -14,7 +14,7 @@
 #include "VeloClusterWord.h"
 #include "VeloRawBankVersions.h"
 #include "VeloRawWordSizes.h"
-
+#include "InternalVeloClusterPtrLessThan.h"
 #include "PrepareVeloRawBuffer.h"
 
 
@@ -36,7 +36,7 @@ const        IAlgFactory& PrepareVeloRawBufferFactory = Factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
-                                          ISvcLocator* pSvcLocator) 
+                                            ISvcLocator* pSvcLocator) 
   : 
   GaudiAlgorithm (name , pSvcLocator),
   m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
@@ -45,6 +45,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
 {
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("DumpInputClusters",m_dumpInputClusters=false);
 }
 
 //=============================================================================
@@ -78,9 +79,9 @@ StatusCode PrepareVeloRawBuffer::execute() {
   // Get the InternalVeloClusters from their default location 
   const LHCb::InternalVeloClusters* clusters = 0;
   if(!exist<LHCb::InternalVeloClusters>(m_clusterLoc)){
-    error()<< " ==> There are no VeloClusters in TES! " <<endmsg;
-    return (StatusCode::FAILURE);
-  }else{
+    error()<< " ==> There are no InternalVeloClusters in TES! " <<endmsg;
+    return StatusCode::FAILURE;
+  } else {
     clusters=get<LHCb::InternalVeloClusters>(m_clusterLoc);
   }
 
@@ -90,23 +91,24 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
   // Then sort the clusters by sensor number and local coordinate
   std::sort( m_sortedClusters.begin(), m_sortedClusters.end(), 
-             PrepareVeloRawBuffer::sortClustersBySensorAndStrip() );
+             VeloDAQ::internalVeloClusterPtrLessThan);
+
+  // dump input clusters to console, if requested
+  if (m_dumpInputClusters) dumpInputClusters();
+
 
   // define the pointer  
   LHCb::RawEvent* rawEvent;
   // see whether the raw event exits
-  if(exist<LHCb::RawEvent>(m_rawEventLoc))
-  {
+  if(exist<LHCb::RawEvent>(m_rawEventLoc)) {
     rawEvent = get<LHCb::RawEvent>(m_rawEventLoc);
-  }
-  else
-  {
+  } else {
     // raw rawEvent doesn't exist. We need to create it 
     rawEvent = new LHCb::RawEvent();
     eventSvc()->registerObject(m_rawEventLoc, rawEvent);
   } 
  
- // loop over all clusters and write one bank per sensor
+  // loop over all clusters and write one bank per sensor
   std::vector<const LHCb::InternalVeloCluster*>::const_iterator firstOnSensor, lastOnSensor;
   int currentSensorNumber;
 
@@ -160,8 +162,7 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   // work out number of clusters for this sensor uses 1st 16 bits
   int numClu = end - begin;
 
-  if(isVerbose) 
-  {
+  if(isVerbose) {
     verbose() <<"Number of clusters:" << numClu  <<endmsg;
   }  
 
@@ -183,15 +184,14 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
                           // number of padding bytes at end of raw bank 
 
   std::vector<const LHCb::InternalVeloCluster*>::const_iterator iC = begin;
-  for ( ; iC != end ; ++iC) // 
-  {
-    // get a cluster 
+  for ( ; iC != end ; ++iC) {
+
     const LHCb::InternalVeloCluster* clu = *iC;
-    // get num strips 
+
     unsigned int numStrips = clu->size();
+    bool highThresh = clu->hasHighThreshold();
       
-    if(isVerbose) 
-    {
+    if(isVerbose) {
       verbose() <<"Reading cluster from sensor "
                 << clu->sensor() << " with " <<
         numStrips << " strips." <<endmsg;
@@ -199,27 +199,17 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 
     SiDAQ::buffer_word packedCluster;
 
-    // case of one strip cluster is handled here
-    // 
-    if( numStrips == 1 )  
-    {
-      // single strip cluster
 
-      // currently we have no way of retrieving the high theshold
-      // information since the VeloInternalCluster does not
-      // provide an interface.
-      bool highThresh = clu->hasHighThreshold();
+    if( numStrips == 1 ) {  // single strip cluster
 
       double adcCount = clu->adcValue(0);
 
-      if (adcCount > 127)
-      {
+      if (adcCount > 127) {
         adcCount = 127;
       }
       VeloClusterWord vcw(clu->strip(0),0.0,1, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
-      if ( isVerbose )
-	    {
+      if ( isVerbose ) {
 	      verbose() <<"STRIP: " << clu->strip(0)
                   << ",ADC: " << clu->adcValue( 0) << endmsg;
 	    }
@@ -228,21 +218,17 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
 
       ++nAdc;
-      if (nAdc % VeloDAQ::adc_per_buffer == 0)
-	    {
+      if (nAdc % VeloDAQ::adc_per_buffer == 0) {
 	      m_clusterADCBuffer.push_back ( rowData );
 	      //reset rowData
 	      rowData = 0x0;
 	    }
 
-      if ( isVerbose )
-	    {
+      if ( isVerbose ) {
 	      verbose() <<"strip " << clu->strip(0)
                   << ",adc= " + aw.value() << endmsg;
 	    }
-    }
-    else 
-    {
+    } else {
       // multiple strip cluster
       // calculate weighted average position of cluster 
       const std::vector< std::pair<long,double> >& stripSignals = clu->stripSignals();
@@ -251,23 +237,15 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 
       // loop over all strip signals 
 
-      // currently we have no way of retrieving the high theshold
-      // information since the VeloInternalCluster does not
-      // provide an interface.
-      bool highThresh = false; 
-
       unsigned int i = 0;
-      for (; i<stripSignals.size(); ++i) 
-	    {
+      for (; i<stripSignals.size(); ++i) {
         unsigned int stripNumber = stripSignals[i].first;
         double adcCount = stripSignals[i].second;
-        if (adcCount > 127)
-        {
+        if (adcCount > 127) {
           adcCount = 127;
         }
 	   
-	      if(isVerbose)
-        {
+	      if(isVerbose) {
           verbose() << "ADC COUNT:" <<  adcCount << " STRIP:" << stripNumber
                     << endmsg; 
         }
@@ -282,63 +260,51 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
 
         ++nAdc;
-        if (nAdc % VeloDAQ::adc_per_buffer == 0)
-        {
+        if (nAdc % VeloDAQ::adc_per_buffer == 0) {
           m_clusterADCBuffer.push_back ( rowData );
           //reset rowData
           rowData = 0x0;
         }
 
-	    }// end for  
-      if(isVerbose)
-	    {
-	      verbose() <<endmsg;
 	    }
-
+  
       double cPos = (sumADCWeightedeStrip/sumADC) ; // get weighted mean
       unsigned int channelPos = static_cast<unsigned int>(cPos); // without fractional part
       double interStripPos = cPos - channelPos; // fractional part
       VeloClusterWord vcw(channelPos, interStripPos, numStrips, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
 
-      if(isVerbose)
-	    {
+      if(isVerbose) {
 	      verbose() << "CPOS: " << cPos
                   << " CHPOS: " << channelPos
                   << " ISPOS: " << interStripPos
                   << " WORD: " << format( "%8X" , packedCluster )
                   <<endmsg;
 	    }
-
-    }// end else 
+    }
    
     // store the cluster position
     cluRowData |= (packedCluster << ((nClu % VeloDAQ::clu_per_buffer) << VeloDAQ::clu_shift));
     ++nClu;
-    if ( nClu % VeloDAQ::clu_per_buffer == 0 ) 
-    {
+    if ( nClu % VeloDAQ::clu_per_buffer == 0 ) {
       m_clusterPosBuffer.push_back( cluRowData );
       // clear the cluster buffer 
       cluRowData = 0x0 ; 
     }
-    
-  }// end for 
+  }
 
   // if the cluster row isn't empty add the contents to the vector 
-  if ( cluRowData != 0x0 )
-  {
+  if ( cluRowData != 0x0 ) {
     m_clusterPosBuffer.push_back ( cluRowData  );
   }
   // check row data is not empty, store remaining adcs
-  if ( rowData != 0x0 )
-  {
+  if ( rowData != 0x0 ) {
     m_clusterADCBuffer.push_back ( rowData );
   }
   
   // write to buffer or return ? 
 
-  if ( isVerbose ) 
-  {
+  if ( isVerbose ) {
     verbose()<< "Raw  output of cluster start" <<endmsg;
     verbose()<< "PCN error flag and number of clusters[" << format( "%10X" , pcnAndNumClu ) 
              << "]"<<endmsg;
@@ -349,10 +315,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
 
   // add clusters positions  
   std::vector<SiDAQ::buffer_word>::iterator tmpCp = m_clusterPosBuffer.begin();
-  for ( ; tmpCp != m_clusterPosBuffer.end() ; ++tmpCp )
-  {      
-    if ( isVerbose  ) 
-    {
+  for ( ; tmpCp != m_clusterPosBuffer.end() ; ++tmpCp ) {      
+    if ( isVerbose  ) {
 
       verbose()<< "Cluster position[" << format( "%10X" , *tmpCp ) << "]"<<endmsg;
     }
@@ -362,10 +326,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   
   // add adc values 
   std::vector<SiDAQ::buffer_word>::iterator tmpAdc = m_clusterADCBuffer.begin();
-  for ( ; tmpAdc != m_clusterADCBuffer.end() ; ++tmpAdc )
-  {
-    if ( isVerbose ) 
-    {
+  for ( ; tmpAdc != m_clusterADCBuffer.end() ; ++tmpAdc ) {
+    if ( isVerbose ) {
 
       verbose()<< "Adc row[" << format( "%10X" , *tmpAdc ) << "]"<<endmsg;
     }
@@ -378,13 +340,65 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
   // *without* the padding bytes at the end. 
   // The number of padding bytes is completely determined by
   // the number of ADC words in the raw bank.
-  m_bankSizeInBytes = sizeof(SiDAQ::buffer_word)*m_rawData.size() - (nAdc%VeloDAQ::adc_per_buffer);
+  int adcRemainder = nAdc%VeloDAQ::adc_per_buffer;
+  m_bankSizeInBytes = sizeof(SiDAQ::buffer_word)*m_rawData.size()  
+    - (adcRemainder ? sizeof(SiDAQ::buffer_word)-adcRemainder*VeloDAQ::adc_word_size : 0);
 
-  if ( isVerbose) 
-  {
+  if ( isVerbose) {
     verbose()<< "Raw  output of cluster end" <<endmsg;
   }
 
   return nClu;
 }
 
+void PrepareVeloRawBuffer::dumpInputClusters() const
+{
+  for (std::vector<const LHCb::InternalVeloCluster*>::const_iterator ci =  m_sortedClusters.begin(); 
+       ci != m_sortedClusters.end(); 
+       ++ci) {
+
+    const LHCb::InternalVeloCluster* clu = *ci;
+    
+    unsigned int sensorNumber = clu->sensor();
+
+    unsigned int centroidStrip = clu->strip(0);
+    float channelPos = centroidStrip;
+
+    // ensure 7 bit cut off for adc values
+    std::vector<float> adcValues;
+    for (int adci=0; adci<clu->size(); ++adci) {
+      adcValues.push_back((clu->adcValue(adci) > 127 ? 127 : clu->adcValue(adci)));
+    }
+
+    if (clu->size() > 2) {
+      float sumAdc = 0.0;
+      float offset = 0;
+      for (int strip = 0; strip < clu->size(); ++strip) {
+        offset += strip*adcValues[strip];
+        sumAdc += adcValues[strip];
+      }
+      channelPos += offset/sumAdc;
+      centroidStrip = static_cast<unsigned int>(channelPos);
+    }
+
+    // interstrip position in 1/8 of strip pitch (as it is encoded in raw bank)
+    float interStripPos = static_cast<unsigned int>((channelPos-centroidStrip)*8.0)/8.0;
+
+    std::cout << "ENC::POSDUMP:"
+              << " SN=" << sensorNumber
+              << " CS=" << centroidStrip
+              << " ISP=" << interStripPos
+              << std::endl;
+
+    std::cout << "ENC::ADCDUMP:"
+              << " SN=" << sensorNumber;
+
+    for (int adci=0; adci<clu->size(); ++adci) {
+      std::cout << " " << adcValues[adci]
+                << "@" << clu->strip(adci);
+    }
+    std::cout << std::endl;
+      
+  }
+  return;
+}

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.5 2006-02-23 18:56:35 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.6 2006-03-13 18:58:46 krinnert Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -42,7 +42,7 @@ private:
    *
    * @see VeloLiteCluster
    */
-  void decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const;
+  StatusCode decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const;
 
   /** Decode raw buffer to clusters  
    * This decodes the raw buffer to VeloClusters and
@@ -50,7 +50,13 @@ private:
    *
    * @see VeloCluster
    */
-  void decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) const;
+  StatusCode decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) const;
+
+  /** Write VeloClusters to stdout   
+   * 
+   *  @see VeloCluster
+   */
+  void dumpVeloClusters(const LHCb::VeloClusters* clusters) const;
 
 private:
 
@@ -58,6 +64,8 @@ private:
 
   bool m_decodeToVeloLiteClusters;
   bool m_decodeToVeloClusters;
+
+  bool m_dumpVeloClusters;
 
   std::string m_rawEventLocation;
   std::string m_veloLiteClusterLocation;

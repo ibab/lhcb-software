@@ -1,7 +1,32 @@
 ! Package     : VeloDAQ
 ! Responsible : Chris Parkes
 
+! 2006-03-13 - Kurt Rinnert
+ - moved less-than operator for InternalVeloClusters outside of encoding
+  algorithm
+ - changed definition of less-than for VeloClusters to match the definition
+  for InternalVeloClusters
+ - added testing code
+ - fixed bugs revealed by testing with Boole v11r0:
+  1.  In the decoding to full VeloClusters the interstrip position bits
+  were not passed properly to the VeloLiteCluster. Independent of that the 
+  VeloLiteCluster (or rather the SiCluster.ent) has a bug in the handling of
+  the interstrip position bits which will reported to Chris and Matt.
+  2.  In the decoding the treshold bit was only handled for one strip clusters
+ - updated some documentation
+ - some cosmetics
+
+! 2006-03-10 - Kurt Rinnert
+ - DecodeVeloRawBuffer now checks for the correct byte count when
+  decoding to full VeloClusters
+ - adapted to LHCb coding conventions
+
+! 2006-03-09 - Kurt Rinnert
+ - improved naming of cluster comparison functor
+ - added optional dumping of input clusters in PrepareVeloRawBuffer
+
 !=========================  VeloDAQ v3r0 2006-03-13 =======================
+
 ! 2006-03-09 - David Hutchcroft
  - Added retrieval of threshold from VeloLiteCluster to set bit
 

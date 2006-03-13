@@ -1,15 +1,15 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.1 2006-02-23 18:56:35 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.2 2006-03-13 18:58:46 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
 
 #include "VeloRawBankDecoder.h"
-#include "VeloClusterPtrLessThan.h"
 #include "DecodeRawBankToClusters.h"
 
 unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank, 
                                               unsigned int sensorNumber,
-                                              LHCb::VeloClusters* clusters)
+                                              LHCb::VeloClusters* clusters,
+                                              int& byteCount)
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
@@ -20,12 +20,11 @@ unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank,
 
   // decode the clusterpositions, create  clusters and
   // append them to the container
-  for (VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
-       padci != decoder.posAdcEnd(); 
-       ++padci) {
+  VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
+  for ( ; padci != decoder.posAdcEnd(); ++padci) {
 
     LHCb::VeloChannelID vcid(sensorNumber,padci->first.channelID());
-    LHCb::VeloLiteCluster lc(padci->first.hasHighThreshold(),
+    LHCb::VeloLiteCluster lc(padci->first.fracStripBits(),
                              padci->first.pseudoSizeBits(),
                              padci->first.hasHighThreshold(),
                              vcid);
@@ -61,8 +60,9 @@ unsigned int VeloDAQ::decodeRawBankToClusters(const SiDAQ::buffer_word* bank,
     clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
   }
 
-  // finally sort them (currently by strip number from channel ID)
-  std::sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
+  // fetch number of decoded bytes, including 4 byte header, without
+  // the padding bytes at the end.
+  byteCount = padci.bytesRead();
 
   return decoder.nClusters();
 }
