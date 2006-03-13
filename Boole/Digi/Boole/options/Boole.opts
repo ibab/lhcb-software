@@ -173,6 +173,8 @@ RelationsTrSeq.Members += { "BuildMCTrackInfo" };
 
 ApplicationMgr.DLLs += { "RichMCAssociators" };
 #include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
+// Remove specialized algorithm not working with spillover
+RelationsRICHSeq.Members -= { "MCRichHitToMCRichOpPhotAlg" };
 
 ApplicationMgr.DLLs += { "CaloAssociators" };
 RelationsCaloSeq.Members += { "CaloDigitsFromRaw/EcalFromRaw" };
