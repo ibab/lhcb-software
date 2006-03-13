@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.1 2006-03-01 14:53:00 papanest Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.2 2006-03-13 17:47:42 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -39,12 +39,13 @@
  */
 //============================================================================
 
-class Rich1DTabFunc {
+class Rich1DTabFunc 
+{
 
 public:
 
   /// Default Constructor
-  Rich1DTabFunc::Rich1DTabFunc();
+  Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType = gsl_interp_linear );
 
   /** Constructor from arrays containing x and y values
    *  Arrays must be of the same size, and ordered such that entry i in each
@@ -81,7 +82,7 @@ public:
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
-  virtual ~Rich1DTabFunc( ) { clearInterpolator(); }
+  virtual ~Rich1DTabFunc( );
 
   /** Computes the function value (y) for the given parameter (x) value
    *
@@ -201,6 +202,12 @@ public:
   /// clear the interpolator
   void clearInterpolator();
 
+  /// Return the interpolator name
+  std::string interpName() const;
+
+  /// Return the interpolator type
+  const gsl_interp_type * interType() const;
+
 protected: // data
 
   /// the data points
@@ -216,6 +223,7 @@ private: // data
   gsl_spline       * m_mainDistSpline;     ///< The spline for the main y(x) distribution
   gsl_interp_accel * m_weightedDistAcc;    ///< The accelerator for the weighted x.y(x) distribution
   gsl_spline       * m_weightedDistSpline; ///< The spline for the weighted x.y(x) distribution
+  const gsl_interp_type * m_interType;     ///< The interpolator type
 
 };
 
@@ -316,4 +324,20 @@ inline unsigned int Rich1DTabFunc::nDataPoints() const
 }
 
 //============================================================================
+
+inline std::string Rich1DTabFunc::interpName() const
+{
+  return ( m_mainDistSpline ? 
+           std::string(gsl_interp_name(m_mainDistSpline->interp)) : "Undefined" );
+}
+
+//============================================================================
+
+inline const gsl_interp_type * Rich1DTabFunc::interType() const
+{
+  return m_interType;
+}
+
+//============================================================================
+
 #endif // RICHKERNEL_RICH1DTABFUNC_H

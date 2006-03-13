@@ -4,14 +4,7 @@
  *  Header file for utility class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.1 2006-03-01 14:53:00 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/29 09:30:32  jonrob
- *  Fix various typos + minor updates
- *
- *  Revision 1.3  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: Rich1DTabProperty.h,v 1.2 2006-03-13 17:47:42 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -26,6 +19,9 @@
 // Gaudi
 #include "DetDesc/TabulatedProperty.h"
 
+class ISvcLocator;
+class IUpdateManagerSvc;
+
 /** @class Rich1DTabProperty Rich1DTabProperty.h RichKernel/Rich1DTabProperty.h
  *
  *  A derived class from Rich1DTabFunc for tabulated properties
@@ -39,15 +35,19 @@ class Rich1DTabProperty : public Rich1DTabFunc {
 public:
 
   /** Constructor from tabulated property and gsl interpolator type
-   * 
-   *  @param tab        Pointer to a tabulated proper
-   *  @param interType  GSL Interpolator type
+   *
+   *  @param tab         Pointer to a tabulated proper
+   *  @param registerUMS Flag to indicate if this interpolator should register
+   *                     itself to the UMS, so that it is automatically updated
+   *                     when the underlying TabulatedProperty is updated
+   *  @param interType   GSL Interpolator type
    */
-  explicit Rich1DTabProperty( const TabulatedProperty * tab, 
+  explicit Rich1DTabProperty( const TabulatedProperty * tab,
+                              const bool registerUMS = true,
                               const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
-  virtual ~Rich1DTabProperty( ) { clearInterpolator(); }
+  virtual ~Rich1DTabProperty( );
 
   /** The underlying tabulated property used to initialise the interpolator
    *
@@ -58,10 +58,33 @@ public:
     return m_tabProp;
   }
 
+private: // methods
+
+  /// Service locator
+  ISvcLocator* svcLocator();
+
+  /// UMS update method
+  StatusCode updateTabProp();
+
+  /// Access the UpdateManagerSvc
+  IUpdateManagerSvc* updMgrSvc();
+
+  /// Access the message service
+  IMessageSvc* msgSvc();
+
 private: // data
 
   /// Pointer to the underlying TabulatedProperty
   const TabulatedProperty * m_tabProp;
+
+  /// The service locator
+  ISvcLocator* m_svcLocator;
+
+  /// The Message service
+  IMessageSvc* m_msgSvc;
+
+  /// The Update Manager Service
+  IUpdateManagerSvc* m_updMgrSvc;
 
 };
 
