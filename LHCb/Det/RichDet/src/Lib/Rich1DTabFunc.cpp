@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.1 2006-03-01 14:53:01 papanest Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.2 2006-03-13 17:47:42 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -23,12 +23,13 @@
 //============================================================================
 
 // Default Constructor
-Rich1DTabFunc::Rich1DTabFunc() :
+Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType ) :
   m_OK                 ( false ),
   m_mainDistAcc        ( 0 ),
   m_mainDistSpline     ( 0 ),
   m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 ) { }
+  m_weightedDistSpline ( 0 ),
+  m_interType          ( interType ) { }
 
 
 // Constructor from arrays
@@ -40,7 +41,8 @@ Rich1DTabFunc::Rich1DTabFunc( const double x[],
   m_mainDistAcc        ( 0 ),
   m_mainDistSpline     ( 0 ),
   m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 )
+  m_weightedDistSpline ( 0 ),
+  m_interType          ( interType )
 {
 
   // copy data to internal container
@@ -58,13 +60,17 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
   m_mainDistAcc        ( 0 ),
   m_mainDistSpline     ( 0 ),
   m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 )
+  m_weightedDistSpline ( 0 ),
+  m_interType          ( interType )
 {
 
   // Check on size of containers
-  if ( x.size() != y.size() ) {
+  if ( x.size() != y.size() ) 
+  {
     m_OK = false;
-  } else {
+  } 
+  else 
+  {
 
     // copy data to internal container
     std::vector<double>::const_iterator ix,iy;
@@ -83,17 +89,21 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
 // Constructor from map
 Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
                               const gsl_interp_type * interType ) :
-  m_data               ( data ),
+  m_data               ( data  ),
   m_OK                 ( false ),
   m_mainDistAcc        ( 0 ),
   m_mainDistSpline     ( 0 ),
   m_weightedDistAcc    ( 0 ),
-  m_weightedDistSpline ( 0 )
+  m_weightedDistSpline ( 0 ),
+  m_interType          ( interType )
 {
   // initialise interpolation
   m_OK = initInterpolator( interType );
 }
 
+//============================================================================
+// Destructor
+Rich1DTabFunc::~Rich1DTabFunc( ) { clearInterpolator(); }
 //============================================================================
 
 // initialise the interpolator
@@ -113,9 +123,10 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   double * xy = new double[size];
   unsigned int i = 0;
   for ( std::map<double,double>::const_iterator iD = m_data.begin();
-        iD != m_data.end(); ++iD, ++i ) {
-    x[i] = (*iD).first;
-    y[i] = (*iD).second;
+        iD != m_data.end(); ++iD, ++i ) 
+  {
+    x[i]  = (*iD).first;
+    y[i]  = (*iD).second;
     xy[i] = x[i]*y[i];
   }
 
@@ -132,7 +143,8 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   delete[] y;
   delete[] xy;
 
-  if ( err1 || err2 ) {
+  if ( err1 || err2 ) 
+  {
     throw GaudiException( "Error whilst initialising GSL interpolators",
                           "*Rich1DTabFunc*", StatusCode::FAILURE );
     return false;
@@ -147,21 +159,25 @@ void Rich1DTabFunc::clearInterpolator()
 {
 
   // Free GSL components
-  if ( m_mainDistSpline ) {
+  if ( m_mainDistSpline ) 
+  {
     gsl_spline_free( m_mainDistSpline );
-    m_mainDistSpline = 0;
+    m_mainDistSpline = NULL;
   }
-  if ( m_mainDistAcc ) {
+  if ( m_mainDistAcc ) 
+  {
     gsl_interp_accel_free( m_mainDistAcc );
-    m_mainDistAcc = 0;
+    m_mainDistAcc = NULL;
   }
-  if ( m_weightedDistSpline ) {
+  if ( m_weightedDistSpline ) 
+  {
     gsl_spline_free( m_weightedDistSpline );
-    m_weightedDistSpline = 0;
+    m_weightedDistSpline = NULL;
   }
-  if ( m_weightedDistAcc ) {
+  if ( m_weightedDistAcc ) 
+  {
     gsl_interp_accel_free( m_weightedDistAcc );
-    m_weightedDistAcc = 0;
+    m_weightedDistAcc = NULL;
   }
 
 }

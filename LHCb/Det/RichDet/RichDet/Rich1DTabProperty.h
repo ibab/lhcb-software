@@ -4,7 +4,7 @@
  *  Header file for utility class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.2 2006-03-13 17:47:42 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.3 2006-03-13 17:49:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -43,7 +43,7 @@ public:
    *  @param interType   GSL Interpolator type
    */
   explicit Rich1DTabProperty( const TabulatedProperty * tab,
-                              const bool registerUMS = true,
+                              const bool registerUMS = false,
                               const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
