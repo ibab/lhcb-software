@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2006-03-13 - Jeroen van Tilburg
+ - SiLiteCluster.ent: Added STLiteClusters typedef for FastContainer.
+
 !========================= DigiEvent v1r0 2006-03-06 =========================
 ! 2006-03-06 - Marco Cattaneo
  - Add Kernel/IVeloCluster2VeloDigitTool.h interface

@@ -3,12 +3,15 @@
      <import name="Kernel/FastClusterContainer"/>
      <import name="Kernel/LHCbMath"/>
 
+    <typedef desc = "fast container for light clusters"
+       type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
+       def = "&className;s"
+       access = "PUBLIC " />
 
-     <typedef desc = "fast container for light clusters"
+     <typedef desc = "fast container for light clusters (old name: will be removed)"
        type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
        def = "FastContainer"
        access = "PUBLIC " />
-
 
      <constructor desc="Constructor" 
        argList='&channelIDName; &amp; chan, double fracStrip, 
