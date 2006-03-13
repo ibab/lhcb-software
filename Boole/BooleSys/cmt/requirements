@@ -1,31 +1,34 @@
 package BooleSys
-version v10r3
+version v11r0
 
 branches cmt doc
  
 #=======================================================
-# packages included in the BOOLE tree
+# packages included in the BOOLE project
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole              v10r3    Digi  # Marco Cattaneo
-use DigiAlg		v3r0	Digi  # Marco Cattaneo
+use Boole              v11r0    Digi  # Marco Cattaneo
+use DigiAlg		v4r0	Digi  # Marco Cattaneo
 
 # Calorimeter
-use CaloMoniDigi        v1r0 	Calo  # Ivan Belyaev
-use CaloDigit           v1r8	Calo  # Olivier Callot
-
-# Velo
-use VeloAlgorithms      v3r3	Velo  # Chris Parkes
-
-# Outer Tracker
-use OTSimulation	v2r0	OT    # Jacopo Nardulli
+use CaloMoniDigi        v2r0    Calo  # Olivier Deschamps
+use CaloDigit           v2r0    Calo  # Olivier Callot
 
 # Muon
-use MuonAlgs            v5r7	Muon  # Alessia Satta
-use MuonBackground	v1r10p1	Muon  # Alessia Satta
-use MuonMoniDigi        v1r0    Muon  # Alessio Sarti
+use MuonAlgs            v6r0    Muon  # Alessia Satta
+use MuonAssociators     v2r0    Muon  # Alessia Satta
+use MuonBackground      v2r0    Muon  # Alessia Satta
+use MuonMoniDigi        v2r0    Muon  # Alessio Sarti
+
+# Outer Tracker
+use OTSimulation        v3r0    OT    # Jan Amoraal
 
 # Rich
-use RichDigiQC	        v2r3    Rich  # Chris Jones
-use RichReadout	        v1r14   Rich  # Chris Jones
+use RichDigiQC	        v3r0    Rich  # Chris Jones
+use RichMCAssociators   v2r0    Rich  # Chris Jones
+use RichReadout	        v2r0    Rich  # Chris Jones
+
+# Velo
+use VeloAlgorithms      v4r0    Velo  # Tomasz Szumlak
+use VeloSimulation      v2r0    Velo  # Tomasz Szumlak
