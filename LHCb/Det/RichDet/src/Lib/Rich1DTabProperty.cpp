@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.2 2006-03-13 17:47:43 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.3 2006-03-13 17:59:30 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -57,7 +57,7 @@ Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
   if ( registerUMS )
   {
     MsgStream msg( msgSvc(), "Rich1DTabProperty" );
-    msg << MSG::DEBUG << "Registry UMS dependency for " 
+    msg << MSG::DEBUG << "Registering UMS dependency for " 
         << tabProperty()->name() << endreq;
 
     // register update method
