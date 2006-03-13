@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.12 2006-03-12 16:34:17 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.13 2006-03-13 19:38:14 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -61,22 +61,22 @@ void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
     for ( MCRichHits::const_iterator iHit = mcHits->begin();
           iHit != mcHits->end(); ++iHit, ++nHit )
     {
-      debug() << "MCRichHit " << nHit << " " << *iHit          
-              << " container = " << location << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "MCRichHit " << nHit << " " << *iHit
+                << " container = " << location << endreq;
+        std::cout << "   Data members " << **iHit << std::endl;
+      }
       const MCParticle * mcPart = (*iHit)->mcParticle();
       if ( mcPart )
       {
         const std::string mcploc = objectLocation(mcPart->parent());
-        debug() << "  Parent MCParticle " << mcPart->key() << " " << mcPart 
+        debug() << "  Parent MCParticle " << mcPart->key() << " " << mcPart
                 << " container = " << mcploc << endreq;
       }
       else
       {
         Warning( "NULL pointer to parent MCParticle" );
-      }
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        std::cout << "   Data members " << **iHit << std::endl;
       }
     }
   }
@@ -98,11 +98,11 @@ void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
     for ( MCRichOpticalPhotons::const_iterator iP = mcPhots->begin();
           iP != mcPhots->end(); ++iP )
     {
-      debug() << "MCRichOpticalPhoton " << (*iP)->key() << " " << *iP 
-              << " container = " << location
-              << endreq;
       if ( msgLevel(MSG::DEBUG) )
       {
+        debug() << "MCRichOpticalPhoton " << (*iP)->key() << " " << *iP
+                << " container = " << location
+                << endreq;
         std::cout << "   Data members " << **iP << std::endl;
       }
       // get associated MCRichHit
@@ -110,7 +110,7 @@ void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
       if ( mchit )
       {
         const std::string mchloc = objectLocation(mchit->parent());
-        debug() << "  Associated MCRichHit " << mchit 
+        debug() << "  Associated MCRichHit " << mchit
                 << " container = " << mchloc << endreq;
       }
       else
@@ -149,27 +149,28 @@ StatusCode RichDigiDataObjVerifier::execute()
   }
 
   // MCRichDigits
-  MCRichDigits * richMcDigits( 0 );
-  if ( m_bdMcDigits ) 
+  if ( m_bdMcDigits )
   {
-    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) ) 
+    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) )
     {
       Warning("Cannot locate MCRichDigits at "+MCRichDigitLocation::Default);
-    } 
-    else 
+    }
+    else
     {
-      richMcDigits = get<MCRichDigits>(MCRichDigitLocation::Default);
+      const MCRichDigits * richMcDigits = get<MCRichDigits>(MCRichDigitLocation::Default);
       debug() << "Successfully located " << richMcDigits->size()
               << " MCRichDigits at " << MCRichDigitLocation::Default << endreq;
       for ( MCRichDigits::const_iterator imcDigit = richMcDigits->begin();
-            imcDigit != richMcDigits->end(); ++imcDigit ) 
+            imcDigit != richMcDigits->end(); ++imcDigit )
       {
         debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
-        debug() << "  MCRichHits(" << (*imcDigit)->hits().size() << ") keys= ";
-        //for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
-        //      iHit != (*imcDigit)->hits().end(); ++iHit ) {
-        //  debug() << (long)(*iHit)->key() << " ";
-        //}
+        debug() << " MCRichHits(" << (*imcDigit)->hits().size() << ") =";
+        for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
+              iHit != (*imcDigit)->hits().end(); ++iHit ) 
+        {
+          const MCRichHit * hit = *iHit;
+          debug() << " " << hit;
+        }
         debug() << endreq;
       }
     }

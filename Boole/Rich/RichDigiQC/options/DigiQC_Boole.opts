@@ -9,7 +9,7 @@ RiDigitQC.HistoOffSet = 10000;
 ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 
 // Low level data object debugger
-MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
-RichDigiEventCheck.CheckMCRichDigits         = false;
-RichDigiEventCheck.CheckMCRichHits           = true;
-RichDigiEventCheck.CheckMCRichOpticalPhotons = true;
+//MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
+//RichDigiEventCheck.CheckMCRichDigits         = false;
+//RichDigiEventCheck.CheckMCRichHits           = true;
+//RichDigiEventCheck.CheckMCRichOpticalPhotons = true;
