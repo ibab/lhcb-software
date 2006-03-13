@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== MuonBackground v2r0 2006-02-15 =====================
+! 2006-03-13 - Alessia Satta
+ - use the primary verex pointer to get the collision to which each 
+    particle belongs , fix the usage of gap ID
+
 ! 2006-02-15 - Marco Cattaneo
  - In requirements, migrate to DigiEvent
 
