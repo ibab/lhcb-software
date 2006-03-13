@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.cpp,v 1.5 2006-01-30 11:04:47 asatta Exp $
+// $Id: ParticleInfo.cpp,v 1.6 2006-03-13 14:29:17 asatta Exp $
 // Include files 
 
 #include <iostream> 
@@ -26,13 +26,10 @@ int ParticleInfo::maxDimension=20;
 
 //=============================================================================
 ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle, int station, 
-int gaps ){
-   m_stationNumber=station;
+int gaps, int collision ){
+  m_stationNumber=station;
   m_gapsNumber=gaps;
-//  m_pileupEventNumber=particle->collision()->key();
-//temp it is  a bug not a feature...  waiting for Gloria 
- m_pileupEventNumber=0;
-
+  m_pileupEventNumber=collision;
   maxDimension=station*gaps;  
   m_storagePointer = new std::vector<std::vector<int> >(maxDimension) ;
   m_resultPointer = new std::vector<int>(maxDimension) ;
@@ -40,11 +37,11 @@ int gaps ){
   
 }
 
-ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle)
+ParticleInfo::ParticleInfo(const LHCb::MCParticle* particle, int collision)
 {
 //  m_pileupEventNumber=particle->collision()->key();
 //temp it is  a bug not a feature...  waiting for Gloria 
- m_pileupEventNumber=0;
+ m_pileupEventNumber=collision;
   
   m_storagePointer = new std::vector<std::vector<int> >(maxDimension) ;
   m_resultPointer = new std::vector<int> (maxDimension) ;
@@ -59,7 +56,7 @@ int ParticleInfo::getCollision()
 
 void ParticleInfo::setHitIn(int station, int gap, int chamber)
 {
-  int position=station*m_gapsNumber+gap-1;
+  int position=station*m_gapsNumber+gap;
   //	cout<<"position "<<position<<endl;
   (*m_storagePointer)[position].push_back(chamber);
   //cout<<"position "<<position<<endl;       

@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.31 2006-03-06 11:38:47 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.32 2006-03-13 14:29:17 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -305,8 +305,11 @@ StatusCode MuonBackground::execute() {
       hitsContainer->size()<<endreq;
     eventSvc()->registerObject(path,
                                hitsContainer);    
-    delete m_resultPointer;    
-  }  
+    delete m_resultPointer;
+    m_vertexList.clear();
+    
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -547,9 +550,9 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
     std::string path="/Event"+spill[ispill]+"/"+LHCb::MCHitLocation::Muon;        
     SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
     verbose()<<" container in path "<<path<<" "<<endreq;
-if(hitPointer!=0)verbose()<<"found "<<endreq;
-else verbose()<<" not found "<<endreq;
-
+    if(hitPointer!=0)verbose()<<"found "<<endreq;
+    else verbose()<<" not found "<<endreq;
+    
     LHCb::MCHits::const_iterator iter;	 
     preGap=-1;
     preIndex=-1;
@@ -573,20 +576,28 @@ else verbose()<<" not found "<<endreq;
           " out position  "<<            
           (*iter)->exit().x()<<" "<<
           (*iter)->exit().y()<<" "<<
-          (*iter)->exit().z()<<endreq;       
+          (*iter)->exit().z()<<endreq;      
+        const LHCb::MCVertex* pointVertex= (*iter)->mcParticle()->primaryVertex() ;
+        int collNumber=numberOfCollision(pointVertex);
+        debug()<<" collNumber "<<collNumber<<endreq;
+        
         if(particleInfo[index]){
+  
+          
           if(chamber!=preChamber||gap!=preGap||index!=preIndex)
-            particleInfo[index]->setHitIn(station,gap,chamber);            
+            particleInfo[index]->setHitIn(station,gap,chamber);   
+  
         }
         else{
           ParticleInfo* tmpPointer;
+  
           if(!first){                   
             tmpPointer=                 
-              new ParticleInfo((*iter)->mcParticle());
+              new ParticleInfo((*iter)->mcParticle(),collNumber);
           }else{                
             tmpPointer=
               new ParticleInfo((*iter)->mcParticle(),
-                               m_stationNumber,m_gaps);
+                               m_stationNumber,m_gaps,collNumber);
             first=false;
           }
           particleInfo[index]=tmpPointer;
@@ -599,10 +610,14 @@ else verbose()<<" not found "<<endreq;
     }      
   }    
   int partCollision;  
+
+  
   for(int i=0;i<collisions();i++){
     (*m_resultPointer)[i].resize(m_maxDimension);      
   }    
   std::vector<int> m_particleResult(m_maxDimension) ;    
+  
+  //  info()<<"ale 1"<<endreq;
   
   //all hits in the event have been added
   //then count the multiplicity per station  and track lenght   and delete
@@ -620,9 +635,13 @@ else verbose()<<" not found "<<endreq;
       delete *itParticleInfo;      
     }      
   }
+  
+  
   debug()<<" --- end of routine "<< endreq;  
   return StatusCode::SUCCESS;
 }
+
+
 
 StatusCode 
 MuonBackground::initializeRNDDistribution1D(IHistogram1D* 
@@ -1112,4 +1131,25 @@ int MuonBackground::chamberOffset(int station,int region)
   return m_chamberInRegion[station*4+region];  
 };
 
+
+int MuonBackground::numberOfCollision(const LHCb::MCVertex* pointVertex)
+{
+  int collision=0;
+  //info()<<" entering "<<endreq;  
+  std::vector<const LHCb::MCVertex*>::iterator it;
+  for(it=m_vertexList.begin();it<m_vertexList.end();it++){
+    if((*it)==pointVertex)return collision;
+    collision++;    
+  } 
+  //info()<<collision<<" qui "<<endreq;
+  m_vertexList.push_back(pointVertex);
+  return collision; 
+}
+
+StatusCode MuonBackground::clearCollision(){
+  std::vector<const LHCb::MCVertex*>::iterator it;
+  for(it=m_vertexList.begin();it<m_vertexList.end();it++){
+    return StatusCode::SUCCESS;
+  }
+}
 

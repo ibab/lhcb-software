@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.h,v 1.3 2006-01-30 11:04:47 asatta Exp $
+// $Id: ParticleInfo.h,v 1.4 2006-03-13 14:29:17 asatta Exp $
 #ifndef PARTICLEINFO_H 
 #define PARTICLEINFO_H 1
 
@@ -14,8 +14,8 @@
 class ParticleInfo {
 public:
   /// Standard constructor
-  ParticleInfo(const LHCb::MCParticle* particle, int station, int gaps ); 
-  ParticleInfo(const LHCb::MCParticle* particle);
+  ParticleInfo(const LHCb::MCParticle* particle, int station, int gaps, int collision ); 
+  ParticleInfo(const LHCb::MCParticle* particle, int collision);
   
   virtual ~ParticleInfo( ); ///< Destructor
   void setHitIn(int station, int gap,int chamber);

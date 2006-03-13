@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.9 2006-02-06 21:04:07 asatta Exp $
+// $Id: MuonBackground.h,v 1.10 2006-03-13 14:29:17 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -20,8 +20,7 @@
 // forward declarations
 class IHistogram1D;
 class IHistogram2D;
-//class IMuonTileXYZTool;
-//class IMuonGetInfoTool;
+
 
 typedef std::vector<std::string> VectorName;   
 
@@ -88,6 +87,8 @@ public:
   float min(float a,float b);
   int howManyHit( float floatHit);
   int chamberOffset(int sta,int reg);  
+  int numberOfCollision(const LHCb::MCVertex* vertex);
+StatusCode clearCollision();
 protected:
 
 private:
@@ -140,9 +141,9 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal,
   std::vector<MuBgDistribution*> m_logtimevsradial;  
   std::vector<MuBgDistribution*> m_lintimevsradial;
   std::vector<MuBgDistribution*> m_hitgap;
-  double m_luminosityFactor; 
-//  IMuonTileXYZTool* m_pMuonTileXYZ ;
-//  IMuonGetInfoTool* m_pGetInfo ;
+  double m_luminosityFactor; 	
+  std::vector<const LHCb::MCVertex*> m_vertexList;
+
   //only to test the histos  
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
