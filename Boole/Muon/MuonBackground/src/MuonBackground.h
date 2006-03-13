@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.10 2006-03-13 14:29:17 asatta Exp $
+// $Id: MuonBackground.h,v 1.11 2006-03-13 15:41:54 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -88,7 +88,6 @@ public:
   int howManyHit( float floatHit);
   int chamberOffset(int sta,int reg);  
   int numberOfCollision(const LHCb::MCVertex* vertex);
-StatusCode clearCollision();
 protected:
 
 private:

@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.32 2006-03-13 14:29:17 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.33 2006-03-13 15:41:54 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -1146,10 +1146,4 @@ int MuonBackground::numberOfCollision(const LHCb::MCVertex* pointVertex)
   return collision; 
 }
 
-StatusCode MuonBackground::clearCollision(){
-  std::vector<const LHCb::MCVertex*>::iterator it;
-  for(it=m_vertexList.begin();it<m_vertexList.end();it++){
-    return StatusCode::SUCCESS;
-  }
-}
 
