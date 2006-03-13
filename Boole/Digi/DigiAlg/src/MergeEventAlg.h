@@ -59,14 +59,14 @@ private:
   StatusCode readSpillover();
   
   /// Read additional event and load it into transient Event Store
-  StatusCode readAndLoadEvent( std::string& subPath );
+  StatusCode readAndLoadEvent( const std::string& subPath );
 
   /// Read leaves of unil specified depth
-  StatusCode readLeaves( std::string& subPath, const DataObject* pObj,
+  StatusCode readLeaves( const std::string& subPath, const DataObject* pObj,
                          long depth );
 
   /// Reset path of references attached to object
-  StatusCode resetLinks( std::string& subPath, const DataObject* pObj );
+  StatusCode resetLinks( const std::string& subPath, const DataObject* pObj );
 
   /* Reset path. When "/Event" in in the original path if subPath is ""
    * "/Event/" will be removed from the path, otherwise subPath will be
@@ -74,7 +74,7 @@ private:
    * When "/Event" is not in the original path, subPath is prepended to
    * the original path
    */
-  std::string resetPath( std::string& oldPath, const std::string& subPath="");
+  std::string resetPath( const std::string& oldPath, const std::string& subPath="");
 
   /// Type of events to merge
   std::string               m_mergeType;

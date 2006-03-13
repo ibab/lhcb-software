@@ -4,6 +4,11 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-03-13 - Chris Jones
+ - Changes to options to fix up links for extended RICH data objects in
+   spillover and LHCb background events
+ - Some additions to debug printout (added whilst chasing above fix)
+
 !========================== DigiAlg v4r0 2006-03-09 =========================
 ! 2006-03-08 - Olivier Callot
  - Add the second template of LinkedTo objects in BuildMCTrackInfo, for the new

@@ -12,9 +12,7 @@ LHCbkgAlg.ItemList = {
  "MC/Vertices#1",
  "MC/IT#*",
  "MC/OT#*",
- "MC/Rich#1",
-// Rich hits only available with SicbToOORawh v3 or greater
-// "MC/Rich/Hits#1",
+ "MC/Rich#*",
  "MC/Spd#*",
  "MC/Prs#*",
  "MC/Ecal#1",
