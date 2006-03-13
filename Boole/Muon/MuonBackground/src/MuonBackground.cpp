@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.33 2006-03-13 15:41:54 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.34 2006-03-13 15:53:03 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -382,7 +382,7 @@ StatusCode MuonBackground::initializeParametrization()
   int numName=m_histoName.size();
   int numCode=m_histogramsMapNumber.size();
   int code=0;
-  int gap;  
+  //  int gap;  
   std::string name;
   // Add an "h" to histogram identifiers translated by h2root
   std::string sep;
