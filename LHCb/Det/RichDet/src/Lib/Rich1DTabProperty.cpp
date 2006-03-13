@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.3 2006-03-13 17:59:30 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.4 2006-03-13 18:02:18 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -96,6 +96,12 @@ ISvcLocator* Rich1DTabProperty::svcLocator()
   if ( !m_svcLocator )
   {
     m_svcLocator = Gaudi::svcLocator();
+    if ( 0 == m_svcLocator ) 
+    {
+      throw GaudiException("ISvcLocator* points to NULL!",
+                           "*Rich1DTabProperty*" , 
+                           StatusCode::FAILURE);
+    }
   }
   return m_svcLocator;
 }
