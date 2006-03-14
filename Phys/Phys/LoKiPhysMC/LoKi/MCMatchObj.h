@@ -1,0 +1,364 @@
+// $Id: MCMatchObj.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+#ifndef LOKI_MCMATCHOBJ_H 
+#define LOKI_MCMATCHOBJ_H 1
+// ============================================================================
+// Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <functional>
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/Base.h"
+// ============================================================================
+// LoKiPhysMC 
+// ============================================================================
+#include "LoKi/PhysMCTypes.h"
+// ============================================================================
+
+// ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-03-10
+ */
+// ============================================================================
+
+namespace LoKi 
+{  
+  /** @class MCMatchObj MCMatchObj.h LoKi/MCMatchObj.h
+   *  
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-11
+   */
+  class MCMatchObj 
+    : public LoKi::Base                                                     
+    , public std::binary_function<const LHCb::Particle*,
+                                  const LHCb::MCParticle*,bool>    
+  {
+  public: 
+    /** Standard constructor
+     *  @param name object name 
+     *  @param reporter error reporter 
+     */
+    MCMatchObj
+    ( const std::string&     name , 
+      const LoKi::IReporter* reporter );
+  protected:
+    /// protected and virtual destructor 
+    virtual ~MCMatchObj( ); ///< Destructor
+  public:
+    /** check the match of MC truth information   (functor interface)
+     *  @param  particle    pointer to Particle object  
+     *  @param  mcparticle  pointer to MCParticle object 
+     *  @return true        if the particle and mcparticle has "match"
+     */
+    bool operator() ( const LHCb::Particle*   particle   , 
+                      const LHCb::MCParticle* mcparticle )  const 
+    { return match ( particle , mcparticle ) ; }
+    
+    /** check the match of MC truth information  
+     *  @param  particle    pointer to Particle object  
+     *  @param  mcparticle  pointer to MCParticle object 
+     *  @return true        if the particle and mcparticle has "match"
+     */
+    bool       match   
+    ( const LHCb::Particle*   particle   , 
+      const LHCb::MCParticle* mcparticle )  const ;
+    
+    /** check the match of MC truth information 
+     *  @param  first       begin  iterator for sequence of particles 
+     *  @param  last        end    iterator for sequence of particles 
+     *  @param  mcparticle  pointer to MCParticle object 
+     *  @return iterator to the first matched particle 
+     */
+    template <class PARTICLE> 
+    inline PARTICLE   match     
+    ( PARTICLE                first      , 
+      PARTICLE                last       , 
+      const LHCb::MCParticle* mcparticle ) const ;
+    
+    /** check the match of MC truth information 
+     *  @param  particle    pointer to Particle object 
+     *  @param  first       begin  iterator for sequence of MC particles 
+     *  @param  last        end    iterator for sequence of MC particles 
+     *  @return iterator to the first matched MC particle 
+     */
+    template <class MCPARTICLE>
+    inline MCPARTICLE match  
+    ( const LHCb::Particle*   particle   , 
+      MCPARTICLE              first      , 
+      MCPARTICLE              last       ) const ;
+    
+    /** check the match of MC truth information 
+     *  @param  particle    pointer to Particle object 
+     *  @param  range       range of MC particles 
+     *  @return true if particle matches at least 1 MC particle from range 
+     */
+    inline bool match     
+    ( const LHCb::Particle* particle   ,
+      LoKi::Types::MCRange  range      ) const ;
+    
+    /** check the match of MC truth information 
+     *  @param  particle    pointer to Particle object 
+     *  @param  first       begin  iterator for sequence of MC particles 
+     *  @param  last        end    iterator for sequence of MC particles 
+     *  @return true if *ALL* 'particles' are matched 
+     */
+    template <class PARTICLE, class MCPARTICLE>
+    inline bool match      
+    ( PARTICLE     first     ,
+      PARTICLE     last      , 
+      MCPARTICLE   firstMC   , 
+      MCPARTICLE   lastMC    ) const ;
+    
+  public:
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableP2MC*      table ) 
+    { if ( 0 != table) { m_tableP2MC   .push_back ( table ) ; } }
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableWP2MC*     table ) 
+    { if ( 0 != table) { m_tableWP2MC  .push_back ( table ) ; } }
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableWPP2MC*    table ) 
+    { if ( 0 != table) { m_tableWPP2MC .push_back ( table ) ; } }
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableT2MC*      table ) 
+    { if ( 0 != table) { m_tableT2MC   .push_back ( table ) ; } }
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableWDT2MC*    table ) 
+    { if ( 0 != table) { m_tableWDT2MC .push_back ( table ) ; } }
+    
+    void addMatchInfo
+    ( const LoKi::Types::TableWIT2MC*    table ) 
+    { if ( 0 != table) { m_tableWIT2MC .push_back ( table ) ; } }    
+    
+    /// clear the internal storage
+    void clear() ;
+    
+  protected:
+    
+    /** look at MC truth information using "direct" relation table 
+     *  @param table      pointer to relation table 
+     *  @param object     the object (Particle/ProtoParticle/Track/...)
+     *  @param mcparticle pointer to MCParticle object 
+     */
+    template <class TABLE, class OBJECT, class MCPARTICLE>
+    inline bool matchInTable 
+    ( const TABLE*  table      , 
+      OBJECT        object     ,
+      MCPARTICLE    mcparticle ) const ;
+
+    /** look at MC truth information using "direct" relation table 
+     *  @param table      pointer to relation table 
+     *  @param object     the object (Particle/ProtoParticle/Track/...)
+     *  @param mcparticle pointer to MCParticle object 
+     */
+    template <class TABLE, class OBJECT, class MCPARTICLE>
+    inline bool matchInTable 
+    ( TABLE         first ,
+      TABLE         last  ,
+      OBJECT        obj   ,
+      MCPARTICLE    mcp   ) const ;
+    
+    /** look at MC truth information using "direct" relation table 
+     *  @param table      pointer to relation table 
+     *  @param object     the object (Particle/ProtoParticle/Track/...)
+     *  @param mcparticle pointer to MCParticle object 
+     */
+    template <class TABLES, class OBJECT, class MCPARTICLE>
+    inline bool matchInTables 
+    ( const TABLES& tables,
+      OBJECT        obj   ,
+      MCPARTICLE    mcp   ) const ;
+    
+  private:
+    /// default constructor is disabled (?) 
+    MCMatchObj() ;
+    /// copy constructor is disabled 
+    MCMatchObj           ( const MCMatchObj& right ) ;
+    /// assignement operator is disabled 
+    MCMatchObj& operator=( const MCMatchObj& right ) ;
+  private:
+    
+    typedef std::vector<const LoKi::Types::TableP2MC*>     TablesP2MCs ;
+    typedef std::vector<const LoKi::Types::TableWP2MC*>   TablesWP2MCs ;
+    typedef std::vector<const LoKi::Types::TableWPP2MC*> TablesWPP2MCs ;
+    typedef std::vector<const LoKi::Types::TableT2MC*>     TablesT2MCs ;
+    typedef std::vector<const LoKi::Types::TableWDT2MC*> TablesWDT2MCs ;
+    typedef std::vector<const LoKi::Types::TableWIT2MC*> TablesWIT2MCs ;
+    
+    TablesP2MCs     m_tableP2MC ;
+    TablesWP2MCs   m_tableWP2MC ;
+    TablesWPP2MCs m_tableWPP2MC ;
+    TablesT2MCs     m_tableT2MC ;
+    TablesWDT2MCs m_tableWDT2MC ;
+    TablesWIT2MCs m_tableWIT2MC ;
+    
+  } ; 
+  
+} ; // end of the namespace LoKi
+
+// ============================================================================
+/** check the match of MC truth information 
+ *  @param  first       begin  iterator for sequence of particles 
+ *  @param  last        end    iterator for sequence of particles 
+ *  @param  mcparticle  pointer to MCParticle object 
+ *  @return iterator to the first matched particle 
+ */
+// ============================================================================
+template <class PARTICLE> 
+inline PARTICLE LoKi::MCMatchObj::match     
+( PARTICLE                first      , 
+  PARTICLE                last       , 
+  const LHCb::MCParticle* mcparticle ) const 
+{
+  if ( 0 == mcparticle )
+  { Error ( "match(): MCParticle* points to NULL") ; return last; } // RETURN
+  for ( ; first != last ; ++first ) 
+  { if ( match ( *first , mcparticle ) ) { return first ; } }       // RETURN 
+  return last ;                                                     // RETURN 
+};
+// ============================================================================
+/** check the match of MC truth information 
+ *  @param  particle    pointer to Particle object 
+ *  @param  first       begin  iterator for sequence of MC particles 
+ *  @param  last        end    iterator for sequence of MC particles 
+ *  @return iterator to the first matched MC particle 
+ */
+// ============================================================================
+template <class MCPARTICLE>
+inline MCPARTICLE LoKi::MCMatchObj::match  
+( const LHCb::Particle*   particle   , 
+  MCPARTICLE              first      , 
+  MCPARTICLE              last       ) const 
+{
+  if ( 0 == particle )
+  { Error ("match():   Particle* points to NULL") ; return last ; }  // RETURN     
+  for ( ; first != last ; ++first ) 
+  { if ( match ( particle , *first ) ) { return first ; } }          // RETURN 
+  return  last ;                                                     // RETURN 
+};
+// ============================================================================
+/** check the match of MC truth information 
+ *  @param  particle    pointer to Particle object 
+ *  @param  range       range of MC particles 
+ *  @return true if particle matches at least 1 MC particle from range 
+ */
+// ============================================================================
+inline bool LoKi::MCMatchObj::match     
+( const LHCb::Particle*      particle   ,
+  const LoKi::Types::MCRange range      ) const 
+{ return range.end() != match ( particle , range.begin() , range.end() ) ; }
+// ============================================================================
+/** check the match of MC truth information 
+ *  @param  particle    pointer to Particle object 
+ *  @param  first       begin  iterator for sequence of MC particles 
+ *  @param  last        end    iterator for sequence of MC particles 
+ *  @return true if *ALL* 'particles' are matched 
+ */
+// ============================================================================
+template <class PARTICLE, class MCPARTICLE>
+inline bool LoKi::MCMatchObj::match
+( PARTICLE     first     ,
+  PARTICLE     last      , 
+  MCPARTICLE   firstMC   , 
+  MCPARTICLE   lastMC    ) const 
+{
+  // agreement 
+  if (   first  == last                                ) { return false ; }
+  // match the first particle 
+  if (   lastMC == match ( *first , firstMC , lastMC ) ) { return false ; } 
+  //  empty sequence ?  
+  if ( ++first  == last                                ) { return true  ; }
+  // match the rest 
+  return    match ( first , last , firstMC , lastMC   ) ; 
+};
+// ============================================================================
+/** look at MC truth information using "direct" relation table 
+ *  @param table      pointer to relation table 
+ *  @param object     the object (particle, protoparticle, track, etc..)
+ *  @param mcparticle pointer to MCParticle object 
+ */
+// ============================================================================
+template <class TABLE, class OBJECT, class MCPARTICLE>
+inline bool LoKi::MCMatchObj::matchInTable 
+( const TABLE* table      , 
+  OBJECT       object     , 
+  MCPARTICLE   mcparticle ) const 
+{
+  if ( !table || !object || !mcparticle ) { return false ; }     // RETURN 
+  const typename TABLE::Range range = table->relations ( object ) ;
+  const LHCb::MCParticle* const mcp = mcparticle ;
+  for (  typename TABLE::iterator entry = range.begin() ; 
+         range.end() != entry ; ++entry ) 
+  { 
+    const LHCb::MCParticle* _mc = entry->to() ;
+    if ( mcp == _mc ) { return true ; }                          // RETURN 
+  }  
+  return false ;                                                 // RETURN 
+};
+// ============================================================================
+/** look at MC truth information using "direct" relation table 
+ *  @param table      pointer to relation table 
+ *  @param object     the object (Particle/ProtoParticle/Track/...)
+ *  @param mcparticle pointer to MCParticle object 
+ */
+// ============================================================================
+template <class TABLE, class OBJECT, class MCPARTICLE>
+inline bool LoKi::MCMatchObj::matchInTable 
+( TABLE         first ,
+  TABLE         last  ,
+  OBJECT        obj   ,
+  MCPARTICLE    mcp   ) const 
+{
+  for ( ; first != last ; ++first ) 
+  { if ( matchInTable ( *first , obj , mcp ) ) { return true ; } } // RETURN
+  return false ;
+} ;
+// ============================================================================
+/** look at MC truth information using "direct" relation table 
+ *  @param table      pointer to relation table 
+ *  @param object     the object (Particle/ProtoParticle/Track/...)
+ *  @param mcparticle pointer to MCParticle object 
+ */
+// ============================================================================
+template <class TABLES, class OBJECT, class MCPARTICLE>
+inline bool LoKi::MCMatchObj::matchInTables 
+( const TABLES& tables,
+  OBJECT        obj   ,
+  MCPARTICLE    mcp   ) const 
+{ return matchInTable ( tables.begin() , tables.end() , obj , mcp ) ; }
+// ============================================================================
+    
+  
+
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // LOKI_MCMATCHOBJ_H
+// ============================================================================
