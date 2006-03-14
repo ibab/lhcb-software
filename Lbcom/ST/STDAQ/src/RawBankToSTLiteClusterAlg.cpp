@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.4 2006-03-06 14:36:25 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.5 2006-03-14 10:29:10 jvantilb Exp $
 
 
 #include <algorithm>
@@ -120,7 +120,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 
   } // iterBank
 
-  STLiteCluster::FastContainer* fCont = new STLiteCluster::FastContainer();
+  STLiteCluster::STLiteClusters* fCont = new STLiteCluster::STLiteClusters();
   fCont->resize(nClus);  
 
   unsigned int i = 0;
