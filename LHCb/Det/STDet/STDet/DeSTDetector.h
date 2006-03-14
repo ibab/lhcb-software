@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.13 2006-02-27 19:50:54 jvantilb Exp $
+// $Id: DeSTDetector.h,v 1.14 2006-03-14 14:30:19 jvantilb Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -69,6 +69,11 @@ public:
 
   /** @return number of stations */
   unsigned int nStation() const; 
+
+  /** Implementation of sensitive volume identifier for a given point in the 
+      global reference frame. This is the sensor number defined in the xml.
+  */
+  const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /**  locate the station based on a channel id
   @return  station */

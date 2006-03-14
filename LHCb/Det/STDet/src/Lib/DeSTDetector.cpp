@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.9 2006-03-03 15:54:07 mneedham Exp $
+// $Id: DeSTDetector.cpp,v 1.10 2006-03-14 14:30:19 jvantilb Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -72,6 +72,19 @@ StatusCode DeSTDetector::initialize() {
 
 void DeSTDetector::setFirstStation(const unsigned int iStation){
   m_firstStation = iStation;
+}
+
+const int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const 
+{
+  DeSTDetector* nonConstThis = const_cast<DeSTDetector*>(this);
+  DeSTSector* sector = nonConstThis->findSector( point );
+  if ( sector == 0 ) {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at " 
+        << point << endmsg;
+    return -1;
+  }
+  return sector->elementID();
 }
 
 DeSTStation* DeSTDetector::findStation(const STChannelID aChannel){

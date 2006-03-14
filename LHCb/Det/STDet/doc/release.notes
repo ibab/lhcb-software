@@ -2,6 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-03-14 - Jeroen Van Tilburg
+ - DeSTDetector: Added method sensitiveVolumeID to return the elementID given
+   a 3D point.
+
 !========================= STDet v2r0 2006-03-06 =======================
 ! 2006-03-06 M.Needham
  - fix bug in findSector in DeTTHalfModule 
