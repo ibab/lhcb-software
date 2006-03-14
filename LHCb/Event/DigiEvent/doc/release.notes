@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2006-03-14 - Kurt Rinnert
+ - fixed bug in VeloLiteCluster.xml, the insterstrip position was encoded
+  using only two bits, instead of three
+
 ! 2006-03-13 - Jeroen van Tilburg
  - SiLiteCluster.ent: Added STLiteClusters typedef for FastContainer.
 
