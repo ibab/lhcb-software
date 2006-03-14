@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.6 2006-03-13 18:58:46 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.7 2006-03-14 15:17:02 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -187,7 +187,8 @@ void DecodeVeloRawBuffer::dumpVeloClusters(const LHCb::VeloClusters* clusters) c
     unsigned int centroidStrip = clu->channelID().strip();
 
     // interstrip position in 1/8 of strip pitch (as it is encoded in raw bank)
-    float interStripPos = static_cast<unsigned int>((clu->interStripFraction())*8.0)/8.0;
+//     float interStripPos = static_cast<unsigned int>((clu->interStripFraction())*8.0)/8.0;
+    double interStripPos = clu->interStripFraction();
 
     std::cout << "DEC::POSDUMP:"
               << " SN=" << sensorNumber

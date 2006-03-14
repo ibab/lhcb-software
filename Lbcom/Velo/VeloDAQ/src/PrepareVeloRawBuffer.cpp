@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.16 2006-03-13 18:58:46 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.17 2006-03-14 15:17:02 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -370,7 +370,7 @@ void PrepareVeloRawBuffer::dumpInputClusters() const
       adcValues.push_back((clu->adcValue(adci) > 127 ? 127 : clu->adcValue(adci)));
     }
 
-    if (clu->size() > 2) {
+    if (clu->size() > 1) {
       float sumAdc = 0.0;
       float offset = 0;
       for (int strip = 0; strip < clu->size(); ++strip) {
