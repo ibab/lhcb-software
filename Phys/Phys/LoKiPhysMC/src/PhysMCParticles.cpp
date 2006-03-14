@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.cpp,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: PhysMCParticles.cpp,v 1.2 2006-03-14 19:37:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -303,7 +306,7 @@ LoKi::MCParticles::RCTruth::RCTruth
 // ============================================================================
 LoKi::MCParticles::RCTruth::RCTruth
 ( const LoKi::MCMatch&                match , 
-  const LoKi::Keeper<LHCb::Particle>& range ) ;
+  const LoKi::Keeper<LHCb::Particle>& range ) 
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
@@ -329,7 +332,7 @@ LoKi::MCParticles::RCTruth::RCTruth
 // ============================================================================
 LoKi::MCParticles::RCTruth::RCTruth 
 ( const LHCb::Particle* particle ,
-  const LoKi::MCMatch&  match    ) ;
+  const LoKi::MCMatch&  match    ) 
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( particle )
   , m_match ( match )

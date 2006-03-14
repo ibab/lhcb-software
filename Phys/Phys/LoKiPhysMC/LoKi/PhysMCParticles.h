@@ -1,8 +1,8 @@
-// $Id: PhysMCParticles.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: PhysMCParticles.h,v 1.2 2006-03-14 19:37:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
@@ -16,6 +16,7 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/PhysRangeTypes.h"
 // ============================================================================
 // LoKiMC  
 // ============================================================================
@@ -224,7 +225,7 @@ namespace LoKi
     } ;
 
   } ; // end of namespace Particles
-
+  
   namespace MCParticles
   {    
     /** @class RCTruth PhsyMCParticles.h LoKi/PhysMCParticles.h
@@ -357,7 +358,7 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual RCTruth* clone    () const ;
       /// MANDATORY: the only one essential method ("function")
-      virtual result_Type operator () ( argument ) const ;
+      virtual result_type operator () ( argument ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     public:
@@ -382,7 +383,7 @@ namespace LoKi
       RCTruth& add ( PARTICLE first  , 
                      PARTICLE last   ) 
       { 
-        addObjects ( frist , last ) ;
+        addObjects ( first , last ) ;
         return *this ;
       };      
     private:
