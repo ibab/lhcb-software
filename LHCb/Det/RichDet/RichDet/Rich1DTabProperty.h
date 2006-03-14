@@ -4,7 +4,7 @@
  *  Header file for utility class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.3 2006-03-13 17:49:26 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.4 2006-03-14 14:42:19 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -28,9 +28,12 @@ class IUpdateManagerSvc;
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
+ *
+ *  @todo Figure out why releasing the services during destruction causes a crash
  */
 
-class Rich1DTabProperty : public Rich1DTabFunc {
+class Rich1DTabProperty : public Rich1DTabFunc
+{
 
 public:
 
@@ -40,7 +43,8 @@ public:
    *  @param registerUMS Flag to indicate if this interpolator should register
    *                     itself to the UMS, so that it is automatically updated
    *                     when the underlying TabulatedProperty is updated
-   *  @param interType   GSL Interpolator type
+   *  @param interType   GSL Interpolator type. See
+   *                     http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
    */
   explicit Rich1DTabProperty( const TabulatedProperty * tab,
                               const bool registerUMS = false,
@@ -58,13 +62,22 @@ public:
     return m_tabProp;
   }
 
+  /** @brief The UMS update method
+   *
+   *  Running tis triggers a re-initialisation of the interpolator from
+   *  the underlying tabulated property.
+   *
+   *  Can either be called automatically, if configured to do so at 
+   *  construction, or can be called "by hand" by the user
+   *
+   *  @return StatusCode indicating if the update was successfully or not
+   */
+  StatusCode updateTabProp();
+
 private: // methods
 
   /// Service locator
   ISvcLocator* svcLocator();
-
-  /// UMS update method
-  StatusCode updateTabProp();
 
   /// Access the UpdateManagerSvc
   IUpdateManagerSvc* updMgrSvc();

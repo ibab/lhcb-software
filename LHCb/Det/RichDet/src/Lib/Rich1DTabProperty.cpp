@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.4 2006-03-13 18:02:18 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.5 2006-03-14 14:42:19 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -23,9 +23,10 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
 //============================================================================
-Rich1DTabProperty::~Rich1DTabProperty( ) 
-{ 
-  clearInterpolator();   
+Rich1DTabProperty::~Rich1DTabProperty( )
+{
+  clearInterpolator();
+  // Following lines cause a crash. ??
   //if (NULL != m_svcLocator) m_svcLocator->release();
   //if (NULL != m_msgSvc)     m_msgSvc->release();
   //if (NULL != m_updMgrSvc)  m_updMgrSvc->release();
@@ -57,19 +58,19 @@ Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
   if ( registerUMS )
   {
     MsgStream msg( msgSvc(), "Rich1DTabProperty" );
-    msg << MSG::DEBUG << "Registering UMS dependency for " 
+    msg << MSG::DEBUG << "Registering UMS dependency for "
         << tabProperty()->name() << endreq;
 
     // register update method
     try
     {
       TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
-      updMgrSvc()->registerCondition( this, nonconsttab, 
+      updMgrSvc()->registerCondition( this, nonconsttab,
                                       &Rich1DTabProperty::updateTabProp );
     }
     catch ( const GaudiException & excp )
     {
-      msg << MSG::WARNING 
+      msg << MSG::WARNING
           << tabProperty()->name() << " '" << excp.message() << "'" << endreq;
     }
 
@@ -82,9 +83,17 @@ Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
 
 StatusCode Rich1DTabProperty::updateTabProp()
 {
+  // make a message object
   MsgStream msg( msgSvc(), "Rich1DTabProperty" );
   msg << MSG::INFO << "Update triggered for " << tabProperty()->name() << endreq;
+  // run the update
   m_OK = initInterpolator( interType() );
+  // check status of update
+  if ( !m_OK )
+  {
+    msg << MSG::ERROR << "Update FAILED for " << tabProperty()->name() << endreq;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -96,11 +105,10 @@ ISvcLocator* Rich1DTabProperty::svcLocator()
   if ( !m_svcLocator )
   {
     m_svcLocator = Gaudi::svcLocator();
-    if ( 0 == m_svcLocator ) 
+    if ( 0 == m_svcLocator )
     {
-      throw GaudiException("ISvcLocator* points to NULL!",
-                           "*Rich1DTabProperty*" , 
-                           StatusCode::FAILURE);
+      throw GaudiException( "ISvcLocator* points to NULL!",
+                            "*Rich1DTabProperty*", StatusCode::FAILURE );
     }
   }
   return m_svcLocator;
@@ -110,11 +118,11 @@ IUpdateManagerSvc* Rich1DTabProperty::updMgrSvc()
 {
   if ( !m_updMgrSvc )
   {
-    const StatusCode sc = svcLocator()->service("UpdateManagerSvc" , m_updMgrSvc);
+    const StatusCode sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc);
     if ( sc.isFailure() )
     {
-      throw GaudiException ( "Could not locate UpdateManagerSvc",
-                             "*Rich1DTabProperty*" , StatusCode::FAILURE);
+      throw GaudiException( "Could not locate UpdateManagerSvc",
+                            "*Rich1DTabProperty*", StatusCode::FAILURE );
     }
   }
   return m_updMgrSvc;
@@ -124,11 +132,11 @@ IMessageSvc* Rich1DTabProperty::msgSvc()
 {
   if ( !m_msgSvc )
   {
-    const StatusCode sc = svcLocator()->service("MessageSvc" , m_msgSvc);
+    const StatusCode sc = svcLocator()->service("MessageSvc", m_msgSvc);
     if ( sc.isFailure() )
     {
-      throw GaudiException ( "Could not locate MessageSvc",
-                             "*Rich1DTabProperty*" , StatusCode::FAILURE);
+      throw GaudiException( "Could not locate MessageSvc",
+                            "*Rich1DTabProperty*", StatusCode::FAILURE );
     }
   }
   return m_msgSvc;

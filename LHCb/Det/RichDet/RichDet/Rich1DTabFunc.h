@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.2 2006-03-13 17:47:42 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.3 2006-03-14 14:42:19 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -44,7 +44,11 @@ class Rich1DTabFunc
 
 public:
 
-  /// Default Constructor
+  /** Default Constructor with optional interpolator type argument
+   *
+   *  @param interType   GSL Interpolator type. See
+   *                     http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
+   */
   Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType = gsl_interp_linear );
 
   /** Constructor from arrays containing x and y values
@@ -210,8 +214,11 @@ public:
 
 protected: // data
 
+  /// Internal data container type
+  typedef std::map < double, double > Data;
+
   /// the data points
-  std::map < double, double > m_data;
+  Data m_data;
 
   /// Status flag
   bool m_OK;
