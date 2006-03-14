@@ -1,6 +1,8 @@
 ! Package     : VeloDAQ
-! Responsible : Chris Parkes
+! Responsible : Kurt Rinnert, Chris Parkes
+!--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v3r1 2006-03-14 =======================
 ! 2006-03-13 - Kurt Rinnert
  - moved less-than operator for InternalVeloClusters outside of encoding
   algorithm
@@ -26,7 +28,6 @@
  - added optional dumping of input clusters in PrepareVeloRawBuffer
 
 !=========================  VeloDAQ v3r0 2006-03-13 =======================
-
 ! 2006-03-09 - David Hutchcroft
  - Added retrieval of threshold from VeloLiteCluster to set bit
 
