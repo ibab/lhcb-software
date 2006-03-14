@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.10 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: DecayFinder.h,v 1.11 2006-03-14 13:49:34 jpalac Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -14,6 +14,7 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IDecayFinder.h"
+
 
 class IParticlePropertySvc;
 class IDataProviderSvc;
@@ -106,8 +107,8 @@ public:
   std::string revert( void );
 
   /// Does the described decay exists in the event?
-  bool hasDecay( const ParticleVector &event );
-  bool hasDecay( const Particles &event );
+  bool hasDecay( const LHCb::Particle::ConstVector& event );
+  bool hasDecay( const LHCb::ConstParticles& event );
   bool hasDecay( void );
 
   /** Try to find the (next) match of the decay in the event.
@@ -119,11 +120,11 @@ public:
    *         parameter, a reference to a const Particle *.
    *  The particle pointed to by previous_result must be contained in event.
    */
-  bool findDecay( const ParticleVector &event,
-                  const Particle *&previous_result );
-  bool findDecay( const Particles &event,
-                  const Particle *&previous_result );
-  bool findDecay( const Particle*&previous_result );
+  bool findDecay( const LHCb::Particle::ConstVector &event,
+                  const LHCb::Particle*& previous_result );
+  bool findDecay( const LHCb::ConstParticles& event,
+                  const LHCb::Particle*& previous_result );
+  bool findDecay( const LHCb::Particle*& previous_result );
 
   /** Return the tree pointed at by head as a flat list.
    *
@@ -133,7 +134,8 @@ public:
    *  @param leaf, a bool indicating whether to include all particles or only
    *         the one at the ends of the branches. (Default: all)
    */
-  void descendants( const Particle *head, std::vector<Particle *>&result,
+  void descendants( const LHCb::Particle *head, 
+                    LHCb::Particle::ConstVector& result,
                     bool leaf=false );
 
   /** Get a list of all the requested members that are present in a decay.
@@ -144,13 +146,13 @@ public:
    *  particles seperated from the decay by a ':' and/or by putting a '^' before
    *  any particle in the decay.
    */
-  void decayMembers( const Particle *head, std::vector<Particle*>&members );
+  void decayMembers( const LHCb::Particle *head, 
+                     LHCb::Particle::ConstVector& members );
 
   /// Get a vector of pairs <mother, products> for all sub-trees.
-  void decaySubTrees( const Particle *head,
-                      std::vector<std::pair<const Particle*,
-                      std::vector<Particle*> >
-                      > & subtrees );
+  void decaySubTrees( const LHCb::Particle *head,
+                      std::vector<std::pair<const LHCb::Particle*,
+                      LHCb::Particle::ConstVector > >& subtrees );
 
   /// Enumaration types used internally.
   enum Quarks { empty, up, down, charm, strange, top, bottom, antiup,
@@ -173,7 +175,8 @@ private:
                      IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
                      IParticlePropertySvc *ppSvc );
-    bool test( const Particle *part, std::vector<Particle*> *collect=NULL );
+    bool test( const LHCb::Particle *part, 
+               LHCb::Particle::ConstVector *collect=NULL );
     void setLift( void ) { lift = true; }
     bool getLift( void ) { return lift; }
     void setEmpty( void ) { empty_f = true; }
@@ -225,7 +228,7 @@ private:
     ~Descriptor();
 
     template<class iter> bool test( const iter first, const iter last,
-                                    const Particle *&previous_result ) {
+                                    const LHCb::Particle*& previous_result ) {
       iter start;
       if( previous_result &&
           ((start=std::find(first,last,previous_result)) == last) ) {
@@ -236,8 +239,8 @@ private:
         start++;
       
       if( mother == NULL ) { // No mother == pp collision
-        std::list<const Particle*> prims;
-        ParticleVector::const_iterator i;
+        std::list<const LHCb::Particle*> prims;
+        LHCb::Particle::ConstVector::const_iterator i;
         for( i=(previous_result ? start : first); i != last; i++ ) {
           // Particle have no origin, let's say it comes from the pp collision.
           prims.push_back(*i);
@@ -245,7 +248,7 @@ private:
         if( skipResonnance )
           filterResonnances( prims );
         if( testDaughters(prims) ) {
-          previous_result = (const Particle *)1;
+          previous_result = (const LHCb::Particle *)1;
           return true;
         }
         if( getAlternate() )
@@ -264,8 +267,8 @@ private:
       }
       return false;
     }
-    bool test(const Particle *mother, std::vector<Particle*> *collect=NULL,
-              std::vector<std::pair<const Particle*,std::vector<Particle*> >
+    bool test(const LHCb::Particle *mother, LHCb::Particle::ConstVector *collect=NULL,
+              std::vector<std::pair<const LHCb::Particle*,LHCb::Particle::ConstVector >
               > *subTree=NULL);
 
     void setAlternate( Descriptor *a ) { alternate = a; }
@@ -282,13 +285,13 @@ private:
     void conjugate( void );
     std::string describe( void );
   private:
-    bool testDaughters( std::list<const Particle*> &parts,
-                        std::vector<Particle*> *collect=NULL,
-                        std::vector<std::pair<const Particle*,std::vector<Particle*> >
+    bool testDaughters( std::list<const LHCb::Particle*> &parts,
+                        LHCb::Particle::ConstVector *collect=NULL,
+                        std::vector<std::pair<const LHCb::Particle*,LHCb::Particle::ConstVector >
                         > *subTree=NULL );
-    void addNonResonnantDaughters( std::list<const Particle*> &parts,
-                                   const Particle *part );
-    void filterResonnances( std::list<const Particle*> &parts );
+    void addNonResonnantDaughters( std::list<const LHCb::Particle*> &parts,
+                                   const LHCb::Particle *part );
+    void filterResonnances( std::list<const LHCb::Particle*> &parts );
 
     ParticleMatcher *mother;
     std::vector<Descriptor *> daughters; // wildcard mother at the end!

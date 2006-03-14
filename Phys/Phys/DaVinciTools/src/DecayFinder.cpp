@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.12 2004-09-07 07:04:46 pkoppenb Exp $
+// $Id: DecayFinder.cpp,v 1.13 2006-03-14 13:50:26 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -178,10 +178,10 @@ bool DecayFinder::compile( std::string &source )
   return true;
 }
 
-bool DecayFinder::hasDecay( const ParticleVector &event )
+bool DecayFinder::hasDecay( const LHCb::Particle::ConstVector &event )
 {
   verbose() << "About to test the event" << endreq;
-  const Particle *drop_me = NULL;
+  const LHCb::Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
@@ -191,8 +191,8 @@ bool DecayFinder::hasDecay( const ParticleVector &event )
   }
 }
 
-bool DecayFinder::findDecay( const ParticleVector &event,
-                             const Particle *&previous_result )
+bool DecayFinder::findDecay( const LHCb::Particle::ConstVector &event,
+                             const LHCb::Particle *&previous_result )
 {
   verbose() << "About to test the event" << endreq;
   if( m_decay )
@@ -204,10 +204,10 @@ bool DecayFinder::findDecay( const ParticleVector &event,
   }
 }
 
-bool DecayFinder::hasDecay( const Particles &event )
+bool DecayFinder::hasDecay( const LHCb::ConstParticles &event )
 {
   verbose() << "About to test the event" << endreq;
-  const Particle *drop_me = NULL;
+  const LHCb::Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
@@ -217,8 +217,8 @@ bool DecayFinder::hasDecay( const Particles &event )
   }
 }
 
-bool DecayFinder::findDecay( const Particles &event,
-                             const Particle *&previous_result )
+bool DecayFinder::findDecay( const LHCb::ConstParticles &event,
+                             const LHCb::Particle *&previous_result )
 {
   verbose() << "About to test the event" << endreq;
   if( m_decay )
@@ -232,53 +232,50 @@ bool DecayFinder::findDecay( const Particles &event,
 
 bool DecayFinder::hasDecay( void )
 {
-  SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
+  SmartDataPtr<LHCb::ConstParticles> parts(m_EDS, LHCb::ParticleLocation::Production );
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"
-            << ParticleLocation::Production << "'" << endreq;
+            << LHCb::ParticleLocation::Production << "'" << endreq;
     return false;
   }
   return hasDecay( *parts );
 }
 
-bool DecayFinder::findDecay( const Particle *&previous_result )
+bool DecayFinder::findDecay( const LHCb::Particle *&previous_result )
 {
-  SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
+  SmartDataPtr<LHCb::ConstParticles> parts(m_EDS, LHCb::ParticleLocation::Production );
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"
-            << ParticleLocation::Production << "'" << endreq;
+            << LHCb::ParticleLocation::Production << "'" << endreq;
     return false;
   }
   return findDecay( *parts, previous_result );
 }
 
-void DecayFinder::descendants( const Particle *head,
-                               std::vector<Particle *>&result,
+void DecayFinder::descendants( const LHCb::Particle *head,
+                               LHCb::Particle::ConstVector&result,
                                bool leaf )
 {
   bool term = true;
-  const Vertex *vtx = head->endVertex();
-  if( vtx ) {
-    SmartRefVector<Particle>::const_iterator pi;
-    for( pi = vtx->products().begin(); pi != vtx->products().end(); pi++ ) {
-      term = false;
-      descendants( *pi, result, leaf );
-    }
+  SmartRefVector<LHCb::Particle>::const_iterator pi;
+  for( pi = head->daughters().begin(); pi != head->daughters().end(); pi++ ) {
+    term = false;
+    descendants( *pi, result, leaf );
   }
  
   if( !leaf || term )
-    result.push_back(const_cast<Particle *>(head));
+    result.push_back(const_cast<LHCb::Particle *>(head));
 }
 
-void DecayFinder::decayMembers( const Particle *head,
-                                std::vector<Particle *>&members )
+void DecayFinder::decayMembers( const LHCb::Particle *head,
+                                LHCb::Particle::ConstVector&members )
 {
   if( m_members ) {
-    std::vector<Particle *> flat;
+    LHCb::Particle::ConstVector flat;
     descendants( head, flat, false );
-    std::vector<Particle *>::const_iterator pi;
+    LHCb::Particle::ConstVector::const_iterator pi;
     for( pi = flat.begin(); pi != flat.end(); pi++ ) {
       std::vector<ParticleMatcher *>::const_iterator mi;
       for( mi = m_members->begin(); mi != m_members->end(); mi++ )
@@ -293,9 +290,9 @@ void DecayFinder::decayMembers( const Particle *head,
 }
 
 void DecayFinder::decaySubTrees(
-                                const Particle *head,
-                                std::vector<std::pair<const Particle*,
-                                std::vector<Particle*> >
+                                const LHCb::Particle *head,
+                                std::vector<std::pair<const LHCb::Particle*,
+                                LHCb::Particle::ConstVector >
                                 > & subtrees )
 {
   m_decay->test(head, NULL, &subtrees);
@@ -369,14 +366,14 @@ std::string DecayFinder::Descriptor::describe( void )
   return result;
 }
   
-bool DecayFinder::Descriptor::test( const Particle *part,
-                                    std::vector<Particle*> *collect,
-                                    std::vector<std::pair<const Particle*,
-                                    std::vector<Particle*> >
+bool DecayFinder::Descriptor::test( const LHCb::Particle *part,
+                                    LHCb::Particle::ConstVector *collect,
+                                    std::vector<std::pair<const LHCb::Particle*,
+                                    LHCb::Particle::ConstVector >
                                     > *subtrees )
 {
-  std::vector<Particle*> local_collect(0);
-  std::vector<Particle*> *local = NULL;
+  LHCb::Particle::ConstVector local_collect(0);
+  LHCb::Particle::ConstVector *local = NULL;
   if( collect || subtrees )
     local = &local_collect;
   bool result = false;
@@ -385,21 +382,18 @@ bool DecayFinder::Descriptor::test( const Particle *part,
     if( daughters.empty() )
       result = true; // Nothing to test for the daughters.
     else {
-      std::list<const Particle *> parts;
-      const Vertex *vtx = part->endVertex();
-      if( vtx ) {
-        SmartRefVector<Particle>::const_iterator idau;
-        for ( idau = vtx->products().begin();
-              idau != vtx->products().end(); idau++ ) {
-          parts.push_back(*idau);
-        }
+      std::list<const LHCb::Particle *> parts;
+      SmartRefVector<LHCb::Particle>::const_iterator idau;
+      for ( idau = part->daughters().begin();
+            idau != part->daughters().end(); idau++ ) {
+        parts.push_back(*idau);
       }
       if( skipResonnance )
         filterResonnances( parts );
 
       if( subtrees ) {
-        std::vector<std::pair<const Particle*,
-          std::vector<Particle*> > > local_subtrees;
+        std::vector<std::pair<const LHCb::Particle*,
+          LHCb::Particle::ConstVector > > local_subtrees;
         result = testDaughters(parts,local,&local_subtrees);
         if( result )
           subtrees->insert(subtrees->end(),
@@ -415,7 +409,7 @@ bool DecayFinder::Descriptor::test( const Particle *part,
       collect->insert( collect->end(),
                        local_collect.begin(), local_collect.end() );
     if( subtrees && !daughters.empty() )
-      subtrees->push_back(std::pair<const Particle*,std::vector<Particle*> >
+      subtrees->push_back(std::pair<const LHCb::Particle*,LHCb::Particle::ConstVector >
                           (part,local_collect) );
     return true;
   }
@@ -425,17 +419,17 @@ bool DecayFinder::Descriptor::test( const Particle *part,
 }
 
 bool
-DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts,
-                                        std::vector<Particle*> *collect,
-                                        std::vector<std::pair<const Particle*,
-                                        std::vector<Particle*> >
+DecayFinder::Descriptor::testDaughters( std::list<const LHCb::Particle*> &parts,
+                                        LHCb::Particle::ConstVector *collect,
+                                        std::vector<std::pair<const LHCb::Particle*,
+                                        LHCb::Particle::ConstVector >
                                         > *subtrees)
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
        (di != daughters.end()) && !parts.empty(); di++ )
   {
-    std::list<const Particle *>::iterator p = parts.begin();
+    std::list<const LHCb::Particle *>::iterator p = parts.begin();
     while( p != parts.end() && ((*di)->test(*p,collect,subtrees) == false) )
       p++;
     if( p == parts.end() )
@@ -474,38 +468,34 @@ void DecayFinder::Descriptor::addDaughter( Descriptor *daughter )
 }
 
 void DecayFinder::Descriptor::addNonResonnantDaughters(
-                                                       std::list<const Particle*> &parts,
-                                                       const Particle *part )
+                                                       std::list<const LHCb::Particle*> &parts,
+                                                       const LHCb::Particle *part )
 {
-  const Vertex *vtx = part->endVertex();
-  if( vtx )
+  SmartRefVector<LHCb::Particle>::const_iterator d;
+  for ( d = part->daughters().begin();
+        d != part->daughters().end(); d++ )
   {
-    SmartRefVector<Particle>::const_iterator d;
-    for ( d = vtx->products().begin();
-          d != vtx->products().end(); d++ )
-    {
-      ParticleProperty *pp =
-        m_ppSvc->findByStdHepID( (*d)->particleID().pid() );
-      if( pp->lifetime() >= m_resThreshold )
-        parts.push_front(*d);
-      else
-        addNonResonnantDaughters( parts, *d );
-    }
+    ParticleProperty *pp =
+      m_ppSvc->findByStdHepID( (*d)->particleID().pid() );
+    if( pp->lifetime() >= m_resThreshold )
+      parts.push_front(*d);
+    else
+      addNonResonnantDaughters( parts, *d );
   }
 }
 
-void DecayFinder::Descriptor::filterResonnances( std::list<const Particle*>
+void DecayFinder::Descriptor::filterResonnances( std::list<const LHCb::Particle*>
                                                  &parts )
 {
-  std::list<const Particle*>::iterator pi;
-  std::list<const Particle*>::iterator npi;
+  std::list<const LHCb::Particle*>::iterator pi;
+  std::list<const LHCb::Particle*>::iterator npi;
   for( pi=parts.begin(); pi!=parts.end(); pi = npi )
   {
     ParticleProperty *pp = 
       m_ppSvc->findByStdHepID( (*pi)->particleID().pid() );
     if( pp->lifetime() < m_resThreshold )
     {
-      const Particle *part = *pi;
+      const LHCb::Particle *part = *pi;
       npi = pi;
       npi++;
       parts.erase(pi);
@@ -771,8 +761,8 @@ static int thirdQuark( int id )
 }
 
 bool
-DecayFinder::ParticleMatcher::test( const Particle *part,
-                                    std::vector<Particle*> *collect )
+DecayFinder::ParticleMatcher::test( const LHCb::Particle *part,
+                                    LHCb::Particle::ConstVector *collect )
 {
   bool result = false;
   switch( type ) {
@@ -789,10 +779,7 @@ DecayFinder::ParticleMatcher::test( const Particle *part,
     if( noscillate ) result = false; //Not available on reconstructed particles.
     if( inverse )    result = !result;
     if( stable ) {
-      int n = 0;
-      const Vertex *vtx = part->endVertex();
-      if( vtx )
-        n = vtx->products().size();
+      int n = part->daughters().size();
       result = result && (n == 0);
     }
     break;
@@ -877,7 +864,7 @@ DecayFinder::ParticleMatcher::test( const Particle *part,
     return false;
   }
   if( result && lift && collect )
-    collect->push_back( const_cast<Particle*>(part) );
+    collect->push_back( const_cast<LHCb::Particle*>(part) );
   return result;
 }
 
