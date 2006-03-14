@@ -1,8 +1,11 @@
-// $Id: Child.h,v 1.2 2006-02-18 18:09:14 ibelyaev Exp $
+// $Id: Child.h,v 1.3 2006-03-14 19:06:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:09:14  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
 // New package: "Phys"-part of restructurized LoKi project  
 // 
@@ -103,7 +106,7 @@ namespace LoKi
     { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
     
   } ; // end of the namespace LoKi:Child 
-} ; // end of the namespace LoKi 
+} ; // end of the namespace LoKi
 
 // ============================================================================
 // The END 

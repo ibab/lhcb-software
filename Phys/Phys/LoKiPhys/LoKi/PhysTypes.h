@@ -1,6 +1,6 @@
-// $Id: PhysTypes.h,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.2 2006-03-14 19:06:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================

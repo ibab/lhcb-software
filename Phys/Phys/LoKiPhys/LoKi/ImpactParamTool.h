@@ -1,6 +1,6 @@
-// $Id: ImpactParamTool.h,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: ImpactParamTool.h,v 1.2 2006-03-14 19:06:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -12,6 +12,7 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Functions.h"
+#include "LoKi/Interface.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -50,11 +51,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
      *  @dte 2006-02-19
      */
-    class ImpactParamTool : virtual public LoKi::AuxFunBase 
+    class ImpactParamTool 
+      : virtual public LoKi::AuxFunBase 
     {    
     public:
       /// accessor to the tool itself 
-      inline IGeomDispCalculator*  tool () const { return m_tool ; }
+      inline IGeomDispCalculator*  tool () const 
+      { return m_tool.getObject() ; }
     protected:
       /// constructor 
       ImpactParamTool 
@@ -64,15 +67,12 @@ namespace LoKi
       ( const ImpactParamTool& tool  ) ;
       /// virtual destructor 
       virtual ~ImpactParamTool();
-      /// assignement 
-      ImpactParamTool& 
-      operator=( const ImpactParamTool& right ) ;
     private:
       /// default constructor is private 
       ImpactParamTool();
     private:
       // the local pointer to the tool 
-      IGeomDispCalculator* m_tool;
+      LoKi::Interface<IGeomDispCalculator> m_tool ;
     } ;
 
   }; // end of namespace LoKi::Vertices;

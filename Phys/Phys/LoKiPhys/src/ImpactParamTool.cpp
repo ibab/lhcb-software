@@ -1,6 +1,6 @@
-// $Id: ImpactParamTool.cpp,v 1.1 2006-02-19 21:49:12 ibelyaev Exp $
+// $Id: ImpactParamTool.cpp,v 1.2 2006-03-14 19:06:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -9,10 +9,6 @@
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
-// ============================================================================
-// LHCbKernel
-// ============================================================================
-#include "Kernel/InstanceCounter.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -46,27 +42,14 @@
 // ============================================================================
 
 // ============================================================================
-namespace
-{
-  InstanceCounter<LoKi::Vertices::ImpactParamTool> s_IPTCounter ;
-};
-// ============================================================================
-
-// ============================================================================
 LoKi::Vertices::ImpactParamTool::ImpactParamTool 
 ( IGeomDispCalculator* tool ) 
   : LoKi::AuxFunBase () 
-  , m_tool           ( tool )
+  , m_tool ( tool )
 {
-  if ( 0 == m_tool ) 
+  if ( 0 == m_tool.getObject() ) 
   { throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
                           StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> addRef  ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.increment();
-#endif 
-  //
 };
 // ============================================================================
 
@@ -78,55 +61,17 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   : LoKi::AuxFunBase ( tool ) 
   , m_tool           ( tool.m_tool )
 {
-  if( 0 == m_tool ) 
-    { throw LoKi::Exception
-        ("ImpactParamTool( copy ):  Tool* points to NULL ",
-         StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> addRef  ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.increment();
-#endif 
-  //
-};
-// ============================================================================
-/// assignement 
-// ============================================================================
-LoKi::Vertices::ImpactParamTool& 
-LoKi::Vertices::ImpactParamTool::operator=
-( const LoKi::Vertices::ImpactParamTool& right ) 
-{
-  if ( &right == this ) { return *this ; }
-  IGeomDispCalculator* _tmp = m_tool ;
-  m_tool = right.m_tool ;
-  if ( 0 != m_tool ) { m_tool -> addRef  () ; }
-  if ( 0 !=  _tmp  ) { _tmp   -> release () ;}
-  //
-  if ( 0 == m_tool ) 
-  { throw LoKi::Exception 
-      ("ImpactParamTool&operator=: Tool* points to NULL "  ,
+  if ( 0 == m_tool.getObject()  ) 
+  { throw LoKi::Exception
+      ("ImpactParamTool( copy ):  Tool* points to NULL ",
        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  //
-  return *this ;
-} ;
-// ============================================================================
+};
+
 
 // ============================================================================
-/// destructor 
+/// virtual destructor
 // ============================================================================
-LoKi::Vertices::ImpactParamTool::~ImpactParamTool()
-{
-  if ( 0 == m_tool ) 
-  { throw LoKi::Exception 
-      ("~ImpactParamTool(): Tool* points to NULL "  ,
-       StatusCode::FAILURE , __FILE__ , __LINE__ ); }
-  m_tool -> release ();
-  //
-#ifdef LOKI_DEBUG
-  s_IPTCounter.decrement();
-#endif 
-  //
-};
+LoKi::Vertices::ImpactParamTool::~ImpactParamTool(){}
 // ============================================================================
 
 // ============================================================================
