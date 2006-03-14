@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.2 2006-03-02 15:29:20 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.3 2006-03-14 14:43:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -18,7 +18,6 @@
 
 // namespaces
 using namespace LHCb;
-using namespace std;
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichPhotonRecoUsingQuarticSoln>          Factory ;
@@ -77,11 +76,6 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-  // check iterations
-  if ( m_nQits[Rich::Aerogel] < 1 ) return Error( "# Aerogel iterations < 1" );
-  if ( m_nQits[Rich::C4F10]   < 1 ) return Error( "# C4F10   iterations < 1" );
-  if ( m_nQits[Rich::CF4]     < 1 ) return Error( "# CF4     iterations < 1" );
-
   // information printout about configuration
   if ( m_testForUnambigPhots )
   {
@@ -99,11 +93,20 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   {
     info() << "Will use nominal mirrors for reconstruction" << endreq;
   }
-  info() << "Number of secondary mirror iterations (aero/C4F10/CF4) : "
-         << m_nQits << endreq;
 
   if ( m_forceFlatAssumption )
+  {
     Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS );
+  }
+  else
+  {
+    // check iterations
+    if ( m_nQits[Rich::Aerogel] < 1 ) return Error( "# Aerogel iterations < 1" );
+    if ( m_nQits[Rich::C4F10]   < 1 ) return Error( "# C4F10   iterations < 1" );
+    if ( m_nQits[Rich::CF4]     < 1 ) return Error( "# CF4     iterations < 1" );
+    info() << "Assuming spherical secondary mirrors : # iterations (aero/C4F10/CF4) = "
+           << m_nQits << endreq;
+  }
 
   return sc;
 }
@@ -240,7 +243,8 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // if aerogel (which hasn't yet been treated at all) or ambiguous gas photon, try again
+  // if aerogel (which hasn't yet been treated at all) or ambiguous gas photon, or if 
+  // ambiguous photon check above has been skipped, try again
   // using best emission point and nominal mirror geometries to get the spherical and sec
   // mirrors. Also, force this reconstruction if the above unambiguous test was skipped
   // --------------------------------------------------------------------------------------
@@ -349,16 +353,16 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   {
     if ( sphReflPoint.x() * virtDetPoint.x() < 0.0 )
     {
-      return Warning( "RICH2 : Reflection point on wrong side" );
-      //return StatusCode::FAILURE;
+      //return Warning( "RICH2 : Reflection point on wrong side" );
+      return StatusCode::FAILURE;
     }
   }
   else // RICH 1
   {
     if ( sphReflPoint.y() * virtDetPoint.y() < 0.0 )
     {
-      return Warning( "RICH1 : Reflection point on wrong side" );
-      //return StatusCode::FAILURE;
+      //return Warning( "RICH1 : Reflection point on wrong side" );
+      return StatusCode::FAILURE;
     }
   }
   // --------------------------------------------------------------------------------------
@@ -381,9 +385,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   Gaudi::XYZVector photonDirection = sphReflPoint - emissionPoint;
   double thetaCerenkov(0), phiCerenkov(0);
-  //cout << "photon direction " << photonDirection << endl;
   trSeg.angleToDirection( photonDirection, thetaCerenkov, phiCerenkov );
-  //cout << "out CK angles " << thetaCerenkov << " " << phiCerenkov << endl;
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -558,19 +560,15 @@ solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
                 Gaudi::XYZPoint& sphReflPoint) const
 {
 
-  //cout << "photon reconstruction" << endl;
-
   // vector from mirror centre of curvature to assumed emission point
   Gaudi::XYZVector evec = emissionPoint - CoC;
   const double e2 = evec.Mag2();
   if ( 0 == e2 )  { return false; }
-  //cout << "evec " << evec << endl;
 
   // vector from mirror centre of curvature to virtual detection point
   const Gaudi::XYZVector dvec = virtDetPoint - CoC;
   const double d2 = dvec.Mag2();
   if ( 0 == d2 )  { return false; }
-  //cout << "dvec " << dvec << endl;
 
   // various quantities needed to create quartic equation
   // see LHCB/98-040 section 3, equation 3
@@ -580,9 +578,6 @@ solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
   const double dx    = d * cos(gamma);
   const double dy    = d * sin(gamma);
   const double r2    = radius * radius;
-
-  //cout << "e= " << e << " d= " << d << " gamma= " << gamma << " dx= " 
-  //     << dx << " dy= " << dy << " r2= " << r2 << endl;
 
   // Fill array for quartic equation
   double a[5];
@@ -631,25 +626,19 @@ solveQuarticEq (const Gaudi::XYZPoint& emissionPoint,
 
   // -----------------------------------------------------------------------
   // use 'hacked' RICH version
-  //cout << "quartic " << a[0] << " " << a[1] << " " << a[2] << " " << a[3] << " " << a[4] << endl;
   const double sinbeta = solve_quartic_RICH( a[1]/a[0], // a
                                              a[2]/a[0], // b
                                              a[3]/a[0], // c
                                              a[4]/a[0]  // d
                                              );
 
-  //cout << "sinbeta " << sinbeta << endl;
-
   // normal vector to reflection plane
   const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
-
-  //cout << "nvec2 " << nvec2 << endl;
 
   // use results to form reflection point
 
   // Set vector mag to radius
   evec *= radius/e;
-  //cout << "evec norm " << evec << endl;
   // create rotation
   const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,asin(sinbeta)) );
   // rotate vector and update reflection point
