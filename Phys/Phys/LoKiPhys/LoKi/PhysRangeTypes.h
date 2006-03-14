@@ -1,8 +1,11 @@
-// $Id: PhysRangeTypes.h,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: PhysRangeTypes.h,v 1.2 2006-03-14 19:32:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
+// New package: "Phys"-part of restructurized LoKi project  
+// 
 // ============================================================================
 #ifndef LOKI_PHYSRANGETYPES_H 
 #define LOKI_PHYSRANGETYPES_H 1
@@ -45,16 +48,16 @@ namespace LoKi
   namespace PhysTypes
   {
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Particle::ConstVector>   Range ;
+    typedef LoKi::NamedRange_<LHCb::Particle::Vector>   Range ;
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Vertex::ConstVector>    VRange ;
+    typedef LoKi::NamedRange_<LHCb::Vertex::Vector>    VRange ;
   } ;
   namespace Types
   {
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Particle::ConstVector>   Range ;
+    typedef LoKi::NamedRange_<LHCb::Particle::Vector>   Range ;
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Vertex::ConstVector>    VRange ;
+    typedef LoKi::NamedRange_<LHCb::Vertex::Vector>    VRange ;
   } ;
   
   /** @fn convert 
@@ -67,7 +70,7 @@ namespace LoKi
   inline 
   LHCb::Particle::ConstVector 
   convert ( LHCb::Particle::Vector&      vct ) 
-  { return LHCb::Particle::ConstVector( vct.begin() , vct.end() ) ; }
+  { return LHCb::Particle::ConstVector ( vct.begin() , vct.end() ) ; }
   
   /** @fn convert 
    *  Trivial conversion function 

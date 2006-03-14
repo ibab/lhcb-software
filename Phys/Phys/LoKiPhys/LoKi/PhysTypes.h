@@ -1,6 +1,6 @@
-// $Id: PhysTypes.h,v 1.2 2006-03-14 19:06:36 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.3 2006-03-14 19:32:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -20,7 +20,7 @@ namespace LHCb
 {
   class Particle ;
   class Vertex   ;
-} ;
+};
 // ============================================================================
 
 namespace LoKi 
@@ -69,7 +69,8 @@ namespace LoKi
     /// type of 'cuts' for LHCb::Vertex         (assignable)
     typedef LoKi::PhysTypes::VCut                               VCut  ; 
     /// type of 'functions' for LHCb::Vertex    (assignable)
-    typedef LoKi::PhysTypes::VFun                               VFun  ;
+    typedef LoKi::PhysTypes::VFun                               VFun  ;  
+
   } ;
 
 } ; // end of namespace LoKi 
