@@ -3,7 +3,162 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v12r16>2005-02-03 DaVinci v12r16 - DC04v2 re-stripping version</A></H1><PRE>
+</PRE><H1><A NAME=v12r17>2006-03-14 DaVinci v12r17 - DC06 preselections preparation version</A></H1><PRE>
+Release to prepare for DC06 stripping preselections
+  . Ks2PiPi now on-demand as Pi0 and shared intermediate states
+  . TriggerSource updated
+  . HLT updated
+  
+This version is the last DC04 version built on HEAD. All packages still
+available in DC06 now have a branch "DC04b" for the DC04 developments.
+
+#######################################MM#######################################
+#                                DaVinci v12r17                                #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+#################################### EXTERNAL ##################################
+###################################### HLT #####################################
+!========================== HltInclusive v1r1 2006-03-14 ===================
+! 2005-12-21 - Luis Fernandez
+ - options/HLTselDstar.opts
+   . Lower D* pt cut
+
+! 2005-12-20 - Luis Fernandez
+ - options/HLTselDstar.opts
+   . Change pt cut of D* for inclusive D* thanks to new Hlt PV
+
+!========================== HltSelections v4r1p1 2006-03-14 ===================
+! 2006-02-14 - P. Koppenburg
+ - src/HltDecision.cpp
+   . Bug fix of bug fix. return StatusCode::SUCCESS when m_makeCorr = false!
+
+! 2006-02-11 - Luis Fernandez
+ - src/HltDecision.cpp
+   . Bug fix. Do not return IAlgorithmCorrelations when m_makeCorr = false!
+
+! 2005-12-09 - P. Koppenburg
+  - src/HltDecision.*
+    . Bug fix. Inclusive B stream was ignored in correlations.
+
+##################################### KTJET ####################################
+###################################### L0 ######################################
+##################################### MUON #####################################
+##################################### PHYS #####################################
+!========================== DaVinciTools v12r5p1 2006-03-14 ===================
+! 2006-03-06 - P. Koppenburg
+ - src/CheckPV.cpp
+   . Check if PVLocation exists.
+!========================== Ks2PiPiSel v1r9 2006-03-14 ===================
+! 2006-03-14 - P. Koppenburg
+  - options/best*.opts
+  - options/DaVinciKshortTight.opts
+    . Removed as these options are deprecated
+  - options/*.opts
+    . All algorithms are on-demand now.
+    
+!========================== TriggerSource v1r1 2006-03-14 ===================
+! 2006-03-13 - Patrick KOPPENBURG
+  - src/L1TriggerSource.{cpp,h}
+    . Split Dimu (IP) and DimuJPsi (no IP) streams in L1. Chnage requested by Tomasz.
+ 
+! 2006-03-10 - Patrick KOPPENBURG
+ - Implemented the changes requested by Tomasz Skwarnicki in his nice overview 
+   talk at http://indico.cern.ch/materialDisplay.py?contribId=8&amp;sessionId=0&amp;materialId=slides&amp;confId=1129
+   - TriggerSource/ITriggerSource.h
+     . The main method now takes an optional variable of type
+       ItriggerSource::Report*, which is a 
+       std::vector<std::pair<std::string,TisTosTob>>
+       The first memeber is a string describing the sub-trigger, the second 
+       is the TisTosTob ressult of that trigger
+   - src/*TriggerSource.{cpp,h}
+     . All implementations have been adapted. the isTOS and isTIS
+       booleans dissappear, replaced by the enum. The logics is handled
+       in two methods TriggerSourceBase.
+   - src/TriggerSourceAlg.{cpp,h}
+     . New option GetResult that makes use of the above. It generates an output 
+       of the kind:
+     
+TriggerSourceAlg INFO Details for TriggerSourceAlg.L1TriggerSource getting TOE
+TriggerSourceAlg INFO    Generic gets TOE
+TriggerSourceAlg INFO    Muon gets TIS
+TriggerSourceAlg INFO    DiMuJPsi gets TOB
+     
+#################################### PHYSSEL ###################################
+!========================== Bd2MuMuKstar v3r1 2006-03-14 ===================
+! 2006-02-16 - P. Koppenburg
+  - options/Bd2MuMuKstar.opts
+  - options/DVBd2MuMuKstar.opts
+  - options/FinalCuts.opts 
+    . Restored
+!========================== Bs2JpsiPhi v3r1 2006-03-14 ===================
+! 2006-03-14 - P. Koppenburg
+  - options/Jpsi2MuMuForDC04selBs2Jpsi2MuMu_Phi2KK.opts
+    . Shortened a few lines because they confused the stripping options parser
+    
+! 2006-02-07 - Jan Amoraal
+  - Cleaned up a bit and added comments. It's now a bit more compliant
+    to the guidelines.
+  - . Added
+  - options/CombinedForDC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - options/Jpsi2MuMuForDC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - options/Phi2KKForDC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - options/ NtupleForDC04selBs2Jpsi2MuMu_Phi2KK.opts
+  - . Removed
+  - options/DC04Jpsi2MuMuForSelBs2JpsiPhi.opts
+  - options/DC04Phi2KKForSelBs2JpsiPhi.opts
+  - options/DC04combinedForSelBs2Jpsi2MuMu_Phi2KK.opts
+
+!========================== Bs2PhiEtac v3r8 2006-03-14 ===================
+! 2006-03-11 - Luis Fernandez
+ - options/
+   . Final stripped dst, bb v2, signal, preselection ...
+
+! 2006-02-08 - Luis Fernandez
+ - . Background category
+
+! 2005-12-24 - Luis Fernandez
+ - options/DVMonitorBs2PhiEtac.opts
+   . Background category
+
+!========================== Bu2LLK v2r7 2006-03-14 ===================
+! 2006-02-16 - P. Koppenburg
+  - src/Bu2LLKTruthTuple.cpp
+    . More truth
+  - options/PreselBu2LLK_*.opts
+    . Moved files in Castor
+
+! 2006-02-09 - P. Koppenburg
+  - options/DVTuple.opts
+    . The file that produces the nTuples for Bu2LLK
+  - options/{DV,Do,}PreselB2MuE.opts
+    . New preselection for B->eMuX
+
+!========================== PhysSelSys v8r12 2006-03-14 ===================
+! 2006-03-14 - P. Koppenburg
+> use  Bd2MuMuKstar               v3r1     PhysSel
+> use  Bs2JpsiPhi                 v3r1     PhysSel
+> use  Bs2PhiEtac                 v3r8     PhysSel
+> use  Bu2LLK                     v2r7     PhysSel
+> use  Ks2PiPiSel                 v1r9     Phys
+> use  CommonParticles            v2r0     Phys
+
+! 2006-02-27 - P. Koppenburg
+  - cmt/requirements 
+    . Use Ks2PiPiSel and CommonParticles for Stripping. Do not use Stripping.
+
+#####################################  REC  ####################################
+!========================== GlobalReco v4r8p2 2006-02-24 ===================
+!  2006-02-24 - P. Koppenburg
+  - options/ChargedProtoPAlg.opts
+    . Correction of comment: default in ProtoParticle making is 
+      VTT = true, Downstream = true ;
+      Error reported by Jose Helder Lopes
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+###################################### TR ######################################
+###################################### TRG #####################################
+</PRE><H1><A NAME=v12r16>2006-02-03 DaVinci v12r16 - DC04v2 re-stripping version</A></H1><PRE>
 Main modifications:
  
   - CommonParticles:
