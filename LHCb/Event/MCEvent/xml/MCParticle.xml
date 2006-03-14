@@ -11,6 +11,7 @@
       desc="The Monte Carlo particle kinematics information"
       id="210"
       name="MCParticle"
+      stdVectorTypeDef="TRUE"
       location="MC/Particles"
      >
        &KeyedObject;

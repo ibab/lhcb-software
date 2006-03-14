@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.1 2005-12-15 10:29:12 gcorti Exp $
+// $Id: IMCDecayFinder.h,v 1.2 2006-03-14 13:18:23 jpalac Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -11,7 +11,13 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/MCParticle.h"
 
-
+// Temporary hack to define LHCb::ConstMCParticles outside of G.O.D machinery.
+// TO BE REMOVED AS SOON AS G.O.D CREATES THIS AUTOMATICALLY IN MCParticle 
+// header
+namespace LHCb 
+{
+  typedef KeyedContainer<const MCParticle, Containers::HashMap> ConstMCParticles;  
+}
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 4, 0);
 
@@ -35,26 +41,26 @@ public:
   virtual std::string revert( void ) = 0;
 
   /// Does the described decay exists in the event?
-  virtual bool hasDecay( const std::vector<LHCb::MCParticle*> &event ) = 0;
-  virtual bool findDecay( const std::vector<LHCb::MCParticle*> &event,
-                          const LHCb::MCParticle *&previous_result ) = 0;
+  virtual bool hasDecay(  const LHCb::MCParticle::ConstVector& event ) = 0;
+  virtual bool findDecay( const LHCb::MCParticle::ConstVector& event,
+                          const LHCb::MCParticle*& previous_result ) = 0;
 
-  virtual bool hasDecay( const LHCb::MCParticles &event ) = 0;
-  virtual bool findDecay( const LHCb::MCParticles &event,
-                          const LHCb::MCParticle *&previous_result ) = 0;
+  virtual bool hasDecay(  const LHCb::ConstMCParticles& event ) = 0;
+  virtual bool findDecay( const LHCb::ConstMCParticles& event,
+                          const LHCb::MCParticle*& previous_result ) = 0;
 
   virtual bool hasDecay( void ) = 0;
-  virtual bool findDecay( const LHCb::MCParticle*&previous_result ) = 0;
+  virtual bool findDecay( const LHCb::MCParticle*& previous_result ) = 0;
 
   virtual void descendants( const LHCb::MCParticle *head,
-                            std::vector<LHCb::MCParticle *>&result,
+                            LHCb::MCParticle::Vector& result,
                             bool leaf=false ) = 0;
-  virtual void decayMembers( const LHCb::MCParticle *head,
-                             std::vector<LHCb::MCParticle*>&members ) = 0;
-  virtual void decaySubTrees( const LHCb::MCParticle *head,
-                      std::vector<std::pair<const LHCb::MCParticle*,
-                                            std::vector<LHCb::MCParticle*> >
-                                 > & subtrees ) = 0;
-                                                                                                                                                 
+  virtual void decayMembers( const LHCb::MCParticle* head,
+                             LHCb::MCParticle::Vector& members ) = 0;
+  virtual void decaySubTrees( const LHCb::MCParticle* head,
+                              std::vector<std::pair<const LHCb::MCParticle*,
+                                                    LHCb::MCParticle::Vector >
+                                         > & subtrees ) = 0;
+
 };
 #endif // TOOLS_IMCDECAYFINDER_H

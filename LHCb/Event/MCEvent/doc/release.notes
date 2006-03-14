@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.32 2006-03-07 15:55:20 cattanem Exp $
+! $Id: release.notes,v 1.33 2006-03-14 13:18:27 jpalac Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
 !========================== MCEvent v1r1 2006-03-07 ==========================
+
+! 2006-03-14 - Juan Palacios
+ - Add temporary typedef to IMCDecayFinder to define LHCb::ConstMCParticles.
+   This should be removed as soon as GOD generates it automatically in
+   MCParticle.h.
+   Change xml/MCParticle.xml to generate typedefs LHCb::MCParticle::Vector and
+   LHCb::MCParticle::ConstVector.
+   Change IMCDecayFinder hasDecay, findDecay, decayMembers, decaySubTrees 
+   methods to use LHCb::ConstParticles and LHCb::MCParticle::Vector.
+
 ! 2006-03-07 - Gloria CORTI
  - Add new data member to MCHit, i.e. the absolute momentum of the particle
    when producing the hit.
