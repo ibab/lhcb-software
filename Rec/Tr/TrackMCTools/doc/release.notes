@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r0 2006-03-08 ========================
 ! 2006-03-08 - Eduardo Rodrigues
  - using new linkers tables for MCParticle-MCHit association
  - update to new VeloDet path
@@ -16,7 +17,6 @@
 ! 2006-03-03 - Edwin Bos
  - Moved to linkers.
 
-!======================= TrackMCTools v2r0 2006-02-02 ========================
 ! 2006-02-02 - Edwin Bos
   - Moved to LHCb v20r0
   - Adapted code to use updated Det packages
