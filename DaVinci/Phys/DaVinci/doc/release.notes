@@ -4,6 +4,7 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r17 2006-03-14 ===================
 ! 2006-03-03 - P. Koppenburg for Thomas Ruf
   Force the use of the correct FieldMap
 

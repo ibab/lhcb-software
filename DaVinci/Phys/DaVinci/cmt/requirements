@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.301 2006-03-06 08:30:13 pkoppenb Exp $
+# $Id: requirements,v 1.302 2006-03-14 12:19:18 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -35,8 +35,8 @@ use RootHistCnv         v*
 
 #-- Database
 use XmlDDDB             v22r2     Det
-use FieldMap            v4r5
-use ParamFiles          v3r6    -no_auto_imports
+use FieldMap            v4r*
+use ParamFiles          v3r*    -no_auto_imports
 
 # TMP:
 use TrgEvent                    v5r3p2  Event
@@ -48,14 +48,14 @@ use LHCb                        v*
 #=======================================================                                                                                                                                                                            
 use  DaVinciFilter      	v3r4     Phys
 use  DaVinciKernel      	v3r10    Phys
-use  DaVinciTools       	v12r5    Phys
+use  DaVinciTools       	v12r5p1  Phys
 use  FlavourTagging     	v6r5     Phys
 use  ParticleMaker      	v1r7     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
 use  VertexFit			v1r10    Phys
 use  Tampering                  v1r4     Phys
-use  TriggerSource              v1r0     Phys
+use  TriggerSource              v1r1     Phys
 # Generic tools 
 use  Utilities          	v2r1p2   Tools
 use  RecoTools          	v1r1     Rec
