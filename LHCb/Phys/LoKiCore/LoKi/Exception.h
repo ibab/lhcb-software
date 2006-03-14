@@ -1,8 +1,11 @@
-// $Id: Exception.h,v 1.2 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: Exception.h,v 1.3 2006-03-14 18:56:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:03  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
 // New Import: the core part of restructurized LoKi project
 //
@@ -80,6 +83,10 @@ namespace LoKi
      *  @return the clone
      */
     virtual Exception* clone() const;
+    
+  private:
+    /// the default constructor is disabled 
+    Exception();
     
   }; // end of class Exception 
   

@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.3 2006-02-22 20:58:49 ibelyaev Exp $
+// $Id: Keeper.h,v 1.4 2006-03-14 18:56:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/22 20:58:49  ibelyaev
+//  add Keeper/UniqueKeeper container adapters
+//
 // ============================================================================
 #ifndef LOKI_KEEPER_H 
 #define LOKI_KEEPER_H 1
@@ -62,7 +65,7 @@ namespace LoKi
     typedef typename Objects::const_reverse_iterator reverse_iterator ;
     typedef reverse_iterator                   const_reverse_iterator ;
     typedef typename Objects::value_type                   value_type ;
-  protected:
+  public:
     /// default constructor 
     Keeper() : m_objects() {}
     /// constructor form one object

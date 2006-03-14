@@ -1,11 +1,8 @@
-// $Id: ErrorReport.cpp,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: ErrorReport.cpp,v 1.3 2006-03-14 18:57:00 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -15,6 +12,7 @@
 // local
 // ============================================================================
 #include "LoKi/IReporter.h"
+#include "LoKi/Exception.h"
 #include "LoKi/Welcome.h"
 #include "LoKi/ErrorReport.h"
 // ============================================================================
@@ -45,9 +43,10 @@
 /// standard (default) constructor
 // ============================================================================
 LoKi::ErrorReport::ErrorReport()
-  : m_errors   (   ) 
-  , m_warnings (   ) 
-  , m_reporter ( 0 ) 
+  : m_errors     (   ) 
+  , m_warnings   (   ) 
+  , m_exceptions (   ) 
+  , m_reporter   ( 0 ) 
 {
   LoKi::Welcome::instance() ;
 };
@@ -65,30 +64,41 @@ StatusCode LoKi::ErrorReport::report() const
     {
       std::cout << "LoKi::ErrorReport\t" ;
       std::cout << "  ALWAYS "  ; 
-      std::cout << " Errors/Warnings statistics:  " 
+      std::cout << " Exceptions/Errors/Warnings statistics:  " 
+                << m_exceptions .size () << "/"
                 << m_errors     .size () << "/"
                 << m_warnings   .size () << std::endl ; 
+      // print exceptions counter 
+      for( Counter::const_iterator exc = m_exceptions.begin() ;
+           exc != m_exceptions.end() ; ++exc )
+      {
+        std::cout << "LoKi::ErrorReport\t" ;
+        std::cout << "  ALWAYS "  ; 
+        std::cout << " #EXCEPTIONS= " << exc->second  
+                  << " Message='"     << exc->first    << "'" << std::endl ;
+      }
       // print errors counter 
       for( Counter::const_iterator error = m_errors.begin() ;
            error != m_errors.end() ; ++error )
-        {
-          std::cout << "LoKi::ErrorReport\t" ;
-          std::cout << "  ALWAYS "  ; 
-          std::cout << " #ERRORS    = " << error->second  
-                    << " Message='"     << error->first    << "'" << std::endl ;
-        }  
+      {
+        std::cout << "LoKi::ErrorReport\t" ;
+        std::cout << "  ALWAYS "  ; 
+        std::cout << " #ERRORS    = " << error->second  
+                  << " Message='"     << error->first    << "'" << std::endl ;
+      }  
       // print warnings
       for( Counter::const_iterator warning = m_warnings.begin() ;
            warning != m_warnings.end() ; ++warning )
-        {
-          std::cout << "LoKi::ErrorReport\t" ;
-          std::cout << "  ALWAYS "  ; 
-          std::cout << " #WARNINGS  = " << warning->second 
-                    << " Message='"     << warning->first  << "'" << std::endl; 
-        }  
+      {
+        std::cout << "LoKi::ErrorReport\t" ;
+        std::cout << "  ALWAYS "  ; 
+        std::cout << " #WARNINGS  = " << warning->second 
+                  << " Message='"     << warning->first  << "'" << std::endl; 
+      }  
     }
-  m_errors   .clear () ;
-  m_warnings .clear () ;  
+  m_errors     .clear () ;
+  m_warnings   .clear () ;  
+  m_exceptions .clear () ;  
   //
   return StatusCode::SUCCESS ;
 }
@@ -212,6 +222,63 @@ StatusCode LoKi::ErrorReport::Print
   ///
   return st ;
 };
+// ============================================================================
+
+// ============================================================================
+// Create and (re)-throw the exception
+// ============================================================================
+StatusCode LoKi::ErrorReport::Exception
+( const std::string    & msg ,
+  const GaudiException & exc ,
+  const StatusCode       sc  ) const
+{
+  if ( 0 != m_reporter ) 
+  {  return m_reporter->Exception ( msg , exc , sc ) ; } 
+  // increase local counter of exceptions
+  ++m_exceptions[ msg ];
+  Print ( "Exception (re)throw: " + msg 
+          + " : tag/message='" + exc.tag() + 
+          "'/'" + exc.message() + "'" , sc , MSG::FATAL );
+  throw  LoKi::Exception( "LoKi::" + msg , sc, exc);
+  return  sc ;
+} ;
+// ============================================================================
+
+
+// ============================================================================
+// Create and (re)-throw the exception
+// ============================================================================
+StatusCode LoKi::ErrorReport::Exception
+( const std::string    & msg ,
+  const std::exception & exc ,
+  const StatusCode       sc  ) const
+{
+  if ( 0 != m_reporter ) 
+  {  return m_reporter->Exception ( msg , exc , sc ) ; } 
+  // increase local counter of exceptions
+  ++m_exceptions[ msg ];
+  Print ( "Exception (re)throw: " + msg 
+          + " : what='" + exc.what() + "'" , sc , MSG::FATAL );
+  throw  LoKi::Exception( "LoKi::" + msg + " (re)throw:" + exc.what() , sc );
+  return  sc ;
+} ;
+// ============================================================================
+
+// ============================================================================
+// Create and throw the exception
+// ============================================================================
+StatusCode LoKi::ErrorReport::Exception
+( const std::string    & msg ,
+  const StatusCode       sc  ) const
+{
+  if ( 0 != m_reporter ) 
+  {  return m_reporter->Exception ( msg , sc ) ; }  
+  // increase local counter of exceptions
+  ++m_exceptions[ msg ];
+  Print ( "Exception throw: " + msg , sc , MSG::FATAL );
+  throw LoKi::Exception(  msg , sc );
+  return  sc ;
+} ;
 // ============================================================================
 
 // ============================================================================

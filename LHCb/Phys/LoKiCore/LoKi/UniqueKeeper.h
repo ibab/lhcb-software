@@ -1,8 +1,11 @@
-// $Id: UniqueKeeper.h,v 1.1 2006-02-22 20:58:49 ibelyaev Exp $
+// $Id: UniqueKeeper.h,v 1.2 2006-03-14 18:57:00 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:58:49  ibelyaev
+//  add Keeper/UniqueKeeper container adapters
+//
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1
@@ -60,7 +63,7 @@ namespace LoKi
     typedef typename Objects::const_reverse_iterator reverse_iterator ;
     typedef reverse_iterator                   const_reverse_iterator ;
     typedef typename Objects::value_type                   value_type ;
-  protected:
+  public:
     /// the defualt constructor 
     UniqueKeeper() : m_objects() {}
     /// constructor from one objects

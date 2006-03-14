@@ -1,11 +1,8 @@
-// $Id: ErrorReport.h,v 1.2 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.3 2006-03-14 18:56:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -18,6 +15,7 @@
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/HashMap.h"
 // ============================================================================
+class GaudiException ;
 
 // ============================================================================
 /** @file
@@ -105,7 +103,62 @@ namespace LoKi
     ( const std::string& msg                       , 
       const StatusCode   st  = StatusCode::FAILURE ,
       const MSG::Level   lev = MSG::INFO           ) const ;
-  
+    
+    /** Assertion - throw exception, if condition is not fulfilled 
+     *  @see GaudiException
+     *  @see LoKi::Exception
+     *  @exception LoKi::Exception for invalid condifition 
+     *  @exception GaudiException for invalid condifition 
+     *  @param ok           condition which should be "true"
+     *  @param message      message to be associated with the exception 
+     *  @param sc           status code to be returned (artificial) 
+     *  @return             status code        
+     */ 
+    inline StatusCode Assert 
+    ( const bool         ok                            , 
+      const std::string& message = ""                  , 
+      const StatusCode   sc      = StatusCode::FAILURE ) const 
+    {
+      return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
+    } ;
+    
+    /** Create and (re)-throw the exception  
+     *  @see LoKi::Exception
+     *  @exception LoKi::Exception always!
+     *  @param msg    exception message 
+     *  @param exc    (previous) exception of type GaudiException
+     *  @param sc     status code  
+     *  @return       status code (fictive) 
+     */
+    StatusCode Exception 
+    ( const std::string    & msg                        ,  
+      const GaudiException & exc                        , 
+      const StatusCode       sc  = StatusCode::FAILURE  ) const ;
+    
+    /** Create and (re)-throw the exception  
+     *  @see GaudiException
+     *  @exception GaudiException always!
+     *  @param msg    exception message 
+     *  @param exc    (previous) exception of type std::exception
+     *  @param sc     status code  
+     *  @return       status code (fictive) 
+     */
+    StatusCode Exception 
+    ( const std::string    & msg                        ,  
+      const std::exception & exc                        , 
+      const StatusCode       sc  = StatusCode::FAILURE  ) const ;
+    
+    /** Create and throw the exception  
+     *  @see GaudiException
+     *  @exception GaudiException always!
+     *  @param msg    exception message 
+     *  @param sc     status code  
+     *  @return       status code (fictive) 
+     */
+    StatusCode Exception 
+    ( const std::string& msg = "no message"        ,  
+      const StatusCode   sc  = StatusCode::FAILURE ) const ;
+    
   private:
     
     /// private destructor 
@@ -118,14 +171,15 @@ namespace LoKi
     // private copy constructor
     ErrorReport( const ErrorReport&);
     
-    
   private:
     
     typedef GaudiUtils::HashMap<std::string,unsigned long> Counter ;   
     /// counter of errorr 
-    mutable Counter m_errors     ;
+    mutable Counter m_errors     ; ///< counter of errorr 
     /// counter of warnings 
-    mutable Counter m_warnings   ;
+    mutable Counter m_warnings   ; ///< counter of warnings 
+    /// counter of exception
+    mutable Counter m_exceptions ; ///< counter of exceptions
     
     const LoKi::IReporter* m_reporter ;    
   };

@@ -1,11 +1,8 @@
-// $Id: LoKiCore.h,v 1.10 2006-03-08 21:32:34 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.11 2006-03-14 18:56:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2006/03/07 16:28:49  ibelyaev
-//  add LoKi/FuncCast.h file
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,6 +42,11 @@
 #include "LoKi/Keeper.h"
 #include "LoKi/FuncCast.h"
 #include "LoKi/WrongMass.h"
+#include "LoKi/Interface.h"
+#include "LoKi/AddRef.h"
+#include "LoKi/Release.h"
+#include "LoKi/Convertible.h"
+#include "LoKi/Base.h"
 // ============================================================================
 
 // ============================================================================

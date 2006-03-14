@@ -1,11 +1,8 @@
-// $Id: Report.cpp,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: Report.cpp,v 1.3 2006-03-14 18:57:01 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -17,7 +14,6 @@
 #include "LoKi/Report.h"
 #include "LoKi/ErrorReport.h"
 // ============================================================================
-
 
 // ============================================================================
 /** @file
@@ -86,6 +82,56 @@ StatusCode LoKi::Report::Print
   const MSG::Level   lev )
 { return LoKi::ErrorReport::instance().Print( msg , st , lev  ) ; } ; 
 // ============================================================================
+
+// ============================================================================
+/** Create and (re)-throw the exception  
+ *  @see LoKi::Exception
+ *  @exception LoKi::Exception always!
+ *  @param msg    exception message 
+ *  @param exc    (previous) exception of type GaudiException
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode LoKi::Report::Exception 
+( const std::string    & msg ,  
+  const GaudiException & exc , 
+  const StatusCode       sc  ) 
+{ return LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; } ; 
+// ============================================================================
+
+// ============================================================================
+/** Create and (re)-throw the exception  
+ *  @see GaudiException
+ *  @exception GaudiException always!
+ *  @param msg    exception message 
+ *  @param exc    (previous) exception of type std::exception
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode LoKi::Report::Exception 
+( const std::string    & msg ,  
+  const std::exception & exc , 
+  const StatusCode       sc  ) 
+{ return LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; } ; 
+// ============================================================================
+
+// ============================================================================
+/** Create and throw the exception  
+ *  @see GaudiException
+ *  @exception GaudiException always!
+ *  @param msg    exception message 
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode LoKi::Report::Exception 
+( const std::string& msg ,  
+  const StatusCode   sc  ) 
+{ return LoKi::ErrorReport::instance().Exception( msg , sc ) ; } ; 
+// ============================================================================
+
 
 // ============================================================================
 /** make a report 

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.9 2006-03-08 21:32:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2006-03-14 18:57:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-03-14 - Vanya BELYAEV
+ - LoKi/AddRef.h, 
+   LoKi/Release.h
+   LoKi/Interface.h
+   LoKi/Convertible.h 
+     useful utilities 
 
 ! 2006-03-08 - Vanya BELYAEV
  - LoKi/WrongMass.h, src/WrongMass.cpp
@@ -95,6 +102,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.9  2006/03/08 21:32:34  ibelyaev
+!  add WrongMass.h(.cpp)
+!
 ! Revision 1.8  2006/03/07 16:28:49  ibelyaev
 !  add LoKi/FuncCast.h file
 !
