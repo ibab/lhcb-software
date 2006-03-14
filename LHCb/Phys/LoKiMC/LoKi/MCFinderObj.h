@@ -1,0 +1,318 @@
+// $Id: MCFinderObj.h,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+#ifndef LOKI_MCFINDEROBJ_H 
+#define LOKI_MCFINDEROBJ_H 1
+// ============================================================================
+// Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/HashMap.h"
+// ============================================================================
+// MCEvent
+// ============================================================================
+#include "Kernel/IMCDecayFinder.h"
+// ============================================================================
+// LoKiCore 
+// ============================================================================
+#include "LoKi/Interface.h"
+#include "LoKi/Base.h"
+// ============================================================================
+// LoKiMC 
+// ============================================================================
+#include "LoKi/MCTypes.h"
+// ============================================================================
+class GaudiTool       ;
+class GaudiAlgorithm  ;
+// ============================================================================
+
+// ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-03-11 
+ */
+// ============================================================================
+
+namespace LoKi 
+{ 
+  
+  /** @class MCFinderObj MCFinderObj.h LoKi/MCFinderObj.h
+   *  
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-10
+   */
+  class MCFinderObj : public LoKi::Base 
+  {
+  public: 
+    /** Standard constructor
+     *  @param name object name 
+     *  @param finder the mc-decay finder itself
+     *  @param algo   data provider 
+     *  @param reporter error reporter 
+     */
+    MCFinderObj 
+    ( const std::string&    name     , 
+      const IMCDecayFinder* finder   , 
+      const GaudiAlgorithm* algo     , 
+      const IReporter*      reporter ) ;
+    /** Standard constructor
+     *  @param name object name 
+     *  @param finder the mc-decay finder itself
+     *  @param algo   data provider 
+     *  @param reporter error reporter 
+     */
+    MCFinderObj 
+    ( const std::string&    name     , 
+      const IMCDecayFinder* finder   , 
+      const GaudiTool*      algo     , 
+      const IReporter*      reporter ) ;
+  protected:
+    /// virtual and protected  destructor 
+    virtual ~MCFinderObj(); ///< Destructor
+  public:
+    
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    LoKi::Types::MCRange findDecays 
+    ( const std::string& decay   , 
+      const std::string& address = 
+      LHCb::MCParticleLocation::Default ) const ;
+
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    LoKi::Types::MCRange findDecays 
+    ( const std::string&       decay   , 
+      const LHCb::MCParticles* particles ) const ;
+    
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    LoKi::Types::MCRange findDecays 
+    ( const std::string&                decay     , 
+      const LoKi::MCTypes::MCContainer& particles ) const ;
+
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    LoKi::Types::MCRange findDecays 
+    ( const std::string&                         decay     , 
+      const std::vector<const LHCb::MCParticle*> particles ) const ;
+    
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    LoKi::Types::MCRange findDecays 
+    ( const std::string&          decay , 
+      const LoKi::Types::MCRange& range ) const ;
+    
+    /** find MC decays.
+     *  
+     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  tool by Olivier Dormond   
+     *
+     *  @code 
+     *
+     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
+     *  
+     *  @endcode 
+     * 
+     *  @see DecayFinder  
+     *  @param decay   decay   formula 
+     *  @param address location of container of MC particle
+     *  @return range of found MC decays 
+     */
+    template <class MCPARTICLE>
+    LoKi::Types::MCRange findDecays 
+    ( const std::string& decay , 
+      MCPARTICLE         first , 
+      MCPARTICLE         last  ) const 
+    { 
+      /// the most trivial case 
+      if ( first == last ) { return LoKi::Types::MCRange() ; }
+      LoKi::MCTypes::MCContainer vct ;
+      vct.reserve( last - first ) ;
+      for ( ; first != last ; ++first ) 
+      {
+        const LHCb::MCParticle* mc = *first ;
+        vct.push_back( const_cast<LHCb::MCParticle*>( mc ) ) ;
+      } ;
+      return _findDecays ( decay , vct ) ; 
+    } ;
+    
+    /// clear the internal storage of decays
+    void clear() ;
+    
+  private:
+    /** templated decay extractor to eliminate code duplication 
+     *  @paran decay decay descriptor
+     *  @param source data source 
+     *  @return the pseudocontainer of found decays 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-11
+     */
+    template <class SOURCE> 
+    inline LoKi::Types::MCRange _findDecays 
+    ( const std::string& decay  , 
+      const SOURCE&      source ) const ;
+  private:
+    // the default constructor is disabled 
+    MCFinderObj() ;
+  private:
+    typedef GaudiUtils::HashMap<std::string,LoKi::MCTypes::MCContainer> MCDecays ;
+    // "the temporary" storage of decays 
+    mutable MCDecays                m_decays ; ///< the storage of decays 
+    // the decay finder itself 
+    LoKi::Interface<IMCDecayFinder> m_finder ; ///< the decay finder itself 
+    // data provider 
+    LoKi::Interface<GaudiTool>      m_tool   ; ///< data provider 
+    // data provider 
+    LoKi::Interface<GaudiAlgorithm> m_algo   ; ///< data provider 
+  };
+
+} ; // end of the namespace LoKi
+// ===========================================================================
+
+// ===========================================================================
+/** templated decay extractor to eliminate code duplication 
+ *  @paran decay decay descriptor
+ *  @param source data source 
+ *  @return the pseudocontainer of found decays 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-03-11
+ */
+// ===========================================================================
+template <class SOURCE>
+inline LoKi::Types::MCRange 
+LoKi::MCFinderObj::_findDecays 
+( const std::string& decay  , 
+  const SOURCE&      source ) const
+{
+  Assert ( m_finder.validPointer() , "IMCDecayFinder is invalid!") ;
+  
+  /// the decay need to be reset ?
+  if ( decay != m_finder->decay() )
+  {
+    StatusCode sc = m_finder->setDecay( decay ) ;
+    Assert ( sc.isSuccess() , "Decay Descriptor is not set" , sc ) ;
+  }
+  
+  LoKi::MCTypes::MCContainer& decays = m_decays[decay];
+  decays.clear() ;                                              // CLEAR!!
+  
+  // prepare for member extraction 
+  const bool members =  extractMembers( decay ) ;
+  LoKi::MCTypes::MCContainer mcVct ;
+  
+  /// @see IMCDecayFinder 
+  const LHCb::MCParticle* init   = 0 ;
+  for ( bool  found = true ; found ; ) 
+  {
+    found = m_finder->findDecay ( source , init );
+    if ( !found || 0 == init ) { continue ; }
+    
+    // extract decay members ? 
+    if ( members ) ///< extract decay members 
+    {
+      mcVct.clear() ;
+      m_finder->decayMembers( init , mcVct ) ;
+      decays.insert( decays.end() , mcVct.begin() , mcVct.end() ) ;
+      mcVct.clear() ;
+    } 
+    else /// < deal only with heads  
+    { decays.push_back( const_cast<LHCb::MCParticle*>( init ) ) ; } 
+  }
+  //
+  return LoKi::Types::MCRange( decays.begin() , decays.end() );
+};
+// ===========================================================================
+
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // LOKI_MCFINDEROBJ_H
+// ============================================================================

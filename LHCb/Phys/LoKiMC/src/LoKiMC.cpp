@@ -1,35 +1,20 @@
-// $Id: LoKiMC.h,v 1.4 2006-03-14 19:04:29 ibelyaev Exp $
+// $Id: LoKiMC.cpp,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef LOKI_LOKIMC_H 
-#define LOKI_LOKIMC_H 1
+// Include files 
 // ============================================================================
-// Include files
+// LoKiMC
 // ============================================================================
-// LoKiMC 
-// ============================================================================
-#include "LoKi/MCTypes.h"
-#include "LoKi/MCPIDOperators.h"
-#include "LoKi/MCParticles.h"
-#include "LoKi/MCExtract.h"
-#include "LoKi/MCParticleCuts.h"
-#include "LoKi/MCVertices.h"
-#include "LoKi/MCVertexCuts.h"
-#include "LoKi/MCTrees.h"
-#include "LoKi/BuildMCTrees.h"
-#include "LoKi/MCKinematics.h"
-#include "LoKi/MCAlgs.h"
-#include "LoKi/MCFinder.h"
-#include "LoKi/MCFinderObj.h"
+#include "LoKi/LoKiMC.h"
 // ============================================================================
 
 // ============================================================================
 /** @file
  *
- *  Declaration file for the package Phys/LoKiMC   
+ * Implementation file for the package Phys/LoKiMC
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -50,6 +35,4 @@
 
 // ============================================================================
 // The END 
-// ============================================================================
-#endif // LOKI_LOKIMC_H
 // ============================================================================

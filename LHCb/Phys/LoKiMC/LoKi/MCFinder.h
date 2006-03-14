@@ -1,23 +1,25 @@
-// $Id: LoKi.cpp,v 1.2 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCFinder.h,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Rrvision:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-// 
 // ============================================================================
-// Include files 
+#ifndef LOKI_MCFINDER_H 
+#define LOKI_MCFINDER_H 1
 // ============================================================================
-// LoKiMC
+// Include files
 // ============================================================================
-#include "LoKi/LoKiMC.h"
+// STD & STL 
+// ============================================================================
+#include <functional>
+// ============================================================================
+// LoKiCore 
+// ============================================================================
+#include "LoKi/Interface.h"
 // ============================================================================
 
 // ============================================================================
 /** @file
- *
- * Implementation file for the package Phys/LoKiMC
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -32,10 +34,42 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-03-11 
  */
 // ============================================================================
 
+namespace LoKi 
+{
+  /// forward decalration 
+  class MCFinderObj ;
+  
+  /** @class MCFinder MCFinder.h LoKi/MCFinder.h
+   *
+   *  Helper class whcih simplify the manipulation with 
+   *  the class LoKi::IMCFinderObj 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-11
+   */
+  class MCFinder 
+    : public LoKi::Interface<LoKi::MCFinderObj>
+  {
+  public: 
+    /// Standard constructor
+    MCFinder ( const LoKi::MCFinderObj* ); 
+    /// virtual destructor
+    virtual ~MCFinder( ); ///< Destructor
+    /// implicit conversion to the pointer 
+    operator const LoKi::MCFinderObj* () const ; 
+  private:
+    // the default constructor is disabled 
+    MCFinder() ;
+  } ;
+
+}; // end of the namespace LoKi 
+
 // ============================================================================
 // The END 
+// ============================================================================
+#endif // LOKI_MCFINDER_H
 // ============================================================================

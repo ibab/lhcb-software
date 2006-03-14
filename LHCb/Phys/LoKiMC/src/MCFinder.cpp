@@ -1,35 +1,21 @@
-// $Id: LoKiMC.h,v 1.4 2006-03-14 19:04:29 ibelyaev Exp $
+// $Id: MCFinder.cpp,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef LOKI_LOKIMC_H 
-#define LOKI_LOKIMC_H 1
-// ============================================================================
-// Include files
+// Include files 
 // ============================================================================
 // LoKiMC 
 // ============================================================================
-#include "LoKi/MCTypes.h"
-#include "LoKi/MCPIDOperators.h"
-#include "LoKi/MCParticles.h"
-#include "LoKi/MCExtract.h"
-#include "LoKi/MCParticleCuts.h"
-#include "LoKi/MCVertices.h"
-#include "LoKi/MCVertexCuts.h"
-#include "LoKi/MCTrees.h"
-#include "LoKi/BuildMCTrees.h"
-#include "LoKi/MCKinematics.h"
-#include "LoKi/MCAlgs.h"
-#include "LoKi/MCFinder.h"
 #include "LoKi/MCFinderObj.h"
+#include "LoKi/MCFinder.h"
 // ============================================================================
 
 // ============================================================================
 /** @file
  *
- *  Declaration file for the package Phys/LoKiMC   
+ *  Implementation file for class LoKi::MCFinder
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -44,12 +30,31 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-03-11 
  */
 // ============================================================================
 
+
 // ============================================================================
-// The END 
+/// Standard constructor
 // ============================================================================
-#endif // LOKI_LOKIMC_H
+LoKi::MCFinder::MCFinder 
+( const LoKi::MCFinderObj* obj ) 
+  : LoKi::Interface<LoKi::MCFinderObj>( obj ) 
+{};
 // ============================================================================
+/// destructor 
+// ============================================================================
+LoKi::MCFinder::~MCFinder(){} ;
+// ============================================================================
+/// implicit conversion to the pointer 
+// ============================================================================
+LoKi::MCFinder::operator const LoKi::MCFinderObj* () const
+{ return getObject() ; }
+// ============================================================================
+
+
+// ============================================================================
+// The END
+// ============================================================================
+

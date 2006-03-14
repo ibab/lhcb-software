@@ -1,11 +1,8 @@
-// $Id: MCTypes.h,v 1.2 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCTypes.h,v 1.3 2006-03-14 19:04:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-//
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1
@@ -43,7 +40,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-03-10 
  */
 // ============================================================================
 
@@ -57,18 +54,19 @@ namespace LoKi
    *  @date   2003-05-11
    */
   namespace MCTypes 
-  { 
+  {
+    /// the basic imported type for the sequence of MC-particles 
+    typedef std::vector<LHCb::MCParticle*>  MCContainer      ;
+    /// the basic imported type for the sequence of MC-vertices 
+    typedef std::vector<LHCb::MCVertex*>    MCVContainer     ;
     
-    typedef std::vector<LHCb::MCParticle*> MCParticleVector ;
-    typedef std::vector<LHCb::MCVertex*>   MCVertexVector   ;
+    typedef LoKi::Selected_<MCContainer>    MCSelected       ;
+    typedef LoKi::Selected_<MCVContainer>   MCVSelected      ;
     
-    typedef MCParticleVector               MCContainer      ;
-    typedef LoKi::Selected_<MCContainer>   MCSelected       ;
-    
-    typedef MCVertexVector                 MCVContainer     ;
-    typedef LoKi::Selected_<MCVContainer>  MCVSelected      ;
-    typedef MCSelected::Range              MCRange          ;
-    typedef MCVSelected::Range             MCVRange         ;
+    /// the actual type of the sequence of MC-particles 
+    typedef MCSelected::Range               MCRange          ;
+    /// the actual type of the sequence of MC-vertices  
+    typedef MCVSelected::Range              MCVRange         ;
     
     /// type of 'cuts' for MCParticles       (interface)
     typedef LoKi::Predicate<const LHCb::MCParticle*>              MCCuts  ;
@@ -92,6 +90,12 @@ namespace LoKi
   
   namespace Types 
   {
+    
+    /// the actual type of the sequence of MC-particles 
+    typedef LoKi::MCTypes::MCRange  MCRange ;
+    /// the actual type of the sequence of MC-vertices  
+    typedef LoKi::MCTypes::MCVRange MCVRange ;
+    
     /// type of 'cuts' for MCParticles       (interface)
     typedef LoKi::MCTypes::MCCuts  MCCuts ;
     /// type of 'functions' for <MCParticles  (interface)
