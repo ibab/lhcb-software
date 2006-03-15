@@ -49,7 +49,7 @@ STClusterResolution::STClusterResolution(const std::string& name,
  
 {
   // constructer
-  this->declareProperty("positionToolName", m_positionToolName = "STOnlinePosition");
+  this->declareProperty("positionToolName", m_positionToolName = "STOfflinePosition");
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
   this->declareProperty("asctLocation", m_asctLocation = "TTClusters2MCHits");
@@ -123,20 +123,20 @@ StatusCode STClusterResolution::initHistograms(){
    
    AIDA::IHistogram1D* resHisto = book(id+10,
 		 "resolution"+boost::lexical_cast<std::string>(id+10),
-		 -250., 250., 200);
+		 -0.5, 0.5, 500);
     
    m_resHistoVector.push_back(resHisto); 
 
       
    AIDA::IHistogram1D* onlineResHisto = book(id+30,
 		 "online resolution"+boost::lexical_cast<std::string>(id+30),
-		 -2.5, 2.5, 200);
+		 -0.5, 0.5, 500);
     
    m_onlineResHistoVector.push_back(onlineResHisto); 
 
    AIDA::IHistogram1D* pullHisto = book(id+20,
 		  "pull"+boost::lexical_cast<std::string>(id+20),
-		 -10.,10., 200);
+		 -10.,10., 500);
  
    m_pullHistoVector.push_back(pullHisto); 
 
@@ -160,8 +160,8 @@ StatusCode STClusterResolution::fillHistograms(const STCluster* aCluster,
     
     // rec u - offline
     ISTClusterPosition::Info measVal = m_positionTool->estimate(aCluster);
-    double uRec = (measVal.fractionalPosition * aSector->pitch()) + aSector->localU(measVal.strip.strip());
-    
+    double uRec = aSector->localU(measVal.strip.strip(), measVal.fractionalPosition);
+
     // determine which histos to fill based on cluster size
     const int id = this->histoId((int)aCluster->size());
 
@@ -171,8 +171,7 @@ StatusCode STClusterResolution::fillHistograms(const STCluster* aCluster,
     m_pullHistoVector[id]->fill((uRec-uTrue)/error);
 
     // now the online version
-    double uOnline = (aCluster->interStripFraction() * aSector->pitch()) 
-                   + aSector->localU(aChan.strip());
+    double uOnline = aSector->localU(aChan.strip(), aCluster->interStripFraction());
     m_onlineResHistoVector[id]->fill(uOnline-uTrue);
    
   } // aHit

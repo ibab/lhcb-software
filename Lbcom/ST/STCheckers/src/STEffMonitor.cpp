@@ -59,7 +59,7 @@ STEffMonitor::STEffMonitor(const std::string& name,
 
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("detType", m_detType = "TT");
-  this->declareProperty("includeGuardRings", m_includeGuardRings = false);
+  this->declareProperty("includeGuardRings", m_includeGuardRings = true);
   this->declareProperty("printEfficiency", m_pEff = true);
 }
 
@@ -306,11 +306,19 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
        m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
 
        if (found == true){
-         m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
-         m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
-         m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
-       }
-  
+         if (m_pEff == true){
+           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
+           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
+           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
+         }
+       } 
+       else {
+	 if (m_pEff == false){
+           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
+           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);
+           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);
+         }
+       }       
      } //if
   } // iterLayer
 

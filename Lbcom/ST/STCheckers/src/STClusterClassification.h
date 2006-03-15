@@ -1,12 +1,11 @@
-// $Id: STNoiseClusterMonitor.h,v 1.2 2006-02-28 15:38:58 mneedham Exp $
-#ifndef _STNoiseClusterMonitor_H
-#define _STNoiseClusterMonitor_H
+// $Id $
+#ifndef _STClusterClassification_H
+#define _STClusterClassification_H
 
-#include <vector>
+#include <map>
 #include <string>
 
-class AIDA::IHistogram1D;
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Linker/LinkerTool.h"
 
@@ -15,9 +14,9 @@ namespace LHCb{
  class MCHit;
 };
 
-class DeSTDetector;
 
-/** @class STNoiseClusterMonitor STNoiseClusterMonitor.h
+
+/** @class STClusterClassification STClusterClassification.h
  *
  *  Class for checking STNoiseClusters
  *
@@ -28,22 +27,25 @@ class DeSTDetector;
 // from Associators
 #include "Linker/LinkerTool.h"
 
-class STNoiseClusterMonitor : public GaudiHistoAlg {
+class STClusterClassification : public GaudiAlgorithm {
 
 public:
  
   /// constructer
-  STNoiseClusterMonitor(const std::string& name, 
+  STClusterClassification(const std::string& name, 
                  ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~STNoiseClusterMonitor();
+  virtual ~STClusterClassification();
 
   /// initialize
   StatusCode initialize();
 
   /// execute
   StatusCode execute();
+
+  /// finalize
+  StatusCode finalize();
 
 private:
 
@@ -52,10 +54,11 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  virtual StatusCode fillHistograms(const LHCb::MCHit* aHit,
-                                    const LHCb::STCluster* aCluster) const;
-  int  findSpillIndex(const LHCb::MCHit* aHit) const;
+  StatusCode fillInfo(const LHCb::MCHit* aHit ) const;
+  std::string  findSpill(const LHCb::MCHit* aHit) const;
   
+  unsigned int tCount() const;
+
   std::vector<std::string> m_SpillVector;  // short names of spills
   std::vector<std::string>  m_spillNames; // full name of spills
      
@@ -63,16 +66,17 @@ private:
   int m_eventIndex;
   int m_nStation;
 
-  DeSTDetector* m_tracker;
-  std::string m_detType;
 
   std::string m_asctLocation;
   std::string m_clusterLocation;
   std::string m_hitLocation; 
+  std::string m_detType;
+
+  mutable std::map<std::string, unsigned int> m_infoMap;
 
 };
 
-#endif // _STNoiseClusterMonitor_H
+#endif // _STClusterClassification_H
 
 
 

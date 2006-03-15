@@ -121,8 +121,6 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
 
     const unsigned int nstrips = ttSector->nStrip();
 
-    // TT layer
-    int iRow = ttSector->row();
 
     // construct the histogram id...
     std::string histo = "occ_st"+boost::lexical_cast<std::string>(aChan.station())
@@ -140,6 +138,10 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
     else if (aChan.detRegion() == 3){
       aChan.station() == 1 ? offset = ttSector->column() - 9: offset = ttSector->column() - 10;
     }
+    else {
+      warning() << "unknown row " << endmsg;
+      return StatusCode::FAILURE;
+    } 
   
     plot(binValue(aChan.strip())+(nstrips*(offset-1)),histo, 0., m_hMax, m_nBins);
 

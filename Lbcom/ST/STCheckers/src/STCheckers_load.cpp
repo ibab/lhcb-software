@@ -1,4 +1,4 @@
-// $Id: STCheckers_load.cpp,v 1.3 2006-02-20 16:44:32 mneedham Exp $
+// $Id: STCheckers_load.cpp,v 1.4 2006-03-15 17:36:31 mneedham Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
@@ -10,7 +10,8 @@
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
 DECLARE_FACTORY_ENTRIES( STCheckers ) {
-  DECLARE_ALGORITHM( STNoiseClusterMonitor );
+
+  DECLARE_ALGORITHM( STClusterClassification );
   DECLARE_ALGORITHM( STEffMonitor );
 
   DECLARE_ALGORITHM( STDumpGeom );
