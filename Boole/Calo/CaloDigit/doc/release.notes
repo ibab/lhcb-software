@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !======================== CaloDigit v2r0 2006-02-15 ========================
+! 2006-03-15 - Olivier Deschamps
+ - CaloZSupAlg.{cpp,h} algorithm removed (moved to CaloDAQ)
+ - remove dependency to CaloDAQ in requirements
+ - add explicit dependency to MCEvent in requirements
+
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent
 
