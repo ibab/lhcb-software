@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.99 2006-03-15 13:37:21 pkoppenb Exp $
+! $Id: release.notes,v 1.100 2006-03-15 18:57:20 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-03-15 - Juan Palacios
+ - src/MCParticleMaker.cpp
+    Replace LHCb::ConstMCParticles with LHCb::MCParticle::ConstContainer.
 
 ! 2006-03-08 - P. Koppenburg
   - src/MCParticleMaker.cpp
