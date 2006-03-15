@@ -22,7 +22,6 @@
 ! 2006-03-06 - Marco Cattaneo
  - Add Kernel/IVeloCluster2VeloDigitTool.h interface
 
->>>>>>> 1.14
 ! 2006-02-23 - Olivier Deschamps
  - add CaloDigitLocation::Default in CaloDigit.xml
 
