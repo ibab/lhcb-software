@@ -441,7 +441,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += 'typedef ::ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
     return s
 #--------------------------------------------------------------------------------
-  def genClassVectorTypedefs(self, godClass):
+  def genClassContainerTypedefs(self, godClass):
     s = ''
     classname = godClass['attrs']['name']
     if godClass['attrs']['stdVectorTypeDef'] == 'TRUE':
@@ -449,6 +449,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += '  // typedef for std::vector of %s\n' % classname
       s += '  typedef std::vector<%s*> Vector;\n' % ( classname )
       s += '  typedef std::vector<const %s*> ConstVector;\n\n' % ( classname )
+    if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
+      self.addInclude('KeyedContainer')
+      s += '  // typedef for KeyedContainer of %s\n' % classname
+      s += '  typedef KeyedContainer<%s, Containers::HashMap> Container;\n' % (classname)
+      s += '  typedef KeyedContainer<const %s, Containers::HashMap> ConstContainer;\n' % (classname)
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
@@ -542,7 +547,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['author']                       = godClass['attrs']['author']
       classDict['today']                        = time.ctime()
       classDict['inheritance']                  = self.genInheritance(godClass)
-      classDict['classVectorTypedefs']          = self.genClassVectorTypedefs(godClass)
+      classDict['classContainerTypedefs']       = self.genClassContainerTypedefs(godClass)
       classDict['classTypedefs']                = self.genClassTypedefs(godClass)
       classDict['constructorDecls']             = self.genConstructors(godClass)
       classDict['destructorDecl']               = self.genDestructors(godClass)

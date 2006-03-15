@@ -2,6 +2,16 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!2006-03-15 Stefan
+- introducing two new typedefs
+        typedef KeyedContainer<T,Containers::HashMap> Container;
+        typedef KeyedContainer<const T,Containers::Hashmap> ConstContainer;
+  These macros are generated in addition to the 
+        typedef KeyedContainer<T,Containers::HashMap> Ts;
+        (Ts being the the plurial of the class name)
+  These macros will be created if a class directly inherits from KeyedObject or
+  if the keyedContTypeDef attribute of <class> is set to "TRUE"
+
 !2006-01-30
 - fix for destructor implementation. An empty code element will result in 
   an empty inline implementation
