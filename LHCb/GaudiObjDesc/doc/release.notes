@@ -2,6 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+=============================GaudiObjDesc v9r4============================
 !2006-03-15 Stefan
 - introducing two new typedefs
         typedef KeyedContainer<T,Containers::HashMap> Container;
