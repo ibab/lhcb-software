@@ -1,71 +1,23 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.3 2005-11-11 16:26:40 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/02/09 18:01:34  pkoppenb
-// CLHEP
-//
-// Revision 1.1.1.1  2004/08/24 06:47:48  pkoppenb
-// ParticleMaker extracted from DaVinciTools
-//
-// Revision 1.7  2004/07/28 14:15:24  pkoppenb
-// untag
-//
-// Revision 1.6  2004/07/08 10:14:26  pkoppenb
-// HLT
-//
-// Revision 1.5  2004/05/11 16:01:25  pkoppenb
-// DVAlgorithm.cpp
-//
-// Revision 1.4  2004/04/22 02:55:13  ibelyaev
-//  fix a problem with release of some tools/services
-//
-// Revision 1.3  2004/03/11 13:02:14  pkoppenb
-// Split DaVinciTools into DaVinciTools and DaVinciKernel
-//
-// Revision 1.2  2004/01/14 19:00:06  gcorti
-// compatible with LHCb v15r0
-//
-// Revision 1.1  2003/04/30 13:41:25  gcorti
-// new particlemaker for HLT studies
-// 
-// ============================================================================
-// Include files
-// STD/STL
-#include <algorithm>
+// $Id: NoPIDsParticleMaker.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
+// Include files 
+
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h" 
-// Event 
-#include "Event/Particle.h"
-// ============================================================================
+
+#include "Kernel/IParticleStuffer.h" 
 // local
 #include "NoPIDsParticleMaker.h"
-// ============================================================================
 
-// ============================================================================
-/** @file 
- *  
- * Implementation file for class : NoPIDsParticleMaker
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date   2003-04-17
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : NoPIDsParticleMaker
+//
+// 2006-01-23 : I. Belyaev
+//-----------------------------------------------------------------------------
 
-
-// ============================================================================
-/** @var NoPIDsParticleMakerFactory
- *  Declaration of the Tool Factory
- */
-// ============================================================================
-static const  ToolFactory<NoPIDsParticleMaker>         s_Factory ;
-const        IToolFactory&NoPIDsParticleMakerFactory = s_Factory ; 
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( NoPIDsParticleMaker );
 
 namespace
 {
@@ -77,26 +29,20 @@ namespace
   };
 };
 
-
-
-// ============================================================================
-/** Standard constructor
- *  @param type   tool type
- *  @param name   tool name 
- *  @param parent tool parent
- */
-// ============================================================================
-NoPIDsParticleMaker::NoPIDsParticleMaker
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent )
-  : CaloTool ( type, name , parent ) 
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : GaudiTool ( type, name , parent )
   , m_ppSvc  ( 0 ) 
+  , m_stuffer  ( 0 ) 
   , m_pid    ( "UNDEFINED" ) 
   , m_apid   (   ) 
   , m_pp     ( 0 ) 
   , m_app    ( 0 )
-  , m_inputs ( 1 , ProtoParticleLocation::Charged )
+  , m_inputs ( 1 , LHCb::ProtoParticleLocation::Charged )
   , m_CL     ( 50 * perCent  ) 
   , m_calls  ( 0 ) 
   , m_sum    ( 0 ) 
@@ -104,55 +50,34 @@ NoPIDsParticleMaker::NoPIDsParticleMaker
   , m_longTracks ( true )
   , m_downstreamTracks ( true )  // set to false for HLT
   , m_vttTracks ( true )         // set to false for HLT
-{ 
-  // declare interface 
-  declareInterface<IParticleMaker> ( this ) ;
-  // properties 
+{
+  declareInterface<IParticleMaker>(this);
   declareProperty ( "Particle" , m_pid    ) ;
   declareProperty ( "Inputs"   , m_inputs ) ; 
   declareProperty ( "CL"       , m_CL     ) ; 
   declareProperty ( "UseLongTracks",     m_longTracks );
   declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
   declareProperty ( "UseUpstreamTracks",      m_vttTracks );
-};
-// ============================================================================
 
-// ============================================================================
-/// virtual detructor
-// ============================================================================
-NoPIDsParticleMaker::~NoPIDsParticleMaker(){}
-// ============================================================================
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+NoPIDsParticleMaker::~NoPIDsParticleMaker() {} 
 
-// ============================================================================
-/** standard initialization of tool 
- *  @see CaloTool
- *  @see  AlgTool
- *  @see IAlgTool
- *  @return status code 
- */
-// ============================================================================
-StatusCode NoPIDsParticleMaker::initialize    () 
-{
-  // initialize the base 
-  StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure() ) 
-    { return Error ( "Unable to initilize the base class 'CaloTool'" , sc ) ; }
-  
-  // locate services 
-  
-  if( 0 == evtSvc  () )
-    { return Error ( " IDataProviderSvc* points to NULL "   ) ; }
-  
-  if( 0 != m_ppSvc    ) { m_ppSvc  = 0 ; }
+//=============================================================================
+// Destructor
+//=============================================================================
+StatusCode NoPIDsParticleMaker::initialize() {
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
   m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" , true ) ;
-  if( 0 == ppSvc   () )
-  { return Error ( " IParticlePropertySvc* points to NULL "     ) ; }
+
+  m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
   
-  // remove the duplicates from list of input containers 
   std::sort( m_inputs.begin () , m_inputs.end () ) ;
   m_inputs.erase ( std::unique( m_inputs.begin () , 
                                 m_inputs.end   () ) , m_inputs.end () ) ;
-  
 
   const std::string Upper ( to_upper( m_pid ) ) ;
   if      ( "PIONS"     == Upper ) { m_pid = "pi+"    ; } 
@@ -172,32 +97,26 @@ StatusCode NoPIDsParticleMaker::initialize    ()
   else if ( "PROTON"    == Upper ) { m_pid = "p+"     ; }
   else if ( "P"         == Upper ) { m_pid = "p+"     ; }
   
+
   sc = setPPs( m_pid ) ;
   if ( sc.isFailure() ) 
-    { return Error ( "Particle/Antiparticle are unknown for '"+m_pid+"'",sc);}
+  { return Error ( "Particle/Antiparticle are unknown for '"+m_pid+"'",sc);}
   if ( 0 == m_pp || 0 == m_app )
-    { return Error ( "Particle/Antiparticle are invalid for '"+m_pid+"'"  );}
+  { return Error ( "Particle/Antiparticle are invalid for '"+m_pid+"'"  );}
   
   if (  m_pp->charge() > m_app->charge() ) { std::swap( m_pp , m_app ) ; }
   m_pid  = m_pp  -> particle () ;
   m_apid = m_app -> particle () ;
   
-  MsgStream msg( msgSvc() , name () );
-  msg << MSG::INFO 
-      << " Particle/AntiParticle to be created\t " 
-      << "'"   << m_pid 
-      << "'/'" << m_apid << endreq ;
-  if ( !m_longTracks ) msg << MSG::INFO << "Filtering out long tracks"<< endreq;
-  if ( !m_downstreamTracks ) msg <<  MSG::INFO << 
-                               "Filtering out downstream tracks" << endreq;
-  if ( !m_vttTracks ) msg <<  MSG::INFO << 
-                        "Filtering out upstream tracks" << endreq;
+  info() << " Particle/AntiParticle to be created\t " 
+         << "'"   << m_pid 
+         << "'/'" << m_apid << endmsg ;
+  if ( !m_longTracks ) info() << "Filtering out long tracks"<< endmsg;
+  if ( !m_downstreamTracks ) info() << "Filtering out downstream tracks" << endmsg;
+  if ( !m_vttTracks ) info() << "Filtering out upstream tracks" << endmsg;
+  return StatusCode::SUCCESS;
   
-  
-  return StatusCode::SUCCESS ;
-};
-// ============================================================================
-
+} 
 
 // ============================================================================
 /// set particle properties for particle and for antiparticle  
@@ -215,21 +134,10 @@ StatusCode NoPIDsParticleMaker::setPPs( const std::string& pid )
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
-
-
-// ============================================================================
-/** standard finalization  of tool 
- *  @see CaloTool
- *  @see  AlgTool
- *  @see IAlgTool
- *  @return status code 
- */
-// ============================================================================
-StatusCode NoPIDsParticleMaker::finalize      () 
+StatusCode NoPIDsParticleMaker::finalize() 
 {
-  MsgStream log ( msgSvc() , name () ) ;
   const std::string stars ( 80 , '*' );
-  log << MSG::INFO << stars << endreq ;
+  info() << stars << endmsg ;
   
   if( 0 != m_ppSvc    ) { m_ppSvc  = 0 ; }
   
@@ -239,27 +147,22 @@ StatusCode NoPIDsParticleMaker::finalize      ()
   if ( 0 != m_calls  ) { sigma = m_sum2 / m_calls - mean * mean  ; }
   if ( sigma > 0     ) { sigma = sqrt( sigma )                   ; }
   
-  log << MSG::ALWAYS
-      << " created '"    << m_pid 
-      << "' and '"       << m_apid  
-      << " : "           << m_sum
-      << " per "         << m_calls
-      << " calls ("      << mean 
-      << "+-"            << sigma 
-      << ")/event"       << endreq ;
+  always()
+    << " created '"    << m_pid 
+    << "' and '"       << m_apid  
+    << " : "           << m_sum
+    << " per "         << m_calls
+    << " calls ("      << mean 
+    << "+-"            << sigma 
+    << ")/event"       << endmsg ;
   // finalize the base 
-  return CaloTool::finalize ();
+  return GaudiTool::finalize ();
 };
-// ============================================================================
-
-// ============================================================================
-/** Make the particles 
- *  @see IParticleMaker 
- *  @param particles  vector of particles  
- */
-// ============================================================================
-StatusCode NoPIDsParticleMaker::makeParticles ( ParticleVector & particles ) 
-{
+//=============================================================================
+// Dispatch the making of particles 
+//=============================================================================
+StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & particles ){
+  
   // increase the counter 
   ++m_calls ; 
   
@@ -267,54 +170,53 @@ StatusCode NoPIDsParticleMaker::makeParticles ( ParticleVector & particles )
   // get all input data
   for( Addresses::const_iterator input = m_inputs.begin() ;
        m_inputs.end() != input ; ++input ) 
+  {
+    const LHCb::ProtoParticles* pps = get<LHCb::ProtoParticles>( *input );
+    if( !pps ) {  Warning ("Invalid container '"+(*input)+"' ") ; continue ; }
+    // loop over all protoparticles 
+    for(LHCb:: ProtoParticles::const_iterator ipp = pps->begin() ; 
+         pps->end() != ipp ; ++ipp ) 
     {
-      SmartDataPtr<ProtoParticles> pps( evtSvc() , *input );
-      if( !pps ) {  Warning ("Invalid container '"+(*input)+"' ") ; continue ; }
-      // loop over all protoparticles 
-      for( ProtoParticles::const_iterator ipp = pps->begin() ; 
-           pps->end() != ipp ; ++ipp ) 
-        {
-          const ProtoParticle* pp = *ipp ;
-          if ( 0 == pp                ) { continue ; }              // CONTINUE
-          if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
+      const LHCb::ProtoParticle* pp = *ipp ;
+      if ( 0 == pp                ) { continue ; }              // CONTINUE
+      if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
           
-          if (( !m_longTracks ) || ( !m_downstreamTracks) || ( !m_vttTracks)){
-            const TrStoredTrack* ptrack = pp->track();
-            if ( ptrack ) {
-              if (( !m_longTracks ) && ( ptrack->isLong())){ continue ;}
-              if (( !m_downstreamTracks ) && ( ptrack->isDownstream())){ 
-                continue ;}
-              if (( !m_vttTracks ) && ( ptrack->isUpstream())){ continue ;}
-            }            
-          }
+      if (( !m_longTracks ) || ( !m_downstreamTracks) || ( !m_vttTracks)){
+        const LHCb::Track* ptrack = pp->track();
+        if ( ptrack ) {
+          if (( !m_longTracks ) && ( ptrack->checkType( LHCb::Track::Long))){ continue ;}
+          if (( !m_downstreamTracks ) && ( ptrack->checkType( LHCb::Track::Downstream))){ 
+            continue ;}
+          if (( !m_vttTracks ) && ( ptrack->checkType( LHCb::Track::Upstream))){ continue ;}
+        }            
+      }
           
-          Particle* particle = new Particle();
+      LHCb::Particle* particle = new LHCb::Particle();
           
-          StatusCode sc = StatusCode::FAILURE ;
-          if      ( m_pp  -> charge() == pp -> charge () ) 
-            { sc = fillParticle( pp , m_pp , particle ) ; }
-          else if ( m_app -> charge() == pp -> charge () ) 
-            { sc = fillParticle( pp , m_app , particle ) ; }
+      StatusCode sc = StatusCode::FAILURE ;
+      if      ( m_pp  -> charge() == pp -> charge () ) 
+      { sc = fillParticle( pp , m_pp , particle ) ; }
+      else if ( m_app -> charge() == pp -> charge () ) 
+      { sc = fillParticle( pp , m_app , particle ) ; }
           
-          if( sc.isFailure() ) 
-            {
-              Warning("Error from 'fillParticle'", sc );
-              delete particle ; particle = 0 ; continue ;           // CONTINUE
-            }
+      if( sc.isFailure() ) 
+      {
+        Warning("Error from 'fillParticle'", sc );
+        delete particle ; particle = 0 ; continue ;           // CONTINUE
+      }
           
-          // put particle into the output container 
-          particles.push_back( particle );
-          ++number ;
+      // put particle into the output container 
+      particles.push_back( particle );
+      ++number ;
           
-        } // loop over protoparticles
-    }; // loop over containers
+    } // loop over protoparticles
+  }; // loop over containers
   
   m_sum   +=          number ;
   m_sum2  += number * number ;
 
   return StatusCode::SUCCESS ;  
-};  
-// ============================================================================
+}
 
 // ============================================================================
 /** Fill the particle from protoparticle using ID  
@@ -324,78 +226,24 @@ StatusCode NoPIDsParticleMaker::makeParticles ( ParticleVector & particles )
  *  @return status code 
  */
 // ============================================================================
-StatusCode NoPIDsParticleMaker::fillParticle 
-( const ProtoParticle*    proto    ,
-  const ParticleProperty* property , 
-  Particle*               particle ) const 
-{
+StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto    ,
+                                              const ParticleProperty* property , 
+                                              LHCb::Particle* particle ) const {
   if ( 0 == proto    ) 
-    { return Error ( "fillParticle: ProtoParticle*    is NULL" , 120 ) ; }
+  { return Error ( "fillParticle: ProtoParticle*    is NULL" , 120 ) ; }
   if ( 0 == property ) 
-    { return Error ( "fillParticle: ParticleProperty* is NULL" , 121 ) ; }
+  { return Error ( "fillParticle: ParticleProperty* is NULL" , 121 ) ; }
   if ( 0 == particle ) 
-    { return Error ( "fillParticle: Particle*         is NULL" , 122 ) ; }
+  { return Error ( "fillParticle: Particle*         is NULL" , 122 ) ; }
   
   const double mass = property -> mass() ;
   
-  particle -> setParticleID ( ParticleID ( property -> jetsetID () ) ) ;
+  particle -> setParticleID ( LHCb::ParticleID ( property -> pdgID () ) ) ;
   particle -> setConfLevel  ( m_CL ) ;
-  particle -> setMass       ( mass ) ;
+  particle -> setMeasuredMass( mass ) ;
   
-  const TrStateP* state = proto -> trStateP () ;
-  if ( 0 == state ) 
-    { return Error ( "fillParticle: TrStateP*         is NULL" , 123 ) ; }
-  
-  // point on the track 
-  particle -> setPointOnTrack( HepPoint3D( state -> x () , 
-                                           state -> y () , 
-                                           state -> z () ) ) ;
-
-  // 4-momentum
-  const double p    = state -> p  () ;
-  const double sX   = state -> tx () ;
-  const double sY   = state -> ty () ;     
-  const double pZ   = p / sqrt( 1.0 + sX * sX + sY * sY ) ;
-  HepLorentzVector mom;
-  mom.setE  ( sqrt( mass * mass + p * p ) ) ;
-  mom.setPx ( sX * pZ  ) ;
-  mom.setPy ( sY * pZ  ) ;
-  mom.setPz (      pZ  ) ;
-  particle -> setMomentum( mom ) ;
-  
-  
-  const HepSymMatrix& Cov = state -> pCovMatrix () ;
-  
-  // Set pointOnTrackErr: (Error on x and y. No error on z!)
-  HepSymMatrix pointOnTrackErr   ( Cov.sub ( 1 , 3 ) ) ;
-  pointOnTrackErr ( 3 , 1 ) = 0.0;
-  pointOnTrackErr ( 3 , 2 ) = 0.0;
-  pointOnTrackErr ( 3 , 3 ) = 0.0;
-  particle -> setPointOnTrackErr ( pointOnTrackErr ) ;
-  
-  // Set slope+Momentum error:
-  HepSymMatrix slpMomErr         ( Cov.sub ( 3 , 5 ) ) ;
-  particle -> setSlopesMomErr    ( slpMomErr       ) ;
-
-  // Set position-slopes correlation matrix. 
-  // Position X Momentum correlation matrix also automatically set.
-  // No correlation with Z
-  HepMatrix posSlopesCorr( 3 , 3 , 0 ) ;
-  for( int i = 1; i <= 3; i++ ) 
-    { 
-      for ( int j = 1; j <= 2; j++ ) 
-        { posSlopesCorr ( i , j ) = Cov( i + 2 , j ) ; } 
-    }
-  
-  particle -> setPosSlopesCorr ( posSlopesCorr ) ;
-
-  particle -> setOrigin        ( proto         ) ;
- 
-  return StatusCode::SUCCESS ;
+  particle -> setProto( proto ) ;
+  const LHCb::State& state = proto->track()->firstState() ;
+  return m_stuffer->fillParticle(state,*particle);
 };
-// ============================================================================
-
-
-// ============================================================================
-// The END 
 // ============================================================================

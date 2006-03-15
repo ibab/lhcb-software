@@ -1,20 +1,7 @@
-// $Id: ParticleMakerSeq.cpp,v 1.3 2005-11-11 16:26:40 pkoppenb Exp $
+// $Id: ParticleMakerSeq.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/02/09 18:01:34  pkoppenb
-// CLHEP
-//
-// Revision 1.1.1.1  2004/08/24 06:47:48  pkoppenb
-// ParticleMaker extracted from DaVinciTools
-//
-// Revision 1.2  2004/07/28 14:15:24  pkoppenb
-// untag
-//
-// Revision 1.1  2004/06/18 12:11:36  pkoppenb
-// ParticleMakerSeq
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -119,10 +106,9 @@ StatusCode ParticleMakerSeq::finalize()
   // clear list of makers 
   m_makers.clear() ;
   
-  MsgStream log( msgSvc() , name() ) ;
-  log << MSG::ALWAYS 
-      << " Created Particles = " << m_counter 
-      << " (Maker='" << name() <<"'" << endreq ;
+  always()
+    << " Created Particles = " << m_counter 
+    << " (Maker='" << name() <<"'" << endreq ;
 
   return GaudiTool::finalize () ;
 };
@@ -130,11 +116,11 @@ StatusCode ParticleMakerSeq::finalize()
 
 // ============================================================================
 // ============================================================================
-StatusCode ParticleMakerSeq::makeParticles ( ParticleVector& particles )
+StatusCode ParticleMakerSeq::makeParticles ( LHCb::Particle::ConstVector& particles )
 {
   if ( m_makers.empty() ) { return StatusCode::SUCCESS ; }
   
-  ParticleVector tmp ; 
+  LHCb::Particle::ConstVector tmp ; 
   for( Makers::const_iterator imaker = m_makers.begin() ;
        m_makers.end() != imaker ; ++imaker ) 
   {

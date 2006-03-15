@@ -1,7 +1,18 @@
-! $Id: release.notes,v 1.46 2006-02-03 08:41:16 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2006-03-15 13:48:54 pkoppenb Exp $
+!===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
+!===========================================================================
 
+! 2006-01-23 - P. Koppenburg
+  - src/.*
+    . Removed temporaryly except
+  - src/TrgVertexFitter.{h,cpp}
+
+! 2006-01-23 - P. Koppenburg
+  - src/GeomDispCalculator.*
+  - src/TrgDispCalculator.*
+    . Moved to DaVinciTransporter
 !========================== VertexFit v1r10 2006-02-03 ===================
 ! 2006-01-30 - Y. Xie
   - src/KFFitTool.cpp
@@ -14,7 +25,7 @@
 !========================== VertexFit v1r9p1 2005-12-21 ===================
 ! 2005-12-20 - P. Koppenburg
   - src/LagrangeGlobalFitter.cpp
-    > no need of Kernel/CLHEPStreams.h
+    . no need of Kernel/CLHEPStreams.h
 !========================== VertexFit v1r9 2005-12-15 ===================
 ! 2005-12-09 - P. Koppenburg for L. Fernandez
   - src/KFFitTool.cpp

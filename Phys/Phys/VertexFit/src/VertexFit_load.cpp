@@ -6,19 +6,17 @@
 
 DECLARE_FACTORY_ENTRIES( VertexFit ) {
 
-  // Vertex Fitters
-  DECLARE_TOOL( LagrangeDirectionFitter );
-  DECLARE_TOOL( LagrangeGeomVertexFitter );
-  DECLARE_TOOL( LagrangeMassVertexFitter );
-  DECLARE_TOOL( UnconstVertexFitter );  
-  DECLARE_TOOL( KFFitTool );
+/// @todo Restore all vertex fitters using new interfaces
+// Vertex Fitters
+//   DECLARE_TOOL( LagrangeDirectionFitter ); 
+//   DECLARE_TOOL( LagrangeGeomVertexFitter );
+//   DECLARE_TOOL( LagrangeMassVertexFitter );
+//   DECLARE_TOOL( UnconstVertexFitter );  
+//   DECLARE_TOOL( KFFitTool );
   DECLARE_TOOL( TrgVertexFitter );  
 
-  // Associated tools
-  DECLARE_TOOL( GeomDispCalculator );
-  DECLARE_TOOL( TrgDispCalculator );
-
-  DECLARE_TOOL( LifetimeFitter );
-  DECLARE_TOOL( NewDirectionFitter );
-  DECLARE_TOOL( LagrangeGlobalFitter );
+/// @todo Restore all other fitters
+//   DECLARE_TOOL( LifetimeFitter );
+//   DECLARE_TOOL( NewDirectionFitter );
+//  DECLARE_TOOL( LagrangeGlobalFitter );
 }

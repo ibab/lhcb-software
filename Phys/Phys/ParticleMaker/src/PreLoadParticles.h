@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.h,v 1.3 2006-01-30 13:00:24 pkoppenb Exp $
+// $Id: PreLoadParticles.h,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
 #ifndef PRELOADPARTICLES_H 
 #define PRELOADPARTICLES_H 1
 
@@ -26,15 +26,12 @@ public:
 
   virtual ~PreLoadParticles( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   
   
 private:
-  std::string m_outputLocation ;    ///< Non-standard Output location, gets read by PhysDesktop
 
 };
 #endif // PRELOADPARTICLES_H

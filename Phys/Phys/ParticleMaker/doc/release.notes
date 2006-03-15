@@ -1,6 +1,24 @@
-! $Id: release.notes,v 1.26 2006-02-03 07:30:07 pkoppenb Exp $ 
+! $Id: release.notes,v 1.27 2006-03-15 13:47:29 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
+!==============================================================================
+
+! 2006-01-24 - P. Koppenburg
+  First version for DC06.
+  - src/CnvPhotonParticleMaker.{cpp,h}
+  - src/CombinedParticleMaker.{cpp,h}
+  - src/PhotonFromMergedParameters.{cpp,h}
+  - src/PhotonFromMergedParticleMaker.{cpp,h}
+  - src/PhotonParameters.{cpp,h}
+  - src/PhotonParticleMaker.{cpp,h}
+    . Temporarily removed.
+  - src/NoPIDsParticleMaker.{cpp,h}
+  - src/ParticleMaker_load.{cpp,h}
+  - src/ParticleMakerSeq.{cpp,h}
+  - src/PreLoadParticles.{cpp,h}
+    . Adapted to DC06 event model
+  - src/ParticleStuffer.{cpp,h}
+    . Adapted to DC06 event model and new interface
 
 !========================== ParticleMaker v1r7 2006-02-03 ===================
 ! 2006-01-31 - P. Koppenburg
@@ -391,7 +409,6 @@ file. (probably not for all cases)
  - Introduce ChargedParticleMaker (OO-DST) that make the choice based
    on combined PID
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 ! 2002-05-10 - Gloria Corti
   - New tool category of tool IParticleMaker to which PhysDesktop 
     delegates creations of Particles from different type of objects:

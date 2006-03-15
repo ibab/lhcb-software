@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           VertexFit
-version           v1r10
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,7 +13,8 @@ branches          cmt doc src
 
 # Used packages. 
 #============================================================================
-use  DaVinciTransporter  v*  Phys
+# use  DaVinciTransporter  v*  Phys
+use  DaVinciKernel  v*  Phys
 
 # Component library building rule
 #============================================================================
@@ -23,4 +24,3 @@ library          VertexFit    ../src/*.cpp
 #============================================================================
 apply_pattern component_library library=VertexFit
 	     
-

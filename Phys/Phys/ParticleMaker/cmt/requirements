@@ -17,10 +17,9 @@ branches          cmt doc options src
 # Used packages. 
 #============================================================================
 use  DaVinciKernel  v*     Phys
-use  PhysEvent      v*     Event
-use  TrgEvent       v*     Event
-use  CaloUtils      v*     Calo
-use  CaloInterfaces v*     Calo
+# use  PhysEvent      v*     Event
+# use  CaloUtils      v*     Calo
+# use  CaloInterfaces v*     Calo
 
 # Component library building rule
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.10 2005-12-09 12:23:44 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.11 2006-03-15 13:48:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,8 +8,12 @@
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 
+#include "Kernel/IParticleStuffer.h" 
+
 // local
 #include "TrgVertexFitter.h"
+
+using namespace LHCb ;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrgVertexFitter
@@ -42,191 +46,51 @@ TrgVertexFitter::TrgVertexFitter( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_photonID(22)
+  , m_stuffer()
 {
-  declareInterface<IVertexFitter>(this);
+  declareInterface<IVertexFit>(this);
   declareProperty("useDaughters", m_useDaughters = true);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-TrgVertexFitter::~TrgVertexFitter() {}; 
-
-
-
+TrgVertexFitter::~TrgVertexFitter() {};
 //=============================================================================
-// Method to fit the vertex between two given Particles
+// Initialize
 //=============================================================================
-
-StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex& V)
-{
-
-  // ==============================================================
-  // HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
-  // SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
-  // ==============================================================
-
-  // Track point and error on point
-  const Hep3Vector& iPoint = iPart.pointOnTrack();
-  const Hep3Vector& jPoint = jPart.pointOnTrack();
-  const HepSymMatrix& iCov = iPart.pointOnTrackErr();
-  const HepSymMatrix& jCov = jPart.pointOnTrackErr();
-  
-  // Slopes
-  const double& iMX = iPart.slopeX();
-  const double& iMY = iPart.slopeY();
-  const double& jMX = jPart.slopeX();
-  const double& jMY = jPart.slopeY();
-
-  // x0 and y0, at z=0
-  double iX0 = iPoint.x() - iMX * iPoint.z();
-  double iY0 = iPoint.y() - iMY * iPoint.z();
-  double jX0 = jPoint.x() - jMX * jPoint.z();
-  double jY0 = jPoint.y() - jMY * jPoint.z();
-
-  // Inverse of x and y errors of track
-  double iInvSig2X = 1/iCov(1,1);
-  double iInvSig2Y = 1/iCov(2,2);
-  double jInvSig2X = 1/jCov(1,1);
-  double jInvSig2Y = 1/jCov(2,2);
-  
-  // Terms needed
-  double AX = iX0*iInvSig2X       + jX0*jInvSig2X;
-  double BX = iInvSig2X           + jInvSig2X;
-  double CX = iMX*iInvSig2X       + jMX*jInvSig2X;
-  double DX = iMX*iMX*iInvSig2X   + jMX*jMX*jInvSig2X;
-  double EX = iX0*iMX*iInvSig2X   + jX0*jMX*jInvSig2X;
-  
-  double AY = iY0 * iInvSig2Y     + jY0*jInvSig2Y;
-  double BY = iInvSig2Y           + jInvSig2Y;
-  double CY = iMY*iInvSig2Y       + jMY*jInvSig2Y;
-  double DY = iMY*iMY*iInvSig2Y   + jMY*jMY*jInvSig2Y;
-  double EY = iY0*iMY*iInvSig2Y   + jY0*jMY*jInvSig2Y;
-
-  double vX,vY,vZ;
-  StatusCode status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
-
-  if (!status){
-    fatal() << "vertexPositionAndError failed" << endreq;
-    return StatusCode::FAILURE;
-  };
-
-
-  // Chi2
-  double chi2 = pow( (iX0+iMX*vZ-vX), 2)*iInvSig2X + pow( (jX0+jMX*vZ-vX), 2)*jInvSig2X +
-    pow( (iY0+iMY*vZ-vY), 2)*iInvSig2Y + pow( (jY0+jMY*vZ-vY), 2)*jInvSig2Y;
-  V.setChi2(chi2);
-  V.setNDoF(1);
-
-
-  // Add vertex daughters
-  V.addToProducts(&iPart);
-  V.addToProducts(&jPart);
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
-
-  return StatusCode::SUCCESS;
-}
-
-
-//=============================================================================
-// Method to fit the vertex between three given Particles
-//=============================================================================
-
-// ==============================================================
-// HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
-// SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
-// ==============================================================
-
-StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
-{
-  // Track point and error on point
-  const Hep3Vector& iPoint = iPart.pointOnTrack();
-  const Hep3Vector& jPoint = jPart.pointOnTrack();
-  const Hep3Vector& kPoint = kPart.pointOnTrack();
-  const HepSymMatrix& iCov = iPart.pointOnTrackErr();
-  const HepSymMatrix& jCov = jPart.pointOnTrackErr();
-  const HepSymMatrix& kCov = kPart.pointOnTrackErr();
-  
-  // Slopes
-  const double& iMX = iPart.slopeX();
-  const double& iMY = iPart.slopeY();
-  const double& jMX = jPart.slopeX();
-  const double& jMY = jPart.slopeY();
-  const double& kMX = kPart.slopeX();
-  const double& kMY = kPart.slopeY();
-
-  // x0 and y0, at z=0
-  double iX0 = iPoint.x() - iMX * iPoint.z();
-  double iY0 = iPoint.y() - iMY * iPoint.z();
-  double jX0 = jPoint.x() - jMX * jPoint.z();
-  double jY0 = jPoint.y() - jMY * jPoint.z();
-  double kX0 = kPoint.x() - kMX * kPoint.z();
-  double kY0 = kPoint.y() - kMY * kPoint.z();
-
-  // Inverse of x and y errors of track
-  double iInvSig2X = 1/iCov(1,1);
-  double iInvSig2Y = 1/iCov(2,2);
-  double jInvSig2X = 1/jCov(1,1);
-  double jInvSig2Y = 1/jCov(2,2);
-  double kInvSig2X = 1/kCov(1,1);
-  double kInvSig2Y = 1/kCov(2,2);
-  
-  // Terms needed
-  double AX = iX0*iInvSig2X       + jX0*jInvSig2X       + kX0*kInvSig2X;
-  double BX = iInvSig2X           + jInvSig2X           + kInvSig2X;
-  double CX = iMX*iInvSig2X       + jMX*jInvSig2X       + kMX*kInvSig2X;
-  double DX = iMX*iMX*iInvSig2X   + jMX*jMX*jInvSig2X   + kMX*kMX*kInvSig2X;
-  double EX = iX0*iMX*iInvSig2X   + jX0*jMX*jInvSig2X   + kX0*kMX*kInvSig2X;
-  
-  double AY = iY0 * iInvSig2Y     + jY0*jInvSig2Y       + kY0*kInvSig2Y;
-  double BY = iInvSig2Y           + jInvSig2Y           + kInvSig2Y;
-  double CY = iMY*iInvSig2Y       + jMY*jInvSig2Y       + kMY*kInvSig2Y;
-  double DY = iMY*iMY*iInvSig2Y   + jMY*jMY*jInvSig2Y   + kMY*kMY*kInvSig2Y;
-  double EY = iY0*iMY*iInvSig2Y   + jY0*jMY*jInvSig2Y   + kY0*kMY*kInvSig2Y;
-
-  double vX,vY,vZ;
-  StatusCode status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
-  if (!status){
-    fatal() << "vertexPositionAndError failed" << endreq;
-    return StatusCode::FAILURE;
-  };
-  
-  // Chi2
-  double chi2 = pow( (iX0+iMX*vZ-vX), 2)*iInvSig2X + pow( (jX0+jMX*vZ-vX), 2)*jInvSig2X  + pow( (kX0+kMX*vZ-vX), 2)*kInvSig2X +
-    pow( (iY0+iMY*vZ-vY), 2)*iInvSig2Y + pow( (jY0+jMY*vZ-vY), 2)*jInvSig2Y + pow( (kY0+kMY*vZ-vY), 2)*kInvSig2Y;
-  V.setChi2(chi2);
-  V.setNDoF(3);
-
-  // Add vertex daughters
-  V.addToProducts(&iPart);
-  V.addToProducts(&jPart);
-  V.addToProducts(&kPart);
-
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
-
-  return StatusCode::SUCCESS;
-}
-
+StatusCode TrgVertexFitter::initialize(){
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+  m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
+  return sc;
+};
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-
-StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
-{
+StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
+                                 LHCb::Particle& P, LHCb::Vertex& V) const{
+  fit(parts,V);
+  return m_stuffer->fillParticle(parts,V,P);
+  
+}
+//=============================================================================
+// Fit the vertex from a vector of Particles
+//=============================================================================
+StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
+                                 LHCb::Vertex& V) const{
   
   // Vector of particles to use in fit, can contain daughters of input particles
-  std::vector<const Particle*> partsToFit;
+  LHCb::Particle::ConstVector partsToFit;
 
   // Vector of input photons
-  ParticleVector inputPhotons;
+  Particle::ConstVector inputPhotons;
   int nLongLived = 0;
   //  bool noFit = false;
   
   // Main loop on input particles
-  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+  for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
     
-    Particle* parPointer = *iPart;
+    const Particle* parPointer = *iPart;
     if ( !parPointer) {
       fatal() << "Pointer to particle failed: " << parPointer->particleID() << endreq;
       return StatusCode::FAILURE;
@@ -234,20 +98,14 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     const Particle& par = *(parPointer);
     const Vertex* endVertexPointer = par.endVertex();
 
-
     // Take actions 1) 2) 3) or 4) according to particle type
 
-    // 1) Photons are not used for vertexing, just added to the vertex at the end
-    if ( par.origin() && m_photonID == par.particleID().pid() ) { 
-      inputPhotons.push_back(parPointer);
-      verbose() << "Input particle is a photon. Not added to list for fit" << endreq;
-    }
- 
     // 2) For resonances, use daughter particles for fit if m_useDaughters is set to true
-    else if ( m_useDaughters && endVertexPointer && par.isResonance() ){
+    if ( m_useDaughters && endVertexPointer && isResonance(par) ){
       const Vertex& endvert =  *(endVertexPointer);
-      const SmartRefVector<Particle>& daughters= endvert.products();
-      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
+      const SmartRefVector<Particle>& daughters= endvert.outgoingParticles();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();
+            iDaught!=daughters.end();++iDaught) {
         const Particle* daughtPointer = *iDaught;
         if ( !daughtPointer) {
           fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID() << endreq;
@@ -259,7 +117,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
       
     }
     // 3) FL: Long lived composite
-    else if ( m_useDaughters && endVertexPointer && !(par.isResonance()) ){
+    else if ( m_useDaughters && endVertexPointer && !(isResonance(par)) ){
       verbose() << "Long lived particle added to list for fit: " << par.particleID() << endreq;
       partsToFit.push_back(parPointer);
 		  nLongLived++;
@@ -269,8 +127,8 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     else {
       partsToFit.push_back(parPointer);
       verbose() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
-      verbose() << "Point on particle: " << parPointer->pointOnTrack() << endreq;
-      verbose() << "Error on point on particle: " << parPointer->pointOnTrackErr() << endreq;
+      verbose() << "Point on particle: " << parPointer->referencePoint() << endreq;
+      verbose() << "Error on point on particle: " << parPointer->covMatrix() << endreq;
     }
   }
 
@@ -297,13 +155,15 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
       //Should not only decay to gammas    
       unsigned int ngammas = 0;
       
-      const SmartRefVector<Particle> daughters= Vtemp->products();
-      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
-        if((*iDaught)->origin() && m_photonID == (*iDaught)->particleID().pid()) ngammas++;
+      const SmartRefVector<Particle> daughters= Vtemp->outgoingParticles();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();
+            iDaught!=daughters.end();++iDaught) {
+        if((*iDaught)->proto() && 
+           m_photonID == (*iDaught)->particleID().pid()) ngammas++;
       } // iDaught
     
       // Do not use if only decays to gammas, e.g. J/Psi eta(2g)
-      if(ngammas == Vtemp->products().size()) continue;
+      if(ngammas == Vtemp->outgoingParticles().size()) continue;
     
       // We have our vertex
       verbose() << " composite ID " << composite->particleID().pid() << " will be used to add gammas" << endmsg;
@@ -335,23 +195,14 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
   
   }
   
-  // Update "pointOnTrack" for photons
-  for ( ParticleVector::const_iterator iPhotIt=inputPhotons.begin(); iPhotIt!=inputPhotons.end(); ++iPhotIt ) {
-    Particle* photPointer = *iPhotIt;
-    Particle& phot = *(photPointer);
-    phot.setPointOnTrack(V.position());
-    phot.setPointOnTrackErr(V.positionErr());
-    verbose() << "Photon origin updated" << endreq;
-  }
-
   // Add daugthers
-  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
-    V.addToProducts(*iterP);
-    verbose() << "Particle added to vertex products: " << (*iterP)->particleID() << endreq;
+  for(Particle::ConstVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+    V.addToOutgoingParticles(*iterP);
+    verbose() << "Particle added to vertex outgoingParticles: " << (*iterP)->particleID() << endreq;
   }
 
   debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " Size: " << V.products().size() << endmsg ;  
+          <<  V.covMatrix() << " Size: " << V.outgoingParticles().size() << endmsg ;  
 
   return StatusCode::SUCCESS;
 }
@@ -360,9 +211,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
 //=============================================================================
 // Fit a vertex from a vector of particles
 //=============================================================================
-
-StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vertex &V)
-{
+StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit, Vertex &V) const{
 
   int nPartsToFit = partsToFit.size();
   int ndof = (2*nPartsToFit) - 3;
@@ -378,8 +227,8 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
   for ( std::vector<const Particle*>::const_iterator iPartIt=partsToFit.begin(); iPartIt!=partsToFit.end(); ++iPartIt ) {
     const Particle* parPointer = *iPartIt;
     const Particle& par = *(parPointer);
-    const Hep3Vector& point = par.pointOnTrack();
-    const HepSymMatrix& cov = par.pointOnTrackErr();
+    const Gaudi::XYZPoint& point = par.referencePoint();
+    const Gaudi::SymMatrix7x7& cov = par.covMatrix();
     iMX = par.slopeX();
     iMY = par.slopeY();
     iX0 = point.x() - par.slopeX() * point.z();
@@ -411,7 +260,8 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
     
   // Compute vertex position and error from the summatories
   double vX,vY,vZ;
-  StatusCode stPosAndErr = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  StatusCode stPosAndErr = vertexPositionAndError(AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, 
+                                                  vX, vY, vZ, V);
   if (!stPosAndErr){
     fatal() << "vertexPositionAndError failed" << endreq;
     return StatusCode::FAILURE;
@@ -427,29 +277,25 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
   V.setNDoF(ndof);
   return StatusCode::SUCCESS;
 }
-
-
-
 //=============================================================================
 // Compute vertex position and covariance matrix
 //=============================================================================
-
 StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const double& BX, const double& CX,
                                                    const double& DX, const double& EX,
                                                    const double& AY, const double& BY, const double& CY,
                                                    const double& DY, const double& EY,
-                                                   double& vX, double& vY, double& vZ, Vertex &V)
+                                                   double& vX, double& vY, double& vZ, Vertex &V) const
 {
 
   // Vertex position
   vZ = ( CX*AX/BX + CY*AY/BY - EX - EY ) / (DX +DY - CX*CX/BX - CY*CY/BY);
   vY = CY*vZ/BY + AY/BY;
   vX = CX*vZ/BX + AX/BX;
-  HepPoint3D vPos = HepPoint3D (vX, vY, vZ);
+  const Gaudi::XYZPoint vPos(vX, vY, vZ);
   V.setPosition(vPos);
   
-  // Covariance matrix
-  HepSymMatrix fastCov(3);
+  Gaudi::SymMatrix3x3 fastCov;
+
   double invDet = 1./( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
   fastCov(1,1) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
   fastCov(2,1) = invDet * (  CX*CY );
@@ -457,7 +303,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
   fastCov(2,2) = invDet * ( -CX*CX + ( BX * ( DX + DY )));
   fastCov(2,3) = invDet * (  BX*CY );
   fastCov(3,3) = invDet * (  BX*BY );
-  V.setPositionErr(fastCov);
+  V.setCovMatrix(fastCov);
 
   return StatusCode::SUCCESS;
 }

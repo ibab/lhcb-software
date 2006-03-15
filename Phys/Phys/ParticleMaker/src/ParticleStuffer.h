@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.3 2005-11-11 16:26:40 pkoppenb Exp $
+// $Id: ParticleStuffer.h,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -40,12 +40,25 @@ public:
 
   
   /// Fill Composite Particle from Vertex
-  StatusCode fillParticle( const Vertex&, Particle&, 
-                           const ParticleID& );
+  StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
+                           const  LHCb::Vertex&,  
+                           const  LHCb::ParticleID&,
+                           LHCb::Particle&);
 
-  // Fill Particle from ProtoParticle
-  //StatusCode fillParticle( const ProtoParticle&, Particle&, 
-  //                         const ParticleID& );
+  /// Fill Composite Particle from Vertex
+  StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
+                           const  LHCb::Vertex&,  
+                           LHCb::Particle&);
+
+  /// Fill Composite Particle from a state
+  StatusCode fillParticle( const LHCb::State& state,
+                           LHCb::Particle& par);
+
+  /// Sum 4-vectors for a vector of daughters
+  Gaudi::XYZTVector sumMomenta( const LHCb::Particle::ConstVector& );
+
+  /// Sum 4-vectors for a vector of daughters
+  Gaudi::XYZTVector sumMomenta( const SmartRefVector<LHCb::Particle>& );
 
 private:
   IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
@@ -53,6 +66,11 @@ private:
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   std::string m_transporterType;        ///< Type of transporter to use      
 
+  template <typename TYPE0, typename TYPE1, typename TYPE2>
+  inline TYPE0 Similarity(TYPE1 F, TYPE2 C){
+    return F*C*ROOT::Math::Transpose(F);
+  }
+  
 };
 
 #endif // PARTICLESTUFFER_H

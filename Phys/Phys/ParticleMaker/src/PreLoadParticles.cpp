@@ -1,8 +1,5 @@
-// $Id: PreLoadParticles.cpp,v 1.3 2006-01-30 13:00:24 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -30,22 +27,12 @@ PreLoadParticles::PreLoadParticles( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator ) {
   setProperty( "AvoidSelResult", "true");
   setProperty( "DecayDescriptor", "\"null\"");
-  declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 PreLoadParticles::~PreLoadParticles() {}; 
-
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode PreLoadParticles::initialize() {
-
-  debug() << "==> Initialize" << endmsg;
-  return StatusCode::SUCCESS;
-};
 
 //=============================================================================
 // Main execution
@@ -71,14 +58,4 @@ StatusCode PreLoadParticles::execute() {
   
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PreLoadParticles::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
 

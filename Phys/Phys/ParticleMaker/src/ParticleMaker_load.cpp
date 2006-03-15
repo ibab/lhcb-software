@@ -8,18 +8,23 @@
 DECLARE_FACTORY_ENTRIES( ParticleMaker ) {
 
   // Particle Makers
-  DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
-  DECLARE_TOOL( CombinedParticleMaker ); // "the official one"
+/// @todo Restore the official ParticleMaker
+ //  DECLARE_TOOL( CombinedParticleMaker ); 
   DECLARE_TOOL( NoPIDsParticleMaker );
-  DECLARE_TOOL( PhotonFromMergedParticleMaker );
-  DECLARE_TOOL( PhotonParticleMaker    ) ;  
+
+
+  /// @todo Restore photon particle makers
+  //  DECLARE_TOOL( PhotonFromMergedParticleMaker );
+  //  DECLARE_TOOL( PhotonParticleMaker    ) ;  
+  //  DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
 
   DECLARE_TOOL( ParticleMakerSeq );     // Sequencer of Particle makers
 
   DECLARE_ALGORITHM( PreLoadParticles );
 
-  DECLARE_TOOL( PhotonParameters ) ;  
-  DECLARE_TOOL( PhotonFromMergedParameters );
+  /// @todo Restore photon parameters tools
+  //  DECLARE_TOOL( PhotonParameters ) ;  
+  //  DECLARE_TOOL( PhotonFromMergedParameters );
  
   DECLARE_TOOL( ParticleStuffer );
 

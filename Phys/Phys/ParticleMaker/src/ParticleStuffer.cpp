@@ -1,15 +1,8 @@
-// $Id: ParticleStuffer.cpp,v 1.3 2006-01-24 07:38:16 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
 // Include files 
 
 // 
 #include <math.h>
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Units/PhysicalConstants.h"
-#include "CLHEP/Vector/ThreeVector.h" 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -39,7 +32,7 @@ ParticleStuffer::ParticleStuffer( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_ppSvc(0)
   , m_pTransporter(0) 
-  , m_transporterType("CombinedTransporter"){
+  , m_transporterType("ParticleTransporter"){
 
   // declare additional Interface
   declareInterface<IParticleStuffer>(this);
@@ -65,80 +58,70 @@ StatusCode ParticleStuffer::initialize() {
 //=============================================================================
 // Stuffer
 //=============================================================================
-StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part, 
-                                          const ParticleID& pid ){
-
-  int stdHepID = pid.pid();
-  
-  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(stdHepID  );
-
-  if (partProp){
-    if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)) part.setIsResonance(true);
-  } else warning() << "No particle property" << endmsg;
- 
-  
-  // Set the ParticleID.
-  part.setParticleID( pid ); 
+StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& daughters,
+                                          const LHCb::Vertex& vtx, 
+                                          const LHCb::ParticleID& pid,
+                                          LHCb::Particle& part){
+  part.setParticleID(pid);
+  return fillParticle(daughters,vtx,part);
+}
+//=============================================================================
+// Stuffer
+//=============================================================================
+StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& daughters,
+                                          const LHCb::Vertex& vtx, 
+                                          LHCb::Particle& part){
 
   double zVtxPos = vtx.position().z();
-  // Set the four-momentum.
-  //  HepLorentzVector lorVec( 0., 0., 0., 0. );
-  HepLorentzVector MotherlorVec( 0., 0., 0., 0. );
-  SmartRefVector<Particle>::const_iterator it;  
-  //  HepSymMatrix meMat( 4, 0 ); 
-  HepSymMatrix MothermeMat( 4, 0 ); 
+  // Set the four-momenta
+  Gaudi::XYZTVector MotherlorVec ;
+  Gaudi::SymMatrix4x4 MothermeMat ; 
 
-  Particle transParticle;
-  for (it = vtx.products().begin(); it != vtx.products().end(); it++ ) {
-    if ( (*it)->pointOnTrack().z() > 950.) {
-      debug() << "Position > 950 " << (*it)->pointOnTrack().z() << endmsg;
-    }
+  LHCb::Particle transParticle;
+  for (LHCb::Particle::ConstVector::const_iterator it = daughters.begin(); 
+       it != daughters.end(); ++it ) {
 
     // Transport Particle parameters to the vertex position	 
-    StatusCode sctrans = m_pTransporter->transport(*(*it),
-                                                   zVtxPos,
-                                                   transParticle);
+    StatusCode sctrans = m_pTransporter->transport((*it),zVtxPos,transParticle);
     if ( !sctrans.isSuccess() ) {
-      debug() << "Track extrapolation failed" << endmsg;
+      debug() << "Particle extrapolation failed" << endmsg;
       return sctrans;
     }
-
-    //    lorVec += (*it)->momentum(); 
     MotherlorVec += transParticle.momentum(); 
     // Set the four-momentum error matrix.
-    // The slopes+momentum error matrix is set internally.
-    //    meMat += (*it)->momentumErr();    
-    MothermeMat += transParticle.momentumErr();    
+    MothermeMat += transParticle.momCovMatrix();    
   }
-  //  part.setMomentum( lorVec );
   part.setMomentum( MotherlorVec );
-
-  //  part.setMomentumErr( meMat );
-  part.setMomentumErr( MothermeMat );
+  part.setMomCovMatrix( MothermeMat );
 
   // Set the measured mass.
-  part.setMass( part.momentum().mag() ); 
+  part.setMeasuredMass( part.momentum().mag() ); 
 
   // Set the error on the measured mass.
-  HepMatrix derivs(1,4);
-  HepSymMatrix massErrSqd(1,1);
-  derivs(1,1) = - part.momentum().px() / part.mass();
-  derivs(1,2) = - part.momentum().py() / part.mass();
-  derivs(1,3) = - part.momentum().pz() / part.mass();
-  derivs(1,4) =   part.momentum().e()  / part.mass();
-  massErrSqd = part.momentumErr().similarity( derivs );  
+  typedef ROOT::Math::SMatrix<double, 1, 4> Matrix1x4;
+  Matrix1x4 derivs;
+  Gaudi::SymMatrix1x1 massErrSqd ;
+  derivs(0,0) = - part.momentum().X() / part.measuredMass();
+  derivs(0,1) = - part.momentum().Y() / part.measuredMass();
+  derivs(0,2) = - part.momentum().Z() / part.measuredMass();
+  derivs(0,3) =   part.momentum().E() / part.measuredMass();
+  //  massErrSqd = part.momentumErr().similarity( derivs );  
+
+  // Stolen and adapted from SHacks
+  /// @todo Check that this is correct
+  massErrSqd = Similarity<Gaudi::SymMatrix1x1,Matrix1x4,
+    Gaudi::SymMatrix4x4>(derivs,part.momCovMatrix());
   double massErr = sqrt( massErrSqd(1,1) );
-  part.setMassErr( massErr ); 
+  part.setMeasuredMassErr( massErr ); 
 
   // Set the point on track.
-  part.setPointOnTrack( vtx.position() ); 
+  part.setReferencePoint( vtx.position() ); 
 
   // Set the point on track error matrix.
-  part.setPointOnTrackErr( vtx.positionErr() ); 
+  part.setPosCovMatrix( vtx.covMatrix() ); 
 
   // Set the point - four-momentum error matrix.
-  HepMatrix pmeMat( 4, 3, 0 );  
-  part.setPosMomCorr( pmeMat );
+  // part.setPosMomCorr( pmeMat );
   // Set the end vertex reference.
   part.setEndVertex( &vtx ); 
 
@@ -150,6 +133,60 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   return StatusCode::SUCCESS;
 }
 //=============================================================================
+/// Fill Composite Particle from a state
+//=============================================================================
+StatusCode ParticleStuffer::fillParticle( const LHCb::State& state,
+                                          LHCb::Particle& particle ){
+  
+  // point on the track and error 
+  particle.setReferencePoint( state.position() ) ;
+  particle.setPosCovMatrix( state.errPosition()  ) ;
+  
+  // momentum
+  Gaudi::XYZVector mom = state.momentum();
+  double mass = particle.measuredMass();
+  double e = sqrt( state.p()*state.p()+mass*mass );
+  particle.setMomentum(  Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
+
+  // momentum error
+  Gaudi::SymMatrix4x4 err ;
+  err.Place_at(state.errMomentum(),0,0); // no error on mass
+  particle.setMomCovMatrix(err);
+
+  Gaudi::Matrix4x3 posMomMatrix;
+  Gaudi::SymMatrix6x6 spm = state.posMomCovariance();
+  for ( unsigned int i = 0 ; i<3; ++i){
+    for ( unsigned int j = 0 ; j<3; ++j){
+      posMomMatrix(i,j) = spm(3+i,j);  /// @todo : Check this
+    }
+  }
+  particle.setPosMomCovMatrix(posMomMatrix);
+  
+  return StatusCode::SUCCESS ;
+  
+}
+//=============================================================================
+/// Sum 4-Momenta
+//=============================================================================
+Gaudi::XYZTVector ParticleStuffer::sumMomenta( const LHCb::Particle::ConstVector& vP ){
+  Gaudi::XYZTVector sum;
+  for ( LHCb::Particle::ConstVector::const_iterator i = vP.begin(); i != vP.end() ; ++i){
+    sum += (*i)->momentum();
+  }
+  return sum;
+}
+//=============================================================================
+/// Sum 4-Momenta
+//=============================================================================
+Gaudi::XYZTVector ParticleStuffer::sumMomenta( const SmartRefVector<LHCb::Particle>& vP ){
+  Gaudi::XYZTVector sum;
+  for ( SmartRefVector<LHCb::Particle>::const_iterator i = vP.begin(); i != vP.end() ; ++i){
+    sum += (*i)->momentum();
+  }
+  return sum;
+}
+
+
 
 
 
