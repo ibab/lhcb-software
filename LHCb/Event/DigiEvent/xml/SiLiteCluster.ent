@@ -14,9 +14,6 @@
        def = "&className;s"
        access = "PUBLIC " />
 
-     <typedef desc = "fast container for light clusters"
-       type =  "FastClusterContainer &lt; LHCb::&className; , int &gt;"
-
      <typedef desc = "fast container for light clusters (old name: will be removed)"
        type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
        def = "FastContainer"
