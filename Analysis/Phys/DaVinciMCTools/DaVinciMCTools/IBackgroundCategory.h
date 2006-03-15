@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.12 2006-02-01 15:17:11 gligorov Exp $
+// $Id: IBackgroundCategory.h,v 1.13 2006-03-15 13:37:20 pkoppenb Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -11,8 +11,10 @@
 #include <map>
 
 // forward declarations
-class Particle;
-class MCParticle;
+namespace LHCb{  
+  class Particle;
+  class MCParticle;
+}
 
 static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 );
 
@@ -173,7 +175,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IBackgroundCategory; }
 
   /// Method that returns the category
-  virtual IBackgroundCategory::categories category(const Particle*) = 0;
+  virtual IBackgroundCategory::categories category(const LHCb::Particle*) = 0;
   
   /// Method that returns the MC mother particle associated to the background if any
   /// For a signal it returns the true signal particle, and for any background with a 

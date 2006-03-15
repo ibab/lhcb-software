@@ -1,4 +1,4 @@
-// $Id: FilterGoodDecay.cpp,v 1.1 2004-11-16 16:15:40 pkoppenb Exp $
+// $Id: FilterGoodDecay.cpp,v 1.2 2006-03-15 13:37:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 
 // local
 #include "FilterGoodDecay.h"
-#include "MCTools/IMCDecayFinder.h"
+#include "Kernel/IMCDecayFinder.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FilterGoodDecay

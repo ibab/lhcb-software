@@ -1,7 +1,42 @@
-! $Id: release.notes,v 1.98 2006-02-03 07:23:37 pkoppenb Exp $
+! $Id: release.notes,v 1.99 2006-03-15 13:37:21 pkoppenb Exp $
+!=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-03-08 - P. Koppenburg
+  - src/MCParticleMaker.cpp
+    . Remove MCDecayFinder tool
+
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - src/DebugTool.*
+  - src/TrueMCFilterCriterion.*
+    . Removed temporaril;y
+  - DaVinciMCTools/IDebugTool.h
+    . Dirty hack allowing code using this interface to *compile*.
+
+! 2006-01-26 - P. Koppenburg
+  First DC06 version
+  - src/BackgroundCategory.{cpp,h}
+  - src/CheatedLifetimeFitter.{cpp,h}
+  - src/DecayChainNTuple.{cpp,h}
+  - src/DumpEvent.{cpp,h}
+  - src/MCPIDProtoPAlg.{cpp,h}
+  - src/PrintBackgroundCategory.{cpp,h}
+    . Removed.
+  - DaVinciMCTools/IBackgroundCategory.h
+  - DaVinciMCTools/IDebugTool.h
+  - src/DaVinciMCTools_load.{cpp,h}
+  - src/DebugTool.{cpp,h}
+  - src/FilterGoodDecay.{cpp,h}
+  - src/IsBEvent.{cpp,h}
+  - src/MCParticleMaker.{cpp,h}
+  - src/PrintMCTree.{cpp,h}
+  - src/PrintTree.{cpp,h}
+  - src/TrueMCFilterCriterion.{cpp,h}
+    . Adapted to new event model.
 
 !========================== DaVinciMCTools v5r18 2006-02-03 ===================
 ! 2006-01-30 - V. Gligorov
@@ -36,7 +71,7 @@
      Warning: a change of the enum in IBackgroundCategory should also be translated 
      to the strings used by the category map in the PrintBackgroundCategory constructor.
 
-! 2006-1-23 - V. Gligorov
+! 2006-01-23 - V. Gligorov
   - src/BackgroundCategory.cpp
   Added support for ignoring soft photons through propeties UseSoftPhotonCut and SoftPhotonCut.
   Tool now ignores neutrinos when deciding if final state is correctly reconstructed or not

@@ -1,4 +1,4 @@
-// $Id: FilterGoodDecay.h,v 1.1 2004-11-16 16:15:40 pkoppenb Exp $
+// $Id: FilterGoodDecay.h,v 1.2 2006-03-15 13:37:21 pkoppenb Exp $
 #ifndef FILTERGOODDECAY_H 
 #define FILTERGOODDECAY_H 1
 
@@ -9,7 +9,7 @@
 
 /** @class FilterGoodDecay FilterGoodDecay.h
  *  
- *  Accepts event if defined decay id found
+ *  Accepts event if defined decay is found
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-16

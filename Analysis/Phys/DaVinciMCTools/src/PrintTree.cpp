@@ -1,4 +1,4 @@
-// $Id: PrintTree.cpp,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: PrintTree.cpp,v 1.3 2006-03-15 13:37:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,10 +45,6 @@ StatusCode PrintTree::initialize() {
   
   debug() << "==> Initialize" << endmsg;
   m_debug = tool<IDebugTool>( "DebugTool", this );
-  if( !m_debug ) {
-    fatal() << "Unable to retrieve Debug tool" << endreq;
-    return StatusCode::FAILURE;
-  }  
 
   return StatusCode::SUCCESS;
 };
@@ -61,8 +57,8 @@ StatusCode PrintTree::execute() {
   debug() << "==> Execute" << endmsg;
 
   // code goes here  
-  ParticleVector parts = desktop()->particles();
-  ParticleVector::iterator iL;
+  LHCb::Particle::ConstVector parts = desktop()->particles();
+  LHCb::Particle::ConstVector::iterator iL;
   for ( iL = parts.begin() ; iL != parts.end() ; iL++ ) {
     m_debug->printTree( (*iL) );
   }// - loop

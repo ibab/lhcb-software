@@ -1,4 +1,4 @@
-// $Id: IsBEvent.h,v 1.1 2005-01-12 09:26:55 pkoppenb Exp $
+// $Id: IsBEvent.h,v 1.2 2006-03-15 13:37:21 pkoppenb Exp $
 #ifndef ISBEVENT_H 
 #define ISBEVENT_H 1
 
@@ -30,7 +30,7 @@ public:
 protected:
 
 private:
-  bool goodEvent(MCParticles*); ///< loop
+  bool goodEvent(LHCb::MCParticles*); ///< loop
   StatusCode writeSelResult();
 
 private:

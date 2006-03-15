@@ -1,4 +1,4 @@
-// $Id: PrintMCTree.h,v 1.1 2004-09-14 11:59:07 pkoppenb Exp $
+// $Id: PrintMCTree.h,v 1.2 2006-03-15 13:37:22 pkoppenb Exp $
 #ifndef PRINTMCTREE_H 
 #define PRINTMCTREE_H 1
 
@@ -10,7 +10,7 @@ class IDebugTool;
 
 /** @class PrintMCTree PrintMCTree.h
  *  
- *  Prints the decau tree of all MC particles with a given PID 
+ *  Prints the decay tree of all MC particles with a given PID 
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-09-10

@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.6 2005-12-15 14:19:50 pkoppenb Exp $
+// $Id: MCParticleMaker.h,v 1.7 2006-03-15 13:37:22 pkoppenb Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -11,7 +11,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "CLHEP/Matrix/SymMatrix.h"
 
 // from DaVinciTools
 #include "Kernel/IParticleMaker.h"
@@ -36,7 +35,7 @@ class ProtoParticle;
  *  Different additional selection can be applied to the MCParticles:
  * <ol> 
  * <li> Ask to be reconstructed particles</li>  
- * <li> Ask to be reconstructable particles</li>  
+ * <li> Ask to be reconstructible particles</li>  
  * <li> Use reconstructed covariance to generate the fake measurements</li>  
  * <li> Use a given parametrization of the covariance matrix to generate the fake measurements</li>  
  * </ol>
@@ -52,7 +51,7 @@ class ProtoParticle;
  * <ol>
  * <li> Selection properties:\n 
  *                  \b ParticleNames list of the MCparticle ID to smear\n
- *                  \b OnlyReconstructable (Default:false) to chose only reconstructable MCParticles\n
+ *                  \b OnlyReconstructible (Default:false) to chose only reconstructible MCParticles\n
  *                  \b OnlyReconstructed (Default:false) to chose only reconstructed MCParticles\n
  *                  \b SmearParticle (Default:true)\n
  *                  \b OnlyDecayProducts (Default:false) to chose only the MCParticle of a given Decay process\n
@@ -86,6 +85,8 @@ class ProtoParticle;
  * </li> 
  * </ol> 
  *   
+ * @todo Create a table relating the Particle and the MCParticle
+ *
  *   @author Gerhard Raven with minor contributions from G.Balbi & S.Vecchi
  *   @date   2002-10-08
  * 
@@ -104,7 +105,7 @@ public:
   StatusCode initialize();
   
   /// Functional method to make particles.
-  virtual StatusCode makeParticles( ParticleVector & parts );
+  virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts );
   
   // Finalize
   //  StatusCode finalize();
@@ -112,7 +113,7 @@ public:
 protected:
   /// The Particle property service.
   IParticlePropertySvc* ppSvc() const;
-  std::vector<const MCParticle*> getFinalState(const MCParticle& m);
+  std::vector<const LHCb::MCParticle*> getFinalState(const LHCb::MCParticle& m);
 
 private:
 
@@ -121,7 +122,7 @@ private:
   std::string m_input;
   bool    m_onlyDecayProducts;               ///< flag to select only specific decay products 
   bool    m_onlyStableDecayProducts;        ///<flag to select only STABLE products of a given Decay Channel(defined in JobOption)
-  bool    m_onlyReconstructable;             ///< flag to use only Reconstructable MCparticles
+  bool    m_onlyReconstructible;             ///< flag to use only Reconstructible MCparticles
   bool    m_onlyReconstructed;               ///< flag to use only Reconstruced MCparticles
   bool    m_useReconstructedCovariance;      ///< flag to use only Reconstructed Covariance matrix
   bool    m_smearParticle;                   ///< flag to Smear PArticles
@@ -158,13 +159,14 @@ private:
 
 
   /// internal method
-  StatusCode fillParticle( const MCParticle& mc, 
-                           Particle& particle,
-                           const HepSymMatrix& cov);  ///< fill Particle according generation criteria
-  bool reconstructable(const MCParticle& icand) const; 
-  const Particle *reconstructed(const MCParticle& icand) const;
-  HepSymMatrix * fetchCovariance(const Particle& p ) const;
-  HepSymMatrix * generateCovariance(const HepLorentzVector& p) const;///< Generate covariance according realistic parametrization
+  StatusCode fillParticle( const LHCb::MCParticle& mc, 
+                           LHCb::Particle& particle,
+                           const Gaudi::SymMatrix7x7& cov);  ///< fill Particle according generation criteria
+  bool reconstructible(const LHCb::MCParticle& icand) const; 
+  const LHCb::Particle *reconstructed(const LHCb::MCParticle& icand) const;
+  Gaudi::SymMatrix7x7 * fetchCovariance(const LHCb::Particle& p ) const;
+  /// Generate covariance according realistic parametrization  
+  Gaudi::SymMatrix7x7 * generateCovariance(const Gaudi::XYZTVector& p) const;
 
   
 };

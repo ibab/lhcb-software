@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.2 2005-01-12 09:32:16 pkoppenb Exp $
+// $Id: IsBEvent.cpp,v 1.3 2006-03-15 13:37:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ IsBEvent::IsBEvent( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_particles()
-  , m_selResults(SelResultLocation::Default)
+  , m_selResults(LHCb::SelResultLocation::Default)
 {
   m_required.push_back("b"); // default is to require a b-quark
   declareProperty( "RequiredParticles", m_required );
@@ -83,10 +83,10 @@ StatusCode IsBEvent::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
+  LHCb::MCParticles* mcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !mcparts ){
     fatal() << "Unable to find MC particles at '"
-        << MCParticleLocation::Default << "'" << endreq;
+        << LHCb::MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
   }
   bool found = goodEvent(mcparts);
@@ -102,12 +102,12 @@ StatusCode IsBEvent::execute() {
 //=============================================================================
 //  All there?
 //=============================================================================
-bool IsBEvent::goodEvent(MCParticles* mcparts){
+bool IsBEvent::goodEvent(LHCb::MCParticles* mcparts){
   
   for ( std::vector<int>::const_iterator id = m_particles.begin() ; 
         id != m_particles.end() ; ++id ){
     bool found = false ;
-    for ( MCParticles::const_iterator MC = mcparts->begin() ; 
+    for ( LHCb::MCParticles::const_iterator MC = mcparts->begin() ; 
           MC != mcparts->end() ; ++MC){
       if ( *id == 5 ) found = (*MC)->particleID().hasBottom() ;
       else if ( *id == 4 ) found = (*MC)->particleID().hasCharm() ;
@@ -133,13 +133,13 @@ bool IsBEvent::goodEvent(MCParticles* mcparts){
 //=============================================================================
 StatusCode IsBEvent::writeSelResult() {
   
-  SelResults* SelResCtr ;
-  if ( exist<SelResults>(m_selResults) ){
+  LHCb::SelResults* SelResCtr ;
+  if ( exist<LHCb::SelResults>(m_selResults) ){
     debug() << "SelResult exists already " << endreq ;
-    SelResCtr = get<SelResults>(m_selResults);
+    SelResCtr = get<LHCb::SelResults>(m_selResults);
   } else {
     debug() << "Putting new SelResult container " << endreq ;
-    SelResCtr = new SelResults();
+    SelResCtr = new LHCb::SelResults();
     StatusCode scRO = put(SelResCtr,m_selResults);
     if (scRO.isFailure()){
       err() << "Cannot register Selection Result summary at location: "
@@ -149,7 +149,7 @@ StatusCode IsBEvent::writeSelResult() {
   }
   
   // Create and fill selection result object
-  SelResult* myResult = new SelResult();
+  LHCb::SelResult* myResult = new LHCb::SelResult();
   myResult->setFound(filterPassed());
   myResult->setLocation( ("/Event/Phys/"+name()));
   verbose() << "Selresult location set to " << "/Event/Phys/"+name() << endreq;

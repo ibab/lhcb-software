@@ -1,4 +1,4 @@
-// $Id: PrintMCTree.cpp,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: PrintMCTree.cpp,v 1.3 2006-03-15 13:37:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -55,10 +55,6 @@ StatusCode PrintMCTree::initialize() {
   }
   
   m_debug = tool<IDebugTool>( "DebugTool", this );
-  if( !m_debug ) {
-    fatal() << "Unable to retrieve Debug tool" << endreq;
-    return sc;
-  }  
 
   IParticlePropertySvc *ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   if( !ppSvc ) {
@@ -90,17 +86,17 @@ StatusCode PrintMCTree::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default );
+  LHCb::MCParticles* kmcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !kmcparts ) {
     fatal() << "Unable to find MC particles at '" 
-            << MCParticleLocation::Default << "'" << endreq;
+            << LHCb::MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
   }
-  std::vector<MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
+  std::vector<LHCb::MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
   debug() << "There are " <<  mcparts.size() << " MC particles" << endmsg;
 
   bool printed = false ;
-  std::vector<MCParticle*>::iterator MCP;
+  std::vector<LHCb::MCParticle*>::iterator MCP;
   for (MCP=mcparts.begin() ; MCP!=mcparts.end() ; ++MCP ){
     int pid = (*MCP)->particleID().pid() ;
     verbose() << "MC Particle is a " << pid << endreq ;
