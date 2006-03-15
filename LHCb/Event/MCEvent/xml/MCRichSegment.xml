@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSegment.xml,v 1.5 2006-03-01 09:38:42 jonrob Exp $
+  * $Id: MCRichSegment.xml,v 1.6 2006-03-15 15:08:12 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichSegment class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -28,8 +28,9 @@
         <template name="VectorDict" t1="Gaudi::XYZPoint"/>
         
         <import name="Event/MCParticle"/>
-        <import name="Event/MCRichTrack" soft="TRUE"/>
-        <import name="Event/MCRichOpticalPhoton"/>
+        <import name="Event/MCRichTrack"         soft="TRUE"/>
+        <import name="Event/MCRichHit"           soft="TRUE"/>
+        <import name="Event/MCRichOpticalPhoton" soft="TRUE"/>
         <import name="Kernel/Point3DTypes.h"/>
         <import name="Kernel/Vector3DTypes.h"/>
         <import name="Kernel/RichDetectorType"/>
@@ -219,6 +220,13 @@
                 multiplicity = "N" 
                 name         = "MCRichOpticalPhotons" 
                 type         = "LHCb::MCRichOpticalPhoton"
+        />
+
+        <relation 
+                desc         = "Associated MCRichHits" 
+                multiplicity = "N" 
+                name         = "MCRichHits" 
+                type         = "LHCb::MCRichHit"
         />
         
 </class>

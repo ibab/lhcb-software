@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.6 2006-03-01 09:38:42 jonrob Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.7 2006-03-15 15:08:12 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -37,12 +37,6 @@
                 name = "pdIncidencePoint" 
                 type = "Gaudi::XYZPoint"
                 desc = "Point of incidence of the photon on the HPD window" 
-        />
-            
-        <attribute 
-                name = "pdIncidenceMomentum"
-                type = "Gaudi::XYZVector"
-                desc = "Photon momentum at point of incidence to PD"
         />
             
         <attribute 
