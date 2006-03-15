@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-03-15 - Olivier Callot
+ - Restore the default second template. Use T::classID() without instanciation.
+ - Include GaudiKernel/IRegistry.h in LinkedFrom.h
+
 !====================== LinkerEvent v2r0 2006-03-08 ==========================
 ! 2006-03-08 - Olivier Callot
  - Fixed a typo in LinkedFrom, 'key' left while it should have been 'index'

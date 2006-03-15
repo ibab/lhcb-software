@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.11 2006-03-08 17:38:49 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.12 2006-03-15 13:09:16 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -41,10 +41,9 @@ public:
             << " not registered, Status " << sc << endreq;
       }
     }
-    TARGET tgt;
-    m_links->setTargetClassID( tgt.clID() );
-    SOURCE src;
-    m_links->setSourceClassID( src.clID() );
+
+    m_links->setTargetClassID( TARGET::classID() );
+    m_links->setSourceClassID( SOURCE::classID() );
   }; 
 
   virtual ~LinkerWithKey( ) {}; ///< Destructor

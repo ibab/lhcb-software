@@ -1,9 +1,10 @@
-// $Id: LinkedFrom.h,v 1.16 2006-03-08 17:43:26 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.17 2006-03-15 13:09:16 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -16,7 +17,7 @@
  *  @author Olivier Callot
  *  @date   2004-01-06
  */
-template <class SOURCE, class TARGET>
+template <class SOURCE, class TARGET=ContainedObject>
 class LinkedFrom {
 public: 
   //== Typedefs to please Matt
@@ -43,13 +44,12 @@ public:
     m_links = links;
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
-    SOURCE src;
-    TARGET tgt;
-    if ( links->sourceClassID() != src.clID() ) {
+
+    if ( links->sourceClassID() != SOURCE::classID() ) {
       throw GaudiException( "Incompatible SOURCE type for location " + containerName,
                             "LinkedFrom", StatusCode::FAILURE);
     }
-    if ( links->targetClassID() != tgt.clID() ) {
+    if ( links->targetClassID() != TARGET::classID() ) {
       throw GaudiException( "Incompatible TARGET type for location " + containerName,
                             "LinkedFrom", StatusCode::FAILURE);
     }

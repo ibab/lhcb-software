@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.8 2006-03-09 10:45:40 ocallot Exp $
+// $Id: LinkerTool.h,v 1.9 2006-03-15 13:09:16 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -51,13 +51,12 @@ public:
 
   DirectType* direct ( ) {
     SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_location );
-    SOURCE src;
-    TARGET tgt;
-    if ( links->sourceClassID() != src.clID() ) {
+
+    if ( links->sourceClassID() != SOURCE::classID() ) {
       throw GaudiException( "Incompatible SOURCE type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }
-    if ( links->targetClassID() != tgt.clID() ) {
+    if ( links->targetClassID() != TARGET::classID() ) {
       throw GaudiException( "Incompatible TARGET type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }
@@ -96,13 +95,11 @@ public:
     if ( 0 == linkPtr ) return 0;
 
     //== TARGET and SOURCE are exchanged for the inverse table
-    SOURCE src;
-    TARGET tgt;
-    if ( links->targetClassID() != src.clID() ) {
+    if ( links->targetClassID() != SOURCE::classID() ) {
      throw GaudiException( "Incompatible SOURCE type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }
-    if ( links->sourceClassID() != tgt.clID() ) {
+    if ( links->sourceClassID() != TARGET::classID() ) {
       throw GaudiException( "Incompatible TARGET type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }    
