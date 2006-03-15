@@ -1,4 +1,4 @@
-// $Id: STAlgorithms_load.cpp,v 1.2 2006-02-23 14:35:24 cattanem Exp $
+// $Id: STAlgorithms_load.cpp,v 1.3 2006-03-15 16:16:03 cattanem Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -17,7 +17,6 @@ DECLARE_FACTORY_ENTRIES(STAlgorithms) {
   DECLARE_ALGORITHM( MCSTDigitCreator );
   DECLARE_ALGORITHM( STDigitCreator );
   DECLARE_ALGORITHM( STClusterCreator );
-  DECLARE_ALGORITHM( STSummaryCreator );
 
   DECLARE_TOOL( STAmplifierResponse );
   DECLARE_TOOL( STChargeSharingTool );

@@ -1,5 +1,5 @@
 package STAlgorithms
-version v1r0
+version v1r1
 
 branches cmt doc src options
 
@@ -8,7 +8,6 @@ include_path none
 use GSL			v*    LCG_Interfaces
 use GaudiAlg            v*
 use STDet               v*    Det
-use RecEvent            v*    Event
 use DigiEvent           v*    Event
 use MCEvent             v*    Event
 
