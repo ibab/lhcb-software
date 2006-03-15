@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.4 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.5 2006-03-15 15:07:16 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -73,84 +73,88 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
     // note this key is need for consistency with MCRichHit converter
     unsigned int globalKey = 0;
     ++m_nEvts; // Count events
-    for ( int iii=0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii ) 
+    for ( int iii=0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii )
     {
       const std::string & colName = RichG4HitCollectionName()->RichHCName(iii);
 
       G4SDManager * fSDM = G4SDManager::GetSDMpointer();
       if ( !fSDM ) return Error( "NULL G4SDManager pointer !!" );
       const int collectionID = fSDM->GetCollectionID(colName);
-      if ( -1 == collectionID ) return StatusCode::SUCCESS;
+      if ( -1 == collectionID )
+      {
+        return Warning( "RICH Collection "+colName+" : ID = -1", StatusCode::SUCCESS );
+      }
 
       const RichG4HitsCollection * myCollection =
         dynamic_cast<RichG4HitsCollection*>(hitscollections->GetHC(collectionID));
-      if ( 0 == myCollection ) return StatusCode::SUCCESS;
+      if ( 0 == myCollection )
+      {
+        return Warning( "Null RICH hit collection "+colName, StatusCode::SUCCESS );
+      }
 
       const int numberofhits = myCollection->entries();
 
       //convert hits
-      for ( int ihit = 0; ihit < numberofhits; ++ihit ) 
+      for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
-
-        // Pointer to G4 hit
-        const RichG4Hit * g4hit = (*myCollection)[ihit];
-        if ( !g4hit ) return Error( "Null RichG4Hit pointer" );
-
-        // New optical photon object
-        MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
-        // insert in container
-        photons->insert( mcPhoton, globalKey );
 
         // Find associated MCRichHit
         const MCRichHit * mchit = (*mcHits)[globalKey];
+        if ( !mchit ) { Error( "Null MCRichHit pointer" ); continue; }
 
-        // SmartRef to associated MCRichHit
-        mcPhoton->setMcRichHit( mchit );
-        if ( !mchit ) return Error( "Null MCRichHit pointer" );
+        // Only create a photon for Cherenkov radiator hits
+        if ( mchit->radiator() != Rich::InvalidRadiator )
+        {
 
-        // Copy required info from RichG4Hit to RichMCOpticalPhoton
+          // Pointer to G4 hit
+          const RichG4Hit * g4hit = (*myCollection)[ihit];
+          if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
-        // Incidence point on HPD
-        mcPhoton->setPdIncidencePoint( Gaudi::XYZPoint(g4hit->GetGlobalPEOriginPos()) );
+          // New optical photon object
+          MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
+          // insert in container, with same key has MCRichHit position in container
+          photons->insert( mcPhoton, globalKey );
 
-        // Photon energy at production
-        mcPhoton->setEnergyAtProduction( static_cast<float>(g4hit->PhotEnergyAtProd()) );
+          // SmartRef to associated MCRichHit
+          mcPhoton->setMcRichHit( mchit );
 
-        // Emission point on track
-        mcPhoton->setEmissionPoint( Gaudi::XYZPoint(g4hit->GetPhotEmisPt()) );
+          // Copy required info from RichG4Hit to MCRichOpticalPhoton
 
-        // The momentum of the parent track at production
-        mcPhoton->setParentMomentum( Gaudi::XYZVector(g4hit->ChTrackMomVect()) );
+          // Incidence point on HPD
+          mcPhoton->setPdIncidencePoint( Gaudi::XYZPoint(g4hit->GetGlobalPEOriginPos()) );
 
-        // Cherenkov theta and phi at production
-        mcPhoton->setCherenkovTheta ( g4hit->ThetaCkvAtProd() );
-        mcPhoton->setCherenkovPhi   ( g4hit->PhiCkvAtProd()   );
+          // Photon energy at production
+          mcPhoton->setEnergyAtProduction( static_cast<float>(g4hit->PhotEnergyAtProd()) );
 
-        // Spherical mirror reflection point
-        mcPhoton->setSphericalMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror1PhotonReflPosition()) );
+          // Emission point on track
+          mcPhoton->setEmissionPoint( Gaudi::XYZPoint(g4hit->GetPhotEmisPt()) );
 
-        // Flat mirror reflection point
-        mcPhoton->setFlatMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror2PhotonReflPosition()) );
+          // The momentum of the parent track at production
+          mcPhoton->setParentMomentum( Gaudi::XYZVector(g4hit->ChTrackMomVect()) );
 
-        // exit point from aerogel (only meaningful for aerogel photons)
-        mcPhoton->setAerogelExitPoint( Gaudi::XYZPoint(g4hit->OptPhotAgelExitPos()) );
+          // Cherenkov theta and phi at production
+          mcPhoton->setCherenkovTheta ( g4hit->ThetaCkvAtProd() );
+          mcPhoton->setCherenkovPhi   ( g4hit->PhiCkvAtProd()   );
 
-        // Count photons
-        ++m_hitTally[mchit->radiator()];
+          // Spherical mirror reflection point
+          mcPhoton->setSphericalMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror1PhotonReflPosition()) );
 
-        // finally, increment the key
+          // Flat mirror reflection point
+          mcPhoton->setFlatMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror2PhotonReflPosition()) );
+
+          // exit point from aerogel (only meaningful for aerogel photons)
+          mcPhoton->setAerogelExitPoint( Gaudi::XYZPoint(g4hit->OptPhotAgelExitPos()) );
+
+          // Count photons
+          ++m_hitTally[mchit->radiator()];
+
+        }
+
+        // increment the key
         ++globalKey;
 
       } // loop over g4 hits
 
-    }
-
-    // Should have one opticalphoton for each and every MCRichHit
-    if ( (unsigned int)photons->size() != mcHits->size() )
-    {
-      error() << "Created " << photons->size()
-              << " MCRichOpticalPhotons and"
-              << mcHits->size() << " MCRichHits !!" << endreq;
     }
 
   }
@@ -174,7 +178,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::finalize()
   {
     std::string name = Rich::text((*iM).first);
     name.resize(' ',20);
-    info() << "Av. # MCRichOpticalPhotons : " << name << " = " 
+    info() << "Av. # MCRichOpticalPhotons : " << name << " = "
            << occ((*iM).second,m_nEvts) << " / event" << endreq;
   }
 

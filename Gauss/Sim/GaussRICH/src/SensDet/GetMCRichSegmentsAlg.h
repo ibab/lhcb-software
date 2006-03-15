@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.h,v 1.3 2006-03-15 15:07:16 jonrob Exp $
 #ifndef SENSDET_GetMCRichSegmentsAlg_H
 #define SENSDET_GetMCRichSegmentsAlg_H 1
 
@@ -32,7 +32,8 @@ public:
 
 private:
 
-  std::string   m_richPhotonsLocation;   ///< Name of TES path for MCRichOpticalPPhotons
+  std::string m_richPhotonsLocation; ///< Name of TES path for MCRichOpticalPhotons
+  std::string m_richHitsLocation;    ///< Name of TES path for MCRichOpticalHits
 
   // now the variables used for the local monitoring. This may eventually
   // go into GaussMonitor. SE Nov 2005.

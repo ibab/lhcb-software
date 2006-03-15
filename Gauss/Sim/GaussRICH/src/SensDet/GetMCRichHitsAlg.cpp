@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.15 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.16 2006-03-15 15:07:16 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -112,7 +112,7 @@ StatusCode GetMCRichHitsAlg::execute()
 
         // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
-        if ( !g4hit ) return Error( "Null RichG4Hit pointer" );
+        if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
@@ -198,8 +198,11 @@ StatusCode GetMCRichHitsAlg::execute()
           mess << "Invalid RichSmartID returned for silicon point " << entry;
           Warning( mess.str() );
         }
-        // Fill value into hit
-        mchit->setSensDetID( detID );
+        else
+        {
+          // Fill value into hit
+          mchit->setSensDetID( detID );
+        }
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
         const int trackID = (const_cast<RichG4Hit*>(g4hit))->GetTrackID();
@@ -322,17 +325,17 @@ StatusCode GetMCRichHitsAlg::finalize()
          << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
          << endmsg;
 
-  info() << "Av. # Charged Track hits   : Aero  = " 
+  info() << "Av. # Charged Track hits   : Aero  = "
          << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_ctkHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_ctkHits[Rich::CF4],m_nEvts)
          << endmsg;
-  info() << "Av. # Scattered hits       : Aero  = " 
+  info() << "Av. # Scattered hits       : Aero  = "
          << occ(m_scatHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_scatHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_scatHits[Rich::CF4],m_nEvts)
          << endmsg;
-  info() << "Av. # MCParticle-less hits : Aero  = " 
+  info() << "Av. # MCParticle-less hits : Aero  = "
          << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_nomcpHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_nomcpHits[Rich::CF4],m_nEvts)

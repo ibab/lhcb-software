@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.4 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.5 2006-03-15 15:07:16 jonrob Exp $
 // Include files
 
 // local
@@ -94,7 +94,7 @@ StatusCode GetMCRichTracksAlg::execute()
     {
       // get the GiGa trajectory
       const GiGaTrajectory * traj = gigaTrajectory(*iTr);
-      if ( !traj ) continue;
+      if ( !traj ) { Warning( "Null GiGaTrajectory" ); continue; }
       mcpToTraj[table[traj->trackID()].particle()] = traj;
     }
 
@@ -126,7 +126,7 @@ StatusCode GetMCRichTracksAlg::execute()
           iList != sortedSegs.end(); ++iList )
     {
       const MCParticle * mcPart = (*iList).first;
-      if ( !mcPart ) continue;
+      if ( !mcPart ) { Warning( "Null MCParticle pointer"); continue; }
 
       // new MCRichTrack
       MCRichTrack * mcTrack = new MCRichTrack();

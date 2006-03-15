@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.5 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.6 2006-03-15 15:07:16 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -26,6 +26,8 @@ GetMCRichSegmentsAlg::GetMCRichSegmentsAlg( const std::string& name,
 {
   declareProperty( "MCRichOpticalPhotonsLocation",
                    m_richPhotonsLocation  = MCRichOpticalPhotonLocation::Default );
+  declareProperty( "MCRichHitsLocation",
+                   m_richHitsLocation  = MCRichHitLocation::Default );
   declareProperty( "MCRichSegmentsLocation",
                    m_dataToFill = MCRichSegmentLocation::Default);
 }
@@ -71,16 +73,18 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
     // Locate the MCRichOpticalPhotons
     const MCRichOpticalPhotons * photons = get<MCRichOpticalPhotons>( m_richPhotonsLocation ) ;
+    // Locate the MCRichHits
+    const MCRichHits * hits              = get<MCRichHits>( m_richHitsLocation ) ;
 
     // map of vectors to store Hits associated to each MCParticle
     typedef std::pair< const MCParticle*, Rich::RadiatorType> HitDataListKey;
-    typedef std::pair< const RichG4Hit*, int > HitDataType;
+    typedef std::pair< const RichG4Hit*, unsigned int > HitDataType;
     typedef std::vector< HitDataType > G4HitList;
     typedef std::map< HitDataListKey, G4HitList > HitDataList;
     HitDataList sortedHits;
 
     // note this key is needed for consistency with MCRichHit converter
-    int globalKey = 0;
+    unsigned int globalKey = 0;
     ++m_nEvts; // Count events
     for ( int iii = 0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii )
     {
@@ -126,8 +130,8 @@ StatusCode GetMCRichSegmentsAlg::execute()
           HitDataType data(g4hit,globalKey);
           sortedHits[key].push_back( data );
 
-        } 
-        else 
+        }
+        else
         {
           if ( msgLevel(MSG::DEBUG) )
           {
@@ -185,8 +189,23 @@ StatusCode GetMCRichSegmentsAlg::execute()
         momenta.insert( MomentumAtZ( Gaudi::XYZVector((*iHit).first->ChTrackMomVect()),
                                      Gaudi::XYZPoint((*iHit).first->ChTrackCkvPostStepPos()) ) );
 
-        // Add associated MCRichOpticalPhoton to this segment
-        mcSeg->addToMCRichOpticalPhotons( photons->object((*iHit).second) );
+        // global key for photons and hits
+        const unsigned int gkey = (*iHit).second;
+
+        // MCRichHit Pointer
+        if ( gkey >= hits->size() ) 
+        { Error( "MCRichHit key outside valid range" ); continue; }
+        const MCRichHit * mchit = (*hits)[gkey];
+        if ( !mchit ) { Warning( "Null MCRichHit pointer" ); continue; }
+        mcSeg->addToMCRichHits( mchit );
+
+        // MCRichOpticalPhoton pointer
+        const MCRichOpticalPhoton * mcphot = photons->object(gkey);
+        // not all hits have photons, so only add if not null
+        if ( mcphot ) 
+        { 
+          mcSeg->addToMCRichOpticalPhotons( mcphot );
+        }
 
       }
 
@@ -231,7 +250,7 @@ StatusCode GetMCRichSegmentsAlg::finalize()
   {
     std::string name = Rich::text((*iM).first);
     name.resize(' ',20);
-    info() << "Av. # MCRichSegments       : " << name << " = " 
+    info() << "Av. # MCRichSegments       : " << name << " = "
            << occ((*iM).second,m_nEvts) << " / event" << endreq;
   }
 
