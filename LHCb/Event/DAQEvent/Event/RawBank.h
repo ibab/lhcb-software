@@ -77,6 +77,8 @@ namespace LHCb
                    TTError,
                    ITPedestal,
                    TTPedestal,
+                   VeloError,
+                   VeloPedestal,
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 

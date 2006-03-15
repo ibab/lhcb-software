@@ -1,7 +1,8 @@
 package DAQEvent
-version v6r2
+version v6r3
 
 use GaudiAlg  v*
+branches cmt doc Event src tests xml
 
 include_dirs $(DAQEVENTROOT)
 

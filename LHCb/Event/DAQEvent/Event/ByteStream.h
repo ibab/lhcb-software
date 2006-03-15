@@ -1,4 +1,4 @@
-// $Id: ByteStream.h,v 1.4 2005-11-23 13:28:21 mneedham Exp $
+// $Id: ByteStream.h,v 1.5 2006-03-15 15:00:44 cattanem Exp $
 #ifndef EVENT_BYTESTREAM_H 
 #define EVENT_BYTESTREAM_H 1
 
@@ -18,8 +18,8 @@ namespace LHCb
   public: 
     /**
      *  Constructor
-     * @param pointer to data
-     * @param data size in bytes
+     * @param bank pointer to data
+     * @param size size in bytes
      */
     ByteStream(unsigned int* bank, size_t size);
 

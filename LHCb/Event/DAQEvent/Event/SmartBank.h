@@ -1,4 +1,4 @@
-// $Id: SmartBank.h,v 1.1 2005-10-14 12:51:59 cattanem Exp $
+// $Id: SmartBank.h,v 1.2 2006-03-15 15:00:44 cattanem Exp $
 #ifndef EVENT_SMARTBANK_H 
 #define EVENT_SMARTBANK_H 1
 
@@ -23,8 +23,8 @@ namespace LHCb
 
     /**
      *  Constructor
-     * @param pointer to data
-     * @param data size in bytes
+     * @param data     pointer to data
+     * @param dataSize size in bytes
      */
     SmartBank(unsigned int* data, size_t dataSize);
 

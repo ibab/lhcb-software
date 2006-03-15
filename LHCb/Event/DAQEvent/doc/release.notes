@@ -2,6 +2,11 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+!================ DAQEvent v6r3 2006-03-15 ============================
+! 2006-03-15 - Marco Cattaneo
+ - Add VeloError and VeloPedestal as RawBank types
+ - Add ODINDefinitions.h to describe contents of ODIN bank
+
 !================ DAQEvent v6r2 2006-03-06 ============================
 ! 2006-03-06 - Markus Frank
  - Fix RawBank according to EDMS note. UI is backwards compatible,

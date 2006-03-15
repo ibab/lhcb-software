@@ -1,4 +1,4 @@
-// $Id: BankWriter.h,v 1.4 2006-02-07 15:58:09 mneedham Exp $
+// $Id: BankWriter.h,v 1.5 2006-03-15 15:00:44 cattanem Exp $
 #ifndef EVENT_BANKWRITER_H 
 #define EVENT_BANKWRITER_H 1
 
@@ -24,7 +24,7 @@ namespace LHCb
 
     /**
      *  Constructor
-     * @param data size in 32 bit words
+     * @param blockSize size in 32 bit words
      */
     BankWriter(size_t blockSize);
 
