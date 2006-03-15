@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.36 2006-03-01 09:33:14 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.37 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -111,10 +111,19 @@ StatusCode DeRichHPDPanel::initialize()
   else
     rich1Location = DeRichLocation::Rich1;
 
-  SmartDataPtr<DetectorElement> deRich1(dataSvc(),rich1Location );
-  if ( !deRich1 ) {
-    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
-    return StatusCode::FAILURE;
+  DetectorElement* deRich1;
+  SmartDataPtr<DetectorElement> deRich1a(dataSvc(),rich1Location );
+  if ( !deRich1a ) {
+    // for the testbeam try Rich2
+    SmartDataPtr<DetectorElement> deRich1b(dataSvc(),DeRichLocation::Rich2 );
+    if ( !deRich1b ) {
+      msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    deRich1 = deRich1b;
+  }
+  else {
+    deRich1 = deRich1a;
   }
 
   // find the RichSystem

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.23 2006-03-09 11:37:35 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.24 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -50,28 +50,22 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  const double nominalCoCX = param<double>("Rich1Mirror1NominalCoCX");
-  const double nominalCoCY = param<double>("Rich1Mirror1NominalCoCY");
-  const double nominalCoCZ = param<double>("Rich1Mirror1NominalCoCZ");
-
+  const std::vector<double> nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvature =
-    Gaudi::XYZPoint(nominalCoCX, nominalCoCY, nominalCoCZ);
+    Gaudi::XYZPoint( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
   m_nominalCentreOfCurvatureBottom =
-    Gaudi::XYZPoint(nominalCoCX, -nominalCoCY, nominalCoCZ);
+    Gaudi::XYZPoint( nominalCoC[0], -nominalCoC[1], nominalCoC[2]);
 
   msg << MSG::DEBUG << "Nominal centre of curvature"
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
       << endmsg;
 
-  m_sphMirrorRadius = param<double>("Rich1SphMirror1Radius");
+  m_sphMirrorRadius = param<double>("SphMirrorRadius");
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
   std::vector<double> nominalFMirrorPlane;
-  if ( exists("Rich1NominalSecMirrorPlane") )
-    nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalSecMirrorPlane");
-  else
-    nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+  nominalFMirrorPlane = param<std::vector<double> >("NominalSecMirrorPlane");
 
   m_nominalPlaneTop = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                      nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
@@ -84,10 +78,12 @@ StatusCode DeRich1::initialize()
   msg << MSG::DEBUG << "Nominal normal " << Gaudi::XYZVector( m_nominalNormal )
       << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
 
-  const IPVolume* pvGasWindow = geometry()->lvolume()->
-    pvolume("pvRich1SubMaster")->lvolume()->pvolume("pvRich1MagShH0:0")->
-    lvolume()->pvolume("pvRich1GQuartzWH0:0");
-
+  const IPVolume* pvGasWindow( 0 );
+  const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
+  if ( pvRich1SubMaster ) {
+    pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->
+      lvolume()->pvolume("pvRich1GQuartzWH0:0");
+  }
   if ( pvGasWindow ) {
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
@@ -96,7 +92,7 @@ StatusCode DeRich1::initialize()
       if( (*matIter) ){
         if ( (*matIter)->type() == "RINDEX" ) {
           m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
-          msg << MSG::DEBUG << "Loaded gas window refIndex from: " << (*matIter)->name()  
+          msg << MSG::DEBUG << "Loaded gas window refIndex from: " << (*matIter)->name()
               << endmsg;
         }
         if ( (*matIter)->type() == "ABSLENGTH" ) {
@@ -107,21 +103,6 @@ StatusCode DeRich1::initialize()
   } else {
     msg << MSG::ERROR << "Could not find gas window properties" << endmsg;
     return StatusCode::FAILURE;
-  }
-
-  // find the HPD quantum efficiency
-  std::string HPD_QETabPropLoc;
-  if ( exists( "RichHpdQETableName" ) )
-    HPD_QETabPropLoc = param<std::string>( "RichHpdQETableName" );
-  else
-    HPD_QETabPropLoc = "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
-
-  SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
-  if ( !tabQE )
-    msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
-  else {
-    m_HPDQuantumEff = new Rich1DTabProperty( tabQE );
-    msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
   }
 
   // get the nominal reflectivity of the spherical mirror
@@ -176,6 +157,10 @@ StatusCode DeRich1::initialize()
   ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   StatusCode upsc = ums->update(this);
+
+  // initialize all child detector elements. Thsi triggers the update
+  // of the radiator properties
+  childIDetectorElements();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return upsc;

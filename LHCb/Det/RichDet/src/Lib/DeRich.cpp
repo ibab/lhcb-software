@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.18 2006-03-09 11:37:35 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.19 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -59,6 +59,9 @@ DeRich::~DeRich() {
 //=========================================================================
 StatusCode DeRich::initialize ( )
 {
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
+
   if ( exists( "SphMirrorSegRows" ) )
   {
     m_sphMirrorSegRows  = param<int>( "SphMirrorSegRows" );
@@ -72,6 +75,23 @@ StatusCode DeRich::initialize ( )
   } else if ( exists( "FlatMirrorSegRows" ) ){
     m_secMirrorSegRows = param<int>( "FlatMirrorSegRows" );
     m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
+  }
+
+  // find the HPD quantum efficiency
+  std::string HPD_QETabPropLoc;
+  if ( exists( "RichHpdQETableName" ) )
+    HPD_QETabPropLoc = param<std::string>( "RichHpdQETableName" );
+  else {
+    msg << MSG::FATAL << "Cannot find HPD QE location" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
+  if ( !tabQE )
+    msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
+  else {
+    m_HPDQuantumEff = new Rich1DTabProperty( tabQE );
+    msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -167,19 +187,19 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   if ( rotX.size() != rotY.size() ) {
     msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:"
         << mirrorAlignCond->name() << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   if ( rotX.size() != mirrors.size() ) {
     msg << MSG::FATAL << "Number of parameters does not match mirrors in:"
         << mirrorAlignCond->name() << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
 
   std::vector<double> Rs = paramVect<double>(Rvector);
   if ( rotX.size() != Rs.size() ) {
     msg << MSG::FATAL << "Number of Rs does not match mirrors in:"
         << mirrorAlignCond->name() << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
 
   for (unsigned int mNum=0; mNum<rotX.size(); ++mNum) {

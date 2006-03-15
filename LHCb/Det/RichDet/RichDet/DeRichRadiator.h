@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.17 2006-03-01 14:52:59 papanest Exp $
+ *  $Id: DeRichRadiator.h,v 1.18 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -50,11 +50,13 @@ namespace DeRichRadiatorLocation {
 
   /// Rich1 gas (C4F10) location
   static const std::string& C4F10_old     = "/dd/Structure/LHCb/Rich1/C4F10";
-  static const std::string& C4F10 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/C4F10";
+  static const std::string& C4F10 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1Gas";
+  static const std::string& Rich1Gas = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1Gas";
 
   /// Rich2 gas (CF4) location
   static const std::string& CF4_old       = "/dd/Structure/LHCb/Rich2/CF4";
-  static const std::string& CF4  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/CF4";
+  static const std::string& CF4  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2Gas";
+  static const std::string& Rich2Gas  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2Gas";
 }
 
 //----------------------------------------------------------------------------
@@ -73,16 +75,7 @@ class DeRichRadiator: public DetectorElement {
 public:
 
   /// Default constructor
-  DeRichRadiator()
-    : DetectorElement  (),
-      m_radiatorID     ( Rich::InvalidRadiator ),
-      m_rich           ( Rich::InvalidDetector ),
-      m_refIndex       ( 0                     ),
-      m_refIndexTabProp( 0                     ),
-      m_rayleigh       ( 0                     ),
-      m_rayleighTabProp( 0                     ),
-      m_name           ( "UnInitialized"       ),
-      m_condTool       ( 0                     ) { }
+  DeRichRadiator();
 
   /// Destructor
   virtual ~DeRichRadiator();
@@ -192,7 +185,8 @@ public:
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
-                                      std::vector<RichRadIntersection>& intersections ) const = 0;
+                                      std::vector<RichRadIntersection>&
+                                      intersections ) const = 0;
 
   /** Returns the name of this particular radiator medium
    *  @return radiator name
@@ -207,22 +201,25 @@ protected:
   /// pointer to the refractive index of the material
   const Rich1DTabProperty* m_refIndex;
 
-  /// pointer to the refractive index of the material
+  /// pointer to the Tabulated property refractive index
   const TabulatedProperty* m_refIndexTabProp;
+
+  /// pointer to the Tabulated property Cherenkov Ref Index
+  const TabulatedProperty* m_chkvRefIndexTabProp;
 
   /// pointer to the Rayleigh scattering properties
   const Rich1DTabProperty* m_rayleigh;
 
-  /// pointer to the Rayleigh scattering properties
+  /// pointer to the Tabulated property Rayleigh
   const TabulatedProperty* m_rayleighTabProp;
+
+  /// pointer to the Tabulated property for the absoption
+  const TabulatedProperty* m_absorptionTabProp;
+
 
 private:
 
   std::string m_name; ///< The name of this radiator
-
-  /// Pointer to RichCondition tool that maintains the
-  /// refractive index tabulated properties
-  IAlgTool * m_condTool;
 
 };
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.14 2006-02-21 15:17:25 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.15 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -25,9 +25,32 @@
 
 //----------------------------------------------------------------------------
 
+//=========================================================================
+//  default constructor
+//=========================================================================
+DeRichRadiator::DeRichRadiator() :
+  DetectorElement       (),
+  m_radiatorID          ( Rich::InvalidRadiator ),
+  m_rich                ( Rich::InvalidDetector ),
+  m_refIndex            ( 0                     ),
+  m_refIndexTabProp     ( 0                     ),
+  m_chkvRefIndexTabProp ( 0                     ),
+  m_rayleigh            ( 0                     ),
+  m_rayleighTabProp     ( 0                     ),
+  m_absorptionTabProp   ( 0                     ),
+  m_name                ( "UnInitialized"       )
+{ }
+
+
+//=========================================================================
+//  destructor
+//=========================================================================
+DeRichRadiator::~DeRichRadiator()
+{}
+
+
 StatusCode DeRichRadiator::initialize()
 {
-
   // store the name of the radiator
   const std::string::size_type pos = name().find("Rich");
   m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
@@ -36,7 +59,7 @@ StatusCode DeRichRadiator::initialize()
   msg << MSG::DEBUG << "Starting initialisation" << endreq;
 
   if ( std::string::npos != name().find("Rich2") ) {
-    m_radiatorID = Rich::CF4;
+    m_radiatorID = Rich::Rich2Gas;
     m_rich = Rich::Rich2;
   }
   else {
@@ -45,8 +68,8 @@ StatusCode DeRichRadiator::initialize()
       m_rich = Rich::Rich1;
     }
     else {
-      if ( std::string::npos != name().find("C4F10") ) {
-        m_radiatorID = Rich::C4F10;
+      if ( std::string::npos != name().find("Rich1Gas") ) {
+        m_radiatorID = Rich::Rich1Gas;
         m_rich = Rich::Rich1;
       }
       else {
@@ -58,58 +81,5 @@ StatusCode DeRichRadiator::initialize()
 
   msg << MSG::DEBUG << "Initializing Radiator : " << rich() << " " << radiatorID() << endreq;
 
-  // Trick to load up the RichConditions tool for this detector element
-  // need to make sure it is created before this object is initialised
-  const std::string richConName =
-    ( Rich::Rich2 == rich() ? "Rich2PresTempMonitor" 
-      : Rich::C4F10 == radiatorID() ? "Rich1PresTempMonitor" : "Rich1AerogelMonitor" );
-
-  StatusCode sc = StatusCode::FAILURE;
-  // get the Gaudi service locator
-  static ISvcLocator * svcLoc = Gaudi::svcLocator();
-  if (svcLoc)
-  {
-    // get the tool service
-    IToolSvc * toolSvc;
-    svcLoc->service( "ToolSvc", toolSvc, true );
-    if (toolSvc)
-    {
-      // load the RICH conditions tool for this element
-      msg << MSG::DEBUG << "Loading tool " << richConName << endreq;
-      sc = toolSvc->retrieveTool ( richConName , m_condTool , 0 , true ) ;
-    }
-    else
-    {
-      msg << MSG::ERROR << "Failed to find ToolSvc" << endreq;
-      return StatusCode::FAILURE;
-    }
-  } 
-  else
-  {
-    msg << MSG::ERROR << "Failed to find Gaudi::svcLocator()" << endreq;
-    return StatusCode::FAILURE;
-  }
-  if (!sc)
-  {
-    static bool errPrinted = false;
-    if ( !errPrinted )
-    {
-      msg << MSG::WARNING 
-          << "Failed to load RichCondition tools" << endreq
-          << "Some conditions data will not be updated properly" << endreq
-          << "Please add 'RichCondition' to the list of DLLs" << endreq;
-      errPrinted = true;
-    }
-  }
-  
   return StatusCode::SUCCESS;
-}
-
-DeRichRadiator::~DeRichRadiator()
-{
-  // CRJ : Note sure if this should be done ??
-  //     : Probably should be in a finalize() method but DetectorElements
-  //     : do not have this method. If done here causes a crash at the end
-  //     : of the job :(
-  // if ( m_condTool ) { m_condTool->release(); }
 }

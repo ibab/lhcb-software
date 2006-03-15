@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.14 2006-03-01 14:53:01 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.15 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -33,8 +33,8 @@ DeRichSingleSolidRadiator::DeRichSingleSolidRadiator() {}
 
 // Standard Destructor
 DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() {
-  if ( !m_refIndex ) delete m_refIndex;
-  if ( !m_rayleigh) delete m_rayleigh;
+  if ( m_refIndex ) delete m_refIndex;
+  if ( m_rayleigh) delete m_rayleigh;
 }
 
 // Retrieve Pointer to class defininition structure
@@ -45,7 +45,8 @@ const CLID& DeRichSingleSolidRadiator::classID()
 
 StatusCode DeRichSingleSolidRadiator::initialize()
 {
-  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
+  StatusCode initSC =  DeRichRadiator::initialize();
+  if ( initSC.isFailure() ) return initSC;
 
   MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
   log << MSG::DEBUG << "Starting initialisation for DeRichSingleSolidRadiator "
@@ -60,31 +61,79 @@ StatusCode DeRichSingleSolidRadiator::initialize()
       if ( (*matIter)->type() == "RINDEX" ) {
         m_refIndexTabProp = (*matIter);
         m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
+        log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
+            << m_refIndexTabProp->type() << endmsg;
       }
       if ( (*matIter)->type() == "RAYLEIGH" ) {
         m_rayleighTabProp = (*matIter);
         m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
+        log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
+            << m_rayleighTabProp->type() << endmsg;
+      }
+      if ( (*matIter)->type() == "CKVRNDX" ) {
+        m_chkvRefIndexTabProp = (*matIter);
+        log << MSG::DEBUG << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
+            << m_chkvRefIndexTabProp->type() << endmsg;
+      }
+      if ( (*matIter)->type() == "ABSLENGTH" ) {
+        m_absorptionTabProp = (*matIter);
+        log << MSG::DEBUG << "Found TabProp " << m_absorptionTabProp->name() << " type "
+            << m_absorptionTabProp->type() << endmsg;
       }
     }
   }
 
-  if (!m_refIndex) {
+  if (!m_refIndexTabProp) {
     log << MSG::ERROR << "Radiator " << name() << " without refractive index"
         << endmsg;
     return StatusCode::FAILURE;
   }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
-      << m_refIndexTabProp->type() << endmsg;
-  if ( m_rayleigh )
-    log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
-        << m_rayleighTabProp->type() << endmsg;
   log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
 
   return StatusCode::SUCCESS;
 }
 
+
+//=========================================================================
+// prepareMomentumVector
+//=========================================================================
+StatusCode DeRichSingleSolidRadiator::
+prepareMomentumVector ( std::vector<double>& photonMomentumVect,
+                        double min,
+                        double max,
+                        unsigned int nbins) {
+
+  // check parameters are sane
+  if( max <= min ) {
+    MsgStream msg( msgSvc(), myName() );
+    msg << MSG::ERROR << "Inadmissible photon energy limits "
+        << max << " " << min << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if ( nbins <= 0  ) {
+    MsgStream msg( msgSvc(), myName() );
+    msg << MSG::ERROR << "Inadimissible photon energy num bins "
+        << nbins << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  photonMomentumVect.reserve( nbins );
+
+  // fill momentum vector
+  double photonEnergyStep = ( max - min )/ nbins;
+  for ( unsigned int ibin = 0; ibin<nbins; ++ibin )
+  {
+    photonMomentumVect.push_back( min + photonEnergyStep*ibin );
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  nextIntersectionPoint
+//=========================================================================
 StatusCode
 DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal,
                                                   const Gaudi::XYZVector& vGlobal,
@@ -107,7 +156,7 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
 }
 
 //=========================================================================
-//
+// intersectionPoints
 //=========================================================================
 StatusCode
 DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,

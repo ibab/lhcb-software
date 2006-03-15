@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.25 2006-03-09 11:37:35 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.26 2006-03-15 15:57:05 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,6 +14,7 @@
 // Include files
 #include "RichDet/DeRich2.h"
 #include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichRadiator.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -50,7 +51,7 @@ StatusCode DeRich2::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  const std::vector<double> nominalCoC = param<std::vector<double> >("Rich2NominalCoC");
+  const std::vector<double> nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvature =
     Gaudi::XYZPoint( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
   m_nominalCentreOfCurvatureRight =
@@ -60,15 +61,12 @@ StatusCode DeRich2::initialize()
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureRight
       << endmsg;
 
-  m_sphMirrorRadius = param<double>("Rich2SphMirrorRadius");
+  m_sphMirrorRadius = param<double>("SphMirrorRadius");
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
   std::vector<double> nominalFMirrorPlane;
-  if ( exists("Rich2NominalSecMirrorPlane") )
-    nominalFMirrorPlane = param<std::vector<double> >("Rich2NominalSecMirrorPlane");
-  else
-    nominalFMirrorPlane = param<std::vector<double> >("Rich2NominalFlatMirrorPlane");
+  nominalFMirrorPlane = param<std::vector<double> >("NominalSecMirrorPlane");
 
   m_nominalPlaneLeft = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                       nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
@@ -82,10 +80,6 @@ StatusCode DeRich2::initialize()
       << Gaudi::XYZVector( m_nominalNormalRight ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow:0");
-  // compatibilty will DC04 xml
-  if ( !pvGasWindow )
-    pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow1");
-
   if ( pvGasWindow ) {
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
@@ -141,20 +135,27 @@ StatusCode DeRich2::initialize()
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
 
+  // initialize Rich2Gas
+  SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(), DeRichRadiatorLocation::Rich2Gas);
+  if ( !rich2Gas )
+    msg << MSG::ERROR << "Cannot initialize Rich2Gas" << endmsg;
+
+
   // update mirror alignment
-  m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
-  if ( !m_sphMirAlignCond ) {
-    msg << MSG::FATAL << "Cannot load Condition Rich2SphMirrorAlign" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-  m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
-  if ( !m_secMirAlignCond ) {
-    msg << MSG::FATAL << "Cannot load Condition Rich2SecMirrorAlign" << endmsg;
-    return StatusCode::SUCCESS;
-  }
   IUpdateManagerSvc* ums = updMgrSvc();
-  ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
-  ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
+  
+  m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
+  if ( m_sphMirAlignCond )
+    ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
+  else
+    msg << MSG::WARNING << "Cannot load Condition Rich2SphMirrorAlign" << endmsg;
+
+  m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
+  if ( m_secMirAlignCond )
+    ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
+  else
+    msg << MSG::WARNING << "Cannot load Condition Rich2SecMirrorAlign" << endmsg;
+
   StatusCode upsc = ums->update(this);
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;

@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-03-15 - Antonis Papanestis
+ - Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
+   the update of the gas and aerogel properties. Small changes in the
+   DeRich1/2 moving common code to the base class. Requires new xml.
+
 !========================= RichDet v9r1 2006-03-01 =========================
 ! 2006-03-01 - Antonis Papanestis
  - added Rich1DTabFunc, Rich1DTabProperty and RichRadIntersection
