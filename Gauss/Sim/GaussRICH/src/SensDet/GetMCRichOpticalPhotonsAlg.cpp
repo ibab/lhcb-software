@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.6 2006-03-15 15:39:55 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.7 2006-03-15 15:45:12 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -100,7 +100,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
         // Find associated MCRichHit
         const MCRichHit * mchit = (*mcHits)[globalKey];
-        if ( !mchit ) { Error( "Null MCRichHit pointer" ); continue; }
+        if ( !mchit ) { return Error( "Null MCRichHit pointer" ); }
 
         // Only create a photon for Cherenkov radiator hits
         if ( mchit->radiator() != Rich::InvalidRadiator )
@@ -108,7 +108,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
           // Pointer to G4 hit
           const RichG4Hit * g4hit = (*myCollection)[ihit];
-          if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
+          if ( !g4hit ) { return Error( "Null RichG4Hit pointer" ); }
 
           // New optical photon object
           MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();

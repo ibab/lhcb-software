@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.7 2006-03-15 15:39:55 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.8 2006-03-15 15:45:12 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -193,9 +193,9 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
         // MCRichHit Pointer
         if ( gkey >= hits->size() ) 
-        { Error( "MCRichHit key outside valid range" ); continue; }
+        { return Error( "MCRichHit key outside valid range" ); }
         const MCRichHit * mchit = (*hits)[gkey];
-        if ( !mchit ) { Warning( "Null MCRichHit pointer" ); continue; }
+        if ( !mchit ) { return Warning( "Null MCRichHit pointer" ); }
         mcSeg->addToMCRichHits( mchit );
 
         // MCRichOpticalPhoton pointer

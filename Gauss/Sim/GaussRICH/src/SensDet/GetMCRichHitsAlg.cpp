@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.17 2006-03-15 15:39:55 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.18 2006-03-15 15:45:12 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -112,16 +112,12 @@ StatusCode GetMCRichHitsAlg::execute()
 
         // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
-        if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
+        if ( !g4hit ) { return Error( "Null RichG4Hit pointer" ); }
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
         // add to container
         hits->push_back( mchit );
-        if ( hits->size() != globalKey+1 )
-        {
-          return Error( "Mis-match in MCRichHit keys" );
-        }
 
         // hit position
         const Gaudi::XYZPoint entry = Gaudi::XYZPoint(g4hit->GetGlobalPos());
