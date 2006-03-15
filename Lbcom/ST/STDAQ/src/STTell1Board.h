@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.1 2006-02-10 08:59:32 mneedham Exp $
+// $Id: STTell1Board.h,v 1.2 2006-03-15 16:38:51 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -21,13 +21,14 @@ class STTell1Board{
 public:
 
   /// constructer
-  STTell1Board(const STTell1ID aBoard, const unsigned int stripsPerHybrid);
+  STTell1Board(const STTell1ID aBoard, 
+               const unsigned int stripsPerHybrid);
 
   /// destructer
   virtual ~STTell1Board();
 
   /// add wafer
-  void addSector(LHCb::STChannelID aOfflineChan);
+  void addSector(LHCb::STChannelID aOfflineChan, unsigned int orientation);
 
   /// board indentifer
   STTell1ID boardID() const;
@@ -62,11 +63,13 @@ private:
   STTell1ID m_boardID;
   unsigned int m_nStripsPerHybrid;
   std::vector<LHCb::STChannelID> m_sectorsVector;
+  std::vector<int> m_orientation;
 
 };
 
 inline STTell1ID STTell1Board::boardID() const{
   return m_boardID;
 }
+
 
 #endif // _STTell1Board_H

@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.2 2006-03-15 16:38:51 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -87,7 +87,9 @@ StatusCode ITReadoutTool::createBoards() {
 
   for (; iterS != stations.end(); ++iterS, ++iReg){
    m_firstBoardInRegion.push_back(m_boards.size());
+   
    const std::vector<int>& tMap = rInfo->param<std::vector<int> >(*iterS); 
+   const std::vector<int>& orientation = rInfo->param<std::vector<int> >(*iterS+"HybridOrientation"); 
    unsigned int vecLoc = 0;
   
    if ( iterS == stations.begin()){
@@ -103,7 +105,7 @@ StatusCode ITReadoutTool::createBoards() {
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
-       aBoard->addSector(sectorID);
+       aBoard->addSector(sectorID, orientation[vecLoc]);
      } // iH
 
      m_boards.push_back(aBoard);

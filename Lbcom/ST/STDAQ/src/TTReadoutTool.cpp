@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.1 2006-02-10 08:59:32 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.2 2006-03-15 16:38:51 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -91,6 +91,8 @@ StatusCode TTReadoutTool::createBoards() {
    m_nBoard += nBoards[iReg];   
 
    const std::vector<int>& tMap = rInfo->param<std::vector<int> >(layers[iReg]);
+   std::string orLoc = layers[iReg]+"HybridOrientation";
+   const std::vector<int>& orientation = rInfo->param<std::vector<int> >(orLoc);
    unsigned int vecLoc = 0;
    if ( iReg == 0){
      STChannelID firstChan = STChannelID(tMap[0]);
@@ -105,7 +107,7 @@ StatusCode TTReadoutTool::createBoards() {
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
-       aBoard->addSector(sectorID);
+       aBoard->addSector(sectorID, orientation[vecLoc]);
      } // iH
 
      m_boards.push_back(aBoard);

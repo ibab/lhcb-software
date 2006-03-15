@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.1 2006-02-10 08:59:32 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.2 2006-03-15 16:38:51 mneedham Exp $
 #include "STTell1Board.h"
 
 
@@ -17,8 +17,9 @@ STTell1Board::~STTell1Board(){
   // destructer
 }
 
-void STTell1Board::addSector(STChannelID aOfflineChan){
+void STTell1Board::addSector(STChannelID aOfflineChan, unsigned int orientation){
  // add sector to vector
+ m_orientation.push_back(orientation);
  m_sectorsVector.push_back(aOfflineChan);
 }
 
@@ -36,32 +37,18 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
   return (iSector != m_sectorsVector.size() ? true : false); 
 }
 
-/*
-bool STTell1Board::isInside(const ITChannelID aOfflineChan,
-                            unsigned int& waferIndex) const{
-  // look-up the board
-  bool isIn = false;
-  unsigned int iSector = 0u;
 
-  while ((isIn == false)&&(iSector<m_wafersVector.size())){
-
-    if (aOfflineChan.uniqueSector() == m_wafersVector[iSector].uniqueSector()){
-      isIn = true;
-      waferIndex = iSector;
-    }
-    else {
-      ++iSector;   
-    }
-  } // while loop 
-
-  return isIn;
-}
-*/
 STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan) const{
 
   // convert a DAQ channel to offline !
   unsigned int index = aDAQChan/m_nStripsPerHybrid;
-  unsigned int strip = aDAQChan - (index*m_nStripsPerHybrid) + 1u;
+  unsigned int strip =  aDAQChan - (index*m_nStripsPerHybrid);
+  if (m_orientation[index] == 0){
+    strip = m_nStripsPerHybrid - strip;
+  }
+  else {
+    ++strip;
+  }
 
   return STChannelID(m_sectorsVector[index].type(),
                      m_sectorsVector[index].station(), 
@@ -75,7 +62,14 @@ unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
                                         const unsigned int waferIndex) const{
 
   // convert an offline channel to DAQ channel
-  return (waferIndex*m_nStripsPerHybrid)+ aOfflineChan.strip()-1u;
+  unsigned int strip = aOfflineChan.strip();
+  if (m_orientation[0] == 0){
+    strip = m_nStripsPerHybrid - strip;
+  }
+  else {
+    --strip;
+  }
+  return (waferIndex*m_nStripsPerHybrid)+ strip;
 }
 
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
