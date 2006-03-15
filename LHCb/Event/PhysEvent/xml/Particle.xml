@@ -325,6 +325,21 @@
 	  return m_momentum.Y()/m_momentum.X() ;
         </code>
        </method>
+
+       <typedef
+         type='KeyedContainer&lt;Particle, Containers::HashMap&gt;'
+         def='Container'
+         desc='Particle keyed container'
+         access='PUBLIC'
+       />
+
+       <typedef
+         type='KeyedContainer&lt;const Particle, Containers::HashMap&gt;'
+         def='ConstContainer'
+         desc='const Particle keyed container'
+         access='PUBLIC'
+       />
+
     </class>
   </package>
 

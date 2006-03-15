@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.2 2006-03-14 13:18:23 jpalac Exp $
+// $Id: IMCDecayFinder.h,v 1.3 2006-03-15 18:51:03 jpalac Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -11,13 +11,6 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/MCParticle.h"
 
-// Temporary hack to define LHCb::ConstMCParticles outside of G.O.D machinery.
-// TO BE REMOVED AS SOON AS G.O.D CREATES THIS AUTOMATICALLY IN MCParticle 
-// header
-namespace LHCb 
-{
-  typedef KeyedContainer<const MCParticle, Containers::HashMap> ConstMCParticles;  
-}
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 4, 0);
 
@@ -45,8 +38,8 @@ public:
   virtual bool findDecay( const LHCb::MCParticle::ConstVector& event,
                           const LHCb::MCParticle*& previous_result ) = 0;
 
-  virtual bool hasDecay(  const LHCb::ConstMCParticles& event ) = 0;
-  virtual bool findDecay( const LHCb::ConstMCParticles& event,
+  virtual bool hasDecay(  const LHCb::MCParticle::ConstContainer& event ) = 0;
+  virtual bool findDecay( const LHCb::MCParticle::ConstContainer& event,
                           const LHCb::MCParticle*& previous_result ) = 0;
 
   virtual bool hasDecay( void ) = 0;
