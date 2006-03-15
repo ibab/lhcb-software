@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.18 2006-03-15 15:45:12 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.19 2006-03-15 16:27:31 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -71,7 +71,7 @@ StatusCode GetMCRichHitsAlg::execute()
   {
 
     // note this key is need for consistency with MCRichOpticalPhoton converter
-    unsigned int globalKey( 0 ), totalSize( 0 );
+    unsigned int  totalSize( 0 );
     ++m_nEvts; // Count events
     // now check the existence of MC particles and get their table.
     if( !( exist<MCParticles>( MCParticleLocation::Default ) ) )
@@ -106,13 +106,17 @@ StatusCode GetMCRichHitsAlg::execute()
       // reserve space
       totalSize += numberofhits;  // count the total num of hits in all collections.
 
-      // now loop through the hits in the current collection.
-      for ( int ihit = 0; ihit < numberofhits; ++ihit, ++globalKey )
-      {
+      // CRJ : Disclaimer. Be careful when editting the following as there is
+      // a hidden dependency on the position of the MCRichHit in the container and
+      // the associated g4hit. There must be one MCRichHit added in sequence for
+      // each non-NULL g4hit
 
+      // now loop through the hits in the current collection.
+      for ( int ihit = 0; ihit < numberofhits; ++ihit )
+      {
         // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
-        if ( !g4hit ) { return Error( "Null RichG4Hit pointer" ); }
+        if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();

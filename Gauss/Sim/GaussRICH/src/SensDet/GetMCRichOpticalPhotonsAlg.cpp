@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.7 2006-03-15 15:45:12 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.8 2006-03-15 16:27:31 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -94,11 +94,19 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
       const int numberofhits = myCollection->entries();
 
+      // CRJ : Disclaimer. Be careful when editting the following as there is
+      // a hidden dependency on the globalkey value between the various GetXXX 
+      // algorithms. globalkey MUST be incremented once for each non-NULL g4hit
+
       //convert hits
-      for ( int ihit = 0; ihit < numberofhits; ++ihit, ++globalKey )
+      for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
+        // Pointer to G4 hit
+        const RichG4Hit * g4hit = (*myCollection)[ihit];
+        if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         // Find associated MCRichHit
+        if ( globalKey >= mcHits->size() ) { return Error( "Global Key mis-match" ); }
         const MCRichHit * mchit = (*mcHits)[globalKey];
         if ( !mchit ) { return Error( "Null MCRichHit pointer" ); }
 
@@ -106,13 +114,9 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
         if ( mchit->radiator() != Rich::InvalidRadiator )
         {
 
-          // Pointer to G4 hit
-          const RichG4Hit * g4hit = (*myCollection)[ihit];
-          if ( !g4hit ) { return Error( "Null RichG4Hit pointer" ); }
-
           // New optical photon object
           MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
-          // insert in container, with same key has MCRichHit position in container
+          // insert in container, with same key as MCRichHit position in container
           photons->insert( mcPhoton, globalKey );
 
           // SmartRef to associated MCRichHit
@@ -149,6 +153,9 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
           ++m_hitTally[mchit->radiator()];
 
         }
+
+        // increment key
+        ++globalKey;
 
       } // loop over g4 hits
 

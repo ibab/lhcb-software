@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.8 2006-03-15 15:45:12 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.9 2006-03-15 16:27:31 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -103,12 +103,16 @@ StatusCode GetMCRichSegmentsAlg::execute()
       // Reference table between G4 tracks/trajectories and MC particles
       const GiGaKineRefTable & table = kineSvc()->table();
 
-      // loop over hits and sort them
-      for ( int ihit = 0; ihit < myCollection->entries(); ++ihit, ++globalKey )
-      {
+      // CRJ : Disclaimer. Be careful when editting the following as there is
+      // a hidden dependency on the globalkey value between the various GetXXX 
+      // algorithms. globalkey MUST be incremented once for each non-NULL g4hit
 
+      // loop over hits and sort them
+      for ( int ihit = 0; ihit < myCollection->entries(); ++ihit )
+      {
         // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
+        if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
         if ( g4hit->GetRadiatorNumber() >= 0 )
         {
@@ -122,13 +126,14 @@ StatusCode GetMCRichSegmentsAlg::execute()
             warning() << "No pointer to MCParticle for "
                       << " MCRichHit associated to trackID: "
                       << iii << "  " << ihit << "   " << traid << endreq;
-            continue;
           }
-
-          // add to sorted list
-          HitDataListKey key(mcPart,rad);
-          HitDataType data(g4hit,globalKey);
-          sortedHits[key].push_back( data );
+          else
+          {
+            // add to sorted list
+            HitDataListKey key(mcPart,rad);
+            HitDataType data(g4hit,globalKey);
+            sortedHits[key].push_back( data );
+          }
 
         }
         else
@@ -139,6 +144,9 @@ StatusCode GetMCRichSegmentsAlg::execute()
                     << endreq;
           }
         }
+
+        // increment key
+        ++globalKey;
 
       } // end loop over this collection
 
@@ -192,7 +200,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
         const unsigned int gkey = (*iHit).second;
 
         // MCRichHit Pointer
-        if ( gkey >= hits->size() ) 
+        if ( gkey >= hits->size() )
         { return Error( "MCRichHit key outside valid range" ); }
         const MCRichHit * mchit = (*hits)[gkey];
         if ( !mchit ) { return Warning( "Null MCRichHit pointer" ); }
@@ -201,8 +209,8 @@ StatusCode GetMCRichSegmentsAlg::execute()
         // MCRichOpticalPhoton pointer
         const MCRichOpticalPhoton * mcphot = photons->object(gkey);
         // not all hits have photons, so only add if not null
-        if ( mcphot ) 
-        { 
+        if ( mcphot )
+        {
           mcSeg->addToMCRichOpticalPhotons( mcphot );
         }
 
