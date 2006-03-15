@@ -1,0 +1,19 @@
+#============================================================================
+# Created    : 2003-06-23
+# Maintainer : Marco CATTANEO
+#============================================================================
+package         RecAlgs
+version         v1r0
+
+branches        cmt doc src
+include_path    none
+
+use RecEvent        v* Event
+use DAQEvent        v* Event
+use EventBase       v* Event
+use LHCbKernel      v* Kernel
+use GaudiAlg        v*
+
+library RecAlgs ../src/*.cpp
+
+apply_pattern component_library library=RecAlgs

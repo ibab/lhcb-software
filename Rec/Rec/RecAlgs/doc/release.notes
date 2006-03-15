@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/RecAlgs
+! Responsible : Marco CATTANEO
+! Purpose     : Holds generic reconstruction algorithms
+!-----------------------------------------------------------------------------
+
+!========================== RecAlgs v1r0 2006-03-15 ==========================
+! 2006-03-15 - Marco Cattaneo
+ - First release of package. Contains:
+   . RecInit: algorithm to create RecHeader and ProcStatus at start of Reco 
+   . STSummaryCreator: moved from STAlgorithms
