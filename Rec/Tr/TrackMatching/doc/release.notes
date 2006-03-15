@@ -4,10 +4,13 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r0 2006-03-15 =======================
+! 2006-03-15 - Marco Cattaneo
+ - Remove obsolete STTools dependency
+
 ! 2006-03-02 - Eduardo Rodrigues
  - adapted to new STClusterPosition interface
 
-!======================= TrackMatching v2r0 2006-02-20 =======================
 ! 2006-02-22 - Jeroen van Tilburg
  - addTTClusters method updated to work with trajectories and new STDet.
 
