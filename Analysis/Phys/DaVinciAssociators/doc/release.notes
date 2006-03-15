@@ -1,11 +1,8 @@
-! $Id: release.notes,v 1.74 2006-03-15 12:58:30 pkoppenb Exp $
+! $Id: release.notes,v 1.75 2006-03-15 13:24:41 pkoppenb Exp $
 !================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !================================================================================
-!
-! Built on branch v6r0b on tag v5r5p1 for DC06
-!
 
 ! 2006-02-28 - P. Koppenburg
   Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
