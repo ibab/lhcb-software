@@ -1,3 +1,4 @@
+// $Id: TrackChecker.cpp,v 1.3 2006-03-15 08:04:12 ebos Exp $
 // Include files 
 
 // local
@@ -5,6 +6,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IRegistry.h"
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"
@@ -14,7 +16,7 @@
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 
-// from Event/Event
+// from Event/MCEvent
 #include "Event/MCParticle.h"
 
 // from Tr/TrackFitEvent
@@ -22,6 +24,9 @@
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
+
+using namespace Gaudi;
+using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<TrackChecker>          s_factory;
@@ -32,25 +37,8 @@ const        IAlgFactory& TrackCheckerFactory = s_factory;
 //=============================================================================
 TrackChecker::TrackChecker( const std::string& name,
                             ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg( name , pSvcLocator ),
-  m_veloClusToMCP(0),
-  m_itClusToMCP(0),
-  m_otTimToMCP(0),
-  m_trackSelector(0),
-  m_stateCreator(0),  
-  m_extrapolatorL(0),
-  m_extrapolatorM(0),
-  m_nTracks(0),
-  m_nMCTracks(0),
-  m_nAsctTracks(0),
-  m_nAsctMCTracks(0),
-  m_evtAveEff(0.),
-  m_err2EvtAveEff(0.),
-  m_evtAveGhost(0.),
-  m_err2EvtAveGhost(0.),
-  m_nMCEvt(0),
-  m_nEvt(0)
-{
+  GaudiHistoAlg( name , pSvcLocator ) {
+
   // default z-positions
   m_zPositions.clear();
   m_zPositions.push_back(   990.0 );
@@ -58,8 +46,8 @@ TrackChecker::TrackChecker( const std::string& name,
   m_zPositions.push_back(  9450.0 );
   m_zPositions.push_back( 11900.0 );
 
-  declareProperty( "TracksInContainer", m_tracksInContainer );
-  declareProperty( "LinkerInTable", m_linkerInTable );
+  declareProperty( "TracksInContainer", m_tracksInContainer = TrackLocation::Default );
+  declareProperty( "LinkerInTable", m_linkerInTable = "Link/" + TrackLocation::Default );
   declareProperty( "ZPositions", m_zPositions );
 }
 
@@ -74,7 +62,7 @@ TrackChecker::~TrackChecker() {};
 StatusCode TrackChecker::initialize() {
 
   // Mandatory initialization of GaudiAlgorithm
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = GaudiHistoAlg::initialize();
   if( sc.isFailure() ) { return sc; }
 
   // Set counters
@@ -88,11 +76,6 @@ StatusCode TrackChecker::initialize() {
   m_err2EvtAveGhost = 0.;
   m_nMCEvt = 0;
   m_nEvt = 0;
-
-  // Retrieve tools
-  m_veloClusToMCP = tool<VeloClusAsct>( "VeloCluster2MCParticleAsct" );
-  m_itClusToMCP   = tool<ITClusAsct>( "ITCluster2MCParticleAsct" );
-  m_otTimToMCP    = tool<OTTimAsct>( "OTTime2MCParticleAsct" );
 
   m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
                                                   "TrackSelector", this );
@@ -160,7 +143,7 @@ StatusCode TrackChecker::execute() {
     if( m_trackSelector->select( particle ) ) {
       ++nMCTracks;
       // Fill the general histograms
-      plot1D( particle->momentum().vect().mag() / GeV,
+      plot1D( particle->momentum().mag() / GeV,
               33, "True momentum (GeV) for MCParticles", -1.0, 101.0, 51 );
       Track* track = reverseLink.first( particle );
       if( NULL != track ) {
@@ -170,9 +153,9 @@ StatusCode TrackChecker::execute() {
             found = true;
             ++nAsctMCTracks;
           }
-          // If FALSE, try next MCParticle linked to the Track
+          // If FALSE, try next Track linked to the MCParticle
           else { track = reverseLink.next(); }
-          // Break from while loop when there is no next MCParticle linked
+          // Break from while loop when there is no next Track linked
           if( NULL == track ) { break; }
         }
       }
@@ -233,18 +216,18 @@ StatusCode TrackChecker::finalize() {
   // print out efficiency and ghost rate
   info() << "Track averaged:" << endreq;
   info() << "Track efficiency = " << format( "%5.1f +/- %3.1f %%",
-            100.0 * trackAveEff, 100.0 * errTrackAveEff )
+                                             100.0 * trackAveEff, 100.0 * errTrackAveEff )
          << "  (=" << m_nAsctMCTracks << "/" <<  m_nMCTracks << ")" << endreq;
   info() << "Ghost rate =       " << format( "%5.1f +/- %3.1f %%",
-            100.0 * trackAveGhost, 100.0 * errTrackAveGhost )
+                                             100.0 * trackAveGhost, 100.0 * errTrackAveGhost )
          << "  (=" << m_nTracks-m_nAsctTracks << "/" << m_nTracks << ")" << endreq;
   info() << "Event averaged:" << endreq;
   info() << "Track efficiency = " << format( "%5.1f +/- %3.1f %%",
-            100.0 * m_evtAveEff, 100. * sqrt(m_err2EvtAveEff) ) << endreq;
+                                             100.0 * m_evtAveEff, 100. * sqrt(m_err2EvtAveEff) ) << endreq;
   info() << "Ghost rate =       " << format( "%5.1f +/- %3.1f %%",
-            100.0*m_evtAveGhost, 100.*sqrt(m_err2EvtAveGhost) ) << endreq;
+                                             100.0*m_evtAveGhost, 100.*sqrt(m_err2EvtAveGhost) ) << endreq;
   
-  return GaudiAlgorithm::finalize();
+  return GaudiHistoAlg::finalize();
 }
 
 //=============================================================================
@@ -254,11 +237,11 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
 
   // Resolutions and pulls at true vertex position
   // Get true values at vertex
-  MCVertex* vOrigin = mcPart->originVertex();
+  const MCVertex* vOrigin = mcPart->originVertex();
   if( 0 != vOrigin ) {
-    Hep3Vector vertPos = vOrigin->position();
-    Hep3Vector pVec = mcPart->momentum().vect();
-    Hep3Vector mcVec( pVec / pVec.z() );
+    XYZPoint vertPos = vOrigin->position();
+    LorentzVector pVec = mcPart->momentum();
+    LorentzVector mcVec( pVec / pVec.z() );
     
     // Find closest state to true vertex position
     State& vtxState = track->closestState( vertPos.z() );
@@ -272,29 +255,29 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
     StatusCode sc = extrap->propagate( vtxState, vertPos.z() );
     if( !sc.isFailure() ) {
       // Update the vtxState
-      HepVector vec = vtxState.stateVector();
-      HepSymMatrix cov = vtxState.covariance();
+      TrackVector vec = vtxState.stateVector();
+      TrackMatrix cov = vtxState.covariance();
 
       // calculate impact parameter vector
-      Hep3Vector dist( vec[0] - vertPos.x(), vec[1] - vertPos.y(), 0.0 );
-      Hep3Vector trackVec( vec[2], vec[3], 1 );
-      Hep3Vector ipVector = dist.cross( trackVec ) / trackVec.mag();
+      XYZVector dist( vec(0) - vertPos.x(), vec(1) - vertPos.y(), 0.0 );
+      XYZVector trackVec( vec(2), vec(3), 1 );
+      XYZVector ipVector = dist.Cross( trackVec ) / sqrt(trackVec.mag2());
 
       // fill the histograms
       plot1D( dist.x(), 101, "X resolution at vertex", -0.5, 0.5, 50 );
       plot1D( dist.y(), 102, "Y resolution at vertex", -0.5, 0.5, 50 );
-      plot1D( vec[2] - mcVec.x(), 103, "Tx resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( vec[3] - mcVec.y(), 104, "Ty resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( 1.0/( fabs(vec[4]) * pVec.mag() ) - 1.0,
+      plot1D( vec(2) - mcVec.x(), 103, "Tx resolution at vertex", -0.01, 0.01, 50 );
+      plot1D( vec(3) - mcVec.y(), 104, "Ty resolution at vertex", -0.01, 0.01, 50 );
+      plot1D( 1.0/( fabs(vec(4)) * pVec.mag() ) - 1.0,
               105, "Momentum resolution dp/p at vertex", -0.05, 0.05, 50 );
-      plot1D( ipVector.mag(), 106, "Impact parameter at vertex", -0.01, 1.01, 51 );
-      plot1D( dist.x() / sqrt(cov[0][0]), 111, "X pull at vertex", -5.0, 5.0, 50 );
-      plot1D( dist.y() / sqrt(cov[1][1]), 112, "Y pull at vertex", -5.0, 5.0, 50 );
-      plot1D( (vec[2] - mcVec.x()) / sqrt(cov[2][2]),
+      plot1D( sqrt(ipVector.mag2()), 106, "Impact parameter at vertex", -0.01, 1.01, 51 );
+      plot1D( dist.x() / sqrt(cov(0,0)), 111, "X pull at vertex", -5.0, 5.0, 50 );
+      plot1D( dist.y() / sqrt(cov(1,1)), 112, "Y pull at vertex", -5.0, 5.0, 50 );
+      plot1D( (vec(2) - mcVec.x()) / sqrt(cov(2,2)),
               113, "Tx pull at vertex", -5.0, 5.0, 50 );
-      plot1D( (vec[3] - mcVec.y()) / sqrt(cov[3][3]),
+      plot1D( (vec(3) - mcVec.y()) / sqrt(cov(3,3)),
               114, "Ty pull at vertex", -5.0, 5.0, 50 );
-      plot1D( ( fabs(vec[4]) - 1.0/pVec.mag() ) / sqrt(cov[4][4]),
+      plot1D( ( fabs(vec(4)) - 1.0/pVec.mag() ) / sqrt(cov(4,4)),
               115, "Momentum pull q/p at vertex", -5.0, 5.0, 50 );
     }
   }
@@ -310,22 +293,22 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
     StatusCode sc =
       m_stateCreator->createState( mcPart, stateAt1stMeas.z(), trueState );
     if( sc.isSuccess() ) {
-      HepVector vec = stateAt1stMeas.stateVector();
-      HepVector trueVec = trueState->stateVector();
-      HepSymMatrix cov = stateAt1stMeas.covariance();
-      double dx = vec[0] - trueVec[0];
-      double dy = vec[1] - trueVec[1];
-      double dtx = vec[2] - trueVec[2];
-      double dty = vec[3] - trueVec[3];
+      TrackVector vec = stateAt1stMeas.stateVector();
+      TrackVector trueVec = trueState->stateVector();
+      TrackMatrix cov = stateAt1stMeas.covariance();
+      double dx = vec(0) - trueVec(0);
+      double dy = vec(1) - trueVec(1);
+      double dtx = vec(2) - trueVec(2);
+      double dty = vec(3) - trueVec(3);
       // fill the histograms
       plot1D( dx, 201, "X resolution at 1st measurement", -0.5, 0.5, 50 );
       plot1D( dy, 202, "Y resolution at 1st measurement", -0.5, 0.5, 50 );
       plot1D( dtx, 203, "Tx resolution at 1st measurement", -0.01, 0.01, 50 );
       plot1D( dty, 204, "Ty resolution at 1st measurement", -0.01, 0.01, 50 );
-      plot1D( dx / sqrt(cov[0][0]), 211,"X pull at 1st measurement", -5.0, 5.0, 50 );
-      plot1D( dy / sqrt(cov[1][1]), 212,"Y pull at 1st measurement", -5.0, 5.0, 50 );
-      plot1D( dtx / sqrt(cov[2][2]), 213,"Tx pull at 1st measurement", -5.0, 5.0, 50 );
-      plot1D( dty / sqrt(cov[3][3]), 214,"Ty pull at 1st measurement", -5.0, 5.0, 50 );
+      plot1D( dx / sqrt(cov(0,0)), 211,"X pull at 1st measurement", -5.0, 5.0, 50 );
+      plot1D( dy / sqrt(cov(1,1)), 212,"Y pull at 1st measurement", -5.0, 5.0, 50 );
+      plot1D( dtx / sqrt(cov(2,2)), 213,"Tx pull at 1st measurement", -5.0, 5.0, 50 );
+      plot1D( dty / sqrt(cov(3,3)), 214,"Ty pull at 1st measurement", -5.0, 5.0, 50 );
     }
   }
     
@@ -342,13 +325,13 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
       StatusCode sc =
         m_stateCreator->createState( mcPart, state.z(), trueState );
       if( sc.isSuccess() ) {
-        HepVector vec = state.stateVector();
-        HepVector trueVec = trueState->stateVector();
-        HepSymMatrix cov = state.covariance();
-        double dx = vec[0] - trueVec[0];
-        double dy = vec[1] - trueVec[1];
-        double dtx = vec[2] - trueVec[2];
-        double dty = vec[3] - trueVec[3];
+        TrackVector vec = state.stateVector();
+        TrackVector trueVec = trueState->stateVector();
+        TrackMatrix cov = state.covariance();
+        double dx = vec(0) - trueVec(0);
+        double dy = vec(1) - trueVec(1);
+        double dtx = vec(2) - trueVec(2);
+        double dty = vec(3) - trueVec(3);
         // fill the histograms
         int ID = 300 + 100 * numPos;
         std::string title = format( " at z=%d mm", int( *iZpos ) );
@@ -356,10 +339,10 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
         plot1D( dy, ID+2, "y resolution"+title, -0.5, 0.5, 50 );
         plot1D( dtx, ID+3, "tx resolution"+title, -0.01, 0.01, 50 );
         plot1D( dty, ID+4, "ty resolution"+title, -0.01, 0.01, 50 );
-        plot1D( dx / sqrt(cov[0][0]), ID+11,"x pull"+title, -5.0, 5.0, 50 );
-        plot1D( dy / sqrt(cov[1][1]), ID+12,"y pull"+title, -5.0, 5.0, 50 );
-        plot1D( dtx / sqrt(cov[2][2]), ID+13,"tx pull"+title, -5.0, 5.0, 50 );
-        plot1D( dty / sqrt(cov[3][3]), ID+14,"ty pull"+title, -5.0, 5.0, 50 );
+        plot1D( dx / sqrt(cov(0,0)), ID+11,"x pull"+title, -5.0, 5.0, 50 );
+        plot1D( dy / sqrt(cov(1,1)), ID+12,"y pull"+title, -5.0, 5.0, 50 );
+        plot1D( dtx / sqrt(cov(2,2)), ID+13,"tx pull"+title, -5.0, 5.0, 50 );
+        plot1D( dty / sqrt(cov(3,3)), ID+14,"ty pull"+title, -5.0, 5.0, 50 );
       }
     }
     ++numPos;
@@ -391,65 +374,116 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart ) {
   }
 
   // get VeloClusters and count correct and total number of clusters
-  VeloCluster2MCParticleAsct::FromRange veloRange = m_veloClusToMCP->rangeTo( mcPart );
+  // Get the linker table MCParticle => VeloCluster
+  LinkedFrom<VeloCluster,MCParticle> veloLink(evtSvc(),msgSvc(),
+                                              LHCb::VeloClusterLocation::Default);
+  if( veloLink.notFound() ) {
+    error() << "Unable to retrieve MCParticle to VeloCluster linker table." << endreq;
+    return StatusCode::FAILURE;
+  }
+  
   int nGoodVelo = 0;
-  int nMCTotalVelo = veloRange.size();
-  VeloCluster2MCParticleAsct::FromIterator veloClus;
-  for( veloClus = veloRange.begin(); veloClus != veloRange.end(); ++veloClus ) {
-    VeloCluster* aCluster = veloClus->to();
-    bool found = false;
+  int nMCTotalVelo = 0;
+  
+  const VeloCluster* veloCluster = veloLink.first( mcPart );
+  bool found = false;
+  while( 0 != veloCluster ) {
+    ++nMCTotalVelo;
     std::vector<Measurement*>::const_iterator iMeas = track->measurements().begin();
     while( !found && iMeas != track->measurements().end() ) {
       if( (*iMeas)->type() == Measurement::VeloR ) {
         VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*>( *iMeas );
-        found = ( aCluster == meas->cluster() );
+        found = ( veloCluster == meas->cluster() );
       }
       if( (*iMeas)->type() == Measurement::VeloPhi ) {
         VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*>( *iMeas );
-        found = ( aCluster == meas->cluster() );
+        found = ( veloCluster == meas->cluster() );
       }
       ++iMeas;
     }
     if( found ) { ++nGoodVelo; }
+    veloCluster = veloLink.next();
   }
 
-  // get ITClusters and count correct and total number of clusters
-  ITCluster2MCParticleAsct::FromRange itRange = m_itClusToMCP->rangeTo( mcPart );
+  // get STClusters and count correct and total number of clusters
+  // Get the linker table MCParticle => TTCluster
+  LinkedFrom<STCluster,MCParticle> ttLink(evtSvc(),msgSvc(),
+                                          LHCb::STClusterLocation::TTClusters);
+  if( ttLink.notFound() ) {
+    error() << "Unable to retrieve MCParticle to TTCluster linker table." << endreq;
+    return StatusCode::FAILURE;
+  }
+  // Get the linker table MCParticle => ITCluster
+  LinkedFrom<STCluster,MCParticle> itLink(evtSvc(),msgSvc(),
+                                          LHCb::STClusterLocation::ITClusters);
+  if( itLink.notFound() ) {
+    error() << "Unable to retrieve MCParticle to ITCluster linker table." << endreq;
+    return StatusCode::FAILURE;
+  }
+
   int nGoodIT = 0;
-  int nMCTotalIT = itRange.size();
-  ITCluster2MCParticleAsct::FromIterator itClus;
-  for( itClus = itRange.begin(); itClus != itRange.end(); ++itClus ) {
-    ITCluster* aCluster = itClus->to();
-    bool found = false;
+  int nMCTotalIT = 0;
+
+  // TT
+  const STCluster* ttCluster = ttLink.first ( mcPart );
+  found = false;
+  while( 0 != ttCluster ) {
+    ++nMCTotalIT;
     std::vector<Measurement*>::const_iterator iMeas = ( track->measurements() ).begin();
-    while (!found && iMeas != ( track->measurements() ).end()) {
-      if ( (*iMeas)->type() == Measurement::TT ||
-           (*iMeas)->type() == Measurement::IT ) {
+    while(!found && iMeas != ( track->measurements() ).end()) {
+      if( (*iMeas)->type() == Measurement::TT ) {
         STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
-        found = ( aCluster == meas->cluster() );
+        found = ( ttCluster == meas->cluster() );
       }
       ++iMeas;
     }
     if( found ) { ++nGoodIT; }
+    ttCluster = ttLink.next();
   }
-  
+
+  //IT
+  const STCluster* itCluster = itLink.first ( mcPart );
+  found = false;
+  while( 0 != itCluster ) {
+    ++nMCTotalIT;
+    std::vector<Measurement*>::const_iterator iMeas = ( track->measurements() ).begin();
+    while(!found && iMeas != ( track->measurements() ).end()) {
+      if( (*iMeas)->type() == Measurement::IT ) {
+        STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
+        found = ( itCluster == meas->cluster() );
+      }
+      ++iMeas;
+    }
+    if( found ) { ++nGoodIT; }
+    itCluster = itLink.next();
+  }
+
   // get OTTimes and count correct and total number of clusters
-  OTTime2MCParticleAsct::FromRange otRange = m_otTimToMCP->rangeTo( mcPart );
+  // Get the linker table MCParticle => OTTime
+  LinkedFrom<OTTime,MCParticle> otLink(evtSvc(),msgSvc(),
+                                       LHCb::OTTimeLocation::Default);
+  if( itLink.notFound() ) {
+    error() << "Unable to retrieve MCParticle to ITCluster linker table." << endreq;
+    return StatusCode::FAILURE;
+  }
+
   int nGoodOT = 0;
-  int nMCTotalOT = otRange.size();
-  OTTime2MCParticleAsct::FromIterator otTim;
-  for( otTim = otRange.begin(); otTim != otRange.end(); ++otTim ) {
-    OTTime* aTime = otTim->to();
-    bool found = false;
-    std::vector<Measurement*>::const_iterator iMeas = (track->measurements()).begin();
-    while(!found && iMeas != ( track->measurements()).end() ) {
+  int nMCTotalOT = 0;
+  
+  const OTTime* otTime = otLink.first( mcPart );
+  found = false;
+  while( 0 != otTime ) {
+    ++nMCTotalOT;
+    std::vector<Measurement*>::const_iterator iMeas = track->measurements().begin();
+    while( !found && iMeas != track->measurements().end() ) {
       if( (*iMeas)->type() == Measurement::OT ) {
         OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
-        found = ( aTime == meas->time() );
+        found = ( otTime == meas->time() );
       }
       ++iMeas;
     }
     if( found ) { ++nGoodOT; }
+    veloCluster = veloLink.next();
   }
 
   // Sum of Velo, IT and OT hits
