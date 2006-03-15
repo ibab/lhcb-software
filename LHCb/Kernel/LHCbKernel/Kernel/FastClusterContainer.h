@@ -112,6 +112,13 @@ public:
   void resize(size_type len, const VISIBLE& def )
   {  return m_data.resize(len, *(const INTERNAL*)&def);                       }
 
+  /// find method
+  template <class findPolicy> 
+    const_iterator find(const typename findPolicy::comp_type& value) const{
+    std::pair< const_iterator, const_iterator> iterP = std::equal_range(begin(),end(),value,findPolicy());
+    return (iterP.first!=iterP.second) ? iterP.first : end();
+  }
+
 };
 
 #endif // GAUDIROOT_FASTCLUSTERCONTAINER_H
