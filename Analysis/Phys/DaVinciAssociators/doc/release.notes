@@ -1,8 +1,61 @@
-! $Id: release.notes,v 1.73 2005-12-14 14:41:47 cattanem Exp $
+! $Id: release.notes,v 1.74 2006-03-15 12:58:30 pkoppenb Exp $
 !================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !================================================================================
+!
+! Built on branch v6r0b on tag v5r5p1 for DC06
+!
+
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - DaVinciAssociators/Particle2MCAsct.h
+  - DaVinciAssociators/Particle2MCLinksAsct.h
+  - DaVinciAssociators/Particle2MCWithChi2Asct.h
+  - DaVinciAssociators/ProtoParticle2MCAsct.h
+  - src/AsctAlgorithm.cpp
+  - src/AsctAlgorithm.h
+  - src/CompositeParticle2MCLinks.cpp
+  - src/CompositeParticle2MCLinks.h
+  - src/DaVinciAssociators_dll.cpp
+  - src/DaVinciAssociators_load.cpp
+  - src/NeutralPP2MC.cpp
+  - src/Particle2MCChi2.cpp
+  - src/Particle2MCChi2.h
+  - src/Particle2MCLinks.cpp
+  - src/Particle2MCLinks.h
+  - src/Particle2MCLinksAsct.cpp
+    . Removed 
+
+! 2006-02-03 - P. Koppenburg
+  - Add a few LHCb:: in Relations
+  
+! 2006-01-24 - P. Koppenburg
+  First DC06 version
+  - DaVinciAssociators/Particle2MCAsct.h
+  - DaVinciAssociators/Particle2MCLink.h
+  - DaVinciAssociators/Particle2MCLinksAsct.h
+  - DaVinciAssociators/Particle2MCWithChi2Asct.h
+  - DaVinciAssociators/ProtoParticle2MCAsct.h
+  - src/CompositeParticle2MCLinks.cpp
+  - src/CompositeParticle2MCLinks.h
+  - src/DaVinciAssociators_load.cpp
+  - src/Lib/Particle2MCLink.cpp
+  - src/NeutralPP2MC.cpp
+  - src/Particle2MCChi2.cpp
+  - src/Particle2MCLinksAsct.cpp
+  - src/Particle2MCLinks.cpp
+  . Translated to new Physics Event Model
+  - src/ChargedPP2MC.cpp
+  - src/ChargedPP2MC.h
+  - src/Particle2MCWithChi2.cpp
+  - src/Particle2MCWithChi2.h
+  - src/TestAssociators.cpp
+  - src/TestAssociators.h
+  - src/TestLinker.cpp
+  - src/TestLinker.h
+    . Removed as they are not trivial to translate
 
 !========================== DaVinciAssociators v5r5p1 2005-12-14 ================
 ! 2005-12-14 - Marco Cattaneo
@@ -22,7 +75,7 @@
    . Go to v5r4p1
 
 !========================== DaVinciAssociators v5r4 2005-04-17 ===================
-! 2005-05-09 - P. KOppenburg
+! 2005-05-09 - P. Koppenburg
  - src/NeutralPP2MC.cpp
    . Fix compilation warning
 ! 2005-05-09 - Vanya BELYAEV

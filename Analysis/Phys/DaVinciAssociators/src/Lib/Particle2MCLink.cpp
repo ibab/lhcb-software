@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.cpp,v 1.5 2005-05-19 08:34:55 phicharp Exp $
+// $Id: Particle2MCLink.cpp,v 1.6 2006-03-15 12:58:31 pkoppenb Exp $
 // Include files 
 
 
@@ -12,6 +12,7 @@
 //
 // 2004-04-29 : Philippe Charpentier
 //-----------------------------------------------------------------------------
+using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables

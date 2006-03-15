@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.h,v 1.4 2005-04-13 08:50:11 phicharp Exp $
+// $Id: Particle2MCLink.h,v 1.5 2006-03-15 12:58:30 pkoppenb Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 1
 
@@ -136,37 +136,37 @@ class Object2MCLink
     
   
 
-  typedef LinkedTo<MCParticle>          To;
-  typedef LinkerWithKey<MCParticle>     Linker;
+  typedef LinkedTo<LHCb::MCParticle>          To;
+  typedef LinkerWithKey<LHCb::MCParticle>     Linker;
   Linker* linkerTable( const std::string& name) ;
   Linker* linkerTable( const std::string& name, To& test) ;
 
-  MCParticle* firstMCP( const KeyedObject<int>* obj) ;
-  MCParticle* firstMCP( const KeyedObject<int>* obj, double& weight) ;
-  MCParticle* nextMCP() { 
+  LHCb::MCParticle* firstMCP( const KeyedObject<int>* obj) ;
+  LHCb::MCParticle* firstMCP( const KeyedObject<int>* obj, double& weight) ;
+  LHCb::MCParticle* nextMCP() { 
     return m_linkTo.next(); };
-  MCParticle* nextMCP( double& weight) { 
-    MCParticle* mcPart =  m_linkTo.next();
+  LHCb::MCParticle* nextMCP( double& weight) { 
+    LHCb::MCParticle* mcPart =  m_linkTo.next();
     weight = NULL != mcPart ? m_linkTo.weight() : 0.;
     return mcPart;
   };
   double      weightMCP() { 
     return m_linkTo.weight(); };
   int         associatedMCP( const KeyedObject<int>* obj) ;
-  MCParticle* first ( const KeyedObject<int>* obj ) {
+  LHCb::MCParticle* first ( const KeyedObject<int>* obj ) {
     return firstMCP( obj ); };
-  MCParticle* first ( const KeyedObject<int>* obj, double & weight ) {
+  LHCb::MCParticle* first ( const KeyedObject<int>* obj, double & weight ) {
     return firstMCP( obj, weight ); };
-  MCParticle* next() {
+  LHCb::MCParticle* next() {
     return m_linkTo.next(); } ;
-  MCParticle* next( double& weight) {
+  LHCb::MCParticle* next( double& weight) {
     return nextMCP(weight); } ;
   double weight() {
     return m_linkTo.weight(); } ;
   bool notFound();
   bool notFound( const std::string& contname);
   bool checkAssociation( const KeyedObject<int>* obj, 
-                         const MCParticle* mcPart);
+                         const LHCb::MCParticle* mcPart);
 
  protected:
   void createLinks( const std::string& contName = "") ;
@@ -202,7 +202,7 @@ class Object2MCLink
   }
 };
 
-template <class OBJ2MCP=Particle>
+template <class OBJ2MCP=LHCb::Particle>
 class Object2FromMC : public Object2MCLink {
 
 public: 
@@ -236,7 +236,7 @@ public:
   {
     const OBJ2MCP* part = dynamic_cast<const OBJ2MCP*>(obj);
     if( NULL != part ) return NULL != firstMCP(part);
-    const MCParticle* mcPart = dynamic_cast<const MCParticle*>(obj);
+    const LHCb::MCParticle* mcPart = dynamic_cast<const LHCb::MCParticle*>(obj);
     if( NULL != mcPart ) return NULL != firstP(mcPart);
     return false;
   };
@@ -326,7 +326,7 @@ private:
 
 };
 
-typedef Object2FromMC<ProtoParticle> ProtoParticle2MCLink;
+typedef Object2FromMC<LHCb::ProtoParticle> ProtoParticle2MCLink;
 typedef Object2FromMC<>              Particle2MCLink;
 
 #endif // DAVINCIASSOCIATORS_PARTICLE2MCLINK_H
