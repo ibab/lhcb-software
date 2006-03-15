@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.5 2006-03-15 15:07:16 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.6 2006-03-15 15:39:55 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -95,7 +95,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
       const int numberofhits = myCollection->entries();
 
       //convert hits
-      for ( int ihit = 0; ihit < numberofhits; ++ihit )
+      for ( int ihit = 0; ihit < numberofhits; ++ihit, ++globalKey )
       {
 
         // Find associated MCRichHit
@@ -149,9 +149,6 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
           ++m_hitTally[mchit->radiator()];
 
         }
-
-        // increment the key
-        ++globalKey;
 
       } // loop over g4 hits
 

@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.6 2006-03-15 15:07:16 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.7 2006-03-15 15:39:55 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -104,7 +104,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
       const GiGaKineRefTable & table = kineSvc()->table();
 
       // loop over hits and sort them
-      for ( int ihit = 0; ihit < myCollection->entries(); ++ihit )
+      for ( int ihit = 0; ihit < myCollection->entries(); ++ihit, ++globalKey )
       {
 
         // Pointer to G4 hit
@@ -140,7 +140,6 @@ StatusCode GetMCRichSegmentsAlg::execute()
           }
         }
 
-        ++globalKey;
       } // end loop over this collection
 
     } // end loop over all collections

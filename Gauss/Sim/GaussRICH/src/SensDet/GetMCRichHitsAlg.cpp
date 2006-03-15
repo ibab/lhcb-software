@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.16 2006-03-15 15:07:16 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.17 2006-03-15 15:39:55 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -107,7 +107,7 @@ StatusCode GetMCRichHitsAlg::execute()
       totalSize += numberofhits;  // count the total num of hits in all collections.
 
       // now loop through the hits in the current collection.
-      for ( int ihit = 0; ihit < numberofhits; ++ihit )
+      for ( int ihit = 0; ihit < numberofhits; ++ihit, ++globalKey )
       {
 
         // Pointer to G4 hit
@@ -258,9 +258,6 @@ StatusCode GetMCRichHitsAlg::execute()
                     << " sensDetID " << detID
                     << " MCParticle " << mcPart << endreq;
         }
-
-        // finally increment key for the container
-        ++globalKey;
 
       } // end loop on hits in the collection
 
