@@ -1,18 +1,41 @@
 
      <import name="Kernel/&channelIDName;"/>
      <import name="Kernel/FastClusterContainer"/>
+     <import name="Kernel/SiDataFunctor"/>
      <import name="Kernel/LHCbMath"/>
 
+<<<<<<< SiLiteCluster.ent
+     <typedef desc = "channelID type"
+       type =  "LHCb::&channelIDName;"
+       def = "chan_type"
+       access = "PUBLIC " />
+
+=======
     <typedef desc = "fast container for light clusters"
        type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
        def = "&className;s"
        access = "PUBLIC " />
+>>>>>>> 1.3
 
+<<<<<<< SiLiteCluster.ent
+     <typedef desc = "fast container for light clusters"
+       type =  "FastClusterContainer &lt; LHCb::&className; , int &gt;"
+=======
      <typedef desc = "fast container for light clusters (old name: will be removed)"
        type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
+>>>>>>> 1.3
        def = "FastContainer"
        access = "PUBLIC " />
 
+<<<<<<< SiLiteCluster.ent
+     <typedef desc = "finding policy"
+       type =  "SiDataFunctor::CompareByChannel &lt; LHCb::&className;&gt;"
+       def = "findPolicy"
+       access = "PUBLIC " /> 
+
+
+=======
+>>>>>>> 1.3
      <constructor desc="Constructor" 
        argList='&channelIDName; &amp; chan, double fracStrip, 
                 unsigned int size, bool secondThres'>
@@ -110,6 +133,8 @@
       <code> return &channelIDName;((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits); 
      </code>
      </method>
+
+     
 
 
      <attribute type='bitfield' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
