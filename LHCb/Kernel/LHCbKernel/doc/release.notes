@@ -2,16 +2,14 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-
+!===================== LHCbKernel v6r2 2006-03-15 =========================
 ! 2006-03-15 M Needham
  - Add find method to fast container class
  - Add functors to use it for Silicon (SiDataFunctors.h)
 
-
 !===================== LHCbKernel v6r2 2006-03-09 =========================
 ! 2006-03-09 - Marco Cattaneo
  - Remove obsolete IRndmTool.h interface
-
 
 ! 2006-03-03 - Julien Cogan
  - MuonTileID: proper initialization in the constructor from a string.
