@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.8 2006-01-30 12:57:07 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.9 2006-03-15 13:40:12 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -39,10 +39,10 @@ protected:
   typedef std::vector<std::string> strings;
   StatusCode createDecays();
   StatusCode createDecay(const std::string&,const strings&);
-  StatusCode applyFilter(const ParticleVector&, ParticleVector&, IFilterCriterion*) const;
-  StatusCode applyDecay(Decay&,ParticleVector& );
-  StatusCode makeMother(Particle*&,const ParticleVector&,const ParticleID&) const;
-  StatusCode makePlots(const ParticleVector&,IPlotTool*); ///< make plots
+  StatusCode applyFilter(const LHCb::Particle::ConstVector&, LHCb::Particle::ConstVector&, IFilterCriterion*) const;
+  StatusCode applyDecay(Decay&,LHCb::Particle::ConstVector& );
+  StatusCode makeMother(LHCb::Particle*&,const LHCb::Particle::ConstVector&,const LHCb::ParticleID&);
+  StatusCode makePlots(const LHCb::Particle::ConstVector&,IPlotTool*); ///< make plots
   inline bool consideredPID(const int& pid)const ; ///< make plots
 
 private:
@@ -102,27 +102,27 @@ private:
       initialize(0,a,0.,100000.,-1.,-1.,NULL);
     };
     ~Decay(){};
-    bool fillPidParticles(const ParticleVector&); ///< fill maps at each even
-    bool getNextCandidates(ParticleVector&);  ///< Return a vector of daughters
-    bool getFirstCandidates(ParticleVector&);  ///< Return a vector of daughters
-    ParticleID getMotherPid()const{return m_motherPid;};
-    bool goodFourMomentum(const HepLorentzVector& P)const{
-      if (!inMassRange(P.m())) return false;
+    bool fillPidParticles(const LHCb::Particle::ConstVector&); ///< fill maps at each even
+    bool getNextCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
+    bool getFirstCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
+    LHCb::ParticleID getMotherPid()const{return m_motherPid;};
+    bool goodFourMomentum(const Gaudi::XYZTVector& P)const{
+      if (!inMassRange(P.M())) return false;
       if (!m_checkP) return true;
       return goodMomentum(P);
     }
 
   protected:
     bool iterate(); ///< Iterate to next positions
-    bool getCandidates(ParticleVector&);  ///< Return a vector of daughters
+    bool getCandidates(LHCb::Particle::ConstVector&);  ///< Return a vector of daughters
     bool inMassRange(const double& m)const{return ((m >= m_minMass) && (m<= m_maxMass));}
-    bool goodMomentum(const HepLorentzVector& P)const{return (P.rho()>m_minP && P.perp()>m_minPt);}
-    bool foundOverlap(const ParticleVector&);
-    bool replaceResonanceByDaughters(ParticleVector&);
+    bool goodMomentum(const Gaudi::XYZTVector& P)const{return (P.R()>m_minP && P.Pt()>m_minPt);}
+    bool foundOverlap(const LHCb::Particle::ConstVector&);
+    bool replaceResonanceByDaughters(LHCb::Particle::ConstVector&);
 
   private:
     std::vector<PidParticles> m_pidParticles ;
-    ParticleID m_motherPid;
+    LHCb::ParticleID m_motherPid;
     double m_minMass;
     double m_maxMass;
     double m_minP;
@@ -142,15 +142,15 @@ private:
       ~PidParticles(){};
       int getPid()const {return m_pid;} ;
       void setPid(const int& i){m_pid = i;}
-      bool fillParticles(const ParticleVector&);
-      Particle* getCandidate()const {return *m_iterator;};
+      bool fillParticles(const LHCb::Particle::ConstVector&);
+      const LHCb::Particle* getCandidate()const {return *m_iterator;};
       bool iterate();
       bool samePid()const{return m_samePID;};
       void setSamePid(bool m){m_samePID = m ;};
       
     private:
-      ParticleVector m_particles;
-      ParticleVector::const_iterator m_iterator;
+      LHCb::Particle::ConstVector m_particles;
+      LHCb::Particle::ConstVector::const_iterator m_iterator;
       int m_pid ;
       bool m_samePID; // there is another one with same PID in the decay
     };  

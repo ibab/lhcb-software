@@ -1,6 +1,26 @@
-! $Id: release.notes,v 1.19 2005-10-19 07:32:58 pkoppenb Exp $
+! $Id: release.notes,v 1.20 2006-03-15 13:40:59 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
+!=================================================================================
+
+! 2006-02-16 - P. Koppenburg
+  - src/TrgDispCalculator.{cpp,h}
+    . Samll change in interface
+
+! 2006-01-25 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . Allow not to define an extrapolator.
+
+! 2006-01-20 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . New tool that uses the TrackExtrapolator tools to do transporting
+  - src/CombinedTransporter.cpp
+  - src/CombinedTransporter.*
+  - src/LinearTransporter.*
+  - src/NsctVeloTransporter.*
+  - src/ParabolicTransporter.*
+  - src/TrTransporter.*
+    . Removed as these tools mainly duplicate code of the tracking tools.
 
 !========================== DaVinciTransporter v2r1 2005-10-19 ===================
 ! 2005-09-02 - P. Koppenburg

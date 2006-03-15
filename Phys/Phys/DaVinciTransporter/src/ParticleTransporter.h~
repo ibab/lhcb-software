@@ -1,0 +1,35 @@
+// $Id: ParticleTransporter.h~,v 1.2 2006-03-15 13:41:00 pkoppenb Exp $
+#ifndef PARTICLETRANSPORTER_H 
+#define PARTICLETRANSPORTER_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiTool.h"
+#include "IParticleTransporter.h"            // Interface
+
+
+/** @class ParticleTransporter ParticleTransporter.h
+ *  
+ *  Particle transporter calling 
+ *  the master track extrapolator for Particles made from Tracks,
+ *  the parabolic track extrapolator for charged composite
+ *  and the linear track extrapolator for neutrals.
+ *
+ *  @author Patrick KOPPENBURG
+ *  @date   2006-01-20
+ */
+class ParticleTransporter : public GaudiTool, virtual public IParticleTransporter {
+public: 
+  /// Standard constructor
+  ParticleTransporter( const std::string& type, 
+                       const std::string& name,
+                       const IInterface* parent);
+
+  virtual ~ParticleTransporter( ); ///< Destructor
+
+protected:
+
+private:
+
+};
+#endif // PARTICLETRANSPORTER_H

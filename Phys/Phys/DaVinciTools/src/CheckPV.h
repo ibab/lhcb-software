@@ -1,4 +1,4 @@
-// $Id: CheckPV.h,v 1.5 2006-03-06 13:59:49 pkoppenb Exp $
+// $Id: CheckPV.h,v 1.6 2006-03-15 13:40:12 pkoppenb Exp $
 #ifndef CHECKPV_H 
 #define CHECKPV_H 1
 
@@ -9,7 +9,8 @@
 
 /** @class CheckPV CheckPV.h
  *  
- *  Checks the number of PVs
+ *  Algorithm that checks if there is a reconstructed PV available.
+ *  To be used in any sequencer
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-18

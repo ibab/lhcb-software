@@ -1,4 +1,4 @@
-// $Id: RecursivePlotTool.h,v 1.2 2005-01-13 12:28:01 pkoppenb Exp $
+// $Id: RecursivePlotTool.h,v 1.3 2006-03-15 13:40:12 pkoppenb Exp $
 #ifndef RECURSIVEPLOTTOOL_H 
 #define RECURSIVEPLOTTOOL_H 1
 
@@ -30,11 +30,11 @@ public:
   StatusCode setPath(const std::string&);
 
    /// Fill plots using a ParticleVector
-  StatusCode fillPlots(const ParticleVector&,
+  StatusCode fillPlots(const LHCb::Particle::ConstVector&,
                        const std::string trailer);
 
   /// Fill plots using a single Particle
-  StatusCode fillPlots(const Particle*,
+  StatusCode fillPlots(const LHCb::Particle*,
                        const std::string trailer);  
  
 

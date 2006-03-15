@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: SimplePlots.cpp,v 1.3 2006-03-15 13:40:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode SimplePlots::execute() {
   debug() << "==> Execute" << endmsg;
 
   // code goes here  
-  const ParticleVector PP = desktop()->particles() ;
+  const LHCb::Particle::ConstVector PP = desktop()->particles() ;
   StatusCode sc = m_plots->fillPlots(PP);
   if (!sc) {
     err() << "Error from PlotTool" << endmsg;

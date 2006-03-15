@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTransporter
-version           v2r1
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,7 +13,9 @@ branches          cmt doc src
 
 # Used packages. 
 #============================================================================
-use DaVinciKernel  v* Phys
+use DaVinciKernel    v* Phys
+use TrackInterfaces  v* Tr
+use LHCbDefinitions  v* Kernel
 
 # Component library building rule
 #============================================================================

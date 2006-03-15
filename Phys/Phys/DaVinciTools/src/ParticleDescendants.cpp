@@ -1,4 +1,4 @@
-// $Id: ParticleDescendants.cpp,v 1.1 2005-10-21 14:48:07 pkoppenb Exp $
+// $Id: ParticleDescendants.cpp,v 1.2 2006-03-15 13:40:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -37,17 +37,17 @@ ParticleDescendants::~ParticleDescendants() {};
 //=============================================================================
 // Return all descendants of a Particle
 //=============================================================================
-const ParticleVector ParticleDescendants::descendants(const Particle* P){
+const LHCb::Particle::ConstVector ParticleDescendants::descendants(const LHCb::Particle* P){
   return descendants( P, 0 );
 }  
 //=============================================================================
 // Return all stable descendants of a Particle
 //=============================================================================
-const ParticleVector ParticleDescendants::finalStates(const Particle* P){
-  ParticleVector stables ; // 
-  ParticleVector all = descendants( P, 0 ); // get them all all
-  for ( ParticleVector::const_iterator i = all.begin() ; i!=all.end() ; ++i){
-    if ( 0 == (*i)->endVertex() ) {
+const LHCb::Particle::ConstVector ParticleDescendants::finalStates(const LHCb::Particle* P){
+  LHCb::Particle::ConstVector stables ; // 
+  LHCb::Particle::ConstVector all = descendants( P, 0 ); // get them all all
+  for ( LHCb::Particle::ConstVector::const_iterator i = all.begin() ; i!=all.end() ; ++i){
+    if ( (*i)->isBasicParticle() ) {
       stables.push_back( *i );
       debug() << "Saving a " << (*i)->particleID().pid() << endmsg ;
     } else verbose() << "Discarding a " << (*i)->particleID().pid() << endmsg ;
@@ -57,16 +57,12 @@ const ParticleVector ParticleDescendants::finalStates(const Particle* P){
 //=============================================================================
 // Return all daughters of particles in a vector
 //=============================================================================
-bool ParticleDescendants::addDaughters(const Particle* M, 
-                                       ParticleVector& Parts){
+bool ParticleDescendants::addDaughters(const LHCb::Particle* M, 
+                                       LHCb::Particle::ConstVector& Parts){
   if ( 0==M ) return false;
-  if ( 0==M->endVertex()) return false;
-  SmartRefVector< Particle > dauts = M->endVertex()->products();
-  for ( SmartRefVector< Particle >::iterator i =  dauts.begin();
-        i != dauts.end() ; ++i ){
-    Particle* P = *i;
-    Parts.push_back(P);
-  }
+  if ( M->isBasicParticle() ) return false;  
+  const LHCb::Particle::ConstVector dauts = M->daughtersVector();
+  Parts.insert(Parts.end(),dauts.begin(),dauts.end());
   verbose() << "Added " << dauts.size() << " daughters" << endmsg ;
   return (!dauts.empty());
   
@@ -74,11 +70,11 @@ bool ParticleDescendants::addDaughters(const Particle* M,
 //=============================================================================
 // Return all daughters of particles in a vector
 //=============================================================================
-bool ParticleDescendants::addDaughters(const ParticleVector& mothers, 
-                                       ParticleVector& Parts){
+bool ParticleDescendants::addDaughters(const LHCb::Particle::ConstVector& mothers, 
+                                       LHCb::Particle::ConstVector& Parts){
   if ( mothers.empty() ) return false ;
   bool found = false ;
-  for ( ParticleVector::const_iterator i = mothers.begin() ; i!=mothers.end() ; ++i){
+  for ( LHCb::Particle::ConstVector::const_iterator i = mothers.begin() ; i!=mothers.end() ; ++i){
     found = ( addDaughters( *i, Parts) || found );
   }
   return found ;
@@ -86,18 +82,18 @@ bool ParticleDescendants::addDaughters(const ParticleVector& mothers,
 //=============================================================================
 // Return all descendants of level i for a Particle
 //=============================================================================
-const ParticleVector ParticleDescendants::descendants(const Particle* P, int maxlevel){
+const LHCb::Particle::ConstVector ParticleDescendants::descendants(const LHCb::Particle* P, int maxlevel){
   
-  ParticleVector Parts ;
+  LHCb::Particle::ConstVector Parts ;
 
   int level = 0 ;
   bool found = false ;
   
-  ParticleVector mothers ;
+  LHCb::Particle::ConstVector mothers ;
 
   do {
     ++level ;
-    ParticleVector leveldaughters ;
+    LHCb::Particle::ConstVector leveldaughters ;
     if ( level == 1 ) found = addDaughters( P, leveldaughters) ;
     else found = addDaughters( mothers, leveldaughters) ;
     if ( level==maxlevel || maxlevel == 0 ) {

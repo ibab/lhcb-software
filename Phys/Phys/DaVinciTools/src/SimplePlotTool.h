@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.h,v 1.4 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: SimplePlotTool.h,v 1.5 2006-03-15 13:40:12 pkoppenb Exp $
 #ifndef SIMPLEPLOTTOOL_H 
 #define SIMPLEPLOTTOOL_H 1
 
@@ -10,7 +10,10 @@
 #include "Event/Particle.h"
 
 /** @class SimplePlotTool SimplePlotTool.h
- *  
+ *
+ *  Tool that produces some predefined plots far a given particle
+ *
+ *  @todo Unify options syntax with LoKi
  *
  *  @author Patrick KOPPENBURG
  *  @date   2005-01-05
@@ -33,12 +36,12 @@ public:
   /// Define plot directory
   StatusCode setPath(const std::string&);
 
-  /// Fill plots using a ParticleVector
-  StatusCode fillPlots(const ParticleVector&,
+  /// Fill plots using a LHCb::Particle::ConstVector
+  StatusCode fillPlots(const LHCb::Particle::ConstVector&,
                        const std::string trailer = "");
 
   /// Fill plots using a single Particle
-  StatusCode fillPlots(const Particle*,
+  StatusCode fillPlots(const LHCb::Particle*,
                        const std::string trailer = "");  
 
 protected:
@@ -67,7 +70,7 @@ private:
     double m_min ;
     double m_max ;
   };
-  StatusCode doPlot(const Particle*,MyHisto&,std::string) ;
+  StatusCode doPlot(const LHCb::Particle*,MyHisto&,std::string) ;
 
   std::vector<MyHisto> m_histos ; ///< All histogram definitions
   bool m_allDefault ; ///< All histograms are default

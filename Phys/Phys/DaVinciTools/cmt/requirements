@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.74 2006-03-06 13:59:49 pkoppenb Exp $
+# $Id: requirements,v 1.75 2006-03-15 13:40:12 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v12r5p1
+version           v13r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,10 +16,6 @@ branches          cmt doc src
 #============================================================================
 use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
-use  ParticleMaker         v* Phys
-use  DaVinciTransporter    v* Phys
-use  VertexFit             v* Phys
-use  DaVinciFilter         v* Phys
 
 # For DV v11r12
 # macro_append BOOST_linkopts " -lboost_regex"\

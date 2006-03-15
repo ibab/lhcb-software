@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.7 2005-03-10 16:53:56 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.8 2006-03-15 13:40:12 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -38,12 +38,7 @@ public:
   /// Argument: parts is a vector of pointers to particles.
   ///  Create an empty vector of pointers to protoparticles. 
   ///  Call the real check method.
-  bool foundOverlap( ConstParticleVector & parts );
-  
-  /// backward-compatible method
-  bool foundOverlap( ParticleVector & parts  );
-  /// backward-compatible method
-  bool foundOverlap( const ParticleVector & parts  );
+  bool foundOverlap( const LHCb::Particle::ConstVector & parts ); 
 
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
@@ -52,10 +47,10 @@ public:
   ///  Create an empty vector of pointers to protoparticles. 
   ///  Call the real check method.
   
-  bool foundOverlap( const Particle* );
-  bool foundOverlap( const Particle*,const Particle* );
-  bool foundOverlap( const Particle*,const Particle*,const Particle*);
-  bool foundOverlap( const Particle*,const Particle*,const Particle*,const Particle*);
+  bool foundOverlap( const LHCb::Particle* );
+  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle* );
+  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*);
+  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*);
   
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
@@ -68,37 +63,26 @@ public:
   //  If called directly by the user, it will continue a previous check, 
   //  not start a new one!
   //===========================================================================
-  bool foundOverlap( ConstParticleVector & parts,
-                     std::vector<const ContainedObject* > & proto );
+  bool foundOverlap( const LHCb::Particle::ConstVector & parts,
+                     std::vector<const LHCb::ProtoParticle*> & proto );
   
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  StatusCode removeOverlap( ParticleVector& ) ;
+  StatusCode removeOverlap( LHCb::Particle::ConstVector& ) ;
 
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  StatusCode removeOverlap( ConstParticleVector& ) ;
+  StatusCode removeOverlap( LHCb::Particle::Vector& ) ;
 
 protected:
   
-  StatusCode addOrigins( ConstParticleVector&, std::vector<const ContainedObject*>&);
+  StatusCode addOrigins( const LHCb::Particle::ConstVector&, std::vector<const LHCb::ProtoParticle*>&);
 
   /// Only look at protoparticles
-  bool searchOverlap( std::vector<const ContainedObject* > & proto );
+  bool searchOverlap( std::vector<const LHCb::ProtoParticle* > & proto );
   
 private:
   
 }; // End of class header. 
-
-// Implement inline methods:
-
-
-
-// The real checking method is implemented in CheckOverlap.cpp
-//===========================================================================  
-/// Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
-//===========================================================================
-template <class T> std::vector<const T*> toStdVector( const SmartRefVector<T>& 
-                                                      refvector );
 
 #endif // CHECKOVERLAP_H

@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.58 2006-01-18 13:43:22 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.59 2006-03-15 13:40:12 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -17,8 +17,10 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   // Miscellaneous
   DECLARE_TOOL( Algorithm2ID ) ;
   DECLARE_TOOL( CheckOverlap );
-  DECLARE_TOOL( CheckVeloOverlap );
-  DECLARE_TOOL( DecayFinder );
+  /// @todo: Restore CheckVeloOverlap
+  //  DECLARE_TOOL( CheckVeloOverlap );
+  /// @todo: Get DecayFinder to compile (need stl expert), use tag v13r0df to restore it 
+  //  DECLARE_TOOL( DecayFinder ); /     
   DECLARE_TOOL( DecodeSimpleDecayString );
   DECLARE_TOOL( OnOfflineTool ) ;
   DECLARE_TOOL( ParticleDescendants ) ;
@@ -29,8 +31,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_ALGORITHM( CheckPV );  
   DECLARE_ALGORITHM( MakeResonances ) ;
   DECLARE_ALGORITHM( SimplePlots );  
-  DECLARE_ALGORITHM( PIDFilter );  
   
-  DECLARE_ALGORITHM( Particle2VertexWithIPS );
 }
 

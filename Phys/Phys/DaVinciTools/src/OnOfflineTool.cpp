@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.3 2005-10-17 12:28:42 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.4 2006-03-15 13:40:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -30,12 +30,15 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   : GaudiTool ( type, name , parent ){
   declareInterface<IOnOffline>(this);
 
-  declareProperty( "OfflinePVLocation", m_offlinePVLocation = VertexLocation::Primary);
+  declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::VertexLocation::Primary);
   declareProperty( "OnlinePVLocation", m_onlinePVLocation = "/Event/Phys/Trg/Vertices" );
   declareProperty( "Online", m_online = false );
-  declareProperty( "OfflineGeomTool", m_offlineGeomTool = "GeomDispCalculator" );
+  /// @todo Restore offline tools when they are ready
+  //  declareProperty( "OfflineGeomTool", m_offlineGeomTool = "GeomDispCalculator" );
+  declareProperty( "OfflineGeomTool", m_offlineGeomTool = "TrgDispCalculator" );
   declareProperty( "OnlineGeomTool", m_onlineGeomTool = "TrgDispCalculator" );
-  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "UnconstVertexFitter" );
+  //  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "UnconstVertexFitter" );
+  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "TrgVertexFitter" );
   declareProperty( "OnlineVertexFitter", m_onlineVertexFitter = "TrgVertexFitter" );
   
 }

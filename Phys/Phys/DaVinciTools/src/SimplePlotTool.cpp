@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.11 2005-10-17 12:28:42 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.12 2006-03-15 13:40:12 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -65,15 +65,11 @@ StatusCode SimplePlotTool::firstInitialize () {
   StatusCode sc = GaudiHistoTool::initialize();
   if (!sc) return sc;
 
+  debug() << m_minima << endmsg ;
+
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   if( !m_ppSvc ) {
     err() << "Unable to locate Particle Property Service" << endreq;
-    return StatusCode::FAILURE;
-  }          
-
-  m_geomTool = tool<IGeomDispCalculator>("GeomDispCalculator",this);
-  if( !m_geomTool ) {
-    err() << "Unable to get GeomDispCalculator" << endreq;
     return StatusCode::FAILURE;
   }          
 
@@ -81,7 +77,14 @@ StatusCode SimplePlotTool::firstInitialize () {
   if( !m_onOfflineTool ) {
     err() << "Unable to get OnOfflineTool" << endreq;
     return StatusCode::FAILURE;
+  }
+ 
+  m_geomTool = tool<IGeomDispCalculator>(m_onOfflineTool->dispCalculator(),this);
+  if( !m_geomTool ) {
+    err() << "Unable to get GeomDispCalculator" << endreq;
+    return StatusCode::FAILURE;
   }          
+
   m_isInitialised = true ; // don't re-do this
   return StatusCode::SUCCESS;
 }
@@ -138,9 +141,9 @@ StatusCode SimplePlotTool::setPath(const std::string& path) {
 //=============================================================================
 // 
 //=============================================================================
-StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV,
+StatusCode SimplePlotTool::fillPlots(const LHCb::Particle::ConstVector& PV,
                                      const std::string trailer) {
-  for ( ParticleVector::const_iterator p = PV.begin() ; p != PV.end() ; ++p ){
+  for ( LHCb::Particle::ConstVector::const_iterator p = PV.begin() ; p != PV.end() ; ++p ){
     StatusCode sc = fillPlots(*p,trailer);
     if (!sc) return sc;
   }
@@ -149,7 +152,7 @@ StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV,
 //=============================================================================
 // 
 //=============================================================================
-StatusCode SimplePlotTool::fillPlots(const Particle* p,
+StatusCode SimplePlotTool::fillPlots(const LHCb::Particle* p,
                                      const std::string trailer) {
 
   debug() << "Filling plots for " << p->particleID().pid() << endmsg;
@@ -164,7 +167,7 @@ StatusCode SimplePlotTool::fillPlots(const Particle* p,
 //=============================================================================
 //  Plot
 //=============================================================================
-StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H, 
+StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H, 
                                   std::string trailer) {
   std::string var = H.getVar();
   ParticleProperty *pp = m_ppSvc->findByPythiaID(abs(P->particleID().pid()));
@@ -189,9 +192,9 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
       if ( hmax < 0 ){
         double mn = pp->mass() - gsl_max(factor*pp->mass(),pp->maxWidth()); // at least 4%
         double mx = pp->mass() + gsl_max(factor*pp->mass(),pp->maxWidth());
-        plot(P->mass(),"Mass of "+name,mn,mx );
+        plot(P->measuredMass(),"Mass of "+name,mn,mx );
       } else {
-        plot(P->mass(),"Mass of "+name,pp->mass()-fabs(hmin),pp->mass()+hmax );
+        plot(P->measuredMass(),"Mass of "+name,pp->mass()-fabs(hmin),pp->mass()+hmax );
       }
     }
   // -----------------------------------------
@@ -199,12 +202,12 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
   // -----------------------------------------
   } else if ( var == "DM" ){
     if (P->endVertex()){
-      const SmartRefVector<Particle>& pv = P->endVertex()->products();
+      const LHCb::Particle::ConstVector pv = P->daughtersVector();
       double maxmass = 0. ;
       int dpid = 0 ;
-      for (SmartRefVector<Particle>::const_iterator i=pv.begin();i!=pv.end();++i) {
+      for (LHCb::Particle::ConstVector::const_iterator i=pv.begin();i!=pv.end();++i) {
         if ( (*i)->endVertex() ){ // care only about daughters with an endVertex
-          double dm = (*i)->mass(); 
+          double dm = (*i)->measuredMass(); 
           if (dm>maxmass) {
             maxmass = dm ; // compare with heaviest daughter
             dpid = (*i)->particleID().pid();
@@ -214,10 +217,10 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
       if ( dpid!=0 ) {
         ParticleProperty *dp = m_ppSvc->findByPythiaID(abs(dpid));
         double dmn = pp->mass() - dp->mass() ;
-        plot(P->mass()-maxmass,"Mass difference of "+name, dmn-fabs(hmin),dmn+hmax );
-        debug() << "Mass of " << P->particleID().pid() << " is " << P->mass() 
+        plot(P->measuredMass()-maxmass,"Mass difference of "+name, dmn-fabs(hmin),dmn+hmax );
+        debug() << "Mass of " << P->particleID().pid() << " is " << P->measuredMass() 
                  << ", mass of daughter (" << dpid << ") is " << maxmass
-                 << " -> difference = " << P->mass()-maxmass << endmsg;
+                 << " -> difference = " << P->measuredMass()-maxmass << endmsg;
       } 
     }
   // -----------------------------------------
@@ -235,14 +238,14 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
   } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
     std::string PVContainer = m_onOfflineTool->getPVLocation() ;
     verbose() << "Getting PV from " << PVContainer << endreq ;
-    Vertices* PV = get<Vertices>(PVContainer);
+    LHCb::Vertices* PV = get<LHCb::Vertices>(PVContainer);
     if ( !PV ) {
       err() << "Could not find primary vertex location " 
             << PVContainer << endreq;
       return false ;
     }
     double bestf = -1. , bestfe = -1., minip = 9999999.;
-    for (VertexVector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
+    for (LHCb::Vertex::Vector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
       double ip = -1 ,ipe = -1.;
       StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
       if (!sc) continue;
@@ -276,7 +279,7 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
   } else if ( var == "Vy" ){
     if (P->endVertex()) plot(P->endVertex()->position().y(),"Vy of "+name,hmin,hmax);
   } else if ( var == "Vr" ){
-    if (P->endVertex()) plot(P->endVertex()->position().perp(),"Vr of "+name,hmin,hmax);
+    if (P->endVertex()) plot(sqrt(P->endVertex()->position().Perp2()),"Vr of "+name,hmin,hmax);
  } else {
     err() << "Unknown variable " << var << endreq ;
     return  StatusCode::FAILURE;
