@@ -4,10 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-!========================== CaloDAQ v2r0 2006-03-07 ==========================
+!========================== CaloDAQ v2r1 2006-03-15 ==========================
 ! 2006-03-15 - Olivier Deschamps
  - CaloZSupAlg.{cpp,h} algorithm added (moved from CaloDigit)
  
+!========================== CaloDAQ v2r0 2006-03-07 ==========================
 ! 2006-02-24 - Olivier Callot
  - Remove the detection of 'same event' in CaloTriggerBitsFromRaw as ODIN bank
    is not yet very stable... This means decoding twice to get SPD and PRS bits.
