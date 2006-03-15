@@ -28,29 +28,29 @@ class IKFFitTool : virtual public IAlgTool {
   static const InterfaceID& interfaceID() { return IID_IKFFitTool; }
 
   /// Method to refit a particle
-  virtual StatusCode reFit( Particle&) = 0;
+  virtual StatusCode reFit( LHCb::Particle&) = 0;
 
   /// Method to apply mass constraint to a Particle
-  virtual StatusCode massConstrain( Particle&) = 0; 
+  virtual StatusCode massConstrain( LHCb::Particle&) = 0; 
  
-  /// Method to get Particle parameters with energy
-  virtual StatusCode getEParameter(Particle&, HepVector&, HepSymMatrix&) =0;
+  /// Method to get LHCb::Particle parameters with energy
+  virtual StatusCode getEParameter(LHCb::Particle&, HepVector&, Gaudi::Matrix3x3&) =0;
 
                                                                                 
-  /// Method to get Particle parameters with mass
-  virtual StatusCode getMParameter(Particle&, HepVector&, HepSymMatrix&) =0;
+  /// Method to get LHCb::Particle parameters with mass
+  virtual StatusCode getMParameter(LHCb::Particle&, HepVector&, Gaudi::Matrix3x3&) =0;
                                                                                 
 
   /// Method to get photon parameters: z, x,y,E  cov(x,y,E)
-  virtual StatusCode getPhotonParameter(Particle&, double&,
-                                HepVector&, HepSymMatrix&) =0;
+  virtual StatusCode getPhotonParameter(LHCb::Particle&, double&,
+                                HepVector&, Gaudi::Matrix3x3&) =0;
 
 
   /// Method to determine if a particle is composite
-  virtual bool isComposite(Particle&) =0 ;
+  virtual bool isComposite(LHCb::Particle&) =0 ;
                                                                                 
   /// Method to return the z of the most upstream measurement of a non-composite charged particle
-  virtual double zFirstMeasurement(Particle* part) =0 ;
+  virtual double zFirstMeasurement(LHCb::Particle* part) =0 ;
 
 };
 

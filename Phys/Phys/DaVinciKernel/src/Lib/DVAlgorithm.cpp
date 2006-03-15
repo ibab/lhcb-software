@@ -4,63 +4,51 @@
 /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_pDesktop(0)
-  , m_pLagFit(0)
-  , m_pVertexFit(0)
-  , m_pGlobalFit(0)
-  , m_pGeomDispCalc(0)
-  , m_pStuffer(0)
-  , m_pFilter(0)
-  , m_ppSvc(0)
+  , m_desktop(0)
+  , m_desktopName("PhysDesktop")
+  , m_geomTool(0)
   , m_checkOverlap(0)
+  , m_filterNames()
   , m_algorithm2IDTool(0)
+  , m_algorithm2IDToolName("Algorithm2ID")
   , m_taggingTool(0)
+  , m_taggingToolName("BTaggingTool")
   , m_descendants(0)
+  , m_descendantsName("ParticleDescendants")
+  , m_ppSvc(0)
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
   , m_loadToolsWarned(false)
   , m_algorithmID(-1)
-{  
-    
-  declareProperty("VertexFitter", m_typeVertexFit = "Default");
-  declareProperty("GeomTool", m_typeGeomTool = "Default");
-  declareProperty("MassVertexFitter",m_typeLagFit = "LagrangeMassVertexFitter");
-  declareProperty("CheckOverlapTool",m_typeCheckOverlap = "CheckOverlap");
+{
+
+  declareProperty("VertexFitter", m_vertexFitNames );
+  declareProperty("GeomTool", m_geomToolName = "Default");
+  declareProperty("CheckOverlapTool",m_checkOverlapName = "CheckOverlap");
+  m_filterNames.push_back("ParticleFilter");
+  declareProperty("ParticleFilter", m_filterNames );
+
   declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
   declareProperty("PrintSelResult", m_printSelResult = false );
-  declareProperty("GlobalFitter",m_typeGlobalFit="LagrangeGlobalFitter");
 
 };
 //=============================================================================
 // Initialize the thing
 //=============================================================================
-StatusCode DVAlgorithm::sysInitialize () {
+StatusCode DVAlgorithm::initialize () {
   
-  if( isInitialized()) return StatusCode::SUCCESS;
- 
-  // copied from Algorithm.cpp
-  StatusCode sc = setProperties();
-  if( sc.isFailure() ) return StatusCode::FAILURE;
-  //  setOutputLevel( m_outputLevel );
+  StatusCode sc = GaudiTupleAlg::initialize();  
+  if (!sc) return sc;
 
-  if (m_avoidSelResult) {
-    MsgStream msg( msgSvc(), name() ); // warning() not yet initialized
-    msg << MSG::WARNING << "Avoiding SelResult" << endreq ;
+  if (m_avoidSelResult) warning() << "Avoiding SelResult" << endreq ;
+
+  // Load tools very
+  if (!loadTools()){
+    err() << "Unable to load tools" << endreq;
+    return StatusCode::FAILURE;
   }
-
-  // Load tools very first because it needs to be done before initialize()
-  sc = loadTools();
-  if(sc.isFailure()) {
-    MsgStream msg( msgSvc(), name() ); // err() not yet initialized
-    msg << MSG::ERROR << "Unable to load tools" << endreq;
-    return sc;
-  }
-
-  // initialize Algorithm base class first -> calls initialize()
-  sc = this->Algorithm::sysInitialize();
-  if (!sc ) return sc;
 
   if (m_decayDescriptor == "not specified"){
     warning() << "Decay Descriptor string not specified" << endreq;
@@ -68,11 +56,7 @@ StatusCode DVAlgorithm::sysInitialize () {
     info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
 
-  // initialize GaudiTupleAlg base class then
-  sc = this->GaudiTupleAlg::initialize();  
-  if (!sc ) return sc;
-
-  debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
+  debug() << "End of DVAlgorithm::initialize with " << sc << endreq;
 
   return sc;
 }
@@ -81,61 +65,53 @@ StatusCode DVAlgorithm::sysInitialize () {
 //=============================================================================
 StatusCode DVAlgorithm::loadTools() {
 
-  MsgStream msg( msgSvc(), name() ); // err() not yet initialized
-  msg << MSG::INFO << ">>> Retrieving tools" << endreq;
+  info() << ">>> Preloading tools" << endmsg;
 
-  msg << MSG::DEBUG << ">>> Retrieving PhysDesktop" << endreq;
-  m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
-
-  msg << MSG::DEBUG << ">>> Retrieving" << m_typeGlobalFit
-      << " as IGlobalFit" << endreq;
-  m_pGlobalFit = tool<IGlobalFitter>(m_typeGlobalFit,this);
-
-  msg << MSG::DEBUG << ">>> Retrieving " << m_typeLagFit 
-      << " as IMassVertexFitter" << endreq;
-  m_pLagFit = tool<IMassVertexFitter>(m_typeLagFit, this);
+  debug() << ">>> Preloading PhysDesktop" << endmsg;
+  desktop();
 
   // vertex fitter
   IOnOffline* onof = NULL;
-  std::string tvf = m_typeVertexFit ;
-  if ( tvf == "Default" ){
-    onof = tool<IOnOffline>("OnOfflineTool",this);
-    tvf = onof->vertexFitter();
+  if ( m_vertexFitNames.empty() ){
+    if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
+    m_vertexFitNames.push_back(onof->vertexFitter());
   }
-  msg << MSG::DEBUG << ">>> Retrieving " << tvf
-        << " as IVertexFitter" << endreq;
-  m_pVertexFit = tool<IVertexFitter>(tvf, this);
-  
-  // geom
-  std::string gdc = m_typeGeomTool ;
-  if ( gdc == "Default" ){
-    if (onof==0) onof = tool<IOnOffline>("OnOfflineTool",this);
-    gdc = onof->dispCalculator();
+  for ( size_t i = 0; i < m_vertexFitNames.size();++i) {
+    debug() << ">>> Preloading " << m_vertexFitNames.at(i) << " as IVertexFit " << i << endmsg;
+    vertexFitter(i) ;
   }
-  msg << MSG::DEBUG << ">>> Retrieving" << gdc << " as IGeomDispCalculator" << endreq;
-  m_pGeomDispCalc = tool<IGeomDispCalculator>(gdc, this);
   
-  msg << MSG::DEBUG << ">>> Retrieving ParticleStuffer" << endreq;
-  m_pStuffer = tool<IParticleStuffer>("ParticleStuffer", this);
+  // geometry
+  if ( m_geomToolName == "Default" ){
+    if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
+    m_geomToolName = onof->dispCalculator();
+  }
+  debug() << ">>> Preloading" << m_geomToolName << " as IGeomDispCalculator" << endmsg;
+  geomDispCalculator();
 
-  msg << MSG::DEBUG << ">>> Retrieving one ParticleFilter" << endreq;
-  m_pFilter = tool<IParticleFilter>("ParticleFilter", this);
+  debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
+  checkOverlap();
 
-  msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
+  /*  Not preloading non-mandatory tools
+  // particle filter
+  for ( size_t i = 0; i < m_fileNames.size();++i) {
+    debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
+    particleFilter(i); 
+  }
+  
+  debug() << ">>> Preloading Algorithm2ID Tool" << endmsg;
+  algorithm2ID();
+
+  debug() << ">>> Preloading BTagging Tool" << endmsg;
+  flavourTagging();
+
+  debug() << ">>> Preloading ParticleDescendants Tool" << endmsg;
+  descendants();
+  */
+
+  debug() << ">>> Preloading ParticlePropertySvc" << endmsg;
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   
-  msg << MSG::DEBUG << ">>> Retrieving CheckOverlap Tool" << endreq;
-  m_checkOverlap = tool<ICheckOverlap>(m_typeCheckOverlap);
-
-  msg << MSG::DEBUG << ">>> Retrieving Algorithm2ID Tool" << endreq;
-  m_algorithm2IDTool = tool<IAlgorithm2ID>("Algorithm2ID");
-
-  msg << MSG::DEBUG << ">>> Retrieving BTagging Tool" << endreq;
-  m_taggingTool = tool<IBTaggingTool>("BTaggingTool");
-
-  msg << MSG::DEBUG << ">>> Retrieving ParticleDescendants Tool" << endreq;
-  m_descendants = tool<IParticleDescendants>("ParticleDescendants");
-
   return StatusCode::SUCCESS;
 }
 
@@ -146,7 +122,7 @@ StatusCode DVAlgorithm::sysExecute () {
 
   StatusCode scGI = desktop()->getEventInput();
   if (scGI.isFailure()) {
-    err() << "Not able to fill PhysDesktop" << endreq;
+    err() << "Not able to fill PhysDesktop" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -154,11 +130,11 @@ StatusCode DVAlgorithm::sysExecute () {
   if (!sc) return sc;
 
   if (!m_setFilterCalled) {
-    warning() << "SetFilterPassed not called for this event!" << endreq;
+    warning() << "SetFilterPassed not called for this event!" << endmsg;
   }
 
   if (!m_avoidSelResult) sc = fillSelResult () ;
-  else verbose() << "Avoiding selresult" << endreq ;
+  else verbose() << "Avoiding selresult" << endmsg ;
   
   // Reset for next event
   m_setFilterCalled = false;
@@ -178,63 +154,63 @@ StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
 //=============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
 
-  std::string location = SelResultLocation::Default;
-  verbose() << "SelResult to be saved to " << location << endreq ;
+  std::string location = LHCb::SelResultLocation::Default;
+  verbose() << "SelResult to be saved to " << location << endmsg ;
 
-  SelResults* resultsToSave ;
+  LHCb::SelResults* resultsToSave ;
   // Check if SelResult contained has been registered by another algorithm
-  if ( exist<SelResults>(location) ){
-    verbose() << "SelResult exists already " << endreq ;
-    resultsToSave = get<SelResults>(location);
+  if ( exist<LHCb::SelResults>(location) ){
+    verbose() << "SelResult exists already " << endmsg ;
+    resultsToSave = get<LHCb::SelResults>(location);
   } else {
-    verbose() << "Putting new SelResult container " << endreq ;
-    resultsToSave = new SelResults();
+    verbose() << "Putting new SelResult container " << endmsg ;
+    resultsToSave = new LHCb::SelResults();
     StatusCode scRO = put(resultsToSave,location);
     if (scRO.isFailure()){
       err() << "Cannot register Selection Result summary at location: " 
-            << location << endreq;
+            << location << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
   // Create and fill selection result object
-  SelResult* myResult = new SelResult();
+  LHCb::SelResult* myResult = new LHCb::SelResult();
   myResult->setFound(filterPassed());
   myResult->setLocation( ("/Event/Phys/"+name()));
   verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
-            << endreq;
+            << endmsg;
   myResult->setDecay(m_decayDescriptor);
     
   if (filterPassed()) m_countFilterPassed++;
   m_countFilterWrite++;
   verbose() << "wrote " << filterPassed() << " -> " <<
-    m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
+    m_countFilterWrite << " & " << m_countFilterPassed << endmsg ;
 
   resultsToSave->insert(myResult);
   verbose() << "Number of objects in existingSelRes: "
-            << resultsToSave->size() << endreq;
+            << resultsToSave->size() << endmsg;
   return StatusCode::SUCCESS ;
 
 }
 
 //=============================================================================
-StatusCode DVAlgorithm::sysFinalize () {
+StatusCode DVAlgorithm::finalize () {
   
   if ((m_printSelResult) && (!m_avoidSelResult)){
     
     if (m_countFilterWrite < m_countFilterPassed ){
       warning() << "Executed " << m_countFilterWrite << 
         " times and flagged as passed " << m_countFilterPassed <<
-        " times" << endreq;      
+        " times" << endmsg;      
     } else if (m_countFilterWrite <= 0 ){      
       warning() << "Executed " << m_countFilterWrite << " times" 
-                << endreq;
+                << endmsg;
     } else if (m_countFilterPassed <= 0 ){
       always() << "No events selected in " << 
-        m_countFilterWrite << " calls." << endreq;
+        m_countFilterWrite << " calls." << endmsg;
     } else if (m_countFilterPassed == m_countFilterWrite ){
       always() << "All events selected in " << 
-        m_countFilterWrite << " calls." << endreq;
+        m_countFilterWrite << " calls." << endmsg;
     } else {
       double eta = (double)m_countFilterPassed/(double)m_countFilterWrite ;
       double delta = sqrt( eta*((double)1.-eta)/(double)m_countFilterWrite );
@@ -244,27 +220,21 @@ StatusCode DVAlgorithm::sysFinalize () {
       always() << "Passed " << m_countFilterPassed << 
         " times in " << m_countFilterWrite << " calls -> (" <<
         100.0*eta << "+/-" << 100.0*delta <<  ")%, rejection= " << 
-        r << "+/-" << re << endreq;
+        r << "+/-" << re << endmsg;
     }
   }
   
-  // finalize Algorithm base class -> calls finalize() 
-  StatusCode sc = Algorithm::sysFinalize();
-  if (!sc) return sc;
-  
   // finalize GaudiTupleAlg base class
-  sc = GaudiTupleAlg::finalize();
-  return sc;
+  return GaudiTupleAlg::finalize();
 
 }
  
 //=============================================================================
-void DVAlgorithm::imposeOutputLocation(std::string outputLocationString)
-{
-  if ( !m_pDesktop ) {
-    fatal() << "Desktop has not been created yet" << endreq;
+void DVAlgorithm::imposeOutputLocation(std::string outputLocationString){
+  if ( 0==desktop() ) {
+    fatal() << "Desktop has not been created yet" << endmsg;
   }
-  m_pDesktop->imposeOutputLocation(outputLocationString);  
+  desktop()->imposeOutputLocation(outputLocationString);  
   return;  
 }
 // ============================================================================
@@ -272,7 +242,49 @@ void DVAlgorithm::imposeOutputLocation(std::string outputLocationString)
 //=============================================================================
 int DVAlgorithm::getAlgorithmID(){
   if ( m_algorithmID < 0 ) {
-    m_algorithmID = m_algorithm2IDTool->idFromName(name());
+    m_algorithmID = algorithmID()->idFromName(name());
   }
   return  m_algorithmID ;
 }
+// ============================================================================
+// Get tools
+//=============================================================================
+template<class TYPE> 
+TYPE* DVAlgorithm::getTool ( const size_t index, const std::vector<std::string>& names , 
+                             std::vector<TYPE*>& tools, const IInterface* ptr ) const{
+  // the tool is already located properly?
+  if ( index < tools.size() ) { return tools[index] ; }
+    
+  // the tool need to be located 
+    
+  // is it possible to locate the tool in principle?
+  if ( index < names.size() ){
+    Assert( index < names.size() , 
+            "DVAlgorithm::getTools: The tool of type '"  
+            + System::typeinfoName( typeid(TYPE)) + "'/index='"
+            + boost::lexical_cast<std::string>(index) + 
+            "' could not be located" ) ;
+  }
+    
+  // locate only the minimal amount of tools
+  const size_t nT = tools.size() ;
+  for ( std::vector<std::string>::const_iterator iname = names.begin() + nT ; 
+        names.end() != iname ; ++iname ){
+    // have we load enough tools? 
+    if ( index < tools.size() ) { break ; }
+    TYPE* t = getTool<TYPE>( *iname, NULL, ptr ) ;
+    tools.push_back( t ) ; 
+  } ;
+    
+  return tools[index] ;
+} ;
+// ============================================================================
+// Get tool
+//=============================================================================
+template<class TYPE> 
+TYPE* DVAlgorithm::getTool( const std::string& name, TYPE* t, const IInterface* ptr ) const{
+  if ( 0==t ) {  // the tool is already located properly?
+    t = tool<TYPE>( name, ptr )  ;// else get it
+  }
+  return t ;
+} ;

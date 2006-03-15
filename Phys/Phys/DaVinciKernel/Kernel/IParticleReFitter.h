@@ -1,8 +1,17 @@
-// $Id: IParticleReFitter.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IParticleReFitter.h,v 1.3 2006-03-15 13:34:02 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2.4.2  2006/01/24 09:56:05  pkoppenb
+// small changes
+//
+// Revision 1.2.4.1  2006/01/17 08:54:45  pkoppenb
+// First DC06 version
+//
+// Revision 1.2  2005/06/09 13:10:40  pkoppenb
+// Joined with v3r3b1 branch
+//
 // Revision 1.1.2.1  2005/06/09 11:55:41  pkoppenb
 // New vertex interfaces
 // 
@@ -22,7 +31,7 @@
 // ============================================================================
 // forward declarations 
 // ============================================================================
-class Particle ;
+class LHCb::Particle ;
 // ============================================================================
 
 /** @class IParticleReFitter IParticleReFitter.h 
@@ -52,7 +61,7 @@ public:
    *  const IParticleReFitter* refitter = tool<IParticleRefitter>( ... ) ;
    * 
    *  // particle to be refit 
-   *  Particle* p = ... ;
+   *  LHCb::Particle* p = ... ;
    *
    *  StatusCode sc = refitter->reFit ( *p ) ;
    *  if ( sc.isFailure() ) { Warning("Error in reFit" , sc ) ; }
@@ -66,39 +75,15 @@ public:
    *  @param particle reference to the particle 
    *  @return statsu code 
    */
-  virtual StatusCode reFit ( Particle& particle ) const = 0 ;
-  
-  /** The basic method for "refit" of the particle
-   *
-   *  @code 
-   *
-   *  // locate the tool 
-   *  const IParticleReFitter* refitter = get<IParticleRefitter>( ... ) ;
-   * 
-   *  // particle to be refit 
-   *  Particle* p = ... ;
-   *
-   *  StatusCode sc = refitter->reFit ( p ) ;
-   *  if ( sc.isFailure() ) { Warning("Error in reFit" , sc ) ; }
-   *
-   *  @endcode  
-   *
-   *  @see Particle
-   *  @see GaudiAlgorithm::get
-   *  @see GaudiAlgorithm::Warning
-   *
-   *  @param particle pointer to the particle 
-   *  @return status code  
-   */
-  virtual StatusCode reFit ( Particle* particle ) const = 0 ;
+  virtual StatusCode reFit ( LHCb::Particle& particle ) const = 0 ;
   
   /** The method which allows to 
    *  refit a sequence of particles. The actual tyep of sequence
    *  is irrelevant, e.g. it could be 
    *  KeyedContainer<Particle>, std::vetctor<Particle> , 
-   *  SmartRef<Particle>, std::vector<Particle*>, etc..
+   *  SmartRef<Particle>, std::vector<LHCb::Particle*>, etc..
    *  Elements of the vector shoudl be convertible 
-   *  either to Parrticle& or Particle* 
+   *  either to Parrticle& or LHCb::Particle* 
    * 
    *  @code 
    *  
@@ -112,7 +97,7 @@ public:
    *
    *  @endcode 
    * 
-   *  @see Particle 
+   *  @see LHCb::Particle 
    *  @see GaudiAlgorithm::get
    *  @see GaudiAlgorithm::tool
    * 

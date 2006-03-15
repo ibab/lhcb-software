@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.7 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: ICheckOverlap.h,v 1.8 2006-03-15 13:34:01 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
 
@@ -8,11 +8,8 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-// Forward declarations
-class Vertex;
-class Particle;
-typedef std::vector<const Particle*> ConstParticleVector ;
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version)
 static const InterfaceID IID_ICheckOverlap("ICheckOverlap", 2, 1);
@@ -34,41 +31,36 @@ public:
   
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Argument: parts is a vector of pointers to particles.  
-  virtual bool ICheckOverlap::foundOverlap( ConstParticleVector & parts  ) = 0;
-  
-  /// backward-compatible methods
-  virtual bool ICheckOverlap::foundOverlap( ParticleVector & parts  ) = 0;
-  /// backward-compatible methods
-  virtual bool ICheckOverlap::foundOverlap( const ParticleVector & parts  ) = 0; 
+  virtual bool foundOverlap( const LHCb::Particle::ConstVector & parts  ) = 0;
 
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const Particle* ) = 0;
+  virtual bool foundOverlap( const LHCb::Particle* ) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const Particle*, const Particle* ) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*, const LHCb::Particle* ) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const Particle*, const Particle*, const Particle*) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*, const LHCb::Particle*, const LHCb::Particle*) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const Particle*,const Particle*,
-                             const Particle*,const Particle*) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,
+                             const LHCb::Particle*,const LHCb::Particle*) = 0;
 
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Continue a previous check using the contents of the vector of pointers 
   /// to protoparticles.(Most intended for internal use by the other methods).
   /// Arguments: parts is a vector of pointer to particles. 
   ///            proto is a vector of pointers to protoparticles.
-  virtual bool foundOverlap( ConstParticleVector & parts,
-                     std::vector<const ContainedObject* > & proto ) = 0 ;
+  virtual bool foundOverlap( const LHCb::Particle::ConstVector & parts,
+                             std::vector<const LHCb::ProtoParticle* > & proto ) = 0 ;
   
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  virtual StatusCode removeOverlap( ParticleVector& ) = 0;
+  virtual StatusCode removeOverlap( LHCb::Particle::ConstVector& ) = 0;
 
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  virtual StatusCode removeOverlap( ConstParticleVector& ) = 0;
+  virtual StatusCode removeOverlap( LHCb::Particle::Vector& ) = 0;
 
 protected:
   

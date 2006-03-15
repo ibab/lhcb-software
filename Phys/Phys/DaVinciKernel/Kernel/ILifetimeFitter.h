@@ -1,14 +1,12 @@
-// $Id: ILifetimeFitter.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: ILifetimeFitter.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ILIFETIMEFITTER_H 
 #define DAVINCIKERNEL_ILIFETIMEFITTER_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
 
-// Forward declarations
-class Vertex;
-class Particle;
-class StatusCode;
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
 
 static const InterfaceID IID_ILifetimeFitter("ILifetimeFitter", 1 , 0); 
 
@@ -24,11 +22,11 @@ class ILifetimeFitter : virtual public IAlgTool {
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ILifetimeFitter; }
 
-  /// Perform mass contrains vertex fit.
+  /// Get lifetime
   /// inputs: Vertex corresponding to the assumed production point
-  ///         Particle itself
+  ///         LHCb::Particle itself
   /// output: resulting lifetime and error, chisq.
-  virtual StatusCode fit( const Vertex&, const Particle&, 
+  virtual StatusCode fit( const LHCb::Vertex&, const LHCb::Particle&, 
                           double& lifetime, double& error,
                           double& chisq) const = 0; 
 

@@ -1,4 +1,4 @@
-// $Id: IBestParticles.h,v 1.2 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IBestParticles.h,v 1.3 2006-03-15 13:34:01 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IBESTPARTICLES_H 
 #define DAVINCIKERNEL_IBESTPARTICLES_H 1
 
@@ -20,14 +20,14 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IBestParticles; }
-  virtual StatusCode Candidates( const ParticleVector & input,
-                                 ParticleVector& output) = 0;
+  virtual StatusCode Candidates( const LHCb::Particle::ConstVector & input,
+                                 LHCb::Particle::ConstVector& output) = 0;
   //  virtual StatusCode Candidates( const Particles & input,
   //                                 Particles& output) = 0;
-  virtual StatusCode BestCandidate( ParticleVector& input,
-                                    Particle* output) = 0;
+  virtual StatusCode BestCandidate( const LHCb::Particle::ConstVector& input,
+                                    const LHCb::Particle* output) = 0;
   //  virtual StatusCode BestCandidate( Particles& input,
-  //                                   Particle* output) = 0;
+  //                                   LHCb::Particle* output) = 0;
 
 protected:
 

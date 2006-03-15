@@ -1,4 +1,4 @@
-// $Id: IFilterCriterion.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IFilterCriterion.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IFILTERCRITERION_H 
 #define DAVINCIKERNEL_IFILTERCRITERION_H 1
 
@@ -28,10 +28,10 @@ public:
   }
 
   /// Test if filter is satisfied
-  virtual bool isSatisfied( const Particle* const & ) = 0;
+  virtual bool isSatisfied( const LHCb::Particle* const & ) = 0;
 
   /// Test if filter is satisfied
-  virtual bool operator()( const Particle* const & ) = 0;
+  virtual bool operator()( const LHCb::Particle* const & ) = 0;
 
 };
 

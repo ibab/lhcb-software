@@ -1,9 +1,8 @@
-// $Id: DaVinciKernel_load.cpp,v 1.4 2006-01-17 12:50:08 pkoppenb Exp $
-// Include files 
-
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ObjectFactory.h"
 
+/// @todo Restore Particle2VertexAsct, needed for Particle to PV association
+/*
 // Associator tool
 #include "Kernel/Particle2VertexAsct.h"
 #include "Relations/RelationMACROs.h"
@@ -11,6 +10,7 @@
 
 DECLARE_TOOL_FACTORY( Particle2VertexAsct);
 DECLARE_DATAOBJECT_FACTORY( Particle2VertexTable);
+*/
 
 // Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
 // The statements are like that:
@@ -23,8 +23,8 @@ DECLARE_DATAOBJECT_FACTORY( Particle2VertexTable);
 DECLARE_FACTORY_ENTRIES( DaVinciKernel ) {
 
   DECLARE_TOOL( PhysDesktop ); 
-  DECLARE_TOOL( Particle2VertexAsct );
-  DECLARE_DATAOBJECT( Particle2VertexTable );
+//  DECLARE_TOOL( Particle2VertexAsct );
+//  DECLARE_DATAOBJECT( Particle2VertexTable );
   
 }
 

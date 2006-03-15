@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IParticleFilter.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPARTICLEFILTER_H 
 #define DAVINCIKERNEL_IPARTICLEFILTER_H 1
 
@@ -33,36 +33,36 @@ public:
   }
 
   /// Filter
-  virtual StatusCode filter( const ParticleVector&, 
-                             ParticleVector& ) = 0;
+  virtual StatusCode filter( const LHCb::Particle::ConstVector&, 
+                             LHCb::Particle::ConstVector& ) = 0;
   
   /// Filter negative particles
-  virtual StatusCode filterNegative( const ParticleVector&, 
-                                     ParticleVector& ) = 0; 
+  virtual StatusCode filterNegative( const LHCb::Particle::ConstVector&, 
+                                     LHCb::Particle::ConstVector& ) = 0; 
 
   /// Filter positive particles
-  virtual StatusCode filterPositive( const ParticleVector&, 
-                                     ParticleVector& ) = 0; 
+  virtual StatusCode filterPositive( const LHCb::Particle::ConstVector&, 
+                                     LHCb::Particle::ConstVector& ) = 0; 
   
    /// get particles by PID
   /// These two methods allow to get a subset of particles
   /// with the same PID without having to use the PIDFilterCriterion
   /// -> The same instance of ParticleFilter can be used for all
   /// Particles. 
-  /// ParticleVector myKaons, myPiPlus, myPiMinus;
+  /// LHCb::Particle::ConstVector myKaons, myPiPlus, myPiMinus;
   /// sc = particleFilter()->filterByPID(parts, myKaons,   "K+");
   /// sc = particleFilter()->filterByPID(parts, myPiPlus,  "pi+", false);
   /// sc = particleFilter()->filterByPID(parts, myPiMinus, "pi-", false);
   /// would return a vector of kaons (both sign) and pions.
   ///
-  virtual StatusCode filterByPID( const ParticleVector&,
-                                  ParticleVector&,  
+  virtual StatusCode filterByPID( const LHCb::Particle::ConstVector&,
+                                  LHCb::Particle::ConstVector&,  
                                   const std::string&, 
                                   const bool alsoCC = true ) = 0;
 
   /// get particles by PID
-  virtual StatusCode filterByPID( const ParticleVector&,
-                                  ParticleVector&,  
+  virtual StatusCode filterByPID( const LHCb::Particle::ConstVector&,
+                                  LHCb::Particle::ConstVector&,  
                                   const int& pid, 
                                   const bool alsoCC = true ) = 0;
                     

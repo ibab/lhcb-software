@@ -1,6 +1,108 @@
-! $Id: release.notes,v 1.88 2006-02-03 07:17:28 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+!============================================================================
+!
+! DC06 branch v4r0b based on v3r9
+!
+
+! 2006-03-14 - J. Palacios
+  IDecayFinder.h: Add temporary typedef for KeyedContainer of const Particle
+                  as LHCb::ConstParticles. To be removed once GOD produces this
+                  automatically in Particle.h header file.
+                  Change hasDecay and findDecay methods signatures to use
+                  LHCb::ConstParticles.
+
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - Kernel/Particle2VertexAsct.h
+    . Removed
+
+! 2006-02-16 - P. Koppenburg for Vanya Belyaev
+  . Slight change of signatures for two methods
+
+! 2006-02-16 - P. Koppenburg
+  . Joined changes from DaVinci v12r16 (head)
+
+! 2006-02-16 - P. Koppenburg
+  - Kernel/INewDirectionFitter.h
+    . Removed. The NewDirectionFitter should inherit from IDirectionFit.h
+
+! 2006-02-03 - P. Koppenburg
+  Joined changes to v3r10:
+  - Kernel/IBTaggingTool.h
+    . No inclusion of DVAlgorithm
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.{cpp,h}
+  - src/Lib/DVAlgorithm.cpp
+    . Make sure each DVAlgorithm always writes out something to TES
+  - src/component/PhysDesktop.cpp
+    . Ignore OutputLocation of parent algorithm if it is ""
+  - src/component/PhysDesktop.cpp
+    . Issue primary vertex empty container warning only if primary
+      vertices are requested
+  - Kernel/Particle2VertexAsct.h
+    . Moved from DaVinciFilter. 
+
+! 2005-01-20 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+  - Kernel/IParticleMaker.h
+    . Use ConstVectors throughout.
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+    . Kill saveTrees(Vertex::Vector) method
+       
+! 2005-01-19 - P. Koppenburg
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IVertexFit.h
+    . Use explicitly LHCb::Particle::ConstVector instead of the obscure 
+      "Daughters" typedef
+       
+! 2005-01-17 - P. Koppenburg
+  First move to new Physics event model (PEM) for DC06. Package compiles.
+  - Modernize DVAlgorithm
+    . Remove old vertex fitter interfaces
+    . Link to new IVertexFit interface
+    . New getTool<IXX> method allowing several tool instances to be accessed
+      by same method. 
+  - Use namespace LHCb.
+  - Use LHCb::Particle::ConstVector instead of ParticleVector. mm Vertex.
+  - Use Gaudi matrices instead of CLHEP matrices
+  - Removed all old vertex fitter interfaces
+  - Removed deprecated PhysDesktop methods
+  - Added Particle2VertexAsct, but not yet active as Relations are missing
+
+! 2005-01-20 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+  - Kernel/IParticleMaker.h
+    . Use ConstVectors throughout.
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+    . Kill saveTrees(Vertex::Vector) method
+       
+! 2005-01-19 - P. Koppenburg
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IVertexFit.h
+    . Use explicitly LHCb::Particle::ConstVector instead of the obscure 
+      "Daughters" typedef
+       
+! 2005-01-17 - P. Koppenburg
+  First move to new Physics event model (PEM) for DC06. Package compiles.
+  - Modernize DVAlgorithm
+    . Remove old vertex fitter interfaces
+    . Link to new IVertexFit interface
+    . New getTool<IXX> method allowing several tool instances to be accessed
+      by same method. 
+  - Use namespace LHCb.
+  - Use LHCb::Particle::ConstVector instead of ParticleVector. mm Vertex.
+  - Use Gaudi matrices instead of CLHEP matrices
+  - Removed all old vertex fitter interfaces
+  - Removed deprecated PhysDesktop methods
+  - Added Particle2VertexAsct, but not yet active as Relations are missing
 
 !========================== DaVinciKernel v3r10 2006-02-03 ===================
 ! 2006-02-02 - P. Koppenburg

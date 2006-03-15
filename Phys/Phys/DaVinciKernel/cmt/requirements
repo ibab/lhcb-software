@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2006-01-17 12:40:08 pkoppenb Exp $
+# $Id: requirements,v 1.27 2006-03-15 13:34:03 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,11 +6,11 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciKernel
-version           v3r10
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src DaVinciTools Kernel
+branches          cmt doc src Kernel
 
 # Exported header files
 #============================================================================
@@ -20,7 +20,7 @@ include_dirs     $(DAVINCIKERNELROOT)
 #============================================================================
 use PhysEvent  v* Event
 use GaudiAlg   v* 
-use Relations  v*   Kernel
+use Relations  v* Kernel
 
 # Linker library building rule
 #============================================================================

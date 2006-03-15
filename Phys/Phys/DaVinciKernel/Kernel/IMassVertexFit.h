@@ -1,7 +1,3 @@
-// $Id: IMassVertexFit.h,v 1.3 2005-12-21 13:52:38 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
-// ============================================================================
 #ifndef DAVINCIKERNEL_IMASSVERTEXFIT_H 
 #define DAVINCIKERNEL_IMASSVERTEXFIT_H 1
 // ============================================================================
@@ -9,8 +5,8 @@
 // ============================================================================
 // VertexFitter 
 // ============================================================================
-#include "VertexFitter/IParticleCombiner.h"
-#include "VertexFitter/IParticleReFitter.h"
+#include "Kernel/IParticleCombiner.h"
+#include "Kernel/IParticleReFitter.h"
 // ============================================================================
 
 /** @class IMassVertexFit IMassVertexFit.h
@@ -33,9 +29,9 @@
  *  
  *  @code 
  *
- *  StatusCode combine( const Daughters& dauhters , 
- *                      Particle&        mother   , 
- *                      Vertex&          vertex   ) const 
+ *  StatusCode combine( const LHCb::Particle::ConstVector& dauhters , 
+ *                      LHCb::Particle&        mother   , 
+ *                      LHCb::Vertex&          vertex   ) const 
  *   {
  *      return fit( daughters , mother , vertex ) ;
  *   };
@@ -48,9 +44,9 @@
  *  
  *  @code 
  *
- *  StatusCode reFit( Particle& particle ) const 
+ *  StatusCode reFit( LHCb::Particle& particle ) const 
  *  {
- *     Vertex* vertex = particle->endVertex() ;
+ *     LHCb::Vertex* vertex = particle->endVertex() ;
  *     return fit( vertex->products().begin() , 
  *                 vertex->products().end  () , 
  *                 particle , *vertex         ) ; 
@@ -67,15 +63,6 @@ class IMassVertexFit :
 {
 public:
   
-  /** The actual type for container of daughter particles 
-   *  the actual type is imported from interface IParticleCombiner 
-   *  @see IParticleCombiner 
-   *  @see IParticleCombiner::Daughters
-   */
-  typedef IParticleCombiner::Daughters   Daughters;
-  
-public:
-  
   /** The major method for mass-vertex constrain fit
    *  The particles from the input container container  are fit to produce 
    *  "mother" particle and its decay vertex.
@@ -90,14 +77,14 @@ public:
    *  {
    *     for( ... ipi2 = ... ; ... ; ++ipi2 ) 
    *
-   *        const Particle* pi1 = *ipi1 ;
-   *        const Particle* pi2 = *ipi2 ;
+   *        const LHCb::Particle* pi1 = *ipi1 ;
+   *        const LHCb::Particle* pi2 = *ipi2 ;
    *   
-   *        IMassVertexFit::Daughters daughters ;
+   *        IMassVertexFit::LHCb::Particle::ConstVector daughters ;
    *        daughters.push_back( pi1 ) ;
    *        daughters.push_back( pi2 ) ;
    *   
-   *        Particle K0S  ; 
+   *        LHCb::Particle K0S  ; 
    *        Vertex   Vrtx ; 
    *   
    *        StatusCode sc = fitter->fit( daughters ,
@@ -113,7 +100,7 @@ public:
    *
    *  @endcode 
    *
-   *  @see Particle 
+   *  @see LHCb::Particle 
    *  @see Vertex 
    *  @see GaudiAlgorithm::tool
    *  @see GaudiAlgorithm::Warning 
@@ -124,10 +111,10 @@ public:
    *  @param vertex    the decay vertex of mother particle (output)
    */
   virtual StatusCode  fit
-  ( const Daughters&  daughters ,  
+  ( const LHCb::Particle::ConstVector&  daughters ,  
     const double      mass      ,
-    Particle&         mother    , 
-    Vertex&           vertex    ) const = 0 ;
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const = 0 ;
 
   /** The major method for mass-vertex constrain fit
    *  The particles from the input container container  are fit to produce 
@@ -145,14 +132,14 @@ public:
    *  {
    *     for( ... ipi2 = ... ; ... ; ++ipi2 ) 
    *
-   *        const Particle* pi1 = *ipi1 ;
-   *        const Particle* pi2 = *ipi2 ;
+   *        const LHCb::Particle* pi1 = *ipi1 ;
+   *        const LHCb::Particle* pi2 = *ipi2 ;
    *   
-   *        IMassVertexFit::Daughters daughters ;
+   *        IMassVertexFit::LHCb::Particle::ConstVector daughters ;
    *        daughters.push_back( pi1 ) ;
    *        daughters.push_back( pi2 ) ;
    *   
-   *        Particle K0S  ; 
+   *        LHCb::Particle K0S  ; 
    *        K0S.setParticleID( 310 ) ;    // << This line !!!
    *        Vertex   Vrtx ; 
    *   
@@ -179,21 +166,21 @@ public:
    *  @param vertex    the decay vertex of mother particle (output)
    */
   virtual StatusCode  fit
-  ( const Daughters&  daughters ,  
-    Particle&         mother    , 
-    Vertex&           vertex    ) const = 0 ;
+  ( const LHCb::Particle::ConstVector&  daughters ,  
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const = 0 ;
   
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles, 
    *   e.g. following types could be  used:
-   *    - ParticleVector
-   *    - std::vector<Particle*>
-   *    - std::vector<const Particle*>
+   *    - LHCb::Particle::ConstVector
+   *    - std::vector<LHCb::Particle*>
+   *    - std::vector<const LHCb::Particle*>
    *    - Particles 
    *    - SmartRefVector<Particle> ..etc 
    *
    *  The elements of the container must be convertible 
-   *   into "const Particle*"
+   *   into "const LHCb::Particle*"
    * 
    *  @see Vertex 
    *  @see Particle
@@ -209,24 +196,24 @@ public:
   ( DAUGHTER          begin     ,
     DAUGHTER          end       ,
     const double      mass      ,
-    Particle&         mother    , 
-    Vertex&           vertex    ) const 
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const 
   {
-    const Daughters children = Daughters( begin , end ) ;
+    const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return fit( children , mass , mother , vertex ) ;
   };
 
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles,
    *   e.g. following types could be  used:
-   *    - ParticleVector
-   *    - std::vector<Particle*>
-   *    - std::vector<const Particle*>
+   *    - LHCb::Particle::ConstVector
+   *    - std::vector<LHCb::Particle*>
+   *    - std::vector<const LHCb::Particle*>
    *    - Particles 
    *    - SmartRefVector<Particle> ..etc 
    *
    *  The elements of the container must be convertible 
-   *   into "const Particle*"
+   *   into "const LHCb::Particle*"
    * 
    *  The mass is deduced from Particle::particleID()
    *  
@@ -243,10 +230,10 @@ public:
   inline StatusCode   fit 
   ( DAUGHTER          begin     ,
     DAUGHTER          end       ,
-    Particle&         mother    , 
-    Vertex&           vertex    ) const 
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const 
   {
-    const Daughters children = Daughters( begin , end ) ;
+    const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return fit( children , mother , vertex ) ;
   };
 

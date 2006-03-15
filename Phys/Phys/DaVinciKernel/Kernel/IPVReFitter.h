@@ -6,8 +6,7 @@
 
 // Forward declarations
 class StatusCode;
-class Vertex;
-class Particle;
+#include "Event/Particle.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version)
 static const InterfaceID IID_IPVReFitter("IPVReFitter", 1, 0);
@@ -26,10 +25,10 @@ public:
 
  
   /// refit PV
-  virtual StatusCode reFit(Vertex* ) = 0;
+  virtual StatusCode reFit(LHCb::Vertex* ) = 0;
 
-  /// remove track used for a (B) Particle and refit PV
-  virtual StatusCode remove(Particle*,  Vertex*) = 0;
+  /// remove track used for a (B) LHCb::Particle and refit PV
+  virtual StatusCode remove(LHCb::Particle*,  LHCb::Vertex*) = 0;
  
 protected:
 

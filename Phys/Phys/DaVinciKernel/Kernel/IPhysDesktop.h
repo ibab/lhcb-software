@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.7 2006-01-31 14:40:32 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.8 2006-03-15 13:34:03 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -7,8 +7,7 @@
 
 // Forward declarations
 class StatusCode;
-class PrimVertex;
-#include "Event/Vertex.h"
+#include "Event/PrimVertex.h"
 #include "Event/Particle.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version)
@@ -18,6 +17,9 @@ static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
  *  Interface for the Desk Top
  *  upon which the user keeps his particles and vertices
+ *  
+ *  @todo Method to create a table associating Particles and the PV that have been used
+ *
  *  @author Sandra Amato
  *  @date   18/02/2002
  */
@@ -31,42 +33,37 @@ public:
   virtual StatusCode getEventInput() = 0;
 
   /// Retrieve the particles containers
-  virtual const ParticleVector& particles() = 0;
-
-  /// Retrieve the vertex container : primaries and secondaries!
-  virtual const VertexVector& vertices() = 0;
+  virtual const LHCb::Particle::ConstVector particles() = 0;
 
   /// Retrieve the PV from vertex container
-  virtual const VertexVector& primaryVertices() = 0;
+  virtual const LHCb::PrimVertex::ConstVector& primaryVertices() = 0;
 
   /// Retrieve the secondary vertices
-  virtual const VertexVector& secondaryVertices() = 0;
+  virtual const LHCb::Vertex::ConstVector secondaryVertices() = 0;
 
   /// Add the particles  to the Desktop
-  virtual Particle* createParticle( Particle* input=0 ) = 0;
+  virtual LHCb::Particle* createParticle( LHCb::Particle* input=0 ) = 0;
 
   /// Add the vertices  to the Desktop
-  virtual Vertex* createVertex( Vertex* input=0 ) = 0;
+  virtual LHCb::Vertex* createVertex( LHCb::Vertex* input=0 ) = 0;
 
   /// Save the particles to the TES
   virtual StatusCode saveDesktop() = 0;
  
   /// Save the particles to the TES (used by HLT)
-  virtual StatusCode saveDesktop(ParticleVector&,VertexVector& ) = 0;
+  virtual StatusCode saveDesktop(LHCb::Particle::ConstVector&,
+                                 LHCb::Vertex::ConstVector& ) = 0;
  
   /// Save a vector of Particles
   /// If a particle is composite its descendents are also saved
-  virtual StatusCode saveTrees( ParticleVector& ) = 0;
-  
-  /// Save a vector of vertices. all descendents of a vertex are also saved (not used)
-  virtual StatusCode saveTrees( VertexVector& ) = 0;
+  virtual StatusCode saveTrees( LHCb::Particle::ConstVector& ) = 0;
 
   /// Save all Particles with a given particleID code
   virtual StatusCode saveTrees( int pid ) = 0;
 
   /// Clone all particles given by a list. This duplicates information on the TES
   /// and should be used only when necessary. (Used by Filters)
-  virtual StatusCode cloneTrees( ParticleVector& ) = 0;
+  virtual StatusCode cloneTrees( LHCb::Particle::ConstVector& ) = 0;
 
   /// Impose output location
   virtual void imposeOutputLocation(std::string outputLocationString) = 0;
@@ -75,15 +72,15 @@ public:
   virtual std::string getOutputLocation() = 0 ;
   
   /// Find all particles & vertices in a tree. 
-  // virtual void findAllTree( Particle*, ParticleVector&, VertexVector& ) = 0;
-  // virtual void findAllTree( Vertex*, ParticleVector&, VertexVector& )= 0;
+  // virtual void findAllTree( LHCb::Particle*, LHCb::Particle::ConstVector&, LHCb::Vertex::ConstVector& ) = 0;
+  // virtual void findAllTree( LHCb::Vertex*, LHCb::Particle::ConstVector&, LHCb::Vertex::ConstVector& )= 0;
   
   /// Retrieve the PV from vertex container !WARNING: does a dynamic_cast 
   template <class V> const std::vector<const V*> primaryVertices(){
-    const VertexVector pvs = primaryVertices() ;
+    const LHCb::PrimVertex::ConstVector pvs = primaryVertices() ;
     std::vector<const V*> primaries;
-    for ( VertexVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
-      const V* pv = dynamic_cast<V*>(*ipv) ;
+    for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
+      const V* pv = dynamic_cast<const V*>(*ipv) ;
       primaries.push_back(pv);
     }
     return primaries ;

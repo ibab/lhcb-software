@@ -1,8 +1,14 @@
-// $Id: IJetMaker.h,v 1.2 2005-07-27 08:12:38 ibelyaev Exp $
+// $Id: IJetMaker.h,v 1.3 2006-03-15 13:34:02 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2.4.1  2006/01/17 08:54:45  pkoppenb
+// First DC06 version
+//
+// Revision 1.2  2005/07/27 08:12:38  ibelyaev
+//  improve Doxygen comments for IJetMaker interface
+//
 // Revision 1.1  2005/07/26 16:26:17  ibelyaev
 //  add new abstract interface IJetMaker
 // 
@@ -23,7 +29,8 @@
 // ============================================================================
 // forward decalrations 
 // ============================================================================
-class Particle ;
+#include "Event/Particle.h"
+
 // ============================================================================
 
 /** @class IJetMaker IJetMaker.h Kernel/IJetMaker.h
@@ -41,9 +48,9 @@ class IJetMaker : public virtual IAlgTool
 {
 public: 
   /// the actual type of input data container 
-  typedef std::vector<const Particle*>   Input  ;  
+  typedef LHCb::Particle::ConstVector   Input  ;  
   /// the actual type of output container of jets 
-  typedef std::vector<Particle*>         Jets   ;  
+  typedef LHCb::Particle::Vector        Jets   ;  
 public:
   
   /** The main method: jet-finding procedure 
@@ -60,7 +67,7 @@ public:
    *  // // create the input container 
    *  // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
    *  // 2) 
-   *  // ParticleVector particles = .... ;
+   *  // LHCb::Particle::ConstVector particles = .... ;
    *  // // create the input container 
    *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
    *  // 3) 
@@ -79,7 +86,7 @@ public:
    *        jets.end() != iJet ; ++iJet ) 
    *    {
    *        // get the jet 
-   *        Particle* jet = *iJet ;
+   *        LHCb::Particle* jet = *iJet ;
    *    }
    *
    *  @endcode 
@@ -97,8 +104,8 @@ public:
   ( const Input& input , Jets& jets ) const = 0 ;
   
   /** perform jet-finding procedute getting the input data from
-   *  arbitrary sequence of data, convertible to "const Particle*", 
-   *  e.g. ParticleVector, Particles, LoKi::Range, etc... 
+   *  arbitrary sequence of data, convertible to "const LHCb::Particle*", 
+   *  e.g. LHCb::Particle::ConstVector, Particles, LoKi::Range, etc... 
    *
    *  @code 
    *  
@@ -121,7 +128,7 @@ public:
    *        jets.end() != iJet ; ++iJet ) 
    *    {
    *        // get the jet 
-   *        Particle* jet = *iJet ;
+   *        LHCb::Particle* jet = *iJet ;
    *    }
    *
    *  @endcode 
@@ -149,7 +156,7 @@ public:
    *        jets.end() != iJet ; ++iJet ) 
    *    {
    *        // get the jet 
-   *        Particle* jet = *iJet ;
+   *        LHCb::Particle* jet = *iJet ;
    *    }
    *
    *  @endcode 

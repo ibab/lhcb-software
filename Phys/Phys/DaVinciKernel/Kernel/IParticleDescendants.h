@@ -1,4 +1,4 @@
-// $Id: IParticleDescendants.h,v 1.1 2005-10-21 14:47:04 pkoppenb Exp $
+// $Id: IParticleDescendants.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef KERNEL_IPARTICLEDESCENDANTS_H 
 #define KERNEL_IPARTICLEDESCENDANTS_H 1
 
@@ -26,13 +26,13 @@ public:
   static const InterfaceID& interfaceID() { return IID_IParticleDescendants; }
 
   // Return all descendants of a Particle
-  virtual const ParticleVector descendants(const Particle* ) = 0 ;
+  virtual const LHCb::Particle::ConstVector descendants(const LHCb::Particle* ) = 0 ;
   
   // Return all descendants of level i for a Particle
-  virtual const ParticleVector descendants(const Particle*, int ) = 0 ;
+  virtual const LHCb::Particle::ConstVector descendants(const LHCb::Particle*, int ) = 0 ;
   
   // Return all stable descendants of a Particle
-  virtual const ParticleVector finalStates(const Particle* ) = 0 ;
+  virtual const LHCb::Particle::ConstVector finalStates(const LHCb::Particle* ) = 0 ;
 
 protected:
 

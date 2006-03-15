@@ -1,4 +1,3 @@
-// $Id: IBTaggingTool.h,v 1.3 2006-02-02 12:16:46 pkoppenb Exp $
 #ifndef BTAGGINGTOOL_IBTAGGINGTOOL_H
 #define BTAGGINGTOOL_IBTAGGINGTOOL_H 1
 
@@ -25,9 +24,9 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IBTaggingTool; };
 
-  virtual StatusCode tag( FlavourTag&, const Particle* ) = 0;
-  virtual StatusCode tag( FlavourTag&, const  Particle*, const  Vertex* ) = 0;
-  virtual StatusCode tag( FlavourTag&, const  Particle*, const  Vertex*,
-			   ParticleVector& ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle* ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle*, const  LHCb::Vertex* ) = 0;
+  virtual StatusCode tag( LHCb::FlavourTag&, const LHCb::Particle*, const  LHCb::Vertex*,
+			   LHCb::Particle::ConstVector& ) = 0;
 };
 #endif // BTAGGINGTOOL_IBTAGGINGTOOL_H

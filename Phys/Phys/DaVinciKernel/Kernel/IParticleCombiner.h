@@ -1,10 +1,7 @@
-// $Id: IParticleCombiner.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IParticleCombiner.h,v 1.3 2006-03-15 13:34:02 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.3 $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.2.1  2005/06/09 11:55:41  pkoppenb
-// New vertex interfaces
 // 
 // ============================================================================
 #ifndef VERTEXFITTER_IPARTICLECOMBINER_H 
@@ -21,8 +18,7 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IAlgTool.h"
 // ============================================================================
-class Particle ;
-class Vertex   ;
+#include "Event/Particle.h"
 
 /** @class IParticleCombiner IParticleCombiner.h 
  * 
@@ -37,9 +33,8 @@ class IParticleCombiner : virtual public IAlgTool
 public:
   
   /** the actual type for containe rof daughter particles 
-   *  Important: the daughetr are considered to have "const" qualifier!
+   *  Important: the daughters are considered to have "const" qualifier!
    */
-  typedef std::vector<const Particle*> Daughters ;
   
 public:
   
@@ -63,14 +58,14 @@ public:
    *  {
    *     for( ... ipi2 = ... ; ... ; ++ipi2 ) 
    *     {
-   *        const Particle* pi1 = *ipi1 ;
-   *        const Particle* pi2 = *ipi2 ;
+   *        const LHCb::Particle* pi1 = *ipi1 ;
+   *        const LHCb::Particle* pi2 = *ipi2 ;
    *   
-   *        IParticleCombiner::Daughters daughters ;
+   *        IParticleCombiner::LHCb::Particle::ConstVector daughters ;
    *        daughters.push_back( pi1 ) ;
    *        daughters.push_back( pi2 ) ;
    *   
-   *        Particle K0S  ; 
+   *        LHCb::Particle K0S  ; 
    *        Vertex   Vrtx ; 
    *   
    *        StatusCode sc = combiner->combine( daughters , K0S , Vrtx ) ;
@@ -89,13 +84,13 @@ public:
    *  @return status code 
    */
   virtual StatusCode combine
-  ( const Daughters&  daughters ,  
-    Particle&         mother    , 
-    Vertex&           vertex    ) const = 0 ;
+  ( const LHCb::Particle::ConstVector&  daughters ,  
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const = 0 ;
   
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles, e.g. 
-   *  ParticleVector, Particles, SmartRefVector<Particle>, etc.. 
+   *  LHCb::Particle::ConstVector, Particles, SmartRefVector<Particle>, etc.. 
    *
    *  Also this signature allow to make an easy "refit"/"recombine"
    *  of the mother particle, e.g.
@@ -105,7 +100,7 @@ public:
    *   // locate the tool  
    *   const IParticleCombiner* combiner = get<IParticleCombiner>( ... ) 
    *
-   *   Particle*          mother = ... ;  
+   *   LHCb::Particle*          mother = ... ;  
    *   
    *   StatusCode sc = combiner->combine
    *   (  mother->vertex->products().begin() , 
@@ -128,10 +123,10 @@ public:
   inline StatusCode   combine 
   ( DAUGHTER          begin     ,
     DAUGHTER          end       ,
-    Particle&         mother    , 
-    Vertex&           vertex    ) const 
+    LHCb::Particle&         mother    , 
+    LHCb::Vertex&           vertex    ) const 
   {
-    const Daughters children = Daughters( begin , end ) ;
+    const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return combine( children , mother , vertex ) ;
   };
   

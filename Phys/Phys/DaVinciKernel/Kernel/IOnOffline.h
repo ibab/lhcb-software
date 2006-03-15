@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.3 2005-10-18 15:44:38 pkoppenb Exp $
+// $Id: IOnOffline.h,v 1.4 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -11,7 +11,7 @@
 
 static const InterfaceID IID_IOnOffline ( "IOnOffline", 2, 0 );
 
-/** @class IOnOfflineTool IOnOfflineTool.h Kernel/IOnOffline.h
+/** @class IOnOffline IOnOffline.h Kernel/IOnOffline.h
  *  
  *  Tool that tells the application if one runs in On or Offline Mode
  *  Now uses context. Can only be used as private tool.

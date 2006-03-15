@@ -1,4 +1,4 @@
-// $Id: IParticleMaker.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IParticleMaker.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPARTICLEMAKER_H 
 #define DAVINCIKERNEL_IPARTICLEMAKER_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include "Event/Particle.h"
 
 static const InterfaceID IID_IParticleMaker("IParticleMaker", 1 , 0);
 
@@ -24,8 +25,8 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IParticleMaker; }
   
-  /// Dispatch the makong of particles 
-  virtual StatusCode makeParticles( ParticleVector & parts ) = 0;
+  /// Dispatch the making of particles 
+  virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts ) = 0;
   
 
 };

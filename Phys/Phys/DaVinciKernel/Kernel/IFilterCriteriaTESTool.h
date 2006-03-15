@@ -1,4 +1,4 @@
-// $Id: IFilterCriteriaTESTool.h,v 1.1 2005-06-28 15:32:27 lazzecri Exp $
+// $Id: IFilterCriteriaTESTool.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IFILTERCRITERIATESTOOL_H
 #define DAVINCITOOLS_IFILTERCRITERIATESTOOL_H 1
 
@@ -13,7 +13,7 @@
 class IFilterCriterion;
 
 // Event
-class Particle;
+#include "Event/Particle.h"
 #include "Event/FilterCriterionResult.h"
 
 static const InterfaceID IID_IFilterCriteriaTESTool ( "IFilterCriteriaTESTool", 1, 0 );
@@ -31,7 +31,7 @@ class IFilterCriteriaTESTool : virtual public IAlgTool {
 
 public: // definitions
 
-  typedef std::vector<const FilterCriterionResult *> ResultsVector;
+  typedef std::vector<const LHCb::FilterCriterionResult *> ResultsVector;
 
 public:
 
@@ -40,11 +40,11 @@ public:
 
   /// Save the given filter result to the TES container
   virtual bool saveFilterResult( IFilterCriterion * critTool,
-                                 Particle * part,
+                                 LHCb::Particle * part,
                                  const bool result ) const = 0;
 
   /// Access to the vector of all filter results
-  virtual const FilterCriterionResults * criterionResults() const = 0;
+  virtual const LHCb::FilterCriterionResults * criterionResults() const = 0;
 
   /// Returns a vector of all filter results that either failed or succeeded
   virtual bool criterionResults( ResultsVector & results,
@@ -56,7 +56,7 @@ public:
 
   /// Returns all filter results that were applied to a given particle
   virtual bool criterionResults( ResultsVector & results,
-                                 const Particle * part ) const = 0;
+                                 const LHCb::Particle * part ) const = 0;
 
 };
 

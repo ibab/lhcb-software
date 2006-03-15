@@ -5,6 +5,7 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -13,12 +14,9 @@
 
 // from DaVinciTools
 #include "Kernel/IPhysDesktop.h"
-#include "Kernel/IMassVertexFitter.h"
-#include "Kernel/IVertexFitter.h"
+#include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IParticleStuffer.h"
 #include "Kernel/IParticleFilter.h"
-#include "Kernel/IGlobalFitter.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBTaggingTool.h"
@@ -50,10 +48,10 @@ public:
   StatusCode sysExecute ();  
 
   // Overridden from Gaudi Algorithm
-  StatusCode sysInitialize ();  
+  StatusCode initialize ();  
 
   // Overridden from Gaudi Algorithm
-  StatusCode sysFinalize ();  
+  StatusCode finalize ();  
 
   // Overridden from Gaudi Algorithm
   std::string getDecayDescriptor(){return m_decayDescriptor;};  
@@ -66,42 +64,74 @@ public:
   int getAlgorithmID();
  
   /// Accessor for PhysDesktop Tool
-  inline IPhysDesktop* desktop() const {return m_pDesktop;}; 
+  inline IPhysDesktop* desktop(){
+    return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
+  }
 
-  /// Accessor for Mass Constrained Vertex Fitter Tool
-  inline IMassVertexFitter* massVertexFitter() const {return m_pLagFit;}; 
-
-  /// Accessor for Unconstrained Vertex Fitter Tool
-  inline IVertexFitter* vertexFitter() const {return m_pVertexFit;};
-
-  /// Accessor for Global Fitter Tool
-  inline IGlobalFitter* globalFitter() const {return m_pGlobalFit;};
+  /// Accessor for Vertex Fitter Tool
+  inline IVertexFit* vertexFitter(int index=0){
+    return getTool<IVertexFit>(index,m_vertexFitNames,m_vertexFit,this);
+  }
 
   /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* geomDispCalculator() const {return m_pGeomDispCalc;};
-
-  /// Accessor for Particle Stuffer Tool
-  inline IParticleStuffer* particleStuffer() const {return m_pStuffer;};
+  inline IGeomDispCalculator* geomDispCalculator(){
+    return getTool<IGeomDispCalculator>(m_geomToolName,m_geomTool,this);
+  }
 
   /// Accessor for Particle Filter Tool
-  inline IParticleFilter* particleFilter() const {return m_pFilter;};
+  inline IParticleFilter* particleFilter(int index=0){
+    return getTool<IParticleFilter>(index,m_filterNames,m_filter,this);
+  }
+
+  /// Accessor for CheckOverlap Tool
+  inline ICheckOverlap* checkOverlap(){
+    return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
+  }
+
+  /// Accessor for Algorithm2ID Tool
+  inline IAlgorithm2ID* algorithmID(){
+    return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
+  }
+
+  /// Tagging Tool
+  inline IBTaggingTool* flavourTagging(){
+    return getTool<IBTaggingTool>(m_taggingToolName,m_taggingTool);
+  }
+
+  /// Descnedants
+  inline IParticleDescendants* descendants(){
+    return getTool<IParticleDescendants>(m_descendantsName,m_descendants);
+  }
 
   /// Accessor for ParticlePropertySvc
   inline IParticlePropertySvc* ppSvc() const {return m_ppSvc;};
 
-  /// Accessor for CheckOverlap Tool
-  inline ICheckOverlap* checkOverlap() const {return m_checkOverlap;};
-
-  /// Accessor for Algorithm2ID Tool
-  inline IAlgorithm2ID* algorithmID() const {return m_algorithm2IDTool;};
-
-  /// Tagging Tool
-  inline IBTaggingTool* flavourTagging() const {return m_taggingTool;};
-
-  /// Descnedants
-  inline IParticleDescendants* descendants() const {return m_descendants;};
-
 protected:
+
+  /** helper protected function to load the tool on-demand 
+   *  by index 
+   *  @param index tool index 
+   *  @param names list of tools typ/names 
+   *  @param tools the list of tools 
+   *  @param ptr the pointer to this or NULL for private or common tools
+   *  @return tool with given index 
+   */
+  template<class TYPE> 
+  TYPE* getTool ( const size_t index, 
+                  const std::vector<std::string>& names , 
+                  std::vector<TYPE*>& tools,
+                  const IInterface* ptr=NULL ) const ;
+
+  /** helper protected function to load the tool on-demand  
+   *  @param name of tool
+   *  @param tool 
+   *  @param ptr the pointer to this or NULL for private or common tools
+   *  @return tool 
+   */
+  template<class TYPE> 
+    TYPE* getTool ( const std::string& name, 
+                    TYPE* tool,
+                    const IInterface* ptr=NULL ) const ;
 
 private:
 
@@ -112,48 +142,59 @@ private:
   /// Method to create SelResult container
   StatusCode fillSelResult() ;
 
-  /// Concrete type Name of Unconstrained vertex to use (Property)
-  std::string m_typeVertexFit;
-  /// Concrete type of GlobalFitter to use (Property)
-  std::string m_typeGlobalFit;
-  /// Concrete type Name of geom tool
-  std::string m_typeGeomTool;
-  /// Concrete type of VertexFitter to use (Property)
-  std::string m_typeLagFit;
+  /// Reference to desktop tool
+  mutable IPhysDesktop* m_desktop;
+  /// Concrete type desktop
+  std::string m_desktopName;
+
+protected:
+  /// Reference to Vertex Fitter
+  std::vector<IVertexFit*> m_vertexFit;
+  /// Concrete type of vertex fitter
+  std::vector<std::string> m_vertexFitNames;
+
+  /// Reference to geometrical displacement Calculation.
+  mutable IGeomDispCalculator* m_geomTool;  
+  /// Concrete type of geom tool
+  std::string m_geomToolName;
+
+  /// Reference to CheckOverlap
+  mutable ICheckOverlap* m_checkOverlap;
+  /// Concrete type of CheckOverlap tool
+  std::string m_checkOverlapName;
+
+  /// Reference to ParticleFilter
+  std::vector<IParticleFilter*> m_filter;
+  /// Concrete Type of ParticleFilter tool
+  std::vector<std::string> m_filterNames;  
+
+  /// Reference to Algorithm2ID
+  mutable IAlgorithm2ID* m_algorithm2IDTool;
+  /// Concrete Type of IAlgorithm2ID tool
+  std::string m_algorithm2IDToolName;
+
+  /// Reference to FlavourTagging
+  mutable IBTaggingTool* m_taggingTool;
+  /// Concrete Type of FlavourTagging tool
+  std::string m_taggingToolName;
+
+  /// Reference to ParticleDescendants
+  mutable IParticleDescendants* m_descendants;
+  /// Concrete Type of ParticleDescendants  tool
+  std::string m_descendantsName;
+
+  /// Reference to ParticlePropertySvc
+  mutable IParticlePropertySvc* m_ppSvc;
+
+private:
   /// Decay description (Property)
   std::string m_decayDescriptor;
-  /// Concrete type of CheckOverlap tool
-  std::string m_typeCheckOverlap;
   /// Avoid writing SelResult object in TES (Property)
   bool m_avoidSelResult;
   /// Avoid printing SelResult statistics 
   /// (cannot be switched off by OutputLevel)
   bool m_printSelResult;
   
-  /// Reference to desktop tool
-  mutable IPhysDesktop* m_pDesktop;        
-  /// Reference to Mass Constrained Vertex Fitter
-  mutable IMassVertexFitter* m_pLagFit; 
-  /// Reference to unconstrained Vertex Fitter
-  mutable IVertexFitter* m_pVertexFit;
-  /// Reference to Global Fitter
-  mutable IGlobalFitter* m_pGlobalFit;   
-  /// Reference to geometrical displacement Calculation.
-  mutable IGeomDispCalculator* m_pGeomDispCalc;  
-  /// Reference to ParticleStuffer.
-  mutable IParticleStuffer* m_pStuffer;  
-  /// Reference to ParticleFilter.
-  mutable IParticleFilter* m_pFilter;
-  /// Reference to ParticlePropertySvc
-  mutable IParticlePropertySvc* m_ppSvc;
-  /// Reference to CheckOverlap
-  mutable ICheckOverlap* m_checkOverlap;
-  /// Reference to Algorithm2ID
-  mutable IAlgorithm2ID* m_algorithm2IDTool;
-  /// Reference to FlavourTagging
-  mutable IBTaggingTool* m_taggingTool;
-  /// Reference to ParticleDescendants
-  mutable IParticleDescendants* m_descendants;
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;

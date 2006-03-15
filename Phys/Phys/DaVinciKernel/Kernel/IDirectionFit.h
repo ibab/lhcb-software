@@ -1,15 +1,4 @@
-// $Id: IDirectionFit.h,v 1.3 2005-12-21 13:56:05 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/06/09 13:10:40  pkoppenb
-// Joined with v3r3b1 branch
-//
-// Revision 1.1.2.1  2005/06/09 11:55:40  pkoppenb
-// New vertex interfaces
-// 
-// ============================================================================
+// $Id: IDirectionFit.h,v 1.4 2006-03-15 13:34:02 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IDIRECTIONFIT_H 
 #define DAVINCIKERNEL_IDIRECTIONFIT_H 1
 // ============================================================================
@@ -25,7 +14,7 @@
 // ============================================================================
 // VertexFitters 
 // ============================================================================
-#include "VertexFitter/IParticleReFitter.h"
+#include "Kernel/IParticleReFitter.h"
 // ============================================================================
 
 /** @class IDirectionFit IDirectionFit.h VertexFitter/IDirectionFit.h
@@ -41,11 +30,11 @@
  *    - IParticleReFitter::reFit
  *
  *  It is assumed that IParticleReFitter::reFit method 
- *  is implemented through @c fit 
+ *  in implemented through @c fit 
  * 
  *  @code 
  *
- *  StatusCode reFit( Particle& particle ) const 
+ *  StatusCode reFit( LHCb::Particle& particle ) const 
  *  {
  *     // Get the primary vertex (implementation dependent)
  *     // e.g. it coudl be a vertex with minimal impact parameter, 
@@ -53,7 +42,7 @@
  *     // alfo additional constrains may be applyes, e.g.
  *     // "the vertex with minimal impact parameter choosed from all 
  *     //  downstream vertices". 
- *     const Vertex* primary = .... 
+ *     const LHCb::Vertex* primary = .... 
  *
  *     return fit( *primary , particle ) ; 
  *  } ; 
@@ -78,10 +67,10 @@ public:
    *  const IDirectionFit* fitter = tool<IDirectionFit>( ... ) ;
    *  
    *  // primary vertex:
-   *  const Vertex* primary = ... ;
+   *  const LHCb::Vertex* primary = ... ;
    * 
    *  // Bs-candidate:
-   *  Particle*  Bs = ... ; 
+   *  LHCb::Particle*  Bs = ... ; 
    *
    *  StatusCode sc = fitter->fit( primary , Bs ) ;
    *  if ( sc.isFailure() ) 
@@ -98,8 +87,8 @@ public:
    *  @return status code 
    */
   virtual StatusCode fit 
-  ( const Vertex& primary ,
-    Particle&     particle ) const = 0 ;
+  ( const LHCb::Vertex& primary ,
+    LHCb::Particle&     particle ) const = 0 ;
 
 public: 
   

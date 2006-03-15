@@ -1,7 +1,3 @@
-// $Id: IVertexFit.h,v 1.3 2005-12-21 13:50:04 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
-// ============================================================================
 #ifndef DAVINCIKERNEL_IVERTEXFIT_H 
 #define DAVINCIKERNEL_IVERTEXFIT_H 1
 // ============================================================================
@@ -13,13 +9,12 @@
 // ============================================================================
 // VertexFitter 
 // ============================================================================
-#include "VertexFitter/IParticleCombiner.h"
-#include "VertexFitter/IParticleReFitter.h"
+#include "Kernel/IParticleCombiner.h"
+#include "Kernel/IParticleReFitter.h"
 // ============================================================================
 // forward declarations 
 // ============================================================================
-class Particle ;
-class Vertex;
+#include "Event/Particle.h"
 // ============================================================================
 
 /** @class IVertexFit IVertexFit.h VertexFitter/IVertexFit.h
@@ -39,9 +34,9 @@ class Vertex;
  *  
  *  @code 
  *
- *  StatusCode combine( const Daughters& dauhters , 
- *                      Particle&        mother   , 
- *                      Vertex&          vertex   ) const 
+ *  StatusCode combine( const LHCb::Particle::ConstVector& dauhters , 
+ *                      LHCb::Particle&        mother   , 
+ *                      LHCb::Vertex&          vertex   ) const 
  *   {
  *      return fit( daughters , mother , vertex ) ;
  *   };
@@ -54,9 +49,9 @@ class Vertex;
  *  
  *  @code 
  *
- *  StatusCode reFit( Particle& particle ) const 
+ *  StatusCode reFit( LHCb::Particle& particle ) 
  *  {
- *     Vertex* vertex = particle->endVertex() ;
+ *     LHCb::Vertex* vertex = particle.endVertex() ;
  *    return fit( vertex->products().begin() , 
  *                vertex->products().end  () , 
  *                particle , *vertex         ) ; 
@@ -73,16 +68,7 @@ class IVertexFit :
 {
 public:
   
-  /** The actual type for container of daughter particles 
-   *  the actual type is imported from interface IParticleCombiner 
-   *  @see IParticleCombiner 
-   *  @see IParticleCombiner::Daughters
-   */
-  typedef IParticleCombiner::Daughters   Daughters;
-  
-public:
-  
-  /** The vertex fitting method without creation of Particle 
+  /** The vertex fitting method without creation of a Particle 
    *
    *  @code
    *
@@ -90,7 +76,7 @@ public:
    *  const IVertexFit* fitter = tool<IVertexFit>( ... ) ;
    * 
    *  // container of particles to be fitetr into common vertex 
-   *  IVertexFit::Daughters daughters = ... ;
+   *  IVertexFit::LHCb::Particle::ConstVector daughters = ... ;
    *  
    *  Vertex vertex ;
    *  StatusCode sc = fitter->fit( daughters , vertex ) 
@@ -111,21 +97,21 @@ public:
    *  @return status code 
    */
   virtual StatusCode fit 
-  ( const Daughters& daughters ,
-    Vertex&          vertex    ) const = 0 ;
+  ( const LHCb::Particle::ConstVector& daughters ,
+    LHCb::Vertex&          vertex    ) const = 0 ;
   
-  /** the vertex fitting method without creation of Particle, 
-   *  which allow to use almost arbotrary sequence of 
-   *  daughter partricles 
-   *   (E.g. following types coudll be used :
-   *    - ParticleVector, 
-   *    - std::vector<Particle*> 
-   *    - std::vector<const Particle*> 
+  /** the vertex fitting method without creation of a Particle, 
+   *  which allow to use an almost arbitrary sequence of 
+   *  daughter particles 
+   *   (E.g. following types coudl be used :
+   *    - LHCb::Particle::ConstVector, 
+   *    - std::vector<LHCb::Particle*> 
+   *    - std::vector<const LHCb::Particle*> 
    *    - SmartRefVector<Particle>
    *    - Particles, etc.. )
    *
-   *  The elements of the sequence shodul be convertible to 
-   *  "const Particle*"
+   *  The elements of the sequence should be convertible to 
+   *  "const LHCb::Particle*"
    * 
    *  @code 
    *
@@ -161,13 +147,13 @@ public:
   inline  StatusCode fit 
   ( DAUGHTER         begin     ,
     DAUGHTER         end       ,
-    Vertex&          vertex    ) const 
+    LHCb::Vertex&          vertex    ) const 
   {
-    const Daughters daughters = Daughters( begin , end ) ;
+    const LHCb::Particle::ConstVector daughters = Daughters( begin , end ) ;
     return fit ( daughters , vertex ) ;
   };
 
-  /** The vertex fitting method with creation of Particle 
+  /** The vertex fitting method with creation of LHCb::Particle 
    *  ("classical")
    *
    *  @code
@@ -176,10 +162,10 @@ public:
    *  const IVertexFit* fitter = tool<IVertexFit>( ... ) ;
    * 
    *  // container of particles to be fitted into common vertex 
-   *  IVertexFit::Daughters daughters = ... ;
+   *  IVertexFit::LHCb::Particle::ConstVector daughters = ... ;
    *  
    *  Vertex   vertex   ;
-   *  Particle particle ; 
+   *  LHCb::Particle particle ; 
    *  StatusCode sc = fitter->fit( daughters , particle , vertex ) 
    *  if( sc.isFailure() ) { Warning("Error in vertex fit", sc ) ; }
    *   
@@ -199,22 +185,22 @@ public:
    *  @return status code 
    */
   virtual StatusCode fit 
-  ( const Daughters& daughters ,
-    Particle&        particle  ,
-    Vertex&          vertex    ) const = 0 ;
+  ( const LHCb::Particle::ConstVector& daughters ,
+    LHCb::Particle&        particle  ,
+    LHCb::Vertex&          vertex    ) const = 0 ;
   
-  /** the vertex fitting method with creation of Particle ("classical")
+  /** the vertex fitting method with creation of LHCb::Particle ("classical")
    *  which allow to use almost arbotrary sequence of 
    *  daughter partricles 
    *  (E.g. follwoing types could be used:
-   *     - ParticleVector 
-   *     - std::vector<Particle*> 
-   *     - std::vector<const Particle*> 
+   *     - LHCb::Particle::ConstVector 
+   *     - std::vector<LHCb::Particle*> 
+   *     - std::vector<const LHCb::Particle*> 
    *     - SmartRefVector<Particle>
    *     - Particles, etc.. )
    *   
    *  The elements of the sequence shodul be convertible to 
-   *  "const Particle*"
+   *  "const LHCb::Particle*"
    * 
    *  @code 
    *
@@ -225,7 +211,7 @@ public:
    *  Particles* particles = get<Particles>( "/Event/Phys/MyParticlesFromPV" );
    *  
    *  Vertex   vertex ;
-   *  Particle particle ;
+   *  LHCb::Particle particle ;
    *  StatusCode sc = fitter->fit( particles->begin()  ,
    *                               particles->end()    ,
    *                               particle            ,
@@ -249,10 +235,10 @@ public:
   inline StatusCode  fit 
   ( DAUGHTER         begin     ,
     DAUGHTER         end       ,
-    Particle&        particle  ,
-    Vertex&          vertex    ) const 
+    LHCb::Particle&        particle  ,
+    LHCb::Vertex&          vertex    ) const 
   {
-    const Daughters daughters = Daughters( begin , end ) ;
+    const LHCb::Particle::ConstVector daughters = Daughters( begin , end ) ;
     return fit ( daughters , particle , vertex ) ;
   };
   
@@ -263,8 +249,8 @@ public:
    *  // locate  the tool 
    *  const IVertexFit* fitter = get<IVertexFit>( ... ) ;
    *    
-   *  Vertex*   vertex  = ... ;
-   *  Particle* oneMore = ... ;
+   *  LHCb::Vertex*   vertex  = ... ;
+   *  LHCb::Particle* oneMore = ... ;
    *
    *  StatusCode sc = fitter->add( oneMore , vertex ) ;
    *  if( sc.isFailure() ) { Warning("Error in 'add' ", sc ) ; }
@@ -279,8 +265,8 @@ public:
    *  @return status code 
    */
   virtual StatusCode add
-  ( const Particle*  particle , 
-    Vertex*          vertex   ) const = 0 ;
+  ( const LHCb::Particle*  particle , 
+    LHCb::Vertex&          vertex   ) const = 0 ;
   
   /** remove the particle from the vertex and refit 
    *
@@ -289,8 +275,8 @@ public:
    *  // locate  the tool 
    *  const IVertexFit* fitter = get<IVertexFit>( ... ) ;
    *    
-   *  Vertex*   vertex = ... ;
-   *  Particle* remove = ... ;
+   *  LHCb::Vertex*   vertex = ... ;
+   *  LHCb::Particle* remove = ... ;
    *
    *  StatusCode sc = fitter->remove( remove , vertex ) ;
    *  if( sc.isFailure() ) { Warning("Error in 'remove' ", sc ) ; }
@@ -305,8 +291,8 @@ public:
    *  @return status code 
    */
   virtual StatusCode remove
-  ( const Particle*  particle , 
-    Vertex*          vertex   ) const = 0 ;
+  ( const LHCb::Particle*  particle , 
+    LHCb::Vertex&          vertex   ) const = 0 ;
   
 public: 
   

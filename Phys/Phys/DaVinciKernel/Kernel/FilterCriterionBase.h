@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.h,v 1.1 2005-06-28 15:32:27 lazzecri Exp $
+// $Id: FilterCriterionBase.h,v 1.2 2006-03-15 13:34:01 pkoppenb Exp $
 #ifndef FILTERCRITERIONBASE_H 
 #define FILTERCRITERIONBASE_H 1
 
@@ -36,16 +36,16 @@ public:
   StatusCode initialize( );
 
   /// Test if kinematical filter (minimum momentum and pt) is satisfied.
-  virtual bool isSatisfied( const Particle* const & part );
+  virtual bool isSatisfied( const LHCb::Particle* const & part );
 
   /// Test if kinematical filter (minimum momentum and pt) is satisfied.
-  virtual bool operator()( const Particle* const & part );
+  virtual bool operator()( const LHCb::Particle* const & part );
   
 protected:
 
   /// The method which actually makes the decision
   /// Must be re-implemented in each real derived filter tool
-  virtual bool testParticle( const Particle* const & part ) = 0; 
+  virtual bool testParticle( const LHCb::Particle* const & part ) = 0; 
 
 private: // methods
 

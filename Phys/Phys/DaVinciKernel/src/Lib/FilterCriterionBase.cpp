@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.cpp,v 1.1 2005-06-28 15:32:27 lazzecri Exp $
+// $Id: FilterCriterionBase.cpp,v 1.2 2006-03-15 13:34:03 pkoppenb Exp $
 // Include files 
 
 // local
@@ -45,12 +45,12 @@ StatusCode FilterCriterionBase::initialize( )
 }
 
 // wrapper operator method around isSatisfied
-bool FilterCriterionBase::operator()( const Particle* const & part ) 
+bool FilterCriterionBase::operator()( const LHCb::Particle* const & part ) 
 {
   return isSatisfied(part);
 }
 
-bool FilterCriterionBase::isSatisfied( const Particle* const & part ) 
+bool FilterCriterionBase::isSatisfied( const LHCb::Particle* const & part ) 
 {
   // run the actual filter in derived class
   const bool result = testParticle( part );
@@ -64,7 +64,7 @@ bool FilterCriterionBase::isSatisfied( const Particle* const & part )
   // save if requested
   if ( m_saveResults )
   {
-    tesTool()->saveFilterResult( this, const_cast<Particle*>(part), result );
+    tesTool()->saveFilterResult( this, const_cast<LHCb::Particle*>(part), result );
   }
 
   // return result of filter, or true if Flagging mode is enabled
