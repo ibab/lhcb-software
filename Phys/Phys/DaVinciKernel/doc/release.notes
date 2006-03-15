@@ -5,6 +5,13 @@
 ! DC06 branch v4r0b based on v3r9
 !
 
+! 2006-03-15 - J. Palacios
+  IDecayFinder.h: 
+    Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
+    Remove temporary typedef for LHCb::ConstParticles.
+  Kernel/Particle2VertexAsct.h: Prepend LHCb:: to Particle, Vertex.
+
+
 ! 2006-03-14 - J. Palacios
   IDecayFinder.h: Add temporary typedef for KeyedContainer of const Particle
                   as LHCb::ConstParticles. To be removed once GOD produces this

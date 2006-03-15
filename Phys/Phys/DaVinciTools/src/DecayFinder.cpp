@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.13 2006-03-14 13:50:26 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.14 2006-03-15 19:00:44 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -204,7 +204,7 @@ bool DecayFinder::findDecay( const LHCb::Particle::ConstVector &event,
   }
 }
 
-bool DecayFinder::hasDecay( const LHCb::ConstParticles &event )
+bool DecayFinder::hasDecay( const LHCb::Particle::ConstContainer &event )
 {
   verbose() << "About to test the event" << endreq;
   const LHCb::Particle *drop_me = NULL;
@@ -217,7 +217,7 @@ bool DecayFinder::hasDecay( const LHCb::ConstParticles &event )
   }
 }
 
-bool DecayFinder::findDecay( const LHCb::ConstParticles &event,
+bool DecayFinder::findDecay( const LHCb::Particle::ConstContainer &event,
                              const LHCb::Particle *&previous_result )
 {
   verbose() << "About to test the event" << endreq;
@@ -232,7 +232,7 @@ bool DecayFinder::findDecay( const LHCb::ConstParticles &event,
 
 bool DecayFinder::hasDecay( void )
 {
-  SmartDataPtr<LHCb::ConstParticles> parts(m_EDS, LHCb::ParticleLocation::Production );
+  SmartDataPtr<LHCb::Particle::ConstContainer> parts(m_EDS, LHCb::ParticleLocation::Production );
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"
@@ -244,7 +244,7 @@ bool DecayFinder::hasDecay( void )
 
 bool DecayFinder::findDecay( const LHCb::Particle *&previous_result )
 {
-  SmartDataPtr<LHCb::ConstParticles> parts(m_EDS, LHCb::ParticleLocation::Production );
+  SmartDataPtr<LHCb::Particle::ConstContainer> parts(m_EDS, LHCb::ParticleLocation::Production );
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"

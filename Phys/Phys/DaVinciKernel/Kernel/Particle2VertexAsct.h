@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsct.h,v 1.2 2006-01-17 12:40:08 pkoppenb Exp $
+// $Id: Particle2VertexAsct.h,v 1.3 2006-03-15 18:55:55 jpalac Exp $
 #ifndef ASSOCIATORS_Particle2VertexASCT_H 
 #define ASSOCIATORS_Particle2VertexASCT_H 1
 
@@ -21,14 +21,14 @@ Particle2VertexAsctLocation = "/Event/Phys/Relations/Particle2VertexWithIPS";
  *  @date   05/04/2002
  */
 
-class Particle2VertexAsct : public AssociatorWeighted<Particle,Vertex,double>
+class Particle2VertexAsct : public AssociatorWeighted<LHCb::Particle,LHCb::Vertex,double>
 {
   friend class ToolFactory<Particle2VertexAsct>;
   
 public:
 
   // Define data types
-  typedef RelationWeighted1D<Particle,Vertex,double> Table;
+  typedef RelationWeighted1D<LHCb::Particle,LHCb::Vertex,double> Table;
   typedef OwnType                                    Asct;
   
 protected:

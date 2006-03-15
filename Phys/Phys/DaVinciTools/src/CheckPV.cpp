@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.8 2006-03-06 13:59:49 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.9 2006-03-15 19:00:44 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -79,11 +79,11 @@ StatusCode CheckPV::execute() {
   bool ok = 0 ;
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
-  if ( !exist<Vertices>(m_PVContainer)){
+  if ( !exist<LHCb::Vertices>(m_PVContainer)){
     info() << m_PVContainer << " not found" << endmsg ;
     ok = (m_minPV<=0) ; // Ok if no PV required
   } else {  
-    Vertices* PV = get<Vertices>(m_PVContainer);
+    LHCb::Vertices* PV = get<LHCb::Vertices>(m_PVContainer);
     if ( !PV ) { 
       err() << "Could not find primary vertex location " 
             <<  m_PVContainer << endreq;

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.191 2006-03-15 13:40:12 pkoppenb Exp $
+! $Id: release.notes,v 1.192 2006-03-15 19:00:43 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 !============================================================================
+
+! 2006-03-15 - J. Palacios
+  - DecayFinder: 
+       Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
+  - CheckPV.cpp: Prepend LHCb:: to Vertices.
 
 !========================== DaVinciTools v12r5p1 2006-03-14 ===================
 ! 2006-03-06 - P. Koppenburg

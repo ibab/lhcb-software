@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.2 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IDecayFinder.h,v 1.3 2006-03-15 18:55:55 jpalac Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -12,13 +12,7 @@
 
 #include "Event/Particle.h"
 //class Particle;
-// Temporary hack to define LHCb::ConstParticles outside of G.O.D machinery.
-// TO BE REMOVED AS SOON AS G.O.D CREATES THIS AUTOMATICALLY IN Particle 
-// header
-namespace LHCb 
-{
-  typedef KeyedContainer<const Particle, Containers::HashMap> ConstParticles;  
-}
+
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IDecayFinder("IDecayFinder", 3, 0);
 
@@ -46,8 +40,8 @@ public:
   virtual bool findDecay( const LHCb::Particle::ConstVector& event,
                           const LHCb::Particle*& previous_result ) = 0;
 
-  virtual bool hasDecay( const LHCb::ConstParticles& event ) = 0;
-  virtual bool findDecay( const LHCb::ConstParticles& event,
+  virtual bool hasDecay( const LHCb::Particle::ConstContainer& event ) = 0;
+  virtual bool findDecay( const LHCb::Particle::ConstContainer& event,
                           const LHCb::Particle *&previous_result ) = 0;
 
   virtual bool hasDecay( void ) = 0;
