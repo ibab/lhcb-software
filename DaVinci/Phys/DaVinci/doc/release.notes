@@ -4,6 +4,121 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v15r0 2005-12-21 ===================
+Built on GAUDI_v17r2, XmlDDDB v27r1, LHCb v19r3, LbcomSys v3r2, 
+RecSys v2r2, PhysSys v2r0
+
+WARNING: Physics analysis does not work because of problems in 
+ProtoParticle Making. Trigger works fine.
+!========================== DaVinci v14r5 2005-11-09 ===================
+Increment to Phys v1r5, Rec v1r5, Lbcom v2r5, LHCb v18r9, XmlDDDB v26r2
+! 2005-11-10 - P. Koppenburg
+  - options/*.opts
+    . Remove HltGeneric inclusion
+                                                                                                                                                                         
+! 2005-11-09 - P. Koppenburg
+  - options/*.opts
+    . Use ROOT everywhere
+                                                                                                                                                                         
+! 2005-11-02 - P. Koppenburg
+  - options/L0Checking.opts
+    . Removed. Replaced by L0CHECKERROOT/options/L0Checker.opts
+      Because of a bug noticed by Krzysztof Syryczynski
+  - options/DaVinci.opts
+  - options/DVTriggerFilter.opts
+    . Corrected accordingly                                                                                                                                 
+!========================== DaVinci v14r4 2005-07-26 ===================
+Increment to Phys v1r4, Rec v1r4, Lbcom v2r4, LHCb v18r8, XmlDDDB v26r1
+!========================== DaVinci v14r3 2005-06-30 ===================
+Increment Phys, Rec, Lbcom, LHCb
+! 2005-06-30 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . Add Pool options that have been removed from LHCb
+  - options/DVTriggerFilter.opts
+    . TestHltScore moved from HltSelChecker to HltMonitor    
+!========================== DaVinci v14r2 2005-06-15 ===================
+! 2005-06-07 - P. Koppenburg
+  - Dummy L0.opts added
+! 2005-06-03 - P. Koppenburg
+  - L0.opts moved to L0DU
+  - RTTCData.opts moved to HltSys
+!========================== DaVinci v14r1 2005-05-24 ===================
+! 2005-05-24 - P. Koppenburg
+  Reshuffling of options
+  - options/DaVinciKshortLoose.opts
+  - options/DaVinciKshortTight.opts
+    . Moved to Ks2PiPiSel
+    
+! 2005-05-24 - P. Koppenburg
+  Reshuffling of options
+  - options/DVHLT.opts
+    . New options to run HLT on test data.
+  - options/DVTriggerFilter.opts
+    . Renamed TrgL?Filter instances to avoid conflicts with HLT sequence
+  - options/DaVinciCommon.opts 
+    . GAUDI/LHCb stuff goes into DaVinciInit.opts
+      This file should not be included by Panoramix. Panoramix
+      should provide it's own initialization.
+      How much of this could go into some LHCb package?  
+    . Associators. Do we need all DLLs for DETAssociators? 
+      Where to put them?
+    . ProtoParticles.
+      i) Moved $GLOBALRECOROOT/options/ChargedProtoPAlg.opts to DaVinciReco.opts
+         Panoramix should provide a similar file
+      ii) Removed NeutralProtoPAlg.opts. Obsolete. 
+      iii) Removed MuonIDReTuning.opts
+      iv) No need to include MCPIDProtoPAlg.opts
+      v) Moved all PID stuff into GlobalReco.opts
+    . Phys DLLs
+       i) Moved DLLS to PhysCoreSys and PhysMCSys
+  - options/DaVinciReco.opts 
+    . Options for ChargedProtoPAlg moved here
+  - options/DaVinciNeutrals.opts
+  - options/DaVinciElectrons.opts
+    . Moved algorithms to GlobalReco  
+  - options/DaVinciMainSeq.opts
+    . New options containing main sequence
+  - options/MuonIDReTuning.opts
+    . Put algo in DaVinciSeq
+                                                                                                                                                          
+    
+!========================== DaVinci v14r0 2005-05-18 ===================
+! 2005-05-18 - P. Koppenburg
+  - options/DaVinciCommon.opts 
+    . Add { "CreateRawEvent", "EventHeaderFromRaw" }; to get /Event/Header
+    . Add ToolSvc.PhotonMatch.Location = "Rec/Calo/PhotonMatch" ; temporarily
+    .  #include "$DAQSYSROOT/options/RawBuffer.opts" for raw buffer
+  - options/CaloOnDemand.opts
+    . Remove duplicated on-demand options wrt RawBuffer.opts
+  - options/DVTRiggerFilter.opts
+    . Add HLT
+  - options/DVRTTC.opts
+    . New options to run L1 and HLT on raw data
+  - options/RawWriter.opts
+    . New options to write out raw data
+  - options/RTTCTestData.opts
+    . New Raw RTTC test data !! WARNING this is raw data. There is no MC nor L0.
+
+!========================== DaVinci v13r1 2005-04-20 ===================
+! 2005-04-21 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . Load EventUtils
+! 2005-04-20 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . using now in $STDOPTS/units.opts
+ - options/DaVinciTestData.opts
+   . New data
+!========================== DaVinci v13r0 2005-03-08 ===================
+! 2005-03-08 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . No need for "OldRichPIDCnvAlg" anymore
+  - options/DaVinciDDDB.opts
+    . New detector database
+  - options/DaTestData.opts
+    . New test data
+  - options/DstContents.opts
+    . New contents
+
 !========================== DaVinci v12r17 2006-03-14 ===================
 ! 2006-03-03 - P. Koppenburg for Thomas Ruf
   Force the use of the correct FieldMap
@@ -103,6 +218,9 @@ No major changes in Phys/DaVinci package. See DaVinciSys for details.
     . Include HLT
     . Switch off DstWriter by default
 !========================== DaVinci v12r9 2005-03-22 ===================
+! 2005-04-27 - P. Koppenburg
+  - cmt/requirements
+    . Splitting of options for DaVinci v14r0
 !========================== DaVinci v12r8 2005-03-03 ===================
 ! 2005-02-23 - P. Koppenburg
   - options/L0.opts

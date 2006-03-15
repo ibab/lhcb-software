@@ -9,97 +9,22 @@
  *  @date 2003-03-14
  */
 
-// Allow units to be used in jobOptions 
-#units "$GAUDICONFROOT/options/units.opts"
-
-// Framework
-// ToolSvc has to be first to be sure it's the last
-// to be deleted at the end
-ApplicationMgr.ExtSvc = { "ToolSvc" ,
-                           "ParticlePropertySvc",
-                           "EventSelector" };
-ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
-
-// Detector Description & Magnetic Field
-#include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-ApplicationMgr.DLLs   += { "Magnet" };
-ApplicationMgr.DLLs   += { "VeloDet", "OTDet", "STDet", "MuonDet" };
-ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
-
-// Particle Properties
-// ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
-
-// Pool Persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
-
-// GaudiDb Persistency
-//#include "$STDOPTS/RootDb.opts"
-EventDataSvc.ForceLeaves = true;
-EventDataSvc.RootCLID    =    1;
-
-// Associators
-ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
-ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
-ApplicationMgr.DLLs += { "CaloAssociators" };
-ApplicationMgr.DLLs += { "TrAssociators" };
-ApplicationMgr.DLLs += { "Associators" };
-ApplicationMgr.DLLs += { "DaVinciAssociators" };
-#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
-
-// ProtoParticles creation: charged and neutrals
-ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
-ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
-#include "$GLOBALRECOROOT/options/GlobalReco.opts"
-#include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
-#include "$CALORECOOPTS/Reco.opts"
-#include "$CALOPIDSOPTS/CaloPIDs.opts"
-#include "$CALOEVENTOPTS/CaloEvent.opts"
-#include "$MUONIDROOT/options/MuonIDDLLTool.opts"
-
+//--------------------------------------------------------------
+// Main initialisation
+#include "$PHYSCORESYSROOT/options/DaVinciInit.opts"
+// POOL Persistency
+#include "$STDOPTS/DstDicts.opts"
+//--------------------------------------------------------------
 // Physics packages and dependent packages
-ApplicationMgr.DLLs += { "DaVinciTools" };
-ApplicationMgr.DLLs += { "DaVinciTransporter" };
-ApplicationMgr.DLLs += { "DaVinciFilter" };
-ApplicationMgr.DLLs += { "ParticleMaker" };
-ApplicationMgr.DLLs += { "DaVinciKernel" };
-ApplicationMgr.DLLs += { "VertexFit" };
-ApplicationMgr.DLLs += { "TrExtrapolator" };
+#include "$PHYSCORESYSROOT/options/PhysCoreSys.opts"
 //    ... for physics check on MC data
-ApplicationMgr.DLLs += { "MCTools" };
-ApplicationMgr.DLLs += { "DaVinciMCTools" };
-ApplicationMgr.DLLs += { "DaVinciEff" };
-//ApplicationMgr.DLLs += { "DaVinciTest" };
-//ApplicationMgr.DLLs += { "DaVinciUser" };
-//    ... generic algorithms for selection of decays
-// ApplicationMgr.DLLs += { "PhysSelections", "LoKi" };
-ApplicationMgr.DLLs += { "Ks2PiPiSel" };
-//    ... flavour tagging
-ApplicationMgr.DLLs += { "FlavourTagging" };
-ApplicationMgr.DLLs += { "RecoTools" };
-
-// Generic Utility package
-ApplicationMgr.DLLs += { "Utilities" };
-ApplicationMgr.DLLs += { "LHCbAlgs" };
-
-// Configure the DataOnDemand Service (for Calo) 
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler  = true ;      
-ApplicationMgr.DLLs += { "DAQEvent" };
-DataOnDemandSvc.Algorithms +=
-  {
-     "DATA='/Event/DAQ/RawEvent'       TYPE='CreateRawEvent'"
-  ,   "DATA='/Event/Header'             TYPE='EventHeaderFromRaw'"
-  ,   "DATA='Event/Rec/Relations/NeutralPP2MC' TYPE='NeutralPP2MC'"
-  ,   "DATA='Event/Rec/Relations/ChargedPP2MC' TYPE='ChargedPP2MC'"
-   };
-
+#include "$PHYSMCSYSROOT/options/PhysMCSys.opts"
+//--------------------------------------------------------------
 // Profiling
 #pragma print on
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
+ChronoAuditor.Enable = true ;
 MemoryAuditor.Enable = false;
 
 // General output levels (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
@@ -126,16 +51,8 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // compatible database is included from here.
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
-//--------------------------------------------------------------
+//=================================================================
 // Start DaVinci sequence
 //
-ApplicationMgr.TopAlg += { "GaudiSequencer/DaVinciMainSeq" } ;
-DaVinciMainSeq.IgnoreFilterPassed = true ; // because of DaVinciElectrons
-DaVinciMainSeq.MeasureTime = true ;
-DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
-DaVinci.OutputLevel = 4 ;                                                                                                
-//--------------------------------------------------------------
-// Temporary hack converting old RICH data to new format
-//
-ApplicationMgr.DLLs += { "RichTools" };
-DaVinciMainSeq.Members += { "OldRichPIDCnvAlg" } ;
+#include "$DAVINCIROOT/options/DaVinciMainSeq.opts"
+ApplicationMgr.AppName = "DaVinci" ;

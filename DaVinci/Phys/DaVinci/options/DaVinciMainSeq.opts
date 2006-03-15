@@ -1,0 +1,13 @@
+//=================================================================
+// Start DaVinci sequence
+//
+ApplicationMgr.TopAlg += { "GaudiSequencer/DaVinciMainSeq" } ;
+DaVinciMainSeq.IgnoreFilterPassed = true ; // because of DaVinciElectrons
+DaVinciMainSeq.MeasureTime = true ;
+// To avoid loading Sim file to get /Event/Header, explicitly make it
+// from the raw buffer. Needs to be done *before* LbAppInit
+//DaVinciMainSeq.Members += { "CreateRawEvent", "EventHeaderFromRaw" };
+
+DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
+DaVinci.OutputLevel = 4 ;                                                                                                
+

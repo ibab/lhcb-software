@@ -7,25 +7,4 @@
  *  @date 2003-04-30
  */
 
-ApplicationMgr.TopAlg += { 
-  "PreLoadParticles/PreLoadElectrons",
-  "PreLoadParticles/PreLoadMuons",
-  "PreLoadParticles/PreLoadPions",
-  "PreLoadParticles/PreLoadKaons",
-  "PreLoadParticles/PreLoadProtons"
-};
-
-PreLoadElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
-PreLoadElectrons.PhysDesktop.NoPIDsParticleMaker.Particle = "electrons";
-
-PreLoadMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
-PreLoadMuons.PhysDesktop.NoPIDsParticleMaker.Particle = "muons";
-
-PreLoadPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
-PreLoadPions.PhysDesktop.NoPIDsParticleMaker.Particle = "pions";
-
-PreLoadKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
-PreLoadKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "kaons";
-
-PreLoadProtons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
-PreLoadProtons.PhysDesktop.NoPIDsParticleMaker.Particle = "protons";
+#include "$PARTICLEMAKERROOT/options/PreLoadNoPIDParticles.opts"

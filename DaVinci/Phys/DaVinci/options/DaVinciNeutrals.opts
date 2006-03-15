@@ -1,4 +1,6 @@
-// $Id: DaVinciNeutrals.opts,v 1.26 2006-03-06 08:30:13 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.27 2006-03-15 13:45:45 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
  
 /** @file 
@@ -13,24 +15,8 @@
 // The major algorith sequence for "neutrals"
 DaVinciMainSeq.Members += { "GaudiSequencer/Neutrals" };
 
-// Re-create CaloDigits from raw buffer 
-// Neutrals.Members  = { "CaloDigitsFromRaw" };
-// -> Now on demand  
+#include "$GLOBALRECOROOT/options/Neutrals.opts"
 
-// correct 3x3 matrix 
-Neutrals.Members += {"CaloClusterCorrect3x3Position"};
-// Corrections for SplitPhotons
-Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
-// Corrections for Single Photons
-Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
-
-// Make neutral ProtoParticles
-Neutrals.Members += { "NeutralPPsFromCPsAlg" };
-
-//
-// Pi0 and pair photons on demand
-//
-#include "$COMMONPARTICLESROOT/options/CommonParticles.opts"
 // ============================================================================
 // The END 
 // ============================================================================

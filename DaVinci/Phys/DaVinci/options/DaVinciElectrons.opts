@@ -1,5 +1,6 @@
-// $Id: DaVinciElectrons.opts,v 1.20 2006-03-06 08:30:13 pkoppenb Exp $ 
+// $Id: DaVinciElectrons.opts,v 1.21 2006-03-15 13:45:45 pkoppenb Exp $ 
 // ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 
 
@@ -16,29 +17,6 @@
 
 // The major algorith sequence for "electrons"
 DaVinciMainSeq.Members        += { "GaudiSequencer/Electrons" } ;
-
-// Re-create CaloDigits from raw buffer 
-// Electrons.Members             = { "CaloDigitsFromRaw"    } ;  
-// -> Now on demand  
-
-// For Electrons 
-Electrons.Members            += { "CaloHypoAlg/ElectronCalibration"     } ;
-// For Electrons 
-Electrons.Members            += { "TESFilter/ElectronDelete" } ;
-// For Electrons 
-Electrons.Members            += { "CaloHypo2TrackAlg/ElectronMatch"     } ;
-
-// For Electrons 
-ElectronCalibration.Input     =   "Rec/Calo/Electrons"              ;
-ElectronCalibration.Detector  =   "/dd/Structure/LHCb/Ecal"         ;
-ElectronCalibration.Tools     = { "Calo04ECorrection/ECorrection" } ; // Ecorrection
-ElectronCalibration.Tools    += { "Calo04SCorrection/SCorrection" } ; // Scorrection
-ElectronCalibration.Tools    += { "Calo04LCorrection/LCorrection" } ; // Lcorrection
-
-ElectronDelete.DroppedContainers = { "/Event/Rec/Calo/ElectronMatch" } ;
-
-ElectronDelete.OutputLevel = 2 ;
-
 
 // ============================================================================
 // The end  

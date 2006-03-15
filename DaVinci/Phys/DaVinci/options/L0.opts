@@ -1,19 +1,1 @@
-//*************************************************************
-//   Options to re-run the Level 0 trigger decision in DaVinci
-//=============================================================
-// Reimplemented by O.Callot for DC04
-
-//=============================================================
-// re-run L0Muon
-// Not included by default! There is a 26 KB/event memory leak
-// in L0Muon. Include it at your own risk.
-//#include "$DAVINCIROOT/options/L0Muon.opts"
-//=============================================================
-// Make L0 calo candidates
-#include "$DAVINCIROOT/options/L0Calo.opts"
-//=============================================================
-// run L0 decision unit
 #include "$L0DUROOT/options/L0.opts"
-// For high luminosities use one of:
-//#include "$L0DUROOT/options/L0-lumi3e32.opts"
-//#include "$L0DUROOT/options/L0-lumi5e32.opts"

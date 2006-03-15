@@ -1,4 +1,5 @@
-// Define DST content for Brunel
+// Define DST content for DaVinci
+// Stolen from Brunel, with a few additions
 
 DstWriter.OptItemList =
 {
@@ -9,12 +10,11 @@ DstWriter.OptItemList =
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
 , "/Event/MC/Signal#1"
-, "/Event/Trig/AlgUsedTimes#1"
 }; 
 DstWriter.ItemList = 
 {
   "/Event#1"
-, "/Event/Header#1"
+//, "/Event/Header#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
@@ -25,6 +25,7 @@ DstWriter.ItemList =
 , "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
+//, "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
@@ -32,19 +33,13 @@ DstWriter.ItemList =
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
-// The next lines are different from Brunel
-// as they might not be in the transient store
-// and hence not written out (usecase: L0xL1 stripping)
+// Todo : Expland this line as it may cause troubles in case
+// of L0xL1 strippings
 , "/Event/Raw#2"
-, "/Event/Raw/Velo#1"
-, "/Event/Raw/Ecal#1"
-, "/Event/Raw/Prs#1"
-, "/Event/Raw/Spd#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
-, "/Event/Rec/OT#1"
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/ITClusters#1"
@@ -97,12 +92,10 @@ DstWriter.ItemList =
 , "/Event/Link/Raw/IT#1"
 , "/Event/Link/Raw/IT/Digits#1"
 , "/Event/Link/Raw/OT#1"
-, "/Event/Link/Raw/OT/Digits#1"
+, "/Event/Link/Raw/OT/Times#1"
 , "/Event/Link/Rec#1"
 , "/Event/Link/Rec/IT#1"
 , "/Event/Link/Rec/IT/Clusters#1"
-, "/Event/Link/Rec/OT#1"
-, "/Event/Link/Rec/OT/Clusters#1"
 , "/Event/Link/Rec/Muon#1"
 , "/Event/Link/Rec/Muon/Coords#1"
 , "/Event/Link/Rec/Tr#1"
