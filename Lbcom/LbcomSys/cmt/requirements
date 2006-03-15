@@ -26,7 +26,7 @@ use RichMCTools       v3r0  Rich        # Chris Jones
 # Silicon Tracker
 use STDAQ             v2r3  ST          # Matt Needham
 use STTools           v2r0  ST          # Matt Needham
-use STAlgorithms      v1r0  ST          # Matt Needham
+use STAlgorithms      v1r1  ST          # Matt Needham
 use STAssociators     v1r0  ST          # Matt Needham
 use STCheckers        v1r0  ST          # Matt Needham
 
@@ -35,7 +35,7 @@ use CaloAssociators   v6r0  Calo        # Olivier Deschamps
 #use KaliMisCalo       v1r0  Calo        # Ivan Belyaev
 
 # Velo
-use VeloDAQ           v3r0  Velo        # Kurt Rinnert
+use VeloDAQ           v3r1  Velo        # Kurt Rinnert
 use VeloAssociators   v2r0  Velo        # Tomasz Szumlak
 
 # Common
