@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.75 2006-02-10 18:54:41 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.76 2006-03-16 14:15:42 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -87,10 +87,10 @@ Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
 // and for the RICHes
 Simulation.Members += { "GetMCRichHitsAlg" };
 // Uncomment lines below for switching on RICH extended info
-Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
-                        "GetMCRichSegmentsAlg",
-                        "GetMCRichTracksAlg" };
-#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+// Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
+//                         "GetMCRichSegmentsAlg",
+//                         "GetMCRichTracksAlg" };
+// #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
