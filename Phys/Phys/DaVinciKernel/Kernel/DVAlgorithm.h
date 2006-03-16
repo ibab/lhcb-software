@@ -130,7 +130,7 @@ protected:
    */
   template<class TYPE> 
     TYPE* getTool ( const std::string& name, 
-                    TYPE* tool,
+                    TYPE*& tool,
                     const IInterface* ptr=NULL ) const ;
 
 private:
@@ -147,7 +147,7 @@ private:
   /// Concrete type desktop
   std::string m_desktopName;
 
-protected:
+private:
   /// Reference to Vertex Fitter
   std::vector<IVertexFit*> m_vertexFit;
   /// Concrete type of vertex fitter
@@ -203,16 +203,17 @@ private:
   int m_countFilterWrite ;
   /// Number of passing events
   int m_countFilterPassed ;
-  
-  /// Variable needed to ensure that calling getTools by user 
-  /// (which is now not needed anymore) will give only one
-  /// message warning, not one per event. To be removed
-  /// from code when calling by user not tolerated anymore
-  bool m_loadToolsWarned;
 
   /// - For GaudiAlgorithm -
   /// Algorithm ID
   int m_algorithmID ;
+
+  /// Switch PreloadTools to false no to preload any tools.
+  /// This will have the effect that they will be loaded on demand, when needed,
+  /// at any event. This option is thus only recommended for use of DVAlgorithm
+  /// to do something unrelated to physics analysis.
+  bool m_preloadTools;
+
 };
 // ---------------------------------------------------------------------------
 //   end of class

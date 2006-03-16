@@ -19,7 +19,6 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
-  , m_loadToolsWarned(false)
   , m_algorithmID(-1)
 {
 
@@ -32,6 +31,8 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
   declareProperty("PrintSelResult", m_printSelResult = false );
+  declareProperty("PreloadTools", m_preloadTools = true );
+  
 
 };
 //=============================================================================
@@ -65,7 +66,12 @@ StatusCode DVAlgorithm::initialize () {
 //=============================================================================
 StatusCode DVAlgorithm::loadTools() {
 
-  info() << ">>> Preloading tools" << endmsg;
+  if ( !m_preloadTools ) {
+    info() << "Not preloading tools" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
+  debug() << ">>> Preloading tools" << endmsg;
 
   debug() << ">>> Preloading PhysDesktop" << endmsg;
   desktop();
@@ -272,7 +278,8 @@ TYPE* DVAlgorithm::getTool ( const size_t index, const std::vector<std::string>&
         names.end() != iname ; ++iname ){
     // have we load enough tools? 
     if ( index < tools.size() ) { break ; }
-    TYPE* t = getTool<TYPE>( *iname, NULL, ptr ) ;
+    TYPE* t = NULL;
+    t = getTool<TYPE>( *iname, t, ptr ) ;
     tools.push_back( t ) ; 
   } ;
     
@@ -282,7 +289,8 @@ TYPE* DVAlgorithm::getTool ( const size_t index, const std::vector<std::string>&
 // Get tool
 //=============================================================================
 template<class TYPE> 
-TYPE* DVAlgorithm::getTool( const std::string& name, TYPE* t, const IInterface* ptr ) const{
+TYPE* DVAlgorithm::getTool( const std::string& name, 
+                            TYPE*& t, const IInterface* ptr ) const{
   if ( 0==t ) {  // the tool is already located properly?
     t = tool<TYPE>( name, ptr )  ;// else get it
   }

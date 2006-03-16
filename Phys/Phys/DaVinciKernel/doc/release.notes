@@ -1,9 +1,18 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 !============================================================================
-!
-! DC06 branch v4r0b based on v3r9
-!
+
+! 2006-03-15 - P. Koppenburg
+  - Kernel/DVAlgorithm.h
+  - src/Lib/DVAlgorithm.cpp
+    . Bug fix in getTool: modify pointer to tool if NULL
+    . Removed m_loadToolsWarned
+    . New variable bool m_preloadTools (=true) with option PreloadTools.
+      Can be set to false when the tools are not needed (i.e. not for
+      physics analysis). Then they will be loaded on demand, i.e. at any
+      event which will slow down the execution of the first events and may
+      cause aborts due to misconfigured tools only after a long execution.
+
 
 ! 2006-03-15 - J. Palacios
   IDecayFinder.h: 
