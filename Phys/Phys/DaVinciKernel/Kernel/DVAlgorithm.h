@@ -80,7 +80,8 @@ public:
 
   /// Accessor for Particle Filter Tool
   inline IParticleFilter* particleFilter(int index=0)const{
-    return getTool<IParticleFilter>(index,m_filterNames,m_filter,this);
+    info() << "Hello " << index << endmsg ;
+    return DVAlgorithm::getTool<IParticleFilter>(index,m_filterNames,m_filter,this);
   }
 
   /// Accessor for CheckOverlap Tool
@@ -120,7 +121,34 @@ protected:
   TYPE* getTool ( const size_t index, 
                   const std::vector<std::string>& names , 
                   std::vector<TYPE*>& tools,
-                  const IInterface* ptr=NULL ) const ;
+                  const IInterface* ptr=NULL ) const {
+    // the tool is already located properly?
+    if ( index < tools.size() ) { return tools[index] ; }
+    
+    // the tool need to be located 
+    
+    // is it possible to locate the tool in principle?
+    if ( index < names.size() ){
+      Assert( index < names.size() , 
+              "DVAlgorithm::getTools: The tool of type '"  
+              + System::typeinfoName( typeid(TYPE)) + "'/index='"
+              + boost::lexical_cast<std::string>(index) + 
+              "' could not be located" ) ;
+    }
+    
+    // locate only the minimal amount of tools
+    const size_t nT = tools.size() ;
+    for ( std::vector<std::string>::const_iterator iname = names.begin() + nT ; 
+          names.end() != iname ; ++iname ){
+      // have we load enough tools? 
+      if ( index < tools.size() ) { break ; }
+      TYPE* t = NULL;
+      t = getTool<TYPE>( *iname, t, ptr ) ;
+      tools.push_back( t ) ; 
+    } ;
+    
+    return tools[index] ;
+  } 
 
   /** helper protected function to load the tool on-demand  
    *  @param name of tool
@@ -129,9 +157,15 @@ protected:
    *  @return tool 
    */
   template<class TYPE> 
-    TYPE* getTool ( const std::string& name, 
-                    TYPE*& tool,
-                    const IInterface* ptr=NULL ) const ;
+  TYPE* getTool ( const std::string& name, 
+                  TYPE*& t,
+                  const IInterface* ptr=NULL ) const {
+    if ( 0==t ) {  // the tool is already located properly?
+      t = tool<TYPE>( name, ptr )  ;// else get it
+    }
+    return t ;
+  } ;
+
 
 private:
 

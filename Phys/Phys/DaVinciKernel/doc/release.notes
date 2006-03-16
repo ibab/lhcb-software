@@ -3,6 +3,13 @@
 !============================================================================
 
 ! 2006-03-15 - P. Koppenburg
+  - Kernel/DVAlgorithm.h 
+  - src/Lib/DVAlgorithm.cpp
+    . Move the implementation of the getTool methods from the cpp to the header.
+      This avoids a linker error both on linux (run-time) and windows.
+      That's pure black magic.
+
+! 2006-03-15 - P. Koppenburg
   - Kernel/IPhysDesktop.h
     . Remove templated PrimaryVertices method
 
