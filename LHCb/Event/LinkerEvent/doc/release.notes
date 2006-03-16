@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-03-16 - Olivier Callot
+ - Accept a missing template in checking the classID in LinkedTo, LinkedFrom 
+   and AllLinks
+
 !====================== LinkerEvent v2r1 2006-03-15 ==========================
 ! 2006-03-15 - Olivier Callot
  - Restore the default second template. Use T::classID() without instanciation.

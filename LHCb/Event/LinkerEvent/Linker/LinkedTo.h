@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.13 2006-03-15 13:09:16 ocallot Exp $
+// $Id: LinkedTo.h,v 1.14 2006-03-16 16:50:48 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -46,7 +46,9 @@ public:
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
 
-    if ( links->sourceClassID() != SOURCE::classID() ) {
+    //== Check proper template, only if specified. 
+    if ( links->sourceClassID() != SOURCE::classID() &&
+         CLID_ContainedObject   != SOURCE::classID()  ) {
       throw GaudiException( "Incompatible SOURCE type for location " + containerName,
                             "LinkedTo", StatusCode::FAILURE);
     }

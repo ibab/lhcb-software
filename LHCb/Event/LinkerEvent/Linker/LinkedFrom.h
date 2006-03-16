@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.17 2006-03-15 13:09:16 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.18 2006-03-16 16:50:48 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -45,11 +45,13 @@ public:
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
 
+    //== Check proper template, only if specified. 
     if ( links->sourceClassID() != SOURCE::classID() ) {
       throw GaudiException( "Incompatible SOURCE type for location " + containerName,
                             "LinkedFrom", StatusCode::FAILURE);
     }
-    if ( links->targetClassID() != TARGET::classID() ) {
+    if ( links->targetClassID() != TARGET::classID() &&
+         CLID_ContainedObject   != TARGET::classID()  ) {
       throw GaudiException( "Incompatible TARGET type for location " + containerName,
                             "LinkedFrom", StatusCode::FAILURE);
     }
