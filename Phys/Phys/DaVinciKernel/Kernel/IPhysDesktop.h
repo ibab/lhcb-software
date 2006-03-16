@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.8 2006-03-15 13:34:03 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.9 2006-03-16 14:54:28 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -74,17 +74,6 @@ public:
   /// Find all particles & vertices in a tree. 
   // virtual void findAllTree( LHCb::Particle*, LHCb::Particle::ConstVector&, LHCb::Vertex::ConstVector& ) = 0;
   // virtual void findAllTree( LHCb::Vertex*, LHCb::Particle::ConstVector&, LHCb::Vertex::ConstVector& )= 0;
-  
-  /// Retrieve the PV from vertex container !WARNING: does a dynamic_cast 
-  template <class V> const std::vector<const V*> primaryVertices(){
-    const LHCb::PrimVertex::ConstVector pvs = primaryVertices() ;
-    std::vector<const V*> primaries;
-    for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
-      const V* pv = dynamic_cast<const V*>(*ipv) ;
-      primaries.push_back(pv);
-    }
-    return primaries ;
-  };
 
   /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() = 0 ;

@@ -3,6 +3,10 @@
 !============================================================================
 
 ! 2006-03-15 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+    . Remove templated PrimaryVertices method
+
+! 2006-03-15 - P. Koppenburg
   - Kernel/DVAlgorithm.h
   - src/Lib/DVAlgorithm.cpp
     . Bug fix in getTool: modify pointer to tool if NULL
