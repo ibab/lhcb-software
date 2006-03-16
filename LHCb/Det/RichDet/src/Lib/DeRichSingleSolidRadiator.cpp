@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.16 2006-03-16 14:10:44 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.17 2006-03-16 14:57:22 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -31,10 +31,10 @@ const CLID& CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 // Standard Constructor
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator()
   : DeRichRadiator()
- {}
+{}
 
 // Standard Destructor
-DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() 
+DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator()
 {
   if ( m_refIndex ) delete m_refIndex;
   if ( m_rayleigh) delete m_rayleigh;
@@ -59,43 +59,29 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 
   const Material::Tables& myTabProp = geometry()->lvolume()->material()->tabulatedProperties();
   Material::Tables::const_iterator matIter;
-  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter ) 
+  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter )
   {
-    if ( (*matIter) ) 
+    if ( (*matIter) )
     {
-      if ( (*matIter)->type() == "RINDEX" ) 
+      if ( (*matIter)->type() == "RINDEX" )
       {
         m_refIndexTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
             << m_refIndexTabProp->type() << endmsg;
-        m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
-        if ( !m_refIndex->valid() ) 
-        {
-          log << MSG::ERROR
-              << "Invalid RINDEX Rich1DTabProperty for " << m_refIndexTabProp->name() << endreq;
-          return StatusCode::FAILURE;
-        }
       }
-      if ( (*matIter)->type() == "RAYLEIGH" ) 
+      if ( (*matIter)->type() == "RAYLEIGH" )
       {
         m_rayleighTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
             << m_rayleighTabProp->type() << endmsg;
-        m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
-        if ( !m_rayleigh->valid() ) 
-        {
-          log << MSG::ERROR
-              << "Invalid RAYLEIGH Rich1DTabProperty for " << m_rayleighTabProp->name() << endreq;
-          return StatusCode::FAILURE;
-        }
       }
-      if ( (*matIter)->type() == "CKVRNDX" ) 
+      if ( (*matIter)->type() == "CKVRNDX" )
       {
         m_chkvRefIndexTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
             << m_chkvRefIndexTabProp->type() << endmsg;
       }
-      if ( (*matIter)->type() == "ABSLENGTH" ) 
+      if ( (*matIter)->type() == "ABSLENGTH" )
       {
         m_absorptionTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_absorptionTabProp->name() << " type "
@@ -104,7 +90,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     }
   }
 
-  if (!m_refIndexTabProp) 
+  if (!m_refIndexTabProp)
   {
     log << MSG::ERROR << "Radiator " << name() << " without refractive index"
         << endmsg;
@@ -117,6 +103,35 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   return initSC;
 }
 
+StatusCode DeRichSingleSolidRadiator::initTabPropInterpolators()
+{
+  MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
+  log << MSG::DEBUG << "Initialising interpolators" << endreq;
+
+  if ( m_refIndexTabProp )
+  {
+    m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
+    if ( !m_refIndex->valid() )
+    {
+      log << MSG::ERROR
+          << "Invalid RINDEX Rich1DTabProperty for " << m_refIndexTabProp->name() << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  if ( m_rayleighTabProp )
+  {
+    m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
+    if ( !m_rayleigh->valid() )
+    {
+      log << MSG::ERROR
+          << "Invalid RAYLEIGH Rich1DTabProperty for " << m_rayleighTabProp->name() << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
 
 //=========================================================================
 // prepareMomentumVector

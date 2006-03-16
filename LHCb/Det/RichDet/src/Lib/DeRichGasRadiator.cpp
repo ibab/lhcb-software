@@ -1,4 +1,4 @@
-// $Id: DeRichGasRadiator.cpp,v 1.2 2006-03-16 14:10:44 jonrob Exp $
+// $Id: DeRichGasRadiator.cpp,v 1.3 2006-03-16 14:57:22 jonrob Exp $
 // Include files
 
 // Gaudi
@@ -69,7 +69,11 @@ StatusCode DeRichGasRadiator::initialize ( ) {
   else
     msg << MSG::WARNING << "Cannot load Condition GasPressure" << endmsg;
 
-  StatusCode upsc = ums->update(this);
+  const StatusCode upsc = ums->update(this);
+  if ( upsc.isFailure() ) msg << MSG::ERROR << "First UMS update failed" << endreq;
+
+  // Hack - Update interpolators in base class after first update
+  initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return upsc;

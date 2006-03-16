@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.11 2006-03-16 14:10:44 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.12 2006-03-16 14:57:21 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -118,6 +118,9 @@ protected:
                                     double min,
                                     double max,
                                     unsigned int nbins );
+
+  /// Initialise Tab Property Interpolators
+  StatusCode initTabPropInterpolators();
 
 private:
 

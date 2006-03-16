@@ -1,4 +1,4 @@
-// $Id: DeRichAerogelRadiator.cpp,v 1.2 2006-03-16 14:10:44 jonrob Exp $
+// $Id: DeRichAerogelRadiator.cpp,v 1.3 2006-03-16 14:57:21 jonrob Exp $
 // Include files
 
 #include "Kernel/PhysicalConstants.h"
@@ -78,7 +78,11 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
 
-  StatusCode upsc = ums->update(this);
+  const StatusCode upsc = ums->update(this);
+  if ( upsc.isFailure() ) msg << MSG::ERROR << "First UMS update failed" << endreq;
+
+  // Hack - Update interpolators in base class after first update
+  initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return upsc;

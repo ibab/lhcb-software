@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.13 2006-03-02 09:35:23 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.14 2006-03-16 14:57:22 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -42,7 +42,8 @@ const CLID& DeRichMultiSolidRadiator::classID()
 
 StatusCode DeRichMultiSolidRadiator::initialize()
 {
-  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
+  const StatusCode sc = DeRichRadiator::initialize();
+  if ( sc.isFailure() ) return sc;
 
   MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
   log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator "
@@ -65,10 +66,8 @@ StatusCode DeRichMultiSolidRadiator::initialize()
   else
     if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) return StatusCode::FAILURE;
 
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
-
 
 //=========================================================================
 // add physical volumes to multi solid radiator
