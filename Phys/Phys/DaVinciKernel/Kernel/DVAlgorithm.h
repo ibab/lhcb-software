@@ -147,7 +147,7 @@ private:
   /// Concrete type desktop
   std::string m_desktopName;
 
-private:
+protected:
   /// Reference to Vertex Fitter
   mutable std::vector<IVertexFit*> m_vertexFit;
   /// Concrete type of vertex fitter
