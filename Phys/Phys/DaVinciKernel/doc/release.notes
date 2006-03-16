@@ -2,7 +2,7 @@
 ! Responsible : P. Koppenburg
 !============================================================================
 
-! 2006-03-15 - P. Koppenburg
+! 2006-03-16 - P. Koppenburg
   - Kernel/DVAlgorithm.h 
   - src/Lib/DVAlgorithm.cpp
     . Move the implementation of the getTool methods from the cpp to the header.
