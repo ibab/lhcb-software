@@ -4,6 +4,14 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-03-16 - Chris Jones
+ - Add some checks on the validity of the Rich1DTabProperty after they are
+   created
+ - Add a work around to the problem of Rich1DTabProperty objects being created
+   before UMS has updated the underlying tables. This problem will "go away"
+   once Rich1DTabProperty can automatically update itself on changes to the 
+   underlying tables
+
 ! 2006-03-15 - Antonis Papanestis
  - Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
    the update of the gas and aerogel properties. Small changes in the
