@@ -12,7 +12,9 @@
       physics analysis). Then they will be loaded on demand, i.e. at any
       event which will slow down the execution of the first events and may
       cause aborts due to misconfigured tools only after a long execution.
-
+    . Declare all tool accessors as const and the tools and tool vectors
+      as mutable.
+    
 
 ! 2006-03-15 - J. Palacios
   IDecayFinder.h: 

@@ -64,42 +64,42 @@ public:
   int getAlgorithmID();
  
   /// Accessor for PhysDesktop Tool
-  inline IPhysDesktop* desktop(){
+  inline IPhysDesktop* desktop()const{
     return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
   }
 
   /// Accessor for Vertex Fitter Tool
-  inline IVertexFit* vertexFitter(int index=0){
+  inline IVertexFit* vertexFitter(int index=0)const{
     return getTool<IVertexFit>(index,m_vertexFitNames,m_vertexFit,this);
   }
 
   /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* geomDispCalculator(){
+  inline IGeomDispCalculator* geomDispCalculator()const{
     return getTool<IGeomDispCalculator>(m_geomToolName,m_geomTool,this);
   }
 
   /// Accessor for Particle Filter Tool
-  inline IParticleFilter* particleFilter(int index=0){
+  inline IParticleFilter* particleFilter(int index=0)const{
     return getTool<IParticleFilter>(index,m_filterNames,m_filter,this);
   }
 
   /// Accessor for CheckOverlap Tool
-  inline ICheckOverlap* checkOverlap(){
+  inline ICheckOverlap* checkOverlap()const{
     return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
   }
 
   /// Accessor for Algorithm2ID Tool
-  inline IAlgorithm2ID* algorithmID(){
+  inline IAlgorithm2ID* algorithmID()const{
     return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
   }
 
   /// Tagging Tool
-  inline IBTaggingTool* flavourTagging(){
+  inline IBTaggingTool* flavourTagging()const{
     return getTool<IBTaggingTool>(m_taggingToolName,m_taggingTool);
   }
 
   /// Descnedants
-  inline IParticleDescendants* descendants(){
+  inline IParticleDescendants* descendants()const{
     return getTool<IParticleDescendants>(m_descendantsName,m_descendants);
   }
 
@@ -149,7 +149,7 @@ private:
 
 private:
   /// Reference to Vertex Fitter
-  std::vector<IVertexFit*> m_vertexFit;
+  mutable std::vector<IVertexFit*> m_vertexFit;
   /// Concrete type of vertex fitter
   std::vector<std::string> m_vertexFitNames;
 
@@ -164,7 +164,7 @@ private:
   std::string m_checkOverlapName;
 
   /// Reference to ParticleFilter
-  std::vector<IParticleFilter*> m_filter;
+  mutable std::vector<IParticleFilter*> m_filter;
   /// Concrete Type of ParticleFilter tool
   std::vector<std::string> m_filterNames;  
 
