@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.111 2006-02-17 14:34:18 gcorti Exp $
+! $Id: release.notes,v 1.112 2006-03-16 14:28:00 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+! =============================================================================
 
-!======================= GiGa v18r0 2005-02-17 ================================
+!======================= GiGa v18r1 2005-02-17 ================================
 ! 2006-02-17 - Gloria CORTI
  - GiGaMagFieldBase.cpp
    . When requiring MagneticFieldSvc create if it does not exist already
