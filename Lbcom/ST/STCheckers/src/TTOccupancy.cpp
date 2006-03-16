@@ -35,8 +35,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<TTOccupancy> s_Factory;
-const IAlgFactory& TTOccupancyFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( TTOccupancy );
 
 //--------------------------------------------------------------------
 //
@@ -139,8 +138,7 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit){
       aChan.station() == 1 ? offset = ttSector->column() - 9: offset = ttSector->column() - 10;
     }
     else {
-      warning() << "unknown row " << endmsg;
-      return StatusCode::FAILURE;
+      return Warning( "unknown row " );
     } 
   
     plot(binValue(aChan.strip())+(nstrips*(offset-1)),histo, 0., m_hMax, m_nBins);

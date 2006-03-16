@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+!============================ STCheckers v1r1 2006-03-16 =======================
 ! 2006-03-16
  - Minor tuning of STEffMonitor, STClusterResolution
  - Remove STNoiseClusterMonitor replace with STClusterClassification
