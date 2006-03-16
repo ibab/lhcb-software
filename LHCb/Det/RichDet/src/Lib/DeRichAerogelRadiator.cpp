@@ -1,4 +1,4 @@
-// $Id: DeRichAerogelRadiator.cpp,v 1.3 2006-03-16 14:57:21 jonrob Exp $
+// $Id: DeRichAerogelRadiator.cpp,v 1.4 2006-03-16 17:36:26 jonrob Exp $
 // Include files
 
 #include "Kernel/PhysicalConstants.h"
@@ -47,7 +47,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   MsgStream msg( msgSvc(), "DeRichAerogelRadiator" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  const StatusCode sc = DeRichSingleSolidRadiator::initialize();
+  StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
   // extract tile number from detector element name
@@ -78,14 +78,18 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
 
-  const StatusCode upsc = ums->update(this);
-  if ( upsc.isFailure() ) msg << MSG::ERROR << "First UMS update failed" << endreq;
+  sc = ums->update(this);
+  if ( sc.isFailure() ) 
+  { 
+    msg << MSG::ERROR << "First UMS update failed" << endreq;
+    return sc;
+  }
 
   // Hack - Update interpolators in base class after first update
-  initTabPropInterpolators();
+  sc = initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
-  return upsc;
+  return sc;
 }
 
 //=========================================================================

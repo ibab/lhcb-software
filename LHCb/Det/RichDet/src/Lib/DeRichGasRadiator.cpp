@@ -1,4 +1,4 @@
-// $Id: DeRichGasRadiator.cpp,v 1.3 2006-03-16 14:57:22 jonrob Exp $
+// $Id: DeRichGasRadiator.cpp,v 1.4 2006-03-16 17:36:26 jonrob Exp $
 // Include files
 
 // Gaudi
@@ -47,7 +47,7 @@ StatusCode DeRichGasRadiator::initialize ( ) {
   MsgStream msg( msgSvc(), "DeRichGasRadiator" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  const StatusCode sc = DeRichSingleSolidRadiator::initialize();
+  StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
   // update refractive index
@@ -69,14 +69,18 @@ StatusCode DeRichGasRadiator::initialize ( ) {
   else
     msg << MSG::WARNING << "Cannot load Condition GasPressure" << endmsg;
 
-  const StatusCode upsc = ums->update(this);
-  if ( upsc.isFailure() ) msg << MSG::ERROR << "First UMS update failed" << endreq;
+  sc = ums->update(this);
+  if ( sc.isFailure() ) 
+  {
+    msg << MSG::ERROR << "First UMS update failed" << endreq;
+    return sc;
+  }
 
   // Hack - Update interpolators in base class after first update
-  initTabPropInterpolators();
+  sc = initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
-  return upsc;
+  return sc;
 
 }
 
