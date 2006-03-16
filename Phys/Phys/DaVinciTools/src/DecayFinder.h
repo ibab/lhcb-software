@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.12 2006-03-15 19:00:44 jpalac Exp $
+// $Id: DecayFinder.h,v 1.13 2006-03-16 13:35:56 pkoppenb Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -108,7 +108,7 @@ public:
 
   /// Does the described decay exists in the event?
   bool hasDecay( const LHCb::Particle::ConstVector& event );
-  bool hasDecay( const LHCb::Particle::ConstContainer& event );
+  bool hasDecay( const LHCb::Particle::Container& event );
   bool hasDecay( void );
 
   /** Try to find the (next) match of the decay in the event.
@@ -122,7 +122,7 @@ public:
    */
   bool findDecay( const LHCb::Particle::ConstVector &event,
                   const LHCb::Particle*& previous_result );
-  bool findDecay( const LHCb::Particle::ConstContainer& event,
+  bool findDecay( const LHCb::Particle::Container& event,
                   const LHCb::Particle*& previous_result );
   bool findDecay( const LHCb::Particle*& previous_result );
 
@@ -227,9 +227,9 @@ private:
 
     ~Descriptor();
 
-    template<class iter> bool test( const iter first, const iter last,
+    template<class Iter> bool test( const Iter first, const Iter last,
                                     const LHCb::Particle*& previous_result ) {
-      iter start;
+      Iter start;
       if( previous_result &&
           ((start=std::find(first,last,previous_result)) == last) ) {
         previous_result = NULL;
@@ -240,7 +240,7 @@ private:
       
       if( mother == NULL ) { // No mother == pp collision
         std::list<const LHCb::Particle*> prims;
-        LHCb::Particle::ConstVector::const_iterator i;
+        Iter i;
         for( i=(previous_result ? start : first); i != last; i++ ) {
           // Particle have no origin, let's say it comes from the pp collision.
           prims.push_back(*i);
@@ -256,7 +256,7 @@ private:
         return false;
       }
       
-      iter part_i;
+      Iter part_i;
       part_i = (previous_result ? start : first);
       while( (part_i != last) && (test(*part_i) == false) )
         part_i++;

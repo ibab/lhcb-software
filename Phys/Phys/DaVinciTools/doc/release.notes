@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.192 2006-03-15 19:00:43 jpalac Exp $
+! $Id: release.notes,v 1.193 2006-03-16 13:35:56 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 !============================================================================
+
+! 2006-03-16 - J. Palacios
+  - DecayFinder: 
+       Replace LHCb::Particle::ConstContainer by LHCb::Particle::Container
 
 ! 2006-03-15 - J. Palacios
   - DecayFinder: 
