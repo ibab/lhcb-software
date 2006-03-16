@@ -5,7 +5,7 @@
  *  Header file for tool : RichRadIntersection
  *
  *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.3 2006-03-16 16:10:57 jonrob Exp $
+ *  $Id: RichRadIntersection.h,v 1.4 2006-03-16 16:13:05 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
@@ -83,8 +83,8 @@ public:
   }
   
   /**
-   * Set accessor to member m_radiator
-   * @param radiator the new value for m_radiator
+   * Set pointer to associated radiator detector element
+   * @param pointer to associated radiator detector element
    */
   inline void setRadiator ( const DeRichRadiator* radiator ) 
   {
@@ -92,8 +92,8 @@ public:
   }
 
   /**
-   * Get accessor to member m_radiator
-   * @return the current value of m_radiator
+   * Get pointer to associated radiator detector element
+   * @return pointer to associated radiator detector element
    */
   inline const DeRichRadiator* radiator () const
   {
