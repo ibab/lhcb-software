@@ -12,7 +12,7 @@ set MODE = $CMTCONFIG
 if ($#argv == 0 ) then
   echo "\nUsage: Boole.job <options> [<mode>]"
   echo " where:"
-  echo "  <options> (mandatory) is name of options file (e.g. v200402)"
+  echo "  <options> (mandatory) is name of options file (e.g. v200601)"
   echo "  <mode>    (optional)  is execution mode (e.g. $CMTDEB)"
   exit 0
 else
@@ -24,7 +24,7 @@ else
   shift
 endif
 #
-set Bversion = "v11r0"
+set Bversion = "v11r1"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 

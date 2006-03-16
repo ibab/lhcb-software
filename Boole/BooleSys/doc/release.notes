@@ -3,6 +3,23 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v11r1>2006-03-16 Boole v11r1</A></H1><PRE>
+This version uses projects Gaudi v18r2, LHCb v20r1, Lbcom v4r1
+  and databases XmlDDDB v30r0, XmlConditions v1r4, ParamFiles v4r1, FieldMap v4r6
+Requires input from Gauss v24r1 or greater. Output needs Brunel v30r0 or greater
+
+This is the first bug fix release for commissioning of the software for DC06.
+
+- New tuning
+  . Minor tuning of STEffMonitor, STClusterResolution (STCheckers v1r1)
+
+- Bug fixes
+  . Fix handling of Velo interstrip position bits and threshold bit
+    (VeloDAQ v3r1, DigiEvent v1r1)
+
+- Repackaging
+  . Move CaloZSupAlg to CaloDAQ (CaloDAQ v2r1, CaloDigit v2r1)
+
 </PRE><H1><A NAME=v11r0>2006-03-13 Boole v11r0</A></H1><PRE>
 This version uses projects Gaudi v18r2, LHCb v20r0, Lbcom v4r0
   and databases XmlDDDB v30r0, XmlConditions v1r4, ParamFiles v4r1, FieldMap v4r6

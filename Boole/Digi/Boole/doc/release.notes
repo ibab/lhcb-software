@@ -3,7 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v11r0>2006-03-13 Boole v11r1</A></H1><PRE>
+</PRE><H1><A NAME=v11r1>2006-03-16 Boole v11r1</A></H1><PRE>
+ - Adapt requirements to Lbcom v4r1, LHCb v20r1
+
+</PRE><H1><A NAME=v11r0>2006-03-13 Boole v11r0</A></H1><PRE>
  - Major new version with changes for:
    . New event model, LHCb namespace, migration to MathCore
    . 1MHz readout and new RawEvent format

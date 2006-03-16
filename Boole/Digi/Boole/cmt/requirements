@@ -1,5 +1,5 @@
 package Boole
-version v11r0
+version v11r1
 
 branches doc cmt job options
 
@@ -28,19 +28,19 @@ use ParamFiles	         v4r1        -no_auto_imports
 use FieldMap	         v4r6        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r0)
-use LHCb                 v20r0       -no_auto_imports
+#-- LHCb libraries (from LHCB_v20r1)
+use LHCb                 v20r1       -no_auto_imports
 use SimComponents        v1r0   Sim  -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r0)
-use LbcomSys             v4r0        -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r1)
+use LbcomSys             v4r1        -no_auto_imports
 
-#-- BooleSys v11r0 packages
+#-- BooleSys v11r1 packages
 use DigiAlg              v4r0   Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r0   Calo -no_auto_imports
-use CaloDigit            v2r0   Calo -no_auto_imports
+use CaloDigit            v2r1   Calo -no_auto_imports
 
 # Velo
 use VeloSimulation       v2r0   Velo -no_auto_imports

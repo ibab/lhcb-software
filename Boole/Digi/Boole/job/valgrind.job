@@ -12,14 +12,14 @@
 if ($#argv == 0 ) then
   echo "\nUsage: valgrind.job <options>"
   echo " where:"
-  echo "  <options> (mandatory) is name of options file (e.g. v200402)"
+  echo "  <options> (mandatory) is name of options file (e.g. v200601)"
   exit 0
 else
   set Dver = $1
   shift
 endif
 #   
-set Bversion = "v11r0"
+set Bversion = "v11r1"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
