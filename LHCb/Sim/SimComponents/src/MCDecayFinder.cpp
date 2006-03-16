@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: MCDecayFinder.cpp,v 1.2 2006-03-16 12:59:36 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -76,7 +76,7 @@ StatusCode MCDecayFinder::initialize(){
   }
   if( compile(m_source) ){
     debug() << "The compilation of the decay was successfull"
-        << endreq;
+            << endreq;
     return StatusCode::SUCCESS;
   }
   err() << "Could not compile the decay description" << endreq;
@@ -94,7 +94,7 @@ StatusCode MCDecayFinder::setDecay( std::string decay ){
   debug() << "Setting decay to " << decay << endreq;
   if( compile(decay) ) {
     debug() << "The compilation of the decay was successfull"
-        << endreq;
+            << endreq;
     m_source = decay;
     if( old_decay )
       delete old_decay;
@@ -159,18 +159,18 @@ bool MCDecayFinder::compile( std::string &source )
   catch( DescriptorError e )
   {
     err() << "Invalid decay description '"
-        << source << "'" << endreq;
+          << source << "'" << endreq;
     err() << e.cause() << endreq;
     yy_delete_buffer(bs);
     return false;
   }
   yy_delete_buffer(bs);
   debug() << "Result of the compilation:\n"
-      << revert() << endreq;
+          << revert() << endreq;
   return true;
 }
 
-bool MCDecayFinder::hasDecay( const std::vector<LHCb::MCParticle*> &event )
+bool MCDecayFinder::hasDecay( const  LHCb::MCParticle::ConstVector &event )
 {
   verbose() << "About to test the event" << endreq;
   const LHCb::MCParticle *drop_me = NULL;
@@ -183,8 +183,8 @@ bool MCDecayFinder::hasDecay( const std::vector<LHCb::MCParticle*> &event )
   }
 }
 
-bool MCDecayFinder::findDecay( const std::vector<LHCb::MCParticle*> &event,
-                                   const LHCb::MCParticle *&previous_result )
+bool MCDecayFinder::findDecay( const LHCb::MCParticle::ConstVector& event,
+                               const LHCb::MCParticle*& previous_result )
 {
   verbose() << "About to test the event" << endreq;
   if( m_decay )
@@ -242,7 +242,7 @@ bool MCDecayFinder::findDecay( const LHCb::MCParticle *&previous_result )
   if( !mcparts )
   {
     fatal() << "Enable to find MC particles at '"
-        << LHCb::MCParticleLocation::Default << "'" << endreq;
+            << LHCb::MCParticleLocation::Default << "'" << endreq;
     return false;
   }
   return findDecay( *mcparts, previous_result );
@@ -289,10 +289,10 @@ void MCDecayFinder::decayMembers( const LHCb::MCParticle *head,
 }
 
 void MCDecayFinder::decaySubTrees(
-                      const LHCb::MCParticle *head,
-                      std::vector<std::pair<const LHCb::MCParticle*,
-                                            std::vector<LHCb::MCParticle*> >
-                                 > & subtrees )
+                                  const LHCb::MCParticle *head,
+                                  std::vector<std::pair<const LHCb::MCParticle*,
+                                  std::vector<LHCb::MCParticle*> >
+                                  > & subtrees )
 {
   m_decay->test(head, NULL, &subtrees);
 }
@@ -367,9 +367,9 @@ std::string MCDecayFinder::Descriptor::describe( void )
 
 bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
                                       std::vector<LHCb::MCParticle*> *collect,
-                            std::vector<std::pair<const LHCb::MCParticle*,
-                            std::vector<LHCb::MCParticle*> >
-                                       > *subtrees )
+                                      std::vector<std::pair<const LHCb::MCParticle*,
+                                      std::vector<LHCb::MCParticle*> >
+                                      > *subtrees )
 {
   std::vector<LHCb::MCParticle*> local_collect(0);
   std::vector<LHCb::MCParticle*> *local = NULL;
@@ -399,7 +399,7 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
       if( subtrees ) {
         std::vector<std::pair<const LHCb::MCParticle*,
           std::vector<LHCb::MCParticle*> > > local_subtrees;
-          result = testDaughters(parts,local,&local_subtrees);
+        result = testDaughters(parts,local,&local_subtrees);
         if( result )
           subtrees->insert(subtrees->end(),
                            local_subtrees.begin(),
@@ -426,9 +426,9 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
 bool
 MCDecayFinder::Descriptor::testDaughters(std::list<const LHCb::MCParticle*> &parts,
                                          std::vector<LHCb::MCParticle*> *collect,
-                            std::vector<std::pair<const LHCb::MCParticle*,
-                                                  std::vector<LHCb::MCParticle*> >
-                                       > *subtrees)
+                                         std::vector<std::pair<const LHCb::MCParticle*,
+                                         std::vector<LHCb::MCParticle*> >
+                                         > *subtrees)
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
@@ -473,8 +473,8 @@ void MCDecayFinder::Descriptor::addDaughter( Descriptor *daughter )
 }
 
 void MCDecayFinder::Descriptor::addNonResonnantDaughters(
-                                  std::list<const LHCb::MCParticle*> &parts,
-                                  const LHCb::MCParticle *part )
+                                                         std::list<const LHCb::MCParticle*> &parts,
+                                                         const LHCb::MCParticle *part )
 {
   SmartRefVector<LHCb::MCVertex>::const_iterator vi;
   for ( vi = part->endVertices().begin();
@@ -801,7 +801,7 @@ MCDecayFinder::ParticleMatcher::test( const LHCb::MCParticle *part,
     {
       static Quarks Q[] = { empty, down, up, strange, charm, bottom, top };
       static Quarks AQ[] = { empty, antidown, antiup, antistrange,
-                              anticharm, antibottom, antitop };
+                             anticharm, antibottom, antitop };
       int q = firstQuark(part->particleID().pid());
       Quarks q1 = (q<0 ? AQ[-q] : Q[q]);
       Quarks cq1 = (q<0 ? Q[-q] : AQ[q]); // cc hypothesis

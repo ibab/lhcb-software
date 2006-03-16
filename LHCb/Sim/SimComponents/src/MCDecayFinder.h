@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: MCDecayFinder.h,v 1.2 2006-03-16 12:59:36 pkoppenb Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -108,8 +108,8 @@ public:
   std::string revert( void );
 
   /// Does the described decay exists in the event?
-  bool hasDecay( const std::vector<LHCb::MCParticle*> &event );
-  bool hasDecay( const LHCb::MCParticles &event );
+  bool hasDecay( const LHCb::MCParticle::ConstVector &event );
+  bool hasDecay( const LHCb::MCParticle::Container &event );
   bool hasDecay( void );
 
   /** Try to find the (next) match of the decay in the event.
@@ -121,10 +121,10 @@ public:
    *         parameter, a reference to a const LHCb::MCParticle *.
    *  The particle pointed to by previous_result must be contained in event.
    */
-  bool findDecay( const std::vector<LHCb::MCParticle*> &event,
-                  const LHCb::MCParticle *&previous_result );
-  bool findDecay( const LHCb::MCParticles &event,
-                  const LHCb::MCParticle *&previous_result );
+  bool findDecay( const LHCb::MCParticle::ConstVector& event,
+                  const LHCb::MCParticle*& previous_result );
+  bool findDecay( const LHCb::MCParticle::Container& event,
+                  const LHCb::MCParticle*& previous_result ) ;
   bool findDecay( const LHCb::MCParticle*&previous_result );
 
   /** Return the tree pointed at by head as a flat list.
