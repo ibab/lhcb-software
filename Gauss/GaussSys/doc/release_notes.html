@@ -4,9 +4,280 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v24r1">2006-03-15 - GaussSys v24r1</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version for tests. 
+   Includes also changes described in v24r0. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2 (via GENSER 1_2_1), lhapdf 4.2  
+   DecFiles v11r4, ParamFiles v4r1 
+   Geant4 v71r0p13 (based on geant4.7.1.p01)
+   LHCb v20r0 (and Gaudi v18r2)
+   XmlDDDB v30r0, XmlConditions v1r4, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r1 2006-03-16 =============================
+! 2006-03-16 - Gloria CORTI
+ - Switch off in normal production the extended RICH information
+   . Simulation.opts
+ 
+! 2006-03-16 - Gloria CORTI from Alessia SATTA
+ - Adapt to new path of muon detector element the special simulation cuts
+   . xml/Simulation.xml
+ 
+! 2006-03-08 - Gloria CORTI
+ - Use new field map as scaled to agree with measurements (FieldMap v4r7)
+ - Use new version of GaussTracker (v5r1) to fill |P| in MCHit
+ - Use new version of GaussRICH (v6r2) to adapt to changes in MCRichHit
+ - Introduce example for generating fixed number of interactions
+   . FixedNInteractions.opts  - NEW
+   . Generator.opts
+ 
+! 2006-02-23 - Gloria CORTI
+ - Use latest DecFiles v11r4 (temporarly in GAUSS project to switch off
+   use of PHOTOS in all decays, since it give problems to reproduce events)
+ 
+! 2006-02-17 - Gloria CORTI
+ - Use GiGa v18r1 for new setting of field
+   Use modification for Generators (v4r1) allowing to produce b inclusive
+   Use PackedEvent to be able to use options from
+   . requirement
+ 
+! 2006-02-16 - Gloria CORTI
+ - Introduce setting of Event time and step in EventClockSvc to get information
+   for simulated event
+   . Common.opts
+ - Modify ParticleGuns.opts to fix problem obserbed by S.Easo of wrongly
+   re-sequencing GenMonitor
+   . ParticleGuns.opts
+ - Modify options for Velo detailed geometry to allow for misalignment, from
+   Mark TOBIN
+   . SimVeloGeometry.opts
+ - Use new options for dictionary from $STDOPTS
+   . Common.opts
+   . GaussPoolIO.opts - REMOVED
+ - Use new version of ParamFiles v4r1 to get ParticleData.txt with changes
+   of B** masses
+   . requirements
+ 
+! 2006-02-13 - Gloria CORTI
+ - Switch on Calorimeters, requires GaussCalo v6r1 and CaloMoniSim v2r1
+   . SimGeometry.opts
+   . Monitor.opts
+   . requirements
+ 
+! 2006-02-13 - Gloria CORTI
+ - Switch on simulation of TT that works.
+   . SimGeometry.opts
+ 
+! 2006-02-10 - Gloria CORTI
+ - Use GaussRICH v6r1 and VelOGauss v1r2
+   . requirements
+ - Switch on monitoring of Velo and RICH working with the geometry structure
+   (requires VeloGauss v1r2 and GaussRICH v6r1)
+   . Monitor.opts
+ - Remove simulation xml settings for old geometry.
+   . Simulation-v200412.xml - REMOVED
+ - Adapt simulation xml setting to new structure in RICHes, from Sajan EASO
+   . Rich1AerogelRegionDefinition.xml,
+     RichOverallRegionDefinition.xml,
+     RichSimulationAttributes.xml
+ - Set paths for RICH surfaces as in new detector structure and switch on
+   its simulation (requires GaussRICH v6r1)
+   . SimGeometry.opts
+   . Simulation.opts
+ - Switch back simulation of IT, now working.
+   . SimGeometry.opts
+ - Add loading of STDet, OTDet and RichDet
+   . Common.opts
+ 
+! 2006-02-09 - Gloria CORTI
+ - Use new detector description lhcb-v200601.xml from XmlDDDB v30r0
+   . requirements
+   . Common.opts - set it as default
+   . v200601.opts - New
+   . v200511.opts - Removed
+ - Adapt GetTrackerHits algorithms instances for the Velo, TT, IT, OT and Muon
+   to set the DeElement paths to new structure with regions
+   . Simulation.opts
+ - Switch off temporarly RICH physics until GaussRIHC has necessary changes
+   . Simulation.opts
+ - Adapt list of detectors to be simulated to use new DeElement paths, comment
+   those that either give a crash or warning messages because still looking at
+   pre-v30r0 XmlDDDb.
+   . SimGeometry.opts
+ - Temporarly switch off monitors depending on detector paths not yet migrated
+   to new structure
+   . Monitor.opts
+ 
+!========================== VeloGauss v1r2 2006-02-14 ========================
+! 2006-03-10 - Tomasz Szumlak
+ - using DeVeloLocation namespace
+ 
+! 2006-02-02 - Tomasz Szumlak
+ - Use a midPoint() method to determine sensor number instead of exit()
+   or entry() methods (problems with misaligned Velo sensors)
+ 
+! 2006-02-14 - Gloria CORTI
+ - Introduce necessary use of GaudiAlg, no longer gotten via LHCbKernel
+   . requirements
+ 
+! 2006-02-08 - Tomasz Szumlak
+ - new detector geometry XmlDDDB v30r0, new detector path
+ 
+!==================== CaloMoniSim v2r1 2006-02-13 =============================
+! 2006-02-13 - Olivier Deschamps
+ - GaudiHistoAlg migration completed for MCCaloMonitor.{h,cpp}
+ - Adapt /dd/Structure/ path to new enveloppe (DownstreamRegion)
+ 
+!===================== GaussCalo v8r1 2006-02-13 =============================
+! 2006-02-13 - Olivier Deschamps
+ - Adapt pathes to DownstreamRegion enveloppe in options files.
+ 
+!======================= GaussTracker v5r1 2006-03-09 ========================
+ 2006-03-08 - Gloria CORTI
+ - Introduce filling of new variable in MCHit (absolute momentum)
+   . src/TrackerHit.{h,cpp}
+   . src/GiGaSensDetTracker.cpp
+   . src/GetTrackerHitsAlg.cpp
+ - Use  midPoint() method of MCHit instead of calculating it locally to
+   search for detectorID
+   . src/GetTrackerHitsAlg.cpp
+ 
+! 2006-02-21 - Alessia Satta
+ - define middle=(entry+exit)/2 as hit position to search for detectorID ,
+   previous it was entry which causes some rounding problems
+ 
+!======================== GaussRICH v6r2 2006-03-09 ===========================
+! 2006-03-06  Sajan Easo
+ - Use of PSF in Hpd Photoelectric effect improved.
+ - RichAnalysis improved in RichHpdRecon.cpp  to reconstruct the quadratic law.
+! 2006-03-01 - Chris Jones
+ - More improvements to the end converters
+  + MCRichHit can now store radiator and detector enum types for all radiator
+    and detector sources and  "invalid" radiators and detectors.
+  + Improvements to monitoring
+  + Additions to RichG4Hit, so it can now return the enum types itself.
+  + SensDetID now set as the pixel RichSmartID
+  + Requires latest version of RichDet and MCEvent
+ 
+! 2006-02-27  Sajan Easo
+ - Improved the RichAnalysis for histogramming the hpd QW hits info
+ - As part of the 'extended output info' , the calculation for the location of
+    exit point of the photon from aerogel fixed using the raidator numbers.
+ - Introduced the flags to have the HpdMagnetic field distortions read in
+   from the conditions database. The current default is not to read these distortion info
+   and just use a quadratic law.
+ 
+! 2006-02-22 - Chris Jones
+ - Update the setting of the sensDetID in the MCRichHits
+ - Add some initialisation printout from the converter algs
+ 
+! 2006-02-21  Sajan Easo
+ - The Flag for MC particle creation for the case of charged particle hitting
+  the HPD Si Det activated in SensDet.cpp.
+ - Some histograms updated
+ 
+!======================== GaussRICH v6r1 2006-02-17 ===========================
+! 2006-02-16 - Chris Jones
+ - Update GetMCRichHitsAlg for new MC flags
+ 
+! 2006-02-14 - Sajan Easo
+  -Histograms in RichAnalysis fixed tobe compatible with the xmlv30r0
+  - Minor changes in the MCRichHit convertor
+  - gas quartz window name paths updated for the rich1 and rich2
+  - HpdSiEnergy loss activated for all charged particles. This
+    does nothing except when a particle hits the hpd silicon detector.
+ 
+! 2006-02-13 - Chris Jones
+ - Update MCRichHit converter to include
+  + Information for new radiator types (requires new MCEvent)
+  + SensDet ID set from RichG4Hit
+ - Also start clean up process for hard coded strings, by using instead RichDet
+   definition.
+ 
+! 2006-02-10 - Gloria CORTI
+ - Remove commented lines in requirements and set version v6r1
+ 
+! 2006-02-10 Sajan Easo
+ - Version compatible with xmlddbv30r0 with the envelope volumes.
+ - Modified the RichAnalysis to be compatible with LHCB v20r0 onwards
+   which uses MathCore.
+! 2006-02-06 - Chris Jones
+ - Fix problem with MCRichTrack converter algorithm aborting production if
+   empty MCRichSegment container is found.
+
+!======================= GiGa v18r1 2005-02-17 ============================
+! 2006-02-17 - Gloria CORTI
+ - GiGaMagFieldBase.cpp
+   . When requiring MagneticFieldSvc create if it does not exist already
+ - GiGaFieldMgrBase.cpp
+   . Change default setting of delta_intersection to 1e-05mm (see T.Ruf
+     presentation at T-Rec of 2006-01-23
+     http://indico.cern.ch/conferenceDisplay.py?confId=a06540)
+ 
+!=================== Generators v4r1 2006-03-16 ===========================
+! 2006-03-12 - Patrick Robbe
+ - Generation: fix interaction counters to count direct B from protons
+   as b quark.
+ 
+! 2006-03-07 - Patrick Robbe
+ - phocin: set up PHOTOS to work with more than 2 charged tracks
+   and interferences
+ - SignalPlain: add counters
+ 
+! 2006-02-22 - Patrick Robbe
+ - requirements: use names with double underscore
+ - ExternalGenerator, EvtGenDecay: use names with __
+ - GenCounters: fix counter when there is a B oscillating
+ - Signal: use end vertex as signal process
+ - Generation: number HepMC::GenEvent with pile up number
+ 
+! 2006-02-17 - Patrick Robbe
+ - HepMCUtils: add utility functions to help with HepMC structures.
+ - ExternalGenerator: change decay heavy particle methods to be able
+     to reproduce events.
+ - Signal: add counters of excited states and B hadron types,
+     fix clean events.
+ - EvtReport, EvtGenDecay: fix overload of EvtGen output facility.
+ - GenCouters: add counters for signal event types.
+ - DumpMC: order particles when printing them.
+ - Generation: improve reproducibility of events.
+ - Inclusive, Signal...: use new function to decay heavy particles.
+ 
+! 2006-02-07 - Patrick Robbe
+ - EvtGenDecay: finalize random generator at destruction of EvtGenGaudiRandom
+ - LHAPdf interface: fix memoty leaks
+ 
+! 2006-02-06 - Patrick Robbe
+ - Generation: fix problem with HepMCEvents (crashing for inclusive and
+       signal productions)
+ - GenCounters: add several utility functions to handle array of counters.
+ 
+! 2006-02-05 - Patrick Robbe
+ - requirements: use SEAL
+ - Generation: use arrays to contain counters
+ - Use temporary file class from SEAL to make temporary files.
+ 
+! 2006-02-01 - Patrick Robbe
+ - ExternalGenerator and src/Lib/EVLCTEQ.F: remove warnings when not in DEBUG
+     mode for LHAPDF.
+ - Remove includes of CLHEP SystemOfUnits
+ 
+!======================== EvtGen v8r7 2006-03-12  ==========================
+! 2006-03-12 - Patrick Robbe
+ - cmt/requirements: build shared library for EvtGen and uses -O2
+   flag to compile FORTRAN files (to be compatible with GENSER
+    compilation flags)
+ 
+! 2006-02-07 - Patrick Robbe
+ - EvtGenBase/EvtRandomEngine.hh, EvtPartWave and EvtCGCoefSingle:
+    fix memory leaks
+ 
+!=============================================================================
+
 <H1><A NAME="v24r0">2006-02-06 - GaussSys v24r0</A></H1><PRE>
 <H2><A NAME="Note"> Preliminary DC06 version.
-   This version works only with modified XmlDDDB v27r1 (for sensdet). </A></H2>
+   This version works only with modified XmlDDDB v27r1 (for sensdet). 
+   It is only available as CVS tag. </A></H2>
 <H3><A NAME="Use">This version uses:
    Pythia 6_325.2, photos 215.2 (via GENSER 1_2_1), lhapdf 4.2  
    DecFiles v11r2, ParamFiles v3r13 
@@ -364,7 +635,11 @@ Purpose: LHCb Simulation program
  - a new version of the Velo monitoring package for Gauss stage
  - adapt to the LHCb v20r0
 
-!====================== MuonMoniSim v2r0 2006-01-23  ========================
+!====================== MuonMoniSim v2r0 2006-02-14  ========================
+! 2006-02-14 - Gloria CORTI
+ - Introduce necessary use of GaudiAlg, no longer gotten via LHCbKernel
+   . requirements
+ 
 ! 2006-01-23 - A. Sarti
  - Fixed the call to MCevent in requirements
  - Use MuonDet to retrieve the info from sensDetID!
