@@ -3,6 +3,22 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r0>2006-03-16 Brunel v30r0</A></H1><PRE>
+This version uses projects Gaudi v18r2, LHCb v20r1, Lbcom v4r1
+  and databases XmlDDDB v30r1, XmlConditions v1r4, ParamFiles v4r1, FieldMap v4r6
+Requires input from Boole v11r0 or greater. 
+
+This an incomplete release for commissioning of the software for DC06.
+
+It breaks all backward compatibility and introduces many new features, including
+a major redesign of event model classes following the review in Autumn 2006,
+changes for the 1MHz readout, changes to the geometry to introduce detector
+tilts and capability for misalignement, changes to replace CLHEP with MathCore,
+as well as deployment of the new tracking software based on the new track model
+
+All packages have been touched. Please look at release notes of the individual
+packages for details.
+
 </PRE><H1><A NAME=v28r2>2005-12-09 Brunel v28r2</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r3, Lbcom v3r2, Rec v2r2, XmlDDDB v27r1
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
