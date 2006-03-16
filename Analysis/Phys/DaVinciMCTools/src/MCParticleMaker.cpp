@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.15 2006-03-15 18:57:20 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.16 2006-03-16 13:17:15 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -193,7 +193,7 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     << "==> MCParticleMaker::makeParticles() is running." 
     << endmsg;
   
-  LHCb::MCParticle::ConstContainer* candidates = get<LHCb::MCParticle::ConstContainer>( m_input);
+  LHCb::MCParticle::Container* candidates = get<LHCb::MCParticle::Container>( m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
     debug() << "    No MCParticles retrieved from" << m_input << endmsg;
     return StatusCode::SUCCESS;
@@ -210,7 +210,7 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
       while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
     }
   } else {
-    LHCb::MCParticle::ConstContainer::const_iterator icand;
+    LHCb::MCParticle::Container::const_iterator icand;
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
       list.push_back(*icand);    
     }
