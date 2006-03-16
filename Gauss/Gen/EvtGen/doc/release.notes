@@ -1,12 +1,12 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r7 2006-03-12  ==========================
 ! 2006-03-12 - Patrick Robbe
  - cmt/requirements: build shared library for EvtGen and uses -O2 
    flag to compile FORTRAN files (to be compatible with GENSER 
     compilation flags)
 
-!======================== EvtGen v8r6 2006-02-17  ==========================
 ! 2006-02-07 - Patrick Robbe
  - EvtGenBase/EvtRandomEngine.hh, EvtPartWave and EvtCGCoefSingle:
     fix memory leaks
