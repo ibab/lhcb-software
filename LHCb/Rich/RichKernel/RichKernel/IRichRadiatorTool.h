@@ -4,7 +4,7 @@
  *
  *  Header file for RICH tool interface : IRichRadiatorTool
  *
- *  $Id: IRichRadiatorTool.h,v 1.2 2006-03-12 16:12:37 jonrob Exp $
+ *  $Id: IRichRadiatorTool.h,v 1.3 2006-03-16 15:46:54 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -44,7 +44,7 @@ class IRichRadiatorTool : virtual public IAlgTool
 
 public:
 
-  // Return the interface ID
+  /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IRichRadiatorTool; }
 
   /** @brief Finds the intersections (entry/exit) with radiator. 
@@ -56,7 +56,7 @@ public:
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                                       const Gaudi::XYZVector& globalVector,
-                                      Rich::RadiatorType radiator,
+                                      const Rich::RadiatorType radiator,
                                       std::vector<RichRadIntersection>&
                                       intersections ) const = 0;
 
