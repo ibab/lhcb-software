@@ -1,4 +1,17 @@
-// $Id: RichRadIntersection.h,v 1.2 2006-03-16 16:09:50 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRadIntersection.h
+ *
+ *  Header file for tool : RichRadIntersection
+ *
+ *  CVS Log :-
+ *  $Id: RichRadIntersection.h,v 1.3 2006-03-16 16:10:57 jonrob Exp $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2006-02-28
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHDET_RICHRADINTERSECTION_H 
 #define RICHDET_RICHRADINTERSECTION_H 1
 

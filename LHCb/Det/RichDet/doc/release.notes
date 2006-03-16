@@ -11,6 +11,7 @@
    before UMS has updated the underlying tables. This problem will "go away"
    once Rich1DTabProperty can automatically update itself on changes to the 
    underlying tables
+ - Some speed optimisations for the RichRadIntersections class
 
 ! 2006-03-15 - Antonis Papanestis
  - Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
