@@ -4,7 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r1 2006-03-08 =============================
+!======================== Gauss v24r1 2006-03-16 =============================
+! 2006-03-16 - Gloria CORTI
+ - Switch off in normal production the extended RICH information
+   . Simulation.opts
+
+! 2006-03-16 - Gloria CORTI from Alessia SATTA
+ - Adapt to new path of muon detector element the special simulation cuts
+   . xml/Simulation.xml
+
 ! 2006-03-08 - Gloria CORTI
  - Use new field map as scaled to agree with measurements (FieldMap v4r7)
  - Use new version of GaussTracker (v5r1) to fill |P| in MCHit  
