@@ -28,7 +28,7 @@ use STDAQ             v2r3  ST          # Matt Needham
 use STTools           v2r0  ST          # Matt Needham
 use STAlgorithms      v1r1  ST          # Matt Needham
 use STAssociators     v1r0  ST          # Matt Needham
-use STCheckers        v1r0  ST          # Matt Needham
+use STCheckers        v1r1  ST          # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r0  Calo        # Olivier Deschamps

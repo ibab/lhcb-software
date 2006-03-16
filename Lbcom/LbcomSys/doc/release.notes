@@ -6,10 +6,10 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r1>2006-03-15 LbcomSys v4r1</A></H1><PRE>
+</PRE><H1><A NAME=v4r1>2006-03-16 LbcomSys v4r1</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.
 
-- Packages modified: VeloDAQ v3r1, STAlgorithms v1r1
+- Packages modified: VeloDAQ v3r1, STAlgorithms v1r1, STCheckers v1r1
 
 - In VeloDAQ v3r1:
   . Bug fixes in handling of interstrip position bits and threshold bit
@@ -18,6 +18,10 @@ This version uses Gaudi v18r2 and LHCb v20r1.
 
 - In STAlgorithms v1r1:
   . Move STSummaryCreator to Rec/RecAlgs. Removes package dependency on RecEvent
+
+- In STCheckers v1r1:
+  . Minor tuning of STEffMonitor, STClusterResolution
+  . Remove STNoiseClusterMonitor replace with STClusterClassification
 
 </PRE><H1><A NAME=v4r0>2006-03-13 LbcomSys v4r0</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r0.
