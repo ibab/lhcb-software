@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.42 2006-03-12 20:11:19 robbep Exp $
+! $Id: release.notes,v 1.43 2006-03-16 14:03:47 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v4r1 2006-03-16 ===========================
 ! 2006-03-12 - Patrick Robbe
  - Generation: fix interaction counters to count direct B from protons
    as b quark.
 
-!=================== Generators v4r1 2006-03-08 ===========================
 ! 2006-03-07 - Patrick Robbe
  - phocin: set up PHOTOS to work with more than 2 charged tracks
    and interferences
