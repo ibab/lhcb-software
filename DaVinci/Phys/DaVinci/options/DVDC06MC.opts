@@ -78,8 +78,9 @@ ApplicationMgr.EvtMax  = -1;
 
 //--
 EventSelector.Input   = {
-"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r1/11144100.500ev.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r1/11144100.500ev.09Mar.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //-- End of Data cards
 EventSelector.OutputLevel = 2 ;
 
+PreLoadMCParticles.OutputLevel = 1 ;

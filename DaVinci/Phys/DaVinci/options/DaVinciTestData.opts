@@ -1,6 +1,5 @@
 //-- 
 EventSelector.Input   = {
-"DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Brunel/v28r1/0507-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //-- End of Data cards 
 //

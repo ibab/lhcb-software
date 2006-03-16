@@ -4,6 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-03-16 - P. Koppenburg
+  Version fof DC06
+  Only a few things ``work'' and there is no data...
+
 !========================== DaVinci v15r0 2005-12-21 ===================
 Built on GAUDI_v17r2, XmlDDDB v27r1, LHCb v19r3, LbcomSys v3r2, 
 RecSys v2r2, PhysSys v2r0

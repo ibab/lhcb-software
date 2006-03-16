@@ -1,6 +1,0 @@
-#include "$HLTSELCHECKERROOT/options/DVHLTCorr.opts"
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-
-DaVinci.OutputLevel = 2 ;
-
-ApplicationMgr.EvtMax    = -1 ;
