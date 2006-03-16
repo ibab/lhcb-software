@@ -5,10 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v1r1 2006-03-16 ========================
 ! 2006-03-16 - P. Koppenburg
  - Adapt MCDecayFinder to new interface
 
-!====================== SimComponents v1r0 2005-12-15 ========================
+!====================== SimComponents v1r0 2006-02-17 ========================
 ! 2006-02-17 - Marco Cattaneo
  - Add algorithms to pack, unpack and compare MCParticles and MCVertices
 
