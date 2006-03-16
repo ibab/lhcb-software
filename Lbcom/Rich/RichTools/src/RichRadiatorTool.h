@@ -1,10 +1,23 @@
-// $Id: RichRadiatorTool.h,v 1.1 2006-03-01 17:12:25 papanest Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRadiatorTool.h
+ *
+ *  Header file for tool : RichRadiatorTool
+ *
+ *  CVS Log :-
+ *  $Id: RichRadiatorTool.h,v 1.2 2006-03-16 15:48:13 jonrob Exp $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2006-03-01
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHTOOLS_RICHRADIATORTOOL_H
 #define RICHTOOLS_RICHRADIATORTOOL_H 1
 
-// Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+// base class
+#include "RichKernel/RichToolBase.h"
+
 #include "RichKernel/IRichRadiatorTool.h"            // Interface
 
 #include "Kernel/RichRadiatorType.h"
@@ -16,14 +29,19 @@
 #include "RichDet/DeRichRadiator.h"
 #include "RichDet/RichRadIntersection.h"
 
-/** @class RichRadiatorTool RichRadiatorTool.h v2r2/RichRadiatorTool.h
+/** @class RichRadiatorTool RichRadiatorTool.h
  *
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
  */
-class RichRadiatorTool : public GaudiTool, virtual public IRichRadiatorTool {
+
+class RichRadiatorTool : public RichToolBase, 
+                         virtual public IRichRadiatorTool 
+{
+
 public:
+
   /// Standard constructor
   RichRadiatorTool( const std::string& type,
                     const std::string& name,
@@ -31,10 +49,8 @@ public:
 
   virtual ~RichRadiatorTool( ); ///< Destructor
 
-
   // Initialization of the tool after creation
   virtual StatusCode initialize();
-
 
   /**
    * Finds the intersections (entry/exit) with radiator. For multiple solids
@@ -45,12 +61,9 @@ public:
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                                       const Gaudi::XYZVector& globalVector,
-                                      Rich::RadiatorType radiator,
+                                      const Rich::RadiatorType radiator,
                                       std::vector<RichRadIntersection>&
                                       intersections ) const;
-
-
-protected:
 
 private:
 
@@ -61,4 +74,5 @@ private:
   boost::array<Transforms, Rich::NRadiatorTypes> m_transforms;
 
 };
+
 #endif // RICHTOOLS_RICHRADIATORTOOL_H

@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.14 2005-12-20 09:38:55 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.15 2006-03-16 15:48:13 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -41,8 +41,6 @@ RichMirrorSegFinder::~RichMirrorSegFinder() { }
 //=========================================================================
 StatusCode RichMirrorSegFinder::initialize( )
 {
-
-  debug() << "Initialise RichMirrorSegFinder" << endreq;
   // intialise base class
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -61,9 +59,9 @@ StatusCode RichMirrorSegFinder::initialize( )
   }
 
   // should come from XML or job options ?? (this is in mm^2)
-  m_maxDist[Rich::Rich1][sph]  = 41271;
+  m_maxDist[Rich::Rich1][sph] = 41271;
   m_maxDist[Rich::Rich1][sec] = 34297;
-  m_maxDist[Rich::Rich2][sph]  = 49414;
+  m_maxDist[Rich::Rich2][sph] = 49414;
   m_maxDist[Rich::Rich2][sec] = 36675;
 
   // get the RICH detectors

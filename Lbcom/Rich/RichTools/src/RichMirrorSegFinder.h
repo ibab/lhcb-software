@@ -5,7 +5,7 @@
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.9 2005-12-13 18:01:10 papanest Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.10 2006-03-16 15:48:13 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -17,7 +17,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
+//#include "GaudiKernel/SmartDataPtr.h"
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"
