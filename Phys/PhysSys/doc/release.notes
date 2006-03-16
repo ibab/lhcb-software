@@ -3,7 +3,7 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v3r0>2006-01-24 Phys v3r0 - Minimal Phys</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
   - Built against LHCb v20r0
   - New event model
   - ROOT vector classes 

@@ -13,6 +13,7 @@
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
+ * \li <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinci">DaVinci wiki page</a>
  
  * <hr>
  * \htmlinclude new_release.notes

@@ -8,14 +8,27 @@ branches doc cmt
 ####################################################################
 use  PhysCoreSys      	v2r0   Phys
 #===================================================================
+use  DaVinciKernel      	v4r0     Phys
+use  DaVinciFilter      	v4r0     Phys
+use  DaVinciTools       	v13r0    Phys
+use  DaVinciTransporter 	v3r0     Phys
+use  ParticleMaker      	v2r0     Phys
+use  VertexFit			v2r0     Phys
+
+# Generic tools 
+use  Utilities          	v3r0   Tools
+
+use  DaVinciUser      	        v6r0     Phys
 
 ####################################################################
 use  PhysMCSys      	v2r0   Phys
 #===================================================================
+use  DaVinciMCTools     	v6r0  Phys
 
 ####################################################################
 use  PhysSelSys      	v9r0   PhysSel
 #===================================================================
+use Bu2JpsiK                   v1r0p2   PhysSel
 
 
 ####################################################################
