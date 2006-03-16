@@ -3,6 +3,79 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v15r0>2005-12-21 DaVinci v15r0 - Compiling development version</A></H1><PRE>
+Based on Phys v2r2, Rec v2r2, Lbcom v3r2, LHCb v19r3, Gaudi v17r2.
+
+One small step towards DC06. This version compiles (except Tampering and TriggerSource)
+but does not run as the ProtoParticle making is confused between Track and TrStoredTrack.
+
+The trigger wroks fine.
+
+</PRE><H1><A NAME=v14r5>2005-10-21 DaVinci v14r5 - Updated RTTC compatible version</A></H1><PRE>
+Based on Phys v1r5, Rec v1r5, Lbcom v2r5, LHCb v18r9, Gaudi v16r5.
+
+</PRE><H1><A NAME=v14r4>2005-07-26 DaVinci v14r4 - RTTC Legacy version</A></H1><PRE>
+Based on Phys v1r4, Rec v1r4, Lbcom v2r4, LHCb v18r8, Gaudi v16r5.
+
+Fixes many small problems found during RTTC. 
+
+Warning: Due to a new version of LoKi, the stripping does not run with this
+version. Fixed in head of relevant packages.
+
+</PRE><H1><A NAME=v14r3>2005-06-30 DaVinci v14r3 - Updated RTTC version</A></H1><PRE>
+Based on Phys v1r3, Rec v1r3, Lbcom v2r3, LHCb v18r7, Gaudi v16r4.
+
+Allows to re-run the RTTC version of the trigger. A few memory leaks
+have been fixed. See Rec and Phys prtojects for details.
+
+</PRE><H1><A NAME=v14r2>2005-06-15 DaVinci v14r2 - RTTC version</A></H1><PRE>
+Based on Phys v1r2, Rec v1r2, Lbcom v2r2, LHCb v18r6, Gaudi v16r4.
+
+Allows to re-run the RTTC version of the trigger.
+
+</PRE><H1><A NAME=v14r1>2005-05-30 DaVinci v14r1 - Towards RTTC</A></H1><PRE>
+Based on Phys v1r1, Rec v1r1, Lbcom v2r1, LHCb v18r5, Gaudi v16r4.
+Big reshuffling of options to aloow Panoramix not to depend on DaVinci.
+                                                                                                                                                      
+</PRE><H1><A NAME=v14r0>2005-05-18 DaVinci v14r0 - First split version</A></H1><PRE>
+Result of new splitting into projects. 
+- Hlt/ Phys/ PhysSel/ and Tools/ go to Phys.
+- L0/ goes to Lbcom.
+- Trg/, Rec/, Rich and Muon/ to Rec.
+Only Phys/DaVinci stays in DaVinci.
+
+This version uses Phys v1r0, Rec v1r0 and Lbcom v2r0.
+                                                                                                                                                      
+</PRE><H1><A NAME=v13r1>2005-04-20 DaVinci v13r1 - Version able to read RTTC data</A></H1><PRE>
+First DaVinci version able to read in data from RTTC.
+
+This version is backward-incompatible with the DC04 data. For development
+purposes only. 
+
+</PRE><H1><A NAME=v13r0>2005-03-08 DaVinci v13r0 - Parralel version with v12r8</A></H1><PRE>
+Version released in parralel with v12r8. 
+
+First DaVinci release with new Gaudi v16, LHCb v18, new ROOT, new CLHEP 1.9...
+
+This version is backward-incompatible with the DC04 data. For development 
+purposes only. 
+
+</PRE><H1><A NAME=v13r0>2005-03-08 DaVinci v13r0 - Parralel version with v12r8</A></H1><PRE>
+Version released in parralel with v12r8. 
+
+First DaVinci release with new Gaudi v16, LHCb v18, new ROOT, new CLHEP 1.9...
+
+This version is backward-incompatible with the DC04 data. For development 
+purposes only. 
+
+################################################################################
+################################################################################
+################################################################################
+##                               DC04 SERIES                                   #
+################################################################################
+################################################################################
+################################################################################
+
 </PRE><H1><A NAME=v12r17>2006-03-14 DaVinci v12r17 - DC06 preselections preparation version</A></H1><PRE>
 Release to prepare for DC06 stripping preselections
   . Ks2PiPi now on-demand as Pi0 and shared intermediate states
