@@ -9,7 +9,8 @@
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
 
 - Modified packages: KernelSys v5r1, LHCbKernel v6r3, EventSys v21r1,
-    DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, DAQSys v2r1, CAloDAQ v2r1
+    DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2, PhysEvent v9r1,
+    DAQSys v2r1, CaloDAQ v2r1, SimComponents v1r1
 
 - In LHCbKernel v6r3:
   . Add find method to fast container, and SiDataFunctors.h to use it 
@@ -25,8 +26,18 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
 - In LinkerEvent v2r1:
   . Restore the default second template. Use T::classID() without instantiation.
 
+- In MCEvent v1r2:
+  . Add typedefs for KeyedContainers of MCParticle and const MCParticle.
+  . Modify IMCDecayFinder interface to use MCParticle::Container
+
+- In PhysEvent v9r1:
+  . Add typedefs for KeyedContainers of Particle and const Particle.
+
 - In CaloDAQ v2r1:
   . CaloZSupAlg algorithm added (moved from CaloDigit)
+
+- In SimComponents v1r1:
+  . Adapt MCDecayFinder to changed interface
 
 </PRE><H1><A NAME=v20r0>2006-03-10 LHCbSys v20r0</A></H1><PRE>
 This version uses Gaudi v18r2 and is the first release for commissioning of the 
