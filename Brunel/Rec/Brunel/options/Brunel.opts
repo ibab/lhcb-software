@@ -9,22 +9,21 @@
 //==============================================================
 
 // First algorithm, to clean up input data file if necessary
-ApplicationMgr.TopAlg  = { "EventNodeKiller" };
-EventNodeKiller.Nodes = { "Rec", "Raw" };
+//ApplicationMgr.TopAlg  = { "EventNodeKiller" };
+//EventNodeKiller.Nodes = { "Rec", "Raw" };
 
 // Standard LHCb application setup
-#include "$LHCBROOT/options/LHCbApplication.opts"
+#include "$STDOPTS/LHCbApplication.opts"
 
 // POOL Persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
+#include "$STDOPTS/DstDicts.opts"
 
 // Define DST content
 #include "$BRUNELOPTS/DstContent.opts"
 
-// Data on demand service for decoding RawBuffer
+// Data on demand service for decoding RawEvent
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-#include "$DAQSYSROOT/options/RawBuffer.opts"
+#include "$STDOPTS/DecodeRawEvent.opts"
 
 //----------------------------------------------------------------------------
 // Instantiate all Brunel phases. MC specific phases not populated in this file
@@ -37,8 +36,9 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Output" };
 
 // Initialisation phase
+ApplicationMgr.DLLs += { "RecAlgs" };
 Init.DetectorList = { "Brunel" };
-InitBrunelSeq.Members += { "LbAppInit/Brunel" };
+InitBrunelSeq.Members += { "RecInit/Brunel" };
 
 // Reconstruction phase
 #include "$RECSYSROOT/options/Reco.opts"

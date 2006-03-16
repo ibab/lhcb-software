@@ -1,19 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v9r2 or greater   ///
-///   geometry lhcb-200506 (tilted Calo and Muon)                           ///
+///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
+///   geometry lhcb-200601 (DC06)                                           ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
 #include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
-//#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
-ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos
+//ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
-#include "$STDAQROOT/options/stDAQ-v2.opts"
-#include "$RICHRECSYSOPTS/FlatSecondaryMirrCompat.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field046.cdf";
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -29,7 +28,7 @@ ApplicationMgr.EvtMax = -1;
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "0506-11144100.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "0601-11144100.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
@@ -43,11 +42,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r2/0506-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // 500 events B->J/Psi(mumu)Ks with Gauss v20r0, Boole v9r2
+ "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v11r0/0601-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // B->J/Psi(mumu)Ks with Gauss v24r1, Boole v11r0
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:0506-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:0601-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

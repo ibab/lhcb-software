@@ -5,34 +5,27 @@
 //--------------------------------------------------------------
 // Detectors to check
 //--------------------------------------------------------------
-Check.DetectorList = { "IT", "OT", "Tr", "RICH" };
+Check.DetectorList = { 
+                       // "Tr",
+                       "RICH"
+                     };
 
 //--------------------------------------------------------------
 // Checking algorithms
 //--------------------------------------------------------------
 
-// IT clustering and efficiency
-ApplicationMgr.DLLs += { "MCTools" };
-ApplicationMgr.DLLs += { "Associators" };
-#include "$ASSOCIATORSROOT/options/Brunel.opts"
-CheckITSeq.Members  += { "ITEffMonitor" };
-ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
-
-// OT reconstruction
-BrunelMoniOTSeq.Members += { "OTTimeChecker" };
-
 // Tracking
-ApplicationMgr.DLLs += { "TrCheck" };
-#include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
+//ApplicationMgr.DLLs += { "TrCheck" };
+//#include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
 CheckTrSeq.Members += { "TrAnalyse" };
 CheckTrSeq.Members += { "KShortMonitor" };
 CheckTrSeq.Members += { "TrChecker" };
 // MC Truth for new tracks (used by Rich checkers)
-ApplicationMgr.DLLs += { "TrackAssociators" };
+//ApplicationMgr.DLLs += { "TrackAssociators" };
 CheckTrSeq.Members   += { "TrackAssociator" };
 TrackAssociator.TracksInContainer = "Rec/Track/Best";
 TrackAssociator.LinkerOutTable    = "Rec/Track/Best";
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
-#include "$RICHRECQCOPTS/RecQC_Brunel.opts"
+//#include "$RICHRECQCOPTS/RecQC_Brunel.opts"

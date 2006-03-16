@@ -30,7 +30,7 @@ set MODE = $CMTCONFIG
 if ($#argv == 0 ) then
   echo "\nUsage: Brunel.job <options> [<mode>]"
   echo " where:"
-  echo "  <options> (mandatory) is name of options file (e.g. v200412)"
+  echo "  <options> (mandatory) is name of options file (e.g. v200601)"
   echo "  <mode>    (optional)  is execution mode (e.g. $CMTDEB)"
   exit 0
 else
@@ -42,7 +42,7 @@ else
   shift
 endif
 #   
-set Bversion = "v28r2"
+set Bversion = "v30r0"
 echo "Executing Brunel $Bversion using options file $Dver.opts"
 #
 

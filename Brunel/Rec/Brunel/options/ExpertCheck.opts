@@ -2,24 +2,45 @@
 // Assumes BrunelMoni.opts and BrunelCheck.opts have also been included
 //------------------------------------------------------------------------------
 
-// IT efficiency
+// ST cluster monitoring, to be compared to identical montoring in Boole
+ApplicationMgr.DLLs += { "STCheckers", "STTools" };
+Moni.DetectorList   += { "TT" };
+MoniTTSeq.Members   += { "STClusterChecker/TTClusterChecker" }; // Needs MCHits
+
+Moni.DetectorList   += { "IT" }; 
+MoniITSeq.Members   += { "STClusterChecker/ITClusterChecker" }; // Needs MCHits
+ITClusterChecker.detType = "IT";
+
+// IT and TT efficiency, to be compared to identical montoring in Boole
+ApplicationMgr.DLLs += { "Associators" };
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+Check.DetectorList  += { "TT" }; 
+CheckTTSeq.Members  += { "STEffMonitor/TTEffMonitor" };
+TTEffMonitor.fullDetail = true;
+
+Check.DetectorList  += { "IT" }; 
+CheckITSeq.Members  += { "STEffMonitor/ITEffMonitor" };
+ITEffMonitor.detType = "IT";
 ITEffMonitor.fullDetail = true;
 
-// OT reconstruction
+// OT - These histograms should be identical to those already done in Boole.
+ApplicationMgr.DLLs += { "OTMonitor" };
+Moni.DetectorList   += { "OT" }; 
+MoniOTSeq.Members   += { "OTTimeMonitor" };
+//Check.DetectorList  += { "OT" }; 
+//CheckOTSeq.Members  += { "OTTimeChecker" }; - needs MCHits
 OTTimeChecker.fullDetail = true;
 
 // Tracking
-MoniTrSeq.Members += { "TrMonitor" };
+//MoniTrSeq.Members += { "TrMonitor" };
 
 // Detailed RICH reconstruction monitors
-// Detailed RICH reconstruction monitors
-ApplicationMgr.DLLs += { "RichRecMonitors", "RichMCTools", "RichRecMCTools" };
-#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
-#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
+ApplicationMgr.DLLs += { "RichRecMonitors" };
+//#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
+//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
 #include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
 #include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
-#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"   // Ring refitting monitor
 
 // Calorimeters
 Check.DetectorList += { "CALO" };
-#include "$CALOMONIDSTOPTS/Brunel.opts"
+//#include "$CALOMONIDSTOPTS/Brunel.opts"

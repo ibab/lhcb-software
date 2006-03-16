@@ -52,8 +52,7 @@ DstWriter.ItemList += {
 };
 
 // Pack track and state containers
-ApplicationMgr.DLLs += { "PackedEvent" };
-Output.DetectorList += { "Pack" };
+//Output.DetectorList += { "Pack" };
 OutputPackSeq.Members += { "PackTrStateL", "PackTrStateP", "PackTrStoredTrack" };
 PackTrStoredTrack.StoreMeasurements = true;
 
