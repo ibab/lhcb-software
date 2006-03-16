@@ -4,6 +4,7 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r0 2006-03-13 =======================
 ! 2006-03-01 - Eduardo Rodrigues
  - first release of the package.
    Contains the event clone killer algorithm TrackEventCloneKiller
