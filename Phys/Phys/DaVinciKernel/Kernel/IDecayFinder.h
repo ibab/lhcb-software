@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.3 2006-03-15 18:55:55 jpalac Exp $
+// $Id: IDecayFinder.h,v 1.4 2006-03-16 14:49:07 pkoppenb Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -40,8 +40,8 @@ public:
   virtual bool findDecay( const LHCb::Particle::ConstVector& event,
                           const LHCb::Particle*& previous_result ) = 0;
 
-  virtual bool hasDecay( const LHCb::Particle::ConstContainer& event ) = 0;
-  virtual bool findDecay( const LHCb::Particle::ConstContainer& event,
+  virtual bool hasDecay( const LHCb::Particle::Container& event ) = 0;
+  virtual bool findDecay( const LHCb::Particle::Container& event,
                           const LHCb::Particle *&previous_result ) = 0;
 
   virtual bool hasDecay( void ) = 0;
