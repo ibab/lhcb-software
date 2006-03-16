@@ -1,11 +1,8 @@
-// $Id: PhysRangeTypes.h,v 1.2 2006-03-14 19:32:44 ibelyaev Exp $
+// $Id: PhysRangeTypes.h,v 1.3 2006-03-16 14:43:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-// New package: "Phys"-part of restructurized LoKi project  
-// 
 // ============================================================================
 #ifndef LOKI_PHYSRANGETYPES_H 
 #define LOKI_PHYSRANGETYPES_H 1
@@ -20,6 +17,7 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/NamedRange.h"
+#include "LoKi/Selected.h"
 // ============================================================================
 
 // ============================================================================
@@ -47,17 +45,25 @@ namespace LoKi
 {
   namespace PhysTypes
   {
-    /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Particle::Vector>   Range ;
-    /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Vertex::Vector>    VRange ;
+    /// the actual type of the container of particles  
+    typedef LHCb::Particle::ConstVector          Container ;
+    /// the actual storagf  of containers of particles  
+    typedef LoKi::Selected_<Container>            Selected ;
+    /// the actual type of range of particles 
+    typedef Selected::Range   Range ;
+    /// the actual type of the container of vertices 
+    typedef LHCb::Vertex::ConstVector           VContainer ;
+    /// the actual storagf  of containers of particles  
+    typedef LoKi::Selected_<VContainer>          VSelected ;
+    /// the actual type of range of particles 
+    typedef VSelected::Range                        VRange ;
   } ;
   namespace Types
   {
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Particle::Vector>   Range ;
+    typedef LoKi::PhysTypes::Range                   Range ;
     /// the actual range of particles 
-    typedef LoKi::NamedRange_<LHCb::Vertex::Vector>    VRange ;
+    typedef LoKi::PhysTypes::VRange                 VRange ;
   } ;
   
   /** @fn convert 
@@ -72,17 +78,7 @@ namespace LoKi
   convert ( LHCb::Particle::Vector&      vct ) 
   { return LHCb::Particle::ConstVector ( vct.begin() , vct.end() ) ; }
   
-  /** @fn convert 
-   *  Trivial conversion function 
-   *  @param vct vector of const particles 
-   *  @param return vector of non-const particles 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-02-16 
-   */
-  LHCb::Particle::Vector 
-  convert ( LHCb::Particle::ConstVector& vct ) ;
-
-} // end of namespace LoKi 
+} ; // end of namespace LoKi 
 
 // ============================================================================
 // The END 

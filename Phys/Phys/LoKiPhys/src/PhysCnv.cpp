@@ -1,8 +1,8 @@
-// $Id: PhysCnv.cpp,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: PhysCnv.cpp,v 1.2 2006-03-16 14:43:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -66,8 +66,6 @@ LoKi::Cnv::convert
   return _v ;
 } ;
 // ============================================================================
-
-// ============================================================================
 /** @fn convert 
  *  Trivial conversion function 
  *  @param vct vector of const particles 
@@ -87,7 +85,22 @@ LoKi::Cnv::convert
   return _v ;
 } ;
 // ============================================================================
-
+/** @fn convert 
+ *  Trivial conversion function 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-02-16 
+ */
+// ============================================================================
+LHCb::Vertex::Vector 
+LoKi::Cnv::convert 
+( const LoKi::Types::Range& vct ) 
+{
+  LHCb::Particle::Vector _v ( vct.size() ) ;
+  std::transform 
+    ( vct.begin() , vct.end() , _v.begin() , 
+      LoKi::Cast::ConstAway<LHCb::Particle>() ) ;
+  return _v ;
+} ;
 // ============================================================================
 /** @fn convert 
  *  Trivial conversion function 
@@ -107,8 +120,6 @@ LoKi::Cnv::convert
       LoKi::Cast::ConstAway<LHCb::Vertex>() ) ;
   return _v ;
 } ;
-// ============================================================================
-
 // ============================================================================
 /** @fn convert 
  *  Trivial conversion function 

@@ -1,8 +1,8 @@
-// $Id: PhysCnv.h,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $
+// $Id: PhysCnv.h,v 1.2 2006-03-16 14:43:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef LOKI_PHYSCNV_H 
 #define LOKI_PHYSCNV_H 1
@@ -11,6 +11,10 @@
 // ============================================================================
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/PhysRangeTypes.h"
 // ============================================================================
 
 // ============================================================================
@@ -115,6 +119,15 @@ namespace LoKi
     LHCb::Vertex::Vector 
     convert 
     ( const LHCb::Vertex::ConstVector& vct ) ;
+    
+    /** @fn convert 
+     *  Trivial conversion function 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-16 
+     */
+    LHCb::Vertex::Vector 
+    convert 
+    ( const LoKi::Types::Range& vct ) ;
     
     /** @fn convert 
      *  Trivial conversion function 
