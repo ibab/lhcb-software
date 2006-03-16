@@ -1,4 +1,4 @@
-// $Id: DeRichAerogelRadiator.cpp,v 1.1 2006-03-15 15:57:05 papanest Exp $
+// $Id: DeRichAerogelRadiator.cpp,v 1.2 2006-03-16 14:10:44 jonrob Exp $
 // Include files
 
 #include "Kernel/PhysicalConstants.h"
@@ -21,9 +21,11 @@ const CLID& CLID_DeRichAerogelRadiator = 12043;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichAerogelRadiator::DeRichAerogelRadiator(  ) {
-
+DeRichAerogelRadiator::DeRichAerogelRadiator(  ) 
+  : DeRichSingleSolidRadiator() 
+{
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -39,12 +41,13 @@ const CLID& DeRichAerogelRadiator::classID()
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRichAerogelRadiator::initialize ( ) {
+StatusCode DeRichAerogelRadiator::initialize ( ) 
+{
 
   MsgStream msg( msgSvc(), "DeRichAerogelRadiator" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  StatusCode sc = DeRichSingleSolidRadiator::initialize();
+  const StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
   // extract tile number from detector element name
@@ -68,11 +71,11 @@ StatusCode DeRichAerogelRadiator::initialize ( ) {
   IUpdateManagerSvc* ums = updMgrSvc();
   // aerogel parameters from cond DB
   m_AerogelCond = condition( "AerogelParameters" );
-  if ( m_AerogelCond )
+  if ( m_AerogelCond ) {
     ums->registerCondition(this,m_AerogelCond.path(),
-                           &DeRichAerogelRadiator::updateProperties );
+                           &DeRichAerogelRadiator::updateProperties ); }
   else
-    msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg;
+  { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
 
   StatusCode upsc = ums->update(this);

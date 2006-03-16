@@ -1,4 +1,4 @@
-// $Id: DeRichAerogelRadiator.h,v 1.1 2006-03-15 15:57:05 papanest Exp $
+// $Id: DeRichAerogelRadiator.h,v 1.2 2006-03-16 14:10:44 jonrob Exp $
 #ifndef RICHDET_DERICHAEROGELRADIATOR_H
 #define RICHDET_DERICHAEROGELRADIATOR_H 1
 
@@ -11,8 +11,11 @@
  *  @author Antonis Papanestis
  *  @date   2006-03-02
  */
-class DeRichAerogelRadiator : public DeRichSingleSolidRadiator {
+class DeRichAerogelRadiator : public DeRichSingleSolidRadiator 
+{
+
 public:
+
   /// Standard constructor
   DeRichAerogelRadiator( );
 

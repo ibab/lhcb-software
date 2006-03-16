@@ -1,4 +1,4 @@
-// $Id: DeRichGasRadiator.cpp,v 1.1 2006-03-15 15:57:05 papanest Exp $
+// $Id: DeRichGasRadiator.cpp,v 1.2 2006-03-16 14:10:44 jonrob Exp $
 // Include files
 
 // Gaudi
@@ -22,14 +22,15 @@ const CLID& CLID_DeRichGasRadiator = 12042;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichGasRadiator::DeRichGasRadiator(  ) {
-
+DeRichGasRadiator::DeRichGasRadiator(  ) 
+  : DeRichSingleSolidRadiator()
+{
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 DeRichGasRadiator::~DeRichGasRadiator() {}
-
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichGasRadiator::classID()
@@ -46,7 +47,7 @@ StatusCode DeRichGasRadiator::initialize ( ) {
   MsgStream msg( msgSvc(), "DeRichGasRadiator" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  StatusCode sc = DeRichSingleSolidRadiator::initialize();
+  const StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
   // update refractive index

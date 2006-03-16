@@ -1,4 +1,4 @@
-// $Id: DeRichGasRadiator.h,v 1.1 2006-03-15 15:57:05 papanest Exp $
+// $Id: DeRichGasRadiator.h,v 1.2 2006-03-16 14:10:44 jonrob Exp $
 #ifndef RICHDET_DERICHGASRADIATOR_H
 #define RICHDET_DERICHGASRADIATOR_H 1
 
@@ -14,8 +14,11 @@ extern const CLID& CLID_DeRichGasRadiator;
  *  @author Antonis Papanestis
  *  @date   2006-03-02
  */
-class DeRichGasRadiator : public DeRichSingleSolidRadiator {
+class DeRichGasRadiator : public DeRichSingleSolidRadiator 
+{
+
 public:
+
   /// Standard constructor
   DeRichGasRadiator( );
 

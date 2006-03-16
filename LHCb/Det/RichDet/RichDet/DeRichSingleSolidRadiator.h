@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.10 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.11 2006-03-16 14:10:44 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -31,7 +31,8 @@ extern const CLID& CLID_DeRichSingleSolidRadiator;
  */
 //----------------------------------------------------------------------------
 
-class DeRichSingleSolidRadiator: public DeRichRadiator {
+class DeRichSingleSolidRadiator: public DeRichRadiator 
+{
 
 public:
 

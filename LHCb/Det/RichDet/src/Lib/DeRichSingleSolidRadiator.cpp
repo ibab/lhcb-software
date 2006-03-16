@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.15 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.16 2006-03-16 14:10:44 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -29,10 +29,13 @@
 const CLID& CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
-DeRichSingleSolidRadiator::DeRichSingleSolidRadiator() {}
+DeRichSingleSolidRadiator::DeRichSingleSolidRadiator()
+  : DeRichRadiator()
+ {}
 
 // Standard Destructor
-DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() {
+DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() 
+{
   if ( m_refIndex ) delete m_refIndex;
   if ( m_rayleigh) delete m_rayleigh;
 }
@@ -45,7 +48,7 @@ const CLID& DeRichSingleSolidRadiator::classID()
 
 StatusCode DeRichSingleSolidRadiator::initialize()
 {
-  StatusCode initSC =  DeRichRadiator::initialize();
+  const StatusCode initSC =  DeRichRadiator::initialize();
   if ( initSC.isFailure() ) return initSC;
 
   MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
@@ -56,26 +59,44 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 
   const Material::Tables& myTabProp = geometry()->lvolume()->material()->tabulatedProperties();
   Material::Tables::const_iterator matIter;
-  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter ) {
-    if ( (*matIter) ) {
-      if ( (*matIter)->type() == "RINDEX" ) {
+  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter ) 
+  {
+    if ( (*matIter) ) 
+    {
+      if ( (*matIter)->type() == "RINDEX" ) 
+      {
         m_refIndexTabProp = (*matIter);
-        m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
         log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
             << m_refIndexTabProp->type() << endmsg;
+        m_refIndex = new Rich1DTabProperty( m_refIndexTabProp );
+        if ( !m_refIndex->valid() ) 
+        {
+          log << MSG::ERROR
+              << "Invalid RINDEX Rich1DTabProperty for " << m_refIndexTabProp->name() << endreq;
+          return StatusCode::FAILURE;
+        }
       }
-      if ( (*matIter)->type() == "RAYLEIGH" ) {
+      if ( (*matIter)->type() == "RAYLEIGH" ) 
+      {
         m_rayleighTabProp = (*matIter);
-        m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
         log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
             << m_rayleighTabProp->type() << endmsg;
+        m_rayleigh = new Rich1DTabProperty( m_rayleighTabProp );
+        if ( !m_rayleigh->valid() ) 
+        {
+          log << MSG::ERROR
+              << "Invalid RAYLEIGH Rich1DTabProperty for " << m_rayleighTabProp->name() << endreq;
+          return StatusCode::FAILURE;
+        }
       }
-      if ( (*matIter)->type() == "CKVRNDX" ) {
+      if ( (*matIter)->type() == "CKVRNDX" ) 
+      {
         m_chkvRefIndexTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
             << m_chkvRefIndexTabProp->type() << endmsg;
       }
-      if ( (*matIter)->type() == "ABSLENGTH" ) {
+      if ( (*matIter)->type() == "ABSLENGTH" ) 
+      {
         m_absorptionTabProp = (*matIter);
         log << MSG::DEBUG << "Found TabProp " << m_absorptionTabProp->name() << " type "
             << m_absorptionTabProp->type() << endmsg;
@@ -83,7 +104,8 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     }
   }
 
-  if (!m_refIndexTabProp) {
+  if (!m_refIndexTabProp) 
+  {
     log << MSG::ERROR << "Radiator " << name() << " without refractive index"
         << endmsg;
     return StatusCode::FAILURE;
@@ -92,7 +114,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
   log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
 
-  return StatusCode::SUCCESS;
+  return initSC;
 }
 
 
