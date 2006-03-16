@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.24 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.25 2006-03-16 15:07:44 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -90,13 +90,27 @@ StatusCode DeRich1::initialize()
     Material::Tables::const_iterator matIter;
     for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
       if( (*matIter) ){
-        if ( (*matIter)->type() == "RINDEX" ) {
-          m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
+        if ( (*matIter)->type() == "RINDEX" ) 
+        {
           msg << MSG::DEBUG << "Loaded gas window refIndex from: " << (*matIter)->name()
               << endmsg;
+          m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
+          if ( !m_gasWinRefIndex->valid() )
+          {
+            msg << MSG::ERROR
+                << "Invalid RINDEX Rich1DTabProperty for " << (*matIter)->name() << endreq;
+            return StatusCode::FAILURE;
+          }
         }
-        if ( (*matIter)->type() == "ABSLENGTH" ) {
+        if ( (*matIter)->type() == "ABSLENGTH" ) 
+        {
           m_gasWinAbsLength = new Rich1DTabProperty( *matIter );
+          if ( !m_gasWinAbsLength->valid() )
+          {
+            msg << MSG::ERROR
+                << "Invalid ABSLENGTH Rich1DTabProperty for " << (*matIter)->name() << endreq;
+            return StatusCode::FAILURE;
+          }
         }
       }
     }
@@ -118,9 +132,15 @@ StatusCode DeRich1::initialize()
   if ( !sphMirrorRefl )
     msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
   else {
-    m_nominalSphMirrorRefl = new Rich1DTabProperty( sphMirrorRefl );
     msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
+    m_nominalSphMirrorRefl = new Rich1DTabProperty( sphMirrorRefl );
+    if ( !m_nominalSphMirrorRefl->valid() )
+    {
+      msg << MSG::ERROR
+          << "Invalid Rich1DTabProperty for " << sphMirrorRefl->name() << endreq;
+      return StatusCode::FAILURE;
+    }
   }
 
   // get the nominal reflectivity of the secondary mirror
@@ -130,9 +150,15 @@ StatusCode DeRich1::initialize()
   if ( !secMirrorRefl )
     msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
   else {
-    m_nominalSecMirrorRefl = new Rich1DTabProperty( secMirrorRefl );
     msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
         << secMirrorReflLoc << endmsg;
+    m_nominalSecMirrorRefl = new Rich1DTabProperty( secMirrorRefl );
+    if ( !m_nominalSecMirrorRefl->valid() )
+    {
+      msg << MSG::ERROR
+          << "Invalid Rich1DTabProperty for " << secMirrorRefl->name() << endreq;
+      return StatusCode::FAILURE;
+    }
   }
 
   // get pointers to HPD panels
