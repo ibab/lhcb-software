@@ -16,6 +16,7 @@ ApplicationMgr.DLLs += { "DaVinciUser" };
 //
 // Make loose J/psi
 //
+ApplicationMgr.TopAlg += { "DC06Tests" };
 ApplicationMgr.TopAlg += { "MakeResonances/MakeJpsi" };
 
 MakeJpsi.PhysDesktop.InputLocations = {"Phys/PreLoadMuons", "Phys/PreLoadElectrons"};
