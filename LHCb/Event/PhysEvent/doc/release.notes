@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.80 2006-03-15 18:53:28 jpalac Exp $
+! $Id: release.notes,v 1.81 2006-03-16 17:31:16 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================= PhysEvent v9r1 2006-03-16 ==========================
 ! 2006-03-15 - Juan Palacios
  - xml/Particle.xml: add typedefs for KeyedContainers of Particle and 
    const Particle. LHCb::Particle::Container, LHCb::Particle::ConstContainer.
    These should be generated automatically by GOD from Gaudi v18r3 onwards.
 
 !======================= PhysEvent v9r0 2006-03-08 ==========================
-
 ! 2006-03-08 - Marco Cattaneo
  - Move ProtoParticle.xml to RecEvent
 
