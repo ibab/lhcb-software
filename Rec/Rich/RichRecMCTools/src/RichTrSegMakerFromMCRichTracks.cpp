@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.4 2006-03-02 15:25:02 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.5 2006-03-17 15:55:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -32,12 +32,27 @@ RichTrSegMakerFromMCRichTracks( const std::string& type,
   : RichToolBase ( type, name, parent ),
     m_truth      ( 0 ),
     m_rectruth   ( 0 ),
-    m_usedRads   ( Rich::NRadiatorTypes, true )
+    m_usedRads   ( Rich::NRadiatorTypes, true ),
+    m_minPathL   ( Rich::NRadiatorTypes, 0 ),
+    m_minPhots   ( Rich::NRadiatorTypes, 1 )
 {
   // interface
   declareInterface<IRichTrSegMaker>(this);
+
   // job options
+
   declareProperty( "UseRadiators", m_usedRads );
+
+  m_minPathL[Rich::Aerogel] = 10*mm;
+  m_minPathL[Rich::C4F10]   = 500*mm;
+  m_minPathL[Rich::CF4]     = 500*mm;
+  declareProperty( "MinPathLengths", m_minPathL );
+
+  m_minPhots[Rich::Aerogel] = 3;
+  m_minPhots[Rich::C4F10]   = 5;
+  m_minPhots[Rich::CF4]     = 5;
+  declareProperty( "MinNumPhotons", m_minPhots );
+
 }
 
 //=============================================================================
@@ -63,8 +78,11 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
   m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
   m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
 
+  info() << "Min path lengths for aero/C4F10/CF4 segments = " << m_minPathL << endreq
+         << "Min # photons for aero/C4F10/CF4 segments    = " << m_minPhots << endreq;
+
   return sc;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -88,13 +106,13 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
   // get MCRichTrack
   const MCRichTrack * track = mcRichTrack(obj);
-  if ( !track ) 
-  { 
+  if ( !track )
+  {
     verbose() << "MCRichTrack not available for input data object" << endreq;
-    return 0; 
+    return 0;
   }
 
-  verbose() << "Trying MCRichTrack " << track->key() << " with " 
+  verbose() << "Trying MCRichTrack " << track->key() << " with "
             << track-> mcSegments().size() << " MCRichSegments" << endreq;
 
   // loop over radiators
@@ -112,6 +130,18 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     // See if there is an MCRichSegment for this radiator
     const MCRichSegment * segment = track->segmentInRad(rad);
     if ( !segment ) continue;
+
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Found " << rad << " segment : pathL=" << segment->pathLength()
+                << " nPhots=" << segment->mcRichOpticalPhotons().size() << endreq;
+    }
+
+    // Apply selection cuts
+    if ( segment->pathLength() < m_minPathL[rad] ) continue;
+    if ( segment->mcRichOpticalPhotons().size() < m_minPhots[rad] ) continue;
+
+    verbose() << "  -> Segment selected" << endreq;
 
     // Get entry information
     const Gaudi::XYZPoint & entryPoint          = segment->entryPoint();
@@ -141,8 +171,8 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
                   << "    Exit Mom.   : " << exitStateMomentum << endreq;
       }
 
-    } 
-    else 
+    }
+    else
     {
 
       // Get middle point information
@@ -187,7 +217,7 @@ RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
   if ( track )
   {
     verbose() << "Input data is of type MCRichTrack" << endreq;
-  } 
+  }
   else
   {
     const Track * trTrack = dynamic_cast<const Track *>(obj);

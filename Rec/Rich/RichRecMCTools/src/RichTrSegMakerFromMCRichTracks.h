@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.2 2006-03-02 15:25:02 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.3 2006-03-17 15:55:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -119,6 +119,12 @@ private: // data
 
   /// Flags to turn on/off individual radiators
   std::vector<bool> m_usedRads;
+
+  /// Min path length for each radiator
+  std::vector<double> m_minPathL;
+
+  /// Min number of photons for each radiator
+  std::vector<double> m_minPhots;
 
 };
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.2 2006-02-16 16:06:42 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.3 2006-03-17 15:55:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -147,11 +147,6 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
           continue;
         }
 
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << "Trying in fake loop MCRichTrack " << (*track)->key() << endreq;
-        }
-
         // track type
         const Rich::Track::Type trType = getTrType( *track );
         // momentum and charge
@@ -160,11 +155,6 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
 
         // Track selection
         if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
-
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> Creating fake Track for MCRichTrack " << (*track)->key() << endreq;
-        }
 
         // new fake Track
         Track * newFake = new Track();
@@ -228,24 +218,23 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
   // track type
   const Rich::Track::Type trType = getTrType( mcrTrack );
-   
+
   // unique ( by definition for MC ... )
   const bool trUnique = true;
-
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying MCRichTrack " << mcrTrack->key() << endreq;
-  }
-
-  // Is track a usable type
-  if ( !Rich::Track::isUsable(trType) ) return NULL;
 
   // momentum and charge
   const double ptot   = mcPart->p();
   const double charge = mcPart->particleID().threeCharge()/3;
 
-  // Track selection
-  if ( !trackSelector().trackSelected(trType,ptot,charge,trUnique) ) return NULL;
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "Trying MCRichTrack " << mcrTrack->key()
+              << " ptot = " << ptot/GeV << " GeV/c, charge = " << charge
+              << endreq;
+  }
+
+  // Is track a usable type
+  if ( !Rich::Track::isUsable(trType) ) return NULL;
 
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
@@ -260,6 +249,14 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
     // count tried tracks
     ++tkCount.triedTracks;
+
+    // Track selection
+    if ( !trackSelector().trackSelected(trType,ptot,charge,trUnique) ) return NULL;
+
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Track selected" << endreq;
+    }
 
     // New track object pointer
     RichRecTrack * newTrack = NULL;
@@ -370,7 +367,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         richTracks()->insert( newTrack, mcrTrack->key() );
 
         // Set vertex momentum
-        newTrack->setVertexMomentum( mcPart->p() );
+        newTrack->setVertexMomentum( ptot );
 
         // track charge
         newTrack->setCharge( (float)charge );

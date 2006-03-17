@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.9 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.10 2006-03-17 15:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,7 +32,7 @@
 #include "Event/RichRecSegment.h"
 
 // RichDet
-#include "RichDet/DeRichRadiator.h"
+#include "RichDet/DeRichAerogelRadiator.h"
 
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
@@ -72,14 +72,14 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from public interface
 
-  // Rayleigh scattering probability for given pathlength (segment) and photyon energy
+  // Rayleigh scattering probability for given pathlength (segment) and photon energy
   double photonScatteredProb( const LHCb::RichRecSegment * segment,
                               const double energy ) const;
 
 private:  // Private data
 
   /// Pointer to aerogel detector element
-  const DeRichRadiator * m_aero;
+  const DeRichAerogelRadiator * m_aero;
 
 };
 

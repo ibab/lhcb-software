@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.3 2006-01-27 11:01:57 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.4 2006-03-17 15:54:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -32,14 +32,15 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : RichToolBase         ( type, name, parent           ),
-    m_rayTracing         ( 0                            ),
-    m_richPartProp       ( 0                            ),
+    m_rayTracing         ( NULL                         ),
+    m_richPartProp       ( NULL                         ),
+    m_radTool            ( NULL                         ),
     m_zTolerance         ( Rich::NRadiatorTypes, 0      ),
     m_nomZstates         ( 2*Rich::NRiches,      0      ),
     m_mirrShift          ( Rich::NRiches,        0      ),
     m_minStateDiff       ( Rich::NRadiatorTypes, 0      ),
-    m_trExt1             ( 0                            ),
-    m_trExt2             ( 0                            ),
+    m_trExt1             ( NULL                         ),
+    m_trExt2             ( NULL                         ),
     m_trExt1Name         ( "TrackHerabExtrapolator"     ),
     m_trExt2Name         ( "TrackParabolicExtrapolator" ),
     m_usedRads           ( Rich::NRadiatorTypes, true   ),
@@ -104,6 +105,7 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
   // Get the RICH tools
   acquireTool( "RichRayTracing",          m_rayTracing   );
   acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichRadiatorTool",        m_radTool      );
 
   // get Detector elements for RICH1 and RICH2
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
@@ -248,7 +250,7 @@ constructSegments( const ContainedObject * obj,
           if ( (*radiator)->intersectionPoints( entryPState->position(),
                                                 entryPState->slopes(),
                                                 entryPoint1,
-                                                exitPoint1) )
+                                                exitPoint1 ) )
           {
             entryStateOK = true;
             if ( msgLevel(MSG::VERBOSE) )
@@ -510,6 +512,22 @@ constructSegments( const ContainedObject * obj,
   // return value is number of segments formed
   return segments.size();
 }
+//====================================================================================================
+
+
+//====================================================================================================
+// Get radiator intersections
+unsigned int
+RichDetailedTrSegMakerFromRecoTracks::
+getRadIntersections( const Gaudi::XYZPoint& point,
+                     const Gaudi::XYZVector& direction,
+                     const Rich::RadiatorType rad,
+                     std::vector<RichRadIntersection>& intersections )
+{
+
+  return intersections.size();
+}
+//====================================================================================================
 
 
 //====================================================================================================
@@ -533,6 +551,7 @@ void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
 
 }
 //====================================================================================================
+
 
 //====================================================================================================
 void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
@@ -574,6 +593,7 @@ void RichDetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRad
 
 }
 //====================================================================================================
+
 
 //====================================================================================================
 StatusCode RichDetailedTrSegMakerFromRecoTracks::moveState( State *& stateToMove,

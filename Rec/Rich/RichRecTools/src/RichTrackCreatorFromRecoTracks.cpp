@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.7 2006-02-16 16:15:36 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.8 2006-03-17 15:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -148,7 +148,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   catch ( const GaudiException & expt )
   {
     Error( expt.message() );
-    return 0;
+    return NULL;
   }
 
   // unique ?
@@ -165,9 +165,6 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   // Is track a usable type
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
-  // Track selection
-  if ( !trackSelector().trackSelected(trTrack) ) return NULL;
-
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
 
@@ -181,6 +178,9 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
     // count tried tracks
     ++tkCount.triedTracks;
+
+    // Track selection
+    if ( !trackSelector().trackSelected(trTrack) ) return NULL;
 
     // New track object pointer
     RichRecTrack * newTrack = NULL;

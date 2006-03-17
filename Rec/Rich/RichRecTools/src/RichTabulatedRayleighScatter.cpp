@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.9 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.10 2006-03-17 15:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,7 +34,7 @@ RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& 
   declareInterface<IRichRayleighScatter>(this);
 }
 
-StatusCode RichTabulatedRayleighScatter::initialize() 
+StatusCode RichTabulatedRayleighScatter::initialize()
 {
 
   // Sets up various tools and services
@@ -44,12 +44,12 @@ StatusCode RichTabulatedRayleighScatter::initialize()
   // Get aerogel radiator
   // for aero, get the "0" file, as the multisolid does not have any properties
   // this whole scheme needs reworking to cope properly with different aerogel tiles.
-  m_aero = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
+  m_aero = getDet<DeRichAerogelRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
 
   return sc;
 }
 
-StatusCode RichTabulatedRayleighScatter::finalize() 
+StatusCode RichTabulatedRayleighScatter::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -57,7 +57,7 @@ StatusCode RichTabulatedRayleighScatter::finalize()
 
 double
 RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                   const double energy ) const 
+                                                   const double energy ) const
 {
   // check this is aerogel
   if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;
