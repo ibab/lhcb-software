@@ -1,5 +1,5 @@
 package GaudiConf
-version v9r3
+version v9r4
 
 branches doc cmt options src
 include_path none
@@ -7,5 +7,4 @@ include_path none
 ignore_pattern package_stamps
 
 set STDOPTS    ${GAUDICONFROOT}/options
-macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" ' \
-                win32 ' /DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
+macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
