@@ -1,4 +1,4 @@
-// $Id: DeRichAerogelRadiator.cpp,v 1.4 2006-03-16 17:36:26 jonrob Exp $
+// $Id: DeRichAerogelRadiator.cpp,v 1.5 2006-03-17 17:15:40 jonrob Exp $
 // Include files
 
 #include "Kernel/PhysicalConstants.h"
@@ -68,17 +68,17 @@ StatusCode DeRichAerogelRadiator::initialize ( )
         << endmsg;
 
   // update refractive index
-  IUpdateManagerSvc* ums = updMgrSvc();
+
   // aerogel parameters from cond DB
   m_AerogelCond = condition( "AerogelParameters" );
   if ( m_AerogelCond ) {
-    ums->registerCondition(this,m_AerogelCond.path(),
+    updMgrSvc()->registerCondition(this,m_AerogelCond.path(),
                            &DeRichAerogelRadiator::updateProperties ); }
   else
   { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
 
-  sc = ums->update(this);
+  sc = updMgrSvc()->update(this);
   if ( sc.isFailure() ) 
   { 
     msg << MSG::ERROR << "First UMS update failed" << endreq;
@@ -95,7 +95,10 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 //=========================================================================
 // updateRefIndex
 //=========================================================================
-StatusCode DeRichAerogelRadiator::updateProperties ( ) {
+StatusCode DeRichAerogelRadiator::updateProperties ( ) 
+{
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Refractive Index Update Triggered" << endreq;
 
   // load various parameters
   const double photonEnergyLowLimit = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");
@@ -107,7 +110,6 @@ StatusCode DeRichAerogelRadiator::updateProperties ( ) {
 
   if ( photonEnergyHighLimit    <  ckvPhotonEnergyHighLimit ||
        ckvPhotonEnergyLowLimit  <  photonEnergyLowLimit  ) {
-    MsgStream msg( msgSvc(), myName() );
     msg << MSG::ERROR << "Inadmissible photon energy limits "
         << photonEnergyLowLimit << " " << photonEnergyHighLimit
         << "  " << ckvPhotonEnergyLowLimit << " "
@@ -121,16 +123,16 @@ StatusCode DeRichAerogelRadiator::updateProperties ( ) {
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  StatusCode scCalc = calcSellmeirRefIndex( photonMomentumVect, m_refIndexTabProp );
-  if ( !scCalc ) return scCalc;
+  sc = calcSellmeirRefIndex( photonMomentumVect, m_refIndexTabProp );
+  if ( !sc ) return sc;
 
   // calculate Rayleigh scattering and update Tabulated property
-  scCalc = calcRayleigh( photonMomentumVect, m_rayleighTabProp );
-  if ( !scCalc ) return scCalc;
+  sc = calcRayleigh( photonMomentumVect, m_rayleighTabProp );
+  if ( !sc ) return sc;
 
   // calculate Absorption and update Tabulated property
-  scCalc = calcAbsorption( photonMomentumVect, m_absorptionTabProp );
-  if ( !scCalc ) return scCalc;
+  sc = calcAbsorption( photonMomentumVect, m_absorptionTabProp );
+  if ( !sc ) return sc;
 
   std::vector<double> ckvPhotonMomentumVect;
   sc = prepareMomentumVector( ckvPhotonMomentumVect, ckvPhotonEnergyLowLimit,
@@ -138,11 +140,10 @@ StatusCode DeRichAerogelRadiator::updateProperties ( ) {
   if ( !sc ) return sc;
 
   // calculate the refractive index CKVRNDX and update Tabulated property
-  scCalc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
-  if ( !scCalc ) return scCalc;
+  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
+  if ( !sc ) return sc;
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
 
 //=========================================================================
@@ -155,7 +156,7 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp ) {
     MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Problem with Tab Property" << endmsg;
+    msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -174,45 +175,44 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
   const double nAtFixedL = m_AerogelCond->param<double>("CurrentAerogel_nAtFixedLambda");
 
   //calculate scaling factor to match measured n(lambda)
-  double ephot = m_photMomWaveConv/eV / fixedLambdaValue;
-  double term1 = SellF1/(SellE1*SellE1-ephot*ephot);
-  double term2 = SellF2/(SellE2*SellE2-ephot*ephot);
-  double rindex_square_minusone = term1 + term2;
-  double scalingfactor = (nAtFixedL*nAtFixedL-1.0)/rindex_square_minusone;
+  const double ephot = m_photMomWaveConv/eV / fixedLambdaValue;
+  const double term1 = SellF1/(SellE1*SellE1-ephot*ephot);
+  const double term2 = SellF2/(SellE2*SellE2-ephot*ephot);
+  const double rindex_square_minusone = term1 + term2;
+  const double scalingfactor = (nAtFixedL*nAtFixedL-1.0)/rindex_square_minusone;
 
-  for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin ){
+  for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin )
+  {
     const double epho = momVect[ibin]/eV;
     const double pfe  =
       SellF1 / ( SellE1 * SellE1 - epho * epho ) +
       SellF2 / ( SellE2 * SellE2 - epho * epho );
-
     const double curRindex = sqrt( 1.0 + pfe * scalingfactor );
-
     aTable.push_back( TabulatedProperty::Entry( epho*eV, curRindex ) );
   }
 
-  if ( 0 == m_tileNumber || 15 == m_tileNumber ) {
+  if ( 0 == m_tileNumber || 15 == m_tileNumber ) 
+  {
     MsgStream msg( msgSvc(), myName() );
     msg << MSG::INFO << "Updated the table in Tab property " << tabProp->name()
         << " with " << momVect.size() << " bins" << endmsg;
   }
 
   return StatusCode::SUCCESS;
-
 }
-
 
 //=========================================================================
 // calculate Rayleigh scattering
 //=========================================================================
 StatusCode DeRichAerogelRadiator::
 calcRayleigh (const std::vector<double>& momVect,
-              const TabulatedProperty* tabProp ) {
+              const TabulatedProperty* tabProp ) 
+{
 
   // test the tab property pointer
   if ( !tabProp ) {
     MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Problem with Tab Property" << endmsg;
+    msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -225,11 +225,11 @@ calcRayleigh (const std::vector<double>& momVect,
   aTable.clear();
   aTable.reserve( momVect.size() );
 
-  for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin ){
-    const double epho  = momVect[ibin]/eV;
-    const double wAgel = (m_photMomWaveConv/1000./eV/nanometer) /epho;
-    const double pathlenght = pow(wAgel,4)/clarity*10;
-
+  for ( unsigned int ibin = 0; ibin < momVect.size(); ++ibin )
+  {
+    const double epho       = momVect[ibin]/eV;
+    const double wAgel      = (m_photMomWaveConv/1000./eV/nanometer) /epho;
+    const double pathlenght = wAgel*wAgel*wAgel*wAgel/clarity*10;
     aTable.push_back( TabulatedProperty::Entry( epho*eV, pathlenght ) );
   }
 
@@ -253,7 +253,7 @@ calcAbsorption (const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp ) {
     MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Problem with Tab Property" << endmsg;
+    msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 

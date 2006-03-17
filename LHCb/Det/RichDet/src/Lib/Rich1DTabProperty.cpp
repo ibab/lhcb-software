@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich1DTabProperty
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.7 2006-03-16 14:57:22 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.8 2006-03-17 17:16:18 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -52,7 +52,6 @@ Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
   for ( TabulatedProperty::Table::const_iterator it = tab->table().begin();
         it != tab->table().end(); ++it )
   {
-    //std::cout << "Data x,y = " << (*it).first << " " << (*it).second << std::endl;
     m_data[ (*it).first ] = (*it).second;
   }
 
