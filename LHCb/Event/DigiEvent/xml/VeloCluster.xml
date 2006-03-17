@@ -14,9 +14,9 @@
      id="4006"
      author="Chris Parkes"
      desc="A cluster as produced by the TELL1 with full ADC information."
-     location="Raw/Velo/Clusters"
-     serializers="FALSE"
-    >
+     serializers="FALSE">
+     <location name="Default"   place="Raw/Velo/Clusters"   />
+     
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips'
@@ -31,7 +31,7 @@
      desc="first Velo Channel ID"
      const="TRUE">
     <code>
- return VeloChannelID(channelID().sensor(),channelID().strip()-stripValues().front().first,channelID().type());
+ return VeloChannelID(channelID().sensor(),stripValues().front().first,channelID().type());
 
    </code>
    </method>
@@ -41,7 +41,7 @@
      desc="first Velo Channel ID"
      const="TRUE">
     <code>
- return VeloChannelID(channelID().sensor(),channelID().strip()+stripValues().back().first,channelID().type());    </code>
+ return VeloChannelID(channelID().sensor(),stripValues().back().first,channelID().type());    </code>
   </method>
 
  <method
@@ -52,7 +52,7 @@
       <code>
   std::vector &lt; LHCb::VeloChannelID &gt; chanCont;
   VeloChannelID first = firstChannel();
-  for (unsigned int i = 0; i &gt; size(); ++i){
+  for (unsigned int i = 0; i &lt; size(); i++){
     VeloChannelID aChan(first.sensor(),first.strip()+i,first.type());
     chanCont.push_back(aChan);
   }
