@@ -4,9 +4,6 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2006-03-17
- - Bug fix
-
 !=============================== STDAQ v2r4 2006-03-17 =======================
 ! 2006-03-15 - Matt Needham
  - Changes to switch strip mapping for hybrids that are flipped. Requires
