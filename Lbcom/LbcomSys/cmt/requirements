@@ -39,4 +39,4 @@ use VeloDAQ           v3r1  Velo        # Kurt Rinnert
 use VeloAssociators   v2r0  Velo        # Tomasz Szumlak
 
 # Common
-use Associators       v3r0  Associators # Matt Needham
+use Associators       v3r1  Associators # Matt Needham

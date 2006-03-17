@@ -9,13 +9,17 @@
 </PRE><H1><A NAME=v4r1>2006-03-17 LbcomSys v4r1</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.
 
-- Packages modified: VeloDAQ v3r1, STAlgorithms v1r1, STCheckers v1r1,
+- Packages modified: VeloDAQ v3r1,STDAQ v2r4, STAlgorithms v1r1, STCheckers v1r1,
                      Associators v3r1
 
 - In VeloDAQ v3r1:
   . Bug fixes in handling of interstrip position bits and threshold bit
   . Definition of less-than for VeloCluster, now same as for InternalVeloCluster
   . Various cosmetic fixes
+
+- In STDAQ v2r4:
+  . Changes to switch strip mapping for hybrids that are flipped. 
+    Requires XmlConditions v1r5 or greater
 
 - In STAlgorithms v1r1:
   . Move STSummaryCreator to Rec/RecAlgs. Removes package dependency on RecEvent
