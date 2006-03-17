@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v2r1 2006-03-17 ===================
+! 2006-03-17 - Marco Cattaneo
+ - Add VeloCluster2MCHitLinker and VeloCluster2MCParticleLinker
+
 !==================== VeloAssociators v2r0 2006-03-08 ===================
 ! 2006-03-09 - Tomasz Szumlak
  - code optymization (move linker instantiation out the main loop)
