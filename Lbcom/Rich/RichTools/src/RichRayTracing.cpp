@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.19 2005-12-21 15:58:06 papanest Exp $
+ * $Id: RichRayTracing.cpp,v 1.20 2006-03-17 18:09:11 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -83,29 +83,16 @@ StatusCode RichRayTracing::initialize()
                                             DeRichHPDPanelLocation::Rich2Panel1_old }};
 
   // RICH detector elements
-  const DeRich* rich1;
-  try {
-    rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  }
-  catch ( GaudiException& e ) {
-    rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
-  }
-
-  const DeRich* rich2;
-  try {
-    rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  }
-  catch ( GaudiException& e ) {
-    rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
-  }
+  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
 
   // loop over riches and photo detector panels
   unsigned int rich, panel;
-  for ( rich=0; rich<m_photoDetPanels.size(); ++rich)
+  for ( rich=0; rich<m_photoDetPanels.size(); ++rich )
   {
-    for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel)
+    for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
       try {
         m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
@@ -132,7 +119,6 @@ StatusCode RichRayTracing::initialize()
   {
     m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SecMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SecMirrorSegColumns" );
-    info() << "Found spherical secondary mirrors for RICH1" << endreq;
   }
   else
   {
@@ -153,7 +139,6 @@ StatusCode RichRayTracing::initialize()
   {
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
-    info() << "Found spherical secondary mirrors for RICH2" << endreq;
   }
   else
   {
