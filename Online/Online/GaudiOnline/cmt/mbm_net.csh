@@ -12,7 +12,7 @@ setenv PROCESSNAME ALLOC_0
 $MINITERM "$EXEC tan_nameserver -a" &
 sleep 3
 setenv PROCESSNAME INQUIRE_0
-$MINITERM "$EXEC tan_nameserver -i" &
+$MINITERM "$EXEC tan_nameserver -i -tcp" &
 setenv PROCESSNAME TANMON_0
 $MINITERM "$EXEC tanmon -c" &
 sleep 5
@@ -24,6 +24,8 @@ setenv PROCESSNAME NetRead_2
 $WIDETERM "$GEXEC libMDF.so GaudiTask ../options/Network2MBM.opts" &
 setenv PROCESSNAME NetWrite_0
 $WIDETERM "$GEXEC libMDF.so GaudiTask ../options/MBM2Network.opts" &
+#gvd $GEXEC &
+#echo libMDF.so GaudiTask ../options/MBM2Network.opts
 setenv PROCESSNAME NetWrite_1
 $WIDETERM "$GEXEC libMDF.so GaudiTask ../options/MBM2Network.opts" &
 #

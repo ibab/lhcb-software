@@ -6,7 +6,7 @@ set PROCESSNAME=ALLOC_0
 start "%PROCESSNAME%" %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -a
 set PROCESSNAME=INQUIRE_0
 sleep 1
-start "%PROCESSNAME%" %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -i
+start "%PROCESSNAME%" %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -i -tcp
 set PROCESSNAME=TANMON_0
 start "%PROCESSNAME%" %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tanmon -c
 set PROCESSNAME=NetRead_0
