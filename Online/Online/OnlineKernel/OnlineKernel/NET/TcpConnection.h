@@ -33,19 +33,19 @@ class TcpNetworkAddress : public NetworkAddress {
   typedef TcpNetworkChannel::Address Data;
   //@Man: Public member variables
   /// Structure holding an inet address
-  Data _addr;
+  Data m_addr;
   /// Name of network connection host
-  char         _cHost[64];
+  char m_cHost[64];
   //@Man: Public member functions
   /// Automatic cast to the data object
   operator Data& () {
-      return _addr;
+      return m_addr;
   }
   /// Retrieve Name of Network Host
-  const char* HostName() const {
-    return _cHost;
+  const char* hostName() const {
+    return m_cHost;
   }
-  void SetHostName();
+  void setHostName();
 };
 
 /// Definition of a network connection based on TCP sockets
@@ -79,23 +79,23 @@ public:
   /// Standard destructor
   virtual ~TcpConnection();
   /// Initialize the connection (called by constructor(s))
-  int Initialize( Port port );
+  int initialize( Port port );
   /// return Network channel 
-  virtual NetworkChannel& _SendChannel ();
+  virtual NetworkChannel& sendChannel ();
   /// return Network channel 
-  virtual NetworkChannel& _RecvChannel ();
+  virtual NetworkChannel& recvChannel ();
   /// return Port number
-  Port _Port () const;
+  Port port () const;
   /// Return family type
-  Family _Family () const;
+  Family family () const;
   /// Address the connection points to (may be invalid)
-  virtual const NetworkAddress& _Address () const;
+  virtual const NetworkAddress& address () const;
   /// Virtual method to receive data
-  virtual int Receive  (BasicRequest* req, NetworkAddress&from);
+  virtual int receive  (BasicRequest* req, NetworkAddress&from);
   /// Virtual method to send data
-  virtual int Send     (BasicRequest* req, NetworkAddress& to);
+  virtual int send     (BasicRequest* req, NetworkAddress& to);
   /// Virtual method to listen to the connection socket
-  virtual int Listen( EventHandler *handler );
+  virtual int listen( EventHandler *handler );
   /// Standard constructor with given service name
   static int servicePort(const char* service = "UserService");
 };

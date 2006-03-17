@@ -21,7 +21,7 @@ protected:
   /// Dummy receive buffer
   int  m_recvBuff;
   /// Default ACTION after AST callback -> Call handler callback....
-  static int  _DefaultAction ( void* par );    
+  static int  _defaultAction ( void* par );    
 public:
   //@Man: public member functions
   /// Constructor to initialize the connection
@@ -29,19 +29,19 @@ public:
   /// Destructor: closes channel
   virtual ~UdpNetworkChannel();
   /// Cancel eventually pending I/O requests
-  int _Cancel();
+  int cancel();
   /// Bind Address (Acceptor)
-  int _Bind( const Address& addr, int con_pend = 5 );
+  int bind( const Address& addr, int con_pend = 5 );
   /// Connect to target
-  int _Connect( const Address& addr, int tmo = 0);
-  /// Send data to network partner.
-  int _Send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
-  /// Receive data from network partner.
-  int _Recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
-  /// Queue Receive call 
-  int _QueueReceive ( Port port, EventHandler *handler );
-  /// Queue Receive call
-  int _UnqueueIO ( Port port );
+  int connect( const Address& addr, int tmo = 0);
+  /// send data to network partner.
+  int send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
+  /// receive data from network partner.
+  int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
+  /// Queue receive call 
+  int queueReceive ( Port port, EventHandler *handler );
+  /// Queue receive call
+  int _unqueueIO ( Port port );
   /// Standard constructor with given service name
   static int servicePort(const char* service = "UserService");
 };

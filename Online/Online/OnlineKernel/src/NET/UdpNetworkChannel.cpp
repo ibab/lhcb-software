@@ -13,15 +13,15 @@ UdpNetworkChannel::UdpNetworkChannel()  {
   m_errno = 0;
   m_socket = ::socket(PF_INET, SOCK_DGRAM, 0);
   if ( m_socket <= 0 )  {
-    ::printf("UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",errMsg());
     m_errno = lib_rtl_get_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) < 0) {
-    ::printf("UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",errMsg());
     m_errno = lib_rtl_get_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_DONTROUTE, (char*)&on, sizeof(on)) < 0) {
-    ::printf("UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",errMsg());
     m_errno = lib_rtl_get_error();
   }
   else  {
@@ -33,36 +33,36 @@ UdpNetworkChannel::UdpNetworkChannel()  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 UdpNetworkChannel::~UdpNetworkChannel()  {
-  //StopTimer();
+  //stopTimer();
   if ( m_socket > 0 ) {
     ::shutdown(m_socket,2);
     ::socket_close (m_socket);
   }
 }
 // ----------------------------------------------------------------------------
-//  Send data to network partner.
+//  send data to network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Address* addr)    {
+int UdpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Address* addr)    {
   if ( m_socket > 0 )  {
     int status;
     socklen_t siz = sizeof(Address);
-    StartTimer(tmo);
+    startTimer(tmo);
     if ( addr == 0 )
       status = ::send ( m_socket, (char*)buff, len, flags);
     else 
       status = ::sendto ( m_socket, (char*)buff, len, flags, (sockaddr*)addr, siz);
-    StopTimer();
+    stopTimer();
     if ( status != len )  m_errno = ::lib_rtl_get_error();
     return status;
   }
   return 0;
 }
 // ----------------------------------------------------------------------------
-//  Receive data from network partner.
+//  receive data from network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
+int UdpNetworkChannel::recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
   socklen_t siz = sizeof(Address);
   int status = selectTmo(READ|EXCEPT,tmo);
   if ( status == 1 ) {
@@ -79,11 +79,11 @@ int UdpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address*
 //  Connect to network partner  (Connector)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
+int UdpNetworkChannel::connect ( const Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
-    StartTimer(tmo);
+    startTimer(tmo);
     int status = ::connect(m_socket, (sockaddr*)&addr, sizeof(addr) );
-    StopTimer();
+    stopTimer();
     if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
     return status;
   }
@@ -94,7 +94,7 @@ int UdpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
 //  Bind Address (Acceptor)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Bind ( const Address& addr, int /* pend */ )  {
+int UdpNetworkChannel::bind ( const Address& addr, int /* pend */ )  {
   if ( m_socket > 0 )  {
     int status = ::bind ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
@@ -106,21 +106,21 @@ int UdpNetworkChannel::_Bind ( const Address& addr, int /* pend */ )  {
 // Cancel eventually pending I/O requests
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Cancel()  {
+int UdpNetworkChannel::cancel()  {
   return ::lib_rtl_cancel_io(m_socket);
 }
 // ----------------------------------------------------------------------------
-//  Queue Receive request on receive socket
+//  Queue receive request on receive socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_QueueReceive ( Port port, EventHandler* handler )  {
-  return IOPortManager(m_port=port).add(1, m_socket, _DefaultAction, handler);
+int UdpNetworkChannel::queueReceive ( Port port, EventHandler* handler )  {
+  return IOPortManager(m_port=port).add(1, m_socket, _defaultAction, handler);
 }
 // ----------------------------------------------------------------------------
-//  Unqueue Receive request on receive socket
+//  Unqueue receive request on receive socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_UnqueueIO ( Port port )  {
+int UdpNetworkChannel::_unqueueIO ( Port port )  {
   return IOPortManager(m_port=port).remove(m_socket);
 }
 // ----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ int UdpNetworkChannel::_UnqueueIO ( Port port )  {
 //  Call handler callback....
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_DefaultAction ( void* par )  {
+int UdpNetworkChannel::_defaultAction ( void* par )  {
   EventHandler* handler = (EventHandler*)par;
-  return handler->HandleEvent();
+  return handler->handleEvent();
 }

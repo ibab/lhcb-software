@@ -12,14 +12,14 @@ static inline const char* timestr(void)    {
   return tim;
 }
 
-void UdpNetworkAddress::SetHostName() {
+void UdpNetworkAddress::setHostName() {
   // ----------------------------------------------------------------------------
   // Return the hostname this address is pointing to.
   //  - Only valid for valid receive addresses
   //                                      M.Frank
   // ----------------------------------------------------------------------------
-  struct hostent *he = ::gethostbyaddr((char*)&_addr.sin_addr,sizeof(_addr.sin_addr),AF_INET);
-  ::strcpy(_cHost, ( he == 0 ) ? inet_ntoa(_addr.sin_addr) : he->h_name);
+  struct hostent *he = ::gethostbyaddr((char*)&m_addr.sin_addr,sizeof(m_addr.sin_addr),AF_INET);
+  ::strcpy(m_cHost, ( he == 0 ) ? inet_ntoa(m_addr.sin_addr) : he->h_name);
 }
 
 UdpConnection::UdpConnection ( const char* service )  {
@@ -33,7 +33,7 @@ UdpConnection::UdpConnection ( const char* service )  {
   // 
   // ----------------------------------------------------------------------------
   ::strcpy(m_service,service);
-  Initialize ( servicePort(Service()) );
+  initialize( servicePort(Service()) );
 }
 
 UdpConnection::UdpConnection ( UdpConnection::Port port )  {
@@ -46,10 +46,10 @@ UdpConnection::UdpConnection ( UdpConnection::Port port )  {
   // 
   // ----------------------------------------------------------------------------
   ::sprintf(m_service,"UDPservice_%d",port);
-  Initialize ( htons(port) );
+  initialize( htons(port) );
 }
 
-int UdpConnection::Initialize ( UdpConnection::Port port )  {
+int UdpConnection::initialize( UdpConnection::Port port )  {
   // ----------------------------------------------------------------------------
   //
   //  Initialisation of UDP socket:
@@ -63,18 +63,18 @@ int UdpConnection::Initialize ( UdpConnection::Port port )  {
   // ----------------------------------------------------------------------------
   // int on=1, sndbuf= 512, rcvbuf=128;
   m_status = CONNECTION_ERROR;
-  if ( !m_channel._IsValid() )  return m_status;
+  if ( !m_channel.isValid() )  return m_status;
   //  Create a "sockaddr_in" structure which describes the port we
   //  want to listen to. Address INADDR_ANY means we will accept
   //  connections to any of our local IP addresses.
   //
-  m_sin._addr.sin_port = port;
-  m_sin._addr.sin_family = AF_INET;
-  m_sin._addr.sin_addr.s_addr = INADDR_ANY;
-  ::memset(m_sin._addr.sin_zero,0,sizeof(m_sin._addr.sin_zero));
+  m_sin.m_addr.sin_port = port;
+  m_sin.m_addr.sin_family = AF_INET;
+  m_sin.m_addr.sin_addr.s_addr = INADDR_ANY;
+  ::memset(m_sin.m_addr.sin_zero,0,sizeof(m_sin.m_addr.sin_zero));
   //  Bind to that address...
-  if ( m_channel._Bind(m_sin._addr) < 0 ) {
-    ::printf("%s UdpConnection> Error binding address:%s\n",timestr(),m_channel._ErrMsg());
+  if ( m_channel.bind(m_sin.m_addr) < 0 ) {
+    ::printf("%s UdpConnection> Error binding address:%s\n",timestr(),m_channel.errMsg());
     return m_status;
   }
   return m_status = CONNECTION_SUCCESS;
@@ -90,31 +90,31 @@ UdpConnection::~UdpConnection() {
   // ----------------------------------------------------------------------------
 }
 
-int UdpConnection::Receive(BasicRequest* req, NetworkAddress& origine)  {
+int UdpConnection::receive(BasicRequest* req, NetworkAddress& origine)  {
   // ----------------------------------------------------------------------------
   //
-  //  Receive data from UDP
+  //  receive data from UDP
   //  
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
   int flags = 0, size  = req->MaxBuffSize();
   UdpNetworkAddress *from = (UdpNetworkAddress*)&origine;
-  int status = m_channel._Recv(req->Buffer(), size, 0, flags, &from->_addr);
+  int status = m_channel.recv(req->Buffer(), size, 0, flags, &from->m_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
-    m_status = m_channel._Error();
-    printf("%s  UdpConnection::Receive> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel._Error(),m_channel._ErrMsg());
+    m_status = m_channel.error();
+    printf("%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
+      timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
 }
 
-int UdpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
+int UdpConnection::send(BasicRequest* req, NetworkAddress& target)  {
   // ----------------------------------------------------------------------------
   //
-  //  Receive data from UDP
+  //  receive data from UDP
   //  
   //                                      M.Frank
   // 
@@ -122,12 +122,12 @@ int UdpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
   int       flags = 0;
   socklen_t size  = req->BuffSize();
   UdpNetworkAddress *to = (UdpNetworkAddress*)&target;
-  int status = m_channel._Send(req->Buffer(), size, 0, flags, &to->_addr);
+  int status = m_channel.send(req->Buffer(), size, 0, flags, &to->m_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
-    m_status = m_channel._Error();
-    ::printf("%s  UdpConnection::Send> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel._Error(),m_channel._ErrMsg());
+    m_status = m_channel.error();
+    ::printf("%s  UdpConnection::send> Bad IO status. Status=0x%X %s\n",
+      timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -135,13 +135,13 @@ int UdpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
 // ----------------------------------------------------------------------------
 // return Network channel
 // ----------------------------------------------------------------------------
-NetworkChannel& UdpConnection::_RecvChannel()  {
+NetworkChannel& UdpConnection::recvChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
 // return Network channel
 // ----------------------------------------------------------------------------
-NetworkChannel& UdpConnection::_SendChannel()  {
+NetworkChannel& UdpConnection::sendChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
@@ -153,26 +153,26 @@ const char* UdpConnection::Service() const  {
 // ----------------------------------------------------------------------------
 // return Port number
 // ----------------------------------------------------------------------------
-UdpConnection::Port UdpConnection::_Port () const {
-  return m_sin._addr.sin_port;
+UdpConnection::Port UdpConnection::port () const {
+  return m_sin.m_addr.sin_port;
 }
 // ----------------------------------------------------------------------------
 // Address the connection points to (may be invalid)
 // ----------------------------------------------------------------------------
-const NetworkAddress& UdpConnection::_Address () const {
+const NetworkAddress& UdpConnection::address () const {
   return m_sin;
 }
 // ----------------------------------------------------------------------------
 // Address the connection points to (may be invalid)
 // ----------------------------------------------------------------------------
 NetworkChannel::Address& UdpConnection::_InAddress ()  {
-  return m_sin._addr;
+  return m_sin.m_addr;
 }
 // ----------------------------------------------------------------------------
 // Return family type
 // ----------------------------------------------------------------------------
-UdpConnection::Family UdpConnection::_Family () const {
-  return m_sin._addr.sin_family;
+UdpConnection::Family UdpConnection::family () const {
+  return m_sin.m_addr.sin_family;
 }
 // ----------------------------------------------------------------------------
 // Standard constructor with given service name

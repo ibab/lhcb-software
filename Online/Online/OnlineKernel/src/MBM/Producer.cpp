@@ -134,7 +134,7 @@ int MBM::Producer::getSpace(int len)  {
   return spaceRearm(len);
 }
 
-/// Send and declare event to consumers
+/// send and declare event to consumers
 int MBM::Producer::sendEvent()  {
   return spaceAction();
 }

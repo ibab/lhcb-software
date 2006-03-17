@@ -25,7 +25,7 @@ protected:
     /// Dummy receive buffer
     int  m_recvBuff;
     /// Default ACTION after AST callback -> Call handler callback....
-    static int _DefaultAction ( void* par );    
+    static int _defaultAction ( void* par );    
 public:
     //@Man: public member functions
     /// Standard Constructor to initialize the connection for CONNECTOR
@@ -35,22 +35,22 @@ public:
     /// Destructor: closes channel
     ~TcpNetworkChannel();
     /// Connect to network partner (Connector)
-    int _Connect ( const Address&  addr, int tmo = 0);
-    /// Bind Address + Listen to specified connection (Acceptor)
-    int _Bind( const Address& addr, int con_pend = 5 );
+    int connect ( const Address&  addr, int tmo = 0);
+    /// Bind Address + listen to specified connection (Acceptor)
+    int bind( const Address& addr, int con_pend = 5 );
     /// Accept connection on socket (Acceptor)
-    Channel _Accept( Address& addr, int tmo = 0 );
-    /// Send data to network partner.
-    int _Send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
-    /// Receive data from network partner.
-    int _Recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
+    Channel accept( Address& addr, int tmo = 0 );
+    /// send data to network partner.
+    int send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
+    /// receive data from network partner.
+    int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
     /// Queue Accept call 
-    int _QueueAccept  ( Port port, EventHandler *handler );
-    /// Queue Receive call 
-    int _QueueReceive ( Port port, EventHandler *handler );
-    /// Queue Receive call
-    int _UnqueueIO ( Port port );
+    int queueAccept  ( Port port, EventHandler *handler );
+    /// Queue receive call 
+    int queueReceive ( Port port, EventHandler *handler );
+    /// Queue receive call
+    int _unqueueIO ( Port port );
     /// Cancel eventually pending I/O requests
-    int _Cancel();
+    int cancel();
 };
 #endif  /* __TcpNetworkChannel_H__  */

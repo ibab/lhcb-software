@@ -40,22 +40,22 @@ class UdpNetworkAddress : public NetworkAddress  {
   protected:
   //@Man: Protected member variables
   /// Structure holding an inet address
-  Data         _addr;
+  Data         m_addr;
   //@Man: Protected member variables
   /// Name of network connection host
-  char         _cHost[64];
+  char         m_cHost[64];
   public:
   //@Man: Public member functions
   /// Automatic cast to the data object
   operator Data& () {
-      return _addr;
+      return m_addr;
   }
   /// Retrieve Name of Network Host
-  const char* HostName() const {
-    return _cHost;
+  const char* hostName() const {
+    return m_cHost;
   }
   /// Store Name of Network host
-  void SetHostName();
+  void setHostName();
 };
 
 /// Definition of a network connection based on UDP sockets
@@ -93,25 +93,25 @@ public:
   /// Standard destructor
   virtual ~UdpConnection();
   /// Initialize the connection (called by constructor)
-  int Initialize( Port port );
+  int initialize( Port port );
   /// Return name to the service the connection represents
   const char* Service() const;
   /// Return a copy of the address of this connection
-  const NetworkAddress& _Address() const;
+  const NetworkAddress& address() const;
   /// Return a copy of the address of this connection
   NetworkChannel::Address& _InAddress();
   /// return Network channel for Sending
-  NetworkChannel& _SendChannel ();
+  NetworkChannel& sendChannel ();
   /// return Network channel for Receiving
-  NetworkChannel& _RecvChannel();
+  NetworkChannel& recvChannel();
   /// return Port number
-  Port _Port () const;
+  Port port () const;
   /// Return family type
-  Family _Family () const;
+  Family family () const;
   /// Virtual method to receive data from a given UDP address
-  virtual int Receive  (BasicRequest* req, NetworkAddress& from);
+  virtual int receive  (BasicRequest* req, NetworkAddress& from);
   /// Virtual method to send data to a given UDP address
-  virtual int Send     (BasicRequest* req, NetworkAddress& to);
+  virtual int send     (BasicRequest* req, NetworkAddress& to);
   /// Standard constructor with given service name
   static int servicePort(const char* service = "UserService");
 };

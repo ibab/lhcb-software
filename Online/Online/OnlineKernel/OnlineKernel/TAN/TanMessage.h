@@ -39,11 +39,11 @@ public:
 #else
 typedef struct  {
 #endif
-  unsigned int       length;
-  unsigned int       error;
-  unsigned int       function;
-  char               name [32];
-  __NetworkAddress__ sin;
+  unsigned int       m_length;
+  unsigned int       m_error;
+  unsigned int       m_function;
+  char               m_name [32];
+  __NetworkAddress__ m_sin;
 #ifndef __cplusplus
 }  TAN_MSG, TanMessage;
 #else                                            /*   C++ Only!!!   */
@@ -70,73 +70,73 @@ public:
   TanMessage& operator = (const TanMessage& cp);
   /// Retrieve pointer to name
   char* _Name() {
-    return name;
+    return m_name;
   }
   /// Retrieve reference to network address
   Address& Addr()  {
-    return sin;
+    return m_sin;
   }
   /// Retrieve reference to network sub address
-  SubAddress& _Address() {
-    return sin.sin_addr;
+  SubAddress& address() {
+    return m_sin.sin_addr;
   }
   /// Retrieve port number
-  Port    _Port() const {
-    return sin.sin_port;
+  Port    port() const {
+    return m_sin.sin_port;
   }
   /// Retrieve network family type
-  Family  _Family() const {
-    return sin.sin_family;
+  Family  family() const {
+    return m_sin.sin_family;
   }
   /// Retrieve error code
-  unsigned int _Error() const {
-    return error;
+  unsigned int error() const {
+    return m_error;
   }
   /// Retrieve function code (of type Type)
-  unsigned int _Function() const {
-    return function;
+  unsigned int function() const {
+    return m_function;
   }
   /// Retrive length
   unsigned int _Length() const {
-    return length;
+    return m_length;
   }
   /// Swap to network structure
   void Convert();
 };
 
 inline TanMessage::TanMessage () {
-  length = sizeof (TanMessage);
-  error  = TAN_SS_SUCCESS;
-  function = 0;
-  ::memset  (name,0,sizeof(name));
-  ::memset  (&sin, 0, sizeof (sin));
+  m_length = sizeof (TanMessage);
+  m_error  = TAN_SS_SUCCESS;
+  m_function = 0;
+  ::memset  (m_name,0,sizeof(m_name));
+  ::memset  (&m_sin, 0, sizeof (m_sin));
 }
 
 inline TanMessage::TanMessage (u_int func, const char* proc)  {
   size_t i, n;
-  length    = htonl (sizeof (TanMessage));
-  error     = htonl (TAN_SS_SUCCESS);
-  function  = htonl (func);
+  m_length    = htonl (sizeof (TanMessage));
+  m_error     = htonl (TAN_SS_SUCCESS);
+  m_function  = htonl (func);
   for (i=0, n=::strlen(proc); i<n; i++)
-     name[i] = ::tolower(proc[i]);
-  name[i] = 0;
-  memset  (&sin, 0, sizeof (sin));
+     m_name[i] = ::tolower(proc[i]);
+  m_name[i] = 0;
+  ::memset  (&m_sin, 0, sizeof (m_sin));
 }
 
 inline TanMessage& TanMessage::operator = (const TanMessage& cp)  {
-  sin       = cp.sin;
-  error     = cp._Error();
-  length    = sizeof(cp);
-  function  = cp._Function();
-  ::strcpy(name, cp.name);
+  m_sin       = cp.m_sin;
+  m_error     = cp.m_error;
+  m_length    = sizeof(cp);
+  m_function  = cp.m_function;
+  ::strcpy(m_name, cp.m_name);
   return *this;
 }
 
 inline void TanMessage::Convert()  {
-  length   = htonl(length);
-  error    = htonl(error);
-  function = htonl(function);
-  //sin.sin_family = ntohs (sin.sin_family);
+  m_length   = htonl(m_length);
+  m_error    = htonl(m_error);
+  m_function = htonl(m_function);
+  //m_sin.sin_family = ntohs (m_sin.sin_family);
 }
 
 #endif   /* __cplusplus                    */

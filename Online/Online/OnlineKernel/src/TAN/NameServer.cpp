@@ -19,21 +19,21 @@ inline const char *timestr (void)  {
   return tim;
 }          
 
-class ReceiveHandler : public EventHandler  {
+class Receivehandler : public EventHandler  {
 protected:
   TcpNetworkChannel*    _pNetwork;
   TanDataBase::Entry*   _pEntry;
 public:
-  ReceiveHandler ( EventReactor* reactor ) 
+  Receivehandler ( EventReactor* reactor ) 
     : EventHandler(reactor), _pNetwork(0), _pEntry(0)  {
     }
-    ReceiveHandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
+    Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
       : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
     {
     }
-    virtual ~ReceiveHandler() {
+    virtual ~Receivehandler() {
     }
-    TcpNetworkChannel* _Channel()     {
+    TcpNetworkChannel* channel()     {
       return _pNetwork;
     }
     TanDataBase::Entry* _Entry()     {
@@ -44,8 +44,8 @@ public:
       _pEntry   = entry;
     }
     void _Delete()  {
-      TcpNetworkChannel* chan = _Channel();
-      chan->_Cancel();
+      TcpNetworkChannel* chan = channel();
+      chan->cancel();
       delete chan;
       delete this;
     }
@@ -80,30 +80,30 @@ public:
   NameService( NetworkConnection* ptr = 0);
   /// Standard destructor
   virtual ~NameService();
-  /// Handle Tan request
-  virtual void HandleMessage(TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg ); 
+  /// handle Tan request
+  virtual void handleMessage(TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg ); 
   /// Reactor's Event dispatching overlayed method
-  virtual int Handle ( EventHandler* /* handler */ )  {
+  virtual int handle ( EventHandler* /* handler */ )  {
     return NAME_SERVER_SUCCESS;
   }
   /// Abstract member function: Act on Nameservice requests
-  virtual void Handle() {
+  virtual void handle() {
   }
-  /// Abstract: Suspend the service
-  virtual int Suspend() {
+  /// Abstract: suspend the service
+  virtual int suspend() {
     return NAME_SERVER_SUCCESS;
   }
-  /// Abstract: Resume the service
-  virtual int Resume()   {
+  /// Abstract: resume the service
+  virtual int resume()   {
     return NAME_SERVER_SUCCESS;
   }
-  /// Run the service
-  virtual void Run();
+  /// run the service
+  virtual void run();
 };
 
 /** @class UdpNameService NameServer.cpp TAN/NameServer.cpp
   *
-  *  Handle TAN messages in UDP mode
+  *  handle TAN messages in UDP mode
   *  A network connection is forseen to reply the 
   *  requested information.                       
   *
@@ -119,17 +119,17 @@ public:
   virtual ~UdpNameService()   {
   }
   /// Reactor's Event dispatching overlayed method
-  virtual int Handle ( EventHandler* /* handler */ )  {
+  virtual int handle ( EventHandler* /* handler */ )  {
     return NAME_SERVER_SUCCESS;
   }
-  /// Handle Single request
-  virtual void Handle();
-  /// Suspend the service
-  virtual int Suspend()       {
+  /// handle Single request
+  virtual void handle();
+  /// suspend the service
+  virtual int suspend()       {
     return true;
   }
-  /// Resume the service
-  virtual int Resume()       {
+  /// resume the service
+  virtual int resume()       {
     return true;
   }
 };
@@ -137,7 +137,7 @@ public:
 
 /** @class TcpNameService NameServer.cpp TAN/NameServer.cpp
   *
-  *  Handle TAN messages in TCP/IP mode
+  *  handle TAN messages in TCP/IP mode
   *  A network connection is forseen to reply the 
   *  requested information.                       
   *
@@ -148,7 +148,7 @@ class TcpNameService : public NameService {
 protected:
   //@Man: Protected member variables
   /// Pointer to Accept Event handler
-  EventHandler*      m_pAcceptHandler;
+  EventHandler*      m_pAccepthandler;
   /// Pointer to TCP networkconnection
   TcpConnection*     m_tcp;
   /// Pointer to Network Channel
@@ -162,17 +162,17 @@ public:
   /// Standard destructor
   virtual ~TcpNameService();
   /// Overloaded abstract member function: Act on Nameservice requests
-  virtual void Handle();
-  /// Overloaded abstract member function: Suspend the service
-  virtual int Suspend();
-  /// Overloaded abstract member function: Resume the service
-  virtual int Resume();
+  virtual void handle();
+  /// Overloaded abstract member function: suspend the service
+  virtual int suspend();
+  /// Overloaded abstract member function: resume the service
+  virtual int resume();
   /// Reactor's Event dispatching overlayed method
-  int Handle ( EventHandler* handler );
-  /// Handle Accept request
-  int HandleAcceptRequest ( EventHandler* handler );
-  /// Handle Receive request
-  int HandleReceiveRequest ( EventHandler* handler );
+  int handle ( EventHandler* handler );
+  /// handle Accept request
+  int handleAcceptRequest ( EventHandler* handler );
+  /// handle receive request
+  int handleReceiveRequest ( EventHandler* handler );
 };
 
 // ----------------------------------------------------------------------------
@@ -204,69 +204,69 @@ NameService::~NameService()  {
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void NameService::Run()  {
+void NameService::run()  {
   while ( 1 ) {
-    Handle();
+    handle();
   }
 }
 
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void NameService::HandleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg )    {
-  TanMessage::Type func = (TanMessage::Type)ntohl (rec_msg.function);
+void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg )    {
+  TanMessage::Type func = (TanMessage::Type)ntohl (rec_msg.function());
   NetworkChannel::Port port = 0;
 
   if ( &snd_msg != &rec_msg ) snd_msg = rec_msg;
-  snd_msg.error  = TAN_SS_SUCCESS;
-  snd_msg.length = sizeof(snd_msg);
+  snd_msg.m_error  = TAN_SS_SUCCESS;
+  snd_msg.m_length = sizeof(snd_msg);
   switch ( func )  {
     case TanMessage::ALLOCATE:                                // Allocation service...
-      //::printf("Handle message: ALLOCATE\n");
-      if ( (port = m_tandb.AllocatePort(ent)) == 0 )
-        snd_msg.error = m_tandb.Error();
+      //::printf("handle message: ALLOCATE\n");
+      if ( (port = m_tandb.allocatePort(ent)) == 0 )
+        snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DEALLOCATE:
-      //::printf("Handle message: DEALLOCATE\n");
-      if ( TAN_SS_SUCCESS != m_tandb.FreePort(ent) ) 
-        snd_msg.error = m_tandb.Error();
+      //::printf("handle message: DEALLOCATE\n");
+      if ( TAN_SS_SUCCESS != m_tandb.freePort(ent) ) 
+        snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::ALIAS:
-      //::printf("Handle message: ALIAS\n");
-      if ( TAN_SS_SUCCESS != m_tandb.InsertAlias(ent) )
-        snd_msg.error = m_tandb.Error();
+      //::printf("handle message: ALIAS\n");
+      if ( TAN_SS_SUCCESS != m_tandb.insertAlias(ent) )
+        snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DEALIAS:
-      //::printf("Handle message: DEALIAS\n");
-      if ( TAN_SS_SUCCESS != m_tandb.RemoveAlias(ent) )
-        snd_msg.error = m_tandb.Error();
+      //::printf("handle message: DEALIAS\n");
+      if ( TAN_SS_SUCCESS != m_tandb.removeAlias(ent) )
+        snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DUMP:
-      //::printf("Handle message: DUMP\n");
+      //::printf("handle message: DUMP\n");
       m_tandb.Dump(stdout);
       break;
     case TanMessage::INQUIRE:                                 // Inquire service...
-      //::printf("Handle message: INQUIRE\n");
-      if ( (port=m_tandb.FindPort(rec_msg)) == 0 )  {
-        snd_msg.error = m_tandb.Error();
+      //::printf("handle message: INQUIRE\n");
+      if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
+        snd_msg.m_error = m_tandb.Error();
       }
       break;
     default:
-      //::printf("Handle message: TAN_SS_UNKNOWNMODE\n");
-      snd_msg.error = TAN_SS_UNKNOWNMODE;
+      //::printf("handle message: TAN_SS_UNKNOWNMODE\n");
+      snd_msg.m_error = TAN_SS_UNKNOWNMODE;
       break;
   }
   if ( port != 0 )  {
-    snd_msg.sin.sin_family  = rec_msg.sin.sin_family;
-    snd_msg.sin.sin_port    = htons(port);
+    snd_msg.m_sin.sin_family  = rec_msg.m_sin.sin_family;
+    snd_msg.m_sin.sin_port    = htons(port);
   }
-  else if ( snd_msg.error != TAN_SS_SUCCESS )  {
-    snd_msg.sin.sin_family      = 0;
-    snd_msg.sin.sin_port        = 0;
-    snd_msg.sin.sin_addr.s_addr = 0;
+  else if ( snd_msg.m_error != TAN_SS_SUCCESS )  {
+    snd_msg.m_sin.sin_family      = 0;
+    snd_msg.m_sin.sin_port        = 0;
+    snd_msg.m_sin.sin_addr.s_addr = 0;
   }
-  snd_msg.error  = htonl (snd_msg.error);
-  snd_msg.length = htonl (snd_msg.length);
+  snd_msg.m_error  = htonl (snd_msg.m_error);
+  snd_msg.m_length = htonl (snd_msg.m_length);
 }
 
 // ----------------------------------------------------------------------------
@@ -283,7 +283,7 @@ UdpNameService::UdpNameService() : NameService(0)  {
   ::fflush(stdout);
 }
 
-void UdpNameService::Handle ()   {
+void UdpNameService::handle ()   {
   // ----------------------------------------------------------------------------
   //                                      M.Frank
   // ----------------------------------------------------------------------------
@@ -293,28 +293,28 @@ void UdpNameService::Handle ()   {
   static UdpConnection     conn(m_port);
   NetworkChannel::Address  addr;
 
-  addr.sin_port = conn._Port();
-  addr.sin_family = conn._Family();
+  addr.sin_port = conn.port();
+  addr.sin_family = conn.family();
   addr.sin_addr.s_addr = INADDR_ANY;
   ::memset(addr.sin_zero,0,sizeof(addr.sin_zero));
 
-  int status = conn._RecvChannel()._Recv(&req,sizeof(req),0,0,&addr);
+  int status = conn.recvChannel().recv(&req,sizeof(req),0,0,&addr);
   if ( status != sizeof(req) )  {
-    printf("NameService::Handle> Error receiving message\n");
+    printf("NameService::handle> Error receiving message\n");
   }
   else  {      // handle the request....
     ent = 0;
-    addr.sin_port = req.sin.sin_port;
-    HandleMessage( ent, req, rep );
+    addr.sin_port = req.m_sin.sin_port;
+    handleMessage( ent, req, rep );
 #ifndef SERVICE
     // Swap port to reply connection
     addr.sin_port = htons(m_port+1);
 #endif
-    //printf("Send to port:%04X\n",addr.sin_port);
-    status = snd._Send(&rep,sizeof(rep),0,0,&addr);
+    //printf("send to port:%04X\n",addr.sin_port);
+    status = snd.send(&rep,sizeof(rep),0,0,&addr);
     if ( status != sizeof(rep) )  {
-      ::printf("NameService::Handle> Error sending message to [%s] on port 0x%X\n",
-        inet_ntoa(rep._Address()), rep._Port());
+      ::printf("NameService::handle> Error sending message to [%s] on port 0x%X\n",
+        inet_ntoa(rep.address()), rep.port());
     }
   }
 }
@@ -328,45 +328,45 @@ TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERV
 TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERVICE_PORT))
 #endif
 {
-  m_port = m_tcp->_Port();
+  m_port = m_tcp->port();
   fprintf(stdout,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
   ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
       m_port, m_port, htons(m_port), htons(m_port));
   fprintf(stdout,"+======================================================================+\n");
   fflush(stdout);
-  m_pAcceptHandler = new EventHandler(this);
-  m_pNetwork = &((TcpNetworkChannel&)m_tcp->_RecvChannel());
-  m_pNetwork->_QueueAccept ( m_tcp->_Port(), m_pAcceptHandler );              // Rearm
+  m_pAccepthandler = new EventHandler(this);
+  m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
+  m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm
 }
 
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 TcpNameService::TcpNameService(int port) : NameService(m_tcp=new TcpConnection(port))  {
-  m_port = m_tcp->_Port();
+  m_port = m_tcp->port();
   fprintf(stdout,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
   ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
       m_port, m_port, htons(m_port), htons(m_port));
   fprintf(stdout,"+======================================================================+\n");
   fflush(stdout);
-  m_pAcceptHandler = new EventHandler(this);
-  m_pNetwork = &((TcpNetworkChannel&)m_tcp->_RecvChannel());
-  m_pNetwork->_QueueAccept ( m_tcp->_Port(), m_pAcceptHandler );              // Rearm
+  m_pAccepthandler = new EventHandler(this);
+  m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
+  m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm
 }
 
 TcpNameService::~TcpNameService()   {
   // ----------------------------------------------------------------------------
   //                                      M.Frank
   // ----------------------------------------------------------------------------
-  m_pNetwork->_UnqueueIO( m_tcp->_Port() );
-  m_pNetwork->_Cancel();
-  delete m_pAcceptHandler;
+  m_pNetwork->_unqueueIO( m_tcp->port() );
+  m_pNetwork->cancel();
+  delete m_pAccepthandler;
 }
 
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void TcpNameService::Handle()   {
+void TcpNameService::handle()   {
   void* par;
   unsigned int fac;
   int sub_status, status;
@@ -377,27 +377,27 @@ void TcpNameService::Handle()   {
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNameService::Handle ( EventHandler* handler )  {
-  if ( handler == m_pAcceptHandler )
-    return HandleAcceptRequest ( handler );
+int TcpNameService::handle ( EventHandler* handler )  {
+  if ( handler == m_pAccepthandler )
+    return handleAcceptRequest ( handler );
   else if ( handler != 0 )
-    return HandleReceiveRequest ( handler );
+    return handleReceiveRequest ( handler );
   return NAME_SERVER_SUCCESS;
 }
 
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNameService::HandleAcceptRequest ( EventHandler* handler )  {
+int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   int retry = 1, accept_error;                                     //
   NetworkChannel::Address address;                                 //
-  NetworkChannel::Channel channel = m_pNetwork->_Accept(address);  // Accept
-  accept_error = m_pNetwork->_Error();                             //
-  int status = m_pNetwork->_QueueAccept(m_port,handler);           // Rearm ACCEPT
+  NetworkChannel::Channel channel = m_pNetwork->accept(address);  // Accept
+  accept_error = m_pNetwork->error();                             //
+  int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
-    printf("HandleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-      m_pNetwork->_Error(),retry,                                  //
-      m_pNetwork->_ErrMsg());                                      //
+    printf("handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
+      m_pNetwork->error(),retry,                                  //
+      m_pNetwork->errMsg());                                      //
   }                                                                //
   if ( channel <= 0 )   {                                          // Error!
     return NAME_SERVER_SUCCESS;                                    // Return status code
@@ -405,10 +405,10 @@ int TcpNameService::HandleAcceptRequest ( EventHandler* handler )  {
   else  {                                                          // Event handling:
     TanDataBase::Entry* entry = m_tandb.AllocateEntry(channel);    // Allocate database entry
     if ( entry != 0 )  {                                           // SUCCESS:
-      ReceiveHandler*    hand = new ReceiveHandler(this);          // Add handler      
+      Receivehandler*    hand = new Receivehandler(this);          // Add handler      
       TcpNetworkChannel* chan = new TcpNetworkChannel(channel);    // Create new connection
       hand->_Set ( chan, entry );                                  //   Update handler's parameters
-      return HandleReceiveRequest( hand );                         //
+      return handleReceiveRequest( hand );                         //
     }                                                              // and return
     return TAN_SS_NOMEM;                                           // Failed to allocate TAN slot
   }                                                                //
@@ -417,49 +417,49 @@ int TcpNameService::HandleAcceptRequest ( EventHandler* handler )  {
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNameService::HandleReceiveRequest ( EventHandler* handler )  {
-  ReceiveHandler*     hand = (ReceiveHandler*)handler;
+int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
+  Receivehandler*     hand = (Receivehandler*)handler;
   TanDataBase::Entry*  ent = hand->_Entry();
-  TcpNetworkChannel*  chan = hand->_Channel();
+  TcpNetworkChannel*  chan = hand->channel();
   int status = NAME_SERVER_SUCCESS, num_byte;
 
-  num_byte = chan->_Recv( &ent->_Message(), sizeof(ent->_Message()));
+  num_byte = chan->recv( &ent->_Message(), sizeof(ent->_Message()));
   if ( num_byte <= 1 )  {           // Socket closed by Client
     m_tandb.Close ( ent );          // No need to return error
-    //status = chan->_Error();      // condition in this case!
-    chan->_UnqueueIO (m_port);
+    //status = chan->error();      // condition in this case!
+    chan->_unqueueIO (m_port);
   }
   else {
     TanMessage reply;
-    HandleMessage( ent, ent->_Message(), reply);
-    num_byte = chan->_Send(&reply, sizeof(reply));
+    handleMessage( ent, ent->_Message(), reply);
+    num_byte = chan->send(&reply, sizeof(reply));
     if ( num_byte <= 0 ) {
       m_tandb.Close ( ent );
-      status = chan->_Error();
-      chan->_UnqueueIO (m_port);
+      status = chan->error();
+      chan->_unqueueIO (m_port);
     }
     else  {
-      switch ( ntohl(reply._Function()) )    
+      switch ( ntohl(reply.function()) )    
       {
       case TanMessage::DEALLOCATE:
-        // No task dead message! chan->_Recv(&reply, 1);
-        chan->_UnqueueIO (m_port);
+        // No task dead message! chan->recv(&reply, 1);
+        chan->_unqueueIO (m_port);
         break;
       default:
-        if ( ntohl(reply._Error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
-          status = chan->_QueueReceive (m_port, hand);     // with success!
+        if ( ntohl(reply.error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
+          status = chan->queueReceive (m_port, hand);     // with success!
           if ( !lib_rtl_is_success(status) ) {
-            printf("Error rearming receive: %s",chan->_ErrMsg());
+            printf("Error rearming receive: %s",chan->errMsg());
           }
           return status;
         }
         m_tandb.Close ( ent );
-        chan->_UnqueueIO (m_port);
+        chan->_unqueueIO (m_port);
         break;
       }
     }
   }
-  //printf("HandleReceiveRequest> Close Receive on %d %s\n",chan, strerror(status));
+  //printf("handleReceiveRequest> Close receive on %d %s\n",chan, strerror(status));
   hand->_Delete();
   return status;
 }
@@ -467,7 +467,7 @@ int TcpNameService::HandleReceiveRequest ( EventHandler* handler )  {
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNameService::Suspend  ()   {
+int TcpNameService::suspend  ()   {
   delete m_connection;
   m_connection = 0;
   m_tcp = 0;
@@ -477,17 +477,17 @@ int TcpNameService::Suspend  ()   {
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNameService::Resume ()   {
+int TcpNameService::resume ()   {
   int retry = 0;
 New_allocation:
-  if ( m_connection != 0 ) Suspend();
+  if ( m_connection != 0 ) suspend();
   m_connection = m_tcp = new TcpConnection(m_port);
-  m_pNetwork = &((TcpNetworkChannel&)m_tcp->_RecvChannel());
-  if ( m_pNetwork->_Error() != 0 && ++retry < 5 )  {
-    printf("Resume-Retry# %d> %s\n", retry, m_pNetwork->_ErrMsg());
+  m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
+  if ( m_pNetwork->error() != 0 && ++retry < 5 )  {
+    printf("resume-Retry# %d> %s\n", retry, m_pNetwork->errMsg());
     goto New_allocation;
   }
-  return m_pNetwork->_QueueAccept ( m_tcp->_Port(), m_pAcceptHandler );
+  return m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );
 }
 
 extern "C" int tan_nameserver (int argc, char* argv[]) {
@@ -496,7 +496,7 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
   // ----------------------------------------------------------------------------
   char *c;
   NameService *srv = 0;
-  bool inquirer = false, allocator = false, tcp = false, udp = false;
+  bool inquirer = false, allocator = false, tcp = false, udp = false, nowait = false;
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {
@@ -504,13 +504,15 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
          case 'a':  allocator = true;   break;
          case 't':  tcp       = true;   break;
          case 'u':  udp       = true;   break;
+         case 'n':  nowait    = true;   break;
          default:
 Options:
            printf("NameServer -<opt>\n");
-           printf("  -a             Listen and serve (DE)ALLOCATION requests\n");
-           printf("  -i             Listen and serve INQUIRE        requests\n");
-           printf("  -tcp           Run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           printf("  -udp           Run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           printf("  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
+           printf("  -i(nqquirer)   listen and serve INQUIRE        requests\n");
+           printf("  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           printf("  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           printf("  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
            return 0x1;
       }
     }
@@ -523,7 +525,7 @@ Options:
     else       srv = new UdpNameService();
   }
   else if ( allocator )   {
-    if ( TanDataBase::Initialize() != TAN_SS_SUCCESS )  {
+    if ( TanDataBase::initialize() != TAN_SS_SUCCESS )  {
       printf("TcpNameService> Error initializing the DataBase!\n");
       return 1;
     }
@@ -531,7 +533,9 @@ Options:
     else       srv = new TcpNameService();
   }
   if ( !srv ) goto Options;
-  srv->Run();
-  delete srv;
+  if ( !nowait )  {
+    srv->run();
+    delete srv;
+  }
   return 0x1;
 }

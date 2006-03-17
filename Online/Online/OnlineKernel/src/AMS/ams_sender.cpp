@@ -43,7 +43,7 @@ extern "C" int amsc_sender(int argc, char **argv)  {
   }
   amsc_get_node( node );
 
-  // Receive some messages and bounce them
+  // receive some messages and bounce them
   for (int i=0; loop > 0; --loop, ++i)  {
     //if ( (i%5) == 0 ) lib_rtl_sleep(1);
     wsize =  length;

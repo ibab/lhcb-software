@@ -12,14 +12,14 @@ inline const char* timestr(void)    {
   return tim;
 }
 
-void TcpNetworkAddress::SetHostName() {
+void TcpNetworkAddress::setHostName() {
   // ----------------------------------------------------------------------------
   // Return the hostname this address is pointing to.
   //  - Only valid for valid receive addresses
   //                                      M.Frank
   // ----------------------------------------------------------------------------
-  struct hostent *he = ::gethostbyaddr((char*)&_addr.sin_addr,sizeof(_addr.sin_addr),AF_INET);
-  ::strcpy(_cHost, ( he == 0 ) ? ::inet_ntoa(_addr.sin_addr) : he->h_name);
+  struct hostent *he = ::gethostbyaddr((char*)&m_addr.sin_addr,sizeof(m_addr.sin_addr),AF_INET);
+  ::strcpy(m_cHost, ( he == 0 ) ? ::inet_ntoa(m_addr.sin_addr) : he->h_name);
 }
 
 TcpConnection::TcpConnection ( const char* service )  {
@@ -31,7 +31,7 @@ TcpConnection::TcpConnection ( const char* service )  {
   // ----------------------------------------------------------------------------
   m_status = CONNECTION_ERROR;
   ::strcpy(m_service,service);
-  Initialize ( servicePort(Service()) );
+  initialize( servicePort(Service()) );
 }
 
 TcpConnection::TcpConnection ( TcpConnection::Port port )  {
@@ -43,10 +43,10 @@ TcpConnection::TcpConnection ( TcpConnection::Port port )  {
   char service[32];
   ::sprintf(service,"TCPservice_%d",port);
   ::strcpy(m_service,service);
-  Initialize ( htons(port) );
+  initialize( htons(port) );
 }
 
-int TcpConnection::Initialize ( TcpConnection::Port port )  {
+int TcpConnection::initialize( TcpConnection::Port port )  {
   // ----------------------------------------------------------------------------
   //  Standard handling of a Tcp socket creation:
   //  - Create socket,
@@ -55,18 +55,18 @@ int TcpConnection::Initialize ( TcpConnection::Port port )  {
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   m_status = CONNECTION_ERROR;
-  if ( !m_channel._IsValid() )  return m_status;
+  if ( !m_channel.isValid() )  return m_status;
   //  Create a "sockaddr_in" structure which describes the port we
   //  want to listen to. Address INADDR_ANY means we will accept
   //  connections to any of our local IP addresses.
   //
-  m_sin._addr.sin_family       = AF_INET;
-  m_sin._addr.sin_port         = port;
-  m_sin._addr.sin_addr.s_addr  = INADDR_ANY;
-  ::memset(m_sin._addr.sin_zero,0,sizeof(m_sin._addr.sin_zero));
+  m_sin.m_addr.sin_family       = AF_INET;
+  m_sin.m_addr.sin_port         = port;
+  m_sin.m_addr.sin_addr.s_addr  = INADDR_ANY;
+  ::memset(m_sin.m_addr.sin_zero,0,sizeof(m_sin.m_addr.sin_zero));
   //  Bind to that address...
-  if ( m_channel._Bind(m_sin._addr) < 0 ) {
-    printf("%s TcpConnection> Error BIND:%s\n",timestr(),m_channel._ErrMsg());
+  if ( m_channel.bind(m_sin.m_addr) < 0 ) {
+    printf("%s TcpConnection> Error BIND:%s\n",timestr(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return m_status = CONNECTION_SUCCESS;
@@ -80,45 +80,45 @@ TcpConnection::~TcpConnection() {
   // ----------------------------------------------------------------------------
 }
 
-int TcpConnection::Listen ( EventHandler *handler )  {
+int TcpConnection::listen ( EventHandler *handler )  {
   // ----------------------------------------------------------------------------
   //  Enable accepts on the socket
   //                                      M.Frank
   // ----------------------------------------------------------------------------
-  return m_channel._QueueAccept( _Port(), handler );
+  return m_channel.queueAccept( port(), handler );
 }
 
-int TcpConnection::Receive(BasicRequest* req, NetworkAddress& org)  {
+int TcpConnection::receive(BasicRequest* req, NetworkAddress& org)  {
   // ----------------------------------------------------------------------------
-  //  Receive data from Tcp
+  //  receive data from Tcp
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   int flags = 0, size  = req->MaxBuffSize();
   TcpNetworkAddress *from = (TcpNetworkAddress*)&org;
-  int status = m_channel._Recv(req->Buffer(), size, 0, flags, &from->_addr);
+  int status = m_channel.recv(req->Buffer(), size, 0, flags, &from->m_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
-    m_status = m_channel._Error();
-    ::printf("%s  UdpConnection::Receive> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel._Error(),m_channel._ErrMsg());
+    m_status = m_channel.error();
+    ::printf("%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
+      timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
 }
 
-int TcpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
+int TcpConnection::send(BasicRequest* req, NetworkAddress& target)  {
   // ----------------------------------------------------------------------------
-  //  Receive data from Tcp
+  //  receive data from Tcp
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   int flags = 0, size  = req->BuffSize();
   TcpNetworkAddress *to = (TcpNetworkAddress*)&target;
-  int status = m_channel._Send(req->Buffer(),size,0,flags,&to->_addr);
+  int status = m_channel.send(req->Buffer(),size,0,flags,&to->m_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
-    m_status = m_channel._Error();
-    ::printf("%s  TcpConnection::Send> Bad IO status. Status=0x%X %s\n",
-      timestr(),m_channel._Error(),m_channel._ErrMsg());
+    m_status = m_channel.error();
+    ::printf("%s  TcpConnection::send> Bad IO status. Status=0x%X %s\n",
+      timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -126,32 +126,32 @@ int TcpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
 // ----------------------------------------------------------------------------
 // return Network channel
 // ----------------------------------------------------------------------------
-NetworkChannel& TcpConnection::_RecvChannel()  {
+NetworkChannel& TcpConnection::recvChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
 // return Network channel
 // ----------------------------------------------------------------------------
-NetworkChannel& TcpConnection::_SendChannel()  {
+NetworkChannel& TcpConnection::sendChannel()  {
   return m_channel;
 }
 // ----------------------------------------------------------------------------
 // return Port number
 // ----------------------------------------------------------------------------
-TcpConnection::Port TcpConnection::_Port () const {
-  return m_sin._addr.sin_port;
+TcpConnection::Port TcpConnection::port () const {
+  return m_sin.m_addr.sin_port;
 }
 // ----------------------------------------------------------------------------
 // Address the connection points to (may be invalid)
 // ----------------------------------------------------------------------------
-const NetworkAddress& TcpConnection::_Address () const {
+const NetworkAddress& TcpConnection::address () const {
   return m_sin;
 }
 // ----------------------------------------------------------------------------
 // Return family type
 // ----------------------------------------------------------------------------
-TcpConnection::Family TcpConnection::_Family () const {
-  return m_sin._addr.sin_family;
+TcpConnection::Family TcpConnection::family () const {
+  return m_sin.m_addr.sin_family;
 }
 // ----------------------------------------------------------------------------
 // Standard constructor with given service name

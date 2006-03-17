@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.3 2006-01-10 18:06:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.4 2006-03-17 07:33:06 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -107,5 +107,10 @@ StatusCode LHCb::MBMCnvSvc::closeIO(void* ioDesc) const   {
       return StatusCode::SUCCESS;
     }
   }
+  return StatusCode::FAILURE;
+}
+
+/// Read raw banks
+StatusCode LHCb::MBMCnvSvc::readRawBanks(void* , std::vector<RawBank*>& , long long& )  {
   return StatusCode::FAILURE;
 }

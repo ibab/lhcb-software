@@ -21,7 +21,7 @@ TcpNetworkChannel::TcpNetworkChannel() {
   struct linger Linger;
   Linger.l_onoff  = 0;
   Linger.l_linger = 0;
-  setsockopt(m_socket, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
+  ::setsockopt(m_socket, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
   m_bValid = true;
 }
 // ----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ TcpNetworkChannel::TcpNetworkChannel(Channel channel) {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 TcpNetworkChannel::~TcpNetworkChannel()  {
-  //StopTimer();
+  //stopTimer();
   if ( m_socket > 0 ) {
     ::shutdown(m_socket,2);
     ::socket_close (m_socket);
@@ -45,10 +45,10 @@ TcpNetworkChannel::~TcpNetworkChannel()  {
 }
 // ----------------------------------------------------------------------------
 //  o Bind Address (Acceptor)
-//  o Listen to specified connection (Acceptor)
+//  o listen to specified connection (Acceptor)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_Bind ( const Address& addr, int con_pend )  {
+int TcpNetworkChannel::bind ( const Address& addr, int con_pend )  {
   if ( m_socket > 0 )  {
     m_errno = 0;
     int status, on = 1;
@@ -73,12 +73,12 @@ int TcpNetworkChannel::_Bind ( const Address& addr, int con_pend )  {
 //  Accept connection on socket (Acceptor)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NetworkChannel::Channel TcpNetworkChannel::_Accept ( Address& addr, int tmo )  {
+NetworkChannel::Channel TcpNetworkChannel::accept ( Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
     socklen_t size = sizeof(addr);
-    StartTimer(tmo);
+    startTimer(tmo);
     Channel accepted = ::accept(m_socket,(sockaddr*)&addr, &size );
-    StopTimer();
+    stopTimer();
     if ( !m_bCancel ) m_errno = (accepted <= 0) ? TCP_errno : 0;
     if ( accepted > 0 )   {
       int status, on = 1;
@@ -98,39 +98,39 @@ NetworkChannel::Channel TcpNetworkChannel::_Accept ( Address& addr, int tmo )  {
 //  Connect to network partner   (Connector)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
+int TcpNetworkChannel::connect ( const Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
-    StartTimer(tmo);
+    startTimer(tmo);
     int status = ::connect ( m_socket, (sockaddr*)&addr, sizeof(addr) );
-    StopTimer();
+    stopTimer();
     if ( !m_bCancel ) m_errno = (status < 0) ? TCP_errno : 0;
     return status;
   }
   return (-1);
 }
 // ----------------------------------------------------------------------------
-//  Send data to network partner.
+//  send data to network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Address* addr )    {
+int TcpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Address* addr )    {
   if ( m_socket > 0 )  {
     int status, addr_len = sizeof(Address);
-    StartTimer(tmo);
+    startTimer(tmo);
     if ( addr == 0 )
       status = ::send(m_socket,(char*)buff,len,flags);
     else
       status = ::sendto(m_socket,(char*)buff,len,flags,(sockaddr*)addr,addr_len);
-    StopTimer();
+    stopTimer();
     m_errno = (status <= 0) ? TCP_errno : 0;
     return status;
   }
   return 0;
 }
 // ----------------------------------------------------------------------------
-//  Receive data from network partner.
+//  receive data from network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
+int TcpNetworkChannel::recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
   socklen_t addr_len = sizeof(Address);
   int status = selectTmo(READ|EXCEPT,tmo);
   if ( status == 1 ) {
@@ -146,28 +146,28 @@ int TcpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address*
 //  Queue Accept request on accept socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_QueueAccept ( Port port, EventHandler* handler )  {
-  return IOPortManager(m_port=port).add(0, m_socket, _DefaultAction, handler);
+int TcpNetworkChannel::queueAccept ( Port port, EventHandler* handler )  {
+  return IOPortManager(m_port=port).add(0, m_socket, _defaultAction, handler);
 }
 // ----------------------------------------------------------------------------
-//  Queue Receive request on receive socket
+//  Queue receive request on receive socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_QueueReceive ( Port port, EventHandler* handler )  {
-  return IOPortManager(m_port=port).add(1, m_socket, _DefaultAction, handler);
+int TcpNetworkChannel::queueReceive ( Port port, EventHandler* handler )  {
+  return IOPortManager(m_port=port).add(1, m_socket, _defaultAction, handler);
 }
 // ----------------------------------------------------------------------------
-//  Unqueue Receive request on receive socket
+//  Unqueue receive request on receive socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_UnqueueIO ( Port port )  {
+int TcpNetworkChannel::_unqueueIO ( Port port )  {
   return IOPortManager(m_port=port).remove(m_socket);
 }
 // ----------------------------------------------------------------------------
 // Cancel eventually pending I/O requests
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_Cancel()  {
+int TcpNetworkChannel::cancel()  {
   return ::lib_rtl_cancel_io(m_socket);
 }
 // ----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ int TcpNetworkChannel::_Cancel()  {
 //  Call handler callback....
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::_DefaultAction ( void* par )  {
+int TcpNetworkChannel::_defaultAction ( void* par )  {
   EventHandler* handler = (EventHandler*)par;
-  return handler->HandleEvent();
+  return handler->handleEvent();
 }

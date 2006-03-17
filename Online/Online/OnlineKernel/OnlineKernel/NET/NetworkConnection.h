@@ -64,15 +64,15 @@ public:
     return m_service;
   }
   /// Address the connection points to (may be invalid)
-  virtual const NetworkAddress& _Address () const = 0;
+  virtual const NetworkAddress& address () const = 0;
   /// Virtual method to manipulate the channel
-  virtual NetworkChannel& _SendChannel ()  = 0;
+  virtual NetworkChannel& sendChannel ()  = 0;
   /// Virtual method to manipulate the channel
-  virtual NetworkChannel& _RecvChannel ()  = 0;
+  virtual NetworkChannel& recvChannel ()  = 0;
   /// Virtual method to receive data.
-  virtual int Receive  (BasicRequest* req, NetworkAddress& addr) = 0;
+  virtual int receive  (BasicRequest* req, NetworkAddress& addr) = 0;
   /// Virtual method to send data
-  virtual int Send     (BasicRequest* req, NetworkAddress& addr) = 0;
+  virtual int send     (BasicRequest* req, NetworkAddress& addr) = 0;
 };
 
 #endif

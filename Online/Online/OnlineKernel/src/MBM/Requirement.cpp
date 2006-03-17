@@ -19,15 +19,13 @@ void MBM::Requirement::reset()    {
 /// Parse requirement from string
 void MBM::Requirement::parse(const std::string& reqstring)
 {
-  char *token;
   char *items[20];
   int ikey=0;
   char rstr[1024];
-  ::strcpy(rstr,reqstring.c_str ( ));
-  token = ::strtok(rstr, ";");
+  ::strcpy(rstr,reqstring.c_str());
+  char* token = ::strtok(rstr, ";");
   while (token!= NULL)  {
-    items[ikey] = token;
-    ikey++;
+    items[ikey++] = token;
     token = ::strtok(NULL,";");
   }
   // Requirement format:

@@ -1,21 +1,20 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.2 2005-06-09 12:55:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.3 2006-03-17 07:33:06 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
+#include "GaudiKernel/Service.h"
+#include "GaudiKernel/Message.h"
+#include "GaudiKernel/IMessageSvc.h"
+
 // Include files
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
-#include <dis.hxx>
-#include <sstream>
-
-#include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/Service.h"
-#include "GaudiKernel/IMessageSvc.h"
-#include "GaudiKernel/Message.h"
 
 // Forward declarations
 class ISvcLocator;
+class DimService;
 
 //
 // ClassName:   MessageSvc 
@@ -124,10 +123,10 @@ public:
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   // Implementation of IMessageSvc::useColor()
-  virtual bool useColor() const { return m_color; }
+  virtual bool useColor() const { return false; }
 
   // Implementation of IMessageSvc::getLogColor()
-  virtual std::string getLogColor(int logLevel) const;
+  virtual std::string getLogColor(int logLevel) const {  return ""; };
   
 
 private:
@@ -138,14 +137,6 @@ private:
   ThresholdMap m_thresholdMap;        ///< Output level threshold map
   std::string m_defaultFormat;        ///< Default format for the messages
   std::vector<std::string> m_thresholdProp[MSG::NUM_LEVELS]; ///< Properties controling
-
-  bool m_color;
-  std::vector<std::string> m_logColors[MSG::NUM_LEVELS];
-  std::string m_logColorCodes[MSG::NUM_LEVELS];
-
-  std::string colTrans(std::string, int);
-  typedef std::map<std::string, MSG::Color> ColorMap;
-  ColorMap                                  m_colMap;
   bool                                      m_useDIM;
   DimService                               *m_LogSrvc;
   OnlineDimMessage                          m_mess;

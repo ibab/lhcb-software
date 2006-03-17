@@ -1,0 +1,6 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable";
+ApplicationMgr.TopAlg                = { };
+ApplicationMgr.ExtSvc                = {"LHCb::Nameserver/Allocator" };
+Allocator.InitFlags                  = "-a -tcp";

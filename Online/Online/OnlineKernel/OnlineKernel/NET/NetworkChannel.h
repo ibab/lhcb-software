@@ -40,9 +40,9 @@ protected:
   unsigned int m_errno;
   //@Man: protected member functions
   /// Start timer before receiving data, if you don't want to wait forever
-  void StartTimer( int tmo );    
+  void startTimer( int tmo );    
   /// Cancel timer
-  void StopTimer ();
+  void stopTimer ();
 public:
   //@Man: public member functions
   /// Default constructor
@@ -52,33 +52,33 @@ public:
   /// AST called on timeout for receiving data on socket
   static int TmoAST(void* par);
   /// Retieve cancel flag
-  bool _IsCancelled()   const {
+  bool isCancelled()   const {
     return m_bCancel;
   }
   /// Indicate if the connection is valid
-  bool _IsValid() const  {
+  bool isValid() const  {
     return m_bValid;
   }
   /// Return errno of socket
-  unsigned int _Error() const   {
+  unsigned int error() const   {
     return m_errno;
   }
   /// Return channel/path number
-  Channel _Channel() const  {
+  Channel channel() const  {
     return m_socket;
   }
   /// Return Error string
-  const char* _ErrMsg();
+  const char* errMsg();
   /// Abstract method to cancel eventually pending I/O requests
-  virtual int _Cancel() = 0;
+  virtual int cancel() = 0;
   /// Abstract method to Bind Address (Acceptor)
-  virtual int _Bind   (const Address& addr, int con_pend = 5) = 0;
+  virtual int bind   (const Address& addr, int con_pend = 5) = 0;
   /// Abstract method to Connect to target
-  virtual int _Connect(const Address& addr, int tmo = 0) = 0;
+  virtual int connect(const Address& addr, int tmo = 0) = 0;
   /// Abstract method: send data on network
-  virtual int _Send   (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
+  virtual int send   (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
   /// Abstract method: receive data from network.
-  virtual int _Recv   (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0) = 0;
+  virtual int recv   (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0) = 0;
   ///  Set Select TMO on receive.
   virtual int selectTmo(int flags, int tmo);
 };

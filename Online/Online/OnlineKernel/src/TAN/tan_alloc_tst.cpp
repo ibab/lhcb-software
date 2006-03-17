@@ -53,10 +53,10 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
         status = tan_allocate_port_number (buff, &ports[i]);
         alloc++;
         if ( status == TAN_SS_SUCCESS )  {
-          if ( !quiet ) ::printf("AllocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
+          if ( !quiet ) ::printf("allocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
         }
         else   {
-          ::printf("AllocatePort: %d \n", status);
+          ::printf("allocatePort: %d \n", status);
           lib_signal(status);
         }
         for ( int j = 0; j < i; j++ )           {

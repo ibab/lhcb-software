@@ -85,30 +85,30 @@ extern "C" TanDataBase::Entry *tandb_allocate_entry (NetworkChannel::Channel cha
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 extern "C" u_short tandb_allocate_port (TanDataBase::Entry *ce)   {
-  return TanDataBase::Instance().AllocatePort(ce);
+  return TanDataBase::Instance().allocatePort(ce);
 }
 // ----------------------------------------------------------------------------
 // C INTERFACE: insert alias entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 extern "C" int tandb_insert_alias (TanDataBase::Entry *ce)   {
-  return TanDataBase::Instance().InsertAlias ( ce );
+  return TanDataBase::Instance().insertAlias ( ce );
 }
 // ----------------------------------------------------------------------------
 // C INTERFACE: convert Dbase entry into its information
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 extern "C" void tandb_get_info (TanDataBase::Entry *ce, NetworkChannel::Channel *chan, TanMessage **msg, TanDataBase::Entry::IOSB **iosb)   {
-  *chan = ce->chan;
-  *msg  = &ce->msg;
-  *iosb = &ce->iosb;
+  *chan = ce->m_chan;
+  *msg  = &ce->m_msg;
+  *iosb = &ce->m_iosb;
 }
 // ----------------------------------------------------------------------------
 // C INTERFACE: find port by entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 extern "C" u_short tandb_find_port (TanDataBase::Entry *ce)   {
-  return TanDataBase::Instance().FindPort ( ce );
+  return TanDataBase::Instance().findPort ( ce );
 }
 // ----------------------------------------------------------------------------
 // C INTERFACE: close connection on an allocated port
@@ -130,7 +130,7 @@ extern "C" int tandb_init()  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 extern "C" int tandb_free_port (TanDataBase::Entry* ce)   {
-  return TanDataBase::Instance().FreePort(ce);
+  return TanDataBase::Instance().freePort(ce);
 }
 // ----------------------------------------------------------------------------
 // Database Constructor
@@ -174,7 +174,7 @@ TanDataBase::~TanDataBase() {
 // Create the database
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanDataBase::Initialize()  {
+int TanDataBase::initialize()  {
   PubArea Pa(NAMESRV_PUBAREA_NAME);
   int status = Pa.CreatePubArea(NAMESRV_PUBAREA_SIZE);
   int context = (-1);
@@ -222,16 +222,16 @@ TanDataBase& TanDataBase::Instance() {
 //  If not existant, retrun 0.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NetworkChannel::Port TanDataBase::FindPort ( TanMessage& msg )  {
+NetworkChannel::Port TanDataBase::findPort ( TanMessage& msg )  {
   RTL::Lock lock(m_lock);
   Entry *e = _findEntry ( msg._Name() );  
-  return (e && e->_IsDead == 0) ? e->port : 0;
+  return (e && e->m_dead == 0) ? e->m_port : 0;
 }
 // ----------------------------------------------------------------------------
 // Allocate database port from a given already alloctaed entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NetworkChannel::Port TanDataBase::AllocatePort ( Entry* ce)   {
+NetworkChannel::Port TanDataBase::allocatePort ( Entry* ce)   {
   RTL::Lock lock(m_lock);
   return _allocatePort(ce);
 }
@@ -246,8 +246,8 @@ NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
     return 0;
   }
   _pData->_ports++;
-  strup(ce->name, ce->msg.name);                  /* FIND INDEX             */
-  Entry* entry = _findEntry(ce->name);
+  strup(ce->m_name, ce->m_msg.m_name);                  /* FIND INDEX             */
+  Entry* entry = _findEntry(ce->m_name);
   if ( entry != 0 )  {                             /* CHECK IF ENTRY ALREADY EXISTS       */
     _iError = TAN_SS_DUPLNAM;
     return 0;
@@ -271,13 +271,13 @@ NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
     for ( int j = 0; j < TanPaSlot::NumEntries; j++ )    {
       e = _pData->_pEntry[j];
       count = 0;
-      if ( 0 != e && e->_IsDead == 0 && e->port != 0 )   {
+      if ( 0 != e && e->m_dead == 0 && e->port != 0 )   {
         used = next = (e->port+1 > (NAMESERVICE_BASE_PORT+OS9_PORT_FLIP))
           ? NAMESERVICE_BASE_PORT : e->port+1;
         for ( int i = next-NAMESERVICE_BASE_PORT; i < OS9_PORT_FLIP; i++ )    {
           for ( int k = 0; k < TanPaSlot::NumEntries; k++ )    {
             ee = _pData->_pEntry[k];
-            if ( 0 != ee && e != ee && ee->_IsDead == 0 && ee->port == used )    {
+            if ( 0 != ee && e != ee && ee->m_dead == 0 && ee->m_port == used )    {
               goto Done;
             }
           }
@@ -312,19 +312,19 @@ Done:
   }
   index = current_port;
 #endif
-  ce->_IsDead   = 0;
-  ce->port      = NAMESERVICE_BASE_PORT+index+1;   /* THAT'S MY PORT NUMBER          */
+  ce->m_dead   = 0;
+  ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   /* THAT'S MY PORT NUMBER          */
   //fprintf(stdout, "%s [%s] Got port:%d %X -> current: %d remaining: %d \n", 
-  //        ce->name, ce->msg.name, ce->port,ce->port, current_port, ports_availible-current_port);
+  //        ce->name, ce->m_msg.m_name, ce->port,ce->port, current_port, ports_availible-current_port);
   //fflush(stdout);
-  ce->port_flag = true;
-  return ce->port;
+  ce->m_port_flag = true;
+  return ce->m_port;
 }
 // ----------------------------------------------------------------------------
 // Free database port from a given alloctaed entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanDataBase::FreePort ( Entry* e)   {
+int TanDataBase::freePort ( Entry* e)   {
   RTL::Lock lock(m_lock);
   return _freePort(e);
 }
@@ -348,39 +348,39 @@ int TanDataBase::_freePort (Entry* e)   {
 //  Insert ALIAS entry, to a given natural entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanDataBase::InsertAlias ( Entry *ce )  {
+int TanDataBase::insertAlias ( Entry *ce )  {
   RTL::Lock lock(m_lock);
-  Entry *e = _findEntry ( ce->msg.name );
+  Entry *e = _findEntry ( ce->m_msg.m_name );
   if ( e != 0 )  {                           // CHECK IF ENTRY ALREADY EXISTS 
     _iError = TAN_SS_DUPLNAM;
     return TAN_SS_ERROR;
   }
-  e = _allocateEntry(ce->chan);              // NO, ONE EXTRA ENTRY IS NEEDED 
+  e = _allocateEntry(ce->m_chan);            // NO, ONE EXTRA ENTRY IS NEEDED 
   if ( e == 0 )    {                         // CHECK ALLOCATION STATUS 
     _iError = TAN_SS_NOMEM;
     return TAN_SS_ERROR;
   }
-  e->msg = ce->msg;                          // COPY REQUEST MESSAGE 
-  strup  (e->name,     ce->msg.name);       // COPY REMOTE ALIAS NAME 
-  strup  (e->msg.name, ce->msg.name);       // COPY REMOTE ALIAS NAME 
+  e->m_msg = ce->m_msg;                      // COPY REQUEST MESSAGE 
+  strup(e->m_name,      ce->m_msg.m_name);   // COPY REMOTE ALIAS NAME 
+  strup(e->m_msg.m_name,ce->m_msg.m_name);   // COPY REMOTE ALIAS NAME 
   _INSQTI (&e->hl, &_pData->_name_head);     // INSERT ENTRY IN NAME TABLE 
   _INSQTI (&e->al, &ce->al);                 // INSERT ENTRY IN ALIAS TABLE 
-  e->port       = ce->port;                  // PORT IS MAIN ENTRIES PORT 
-  e->alias_flag = true;
+  e->m_port       = ce->m_port;              // PORT IS MAIN ENTRIES PORT 
+  e->m_alias_flag = true;
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------
 //  Remove ALIAS entry, to a given natural entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TanDataBase::RemoveAlias ( Entry *e )  {
+int TanDataBase::removeAlias ( Entry *e )  {
   RTL::Lock lock(m_lock);
-  Entry *db = _findEntry ( e->msg.name );
+  Entry *db = _findEntry ( e->m_msg.m_name );
   if ( db == 0 )  {                        // CHECK IF ENTRY ALREADY EXISTS
     _iError = TAN_SS_ENTNOTALLOC;
     return TAN_SS_ERROR;
   }
-  if ( db->port_flag )  {             // CHECK IF THIS IS REALLY A PORT ENTRY
+  if ( db->m_port_flag )  {             // CHECK IF THIS IS REALLY A PORT ENTRY
     _iError = TAN_SS_ODDREQUEST;
     return TAN_SS_ERROR;
   }
@@ -400,31 +400,31 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )   {
     if ( _pData->_pEntry[i] == 0 )  {
       e = &_pData->_Entry[i];
-      e->port_flag = e->alias_flag = false;
-      e->port = 0;
-      e->_IsDead = 0;
-      e->chan = chan;
+      e->m_port_flag = e->m_alias_flag = false;
+      e->m_port = 0;
+      e->m_dead = 0;
+      e->m_chan = chan;
 #ifdef _OSK
       sockaddr_in peer;
       int peerlen = sizeof(peer);
-      e->iosb._pHandler = 0;
-      e->iosb._pPort = e->iosb._lPort = 0;
+      e->m_iosb._pHandler = 0;
+      e->m_iosb._pPort = e->iosb._lPort = 0;
       e->hl.next = e->hl.prev = (int)&e->hl;
       e->al.next = e->al.prev = (int)&e->al;
       if ( getpeername( e->chan, (sockaddr *)&peer, &peerlen ) == 0 )
-        e->iosb._pPort = peer.sin_port;
+        e->m_iosb._pPort = peer.sin_port;
       else
         ::printf("Cannot determine peer of socket %d\n", e->chan);
-      if ( getsockname( e->chan, (sockaddr *)&peer, &peerlen ) == 0 )
-        e->iosb._lPort = peer.sin_port;
+      if ( getsockname( e->m_chan, (sockaddr *)&peer, &peerlen ) == 0 )
+        e->im_osb._lPort = peer.sin_port;
       else
         ::printf("Cannot determine sock of socket %d\n", e->chan);
 #elif _VMS
-      e->iosb.dev_info = e->iosb.status = e->iosb.count = 0;
+      e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
 #else
-      e->iosb._pHandler = 0;
-      e->iosb._pPort = e->iosb._lPort = 0;
+      e->m_iosb._pHandler = 0;
+      e->m_iosb._pPort = e->m_iosb._lPort = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
 #endif
       _pData->_pEntry[i] =  e;
@@ -451,10 +451,10 @@ int TanDataBase::_freeEntry (TanDataBase::Entry* e)  {
 #else
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
 #endif
-      e->_IsDead = 1;
-      e->name[0] = 0;
-      e->chan = 0;
-      if ( e->port_flag ) _pData->_ports--;
+      e->m_dead = 1;
+      e->m_name[0] = 0;
+      e->m_chan = 0;
+      if ( e->m_port_flag ) _pData->_ports--;
       _pData->_allocated--;
       found = true;
     }
@@ -481,8 +481,8 @@ TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
     last = a, a  = (Entry*)((char*)a + (int)a->hl.next) )
 #endif
   {
-    if (::strlen(a->name) > 0 && ::strncmp (s, a->name, sizeof (a->name)) == 0)  {
-      if ( a->port_flag || a->alias_flag )  {
+    if (::strlen(a->m_name) > 0 && ::strncmp(s,a->m_name,sizeof(a->m_name)) == 0)  {
+      if ( a->m_port_flag || a->m_alias_flag )  {
         return a;
       }
     }
@@ -494,13 +494,13 @@ TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
 // Find port associated to e valid entry
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NetworkChannel::Port TanDataBase::FindPort(Entry *e)  {
+NetworkChannel::Port TanDataBase::findPort(Entry *e)  {
   RTL::Lock lock(m_lock);
   return _findPort(e);
 }
 NetworkChannel::Port TanDataBase::_findPort(Entry *e)  {
-  Entry *db = _findEntry (e->msg.name);
-  if ( db != 0 )  return db->port;
+  Entry *db = _findEntry (e->m_msg.m_name);
+  if ( db != 0 )  return db->m_port;
   _iError = TAN_SS_TASKNOTFOUND;
   return 0;
 }
@@ -513,7 +513,7 @@ NetworkChannel::Port TanDataBase::_findPort(Entry *e)  {
 // ----------------------------------------------------------------------------
 int TanDataBase::Close (TanDataBase::Entry *ce)   {
   RTL::Lock lock(m_lock);
-  return (ce->port_flag)  ? _freePort (ce) : _freeEntry(ce);
+  return (ce->m_port_flag)  ? _freePort (ce) : _freeEntry(ce);
 }
 // ----------------------------------------------------------------------------
 // Dump database content to a file
@@ -528,8 +528,8 @@ int TanDataBase::Dump( FILE* fptr)  {
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
     if ( _pData->_pEntry[i] != 0 )  {
       Entry& e = _pData->_Entry[i];
-      if ( e.port_flag )  {
-        switch ( htonl(e.msg.function) ) {
+      if ( e.m_port_flag )  {
+        switch ( htonl(e.m_msg.m_function) ) {
           case TanMessage::ALLOCATE:
             func = "ALLOC";  
             break;
@@ -553,16 +553,16 @@ int TanDataBase::Dump( FILE* fptr)  {
             break;
         }
         ::fprintf(fptr,"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s\n",
-          e._Name(), e._Port(), e._Channel(), e._IsDead==1 ? "***" : "",
-          func, htonl(e.msg._Length()), e.msg._Name(),
-          inet_ntoa(e.msg._Address()));
+          e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
+          func, htonl(e.m_msg._Length()), e.m_msg._Name(),
+          inet_ntoa(e.m_msg.address()));
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
           a != _TheEntry(&e.al) && a != 0 && a != last;
           last = a, a  = _NextEntry(a) )  
         {
           Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
           a = (qentry_t*)&ee->al;
-          switch ( htonl(ee->msg.function) ) {
+          switch ( htonl(ee->m_msg.m_function) ) {
             case TanMessage::ALLOCATE:       func = "ALLOC";       break;
             case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
             case TanMessage::INQUIRE:        func = "INQUIRE";     break;
@@ -572,8 +572,8 @@ int TanDataBase::Dump( FILE* fptr)  {
             default:                         func = "-----";       break;
           }
           ::fprintf(fptr,"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s\n",
-            ee->_Name(), ee->_Port(), ee->_Channel(), ee->_IsDead==1 ? "***" : "",
-            func, ee->msg._Length(), ee->msg._Name(), inet_ntoa(ee->msg._Address()));
+            ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
+            func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
         }
       }
     }

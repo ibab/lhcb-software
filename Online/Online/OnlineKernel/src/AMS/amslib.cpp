@@ -383,7 +383,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)    {
       WITHOUT_INTERCEPT(sent_now = ::send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-        lib_rtl_signal_message(LIB_RTL_OS,"AMS: Send error [%s] size:%d/%d/%d errno=%d",
+        lib_rtl_signal_message(LIB_RTL_OS,"AMS: send error [%s] size:%d/%d/%d errno=%d",
                                db->name,siz,already_sent,tosend,errno);
         // lib_rtl_start_debugger();
         return errno;
@@ -400,7 +400,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)  {
       WITHOUT_INTERCEPT(sent_now = send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
-        lib_rtl_signal_message(LIB_RTL_OS,"AMS: Send error [%s] size:%d/%d/%d errno=%d",
+        lib_rtl_signal_message(LIB_RTL_OS,"AMS: send error [%s] size:%d/%d/%d errno=%d",
                                db->name,siz,already_sent,tosend,errno);
         // lib_rtl_start_debugger();
         return errno;
@@ -440,7 +440,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   while (got != siz)  {
     WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
     if (got_now <= 0)    {
-      _amsc_printf("AMS: Receive error errno=%d\n",errno);
+      _amsc_printf("AMS: receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
         case ESOCK_NOTCONN:
@@ -459,7 +459,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
           if (++count == MAX_TCP_ERRORS)
             return AMS_NODATA;
           else {
-            _amsc_printf("AMS: Receive error (ignored) errno=%d\n",errno);
+            _amsc_printf("AMS: receive error (ignored) errno=%d\n",errno);
             got_now = 0;
           }
       }
@@ -877,7 +877,7 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
   size_t length = m->size - e->received;
   int status = _amsc_tcp_recv_exact(e, (char*)m->message + e->received, length, 0);
   //int status = _amsc_tcp_recv (e, (char*)m->message + e->received, &length, 0);
-  _amsc_printf("Receive action: recv_exect:%d\n",status);
+  _amsc_printf("receive action: recv_exect:%d\n",status);
 
   switch (status)  {
   case AMS_SUCCESS:

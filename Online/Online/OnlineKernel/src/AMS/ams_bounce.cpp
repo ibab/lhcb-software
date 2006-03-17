@@ -69,7 +69,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   }
   amsc_get_node( node );
 
-  // Receive some messages and bounce them
+  // receive some messages and bounce them
   int  wsize =  length;
   if (fanout)  {
     srand(length);

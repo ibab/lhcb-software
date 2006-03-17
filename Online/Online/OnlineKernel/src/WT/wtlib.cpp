@@ -8,11 +8,12 @@
 #include <cstring>
 #include <cerrno>
 
-#define WT_USE_PIPES 1
+//#define WT_USE_PIPES 1
 #ifdef WT_USE_PIPES
   #ifdef _WIN32
     #include <io.h>
     #include <fcntl.h>
+    #define pipe(x) _pipe(x,1024,_O_BINARY)
   #else
     #include <unistd.h> 
   #endif
@@ -98,11 +99,7 @@ int wtc_init()    {
       WTLock lock(wt_mutex_id);
       if ( lock )  {
 #ifdef WT_USE_PIPES
-#ifdef _WIN32
-        status = pipe(pipe_desc, 1024, _O_BINARY);
-#else
         status = pipe(pipe_desc);
-#endif
         if ( 0 != pipe(pipe_desc) ) {
 	  printf("WT: failed to create pipe...\n");
 	}

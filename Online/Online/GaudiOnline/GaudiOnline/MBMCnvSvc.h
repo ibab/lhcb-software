@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.1 2006-01-10 13:45:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.2 2006-03-17 07:33:06 frankb Exp $
 //	====================================================================
 //  MBMCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -58,6 +58,9 @@ namespace LHCb    {
 
     /// Close MBM buffer manager
     virtual StatusCode closeIO(void* ioDesc) const;
+
+    /// Read raw banks
+    virtual StatusCode readRawBanks(void* ioDesc, std::vector<RawBank*>& banks, long long& offset);
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_MBMCNVSVC_H

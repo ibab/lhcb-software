@@ -49,13 +49,13 @@ namespace MBM {
     /// Declare event (without send space)
     virtual int declareEvent();
 
-    /// Send event space to consumers
+    /// send event space to consumers
     virtual int sendSpace();
 
     /// Get space call to fill event data
     virtual int getSpace(int len);
 
-    /// Send and declare event to consumers
+    /// send and declare event to consumers
     virtual int sendEvent();
   };
 }

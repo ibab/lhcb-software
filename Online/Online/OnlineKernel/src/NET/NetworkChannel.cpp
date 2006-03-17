@@ -31,14 +31,14 @@ NetworkChannel::NetworkChannel()
 }
 NetworkChannel::~NetworkChannel()  {
   if ( 0 != m_alarmID ) {
-    StopTimer();
+    stopTimer();
   }
 }
 // ----------------------------------------------------------------------------
 //  Return error string
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-const char* NetworkChannel::_ErrMsg()  {
+const char* NetworkChannel::errMsg()  {
   return lib_rtl_error_message(m_errno);
 }
 
@@ -89,7 +89,7 @@ int NetworkChannel::TmoAST ( void* par )   {
 //  Start timer before receiving data, if you don't want to wait forever
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void NetworkChannel::StartTimer( int tmo )  {
+void NetworkChannel::startTimer( int tmo )  {
   if ( tmo > 0 )  {
     if ( m_alarmID ) lib_rtl_kill_timer(m_alarmID);
     lib_rtl_set_timer(1000*tmo, TmoAST, this, &m_alarmID);
@@ -100,7 +100,7 @@ void NetworkChannel::StartTimer( int tmo )  {
 //  Cancel timer
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-void NetworkChannel::StopTimer()  {
+void NetworkChannel::stopTimer()  {
   lib_rtl_kill_timer(m_alarmID);
   m_alarmID = 0;
 }

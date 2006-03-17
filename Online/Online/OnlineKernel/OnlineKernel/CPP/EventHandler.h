@@ -1,46 +1,47 @@
-#ifndef __EventHandler_H__
-#define __EventHandler_H__
+#ifndef CPP_EVENTHANDLER_H
+#define CPP_EVENTHANDLER_H
+
+// Forward declarations
 class EventReactor;
 class EventHandler;
 
-/// Definiton of the abstract EventReactor class
-/** 
-    {\Large{\bf Class EventReactor}}
-
-   React on stimuli from event handlers
-*/
+/** @class EventReactor EventHandler.h CPP/EventHandler.h
+  *
+  *  Definiton of the abstract EventReactor class
+  *  React on stimuli from event handlers.
+  *
+  *  @author M.Frank
+  *  @version 1.0
+  */
 class EventReactor  {
 public:
   //@Man: public member functions
   /// Destructor
-  virtual ~EventReactor()	{
-  }
+  virtual ~EventReactor()	{  }
   /// Abstract method to handle event from given handler
-  virtual int Handle ( EventHandler* handler ) = 0;
+  virtual int handle ( EventHandler* handler ) = 0;
 };
 
-/// Definiton of the abstract EventHandler class
-/** 
-    {\Large{\bf Class EventHandler}}
-
-   On given event occurence, invoke handle of Reactor
-*/
+/** @class EventHandler EventHandler.h CPP/EventHandler.h
+  *
+  *  Definiton of the abstract EventHandler class
+  *  On given event occurence, invoke handle of Reactor
+  *
+  *  @author M.Frank
+  *  @version 1.0
+  */
 class EventHandler {
 protected:
   //@Man: Protected member variables
   /// Pointer to associated Reactor pattern
-  EventReactor*   _pEventReactor;
+  EventReactor*   m_pEventReactor;
 public:
   //@Man: public member functions
   /// Constructor
-  EventHandler ( EventReactor* reactor ) : _pEventReactor(reactor)  {
-  }
+  EventHandler(EventReactor* reactor) : m_pEventReactor(reactor)  {}
   /// Destructor
-  virtual ~EventHandler()  {
-  }
+  virtual ~EventHandler()    {}
   /// Forward event handling to the proper reactor pattern
-  virtual int HandleEvent()  {
-    return _pEventReactor->Handle ( this );
-  }
+  virtual int handleEvent()  { return m_pEventReactor->handle(this); }
 };
-#endif
+#endif  // CPP_EVENTHANDLER_H

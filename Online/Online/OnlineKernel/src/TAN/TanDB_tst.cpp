@@ -27,12 +27,12 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
     // Insert entry
     TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
     sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
-    db.AllocatePort (e);
+    db.allocatePort (e);
 
     // Insert alias(s)
     for ( int j = 0; j < i; j++ )  {
       sprintf(e->_Message()._Name(),"MYTASK_%02d_%02d",i,j);
-      db.InsertAlias (e);
+      db.insertAlias (e);
     }
   }
   // Dump contents
@@ -76,8 +76,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
       sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
       strcpy(msg._Name(),e->_Message()._Name());
-      NetworkChannel::Port port = db.AllocatePort (e);
-      NetworkChannel::Port fnd  = db.FindPort(msg);
+      NetworkChannel::Port port = db.allocatePort (e);
+      NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
         printf("!!!!!!!!!!! Port allocated:%X found:%X\n",port,fnd);
       }
@@ -86,8 +86,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       for ( int j = 0; j < i; j++ )  {
         sprintf(e->_Message()._Name(),"MYTASK_%02d_%02d",i,j);
         strcpy(msg._Name(),e->_Message()._Name());
-        int status = db.InsertAlias (e);
-        NetworkChannel::Port fnd  = db.FindPort(msg);
+        int status = db.insertAlias (e);
+        NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
           printf("!!!!!!!!!!! Port allocated:%X found:%X status:%X\n",port,fnd,status);
         }

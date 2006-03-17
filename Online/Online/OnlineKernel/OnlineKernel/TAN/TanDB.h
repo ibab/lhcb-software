@@ -78,19 +78,19 @@ public:
   /// Linked list of alias entries
   qentry_t   al;       /* alias linked list */
   /// IOSB structure
-  IOSB    iosb;
+  IOSB    m_iosb;
   /// Conected channel number
-  NetworkChannel::Channel chan;
+  NetworkChannel::Channel m_chan;
   /// Port number of the connection
-  NetworkChannel::Port    port;
+  NetworkChannel::Port    m_port;
   /// Boolean flag to store if the connection is a port
-  u_short port_flag;       /* this entry is used for allocating a port */
+  u_short m_port_flag;       /* this entry is used for allocating a port */
   /// Boolean flag to store if the connection is an alias
-  u_short alias_flag;       /* this entry is an alias entry */
+  u_short m_alias_flag;       /* this entry is an alias entry */
   /// Store the name of the network partner
-  char    name [32];
+  char    m_name [32];
   /// last message sent
-  TanMessage msg;
+  TanMessage m_msg;
 #ifdef _VMS
   /// On VMS only 3 bytes padding, since the socket size is short
   char    _pad[3];
@@ -99,23 +99,23 @@ public:
   char    _pad[1];
 #endif
   /// Dead entry flag (used mainly for OS9)
-  char    _IsDead;
+  char    m_dead;
   //@Man: Public access method
   /// Return channel number
-  NetworkChannel::Channel _Channel() const {
-    return chan;
+  NetworkChannel::Channel channel() const {
+    return m_chan;
   }
   /// Return Port number
-  NetworkChannel::Port _Port()  const {
-    return port;
+  NetworkChannel::Port port()  const {
+    return m_port;
   }
   /// return Name of the network partner
   const char* _Name() const {
-    return name;
+    return m_name;
   }
   /// Return last message received
   TanMessage& _Message() {
-    return msg;
+    return m_msg;
   }
 }; 
 
@@ -163,7 +163,7 @@ protected:
 public:
   //@Man Public member functions
   /// Initialise/Create the database (Should ONLY be done by the allocator server)
-  static int Initialize();
+  static int initialize();
 
   /// Construction method
   static TanDataBase& Instance();
@@ -177,22 +177,22 @@ public:
   }
 
   /// Find port entry
-  NetworkChannel::Port FindPort     ( Entry *ce );
+  NetworkChannel::Port findPort     ( Entry *ce );
 
   /// Insert alias entry
-  int InsertAlias                   ( Entry *ce );
+  int insertAlias                   ( Entry *ce );
 
   /// Remove alias entry
-  int RemoveAlias                   ( Entry *ce );
+  int removeAlias                   ( Entry *ce );
 
   /// Allocate entry
   Entry* AllocateEntry              ( NetworkChannel::Channel chan );
 
   /// Allocate Port
-  NetworkChannel::Port AllocatePort ( Entry *ce );
+  NetworkChannel::Port allocatePort ( Entry *ce );
 
   /// Free port
-  int FreePort                      ( Entry *ce );
+  int freePort                      ( Entry *ce );
 
   /// Close single connection
   int Close                         ( Entry *ce );
@@ -204,7 +204,7 @@ public:
   int Dump                          ( FILE* fptr );
 
   /// Given a message, find the approprate port number in the database. If not existant, retrun 0.
-  NetworkChannel::Port FindPort     ( TanMessage& msg );
+  NetworkChannel::Port findPort     ( TanMessage& msg );
 };
 
 #endif /*  C++ ONLY!                */
