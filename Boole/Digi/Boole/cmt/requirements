@@ -23,14 +23,14 @@ use RootHistCnv          v9r8        -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r0   Det  -no_auto_imports
-use XmlConditions        v1r4   Det  -no_auto_imports
+use XmlConditions        v1r5   Det  -no_auto_imports
 use ParamFiles	         v4r1        -no_auto_imports
 use FieldMap	         v4r6        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v20r1)
 use LHCb                 v20r1       -no_auto_imports
-use SimComponents        v1r0   Sim  -no_auto_imports
+use SimComponents        v1r1   Sim  -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v4r1)
 use LbcomSys             v4r1        -no_auto_imports
