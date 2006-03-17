@@ -5,7 +5,7 @@ Reco.DetectorList = {
                       "VELO", 
                      // "TT",
                      // "IT",
-                     // "Tr",
+                      "Tr",
                       "RICH",
                       "CALO"
                      // ,"MUON"
@@ -31,52 +31,59 @@ RecoITSeq.Members   += { "ITClusterCreator", "ITSummaryCreator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 
 // Forward tracking
-//ApplicationMgr.DLLs += { "LongTrack" };
-RecoTrSeq.Members   += { "FindLongTrack",
-                         "TrEventTracksFitter/FitFw" };
+ApplicationMgr.DLLs += { "PatForward" };
+RecoTrSeq.Members += { 
+  //"RawBankToSTLiteClusterAlg/createITLiteClusters"
+                      ,"PatTCoordFromRaw"
+                      ,"PatForward"
+};
+#include "$PATFORWARDROOT/options/PatFwdTool.opts"
+// Next option to be removed when PatVeloTT is migrated and can run before
+ToolSvc.PatForwardTool.ValidateInTT = false;
+
+//RecoTrSeq.Members   += { "TrEventTracksFitter/FitFw" };
 FitFw.TrackContainer = "Rec/FitTrack/Forward";
-//#include "$LONGTRACKROOT/options/Brunel.opts"
 
 // Seeding
 //ApplicationMgr.DLLs += { "Seeding" }; 
-RecoTrSeq.Members   += { "TrSeedEvent/seedEvent",
-                         "TrEventTracksFitter/fitSeed" };
+//RecoTrSeq.Members   += { "TrSeedEvent/seedEvent",
+//                         "TrEventTracksFitter/fitSeed" };
 //#include "$SEEDINGROOT/options/Brunel.opts"
 seedEvent.FilterCluster = true; // Enable filtering of T clusters
 ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
 
 // Velo Matching
 //ApplicationMgr.DLLs += { "TrMatching" }; 
-RecoTrSeq.Members   += { "TrMatchVeloSeed/matchVeloSeed",
-                         "TrEventTracksFitter/reFit" };
+//RecoTrSeq.Members   += { "TrMatchVeloSeed/matchVeloSeed",
+//                         "TrEventTracksFitter/reFit" };
 reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // K Short tracking
 //ApplicationMgr.DLLs += { "TrKShort" };
 //#include "$TRKSHORTROOT/options/Brunel.opts"
-RecoTrSeq.Members   += { "FindTrKShort"
-                       , "TrEventTracksFitter/KShortFit" };
+//RecoTrSeq.Members   += { "FindTrKShort"
+//                       , "TrEventTracksFitter/KShortFit" };
 KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
 KShortFit.Fitter.stateAtBeamLine = false;
 
 // Clone killer
 //ApplicationMgr.DLLs += { "TrCleanEx" };
-RecoTrSeq.Members   += { "TrTrackCloneKiller" };
+//RecoTrSeq.Members   += { "TrTrackCloneKiller" };
 
 // VeloTT tracking
 //ApplicationMgr.DLLs += { "VeloTT" };
-RecoTrSeq.Members   += { "VeloTTFind" };
+//RecoTrSeq.Members   += { "VeloTTFind" };
 //#include "$VELOTTROOT/options/BrunelField045.opts"
-RecoTrSeq.Members   += { "TrPrepareVelo" };
+//RecoTrSeq.Members   += { "TrPrepareVelo" };
 
 // Conversion to TrStoredTrack
-RecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
+//RecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 //#include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
 // Conversion to Track
 //ApplicationMgr.DLLs += { "TrackTools", "TrConverters" };
-RecoTrSeq.Members += { "TrFitTrack2TrackCnv/StoreBestTrack" };
+//RecoTrSeq.Members += { "TrFitTrack2TrackCnv/StoreBestTrack" };
 StoreBestTrack.InputTracks  = "Rec/FitTrack/Best";
 StoreBestTrack.OutputTracks = "Rec/Track/Best";
 

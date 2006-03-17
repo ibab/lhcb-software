@@ -37,7 +37,7 @@ use PatTools            v2r0    Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
 use PatVelo             v2r0    Pat   # David Hutchcroft
 #use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
-#use PatForward          v1r2    Pat   # Olivier Callot
+use PatForward          v2r0    Pat   # Olivier Callot
 #use PatPV               v1r0p1  Pat   # Mariusz Witek
 #use PatChecker          v1r3    Pat   # Olivier Callot
 use PatFitParams        v2r0    Pat   # Matt Needham
