@@ -1,5 +1,5 @@
 package LbcomSys
-version v4r0
+version v4r1
 
 branches doc cmt
 
@@ -24,7 +24,7 @@ use RichTools         v2r2  Rich        # Chris Jones
 use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker
-use STDAQ             v2r3  ST          # Matt Needham
+use STDAQ             v2r4  ST          # Matt Needham
 use STTools           v2r0  ST          # Matt Needham
 use STAlgorithms      v1r1  ST          # Matt Needham
 use STAssociators     v1r0  ST          # Matt Needham
