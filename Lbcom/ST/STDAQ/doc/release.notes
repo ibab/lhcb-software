@@ -4,9 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-!=============================== STDAQ v2r4 2006-03-15 =======================
+!=============================== STDAQ v2r4 2006-03-17 =======================
 ! 2006-03-15 - Matt Needham
- - Changes to switch strip mapping for hybrids that are flipped
+ - Changes to switch strip mapping for hybrids that are flipped. Requires
+   XmlConditions v1r5 or greater
 
 ! 2006-03-14 - Jeroen Van Tilburg
  - RawBankToSTLiteClusterAlg.cpp: Make use of new typedef STLiteClusters.
