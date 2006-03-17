@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="C84D2199-C6B4-DA11-A1E1-0002B3AFA9A3">
+    <physical>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r1/0601-11144100.500ev.digi"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="BEC1CE1A-D9AE-DA11-91CA-0007E9EDBD41">
+    <physical>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r1/11144100.500ev.09Mar.sim"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="981EA222-A3AF-DA11-BF84-0007E9EDBD41">
+    <physical>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r1/30000000.1000ev.10Mar.sim"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

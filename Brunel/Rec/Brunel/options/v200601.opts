@@ -34,7 +34,7 @@ HistogramPersistencySvc.OutputFile = "0601-11144100.root";  // Monitoring histos
 // POOL file catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------
 PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:NewCatalog.xml"
+  "xmlcatalog_file:../job/NewCatalog.xml"
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
 
