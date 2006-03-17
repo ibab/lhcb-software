@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.12 2006-01-26 10:42:30 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.13 2006-03-17 09:43:02 marcocle Exp $
 
 // include files
 
@@ -158,7 +158,11 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
                          StatusCode::FAILURE);
   }
   // initializes it
-  dataObj->initialize();
+  sc = dataObj->initialize();
+  if (!sc.isSuccess()) {
+    log << MSG::ERROR << "DetectorElement initialization failed." << endreq;
+    return sc;
+  }
   // returns
   log << MSG::VERBOSE << "Method fillObjRefs() ending" << endreq;
   return StatusCode::SUCCESS;

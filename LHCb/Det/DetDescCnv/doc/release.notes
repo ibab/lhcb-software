@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2006-03-17 - Marco Clemencic
+ - Fixed a bug in XmlBaseDetElemCnv. If DetectorElement::initialize()
+   failed, the error was not reported upstream. Now it works.
+   (Bug found and fixed suggested by Chris J. and Vanya)
+
 !================ DetDescCnv v3r0 2006-01-26 ==========================
 ! - *** Requires MathCore-5_06_02 or higher. ***
 
