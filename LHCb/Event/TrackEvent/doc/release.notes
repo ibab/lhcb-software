@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-03-17 - Eduardo Rodrigues
+ - kappa const added to TrackParameters
+
 !========================= TrackEvent v2r0 2006-03-03 ========================
 ! 2006-03-03 - Eduardo Rodrigues
  - added check in removeFromNodes method in Track (a node may exist without

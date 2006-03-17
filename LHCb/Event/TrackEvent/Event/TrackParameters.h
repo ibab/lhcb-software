@@ -16,8 +16,8 @@
 
 namespace TrackParameters
 {
-  /// enum
-  enum TrackStatusCode{ PROBLEMS=3 };
+  /// Proportionality factor for calculating equation of motion in B-field
+  static const double kappa = 0.3 * GeV / ( c_light * tesla * meter );
 
   static const double hiTolerance     = 1e-40;          ///< High tolerance
   static const double lowTolerance    = 1e-20;          ///< Low tolerance
