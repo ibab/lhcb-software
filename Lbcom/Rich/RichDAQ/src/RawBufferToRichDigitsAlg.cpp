@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.15 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.16 2006-03-17 15:58:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -50,6 +50,9 @@ StatusCode RawBufferToRichDigitsAlg::initialize()
 
   // Acquire tools
   acquireTool( "RichSmartIDDecoder", m_decoder );
+
+  if ( m_decodeOnly )
+  { info() << "Will only decode Raw Buffer -> No RichDigits produced" << endreq; }
 
   return sc;
 }
