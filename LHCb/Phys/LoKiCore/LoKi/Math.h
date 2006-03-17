@@ -1,8 +1,11 @@
-// $Id: Math.h,v 1.2 2006-02-18 18:06:03 ibelyaev Exp $
+// $Id: Math.h,v 1.3 2006-03-17 12:37:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:03  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
 // New Import: the core part of restructurized LoKi project
 //
@@ -11,6 +14,12 @@
 #define LOKI_MATH_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <cmath>
+// ============================================================================
+// LokiCore
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/Power.h"
