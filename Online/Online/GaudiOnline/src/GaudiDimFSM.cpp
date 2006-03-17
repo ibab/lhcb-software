@@ -19,7 +19,7 @@ extern "C"
 #ifdef _WIN32
 __declspec(dllimport) 
 #endif 
-GaudiMain(int, char**);
+int GaudiMain(int, char**);
 
 static void help() {}
 

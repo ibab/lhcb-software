@@ -36,10 +36,10 @@ class Sensor {
 private:
   Sensor  *m_next;
 public:
-  int     m_facility;
-  bool    m_rearmPending;
+  unsigned int     m_facility;
+  bool             m_rearmPending;
   std::string Name;
-  Sensor( int, const char* = "NONAME", bool = true);
+  Sensor( unsigned int fac, const char* = "NONAME", bool = true);
   /// Standard destructor
   virtual ~Sensor();
   Sensor* next()  const   {  return m_next; }

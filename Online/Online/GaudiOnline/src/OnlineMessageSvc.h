@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.3 2006-03-17 07:33:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.4 2006-03-17 07:48:49 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -126,7 +126,7 @@ public:
   virtual bool useColor() const { return false; }
 
   // Implementation of IMessageSvc::getLogColor()
-  virtual std::string getLogColor(int logLevel) const {  return ""; };
+  virtual std::string getLogColor(int /* logLevel */) const {  return ""; };
   
 
 private:

@@ -24,7 +24,7 @@
 **--
 */
 
-#include "CPP/sensor.h"
+#include "CPP/Sensor.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 
@@ -32,7 +32,7 @@ static bool    Initdone  = false;
 static Sensor *Head      = 0;
 
 //------------------------------------------------------------------------------
-int s_rearm(unsigned int fac, void* param)    {
+int s_rearm(unsigned int /* fac */, void* /* param */ )    {
   for(Sensor* sn = Head; sn; sn = sn->next())  {
     if( sn->m_rearmPending )    { 
       sn->rearm();
@@ -54,7 +54,7 @@ int s_action(unsigned int facility, void* param) {
   return WT_SUCCESS;
 }
 //------------------------------------------------------------------------------
-Sensor::Sensor( int facility, const char* name, bool wtsubs) {
+Sensor::Sensor( unsigned int facility, const char* name, bool wtsubs) {
   int status;
   if ( !Initdone )  {
     status = wtc_init();
@@ -84,7 +84,7 @@ int Sensor::run()  {
   while(1)  {
     status = wtc_wait( &facility, &param, &substatus );  
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
-      printf (" exiting wt_wait status = %d param %d  substat %d, fac %d \n",
+      printf (" exiting wt_wait status = %d param %p substat %d, fac %d \n",
               status, param, substatus, facility);
     }
   } 

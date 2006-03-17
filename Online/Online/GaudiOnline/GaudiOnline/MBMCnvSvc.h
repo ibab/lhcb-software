@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.2 2006-03-17 07:33:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.3 2006-03-17 07:48:49 frankb Exp $
 //	====================================================================
 //  MBMCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -20,6 +20,7 @@ namespace MBM  {  class Producer;  }
 namespace LHCb    {
 
   // Forward declarations  
+  class RawBank;
   class RawEvent;
   class MEPFragment;
 
