@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.15 2006-03-16 15:48:13 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.16 2006-03-17 15:54:33 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -65,21 +65,8 @@ StatusCode RichMirrorSegFinder::initialize( )
   m_maxDist[Rich::Rich2][sec] = 36675;
 
   // get the RICH detectors
-  const DeRich* rich1;
-  try {
-    rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  }
-  catch ( GaudiException& e ) { 
-    rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
-  }
-  
-  const DeRich* rich2;
-  try {
-    rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  }
-  catch ( GaudiException& e ) {
-    rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
-  }
+  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // find all the mirrors in Rich1
   unsigned int mirrorNum(0);

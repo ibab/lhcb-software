@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.2 2006-03-16 15:48:13 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.3 2006-03-17 15:54:33 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -79,8 +79,8 @@ StatusCode RichRadiatorTool::initialize ( )
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Using the following DeRichRadiators:" << endmsg;
-    for (unsigned int i=0; i<m_radiators.size(); ++i)
-      for (unsigned int j=0; j<m_radiators[i].size(); ++j)
+    for ( unsigned int i=0; i<m_radiators.size(); ++i )
+      for ( unsigned int j=0; j<m_radiators[i].size(); ++j )
         debug() << m_radiators[i][j]->name() << endmsg;
   }
 
