@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.6 2006-03-17 19:37:53 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -22,6 +22,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartIF.h"
 #include "Event/RawEvent.h"
 
 #include <memory>
@@ -44,7 +45,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, long typ) 
-: ConversionSvc(nam, loc, typ), m_dataMgr(0)
+: ConversionSvc(nam, loc, typ)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",         m_compress=0);        // File compression
@@ -53,7 +54,7 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, lon
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: ConversionSvc(nam, loc, RAWDATA_StorageType), m_dataMgr(0)
+: ConversionSvc(nam, loc, RAWDATA_StorageType)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",         m_compress=0);        // File compression
@@ -67,11 +68,6 @@ StatusCode LHCb::RawDataCnvSvc::initialize()
   MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
     IPersistencySvc *pSvc = 0;
-    sc = dataProvider()->queryInterface(IID_IDataManagerSvc, (void**)&m_dataMgr);
-    if ( !sc.isSuccess() )    {
-      log << MSG::ERROR << "Cannot connect to \"IDataManagerSvc\" interface." << endmsg;
-      return sc;
-    }
     sc = service("EventPersistencySvc",pSvc,true);
     if ( sc.isSuccess() )  {
       IConversionSvc *pCnv = 0;
@@ -94,8 +90,6 @@ StatusCode LHCb::RawDataCnvSvc::finalize()
     }
   }
   m_fileMap.clear();
-  if ( m_dataMgr )  m_dataMgr->release();
-  m_dataMgr = 0;
   return ConversionSvc::finalize();
 }
 
@@ -146,25 +140,32 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddress, DataObject
       if ( pReg )  {
         RawDataAddress* paddr = 0;
         const std::string& id = pReg->identifier();
+        SmartIF<IDataManagerSvc> mgr(dataProvider());
+        if ( !mgr.isValid() )  {
+          return error("Failed to locate Manager interface in dataprovider!");
+        }
         if ( id == "/Event" )  {
           paddr = new RawDataAddress(*pA);
           paddr->setClID(DataObject::classID());
-          StatusCode sc = m_dataMgr->registerAddress(pReg, "DAQ", paddr);
+          StatusCode sc = mgr->registerAddress(pReg, "/DAQ", paddr);
           if ( !sc.isSuccess() )  {
             paddr->release();
             return error("Failed to register address for object /Event/DAQ");
           }
-          return sc;
-        }
-        else if ( id == "/Event/DAQ" )  {
           paddr = new RawDataAddress(*pA);
           paddr->setClID(RawEvent::classID());
-          StatusCode sc = m_dataMgr->registerAddress(pReg, Default, paddr);
+          if ( Default.find(id) == 0 )
+            sc = mgr->registerAddress(Default, paddr);
+          else
+            sc = mgr->registerAddress(pReg, Default, paddr);
           if ( !sc.isSuccess() )  {
             paddr->release();
             return error("Failed to register address for object "+Default);
           }
           return sc;
+        }
+        else if ( id == "/Event/DAQ" )  {
+          return StatusCode::SUCCESS;
         }
         else if ( id.find(Default) != std::string::npos )  {
           typedef std::vector<RawBank*> _B;

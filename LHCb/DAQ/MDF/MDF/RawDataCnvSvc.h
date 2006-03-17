@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.3 2006-03-17 19:37:53 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -48,9 +48,6 @@ namespace LHCb  {
     StreamBuffer  m_data;
     /// Streambuffer to hold compressed data
     StreamBuffer  m_tmp;
-
-    /// Services needed for proper operation: Data Manager
-    IDataManagerSvc* m_dataMgr;
 
     /// Helper to print errors and return bad status
     StatusCode error(const std::string& msg)  const;
