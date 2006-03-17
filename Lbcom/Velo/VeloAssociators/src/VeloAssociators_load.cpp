@@ -16,6 +16,8 @@ DECLARE_FACTORY_ENTRIES( VeloAssociators ) {
   DECLARE_ALGORITHM( InternalVeloCluster2MCHitLinker );
   DECLARE_ALGORITHM( VeloDigit2MCHitLinker );
   DECLARE_ALGORITHM( VeloDigit2MCParticleLinker );
+  DECLARE_ALGORITHM( VeloCluster2MCHitLinker );
+  DECLARE_ALGORITHM( VeloCluster2MCParticleLinker );
 
   DECLARE_TOOL( VeloCluster2VeloDigitTool );
 

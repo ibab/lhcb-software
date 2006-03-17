@@ -2,6 +2,7 @@
 #include "VeloEvent/InternalVeloCluster.h"
 #include "Event/MCVeloFE.h"
 #include "Event/MCHit.h"
+#include "Event/VeloCluster.h"
 
 #include <map>
 #include <vector>
@@ -10,6 +11,10 @@
 //
 // 21/05/2002 : Chris Parkes & Tomasz Szumlak
 //-----------------------------------------------------------------------------
+
+// //////////////////////////////////////// //
+//  associate InternalVeloCluster -> MCHit
+// //////////////////////////////////////// //
 StatusCode VeloTruthTool::associateToTruth(
                           const LHCb::InternalVeloCluster* aCluster,
                           std::map<LHCb::MCHit*,double>& hitMap, 
@@ -18,7 +23,9 @@ StatusCode VeloTruthTool::associateToTruth(
   //
   return (VeloTruthTool::associateToTruth( aCluster, hitMap, mcFEsPtr ));
 }
-//
+// ////////////////////////////// //
+//  associate VeloDigit -> MCHit
+// ////////////////////////////// //
 StatusCode VeloTruthTool::associateToTruth(
                           const LHCb::VeloDigit* aDigit,
                           std::map<LHCb::MCHit*, double>& hitMap,
@@ -28,7 +35,21 @@ StatusCode VeloTruthTool::associateToTruth(
   //
   return ( associateToTruth(aDigit, hitMap, mcFEsPtr) );
 }
-//
+// //////////////////////////////// //
+//  associate VeloCluster -> MCHit
+// //////////////////////////////// //
+StatusCode VeloTruthTool::associateToTruth(
+                          const LHCb::VeloCluster* aCluster,
+                          std::map<LHCb::MCHit*, double>& hitMap,
+                          SmartDataPtr<LHCb::MCVeloFEs> mcfes)
+{
+  LHCb::MCVeloFEs* mcFEsPtr=mcfes;
+  //
+  return ( VeloTruthTool::associateToTruth(aCluster, hitMap, mcFEsPtr) );
+}
+// //////////////////////////////////////// //
+//  associate InternalVeloCluster -> MCHit 
+// //////////////////////////////////////// //
 StatusCode VeloTruthTool::associateToTruth(
                           const LHCb::InternalVeloCluster* aCluster,
                           std::map<LHCb::MCHit*,double>& hitMap,
@@ -55,7 +76,41 @@ StatusCode VeloTruthTool::associateToTruth(
   //
   return (StatusCode::SUCCESS);
 }
-//
+// //////////////////////////////// //
+//  associate VeloCluster -> MCHit
+// //////////////////////////////// //
+StatusCode VeloTruthTool::associateToTruth(
+                          const LHCb::VeloCluster* aCluster,
+                          std::map<LHCb::MCHit*, double>& hitMap,
+                          LHCb::MCVeloFEs* mcfes)
+{
+  // associate VeloCluster to the MCHit objects
+  std::vector<LHCb::VeloChannelID> channels=aCluster->channels();
+  int NChannels=channels.size();  
+  for(int iChann=0; iChann<NChannels; iChann++){
+    // relate FE object with each strip
+    LHCb::VeloChannelID aChann=channels[iChann];
+    LHCb::MCVeloFE* anFE=mcfes->object(aChann);
+    //
+    if(NULL!=anFE){
+      // get hits related with given FE object
+      SmartRefVector<LHCb::MCHit> aHitVec=anFE->mcHits();
+      std::vector<double> aHitVecCharge=anFE->mcHitsCharge();
+      int size=aHitVec.size();      
+      for(int i=0; i<size; i++){
+        hitMap[aHitVec[i]]+=aHitVecCharge[i];
+      }      
+    }
+  }
+  if(hitMap.size()==0){
+    return ( StatusCode::FAILURE );
+  }
+  //
+  return ( StatusCode::SUCCESS );
+}
+// ////////////////////////////// //
+//  associate VeloDigit -> MCHit
+// ////////////////////////////// //
 StatusCode VeloTruthTool::associateToTruth(
                          const LHCb::VeloDigit* aDigit,
                          std::map<LHCb::MCHit*, double>& hitMap,
@@ -84,4 +139,4 @@ StatusCode VeloTruthTool::associateToTruth(
   //
   return ( StatusCode::SUCCESS );
 }
-
+//

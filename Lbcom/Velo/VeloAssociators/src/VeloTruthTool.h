@@ -21,20 +21,33 @@ namespace LHCb
   class MCHit;
   class InternalVeloCluster;
   class VeloDigit;
+  class VeloCluster;
 }
 
 namespace VeloTruthTool{
 
-  /// make link between VeloCluster and MCHit
+  /// make link between InternalVeloCluster and MCHit
   StatusCode associateToTruth(
              const LHCb::InternalVeloCluster* aCluster,
-             std::map<LHCb::MCHit*,double>& hitMap,
+             std::map<LHCb::MCHit*, double>& hitMap,
+             SmartDataPtr<LHCb::MCVeloFEs> mcfes);
+
+  /// make link between InternalVeloCluster and MCHit
+  StatusCode associateToTruth(
+             const LHCb::InternalVeloCluster* aCluster,
+             std::map<LHCb::MCHit*, double>& hitMap,
+             LHCb::MCVeloFEs* mcfes);
+
+  /// make link between VeloCluster and MCHit
+  StatusCode associateToTruth(
+             const LHCb::VeloCluster* aCluster,
+             std::map<LHCb::MCHit*, double>& hitMap,
              SmartDataPtr<LHCb::MCVeloFEs> mcfes);
 
   /// make link between VeloCluster and MCHit
   StatusCode associateToTruth(
-             const LHCb::InternalVeloCluster* aCluster,
-             std::map<LHCb::MCHit*,double>& hitMap,
+             const LHCb::VeloCluster* aCluster,
+             std::map<LHCb::MCHit*, double>& hitMap,
              LHCb::MCVeloFEs* mcfes);
 
   /// make link between VeloDigits and MCHits
