@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.15 2006-02-16 16:04:58 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.16 2006-03-17 15:56:04 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -97,7 +97,7 @@ public:
   /** Test it the given track information is selected
    *
    *  @param type Track type
-   *  @param ptot Track momentum
+   *  @param ptot Track momentum in MeV/c
    *  @param charge Track charge
    *  @param unique Track unique flag
    *
@@ -234,8 +234,8 @@ inline bool RichTrackSelector::trackSelected( const Rich::Track::Type type,
            (!m_uniqueTrOnly || unique)   &&         // Unique tracks
            m_tkTypeSel[type] &&       // tracking algorithm type
            ( m_chargeSel*charge >= 0 )  &&          // track charge
-           ( ptot > minMomentum(type) ) &&          // Momentum cut
-           ( ptot < maxMomentum(type) )             // Momentum cut
+           ( ptot/GeV > minMomentum(type) ) &&          // Momentum cut
+           ( ptot/GeV < maxMomentum(type) )             // Momentum cut
            );
 }
 
