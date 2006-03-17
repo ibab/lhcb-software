@@ -10,14 +10,15 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
 
 - Modified packages: GaudiConf v9r4, KernelSys v5r1, LHCbKernel v6r3,
    EventSys v21r1, DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2,
-   PhysEvent v9r1, DAQSys v2r1, CaloDAQ v2r1, SimComponents v1r1,
-   TrackInterfaces v2r1
+   TrackEvent v2r1, PhysEvent v9r1, DetSys v8r1, DetDescCnv v3r1, DAQSys v2r1,
+   CaloDAQ v2r1, SimComponents v1r1, TrackInterfaces v2r1
 
 - In GaudiConf v9r4:
   . Fix DecodeRawBuffer.opts for IT and TT
 
 - In LHCbKernel v6r3:
   . Add find method to fast container, and SiDataFunctors.h to use it 
+  . Fix LineTraj constructor with two points.
 
 - In DigiEvent v1r1:
   . Added STLiteCluster typedefs
@@ -34,8 +35,14 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
   . Add typedefs for KeyedContainers of MCParticle and const MCParticle.
   . Modify IMCDecayFinder interface to use MCParticle::Container
 
+- In TrackEvent v2r1:
+  . Add kappa constant to TrackParameters.h
+
 - In PhysEvent v9r1:
   . Add typedefs for KeyedContainers of Particle and const Particle.
+
+- In DetDescCnv v3r1:
+  . If DetectorElement::initialize() failed, the error was not reported upstream
 
 - In CaloDAQ v2r1:
   . CaloZSupAlg algorithm added (moved from CaloDigit)
