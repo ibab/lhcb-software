@@ -84,9 +84,9 @@ StatusCode MCParticle2MCHitAlg::execute()
   if ( m_makeLinker ) {
     std::string linkPath = outputData();
     if ( "/Event/Relations/" == linkPath.substr(0,17) )
-      linkPath = "Link/" + linkPath.substr(17);
+      linkPath = "/Event/Link/" + linkPath.substr(17);
     else if ( "Relations/" == linkPath.substr(0,10) )
-      linkPath = "Link/" + linkPath.substr(10);
+      linkPath = "/Event/Link/" + linkPath.substr(10);
     LinkerWithKey<MCParticle,MCHit> myLink( eventSvc(), msgSvc(), linkPath );
     LocalDirectType::Range ran = table->relations();
     for( LocalDirectType::Range::const_iterator it = ran.begin();
