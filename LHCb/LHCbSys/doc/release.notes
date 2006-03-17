@@ -5,12 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r1>2006-03-16 LHCbSys v20r1</A></H1><PRE>
+</PRE><H1><A NAME=v20r1>2006-03-17 LHCbSys v20r1</A></H1><PRE>
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
 
-- Modified packages: KernelSys v5r1, LHCbKernel v6r3, EventSys v21r1,
-   DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2, PhysEvent v9r1,
-   DAQSys v2r1, CaloDAQ v2r1, SimComponents v1r1, TrackInterfaces v2r1
+- Modified packages: GaudiConf v9r4, KernelSys v5r1, LHCbKernel v6r3,
+   EventSys v21r1, DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2,
+   PhysEvent v9r1, DAQSys v2r1, CaloDAQ v2r1, SimComponents v1r1,
+   TrackInterfaces v2r1
+
+- In GaudiConf v9r4:
+  . Fix DecodeRawBuffer.opts for IT and TT
 
 - In LHCbKernel v6r3:
   . Add find method to fast container, and SiDataFunctors.h to use it 
