@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.1 2006-03-02 15:27:39 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.2 2006-03-17 15:55:14 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -88,8 +88,6 @@ StatusCode RichRecPixelQC::execute()
 
   // Histogramming
   const RichHistoID hid;
-  //PD_GLOBAL_POSITIONS;
-  //PD_LOCAL_POSITIONS;
 
   std::vector<unsigned int> pixels( Rich::NRiches, 0 );
   std::vector<unsigned int> bkgs( Rich::NRiches, 0 );
@@ -109,11 +107,6 @@ StatusCode RichRecPixelQC::execute()
     const RichSmartID::Vector & rawIDs = (*iHPD).second;
     // RICH
     const Rich::DetectorType rich = hpd.rich();
-
-    // Hardware ID
-    //const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
-    // HPD as a string
-    //std::ostringstream HPD; HPD << hpd;
 
     // Loop over raw RichSmartIDs
     for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
@@ -193,6 +186,7 @@ StatusCode RichRecPixelQC::finalize()
            << "                         Pixel summary for " << m_nEvts << " events :-" << endreq
            << "-------------------------------------------------------------------------------" << endreq;
     printRICH(Rich::Rich1);
+    info() << "-------------------------------------------------------------------------------" << endreq;
     printRICH(Rich::Rich2);
     info() << "===============================================================================" << endreq;
   }
