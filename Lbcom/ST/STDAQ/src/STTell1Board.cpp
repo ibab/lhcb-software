@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.2 2006-03-15 16:38:51 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.3 2006-03-17 15:08:29 mneedham Exp $
 #include "STTell1Board.h"
 
 
@@ -63,7 +63,7 @@ unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
 
   // convert an offline channel to DAQ channel
   unsigned int strip = aOfflineChan.strip();
-  if (m_orientation[0] == 0){
+  if (m_orientation[waferIndex] == 0){
     strip = m_nStripsPerHybrid - strip;
   }
   else {
