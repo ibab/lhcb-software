@@ -13,3 +13,8 @@ ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 //RichDigiEventCheck.CheckMCRichDigits         = false;
 //RichDigiEventCheck.CheckMCRichHits           = true;
 //RichDigiEventCheck.CheckMCRichOpticalPhotons = true;
+
+// decoding tests (requires RichDAQ package to be loaded)
+//ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
+//MoniRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichRawEventToDigits" };
+//RichRawEventToDigits.DecodeBufferOnly = true;
