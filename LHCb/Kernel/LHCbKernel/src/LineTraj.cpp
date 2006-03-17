@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.5 2006-02-13 11:00:51 graven Exp $
+// $Id: LineTraj.cpp,v 1.6 2006-03-17 13:10:18 ocallot Exp $
 // Include files
 
 // local
@@ -16,15 +16,15 @@ LineTraj::clone() const
 LineTraj::LineTraj( const Gaudi::XYZPoint& middle,
                     const Gaudi::XYZVector& dir,
                     const Range& range ) 
-        : m_pos(middle),m_dir(dir.Unit()),m_range(range)
+        : m_dir(dir.Unit()),m_pos(middle),m_range(range)
 {
 };
 
 /// Constructor from a begin and an end point
 LineTraj::LineTraj( const Gaudi::XYZPoint& begPoint,
                     const Gaudi::XYZPoint& endPoint )
-        : m_pos(begPoint+0.5*m_dir),
-          m_dir(endPoint-begPoint)
+  : m_dir(endPoint-begPoint)
+  , m_pos(begPoint+0.5*m_dir)
 {
   double d = m_dir.r();
   m_range = Range(-d,d);

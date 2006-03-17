@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.7 2006-02-13 11:00:51 graven Exp $
+// $Id: LineTraj.h,v 1.8 2006-03-17 13:10:18 ocallot Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -81,8 +81,8 @@ namespace LHCb
     
   private:
     
-    Gaudi::XYZPoint  m_pos;
     Gaudi::XYZVector m_dir;
+    Gaudi::XYZPoint  m_pos;
     Range            m_range;
     
   }; // class LineTraj

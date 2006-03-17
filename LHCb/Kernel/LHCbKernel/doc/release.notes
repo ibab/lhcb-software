@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-03-17 - Olivier Callot
+ - Fix LineTraj constructor with two points. Order of initialisations was
+   wrong, and uninitialised variable used...
+
 !===================== LHCbKernel v6r2 2006-03-15 =========================
 ! 2006-03-15 M Needham
  - Add find method to fast container class
