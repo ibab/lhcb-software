@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.5 2006-02-13 11:02:22 graven Exp $
+// $Id: StateTraj.cpp,v 1.6 2006-03-17 10:49:38 erodrigu Exp $
 // Include files
 
 // local
@@ -15,7 +15,7 @@ StateTraj::StateTraj( const State& state,
   m_dir = state.slopes().unit();
   m_qOverP = state.qOverP();
   m_bField = bField;   
-  m_curv = kappa * m_qOverP * ( m_dir.Cross(m_bField) );
+  m_curv = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );
 };
 
 StateTraj::StateTraj( const TrackVector& stateVector,
@@ -28,7 +28,7 @@ StateTraj::StateTraj( const TrackVector& stateVector,
   m_dir    = slopes.unit();
   m_qOverP = stateVector(4);
   m_bField = bField;
-  m_curv   = kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
+  m_curv   = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
 };
 
 StateTraj* StateTraj::clone() const
@@ -72,7 +72,7 @@ StateTraj::derivative( double arclength ) const
   double arcvxyz  = arclength * vx * vy * vz;
   double arcvx = 1.0 - vx * vx;
   double arcvy = 1.0 - vy * vy;
-  double C     = 0.5 * arclength * arclength * kappa;
+  double C     = 0.5 * arclength * arclength * TrackParameters::kappa;
   double cvz   = C * m_qOverP * vz;
   XYZVector crossB = m_dir.Cross(m_bField);
 

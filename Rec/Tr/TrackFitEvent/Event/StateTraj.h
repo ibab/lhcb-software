@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.5 2006-02-13 11:02:22 graven Exp $
+// $Id: StateTraj.h,v 1.6 2006-03-17 10:49:38 erodrigu Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -11,6 +11,7 @@
 #include "Kernel/DifTraj.h"
 
 // from TrackEvent
+#include "Event/TrackParameters.h"
 #include "Event/State.h"
 
 /** @class StateTraj StateTraj.h
@@ -94,9 +95,6 @@ namespace LHCb
     Gaudi::XYZVector m_curv;   ///< constant value of parabola's curvature
     double           m_qOverP; ///< the charge-over-momentum Q/P of the State
     Gaudi::XYZVector m_bField; ///< the magnetic field vector at the State position
-    
-    /// Proportionality factor for calculating equation of motion in B-field
-    static const double kappa = 0.3 * GeV / ( c_light * tesla * meter );
     
   }; // class StateTraj
   
