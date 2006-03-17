@@ -6,17 +6,15 @@ version           v1r0
 #============================================================================
 branches          cmt doc src MDF
 include_dirs      $(MDFROOT)
-use DAQEvent      v* Event -no_auto_imports
 use GaudiKernel   v*
+use DAQEvent      v* Event -no_auto_imports
+use ROOT          v* LCG_Interfaces -no_auto_imports
 
 # ==================== libraries ==================================
-library MDF *.cpp -import=DAQEvent
-macro_append MDF_shlibflags '' WIN32 ' $(DAQEvent_linkopts) '
+library MDF *.cpp -import=DAQEvent -import=ROOT
+macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern component_library library=MDF
 apply_pattern ld_library_path
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'
-
-private
-use GaudiSvc      v*

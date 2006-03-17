@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MIFWriter.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MIFWriter.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
 //	====================================================================
 //  MIFWriter.h
 //	--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 
 #include "MDF/StreamDescriptor.h"
 #include "GaudiKernel/Algorithm.h"
-
+#include <map>
 /*
  *    LHCb namespace
  */
@@ -24,7 +24,8 @@ namespace LHCb    {
     * @version: 1.0
     */
   class MIFWriter : public Algorithm   {
-
+    typedef std::map<std::string, int> FidMap;
+    FidMap m_fidMap;
   private:
     typedef LHCb::StreamDescriptor   Descriptor;
     typedef Descriptor::Access       Access;

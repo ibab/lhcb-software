@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.5 2006-01-12 19:09:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.6 2006-03-17 17:23:56 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -32,7 +32,7 @@ namespace LHCb  {
 
   /// Fill MDF header structure in given memory location
   void makeMDFHeader(void* const data, int len, int evtype, int hdrType, 
-                     longlong trNumber, unsigned int trMask[4],
+                     long long trNumber, unsigned int trMask[4],
                      int compression, int checksum);
   /// Determine length of the sequential buffer from RawEvent object
   size_t rawEventLength(const RawEvent* evt);
@@ -41,14 +41,23 @@ namespace LHCb  {
   /// Determine number of bank types from rawEvent object
   size_t numberOfBankTypes(const RawEvent* evt);
   /// Generate XOR Checksum
-  unsigned int xorChecksum(const void* ptr, size_t len);
+  unsigned int genChecksum(int flag, const void* ptr, size_t len);
   /// Compress opaque data buffer
+  /** The algorithm applied is the ROOT compression mechanism.
+    * Option "algtype" is used to specify the compression level:
+    * compress = 0 objects written to this file will not be compressed.
+    * compress = 1 minimal compression level but fast.
+    * ....
+    * compress = 9 maximal compression level but slow.
+    */
   StatusCode compressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len);
-  /// Decompress opaque data buffer
+  /// Decompress opaque data buffer using the ROOT (de-)compression mechanism.
   StatusCode decompressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len);
 
   /// Copy RawEvent data from the object to sequential buffer
   StatusCode encodeRawBanks(const RawEvent* evt,char* const data, size_t len);
+  /// Copy RawEvent data from bank vectors to sequential buffer
+  StatusCode encodeRawBanks(const std::vector<RawBank*>& banks, char* const data, size_t size, size_t* length);
   /// Conditional decoding of raw buffer from MDF to raw event object
   StatusCode decodeRawBanks(const char* start, const char* end, RawEvent* raw);
   /// Conditional decoding of raw buffer from MDF to bank offsets

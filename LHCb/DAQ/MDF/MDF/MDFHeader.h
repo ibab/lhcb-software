@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
@@ -42,6 +42,7 @@ namespace LHCb    {
     /// Trigger mask used for event selection
     unsigned int   m_trMask[4];
 
+    typedef long long int int_64_t;
   public:
     /// Default constructor
     MDFHeader() : m_checkSum(0), m_compression(0), m_evType(0), m_hdr(0), m_trH(0), m_trL(0)
@@ -79,16 +80,16 @@ namespace LHCb    {
     /// Accessor: Number of bits in the trigger mask
     unsigned int  maskBits() const         { return sizeof(m_trMask)*8;        }
     /// Accessor: L0 trigger number of the event  
-    longlong      triggerNumber() const    { return (longlong(m_trH)<<32)+m_trL;}
+    long long     triggerNumber() const    { return (int_64_t(m_trH)<<32)+m_trL;}
     /// Update the L0 trigger number of the event
-    void setTriggerNumber(longlong val)    {
+    void setTriggerNumber(int_64_t val)    {
       m_trH = char(0xFF&(val>>32));
       m_trL = (unsigned int)(0xFFFFFFFFLL&(val&0xFFFFFFFFLL));
     }
     /// Accessor: trigger mask
     const unsigned int* triggerMask() const{ return m_trMask;                  }
     /// Update the trigger mask of the event
-    void setTriggerMask(unsigned int* mask){
+    void setTriggerMask(const unsigned int* mask){
       m_trMask[0] = mask[0];
       m_trMask[1] = mask[1];
       m_trMask[2] = mask[2];

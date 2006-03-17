@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.4 2006-01-10 14:00:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -63,14 +63,14 @@ StatusCode LHCb::MDFWriter::execute()    {
       if ( compressBuffer(m_compress,
                           m_tmp.data()+sizeof(MDFHeader),len,
                           m_data.data()+sizeof(MDFHeader),len,newlen).isSuccess() )  {
-        int chk = m_genChecksum ? xorChecksum(m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
+        int chk = m_genChecksum ? genChecksum(1,m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
         makeMDFHeader(m_tmp.data(), newlen, evType, hdrType, trNumber, trMask, m_compress, chk);
         return Descriptor::write(m_connection,m_tmp.data(),newlen+sizeof(MDFHeader)) 
           ? StatusCode::SUCCESS : StatusCode::FAILURE;
       }
       // Bad compression; file uncompressed buffer
     }
-    int chk = m_genChecksum ? xorChecksum(m_data.data()+sizeof(MDFHeader),len) : 0;
+    int chk = m_genChecksum ? genChecksum(1,m_data.data()+sizeof(MDFHeader),len) : 0;
     makeMDFHeader(m_data.data(), len, evType, hdrType, trNumber, trMask, 0, chk);
     return Descriptor::write(m_connection, m_data.data(),len+sizeof(MDFHeader)) 
       ? StatusCode::SUCCESS : StatusCode::FAILURE;

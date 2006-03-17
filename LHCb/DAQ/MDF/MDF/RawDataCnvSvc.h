@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -13,13 +13,18 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include <map>
 
+// Forward declarations
+class IDataManagerSvc;
+
 /*
  *    LHCb namespace declaration
  */
 namespace LHCb  {  
 
   // Forward declarations
+  class RawDataAddress;
   class RawEvent;
+  class RawBank;
 
   /** @class RawDataCnvSvc RawDataCnvSvc.h  MDF/RawDataCnvSvc.h
     *
@@ -44,6 +49,9 @@ namespace LHCb  {
     /// Streambuffer to hold compressed data
     StreamBuffer  m_tmp;
 
+    /// Services needed for proper operation: Data Manager
+    IDataManagerSvc* m_dataMgr;
+
     /// Helper to print errors and return bad status
     StatusCode error(const std::string& msg)  const;
 
@@ -59,13 +67,16 @@ namespace LHCb  {
     /// Commit Raw Bank output to stream/buffer
     virtual StatusCode commitRawBanks(void* ioDesc);
 
+    /// Read raw banks
+    virtual StatusCode readRawBanks(RawDataAddress* pAddr, RawEvent* evt);
+
     /// Allocate data space for output
     virtual char* const getDataSpace(void* ioDesc, size_t len);
 
     /// Declare event to data space
     virtual StatusCode writeDataSpace(void* ioDesc, 
                                       size_t len, 
-                                      longlong trNumber, 
+                                      long long trNumber, 
                                       unsigned int trMask[4],
                                       int evType, 
                                       int hdrType);
@@ -119,6 +130,9 @@ namespace LHCb  {
 
     /// Connect the output file to the service with open mode.
     virtual StatusCode connectOutput(const std::string& name, const std::string& mode);
+
+    /// Connect the input file to the service with READ mode
+    virtual StatusCode connectInput(const std::string& fname, void*& iodesc);
 
     /// Commit pending output.
     virtual StatusCode commitOutput(const std::string& , bool doCommit);

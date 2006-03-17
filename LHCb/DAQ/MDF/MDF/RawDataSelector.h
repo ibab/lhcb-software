@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.3 2006-01-11 15:31:52 frankb Exp $
+// $Id: RawDataSelector.h,v 1.4 2006-03-17 17:23:56 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.3 2006-01-11 15:31:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.4 2006-03-17 17:23:56 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -72,13 +72,21 @@ namespace LHCb  {
         DSC::close(m_bindDsc);
       }
       /// Access descriptor (CONST)
-      const DSC& descriptor() const  { return m_descriptor; }
+      const DSC& descriptor() const             { return m_descriptor;  }
       /// Access descriptor
-      DSC& descriptor()              { return m_descriptor; }
+      DSC& descriptor()                         { return m_descriptor;  }
       /// Connection specification
-      const std::string& specs() const          {      return m_conSpec;    }
+      const std::string& specs() const          { return m_conSpec;     }
+      /// Access to file offset(if possible)
+      virtual long long offset()  const         { return -1;            }
       /// Access to RawBank array
       virtual const std::vector<LHCb::RawBank*>& banks()  const = 0;
+      /// Accessor: event size
+      virtual const unsigned int  size() const  = 0;
+      /// Accessor: event type identifier
+      virtual const unsigned char eventType() const  = 0;
+      /// Accessor: trigger mask
+      virtual const unsigned int* triggerMask() const = 0;
     };
 
     /// IService implementation: Db event selector override

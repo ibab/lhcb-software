@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.2 2006-01-10 12:56:03 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.3 2006-03-17 17:23:56 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -63,10 +63,9 @@ namespace FileIO {
   using ::write;
   using ::lseek64;
 }
-
+typedef LHCb::StreamDescriptor::Access Access;
 
 namespace {
-  typedef LHCb::StreamDescriptor::Access Access;
   bool file_read(const Access& con, void* buff, int len)  {
     int tmp = 0;
     char* p = (char*)buff;
@@ -88,8 +87,8 @@ namespace {
     }
     return true;
   }
-  longlong file_tell(const Access& con)  {
-    return FileIO::lseek64(con.ioDesc,0,SEEK_CUR);
+  long long file_seek(const Access& con, long long offset, int where)  {
+    return FileIO::lseek64(con.ioDesc,offset,where) != -1;
   }
   bool ip_recv(const Access& con, void* buff, int len)  {
     int tmp = 0;
@@ -111,7 +110,7 @@ namespace {
     }
     return true;
   }
-  longlong ip_tell(const Access& /* con */)  {
+  long long ip_seek(const Access& /* con */, long long /* offset */, int /* where */)  {
     return -1;
   }
 }
@@ -152,10 +151,10 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con, std::stri
   }
 }
 
-void LHCb::StreamDescriptor::getInetConnection(const std::string& con, 
-                                                      std::string& host,
-                                                      Networking::in_addr* ip,
-                                                      unsigned short& port)
+void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 
+                                                std::string& host,
+                                                Networking::in_addr* ip,
+                                                unsigned short& port)
 {
   getFileConnection(con, host);
   size_t idx = host.find(":");
@@ -183,8 +182,7 @@ void LHCb::StreamDescriptor::getInetConnection(const std::string& con,
   }
 }
 
-LHCb::StreamDescriptor::Access 
-LHCb::StreamDescriptor::connect(const std::string& specs)  {
+Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   Access result;
   std::string file;
   Networking::sockaddr_in sin;
@@ -195,7 +193,7 @@ LHCb::StreamDescriptor::connect(const std::string& specs)  {
       result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU );
       result.m_write    = file_write;
       result.m_read     = file_read;
-      result.m_tell     = file_tell;
+      result.m_seek     = file_seek;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       /*
@@ -215,7 +213,7 @@ LHCb::StreamDescriptor::connect(const std::string& specs)  {
         if ( ret == 0 )  {
           result.m_write    = ip_send;
           result.m_read     = ip_recv;
-          result.m_tell     = ip_tell;
+          result.m_seek     = ip_seek;
           return result;
         }
         Networking::closesocket(result.ioDesc);
@@ -229,8 +227,7 @@ LHCb::StreamDescriptor::connect(const std::string& specs)  {
   return result;
 }
 
-LHCb::StreamDescriptor::Access 
-LHCb::StreamDescriptor::bind(const std::string& specs)  {
+Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   Access result;
   std::string file;
   Networking::sockaddr_in sin;
@@ -238,10 +235,10 @@ LHCb::StreamDescriptor::bind(const std::string& specs)  {
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
       getFileConnection(specs, file);
-      result.ioDesc     = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
-      result.m_write    = file_write;
-      result.m_read     = file_read;
-      result.m_tell     = file_tell;
+      result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
+      result.m_write = file_write;
+      result.m_read  = file_read;
+      result.m_seek  = file_seek;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
@@ -252,9 +249,9 @@ LHCb::StreamDescriptor::bind(const std::string& specs)  {
         sin.sin_family = AF_INET;
         if ( Networking::bind(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin)) == 0) {
           if ( Networking::listen(result.ioDesc, SOMAXCONN) == 0 )  {
-            result.m_write    = ip_send;
-            result.m_read     = ip_recv;
-            result.m_tell     = ip_tell;
+            result.m_write = ip_send;
+            result.m_read  = ip_recv;
+            result.m_seek  = ip_seek;
             return result;
           }
         }
@@ -281,8 +278,7 @@ int LHCb::StreamDescriptor::close(Access& specs) {
   }
 }
 
-LHCb::StreamDescriptor::Access 
-LHCb::StreamDescriptor::accept(const Access& specs)  {
+Access LHCb::StreamDescriptor::accept(const Access& specs)  {
   Access result = specs;
   switch(specs.type)  {
     case 'F':

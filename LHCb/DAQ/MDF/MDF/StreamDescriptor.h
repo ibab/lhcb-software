@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/StreamDescriptor.h,v 1.2 2006-03-17 17:23:56 frankb Exp $
 #ifndef LHCb_STREAMDESCRIPTOR_H
 #define LHCb_STREAMDESCRIPTOR_H 1
 
@@ -49,10 +49,10 @@ namespace LHCb {
       bool (*m_read)     (const Access& con, void* buffer, int max_len);
       /// Fast functions: write buffer from memory
       bool (*m_write)    (const Access& con, const void* buffer, int max_len);
-      /// Fast functions: tell file location
-      longlong (*m_tell) (const Access& con);
+      /// Fast functions: seek file location
+      longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_tell(0)
+      Access() : ioDesc(-1), m_read(0), m_write(0), m_seek(0)
       {
       }      
     };
@@ -90,8 +90,8 @@ namespace LHCb {
     {   return (*con.m_write)(con, data, len);         }
     static bool read(const Access& con, void* data, int len)
     {   return (*con.m_read)(con, data, len);          }
-    static longlong tell(const Access& con)
-    {   return (*con.m_tell)(con);                     }
+    static long long seek(const Access& con, long long offset, int where)
+    {   return (*con.m_seek)(con, offset, where);       }
   };
 }
 #endif // LHCb_STREAMDESCRIPTOR_H

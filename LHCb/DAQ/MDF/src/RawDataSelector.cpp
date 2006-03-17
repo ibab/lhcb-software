@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.2 2006-01-10 12:56:03 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.3 2006-03-17 17:23:56 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -14,10 +14,10 @@
 
 // Include files
 #include "MDF/StorageTypes.h"
+#include "MDF/RawDataAddress.h"
 #include "MDF/RawDataSelector.h"
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 
 /// Set connection
@@ -78,12 +78,12 @@ LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcl
 // IInterface::queryInterface
 StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf)
 {
-  if ( riid == IID_IEvtSelector )  {
+  if (riid == IID_IEvtSelector)  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
     return SUCCESS;
   }
-  return Service::queryInterface( riid, ppvIf );
+  return Service::queryInterface(riid, ppvIf);
 }
 
 /// IService implementation: Db event selector override
@@ -91,7 +91,7 @@ StatusCode LHCb::RawDataSelector::initialize()
 {
   // Initialize base class
   StatusCode status = Service::initialize();
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   if ( !status.isSuccess() )    {
     log << MSG::ERROR << "Error initializing base class Service!" << endreq;
     return status;
@@ -177,8 +177,13 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
   if ( pctxt ) {
     const StreamDescriptor& dsc = pctxt->descriptor();
     if ( dsc.hasData() )  {
-      unsigned long p1 = (unsigned long)&pctxt->banks();
-      pAddr = new GenericAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"",p1,0);
+      RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"",0,0);
+      pA->setTriggerMask(pctxt->triggerMask());
+      pA->setEventType(pctxt->eventType());
+      pA->setFileOffset(pctxt->offset());
+      pA->setBanks(&pctxt->banks());
+      pA->setSize(pctxt->size());
+      pAddr = pA;
       return StatusCode::SUCCESS;
     }
   }

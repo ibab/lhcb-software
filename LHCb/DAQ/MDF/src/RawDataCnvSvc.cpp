@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.4 2006-01-10 14:00:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -9,13 +9,14 @@
 #include "MDF/StorageTypes.h"
 #include "MDF/RawDataCnvSvc.h"
 #include "MDF/StreamDescriptor.h"
-#include "MDF/MDFHeader.h"
+#include "MDF/RawDataAddress.h"
 #include "MDF/RawEventHelpers.h"
+#include "MDF/MDFHeader.h"
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IPersistencySvc.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/DataObject.h"
@@ -35,6 +36,7 @@ namespace {
   struct MDFMapEntry  {
     StreamDescriptor::Access   bind;
     StreamDescriptor::Access   con;
+    StreamDescriptor           desc;
   };
 }
 
@@ -42,7 +44,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, long typ) 
-: ConversionSvc(nam, loc, typ)
+: ConversionSvc(nam, loc, typ), m_dataMgr(0)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",         m_compress=0);        // File compression
@@ -51,7 +53,7 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, lon
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: ConversionSvc(nam, loc, RAWDATA_StorageType)
+: ConversionSvc(nam, loc, RAWDATA_StorageType), m_dataMgr(0)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",         m_compress=0);        // File compression
@@ -62,8 +64,14 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc)
 StatusCode LHCb::RawDataCnvSvc::initialize()    
 {
   StatusCode sc = ConversionSvc::initialize();
+  MsgStream log(msgSvc(),name());
   if ( sc.isSuccess() )  {
     IPersistencySvc *pSvc = 0;
+    sc = dataProvider()->queryInterface(IID_IDataManagerSvc, (void**)&m_dataMgr);
+    if ( !sc.isSuccess() )    {
+      log << MSG::ERROR << "Cannot connect to \"IDataManagerSvc\" interface." << endmsg;
+      return sc;
+    }
     sc = service("EventPersistencySvc",pSvc,true);
     if ( sc.isSuccess() )  {
       IConversionSvc *pCnv = 0;
@@ -86,6 +94,8 @@ StatusCode LHCb::RawDataCnvSvc::finalize()
     }
   }
   m_fileMap.clear();
+  if ( m_dataMgr )  m_dataMgr->release();
+  m_dataMgr = 0;
   return ConversionSvc::finalize();
 }
 
@@ -103,34 +113,77 @@ const CLID& LHCb::RawDataCnvSvc::objType() const  {
 }
 
 /// Object creation callback
-StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* /* pAddr */, DataObject*& refpObj)  
+StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  
 {
-  refpObj = new DataObject();
-  return StatusCode::SUCCESS;
+  if ( pAddr )  {
+    IRegistry* pReg = pAddr->registry();
+    if ( pReg )  {
+      const std::string& id = pReg->identifier();
+      if ( id == "/Event" )  {
+        refpObj = new DataObject();
+        return StatusCode::SUCCESS;
+      }
+      else if ( id == "/Event/DAQ" )  {
+        refpObj = new DataObject();
+        return StatusCode::SUCCESS;
+      }
+      else if ( id.find(Default) != std::string::npos )  {
+        refpObj = new RawEvent();
+        return StatusCode::SUCCESS;
+      }
+    }
+  }
+  return StatusCode::FAILURE;
 }
 
 /// Callback for reference processing (misused to attach leaves)
-StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /* pObj */ )
+StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObj )
 {
-  if ( pAddr )  {
+  RawDataAddress* pA = dynamic_cast<RawDataAddress*>(pAddress);
+  if ( pA && pObj )  {
     try {
-      std::auto_ptr<DataObject> obj(new DataObject());
-      std::auto_ptr<RawEvent> raw(new RawEvent());
-      if ( dataProvider()->registerObject("/Event/DAQ", obj.get()).isSuccess() )  {
-        typedef std::vector<RawBank*> _B;
-        obj.release();
-        const _B* banks = (const _B*)pAddr->ipar()[0];
-        for(_B::const_iterator i=banks->begin(); i!=banks->end(); ++i)  {
-          raw->adoptBank(*i, false);
+      IRegistry* pReg = pA->registry();
+      if ( pReg )  {
+        RawDataAddress* paddr = 0;
+        const std::string& id = pReg->identifier();
+        if ( id == "/Event" )  {
+          paddr = new RawDataAddress(*pA);
+          paddr->setClID(DataObject::classID());
+          StatusCode sc = m_dataMgr->registerAddress(pReg, "DAQ", paddr);
+          if ( !sc.isSuccess() )  {
+            paddr->release();
+            return error("Failed to register address for object /Event/DAQ");
+          }
+          return sc;
         }
-        StatusCode sc = dataProvider()->registerObject(Default,raw.get());
-        if ( sc.isSuccess() )  {
-          raw.release();
-          return StatusCode::SUCCESS;
+        else if ( id == "/Event/DAQ" )  {
+          paddr = new RawDataAddress(*pA);
+          paddr->setClID(RawEvent::classID());
+          StatusCode sc = m_dataMgr->registerAddress(pReg, Default, paddr);
+          if ( !sc.isSuccess() )  {
+            paddr->release();
+            return error("Failed to register address for object "+Default);
+          }
+          return sc;
         }
-        return error("Failed to register object "+Default);
+        else if ( id.find(Default) != std::string::npos )  {
+          typedef std::vector<RawBank*> _B;
+          RawEvent* raw = dynamic_cast<RawEvent*>(pObj);
+          const _B* banks = pA->banks();
+          if ( banks )  {
+            // MDF file/MBM input was opened by the event selector: banks already filled...
+            for(_B::const_iterator i=banks->begin(); i!=banks->end(); ++i)  {
+              raw->adoptBank(*i, false);
+            }
+            return StatusCode::SUCCESS;
+          }
+          /// Need to open MDF file to get access!
+          if ( readRawBanks(pA, raw).isSuccess() )  {
+            return StatusCode::SUCCESS;
+          }
+          return error("Failed to open raw data input:"+pA->par()[0]);
+        }
       }
-      return error("Failed to register object DAQ");
     }
     catch (std::exception& e) {
       return error(std::string("Exception:") + e.what());
@@ -139,7 +192,7 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /
       return error("Exception: (Unknown)");
     }
   }
-  return error("No valid top level event object present.");
+  return error("No valid event object/address present.");
 }
 
 /// Connect the output file to the service with open mode.
@@ -150,8 +203,7 @@ LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
   m_wrFlag = false;
   m_current = m_fileMap.find(outputFile);
   if ( m_current == m_fileMap.end() )   {
-    void* entry = 0;
-    entry = openIO(outputFile, openMode);
+    void* entry = openIO(outputFile, openMode);
     if ( entry ) {
       m_fileMap.insert(std::make_pair(outputFile,entry));
       m_current = m_fileMap.find(outputFile);
@@ -159,6 +211,21 @@ LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
     }
     return error("connectOutput> FAILED to bind I/O channel:"+outputFile);
   }
+  return StatusCode::SUCCESS;
+}
+
+/// Connect the input file to the service with READ mode
+StatusCode LHCb::RawDataCnvSvc::connectInput(const std::string& fname, void*& iodesc)   {
+  FileMap::const_iterator it = m_fileMap.find(fname);
+  if ( it == m_fileMap.end() )   {
+    iodesc = openIO(fname, "READ");
+    if ( iodesc ) {
+      m_fileMap.insert(std::make_pair(fname,iodesc));
+      return StatusCode::SUCCESS;
+    }
+    return error("connectInput> FAILED to bind I/O channel:"+fname);
+  }
+  iodesc = (*it).second;
   return StatusCode::SUCCESS;
 }
 
@@ -223,20 +290,20 @@ StatusCode LHCb::RawDataCnvSvc::createAddress(long typ,
                                               const unsigned long* ip,
                                               IOpaqueAddress*& refpAddress)    
 {
-  refpAddress = new GenericAddress(typ, clid, par[0], par[1], ip[0], ip[1]);
+  refpAddress = new RawDataAddress(typ, clid, par[0], par[1], ip[0], ip[1]);
   return StatusCode::SUCCESS;
 }
 
-void* LHCb::RawDataCnvSvc::openIO(const std::string& outputFile, const std::string& mode) const    {
+void* LHCb::RawDataCnvSvc::openIO(const std::string& fname, const std::string& mode) const    {
   MDFMapEntry* ent = new MDFMapEntry;
   if ( strncasecmp(mode.c_str(),"N",1)==0 || strncasecmp(mode.c_str(),"REC",3)==0 )  {
-    ent->con = StreamDescriptor::connect(outputFile);
+    ent->con = StreamDescriptor::connect(fname);
     if ( ent->con.ioDesc > 0 )  {
       return ent;
     }
   }
   else if ( strncasecmp(mode.c_str(),"O",1)==0 || strncasecmp(mode.c_str(),"REA",3)==0 )  {
-    ent->bind = StreamDescriptor::bind(outputFile);
+    ent->bind = StreamDescriptor::bind(fname);
     if ( ent->bind.ioDesc > 0 )  {
       ent->con = StreamDescriptor::accept(ent->bind);
       if ( ent->con.ioDesc > 0 )  {
@@ -244,7 +311,7 @@ void* LHCb::RawDataCnvSvc::openIO(const std::string& outputFile, const std::stri
       }
     }
   }
-  error("Unknown openmode "+mode+" for MDF file :"+outputFile);
+  error("Unknown openmode "+mode+" for MDF file :"+fname);
   delete ent;
   return 0;
 }
@@ -268,6 +335,40 @@ char* const LHCb::RawDataCnvSvc::getDataSpace(void* /* ioDesc */, size_t len)  {
   return m_data.data() + sizeof(MDFHeader);
 }
 
+/// Read raw banks
+StatusCode 
+LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
+{
+  void* iodesc = 0;
+  const std::string* par = pAddr->par();
+  const unsigned long* ipar = pAddr->ipar();
+  StatusCode sc = connectInput(par[0], iodesc);
+  if ( sc.isSuccess() )  {
+    long long offset = pAddr->fileOffset();
+    MDFMapEntry* ent = (MDFMapEntry*)iodesc;
+    if ( ent->con.ioDesc > 0 )  {
+      if ( StreamDescriptor::seek(ent->con, offset, SEEK_SET) != -1 )  {
+        if ( readMDFrecord(ent->desc, ent->con).isSuccess() )  {
+          MDFHeader* h = (MDFHeader*)ent->desc.data();
+          char* ptr = ent->desc.data()+sizeof(MDFHeader);
+          sc = decodeRawBanks(ptr,ptr+h->size(),evt);
+          if ( sc.isSuccess() )  {
+            pAddr->setSize(h->size());
+            pAddr->setEventType(h->eventType());
+            pAddr->setTriggerMask(h->triggerMask());
+            return sc;
+          }
+          return error("Failed to decode raw data input from:"+par[0]);
+        }
+        return error("Cannot read data record: [I/O read error]");
+      }
+      return error("Cannot seek data record: [Invalid I/O operation]");
+    }
+    return error("Cannot read data record: [Invalid I/O descriptor]");
+  }
+  return error("Cannot read data record: [Failed to open file: "+par[0]+"]");
+}
+
 /// Write data block to stream
 StatusCode LHCb::RawDataCnvSvc::streamWrite(void* iodesc, void* ptr, size_t len)   {
   MDFMapEntry* ent = (MDFMapEntry*)iodesc;
@@ -282,7 +383,7 @@ StatusCode LHCb::RawDataCnvSvc::streamWrite(void* iodesc, void* ptr, size_t len)
 
 StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
                                                size_t len, 
-                                               longlong trNumber, 
+                                               long long trNumber, 
                                                unsigned int trMask[4],
                                                int evType, 
                                                int hdrType)
@@ -293,13 +394,13 @@ StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
     if ( compressBuffer(m_compress,
                         m_tmp.data()+sizeof(MDFHeader),len,
                         m_data.data()+sizeof(MDFHeader),len, newlen).isSuccess() )  {
-      int chk = m_genChecksum ? xorChecksum(m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
+      int chk = m_genChecksum ? genChecksum(1,m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
       makeMDFHeader(m_tmp.data(),newlen,evType,hdrType,trNumber,trMask,m_compress,chk);
       return streamWrite(ioDesc,m_tmp.data(),newlen+sizeof(MDFHeader));
     }
     // Bad compression; file uncompressed buffer
   }
-  int chk = m_genChecksum ? xorChecksum(m_data.data()+sizeof(MDFHeader),len) : 0;
+  int chk = m_genChecksum ? genChecksum(1,m_data.data()+sizeof(MDFHeader),len) : 0;
   makeMDFHeader(m_data.data(),len,evType,hdrType,trNumber,trMask,0,chk);
   return streamWrite(ioDesc,m_data.data(),len+sizeof(MDFHeader));
 }
@@ -310,9 +411,9 @@ StatusCode LHCb::RawDataCnvSvc::commitRawBanks(void* ioDesc)  {
   SmartDataPtr<RawEvent> raw(dataProvider(),Default);
   if ( raw )  {
     unsigned int trMask[4] = { 0x103, 0, 0, 0 };
-    int evType = 1;
+    int evType  = 1;
     int hdrType = 0;
-    longlong trNumber = 0;
+    long long trNumber = 0;
     size_t len = rawEventLength(raw);
     char* data = getDataSpace(ioDesc, len);
     if ( data )  {

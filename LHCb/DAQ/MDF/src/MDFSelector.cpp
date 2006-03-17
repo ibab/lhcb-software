@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -24,15 +24,23 @@ namespace LHCb  {
   *  @version 1.0
   */
   class MDFContext : public RawDataSelector::LoopContext {
-    std::vector<RawBank*> m_banks;
+    typedef std::vector<RawBank*> Banks;
+    Banks     m_banks;
+    long long m_fileOffset;
+    const MDFHeader* header() const  {
+      return (MDFHeader*)m_descriptor.data();
+    }
+
   public:
     /// Standard constructor
-    MDFContext(const RawDataSelector* pSel) : RawDataSelector::LoopContext(pSel) {}
+    MDFContext(const RawDataSelector* pSel) 
+      : RawDataSelector::LoopContext(pSel), m_fileOffset(0)  { }
     /// Standard destructor 
-    virtual ~MDFContext()          {                      }
+    virtual ~MDFContext()                                    { }
     /// Receive event and update communication structure
     virtual StatusCode receiveData()  {
       m_banks.clear();
+      m_fileOffset = StreamDescriptor::seek(m_accessDsc,0,SEEK_CUR);
       if ( readMDFrecord(m_descriptor, m_accessDsc).isSuccess() )  {
         MDFHeader* h = (MDFHeader*)m_descriptor.data();
         char* ptr = m_descriptor.data()+sizeof(MDFHeader);
@@ -40,9 +48,15 @@ namespace LHCb  {
       }
       return StatusCode::FAILURE;
     }
-
-    virtual const std::vector<LHCb::RawBank*>& banks()  const { return m_banks;  }
-    std::vector<LHCb::RawBank*>& banks()                      { return m_banks;  }
+    long long offset()  const               { return m_fileOffset;            }
+    virtual const Banks& banks()  const     { return m_banks;                 }
+    Banks& banks()                          { return m_banks;                 }
+    /// Accessor: event size
+    const unsigned int  size() const        { return header()->size();        }
+    /// Accessor: event type identifier
+    const unsigned char eventType() const   { return header()->eventType();   }
+    /// Accessor: trigger mask
+    const unsigned int* triggerMask() const { return header()->triggerMask(); }
   };
 
   /** @class MDFSelector

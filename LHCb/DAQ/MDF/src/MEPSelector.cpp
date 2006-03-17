@@ -1,4 +1,4 @@
-// $Id: MEPSelector.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
+// $Id: MEPSelector.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
 //====================================================================
 //	MEPSelector.cpp
 //--------------------------------------------------------------------
@@ -24,9 +24,12 @@ namespace LHCb  {
     typedef std::map<unsigned int, Banks> Events;
     Banks  m_banks;
     Events m_events;
+    unsigned m_mask[4];
   public:
     /// Standard constructor
-    MEPContext(const RawDataSelector* pSel) : RawDataSelector::LoopContext(pSel) {}
+    MEPContext(const RawDataSelector* pSel) : RawDataSelector::LoopContext(pSel) {
+      m_mask[0] = m_mask[1] = m_mask[2] = m_mask[3] = ~0x0;
+    }
     /// Standard destructor 
     virtual ~MEPContext()          {                      }
     /// Receive event and update communication structure
@@ -51,6 +54,12 @@ namespace LHCb  {
     }
     virtual const std::vector<RawBank*>& banks()  const { return m_banks;  }
     std::vector<RawBank*>& banks()                      { return m_banks;  }
+    /// Accessor: event size
+    const unsigned int  size() const        { return 0;         }
+    /// Accessor: event type identifier
+    const unsigned char eventType() const   { return 1;         }
+    /// Accessor: trigger mask
+    const unsigned int* triggerMask() const { return m_mask;    }
   };
 
   /** @class MEPSelector
