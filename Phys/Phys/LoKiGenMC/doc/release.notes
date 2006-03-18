@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.4 2006-03-18 18:26:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.5 2006-03-18 19:15:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -20,7 +20,7 @@
   2006-03-18 - Vanya BELYAEV
   
   New functionality:
-  According to PEM, there shoudl be some "tool" which allows basically
+  According to PEM, there should be some "tool" which allows basically
   the navigation from MC-vertex to GenCollision. 
   Now this tool is implemented.
   Implementation has 2 layers

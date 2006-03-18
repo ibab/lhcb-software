@@ -1,8 +1,11 @@
-// $Id: MC2Collision.cpp,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: MC2Collision.cpp,v 1.2 2006-03-18 19:15:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -135,76 +138,98 @@ MC2Collision::collision
   return collision ( hit->mcParticle() , table ) ;
 } ;
 // ============================================================================
-
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCVertex>::operator() 
-  ( const LHCb::MCVertex* vertex ) const 
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCVertex* vertex ) 
 {
-  if ( 0 == vertex   ) { return false ; }                      // RETURN  
-  if ( 0 == m_table  )
+  if ( 0 == vertex ) { return 0 ; }
+  return vertex->primaryVertex() ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCParticle* particle  ) 
+{
+  if ( 0 == particle ) { return 0 ; }
+  return particle->primaryVertex() ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCHit* hit ) 
+{
+  if ( 0 == hit ) { return 0 ; }
+  return primaryVertex ( hit->mcParticle() ) ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCRichHit* hit ) 
+{
+  if ( 0 == hit ) { return 0 ; }
+  return primaryVertex ( hit->mcParticle() ) ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCCaloHit* hit ) 
+{
+  if ( 0 == hit ) { return 0 ; }
+  return primaryVertex ( hit->particle() ) ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCOTDeposit* hit ) 
+{
+  if ( 0 == hit ) { return 0 ; }
+  return primaryVertex ( hit->mcHit() ) ;
+} ;
+// ============================================================================
+const LHCb::MCVertex* 
+MC2Collision::primaryVertex 
+( const LHCb::MCSTDeposit* hit ) 
+{
+  if ( 0 == hit ) { return 0 ; }
+  return primaryVertex ( hit->mcHit() ) ;
+} ;
+// ============================================================================
+/** @fn fromCollision
+ *  Helper function which checs, is the given (primary) vertex 
+ *  has as an origin the given collision
+ *  @param vertex the vertex 
+ *  @param collision the collision
+ *  @param table the information source
+ *  @return true if the vertex comes from the collision
+ */
+// ============================================================================
+bool MC2Collision::fromCollision 
+( const LHCb::MCVertex*            vertex    , 
+  const LHCb::GenCollision*        collision , 
+  const LHCb::MCVertex2Collision*  table     ) 
+{
+  if ( 0 == vertex ) { return false ; }                               // RETURN 
+  if ( 0 == table  ) 
   {
     LoKi::Report::Error
-      ( "MC2Collision::FromCollision: Table* points to NULL!");
-    return false ;                                                 // RETURN 
+      ("MC2Collision::fromCollision: Table* points to NULL"); 
+    return false ;                                                    // RETURN   
   }
-  if ( 0 == m_collision ) 
+  if ( 0 == collision )
   {
     LoKi::Report::Warning
-      ( "MC2Collision::FromCollision: LHCb::GenCollision* points to NULL!");
+      ("MC2Collision::fromCollision: LHCb::GenCollision* points to NULL"); 
   }
-
   typedef LHCb::MCVertex2Collision::Range Range ;
-  Range r = m_table->relations ( vertex ) ;
+  Range r = table->relations ( vertex ) ;
   for ( Range::iterator ir = r.begin() ; r.end() != ir ; ++ir ) 
   {
-    if ( m_collision == ir->to() ) { return true ; }                // RETURN 
+    if ( collision == ir->to() ) { return true ; }                    // RETURN
   }
-  //
-  return false ;
+  return false ;                                                      // RETURN 
 };
 // ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCParticle>::operator() 
-  ( const LHCb::MCParticle* particle ) const 
-{
-  if ( 0 == particle ) { return false ; }
-  return m_evaluator ( particle->primaryVertex() ) ;
-} ;
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCHit>::operator() 
-  ( const LHCb::MCHit* hit ) const 
-{
-  if ( 0 == hit ) { return false ; }
-  return m_evaluator ( hit->mcParticle() ) ;
-} ;
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCRichHit>::operator() 
-  ( const LHCb::MCRichHit* hit ) const 
-{
-  if ( 0 == hit ) { return false ; }
-  return m_evaluator ( hit->mcParticle() ) ;
-} ;
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCCaloHit>::operator() 
-  ( const LHCb::MCCaloHit* hit ) const 
-{
-  if ( 0 == hit ) { return false ; }
-  return m_evaluator ( hit->particle() ) ;
-} ;
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCOTDeposit>::operator() 
-  ( const LHCb::MCOTDeposit* hit ) const 
-{
-  if ( 0 == hit ) { return false ; }
-  return m_evaluator ( hit->mcHit() ) ;
-} ;
-// ============================================================================
-bool MC2Collision::FromCollision<LHCb::MCSTDeposit>::operator() 
-  ( const LHCb::MCSTDeposit* hit ) const 
-{
-  if ( 0 == hit ) { return false ; }
-  return m_evaluator ( hit->mcHit() ) ;
-} ;
-// ============================================================================
+
 
 // ============================================================================
 // The END 

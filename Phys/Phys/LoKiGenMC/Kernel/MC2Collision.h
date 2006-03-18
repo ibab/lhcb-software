@@ -1,8 +1,11 @@
-// $Id: MC2Collision.h,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: MC2Collision.h,v 1.2 2006-03-18 19:15:10 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 #ifndef KERNEL_MC2COLLISION_H 
 #define KERNEL_MC2COLLISION_H 1
@@ -325,23 +328,103 @@ namespace MC2Collision
   collision 
   ( const LHCb::MCRichHit*          hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given vertex
+   *  
+   *  @param vertex vertex
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCVertex* vertex ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given particle 
+   *  
+   *  @param particle particle
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCParticle* hit ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given hit 
+   *  
+   *  @param hit hit 
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCHit* hit ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given hit 
+   *  
+   *  @param hit hit 
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCCaloHit* hit ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given hit 
+   *  
+   *  @param hit hit 
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCRichHit* hit ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given hit 
+   *  
+   *  @param hit hit 
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCOTDeposit* hit ) ;
+  /** @fn primaryVertex
+   *  Simple function wich returns the primary vertex for the given hit 
+   *  
+   *  @param hit hit 
+   *  @return the primary vertex 
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  const LHCb::MCVertex* 
+  primaryVertex ( const LHCb::MCSTDeposit* hit ) ;
+  
+  /** @fn fromCollision
+   *  Helper function which checs, is the given (primary) vertex 
+   *  has as an origin the given collision
+   *  @param vertex the vertex 
+   *  @param collision the collision
+   *  @param table the information source
+   *  @return true if the vertex comes from the collision
+   */
+  bool fromCollision 
+  ( const LHCb::MCVertex*            vertex    , 
+    const LHCb::GenCollision*        collision , 
+    const LHCb::MCVertex2Collision*  table     ) ;
+  
   /** @class FromCollision
    *
    *  Helper class(functor) to find check if the MC-objects 
    *  originates form a given GenCollision
    *  
-   *  the class itsel is 100% fiction; 
-   *  only the template specializations have are defined
-   *  Currently there are specializations for 
-   *    - LHCb::MCVertex
-   *    - LHCb::MCParticle
-   *    - LHCb::MCHit
-   *    - LHCb::MCRichHit
-   *    - LHCb::MCCaloHit
-   *    - LHCb::MCOTDeposit
-   *    - LHCb::MCSTDeposit
-   * 
    *  @code
    *
    *  // get the relation table  
@@ -381,12 +464,9 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
-  template <class TYPE>
-  class FromCollision ;
-  // template specialzation for class LHCb::MCVertex
-  template <>
-  class FromCollision<LHCb::MCVertex>
-    : public std::unary_function<const LHCb::MCVertex*,bool>
+  template <class TYPE> 
+  class FromCollision
+    : public std::unary_function<const TYPE*,bool>
   {
   public:
     /// constructor from the collision and the information provider 
@@ -397,133 +477,15 @@ namespace MC2Collision
       , m_table ( table )
     {};
     /// the only one essential method 
-    bool operator () ( const LHCb::MCVertex* vertex ) const ;
+    bool operator () ( const TYPE* object ) const 
+    { return fromCollision
+        ( primaryVertex ( object ) , m_collision , m_table ) ; }
   private:
     // the default constructor is disabled
     FromCollision();
   private:
     const LHCb::GenCollision*       m_collision ;
     const LHCb::MCVertex2Collision* m_table     ;
-  } ;
-  // template specialzation for class LHCb::MCParticle
-  template <>
-  class FromCollision<LHCb::MCParticle>
-    : public std::unary_function<const LHCb::MCParticle*,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCParticle* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCVertex> m_evaluator ;
-  } ;
-  // template specialzation for class LHCb::MCHit  
-  template <>
-  class FromCollision<LHCb::MCHit>
-    : public std::unary_function<const LHCb::MCHit*,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCHit* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCParticle> m_evaluator ;
-  } ;
-  // template specialzation for class LHCb::MCRichHit
-  template <>
-  class FromCollision<LHCb::MCRichHit>
-    : public std::unary_function<const LHCb::MCRichHit*,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCRichHit* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCParticle> m_evaluator ;
-  } ;
-  // template specialzation for class LHCb::MCCaloHit
-  template <>
-  class FromCollision<LHCb::MCCaloHit>
-    : public std::unary_function<const LHCb::MCCaloHit*,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCCaloHit* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCParticle> m_evaluator ;
-  } ;
-  // template specialzation for class LHCb::MCOTDeposit
-  template <>
-  class FromCollision<LHCb::MCOTDeposit>
-    : public std::unary_function<const LHCb::MCOTDeposit,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCOTDeposit* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCHit> m_evaluator ;
-  } ;
-  // template specialzation for class LHCb::MCSTDeposit
-  template <>
-  class FromCollision<LHCb::MCSTDeposit>
-    : public std::unary_function<const LHCb::MCSTDeposit,bool>
-  {
-  public:
-    /// constructor from the collision and the information provider 
-    FromCollision
-    ( const LHCb::GenCollision*       collision , 
-      const LHCb::MCVertex2Collision* table     ) 
-      : m_evaluator ( collision , table ) 
-    {} ;
-    /// the only one essential method 
-    bool operator () ( const LHCb::MCSTDeposit* particle ) const ;
-  private:
-    // the default constructor is disabled
-    FromCollision();
-  private:
-    FromCollision<LHCb::MCHit> m_evaluator ;
   } ;
 
 } ; // end of namespace MC2Collision
