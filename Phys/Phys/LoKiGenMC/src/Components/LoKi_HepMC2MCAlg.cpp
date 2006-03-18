@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.4 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.5 2006-03-18 12:38:15 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/02/18 18:15:44  ibelyaev
+//  fix a typo
+//
 // Revision 1.3  2006/02/09 17:52:35  ibelyaev
 //  regular update: add *.opts configuration files
 //
@@ -111,7 +114,7 @@ namespace Relations
 // ============================================================================
 /** @class LoKi_HepMC2MCAlg
  *
- *  helper algorthm to build HepMC  <---> MCParrticle/MCVertex relations 
+ *  helper algorthm to build HepMC  <---> MCParticle/MCVertex relations 
  *  
  *  It associates the HepMC::GenParticle p1 to LHCb::MCPArticle p2 
  *  according to the folowing rule. For all MC particles of the same 

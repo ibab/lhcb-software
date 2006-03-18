@@ -1,18 +1,22 @@
-// $Id: HepMC2MC.h,v 1.3 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: HepMC2MC.h,v 1.4 2006-03-18 12:38:15 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 17:52:34  ibelyaev
-//  regular update: add *.opts configuration files
-//
 // ============================================================================
 #ifndef MCTOOLS_HEPMC2MC_H 
 #define MCTOOLS_HEPMC2MC_H 1
 // ============================================================================
+// Include files
+// ============================================================================
+// GeneEvent
+// ============================================================================
+#include "Event/HepMCevent.h"
+// ============================================================================
 // forward declarations
 // ============================================================================
 // HepMC 
+// ============================================================================
 // ============================================================================
 namespace HepMC { class GenParticle ; }
 // ============================================================================
@@ -49,7 +53,12 @@ namespace LHCb { class MCParticle  ; }
 
 namespace LHCb
 {
-  namespace Relations 
+  /** @namespace LHCb::Relations_
+   *  definition fo low-level classes used for relations
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-03-16
+   */
+  namespace Relations_ 
   {
     /// the actual type for HepMC  -->    MC relations 
     typedef IRelation<HepMC::GenParticle*,LHCb::MCParticle>    HepMC2MC   ;
@@ -60,11 +69,11 @@ namespace LHCb
   };
   
   /// the actual type for HepMC  -->    MC relations 
-  typedef LHCb::Relations::HepMC2MC HepMC2MC   ;
+  typedef LHCb::Relations_::HepMC2MC HepMC2MC   ;
   /// the actual type for    MC  --> HepMC relations 
-  typedef LHCb::Relations::MC2HepMC     MC2HepMC   ;
+  typedef LHCb::Relations_::MC2HepMC     MC2HepMC   ;
   /// the actual type for HepMC <-->    MC relations 
-  typedef LHCb::Relations::HepMC2MC2D   HepMC2MC2D ;
+  typedef LHCb::Relations_::HepMC2MC2D   HepMC2MC2D ;
   
   // ==========================================================================
   /** @namespace HepMC2MCLocation
@@ -84,7 +93,8 @@ namespace LHCb
      *  @date 2005-07-14 
      */
     // ========================================================================
-    const std::string Default = "Gen/HepMC2MC" ;
+    const std::string Default = 
+    "Relations/" + LHCb::HepMCEventLocation::Default ;
     // ========================================================================
   };
   // ==========================================================================
