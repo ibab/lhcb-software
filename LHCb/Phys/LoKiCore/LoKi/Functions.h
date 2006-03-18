@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.6 2006-03-08 14:14:06 ibelyaev Exp $
+// $Id: Functions.h,v 1.7 2006-03-18 12:39:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/08 14:14:06  ibelyaev
+//  add class EqualToValue
+//
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -1657,7 +1660,7 @@ namespace LoKi
   public:
     /// constructor form the value 
     TheSame 
-    ( const argument value ) 
+    ( argument value ) 
       : LoKi::Predicate<TYPE>() 
       , m_value ( value ) 
     {}
@@ -1682,7 +1685,7 @@ namespace LoKi
     TheSame();
   private:
     // the predefined value 
-    const typename LoKi::Predicate<TYPE>::argument m_value ;
+    const typename LoKi::Predicate<TYPE>::argument_type m_value ;
   };
   
   /** @class EqualToValue 
