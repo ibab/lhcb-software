@@ -1,8 +1,11 @@
-// $Id: PhysCnv.cpp,v 1.2 2006-03-16 14:43:55 ibelyaev Exp $
+// $Id: PhysCnv.cpp,v 1.3 2006-03-18 12:40:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/16 14:43:55  ibelyaev
+//  tiny fix
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,7 +94,7 @@ LoKi::Cnv::convert
  *  @date 2006-02-16 
  */
 // ============================================================================
-LHCb::Vertex::Vector 
+LHCb::Particle::Vector 
 LoKi::Cnv::convert 
 ( const LoKi::Types::Range& vct ) 
 {

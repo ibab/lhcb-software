@@ -1,8 +1,11 @@
-// $Id: PhysAlgs.h,v 1.1 2006-02-22 20:53:47 ibelyaev Exp $
+// $Id: PhysAlgs.h,v 1.2 2006-03-18 12:40:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/22 20:53:47  ibelyaev
+//  add a lot of new functions (without fillStream)
+// 
 // ============================================================================
 #ifndef LOKI_PHYSALGS_H 
 #define LOKI_PHYSALGS_H 1
@@ -96,7 +99,7 @@ namespace LoKi
      *  @date   2006-02-20
      */
     template <class PREDICATE>
-    inline size_t found  
+    inline bool  found  
     ( const LHCb::Particle* p   , 
       const PREDICATE&      cut ) 
     {
