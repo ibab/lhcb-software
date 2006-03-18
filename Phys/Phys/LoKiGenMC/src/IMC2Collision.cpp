@@ -1,22 +1,24 @@
-// $Id: IHepMC2MC.cpp,v 1.3 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: IMC2Collision.cpp,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
-// Include files
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
 // ============================================================================
-// Kernel?
+// Kernel ?
 // ============================================================================
-#include "Kernel/IHepMC2MC.h"
+#include "Kernel/IMC2Collision.h"
 // ============================================================================
 
 // ============================================================================
 /** @file
  *
- *  Implementation file for class IHepMC2MC
+ *  Implementation file for class IMC2Collision
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -31,7 +33,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-23 
+ *  @date 2006-03-18 
  */
 // ============================================================================
 
@@ -39,14 +41,14 @@
 namespace 
 {
   // ==========================================================================
-  /** @var IID_IHepMC2MC
-   *  unique static identifier of IHepMC2MC interface 
-   *  @see IHepMC2MC
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-12
+  /** @var IID_IMC2Collision
+   *  unique static identifier of IMC2Collisioninterface 
+   *  @see IMC2Collision
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-03-18
    */
   // ==========================================================================
-  const InterfaceID IID_IHepMC2MC ( "IHepMC2MC" , 1 , 0 ) ;
+  const InterfaceID IID_IMC2Collision ( "IMC2Collision" , 1 , 0 ) ;
   // ==========================================================================
 };
 // ============================================================================
@@ -54,15 +56,18 @@ namespace
 // ============================================================================
 /// Return the unique interface identifier
 // ============================================================================
-const InterfaceID& IHepMC2MC::interfaceID() { return IID_IHepMC2MC ; } ;
+const InterfaceID& IMC2Collision::interfaceID() { return IID_IMC2Collision ; } ;
 // ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-IHepMC2MC::~IHepMC2MC() {}; 
+IMC2Collision::~IMC2Collision() {}; 
 // ============================================================================
+
+
 
 // ============================================================================
 // The END 
 // ============================================================================
+

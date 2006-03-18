@@ -1,8 +1,11 @@
-// $Id: IHepMC2MC.h,v 1.2 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: IHepMC2MC.h,v 1.3 2006-03-18 18:26:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:15:44  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/26 17:35:18  ibelyaev
 // New import: Generator/MC related part of LoKi project 
 //
@@ -15,6 +18,8 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IAlgTool.h"
+// ============================================================================
+// Kernel ?
 // ============================================================================
 #include "Kernel/HepMC2MC.h"
 // ============================================================================
@@ -35,7 +40,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-01-23 
  */
 // ============================================================================
 
@@ -50,7 +55,8 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
  *  @date   2005-05-12
    */
-class IHepMC2MC : virtual public IAlgTool 
+class IHepMC2MC 
+  : virtual public IAlgTool 
 {
 public:
   
@@ -114,8 +120,8 @@ public:
   /// Return the unique interface identifier 
   static const InterfaceID& interfaceID() ;
 protected:
-  /// virtual nd protected destructor 
-  virtual ~IHepMC2MC() ;
+  // virtual and protected destructor 
+  virtual ~IHepMC2MC() ; ///< virtual and protected destructor 
 } ;
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: HepMC2MC.h,v 1.4 2006-03-18 12:38:15 ibelyaev Exp $
+// $Id: HepMC2MC.h,v 1.5 2006-03-18 18:26:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/18 12:38:15  ibelyaev
+//  minor fix for Win32 + change in the table name/location
+//
 // ============================================================================
 #ifndef MCTOOLS_HEPMC2MC_H 
 #define MCTOOLS_HEPMC2MC_H 1
@@ -16,7 +19,6 @@
 // forward declarations
 // ============================================================================
 // HepMC 
-// ============================================================================
 // ============================================================================
 namespace HepMC { class GenParticle ; }
 // ============================================================================
@@ -46,7 +48,7 @@ namespace LHCb { class MCParticle  ; }
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-01-23 
  */
 // ============================================================================
 

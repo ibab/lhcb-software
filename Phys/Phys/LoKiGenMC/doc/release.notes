@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.3 2006-03-18 12:38:15 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2006-03-18 18:26:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,7 +17,69 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-! 2006-03-18 - Vanya BELYAEV
+  2006-03-18 - Vanya BELYAEV
+  
+  New functionality:
+  According to PEM, there shoudl be some "tool" which allows basically
+  the navigation from MC-vertex to GenCollision. 
+  Now this tool is implemented.
+  Implementation has 2 layers
+
+   I) Low-level: 
+     The relation table between *PRIMARY* MC-vertices and GenCollison
+     objects of the the type IRelation<LHCb::MCVertex,LHCb::GenCollision>
+     is created (typedef'ed to LHCb::MCVertex2Collision ).
+     The table location in TES is LHCb::MC2CollisionLocation::Default 
+     Table is created by the algorithm LoKi_MC2CollisionAlg
+     Data-On-Demand service is configured properly to invoke 
+     the algorithm "on-demand"
+     One also could use the "tool" with interface IMC2Collision
+     to access the table in TES.
+
+  II) High-level:
+
+     a) The uniform set of functions is provided to get the collision 
+     practically for all MC-classes:
+ 
+     const LHCb::GenCollision* collision 
+                    ( const TYPE*                     object , 
+                      const LHCb::MCVertex2Collision* table  ) ;
+
+     The functions are implemented for classes: 
+        - LHCb::MCVertex 
+        - LHCb::MCParticle 
+        - LHCb::MCHit 
+        - LHCb::MCRichHit
+        - LHCb::MCCaloHit
+        - LHCb::MCOTDeposit
+        - LHCb::MCSTDeposit
+
+     b) The templated functor FromCollision<TYPE>, 
+        which allows to extract the MC-objects, related
+         to the given pp-Collision, e.g. 
+            
+           // count MC-hits from the given collision:
+
+           const LHCb::MCHits* hits = get<LHCb::MCHits>( ... ) ;    
+           const size_t nHits = 
+           std::count_if ( hits->begin()                           , 
+                      hits->end()                             ,
+                      FromCollision<LHCb::MCHit>( c , table ) ) ;
+    
+           // get all MC-particles form the given collison    
+           const LHCb::MCParticles* mcps = get<LHCb::MCParticles>( ... ) ;
+           // prepare the output container
+           LHCb::Particle::ConstVector result ;
+           // put all particles from the given collisinig into the output container:
+           LoKi::Algs::copy_if ( mcps->begin() , 
+                                 mcps->end  () , 
+                                 FromCollision<LHCb::MCParticle>( c , table ) ) ;
+      
+   
+         again the functor is defined for the types, listed above
+    
+     
+  2006-03-18 - Vanya BELYAEV
 
  - Kernel/HepMC2MC.h
     a) minor fix for Win32 platform
@@ -207,6 +269,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.3  2006/03/18 12:38:15  ibelyaev
+!  minor fix for Win32 + change in the table name/location
+!
 ! Revision 1.2  2006/02/09 17:52:34  ibelyaev
 !  regular update: add *.opts configuration files
 !

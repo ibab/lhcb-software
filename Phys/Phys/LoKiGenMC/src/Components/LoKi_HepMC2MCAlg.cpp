@@ -1,14 +1,8 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.5 2006-03-18 12:38:15 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.6 2006-03-18 18:26:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.3  2006/02/09 17:52:35  ibelyaev
-//  regular update: add *.opts configuration files
-//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -21,6 +15,10 @@
 // ============================================================================
 #include "Event/MCParticle.h" 
 #include "Event/HepMCEvent.h" 
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -56,7 +54,7 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2001-01-23 
+ *  @date 2006-01-23 
  */
 // ============================================================================
 
@@ -117,7 +115,7 @@ namespace Relations
  *  helper algorthm to build HepMC  <---> MCParticle/MCVertex relations 
  *  
  *  It associates the HepMC::GenParticle p1 to LHCb::MCPArticle p2 
- *  according to the folowing rule. For all MC particles of the same 
+ *  according to the folowing rule: For all MC particles of the same 
  *  type, it finds the particle "nearest" in euclidian distance in 4-momenta.
  *  For the nearest particle 
  * 
@@ -134,7 +132,8 @@ namespace Relations
  *  @date 2005-07-13
  */
 // ============================================================================
-class LoKi_HepMC2MCAlg : public GaudiAlgorithm 
+class LoKi_HepMC2MCAlg
+  : public GaudiAlgorithm 
 {
   friend class AlgFactory<LoKi_HepMC2MCAlg>;
 public:
@@ -188,28 +187,7 @@ private:
 
 
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  concrete local instance of algorithm factory to create 
-   *  the algorithm of type LoKi_HepMC2MCAlg 
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-07-13
-   */
-  // ==========================================================================
-  const  AlgFactory<LoKi_HepMC2MCAlg>          s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var LoKi_HepMC2MCAlgFactory ;
- *  abstract algorithm factory to create 
- *  the algorithm of type LoKi_HepMC2MCAlg 
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-07-13
- */
-// ============================================================================
-const   IAlgFactory&LoKi_HepMC2MCAlgFactory =  s_Factory ; 
+DECLARE_ALGORITHM_FACTORY(LoKi_HepMC2MCAlg);
 // ============================================================================
 
 namespace 

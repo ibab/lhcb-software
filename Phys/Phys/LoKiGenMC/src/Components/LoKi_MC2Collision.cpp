@@ -1,16 +1,10 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.4 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: LoKi_MC2Collision.cpp,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/09 17:52:35  ibelyaev
-//  regular update: add *.opts configuration files
-//
 // ============================================================================
-// Include files
+// Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -24,28 +18,23 @@
 // ============================================================================
 // Relations 
 // ============================================================================
-#include "Relations/IRelation2D.h"
+#include "Relations/IRelation.h"
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/MCParticle.h"
-#include "Event/HepMCEvent.h"
+#include "Event/MCVertex.h"
+#include "Event/GenCollision.h"
 // ============================================================================
-// LoKi 
+// Kernel ?  
 // ============================================================================
-#include "LoKi/select.h"
-#include "LoKi/MCParticleCuts.h"
-#include "LoKi/MCVertexCuts.h"
-#include "LoKi/GenParticleCuts.h"
-// ============================================================================
-// MCTools 
-// ============================================================================
-#include "Kernel/IHepMC2MC.h"
-#include "Kernel/HepMC2MC.h"
+#include "Kernel/IMC2Collision.h"
+#include "Kernel/MC2Collision.h"
 // ============================================================================
 
 // ============================================================================
 /** @file
+ *
+ *  Implementation file for class : LoKi_MC2Collision
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -60,104 +49,60 @@
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-23 
+ *  @date 2006-03-18 
  */
 // ============================================================================
 
 // ============================================================================
-/** @class LoKi_HepMC2MC
- *  The most simplest implementation of IHepMC2MC interface
+/** @class LoKi_MC2Collision
+ *  The most simplest implementation of IMC2Collision interface
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
 // ============================================================================
-class LoKi_HepMC2MC : 
-  public virtual IHepMC2MC         ,
+class LoKi_MC2Collision : 
+  public virtual IMC2Collision     ,
   public virtual IIncidentListener ,
   public         GaudiTool  
 {
   // friend factory for instantiation
-  friend class ToolFactory<LoKi_HepMC2MC> ;
+  friend class ToolFactory<LoKi_MC2Collision> ;
   //
 public:
-
-  /** return a relation table for HepMC::GenParticle -> LHCb::MCParticle 
-   *  relations 
-   *  
+  /** get the relation table for LHCb::MCVertex -> LHCb::GenCollision 
+   * 
    *  @code 
-   *  typedef IHepMC2MC::HepMC2MC Table ;
-   *  typedef Table::Range        Range ;
+   *
+   *  // get tht tool 
+   *  const IMC2Collision* t = tool<IMC2Collision>( .... ) ;
    * 
-   *  // tool itself 
-   *  const LoKi::IHepMC2MC*  imc = ... ;
-   *  // get the relation table 
-   *  const Table* table = imc->hepMC2MC() ;
-   *  if ( 0 == table ) { ... } ; // error here!!
-   * 
-   *  // 
-   *  const HepMC::GenParticle* hepMC = ... ;
-   *  // get MC particles associated with given HepMC::GenParticle
-   *  Range links = table->relations( hepMC ) ; 
+   *  // get the reation table form the tool 
+   *  const LHCb::MCVertex2Collision* table = t->vertex2collision() ;
    *
    *  @endcode 
-   * 
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-12 
-   */  
-  virtual const HepMC2MC* hepMC2MC () const 
+   *
+   *  @see MC2Collision
+   *  @see LHCb::MCVertex2Collision
+   *  @see LHCb::MCVertex 
+   *  @see LHCb::GenCollision
+   *  @see IMC2Collision
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2006-03-18
+   */
+  virtual const MCVertex2Collision* vertex2collision() const 
   {
     //
-    if ( 0 != m_table ) { return m_table->direct() ; }
+    if ( 0 != m_table ) { return m_table ; }
     m_table = get<Table>( m_location ) ;
     if ( 0 == m_table ) 
     {
       Error ( "Could not load input data from '" + m_location + "'" ) ;
-      return 0 ;
     }
-    return m_table->direct() ;
-    //
+    return m_table ;
   } ;
-  
-  /** return a relation table for LHCb::MCParticle -> HepMC::GenParticle 
-   *  relations 
-   *  
-   *  @code 
-   *  typedef IHepMC2MC::MC2HepMC Table ;
-   *  typedef Table::Range        Range ;
-   * 
-   *  // tool itself 
-   *  const LoKi::IHepMC2MC*  imc = ... ;
-   *  // get the relation table 
-   *  const Table* table = imc->mc2HepMC() ;
-   *  if ( 0 == table ) { ... } ; // error here!!
-   * 
-   *  // 
-   *  const LHCb::MCParticle* mc = ... ;
-   *  // get HepMC particles associated with given MCParticle
-   *  Range links = table->relations( mc ) ; 
-   *
-   *  @endcode 
-   * 
-   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
-   *  @date 2005-05-12 
-   */  
-  virtual const MC2HepMC* mc2HepMC () const 
-  {
-    //
-    if ( 0 != m_table ) { return m_table->inverse() ; }
-    m_table = get<Table>( m_location ) ;
-    if ( 0 == m_table ) 
-    {
-      Error ( "Could not load input data from '" + m_location + "'" ) ;
-      return 0 ;
-    }
-    return m_table->inverse() ;
-    //
-  };
-  //
 public:
-  
   /// standard initialization of the tool 
   virtual StatusCode initialize () 
   {
@@ -172,7 +117,6 @@ public:
   };
   /// handle new incident 
   virtual void handle ( const Incident& ) { m_table = 0 ; }
-  
 protected:
   
   /** standart constructor 
@@ -180,49 +124,48 @@ protected:
    *  @param name tool name 
    *  @param parent parent object
    */
-  LoKi_HepMC2MC 
+  LoKi_MC2Collision 
   ( const std::string& type   , 
     const std::string& name   , 
     const IInterface*  parent )
     : GaudiTool ( type, name , parent )
     ///
-    , m_table    ( 0                               ) 
-    , m_location ( LHCb::HepMC2MCLocation::Default ) 
+    , m_table    ( 0                                   ) 
+    , m_location ( LHCb::MC2CollisionLocation::Default ) 
     ///
   {
     declareInterface<IIncidentListener> ( this ) ; 
-    declareInterface<IHepMC2MC>         ( this ) ; 
+    declareInterface<IMC2Collision>     ( this ) ; 
     // 
     declareProperty  ( "Location"    , m_location  ) ;
-  };
+  };           
   /// destructor (virual and protected)
-  virtual ~LoKi_HepMC2MC () {} ;
+  virtual ~LoKi_MC2Collision () {} ;
 private:
   // default constructor  is disabled 
-  LoKi_HepMC2MC ()  ;
+  LoKi_MC2Collision ()  ;
   // copy constructor     is disabled 
-  LoKi_HepMC2MC 
-  ( const LoKi_HepMC2MC& ) ;
+  LoKi_MC2Collision 
+  ( const LoKi_MC2Collision& ) ;
   // assignement operator is disabled 
-  LoKi_HepMC2MC& operator=
-  ( const LoKi_HepMC2MC& ) ;
+  LoKi_MC2Collision& operator=
+  ( const LoKi_MC2Collision& ) ;
   //
 private:
   // the actual interface class (not exported) 
-  typedef const IRelation2D<HepMC::GenParticle*,LHCb::MCParticle> Table ;
-  // the relation table itself
-  mutable Table* m_table     ;
-  // 
+  typedef const LHCb::MCVertex2Collision    Table ;
+  mutable Table*                          m_table ;
 private:
   // table location 
   std::string    m_location  ;
-};
+} ;
 // ============================================================================
 
 // ============================================================================
-DECLARE_TOOL_FACTORY( LoKi_HepMC2MC ) ;
+DECLARE_TOOL_FACTORY( LoKi_MC2Collision ) ;
 // ============================================================================
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
+
