@@ -1,8 +1,11 @@
-// $Id: VertexCuts.h,v 1.2 2006-02-18 18:09:14 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.3 2006-03-19 13:03:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.2  2006/02/18 18:09:14  ibelyaev
+//   fix a typo
+//
 //  Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
 //  New package: "Phys"-part of restructurized LoKi project  
 // 
@@ -365,7 +368,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Trivial predicate which evaluates LHCb::Vertex::hasInfo
+    /** @typedef VHASINFO
+     *  Trivial predicate which evaluates LHCb::Vertex::hasInfo
      *  function
      *
      *  It relies on the method LHCb::Vertex::hasInfo
@@ -390,7 +394,8 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** Trivial predicate which evaluates LHCb::Vertex::hasInfo
+    /** @typedef HASVINFO
+     *  Trivial predicate which evaluates LHCb::Vertex::hasInfo
      *  function
      *
      *  It relies on the method LHCb::Vertex::hasInfo
@@ -416,7 +421,8 @@ namespace LoKi
     // ========================================================================
    
     // ========================================================================
-    /** Trivial function which evaluates LHCb::Vertex::info
+    /** @typedef VINFO
+     *  Trivial function which evaluates LHCb::Vertex::info
      *  
      *  It relies on the method LHCb::Vertex::info
      *
@@ -488,8 +494,203 @@ namespace LoKi
     const LoKi::Vertices::NumberOfOutgoing                        NPRONGS ;
     // ========================================================================
 
+    // ========================================================================
+    /** @typedef VVDIST
+     *  Evaluator of the distance between the vertex and another
+     *  vertex or point
+     *
+     *  @code 
+     *  
+     *  const LHCb::Vertex* v = ... ;
+     * 
+     *  // some primary vertex 
+     *  const LHCb::Vertex*  pv  = ... ;
+     *  // some point 
+     *  const LoKi::Point3D& pnt = ... ;   
+     *
+     *  // create the functions 
+     *  VFun d1 = VVDIST ( pv  ) ;
+     *  VFun d2 = VVDIST ( pnt ) ;
+     * 
+     * // use them:
+     *  const double dist1 = d1( v ) ;
+     *  const double dist2 = d2( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Vertices::VertexDistance 
+     *  @see LoKi::Cuts::VVD 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef LoKi::Vertices::VertexDistance                            VVDIST ;
+    // ========================================================================
 
+    // ========================================================================
+    /** @typedef VVD
+     *  Evaluator of the distance between the vertex and another
+     *  vertex or point
+     *
+     *  @code 
+     *  
+     *  const LHCb::Vertex* v = ... ;
+     * 
+     *  // some primary vertex 
+     *  const LHCb::Vertex*  pv  = ... ;
+     *  // some point 
+     *  const LoKi::Point3D& pnt = ... ;   
+     *
+     *  // create the functions 
+     *  VFun d1 = VVD ( pv  ) ;
+     *  VFun d2 = VVD ( pnt ) ;
+     * 
+     * // use them:
+     *  const double dist1 = d1( v ) ;
+     *  const double dist2 = d2( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Cuts::VVDIST 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef VVDIST                                                      VVD ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef VVDSIGN
+     *  Evaluator of the signed distance between the vertex and another
+     *  vertex or point
+     *
+     *  @code 
+     *  
+     *  const LHCb::Vertex* v = ... ;
+     * 
+     *  // some primary vertex 
+     *  const LHCb::Vertex*  pv  = ... ;
+     *  // some point 
+     *  const LoKi::Point3D& pnt = ... ;   
+     *
+     *  // create the functions 
+     *  VFun d1 = VVDSIGN ( pv  ) ;
+     *  VFun d2 = VVDSIGN ( pnt ) ;
+     * 
+     * // use them:
+     *  const double dist1 = d1( v ) ;
+     *  const double dist2 = d2( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Vertices::VertexSignedDistance
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef LoKi::Vertices::VertexSignedDistance                     VVDSIGN ;
+    // ========================================================================
     
+    // ========================================================================
+    /** @typedef VVDCHI2
+     *  evaluator of the distance in chi2 units  
+     *  between vertex and the abother vertex or point
+     *
+     *  @code 
+     *  
+     *  const LHCb::Vertex* v = ... ;
+     * 
+     *  // some primary vertex 
+     *  const LHCb::Vertex*  pv  = ... ;
+     *  // some point 
+     *  const LoKi::Point3D& pnt = ... ;   
+     *
+     *  // create the functions 
+     *  VFun d1 = VVDCHI2 ( pv  ) ;
+     *  VFun d2 = VVDCHI2 ( pnt ) ;
+     * 
+     * // use them:
+     *  const double chi2_1 = d1( v ) ;
+     *  const double chi2_2 = d2( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Vertices::VertexChi2Distance
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef LoKi::Vertices::VertexChi2Distance                       VVDCHI2 ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @typedef MINVVD
+     *  class for evaluation of minimal GEOMETRY distance 
+     *  between the vertex and set of other vertices 
+     *
+     *  @code 
+     *  
+     *  // get all primary vertices  
+     *  const LHCb::PrimVertices* prims = ... ;
+     * 
+     *  const LHCb::Vertex* v = ... ; 
+     *
+     *  // create the function
+     *  VFun dist = MINVVD( prims ) ;
+     *
+     *  // use the function 
+     *  const double distance = dist ( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Vertices::MinVertexDistance
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef LoKi::Vertices::MinVertexDistance                         MINVVD ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef MINVVDCHI2 
+     *  class for evaluation of minimal chi2 distance 
+     *  between the vertex and set of other vertices 
+     *
+     *  @code 
+     *  
+     *  // get all primary vertices  
+     *  const LHCb::PrimVertices* prims = ... ;
+     * 
+     *  const LHCb::Vertex* v = ... ; 
+     *
+     *  // create the function
+     *  VFun dist = MINVVDCHI2 ( prims ) ;
+     *
+     *  // use the function 
+     *  const double chi2 = dist ( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LoKi::Point3D
+     *
+     *  @see LoKi::Vertices::MinVertexChi2Distance
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    typedef LoKi::Vertices::MinVertexChi2Distance                 MINVVDCHI2 ;
+    // ========================================================================
+
   } ; // end of namespace LoKi::Cuts
 }; // end of the namespace LoKi 
 // ============================================================================

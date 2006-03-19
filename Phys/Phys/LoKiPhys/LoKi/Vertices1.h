@@ -1,8 +1,11 @@
-// $Id: Vertices1.h,v 1.3 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.4 2006-03-19 13:03:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/23 21:14:09  ibelyaev
+//   add new fuctors/predicates
+//
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -53,6 +56,8 @@ namespace LoKi
     /** @class VertexDistance
      *  evaluator of the distance
      *  between vertex and the 'vertex'
+     *  @see LoKi::Cuts::VVDIST
+     *  @see LoKi::Cuts::VVD
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
@@ -103,6 +108,7 @@ namespace LoKi
      *  
      *  @see LoKi::Vertices::VertexDistance 
      *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::VVDSIGN
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
@@ -152,6 +158,7 @@ namespace LoKi
     /** @class VertexChi2Distance
      *  evaluator of the distance in chi2 units  
      *  between vertex and the 'vertex'
+     *  @see LoKi::Cuts::VVDCHI2
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
@@ -195,8 +202,8 @@ namespace LoKi
     /** @class MinVertexDistance
      *  class for evaluation of minimal GEOMETRY distance 
      *  between the vertex and other vertices 
-     *
-     *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
+     *  @see LoKi::Cuts::MINVVD
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
     class MinVertexDistance :
@@ -300,7 +307,7 @@ namespace LoKi
     /** @class MinVertexChi2Distance
      *  class for evaluation of minimal chi2 distance 
      *  between the vertex and other vertices 
-     *
+     *  @see LoKi::Cuts::MINVVDCHI2 
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
