@@ -1,8 +1,11 @@
-// $Id: IMC2Collision.cpp,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: IMC2Collision.cpp,v 1.2 2006-03-19 12:13:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,7 +45,7 @@ namespace
 {
   // ==========================================================================
   /** @var IID_IMC2Collision
-   *  unique static identifier of IMC2Collisioninterface 
+   *  unique static identifier of IMC2Collision interface 
    *  @see IMC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-03-18

@@ -1,11 +1,8 @@
-// $Id: MC2Collision.h,v 1.2 2006-03-18 19:15:10 ibelyaev Exp $
+// $Id: MC2Collision.h,v 1.3 2006-03-19 12:13:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/03/18 18:26:43  ibelyaev
-//  add (primary)MCVErtex->GenCollision links
-//
 // ============================================================================
 #ifndef KERNEL_MC2COLLISION_H 
 #define KERNEL_MC2COLLISION_H 1

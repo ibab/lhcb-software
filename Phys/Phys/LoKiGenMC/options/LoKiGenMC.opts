@@ -1,6 +1,6 @@
-// $Id: LoKiGenMC.opts,v 1.2 2006-03-18 18:26:43 ibelyaev Exp $ 
+// $Id: LoKiGenMC.opts,v 1.3 2006-03-19 12:13:09 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -8,7 +8,7 @@
 #include "$LOKIGENMCOPTS/MC2Collision.opts"
 // ============================================================================
 
-/** @file *
+/** @file 
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -28,6 +28,9 @@
 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.6 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.7 2006-03-19 12:13:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -78,7 +81,7 @@ namespace std
   };
   
   /** comparison criteria for LHCb::ParticleID objects 
-   *  nesessary for proper usage as ker for map-like ocntainers 
+   *  nesessary for proper usage as the key for map-like ocntainers 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 200-01-21
    */
@@ -92,7 +95,7 @@ namespace std
 // ============================================================================
 namespace Relations
 {
-  /** partical (empty)_ specialization for 
+  /** partial (empty)_ specialization for 
    *  serialization of HepMC::GenParticle objects..
    *  pure technical trick..
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -126,7 +129,7 @@ namespace Relations
  *
  *  @see LHCb::MCParticle
  *  @see HepMC::GenParticle
- *  @see LHCb::Relations::HepMC2MC
+ *  @see LHCb::HepMC2MC
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
  *  @date 2005-07-13

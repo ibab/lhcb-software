@@ -1,14 +1,8 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.4 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: LoKi_HepMC2MC.cpp,v 1.5 2006-03-19 12:13:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/09 17:52:35  ibelyaev
-//  regular update: add *.opts configuration files
-//
 // ============================================================================
 // Include files
 // ============================================================================
