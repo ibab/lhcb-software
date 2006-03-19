@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2006-03-19 12:12:24 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -9,7 +9,7 @@ package           LoKiPhysMC
 version           v1r0
 	
 # =============== structure ==================================================
-branches          cmt doc src LoKi 
+branches          cmt doc src LoKi Kernel options
 	
 # =============== own includes ===============================================
 include_dirs      $(LOKIPHYSMCROOT)
@@ -18,12 +18,15 @@ include_dirs      $(LOKIPHYSMCROOT)
 use               Relations   v*    Kernel
 use               LoKiMC      v*    Phys 
 use               LoKiPhys    v*    Phys 
+use               LoKiGenMC   v*    Phys 
 
 # =============== constituents ===============================================
-library           LoKiPhysMC    ../src/*.cpp 
+library           LoKiPhysMCLib ../src/*.cpp 
+library           LoKiPhysMC    ../src/Components/*.cpp 
 
 # =============== patterns ===================================================
-apply_pattern     linker_library library=LoKiPhysMC
+apply_pattern     linker_library    library=LoKiPhysMCLib
+apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $

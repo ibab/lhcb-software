@@ -1,11 +1,62 @@
-! $Id: release.notes,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-03-19 12:12:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2006-03-19 - Vanya BELYAEV
+ - the major upgrade 
+   add the code for making the links inbetween the recontructed 
+   primary vertices and (primary) MC-vertices and pp-collisions.
+  
+   The link attribute ("weight") is LHCb::PV2MCWeight, 
+     which is std::pair<size_t,float>.
+   The first component is  a number of true MC-tracks from the 
+   given (primary) vertez, used in the reconstruction of the PrimVertex
+   The second component is chi2-distance inbetween the reconstructed 
+   primary vertex and (primary) MC-vertex/pp-Collision 
+
+   Relation tables and builder algorithsm 
+    
+   Kernel/PV2MC.h 
+     the defintion of basic types & table locations
+     Types: 
+      RC           --> MC 
+     IRelationWeighted<LHCb::PrimVertex,LHCb::MCVertex,LHCb::PV2MCWeght> ,
+      MC           --> RC 
+     IRelationWeighted<LHCb::MCVertex,LHCb::PrimVertexLHCb::PV2MCWeght> ,
+      RC           --> pp-Collision
+     IRelationWeighted<LHCb::PrimVertex,LHCb::GenCollision,LHCb::PV2MCWeght> ,
+      pp-Collision --> RC 
+     IRelationWeighted<LHCb::GenCollision,LHCb::PrimVertexLHCb::PV2MCWeght> 
+
+  Locaions of 2D tables:
+    LHCb::PV2MCLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary 
+    LHCb::PV2CoillisonLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary + "2Collision"
+ 
+  Algorithm:
+   
+   src/Components/LoKi_PV2MCAlg.cpp
+     the algorithm to build the links
+
+  Run-time configuration  (using Data-on-Demand service) 
+
+     options/LoKiPhysMC.opts
+     options/PV2MC.opts
+    
+
+   OPTIONAL: (for those who likes to manipulate with tools)
+
+   Kernel/IPV2MC.h
+   src/Components/LoKi_PV2MC.cpp 
+     definition of the abstract interface to deal with the tables
+     and concrete tool  
+
 
 ! 2006-03-14 - Vanya BELYAEV
  - new import 
