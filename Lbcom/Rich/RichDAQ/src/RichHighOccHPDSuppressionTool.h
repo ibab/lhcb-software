@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.1 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.2 2006-03-19 16:14:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,6 +37,12 @@
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
+
+// Boost
+#include "boost/lexical_cast.hpp"
+
+// DetDesc
+#include "DetDesc/Condition.h"
 
 // namespaces
 using namespace LHCb; ///< LHCb general namespace
@@ -76,6 +82,20 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // private methods
 
+  /// Print out the XML entries for the background conditions
+  void createHPDBackXML() const;
+
+  /// Initialise occupancy map
+  StatusCode initOccMap( );
+
+  /// Initialise occupancy map for given RICH
+  StatusCode initOccMap( const Rich::DetectorType rich );
+
+  /// UMS method for RICH1
+  StatusCode umsUpdateRICH1();
+
+  /// UMS method for RICH2
+  StatusCode umsUpdateRICH2();
 
 private: // private data
 
@@ -98,6 +118,15 @@ private: // private data
 
   /// Memory fraction
   double m_memory;
+
+  /// Flag to turn on/off the printing of the XML conditions
+  bool m_printXML;
+
+  /// Flag to turn on/off reading of data from Conditions
+  bool m_readFromCondDB;
+
+  /// Location of occupancies in DB
+  std::vector<std::string> m_condBDLocs;
 
 };
 
