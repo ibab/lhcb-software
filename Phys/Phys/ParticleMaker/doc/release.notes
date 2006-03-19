@@ -1,7 +1,25 @@
-! $Id: release.notes,v 1.27 2006-03-15 13:47:29 pkoppenb Exp $ 
+! $Id: release.notes,v 1.28 2006-03-19 16:33:09 ibelyaev Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-03-19 - Vanya BELYAEV
+ - tiny decoration around ParticleMakerSeq
+   1) remove *.h file, the body of the tool is moved into *.cpp file
+   2) remove the difference inbetween private an dpublic makers
+      (this piece of code has beed coded well before "::PUBLIC" 
+       directive becomes available in ToolSvc) 
+   3) tiny line reshuffling 
+
+   From now the maker has only one property: Makers:
+
+   MyAlg.PhysDesktop.ParticleMaker = "ParticleMakerSeq/MyMaker" ;
+   MyAlg.PhysDesktop.MyMaker.Makers = 
+    {
+      "SomeParticleMakerType/SomeParticleMakerName" , // private maker  
+      "NoPIDParticleMaker/NoPIDMuons::PUBLIC"       , // public  maker  
+      "PhotonParticleMaker/PhotonMaker::PUBLIC"     , // public  maker 
+    };
 
 ! 2006-01-24 - P. Koppenburg
   First version for DC06.

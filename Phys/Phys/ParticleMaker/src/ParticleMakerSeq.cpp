@@ -1,7 +1,8 @@
-// $Id: ParticleMakerSeq.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
+// $Id: ParticleMakerSeq.cpp,v 1.5 2006-03-19 16:33:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,119 +11,143 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 // ============================================================================
+// from GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiTool.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/IParticleMaker.h"
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-// local
-// ============================================================================
-#include "ParticleMakerSeq.h"
-// ============================================================================
 
+// ============================================================================
 /** @file 
  * 
- *  Implementation file for class : ParticleMakerSeq
+ *  Implementation file for class ParticleMakerSeq
  *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-04-29 
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2006-03-19 
  */
+// ============================================================================
+
+// ============================================================================
+/** @class ParticleMakerSeq ParticleMakerSeq.h
+ *
+ *  Simple particle maker which does delegates all its job to few concrete
+ *  Particle makers 
+ *  
+ *  In principle this maker does nor provide any gain in the code ,
+ *  but it results in a simplicication of job configuration, 
+ *  e.g. if one need to get as an input particles of different "origin":
+ *  charged particles *AND* neutral particles.
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2004-04-29
+ *  @date 2006-03-19 
+ */
+class ParticleMakerSeq : 
+  public         GaudiTool      ,
+  public virtual IParticleMaker 
+{
+  /// friend factory for instantiation
+  friend class ToolFactory<ParticleMakerSeq>;
+public:  
+  /** make the particles
+   *  @see IParticleMaker
+   *  @param particles (output) vector of Particles
+   *  @return status code 
+   */
+  virtual StatusCode makeParticles 
+  ( LHCb::Particle::ConstVector & particles ) ;
+  /// standard initialization of the tool
+  virtual StatusCode initialize () ;
+protected:
+  /** Standard constructor
+   *  @see GaudiTool
+   *  @see AlgTool
+   *  @see ToolFactory
+   *  @see IToolFactory
+   *  @param type tool type (?)
+   *  @param name tool name 
+   *  @param parent tool's parent
+   */
+  ParticleMakerSeq 
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) 
+    : GaudiTool ( type, name , parent )
+    , m_names   (   )
+    , m_makers  (   ) 
+  {
+    declareInterface<IParticleMaker>(this);
+    declareProperty ( "Makers"        , m_names ) ;
+    setProperty     ( "StatPrint"     , "true"  ) ;
+  };
+  /// destructor 
+  virtual ~ParticleMakerSeq (){};
+private:
+  // default constructor is disabled
+  ParticleMakerSeq () ;
+  // copy    constructor is disabled
+  ParticleMakerSeq ( const ParticleMakerSeq& ) ;
+  // assignement operator is disabled
+  ParticleMakerSeq& operator=( const ParticleMakerSeq& ) ;
+private:
+  typedef std::vector<std::string>     Names   ;
+  typedef std::vector<IParticleMaker*> Makers  ;
+  // list of privat eparticle makers 
+  Names   m_names   ;
+  Makers  m_makers  ;
+};
+// ============================================================================
 
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
-static const  ToolFactory<ParticleMakerSeq>         s_Factory ;
-const        IToolFactory&ParticleMakerSeqFactory = s_Factory ; 
-// ============================================================================
-
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-ParticleMakerSeq::ParticleMakerSeq 
-( const std::string& type,
-  const std::string& name,
-  const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-    , m_private (   )  
-    , m_public  (   )
-    , m_makers  (   ) 
-    , m_counter ( 0 ) 
-{
-  declareInterface<IParticleMaker>(this);
-
-  declareProperty( "PrivateMakers" , m_private ) ;
-  declareProperty( "PublicMakers"  , m_public  ) ;
-  
-};
-// ============================================================================
-
-
-// ============================================================================
-/// destructor 
-// ============================================================================
-ParticleMakerSeq::~ParticleMakerSeq() {}; 
+DECLARE_TOOL_FACTORY( ParticleMakerSeq ) ;
 // ============================================================================
 
 // ============================================================================
+/// initialize the tool
 // ============================================================================
 StatusCode ParticleMakerSeq::initialize()
 {
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
-   
+  
   m_makers.clear() ;
-  
-  { // locate private makers 
-    for ( Names::const_iterator i = m_private.begin() ; 
-          m_private.end() != i ; ++i ) 
-    {
-      IParticleMaker* maker = tool<IParticleMaker>( *i , this ) ;
-      if ( 0 == maker ) { return StatusCode::FAILURE ; }
-      m_makers.push_back( maker ) ;
-    }
+  // locate the makers 
+  for ( Names::const_iterator i = m_names.begin() ; 
+        m_names.end() != i ; ++i ) 
+  {
+    IParticleMaker* maker = tool<IParticleMaker>( *i , this ) ;
+    if ( 0 == maker ) { return StatusCode::FAILURE ; }
+    m_makers.push_back( maker ) ;
   }
-  { // locate public makers 
-    for ( Names::const_iterator i = m_public.begin() ; 
-          m_public.end() != i ; ++i ) 
-    {
-      IParticleMaker* maker = tool<IParticleMaker>( *i ) ;
-      if ( 0 == maker ) { return StatusCode::FAILURE ; }
-      m_makers.push_back( maker ) ;
-    }
-  }
-  
   if ( m_makers.empty() ) 
   { Warning ( " Empty list of available ParticleMakers" ) ; }
-  
+  //
   return StatusCode::SUCCESS  ;
-  
 };
 // ============================================================================
 
-// ============================================================================
-// ============================================================================
-StatusCode ParticleMakerSeq::finalize()
-{
-  // clear list of makers 
-  m_makers.clear() ;
-  
-  always()
-    << " Created Particles = " << m_counter 
-    << " (Maker='" << name() <<"'" << endreq ;
-
-  return GaudiTool::finalize () ;
-};
-// ============================================================================
 
 // ============================================================================
+/// the only essential method 
 // ============================================================================
-StatusCode ParticleMakerSeq::makeParticles ( LHCb::Particle::ConstVector& particles )
+StatusCode ParticleMakerSeq::makeParticles 
+( LHCb::Particle::ConstVector& particles )
 {
-  if ( m_makers.empty() ) { return StatusCode::SUCCESS ; }
+  if ( m_makers.empty() ) { return Error ( "No Makers are available!" ) ; }
   
   LHCb::Particle::ConstVector tmp ; 
-  for( Makers::const_iterator imaker = m_makers.begin() ;
-       m_makers.end() != imaker ; ++imaker ) 
+  for ( Makers::const_iterator imaker = m_makers.begin() ;
+        m_makers.end() != imaker ; ++imaker ) 
   {
     IParticleMaker* maker = *imaker ;
     if ( 0 == maker ) { continue ; }
@@ -132,13 +157,15 @@ StatusCode ParticleMakerSeq::makeParticles ( LHCb::Particle::ConstVector& partic
     {
       Error ( " Error from Maker='" 
               + maker->type() + "/" 
-              + maker->name() + "'" , sc ) ;
-      continue ;
+              + maker->name() + "', skip " , sc ) ;
+      continue ;                                               // CONTINUE 
     }
-    m_counter += tmp.size() ;
-    std::copy ( tmp.begin() , tmp.end() , std::back_inserter( particles ) ) ;
+    // use the standard counters form GaudiTool
+    counter("#Particles") += tmp.size() ;
+    // insert 
+    particles.insert( particles.end() , tmp.begin() , tmp.end() ) ;
   }
-  
+  //  
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
