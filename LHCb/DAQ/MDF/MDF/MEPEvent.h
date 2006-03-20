@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.2 2006-03-20 15:17:14 niko Exp $
 //	====================================================================
 //  MBMEvent.h
 //	--------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace LHCb  {
     /// Access to the next bank
     Fragment* next(const Fragment* last) const {
       // MEP size excludes MEP header size; need to advance 2 shorts more !
-      return (Fragment*)(last->start()+last->size());
+      return (Fragment*)(last->start()+last->size()-12);
     }
     /// Object size ithout variable buffer
     static size_t sizeOf()  {  return sizeof(MEPEvent)-4*sizeof(char);     }

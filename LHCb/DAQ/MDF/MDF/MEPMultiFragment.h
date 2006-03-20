@@ -1,4 +1,4 @@
-// $Id: MEPMultiFragment.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Id: MEPMultiFragment.h,v 1.2 2006-03-20 15:17:14 niko Exp $
 //====================================================================
 //	MEPMultiFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.2 2006-03-20 15:17:14 niko Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"
@@ -36,12 +36,14 @@ namespace LHCb  {
   protected:
     /// Bank definition
     typedef LHCb::MEPFragment Fragment;
+    /// placeholder for IP header
+    char m_ipheader[20];
     /// Event ID
     unsigned int   m_evID;
-    /// Packing factor
-    unsigned short m_numEvt;
     /// Fragment size (=size of all banks including header)
     unsigned short m_size;
+    /// Packing factor
+    unsigned short m_numEvt;
     /// Partition identifier
     unsigned int   m_partitionID;
     /// First byte of event data
@@ -50,10 +52,10 @@ namespace LHCb  {
   public:
     /// Default constructor
     MEPMultiFragment()
-      : m_evID(0), m_numEvt(0), m_size(0), m_partitionID(0) {                 }
+      : m_evID(0), m_size(0), m_numEvt(0), m_partitionID(0) {                 }
     /// Initializing constructor
     MEPMultiFragment(unsigned int eid, unsigned short siz, int pID, int packing) 
-      : m_evID(eid), m_numEvt(packing), m_size(siz), m_partitionID(pID) {     }
+      : m_evID(eid), m_size(siz), m_numEvt(packing), m_partitionID(pID) {     }
     /// Default destructor
     ~MEPMultiFragment()                  {                                    }
     /// Access event ID of the fragment
@@ -74,8 +76,8 @@ namespace LHCb  {
     void  setPacking(unsigned short val) {  m_numEvt = val;                   }
     /// Access to first bank in the fragment
     const char*          start()   const {  return m_frags;                   }
-    /// Access to end-iteration over bank
-    const char*          end()     const {  return m_frags+m_size-1;          }
+    /// Access to end-iteration over bank (Note: 12 Bytes mep multifragment header!)
+    const char*          end()     const {  return m_frags+m_size-12-4*sizeof(char);}
     /// Access to first bank in the fragment
     Fragment*            first()   const { return (Fragment*)m_frags;         }
     /// Access to end-iteration over bank
