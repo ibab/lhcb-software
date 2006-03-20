@@ -1,8 +1,11 @@
-// $Id: Particles14.cpp,v 1.1 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles14.cpp,v 1.2 2006-03-20 20:36:17 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +31,7 @@
 #include "LoKi/Child.h"
 // ============================================================================
 
-// ============================================================================
+
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles

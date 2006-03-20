@@ -1,20 +1,15 @@
-// $Id: LoKiPhys.cpp,v 1.3 2006-03-18 12:40:18 ibelyaev Exp $
+// $Id: LoKiPhys.cpp,v 1.4 2006-03-20 20:36:17 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:09:15  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-// New package: "Phys"-part of restructurized LoKi project  
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IFilterCriterion.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================

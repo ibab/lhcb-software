@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.5 2006-03-08 14:14:50 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.6 2006-03-20 20:36:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.5  2006/03/08 14:14:50  ibelyaev
+//   add Particles14.h/.cpp
+//
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -3837,8 +3840,36 @@ namespace LoKi
      */
     const LoKi::Particles::TrackStatus TRSTATUS ;
     // ========================================================================
+
+    // ========================================================================
+    /** @typedef FILTER
+     *  Simple adapter which allows to use the tool IFilterCriterion
+     *  as LoKi functor/cut
+     * 
+     *  @code
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // get the tool 
+     *  const IFilterCriterion* filter = ... ;
+     *
+     *  // construct a predicate 
+     *  Cut cut = FILTER( filter ) ;
+     *
+     *  // use it!
+     *  const bool OK = cut ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see IFilterCriterion
+     *  @see LoKi::Cuts::FILTER
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-20
+     */
+    typedef LoKi::Particles::Filter                FILTER ;
+    // ========================================================================
     
-    
+
   } ; // end of namespace LoKi::Cuts  
 } ; // end of namespace LoKi
 

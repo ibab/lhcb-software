@@ -1,17 +1,15 @@
-// $Id: Particles.cpp,v 1.4 2006-03-18 12:40:18 ibelyaev Exp $
+// $Id: Particles.cpp,v 1.5 2006-03-20 20:36:17 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
-//
 // ============================================================================
 // Include files 
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IFilterCriterion.h"
 // ============================================================================
 // LoKiPhys
 // ============================================================================
