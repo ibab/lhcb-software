@@ -2,9 +2,6 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="L0Event">
-    <namespace desc="L0Calo namespace" name="L0Calo">
-      <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global, SpdMult"/>
-    </namespace>
     <class 
       author = "Olivier Callot" 
       desc   = "This class represents the input from the calorimeter to the L0 trigger" 

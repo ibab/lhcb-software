@@ -1,10 +1,10 @@
-// $Id: L0CaloCandidate.cpp,v 1.2 2006-02-07 09:43:18 ocallot Exp $
+// $Id: L0CaloCandidate.cpp,v 1.3 2006-03-20 18:00:58 odescham Exp $
 // Include files 
 
 #include "Kernel/SystemOfUnits.h"
 
 #include "Event/L0CaloCandidate.h"
-#include "Event/L0Calo.h"
+#include "Event/L0DUBase.h"
 
 //-----------------------------------------------------------------------------
 // Auxilliary Implementation file for L0CaloCandidate Event classes
@@ -18,14 +18,13 @@
 //=========================================================================
 std::string LHCb::L0CaloCandidate::typeName() const {
   switch (m_type) {
-  case LHCb::L0Calo::Electron:  return "electron";
-  case LHCb::L0Calo::Photon:    return "photon  ";
-  case LHCb::L0Calo::Hadron:    return "hadron  ";
-  case LHCb::L0Calo::Hadron2:   return "hadron_2";
-  case LHCb::L0Calo::Pi0Local:  return "Pi0 loc ";
-  case LHCb::L0Calo::Pi0Global: return "Pi0 glob";
-  case LHCb::L0Calo::SumEt:     return "Sum Et  ";
-  case LHCb::L0Calo::SpdMult:   return "Spd Mult";
+  case L0DUBase::Fiber::CaloElectron:  return "electron";
+  case L0DUBase::Fiber::CaloPhoton:    return "photon  ";
+  case L0DUBase::Fiber::CaloHadron:    return "hadron  ";
+  case L0DUBase::Fiber::CaloPi0Local:  return "Pi0 loc ";
+  case L0DUBase::Fiber::CaloPi0Global: return "Pi0 glob";
+  case L0DUBase::Fiber::CaloSumEt:     return "Sum Et  ";
+  case L0DUBase::Fiber::CaloSpdMult:   return "Spd Mult";
   default:                      return "unknown ";
   }
 }
@@ -34,13 +33,13 @@ std::string LHCb::L0CaloCandidate::typeName() const {
 //=========================================================================
 MsgStream& LHCb::L0CaloCandidate::fillStream( MsgStream& msg ) const {
 
-  if ( LHCb::L0Calo::SpdMult == m_type ) {
+  if ( L0DUBase::Fiber::CaloSpdMult == m_type ) {
     msg << "L0CaloCandidate "  <<  typeName() <<  " Multiplicity " << m_etCode;
     return msg;
   }
   msg << "L0CaloCandidate "  <<  typeName() 
       <<  format( " Et %4d GeV %6.2f ID ", m_etCode, m_et/GeV ) ;
-  if ( L0Calo::SumEt != m_type ) {
+  if ( L0DUBase::Fiber::CaloSumEt != m_type ) {
     msg << " ID " << m_ID << format( "%7.1f %7.1f %7.1f Error(cm) %5.2f",
                                      m_position.x()/centimeter,
                                      m_position.y()/centimeter,
