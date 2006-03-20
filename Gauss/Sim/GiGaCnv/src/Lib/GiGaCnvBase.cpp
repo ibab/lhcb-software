@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.14 2006-03-20 12:51:49 gcorti Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.15 2006-03-20 12:53:28 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/03/20 12:51:49  gcorti
+// fix of units when passing isotopes
+//
 // Revision 1.13  2004/03/20 20:16:13  ibelyaev
 //  fix for MCVertex type
 //
@@ -276,7 +279,6 @@ StatusCode GiGaCnvBase::initialize ()
     StatusCode sc = 
       serviceLocator() ->
       service( m_NameOfGiGaConversionService , m_GiGaCnvSvc , true ) ;
-    Print("Name of IGiGaCnvSvc= "+m_NameOfGiGaConversionService);
     if ( st.isFailure() ) 
       { return Error("Initialize::unable to locate IGiGaCnvSvs=" + 
                      m_NameOfGiGaConversionService, sc );} 
