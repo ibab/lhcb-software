@@ -1,8 +1,11 @@
-// $Id: GiGaIsotopeCnv.cpp,v 1.6 2002-12-07 14:36:26 ibelyaev Exp $ 
+// $Id: GiGaIsotopeCnv.cpp,v 1.7 2006-03-20 12:51:06 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.5  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -135,22 +138,22 @@ StatusCode GiGaIsotopeCnv::updateRep
     { return StatusCode::SUCCESS; }
   /// Here we should create the Isotop
   G4Isotope* NewIsotope = 0 ;
-  NewIsotope = new G4Isotope( isotope->registry()->identifier ()          ,
-                              (int) isotope->Z                ()          ,
-                              (int) isotope->N                ()          ,
-                              isotope->A                      () * g/mole );
+  NewIsotope = new G4Isotope( isotope->registry()->identifier () ,
+                              (int) isotope->Z                () ,
+                              (int) isotope->N                () ,
+                              isotope->A                      () );
   ///
   if( 0 != G4Material::GetMaterial( isotope->registry()->identifier() ) ) 
     { return StatusCode::SUCCESS; }
   /// per each Isotope we could create the "simple material" with the same name
   G4Material* NewMaterial = 0 ;
-  NewMaterial = new G4Material( isotope->registry()->identifier()          ,
-                                isotope->Z                     ()          ,
-                                isotope->A                     () * g/mole ,
-                                isotope->density               ()          ,
-                                (G4State) isotope->state       ()          ,
-                                isotope->temperature           ()          ,
-                                isotope->pressure              ()          );
+  NewMaterial = new G4Material( isotope->registry()->identifier() ,
+                                isotope->Z                     () ,
+                                isotope->A                     () ,
+                                isotope->density               () ,
+                                (G4State) isotope->state       () ,
+                                isotope->temperature           () ,
+                                isotope->pressure              () );
   ///
   /// add tabulated properties
   if( !isotope->tabulatedProperties().empty() )

@@ -4,6 +4,12 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!======================= GiGaCnv v16r1 2006-03-20 ==========================
+! 2006-03-20 - Gloria CORTI for Emanuele SANTOVETTI
+ - Remove multiplication for g/mole when passing A, similarly as what done 
+   for elements and mixtures, since given already in this unit. 
+   . GiGaIsotopeCnv.cpp
+
 !======================= GiGaCnv v16r0 2006-02-07 ==========================
 
 ! 2006-02-06 - Chris Jones
