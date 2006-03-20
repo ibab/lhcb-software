@@ -8,7 +8,7 @@
 
 #define ST_NAME_NONE        "----"
 #define ST_NAME_ERROR       ""
-#define ST_NAME_OFFLINE     "offline"
+#define ST_NAME_OFFLINE     "autoconfig" // "offline"
 #define ST_NAME_CONFIGURED  ST_NAME_NONE
 #define ST_NAME_INITIALIZED "configured"
 #define ST_NAME_PAUSED      "paused"
@@ -31,8 +31,9 @@ namespace  {
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
+      std::cout << "Dim command:" << cmd << std::endl;
       if      ( cmd == "config"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
-      if      ( cmd == "init"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
+      else if ( cmd == "init"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::ENABLE);
       else if ( cmd == "pause"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
       else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::FINALIZE);
@@ -48,6 +49,7 @@ LHCb::DimTaskFSM::DimTaskFSM(bool loop)
   ::lib_rtl_get_process_name(txt, sizeof(txt));
   m_procName = txt;
   std::string svcname= m_procName+"/status";
+  print("Task name:'%s'\n",m_procName.c_str());
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   DimServer::start(m_procName.c_str());
@@ -90,9 +92,13 @@ StatusCode LHCb::DimTaskFSM::printErr(int flag, const std::string& msg)  {
 }
 
 void LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
+  output(std::string("Declare state:"+new_state).c_str());
   if ( new_state != ST_NAME_NONE )  {
     m_stateName = new_state;
     m_service->updateService((char*)m_stateName.c_str());
+  }
+  else  {
+    output(std::string("Declare state:"+new_state+" FAKE!!!").c_str());
   }
 }
 
@@ -156,7 +162,7 @@ StatusCode LHCb::DimTaskFSM::process()  {
 StatusCode LHCb::DimTaskFSM::disable()  {
   m_continue = false;
   cancel();
-  declareState(ST_NAME_CONFIGURED);
+  declareState(ST_NAME_INITIALIZED);
   return StatusCode::SUCCESS;
 }
 

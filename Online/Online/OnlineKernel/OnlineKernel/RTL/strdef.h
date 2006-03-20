@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 int str_match_wild (__CXX_CONSTANT char *candidate_string, __CXX_CONSTANT char *pattern_string);
-int str_trim(char* dst, __CXX_CONSTANT char* src, size_t* resultant_length);
+int str_trim(__CXX_CONSTANT char* src, char* dst, size_t* resultant_length);
 int str_upcase(__CXX_CONSTANT char* src, char* dst, size_t dest_len);
 int str_lowcase(__CXX_CONSTANT char* src, char* dst, size_t dest_len);
 

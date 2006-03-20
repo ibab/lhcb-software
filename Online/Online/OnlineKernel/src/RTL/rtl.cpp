@@ -11,6 +11,8 @@
 #include <cstdlib>
 #include <unistd.h>
 #endif
+#include "RTL/strdef.h"
+
 namespace RTL  {
   struct EXHDEF   {
     int   flink;
@@ -292,12 +294,14 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   return 1;
 #else
   const char *tmp;
-  char buff[32];
+  char buff[32], buff2[64];
+  size_t resultant_length = sizeof(buff2);
   tmp = ::getenv("UTGID");
   if ( !tmp ) tmp = ::getenv("PROCESSNAME");
   if ( !tmp ) tmp = ::getenv("PROCESS");
   if ( !tmp ) { sprintf(buff,"P%06d",lib_rtl_pid()); tmp=buff;}
-  ::strncpy(process, tmp != 0 ? tmp : tmp="UNKNOWN", len);
+  ::str_trim(tmp, buff2, &resultant_length);
+  ::strncpy(process, buff2, len);
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
 #endif
 }
