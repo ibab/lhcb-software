@@ -3,12 +3,13 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/SmartIF.h"
-#include "CPP/IOCSENSOR.h"
+#include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdarg>
 
 extern "C" 
 #ifdef _WIN32
