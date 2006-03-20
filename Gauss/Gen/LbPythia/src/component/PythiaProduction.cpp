@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.9 2006-03-12 20:13:37 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.10 2006-03-20 22:32:08 robbep Exp $
 // Include files 
 
 // local
@@ -89,7 +89,6 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_defaultSettings.push_back( "pydat1 parj 15 0.018" ) ;
     m_defaultSettings.push_back( "pydat1 parj 16 0.054" ) ;
     m_defaultSettings.push_back( "pydat1 parj 17 0.090" ) ;
-    m_defaultSettings.push_back( "pydat1 parj 13 0.750" ) ;
     m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
     m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
 }
