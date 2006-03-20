@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-03-20 - Gloria CORTI
+ - Use new version of GaussRICH with modification for extended info
+ - Compile against LHCb v20r1
+
 !======================== Gauss v24r1 2006-03-16 =============================
 ! 2006-03-16 - Gloria CORTI
  - Switch off in normal production the extended RICH information
