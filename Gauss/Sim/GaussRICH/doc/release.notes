@@ -5,6 +5,7 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v6r3 2006-03-20 ===========================
 ! 2006-03-15 - Chris Jones
  - Yet more tidying up of converter algorithms and options
 
