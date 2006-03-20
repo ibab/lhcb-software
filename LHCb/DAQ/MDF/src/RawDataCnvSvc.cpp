@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.6 2006-03-17 19:37:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.7 2006-03-20 15:37:53 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -342,7 +342,6 @@ LHCb::RawDataCnvSvc::readRawBanks(RawDataAddress* pAddr, RawEvent* evt)
 {
   void* iodesc = 0;
   const std::string* par = pAddr->par();
-  const unsigned long* ipar = pAddr->ipar();
   StatusCode sc = connectInput(par[0], iodesc);
   if ( sc.isSuccess() )  {
     long long offset = pAddr->fileOffset();

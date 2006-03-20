@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.6 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.7 2006-03-20 15:37:53 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -14,6 +14,7 @@
 #include <stdexcept>
 #ifdef _WIN32
 #include <winsock.h>
+#define LITTLE_ENDIAN
 #else
 #include <netinet/in.h>
 #endif
@@ -98,7 +99,6 @@ public:
   const unsigned int* data() const { return m_data; }
 };
 
-#define LITTLE_ENDIAN
 // Only works for word aligned data and assumes that the data is an exact number of words
 // Copyright © 1993 Richard Black. All rights are reserved. 
 static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {  
@@ -106,7 +106,7 @@ static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {
   const unsigned int *crctab = table.data();
   const unsigned int *p = (const unsigned int *)data;
   const unsigned int *e = (const unsigned int *)(data + len);   
-  if ( len < 4 || (size_t(data)%sizeof(unsigned int)) != 0 ) return -1;
+  if ( len < 4 || (size_t(data)%sizeof(unsigned int)) != 0 ) return ~0x0;
   unsigned int result = ~*p++;
   while( p < e )  {
 #if defined(LITTLE_ENDIAN)
@@ -128,7 +128,7 @@ static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {
 }
 
 static unsigned short crc16Checksum (const unsigned char *data, size_t len) {
-  static const WORD wCRCTable[] =
+  static const unsigned short wCRCTable[] =
   { 0X0000, 0XC0C1, 0XC181, 0X0140, 0XC301, 0X03C0, 0X0280, 0XC241,
     0XC601, 0X06C0, 0X0780, 0XC741, 0X0500, 0XC5C1, 0XC481, 0X0440,
     0XCC01, 0X0CC0, 0X0D80, 0XCD41, 0X0F00, 0XCFC1, 0XCE81, 0X0E40,

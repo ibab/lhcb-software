@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.1 2006-03-17 17:24:47 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.2 2006-03-20 15:37:53 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -65,7 +65,7 @@ namespace LHCb  {
           }
           if ( m_dump ) info << endmsg;
           if( m_check ) { // Check the patterns put in by RawEventCreator
-            size_t cnt, inc = i == RawBank::DAQ ? 64 : 32;
+            int cnt, inc = i == RawBank::DAQ ? 64 : 32;
             const int *p;
             for( itB = b.begin(), k = 1; itB != b.end(); itB++, k++ ) {
               const RawBank* r = *itB;
@@ -80,7 +80,7 @@ namespace LHCb  {
                   info << "Bad BANK DATA:" << *p << endmsg;
                 }
               }
-              if ( cnt != (inc*k)/sizeof(int) )  {
+              if ( cnt != (inc*k)/int(sizeof(int)) )  {
                 info << "Bad amount of data in bank:" << cnt << " word" << endmsg;
               }
             }

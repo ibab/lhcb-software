@@ -14,6 +14,4 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
-EventSelector.Input                  = {"DATA='file://2tell1sZeroSuppressedMeaningfulData3.bin' SVC='LHCb::MDFSelector'"};
-//EventSelector.Input                 = {"DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'"};
-//EventSelector.Input                  = {"DATA='file://1tell1.bin' SVC='LHCb::MDFSelector'"};
+EventSelector.Input                  = {"DATA='file:///afs/cern.ch/lhcb/online/2tell1sZeroSuppressedMeaningfulData3.bin' SVC='LHCb::MDFSelector'"};
