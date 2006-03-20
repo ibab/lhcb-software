@@ -4,6 +4,8 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2006-03-20 Bug fix in STCluster.xml
+
 !========================= DigiEvent v1r1 2006-03-15 =========================
 ! 2006-03-15 M Needham
  - Functionality for fast container find added SiLiteClusters (typedefs)

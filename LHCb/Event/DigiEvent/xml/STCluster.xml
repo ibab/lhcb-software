@@ -42,7 +42,7 @@
     <code>
  return STChannelID(channelID().type(),channelID().station(),
                      channelID().layer(), channelID().detRegion(),
-                     channelID().sector(),channelID().strip()-stripValues().front().first);
+                     channelID().sector(),channelID().strip()+stripValues().front().first);
    </code>
    </method>
    <method
