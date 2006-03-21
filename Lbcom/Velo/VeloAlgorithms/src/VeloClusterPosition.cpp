@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.4 2006-03-10 10:27:38 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.5 2006-03-21 17:32:20 mtobin Exp $
 // Include files
 
 // from Gaudi
@@ -84,8 +84,8 @@ toolInfo VeloClusterPosition::weightedMeanPos(
   //
   LHCb::VeloChannelID intDistanceID;
   // determine the closest VeloChannelID (strip) to the cluster
-  StatusCode sc;
-  sc=m_veloDet->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
+  const DeVeloSensor* sens=m_veloDet->sensor(cluster->firstChannel().sensor());
+  StatusCode sc=sens->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
   //
     if(sc){
       posAndError(cluster, intDistanceID, fractionalPos, userInfo, tempPair);
@@ -123,8 +123,8 @@ toolInfo VeloClusterPosition::etaFitPos(
   fractionalPos=fPair.first;
   intDistance=int(fPair.second);
   LHCb::VeloChannelID intDistanceID;
-  StatusCode sc;
-  sc=m_veloDet->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
+  const DeVeloSensor* sens=m_veloDet->sensor(cluster->firstChannel().sensor());
+  StatusCode sc=sens->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
   if(sc){
     posAndError(cluster, intDistanceID, fractionalPos, userInfo, tempPair);
     // fill the wrapper object
@@ -219,10 +219,9 @@ Pair VeloClusterPosition::fractionalPosMean(
   std::vector<LHCb::VeloChannelID> chanCont=cluster->channels();
   StatusCode sc;
   //
+  const DeVeloSensor* sens=m_veloDet->sensor(chanCont[0].sensor());
   for(int i=0; i<stripNumber; i++){
-    sc=m_veloDet->channelDistance(chanCont[0],
-                                  chanCont[i],
-                                  intDistance);
+    sc=sens->channelDistance(chanCont[0],chanCont[i],intDistance);
     centre+=float(intDistance)*cluster->adcValue(i);
     sum+=cluster->adcValue(i);
   }
@@ -280,17 +279,19 @@ void VeloClusterPosition::posAndError(
   debug()<< "==> VeloClusterPosition::posAndError" <<endmsg;
   //  
   unsigned int sensor=cluster->channelID().sensor();
+  const DeVeloSensor* sens=m_veloDet->sensor(sensor);
   double cluSize=static_cast<double>(cluster->size());
   double pitch=0., clusterPos=0., errorPos=0., rOfPhiCluster=0.;
   double alphaOfTrack=userInfo.first;
   Pair resInfo=std::make_pair(alphaOfTrack, cluSize);
   //
-  if(m_veloDet->isRSensor(sensor)||m_veloDet->isPileUpSensor(sensor)){
-    clusterPos=m_veloDet->rOfStrip(intDistanceID, fractionalPos);
+  if(sens->isR()||sens->isPileUp()){
+    const DeVeloRType* rSens=dynamic_cast<const DeVeloRType*>(sens);
+    clusterPos=rSens->rOfStrip(intDistanceID.strip(), fractionalPos);
     if(m_printInfo)
       info()<< " ==> The given cluster is on RType sensor" <<endmsg;
     clusterPos=clusterPos/cm;
-    pitch=m_veloDet->rPitch(intDistanceID, fractionalPos);
+    pitch=rSens->rPitch(intDistanceID.strip(), fractionalPos);
     errorPos=resolution(pitch/micrometer, resInfo);
     errorPos=errorPos/(pitch/micrometer);
     // return values for cluster position and position errorPos
@@ -300,17 +301,18 @@ void VeloClusterPosition::posAndError(
         info()<< "cluster pos: " << clusterPos <<endmsg;
       }
   }
-  else if(m_veloDet->isPhiSensor(sensor)){
+  else if(sens->isPhi()){
+    const DeVeloPhiType* phiSens=dynamic_cast<const DeVeloPhiType*>(sens);
     if(!(userInfo.first+userInfo.second)){
       double minRadius=0., maxRadius=0.;
       unsigned int zoneOfCluster=0;
-      zoneOfCluster=m_veloDet->zoneOfStrip(intDistanceID);
-      minRadius=m_veloDet->rMin(sensor, zoneOfCluster);
-      maxRadius=m_veloDet->rMax(sensor, zoneOfCluster);
+      zoneOfCluster=sens->zoneOfStrip(intDistanceID.strip());
+      minRadius=sens->rMin(zoneOfCluster);
+      maxRadius=sens->rMax(zoneOfCluster);
       double meanRadius=0.5*(maxRadius+minRadius);
       double frac=fractionalPos;
-      clusterPos=m_veloDet->phiOfStrip(intDistanceID, frac, meanRadius);
-      double phiOf=m_veloDet->phiOfStrip(intDistanceID, meanRadius);
+      clusterPos=phiSens->phiOfStrip(intDistanceID.strip(), frac, meanRadius);
+      double phiOf=phiSens->phiOfStrip(intDistanceID.strip(), 0.0, meanRadius);
       debug()<< "phi: " << phiOf/degree << ", " << frac <<endmsg;
       //
       if(m_printInfo)
@@ -322,7 +324,7 @@ void VeloClusterPosition::posAndError(
         info()<< "mean radius: " << meanRadius/cm <<endmsg;
       }
       //
-      pitch=m_veloDet->phiPitch(intDistanceID, meanRadius);
+      pitch=phiSens->phiPitch(meanRadius);
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(meanRadius/micrometer);
       double errorDeg=errorRad/degree;
@@ -336,13 +338,12 @@ void VeloClusterPosition::posAndError(
       toolInfo=std::make_pair(clusterPos, errorPos);
     }else{
       rOfPhiCluster=userInfo.second;
-      clusterPos=m_veloDet->phiOfStrip(intDistanceID, fractionalPos,
-                                         rOfPhiCluster);
+      clusterPos=phiSens->phiOfStrip(intDistanceID.strip(), fractionalPos, rOfPhiCluster);
       if(m_printInfo)
         info()<< " ==> The given cluster is on PhiType sensor" <<endmsg;
       //
       clusterPos=clusterPos/degree;
-      pitch=m_veloDet->phiPitch(intDistanceID, rOfPhiCluster);
+      pitch=phiSens->phiPitch(rOfPhiCluster);
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(rOfPhiCluster/micrometer);
       double errorDeg=errorRad/degree;

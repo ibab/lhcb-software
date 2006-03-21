@@ -80,7 +80,6 @@ class VeloClusterMaker : public GaudiAlgorithm {
 private:
 
   // data members
-  enum {maxVeloSensors=100};
   std::string m_inputContainer;       ///< Name of input container
   std::string m_outputContainer;      ///< Name of output container
   LHCb::VeloDigits* m_digits; ///< store digits for event considered
@@ -92,9 +91,9 @@ private:
   /// S/N cut for clusters to apply to all detectors from job opts
   float  m_defaultClusterSignalToNoiseCut;
   /// S/N cut for individual strips for each detector
-  float  m_signalToNoiseCut[maxVeloSensors];
+  std::map<unsigned int,float>  m_signalToNoiseCut;
   /// S/N cut for clusters for each detector
-  float  m_clusterSignalToNoiseCut[maxVeloSensors];
+  std::map<unsigned int,float>  m_clusterSignalToNoiseCut;
   int m_maxClusters; ///< maximum number of clusters to make per event
   float m_inclusionThreshold; ///< for adding strips to the cluster
   double m_highThreshold; ///< Spillover Threshold 

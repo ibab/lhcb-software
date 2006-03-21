@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.5 2006-03-10 10:27:38 szumlat Exp $
+// $Id: VeloClusterMoni.cpp,v 1.6 2006-03-21 17:32:20 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -213,9 +213,10 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
     }
     //
     unsigned int sensor=(*cluIt)->sensor();
-    if(m_veloDet->isPileUpSensor(sensor))
+    const DeVeloSensor* sens=m_veloDet->sensor(sensor);
+    if(sens->isPileUp())
     debug()<< "sensor number: " << sensor <<endmsg;
-    double zPosOfClu=m_veloDet->zSensor(sensor);
+    double zPosOfClu=sens->z();
     debug()<< " z pos: " << zPosOfClu <<endmsg;
     //
     plot2D((*cluIt)->sensor(), (*cluIt)->strip(0), 102,
