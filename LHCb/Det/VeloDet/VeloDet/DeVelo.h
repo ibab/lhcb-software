@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.36 2006-03-09 15:03:17 mtobin Exp $
+// $Id: DeVelo.h,v 1.37 2006-03-21 17:26:26 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -82,219 +82,69 @@ public:
     return m_nPhiSensors;
   }
 
-  /// return the sensor type
-  inline std::string type(unsigned int sensor) const
-  {
-    return m_vpSensor[sensorIndex(sensor)]->type();
-  }
-  
-  /// return true if this is an PileUp type sensor
-  inline bool isPileUpSensor(unsigned int sensor) const {
-    return m_vpSensor[sensorIndex(sensor)]->isPileUp();
-  }
-
-  /// return true if this is an R type sensor
-  inline bool isRSensor(unsigned int sensor) const {    
-    return m_vpSensor[sensorIndex(sensor)]->isR();
-  }
-
-  /// return true if this is an Phi type sensor
-  inline bool isPhiSensor(unsigned int sensor) const {
-    return m_vpSensor[sensorIndex(sensor)]->isPhi();
-  }
-
-  /// return true if phi sensor is second stereo (Downstream)
-  inline bool isDownstreamSensor(unsigned int sensor) const {
-    return m_vpSensor[sensorIndex(sensor)]->isDownstream();
-  }
-
   /// return the sensor number for a point (global frame)
-  unsigned int sensorNumber( const Gaudi::XYZPoint& point ) const;
+  const DeVeloSensor* sensor( const Gaudi::XYZPoint& point ) const;
   
-  /// return the sensor number for a given index
-  unsigned int sensorNumber( const unsigned int index ) const{
-    return m_vpSensor[index]->sensorNumber();
-  };
-  
-  /// return the index of the sensor (assumes sensors are stored 
-  unsigned int sensorIndex(unsigned int sensor) const;
-
-  /// Return vector of pointers to all sensors sorted by increasing z
-  inline const std::vector<DeVeloSensor*>& vpSensors() const {
-    return m_vpSensor;
+  /// Return iterator corresponding to first sensor
+  inline std::vector<DeVeloSensor*>::const_iterator sensorsBegin() const {
+    return m_sensorsBegin;
   }
 
-  /// Return vector of pointers to the R sensors sorted by increasing z
-  inline const std::vector<DeVeloRType*>& vpRSensors() const {
-    return m_vpRSensor;
+  /// Return iterator corresponding to last sensor
+  inline std::vector<DeVeloSensor*>::const_iterator sensorsEnd() const {
+    return m_sensorsEnd;
   }
   
-  /// Return vector of pointers to the Phi sensors 
-  /// sorted by increasing z
-  inline const std::vector<DeVeloPhiType*>& vpPhiSensors() const {
-    return m_vpPhiSensor;
+  /// Return iterator corresponding to first non-pile up sensor
+  inline std::vector<DeVeloSensor*>::const_iterator rPhiSensorsBegin() const {
+    return m_rPhiSensorsBegin;
+  }
+
+  /// Return iterator corresponding to last non-pile up sensor
+  inline std::vector<DeVeloSensor*>::const_iterator rPhiSensorsEnd() const {
+    return m_rPhiSensorsEnd;
   }
   
-  /// Return vector of pointers to the Pile Up sensors sorted by increasing z
-  inline const std::vector<DeVeloRType*>& vpPileUpSensors() const {
-    return m_vpPUSensor;
+  /// Return iterator corresponding to first R sensor
+  inline std::vector<DeVeloRType*>::const_iterator rSensorsBegin() const {
+    return m_rSensorsBegin;
+  }
+
+  /// Return iterator corresponding to last R sensor
+  inline std::vector<DeVeloRType*>::const_iterator rSensorsEnd() const {
+    return m_rSensorsEnd;
   }
   
-  /** Gives the VeloChannelID and offset (in fraction of a pitch width) 
-      associated to a 3D position. with pitch width in mm
-      Sign convention is offset is +- 0.5 
-      with +ve in increasing stip number  (global frame) */
-  StatusCode pointToChannel(const Gaudi::XYZPoint &point, 
-                            LHCb::VeloChannelID &channel,
-                            double &localOffset,
-                            double &pitch) const;
+  /// Return iterator corresponding to first Phi sensor
+  inline std::vector<DeVeloPhiType*>::const_iterator phiSensorsBegin() const {
+    return m_phiSensorsBegin;
+  }
 
-  /// pointToChannel if sensor known (global frame)
-  StatusCode pointToChannel(const Gaudi::XYZPoint &point, 
-                            const unsigned int &sensor,
-                            LHCb::VeloChannelID &channel,
-                            double &localOffset,
-                            double &pitch) const;
-
-
-  /** Residual of 3D point to a VeloChannelID
-      returns offset in mm from closest point on channel */
-  StatusCode residual(const Gaudi::XYZPoint &point, 
-                      const LHCb::VeloChannelID &channel,
-                      double &residual,
-                      double &chi2) const;
-
-  /** Residual of 3D point to a VeloChannelID + offset in fraction of a channel
-      and width of the cluster in channel widths (for the chi2)
-      returns offset in mm, and chi^2 from position to point */
-  StatusCode residual(const Gaudi::XYZPoint &point, 
-                      const LHCb::VeloChannelID &channel,
-                      const double &localOffset,
-                      const double &width,
-                      double &residual,
-                      double &chi2) const;
-
-  /// Convert global 3D Point to local 3D point in frame of the sensor 
-  StatusCode globalToLocal(const unsigned int &sensorNumber,
-                           const Gaudi::XYZPoint &global,
-                           Gaudi::XYZPoint &local) ;
-  
-  /// Convert local 3D Point in the sensor frame to a global 3D point 
-  StatusCode localToGlobal(const unsigned int &sensorNumber,
-                           const Gaudi::XYZPoint &local,
-                           Gaudi::XYZPoint &global) const;
-
-  /// Get the nth (signed) neighbour strip to a given VeloChannelID
-  StatusCode neighbour(const LHCb::VeloChannelID &startChannel,
-                       const int &Offset,
-                       LHCb::VeloChannelID &channel) const;
-
-  /// Check the distance in strips between two channelIDs
-  StatusCode channelDistance(const LHCb::VeloChannelID &startChannel,
-                             const LHCb::VeloChannelID &endChannel,
-                             int &Offset) const;
-
-  /** Returns the vector of sensor numbers one can match with the 
-      specified sensor number, r and pileup sensors match to phi, phi to R 
-      Returns a list (0,1,2) of sensor numbers (same +/- x side) 
-      with the closest in Z listed first */
-  StatusCode sensorAssociated( unsigned int sensor, 
-                               std::vector<unsigned int> &assocSensor ) const;
-  
-  /// Returns the z position of this Velo sensor from the current cached geometry 
-  inline double zSensor( unsigned int sensor )  const { 
-    return m_sensorZ[sensorIndex(sensor)]; 
+  /// Return iterator corresponding to last Phi sensor
+  inline std::vector<DeVeloPhiType*>::const_iterator phiSensorsEnd() const {
+    return m_phiSensorsEnd;
   }
   
-  /// returns the number of zones in this sensor
-  unsigned int numberOfZones( unsigned int sensor) const;
+  /// Return iterator corresponding to first pile up sensor
+  inline std::vector<DeVeloSensor*>::const_iterator pileUpSensorsBegin() const {
+    return m_pileUpSensorsBegin;
+  }
 
-  /// returns the phi "zone" of the r strip or r zone of phi strip
-  unsigned int zoneOfStrip( LHCb::VeloChannelID strip ) const;
-
-  /// returns the phi "zone" of the r strip or r zone of phi strip
-  unsigned int zoneOfStrip( unsigned int strip, unsigned int sensor ) const;
+  /// Return iterator corresponding to last pile up sensor
+  inline std::vector<DeVeloSensor*>::const_iterator pileUpSensorsEnd() const {
+    return m_pileUpSensorsEnd;
+  }
   
-  /// Number of strips in each zone
-  unsigned int stripsInZone( unsigned int sensor, unsigned int zone ) const;
+  /// Return iterator corresponding to first pile up sensor
+  inline std::vector<DeVeloRType*>::const_iterator pileUpRSensorsBegin() const {
+    return m_pileUpRSensorsBegin;
+  }
 
-  /// returns the local radius of the strip
-  double rOfStrip( LHCb::VeloChannelID channel ) const;
-
-  /// returns the local radius of the strip+fractional distance to strip
-  double rOfStrip(LHCb::VeloChannelID channel, double fraction) const;
-
-  /// returns the R pitch at the given channelID
-  double rPitch( LHCb::VeloChannelID channel) const;
-
-  /// returns the R pitch at the given channelID +/- fraction of channel
-  double rPitch( LHCb::VeloChannelID channel, double fraction) const;
-
-  /// returns the R pitch at a given radius
-  double rPitchAtLocalR( LHCb::VeloChannelID channel, double radius) const;
-
-  /// returns the phi of the strip at the specified radius 
-  /// in the local frame of the sensor.
-  double phiOfStrip( LHCb::VeloChannelID channel, double radius) const;
-
-  /// returns the phi of the strip+fractional distance to strip
-  /// at the specified radius in the local frame of sensor.
-  double phiOfStrip( LHCb::VeloChannelID channel, double fraction, double radius) const;
-                      
-  /// returns the angle of the strip wrt the x axis in the local frame for
-  /// the strip+fractional distance to strip
-  double angleOfStrip( LHCb::VeloChannelID channel, double fraction=0.) const;
-
-  /** The stereo angle of the phi strips in radians,
-      signed so that positive indicates phi increases with radius */
-  double phiStereo( LHCb::VeloChannelID channel, double radius) const;
-
-  /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( LHCb::VeloChannelID channel, double radius ) const;
-
-  /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( LHCb::VeloChannelID channel ) const;
-
-  /// Return the distance to the origin for a phi strip
-  double distToOrigin(LHCb::VeloChannelID channel) const;
-
-  /// return the minimum sensitive radius of an R wafer, local frame
-  double rMin(unsigned int sensor) const;
-
-  /// return the maximum sensitive radius of an R wafer, local frame
-  double rMax(unsigned int sensor) const;
-
-  /** return the minimum sensitive radius of an R wafer in a zone, local frame
-      4 zones (different phi) for R sensors and 2 zones 
-      (different R and stereo) for the phi sensors */
-  double rMin(unsigned int sensor, unsigned int zone) const; 
-
-  /** return the maximum sensitive radius of an R wafer in a zone, local frame
-      4 zones (different phi) for R sensors and 2 zones 
-      (different R and stereo) for the phi sensors */
-  double rMax(unsigned int sensor, unsigned int zone) const;
-
-  /// Smallest Phi at R (local frame) of the R strips in a zone
-  double phiMin(unsigned int sensor, unsigned int zone) const;
+  /// Return iterator corresponding to last pile up sensor
+  inline std::vector<DeVeloRType*>::const_iterator pileUpRSensorsEnd() const {
+    return m_pileUpRSensorsEnd;
+  }
   
-  /// Largest Phi (local frame) of the R strips in a zone
-  double phiMax(unsigned int sensor, unsigned int zone) const;
-
-  // minimum phi at R (overlap in x) for a given zone
-  double phiMin(unsigned int sensor, unsigned int zone, double radius) const;
-  
-  // maximum phi at R (overlap in x) for a given zone
-  double phiMax(unsigned int sensor, unsigned int zone, double radius) const;
-  
-  /// returns the silicon thickness
-  double siliconThickness ( unsigned int sensor ) const;
-
-  /// returns the number of strips per sensor.
-  unsigned int numberStrips(unsigned int sensor) const;
-    
-  /// returns the capacitance of the strip.
-  double stripCapacitance(LHCb::VeloChannelID channel) const;
-
   /** Access to a strip's geometry, for Panoramix
       from strip number and R sensor number, returns Z, R and a phi range.
       in local frame */
@@ -315,134 +165,14 @@ public:
   /// Return a trajectory (for track fit) from strip + offset
   LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset) const;
   
-  /// Return the side of the detector. (+1 for +ve x, -1 for -ve x.)
-  inline int xSide(unsigned int sensor)  const
-  {
-    return m_vpSensor[sensorIndex(sensor)]->xSide();
-  }
-  
-  /// Returns true if sensor is in right side (-ve x) of detector
-  inline bool isRightSensor(unsigned int sensor) const
-  {
-    return m_vpSensor[sensorIndex(sensor)]->isRight();
-  }
-
-  /// Set accessor to member m_zVertex, used to compute phi by extrapolating
-  /// between R and Phi sensors.
-  inline void setZVertex(double zVertex)
-  {
-    m_zVertex = zVertex;
-  }
-
-  ///  Returns m_zVertex, used to compute phi by extrapolating
-  /// between R and Phi sensors.
-  inline double zVertex() const
-  {
-    return m_zVertex;
-  }
-
-  /// Construct 3d point from R/phi channels (rFrac is fractional distance 
-  /// to strip (+/-0.5))
-  StatusCode makeSpacePoint( LHCb::VeloChannelID rChan, 
-                             double rFrac,
-                             LHCb::VeloChannelID phiChan,
-                             double phiFrac,
-                             Gaudi::XYZPoint& point, 
-                             double&  rPitch,
-                             double&  phiPitch ) const;
-
-  ///  Return true if the two zones are matching for R sensors. 
-  ///  Also returns true for neighbouring phi zones
-  bool matchingZones(unsigned int zone1, unsigned int zone2) const;
-
-  /// Re-calculate the z position for all sensors after changes in geometry conditions
-  void recalculateZs();
-
-  /// Re-calculate z position for a given sensor of changes in geometry conditions
-  void recalculateZ(unsigned int sensor);
-
-  /// Convert chip channel to VeloChannelID for a given sensor
-  LHCb::VeloChannelID ChipChannelToVeloChannelID(unsigned int sensor, unsigned int chipChan){
-    return LHCb::VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->ChipChannelToStrip(chipChan));
-  };
-  /// Convert VeloChannelID to chip channel
-  unsigned int VeloChannelIDToChipChannel(LHCb::VeloChannelID channel){
-    return m_vpSensor[sensorIndex(channel.sensor())]->StripToChipChannel(channel.strip());
-  };
-  
-  /// Convert routing line to chip channel for a given sensor (chip channel run clock-wise
-  /// but routing line run anti-clockwise)
-  unsigned int RoutingLineToChipChannel(unsigned int sensor, unsigned int routLine){
-    return m_vpSensor[sensorIndex(sensor)]->RoutingLineToChipChannel(routLine);
-  };
-  /// Convert chip channel to routing line for a given sensor
-  unsigned int ChipChannelToRoutingLine(unsigned int sensor, unsigned int chipChan){
-    return m_vpSensor[sensorIndex(sensor)]->ChipChannelToRoutingLine(chipChan);
-  };
-  
-  /// Convert routing line to VeloChannelID for a given sensor
-  unsigned int RoutingLineToVeloChannelID(unsigned int sensor, unsigned int routLine){
-    return LHCb::VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->RoutingLineToStrip(routLine));
-  };
-  /// Convert VeloChannelId to routing line
-  unsigned int VeloChannelIDToRoutingLine(LHCb::VeloChannelID channel){
-    return m_vpSensor[sensorIndex(channel.sensor())]->StripToRoutingLine(channel.strip());
-  };
-
-  /// Get the chip number from the routing line for a given sensor
-  unsigned int ChipFromRoutingLine(unsigned int sensor, unsigned int routLine){
-    return m_vpSensor[sensorIndex(sensor)]->ChipFromRoutingLine(routLine);
-  };
-  /// Get the chip number from the chip channel for a given sensor
-  unsigned int ChipFromChipChannel(unsigned int sensor, unsigned int chipChan){    
-    return m_vpSensor[sensorIndex(sensor)]->ChipFromChipChannel(chipChan);
-  };
-  /// Get the chip number from the VeloChannelID
-  unsigned int ChipFromVeloChannelID(LHCb::VeloChannelID channel){   
-    return m_vpSensor[sensorIndex(channel.sensor())]->ChipFromStrip(channel.strip());
-  };
-  
-  /// Check validity of VeloChannelID
-  bool OKVeloChannelID(LHCb::VeloChannelID channel){
-    return m_vpSensor[sensorIndex(channel.sensor())]->OKStrip(channel.strip());
-  }
-  
-  /// Check validity of chip channel for a given sensor
-  bool OKChipChannel(unsigned int sensor, unsigned int chipChan){
-    return m_vpSensor[sensorIndex(sensor)]->OKChipChannel(chipChan);
-  }
-  
-  /// Check validity of a given sensor
-  bool OKSensor(unsigned int sensor){
-    return m_validSensors[sensor];
-  };
-  
-  ///=========================================================================
-  /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry
-  ///=========================================================================
-  ///  Returns a range of strip matching the point, and the conversion factors
-  void trgPhiMatchingStrips( int sensor, 
-                             double radius, 
-                             int rSensor, 
-                             int zone,
-                             double angularTol,
-                             double& stripMin, 
-                             double& stripMax, 
-                             double& pitch, 
-                             double& offset ) const;
-  /// returns the phi of the strip at the specified radius 
-  double trgPhiOfStrip( LHCb::VeloChannelID channel,
-                        double radius ) const;
-  /// returns the phi of the strip+fractional distance to strip
-  double trgPhiOfStrip( LHCb::VeloChannelID channel, 
-                        double fraction, 
-                        double radius ) const;
-  /// returns the angle of the strip+frac. distance to strip wrt the x axis 
-  double trgPhiDirectionOfStrip( LHCb::VeloChannelID channel, 
-                                 double fraction=0. ) const;
-
   /// give access to sensor for given sensor number
   const DeVeloSensor* sensor(unsigned int sensorNumber) const;
+
+  /// give access to sensor for given sensor number
+  const DeVeloRType* rSensor(unsigned int sensorNumber) const;
+
+  /// give access to sensor for given sensor number
+  const DeVeloPhiType* phiSensor(unsigned int sensorNumber) const;
 
   // public condition related methods 
 
@@ -497,6 +227,9 @@ private:
   /// vector of pointers to the Pile Up sensors sorted by increasing z
   std::vector<DeVeloRType*> m_vpPUSensor;
   
+  /// return the index of the sensor (assumes sensors are stored 
+  unsigned int sensorIndex(unsigned int sensor) const;
+
   /// Number of R sensors
   unsigned int m_nRSensors;
 
@@ -535,6 +268,20 @@ private:
   double m_zVertex;
 
   std::map<unsigned int,bool> m_validSensors;//< Map of all valid sensors
+
+  std::vector<DeVeloSensor*>::const_iterator m_sensorsBegin;
+  std::vector<DeVeloSensor*>::const_iterator m_sensorsEnd;
+  std::vector<DeVeloSensor*>::const_iterator m_rPhiSensorsBegin;
+  std::vector<DeVeloSensor*>::const_iterator m_rPhiSensorsEnd;
+  std::vector<DeVeloRType*>::const_iterator m_rSensorsBegin;
+  std::vector<DeVeloRType*>::const_iterator m_rSensorsEnd;
+  std::vector<DeVeloPhiType*>::const_iterator m_phiSensorsBegin;
+  std::vector<DeVeloPhiType*>::const_iterator m_phiSensorsEnd;
+  std::vector<DeVeloSensor*>::const_iterator m_pileUpSensorsBegin;
+  std::vector<DeVeloSensor*>::const_iterator m_pileUpSensorsEnd;
+  std::vector<DeVeloRType*>::const_iterator m_pileUpRSensorsBegin;
+  std::vector<DeVeloRType*>::const_iterator m_pileUpRSensorsEnd;
+  
 
   // condition caching
 

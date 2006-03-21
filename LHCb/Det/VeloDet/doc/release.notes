@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.100 2006-03-09 15:03:17 mtobin Exp $
+! $Id: release.notes,v 1.101 2006-03-21 17:26:26 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-03-21 - Mark Tobin
+ - Renamed isInside method to isInActiveArea
+
+! 2006-03-17 - Mark Tobin and Kurt Rinnert
+ - Removed all accessors to sensor information via DeVelo: sensor information
+   must now be retrieved directly from sensors
+ - Provide iterator access to sensor containers
 
 !========================= VeloDet v10r1 2006-03-02 ========================
 ! 2006-09-02 - Mark Tobin

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.11 2006-01-26 15:54:14 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.12 2006-03-21 17:26:26 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -43,24 +43,24 @@ public:
   /// Calculate the nearest channel to a 3-d point.
   /// Also returns the fractional difference in the channel
   /// and the local pitch.
-  StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloChannelID& channel,
                                     double& fraction,
                                     double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
-  StatusCode neighbour(const LHCb::VeloChannelID& start, 
+  virtual StatusCode neighbour(const LHCb::VeloChannelID& start, 
                                const int& nOffset, 
                                LHCb::VeloChannelID& channel) const;
 
   /// Residual of 3-d point to a VeloChannelID
-  StatusCode residual(const Gaudi::XYZPoint& point, 
+  virtual StatusCode residual(const Gaudi::XYZPoint& point, 
                               const LHCb::VeloChannelID& channel,
                               double &residual,
                               double &chi2) const;
   
   /// Residual [see DeVelo for explanation]
-   StatusCode residual(const Gaudi::XYZPoint& point,
+  virtual StatusCode residual(const Gaudi::XYZPoint& point,
                       const LHCb::VeloChannelID& channel,
                       const double localOffset,
                       const double width,
@@ -71,31 +71,31 @@ public:
   //  inline unsigned int numberOfZones(){return m_numberOfZones;}
  
   /// The zones number for a given strip
-  inline unsigned int zoneOfStrip(const unsigned int strip) const {
+  virtual unsigned int zoneOfStrip(const unsigned int strip) const {
     return static_cast<unsigned int>(strip/512);
   }
 
   /// The number of strips in a zone
-  inline unsigned int stripsInZone(const unsigned int /*zone*/) const{
+  virtual unsigned int stripsInZone(const unsigned int /*zone*/) const{
     return m_stripsInZone;
   }
 
   /// The minimum radius for a given zone of the sensor
-  double rMin(const unsigned int /*zone*/) const {
-    return this->innerRadius();
+  virtual double rMin(const unsigned int /*zone*/) const {
+    return innerRadius();
   }
   
   /// The maximum radius for a given zone of the sensor
-  double rMax(const unsigned int /*zone*/) const {return this->outerRadius();}
+  virtual double rMax(const unsigned int /*zone*/) const {return outerRadius();}
 
   /// Determines if local 3-d point is inside sensor
-  StatusCode isInside(const Gaudi::XYZPoint& point) const;
+  virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
 
   /// Determine if local point is in corner cut-offs
-  bool isCutOff(double x, double y) const;
+  virtual bool isCutOff(double x, double y) const;
 
   /// Zone for a given local phi
-  inline unsigned int zoneOfPhi(double phi) const {
+  unsigned int zoneOfPhi(double phi) const {
     unsigned int zone=0;
     if(m_phiMax[0] > phi){
       zone = 0;
@@ -132,7 +132,7 @@ public:
 
   /// Return the local pitch at a given radius 
   inline double rPitch(double radius) const {  
-    return m_innerPitch + m_pitchSlope*(radius - this->innerRadius());
+    return m_innerPitch + m_pitchSlope*(radius - innerRadius());
   }
 
   /// The minimum phi for a zone
@@ -146,7 +146,7 @@ public:
     } else if(2 == zone){
       phiMin = asin(m_phiGap/radius);
     } else {
-      phiMin = this->phiMinZone(zone);
+      phiMin = phiMinZone(zone);
     }
     return phiMin;
   }
@@ -162,7 +162,7 @@ public:
     } else if(3 == zone){
       phiMax = acos(m_overlapInX/radius);
     } else {
-      phiMax = this->phiMaxZone(zone);
+      phiMax = phiMaxZone(zone);
     }
     return phiMax;
   }

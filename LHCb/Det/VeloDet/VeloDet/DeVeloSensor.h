@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.14 2006-02-06 14:09:14 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.15 2006-03-21 17:26:26 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -88,14 +88,8 @@ public:
   /// The maximum radius of the sensitive area of a zone
   virtual double rMax(const unsigned int zone) const = 0;
 
-  /// The minimum phi for a given zone of the sensor
-  //  virtual double phiMin(const unsigned int zone)=0;
-  
-  /// The maximum phi for a given zone of the sensor
-  //  virtual double phiMax(const unsigned int zone)=0;
-  
   /// Determine if point is in corner cut-offs
-  virtual  StatusCode isInside(const Gaudi::XYZPoint& point) const = 0;
+  virtual  StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const = 0;
 
   /// Determine if local point is in corner cut-offs
   virtual bool isCutOff(double x, double y) const = 0;

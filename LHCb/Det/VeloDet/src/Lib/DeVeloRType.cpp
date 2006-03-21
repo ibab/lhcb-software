@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.19 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVeloRType.cpp,v 1.20 2006-03-21 17:26:26 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -71,7 +71,7 @@ StatusCode DeVeloRType::initialize()
   }
 
   m_numberOfZones = 4;
-  m_stripsInZone = this->numberOfStrips() / m_numberOfZones;
+  m_stripsInZone = numberOfStrips() / m_numberOfZones;
 
   m_innerPitch = this->param<double>("InnerPitch");
   m_outerPitch = this->param<double>("OuterPitch");
@@ -100,12 +100,12 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   Gaudi::XYZPoint localPoint(0,0,0);
-  StatusCode sc = this->globalToLocal(point,localPoint);
+  StatusCode sc = globalToLocal(point,localPoint);
 
   if(!sc.isSuccess()) return sc;
 
   // Check boundaries...
-  sc = isInside(localPoint);
+  sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
   // work out closet channel....
@@ -125,13 +125,13 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
   // minimum strip in zone
   closestStrip += firstStrip(zone);
   
-  unsigned int sensor=this->sensorNumber();
+  unsigned int sensor=sensorNumber();
   // set VeloChannelID....
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
-  if(this->isR()) {
+  if(isR()) {
     channel.setType(LHCb::VeloChannelID::RType);
-  } else if( this->isPileUp() ) {
+  } else if( isPileUp() ) {
     channel.setType(LHCb::VeloChannelID::PileUpType);
   }
   // calculate pitch....
@@ -141,12 +141,12 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloRType::isInside(const Gaudi::XYZPoint& point) const
+StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.Rho();
-  if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
+  if(innerRadius() >= radius || outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
@@ -195,7 +195,7 @@ StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start,
   unsigned int endZone;
   endZone = zoneOfStrip(strip);
   // Check boundaries
-  if(this->numberOfStrips() < strip) return StatusCode::FAILURE;
+  if(numberOfStrips() < strip) return StatusCode::FAILURE;
   if(startZone != endZone) {
     return StatusCode::FAILURE;
   }
@@ -219,7 +219,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
   if(!sc.isSuccess()) return sc;
   
   // Check boundaries...
-  sc = isInside(localPoint);
+  sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
   unsigned int strip=channel.strip();
@@ -259,8 +259,8 @@ void DeVeloRType::calcStripLimits()
 {
   MsgStream msg( msgSvc(), "DeVeloRType" );
   msg << MSG::VERBOSE << "calcStripLimits" << endreq;
-  m_innerR = this->innerRadius() + m_innerPitch / 2;
-  m_outerR = this->outerRadius() - m_outerPitch / 2;
+  m_innerR = innerRadius() + m_innerPitch / 2;
+  m_outerR = outerRadius() - m_outerPitch / 2;
 
   m_pitchSlope = (m_outerPitch - m_innerPitch) / 
     (m_outerR - m_innerR);
@@ -327,8 +327,8 @@ void DeVeloRType::calcStripLimits()
   for(unsigned int i=0; i < m_phiMin.size(); i++){
     msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
         << " max " << m_phiMax[i] << " phiMin " 
-        << phiMinZone(i,this->innerRadius()) 
-        << " max " << phiMaxZone(i,this->innerRadius()) << endmsg;
+        << phiMinZone(i,innerRadius()) 
+        << " max " << phiMaxZone(i,innerRadius()) << endmsg;
   }
   msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
       << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
@@ -364,7 +364,7 @@ void DeVeloRType::phiZoneLimits()
   m_quarterAngle  = .5 * m_halfAngle;
 
   double phi;
-  phi = acos(m_overlapInX/this->outerRadius());
+  phi = acos(m_overlapInX/outerRadius());
 
   m_phiMin.clear();
   m_phiMax.clear();

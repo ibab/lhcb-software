@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.12 2006-01-26 15:54:14 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.13 2006-03-21 17:26:26 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -41,18 +41,18 @@ public:
   virtual StatusCode initialize();
 
   /// Calculate the nearest channel to a 3-d point.
-  StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                             LHCb::VeloChannelID& channel,
                             double& localOffset,
                             double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
-  StatusCode neighbour(const LHCb::VeloChannelID& start, 
+  virtual StatusCode neighbour(const LHCb::VeloChannelID& start, 
                        const int& nOffset, 
                        LHCb::VeloChannelID& channel) const;
 
   /// Residual of 3-d point to a VeloChannelID
-  StatusCode residual(const Gaudi::XYZPoint& point, 
+  virtual StatusCode residual(const Gaudi::XYZPoint& point, 
                       const LHCb::VeloChannelID& channel,
                       double &residual,
                       double &chi2) const;
@@ -60,7 +60,7 @@ public:
 
 
   /// Residual [see DeVelo for explanation]
-  StatusCode residual(const Gaudi::XYZPoint& point,
+  virtual StatusCode residual(const Gaudi::XYZPoint& point,
                       const LHCb::VeloChannelID& channel,
                       const double localOffset,
                       const double width,
@@ -68,41 +68,34 @@ public:
                       double &chi2) const;
 
   /// The number of zones in the detector
-  inline unsigned int numberOfZones() const {return m_numberOfZones;}
+  virtual unsigned int numberOfZones() const {return m_numberOfZones;}
   
   /// The zones number for a given strip
-  inline unsigned int zoneOfStrip(const unsigned int strip) const {
+  virtual unsigned int zoneOfStrip(const unsigned int strip) const {
     return (m_nbInner > strip) ? 0 : 1;
   }
   
   /// The number of strips in a zone
-  inline unsigned int stripsInZone(const unsigned int zone) const {
-
+  virtual unsigned int stripsInZone(const unsigned int zone) const {
     if(0 == zone) {
       return m_nbInner;
     } else if(1 == zone){
-      return this->numberOfStrips()-m_nbInner;
+      return numberOfStrips()-m_nbInner;
     }
     return 0;
   }
   
   /// The minimum radius for a given zone of the sensor
-  double rMin(const unsigned int zone) const;
+  virtual double rMin(const unsigned int zone) const;
   
   /// The maximum radius for a given zone of the sensor
-  double rMax(const unsigned int zone) const;
-
-  /// The minimum phi for a given zone of the sensor
-  //  double phiMin(const unsigned int /*zone*/) {return 0.;}
-  
-  /// The maximum phi for a given zone of the sensor
-  //  double phiMax(const unsigned int /*zone*/) {return 0.;}
+  virtual double rMax(const unsigned int zone) const;
 
   /// Determines if 3-d point is inside sensor
-  StatusCode isInside(const Gaudi::XYZPoint& point) const;
+  virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
 
   /// Determine if local point is in corner cut-offs
-  bool isCutOff(double x, double y) const;
+  virtual bool isCutOff(double x, double y) const;
 
   /// The phi position of a strip at a given radius in the local frame
   inline double phiOfStrip(unsigned int strip, double fraction, 
@@ -118,14 +111,14 @@ public:
   
   /// The phi position of a strip at a given radius using method of DeVelo v8r*
   inline double trgPhiOfStrip(unsigned int strip, double fraction, 
-                           const double radius){
+                              const double radius) const{
     double phi=phiOfStrip(strip,fraction,radius);
-    if(this->isDownstream()) phi = -phi;
+    if(isDownstream()) phi = -phi;
     return phi;
   }
   
   /// The angle of the strip wrt to the x axis in the local frame
-  inline double angleOfStrip(unsigned int strip, double fraction){
+  inline double angleOfStrip(unsigned int strip, double fraction) const{
     double effectiveStrip=fraction+static_cast<double>(strip);
     if (m_nbInner > strip) {
       return (effectiveStrip*m_innerPitch) + m_innerTilt;
@@ -137,8 +130,8 @@ public:
 
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
-  inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction){
-    return this->localPhiToGlobal(angleOfStrip(strip,fraction));
+  inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction) const{
+    return localPhiToGlobal(angleOfStrip(strip,fraction));
   }
   
   inline double phiTilt(unsigned int strip){
@@ -178,9 +171,9 @@ public:
   /// Return the strip geometry for panoramix
   inline StatusCode stripLimits(unsigned int strip, Gaudi::XYZPoint& begin,
                                 Gaudi::XYZPoint& end){
-    StatusCode sc=this->localToGlobal(m_stripLimits[strip].first,begin);
+    StatusCode sc=localToGlobal(m_stripLimits[strip].first,begin);
     if(!sc) return sc;
-    sc=this->localToGlobal(m_stripLimits[strip].second,end);
+    sc=localToGlobal(m_stripLimits[strip].second,end);
     return sc;
   }
  

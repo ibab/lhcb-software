@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.18 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVeloPhiType.cpp,v 1.19 2006-03-21 17:26:26 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -80,7 +80,7 @@ StatusCode DeVeloPhiType::initialize()
   /* Inner strips (dist. to origin defined by angle between 
      extrapolated strip and phi)*/
   m_innerDistToOrigin = this->param<double>("InnerDistToOrigin");
-  m_innerTilt = asin(m_innerDistToOrigin/this->innerRadius());
+  m_innerTilt = asin(m_innerDistToOrigin/innerRadius());
   m_innerTilt += m_phiOrigin;
   // Outer strips
   m_outerDistToOrigin = this->param<double>("OuterDistToOrigin");
@@ -88,7 +88,7 @@ StatusCode DeVeloPhiType::initialize()
   double phiAtBoundary   = m_innerTilt - 
     asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
-  double phi = m_outerTilt - asin( m_outerDistToOrigin/this->outerRadius() );
+  double phi = m_outerTilt - asin( m_outerDistToOrigin/outerRadius() );
   msg << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/degree
       << " at boundary " << phiAtBoundary/degree
       << " and outside " << phi/degree
@@ -125,17 +125,17 @@ void DeVeloPhiType::calcStripLines()
 {
   m_stripLines.clear();
   double x1,y1,x2,y2;
-  for(unsigned int strip=0; strip<this->numberOfStrips(); strip++){
+  for(unsigned int strip=0; strip<numberOfStrips(); strip++){
     if(m_nbInner > strip) {
-      x1 = this->innerRadius() * cos(phiOfStrip(strip,0.,this->innerRadius()));
-      y1 = this->innerRadius() * sin(phiOfStrip(strip,0.,this->innerRadius()));
+      x1 = innerRadius() * cos(phiOfStrip(strip,0.,this->innerRadius()));
+      y1 = innerRadius() * sin(phiOfStrip(strip,0.,this->innerRadius()));
       x2 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
       y2 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
       x1 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
       y1 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      x2 = this->outerRadius() * cos(phiOfStrip(strip,0.,this->outerRadius()));
-      y2 = this->outerRadius() * sin(phiOfStrip(strip,0.,this->outerRadius()));
+      x2 = outerRadius() * cos(phiOfStrip(strip,0.,outerRadius()));
+      y2 = outerRadius() * sin(phiOfStrip(strip,0.,outerRadius()));
     }
     double gradient;
     gradient = (y2 - y1) /  (x2 - x1);
@@ -197,17 +197,17 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   Gaudi::XYZPoint localPoint(0,0,0);
-  StatusCode sc = this->globalToLocal(point,localPoint);
+  StatusCode sc = globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
   double radius=localPoint.Rho();
 
   // Check boundaries...
-  sc = isInside(localPoint);
+  sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
   // Use symmetry to handle second stereo...
   double phi=localPoint.phi();
-  if(this->isDownstream()) {
+  if(isDownstream()) {
     //    phi = -phi;
   }
   
@@ -225,7 +225,7 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   fraction = strip - closestStrip;
 
   pitch = phiPitch(radius);
-  unsigned int sensor=this->sensorNumber();
+  unsigned int sensor=sensorNumber();
   
   // set VeloChannelID....
   channel.setSensor(sensor);
@@ -255,7 +255,7 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
   unsigned int endZone=0;
   endZone = zoneOfStrip(strip);
   // put in some checks for boundaries etc...
-  if(this->numberOfStrips() < strip) return StatusCode::FAILURE;
+  if(numberOfStrips() < strip) return StatusCode::FAILURE;
   if(startZone != endZone) {
     return StatusCode::FAILURE;
   }
@@ -266,12 +266,12 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloPhiType::isInside(const Gaudi::XYZPoint& point) const
+StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   // check boundaries....  
   double radius=point.Rho();
-  if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
+  if(innerRadius() >= radius || outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
@@ -366,7 +366,7 @@ StatusCode DeVeloPhiType::isInside(const Gaudi::XYZPoint& point) const
 bool DeVeloPhiType::isCutOff(double x, double y) const
 {
   // Use symmetry to handle second stereo...
-  if(this->isDownstream()) {
+  if(isDownstream()) {
     //    y = -y;
   }
   // if(m_corner1X1 > x) return true;
@@ -404,7 +404,7 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
   Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc=DeVeloSensor::globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
-  sc = isInside(localPoint);
+  sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
   double x=localPoint.x();
@@ -452,7 +452,7 @@ double DeVeloPhiType::rMin(const unsigned int zone) const
 {
   double rMin=0;
   if(zone == 0) {
-    rMin = this->innerRadius();
+    rMin = innerRadius();
   } else if (zone == 1) {
     rMin = m_middleRadius;
   }
@@ -467,7 +467,7 @@ double DeVeloPhiType::rMax(const unsigned int zone) const
   if(zone == 0) {
     rMax = m_middleRadius;
   } else if (zone == 1) {
-    rMax = this->outerRadius();
+    rMax = outerRadius();
   }
   return rMax;
 }
