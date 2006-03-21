@@ -39,8 +39,10 @@ namespace  {
     }
     virtual void declareSubEvents(const EventDesc& evt, SubEvents& events)  {
       int evID = 0;
-      if ( prt ) ::printf("Declare MEP....\n");
+      size_t numEvt = events.size();
+      if ( prt ) ::printf("Declare MEP..%ld subevents..\n",numEvt);
       for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
+        if ( prt ) ::printf("----> Declare subevent:%ld\n",evID+1);
         declareSubEvent(evt, ++evID, (*i).second);
       }
     }
@@ -60,7 +62,9 @@ namespace  {
         h->setNumberOfMissing(0);
         h->setOffsetOfMissing(0);
         for(size_t j=0; j<frags.size(); ++j)  {
-          h->setOffset(j, int(int(frags[j])-m_mepID->mepStart));
+          LHCb::MEPFragment* f = frags[j];
+          if ( prt ) LHCb::checkFragment(f);
+          h->setOffset(j, int(int(f)-m_mepID->mepStart));
         }
         e.mask[0] = partitionID();
         e.mask[1] = 0;

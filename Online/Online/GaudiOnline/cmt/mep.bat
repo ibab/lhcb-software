@@ -9,10 +9,10 @@ start "evtprod_0"     %gaudi_exe% GaudiOnline mep2event_prod -n=evtprod_0 -p=333
 start "diskwr_0"      %test_exe% mep_cons_a -i=RESULT -n=diskwr_0 -p=333
 start "diskwr_1"      %test_exe% mep_cons_a -i=RESULT -n=diskwr_1 -p=333
 set PROCESSNAME=moore_0
-start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
+start "Moore" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
 set PROCESSNAME=moore_1
-start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
+start "Moore" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
 set PROCESSNAME=moore_2
-start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
+start "Moore" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
 
-echo start prod_0 %gaudi_exe% GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2
+rem start "prod_0" %gaudi_exe% GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2

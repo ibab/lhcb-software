@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.4 2006-03-17 07:33:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.5 2006-03-21 07:54:57 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiOnline/MBMCnvSvc.h"
 #include "MDF/RawEventHelpers.h"
@@ -14,10 +14,13 @@
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
 
+using MBM::Producer;
+using MBM::EventDesc;
+
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMCnvSvc)
 
-static MBM::Producer* producerFromIODescriptor(void* ioDesc)   {
-  return (MBM::Producer*)ioDesc;
+static Producer* producerFromIODescriptor(void* ioDesc)   {
+  return (Producer*)ioDesc;
 }
 
 /// Initializing constructor
@@ -40,10 +43,10 @@ LHCb::MBMCnvSvc::~MBMCnvSvc() {
 char* const LHCb::MBMCnvSvc::getDataSpace(void* ioDesc, size_t len)   
 {
   if ( ioDesc )   {
-    MBM::Producer* prod = producerFromIODescriptor(ioDesc);
+    Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
       if ( prod->getSpace(len+sizeof(LHCb::MDFHeader)) == MBM_NORMAL )  {
-        MBM::EventDesc& e = prod->event();
+        EventDesc& e = prod->event();
         return (char*)e.data+sizeof(LHCb::MDFHeader);
       }
     }
@@ -59,9 +62,9 @@ StatusCode LHCb::MBMCnvSvc::writeDataSpace(void* ioDesc,
                                            int evType, 
                                            int hdrType)    {
   if ( ioDesc )   {
-    MBM::Producer* prod = producerFromIODescriptor(ioDesc);
+    Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
-      MBM::EventDesc& e = prod->event();
+      EventDesc& e = prod->event();
       makeMDFHeader(e.data,len,evType,hdrType,trNumber,trMask,0,0);
       e.type    = evType;
       e.mask[0] = trMask[0];
@@ -88,7 +91,7 @@ void* LHCb::MBMCnvSvc::openIO(const std::string& fname, const std::string&  mode
       std::string buff = fname.substr(6, id1-6);
       std::string proc = fname.substr(id1+1, id2-id1-1);
       ::sscanf(fname.c_str()+id2+1,"0x%X",&partID);
-      MBM::Producer* p = new MBM::Producer(buff,proc,partID);
+      Producer* p = new Producer(buff,proc,partID);
       return p;
     }
   }
@@ -101,7 +104,7 @@ void* LHCb::MBMCnvSvc::openIO(const std::string& fname, const std::string&  mode
 /// Close MBM buffer manager
 StatusCode LHCb::MBMCnvSvc::closeIO(void* ioDesc) const   {
   if ( ioDesc )   {
-    MBM::Producer* prod = producerFromIODescriptor(ioDesc);
+    Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
       delete prod;
       return StatusCode::SUCCESS;

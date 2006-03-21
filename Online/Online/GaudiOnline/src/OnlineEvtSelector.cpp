@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.8 2006-01-12 12:02:57 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.9 2006-03-21 07:54:57 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -16,9 +16,9 @@
 #include "GaudiOnline/OnlineEvtSelector.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "MBM/Consumer.h"
 #include "MDF/StorageTypes.h"
+#include "MDF/RawDataAddress.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventDescriptor.h"
 
@@ -201,9 +201,15 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
 {
   const OnlineContext* pctxt = dynamic_cast<const OnlineContext*>(&ctxt);
   if ( pctxt )   {
-    unsigned long p1 = (unsigned long)&pctxt->banks();
-    unsigned long p2 = (unsigned long)&pctxt->descriptor();
-    pAddr = new GenericAddress(RAWDATA_StorageType,CLID_DataObject,"","",p1,p2);
+    const RawEventDescriptor& dsc = pctxt->descriptor();
+    unsigned long p0 = (unsigned long)&pctxt->descriptor();
+    RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
+    pA->setTriggerMask(dsc.triggerMask());
+    pA->setEventType(dsc.eventType());
+    pA->setFileOffset(0);
+    pA->setBanks(&pctxt->banks());
+    pA->setSize(dsc.size());
+    pAddr = pA;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;

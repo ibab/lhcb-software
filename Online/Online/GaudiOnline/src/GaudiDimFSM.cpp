@@ -30,6 +30,7 @@ StatusCode LHCb::GaudiDimFSM::init()  {
 }
 	
 StatusCode LHCb::GaudiDimFSM::process()  {
+  _asm int 3
   return m_appMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::process()
     : printErr(1,"Failed to execute single shot.");
 }

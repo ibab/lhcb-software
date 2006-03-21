@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.12 2006-01-16 19:24:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.13 2006-03-21 07:54:57 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiOnline/MEPManager.h"
 #include "MDF/RawEventDescriptor.h"
+#include "MDF/RawDataAddress.h"
 #include "MBM/Producer.h"
 
 using namespace MBM;
@@ -74,8 +74,8 @@ namespace LHCb  {
       if ( evt )  {
         IRegistry* reg = evt->registry();
         if ( reg )   {
-          GenericAddress* addr = dynamic_cast<GenericAddress*>(reg->address());
-          RawEventDescriptor* src = (RawEventDescriptor*)addr->ipar()[1];
+          RawDataAddress* addr = dynamic_cast<RawDataAddress*>(reg->address());
+          RawEventDescriptor* src = (RawEventDescriptor*)addr->ipar()[0];
           size_t len = sizeof(RawEventHeader)+(src->numberOfFragments()-1)*sizeof(int);
           if ( m_prod->getSpace(len) == MBM_NORMAL ) {
             EventDesc& e = m_prod->event();
