@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.4 2006-02-21 15:56:49 ocallot Exp $
+// $Id: L0DU.cpp,v 1.5 2006-03-21 08:33:43 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -37,10 +37,10 @@ L0DU::L0DU( const std::string& name,
     , m_conditions()
     , m_channels()
     , m_ADCconvert(true)
-    , m_reconfigure()
-    , m_reparametrize()
-    , m_writeOnTES()
-    , m_fillRaw()
+    , m_reconfigure(false)
+    , m_reparametrize(false)
+    , m_writeOnTES(false)
+    , m_fillRaw(true)
 {    
   declareProperty( "CaloData"                , m_CaloDataLocation   );
   declareProperty( "MuonData"                , m_MuonDataLocation   );
@@ -53,7 +53,7 @@ L0DU::L0DU( const std::string& name,
   declareProperty( "ResetConfiguration"      , m_reconfigure = false );
   declareProperty( "ResetParametrisation"    , m_reparametrize = false   );
   declareProperty( "WriteOnTES"              , m_writeOnTES = false   );
-  declareProperty( "FillRaw"                 , m_fillRaw = false   );
+  declareProperty( "FillRaw"                 , m_fillRaw = true );
 
   // configure DAQ
   m_rawSrcID = 0 ;// rawBank srcID
