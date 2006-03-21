@@ -1,5 +1,5 @@
 package MuonDAQ
-version v2r0
+version v2r1
 
 # ================ structure ===========================================
 branches src MuonDAQ cmt doc
@@ -11,6 +11,7 @@ use MuonKernel  v*    Muon
 use MuonDet     v*    Det
 use DigiEvent   v*    Event	
 use DAQEvent    v*    Event
+use RecEvent    v*    Event
 use GaudiAlg    v*
 
 # build a component library

@@ -1,4 +1,4 @@
-// $Id: IMuonRawBuffer.h,v 1.1 2006-01-31 15:22:33 asatta Exp $
+// $Id: IMuonRawBuffer.h,v 1.2 2006-03-21 08:35:01 asatta Exp $
 #ifndef MUONDAQ_IMUONRAWBUFFER_H 
 #define MUONDAQ_IMUONRAWBUFFER_H 1
 
@@ -34,6 +34,7 @@ public:
   }
   virtual std::vector<LHCb::MuonTileID> getTile()=0;
   virtual std::vector<std::pair<LHCb::MuonTileID,unsigned int> > getTileAndTDC()=0;
+  virtual std::vector<LHCb::MuonTileID> getPads()=0;
   
 
 protected:

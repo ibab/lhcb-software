@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonDAQ v2r1 2006-03-21 ===========================
+! 2006-02-21 - Alessia Satta
+ - add the endoding and decoding of the date format to be used by trigger
+
 !========================= MuonDAQ v2r0 2006-02-24 ===========================
 ! 2006-02-24 - Alessia Satta
  -fix a non intialized variable

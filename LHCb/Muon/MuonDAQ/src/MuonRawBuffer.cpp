@@ -1,18 +1,17 @@
-// $Id: MuonRawBuffer.cpp,v 1.2 2006-02-01 10:21:08 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.3 2006-03-21 08:35:02 asatta Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "MuonRawBuffer.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonStationCabling.h"
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonTSMap.h"
 #include "Event/RawBank.h"
-
+#include "MuonRawBuffer.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonRawBuffer
 //
@@ -80,6 +79,7 @@ StatusCode MuonRawBuffer::initialize()
       error() << cablingPath << " not found in XmlDDDB" << endmsg;
       return StatusCode::FAILURE;
     }    
+    if(station==0)m_M1Tell1=cabling->getNumberOfL1Board();
     
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
       debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
@@ -136,6 +136,7 @@ StatusCode MuonRawBuffer::initialize()
       countL1++;      
     }
   }
+  sc=initializeLUTCrossing();
   
   return StatusCode::SUCCESS ;
 };
@@ -166,14 +167,32 @@ std::vector<MuonTileID>  MuonRawBuffer::getTile(){
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
     const RawBank* r = *itB;
     //info()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;
-   //char* it;
+    //char* it;
+    //skip the tell1 corresponding to M1
+    const unsigned char* it=r->begin<unsigned char>();   
+    short skip=0;
+    
+    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
+      //how many pads ?
+      const short * itPad=r->begin<short>();
+      short nPads=*itPad;
+      if((nPads+1)%2==0){
+        skip=(nPads+1)/2;
+      }else {
+        skip=(nPads+1)/2+1;
+      }
+    }
+    
+    it=it+4*skip;
+    debug()<<" skipping "<< skip <<" bytes words "<<endreq;
+    
     // how many ODE in this tell1?
     unsigned int nODE=m_ODENumberInTell1[(*itB)->sourceID()];
     //info()<<" number of ODE "<<nODE<<endmsg;    
     std::vector<unsigned int> firedInODE;
     firedInODE.resize(nODE) ;    
     unsigned int itODE=0;
-    const unsigned char* it=r->begin<unsigned char>();    
+    //const unsigned char* it=r->begin<unsigned char>();    
     for(itODE=0; itODE < nODE ; itODE++) {
       //first decode the header
         firedInODE[itODE]=(unsigned int)(*it);
@@ -212,20 +231,41 @@ std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(){
   
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
     const RawBank* r = *itB;
-    //info()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;
+    debug()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;
    //char* it;
+    const unsigned char* it=r->begin<unsigned char>();    
+    short skip=0;
+    
+    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
+      //how many pads ?
+      const short * itPad=r->begin<short>();
+      short nPads=*itPad;
+      if((nPads+1)%2==0){
+        skip=(nPads+1)/2;
+      }else {
+        skip=(nPads+1)/2+1;
+      }
+    }    
+    for(int k=0;k<4*skip;k++){      
+      it++;
+    }
+    
+    debug()<<" skipping a pad number  of "<<*((*itB)->begin<short>())<<" then skip "
+          <<skip<<" 4 byte words "<<endreq;
+    
+
     // how many ODE in this tell1?
     unsigned int nODE=m_ODENumberInTell1[(*itB)->sourceID()];
-    //  info()<<" number of ODE "<<nODE<<endmsg;    
+    debug()<<"tell1 "<<(*itB)->sourceID()<<" number of ODE "<<nODE<<endmsg;    
     std::vector<unsigned int> firedInODE;
     firedInODE.resize(nODE) ;    
     unsigned int itODE=0;
-    const unsigned char* it=r->begin<unsigned char>();    
     unsigned int channelsInTell1=0;    
     for(itODE=0; itODE < nODE ; itODE++) {
       //first decode the header
         firedInODE[itODE]=(unsigned int)(*it);
-        //   info()<<"channels in ODE "<<(unsigned int)(*it)<<endmsg;        
+        debug()<<"channels in ODE "<<itODE<<" "<<
+          (unsigned int)(*it)<<endmsg;        
         
         channelsInTell1=channelsInTell1+(unsigned int)(*it);
         it++;
@@ -250,8 +290,19 @@ std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(){
     }
     
     //then decode the TDC info
-    unsigned int TDCword=0;
-    
+
+    //first skip the byte required for padding
+    //how many? 
+    int padding=0;
+    if((channelsInTell1+nODE)%4){
+      padding=4-(channelsInTell1+nODE)%4;      
+    }
+    for(int ipad=0;ipad<padding;ipad++){
+      it++;     
+    }    
+
+
+    unsigned int TDCword=0;    
     if(channelsInTell1%2==0) TDCword=channelsInTell1/2;
     else TDCword=channelsInTell1/2+1;
     unsigned int countChannels=0;
@@ -290,3 +341,201 @@ std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(){
 };
 
 
+StatusCode MuonRawBuffer::initializeLUTCrossing()
+{
+  //skip M1
+  int countTell1=m_M1Tell1; 
+ 
+  for(int station=1;station<5;station++){
+    debug()<<"station number "<<station<<endreq;    
+    std::string cablingBasePath=getBasePath(station);    
+    std::string cablingPath=cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);   
+    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
+      debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
+      std::string L1path=cablingBasePath+
+        cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
+      //      unsigned totODE=0;      
+      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
+        std::string ODEpath=cablingBasePath
+          +l1->getODEName(ODEBoard);
+        SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
+        //build LUT with ode ID --> MuonTileID
+        unsigned int region=ode->region();        
+        for(int TS=0;TS<ode->getTSNumber();TS++){        
+          std::string  TSPath= cablingBasePath+
+            ode->getTSName(TS);          
+          unsigned int quadrant= ode->getTSQuadrant(TS);
+          unsigned int TSLayoutX=ode->getTSLayoutX();
+          unsigned int TSLayoutY=ode->getTSLayoutY();
+          unsigned int TSGridX=ode->getTSGridX(TS);
+          unsigned int TSGridY=ode->getTSGridY(TS);
+          unsigned int digitOffSetX=0;
+          unsigned int digitOffSetY=0;          
+          SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);
+          debug()<<"trigger sector "<<TSPath<<endreq;
+          
+          std::vector<LHCb::MuonTileID> digitInTS;          
+          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
+            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
+            unsigned int layout=TSMap->layoutOutputChannel(i);
+            unsigned int  layoutX=TSMap->gridXLayout(layout);
+            unsigned int  layoutY=TSMap->gridYLayout(layout);            
+            digitOffSetX=layoutX*TSGridX;
+            digitOffSetY=layoutY*TSGridY;
+            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
+            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
+            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
+            MuonTileID muontile(station,lay,region,
+                                quadrant,digitX,digitY);
+            digitInTS.push_back(muontile);            
+          }
+          std::vector<LHCb::MuonTileID> crossAddress=DoPad(digitInTS,TSMap);  
+          std::vector<LHCb::MuonTileID>::iterator itPad;
+          for(itPad=crossAddress.begin();itPad<crossAddress.end();itPad++){
+            m_mapPad[countTell1].push_back(*itPad);
+          }        
+        }
+      }
+      countTell1++;      
+    }    
+  }  
+  return StatusCode::SUCCESS;  
+}
+
+std::vector<LHCb::MuonTileID> MuonRawBuffer::DoPad(std::vector<
+                                                   LHCb::MuonTileID> digit,
+                                                   MuonTSMap* TS)
+{
+  
+  std::vector<LHCb::MuonTileID> list_of_pads;
+  if(TS->numberOfLayout()==2){
+    //how many subsector????
+    int NX=TS->gridXLayout(1);    
+    int NY=TS->gridYLayout(0);
+    int Nsub=NX*NY;
+
+    debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;   
+    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);   
+    list_of_pads.reserve(maxPads);
+    LHCb::MuonTileID t;    
+    for(int i=0;i<maxPads;i++){
+      list_of_pads.push_back(t);      
+    }    
+    // work on sub sector 
+    std::vector<unsigned int> horiz[Nsub];
+    std::vector<unsigned int> hvert[Nsub];
+    // clear the memory;    
+    // start fill the sub sector matrices
+    std::vector<LHCb::MuonTileID>::iterator it;
+    int index=0;
+    for(it=digit.begin();it<digit.end();it++,index++){
+      //also zero must be set
+      // which subsector?
+      int mx=TS->gridXOutputChannel(index)/
+        (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
+      int my=TS->gridYOutputChannel(index)/
+        (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
+      debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;     
+      int Msub=mx+my*NX;
+      // horizntal o vertical?
+      bool horizontal=false;
+      if(TS->layoutOutputChannel(index)==0)horizontal=true;
+      if(horizontal)horiz[Msub].push_back(*it);
+      else hvert[Msub].push_back(*it);
+      debug()<<" horizontal ? "<<     horizontal<<endreq;      
+    }
+    // now the address of fired pads..
+    for(int i=0;i<Nsub;i++){
+      // cross only local to each sub matrix
+      std::vector<unsigned int>::iterator itx;
+      std::vector<unsigned int>::iterator ity;
+      //debug 
+      debug()<<" sub matrix "<<i<<endreq;
+      debug()<<" horizontal sequence ";
+      for(itx=horiz[i].begin();
+          itx<horiz[i].end();itx++){
+        debug()<<*itx<<" ";
+      }
+      debug()<<endreq;
+      debug()<<" vertical sequence ";     
+      for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
+        debug()<<*ity<<" ";        
+      }
+      debug()<<endreq;      
+      //end debug
+      unsigned int y_index=0;
+      unsigned int subY=i/NX;
+      unsigned int subX=i-subY*NX;      
+      unsigned int offsetY=subY*(TS->gridYLayout(1)/NY);
+      unsigned int offsetX=subX*(TS->gridXLayout(0)/NX);      
+      for(ity=hvert[i].begin();
+          ity<hvert[i].end();ity++,y_index++){                  
+        unsigned int x_index=0;
+        LHCb::MuonTileID tileY=*ity;
+        
+        for(itx=horiz[i].begin();
+            itx<horiz[i].end();itx++,x_index++){          
+            unsigned int address=offsetX+x_index+
+              (offsetY+y_index)*(TS->gridXLayout(0));             
+            debug()<<" result of the address "<<address<<endreq;   
+            LHCb::MuonTileID padTile=tileY.intercept(*itx);            
+            list_of_pads[address]=padTile; 
+            debug()<<" TS dec "<<address<<" "<<
+                  padTile.layout()<<" "<<padTile.station()<<" "<<
+              padTile.region()<<" "<<padTile.quarter()<<" "<<
+              padTile.nX()<<" "<<padTile.nY()<<" "<<endreq;
+            
+        }     
+      }            
+    }   
+  }else{    
+    //easy only zero suppression
+    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(0);   
+    list_of_pads.reserve(maxPads);
+    LHCb::MuonTileID t;    
+    for(int i=0;i<maxPads;i++){
+      list_of_pads.push_back(t);      
+    }
+
+    std::vector<LHCb::MuonTileID>::iterator it;
+    unsigned int index=0;    
+    for(it=digit.begin();it<digit.end();it++,index++){
+      unsigned int address=index;
+      list_of_pads[address]=*it;
+      debug()<<" result of the address "<<address<<endreq; 
+    }    
+  }
+  return list_of_pads;  
+
+
+}
+
+
+std::vector<LHCb::MuonTileID> MuonRawBuffer::getPads()
+{
+  std::vector<MuonTileID> storage;
+  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;  
+  unsigned int chIterator=0;
+  
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+    const RawBank* r = *itB;
+    debug()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;   
+    const short * it=r->begin<short>();    
+    if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
+      unsigned int tell=(unsigned int)(*itB)->sourceID();      
+      unsigned int pads=*it;
+      it++;      
+      for(unsigned int loop=0;loop<pads;loop++){
+        unsigned int address=*it;
+        storage.push_back(m_mapPad[tell][address]);        
+        it++;        
+      }      
+    }
+  }
+  return storage;  
+}

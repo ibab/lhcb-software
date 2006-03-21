@@ -1,4 +1,4 @@
-// $Id: MuonDAQTest.cpp,v 1.1 2006-01-31 15:22:33 asatta Exp $
+// $Id: MuonDAQTest.cpp,v 1.2 2006-03-21 08:35:01 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode MuonDAQTest::execute() {
   LHCb::MuonDigits::iterator idigit;
   for(idigit=digit->begin();idigit<digit->end();idigit++){    
     LHCb::MuonTileID digitTile=(*idigit)->key();
-    info()<< "["  <<  digitTile.layout() << ","
+    debug()<< "["  <<  digitTile.layout() << ","
           <<  digitTile.station() << ","
           <<  digitTile.region() << ","
           <<  digitTile.quarter() << ","
@@ -67,41 +67,58 @@ StatusCode MuonDAQTest::execute() {
           <<  digitTile.nY() << "]" <<"time "<<(*idigit)->TimeStamp()<<
       endmsg;
   }
-  /*  std::vector<LHCb::MuonTileID> decoding=m_MuonBuffer->getTile();
-std::vector<LHCb::MuonTileID>::iterator ji;
-for(ji=decoding.begin();ji<decoding.end();ji++){
-LHCb::MuonTileID digitTile=(*ji);
-info()<<" alesia "<<(unsigned int) digitTile<<endmsg;
-   info()<< "["  <<  digitTile.layout() << ","
-          <<  digitTile.station() << ","
-          <<  digitTile.region() << ","
-          <<  digitTile.quarter() << ","
-          <<  digitTile.nX() << ","
-          <<  digitTile.nY() << "]" <<endmsg;
-
-
-}  
-  */
-  std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator ji;
+    std::vector<LHCb::MuonTileID> decodingTile=m_MuonBuffer->getTile();
+    std::vector<LHCb::MuonTileID>::iterator jitile;
+    for(jitile=decodingTile.begin();jitile<decodingTile.end();jitile++){
+      LHCb::MuonTileID digitTile=(*jitile);
+      verbose()<<
+        " ;ist of tile "<<
+        (unsigned int) digitTile<<endmsg;
+      debug()<< "["  <<  digitTile.layout() << ","
+            <<  digitTile.station() << ","
+            <<  digitTile.region() << ","
+            <<  digitTile.quarter() << ","
+            <<  digitTile.nX() << ","
+            <<  digitTile.nY() << "]" <<endmsg;      
+    }  
   
-   std::vector<std::pair<LHCb::MuonTileID,unsigned int> > 
-     decoding=m_MuonBuffer->getTileAndTDC();
-for(ji=decoding.begin();ji<decoding.end();ji++){
-std::pair<LHCb::MuonTileID,unsigned int> digit=(*ji);
- LHCb::MuonTileID digitTile=digit.first;
- unsigned int time = digit.second;
- //info()<<" alesia "<<(unsigned int) digitTile<<endmsg;
- info()<< "["  <<  digitTile.layout() << ","
-       <<  digitTile.station() << ","
-       <<  digitTile.region() << ","
-       <<  digitTile.quarter() << ","
-       <<  digitTile.nX() << ","
-       <<  digitTile.nY() << "]" <<" time "<<time<<endmsg;
- 
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator ji;
+    
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> > 
+      decoding=m_MuonBuffer->getTileAndTDC();
+    for(ji=decoding.begin();ji<decoding.end();ji++){
+      std::pair<LHCb::MuonTileID,unsigned int> digit=(*ji);
+      LHCb::MuonTileID digitTile=digit.first;
+      unsigned int time = digit.second;
+      //info()<<" alesia "<<(unsigned int) digitTile<<endmsg;
+      debug()<< "["  <<  digitTile.layout() << ","
+            <<  digitTile.station() << ","
+            <<  digitTile.region() << ","
+            <<  digitTile.quarter() << ","
+            <<  digitTile.nX() << ","
+            <<  digitTile.nY() << "]" <<" time "<<time<<endmsg;      
+    }  
+    for(idigit=digit->begin();idigit<digit->end();idigit++){    
+      LHCb::MuonTileID digitTile=(*idigit)->key();
+      bool found=false;     
+      for(ji=decoding.begin();ji<decoding.end()&&!found;ji++){
+        std::pair<LHCb::MuonTileID,unsigned int> digitPair=(*ji);
+        LHCb::MuonTileID digitTileDecoded=digitPair.first;
+        unsigned int time = digitPair.second;
+        if(digitTile==digitTileDecoded){
+          if(time!=(*idigit)->TimeStamp()){
+	    err()<<"time not correct "<<
+            time<<" "<<(*idigit)->TimeStamp()<<endreq;
+          }else{ found=true;}  
+      }
+      
+      }
+      if(!found)info()<<" not found the digit "<<endreq;
+      
+    }
+    
 
-}  
-
-
+    
   return StatusCode::SUCCESS;
 };
 

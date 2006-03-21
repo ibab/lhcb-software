@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.3 2006-02-07 12:12:20 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.h,v 1.4 2006-03-21 08:35:02 asatta Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 
@@ -45,15 +45,21 @@ void TilePrintOut(LHCb::MuonTileID digitTile);
   long channelsInL1BeforeODE(std::string L1Path,long ODENumber);	
   unsigned int DAQaddress(LHCb::MuonTileID digitTile, long& L1Number, long& ODENumber);
   std::string getBasePath(int station);  
+  std::vector<unsigned int> padsinTS(std::vector<unsigned int>& TSDigit, 
+                                   std::string TSPath);
   std::vector<std::string> m_L1Name;
   std::vector<std::string> m_ODEName;
+  std::vector<std::string> m_TELL1Name;
   unsigned int m_ODENameStart[5][4][4];
   unsigned int m_ODENameEnd[5][4][4];
   std::vector<unsigned int> m_digitsInODE[180];
   unsigned int firedInODE[180];
   std::vector<unsigned int> m_ODEInL1[20];
+  std::vector<unsigned int> m_padInL1[20];  
   long m_TotL1Board;
   long m_TotODEBoard;  
   std::string basePath[5] ;
+  unsigned int m_M1Tell1;
+  
 };
 #endif // MUONDIGITTORAWBUFFER_H
