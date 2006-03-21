@@ -40,9 +40,9 @@ namespace  {
     virtual void declareSubEvents(const EventDesc& evt, SubEvents& events)  {
       int evID = 0;
       size_t numEvt = events.size();
-      if ( prt ) ::printf("Declare MEP..%ld subevents..\n",numEvt);
+      if ( prt ) ::printf("Declare MEP..%d subevents..\n",numEvt);
       for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
-        if ( prt ) ::printf("----> Declare subevent:%ld\n",evID+1);
+        if ( prt ) ::printf("----> Declare subevent:%d\n",evID+1);
         declareSubEvent(evt, ++evID, (*i).second);
       }
     }
