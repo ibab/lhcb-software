@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.6 2006-03-10 10:37:10 szumlat Exp $
+// $Id: VeloSimMoni.cpp,v 1.7 2006-03-21 17:33:16 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -285,7 +285,8 @@ StatusCode VeloSimMoni::VeloFEMonitor()
 //
   if(m_detailedMonitor){
   LHCb::VeloChannelID channel=localFE->channelID();
-  double sensorZ=m_veloDet->zSensor(channel.sensor())/cm;
+  const DeVeloSensor* sens=m_veloDet->sensor(localFE->channelID().sensor());
+  double sensorZ=sens->z()/cm;
   if(m_printInfo){
     info()<< "Channel: " << channel << ", sensor (from channel): "
           << channel.sensor() << ", sensor (from MCVeloFE): "
@@ -293,9 +294,10 @@ StatusCode VeloSimMoni::VeloFEMonitor()
           << sensorZ <<endmsg;
   }
   //
-  if(m_veloDet->isRSensor(channel.sensor())){
-    double testRadius=m_veloDet->rOfStrip(channel);
-    unsigned int zone=m_veloDet->zoneOfStrip(channel);
+  if(sens->isR()){
+    const DeVeloRType* rSens=dynamic_cast<const DeVeloRType*>(sens);
+    double testRadius=rSens->rOfStrip(channel.strip());
+    unsigned int zone=rSens->zoneOfStrip(channel.strip());
     if(m_printInfo){
       info()<< "Sensor: " << channel.sensor()
             << ", strip: " << channel.strip()
@@ -322,16 +324,18 @@ StatusCode VeloSimMoni::VeloFEMonitor()
              "MCVeloFE R position vs. Z (cm), Zone 3",
              -20., 80., 0., 5., 1000, 50);
     }
-  }else if(m_veloDet->isPhiSensor(channel.sensor())){
-    unsigned int zone=m_veloDet->zoneOfStrip(channel);
-    double testRadius=m_veloDet->rMin(channel.sensor(), zone);
-    double testPhi=m_veloDet->phiOfStrip(channel, testRadius);
-    double trgPhi=m_veloDet->trgPhiOfStrip(channel, testRadius);
-    double testPhiDirec=m_veloDet->angleOfStrip(channel);
-    double trgPhiDirec=m_veloDet->trgPhiDirectionOfStrip(channel);
+  }else if(sens->isPhi()){
+    unsigned int strip=channel.strip();
+    unsigned int zone=sens->zoneOfStrip(strip);
+    const DeVeloPhiType* phiSens=dynamic_cast<const DeVeloPhiType*>(sens);
+    double testRadius=phiSens->rMin(zone);
+    double testPhi=phiSens->phiOfStrip(strip, 0., testRadius);
+    double trgPhi=phiSens->trgPhiOfStrip(strip, 0., testRadius);
+    double testPhiDirec=phiSens->angleOfStrip(strip,0.);
+    double trgPhiDirec=phiSens->trgPhiDirectionOfStrip(strip,0.);
     if(m_printInfo){
       info()<< "Sensor: " << channel.sensor()
-            << ", type: " << (m_veloDet->type(channel.sensor()))
+            << ", type: " << (sens->type())
             << ", strip: " << channel.strip()
             << ", sensorZ: " << sensorZ
             << ", testPhi: " << testPhi/degree

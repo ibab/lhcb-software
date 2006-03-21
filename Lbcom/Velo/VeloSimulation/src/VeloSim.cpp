@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.9 2006-03-10 10:37:10 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.10 2006-03-21 17:33:16 mtobin Exp $
 // Include files
 // STL
 #include <string>
@@ -314,17 +314,22 @@ void VeloSim::testSim(LHCb::MCHit* hit, bool spillOver){
   double pitch;
   StatusCode sc;
   LHCb::VeloChannelID entryChan;
-  if (m_uniformDist()>0.5){
-    sc=m_veloDet->pointToChannel(hit->entry(), entryChan, EntryFraction, pitch);
+  const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
+  if(sens) {
+    if (m_uniformDist()>0.5){
+      sc=sens->pointToChannel(hit->entry(), entryChan, EntryFraction, pitch);
+    }
+    else{
+      sc=sens->pointToChannel(hit->exit(), entryChan, EntryFraction, pitch);
+    }
+    double charge=(hit->energy()/eV)/m_eVPerElectron;
+    if(spillOver) 
+      charge*=spillOverReminder(hit->time()/ns);
+    LHCb::MCVeloFE* myFE = findOrInsertFE(entryChan);
+    fillFE(myFE,hit,charge);
+  } else {
+    verbose() << "testSim: No sensor from hit " << (hit->sensDetID()) << endreq;
   }
-  else{
-    sc=m_veloDet->pointToChannel(hit->exit(), entryChan, EntryFraction, pitch);
-  }
-  double charge=(hit->energy()/eV)/m_eVPerElectron;
-  if(spillOver) 
-    charge*=spillOverReminder(hit->time()/ns);
-  LHCb::MCVeloFE* myFE = findOrInsertFE(entryChan);
-  fillFE(myFE,hit,charge);
 }
 //=========================================================================
 // calculate how many points in the silicon the simulation will be performed at
@@ -337,12 +342,14 @@ long VeloSim::simPoints(LHCb::MCHit* hit){
   double pitch=0.;
   StatusCode EntryValid, ExitValid;
   verbose()<< "hit entry: " << hit->entry() <<endmsg;
-  
   LHCb::VeloChannelID entryChan, exitChan;
-  EntryValid=m_veloDet->pointToChannel(hit->entry(),entryChan,EntryFraction,
-                                      pitch);
-  ExitValid=m_veloDet->pointToChannel(hit->exit(),exitChan,ExitFraction,
-                                   pitch);
+  const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
+  double NPoints=0.;
+  if(sens) {
+    EntryValid=sens->pointToChannel(hit->entry(),entryChan,EntryFraction,
+                                         pitch);
+    ExitValid=sens->pointToChannel(hit->exit(),exitChan,ExitFraction,
+                                        pitch);
     verbose()<< "calculate number of points to simulate in Si"
 	           <<endmsg;
     verbose()<< "entry/exit points "
@@ -352,25 +359,27 @@ long VeloSim::simPoints(LHCb::MCHit* hit){
 	           << " + " << ExitFraction <<endmsg;
     if (!EntryValid) verbose() << " invalid entry point" <<endmsg;
     if (!ExitValid) verbose() << " invalid exit point" <<endmsg;
-  //  
-  double NPoints=0.;
-  if (EntryValid&&ExitValid){
-    // both entry and exit are at valid strip numbers,
-    // calculate how many full strips apart
-    int INeighb;
-    StatusCode sc=m_veloDet->channelDistance(entryChan,exitChan,INeighb);
-    if (sc) NPoints = fabs(float(INeighb)-(EntryFraction-ExitFraction));
-    //
-    verbose()<< "Integer number of strips apart " << INeighb
-		         << " floating number " << NPoints <<endmsg;
-  }else{
-    // either entry or exit or both are invalid, ignore this hit
-    NPoints=0.;
-    //
-    if((EntryValid!=ExitValid)){
-      verbose()<< "simPoints: only one of entry and exit point of hit are in "
-             	 << "silicon - hit ignored " <<endmsg;
+    //  
+    if (EntryValid&&ExitValid){
+      // both entry and exit are at valid strip numbers,
+      // calculate how many full strips apart
+      int INeighb;
+      StatusCode sc=sens->channelDistance(entryChan,exitChan,INeighb);
+      if (sc) NPoints = fabs(float(INeighb)-(EntryFraction-ExitFraction));
+      //
+      verbose()<< "Integer number of strips apart " << INeighb
+               << " floating number " << NPoints <<endmsg;
+    }else{
+      // either entry or exit or both are invalid, ignore this hit
+      NPoints=0.;
+      //
+      if((EntryValid!=ExitValid)){
+        verbose()<< "simPoints: only one of entry and exit point of hit are in "
+                 << "silicon - hit ignored " <<endmsg;
+      }
     }
+  } else { // matches test on sensor pointer
+    verbose() << "Invalid sensor from hit " << (hit->sensDetID());
   }
   //
   return (int(ceil(NPoints)*m_simulationPointsPerStrip));
@@ -397,9 +406,8 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
   double chargeEqual;
   if(m_inhomogeneousCharge){
     // some of charge allocated by delta ray algorithm
-    unsigned int sensorNo=m_veloDet->sensorNumber(hit->entry());
-    chargeEqual=m_chargeUniform*
-                m_veloDet->siliconThickness(sensorNo)/micrometer;
+    const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
+    chargeEqual=m_chargeUniform*sens->siliconThickness()/micrometer;
     if(spillOver) 
       chargeEqual*=spillOverReminder(hit->time()/ns);
     if(chargeEqual>charge)  chargeEqual=charge;
@@ -485,8 +493,8 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
   Gaudi::XYZVector tempVec(m_movePosition);
   point=point+tempVec;
   //
-  unsigned int sensorNo=m_veloDet->sensorNumber(hit->entry());
-  double thickness=m_veloDet->siliconThickness(sensorNo)/micrometer;
+  const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
+  double thickness=sens->siliconThickness()/micrometer;
   // sensor numbers for hits currently incorrect (7/02) 
   // nasty fudge - use one hardcoded number
   //  double thickness=m_velo->siliconThickness(1)/micrometer;
@@ -501,11 +509,11 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
     verbose()<< " ipt " << ipt << " point " << point <<endmsg;
     //calculate point on path
     LHCb::VeloChannelID entryChan;
-    StatusCode valid=m_veloDet->pointToChannel(point,entryChan,fraction,pitch);
+    StatusCode valid=sens->pointToChannel(point,entryChan,fraction,pitch);
     if(!valid){
-  	 verbose()<< " point is not in active silicon " << point 
-              << " entry " << hit->entry() << " exit " 
-              <<  hit->exit() <<endmsg;
+      verbose()<< " point is not in active silicon " << point 
+               << " entry " << hit->entry() << " exit " 
+               <<  hit->exit() << " detID " << hit->sensDetID() <<endmsg;
     }
     //
     if(valid){
@@ -525,7 +533,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
         double diffuseDist1=((iNg-0.5)-fraction)*pitch/micrometer;
         double diffuseDist2=((iNg+0.5)-fraction)*pitch/micrometer;
         verbose()<< "dif1: " << diffuseDist1 << ", dif2: "
-              << diffuseDist2 <<endmsg;
+                 << diffuseDist2 <<endmsg;
         
         //      double diffuseDist1=((iNg)-fraction)*pitch/micrometer;
         //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micrometer;
@@ -563,7 +571,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
           // ignore if below 10% of threshold
           // calculate index of this strip
           LHCb::VeloChannelID stripKey;
-          valid=m_veloDet->neighbour(entryChan,iNg,stripKey);
+          valid=sens->neighbour(entryChan,iNg,stripKey);
           //
           debug()<< " neighbour " << entryChan.strip() << " "
                  << stripKey.strip() << " iNg " << iNg <<endmsg;
@@ -724,7 +732,8 @@ LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
   }
   // check this
   int checkDistance;
-  StatusCode sc=m_veloDet->channelDistance((*FEIt)->key(),prevStrip->key(),
+  const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->key().sensor());
+  StatusCode sc=sens->channelDistance((*FEIt)->key(),prevStrip->key(),
                                         checkDistance);
   valid = sc.isSuccess();
   bool exists=(-1 == checkDistance && valid);
@@ -735,15 +744,15 @@ LHCb::MCVeloFE* VeloSim::findOrInsertPrevStrip(
     prevStrip=(*last);
   }
   // check this
-  sc=m_veloDet->channelDistance((*FEIt)->key(),prevStrip->key(),
-                             checkDistance);
+  sc=sens->channelDistance((*FEIt)->key(),prevStrip->key(),
+                           checkDistance);
   valid = sc.isSuccess();
   exists=(-1 == checkDistance && valid);
   if(exists) return prevStrip;  
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
     LHCb::VeloChannelID stripKey;
-    sc=m_veloDet->neighbour((*FEIt)->key(),-1,stripKey);
+    sc=sens->neighbour((*FEIt)->key(),-1,stripKey);
     if(sc.isSuccess()){
       //== Protect if key already exists ==
       prevStrip = m_FEs_coupling->object(stripKey);
@@ -783,16 +792,17 @@ LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
     FEIt--;
   }
   // check this
+  const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->key().sensor());
   int checkDistance;
-  StatusCode sc=m_veloDet->channelDistance((*FEIt)->key(),nextStrip->key(),
-					checkDistance);
+  StatusCode sc=sens->channelDistance((*FEIt)->key(),nextStrip->key(),
+                                           checkDistance);
   valid = sc.isSuccess();
   bool exists=(1 == checkDistance && valid);
   if(exists) return nextStrip;
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
     LHCb::VeloChannelID stripKey;
-    sc=m_veloDet->neighbour((*FEIt)->key(),+1,stripKey);
+    sc=sens->neighbour((*FEIt)->key(),+1,stripKey);
     if(sc.isSuccess()){
       //== Protect if key already exists ==
       nextStrip = m_FEs_coupling->object(stripKey);
@@ -856,32 +866,36 @@ StatusCode VeloSim::noiseSim(){
   }
   // allocate noise (above threshold) to channels that don't currently
   // have signal
-  int maxSensor=0;
-  int minSensor=0;
+  std::vector<DeVeloSensor*>::const_iterator sensBegin;
+  std::vector<DeVeloSensor*>::const_iterator sensEnd;
+  
   if (m_simMode=="velo") {
-    minSensor=m_veloDet->numberPileUpSensors();
-    maxSensor=m_veloDet->numberSensors();
+    sensBegin = m_veloDet->rPhiSensorsBegin();
+    sensEnd   = m_veloDet->rPhiSensorsEnd();
   } else if (m_simMode=="pileUp") {
-    maxSensor=m_veloDet->numberPileUpSensors();
+    sensBegin = m_veloDet->pileUpSensorsBegin();
+    sensEnd   = m_veloDet->pileUpSensorsEnd();
   }  
-  for(int iSensorArrayIndex=minSensor; iSensorArrayIndex< maxSensor;
-       iSensorArrayIndex++){
-    unsigned int sensor=m_veloDet->sensorNumber(iSensorArrayIndex);
+  for(std::vector<DeVeloSensor*>::const_iterator iSens = sensBegin;
+      iSens != sensEnd;
+      ++iSens) {
+    const DeVeloSensor* sens = *iSens;
     double noiseSig=noiseSigma(stripCapacitance);
     // use average capacitance of sensor, should be adequate if variation in
     // cap. not too large.
     // number of hits to add noise to (i.e. fraction above threshold)
     // add both large +ve and -ve noise.
-    int maxStrips= m_veloDet->numberStrips(sensor);
+    int maxStrips= sens->numberOfStrips();
     int hitNoiseTotal= 
         int(LHCbMath::round(2.*gsl_sf_erf_Q(m_threshold/noiseSig)
 			  *float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
     hitNoiseTotal = int(poisson());
     //
+    unsigned int sensorNo=sens->sensorNumber();
     verbose()<< "Number of strips to add noise to "
 		         << hitNoiseTotal
-             << " sensor Number " << sensor
+             << " sensor Number " << sensorNo
 		         << " maxStrips " << maxStrips
 		         <<  " sigma of noise " << noiseSig
 		         << " threshold " << m_threshold
@@ -893,7 +907,7 @@ StatusCode VeloSim::noiseSim(){
       // choose random hit to add noise to
       // get strip number
       int stripArrayIndex=int(LHCbMath::round(m_uniformDist()*(maxStrips-1)));
-      LHCb::VeloChannelID stripKey(sensor,stripArrayIndex);
+      LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
       // find strip in list.
       LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
       if (myFE->addedNoise()==0){
