@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.26 2006-03-08 07:08:45 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.27 2006-03-21 17:30:42 mtobin Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -63,10 +63,12 @@ StatusCode PuVetoAlg::initialize() {
   DeVelo* m_velo = get<DeVelo>( detSvc(), "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
 
   m_nbPuSensor = m_velo->numberPileUpSensors();
-  m_firstPuSensor = 128;
+  m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
   
-  for (int i=0;i<(int)m_nbPuSensor;i++) {
-    m_zSensor[i] = m_velo->zSensor(i+m_firstPuSensor); 
+  unsigned int i=0;
+  for (std::vector<DeVeloRType*>::const_iterator iPU=m_velo->pileUpRSensorsBegin();
+       iPU != m_velo->pileUpRSensorsEnd(); ++iPU, ++i) {
+    m_zSensor[i] = (*iPU)->z(); 
     debug() << "Sensor " << i << " z = " << m_zSensor[i] << endreq;
   }
  
@@ -153,8 +155,9 @@ StatusCode PuVetoAlg::initialize() {
    }
    
    // Set r positions of PU "clusters" (4 strips OR-ed together)
+   const DeVeloRType* firstSens=(*(m_velo->pileUpRSensorsBegin()));
   for (int i=0;i<128;i++) {
-    m_rCluster[i] = m_velo->rOfStrip(VeloChannelID(m_firstPuSensor,i*4+2)); 
+    m_rCluster[i] = firstSens->rOfStrip(i*4+2); 
     debug() << "Cluster " << i << "  r = " << m_rCluster[i] << endreq;
   }
 
@@ -179,7 +182,6 @@ StatusCode PuVetoAlg::initialize() {
   
   return StatusCode::SUCCESS;
 }
-
   
 //=============================================================================
 // Main execution

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.42 2006-03-08 07:14:39 cattanem Exp $
+! $Id: release.notes,v 1.43 2006-03-21 17:30:42 mtobin Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-03-17 - Mark Tobin and Kurt Rinnert
+ - Adapt to use new DeVelo interface
 
 !======================== PuVeto v7r0 2006-03-08 ========================
 ! 2006-03-08 - Olivier Callot
