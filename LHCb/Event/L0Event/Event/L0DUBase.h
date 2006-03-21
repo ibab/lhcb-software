@@ -35,10 +35,12 @@ namespace L0DUBase{
     namespace Address2 { static const unsigned int Mask  = 0x7F000000 , Shift = 24; };
     namespace BCID1    { static const unsigned int Mask  = 0x80000000 , Shift = 31;  };
     // from SU
-    namespace PbPu1    { static const unsigned int Mask  = 0x7E      , Shift = 1; }; // PB | PU address
-    namespace Sign1    { static const unsigned int Mask  = 0x80      , Shift = 7;  };
-    namespace BCID     { static const unsigned int Mask  = 0xFE00    , Shift = 9;  };
-    namespace PbPu2    { static const unsigned int Mask  = 0x7E0000  , Shift = 17;  }; // PB | PU address
+    namespace Pu1      { static const unsigned int Mask  = 0x6       , Shift = 1; }; // PU address
+    namespace Pb1      { static const unsigned int Mask  = 0x78      , Shift = 3; }; // PB address
+    namespace Sign1    { static const unsigned int Mask  = 0x80      , Shift = 7; };
+    namespace BCID     { static const unsigned int Mask  = 0xFE00    , Shift = 9; };
+    namespace Pu2      { static const unsigned int Mask  = 0x60000   , Shift = 17;}; // PU address
+    namespace Pb2      { static const unsigned int Mask  = 0x780000  , Shift = 19;}; // PB address
     namespace Sign2    { static const unsigned int Mask  = 0x800000  , Shift = 23; };
     namespace Status   { static const unsigned int Mask  = 0xF0000000, Shift = 28; };
     static const unsigned int AddressSize = 7;
@@ -107,63 +109,73 @@ namespace L0DUBase{
     Pt[Index::Size]  = { Fiber::MuonCU0, Type::MuonPt,Muon::Pt1::Mask, Muon::Pt1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU0, Type::Digit ,Muon::Sign1::Mask, Muon::Sign1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU0, Type::Digit ,Muon::Address1::Mask , Muon::Address1::Shift , 
-                             Fiber::MuonSU0, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU0, Muon::Pu1::Mask|Muon::Pb1::Mask , Muon::Pu1::Shift,
+                             Muon::AddressSize};
   };
   namespace Muon2{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU0, Type::MuonPt,Muon::Pt2::Mask, Muon::Pt2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU0, Type::Digit ,Muon::Sign2::Mask, Muon::Sign2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU0, Type::Digit ,Muon::Address2::Mask , Muon::Address2::Shift , 
-                             Fiber::MuonSU0, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU0, Muon::Pu2::Mask|Muon::Pb2::Mask ,
+                             Muon::Pu2::Shift,Muon::AddressSize};
   };
   namespace Muon3{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU1, Type::MuonPt,Muon::Pt1::Mask, Muon::Pt1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU1, Type::Digit ,Muon::Sign1::Mask, Muon::Sign1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU1, Type::Digit ,Muon::Address1::Mask , Muon::Address1::Shift , 
-                             Fiber::MuonSU1, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU1, Muon::Pu1::Mask|Muon::Pb1::Mask ,
+                             Muon::Pu1::Shift,Muon::AddressSize};
   };
   namespace Muon4{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU1, Type::MuonPt,Muon::Pt2::Mask, Muon::Pt2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU1, Type::Digit ,Muon::Sign2::Mask, Muon::Sign2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU1, Type::Digit ,Muon::Address2::Mask , Muon::Address2::Shift , 
-                             Fiber::MuonSU1, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU1, Muon::Pu2::Mask|Muon::Pb2::Mask , Muon::Pu2::Shift,
+                             Muon::AddressSize};
   };
   namespace Muon5{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU2, Type::MuonPt,Muon::Pt1::Mask, Muon::Pt1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU2, Type::Digit ,Muon::Sign1::Mask, Muon::Sign1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU2, Type::Digit ,Muon::Address1::Mask , Muon::Address1::Shift , 
-                             Fiber::MuonSU2, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU2, Muon::Pu1::Mask|Muon::Pb1::Mask , Muon::Pu1::Shift, 
+                             Muon::AddressSize};
   };
   namespace Muon6{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU2, Type::MuonPt,Muon::Pt2::Mask, Muon::Pt2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU2, Type::Digit ,Muon::Sign2::Mask, Muon::Sign2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU2, Type::Digit ,Muon::Address2::Mask , Muon::Address2::Shift , 
-                             Fiber::MuonSU2, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU2, Muon::Pu2::Mask|Muon::Pb2::Mask , Muon::Pu2::Shift,
+                             Muon::AddressSize};
   };
   namespace Muon7{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU3, Type::MuonPt,Muon::Pt1::Mask, Muon::Pt1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU3, Type::Digit ,Muon::Sign1::Mask, Muon::Sign1::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU3, Type::Digit ,Muon::Address1::Mask , Muon::Address1::Shift , 
-                             Fiber::MuonSU3, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU3, Muon::Pu1::Mask|Muon::Pb1::Mask , Muon::Pu1::Shift,
+                             Muon::AddressSize};
   };
   namespace Muon8{
     static const unsigned int  
     Pt[Index::Size]  = { Fiber::MuonCU3, Type::MuonPt,Muon::Pt2::Mask, Muon::Pt2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Sign[Index::Size]= { Fiber::MuonSU3, Type::Digit ,Muon::Sign2::Mask, Muon::Sign2::Shift, Fiber::Empty, 0 , 0 , 0 },
     Address[Index::Size] = { Fiber::MuonCU3, Type::Digit ,Muon::Address2::Mask , Muon::Address2::Shift , 
-                             Fiber::MuonSU3, Muon::PbPu1::Mask , Muon::PbPu1::Shift, Muon::AddressSize};
+                             Fiber::MuonSU3, Muon::Pu2::Mask|Muon::Pb2::Mask , Muon::Pu2::Shift,
+                             Muon::AddressSize};
   };
   namespace PileUp{
     static const unsigned int  
     Peak1[Index::Size] = { Fiber::Pu1, Type::Digit , L0Pu::Peak::Mask, L0Pu::Peak::Shift, Fiber::Empty, 0 , 0 , 0  },
     Peak2[Index::Size] = { Fiber::Pu2, Type::Digit , L0Pu::Peak::Mask, L0Pu::Peak::Shift, Fiber::Empty, 0 , 0 , 0  },
-    Peak1Pos[Index::Size] = { Fiber::Pu1, Type::Digit , L0Pu::Address::Mask, L0Pu::Address::Shift, Fiber::Empty, 0 , 0 , 0 },
-    Peak2Pos[Index::Size] = { Fiber::Pu2, Type::Digit , L0Pu::Address::Mask, L0Pu::Address::Shift, Fiber::Empty, 0 , 0 , 0 },
+    Peak1Pos[Index::Size] = { Fiber::Pu1, Type::Digit , L0Pu::Address::Mask, L0Pu::Address::Shift, Fiber::Empty, 
+                              0 , 0 , 0 },
+    Peak2Pos[Index::Size] = { Fiber::Pu2, Type::Digit , L0Pu::Address::Mask, L0Pu::Address::Shift, Fiber::Empty, 
+                              0 , 0 , 0 },
     Hits[Index::Size]  = {Fiber::Pu2, Type::Digit, L0Pu::HitsLSB::Mask, L0Pu::HitsLSB::Shift, 
                           Fiber::Pu2, L0Pu::HitsMSB::Mask, L0Pu::HitsMSB::Shift, L0Pu::HitsLSBSize  };
   };

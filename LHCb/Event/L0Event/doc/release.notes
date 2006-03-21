@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.51 2006-03-20 18:00:58 odescham Exp $
+$Id: release.notes,v 1.52 2006-03-21 11:07:31 odescham Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
 !======================== L0Event v15r0 2006-02-21 ========================
+! 2006-03-21 - Olivier Deschamps
+ - improve L0DUBase.h to please L0Muon 
+
 ! 2006-03-20 - Olivier Deschamps
  - Fix in src/L0CaloCandidate.cpp implementation file.
  - Remove L0Calo namespace.
