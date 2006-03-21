@@ -1,4 +1,4 @@
-// $Id: MEPMultiFragment.h,v 1.2 2006-03-20 15:17:14 niko Exp $
+// $Id: MEPMultiFragment.h,v 1.3 2006-03-21 07:55:32 frankb Exp $
 //====================================================================
 //	MEPMultiFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //====================================================================
 #ifndef MDF_MEPMULTIFRAGMENT_H
 #define MDF_MEPMULTIFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.2 2006-03-20 15:17:14 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPMultiFragment.h,v 1.3 2006-03-21 07:55:32 frankb Exp $
 
 // Framework include files
 #include "MDF/MEPFragment.h"
@@ -52,7 +52,7 @@ namespace LHCb  {
   public:
     /// Default constructor
     MEPMultiFragment()
-      : m_evID(0), m_size(0), m_numEvt(0), m_partitionID(0) {                 }
+      : m_evID(0), m_size(12), m_numEvt(0), m_partitionID(0) {                }
     /// Initializing constructor
     MEPMultiFragment(unsigned int eid, unsigned short siz, int pID, int packing) 
       : m_evID(eid), m_size(siz), m_numEvt(packing), m_partitionID(pID) {     }
@@ -66,10 +66,12 @@ namespace LHCb  {
     unsigned short       eventID() const {  return m_evID;                    }
     /// Set event ID of the fragment
     void setEventID(unsigned short val)  {  m_evID = val;                     }
-    /// Length of the fragment
-    size_t               size()    const {  return m_size;                    }
-    /// Set event ID of the fragment
-    void setSize(unsigned short val)     {  m_size = val;                     }
+    /// Header size (=12 bytes)
+    static size_t hdrSize()              {  return 12;                        }
+    /// Length of the fragment       (Note: 12 Bytes mep multifragment header!)
+    size_t               size()    const {  return m_size-hdrSize();          }
+    /// Set event ID of the fragment (Note: 12 Bytes mep multifragment header!)
+    void setSize(unsigned short val)     {  m_size = val+hdrSize();           }
     /// Packing factor
     size_t               packing() const {  return m_numEvt;                  }
     /// Set packing factor
@@ -77,7 +79,7 @@ namespace LHCb  {
     /// Access to first bank in the fragment
     const char*          start()   const {  return m_frags;                   }
     /// Access to end-iteration over bank (Note: 12 Bytes mep multifragment header!)
-    const char*          end()     const {  return m_frags+m_size-12-4*sizeof(char);}
+    const char*          end()     const {  return m_frags+size();            } //-4*sizeof(char);}
     /// Access to first bank in the fragment
     Fragment*            first()   const { return (Fragment*)m_frags;         }
     /// Access to end-iteration over bank
@@ -87,8 +89,8 @@ namespace LHCb  {
       // MEP size excludes MEP header size; need to advance 2 shorts more !
       return (Fragment*)(last->start()+last->size());
     }
-    /// Object size ithout variable buffer
-    static size_t sizeOf()  {  return sizeof(MEPMultiFragment)-4*sizeof(char);  }
+    /// Object size ithout variable buffer (Note: 12 Bytes mep multifragment header!)
+    static size_t sizeOf()  {  return sizeof(MEPMultiFragment)-4*sizeof(char); }
   };
 }      // end namespace LHCb
 #endif // MDF_MEPMULTIFRAGMENT_H

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.4 2006-03-17 17:23:56 frankb Exp $
+// $Id: RawDataSelector.h,v 1.5 2006-03-21 07:55:32 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.4 2006-03-17 17:23:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.5 2006-03-21 07:55:32 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -179,9 +179,7 @@ namespace LHCb  {
   protected:
     // Data Members
     CLID                          m_rootCLID;
-    std::string                   m_cnvSvcName;
     std::string                   m_rootName;
-    std::string                   m_buffLen;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

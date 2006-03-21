@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.3 2006-03-17 17:23:56 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.4 2006-03-21 07:55:32 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -46,9 +46,6 @@ void LHCb::RawDataSelector::LoopContext::setCriteria(const std::string& crit) {
     std::string tmp = (*i).tag().substr(0,3);
     std::string val = (*i).value();
     switch(::toupper(tmp[0])) {
-      case 'L': // LENGTH='1024'
-        ::sscanf((*i).value().c_str(), "%d", &buff_len);
-        break;
       case 'D': // DATA='...'
         m_conSpec = val;
         switch(::toupper(m_conSpec[0])) {
@@ -71,8 +68,6 @@ void LHCb::RawDataSelector::LoopContext::setCriteria(const std::string& crit) {
 LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
 : Service( nam, svcloc), m_rootCLID(CLID_NULL)
 {
-  declareProperty("CnvService",  m_cnvSvcName);
-  declareProperty("LENGTH",      m_buffLen = "35000");
 }
 
 // IInterface::queryInterface
@@ -177,7 +172,7 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
   if ( pctxt ) {
     const StreamDescriptor& dsc = pctxt->descriptor();
     if ( dsc.hasData() )  {
-      RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"",0,0);
+      RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
       pA->setTriggerMask(pctxt->triggerMask());
       pA->setEventType(pctxt->eventType());
       pA->setFileOffset(pctxt->offset());
@@ -200,7 +195,6 @@ LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& contex
   if ( ctxt )  {
     ctxt->close();
     crit.replace(0,5,"DATA='");
-    crit += "' LENGTH='" + m_buffLen;
     ctxt->setCriteria(crit);
     StatusCode sc = ctxt->connect();
     if ( !sc.isSuccess() )  {

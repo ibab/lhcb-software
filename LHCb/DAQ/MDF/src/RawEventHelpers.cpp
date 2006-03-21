@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.7 2006-03-20 15:37:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.8 2006-03-21 07:55:32 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -393,6 +393,25 @@ StatusCode LHCb::decodeFragment(const MEPFragment* f, std::vector<RawBank*>& raw
   return decodeRawBanks(f->start(), f->end(), raw);
 }
 
+/// Check consistency of MEP fragment using magic bank patterns.
+bool LHCb::checkFragment(const MEPFragment* f)  {
+  bool res = true;
+  for(RawBank* b=f->first(); b < f->last(); b=f->next(b))  {
+    size_t s = b->totalSize();
+    if ( b->magic() != RawBank::MagicPattern )  {
+      // Error: Bad magic pattern; needs handling
+      printf("Bad magic pattern in Tell1 bank %p: srcID=%d Size:%d Vsn:%d Magic:%X\n",
+        b, b->sourceID(), b->size(), b->version(), b->magic());
+      res = false;
+    }
+    else  {
+//      printf("Tell1 bank OK %p: srcID=%d Size:%d Vsn:%d Magic:%X\n",
+//        b, b->sourceID(), b->size(), b->version(), b->magic());
+    }
+  }
+  return res;
+}
+
 /// Copy MEP fragment into opaque data buffer
 StatusCode LHCb::encodeFragment(const MEPFragment* f, char* const data, size_t len)  {
   char* ptr = data;
@@ -467,7 +486,7 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
       encodeFragment((*l).second, f);
       mf->setSize(mf->size()+f->size()+f->sizeOf());
     }
-    me->setSize(me->size()+mf->size()+mf->sizeOf());
+    me->setSize(me->size()+mf->size()+mf->sizeOf()-mf->hdrSize());
     // printf("MF:%p  %p\n",mf,((char*)me)+evtlen);
   }
   *mep_event = me;

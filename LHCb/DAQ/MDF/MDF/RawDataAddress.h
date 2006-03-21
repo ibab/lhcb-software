@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.1 2006-03-17 17:24:47 frankb Exp $
+// $Id: RawDataAddress.h,v 1.2 2006-03-21 07:55:32 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -38,6 +38,7 @@ namespace LHCb  {
     /// Dummy constructor
     RawDataAddress() : GenericAddress(), m_size(0), m_evType(0), m_banks(0)  {
       m_trMask[0]=m_trMask[1]=m_trMask[2]=m_trMask[3] = 0;
+      m_par[1] = "0 ";
     }
     /// Copy Constructor
     RawDataAddress( const RawDataAddress& c)

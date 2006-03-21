@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.7 2006-03-20 15:37:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.8 2006-03-21 07:55:32 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -138,14 +138,13 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddress, DataObject
     try {
       IRegistry* pReg = pA->registry();
       if ( pReg )  {
-        RawDataAddress* paddr = 0;
         const std::string& id = pReg->identifier();
-        SmartIF<IDataManagerSvc> mgr(dataProvider());
-        if ( !mgr.isValid() )  {
-          return error("Failed to locate Manager interface in dataprovider!");
-        }
         if ( id == "/Event" )  {
-          paddr = new RawDataAddress(*pA);
+          SmartIF<IDataManagerSvc> mgr(dataProvider());
+          if ( !mgr.isValid() )  {
+            return error("Failed to locate Manager interface in dataprovider!");
+          }
+          RawDataAddress* paddr = new RawDataAddress(*pA);
           paddr->setClID(DataObject::classID());
           StatusCode sc = mgr->registerAddress(pReg, "/DAQ", paddr);
           if ( !sc.isSuccess() )  {
