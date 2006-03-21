@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.3 2006-03-08 17:49:07 ocallot Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.4 2006-03-21 17:34:16 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -119,6 +119,7 @@ StatusCode BuildMCTrackInfo::execute() {
   for ( LHCb::VeloDigits::const_iterator vIt = veloDigs->begin() ;
         veloDigs->end() != vIt ; vIt++ ) {
     int sensor = (*vIt)->channelID().sensor();
+    const DeVeloSensor* sens=m_velo->sensor(sensor);
     part = veloLink.first( *vIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {
@@ -126,10 +127,10 @@ StatusCode BuildMCTrackInfo::execute() {
         if ( veloR.size() > MCNum ) {
           if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
             lastVelo[MCNum] = sensor;
-            if ( m_velo->isRSensor( sensor ) ) {
+            if ( sens->isR() ) {
               veloR[MCNum]++;
               verbose() << "MC " << MCNum << " Velo R sensor " << sensor << " nbR " << veloR[MCNum] << endreq;
-            } else if ( m_velo->isPhiSensor( sensor ) ) {
+            } else if ( sens->isPhi() ) {
               veloPhi[MCNum]++;
               verbose() << "MC " << MCNum << " Velo Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endreq;
             }
@@ -271,9 +272,9 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
       continue;
     }
     
-    Gaudi::XYZPoint midPoint = (*vHit)->midPoint();
-    int staNr = m_velo->sensorNumber( midPoint );   
-    if ( m_velo->isRSensor( staNr ) ) {
+    int staNr = (*vHit)->sensDetID();
+    const DeVeloSensor* sens=m_velo->sensor(staNr);   
+    if ( sens->isR() ) {
       nVeloR[MCNum]++;
     } else {
       nVeloP[MCNum]++;
