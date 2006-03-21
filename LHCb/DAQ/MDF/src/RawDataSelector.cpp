@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.4 2006-03-21 07:55:32 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.5 2006-03-21 10:23:48 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -195,6 +195,7 @@ LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& contex
   if ( ctxt )  {
     ctxt->close();
     crit.replace(0,5,"DATA='");
+    crit += "'";
     ctxt->setCriteria(crit);
     StatusCode sc = ctxt->connect();
     if ( !sc.isSuccess() )  {
