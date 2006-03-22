@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.8 2006-02-22 22:18:09 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.9 2006-03-22 22:50:25 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -67,8 +67,8 @@ extern MsgStream * evtgenStream ;
 // Standard constructor, initializes variables
 //=============================================================================
 EvtGenDecay::EvtGenDecay( const std::string& type,
-                        const std::string& name,
-                        const IInterface* parent )
+                          const std::string& name,
+                          const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_gen(0),
     m_randomEngine(0),
@@ -358,15 +358,16 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
     // In EvtGen all positions are defined with respect to the
     // root mother particle whose production vertex is theOrigin
     EvtVector4R position = theEvtGenPart -> getDaug( 0 ) -> get4Pos() ;
-    double ct = position . get( 0 ) + theOrigin.t() ;
-    double x  = position . get( 1 ) + theOrigin.x() ;
-    double y  = position . get( 2 ) + theOrigin.y() ;
-    double z  = position . get( 3 ) + theOrigin.z() ;
+    double t  = ( position . get( 0 ) * mm / EvtConst::c ) * s 
+      + theOrigin.t() ;
+    double x  = position . get( 1 ) * mm + theOrigin.x() ;
+    double y  = position . get( 2 ) * mm + theOrigin.y() ;
+    double z  = position . get( 3 ) * mm + theOrigin.z() ;
 
     // Create a new vertex corresponding to the decay vertex of
     // theMother and add it to theEvent
     HepMC::GenVertex * end_vtx = 
-      new HepMC::GenVertex( HepLorentzVector( x , y , z , ct ) ) ;
+      new HepMC::GenVertex( HepLorentzVector( x , y , z , t ) ) ;
     theMother -> parent_event() -> add_vertex( end_vtx ) ;
     end_vtx->add_particle_in( theMother ) ;
     
@@ -374,10 +375,10 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
       // For each daughter create a new HepMCParticle with correct
       // 4 momentum and PDG Id and with status 777 (= decayed with EvtGen)
       EvtVector4R momentum = theEvtGenPart -> getDaug( it ) -> getP4Lab() ;
-      double e  = momentum . get( 0 ) ;
-      double px = momentum . get( 1 ) ;
-      double py = momentum . get( 2 ) ;
-      double pz = momentum . get( 3 ) ;
+      double e  = momentum . get( 0 ) * GeV ;
+      double px = momentum . get( 1 ) * GeV ;
+      double py = momentum . get( 2 ) * GeV ;
+      double pz = momentum . get( 3 ) * GeV ;
       
       int id = EvtPDL::getStdHep( theEvtGenPart->getDaug( it )->getId() ) ;
       int status = LHCb::HepMCEvent::DecayedByDecayGen ;
@@ -670,7 +671,8 @@ const {
   // The mother is created outside EvtGenDecay
   Gaudi::LorentzVector lVect( theHepMCPart -> momentum() ) ;
   
-  EvtVector4R p_init ( lVect.e() , lVect.px() , lVect.py() , lVect.pz() ) ;
+  EvtVector4R p_init ( lVect.e() / GeV , lVect.px() / GeV , 
+                       lVect.py() / GeV , lVect.pz() / GeV ) ;
   
   // Create the corresponding EvtGen particle
   // If eid is not specified (no alias) take PID from theHepMCPart

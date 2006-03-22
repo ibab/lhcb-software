@@ -1,4 +1,4 @@
-// $Id: LeptonInAcceptance.cpp,v 1.2 2005-12-31 17:33:12 robbep Exp $
+// $Id: LeptonInAcceptance.cpp,v 1.3 2006-03-22 22:54:53 robbep Exp $
 // Include files 
 // local
 #include "LeptonInAcceptance.h"
@@ -63,9 +63,9 @@ bool LeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
   std::list< HepMC::GenParticle * >::const_iterator it ;
   double px , py , pz , pp , theta , pt ;
   for ( it = leptonList.begin() ; leptonList.end() != it ; ++it ) {
-    px = (*it) -> momentum() . px() * GeV ;
-    py = (*it) -> momentum() . py() * GeV ;
-    pz = (*it) -> momentum() . pz() * GeV ;
+    px = (*it) -> momentum() . px() ;
+    py = (*it) -> momentum() . py() ;
+    pz = (*it) -> momentum() . pz() ;
     pp = sqrt( px*px + py*py + pz*pz ) ;
     pt = sqrt( px*px + py*py ) ;
     theta = acos( fabs( pz ) / pp ) ;
