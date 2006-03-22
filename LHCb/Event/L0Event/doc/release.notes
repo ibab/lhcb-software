@@ -1,8 +1,8 @@
-$Id: release.notes,v 1.52 2006-03-21 11:07:31 odescham Exp $
+$Id: release.notes,v 1.53 2006-03-22 12:57:42 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!======================== L0Event v15r0 2006-02-21 ========================
+!======================== L0Event v15r1 2006-03-21 ========================
 ! 2006-03-21 - Olivier Deschamps
  - improve L0DUBase.h to please L0Muon 
 
@@ -10,6 +10,7 @@ Package manager : Olivier Callot
  - Fix in src/L0CaloCandidate.cpp implementation file.
  - Remove L0Calo namespace.
 
+!======================== L0Event v15r0 2006-02-21 ========================
 ! 2006-02-21 - Olivier Callot
  - Add IL0Candidate.h in Event. Interface to decode L0ProcessorData.
  - Fix a typo in the location of PuVeto data.
