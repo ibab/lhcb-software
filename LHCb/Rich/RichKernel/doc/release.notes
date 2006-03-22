@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.113 2006-03-12 16:12:37 jonrob Exp $
+! $Id: release.notes,v 1.114 2006-03-22 09:55:23 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-03-22 - Chris Jones
+ - Remove now obsolete RichCondition interfaces
 
 ! 2006-03-12 - Chris Jones
  - Add missing includes for IAlgTool in tool interfaces
