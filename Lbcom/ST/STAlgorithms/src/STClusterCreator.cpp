@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.10 2006-03-07 07:21:57 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.11 2006-03-22 13:56:47 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -83,6 +83,7 @@ StatusCode STClusterCreator::initialize()
 
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
+
 
   // calculate cut values
   const std::vector<DeSTSector*>& tSectors =m_tracker->sectors(); 

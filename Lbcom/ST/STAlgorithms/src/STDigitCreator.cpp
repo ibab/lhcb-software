@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.10 2006-03-10 20:26:09 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.11 2006-03-22 13:56:47 mneedham Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -30,6 +30,8 @@
 #include "STDet/DeSTSector.h"
 
 #include <algorithm>
+
+#include "Kernel/LHCbMath.h"
 
 using namespace LHCb;
 
@@ -184,7 +186,7 @@ void STDigitCreator::createDigits(MCSTDigits* mcDigitCont,
       totalCharge += (m_gaussDist->shoot()*m_sigNoiseTool->noiseInADC((*iterMC)->channelID()));
 
       // make digit and add to container.....    
-      STDigit* newDigit = new STDigit(GSL_MIN(floor(totalCharge),m_saturation));
+      STDigit* newDigit = new STDigit(GSL_MIN(LHCbMath::round(totalCharge),m_saturation));
       digitsCont->insert(newDigit,(*iterMC)->channelID());
     } // isOK
   } // iterDigit
@@ -201,7 +203,7 @@ void STDigitCreator::mergeContainers(const std::vector<digitPair>& noiseCont,
      (prevChan != iterNoise->second)){
      // strip was not hit add noise
      if ( m_effTool->accept() == true){     
-       STDigit* newDigit = new STDigit(GSL_MIN(floor(iterNoise->first),m_saturation));
+       STDigit* newDigit = new STDigit(GSL_MIN(LHCbMath::round(iterNoise->first),m_saturation));
        digitsCont->insert(newDigit,iterNoise->second);
       } // alive
     }   // findDigit  
@@ -254,7 +256,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const{
   for ( std::vector<digitPair>::iterator iterP = tmpCont.begin(); iterP != tmpCont.end(); ++iterP){   
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
-      STDigit* aDigit = new STDigit(GSL_MIN(floor(iterP->first),m_saturation));
+      STDigit* aDigit = new STDigit(GSL_MIN(LHCbMath::round(iterP->first),m_saturation));
       digitsCont->insert(aDigit,iterP->second);
     }
   } //iterP
