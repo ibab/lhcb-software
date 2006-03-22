@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.3 2006-03-22 22:51:20 robbep Exp $
 // Include files 
 
 // local
@@ -92,7 +92,7 @@ StatusCode FlatZSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   dy = dy * m_sigmaY ;
   dz = m_flatDist( ) ;
 
-  Gaudi::LorentzVector dpos( dx / mm , dy / mm , dz / mm , 0. ) ;
+  Gaudi::LorentzVector dpos( dx , dy , dz , 0. ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;

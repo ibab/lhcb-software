@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.4 2006-02-01 21:28:58 robbep Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.5 2006-03-22 22:49:33 robbep Exp $
 // Include files 
 
 // local
@@ -87,7 +87,7 @@ StatusCode BeamSpotSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   do { dz = m_gaussDist( ) ; } while ( fabs( dz ) > m_zcut ) ;
   dz = dz * m_sigmaZ ;
 
-  HepLorentzVector dpos( dx / mm , dy / mm , dz / mm , 0. ) ;
+  HepLorentzVector dpos( dx , dy , dz , 0. ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
