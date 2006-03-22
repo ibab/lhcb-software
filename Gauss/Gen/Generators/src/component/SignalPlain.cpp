@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.9 2006-03-08 08:52:27 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.10 2006-03-22 22:56:40 robbep Exp $
 // Include files 
 
 // local
@@ -98,6 +98,8 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             }
             theGenEvent -> 
               set_signal_process_vertex( theSignal -> end_vertex() ) ;
+
+            theGenCollision -> setIsSignal( true ) ;
 
             // Count signal B and signal Bbar
             if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
