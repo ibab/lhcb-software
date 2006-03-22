@@ -2,6 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r1 2006-03-22 =======================
+! 2006-03-22 - Marco Cattaneo
+ - Remove unneccessary gsl dependency
+
 ! 2006-03-14 - Jeroen Van Tilburg
  - DeSTDetector: Added method sensitiveVolumeID to return the elementID given
    a 3D point.
