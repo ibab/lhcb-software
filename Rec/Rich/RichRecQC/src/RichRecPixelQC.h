@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecPixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.1 2006-03-02 15:27:39 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.2 2006-03-22 10:02:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -73,7 +73,10 @@ private: // methods
   void getHistories( const RichSmartID id, 
                      bool & isBkg,
                      bool & isHPDQCK,
-                     bool & isSignal ) const;
+                     bool & isSignal,
+                     bool & isAerogelCK,
+                     bool & isC4F10CK,
+                     bool & isCF4CK ) const;
 
   /// Print summary for given RICH
   void printRICH( const Rich::DetectorType rich ) const;
@@ -98,11 +101,13 @@ private: // data
   std::vector<unsigned int> m_bkgsRaw;
   std::vector<unsigned int> m_npdqcksRaw;
   std::vector<unsigned int> m_signalRaw;
+  std::vector<unsigned int> m_radHitsRaw;
 
   std::vector<unsigned int> m_pixels;
   std::vector<unsigned int> m_bkgs;
   std::vector<unsigned int> m_npdqcks;
   std::vector<unsigned int> m_signal;
+  std::vector<unsigned int> m_radHits;
 
   unsigned int m_nEvts;
 

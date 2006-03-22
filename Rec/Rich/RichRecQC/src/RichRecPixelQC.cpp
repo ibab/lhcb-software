@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.2 2006-03-17 15:55:14 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.3 2006-03-22 10:02:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,10 +37,12 @@ RichRecPixelQC::RichRecPixelQC( const std::string& name,
     m_bkgsRaw           ( Rich::NRiches, 0 ),
     m_npdqcksRaw        ( Rich::NRiches, 0 ),
     m_signalRaw         ( Rich::NRiches, 0 ),
+    m_radHitsRaw        ( Rich::NRadiatorTypes, 0 ),
     m_pixels            ( Rich::NRiches, 0 ),
     m_bkgs              ( Rich::NRiches, 0 ),
     m_npdqcks           ( Rich::NRiches, 0 ),
     m_signal            ( Rich::NRiches, 0 ),
+    m_radHits           ( Rich::NRadiatorTypes, 0 ),
     m_nEvts             ( 0 )
 {
 }
@@ -77,8 +79,9 @@ StatusCode RichRecPixelQC::execute()
   // Make sure all pixels have been formed
   if ( richPixels()->empty() )
   {
-    if ( pixelCreator()->newPixels().isFailure() )
-      return Error( "Problem creating RichRecPixels" );
+    const StatusCode sc = pixelCreator()->newPixels();
+    if ( sc.isFailure() )
+    { return Error( "Problem creating RichRecPixels", sc ); }
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endreq;
   }
@@ -113,15 +116,16 @@ StatusCode RichRecPixelQC::execute()
           iR != rawIDs.end(); ++iR )
     {
       // flags
-      bool isBkg(false), isHPDQCK(false), isSignal(false);
-      getHistories( *iR, isBkg, isHPDQCK, isSignal );
-
+      bool isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK;
+      getHistories( *iR, isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK );
       // count
       ++m_pixelsRaw[rich];
       if ( isBkg    ) ++m_bkgsRaw[rich];
       if ( isHPDQCK ) ++m_npdqcksRaw[rich];
       if ( isSignal ) ++m_signalRaw[rich];
-
+      if ( isAerogelCK ) ++m_radHitsRaw[Rich::Aerogel];
+      if ( isC4F10CK ) ++m_radHitsRaw[Rich::C4F10];
+      if ( isCF4CK   ) ++m_radHitsRaw[Rich::CF4];
     } // raw channel ids
 
     // Get the reconstructed pixels for this HPD
@@ -132,8 +136,9 @@ StatusCode RichRecPixelQC::execute()
     for ( ; iPixel != endPix; ++iPixel )
     {
       // flags
-      bool isBkg(false), isHPDQCK(false), isSignal(false);
-      getHistories( (*iPixel)->smartID(), isBkg, isHPDQCK, isSignal );
+      bool isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK;
+      getHistories( (*iPixel)->smartID(), 
+                    isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK );
 
       // count
       ++nHPDHits;
@@ -145,6 +150,9 @@ StatusCode RichRecPixelQC::execute()
       if ( isBkg    ) ++m_bkgs[rich];
       if ( isHPDQCK ) ++m_npdqcks[rich];
       if ( isSignal ) ++m_signal[rich];
+      if ( isAerogelCK ) ++m_radHits[Rich::Aerogel];
+      if ( isC4F10CK ) ++m_radHits[Rich::C4F10];
+      if ( isCF4CK   ) ++m_radHits[Rich::CF4];
     }
 
     plot1D( nHPDHits, hid(rich,"nPixsPerHPD"), "Average HPD occupancy (nHits>0)", 0, 150, 75 );
@@ -160,19 +168,32 @@ StatusCode RichRecPixelQC::execute()
 void RichRecPixelQC::getHistories( const RichSmartID id,
                                    bool & isBkg,
                                    bool & isHPDQCK,
-                                   bool & isSignal ) const
+                                   bool & isSignal,
+                                   bool & isAerogelCK,
+                                   bool & isC4F10CK,
+                                   bool & isCF4CK ) const
 {
+  // set to defaults
+  isBkg       = false;
+  isHPDQCK    = false;
+  isSignal    = false;
+  isAerogelCK = false;
+  isC4F10CK   = false;
+  isCF4CK     = false;
   // get MC histories for this RichSmartID
   typedef std::vector<const LHCb::MCRichDigitSummary*> Summaries;
   Summaries summaries;
   m_truth->getMcHistories( id, summaries );
-  // loop over summaries and see if this HPD has any background
+  // loop over summaries and set various flags
   for ( Summaries::const_iterator iS = summaries.begin();
         iS != summaries.end(); ++iS )
   {
-    if ( (*iS)->history().isBackground() ) { isBkg = true;    }
+    if ( (*iS)->history().isBackground() ) { isBkg    = true; }
     if ( (*iS)->history().hpdQuartzCK()  ) { isHPDQCK = true; }
     if ( (*iS)->history().isSignal()     ) { isSignal = true; }
+    if ( (*iS)->history().aerogelHit()   ) { isAerogelCK = true; }
+    if ( (*iS)->history().c4f10Hit()     ) { isC4F10CK = true; }
+    if ( (*iS)->history().cf4Hit()       ) { isCF4CK = true; }
   }
 }
 
@@ -205,6 +226,22 @@ void RichRecPixelQC::printRICH( const Rich::DetectorType rich ) const
 
   info() << "        : Cherenkov Signal   : " << occ(m_signal[rich],m_nEvts) 
          << "   Eff. = " << pois(m_signal[rich],m_signalRaw[rich]) << " %" << endreq;
+
+  if ( Rich::Rich1 == rich )
+  {
+    info() << "        :     Aerogel        : " << occ(m_radHitsRaw[Rich::Aerogel],m_nEvts) 
+           << "   Eff. = " << pois(m_radHits[Rich::Aerogel],m_radHitsRaw[Rich::Aerogel]) 
+           << " %" << endreq;
+    info() << "        :     C4F10          : " << occ(m_radHitsRaw[Rich::C4F10],m_nEvts) 
+           << "   Eff. = " << pois(m_radHits[Rich::C4F10],m_radHitsRaw[Rich::C4F10]) 
+           << " %" << endreq;
+  }
+  else
+  {
+    info() << "        :     CF4            : " << occ(m_radHitsRaw[Rich::CF4],m_nEvts) 
+           << "   Eff. = " << pois(m_radHits[Rich::CF4],m_radHitsRaw[Rich::CF4]) 
+           << " %" << endreq;
+  }
 
   info() << "        : All Backgrounds    : " << occ(m_bkgs[rich],m_nEvts) 
          << "   Eff. = " << pois(m_bkgs[rich],m_bkgsRaw[rich]) << " %" << endreq;
