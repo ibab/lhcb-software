@@ -1,11 +1,15 @@
-# $Id: release.notes,v 1.63 2006-02-03 11:12:02 cattanem Exp $
+# $Id: release.notes,v 1.64 2006-03-22 13:38:20 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-================= Det/DetCond v7r9 2006-02-03 ================================
+!================= Det/DetCond v7r10 2006-03-22 ==============================
+! 2006-03-22 - Marco Cattaneo
+ - Add DetCondDict (to remove dependency on DetCond in DetSys)
+
+!================= Det/DetCond v7r9 2006-02-03 ===============================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
  - Added Boost and SEAL to the dependencies because they are not inherited

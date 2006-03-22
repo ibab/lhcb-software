@@ -1,0 +1,6 @@
+<lcgdict>
+  
+  <class name="ICondDBAccessSvc"     />
+  <class name="ICondDBCnvSvc"        />
+
+</lcgdict>

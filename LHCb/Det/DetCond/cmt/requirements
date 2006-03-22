@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.48 2006-02-03 11:12:02 cattanem Exp $
+# $Id: requirements,v 1.49 2006-03-22 13:38:20 cattanem Exp $
 # =============================================================================
 package       DetCond
-version       v7r9
+version       v7r10
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
@@ -11,7 +11,6 @@ include_dirs  $(DETCONDROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           GaudiSvc          v*
 use           COOL              v*      LCG_Interfaces
 use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
@@ -20,6 +19,12 @@ use           DetDesc           v*      Det
 # Needed to resolve references to CoolApplication
 apply_tag   NEEDS_COOL_FACTORY
 apply_tag   NEEDS_CORAL_BASE
+
+# =============== LCG Dictionary ==============================================
+apply_pattern     reflex_dictionary                                     \
+                  dictionary=DetCond                                    \
+                  headerfiles=$(DETCONDROOT)/src/dict/DetCondDict.h     \
+                  selectionfile=$(DETCONDROOT)/src/dict/DetCondDict.xml
 
 # =========== constituents =====================================================
 library       DetCondLib        Lib/*.cpp
