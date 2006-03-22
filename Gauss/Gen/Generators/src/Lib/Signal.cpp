@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.12 2006-02-22 22:18:09 robbep Exp $
+// $Id: Signal.cpp,v 1.13 2006-03-22 22:48:39 robbep Exp $
 // Include files 
 
 // local
@@ -192,9 +192,7 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
   StatusCode sc = StatusCode::SUCCESS ;
   // Create a new event to contain isolated signal decay tree
   LHCb::HepMCEvent * mcevt = new LHCb::HepMCEvent( ) ;
-  mcevt -> setGeneratorName( name() ) ;
-  HepMC::GenEvent * hepMCevt = new HepMC::GenEvent( ) ;
-  mcevt -> setPGenEvt( hepMCevt ) ;
+  mcevt -> setGeneratorName( m_hepMCName + "_clean" ) ;
   
   if ( 0 == theSignal -> production_vertex() ) 
     return Error( "Signal particle has no production vertex." ) ;
@@ -204,7 +202,9 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
 
   HepMC::GenVertex * newVertex =
     new HepMC::GenVertex( theSignal -> production_vertex() -> position() ) ;
-  
+
+  HepMC::GenEvent * hepMCevt = mcevt -> pGenEvt() ;
+
   hepMCevt -> add_vertex( newVertex ) ;
   
   HepMC::GenParticle * theNewParticle =
