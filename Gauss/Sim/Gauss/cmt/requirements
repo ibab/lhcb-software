@@ -33,7 +33,7 @@ use $(LbHerwig_use)
 
 #-- Simulation
 use GiGa                 v18r1   Sim
-use GiGaCnv              v16r0   Sim
+use GiGaCnv              v16r1   Sim
 use GaussTools           v12r0 	 Sim
 use GaussAlgs		 v2r0    Sim
 use GaussKine            v1r0    Sim

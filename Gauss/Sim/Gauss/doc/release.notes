@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r2 2006-03-22 =============================
+! 2006-03-22 - Gloria Corti
+ - Use new version of GiGaCnv to fix problem of units when passing isotopes
+
 ! 2006-03-20 - Gloria CORTI
  - Use new version of GaussRICH with modification for extended info
  - Compile against LHCb v20r1
