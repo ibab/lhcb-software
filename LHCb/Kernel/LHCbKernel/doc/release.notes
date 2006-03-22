@@ -2,7 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r3 2006-03-17 =========================
+!===================== LHCbKernel v6r3 2006-03-22 =========================
+! 2006-03-22 - Marco Cattaneo
+ - Add Kernel/OTDataFunctor.h, moved from OTSimulation
+
 ! 2006-03-17 - Olivier Callot
  - Fix LineTraj constructor with two points. Order of initialisations was
    wrong, and uninitialised variable used...
