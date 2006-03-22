@@ -5,10 +5,10 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.1 2006-03-01 09:56:12 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.2 2006-03-22 09:51:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 14/01/2002
+ * @date   21/03/2006
  */
 //-----------------------------------------------------------------------------
 
@@ -20,40 +20,37 @@ static const  ToolFactory<RichHPDPixelClusterSuppressionTool>          s_factory
 const        IToolFactory& RichHPDPixelClusterSuppressionToolFactory = s_factory ;
 
 // Standard constructor
-RichHPDPixelClusterSuppressionTool::RichHPDPixelClusterSuppressionTool( const std::string& type,
-                                                                        const std::string& name,
-                                                                        const IInterface* parent )
-  : RichToolBase   ( type, name, parent ),
-    m_richSys      ( 0                  ),
-    m_overallCheck ( 0 )
+RichHPDPixelClusterSuppressionTool::
+RichHPDPixelClusterSuppressionTool( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+  : RichHighOccHPDSuppressionTool ( type, name, parent )
 {
-
   // Define interface
   declareInterface<IRichPixelSuppressionTool>(this);
-
+  // job options
+  declareProperty( "MaxPixelClusterSize",    m_maxPixClusterSize = 10 );
+  declareProperty( "MinHPDOccForClustering", m_minHPDocc         = 10 );
+  // sanity check
+  if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 }
 
 StatusCode RichHPDPixelClusterSuppressionTool::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichHighOccHPDSuppressionTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
-
-  // HPD supression
-  acquireTool( "RichHPDSuppress", m_overallCheck, this );
+  info() << "Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
+         << "Min HPD occupancy for clustering      = " << m_minHPDocc << endreq;
 
   return sc;
 }
 
 StatusCode RichHPDPixelClusterSuppressionTool::finalize()
 {
-
-
   // Execute base class method
-  return RichToolBase::finalize();
+  return RichHighOccHPDSuppressionTool::finalize();
 }
 
 bool
@@ -61,12 +58,123 @@ RichHPDPixelClusterSuppressionTool::
 applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
-  // check overall HPD suppression
-  bool suppress = m_overallCheck->applyPixelSuppression( hpdID, smartIDs );
+  // check overall HPD suppression and update running average occupancy
+  bool suppress = 
+    RichHighOccHPDSuppressionTool::applyPixelSuppression( hpdID, smartIDs );
   if ( suppress ) return true;
 
-  // Carry on with pixel cluster finding
+ // number of pixels before suppression
+  const unsigned int startSize = smartIDs.size();
+
+  // get occupancy data for this HPD
+  if ( startSize < m_minHPDocc ) return false;
+
+  // Make a local pixel data object
+  PixelData pixelData( smartIDs );
+
+  // cluster numbers
+  int clusterID(0);
+
+  // loop over pixels
+  int row(0), lastrow(-1);
+  for ( ; row < 32; ++row, ++lastrow )
+  {
+    int col(0), lastcol(-1), nextcol(1);
+    for ( ; col < 32; ++col, ++lastcol, ++nextcol )
+    {
+      if ( pixelData.isOn(row,col) )
+      {
+
+        // Null cluster pointer
+        PixelData::Cluster * clus(NULL);
+
+        // check neighbouring pixels
+        if      ( pixelData.isOn(lastrow,lastcol) )
+        {
+          clus = pixelData.getCluster(lastrow,lastcol);
+        }
+        if ( pixelData.isOn(lastrow,col) )
+        {
+          PixelData::Cluster * newclus = pixelData.getCluster(lastrow,col);
+          if ( clus && newclus && clus != newclus )
+          { clus = pixelData.mergeClusters(clus,newclus); } 
+          else { clus = newclus; }
+        }
+        if ( pixelData.isOn(lastrow,nextcol) )
+        {
+          PixelData::Cluster * newclus = pixelData.getCluster(lastrow,nextcol);
+          if ( clus && newclus && clus != newclus )
+          { clus = pixelData.mergeClusters(clus,newclus); } 
+          else { clus = newclus; }
+        }
+        if ( pixelData.isOn(row,lastcol) )
+        {
+          PixelData::Cluster * newclus = pixelData.getCluster(row,lastcol);
+          if ( clus && newclus && clus != newclus )
+          { clus = pixelData.mergeClusters(clus,newclus); } 
+          else { clus = newclus; }
+        }
+
+        // Did we find a neighbouring pixel cluster
+        // If not, this is a new cluster
+        if (!clus) { clus = pixelData.createNewCLuster(++clusterID); }
+
+        // assign final cluster to this pixel
+        pixelData.setCluster(row,col,clus);
+
+      } // current pixel is ON
+    } // col loop
+  } // row loop
+
+  // Print out clustering results
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << hpdID << endreq
+              << pixelData << endreq;
+  }
+
+  // apply pixel cluster suppression
+  pixelData.suppressedIDs(hpdID,smartIDs,m_maxPixClusterSize);
+
+  // was anything removed ?
+  suppress = ( startSize != smartIDs.size() );
+
+  if ( suppress )
+  {
+    // Print message
+    std::ostringstream hpd;
+    hpd << hpdID;
+    Warning( "Partially suppressed HPD "+hpd.str(), StatusCode::SUCCESS, 3 );
+  }
 
   // return status
   return suppress;
+}
+
+// ======================= Methods for PixelData ================================
+
+MsgStream& RichHPDPixelClusterSuppressionTool::
+PixelData::fillStream ( MsgStream & os ) const
+{
+  // column numbers
+  os << " c    |";
+  for ( unsigned int col = 0; col < 32; ++col )
+  {
+    os << format("%3i",col);
+  }
+  os << endreq;
+
+  for ( unsigned int row = 0; row < 32; ++row )
+  {
+    os << format( " r %2i | ", row );
+    for ( unsigned int col = 0; col < 32; ++col )
+    {
+      const Cluster * clus = getCluster(row,col);
+      if ( clus ) { os << format("%2i ",clus->id()); }
+      else        { os << " . "; }
+    }
+    os << endreq;
+  }
+
+  return os;
 }

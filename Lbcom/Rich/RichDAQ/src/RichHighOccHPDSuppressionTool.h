@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.2 2006-03-19 16:14:35 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.3 2006-03-22 09:51:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -53,7 +53,7 @@ using namespace LHCb; ///< LHCb general namespace
  *  Tool for monitoring high occupancy HPDs
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   21/03/2006
  */
 //-----------------------------------------------------------------------------
 
@@ -97,10 +97,12 @@ private: // private methods
   /// UMS method for RICH2
   StatusCode umsUpdateRICH2();
 
-private: // private data
+protected: // protected data
 
   /// Rich System detector element
   const DeRichSystem * m_richSys;
+
+private: // private data
 
   /// Occupancy map
   typedef std::pair<long unsigned,double> Data;
@@ -127,6 +129,12 @@ private: // private data
 
   /// Location of occupancies in DB
   std::vector<std::string> m_condBDLocs;
+
+protected: // protected data
+
+  // data caches
+
+  mutable Data * m_currentData;
 
 };
 

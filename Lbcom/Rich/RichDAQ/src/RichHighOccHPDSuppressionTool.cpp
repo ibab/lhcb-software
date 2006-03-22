@@ -5,10 +5,10 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.2 2006-03-19 16:14:35 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.3 2006-03-22 09:51:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 14/01/2002
+ * @date 21/03/2006
  */
 //-----------------------------------------------------------------------------
 
@@ -20,9 +20,10 @@ static const  ToolFactory<RichHighOccHPDSuppressionTool>          s_factory ;
 const        IToolFactory& RichHighOccHPDSuppressionToolFactory = s_factory ;
 
 // Standard constructor
-RichHighOccHPDSuppressionTool::RichHighOccHPDSuppressionTool( const std::string& type,
-                                                              const std::string& name,
-                                                              const IInterface* parent )
+RichHighOccHPDSuppressionTool::
+RichHighOccHPDSuppressionTool( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent )
   : RichToolBase ( type, name, parent ),
     m_richSys    ( NULL               ),
     m_condBDLocs ( Rich::NRiches      )
@@ -32,14 +33,14 @@ RichHighOccHPDSuppressionTool::RichHighOccHPDSuppressionTool( const std::string&
   declareInterface<IRichPixelSuppressionTool>(this);
 
   // job ops
-  m_condBDLocs[Rich::Rich1] = "/dd/Conditions/RichHPDs/Rich1/AverageHPDOccupancies";
-  m_condBDLocs[Rich::Rich2] = "/dd/Conditions/RichHPDs/Rich2/AverageHPDOccupancies";
+  m_condBDLocs[Rich::Rich1] = "/dd/Conditions/Environment/Rich1/AverageHPDOccupancies";
+  m_condBDLocs[Rich::Rich2] = "/dd/Conditions/Environment/Rich2/AverageHPDOccupancies";
   declareProperty( "HPDOccLocs",        m_condBDLocs );
   declareProperty( "MinHPDFills",       m_minFills   = 20   );
   declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100  );
   declareProperty( "OccCutScaleFactor", m_scale      = 4    );
   declareProperty( "MemoryFactor",      m_memory     = 20   );
-  declareProperty( "PrintXML",          m_printXML   = false );
+  declareProperty( "PrintXML",          m_printXML   = true );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
 
 }
@@ -53,13 +54,13 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
 
+  // initialise data map
+  sc = initOccMap();
+
   // summary printout of options
   info() << "Occupancy memory                      = " << m_memory << endreq
          << "Occupancy scale factor                = " << m_scale << endreq
          << "Absolute Max HPD occupancy            = " << m_overallMax << endreq;
-
-  // initialise data map
-  sc = initOccMap();
 
   // return
   return sc;
@@ -79,7 +80,6 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( )
 
   if ( m_readFromCondDB )
   {
-
     // Register RICH1
     updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
                                     &RichHighOccHPDSuppressionTool::umsUpdateRICH1 );
@@ -89,12 +89,11 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( )
     // force first updates
     sc = updMgrSvc()->update(this);
     if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
-
   }
   else
   {
     info() << "Using NULL starting HPD occupancies" << endreq
-           << "Min ' measurements before suppressing = " << m_minFills << endreq;
+           << "Min # measurements before suppressing = " << m_minFills << endreq;
   }
 
   return sc;
@@ -125,6 +124,7 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType r
   {
     // extract numbers from string
     const int slash       = (*iS).find_first_of( "/" );
+    if ( slash == 0 ) return Error( "Badly formed data value = " + *iS );
     const RichSmartID HPD ( boost::lexical_cast<int>    ( (*iS).substr(0,slash) ) );
     const double      occ ( boost::lexical_cast<double> ( (*iS).substr(slash+1) ) );
     // update local data map
@@ -146,15 +146,15 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
   // get data for this HPD
   OccMap::iterator iD = m_occMap.find(hpdID);
-  if ( iD == m_occMap.end() ) 
-  { 
+  if ( iD == m_occMap.end() )
+  {
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << hpdID;
-    throw GaudiException( mess.str(), 
-                          "RichHighOccHPDSuppressionTool", 
-                          StatusCode::FAILURE ); 
+    throw GaudiException( mess.str(),
+                          "RichHighOccHPDSuppressionTool",
+                          StatusCode::FAILURE );
   }
-  Data & data = (*iD).second;
+  m_currentData = &(*iD).second;
 
   // Occupancy for this HPD in current event
   const unsigned int occ = smartIDs.size();
@@ -162,26 +162,27 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // default is below threshold
   bool aboveThres = false;
 
-  if      ( data.first <  m_minFills )
+  if      ( m_currentData->first <  m_minFills )
   {
     // Not yet enough sampling data, so just update
-    data.second += occ;
+    m_currentData->second += occ;
   }
-  else if ( data.first == m_minFills )
+  else if ( m_currentData->first == m_minFills )
   {
     // Now enough data so update and normalise
-    data.second += occ;
-    data.second /= (1+m_minFills);
+    m_currentData->second += occ;
+    m_currentData->second /= (1+m_minFills);
   }
   else
   {
     // update running average occ for this HPD
-    data.second = ( (m_memory*data.second) + occ ) / ( m_memory+1 ) ;
+    m_currentData->second = 
+      ( (m_memory*m_currentData->second) + occ ) / ( m_memory+1 ) ;
   }
 
   // is this HPD suppressed
-  aboveThres = ( data.first >= m_minFills &&
-                 (occ > m_overallMax || occ > data.second*m_scale) );
+  aboveThres = ( m_currentData->first >= m_minFills &&
+                 (occ > m_overallMax || occ > m_currentData->second*m_scale) );
 
   // is this HPD suppressed ?
   if ( aboveThres )
@@ -189,13 +190,13 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     // Print message
     std::ostringstream hpd;
     hpd << hpdID;
-    Warning( "Suppressed HPD "+hpd.str(), StatusCode::SUCCESS, 3 );
+    Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 3 );
     // clear vector
     smartIDs.clear();
   }
 
   // increment count for this HPD
-  ++data.first;
+  ++m_currentData->first;
 
   // return status
   return aboveThres;
