@@ -2,10 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
-! 2006-03-23 M Needham
+!======================= STAlgorithms v1r1 2006-03-22 ========================
+! 2006-03-22 M Needham
  - round rather than floor ADC
 
-!======================= STAlgorithms v1r1 2006-03-15 ========================
 ! 2006-03-15 - Marco Cattaneo
  - Move STSummaryCreator to new Rec/RecAlgs package. This removes STAlgorithms
    dependency on RecEvent
