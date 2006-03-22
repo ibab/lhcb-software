@@ -1,8 +1,11 @@
-// $Id: Algo.h,v 1.1.1.1 2006-03-18 10:39:21 ibelyaev Exp $
+// $Id: Algo.h,v 1.2 2006-03-22 17:12:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/18 10:39:21  ibelyaev
+// Phys/LoKiAlgo: new package with the basic LoKi functionality
+// 
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -446,7 +449,7 @@ namespace LoKi
     {
       return m_selected ( name ) ; 
     } ;
-        
+    
     /** Extract the selected vertices from local LoKi storage  
      *   by their name/tag
      *  
@@ -466,13 +469,16 @@ namespace LoKi
       return m_vselected ( name ) ;
     } ;
 
+  public:
+    
   protected:
     /** standard constructor 
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
      */
-    Algo ( const std::string& name , 
-           ISvcLocator*       pSvc ) ;
+    Algo
+    ( const std::string& name , 
+      ISvcLocator*       pSvc ) ;
     /// virtual and protected destructor 
     virtual ~Algo() ;
   private:
