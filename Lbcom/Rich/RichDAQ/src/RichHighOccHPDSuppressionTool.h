@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.3 2006-03-22 09:51:53 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.4 2006-03-22 14:19:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -102,11 +102,43 @@ protected: // protected data
   /// Rich System detector element
   const DeRichSystem * m_richSys;
 
+protected: // utility classes
+
+  //-----------------------------------------------------------------------------
+  /** @class HPDData RichHighOccHPDSuppressionTool.h
+   *
+   *  Utility class hold data for a single HPD
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   21/03/2006
+   */
+  //-----------------------------------------------------------------------------
+  class HPDData : private std::pair<long unsigned,double>
+  {
+  public:
+    /// Constructor
+    HPDData( const long unsigned tally = 0, const double occ = 0 )
+      : std::pair<long unsigned,double>(tally,occ) { }
+    /// Access the number of data entries for the HPD
+    inline long unsigned & fillCount()      { return this->first;  }
+    /// Access the occupancy for the HPD
+    inline double & avOcc()                 { return this->second; }
+    /// Const Access the number of data entries for the HPD
+    inline long unsigned fillCount() const  { return this->first;  }
+    /// Const Access the occupancy for the HPD
+    inline double avOcc() const             { return this->second; }
+  };
+
+  /// Find HPD data for given HPD RichSmartID
+  void findHpdData( const LHCb::RichSmartID hpdID ) const;
+
+  /// Returns current HPD Data object
+  inline HPDData & hpdData() const { return *m_currentData; }
+
 private: // private data
 
   /// Occupancy map
-  typedef std::pair<long unsigned,double> Data;
-  typedef Rich::HashMap< const LHCb::RichSmartID, Data > OccMap;
+  typedef Rich::HashMap< const LHCb::RichSmartID, HPDData > OccMap;
   mutable OccMap m_occMap;
 
   // Min number fills before applying occupancy cut
@@ -130,12 +162,24 @@ private: // private data
   /// Location of occupancies in DB
   std::vector<std::string> m_condBDLocs;
 
-protected: // protected data
-
-  // data caches
-
-  mutable Data * m_currentData;
+  mutable HPDData * m_currentData; ///< Pointer to the Data for the current HPD
 
 };
+
+inline void
+RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) const
+{
+  // get data for this HPD
+  OccMap::iterator iD = m_occMap.find(hpdID);
+  if ( iD == m_occMap.end() )
+  {
+    std::ostringstream mess;
+    mess << "Unknown HPD RichSmartID " << hpdID;
+    throw GaudiException( mess.str(),
+                          "RichHighOccHPDSuppressionTool",
+                          StatusCode::FAILURE );
+  }
+  m_currentData = &(*iD).second;
+}
 
 #endif // RICHDAQ_RichHighOccHPDSuppressionTool_H

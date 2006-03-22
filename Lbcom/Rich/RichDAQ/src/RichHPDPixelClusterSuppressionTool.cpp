@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.2 2006-03-22 09:51:52 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.3 2006-03-22 14:19:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -29,9 +29,10 @@ RichHPDPixelClusterSuppressionTool( const std::string& type,
   // Define interface
   declareInterface<IRichPixelSuppressionTool>(this);
   // job options
-  declareProperty( "MaxPixelClusterSize",    m_maxPixClusterSize = 10 );
-  declareProperty( "MinHPDOccForClustering", m_minHPDocc         = 10 );
-  // sanity check
+  declareProperty( "MaxPixelClusterSize",    m_maxPixClusterSize  = 10 );
+  declareProperty( "MinHPDOccForClustering", m_minHPDocc          = 10 );
+  declareProperty( "MaxAverageHPDOccForClustering", m_maxAvHPDOcc = 10 );
+  // sanity checks
   if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 }
 
@@ -42,7 +43,8 @@ StatusCode RichHPDPixelClusterSuppressionTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   info() << "Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
-         << "Min HPD occupancy for clustering      = " << m_minHPDocc << endreq;
+         << "Min HPD occupancy for clustering      = " << m_minHPDocc << endreq
+         << "Max HPD av. occupancy for clustering  = " << m_maxAvHPDOcc << endreq;
 
   return sc;
 }
@@ -59,11 +61,14 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
   // check overall HPD suppression and update running average occupancy
-  bool suppress = 
+  bool suppress =
     RichHighOccHPDSuppressionTool::applyPixelSuppression( hpdID, smartIDs );
   if ( suppress ) return true;
 
- // number of pixels before suppression
+  // Check if HPD average occupancy is too high to do clustering
+  if ( m_maxAvHPDOcc < hpdData().avOcc() ) return true;
+
+  // number of pixels before suppression
   const unsigned int startSize = smartIDs.size();
 
   // get occupancy data for this HPD
@@ -97,21 +102,21 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
         {
           PixelData::Cluster * newclus = pixelData.getCluster(lastrow,col);
           if ( clus && newclus && clus != newclus )
-          { clus = pixelData.mergeClusters(clus,newclus); } 
+          { clus = pixelData.mergeClusters(clus,newclus); }
           else { clus = newclus; }
         }
         if ( pixelData.isOn(lastrow,nextcol) )
         {
           PixelData::Cluster * newclus = pixelData.getCluster(lastrow,nextcol);
           if ( clus && newclus && clus != newclus )
-          { clus = pixelData.mergeClusters(clus,newclus); } 
+          { clus = pixelData.mergeClusters(clus,newclus); }
           else { clus = newclus; }
         }
         if ( pixelData.isOn(row,lastcol) )
         {
           PixelData::Cluster * newclus = pixelData.getCluster(row,lastcol);
           if ( clus && newclus && clus != newclus )
-          { clus = pixelData.mergeClusters(clus,newclus); } 
+          { clus = pixelData.mergeClusters(clus,newclus); }
           else { clus = newclus; }
         }
 

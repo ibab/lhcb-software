@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.3 2006-03-22 09:51:52 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.4 2006-03-22 14:19:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -75,7 +75,7 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( )
   for ( RichSmartID::Vector::const_iterator iHPD = smartIDs.begin();
         iHPD != smartIDs.end(); ++iHPD )
   {
-    m_occMap[ *iHPD ] = Data( 0, 0 );
+    m_occMap[ *iHPD ] = HPDData( 0, 0 );
   }
 
   if ( m_readFromCondDB )
@@ -132,7 +132,7 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType r
     {
       verbose() << "Updating " << HPD << " occupancy to " << occ << endreq;
     }
-    m_occMap[HPD] = Data( m_minFills+1 , occ );
+    m_occMap[HPD] = HPDData( m_minFills+1 , occ );
   }
 
   return StatusCode::SUCCESS;
@@ -144,48 +144,39 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
 
-  // get data for this HPD
-  OccMap::iterator iD = m_occMap.find(hpdID);
-  if ( iD == m_occMap.end() )
-  {
-    std::ostringstream mess;
-    mess << "Unknown HPD RichSmartID " << hpdID;
-    throw GaudiException( mess.str(),
-                          "RichHighOccHPDSuppressionTool",
-                          StatusCode::FAILURE );
-  }
-  m_currentData = &(*iD).second;
+  // Get HPD data
+  findHpdData(hpdID);
 
   // Occupancy for this HPD in current event
   const unsigned int occ = smartIDs.size();
 
   // default is below threshold
-  bool aboveThres = false;
+  bool suppress = false;
 
-  if      ( m_currentData->first <  m_minFills )
+  if      ( hpdData().fillCount() <  m_minFills )
   {
     // Not yet enough sampling data, so just update
-    m_currentData->second += occ;
+    hpdData().avOcc() += occ;
   }
-  else if ( m_currentData->first == m_minFills )
+  else if ( hpdData().fillCount() == m_minFills )
   {
     // Now enough data so update and normalise
-    m_currentData->second += occ;
-    m_currentData->second /= (1+m_minFills);
+    hpdData().avOcc() += occ;
+    hpdData().avOcc() /= (1+m_minFills);
   }
   else
   {
     // update running average occ for this HPD
-    m_currentData->second = 
-      ( (m_memory*m_currentData->second) + occ ) / ( m_memory+1 ) ;
+    hpdData().avOcc() =
+      ( (m_memory*hpdData().avOcc()) + occ ) / ( m_memory+1 ) ;
   }
 
   // is this HPD suppressed
-  aboveThres = ( m_currentData->first >= m_minFills &&
-                 (occ > m_overallMax || occ > m_currentData->second*m_scale) );
+  suppress = ( hpdData().fillCount() >= m_minFills &&
+               (occ > m_overallMax || occ > hpdData().avOcc()*m_scale) );
 
   // is this HPD suppressed ?
-  if ( aboveThres )
+  if ( suppress )
   {
     // Print message
     std::ostringstream hpd;
@@ -196,10 +187,10 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   }
 
   // increment count for this HPD
-  ++m_currentData->first;
+  ++(hpdData().fillCount());
 
   // return status
-  return aboveThres;
+  return suppress;
 }
 
 StatusCode RichHighOccHPDSuppressionTool::finalize()
@@ -219,17 +210,18 @@ void RichHighOccHPDSuppressionTool::createHPDBackXML() const
   // loop over final occupancies
   for ( OccMap::const_iterator iS = m_occMap.begin(); iS != m_occMap.end(); ++iS )
   {
-    const Data & d = (*iS).second;
+    const HPDData & d = (*iS).second;
     const RichDAQ::HPDHardwareID hID = m_richSys->hardwareID( (*iS).first );
     const double occ =
-      ( d.first < m_minFills ? ( d.first>0 ? d.second/d.first : 0 ) : d.second );
+      ( d.fillCount() < m_minFills ?
+        ( d.fillCount()>0 ? d.avOcc()/d.fillCount() : 0 ) : d.avOcc() );
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << (*iS).first << " hID=" << hID << " nMeas=" << d.first
+      debug() << (*iS).first << " hID=" << hID << " nMeas=" << d.fillCount()
               << " final occ = " << occ << endreq;
     }
     // Create condition string
-    if ( d.first > m_minFills )
+    if ( d.fillCount() > m_minFills )
     {
       const std::string entry =
         boost::lexical_cast<std::string>( (int)(*iS).first ) + "/" +

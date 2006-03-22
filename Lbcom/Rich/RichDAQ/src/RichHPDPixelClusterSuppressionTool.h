@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.2 2006-03-22 09:51:52 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.3 2006-03-22 14:19:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -63,6 +63,9 @@ private: // private data
 
   /// Minimum HPD occupancy to bother with running cluster finding
   unsigned int m_minHPDocc;
+
+  /// Maximum average HPD occupancy to bother with running cluster finding
+  unsigned int m_maxAvHPDOcc;
 
 private: // utility classes
 
@@ -206,8 +209,11 @@ PixelData::getCluster( const int row, const int col ) const
 inline void RichHPDPixelClusterSuppressionTool::
 PixelData::setCluster( const int row, const int col, Cluster * clus )
 {
-  (m_clusters[row])[col] = clus;
-  if (clus) clus->addPixel(row,col);
+  if (clus)
+  {
+    (m_clusters[row])[col] = clus;
+    clus->addPixel(row,col);
+  }
 }
 
 inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *
