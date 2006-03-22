@@ -1,11 +1,9 @@
-// $Id: L0CaloAlg.cpp,v 1.32 2006-02-18 11:20:41 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.33 2006-03-22 23:57:04 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
-/// L0Event
-#include "Event/L0Calo.h"
 
 /// CaloKernel
 #include "CaloKernel/CaloException.h"

@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.6 2006-03-09 12:34:42 cattanem Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.7 2006-03-22 23:57:04 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,7 @@
 #include "Event/MCParticle.h"
 #include "Event/MCCaloDigit.h"
 #include "Event/L0CaloCandidate.h"
-#include "Event/L0Calo.h"
+#include "Event/L0DUBase.h"
 
 #include "Linker/LinkerWithKey.h"
 // local
@@ -62,12 +62,12 @@ StatusCode L0CaloToMCParticleAsct::execute() {
   LHCb::L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     mcDigs = 0;
-    if ( ( LHCb::L0Calo::Electron  == (*cand)->type() ) ||
-         ( LHCb::L0Calo::Photon    == (*cand)->type() ) ||
-         ( LHCb::L0Calo::Pi0Local  == (*cand)->type() ) ||
-         ( LHCb::L0Calo::Pi0Global == (*cand)->type() )   ) {
+    if ( ( L0DUBase::Fiber::CaloElectron  == (*cand)->type() ) ||
+         ( L0DUBase::Fiber::CaloPhoton    == (*cand)->type() ) ||
+         ( L0DUBase::Fiber::CaloPi0Local  == (*cand)->type() ) ||
+         ( L0DUBase::Fiber::CaloPi0Global == (*cand)->type() )   ) {
       mcDigs = mcEcalDigs;
-    } else if ( ( LHCb::L0Calo::Hadron  == (*cand)->type() )  ) {
+    } else if ( ( L0DUBase::Fiber::CaloHadron  == (*cand)->type() )  ) {
       mcDigs = mcHcalDigs;
     }
     if ( 0 != mcDigs ) {

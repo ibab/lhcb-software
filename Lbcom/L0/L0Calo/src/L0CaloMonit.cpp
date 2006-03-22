@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.9 2006-01-26 16:52:13 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.10 2006-03-22 23:57:04 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,7 +7,7 @@
 // Event/L0Event
 #include "Event/L0CaloCandidate.h"
 #include "Event/RawEvent.h"
-#include "Event/L0Calo.h"
+#include "Event/L0DUBase.h"
 
 // local
 #include "L0CaloMonit.h"
@@ -69,19 +69,19 @@ StatusCode L0CaloMonit::execute() {
 
   LHCb::L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
-    if ( LHCb::L0Calo::Electron == (*cand)->type()  ) {
+    if ( L0DUBase::Fiber::CaloElectron == (*cand)->type()  ) {
       m_histElectron  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::Photon == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloPhoton == (*cand)->type()  ) {
       m_histPhoton    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::Hadron == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloHadron == (*cand)->type()  ) {
       m_histHadron    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::Pi0Local == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloPi0Local == (*cand)->type()  ) {
       m_histPi0Local  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::Pi0Global == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloPi0Global == (*cand)->type()  ) {
       m_histPi0Global -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::SumEt == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloSumEt == (*cand)->type()  ) {
       m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( LHCb::L0Calo::SpdMult == (*cand)->type()  ) {
+    } else if ( L0DUBase::Fiber::CaloSpdMult == (*cand)->type()  ) {
       m_histSpdMult   -> fill( (*cand)->etCode(), 1. );
     }
   }
@@ -101,9 +101,9 @@ StatusCode L0CaloMonit::execute() {
         
         debug() << format( " L0Calo cand %8x ", word );
         int type = (word >>24) & 0xf;
-        if ( LHCb::L0Calo::SpdMult == type ) {
+        if ( L0DUBase::Fiber::CaloSpdMult == type ) {
           debug() << " Spd Mult = " << (word & 0xFFFF);
-        } else if ( LHCb::L0Calo::SumEt == type ) {
+        } else if ( L0DUBase::Fiber::CaloSumEt == type ) {
           debug() << " Hcal SumEt = " << (word&0xFFFF);
         } else {
           double et = word&0xFF;

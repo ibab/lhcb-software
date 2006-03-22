@@ -1,10 +1,10 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.5 2006-02-23 15:21:19 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.6 2006-03-22 23:57:04 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
-#include "Event/L0Calo.h"
+#include "Event/L0DUBase.h"
 
 // local
 #include "L0CaloCandidatesFromRaw.h"
@@ -87,16 +87,16 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
       verbose() << format( "Data %8x Type %1d", cand, type ) << endreq;
 
-      if ( LHCb::L0Calo::SumEt == type ) {
+      if ( L0DUBase::Fiber::CaloSumEt == type ) {
         int sumEt = cand & 0xFFFFFF;
-        myL0Cand = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SumEt, LHCb::CaloCellID(), 
+        myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(), 
                                                sumEt, sumEt * m_etScale, dummy, 0. );
         outFull->add( myL0Cand );
         bestCand[type] = myL0Cand;
 
-     } else if ( LHCb::L0Calo::SpdMult == type ) {
+     } else if ( L0DUBase::Fiber::CaloSpdMult == type ) {
         int mult = cand & 0xFFFFFF;
-        myL0Cand = new LHCb::L0CaloCandidate ( LHCb::L0Calo::SpdMult, LHCb::CaloCellID(),
+        myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
                                                mult, 0., dummy, 0. );
         outFull->add( myL0Cand );
         bestCand[type] = myL0Cand;
@@ -118,6 +118,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
          LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
          center = det->cellCenter( tmp );
          tol    = det->cellSize( tmp ) * .5;
+
          center.SetX( center.x() - tol );
          center.SetY( center.y() - tol );
        }
