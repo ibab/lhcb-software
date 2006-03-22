@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.43 2006-03-16 14:03:47 gcorti Exp $
+! $Id: release.notes,v 1.44 2006-03-22 22:58:31 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-03-22 - Patrick Robbe
+ - ExternalGenerators: adapt to new HepMCEvent constructor and set to false
+   isSignal for pile up collisions
+ - Signal: use new HepMCEvent constructor and set HepMC container name of
+   clean events.
+ - BeamSpotSmearVertex, FlatZSmearVertex: use mm
+ - EvtGenDecay: use MeV and interface EvtGen engine with GeV in the tool
+ - Inclusive: set IsSignal flag of collision containing the inclusive type.
+ - LeptonInAcceptance: use MeV
+ - SignalPlain, SignalForcedFragmentation, SignalRepeatedHadronization, 
+   Special: set IsSignal flag for collision with signal.
 
 !=================== Generators v4r1 2006-03-16 ===========================
 ! 2006-03-12 - Patrick Robbe
