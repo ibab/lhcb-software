@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.20 2006-03-17 18:09:11 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.21 2006-03-22 10:04:58 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -73,14 +73,10 @@ StatusCode RichRayTracing::initialize()
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
 
   // HPD panel names
-  const std::string pdPanelName[2][2]   ={{ DeRichHPDPanelLocation::Rich1Panel0,
+  const std::string pdPanelName[2][2] = { { DeRichHPDPanelLocation::Rich1Panel0,
                                             DeRichHPDPanelLocation::Rich1Panel1 },
                                           { DeRichHPDPanelLocation::Rich2Panel0,
                                             DeRichHPDPanelLocation::Rich2Panel1 } };
-  const std::string pdPanelNameOld[2][2]={{ DeRichHPDPanelLocation::Rich1Panel0_old,
-                                            DeRichHPDPanelLocation::Rich1Panel1_old },
-                                          { DeRichHPDPanelLocation::Rich2Panel0_old,
-                                            DeRichHPDPanelLocation::Rich2Panel1_old }};
 
   // RICH detector elements
   const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
@@ -94,14 +90,10 @@ StatusCode RichRayTracing::initialize()
   {
     for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
-      try {
-        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
-      }
-      catch ( GaudiException& e ) {
-        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
-      }
-      debug() << "Stored photodetector panel "
-              << m_photoDetPanels[rich][panel]->name() << endreq;
+      m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Stored photodetector panel "
+                << m_photoDetPanels[rich][panel]->name() << endreq;
     }
   }
 
