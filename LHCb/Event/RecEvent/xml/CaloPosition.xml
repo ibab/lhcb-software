@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloPosition.xml,v 1.3 2006-03-09 13:44:37 odescham Exp $
+  * $Id: CaloPosition.xml,v 1.4 2006-03-22 18:29:15 odescham Exp $
   *****************************************************************************
   * XML-description of CaloPosition class                                     *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -34,28 +34,28 @@
 />
     
 <typedef
- def    = "Parameters3"
+ def    = "Parameters"
  type   = "Gaudi::Vector3"
  desc   = "3-vector of parameters (E,X,Y)"
  access = "PUBLIC"
 />
 
 <typedef
- def    = "Covariance3x3"
+ def    = "Covariance"
  type   = "Gaudi::SymMatrix3x3"
  desc   = "3x3 Covariance matrix (E,X,Y)"
  access = "PUBLIC"
 />
 
 <typedef
- def    = "Parameters2"
+ def    = "Center"
  type   = "Gaudi::Vector2"
  desc   = "2-vector of parameters (X,Y)"
  access = "PUBLIC"
 />
 
 <typedef
- def    = "Covariance2x2"
+ def    = "Spread"
  type   = "Gaudi::SymMatrix2x2"
  desc   = "2x2 Covariance matrix (X,Y)"
  access = "PUBLIC"
@@ -71,7 +71,7 @@
 <attribute
  name = "parameters"
  desc = "vector of major cluster parameters"
- type = "Parameters3"
+ type = "Parameters"
  init = "0., 0., 0."
  dictalias = "Gaudi::Vector3"
 />
@@ -79,13 +79,13 @@
 <attribute
  name = "covariance"
  desc = "covariance matrix of major cluster parameters (3x3)"
- type = "Covariance3x3"
+ type = "Covariance"
  dictalias = "Gaudi::SymMatrix3x3"/>
 
 <attribute
  name = "center"
  desc = "cluster center of gravity position (2D)"
- type = "Parameters2"
+ type = "Center"
  init = "0., 0."
  dictalias = "Gaudi::Vector2"
 />
@@ -93,7 +93,7 @@
 <attribute
  name = "spread"
  desc = "cluster spread matrix (2x2)"
- type = "Covariance2x2"
+ type = "Spread"
  dictalias = "Gaudi::SymMatrix2x2"/>
 
 <method

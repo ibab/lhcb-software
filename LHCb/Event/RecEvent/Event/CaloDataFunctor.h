@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.3 2006-02-21 11:18:32 odescham Exp $
+// $Id: CaloDataFunctor.h,v 1.4 2006-03-22 18:29:14 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -231,7 +231,6 @@ namespace CaloDataFunctor
       if ( !obj ) { return 0; }               
       const LHCb::CaloCellID cell  = m_cell( obj )  ;
       // cell center 
-      // const Gaudi::Vector2 
       const Gaudi::XYZPoint& point = m_det->cellCenter ( cell ) ;
       // 
       return obj->e() * sin ( point.Theta() )  ;  
@@ -678,7 +677,7 @@ namespace CaloDataFunctor
         epos += eDigit ;
         ///
         ++num ;
-        const Gaudi::Vector2 pos = de->cellCenter( digit->cellID() );
+        const Gaudi::XYZPoint pos = de->cellCenter( digit->cellID() );
         x += eDigit * pos.x() ;
         y += eDigit * pos.y() ;
       }
