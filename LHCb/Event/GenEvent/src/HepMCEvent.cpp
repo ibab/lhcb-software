@@ -15,13 +15,6 @@
 #include <algorithm>
 
 // -------------------------------------------------------------------------
-LHCb::HepMCEvent::HepMCEvent(const std::string& Name,int ProcessId, int EventNum) :
-  m_generatorName(Name) {
-// -------------------------------------------------------------------------
-  m_pGenEvt = new HepMC::GenEvent(ProcessId, EventNum);
-}
-
-// -------------------------------------------------------------------------
 LHCb::HepMCEvent::HepMCEvent(const LHCb::HepMCEvent& evt):KeyedObject<int>() 
 // -------------------------------------------------------------------------
 {

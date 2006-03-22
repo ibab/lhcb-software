@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!======================== GenEvent v4r2 2006-03-22 ============================
+! 2006-03-22 - Gloria CORTI for Patrick ROBBE
+ - Remove constructor with arguments from HepMCEvent, values need to be set
+   with setters.
+
 !======================== GenEvent v4r1 2006-02-03 ============================
 ! 2006-02-03 - Marco Cattaneo
  - Updates to work with Root reflex in Gaudi v18r2

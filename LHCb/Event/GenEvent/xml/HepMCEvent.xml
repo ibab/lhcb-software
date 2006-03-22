@@ -22,11 +22,11 @@
       />
       <constructor
         desc="Constructor">
-        <arg type="std::string" name="generatorName" const="TRUE"/>
-        <arg type="int" name="ProcessId"/>
-        <arg type="int" name="EventNum"/>
-      </constructor>      
-      <constructor
+        <code>
+          m_pGenEvt = new HepMC::GenEvent();
+        </code>
+      </constructor>
+       <constructor
         desc="Copy constructor"
         argList="const HepMCEvent evt"/>
       <destructor
