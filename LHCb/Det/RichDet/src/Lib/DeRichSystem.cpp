@@ -1,12 +1,15 @@
+
+//=============================================================================
 /** @file DeRichSystem.cpp
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.3 2006-02-16 15:41:40 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.4 2006-03-22 09:07:08 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
  */
+//=============================================================================
 
 // Include files
 // Gaudi
@@ -151,8 +154,6 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   // current number of L1 boards
   const int saveL1size = m_l1IDs.size();
 
-  //CondData newList;
-
   // build cached mappings
   CondData::const_iterator iSoft = softIDs.begin();
   CondData::const_iterator iHard = hardIDs.begin();
@@ -166,15 +167,6 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
           iL1In != l1Ins.end()   ;
         ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In )
   {
-    /*
-    // make a new list of RichSmartIDs
-    RichSmartID newID ( *iSoft );
-    const int row = newID.hpdNumInCol();
-    const int col = newID.hpdCol();
-    newID.setHPDNumInCol(col);
-    newID.setHPDCol(row);
-    newList.push_back(newID);
-    */
 
     // get data
     const RichSmartID            hpdID  ( *iSoft );
@@ -241,9 +233,6 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     msg << MSG::INFO
         << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endreq;
   }
-
-  
-  //msg << MSG::INFO << newList << endreq;
 
   msg << MSG::INFO << "Built mappings for " << m_l1IDs.size()-saveL1size
       << " L1 and " << nHPDs << " HPDs in " << rich << endreq;
