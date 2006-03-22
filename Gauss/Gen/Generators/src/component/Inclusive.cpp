@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.9 2006-02-22 22:18:09 robbep Exp $
+// $Id: Inclusive.cpp,v 1.10 2006-03-22 22:53:45 robbep Exp $
 // Include files 
 
 // local
@@ -160,6 +160,8 @@ bool Inclusive::generate( const unsigned int nPileUp ,
         if ( passCut && ( ! theParticleList.empty() ) ) {
           ++m_nEventsAfterCut ;
           result = true ;
+
+          theGenCollision -> setIsSignal( true ) ;
 
           if ( 0 == nPositivePz( theParticleList ) ) {
             revertEvent( theGenEvent ) ;
