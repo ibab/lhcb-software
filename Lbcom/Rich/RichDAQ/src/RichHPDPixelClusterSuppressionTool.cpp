@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.4 2006-03-22 19:08:42 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.5 2006-03-22 23:50:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -65,8 +65,11 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     RichHighOccHPDSuppressionTool::applyPixelSuppression( hpdID, smartIDs );
   if ( suppress ) return true;
 
+  // Get HPD occupancy data
+  HPDData & data = hpdData(hpdID);
+
   // Check if HPD average occupancy is too high to do clustering
-  if ( m_maxAvHPDOcc < hpdData().avOcc() ) return true;
+  if ( m_maxAvHPDOcc < data.avOcc() ) return true;
 
   // number of pixels before suppression
   const unsigned int startSize = smartIDs.size();
@@ -82,10 +85,10 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
   // loop over pixels
   int row(0), lastrow(-1);
-  for ( ; row < 32; ++row, ++lastrow )
+  for ( ; row < nPixelRowsOrCols; ++row, ++lastrow )
   {
     int col(0), lastcol(-1), nextcol(1);
-    for ( ; col < 32; ++col, ++lastcol, ++nextcol )
+    for ( ; col < nPixelRowsOrCols; ++col, ++lastcol, ++nextcol )
     {
       if ( pixelData.isOn(row,col) )
       {
@@ -139,17 +142,17 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   }
 
   // apply pixel cluster suppression
-  pixelData.suppressedIDs(hpdID,smartIDs,m_maxPixClusterSize);
+  pixelData.suppressIDs(smartIDs,m_maxPixClusterSize);
 
   // was anything removed ?
   suppress = ( startSize != smartIDs.size() );
 
-  if ( suppress )
+  if ( suppress && m_sumPrint )
   {
     // Print message
     std::ostringstream hpd;
     hpd << hpdID;
-    Warning( "Partially suppressed HPD "+hpd.str(), StatusCode::SUCCESS, 3 );
+    Warning( "Partially suppressed HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
   }
 
   // return status
@@ -163,16 +166,16 @@ PixelData::fillStream ( MsgStream & os ) const
 {
   // column numbers
   os << " c    |";
-  for ( unsigned int col = 0; col < 32; ++col )
+  for ( int col = 0; col < nPixelRowsOrCols; ++col )
   {
     os << format("%3i",col);
   }
   os << endreq;
 
-  for ( unsigned int row = 0; row < 32; ++row )
+  for ( int row = 0; row < nPixelRowsOrCols; ++row )
   {
     os << format( " r %2i | ", row );
-    for ( unsigned int col = 0; col < 32; ++col )
+    for ( int col = 0; col < nPixelRowsOrCols; ++col )
     {
       const Cluster * clus = getCluster(row,col);
       if ( clus ) { os << format("%2i ",clus->id()); }

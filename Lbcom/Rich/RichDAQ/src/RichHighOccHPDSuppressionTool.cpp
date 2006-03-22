@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.4 2006-03-22 14:19:31 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.5 2006-03-22 23:50:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -36,6 +36,7 @@ RichHighOccHPDSuppressionTool( const std::string& type,
   m_condBDLocs[Rich::Rich1] = "/dd/Conditions/Environment/Rich1/AverageHPDOccupancies";
   m_condBDLocs[Rich::Rich2] = "/dd/Conditions/Environment/Rich2/AverageHPDOccupancies";
   declareProperty( "HPDOccLocs",        m_condBDLocs );
+  declareProperty( "PrintHPDSuppressions", m_sumPrint = false );
   declareProperty( "MinHPDFills",       m_minFills   = 20   );
   declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100  );
   declareProperty( "OccCutScaleFactor", m_scale      = 4    );
@@ -144,8 +145,8 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
 
-  // Get HPD data
-  findHpdData(hpdID);
+  // Get occupancy HPD data
+  HPDData & data = hpdData(hpdID);
 
   // Occupancy for this HPD in current event
   const unsigned int occ = smartIDs.size();
@@ -153,41 +154,44 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // default is below threshold
   bool suppress = false;
 
-  if      ( hpdData().fillCount() <  m_minFills )
+  if      ( data.fillCount() <  m_minFills )
   {
     // Not yet enough sampling data, so just update
-    hpdData().avOcc() += occ;
+    data.avOcc() += occ;
   }
-  else if ( hpdData().fillCount() == m_minFills )
+  else if ( data.fillCount() == m_minFills )
   {
     // Now enough data so update and normalise
-    hpdData().avOcc() += occ;
-    hpdData().avOcc() /= (1+m_minFills);
+    data.avOcc() += occ;
+    data.avOcc() /= (1+m_minFills);
   }
   else
   {
     // update running average occ for this HPD
-    hpdData().avOcc() =
-      ( (m_memory*hpdData().avOcc()) + occ ) / ( m_memory+1 ) ;
+    data.avOcc() =
+      ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
   }
 
   // is this HPD suppressed
-  suppress = ( hpdData().fillCount() >= m_minFills &&
-               (occ > m_overallMax || occ > hpdData().avOcc()*m_scale) );
+  suppress = ( data.fillCount() >= m_minFills &&
+               (occ > m_overallMax || occ > data.avOcc()*m_scale) );
 
   // is this HPD suppressed ?
   if ( suppress )
   {
     // Print message
-    std::ostringstream hpd;
-    hpd << hpdID;
-    Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 3 );
+    if ( m_sumPrint )
+    {
+      std::ostringstream hpd;
+      hpd << hpdID;
+      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
+    }
     // clear vector
     smartIDs.clear();
   }
 
   // increment count for this HPD
-  ++(hpdData().fillCount());
+  ++(data.fillCount());
 
   // return status
   return suppress;
@@ -234,12 +238,12 @@ void RichHighOccHPDSuppressionTool::createHPDBackXML() const
   Condition newCond1;
   newCond1.addParam( "HPDAvOccupancies",
                      entries[Rich::Rich1], "Average occupancy of RICH1 HPDs" );
-  info() << newCond1.toXml() << endreq;
+  always() << newCond1.toXml() << endreq;
 
   // RICH2 condition
   Condition newCond2;
   newCond2.addParam( "HPDAvOccupancies",
                      entries[Rich::Rich2], "Average occupancy of RICH2 HPDs" );
-  info() << newCond2.toXml() << endreq;
+  always() << newCond2.toXml() << endreq;
 
 }

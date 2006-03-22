@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.4 2006-03-22 19:08:42 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.5 2006-03-22 23:50:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -21,8 +21,14 @@
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
 
+namespace PixelInfo
+{
+  static const int nPixelRowsOrCols = 32;
+}
+
 // namespaces
 using namespace LHCb; ///< LHCb general namespace
+using namespace PixelInfo;
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDPixelClusterSuppressionTool RichHPDPixelClusterSuppressionTool.h
@@ -107,10 +113,12 @@ private: // utility classes
     public: // methods
 
       /// Constructor
-      Cluster( const int id = -1 ) : m_clusterID(id) { }
+      Cluster( const int id = -1 )
+        : m_clusterID(id) { m_cluster.reserve(10); }
 
       /// Add a pixel (row,col) to this cluster
-      inline void addPixel( const unsigned int row, const unsigned int col )
+      inline void addPixel( const unsigned int row,
+                            const unsigned int col )
       { m_cluster.push_back( Pixel(row,col) ); }
 
       /// Add a pixel (row,col) to this cluster
@@ -140,7 +148,7 @@ private: // utility classes
     ~PixelData();
 
     /// Set given col and row on
-    void setOn( const unsigned int row, const unsigned int col );
+    void setOn( const int row, const int col );
 
     /// Check if given row and col is on
     bool isOn( const int row, const int col ) const;
@@ -158,9 +166,8 @@ private: // utility classes
     Cluster * mergeClusters( Cluster * clus1, Cluster * clus2 );
 
     /// Create a new vector of suppressed RichSmartIDs
-    void suppressedIDs( const LHCb::RichSmartID hID,
-                        LHCb::RichSmartID::Vector & smartIDs,
-                        const unsigned int maxSize );
+    void suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
+                      const unsigned int maxSize );
 
     /// Print in a human readable way
     MsgStream& fillStream( MsgStream& os ) const;
@@ -171,16 +178,21 @@ private: // utility classes
 
   private:
 
-    bool m_data[32][32];             ///<  Raw input data (false means no hit, true means hit)
-    Cluster * m_clusters[32][32];     ///<  Assigned cluster for each pixel
-    std::vector<Cluster*> m_allclus;  ///<  List of all created clusters
+    /// Raw input data (false means no hit, true means hit)
+    bool m_data[nPixelRowsOrCols][nPixelRowsOrCols];
+
+    /// Assigned cluster for each pixel
+    Cluster * m_clusters[nPixelRowsOrCols][nPixelRowsOrCols];
+
+    /// Vector of all created clusters
+    std::vector<Cluster*> m_allclus;
 
   };
 
 };
 
 inline void RichHPDPixelClusterSuppressionTool::
-PixelData::setOn( const unsigned int row, const unsigned int col )
+PixelData::setOn( const int row, const int col )
 {
   (m_data[row])[col] = true;
 }
@@ -188,7 +200,8 @@ PixelData::setOn( const unsigned int row, const unsigned int col )
 inline bool RichHPDPixelClusterSuppressionTool::
 PixelData::isOn( const int row, const int col ) const
 {
-  return ( row>=0 && row<32 && col>=0 && col<32 && (m_data[row])[col] );
+  return ( row>=0 && row<nPixelRowsOrCols &&
+           col>=0 && col<nPixelRowsOrCols && (m_data[row])[col] );
 }
 
 inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *
@@ -201,11 +214,8 @@ PixelData::getCluster( const int row, const int col ) const
 inline void RichHPDPixelClusterSuppressionTool::
 PixelData::setCluster( const int row, const int col, Cluster * clus )
 {
-  if (clus)
-  {
-    (m_clusters[row])[col] = clus;
-    clus->addPixel(row,col);
-  }
+  (m_clusters[row])[col] = clus;
+  clus->addPixel(row,col);
 }
 
 inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *
@@ -236,11 +246,13 @@ PixelData::PixelData( const LHCb::RichSmartID::Vector & smartIDs )
   // initialise the c arrays
   memset ( m_data,     0, sizeof(m_data)     );
   memset ( m_clusters, 0, sizeof(m_clusters) );
-  m_allclus.reserve(5);
+  m_allclus.reserve(10);
   // set the hit pixels as "on"
+  std::cout << "new HPD" << std::endl;
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
+    std::cout << *iS << std::endl;
     setOn( (*iS).pixelRow(), (*iS).pixelCol() );
   }
 }
@@ -253,24 +265,22 @@ PixelData::~PixelData()
 }
 
 inline void RichHPDPixelClusterSuppressionTool::
-PixelData::suppressedIDs( const LHCb::RichSmartID hID,
-                          LHCb::RichSmartID::Vector & smartIDs,
-                          const unsigned int maxSize )
+PixelData::suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
+                        const unsigned int maxSize )
 {
-  smartIDs.clear();
-  for ( unsigned int row = 0; row < 32; ++row )
+  LHCb::RichSmartID::Vector newSmartIDs;
+  newSmartIDs.reserve(smartIDs.size());
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
+        iS != smartIDs.end(); ++iS )
   {
-    for ( unsigned int col = 0; col < 32; ++col )
+    const int row = (*iS).pixelRow();
+    const int col = (*iS).pixelCol();
+    if ( isOn(row,col) && getCluster(row,col)->pixels().size() <= maxSize )
     {
-      if ( isOn(row,col) && getCluster(row,col)->pixels().size() <= maxSize )
-      {
-        RichSmartID id(hID);
-        id.setPixelRow(row);
-        id.setPixelCol(col);
-        smartIDs.push_back(id);
-      }
+      newSmartIDs.push_back(*iS);
     }
   }
+  smartIDs = newSmartIDs;
 }
 
 #endif // RICHDAQ_RichHPDPixelClusterSuppressionTool_H

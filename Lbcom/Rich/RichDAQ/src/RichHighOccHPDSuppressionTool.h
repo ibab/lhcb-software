@@ -5,7 +5,7 @@
  *  Header file for tool : RichHighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.4 2006-03-22 14:19:31 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.5 2006-03-22 23:50:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -97,6 +97,9 @@ private: // private methods
   /// UMS method for RICH2
   StatusCode umsUpdateRICH2();
 
+  /// Find HPD data for given HPD RichSmartID
+  void findHpdData( const LHCb::RichSmartID hpdID ) const;
+
 protected: // protected data
 
   /// Rich System detector element
@@ -129,11 +132,8 @@ protected: // utility classes
     inline double avOcc() const             { return this->second; }
   };
 
-  /// Find HPD data for given HPD RichSmartID
-  void findHpdData( const LHCb::RichSmartID hpdID ) const;
-
-  /// Returns current HPD Data object
-  inline HPDData & hpdData() const { return *m_currentData; }
+  /// Returns occupancy data object for given HPD identifier
+  HPDData & hpdData( const LHCb::RichSmartID hpdID ) const;
 
 private: // private data
 
@@ -162,7 +162,12 @@ private: // private data
   /// Location of occupancies in DB
   std::vector<std::string> m_condBDLocs;
 
-  mutable HPDData * m_currentData; ///< Pointer to the Data for the current HPD
+  mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
+  mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
+
+protected:
+
+  bool m_sumPrint; ///< Print summary of suppressions each event ?
 
 };
 
@@ -180,6 +185,14 @@ RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) cons
                           StatusCode::FAILURE );
   }
   m_currentData = &(*iD).second;
+  m_lastHPD = hpdID;
+}
+
+inline RichHighOccHPDSuppressionTool::HPDData & 
+RichHighOccHPDSuppressionTool::hpdData( const LHCb::RichSmartID hpdID ) const
+{
+  if ( m_lastHPD != hpdID ) { findHpdData(hpdID); }
+  return *m_currentData;
 }
 
 #endif // RICHDAQ_RichHighOccHPDSuppressionTool_H
