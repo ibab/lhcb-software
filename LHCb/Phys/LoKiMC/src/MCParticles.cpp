@@ -1,14 +1,8 @@
-// $Id: MCParticles.cpp,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.4 2006-03-22 10:33:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/07 17:14:02  ibelyaev
-//  regular update
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,6 +16,7 @@
 // MCEvent
 // ============================================================================
 #include "Kernel/IMCDecayFinder.h"
+#include "Kernel/IMCParticleSelector.h"
 // ============================================================================
 
 // ============================================================================
@@ -446,7 +441,7 @@ LoKi::MCParticles::HasQuark::HasQuark
 // ============================================================================
 LoKi::MCParticles::HasQuark::result_type 
 LoKi::MCParticles::HasQuark::operator() 
-  ( const LoKi::MCParticles::HasQuark::argument p ) const 
+  ( LoKi::MCParticles::HasQuark::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -494,7 +489,7 @@ LoKi::MCParticles::HasQuark::fillStream
 // ============================================================================
 LoKi::MCParticles::IsCharged::result_type 
 LoKi::MCParticles::IsCharged::operator() 
-  ( const LoKi::MCParticles::IsCharged::argument p ) const 
+  ( LoKi::MCParticles::IsCharged::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -521,7 +516,7 @@ LoKi::MCParticles::IsCharged::fillStream
 // ============================================================================
 LoKi::MCParticles::IsNeutral::result_type 
 LoKi::MCParticles::IsNeutral::operator() 
-  ( const LoKi::MCParticles::IsNeutral::argument p ) const 
+  ( LoKi::MCParticles::IsNeutral::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -548,7 +543,7 @@ LoKi::MCParticles::IsNeutral::fillStream
 // ============================================================================
 LoKi::MCParticles::IsLepton::result_type 
 LoKi::MCParticles::IsLepton::operator() 
-  ( const LoKi::MCParticles::IsLepton::argument p ) const 
+  ( LoKi::MCParticles::IsLepton::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -575,7 +570,7 @@ LoKi::MCParticles::IsLepton::fillStream
 // ============================================================================
 LoKi::MCParticles::IsMeson::result_type 
 LoKi::MCParticles::IsMeson::operator() 
-  ( const LoKi::MCParticles::IsMeson::argument p ) const 
+  ( LoKi::MCParticles::IsMeson::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -602,7 +597,7 @@ LoKi::MCParticles::IsMeson::fillStream
 // ============================================================================
 LoKi::MCParticles::IsBaryon::result_type 
 LoKi::MCParticles::IsBaryon::operator() 
-  ( const LoKi::MCParticles::IsBaryon::argument p ) const 
+  ( LoKi::MCParticles::IsBaryon::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -629,7 +624,7 @@ LoKi::MCParticles::IsBaryon::fillStream
 // ============================================================================
 LoKi::MCParticles::IsHadron::result_type 
 LoKi::MCParticles::IsHadron::operator() 
-  ( const LoKi::MCParticles::IsHadron::argument p ) const 
+  ( LoKi::MCParticles::IsHadron::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -657,7 +652,7 @@ LoKi::MCParticles::IsHadron::fillStream
 // ============================================================================
 LoKi::MCParticles::IsNucleus::result_type 
 LoKi::MCParticles::IsNucleus::operator() 
-  ( const LoKi::MCParticles::IsNucleus::argument p ) const 
+  ( LoKi::MCParticles::IsNucleus::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -1428,12 +1423,21 @@ LoKi::MCParticles::MCDecayPattern::MCDecayPattern
   : LoKi::Predicate<const LHCb::MCParticle*>()
   , m_finder ( finder ) 
   , m_decay  ( decay  ) 
-{
-  // add reference 
-  if ( 0 != m_finder ) { m_finder->addRef() ; } 
-} ;
+{} ;
 // ============================================================================
-
+/** constructor 
+ *  @param decay  decay descriptor 
+ *  @param finder decay finder tool 
+ *  @see IMCDecayFinder
+ */
+// ============================================================================
+LoKi::MCParticles::MCDecayPattern::MCDecayPattern 
+( const std::string&                     decay  ,
+  const LoKi::Interface<IMCDecayFinder>& finder ) 
+  : LoKi::Predicate<const LHCb::MCParticle*>()
+  , m_finder ( finder ) 
+  , m_decay  ( decay  ) 
+{} ;
 // ============================================================================
 /** copy constructor
  *  @param right object to be copied 
@@ -1444,27 +1448,17 @@ LoKi::MCParticles::MCDecayPattern::MCDecayPattern
   : LoKi::Predicate<const LHCb::MCParticle*>( right )
   , m_finder ( right.m_finder ) 
   , m_decay  ( right.m_decay  ) 
-{
-  // add reference 
-  if ( 0 != m_finder ) { m_finder->addRef() ; } 
-} ;
-// ============================================================================
-
+{} ;
 // ============================================================================
 /// MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::MCParticles::MCDecayPattern::~MCDecayPattern()
-{ if ( 0 != m_finder ) { m_finder->release() ; m_finder = 0  ; } }
-// ============================================================================
-
+LoKi::MCParticles::MCDecayPattern::~MCDecayPattern() {}
 // ============================================================================
 /// MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::MCParticles::MCDecayPattern*
 LoKi::MCParticles::MCDecayPattern::clone() const 
 { return new LoKi::MCParticles::MCDecayPattern(*this) ; }
-// ============================================================================
-
 // ============================================================================
 /// MANDATORY: the only one essential method 
 // ============================================================================
@@ -1478,7 +1472,7 @@ LoKi::MCParticles::MCDecayPattern::operator()
     Error ( " MCParticle* points to NULL, return 'false'") ;
     return false ;
   }
-  if ( 0 == m_finder ) 
+  if ( !m_finder.validPointer() ) 
   {
     Error ( " IMCDecayFinder* points to NULL, return 'false'") ;
     return false ;
@@ -1500,13 +1494,66 @@ LoKi::MCParticles::MCDecayPattern::operator()
   return m_finder->hasDecay( vMC ) ;
 } ;
 // ============================================================================
-
-// ============================================================================
 /// "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::MCParticles::MCDecayPattern::fillStream
 ( std::ostream& s ) const { return s << "MCDECAY['" << m_decay << "']" ; }
+// ============================================================================
+
+
+// ============================================================================
+LoKi::MCParticles::MCFilter::MCFilter
+( const IMCParticleSelector* selector ) 
+  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  , m_selector( selector ) 
+{};
+// ============================================================================
+LoKi::MCParticles::MCFilter::MCFilter
+( const LoKi::Interface<IMCParticleSelector>& selector ) 
+  : LoKi::Predicate<const LHCb::MCParticle*> ()
+  , m_selector( selector ) 
+{};
+// ============================================================================
+LoKi::MCParticles::MCFilter::MCFilter
+( const LoKi::MCParticles::MCFilter& right ) 
+  : LoKi::Predicate<const LHCb::MCParticle*> ( right )
+  , m_selector( right.m_selector ) 
+{};
+// ============================================================================
+LoKi::MCParticles::MCFilter::~MCFilter(){}
+// ============================================================================
+LoKi::MCParticles::MCFilter*
+LoKi::MCParticles::MCFilter::clone() const 
+{ return new MCFilter(*this) ; }
+// ============================================================================
+LoKi::MCParticles::MCFilter::result_type
+LoKi::MCParticles::MCFilter::operator()
+  ( LoKi::MCParticles::MCFilter::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " MCParticle* points to NULL, return 'false'") ;
+    return false ;
+  }
+  if ( !m_selector.validPointer() ) 
+  {
+    Error ( " IMCParticleSelector* points to NULL, return 'false'") ;
+    return false ;
+  }
+  // use the tool 
+  return m_selector->accept ( p ) ;
+};
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::MCFilter::fillStream
+( std::ostream& s ) const 
+{ 
+  s << "MCFILTER[" ;
+  if ( m_selector.validPointer() ) 
+  { s << m_selector->type() << "'" << m_selector->name() ; }
+  return s << "]" ;
+};
 // ============================================================================
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: MCParticles.h,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.4 2006-03-22 10:33:16 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.2  2006/02/07 17:14:02  ibelyaev
 //  regular update
 //
@@ -26,6 +29,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Interface.h"
 #include "LoKi/Kinematics.h"
 #include "LoKi/Functions.h"
 #include "LoKi/Operators.h"
@@ -36,6 +40,7 @@
 // forward declarations 
 // ============================================================================
 class IMCDecayFinder ;
+class IMCParticleSelector;
 // ============================================================================
 
 // ============================================================================
@@ -630,10 +635,12 @@ namespace LoKi
        *  @param fun predicate to be evaluated 
        *  @param val value to be returned for 'invalid' mother 
        */
-      MCMotherPredicate ( const LoKi::Predicate<const LHCb::MCParticle*>& cut   , 
-                          const bool                                val   ) ;
+      MCMotherPredicate
+      ( const LoKi::Predicate<const LHCb::MCParticle*>& cut   , 
+        const bool                                      val   ) ;
       /// copy constructor 
-      MCMotherPredicate ( const MCMotherPredicate&                  right ) ;
+      MCMotherPredicate 
+      ( const MCMotherPredicate&                  right ) ;
       /// destructor 
       virtual ~MCMotherPredicate();
       /// clone method (virtual constructor) (mandatory!)
@@ -643,7 +650,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     private:
-      double               m_val ;
+      bool                 m_val ;
       LoKi::MCTypes::MCCut m_cut ;
     };
     
@@ -1007,8 +1014,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCDecayPattern : 
-      public LoKi::Predicate<const LHCb::MCParticle*>
+    class MCDecayPattern 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /** constructor 
@@ -1019,6 +1026,14 @@ namespace LoKi
       MCDecayPattern
       ( const std::string& decay  ,
         IMCDecayFinder*    finder ) ;
+      /** constructor 
+       *  @param decay  decay descriptor 
+       *  @param finder decay finder tool 
+       *  @see IMCDecayFinder
+       */
+      MCDecayPattern
+      ( const std::string&                     decay  ,
+        const LoKi::Interface<IMCDecayFinder>& finder ) ;
       /** copy constructor
        *  @param right object to be copied 
        */
@@ -1035,14 +1050,44 @@ namespace LoKi
     private:
       // default constructor is disabled 
       MCDecayPattern() ;
-      // assignement operator is disabled 
-      MCDecayPattern& operator=
-      ( const MCDecayPattern& right ) ;
     private:
-      IMCDecayFinder* m_finder ;
-      std::string     m_decay  ;
+      LoKi::Interface<IMCDecayFinder> m_finder ;
+      std::string                     m_decay  ;
     };
     
+    /** @class MCFilter
+     *  The simple class-adapter to IMCParticleSelector tool
+     *  @see IMCParticleSelector
+     *  @see LoKi::Cuts::MCFILTER
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-20
+     */
+    class MCFilter
+      : public LoKi::Predicate<const LHCb::MCParticle*>
+    {
+    public:
+      /// constructor from selector 
+      MCFilter ( const IMCParticleSelector*                  selector ) ;
+      /// constructor from selector 
+      MCFilter ( const LoKi::Interface<IMCParticleSelector>& selector ) ;
+      /// copy constructor 
+      MCFilter ( const MCFilter& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~MCFilter() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual MCFilter* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    private:
+      // default constructor is disabled 
+      MCFilter() ;
+    private:
+      // the selector itself
+      LoKi::Interface<IMCParticleSelector> m_selector ; ///< the selector itself
+    };
+
   }; // end of namespace LHCb::MCParticles 
 }; // end of namespace LoKi
 
