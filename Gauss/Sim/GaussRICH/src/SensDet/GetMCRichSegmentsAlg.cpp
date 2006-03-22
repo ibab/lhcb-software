@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.9 2006-03-15 16:27:31 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.10 2006-03-22 14:53:07 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -210,9 +210,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
         const MCRichOpticalPhoton * mcphot = photons->object(gkey);
         // not all hits have photons, so only add if not null
         if ( mcphot )
-        {
-          mcSeg->addToMCRichOpticalPhotons( mcphot );
-        }
+        { mcSeg->addToMCRichOpticalPhotons( mcphot ); }
 
       }
 
