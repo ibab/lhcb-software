@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.10 2005-10-13 16:11:08 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.11 2006-03-22 10:04:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -69,7 +69,7 @@ RichToolRegistry::toolType( const std::string & nickname ) const
     // Don't allow any missing tool entries
     // Exception( "Unknown RICH tool nickname '" + nickname + "'" );
     // or... just assume same as nickname and issue a Warning
-    Warning( "Unknown nickname " + nickname + " -> Assuming same class name",
+    Warning( "Unknown nickname '" + nickname + "' -> Assuming same class name",
              StatusCode::SUCCESS );
     addEntry( nickname, nickname );
   }
@@ -89,8 +89,8 @@ void RichToolRegistry::addEntry( const std::string & nickname,
 {
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
-    Warning( "Changing tool nickname implementation from '" + m_myTools[nickname]
-             + "' to '" + type + "'", StatusCode::SUCCESS );
+    Warning( "Nickname '" + nickname + "' mapping changed : '" 
+             + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS );
   }
   if ( msgLevel(MSG::DEBUG) )
   {
