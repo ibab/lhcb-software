@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.10 2006-02-17 13:18:44 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.11 2006-03-22 22:45:17 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -150,6 +150,9 @@ class ExternalGenerator : public GaudiTool ,
   /// Generator level cut tool to apply to generated interactions
   IGenCutTool     * m_cutTool        ;
   
+  /// Name assigned to the HepMC event and stored with it
+  std::string m_hepMCName ;
+
  private:  
   /** Decode commands (given by job options) to configure LHAPDF library.
    *  @param[in] theCommandVector  Vector of string to configure LHAPDF. The
@@ -176,9 +179,6 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Optional additional user commands to configure LHAPDF (by job options)
   CommandVector m_userLhaPdfSettings ;
-
-  /// Name assigned to the HepMC event and stored with it
-  std::string m_hepMCName ;
 
   /// Temporary filename to redirect LHAPDF output
   seal::Filename m_lhapdfTempFilename ;
