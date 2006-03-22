@@ -1,4 +1,4 @@
- // $Id: SignalRepeatedHadronization.cpp,v 1.8 2006-02-22 22:18:09 robbep Exp $
+ // $Id: SignalRepeatedHadronization.cpp,v 1.9 2006-03-22 22:57:18 robbep Exp $
 // Include files 
 
 // local
@@ -155,6 +155,8 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                 }
                 theGenEvent -> 
                   set_signal_process_vertex( theSignal -> end_vertex() ) ;
+                
+                theGenCollision -> setIsSignal( true ) ;
 
                 if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
                 else ++m_nSigBar ;
