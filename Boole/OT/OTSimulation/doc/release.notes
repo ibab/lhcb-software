@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.22 2006-02-03 16:44:23 janos Exp $
+! $Id: release.notes,v 1.23 2006-03-22 18:25:18 janos Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
 !====================== OTSimulation v3r2 2006-02-02 ======================
+! 2006-03-22 Jan Amoraal
+ - OTDataFunctor has moved to LHCbKernel. Fixed includes. 
+ 
 ! 2006-02-02 Jan Amoraal
  - Bug fix and typo, moved some headers and a bit of spring cleaning 
 

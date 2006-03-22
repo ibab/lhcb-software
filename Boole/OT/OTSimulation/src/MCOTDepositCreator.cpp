@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.12 2006-02-03 16:44:23 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.13 2006-03-22 18:25:18 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -7,7 +7,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
 
-// xml geometry
+// XML geometry
 #include "DetDesc/IGeometryInfo.h"
 
 // OTDet
@@ -17,7 +17,8 @@
 #include "Event/MCHit.h"
 #include "Event/MCOTDeposit.h"
 
-// MathCore
+// Kernel
+#include "Kernel/OTDataFunctor.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
 
@@ -28,7 +29,6 @@
 #include "MCOTDepositCreator.h"
 #include "IOTSmearer.h" 
 #include "IOTrtRelation.h"
-#include "OTDataFunctor.h"
 #include "IOTEffCalculator.h"
 #include "IOTRandomDepositCreator.h"
 

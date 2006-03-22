@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.12 2006-02-03 16:44:23 janos Exp $
+# $Id: requirements,v 1.13 2006-03-22 18:25:18 janos Exp $
 package OTSimulation
 
 version v3r2
 
-branches cmt doc src options
+branches cmt doc src
 
 include_path none
 
