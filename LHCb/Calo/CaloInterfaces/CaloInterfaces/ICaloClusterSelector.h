@@ -1,8 +1,11 @@
-// $Id: ICaloClusterSelector.h,v 1.5 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloClusterSelector.h,v 1.6 2006-03-22 18:21:50 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.4  2004/02/17 11:51:54  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -24,7 +27,10 @@
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
-class     CaloCluster     ;    // from CaloEvent/Event
+namespace LHCb{
+  class  CaloCluster     ;    
+};
+
 
 /** @class ICaloClusterSelector ICaloClusterSelector.h
  *  
@@ -38,9 +44,10 @@ class     CaloCluster     ;    // from CaloEvent/Event
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   31/03/2002
  */
+
 class ICaloClusterSelector :
   public virtual   IAlgTool                           ,
-  public std::unary_function<const CaloCluster*,bool> 
+  public std::unary_function<const LHCb::CaloCluster*,bool> 
 {
 public:
   
@@ -55,13 +62,13 @@ public:
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool select     ( const CaloCluster* cluster ) const = 0 ;
+  virtual bool select     ( const LHCb::CaloCluster* cluster ) const = 0 ;
   
   /** "select"/"preselect" method (functor interface)
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const CaloCluster* cluster ) const = 0 ;
+  virtual bool operator() ( const LHCb::CaloCluster* cluster ) const = 0 ;
   
 protected:
   
@@ -69,9 +76,7 @@ protected:
   virtual ~ICaloClusterSelector(); 
   
 };
-
-// ============================================================================
-// The End 
+  
 // ============================================================================
 #endif // CALOINTERFACES_ICALOCLUSTERSELECTOR_H
 // ============================================================================

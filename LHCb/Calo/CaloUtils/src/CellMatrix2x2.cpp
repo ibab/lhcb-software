@@ -1,8 +1,11 @@
-// $Id: CellMatrix2x2.cpp,v 1.4 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellMatrix2x2.cpp,v 1.5 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2004/10/22 09:29:08  ibelyaev
 //  bug fix in the evaluation of energy sharing fractions
 //
@@ -14,9 +17,7 @@
 //
 // ============================================================================
 // Include files
-// CaloDet
 #include "CaloDet/DeCalorimeter.h"
-// local
 #include "CaloUtils/CellMatrix2x2.h"
 
 // ============================================================================
@@ -43,8 +44,8 @@ CellMatrix2x2::~CellMatrix2x2() {}
  *          3x3 matrix aroud the seed cell
  */
 // ============================================================================
-double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
-                                           const CaloCellID& cell ) const
+double CellMatrix2x2::treatDifferentAreas( const LHCb::CaloCellID& seed ,
+                                           const LHCb::CaloCellID& cell ) const
 {
   /// valid detector
   if( 0 == det() )
@@ -55,8 +56,8 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
   const double      sizeMtrx   =  0.5  * det()->cellSize   ( seed ) ;
   const double      sizeCell   =  0.5  * det()->cellSize   ( cell ) ;
   /// cell centers
-  const HepPoint3D& centerMtrx =         det()->cellCenter ( seed ) ;
-  const HepPoint3D& centerCell =         det()->cellCenter ( cell ) ;
+  const Gaudi::XYZPoint& centerMtrx =         det()->cellCenter ( seed ) ;
+  const Gaudi::XYZPoint& centerCell =         det()->cellCenter ( cell ) ;
   /// cell area 
   const double      cellArea   = sizeCell * sizeCell * 4.0 ;
   /// effective halfsize
@@ -66,8 +67,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
   switch( type() )
     {
     case LowerLeft :
-      Area = area ( centerMtrx +
-                    HepPoint3D( -1.0 * sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
+      Area = area ( Gaudi::XYZPoint( centerMtrx.x() -1.0 * sizeMtrx , centerMtrx.y()-1.0 * sizeMtrx , 0. ) ,
                     2.0 * sizeMtrx                                      ,
                     centerCell                                          ,
                     sizeCell                                            );
@@ -75,8 +75,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
       return Area <= sizeMin ? 0 : Area / cellArea ;
       break;
     case LowerRight :
-      Area = area ( centerMtrx +
-                    HepPoint3D(        sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
+      Area = area ( Gaudi::XYZPoint( centerMtrx.x() +1.0 * sizeMtrx , centerMtrx.y()-1.0 * sizeMtrx , 0. ) ,
                     2.0 * sizeMtrx                                      ,
                     centerCell                                          ,
                     sizeCell                                            );
@@ -84,8 +83,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
       return Area <= sizeMin ? 0 : Area / cellArea ;
       break;
     case UpperLeft :
-      Area = area ( centerMtrx +
-                    HepPoint3D( -1.0 * sizeMtrx ,        sizeMtrx , 0 ) ,
+      Area = area ( Gaudi::XYZPoint( centerMtrx.x() -1.0 * sizeMtrx , centerMtrx.y()+1.0 * sizeMtrx , 0. ) ,
                     2.0 * sizeMtrx                                      ,
                     centerCell                                          ,
                     sizeCell                                            );
@@ -93,8 +91,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
       return Area <= sizeMin ? 0 : Area / cellArea  ;
       break;
     case UpperRight :
-      Area = area ( centerMtrx +
-                    HepPoint3D(        sizeMtrx ,        sizeMtrx , 0 ) ,
+      Area = area ( Gaudi::XYZPoint( centerMtrx.x() +1.0 * sizeMtrx , centerMtrx.y()+1.0 * sizeMtrx , 0. ) ,
                     2.0 * sizeMtrx                                      ,
                     centerCell                                          ,
                     sizeCell                                            );
@@ -109,7 +106,4 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
   return 0;
 };
 
-// ============================================================================
-// The End
-// ============================================================================
 

@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.9 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloTrackMatch.h,v 1.10 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.8  2004/09/02 18:52:52  ibelyaev
 //  make preparation for HLT/Trigger
 //
@@ -24,10 +27,11 @@
 #include <utility>
 // GaudiKernel 
 #include "GaudiKernel/IAlgTool.h"
-
-class CaloPosition  ; // from CaloEvent package 
-class Track         ; // from TrackEvent   package
-class State         ; // from TrackEvent   package
+namespace LHCb{
+  class CaloPosition  ; // from CaloEvent package 
+  class Track         ; // from TrackEvent   package
+  class State         ; // from TrackEvent   package
+};
 
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  
@@ -55,7 +59,7 @@ class State         ; // from TrackEvent   package
 
 class ICaloTrackMatch: 
   public  virtual IAlgTool ,
-  public  std::binary_function<const CaloPosition*,const Track*,
+  public  std::binary_function<const LHCb::CaloPosition*,const LHCb::Track*,
   std::pair<StatusCode,double> >
 {
  public:
@@ -78,8 +82,8 @@ class ICaloTrackMatch:
    *  @return status code for matching procedure 
    */
   virtual StatusCode match 
-  ( const CaloPosition*   caloObj  , 
-    const Track*  trObj    ,
+  ( const LHCb::CaloPosition*   caloObj  , 
+    const LHCb::Track*  trObj    ,
     double&               chi2     ) = 0 ;
   
   /** The main matching method (Stl interface) 
@@ -88,8 +92,8 @@ class ICaloTrackMatch:
    *  @return pair of status code/chi2  for matching procedure 
    */
   virtual MatchingPair    operator() 
-    ( const CaloPosition*   caloObj  , 
-      const Track*  trObj    ) = 0 ;
+    ( const LHCb::CaloPosition*   caloObj  , 
+      const LHCb::Track*  trObj    ) = 0 ;
   
   /** extract the TrState which was actually used for last matching
    *  @attention TrState is owned by the tool itself 
@@ -97,7 +101,7 @@ class ICaloTrackMatch:
    *  to TrStateP 
    *  @return pointer to the state actually used for last matching
    */
-  virtual const State* state   () const = 0 ;
+  virtual const LHCb::State* state   () const = 0 ;
   
 
  protected:
@@ -106,10 +110,6 @@ class ICaloTrackMatch:
   virtual ~ICaloTrackMatch() ; 
   
 };
-// ============================================================================
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOTRMATCH_H
 // ============================================================================

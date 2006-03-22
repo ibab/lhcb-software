@@ -1,8 +1,11 @@
-// $Id: CaloInterfaces.cpp,v 1.2 2004-02-17 11:51:56 ibelyaev Exp $
+// $Id: CaloInterfaces.cpp,v 1.3 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name:R
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 11:51:56  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.1  2004/02/17 11:42:29  ibelyaev
 //  fix in Likel(i,y)hoods
 // 
@@ -16,9 +19,6 @@
 #include "CaloInterfaces/ICaloHypoLikelihood.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
 #include "CaloInterfaces/ICaloLikelihood.h"
-#include "CaloInterfaces/ICaloMomentumTool.h"
-#include "CaloInterfaces/ICaloParticleTool.h"
-#include "CaloInterfaces/ICaloPosition2MomentumTool.h"
 #include "CaloInterfaces/ICaloSCorrectionFunction.h"
 #include "CaloInterfaces/ICaloSplitTool.h"
 #include "CaloInterfaces/ICaloSubClusterTag.h"
@@ -34,9 +34,6 @@
 #include "IIDICaloHypoLikelihood.h"
 #include "IIDICaloHypoTool.h"
 #include "IIDICaloLikelihood.h"
-#include "IIDICaloMomentumTool.h"
-#include "IIDICaloParticleTool.h"
-#include "IIDICaloPosition2MomentumTool.h"
 #include "IIDICaloSplitTool.h"
 #include "IIDICaloSubClusterTag.h"
 #include "IIDICaloTrackIdEval.h"
@@ -65,12 +62,6 @@ ICaloHypoLikelihood        :: ~ICaloHypoLikelihood        () {} ;
 ICaloHypoTool              :: ~ICaloHypoTool              () {} ;
 // ============================================================================
 ICaloLikelihood            :: ~ICaloLikelihood            () {} ;
-// ============================================================================
-ICaloMomentumTool          :: ~ICaloMomentumTool          () {} ;
-// ============================================================================
-ICaloParticleTool          :: ~ICaloParticleTool          () {} ;
-// ============================================================================
-ICaloPosition2MomentumTool :: ~ICaloPosition2MomentumTool () {} ;
 // ============================================================================
 ICaloSCorrectionFunction   :: ~ICaloSCorrectionFunction   () {} ;
 // ============================================================================
@@ -111,18 +102,6 @@ ICaloLikelihood            ::  interfaceID()
 const InterfaceID& 
 ICaloHypoLikelihood        ::  interfaceID() 
 { return                   IID_ICaloHypoLikelihood        ; }
-// ============================================================================
-const InterfaceID& 
-ICaloMomentumTool          ::  interfaceID() 
-{ return                   IID_ICaloMomentumTool          ; }
-// ============================================================================
-const InterfaceID& 
-ICaloParticleTool          ::  interfaceID() 
-{ return                   IID_ICaloParticleTool          ; }
-// ============================================================================
-const InterfaceID& 
-ICaloPosition2MomentumTool ::  interfaceID() 
-{ return                   IID_ICaloPosition2MomentumTool ; }
 // ============================================================================
 const InterfaceID& 
 ICaloSCorrectionFunction   ::  interfaceID() 

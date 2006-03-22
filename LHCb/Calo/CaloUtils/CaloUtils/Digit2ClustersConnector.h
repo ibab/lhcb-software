@@ -1,8 +1,11 @@
-// $Id: Digit2ClustersConnector.h,v 1.2 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: Digit2ClustersConnector.h,v 1.3 2006-03-22 18:25:06 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.1  2002/04/02 10:59:30  ibelyaev
 //  update for new event model
 //
@@ -23,8 +26,7 @@
 #define CALOEVENT_DIGIT2CLUSTERSCONNECTOR_H 1
 // ===========================================================================
 // Include files
-#include "CaloKernel/CaloMap.h"
-// Event
+#include "GaudiKernel/Map.h"
 #include "Event/CaloCluster.h"
 
 /** @class  Digit2ClustersConnector Digit2ClustersConnector.h
@@ -50,12 +52,12 @@ class Digit2ClustersConnector
 public:  
   
   /// useful typedefs
-  typedef CaloClusters                             Clusters;
-  typedef CaloCluster::Entries::iterator           EntryPointer;
-  typedef std::pair<CaloCluster*,EntryPointer>     ClusterPair;
-  typedef std::vector<ClusterPair>                 ClusterPairs;
+  typedef LHCb::CaloClusters                           Clusters;
+  typedef LHCb::CaloCluster::Entries::const_iterator   EntryPointer;
+  typedef std::pair< LHCb::CaloCluster*,EntryPointer>  ClusterPair;
+  typedef std::vector<ClusterPair>                     ClusterPairs;
   
-  typedef CaloMap<const CaloDigit*,ClusterPairs>   Map   ;
+  typedef GaudiUtils::Map<const  LHCb::CaloDigit*, ClusterPairs>   Map   ;
   typedef Map::iterator                            It    ;
   typedef std::pair<It,It>                         Pair  ;
   
@@ -66,7 +68,7 @@ public:
    *  @param   CutOff for "shared" digits 
    */
   Digit2ClustersConnector
-  ( Clusters*          Clus   = 0 , 
+  ( Clusters*    Clus   = 0 , 
     const unsigned int CutOff = 0 );
   
   /** Load data and build the inverse table 
@@ -103,7 +105,7 @@ protected:
    *   @param    clu  pointer to CaloCluster 
    *   @result   status code 
    */
-  StatusCode  addCluster  ( CaloCluster*   clu  );
+  StatusCode  addCluster  ( LHCb::CaloCluster*   clu  );
   
   /**  Apply cut-off
    *    remove all digits which are connected toless then 

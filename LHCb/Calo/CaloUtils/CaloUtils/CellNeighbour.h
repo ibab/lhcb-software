@@ -1,8 +1,11 @@
-// $Id: CellNeighbour.h,v 1.4 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellNeighbour.h,v 1.5 2006-03-22 18:25:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2005/05/09 13:48:47  cattanem
 // fix some doxygen warnings
 //
@@ -48,12 +51,10 @@ public:
    *          "neighbour" aroud the seed cell, equivalently 0 or 1 
    */
   double operator() 
-    ( const CaloCellID& seed , 
-      const CaloCellID& cell ) const ;
+    ( const LHCb::CaloCellID& seed , 
+      const LHCb::CaloCellID& cell ) const ;
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOUTILS_CELLNEIGHBOUR_H
 // ============================================================================

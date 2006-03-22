@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.3 2005-12-08 13:05:24 odescham Exp $
+// $Id: TrackUse.cpp,v 1.4 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -11,8 +11,6 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/AlgTool.h"
-// ============================================================================
-// Event 
 // ============================================================================
 #include "Event/Track.h"
 // ============================================================================
@@ -182,27 +180,27 @@ StatusCode TrackUse::declareProperties ( AlgTool*  tool )
  *  @return decsion
  */
 // ============================================================================
-bool TrackUse::use  (  Track* track ) const 
+bool TrackUse::use  (  LHCb::Track* track ) const 
 {
   if ( 0 == track ) { return false ; }
   // Flag ?
-  if ( uniqueOnly    () && !track -> checkFlag(Track::Unique) ) { return false ; }
-  if ( !error        () && track -> checkFlag(Track::Invalid) ) { return false ; }
-  if ( !isBackward   () && track -> checkFlag(Track::Backward) ) { return false ; }
+  if ( uniqueOnly    () && !track -> checkFlag(LHCb::Track::Unique) ) { return false ; }
+  if ( !error        () && track -> checkFlag(LHCb::Track::Invalid) ) { return false ; }
+  if ( !isBackward   () && track -> checkFlag(LHCb::Track::Backward) ) { return false ; }
   // Type ?
-  if ( !isLong       () && track -> checkType (Track::Long) ) { return false ; }
-  if ( !isUpstream   () && track -> checkType (Track::Upstream) ) { return false ; }
-  if ( !isDownstream () && track -> checkType (Track::Downstream) ) { return false ; }
-  if ( !isVelotrack  () && track -> checkType (Track::Velo) ) { return false ; }
-  if ( !isTtrack     () && track -> checkType (Track::Ttrack ) ) { return false ; }
+  if ( !isLong       () && track -> checkType (LHCb::Track::Long) ) { return false ; }
+  if ( !isUpstream   () && track -> checkType (LHCb::Track::Upstream) ) { return false ; }
+  if ( !isDownstream () && track -> checkType (LHCb::Track::Downstream) ) { return false ; }
+  if ( !isVelotrack  () && track -> checkType (LHCb::Track::Velo) ) { return false ; }
+  if ( !isTtrack     () && track -> checkType (LHCb::Track::Ttrack ) ) { return false ; }
   // History : use Cnv track for the time being ...
-  if ( !veloBack     () && track -> checkHistory(Track::CnvVeloBack) ) { return false ; }
-  if ( !velo         () && track -> checkHistory(Track::CnvVelo) ) { return false ; }
-  if ( !seed         () && track -> checkHistory(Track::CnvSeed) ) { return false ; }
-  if ( !match        () && track -> checkHistory(Track::CnvMatch) ) { return false ; }
-  if ( !forward      () && track -> checkHistory(Track::CnvForward) ) { return false ; }
-  if ( !veloTT       () && track -> checkHistory(Track::CnvVeloTT) ) { return false ; }
-  if ( !ksTrack      () && track -> checkHistory(Track::CnvKsTrack) ) { return false ; }
+  if ( !veloBack     () && track -> checkHistory(LHCb::Track::CnvVeloBack) ) { return false ; }
+  if ( !velo         () && track -> checkHistory(LHCb::Track::CnvVelo) ) { return false ; }
+  if ( !seed         () && track -> checkHistory(LHCb::Track::CnvSeed) ) { return false ; }
+  if ( !match        () && track -> checkHistory(LHCb::Track::CnvMatch) ) { return false ; }
+  if ( !forward      () && track -> checkHistory(LHCb::Track::CnvForward) ) { return false ; }
+  if ( !veloTT       () && track -> checkHistory(LHCb::Track::CnvVeloTT) ) { return false ; }
+  if ( !ksTrack      () && track -> checkHistory(LHCb::Track::CnvKsTrack) ) { return false ; }
    return true ;  
 };
 // ============================================================================
@@ -223,29 +221,29 @@ namespace
 // ============================================================================
 /// 'bit'-representation of track flags/types/categories/algorithms
 // ============================================================================
-std::string TrackUse::bits (Track* track ) const 
+std::string TrackUse::bits (LHCb::Track* track ) const 
 {
   if ( 0 == track ) { return std::string("<invalid>") ; }
   
   std::string msg( "bits: ") ;
-  msg +=  "E:" + prnt ( track -> checkFlag(Track::Invalid) ) ;
-  msg += "/U:" + prnt ( track -> checkFlag(Track::Unique) ) ;
+  msg +=  "E:" + prnt ( track -> checkFlag(LHCb::Track::Invalid) ) ;
+  msg += "/U:" + prnt ( track -> checkFlag(LHCb::Track::Unique) ) ;
   msg += "/H:" + prnt ( track -> history       () ) ;
   //
-  msg += "/L:" + prnt ( track -> checkType (Track::Long) ) ;
-  msg += "/U:" + prnt ( track -> checkType (Track::Upstream) ) ;
-  msg += "/D:" + prnt ( track -> checkType (Track::Downstream) ) ;
-  msg += "/V:" + prnt ( track -> checkType (Track::Velo) ) ;
-  msg += "/B:" + prnt ( track -> checkFlag(Track::Backward) ) ;
-  msg += "/T:" + prnt ( track -> checkType (Track::Ttrack ) ) ;
+  msg += "/L:" + prnt ( track -> checkType (LHCb::Track::Long) ) ;
+  msg += "/U:" + prnt ( track -> checkType (LHCb::Track::Upstream) ) ;
+  msg += "/D:" + prnt ( track -> checkType (LHCb::Track::Downstream) ) ;
+  msg += "/V:" + prnt ( track -> checkType (LHCb::Track::Velo) ) ;
+  msg += "/B:" + prnt ( track -> checkFlag(LHCb::Track::Backward) ) ;
+  msg += "/T:" + prnt ( track -> checkType (LHCb::Track::Ttrack ) ) ;
   // History : use Cnv track for the time being ...
-  msg += "/b:" + prnt ( track -> checkHistory(Track::CnvVeloBack) ) ;
-  msg += "/v:" + prnt ( track -> checkHistory(Track::CnvVelo) ) ;
-  msg += "/s:" + prnt ( track -> checkHistory(Track::CnvSeed) ) ;
-  msg += "/m:" + prnt ( track -> checkHistory(Track::CnvMatch) ) ;
-  msg += "/f:" + prnt ( track -> checkHistory(Track::CnvForward) ) ;
-  msg += "/v:" + prnt ( track -> checkHistory(Track::CnvVeloTT) ) ;
-  msg += "/k:" + prnt ( track ->  checkHistory(Track::CnvKsTrack) ) ;
+  msg += "/b:" + prnt ( track -> checkHistory(LHCb::Track::CnvVeloBack) ) ;
+  msg += "/v:" + prnt ( track -> checkHistory(LHCb::Track::CnvVelo) ) ;
+  msg += "/s:" + prnt ( track -> checkHistory(LHCb::Track::CnvSeed) ) ;
+  msg += "/m:" + prnt ( track -> checkHistory(LHCb::Track::CnvMatch) ) ;
+  msg += "/f:" + prnt ( track -> checkHistory(LHCb::Track::CnvForward) ) ;
+  msg += "/v:" + prnt ( track -> checkHistory(LHCb::Track::CnvVeloTT) ) ;
+  msg += "/k:" + prnt ( track ->  checkHistory(LHCb::Track::CnvKsTrack) ) ;
   //
   return msg ;
 };
@@ -298,6 +296,3 @@ std::string  TrackUse::rejectedAlgorithms () const
 };
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================

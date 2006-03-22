@@ -1,8 +1,11 @@
-// $Id: CellSwissCross.cpp,v 1.4 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellSwissCross.cpp,v 1.5 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2004/10/22 09:29:08  ibelyaev
 //  bug fix in the evaluation of energy sharing fractions
 //
@@ -43,8 +46,8 @@ CellSwissCross::~CellSwissCross() {};
  *          3x3 matrix aroud the seed cell
  */
 // ============================================================================
-double CellSwissCross::treatDifferentAreas ( const CaloCellID& seed ,
-                                             const CaloCellID& cell ) const 
+double CellSwissCross::treatDifferentAreas ( const LHCb::CaloCellID& seed ,
+                                             const LHCb::CaloCellID& cell ) const 
 {
   /// valid detector
   if ( 0 == det() ) 
@@ -57,8 +60,8 @@ double CellSwissCross::treatDifferentAreas ( const CaloCellID& seed ,
   /// cell area 
   const double      cellArea   = sizeCell * sizeCell * 4.0 ;
   /// cell centers 
-  const HepPoint3D& centerMtrx =         det()->cellCenter ( seed ) ;
-  const HepPoint3D& centerCell =         det()->cellCenter ( cell ) ;
+  const Gaudi::XYZPoint& centerMtrx =         det()->cellCenter ( seed ) ;
+  const Gaudi::XYZPoint& centerCell =         det()->cellCenter ( cell ) ;
   /// effective halfsize 
   const double      sizeMin    =  0.01 * mini ( sizeMtrx , sizeCell ) ;
   /// 
@@ -69,29 +72,18 @@ double CellSwissCross::treatDifferentAreas ( const CaloCellID& seed ,
   if ( AreaAux <= sizeMin )                     { return 0 ; }  ///< RETURN 
   /// check the real intersection with swiss-cross 
   const double Area = 
-    area ( centerMtrx + HepPoint3D ( -2 * sizeMtrx , 0             , 0 ) , 
-           sizeMtrx                                                   ,
-           centerCell                                                 , 
-           sizeCell                                                   ) +    
-    area ( centerMtrx + HepPoint3D (  2 * sizeMtrx , 0             , 0 ) , 
-           sizeMtrx                                                   ,
-           centerCell                                                 , 
-           sizeCell                                                   ) + 
-    area ( centerMtrx + HepPoint3D ( 0             , -2 * sizeMtrx , 0 ) , 
-           sizeMtrx                                                   ,
-           centerCell                                                 , 
-           sizeCell                                                   ) +
-    area ( centerMtrx + HepPoint3D ( 0             ,  2 * sizeMtrx , 0 ) , 
-           sizeMtrx   ,
-           centerCell , 
-           sizeCell   ) ;  
+    area ( Gaudi::XYZPoint ( centerMtrx.x()-2 * sizeMtrx , centerMtrx.y()  , 0 ) , 
+           sizeMtrx    , centerCell  , sizeCell  ) +    
+    area ( Gaudi::XYZPoint(  centerMtrx.x()+2 * sizeMtrx , centerMtrx.y()      , 0 ) , 
+           sizeMtrx   , centerCell  , sizeCell    ) + 
+    area ( Gaudi::XYZPoint( centerMtrx.x() , centerMtrx.y()  -2 * sizeMtrx , 0 ) , 
+           sizeMtrx , centerCell , sizeCell ) +
+    area ( Gaudi::XYZPoint( centerMtrx.x() ,  centerMtrx.y()+2 * sizeMtrx , 0 ) , 
+           sizeMtrx   , centerCell , sizeCell   ) ;  
   ///
   if ( Area <= sizeMin )       { return 0; }  ///< RETURN 
   ///
   return Area / cellArea  ;
 };
 
-// ============================================================================
-// The End 
-// ============================================================================
 

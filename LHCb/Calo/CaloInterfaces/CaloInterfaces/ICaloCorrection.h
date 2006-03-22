@@ -1,4 +1,4 @@
-// $Id: ICaloCorrection.h,v 1.5 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloCorrection.h,v 1.6 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,11 +9,9 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-// forward declaration 
-class CaloPosition ;   // CaloEvent/Event 
- 
+#include "Kernel/Point3DTypes.h"
+#include "Event/CaloPosition.h"
+
 /** @class ICaloCorrection ICaloCorrection.h CaloInterfaces/ICaloCorrection.h
  *  
  *  A minimal abstract interface for S-,L-shape correction functions 
@@ -23,7 +21,7 @@ class CaloPosition ;   // CaloEvent/Event
  */
 class ICaloCorrection :
   public virtual IAlgTool , 
-  public std::binary_function<const CaloPosition,const HepPoint3D,CaloPosition*>
+  public std::binary_function<const LHCb::CaloPosition, const  LHCb::CaloPosition::Center , LHCb::CaloPosition*>
 {
 public:
   
@@ -39,27 +37,27 @@ public:
    *  @return status code 
    */  
   virtual StatusCode     process    
-  ( const CaloPosition & position  , 
-    const HepPoint3D   & seed      , 
-    CaloPosition*&       corrected ) const = 0 ;
+  ( const LHCb::CaloPosition    & position  , 
+    const LHCb::CaloPosition::Center & seed      , 
+    LHCb::CaloPosition*&        corrected ) const = 0 ;
   
   /** The main processing method 
    *  @param  position  uncorrected position
    *  @param  seed      position of the 'seed' 
    *  @return new created corrected CaloPosition object 
    */  
-  virtual CaloPosition* process    
-  ( const CaloPosition & position , 
-    const HepPoint3D   & seed     ) const = 0 ;
+  virtual LHCb::CaloPosition* process    
+  ( const LHCb::CaloPosition & position , 
+    const LHCb::CaloPosition::Center & seed     ) const = 0 ;
   
   /** The main processing method (functor interface)
    *  @param  position  uncorrected position
    *  @param  seed      position of the 'seed' 
    *  @return new created corrected CaloPosition object 
    */  
-  virtual CaloPosition* operator() 
-    ( const CaloPosition & position , 
-      const HepPoint3D   & seed     ) const = 0 ;
+  virtual LHCb::CaloPosition* operator() 
+    ( const LHCb::CaloPosition & position , 
+      const LHCb::CaloPosition::Center & seed     ) const = 0 ;
 
 protected:
   
@@ -68,8 +66,6 @@ protected:
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOCORRECTION_H
 // ============================================================================

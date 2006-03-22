@@ -1,8 +1,11 @@
-// $Id: CaloHistoTrackAlg.cpp,v 1.2 2005-11-07 11:57:13 odescham Exp $
+// $Id: CaloHistoTrackAlg.cpp,v 1.3 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.1  2005/05/06 17:48:33  ibelyaev
 //  add new base classes: Calo(Histo)TrackAlg
 // Revision 1.2 2005/10/14 odescham
@@ -17,10 +20,6 @@
 // Event 
 // ============================================================================
 #include "Event/Track.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloPrint.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -47,7 +46,7 @@
 CaloHistoTrackAlg::CaloHistoTrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloHistoAlg ( name , svcloc ) 
+  : GaudiHistoAlg ( name , svcloc ) 
   , m_use () 
 {
   //
@@ -71,7 +70,7 @@ CaloHistoTrackAlg::~CaloHistoTrackAlg() {};
 // ============================================================================
 StatusCode CaloHistoTrackAlg::initialize()
 {
-  StatusCode sc = CaloHistoAlg::initialize() ;
+  StatusCode sc = GaudiHistoAlg::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
   
   {
@@ -117,7 +116,7 @@ StatusCode CaloHistoTrackAlg::initialize()
  */
 // ============================================================================
 StatusCode CaloHistoTrackAlg::finalize  () 
-{ return CaloHistoAlg::finalize() ; }
+{ return GaudiHistoAlg::finalize() ; }
 // ============================================================================
 
 // ============================================================================

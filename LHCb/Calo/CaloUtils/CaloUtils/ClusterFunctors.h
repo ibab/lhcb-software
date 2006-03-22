@@ -1,4 +1,4 @@
-// $Id: ClusterFunctors.h,v 1.8 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: ClusterFunctors.h,v 1.9 2006-03-22 18:25:05 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,7 +8,6 @@
 // Include files
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
-// CaloEvent
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
 
@@ -22,12 +21,12 @@ class DeCalorimeter;
  *  @author Ivan Belyaev
  *  @date   04/07/2001
  */
-
+namespace LHCb{
 namespace ClusterFunctors
 {
   
-  typedef CaloCluster::Entries::iterator            iterator            ;
-  typedef CaloCluster::Entries::const_iterator      const_iterator      ;
+  typedef LHCb::CaloCluster::Entries::iterator            iterator            ;
+  typedef LHCb::CaloCluster::Entries::const_iterator      const_iterator      ;
   typedef std::pair<iterator,iterator>              iterator_pair       ;
   typedef std::pair<const_iterator,const_iterator>  const_iterator_pair ;
   
@@ -47,7 +46,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   xx/xx/xxxx
    */
-  double  energy( const CaloCluster* cl );
+  double  energy( const LHCb::CaloCluster* cl );
 
   /** Calculate the "energy" of the cluster 
    *  as a sum of energies of its digits, weighted with energy fractions
@@ -77,7 +76,7 @@ namespace ClusterFunctors
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    */
-  StatusCode  calculateEXY( const  CaloCluster*   cl ,
+  StatusCode  calculateEXY( const  LHCb::CaloCluster*   cl ,
                             const  DeCalorimeter* de ,
                             double& e                ,
                             double& x                ,
@@ -125,8 +124,8 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   xx/xx/xxxx
    */
-  bool overlapped( const CaloCluster* cl1 ,
-                   const CaloCluster* cl2 ) ;
+  bool overlapped( const LHCb::CaloCluster* cl1 ,
+                   const LHCb::CaloCluster* cl2 ) ;
 
   /** Useful function to find first common digit from two sequences. 
    *  It returns the pair of
@@ -168,7 +167,7 @@ namespace ClusterFunctors
   template<class IT>
   inline IT locateDigit( IT begin               ,  
                          IT end                 ,
-                         const CaloDigit* digit )
+                         const LHCb::CaloDigit* digit )
   {
     return CaloDataFunctor::clusterLocateDigit( begin , end , digit );
   };
@@ -187,7 +186,7 @@ namespace ClusterFunctors
   template <class IT>
   inline IT locateDigit( IT begin                          , 
                          IT end                            ,
-                         const CaloDigitStatus::Status& st )
+                         const LHCb::CaloDigitStatus::Status& st )
   {
     return CaloDataFunctor::clusterLocateDigit( begin, end , st );
   };
@@ -199,7 +198,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class  ClusterArea
-    : public std::unary_function<const CaloCluster*,const unsigned int>
+    : public std::unary_function<const LHCb::CaloCluster*,const unsigned int>
   {
   public:
     
@@ -208,7 +207,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return index of calorimeter area for given cluster 
      */
-    const unsigned int operator() ( const CaloCluster* cluster ) const 
+    const unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
     {
       if( 0 == cluster ) 
         { Exception( " CaloCluster* points to NULL! "); }
@@ -219,7 +218,7 @@ namespace ClusterFunctors
                      CaloDigitStatus::SeedCell   );
       if ( cluster->entries().end() == seed  ) 
         { Exception( " 'SeedCell' is not found!"); }
-      const CaloDigit* digit = seed->digit() ;
+      const LHCb::CaloDigit* digit = seed->digit() ;
       if( 0 == digit ) 
         { Exception( " CaloDigit* points to NULL for seed!"); }
       // get the area
@@ -246,7 +245,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const unsigned int clusterArea( const CaloCluster* cluster )
+  inline const unsigned int clusterArea( const LHCb::CaloCluster* cluster )
   {
     ClusterArea evaluator;
     return evaluator( cluster );
@@ -262,7 +261,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class  ClusterCalo
-    : public std::unary_function<const CaloCluster*,const unsigned int>
+    : public std::unary_function<const LHCb::CaloCluster*,const unsigned int>
   {
   public:
     
@@ -271,7 +270,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return index of calorimeter area for given cluster 
      */
-    const unsigned int operator() ( const CaloCluster* cluster ) const 
+    const unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
     {
       if( 0 == cluster ) 
         { Exception( " CaloCluster* points to NULL! "); }
@@ -279,10 +278,10 @@ namespace ClusterFunctors
       const_iterator seed = 
         locateDigit( cluster->entries().begin () , 
                      cluster->entries().end   () , 
-                     CaloDigitStatus::SeedCell   );
+                     LHCb::CaloDigitStatus::SeedCell   );
       if ( cluster->entries().end() == seed  ) 
         { Exception( " 'SeedCell' is not found!"); }
-      const CaloDigit* digit = seed->digit() ;
+      const LHCb::CaloDigit* digit = seed->digit() ;
       if( 0 == digit ) 
         { Exception( " CaloDigit* points to NULL for seed!"); }
       // get the area
@@ -310,7 +309,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const unsigned int clusterCalo( const CaloCluster* cluster )
+  inline const unsigned int clusterCalo( const LHCb::CaloCluster* cluster )
   {
     ClusterCalo evaluator;
     return evaluator( cluster );
@@ -325,7 +324,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class ClusterFromCalo
-    : public std::unary_function<const CaloCluster*,bool>
+    : public std::unary_function<const LHCb::CaloCluster*,bool>
   {
   public:
     /** constructor 
@@ -343,7 +342,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return true if cluster belongs to tehselected calorimter 
      */ 
-    inline bool operator() ( const CaloCluster* cluster ) const 
+    inline bool operator() ( const LHCb::CaloCluster* cluster ) const 
     { return (int) m_evaluator( cluster ) == m_calo ; };
     /** set new calorimeter name 
      *  @exception   CaloException for invalid calorimeter name
@@ -384,7 +383,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class ClusterFromArea
-    : public std::unary_function<const CaloCluster*,bool>
+    : public std::unary_function<const LHCb::CaloCluster*,bool>
   {
   public:
     /** constructor 
@@ -400,7 +399,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return true if cluster belongs to the selected area in calorimter 
      */ 
-    inline bool operator() ( const CaloCluster* cluster ) const 
+    inline bool operator() ( const LHCb::CaloCluster* cluster ) const 
     { return m_evaluator( cluster ) == m_area ; };
   private:
     unsigned int m_area      ;
@@ -416,7 +415,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class OnTheBoundary 
-    : public std::unary_function<const CaloCluster*,bool>
+    : public std::unary_function<const LHCb::CaloCluster*,bool>
   {
   public:
     
@@ -426,23 +425,23 @@ namespace ClusterFunctors
      *               for empty clusters "false" is returned  
      *  @exception CaloException for invalid clusters
      */
-    inline bool operator() ( const CaloCluster* cluster ) const 
+    inline bool operator() ( const LHCb::CaloCluster* cluster ) const 
     {
       if( 0 == cluster ) { Exception("CaloCluster* points to NULL!"); }
-      const CaloCluster::Entries& entries = cluster->entries();
+      const LHCb::CaloCluster::Entries& entries = cluster->entries();
       if( entries.size() <= 1 )  { return false; }   // RETURN !!!
       const_iterator seed = 
         locateDigit( entries.begin ()          , 
                      entries.end   ()          , 
-                     CaloDigitStatus::SeedCell );
+                     LHCb::CaloDigitStatus::SeedCell );
       if( entries.end() == seed ) { Exception("'SeedCell' is not found!");}
-      const CaloDigit* sd = seed->digit() ;
+      const LHCb::CaloDigit* sd = seed->digit() ;
       if( 0 == sd  ) { Exception("CaloDigit* for 'SeedCell' is  NULL!");}
       const unsigned int seedArea = sd->cellID().area() ;
       for( const_iterator entry = entries.begin() ;
            entries.end() != entry ; ++entry ) 
         {
-          const CaloDigit* digit = entry->digit() ;
+          const LHCb::CaloDigit* digit = entry->digit() ;
           if( 0 == digit )           { continue ; }
           if( seedArea != digit->cellID().area() ) { return true ; }
         } // end of loop over all cluyster entries  
@@ -474,7 +473,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const bool onTheBoundary( const CaloCluster* cluster )
+  inline const bool onTheBoundary( const LHCb::CaloCluster* cluster )
   {
     OnTheBoundary evaluator ;
     return evaluator( cluster );
@@ -489,7 +488,7 @@ namespace ClusterFunctors
    *  @date   02/12/2001
    */
   class ZPosition
-    : public std::unary_function<const CaloCluster*,double>
+    : public std::unary_function<const LHCb::CaloCluster*,double>
   {
   public:    
     /** the explicit constructor
@@ -508,7 +507,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return z-position 
      */
-    inline double operator() ( const CaloCluster* cluster ) const
+    inline double operator() ( const LHCb::CaloCluster* cluster ) const
     {
       if( 0 == m_detector           ) 
         { return Exception( " DeCalorimeter*     points to NULL! " );}
@@ -523,7 +522,7 @@ namespace ClusterFunctors
       if( cluster->entries().end() == iseed ) 
         { return Exception( " The Seed Cell is not found! ");}
       ///
-      const CaloDigit* seed = iseed->digit();
+      const LHCb::CaloDigit* seed = iseed->digit();
       if( 0 == seed ) 
         { return Exception( " The Seed Digit points to NULL! ");}
       //
@@ -567,44 +566,44 @@ namespace ClusterFunctors
   
   template< class EVALUATOR>
   inline StatusCode tagTheSubCluster
-  ( CaloCluster*                   cluster   , 
+  ( LHCb::CaloCluster*                   cluster   , 
     const EVALUATOR&               evaluator , 
     const bool                     modify    ,
-    const CaloDigitStatus::Status& tag       )
+    const LHCb::CaloDigitStatus::Status& tag       )
   {
     // check the arguments 
     if( 0 == cluster               ) { return StatusCode( 225 ) ; }
     // get all entries
-    CaloCluster::Entries& entries = cluster->entries() ;
+    LHCb::CaloCluster::Entries& entries = cluster->entries() ;
     // find seed digit
-    CaloCluster::Entries::iterator seedEntry = 
+    LHCb::CaloCluster::Entries::iterator seedEntry = 
       locateDigit( entries.begin ()          , 
                    entries.end   ()          , 
                    CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
-    const CaloDigit* seed = seedEntry->digit() ;
+    const LHCb::CaloDigit* seed = seedEntry->digit() ;
     if( 0             == seed      ) { return StatusCode( 227 ) ; }
     // loop over all entried 
-    for( CaloCluster::Entries::iterator entry = entries.begin() ; 
+    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ; 
          entries.end() != entry ; ++entry )
       {
         // reset existing statuses 
-        entry -> removeStatus  ( CaloDigitStatus::UseForEnergy     ) ;
-        entry -> removeStatus  ( CaloDigitStatus::UseForPosition   ) ;
-        entry -> removeStatus  ( CaloDigitStatus::UseForCovariance ) ;
+        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
+        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForPosition   ) ;
+        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForCovariance ) ;
         // remove the tag
         entry -> removeStatus  ( tag ) ;
         // skip invalid digits 
-        const CaloDigit* digit = entry->digit() ;
+        const LHCb::CaloDigit* digit = entry->digit() ;
         if( 0 == digit    )                         { continue ; } // CONTINUE  
         // evaluate the fraction 
         const double fraction = evaluator( seed->cellID() , digit->cellID() );
         if( 0 >= fraction )                         { continue ; } // CONTINUE
         // update statuses
-        entry->addStatus ( CaloDigitStatus::UseForEnergy     ) ;
-        entry->addStatus ( CaloDigitStatus::UseForPosition   ) ;
-        entry->addStatus ( CaloDigitStatus::UseForCovariance ) ;
+        entry->addStatus ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
+        entry->addStatus ( LHCb::CaloDigitStatus::UseForPosition   ) ;
+        entry->addStatus ( LHCb::CaloDigitStatus::UseForCovariance ) ;
         if( ! modify      )                         { continue ; } // CONTINUE 
         // modify the fractions 
         entry->setFraction( entry->fraction() * fraction         ) ;
@@ -637,35 +636,35 @@ namespace ClusterFunctors
   
   template< class EVALUATOR>
   inline StatusCode untagTheSubCluster
-  ( CaloCluster*                   cluster   , 
+  ( LHCb::CaloCluster*                   cluster   , 
     const EVALUATOR&               evaluator , 
-    const CaloDigitStatus::Status& tag       )
+    const LHCb::CaloDigitStatus::Status& tag       )
   {
     // check the arguments 
     if( 0 == cluster               ) { return StatusCode( 225 ) ; }
     // get all entries
-    CaloCluster::Entries& entries = cluster->entries() ;
+    LHCb::CaloCluster::Entries& entries = cluster->entries() ;
     // find seed digit
-    CaloCluster::Entries::iterator seedEntry = 
+    LHCb::CaloCluster::Entries::iterator seedEntry = 
       locateDigit( entries.begin ()          , 
                    entries.end   ()          , 
-                   CaloDigitStatus::SeedCell );
+                   LHCb::CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
-    const CaloDigit* seed = seedEntry->digit() ;
+    const LHCb::CaloDigit* seed = seedEntry->digit() ;
     if( 0             == seed      ) { return StatusCode( 227 ) ; }
     // loop over all entries 
-    for( CaloCluster::Entries::iterator entry = entries.begin() ; 
+    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ; 
          entries.end() != entry ; ++entry )
       {
         // reset existing statuses 
-        entry -> addStatus  ( CaloDigitStatus::UseForEnergy     ) ;
-        entry -> addStatus  ( CaloDigitStatus::UseForPosition   ) ;
-        entry -> addStatus  ( CaloDigitStatus::UseForCovariance ) ;
+        entry -> addStatus  ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
+        entry -> addStatus  ( LHCb::CaloDigitStatus::UseForPosition   ) ;
+        entry -> addStatus  ( LHCb::CaloDigitStatus::UseForCovariance ) ;
         // tagged ?
         if( !( tag | entry->status() ) )           { continue ; }  // CONTINUE
         // skip invalid digits 
-        const CaloDigit* digit = entry->digit() ;
+        const LHCb::CaloDigit* digit = entry->digit() ;
         if( 0 == digit                 )           { continue ; } // CONTINUE  
         // evaluate the fraction 
         const double fraction = evaluator( seed->cellID() , digit->cellID() );
@@ -679,10 +678,9 @@ namespace ClusterFunctors
   };
   
 }; /// end of name space
+}
 
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif ///< CALOUTILS_CLUSTERFUNCTORS_H
 // ============================================================================

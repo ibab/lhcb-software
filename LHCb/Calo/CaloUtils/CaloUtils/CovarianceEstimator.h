@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.h,v 1.6 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: CovarianceEstimator.h,v 1.7 2006-03-22 18:25:05 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.5  2004/05/27 13:40:03  cattanem
 // v4r7
 //
@@ -15,15 +18,13 @@
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
 // ===========================================================================
 // Include files
-// STD & STL
 #include <functional>
 #include <iostream>
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-// GaudiKernel
+#include "Kernel/SystemOfUnits.h"
 #include "GaudiKernel/StatusCode.h"
+
 // forward declaration
-class  CaloCluster    ;
+class  LHCb::CaloCluster    ;
 class  DeCalorimeter  ;
 class  MsgStream      ;
 
@@ -152,7 +153,7 @@ class  MsgStream      ;
  *  @date   06/07/2001
  */
 class CovarianceEstimator:
-  public std::unary_function<CaloCluster*,StatusCode>
+  public std::unary_function<LHCb::CaloCluster*,StatusCode>
 {
 public:
 
@@ -186,13 +187,13 @@ public:
    *  @param cluster pointer to cluster object 
    *  @return status code
    */
-  StatusCode operator()( CaloCluster* cluster ) const ;
+  StatusCode operator()( LHCb::CaloCluster* cluster ) const ;
 
   /** calculate covariance matrix for cluster
    *  @param cluster pointer to cluster
    *   @return status code
    */
-  inline StatusCode calculateCovarianceMatrix ( CaloCluster* cluster ) const
+  inline StatusCode calculateCovarianceMatrix ( LHCb::CaloCluster* cluster ) const
   { return (*this)( cluster ); }
   
   

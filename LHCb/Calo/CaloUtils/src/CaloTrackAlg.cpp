@@ -1,8 +1,11 @@
-// $Id: CaloTrackAlg.cpp,v 1.2 2005-11-07 11:57:13 odescham Exp $
+// $Id: CaloTrackAlg.cpp,v 1.3 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.1  2005/05/06 17:48:33  ibelyaev
 //  add new base classes: Calo(Histo)TrackAlg
 // Revision 1.2 2005/10/14 odescham
@@ -10,23 +13,9 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// from Gaudi
-// ============================================================================
 #include "GaudiKernel/MsgStream.h" 
-// ============================================================================
-// Event 
-// ============================================================================
 #include "Event/Track.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloPrint.h"
-// ============================================================================
-// local
-// ============================================================================
 #include "CaloUtils/CaloTrackAlg.h"
-// ============================================================================
-
 // ============================================================================
 /** @file 
  * 
@@ -47,7 +36,7 @@
 CaloTrackAlg::CaloTrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
+  : GaudiAlgorithm ( name , svcloc ) 
   , m_use () 
 {
   //
@@ -71,7 +60,7 @@ CaloTrackAlg::~CaloTrackAlg() {};
 // ============================================================================
 StatusCode CaloTrackAlg::initialize()
 {
-  StatusCode sc = CaloAlgorithm::initialize() ;
+  StatusCode sc = GaudiAlgorithm::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
   
   {
@@ -116,9 +105,5 @@ StatusCode CaloTrackAlg::initialize()
  *  @return status code 
  */
 // ============================================================================
-StatusCode CaloTrackAlg::finalize  () { return CaloAlgorithm::finalize() ; }
-// ============================================================================
-
-// ============================================================================
-// The End 
+StatusCode CaloTrackAlg::finalize  () { return GaudiAlgorithm::finalize() ; }
 // ============================================================================

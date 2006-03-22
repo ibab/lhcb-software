@@ -1,8 +1,11 @@
-// $Id: ICaloClusterTool.h,v 1.7 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloClusterTool.h,v 1.8 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.6  2004/02/17 11:51:54  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -18,7 +21,10 @@
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // forward declarations
-class     CaloCluster                ; ///< from CaloEvent 
+namespace LHCb{
+  class     CaloCluster                ; 
+};
+
 
 /** @class ICaloClusterTool ICaloClusterTool.h 
  *           CaloInterfaces/ICaloClusterTool.h
@@ -37,7 +43,7 @@ class     CaloCluster                ; ///< from CaloEvent
 
 class ICaloClusterTool: 
   public virtual IAlgTool                            ,
-  public std::unary_function<CaloCluster*,StatusCode>
+  public std::unary_function<LHCb::CaloCluster*,StatusCode>
 {
   
  public:
@@ -52,13 +58,13 @@ class ICaloClusterTool:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloCluster* cluster ) const = 0 ;
+  virtual StatusCode process    ( LHCb::CaloCluster* cluster ) const = 0 ;
   
   /** The main processing method (functor interface) 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const = 0 ;
+  virtual StatusCode operator() ( LHCb::CaloCluster* cluster ) const = 0 ;
   
  protected:
   
@@ -67,8 +73,6 @@ class ICaloClusterTool:
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOCLUSTERTOOL_H
 // ============================================================================

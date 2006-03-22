@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.12 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.13 2006-03-22 18:25:06 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.11  2002/11/13 20:43:37  ibelyaev
 //  few bugs are fixed
 //
@@ -10,19 +13,12 @@
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
 /// Include files
-/// STD & STL
 #include<cmath>
-/// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-/// GaudiKernel
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/MsgStream.h"
-/// Kernel
-#include "Kernel/CaloPrint.h"
-/// CaloDet
 #include "CaloDet/DeCalorimeter.h"
-/// CaloEvent
 #include "Event/CaloCluster.h"
 /// local
 #include "CaloUtils/CovarianceEstimator.h"
@@ -74,7 +70,7 @@ CovarianceEstimator::~CovarianceEstimator(){}
     @return status code 
 */
 // ============================================================================
-StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const 
+StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const 
 {
   // ignore trivial cases 
   if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
@@ -83,10 +79,10 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   if( 0 == detector()            ) { return StatusCode(221)     ; }
   
   // avoid long names 
-  typedef CaloCluster::Entries::iterator       iterator;
-  typedef CaloCluster::Entries::const_iterator const_iterator;
+  typedef LHCb::CaloCluster::Entries::iterator       iterator;
+  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
   
-  CaloCluster::Entries& entries = cluster->entries();
+  LHCb::CaloCluster::Entries entries = cluster->entries();
   const unsigned int size = entries.size() ;
   // auxillary arrays 
   std::vector<bool>   use  ( size , false ); ///< use this cell?
@@ -110,20 +106,20 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   ///
   for( unsigned int i = 0 ; i < size ; ++i )
     {
-      CaloClusterEntry& entry = entries[i];
-      const CaloDigit* digit  = entry.digit() ;
+      LHCb::CaloClusterEntry& entry = entries[i];
+      const LHCb::CaloDigit* digit  = entry.digit() ;
       /// get the status 
       if( 0 != digit && 
-          ( entry.status() & CaloDigitStatus::UseForCovariance ) ) 
+          ( entry.status() & LHCb::CaloDigitStatus::UseForCovariance ) ) 
         {
           use[i] = true ; ///< use this cell!
-          entry.addStatus    ( CaloDigitStatus::UseForEnergy   );
-          entry.addStatus    ( CaloDigitStatus::UseForPosition );
+          entry.addStatus    ( LHCb::CaloDigitStatus::UseForEnergy   );
+          entry.addStatus    ( LHCb::CaloDigitStatus::UseForPosition );
         }
       else 
         {    
-          entry.removeStatus ( CaloDigitStatus::UseForEnergy   );
-          entry.removeStatus ( CaloDigitStatus::UseForPosition );
+          entry.removeStatus ( LHCb::CaloDigitStatus::UseForEnergy   );
+          entry.removeStatus ( LHCb::CaloDigitStatus::UseForPosition );
         }
       if( !use[i] )                   { continue; } ///< CONTINUE !
       /// 
@@ -132,7 +128,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
       ///
       const double e_i  =   energy  ;
       // get cell position 
-      const HepPoint3D& pos = detector()->cellCenter( digit->cellID() ) ;
+      const Gaudi::XYZPoint& pos = detector()->cellCenter( digit->cellID() ) ;
       ///
       const double x_i  =   pos.x() ;
       const double y_i  =   pos.y() ;
@@ -196,7 +192,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   // does energy have a reasonable value? 
   if( 0 >= eT ) 
     {
-      CaloPosition::Parameters& parameters = cluster->position().parameters();
+      LHCb::CaloPosition::Parameters parameters = cluster->position().parameters();
       parameters( 1 ) =  -1 * TeV ;
       parameters( 2 ) =  -1 * km  ;
       parameters( 3 ) =  -1 * km  ;
@@ -229,19 +225,19 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
     -                2.0 * Ycl * Sey / eT / eT ;
   
   // update cluster patameters  
-  CaloPosition::Parameters& parameters = cluster->position().parameters();
-  parameters( CaloPosition::E ) = Ecl ;   // E 
-  parameters( CaloPosition::X ) = Xcl ;   // X 
-  parameters( CaloPosition::Y ) = Ycl ;   // Y 
+  LHCb::CaloPosition::Parameters parameters = cluster->position().parameters();
+  parameters( LHCb::CaloPosition::E ) = Ecl ;   // E 
+  parameters( LHCb::CaloPosition::X ) = Xcl ;   // X 
+  parameters( LHCb::CaloPosition::Y ) = Ycl ;   // Y 
 
   // update cluster matrix   
-  CaloPosition::Covariance& covariance = cluster->position().covariance();
-  covariance( CaloPosition::X , CaloPosition::X ) = CovXX ;
-  covariance( CaloPosition::Y , CaloPosition::X ) = CovXY ;
-  covariance( CaloPosition::E , CaloPosition::X ) = CovEX ;
-  covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY ;
-  covariance( CaloPosition::E , CaloPosition::Y ) = CovEY ;
-  covariance( CaloPosition::E , CaloPosition::E ) = CovEE ;
+  LHCb::CaloPosition::Covariance covariance = cluster->position().covariance();
+  covariance( LHCb::CaloPosition::X , LHCb::CaloPosition::X ) = CovXX ;
+  covariance( LHCb::CaloPosition::Y , LHCb::CaloPosition::X ) = CovXY ;
+  covariance( LHCb::CaloPosition::E , LHCb::CaloPosition::X ) = CovEX ;
+  covariance( LHCb::CaloPosition::Y , LHCb::CaloPosition::Y ) = CovYY ;
+  covariance( LHCb::CaloPosition::E , LHCb::CaloPosition::Y ) = CovEY ;
+  covariance( LHCb::CaloPosition::E , LHCb::CaloPosition::E ) = CovEE ;
 
   return StatusCode::SUCCESS;
 };
@@ -256,17 +252,16 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
 // ============================================================================
 MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const 
 {
-  CaloPrint print;
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
       << endreq 
-      << "   Resolution       is " << print( sqrt( a2GeV        () / GeV ) ) 
+      << "   Resolution       is " << ( sqrt( a2GeV        () / GeV ) ) 
       << endreq 
-      << "   Sigma Gain       is " << print( sqrt( s2gain       ()       ) ) 
+      << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
       << endreq 
-      << "   Coherent Noise   is " << print( sqrt( s2coherent   ()       ) ) 
+      << "   Coherent Noise   is " << ( sqrt( s2coherent   ()       ) ) 
       << endreq 
-      << "   InCoherent Noise is " << print( sqrt( s2incoherent ()       ) )
+      << "   InCoherent Noise is " << ( sqrt( s2incoherent ()       ) )
       << endreq ;
   ///
   return log ;
@@ -283,17 +278,16 @@ MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const
 // ============================================================================
 std::ostream& CovarianceEstimator::printOut ( std::ostream& log ) const 
 {
-  CaloPrint print;
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
       << std::endl 
-      << "   Resolution       is " << print( sqrt( a2GeV        () / GeV ) ) 
+      << "   Resolution       is " << ( sqrt( a2GeV        () / GeV ) ) 
       << std::endl 
-      << "   Sigma Gain       is " << print( sqrt( s2gain       ()       ) ) 
+      << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
       << std::endl 
-      << "   Coherent Noise   is " << print( sqrt( s2coherent   ()       ) ) 
+      << "   Coherent Noise   is " << ( sqrt( s2coherent   ()       ) ) 
       << std::endl 
-      << "   InCoherent Noise is " << print( sqrt( s2incoherent ()       ) )
+      << "   InCoherent Noise is " << ( sqrt( s2incoherent ()       ) )
       << std::endl ;
   ///
   return log ;

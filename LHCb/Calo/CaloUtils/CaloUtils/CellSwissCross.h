@@ -1,8 +1,11 @@
-// $Id: CellSwissCross.h,v 1.4 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellSwissCross.h,v 1.5 2006-03-22 18:25:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2004/05/27 13:40:03  cattanem
 // v4r7
 //
@@ -50,8 +53,8 @@ public:
    *  @return fraction of area of the second cell which fits inside 
    *          "swiss-cross" area around the seed 
    */
-  inline double operator() ( const CaloCellID& seed , 
-                             const CaloCellID& cell ) const 
+  inline double operator() ( const LHCb::CaloCellID& seed , 
+                             const LHCb::CaloCellID& cell ) const 
   { 
     /// the same cells
     if      ( seed             == cell             ) { return 1 ; } ///< RETURN
@@ -90,13 +93,11 @@ protected:
    *  @return fraction of area of the second cell which fits inside 
    *          3x3 matrix aroud the seed cell
    */
-  double treatDifferentAreas( const CaloCellID& seed ,
-                              const CaloCellID& cell ) const ;
+  double treatDifferentAreas( const LHCb::CaloCellID& seed ,
+                              const LHCb::CaloCellID& cell ) const ;
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOUTILS_CELLSWISSCROSS_H
 // ============================================================================

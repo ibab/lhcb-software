@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.7 2005-11-07 11:57:13 odescham Exp $
+// $Id: SpreadEstimator.cpp,v 1.8 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.6  2002/11/13 20:43:37  ibelyaev
 //  few bugs are fixed
 //
@@ -14,11 +17,8 @@
 //
 // ============================================================================
 // Include files
-// GaudiKernel
 #include "GaudiKernel/SmartRef.h"
-// CaloDet 
 #include "CaloDet/DeCalorimeter.h"
-// CaloEvent 
 #include "Event/CaloCluster.h"
 // local
 #include "CaloUtils/SpreadEstimator.h"
@@ -72,7 +72,7 @@ SpreadEstimator::~SpreadEstimator()
  */
 // ============================================================================
 StatusCode SpreadEstimator::operator()
-  ( CaloCluster* cluster ) const 
+  ( LHCb::CaloCluster* cluster ) const 
 {
   // ignore trivial cases 
   if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
@@ -81,7 +81,7 @@ StatusCode SpreadEstimator::operator()
   if( 0 == detector ()           ) { return StatusCode( 221 )   ; }
   
   /// avoid long names 
-  typedef CaloCluster::Entries::const_iterator const_iterator;
+  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
   
   ///
   double covxx         = 0 ;
@@ -95,21 +95,21 @@ StatusCode SpreadEstimator::operator()
   
   double cellsize      = -10 ;
   
-  const CaloCluster::Entries& entries = cluster->entries() ;
-  for( const_iterator entry = entries.begin() ;
+  const LHCb::CaloCluster::Entries& entries = cluster->entries() ;
+  for( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ;
        entries.end() != entry ; ++entry ) 
     {
-      const CaloDigit* digit = entry->digit()  ;
+      const LHCb::CaloDigit* digit = entry->digit()  ;
       if( 0 == digit ) { continue ; }
       ///    
       const double fraction = entry->fraction();
       ///  
       const double energy   = digit->e() * fraction ;
       ///
-      const HepPoint3D& pos =
+      const Gaudi::XYZPoint& pos =
         detector()->cellCenter( digit->cellID() );
       ///
-      if( entry->status() & CaloDigitStatus::SeedCell )
+      if( entry->status() & LHCb::CaloDigitStatus::SeedCell )
         { cellsize = detector()->cellSize( digit->cellID() ) ; }
       ///
       const double x =  pos.x() ;
@@ -143,9 +143,9 @@ StatusCode SpreadEstimator::operator()
   xmean /= etot ;
   ymean /= etot ;
   
-  CaloPosition::Parameters& center = cluster->position().center() ;
-  center( CaloPosition::X ) = xmean ;
-  center( CaloPosition::Y ) = ymean ;
+  LHCb::CaloPosition::Center center = cluster->position().center() ;
+  center( LHCb::CaloPosition::X ) = xmean ;
+  center( LHCb::CaloPosition::Y ) = ymean ;
   
   covxx /= etot ;
   covyx /= etot ;
@@ -181,10 +181,10 @@ StatusCode SpreadEstimator::operator()
   if( covxx < cut ) { covxx = uniform ; covyx = 0 ; }
   if( covyy < cut ) { covyy = uniform ; covyx = 0 ; }
   
-  CaloPosition::Covariance& spread = cluster->position().spread() ;
-  spread( CaloPosition::X , CaloPosition::X ) = covxx ;
-  spread( CaloPosition::Y , CaloPosition::X ) = covyx ;
-  spread( CaloPosition::Y , CaloPosition::Y ) = covyy ;
+  LHCb::CaloPosition::Spread spread = cluster->position().spread() ;
+  spread( LHCb::CaloPosition::X , LHCb::CaloPosition::X ) = covxx ;
+  spread( LHCb::CaloPosition::Y , LHCb::CaloPosition::X ) = covyx ;
+  spread( LHCb::CaloPosition::Y , LHCb::CaloPosition::Y ) = covyy ;
 
   ///
   return StatusCode::SUCCESS ;

@@ -1,8 +1,11 @@
-// $Id: TrackUse.h,v 1.1 2005-11-07 11:57:13 odescham Exp $
+// $Id: TrackUse.h,v 1.2 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.1  2004/10/27 11:58:09  ibelyaev
 //  ad dnew class TrackUse
 // 
@@ -104,10 +107,10 @@ public:
    *  @param track pointer to TrStoiredTrack object 
    *  @return decsion
    */
-  bool        use  ( Track* track ) const ;
+  bool        use  ( LHCb::Track* track ) const ;
   
   /// 'bit'-representation of track flags/types/categories/algorithms
-  std::string bits ( Track* track ) const ;
+  std::string bits ( LHCb::Track* track ) const ;
   
   /// get the list of rejected track types 
   std::string  rejectedTypes      () const ;

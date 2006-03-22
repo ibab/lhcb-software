@@ -1,4 +1,4 @@
-// $Id: Digit2ClustersConnector.cpp,v 1.3 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: Digit2ClustersConnector.cpp,v 1.4 2006-03-22 18:25:06 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,9 +7,7 @@
 // GaudiKernel
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRef.h"
-// CaloKernel
 #include "CaloKernel/CaloException.h"
-// CaloEvent
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 // local 
@@ -48,7 +46,7 @@ Digit2ClustersConnector::Digit2ClustersConnector( Clusters*    clus         ,
 
 // ============================================================================
 /// addCluster method 
-StatusCode Digit2ClustersConnector::addCluster( CaloCluster* cluster )
+StatusCode Digit2ClustersConnector::addCluster( LHCb::CaloCluster* cluster )
 {
   // check arguments 
   if( 0 == cluster ) { return StatusCode::SUCCESS ;}
@@ -56,7 +54,7 @@ StatusCode Digit2ClustersConnector::addCluster( CaloCluster* cluster )
   for( EntryPointer entry = cluster->entries().begin();
        cluster->entries().end() != entry ; ++entry )
     {
-      const CaloDigit* digit = entry->digit();
+      const LHCb::CaloDigit* digit = entry->digit();
       if( 0 == digit ) { continue; }              ///< CONTINUE!
       // update map  
       m_map[digit].push_back( ClusterPair( cluster, entry ) );
@@ -92,6 +90,3 @@ StatusCode Digit2ClustersConnector::applyCutOff( const unsigned int CutOff )
 Digit2ClustersConnector::~Digit2ClustersConnector() { m_map.clear(); }
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

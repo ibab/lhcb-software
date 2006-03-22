@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.6 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloTrackIdEval.h,v 1.7 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.6  2005/10/14 14:12:18  odescham
 // adapt to new track model
 //
@@ -22,7 +25,10 @@
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
-class Track      ;
+namespace LHCb{
+  class Track      ;
+};
+
 
 /** @class ICaloTrackIdEval ICaloTrackIdEval.h CaloInterfaces/ICaloTrackIdEval.h
  *  
@@ -41,7 +47,7 @@ class Track      ;
 
 class ICaloTrackIdEval : 
   public virtual                                 IAlgTool ,
-  public std::unary_function<const Track*,double>
+  public std::unary_function<const LHCb::Track*,double>
 {
   
 public:
@@ -59,7 +65,7 @@ public:
    *  @return status code 
    */  
   virtual StatusCode process   
-  ( const Track* track , 
+  ( const LHCb::Track* track , 
     double&              value ) const = 0 ;
   
   /** The main processing method (functor interface)
@@ -67,7 +73,7 @@ public:
    *  @param  track  pointer to the object to be processed
    */  
   virtual double     operator() 
-    ( const Track* track ) const = 0 ;
+    ( const LHCb::Track* track ) const = 0 ;
   
   
 protected:
@@ -77,8 +83,6 @@ protected:
   
 };
 
-// ============================================================================
-// The END 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOTRACKIDEVAL_H
 // ============================================================================

@@ -1,6 +1,9 @@
-// $Id: ClusterFunctors.cpp,v 1.4 2002-04-07 18:05:41 ibelyaev Exp $ 
+// $Id: ClusterFunctors.cpp,v 1.5 2006-03-22 18:25:06 odescham Exp $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/07 18:05:41  ibelyaev
+//  bug fix
+//
 // Revision 1.3  2002/04/02 10:59:31  ibelyaev
 //  update for new event model
 //
@@ -22,14 +25,10 @@
 // Include files
 // GaudiKernel
 #include "GaudiKernel/SmartRef.h"
-// CaloKernel
 #include "CaloKernel/CaloException.h"
-// CaloDEt 
 #include "CaloDet/DeCalorimeter.h"
-// CaloEvent 
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"
-// CaloUtils
 #include "CaloUtils/ClusterFunctors.h"
 
 // ============================================================================
@@ -50,8 +49,8 @@
  *   @return      "energy" of cluster
  */
 // ============================================================================
-double  ClusterFunctors::energy
-( const CaloCluster* cl )
+double  LHCb::ClusterFunctors::energy
+( const LHCb::CaloCluster* cl )
 {
   if( 0 == cl ||  cl->entries().empty() ) { return 0 ; }
   return 
@@ -69,15 +68,15 @@ double  ClusterFunctors::energy
  *     @return "true" if clusters have at least 1 common cell 
  */
 // ===========================================================================
-bool ClusterFunctors::overlapped
-( const CaloCluster* cl1 ,
-  const CaloCluster* cl2 )
+bool LHCb::ClusterFunctors::overlapped
+( const LHCb::CaloCluster* cl1 ,
+  const LHCb::CaloCluster* cl2 )
 { 
   if( 0 == cl1              || 0 == cl2              || 
       cl1->entries().empty() || cl2->entries().empty() ){ return false ; }
   ///
   const_iterator_pair p =
-    ClusterFunctors::commonDigit( cl1->entries().begin() , 
+    LHCb::ClusterFunctors::commonDigit( cl1->entries().begin() , 
                                   cl1->entries().end  () ,
                                   cl2->entries().begin() , 
                                   cl2->entries().end  () ) ;
@@ -100,8 +99,8 @@ bool ClusterFunctors::overlapped
  *   @return    status code
  */
 // ===========================================================================
-StatusCode  ClusterFunctors::calculateEXY
-( const CaloCluster*   cl ,
+StatusCode  LHCb::ClusterFunctors::calculateEXY
+( const LHCb::CaloCluster*   cl ,
   const DeCalorimeter* de , 
   double& e               ,
   double& x               ,
@@ -123,7 +122,7 @@ StatusCode  ClusterFunctors::calculateEXY
  *  @return status code (fictive)
  */
 // ===========================================================================
-StatusCode ClusterFunctors::throwException 
+StatusCode LHCb::ClusterFunctors::throwException 
 ( const std::string& message )
 {
   // throw the exception

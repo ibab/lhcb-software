@@ -1,16 +1,17 @@
-// $Id: CellMatrix3x3.cpp,v 1.4 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellMatrix3x3.cpp,v 1.5 2006-03-22 18:25:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2004/10/22 09:29:08  ibelyaev
 //  bug fix in the evaluation of energy sharing fractions
 //
 // ============================================================================
 // Include files
-// CaloDet 
 #include "CaloDet/DeCalorimeter.h"
-// local 
 #include "CaloUtils/CellMatrix3x3.h"
 
 // ============================================================================
@@ -37,8 +38,8 @@ CellMatrix3x3::~CellMatrix3x3() {}
  *          3x3 matrix aroud the seed cell
  */
 // ============================================================================
-double CellMatrix3x3::treatDifferentAreas ( const CaloCellID& seed ,
-                                            const CaloCellID& cell ) const 
+double CellMatrix3x3::treatDifferentAreas ( const LHCb::CaloCellID& seed ,
+                                            const LHCb::CaloCellID& cell ) const 
 {
   /// valid detector
   if ( 0 == det() ) 
@@ -51,8 +52,8 @@ double CellMatrix3x3::treatDifferentAreas ( const CaloCellID& seed ,
   /// cell area 
   const double      cellArea   = sizeCell * sizeCell * 4.0 ;
   /// cell centers 
-  const HepPoint3D& centerMtrx =             det()->cellCenter ( seed ) ;
-  const HepPoint3D& centerCell =             det()->cellCenter ( cell ) ;
+  const Gaudi::XYZPoint& centerMtrx =             det()->cellCenter ( seed ) ;
+  const Gaudi::XYZPoint& centerCell =             det()->cellCenter ( cell ) ;
   /// effective halfsize 
   const double      sizeMin    =  0.01 * mini ( sizeMtrx , sizeCell ) ;
   /// 

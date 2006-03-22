@@ -1,8 +1,11 @@
-// $Id: CellMatrix.h,v 1.6 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellMatrix.h,v 1.7 2006-03-22 18:25:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.5  2004/05/27 01:42:11  ibelyaev
 //  fix a bug in CellMatrix::area method
 //
@@ -22,14 +25,11 @@
 #ifndef CALOUTILS_CELLMATRIX_H 
 #define CALOUTILS_CELLMATRIX_H 1
 // Include files
-// STD & STL
 #include <functional>
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-// CaloKernel 
-#include "CaloKernel/CaloCellID.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/CaloCellID.h"
 // forward declaration
-class DeCalorimeter ;   ///< from CaloDet package 
+class DeCalorimeter ;   
 
 /** @class CellMatrix CellMatrix.h CaloUtils/CellMatrix.h
  *  
@@ -41,7 +41,7 @@ class DeCalorimeter ;   ///< from CaloDet package
  *  @date   07/11/2001
  */
 class CellMatrix : 
-  public std::binary_function<CaloCellID,CaloCellID,double>
+  public std::binary_function<LHCb::CaloCellID,LHCb::CaloCellID,double>
 {
   
  public:
@@ -95,10 +95,10 @@ class CellMatrix :
    *  @param   halfsize2 half   size  of the second square 
    *  @return the intersection area
    */ 
-  inline double area ( const HepPoint3D& center1   , 
-                       const double      halfsize1 , 
-                       const HepPoint3D& center2   , 
-                       const double      halfsize2 ) const 
+  inline double area ( const Gaudi::XYZPoint& center1   , 
+                       const double           halfsize1 , 
+                       const Gaudi::XYZPoint& center2   , 
+                       const double           halfsize2 ) const 
     {
       /// check the sizes 
       if( halfsize1 <= 0 || halfsize2 <= 0 ) { return 0 ; } ///< RETURN 
@@ -137,8 +137,6 @@ class CellMatrix :
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOUTILS_CELLMATRIX_H
 // ============================================================================

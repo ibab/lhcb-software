@@ -1,8 +1,11 @@
-// $Id: ICaloLikelihood.h,v 1.3 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloLikelihood.h,v 1.4 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 11:51:54  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -17,8 +20,10 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
+namespace LHCb{
+  class  CaloCluster     ;     
+};
 
-class     CaloCluster     ;     // from CaloEvent/Event
 
 /** @class ICaloLikelihood ICaloLikelihood.h CaloInterfaces/ICaloLikelihood.h
  *  
@@ -32,7 +37,7 @@ class     CaloCluster     ;     // from CaloEvent/Event
  */
 class ICaloLikelihood:
   public  virtual IAlgTool                               ,
-  public  std::unary_function<const CaloCluster*,double>
+  public  std::unary_function<const LHCb::CaloCluster*,double>
 {
 public:
   
@@ -47,20 +52,20 @@ public:
    *  @see CaloHypotheses 
    *  @return calorimeter hypothesis to be evaluated 
    */
-  virtual const CaloHypotheses::Hypothesis& hypothesis() const = 0 ;
+  virtual const LHCb::CaloHypotheses::Hypothesis& hypothesis() const = 0 ;
   
   /** evaluate the likelyhood of the cluster for the given hypotheses
    *  @param  cluster pointer to cluster, to be evaluated (const!)
    *  @return likelyhood of the hypothesis 
    */
-  virtual double likelihood ( const CaloCluster* cluster ) const = 0 ;
+  virtual double likelihood ( const LHCb::CaloCluster* cluster ) const = 0 ;
   
   /** evaluate the likelyhood of the cluster for the given hypotheses
    *  (functor interface)
    *  @param  cluster pointer to cluster, to be evaluated (const!)
    *  @return likelyhood of the hypothesis 
    */
-  virtual double operator() ( const CaloCluster* cluster ) const = 0 ;
+  virtual double operator() ( const LHCb::CaloCluster* cluster ) const = 0 ;
   
 protected:
   
@@ -69,8 +74,6 @@ protected:
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOLIKELIHOOD_H
 // ============================================================================

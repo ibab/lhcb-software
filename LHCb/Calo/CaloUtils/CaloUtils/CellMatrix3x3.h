@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.h,v 1.6 2005-11-07 11:57:13 odescham Exp $
+// $Id: CellMatrix3x3.h,v 1.7 2006-03-22 18:25:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.5  2005/05/09 13:48:46  cattanem
 // fix some doxygen warnings
 //
@@ -56,8 +59,8 @@ public:
    *          3x3 matrix aroud the seed cell
    */
   inline double operator()
-    ( const CaloCellID& seed , 
-      const CaloCellID& cell ) const 
+    ( const LHCb::CaloCellID& seed , 
+      const LHCb::CaloCellID& cell ) const 
   {
     /// the same cells
     if( seed             == cell             ) { return 1 ; } ///< RETURN
@@ -86,8 +89,8 @@ protected:
    *  @return fraction of area of the second cell which fits inside 
    *          3x3 matrix aroud the seed cell
    */
-  double treatDifferentAreas( const CaloCellID& seed ,
-                              const CaloCellID& cell ) const ;
+  double treatDifferentAreas( const LHCb::CaloCellID& seed ,
+                              const LHCb::CaloCellID& cell ) const ;
   
 };
 

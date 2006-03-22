@@ -1,8 +1,11 @@
-// $Id: CaloTrackAlg.h,v 1.2 2005-11-07 11:57:13 odescham Exp $
+// $Id: CaloTrackAlg.h,v 1.3 2006-03-22 18:25:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.1  2005/05/06 17:48:33  ibelyaev
 //  add new base classes: Calo(Histo)TrackAlg
 // Revision 1.2 2005/10/14 odescham
@@ -12,15 +15,8 @@
 #define CALOUTILS_CALOTrackAlg_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// from STL
-// ============================================================================
 #include <string>
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
-// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "CaloUtils/TrackUse.h"
 #include "Event/Track.h"
 // ============================================================================
@@ -53,7 +49,7 @@
 class TrackUse;
 class Track;
 
-class CaloTrackAlg : public CaloAlgorithm 
+class CaloTrackAlg : public GaudiAlgorithm 
 {
 public:  
   /** standard algorithm initialization 
@@ -94,7 +90,7 @@ protected:
    *  @param track track object 
    *  @return decision
    */
-  bool        use  ( Track* track ) const
+  bool        use  ( LHCb::Track* track ) const
     { return m_use.use( track) ; }
     //  { return false ; }
   //  bool        use  (  ) const 
@@ -103,16 +99,12 @@ protected:
    *  @param trObj the track object
    *  @return 'bit'-representation of the track (useful for debugging)
    */
-  std::string bits ( Track* trObj ) const 
+  std::string bits ( LHCb::Track* trObj ) const 
   { return m_use.bits ( trObj ) ; }
 protected :
   // the actual object 
   TrackUse m_use ;
 };
-// ============================================================================
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOTrackAlg_H
 // ============================================================================

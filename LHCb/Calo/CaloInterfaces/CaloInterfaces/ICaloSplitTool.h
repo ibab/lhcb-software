@@ -1,8 +1,11 @@
-// $Id: ICaloSplitTool.h,v 1.5 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloSplitTool.h,v 1.6 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.4  2004/02/17 11:51:54  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -23,6 +26,7 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
+#include "Event/CaloHypo.h"
 /** @class ICaloSplitTool ICaloSplitTool.h CaloInterfaces/ICaloSplitTool.h
  *
  *  An abstract interface for "cluster splitting tools", like 
@@ -32,15 +36,21 @@
  *  @author Frederic Machefert machefer@in2p3.fr
  *  @date   19/03/2002
  */
+namespace LHCb{
+  class     CaloHypo     ;     
+};
 
 class ICaloSplitTool: 
   public virtual IAlgTool ,
-  public std::binary_function<CaloHypo*,std::vector<CaloHypo>&,StatusCode>
+  public std::binary_function<LHCb::CaloHypo*,LHCb::CaloHypos&,StatusCode>
 {
 public:
 
-  /// useful type definition for output container 
-  typedef std::vector<CaloHypo*>  CaloHypos;
+  // OD ALREADY DEFINED AS A KEYEDCONTAINER IN EVENT
+  // useful type definition for output container  
+  //namespace LHCb  {
+  //  typedef std::vector<LHCb::CaloHypo*>  CaloHypos;
+  //}
   
 public:
   
@@ -55,8 +65,8 @@ public:
    *  @return status code 
    */  
   virtual StatusCode 
-  process ( CaloHypo*  hypo  ,
-            CaloHypos& hypos ) const = 0 ;
+  process ( LHCb::CaloHypo*  hypo  ,
+            LHCb::CaloHypos& hypos ) const = 0 ;
   
   /** The main processing method (functor interface)
    *  @param  hypo   pointer to CaloHypo object to be processed
@@ -64,8 +74,8 @@ public:
    *  @return status code 
    */  
   virtual StatusCode 
-  operator() ( CaloHypo*  hypo  ,
-               CaloHypos& hypos ) const = 0 ;
+  operator() ( LHCb::CaloHypo*  hypo  ,
+               LHCb::CaloHypos& hypos ) const = 0 ;
   
 protected:
   
@@ -73,9 +83,5 @@ protected:
   virtual ~ICaloSplitTool();
   
 };
-
-// ============================================================================
-// The End 
-// ============================================================================
 
 #endif // CALOINTERFACES_ICALOSPLITTOOL_H

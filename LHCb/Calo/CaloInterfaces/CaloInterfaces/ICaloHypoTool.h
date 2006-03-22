@@ -1,8 +1,11 @@
-// $Id: ICaloHypoTool.h,v 1.6 2005-11-07 12:08:25 odescham Exp $
+// $Id: ICaloHypoTool.h,v 1.7 2006-03-22 18:21:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:08:25  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.5  2005/01/25 14:12:18  cattanem
 // updates for CLHEP 1.9
 //
@@ -26,8 +29,9 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-
-class    CaloHypo                ;  ///< from CaloEvent 
+namespace LHCb{
+  class    CaloHypo                ;  
+};
 
 /** @class ICaloHypoTool ICaloHypoTool.h CaloInterfaces/ICaloHypoTool.h
  *
@@ -44,7 +48,7 @@ class    CaloHypo                ;  ///< from CaloEvent
 
 class ICaloHypoTool: 
   public virtual IAlgTool ,
-  public std::unary_function<CaloHypo*,StatusCode>
+  public std::unary_function<LHCb::CaloHypo*,StatusCode>
 {
   
  public:
@@ -59,13 +63,13 @@ class ICaloHypoTool:
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloHypo* hypo  ) const = 0 ;
+  virtual StatusCode process    ( LHCb::CaloHypo* hypo  ) const = 0 ;
   
   /** The main processing method (functor interface)
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloHypo* hypo  ) const = 0 ;
+  virtual StatusCode operator() ( LHCb::CaloHypo* hypo  ) const = 0 ;
   
  protected: 
   
@@ -74,8 +78,6 @@ class ICaloHypoTool:
   
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOINTERFACES_ICALOCLUSTERTOOL_H
 // ============================================================================
