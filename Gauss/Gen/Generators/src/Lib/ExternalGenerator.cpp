@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.16 2006-02-22 22:12:27 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.17 2006-03-22 22:46:40 robbep Exp $
 // Include files 
 
 // local
@@ -266,11 +266,11 @@ void ExternalGenerator::prepareInteraction( LHCb::HepMCEvents * theEvents ,
     LHCb::GenCollision * & theGenCollision ) const {
   LHCb::HepMCEvent * theHepMCEvent = new LHCb::HepMCEvent( ) ;
   theHepMCEvent -> setGeneratorName( m_hepMCName ) ;
-  theGenEvent = new HepMC::GenEvent( ) ;
-  theHepMCEvent -> setPGenEvt( theGenEvent ) ;
+  theGenEvent = theHepMCEvent -> pGenEvt() ;
 
   theGenCollision = new LHCb::GenCollision() ;  
   theGenCollision -> setEvent( theHepMCEvent ) ;
+  theGenCollision -> setIsSignal( false ) ;
 
   theEvents -> insert( theHepMCEvent ) ;
   theCollisions -> insert( theGenCollision ) ;
