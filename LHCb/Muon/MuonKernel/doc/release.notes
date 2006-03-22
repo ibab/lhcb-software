@@ -1,5 +1,8 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
+! 2006-03-22 - Julien Cogan
+ - Remove python wrappping. The binding is now in the standalone package
+   MuonKernelStandalone
 ! 2006-03-03 - Julien Cogan
  - Python wrapper compatible with the LHCb v20r0 and global LHCb namespace.
 !======================= MuonKernel v3r0 2006-01-16 =======================
