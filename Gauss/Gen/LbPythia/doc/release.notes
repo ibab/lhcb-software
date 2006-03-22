@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.22 2006-01-31 09:17:07 gcorti Exp $
+! $Id: release.notes,v 1.23 2006-03-22 23:00:34 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-03-22 - Patrick Robbe
+ - PythiaProduction: use MeV instead of GeV
 
 ! ==================== LbPythia v4r0 2006-01-19 ======================
 ! 2005-31-12 - Patrick Robbe

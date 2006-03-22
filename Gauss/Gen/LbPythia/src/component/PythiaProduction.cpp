@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.10 2006-03-20 22:32:08 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.11 2006-03-22 23:00:09 robbep Exp $
 // Include files 
 
 // local
@@ -200,9 +200,14 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
   
   // Convert event in HepMC Format
   HepMC::IO_HEPEVT theHepIO ;
-  if ( ! theHepIO.fill_next_event( theEvent ) ) 
+  if ( ! theHepIO.fill_next_event( theEvent ) )
     return Error( "Could not fill HepMC event" ) ;
 
+  // Now convert to LHCb units:
+  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
+        p != theEvent -> particles_end() ; ++p ) 
+    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+  
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
   // Retrieve hard process information
@@ -268,6 +273,7 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
 // Retrieve the Hard scatter information
 //=============================================================================
 void PythiaProduction::hardProcessInfo( LHCb::GenCollision * theCollision ) {
+  theCollision -> setProcessType( Pythia::pypars().msti(1) ) ;
   theCollision -> setSHat( Pythia::pypars().pari(14) );
   theCollision -> setTHat( Pythia::pypars().pari(15) );
   theCollision -> setUHat( Pythia::pypars().pari(16) );
