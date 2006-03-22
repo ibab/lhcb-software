@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.6 2006-02-17 13:27:28 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.7 2006-03-22 22:56:06 robbep Exp $
 // Include files
 
 // local
@@ -165,6 +165,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
 
           theGenEvent -> 
             set_signal_process_vertex( theSignal -> end_vertex() ) ;
+          theGenCollision -> setIsSignal( true ) ;
           
           result = true ;
         }

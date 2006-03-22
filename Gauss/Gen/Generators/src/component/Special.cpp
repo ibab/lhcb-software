@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.4 2005-12-31 17:32:01 robbep Exp $
+// $Id: Special.cpp,v 1.5 2006-03-22 22:58:06 robbep Exp $
 // Include files 
 
 // local
@@ -77,6 +77,7 @@ bool Special::generate( const unsigned int /* nPileUp */ ,
     if ( passCut ) {
       m_nEventsAfterCut++ ;
       result = true ;
+      theGenCollision -> setIsSignal( true ) ;
     }
   } 
   return result ;
