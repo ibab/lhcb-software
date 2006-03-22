@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.11 2006-03-02 15:24:07 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.12 2006-03-22 09:57:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -81,7 +81,7 @@ StatusCode RichPixelCreatorBase::initialize()
              StatusCode::SUCCESS );
   }
 
-  if ( m_moniHPDOcc ) acquireTool( "RichPixelSuppress", m_hpdOcc, this );
+  if ( m_moniHPDOcc ) acquireTool( "PixelSuppress", m_hpdOcc, this );
 
   // Check which detectors to use
   if ( !m_usedDets[Rich::Rich1] )
