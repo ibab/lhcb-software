@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.6 2006-03-03 15:55:36 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.7 2006-03-22 13:02:16 mneedham Exp $
 
  
 // Kernel
@@ -14,6 +14,11 @@
 #include "STFun.h"
 #include "STOfflinePosition.h" 
 
+#include <boost/assign/std/vector.hpp>
+
+using namespace boost::assign;
+using namespace boost;
+
 static ToolFactory<STOfflinePosition> s_factory;
 const IToolFactory& STOfflinePositionFactory = s_factory;
  
@@ -21,15 +26,11 @@ STOfflinePosition::STOfflinePosition(const std::string& type, const std::string&
  GaudiTool(type, name, parent)
 {
   // constructer
-  m_ErrorVec.resize(4);
-  m_ErrorVec[0] = 0.22;
-  m_ErrorVec[1] = 0.12;
-  m_ErrorVec[2] = 0.24;
-  m_ErrorVec[3] = 0.21;
+  m_ErrorVec += 0.22, 0.12, 0.24, 0.21;
   this->declareProperty("errorVec",m_ErrorVec);
 
   this->declareProperty("sharingCorr",m_sharingCorr = 112.);
-  this->declareProperty("maxNtoCorr",m_MaxNtoCorr = 3);
+  this->declareProperty("maxNtoCorr",m_MaxNtoCorr = 4);
 
   declareInterface<ISTClusterPosition>(this);
 }

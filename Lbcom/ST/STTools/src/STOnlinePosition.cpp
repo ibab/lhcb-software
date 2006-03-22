@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.6 2006-03-03 15:55:36 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.7 2006-03-22 13:02:16 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -14,6 +14,10 @@
 
 #include "STOnlinePosition.h" 
 
+#include <boost/assign/std/vector.hpp>
+
+using namespace boost::assign;
+using namespace boost;
 
 static ToolFactory<STOnlinePosition> s_factory;
 const IToolFactory& STOnlinePositionFactory = s_factory;
@@ -23,10 +27,7 @@ STOnlinePosition::STOnlinePosition(const std::string& type, const std::string& n
 {
   // constructer
 
-  m_ErrorVec.resize(3);
-  m_ErrorVec[0] = 0.22;
-  m_ErrorVec[1] = 0.14;
-  m_ErrorVec[2] = 0.25;
+  m_ErrorVec += 0.22, 0.14, 0.25;
 
   this->declareProperty("errorVec",m_ErrorVec);
   declareProperty("nBits",m_nBits = 2);
@@ -42,7 +43,7 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aClus
   double stripNum = STFun::position(aCluster->stripValues());
   double interStripPos = stripFraction(stripNum - floor(stripNum));
 
-  if (fabs(interStripPos -1 ) < 1e-3) { 
+  if (interStripPos > 0.99) { 
     stripNum +=1; 
     interStripPos = 0;
   }
@@ -66,15 +67,17 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const SmartRefVector<LHCb::S
   double stripNum = STFun::position(digits);
   double interStripPos = stripFraction(stripNum - floor(stripNum));
   LHCb::STChannelID firstChan = digits.front()->channelID();
+ 
+  if (interStripPos > 0.99) { 
+    stripNum +=1; 
+    interStripPos = 0;
+  }
+
   LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
                                     firstChan.station(),firstChan.layer(),
                                     firstChan.detRegion(),firstChan.sector(), 
                                     (unsigned int)stripNum);
- 
-  if (fabs(interStripPos -1 ) < 1e-3) { 
-    stripNum +=1; 
-    interStripPos = 0;
-  }
+
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
   theInfo.fractionalPosition = interStripPos;
