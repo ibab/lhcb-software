@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.26 2006-02-15 11:01:16 cattanem Exp $
+# $Id: requirements,v 1.27 2006-03-22 15:10:32 cattanem Exp $
 # Created    : 06/02/2006
 # Maintainer : Marko Zupan
 
 package           PuVeto
-version           v7r0
+version           v7r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
