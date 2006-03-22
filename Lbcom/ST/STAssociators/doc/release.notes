@@ -2,6 +2,7 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+!======================= STAssociators v1r1 2006-03-17 ========================
 ! 2006-03-17  Eduardo Rodrigues
  - options file fixed as still using all names from old event model,
    and renamed as STAssociators.opts for consistency
