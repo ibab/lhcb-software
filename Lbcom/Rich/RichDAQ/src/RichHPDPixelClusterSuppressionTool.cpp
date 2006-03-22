@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.3 2006-03-22 14:19:31 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.4 2006-03-22 19:08:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -122,7 +122,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
         // Did we find a neighbouring pixel cluster
         // If not, this is a new cluster
-        if (!clus) { clus = pixelData.createNewCLuster(++clusterID); }
+        if (!clus) { clus = pixelData.createNewCluster(++clusterID); }
 
         // assign final cluster to this pixel
         pixelData.setCluster(row,col,clus);

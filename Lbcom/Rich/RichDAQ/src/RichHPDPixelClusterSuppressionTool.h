@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.3 2006-03-22 14:19:31 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.4 2006-03-22 19:08:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -131,14 +131,6 @@ private: // utility classes
 
     };
 
-  public: // definitions
-
-    /// 32 by 32 array of raw data
-    typedef std::vector< std::vector<bool> >     RawDataArray;
-
-    /// 32 by 32 array assigning each pixel to a Cluster
-    typedef std::vector< std::vector<Cluster*> > ClusterArray;
-
   public: // methods
 
     /// Constructor from a list of RichSmartIDs
@@ -160,7 +152,7 @@ private: // utility classes
     void setCluster( const int row, const int col, Cluster * clus );
 
     /// Create a new cluster with given ID
-    Cluster * createNewCLuster( const int id );
+    Cluster * createNewCluster( const int id );
 
     /// Create a new cluster with given ID
     Cluster * mergeClusters( Cluster * clus1, Cluster * clus2 );
@@ -179,9 +171,9 @@ private: // utility classes
 
   private:
 
-    RawDataArray m_data;     ///< Raw input data
-    ClusterArray m_clusters; ///< Assigned clusters
-    std::vector<Cluster*> m_allclus;   ///< List of all created clusters
+    bool m_data[32][32];             ///<  Raw input data (false means no hit, true means hit)
+    Cluster * m_clusters[32][32];     ///<  Assigned cluster for each pixel
+    std::vector<Cluster*> m_allclus;  ///<  List of all created clusters
 
   };
 
@@ -203,7 +195,7 @@ inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *
 RichHPDPixelClusterSuppressionTool::
 PixelData::getCluster( const int row, const int col ) const
 {
-  return (m_clusters[row])[col];
+  return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
 }
 
 inline void RichHPDPixelClusterSuppressionTool::
@@ -218,7 +210,7 @@ PixelData::setCluster( const int row, const int col, Cluster * clus )
 
 inline RichHPDPixelClusterSuppressionTool::PixelData::Cluster *
 RichHPDPixelClusterSuppressionTool::
-PixelData::createNewCLuster( const int id )
+PixelData::createNewCluster( const int id )
 {
   Cluster * clus = new Cluster(id);
   m_allclus.push_back(clus);
@@ -240,10 +232,12 @@ PixelData::mergeClusters( Cluster * clus1, Cluster * clus2 )
 
 inline RichHPDPixelClusterSuppressionTool::
 PixelData::PixelData( const LHCb::RichSmartID::Vector & smartIDs )
-  : m_data     ( 32, std::vector<bool>(32,false) ),
-    m_clusters ( 32, std::vector<Cluster*>(32)   )
 {
+  // initialise the c arrays
+  memset ( m_data,     0, sizeof(m_data)     );
+  memset ( m_clusters, 0, sizeof(m_clusters) );
   m_allclus.reserve(5);
+  // set the hit pixels as "on"
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
