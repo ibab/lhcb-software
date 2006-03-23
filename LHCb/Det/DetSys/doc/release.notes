@@ -4,9 +4,11 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r1 2006-03-17 =========================
-! 2006-03-17 - Marco Cattaneo
- - Use DetDescCnv v3r1
+!========================= DetSys v8r1 2006-03-22 =========================
+! 2006-03-22 - Marco Cattaneo
+ - Use DetDescCnv v3r1, STDet v2r1, VeloDet v10r2, RichDet v9r2
+ - Remove obsolete RichCondition package
+ - Remove DetCond interfaces from lcgdict
 
 !========================= DetSys v8r0 2006-02-02 =========================
 ! 2006-02-02 - Marco Cattaneo

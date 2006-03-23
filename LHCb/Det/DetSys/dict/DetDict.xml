@@ -43,9 +43,6 @@
   
   <class pattern="Solid*" />
 
-  <class name="ICondDBAccessSvc"     />
-  <class name="ICondDBCnvSvc"        />
-
   <class name="DeVelo"        />
   <class name="DeVeloSensor"  />
   <class name="DeVeloPhiType" />
