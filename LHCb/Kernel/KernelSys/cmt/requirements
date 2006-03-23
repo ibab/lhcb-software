@@ -7,7 +7,7 @@ use LHCbDefinitions  v1r3   Kernel
 use LHCbKernel       v6r3   Kernel
 use Relations        v3r0   Kernel
 use CaloKernel       v4r0   Calo
-use MuonKernel       v3r0   Muon
-use RichKernel       v6r1   Rich
+use MuonKernel       v3r1   Muon
+use RichKernel       v6r2   Rich
 use L0MuonKernel     v5r0 L0
 use ProcessorKernel  v3r0 L0
