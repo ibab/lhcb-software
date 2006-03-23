@@ -5,24 +5,40 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r1>2006-03-17 LHCbSys v20r1</A></H1><PRE>
+</PRE><H1><A NAME=v20r1>2006-03-23 LHCbSys v20r1</A></H1><PRE>
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
 
-- Modified packages: GaudiConf v9r4, KernelSys v5r1, LHCbKernel v6r3,
+- Packages added:    CaloInterfaces v6r0 (newly migrated to LHCb v20r*)
+                     CaloUtils v6r0      (newly migrated to LHCb v20r*)
+- Packages removed:  RichCondition       (obsolete, functionality now in RichDet)
+- Packages modified: GaudiConf v9r4, KernelSys v5r1, LHCbKernel v6r3, 
+   RichKernel v6r2, MuonKernel v3r1, TrackInterfaces v2r1, SimComponents v1r1,
    EventSys v21r1, DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2,
-   TrackEvent v2r1, PhysEvent v9r1, DetSys v8r1, DetDescCnv v3r1, DAQSys v2r1,
-   CaloDAQ v2r1, SimComponents v1r1, TrackInterfaces v2r1
+   TrackEvent v2r1, PhysEvent v9r1, L0Event v15r1, GenEvent v4r2, RecEvent v1r1,
+   DetSys v8r1, DetDescCnv v3r1, STDet v2r1, VeloDet v10r2, RichDet v9r2,
+   DetCond v7r10, DAQSys v2r1, CaloDAQ v2r1, MuonDAQ v2r1
 
 - In GaudiConf v9r4:
-  . Fix DecodeRawBuffer.opts for IT and TT
+  . Fix DecodeRawBuffer.opts for Velo, IT and TT
+  . Remove RichCondition from LHCbApplication.opts
 
 - In LHCbKernel v6r3:
   . Add find method to fast container, and SiDataFunctors.h to use it 
-  . Fix LineTraj constructor with two points.
+  . Fix LineTraj constructor with two points
+  . Add OTDataFunctor.h (previously in OTSimulation)
+  . Invert order of pixel row and column in RichSmartID so "natural" sorting
+    matches the order the pixels come out the HPD electronics
+
+- In RichKernel v6r2:
+  . Remove obsolete RichCondition interfaces
+
+- In MuonKernel v3r1:
+  . remove Python wrapper, moved to standalone package MuonKernelStandalone 
 
 - In DigiEvent v1r1:
   . Added STLiteCluster typedefs
   . Bug fix in interstrip position size for VeloLiteCluster
+  . Bug fixes in STCluster.xml and VeloCluster.xml
 
 - In DAQEvent v6r3:
   . Add VeloError and VeloPedestal as RawBank types
@@ -37,15 +53,49 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
 
 - In TrackEvent v2r1:
   . Add kappa constant to TrackParameters.h
+  . Add a constructor with assigned key to State
 
 - In PhysEvent v9r1:
   . Add typedefs for KeyedContainers of Particle and const Particle.
 
+- In L0Event v15r1:
+  . improve L0DUBase.h to please L0Muon 
+  . Fix in src/L0CaloCandidate.cpp implementation file.
+  . Remove L0Calo namespace.
+
+- In GenEvent v4r2:
+  . Remove constructor with arguments from HepMCEvent
+
+- In RecEvent v1r1:
+  . Fix in CaloDataFunctor.h, redefine typedef in CaloPosition.xml
+
 - In DetDescCnv v3r1:
   . If DetectorElement::initialize() failed, the error was not reported upstream
 
+- In STDet v2r1:
+  . Add DeSTDetector::sensitiveVolumeID method
+
+- In VeloDet v10r2:
+  . Removed all accessors to sensor information via DeVelo
+  . Provide iterator access to sensor containers
+  . Renamed isInside method to isInActiveArea
+
+- In RichDet v9r2:
+  . Changes to remove need for RichCondition package. Requires XmlDDDB from v30r1
+  . Changes to Rich1DTabProperty
+  . Speed optimisations for the RichRadIntersections class
+  . Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
+    the update of the gas and aerogel properties.
+  . Small changes in the DeRich1/2 moving common code to the base class.
+
+- In DetCond v7r10, DetSys v8r1
+  . Add DetCondDict lcgdict, to remove DetCond dependency from DetSys
+
 - In CaloDAQ v2r1:
   . CaloZSupAlg algorithm added (moved from CaloDigit)
+
+- In MuonDAQ v2r1:
+  . Add the encoding and decoding of the date format to be used by trigger
 
 - In SimComponents v1r1:
   . Adapt MCDecayFinder to changed interface

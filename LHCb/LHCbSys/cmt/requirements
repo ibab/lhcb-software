@@ -20,14 +20,14 @@ use LHCbDefinitions       v1r3    Kernel  # Juan Palacios
 use LHCbKernel            v6r3    Kernel  # Marco Cattaneo
 use Relations		  v3r0    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0    Calo    # Olivier Deschamps
-use MuonKernel            v3r0    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v6r1    Rich    # Chris Jones
+use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
+use RichKernel            v6r2    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v8r1    Det     # Marco Cattaneo
-use VeloDet               v10r1   Det     # Mark Tobin
+use VeloDet               v10r2   Det     # Mark Tobin
 use DetDesc               v16r3   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r1    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r3    Det     # Marco Clemencic, Matt Needham
@@ -37,20 +37,19 @@ use CaloDet               v7r0    Det     # Ivan Belyaev
 use CaloDetXmlCnv         v2r3p2  Det     # Ivan Belyaev
 use MuonDet               v5r1    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r1    Det     # N.N.
-use RichDet               v9r1    Det     # Chris Jones
-use RichCondition         v1r2    Rich    # Sajan Easo
-use STDet                 v2r0    Det     # Matt Needham
+use RichDet               v9r2    Det     # Chris Jones
+use STDet                 v2r1    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
 use EventSys              v21r1   Event   # Marco Cattaneo
 use EventBase             v1r1    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v1r2    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r1    Event   # Marco Cattaneo and sub-det experts
-use RecEvent              v1r0    Event   # Marco Cattaneo and sub-det experts
-use L0Event               v15r0   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
+use RecEvent              v1r1    Event   # Marco Cattaneo and sub-det experts
+use L0Event               v15r1   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v9r1    Event   # Patrick Koppenburg
 use DAQEvent	          v6r3    Event   # Marco Cattaneo
-use GenEvent    	  v4r1    Event   # Gloria Corti
+use GenEvent              v4r2    Event   # Gloria Corti
 use EventAssoc            v3r0    Event   # Ivan Belyaev
 use LinkerEvent           v2r1    Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
@@ -61,7 +60,7 @@ use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v2r1    DAQ     # Marco Cattaneo
-use MuonDAQ               v2r0    Muon    # Alessia Satta
+use MuonDAQ               v2r1    Muon    # Alessia Satta
 use OTDAQ                 v4r0    OT      # Jan Amoraal
 use CaloDAQ               v2r1    Calo    # Olivier Deschamps
 #use L0MuonDAQ	           v1r0    L0      # Andrei Tsaregorodtsev
@@ -69,13 +68,13 @@ use SiDAQ                 v1r1    Si      # Matt Needham
 
 # Other stuff
 use LHCbAlgs              v2r0   Kernel  # Marco Cattaneo
-#use CaloInterfaces        v5r0   Calo    # Olivier Deschamps
-#use CaloUtils             v5r1   Calo    # Olivier Deschamps
+use CaloInterfaces        v6r0   Calo    # Olivier Deschamps
+use CaloUtils             v6r0   Calo    # Olivier Deschamps
 use RichRecBase           v2r0   Rich    # Chris Jones
 use TrackInterfaces       v2r1   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 #use TrackPython           v1r1   Tr      # Eduardo Rodrigues, Jose Hernando
-use DetCond               v7r9   Det     # Marco Clemencic
+use DetCond               v7r10  Det     # Marco Clemencic
 use CondDBEntityResolver  v1r1   Tools   # Marco Clemencic
 use LoKiCore              v1r0   Phys    # Ivan Belyaev
 use LoKiGen               v1r0   Phys    # Ivan Belyaev
