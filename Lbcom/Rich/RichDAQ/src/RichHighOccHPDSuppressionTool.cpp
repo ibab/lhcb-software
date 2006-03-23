@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.6 2006-03-23 13:49:31 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.7 2006-03-23 19:01:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -131,7 +131,7 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType r
     // update local data map
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Updating " << HPD << " occupancy to " << occ << endreq;
+      verbose() << "Updating HPD " << HPD << " occupancy to " << occ << endreq;
     }
     m_occMap[HPD] = HPDData( m_minFills+1 , occ );
   }
