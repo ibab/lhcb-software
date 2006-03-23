@@ -1,9 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r4 2006-03-22 ========================
-! 2006-03-22 - Marco Cattaneo
+!======================== GaudiConf v9r4 2006-03-23 ========================
+! 2006-03-23 - Marco Cattaneo
  - Fix DecodeRawEvent.opts for Velo, IT and TT decoding
+ - Remove RichCondition from LHCbApplication.opts
 
 !======================== GaudiConf v9r3 2006-03-08 ========================
 ! 2006-03-08 - Marco Cattaneo

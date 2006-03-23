@@ -13,7 +13,7 @@ EventDataSvc.RootCLID    =    1;
 // Geometry and magnetic field
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-ApplicationMgr.DLLs += { "RichDet", "RichCondition" };
+ApplicationMgr.DLLs += { "RichDet" };
 ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
