@@ -4,9 +4,15 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+
+! 2006-03-24 M Needham
+ - Add constructor to state
+
+
 !========================= TrackEvent v2r1 2006-03-17 ========================
 ! 2006-03-17 - Eduardo Rodrigues
  - kappa const added to TrackParameters
+
 
 !========================= TrackEvent v2r0 2006-03-03 ========================
 ! 2006-03-03 - Eduardo Rodrigues

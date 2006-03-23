@@ -22,6 +22,8 @@
       <location name="VeloTT"  place="Rec/Track/VeloTT"/>
       <location name="Match"   place="Rec/Track/Match"/>
       <location name="KsTrack" place="Rec/Track/KsTrack"/>
+      <location name="Tsa" place="Rec/Track/Tsa"/>
+
 
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
