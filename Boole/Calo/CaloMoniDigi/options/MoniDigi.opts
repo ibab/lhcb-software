@@ -1,8 +1,11 @@
-// $Id: MoniDigi.opts,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $ 
+// $Id: MoniDigi.opts,v 1.2 2006-03-23 00:07:11 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
+// // The new package: code is inported from Calo/CaloMonitor
+// 
 // ============================================================================
 
 /** @file 
@@ -21,12 +24,12 @@ PrsMoni.MaxEnergy                =  10.   ;
 
 // Ecal digits Monitoring 
 EcalMoni.Detector                = "Ecal" ;
-EcalMoni.MaxMultiplicity         = 6000.  ;
-EcalMoni.ScaleHit                = 6.66   ;
+EcalMoni.MaxMultiplicity         = 6100.  ;
+EcalMoni.ScaleHit                = 7.27   ;
 
 // Hcal digits Monitoring 
 HcalMoni.Detector                = "Hcal" ;
-HcalMoni.ScaleHit                =  50.   ;
+HcalMoni.ScaleHit                =  57.4   ;
 
 // ============================================================================
 // The END 

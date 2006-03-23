@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2006-02-15 11:13:05 cattanem Exp $
+! $Id: release.notes,v 1.8 2006-03-23 00:07:11 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,14 @@
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloMoniDigi v2r1 2006-03-22 ========================
+! 2006-03-22 - Olivier Deschamps
+ - update histo scales in MoniDigi.opts
+
 !======================== CaloMoniDigi v2r0 2006-02-15 ========================
+! 2006-02-15 - Olivier Deschamps
+ - Migrate requirements to DigiEvent
+
 ! 2006-02-15 - Marco Cattaneo
  - Migrate requirements to DigiEvent
 
