@@ -6,7 +6,6 @@ Package manager : Stefan Roiser
 !2006-03-23 Stefan
 - Adding Container and ConstContainer typedefs also for classes inheriting
   from ContainedObject
-- Adding instantiations and selections for const containers to dictionaries
 
 !2006-03-15 Stefan
 - introducing two new typedefs
