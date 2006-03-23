@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!2006-03-23 Stefan
+- Adding instantiations and selections for const containers to dictionaries
+
 =============================GaudiObjDesc v9r4============================
 !2006-03-23 Stefan
 - Adding Container and ConstContainer typedefs also for classes inheriting
