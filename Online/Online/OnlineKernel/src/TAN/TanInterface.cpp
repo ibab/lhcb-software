@@ -83,7 +83,7 @@ TanInterface::TanInterface()  {
   if ( m_pLocalHost == 0 )                                           goto Error;
   dot  = strchr(m_pcHostName,'.');
   if ( dot != 0   )  *dot = 0;
-  printf("Tan interface: Host=%s\n",m_pcHostName);
+  //printf("Tan interface: Host=%s\n",m_pcHostName);
   setLocalAddress(m_sinudp);
   setLocalAddress(m_sintcp);
 #ifdef _SERVICE

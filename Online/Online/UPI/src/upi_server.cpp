@@ -2347,7 +2347,7 @@ void start_restore_conf()   {
   }
   const char* cfile = getenv("SERVER_CONFIG");
   if (cfile == 0)  {
-    cfile = "sys$login:SERVER_CONFIG";
+    cfile = "SERVER_CONFIG";
   }
   restore_file = fopen (cfile, "r");
   if (restore_file == 0)  {
