@@ -4,10 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r0 2006-03-23 ========================
 ! 2006-03-23 - Mark Tobin
  - Modified to use new VeloDet interface
 
-!======================= TrackIdealPR v2r0 2006-03-08 ========================
 ! 2006-03-08 - Eduardo Rodrigues
  - update to new VeloDet path
  - using MCHeader instead of RecHeader, as latter not yet available
