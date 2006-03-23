@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.cpp,v 1.8 2006-03-08 14:49:19 erodrigu Exp $
+// $Id: TrackVeloPhiProjector.cpp,v 1.9 2006-03-23 12:44:28 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -35,8 +35,9 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   VeloPhiMeasurement& veloPhiMeas= *(dynamic_cast<VeloPhiMeasurement*>(&meas));
   std::vector < VeloChannelID > channels = veloPhiMeas.cluster()->channels();
   std::vector< VeloChannelID >::const_iterator iChan;
+  const DeVeloPhiType* phiSens=m_det->phiSensor(veloPhiMeas.cluster()->channelID().sensor());
   for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
-    double phi    =  m_det -> trgPhiDirectionOfStrip( *iChan );
+    double phi    =  phiSens -> trgPhiDirectionOfStrip( (*iChan).strip() );
     double adc = static_cast<double>(veloPhiMeas.cluster()->
 				     adcValue(iChan-channels.begin()));
     sum    += adc;

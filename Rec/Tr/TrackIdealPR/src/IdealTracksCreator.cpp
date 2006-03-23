@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.13 2006-03-08 14:50:51 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.14 2006-03-23 12:42:31 mtobin Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -506,12 +506,13 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
     const VeloCluster* aCluster = it -> to();
 
     // Get the reference vector
-    double z = m_velo -> zSensor( aCluster -> channelID().sensor() );
+    const DeVeloSensor* sensor=m_velo->sensor( aCluster -> channelID().sensor() );
+    double z = sensor->z();
     State* tempState;
     StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
 
     // Check if VeloCluster is of type R or Phi
-    if ( m_velo -> isRSensor( aCluster -> channelID().sensor() ) ) {
+    if ( sensor->isR() ) {
       VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo );
       if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
       track -> addToLhcbIDs( meas.lhcbID() );

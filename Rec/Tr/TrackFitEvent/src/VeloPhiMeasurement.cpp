@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.9 2006-02-27 19:54:02 jvantilb Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.10 2006-03-23 12:38:58 mtobin Exp $
 // Include files 
 
 // local
@@ -40,14 +40,15 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   m_refIsSet  = refIsSet;
   m_cluster = &cluster;
   m_lhcbID = LHCbID( m_cluster->channelID() );
-  m_z = det.zSensor( m_cluster->channelID().sensor() );
+  const DeVeloPhiType* phiDet=det.phiSensor( m_cluster->channelID().sensor() );
+  m_z = phiDet->z();
   m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
-  m_measure = det.distToOrigin(  m_cluster->channelID() );
+  m_measure = phiDet->distToOrigin(  m_cluster->channelID().strip() );
   // fix sign convention of d0 of strip
-  if( ! det.isDownstreamSensor( m_cluster->channelID().sensor() ) ) {
+  if( ! phiDet->isDownstream() ) {
     m_measure = -m_measure;
   }
 
@@ -66,7 +67,7 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   if ( 0 < sum ) {
     // MM+
     // m_errMeasure  = ( pitch / sum) * sqrt( sum2 / 12 );
-    double pitch =   det.phiPitch( m_cluster->channelID() );
+    double pitch =   phiDet->phiPitch( m_cluster->channelID().strip() );
     m_errMeasure  = 0.8 * ( pitch / sum) * sqrt( sum2 / 12 );
     // m_errMeasure = 0.254*pitch - 0.0049*mm;
     // MM-

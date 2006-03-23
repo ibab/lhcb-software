@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.8 2006-02-27 19:54:02 jvantilb Exp $
+// $Id: VeloRMeasurement.cpp,v 1.9 2006-03-23 12:38:58 mtobin Exp $
 // Include files
 
 // local
@@ -40,7 +40,8 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
   m_refIsSet  = refIsSet;
   m_cluster = &cluster;
   m_lhcbID = LHCbID( m_cluster->channelID() );
-  m_z = det.zSensor( m_cluster->channelID().sensor() );
+  const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
+  m_z = rDet->z();
   m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
   double sum   = 0.;
@@ -50,7 +51,7 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
   std::vector < VeloChannelID > channels = m_cluster->channels();
   std::vector< VeloChannelID >::const_iterator iChan;
   for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
-    double radius= det.rOfStrip( *iChan );
+    double radius= rDet->rOfStrip( (*iChan).strip() );
     double adc = static_cast<double>(m_cluster->
 				     adcValue(iChan-channels.begin()));
     sum   += adc;
@@ -62,7 +63,7 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
     // MM+
     // m_measure    = ( pitch / sum ) * sqrt( sum2 / 12 );
   // use center strip as representative
-    double pitch =   det.rPitch( m_cluster->channelID() );
+    double pitch =   rDet->rPitch( m_cluster->channelID().strip() );
     m_errMeasure    = 0.8 * ( pitch / sum ) * sqrt( sum2 / 12 );
     // m_errMeasure = 0.254*pitch - 0.0049*mm;
     // MM-

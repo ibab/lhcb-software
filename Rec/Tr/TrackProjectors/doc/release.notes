@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-03-23 - Mark Tobin
+ - Modified to use new VeloDet interface
+
 !====================== TrackProjectors v2r0 2006-03-08 ======================
 ! 2006-03-08 - Eduardo Rodrigues
  - update to new VeloDet path
