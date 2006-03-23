@@ -3,6 +3,9 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r1 2006-03-23 =====================
+! 2006-03-23 - Tomasz Szumlak
+ - Security checks in execute() and finalize() of the VeloDigiMoni
+
 ! 2006-03-17 - Mark Tobin and Kurt Rinnert
  - Adapt to use new DeVelo interface
 

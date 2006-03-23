@@ -1,4 +1,4 @@
-// $Id: VeloDigiMoni.cpp,v 1.6 2006-03-06 11:01:27 cattanem Exp $
+// $Id: VeloDigiMoni.cpp,v 1.7 2006-03-23 14:37:54 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -60,7 +60,12 @@ StatusCode VeloDigiMoni::execute() {
   //
   m_numberOfEvents++;
   StatusCode sc=getData();
-  if(sc) testVeloDigit();
+  if(sc){ 
+    sc=testVeloDigit();
+    if(sc.isFailure()) return ( sc );
+  }else{
+    return ( sc );
+  }
   //
   return StatusCode::SUCCESS;
 };
@@ -72,6 +77,7 @@ StatusCode VeloDigiMoni::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   //
+  if(m_numberOfEvents!=0){
   m_nVeloDigits/=m_numberOfEvents;
   m_nVeloDigits2/=m_numberOfEvents;
   double errnVeloDigits=
@@ -82,6 +88,10 @@ StatusCode VeloDigiMoni::finalize() {
   info()<< "| Number of VeloDigits/Event: " << m_nVeloDigits << " +/- " 
       << errnVeloDigits <<endmsg;
   info()<< "------------------------------------------------------" <<endmsg;
+  }else{
+    error()<< " ==> Zero events processed! " <<endmsg;
+  }
+  //
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -129,12 +139,13 @@ StatusCode VeloDigiMoni::testVeloDigit()
          "Raw ADC counts",
          0., 256., 256);
   // Test the VeloDigits2MCHits associator (linker)
-    asctTool associator(evtSvc(), LHCb::VeloDigitLocation::Default + "2MCHits" );
-    const Table* table=associator.direct();
-    if(!table){
-      error()<< "Empty table with associations" <<endmsg;
-      return ( StatusCode::FAILURE );
-    }
+    asctTool associator(evtSvc(), LHCb::VeloDigitLocation::Default+"2MCHits" );
+      const Table* table=associator.direct();
+      if(!table){
+        error()<< "Empty table with associations" <<endmsg;
+        return ( StatusCode::FAILURE );
+      }
+    //
     Range range1=table->relations(*digIt);
     iterator it;
     if(range1.size()!=0){
