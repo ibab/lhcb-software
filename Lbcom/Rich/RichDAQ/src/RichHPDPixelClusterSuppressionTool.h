@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.5 2006-03-22 23:50:30 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.6 2006-03-23 01:18:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -20,6 +20,7 @@
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
+#include "RichKernel/RichSmartIDSorter.h"
 
 namespace PixelInfo
 {
@@ -248,11 +249,9 @@ PixelData::PixelData( const LHCb::RichSmartID::Vector & smartIDs )
   memset ( m_clusters, 0, sizeof(m_clusters) );
   m_allclus.reserve(10);
   // set the hit pixels as "on"
-  std::cout << "new HPD" << std::endl;
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
-    std::cout << *iS << std::endl;
     setOn( (*iS).pixelRow(), (*iS).pixelCol() );
   }
 }

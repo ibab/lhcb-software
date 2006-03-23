@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.9 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.10 2006-03-23 01:18:26 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -21,7 +21,8 @@ using namespace LHCb; ///< LHCb general namespace
 
 // ===================================================================================================
 
-namespace RichZeroSuppDataV1 {
+namespace RichZeroSuppDataV1 
+{
 
   void RichZeroSuppData::buildData( const RichSmartID::Vector & pdHits )
   {
@@ -126,7 +127,8 @@ namespace RichZeroSuppDataV1 {
 
 // ===================================================================================================
 
-namespace RichZeroSuppDataV2 {
+namespace RichZeroSuppDataV2 
+{
 
   void RichZeroSuppData::buildData( const RichSmartID::Vector & pdHits )
   {
@@ -135,7 +137,7 @@ namespace RichZeroSuppDataV2 {
     typedef Rich::Map< RichDAQ::ShortType, RichDAQ::ShortType > DataMap;
     DataMap dataM;
 
-    // Loop over digits and form groups of three
+    // Loop over digits
     for ( RichSmartID::Vector::const_iterator iID = pdHits.begin();
           iID != pdHits.end(); ++iID )
     {
@@ -187,7 +189,8 @@ namespace RichZeroSuppDataV2 {
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
+    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) 
+    {
 
       // Get packed data data
       const RichZSPacked zsData( data()[iData] );
