@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.41 2006-02-15 10:56:31 cattanem Exp $
+# $Id: requirements,v 1.42 2006-03-23 10:10:43 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v6r1
+version v6r2
 
 # ================ structure =================================================
 branches RichKernel RichEvent cmt doc src
@@ -18,7 +18,7 @@ include_dirs $(RICHKERNELROOT)
 use DetDesc     v*   Det
 use LHCbKernel  v*   Kernel
 use GaudiAlg    v*
-use GSL         v*   LCG_Interfaces
+use Boost       v*   LCG_Interfaces
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp

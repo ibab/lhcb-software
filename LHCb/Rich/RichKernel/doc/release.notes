@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.114 2006-03-22 09:55:23 jonrob Exp $
+! $Id: release.notes,v 1.115 2006-03-23 10:10:44 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+!======================= RichKernel v6r2 2006-03-23 =======================
+! 2006-03-23 - Marco Cattaneo
+ - Remove unneccessary GSL dependency, add explicit Boost dependency
 
 ! 2006-03-22 - Chris Jones
  - Remove now obsolete RichCondition interfaces
@@ -10,7 +14,6 @@
  - Add missing includes for IAlgTool in tool interfaces
 
 !======================= RichKernel v6r1 2006-03-07 =======================
-
 ! 2006-03-01 - Chris Jones
  - Remove classes Rich1DTabFunc and Rich1DTabProperty, which have been
    moved into RichDet to allow them to be used there without introducing a
