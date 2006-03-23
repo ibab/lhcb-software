@@ -385,7 +385,6 @@ static char Text[133];
 #define EVENT_SCR 20
 #define EVENT_KBD 21
 
-static int  Event_scr = EVENT_SCR;
 static int  Event_kbd = EVENT_KBD;
 
 static FILE* F_scr = 0;
@@ -438,7 +437,7 @@ extern "C" int upi_server (int argc, char** argv)  {
   //_asm int 3
 #endif
   wtc_init();
-  //wtc_subscribe (Event_scr, (wt_callback_t)rearm_scr_mbx, 0);
+  //wtc_subscribe (EVENT_SCR, (wt_callback_t)rearm_scr_mbx, 0);
   upic_attach_terminal();
   UPIsystem = upic_get_system();
   upic_set_mode (WAKE_UP_ON_CHANGE);
@@ -2097,11 +2096,8 @@ void get_my_node () {
 //--------------------------------------------------------------------------
 int kbd_handler (unsigned int event, void* )  {
   Kbd_request* r;
-
-  r = (Kbd_request*) list_add_entry ((Linked_list*) &Mbx_header.requests.first,
-    sizeof(Kbd_request));
+  r = (Kbd_request*) list_add_entry ((Linked_list*) &Mbx_header.requests.first,sizeof(Kbd_request));
   r->lun = event - EVENT_KBD;
-
   if (!r->prev)   {
     Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
     upic_change_titles (2, c->name, "", "");

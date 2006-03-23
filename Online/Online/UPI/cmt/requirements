@@ -1,12 +1,12 @@
 package UPI
 
-branches  cmt UPI src
+branches cmt UPI src
 
 include_dirs $(UPIROOT)
 use OnlineKernel v* Online
 
 library  UPI  ../src/*.cpp
-library  UPIR ../src/*.cpp
+library  UPIR ../src/*.cxx
 
 apply_pattern ld_library_path
 apply_pattern linker_library   library=UPI
