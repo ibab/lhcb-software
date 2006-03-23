@@ -5,22 +5,44 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v11r1>2006-03-17 Boole v11r1</A></H1><PRE>
 This version uses projects Gaudi v18r2, LHCb v20r1, Lbcom v4r1
-  and databases XmlDDDB v30r0, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r6
-Requires input from Gauss v24r1 or greater. Output needs Brunel v30r0 or greater
+  and databases XmlDDDB v30r1, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r7
+Requires input from Gauss v24r2 or greater. Output needs Brunel v30r0 or greater
 
 This is the first bug fix release for commissioning of the software for DC06.
 
 - New tuning
   . Minor tuning of STEffMonitor, STClusterResolution (STCheckers v1r1)
-  . Change strip mapping of ST flipped hybrids (STDAQ v2r4, XmlConditions v1r5)
-    N.B. This change makes output incompatible with Boole v11r0 output
+  . Change histogram scales in Calo histograms (CaloMoniDigi v2r1)
+  . Use FieldMap v4r7 by default
+  . New ActiveToTotal calibration for Ecal and Hcal (XmlConditions v1r5)
 
 - Bug fixes
   . Fix handling of Velo interstrip position bits and threshold bit
     (VeloDAQ v3r1, DigiEvent v1r1)
+  . Fix bug in ST position tool for cluster resolution (STTools v2r1)
+  . Fix CaloCandidate type in L0CaloCandidateFromRaw (L0Calo v9r1, L0Event v15r1)
+
+- Persistency changes
+  . Change strip mapping of ST flipped hybrids (STDAQ v2r4, XmlConditions v1r5)
+    N.B. This change makes output incompatible with Boole v11r0 output
+  . Add L0DU bank to RawEvent (L0DU v7r1)
+  . Bug fix when writing L0ProcessorData, MuonCandidates (L0MuonTrigger v5r1)
+  . Add the encoding and decoding of the date format in Muon data (MuonDAQ v2r1)
+  . Invert order of pixel row and column in RIchSmartID so "natural" sorting
+    matches the order of the pixels from the HPD electronics (LHCbKernel v6r3)
+  . Update ODIN bank structure according to EDMS 704084 v2.0
+    (DigiAlg v4r1, DAQEvent v6r3)
+  . Invert order of pixel row and column in RichSmartID (LHCbKernel v6r3)
+  . Save VeloCluster linkers instead of VeloDigit ones, and use them for
+    BuildMCTrackInfo (VeloAssociators v2r1, DigiAlg v4r1)
 
 - Repackaging
   . Move CaloZSupAlg to CaloDAQ (CaloDAQ v2r1, CaloDigit v2r1)
+  . Changes to DeVelo interface (VeloAlgorithms v4r1, VeloSimulation v2r1,
+      DigiAlg v4r1, PuVeto v7r1, DeVelo v10r2)
+  . OTDataFunctor moved to LHCbKernel (OTSimulation v3r1, LHCbKernel v6r3)
+  . Changes to remove RichCondition package 
+    (RichDet v9r2, XmlConditions v1r5, XmlDDDB v30r1)
 
 </PRE><H1><A NAME=v11r0>2006-03-13 Boole v11r0</A></H1><PRE>
 This version uses projects Gaudi v18r2, LHCb v20r0, Lbcom v4r0
