@@ -2,7 +2,7 @@ set PROCESSNAME=ALLOC_0
 start %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -a
 set PROCESSNAME=INQUIRE_0
 sleep 1
-start %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -i
+start %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe tan_nameserver -i -tcp
 set PROCESSNAME=ALLOC_TEST_0
 start %ONLINEKERNELROOT%\%CMTCONFIG%\test.exe rtl_tan_alloc_test -c -q
 rem start netstat -a -p UDP -v 5

@@ -134,7 +134,7 @@ namespace  {
       upic_set_param (&i, 2, "I3", 0, 0, 0, 0, 0, 0);
       upic_set_param (&m, 1, "I3", 0, 0, 0, 0, 0, 0);
       upic_add_param_line (9, "Delete item ^^^ of menu ^^^ ", "");
-
+#ifdef SCREEN
       upic_get_message_window (&mrows, &mcols, &mrow, &mcol);
 
       upic_set_param (&mrows, 1, "I3", mrows, 0, 0, 0, 0, 0);
@@ -144,7 +144,7 @@ namespace  {
       upic_set_param (&mrow, 1, "I3", mrow, 0, 0, 0, 0, 0);
       upic_set_param (&mcol, 2, "I3", mcol, 0, 0, 0, 0, 0);
       upic_add_param_line (11, "Move message to row  ^^^ col  ^^^", "");
-
+#endif
       log = 0;
       upic_set_param (&log, 1, "L1", log, 0, 0, 0, 0, 0);
       upic_add_command (26, "Log = ^", "");
@@ -152,7 +152,7 @@ namespace  {
       items = upic_get_items_per_page();
       upic_set_param (&items, 1, "I3", items, 0, 0, 0, 0, 0);
       upic_add_param_line (12, "Items per page : ^^^", "");
-
+#ifdef SCREEN
       mode = upic_get_mode();
       upic_set_param (&mode, 1, "I1", mode, 0, 0, mode_list, 2, 1);
       upic_add_param_line (13, "Mode : ^", "");
@@ -163,7 +163,7 @@ namespace  {
       upic_set_param (&wrow, 1, "I3", 0, 0, 0, 0, 0, 0);
       upic_set_param (&wcol, 2, "I3", 0, 0, 0, 0, 0, 0);
       upic_add_param_line (15, "Window row  ^^^ col  ^^^", "");
-
+#endif
       upic_set_param (&dmenu, 1, "I3", dmenu, 0, 0, 0, 0, 0);
       upic_add_param_line (16, "Delete menu ^^^ ", "");
 

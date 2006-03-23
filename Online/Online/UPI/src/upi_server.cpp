@@ -434,6 +434,9 @@ extern "C" int upi_server (int argc, char** argv)  {
   GetBuffer = UpiBufferNew ();
   AckBuffer = UpiBufferNew ();
 
+#ifdef _WIN32
+  //_asm int 3
+#endif
   wtc_init();
   //wtc_subscribe (Event_scr, (wt_callback_t)rearm_scr_mbx, 0);
   upic_attach_terminal();
@@ -457,8 +460,8 @@ extern "C" int upi_server (int argc, char** argv)  {
   strcpy (Dest, "");
   strcpy (Node, "");
   upic_set_param (Dest, 1, "A30", Dest, 0, 0, 0, 0, 0);
-  upic_set_param (Node, 2, "A8", Node, 0, 0, 0, 0, 0);
-  upic_add_command (C_DESTINATION, "Name ^^^^^^^^^^^^^^ Node ^^^^^^^^", "");
+  upic_set_param (Node, 2, "A20", Node, 0, 0, 0, 0, 0);
+  upic_add_command (C_DESTINATION, "Name ^^^^^^^^^^^^^^ Node ^^^^^^^^^^^^", "");
   upic_add_comment (C_CONNECT,     "------> Connect", "");
   upic_add_comment (C_DISCONNECT,  "------> Disconnect", "");
   upic_add_comment (C_KILL,        "------> Kill", "");
@@ -580,16 +583,10 @@ void screen_handler()  {
 }
 
 //--------------------------------------------------------------------------
-void upi_handler()
-//--------------------------------------------------------------------------
-{
-  int      menu, command, param;
-  int      status;
+void upi_handler()  {
+  int      menu, command, param, status, length, list_index, rid, remote_id;
   SrvConnect* c;
-  int      remote_id;
   char* buffer;
-  int      length;
-  int      list_index;
 
   upic_get_input_with_index (&menu, &command, &param, &list_index);
   switch (menu)  {
@@ -598,7 +595,6 @@ void upi_handler()
     case C_DESTINATION:
       {
         char* c;
-
         length = cut_blanks (Dest);
         Dest[length] = '\0';
         upper_case (Dest);
@@ -611,9 +607,10 @@ void upi_handler()
           strcpy (Ams_dest, Node);
           strcat (Ams_dest, "::");
         }
-        else
+        else  {
           strcpy (Ams_dest, My_node);
-
+          strcat (Ams_dest, "::");
+        }
         strcat (Ams_dest, Dest);
 
         if (to_be_started (Dest))        {
@@ -672,18 +669,10 @@ void upi_handler()
       break;
     default:
       {
-        int rid;
         SrvConnect* cc  = find_connect_with_id(menu, &rid);
         c = find_connect_with_id(command, &remote_id);
         if (c)    {
-          if (cc == c)      {
-            upic_set_cursor_and_mark
-              (c->current_menu,c->current_command,c->current_param,1);
-          }
-          else      {
-            upic_set_cursor_and_mark
-              (c->current_menu,c->current_command,c->current_param,0);
-          }
+          upic_set_cursor_and_mark(c->current_menu,c->current_command,c->current_param,cc==c ? 1 : 0);
         }
       }
     }
@@ -800,7 +789,7 @@ int message_handler (unsigned int, void*)  {
   scrc_save_cursor (Pb, &cursor_context);
   while ((info = UpiBufferCheckProtocol (GetBuffer)) == UpiBufferOk)  {
     UpiBufferGetInt (GetBuffer, &code);
-    if ((code >= UPIF_FIRST_CODE) && (code < UPIF_LAST_CODE))    {
+    if ((code > UPIF_FIRST_CODE) && (code < UPIF_LAST_CODE))    {
       (*Actions[code - UPIF_FIRST_CODE])(c);
     }
     else    {
@@ -1345,11 +1334,9 @@ void quit (SrvConnect* connect)  {
   Var* v;
   Menu_list* m;
   Histo_list* h;
-  /*
+  char temp[512];
   sprintf (temp, "SERVER> Disconnecting source [%s]", connect->source);
   upic_write_message (temp, "");
-  */
-
   while ((v = connect->var.first))  {
     if (v->type == ASC_FMT) free (v->value.c);
     list_remove_entry ((Link*) v);
@@ -1377,7 +1364,7 @@ void quit (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void open_window (SrvConnect* /* connect */)  {
-  /*  upic_open_window ();  */
+  upic_open_window ();
 }
 
 //--------------------------------------------------------------------------

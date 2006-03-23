@@ -11,13 +11,7 @@ Created           : 15-DEC-1989 by
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-int amsc_init             ( const char* ) { return 1; }
-int amsc_close            ( void ) { return 1; }
-int amsc_send_message     ( const void*, size_t, const char*, int, const char* ) { return 1; }
-int amsc_spy_next_message ( void*, size_t*, char*, unsigned int*, size_t*) { return 1; }
-int amsc_get_message (void* , size_t* , char* , char* ,
-                      int , unsigned int* , unsigned int , char* ) { return 1; }
-int amsc_get_node         ( char[40] )  { return 1; }
+
 static int Opened = 0;
 static char My_node[80];
 static char Source_name[80];
@@ -41,7 +35,7 @@ static struct {
 static int MessageLogActive = false;
 static int MessageLogMaxLogs = 100;
 //----------------------------------------------------------------------------
-int upic_net_init (const char* name, const char** /*server*/, WtRoutine handler, WtRoutine broadcast)  {
+int upic_net_init (const char* name, char** server, WtRoutine handler, WtRoutine broadcast)  {
   if (Opened) upic_net_close();
   Opened = 1;
   int status = wtc_init();
@@ -52,6 +46,14 @@ int upic_net_init (const char* name, const char** /*server*/, WtRoutine handler,
   }
   else  {
     status = amsc_init (0);
+  }
+  if ( server )  {
+    *server = 0;
+    char srv[128];
+    if ( upic_net_server_name(srv) )  {
+      *server = (char*)::malloc(::strlen(srv)+1);
+      ::strcpy(*server,srv);
+    }
   }
   amsc_get_node(My_node); 
   strcat(My_node,"::");
@@ -70,7 +72,7 @@ void upic_net_discard_server ()  {
 
 //----------------------------------------------------------------------------
 int upic_net_server_name (char* name)  {
-  const char* source = (char*)getenv("$TERMINAL_SERVER");
+  const char* source = (char*)getenv("TERMINAL_SERVER");
   if ( source )   {
     strcpy (name, source);
     return 1;
@@ -87,10 +89,10 @@ int upic_net_set_server_name (const char* /*name*/)  {
 int upic_net_read (char** buffer, size_t* bytes, char** source) {
   int status;
   unsigned int f;
-  size_t fill=0, total=0;
+  size_t fill=1, total=0;
   char blank[32];
   status = amsc_spy_next_message (blank, &fill, Source_name, &f, &total);
-  if (!status)  {
+  if ( AMS_SUCCESS == status )  {
     *buffer = (char*) malloc (total + 1);
     *bytes  = total+1;
     status = amsc_get_message (*buffer, bytes, Source_name, 0, 0, &f, 0, 0);
@@ -106,6 +108,8 @@ int upic_net_read (char** buffer, size_t* bytes, char** source) {
     }
   }
   else  {
+    fill = sizeof(blank);
+    ::amsc_read_message(blank,&fill,Source_name,&f,0);
     *buffer = 0;
     *bytes = 0;
     *source = 0;

@@ -214,7 +214,7 @@ void upic_act_on_pop_up (int*,int,int);
 /*- From UPI_REMOTE.C -------------------------------------------------*/
 
 void upic_net_close ();
-int  upic_net_init (const char* name, const char** server, WtRoutine handler, WtRoutine broadcast);
+int  upic_net_init (const char* name, char** server, WtRoutine handler, WtRoutine broadcast);
 void upic_net_discard_server ();
 int  upic_net_server_name (char* name);
 int  upic_net_set_server_name (const char* name);
@@ -229,6 +229,8 @@ void upic_net_log_spy (int status, int bytes);
 void upic_net_log_last_message (int status, int bytes, const char* buffer);
 
 #ifdef REMOTE
+struct _UpiConnectRec;
+typedef _UpiConnectRec* UpiConnect;
 void upir_init_remote (void);
 int upir_input (int*,int*,int*,int*);
 void upir_delete_command (int,int);
@@ -236,7 +238,7 @@ void upir_enable_command (int,int);
 void upir_disable_command (int,int);
 void upir_replace_item (Menu*,Item*);
 void upir_insert_item (Menu*,Item*);
-void upir_close_menu (Menu*,Connect*);
+void upir_close_menu (Menu*,UpiConnect);
 void upir_delete_menu (int);
 void upir_erase_menu (int);
 void upir_write_message (const char*, const char*);

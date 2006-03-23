@@ -5,11 +5,9 @@
         upirem.h
          Created           : 12-JAN-1990 by 
 */
- 
 #define UPIF_FIRST_CODE 1000
-
 enum { 
-  UPIF_RECONNECT,
+  UPIF_RECONNECT = UPIF_FIRST_CODE,
   UPIF_INPUT,
   UPIF_DELETE_COMMAND,
   UPIF_ENABLE_COMMAND,

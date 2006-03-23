@@ -53,6 +53,7 @@ struct amsheader_t {
     unsigned int    reserved;
     unsigned int    msg_type;
     unsigned int    facility;
+    amsheader_t() : size(0), msg_type(AMS_MSG_DATA), facility(0) {}
 };
 
 struct amsqueue_t : public qentry_t {
@@ -279,12 +280,16 @@ static void _amsc_net_to_host (amsheader_t *amh)  {
 }
 
 static int _amsc_tcp_set_sockopts(amsentry_t *db)  {
+  int on = 1;
   struct linger Linger;
   Linger.l_onoff = 1;
   Linger.l_linger = LINGER_VALUE ;
-  setsockopt(db->chan, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
-  setsockopt(db->chan, SOL_SOCKET, SO_SNDBUF, (const char*)&SNDBUF_VALUE, sizeof(int)) ;
-  setsockopt(db->chan, SOL_SOCKET, SO_RCVBUF, (const char*)&RCVBUF_VALUE, sizeof(int)) ;
+  ::setsockopt(db->chan, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
+  ::setsockopt(db->chan, SOL_SOCKET, SO_SNDBUF, (const char*)&SNDBUF_VALUE, sizeof(int)) ;
+  ::setsockopt(db->chan, SOL_SOCKET, SO_RCVBUF, (const char*)&RCVBUF_VALUE, sizeof(int)) ;
+  ::setsockopt(db->chan, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
+  ::setsockopt(db->chan, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof(on));
+  ::setsockopt(db->chan, SOL_SOCKET, SO_OOBINLINE, (const char*)&on, sizeof(on));
   return 0;
 }
 
@@ -331,14 +336,14 @@ static int _amsc_tcp_open (amsentry_t *db)   {
   if (TAN_SS_SUCCESS == status)  {
     WITHOUT_INTERCEPT(db->chan = socket (AF_INET, SOCK_STREAM, 0); _amsc_tcp_set_sockopts(db));
     if (db->chan == -1)  {
-      return lib_rtl_get_error();
+      return lib_rtl_socket_error();
     }
     lib_rtl_disable_intercept();
     _amsc_printf("Task: %s has port: %d - %d\n",db->name, db->address.sin_port, ntohl(db->address.sin_port));
     status = connect (db->chan, (struct sockaddr*)&db->address,sizeof(struct sockaddr_in));
     lib_rtl_enable_intercept();
     if (status == -1)  {
-      status  = lib_rtl_get_error();
+      status  = lib_rtl_socket_error();
       WITHOUT_INTERCEPT(socket_close (db->chan));
       return status;
     }
@@ -360,7 +365,7 @@ static int _amsc_tcp_accept (amsentry_t *mydb, amsentry_t *db)   {
   socklen_t n = sizeof (db->address);
   db->chan = accept (mydb->chan, (sockaddr*)&db->address, &n);
   if (db->chan == -1)  {
-    int ret_status  = lib_rtl_get_error();
+    int ret_status  = lib_rtl_socket_error();
     return ret_status;
   }
   _amsc_tcp_set_sockopts(db);
@@ -383,6 +388,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)    {
       WITHOUT_INTERCEPT(sent_now = ::send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
+        errno = lib_rtl_socket_error();
         lib_rtl_signal_message(LIB_RTL_OS,"AMS: send error [%s] size:%d/%d/%d errno=%d",
                                db->name,siz,already_sent,tosend,errno);
         // lib_rtl_start_debugger();
@@ -400,6 +406,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
     while (sent != this_siz)  {
       WITHOUT_INTERCEPT(sent_now = send (db->chan, buff + already_sent, tosend, flag));
       if (sent_now == -1)  {
+        errno = lib_rtl_socket_error();
         lib_rtl_signal_message(LIB_RTL_OS,"AMS: send error [%s] size:%d/%d/%d errno=%d",
                                db->name,siz,already_sent,tosend,errno);
         // lib_rtl_start_debugger();
@@ -417,6 +424,7 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
 static int _amsc_tcp_recv (amsentry_t *db, void *buff, size_t *sizptr, u_int flag)  {
   WITHOUT_INTERCEPT(int got_now = recv (db->chan, (char*)buff, *sizptr, flag));
   if (got_now == -1)  {
+    errno = lib_rtl_socket_error();
     got_now = 0;
     switch(errno)  {
       case ESOCK_CONNREFUSED:
@@ -440,6 +448,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   while (got != siz)  {
     WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
     if (got_now <= 0)    {
+      errno = lib_rtl_socket_error();
       _amsc_printf("AMS: receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
@@ -954,11 +963,10 @@ static void _amsc_send_close_message(amsentry_t *e)  {
 }
 
 static int _amsc_send_message (const void* buff, size_t size, const char* dest, int fac, const char* from)  {
-  int status;
+  char  full_dest [SAFE_NAME_LENGTH], full_from [SAFE_NAME_LENGTH];
   // If facility is 0 used default
   int facility = fac==0 ? FACILITIES__USER : fac;
-  char  full_dest [SAFE_NAME_LENGTH];
-  char  full_from [SAFE_NAME_LENGTH];
+  int status;
 
   // Build full source and destination names 
   if (size <= 0)  {
@@ -1136,15 +1144,14 @@ static int _amsc_disconnect_task(const char* task)   {
 int amsc_init (const char *inname)   {
   if (_ams.inited)  {
     _ams.refCount++;
-    return errno=AMS_ALRINITED;
+    return errno = AMS_ALRINITED;
   }
   _ams.refCount = 0;
   _ams.userAst = 0;
   _ams.userPar = 0;
   int status = _amsc_tcp_get_host_name (_ams.hostName, sizeof (_ams.hostName));
   if (status != AMS_SUCCESS)  {
-    errno = status;
-    return status;
+    return errno = status;
   }
   _ams.hostNameLen   = strlen (_ams.hostName);
   if (inname == 0)  {
@@ -1237,7 +1244,7 @@ int amsc_send_message (const void* buff, size_t size, const char* dest, int fac,
 }
 
 int amsc_get_node ( char node[40])   {
-  return _amsc_tcp_get_host_name( node, sizeof(node) );
+  return _amsc_tcp_get_host_name( node, HOST_NAME_LENGTH );
 }
 
 int amsc_get_message (void* buff, size_t* size, char* from, char* r_source_in,

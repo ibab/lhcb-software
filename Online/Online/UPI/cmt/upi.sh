@@ -1,6 +1,7 @@
 #/usr/bin/sh
 stty -icanon -echo
-`stty size | awk '{ print "export LINES=" $1 " COLUMNS=" $2 }'`
+export LINES=`stty size | awk '{ print $1 }'`
+export COLUMNS=`stty size | awk '{ print $2 }'`
 echo "Terminal setup is: $LINES lines and $COLUMNS columns "
 $*
 stty icanon echo

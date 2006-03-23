@@ -36,7 +36,7 @@ void UpiBufferPutInt (UpiBuffer buffer, int value);
 void UpiBufferGetInt (UpiBuffer buffer, int* address);
 void UpiBufferPutDouble (UpiBuffer buffer, double value);
 void UpiBufferGetDouble (UpiBuffer buffer, double* address);
-void UpiBufferPutText (UpiBuffer buffer, char* value);
+void UpiBufferPutText (UpiBuffer buffer, const char* value);
 void UpiBufferGetText (UpiBuffer buffer, char** address);
 void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size);
 void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size);
@@ -46,12 +46,12 @@ int UpiBufferPutItem (UpiBuffer buffer, Item* item);
 void UpiBufferGetItem (UpiBuffer buffer, Item** itemPtr);
 int UpiBufferPutParam (UpiBuffer buffer, Param* param);
 void UpiBufferGetParam (UpiBuffer buffer, Param** paramPtr);
-void UpiBufferPutBytes (UpiBuffer buffer, char* bytes, int length);
+void UpiBufferPutBytes (UpiBuffer buffer, const char* bytes, int length);
 void UpiBufferGetBytes (UpiBuffer buffer, char** bytes, int neededLength);
 void UpiBufferPutHisto (UpiBuffer buffer, Histo* histo);
 void UpiBufferGetHisto (UpiBuffer buffer, Histo** histoPtr);
-int UpiBufferSendAlwaysToName (UpiBuffer buffer, char* name);
-int UpiBufferSendToName (UpiBuffer buffer, char* name);
+int UpiBufferSendAlwaysToName (UpiBuffer buffer, const char* name);
+int UpiBufferSendToName (UpiBuffer buffer, const char* name);
 int UpiBufferSendAlways (UpiBuffer buffer);
 int UpiBufferSend (UpiBuffer buffer);
 void UpiBufferPutHeader (UpiBuffer buffer);
@@ -59,10 +59,10 @@ void UpiBufferPutTrailer (UpiBuffer buffer);
 void UpiBufferSkipHeader (UpiBuffer buffer);
 void UpiBufferGetTrailer (UpiBuffer buffer);
 
-UpiConnect UpiConnectNew (char* name);
+UpiConnect UpiConnectNew (const char* name);
 void UpiConnectDelete (UpiConnect This);
 char* UpiConnectName (UpiConnect This);
-UpiConnect UpiConnectFind (char* name);
+UpiConnect UpiConnectFind (const char* name);
 int UpiConnectNumber ();
 
 #endif

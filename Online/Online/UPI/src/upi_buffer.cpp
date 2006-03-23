@@ -68,21 +68,17 @@ UpiBuffer UpiBufferNew ()
 {
   UpiBuffer This;
 
-  if (upibufferlog == -1)
-  {
+  if (upibufferlog == -1)  {
     char *buffer_log_name;
     buffer_log_name = getenv ("UPIBUFER_LOG_FILE");
-    if (buffer_log_name != NULL)
-    {
+    if (buffer_log_name != NULL)    {
       upibufferlog = 1;
       buffer_log_file = fopen (buffer_log_name, "w+");
-      if (buffer_log_file == NULL)
-      {
+      if (buffer_log_file == NULL)      {
         upibufferlog = 0;
       }
     }
-    else
-    {
+    else    {
       upibufferlog = 0;
     }
   }
@@ -160,8 +156,7 @@ UpiBufferInfo UpiBufferCheckProtocol (UpiBuffer buffer) {
 
   ptr = (int*) buffer->start;
 
-  if (ptr[1] != int(MAGIC_WORD) )
-  {
+  if (ptr[1] != int(MAGIC_WORD) )  {
     /*
     printf ("UpiBuffer> No magic word in front of the message.\n");
     */
@@ -169,8 +164,7 @@ UpiBufferInfo UpiBufferCheckProtocol (UpiBuffer buffer) {
   }
 
   length = ptr[0];
-  if (length < int(3*sizeof(int)))
-  {
+  if (length < int(3*sizeof(int)))  {
     printf ("UpiBuffer> Message length unsufficient for protocol.\n");
     return (UpiBufferBadLength);
   }
@@ -182,22 +176,16 @@ UpiBufferInfo UpiBufferCheckProtocol (UpiBuffer buffer) {
 
   ptr = (int*) (buffer->start + length);
   ptr--;
-  if (*ptr != int(MAGIC_WORD) )
-  {
+  if (*ptr != int(MAGIC_WORD) )  {
     printf ("UpiBuffer> No magic word at the message tail.\n");
     return (UpiBufferBadTail);
   }
 
-  if (pos > startPos)
-  {
-    int status;
-
+  if (pos > startPos)  {
     buffer->start += length;
-    status = UpiBufferCheckProtocol (buffer);
-    return UpiBufferInfo(status);
+    return UpiBufferInfo(UpiBufferCheckProtocol (buffer));
   }
-  else
-  {
+  else {
     UpiBufferSkipHeader (buffer);
     return (UpiBufferOk);
   }
@@ -215,7 +203,6 @@ const char* UpiBufferGetInfoText (UpiBufferInfo info)
     "UpiBuffer> BadHeader",
     "UpiBuffer> BadTail"
   };
-
   return (text[info]);
 }
 
@@ -290,70 +277,49 @@ char* UpiBufferExtend (UpiBuffer buffer, int bytes)  {
 }
 
 /*--------------------------------------------------------------------------*/
-char* UpiBufferMove (UpiBuffer buffer, int bytes)
-{
-  int pos;
-  char* current;
-
+char* UpiBufferMove (UpiBuffer buffer, int bytes) {
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferMove: ");
     fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, bytes);
   }
   if (!buffer) return (0);
-
-  pos = buffer->current - buffer->data;
-
+  int pos = buffer->current - buffer->data;
   if ((pos + bytes) > (buffer->allocated + 1))  {
     printf ("UpiBufferMove> Trying to read beyond data space\n");
     bytes = buffer->allocated - pos + 1;
   }
-
-  current = buffer->current;
+  char* current = buffer->current;
   buffer->current += bytes;
   return (current);
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferOffset (UpiBuffer buffer, char* address)
-/*--------------------------------------------------------------------------*/
-{
+int UpiBufferOffset (UpiBuffer buffer, char* address) {
   if (!buffer) return (0);
   return (address - (buffer->data));
 }
 
 /*--------------------------------------------------------------------------*/
-char* UpiBufferAddress (UpiBuffer buffer, int offset)
-/*--------------------------------------------------------------------------*/
-{
+char* UpiBufferAddress (UpiBuffer buffer, int offset) {
   if (!buffer) return (0);
   return ((buffer->data) + offset);
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutInt (UpiBuffer buffer, int value)
-/*--------------------------------------------------------------------------*/
-{
-  int* p;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutInt (UpiBuffer buffer, int value)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutInt: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
       (void*)buffer, value);
   }
-  p = (int*) UpiBufferExtend (buffer, sizeof(int));
+  int* p = (int*) UpiBufferExtend (buffer, sizeof(int));
   *p = value;
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetInt (UpiBuffer buffer, int* address)
-/*--------------------------------------------------------------------------*/
-{
-  int* p;
-
-  p = (int*) UpiBufferMove (buffer, sizeof(int));
-  if (upibufferlog == 1)
-  {
+void UpiBufferGetInt (UpiBuffer buffer, int* address) {
+  int* p = (int*) UpiBufferMove (buffer, sizeof(int));
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetInt: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
       (void*)buffer, *p);
@@ -362,28 +328,19 @@ void UpiBufferGetInt (UpiBuffer buffer, int* address)
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutDouble (UpiBuffer buffer, double value)
-/*--------------------------------------------------------------------------*/
-{
-  double* p;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutDouble (UpiBuffer buffer, double value)    {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutDouble: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %f\n",
       (void*)buffer, value);
   }
-  p = (double*) UpiBufferExtend (buffer, sizeof(double));
+  double* p = (double*) UpiBufferExtend (buffer, sizeof(double));
   *p = value;
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetDouble (UpiBuffer buffer, double* address)
-/*--------------------------------------------------------------------------*/
-{
-  double* p;
-
-  p = (double*) UpiBufferMove (buffer, sizeof(double));
+void UpiBufferGetDouble (UpiBuffer buffer, double* address) {
+  double* p= (double*) UpiBufferMove (buffer, sizeof(double));
   if (upibufferlog == 1)
   {
     fprintf (buffer_log_file, "UpiBufferGetDouble: ");
@@ -394,36 +351,24 @@ void UpiBufferGetDouble (UpiBuffer buffer, double* address)
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutText (UpiBuffer buffer, char* value)
-/*--------------------------------------------------------------------------*/
-{
-  int len;
-  char* p;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutText (UpiBuffer buffer, const char* value) {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutText: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %s\n",
-      (void*)buffer, value);
+    fprintf (buffer_log_file,"Buffer: %p, Value %s\n",(void*)buffer, value);
   }
-  len = strlen (value);
+  size_t len = strlen (value);
   UpiBufferPutInt (buffer, len);
   len++;                         /* For the null termination of the string. */
-  p = UpiBufferExtend (buffer, len);
+  char* p = UpiBufferExtend (buffer, len);
   strcpy (p, value);
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetText (UpiBuffer buffer, char** address)
-/*--------------------------------------------------------------------------*/
-{
+void UpiBufferGetText (UpiBuffer buffer, char** address)  {
   int len;
-  char* p;
-
   UpiBufferGetInt (buffer, &len);
-  p = UpiBufferMove (buffer, len + 1);
-  if (upibufferlog == 1)
-  {
+  char* p = UpiBufferMove (buffer, len + 1);
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetText: ");
     fprintf (buffer_log_file,"Buffer: %p, Value %s\n",
       (void*)buffer, p);
@@ -432,45 +377,35 @@ void UpiBufferGetText (UpiBuffer buffer, char** address)
   /*
   The received string must be null-terminated.
   */
-  if (p[len] != 0)
-  {
+  if (p[len] != 0)  {
     printf ("UpiBufferGetText> String not terminated\n!!!");
     p[len] = 0;
   }
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)
-/*--------------------------------------------------------------------------*/
-{
-  int i;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutList: ");
-    fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",
-      (void*)buffer, size);
+    fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
-  switch (type)
-  {
-  case ASC_FMT : {
-    char** s = (char**)list;
-    for (i=0; i<size; i++,s++) UpiBufferPutText (buffer, *s);
-                 }
-                 break;
+  switch (type)  {
+  case ASC_FMT : 
+    {
+      char** s = (char**)list;
+      for (int i=0; i<size; i++,s++) UpiBufferPutText (buffer, *s);
+    }
+    break;
   case DEC_FMT :
   case HEX_FMT :
   case OCT_FMT :
   case BIN_FMT :
   case LOG_FMT :
     {
-      int* p;
-      int bytes;
       int* s = (int*)list;
-
-      bytes = size * sizeof(int);
-      p = (int*) UpiBufferExtend (buffer, bytes);
-      for (i=0; i<size; i++,p++,s++) *p = *s;
+      int bytes = size * sizeof(int);
+      int* p = (int*) UpiBufferExtend (buffer, bytes);
+      for (int i=0; i<size; i++,p++,s++) *p = *s;
     }
     break;
   case REAL_FMT :
@@ -478,33 +413,24 @@ void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)
       double* s = (double*)list;
       int bytes = size * sizeof(double);
       double *p = (double*) UpiBufferExtend (buffer, bytes);
-      for (i=0; i<size; i++,p++,s++) *p = *s;
+      for (int i=0; i<size; i++,p++,s++) *p = *s;
     }
     break;
   }
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size)
-/*--------------------------------------------------------------------------*/
-{
-  int i;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size) {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetList: ");
-    fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",
-      (void*)buffer, size);
+    fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
-  switch (type)
-  {
+  switch (type)  {
   case ASC_FMT :
     {
-      char** ptr;
-
-      ptr = (char**) list_malloc (size * sizeof(char**));
+      char** ptr = (char**) list_malloc (size * sizeof(char**));
       *list = ptr;
-      for (i=0; i<size; i++, ptr++) UpiBufferGetText (buffer, ptr);
+      for (int i=0; i<size; i++, ptr++) UpiBufferGetText (buffer, ptr);
     }
     break;
   case DEC_FMT :
@@ -512,20 +438,10 @@ void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size)
   case OCT_FMT :
   case BIN_FMT :
   case LOG_FMT :
-    {
-      int* p;
-
-      p = (int*) UpiBufferMove (buffer, size * sizeof(int));
-      *list = p;
-    }
+    *list = UpiBufferMove (buffer, size * sizeof(int));
     break;
   case REAL_FMT :
-    {
-      double* p;
-
-      p = (double*) UpiBufferMove (buffer, size * sizeof(double));
-      *list = p;
-    }
+    *list = UpiBufferMove (buffer, size * sizeof(double));
     break;
   }
 }
@@ -565,15 +481,11 @@ void UpiBufferPutMenu (UpiBuffer buffer, Menu* menu)
   listr_init ((Linked_list*) &newPage->item);
 
   page = menu->page.first;
-  while (page)
-  {
+  while (page)  {
     item = page->item.first;
-    while (item)
-    {
-      if (item->id != -1)
-      {
+    while (item)  {
+      if (item->id != -1)  {
         itemOffset = UpiBufferPutItem (buffer, item);
-
         newPage = (Page*) UpiBufferAddress (buffer, pageOffset);
         newItem = (Item*) UpiBufferAddress (buffer, itemOffset);
         listr_connect_entry ((Link*) newItem, (Linked_list*) &newPage->item);
@@ -598,14 +510,11 @@ void UpiBufferGetMenu (UpiBuffer buffer, Menu** menuPtr)  {
   UpiBufferGetText (buffer, &menu->bt_title);
 
   listr_convert ((Linked_list*) &menu->page);
-
   Page* page = (Page*) UpiBufferMove (buffer, sizeof(Page));
   if (menu->page.first != page)  {
     printf ("UpiBufferGetMenu> Desynchronized page structures\n");
   }
-
   listr_convert ((Linked_list*) &page->item);
-
   Item *itemFromBuffer, *item = page->item.first;
   while (item)  {
     UpiBufferGetItem (buffer, &itemFromBuffer);
@@ -618,18 +527,14 @@ void UpiBufferGetMenu (UpiBuffer buffer, Menu** menuPtr)  {
 
 /*--------------------------------------------------------------------------*/
 int UpiBufferPutItem (UpiBuffer buffer, Item* item)   {
-  Item* newItem;
-  Param* param;
   Param* newParam;
   int offset;
   int paramOffset;
-
-  if (upibufferlog == 1)
-  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutItem: ");
     fprintf (buffer_log_file,"Buffer: %p\n", (void*)buffer);
   }
-  newItem = (Item*) UpiBufferExtend (buffer, sizeof(Item));
+  Item* newItem = (Item*) UpiBufferExtend (buffer, sizeof(Item));
   offset = UpiBufferOffset (buffer, (char*) newItem);
   *newItem = *item;
 
@@ -639,139 +544,92 @@ int UpiBufferPutItem (UpiBuffer buffer, Item* item)   {
   newItem = (Item*) UpiBufferAddress (buffer, offset);
   listr_init ((Linked_list*) &newItem->param);
 
-  param = item->param.first;
-  while (param)
-  {
+  for(Param* param = item->param.first; param; param = param->next )  {
     paramOffset = UpiBufferPutParam (buffer, param);
-
     newItem = (Item*) UpiBufferAddress (buffer, offset);
     newParam = (Param*) UpiBufferAddress (buffer, paramOffset);
     listr_connect_entry ((Link*) newParam, (Linked_list*) &newItem->param);
-
-    param = param->next;
   }
   return (offset);
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetItem (UpiBuffer buffer, Item** itemPtr)
-/*--------------------------------------------------------------------------*/
-{
-  Item* item;
-  Param* param;
+void UpiBufferGetItem (UpiBuffer buffer, Item** itemPtr)  {
   Param* paramFromBuffer;
+  Item* item = (Item*) UpiBufferMove (buffer, sizeof (Item));
 
-  item = (Item*) UpiBufferMove (buffer, sizeof (Item));
-
-  *itemPtr = item;
-
-  if (upibufferlog == 1)
-  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetItem: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
+  *itemPtr = item;
   UpiBufferGetText (buffer, &item->string);
   UpiBufferGetText (buffer, &item->help);
-
   listr_convert ((Linked_list*) &item->param);
-
-  param = item->param.first;
-  while (param)
-  {
+  for(Param* param = item->param.first; param; param = param->next )  {
     UpiBufferGetParam (buffer, &paramFromBuffer);
-    if (param != paramFromBuffer)
-    {
+    if (param != paramFromBuffer)    {
       printf ("UpiBufferGetMenu> Desynchronized param structures\n");
     }
-    param = param->next;
   }
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferPutParam (UpiBuffer buffer, Param* param)
-/*--------------------------------------------------------------------------*/
-{
-  Param* newParam;
-  int offset;
-
-  if (upibufferlog == 1)
-  {
+int UpiBufferPutParam (UpiBuffer buffer, Param* param)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutParam: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
-  newParam = (Param*) UpiBufferExtend (buffer, sizeof(Param));
-  offset = UpiBufferOffset (buffer, (char*) newParam);
+  Param* newParam = (Param*) UpiBufferExtend (buffer, sizeof(Param));
+  int offset = UpiBufferOffset (buffer, (char*) newParam);
   *newParam = *param;
 
   UpiBufferPutText (buffer, param->buf);
-  if (param->list_size)
-  {
+  if (param->list_size)  {
     UpiBufferPutList (buffer, param->type, param->list, param->list_size);
   }
   return (offset);
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetParam (UpiBuffer buffer, Param** paramPtr)
-/*--------------------------------------------------------------------------*/
-{
-  Param* param;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferGetParam (UpiBuffer buffer, Param** paramPtr)   {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetParam: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
-  param = (Param*) UpiBufferMove (buffer, sizeof(Param));
-
+  Param* param = (Param*) UpiBufferMove (buffer, sizeof(Param));
   *paramPtr = param;
-
   UpiBufferGetText (buffer, &param->buf);
-
-  if (param->list_size)
-  {
+  if (param->list_size)  {
     UpiBufferGetList (buffer, param->type, (void**)&param->list, param->list_size);
   }
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutBytes (UpiBuffer buffer, char* bytes, int length)
-/*--------------------------------------------------------------------------*/
-{
-  char* p;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutBytes (UpiBuffer buffer, const char* bytes, int length)    {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutBytes: ");
     fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, length);
   }
   UpiBufferPutInt (buffer, length);
-  p = UpiBufferExtend (buffer, length);
+  char* p = UpiBufferExtend (buffer, length);
   memcpy (p, bytes, length);
   UpiBufferPutInt (buffer, MAGIC_WORD);
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetBytes (UpiBuffer buffer, char** bytes, int neededLength)
-/*--------------------------------------------------------------------------*/
-{
-  int length;
-  int magic;
-  char* p;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferGetBytes (UpiBuffer buffer, char** bytes, int neededLength)   {
+  int length, magic;
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetBytes: ");
     fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, neededLength);
   }
   UpiBufferGetInt (buffer, &length);
-  if (neededLength && (length != neededLength))
-  {
+  if (neededLength && (length != neededLength))  {
     printf ("UpiBufferGetBytes> Mismatch in block length (%d instead of %d)\n",
       length, neededLength);
   }
-  p = UpiBufferMove (buffer, length);
-  *bytes = p;
+  *bytes = UpiBufferMove (buffer, length);
   UpiBufferGetInt (buffer, &magic);
   if (magic != int(MAGIC_WORD)) { 
     printf ("UpiBufferGetBytes> Bad block trailer\n");
@@ -780,31 +638,24 @@ void UpiBufferGetBytes (UpiBuffer buffer, char** bytes, int neededLength)
 
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutHisto (UpiBuffer buffer, Histo* histo)  {
-  Histo* newHisto;
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutHisto: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
-  newHisto = (Histo*) UpiBufferExtend (buffer, sizeof(Histo));
+  Histo* newHisto = (Histo*) UpiBufferExtend (buffer, sizeof(Histo));
   *newHisto = *histo;
 
   UpiBufferPutText (buffer, histo->text);
-  UpiBufferPutBytes (buffer, (char*) histo->first, 
-    histo->bins * sizeof(double));
+  UpiBufferPutBytes (buffer, (char*)histo->first, histo->bins * sizeof(double));
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferGetHisto (UpiBuffer buffer, Histo** histoPtr)
-/*--------------------------------------------------------------------------*/
-{
-  Histo* histo;
-
-  if (upibufferlog == 1)
-  {
+void UpiBufferGetHisto (UpiBuffer buffer, Histo** histoPtr)   {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferGetHisto: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
-  histo = (Histo*) UpiBufferMove (buffer, sizeof(Histo));
+  Histo* histo = (Histo*) UpiBufferMove (buffer, sizeof(Histo));
   *histoPtr = histo;
 
   UpiBufferGetText (buffer, &histo->text);
@@ -813,28 +664,20 @@ void UpiBufferGetHisto (UpiBuffer buffer, Histo** histoPtr)
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferSendAlwaysToName (UpiBuffer buffer, char* name)
-/*--------------------------------------------------------------------------*/
-{
-  int noSend;
-  int status;
-
-  if (upibufferlog == 1)
-  {
+int UpiBufferSendAlwaysToName (UpiBuffer buffer, const char* name)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferSendAlwaysToName: ");
     fprintf (buffer_log_file,"Buffer: %p, Name %s\n",(void*)buffer, name);
   }
-  noSend = buffer->noSend;
+  int noSend = buffer->noSend;
   buffer->noSend = 0;
-  status = UpiBufferSendToName (buffer, name);
+  int status = UpiBufferSendToName (buffer, name);
   buffer->noSend = noSend;
   return (status);
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferSendToName (UpiBuffer buffer, char* name)
-/*--------------------------------------------------------------------------*/
-{
+int UpiBufferSendToName (UpiBuffer buffer, const char* name)  {
   int status = 0;
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferSendToName: ");
@@ -844,21 +687,14 @@ int UpiBufferSendToName (UpiBuffer buffer, char* name)
 
   UpiBufferPutTrailer (buffer);
 
-  if (buffer->updating)
-  {
+  if (buffer->updating)  {
     buffer->start = buffer->current;
   }
-  else
-  {
-    int bytes;
-
-    if (!buffer->noSend)
-    {
-      if (name)
-      {
-        bytes = buffer->current - buffer->data;
-        if (bytes > UpiBufferProtocolSize)
-        {
+  else  {
+    if (!buffer->noSend)    {
+      if (name)   {
+        int bytes = buffer->current - buffer->data;
+        if (bytes > UpiBufferProtocolSize)   {
           status = upic_net_send_to_name (buffer->data, bytes, name);
         }
       }
@@ -872,32 +708,22 @@ int UpiBufferSendToName (UpiBuffer buffer, char* name)
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferSendAlways (UpiBuffer buffer)
-/*--------------------------------------------------------------------------*/
-{
-  int noSend;
-  int status;
-
-  if (upibufferlog == 1)
-  {
+int UpiBufferSendAlways (UpiBuffer buffer)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferSendAlways: ");
     fprintf (buffer_log_file,"Buffer: %p \n",(void*)buffer);
   }
-  noSend = buffer->noSend;
+  int noSend = buffer->noSend;
   buffer->noSend = 0;
-  status = UpiBufferSend (buffer);
+  int status = UpiBufferSend (buffer);
   buffer->noSend = noSend;
   return (status);
 }
 
 /*--------------------------------------------------------------------------*/
-int UpiBufferSend (UpiBuffer buffer)
-/*--------------------------------------------------------------------------*/
-{
+int UpiBufferSend (UpiBuffer buffer)  {
   int status = 0;
-
-  if (upibufferlog == 1)
-  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferSend: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*) buffer);
   }
@@ -905,36 +731,25 @@ int UpiBufferSend (UpiBuffer buffer)
 
   UpiBufferPutTrailer (buffer);
 
-  if (buffer->updating)
-  {
+  if (buffer->updating)  {
     buffer->start = buffer->current;
   }
-  else
-  {
-    int bytes;
-    UpiConnect connect;
-
-    if (!buffer->noSend)
-    {
-      bytes = buffer->current - buffer->data;
-      connect = UpiConnects.first;
-      while (connect)
-      {
-        if (upibufferlog == 1)
-        {
+  else  {
+    if (!buffer->noSend)    {
+      int bytes = buffer->current - buffer->data;
+      UpiConnect c, connect = UpiConnects.first;
+      while (connect)       {
+        if (upibufferlog == 1)   {
           fprintf (buffer_log_file,"#Bytes %d to name %s\n",
             bytes,connect->name);
         }
         status = upic_net_send_to_name (buffer->data, bytes, connect->name);
-        if (! (status & 1))
-        {
-          UpiConnect c;
+        if (! (status & 1))  {
           c	= connect;
           connect = connect->next;
           UpiConnectDelete(c);
         }
-        else
-        {
+        else {
           connect = connect->next;
         }
       }
@@ -948,11 +763,8 @@ int UpiBufferSend (UpiBuffer buffer)
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiBufferPutHeader (UpiBuffer buffer)
-/*--------------------------------------------------------------------------*/
-{
-  if (upibufferlog == 1)
-  {
+void UpiBufferPutHeader (UpiBuffer buffer)  {
+  if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutHeader: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
@@ -962,23 +774,19 @@ void UpiBufferPutHeader (UpiBuffer buffer)
 
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutTrailer (UpiBuffer buffer) {
-  int bytes;
-  int* p;
-
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferPutTrailer: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
   }
   UpiBufferPutInt (buffer, MAGIC_WORD);
-  bytes = buffer->current - buffer->start;
-  p = (int*) buffer->start;
+  int bytes = buffer->current - buffer->start;
+  int* p = (int*) buffer->start;
   *p = bytes;
 }
 
 /*--------------------------------------------------------------------------*/
 void UpiBufferSkipHeader (UpiBuffer buffer) {
-  int length;
-  int magic;
+  int length, magic;
   if (upibufferlog == 1)  {
     fprintf (buffer_log_file, "UpiBufferSkipHeader: ");
     fprintf (buffer_log_file,"Buffer: %p\n",(void*)buffer);
@@ -1004,44 +812,41 @@ void UpiBufferGetTrailer (UpiBuffer buffer) {
 /*--------------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------------*/
-UpiConnect UpiConnectNew (char* name)  {
-  UpiConnect This = UpiConnectFind (name);
-  if (!This)  {
-    This = (UpiConnect) list_add_entry ((Linked_list*) &UpiConnects, 
-      sizeof(UpiConnectRec));
-    This->name = (char*) malloc (strlen(name) + 1);
-    strcpy (This->name, name);
+UpiConnect UpiConnectNew (const char* name)  {
+  UpiConnect c = UpiConnectFind (name);
+  if (!c)  {
+    c = (UpiConnect) list_add_entry ((Linked_list*) &UpiConnects, sizeof(UpiConnectRec));
+    c->name = (char*) malloc (strlen(name) + 1);
+    strcpy (c->name, name);
     UpiConnects.number++;
   }
-  return (This);
+  return c;
 }
 
 /*--------------------------------------------------------------------------*/
-void UpiConnectDelete (UpiConnect This)  {
-  if (!This) return;
-
-  if (This->name) free (This->name);
-  list_remove_entry ((Link*) This);
+void UpiConnectDelete (UpiConnect c)  {
+  if (!c) return;
+  if (c->name) free (c->name);
+  list_remove_entry ((Link*) c);
   UpiConnects.number--;
 }
 
 /*--------------------------------------------------------------------------*/
-char* UpiConnectName (UpiConnect This)  {
-  if (!This) return (0);
-
-  return (This->name);
+char* UpiConnectName (UpiConnect c)  {
+  if (!c) return (0);
+  return (c->name);
 }
 
 /*--------------------------------------------------------------------------*/
-UpiConnect UpiConnectFind (char* name)    {
-  for(UpiConnect This = UpiConnects.first; This; This=This->next)  {
-    if (!strcmp(This->name, name)) return (This);
+UpiConnect UpiConnectFind (const char* name)    {
+  for(UpiConnect c = UpiConnects.first; c; c=c->next)  {
+    if (!strcmp(c->name, name)) return (c);
   }
   return (0);
 }
 
 /*--------------------------------------------------------------------------*/
 int UpiConnectNumber ()  {
-  return (UpiConnects.number);
+  return UpiConnects.number;
 }
 

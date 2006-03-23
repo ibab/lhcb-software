@@ -14,15 +14,15 @@ UdpNetworkChannel::UdpNetworkChannel()  {
   m_socket = ::socket(PF_INET, SOCK_DGRAM, 0);
   if ( m_socket <= 0 )  {
     ::printf("UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",errMsg());
-    m_errno = lib_rtl_get_error();
+    m_errno = ::lib_rtl_socket_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) < 0) {
     ::printf("UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",errMsg());
-    m_errno = lib_rtl_get_error();
+    m_errno = ::lib_rtl_socket_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_DONTROUTE, (char*)&on, sizeof(on)) < 0) {
     ::printf("UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",errMsg());
-    m_errno = lib_rtl_get_error();
+    m_errno = ::lib_rtl_socket_error();
   }
   else  {
     m_bValid = true;
@@ -53,7 +53,7 @@ int UdpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Add
     else 
       status = ::sendto ( m_socket, (char*)buff, len, flags, (sockaddr*)addr, siz);
     stopTimer();
-    if ( status != len )  m_errno = ::lib_rtl_get_error();
+    if ( status != len )  m_errno = ::lib_rtl_socket_error();
     return status;
   }
   return 0;
@@ -70,7 +70,7 @@ int UdpNetworkChannel::recv  (void* buff, int len, int tmo, int flags, Address* 
       status = ::recv(m_socket, (char*)buff, len, flags);  
     else
       status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &siz);  
-    m_errno = (status < 0 || status != len) ? ::lib_rtl_get_error() : 0;
+    m_errno = (status < 0 || status != len) ? ::lib_rtl_socket_error() : 0;
   }
   return status;
 }
@@ -84,7 +84,7 @@ int UdpNetworkChannel::connect ( const Address& addr, int tmo )  {
     startTimer(tmo);
     int status = ::connect(m_socket, (sockaddr*)&addr, sizeof(addr) );
     stopTimer();
-    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
+    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_socket_error() : 0;
     return status;
   }
   return (-1);
@@ -97,7 +97,7 @@ int UdpNetworkChannel::connect ( const Address& addr, int tmo )  {
 int UdpNetworkChannel::bind ( const Address& addr, int /* pend */ )  {
   if ( m_socket > 0 )  {
     int status = ::bind ( m_socket, (sockaddr*)&addr, sizeof(addr) );
-    m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
+    m_errno = (status < 0) ? ::lib_rtl_socket_error() : 0;
     return status;
   }
   return (-1);

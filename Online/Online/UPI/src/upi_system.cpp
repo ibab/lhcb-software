@@ -22,7 +22,6 @@ static int upic_memory_of_param (Param* p)    {
   int n;
   int memory = sizeof (Param) + p->size + 1;  /* for p->buf  */
   if (p->type == ASC_FMT) memory += p->size + 1; /* for p->def */
-  
   if ((n = p->list_size))  {
     switch (p->type)    {
       case ASC_FMT:
@@ -52,27 +51,19 @@ static int upic_memory_of_async (Async_line* a) {
 //---------------------------------------------------------------------------
 static int upic_memory_of_item (Item* i)    {
   int memory = sizeof (Item);
-  Param* p = i->param.first;
-  while (p)  {
+  for(Param* p = i->param.first;p;p = p->next)
     memory += upic_memory_of_param (p);
-    p = p->next;
-  }
   memory += strlen(i->string) + 1 +
             strlen(i->help) + 1;
-
-  return (memory);
+  return memory;
 }
 
 //---------------------------------------------------------------------------
 static int upic_memory_of_page (Page* d)  {
   int memory = sizeof (Page);
-  Item* i = d->item.first;
-  while (i)  {
+  for(Item* i = d->item.first;i;i = i->next)
     memory += upic_memory_of_item (i);
-    i = i->next;
-  }
-  
-  return (memory);
+  return memory;
 }
 
 //---------------------------------------------------------------------------
@@ -158,7 +149,6 @@ int upic_quit ()    {
   while ((a = Sys.async.first)) upic_drop_async (a);
   
   Sys.id = 0;
-
 #ifdef SCREEN
   scrc_cursor_on(Sys.pb);
   if (Sys.async.id) scrc_delete_display (Sys.async.id);
@@ -301,26 +291,14 @@ int upic_disconnect_process (const char*)  {
 //---------------------------------------------------------------------------
 int upic_show_memory ()   {
   int memory = sizeof(System);
-  Menu* m = Sys.menu.first;
-  while (m)  {
+  for(Menu* m = Sys.menu.first;m;m = m->next) 
     memory += upic_memory_of_menu (m);
-    m = m->next;
-  }  
-  Param* p = Sys.param.first;
-  while (p)  {
+  for(Param* p = Sys.param.first;p;p = p->next)
     memory += upic_memory_of_param (p);
-    p = p->next;
-  }
-  Item* i = Sys.item.first;
-  while (i)  {
+  for(Item* i = Sys.item.first;i;i = i->next)
     memory += upic_memory_of_item (i);
-    i = i->next;
-  }
-  Async_line* a = Sys.async.first;
-  while (a)  {
+  for(Async_line* a = Sys.async.first;a;a = a->next)
     memory += upic_memory_of_async (a);
-    a = a->next;
-  }
 
 #ifdef SCREEN  
   if (Sys.pop_up) memory += scrc_memory_of_display (Sys.pop_up->id);
@@ -330,6 +308,5 @@ int upic_show_memory ()   {
   memory += scrc_memory_of_windows();
 #else
 #endif
-  
   return (memory);
 }

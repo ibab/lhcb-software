@@ -49,6 +49,8 @@ extern "C" {
 
   /// Access to error code
   int lib_rtl_get_error();
+  /// Access to error code from socket library
+  int lib_rtl_socket_error();
   /// Access to process ID
   int lib_rtl_pid();
   /// Invoke debugger

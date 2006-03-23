@@ -86,6 +86,15 @@ const char* errorString(int status)  {
 }
 #endif
 
+/// Access to error code from socket library
+int lib_rtl_socket_error()  {
+#ifdef _WIN32
+  return ::WSAGetLastError();
+#else
+  return errno;
+#endif
+}
+
 int lib_rtl_get_error()   {
 #ifdef USE_PTHREADS
   return errno;

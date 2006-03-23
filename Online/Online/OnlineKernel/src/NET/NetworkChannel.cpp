@@ -58,7 +58,7 @@ int NetworkChannel::selectTmo(int flags, int tmo) {
     if ( e_fds ) { FD_ZERO(e_fds); FD_SET(m_socket,e_fds); }
     int res = select(m_socket+1, r_fds, w_fds, e_fds, &tv);
     if ( res < 0 ) {
-      m_errno = ::lib_rtl_get_error();
+      m_errno = ::lib_rtl_socket_error();
       return -1;
     }
     else if ( res == 0 ) {

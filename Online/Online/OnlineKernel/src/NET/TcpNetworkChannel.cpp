@@ -6,8 +6,6 @@
 #include "NET/TcpNetworkChannel.h"
 #include "NET/IOPortManager.h"
 
-#define TCP_errno errno
-
 // ----------------------------------------------------------------------------
 //  Constructor: initialize network connection for CONNECTOR.
 //                                      M.Frank
@@ -15,7 +13,7 @@
 TcpNetworkChannel::TcpNetworkChannel() {
   m_socket = ::socket(AF_INET, SOCK_STREAM, 0);
   if ( m_socket < 0 )  {
-    m_errno = TCP_errno;
+    m_errno = ::lib_rtl_socket_error();
     return;
   }
   struct linger Linger;
@@ -57,12 +55,12 @@ int TcpNetworkChannel::bind ( const Address& addr, int con_pend )  {
     status = ::setsockopt(m_socket, SOL_SOCKET, SO_OOBINLINE, (const char*)&on, sizeof(on));
     status = ::bind ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     if ( status < 0 )  {
-      m_errno = TCP_errno;
+      m_errno = ::lib_rtl_socket_error();
       return status;
     }
     status = ::listen( m_socket, con_pend );
     if ( status < 0 )  {
-      m_errno = TCP_errno;
+      m_errno = ::lib_rtl_socket_error();
       return status;
     }
     return status;
@@ -79,7 +77,7 @@ NetworkChannel::Channel TcpNetworkChannel::accept ( Address& addr, int tmo )  {
     startTimer(tmo);
     Channel accepted = ::accept(m_socket,(sockaddr*)&addr, &size );
     stopTimer();
-    if ( !m_bCancel ) m_errno = (accepted <= 0) ? TCP_errno : 0;
+    if ( !m_bCancel ) m_errno = (accepted <= 0) ? ::lib_rtl_socket_error() : 0;
     if ( accepted > 0 )   {
       int status, on = 1;
       struct linger Linger;
@@ -103,7 +101,7 @@ int TcpNetworkChannel::connect ( const Address& addr, int tmo )  {
     startTimer(tmo);
     int status = ::connect ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     stopTimer();
-    if ( !m_bCancel ) m_errno = (status < 0) ? TCP_errno : 0;
+    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_socket_error() : 0;
     return status;
   }
   return (-1);
@@ -121,7 +119,7 @@ int TcpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Add
     else
       status = ::sendto(m_socket,(char*)buff,len,flags,(sockaddr*)addr,addr_len);
     stopTimer();
-    m_errno = (status <= 0) ? TCP_errno : 0;
+    m_errno = (status <= 0) ? ::lib_rtl_socket_error() : 0;
     return status;
   }
   return 0;
@@ -138,7 +136,7 @@ int TcpNetworkChannel::recv  (void* buff, int len, int tmo, int flags, Address* 
       status = ::recv(m_socket, (char*)buff, len, flags );
     else
       status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &addr_len);
-    if ( !m_bCancel ) m_errno = (status <= 0) ? TCP_errno : 0;
+    if ( !m_bCancel ) m_errno = (status <= 0) ? ::lib_rtl_socket_error() : 0;
   }
   return status;
 }
