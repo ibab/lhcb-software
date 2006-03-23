@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r3 2006-03-22 =========================
 ! 2006-03-22 - Chris Jones
  - Add first version of pixel cluster suppression tool.
    Works by finding clusters of hits in HPDs and removing them.
