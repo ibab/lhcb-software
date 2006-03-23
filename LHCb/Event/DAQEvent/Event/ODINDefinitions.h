@@ -1,4 +1,4 @@
-// $Id: ODINDefinitions.h,v 1.2 2006-03-23 09:21:37 cattanem Exp $
+// $Id: ODINDefinitions.h,v 1.3 2006-03-23 09:35:54 cattanem Exp $
 #ifndef ODINDEFINITIONS_H 
 #define ODINDEFINITIONS_H 1
 
@@ -32,11 +32,11 @@ namespace LHCb
     }; // enum ODIN::Data
 
     enum EventTypeBits {
-      EventTypeBits = 0;
+      EventTypeBits = 0
     }; // enum ODIN::EventTypeBits
     
     enum EventTypeMasks {
-      EventTypeMask = 0xFFL;
+      EventTypeMask = 0xFFL
     }; // enum ODIN::EventTypeMasks
 
     enum Word7Bits {
