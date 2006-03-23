@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.9 2006-03-15 13:09:16 ocallot Exp $
+// $Id: LinkerTool.h,v 1.10 2006-03-23 12:55:40 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -51,17 +51,19 @@ public:
 
   DirectType* direct ( ) {
     SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_location );
+    if ( 0 != links ) {
+      links->resolveLinks( m_evtSvc );
 
-    if ( links->sourceClassID() != SOURCE::classID() ) {
-      throw GaudiException( "Incompatible SOURCE type for location " + m_location,
-                            "LinkerTool", StatusCode::FAILURE);
-    }
-    if ( links->targetClassID() != TARGET::classID() ) {
-      throw GaudiException( "Incompatible TARGET type for location " + m_location,
-                            "LinkerTool", StatusCode::FAILURE);
+      if ( links->sourceClassID() != SOURCE::classID() ) {
+        throw GaudiException( "Incompatible SOURCE type for location " + m_location,
+                              "LinkerTool", StatusCode::FAILURE);
+      }
+      if ( links->targetClassID() != TARGET::classID() ) {
+        throw GaudiException( "Incompatible TARGET type for location " + m_location,
+                              "LinkerTool", StatusCode::FAILURE);
+      }
     }
     
-    if ( 0 != links ) links->resolveLinks( m_evtSvc );
     const LHCb::LinksByKey* linkPtr = links;
     m_table.load( linkPtr );
     if ( 0 == linkPtr ) return 0;
@@ -95,11 +97,11 @@ public:
     if ( 0 == linkPtr ) return 0;
 
     //== TARGET and SOURCE are exchanged for the inverse table
-    if ( links->targetClassID() != SOURCE::classID() ) {
+    if ( linkPtr->targetClassID() != SOURCE::classID() ) {
      throw GaudiException( "Incompatible SOURCE type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }
-    if ( links->sourceClassID() != TARGET::classID() ) {
+    if ( linkPtr->sourceClassID() != TARGET::classID() ) {
       throw GaudiException( "Incompatible TARGET type for location " + m_location,
                             "LinkerTool", StatusCode::FAILURE);
     }    

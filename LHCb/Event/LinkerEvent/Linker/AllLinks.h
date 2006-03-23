@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.10 2006-03-16 16:50:47 ocallot Exp $
+// $Id: AllLinks.h,v 1.11 2006-03-23 12:55:25 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -37,21 +37,21 @@ public:
         msg << MSG::ERROR << "*** Link container " << name
             << " not found." << endreq;
       }
+    } else {
+      //== Check proper template, only if specified. 
+      if ( links->sourceClassID() != SOURCE::classID() &&
+           CLID_ContainedObject   != SOURCE::classID()  ) {
+        throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+                              "LinkedTo", StatusCode::FAILURE);
+      }
+      if ( links->targetClassID() != TARGET::classID() ) {
+        throw GaudiException( "Incompatible TARGET type for location " + containerName,
+                              "LinkedTo", StatusCode::FAILURE);
+      }
     }
     m_links = links;
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
-
-    //== Check proper template, only if specified. 
-    if ( links->sourceClassID() != SOURCE::classID() &&
-         CLID_ContainedObject   != SOURCE::classID()  ) {
-      throw GaudiException( "Incompatible SOURCE type for location " + containerName,
-                            "LinkedTo", StatusCode::FAILURE);
-    }
-    if ( links->targetClassID() != TARGET::classID() ) {
-      throw GaudiException( "Incompatible TARGET type for location " + containerName,
-                            "LinkedTo", StatusCode::FAILURE);
-    }
   }; 
             
   virtual ~AllLinks( ) {}; ///< Destructor
