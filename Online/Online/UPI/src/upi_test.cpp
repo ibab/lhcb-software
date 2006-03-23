@@ -7,6 +7,7 @@
 namespace  {
   const char ins_text[81] = "";
   const char ins_help[81] = "";
+  const char ins_type[16] = "COMMENT";
   int  ins_id = 0;
   int  ins_menu = 0;
   int  ins_before = 0;
@@ -15,7 +16,6 @@ namespace  {
     "COMMAND",
     "PARAM  ",
   };
-  const char ins_type[] = "COMMENT";
 
   /*  Variables for creating a parameter  */
 
@@ -100,7 +100,7 @@ namespace  {
       int items;
       int mode = 0;
       static int mode_list[] = {0, 1};
-      int wmenu, wrow, wcol;
+      int wmenu = 0, wrow, wcol;
       int dmenu = 0;
       int emenu = 0;
       static int log;

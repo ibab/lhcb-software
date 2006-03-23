@@ -11,10 +11,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-//---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
-
  
 //---------------------------------------------------------------------------
 void upic_open_pop_up (Menu* m, Param* p, int row, int col)   {
@@ -50,19 +47,13 @@ void upic_close_pop_up () {
 
 //---------------------------------------------------------------------------
 void upic_set_pop_up_cursor ()    {
-/*
-   Page* d = Sys.pop_up;
-
-  scrc_set_cursor (d->id, d->cur_line, 1);
-*/
   return;
 }
 
 //---------------------------------------------------------------------------
 void upic_act_on_pop_up (int *num, int key, int row)    {
-  int c = key;
   Page* d = Sys.pop_up;
-  int delta, cur = d->cur_line;
+  int delta, c = key, cur = d->cur_line;
 
   if (cur) scrc_change_rendition (d->id, cur, 1, 1, d->cols, NORMAL);
   scrc_begin_pasteboard_update (Sys.pb);
@@ -95,13 +86,10 @@ void upic_act_on_pop_up (int *num, int key, int row)    {
     if (cur > 0 && cur <= d->lines) d->cur_line = cur;
     else cur = d->cur_line;
 
-    if (d->row + cur - 1 < 3 ||
-        d->row + cur - 1 > Sys.pb_rows - 2)
-    {
+    if (d->row + cur - 1 < 3 || d->row + cur - 1 > Sys.pb_rows - 2)  {
       d->row -= delta;
       scrc_move_display (d->id, Sys.pb, -delta, 0);
     }
-
     scrc_change_rendition (d->id, cur, 1, 1, d->cols, INVERSE);
   }
   else   {

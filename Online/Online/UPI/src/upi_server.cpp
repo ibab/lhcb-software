@@ -24,126 +24,126 @@ int upic_net_close_mbx(int) { return 1; }
 int upic_net_open_mbx(const char*) {  return 1; }
 
 namespace {
-enum {
-  MAIN_MENU = 1,
-  PARAMS_MENU,
-  KEYBOARD_MENU,
-  LOGFILE_MENU,
-  LAST_MENU
-};
+  enum {
+    MAIN_MENU = 1,
+    PARAMS_MENU,
+    KEYBOARD_MENU,
+    LOGFILE_MENU,
+    LAST_MENU
+  };
 
-enum {
-  C_SEPARATOR = 1000000,
-  C_DESTINATION,
-  C_CONNECT,
-  C_DISCONNECT,
-  C_KILL,
-  C_START,
-  C_PARAMS,
-  C_LOCK,
-  C_LOG,
-  C_SAVE_CONF,
-  C_RESTORE_CONF,
-  C_EXIT,
+  enum {
+    C_SEPARATOR = 1000000,
+    C_DESTINATION,
+    C_CONNECT,
+    C_DISCONNECT,
+    C_KILL,
+    C_START,
+    C_PARAMS,
+    C_LOCK,
+    C_LOG,
+    C_SAVE_CONF,
+    C_RESTORE_CONF,
+    C_EXIT,
 
-  C_P1,
-  C_P2,
-  C_P3,
-  C_P4,
+    C_P1,
+    C_P2,
+    C_P3,
+    C_P4,
 
-  C_INPUT,
+    C_INPUT,
 
-  C_LOG_SEP1,
-  C_LOG_ACTIVATE,
-  C_LOG_DISACTIVATE,
-  C_LOG_RESET,
-  C_LOG_NAME,
-  C_LOG_SHOW,
-  C_LOG_DUMP_DTB
-};
+    C_LOG_SEP1,
+    C_LOG_ACTIVATE,
+    C_LOG_DISACTIVATE,
+    C_LOG_RESET,
+    C_LOG_NAME,
+    C_LOG_SHOW,
+    C_LOG_DUMP_DTB
+  };
 
-struct Menu_list;
-struct Histo_list;
-struct Var;
+  struct Menu_list;
+  struct Histo_list;
+  struct Var;
 
-struct SrvConnect {
-  SrvConnect Link_items;
+  struct SrvConnect {
+    SrvConnect Link_items;
 
-  struct {
-    Menu_list Linked_list_items;
-  } menu_list;
-  struct {
-    Histo_list Linked_list_items;
-  } histo_list;
-  struct {
-    Var Linked_list_items;
-  } var;
-  char* source;
-  int disabled;
-  int starting;
-  int connected;
-  int current_menu;
-  int current_command;
-  int current_param;
-};
+    struct {
+      Menu_list Linked_list_items;
+    } menu_list;
+    struct {
+      Histo_list Linked_list_items;
+    } histo_list;
+    struct {
+      Var Linked_list_items;
+    } var;
+    char* source;
+    int disabled;
+    int starting;
+    int connected;
+    int current_menu;
+    int current_command;
+    int current_param;
+  };
 
-struct Menu_list {
-  Menu_list Link_items;
-  int remote_id;
-  int local_id;
-  Window* window;
-};
+  struct Menu_list {
+    Menu_list Link_items;
+    int remote_id;
+    int local_id;
+    Window* window;
+  };
 
-struct Histo_list {
-  Histo_list Link_items;
+  struct Histo_list {
+    Histo_list Link_items;
 
-  int    remote_id;
-  Histo* local_id;
-};
+    int    remote_id;
+    Histo* local_id;
+  };
 
 
-struct Var {
-  Var Link_items;
-  void* reference;
-  int  type;
-  int  size;
-  union {
-    int     i;
-    double  d;
-    char* c;
-  } value;
-};
+  struct Var {
+    Var Link_items;
+    void* reference;
+    int  type;
+    int  size;
+    union {
+      int     i;
+      double  d;
+      char* c;
+    } value;
+  };
 
-typedef struct KBD_REQUEST Kbd_request;
-typedef struct KBD_CONNECT Kbd_connect;
+  typedef struct KBD_REQUEST Kbd_request;
+  typedef struct KBD_CONNECT Kbd_connect;
 
-struct KBD_REQUEST {
-  Kbd_request Link_items;
-  int lun;
-};
+  struct KBD_REQUEST {
+    Kbd_request Link_items;
+    int lun;
+  };
 
-struct KBD_CONNECT {
-  Kbd_connect Link_items;
-  char* name;
-  int lun;
-  int chan;
-  FILE* f;
-};
-struct SrvConnection {
-  int col;
-  char s[64];
-  void *data;
-};
+  struct KBD_CONNECT {
+    Kbd_connect Link_items;
+    char* name;
+    int lun;
+    int chan;
+    FILE* f;
+  };
+  struct SrvConnection {
+    int col;
+    char s[64];
+    void *data;
+  };
 
-static char Error_message[256];
+  static char Error_message[256];
 
-int conn_comp(const void *a1, const void*a2)  {
-  int col1    = ((SrvConnection*)a1)->col;
-  int col2    = ((SrvConnection*)a2)->col;
-  if ( col1 < col2)      return -1;
-  else if (col1 == col2) return 0;
-  return 1;
-}
+  int conn_comp(const void *a1, const void*a2)  {
+    int col1    = ((SrvConnection*)a1)->col;
+    int col2    = ((SrvConnection*)a2)->col;
+    if ( col1 < col2)      return -1;
+    else if (col1 == col2) return 0;
+    return 1;
+  }
 }
 
 /*-------------------------------------------------------------------------*/
@@ -592,145 +592,145 @@ void upi_handler()  {
   switch (menu)  {
   case MAIN_MENU:
     switch (command)    {
-    case C_DESTINATION:
-      {
-        char* c;
-        length = cut_blanks (Dest);
-        Dest[length] = '\0';
-        upper_case (Dest);
-        c = (char*) strchr (Node, ':');
-        if (c) *c = '\0';
-        c = (char*) strchr (Node, ' ');
-        if (c) *c = '\0';
-        upper_case (Node);
-        if (strlen(Node))        {
-          strcpy (Ams_dest, Node);
-          strcat (Ams_dest, "::");
-        }
-        else  {
-          strcpy (Ams_dest, My_node);
-          strcat (Ams_dest, "::");
-        }
-        strcat (Ams_dest, Dest);
+  case C_DESTINATION:
+    {
+      char* c;
+      length = cut_blanks (Dest);
+      Dest[length] = '\0';
+      upper_case (Dest);
+      c = (char*) strchr (Node, ':');
+      if (c) *c = '\0';
+      c = (char*) strchr (Node, ' ');
+      if (c) *c = '\0';
+      upper_case (Node);
+      if (strlen(Node))        {
+        strcpy (Ams_dest, Node);
+        strcat (Ams_dest, "::");
+      }
+      else  {
+        strcpy (Ams_dest, My_node);
+        strcat (Ams_dest, "::");
+      }
+      strcat (Ams_dest, Dest);
 
-        if (to_be_started (Dest))        {
-          upic_disable_command (MAIN_MENU, C_CONNECT);
-          upic_disable_command (MAIN_MENU, C_DISCONNECT);
-          upic_disable_command (MAIN_MENU, C_KILL);
-          upic_enable_command  (MAIN_MENU, C_START);
-          upic_set_cursor (MAIN_MENU, C_START, 0);
-        }
-        else        {
-          upic_enable_command  (MAIN_MENU, C_CONNECT);
-          upic_enable_command  (MAIN_MENU, C_DISCONNECT);
-          upic_enable_command  (MAIN_MENU, C_KILL);
-          upic_disable_command (MAIN_MENU, C_START);
-          upic_set_cursor (MAIN_MENU, C_CONNECT, 0);
-        }
+      if (to_be_started (Dest))        {
+        upic_disable_command (MAIN_MENU, C_CONNECT);
+        upic_disable_command (MAIN_MENU, C_DISCONNECT);
+        upic_disable_command (MAIN_MENU, C_KILL);
+        upic_enable_command  (MAIN_MENU, C_START);
+        upic_set_cursor (MAIN_MENU, C_START, 0);
       }
-      break;
-    case C_CONNECT:
-      if (!find_connect_with_name (Ams_dest))      {
-        UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
-        status = server_send_message (Ams_dest);
-        if (!(status & 1)) upic_signal_error (status, "");
-        else upic_write_message ("Connecting...", "");
+      else        {
+        upic_enable_command  (MAIN_MENU, C_CONNECT);
+        upic_enable_command  (MAIN_MENU, C_DISCONNECT);
+        upic_enable_command  (MAIN_MENU, C_KILL);
+        upic_disable_command (MAIN_MENU, C_START);
+        upic_set_cursor (MAIN_MENU, C_CONNECT, 0);
       }
-      else
-        upic_write_message ("Process already connected", "");
-      break;
-    case C_DISCONNECT:
-      UpiBufferPutInt (AckBuffer, UPIF_DISCONNECT_PROCESS);
+    }
+    break;
+  case C_CONNECT:
+    if (!find_connect_with_name (Ams_dest))      {
+      UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
       status = server_send_message (Ams_dest);
       if (!(status & 1)) upic_signal_error (status, "");
-      else upic_write_message ("Disconnecting...", "");
-      break;
-    case C_KILL:
-      kill_process (Dest);
-      break;
-    case C_START:
-      upic_disable_command (MAIN_MENU, C_START);
-      upic_set_cursor (MAIN_MENU, C_DESTINATION, 0);
-      upic_end_update ();
-      start (Dest, Node);
-      break;
-    case C_LOCK:
-      if (Cursor_locked) unlock_cursor (0);
-      else lock_cursor (0);
-      break;
-    case C_SAVE_CONF:
-      save_conf();
-      break;
-    case C_RESTORE_CONF:
-      start_restore_conf();
-      break;
-    case C_EXIT:
-      End = 1;
-      break;
-    default:
-      {
-        SrvConnect* cc  = find_connect_with_id(menu, &rid);
-        c = find_connect_with_id(command, &remote_id);
-        if (c)    {
-          upic_set_cursor_and_mark(c->current_menu,c->current_command,c->current_param,cc==c ? 1 : 0);
-        }
+      else upic_write_message ("Connecting...", "");
+    }
+    else
+      upic_write_message ("Process already connected", "");
+    break;
+  case C_DISCONNECT:
+    UpiBufferPutInt (AckBuffer, UPIF_DISCONNECT_PROCESS);
+    status = server_send_message (Ams_dest);
+    if (!(status & 1)) upic_signal_error (status, "");
+    else upic_write_message ("Disconnecting...", "");
+    break;
+  case C_KILL:
+    kill_process (Dest);
+    break;
+  case C_START:
+    upic_disable_command (MAIN_MENU, C_START);
+    upic_set_cursor (MAIN_MENU, C_DESTINATION, 0);
+    upic_end_update ();
+    start (Dest, Node);
+    break;
+  case C_LOCK:
+    if (Cursor_locked) unlock_cursor (0);
+    else lock_cursor (0);
+    break;
+  case C_SAVE_CONF:
+    save_conf();
+    break;
+  case C_RESTORE_CONF:
+    start_restore_conf();
+    break;
+  case C_EXIT:
+    End = 1;
+    break;
+  default:
+    {
+      SrvConnect* cc  = find_connect_with_id(menu, &rid);
+      c = find_connect_with_id(command, &remote_id);
+      if (c)    {
+        upic_set_cursor_and_mark(c->current_menu,c->current_command,c->current_param,cc==c ? 1 : 0);
       }
+    }
     }
     break;
   case PARAMS_MENU:
     break;
   case KEYBOARD_MENU:  {
-      Kbd_request* r = Mbx_header.requests.first;
-      if (r)   {
-        Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
-        length = cut_blanks (Input_text);
-        Input_text[length] = 0;
-        fprintf (c->f, "%s\n", Input_text);
-        Event_kbd = EVENT_KBD + r->lun;
-        rearm_kbd_mbx (Event_kbd, c->chan);
-        list_remove_entry ((Link*) r);
-      }
-      if (!(r = Mbx_header.requests.first))  {
-	upic_back_space (KEYBOARD_MENU);
-      }
-      else  {
-        Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
-        upic_change_titles (2, c->name, "", "");
-      }
+    Kbd_request* r = Mbx_header.requests.first;
+    if (r)   {
+      Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
+      length = cut_blanks (Input_text);
+      Input_text[length] = 0;
+      fprintf (c->f, "%s\n", Input_text);
+      Event_kbd = EVENT_KBD + r->lun;
+      rearm_kbd_mbx (Event_kbd, c->chan);
+      list_remove_entry ((Link*) r);
     }
-    break;
+    if (!(r = Mbx_header.requests.first))  {
+      upic_back_space (KEYBOARD_MENU);
+    }
+    else  {
+      Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
+      upic_change_titles (2, c->name, "", "");
+    }
+                       }
+                       break;
   case LOGFILE_MENU:
     switch (command)  {
-    case C_LOG_ACTIVATE:
-      LogFile_active = 1;
-      log_show ();
-      upic_disable_command(LOGFILE_MENU, C_LOG_ACTIVATE);
-      upic_enable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
-      upic_enable_command (LOGFILE_MENU, C_LOG_RESET);
-      upic_net_start_log ();
-      break;
-    case C_LOG_DISACTIVATE:
-      LogFile_active = 0;
-      upic_enable_command  (LOGFILE_MENU, C_LOG_ACTIVATE);
-      upic_disable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
-      upic_disable_command (LOGFILE_MENU, C_LOG_RESET);
-      upic_net_stop_log ();
-      break;
-    case C_LOG_RESET:
-      log_reset ();
-      break;
-    case C_LOG_NAME:
-      log_set_name (LogFile_name);
-      break;
-    case C_LOG_SHOW:
-      log_get_name ();
-      upic_refresh_param_page (LOGFILE_MENU);
-      log_show ();
-      break;
-    case C_LOG_DUMP_DTB:
-      database_dump ();
-      upic_net_flush_log ();
-      break;
+  case C_LOG_ACTIVATE:
+    LogFile_active = 1;
+    log_show ();
+    upic_disable_command(LOGFILE_MENU, C_LOG_ACTIVATE);
+    upic_enable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
+    upic_enable_command (LOGFILE_MENU, C_LOG_RESET);
+    upic_net_start_log ();
+    break;
+  case C_LOG_DISACTIVATE:
+    LogFile_active = 0;
+    upic_enable_command  (LOGFILE_MENU, C_LOG_ACTIVATE);
+    upic_disable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
+    upic_disable_command (LOGFILE_MENU, C_LOG_RESET);
+    upic_net_stop_log ();
+    break;
+  case C_LOG_RESET:
+    log_reset ();
+    break;
+  case C_LOG_NAME:
+    log_set_name (LogFile_name);
+    break;
+  case C_LOG_SHOW:
+    log_get_name ();
+    upic_refresh_param_page (LOGFILE_MENU);
+    log_show ();
+    break;
+  case C_LOG_DUMP_DTB:
+    database_dump ();
+    upic_net_flush_log ();
+    break;
     }
     break;
   default:    
@@ -1090,9 +1090,9 @@ void delete_menu (SrvConnect* connect)  {
       upic_get_window_position(m->local_id,&carr[i].col,&row);
     }
     else
-      {
-	carr[i].col = 9999999;
-      }
+    {
+      carr[i].col = 9999999;
+    }
     carr[i].data    = c;
     strcpy(carr[i].s,c->source);
   }

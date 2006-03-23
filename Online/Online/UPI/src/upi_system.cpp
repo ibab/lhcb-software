@@ -231,7 +231,6 @@ int upic_save_setup ()    {
 int upic_restore_setup ()   {
   FILE* f;
   static char format[] = {'%','d','%','*','s','\n','\0'};
-  
   if (!(f = fopen ("upi.setup", "r"))) return UPI_SS_NORMAL;
   fscanf (f, format, &Sys.items_per_page);
   fscanf (f, format, &Sys.mode);
@@ -245,27 +244,10 @@ int upic_restore_setup ()   {
 }
 
 /*--------------------------------------------------*/
-#ifdef VAX
 int upic_signal_error (int code,const char* text) {
-  short len;
-  int flag;
-  int status;
-  static char Buffer[133];
-  static $DESCRIPTOR (Dbuffer, Buffer);
-  int p_code = code;
-
-  flag = 15;
-  status = LIB$SYS_GETMSG (&p_code, &len, &Dbuffer, &flag, 0);
-  if (len > 132) len = 132;
-  Buffer[len] = '\0';
-  if (len + strlen(text) <= 132) strcat (Buffer, text);
-  return (upic_write_message (Buffer, text));
-#else
-int upic_signal_error (int, const char* ) {
-#endif
-  return UPI_SS_NORMAL;
+  const char* errmsg = ::lib_rtl_error_message(code);
+  return upic_write_message (errmsg, text);
 }
-
 
 /*--------------------------------------------------*/
 #ifdef REMOTE

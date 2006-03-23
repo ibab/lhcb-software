@@ -2,17 +2,16 @@
 upi_net.c
 Created           : 15-DEC-1989 by 
 */
-
-//----------------------------------------------------------------------------
 #include "WT/wt_facilities.h"
 #include "WT/wtdef.h"
 #include "AMS/amsdef.h"
 #include "UPI/upidef.h"
+#include "RTL/rtl.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-static int Opened = 0;
+static int  Opened = 0;
 static char My_node[80];
 static char Source_name[80];
 
@@ -34,19 +33,14 @@ static struct {
 
 static int MessageLogActive = false;
 static int MessageLogMaxLogs = 100;
+
 //----------------------------------------------------------------------------
 int upic_net_init (const char* name, char** server, WtRoutine handler, WtRoutine broadcast)  {
   if (Opened) upic_net_close();
   Opened = 1;
   int status = wtc_init();
   wtc_subscribe (WT_FACILITY_AMS,handler,broadcast);
-
-  if (name)    {
-    status = amsc_init (name);
-  }
-  else  {
-    status = amsc_init (0);
-  }
+  status = (name) ? amsc_init (name) : amsc_init (0);
   if ( server )  {
     *server = 0;
     char srv[128];
@@ -142,11 +136,9 @@ int upic_net_send_to_name (const char* buffer, int bytes, const char* dest)  {
 
 //----------------------------------------------------------------------------
 int upic_net_who_am_i (char* name)   {
-  char* n = (char*)getenv("$PROCESS");
-  if( n )  {
-    strcpy(name, n);
-    return 0;
-  }
+  char n[64];
+  ::lib_rtl_get_process_name(n,sizeof(n));
+  strcpy(name,n);
   return 1;
 }
 
@@ -158,12 +150,12 @@ void upic_net_stop_log ()   {
 /*-------------------------------------------------------------------------*/
 void upic_net_start_log ()   {
   MessageLog* log;
-  int logs;
-  const char* text = (char*) getenv ("UPIMSG$MAX_LOGS");
+  const char* text = (char*)getenv ("UPIMSG_MAX_LOGS");
   if (text)  {
-    logs = 0;
+    int logs = 0;
     sscanf (text, "%d", &logs);
-    if (logs > 0) MessageLogMaxLogs = logs;
+    if (logs > 0) 
+      MessageLogMaxLogs = logs;
     else   {
       upic_net_stop_log ();
       return;
@@ -174,22 +166,16 @@ void upic_net_start_log ()   {
   MessageLogActive = 1;
 }
 /*-------------------------------------------------------------------------*/
-void upic_net_log_spy (int status, int bytes)
-/*-------------------------------------------------------------------------*/
-{
-  MessageLog* log;
-
+void upic_net_log_spy (int status, int bytes)   {
+  MessageLog* log = 0;
   if (!MessageLogActive) return;
-
-  if (MessageLogs.logs > MessageLogMaxLogs)
-  {
+  if (MessageLogs.logs > MessageLogMaxLogs)  {
     log = MessageLogs.first;
     list_remove_entry ((Link*) log);
   }
-  else MessageLogs.logs++;
-
-  log = (MessageLog*) list_add_entry ((Linked_list*) &MessageLogs,
-                                      sizeof (MessageLog));
+  else 
+    MessageLogs.logs++;
+  log = (MessageLog*) list_add_entry ((Linked_list*)&MessageLogs,sizeof (MessageLog));
   log->isSpy = 1;
   log->status = status;
   log->total = bytes;
@@ -197,16 +183,15 @@ void upic_net_log_spy (int status, int bytes)
 }
 /*-------------------------------------------------------------------------*/
 void upic_net_log_last_message (int status, int bytes, const char* buffer)  {
-  MessageLog* log;
+  MessageLog* log = 0;
   if (!MessageLogActive) return;
   if (MessageLogs.logs > MessageLogMaxLogs)  {
     log = MessageLogs.first;
     list_remove_entry ((Link*) log);
   }
-  else MessageLogs.logs++;
-
-  log = (MessageLog*) list_add_entry ((Linked_list*) &MessageLogs,
-                                      sizeof (MessageLog));
+  else 
+    MessageLogs.logs++;
+  log = (MessageLog*) list_add_entry ((Linked_list*) &MessageLogs,sizeof (MessageLog));
   log->status = status;
   log->total = bytes;
   strcpy (log->sourceName, Source_name);
@@ -215,40 +200,28 @@ void upic_net_log_last_message (int status, int bytes, const char* buffer)  {
 }
 /*-------------------------------------------------------------------------*/
 void upic_net_flush_log ()  {
-  MessageLog* log;
-  char* fileName;
-  FILE* f;
-  unsigned char c;
-  int byte;
-  int bytes;
-
-  fileName = (char*) getenv ("UPIMSG$LOG_FILE");
+  const char* fileName = (char*) getenv ("UPIMSG_LOG_FILE");
   if (!fileName) return;
 
-  f = fopen (fileName, "w+");
+  FILE* f = fopen (fileName, "w+");
   if (!f) return;
 
-  log = MessageLogs.first;
+  MessageLog* log = MessageLogs.first;
   while (log)  {
     if (log->isSpy) fprintf (f, "Spy ");
     else            fprintf (f, "    ");
     fprintf (f, "stat 0x%x ", log->status);
-
     fprintf (f, "from [%s] ", log->sourceName);
-
     fprintf (f, "bytes %d : ", log->total);
-
     if (!log->isSpy)    {
-      bytes = log->total;
+      int bytes = log->total;
       if (bytes > DUMMYLENGTH+1) bytes = DUMMYLENGTH;
-      for (byte = 0; byte < bytes; byte++)
-      {
-        c = log->buffer[byte];
+      for (int byte = 0; byte < bytes; byte++)      {
+        unsigned char c = log->buffer[byte];
         fprintf (f, "%2.2x ", c);
       }
-      for (byte = 0; byte < bytes; byte++)
-      {
-        c = log->buffer[byte];
+      for (int byte = 0; byte < bytes; byte++)      {
+        unsigned char c = log->buffer[byte];
         c &= 0x7f;
         if (c < 0x20) c = '.';
         fprintf (f, "%c", c);
