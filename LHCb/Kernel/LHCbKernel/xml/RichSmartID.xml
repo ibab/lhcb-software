@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.25 2006-02-01 14:41:36 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.26 2006-03-23 01:17:20 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -35,15 +35,15 @@
             init = "0" 
             type = "bitfield">
             <bitfield desc="The pixel sub-row (Alice mode) number" length="3"  name="pixelSubRow"   setMeth="FALSE" />
-            <bitfield desc="The pixel row number"                  length="5"  name="pixelRow"      setMeth="FALSE" />
             <bitfield desc="The pixel column number"               length="5"  name="pixelCol"      setMeth="FALSE" />
+            <bitfield desc="The pixel row number"                  length="5"  name="pixelRow"      setMeth="FALSE" />
             <bitfield desc="The HPD number in column"              length="5"  name="HPDNumInCol"   setMeth="FALSE" />
             <bitfield desc="The HPD column number"                 length="5"  name="HPDCol"        setMeth="FALSE" />
             <bitfield desc="The RICH panel"                        length="1"  name="panel"         setMeth="FALSE" type="Rich::Side"         />
             <bitfield desc="The RICH Detector"                     length="1"  name="rich"          setMeth="FALSE" type="Rich::DetectorType" />
             <bitfield desc="Pixel sub-row field is set"            length="1"  name="pixelSubRowIsSet"   setMeth="FALSE" />
-            <bitfield desc="Pixel row field is set"                length="1"  name="pixelRowIsSet"      setMeth="FALSE" />
             <bitfield desc="Pixel column field is set"             length="1"  name="pixelColIsSet"      setMeth="FALSE" />
+            <bitfield desc="Pixel row field is set"                length="1"  name="pixelRowIsSet"      setMeth="FALSE" />
             <bitfield desc="HPD number in column field is set"     length="1"  name="HPDNumInColIsSet"   setMeth="FALSE" />
             <bitfield desc="HPD column field is set"               length="1"  name="HPDColIsSet"        setMeth="FALSE" />
             <bitfield desc="RICH panel field is set"               length="1"  name="panelIsSet"         setMeth="FALSE" />
@@ -290,22 +290,6 @@
         </method>
 
         <method 
-            name = "setPixelCol"
-            desc = "Set the RICH HPD pixel column identifier"  
-            type = "void">
-            <arg 
-                const = "TRUE" 
-                name  = "col" 
-                type  = "int"  />
-            <code>
-#ifdef RICHDEBUG
-               checkRange(col,HPDNumInColBits-pixelColBits,"PixelColumn");
-#endif
-               setData( col, pixelColBits, pixelColMask, pixelColIsSetMask );
-            </code>
-        </method>
-
-        <method 
             name = "setPixelRow"
             desc = "Set the RICH HPD pixel row identifier"  
             type = "void">
@@ -315,9 +299,25 @@
                 type  = "int"  />
             <code>
 #ifdef RICHDEBUG
-               checkRange(row,pixelColBits-pixelRowBits,"PixelRow");
+               checkRange(row,HPDNumInColBits-pixelRowBits,"PixelRow");
 #endif
                setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask );
+            </code>
+        </method>
+
+        <method 
+            name = "setPixelCol"
+            desc = "Set the RICH HPD pixel column identifier"  
+            type = "void">
+            <arg 
+                const = "TRUE" 
+                name  = "col" 
+                type  = "int"  />
+            <code>
+#ifdef RICHDEBUG
+               checkRange(col,pixelRowBits-pixelColBits,"PixelColumn");
+#endif
+               setData( col, pixelColBits, pixelColMask, pixelColIsSetMask );
             </code>
         </method>
 
@@ -331,7 +331,7 @@
                 type  = "int"  />
             <code>
 #ifdef RICHDEBUG
-               checkRange(pixelSubRow,pixelRowBits-pixelSubRowBits,"PixelSubRow");
+               checkRange(pixelSubRow,pixelColBits-pixelSubRowBits,"PixelSubRow");
 #endif
                setData( pixelSubRow, pixelSubRowBits, pixelSubRowMask, pixelSubRowIsSetMask );
             </code>
