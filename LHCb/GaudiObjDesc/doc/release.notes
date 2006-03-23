@@ -3,6 +3,11 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 =============================GaudiObjDesc v9r4============================
+!2006-03-23 Stefan
+- Adding Container and ConstContainer typedefs also for classes inheriting
+  from ContainedObject
+- Adding instantiations and selections for const containers to dictionaries
+
 !2006-03-15 Stefan
 - introducing two new typedefs
         typedef KeyedContainer<T,Containers::HashMap> Container;

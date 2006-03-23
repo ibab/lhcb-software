@@ -90,11 +90,17 @@ class genClassDicts:
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
               # include template instantiation
               self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+              self.sDictInstances = self.conc(self.sDictInstances, '%s<const %s> m_%s_const_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
               # Add container id to class id
               if cl['attrs'].has_key('id'):
                 sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x60000)
               # include element for selection file
               kc =  '  <class name="%s<%s,Containers::KeyedObjectManager<Containers::hashmap> >"%s>' % (tcname, t1name,sid)
+	      kc += ' <field name="m_cont" transient="true"/>'
+	      kc += ' <field name="m_random" transient="true"/>'
+	      kc += ' </class>'
+              self.sClassSelections = self.conc(self.sClassSelections, kc)              
+              kc =  '  <class name="%s<const %s,Containers::KeyedObjectManager<Containers::hashmap> >"%s>' % (tcname, t1name,sid)
 	      kc += ' <field name="m_cont" transient="true"/>'
 	      kc += ' <field name="m_random" transient="true"/>'
 	      kc += ' </class>'
@@ -129,11 +135,13 @@ class genClassDicts:
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
               # include template instantiation
               self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+              self.sDictInstances = self.conc(self.sDictInstances, '%s<const %s> m_%s_const_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
               # Add container id to class id
               if cl['attrs'].has_key('id'):
                 sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x20000)
               # include element for selection file
               self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<%s>"%s/>' % (tcname, t1name,sid))
+              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s<const %s>"%s/>' % (tcname, t1name,sid))
             else:
               # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)

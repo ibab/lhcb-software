@@ -454,6 +454,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += '  // typedef for KeyedContainer of %s\n' % classname
       s += '  typedef KeyedContainer<%s, Containers::HashMap> Container;\n' % (classname)
       s += '  typedef KeyedContainer<const %s, Containers::HashMap> ConstContainer;\n' % (classname)
+    if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
+      self.addInclude('ObjectVector')
+      s += '// typedef for ObjectVector of %s\n' % classname
+      s += 'typedef ObjectVector<%s> Container;\n' % (classname)
+      s += 'typedef ObjectVector<const %s> ConstContainer;\n' % (classname)
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
