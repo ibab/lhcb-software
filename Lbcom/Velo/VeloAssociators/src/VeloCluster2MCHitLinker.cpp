@@ -1,4 +1,4 @@
-// $Id: VeloCluster2MCHitLinker.cpp,v 1.3 2006-03-17 16:09:36 szumlat Exp $
+// $Id: VeloCluster2MCHitLinker.cpp,v 1.4 2006-03-23 10:58:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,7 @@ DECLARE_ALGORITHM_FACTORY( VeloCluster2MCHitLinker );
 VeloCluster2MCHitLinker::VeloCluster2MCHitLinker( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_asctName ( LHCb::VeloClusterLocation::Default + "2MCHit" ),
+    m_asctName ( LHCb::VeloClusterLocation::Default + "2MCHits" ),
     m_inputClusters ( LHCb::VeloClusterLocation::Default ),
     m_inputFEs ( LHCb::MCVeloFELocation::Default )
 { }

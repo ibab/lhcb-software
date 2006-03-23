@@ -1,4 +1,4 @@
-// $Id: VeloCluster2MCParticleLinker.cpp,v 1.1 2006-03-17 16:09:36 szumlat Exp $
+// $Id: VeloCluster2MCParticleLinker.cpp,v 1.2 2006-03-23 10:58:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -74,7 +74,7 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   //
-  asctTool associator(evtSvc(), LHCb::VeloClusterLocation::Default+"2MCHit");
+  asctTool associator(evtSvc(), LHCb::VeloClusterLocation::Default+"2MCHits");
   const Table* table=associator.direct();
   if(!table){
     error()<< " ==> Empty table with associations " <<endmsg;
