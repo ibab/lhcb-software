@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.5 2006-03-13 16:26:46 erodrigu Exp $
+// $Id: TrackAcceptance.cpp,v 1.6 2006-03-23 17:58:10 mtobin Exp $
 // Include files
 
 // from Gaudi
@@ -99,7 +99,8 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
     MCHit* aMCHit = mcp2mchLink.first( mcPart );
     if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
     while( 0 != aMCHit ) {
-      std::string hitType = m_velo->type( aMCHit->sensDetID() );    
+      const DeVeloSensor* sens=m_velo->sensor( aMCHit->sensDetID() );    
+      std::string hitType = sens->type();
       if ( hitType == "VeloR" ) { ++nVeloRHits; }
       else { ++nVeloPhiHits; }
       
