@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.12 2006-03-21 08:35:01 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.13 2006-03-23 10:53:53 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -412,7 +412,7 @@ StatusCode MuonDigitToRawBuffer::execute() {
       unsigned int odenumber=(*iODE);
       //build header == channels fired for each ode
       unsigned int firedChannels=firedInODE[odenumber-1];     
-      info()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
+      debug()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
       // //fill in bank.....
       unsigned char fired=(unsigned char) firedChannels;
       bank<<fired;      
