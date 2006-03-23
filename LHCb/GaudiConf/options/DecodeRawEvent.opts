@@ -25,6 +25,7 @@ DataOnDemandSvc.Algorithms += {
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
-createVeloClusters.DecodeToVeloClusters = true;
+createVeloClusters.DecodeToVeloClusters     = true;
+createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
