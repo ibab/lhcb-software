@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.5 2006-03-22 23:50:30 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.6 2006-03-23 13:49:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -41,7 +41,7 @@ RichHighOccHPDSuppressionTool( const std::string& type,
   declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100  );
   declareProperty( "OccCutScaleFactor", m_scale      = 4    );
   declareProperty( "MemoryFactor",      m_memory     = 20   );
-  declareProperty( "PrintXML",          m_printXML   = true );
+  declareProperty( "PrintXML",          m_printXML   = false );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
 
 }
