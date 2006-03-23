@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.16 2006-02-20 09:55:38 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.17 2006-03-23 07:58:12 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,7 @@
 // from DAQEvent
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
+#include "Event/ODINDefinitions.h"
 
 // local
 #include "BooleInit.h"
@@ -106,14 +107,14 @@ StatusCode BooleInit::execute() {
 
   // Add the ODIN bank (EDMS 704084)
   unsigned int odin[8];
-  odin[0] = evt->runNumber();
-  odin[1] = 0; // Orbit number
-  odin[2] = 0xFFFFFFFF & evt->evtNumber();
-  odin[3] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
-  odin[4] = 0xFFFFFFFF & evt->evtTime();
-  odin[5] = 0xFFFFFFFF & (evt->evtTime()) >> 32;
-  odin[6] = 0; // Error bits [31-24], Detector status [23-0]
-  odin[7] = 0; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
+  odin[LHCb::ODIN::RunNumber]   = evt->runNumber();
+  odin[LHCb::ODIN::OrbitNumber] = 0; // Orbit number
+  odin[LHCb::ODIN::L0EventIDLo] = 0xFFFFFFFF & evt->evtNumber();
+  odin[LHCb::ODIN::L0EventIDHi] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
+  odin[LHCb::ODIN::GPSTimeLo]   = 0xFFFFFFFF & evt->evtTime();
+  odin[LHCb::ODIN::GPSTimeHi]   = 0xFFFFFFFF & (evt->evtTime()) >> 32;
+  odin[LHCb::ODIN::Word6]       = 0; // Error bits, Detector status
+  odin[LHCb::ODIN::Word7]       = 0; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
   
   LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+32, odin);
   raw->adoptBank(odinBank, true);

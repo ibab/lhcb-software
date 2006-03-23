@@ -4,6 +4,13 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r1 2006-03-23 =========================
+! 2006-03-23 - Marco Cattaneo
+ - In BooleInit, use ODINDefinitions.h to get ODIN bank structure
+
+! 2006-03-17 - Mark Tobin and Kurt Rinnert
+ - Adapt BuildMCTrackInfo to use new DeVelo interface
+
 !========================== DigiAlg v4r0 2006-03-13 =========================
 ! 2006-03-13 - Chris Jones
  - Changes to options to fix up links for extended RICH data objects in
