@@ -2,11 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r3 2006-03-23 =========================
 ! 2006-03-23 - Chris Jones
  - Invert order of pixel row and column in RIchSmartID so "natural" sorting
    matches the order the pixels come out the HPD electronics
 
-!===================== LHCbKernel v6r3 2006-03-22 =========================
 ! 2006-03-22 - Marco Cattaneo
  - Add Kernel/OTDataFunctor.h, moved from OTSimulation
 
