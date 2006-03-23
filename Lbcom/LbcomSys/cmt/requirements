@@ -8,10 +8,10 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r0  L0          # Olivier Callot
-use L0DU              v7r0  L0          # Olivier Deschamps   
-use L0MuonTrigger     v5r0  L0          # Andrei Tsarogorodtsev, Julien Cogan
-use PuVeto            v7r0  L0          # Marko Zupan
+use L0Calo            v9r1  L0          # Olivier Callot
+use L0DU              v7r1  L0          # Olivier Deschamps   
+use L0MuonTrigger     v5r1  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use PuVeto            v7r1  L0          # Marko Zupan
 #use L0Checker         v3r2p1 L0         # Eduardo Rodrigues
 
 # Outer tracker
@@ -19,15 +19,15 @@ use OTMonitor         v2r0  OT          # Jan Amoraal
 use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r2  Rich        # Chris Jones
+use RichDAQ           v3r3  Rich        # Chris Jones
 use RichTools         v2r2  Rich        # Chris Jones
 use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker
 use STDAQ             v2r4  ST          # Matt Needham
-use STTools           v2r0  ST          # Matt Needham
+use STTools           v2r1  ST          # Matt Needham
 use STAlgorithms      v1r1  ST          # Matt Needham
-use STAssociators     v1r0  ST          # Matt Needham
+use STAssociators     v1r1  ST          # Matt Needham
 use STCheckers        v1r1  ST          # Matt Needham
 
 # Calorimeter
@@ -36,7 +36,7 @@ use CaloAssociators   v6r0  Calo        # Olivier Deschamps
 
 # Velo
 use VeloDAQ           v3r1  Velo        # Kurt Rinnert
-use VeloAssociators   v2r0  Velo        # Tomasz Szumlak
+use VeloAssociators   v2r1  Velo        # Tomasz Szumlak
 
 # Common
 use Associators       v3r1  Associators # Matt Needham

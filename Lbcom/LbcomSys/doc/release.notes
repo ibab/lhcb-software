@@ -6,16 +6,20 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r1>2006-03-17 LbcomSys v4r1</A></H1><PRE>
+</PRE><H1><A NAME=v4r1>2006-03-23 LbcomSys v4r1</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.
 
-- Packages modified: VeloDAQ v3r1,STDAQ v2r4, STAlgorithms v1r1, STCheckers v1r1,
-                     Associators v3r1
+- Packages modified: VeloDAQ v3r1, RichDAQ v3r3, STDAQ v2r4, STAlgorithms v1r1,
+    STCheckers v1r1, STTools v2r1, STAssociators v1r1, Associators v3r1,
+    VeloAssociators v2r1, L0DU v7r1, L0MuonTrigger v5r1, PuVeto v7r1, L0Calo v9r1
 
 - In VeloDAQ v3r1:
   . Bug fixes in handling of interstrip position bits and threshold bit
   . Definition of less-than for VeloCluster, now same as for InternalVeloCluster
   . Various cosmetic fixes
+
+- In RichDAQ v3r3:
+  . Add pixel cluster suppression tool
 
 - In STDAQ v2r4:
   . Changes to switch strip mapping for hybrids that are flipped. 
@@ -23,13 +27,35 @@ This version uses Gaudi v18r2 and LHCb v20r1.
 
 - In STAlgorithms v1r1:
   . Move STSummaryCreator to Rec/RecAlgs. Removes package dependency on RecEvent
+  . round rather than floor ADC
 
 - In STCheckers v1r1:
   . Minor tuning of STEffMonitor, STClusterResolution
   . Remove STNoiseClusterMonitor replace with STClusterClassification
 
+- In STTools v2r1:
+  . Fix bug in PositionTool
+
 - In Associators v3r1:
   . Add possibility to also make Linker table
+
+- In VeloAssociators v2r1:
+  . VeloCluster2MCHitLinker and VeloCluster2MCParticleLinker
+
+- In STAssociators v1r1:
+  . Update options for new event model
+
+- In L0DU v7r1:
+  . change default property : fillRaw = true in L0DU.cpp
+
+- In L0MuonTrigger v5r1:
+  . Bug fix when encoding/decoding the L0ProcessorData, MuonCandidates
+
+- In PuVeto v7r1:
+  . Adapt to ne wDeVelo interface
+
+- In L0Calo v9r1:
+  . Fix CaloCandidate type in L0CaloCandidateFromRaw, plus related changes
 
 </PRE><H1><A NAME=v4r0>2006-03-13 LbcomSys v4r0</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r0.
