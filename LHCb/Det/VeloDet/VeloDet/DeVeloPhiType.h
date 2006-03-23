@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.13 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.14 2006-03-23 11:05:38 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -118,7 +118,7 @@ public:
   }
   
   /// The angle of the strip wrt to the x axis in the local frame
-  inline double angleOfStrip(unsigned int strip, double fraction) const{
+  inline double angleOfStrip(unsigned int strip, double fraction=0.) const{
     double effectiveStrip=fraction+static_cast<double>(strip);
     if (m_nbInner > strip) {
       return (effectiveStrip*m_innerPitch) + m_innerTilt;
@@ -130,7 +130,7 @@ public:
 
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
-  inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction) const{
+  inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction=0.) const{
     return localPhiToGlobal(angleOfStrip(strip,fraction));
   }
   

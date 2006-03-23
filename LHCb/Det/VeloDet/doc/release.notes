@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.102 2006-03-22 13:11:06 cattanem Exp $
+! $Id: release.notes,v 1.103 2006-03-23 11:05:38 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-03-23 - Mark Tobin
+ - Added reverse iterator access to sensor containers
 
 !========================= VeloDet v10r2 2006-03-22 ========================
 ! 2006-03-21 - Mark Tobin

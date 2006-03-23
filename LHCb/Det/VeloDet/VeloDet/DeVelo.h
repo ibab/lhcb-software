@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.37 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVelo.h,v 1.38 2006-03-23 11:05:38 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -87,63 +87,124 @@ public:
   
   /// Return iterator corresponding to first sensor
   inline std::vector<DeVeloSensor*>::const_iterator sensorsBegin() const {
-    return m_sensorsBegin;
+    return m_vpSensor.begin();
   }
 
   /// Return iterator corresponding to last sensor
   inline std::vector<DeVeloSensor*>::const_iterator sensorsEnd() const {
-    return m_sensorsEnd;
+    return m_vpSensor.end();
   }
   
   /// Return iterator corresponding to first non-pile up sensor
   inline std::vector<DeVeloSensor*>::const_iterator rPhiSensorsBegin() const {
-    return m_rPhiSensorsBegin;
+    return m_vpSensor.begin()+m_nPileUpSensors;
   }
 
   /// Return iterator corresponding to last non-pile up sensor
   inline std::vector<DeVeloSensor*>::const_iterator rPhiSensorsEnd() const {
-    return m_rPhiSensorsEnd;
+    return m_vpSensor.end();
   }
   
   /// Return iterator corresponding to first R sensor
   inline std::vector<DeVeloRType*>::const_iterator rSensorsBegin() const {
-    return m_rSensorsBegin;
+    return m_vpRSensor.begin();
   }
 
   /// Return iterator corresponding to last R sensor
   inline std::vector<DeVeloRType*>::const_iterator rSensorsEnd() const {
-    return m_rSensorsEnd;
+    return m_vpRSensor.end();
   }
   
   /// Return iterator corresponding to first Phi sensor
   inline std::vector<DeVeloPhiType*>::const_iterator phiSensorsBegin() const {
-    return m_phiSensorsBegin;
+    return m_vpPhiSensor.begin();
   }
 
   /// Return iterator corresponding to last Phi sensor
   inline std::vector<DeVeloPhiType*>::const_iterator phiSensorsEnd() const {
-    return m_phiSensorsEnd;
+    return m_vpPhiSensor.end();
   }
   
   /// Return iterator corresponding to first pile up sensor
   inline std::vector<DeVeloSensor*>::const_iterator pileUpSensorsBegin() const {
-    return m_pileUpSensorsBegin;
+    return m_vpSensor.begin();
   }
 
   /// Return iterator corresponding to last pile up sensor
   inline std::vector<DeVeloSensor*>::const_iterator pileUpSensorsEnd() const {
-    return m_pileUpSensorsEnd;
+    return m_vpSensor.begin()+m_nPileUpSensors;
   }
   
   /// Return iterator corresponding to first pile up sensor
   inline std::vector<DeVeloRType*>::const_iterator pileUpRSensorsBegin() const {
-    return m_pileUpRSensorsBegin;
+    return m_vpPUSensor.begin();
   }
 
   /// Return iterator corresponding to last pile up sensor
   inline std::vector<DeVeloRType*>::const_iterator pileUpRSensorsEnd() const {
-    return m_pileUpRSensorsEnd;
+    return m_vpPUSensor.end();
   }
+  
+  /// Return reverse iterator corresponding to first sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator sensorsReverseBegin() const {
+    return m_vpSensor.rbegin();
+  }
+
+  /// Return reverse iterator corresponding to last sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator sensorsReverseEnd() const {
+    return m_vpSensor.rend();
+  }
+  
+  /// Return reverse iterator corresponding to first non-pile up sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator rPhiSensorsReverseBegin() const {
+    return m_vpSensor.rbegin();
+  }
+
+  /// Return reverse iterator corresponding to last non-pile up sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator rPhiSensorsReverseEnd() const {
+    return m_vpSensor.rend()+m_nPileUpSensors;
+  }
+  
+  /// Return reverse iterator corresponding to first R sensor
+  inline std::vector<DeVeloRType*>::const_reverse_iterator rSensorsReverseBegin() const {
+    return m_vpRSensor.rbegin();
+  }
+
+  /// Return reverse iterator corresponding to last R sensor
+  inline std::vector<DeVeloRType*>::const_reverse_iterator rSensorsReverseEnd() const {
+    return m_vpRSensor.rend();
+  }
+  
+  /// Return reverse iterator corresponding to first Phi sensor
+  inline std::vector<DeVeloPhiType*>::const_reverse_iterator phiSensorsReverseBegin() const {
+    return m_vpPhiSensor.rbegin();
+  }
+
+  /// Return reverse iterator corresponding to last Phi sensor
+  inline std::vector<DeVeloPhiType*>::const_reverse_iterator phiSensorsReverseEnd() const {
+    return m_vpPhiSensor.rend();
+  }
+  
+  /// Return reverse iterator corresponding to first pile up sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator pileUpSensorsReverseBegin() const {
+    return m_vpSensor.rend()+m_nPileUpSensors;
+  }
+
+  /// Return reverse iterator corresponding to last pile up sensor
+  inline std::vector<DeVeloSensor*>::const_reverse_iterator pileUpSensorsReverseEnd() const {
+    return m_vpSensor.rend();
+  }
+  
+  /// Return reverse iterator corresponding to first pile up sensor
+  inline std::vector<DeVeloRType*>::const_reverse_iterator pileUpRSensorsReverseBegin() const {
+    return m_vpPUSensor.rbegin();
+  }
+
+  /// Return reverse iterator corresponding to last pile up sensor
+  inline std::vector<DeVeloRType*>::const_reverse_iterator pileUpRSensorsReverseEnd() const {
+    return m_vpPUSensor.rend();
+  }
+  
   
   /** Access to a strip's geometry, for Panoramix
       from strip number and R sensor number, returns Z, R and a phi range.
@@ -173,6 +234,21 @@ public:
 
   /// give access to sensor for given sensor number
   const DeVeloPhiType* phiSensor(unsigned int sensorNumber) const;
+
+  /// give access to sensor for given LHCb::VeloChannelID
+  const DeVeloSensor* sensor(LHCb::VeloChannelID channel) const {
+    return sensor(channel.sensor());
+  }
+
+  /// give access to sensor for given LHCb::VeloChannelID
+  const DeVeloRType* rSensor(LHCb::VeloChannelID channel) const {
+    return rSensor(channel.sensor());
+  }
+
+  /// give access to sensor for given LHCb::VeloChannelID
+  const DeVeloPhiType* phiSensor(LHCb::VeloChannelID channel) const {
+    return phiSensor(channel.sensor());
+  }
 
   // public condition related methods 
 
@@ -268,20 +344,6 @@ private:
   double m_zVertex;
 
   std::map<unsigned int,bool> m_validSensors;//< Map of all valid sensors
-
-  std::vector<DeVeloSensor*>::const_iterator m_sensorsBegin;
-  std::vector<DeVeloSensor*>::const_iterator m_sensorsEnd;
-  std::vector<DeVeloSensor*>::const_iterator m_rPhiSensorsBegin;
-  std::vector<DeVeloSensor*>::const_iterator m_rPhiSensorsEnd;
-  std::vector<DeVeloRType*>::const_iterator m_rSensorsBegin;
-  std::vector<DeVeloRType*>::const_iterator m_rSensorsEnd;
-  std::vector<DeVeloPhiType*>::const_iterator m_phiSensorsBegin;
-  std::vector<DeVeloPhiType*>::const_iterator m_phiSensorsEnd;
-  std::vector<DeVeloSensor*>::const_iterator m_pileUpSensorsBegin;
-  std::vector<DeVeloSensor*>::const_iterator m_pileUpSensorsEnd;
-  std::vector<DeVeloRType*>::const_iterator m_pileUpRSensorsBegin;
-  std::vector<DeVeloRType*>::const_iterator m_pileUpRSensorsEnd;
-  
 
   // condition caching
 

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.61 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.62 2006-03-23 11:05:38 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -130,19 +130,6 @@ StatusCode DeVelo::initialize() {
     detElemCount++;
   }
 
-  m_sensorsBegin = m_vpSensor.begin();
-  m_sensorsEnd   = m_vpSensor.end();
-  m_rSensorsBegin = m_vpRSensor.begin();
-  m_rSensorsEnd   = m_vpRSensor.end();
-  m_phiSensorsBegin = m_vpPhiSensor.begin();
-  m_phiSensorsEnd   = m_vpPhiSensor.end();
-  m_pileUpSensorsBegin = m_vpSensor.begin();
-  m_pileUpSensorsEnd = m_vpSensor.begin()+m_nPileUpSensors; 
-  m_pileUpRSensorsBegin = m_vpPUSensor.begin();
-  m_pileUpRSensorsEnd = m_vpPUSensor.end();
-  m_rPhiSensorsBegin = m_vpSensor.begin()+m_nPileUpSensors;
-  m_rPhiSensorsEnd   = m_vpSensor.end();
-    
   // Check indices are correct
   if(msg.level() == MSG::VERBOSE) {
     for(unsigned int i=0; m_RIndex.size()>i; i++){
