@@ -26,7 +26,7 @@
 	name    = "typeName" 
 	type    = "std::string">
       </method>
-      <attribute desc="Type of trigger, from L0:L0Type" name="type" setMeth="FALSE" type="int"/>
+      <attribute desc="Type of trigger, from L0DUBase::Type" name="type" setMeth="FALSE" type="int"/>
       <attribute desc="Calo Cell ID. To access MC information..." name="ID" setMeth="FALSE" type="LHCb::CaloCellID"/>
       <attribute desc="integer version of Et." name="etCode" setMeth="FALSE" type="int"/>
       <attribute desc="Transverse energy" name="et" setMeth="FALSE" type="double"/>

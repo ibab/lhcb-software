@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.53 2006-03-22 12:57:42 cattanem Exp $
+$Id: release.notes,v 1.54 2006-03-23 00:02:09 odescham Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!======================== L0Event v15r1 2006-03-21 ========================
+!======================== L0Event v15r1 2006-02-22 ========================
+! 2006-03-22 - Olivier Deschamps
+ - update L0CaloCandidate.xml Doxygen
+
 ! 2006-03-21 - Olivier Deschamps
  - improve L0DUBase.h to please L0Muon 
 
