@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.cpp,v 1.4 2005-12-16 20:13:50 gcorti Exp $
+// $Id: MCDecayCounter.cpp,v 1.5 2006-03-23 12:04:11 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,8 @@ StatusCode MCDecayCounter::execute() {
   
   // Find decay as described in MCDecayFinder
   const LHCb::MCParticle *mcpart = NULL;
-  std::vector<LHCb::MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
+  LHCb::MCParticle::ConstVector mcparts(kmcparts->begin(), kmcparts->end());
+
   while( m_mcFinder->findDecay( mcparts, mcpart ) ) {
     m_nMCFound++;
     if( m_debug ) {
