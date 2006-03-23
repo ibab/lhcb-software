@@ -209,7 +209,6 @@ void lock_cursor (SrvConnect* connect);
 void save_conf();
 int restore_conf(int fac,int param);
 void start_restore_conf();
-void end_restore_conf();
 void unlock_cursor (SrvConnect* connect);
 void dldec (SrvConnect* connect);
 void dlend (SrvConnect* connect);
@@ -279,13 +278,10 @@ void log_set_name (const char* name);
 void database_dump ();
 /*-------------------------------------------------------------------------*/
 
-/*-------------------------------------------------------------------------*/
-//static int   Updating = 0;
 static UpiBuffer GetBuffer = 0;
 static UpiBuffer AckBuffer = 0;
-//static int   Frame = 0;
+static FILE* restore_file = 0;
 static int restoring_configuration = 0;
-static FILE *restore_file;
 typedef void (*SrvFunc)(SrvConnect*);
 static SrvFunc Actions[] = { 
   0,
@@ -433,9 +429,6 @@ extern "C" int upi_server (int argc, char** argv)  {
   GetBuffer = UpiBufferNew ();
   AckBuffer = UpiBufferNew ();
 
-#ifdef _WIN32
-  //_asm int 3
-#endif
   wtc_init();
   //wtc_subscribe (EVENT_SCR, (wt_callback_t)rearm_scr_mbx, 0);
   upic_attach_terminal();
@@ -1968,7 +1961,7 @@ void fetch_menu (Menu* menu, SrvConnect* connect) {
       upic_set_window_position(menu->id,maxcol,1);
     }
     if (restoring_configuration == 1)    {
-      wtc_insert(WT_FACILITY_USER1,0);
+      wtc_insert(WT_FACILITY_USER1,restore_file);
     }
   }
   if (first && !connect->prev && !connect->next)  {
@@ -2312,14 +2305,13 @@ void save_conf()  {
   return;
 }
 
-int restore_conf(int /* fac */, int /* par */)
-{
+int restore_conf(unsigned int /* fac */, void* par)   {
   char s[64];
   int mflag;
+  upic_write_message ("Restoring configuration","");
 again:
-  int status = fscanf(restore_file,"%s %d",s, &mflag);
-  if (status != EOF)
-  {
+  int status = fscanf((FILE*)par,"%s %d",s, &mflag);
+  if (status != EOF)  {
     UpiBufferPutInt (AckBuffer, UPIF_RECONNECT);
     status = server_send_message (s);
     if (!(status & 1))  {
@@ -2331,10 +2323,11 @@ again:
       sprintf(str,"Connecting to %s",s);
       upic_write_message (str,"");
     }
+    return 1;
   }
-  else  {
-    end_restore_conf();
-  }
+  wtc_remove(WT_FACILITY_USER1);
+  restoring_configuration = 0;
+  fclose((FILE*)par);
   return 1;
 }
 
@@ -2354,16 +2347,7 @@ void start_restore_conf()   {
     upic_write_message ("Cannot open configuration file", "");
     return;
   }
-  //wtc_subscribe(WT_FACILITY_USER1, 0, (wt_callback_t)restore_conf);
+  wtc_subscribe(WT_FACILITY_USER1, restore_conf, 0, restore_file);
   restoring_configuration = 1;
-  //wtc_insert(WT_FACILITY_USER1,0);
-}
-void end_restore_conf()
-{
-  wtc_remove(WT_FACILITY_USER1);
-  restoring_configuration = 0;
-  fclose(restore_file);
-  restore_file    = 0;
-  return;
 }
 #endif
