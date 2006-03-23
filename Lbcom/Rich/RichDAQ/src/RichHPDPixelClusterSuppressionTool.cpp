@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.7 2006-03-23 01:28:50 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.8 2006-03-23 21:32:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -188,4 +188,23 @@ PixelData::fillStream ( MsgStream & os ) const
   }
 
   return os;
+}
+
+void RichHPDPixelClusterSuppressionTool::
+PixelData::suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
+                        const unsigned int maxSize )
+{
+  LHCb::RichSmartID::Vector newSmartIDs;
+  newSmartIDs.reserve(smartIDs.size());
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
+        iS != smartIDs.end(); ++iS )
+  {
+    const int row = (*iS).pixelRow();
+    const int col = (*iS).pixelCol();
+    if ( isOn(row,col) && getCluster(row,col)->size() <= maxSize )
+    {
+      newSmartIDs.push_back(*iS);
+    }
+  }
+  smartIDs = newSmartIDs;
 }
