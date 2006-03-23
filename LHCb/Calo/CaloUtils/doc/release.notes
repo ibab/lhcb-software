@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.40 2006-03-22 18:25:06 odescham Exp $
+! $Id: release.notes,v 1.41 2006-03-23 07:36:15 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!========================== CaloInterfaces v6r0 2006-03-22  ===================
+!========================== CaloUtils v6r0 2006-03-22 ===================
 ! 2006-03-22 - Olivier Deschamps
  - Migration to LHCb v20/Gaudi v18
  - cmt/requirement : RecEvent dependency replaces CaloEvent 
