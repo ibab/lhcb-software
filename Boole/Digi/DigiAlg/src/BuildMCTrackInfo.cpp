@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.4 2006-03-21 17:34:16 mtobin Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.5 2006-03-23 13:18:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,13 +6,17 @@
 
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
-#include "Event/VeloDigit.h"
+#include "Event/VeloCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 
 #include "Linker/LinkedTo.h"
 #include "Event/MCProperty.h"
+
 // Det
+#include "VeloDet/DeVelo.h"
+#include "STDet/DeSTDetector.h"
+#include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTDetector.h"
 
 // local
@@ -25,9 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<BuildMCTrackInfo>          s_factory ;
-const        IAlgFactory& BuildMCTrackInfoFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( BuildMCTrackInfo );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -52,8 +54,7 @@ StatusCode BuildMCTrackInfo::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
-  
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );
   info() << "Number TT layer " << m_ttDet->layers().size() << endreq;
@@ -77,22 +78,26 @@ StatusCode BuildMCTrackInfo::initialize() {
 StatusCode BuildMCTrackInfo::execute() {
   debug() << "==> Execute" << endreq;
   
-  LinkedTo<LHCb::MCParticle, LHCb::VeloDigit> veloLink( eventSvc(), msgSvc(), 
-                                       LHCb::VeloDigitLocation::Default );
+  LinkedTo<LHCb::MCParticle, LHCb::VeloCluster> veloLink( eventSvc(), msgSvc(), 
+                                       LHCb::VeloClusterLocation::Default );
+  if( veloLink.notFound() ) return StatusCode::FAILURE;
   
   LinkedTo<LHCb::MCParticle, LHCb::STCluster> ttLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::TTClusters );
+  if( ttLink.notFound() ) return StatusCode::FAILURE;
   
   LinkedTo<LHCb::MCParticle, LHCb::STCluster> itLink( eventSvc(), msgSvc(), 
                                      LHCb::STClusterLocation::ITClusters );
+  if( itLink.notFound() ) return StatusCode::FAILURE;
   
   LinkedTo<LHCb::MCParticle, LHCb::OTTime> otLink( eventSvc(), msgSvc(), 
                                      LHCb::OTTimeLocation::Default );
-  
-  LHCb::MCProperty* trackInfo = new LHCb::MCProperty();
-  put( trackInfo, LHCb::MCPropertyLocation::TrackInfo );  
+  if( otLink.notFound() ) return StatusCode::FAILURE;
   
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
+
+  LHCb::MCProperty* trackInfo = new LHCb::MCProperty();
+  put( trackInfo, LHCb::MCPropertyLocation::TrackInfo );  
 
   //== The array size is bigger than MCParticle.size() as the MCParticles are
   //== compressed, uninteresting particles were removed at the end of Brunel.
@@ -114,10 +119,10 @@ StatusCode BuildMCTrackInfo::execute() {
   unsigned int MCNum;
   
   //== particle-> VeloDigit links
-  LHCb::VeloDigits* veloDigs = get<LHCb::VeloDigits>( LHCb::VeloDigitLocation::Default);
+  LHCb::VeloClusters* veloClus = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default);
   
-  for ( LHCb::VeloDigits::const_iterator vIt = veloDigs->begin() ;
-        veloDigs->end() != vIt ; vIt++ ) {
+  for ( LHCb::VeloClusters::const_iterator vIt = veloClus->begin() ;
+        veloClus->end() != vIt ; vIt++ ) {
     int sensor = (*vIt)->channelID().sensor();
     const DeVeloSensor* sens=m_velo->sensor(sensor);
     part = veloLink.first( *vIt );

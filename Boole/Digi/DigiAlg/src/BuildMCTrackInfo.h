@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.h,v 1.1 2006-02-21 17:17:18 ocallot Exp $
+// $Id: BuildMCTrackInfo.h,v 1.2 2006-03-23 13:18:02 cattanem Exp $
 #ifndef BUILDMCTRACKINFO_H 
 #define BUILDMCTRACKINFO_H 1
 
@@ -6,10 +6,11 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "VeloDet/DeVelo.h"
-#include "STDet/DeSTDetector.h"
-#include "OTDet/DeOTStation.h"
 #include "Event/MCTrackInfoBits.h"
+
+class DeVelo;
+class DeSTDetector;
+class DeOTStation;
 
 /** @class BuildMCTrackInfo BuildMCTrackInfo.h
  *  Build the Reconstructable MCProperty table.
