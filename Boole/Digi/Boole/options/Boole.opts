@@ -148,8 +148,11 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "VeloAssociators" };
-RelationsVeloSeq.Members += { "VeloDigit2MCHitLinker" };
-RelationsVeloSeq.Members += { "VeloDigit2MCParticleLinker" };
+RelationsVeloSeq.Members += { "DecodeVeloRawBuffer" };
+DecodeVeloRawBuffer.DecodeToVeloClusters     = true;
+DecodeVeloRawBuffer.DecodeToVeloLiteClusters = false;
+RelationsVeloSeq.Members += { "VeloCluster2MCHitLinker" };
+RelationsVeloSeq.Members += { "VeloCluster2MCParticleLinker" };
 
 ApplicationMgr.DLLs += { "STAssociators" };
 ITDigitLinker.detType   = "IT";

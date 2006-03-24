@@ -22,10 +22,10 @@ use GaudiObjDesc 	 v9r3        -no_auto_imports
 use RootHistCnv          v9r8        -no_auto_imports
 
 #-- Databases
-use XmlDDDB             v30r0   Det  -no_auto_imports
+use XmlDDDB             v30r1   Det  -no_auto_imports
 use XmlConditions        v1r5   Det  -no_auto_imports
 use ParamFiles	         v4r1        -no_auto_imports
-use FieldMap	         v4r6        -no_auto_imports
+use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v20r1)
@@ -36,18 +36,18 @@ use SimComponents        v1r1   Sim  -no_auto_imports
 use LbcomSys             v4r1        -no_auto_imports
 
 #-- BooleSys v11r1 packages
-use DigiAlg              v4r0   Digi -no_auto_imports
+use DigiAlg              v4r1   Digi -no_auto_imports
 
 # Calorimeter
-use CaloMoniDigi         v2r0   Calo -no_auto_imports
+use CaloMoniDigi         v2r1   Calo -no_auto_imports
 use CaloDigit            v2r1   Calo -no_auto_imports
 
 # Velo
-use VeloSimulation       v2r0   Velo -no_auto_imports
-use VeloAlgorithms       v4r0   Velo -no_auto_imports
+use VeloSimulation       v2r1   Velo -no_auto_imports
+use VeloAlgorithms       v4r1   Velo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation         v3r0   OT   -no_auto_imports
+use OTSimulation         v3r1   OT   -no_auto_imports
 
 # Muon
 use MuonAlgs             v6r0   Muon -no_auto_imports

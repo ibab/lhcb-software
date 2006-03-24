@@ -36,6 +36,7 @@ MoniL0Seq.Members += { "L0Monitor" };
 // Velo
 MoniVELOSeq.Members += {
                          "VeloSimMoni",
+                         "VeloDigit2MCHitLinker",
                          "VeloDigiMoni",
                          "VeloClusterMoni"
                         };
@@ -54,9 +55,16 @@ MoniTTSeq.Members += { "STDigitChecker/TTDigitChecker" };
 MoniTTSeq.Members += { "STClusterChecker/TTClusterChecker" };
 
 ApplicationMgr.DLLs   += { "Associators" };
-#include "$ASSOCIATORSROOT/options/Brunel.opts"
-MoniITSeq.Members += { "STEffMonitor/ITEffMonitor" };
-MoniTTSeq.Members += { "STEffMonitor/TTEffMonitor" };
+//#include "$ASSOCIATORSROOT/options/Brunel.opts"
+MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
+MCP2ITMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCITHits";
+MoniITSeq.Members += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
+                      ,"STEffMonitor/ITEffMonitor" };
+
+MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
+MCP2TTMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCTTHits";
+MoniTTSeq.Members += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
+                      ,"STEffMonitor/TTEffMonitor" };
 
 // OT
 ApplicationMgr.DLLs += {"OTMonitor"};
