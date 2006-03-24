@@ -4,10 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r0 2006-03-23 ========================
 ! 2006-03-23 - Mark Tobin
  - Modified to work with new VeloDet interface
 
-!======================= TrackMCTools v2r0 2006-03-08 ========================
 ! 2006-03-08 - Eduardo Rodrigues
  - using new linkers tables for MCParticle-MCHit association
  - update to new VeloDet path
