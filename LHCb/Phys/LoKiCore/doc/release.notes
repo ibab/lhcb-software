@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.10 2006-03-14 18:57:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2006-03-24 17:23:26 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiCore v1r1 2006-03-24 =========================
+! 2006-03-24 - Marco Cattaneo
+ - Add explicit import=Boost to requirements, for Gaudi v18r3 migration
 
 ! 2006-03-14 - Vanya BELYAEV
  - LoKi/AddRef.h, 
@@ -102,6 +106,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.10  2006/03/14 18:57:00  ibelyaev
+!  v1r1 : add a lot of new utilities
+!
 ! Revision 1.9  2006/03/08 21:32:34  ibelyaev
 !  add WrongMass.h(.cpp)
 !
