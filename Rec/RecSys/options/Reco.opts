@@ -3,11 +3,12 @@
 //--------------------------------------------------------------
 Reco.DetectorList = { 
                       "VELO", 
-                     // "TT",
-                     // "IT",
-                      "Tr",
-                      "RICH",
-                      "CALO"
+                      "TT",
+                      "IT",
+                      "OT",
+                      "Tr"
+                     //,"RICH",
+                    , "CALO"
                      // ,"MUON"
                     };
 
@@ -19,21 +20,37 @@ RecoVELOSeq.Members += { "PatInitEvent"
                         ,"PatVeloRTracking"
                         ,"PatVeloSpaceTracking"
 };
+PatVeloRTracking.ChargeThreshold = 0.75;
 RecoVeloSeq.context = "HLT";
 
-// TT reconstruction (clustering)
-ApplicationMgr.DLLs += { "STAlgorithms" };
-RecoITSeq.Members   += { "ITClusterCreator", "ITSummaryCreator" };
-//#include "$ITALGORITHMSROOT/options/itRec.opts"
+// Decode also VeloClusters, needed for track fit
+RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters = true;
 
-// Tracking tools
-//ApplicationMgr.DLLs += { "TrFitter", "TrExtrapolator", "STTools" };
-ApplicationMgr.ExtSvc += { "TransportSvc" };
+ApplicationMgr.DLLs += { "STAlgorithms" };
+
+// TT clusters for pattern recognition and track fit
+RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
+                      ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+//                      ,"STSummaryCreator/TTSummaryCreator"
+};
+
+// IT clusters for pattern recognition and track fit
+RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
+                      ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+//                      ,"STSummaryCreator/ITSummaryCreator"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+ITSummaryCreator.detType     = "IT";
+
+// OTTimes for pattern recognition and track fit
+RecoOTSeq.Members += {"OTTimeCreator" };
 
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
 RecoTrSeq.Members += { 
-  //"RawBankToSTLiteClusterAlg/createITLiteClusters"
                       ,"PatTCoordFromRaw"
                       ,"PatForward"
 };
@@ -41,8 +58,17 @@ RecoTrSeq.Members += {
 // Next option to be removed when PatVeloTT is migrated and can run before
 ToolSvc.PatForwardTool.ValidateInTT = false;
 
-//RecoTrSeq.Members   += { "TrEventTracksFitter/FitFw" };
-FitFw.TrackContainer = "Rec/FitTrack/Forward";
+// Track fit
+ApplicationMgr.DLLs += { "TrackExtrapolators",
+                         "TrackProjectors",
+                         "TrackTools",
+                         "TrackFitter"
+                       };
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+//RecoTrSeq.Members += { "TrackEventFitter/FitForward" }; 
+FitForward.TracksInContainer  = "Rec/Track/Forward"; 
+FitForward.TracksOutContainer = "Rec/Track/Forward";
+
 
 // Seeding
 //ApplicationMgr.DLLs += { "Seeding" }; 
@@ -88,7 +114,6 @@ StoreBestTrack.InputTracks  = "Rec/FitTrack/Best";
 StoreBestTrack.OutputTracks = "Rec/Track/Best";
 
 // Rich, using Track
-ApplicationMgr.DLLs += { "TrackExtrapolators" };
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"

@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v3r0>2006-03-16 RecSys v3r0</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2006-03-23 RecSys v3r0</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.
 It is the first (incomplete) release for commissioning of the software for DC06.
 
