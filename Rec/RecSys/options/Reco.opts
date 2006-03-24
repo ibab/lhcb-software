@@ -7,7 +7,7 @@ Reco.DetectorList = {
                       "IT",
                       "OT",
                       "Tr"
-                     //,"RICH",
+                     ,"RICH",
                     , "CALO"
                      // ,"MUON"
                     };
