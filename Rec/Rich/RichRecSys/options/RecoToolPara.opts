@@ -61,7 +61,6 @@ ToolSvc.Offline.RichPixelCreator.ApplyPixelSuppression = true;
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/PixelSuppress" };
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills       = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc = 100;
-// Probably best somewhere between 4 and 5
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor = 4.5;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 */
@@ -69,11 +68,15 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 // Pixel rejection based on cluster finding
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/PixelSuppress" };
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills            = 20;
+ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor           = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc      = 200;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor      = 6;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor           = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxPixelClusterSize    = 10;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDOccForClustering = 10;
+ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxAverageHPDOccForClustering = 20;
+
+// Turn off XML printout 
+ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintXML = false;
 
 // ================================== Photon Creators ==========================================
 
