@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!====================== GENSER v1r121p3 ==================================
+! 2006-03-24 - Florence RANJARD
+ - requirements - use GaudiPolicy to get fflags with -O2
+
 !====================== GENSER v1r121p2 ================================
 ! 2006-02-06 - Florence RANJARD
  - requirements - link with liblhapdfdummy.a instead of lhaglue.o

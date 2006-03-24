@@ -1,10 +1,10 @@
 package GENSER
-version v1r121p2
+version v1r121p3
 
 branches doc cmt src
 
-
 use LCG_Settings v*
+use GaudiPolicy  v*
 
 include_path none
 
@@ -20,6 +20,7 @@ macro pythia_native_version "6_325.2"
 
 macro pythia_linkopts "$(GENSER_home)/libpythia$(pythia_native_version).a ${GENSER_home}/libdummy_pythia$(pythia_native_version).a"\
         WIN32         "/libpath:$(GENSER_home) pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
+
 
 macro photos_native_version "215.2"
 macro photos_linkopts " $(GENSER_home)/libphotos$(photos_native_version).a" \
