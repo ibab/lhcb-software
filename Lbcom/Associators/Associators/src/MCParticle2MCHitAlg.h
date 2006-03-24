@@ -24,9 +24,6 @@ public:
 
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-  /// Location of table in TES
-  std::string outputData() { return m_outputData; }
-  
 protected:
 
 private:

@@ -59,7 +59,7 @@ StatusCode MCParticle2MCHitAlg::execute()
   typedef Relation1D<MCParticle, MCHit> LocalDirectType;
 
   // create an association table
-  LocalDirectType* table = new LocalDirectType();
+  LocalDirectType* table = new LocalDirectType( int(0.5*mcHits->size()) );
 
   // loop over MCHits
   for(MCHits::const_iterator itHit = mcHits->begin();
@@ -70,31 +70,29 @@ StatusCode MCParticle2MCHitAlg::execute()
       return Error( "Failed retrieving MCHit" );
     }
     
-    // retrieve associated MCParticle
-    const MCParticle* mcPart = mcHit->mcParticle();
-
-    // relate in table 
-    table->relate(mcPart, mcHit);
+    // relate to associated MCParticle
+    table -> relate( mcHit->mcParticle(), mcHit );
   }
   
   // Register the table on the TES
-  put( table, outputData() );
-  
+  put( table, m_outputData );
+  debug() << "Relations table stored at " << m_outputData << endreq;
+
   // Produce also the Linker table if requested
   if ( m_makeLinker ) {
-    std::string linkPath = outputData();
+    std::string linkPath = m_outputData;
     if ( "/Event/Relations/" == linkPath.substr(0,17) )
-      linkPath = "/Event/Link/" + linkPath.substr(17);
+      linkPath = linkPath.substr(17);
     else if ( "Relations/" == linkPath.substr(0,10) )
-      linkPath = "/Event/Link/" + linkPath.substr(10);
+      linkPath = linkPath.substr(10);
     LinkerWithKey<MCParticle,MCHit> myLink( eventSvc(), msgSvc(), linkPath );
-    LocalDirectType::Range ran = table->relations();
-    for( LocalDirectType::Range::const_iterator it = ran.begin();
-         it != ran.end(); ++it ) {
-      myLink.link( it->to(), it->from(), 1. );
+    LocalDirectType::Range allRelations = table -> relations();
+    for( LocalDirectType::Range::const_iterator itRel = allRelations.begin();
+         itRel != allRelations.end(); ++itRel ) {
+      myLink.link( itRel->to(), itRel->from(), 1. );
     }
     debug() << "Linker table stored at " << linkPath << endreq;
   }
   
-  return StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS;
 };

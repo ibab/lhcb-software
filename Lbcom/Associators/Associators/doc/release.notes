@@ -2,6 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2006-03-24 - Eduardo Rodrigues
+ - small improvements to code
+
 !====================== Associators v3r1 2006-03-17 ========================
 ! 2006-03-17 - Eduardo Rodrigues
  - added possibility to create in addition the linker table
