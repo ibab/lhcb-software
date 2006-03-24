@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.33 2006-03-22 23:57:04 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.34 2006-03-24 15:09:13 cattanem Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -234,8 +234,6 @@ StatusCode L0CaloAlg::execute() {
   std::vector<L0Candidate> allPi0Local;
   std::vector<L0Candidate> allPi0Global;
 
-  int kk;
-
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allElectrons.push_back( L0Candidate( m_ecal ) );
     allPhotons.push_back(   L0Candidate( m_ecal ) );
@@ -409,20 +407,20 @@ StatusCode L0CaloAlg::execute() {
   
   //=== Store the perValidation candidates, only in Raw Event
 
-  for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     saveInRawEvent(  L0DUBase::Fiber::CaloElectron, allElectrons[kk] );
   }
-  for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk] );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
     saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron );
   }
-  for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     saveInRawEvent(  L0DUBase::Fiber::CaloPi0Local, allPi0Local[kk] );
   }
-  for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     saveInRawEvent(  L0DUBase::Fiber::CaloPi0Global, allPi0Global[kk] );
   }
 
