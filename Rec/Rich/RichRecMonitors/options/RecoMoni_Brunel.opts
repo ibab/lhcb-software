@@ -7,6 +7,9 @@ ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichMCTrackInfoTool/RichMCTrackInfoTool" };
 
+// Turn on HPD suppression warnings
+//ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintHPDSuppressions = true;
+
 // Pixel monitors
 CheckRICHSeq.Members += { 
   "RichPixelPositionMonitor/RiRecPixelPosMoni"

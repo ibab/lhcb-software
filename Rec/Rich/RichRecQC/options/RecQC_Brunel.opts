@@ -7,8 +7,8 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 
 // PID Monitors for all tracks combined
-#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
-#include "$RICHRECQCOPTS/pid/AllTracks_Para.opts"
+//#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
+//#include "$RICHRECQCOPTS/pid/AllTracks_Para.opts"
 
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
