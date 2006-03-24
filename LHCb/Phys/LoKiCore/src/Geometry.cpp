@@ -1,8 +1,11 @@
-// $Id: Geometry.cpp,v 1.1 2006-02-17 19:12:53 ibelyaev Exp $
+// $Id: Geometry.cpp,v 1.2 2006-03-24 16:39:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/17 19:12:53  ibelyaev
+//  add Cast and some other minor changes
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -191,7 +194,8 @@ StatusCode LoKi::Geometry::chi2
   }
   
   // delta^T*cov*delta 
-  value = ROOT::Math::Product( delta , cov ) ;
+  //value = ROOT::Math::Product( delta , cov ) ;
+  value = ROOT::Math::Similarity( delta , cov ) ;
   // 
   return StatusCode::SUCCESS ;
 } ;
@@ -234,7 +238,8 @@ StatusCode LoKi::Geometry::chi2
   }
   
   // delta^T*cov*delta 
-  value = ROOT::Math::Product( delta , cov ) ;
+  // value = ROOT::Math::Product( delta , cov ) ;
+  value = ROOT::Math::Similarity( delta , cov ) ;
   //
   return StatusCode::SUCCESS ;
 } ;
