@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.42 2006-03-23 10:10:43 cattanem Exp $
+# $Id: requirements,v 1.43 2006-03-24 13:44:06 jonrob Exp $
 #============================================================================
 
 package RichKernel
@@ -16,6 +16,7 @@ include_dirs $(RICHKERNELROOT)
 
 # ================ dependencies ==============================================
 use DetDesc     v*   Det
+use RichDet     v*   Det
 use LHCbKernel  v*   Kernel
 use GaudiAlg    v*
 use Boost       v*   LCG_Interfaces

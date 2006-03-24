@@ -4,7 +4,7 @@
  *
  *  Header file for RICH tool interface : IRichRadiatorTool
  *
- *  $Id: IRichRadiatorTool.h,v 1.3 2006-03-16 15:46:54 jonrob Exp $
+ *  $Id: IRichRadiatorTool.h,v 1.4 2006-03-24 13:44:05 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -27,7 +27,8 @@
 // from LHCbKernel
 #include "Kernel/RichRadiatorType.h"
 
-class RichRadIntersection;
+//class RichRadIntersection;
+#include "RichDet/RichRadIntersection.h"
 
 static const InterfaceID IID_IRichRadiatorTool ( "IRichRadiatorTool", 1, 0 );
 
