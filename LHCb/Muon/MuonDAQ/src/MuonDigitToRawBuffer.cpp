@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.13 2006-03-23 10:53:53 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.14 2006-03-24 11:03:21 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -412,7 +412,7 @@ StatusCode MuonDigitToRawBuffer::execute() {
       unsigned int odenumber=(*iODE);
       //build header == channels fired for each ode
       unsigned int firedChannels=firedInODE[odenumber-1];     
-      debug()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
+      //info()<<" fired channels "<<firedChannels<<" "<<odenumber<<endmsg;
       // //fill in bank.....
       unsigned char fired=(unsigned char) firedChannels;
       bank<<fired;      
@@ -812,7 +812,7 @@ std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
   //debug()<<"----- start a trigger sector cross ---------"<<endreq;
   //debug()<<TSPath<<" "<<TS->numberOfOutputSignal()<<endreq;
   //debug()<<" seq ";
-  std::vector<unsigned int>::iterator idebug;
+  //std::vector<unsigned int>::iterator idebug;
   //for(idebug=TSDigit.begin();idebug<TSDigit.end();idebug++){
   //  debug()<<" "<<*idebug;    
   //} 
@@ -826,8 +826,14 @@ std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
     //debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;   
     //maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);   
     // work on sub sector 
-    std::vector<unsigned int> horiz[Nsub];
-    std::vector<unsigned int> hvert[Nsub];
+    if(Nsub>8){
+      err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
+      return list_of_pads;
+    
+    }
+
+    std::vector<unsigned int> horiz[8];
+    std::vector<unsigned int> hvert[8];
     // clear the memory;
 
     // start fill the sub sector matrices

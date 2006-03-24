@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.4 2006-03-21 08:35:02 asatta Exp $
+// $Id: MuonDigitToRawBuffer.h,v 1.5 2006-03-24 11:03:22 asatta Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 
@@ -60,6 +60,7 @@ void TilePrintOut(LHCb::MuonTileID digitTile);
   long m_TotODEBoard;  
   std::string basePath[5] ;
   unsigned int m_M1Tell1;
+  //unsigned int m_maxSubSectorInTS;
   
 };
 #endif // MUONDIGITTORAWBUFFER_H

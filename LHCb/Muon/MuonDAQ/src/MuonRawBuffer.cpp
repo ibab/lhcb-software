@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.3 2006-03-21 08:35:02 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.4 2006-03-24 11:03:22 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -424,8 +424,13 @@ std::vector<LHCb::MuonTileID> MuonRawBuffer::DoPad(std::vector<
       list_of_pads.push_back(t);      
     }    
     // work on sub sector 
-    std::vector<unsigned int> horiz[Nsub];
-    std::vector<unsigned int> hvert[Nsub];
+    if(Nsub>8){
+      err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
+      return list_of_pads;
+      
+    }
+    std::vector<unsigned int> horiz[8];
+    std::vector<unsigned int> hvert[8];
     // clear the memory;    
     // start fill the sub sector matrices
     std::vector<LHCb::MuonTileID>::iterator it;
