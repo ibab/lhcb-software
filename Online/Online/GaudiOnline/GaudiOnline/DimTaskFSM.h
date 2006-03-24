@@ -21,34 +21,27 @@ namespace LHCb  {
     * These FSMs look like this:
     *
     *                     +----------+                        
-    *                     |  OFFLINE |                      
+    *                     |  UNKNOWN |                      
     *                     +----------+                         
     *                         |    ^                  
-    *            DimTaskFSM() |    | disconnect()   
+    *            DimTaskFSM() |    | unload()
     *                         v    |                  
     *                     +----------+       +---------+
-    *                     | Inactive |<------+  Error  |<------+
-    *              +----->|          |---+   +---------+       |
-    *              |      +----------+   |                     |
-    *              |  error()            |                     |
-    *   terminate()|   ^     configure() |             error() |
-    *              |   |                 v                     |
-    *       +-------------+        +-------------+             |
-    *       |  Finalized  |        |  Configured |-------------+
-    *       +-------------+        +-------------+             |
-    *              |                     |                     |
-    *   finalize() |        initialize() |                     |
-    *              |                     |                     |
-    *              |      +---------+    |                     |
-    *              +------|  Ready  |<---+                     |
-    *                     |         |--------------------------+
-    *                     +---------+                          |
-    *                       |    ^                             |
-    *             enable()  |    |  disable()                  |
-    *                       v    |                             |
-    *                   +-------------+                        |
-    *                   |   Running   |------------------------+
-    *                   +-------------+
+    *                     | NOT_READY|<------+  ERROR  |<------+
+    *                     +----------+       +---------+       |
+    *                         |  ^                             |
+    *                         |  |                             |
+    *              configure()|  |reset()              error() |
+    *                         V  |                             |
+    *                     +----------+                         |
+    *                     | READY    |-------------------------+
+    *                     +----------+                         |
+    *                         |  ^                             |
+    *                 start() |  | stop()                      |
+    *                         V  |                             |
+    *                     +-----------+                        |
+    *                     | RUNNING   |------------------------+
+    *                     +-----------+
     *
     * 
     * @author  M.Frank
@@ -65,7 +58,7 @@ namespace LHCb  {
       PRESTOP, 
       FINALIZE,
       TERMINATE,
-      DISCONNECT, 
+      UNLOAD, 
       ERROR
     };
 
@@ -89,7 +82,7 @@ namespace LHCb  {
     /// Print error message (returns FAILURE)
     StatusCode printErr(int flag, const std::string& msg);
     /// Declare FSM state
-    void declareState(const std::string& new_state);
+    StatusCode declareState(const std::string& new_state);
     /// Printout overload
     size_t print(const char* fmt,...);
     /// Print overload
@@ -121,7 +114,7 @@ namespace LHCb  {
     /// Terminate application, but do not exit process  (Finalized  -> Inactive)
     virtual StatusCode terminate(); 
     /// Disconnect process and exit                     (Inactive   -> OFFLINE )
-    virtual StatusCode disconnect();
+    virtual StatusCode unload();
     /// Invoke transition to error state                ( ****      -> Error   )
     virtual StatusCode error();
   };

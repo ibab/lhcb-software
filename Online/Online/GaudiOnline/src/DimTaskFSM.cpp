@@ -6,14 +6,11 @@
 #include <cstdarg>
 #include "dis.hxx"
 
-#define ST_NAME_NONE        "----"
-#define ST_NAME_ERROR       ""
-#define ST_NAME_OFFLINE     "autoconfig" // "offline"
-#define ST_NAME_CONFIGURED  ST_NAME_NONE
-#define ST_NAME_INITIALIZED "configured"
-#define ST_NAME_PAUSED      "paused"
-#define ST_NAME_STOPPED     "stopped"
-#define ST_NAME_RUNNING     "processing"
+#define ST_NAME_UNKNOWN     "UNKNOWN"
+#define ST_NAME_ERROR       "ERROR"
+#define ST_NAME_NOT_READY   "NOT_READY"
+#define ST_NAME_READY       "READY"
+#define ST_NAME_RUNNING     "RUNNING"
 
 namespace  {
   /** @class Command
@@ -31,19 +28,18 @@ namespace  {
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
-      std::cout << "Dim command:" << cmd << std::endl;
+      std::cout << "Received DIM command:" << cmd << std::endl;
       if      ( cmd == "config"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
-      else if ( cmd == "init"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
-      else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::ENABLE);
-      else if ( cmd == "pause"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
-      else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::FINALIZE);
-      else if ( cmd == "disconnect" ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISCONNECT);
+      else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
+      else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
+      else if ( cmd == "reset"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::TERMINATE);
+      else if ( cmd == "unload"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
     }
   };
 }
 
 LHCb::DimTaskFSM::DimTaskFSM(bool loop) 
-: m_stateName(ST_NAME_OFFLINE), m_haveEventLoop(loop)
+: m_stateName(ST_NAME_UNKNOWN), m_haveEventLoop(loop)
 {
   char txt[64];
   ::lib_rtl_get_process_name(txt, sizeof(txt));
@@ -53,6 +49,7 @@ LHCb::DimTaskFSM::DimTaskFSM(bool loop)
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   DimServer::start(m_procName.c_str());
+  declareState(ST_NAME_UNKNOWN);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
@@ -91,15 +88,11 @@ StatusCode LHCb::DimTaskFSM::printErr(int flag, const std::string& msg)  {
   return StatusCode::FAILURE;
 }
 
-void LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
+StatusCode LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
+  m_stateName = new_state;
   output(std::string("Declare state:"+new_state).c_str());
-  if ( new_state != ST_NAME_NONE )  {
-    m_stateName = new_state;
-    m_service->updateService((char*)m_stateName.c_str());
-  }
-  else  {
-    output(std::string("Declare state:"+new_state+" FAKE!!!").c_str());
-  }
+  m_service->updateService((char*)m_stateName.c_str());
+  return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::DimTaskFSM::cancel()  {
@@ -110,7 +103,7 @@ StatusCode LHCb::DimTaskFSM::cancel()  {
 void LHCb::DimTaskFSM::handle(const Event& ev)  {
   if(ev.eventtype == IocEvent)  {
     switch(ev.type) {
-      case DISCONNECT:  disconnect();                              return;
+      case UNLOAD:      unload();                                  return;
       case CONFIGURE:   config();                                  return;
       case INITIALIZE:  init();                                    return;
       case ENABLE:      enable();                                  return;
@@ -126,22 +119,18 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
 }
 
 StatusCode LHCb::DimTaskFSM::config()  {
-  declareState(ST_NAME_CONFIGURED);
-  // For the time being: continue to initialized
-  IOCSENSOR.send(this, INITIALIZE);
-  return StatusCode::SUCCESS;
+  return declareState(ST_NAME_READY);
 }
 	
 StatusCode LHCb::DimTaskFSM::init()  {
-  declareState(ST_NAME_INITIALIZED);
+  IOCSENSOR.send(this, ENABLE);
   return StatusCode::SUCCESS;
 }
 	
 StatusCode LHCb::DimTaskFSM::enable()  {
   m_continue = true;
-  declareState(ST_NAME_RUNNING);
   IOCSENSOR.send(this, PROCESS);
-  return StatusCode::SUCCESS;
+  return declareState(ST_NAME_RUNNING);
 }
 
 StatusCode LHCb::DimTaskFSM::rearm()  {
@@ -153,37 +142,29 @@ StatusCode LHCb::DimTaskFSM::process()  {
   if ( m_continue )  {
     rearm();
   }
-  if ( m_stateName != ST_NAME_ERROR )  {
-    declareState(ST_NAME_CONFIGURED);
-  }
   return StatusCode::SUCCESS;
 }
 	
 StatusCode LHCb::DimTaskFSM::disable()  {
   m_continue = false;
   cancel();
-  declareState(ST_NAME_INITIALIZED);
+  IOCSENSOR.send(this, FINALIZE);
   return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::DimTaskFSM::finalize()  {
   m_continue = false;
   cancel();
-  // For the time being: auto-terminate
-  IOCSENSOR.send(this, TERMINATE);
-  return StatusCode::SUCCESS;
+  return declareState(ST_NAME_READY);
 }
 
 StatusCode LHCb::DimTaskFSM::terminate()  {
-  declareState(ST_NAME_STOPPED);
-  // For the time being: auto-disconnect
-  IOCSENSOR.send(this, DISCONNECT);
-  return StatusCode::SUCCESS;
+  return declareState(ST_NAME_NOT_READY);
 }
 
-StatusCode LHCb::DimTaskFSM::disconnect()  {
-  declareState(ST_NAME_STOPPED);
-  exit(0);
+StatusCode LHCb::DimTaskFSM::unload()  {
+  declareState(ST_NAME_UNKNOWN);
+  ::exit(0);
   return StatusCode::SUCCESS;
 }
 

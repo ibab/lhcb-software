@@ -4,6 +4,7 @@
 #include <string>
 #include <cerrno>
 #include <cstdarg>
+#include <iostream>
 #include <fcntl.h>
 #ifdef _WIN32
 #include <winsock.h>
@@ -336,5 +337,10 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
 #endif
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
+  return 1;
+}
+
+extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
+  std::cout << "Executing empty test action ..... finished ......" << std::endl;
   return 1;
 }

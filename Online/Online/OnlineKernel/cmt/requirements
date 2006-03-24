@@ -2,7 +2,7 @@ package OnlineKernel
 
 branches  cmt doc src
 
-include_dirs $(ONLINEKERNELROOT)/OnlineKernel $(ONLINEKERNELROOT)/NEW
+include_dirs $(ONLINEKERNELROOT)/OnlineKernel
 use GaudiPolicy v*
 library       pthread_extern  ../thread/pthread.cpp
 macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
@@ -10,13 +10,12 @@ macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBU
 library       OnlineKernel ../src/WT/*.cpp   \
                            ../src/MBM/*.cpp  \
                            ../src/RTL/*.cpp  \
-                           ../src/PUBAREA/*.cpp  \
+                           ../src/PUBAREA/*.cpp \
                            ../src/TAN/*.cpp  \
                            ../src/AMS/*.cpp  \
                            ../src/SCR/*.cpp  \
                            ../src/CPP/*.cpp  \
                            ../src/NET/*.cpp
-
 
 macro_append  OnlineKernel_cppflags ' -I"/pthreads" '
 macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' \

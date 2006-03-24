@@ -59,12 +59,25 @@ static int error(const char* format, ...)  {
 extern "C" int OnlineDeamon(int argc, char** argv)  {
   int result = 0;
   RTL::CLI cli(argc, argv, help);
-  std::string dll = "", call = "";
+  std::string dll = "", call = "rtl_test_";
   std::vector<char*> arg;
   cli.getopt("dll",3,dll);
   cli.getopt("call",4,call);
-  if ( cli.getopt("debug",5) != 0 )
+  if ( cli.getopt("help",4)   != 0 )  {
+    std::cout << "usage: gentest.exe GaudiOnline.dll OnlineDeamon -option [-option]" << std::endl; 
+    std::cout << "    Invoke a routine hosted in a DLL                              " << std::endl;
+    std::cout << "                                                                  " << std::endl;
+    std::cout << "    -dll=<dll-name>          DLL hosting the routine to be called." << std::endl;
+    std::cout << "    -call=<call-name>        Name of the routine to be invoked." << std::endl;
+    std::cout << "                             signature: int (*action)(int argc, char** ergv)" << std::endl;
+    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    -args ....               Any option will be passes to <call-name>" << std::endl;
+    std::cout << "    " << std::endl;
+    return 1;
+  }
+  if ( cli.getopt("debug",5) != 0 ) {
     ::lib_rtl_start_debugger();
+  }
   arg.push_back("OnlineDeamon");
   for ( int i=0, use=0; i<argc; ++i ) {
     if ( 0 == strcmp(argv[i],"-args") && 0 == use ) {
@@ -84,7 +97,6 @@ extern "C" int OnlineDeamon(int argc, char** argv)  {
         if ( result&1 )  {
           printf("Starting DIM FSM....\n");
           LHCb::DimTaskFSM fsm;
-          IOCSENSOR.send(&fsm, LHCb::DimTaskFSM::CONFIGURE);
           return fsm.run();
         }
         return error("Failed to execute procedure: %s\n",call.c_str());
@@ -107,7 +119,16 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   if(cli.getopt("evtloop",6,evtloop)) p->setProperty("EventLoop",evtloop);
   if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty("MessageSvcType",msgsvc);
   if(cli.getopt("options",6,opts)   ) p->setProperty("JobOptionsPath",opts);
-
+  if ( cli.getopt("help",4)   != 0 )  {
+    std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
+    std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
+    std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
+    std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
+    std::cout << "    -options=<class-name>    Job options file name" << std::endl;
+    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    " << std::endl;
+    return 1;
+  }
   if ( cli.getopt("debug",5) != 0 )  {
     ::lib_rtl_start_debugger();
   }
