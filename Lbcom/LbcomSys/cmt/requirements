@@ -20,7 +20,7 @@ use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
 use RichDAQ           v3r3  Rich        # Chris Jones
-use RichTools         v2r2  Rich        # Chris Jones
+use RichTools         v2r3  Rich        # Chris Jones
 use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker

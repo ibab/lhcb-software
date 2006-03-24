@@ -6,13 +6,14 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r1>2006-03-23 LbcomSys v4r1</A></H1><PRE>
+</PRE><H1><A NAME=v4r1>2006-03-24 LbcomSys v4r1</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.
 
 - Packages modified: VeloDAQ v3r1, RichDAQ v3r3, STDAQ v2r4, STAlgorithms v1r1,
     STCheckers v1r1, STTools v2r1, STAssociators v1r1, Associators v3r1,
     VeloAssociators v2r1, L0DU v7r1, L0MuonTrigger v5r1, PuVeto v7r1, L0Calo v9r1
-
+    RichTools v2r3
+    
 - In VeloDAQ v3r1:
   . Bug fixes in handling of interstrip position bits and threshold bit
   . Definition of less-than for VeloCluster, now same as for InternalVeloCluster
