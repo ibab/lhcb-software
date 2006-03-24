@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.2 2006-03-01 09:33:14 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.3 2006-03-24 10:42:04 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -339,70 +339,141 @@ namespace __gnu_cxx
 
   /// Level0ID hash function
   template <> struct hash<RichDAQ::Level0ID>
-  { size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
   /// Level0ID hash function
   template <> struct hash<RichDAQ::Level0ID&>
-  { size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
   /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID>
-  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
   /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID&>
-  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
 
   /// Level1ID hash function
   template <> struct hash<RichDAQ::Level1ID>
-  { size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
   /// Level1ID hash function
   template <> struct hash<RichDAQ::Level1ID&>
-  { size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
   /// Level1ID hash function
   template <> struct hash<const RichDAQ::Level1ID>
-  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
   /// Level1ID hash function
   template <> struct hash<const RichDAQ::Level1ID&>
-  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
 
   /// Level1Input hash function
   template <> struct hash<RichDAQ::Level1Input>
-  { size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
   /// Level1Input hash function
   template <> struct hash<RichDAQ::Level1Input&>
-  { size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
   /// Level1Input hash function
   template <> struct hash<const RichDAQ::Level1Input>
-  { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
   /// Level1Input hash function
   template <> struct hash<const RichDAQ::Level1Input&>
-  { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
 
   /// HPDHardwareID hash function
   template <> struct hash<RichDAQ::HPDHardwareID>
-  { size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
   /// HPDHardwareID hash function
   template <> struct hash<RichDAQ::HPDHardwareID&>
-  { size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
   /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID>
-  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
   /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID&>
-  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
 
   /// HPDL1InputID hash function
   template <> struct hash<RichDAQ::HPDL1InputID>
-  { size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
   /// HPDL1InputID hash function
   template <> struct hash<RichDAQ::HPDL1InputID&>
-  { size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
   /// HPDL1InputID hash function
   template <> struct hash<const RichDAQ::HPDL1InputID>
-  { size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
   /// HPDL1InputID hash function
   template <> struct hash<const RichDAQ::HPDL1InputID&>
-  { size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
 
 }
+
+namespace GaudiUtils
+{
+
+  /// Level0ID Hash function
+  template <> struct Hash<RichDAQ::Level0ID>
+  { inline size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  /// Level0ID Hash function
+  template <> struct Hash<RichDAQ::Level0ID&>
+  { inline size_t operator() ( RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  /// Level0ID Hash function
+  template <> struct Hash<const RichDAQ::Level0ID>
+  { inline size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  /// Level0ID Hash function
+  template <> struct Hash<const RichDAQ::Level0ID&>
+  { inline size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1ID Hash function
+  template <> struct Hash<RichDAQ::Level1ID>
+  { inline size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1ID Hash function
+  template <> struct Hash<RichDAQ::Level1ID&>
+  { inline size_t operator() ( RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1ID Hash function
+  template <> struct Hash<const RichDAQ::Level1ID>
+  { inline size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1ID Hash function
+  template <> struct Hash<const RichDAQ::Level1ID&>
+  { inline size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1Input Hash function
+  template <> struct Hash<RichDAQ::Level1Input>
+  { inline size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input Hash function
+  template <> struct Hash<RichDAQ::Level1Input&>
+  { inline size_t operator() ( RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input Hash function
+  template <> struct Hash<const RichDAQ::Level1Input>
+  { inline size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input Hash function
+  template <> struct Hash<const RichDAQ::Level1Input&>
+  { inline size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+
+  /// HPDHardwareID Hash function
+  template <> struct Hash<RichDAQ::HPDHardwareID>
+  { inline size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  /// HPDHardwareID Hash function
+  template <> struct Hash<RichDAQ::HPDHardwareID&>
+  { inline size_t operator() ( RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  /// HPDHardwareID Hash function
+  template <> struct Hash<const RichDAQ::HPDHardwareID>
+  { inline size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  /// HPDHardwareID Hash function
+  template <> struct Hash<const RichDAQ::HPDHardwareID&>
+  { inline size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+
+  /// HPDL1InputID Hash function
+  template <> struct Hash<RichDAQ::HPDL1InputID>
+  { inline size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  /// HPDL1InputID Hash function
+  template <> struct Hash<RichDAQ::HPDL1InputID&>
+  { inline size_t operator() ( RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  /// HPDL1InputID Hash function
+  template <> struct Hash<const RichDAQ::HPDL1InputID>
+  { inline size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  /// HPDL1InputID Hash function
+  template <> struct Hash<const RichDAQ::HPDL1InputID&>
+  { inline size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+
+}
+
 #endif
 
 //---------------------------------------------------------------------------------
