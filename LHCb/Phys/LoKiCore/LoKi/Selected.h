@@ -1,8 +1,11 @@
-// $Id: Selected.h,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: Selected.h,v 1.3 2006-03-24 16:30:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:04  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
 // New Import: the core part of restructurized LoKi project
 //
@@ -144,7 +147,7 @@ namespace LoKi
                const OBJECT&      object ) 
     {
       // get the container 
-      Container& cont = m_map( name );
+      Container& cont = m_map[ name ];
       // append object to the container 
       cont.push_back( object );
       // return valid range 

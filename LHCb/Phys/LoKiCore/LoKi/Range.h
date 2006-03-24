@@ -1,8 +1,11 @@
-// $Id: Range.h,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: Range.h,v 1.3 2006-03-24 16:30:04 ibelyaev Exp $
 // ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:04  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
 // New Import: the core part of restructurized LoKi project
 //
@@ -68,6 +71,7 @@ namespace LoKi
   public:
     /// type for actual contained iterator
     typedef CONTAINER                                  Container              ;
+    typedef typename Container::value_type             value_type             ;
     typedef typename Container::const_iterator         iterator               ;
     typedef typename Container::const_iterator         const_iterator         ;
     typedef typename Container::const_reverse_iterator reverse_iterator       ;

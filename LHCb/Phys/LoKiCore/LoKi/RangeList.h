@@ -1,11 +1,8 @@
-// $Id: RangeList.h,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: RangeList.h,v 1.3 2006-03-24 16:30:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
 #define LOKI_RANGELIST_H 1
@@ -44,16 +41,16 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-11-18
    */
-  template<class TYPE>
+  template<class RANGE>
   class RangeList_ 
   {
   public:
-    typedef LoKi::NamedRange_<TYPE>               Range    ;
+    typedef RANGE                                 Range    ;
     typedef std::vector<Range>                    Ranges   ;
     typedef typename Ranges::const_iterator       iterator ;
     typedef typename Ranges::const_iterator const_iterator ;
   protected:
-    typedef RangeList_<TYPE>                      Self ;
+    typedef RangeList_<RANGE>                      Self ;
   public:
     
     /** Standard constructor
@@ -104,18 +101,32 @@ namespace LoKi
     /// add 
     void add ( const Range&      range ) { m_ranges.push_back( range ) ; }
     /// add 
-    void add ( const Ranges      range ) 
+    void add ( const Ranges&     range ) 
     { for ( iterator it = range.begin() ; range.end() != it ; ++it ){ add( *it ) ; } }
     /// add 
     void add ( const Self&       range ) { add( range.ranges() ) ; }
     
-    Self& operator+= ( const Range&  range )
-    { add ( range ) ; return *this ; }
-    Self& operator+= ( const Ranges& range ) 
-    { add ( range ) ; return *this ; }
-    Self& operator+= ( const Self&   range ) 
-    { add ( range ) ; return *this ; }
+    Self& operator+= ( const Range&  range ) { add ( range ) ; return *this ; }
+    Self& operator+= ( const Ranges& range ) { add ( range ) ; return *this ; }
+    Self& operator+= ( const Self&   range ) { add ( range ) ; return *this ; }
     
+  public:
+    
+    // RangeList + <OTHER>
+    template <class OTHER>
+    Self operator+( const OTHER& range ) const 
+    {
+      Self tmp(*this);
+      return tmp += range ;
+    } ;
+    
+    // Range + RangeList
+    friend Self operator+( const Range& range1 , 
+                           const Self&  range2 )
+    {
+      return Self(range1)+=range2 ;
+    } ;
+
   protected:
     
     /// access to the underlying storage 
@@ -130,37 +141,13 @@ namespace LoKi
   
 }; // end of namespace LoKi 
 
-template <class TYPE> 
-inline LoKi::RangeList_<TYPE> 
-operator+( const LoKi::RangeList_<TYPE>& range1 , 
-           const LoKi::RangeList_<TYPE>& range2 ) 
+// Range + Range
+template <class RANGE> 
+inline LoKi::RangeList_<RANGE> 
+operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 , 
+           const typename LoKi::RangeList_<RANGE>::Range& range2 ) 
 {
-  LoKi::RangeList_<TYPE> tmp ( range1 )  ;
-  return tmp += range2 ;
-};
-
-template <class TYPE> 
-inline LoKi::RangeList_<TYPE> 
-operator+( const LoKi::RangeList_<TYPE>&  range1 , 
-           const LoKi::NamedRange_<TYPE>& range2 ) 
-{
-  return range1 + LoKi::RangeList_<TYPE>( range2 ) ;
-};
-
-template <class TYPE> 
-inline LoKi::RangeList_<TYPE> 
-operator+( const LoKi::NamedRange_<TYPE>& range1 , 
-           const LoKi::RangeList_<TYPE>& range2 ) 
-{
-  return LoKi::RangeList_<TYPE> ( range1 ) += range2 ;
-};
-
-template <class TYPE> 
-inline LoKi::RangeList_<TYPE> 
-operator+( const LoKi::NamedRange_<TYPE>& range1 , 
-           const LoKi::NamedRange_<TYPE>& range2 ) 
-{
-  return  LoKi::RangeList_<TYPE>( range1 , range2 ) ;
+  return  LoKi::RangeList_<RANGE>( range1 , range2 ) ;
 };
 
 // ============================================================================
