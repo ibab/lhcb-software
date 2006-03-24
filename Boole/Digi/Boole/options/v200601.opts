@@ -51,10 +51,10 @@ SpilloverSelector.Input = {
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/11144100.500ev.09Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r2/11144100.100ev.24Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
 };  // B->J/Psi(mumu)Ks events with Gauss v24r1
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:0601-11144100.500ev.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:0601-11144100.100ev.24Mar.digi' TYP='POOL_ROOTTREE' OPT='REC'";
