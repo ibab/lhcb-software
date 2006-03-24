@@ -13,22 +13,31 @@ ITClusterChecker.detType = "IT";
 
 // IT and TT efficiency, to be compared to identical montoring in Boole
 ApplicationMgr.DLLs += { "Associators" };
-#include "$ASSOCIATORSROOT/options/Brunel.opts"
 Check.DetectorList  += { "TT" }; 
-CheckTTSeq.Members  += { "STEffMonitor/TTEffMonitor" };
+CheckTTSeq.Members  += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
+                       , "STEffMonitor/TTEffMonitor"
+                       };
+MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
+MCP2TTMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCTTHits";
 TTEffMonitor.fullDetail = true;
 
 Check.DetectorList  += { "IT" }; 
-CheckITSeq.Members  += { "STEffMonitor/ITEffMonitor" };
+CheckITSeq.Members  += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
+                       , "STEffMonitor/ITEffMonitor"
+                       };
+MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
+MCP2ITMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCITHits";
 ITEffMonitor.detType = "IT";
 ITEffMonitor.fullDetail = true;
+
+
 
 // OT - These histograms should be identical to those already done in Boole.
 ApplicationMgr.DLLs += { "OTMonitor" };
 Moni.DetectorList   += { "OT" }; 
 MoniOTSeq.Members   += { "OTTimeMonitor" };
-//Check.DetectorList  += { "OT" }; 
-//CheckOTSeq.Members  += { "OTTimeChecker" }; - needs MCHits
+Check.DetectorList  += { "OT" }; 
+CheckOTSeq.Members  += { "OTTimeChecker" }; // needs MCHits
 OTTimeChecker.fullDetail = true;
 
 // Tracking

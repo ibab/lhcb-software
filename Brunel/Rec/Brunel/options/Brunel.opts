@@ -21,9 +21,13 @@
 // Define DST content
 #include "$BRUNELOPTS/DstContent.opts"
 
-// Data on demand service for decoding RawEvent
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-#include "$STDOPTS/DecodeRawEvent.opts"
+// DLLs for RawEvent decoding
+ApplicationMgr.DLLs += { "VeloDAQ" };
+ApplicationMgr.DLLs += { "STDAQ" };
+ApplicationMgr.DLLs += { "OTDAQ" };
+ApplicationMgr.DLLs += { "CaloDAQ" };
+ApplicationMgr.DLLs += { "RichDAQ" };
+ApplicationMgr.DLLs += { "MuonDAQ" };
 
 //----------------------------------------------------------------------------
 // Instantiate all Brunel phases. MC specific phases not populated in this file

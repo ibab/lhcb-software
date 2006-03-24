@@ -6,13 +6,28 @@
 // Detectors to check
 //--------------------------------------------------------------
 Check.DetectorList = { 
+                       "Unpack"
+                     , "Pat"
                        // "Tr",
-                       "RICH"
+                     , "RICH"
                      };
 
 //--------------------------------------------------------------
 // Checking algorithms
 //--------------------------------------------------------------
+
+// Unpack Sim data
+ApplicationMgr.DLLs += { "SimComponents" };
+CheckUnpackSeq.Members += { "UnpackMCParticle" };
+CheckUnpackSeq.Members += { "UnpackMCVertex" };
+
+// Pattern recognition
+ApplicationMgr.DLLs += { "PatChecker" };
+CheckPatSeq.Members += {
+                         "PatLHCbID2MCParticle"
+                       , "PatTrack2MCParticle"
+                       , "PatChecker"
+                       };
 
 // Tracking
 //ApplicationMgr.DLLs += { "TrCheck" };

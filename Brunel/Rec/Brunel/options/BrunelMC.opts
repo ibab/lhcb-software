@@ -15,7 +15,7 @@
 
 // Create Relations needed for MC truth DST
 //#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
-//#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+//#include "$STASSOCIATORSROOT/options/STAssociators.opts"
 //#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
 //#include "$TRASSOCIATORSROOT/options/Brunel.opts"
 //#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
@@ -28,18 +28,10 @@
 // Additional massaging of relations for MC truth DST
 //----------------------------------------------------------------------
 Relations.DetectorList   = { 
-                             "Unpack"
+  //"Unpack" - moved to Check phase, bring back if needed for DST
                              // "Tr",
-                             // "Links"
                            };
 
-// Unpack Sim data
-ApplicationMgr.DLLs += { "SimComponents" };
-RelationsUnpackSeq.Members += { "UnpackMCParticle" };
-RelationsUnpackSeq.Members += { "UnpackMCVertex" };
 
-//ApplicationMgr.DLLs += { "AsctToLinker" };
 RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
 Tr2MCP.MakeLinker = true;
-// Convert Velo, IT, OT, Tr, Muon relations to Links
-RelationsLinksSeq.Members += { "ConvertToLinker" };

@@ -12,7 +12,7 @@
 // Geometry specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field046.cdf";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 EventSelector.Input = {
   //  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v11r0/0601-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
-  "DATAFILE='PFN:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r1/0601-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+  "DATAFILE='PFN:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r1/0601-11144100.100ev.24Mar.digi' TYP='POOL_ROOT' OPT='READ'"
 };  // B->J/Psi(mumu)Ks with Gauss v24r1, Boole v11r1
 
 //---------------------------------------------------------------------------
