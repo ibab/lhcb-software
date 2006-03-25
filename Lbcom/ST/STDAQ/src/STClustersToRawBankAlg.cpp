@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.3 2006-03-04 15:27:08 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.4 2006-03-25 15:51:13 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -205,6 +205,9 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
       if (iterMap != m_clusMap.end() ){
         STClustersOnBoard* tVec = iterMap->second;
         tVec->addCluster(*iterClus,aPair.second);
+        // look for consistancy...
+        //STTell1Board* board =  m_readoutTool->findByBoardID(aPair.first);
+        //STChannelID chan2 = board->DAQToOffline(aPair.second);
       }
       else {
 	 warning() << "Failed to find board in map " << endreq;
@@ -251,6 +254,7 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
     STCluster* aCluster = clusCont[iCluster].first;
     STChannelID aChan = aCluster->channelID();
     STClusterWord  aWord = STClusterWord(clusCont[iCluster].second,aCluster->interStripFraction() ,aCluster->size(),aCluster->highThreshold());
+
     bWriter << aWord;
   } // iCluster
 
