@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.15 2006-02-06 16:51:34 erodrigu Exp $
+// $Id: State.cpp,v 1.16 2006-03-26 18:23:34 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -71,11 +71,13 @@ SymMatrix6x6 State::posMomCovariance() const
   // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
   const TrackMatrix cov5D = covariance();
   SymMatrix6x6 cov6Dtmp   = SymMatrix6x6();
-  cov6Dtmp.Place_at(cov5D.Sub<2,2>(0,0),0,0);
-  cov6Dtmp.Place_at(cov5D.Sub<3,3>(0,2),0,3);
-  cov6Dtmp.Place_at(cov5D.Sub<3,3>(2,0),3,0);
-  cov6Dtmp.Place_at(cov5D.Sub<3,3>(2,2),3,3);
- 
+  //TODO: replace Matrix2x2 by SymMatrix2x2 as soon as SMatrix is fixed
+  cov6Dtmp.Place_at(cov5D.Sub<Matrix2x2>(0,0),0,0);
+  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed
+  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(0,2),0,3);
+  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(2,0),3,0);
+  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(2,2),3,3);
+
   // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
   // jacobian J = I 0
   //              0 j
@@ -94,8 +96,9 @@ SymMatrix6x6 State::posMomCovariance() const
   const double N2  = N*N;
 
   SymMatrix6x6 cov6D = SymMatrix6x6();
-  SymMatrix3x3 C_A = cov6Dtmp.Sub<3,3>(0,2);
-  SymMatrix3x3 C_D = cov6Dtmp.Sub<3,3>(3,5);
+  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed;
+  Matrix3x3 C_A = cov6Dtmp.Sub<Matrix3x3>(0,0);
+  Matrix3x3 C_D = cov6Dtmp.Sub<Matrix3x3>(3,3);
   Matrix3x3    C_B = Matrix3x3();
   Matrix3x3    jmat = Matrix3x3();
 
@@ -119,7 +122,8 @@ SymMatrix6x6 State::posMomCovariance() const
   C_B = jmat * C_B;
 
   cov6D.Place_at(C_A,0,0);
-  cov6D.Place_at(SHacks::Similarity<Matrix3x3,SymMatrix3x3>(jmat, C_D),3,3);
+  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed;
+  cov6D.Place_at(SHacks::Similarity<Matrix3x3,Matrix3x3>(jmat, C_D),3,3);
 
   cov6D(3,0) = C_B(0,0);
   cov6D(4,0) = C_B(1,0);
@@ -140,7 +144,7 @@ SymMatrix6x6 State::posMomCovariance() const
 Gaudi::SymMatrix3x3 State::errPosition() const
 {
   const Gaudi::SymMatrix6x6 temp = posMomCovariance();
-  return temp.Sub<3,3>(0,0);
+  return temp.Sub<SymMatrix3x3>(0,0);
 };
 
 //=============================================================================
@@ -149,7 +153,8 @@ Gaudi::SymMatrix3x3 State::errPosition() const
 Gaudi::SymMatrix3x3 State::errSlopes() const
 {
   Gaudi::SymMatrix3x3 err = Gaudi::SymMatrix3x3();
-  err.Place_at( m_covariance.Sub<2,2>(2,2),0,0 );
+  //TODO: replace Matrix2x2 by SymMatrix2x2 as soon as SMatrix is fixed
+  err.Place_at( m_covariance.Sub<Matrix2x2>(2,2),0,0 );
   return err;
 };
 
@@ -176,7 +181,7 @@ double State::errP2() const
 SymMatrix3x3 State::errMomentum() const
 {
   const SymMatrix6x6 temp = posMomCovariance(); 
-  return temp.Sub<3,3>(3,5);
+  return temp.Sub<SymMatrix3x3>(3,3);
 };
 
 //=============================================================================

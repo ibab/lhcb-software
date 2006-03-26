@@ -15,8 +15,9 @@
       stdVectorTypeDef = "TRUE"
       serializers = 'FALSE'>
 
-      <location name="Ideal"   place="Rec/Track/Ideal"/>
+      <location name="Ideal"   place="MC/Track/Ideal"/>
       <location name="Seed"    place="Rec/Track/Seed"/>
+      <location name="RZVelo"  place="Rec/Track/RZVelo"/>
       <location name="Velo"    place="Rec/Track/Velo"/>
       <location name="Forward" place="Rec/Track/Forward"/>
       <location name="VeloTT"  place="Rec/Track/VeloTT"/>
@@ -327,7 +328,7 @@
         desc    = 'Retrieve the 3D-position (+ errors) at the first state'
         const   = 'TRUE'>
         <arg type = 'Gaudi::XYZPoint' name='pos' />
-        <arg type = 'Gaudi::Matrix3x3' name='errPos' />
+        <arg type = 'Gaudi::SymMatrix3x3' name='errPos' />
       </method>
 
     <method
