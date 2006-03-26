@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.26 2006-03-07 13:20:04 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.27 2006-03-26 20:13:29 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -565,18 +565,48 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   const SolidBox *box = dynamic_cast<const SolidBox *>
     (geoCh->lvolume()->solid());
   float dx = box->xHalfLength();  float dy = box->yHalfLength();
-  
+
   //Refer the distances to Local system [should be the gap]
   Gaudi::XYZPoint new_entry = geoCh->toLocal(my_entry);
   Gaudi::XYZPoint new_exit  = geoCh->toLocal(my_exit);
 
+  Gaudi::XYZPoint LL(-dx,-dy,0);
+  Gaudi::XYZPoint LR(dx,-dy,0);
+  Gaudi::XYZPoint UL(dx,dy,0);
+  Gaudi::XYZPoint UR(-dx,dy,0);
+  
+  Gaudi::XYZPoint lowerleft = geoCh->toGlobal(LL);
+  Gaudi::XYZPoint lowerright  = geoCh->toGlobal(LR);
+  Gaudi::XYZPoint upperleft = geoCh->toGlobal(UL);
+  Gaudi::XYZPoint upperright  = geoCh->toGlobal(UR);
+
+
   //Define relative dimensions
   float mod_xen, mod_yen, mod_xex, mod_yex;
   if( dx && dy ) {
-    mod_xen = (new_entry.x()+dx)/(2*dx);
-    mod_yen = (new_entry.y()+dy)/(2*dy);
-    mod_xex = (new_exit.x()+dx)/(2*dx);
-    mod_yex = (new_exit.y()+dy)/(2*dy);
+    if((lowerleft.x()<lowerright.x())&&(lowerleft.y()<upperleft.y())){
+      mod_xen = (new_entry.x()+dx)/(2*dx);
+      mod_yen = (new_entry.y()+dy)/(2*dy);
+      mod_xex = (new_exit.x()+dx)/(2*dx);
+      mod_yex = (new_exit.y()+dy)/(2*dy);
+    }else if(lowerleft.x()<lowerright.x()&&(lowerleft.y()>upperleft.y())){
+      mod_xen = (new_entry.x()+dx)/(2*dx);
+      mod_yen = (-new_entry.y()+dy)/(2*dy);
+      mod_xex = (new_exit.x()+dx)/(2*dx);
+      mod_yex = (-new_exit.y()+dy)/(2*dy);
+    }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()>upperleft.y())){
+      mod_xen = (-new_entry.x()+dx)/(2*dx);
+      mod_yen = (-new_entry.y()+dy)/(2*dy);
+      mod_xex = (-new_exit.x()+dx)/(2*dx);
+      mod_yex = (-new_exit.y()+dy)/(2*dy);
+       msg<<MSG::INFO<<" qui non deve entrare mai 1 "<<endreq;
+    }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()<upperleft.y())){
+      mod_xen = (-new_entry.x()+dx)/(2*dx);
+      mod_yen = (new_entry.y()+dy)/(2*dy);
+      mod_xex = (-new_exit.x()+dx)/(2*dx);
+      mod_yex = (new_exit.y()+dy)/(2*dy);  
+      msg<<MSG::INFO<<" qui non deve entrare mai 2 "<<endreq;
+    }
   } else {
     msg << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<
       endreq; 
