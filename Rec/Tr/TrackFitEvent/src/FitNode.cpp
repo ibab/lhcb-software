@@ -1,11 +1,8 @@
-// $Id: FitNode.cpp,v 1.9 2006-02-08 17:35:49 erodrigu Exp $
+// $Id: FitNode.cpp,v 1.10 2006-03-26 19:04:58 erodrigu Exp $
 // Include files
 
 // local
 #include "Event/FitNode.h"
-
-// Event/TrackEvent
-#include "Event/SHacks.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -99,7 +96,7 @@ void FitNode::updateTransport( const FitNode& prevNode )
 {
   // add the transport transformation of prevNode to this node
   m_transportVector += m_transportMatrix * prevNode.transportVector() ;
-  m_noiseMatrix     += SHacks::Similarity( m_transportMatrix, prevNode.noiseMatrix() );
+  m_noiseMatrix     += ROOT::Math::Similarity<double,5,5>( m_transportMatrix, prevNode.noiseMatrix() );
   m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
   m_transportDeltaZ += prevNode.transportDeltaZ();
 }
