@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.19 2006-03-08 14:48:11 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.20 2006-03-26 20:16:30 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -205,7 +205,6 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   else if ( id.isOT() && !m_ignoreOT ) {
     OTChannelID oid = id.otID();
     OTTime* clus = m_otTimes->object(oid);
-    debug() << "Looking for OTTime of key = " << oid << endreq;
     if (clus != NULL) {
       meas = new OTMeasurement( *clus, *m_otDet, (int) par );
     }

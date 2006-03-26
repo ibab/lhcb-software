@@ -10,7 +10,6 @@
 #include "Kernel/TrackTypes.h"
 
 // from TrackEvent
-#include "Event/SHacks.h"
 #include "Event/TrackUnitsConverters.h"
 
 // local
@@ -70,10 +69,10 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
                                                double& chi2 ) const
 {
   if ( !m_addMomentum ) { // then the dimension is 4
-    Vector4 vec1            = trackVector1.Sub<4>(0);
-    Vector4 vec2            = trackVector2.Sub<4>(0);
-    SymMatrix4x4 trackCov12 =   trackCov1.Sub<4,4>(0,0)
-                              + trackCov2.Sub<4,4>(0,0);
+    Vector4 vec1            = trackVector1.Sub<Vector4>(0);
+    Vector4 vec2            = trackVector2.Sub<Vector4>(0);
+    SymMatrix4x4 trackCov12 =   trackCov1.Sub<SymMatrix4x4>(0,0)
+                              + trackCov2.Sub<SymMatrix4x4>(0,0);
     return calculateChi2( vec1, vec2, trackCov12, chi2 );
   }
 
@@ -107,7 +106,7 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
   }
 
   // Calculate the chi2 distance between 2 tracks
-  chi2 = SHacks::Similarity<5,TrackMatrix>( vec1-vec2, trackCinv );
+  chi2 = ROOT::Math::Similarity<double,5>( vec1-vec2, trackCinv );
 
   return StatusCode::SUCCESS;
 };
@@ -143,8 +142,8 @@ StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
   }
 
   // Calculate the chi2 distance between 2 tracks
-  chi2 = SHacks::Similarity<4,SymMatrix4x4>( trackVector1-trackVector2,
-                                             trackCov12 );
+  chi2 = ROOT::Math::Similarity<double,4>( trackVector1-trackVector2,
+                                           trackCov12 );
 
   return StatusCode::SUCCESS;
 };
