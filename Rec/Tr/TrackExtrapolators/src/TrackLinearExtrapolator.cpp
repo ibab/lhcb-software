@@ -5,7 +5,6 @@
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
-#include "Event/SHacks.h"
 
 // local
 #include "TrackLinearExtrapolator.h"
@@ -40,7 +39,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   
   // update covariance
   TrackMatrix& tStateCov = state.covariance();
-  tStateCov = SHacks::Similarity<TransportMatrix,TrackMatrix>( m_F, tStateCov ); // F*C*F.T()
+  tStateCov = ROOT::Math::Similarity<double,5,5>( m_F, tStateCov ); // F*C*F.T()
 
   debug() << " z propagation " << zNew
           << " propagated state " << state.stateVector()

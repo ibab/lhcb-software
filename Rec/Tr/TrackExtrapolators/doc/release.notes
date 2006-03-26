@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-03-26 - Eduardo Rodrigues
+ - adaptations to new SMatrix-5.10.00b and higher
+
 !======================= TrackExtrapolators v2r0 2006-02-07 ==================
 ! 2006-02-02 - Eduardo Rodrigues
  - move to LHCb v20r0

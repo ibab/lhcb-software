@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.4 2006-02-02 14:28:53 erodrigu Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.5 2006-03-26 18:58:18 erodrigu Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -6,7 +6,6 @@
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
-#include "Event/SHacks.h"
 
 // Local
 #include "TrackHerabExtrapolator.h"
@@ -120,8 +119,9 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
       m_F(i,j) = fQp[(5*j)+i];
     }
   }
+
   state.setState( pOut[0], pOut[1], zNew, pOut[2], pOut[3], pOut[4] );
-  state.setCovariance( SHacks::Similarity<TransportMatrix,TrackMatrix>
+  state.setCovariance( ROOT::Math::Similarity<double,5,5>
                        ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;

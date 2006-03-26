@@ -15,7 +15,6 @@
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
-#include "Event/SHacks.h"
 
 // Local 
 #include "TrackParabolicExtrapolator.h"
@@ -103,7 +102,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
                   tState[2] + m_ax*tState[4]*eplus*c_light*dz,
                   tState[3] + m_ay*tState[4]*eplus*c_light*dz,
                   tState[4] );
-  state.setCovariance( SHacks::Similarity<TransportMatrix,TrackMatrix>
+  state.setCovariance( ROOT::Math::Similarity<double,5,5>
                        ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;
