@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.10 2006-03-02 11:05:22 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.11 2006-03-26 19:48:03 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -147,21 +147,13 @@ StatusCode TrackMatchVeloSeed::execute() {
 
   // create and register the container for the matched tracks
   TrackMatches* matches = new TrackMatches();
-  StatusCode sc = put( matches, TrackMatchLocation::Default );
-  if( sc.isFailure() ) {
-    delete matches;
-    error() << "Unable to register the output container "
-            << TrackMatchLocation::Default << ". Status is " << sc << endreq;
-    return sc ;
-  }
-  else {
-    debug() << "Output container " << TrackMatchLocation::Default
-            << " registered" << endreq;
-  }
+  put( matches, TrackMatchLocation::Default );
+  debug() << "Output container " << TrackMatchLocation::Default
+          << " registered" << endreq;
   
   // the actual matching of the tracks
   debug() << "Trying to match velo with seed tracks ..." << endmsg;
-  sc = matchTracks( veloTracks, seedTracks, matches );
+  StatusCode sc = matchTracks( veloTracks, seedTracks, matches );
   if ( sc.isFailure() )
     return Error( "Unable to match velo tracks with Seed tracks" );
 
@@ -635,17 +627,9 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
   debug() << "Registering the tracks ..." << endreq;
 
   // Here the new tracks are registered
-  sc = put( trackCont, TrackLocation::Match );
-  if( sc.isFailure() ) {
-    delete trackCont;
-    error() << "Unable to register the output container "
-            << TrackLocation::Match << ". Status is " << sc.getCode() << endreq;
-    return sc ;
-  }
-  else {
-    debug() << "Output container " << TrackLocation::Match
-            << " registered" << endreq;
-  }
+  put( trackCont, TrackLocation::Match );
+  debug() << "Output container " << TrackLocation::Match
+          << " registered" << endreq;
 
   return StatusCode::SUCCESS;
 }
