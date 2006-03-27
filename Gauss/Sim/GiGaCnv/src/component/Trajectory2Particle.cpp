@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.10 2006-01-31 10:34:15 gcorti Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.11 2006-03-27 12:17:45 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/01/31 10:34:15  gcorti
+// adapt to changes in event model
+//
 // Revision 1.9  2005/01/17 19:35:10  robbep
 // Fix units
 //
@@ -115,10 +118,10 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
     HepMC::GenEvent    * gEvt = trajectory -> pHepMCEvent() -> pGenEvt() ;
     HepMC::GenParticle * gPart = 
       gEvt -> barcode_to_particle( trajectory -> signalBarcode() ) ;
-    HepLorentzVector theFMom( gPart -> momentum().px() * GeV ,
-                              gPart -> momentum().py() * GeV ,
-                              gPart -> momentum().pz() * GeV ,
-                              gPart -> momentum().e () * GeV ) ;
+    HepLorentzVector theFMom( gPart -> momentum().px() ,
+                              gPart -> momentum().py() ,
+                              gPart -> momentum().pz() ,
+                              gPart -> momentum().e () ) ;
     Gaudi::LorentzVector momentum( theFMom );
     particle -> setMomentum( momentum ) ;
   }
