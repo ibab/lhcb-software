@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.73 2006-03-26 20:13:29 asatta Exp $
+! $Id: release.notes,v 1.74 2006-03-27 06:59:04 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
-!========================= MuonDet v5r1 2006-03-26 =========================
+!========================= MuonDet v5r2 2006-03-26 =========================
 ! 2006-03-26 - Alessia Satta
  -fix a bug in DeMuonDetector::list_f_physical_channels
 
+!========================= MuonDet v5r1 2006-02-28 =========================
 ! 2006-02-28 - Alessio Sarti
  - Fixed a memory leak problem in MuonChamberLayout.cpp
 	Methods used to navigate the chambers have been 
