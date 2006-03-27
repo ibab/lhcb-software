@@ -1,4 +1,4 @@
-// $Id: GiGaCnvBase.cpp,v 1.15 2006-03-20 12:53:28 gcorti Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.16 2006-03-27 17:37:36 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -279,6 +279,7 @@ StatusCode GiGaCnvBase::initialize ()
     StatusCode sc = 
       serviceLocator() ->
       service( m_NameOfGiGaConversionService , m_GiGaCnvSvc , true ) ;
+    Print("Name of IGiGaCnvSvc= "+m_NameOfGiGaConversionService);
     if ( st.isFailure() ) 
       { return Error("Initialize::unable to locate IGiGaCnvSvs=" + 
                      m_NameOfGiGaConversionService, sc );} 

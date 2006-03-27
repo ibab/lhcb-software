@@ -4,10 +4,10 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!======================= GiGaCnv v16r1 2006-03-27 ==========================
 ! 2006-03-27 - Patrick Robbe
  - Trajectory2Particle: switch to MeV for HepMC
 
-!======================= GiGaCnv v16r1 2006-03-20 ==========================
 ! 2006-03-20 - Gloria CORTI for Emanuele SANTOVETTI
  - Remove multiplication for g/mole when passing A, similarly as what done 
    for elements and mixtures, since given already in this unit. 
