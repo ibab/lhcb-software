@@ -4,10 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r4 2006-03-26 =======================
 ! 2006-03-25 M Needham
  - unsign some signs 
 
-!=============================== STDAQ v2r4 2006-03-17 =======================
 ! 2006-03-15 - Matt Needham
  - Changes to switch strip mapping for hybrids that are flipped. Requires
    XmlConditions v1r5 or greater
