@@ -2,9 +2,9 @@
 <!-- Edited By POOL -->
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
-  <File ID="8E9AA76B-22BB-DA11-B087-003048836649">
+  <File ID="E85E0899-20BB-DA11-9966-0002B3AFA9A3">
     <physical>
-      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r1/0601-11144100.100ev.24Mar.digi"/>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r1/0601-11144100.100ev.27Mar.digi"/>
     </physical>
     <logical/>
   </File>
