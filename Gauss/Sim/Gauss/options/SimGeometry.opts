@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.15 2006-03-08 17:01:28 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.16 2006-03-27 18:47:26 gcorti Exp $
 
 /** @file
  *
@@ -49,15 +49,31 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
 // Uncomment following line to enable misaligneable VELO
 //#include "$GAUSSOPTS/SimVeloGeometry.opts"
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/PipeInRich1BeforeSubM"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/PipeInRich1SubMaster"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/PipeInRich1AfterSubM"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/PipeInTT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
 Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
+//
+Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeInMagnet"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
+//
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeInT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeBakeoutAfterMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
 Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
+//
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
@@ -80,3 +96,4 @@ GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 ApplicationMgr.DLLs   += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
+//MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
