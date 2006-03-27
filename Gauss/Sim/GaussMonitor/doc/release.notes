@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v3r1 2007-03-27 ============================
 ! 2006-03-23 - Juan PALACIOS
  - Change use of std::vector<LHCb::MCParticle*> to 
    LHCb::MCParticle::ConstVector in MCDecayCounter to match 
