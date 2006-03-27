@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.14 2006-01-26 14:58:43 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.15 2006-03-27 17:26:22 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -83,6 +83,13 @@ StatusCode DeVeloSensor::initialize()
       << " Left " << m_isLeft
       << " Right " << this->isRight() 
       << " Downstream " << this->isDownstream() << endreq;
+
+  sc = registerConditionCallBacks();
+  if (sc.isFailure()) {
+    msg << MSG::ERROR << "Failure to register condition update call backs." << endreq;    
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 //==============================================================================

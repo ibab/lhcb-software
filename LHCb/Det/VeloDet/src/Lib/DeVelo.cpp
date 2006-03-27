@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.62 2006-03-23 11:05:38 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.63 2006-03-27 17:26:22 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -178,6 +178,13 @@ StatusCode DeVelo::initialize() {
       << m_nPileUpSensors << " pileup type sensors " << endreq;
   /*  msg << "Going to attempt to recalculate z positions\n";
       recalculateZs();*/
+
+  sc = registerConditionCallBacks();
+  if (sc.isFailure()) {
+    msg << MSG::ERROR << "Failure to register condition update call backs." << endreq;    
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 

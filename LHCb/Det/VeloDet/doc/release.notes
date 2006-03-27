@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.104 2006-03-23 13:32:28 cattanem Exp $
+! $Id: release.notes,v 1.105 2006-03-27 17:26:22 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-03-27 - Kurt Rinnert
+ - Added missing registration of condition update call back methods
+	to DeVelo::initialize() and DeVeloSensor::initialize(). They must
+	have got lost during some of previous updates.
 
 !========================= VeloDet v10r2 2006-03-23 ========================
 ! 2006-03-23 - Mark Tobin
