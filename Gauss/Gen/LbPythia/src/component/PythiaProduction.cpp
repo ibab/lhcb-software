@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.11 2006-03-22 23:00:09 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.12 2006-03-27 22:14:02 robbep Exp $
 // Include files 
 
 // local
@@ -514,6 +514,11 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   HepMC::IO_HEPEVT theHepIO ;
   if ( ! theHepIO.fill_next_event( theEvent ) ) 
     return Error( "Could not fill HepMC event" ) ;
+
+  // Now convert to LHCb units:                                                   
+  for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
+        p != theEvent -> particles_end() ; ++p )
+    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
   
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
