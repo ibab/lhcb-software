@@ -16,7 +16,7 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
    EventSys v21r1, DigiEvent v1r1, DAQEvent v6r3, LinkerEvent v2r1, MCEvent v1r2,
    TrackEvent v2r1, PhysEvent v9r1, L0Event v15r1, GenEvent v4r2, RecEvent v1r1,
    DetSys v8r1, DetDescCnv v3r1, STDet v2r1, VeloDet v10r2, RichDet v9r2,
-   DetCond v7r10, DAQSys v2r1, CaloDAQ v2r1, MuonDAQ v2r1
+   MuonDet v5r2, DetCond v7r10, DAQSys v2r1, CaloDAQ v2r1, MuonDAQ v2r1
 
 - In GaudiConf v9r4:
   . Fix DecodeRawBuffer.opts for Velo, IT and TT
@@ -87,6 +87,9 @@ This version uses Gaudi v18r2 and is for commissioning of the software for DC06.
   . Added classes DeRichGasRadiator and DeRichAerogelRadiator to handle 
     the update of the gas and aerogel properties.
   . Small changes in the DeRich1/2 moving common code to the base class.
+
+- In MuonDet v5r2:
+  . fix a bug in DeMuonDetector::list_f_physical_channels
 
 - In DetCond v7r10, DetSys v8r1
   . Add DetCondDict lcgdict, to remove DetCond dependency from DetSys
