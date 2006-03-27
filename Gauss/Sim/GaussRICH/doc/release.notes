@@ -5,10 +5,10 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v6r3 2006-03-27 ===========================
 ! 2006-03-22 - Chris Jones
  - Adapt to removal of RichCondition package (functionality now in RichDet)
 
-!======================== GaussRICH v6r3 2006-03-20 ===========================
 ! 2006-03-15 - Chris Jones
  - Yet more tidying up of converter algorithms and options
 
