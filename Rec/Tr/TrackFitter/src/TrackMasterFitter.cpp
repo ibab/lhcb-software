@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.7 2006-03-03 18:24:46 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.8 2006-03-27 10:07:39 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -156,7 +156,6 @@ StatusCode TrackMasterFitter::fit( Track& track )
     // fit iteration
     ++iter;
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endreq;
-
     // Call the track fit
     sc = m_trackNodeFitter->fit( track );
     if ( sc.isFailure() ) {
@@ -401,7 +400,7 @@ double TrackMasterFitter::closestToBeamLine( State& state ) const
 //=========================================================================
 // Retrieve the number of nodes with a measurement
 //=========================================================================
-unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track) const
+unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track ) const
 {
   unsigned int nMeas = 0;
   const std::vector<Node*>& nodes = track.nodes();

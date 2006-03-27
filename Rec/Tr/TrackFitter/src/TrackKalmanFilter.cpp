@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.9 2006-03-03 18:24:46 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.10 2006-03-27 10:07:39 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -9,7 +9,6 @@
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
-#include "Event/SHacks.h"
 #include "Event/TrackUnitsConverters.h"
 
 // local
@@ -161,7 +160,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
         aNode.setTransportMatrix( F );
         aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
         aNode.setNoiseMatrix( aState.covariance() -
-                              SHacks::Similarity<TransportMatrix,TrackMatrix>
+                              ROOT::Math::Similarity<double,5,5>
                               ( F, prevStateCov ) );
         aNode.setTransportDeltaZ( deltaZ );
       }
@@ -173,7 +172,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
       TrackVector& stateVec = aState.stateVector();
       TrackMatrix& stateCov = aState.covariance();
       stateVec = F * stateVec + aNode.transportVector();
-      stateCov = SHacks::Similarity<TransportMatrix,TrackMatrix>( F, stateCov )
+      stateCov = ROOT::Math::Similarity<double,5,5>( F, stateCov )
                  + aNode.noiseMatrix();
       aState.setZ( z );
       aState.setLocation( (aNode.state()).location() );
@@ -239,9 +238,8 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   //tC.assign( B * tC * B.T() + ( mK * errorMeas2 * mK.T()));
   //These 2 lines are equal to tC.assign( B * tC ) !
   //BTW, from the above how does one get tC to be symmetric at the end?
-  TransportMatrix uniDiagMat = TransportMatrix();
-  for ( unsigned int ind = 0; ind < uniDiagMat.kRows; ++ind )
-    uniDiagMat(ind,ind) = 1.;
+  TransportMatrix uniDiagMat = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+
   // hack to do the product (5x1) * (1x5) of TrackVectors
   TransportMatrix B = uniDiagMat - TrackVectorProd( mK, H );
   tC.Place_at( B * tC, 0, 0 );
@@ -263,11 +261,11 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 //=========================================================================
 // 
 //=========================================================================
-TransportMatrix TrackVectorProd( TrackVector& vec1, const TrackVector& vec2 )
+TransportMatrix TrackKalmanFilter::TrackVectorProd( TrackVector& vec1,
+                                                    const TrackVector& vec2 )
 {
   // this is really an ugly hack!
   TrackMatrix result = TrackMatrix();
-
   for ( unsigned int i = 0; i < vec1.Dim(); ++i ) {
     for ( unsigned int j = 0; j < vec2.Dim(); ++j ) {
       result(i,j) = vec1[i] * vec2[j];
@@ -326,7 +324,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // smooth covariance  matrix
   TrackMatrix covDiff = prevNodeSmoothedC - prevNodeC;
   TrackMatrix covUpDate =
-    SHacks::Similarity<TransportMatrix,TrackMatrix>( A, covDiff );
+    ROOT::Math::Similarity<double,5,5>( A, covDiff );
 
   thisNodeC += covUpDate;
 
@@ -343,7 +341,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     thisNode.setResidual( res );
     double errRes2 =
       thisNode.errResidual2()
-      - SHacks::Similarity<5,TrackMatrix>( H, covUpDate );
+      - ROOT::Math::Similarity<double,5>( H, covUpDate );
     if ( errRes2 < 0.) {
       return Warning( "Negative residual error in smoother!" );
     }

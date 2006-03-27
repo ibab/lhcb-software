@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.6 2006-02-10 16:29:23 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.7 2006-03-27 10:07:39 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -158,11 +158,10 @@ StatusCode TrackEventFitter::execute() {
 
   // Store the Tracks in the TES
   // ---------------------------
-  if ( m_makeNewContainer ) {
-    return put( tracksNewCont, m_tracksOutContainer );
-  } else {
-    return StatusCode::SUCCESS;
-  }
+  if ( m_makeNewContainer )
+    put( tracksNewCont, m_tracksOutContainer );
+  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

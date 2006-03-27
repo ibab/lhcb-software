@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-03-26 - Eduardo Rodrigues
+ - adaptations to new SMatrix-5.10.00b and higher, and new Gaudi
+ - minor bugs corrected
+
 ! 2006-03-03 - Eduardo Rodrigues
  - outliers removal improved: when an outlier measurement is removed from
    the node it is also removed from the track (needed for consistency)
