@@ -4,12 +4,21 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r2 2006-03-22 =============================
+!======================== Gauss v24r2 2006-03-27 =============================
+! 2006-03-27 - Gloria CORTI
+ - Switch on simulation of beam pipe in reagions
+   . use XmlDDDB v30r2
+   . SimGeometry.opts
+ - Use DecFiles (v12r0) as to be prepared for DC06
+ - Introduce use of MeV in Generators (use ParticleGuns v2r1, Generators v4r2,
+   LbPythia v4r1, GaussKine v1r1, GiGaCnv v16r1)
+
 ! 2006-03-22 - Gloria Corti
- - Use new version of GiGaCnv to fix problem of units when passing isotopes
+ - Use new version of GiGaCnv (v16r1) to fix problem of units when passing
+   isotopes
 
 ! 2006-03-20 - Gloria CORTI
- - Use new version of GaussRICH with modification for extended info
+ - Use new version of GaussRICH with modification for extended info (v6r3)
  - Compile against LHCb v20r1
 
 !======================== Gauss v24r1 2006-03-16 =============================
