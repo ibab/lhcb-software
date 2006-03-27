@@ -21,6 +21,7 @@ This is the first bug fix release for commissioning of the software for DC06.
     (VeloDAQ v3r1, DigiEvent v1r1)
   . Fix bug in ST position tool for cluster resolution (STTools v2r1)
   . Fix CaloCandidate type in L0CaloCandidateFromRaw (L0Calo v9r1, L0Event v15r1)
+  . Fix bug in RichDigiQC summary printout information (RichDigiQC v3r1)
 
 - Persistency changes
   . Change strip mapping of ST flipped hybrids (STDAQ v2r4, XmlConditions v1r5)
