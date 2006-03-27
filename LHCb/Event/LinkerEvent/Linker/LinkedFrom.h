@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.19 2006-03-23 12:55:39 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.20 2006-03-27 12:53:38 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -74,7 +74,7 @@ public:
     }
     if ( 0 == link ) return NULL;
     //== Define the target's linkID and Index
-    m_curReference.setLinkID( link->ID() );
+    m_curReference.setLinkID( short(link->ID()) );
     m_curReference.setObjectKey( target->index() );
     int index = m_links->firstSource( m_curReference, m_srcIterator );
     if ( m_wantedKey != m_curReference.objectKey() ) return NULL;
@@ -117,7 +117,7 @@ public:
     }
     if ( 0 == link ) return m_int;
     //== Define the target's linkID and index
-    m_curReference.setLinkID( link->ID() );
+    m_curReference.setLinkID( short(link->ID()) );
     m_curReference.setObjectKey( target->index() );
     int key = m_links->firstSource( m_curReference, m_srcIterator );
     while ( m_wantedKey == m_curReference.objectKey() ) {

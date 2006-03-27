@@ -13,8 +13,8 @@
         desc   = "Constructor with arguments" 
         argList= "int srcLinkID, int linkID, int key, int nextIndex, float weight">
         <code> 
-m_srcLinkID = srcLinkID;
-m_linkID    = linkID;
+m_srcLinkID = short( srcLinkID );
+m_linkID    = short( linkID );
 m_objectKey = key;
 m_nextIndex = nextIndex;
 m_weight    = weight;

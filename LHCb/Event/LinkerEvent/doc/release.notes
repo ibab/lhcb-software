@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-03-27 - Olivier Callot
+ - Fix warnings on Windows due to int -> short conversion. Make it explicit...
+
 !====================== LinkerEvent v2r1 2006-03-23 ==========================
 ! 2006-03-23 - Olivier Callot
  - Bypass the test of classID in case the linker object is not found.
