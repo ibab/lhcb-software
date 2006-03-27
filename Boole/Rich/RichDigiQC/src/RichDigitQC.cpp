@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.29 2006-03-01 09:44:57 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.30 2006-03-27 15:19:31 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -31,6 +31,7 @@ RichDigitQC::RichDigitQC( const std::string& name,
     m_evtC           ( 0                 ),
     m_spillDigits    ( Rich::NRiches     ),
     m_totalSpills    ( Rich::NRiches     ),
+    m_allHits        ( Rich::NRiches, 0  ),
     m_scattHits      ( Rich::NRiches, 0  ),
     m_chrgTkHits     ( Rich::NRiches, 0  ),
     m_gasQCK         ( Rich::NRiches, 0  ),
@@ -120,6 +121,7 @@ StatusCode RichDigitQC::execute()
       ++(m_spillDigits[rich])[location];
       ++(spills[rich])[location];
     }
+    ++m_allHits[rich];
 
   }
 
@@ -259,7 +261,8 @@ StatusCode RichDigitQC::finalize()
               << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " " << RICH << " : Av. overall hit occupancy    " << occ(totDet,m_evtC) << " hits/event" << endreq
+    info() << " " << RICH << " : Av. total  hit occupancy     " << occ(m_allHits[rich],m_evtC) << " hits/event" << endreq
+           << "       : Av. signal hit occupancy     " << occ(totDet,m_evtC) << " hits/event" << endreq
            << "       : Av. HPD hit occupancy        "
            << occ(totDet,m_evtC*m_nHPD[rich].size()) << " hits/event" << endreq;
     {for ( SpillCount::iterator iC = m_spillDigits[rich].begin(); iC != m_spillDigits[rich].end(); ++iC )

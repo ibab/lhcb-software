@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.19 2006-02-16 15:51:35 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.20 2006-03-27 15:19:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -111,6 +111,9 @@ private: // data
 
   /// Number of digitised hits per RICH detector and event location
   SpillDetCount m_totalSpills;
+
+  /// Number of hits in each RICH
+  std::vector< unsigned int > m_allHits;
 
   /// Number of rayleigh scattered hits in each RICH
   std::vector< unsigned int > m_scattHits;
