@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== GaussKine v1r1 2006-03-27 ========================
 ! 2006-03-27 - Patrick Robbe
  - GeneratorToG4: switch MeV units in HepMC particles
 
