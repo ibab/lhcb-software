@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.44 2006-03-22 22:58:31 robbep Exp $
+! $Id: release.notes,v 1.45 2006-03-27 17:25:12 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v4r2 2006-03-27 ===========================
 ! 2006-03-22 - Patrick Robbe
  - ExternalGenerators: adapt to new HepMCEvent constructor and set to false
    isSignal for pile up collisions
