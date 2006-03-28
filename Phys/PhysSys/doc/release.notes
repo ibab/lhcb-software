@@ -4,11 +4,371 @@ Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
 </PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
-  - Built against LHCb v20r0
+
+ First minimal release of PHYS with DC06 event model.
+ It compiles but is untested.
+
+  - Built against LHCb v20r1
   - New event model
   - ROOT vector classes 
   - SMatrix matrices
   
+##################################### PHYS #####################################
+!========================== DaVinciFilter v4r0 2006-03-28 ===================
+! 2006-03-28 - P. Koppenburg for C. Lazzeroni
+  - src/VtxFilterCriterion.{cpp,h}
+    . New option MinRPos allowing to cut on the R position of the vertex.
+  - src/TrackQualityFilterCriterion.{cpp,h}
+    . New filter allowing to cut on the track chi2/nDoF 
+    
+! 2006-02-28 - P. Koppenburg
+  - New tool TrackFilterCriterion using the TrackSelector tool.
+    
+! 2006-02-28 - P. Koppenburg
+  - Removed LifetimeSignificanceCriterion as it requires Relations
+    
+! 2006-02-03 - P. Koppenburg
+  - Removed MassConstrainedChi2FilterCriterion.{h,cpp} as it is not needed 
+    anymore with the new vertex interfaces.
+    
+! 2006-02-03 - P. Koppenburg
+  Joined changes of v3r4
+  - src/DaughterVertexFilterCriterion..{cpp,h}
+   . New option filter selecting on the distance between the mother and
+     a given daughter. Options are:
+FilterLongDs.Filter.Selections = { "B_s0 : DaughterVertexFilterCriterion" };
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDeltaZ = -1*mm ;               // signed delta z
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MaxDeltaZ = 100*mm ;              // signed delta z
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDistance = 0.01*mm ;           // unsigned distance
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MaxDistance = 100*mm ;            // unsigned distance
+FilterLongDs.Filter.DaughterVertexFilterCriterion.MinDistanceSignificance = 2.5 ;   // unsigned distance error
+FilterLongDs.Filter.DaughterVertexFilterCriterion.DaughterName = "D_s-" ;           // Name of daughter. Can be "Any"
+  - options/DVDaughterVertexFilterCriterion.opts
+    . Example options
+ - src/FilterDesktop.{cpp,h}
+   . New option OutputLocation to get non-default outputLocations
+ - src/Particle2VertexAsct.h moved to Kernel in DaVinciKernel
+ - src/Particle2VertexWithIPS.{cpp,h} moved to DaVinciTools
+ - src/KinFilterCriterion.{h,cpp}
+   . Added new option for max momentum cut
+ - src/MassConstrainedChi2FilterCriterion.{h,cpp}
+   . New FilterCriterion that fits a mass constrained vertex and selects the particles
+     according to the chi2 or z position of this vertex. Wraning: The fitted vertex 
+     is not saved anywhere.  
+
+! 2006-01-20 - P. Koppenburg
+  - src/PIDFilter.*
+    . Moved from DaVinciTools
+  - src/ByPIDFilterCriterion.cpp
+  - src/MassDifferenceFilterCriterion.cpp
+  - src/MomentumMotherDirectionFilterCriterion.cpp
+  - src/VtxIsolationFilterCriterion.cpp
+    . Use Particle::daughtersVector() method
+
+! 2006-01-18 - P. Koppenburg
+  - src/Particle2VertexAsct.h
+    . Moved to DaVinciKernel/Kernel
+  - src/Particle2VertexWithIPS.cpp
+  - src/Particle2VertexWithIPS.h
+    . Moved to DaVinsiTools
+  - src/*.{h,cpp}
+    . Adpated to DC06 physics event model and new interfaces.  
+!========================== DaVinciKernel v4r0 2006-03-28 ===================
+! 2006-03-16 - P. Koppenburg
+  - Kernel/DVAlgorithm.h 
+  - src/Lib/DVAlgorithm.cpp
+    . Move the implementation of the getTool methods from the cpp to the header.
+      This avoids a linker error both on linux (run-time) and windows.
+      That's pure black magic.
+
+! 2006-03-15 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+    . Remove templated PrimaryVertices method
+
+! 2006-03-15 - P. Koppenburg
+  - Kernel/DVAlgorithm.h
+  - src/Lib/DVAlgorithm.cpp
+    . Bug fix in getTool: modify pointer to tool if NULL
+    . Removed m_loadToolsWarned
+    . New variable bool m_preloadTools (=true) with option PreloadTools.
+      Can be set to false when the tools are not needed (i.e. not for
+      physics analysis). Then they will be loaded on demand, i.e. at any
+      event which will slow down the execution of the first events and may
+      cause aborts due to misconfigured tools only after a long execution.
+    . Declare all tool accessors as const and the tools and tool vectors
+      as mutable.
+    
+
+! 2006-03-15 - J. Palacios
+  IDecayFinder.h: 
+    Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
+    Remove temporary typedef for LHCb::ConstParticles.
+  Kernel/Particle2VertexAsct.h: Prepend LHCb:: to Particle, Vertex.
+
+
+! 2006-03-14 - J. Palacios
+  IDecayFinder.h: Add temporary typedef for KeyedContainer of const Particle
+                  as LHCb::ConstParticles. To be removed once GOD produces this
+                  automatically in Particle.h header file.
+                  Change hasDecay and findDecay methods signatures to use
+                  LHCb::ConstParticles.
+
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - Kernel/Particle2VertexAsct.h
+    . Removed
+
+! 2006-02-16 - P. Koppenburg for Vanya Belyaev
+  . Slight change of signatures for two methods
+
+! 2006-02-16 - P. Koppenburg
+  . Joined changes from DaVinci v12r16 (head)
+
+! 2006-02-16 - P. Koppenburg
+  - Kernel/INewDirectionFitter.h
+    . Removed. The NewDirectionFitter should inherit from IDirectionFit.h
+
+! 2006-02-03 - P. Koppenburg
+  Joined changes to v3r10:
+  - Kernel/IBTaggingTool.h
+    . No inclusion of DVAlgorithm
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.{cpp,h}
+  - src/Lib/DVAlgorithm.cpp
+    . Make sure each DVAlgorithm always writes out something to TES
+  - src/component/PhysDesktop.cpp
+    . Ignore OutputLocation of parent algorithm if it is ""
+  - src/component/PhysDesktop.cpp
+    . Issue primary vertex empty container warning only if primary
+      vertices are requested
+  - Kernel/Particle2VertexAsct.h
+    . Moved from DaVinciFilter. 
+
+! 2005-01-20 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+  - Kernel/IParticleMaker.h
+    . Use ConstVectors throughout.
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+    . Kill saveTrees(Vertex::Vector) method
+       
+! 2005-01-19 - P. Koppenburg
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IVertexFit.h
+    . Use explicitly LHCb::Particle::ConstVector instead of the obscure 
+      "Daughters" typedef
+       
+! 2005-01-17 - P. Koppenburg
+  First move to new Physics event model (PEM) for DC06. Package compiles.
+  - Modernize DVAlgorithm
+    . Remove old vertex fitter interfaces
+    . Link to new IVertexFit interface
+    . New getTool<IXX> method allowing several tool instances to be accessed
+      by same method. 
+  - Use namespace LHCb.
+  - Use LHCb::Particle::ConstVector instead of ParticleVector. mm Vertex.
+  - Use Gaudi matrices instead of CLHEP matrices
+  - Removed all old vertex fitter interfaces
+  - Removed deprecated PhysDesktop methods
+  - Added Particle2VertexAsct, but not yet active as Relations are missing
+
+! 2005-01-20 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+  - Kernel/IParticleMaker.h
+    . Use ConstVectors throughout.
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.*
+    . Kill saveTrees(Vertex::Vector) method
+       
+! 2005-01-19 - P. Koppenburg
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IVertexFit.h
+    . Use explicitly LHCb::Particle::ConstVector instead of the obscure 
+      "Daughters" typedef
+       
+! 2005-01-17 - P. Koppenburg
+  First move to new Physics event model (PEM) for DC06. Package compiles.
+  - Modernize DVAlgorithm
+    . Remove old vertex fitter interfaces
+    . Link to new IVertexFit interface
+    . New getTool<IXX> method allowing several tool instances to be accessed
+      by same method. 
+  - Use namespace LHCb.
+  - Use LHCb::Particle::ConstVector instead of ParticleVector. mm Vertex.
+  - Use Gaudi matrices instead of CLHEP matrices
+  - Removed all old vertex fitter interfaces
+  - Removed deprecated PhysDesktop methods
+  - Added Particle2VertexAsct, but not yet active as Relations are missing
+!========================== DaVinciMCTools v6r0 2006-03-28 ===================
+! 2006-03-16 - P. Koppenburg
+ - src/MCParticleMaker.cpp
+    Replace LHCb::ConstContainer with LHCb::Container
+
+! 2006-03-15 - Juan Palacios
+ - src/MCParticleMaker.cpp
+    Replace LHCb::ConstMCParticles with LHCb::MCParticle::ConstContainer.
+
+! 2006-03-08 - P. Koppenburg
+  - src/MCParticleMaker.cpp
+    . Remove MCDecayFinder tool
+
+! 2006-02-28 - P. Koppenburg
+  Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
+  affects DaVinciAssociators and DaVinciMCTools.
+  - src/DebugTool.*
+  - src/TrueMCFilterCriterion.*
+    . Removed temporaril;y
+  - DaVinciMCTools/IDebugTool.h
+    . Dirty hack allowing code using this interface to *compile*.
+
+! 2006-01-26 - P. Koppenburg
+  First DC06 version
+  - src/BackgroundCategory.{cpp,h}
+  - src/CheatedLifetimeFitter.{cpp,h}
+  - src/DecayChainNTuple.{cpp,h}
+  - src/DumpEvent.{cpp,h}
+  - src/MCPIDProtoPAlg.{cpp,h}
+  - src/PrintBackgroundCategory.{cpp,h}
+    . Removed.
+  - DaVinciMCTools/IBackgroundCategory.h
+  - DaVinciMCTools/IDebugTool.h
+  - src/DaVinciMCTools_load.{cpp,h}
+  - src/DebugTool.{cpp,h}
+  - src/FilterGoodDecay.{cpp,h}
+  - src/IsBEvent.{cpp,h}
+  - src/MCParticleMaker.{cpp,h}
+  - src/PrintMCTree.{cpp,h}
+  - src/PrintTree.{cpp,h}
+  - src/TrueMCFilterCriterion.{cpp,h}
+    . Adapted to new event model.
+!========================== DaVinciTools v13r0 2006-03-28 ===================
+! 2006-03-16 - J. Palacios
+  - DecayFinder: 
+       Replace LHCb::Particle::ConstContainer by LHCb::Particle::Container
+
+! 2006-03-15 - J. Palacios
+  - DecayFinder: 
+       Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
+  - CheckPV.cpp: Prepend LHCb:: to Vertices.
+
+!========================== DaVinciTransporter v3r0 2006-03-28 ===================
+! 2006-02-16 - P. Koppenburg
+  - src/TrgDispCalculator.{cpp,h}
+    . Samll change in interface
+
+! 2006-01-25 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . Allow not to define an extrapolator.
+
+! 2006-01-20 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . New tool that uses the TrackExtrapolator tools to do transporting
+  - src/CombinedTransporter.cpp
+  - src/CombinedTransporter.*
+  - src/LinearTransporter.*
+  - src/NsctVeloTransporter.*
+  - src/ParabolicTransporter.*
+  - src/TrTransporter.*
+    . Removed as these tools mainly duplicate code of the tracking tools.
+!========================== DaVinciUser v6r0 2006-03-28 ===================
+! 2006-02-16 - P. Koppenburg
+ - src/DC06Tests.*
+   . New algorithm with some tests
+  
+! 2006-02-16 - P. Koppenburg
+ - */LoopOnCharged.*
+   . Adapted to DC06
+  
+!========================== ParticleMaker v2r0 2006-03-28 ===================
+! 2006-03-19 - Vanya BELYAEV
+ - tiny decoration around ParticleMakerSeq
+   1) remove *.h file, the body of the tool is moved into *.cpp file
+   2) remove the difference inbetween private an dpublic makers
+      (this piece of code has beed coded well before "::PUBLIC" 
+       directive becomes available in ToolSvc) 
+   3) tiny line reshuffling 
+
+   From now the maker has only one property: Makers:
+
+   MyAlg.PhysDesktop.ParticleMaker = "ParticleMakerSeq/MyMaker" ;
+   MyAlg.PhysDesktop.MyMaker.Makers = 
+    {
+      "SomeParticleMakerType/SomeParticleMakerName" , // private maker  
+      "NoPIDParticleMaker/NoPIDMuons::PUBLIC"       , // public  maker  
+      "PhotonParticleMaker/PhotonMaker::PUBLIC"     , // public  maker 
+    };
+
+! 2006-01-24 - P. Koppenburg
+  First version for DC06.
+  - src/CnvPhotonParticleMaker.{cpp,h}
+  - src/CombinedParticleMaker.{cpp,h}
+  - src/PhotonFromMergedParameters.{cpp,h}
+  - src/PhotonFromMergedParticleMaker.{cpp,h}
+  - src/PhotonParameters.{cpp,h}
+  - src/PhotonParticleMaker.{cpp,h}
+    . Temporarily removed.
+  - src/NoPIDsParticleMaker.{cpp,h}
+  - src/ParticleMaker_load.{cpp,h}
+  - src/ParticleMakerSeq.{cpp,h}
+  - src/PreLoadParticles.{cpp,h}
+    . Adapted to DC06 event model
+  - src/ParticleStuffer.{cpp,h}
+    . Adapted to DC06 event model and new interface
+
+!========================== PhysCoreSys v2r0 2006-03-28 ===================
+! 2005-02-16- P. Koppenburg
+  Temporary commenting out of unavailable options
+  
+! 2005-01-26 - P. Koppenburg
+  First DC06 version
+  
+!========================== PhysMCSys v2r0 2006-03-28 ===================
+! 2005-03-08 - P. Koppenburg
+  - options/PhysMCSys.opts
+    . Extract MCParticles from packedevent
+! 2005-01-26 - P. Koppenburg
+  First DC06 version
+!========================== VertexFit v2r0 2006-03-28 ===================
+! 2006-01-23 - P. Koppenburg
+  - src/.*
+    . Removed temporaryly except
+  - src/TrgVertexFitter.{h,cpp}
+
+! 2006-01-23 - P. Koppenburg
+  - src/GeomDispCalculator.*
+  - src/TrgDispCalculator.*
+    . Moved to DaVinciTransporter
+#################################### PHYSSEL ###################################
+!========================== PhysSelSys v9r0 2006-03-28 ===================
+Commented out everything except Bu2JpsiK
+##################################### TOOLS ####################################
+!========================== Stripping v4r0 2006-03-28 ===================
+! 2006-02-28 - P. Koppenburg
+  . Depend on PhysSelSys
+  . Join changes to HEAD
+! 2006-02-16 - P. Koppenburg
+  . Depend on GaudiAlg
+! 2006-01-25 - P. Koppenburg
+    First DC06 version
+!========================== Utilities v3r0 2006-03-28 ===================
+! 2006-02-16 - P. Koppenburg
+  . Depend on GaudiAlg
+! 2006-01-25 - P. Koppenburg
+  - src/CheckSelResult.{cpp,h}
+  - src/PostScaler.{cpp,h}
+  - src/PrintHeader.{cpp,h}
+  - src/SelResultCorrelations.{cpp,h}
+    . Adapted to new event model
+  - src/CheckSelResultsTool.cpp
+  - src/EventLoader.{cpp,h}
+  - src/MatchedEventFilter.{cpp,h}
+    . Temporarily removed
+
 </PRE><H1><A NAME=v2r0>2005-12-21 Phys v2r0</A></H1><PRE>
   - Built against LHCb v19r3
   
