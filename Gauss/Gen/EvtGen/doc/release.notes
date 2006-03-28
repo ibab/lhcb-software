@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r8 2006-03-28  ==========================
+! 2006-03-28 - Florence RANJARD
+ - cmt/requirements: remove special compilation flags now introduced in 
+   GaudiPolicy
+
 !======================== EvtGen v8r7 2006-03-12  ==========================
 ! 2006-03-12 - Patrick Robbe
  - cmt/requirements: build shared library for EvtGen and uses -O2 
