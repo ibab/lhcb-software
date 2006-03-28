@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.82 2006-03-28 13:54:01 jpalac Exp $
+! $Id: release.notes,v 1.83 2006-03-28 13:59:11 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================= PhysEvent v9r2 2006-03-28 ==========================
 ! 2006-03-28 - Juan Palacios
  - xml/Particle.xml: move body of covMatrix() method to .cpp file.
  - src/Particle.cpp: Use Kernel/MatrixManip to transform symmetric matrices
