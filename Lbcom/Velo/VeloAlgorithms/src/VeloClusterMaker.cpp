@@ -454,17 +454,11 @@ StatusCode VeloClusterMaker::storeClusters(){
 		   VeloEventFunctor::Less_by_key<const LHCb::InternalVeloCluster*>());
   if(m_isDebug) debug()<< " ==> size of clusters container: " 
 		       << m_clusters->size() <<endmsg;  
-  StatusCode sc=put(m_clusters, m_outputContainer);  
-  if ( sc ) {
-    if(m_isDebug) debug()<< "Stored " << m_clusters->size() 
-			 << " MCInternalVeloClusters at " 
-			 << m_outputContainer <<endmsg;
-  } else {
-    error()<< "Unable to store VeloClusters at " 
-	   << m_outputContainer <<endmsg;
-  }
-  //
-  return (sc);
+  put(m_clusters, m_outputContainer);  
+  if(m_isDebug) debug()<< "Stored " << m_clusters->size() 
+                       << " MCInternalVeloClusters at " 
+                       << m_outputContainer <<endmsg;
+  return StatusCode::SUCCESS;
 }  
 //=========================================================================
 std::pair<LHCb::VeloDigits::iterator, LHCb::VeloDigits::iterator> 

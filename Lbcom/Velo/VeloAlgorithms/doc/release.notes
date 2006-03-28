@@ -2,10 +2,15 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
-!===================== VeloAlgorithms v4r1 2006-03-23 =====================
+!===================== VeloAlgorithms v4r2 2006-03-28 =====================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
+ - Various fixes for GaudiAlgorithm
+
 ! 2006-03-23 - Tomasz Szumlak
  - Security checks in execute() and finalize() of the VeloDigiMoni
 
+!===================== VeloAlgorithms v4r1 2006-03-23 =====================
 ! 2006-03-17 - Mark Tobin and Kurt Rinnert
  - Adapt to use new DeVelo interface
 
