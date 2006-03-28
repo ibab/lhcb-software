@@ -3,9 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v11r1>2006-03-17 Boole v11r1</A></H1><PRE>
+</PRE><H1><A NAME=v11r1>2006-03-27 Boole v11r1</A></H1><PRE>
 This version uses projects Gaudi v18r2, LHCb v20r1, Lbcom v4r1
-  and databases XmlDDDB v30r1, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r7
+  and databases XmlDDDB v30r2, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r7
 Requires input from Gauss v24r2 or greater. Output needs Brunel v30r0 or greater
 
 This is the first bug fix release for commissioning of the software for DC06.
@@ -15,6 +15,7 @@ This is the first bug fix release for commissioning of the software for DC06.
   . Change histogram scales in Calo histograms (CaloMoniDigi v2r1)
   . Use FieldMap v4r7 by default
   . New ActiveToTotal calibration for Ecal and Hcal (XmlConditions v1r5)
+  . Add beam pipe to geometry description (XmlDDDBv30r2)
 
 - Bug fixes
   . Fix handling of Velo interstrip position bits and threshold bit

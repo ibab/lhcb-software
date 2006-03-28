@@ -22,7 +22,7 @@ use GaudiObjDesc 	 v9r3        -no_auto_imports
 use RootHistCnv          v9r8        -no_auto_imports
 
 #-- Databases
-use XmlDDDB             v30r1   Det  -no_auto_imports
+use XmlDDDB             v30r2   Det  -no_auto_imports
 use XmlConditions        v1r5   Det  -no_auto_imports
 use ParamFiles	         v4r1        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
