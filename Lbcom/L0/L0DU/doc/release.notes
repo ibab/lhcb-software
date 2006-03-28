@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.44 2006-03-22 15:02:45 cattanem Exp $
+$Id: release.notes,v 1.45 2006-03-28 11:40:15 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================== L0DU v7r1p1 2006-03-28 =======================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
 
 !========================== L0DU v7r1 2006-03-21 =========================
 ! 2006-03-21 - Olivier Deschamps

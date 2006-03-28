@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.44 2006-03-22 15:10:32 cattanem Exp $
+! $Id: release.notes,v 1.45 2006-03-28 11:40:48 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+!======================== PuVeto v7r1p1 2006-03-28 =======================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
 
 !======================== PuVeto v7r1 2006-03-17 ========================
 ! 2006-03-17 - Mark Tobin and Kurt Rinnert

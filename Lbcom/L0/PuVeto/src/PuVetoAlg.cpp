@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.27 2006-03-21 17:30:42 mtobin Exp $
+// $Id: PuVetoAlg.cpp,v 1.28 2006-03-28 11:40:48 cattanem Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -346,14 +346,8 @@ StatusCode PuVetoAlg::execute() {
   L0ProcessorDatas* l0PuDatas = new L0ProcessorDatas();
   l0PuDatas->insert( l0PuData1 ) ;
   l0PuDatas->insert( l0PuData2 ) ;
-   StatusCode sc = put(  l0PuDatas ,  m_outputContainer );
-   if ( sc.isFailure() ) {
-     delete l0PuDatas;
-     error()
-       << "Unable to register output to " << m_outputContainer
-       << endreq;
-     return StatusCode::FAILURE;
-  } 
+
+  put( l0PuDatas,  m_outputContainer );
 
   return StatusCode::SUCCESS;
 };

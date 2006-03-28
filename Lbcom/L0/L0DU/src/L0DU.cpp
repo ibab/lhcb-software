@@ -1,4 +1,4 @@
-// $Id: L0DU.cpp,v 1.5 2006-03-21 08:33:43 odescham Exp $
+// $Id: L0DU.cpp,v 1.6 2006-03-28 11:40:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -212,9 +212,6 @@ StatusCode L0DU::initialize() {
 // Main execution
 //=============================================================================
 StatusCode L0DU::execute() {
-  StatusCode sc = StatusCode::SUCCESS;
-  
-
   
   //-------------------------------
   // Proccess Data  : (built L0DUElementaryData from L0 candidates)
@@ -223,10 +220,10 @@ StatusCode L0DU::execute() {
   //--------------------------------
   // Process L0DU channels decision  - Fill L0DuReport w/ decision pattern
   LHCb::L0DUReport* report = new LHCb::L0DUReport( );
-  sc = put (report , m_L0DUReportLocation );
+  put (report , m_L0DUReportLocation );
   if(m_writeOnTES){
     m_channelsOnTES = new LHCb::L0DUChannels();
-    sc = put(  m_channelsOnTES ,   m_L0DUChannelLocation);
+    put(  m_channelsOnTES ,   m_L0DUChannelLocation);
   }
       
   for( std::map<int,std::string>::iterator ichan = m_channelsMap.begin() ; 
@@ -270,7 +267,7 @@ StatusCode L0DU::execute() {
     raw->addBank(m_rawSrcID , m_rawBankType , m_rawVsn , l0Block);
   }
   
-  return sc;   
+  return StatusCode::SUCCESS;   
 };
 
 //=============================================================================
