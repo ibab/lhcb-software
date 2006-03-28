@@ -4,6 +4,7 @@ Package manager : Stefan Roiser
 
 !2006-03-28 Stefan
 - removing dictionary generation for const containers
+- removing typedefs for const containers from class definitions
 
 !2006-03-23 Stefan
 - Adding instantiations and selections for const containers to dictionaries
