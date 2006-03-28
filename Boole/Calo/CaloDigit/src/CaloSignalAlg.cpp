@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.7 2006-01-19 11:06:49 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.8 2006-03-28 15:23:07 cattanem Exp $
 
 /// Kernel
 #include "Kernel/SystemOfUnits.h"
@@ -119,14 +119,12 @@ StatusCode CaloSignalAlg::execute() {
   
   // prepare the output container
   LHCb::MCCaloDigits* mcDigits = new LHCb::MCCaloDigits();
-  StatusCode sc = put( mcDigits , m_outputData );
-  if( sc.isFailure() ) { return sc ; }
+  put( mcDigits , m_outputData );
 
   LHCb::MCCaloDigits* mcPrevDigits = 0;
   if ( m_storePrevious ) {
     mcPrevDigits  = new LHCb::MCCaloDigits();
-    StatusCode sc = put( mcPrevDigits , m_previousDigits );
-    if( sc.isFailure() ) { return sc ; }
+    put( mcPrevDigits , m_previousDigits );
   }
   
   // get the input data

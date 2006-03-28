@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r1p1 2006-03-28 ========================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
+
 !======================== CaloDigit v2r1 2006-03-16 ========================
 ! 2006-03-15 - Olivier Deschamps
  - CaloZSupAlg.{cpp,h} algorithm removed (moved to CaloDAQ)
