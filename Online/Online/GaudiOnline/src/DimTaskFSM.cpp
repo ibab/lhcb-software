@@ -29,7 +29,7 @@ namespace  {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
       std::cout << "Received DIM command:" << cmd << std::endl;
-      if      ( cmd == "config"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
+      if      ( cmd == "configure"  ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
       else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
       else if ( cmd == "reset"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::TERMINATE);
@@ -49,7 +49,7 @@ LHCb::DimTaskFSM::DimTaskFSM(bool loop)
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   DimServer::start(m_procName.c_str());
-  declareState(ST_NAME_UNKNOWN);
+  declareState(ST_NAME_NOT_READY);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
