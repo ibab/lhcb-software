@@ -1,8 +1,11 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.3 2006-02-23 21:30:45 odescham Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.4 2006-03-28 14:44:36 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/23 21:30:45  odescham
+// Standardize TES path + cleaning
+//
 // Revision 1.2  2006/02/21 10:04:46  odescham
 // update for new Event Model
 //
@@ -117,9 +120,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
 
   // create and register the relation table 
   Table* table = new Table( 1000 ) ;
-  
-  StatusCode sc = put( table , m_output ) ;
-  if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+  put( table , m_output ) ;
   
   if ( m_inputs.empty() ) 
   { return Error ( "No Linker object are specified" ) ; }
@@ -131,7 +132,6 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
     
     // get the container of digits
     Digits* digits = get<Digits> ( *input ) ;
-    if ( 0 == digits ) { return StatusCode::FAILURE ; }
     
     // get linker 
     LHCb::Calo2MC::DigitLinkTo linker( eventSvc() , msgSvc() , (*input)     ) ;

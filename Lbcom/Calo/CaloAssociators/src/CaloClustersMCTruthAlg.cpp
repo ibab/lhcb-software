@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.10 2006-02-23 21:30:45 odescham Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.11 2006-03-28 14:44:36 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -176,20 +176,16 @@ StatusCode CaloClustersMCTruthAlg::execute()
   
   // get mc particles 
   Particles*  particles = get<Particles>        ( m_particles ) ;
-  if ( 0 == particles ) { return StatusCode::FAILURE ; }          // RETURN 
   
   // get the detector 
   Detector*   detector  = getDet<DeCalorimeter> ( m_detector );
-  if ( 0 == detector  ) { return StatusCode::FAILURE ; }          // RETURN 
   
   // scale factor for recalculation of Eactive into Etotal 
   const double activeToTotal = detector->activeToTotal() ;
   
   // create relation table and register it in the event transient store 
   Table* table = new Table( 500 );
-  //
-  StatusCode sc = put( table , m_output ) ;
-  if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+  put( table , m_output ) ;
 
   if ( m_inputs.empty() ) 
   { return Error ("No input data are specified! "); } // RETURN 

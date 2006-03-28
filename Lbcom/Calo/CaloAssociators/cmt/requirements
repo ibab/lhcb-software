@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.26 2006-02-21 10:04:45 odescham Exp $
+# $Id: requirements,v 1.27 2006-03-28 14:44:36 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.26 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.27 $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -8,7 +8,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v6r0
+version           v6r0p1
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
@@ -33,6 +33,9 @@ apply_pattern     component_library library=CaloAssociators
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2006/02/21 10:04:45  odescham
+# update for new Event Model
+#
 # Revision 1.25  2005/05/08 09:19:06  ibelyaev
 #  new relation ables and linkers
 # 

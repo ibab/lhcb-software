@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.6 2006-02-23 21:30:45 odescham Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.7 2006-03-28 14:44:36 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/23 21:30:45  odescham
+// Standardize TES path + cleaning
+//
 // Revision 1.5  2006/02/23 16:38:49  cattanem
 // fix warning and move tag
 //
@@ -201,14 +204,12 @@ StatusCode CaloDigitMCTruth::execute    ()
   
   // get the detector from TDS 
   Detector* detector = getDet<Detector>( m_detector ) ;
-  if ( 0 == detector ) { return StatusCode::FAILURE ; }
   
   // scale factor for recalculation of eActive into eTotal 
   const double activeToTotal = detector->activeToTotal() ;
   
   // get digits from TES  
   Digits*   digits   = get<Digits>     ( m_input ) ;
-  if ( 0 == digits   ) { return StatusCode::FAILURE ; }
   
   { // check the availability of the global MC truth 
     LHCb::MCCaloDigits* _mc = mcTruth<LHCb::MCCaloDigits>( digits ) ;

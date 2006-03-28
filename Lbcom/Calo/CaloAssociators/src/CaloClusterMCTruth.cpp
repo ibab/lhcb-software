@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.4 2006-02-23 21:30:45 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.5 2006-03-28 14:44:36 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/02/23 21:30:45  odescham
+// Standardize TES path + cleaning
+//
 // Revision 1.3  2006/02/21 11:17:17  odescham
 // adapt to CaloDataFunctor moved to LHCb namespace
 //
@@ -129,16 +132,13 @@ StatusCode CaloClusterMCTruth::execute    ()
   
   // create and register the relation table 
   Table* table = new Table( 1000 ) ;
-  StatusCode sc = put( table , m_outputRelations ) ;
-  if ( sc.isFailure() ) { return sc ; }
-  
+  put( table , m_outputRelations ) ;
   
   if ( m_inputRelations.empty() ) 
   { return Error ( "No inputs are specified!" ) ; }
   
   // get CaloDigit->MCParticle relation from TES 
   DigTable* digTable = get<DigTable> ( m_inputRelations ) ;
-  if ( 0 == digTable ) { return StatusCode::FAILURE ; }
   
   // loop over all containers of clusters 
   for ( Inputs::const_iterator container = m_clusterContainers.begin() ; 
@@ -147,7 +147,6 @@ StatusCode CaloClusterMCTruth::execute    ()
     
     // get the container of clusters 
     Clusters* clusters = get<Clusters> ( *container ) ;
-    if ( 0 == clusters ) { return StatusCode::FAILURE ; }
     
     // loop over all clusters in the container  
     for ( Clusters::const_iterator icluster = clusters->begin() ; 

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.40 2006-02-23 21:30:45 odescham Exp $
+! $Id: release.notes,v 1.41 2006-03-28 14:44:36 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!===================== CaloAssociators v6r0p1 2006-02-28 ======================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
 
 !===================== CaloAssociators v6r0 2006-02-23 =====================
 ! 2006-02-23 - Olivier Deschamps
