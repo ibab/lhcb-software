@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.41 2006-03-23 07:36:15 cattanem Exp $
+! $Id: release.notes,v 1.42 2006-03-28 12:26:45 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r0p1 2006-03-28 =================
+! 2006-03-28 - Marco Cattaneo
+ - Add explicit dependency on Boost, needed for Gaudi v18r3
 
 !========================== CaloUtils v6r0 2006-03-22 ===================
 ! 2006-03-22 - Olivier Deschamps
