@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.20 2006-03-15 13:40:59 pkoppenb Exp $
+! $Id: release.notes,v 1.21 2006-03-28 14:47:58 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 !=================================================================================
 
+!========================== DaVinciTransporter v3r0 2006-03-28 ===================
 ! 2006-02-16 - P. Koppenburg
   - src/TrgDispCalculator.{cpp,h}
     . Samll change in interface
