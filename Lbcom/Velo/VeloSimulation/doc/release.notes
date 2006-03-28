@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r1p1 2006-03-28 ======================
+! 2006-03-28 - Marco Cattaneo
+ - Backwards compatible fixes to compile with Gaudi v18r3
+
 !===================== VeloSimulation v2r1 2006-03-23 =====================
 ! 2006-03-17 - Mark Tobin and Kurt Rinnert
  - Adapt to use new DeVelo interface

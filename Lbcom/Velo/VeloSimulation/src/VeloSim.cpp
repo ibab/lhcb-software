@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.10 2006-03-21 17:33:16 mtobin Exp $
+// $Id: VeloSim.cpp,v 1.11 2006-03-28 15:19:27 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -1037,7 +1037,6 @@ StatusCode VeloSim::storeOutputData(){
   //
   debug()<< " ==> storeOutputData() " <<endmsg;
   //
-  StatusCode sc;
   // velo FEs
   // update FEs container adding the pileup FEs
   //  sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
@@ -1051,28 +1050,19 @@ StatusCode VeloSim::storeOutputData(){
     debug()<< " size after update: " << m_veloFEs->size() <<endmsg;
   }
   //
-  sc=put(m_veloFEs, m_outputContainer);
-  if( sc ){
-    debug()<< "Stored " << m_veloFEs->size() << " MCVeloFEs at "
-			     << m_outputContainer <<endmsg;
-  }else{
-    error()<< "Unable to store MCVeloFEs at "
-	         << m_outputContainer << endmsg;
-  }
+  put(m_veloFEs, m_outputContainer);
+  debug()<< "Stored " << m_veloFEs->size() << " MCVeloFEs at "
+         << m_outputContainer <<endmsg;
+
   // pileup FEs
   if (m_pileUp){
     //    sc = eventSvc()->registerObject(m_pileUpOutputContainer,m_pileUpFEs);
-    sc=put(m_pileUpFEs, m_pileUpOutputContainer);
-    if( sc ){
-      debug()<< "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
-			       << m_pileUpOutputContainer << endmsg;
-    }else{
-      error()<< "Unable to store MCVeloFEs at "
-   	         << m_pileUpOutputContainer << endmsg;
-    }
+    put(m_pileUpFEs, m_pileUpOutputContainer);
+    debug()<< "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
+           << m_pileUpOutputContainer << endmsg;
   }
   //
-  return (sc);
+  return StatusCode::SUCCESS;
 }
 //=========================================================================
 // delta ray tail random numbers
