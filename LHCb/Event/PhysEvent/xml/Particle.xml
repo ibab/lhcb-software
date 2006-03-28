@@ -192,6 +192,7 @@
         desc="full error matrix on position, 4-momentum. @todo Check the maths of this"
         type="Gaudi::SymMatrix7x7"
 	>
+<!--
 	<code>
 	  Gaudi::SymMatrix7x7 full;
 	  full.Place_at(m_posCovMatrix,0,0);
@@ -199,6 +200,7 @@
 	  full.Place_at(m_posMomCovMatrix,0,4);
 	  return full;
 	</code>
+-->
        </method>
        <attribute
         name="momCovMatrix"

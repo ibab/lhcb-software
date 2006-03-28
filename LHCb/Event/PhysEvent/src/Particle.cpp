@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.14 2006-01-17 10:13:29 pkoppenb Exp $
+// $Id: Particle.cpp,v 1.15 2006-03-28 13:54:01 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -6,6 +6,8 @@
 
 // local
 #include "Event/Particle.h"
+
+#include "Kernel/MatrixManip.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle
@@ -50,5 +52,21 @@ LHCb::Particle& LHCb::Particle::operator=(const LHCb::Particle& orig) {
   }
   return *this;
 }
+//=============================================================================
+// Create and return the covariance matrix
+//=============================================================================
+Gaudi::SymMatrix7x7 LHCb::Particle::covMatrix() const 
+{
 
+  using namespace MatrixManip;
+
+  Gaudi::Matrix7x7 full;
+
+  full.Place_at(Standardize(m_posCovMatrix),0,0);
+  full.Place_at(Standardize(m_momCovMatrix),4,4);
+  full.Place_at(m_posMomCovMatrix,0,4);
+
+  return Symmetrize(full);
+	
+}
 
