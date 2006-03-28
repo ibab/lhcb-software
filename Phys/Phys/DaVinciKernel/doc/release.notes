@@ -2,6 +2,7 @@
 ! Responsible : P. Koppenburg
 !============================================================================
 
+!========================== DaVinciKernel v4r0 2006-03-28 ===================
 ! 2006-03-16 - P. Koppenburg
   - Kernel/DVAlgorithm.h 
   - src/Lib/DVAlgorithm.cpp
