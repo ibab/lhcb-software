@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           SimComponents
-version           v1r1
+version           v1r1p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,6 +21,7 @@ use   GaudiAlg     v*
 use   GenEvent     v*    Event
 use   MCEvent      v*    Event
 use   PackedEvent  v*    Event
+use   Boost        v*    LCG_Interfaces
 
 #============================================================================
 # Component library building rule
