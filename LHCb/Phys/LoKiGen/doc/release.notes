@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2006-02-17 12:13:17 cattanem Exp $ 
+! $Id: release.notes,v 1.5 2006-03-28 08:43:50 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,10 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKiGen v1r1 2006-03-28 ==========================
+! 2006-03-03 - Vanya BELYAEV
+ - Add G3Q and GP<*> functions
 
 !=========================== LoKiGen v1r0 2006-02-17 ==========================
 ! 2006-02-09 - Vanya BELYAEV
