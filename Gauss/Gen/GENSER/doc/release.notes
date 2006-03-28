@@ -4,9 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!====================== GENSER v1r121p3 ==================================
-! 2006-03-24 - Florence RANJARD
- - requirements - use GaudiPolicy to get fflags with -O2
+!===================== GENSER v1r130p0 ===============================
+! 2006-03-27 - Florence RANJARD
+ - requirements - use GaudiPolicy to get the fflags
+                  use GENSER_1_3_0
 
 !====================== GENSER v1r121p2 ================================
 ! 2006-02-06 - Florence RANJARD
