@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r2 2006-03-28 ========================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
    (needed some temporary changes because of missing/buggy SMatrix functionality)
