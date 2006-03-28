@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.47 2006-03-15 13:48:54 pkoppenb Exp $
+! $Id: release.notes,v 1.48 2006-03-28 14:52:16 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
 
+!========================== VertexFit v2r0 2006-03-28 ===================
 ! 2006-01-23 - P. Koppenburg
   - src/.*
     . Removed temporaryly except

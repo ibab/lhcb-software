@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.28 2006-03-19 16:33:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2006-03-28 14:49:00 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
 
+!========================== ParticleMaker v2r0 2006-03-28 ===================
 ! 2006-03-19 - Vanya BELYAEV
  - tiny decoration around ParticleMakerSeq
    1) remove *.h file, the body of the tool is moved into *.cpp file
