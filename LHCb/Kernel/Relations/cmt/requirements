@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.12 2006-03-29 08:13:52 cattanem Exp $
+# $Id: requirements,v 1.13 2006-03-29 14:38:23 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v3r0
+version v3r1
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
@@ -24,8 +24,9 @@ use              Boost       v* LCG_Interfaces -no_auto_import
 apply_pattern     reflex_dictionary                                 \
                   dictionary=Relations                              \
                   headerfiles=$(RELATIONSROOT)/dict/selection.h     \
-                  selectionfile=$(RELATIONSROOT)/dict/selection.xml
-
+                  selectionfile=$(RELATIONSROOT)/dict/selection.xml \
+                  options="-U__MINGW32__"
+                  
 # ============== constituents =================================================
 library          RelationsLib *.cpp
 
@@ -36,6 +37,8 @@ apply_pattern    linker_library    library=RelationsLib
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
+macro RelationsLib_use_linkopts  $(GaudiKernel_linkopts)
+macro RelationsDict_use_linkopts $(Reflex_linkopts)
 
 path_remove  PYTHONPATH "Relations"
 path_prepend PYTHONPATH "$(RELATIONSROOT)/python"

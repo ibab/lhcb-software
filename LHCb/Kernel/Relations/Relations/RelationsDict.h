@@ -1,8 +1,11 @@
-// $Id: RelationsDict.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationsDict.h,v 1.8 2006-03-29 14:38:23 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/02/07 09:22:24  ibelyaev
+//  update for Win32
+//
 // Revision 1.6  2006/02/02 14:47:56  ibelyaev
 //  many changes: see doc/release.notes
 // 

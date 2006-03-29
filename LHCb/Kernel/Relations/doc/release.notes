@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.31 2006-03-29 08:13:52 cattanem Exp $ 
+! $Id: release.notes,v 1.32 2006-03-29 14:38:23 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.31 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.32 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
-! ====================== Relations v3r0p1 2006-02-29 ==========================
+! ====================== Relations v3r1 2006-02-29 ============================
 ! 2006-03-29 - Marco Cattaneo
- - Remove unneccessary application_path pattern
+ - Various fixes to requirements for Gaudi v18r3
+ - Disable creation of dictionary on Windows (with ifndef in RelationsDict.h)
+   because it breaks with Gaudi v18r3
 
 ! ====================== Relations v3r0 2006-02-23 ============================
 ! 2006-02-22 - Vanya BELYAEV
