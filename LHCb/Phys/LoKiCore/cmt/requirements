@@ -1,5 +1,5 @@
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -20,7 +20,7 @@ use                Boost            v* LCG_Interfaces
 use                ROOT             v* LCG_Interfaces 
  
 # ================ constituents ===============================================
-library            LoKiCoreLib    ../src/*.cpp -import=Boost
+library            LoKiCoreLib    ../src/*.cpp
 library            LoKiCore       ../src/Components/*.cpp
 
 # ================ patterns ===================================================
@@ -29,6 +29,9 @@ apply_pattern      component_library library=LoKiCore
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2006/03/24 17:23:26  cattanem
+# v1r1
+#
 # Revision 1.4  2006/03/24 16:39:56  ibelyaev
 #  fix for Product->Similarity
 #
