@@ -1,3 +1,4 @@
+#include "RTL/rtl.h"
 #include "SCR/scr.h"
 #include "UPI/upidef.h"
 #include <cstdio>
@@ -385,7 +386,9 @@ namespace  {
   }
   */
 }
-extern "C" int upi_test (int /* argc */, char** /* argv */ )   {
-    while (loop());
+extern "C" int upi_test (int argc, char** argv )   {
+  RTL::CLI cli(argc,argv,0);
+  if ( cli.getopt("debug",1) != 0 ) ::lib_rtl_start_debugger();
+  while (loop());
     return 1;
 }

@@ -59,6 +59,11 @@ struct amsuc_info  {
   int  status;
 };
 
+enum AddressStyles   {
+    DECNET_STYLE,
+    INTERNET_STYLE,
+};
+  void amsc_full_name (char *dest, const char *src, size_t length, int style);
   int amsc_init             ( __CXX_CONSTANT char* );
   int amsc_close            ( void );
   int amsc_send_message     ( __CXX_CONSTANT void*, size_t, __CXX_CONSTANT char*, int, __CXX_CONSTANT char* );

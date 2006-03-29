@@ -90,16 +90,9 @@ int upic_net_read (char** buffer, size_t* bytes, char** source) {
     *buffer = (char*) malloc (total + 1);
     *bytes  = total+1;
     status = amsc_get_message (*buffer, bytes, Source_name, 0, 0, &f, 0, 0);
-
-    if (strstr (Source_name, ":"))    {
-      *source = (char*)list_malloc (strlen(Source_name) + 1);
-      strcpy (*source, Source_name);
-    }
-    else    {
-      *source = (char*)list_malloc (strlen(My_node) + strlen(Source_name) + 1);
-      strcpy (*source, My_node);
-      strcat (*source, Source_name);
-    }
+    fill = strlen(My_node) + strlen(Source_name) + 1;
+    *source = (char*)list_malloc (fill);
+    amsc_full_name(*source,Source_name,fill,DECNET_STYLE);
   }
   else  {
     fill = sizeof(blank);
@@ -117,15 +110,9 @@ int upic_net_spy (char** source)  {
   size_t total, fill = 1;
   char blank[32];
   int status = amsc_spy_next_message (blank, &fill, Source_name, &f, &total);
-  if (strstr(Source_name, ":"))  {
-    *source = (char*)list_malloc (strlen(Source_name) + 1);
-    strcpy (*source, Source_name);
-  }
-  else  {
-    *source = (char*)list_malloc (strlen(My_node) + strlen(Source_name) + 1);
-    strcpy (*source, My_node);
-    strcat (*source, Source_name);
-  }
+  fill = strlen(My_node) + strlen(Source_name) + 1;
+  *source = (char*)list_malloc (fill);
+  amsc_full_name(*source,Source_name,fill,DECNET_STYLE);
   return status;
 }
 

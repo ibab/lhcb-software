@@ -9,7 +9,7 @@
 //
 //	===========================================================
 #ifndef GAUDIONLINE_ONLINERUNABLE_H
-#define  GAUDIONLINE_ONLINERUNABLE_H 1
+#define GAUDIONLINE_ONLINERUNABLE_H 1
 
 // Framework include files
 #include "GaudiKernel/Service.h"
@@ -17,7 +17,6 @@
 
 // Forward declarations
 class ISvcLocator;
-
 
 /*
  *  LHCb namespace declaration
@@ -30,8 +29,6 @@ namespace LHCb  {
     *  @version 1.0
     */
   class OnlineRunable : public Service, virtual public IRunable    {
-    /// Debug flag to start debugger online
-    int m_debug;
   public:
     /// Standard Constructor
     OnlineRunable(const std::string& name, ISvcLocator* svc);
@@ -39,10 +36,6 @@ namespace LHCb  {
     virtual ~OnlineRunable();
     /// IInterface implementation: Query interface
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
-    /// IService implementation: Initialize the service
-    virtual StatusCode initialize();
-    /// IService implementation: Finalize the service
-    virtual StatusCode finalize();
     /// IRunable implementation: Run the object
     virtual StatusCode run();
   };
