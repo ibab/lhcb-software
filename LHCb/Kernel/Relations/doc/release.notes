@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.32 2006-03-29 14:38:23 cattanem Exp $ 
+! $Id: release.notes,v 1.33 2006-03-29 16:33:57 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.32 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.33 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
@@ -9,7 +9,8 @@
 
 ! ====================== Relations v3r1 2006-02-29 ============================
 ! 2006-03-29 - Marco Cattaneo
- - Various fixes to requirements for Gaudi v18r3
+ - Fix no_auto_imports flag in requirements (was missing the 's')
+ - Remove no_auto_imports from Boost, it is always needed when using Relations
  - Disable creation of dictionary on Windows (with ifndef in RelationsDict.h)
    because it breaks with Gaudi v18r3
 

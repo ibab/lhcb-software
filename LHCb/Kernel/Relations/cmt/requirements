@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.13 2006-03-29 14:38:23 cattanem Exp $
+# $Id: requirements,v 1.14 2006-03-29 16:33:57 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -16,9 +16,9 @@ include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
 use              GaudiAlg    v*
-use              Python      v* LCG_Interfaces -no_auto_import 
-use              Reflex      v* LCG_Interfaces -no_auto_import 
-use              Boost       v* LCG_Interfaces -no_auto_import 
+use              Python      v* LCG_Interfaces -no_auto_imports 
+use              Reflex      v* LCG_Interfaces -no_auto_imports
+use              Boost       v* LCG_Interfaces
 
 # ============== Produce LCG dictionary =======================================
 apply_pattern     reflex_dictionary                                 \
@@ -37,7 +37,6 @@ apply_pattern    linker_library    library=RelationsLib
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
-macro RelationsLib_use_linkopts  $(GaudiKernel_linkopts)
 macro RelationsDict_use_linkopts $(Reflex_linkopts)
 
 path_remove  PYTHONPATH "Relations"
