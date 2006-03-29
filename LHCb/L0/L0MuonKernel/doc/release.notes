@@ -3,7 +3,8 @@
 ! Responsible : Luisanna Tocco, Andrei Tsaregorodtsev
 ! Purpose     : 
 !-----------------------------------------------------------------------------
-
+! 2006-03-29 - Julien Cogan
+ - minor changes: add >,== and < operators for class MuonCandidate
 !========================= L0MuonKernel v5r0 2006-03-06 ====================
 ! 2006-03-06 - Marco Cattaneo
  - Fixes to compile on Windows
