@@ -4,9 +4,16 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v16r0 2006-03-29 ===================
 ! 2006-03-16 - P. Koppenburg
   Version fof DC06
   Only a few things ``work'' and there is no data...
+  
+  - options/DVDC06MC.opts
+    . Would allow to use the MCParticlemaker (not yet funbctional)
+      to start from MCParticles.
+  - options/DVDC06Test.opts 
+    . Tests initialize and finalize
 
 !========================== DaVinci v15r0 2005-12-21 ===================
 Built on GAUDI_v17r2, XmlDDDB v27r1, LHCb v19r3, LbcomSys v3r2, 

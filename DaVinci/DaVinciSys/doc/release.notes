@@ -1,7 +1,28 @@
 <PRE>
 Package     : Phys/DaVinci 
-Package Coordinator : Patrick Koppenburg
+Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
+
+</PRE><H1><A NAME=v16r0>2006-03-29 DaVinci v16r0 - Compiling development version</A></H1><PRE>
+Based on Phys v3r0, NO Rec, Lbcom v4r1, LHCb v20r1, Gaudi v18r2.
+
+Another small step towards DC06. Everything uses the DC06 event model.
+This version compiles, initializes and finalizes nicely, 
+but does not run
+  - There is no DST data yet
+  - One can read sim files, but the MCParticleMaker needs to be adapted to be able
+    to test anything.
+
+!========================== DaVinci v16r0 2006-03-29 ===================
+! 2006-03-16 - P. Koppenburg
+  Version fof DC06
+  Only a few things ``work'' and there is no data...
+  
+  - options/DVDC06MC.opts
+    . Would allow to use the MCParticlemaker (not yet funbctional)
+      to start from MCParticles.
+  - options/DVDC06Test.opts 
+    . Tests initialize and finalize
 
 </PRE><H1><A NAME=v15r0>2005-12-21 DaVinci v15r0 - Compiling development version</A></H1><PRE>
 Based on Phys v2r2, Rec v2r2, Lbcom v3r2, LHCb v19r3, Gaudi v17r2.
