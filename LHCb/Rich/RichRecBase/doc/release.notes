@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r1 2006-03-29 ========================
+! 2006-03-22 - Chris Jones
+ - In RichTrackSelector.h momentum cut is in GeV
+ - In RichPixelCreatorBase.cpp, RichPixelSuppress tool renamed to PixelSuppress
+
 !====================== RichRecBase v2r0 2006-03-13 ========================
 ! 2006-03-12 - Chris Jones
  - Add missing includes for IAlgTool in tool interfaces
