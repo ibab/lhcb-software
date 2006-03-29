@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.64 2006-03-22 13:38:20 cattanem Exp $
+# $Id: release.notes,v 1.65 2006-03-29 14:55:12 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!================= Det/DetCond v7r10p1 2006-03-29 ============================
+! 2006-03-29 - Marco Cattaneo
+ - Trivial fix in requirements for GCCXML+Boost on Windows with LCG_v42a
 
 !================= Det/DetCond v7r10 2006-03-22 ==============================
 ! 2006-03-22 - Marco Cattaneo

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2006-03-22 13:38:20 cattanem Exp $
+# $Id: requirements,v 1.50 2006-03-29 14:55:09 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v7r10
@@ -24,7 +24,8 @@ apply_tag   NEEDS_CORAL_BASE
 apply_pattern     reflex_dictionary                                     \
                   dictionary=DetCond                                    \
                   headerfiles=$(DETCONDROOT)/src/dict/DetCondDict.h     \
-                  selectionfile=$(DETCONDROOT)/src/dict/DetCondDict.xml
+                  selectionfile=$(DETCONDROOT)/src/dict/DetCondDict.xml \
+                  options="-U__MINGW32__"
 
 # =========== constituents =====================================================
 library       DetCondLib        Lib/*.cpp
