@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.14 2006-03-29 16:33:57 cattanem Exp $
+# $Id: requirements,v 1.15 2006-03-29 16:44:43 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -16,7 +16,7 @@ include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
 use              GaudiAlg    v*
-use              Python      v* LCG_Interfaces -no_auto_imports 
+use              Python      v* LCG_Interfaces -no_auto_imports
 use              Reflex      v* LCG_Interfaces -no_auto_imports
 use              Boost       v* LCG_Interfaces
 
@@ -26,7 +26,10 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(RELATIONSROOT)/dict/selection.h     \
                   selectionfile=$(RELATIONSROOT)/dict/selection.xml \
                   options="-U__MINGW32__"
-                  
+
+#---Added temporary the following macro until ROOT gets fixed-----------------
+macro Relations_reflex_options " --select=$(RELATIONSROOT)/dict/selection.xml --gccxmlpath=$(GCCXML_home)/bin"
+
 # ============== constituents =================================================
 library          RelationsLib *.cpp
 
