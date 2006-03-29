@@ -26,13 +26,15 @@ enum  {
 };
 enum AddressStyles   {
     DECNET_STYLE,
-    INTERNET_STYLE
+    INTERNET_STYLE,
+    UTGID_STYLE
 };
 enum  CONNECTION_FIND_MODES  {
     CREATE_IF,
     FIND_ONLY
 };
 
+static const int DEFAULT_STYLE= UTGID_STYLE;
 static const int SNDBUF_VALUE = 8192;
 static const int RCVBUF_VALUE = CHOP_SIZE;
 
@@ -135,18 +137,24 @@ int AMS_exit_handler(void* ) {
 }
 
 static void _amsc_full_name (char *dest, const char *src, size_t length, int style) {
-  char *p, full[SAFE_NAME_LENGTH], proc[PROC_NAME_LENGTH], host[HOST_NAME_LENGTH];
+  char *p, *q, full[SAFE_NAME_LENGTH], proc[PROC_NAME_LENGTH], host[HOST_NAME_LENGTH];
   if ((p = strstr (src,"::"))) {      // found DECNET style source name 
     int n = p - src;
     strncpy(host, src, n);
-    host [n] = '\0';
+    host[n] = 0;
     strcpy(proc, p + 2);
   }
   else if ((p = strchr(src,'@')))  {  // found INTERNET style source name 
     int n = p - src;
     strncpy(proc, src, n);
-    proc [n] = '\0';
+    proc[n] = 0;
     strcpy(host, p + 1);
+  }
+  else if ((p=strstr(src,"_")) && (q=strstr(p+1,"_"))) { // found UTGID style source name 
+    int n = p - src;
+    strncpy(host, src, n);
+    host[n] = 0;
+    strcpy(proc, p + 1);
   }
   else  {                            // Source is process name only 
     strcpy(proc, src);
@@ -179,13 +187,22 @@ static void _amsc_full_name (char *dest, const char *src, size_t length, int sty
   }
 }
 
-static int _amsc_remove_node_if_mine(char *src)  {
+static int _amsc_remove_node_if_mine(char *src, int style=DECNET_STYLE)  {
   char *s_ptr = strstr(src,"::");
   int   s_len = s_ptr-src;
   int   c_len =( s_len > _ams.hostNameLen ) ? s_len : _ams.hostNameLen;
-  int    stat = strncmp(_ams.hostName,src,c_len);
-  if ( stat == 0 )  {
-    strcpy (src, s_ptr+2);
+  if ( style == DECNET_STYLE )  {
+    int    stat = strncmp(_ams.hostName,src,c_len);
+    if ( stat == 0 )  {
+      strcpy (src, s_ptr+2);
+    }
+  }
+  else {
+    char full[SAFE_NAME_LENGTH];
+    strncpy(full, src, s_ptr-src);
+    strcpy(&full[s_ptr-src+1], s_ptr+2);
+    full[s_ptr-src] = '_';
+    strcpy(src, full);
   }
   return 0;
 }
@@ -663,7 +680,7 @@ static int _amsc_spy_last_message (void* buffer, size_t* size, char* from, unsig
     *tlen = m->size - sizeof (amsheader_t);
   }
   insqti (m, &_ams.message_Q);
-  _amsc_remove_node_if_mine(from);
+  _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
   return (status == AMS_SUCCESS) ? status : errno=status;
 }
 
@@ -682,7 +699,7 @@ static int _amsc_spy_next_message (void* buffer, size_t* size, char* from, unsig
     *tlen = m->size - sizeof (amsheader_t);
   }
   insqhi(m,header);
-  _amsc_remove_node_if_mine(from);
+  _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
   _amsc_printf("_amsc_spy_next_message: all done: status=%d\n",status);
   return status==AMS_SUCCESS ? status : errno=status;
 }
@@ -972,9 +989,9 @@ static int _amsc_send_message (const void* buff, size_t size, const char* dest, 
   if (size <= 0)  {
     return AMS_ILLEGAL_LENGTH;
   }
-  _amsc_full_name(full_dest, dest, sizeof (full_dest), DECNET_STYLE);
+  _amsc_full_name(full_dest,dest,sizeof(full_dest),DECNET_STYLE);
   if (from != 0)  {
-    _amsc_full_name(full_from, from, sizeof (full_from), DECNET_STYLE);
+    _amsc_full_name(full_from,from,sizeof(full_from),DECNET_STYLE);
   }
   else  {
     ::strcpy (full_from, _ams.me.name);
@@ -1015,7 +1032,7 @@ static int _amsc_read_message (void* buffer, size_t* size, char* from, unsigned 
     remqhi (&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
-    _amsc_remove_node_if_mine(from);
+    _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
     return (status == AMS_SUCCESS) ? status : errno=status;
   }
   return errno = AMS_NOPEND;
@@ -1033,7 +1050,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   _ams.reqFac = 0;
   ::memset (_ams.reqSource, 0, sizeof(_ams.reqSource));
   if (r_source_in != 0)   {
-    _amsc_full_name (_ams.reqSource, r_source_in, sizeof (_ams.reqSource), DECNET_STYLE);
+    _amsc_full_name(_ams.reqSource, r_source_in, sizeof (_ams.reqSource), DECNET_STYLE);
     _amsc_remove_node_if_mine(_ams.reqSource);
   }
   parking = (r_source_in != 0) || (r_facility != 0) || timeout!= 0;
@@ -1081,7 +1098,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     remqhi (&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
-    _amsc_remove_node_if_mine(from);
+    _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
     return (status == AMS_SUCCESS) ? status : errno=status;
   }
   else  {
@@ -1118,7 +1135,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     }
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
-    _amsc_remove_node_if_mine(from);
+    _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
     return (status == AMS_SUCCESS) ? status : errno=status;
   }
 }
@@ -1137,9 +1154,6 @@ static int _amsc_disconnect_task(const char* task)   {
   return AMS_SUCCESS;
 }
 
-//----------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 int amsc_init (const char *inname)   {
   if (_ams.inited)  {
@@ -1163,7 +1177,7 @@ int amsc_init (const char *inname)   {
   else  {
     strncpy (_ams.name, inname, sizeof (_ams.name));
   }
-  _amsc_full_name (_ams.me.name, _ams.name, sizeof (_ams.me.name), DECNET_STYLE);
+  _amsc_full_name(_ams.me.name,_ams.name,sizeof(_ams.me.name),DECNET_STYLE);
   memset(_ams.db, 0, sizeof(_ams.db));
   if ( (status=wtc_init()) != WT_SUCCESS )  {
     return errno = status;

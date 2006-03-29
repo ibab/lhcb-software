@@ -102,7 +102,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       ams_status = amsc_send_message (rmessage, rsize, source, 0, 0);
     }
     if (ams_status != AMS_SUCCESS) err_print (ams_status);
-    if (++loop % 100 == 0) printf ("%d\n", loop);
+    if (++loop % 100 == 0) printf ("%d -- Last msg from:%s\n", loop, source);
   }
   return 0;
 }
