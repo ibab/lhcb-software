@@ -18,7 +18,7 @@ use HepMC                v4r126p0 Sim     # Gloria Corti, Matt Dobbs
 use KernelSys             v5r2    Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r4    Kernel  # Juan Palacios
 use LHCbKernel            v6r4    Kernel  # Marco Cattaneo
-use Relations             v3r0p1  Kernel  # Ivan Belyaev
+use Relations             v3r1    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0    Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
 use RichKernel            v6r2    Rich    # Chris Jones
@@ -74,7 +74,7 @@ use RichRecBase           v2r1   Rich    # Chris Jones
 use TrackInterfaces       v2r1   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 #use TrackPython           v1r1   Tr      # Eduardo Rodrigues, Jose Hernando
-use DetCond               v7r10  Det     # Marco Clemencic
+use DetCond              v7r10p1 Det     # Marco Clemencic
 use CondDBEntityResolver  v1r1   Tools   # Marco Clemencic
 use LoKiCore              v1r1   Phys    # Ivan Belyaev
 use LoKiGen               v1r1   Phys    # Ivan Belyaev
