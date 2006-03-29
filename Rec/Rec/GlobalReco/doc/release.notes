@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v5r2 2006-03-23 ===================
 !  2006-02-24 - P. Koppenburg
   - options/ChargedProtoPAlg.opts
     . Correction of comment: default in ProtoParticle making is 
