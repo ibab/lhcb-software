@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r0 2006-03-29 =======================
 ! 2006-03-09 - Edwin Bos
  - Moved to LHCb v20r0
 
