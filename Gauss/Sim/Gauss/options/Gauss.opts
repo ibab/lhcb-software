@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.82 2006-03-27 18:49:03 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.83 2006-03-29 08:25:41 gcorti Exp $ 
 
 /** @file 
  * 
@@ -73,7 +73,7 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 100;
+ApplicationMgr.EvtMax     = 500;
 
 //---------------------------------------------------------------------------
 // Output files. 
@@ -90,8 +90,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b-b~ events
-#include "$GAUSSOPTS/13144000.opts"  // Bs->J/Psi(mumu)phi
-//#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
+//#include "$GAUSSOPTS/13144000.opts"  // Bs->J/Psi(mumu)phi
+#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
 //#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
 
 //MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout

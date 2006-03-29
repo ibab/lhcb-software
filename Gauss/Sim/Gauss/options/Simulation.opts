@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.76 2006-03-16 14:15:42 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.77 2006-03-29 08:25:41 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -121,7 +121,7 @@ GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
-{ "/tracking/verbose 1",
+{ "/tracking/verbose 0",
   "/tracking/storeTrajectory  1",
   "/process/eLoss/verbose -1",
 } ;

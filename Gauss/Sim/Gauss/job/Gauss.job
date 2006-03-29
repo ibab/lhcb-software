@@ -30,8 +30,8 @@ echo "----> Executing Gauss $Gversion using as options Gauss.opts (mode $MODE)"
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly - e.g.:
-#  setenv MYJOBROOT ~/cmtuser/Sim/Gauss/$Gversion
-    setenv MYJOBROOT $LHCBDEV/GAUSS/GAUSS_v19r4/Sim/Gauss/$Gversion
+  setenv MYJOBROOT $HOME/cmtuser/Sim/Gauss/$Gversion
+#  setenv MYJOBROOT $LHCBDEV/GAUSS/GAUSS_v19r4/Sim/Gauss/$Gversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
