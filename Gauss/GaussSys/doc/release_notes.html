@@ -4,6 +4,103 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v24r2">2006-03-29 - GaussSys v24r2</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version for tests. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2 (via GENSER 1_3_0), lhapdf 4.2  
+   DecFiles v12r0, ParamFiles v4r1 
+   Geant4 v71r0p13 (based on geant4.7.1.p01a)
+   LHCb v20r1 (and Gaudi v18r2)
+   XmlDDDB v30r2, XmlConditions v1r5, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r2 2006-03-29 =============================
+! 2006-03-29 - Gloria CORTI
+ - Modify Gauss.job to point to cmtuser working directory
+ - Set verbose off to prevent full dump by default when running debug version
+   . Simulation.opts
+ - Use options of event type from DecFiles v12r0
+   . Gauss.opts
+
+! 2006-03-27 - Gloria CORTI
+ - Switch on simulation of beam pipe in reagions
+   . use XmlDDDB v30r2
+   . SimGeometry.opts
+ - Introduce use of MeV in Generators (use ParticleGuns v2r1, Generators v4r2,
+   LbPythia v4r1, GaussKine v1r1, GiGaCnv v16r1)
+
+! 2006-03-22 - Gloria Corti
+ - Use new version of GiGaCnv (v16r1) to fix problem of units when passing
+   isotopes
+
+! 2006-03-20 - Gloria CORTI
+ - Use new version of GaussRICH with modification for extended info (v6r3)
+ - Compile against LHCb v20r1
+
+!========================== VeloGauss v1r3 2006-03-27 ========================
+! 2006-03-27 - Mark Tobin
+ - Modified to work with new VeloDet interface
+
+!=================== GaussMonitor v3r1 2007-03-27 ============================
+! 2006-03-23 - Juan PALACIOS
+ - Change use of std::vector<LHCb::MCParticle*> to
+   LHCb::MCParticle::ConstVector in MCDecayCounter to match
+   new IMCDecayFinder interface.
+
+!======================== GaussRICH v6r3 2006-03-27 ===========================
+! 2006-03-22 - Chris Jones
+ - Adapt to removal of RichCondition package (functionality now in RichDet)
+
+! 2006-03-15 - Chris Jones
+ - Yet more tidying up of converter algorithms and options
+
+!========================== GaussKine v1r1 2006-03-27 ========================
+! 2006-03-27 - Patrick Robbe
+ - GeneratorToG4: switch MeV units in HepMC particles
+
+!======================= GiGaCnv v16r1 2006-03-27 ==========================
+! 2006-03-27 - Patrick Robbe
+ - Trajectory2Particle: switch to MeV for HepMC
+
+! 2006-03-20 - Gloria CORTI for Emanuele SANTOVETTI
+ - Remove multiplication for g/mole when passing A, similarly as what done
+   for elements and mixtures, since given already in this unit.
+   . GiGaIsotopeCnv.cpp
+
+! ===================== ParticleGuns v2r1 2006-03-27 =======================
+! 2006-03-23 - Patrick Robbe
+ - ParticleGunBaseAlg: remove all what is not necessary.
+ - ParticleGun, SingleParticleGun, MaterialEvalGun: follow base class
+   changes, use Gaudi random number generator, use mm and MeV units
+
+! ==================== LbPythia v4r1 2006-03-27 ======================
+! 2006-03-22 - Patrick Robbe
+ - PythiaProduction: use MeV instead of GeV
+
+!=================== Generators v4r2 2006-03-27 ===========================
+! 2006-03-22 - Patrick Robbe
+ - ExternalGenerators: adapt to new HepMCEvent constructor and set to false
+   isSignal for pile up collisions
+ - Signal: use new HepMCEvent constructor and set HepMC container name of
+   clean events.
+ - BeamSpotSmearVertex, FlatZSmearVertex: use mm
+ - EvtGenDecay: use MeV and interface EvtGen engine with GeV in the tool
+ - Inclusive: set IsSignal flag of collision containing the inclusive type.
+ - LeptonInAcceptance: use MeV
+ - SignalPlain, SignalForcedFragmentation, SignalRepeatedHadronization,
+   Special: set IsSignal flag for collision with signal.
+
+!======================== EvtGen v8r8 2006-03-28  ==========================
+! 2006-03-28 - Florence RANJARD
+ - cmt/requirements: remove special compilation flags now introduced in
+   GaudiPolicy
+
+!===================== GENSER v1r130p0 ===============================
+! 2006-03-27 - Florence RANJARD
+ - requirements - use GaudiPolicy to get the fflags
+                  use GENSER_1_3_0
+
+!=============================================================================
 <H1><A NAME="v24r1">2006-03-15 - GaussSys v24r1</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in v24r0. </A></H2>

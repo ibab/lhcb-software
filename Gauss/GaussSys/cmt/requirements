@@ -1,5 +1,5 @@
 package GaussSys
-version v24r1
+version v24r2
 
 branches cmt doc
 
@@ -8,22 +8,22 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v24r1	  Sim
+use Gauss		v24r2	  Sim
 
 # Generator stuff ...
-use GENSER              v1r121p2  Gen
+use GENSER              v1r130p0  Gen
 use HepEvt              v3r126p0  Gen
-use EvtGen              v8r7      Gen
-use Generators          v4r1      Gen
-use LbPythia            v4r0      Gen
-#use LbHerwig            v1r1      Gen
-use AcerMC              v1r23p0   Gen
+use EvtGen              v8r8      Gen
+use Generators          v4r2      Gen
+use LbPythia            v4r1      Gen
+#use LbHerwig            v2r0      Gen
+#use AcerMC              v1r23p0   Gen
 #use LbAcerMC            v1r3      Gen
-use ParticleGuns	v2r0      Gen
+use ParticleGuns	v2r1      Gen
 
 # GiGa stuff...
 use GiGa        	v18r1	  Sim        
-use GiGaCnv     	v16r0	  Sim
+use GiGaCnv     	v16r1	  Sim
 use SimSvc              v4r2      Sim
 use GiGaVisUI		v3r1	  Sim
 use VisSvc              v3r3      Vis
@@ -31,16 +31,16 @@ use VisSvc              v3r3      Vis
 use ClhepTools          v1r0      Tools
 
 # Gauss stuff...
-use GaussKine           v1r0      Sim
+use GaussKine           v1r1      Sim
 use GaussAlgs		v2r0      Sim
 use GaussTools	        v12r0	  Sim
-use GaussRICH		v6r2	  Sim
+use GaussRICH		v6r3	  Sim
 use GaussTracker	v5r1	  Sim
 use GaussCalo		v8r1	  Sim
 use GaussPhysics	v3r2	  Sim
-use GaussMonitor	v3r0	  Sim
+use GaussMonitor	v3r1	  Sim
 use CaloMoniSim         v2r1      Calo
-use VeloGauss           v1r2      Velo
+use VeloGauss           v1r3      Velo
 use MuonMoniSim         v2r0      Muon
 
 # GMDL
