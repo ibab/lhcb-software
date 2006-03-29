@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.83 2006-03-29 08:25:41 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.84 2006-03-29 08:31:33 gcorti Exp $ 
 
 /** @file 
  * 
@@ -73,7 +73,7 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 500;
+ApplicationMgr.EvtMax     = 10;
 
 //---------------------------------------------------------------------------
 // Output files. 
@@ -88,18 +88,9 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
+#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b-b~ events
-//#include "$GAUSSOPTS/13144000.opts"  // Bs->J/Psi(mumu)phi
-#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
+//#include "$DECFILESROOT/options/13144000.opts"  // Bs->J/Psi(mumu)phi
+//#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
+
 //#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
-
-//MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout
-
-//#include "$GAUSSOPTS/ParticleGun.opts"          
-//GenMonitor.Members += {"DumpMC"}; 
-//Geo.OutputLevel = 2;
-//GaussTape.OutputLevel = 2;
-//GiGa.OutputLevel = 2;
-//GiGaGeo.FieldMgr.OutputLevel = 2;
-//GiGaFlushAlgorithm.OutputLevel = 2;

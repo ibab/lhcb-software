@@ -4,12 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r2 2006-03-27 =============================
+!======================== Gauss v24r2 2006-03-29 =============================
+! 2006-03-29 - Gloria CORTI
+ - Modify Gauss.job to point to cmtuser working directory
+ - Set verbose off to prevent full dump by default when running debug version
+   . Simulation.opts
+ - Use options of event type from DecFiles v12r0
+   . Gauss.opts 
+
 ! 2006-03-27 - Gloria CORTI
  - Switch on simulation of beam pipe in reagions
    . use XmlDDDB v30r2
    . SimGeometry.opts
- - Use DecFiles (v12r0) as to be prepared for DC06
  - Introduce use of MeV in Generators (use ParticleGuns v2r1, Generators v4r2,
    LbPythia v4r1, GaussKine v1r1, GiGaCnv v16r1)
 
