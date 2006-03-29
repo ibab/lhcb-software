@@ -5,6 +5,33 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v20r2>2006-03-29 LHCbSys v20r2</A></H1><PRE>
+This version uses Gaudi v18r3 and is for DC06 production
+
+- Packages modified: KernelSys v5r2, LHCbDefinitions v1r4, LHCbKernel v6r4,
+    EventSys v21r2, TrackEvent v2r2, PhysEvent v9r2, DetSys v8r2, RichDet v9r3,
+    LoKiCore v1r1, LoKiGen v1r1, SimComponents v1r1p1, CaloUtils v6r0p1,
+    RichRecBase v2r1, Relations v3r0p1
+
+- In LHCbDefinitions v1r4, TrackEvent v2r2, PhysEvent v9r2:
+  . adaptations to new SMatrix-5.10.00b
+
+- In LHCbKernel v6r4:
+  . Modifications to RichSmartIDHashFuncs.h
+
+- In TrackEvent v2r2:
+  . additions to track locations names
+
+- In RichDet v9r3:
+  . Modifications to RichDAQDefinitions.h
+ 
+- In LoKiCore v1r1, LoKiGen v1r1:
+  . New functions and adapters, see details in package release notes
+
+- In RichRecBase v2r1:
+  . In RichTrackSelector.h momentum cut is in GeV
+  . In RichPixelCreatorBase.cpp, RichPixelSuppress tool renamed to PixelSuppress
+
 </PRE><H1><A NAME=v20r1>2006-03-23 LHCbSys v20r1</A></H1><PRE>
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
 
