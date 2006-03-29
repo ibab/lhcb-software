@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.45 2006-03-27 17:25:12 gcorti Exp $
+! $Id: release.notes,v 1.46 2006-03-29 10:11:43 ranjard Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
-!=================== Generators v4r2 2006-03-27 ===========================
+!=================== Generators v4r2 2006-03-29 ===========================
+! 2006-03-29 - Florence Ranjard
+ - use HepMC from lcg/external : link with HepMCfio
+
 ! 2006-03-22 - Patrick Robbe
  - ExternalGenerators: adapt to new HepMCEvent constructor and set to false
    isSignal for pile up collisions

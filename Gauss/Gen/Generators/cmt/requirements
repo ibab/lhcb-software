@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2006-03-27 17:25:12 gcorti Exp $ 
+# $Id: requirements,v 1.13 2006-03-29 10:11:43 ranjard Exp $ 
 # =============================================================================
 package       Generators
 version       v4r2
@@ -13,7 +13,6 @@ include_dirs  $(GENERATORSROOT)
 use           SEAL              v*                LCG_Interfaces
 use           GaudiAlg          v*
 use           GenEvent          v*                Event
-use           HepEvt            v*                Gen
 use           EvtGen            v*                Gen
 
 # =========== constituents ====================================================
@@ -24,4 +23,7 @@ library       Generators     component/*.cpp
 apply_pattern component_library library=Generators 
 apply_pattern linker_library    library=GeneratorsLib 
 apply_pattern library_stamps    library=GeneratorsLib 
+
+# =========== link with HepMCfio from HepMC ==================================
+macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio "
 
