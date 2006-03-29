@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v9r3 2006-03-29 =========================
+! 2006-03-24 - Chris Jones
+ - Modifications to RichDAQDefinitions.h
+
 !========================= RichDet v9r2 2006-03-16 =========================
 ! 2006-03-16 - Chris Jones
  - Add some checks on the validity of the Rich1DTabProperty after they are
