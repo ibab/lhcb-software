@@ -23,6 +23,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 LHCb::OnlineRunable::OnlineRunable(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc)
 {
+  declareProperty("Debug",m_debug=0);
 }
 
 // Standard Destructor
@@ -34,6 +35,7 @@ StatusCode LHCb::OnlineRunable::initialize()    {
   StatusCode status = Service::initialize();
   MsgStream log(msgSvc(),name());
   int retry = 5;
+  if ( m_debug ) ::lib_rtl_start_debugger();
   if ( AMS_SUCCESS != (status=amsuc_init()))  {
     log << MSG::ERROR << "amsuc_init Failed status:" << status 
         << ". " << lib_rtl_error_message(status) << endmsg;

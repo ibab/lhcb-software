@@ -1,6 +1,6 @@
 /*
-        upic_menu.c
-         Created           : 23-OCT-1989 by Christian Arnault
+upic_menu.c
+Created           : 23-OCT-1989 by Christian Arnault
 */
 
 //---------------------------------------------------------------------------
@@ -11,18 +11,13 @@
 #include <cstring>
 //---------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
 extern System Sys;
-//---------------------------------------------------------------------------
- 
-//---------------------------------------------------------------------------
 static const char* Options[] = {
   "ACCEPT ",
-  "CANCEL ",
-  "RESET  ",
+    "CANCEL ",
+    "RESET  ",
 };
-//---------------------------------------------------------------------------
-  
+
 //---------------------------------------------------------------------------
 int upic_open_menu (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2) {
   return upic_open_menus (id, f, fc, title_0, title_1, title_2, NORMAL_MENU);
@@ -47,23 +42,18 @@ int upic_open_param (int id, int f, int fc, const char* title_0, const char* tit
 int upic_close_param () {
   return (upic_close_menu());
 }
-  
-  
+
 //---------------------------------------------------------------------------
 int upic_close_menu ()  {
   Menu* m = Sys.menu.last;
   if (!m) return UPI_SS_NOOPENMENU;
 
   if (m->type == PARAMETER_PAGE)  {
-    upic_set_param ((int*)Sys.result, ACCEPT_OPTION, "A7",
-      "ACCEPT ",0,0, Options, 1, 1);
-    upic_set_param ((int*)Sys.result, CANCEL_OPTION, "A7",
-      "CANCEL ",0,0, Options+1, 1, 1);
-    upic_set_param ((int*)Sys.result, RESET_OPTION,  "A7",
-      "RESET  ",0,0, Options+2, 1, 1);
+    upic_set_param((int*)Sys.result,ACCEPT_OPTION,"A7","ACCEPT ",0,0,Options,  1,1);
+    upic_set_param((int*)Sys.result,CANCEL_OPTION,"A7","CANCEL ",0,0,Options+1,1,1);
+    upic_set_param((int*)Sys.result,RESET_OPTION, "A7","RESET  ",0,0,Options+2,1,1);
     upic_add_param_line (-1, "[^^^^^^^]   [^^^^^^^]   [^^^^^^^]", "");
   }
-
 #ifdef SCREEN
   upic_draw_menu(m);
 #else
@@ -74,8 +64,7 @@ int upic_close_menu ()  {
 
 //---------------------------------------------------------------------------
 int upic_delete_menu (int menu_id)  {
-   Menu* m = upic_find_menu(menu_id);
-
+  Menu* m = upic_find_menu(menu_id);
   if ( !m ) return UPI_SS_INVMENU;
 #ifdef SCREEN
   scrc_begin_pasteboard_update (Sys.pb);
@@ -105,9 +94,9 @@ int upic_delete_menu (int menu_id)  {
 
 //---------------------------------------------------------------------------
 int upic_erase_menu (int menu_id) {
-   Menu* m = upic_find_menu(menu_id);
-   Page* d;
-   Item* i;
+  Menu* m = upic_find_menu(menu_id);
+  Page* d;
+  Item* i;
 
   if (!m) return UPI_SS_INVMENU;
 
@@ -132,15 +121,14 @@ int upic_erase_menu (int menu_id) {
 #endif
       upic_drop_page(d);
     }
-    else
-    {
+    else    {
 #ifdef SCREEN
       d->lines = 0;
       d->item.cur = 0;
       d->cur_line = 0;
       upic_change_page (m, d, m->width);
 #endif
-    break;
+      break;
     }
   }
 
@@ -164,7 +152,7 @@ Menu* upic_find_menu (int id)   {
 void upic_drop_menu (Menu* m)   {
   Page* d = m->page.first;
   while (d)  {
-     Page* e = d->next;
+    Page* e = d->next;
 #ifdef SCREEN
     if (d->id) scrc_remove_display_from_window (d->id, m->window);
 #endif
@@ -177,7 +165,7 @@ void upic_drop_menu (Menu* m)   {
 
 //---------------------------------------------------------------------------
 int upic_open_menus (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2, int type) {
-   int max_len, len0, len1, len2;
+  int max_len, len0, len1, len2;
   Window* w = 0;
   if (upic_find_menu(id)) return UPI_SS_INVMENU;
   Menu* m = (Menu*) list_add_entry (&Sys.menu, sizeof(Menu));
@@ -198,13 +186,13 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
     upic_open_detached_window();
     w = Sys.detached_window;
   }
-  
-  m->window    = (Window*)w;  
+
+  m->window = (Window*)w;  
   m->type = type;
   list_init (&m->page);
   m->page.cur = (Page*) 0;
   upic_open_page (&m->page);
-  
+
   len0 = max_len = upic_non_blanks (title_0);
   if ((len1 = upic_non_blanks (title_1) + 2*PAGE_MARKER_SIZE) > max_len)
     max_len = len1;
@@ -216,11 +204,11 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
   m->mn_title = (char*) list_malloc (len0 + 1 + len1 + 1 + len2 + 1);
   strncpy (m->mn_title , title_0, len0);
   m->mn_title[len0] = '\0';
-  
+
   m->up_title = m->mn_title + len0 + 1;
   strncpy (m->up_title , title_1, len1);
   m->up_title[len1] = '\0';
-  
+
   m->bt_title = m->up_title + len1 + 1;
   strncpy (m->bt_title , title_2, len2);
   m->bt_title[len2] = '\0';
@@ -229,13 +217,11 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
   m->callback  = 0;
   m->arg       = 0;
 
-  if (f && fc && upic_connect_menu (m, f, fc))
-  {
+  if (f && fc && upic_connect_menu (m, f, fc))  {
     m->from.menu = f;
     m->from.item = fc;
   }
-  else
-  {
+  else  {
     m->from.menu = 0;
     m->from.item = 0;
   }
@@ -254,7 +240,7 @@ int upic_connect_menu (Menu* m, int f_menu, int f_item) {
   d = f->page.first;
   if (!(i = upic_find_item_row(d->item.first, f_item, &row))) return 0;
   if (i->type == COMMENT) return 0;
-  
+
 #ifdef SCREEN
   scrc_begin_pasteboard_update (Sys.pb);
   if (!i->to)  {
@@ -272,7 +258,7 @@ int upic_connect_menu (Menu* m, int f_menu, int f_item) {
 #endif
 
   i->to = m;
-  
+
 #ifdef SCREEN
   upic_draw_item (i, row);
   scrc_end_pasteboard_update (Sys.pb);

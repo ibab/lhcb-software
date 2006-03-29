@@ -17,7 +17,7 @@ Created           : 29-NOV-1989 by Christian Arnault
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
-
+#include "RTL/rtl.h"
 #include "SCR/scr.h"
 
 int upic_net_close_mbx(int) { return 1; }
@@ -420,6 +420,9 @@ int exit_handler()  {
   return (status);
 }
 
+static void help()  {
+}
+
 /*-------------------------------------------------------------------------*/
 extern "C" int upi_server (int argc, char** argv)  {
   int       status = 1;
@@ -508,21 +511,25 @@ extern "C" int upi_server (int argc, char** argv)  {
 
   upic_close_menu ();
 
-  if (argc == 2)  {
+  RTL::CLI cli(argc, argv, help);
+  std::string arg;
+  cli.getopt("start",1,arg);
+  if (!arg.empty())  {
     char saved;
-    char* c = strchr (argv[1], ':');
+    char* c = strchr (arg.c_str(), ':');
     if (c && c[1] == ':')    {
       saved = *c;
       *c = 0;
-      strcpy (Node, argv[1]);
+      strcpy (Node, arg.c_str());
       *c = saved;
       c += 2;
     }
-    else c = argv[1];
+    else c = (char*)arg.c_str();
     strcpy (Dest, c);
 
     start (Dest, Node);
   }
+  if ( cli.getopt("debug",1) ) lib_rtl_start_debugger();
 
   log_show ();
   while (!End)  {
@@ -1867,7 +1874,7 @@ void declare_callback (SrvConnect* connect)  {
   UpiBufferGetInt (GetBuffer, &condition);
   if ((menu_id = find_remote_id (connect, menu_id)))  {
     upic_declare_callback (menu_id, condition, 
-      (Routine) callback_handler, (int) connect);
+      (Routine) callback_handler, connect);
   }
 }
 
@@ -1938,7 +1945,7 @@ void fetch_menu (Menu* menu, SrvConnect* connect) {
   upic_close_menu();
 
   if (menu->condition)  {
-    upic_declare_callback(menu->id,menu->condition,(Routine)callback_handler,(int)connect);
+    upic_declare_callback(menu->id,menu->condition,(Routine)callback_handler,connect);
   }
   if (first)  {
     int maxcol=1;

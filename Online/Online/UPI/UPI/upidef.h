@@ -3,7 +3,32 @@
 
 #include <cstdlib>
 #include "SCR/lists.h"
-#include "UPI/upissdef.h"
+
+
+/* function return codes */
+#define UPI_NORMAL 0
+#define UPI_ERROR (-1)
+ 
+/* error codes */
+#define UPI_FACILITY      80*256
+ 
+#define UPI_NEXMENU      (UPI_FACILITY+1)      /* non existing menu id */
+#define UPI_NEXCOMM      (UPI_FACILITY+2)      /* non existing command id */
+#define UPI_DISCOMM      (UPI_FACILITY+3)      /* command disabled */
+
+#define UPI_SS_DTBFULL	 (UPI_FACILITY+0x4)
+#define UPI_SS_ABORTED	 (UPI_FACILITY+0x6)
+#define UPI_SS_EMPTYMENU (UPI_FACILITY+0x8)
+#define UPI_SS_INVWINDOW (UPI_FACILITY+0xC)
+#define UPI_SS_INVFATHER (UPI_FACILITY+0xE)
+#define UPI_SS_DUPLCOMM  (UPI_FACILITY+0x10)
+#define UPI_SS_NOOPENMENU (UPI_FACILITY+0x12)
+#define UPI_SS_ERRCONV    (UPI_FACILITY+0x14)
+#define UPI_SS_INVFORM    (UPI_FACILITY+0x16)
+#define UPI_SS_INVPARAM   (UPI_FACILITY+0x18)
+#define UPI_SS_INVCOMMAND (UPI_FACILITY+0x1C)
+#define UPI_SS_INVMENU    (UPI_FACILITY+0x1E)
+#define UPI_SS_NORMAL     0
 
 /* Constants for building pages */
 #define PREV_PAGE	"<- "
@@ -240,7 +265,7 @@ struct MENU {
   
   int      condition;
   Routine  callback;
-  int      arg;
+  void*    arg;
 };
 
 
@@ -274,17 +299,17 @@ struct SYSTEM   {
   struct {
     Menu   Linked_list_items;
     Menu   *cur;
-  }         menu;
+  } menu;
 
   struct {
     Param  Linked_list_items;
     Param  *cur;
-  }         param;    
+  } param;    
 
   struct {
     Item   Linked_list_items;
     Item   *cur;
-  }         item;    
+  } item;    
 
   Async     async;
     
@@ -306,17 +331,17 @@ struct SYSTEM   {
   Connection keypad[10];
   Connection pf1;
   Routine    message_callback;
-  int        PF1Arg;
+  void*      PF1Arg;
   Routine    PF1CallBack;
   Connection global_backspace;
   Routine    GlobBSCallBack;
-  int        GlobBSArg;
+  void*      GlobBSArg;
   Connection ML_Callback ;
   Routine    MLCallback;
-  int        MLArg ;
+  void*      MLArg ;
   Connection MR_Callback ;
   Routine    MRCallback;
-  int        MRArg ;
+  void*      MRArg ;
 
 };
  
@@ -333,5 +358,4 @@ struct CONNECT {
 #endif
 
 #include "UPI/upi_proto.h"
-
 #endif /* __UPIDEF_H */

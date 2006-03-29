@@ -136,7 +136,7 @@ int upic_attach_pf1 (int menu)  {
 }
 
 //---------------------------------------------------------------------------
-int upic_declare_callback (int menu_id,int condition, Routine user_routine, int user_arg) {
+int upic_declare_callback (int menu_id,int condition, Routine user_routine, void* user_arg) {
 #define CONDITIONS (CALL_ON_BACK_SPACE | CALL_ON_ENTER | \
 CALL_ON_DRAG | CALL_ON_PF1 | CALL_ON_ANY_BACKSPACE |\
 CALL_ON_MOVE_LEFT | CALL_ON_MOVE_RIGHT)

@@ -30,6 +30,8 @@ namespace LHCb  {
     *  @version 1.0
     */
   class OnlineRunable : public Service, virtual public IRunable    {
+    /// Debug flag to start debugger online
+    int m_debug;
   public:
     /// Standard Constructor
     OnlineRunable(const std::string& name, ISvcLocator* svc);

@@ -225,45 +225,34 @@ int upic_disable_action_routine (int menu_id, int item_id)  {
 
 //---------------------------------------------------------------------------
 int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
-  Menu* m;
-  Page* d;
-  Item* i;
-  int len;
-
-  m = Sys.menu.last;
+  Menu* m = Sys.menu.last;
   if (!m) return UPI_SS_INVMENU;
-
-  d = m->page.last;
+  Page* d = m->page.last;
   if (d->lines == Sys.items_per_page) d = upic_open_page (&m->page);
-
   if (upic_find_item(d->item.first, id)) return UPI_SS_INVCOMMAND;
 
-  i = (Item*) list_add_entry (&d->item, sizeof(Item));
+  Item* i = (Item*) list_add_entry (&d->item, sizeof(Item));
   i->id = id;
 
   d->lines++;
-  if (!d->item.cur)
-  {
-    if (type != COMMENT)
-    {
+  if (!d->item.cur)  {
+    if (type != COMMENT)  {
       d->cur_line = d->lines;
       d->item.cur = i;
       if (!m->page.cur) m->page.cur = d;
     }
   }
-
   m->items++;
-
   list_init (&i->param);
   i->param.cur = (Param*) 0;
   i->string = (char*) 0;
   upic_init_item_strings (i, text_0, text_1);
-
   i->type    = type;
   i->enabled = (type == COMMENT)?DISABLED:ENABLED;
   i->to      = (Menu*) 0;
 
-  if ((len = strlen(i->string)) > m->width) m->width = len;
+  int len = strlen(i->string);
+  if (len > m->width) m->width = len;
 
   if (Sys.param.first)  {
     list_transfer (&Sys.param, &i->param);
@@ -272,7 +261,6 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
     i->type      = PARAM;
   }
   i->action = 0;
-
   return UPI_SS_NORMAL;
 }
 
@@ -280,14 +268,12 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
 //---------------------------------------------------------------------------
 int upic_replace_item (int menu_id, int id, const char* text_0, const char* text_1, int type)  {
   Menu* m;
-  Page* d;
   Item* i;
-  int len;
-  int row;
+  int len, row;
 
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
 
-  d = m->page.first;
+  Page* d = m->page.first;
   if (!d || !(i = (Item*) upic_find_item_row(d->item.first, id, &row)))
     return UPI_SS_INVCOMMAND;
 
@@ -296,7 +282,6 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
   i->type    = type;
   if (Sys.param.first || i->param.first)  {  
     Param* p = Sys.param.first;
-
     if ( p )  {
       upic_drop_params (i->param.first);
       list_transfer (&Sys.param, &i->param);
@@ -330,17 +315,12 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
 
 //---------------------------------------------------------------------------
 int upic_insert_item (int menu_id, int position, int id, const char* text_0, const char* text_1, int type)  {
+  int row, width, len, to_the_end = 0;
   Menu* m = upic_find_menu(menu_id);
   Item* i = 0;
-  int row;
-  int width;
-  int len;
-  int to_the_end = 0;
 
   if ( !m ) return UPI_SS_INVMENU;
-
   if (position == -1 && m->type != PARAMETER_PAGE) to_the_end = 1;
-
   Page* d = m->page.first;
   if (!position)  {
     i = d->item.first;
@@ -353,8 +333,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   }
   else   {
     if (!d) return UPI_SS_INVCOMMAND;
-    if (!(i = (Item*) upic_find_item_row(d->item.first, position, &row)))
-    {
+    if (!(i = (Item*) upic_find_item_row(d->item.first, position, &row)))    {
       d = m->page.last;
       i = d->item.last;
       row = d->lines;
@@ -362,7 +341,6 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
     }
   }
   if (upic_find_item (d->item.first, id)) return UPI_SS_INVCOMMAND;
-
   if (i)  {
     d = Page_address(i->father);
     if (to_the_end)
@@ -386,15 +364,13 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   i->enabled = (type == COMMENT)?DISABLED:ENABLED;
   i->to      = (Menu*) 0;
 
-  if (Sys.param.first)
-  {
+  if (Sys.param.first)  {
     list_transfer (&Sys.param, &i->param);
     upic_install_params (i->param.first, i->string);
     i->param.cur = i->param.first;
     i->type      = PARAM;
   }
   i->action = 0;
-
   if (Sys.menu.cur == m)  {
     Sys.item.cur = 0;
     upic_wakeup();
@@ -423,8 +399,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
 
     scrc_insert_line (d->id, " ", NORMAL, row+1, MOVE_DOWN);
 
-    if (!last)  {
-      /* There is another Page */
+    if (!last)  {      /* There is another Page */
       if (!d->next)    {
         upic_open_page (&m->page);
         upic_init_page (m, m->page.last, width);
@@ -461,9 +436,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
 //---------------------------------------------------------------------------
 Item* upic_find_item (Item* first,int id) {
   if (!first) return 0;
-
   Page* d = Page_address(first->father);
-
   while (d)  {  
     first = d->item.first;
     while (first)    {
@@ -477,19 +450,13 @@ Item* upic_find_item (Item* first,int id) {
 
 //---------------------------------------------------------------------------
 Item* upic_find_item_row (Item* first, int id, int* row)  {
-  int r;
   if (!first) return 0;
-
   Page* d = Page_address(first->father);
-
-  while (d)
-  {  
+  while (d)  {  
     first = d->item.first;
-    r = 1;
-    while (first)
-    {
-      if (first->id == id)
-      {
+    int r = 1;
+    while (first)    {
+      if (first->id == id)  {
         *row = r;
         return (first);
       }
@@ -502,17 +469,12 @@ Item* upic_find_item_row (Item* first, int id, int* row)  {
   return 0;
 }
 
-
 //---------------------------------------------------------------------------
 Item* upic_find_next_item (Item* first, int* row) {
   if (!first) return 0;
-
   Page* d = Page_address(first->father);
-  int r = *row;
-
+  int r = *row + 1;
   first = first->next;
-  r++;
-
   while (d)  {  
     while (first)    {
       if (first->enabled)    {
@@ -534,23 +496,14 @@ Item* upic_find_next_item (Item* first, int* row) {
 
 //---------------------------------------------------------------------------
 Item* upic_find_prev_item (Item* first, int *row)  {
-  Page* d;
-  int r;
-
   if (!first) return 0;
-
-  d = Page_address(first->father);
-  r = *row;
+  Page* d = Page_address(first->father);
+  int r = *row - 1;
 
   first = first->prev;
-  r--;
-
-  while (d)
-  {  
-    while (first)
-    {
-      if (first->enabled)
-      {
+  while (d)  {  
+    while (first)   {
+      if (first->enabled)  {
         *row = r;
         return (first);
       }
@@ -558,8 +511,7 @@ Item* upic_find_prev_item (Item* first, int *row)  {
       r--;
     }
     d = d->prev;
-    if (d)
-    {
+    if (d)  {
       first = d->item.last;
       r = d->lines;
     }
@@ -597,7 +549,6 @@ void upic_draw_item (Item* i, int row)  {
   if (!disp) return;
 
   scrc_begin_pasteboard_update (Sys.pb);
-
   int attr = (i->enabled) ? BOLD : NORMAL;
   row++;
   scrc_put_chars (disp, i->string, attr, row, 1, 1);

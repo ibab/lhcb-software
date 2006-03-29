@@ -360,7 +360,7 @@ int upic_unlock_cursor (void);
 int upic_back_space (int);
 int upic_register_on_keypad (int,int,int);
 int upic_attach_pf1 (int);
-int upic_declare_callback (int,int,Routine,int);
+int upic_declare_callback (int,int,Routine,void*);
 
 #ifdef SCREEN
 int upic_valid_keypad (int);
