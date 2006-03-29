@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r4 2006-03-29 =========================
+! 2006-03-24 - Chris Jones
+ - Modifications to RichSmartIDHashFuncs.h
+
 !===================== LHCbKernel v6r3 2006-03-23 =========================
 ! 2006-03-23 - Chris Jones
  - Invert order of pixel row and column in RIchSmartID so "natural" sorting
