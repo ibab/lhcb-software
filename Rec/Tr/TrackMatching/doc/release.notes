@@ -4,10 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r0 2006-03-29 =======================
 ! 2006-03-26 - Eduardo Rodrigues
- - adaptations to new Gaudi v18r3
+ - Backwards compatible adaptations to new Gaudi v18r3
 
-!======================= TrackMatching v2r0 2006-03-15 =======================
 ! 2006-03-15 - Marco Cattaneo
  - Remove obsolete STTools dependency
 
