@@ -1,11 +1,11 @@
 package KernelSys
-version v5r1
+version v5r2
 
 branches doc cmt
 
-use LHCbDefinitions  v1r3   Kernel
-use LHCbKernel       v6r3   Kernel
-use Relations        v3r0   Kernel
+use LHCbDefinitions  v1r4   Kernel
+use LHCbKernel       v6r4   Kernel
+use Relations        v3r0p1 Kernel
 use CaloKernel       v4r0   Calo
 use MuonKernel       v3r1   Muon
 use RichKernel       v6r2   Rich
