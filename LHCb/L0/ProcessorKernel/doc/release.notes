@@ -4,6 +4,8 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2006-03-29 - Julien Cogan
+ - minor change: add an accessor method to the m_units data in class Unit
 !======================== ProcessorKernel v3r0 2006-01-19 ====================
 ! 2006-03-03 - Marco Cattaneo
  - Fixes to remove Windows compilation warnings

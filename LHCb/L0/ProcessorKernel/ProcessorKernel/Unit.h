@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.7 2006-02-10 12:25:45 jucogan Exp $
+// $Id: Unit.h,v 1.8 2006-03-29 15:21:08 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -48,6 +48,9 @@ namespace L0Muon {
     /// return the parent of the given type
     Unit * parentByType(std::string type);
   
+    /// Return subunits
+    std::vector<L0Muon::Unit*> units(){return m_units;}
+
 //     /// Search for subunit 
 //     Unit * subUnit(std::string type);
   
