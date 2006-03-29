@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.30 2006-02-23 13:07:42 cattanem Exp $ 
+! $Id: release.notes,v 1.31 2006-03-29 08:13:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.30 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.31 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! ====================== Relations v3r0p1 2006-02-29 ==========================
+! 2006-03-29 - Marco Cattaneo
+ - Remove unneccessary application_path pattern
 
 ! ====================== Relations v3r0 2006-02-23 ============================
 ! 2006-02-22 - Vanya BELYAEV

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.11 2006-02-07 13:42:53 ibelyaev Exp $
+# $Id: requirements,v 1.12 2006-03-29 08:13:52 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -41,11 +41,6 @@ path_remove  PYTHONPATH "Relations"
 path_prepend PYTHONPATH "$(RELATIONSROOT)/python"
 path_prepend PYTHONPATH "$(RELATIONSROOT)/$(BINDIR)"
 
-# private
-apply_pattern application_path 
-
-# =============================================================================
-# The END 
 # =============================================================================
 # The END 
 # =============================================================================
