@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.10 2006-03-14 14:30:19 jvantilb Exp $
+// $Id: DeSTDetector.cpp,v 1.11 2006-03-30 14:29:14 jvantilb Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -50,8 +50,8 @@ StatusCode DeSTDetector::initialize() {
   }
   else {
     // get the children
-    IDetectorElement::IDEContainer::const_iterator iStation;
-    for (iStation = this->childBegin(); this->childEnd() != iStation; ++iStation ) {
+    IDetectorElement::IDEContainer::const_iterator iStation =this->childBegin();
+    for ( ; this->childEnd() != iStation; ++iStation ) {
       DeSTStation* tStation = dynamic_cast<DeSTStation*>(*iStation);
       if (tStation != 0) { 
         m_stations.push_back(tStation); 
@@ -67,6 +67,7 @@ StatusCode DeSTDetector::initialize() {
       sc = StatusCode::FAILURE; 
     } // empty
   }
+
   return sc;
 }
 
@@ -90,16 +91,18 @@ const int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const
 DeSTStation* DeSTDetector::findStation(const STChannelID aChannel){
 
   // return pointer to the station from channel
-  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin() , m_stations.end(), 
-                                                          bind(&DeSTStation::contains, _1, aChannel));
+  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(),
+                                                          m_stations.end(),
+                                    bind(&DeSTStation::contains, _1, aChannel));
   return (iter != m_stations.end() ? *iter: 0);
 }
 
 DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) {
 
   // return pointer to the station from point in global system
-  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(), m_stations.end(), 
-                                                        bind(&DeSTStation::isInside, _1, point)); 
+  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(),
+                                                          m_stations.end(), 
+                                       bind(&DeSTStation::isInside, _1, point));
   return (iter != m_stations.end() ? *iter: 0);
 }
 
@@ -130,8 +133,9 @@ DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
   return (iter != m_layers.end() ? *iter: 0);
 }
 
-LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, const double offset) {
-
+LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, 
+                                           const double offset) 
+{
   // look up the trajectory
  
   LHCb::Trajectory* tTraj = 0;
@@ -153,3 +157,48 @@ LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, const double 
   }
   return tTraj;  
 }
+
+LHCb::Trajectory* DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) 
+{
+  LHCb::Trajectory* tTraj = 0;
+
+  if ( !id.isST()){
+     throw GaudiException( "The LHCbID is not of ST type!",
+                           "DeSTDetector.cpp",
+                           StatusCode::FAILURE );
+  }
+  
+  DeSTSector* aSector = findSector(id.stID());
+  if (aSector != 0){
+    tTraj = aSector->trajectoryFirstStrip();
+  }
+  else {
+    throw GaudiException( "Failed to find sector",
+                          "DeSTDetector.cpp",
+			  StatusCode::FAILURE );
+  }
+  return tTraj;  
+}
+
+LHCb::Trajectory* DeSTDetector::trajectoryLastStrip(const LHCb::LHCbID& id) 
+{
+  LHCb::Trajectory* tTraj = 0;
+
+  if ( !id.isST()){
+     throw GaudiException( "The LHCbID is not of ST type!",
+                           "DeSTDetector.cpp",
+                           StatusCode::FAILURE );
+  }
+  
+  DeSTSector* aSector = findSector(id.stID());
+  if (aSector != 0){
+    tTraj = aSector->trajectoryLastStrip();
+  }
+  else {
+    throw GaudiException( "Failed to find sector",
+                          "DeSTDetector.cpp",
+			  StatusCode::FAILURE );
+  }
+  return tTraj;  
+}
+

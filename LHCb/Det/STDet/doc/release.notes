@@ -2,6 +2,11 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-03-30 - Jeroen van Tilburg
+ - Added methods to DeSTDetector and DeSTSector: trajectoryFirstStrip and
+   trajectoryLastStrip.
+ - Removed bug in strip numbering (in DeSTSector::cacheTrajectory).
+
 !========================= STDet v2r1 2006-03-22 =======================
 ! 2006-03-22 - Marco Cattaneo
  - Remove unneccessary gsl dependency

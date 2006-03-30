@@ -83,6 +83,16 @@ public:
   LHCb::Trajectory* trajectory(const LHCb::STChannelID& aChan, 
                                const double offset) const;
 
+  /** trajectory 
+  * @return trajectory of the first strip
+  */
+  LHCb::Trajectory* trajectoryFirstStrip() const;
+
+  /** trajectory 
+  * @return trajectory of the last strip
+  */
+  LHCb::Trajectory* trajectoryLastStrip() const;
+
   /** 
   * @param point in local frame
   * @param tolerance
@@ -165,8 +175,9 @@ private:
   void clear();
   void determineSense();
   void cacheTrajectory();
-  Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
- 
+  Gaudi::XYZPoint globalPoint(const double x, 
+                              const double y, 
+                              const double z) const;
 
   unsigned int m_firstStrip;
   unsigned int m_id;

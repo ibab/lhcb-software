@@ -116,11 +116,11 @@ StatusCode DeSTSector::initialize() {
     m_uMaxLocal = 0.5*(m_pitch*m_nStrip);
     m_uMinLocal = -m_uMaxLocal;
 
-    m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
-
     // and vMin, vMax
     m_vMaxLocal = 0.5*mainBox->ysize() - guardRing;
     m_vMinLocal = -m_vMaxLocal;
+
+    m_stripLength = fabs(m_vMaxLocal - m_vMinLocal);
 
     double height = mainBox->ysize()/nSensors;
     for (unsigned int iSensor = 1u ; iSensor < nSensors; ++iSensor){
@@ -155,9 +155,10 @@ unsigned int DeSTSector::localUToStrip(const double u) const{
 }
 
 double DeSTSector::localU(const unsigned int strip, 
-                          const double offset) const{
-  // strip to local 
-  
+                          const double offset) const
+{ 
+  // strip to local  
+
   double u = -999.;
   if (isStrip(strip) == true){
     double tStrip = strip + offset;
@@ -173,31 +174,33 @@ double DeSTSector::localU(const unsigned int strip,
   return u;
 }
 
-bool DeSTSector::localInActive(const Gaudi::XYZPoint& point,
-                               Gaudi::XYZPoint tol) const{
-
+bool DeSTSector::localInActive( const Gaudi::XYZPoint& point,
+                                Gaudi::XYZPoint tol) const 
+{
   const double u = point.x();
-  const double v= point.y();
+  const double v = point.y();
   return(localInBox(u,v,tol.X(), tol.Y())&&(!localInBondGap(v, tol.Y())));
 }
 
-bool DeSTSector::globalInActive(const Gaudi::XYZPoint& gpoint,
-                               Gaudi::XYZPoint tol) const{
-
+bool DeSTSector::globalInActive( const Gaudi::XYZPoint& gpoint,
+                                 Gaudi::XYZPoint tol) const
+{
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInActive(lPoint,tol);
 };
 
 
-bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& gpoint, double tol) const{
-
+bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& gpoint, 
+                                 double tol) const
+{ 
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInBondGap(lPoint.Y(),tol);
 };
 
 
-bool DeSTSector::globalInBox(const Gaudi::XYZPoint& gpoint,Gaudi::XYZPoint tol ) const{
-
+bool DeSTSector::globalInBox( const Gaudi::XYZPoint& gpoint,
+                              Gaudi::XYZPoint tol ) const
+{
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInBox(lPoint.X(), lPoint.Y(),tol.X(), tol.Y());
 };
@@ -205,34 +208,36 @@ bool DeSTSector::globalInBox(const Gaudi::XYZPoint& gpoint,Gaudi::XYZPoint tol )
 bool DeSTSector::localInBondGap( const double v, double tol) const{
 
   std::vector<double>::const_iterator iterD = m_deadRegions.begin();
-  while ((iterD != m_deadRegions.end())&&(fabs(v-*iterD)> (tol + m_deadWidth))){
+  while ( (iterD != m_deadRegions.end()) && 
+          (fabs(v-*iterD)> (tol + m_deadWidth)) ){
     ++iterD;
   }
   return (iterD != m_deadRegions.end() ? true : false);
 }
 
-bool DeSTSector::localInBox(const double u, const double v, 
-                            double uTol, double vTol) const{
-
-  return ((u + uTol) <(m_uMaxLocal+(0.5*m_pitch)) 
-	 &&(u - uTol)>(m_uMinLocal-(0.5*m_pitch))
-         &&((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
+bool DeSTSector::localInBox( const double u, const double v, 
+                             double uTol, double vTol) const
+{
+  return ((u + uTol) <(m_uMaxLocal+(0.5*m_pitch)) &&
+          (u - uTol)>(m_uMinLocal-(0.5*m_pitch)) &&
+          ((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
 }
 
-LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan, 
-                                         const double offset) const{
-
+LHCb::Trajectory* DeSTSector::trajectory( const STChannelID& aChan, 
+                                          const double offset) const
+{
   LineTraj* traj = 0;  
 
   if (contains(aChan) == true){
-    double arclen = (offset + aChan.strip())*m_pitch ;
-    Gaudi::XYZPoint begPoint =  m_lowerTraj->position( arclen );
-    Gaudi::XYZPoint endPoint =  m_upperTraj->position( arclen );
+    double arclen = (offset + aChan.strip() - m_firstStrip)*m_pitch ;
+    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen );
+    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen );
     traj = new LineTraj(begPoint,endPoint);
   } 
   else {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to link " << aChan.uniqueSector() << " " << elementID().uniqueSector() << endmsg; 
+    msg << MSG::ERROR << "Failed to link " << aChan.uniqueSector() << " " 
+        << elementID().uniqueSector() << endmsg; 
     throw GaudiException( "Failed to make trajectory",
                            "DeSTSector.cpp", StatusCode::FAILURE );
   }
@@ -240,8 +245,26 @@ LHCb::Trajectory* DeSTSector::trajectory(const STChannelID& aChan,
   return traj;
 }
 
-void DeSTSector::determineSense(){
+LHCb::Trajectory* DeSTSector::trajectoryFirstStrip() const 
+{
+  LineTraj* traj = 0;
+  Gaudi::XYZPoint begPoint = m_lowerTraj->position(m_lowerTraj->beginRange());
+  Gaudi::XYZPoint endPoint = m_upperTraj->position(m_lowerTraj->beginRange());
+  traj = new LineTraj(begPoint,endPoint);
+  return traj;
+}
 
+LHCb::Trajectory* DeSTSector::trajectoryLastStrip() const 
+{
+  LineTraj* traj = 0;  
+  Gaudi::XYZPoint begPoint = m_lowerTraj->position( m_lowerTraj->endRange() );
+  Gaudi::XYZPoint endPoint = m_upperTraj->position( m_lowerTraj->endRange() );
+  traj = new LineTraj(begPoint,endPoint);
+  return traj;  
+}
+
+void DeSTSector::determineSense()
+{
   Gaudi::XYZPoint g1 = globalPoint(m_uMinLocal , m_vMinLocal, 0.);
   Gaudi::XYZPoint g2 = globalPoint(m_uMaxLocal , m_vMinLocal, 0.);
   if (g1.x() > g2.x()) { 
@@ -252,30 +275,30 @@ void DeSTSector::determineSense(){
   if (g1.y() > g3.y()) {m_yInverted = true;}
 }
 
-void DeSTSector::cacheTrajectory() {
-
+void DeSTSector::cacheTrajectory()
+{
   clear();
 
   double yUpper =  m_vMaxLocal;
   double yLower =  m_vMinLocal;
-  if (yLower > yUpper) std::swap(yUpper,yLower);
+  if ( m_yInverted ) std::swap(yUpper,yLower);
 
-  double xUpper =  m_uMaxLocal;
-  double xLower =  m_uMinLocal;
-  if (xLower > xUpper) std::swap(xUpper,xLower);
+  double xUpper =  m_uMaxLocal - 0.5*m_pitch;
+  double xLower =  m_uMinLocal + 0.5*m_pitch;
+  if ( m_xInverted ) std::swap(xUpper,xLower);
 
-  Gaudi::XYZPoint g1 = globalPoint(xLower - 0.5*m_pitch, yLower, 0.);
-  Gaudi::XYZPoint g2 = globalPoint(xUpper + 0.5*m_pitch, yLower, 0.);
+  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
+  Gaudi::XYZPoint g2 = globalPoint(xUpper, yLower, 0.);
   m_lowerTraj = new LineTraj(g1,g2);
 
-  Gaudi::XYZPoint g3 = globalPoint(xLower - 0.5*m_pitch, yUpper, 0.);
-  Gaudi::XYZPoint g4 = globalPoint(xUpper + 0.5*m_pitch, yUpper, 0.);
+  Gaudi::XYZPoint g3 = globalPoint(xLower, yUpper, 0.);
+  Gaudi::XYZPoint g4 = globalPoint(xUpper, yUpper, 0.);
   m_upperTraj = new LineTraj(g3,g4);
    
 }
 
-STChannelID DeSTSector::nextLeft(const STChannelID testChan) const{
-
+STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
+{
   if ((contains(testChan))&& (isStrip(testChan.strip()- 1u) == true)){
     return STChannelID(testChan.type(),
                       testChan.station(),
@@ -289,8 +312,8 @@ STChannelID DeSTSector::nextLeft(const STChannelID testChan) const{
    }
 }
 
-STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const{
-
+STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
+{
   if ((contains(testChan) == true)&& (isStrip(testChan.strip()+ 1u) == true)){
     return STChannelID(testChan.type(),
                        testChan.station(),
@@ -305,7 +328,9 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const{
 }
 
 
-Gaudi::XYZPoint DeSTSector::globalPoint(const double x, const double y, const double z) const{
+Gaudi::XYZPoint DeSTSector::globalPoint( const double x, const double y, 
+                                         const double z) const
+{
   Gaudi::XYZPoint lPoint(x,y,z);
   Gaudi::XYZPoint gPoint = toGlobal(lPoint);
   return gPoint;
