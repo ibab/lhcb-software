@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.5 2006-03-23 13:18:02 cattanem Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.6 2006-03-30 21:53:53 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,7 @@
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTDetector.h"
+#include "OTDet/DeOTLayer.h"
 
 // local
 #include "BuildMCTrackInfo.h"
@@ -62,12 +63,8 @@ StatusCode BuildMCTrackInfo::initialize() {
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   info() << "Number IT layer " << m_itDet->layers().size() << endreq;  
 
-  DeOTDetector* otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-
-
-  m_OT1Station = otDet->station( 1 );
-  m_OT2Station = otDet->station( 2 );
-  m_OT3Station = otDet->station( 3 );
+  m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  info() << "Number OT layer " << m_otDet->layers().size() << endreq;  
 
   return StatusCode::SUCCESS;
 };
@@ -359,22 +356,17 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
                 << deltaZ << endmsg;
       continue;
     }
-    
+
     Gaudi::XYZPoint midPoint = (*oHit)->midPoint();
-    
-    if (        m_OT1Station->layer( midPoint ) ) {  // OT1 MCHit?
-      bool isX = m_OT1Station->layer( midPoint )->stereoAngle() == 0;
-      updateAccBit( station[MCNum], 2, isX );
-
-    } else if ( m_OT2Station->layer( midPoint ) ) {  // OT2 MCHit?
-      bool isX = m_OT2Station->layer( midPoint )->stereoAngle() == 0;
-      updateAccBit( station[MCNum], 3, isX );
-
-    } else if ( m_OT3Station->layer( midPoint ) ) {  // OT3 MCHit?
-      bool isX = m_OT3Station->layer( midPoint )->stereoAngle() == 0;
-      updateAccBit( station[MCNum], 4, isX );
-
+    DeOTLayer* otLay = m_otDet->findLayer( midPoint );
+    if ( 0 == otLay ) {
+      debug() << format( "OT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
+                         midPoint.x(), midPoint.y(), midPoint.z() ) << endreq;
+      continue;
     }
+    int sta = otLay->elementID().station() +1;
+    bool isX = otLay->angle() == 0;
+    updateAccBit( station[MCNum], sta, isX );
   }
 
 

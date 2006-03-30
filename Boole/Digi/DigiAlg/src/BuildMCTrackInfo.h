@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.h,v 1.2 2006-03-23 13:18:02 cattanem Exp $
+// $Id: BuildMCTrackInfo.h,v 1.3 2006-03-30 21:53:53 janos Exp $
 #ifndef BUILDMCTRACKINFO_H 
 #define BUILDMCTRACKINFO_H 1
 
@@ -75,8 +75,7 @@ private:
   DeSTDetector* m_itDet;
 
   // OT Detector information
-  DeOTStation* m_OT1Station;        ///< Pointer to OT Station 1
-  DeOTStation* m_OT2Station;        ///< Pointer to OT Station 2
-  DeOTStation* m_OT3Station;        ///< Pointer to OT Station 3
+  DeOTDetector* m_otDet;
+  
 };
 #endif // BUILDMCTRACKINFO_H

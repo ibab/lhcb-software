@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== DigiAlg v4r1 2006-03-23 =========================
+! 2006-03-30 - Jan Amoraal
+ - Minor changes due to new OTDet
+
 ! 2006-03-23 - Marco Cattaneo
  - In BooleInit, use ODINDefinitions.h to get ODIN bank structure
  - In BuildMCTrackInfo, update to use VeloCluster Linker and add protection
