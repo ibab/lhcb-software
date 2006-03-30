@@ -1,5 +1,5 @@
 package LbcomSys
-version v4r1
+version v4r2
 
 branches doc cmt
 
@@ -9,9 +9,9 @@ branches doc cmt
 
 # L0 trigger simulation                 # Maintainer
 use L0Calo            v9r1  L0          # Olivier Callot
-use L0DU              v7r1  L0          # Olivier Deschamps   
+use L0DU            v7r1p1  L0          # Olivier Deschamps   
 use L0MuonTrigger     v5r1  L0          # Andrei Tsarogorodtsev, Julien Cogan
-use PuVeto            v7r1  L0          # Marko Zupan
+use PuVeto          v7r1p1  L0          # Marko Zupan
 #use L0Checker         v3r2p1 L0         # Eduardo Rodrigues
 
 # Outer tracker
@@ -31,7 +31,7 @@ use STAssociators     v1r1  ST          # Matt Needham
 use STCheckers        v1r1  ST          # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r0  Calo        # Olivier Deschamps
+use CaloAssociators v6r0p1  Calo        # Olivier Deschamps
 #use KaliMisCalo       v1r0  Calo        # Ivan Belyaev
 
 # Velo
