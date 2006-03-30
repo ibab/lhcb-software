@@ -1,4 +1,5 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/src/MBM/MEPRx.cpp,v 1.1 2006-02-28 11:06:45 niko Exp $
+#ifndef _WIN32
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/src/MBM/MEPRx.cpp,v 1.2 2006-03-30 08:45:26 frankb Exp $
 //	====================================================================
 //  MEPRx.cpp
 //	--------------------------------------------------------------------
@@ -329,3 +330,4 @@ extern "C" int meprx(int argc, char **argv) {
     
  */
  
+#endif

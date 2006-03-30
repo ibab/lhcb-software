@@ -316,6 +316,18 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
 #endif
 }
 
+namespace RTL {
+  const std::string& processName()  {
+    static std::string s;
+    if ( s.empty() )  {
+      char txt[64];
+      ::lib_rtl_get_process_name(txt, sizeof(txt));
+      s = txt;
+    }
+    return s;
+  }
+}
+
 int lib_rtl_get_node_name(char* node, size_t len)  {
 #ifdef __VMS
   short len;

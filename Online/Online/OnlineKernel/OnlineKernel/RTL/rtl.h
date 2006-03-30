@@ -172,6 +172,9 @@ extern "C" {
  */
 namespace RTL  {
 
+  const std::string& processName();
+
+
   class CLI  {
   private:
     int    m_argc;
