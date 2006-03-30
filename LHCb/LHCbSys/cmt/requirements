@@ -8,11 +8,11 @@ branches doc cmt
 #===============================================================
 
 use LHCb                 v20r2
-use GaudiConf	         v9r4
+use GaudiConf	         v9r5
 
 #                                         Maintainer
-# External package used by GenEvent
-use HepMC                v4r126p0 Sim     # Gloria Corti, Matt Dobbs
+# Interface to external package used by GenEvent
+use HepMC                v1r126p0 Gen     # Florence Ranjard
 
 # Kernel packages
 use KernelSys             v5r2    Kernel  # Marco Cattaneo
@@ -49,7 +49,7 @@ use RecEvent              v1r1    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r1   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v9r2    Event   # Patrick Koppenburg
 use DAQEvent	          v6r3    Event   # Marco Cattaneo
-use GenEvent              v4r2    Event   # Gloria Corti
+use GenEvent              v4r3    Event   # Gloria Corti
 use EventAssoc            v3r0    Event   # Ivan Belyaev
 use LinkerEvent           v2r1    Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
