@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.1 2006-03-08 13:38:58 cattanem Exp $
+// $Id: ProtoParticle.cpp,v 1.2 2006-03-30 13:53:33 jonrob Exp $
 // Include files 
 
 // STD and STL
@@ -20,48 +20,41 @@
 //=============================================================================
 // Copy constructor
 //=============================================================================
-LHCb::ProtoParticle::ProtoParticle(const LHCb::ProtoParticle& proto)
-  : KeyedObject<int>()
-  , m_extraInfo( proto.extraInfo() )
-  , m_calo( proto.calo() )
-  , m_track( proto.track() )
-  , m_richPID( proto.richPID() )
-  , m_muonPID( proto.muonPID() )
-{
-
-}
+//LHCb::ProtoParticle::ProtoParticle(const LHCb::ProtoParticle& proto)
+// : KeyedObject<int>()
+//  , m_extraInfo( proto.extraInfo() )
+//  , m_calo( proto.calo() )
+//  , m_track( proto.track() )
+//  , m_richPID( proto.richPID() )
+//  , m_muonPID( proto.muonPID() )
+//{ }
 
 //=============================================================================
 // Clone 
 //=============================================================================
-LHCb::ProtoParticle* LHCb::ProtoParticle::clone() const
-{
-  return new LHCb::ProtoParticle(*this);
-}
+//LHCb::ProtoParticle* LHCb::ProtoParticle::clone() const
+//{
+//  return new LHCb::ProtoParticle(*this);
+//}
 
 //=============================================================================
 // Assignment operator
 //=============================================================================
-LHCb::ProtoParticle& LHCb::ProtoParticle::operator=(const LHCb::ProtoParticle& orig) {
-  
-  // protect against self assignement
-  if( this != &orig ) {
-    m_extraInfo = orig.extraInfo();
-    m_calo = orig.calo(); 
-    m_track = orig.track();
-    m_richPID = orig.richPID();
-    m_muonPID = orig.muonPID();
-  }
-  return *this;
-}    
-    
-//=============================================================================
-// Return charge of ProtoParticle
-//=============================================================================
-int LHCb::ProtoParticle::charge() const {
-  if ( !track() ) return 0;
-  return track()->charge();
-}
+//LHCb::ProtoParticle& 
+//LHCb::ProtoParticle::operator = ( const LHCb::ProtoParticle& orig ) 
+//{ 
+// // protect against self assignement
+// if ( this != &orig ) 
+//  {
+//    m_extraInfo = orig.extraInfo();
+//    m_calo      = orig.calo(); 
+//    m_track     = orig.track();
+//    m_richPID   = orig.richPID();
+//    m_muonPID   = orig.muonPID();
+//  }
+//  return *this;
+//}
+
 //=============================================================================
 /** Check the presence of the information associated with 
  *  a given key
@@ -78,7 +71,7 @@ int LHCb::ProtoParticle::charge() const {
  *  @return  'true' if there is informaiton with the 'key', 
  *           'false' otherwise
  */
-bool LHCb::ProtoParticle::hasInfo  ( const int & key) const
+bool LHCb::ProtoParticle::hasInfo ( const int key ) const
 { return m_extraInfo.end() != m_extraInfo.find( key ) ; }
 
 //=============================================================================
@@ -98,10 +91,11 @@ bool LHCb::ProtoParticle::hasInfo  ( const int & key) const
  *  @param key key for the information
  *  @param info information to be associated with the key
  *  @param 'true' if informaiton is inserted, 
- *         'false' if the previosu information has been replaced 
+ *         'false' if the previous information has been replaced 
  */
-bool  LHCb::ProtoParticle::addInfo ( int key, double info )
+bool  LHCb::ProtoParticle::addInfo ( const int key, const double info )
 { return m_extraInfo.insert( key , info ).second ;}
+
 //=============================================================================
 /** extract the information associated with the given key 
  *  If there is no such infomration the default value will 
@@ -124,7 +118,8 @@ bool  LHCb::ProtoParticle::addInfo ( int key, double info )
  *  @return information associated with the key if there 
  *          is such information, the default value otherwise 
  */
-double LHCb::ProtoParticle::info( int key, double def ) const {
+double LHCb::ProtoParticle::info( const int key, const double def ) const 
+{
   ExtraInfo::iterator i = m_extraInfo.find( key ) ;
   return m_extraInfo.end() == i ? def : i->second ;
 }
@@ -145,6 +140,8 @@ double LHCb::ProtoParticle::info( int key, double def ) const {
  *  @param key key for the information
  *  @return return number of erased elements 
  */
-LHCb::ProtoParticle::ExtraInfo::size_type LHCb::ProtoParticle::eraseInfo( int key ){ 
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::eraseInfo( const int key )
+{ 
   return m_extraInfo.erase( key ) ; 
 }

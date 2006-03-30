@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.10 2006-03-23 07:26:20 cattanem Exp $
+! $Id: release.notes,v 1.11 2006-03-30 13:53:33 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+
+! 2006-03-30 - Chris Jones
+ - First iteration in improvements to ProtoParticle (not the last)
 
 !========================== RecEvent v1r1 2006-03-23 =========================
 ! 2006-03-22 - Olivier Deschamps 
