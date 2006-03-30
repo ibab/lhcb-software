@@ -1,17 +1,12 @@
 #============================================================================
 # Created    : 2002-07-08
-# Maintainer : Gloria Corti
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+# Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v5r2
+version           v6r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
-#
-# Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src 
 include_path none
@@ -21,12 +16,9 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 #============================================================================
 # Used packages.
 #============================================================================
-use  PhysEvent       v*    Event
-use  CaloKernel      v*    Calo
-use  CaloUtils       v*    Calo
-use  CaloInterfaces  v*    Calo
-use  MuonID          v*    Muon
-use  Relations       v*    Kernel
+use   GaudiAlg         v*
+use   RecEvent         v*    Event
+use   TrackInterfaces  v*    Tr
 
 #============================================================================
 # Component library building rule

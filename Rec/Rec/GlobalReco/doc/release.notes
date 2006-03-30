@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-03-30 - Chris Jones
+ - New version of the package for DC06
+  + First version of ChargedProtoPAlg, with merging of Track, RICH and Muon
+    information (CALO to be added).
+  + Neutral ProtoParticle makers to be added
+
 !========================== GlobalReco v5r2 2006-03-23 ===================
 !  2006-02-24 - P. Koppenburg
   - options/ChargedProtoPAlg.opts

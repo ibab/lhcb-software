@@ -1,38 +1,21 @@
-// $Id: GlobalReco_load.cpp,v 1.8 2004-03-11 10:35:46 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2004/01/14 18:12:38  gcorti
-// remove obsolete files
-//
-// Revision 1.6  2003/02/07 16:54:42  gcorti
-// remove old primary vertex algorithm
-//
-// Revision 1.5  2002/12/20 16:29:50  gcorti
-// calo tools
-//
-// Revision 1.4  2002/11/20 20:00:23  ibelyaev
-//  new algorithm for creation of Neutral ProtoParticles
-//
-// Revision 1.3  2002/07/15 19:27:08  ibelyaev
-//  add new algorithm for creation on Neutral ProtoParticles
-// 
-// ============================================================================
+
+//-----------------------------------------------------------------------------
+/** @file GlobalReco_load.cpp
+ *
+ * Implementation file for classes in the GlobalReco Component Library
+ *
+ * CVS Log :-
+ * $Id: GlobalReco_load.cpp,v 1.9 2006-03-30 14:09:22 jonrob Exp $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 29/03/2006
+ */
+//-----------------------------------------------------------------------------
+
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-
-
-DECLARE_FACTORY_ENTRIES(GlobalReco) {
-  
-  DECLARE_ALGORITHM( ChargedProtoPAlg     ) ;
-  DECLARE_ALGORITHM( NeutralPPCreator     ) ;
-  DECLARE_ALGORITHM( NeutralPPsFromCPsAlg ) ;
-
-};
-
-
-// ============================================================================
-// The END 
-// ============================================================================
+DECLARE_FACTORY_ENTRIES ( GlobalReco ) 
+{
+  DECLARE_ALGORITHM( ChargedProtoPAlg ) ;
+}
