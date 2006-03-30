@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.19 2006-03-15 16:27:31 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.20 2006-03-30 23:07:09 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -286,53 +286,53 @@ StatusCode GetMCRichHitsAlg::finalize()
 {
   const RichStatDivFunctor occ;
 
-  info() << "Av. # Invalid RICH flags           = " << occ(m_invalidRichHits,m_nEvts)
+  info() << "Av. # Invalid RICH flags            = " << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
 
-  info() << "Av. # MCRichHits           : Rich1 = "
+  info() << "Av. # MCRichHits            : Rich1 = "
          << occ(m_hitTally[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
          << endmsg;
 
-  info() << "Av. # Non CK signal hits   : Rich1 = "
+  info() << "Av. # Invalid radiator hits : Rich1 = "
          << occ(m_invalidRadHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_invalidRadHits[Rich::Rich2],m_nEvts)
          << endmsg;
 
-  info() << "Av. # MCRichHits           : Aero  = "
-         << occ(m_radHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Gas Quartz CK hits   : Rich1 = "
+  info() << "Av. # Gas Quartz CK hits    : Rich1 = "
          << occ(m_gasQzHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_gasQzHits[Rich::Rich2],m_nEvts)
          << endmsg;
-  info() << "Av. # HPD Quartz CK hits   : Rich1 = "
+  info() << "Av. # HPD Quartz CK hits    : Rich1 = "
          << occ(m_hpdQzHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_hpdQzHits[Rich::Rich2],m_nEvts)
          << endmsg;
-  info() << "Av. # Nitrogen CK hits     : Rich1 = "
+  info() << "Av. # Nitrogen CK hits      : Rich1 = "
          << occ(m_nitroHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_nitroHits[Rich::Rich2],m_nEvts)
          << endmsg;
-  info() << "Av. # Aero Filter CK hits  : Rich1 = "
+  info() << "Av. # Aero Filter CK hits   : Rich1 = "
          << occ(m_aeroFilterHits[Rich::Rich1],m_nEvts)
          << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
          << endmsg;
+  
+  info() << "Av. # Signal CK MCRichHits  : Aero  = "
+         << occ(m_radHits[Rich::Aerogel],m_nEvts)
+         << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
+         <<   " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
+         << endmsg;
 
-  info() << "Av. # Charged Track hits   : Aero  = "
+  info() << "Av. # Charged Track hits    : Aero  = "
          << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_ctkHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_ctkHits[Rich::CF4],m_nEvts)
          << endmsg;
-  info() << "Av. # Scattered hits       : Aero  = "
+  info() << "Av. # Scattered hits        : Aero  = "
          << occ(m_scatHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_scatHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_scatHits[Rich::CF4],m_nEvts)
          << endmsg;
-  info() << "Av. # MCParticle-less hits : Aero  = "
+  info() << "Av. # MCParticle-less hits  : Aero  = "
          << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
          << " C4F10 = " << occ(m_nomcpHits[Rich::C4F10],m_nEvts)
          << " CF4 = "   << occ(m_nomcpHits[Rich::CF4],m_nEvts)
