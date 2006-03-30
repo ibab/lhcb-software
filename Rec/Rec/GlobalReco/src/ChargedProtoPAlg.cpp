@@ -1,15 +1,15 @@
 
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.cpp
- *
- * Implementation file for algorithm ChargedProtoPAlg
- *
- * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.25 2006-03-30 14:09:22 jonrob Exp $
- *
- * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 29/03/2006
- */
+*
+* Implementation file for algorithm ChargedProtoPAlg
+*
+* CVS Log :-
+* $Id: ChargedProtoPAlg.cpp,v 1.26 2006-03-30 20:46:47 jonrob Exp $
+*
+* @author Chris Jones   Christopher.Rob.Jones@cern.ch
+* @date 29/03/2006
+*/
 //-----------------------------------------------------------------------------
 
 // from Gaudi
@@ -30,21 +30,21 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoPAlg );
 // Standard constructor, initializes variables
 //=============================================================================
 ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
-                                    ISvcLocator* pSvcLocator )
+				    ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_protos       ( NULL ),
     m_trSel        ( NULL )
 {
   // Input data
   declareProperty( "InputTrackLocation",
-                   m_tracksPath = TrackLocation::Default );
+		  m_tracksPath = TrackLocation::Default );
   declareProperty( "InputRichPIDLocation",
-                   m_richPath = RichPIDLocation::Default );
+		  m_richPath = RichPIDLocation::Default );
   declareProperty( "InputMuonPIDLocation",
-                   m_muonPath = MuonPIDLocation::Default );
+		  m_muonPath = MuonPIDLocation::Default );
   // output data
   declareProperty( "OutputProtoParticleLocation",
-                   m_protoPath = ProtoParticleLocation::Charged );
+		  m_protoPath = ProtoParticleLocation::Charged );
 
 }
 
@@ -63,9 +63,9 @@ StatusCode ChargedProtoPAlg::initialize()
 
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector",
-                                  "TrackSelector",
+				  "TrackSelector",
                                   this );
-
+				    
   return sc;
 }
 
@@ -89,7 +89,7 @@ StatusCode ChargedProtoPAlg::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << tracks->size() 
-            << " Tracks from " << m_tracksPath << endreq;
+	    << " Tracks from " << m_tracksPath << endreq;
   }
 
   // Load the RichPIDs (manditory - should be there for each event)
@@ -102,7 +102,7 @@ StatusCode ChargedProtoPAlg::execute()
 
   // Loop over tracks
   for ( Tracks::const_iterator iTrack = tracks->begin(); 
-        iTrack != tracks->end(); ++iTrack )
+	iTrack != tracks->end(); ++iTrack )
   {
     // Select tracks 
     // ( work needed in the tool to add all the selection cuts we need )
@@ -201,16 +201,19 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto )
 //=============================================================================
 StatusCode ChargedProtoPAlg::getRichData()
 {
+  // Do we have any RichPID results
   if ( !exist<RichPIDs>(m_richPath) ) return StatusCode::FAILURE;
+  // yes, so load them
   const RichPIDs * richpids = get<RichPIDs>( m_richPath );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << richpids->size() 
-            << " RichPIDs from " << m_richPath << endreq;
+	    << " RichPIDs from " << m_richPath << endreq;
   }
+  // refresh the reverse mapping
   m_richMap.clear();
   for ( RichPIDs::const_iterator iR = richpids->begin();
-        iR != richpids->end(); ++iR )
+	iR != richpids->end(); ++iR )
   {
     m_richMap[ (*iR)->track() ] = *iR;
   }
@@ -222,16 +225,19 @@ StatusCode ChargedProtoPAlg::getRichData()
 //=============================================================================
 StatusCode ChargedProtoPAlg::getMuonData()
 {
+  // Do we have any MuonPID results
   if ( !exist<MuonPIDs>(m_muonPath) ) return StatusCode::FAILURE;
+   // yes, so load them
   const MuonPIDs * muonpids = get<MuonPIDs>( m_muonPath );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << muonpids->size() 
-            << " MuonPIDs from " << m_muonPath << endreq;
+	    << " MuonPIDs from " << m_muonPath << endreq;
   }
+   // refresh the reverse mapping
   m_muonMap.clear();
   for ( MuonPIDs::const_iterator iM = muonpids->begin();
-        iM != muonpids->end(); ++iM )
+	iM != muonpids->end(); ++iM )
   {
     m_muonMap[ (*iM)->idTrack() ] = *iM;
   }
