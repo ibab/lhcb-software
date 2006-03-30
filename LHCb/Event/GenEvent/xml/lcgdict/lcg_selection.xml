@@ -1,12 +1,4 @@
 <lcgdict>
-   <class name="HepMC::GenEvent" />
-   <class name="HepMC::GenVertex" />
-   <class name="HepMC::GenParticle" />
-   <class name="HepMC::WeightContainer" />
-   <class name="HepMC::Flow" > <field name="m_particle_owner" transient="true" /> </class>
-   <class name="HepMC::Polarization" />
-   <class name="std::vector<long int>" />
-   <class name="std::map<int,int>" />
    <class name="std::pair<int,HepMC::GenParticle*>" />
    <class name="std::pair<int,HepMC::GenVertex*>" />
    <class name="std::map<int,HepMC::GenParticle*>" />

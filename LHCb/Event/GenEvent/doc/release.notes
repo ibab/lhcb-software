@@ -1,7 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
-!======================= GenEvent v4r3 2006-0329 ============================
+!======================== GenEvent v4r3 2006-03-30 ============================
+! 2006-03-30 - Marco Cattaneo
+ - Remove from custom dictionary classes that are in HepMCRflx.so from RELAX
+
 ! 2006-03-29 - Florence RANJARD
  - requirements - uses HepMC from lcg/external
 
