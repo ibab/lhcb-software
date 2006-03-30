@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!======================= GenEvent v4r3 2006-0329 ============================
+! 2006-03-29 - Florence RANJARD
+ - requirements - uses HepMC from lcg/external
+
 !======================== GenEvent v4r2 2006-03-22 ============================
 ! 2006-03-22 - Gloria CORTI for Patrick ROBBE
  - Remove constructor with arguments from HepMCEvent, values need to be set
