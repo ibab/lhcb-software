@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.17 2006-01-31 10:24:59 gcorti Exp $ 
+// $Id: GiGaGeo.cpp,v 1.18 2006-03-30 13:59:05 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2006/01/31 10:24:59  gcorti
+// adapt to LHcb geometry now using MathCore
+//
 // Revision 1.16  2005/01/13 15:04:41  gcorti
 // bug fix giving error in HepTransform3D
 //
@@ -154,7 +157,7 @@ GiGaGeo::GiGaGeo
   // /
   declareProperty ( "XsizeOfWorldVolume"        , m_worldX           ) ;
   declareProperty ( "YsizeOfWorldVolume"        , m_worldY           ) ;
-  declareProperty ( "XsizeOfWorldVolume"        , m_worldZ           ) ;
+  declareProperty ( "ZsizeOfWorldVolume"        , m_worldZ           ) ;
   ///
   declareProperty ( "GlobalSensitivity"         , m_budget           ) ;
   declareProperty ( "WorldMagneticField"        , m_worldMagField    ) ;

@@ -4,6 +4,11 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-03-30 - Gloria CORTI
+ - Fix bug of mispelled property in its name hence repeating existing one:
+   ZsizeOfWorldVolume instead of twice ZsizeOfWorldVolume
+   . GiGaGeo.cpp
+
 !======================= GiGaCnv v16r1 2006-03-27 ==========================
 ! 2006-03-27 - Patrick Robbe
  - Trajectory2Particle: switch to MeV for HepMC
