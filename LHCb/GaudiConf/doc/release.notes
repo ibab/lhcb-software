@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r5 2006-03-30 ========================
+! 2006-03-30 - Marco Cattaneo
+ - In PoolSim.opts, remove dictionaries loaded from RELAX via rootmap mechanism
+
 !======================== GaudiConf v9r4 2006-03-23 ========================
 ! 2006-03-23 - Marco Cattaneo
  - Fix DecodeRawEvent.opts for Velo, IT and TT decoding
