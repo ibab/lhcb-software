@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.45 2006-03-08 12:57:14 cattanem Exp $
+! $Id: release.notes,v 1.46 2006-03-30 21:45:33 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+!========================== OTDet v6r1 2006-03-30 ==========================
+! 2006-03-30 - Jan Amoraal
+ - The "hopefully" new and improved OTDet
+ - Interface is similar to STDet
+ - Calculate hits using vectors
 
 !========================== OTDet v6r0 2006-03-08 ==========================
 ! 2006-02-27 - Jeroen van Tilburg

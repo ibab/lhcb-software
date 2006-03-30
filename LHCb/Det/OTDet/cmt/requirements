@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.24 2006-01-11 12:51:05 cattanem Exp $
+# $Id: requirements,v 1.25 2006-03-30 21:45:33 janos Exp $
 # =========================================================================
 
 package  OTDet 
-version  v6r0
+version  v6r1
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 
@@ -13,6 +13,8 @@ include_dirs      $(OTDETROOT)
 # =============== used packages ===========================================
 use DetDescCnv   v*   Det 
 use LHCbKernel	 v*   Kernel
+use Boost        v*   LCG_Interfaces
+use GSL		 v*   LCG_Interfaces
 
 # =============== link library (base classes) =============================
 library          OTDetLib        Lib/*.cpp 

@@ -1,15 +1,12 @@
-// $Id: DeOTQuarter.h,v 1.3 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTQuarter.h,v 1.4 2006-03-30 21:45:32 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
-// DetDesc
+/// DetDesc
 #include "DetDesc/DetectorElement.h"
 
-// Kernel
+/// Kernel
 #include "Kernel/OTChannelID.h"
-
-// OTDet
-#include "OTDet/DeOTModule.h"
 
 /** @class DeOTQuarter DeOTQuarter.h "OTDet/DeOTQuarter.h"
  *
@@ -19,58 +16,94 @@
  *  @date   04-04-2003
  */
 
+/// Forward declarations
+class DeOTModule;
+
+namespace LHCb
+{
+  class Point3DTypes;
+}
+
 static const CLID& CLID_DeOTQuarter = 8104;
 
 class DeOTQuarter : public DetectorElement {
 
-public:
+ public:
+  /** Some typedefs */
+  typedef std::vector<DeOTModule*> Modules;
   
-  /// Constructor
-  DeOTQuarter ( const std::string& name    = "" ) ;
+  /** Constructor */
+  DeOTQuarter( const std::string& name = "");
   
-  /// Destructor
-  ~DeOTQuarter () ;
+  /** Destructor */
+  ~DeOTQuarter();
   
-  /// object identification
-  const CLID& clID () const ;
-  /// object identification
-  static const CLID& classID () { return CLID_DeOTQuarter ; }
-  
-  /// initialization method 
+  /** Retrieves reference to class identifier
+   * @return the class identifier for this class
+   */
+  const CLID& clID() const;
+
+  /** Another reference to class identifier
+   * @return the class identifier for this class
+   */
+  static const CLID& classID() { return CLID_DeOTQuarter; };
+    
+  /** Initialization method 
+   * @return Status of initialisation
+   */ 
   virtual StatusCode initialize();
 
-  /// get quarterID
-  unsigned int quarterID() const { return m_quarterID; };
+  /** @return quarterID */
+  unsigned int quarterID() const;
 
-  /// get the stereo angle for this layer
-  double stereoAngle() const { return m_stereoAngle; };
+  /** Element id */
+  LHCb::OTChannelID elementID() const;
+  
+  /** Set element id */
+  void setElementID(const LHCb::OTChannelID& chanID);
+  
+  /** Check contains channel
+   *  @param channel
+   *  @return bool
+   */
+  bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;
+  
+  /** Check if a point is inside the quarter 
+   * @parma a point
+   * @return bool
+   */
+  bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const;
 
-  /// return the module for a given moduleID
-  DeOTModule* module(unsigned int moduleID) const;
+  /** @return stereo angle of the layer */
+  double angle() const;
 
-  /// return the module for a given 3D point
-  DeOTModule* module(const Gaudi::XYZPoint& point) const;
+  /** @return stereo angle of the layer */
+  double stereoAngle() const;
 
-  /// check if point is inside volume
-  bool isInside(const Gaudi::XYZPoint& point) const;
+  /** @return the module for a given channelID */
+  DeOTModule* findModule(const LHCb::OTChannelID aChannel) const;
 
-  /// get the vector of all OT modules
-  std::vector<DeOTModule*>& modules() { return m_modules; }
+  /** @return the module for a given XYZ point */
+  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
 
-  /// get the vector of all OT modules
-  const std::vector<DeOTModule*>& modules() const { return m_modules; }
-
-private:
-
-  unsigned int m_quarterID;           ///< quarter ID number
-  double m_stereoAngle;               ///< layer stereo angle 
-  double m_xMin;                      ///< Minimum x of the cover
-  double m_yMin;                      ///< Minimum y of the cover
-  double m_zMin;                      ///< Minimum z of the cover
-  double m_xMax;                      ///< Maximum x of the cover
-  double m_yMax;                      ///< Maximum y of the cover
-  double m_zMax;                      ///< Maximum z of the cover
-  std::vector<DeOTModule*> m_modules; ///< vector of modules
+  /** Flat vector of all OT modules
+   * @return vector of modules
+   */
+  const Modules& modules() const;
+  
+ private:
+  unsigned int m_stationID;      ///< station ID number
+  unsigned int m_layerID;        ///< layer ID number
+  unsigned int m_quarterID;      ///< quarter ID number
+  LHCb::OTChannelID m_elementID; ///< element id
+  double m_stereoAngle;          ///< layer stereo angle 
+  double m_xMin;                 ///< Minimum x of the cover
+  double m_yMin;                 ///< Minimum y of the cover
+  double m_zMin;                 ///< Minimum z of the cover
+  double m_xMax;                 ///< Maximum x of the cover
+  double m_yMax;                 ///< Maximum y of the cover
+  double m_zMax;                 ///< Maximum z of the cover
+  Modules m_modules;             ///< vector of modules
 
 };
 
@@ -78,13 +111,42 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline bool DeOTQuarter::isInside(const Gaudi::XYZPoint& point) const
-{
-  // only check x and y (z should have been checked before in layer)
-  if ( point.x() > m_xMin && point.x() < m_xMax &&
-       point.y() > m_yMin && point.y() < m_yMax && 
-       point.z() > m_zMin && point.z() < m_zMax) return true;
-  return false;
+inline unsigned int DeOTQuarter::quarterID() const {
+  return m_quarterID;
+}
+
+inline LHCb::OTChannelID DeOTQuarter::elementID() const {
+  return m_elementID;
+}
+
+inline void DeOTQuarter::setElementID(const LHCb::OTChannelID& chanID) {
+  m_elementID = chanID;
+}
+
+inline bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const {
+  return (quarterID() == aChannel.quarter());
+}
+
+/// I'll keep this untill it's in DetDesc
+inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const {
+  double aPointX = aPoint.x();
+  double aPointY = aPoint.y();
+  double aPointZ = aPoint.z();
+  return (aPointX > m_xMin && aPointX < m_xMax &&
+	  aPointY > m_yMin && aPointY < m_yMax &&
+	  aPointZ > m_zMin && aPointZ < m_zMax) ? true : false;
+}
+
+inline double DeOTQuarter::angle() const {
+  return m_stereoAngle;
+}
+
+inline double DeOTQuarter::stereoAngle() const {
+  return m_stereoAngle;
+}
+
+inline const DeOTQuarter::Modules& DeOTQuarter::modules() const {
+  return m_modules;
 }
 
 #endif  // OTDET_DEOTQUARTER_H

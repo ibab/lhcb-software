@@ -1,22 +1,13 @@
-// $Id: DeOTDetector.h,v 1.23 2006-02-27 19:33:38 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.24 2006-03-30 21:45:32 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
-// DetDesc
+/// DetDesc
 #include "DetDesc/DetectorElement.h"
 
-// OTDet
-#include "OTDet/DeOTStation.h"
-#include "OTDet/DeOTLayer.h"
-#include "OTDet/DeOTQuarter.h"
-#include "OTDet/DeOTModule.h"
-
-// Kernel
+/// Kernel
 #include "Kernel/OTChannelID.h"
 #include "Kernel/LHCbID.h"
-
-// MathCore
-#include "Kernel/Point3DTypes.h"
 
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
@@ -30,9 +21,21 @@
  *  @date   26-05-2002
  */
 
-namespace LHCb{ class Trajectory; }
+/// Forward declarations
+class DeOTStation;
+class DeOTLayer;
+class DeOTQuarter;
+class DeOTModule;
+
+namespace LHCb
+{
+  class Point3DTypes;
+  class LHCbID;
+  class Trajectory;
+}
 
 namespace DeOTDetectorLocation{
+  /// Outer Tracker location in transient detector store
   static const std::string& Default="/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
 };
 
@@ -40,180 +43,332 @@ static const CLID& CLID_DeOTDetector = 8101;
 
 class DeOTDetector : public DetectorElement {
 
-public:
+ public:
   
-  /// Constructor
-  DeOTDetector ( const std::string& name    = "" ) ;
+  /** Some typedefs */
+  typedef std::vector<DeOTStation*> Stations;
+  typedef std::vector<DeOTLayer*> Layers;
+  typedef std::vector<DeOTQuarter*> Quarters;
+  typedef std::vector<DeOTModule*> Modules;
   
-  /// Destructor
-  ~DeOTDetector () ;
+  /** Constructor */
+  DeOTDetector(const std::string& name = "");
   
-  /// object identification
-  const CLID& clID () const ;
-  /// object identification
-  static const CLID& classID () { return CLID_DeOTDetector ; }
+  /** Destructor */
+  ~DeOTDetector();
+    
+  /** Retrieves reference to class identifier
+   * @return the class identifier for this class
+   */
+  const CLID& clID() const;
   
-  /// initialization method 
+  /** Another reference to class identifier
+   * @return the class identifier for this class
+   */
+  static const CLID& classID() { return CLID_DeOTDetector ; }
+  
+  /** Initialization method 
+   * @return Status of initialisation
+   */
   virtual StatusCode initialize();
 
-  /// Find the channels and the distances from the MCHits
+  /** Find the channels and the distances from the MCHits */
   StatusCode calculateHits(const Gaudi::XYZPoint& entryPoint, 
                            const Gaudi::XYZPoint& exitPoint,
                            std::vector<LHCb::OTChannelID>& channels,
-                           std::vector<double>& driftDistances );
-
-  /// return the station for a given stationID
-  DeOTStation* station(unsigned int stationID) const;
+                           std::vector<double>& driftDistances);
   
-  /// return the layer for a given channelID
-  DeOTLayer* layer(LHCb::OTChannelID aChannel) const;
-
-  /// return the quarter for a given channelID
-  // DeOTQuarter* quarter(LHCb::OTChannelID aChannel) const;
-
-  /// return the module for a given channel ID
-  DeOTModule* module(LHCb::OTChannelID aChannel) const;
-
-  /// return the module for a given point
-  DeOTModule* module(const Gaudi::XYZPoint& point) const;
-
-  /// Return sensor key /sentive volume id for a given global point
-  const int sensitiveVolumeID( const Gaudi::XYZPoint& globalPos ) const;
+  /** @return number of first station */
+  unsigned int firstStation() const; 
   
-  /// return the distance along the wire given a channel and position x,y
-  double distanceAlongWire(LHCb::OTChannelID channelID,
-                           double xHit,
-                           double yHit) const;
+  /** @return number of last station */
+  unsigned int lastStation() const;
 
-  /// return the channel right from a given channel
-  LHCb::OTChannelID nextChannelRight(LHCb::OTChannelID aChannel) const;
-
-  /// return the channel left from a given channel
-  LHCb::OTChannelID nextChannelLeft(LHCb::OTChannelID aChannel) const;
-
-  /// get the straw resolution
-  double resolution() const {return m_resolution;}
+  /** @return number of stations */
+  unsigned int nStation() const; 
   
-  /// get the resolution with magn. field correction
+  /** @return the station for a given channelID */
+  DeOTStation* findStation(const LHCb::OTChannelID aChannel) const;
+  
+  /** @return the station for a given XYZ point */
+  DeOTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Check contains channel
+   *  @param channel
+   *  @return bool
+   */
+  bool contains(const LHCb::OTChannelID aChannel) const;
+
+  /** Check channel number is valid 
+   * @param channel
+   * @return bool
+   */
+  /* bool isValid(const LHCb::OTChannelID aChannel); */
+  
+  /** @return the layer for a given channelID */
+  DeOTLayer* findLayer(const LHCb::OTChannelID aChannel) const;
+
+  /** @return the layer for a given XYZ point */
+  DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
+  
+  // This also works.
+  /** @return the layer for a given t channelID/XYZ point */
+  /* template <typename T>  */
+  /*     DeOTLayer* DeOTDetector::layer(const T& t)  const; */
+
+  /** @return the quarter for a given channelID */
+  DeOTQuarter* findQuarter(const LHCb::OTChannelID aChannel) const;
+
+  /** @return the quarter for a given XYZ point */
+  DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
+
+  /** @return the module for a given channel ID */
+  DeOTModule* findModule(const LHCb::OTChannelID aChannel) const;
+
+  /** @return the module for a given XYZ point */
+  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
+
+  /** @return the channel left from a given channel 
+   * @param channel
+   */
+  LHCb::OTChannelID nextChannelLeft(const LHCb::OTChannelID aChannel) const;
+
+  /** @return the channel right from a given channel 
+   * @param channel
+   */
+  LHCb::OTChannelID nextChannelRight(const LHCb::OTChannelID aChannel) const;
+
+  /** @return sentive volume id for a given global XYZ point */
+  // const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+  
+  /** Calculate the distance along a wire for a given channel and XY position
+   * @param channel
+   * @param x coordinate
+   * @param y coordinate
+   * @return distance
+   */
+  double distanceAlongWire(const LHCb::OTChannelID aChannel, 
+			   double xHit, double yHit) const;
+
+  /** Get the straw resolution
+   * @return straw resolution
+   */   
+  double resolution() const;
+    
+  /** Get B-field corrected resolution
+   * @param By
+   * @return resolution
+   */
   double resolution(const double by) const;
 
-  /// returns the propagation delay (ns/mm)
-  double propagationDelay() const {return m_propagationDelay;} ;
+  /** @return propagation delay (ns/mm) */
+  double propagationDelay() const;
 
-  /// Calculate the propagation delay along the wire
+  /** Calculate the propagation delay along a wire
+   * @param channel
+   * @param x-coordinate
+   * @param y-coordinate 
+   */
   double propagationTime(const LHCb::OTChannelID aChannel, 
                          const double x, const double y ) const;
-
-  /// Calculate max drift as function of By
+  
+  /** Calculate max drift as function of By
+   * @param By
+   * @return Max drift time correction
+   */
   double maxDriftTimeFunc(const double by) const;
   
-  /// r-t relation without correction for the magnetic field
+  /** @return r-t relation */
   double driftTime(const double driftDist) const;
   
-  /// r-t relation with correction for the magnetic field
+  /** @return B-field corrected r-t relation */
   double driftTime(const double driftDist, const double by) const;
-
-  /// returns the drift delay without magnetic field correction (ns/mm)
-  double driftDelay() const {return m_maxDriftTime/m_cellRadius;}
-
-  /// inverse r-t relation without correction for the magnetic field
+  
+  /** @return inverse r-t relation */
   double driftDistance( const double driftTime) const;
 
-  /// inverse r-t relation with correction for the magnetic field
+  /** @return B-field corrected inverse r-t relation */
   double driftDistance( const double driftTime, const double by ) const;
-
-  /// returns the dead time in ns
-  double deadTime() const {return m_deadTime;}
   
-  /// get the number of tracker stations
-  unsigned int numStations()  { return m_numStations; }
+  /** @return drift delay (ns/mm) */
+  double driftDelay() const;
 
-  /// get the first station with OT technology
-  unsigned int firstOTStation()  { return m_firstOTStation; }
+  /** @return dead time (ns) */
+  double deadTime() const;
+  
+  /** Flat vector of OT station
+   * @return vector of station
+   */
+  const Stations& stations() const;
 
-  /// get the maximum # channels in one module
-  unsigned int nMaxChanInModule() { return m_nMaxChanInModule; }
+  /** Flat vector of OT layers
+   * @return vector of layers
+   */
+  const Layers& layers() const;
+  
+  /** Flat vector of OT quarters
+   * @return vector of quarters
+   */
+  const Quarters& quarters() const;
 
-  /// get the vector of all OT modules
-  std::vector<DeOTModule*>& modules() { return m_modules; }
+  /** Flat vector of OT modules
+   * @return vector of modules
+   */
+  const Modules& modules() const;
+  
+  /** @return the total number of readout channels */
+  unsigned int nChannels();
+  
+  /** @return the maximum number of channels in a module */
+  unsigned int nMaxChanInModule();
 
-  /// get the vector of all OT modules
-  const std::vector<DeOTModule*>& modules() const { return m_modules; }
-
-  /// get the total number of readout channels in the OT
-  unsigned int nChannels()  { return m_nChannels; }
-
-  /// Returns a Trajectory representing the wire identified by the LHCbID
-  /// The offset is zero for all OT Trajectories
+  /** Returns a Trajectory representing the wire identified by the LHCbID
+   * The offset is zero for all OT Trajectories
+   * @return trajecory
+   */ 
   LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
                                 const double = 0 /*offset*/ ) const;
-
-private:
-
-  double m_resolution;            ///< straw resolution
-  double m_propagationDelay;      ///< speed of propagation along wire
-  double m_maxDriftTime;          ///< maximum drift time
-  double m_maxDriftTimeCor;       ///< magn. correction on maximum drift time
-  double m_deadTime;              ///< deadtime
-  double m_cellRadius;            ///< cell radius
-
-  unsigned int m_numStations;     ///< number of stations
-  unsigned int m_firstOTStation;  ///< first OT station
-  std::vector<DeOTStation*> m_stations;///< vector of stations
-  std::vector<DeOTLayer*> m_layers;    ///< vector of layers
-  std::vector<DeOTQuarter*> m_quarters;///< vector of layers
-  std::vector<DeOTModule*> m_modules; ///< vector of modules containing geometry
-  unsigned int m_nChannels;       ///< total number of channels in OT
-  unsigned int m_nMaxChanInModule;///< the maximum # channels in 1 module
-
-  /// Bitmasks for bitfield sensorkey id
-  enum sensitiveMasks {moduleMask     = 0x03C00000,
-		       quarterMask    = 0x0C000000,
-		       layerMask      = 0x30000000,
-		       stationMask    = 0xC0000000};
   
+ private:
+
+  /** set the first station */
+  void setFirstStation(const unsigned int iStation);
+
+  /** make flat list of lowest descendents  and also layers*/
+  //void flatten();
+
+  Stations m_stations;             ///< flat vector of stations
+  Layers m_layers;                 ///< flat vector of layers
+  Quarters m_quarters;             ///< flat vector of quarters
+  Modules m_modules;               ///< flat vector of modules 
+                                   ///<containing geometry
+  unsigned int m_firstStation;     ///< number of first station
+  unsigned int m_nChannels;        ///< total number of channels in OT
+  unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module
+
+  /** General Outer Tracker pramaters */
+  double m_cellRadius;             ///< cell radius
+  double m_resolution;             ///< straw resolution
+  double m_propagationDelay;       ///< Propagation time delay
+  double m_maxDriftTime;           ///< maximum drift time
+  double m_maxDriftTimeCor;        ///< magn. correction on maximum drift time
+  double m_deadTime;               ///< deadtime
 };
 
 // -----------------------------------------------------------------------------
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline double DeOTDetector::driftTime(const double driftDist) const
-{
-  // r-t relation without correction for the magnetic field
-  // convert r to t - hack as drift dist can > rCell
-  if ( fabs(driftDist) < m_cellRadius ) {
-    return ( fabs(driftDist) / m_cellRadius) * m_maxDriftTime;
-  } else {
-    return m_maxDriftTime;
-  }
+inline unsigned int DeOTDetector::firstStation() const {
+  return m_firstStation;
 }
 
-inline double DeOTDetector::driftDistance( const double driftTime) const
-{
-  // inverse r-t relation without correction for the magnetic field
-  return driftTime * m_cellRadius / m_maxDriftTime;
+inline unsigned int DeOTDetector::lastStation() const {
+  return m_firstStation + m_stations.size() - 1u;
 }
 
-inline double DeOTDetector::resolution(const double by) const
-{  
-  // Calculate resolution
-  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
-  // p1, p2 vary for different gas mixes
-  // The parameterization is only valid for Bx<1.4T (or there abouts)
-
-  return m_resolution ;
+inline unsigned int DeOTDetector::nStation() const {
+  return m_stations.size();
 }
 
-inline double DeOTDetector::maxDriftTimeFunc(const double by) const
-{
-  // Calculate max drift as function of B 
-  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
-  // p1, p2 vary for different gas mixes
-  // The parameterization is only valid for Bx<1.4T (or there abouts)
+inline bool DeOTDetector::contains(const LHCb::OTChannelID aChannel) const{
+  return ((aChannel.station() >= firstStation()) && (aChannel.station() <= lastStation()));
+}
+
+/* inline bool DeOTDetector::isValid(const LHCb::OTChannelID aChannel) { */
+/*   DeOTDetector::Modules::iterator iter = m_modules.begin(); */
+/*   while((iter != m_modules.end())&&((*iter)->contains(aChannel) == false)){ */
+/*     ++iter; */
+/*   } // iter */
+/*   return (iter != m_modules.end() ? (*iter)->isWire(aChannel.wire()) : false ); */
+/* } */
+
+inline double DeOTDetector::resolution() const {  
+  return m_resolution;
+}
+
+inline double DeOTDetector::resolution(const double by) const {  
+  /// Calculate resolution
+  /// The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  /// p1, p2 vary for different gas mixes
+  /// The parameterization is only valid for Bx<1.4T (or there abouts)
+
+  return m_resolution;
+}
+
+inline double DeOTDetector::propagationDelay() const {
+  return m_propagationDelay;
+}
+
+inline double DeOTDetector::maxDriftTimeFunc(const double by) const {
+  /// Calculate max drift as function of B 
+  /// The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  /// p1, p2 vary for different gas mixes
+  /// The parameterization is only valid for Bx<1.4T (or there abouts)
 
   return (m_maxDriftTime + (m_maxDriftTimeCor * by * by) );
 }
+  
+inline double DeOTDetector::driftTime(const double driftDist) const {
+  /// r-t relation without correction for the magnetic field
+  /// convert r to t - hack as drift dist can > rCell
+  return (fabs(driftDist) < m_cellRadius?(fabs(driftDist) / m_cellRadius) : 1)*m_maxDriftTime;
+}
 
+inline double DeOTDetector::driftTime(const double driftDist, const double by) const
+{
+  /// r-t relation with correction for the magnetic field
+  /// get max drift time 
+  double maxDriftTime = maxDriftTimeFunc( by );
+  /// convert r to t - hack as drift dist can > rCell
+  double driftTime = (fabs(driftDist) < m_cellRadius ? fabs(driftDist)/m_cellRadius : 1)*maxDriftTime;
+  return driftTime;
+}
+
+inline double DeOTDetector::driftDistance( const double driftTime) const {
+  /// inverse r-t relation without correction for the magnetic field
+  return (driftTime * m_cellRadius) / m_maxDriftTime;
+}
+
+inline double DeOTDetector::driftDistance( const double driftTime, const double by ) const {
+  /// inverse r-t relation with correction for the magnetic field
+  /// get max drift time with correction for magnetic field
+  double maxDriftTime = maxDriftTimeFunc(by);
+
+  /// inverse r-t relation
+  return driftTime * m_cellRadius / maxDriftTime;  
+}
+
+inline double DeOTDetector::driftDelay() const {
+  return m_maxDriftTime/m_cellRadius;
+}
+
+inline double DeOTDetector::deadTime() const {
+  return m_deadTime;
+}
+
+inline const DeOTDetector::Stations& DeOTDetector::stations() const {
+  return m_stations;
+}
+
+inline const DeOTDetector::Layers& DeOTDetector::layers() const {
+  return m_layers;
+}
+
+inline const DeOTDetector::Quarters& DeOTDetector::quarters() const {
+  return m_quarters;
+}
+
+inline const DeOTDetector::Modules& DeOTDetector::modules() const {
+  return m_modules;
+}
+
+inline unsigned int DeOTDetector::nChannels() {
+  return m_nChannels;
+}
+
+inline unsigned int DeOTDetector::nMaxChanInModule() {
+  return m_nMaxChanInModule;
+}
 
 #endif  // OTDET_DEOTDETECTOR_H

@@ -1,13 +1,19 @@
-// $Id: DeOTQuarter.cpp,v 1.3 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTQuarter.cpp,v 1.4 2006-03-30 21:45:34 janos Exp $
 
-// DetDesc
+/// DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-// OTDet
-#include "OTDet/DeOTQuarter.h"
-
+/// Kernel
 #include "Kernel/SystemOfUnits.h"
+
+/// OTDet
+#include "OTDet/DeOTQuarter.h"
+#include "OTDet/DeOTModule.h"
+
+/// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 /** @file DeOTQuarter.cpp
  *
@@ -16,11 +22,14 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
 
+using namespace boost::lambda;
 using namespace LHCb;
 
-DeOTQuarter::DeOTQuarter( const std::string& name ) :
+DeOTQuarter::DeOTQuarter(const std::string& name) :
   DetectorElement( name ),
-  m_quarterID( 0 ),
+  m_stationID( 0u ),
+  m_layerID( 0u ),
+  m_quarterID( 0u ),
   m_stereoAngle( 0.0 ),
   m_xMin(  10.0*km ),
   m_yMin(  10.0*km ),
@@ -29,37 +38,30 @@ DeOTQuarter::DeOTQuarter( const std::string& name ) :
   m_yMax( -10.0*km ),
   m_zMax( -10.0*km ),
   m_modules()
-{ }
-
-DeOTQuarter::~DeOTQuarter()
-{
+{ 
+  /// Constructor
 }
 
-const CLID& DeOTQuarter::clID () const 
-{ 
+DeOTQuarter::~DeOTQuarter() {
+}
+
+const CLID& DeOTQuarter::clID() const { 
   return DeOTQuarter::classID() ; 
 }
 
-StatusCode DeOTQuarter::initialize() 
-{
-  IDetectorElement* layer = this->parentIDetectorElement();
-
-  m_quarterID = (unsigned int) param<int>("quarterID");
-  m_stereoAngle = layer->params()->param<double>("stereoAngle");
-
-  //loop over modules
-  IDetectorElement::IDEContainer::const_iterator iModule;
-  for (iModule = this->childBegin(); iModule != this->childEnd();
-       ++iModule) {  
-    DeOTModule* otModule = dynamic_cast<DeOTModule*>(*iModule);
-    if ( otModule) {
-      m_modules.push_back(otModule);
-
-      // Calculate cover box of quarter (this function should be in IVolume!)
-      const IGeometryInfo* gi = otModule->geometry();
+StatusCode DeOTQuarter::initialize() {
+  
+  /// Loop over modules
+  IDetectorElement::IDEContainer::const_iterator iModule = this->childBegin();
+  for ( ; iModule != this->childEnd(); ++iModule) {  
+    DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
+    if (module) {
+      m_modules.push_back(module);
+      
+      /// Calculate cover box of quarter (this function should be in IVolume!)
+      const IGeometryInfo* gi = module->geometry();
       const ISolid* solid = gi->lvolume()->solid();
-      const SolidBox* mainBox = 
-        dynamic_cast<const SolidBox*>( solid->cover() );
+      const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
       if ( mainBox ) {
         double dx = mainBox->xHalfLength();
         double dy = mainBox->yHalfLength();
@@ -76,32 +78,39 @@ StatusCode DeOTQuarter::initialize()
               if ( cornerPoint.x() > m_xMax ) m_xMax = cornerPoint.x();
               if ( cornerPoint.y() > m_yMax ) m_yMax = cornerPoint.y();
               if ( cornerPoint.z() > m_zMax ) m_zMax = cornerPoint.z();
-            } // k
-          } // j
-        } // i
-      } // if mainBox
-    } // if otModule
-  }
+            } /// k
+          } /// j
+        } /// i
+      } /// if mainBox
+    } /// if otModule
+  } /// iModule
+  
+  IDetectorElement* layer = this->parentIDetectorElement();
+  IDetectorElement* station = layer->parentIDetectorElement();
+  m_stationID = (unsigned int) station->params()->param<int>("stationID");
+  m_layerID = (unsigned int) layer->params()->param<int>("layerID");
+  m_quarterID = (unsigned int) param<int>("quarterID");
+  OTChannelID aChan(m_stationID, m_layerID, m_quarterID, 0u, 0u, 0u);
+  setElementID(aChan);
+
+  /// Do people really need this?
+  m_stereoAngle = layer->params()->param<double>("stereoAngle");
+  
   return StatusCode::SUCCESS;
 }
 
-DeOTModule* DeOTQuarter::module(unsigned int moduleID) const
-{
-  DeOTModule* otModule = 0;
-  std::vector<DeOTModule*>::const_iterator iterModule = m_modules.begin();
-  while ( iterModule != m_modules.end() &&
-          !( (*iterModule)->moduleID() == moduleID ) ) ++iterModule;
-
-  if ( iterModule != m_modules.end()) otModule = *iterModule;
-  return otModule;
+/// Find the module for a given channelID
+DeOTModule* DeOTQuarter::findModule(const OTChannelID aChannel) const {
+  /// Find the module and return a pointer to the module from channel
+  Modules::const_iterator iter = std::find_if(m_modules.begin(), m_modules.end(),
+					      bind(&DeOTModule::contains, _1, aChannel));
+  return (iter != m_modules.end() ? (*iter) : 0);
 }
 
-DeOTModule* DeOTQuarter::module(const Gaudi::XYZPoint& point) const
-{
-  DeOTModule* otModule = 0;
-  std::vector<DeOTModule*>::const_iterator iterModule = m_modules.begin();
-  while ( iterModule != m_modules.end() &&
-          !( (*iterModule)->isInside(point) ) ) iterModule++;
-  if ( iterModule != m_modules.end() ) otModule = *iterModule;
-  return otModule;
+/// Find the module for a given XYZ point
+DeOTModule* DeOTQuarter::findModule(const Gaudi::XYZPoint& aPoint) const {
+ /// Find the modules and return a pointer to the modules from channel
+  Modules::const_iterator iter = std::find_if(m_modules.begin(), m_modules.end(),
+					      bind(&DetectorElement::isInside, _1, aPoint));
+  return (iter != m_modules.end() ? (*iter) : 0);
 }

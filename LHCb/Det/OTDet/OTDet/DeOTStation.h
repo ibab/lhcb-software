@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.4 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTStation.h,v 1.5 2006-03-30 21:45:33 janos Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -9,7 +9,8 @@
 #include "Kernel/OTChannelID.h"
 
 // OTDet
-#include "OTDet/DeOTLayer.h"
+#include "OTDet/DeOTDetector.h"
+//#include "OTDet/DeOTBaseElement.h"
 
 /** @class DeOTStation DeOTStation.h "OTDet/DeOTStation.h"
  *
@@ -19,48 +20,74 @@
  *  @date   04-04-2003
  */
 
+/// Forward declarations
+class DeOTLayer;
+
+namespace LHCb 
+{
+  class Point3DTypes;
+}
+
 static const CLID& CLID_DeOTStation = 8102;
 
 class DeOTStation : public DetectorElement {
 
-public:
+ public:
   
-  /// Constructor
-  DeOTStation ( const std::string& name    = "" ) ;
+  /** Some typedefs */
+  typedef std::vector<DeOTLayer*> Layers;
   
-  /// Destructor
-  ~DeOTStation () ;
+  /** Constructor */
+  DeOTStation(const std::string& name = "") ;
   
-  /// object identification
-  const CLID& clID () const ;
-  /// object identification
-  static const CLID& classID () { return CLID_DeOTStation ; }
+  /** Destructor */
+  ~DeOTStation() ;
   
-  /// initialization method 
+  /** Retrieves reference to class identifier
+   * @return the class identifier for this class
+   */
+  const CLID& clID() const ;
+  
+  /** Another reference to class identifier
+   * @return the class identifier for this class
+   */
+  static const CLID& classID() { return CLID_DeOTStation; };
+    
+  /** Initialization method 
+   * @return Status of initialisation
+   */
   virtual StatusCode initialize();
 
-  /// get stationID
-  unsigned int stationID() const { return m_stationID; };
+  /** @return stationID */
+  unsigned int stationID() const;
   
-  /// return the layer for a given layerID
-  DeOTLayer* layer(unsigned int layerID) const;
+  /** Element id */
+  LHCb::OTChannelID elementID() const;
+  
+  /** Set element id */
+  void setElementID(const LHCb::OTChannelID& chanID);
+  
+  /** Check contains channel
+   *  @param channel
+   *  @return bool
+   */
+  bool contains(const LHCb::OTChannelID aChannel) const;
 
-  /// return the layer for a given 3D point
-  DeOTLayer* layer(const Gaudi::XYZPoint& point) const;
+  /** @return the layer for a given channelID */
+  DeOTLayer* findLayer(const LHCb::OTChannelID aChannel);
 
-  /// check if point is inside volume
-  bool isInside(const Gaudi::XYZPoint& point) const;
+  /** @return the layer for a given 3D point */
+  DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint);
 
-  /// get the vector of all OT layers
-  std::vector<DeOTLayer*>& layers() { return m_layers; }
-
-  /// get the vector of all OT modules
-  const std::vector<DeOTLayer*>& layers() const { return m_layers; }
-
-private:
-
-  unsigned int m_stationID;         ///< station ID number
-  std::vector<DeOTLayer*> m_layers; ///< vector of layers
+  /** Flat vector of layers
+   * @return vector of layers
+   */
+  const Layers& layers() const;
+  
+ private:
+  unsigned int m_stationID;      ///< station ID number
+  LHCb::OTChannelID m_elementID; ///< Element ID
+  Layers m_layers;               ///< vector of layers
 
 };
 
@@ -68,9 +95,24 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline bool DeOTStation::isInside(const Gaudi::XYZPoint& point) const
-{
-  return this->geometry()->isInside(point);
+inline unsigned int DeOTStation::stationID() const {
+  return m_stationID;
+}
+
+inline LHCb::OTChannelID DeOTStation::elementID() const {
+  return m_elementID;
+}
+
+inline void DeOTStation::setElementID(const LHCb::OTChannelID& chanID) {
+  m_elementID = chanID;
+}
+
+inline bool DeOTStation::contains(const LHCb::OTChannelID aChannel) const {
+  return (stationID() == aChannel.station());
+}
+
+inline const DeOTStation::Layers& DeOTStation::layers() const {
+  return m_layers;
 }
 
 #endif  // OTDET_DEOTSTATION_H

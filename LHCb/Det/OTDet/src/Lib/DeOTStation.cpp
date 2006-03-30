@@ -1,11 +1,16 @@
-// $Id: DeOTStation.cpp,v 1.4 2006-01-11 09:29:15 janos Exp $
+// $Id: DeOTStation.cpp,v 1.5 2006-03-30 21:45:34 janos Exp $
 
-// DetDesc
+/// DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-// OTDet
+/// OTDet
 #include "OTDet/DeOTStation.h"
+#include "OTDet/DeOTLayer.h"
+
+/// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 /** @file DeOTStation.cpp
  *
@@ -14,55 +19,53 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
 
-DeOTStation::DeOTStation( const std::string& name ) :
-  DetectorElement( name ),
-  m_stationID(),
-  m_layers()
-{ }
+using namespace boost::lambda;
+using namespace LHCb;
 
-DeOTStation::~DeOTStation()
-{
+DeOTStation::DeOTStation(const std::string& name) :
+  DetectorElement( name ),
+  m_stationID(0u),
+  m_elementID(0u),
+  m_layers() { /// constructor 
 }
 
-const CLID& DeOTStation::clID () const 
-{ 
+DeOTStation::~DeOTStation() { 
+  /// destrcutor 
+}
+
+const CLID& DeOTStation::clID() const { 
   return DeOTStation::classID() ; 
 }
 
-StatusCode DeOTStation::initialize() 
-{
-  m_stationID = (unsigned int) param<int>("stationID");
-
-  //loop over layers
+StatusCode DeOTStation::initialize() {
+  
+  /// Loop over layers
   IDetectorElement::IDEContainer::const_iterator iLayer;
   for (iLayer = this->childBegin(); iLayer != this->childEnd();
        ++iLayer) {  
-    DeOTLayer* otLayer = dynamic_cast<DeOTLayer*>(*iLayer);
-    if ( otLayer) {
-      m_layers.push_back(otLayer);
-    }
-  }
+    DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iLayer);
+    if (layer) m_layers.push_back(layer);
+  }/// iLayer
+  
+  m_stationID = (unsigned int) param<int>("stationID");
+  OTChannelID aChan(m_stationID, 0u, 0u, 0u, 0u, 0u);
+  setElementID(aChan);
+  
   return StatusCode::SUCCESS;
 }
 
-DeOTLayer* DeOTStation::layer(unsigned int layerID) const
-{
-  DeOTLayer* otLayer = 0;
-  std::vector<DeOTLayer*>::const_iterator iterLayer = m_layers.begin();
-  while ( iterLayer != m_layers.end() &&
-          !( (*iterLayer)->layerID() == layerID ) )
-    iterLayer++;
-
-  if ( iterLayer != m_layers.end()) otLayer = *iterLayer;
-  return otLayer;
+/// Find the layer for a given channel
+DeOTLayer* DeOTStation::findLayer(const OTChannelID aChannel) {  
+  /// Find the layer and return a pointer to the layer from channel
+  Layers::const_iterator iter = std::find_if(m_layers.begin(), m_layers.end(),
+					     bind(&DeOTLayer::contains, _1, aChannel));
+  return (iter != m_layers.end() ? (*iter) : 0);
 }
 
-DeOTLayer* DeOTStation::layer(const Gaudi::XYZPoint& point) const
-{
-  DeOTLayer* otLayer = 0;
-  std::vector<DeOTLayer*>::const_iterator iterLayer = m_layers.begin();
-  while ( iterLayer != m_layers.end() &&
-          !( (*iterLayer)->isInside(point) ) ) iterLayer++;
-  if ( iterLayer != m_layers.end() ) otLayer = *iterLayer;
-  return otLayer;
+/// Find the layer for a given XYZ point
+DeOTLayer* DeOTStation::findLayer(const Gaudi::XYZPoint& aPoint) {  
+  /// Find the layer and return a pointer to the layer from XYZ point
+  Layers::const_iterator iter = std::find_if(m_layers.begin(), m_layers.end(),
+					     bind(&DetectorElement::isInside, _1, aPoint));
+  return (iter != m_layers.end() ? (*iter) : 0);
 }
