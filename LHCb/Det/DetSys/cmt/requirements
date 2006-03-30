@@ -20,7 +20,8 @@ use STDet          	v2r1    Det
 apply_pattern     reflex_dictionary                            \
                   dictionary=Det                               \
                   headerfiles=$(DETSYSROOT)/dict/DetDict.h     \
-                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml
+                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
+                  options="-U__MINGW32__"
 
 # =============== patterns ====================================================
 apply_pattern     component_library    library=DetDict
