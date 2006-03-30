@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.7 2006-02-03 16:44:24 janos Exp $
+// $Id: OTSmearer.cpp,v 1.8 2006-03-30 21:50:19 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -32,9 +32,8 @@
 
 using namespace LHCb;
 
-static ToolFactory<OTSmearer> s_factory;
-const IToolFactory& OTSmearerFactory = s_factory;
-
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( OTSmearer );
 
 OTSmearer::OTSmearer(const std::string& type, 
                      const std::string& name, 
@@ -53,7 +52,7 @@ OTSmearer::~OTSmearer()
 StatusCode OTSmearer::finalize()
 {
   // release services and tools requested at initialization
-  if( 0 != m_magFieldSvc ) {
+  if ( 0 != m_magFieldSvc ) {
     m_magFieldSvc->release();
     m_magFieldSvc = 0;
   }
@@ -67,27 +66,27 @@ StatusCode OTSmearer::initialize()
  // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
   sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }  
 
   // get interface to generator
   sc = randSvc->generator(Rndm::Gauss(0.,1.0),m_genDist.pRef()); 
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to generate random number distribution",sc);
   }
   randSvc->release();
 
   // retrieve pointer to magnetic field service
   sc = serviceLocator()->service("MagneticFieldSvc", m_magFieldSvc, true);
-  if( sc.isFailure() ) {
-     return Error ("Failed to retrieve magnetic field service",sc);
+  if ( sc.isFailure() ) {
+    return Error ("Failed to retrieve magnetic field service",sc);
   }
 
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to retrieve magnetic field service",sc);
   }
 

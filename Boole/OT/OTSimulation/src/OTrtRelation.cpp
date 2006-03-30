@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.7 2006-02-03 16:44:24 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.8 2006-03-30 21:50:19 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -30,8 +30,8 @@
 
 using namespace LHCb;
 
-static ToolFactory<OTrtRelation> s_factory;
-const IToolFactory& OTrtRelationFactory = s_factory;
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY( OTrtRelation );
 
 OTrtRelation::OTrtRelation(const std::string& type, 
                            const std::string& name, 
@@ -75,9 +75,9 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   const double driftDist = aDeposit->driftDistance();
   
   // average entrance and exit to get point in cell 
-  const Gaudi::XYZPoint& entrancePoint = aMCHit->entry();
+  const Gaudi::XYZPoint& entryPoint = aMCHit->entry();
   const Gaudi::XYZPoint& exitPoint = aMCHit->exit();
-  Gaudi::XYZPoint aPoint = entrancePoint + 0.5 * (exitPoint - entrancePoint);
+  Gaudi::XYZPoint aPoint = entryPoint + 0.5 * (exitPoint - entryPoint);
 
   // add drift time
   double time = driftTime(driftDist, aPoint) ;

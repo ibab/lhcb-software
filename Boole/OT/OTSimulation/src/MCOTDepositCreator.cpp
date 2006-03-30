@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.13 2006-03-22 18:25:18 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.14 2006-03-30 21:50:17 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -44,8 +44,8 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCOTDepositCreator> s_Factory;
-const IAlgFactory& MCOTDepositCreatorFactory = s_Factory;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator );
 
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :
@@ -107,23 +107,22 @@ StatusCode MCOTDepositCreator::initialize()
   
   // Loading OT Geometry from XML
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_numStations = m_tracker->numStations();
-  m_firstOTStation = m_tracker->firstOTStation();  
-
-  int numOTStations = m_numStations - m_firstOTStation + 1;
+  m_firstStation = m_tracker->firstStation();  
+  unsigned int nStations = m_tracker->nStation() - m_firstStation + 1;
+  
+ 
   // retrieve efficiency calculator tool
-  for (int iEff = 0 ; iEff < numOTStations; ++iEff) {
+  for (unsigned int iEff = 0 ; iEff < nStations; ++iEff) {
     // get tool
     IOTEffCalculator* aSingleCellEff = 0;
     std::string aName = toolName("effCalculator", iEff);
-    aSingleCellEff = tool<IOTEffCalculator>("OTEffCalculator",
-                                            aName,this);
+    aSingleCellEff = tool<IOTEffCalculator>("OTEffCalculator", aName, this);
     // add tool to vector
     m_singleCellEffVector.push_back(aSingleCellEff);
   } //loop eff calculators
 
   // smearer
-  for (int iSmearTool = 0; iSmearTool < numOTStations; ++iSmearTool){
+  for (unsigned int iSmearTool = 0; iSmearTool < nStations; ++iSmearTool){
     // get tool
     IOTSmearer* aSmearer = 0;
     std::string aName = toolName("smearer", iSmearTool);
@@ -133,7 +132,7 @@ StatusCode MCOTDepositCreator::initialize()
   } // loop smearing tools
 
   // make r-t calculators
-  for(int iRT = 0; iRT < numOTStations; ++iRT){
+  for(unsigned int iRT = 0; iRT < nStations; ++iRT){
     // get tool
     IOTrtRelation* aRTrelation = 0;
     std::string aName = toolName("rtRelation", iRT);
@@ -259,9 +258,8 @@ StatusCode MCOTDepositCreator::execute(){
 
   MCOTDeposits* deposits = new MCOTDeposits();
   deposits->reserve(m_tempDeposits->size());
-  MCOTDepositVec::iterator iterDep;
-  for ( iterDep = m_tempDeposits->begin(); iterDep != m_tempDeposits->end();
-        ++iterDep ) {
+  MCOTDepositVec::iterator iterDep = m_tempDeposits->begin();
+  for ( ; iterDep != m_tempDeposits->end(); ++iterDep ) {
     deposits->add(*iterDep);
   }
   m_tempDeposits->clear();
@@ -295,19 +293,17 @@ StatusCode MCOTDepositCreator::makeDigitizations()
         // make deposits
         std::vector<OTChannelID> channels;
         std::vector<double> driftDistances;
-        StatusCode sc = m_tracker->calculateHits( (*iterHit)->entry(), 
-                                                  (*iterHit)->exit(),
-                                                  channels, driftDistances );
+        StatusCode sc = m_tracker->calculateHits((*iterHit)->entry(), (*iterHit)->exit(),
+						 channels, driftDistances );
         if ( !sc.isSuccess() ) continue;
         
         std::vector<OTChannelID>::const_iterator iterChan;
         std::vector<double>::const_iterator iterDist = driftDistances.begin();
         for ( iterChan = channels.begin(); iterChan != channels.end();
               ++iterChan) {
-          double absDist = fabs(*(iterDist));
-          int ambiguity = 1;
-          if ( *iterDist < 0.0 ) ambiguity = -1;
-          MCOTDeposit* deposit = new MCOTDeposit(*iterHit, 
+          double absDist = fabs((*iterDist));
+          int ambiguity = (((*iterDist) < 0.0) ? -1 : 1);
+	  MCOTDeposit* deposit = new MCOTDeposit(*iterHit, 
                                                  *iterChan,
                                                  tTimeOffset,
                                                  absDist,
@@ -324,7 +320,6 @@ StatusCode MCOTDepositCreator::makeDigitizations()
   return StatusCode::SUCCESS;
 }
 
-
 StatusCode MCOTDepositCreator::singleCellEff() 
 {
   // apply single cell efficiency
@@ -336,8 +331,7 @@ StatusCode MCOTDepositCreator::singleCellEff()
   while (iterDeposit != m_tempDeposits->end() ) {
     
     // number of tool - maybe there is no outer tracker station 1
-    int iEffTool = (*iterDeposit)->channel().station() 
-                   - m_firstOTStation;
+    int iEffTool = (*iterDeposit)->channel().station() - m_firstStation;
 
     bool iAccept = false;
     sc = m_singleCellEffVector[iEffTool]->calculate(*iterDeposit,iAccept);
@@ -363,10 +357,10 @@ StatusCode MCOTDepositCreator::applySmear()
   StatusCode sc = StatusCode::SUCCESS;
 
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
-  while (iterDeposit != m_tempDeposits->end()){
+  while (iterDeposit != m_tempDeposits->end()) {
     
     // number of tool - there is no outer tracker station 1
-    int iSmearTool = (*iterDeposit)->channel().station() - m_firstOTStation;
+    int iSmearTool = (*iterDeposit)->channel().station() - m_firstStation;
 
     // smear      
     sc = m_smearerVector[iSmearTool]->smear(*iterDeposit);
@@ -394,10 +388,10 @@ StatusCode MCOTDepositCreator::applyRTrelation()
   StatusCode sc = StatusCode::SUCCESS;
 
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
-  while (iterDeposit != m_tempDeposits->end()){
+  while (iterDeposit != m_tempDeposits->end()) {
     
     // number of tool - there is no outer tracker station 1
-    int iRTTool = (*iterDeposit)->channel().station() - m_firstOTStation;
+    int iRTTool = (*iterDeposit)->channel().station() - m_firstStation;
 
     // convert      
     sc = m_rtRelationVector[iRTTool]->convertRtoT(*iterDeposit);
@@ -504,7 +498,7 @@ std::string MCOTDepositCreator::toolName(const std::string& aName,
                                          const int id) const
 {
   // convert id to station number
-   int iStation = id + m_firstOTStation;
+   int iStation = id + m_firstStation;
    
    char buffer[32];
    return  aName+ ::_itoa(iStation,buffer,10);

@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.9 2006-02-03 16:44:24 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.10 2006-03-30 21:50:18 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -17,6 +17,7 @@
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
+#include "OTDet/DeOTModule.h"
 
 // local
 #include "OTRandomDepositCreator.h"
@@ -31,8 +32,8 @@
 
 using namespace LHCb;
 
-static ToolFactory<OTRandomDepositCreator> s_factory;
-const IToolFactory& OTRandomDepositCreatorFactory = s_factory;
+// Declaration of the tool Factory
+DECLARE_TOOL_FACTORY( OTRandomDepositCreator );
 
 OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type, 
 					       const std::string& name, 
@@ -58,12 +59,12 @@ StatusCode OTRandomDepositCreator::initialize()
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
   sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }  
   // get interface to generator
   sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to generate random number distribution",sc);
   }
   randSvc->release();
@@ -71,7 +72,7 @@ StatusCode OTRandomDepositCreator::initialize()
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
-  if( sc.isFailure() ) {
+  if ( sc.isFailure() ) {
     return Error ("Failed to retrieve magnetic field service",sc);
   }
 
@@ -88,13 +89,12 @@ StatusCode OTRandomDepositCreator::initialize()
   // calculate window start and size
   std::vector<double> startGates = readoutTool->startReadOutGate();
   std::vector<double>::iterator iterG = startGates.begin();
-  while (iterG !=  startGates.end()){
+  while (iterG !=  startGates.end()) {
     m_windowOffSet.push_back(*iterG - m_deadTime);
     ++iterG;
   } // iterG
 
   m_windowSize = readoutTool->sizeOfReadOutGate() + m_deadTime;
-
 
   // release tool 
   release(readoutTool);
@@ -112,8 +112,7 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
   std::vector<DeOTModule*> otModules =  m_tracker->modules();
   unsigned int nModules =  otModules.size();
   
-  for (unsigned int iDep = 0; iDep < m_nNoise; ++iDep){
-   
+  for (unsigned int iDep = 0; iDep < m_nNoise; ++iDep) {
     unsigned int moduleNum = (unsigned int) (nModules*m_genDist->shoot());
     DeOTModule* aModule = otModules[moduleNum];
     

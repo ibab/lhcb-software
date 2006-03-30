@@ -1,11 +1,10 @@
-// $Id: MCOTTimeCreator.cpp,v 1.8 2006-02-03 16:44:23 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.9 2006-03-30 21:50:17 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
-
 
 // MCEvent
 #include "Event/MCOTDeposit.h"
@@ -24,11 +23,11 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCOTTimeCreator> s_Factory;
-const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( MCOTTimeCreator );
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
-                                   ISvcLocator* pSvcLocator) :
+				 ISvcLocator* pSvcLocator) :
   GaudiAlgorithm(name, pSvcLocator),
   m_tempTimeCont(0)
 {
@@ -90,8 +89,7 @@ StatusCode MCOTTimeCreator::execute()
 StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 {
   // retrieve deposits
-  MCOTDeposits* depositCont = 
-    get<MCOTDeposits>(MCOTDepositLocation::Default);
+  MCOTDeposits* depositCont = get<MCOTDeposits>(MCOTDepositLocation::Default);
 
   MCOTDeposits::const_iterator iterDep = depositCont->begin();
   MCOTDeposits::const_iterator jterDep = iterDep;
@@ -153,17 +151,15 @@ bool MCOTTimeCreator::DigitalDeadTime( const MCOTDeposit* firstDep,
 { 
   // check whether to continue killing deposits
   if( firstDep->channel() == secondDep->channel()  && 
-      this->calculateTDCTime( secondDep )<(m_countsPerBX * m_numberOfBX))
-  {
-
+      this->calculateTDCTime( secondDep )<(m_countsPerBX * m_numberOfBX)) {
+    
     debug() << " Time 1 " << this->calculateTDCTime( firstDep ) 
             << " Time 2 " << this->calculateTDCTime( secondDep ) << endmsg;    
     
     return true;
-  } else{ 
+  } else { 
     return false;
   }
-  
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.8 2006-02-03 16:44:23 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.9 2006-03-30 21:50:17 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -100,8 +100,8 @@ private:
   /// temporary deposits vector
   MCOTDepositVec* m_tempDeposits;          ///< Vector of tmp deposits
 
-  unsigned int m_numStations;              ///< number of stations
-  unsigned int m_firstOTStation;           ///< first OT station
+  //unsigned int m_nStations;                ///< number of stations
+  unsigned int m_firstStation;             ///< first OT station
   std::vector<std::string> m_spillVector;  ///< spills to digitize  
   std::vector<double>  m_spillTimes;       ///< spillTime
   std::vector<std::string> m_spillNames;   ///< spillNames

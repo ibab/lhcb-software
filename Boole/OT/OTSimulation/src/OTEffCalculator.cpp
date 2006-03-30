@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.7 2006-02-03 16:44:23 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.8 2006-03-30 21:50:17 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -9,8 +9,11 @@
 // MCEvent
 #include "Event/MCOTDeposit.h"
 
-// CLHEP
+// Kernel
 #include "Kernel/SystemOfUnits.h"
+
+/// GSL
+#include "gsl/gsl_math.h"
 
 // OTSimulation
 #include "OTEffCalculator.h"
@@ -25,9 +28,8 @@
 
 using namespace LHCb;
 
-static ToolFactory<OTEffCalculator> s_factory;
-const IToolFactory& OTEffCalculatorFactory = s_factory;
-
+// Declaration of the tool Factory
+DECLARE_TOOL_FACTORY( OTEffCalculator );
 
 OTEffCalculator::OTEffCalculator(const std::string& type, 
                                  const std::string& name, 
@@ -84,8 +86,7 @@ StatusCode OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& iAccept)
   double testVal = m_genEff->shoot();
   if (testVal < effParamFunc(aDeposit->driftDistance()) ) {
     iAccept = true;
-  }
-  else{
+  } else {
     iAccept = false;
   } //  test
 
@@ -97,15 +98,14 @@ double OTEffCalculator::effParamFunc(const double driftDistance)
   // efficiency function parameterization
   
   // calculate the track path Length in the cell
-  double pathLength2 = pow(m_cellRadius,2.) - pow(driftDistance,2.);
+  double pathLength2 = gsl_pow_2(m_cellRadius) - gsl_pow_2(driftDistance);
 
   // eff - return val
   double eff = 0.;
 
-  if (pathLength2 > 0.0){
+  if (pathLength2 > 0.0) {
     eff = m_etaZero*(1.0-exp(-2.0*m_rho*sqrt(pathLength2)));
-  }
-  else{
+  } else {
     // efficiency 0 outside cell
   }
 
