@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.6 2006-01-30 13:42:55 janos Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.7 2006-03-30 21:51:27 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -53,8 +53,8 @@ StatusCode MCOTDepositMonitor::initialize()
   // Get OT Geometry from XML
   DeOTDetector* tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
 
-  m_numStations = tracker->numStations();
-  m_firstOTStation = tracker->firstOTStation();  
+  m_nStations = tracker->nStation();
+  m_firstStation = tracker->firstStation();  
 
   // intialize histos
   this->initHistograms();
@@ -78,8 +78,8 @@ StatusCode MCOTDepositMonitor::execute()
 
   // histos per deposit
   LHCb::MCOTDeposits::iterator iterDep;
-  for( iterDep = depCont->begin(); 
-       iterDep != depCont->end(); iterDep++ ){
+  for ( iterDep = depCont->begin(); 
+	iterDep != depCont->end(); iterDep++ ) {
     this->fillHistograms(*iterDep);
   } // loop iterDep
 
@@ -122,7 +122,7 @@ StatusCode MCOTDepositMonitor::initHistograms()
     AIDA::IHistogram2D* aHisto2D;
     int iStation;
     // drift time spectra
-    for (iStation = m_firstOTStation; iStation <= m_numStations; ++iStation) {
+    for (iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
       ID=100+iStation;
       std::string aString= this->intToString(ID);
       aHisto1D = histoSvc()->book( tDirPath+this->intToString(ID),
@@ -133,7 +133,7 @@ StatusCode MCOTDepositMonitor::initHistograms()
     }
     
     // x vs y
-    for (iStation = m_firstOTStation; iStation <= m_numStations; ++iStation) {
+    for (iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
       ID=200+iStation;
       aHisto2D = histoSvc()->book(tDirPath+this->intToString(ID),
                                   "x(cm) vs y(cm) station "+
@@ -161,7 +161,7 @@ StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit )
   m_nHitsPerLayerHisto->fill( (double)iUniqueLayerNum, 1.);
 
   if ( fullDetail() ) {
-    m_driftTimeHistos[iStation-m_firstOTStation]->fill(aDeposit->time(), 1.);
+    m_driftTimeHistos[iStation-m_firstStation]->fill(aDeposit->time(), 1.);
   }
   
   // reference to mctruth
@@ -175,15 +175,14 @@ StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit )
       Gaudi::XYZPoint mcHitPoint = ( aHit->entry() ) - 0.5*(aHit->exit() - aHit->entry());
 
       // fill x vs y scatter plots    
-      m_xvsyHistos[iStation-m_firstOTStation]->fill(mcHitPoint.x()/cm,
+      m_xvsyHistos[iStation-m_firstStation]->fill(mcHitPoint.x()/cm,
                                                     mcHitPoint.y()/cm);
     }
     
     // drift distance
     m_driftDistHisto->fill(aDeposit->driftDistance(),1.0);
-
-  } // aHit valid 
-  else {
+    // aHit valid 
+  } else {
     // crosstalk hit
     m_nCrossTalkHits++;
   }

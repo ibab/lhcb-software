@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.8 2006-02-10 15:58:49 cattanem Exp $
+// $Id: OTTimeChecker.cpp,v 1.9 2006-03-30 21:51:27 janos Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
@@ -12,6 +12,7 @@
 
 // OT geometry
 #include "OTDet/DeOTDetector.h"
+#include "OTDet/DeOTModule.h"
 
 // MCEvent
 #include "Event/MCHit.h"
@@ -57,9 +58,8 @@ StatusCode OTTimeChecker::initialize()
   this->initHistograms();
 
   // Get OT Geometry from XML
-  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_tracker = tracker;
-
+  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  
   return StatusCode::SUCCESS;
 }
 
@@ -81,7 +81,7 @@ StatusCode OTTimeChecker::execute()
 
   OTTime2MCHitAsct associator( evtSvc(), OTTimeLocation::Default+"2MCHits" );
   const Table* aTable = associator.direct();
-  if( !aTable ) return Error( "Failed to find table", StatusCode::FAILURE );
+  if (!aTable) return Error( "Failed to find table", StatusCode::FAILURE );
   
   // Calculate efficiencies from MCHits to OTTimes
   // loop over OTTimes, find the MCHit and store multiplicity
@@ -89,10 +89,10 @@ StatusCode OTTimeChecker::execute()
   PartMultVec partMultCont;
   int nGhosts = 0;  
   OTTimes::const_iterator iterTime;
-  for ( iterTime = timeCont->begin(); iterTime != timeCont->end(); ++iterTime) {
+  for (iterTime = timeCont->begin(); iterTime != timeCont->end(); ++iterTime) {
     // get MC truth for this time
     Range range = aTable->relations(*iterTime);
-    if ( range.empty() ) {
+    if (range.empty()) {
       nGhosts++;
       continue;
     }
@@ -206,7 +206,7 @@ StatusCode OTTimeChecker::execute()
   double totalHitEff = 0.0;
   HitMultVec::const_iterator iHit;
   
-  for ( iHit = hitMultCont.begin(); iHit != hitMultCont.end(); ++iHit) {
+  for (iHit = hitMultCont.begin(); iHit != hitMultCont.end(); ++iHit) {
     if ( iHit->mult >= 1) totalHitEff += 1.0;
     if ( fullDetail() ) {
       if ( iHit->mult == 1) singleHitEff += 1.0;
@@ -320,12 +320,11 @@ StatusCode OTTimeChecker::initHistograms()
 
 }
 
-
 StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) 
 {
   // get the distance to the wire from MCHit
   const OTChannelID channel = time->channel();
-  DeOTModule* module = m_tracker->module( channel );
+  DeOTModule* module = m_tracker->findModule( channel );
   const Gaudi::XYZPoint entryP = aHit->entry();
   const Gaudi::XYZPoint exitP = aHit->exit();
   const Gaudi::XYZPoint middleP = entryP + (exitP - entryP)/2.;  
@@ -341,8 +340,7 @@ StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit)
   double measDist = m_tracker->driftDistance( driftTime );  
   
   // Get the cheated ambiguity
-  int ambiguity = 1;
-  if ( mcDist < 0.0 ) ambiguity = -1;
+  int ambiguity = ((mcDist < 0.0) ? -1 : 1);
 
   m_resHisto->fill( ambiguity*measDist - mcDist );
 

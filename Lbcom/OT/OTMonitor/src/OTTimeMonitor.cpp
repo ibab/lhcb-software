@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.cpp,v 1.5 2006-01-30 13:42:55 janos Exp $
+// $Id: OTTimeMonitor.cpp,v 1.6 2006-03-30 21:51:27 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,6 +9,7 @@
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
+#include "OTDet/DeOTModule.h"
 
 // Event
 #include "Event/OTTime.h"
@@ -47,8 +48,8 @@ StatusCode OTTimeMonitor::initialize()
 {
   // Get OT Geometry from XML
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_numStations = m_tracker->numStations();
-  m_firstOTStation = m_tracker->firstOTStation();
+  m_nStations = m_tracker->nStation();
+  m_firstStation = m_tracker->firstStation();
 
   // intialize histos
   this->initHistograms();
@@ -62,8 +63,10 @@ StatusCode OTTimeMonitor::initialize()
   std::vector<DeOTModule*> modules = m_tracker->modules();
   std::vector<DeOTModule*>::const_iterator module;
   for (module = modules.begin(); module != modules.end(); ++module) {
-    int iStation = (*module)->stationID();
-    int iLayer = (*module)->layerID();
+    // int iStation = (*module)->stationID();
+    // int iLayer = (*module)->layerID();
+    int iStation = (*module)->elementID().station();
+    int iLayer = (*module)->elementID().layer();
     int iUniqueLayerNum = 10*iStation+iLayer;
     int nChannels = (*module)->nChannels();
     int moduleID = (*module)->moduleID();
@@ -167,9 +170,9 @@ StatusCode OTTimeMonitor::initHistograms()
   // histograms per station
   int ID;
   IHistogram1D* aHisto1D;
-  for (int iStation = m_firstOTStation ;iStation <= m_numStations; ++iStation){
+  for (int iStation = m_firstStation ;iStation <= m_nStations; ++iStation) {
 
-    if(fullDetail()){
+    if (fullDetail()) {
       // Tdc time spectra
       ID = 100 + iStation;
       std::string aString= this->intToString(ID);
@@ -230,7 +233,7 @@ StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime)
 
     // number of times versus x-coordinate for T1 layer 1.
     if (iStation == 3 && iLayer == 1) {
-      DeOTModule* module = m_tracker->module(channel);
+      DeOTModule* module = m_tracker->findModule(channel);
       double channelsPerBin = m_nChannelsPerLayer[iUniqueLayerNum]/50.;
       weight = 100 / ( m_evtMax * channelsPerBin );
       Gaudi::XYZPoint hit = module->centerOfStraw(channel.straw());
@@ -240,11 +243,11 @@ StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime)
     // Bin time for every station
     int tdcTime = channel.tdcTime();
     double tdc = (double) (tdcTime);
-    m_tdcTimeHistos[iStation-m_firstOTStation]->fill( tdc, 1.);
+    m_tdcTimeHistos[iStation-m_firstStation]->fill( tdc, 1.);
   }
   
   // calibrated time for every station
-  m_calTimeHistos[iStation-m_firstOTStation]->fill(aTime->calibratedTime(), 1.);
+  m_calTimeHistos[iStation-m_firstStation]->fill(aTime->calibratedTime(), 1.);
 
   // end
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.h,v 1.3 2006-01-30 13:42:55 janos Exp $
+// $Id: OTTimeMonitor.h,v 1.4 2006-03-30 21:51:27 janos Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
@@ -51,8 +51,8 @@ class OTTimeMonitor : public OTMonitorAlgorithm {
  
   /// Geometry
   DeOTDetector* m_tracker;
-  int m_numStations;    ///< number of stations (from geometry)
-  int m_firstOTStation; ///< first OT station   (from geometry)
+  int m_nStations;    ///< number of stations (from geometry)
+  int m_firstStation; ///< first OT station   (from geometry)
   /// top module number for every layer
   std::vector<unsigned int> m_nTopModules;
   /// number of channels per station 
@@ -71,8 +71,8 @@ class OTTimeMonitor : public OTMonitorAlgorithm {
   AIDA::IHistogram1D* m_nTimesHisto;           ///< times per event distribution
   AIDA::IHistogram1D* m_nTimesPerStationHisto; ///< times per station distribution 
   AIDA::IHistogram1D* m_nTimesPerLayerHisto;   ///< times per layer distribution
-  AIDA::IHistogram1D* m_occPerStationHisto;     ///< occupancy per station
-  AIDA::IHistogram1D* m_occPerLayerHisto;       ///< occupancy per layer
+  AIDA::IHistogram1D* m_occPerStationHisto;    ///< occupancy per station
+  AIDA::IHistogram1D* m_occPerLayerHisto;      ///< occupancy per layer
   /// occupancy in top module per layer distribution
   AIDA::IHistogram1D* m_occTopPerLayerHisto;
   /// occupancy in corner module per layer distribution
