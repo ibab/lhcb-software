@@ -1,4 +1,4 @@
-// $Id: OTFillEventFromOTTime.cpp,v 1.1 2006-02-02 15:31:50 janos Exp $
+// $Id: OTFillEventFromOTTime.cpp,v 1.2 2006-03-30 21:49:02 janos Exp $
 // Include files
 
 // Gaudi
@@ -22,20 +22,16 @@
 #include "OTFillEventFromOTTime.h"
 #include "Event/OTBankVersion.h"
 
-
-
-using namespace LHCb;
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillEventFromOTTime
 //
 // 2004-01-09 : Jacopo Nardulli & Bart Hommels
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<OTFillEventFromOTTime>          s_factory ;
-const        IAlgFactory& OTFillEventFromOTTimeFactory = s_factory ; 
+using namespace LHCb;
 
+// Declaration of the algorithm Factory
+DECLARE_ALGORITHM_FACTORY( OTFillEventFromOTTime );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -89,14 +85,14 @@ StatusCode OTFillEventFromOTTime::execute()
   this->sortTimesIntoBanks();
 
   // Loop the map bank structure
-  for(mBank::iterator iBank = dataContainer->begin();
-      iBank != dataContainer->end();
-      iBank++){
+  for (mBank::iterator iBank = dataContainer->begin();
+       iBank != dataContainer->end();
+       iBank++) {
     dataBank* aBank = new dataBank();
     vOTime* aTime = (*iBank).second;
 
     // Empty Bank -- Still sending all the Headers
-    if(aTime->size() == 0){
+    if (aTime->size() == 0) {
       this->convertToRAWEmptyBank(aBank);
     }
 
@@ -142,7 +138,7 @@ StatusCode OTFillEventFromOTTime::finalize()
 StatusCode OTFillEventFromOTTime::sortTimesIntoBanks()
 {
   // create the map of OTTime vectors, numberOfBanks entries
-  for( int i = 1; i <= numberOfBanks; i++){
+  for ( int i = 1; i <= numberOfBanks; i++) {
     vOTime* currentOTTime = new vOTime();
     mBank::value_type numBank(i, currentOTTime);
     dataContainer->insert( dataContainer->end(), numBank );
@@ -151,9 +147,9 @@ StatusCode OTFillEventFromOTTime::sortTimesIntoBanks()
   mBank::iterator iBank = dataContainer->begin();
   vOTime* currentOTTime;
     
-  for(vOTime::iterator iTime = m_Time->begin();
-      iTime != m_Time->end();
-      iTime++){
+  for (vOTime::iterator iTime = m_Time->begin();
+       iTime != m_Time->end();
+       iTime++) {
 
     int nBankID = chID2int( (*iTime)->channel() );
     iBank = dataContainer->find(nBankID);
@@ -168,7 +164,7 @@ StatusCode OTFillEventFromOTTime::sortTimesIntoGol(vOTime* BankOTime,
 
 {
   // create the map of OT vectors, numberOfGols entries
-  for( int k = 1; k <= numberOfGols; k++){
+  for ( int k = 1; k <= numberOfGols; k++) {
     vOTime* currentTime = new vOTime();
     mGol::value_type numGol(k, currentTime);
     goldatacontainer->insert( goldatacontainer->end(), numGol );
@@ -177,17 +173,17 @@ StatusCode OTFillEventFromOTTime::sortTimesIntoGol(vOTime* BankOTime,
   mGol::iterator iGol = goldatacontainer->begin();
   vOTime* currentTime;
   // There are 18 Gol per Bank, each one containing the data of a short module 
-  for(vOTime::iterator iTime = BankOTime->begin();
+  for (vOTime::iterator iTime = BankOTime->begin();
       iTime != BankOTime->end();
-      iTime++){
+      iTime++) {
 
     long nQuarter = ((*iTime)->channel()).quarter();
     long nModule = ((*iTime)->channel()).module();
     
     int GOL = 0;
     //There are 2 quarters in each Gol (It is necessary to specify)
-    if((nQuarter == 1) || (nQuarter == 3)){GOL = nModule + 9;} 
-    else if((nQuarter == 0 ) || (nQuarter == 2)){GOL = nModule;}
+    if ((nQuarter == 1) || (nQuarter == 3)) {GOL = nModule + 9;} 
+    else if ((nQuarter == 0 ) || (nQuarter == 2)) {GOL = nModule;}
     int nGolID = GOL;
     iGol = goldatacontainer->find(nGolID);
     currentTime = (*iGol).second;
@@ -199,11 +195,11 @@ StatusCode OTFillEventFromOTTime::sortTimesIntoGol(vOTime* BankOTime,
 StatusCode OTFillEventFromOTTime::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
-  for(int i = 0; i < 3; i++){
+  for (int i = 0; i < 3; i++) {
     unsigned int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
-  for(int j = 0; j < 19; j++){
+  for (int j = 0; j < 19; j++) {
     unsigned int golHeader = 0;
     aBank->push_back(golHeader);
   }
@@ -215,7 +211,7 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
                                                         dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
-  for(int i = 0; i < 3; i++){
+  for (int i = 0; i < 3; i++) {
     unsigned int tell1Header = 0;
     aBank->push_back(tell1Header); 
   }
@@ -235,21 +231,21 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
   vOTime::iterator IBank = vToConvert->begin();
   nQuarto = ((*IBank)->channel()).quarter();
   //Per each Gol we have 2 quarters data  - We need a useful Buffer to specify.
-  if((nQuarto == 0) || (nQuarto == 1)){ quar = 1;}
-  else if((nQuarto == 2) || (nQuarto == 3)){ quar = 2;}
+  if ((nQuarto == 0) || (nQuarto == 1)) { quar = 1;}
+  else if ((nQuarto == 2) || (nQuarto == 3)) { quar = 2;}
 
   // loop the map GOL structure, retrieve the vOTime vectors 
-  for(mGol::iterator iGol = goldatacontainer->begin();
-      iGol != goldatacontainer->end();
-      iGol++){
+  for (mGol::iterator iGol = goldatacontainer->begin();
+       iGol != goldatacontainer->end();
+       iGol++) {
 
     //The New Gol Time Vector : 
     vOTime* aGolTime = (*iGol).second;  
 
     //Defining iterator
-    for(vOTime::iterator iTime = aGolTime->begin();
-        iTime != aGolTime->end();
-        iTime++){
+    for (vOTime::iterator iTime = aGolTime->begin();
+	 iTime != aGolTime->end();
+	 iTime++) {
     
       // Get Station, Layer, Quarter, Module Numbers for each OTTime
       nStation = ((*iTime)->channel()).station();
@@ -267,22 +263,22 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
 
     //The Size
     long size = aGolTime->size() / 2;
-    if(((aGolTime->size() / 2) * 2) != aGolTime->size()){ 
+    if (((aGolTime->size() / 2) * 2) != aGolTime->size()) { 
       size = (aGolTime->size() + 1) /2;
     }
     
     // If the Size is 0, we need the correct values for module and quarter Nr.
-    if( aGolTime->size() == 0){
+    if ( aGolTime->size() == 0) {
       int IGOL = (*iGol).first;
-      if(IGOL < 10 ){
+      if (IGOL < 10 ) {
         nModule = IGOL;
         //Using the Quarter Buffers introduced above to get which quarter is it
-        if(quar == 1 ){nQuarter = 0;} 
-        else if(quar == 2){nQuarter = 2;}
-      } else if(IGOL > 9){
+        if (quar == 1 ) {nQuarter = 0;} 
+        else if (quar == 2) {nQuarter = 2;}
+      } else if (IGOL > 9) {
         nModule = IGOL - 9;
-        if(quar == 1 ){nQuarter = 1;}
-        else if(quar == 2){nQuarter = 3;}
+        if (quar == 1 ) {nQuarter = 1;}
+        else if (quar == 2) {nQuarter = 3;}
       }
       size = 0;
     } 
@@ -306,7 +302,7 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
      * 8 bit time: 2 bit BX + 6 bit time itself
      */
     
-    while( iTimeCurrent != pCurrent->end() ){ //While loop over the OTTime
+    while ( iTimeCurrent != pCurrent->end() ) { //While loop over the OTTime
       OTTime* firstTime = (*iTimeCurrent);
       //First Time - we get Otis and Straw Number
       long firstOtisID = chID2Otis(  firstTime->channel() );
@@ -321,7 +317,7 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
       long nextStrawID = 0;
       int nextTdcTime = 0;
 
-      if(iTimeNext != iHitGolEnd){
+      if (iTimeNext != iHitGolEnd) {
         OTTime* nextTime = (*iTimeNext);
         nextOtisID = chID2Otis(  nextTime->channel() );
         nextStrawID = ((nextTime->channel()).straw());
@@ -341,19 +337,19 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
         }
       }
       // Straw Number Conversion
-      if((firstOtisID == 0) || (firstOtisID == 1)){
+      if ((firstOtisID == 0) || (firstOtisID == 1)) {
         firstStrawID = ( firstStrawID - 1 ) % 32;
-      } else if((firstOtisID == 2) || (firstOtisID == 3)){
+      } else if ((firstOtisID == 2) || (firstOtisID == 3)) {
         firstStrawID = 31 - ((firstStrawID - 1) % 32);
       }
       
-      DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
-                         0, nextOtisID, nextStrawID, nextTdcTime);
+      DataWord dataWord(1, firstOtisID, firstStrawID, firstTdcTime, 
+			0, nextOtisID, nextStrawID, nextTdcTime);
       unsigned int data = dataWord.returnInt(dataWord);
       aBank->push_back(data);
       
       
-      if(iTimeNext != iHitGolEnd) iTimeCurrent++;     
+      if (iTimeNext != iHitGolEnd) iTimeCurrent++;     
     } //while loop over OTTimes
     
     // Erase Gol Vector of Time
@@ -363,21 +359,21 @@ StatusCode OTFillEventFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
 
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
 // Member functions
 //=============================================================================
 
 int OTFillEventFromOTTime::chID2Otis(OTChannelID otChannel)
-
 {    
   int OtisID = 0;
   unsigned int nStraw = otChannel.straw();
 
   //We get the OtisID from the Straw Number
-  if(( 1 <= nStraw ) && ( nStraw <= 32)){ OtisID = 0;}
-  else if(( 33 <= nStraw ) && ( nStraw <= 64)){OtisID = 1;}
-  else if(( 65 <= nStraw ) && ( nStraw <= 96)){OtisID = 3;}
-  else if(( 97 <= nStraw ) && ( nStraw <= 128)){OtisID = 2;}
+  if (( 1 <= nStraw ) && ( nStraw <= 32)) { OtisID = 0;}
+  else if (( 33 <= nStraw ) && ( nStraw <= 64)) {OtisID = 1;}
+  else if (( 65 <= nStraw ) && ( nStraw <= 96)) {OtisID = 3;}
+  else if (( 97 <= nStraw ) && ( nStraw <= 128)) {OtisID = 2;}
 
   /* 
    * It seems wrong, but the point is that here we want a different straw 
@@ -394,7 +390,6 @@ int OTFillEventFromOTTime::chID2Otis(OTChannelID otChannel)
 //=============================================================================
 
 int OTFillEventFromOTTime::chID2int(OTChannelID otChannel)
-
 {    
   int nArray = 0;
   int tempnArray = 0;  
@@ -405,15 +400,15 @@ int OTFillEventFromOTTime::chID2int(OTChannelID otChannel)
   unsigned long nQuarter = otChannel.quarter();
    
   // Loop to get the bank number from the OTChannel ID Information
-  if (nStation == 1){tempn3Array = 0;}
-  else if (nStation == 2){tempn3Array = 8;}
-  else if (nStation == 3){tempn3Array = 16;}
-  if (nLayer == 0 ){ tempn2Array = 0;}
-  else if (nLayer == 1 ){ tempn2Array = 2;}
-  else if (nLayer == 2 ){ tempn2Array = 4;}
-  else if (nLayer == 3 ){ tempn2Array = 6;}
-  if((nQuarter == 0) || (nQuarter == 1)){ tempnArray = 1; }
-  else if((nQuarter == 2) || (nQuarter == 3)){ tempnArray = 2; }
+  if (nStation == 1) {tempn3Array = 0;}
+  else if (nStation == 2) {tempn3Array = 8;}
+  else if (nStation == 3) {tempn3Array = 16;}
+  if (nLayer == 0 ) { tempn2Array = 0;}
+  else if (nLayer == 1 ) { tempn2Array = 2;}
+  else if (nLayer == 2 ) { tempn2Array = 4;}
+  else if (nLayer == 3 ) { tempn2Array = 6;}
+  if ((nQuarter == 0) || (nQuarter == 1)) { tempnArray = 1; }
+  else if ((nQuarter == 2) || (nQuarter == 3)) { tempnArray = 2; }
   nArray = tempn3Array + tempn2Array + tempnArray;
   return(nArray);
 }

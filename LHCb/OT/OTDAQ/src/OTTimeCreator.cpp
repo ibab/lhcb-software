@@ -1,16 +1,20 @@
-// $Id: OTTimeCreator.cpp,v 1.11 2006-02-06 14:53:29 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.12 2006-03-30 21:49:02 janos Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // from Detector
 #include "OTDet/DeOTDetector.h"
+#include "OTDet/DeOTModule.h"
 
-//Event
+// Event
 #include "Event/OTTime.h"
 
-// MathCore
+// Kernel
 #include "Kernel/PhysicalConstants.h"
+
+/// GSL
+#include "gsl/gsl_math.h"
 
 // local
 #include "OTTimeCreator.h"
@@ -26,17 +30,16 @@
 //-----------------------------------------------------------------------------
 
 using namespace LHCb;
-
-// Declaration of the Algorithm Factory
-static const  AlgFactory<OTTimeCreator>          s_factory ;
-const        IAlgFactory& OTTimeCreatorFactory = s_factory ; 
+ 
+// Declaration of the tool Factory
+DECLARE_ALGORITHM_FACTORY( OTTimeCreator );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 OTTimeCreator::OTTimeCreator( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+			      ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   this->declareProperty( "OutputLocation",
@@ -45,9 +48,8 @@ OTTimeCreator::OTTimeCreator( const std::string& name,
   declareProperty("countsPerBX", m_countsPerBX = 64);
   declareProperty("numberOfBX", m_numberOfBX = 3);
   declareProperty("timePerBX", m_timePerBX = 25*ns);
-
-   
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -94,11 +96,11 @@ StatusCode OTTimeCreator::execute() {
   unsigned int j = 0;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // Check the bank version
-    if( (*ibank)->version() == OTBankVersion::v1 ) {
+    if ( (*ibank)->version() == OTBankVersion::v1 ) {
       //set up decoding with one header word
       j = 3;
     }
-    else if( (*ibank)->version() == OTBankVersion::v2 ) {
+    else if ( (*ibank)->version() == OTBankVersion::v2 ) {
       //set up decoding with one header word
       j = 1;
     }
@@ -125,9 +127,9 @@ StatusCode OTTimeCreator::execute() {
     for ( unsigned int i = 0; i < bankSize/4.; ++i ) {
     
       // Gol Header or DataWord     
-      if(i < j ){
-      } else if(i > j-1) {
-        if((i == j) || (i == 1 + nSize + k)){
+      if (i < j ) {
+      } else if (i > j-1) {
+        if ((i == j) || (i == 1 + nSize + k)) {
           golHeader = data[i];
           nSize = golHeader.size();      
           // Given Gol Header we Get Station, Layer, Quarter, Module Nr.
@@ -142,8 +144,7 @@ StatusCode OTTimeCreator::execute() {
                             nQuarter, nModule, nSize) 
                   << endmsg;
           k = i;
-        } 
-        else {
+        } else {
           dataWord =  data[i];
           
           // Given Station, Layer, Quarter, Module Nr. and  Data Word, 
@@ -177,7 +178,7 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
   int Nstraw = 0;
   
   //Next Channel = 0
-  if((nextTime == 0) && (nextOtisID == 0) && (nextChannelID == 0)){
+  if ((nextTime == 0) && (nextOtisID == 0) && (nextChannelID == 0)) {
     Nstraw = 0;
   } else {
     Nstraw  = getStrawID (nextOtisID, nextChannelID);
@@ -197,7 +198,7 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
   this->createTimes(fchannelID, times);
   
   //Next Hit 
-  if( Nstraw != 0) { //To Check that this is not a No Channel Case
+  if ( Nstraw != 0) { //To Check that this is not a No Channel Case
     
     //Get Next ChannelID  
     OTChannelID nchannelID(station, layer, quarter, module, Nstraw, nextTime);
@@ -232,22 +233,21 @@ double OTTimeCreator::correctedTime(const OTChannelID aChan,
 
   //Apply Time of Flight
   //Currently take time of flight to 0,0,0 xz proj,get straw's xyz
-  DeOTModule* aModule = m_tracker->module(aChan);
+  DeOTModule* aModule = m_tracker->findModule(aChan);
   double timeOfFlight = -99999.;
   if (aModule != 0) {
     Gaudi::XYZPoint aPoint = aModule->centerOfStraw(aChan.straw());
-    timeOfFlight = sqrt(pow(aPoint.x(),2.)+pow(aPoint.z(),2.))/c_light;
+    timeOfFlight = sqrt(gsl_pow_2(aPoint.x())+gsl_pow_2(aPoint.z()))/c_light;
   } else {
     warning () << "Failed to find DeOTModule" << endreq;
   }
   // Apply Time of Flight Correction and Read Out Gate Correction
-  unsigned stationNum = (aChan).station();
+  unsigned stationNum = aChan.station();
   return (unCorrectedTime - timeOfFlight + m_startReadOutGate[stationNum-1]); 
 }
 
 //==============================================================================
 int OTTimeCreator::getStrawID(int otisID , int channel)
-
 { 
 
   /*
@@ -257,12 +257,12 @@ int OTTimeCreator::getStrawID(int otisID , int channel)
   
   int straw = 0;
   int tempOtis = 0;
-  if((otisID == 0) || (otisID == 1)){
+  if ((otisID == 0) || (otisID == 1)) {
     straw = (channel + 1) + otisID * 32;
-  } else if((otisID == 3) || (otisID == 2)){
+  } else if ((otisID == 3) || (otisID == 2)) {
     int tempstraw = (31 - channel) ;
-    if(otisID == 2){tempOtis =  3 * 32;}
-    else if(otisID == 3){tempOtis =  2 * 32;}
+    if (otisID == 2) {tempOtis =  3 * 32;}
+    else if (otisID == 3) {tempOtis =  2 * 32;}
     straw = tempstraw + tempOtis + 1;
   }
   return(straw);

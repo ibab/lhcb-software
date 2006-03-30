@@ -9,6 +9,7 @@ use GaudiAlg    v*
 use DAQEvent	v*      Event
 use DigiEvent   v*      Event
 use OTDet	v*	Det
+use GSL         v*      LCG_Interfaces
 
 #---- Produce Header-Files from XML description
 document obj2doth OTDAQObj2Doth ../xml/*.xml

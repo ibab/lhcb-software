@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 
 !====================== OTDAQ v4r0 2006-02-15 ======================
+! 2006-03-30 - Jan Amoraal
+ - Minor changes due to new OTDet
+
 ! 2006-02-15 - Marco Cattaneo
  - requirements migrated to DigiEvent
 
