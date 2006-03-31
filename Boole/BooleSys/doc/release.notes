@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v11r2>2006-03-28 Boole v11r2</A></H1><PRE>
+This version uses projects Gaudi v18r3, LHCb v20r2, Lbcom v4r2
+  and databases XmlDDDB v30r2, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r7
+Requires input from Gauss v24r2 or greater. Output needs Brunel v30r0 or greater
+
+This is the first release for DC06 production.
+
 </PRE><H1><A NAME=v11r1>2006-03-27 Boole v11r1</A></H1><PRE>
 This version uses projects Gaudi v18r2, LHCb v20r1, Lbcom v4r1
   and databases XmlDDDB v30r2, XmlConditions v1r5, ParamFiles v4r1, FieldMap v4r7

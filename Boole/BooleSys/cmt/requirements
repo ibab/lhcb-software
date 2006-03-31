@@ -1,5 +1,5 @@
 package BooleSys
-version v11r1
+version v11r2
 
 branches cmt doc
  
@@ -8,12 +8,12 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole              v11r1    Digi  # Marco Cattaneo
+use Boole              v11r2    Digi  # Marco Cattaneo
 use DigiAlg             v4r1    Digi  # Marco Cattaneo
 
 # Calorimeter
 use CaloMoniDigi        v2r1    Calo  # Olivier Deschamps
-use CaloDigit           v2r1    Calo  # Olivier Callot
+use CaloDigit           v2r1p1  Calo  # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r0    Muon  # Alessia Satta
@@ -30,5 +30,5 @@ use RichMCAssociators   v2r0    Rich  # Chris Jones
 use RichReadout	        v2r0    Rich  # Chris Jones
 
 # Velo
-use VeloAlgorithms      v4r1    Velo  # Tomasz Szumlak
-use VeloSimulation      v2r1    Velo  # Tomasz Szumlak
+use VeloAlgorithms      v4r2    Velo  # Tomasz Szumlak
+use VeloSimulation      v2r1p1  Velo  # Tomasz Szumlak

@@ -1,5 +1,5 @@
 package Boole
-version v11r1
+version v11r2
 
 branches doc cmt job options
 
@@ -7,19 +7,21 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r22
+use GaudiPolicy v5r23
 
 #-- External libraries taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          -no_auto_imports
+use RELAX v* LCG_Interfaces
+#          -no_auto_imports
+macro RELAX_home "/afs/cern.ch/user/r/roiser/public/RELAX_4_LHCB/slc3_ia32_gcc323"
 
-#-- Gaudi libraries (from GAUDI_v18r2)
-use GaudiKernel		 v20r4
-use GaudiSvc 		 v14r6       -no_auto_imports
-use GaudiAlg 		 v9r4        -no_auto_imports
-use GaudiAud 		 v6r6        -no_auto_imports
-use GaudiPoolDb		 v2r2        -no_auto_imports
-use GaudiObjDesc 	 v9r3        -no_auto_imports
-use RootHistCnv          v9r8        -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r3)
+use GaudiKernel		 v20r5
+use GaudiSvc 		 v14r7       -no_auto_imports
+use GaudiAlg 		 v9r5        -no_auto_imports
+use GaudiAud 		 v7r0        -no_auto_imports
+use GaudiPoolDb		 v2r3        -no_auto_imports
+use GaudiObjDesc 	 v9r4        -no_auto_imports
+use RootHistCnv          v9r9        -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r2   Det  -no_auto_imports
@@ -28,23 +30,22 @@ use ParamFiles	         v4r1        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r1)
-use LHCb                 v20r1       -no_auto_imports
-use SimComponents        v1r1   Sim  -no_auto_imports
+#-- LHCb libraries (from LHCB_v20r2)
+use LHCb                 v20r2       -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r1)
-use LbcomSys             v4r1        -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r2)
+use LbcomSys             v4r2        -no_auto_imports
 
-#-- BooleSys v11r1 packages
+#-- BooleSys v11r2 packages
 use DigiAlg              v4r1   Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r1   Calo -no_auto_imports
-use CaloDigit            v2r1   Calo -no_auto_imports
+use CaloDigit            v2r1p1 Calo -no_auto_imports
 
 # Velo
-use VeloSimulation       v2r1   Velo -no_auto_imports
-use VeloAlgorithms       v4r1   Velo -no_auto_imports
+use VeloSimulation       v2r1p1 Velo -no_auto_imports
+use VeloAlgorithms       v4r2   Velo -no_auto_imports
 
 # Outer Tracker
 use OTSimulation         v3r1   OT   -no_auto_imports
