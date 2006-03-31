@@ -5,5 +5,5 @@ ApplicationMgr.DLLs += { "TrackAssociators" };
 
 CheckTrSeq.Members  += { "TrackAssociator" };
 
-TrackAssociator.TracksInContainer = "/Event/Rec/Track/Best";
-TrackAssociator.LinkerOutTable    = "/Event/Link/Rec/Track/Best";
+TrackAssociator.TracksInContainer = "Rec/Track/Best";
+TrackAssociator.LinkerOutTable    = "Rec/Track/Best";

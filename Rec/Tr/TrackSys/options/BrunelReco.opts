@@ -3,47 +3,58 @@
 //                 Job options for Brunel Reco Phase                 //
 //                                                                   //
 ///////////////////////////////////////////////////////////////////////
-//( replaces in Brunel/vXrY/options/v200507.opts
+//( replaces in Brunel/vXrY/options/v200601.opts
 // the options file for the reconstruction phase
 // #include "$RECSYSROOT/options/Reco.opts" )
 
 // --------------------------------------------------------------------
 // Silicon tracker reconstruction (clustering)
 // --------------------------------------------------------------------
-Reco.DetectorList = { "IT" };
-ApplicationMgr.DLLs += { "ITAlgorithms" };
-RecoITSeq.Members   += { "ITClusterCreator",
-                         "ITSummaryCreator"
-                       };
-#include "$ITALGORITHMSROOT/options/itRec.opts"
+Reco.DetectorList = { "TT", "IT" };
+
+ApplicationMgr.DLLs += { "STAlgorithms" };
+
+// TT clusters for pattern recognition and track fit
+RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
+                      ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+//                      ,"STSummaryCreator/TTSummaryCreator"
+};
+
+// IT clusters for pattern recognition and track fit
+RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
+                      ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+//                      ,"STSummaryCreator/ITSummaryCreator"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+//ITSummaryCreator.detType     = "IT";
 
 // --------------------------------------------------------------------
-//  Tracking reconstruction phase: pattern recognition + fitting
+// OTTimes for pattern recognition and track fit
 // --------------------------------------------------------------------
-#include "$TRACKSYSROOT/options/RecoOldTracking.opts"
+Reco.DetectorList = { "OT" };
+
+ApplicationMgr.DLLs += { "OTDAQ" };
+
+RecoOTSeq.Members += {"OTTimeCreator" };
+
+// --------------------------------------------------------------------
+// Tracking reconstruction phase: pattern recognition + fitting
+// --------------------------------------------------------------------
 #include "$TRACKSYSROOT/options/RecoTracking.opts"
 
-/*
- * The RICH, Calorimeter and Muon reconstruction phases are
- * switched off since not needed in most cases.
- * Besides, at least the RICH needs Tracks in the "best" container,
- * which are not produced since the clone killer is not run, therefore
- * running the RICH would produce an error in the execution.
- *
 // --------------------------------------------------------------------
 //  Rich, Calorimeter and Muon reconstruction phases
 // --------------------------------------------------------------------
 Reco.DetectorList += { "RICH", "CALO", "MUON" };
 
 // Rich, using Track
-ApplicationMgr.DLLs += { "TrackExtrapolators" };
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
-                         "RichGlobalPID", "RichLocalPID",
-                         "RichRingRefit", "RichPIDMerge" };
+                         "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
+// Temporary, while waiting for tracks
+RecoRICHSeq.Members += { "RichRecInit" };
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
-// Uncomment next line to go back to Rich reconstruction from old tracks
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
 
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
@@ -57,4 +68,3 @@ ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
 RecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
-*/

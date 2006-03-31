@@ -4,6 +4,16 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-03-31 - Eduardo Rodrigues
+ - updated to all packages migrated to LHCb v20r0, Gaudi v18r3
+   and SMatrix 5.10.00b
+ - updated tracking sequence in RecoTracking.opts,
+   and added to it the clone killer algorithm
+ - added new packages TrackUtils v1r0 and TrackMCInterfaces v1r0
+ - things removed as related to old tracking code:
+   - removed TrConverters and Seeding from requirements
+   - removed options file RecoOldTracking.opts
+
 !============================ TrackSys v1r0 2006-01-31 ======================
 ! 2006-01-31 - Eduardo Rodrigues
  - First version. For LHCb v19r3 and Brunel v28r2.

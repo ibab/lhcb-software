@@ -1,11 +1,11 @@
 //==============================================================
 // Load tracking tools
 //==============================================================
-ApplicationMgr.DLLs += { "TrackTools",
-                         "TrackExtrapolators",
+ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackProjectors",
-                         "TrackFitter",
-                         "TrackMatching"
+                         "TrackTools",
+                         "TrackUtils",
+                         "TrackFitter"
                        };
 
 //==============================================================

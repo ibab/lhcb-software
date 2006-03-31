@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackSys
-version           v1r0
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,26 +19,25 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   LHCbKernel           v5r15b  Kernel
+use   TrackEvent           v2r3    Event
+use   TrackFitEvent        v2r1    Tr
 
-use   TrackEvent           v1r8    Event
-use   TrackFitEvent        v1r6    Tr
-use   TrackInterfaces      v1r5b   Tr
+use   TrackMCInterfaces    v1r0    Tr
+use   TrackInterfaces      v2r1    Tr
 
-use   TrackExtrapolators   v1r4    Tr
-use   TrackProjectors      v1r5    Tr
-use   TrackTools           v1r4    Tr
-use   TrackMCTools         v1r4    Tr
+use   TrackExtrapolators   v2r1    Tr
+use   TrackProjectors      v2r1    Tr
+use   TrackMCTools         v2r1    Tr
+use   TrackTools           v2r1    Tr
 
-use   TrackFitter          v1r1    Tr
+use   TrackFitter          v2r1    Tr
 
-use   TrackIdealPR         v1r5    Tr
-use   TrackMatching        v1r2    Tr
+use   TrackUtils           v1r0    Tr
 
-use   TrackAssociators     v1r5    Tr
-use   TrackCheckers        v1r1    Tr
+use   TrackMatching        v2r0    Tr
 
-use   TrConverters         v1r6    Tr
-use   Seeding              v2r11   Tr
+use   TrackIdealPR         v2r1    Tr
+use   TrackAssociators     v2r0    Tr
+use   TrackCheckers        v2r0    Tr
 
 #============================================================================
