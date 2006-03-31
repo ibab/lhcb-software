@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.25 2006-01-11 07:57:22 ocallot Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.26 2006-03-31 20:50:19 odescham Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -41,6 +41,7 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_maxEtSlope        ( 0.0  * GeV )
   ,  m_adcMax            ( 4095       )
   ,  m_activeToTotal     ( 6.         )
+
 { };
 // ============================================================================
 
@@ -84,10 +85,10 @@ StatusCode DeCalorimeter::initialize() {
     pars.erase( it );
   }
 
-  //ZShowerMax
-  it = std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
+  //Zsize
+  it = std::find( pars.begin() , pars.end () , std::string("ZSize") );
   if( pars.end() != it ) {
-    m_zShowerMax = param<double>( *it ) ;
+    m_zSize = param<double>( *it ) ;
     pars.erase( it );
   }
 
@@ -104,6 +105,19 @@ StatusCode DeCalorimeter::initialize() {
   setEtInCenter   ( gain->paramAsDouble( "EtInCenter"    ) ) ;
   setEtSlope      ( gain->paramAsDouble( "EtSlope"       ) ) ;
   setActiveToTotal( gain->paramAsDouble( "ActiveToTotal" ) ) ;
+
+
+  Condition* reco = condition( "Reco" );
+  if ( 0 == reco ) {
+    int index =  CaloCellCode::CaloNumFromName( name() );
+    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+    MsgStream msg( msgSvc(), myName );
+    msg << MSG::ERROR << "'Reco' condition not found" << endreq;
+    return StatusCode::FAILURE;
+  }
+  setZShowerMax(reco->paramAsDouble("ZShowerMax" ) );
+  
+
 
   Condition* hardware = condition( "Hardware" );
   if ( 0 == hardware ) {
@@ -125,6 +139,37 @@ StatusCode DeCalorimeter::initialize() {
   return sc;
 };
 
+//----------------------------------------------------------------------------
+// ** Return a reference (tilted) plane
+//----------------------------------------------------------------------------
+Gaudi::Plane3D DeCalorimeter::plane(CaloPlane::Plane pos){
+  switch(pos){
+  case CaloPlane::Front     : return plane(-m_zSize/2. );
+  case CaloPlane::ShowerMax : return plane(m_zShowerMax);
+  case CaloPlane::Middle    : return plane(0.);
+  case CaloPlane::Back      : return plane(+m_zSize/2.);
+  default : return plane(0.); 
+  }
+};
+
+
+Gaudi::Plane3D DeCalorimeter::plane(double dz){
+  IGeometryInfo* geometry = this->geometry() ;
+  Gaudi::XYZPoint local(0. , 0. , dz);
+  if( fabs(dz) > m_zSize/2. ) {  
+    MsgStream msg( msgSvc(), "DeCalorimeter Plane "+ name () );
+    msg << MSG::WARNING << " THE REQUESTED PLANE IS OUTSIDE THE  " 
+        << name() << " VOLUME : dz/size = " <<dz <<"/"<<m_zSize<< endreq ;
+  }
+  
+  Gaudi::XYZPoint loff(0. , 0. , dz-1.); //arbitrary but non-0 z-offset
+  Gaudi::XYZPoint  point = geometry->toGlobal(local);
+  Gaudi::XYZPoint  goff = geometry->toGlobal(loff);
+  Gaudi::XYZVector vect = point-goff;
+  Gaudi::Plane3D plane3D(vect , point );
+ return plane3D;
+ 
+};
 //----------------------------------------------------------------------------
 // ** Builds the cells from the geometry of the Detector Element
 //----------------------------------------------------------------------------

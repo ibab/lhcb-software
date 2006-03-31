@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.16 2006-01-17 18:44:17 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.17 2006-03-31 20:50:18 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2006/01/17 18:44:17  odescham
+// v7r1 - adapt DeCalorimeterLocations to new path structure
+//
 // Revision 1.15  2005/12/16 17:12:40  odescham
 // v8r0 - LHCb v20 migration + cleaning
 //
@@ -20,6 +23,8 @@
 #include <iostream>
 #include <vector>
 //From Kernel/LHCbDefintions
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
 #include "Kernel/PhysicalConstants.h"
@@ -41,6 +46,11 @@
 
 /// forwad declarations
 class MsgStream;
+
+
+namespace CaloPlane{
+  enum Plane{Front=0,Middle,ShowerMax,Back};
+}
 
 namespace DeCalorimeterLocation {
   static const std::string Spd  = "/dd/Structure/LHCb/DownstreamRegion/Spd"  ;
@@ -91,6 +101,12 @@ public:
 
   ///  set function for coding 
   void setCoding        ( const unsigned int nb     );
+
+  // reference plane in the global frame 
+  Gaudi::Plane3D plane(double zLocal);
+  Gaudi::Plane3D plane(CaloPlane::Plane pos);
+
+
   ///  set function for maxEt 
   void setEtInCenter    ( const double maxEt        ) 
   { m_maxEtInCenter = maxEt; }
@@ -106,7 +122,9 @@ public:
   ///  set function for ZshowerMax 
   void setZShowerMax    ( const double ZShowerMax   ) 
   { m_zShowerMax    = ZShowerMax; }
-  
+  void setZSize ( const double ZSize ) 
+  { m_zSize = ZSize; }
+
   ///  retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
   ///  retrieve max et slope 
@@ -117,6 +135,8 @@ public:
   double        activeToTotal () const { return m_activeToTotal ; };
   ///  retrieve position of shower max 
   double        zShowerMax    () const { return m_zShowerMax    ; };
+  double        zSize         () const { return m_zSize         ; };
+  
   
   ///  validity flag for the cell 
   inline bool   valid    ( const LHCb::CaloCellID& ) const ;
@@ -193,6 +213,7 @@ public:
                                   const int row    , 
                                   const int col    )  const ;
   ///
+
 protected: 
   
   ///  Initialization method for building the cells 
@@ -223,7 +244,7 @@ private:
   double   m_centerRowCol;    
   
   ///  Et value for the maximum ADC value at teta = 0 
- double   m_maxEtInCenter;    
+  double   m_maxEtInCenter;    
   
   /**  Increase in Et per radian. 
    *   This is also the maximum E if m_maxEtInCenter = 0
@@ -235,6 +256,7 @@ private:
   double   m_activeToTotal;
   ///  Z of the shower maximum in the local frame.
   double   m_zShowerMax;
+
   ///  Collection of cells
   CaloVector<CellParam> m_cells;
   ///  Parameters for the cards
@@ -246,6 +268,8 @@ private:
   int    m_centralHoleX;
   /// number of non-connected cells on both sides of the beam, vertical
   int    m_centralHoleY;
+
+  double   m_zSize;
   
 };
 
