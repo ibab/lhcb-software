@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.14 2006-03-23 12:42:31 mtobin Exp $
+// $Id: IdealTracksCreator.cpp,v 1.15 2006-03-31 12:37:16 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -15,8 +15,10 @@
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTDetector.h"
 
+// from RecEvent
+#include "Event/RecHeader.h"
+
 // from MCEvent
-#include "Event/MCHeader.h"
 #include "Event/MCHit.h"
 
 // from TrackFitEvent
@@ -28,7 +30,7 @@
 
 // from LinkerEvent
 #include "Linker/LinkerWithKey.h"
-#include "Linker/LinkerTool.h"
+#include "Linker/LinkedFrom.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrajPoca.h"
@@ -59,9 +61,6 @@ const IAlgFactory& IdealTracksCreatorFactory = s_factory;
 IdealTracksCreator::IdealTracksCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name, pSvcLocator )
-//  , m_otTim2MCHit(0)
-//  , m_itClus2MCP(0)
-//  , m_veloClus2MCP(0)
   , m_velo(0)
   , m_ttTracker(0)
   , m_itTracker(0)
@@ -147,8 +146,8 @@ StatusCode IdealTracksCreator::execute()
   StatusCode sc;
 
   // Event header info
-  const MCHeader* mcHdr = get<MCHeader>( MCHeaderLocation::Default );
-  debug() << "Event " << mcHdr -> evtNumber() << endreq;
+  const RecHeader* recHdr = get<RecHeader>( RecHeaderLocation::Default );
+  debug() << "Event " << recHdr -> evtNumber() << endreq;
 
   // Retrieve the MCParticle container
   const MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
@@ -168,14 +167,17 @@ StatusCode IdealTracksCreator::execute()
   MCParticles::const_iterator iPart;
   for ( iPart = particles -> begin(); particles -> end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
-    verbose() << endreq
-              << "- MCParticle of type "
+    verbose() << "- MCParticle of type "
               << m_trackSelector -> trackType( mcParticle )
               << " , (key # " << mcParticle -> key() << ")" << endreq
+              << "    - vertex = " << mcParticle -> originVertex() -> position()
+              << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV" 
               << endreq
               << "    - P        = " << mcParticle -> momentum().Vect().R()
               << " MeV" <<endreq
+              << "    - PID   = "
+              << ( mcParticle -> particleID().pid() ) << endreq
               << "    - charge   = "
               << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
     if ( m_trackSelector -> select( mcParticle ) ) {
@@ -260,6 +262,8 @@ StatusCode IdealTracksCreator::execute()
                                         track, mcParticle );
         }
         if ( !sc.isSuccess() ) {
+        debug() << " -> track deleted as unable to initialize state"
+                << endreq;
           delete track;
           continue; // go to next track
         }
@@ -355,7 +359,9 @@ StatusCode IdealTracksCreator::execute()
 
   // Store the Tracks in the TES
   // ===========================
-  return put( tracksCont, m_tracksOutContainer );
+  put( tracksCont, m_tracksOutContainer );
+
+  return StatusCode::SUCCESS;
 };
 
 //=============================================================================
@@ -375,42 +381,38 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
 {
   unsigned int nOTMeas = 0;
 
-  // Retrieve OTTimes from inverse relation
-  typedef LinkerTool<OTTime,MCParticle> asctTool;
-  typedef asctTool::InverseType invTable;
+  LinkedFrom<OTTime,MCParticle>
+    otLink( evtSvc(), msgSvc(), OTTimeLocation::Default );
+  if ( otLink.notFound() ) {
+    return Error( "Unable to retrieve OTTime to MCParticle Linker table" );
+  }
+  else {
+    const OTTime* aTime = otLink.first( mcPart );
+    while ( NULL != aTime ) {
+      OTMeasurement meas =
+        OTMeasurement( *aTime, *m_otTracker );
+      track -> addToLhcbIDs( meas.lhcbID() );
+      // Set the reference vector
+      State* tempState;
+      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      if ( sc.isSuccess() ) {
+        meas.setRefVector( tempState -> stateVector() );
+        // Get the ambiguity using the Poca tool
+        double s1, s2;
+        XYZVector distance;
+        XYZVector bfield;
+        m_pIMF -> fieldVector( tempState->position(), bfield );
+        StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
+        m_poca->minimize( stateTraj, s1, meas.trajectory(), s2, distance, 20*mm);
+        int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
+        meas.setAmbiguity( ambiguity );
+      }
+      delete tempState;
 
-  asctTool associator( evtSvc(), OTTimeLocation::Default );
-
-  // Get the inverse relation
-  const invTable* table = associator.inverse();
-  if( !table )
-    return Error( "Empty table with associations OTTime-MCParticle " );
-  invTable::Range range = table -> relations( mcPart );
-  for( invTable::iterator it = range.begin(); it != range.end(); ++it ) {
-    const OTTime* aTime = it -> to();
-    OTMeasurement meas = OTMeasurement( *aTime, *m_otTracker );
-    track -> addToLhcbIDs( meas.lhcbID() );
-
-    // Set the reference vector
-    State* tempState;
-    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
-    if ( sc.isSuccess() ) {
-      meas.setRefVector( tempState -> stateVector() ); 
-
-      // Get the ambiguity using the Poca tool
-      double s1, s2;
-      XYZVector distance;
-      XYZVector bfield;
-      m_pIMF -> fieldVector( tempState->position(), bfield );
-      StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-      m_poca->minimize( stateTraj, s1, meas.trajectory(), s2, distance, 20*mm);
-      int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
-      meas.setAmbiguity( ambiguity );
+      track -> addToMeasurements( meas );
+      ++nOTMeas;      
+      aTime = otLink.next();
     }
-    delete tempState;
-
-    track -> addToMeasurements( meas );
-    ++nOTMeas;
   }
 
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
@@ -426,54 +428,54 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
 {
   unsigned int nSTMeas = 0;
 
-  // Retrieve STClusters from inverse relation
-  typedef LinkerTool<STCluster,MCParticle> asctTool;
+  // For TT
+  LinkedFrom<STCluster,MCParticle>
+    ttLink( evtSvc(), msgSvc(), STClusterLocation::TTClusters );
+  if ( ttLink.notFound() ) {
+    error() << "Unable to retrieve STCluster-TT to MCParticle Linker table"
+            << endreq;
+  }
+  else {
+    const STCluster* aCluster = ttLink.first( mcPart );
+    while ( NULL != aCluster ) {
+      STMeasurement meas =
+        STMeasurement( *aCluster, *m_ttTracker, *m_stPositionTool );
+      track -> addToLhcbIDs( meas.lhcbID() );
+      // Set the reference vector
+      State* tempState;
+      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
+      delete tempState;
 
-  typedef asctTool::InverseType invTable;
-
-  asctTool ttAssociator( evtSvc(), STClusterLocation::TTClusters );
-  asctTool itAssociator( evtSvc(), STClusterLocation::ITClusters );
-
-  // for the STClusters in TT
-  const invTable* invTTTable = ttAssociator.inverse();
-  if( !invTTTable )
-    return Error( "Empty table with associations STCluster(TT)-MCParticle " );
-  invTable::Range ttRange = invTTTable -> relations( mcPart );
-  for( invTable::iterator it = ttRange.begin(); it != ttRange.end(); ++it ) {
-    const STCluster* aCluster = it -> to();
-    STMeasurement meas =
-      STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
-    track -> addToLhcbIDs( meas.lhcbID() );
-
-    // Set the reference vector
-    State* tempState;
-    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
-    if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
-    delete tempState;
-
-    track -> addToMeasurements( meas );
-    ++nSTMeas;
+      track -> addToMeasurements( meas );
+      ++nSTMeas;      
+      aCluster = ttLink.next();
+    }
   }
 
-  // for the STClusters in IT
-  const invTable* invITTable = itAssociator.inverse();
-  if( !invITTable )
-    return Error( "Empty table with associations STCluster(IT)-MCParticle " );
-  invTable::Range itRange = invITTable -> relations( mcPart );
-  for( invTable::iterator it = itRange.begin(); it != itRange.end(); ++it ) {
-    const STCluster* aCluster = it -> to();
-    STMeasurement meas =
-      STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
-    track -> addToLhcbIDs( meas.lhcbID() );
+  // For IT
+  LinkedFrom<STCluster,MCParticle>
+    itLink( evtSvc(), msgSvc(), STClusterLocation::ITClusters );
+  if ( itLink.notFound() ) {
+    error() << "Unable to retrieve STCluster-IT to MCParticle Linker table"
+            << endreq;
+  }
+  else {
+    const STCluster* aCluster = itLink.first( mcPart );
+    while ( NULL != aCluster ) {
+      STMeasurement meas =
+        STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
+      track -> addToLhcbIDs( meas.lhcbID() );
+      // Set the reference vector
+      State* tempState;
+      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
+      delete tempState;
 
-    // Set the reference vector
-    State* tempState;
-    StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
-    if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
-    delete tempState;
-
-    track -> addToMeasurements( meas );
-    ++nSTMeas;
+      track -> addToMeasurements( meas );
+      ++nSTMeas;      
+      aCluster = itLink.next();
+    }
   }
 
   debug() << "- " << nSTMeas << " STMeasurements added" << endreq;
@@ -490,43 +492,37 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
   unsigned int nVeloRMeas   = 0;
   unsigned int nVeloPhiMeas = 0;
 
-  // Retrieve VeloClusters from inverse relation
-  typedef LinkerTool<VeloCluster,MCParticle> asctTool;
-
-  typedef asctTool::InverseType invTable;
-
-  asctTool associator( evtSvc(), VeloClusterLocation::Default );
-  const invTable* invTbl = associator.inverse();
-  if( !invTbl )
-    return Error( "Empty table with associations" );
-
-  invTable::Range range = invTbl -> relations( mcPart );
-
-  for( invTable::iterator it = range.begin(); it != range.end(); ++it ) {
-    const VeloCluster* aCluster = it -> to();
-
-    // Get the reference vector
-    const DeVeloSensor* sensor=m_velo->sensor( aCluster -> channelID().sensor() );
-    double z = sensor->z();
-    State* tempState;
-    StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
-
-    // Check if VeloCluster is of type R or Phi
-    if ( sensor->isR() ) {
-      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo );
-      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
-      track -> addToLhcbIDs( meas.lhcbID() );
-      track -> addToMeasurements( meas );
-      ++nVeloRMeas;
-    } else {
-      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
-      if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
-      track -> addToLhcbIDs( meas.lhcbID() );
-      track -> addToMeasurements( meas );
-      ++nVeloPhiMeas;
+  LinkedFrom<VeloCluster,MCParticle>
+    veloLink( evtSvc(), msgSvc(), VeloClusterLocation::Default );
+  if ( veloLink.notFound() ) {
+    return Error( "Unable to retrieve VeloCluster to MCParticle Linker table" );
+  }
+  else {
+    const VeloCluster* aCluster = veloLink.first( mcPart );
+    while ( NULL != aCluster ) {
+      // Get the reference vector
+      const DeVeloSensor* sensor =
+        m_velo -> sensor( aCluster -> channelID().sensor() );
+      double z = sensor->z();
+      State* tempState;
+      StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
+      // Check if VeloCluster is of type R or Phi
+      if ( sensor -> isR() ) {
+        VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo );
+        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+        track -> addToLhcbIDs( meas.lhcbID() );
+        track -> addToMeasurements( meas );
+        ++nVeloRMeas;
+      } else {
+        VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
+        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+        track -> addToLhcbIDs( meas.lhcbID() );
+        track -> addToMeasurements( meas );
+        ++nVeloPhiMeas;
+      }
+      delete tempState;
     }
-    delete tempState;
-  }    
+  }
   
   debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
           << " Velo R/Phi Measurements added" << endreq;

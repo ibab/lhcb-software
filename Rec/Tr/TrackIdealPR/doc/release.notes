@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-03-23 - Eduardo Rodrigues
+ - addToXxxClusters methods completely rewritten
+ - using again RecHeader instead of MCHeader
+
 !======================= TrackIdealPR v2r0 2006-03-23 ========================
 ! 2006-03-23 - Mark Tobin
  - Modified to use new VeloDet interface
