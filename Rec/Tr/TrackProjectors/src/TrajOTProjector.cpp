@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.7 2006-02-28 19:13:33 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.8 2006-03-31 17:13:56 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -80,10 +80,12 @@ StatusCode TrajOTProjector::project( const State& state,
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
   m_H *= signDist; // Correct for the sign of the distance
   
-  // TODO: when error on the measurement depends on the position of the
-  //       track use the reference trajectory again. This will be the case
-  //       when the error depends on the drift distance.
-  computeErrorResidual( state, meas );
+  // Calculate the error on the residual
+  m_errResidual = sqrt( meas.resolution2( refTraj.position(s1), 
+                                          refTraj.direction(s1) ) +
+                        ROOT::Math::Similarity<double,5>
+                        ( m_H, state.covariance() ) );
+
 
   return StatusCode::SUCCESS;
 }

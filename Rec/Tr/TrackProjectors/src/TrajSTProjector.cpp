@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.3 2006-02-28 19:13:33 jvantilb Exp $
+// $Id: TrajSTProjector.cpp,v 1.4 2006-03-31 17:13:56 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -67,10 +67,13 @@ StatusCode TrajSTProjector::project( const State& state,
  
   // Calculate the residual
   m_residual = - signDist * projDist ;  
-  m_H *= signDist; // Correct for the sign of the distance 
+  m_H *= signDist; // Correct for the sign of the distance
 
-  // Calculate the error on the measurement
-  computeErrorResidual( state, meas );
+  // Calculate the error on the residual
+  m_errResidual = sqrt( meas.resolution2( refTraj.position(s1), 
+                                          refTraj.direction(s1) ) +
+                        ROOT::Math::Similarity<double,5>
+                        ( m_H, state.covariance() ) );
 
   return StatusCode::SUCCESS;
 }

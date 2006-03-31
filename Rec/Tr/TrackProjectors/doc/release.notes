@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-03-31 - Jeroen van Tilburg
+ - Changed all ...Projectors to use the new resolution method.
+
 !====================== TrackProjectors v2r1 2006-03-31 ======================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
