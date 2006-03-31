@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.7 2006-03-30 21:45:32 janos Exp $
+// $Id: DeOTModule.h,v 1.8 2006-03-31 13:36:42 cattanem Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -150,9 +150,6 @@ class DeOTModule : public DetectorElement {
 
   /** @return cell radius */
   double cellRadius() const;
-
-  /** @return stereo angle */
-  double angle() const;
 
   /** @return stereo angle */
   double stereoAngle() const;
