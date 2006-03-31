@@ -21,10 +21,8 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
                                                ParticleID pid )
 {
   // Reset and update the transport matrix
-  //TODO: remove the work-around as soon as MathCore has something to replace
-  //      m_F = HepMatrix(5, 5, 1);
-  m_F = TransportMatrix();
-  for ( unsigned int ind = 0; ind < 5; ++ind ) m_F(ind,ind) = 1.;
+  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+
   double dz = zNew - state.z();
   m_F(0,2) = dz;
   m_F(1,3) = dz;

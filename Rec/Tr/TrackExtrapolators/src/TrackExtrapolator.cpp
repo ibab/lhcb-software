@@ -278,10 +278,7 @@ TrackExtrapolator::TrackExtrapolator( const std::string& type,
   declareInterface<ITrackExtrapolator>( this );
 
   // create transport matrix
-  //TODO: remove the work-around as soon as MathCore has something to replace
-  //      m_F = HepMatrix(5, 5, 1);
-  m_F = TransportMatrix();
-  for ( unsigned int i = 0; i < 5; ++i ) m_F(i,i) = 1.;
+  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
 }
 
 //=============================================================================

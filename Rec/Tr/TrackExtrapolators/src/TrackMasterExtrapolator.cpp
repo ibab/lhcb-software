@@ -100,10 +100,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
   StatusCode sc;
 
   // reset transport matrix
-  //TODO: remove the work-around as soon as MathCore has something to replace
-  //      m_F = HepMatrix(5, 5, 1);
-  m_F = TransportMatrix();
-  for ( unsigned int ind = 0; ind < 5; ++ind ) m_F(ind,ind) = 1.;
+  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
 
   //check not already at current
   double zStart = state.z();
