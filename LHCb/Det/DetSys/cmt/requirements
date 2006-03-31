@@ -8,13 +8,13 @@ use DetDescCnv		v3r1    Det
 use DetDescSvc          v1r3    Det
 use XmlTools		v3r9    Tools
 use VeloDet        	v10r2   Det
-use OTDet               v6r0    Det
+use OTDet               v6r1    Det
 use CaloDet	   	v7r0    Det
 use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r2    Det
 use Magnet              v3r1    Det
 use RichDet	   	v9r3    Det
-use STDet          	v2r1    Det
+use STDet          	v2r2    Det
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \

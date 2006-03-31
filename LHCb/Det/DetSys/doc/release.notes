@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r2 2006-03-30 =========================
-! 2006-03-30 - Marco Cattaneo
- - Use RichDet v9r3
+!========================= DetSys v8r2 2006-03-31 =========================
+! 2006-03-31 - Marco Cattaneo
+ - Use RichDet v9r3, STDet v2r2, OTDet v6r1
  - Trivial fix in requirements for GCCXML+Boost on Windows with LCG_v42a
 
 !========================= DetSys v8r1 2006-03-26 =========================
