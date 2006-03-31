@@ -5,16 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r2>2006-03-30 LHCbSys v20r2</A></H1><PRE>
+</PRE><H1><A NAME=v20r2>2006-03-31 LHCbSys v20r2</A></H1><PRE>
 This version uses Gaudi v18r3 and is for DC06 production
 
 - Packages added:    Gen/HepMC - Interface package to public HepMC release
 - Packages removed:  Sim/HepMC - Private version of HepMC
 - Packages modified: KernelSys v5r2, LHCbDefinitions v1r4, LHCbKernel v6r4,
-    EventSys v21r2, TrackEvent v2r2, PhysEvent v9r2, DetSys v8r2, RichDet v9r3,
-    GenEvent v4r3, LoKiCore v1r1, LoKiGen v1r1, SimComponents v1r1p1, 
-    CaloUtils v6r0p1, RichRecBase v2r1, Relations v3r0p1, DetCond v7r10p1,
-    GaudiConf v9r5
+    EventSys v21r2, TrackEvent v2r2, PhysEvent v9r2, GenEvent v4r3,
+    DetSys v8r2, RichDet v9r3, STDet v2r2, OTDet v6r1, DetCond v7r10p1,
+    LoKiCore v1r1, LoKiGen v1r1, SimComponents v1r1p1, CaloUtils v6r0p1, 
+    RichRecBase v2r1, Relations v3r0p1, GaudiConf v9r5, DAQSys v2r2, OTDAQ v4r1
 
 - In LHCbDefinitions v1r4, TrackEvent v2r2, PhysEvent v9r2:
   . adaptations to new SMatrix-5.10.00b
@@ -30,6 +30,15 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In RichDet v9r3:
   . Modifications to RichDAQDefinitions.h
+
+- In STDet v2r2:
+  . Added methods to DeSTDetector and DeSTSector: trajectoryFirstStrip and
+    trajectoryLastStrip.
+  . Removed bug in strip numbering (in DeSTSector::cacheTrajectory).
+
+- In OTDet v6r1:
+  . New interface, similar to STDet (not backwards compatible)
+  . Calculate hitsusing vectors
  
 - In LoKiCore v1r1, LoKiGen v1r1:
   . New functions and adapters, see details in package release notes
@@ -47,6 +56,9 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In GaudiConf v9r5:
   . Remove explicit loading of RELAX Rflx dictionaries, done by Root on demand
+
+- In OTDAQ v4r1:
+  . Adapt to new OTDet interface
 
 </PRE><H1><A NAME=v20r1>2006-03-23 LHCbSys v20r1</A></H1><PRE>
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
