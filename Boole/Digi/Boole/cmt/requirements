@@ -10,9 +10,7 @@ set BOOLEOPTS  $(BOOLEROOT)/options
 use GaudiPolicy v5r23
 
 #-- External libraries taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces
-#          -no_auto_imports
-macro RELAX_home "/afs/cern.ch/user/r/roiser/public/RELAX_4_LHCB/slc3_ia32_gcc323"
+use RELAX v* LCG_Interfaces          -no_auto_imports
 
 #-- Gaudi libraries (from GAUDI_v18r3)
 use GaudiKernel		 v20r5
