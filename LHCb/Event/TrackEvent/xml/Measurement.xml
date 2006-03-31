@@ -111,7 +111,8 @@
       <method
         type    = 'double'
         name    = 'resolution'
-        desc    = 'Retrieve the measurement error (Added to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
+        desc    = 'Retrieve the measurement error'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
@@ -122,7 +123,8 @@
       <method
         type    = 'double'
         name    = 'resolution2'
-        desc    = 'Retrieve the measurement error squared (Added to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
+        desc    = 'Retrieve the measurement error squared'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>

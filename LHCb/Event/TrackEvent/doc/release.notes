@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-03-31 - Jeroen van Tilburg
+ - Changed resolution method in Measurement.xml. Now it takes two arguments:
+   the point on the track of closest approach and the corresponding direction.
+
 !========================= TrackEvent v2r3 2006-03-31 ========================
 ! 2006-03-31 - Eduardo Rodrigues
  - added Hlt track locations names
