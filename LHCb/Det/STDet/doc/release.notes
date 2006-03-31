@@ -2,6 +2,7 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r2 2006-03-31 =======================
 ! 2006-03-30 - Jeroen van Tilburg
  - Added methods to DeSTDetector and DeSTSector: trajectoryFirstStrip and
    trajectoryLastStrip.
