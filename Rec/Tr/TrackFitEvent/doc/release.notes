@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r1 2006-03-31 ====================
 ! 2006-03-29 - Eduardo Rodrigues
  - correct handling of trajectories in clone methods of XxxMeasurement
 
