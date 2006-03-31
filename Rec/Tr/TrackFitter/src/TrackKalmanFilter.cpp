@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.10 2006-03-27 10:07:39 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.11 2006-03-31 12:26:25 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -419,8 +419,6 @@ StatusCode TrackKalmanFilter::invertMatrix( TrackMatrix& invPrevNodeC )
 {
   // Geant3 units
   TrackUnitsConverters::convertToG3( invPrevNodeC );
-
-  //TODO: why is this here? TrackMatrix tempMatrix = invPrevNodeC;
 
   bool OK = invPrevNodeC.Invert();
 
