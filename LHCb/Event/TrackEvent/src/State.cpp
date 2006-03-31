@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.16 2006-03-26 18:23:34 erodrigu Exp $
+// $Id: State.cpp,v 1.17 2006-03-31 10:45:58 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -8,11 +8,11 @@
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
+#include "Kernel/MatrixManip.h"
 
 // local
 #include "Event/State.h"
 #include "Event/TrackParameters.h"
-#include "Event/SHacks.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -71,12 +71,12 @@ SymMatrix6x6 State::posMomCovariance() const
   // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
   const TrackMatrix cov5D = covariance();
   SymMatrix6x6 cov6Dtmp   = SymMatrix6x6();
-  //TODO: replace Matrix2x2 by SymMatrix2x2 as soon as SMatrix is fixed
-  cov6Dtmp.Place_at(cov5D.Sub<Matrix2x2>(0,0),0,0);
-  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed
-  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(0,2),0,3);
-  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(2,0),3,0);
-  cov6Dtmp.Place_at(cov5D.Sub<Matrix3x3>(2,2),3,3);
+  //TODO: remove "Standardize" method when SMatrix fixed
+  cov6Dtmp.Place_at( MatrixManip::Standardize(cov5D.Sub<SymMatrix2x2>(0,0)),0,0 );
+  //TODO: remove "Standardize" method when SMatrix fixed
+  cov6Dtmp.Place_at( MatrixManip::Standardize(cov5D.Sub<SymMatrix3x3>(0,2)),0,3 );
+  cov6Dtmp.Place_at( MatrixManip::Standardize(cov5D.Sub<SymMatrix3x3>(2,0)),3,0 );
+  cov6Dtmp.Place_at( MatrixManip::Standardize(cov5D.Sub<SymMatrix3x3>(2,2)),3,3 );
 
   // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
   // jacobian J = I 0
@@ -96,9 +96,8 @@ SymMatrix6x6 State::posMomCovariance() const
   const double N2  = N*N;
 
   SymMatrix6x6 cov6D = SymMatrix6x6();
-  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed;
-  Matrix3x3 C_A = cov6Dtmp.Sub<Matrix3x3>(0,0);
-  Matrix3x3 C_D = cov6Dtmp.Sub<Matrix3x3>(3,3);
+  SymMatrix3x3 C_A = cov6Dtmp.Sub<SymMatrix3x3>(0,0);
+  SymMatrix3x3 C_D = cov6Dtmp.Sub<SymMatrix3x3>(3,3);
   Matrix3x3    C_B = Matrix3x3();
   Matrix3x3    jmat = Matrix3x3();
 
@@ -113,7 +112,7 @@ SymMatrix6x6 State::posMomCovariance() const
   jmat(2,2) = - Qp;
 
   C_B(0,0) = cov6Dtmp(3,0);
-  C_B(1,0) = cov6Dtmp(4,0);
+  C_B(0,0) = cov6Dtmp(4,0);
   C_B(1,1) = cov6Dtmp(4,1);
   C_B(2,0) = cov6Dtmp(5,0);
   C_B(2,1) = cov6Dtmp(5,1);
@@ -121,9 +120,9 @@ SymMatrix6x6 State::posMomCovariance() const
 
   C_B = jmat * C_B;
 
-  cov6D.Place_at(C_A,0,0);
-  //TODO: replace Matrix3x3 by SymMatrix3x3 as soon as SMatrix is fixed;
-  cov6D.Place_at(SHacks::Similarity<Matrix3x3,Matrix3x3>(jmat, C_D),3,3);
+  cov6D.Place_at(MatrixManip::Standardize(C_A),0,0);
+  //TODO: remove "Standardize" method when SMatrix fixed
+  cov6D.Place_at(MatrixManip::Standardize(ROOT::Math::Similarity<double,3,3>(jmat, C_D)),3,3);
 
   cov6D(3,0) = C_B(0,0);
   cov6D(4,0) = C_B(1,0);
@@ -135,7 +134,7 @@ SymMatrix6x6 State::posMomCovariance() const
   cov6D(4,2) = C_B(1,2);
   cov6D(5,2) = C_B(2,2);
 
-  return cov6D;
+  return MatrixManip::Symmetrize(cov6D);
 };
 
 //=============================================================================
@@ -153,8 +152,8 @@ Gaudi::SymMatrix3x3 State::errPosition() const
 Gaudi::SymMatrix3x3 State::errSlopes() const
 {
   Gaudi::SymMatrix3x3 err = Gaudi::SymMatrix3x3();
-  //TODO: replace Matrix2x2 by SymMatrix2x2 as soon as SMatrix is fixed
-  err.Place_at( m_covariance.Sub<Matrix2x2>(2,2),0,0 );
+  //TODO: remove "Standardize" method when SMatrix fixed
+  err.Place_at( MatrixManip::Standardize(m_covariance.Sub<SymMatrix2x2>(2,2)),0,0 );
   return err;
 };
 

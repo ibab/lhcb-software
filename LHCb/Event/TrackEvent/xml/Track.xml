@@ -23,7 +23,16 @@
       <location name="VeloTT"  place="Rec/Track/VeloTT"/>
       <location name="Match"   place="Rec/Track/Match"/>
       <location name="KsTrack" place="Rec/Track/KsTrack"/>
-      <location name="Tsa" place="Rec/Track/Tsa"/>
+      <location name="Tsa"     place="Rec/Track/Tsa"/>
+
+      <location name="HltSeed"    place="Hlt/Track/Seed"/>
+      <location name="HltRZVelo"  place="Hlt/Track/RZVelo"/>
+      <location name="HltVelo"    place="Hlt/Track/Velo"/>
+      <location name="HltForward" place="Hlt/Track/Forward"/>
+      <location name="HltVeloTT"  place="Hlt/Track/VeloTT"/>
+      <location name="HltMatch"   place="Hlt/Track/Match"/>
+      <location name="HltKsTrack" place="Hlt/Track/KsTrack"/>
+      <location name="HltTsa"     place="Hlt/Track/Tsa"/>
 
 
       <base name='KeyedObject&lt;int&gt;' />

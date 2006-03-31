@@ -7,9 +7,6 @@
 #include "Kernel/PhysicalConstants.h"
 #include "Kernel/TrackTypes.h"
 
-// from TrackEvent
-#include "Event/SHacks.h"
-
 /** @namespace TrackUnitsConverters
  *
  * This namespace defines some useful units converters
@@ -43,8 +40,6 @@ namespace TrackUnitsConverters
     C(3,4) /= GeV;
     
     C(4,4) /= GeV*GeV;
-
-    SHacks::Symmetrize<5>( C );
   };
 
   //===========================================================================
@@ -60,8 +55,6 @@ namespace TrackUnitsConverters
     C(1,1) /= cm2; 
     C(1,2) /= cm;
     C(1,3) /= cm;
-
-    SHacks::Symmetrize<4>( C );
   };
   
   //===========================================================================
@@ -85,8 +78,6 @@ namespace TrackUnitsConverters
     invC(3,4) /= GeV;
 
     invC(4,4) /= GeV*GeV;
-
-    SHacks::Symmetrize<5>( invC );
   };
   
   //===========================================================================
@@ -102,8 +93,6 @@ namespace TrackUnitsConverters
     invC(1,1) /= cm2; 
     invC(1,2) /= cm;
     invC(1,3) /= cm;
-
-    SHacks::Symmetrize<4>( invC );
   };
   
   //===========================================================================

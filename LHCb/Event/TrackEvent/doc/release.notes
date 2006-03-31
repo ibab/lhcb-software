@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-03-31 - Eduardo Rodrigues
+ - added Hlt track locations names
+ - SMatrix hack file Shacks.h file removed
+ - last temporary SMatrix hacks use MatrixManip.h from Kernel/LHCbDefinitions
+
 !========================= TrackEvent v2r2 2006-03-28 ========================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
