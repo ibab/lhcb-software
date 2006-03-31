@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.8 2006-03-13 13:17:22 jonrob Exp $
+// $Id: MergeEventAlg.cpp,v 1.9 2006-03-31 13:09:56 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -84,23 +84,20 @@ StatusCode MergeEventAlg::initialize()
   }
   info() << endmsg;
 
-  // Get the service manager interface of the service locator
-  SmartIF<ISvcManager> svcMgr  ( IID_ISvcManager, serviceLocator());
-
   // Create and initialize the Merge Event Selector
   IService* pISvc;
-  sc = svcMgr->createService( "EventSelector", m_mergeSelectorName, pISvc );
-  if( sc.isFailure() ) return Error( "Error creating mergeSelector", sc );
+  sc = service( "EventSelector", m_mergeSelectorName, pISvc );
+  if( sc.isFailure() ) return Error( "Error creating "+m_mergeSelectorName, sc );
 
   // Get the necessary base class and interface
   m_mergeSelector  = dynamic_cast<Service*>(pISvc);
-  m_mergeISelector = dynamic_cast<IEvtSelector*>(pISvc);
   sc = m_mergeSelector->initialize();
   if( sc.isFailure() )  
   {
     err() << "Error initializing " << m_mergeSelectorName << endreq;
     return sc;
   }
+  m_mergeISelector = dynamic_cast<IEvtSelector*>(pISvc);
 
   // Clear the item list that will be loaded by this event selector
   clearItems(m_itemList);
@@ -190,6 +187,7 @@ StatusCode MergeEventAlg::execute()
 StatusCode MergeEventAlg::finalize() 
 {
   clearItems(m_itemList);
+  if( 0 != m_mergeIt ) m_mergeISelector->releaseContext(m_mergeIt);
   m_mergeSelector->finalize();
   m_mergeSelector->release();
 

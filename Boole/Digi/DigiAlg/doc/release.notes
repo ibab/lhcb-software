@@ -4,10 +4,14 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v4r1 2006-03-23 =========================
+!========================== DigiAlg v4r2 2006-03-30 =========================
+! 2006-03-31 - Marco Cattaneo
+ - Minor cleanups to MergeEventAlg
+
 ! 2006-03-30 - Jan Amoraal
  - Minor changes due to new OTDet
 
+!========================== DigiAlg v4r1 2006-03-23 =========================
 ! 2006-03-23 - Marco Cattaneo
  - In BooleInit, use ODINDefinitions.h to get ODIN bank structure
  - In BuildMCTrackInfo, update to use VeloCluster Linker and add protection
