@@ -106,18 +106,8 @@
         desc="Additional particle ID and user information. Do not access directly, use *Info() methods instead."
         type="ExtraInfo"
         setMeth="FALSE"
-        getMeth="FALSE"
+        getMeth="TRUE"
        />
-
-       <!--method
-        name  = "extraInfo"
-        const = "TRUE"
-        desc  = "ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
-        type  = "const LHCb::ProtoParticle::ExtraInfo &amp;" > 
-        <code>
-         return m_extraInfo ;
-        </code>
-       </method-->
 
        <method
         name    = "hasInfo"
