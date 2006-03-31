@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r1 2006-03-31 ========================
 ! 2006-03-23 - Eduardo Rodrigues
  - addToXxxClusters methods completely rewritten
  - using again RecHeader instead of MCHeader
