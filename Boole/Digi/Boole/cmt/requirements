@@ -35,7 +35,7 @@ use LHCb                 v20r2       -no_auto_imports
 use LbcomSys             v4r2        -no_auto_imports
 
 #-- BooleSys v11r2 packages
-use DigiAlg              v4r1   Digi -no_auto_imports
+use DigiAlg              v4r2   Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r1   Calo -no_auto_imports
@@ -46,7 +46,7 @@ use VeloSimulation       v2r1p1 Velo -no_auto_imports
 use VeloAlgorithms       v4r2   Velo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation         v3r1   OT   -no_auto_imports
+use OTSimulation         v3r2   OT   -no_auto_imports
 
 # Muon
 use MuonAlgs             v6r0   Muon -no_auto_imports
