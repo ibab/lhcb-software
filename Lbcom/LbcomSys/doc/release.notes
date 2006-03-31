@@ -6,13 +6,17 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r2>2006-03-28 LbcomSys v4r2</A></H1><PRE>
+</PRE><H1><A NAME=v4r2>2006-03-31 LbcomSys v4r2</A></H1><PRE>
 This version uses Gaudi v18r3 and LHCb v20r2.
 
-- Packages modified: PuVeto v7r1p1, L0DU v7r1p1, CaloAssociators v6r0p1
+- Packages modified: PuVeto v7r1p1, L0DU v7r1p1, CaloAssociators v6r0p1,
+                     OTMonitor v2r1
 
 - In PuVeto v7r1p1, L0DU v7r1p1, CaloAssociators v6r0p1:
   . Backward compatible fixes to compile with Gaudi v18r3
+
+- In OTMonitor v2r1:
+  . Adapt to new OTDet interface
 
 </PRE><H1><A NAME=v4r1>2006-03-24 LbcomSys v4r1</A></H1><PRE>
 This version uses Gaudi v18r2 and LHCb v20r1.

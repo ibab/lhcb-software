@@ -15,7 +15,7 @@ use PuVeto          v7r1p1  L0          # Marko Zupan
 #use L0Checker         v3r2p1 L0         # Eduardo Rodrigues
 
 # Outer tracker
-use OTMonitor         v2r0  OT          # Jan Amoraal
+use OTMonitor         v2r1  OT          # Jan Amoraal
 use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
