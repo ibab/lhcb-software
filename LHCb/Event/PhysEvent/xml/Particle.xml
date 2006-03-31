@@ -251,18 +251,8 @@
         desc="Some addtional user information. Don't use directly. Use *Info() methods."
         type="ExtraInfo"
         setMeth="FALSE"
-        getMeth="FALSE"
+        getMeth="TRUE"
        />
-       <method
-        name="extraInfo"
-        const="TRUE"
-        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
-        type="const ExtraInfo"
-       > 
-       <code>
-  return m_extraInfo ;
-       </code>
-       </method>
        <method
         name="hasInfo"
         const="TRUE"

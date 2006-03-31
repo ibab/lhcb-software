@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.83 2006-03-28 13:59:11 cattanem Exp $
+! $Id: release.notes,v 1.84 2006-03-31 09:29:34 jonrob Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+! 2006-03-31 - Chris Jones
+ - Fix Particle.xml to return ExtraInfo by const reference
 
 !======================= PhysEvent v9r2 2006-03-28 ==========================
 ! 2006-03-28 - Juan Palacios
