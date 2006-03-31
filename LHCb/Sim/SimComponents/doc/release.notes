@@ -5,9 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
-!====================== SimComponents v1r1p1 2006-03-28 ======================
-! 2006-03-28 - Marco Cattaneo
+!====================== SimComponents v1r1p1 2006-03-31 ======================
+! 2006-03-31 - Marco Cattaneo
  - Add explicit dependency on Boost, needed with Gaudi v18r3
+ - Add missing factory declaration for CheckMCEventTool
 
 !====================== SimComponents v1r1 2006-03-16 ========================
 ! 2006-03-16 - P. Koppenburg
