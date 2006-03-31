@@ -43,6 +43,14 @@
         desc = 'Pointer to the VeloPhiCluster'
 	getMeth = 'FALSE' />
 
+      <attribute
+        type = 'Gaudi::XYZPoint'
+        name = 'origin'
+        desc = 'Origin of the sensor'
+        access = 'PRIVATE'
+	getMeth = 'FALSE'
+	setMeth = 'FALSE' />
+
       <method
         name   = 'init'
         desc   = 'Initialize the data members'
@@ -65,21 +73,17 @@
       <method
         type    = 'double'
         name    = 'resolution'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
         desc    = 'Retrieve the measurement error'
         const   = 'TRUE'>
-        <code>
-  return sqrt( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure;
-        </code>
       </method>
 
       <method
         type    = 'double'
         name    = 'resolution2'
+        argList = 'Gaudi::XYZPoint /*point*/, Gaudi::XYZVector /*vec*/'
         desc    = 'Retrieve the measurement error squared'
         const   = 'TRUE'>
-        <code>
-  return ( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure * m_errMeasure;
-        </code>
       </method>
 
       <method

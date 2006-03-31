@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.10 2006-03-23 12:38:58 mtobin Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.11 2006-03-31 17:13:14 jvantilb Exp $
 // Include files 
 
 // local
@@ -44,6 +44,9 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   m_z = phiDet->z();
   m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
+  // TODO: Get this from the VeloDet
+  m_origin = Gaudi::XYZPoint(0,0,0);
+
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
   m_measure = phiDet->distToOrigin(  m_cluster->channelID().strip() );
@@ -73,4 +76,20 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
     // MM-
   }
 
+}
+
+double VeloPhiMeasurement::resolution( const Gaudi::XYZPoint& point,
+                                       const Gaudi::XYZVector& /*vec*/) const
+{
+  // Retrieve the measurement error
+  double radius = (m_origin - point).R();
+  return radius * m_errMeasure;
+}
+
+double VeloPhiMeasurement::resolution2( const Gaudi::XYZPoint& point,
+                                        const Gaudi::XYZVector& /*vec*/) const
+{
+  // Retrieve the measurement error
+  double radius = (m_origin - point).R();
+  return radius * m_errMeasure * radius * m_errMeasure;
 }
