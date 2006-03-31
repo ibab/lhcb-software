@@ -1,4 +1,4 @@
-// $Id: TrackOTProjector.h,v 1.2 2006-02-16 10:50:20 ebos Exp $
+// $Id: TrackOTProjector.h,v 1.3 2006-03-31 13:42:44 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKOTPROJECTOR_H 1
 
@@ -6,10 +6,12 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackProjector.h"
 
 // from OTDet
 #include"OTDet/DeOTDetector.h"
+
+// local
+#include "TrackProjector.h"
 
 using namespace LHCb;
 
