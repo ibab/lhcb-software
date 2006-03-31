@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.46 2006-03-30 21:45:33 janos Exp $
+! $Id: release.notes,v 1.47 2006-03-31 14:22:40 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r1 2006-03-30 ==========================
+! 2006-03-31 - Jan Amoraal
+ - replace stereoAngle() with angle()
+ 
 ! 2006-03-30 - Jan Amoraal
  - The "hopefully" new and improved OTDet
  - Interface is similar to STDet

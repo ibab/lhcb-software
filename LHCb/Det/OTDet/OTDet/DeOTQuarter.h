@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.4 2006-03-30 21:45:32 janos Exp $
+// $Id: DeOTQuarter.h,v 1.5 2006-03-31 14:22:40 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -77,9 +77,6 @@ class DeOTQuarter : public DetectorElement {
   /** @return stereo angle of the layer */
   double angle() const;
 
-  /** @return stereo angle of the layer */
-  double stereoAngle() const;
-
   /** @return the module for a given channelID */
   DeOTModule* findModule(const LHCb::OTChannelID aChannel) const;
 
@@ -138,10 +135,6 @@ inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const 
 }
 
 inline double DeOTQuarter::angle() const {
-  return m_stereoAngle;
-}
-
-inline double DeOTQuarter::stereoAngle() const {
   return m_stereoAngle;
 }
 

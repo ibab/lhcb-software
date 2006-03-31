@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.6 2006-03-30 21:45:32 janos Exp $
+// $Id: DeOTLayer.h,v 1.7 2006-03-31 14:22:39 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -75,9 +75,6 @@ class DeOTLayer : public DetectorElement {
     
   /** @return stereo angle of the layer */
   double angle() const;
-
-  /** @return the stereo angle of the layer */
-  double stereoAngle() const;
   
   /** @return the quarter for a given channelID */
   DeOTQuarter* findQuarter(const LHCb::OTChannelID aChannel) const;
@@ -124,10 +121,6 @@ inline bool DeOTLayer::contains(const LHCb::OTChannelID aChannel) const {
 }
 
 inline double DeOTLayer::angle() const {
-  return m_stereoAngle;
-}
-
-inline double DeOTLayer::stereoAngle() const {
   return m_stereoAngle;
 }
 

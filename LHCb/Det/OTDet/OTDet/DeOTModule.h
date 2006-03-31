@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.8 2006-03-31 13:36:42 cattanem Exp $
+// $Id: DeOTModule.h,v 1.9 2006-03-31 14:22:40 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -152,7 +152,7 @@ class DeOTModule : public DetectorElement {
   double cellRadius() const;
 
   /** @return stereo angle */
-  double stereoAngle() const;
+  double angle() const;
 
   /** @return sin of stereo angle */
   double sinAngle() const;
@@ -356,7 +356,7 @@ inline double DeOTModule::cellRadius() const {
   return m_cellRadius;
 }
 
-inline double DeOTModule::stereoAngle() const {
+inline double DeOTModule::angle() const {
   return m_stereoAngle;
 }
 
