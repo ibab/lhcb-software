@@ -1,10 +1,11 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
-!==================== OTMonitor v2r0 2006-02-15 =====================
+!==================== OTMonitor v2r1 2006-03-31 =====================
 ! 2006-03-30 - Jan Amoraal
  - Minor changes due to new OTDet
 
+!==================== OTMonitor v2r0 2006-02-15 =====================
 ! 2006-02-15 - Marco Cattaneo
  - in requirements, migrate to DigiEvent
 
