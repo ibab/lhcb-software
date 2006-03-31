@@ -33,7 +33,7 @@
      <destructor
         desc = 'Destructor to delete m_trajectory'>
         <code>
-          delete m_trajectory;
+  delete m_trajectory;
         </code>
       </destructor>
 
@@ -58,7 +58,7 @@
         desc  = 'Retrieve const  Pointer to the VeloPhiCluster'
         const = 'TRUE'>
         <code>
-          return m_cluster;
+  return m_cluster;
         </code>
       </method>
 
@@ -68,7 +68,7 @@
         desc    = 'Retrieve the measurement error'
         const   = 'TRUE'>
         <code>
-          return sqrt( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure;
+  return sqrt( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure;
         </code>
       </method>
 
@@ -78,7 +78,7 @@
         desc    = 'Retrieve the measurement error squared'
         const   = 'TRUE'>
         <code>
-          return ( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure * m_errMeasure;
+  return ( m_refVector(0)*m_refVector(0) + m_refVector(1)*m_refVector(1) ) * m_errMeasure * m_errMeasure;
         </code>
       </method>
 
@@ -88,8 +88,11 @@
         desc    = 'Clone the VeloPhiMeasurement'
         const   = 'TRUE'>
         <code>
-          LHCb::VeloPhiMeasurement* me = new LHCb::VeloPhiMeasurement();
-          *me = *this; return me;
+  LHCb::VeloPhiMeasurement* me = new LHCb::VeloPhiMeasurement();
+  LHCb::Trajectory* traj       = m_trajectory -&gt; clone();
+  *me = *this;
+  me -&gt; setTrajectory( traj );
+  return me;
         </code>
       </method>
 

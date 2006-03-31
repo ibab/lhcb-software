@@ -35,7 +35,7 @@
       <destructor
         desc = 'Destructor to delete m_trajectory'>
         <code>
-          delete m_trajectory;
+  delete m_trajectory;
         </code>
       </destructor>
 
@@ -61,7 +61,7 @@
         desc  = 'Retrieve const  Pointer to the STCluster'
         const = 'TRUE'>
         <code>
-          return m_cluster;
+  return m_cluster;
         </code>
       </method>
 
@@ -72,8 +72,11 @@
         virtual = 'TRUE'
         const   = 'TRUE'>
         <code>
-          LHCb::STMeasurement* me = new LHCb::STMeasurement();
-          *me = *this; return me;
+  LHCb::STMeasurement* me = new LHCb::STMeasurement();
+  LHCb::Trajectory* traj  = m_trajectory -&gt; clone();
+  *me = *this;
+  me -&gt; setTrajectory( traj );
+  return me;
         </code>
       </method>
 
@@ -83,7 +86,7 @@
         argList = 'const Gaudi::TrackVector refVector'
         virtual = 'TRUE'>
         <code>
-          this->setRefVector( refVector );
+  this->setRefVector( refVector );
         </code>
       </method>
 

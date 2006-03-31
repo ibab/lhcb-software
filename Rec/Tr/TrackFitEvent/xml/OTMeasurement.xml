@@ -36,7 +36,7 @@
       <destructor
         desc = 'Destructor to delete m_trajectory'>
         <code>
-          delete m_trajectory;
+  delete m_trajectory;
         </code>
       </destructor>
 
@@ -73,7 +73,7 @@
         desc    = 'Retrieve const  Pointer to the OTTime'
         const   = 'TRUE'>
         <code>
-          return m_time;
+  return m_time;
         </code>
       </method>
 
@@ -83,8 +83,11 @@
         desc    = 'Clone the OTMeasurement'
         const   = 'TRUE'>
         <code>
-          LHCb::OTMeasurement* me = new LHCb::OTMeasurement();
-          *me = *this; return me;
+  LHCb::OTMeasurement* me = new LHCb::OTMeasurement();
+  LHCb::Trajectory* traj  = m_trajectory -&gt; clone();
+  *me = *this;
+  me -&gt; setTrajectory( traj );
+  return me;
         </code>
       </method>
 
