@@ -2,6 +2,7 @@
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/Property.h"
 #include "GaudiKernel/SmartIF.h"
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
@@ -115,10 +116,10 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   std::string msgsvc  = "OnlineMessageSvc";
   std::string opts    = "jobOptions.txt";
   SmartIF<IProperty> p(Gaudi::createApplicationMgr());
-  if(cli.getopt("runable",6,runable)) p->setProperty("Runable",runable);
-  if(cli.getopt("evtloop",6,evtloop)) p->setProperty("EventLoop",evtloop);
-  if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty("MessageSvcType",msgsvc);
-  if(cli.getopt("options",6,opts)   ) p->setProperty("JobOptionsPath",opts);
+  if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
+  if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
+  if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
+  if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
   if ( cli.getopt("help",4)   != 0 )  {
     std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
     std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
@@ -166,6 +167,6 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   }
   SmartIF<IAppMgrUI> ui(p);
   LHCb::GaudiDimFSM fsm(ui);
-  IOCSENSOR.send(&fsm, LHCb::DimTaskFSM::CONFIGURE);
+  // IOCSENSOR.send(&fsm, LHCb::DimTaskFSM::CONFIGURE);
   return fsm.run();
 }
