@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.9 2006-03-31 13:09:56 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.10 2006-03-31 14:05:06 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -91,12 +91,6 @@ StatusCode MergeEventAlg::initialize()
 
   // Get the necessary base class and interface
   m_mergeSelector  = dynamic_cast<Service*>(pISvc);
-  sc = m_mergeSelector->initialize();
-  if( sc.isFailure() )  
-  {
-    err() << "Error initializing " << m_mergeSelectorName << endreq;
-    return sc;
-  }
   m_mergeISelector = dynamic_cast<IEvtSelector*>(pISvc);
 
   // Clear the item list that will be loaded by this event selector
