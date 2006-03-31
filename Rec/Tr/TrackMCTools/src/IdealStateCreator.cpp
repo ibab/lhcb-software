@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.3 2006-03-03 14:18:25 ebos Exp $
+// $Id: IdealStateCreator.cpp,v 1.4 2006-03-31 13:23:36 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,7 @@
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"
+#include "Linker/LinkedFrom.h"
 
 // from Event
 #include "Event/MCParticle.h"
@@ -70,15 +71,11 @@ StatusCode IdealStateCreator::initialize()
 /// from a MCParticle using the entry/exit points of the MCHits
 StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
                                            double zRec,
-                                           LHCb::State*& state ) const {
-
-  // Retrieve MCParticle to MCHit linker table
-  LinkedTo<MCHit,MCParticle> mcp2mchLink( evtSvc(), msgSvc(),
-                                          MCParticleLocation::Default+"2MCHits" );
-  if( mcp2mchLink.notFound() ) {
-    error() << "Unable to retrieve MCParticle to MCHit Linker table." << endreq;
-  }
-
+                                           LHCb::State*& state ) const
+{
+  // Check if MCParticle exists
+  if( mcPart == 0 ) return StatusCode::FAILURE;
+  
   // First create the state
   TrackMatrix stateCov = TrackMatrix();
   for( int i=0; i<5; ++i ) { stateCov(i,i) = 0.; }
@@ -87,35 +84,12 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   pState -> setCovariance( stateCov );
   state = pState;
 
-  // Check if MCParticle exists
-  if( mcPart == 0 ) return StatusCode::FAILURE;
 
-  MCHit* closestHit = 0;
-  MCHit* secondClosestHit = 0;
-  double closestZ = 10000;
-  double secondClosestZ = 10000;
+  MCHit* closestHit;
+  MCHit* secondClosestHit;
 
-  // Use first link with highest weight.
-  MCHit* aMCHit = mcp2mchLink.first( mcPart );
-  if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
-  while( 0 != aMCHit ) {
-    // calculate center point
-    XYZPoint midPoint = aMCHit->midPoint();
+  findClosestHits( mcPart, zRec, closestHit, secondClosestHit );
 
-    // get the closest and second closest hits
-    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
-      secondClosestHit = closestHit;
-      secondClosestZ   = closestZ;
-      closestHit       = aMCHit;
-      closestZ         = fabs( midPoint.z()- zRec );
-    }
-    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
-      secondClosestHit = aMCHit;
-      secondClosestZ   = fabs( midPoint.z()- zRec );
-    }
-    aMCHit = mcp2mchLink.next();
-  }
-  
   if( !closestHit || !secondClosestHit ) {
     warning() << "No two closest MCHits found!!" << endreq;
     return StatusCode::FAILURE;
@@ -225,6 +199,110 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   trueState -> setCovariance( cov );
 
   return StatusCode::SUCCESS;
+}
+
+void IdealStateCreator::findClosestHits( const MCParticle* mcPart,
+                                         const double zRec,
+                                         MCHit*& closestHit,
+                                         MCHit*& secondClosestHit ) const
+{
+//TODO: clean-up/beautify as code does 4 times the same!
+
+  // Retrieve MCParticle to MCHit linker tables
+  LinkedFrom<MCHit,MCParticle>
+    mcp2VelomchLink( evtSvc(), msgSvc(),
+                     MCParticleLocation::Default+"2MCVeloHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2TTmchLink( evtSvc(), msgSvc(),
+                   MCParticleLocation::Default+"2MCTTHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2ITmchLink( evtSvc(), msgSvc(),
+                   MCParticleLocation::Default+"2MCITHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2OTmchLink( evtSvc(), msgSvc(),
+                   MCParticleLocation::Default+"2MCOTHits" );
+
+  //LinkedTo<MCHit,MCParticle>
+  //  mcp2mchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCHits" );
+
+  double closestZ = 10000;
+  double secondClosestZ = 10000;
+
+  MCHit* aMCHit = mcp2VelomchLink.first( mcPart );
+  while( 0 != aMCHit ) {
+    // calculate center point
+    XYZPoint midPoint = aMCHit->midPoint();
+
+    // get the closest and second closest hits
+    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
+      secondClosestHit = closestHit;
+      secondClosestZ   = closestZ;
+      closestHit       = aMCHit;
+      closestZ         = fabs( midPoint.z()- zRec );
+    }
+    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
+      secondClosestHit = aMCHit;
+      secondClosestZ   = fabs( midPoint.z()- zRec );
+    }
+    aMCHit = mcp2VelomchLink.next();
+  }
+
+  aMCHit = mcp2TTmchLink.first( mcPart );
+  while( 0 != aMCHit ) {
+    // calculate center point
+    XYZPoint midPoint = aMCHit->midPoint();
+
+    // get the closest and second closest hits
+    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
+      secondClosestHit = closestHit;
+      secondClosestZ   = closestZ;
+      closestHit       = aMCHit;
+      closestZ         = fabs( midPoint.z()- zRec );
+    }
+    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
+      secondClosestHit = aMCHit;
+      secondClosestZ   = fabs( midPoint.z()- zRec );
+    }
+    aMCHit = mcp2TTmchLink.next();
+  }
+
+  aMCHit = mcp2ITmchLink.first( mcPart );
+  while( 0 != aMCHit ) {
+    // calculate center point
+    XYZPoint midPoint = aMCHit->midPoint();
+
+    // get the closest and second closest hits
+    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
+      secondClosestHit = closestHit;
+      secondClosestZ   = closestZ;
+      closestHit       = aMCHit;
+      closestZ         = fabs( midPoint.z()- zRec );
+    }
+    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
+      secondClosestHit = aMCHit;
+      secondClosestZ   = fabs( midPoint.z()- zRec );
+    }
+    aMCHit = mcp2ITmchLink.next();
+  }
+
+  aMCHit = mcp2OTmchLink.first( mcPart );
+  while( 0 != aMCHit ) {
+    // calculate center point
+    XYZPoint midPoint = aMCHit->midPoint();
+
+    // get the closest and second closest hits
+    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
+      secondClosestHit = closestHit;
+      secondClosestZ   = closestZ;
+      closestHit       = aMCHit;
+      closestZ         = fabs( midPoint.z()- zRec );
+    }
+    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
+      secondClosestHit = aMCHit;
+      secondClosestZ   = fabs( midPoint.z()- zRec );
+    }
+    aMCHit = mcp2OTmchLink.next();
+  }
 }
 
 /// Determine Q/P for a MCParticle

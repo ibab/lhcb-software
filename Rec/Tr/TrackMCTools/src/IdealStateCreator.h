@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.4 2006-03-06 18:58:17 erodrigu Exp $
+// $Id: IdealStateCreator.h,v 1.5 2006-03-31 13:23:36 erodrigu Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -80,10 +80,15 @@ public:
                                         State*& pState ) const;
 
 private:
-  
   /// Determine Q/P for a MCParticle
   double qOverP( const MCParticle* mcPart ) const;
 
+  void findClosestHits( const MCParticle* mcPart,
+                        const double zRec,
+                        MCHit*& closestHit,
+                        MCHit*& secondClosestHit ) const;
+  
+private:
   ITrackExtrapolator* m_extrapolator; ///< Extrapolator Tool
 
   // Job options:

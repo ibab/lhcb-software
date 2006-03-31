@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.6 2006-03-23 17:58:10 mtobin Exp $
+// $Id: TrackAcceptance.cpp,v 1.7 2006-03-31 13:23:36 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IRegistry.h"
 
 // from Event/LinkerEvent
-#include "Linker/LinkedTo.h"
+#include "Linker/LinkedFrom.h"
 
 // from Det
 #include "OTDet/DeOTDetector.h"
@@ -40,10 +40,10 @@ TrackAcceptance::TrackAcceptance( const std::string& type,
   // declare properties
   declareProperty( "MinNVeloRHits",   m_minNVeloRHits   = 3 );
   declareProperty( "MinNVeloPhiHits", m_minNVeloPhiHits = 3 );
-  declareProperty( "MinNTTHits", m_minNTTHits = 1 );
-  declareProperty( "MinNT1Hits", m_minNT1Hits = 1 );
-  declareProperty( "MinNT2Hits", m_minNT2Hits = 1 );
-  declareProperty( "MinNT3Hits", m_minNT3Hits = 1 );
+  declareProperty( "MinNTTHits",      m_minNTTHits = 1 );
+  declareProperty( "MinNT1Hits",      m_minNT1Hits = 1 );
+  declareProperty( "MinNT2Hits",      m_minNT2Hits = 1 );
+  declareProperty( "MinNT3Hits",      m_minNT3Hits = 1 );
 }
 
 /// Default destructor
@@ -88,8 +88,9 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
   int nVeloPhiHits = 0;
 
   // Retrieve MCParticle to MCHit linker table
-  LinkedTo<MCHit,MCParticle>
-    mcp2mchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCVeloHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2mchLink( evtSvc(), msgSvc(),
+                 MCParticleLocation::Default+"2MCVeloHits" );
   if( mcp2mchLink.notFound() ) {
     error() << "Unable to retrieve MCParticle to Velo MCHit Linker table."
             << endreq;
@@ -97,17 +98,24 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
   else {
     // Use first link with highest weight
     MCHit* aMCHit = mcp2mchLink.first( mcPart );
-    if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
-    while( 0 != aMCHit ) {
-      const DeVeloSensor* sens=m_velo->sensor( aMCHit->sensDetID() );    
-      std::string hitType = sens->type();
-      if ( hitType == "VeloR" ) { ++nVeloRHits; }
+
+    if( 0 == aMCHit ) {
+      debug() << "No Velo MCHit linked to MCParticle "
+              << mcPart -> key() << endreq;
+    }
+
+    while( NULL != aMCHit ) {
+      const DeVeloSensor* sens = m_velo -> sensor( aMCHit->sensDetID() );    
+      std::string hitType = sens -> type();
+      if ( hitType == "R" ) { ++nVeloRHits; }
       else { ++nVeloPhiHits; }
       
       aMCHit = mcp2mchLink.next();
     }
   }
-
+  debug() << "# Velo R / Phi Hits = "
+          << nVeloRHits << " / " << nVeloPhiHits << endreq;
+  
   // judge if MCParticle satisfies VELO track acceptance criteria
   bool isVeloTrack = false;
   if(( nVeloRHits >= m_minNVeloRHits ) && ( nVeloPhiHits >= m_minNVeloPhiHits ))
@@ -126,8 +134,9 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
   int nTTHits = 0;
 
   // Retrieve MCParticle to MCHit linker table
-  LinkedTo<MCHit,MCParticle>
-    mcp2mchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCTTHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2mchLink( evtSvc(), msgSvc(),
+                 MCParticleLocation::Default+"2MCTTHits" );
   if( mcp2mchLink.notFound() ) {
     error() << "Unable to retrieve MCParticle to TT MCHit Linker table."
             << endreq;
@@ -135,12 +144,18 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
   else {
     // Use first link with highest weight
     MCHit* aMCHit = mcp2mchLink.first( mcPart );
-    if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
-    while( 0 != aMCHit ) {
+
+    if( 0 == aMCHit ) {
+      debug() << "No TT MCHit linked to MCParticle "
+              << mcPart -> key() << endreq;
+    }
+
+    while( NULL != aMCHit ) {
       ++nTTHits;
       aMCHit = mcp2mchLink.next();
     }
   }
+  debug() << "# TT Hits = " << nTTHits << endreq;
   
   // judge if MCParticle satisfies TT1 track acceptance criteria
   bool isTTTrack = false;
@@ -162,8 +177,9 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
   int nIT3Hits = 0;
 
   // Retrieve MCParticle to MCHit linker table for IT
-  LinkedTo<MCHit,MCParticle>
-    mcp2ITmchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCITHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2ITmchLink( evtSvc(), msgSvc(),
+                   MCParticleLocation::Default+"2MCITHits" );
   if( mcp2ITmchLink.notFound() ) {
     error() << "Unable to retrieve MCParticle to IT MCHit Linker table."
             << endreq;
@@ -171,7 +187,12 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
   else {
     // Use first link with highest weight
     MCHit* aMCHit = mcp2ITmchLink.first( mcPart );
-    if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
+
+    if( 0 == aMCHit ) {
+      debug() << "No IT MCHit linked to MCParticle "
+              << mcPart -> key() << endreq;
+    }
+
     while( 0 != aMCHit ) {
       // calculate center point
       XYZPoint midPoint = aMCHit->midPoint();
@@ -187,8 +208,9 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
   }
 
   // Retrieve MCParticle to MCHit linker table for OT
-  LinkedTo<MCHit,MCParticle>
-    mcp2OTmchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCOTHits" );
+  LinkedFrom<MCHit,MCParticle>
+    mcp2OTmchLink( evtSvc(), msgSvc(),
+                   MCParticleLocation::Default+"2MCOTHits" );
   if( mcp2OTmchLink.notFound() ) {
     error() << "Unable to retrieve MCParticle to IT MCHit Linker table."
             << endreq;
@@ -196,8 +218,12 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
   else {
     // Use first link with highest weight
     MCHit* aMCHit = mcp2OTmchLink.first( mcPart );
-    if( 0 == aMCHit ) return Error( "No MCHit linked to this MCParticle" );
-    while( 0 != aMCHit ) {
+    if( 0 == aMCHit ) {
+      debug() << "No OT MCHit linked to MCParticle "
+              << mcPart -> key() << endreq;
+    }
+
+    while( NULL != aMCHit ) {
       // calculate center point
       XYZPoint midPoint = aMCHit->midPoint();
       // OT1 MCHit?
@@ -210,6 +236,9 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
       aMCHit = mcp2OTmchLink.next();
     }
   }
+  debug() << "# IT / OT Hits = "
+          << (nIT1Hits+nIT2Hits+nIT3Hits) << " / "
+          << (nOT1Hits+nOT2Hits+nOT3Hits) << endreq;
   
   // judge if MCParticle satisfies SEED track acceptance criteria
   bool isSeedTrack = false;
@@ -224,6 +253,6 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
 /// Checks if the MCParticle is in the long-track acceptance
 //-------------------------------------------------------------------------
 bool TrackAcceptance::hasVeloAndSeed( MCParticle* mcPart ) 
-{  
+{
   return ( this->hasVelo(mcPart) && this->hasSeed(mcPart) );
 }
