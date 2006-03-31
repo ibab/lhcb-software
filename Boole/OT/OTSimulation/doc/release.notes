@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.25 2006-03-30 21:50:17 janos Exp $
+! $Id: release.notes,v 1.26 2006-03-31 13:21:25 cattanem Exp $
 Package         : OTSimulation
-Package manager : Jacopo Nardulli
+Package manager : Jan Amoraal
 
-!====================== OTSimulation v3r1 2006-03-23 ======================
+!====================== OTSimulation v3r2 2006-03-31 ======================
+! 2006-03-31 - Marco Cattaneo
+ - Minor cleanups in OTrtRelation.cpp
+
 ! 2006-03-30 Jan Amoraal
  - Minor changes due to new OTDet
 
+!====================== OTSimulation v3r1 2006-03-23 ======================
 ! 2006-03-22 Jan Amoraal
  - OTDataFunctor has moved to LHCbKernel. Fixed includes.
  

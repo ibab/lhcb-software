@@ -1,8 +1,7 @@
-// $Id: OTrtRelation.cpp,v 1.8 2006-03-30 21:50:19 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.9 2006-03-31 13:21:25 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IService.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // OTDet
@@ -46,18 +45,12 @@ StatusCode OTrtRelation::initialize()
 {
 
   StatusCode sc = GaudiTool::initialize();
+  if( sc.isFailure() ) return sc;
+  
   // retrieve pointer to magnetic field service
   m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
   
-  // Loading OT Geometry from XML
-  IDataProviderSvc* detSvc; 
-  sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
-  if( sc.isFailure() ) {
-    return Error ("Failed to retrieve DetectorDataSvc",sc);
-  }
-
   m_tracker = getDet<DeOTDetector>(  DeOTDetectorLocation::Default );
-  detSvc->release();
 
   return StatusCode::SUCCESS;
 }
@@ -75,9 +68,7 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   const double driftDist = aDeposit->driftDistance();
   
   // average entrance and exit to get point in cell 
-  const Gaudi::XYZPoint& entryPoint = aMCHit->entry();
-  const Gaudi::XYZPoint& exitPoint = aMCHit->exit();
-  Gaudi::XYZPoint aPoint = entryPoint + 0.5 * (exitPoint - entryPoint);
+  Gaudi::XYZPoint aPoint = aMCHit->midPoint();
 
   // add drift time
   double time = driftTime(driftDist, aPoint) ;
