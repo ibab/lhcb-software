@@ -24,7 +24,7 @@ StatusCode LHCb::GaudiTask::cancel()  {
 }
 
 /// Set properties of application manager instance
-StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
+StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* /* inst */ )  {
   return StatusCode::SUCCESS;
 }
 

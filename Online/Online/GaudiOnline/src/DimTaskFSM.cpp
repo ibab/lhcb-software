@@ -47,7 +47,7 @@ namespace  {
 }
 
 LHCb::DimTaskFSM::DimTaskFSM(IInterface*) 
-: m_stateName(ST_NAME_UNKNOWN), m_name("Exec"), m_haveEventLoop(false), m_refCount(1)
+: m_name("Exec"), m_stateName(ST_NAME_UNKNOWN), m_haveEventLoop(false), m_refCount(1)
 {
   m_propertyMgr  = new PropertyMgr(this);
   m_procName = RTL::processName();
