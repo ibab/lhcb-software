@@ -47,6 +47,7 @@ StatusCode DeITLayer::initialize() {
     STChannelID chan(STChannelID::typeIT, parentID.station(), id(), parentID.detRegion(), 0, 0);
     setElementID(chan);
     m_ladders = getChildren<DeITLayer>();
+    flatten();
   }
 
   return sc;
@@ -67,4 +68,13 @@ DeITLadder* DeITLayer::findLadder(const Gaudi::XYZPoint& point) {
 }
 
 
+void DeITLayer::flatten() {
 
+ Children::const_iterator iterLadder = ladders().begin();
+ for ( ; iterLadder !=  ladders().end() ; ++iterLadder ){
+   DeSTSector* tSector = (*iterLadder)->sector();
+   m_sectors.push_back(tSector);  
+ } //sectors     
+
+
+}

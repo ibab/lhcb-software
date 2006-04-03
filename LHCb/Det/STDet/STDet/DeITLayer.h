@@ -1,4 +1,4 @@
-// $Id: DeITLayer.h,v 1.2 2006-01-26 09:54:29 mneedham Exp $
+// $Id: DeITLayer.h,v 1.3 2006-04-03 14:48:25 mneedham Exp $
 #ifndef _DeITLayer_H_
 #define _DeITLayer_H_
 
@@ -72,11 +72,15 @@ public:
   const DeITLayer::Children& ladders() const;
 
 private:
-  
+
+   /** make flat list of lowest descendents  and also layers*/
+   void flatten();
+ 
    Children m_ladders;
    parent_type* m_parent;   
 
 };
+
 
 
 #include "STDet/DeITBox.h"

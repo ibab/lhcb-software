@@ -95,17 +95,12 @@ void DeTTDetector::flatten(){
     for (;iterLayer != tStation->layers().end(); ++iterLayer){
       DeTTLayer* tLayer = *iterLayer;
       m_layers.push_back(tLayer);
-      DeTTLayer::Children::const_iterator iterModule = tLayer->halfModules().begin();
-      for (;iterModule != tLayer->halfModules().end(); ++iterModule){
-        DeTTHalfModule* tModule = *iterModule;
-        DeTTHalfModule::Children::const_iterator iterSector = tModule->sectors().begin();
-        for ( ; iterSector !=  tModule->sectors().end() ; ++iterSector ){
-          DeSTSector* tSector = *iterSector;
-          m_sectors.push_back(tSector);  
-	} //sectors     
-      } // half module
+      const DeSTLayer::Sectors& tSectors = tLayer->sectors();
+      //      for (DeSTLayer::Sectors::const_iterator iter = tSectors.begin(); iter != tSectors.end(); ++iter){
+      //   m_sectors.push_back(*iter);
+      // } 
+      m_sectors.insert(m_sectors.begin(),tSectors.begin(),tSectors.end());
     }  // iterLayer
   } // iterStation
-
 
 }

@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.2 2006-02-27 19:50:54 jvantilb Exp $
+// $Id: DeSTLayer.h,v 1.3 2006-04-03 14:48:25 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -15,14 +15,16 @@
  *  @author Matthew Needham Matthew.Needham@cern.ch
  */
 
+class DeSTSector;
 
 class DeSTLayer : public DeSTBaseElement  {
 
 public:
 
+  typedef std::vector<DeSTSector*> Sectors;
 
   /** Constructor */
-  DeSTLayer ( const std::string& name = "" ) ;
+  DeSTLayer ( const std::string& name = "" );
 
   /** Destructor */
   virtual ~DeSTLayer(); 
@@ -65,6 +67,15 @@ public:
   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
+  /** flat vector of sectors
+  * @return vector of sectors
+  */
+  const Sectors& sectors() const;
+
+protected:
+
+  Sectors m_sectors;
+
 private:
 
   unsigned int m_id;
@@ -90,6 +101,9 @@ inline double DeSTLayer::sinAngle() const{
   return m_sinAngle;
 }
 
+inline const DeSTLayer::Sectors& DeSTLayer::sectors() const{
+  return m_sectors;
+}
 
 /** ouput operator for class DeSTLayer
  *  @see DeSTLayer

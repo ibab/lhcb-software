@@ -1,4 +1,4 @@
-// $Id: DeTTLayer.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeTTLayer.h,v 1.2 2006-04-03 14:48:25 mneedham Exp $
 #ifndef _DeTTLayer_H_
 #define _DeTTLayer_H_
 
@@ -73,6 +73,9 @@ public:
   const DeTTLayer::Children& DeTTLayer::halfModules() const;
 
  private:
+
+  /** make flat list of lowest descendents  and also layers*/
+  void flatten();
     
   Children m_modules;
   parent_type* m_parent;

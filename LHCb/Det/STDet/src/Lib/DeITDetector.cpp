@@ -4,8 +4,6 @@
 #include "STDet/DeITStation.h"
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
-#include "STDet/DeITSector.h"
-#include "STDet/DeITLadder.h"
 
 /** @file DeITDetector.cpp
 *
@@ -96,12 +94,16 @@ void DeITDetector::flatten(){
       for (;iterLayer != tBox->layers().end(); ++iterLayer){
         DeITLayer* tLayer = *iterLayer;
         m_layers.push_back(tLayer);
-        DeITLayer::Children::const_iterator iterLadder = tLayer->ladders().begin();
-        for ( ; iterLadder !=  tLayer->ladders().end() ; ++iterLadder ){
-          DeSTSector* tSector = (*iterLadder)->sector();
-          m_sectors.push_back(tSector);  
-	} //sectors     
-      } // half module
-    }  // iterLayer
+	const DeSTLayer::Sectors& tSectors = tLayer->sectors();
+	//       for (DeSTLayer::Sectors::const_iterator iter = tSectors.begin(); iter != tSectors.end(); ++iter){
+          //DeSTSector* tSector = *iter;
+	  //        m_sectors.push_back(*iter);
+        //} 
+        m_sectors.insert(m_sectors.begin(),tSectors.begin(),tSectors.end());
+       }  // iterLayer
+    }  // box
   } // iterStation
 }
+
+
+

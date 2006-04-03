@@ -55,6 +55,7 @@ StatusCode DeTTLayer::initialize() {
     STChannelID chan(STChannelID::typeTT, parentID.station(), id(), 0, 0, 0);
     setElementID(chan);
     m_modules = getChildren<DeTTLayer>();
+    flatten();
   }
   return sc;
 }
@@ -76,8 +77,19 @@ DeTTHalfModule* DeTTLayer::findHalfModule(const Gaudi::XYZPoint& point) {
 }
 
 
+void DeTTLayer::flatten() {
 
+  DeTTLayer::Children::const_iterator iterModule = halfModules().begin();
+  for (;iterModule != halfModules().end(); ++iterModule){
+     DeTTHalfModule* tModule = *iterModule;
+     DeTTHalfModule::Children::const_iterator iterSector = tModule->sectors().begin();
+     for ( ; iterSector !=  tModule->sectors().end() ; ++iterSector ){
+       DeSTSector* tSector = *iterSector;
+       m_sectors.push_back(tSector);  
+     } //sectors     
+  } // half module
 
+}
 
 
 
