@@ -4,8 +4,8 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r3 2006-04-03 ========================
 ! 2006-04-03 - Juan Palacios
-
  - Remove many unnecessary calls to MatrixManip::Standardize and fix filling
    and retrieving of submatrices to and from matrices, both symmetric and
    non-symmetric. Changes only possible with bug-fixes in ROOT 5.10.c
@@ -14,7 +14,6 @@
  - Changed resolution method in Measurement.xml. Now it takes two arguments:
    the point on the track of closest approach and the corresponding direction.
 
-!========================= TrackEvent v2r3 2006-03-31 ========================
 ! 2006-03-31 - Eduardo Rodrigues
  - added Hlt track locations names
  - SMatrix hack file Shacks.h file removed
