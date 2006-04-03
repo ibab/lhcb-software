@@ -5,14 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r2>2006-03-31 LHCbSys v20r2</A></H1><PRE>
+</PRE><H1><A NAME=v20r2>2006-04-03 LHCbSys v20r2</A></H1><PRE>
 This version uses Gaudi v18r3 and is for DC06 production
 
 - Packages added:    Gen/HepMC - Interface package to public HepMC release
 - Packages removed:  Sim/HepMC - Private version of HepMC
 - Packages modified: KernelSys v5r2, LHCbDefinitions v1r4, LHCbKernel v6r4,
-    EventSys v21r2, TrackEvent v2r2, PhysEvent v9r2, GenEvent v4r3,
-    DetSys v8r2, RichDet v9r3, STDet v2r2, OTDet v6r1, DetCond v7r10p1,
+    EventSys v21r2, TrackEvent v2r2,PhysEvent v9r2,GenEvent v4r3,EventAssoc v3r1,
+    DetSys v8r2, RichDet v9r3,STDet v2r2,OTDet v6r1,CaloDet v7r1,DetCond v7r10p1,
     LoKiCore v1r1, LoKiGen v1r1, SimComponents v1r1p1, CaloUtils v6r0p1, 
     RichRecBase v2r1, Relations v3r0p1, GaudiConf v9r5, DAQSys v2r2, OTDAQ v4r1
 
@@ -23,10 +23,16 @@ This version uses Gaudi v18r3 and is for DC06 production
   . Modifications to RichSmartIDHashFuncs.h
 
 - In TrackEvent v2r2:
-  . additions to track locations names
+  . Additions to track locations names
+  . Cleanup matrix manipulations using fixes from Root 5.10.00c
+  . Resolution method in Measurement.xml now takes two arguments
 
 - In GenEvent v4r3, HepMC v1r126p0:
   . Pick up HepMC 1.26 from lcg external packages, and dictionary from RELAX
+
+- In PhysEvent v9r2:
+  . Fixes for SMatrix in covariance matrix methods
+  . Return ExtraInfo by const reference
 
 - In RichDet v9r3:
   . Modifications to RichDAQDefinitions.h
@@ -39,6 +45,10 @@ This version uses Gaudi v18r3 and is for DC06 production
 - In OTDet v6r1:
   . New interface, similar to STDet (not backwards compatible)
   . Calculate hitsusing vectors
+
+- In CaloDet v7r1:
+  . Adapt DeCalorimeter to the change in XmlConditions v1r6 and XmlDDDB v30r3
+  . Introduce a new method returning reference planes in DeCalorimeter
  
 - In LoKiCore v1r1, LoKiGen v1r1:
   . New functions and adapters, see details in package release notes
@@ -47,11 +57,13 @@ This version uses Gaudi v18r3 and is for DC06 production
   . In RichTrackSelector.h momentum cut is in GeV
   . In RichPixelCreatorBase.cpp, RichPixelSuppress tool renamed to PixelSuppress
 
-- In Relations v3r1:
+- In Relations v3r1, EventAssoc v3r1:
   . Suppress dictionary generation on Windows due to Boost problems
+
+- In Relations v3r1:
   . Suppress rootmap creation by lcgdict due to CINT problems
 
-- In DetCond v7r10p1, Relations v3r1
+- In DetCond v7r10p1, Relations v3r1, EventAssoc v3r1:
   . Trivial fix in requirements for GCCXML+Boost on Windows with LCG_v42a
 
 - In GaudiConf v9r5:

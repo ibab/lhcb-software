@@ -33,8 +33,8 @@ use DetDescCnv            v3r1    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r3    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r9    Tools   # Marco Clemencic
 use OTDet                 v6r1    Det     # Jan Amoraal
-use CaloDet               v7r0    Det     # Ivan Belyaev
-use CaloDetXmlCnv         v2r3p2  Det     # Ivan Belyaev
+use CaloDet               v7r1    Det     # Olivier Deschamps
+use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r2    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r1    Det     # N.N.
 use RichDet               v9r3    Det     # Chris Jones
@@ -50,7 +50,7 @@ use L0Event               v15r1   Event   # O.Callot,O.Deschamps,A.Tsaregorodtse
 use PhysEvent             v9r2    Event   # Patrick Koppenburg
 use DAQEvent	          v6r3    Event   # Marco Cattaneo
 use GenEvent              v4r3    Event   # Gloria Corti
-use EventAssoc            v3r0    Event   # Ivan Belyaev
+use EventAssoc            v3r1    Event   # Ivan Belyaev
 use LinkerEvent           v2r1    Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v2r2    Event   # Eduardo Rodrigues, Jose Hernando
