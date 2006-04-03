@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.48 2006-03-28 14:52:16 jpalac Exp $
+! $Id: release.notes,v 1.49 2006-04-03 17:07:02 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-04-03 - J. Palacios
+ - Added src/OfflineVertexFitter.h and .cpp from Yuehong Xie.
+ - Modified src/OfflineVertexFitter.cpp:
+   . Translate all matrix and vector operations from CLHEP-like lingo to
+     SMatrix talk.
 
 !========================== VertexFit v2r0 2006-03-28 ===================
 ! 2006-01-23 - P. Koppenburg
