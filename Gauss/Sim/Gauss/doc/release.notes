@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-04-03 - Gloria CORTI
+ - Adapt example options of ParticleGun.opts to units now beeing MeV in 
+   generator phase like in whole the rest of LHCb
+
 !======================== Gauss v24r2 2006-03-29 =============================
 ! 2006-03-29 - Gloria CORTI
  - Modify Gauss.job to point to cmtuser working directory

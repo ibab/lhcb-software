@@ -11,19 +11,15 @@ ParticleGun.EventType = 53210205;
 
 
 // Particle Gun's options
-// Note that internally the ParticleGun expect the 
-// units to be as specified on the side (this is
-// because of consistency with the generator format
-// HepMC
-ParticleGun.xVertexMin = 0.0;  // mm
-ParticleGun.xVertexMax = 0.0;  // mm
-ParticleGun.yVertexMin = 0.0;  // mm
-ParticleGun.yVertexMax = 0.0;  // mm
-ParticleGun.zVertexMin = 0.0;  // mm
-ParticleGun.zVertexMax = 0.0;  // mm
+ParticleGun.xVertexMin = 0.0*mm;
+ParticleGun.xVertexMax = 0.0*mm;
+ParticleGun.yVertexMin = 0.0*mm;
+ParticleGun.yVertexMax = 0.0*mm;
+ParticleGun.zVertexMin = 0.0*mm;
+ParticleGun.zVertexMax = 0.0*mm;
 
-ParticleGun.MomentumMin =   1.0;  // GeV
-ParticleGun.MomentumMax = 100.0;  // GeV
+ParticleGun.MomentumMin =   1.0*GeV;
+ParticleGun.MomentumMax = 100.0*GeV;
 ParticleGun.ThetMin     = 0.015;  // rad
 ParticleGun.ThetMax     = 0.300;  // rad
 ParticleGun.PhiMin      =   0.0;  // rad
