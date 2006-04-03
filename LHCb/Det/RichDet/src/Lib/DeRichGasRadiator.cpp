@@ -1,4 +1,17 @@
-// $Id: DeRichGasRadiator.cpp,v 1.5 2006-03-17 17:15:40 jonrob Exp $
+
+//----------------------------------------------------------------------------
+/** @file DeRichGasRadiator.cpp
+ *
+ *  Implementation file for detector description class : DeRichGasRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichGasRadiator.cpp,v 1.6 2006-04-03 08:57:11 jonrob Exp $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2006-03-02
+ */
+//----------------------------------------------------------------------------
+
 // Include files
 
 // Gaudi
@@ -22,22 +35,17 @@ const CLID& CLID_DeRichGasRadiator = 12042;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichGasRadiator::DeRichGasRadiator(  ) 
-  : DeRichSingleSolidRadiator()
-{
-}
+DeRichGasRadiator::DeRichGasRadiator() : DeRichSingleSolidRadiator() {}
 
 //=============================================================================
 // Destructor
 //=============================================================================
 DeRichGasRadiator::~DeRichGasRadiator() {}
 
+//=========================================================================
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichGasRadiator::classID()
-{
-  return CLID_DeRichGasRadiator;
-}
-
+//=========================================================================
+const CLID& DeRichGasRadiator::classID() { return CLID_DeRichGasRadiator; }
 
 //=========================================================================
 //  initialize
@@ -51,13 +59,13 @@ StatusCode DeRichGasRadiator::initialize ( )
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // update refractive index
+  // configure refractive index updates
 
   // temperature
   m_temperatureCond = condition( "GasTemperature" );
   if ( m_temperatureCond )
     updMgrSvc()->registerCondition(this,m_temperatureCond.path(),
-                           &DeRichGasRadiator::updateProperties );
+                                   &DeRichGasRadiator::updateProperties );
   else
     msg << MSG::WARNING << "Cannot load Condition GasTemperature" << endmsg;
 
@@ -65,12 +73,12 @@ StatusCode DeRichGasRadiator::initialize ( )
   m_pressureCond = condition( "GasPressure" );
   if ( m_pressureCond )
     updMgrSvc()->registerCondition(this,m_pressureCond.path(),
-                           &DeRichGasRadiator::updateProperties );
+                                   &DeRichGasRadiator::updateProperties );
   else
     msg << MSG::WARNING << "Cannot load Condition GasPressure" << endmsg;
 
   sc = updMgrSvc()->update(this);
-  if ( sc.isFailure() ) 
+  if ( sc.isFailure() )
   {
     msg << MSG::ERROR << "First UMS update failed" << endreq;
     return sc;
@@ -80,16 +88,20 @@ StatusCode DeRichGasRadiator::initialize ( )
   sc = initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  m_firstUpdate = false;
+
+  // return
   return sc;
 }
 
 //=========================================================================
 // updateRefIndex
 //=========================================================================
-StatusCode DeRichGasRadiator::updateProperties ( ) 
+StatusCode DeRichGasRadiator::updateProperties ( )
 {
   MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Refractive Index Update Triggered" << endreq;
+  if ( !m_firstUpdate )
+    msg << MSG::INFO << "Refractive index update triggered" << endreq;
 
   // load parameters
   const double photonEnergyLowLimit     = param<double>("PhotonMinimumEnergy");
@@ -132,12 +144,13 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 //  calcSellmeirRefIndex
 //=========================================================================
 StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& momVect,
-                                                    const TabulatedProperty* tabProp ) 
+                                                    const TabulatedProperty* tabProp )
 {
   MsgStream msg( msgSvc(), myName() );
 
   // test the tab property pointer
-  if ( !tabProp ) {
+  if ( !tabProp )
+  {
     msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -182,11 +195,10 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
     aTable.push_back( TabulatedProperty::Entry(epho*eV,curRindex) );
   }
 
-  msg << MSG::INFO << "Updated the table in Tab property " << tabProp->name()
-      << " with " << momVect.size() << " bins" << endmsg;
+  msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
+      << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
-
 }
 
 //=============================================================================

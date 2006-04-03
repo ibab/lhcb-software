@@ -1,4 +1,17 @@
-// $Id: DeRichAerogelRadiator.cpp,v 1.5 2006-03-17 17:15:40 jonrob Exp $
+
+//----------------------------------------------------------------------------
+/** @file DeRichAerogelRadiator.cpp
+ *
+ *  Implementation file for detector description class : DeRichAerogelRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.6 2006-04-03 08:57:11 jonrob Exp $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2006-03-02
+ */
+//----------------------------------------------------------------------------
+
 // Include files
 
 #include "Kernel/PhysicalConstants.h"
@@ -21,27 +34,22 @@ const CLID& CLID_DeRichAerogelRadiator = 12043;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichAerogelRadiator::DeRichAerogelRadiator(  ) 
-  : DeRichSingleSolidRadiator() 
-{
-}
+DeRichAerogelRadiator::DeRichAerogelRadiator() : DeRichSingleSolidRadiator() {}
 
 //=============================================================================
 // Destructor
 //=============================================================================
 DeRichAerogelRadiator::~DeRichAerogelRadiator() {}
 
-
+//=========================================================================
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichAerogelRadiator::classID()
-{
-  return CLID_DeRichAerogelRadiator;
-}
+//=========================================================================
+const CLID& DeRichAerogelRadiator::classID() { return CLID_DeRichAerogelRadiator; }
 
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRichAerogelRadiator::initialize ( ) 
+StatusCode DeRichAerogelRadiator::initialize ( )
 {
 
   MsgStream msg( msgSvc(), "DeRichAerogelRadiator" );
@@ -52,7 +60,8 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 
   // extract tile number from detector element name
   const std::string::size_type pos = name().find(':');
-  if ( std::string::npos == pos ) {
+  if ( std::string::npos == pos )
+  {
     msg << MSG::FATAL << "An Aerogel tile without a number!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -63,24 +72,20 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocation::Rich1 );
   m_deRich1 = deRich1;
 
-  if ( 0 == m_tileNumber || 15 == m_tileNumber )
-    msg << MSG::INFO << "Aerogel messages are suppressed for tiles 1-14"
-        << endmsg;
-
-  // update refractive index
+  // configure refractive index updates
 
   // aerogel parameters from cond DB
   m_AerogelCond = condition( "AerogelParameters" );
   if ( m_AerogelCond ) {
     updMgrSvc()->registerCondition(this,m_AerogelCond.path(),
-                           &DeRichAerogelRadiator::updateProperties ); }
+                                   &DeRichAerogelRadiator::updateProperties ); }
   else
   { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
 
   sc = updMgrSvc()->update(this);
-  if ( sc.isFailure() ) 
-  { 
+  if ( sc.isFailure() )
+  {
     msg << MSG::ERROR << "First UMS update failed" << endreq;
     return sc;
   }
@@ -89,16 +94,20 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   sc = initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  m_firstUpdate = false;
+
+  // return
   return sc;
 }
 
 //=========================================================================
 // updateRefIndex
 //=========================================================================
-StatusCode DeRichAerogelRadiator::updateProperties ( ) 
+StatusCode DeRichAerogelRadiator::updateProperties ( )
 {
   MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Refractive Index Update Triggered" << endreq;
+  if ( !m_firstUpdate )
+    msg << MSG::INFO << "Refractive index update triggered" << endreq;
 
   // load various parameters
   const double photonEnergyLowLimit = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");
@@ -151,11 +160,13 @@ StatusCode DeRichAerogelRadiator::updateProperties ( )
 //=========================================================================
 StatusCode DeRichAerogelRadiator::
 calcSellmeirRefIndex (const std::vector<double>& momVect,
-                      const TabulatedProperty* tabProp ) {
+                      const TabulatedProperty* tabProp )
+{
+  MsgStream msg( msgSvc(), myName() );
 
   // test the tab property pointer
-  if ( !tabProp ) {
-    MsgStream msg( msgSvc(), myName() );
+  if ( !tabProp )
+  {
     msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -191,12 +202,8 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*eV, curRindex ) );
   }
 
-  if ( 0 == m_tileNumber || 15 == m_tileNumber ) 
-  {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::INFO << "Updated the table in Tab property " << tabProp->name()
-        << " with " << momVect.size() << " bins" << endmsg;
-  }
+  msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
+      << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -206,12 +213,13 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
 //=========================================================================
 StatusCode DeRichAerogelRadiator::
 calcRayleigh (const std::vector<double>& momVect,
-              const TabulatedProperty* tabProp ) 
+              const TabulatedProperty* tabProp )
 {
+  MsgStream msg( msgSvc(), myName() );
 
   // test the tab property pointer
-  if ( !tabProp ) {
-    MsgStream msg( msgSvc(), myName() );
+  if ( !tabProp )
+  {
     msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -233,11 +241,8 @@ calcRayleigh (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*eV, pathlenght ) );
   }
 
-  if ( 0 == m_tileNumber || 15 == m_tileNumber ) {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::INFO << "Updated the table in Tab property " << tabProp->name()
-        << " with " << momVect.size() << " bins" << endmsg;
-  }
+  msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
+      << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 
@@ -248,11 +253,12 @@ calcRayleigh (const std::vector<double>& momVect,
 //=========================================================================
 StatusCode DeRichAerogelRadiator::
 calcAbsorption (const std::vector<double>& momVect,
-                const TabulatedProperty* tabProp ) {
+                const TabulatedProperty* tabProp )
+{
+  MsgStream msg( msgSvc(), myName() );
 
   // test the tab property pointer
   if ( !tabProp ) {
-    MsgStream msg( msgSvc(), myName() );
     msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -275,11 +281,8 @@ calcAbsorption (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*eV, pathlenght ) );
   }
 
-  if ( 0 == m_tileNumber || 15 == m_tileNumber ) {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::INFO << "Updated the table in Tab property " << tabProp->name()
-        << " with " << momVect.size() << " bins" << endmsg;
-  }
+  msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
+      << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 }

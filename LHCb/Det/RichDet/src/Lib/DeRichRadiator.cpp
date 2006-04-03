@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.15 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.16 2006-04-03 08:57:11 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -38,6 +38,7 @@ DeRichRadiator::DeRichRadiator() :
   m_rayleigh            ( 0                     ),
   m_rayleighTabProp     ( 0                     ),
   m_absorptionTabProp   ( 0                     ),
+  m_firstUpdate         ( true                  ),
   m_name                ( "UnInitialized"       )
 { }
 

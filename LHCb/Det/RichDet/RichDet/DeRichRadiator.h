@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.18 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRichRadiator.h,v 1.19 2006-04-03 08:57:11 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,9 +32,6 @@
 // RichDet
 #include "RichDet/RichRadIntersection.h"
 #include "RichDet/Rich1DTabProperty.h"
-
-// GaudiKernel
-class IAlgTool;
 
 /** @namespace DeRichRadiatorLocation
  *
@@ -216,6 +213,8 @@ protected:
   /// pointer to the Tabulated property for the absoption
   const TabulatedProperty* m_absorptionTabProp;
 
+  /// First update flag
+  bool m_firstUpdate;
 
 private:
 

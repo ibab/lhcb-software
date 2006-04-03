@@ -1,4 +1,17 @@
-// $Id: DeRichAerogelRadiator.h,v 1.2 2006-03-16 14:10:44 jonrob Exp $
+
+//----------------------------------------------------------------------------
+/** @file DeRichAerogelRadiator.h
+ *
+ *  Header file for detector description class : DeRichAerogelRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichAerogelRadiator.h,v 1.3 2006-04-03 08:57:10 jonrob Exp $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2006-03-02
+ */
+//----------------------------------------------------------------------------
+
 #ifndef RICHDET_DERICHAEROGELRADIATOR_H
 #define RICHDET_DERICHAEROGELRADIATOR_H 1
 
@@ -7,6 +20,7 @@
 
 /** @class DeRichAerogelRadiator DeRichAerogelRadiator.h RichDet/DeRichAerogelRadiator.h
  *
+ *  Detector element for aerogel radiator volumes
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-02
@@ -74,6 +88,7 @@ private:
 
   /// conertion from nm to eV
   double m_photMomWaveConv;
+
   /// Aerogel tile number
   int m_tileNumber;
 

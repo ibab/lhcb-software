@@ -1,4 +1,17 @@
-// $Id: DeRichGasRadiator.h,v 1.2 2006-03-16 14:10:44 jonrob Exp $
+
+//----------------------------------------------------------------------------
+/** @file DeRichGasRadiator.h
+ *
+ *  Header file for detector description class : DeRichGasRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichGasRadiator.h,v 1.3 2006-04-03 08:57:11 jonrob Exp $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2006-03-02
+ */
+//----------------------------------------------------------------------------
+
 #ifndef RICHDET_DERICHGASRADIATOR_H
 #define RICHDET_DERICHGASRADIATOR_H 1
 
@@ -10,6 +23,7 @@ extern const CLID& CLID_DeRichGasRadiator;
 
 /** @class DeRichGasRadiator DeRichGasRadiator.h RichDet/DeRichGasRadiator.h
  *
+ *  Detector element for gaseous radiator volumes
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-02
@@ -61,6 +75,7 @@ private:
 
   /// Condition holding the current temperature of radiator
   SmartRef<Condition> m_temperatureCond;
+
   /// Condition holding the current pressure of radiator
   SmartRef<Condition> m_pressureCond;
 
