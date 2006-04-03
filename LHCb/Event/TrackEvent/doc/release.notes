@@ -4,6 +4,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-04-03 - Juan Palacios
+
+ - Remove many unnecessary calls to MatrixManip::Standardize and fix filling
+   and retrieving of submatrices to and from matrices, both symmetric and
+   non-symmetric. Changes only possible with bug-fixes in ROOT 5.10.c
+
 ! 2006-03-31 - Jeroen van Tilburg
  - Changed resolution method in Measurement.xml. Now it takes two arguments:
    the point on the track of closest approach and the corresponding direction.
