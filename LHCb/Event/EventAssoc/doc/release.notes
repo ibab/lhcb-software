@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v3r1 2006-04-03 ==========================
+ - Disable creation of dictionary on Windows (with ifndef in selection.h)
+   because it breaks with Gaudi v18r3
+
 !======================= EventAssoc v3r0 2006-02-03 ==========================
 ! 2006-02-02 - Vanya BELYAEV
  - remove src/EventAssoc_Associations_dict.cpp fiel with "hand-made" 

@@ -1,6 +1,6 @@
-// $Id: selection.h,v 1.2 2006-02-07 14:41:50 ibelyaev Exp $
+// $Id: selection.h,v 1.3 2006-04-03 14:41:38 cattanem Exp $
 // ====================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ====================================================================
 // Incldue files
 // ====================================================================
@@ -43,6 +43,7 @@ namespace Dict
 {
   struct __Instantiations 
   {
+#ifndef WIN32 // Breaks gccxml
     //GaudiDict::Relation2DDict<LHCb::Particle,LHCb::Vertex>	_1 ;
 GaudiDict::RelationWeighted1DDict<LHCb::ProtoParticle,LHCb::MCParticle,double>	_2 ;
     //GaudiDict::Relation1DDict<LHCb::Particle,LHCb::MCParticle>	_3 ;
@@ -52,6 +53,7 @@ GaudiDict::RelationWeighted1DDict<LHCb::CaloDigit,LHCb::MCParticle,float>	_6 ;
 GaudiDict::RelationWeighted1DDict<LHCb::CaloCluster,LHCb::MCParticle,float>	_7 ;
     //GaudiDict::RelationWeighted2DDict<LHCb::CaloHypo,LHCb::Track,float>	_8 ;
     //GaudiDict::RelationWeighted2DDict<LHCb::CaloCluster,LHCb::Track,float>	_9 ;
+#endif // WIN32
   };
 };
 

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.12 2006-02-03 10:53:59 cattanem Exp $
+# $Id: requirements,v 1.13 2006-04-03 14:41:38 cattanem Exp $
 # Created    : 19/12/2003
 # Maintainer : Ivan Belyaev
 #
 package           EventAssoc
-version           v3r0
+version           v3r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,6 +23,8 @@ use GaudiPython v* -no_auto_imports
 apply_pattern reflex_dictionary \ 
                 dictionary=EventAssoc \
                 headerfiles=$(EVENTASSOCROOT)/dict/selection.h \
-                selectionfile=../dict/selection.xml
+                selectionfile=../dict/selection.xml \
+                options="-U__MINGW32__"
+
 
 apply_pattern component_library library=EventAssocDict
