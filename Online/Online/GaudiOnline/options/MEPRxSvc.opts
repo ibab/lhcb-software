@@ -1,0 +1,8 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.EventLoop             = "MinimalEventLoopMgr";
+ApplicationMgr.Runable               = "LHCb::MEPRxSvc";
+ApplicationMgr.DLLs                  = { "GaudiOnline" };
+ApplicationMgr.TopAlg                = { };
+ApplicationMgr.ExtSvc                = { };
+ApplicationMgr.OutputLevel = 1;
