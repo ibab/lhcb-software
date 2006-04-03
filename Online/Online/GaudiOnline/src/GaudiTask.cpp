@@ -27,12 +27,14 @@ StatusCode LHCb::GaudiTask::cancel()  {
 StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   SmartIF<IProperty> ip(inst);
   if ( ip )  {
+    std::cout << "2nd layer options:" << m_optOptions << std::endl;
     ip->setProperty(StringProperty("JobOptionsPath",m_optOptions));
   }
   return StatusCode::SUCCESS;
 }
 
 StatusCode LHCb::GaudiTask::configure()  {
+    std::cout << "2nd layer configure"  << std::endl;
   m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
   if ( m_subMgr )  {
     Gaudi::setInstance(m_subMgr);
@@ -61,8 +63,9 @@ StatusCode LHCb::GaudiTask::initialize()  {
 	
 StatusCode LHCb::GaudiTask::nextEvent(int /* num_event */)  {
   //_asm int 3
-  return m_subMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::nextEvent(1)
-    : printErr(1,"Failed to execute single shot.");
+  //return m_subMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::nextEvent(1)
+  //  : printErr(1,"Failed to execute single shot.");
+  return DimTaskFSM::nextEvent(1);
 }
 	
 StatusCode LHCb::GaudiTask::finalize()  {

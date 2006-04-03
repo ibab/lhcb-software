@@ -204,7 +204,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
     if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
     if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
-    if(cli.getopt("optoptions",6,optopts)) p->setProperty(StringProperty("OptionalOptions",opts));
+    if(cli.getopt("optoptions",6,optopts)) p->setProperty(StringProperty("OptionalOptions",optopts));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       return runner->run();
