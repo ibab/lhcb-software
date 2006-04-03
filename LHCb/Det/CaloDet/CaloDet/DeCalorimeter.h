@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.17 2006-03-31 20:50:18 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.18 2006-04-03 16:18:42 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2006/03/31 20:50:18  odescham
+// introduce reference plane in DeCalirimeter  + ADAPT TO CHANGE IN XMLDDDB/CONDITIONS
+//
 // Revision 1.16  2006/01/17 18:44:17  odescham
 // v7r1 - adapt DeCalorimeterLocations to new path structure
 //
@@ -103,8 +106,8 @@ public:
   void setCoding        ( const unsigned int nb     );
 
   // reference plane in the global frame 
-  Gaudi::Plane3D plane(double zLocal);
-  Gaudi::Plane3D plane(CaloPlane::Plane pos);
+  const Gaudi::Plane3D plane(double zLocal);
+  const Gaudi::Plane3D plane(CaloPlane::Plane pos);
 
 
   ///  set function for maxEt 

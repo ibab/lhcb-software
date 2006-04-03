@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.54 2006-04-03 14:48:01 cattanem Exp $ 
+! $Id: release.notes,v 1.55 2006-04-03 16:18:43 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 
 !========================= CaloDet v7r1 2006-04-03 ============================
+! 2006-04-03 - Olivier Deschamps
+ -  DeCalorimeter->plane()  as CONST method 
 ! 2006-03-31 - Olivier Deschamps
  - Adapt DeCalorimeter to the change in XmlConditions v1r6 and XmlDDDB v30r3
    (ZshowerMax moving and ZSize introducing)

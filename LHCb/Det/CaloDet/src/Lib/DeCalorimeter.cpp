@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.26 2006-03-31 20:50:19 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.27 2006-04-03 16:18:45 odescham Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -142,7 +142,7 @@ StatusCode DeCalorimeter::initialize() {
 //----------------------------------------------------------------------------
 // ** Return a reference (tilted) plane
 //----------------------------------------------------------------------------
-Gaudi::Plane3D DeCalorimeter::plane(CaloPlane::Plane pos){
+const Gaudi::Plane3D DeCalorimeter::plane(CaloPlane::Plane pos){
   switch(pos){
   case CaloPlane::Front     : return plane(-m_zSize/2. );
   case CaloPlane::ShowerMax : return plane(m_zShowerMax);
@@ -153,7 +153,7 @@ Gaudi::Plane3D DeCalorimeter::plane(CaloPlane::Plane pos){
 };
 
 
-Gaudi::Plane3D DeCalorimeter::plane(double dz){
+const Gaudi::Plane3D DeCalorimeter::plane(double dz){
   IGeometryInfo* geometry = this->geometry() ;
   Gaudi::XYZPoint local(0. , 0. , dz);
   if( fabs(dz) > m_zSize/2. ) {  
