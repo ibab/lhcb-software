@@ -5,8 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-04-03 - Gloria CORTI
- - Adapt example options of ParticleGun.opts to units now beeing MeV in 
+ - Adapt options for simulating geometry to beam pipe integrated in TT,
+   Rich1 and T. Requires XmlDDDB v30r3 or higher.
+   . SimGeometry.opts
+ - Adapt example options of particle gun to units now being MeV in 
    generator phase like in whole the rest of LHCb
+   . ParticleGun.opts
 
 !======================== Gauss v24r2 2006-03-29 =============================
 ! 2006-03-29 - Gloria CORTI
