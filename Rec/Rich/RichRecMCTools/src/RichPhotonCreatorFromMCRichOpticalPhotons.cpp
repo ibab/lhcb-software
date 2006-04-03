@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.11 2006-03-02 15:25:01 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.12 2006-04-03 12:47:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,7 +30,7 @@ RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
   : RichPhotonCreatorBase ( type, name, parent ),
-    m_mcRecTool           ( 0 ) {  }
+    m_mcRecTool           ( NULL ) {  }
 
 StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize()
 {

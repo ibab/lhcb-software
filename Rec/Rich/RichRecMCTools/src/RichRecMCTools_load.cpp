@@ -5,7 +5,7 @@
  *  Declaration of objects in component library RichRecMCTools
  *
  *  CVS Log :-
- *  $Id: RichRecMCTools_load.cpp,v 1.8 2006-02-09 17:58:59 jonrob Exp $
+ *  $Id: RichRecMCTools_load.cpp,v 1.9 2006-04-03 12:47:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -28,6 +28,7 @@ DECLARE_FACTORY_ENTRIES ( RichRecMCTools )
   DECLARE_TOOL( RichPhotonPredictorUsingMCRichOpticalPhotons );
   DECLARE_TOOL( RichPhotonCreatorWithGaussianCKSmear         );
   DECLARE_TOOL( RichPhotonCreatorWithMCSignal                );
+  DECLARE_TOOL( RichPhotonCreatorCheatedTrackDir             );
 
   // MC truth interrogation tools
   DECLARE_TOOL( RichRecMCTruthTool );

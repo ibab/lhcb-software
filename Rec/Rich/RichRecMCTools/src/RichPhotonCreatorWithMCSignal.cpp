@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.4 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.5 2006-04-03 12:47:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,9 +30,9 @@ RichPhotonCreatorWithMCSignal( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
   : RichPhotonCreatorBase ( type, name, parent ),
-    m_mcRecTool           ( 0 ),
-    m_mcPhotCr            ( 0 ),
-    m_recoPhotCr          ( 0 ) { }
+    m_mcRecTool           ( NULL ),
+    m_mcPhotCr            ( NULL ),
+    m_recoPhotCr          ( NULL ) { }
 
 StatusCode RichPhotonCreatorWithMCSignal::initialize()
 {
