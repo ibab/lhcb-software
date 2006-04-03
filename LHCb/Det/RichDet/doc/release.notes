@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-04-03 - Chris Jones
+ - Update to printing to suppress messaging during initialize, but for all
+   subsequent updates print a message.
+
 !========================= RichDet v9r3 2006-03-29 =========================
 ! 2006-03-24 - Chris Jones
  - Modifications to RichDAQDefinitions.h
