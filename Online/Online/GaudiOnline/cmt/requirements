@@ -12,7 +12,7 @@ use OnlineKernel  v* Online
 use DAQEvent      v* Event
 use GaudiKernel   v*
 use MDF           v* DAQ
-
+#use GaudiUPI      v* Online
 # ==================== component libraries ==================================
 library GaudiOnline  *.cpp
 apply_pattern component_library library=GaudiOnline 

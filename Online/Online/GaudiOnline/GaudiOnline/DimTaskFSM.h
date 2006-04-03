@@ -2,11 +2,16 @@
 #define ONLINEKERNEL_DIMTASKFSM_H
 
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/Property.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/ObjectFactory.h"
 #include "CPP/Interactor.h"
 #include <string>
 class DimService;
 class DimCommand;
+class PropertyMgr;
 
 /*
  * LHCb namespace declaration
@@ -34,7 +39,7 @@ namespace LHCb  {
     *              configure()|  |reset()              error() |
     *                         V  |                             |
     *                     +----------+                         |
-    *                     | READY    |-------------------------+
+    *                     | READY    |                         |
     *                     +----------+                         |
     *                         |  ^                             |
     *                 start() |  | stop()                      |
@@ -47,13 +52,16 @@ namespace LHCb  {
     * @author  M.Frank
     * @version 1.0
     */
-  class DimTaskFSM : public Interactor  {
+  class DimTaskFSM : public Interactor, 
+                     virtual public IRunable,
+                     virtual public IAppMgrUI
+  {
   public:
     enum Transitions { 
       CONFIGURE=1, 
       INITIALIZE, 
       ENABLE, 
-      PROCESS, 
+      NEXTEVENT, 
       DISABLE, 
       PRESTOP, 
       FINALIZE,
@@ -61,52 +69,79 @@ namespace LHCb  {
       UNLOAD, 
       ERROR
     };
+    enum State  {
+      UNKNOWN,
+      LOADED,
+      NOT_READY,
+      READY,
+      RUNNING
+    };
 
   protected:
+    /// Variable to contain object name (==constant)
+    std::string   m_name;
     /// Variable to contain the state name
-    std::string m_stateName;
+    std::string   m_stateName;
     /// Variable to contain the process name
-    std::string m_procName;
+    std::string   m_procName;
     /// Pointer to dim command to treceive transition changes
-    DimCommand* m_command;
+    DimCommand*   m_command;
     /// Pointer to the dim service publishing the state
-    DimService* m_service;
+    DimService*   m_service;
+    /// Gaudi property manager
+    PropertyMgr*  m_propertyMgr;
     /// Flag to indicate the event loop is "ON"
-    bool        m_continue;
+    bool          m_continue;
     /// Flag to indicate the event loop should be executed and rearmed.
-    bool        m_haveEventLoop;
+    bool          m_haveEventLoop;
+    /// Object reference count
+    unsigned long m_refCount;
 
   protected:
     /// Function to rearm the event loop
     StatusCode rearm();
     /// Print error message (returns FAILURE)
-    StatusCode printErr(int flag, const std::string& msg);
+    StatusCode printErr(int flag, const char* fmt, ...);
     /// Declare FSM state
     StatusCode declareState(const std::string& new_state);
+    /// Declare FSM state
+    StatusCode declareState(State state);
     /// Printout overload
     size_t print(const char* fmt,...);
     /// Print overload
     virtual void output(const char* s);
+    /// Accessor to property manager
+    PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)
-    DimTaskFSM(bool loop = false);
+    DimTaskFSM(IInterface*);
     /// Standard destructor
     virtual ~DimTaskFSM();
-    /// Run the dim command and listen to stimuli
-    virtual StatusCode run() const;
     /// Interactor overload: handle Sensor stimuli
     virtual void handle(const Event& ev);
     /// Cancel IO request
     virtual StatusCode cancel();
+    /// Implmentation of IInterface::addRef
+    virtual unsigned long addRef();
+    /// Implmentation of IInterface::release
+    virtual unsigned long release();
+    /// Implementation of IInterface::queryInterface
+    virtual StatusCode queryInterface(const InterfaceID& iid, void** pinterface);
+    /// IRunable overload: Run the dim command and listen to stimuli
+    virtual StatusCode run();
+    /// IAppMgrUI overload: object name
+    virtual const std::string& name() const        {    return m_name;      }
+    /// IAppMgrUI overload: state name
+    virtual const std::string& stateName() const   {    return m_stateName; }
     /// Configure application                           (Inactive   -> Configured)
-    virtual StatusCode config();
+    virtual StatusCode configure();
     /// Initialize the application                      (Configured -> Ready)
-    virtual StatusCode init();
+    virtual StatusCode initialize();
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
     /// Process single event                            (Running    -> Running)
-    virtual StatusCode process();
+    virtual StatusCode nextEvent(int num_event);
     /// Disable the event loop                          (Running    -> Ready)
     virtual StatusCode disable();
     /// Finialize the application                       (Ready      -> Finalized)

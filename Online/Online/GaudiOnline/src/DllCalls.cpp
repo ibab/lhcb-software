@@ -1,5 +1,7 @@
 #include "GaudiOnline/GaudiDimFSM.h"
+#include "GaudiOnline/GaudiTask.h"
 #include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/Property.h"
@@ -97,7 +99,7 @@ extern "C" int OnlineDeamon(int argc, char** argv)  {
         result = (*fun)(arg.size(), &arg[0]);
         if ( result&1 )  {
           printf("Starting DIM FSM....\n");
-          LHCb::DimTaskFSM fsm;
+          LHCb::DimTaskFSM fsm(0);
           return fsm.run();
         }
         return error("Failed to execute procedure: %s\n",call.c_str());
@@ -125,7 +127,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
     std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
     std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
     std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
-    std::cout << "    -options=<class-name>    Job options file name" << std::endl;
+    std::cout << "    -options=<file-name>     Job options file name" << std::endl;
     std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
     std::cout << "    " << std::endl;
     return 1;
@@ -169,4 +171,41 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   LHCb::GaudiDimFSM fsm(ui);
   // IOCSENSOR.send(&fsm, LHCb::DimTaskFSM::CONFIGURE);
   return fsm.run();
+}
+
+extern "C" int OnlineTask(int argc, char** argv)  {
+  RTL::CLI cli(argc, argv, help);
+  std::string dll     = "";
+  std::string type    = "LHCb::GaudiTask";
+  std::string runable = "LHCb::OnlineRunable";
+  std::string evtloop = "MinimalEventLoopMgr";
+  std::string msgsvc  = "OnlineMessageSvc";
+  std::string opts    = "jobOptions.txt";
+  cli.getopt("dll",3,dll);
+  cli.getopt("tasktype",8,type);
+  if ( cli.getopt("help",4)   != 0 )  {
+    std::cout << "usage: Gaudi.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
+    std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
+    std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
+    std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
+    std::cout << "    -options=<file-name>     Job options file name" << std::endl;
+    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    " << std::endl;
+    return 1;
+  }
+  else if ( cli.getopt("debug",5) != 0 )  {
+    ::lib_rtl_start_debugger();
+  }
+  SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
+  if ( p )  {
+    if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
+    if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
+    if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
+    if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
+    SmartIF<IRunable> runner(p);
+    if ( runner )  {
+      return runner->run();
+    }
+  }
+  return 0;
 }

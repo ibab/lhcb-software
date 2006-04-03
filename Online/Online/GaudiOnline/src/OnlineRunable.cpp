@@ -22,6 +22,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 LHCb::OnlineRunable::OnlineRunable(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc)
 {
+  ::wtc_init();
 }
 
 // Standard Destructor
@@ -48,7 +49,7 @@ StatusCode LHCb::OnlineRunable::run() {
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering wtc_wait....." << endmsg;
   while(1)  {
-    status = wtc_wait( &facility, &param, &substatus );  
+    status = wtc_wait( &facility, &param, &substatus );
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
       log << MSG::INFO << " exiting wt_wait status = " << status
           << " param " << param << " substat " << substatus << " fac " << facility << endmsg;

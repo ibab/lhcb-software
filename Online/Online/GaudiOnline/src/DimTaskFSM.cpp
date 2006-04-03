@@ -12,6 +12,14 @@
 #define ST_NAME_READY       "READY"
 #define ST_NAME_RUNNING     "RUNNING"
 
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
+
+template <class T,class Q> static inline StatusCode cast_success(T* p, void** q)  {
+  *q = (Q*)p;
+  p->addRef();
+  return StatusCode::SUCCESS;
+}
+
 namespace  {
   /** @class Command
     *
@@ -28,7 +36,7 @@ namespace  {
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
-      std::cout << "Received DIM command:" << cmd << std::endl;
+      std::cout << "Received DIM command:'" << cmd << "'" << std::endl;
       if      ( cmd == "configure"  ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
       else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
@@ -38,26 +46,59 @@ namespace  {
   };
 }
 
-LHCb::DimTaskFSM::DimTaskFSM(bool loop) 
-: m_stateName(ST_NAME_UNKNOWN), m_haveEventLoop(loop)
+LHCb::DimTaskFSM::DimTaskFSM(IInterface*) 
+: m_stateName(ST_NAME_UNKNOWN), m_name("Exec"), m_haveEventLoop(false), m_refCount(1)
 {
-  char txt[64];
-  ::lib_rtl_get_process_name(txt, sizeof(txt));
-  m_procName = txt;
+  m_propertyMgr  = new PropertyMgr(this);
+  m_procName = RTL::processName();
   std::string svcname= m_procName+"/status";
-  print("Task name:'%s'\n",m_procName.c_str());
+  //print("Task name:'%s'",m_procName.c_str());
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   DimServer::start(m_procName.c_str());
   declareState(ST_NAME_NOT_READY);
+  propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
+  propertyMgr().declareProperty("Name",m_procName);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
   delete m_service;
+  delete m_command;
   m_service = 0;
+  m_command = 0;
 }
 
-StatusCode LHCb::DimTaskFSM::run() const  {
+/// IInterface implementation: DimTaskFSM::addRef()
+unsigned long LHCb::DimTaskFSM::addRef() {
+  m_refCount++;
+  return m_refCount;
+}
+
+/// IInterface implementation: DimTaskFSM::release()
+unsigned long LHCb::DimTaskFSM::release() {
+  long count = --m_refCount;
+  if( count <= 0) {
+    delete this;
+  }
+  return count;
+}
+
+/// IInterface implementation: LHCb::DimTaskFSM::queryInterface()
+StatusCode LHCb::DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf) {
+  if( iid == IID_IInterface )
+    return cast_success<DimTaskFSM,IInterface>(this,ppvIf);
+  else if( iid == IID_IRunable )
+    return cast_success<DimTaskFSM,IRunable>(this,ppvIf);
+  else if( iid == IID_IAppMgrUI )
+    return cast_success<DimTaskFSM,IAppMgrUI>(this,ppvIf);
+  else if ( iid == IID_IProperty )
+    return m_propertyMgr->queryInterface(iid, ppvIf);
+  else
+    return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
+}
+
+StatusCode LHCb::DimTaskFSM::run()  {
   IOCSENSOR.run();
   return StatusCode::SUCCESS;
 }
@@ -82,8 +123,19 @@ void LHCb::DimTaskFSM::output(const char* s)  {
   std::cout << s << std::endl;
 }
 
-StatusCode LHCb::DimTaskFSM::printErr(int flag, const std::string& msg)  {
-  print("Error: %s", msg.c_str());
+StatusCode LHCb::DimTaskFSM::printErr(int flag, const char* format, ...)  {
+  va_list args;
+  char buffer[1024];
+  sprintf(buffer,"Error: ");
+  va_start( args, format );
+  size_t len = ::vsprintf(&buffer[7], format, args);
+  if ( len > sizeof(buffer) )  {
+    // !! memory corruption !!
+    output("Memory corruption...");
+    output(buffer);
+    exit(0);
+  }
+  output(buffer);
   if ( flag ) error();
   return StatusCode::FAILURE;
 }
@@ -95,6 +147,22 @@ StatusCode LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
   return StatusCode::SUCCESS;
 }
 
+StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
+  switch(new_state)   {
+    case ERROR:
+      return declareState(ST_NAME_ERROR);
+    case NOT_READY:
+      return declareState(ST_NAME_NOT_READY);
+    case READY:
+      return declareState(ST_NAME_READY);
+    case RUNNING:
+      return declareState(ST_NAME_RUNNING);
+    case UNKNOWN:
+    default:
+      return declareState(ST_NAME_UNKNOWN);
+  }
+}
+
 StatusCode LHCb::DimTaskFSM::cancel()  {
   // Todo:  Need to somehow issue MBM Cancel!
   return StatusCode::SUCCESS;
@@ -104,41 +172,43 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
   if(ev.eventtype == IocEvent)  {
     switch(ev.type) {
       case UNLOAD:      unload();                                  return;
-      case CONFIGURE:   config();                                  return;
-      case INITIALIZE:  init();                                    return;
+      case CONFIGURE:   configure();                               return;
+      case INITIALIZE:  initialize();                              return;
       case ENABLE:      enable();                                  return;
       case DISABLE:     disable();                                 return;
-      case PROCESS:     process();                                 return;
+      case NEXTEVENT:   nextEvent(1);                              return;
       case FINALIZE:    finalize();                                return;
       case TERMINATE:   terminate();                               return;
       case ERROR:       declareState(ST_NAME_ERROR);               return;
-      default:          printErr(0,"Got Unkown action request.");  return;
+      default:
+        printErr(0,"Got Unkown action request:%d",ev.type);
+        return;
     }
   }
   printErr(0,"Got Unkown event request.");
 }
 
-StatusCode LHCb::DimTaskFSM::config()  {
+StatusCode LHCb::DimTaskFSM::configure()  {
   return declareState(ST_NAME_READY);
 }
 	
-StatusCode LHCb::DimTaskFSM::init()  {
+StatusCode LHCb::DimTaskFSM::initialize()  {
   IOCSENSOR.send(this, ENABLE);
   return StatusCode::SUCCESS;
 }
 	
 StatusCode LHCb::DimTaskFSM::enable()  {
   m_continue = true;
-  IOCSENSOR.send(this, PROCESS);
+  IOCSENSOR.send(this, NEXTEVENT);
   return declareState(ST_NAME_RUNNING);
 }
 
 StatusCode LHCb::DimTaskFSM::rearm()  {
-  if ( m_haveEventLoop ) IOCSENSOR.send(this, PROCESS);
+  if ( m_haveEventLoop ) IOCSENSOR.send(this, NEXTEVENT);
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::process()  {
+StatusCode LHCb::DimTaskFSM::nextEvent(int /* num_event */)  {
   if ( m_continue )  {
     rearm();
   }

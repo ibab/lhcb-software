@@ -24,9 +24,9 @@ namespace LHCb  {
     GaudiDimFSM(IAppMgrUI* svc);
     virtual ~GaudiDimFSM();
     StatusCode cancel();
-    StatusCode config();
-    StatusCode init();
-    StatusCode process();
+    StatusCode configure();
+    StatusCode initialize();
+    StatusCode nextEvent(int num_event);
     StatusCode finalize();
     StatusCode terminate();
   };

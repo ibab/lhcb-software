@@ -5,7 +5,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "CPP/IocSensor.h"
 
-LHCb::GaudiDimFSM::GaudiDimFSM(IAppMgrUI* ui) : DimTaskFSM(true), m_appMgr(ui)  {
+LHCb::GaudiDimFSM::GaudiDimFSM(IAppMgrUI* ui) : DimTaskFSM(0), m_appMgr(ui)  {
   if (m_appMgr) m_appMgr->addRef();
 }
 
@@ -19,19 +19,19 @@ StatusCode LHCb::GaudiDimFSM::cancel()  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::GaudiDimFSM::config()  {
-  return m_appMgr->configure().isSuccess() ? DimTaskFSM::config()
+StatusCode LHCb::GaudiDimFSM::configure()  {
+  return m_appMgr->configure().isSuccess() ? DimTaskFSM::configure()
     : printErr(1,"Failed to configure Application manager.");
 }
 
-StatusCode LHCb::GaudiDimFSM::init()  {
-  return m_appMgr->initialize().isSuccess() ? DimTaskFSM::init()
+StatusCode LHCb::GaudiDimFSM::initialize()  {
+  return m_appMgr->initialize().isSuccess() ? DimTaskFSM::initialize()
     : printErr(1,"Failed to initialize Application manager.");
 }
 	
-StatusCode LHCb::GaudiDimFSM::process()  {
+StatusCode LHCb::GaudiDimFSM::nextEvent(int /* num_event */)  {
   //_asm int 3
-  return m_appMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::process()
+  return m_appMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::nextEvent(1)
     : printErr(1,"Failed to execute single shot.");
 }
 	

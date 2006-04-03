@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.6 2006-03-17 07:33:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.7 2006-04-03 17:03:09 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -89,7 +89,7 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
           return error("Unknown buffer name:"+(*i));
       }
     }
-    log << MSG::ALWAYS << "Including in MEP buffers" << endmsg;
+    log << MSG::DEBUG << "Including in MEP buffers" << endmsg;
     m_mepID = mep_include(m_procName.c_str(), m_partitionID, flags);
     if ( m_mepID == MEP_INV_DESC )  {
       return error("Failed to include into MEP buffers!");
