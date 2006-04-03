@@ -1,14 +1,15 @@
-! $Id: release.notes,v 1.53 2006-03-31 20:50:19 odescham Exp $ 
+! $Id: release.notes,v 1.54 2006-04-03 14:48:01 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 
-!========================= CaloDet v7r0 2005-01-17 ============================
+!========================= CaloDet v7r1 2006-04-03 ============================
 ! 2006-03-31 - Olivier Deschamps
- - Adap DeCalorimeter to the change in xmlConditions and xmlDDDB (ZshowerMax moving and ZSize introducing)
+ - Adapt DeCalorimeter to the change in XmlConditions v1r6 and XmlDDDB v30r3
+   (ZshowerMax moving and ZSize introducing)
  - Introduce a new method returning reference planes in DeCalorimeter
- - increment version number in requirement
 
+!========================= CaloDet v7r0 2006-01-17 ============================
 ! 2006-01-17 - Olivier Deschamps
  - add /DownstreamRegion/ to DeCalorimeterLocation in CaloDet/DeCalorimeter.h
 
