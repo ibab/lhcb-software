@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.15 2006-03-28 13:54:01 jpalac Exp $
+// $Id: Particle.cpp,v 1.16 2006-04-03 07:42:03 cattanem Exp $
 // Include files 
 
 // STD and STL
@@ -58,15 +58,15 @@ LHCb::Particle& LHCb::Particle::operator=(const LHCb::Particle& orig) {
 Gaudi::SymMatrix7x7 LHCb::Particle::covMatrix() const 
 {
 
-  using namespace MatrixManip;
+//  using namespace MatrixManip;
 
   Gaudi::Matrix7x7 full;
 
-  full.Place_at(Standardize(m_posCovMatrix),0,0);
-  full.Place_at(Standardize(m_momCovMatrix),4,4);
+  full.Place_at(m_posCovMatrix,0,0);
+  full.Place_at(m_momCovMatrix,3,3);
   full.Place_at(m_posMomCovMatrix,0,4);
 
-  return Symmetrize(full);
+  return LHCb::MatrixManip::Symmetrize(full);
 	
 }
 
