@@ -181,6 +181,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string evtloop = "MinimalEventLoopMgr";
   std::string msgsvc  = "OnlineMessageSvc";
   std::string opts    = "jobOptions.txt";
+  std::string optopts = "";
   cli.getopt("dll",3,dll);
   cli.getopt("tasktype",8,type);
   if ( cli.getopt("help",4)   != 0 )  {
@@ -189,6 +190,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
     std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
     std::cout << "    -options=<file-name>     Job options file name" << std::endl;
+    std::cout << "    -optoptions=<file-name>  2nd level job options file name" << std::endl;
     std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
     std::cout << "    " << std::endl;
     return 1;
@@ -202,6 +204,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
     if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
     if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
+    if(cli.getopt("optoptions",6,optopts)) p->setProperty(StringProperty("OptionalOptions",opts));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       return runner->run();

@@ -24,7 +24,11 @@ StatusCode LHCb::GaudiTask::cancel()  {
 }
 
 /// Set properties of application manager instance
-StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* /* inst */ )  {
+StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
+  SmartIF<IProperty> ip(inst);
+  if ( ip )  {
+    ip->setProperty(StringProperty("JobOptionsPath",m_optOptions));
+  }
   return StatusCode::SUCCESS;
 }
 
