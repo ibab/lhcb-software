@@ -4,8 +4,21 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2006-04-04 - Florence Ranjard
- - requirements - use HepMC from lcg/external
+!======================== Gauss v24r3 2006-04-04 =============================
+! 2006-04-04 - Gloria CORTI
+ - Use XmlConditions v1r6 for changes in CaloDet.
+ - Adapt to changes in GaudiAlgorithm base class. Requires use of 
+   GiGaCnv v16r2, GaussAlgs v2r1, GaussCalo v8r2
+ - Modify simulation settings for special muon low energy runs according
+   to new paths in "/dd"
+   . MuonLowEnergy.xml - from Emanuele SANTOVETTI
+ - Remove options no longer necessary for Rich simulation since already in
+   $GAUSSRICHROOT/options/Rich.opts or RichExtendedInfo.opts
+   . Simulation.opts
+
+! 2006-04-04 - Florence RANJARD
+ - Use HepMC from lcg/external, requires use of Generators v5r0 and
+   ParticleGuns v3r0 in addition to LHCb v20r3
 
 ! 2006-04-03 - Gloria CORTI
  - Adapt options for simulating geometry to beam pipe integrated in TT,

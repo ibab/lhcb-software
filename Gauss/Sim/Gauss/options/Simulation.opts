@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.77 2006-03-29 08:25:41 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.78 2006-04-04 13:53:39 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -147,10 +147,6 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 // specific RICH options
 #pragma print off
 #include "$GAUSSRICHROOT/options/Rich.opts"
-GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
-// uncomment the following to activate the extended Rich information
-// see http://j.home.cern.ch/j/jonesc/www/OORich for more details
-//#include "$GAUSSRICHROOT/options/RichVerbose.opts"
 
 //////////////////////////////////////////////////////////////////////
 
