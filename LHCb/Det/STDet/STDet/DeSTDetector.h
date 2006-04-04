@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.15 2006-03-30 14:29:14 jvantilb Exp $
+// $Id: DeSTDetector.h,v 1.16 2006-04-04 14:25:56 ebos Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -138,17 +138,17 @@ public:
   /** get the trajectory 
    @return trajectory
   */
-  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset);
+  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset);
 
   /** get the trajectory representing the first strip
    @return trajectory
   */
-  LHCb::Trajectory* trajectoryFirstStrip(const LHCb::LHCbID& id);
+  std::auto_ptr<LHCb::Trajectory> trajectoryFirstStrip(const LHCb::LHCbID& id);
 
-  /** get the trajectory representing the first strip
+  /** get the trajectory representing the last strip
    @return trajectory
   */
-  LHCb::Trajectory* trajectoryLastStrip(const LHCb::LHCbID& id);
+  std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip(const LHCb::LHCbID& id);
 
   /** get the number of strips in detector*/
   unsigned int nStrip() const; 

@@ -1,4 +1,4 @@
-
+// $Id: DeSTSector.cpp,v 1.17 2006-04-04 14:26:09 ebos Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -223,8 +223,8 @@ bool DeSTSector::localInBox( const double u, const double v,
           ((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
 }
 
-LHCb::Trajectory* DeSTSector::trajectory( const STChannelID& aChan, 
-                                          const double offset) const
+std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectory( const STChannelID& aChan, 
+                                                        const double offset) const
 {
   LineTraj* traj = 0;  
 
@@ -241,26 +241,29 @@ LHCb::Trajectory* DeSTSector::trajectory( const STChannelID& aChan,
     throw GaudiException( "Failed to make trajectory",
                            "DeSTSector.cpp", StatusCode::FAILURE );
   }
+  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
 
-  return traj;
+  return autoTraj;
 }
 
-LHCb::Trajectory* DeSTSector::trajectoryFirstStrip() const 
+std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const 
 {
   LineTraj* traj = 0;
   Gaudi::XYZPoint begPoint = m_lowerTraj->position(m_lowerTraj->beginRange());
   Gaudi::XYZPoint endPoint = m_upperTraj->position(m_lowerTraj->beginRange());
   traj = new LineTraj(begPoint,endPoint);
-  return traj;
+  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
+  return autoTraj;
 }
 
-LHCb::Trajectory* DeSTSector::trajectoryLastStrip() const 
+std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const 
 {
   LineTraj* traj = 0;  
   Gaudi::XYZPoint begPoint = m_lowerTraj->position( m_lowerTraj->endRange() );
   Gaudi::XYZPoint endPoint = m_upperTraj->position( m_lowerTraj->endRange() );
   traj = new LineTraj(begPoint,endPoint);
-  return traj;  
+  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
+  return autoTraj;  
 }
 
 void DeSTSector::determineSense()

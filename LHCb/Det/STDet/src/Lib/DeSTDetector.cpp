@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.11 2006-03-30 14:29:14 jvantilb Exp $
+// $Id: DeSTDetector.cpp,v 1.12 2006-04-04 14:26:08 ebos Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -133,12 +133,12 @@ DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
   return (iter != m_layers.end() ? *iter: 0);
 }
 
-LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id, 
-                                           const double offset) 
+std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id, 
+                                                         const double offset) 
 {
   // look up the trajectory
  
-  LHCb::Trajectory* tTraj = 0;
+ std::auto_ptr<LHCb::Trajectory> tTraj;
 
   if ( !id.isST()){
      throw GaudiException( "The LHCbID is not of ST type!",
@@ -158,9 +158,9 @@ LHCb::Trajectory* DeSTDetector::trajectory(const LHCb::LHCbID& id,
   return tTraj;  
 }
 
-LHCb::Trajectory* DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) 
+std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) 
 {
-  LHCb::Trajectory* tTraj = 0;
+  std::auto_ptr<LHCb::Trajectory> tTraj;
 
   if ( !id.isST()){
      throw GaudiException( "The LHCbID is not of ST type!",
@@ -180,9 +180,9 @@ LHCb::Trajectory* DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id)
   return tTraj;  
 }
 
-LHCb::Trajectory* DeSTDetector::trajectoryLastStrip(const LHCb::LHCbID& id) 
+std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryLastStrip(const LHCb::LHCbID& id) 
 {
-  LHCb::Trajectory* tTraj = 0;
+  std::auto_ptr<LHCb::Trajectory> tTraj;
 
   if ( !id.isST()){
      throw GaudiException( "The LHCbID is not of ST type!",

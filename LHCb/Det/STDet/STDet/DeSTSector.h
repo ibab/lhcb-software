@@ -1,3 +1,4 @@
+// $Id: DeSTSector.h,v 1.9 2006-04-04 14:25:56 ebos Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -80,18 +81,18 @@ public:
   /** trajectory 
   * @return trajectory for the fit 
   */
-  LHCb::Trajectory* trajectory(const LHCb::STChannelID& aChan, 
-                               const double offset) const;
-
+  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::STChannelID& aChan,
+                                             const double offset) const;
+  
   /** trajectory 
   * @return trajectory of the first strip
   */
-  LHCb::Trajectory* trajectoryFirstStrip() const;
+  std::auto_ptr<LHCb::Trajectory> trajectoryFirstStrip() const;
 
   /** trajectory 
   * @return trajectory of the last strip
   */
-  LHCb::Trajectory* trajectoryLastStrip() const;
+  std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
   /** 
   * @param point in local frame

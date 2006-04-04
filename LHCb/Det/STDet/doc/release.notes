@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-04-04 - Edwin Bos
+ - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
+
 ! 2006-04-03
  - Add method to return all sectors in the layers
 
