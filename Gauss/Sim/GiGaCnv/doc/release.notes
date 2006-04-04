@@ -4,6 +4,7 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!======================= GiGaCnv v16r2 2006-04-04 ==========================
 ! 2006-03-30 - Gloria CORTI
  - Fix bug of mispelled property in its name hence repeating existing one:
    ZsizeOfWorldVolume instead of twice ZsizeOfWorldVolume
