@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.13 2006-03-29 10:11:43 ranjard Exp $ 
+# $Id: requirements,v 1.14 2006-04-04 08:01:24 ranjard Exp $ 
 # =============================================================================
 package       Generators
-version       v4r2
+version       v5r0
 
 # =========== structure =======================================================
 branches      Generators doc cmt src
