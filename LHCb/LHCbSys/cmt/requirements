@@ -27,7 +27,7 @@ use ProcessorKernel       v3r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v8r2    Det     # Marco Cattaneo
-use VeloDet               v10r2   Det     # Mark Tobin
+use VeloDet               v10r3   Det     # Mark Tobin
 use DetDesc               v16r3   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r1    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r3    Det     # Marco Clemencic, Matt Needham
