@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.7 2006-03-31 13:23:36 erodrigu Exp $
+// $Id: TrackAcceptance.cpp,v 1.8 2006-04-04 17:57:31 janos Exp $
 // Include files
 
 // from Gaudi
@@ -67,14 +67,16 @@ StatusCode TrackAcceptance::initialize()
   // get pointers to the stations
   std::vector<DeSTStation*> ttStations = ttDet->stations();
   std::vector<DeSTStation*> itStations = itDet->stations();
+  std::vector<DeOTStation*> otStations = otDet->stations();
+  
   m_TT1Station = ttStations[0];
   m_TT2Station = ttStations[1];
   m_IT1Station = itStations[0];
   m_IT2Station = itStations[1];
   m_IT3Station = itStations[2];
-  m_OT1Station = otDet->station(1);
-  m_OT2Station = otDet->station(2);
-  m_OT3Station = otDet->station(3);
+  m_OT1Station = otStations[0];
+  m_OT2Station = otStations[1];
+  m_OT3Station = otStations[2];
 
   return StatusCode::SUCCESS;
 }

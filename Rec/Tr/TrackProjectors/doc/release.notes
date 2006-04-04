@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-04-04 - Jan Amoraal
+ - TrackOTProjector.cpp: Adapt to new OTDet interface
+
 ! 2006-03-31 - Jeroen van Tilburg
  - Changed all ...Projectors to use the new resolution method.
 

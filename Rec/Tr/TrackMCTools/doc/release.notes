@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackMCTools v2r1 2006-03-31 ========================
+ ! 2006-04-04 - Jan Amoraal
+ - TrackAcceptance.cpp: Adapt to new OTDet interface
+
 ! 2006-03-31 - Eduardo Rodrigues
  - modifications related to paths of linker tables
  - clean-up and minor corrections

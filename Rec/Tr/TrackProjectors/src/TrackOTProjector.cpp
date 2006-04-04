@@ -1,8 +1,11 @@
-// $Id: TrackOTProjector.cpp,v 1.8 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrackOTProjector.cpp,v 1.9 2006-04-04 18:00:50 janos Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+
+// OTDet
+#include "OTDet/DeOTModule.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -32,8 +35,8 @@ StatusCode TrackOTProjector::project( const State& state,
 
   // Get the stereo angle
   OTChannelID OTChan = meas.lhcbID().otID();
-  DeOTModule* module = m_det -> module( OTChan );
-  double stereoAngle = module -> stereoAngle();
+  DeOTModule* module = m_det -> findModule( OTChan );
+  double stereoAngle = module -> angle();
 
   // Get the required velocities
   double driftVelocity = m_det -> driftDelay();       // ns/mm
