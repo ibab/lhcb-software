@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.102 2006-03-28 14:47:19 jpalac Exp $
+! $Id: release.notes,v 1.103 2006-04-04 06:29:06 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-04-04 - J.P. Palacios
+ - src/IsBEvent.cpp: adapt to void return value of put.
+ - src/MCParticleMaker.cpp: Adapt to new SMatrix interface (ROOT 5.10.00c)
 
 !========================== DaVinciMCTools v6r0 2006-03-28 ===================
 ! 2006-03-16 - P. Koppenburg

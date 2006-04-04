@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.3 2006-03-15 13:37:21 pkoppenb Exp $
+// $Id: IsBEvent.cpp,v 1.4 2006-04-04 06:29:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -140,12 +140,8 @@ StatusCode IsBEvent::writeSelResult() {
   } else {
     debug() << "Putting new SelResult container " << endreq ;
     SelResCtr = new LHCb::SelResults();
-    StatusCode scRO = put(SelResCtr,m_selResults);
-    if (scRO.isFailure()){
-      err() << "Cannot register Selection Result summary at location: "
-            << m_selResults << endreq;
-      return StatusCode::FAILURE;
-    }
+    put(SelResCtr,m_selResults);
+
   }
   
   // Create and fill selection result object

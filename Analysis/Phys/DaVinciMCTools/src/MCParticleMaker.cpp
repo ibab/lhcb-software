@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.16 2006-03-16 13:17:15 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.17 2006-04-04 06:29:06 jpalac Exp $
 // Include files 
 
 #include <memory>
@@ -13,7 +13,7 @@
 #include "Event/Particle.h"
 
 #include "Kernel/IMCDecayFinder.h"
-
+#include "Kernel/MatrixManip.h"
 
 // local
 #include "MCParticleMaker.h"
@@ -370,9 +370,9 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
   particle.setMeasuredMass(mom.M());
   particle.setMeasuredMassErr(0.0); // For the moment but already in constructor
 
-  particle.setPosCovMatrix(covSF.Sub<3,3>(0,0)); /// @todo This is wrong, correct 
-  particle.setMomCovMatrix(covSF.Sub<4,4>(3,3));
-  particle.setPosMomCovMatrix(covSF.Sub<4,3>(3,0));
+  particle.setPosCovMatrix(covSF.Sub<Gaudi::SymMatrix3x3>(0,0));
+  particle.setMomCovMatrix(covSF.Sub<Gaudi::SymMatrix4x4>(3,3));
+  particle.setPosMomCovMatrix(covSF.Sub<Gaudi::Matrix4x3>(3,0));
     
   debug() << "Done Filling Particle with PID " << mc.particleID().pid() << endmsg ;
   return StatusCode::SUCCESS;
@@ -407,10 +407,13 @@ MCParticleMaker::reconstructed(const LHCb::MCParticle& icand) const
 Gaudi::SymMatrix7x7 *
 MCParticleMaker::fetchCovariance(const LHCb::Particle& p ) const{
 
+  Gaudi::Matrix7x7 cTmp = Gaudi::Matrix7x7();
+  cTmp.Place_at(p.posCovMatrix(),0,0);
+  cTmp.Place_at(p.momCovMatrix(),3,3);
+  cTmp.Place_at(p.posMomCovMatrix(), 0, 3);
+  cTmp.Place_at(ROOT::Math::Transpose(p.posMomCovMatrix()), 3, 0); /// @todo Check that this actually works!
   Gaudi::SymMatrix7x7 *c = new Gaudi::SymMatrix7x7();
-  c->Place_at<3,3>(p.posCovMatrix(),0,0);
-  c->Place_at<4,4>(p.momCovMatrix(),3,3);
-  c->Place_at<4,3>(p.posMomCovMatrix(),0,3); /// @todo Check what happens with lower half
+  *c = LHCb::MatrixManip::Symmetrize(cTmp);
 
   return c;
 }
