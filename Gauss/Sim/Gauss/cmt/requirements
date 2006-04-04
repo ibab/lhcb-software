@@ -1,5 +1,5 @@
 package Gauss
-version v24r2
+version v24r3
 
 #=========================================================================
 #-- Structure
@@ -19,8 +19,8 @@ use Geant4Files		v71r0	      -no_auto_imports
 
 #========================================================================
 #-- Generator
-use ParticleGuns        v2r1    Gen
-use Generators          v4r2    Gen
+use ParticleGuns        v3r0    Gen
+use Generators          v5r0    Gen
 use LbPythia            v4r1    Gen
 
 #-- Optional AcerMC : not yet ported

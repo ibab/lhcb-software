@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-04-04 - Florence Ranjard
+ - requirements - use HepMC from lcg/external
+
 ! 2006-04-03 - Gloria CORTI
  - Adapt options for simulating geometry to beam pipe integrated in TT,
    Rich1 and T. Requires XmlDDDB v30r3 or higher.
