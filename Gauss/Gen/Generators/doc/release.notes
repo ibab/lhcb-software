@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.48 2006-04-04 11:57:22 gcorti Exp $
+! $Id: release.notes,v 1.49 2006-04-04 15:09:05 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-04-04 - Patrick Robbe
+ - ExternalGenerators.h/.cpp: add a switch (KeepOriginalProperties) in 
+   options to be able to keep the original particle properties of the
+   external generator.
+ - StringParse.h/.cpp: returns a double instead of a float when decoding
+   job option commands.
+ - requirements: use "-O" flag to compile LHAPDF code instead of -O2.
+ - Generation.cpp: improve counting of B hadrons
 
 !=================== Generators v5r0 2006-04-04 ===========================
 ! 2006-04-04 - Gloria CORTI
