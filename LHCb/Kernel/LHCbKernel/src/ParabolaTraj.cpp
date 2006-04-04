@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.5 2006-02-13 11:00:51 graven Exp $
+// $Id: ParabolaTraj.cpp,v 1.6 2006-04-04 16:04:04 ebos Exp $
 // Include files
 
 // local
@@ -6,10 +6,9 @@
 using namespace LHCb;
 using namespace ROOT::Math;
 
-ParabolaTraj*
-ParabolaTraj::clone() const
+std::auto_ptr<Trajectory> ParabolaTraj::clone() const
 {
-        return new ParabolaTraj(*this);
+        return std::auto_ptr<Trajectory>(new ParabolaTraj(*this));
 }
 
 /// Constructor from a (middle) point, a (unit) direction vector and a curvature

@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.8 2006-04-04 14:12:14 ebos Exp $
+// $Id: Trajectory.h,v 1.9 2006-04-04 16:03:48 ebos Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -29,7 +29,7 @@ namespace LHCb
     typedef std::pair<double,double> Range;
 
     /// Clone a trajectory...
-    virtual Trajectory* clone() const = 0;
+    virtual std::auto_ptr<Trajectory> clone() const = 0;
     
     /// Point on the trajectory at arclength from the starting point
     virtual Gaudi::XYZPoint position( double arclength ) const = 0;

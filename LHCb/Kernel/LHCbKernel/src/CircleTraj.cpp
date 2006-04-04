@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.5 2006-02-14 16:13:09 graven Exp $
+// $Id: CircleTraj.cpp,v 1.6 2006-04-04 16:04:04 ebos Exp $
 // Include files
 
 // local
@@ -11,10 +11,9 @@ using namespace LHCb;
 using namespace ROOT::Math;
 using namespace Gaudi;
 
-CircleTraj*
-CircleTraj::clone() const
+std::auto_ptr<Trajectory> CircleTraj::clone() const
 {
-        return new CircleTraj(*this);
+        return std::auto_ptr<Trajectory>(new CircleTraj(*this));
 }
 
 CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,

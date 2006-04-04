@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.8 2006-03-17 13:10:18 ocallot Exp $
+// $Id: LineTraj.h,v 1.9 2006-04-04 16:03:48 ebos Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -28,7 +28,7 @@ namespace LHCb
     virtual ~LineTraj() {};
 
     // clone thyself...
-    virtual LineTraj* clone() const;
+    virtual std::auto_ptr<Trajectory> clone() const;
     
     /// Constructor from the middle point and a (unit) direction vector
     LineTraj( const Gaudi::XYZPoint& middle,

@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.7 2006-02-13 11:00:51 graven Exp $
+// $Id: ParabolaTraj.h,v 1.8 2006-04-04 16:03:48 ebos Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -28,7 +28,7 @@ namespace LHCb
     virtual ~ParabolaTraj() {};
     
     // clone thyself...
-    virtual ParabolaTraj* clone() const;
+    virtual std::auto_ptr<Trajectory> clone() const;
     
     /// Constructor from a (middle) point, a (unit) direction vector,
     /// a curvature vector and the pair of begin- and endpoints.

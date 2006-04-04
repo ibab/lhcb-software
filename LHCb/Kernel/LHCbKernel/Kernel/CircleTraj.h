@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.4 2006-02-13 11:00:51 graven Exp $
+// $Id: CircleTraj.h,v 1.5 2006-04-04 16:03:48 ebos Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -25,7 +25,7 @@ namespace LHCb
     virtual ~CircleTraj() {};
 
     // clone thyself...
-    virtual CircleTraj *clone() const;
+    virtual std::auto_ptr<Trajectory> clone() const;
 
     /// Constructor from a center, the normal which defines the plane
     /// of the circle, a vector from the center to a point on the circle,

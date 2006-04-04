@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.6 2006-03-17 13:10:18 ocallot Exp $
+// $Id: LineTraj.cpp,v 1.7 2006-04-04 16:04:04 ebos Exp $
 // Include files
 
 // local
@@ -6,10 +6,9 @@
 using namespace LHCb;
 using namespace ROOT::Math;
 
-LineTraj*
-LineTraj::clone() const
+std::auto_ptr<Trajectory> LineTraj::clone() const
 {
-        return new LineTraj(*this);
+        return std::auto_ptr<Trajectory>(new LineTraj(*this));
 }
 
 /// Constructor from the middle point and a unit direction vector
