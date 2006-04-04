@@ -17,6 +17,7 @@
 #include "RTL/rtl.h"
 // Forward declarations
 class ISvcLocator;
+class IIncidentSvc;
 
 /*
  *  LHCb namespace declaration
@@ -31,7 +32,7 @@ namespace LHCb  {
   class MEPRxSvc : public Service, virtual public IRunable    {
     lib_rtl_thread_t m_handle;
     bool   m_receiveEvents;
-
+    IIncidentSvc* m_incidentSvc;
     /// Thread execution routine.
     static int exec(void* arg);
     /// Worker routine
