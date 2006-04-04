@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.29 2006-03-28 14:49:00 jpalac Exp $ 
+! $Id: release.notes,v 1.30 2006-04-04 06:37:04 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-04-04 - Juan Palacios
+ - src/ParticleStuffer.cpp: use Similarity function from SMatrix.
 
 !========================== ParticleMaker v2r0 2006-03-28 ===================
 ! 2006-03-19 - Vanya BELYAEV

@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.5 2006-04-04 06:37:04 jpalac Exp $
 // Include files 
 
 // 
@@ -100,7 +100,6 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
   // Set the error on the measured mass.
   typedef ROOT::Math::SMatrix<double, 1, 4> Matrix1x4;
   Matrix1x4 derivs;
-  Gaudi::SymMatrix1x1 massErrSqd ;
   derivs(0,0) = - part.momentum().X() / part.measuredMass();
   derivs(0,1) = - part.momentum().Y() / part.measuredMass();
   derivs(0,2) = - part.momentum().Z() / part.measuredMass();
@@ -109,8 +108,8 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
 
   // Stolen and adapted from SHacks
   /// @todo Check that this is correct
-  massErrSqd = Similarity<Gaudi::SymMatrix1x1,Matrix1x4,
-    Gaudi::SymMatrix4x4>(derivs,part.momCovMatrix());
+  Gaudi::SymMatrix1x1 massErrSqd = 
+    ROOT::Math::Similarity<double,1,4>(derivs,part.momCovMatrix());
   double massErr = sqrt( massErrSqd(1,1) );
   part.setMeasuredMassErr( massErr ); 
 

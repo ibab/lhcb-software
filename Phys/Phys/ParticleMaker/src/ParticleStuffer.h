@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
+// $Id: ParticleStuffer.h,v 1.5 2006-04-04 06:37:04 jpalac Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -64,12 +64,7 @@ private:
   IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
   IToolSvc* m_pToolSvc;
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
-  std::string m_transporterType;        ///< Type of transporter to use      
-
-  template <typename TYPE0, typename TYPE1, typename TYPE2>
-  inline TYPE0 Similarity(TYPE1 F, TYPE2 C){
-    return F*C*ROOT::Math::Transpose(F);
-  }
+  std::string m_transporterType;        ///< Type of transporter to use
   
 };
 
