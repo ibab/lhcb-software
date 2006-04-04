@@ -1,4 +1,4 @@
-// $Id: StringParse.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: StringParse.cpp,v 1.2 2006-04-04 14:58:58 robbep Exp $
 // --------------------------------------------------
 // 
 // File:  GeneratorUtils/StringParse.cxx
@@ -44,9 +44,9 @@ int StringParse::intpiece(const int & num){
   else return -1;
 }
 
-float StringParse::numpiece(const int & num){  
+double StringParse::numpiece(const int & num){  
   if(num <= m_nword){
-    float x= atof(m_lsubstring[num-1].c_str());
+    double x= atof(m_lsubstring[num-1].c_str());
     return x;
   }
   else return -1.1;

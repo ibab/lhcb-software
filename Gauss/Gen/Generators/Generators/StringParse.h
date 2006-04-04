@@ -1,4 +1,4 @@
-// $Id: StringParse.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: StringParse.h,v 1.3 2006-04-04 14:58:24 robbep Exp $
 
 #ifndef GENERATORS_STRINGPARSE_H
 #define GENERATORS_STRINGPARSE_H
@@ -31,8 +31,8 @@ class StringParse {
   /// Returns the num-th component of the input string as an integer.
   int intpiece( const int & num ) ; 
   
-  /// Returns the num-th component of the input string as a float.
-  float numpiece(const int & num); 
+  /// Returns the num-th component of the input string as a double
+  double numpiece(const int & num); 
 
  private:
   /// Input string
