@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.25 2006-04-04 14:22:47 ebos Exp $
+// $Id: DeOTDetector.h,v 1.26 2006-04-04 18:16:57 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -139,7 +139,7 @@ public:
   LHCb::OTChannelID nextChannelRight(const LHCb::OTChannelID aChannel) const;
 
   /** @return sentive volume id for a given global XYZ point */
-  // const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+  const int sensitiveVolumeID(const Gaudi::XYZPoint& aPoint) const;
   
   /** Calculate the distance along a wire for a given channel and XY position
    * @param channel

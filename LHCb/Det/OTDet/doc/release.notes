@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.49 2006-04-04 15:56:28 cattanem Exp $
+! $Id: release.notes,v 1.50 2006-04-04 18:16:57 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r1 2006-04-04 ==========================
+! 2006-04-04 - Jan Amoraal
+ - sensitiveVolumeID() returns element ID
+
 ! 2006-04-04 - Edwin Bos
  - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 

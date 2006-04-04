@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.19 2006-04-04 14:23:15 ebos Exp $
+// $Id: DeOTDetector.cpp,v 1.20 2006-04-04 18:16:57 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -200,36 +200,18 @@ DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) const {
   return(q == 0 ? 0 : q->findModule(aPoint));
 }
 
-// const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& globalPoint ) const
-// {
-//   int tmpSenVolIDStation = 0;
-//   int tmpSenVolIDLayer = 0;
-//   int tmpSenVolIDQuarter = 0;
-//   int tmpSenVolIDModule = 0;
-//   int otSenVolID = 0;
-//   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
-//   //std::vector<DeOtStation*>::const_iterator iterStation = 
-//   // std::find_if(m_stations.begin(),m_stations.end(),_1->isInside(globalPos));
-//   while ( iterStation != m_stations.end() &&
-//           !( (*iterStation)->isInside( globalPos ) ) ) ++iterStation;
-//   if ( iterStation != m_stations.end() ) {
-//     tmpSenVolIDStation = ( ( (*iterStation)->stationID() ) << 30 ) & stationMask;
-//     DeOTLayer* otLayer = (*iterStation)->layer( globalPos );
-//     if ( otLayer != 0 ) {
-//       tmpSenVolIDLayer = ( ( otLayer -> layerID() ) << 28 ) & layerMask;
-//       DeOTQuarter* otQuarter = otLayer->quarter( globalPos );
-//       if ( otQuarter != 0 ) {
-// 	tmpSenVolIDQuarter = ( ( otQuarter->quarterID() ) << 26 ) & quarterMask;
-// 	DeOTModule* otModule = otQuarter->module( globalPos );
-// 	if ( otModule != 0 ) tmpSenVolIDModule =
-// 			       ( otModule->moduleID() << 22 ) & moduleMask;
-//       }
-//     }
-//     otSenVolID = tmpSenVolIDStation | tmpSenVolIDLayer | tmpSenVolIDQuarter | tmpSenVolIDModule;
-//     return ( otSenVolID );
-//   }
-//   else { return -1 ; }
-// }
+const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const {
+  DeOTDetector* nonConstThis = const_cast<DeOTDetector*>(this);
+  DeOTModule* module = nonConstThis->findModule( aPoint );
+  if ( module == 0 ) {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at " 
+        << aPoint << endmsg;
+    return -1;
+  }
+  return module->elementID();
+  
+}
 
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
                                        double xHit, double yHit) const {
