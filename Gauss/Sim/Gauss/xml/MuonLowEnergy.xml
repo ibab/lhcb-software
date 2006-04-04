@@ -36,28 +36,28 @@
     <!-- ************************************************************** -->
     <!-- This part is where simulation attributes are mapped to volumes -->
     <!-- ************************************************************** -->
-
+    
     &SimAttrRich;
-
-    <Item name="/dd/Geometry/Muon/lvMuFilter1">
+    
+    <Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter1">
       <Cut particle="0" attr="SimAttrMuFilt"/>
       <Cut particle="13" attr="SimAttrMuon"/>
       <Cut particle="-13" attr="SimAttrMuon"/>
     </Item>
-
-   <Item name="/dd/Geometry/Muon/lvMuFilter2">
+    
+    <Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter2">
       <Cut particle="0" attr="SimAttrMuFilt"/>
       <Cut particle="13" attr="SimAttrMuon"/>
       <Cut particle="-13" attr="SimAttrMuon"/>
     </Item>
-
-   <Item name="/dd/Geometry/Muon/lvMuFilter3">
+    
+    <Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter3">
       <Cut particle="0" attr="SimAttrMuFilt"/>
       <Cut particle="13" attr="SimAttrMuon"/>
       <Cut particle="-13" attr="SimAttrMuon"/>
     </Item>
-
-   <Item name="/dd/Geometry/Muon/lvMuFilter4">
+    
+    <Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter4">
       <Cut particle="0" attr="SimAttrMuFilt"/>
       <Cut particle="13" attr="SimAttrMuon"/>
       <Cut particle="-13" attr="SimAttrMuon"/>
