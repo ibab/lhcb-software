@@ -5,6 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r2 2006-04-04 ========================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to change in return type of method "put" in GaudiAlgorithm
+   . src/GetTrackerHitsAlg.cpp
+
 !======================= GaussTracker v5r1 2006-03-09 ========================
  2006-03-08 - Gloria CORTI
  - Introduce filling of new variable in MCHit (absolute momentum)

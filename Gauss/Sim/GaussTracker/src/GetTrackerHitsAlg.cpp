@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.6 2006-03-08 15:16:28 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.7 2006-04-04 12:53:03 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -111,10 +111,7 @@ StatusCode GetTrackerHitsAlg::execute() {
   // MCHits* hits = getOrCreate<MCHits,MCHits>( m_hitsLocation );
   // because triggers convertion
   LHCb::MCHits* hits = new LHCb::MCHits();
-  StatusCode sc = put( hits, m_hitsLocation );
-  if( sc.isFailure() ) {
-    return Error( " Unable to register MCHits in " + m_hitsLocation );
-  }                    
+  put( hits, m_hitsLocation );
   
   // Get the G4 necessary hit collection from GiGa
   G4HCofThisEvent* hitsCollections = 0;
