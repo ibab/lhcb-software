@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.63 2006-03-27 17:26:22 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.64 2006-04-04 14:24:51 ebos Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -388,8 +388,8 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
   return StatusCode::SUCCESS;
 }
 
-LHCb::Trajectory* DeVelo::trajectory(const LHCb::LHCbID& lID, 
-                                     const double offset) const {
+std::auto_ptr<LHCb::Trajectory> DeVelo::trajectory(const LHCb::LHCbID& lID, 
+                                                   const double offset) const {
 
   // look up the trajectory
  
@@ -475,6 +475,8 @@ LHCb::Trajectory* DeVelo::trajectory(const LHCb::LHCbID& lID,
     // put into trajectory
     tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
   }
+
+  std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
     
-  return tTraj;  
+  return autoTraj;  
 }

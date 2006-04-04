@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.105 2006-03-27 17:26:22 krinnert Exp $
+! $Id: release.notes,v 1.106 2006-04-04 14:24:15 ebos Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-04-04 - Edwin Bos
+ - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 
 ! 2006-03-27 - Kurt Rinnert
  - Added missing registration of condition update call back methods

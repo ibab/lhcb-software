@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.38 2006-03-23 11:05:38 mtobin Exp $
+// $Id: DeVelo.h,v 1.39 2006-04-04 14:24:34 ebos Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -224,7 +224,7 @@ public:
                              Gaudi::XYZPoint& end ) const;
 
   /// Return a trajectory (for track fit) from strip + offset
-  LHCb::Trajectory* trajectory(const LHCb::LHCbID& id, const double offset) const;
+  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const;
   
   /// give access to sensor for given sensor number
   const DeVeloSensor* sensor(unsigned int sensorNumber) const;
