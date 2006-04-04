@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.304 2006-03-29 13:09:08 pkoppenb Exp $
+# $Id: requirements,v 1.305 2006-04-04 11:39:05 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
 
 #============================================================================
 package           DaVinci
-version           v16r0
+version           v16r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -38,17 +38,17 @@ use FieldMap		v4r6         -no_auto_imports
 use ParamFiles          v4r1         -no_auto_imports
 # use BrunelDQ		v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r1)
-use LHCb	v20r1                -no_auto_imports
+#-- LHCb libraries (from LHCB_v20r2)
+use LHCb	v20r2                -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r1)
-use LbcomSys    v4r1                 -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r2)
+use LbcomSys    v4r2                 -no_auto_imports
 
 #-- Rec packages (from REC_v2r2)
 #-- use RecSys      v2r2                 -no_auto_imports # TEMPORARY
 
-#-- Phys packages (from PHYS_v3r0)
-use PhysSys     v3r0
+#-- Phys packages (from PHYS_v3r1)
+use PhysSys     v3r1
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
