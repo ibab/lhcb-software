@@ -406,17 +406,7 @@ StatusCode PhysDesktop::saveDesktop( LHCb::Particle::ConstVector& pToSave,
             << " new particles in " << location << " from " << pToSave.size()
             << " total particles in desktop " << endmsg;
 
-  StatusCode sc = put(particlesToSave,location);
-  if ( sc.isFailure() ){
-    delete particlesToSave;
-    Exception( " Unable to register " + location );
-    return StatusCode::FAILURE;
-  }
-  //else {
-  //  verbose() << "Removing particles saved to TES from desktop"
-  //      << endmsg;
-  //  pToSave.clear();
-  //}
+  put(particlesToSave,location);
 
   // Register the vertices in the store
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
@@ -434,17 +424,7 @@ StatusCode PhysDesktop::saveDesktop( LHCb::Particle::ConstVector& pToSave,
             << " new vertices in " << location << " from " << vToSave.size()
             << " vertices in desktop " << endmsg;
 
-  sc = put(verticesToSave,location);
-  if ( !sc ) {
-    delete verticesToSave;
-    Exception( " Unable to register " + location );
-    return StatusCode::FAILURE;
-  }
-  //else {
-  //  verbose() << "Removing vertices saved to TES from desktop"
-  //      << endmsg;
-  //  vToSave.clear();
-  //}
+  put(verticesToSave,location);
 
   return StatusCode::SUCCESS;
 }

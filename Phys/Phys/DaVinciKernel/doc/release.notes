@@ -3,7 +3,10 @@
 !============================================================================
 
 ! 2006-04-04 - J.P. Palacios
- - Kernel/DVAlgorithm.h
+ - Kernel/IGeomDispCalculator.h
+   . Change calcImpactPar methods to use Gaudi::SymMatrix3x3 
+     instead of Gaudi::Matrix3x3.
+ - Kernel/DVAlgorithm.h, src/component/PhysDesktop.cpp
    . include <boost/lexical_cast.hpp>
  - src/Lib/DVAlgorithm.cpp
    . GaudiAlg put no longer returns StatusCode. Fix accordingly.
