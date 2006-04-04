@@ -27,6 +27,7 @@ StatusCode LHCb::GaudiDeamon::run()  {
   if ( ui )  {
     SmartIF<IProperty> ip(ui);
     if ( ip )  {
+      ip->setProperty(IntegerProperty("OutputLevel",8));
       ip->setProperty(StringProperty("EvtSel","NONE"));
       ip->setProperty(StringProperty("HistogramPersistency","NONE"));
       ip->setProperty(StringProperty("Runable",        m_runable));
