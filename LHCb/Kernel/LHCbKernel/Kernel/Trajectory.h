@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.7 2006-02-13 11:00:51 graven Exp $
+// $Id: Trajectory.h,v 1.8 2006-04-04 14:12:14 ebos Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -33,6 +33,12 @@ namespace LHCb
     
     /// Point on the trajectory at arclength from the starting point
     virtual Gaudi::XYZPoint position( double arclength ) const = 0;
+
+    /// Beginpoint of the Trajectory
+    Gaudi::XYZPoint beginPoint() const { return position( beginRange() ); }
+
+    /// Endpoint of the Trajectory
+    Gaudi::XYZPoint endPoint() const { return position( endRange() ); }
     
     /// First derivative of the trajectory at arclength from the starting point
     virtual Gaudi::XYZVector direction( double arclength ) const = 0;
