@@ -1,10 +1,11 @@
 package           GaussAlgs
-version           v2r0
+version           v2r1
 
 # =============== structure ==================================================
 branches          cmt doc src
                 
 # =============== dependencies ===============================================
+use               Boost       v* LCG_Interfaces
 use               LHCbKernel  v* Kernel
 use               GaussTools  v* Sim
 

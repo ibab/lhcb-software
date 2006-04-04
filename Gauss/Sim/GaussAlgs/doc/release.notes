@@ -4,6 +4,10 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v2r1 2006-04-04  =========================
+! 2006-04-04 - Gloria CORTI
+ - Introduce use of Boost no longer taken from GaudiAlgs
+
 !===================== GaussAlgs v2r0 2006-02-16  =========================
 ! 2006-02-16 - Gloria CORTI
  - src/GenInit.{h,cpp}
