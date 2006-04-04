@@ -22,6 +22,9 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 
+// from Boost
+#include <boost/lexical_cast.hpp>
+
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
  *  Does the retrieval of all necessary DaVinci Tools

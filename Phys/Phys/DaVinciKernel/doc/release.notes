@@ -2,6 +2,12 @@
 ! Responsible : P. Koppenburg
 !============================================================================
 
+! 2006-04-04 - J.P. Palacios
+ - Kernel/DVAlgorithm.h
+   . include <boost/lexical_cast.hpp>
+ - src/Lib/DVAlgorithm.cpp
+   . GaudiAlg put no longer returns StatusCode. Fix accordingly.
+
 !========================== DaVinciKernel v4r0 2006-03-28 ===================
 ! 2006-03-16 - P. Koppenburg
   - Kernel/DVAlgorithm.h 

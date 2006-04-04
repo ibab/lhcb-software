@@ -171,12 +171,7 @@ StatusCode DVAlgorithm::fillSelResult () {
   } else {
     verbose() << "Putting new SelResult container " << endmsg ;
     resultsToSave = new LHCb::SelResults();
-    StatusCode scRO = put(resultsToSave,location);
-    if (scRO.isFailure()){
-      err() << "Cannot register Selection Result summary at location: " 
-            << location << endmsg;
-      return StatusCode::FAILURE;
-    }
+    put(resultsToSave,location);
   }
 
   // Create and fill selection result object
