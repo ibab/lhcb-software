@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2006-04-04 08:01:24 ranjard Exp $ 
+# $Id: requirements,v 1.15 2006-04-04 15:01:52 robbep Exp $ 
 # =============================================================================
 package       Generators
 version       v5r0
@@ -27,3 +27,4 @@ apply_pattern library_stamps    library=GeneratorsLib
 # =========== link with HepMCfio from HepMC ==================================
 macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio "
 
+macro_append EVLCTEQ_fflags " -O " 
