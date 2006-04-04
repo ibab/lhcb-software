@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.47 2006-04-04 08:01:25 ranjard Exp $
+! $Id: release.notes,v 1.48 2006-04-04 11:57:22 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
-!=================== Generators v5r0 2006-03-29 ===========================
+!=================== Generators v5r0 2006-04-04 ===========================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to changes in put method signature in GaudiAlgorithm base class
+   . src/Lib/Signal.cpp
+   . src/component/Generation.cpp
+
 ! 2006-03-29 - Florence Ranjard
  - use HepMC from lcg/external : link with HepMCfio
 

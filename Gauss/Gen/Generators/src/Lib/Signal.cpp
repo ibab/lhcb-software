@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.13 2006-03-22 22:48:39 robbep Exp $
+// $Id: Signal.cpp,v 1.14 2006-04-04 11:57:22 gcorti Exp $
 // Include files 
 
 // local
@@ -229,9 +229,7 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
   hepVect -> insert( mcevt ) ;
   
   // Register new location and store HepMC event
-  sc = put( hepVect , LHCb::HepMCEventLocation::Signal ) ;
-  if ( ! sc.isSuccess() ) 
-    return Error( "Could not register SignalDecayTree" ) ;
+  put( hepVect , LHCb::HepMCEventLocation::Signal ) ;
   
   return sc ;
 }

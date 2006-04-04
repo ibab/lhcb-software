@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.17 2006-03-12 20:09:53 robbep Exp $
+// $Id: Generation.cpp,v 1.18 2006-04-04 11:57:22 gcorti Exp $
 // Include files 
 
 // local
@@ -238,11 +238,9 @@ StatusCode Generation::execute() {
   for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
     theGenHeader -> addToCollisions( *it ) ;
 
-  sc = put( theEvents , m_hepMCEventLocation ) ;
-  if ( ! sc.isSuccess() ) return Error( "Cannot store HepMC object" ) ;
+  put( theEvents , m_hepMCEventLocation ) ;
 
-  sc = put( theCollisions , m_genCollisionLocation ) ;
-  if ( ! sc.isSuccess() ) return Error( "Cannot store GenCollision object" ) ;
+  put( theCollisions , m_genCollisionLocation ) ;
 
   return sc ;
 }
