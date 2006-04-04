@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------
 // Job options to copy one or more input files onto an output file
 //-------------------------------------------------------------------------
-#include "$EVENTSYSROOT/options/PoolCopy.opts"
+#include "$STDOPTS/PoolCopy.opts"
 
 // Provide one or more input files.
 EventSelector.Input = { 

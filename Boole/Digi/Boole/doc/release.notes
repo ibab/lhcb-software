@@ -3,8 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v11r2>2006-03-28 Boole v11r2</A></H1><PRE>
+</PRE><H1><A NAME=v11r2>2006-04-04 Boole v11r2</A></H1><PRE>
  - Adapt requirements to Lbcom v4r2, LHCb v20r2, Gaudi v18r3
+ - Switch off expert histos for production default
+ - Fix Copy.opts to pick up correct Poolcopy.opts file
 
 </PRE><H1><A NAME=v11r1>2006-03-28 Boole v11r1</A></H1><PRE>
  - Adapt requirements to Lbcom v4r1, LHCb v20r1

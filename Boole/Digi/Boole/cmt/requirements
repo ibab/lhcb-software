@@ -22,14 +22,33 @@ use GaudiObjDesc 	 v9r4        -no_auto_imports
 use RootHistCnv          v9r9        -no_auto_imports
 
 #-- Databases
-use XmlDDDB             v30r2   Det  -no_auto_imports
-use XmlConditions        v1r5   Det  -no_auto_imports
+use XmlDDDB             v30r3   Det  -no_auto_imports
+use XmlConditions        v1r6   Det  -no_auto_imports
 use ParamFiles	         v4r1        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v20r2)
-use LHCb                 v20r2       -no_auto_imports
+#-- Explicitly use EventSys packages to avoid dependency on PhysEvent
+use GaudiConf        v9r5           -no_auto_imports
+use KernelSys        v5r2    Kernel -no_auto_imports
+use DetSys           v8r2    Det    -no_auto_imports
+
+use EventBase        v1r1    Event  -no_auto_imports
+use MCEvent          v1r2    Event  -no_auto_imports
+use DigiEvent        v1r1    Event  -no_auto_imports
+use RecEvent         v1r1    Event  -no_auto_imports  # used by L0MuonTrigger!
+use TrackEvent       v2r2    Event  -no_auto_imports  # used by RecEvent
+use L0Event          v15r1   Event  -no_auto_imports
+use DAQEvent         v6r3    Event  -no_auto_imports
+use GenEvent         v4r3    Event  -no_auto_imports
+use PackedEvent      v2r0    Event  -no_auto_imports
+use VeloEvent        v14r0   Event  -no_auto_imports
+
+use HepMC         v1r126p0   Gen    -no_auto_imports
+use DAQSys           v2r2    DAQ    -no_auto_imports
+use LHCbAlgs         v2r0    Kernel -no_auto_imports
+use SimComponents    v1r1p1  Sim    -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v4r2)
 use LbcomSys             v4r2        -no_auto_imports

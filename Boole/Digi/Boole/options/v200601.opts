@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
-#include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
+//#include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
 //InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Removes spillover
 //ApplicationMgr.OutStream -= { "DigiWriter" };    // Switches off event output
 
