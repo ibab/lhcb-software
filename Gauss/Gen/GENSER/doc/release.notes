@@ -4,6 +4,13 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2006-04-04 - Patrick Robbe
+ - requirements - use dynamic libraries for Pythia, LHAPDF and PHOTOS
+                  build dynamic dummylhapdf library with lhaglue.F but
+                  uses "-O" compilation for it.
+                  re-order link order for dynamic libraries.
+                  add this bin directory to the LD_LIBRARY_PATH.
+
 !===================== GENSER v1r130p0 ===============================
 ! 2006-03-27 - Florence RANJARD
  - requirements - use GaudiPolicy to get the fflags
