@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.5 2006-04-03 17:59:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.6 2006-04-04 08:10:12 frankb Exp $
 //	====================================================================
 //  MEPCnvSvc.cpp
 //	--------------------------------------------------------------------

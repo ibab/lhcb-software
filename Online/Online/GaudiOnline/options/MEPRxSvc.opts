@@ -1,4 +1,0 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "MinimalEventLoopMgr";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable";

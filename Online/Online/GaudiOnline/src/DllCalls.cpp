@@ -180,7 +180,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string runable = "LHCb::OnlineRunable";
   std::string evtloop = "MinimalEventLoopMgr";
   std::string msgsvc  = "OnlineMessageSvc";
-  std::string opts    = "jobOptions.txt";
+  std::string opts    = "";
   std::string optopts = "";
   cli.getopt("dll",3,dll);
   cli.getopt("tasktype",8,type);

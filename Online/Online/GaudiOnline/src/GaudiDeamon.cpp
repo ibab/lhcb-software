@@ -14,7 +14,7 @@ LHCb::GaudiDeamon::GaudiDeamon(IInterface*) : DimTaskFSM(0), m_appMgr(0)  {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "MinimalEventLoopMgr");
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
-  propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "jobOptions.txt");
+  propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
 }
 
 LHCb::GaudiDeamon::~GaudiDeamon()  {
@@ -27,10 +27,17 @@ StatusCode LHCb::GaudiDeamon::run()  {
   if ( ui )  {
     SmartIF<IProperty> ip(ui);
     if ( ip )  {
+      ip->setProperty(StringProperty("EvtSel","NONE"));
+      ip->setProperty(StringProperty("HistogramPersistency","NONE"));
       ip->setProperty(StringProperty("Runable",        m_runable));
       ip->setProperty(StringProperty("EventLoop",      m_evtloop));
       ip->setProperty(StringProperty("MessageSvcType", m_msgsvcType));
-      ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
+      if ( m_mainOptions.empty() )  {
+        ip->setProperty(StringProperty("JobOptionsType", "NONE"));
+      }
+      else  {
+        ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
+      }
       m_appMgr = ui;
       return m_appMgr->run();
     }
