@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.18 2006-04-04 11:57:22 gcorti Exp $
+// $Id: Generation.cpp,v 1.19 2006-04-04 15:07:45 robbep Exp $
 // Include files 
 
 // local
@@ -239,7 +239,6 @@ StatusCode Generation::execute() {
     theGenHeader -> addToCollisions( *it ) ;
 
   put( theEvents , m_hepMCEventLocation ) ;
-
   put( theCollisions , m_genCollisionLocation ) ;
 
   return sc ;
@@ -334,11 +333,13 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
   const HepMC::GenEvent * theEvent = evt -> pGenEvt() ;
   unsigned int bQuark( 0 ) , bHadron( 0 ) , cQuark( 0 ) , cHadron( 0 ) ;
   int pdgId ;
-  
+
   HepMC::GenEvent::particle_const_iterator iter ;
   for ( iter = theEvent -> particles_begin() ; 
         theEvent -> particles_end() != iter ; ++iter ) {
-    if ( (*iter) -> status() >= LHCb::HepMCEvent::DocumentationParticle ) 
+    if ( ( (*iter) -> status() == LHCb::HepMCEvent::DocumentationParticle ) ||
+         ( (*iter) -> status() == LHCb::HepMCEvent::DecayedByDecayGen ) ||
+         ( (*iter) -> status() == LHCb::HepMCEvent::StableInDecayGen ) ) 
       continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
     LHCb::ParticleID thePid( pdgId ) ;
@@ -356,15 +357,15 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
     }
     else if ( 4 == pdgId ) ++cQuark ;
     else {
-      if ( thePid.hasBottom() ) { 
+      if ( thePid.hasBottom() ) {
         // Count B from initial proton as a quark
         if ( 0 != (*iter) -> production_vertex() ) {
           const HepMC::GenParticle * par = 
             *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
           if ( 0 != par -> production_vertex() ) {
-            if ( 0 == par -> production_vertex() -> particles_in_size() ) 
+            if ( 0 == par -> production_vertex() -> particles_in_size() )
               ++bQuark ;
-          }
+          } else ++bQuark ;
         }
         ++bHadron ;
       } else if ( thePid.hasCharm() ) {
@@ -375,7 +376,7 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
           if ( 0 != par -> production_vertex() ) {
             if ( 0 == par -> production_vertex() -> particles_in_size() ) 
               ++cQuark ;
-          }
+          } else ++cQuark ;
         }
         ++cHadron ;
       }
