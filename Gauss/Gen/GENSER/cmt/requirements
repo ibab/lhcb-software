@@ -13,26 +13,26 @@ macro GENSER_path "$(LCG_releases)/GENSER/$(GENSER_native_version)"
 macro GENSER_home "$(GENSER_path)/$(LCG_system)/lib"
 
 # use archive libraries
-#path_remove LD_LIBRARY_PATH "/GENSER/"
-#path_append LD_LIBRARY_PATH "$(GENSER_home)"
+path_remove LD_LIBRARY_PATH "/GENSER/"
+path_append LD_LIBRARY_PATH "$(GENSERROOT)/$(BINDIR)"
+path_append LD_LIBRARY_PATH "$(GENSER_home)"
 
 macro pythia_native_version "6_325.2"
 
-macro pythia_linkopts "$(GENSER_home)/libpythia$(pythia_native_version).a ${GENSER_home}/libdummy_pythia$(pythia_native_version).a"\
+macro pythia_linkopts "-L $(GENSER_home) -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version) "\
         WIN32         "/libpath:$(GENSER_home) pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
 
-
 macro photos_native_version "215.2"
-macro photos_linkopts " $(GENSER_home)/libphotos$(photos_native_version).a" \
+macro photos_linkopts "-L $(GENSER_home) -lphotos$(photos_native_version) " \
              WIN32    " /libpath:$(GENSER_home) photos$(photos_native_version).lib"
-
 
 macro lhapdf_native_version "4_2"
 set LHAPDFPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
-macro lhapdf_linkopts "$(GENSER_home)/liblhapdf$(lhapdf_native_version).a "
+macro lhapdf_linkopts "-L $(GENSER_home) -llhapdf$(lhapdf_native_version) "
 
-library lhapdfdummy -no_share ../src/*.F
-macro_prepend lhapdf_linkopts " $(GENSERROOT)/$(BINDIR)/liblhapdfdummy.a "
+library lhapdfdummy ../src/*.F
+macro_prepend lhapdf_linkopts " -L $(GENSERROOT)/$(BINDIR) -llhapdfdummy "
 
+macro GENSER_linkopts "$(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -lnsl -lcrypt -ldl -lg2c"
 
-macro GENSER_linkopts "$(lhapdf_linkopts) $(pythia_linkopts) $(photos_linkopts)  -lnsl -lcrypt -ldl -lg2c"
+macro_append lhaglue_fflags " -O "
