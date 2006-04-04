@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.10 2006-03-31 14:05:06 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.11 2006-04-04 14:59:53 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -182,8 +182,6 @@ StatusCode MergeEventAlg::finalize()
 {
   clearItems(m_itemList);
   if( 0 != m_mergeIt ) m_mergeISelector->releaseContext(m_mergeIt);
-  m_mergeSelector->finalize();
-  m_mergeSelector->release();
 
   return GaudiAlgorithm::finalize();
 }
