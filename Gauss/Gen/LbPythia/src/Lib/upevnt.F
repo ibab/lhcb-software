@@ -1,5 +1,12 @@
-C $Id: upevnt.F,v 1.2 2005-11-04 11:01:12 robbep Exp $  
+C $Id: upevnt.F,v 1.3 2006-04-04 15:28:53 robbep Exp $  
 C*********************************************************************
+
+      BLOCK DATA GAUSSDATA
+      INTEGER PYTHIAGAUSSPROCESS
+      COMMON /GAUSSUSERPROCESS/ PYTHIAGAUSSPROCESS
+      SAVE /GAUSSUSERPROCESS/      
+      DATA PYTHIAGAUSSPROCESS /0/
+      END
  
 C...UPEVNT
 C...Dummy routine, to be replaced by a user implementing external
