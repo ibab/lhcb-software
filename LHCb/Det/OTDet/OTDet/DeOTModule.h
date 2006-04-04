@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.9 2006-03-31 14:22:40 janos Exp $
+// $Id: DeOTModule.h,v 1.10 2006-04-04 14:22:47 ebos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -61,7 +61,7 @@ static const CLID& CLID_DeOTModule = 8105;
 
 class DeOTModule : public DetectorElement {
 
- public:
+public:
   
   /** Constructor */
   DeOTModule(const std::string& name = "");
@@ -196,33 +196,33 @@ class DeOTModule : public DetectorElement {
   
   /// Returns a Trajectory representing the wire identified by the LHCbID
   /// The offset is zero for all OT Trajectories
-  LHCb::Trajectory* trajectory( const LHCb::OTChannelID& aChan,
-                                const double = 0 /*offset*/ ) const;
+  std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::OTChannelID& aChan,
+                                              const double = 0 /*offset*/ ) const;
 
- private:
+private:
   
   /** Find range of straws that might contain hits */
   void findStraws(const Gaudi::XYZPoint& entryPoint, 
-		  const Gaudi::XYZPoint& exitPoint, 
-		  std::vector<unsigned int>& straws) const;
+                  const Gaudi::XYZPoint& exitPoint, 
+                  std::vector<unsigned int>& straws) const;
     
   /** Find the DOCA paramters mu of a wire and lambda of a track. 
    * Where w = w_bottom + mu*e_w 
    * and p = p_entry + lambda*e_p.
    */
   StatusCode findDocaParams(const Gaudi::XYZPoint& entryPoint,
-			    const Gaudi::XYZVector& pUnit,
-			    const Gaudi::XYZPoint& wireBottom,
-			    const Gaudi::XYZVector& wUnit,
-			    double& lambda, double& mu) const;
+                            const Gaudi::XYZVector& pUnit,
+                            const Gaudi::XYZPoint& wireBottom,
+                            const Gaudi::XYZVector& wUnit,
+                            double& lambda, double& mu) const;
 
   /** Return distance of closest approach to wire */
   double docaWire(const Gaudi::XYZPoint& entryPoint,
-		  const Gaudi::XYZVector& pUnit,
-		  const Gaudi::XYZPoint& wireBottom,
-		  const Gaudi::XYZVector& wUnit,
-		  double lambda,
-		  double mu ) const;
+                  const Gaudi::XYZVector& pUnit,
+                  const Gaudi::XYZPoint& wireBottom,
+                  const Gaudi::XYZVector& wUnit,
+                  double lambda,
+                  double mu ) const;
 
   /** Find the straws that are hit */
   /* void findHitStraws(...) const; */

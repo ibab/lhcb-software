@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.47 2006-03-31 14:22:40 janos Exp $
+! $Id: release.notes,v 1.48 2006-04-04 14:20:48 ebos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+! 2006-04-04 - Edwin Bos
+ - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 
 !========================== OTDet v6r1 2006-03-30 ==========================
 ! 2006-03-31 - Jan Amoraal

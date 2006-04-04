@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.9 2006-03-30 21:45:34 janos Exp $
+// $Id: DeOTModule.cpp,v 1.10 2006-04-04 14:23:16 ebos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -73,7 +73,7 @@ StatusCode DeOTModule::initialize()
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
   OTChannelID aChan = OTChannelID(m_stationID, m_layerID, 
-				  m_quarterID, m_moduleID, 0u);
+                                  m_quarterID, m_moduleID, 0u);
   setElementID(aChan);
   m_uniqueModuleID = aChan.uniqueModule();
 
@@ -95,8 +95,8 @@ StatusCode DeOTModule::initialize()
 }
 
 void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint, 
-			    const Gaudi::XYZPoint& exitPoint, 
-			    std::vector<unsigned int>& straws) const {
+                            const Gaudi::XYZPoint& exitPoint, 
+                            std::vector<unsigned int>& straws) const {
   /// This is in local cooridinates of a module
   double xOffset = -(m_nStraws/2. + 0.25) * m_xPitch;
   double lo = (entryPoint.x()-xOffset)/m_xPitch; 
@@ -117,10 +117,10 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
 }
 
 StatusCode DeOTModule::findDocaParams(const Gaudi::XYZPoint& entryPoint,
-				      const Gaudi::XYZVector& pUnit,
-				      const Gaudi::XYZPoint& wireBottom,
-				      const Gaudi::XYZVector& wUnit,
-				      double& lambda, double& mu) const { 
+                                      const Gaudi::XYZVector& pUnit,
+                                      const Gaudi::XYZPoint& wireBottom,
+                                      const Gaudi::XYZVector& wUnit,
+                                      double& lambda, double& mu) const { 
   Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
   double e_pDote_w = pUnit.Dot(wUnit);
   
@@ -140,11 +140,11 @@ StatusCode DeOTModule::findDocaParams(const Gaudi::XYZPoint& entryPoint,
 }
 
 double DeOTModule::docaWire(const Gaudi::XYZPoint& entryPoint,
-			    const Gaudi::XYZVector& pUnit,
-			    const Gaudi::XYZPoint& wireBottom,
-			    const Gaudi::XYZVector& wUnit,
-			    double lambda,
-			    double mu) const {
+                            const Gaudi::XYZVector& pUnit,
+                            const Gaudi::XYZPoint& wireBottom,
+                            const Gaudi::XYZVector& wUnit,
+                            double lambda,
+                            double mu) const {
   
   Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
   Gaudi::XYZVector d = PenMinWb + lambda*pUnit - mu*wUnit;
@@ -169,9 +169,9 @@ double DeOTModule::localUOfStraw(const int aStraw) const {
 }
 
 StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
-				     const Gaudi::XYZPoint& exitPoint,
-				     std::vector<OTChannelID>& channels,
-				     std::vector<double>& driftDistances) const {
+                                     const Gaudi::XYZPoint& exitPoint,
+                                     std::vector<OTChannelID>& channels,
+                                     std::vector<double>& driftDistances) const {
 
   /// Before we do anything crazy let's first check if the 
   /// entry and exit points are inside the module.
@@ -246,10 +246,10 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       double dist = docaWire(enP, e_p, wB, e_w, lambda, mu);
       /// Do we have a hit?
       if (fabs(dist) < m_cellRadius && isEfficientA(yMiddle)) {
-	tmpChannel = OTChannelID(m_stationID, m_layerID,
-				 m_quarterID, m_moduleID, *iStraw);
-	channels.push_back(tmpChannel);
-	driftDistances.push_back(dist);
+        tmpChannel = OTChannelID(m_stationID, m_layerID,
+                                 m_quarterID, m_moduleID, *iStraw);
+        channels.push_back(tmpChannel);
+        driftDistances.push_back(dist);
       }
     }
 
@@ -272,11 +272,11 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       double dist = docaWire(enP, e_p, wB, e_w, lambda, mu);
       /// Do we have a hit?
       if (fabs(dist) < m_cellRadius && isEfficientB(yMiddle)) {
-	tmpChannel = OTChannelID(m_stationID, m_layerID,
-				 m_quarterID, m_moduleID, 
-				 m_nStraws+*iStraw);
-	channels.push_back(tmpChannel);
-	driftDistances.push_back(dist);
+        tmpChannel = OTChannelID(m_stationID, m_layerID,
+                                 m_quarterID, m_moduleID, 
+                                 m_nStraws+*iStraw);
+        channels.push_back(tmpChannel);
+        driftDistances.push_back(dist);
       }
     }
   } else { // curly track
@@ -312,9 +312,9 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       z3Circ = 2.0 * (zfrac-0.5)*m_zPitch;
     } else {
       if ( z1 < 0 ) {
-	z3Circ = - zfrac * m_zPitch; 
+        z3Circ = - zfrac * m_zPitch; 
       } else {
-	z3Circ = zfrac * m_zPitch; 
+        z3Circ = zfrac * m_zPitch; 
       }
     }
 
@@ -327,17 +327,17 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     while ( (uStep < uHigh) && strawA != 0 ) {
       uStep = localUOfStraw(strawA);
       double distCirc = 
-	sqrt((zCirc-zStrawA)*(zCirc-zStrawA) + (uCirc-uStep)*(uCirc-uStep));
+        sqrt((zCirc-zStrawA)*(zCirc-zStrawA) + (uCirc-uStep)*(uCirc-uStep));
       double distTmp = fabs(distCirc-rCirc);
       int straw = strawA;
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
 
       if ( distTmp < m_cellRadius ) {
-	if (ambTmp < 0.0 ) distTmp *= -1.0;
-	OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
-					  m_quarterID, m_moduleID, straw);
-	channels.push_back(tmpChan);
-	driftDistances.push_back(distTmp);
+        if (ambTmp < 0.0 ) distTmp *= -1.0;
+        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
+                                          m_quarterID, m_moduleID, straw);
+        channels.push_back(tmpChan);
+        driftDistances.push_back(distTmp);
       }
       strawA = nextRightStraw(straw);
     }
@@ -349,17 +349,17 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     while ( (uStep < uHigh) && strawB != 0 ) {
       uStep = localUOfStraw(strawB);
       double distCirc = 
-	sqrt((zCirc-zStrawB)*(zCirc-zStrawB) + (uCirc-uStep)*(uCirc-uStep));
+        sqrt((zCirc-zStrawB)*(zCirc-zStrawB) + (uCirc-uStep)*(uCirc-uStep));
       double distTmp = fabs(distCirc-rCirc);
       int straw = strawB;
 
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
       if ( distTmp < m_cellRadius ) {
-	if (ambTmp < 0.0) distTmp *= -1.0;
-	OTChannelID tmpChan = OTChannelID( m_stationID, m_layerID, 
-					   m_quarterID, m_moduleID, straw);
-	channels.push_back(tmpChan);
-	driftDistances.push_back(distTmp);
+        if (ambTmp < 0.0) distTmp *= -1.0;
+        OTChannelID tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                           m_quarterID, m_moduleID, straw);
+        channels.push_back(tmpChan);
+        driftDistances.push_back(distTmp);
       }
       strawB = nextRightStraw(straw);
     }
@@ -369,8 +369,8 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 }
 
 void DeOTModule::sCircle(const double z1, const double u1, const double z2, 
-			 const double u2, const double z3c,
-			 double& zc, double& uc, double& rc) const {
+                         const double u2, const double z3c,
+                         double& zc, double& uc, double& rc) const {
   
   double zw=(z1+z2)/2.;
   double uw=(u2+u1)/2.;
@@ -381,8 +381,8 @@ void DeOTModule::sCircle(const double z1, const double u1, const double z2,
 }
 
 double DeOTModule::distanceToWire(const unsigned int aStraw, 
-				  const Gaudi::XYZPoint& aPoint, 
-				  const double tx, const double ty) const {
+                                  const Gaudi::XYZPoint& aPoint, 
+                                  const double tx, const double ty) const {
   // go to the local coordinate system
   Gaudi::XYZVector vec(tx, ty, 1.);
   Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(aPoint);
@@ -398,7 +398,7 @@ double DeOTModule::distanceToWire(const unsigned int aStraw,
 }
 
 double DeOTModule::distanceAlongWire(const double xHit, 
-				     const double yHit) const { 
+                                     const double yHit) const { 
   Gaudi::XYZPoint globalPoint(xHit, yHit, 0);
   Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(globalPoint);
 
@@ -410,7 +410,7 @@ double DeOTModule::distanceAlongWire(const double xHit,
 Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int straw) const {
   /// get the global coordinate of the middle of the channel
   Gaudi::XYZPoint localPoint(this->localUOfStraw(straw), 0., 
-			     this->localZOfStraw(straw));
+                             this->localZOfStraw(straw));
   return (this->geometry())->toGlobal(localPoint);
 }
 
@@ -427,8 +427,8 @@ double DeOTModule::z() const {
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
-LHCb::Trajectory* DeOTModule::trajectory( const OTChannelID& aChan,
-                                          const double /*offset*/ ) const 
+std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory( const OTChannelID& aChan,
+                                                        const double /*offset*/ ) const 
 {
   LineTraj* traj = 0;
   if( contains( aChan) == true ) {
@@ -449,6 +449,8 @@ LHCb::Trajectory* DeOTModule::trajectory( const OTChannelID& aChan,
   else { throw GaudiException( "Failed to make trajectory!", "DeOTModule.cpp",
                                StatusCode::FAILURE ); 
   }
+
+  std::auto_ptr<Trajectory> autoTraj(traj);
   
-  return traj;
+  return autoTraj;
 }

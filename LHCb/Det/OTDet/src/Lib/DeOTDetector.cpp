@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.18 2006-03-30 21:45:33 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.19 2006-04-04 14:23:15 ebos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -79,25 +79,25 @@ StatusCode DeOTDetector::initialize()
       //loop over layers
       IDetectorElement::IDEContainer::const_iterator iLayer = (*iStation)->childBegin();
       for ( ; iLayer != (*iStation)->childEnd(); ++iLayer) {
-	DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iLayer);
-	if (layer) m_layers.push_back(layer);
-	// loop over quarters
-	IDetectorElement::IDEContainer::const_iterator iQuarter = (*iLayer)->childBegin();
-	for ( ; iQuarter != (*iLayer)->childEnd(); ++iQuarter) {
-	  DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
-	  if (quarter) m_quarters.push_back(quarter);
-	  // loop over modules
-	  IDetectorElement::IDEContainer::const_iterator iModule = (*iQuarter)->childBegin();
-	  for ( ; iModule != (*iQuarter)->childEnd(); ++iModule) {
-	    DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
-	    if (module) {
-	      unsigned int channels = module->nChannels();
-	      m_nChannels += channels;
-	      m_modules.push_back(module);
-	      if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
-	    }
-	  } // modules
-	} // quarters
+        DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iLayer);
+        if (layer) m_layers.push_back(layer);
+        // loop over quarters
+        IDetectorElement::IDEContainer::const_iterator iQuarter = (*iLayer)->childBegin();
+        for ( ; iQuarter != (*iLayer)->childEnd(); ++iQuarter) {
+          DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
+          if (quarter) m_quarters.push_back(quarter);
+          // loop over modules
+          IDetectorElement::IDEContainer::const_iterator iModule = (*iQuarter)->childBegin();
+          for ( ; iModule != (*iQuarter)->childEnd(); ++iModule) {
+            DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
+            if (module) {
+              unsigned int channels = module->nChannels();
+              m_nChannels += channels;
+              m_modules.push_back(module);
+              if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
+            }
+          } // modules
+        } // quarters
       } // layers
     } // stations
 
@@ -145,7 +145,7 @@ StatusCode DeOTDetector::calculateHits(const Gaudi::XYZPoint& entryPoint,
 DeOTStation* DeOTDetector::findStation(const OTChannelID aChannel) const {
   /// Find the station and return a pointer to the station from channel
   Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
-					       bind(&DeOTStation::contains, _1, aChannel));
+                                               bind(&DeOTStation::contains, _1, aChannel));
   return (iter != m_stations.end() ? (*iter) : 0);
 }
 
@@ -153,7 +153,7 @@ DeOTStation* DeOTDetector::findStation(const OTChannelID aChannel) const {
 DeOTStation* DeOTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {
   /// Find the station and return a pointer to the station from XYZ point
   Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
-					       bind(&DetectorElement::isInside, _1, aPoint));
+                                               bind(&DetectorElement::isInside, _1, aPoint));
   return (iter != m_stations.end() ? (*iter) : 0);
 }
 
@@ -232,7 +232,7 @@ DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) const {
 // }
 
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
-				       double xHit, double yHit) const {
+                                       double xHit, double yHit) const {
   /// Distance along wire
   double dist = 0.0;
   DeOTModule* module = this->findModule(aChannel);
@@ -259,10 +259,10 @@ OTChannelID DeOTDetector::nextChannelLeft(const OTChannelID aChannel) const {
   int nextLeft = module->nextLeftStraw(aChannel.straw());
   return (nextLeft == 0) ?
     OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-				     aChannel.layer(),
-				     aChannel.quarter(),
-				     aChannel.module(),
-				     nextLeft );
+                                     aChannel.layer(),
+                                     aChannel.quarter(),
+                                     aChannel.module(),
+                                     nextLeft );
 }
 
 OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
@@ -270,19 +270,19 @@ OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
   int nextRight = module->nextRightStraw(aChannel.straw());
   return (nextRight == 0) ?
     OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-				     aChannel.layer(),
-				     aChannel.quarter(),
-				     aChannel.module(),
-				     nextRight );
+                                     aChannel.layer(),
+                                     aChannel.quarter(),
+                                     aChannel.module(),
+                                     nextRight );
 }
 
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
-LHCb::Trajectory* DeOTDetector::trajectory( const LHCb::LHCbID& id,
-                                            const double /*offset*/ ) const
+std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory( const LHCb::LHCbID& id,
+                                                          const double /*offset*/ ) const
 {
-  LHCb::Trajectory* traj = 0;
+  std::auto_ptr<LHCb::Trajectory> traj;
   if( !id.isOT() ) {
     throw GaudiException( "The LHCbID is not of OT type!", "DeOTDetector.cpp",
                           StatusCode::FAILURE );

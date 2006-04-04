@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.24 2006-03-30 21:45:32 janos Exp $
+// $Id: DeOTDetector.h,v 1.25 2006-04-04 14:22:47 ebos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -43,7 +43,7 @@ static const CLID& CLID_DeOTDetector = 8101;
 
 class DeOTDetector : public DetectorElement {
 
- public:
+public:
   
   /** Some typedefs */
   typedef std::vector<DeOTStation*> Stations;
@@ -148,7 +148,7 @@ class DeOTDetector : public DetectorElement {
    * @return distance
    */
   double distanceAlongWire(const LHCb::OTChannelID aChannel, 
-			   double xHit, double yHit) const;
+                           double xHit, double yHit) const;
 
   /** Get the straw resolution
    * @return straw resolution
@@ -226,10 +226,10 @@ class DeOTDetector : public DetectorElement {
    * The offset is zero for all OT Trajectories
    * @return trajecory
    */ 
-  LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
-                                const double = 0 /*offset*/ ) const;
+  std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::LHCbID& id,
+                                              const double = 0 /*offset*/ ) const;
   
- private:
+private:
 
   /** set the first station */
   void setFirstStation(const unsigned int iStation);
