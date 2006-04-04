@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.106 2006-04-04 14:24:15 ebos Exp $
+! $Id: release.notes,v 1.107 2006-04-04 15:41:28 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r3 2006-04-04 ========================
 ! 2006-04-04 - Edwin Bos
  - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 

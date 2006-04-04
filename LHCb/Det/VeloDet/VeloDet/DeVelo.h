@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.39 2006-04-04 14:24:34 ebos Exp $
+// $Id: DeVelo.h,v 1.40 2006-04-04 15:41:28 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -12,6 +12,7 @@
 
 // get LHCbID for trajectory
 #include "Kernel/LHCbID.h"
+#include "Kernel/Trajectory.h"
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
  *
@@ -24,11 +25,6 @@
  */
 
 static const CLID& CLID_DeVelo = 8100; 
-
-// forward declaration of LHCb::Trajectory
-namespace LHCb{
-  class Trajectory;
-}
 
 namespace DeVeloLocation{
   static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
