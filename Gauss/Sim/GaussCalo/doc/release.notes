@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!===================== GaussCalo v8r2 2006-04-04 =============================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to change in return type of put method in GaudiAlgorithm base class
+   . src/GetCaloHitsAlg.cpp
+
 !===================== GaussCalo v8r1 2006-02-13 =============================
 ! 2006-02-13 - Olivier Deschamps
  - Adapt pathes to DownstreamRegion enveloppe in options files.

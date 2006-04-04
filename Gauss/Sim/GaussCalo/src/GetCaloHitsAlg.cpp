@@ -1,4 +1,4 @@
-// $Id: GetCaloHitsAlg.cpp,v 1.2 2006-01-17 15:52:57 odescham Exp $
+// $Id: GetCaloHitsAlg.cpp,v 1.3 2006-04-04 13:19:27 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -81,10 +81,8 @@ StatusCode GetCaloHitsAlg::execute() {
 
   // Register output container to contain MCCaloHits
   LHCb::MCCaloHits * hits = new LHCb::MCCaloHits( ) ;
-  StatusCode sc = put( hits , m_hitsLocation ) ;
-  if ( sc.isFailure( ) ) 
-    return Error( "Unable to register LHCb::MCCaloHits in " + m_hitsLocation ) ;
-
+  put( hits , m_hitsLocation ) ;
+  
   // Get the G4 hit collections corresponding to Calo
   GiGaHitsByName col( m_colName ) ;
   *m_gigaSvc >> col ;
