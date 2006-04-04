@@ -1,5 +1,8 @@
-// $Id: OTMeasurement.cpp,v 1.10 2006-02-27 19:54:02 jvantilb Exp $
+// $Id: OTMeasurement.cpp,v 1.11 2006-04-04 16:29:07 jpalac Exp $
 // Include files
+
+// OTDet
+#include "OTDet/DeOTModule.h"
 
 // local
 #include "Event/OTMeasurement.h"
@@ -56,11 +59,12 @@ void OTMeasurement::init( const LHCb::OTTime& otTime,
 
   // Get the z of the measurement (centre of the wire)
   OTChannelID otChan = m_time->channel();
-  DeOTModule* module = geom.module( otChan );
+  //DeOTModule* module = geom.module( otChan );
+  DeOTModule* module = geom.findModule( otChan );
   XYZPoint wirePos = module->centerOfStraw( otChan.straw() );
   m_z = wirePos.z();
 
   // (almost) Obsolete
-  m_stereoAngle = module->stereoAngle();
+  m_stereoAngle = module->angle();
 
 }
