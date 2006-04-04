@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.11 2006-03-22 22:45:17 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.12 2006-04-04 14:56:38 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -179,6 +179,9 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Optional additional user commands to configure LHAPDF (by job options)
   CommandVector m_userLhaPdfSettings ;
+
+  /// Keep original particle properties of the production generator
+  bool m_keepOriginalProperties ;
 
   /// Temporary filename to redirect LHAPDF output
   seal::Filename m_lhapdfTempFilename ;

@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.17 2006-03-22 22:46:40 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.18 2006-04-04 14:57:17 robbep Exp $
 // Include files 
 
 // local
@@ -56,6 +56,7 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
     declareProperty( "DecayTool" , m_decayToolName = "EvtGenDecay" ) ;
     declareProperty( "CutTool" , m_cutToolName = "LHCbAcceptance" ) ;
     declareProperty( "LhaPdfCommands" , m_userLhaPdfSettings ) ;
+    declareProperty( "KeepOriginalProperties" , m_keepOriginalProperties ) ;
     m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 17 LHAPDF" ) ;
     m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 16 NOSTAT" ) ;
   }
@@ -115,7 +116,8 @@ StatusCode ExternalGenerator::initialize( ) {
   // update the particle properties of the production tool
   IParticlePropertySvc::const_iterator iter ;
   for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
-    if ( ! m_productionTool -> isSpecialParticle( *iter ) ) 
+    if ( ( ! m_productionTool -> isSpecialParticle( *iter ) ) && 
+         ( ! m_keepOriginalProperties ) ) 
       m_productionTool -> updateParticleProperties( *iter ) ;
     // set stable in the Production generator all particles known to the
     // decay tool
@@ -150,6 +152,8 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
      const LHCb::ParticleID::Quark theQuark , const int signalPid ) const {
   StatusCode sc ;
   
+  if ( 0 == m_decayTool ) return StatusCode::SUCCESS ;
+
   m_decayTool -> disableFlip() ;
 
   HepMCUtils::ParticleSet particleSet ;  
