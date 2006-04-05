@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.21 2006-03-28 14:47:58 jpalac Exp $
+! $Id: release.notes,v 1.22 2006-04-05 11:25:24 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 !=================================================================================
+
+! 2006-04-04 - Juan PALACIOS
+  - src/TrgDispCalculator change interface to calcImpactPar methods:
+    now use SymMatrix3x3 instead of Matrix3x3.
 
 !========================== DaVinciTransporter v3r0 2006-03-28 ===================
 ! 2006-02-16 - P. Koppenburg
