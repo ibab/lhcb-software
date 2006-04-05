@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.30 2006-04-05 12:16:03 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.31 2006-04-05 13:37:44 cattanem Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -60,7 +60,7 @@ StatusCode PuVetoAlg::initialize() {
   
   debug() << "==> Initialise" << endreq;
 
-  DeVelo* m_velo = get<DeVelo>( DeVeloLocation::Default );
+  DeVelo* m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   m_nbPuSensor = m_velo->numberPileUpSensors();
   m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
