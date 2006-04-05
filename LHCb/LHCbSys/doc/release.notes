@@ -24,6 +24,7 @@ This version uses Gaudi v18r3 and is for DC06 production
 - In LHCbKernel v6r4:
   . Modifications to RichSmartIDHashFuncs.h
   . added beginPoint() and endPoint() functions to Trajectory.h
+  . Fix IInAcceptance interface for LHCb namespace
 
 - In TrackEvent v2r2:
   . Additions to track locations names
@@ -49,6 +50,9 @@ This version uses Gaudi v18r3 and is for DC06 production
   . New interface, similar to STDet (not backwards compatible)
   . Calculate hits using vectors
   . sensitiveVolumeID() returns element ID
+
+- In VeloDet v10r3:
+  . Add module number method to DeVeloSensor
 
 - In VeloDet v10r3, STDet v2r2, OTDet v6r1
   . trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
