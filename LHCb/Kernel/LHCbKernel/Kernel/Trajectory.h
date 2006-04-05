@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.9 2006-04-04 16:03:48 ebos Exp $
+// $Id: Trajectory.h,v 1.10 2006-04-05 06:28:21 cattanem Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -10,6 +10,7 @@
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/PhysicalConstants.h"
 #include <utility>
+#include <memory>
 
 namespace LHCb 
 {
