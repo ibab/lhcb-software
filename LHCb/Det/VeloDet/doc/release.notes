@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.108 2006-04-05 09:06:07 mtobin Exp $
+! $Id: release.notes,v 1.109 2006-04-05 11:59:46 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r3 2006-04-05 ========================
 ! 2006-04-05 - Mark Tobin
  - Add module number method to DeVeloSensor
  - Removed all instances of unecessary this->
 
-!========================= VeloDet v10r3 2006-04-04 ========================
 ! 2006-04-04 - Edwin Bos
  - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 
