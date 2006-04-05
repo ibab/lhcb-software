@@ -19,6 +19,7 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In LHCbDefinitions v1r4, TrackEvent v2r2, PhysEvent v9r2:
   . adaptations to new SMatrix-5.10.00b
+  . Kernel/Vector3DTypes.h: Fix erroneous definition of RhoZPhiVector
 
 - In LHCbKernel v6r4:
   . Modifications to RichSmartIDHashFuncs.h
@@ -46,7 +47,8 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In OTDet v6r1:
   . New interface, similar to STDet (not backwards compatible)
-  . Calculate hitsusing vectors
+  . Calculate hits using vectors
+  . sensitiveVolumeID() returns element ID
 
 - In VeloDet v10r3, STDet v2r2, OTDet v6r1
   . trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
