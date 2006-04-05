@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r0p1 2006-04-05 ======================
+! 2006-04-05 - Chris Jones
+ - Suppress warnings about missing RichPixelProperties 
+
 !======================== RichReadout v2r0 2006-03-07 ========================
 ! 2006-03-01 - Chris Jones
  - Adapt to new RichDAQ interface
