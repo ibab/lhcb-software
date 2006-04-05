@@ -10,10 +10,29 @@ Requires input from Gauss v24r2 or greater. Output needs Brunel v30r0 or greater
 
 This is the first release for DC06 production.
 
+- New geometry
+  . Backward incompatible changes to Velo geometry (VeloDet v10r3, XmlDDDB v30r3)
+    . Rotated velo by 180 degrees around the z axis.  First sensor is now on the
+      left side of LHCb
+    . Fixed z positions of sensors by changing the separation between R and Phi
+      sensors in a module.
+    . Changed order of sensors on right side of detector to ensure that the
+      number of modules with the phi sensor facing downstream is the same as the
+      number with the r sensor facing downtream.
+  . Fixes to IT sensor numbering (XmlDDDB v30r3)
+  . Transparent changes due to beam pipe integration and improved material
+    description (details in XmlDDDB v30r3 release notes)
+
+- New tuning
+  . Update of Velo resolution parametrisations (VeloAlgorithms v4r2)
+
 - Bug fixes
   . Removed bug in ST strip numbering (STDet v2r2)
   . Protections against divide by zero in VeloDigiMoni (VeloAlgorithms v4r2)
   . Fix in Copy.opts to pick up correct PoolCopy.opts (Boole v11r2)
+  . Fix initialization of PU sensor geometry (PuVeto v7r1p1)
+  . Fix pulseShape loop (VeloSimulation v2r2)
+  . Suppress warnings about missing RichPixelProperties (RichReadout v2r0p1)
 
 - Interface changes
   . New OTDet interface
