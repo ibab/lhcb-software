@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-04-05 - Vanya BELYAEV
+ - Kernel/IInAcceptance.h
+   src/IInAcceptance.cpp
+   minor modification for an interface 
+  (add the "LHCb::" namespace qualifier to Track)
+
+
 !===================== LHCbKernel v6r4 2006-04-04 =========================
 ! 2006-04-04 - Edwin Bos
  - added beginPoint() and endPoint() functions to Trajectory.h
