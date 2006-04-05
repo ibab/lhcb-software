@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.5 2006-03-21 17:32:20 mtobin Exp $
+// $Id: VeloClusterPosition.cpp,v 1.6 2006-04-05 10:06:23 szumlat Exp $
 // Include files
 
 // from Gaudi
@@ -39,8 +39,8 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_useWeightedMean ( false ),
     m_useEtaFit ( false ),
     m_paraTypes ( 6, 0. ),
-    m_defaultResOneStrip ( 2, 0. ),
-    m_defaultResTwoStrip ( 2, 0. ),
+    m_defaultRSensorResolution ( 2, 0. ),
+    m_defaultPhiSensorResolution ( 2, 0. ),
     m_defaultEtaPar ( 3, 0. ),
     m_resParameters ( 12, 0. )
 {
@@ -49,8 +49,8 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
   declareProperty("UseWeightedMean", m_useWeightedMean);
   declareProperty("UseEtaFit", m_useEtaFit);
   declareProperty("ParaTypes", m_paraTypes);
-  declareProperty("DefaultResolutionOneStrip", m_defaultResOneStrip);
-  declareProperty("DefaultResolutionTwoStrip", m_defaultResTwoStrip);
+  declareProperty("DefaultRSensorResolution", m_defaultRSensorResolution);
+  declareProperty("DefaultPhiSensorResolution", m_defaultPhiSensorResolution);
   declareProperty("ResParameters", m_resParameters);
   declareProperty("DefaultEtaPar", m_defaultEtaPar);
   //
@@ -149,21 +149,21 @@ double VeloClusterPosition::resolution(const double& pitch,
 { 
   debug()<< " ==> resolution() " <<endmsg;
   //
-  double p_o_0=m_defaultResOneStrip[0];
-  double p_o_1=m_defaultResOneStrip[1];
+  double p_R_0=m_defaultRSensorResolution[0];
+  double p_R_1=m_defaultRSensorResolution[1];
   //
-  double p_t_0=m_defaultResTwoStrip[0];
-  double p_t_1=m_defaultResTwoStrip[1];
+  double p_Phi_0=m_defaultPhiSensorResolution[0];
+  double p_Phi_1=m_defaultPhiSensorResolution[1];
   //
   double resolution=0.;
-  int cluSize=static_cast<int>(resInfo.second);
+  int sensType=static_cast<int>(resInfo.second);
   //
   if(!(resInfo.first)){
     // use default resolution parametrisation for mean LHCb angle
-    switch(cluSize){
-    case 1: resolution=p_o_0+p_o_1*pitch; break;
-    case 2: resolution=p_t_0+p_t_1*pitch; break;
-    default: resolution=p_t_0+p_t_1*pitch;
+    switch(sensType){
+    case 0: resolution=p_Phi_0+p_Phi_1*pitch; break;
+    case 1: resolution=p_R_0+p_R_1*pitch; break;
+    default: resolution=p_R_0+p_R_1*pitch;
     }
     //
     return (resolution);
@@ -280,10 +280,9 @@ void VeloClusterPosition::posAndError(
   //  
   unsigned int sensor=cluster->channelID().sensor();
   const DeVeloSensor* sens=m_veloDet->sensor(sensor);
-  double cluSize=static_cast<double>(cluster->size());
   double pitch=0., clusterPos=0., errorPos=0., rOfPhiCluster=0.;
   double alphaOfTrack=userInfo.first;
-  Pair resInfo=std::make_pair(alphaOfTrack, cluSize);
+  Pair resInfo=std::make_pair(alphaOfTrack, 0.);
   //
   if(sens->isR()||sens->isPileUp()){
     const DeVeloRType* rSens=dynamic_cast<const DeVeloRType*>(sens);
@@ -292,6 +291,8 @@ void VeloClusterPosition::posAndError(
       info()<< " ==> The given cluster is on RType sensor" <<endmsg;
     clusterPos=clusterPos/cm;
     pitch=rSens->rPitch(intDistanceID.strip(), fractionalPos);
+    m_RType=1.;
+    userInfo.second=m_RType;
     errorPos=resolution(pitch/micrometer, resInfo);
     errorPos=errorPos/(pitch/micrometer);
     // return values for cluster position and position errorPos
@@ -325,6 +326,8 @@ void VeloClusterPosition::posAndError(
       }
       //
       pitch=phiSens->phiPitch(meanRadius);
+      m_RType=0.;
+      resInfo.second=m_RType;
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(meanRadius/micrometer);
       double errorDeg=errorRad/degree;
@@ -344,6 +347,8 @@ void VeloClusterPosition::posAndError(
       //
       clusterPos=clusterPos/degree;
       pitch=phiSens->phiPitch(rOfPhiCluster);
+      m_RType=0.;
+      resInfo.second=m_RType;
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(rOfPhiCluster/micrometer);
       double errorDeg=errorRad/degree;

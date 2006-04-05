@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.3 2006-03-01 13:52:08 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.4 2006-04-05 10:06:23 szumlat Exp $
 #ifndef VELOCLUSTERPOS_H 
 #define VELOCLUSTERPOS_H 1
 
@@ -88,12 +88,13 @@ protected:
 private:
 
   DeVelo* m_veloDet;
+  double m_RType;
   bool m_printInfo;
   bool m_useWeightedMean;
   bool m_useEtaFit;
   std::vector<double> m_paraTypes;
-  std::vector<double> m_defaultResOneStrip;
-  std::vector<double> m_defaultResTwoStrip;
+  std::vector<double> m_defaultRSensorResolution;
+  std::vector<double> m_defaultPhiSensorResolution;
   std::vector<double> m_defaultEtaPar;
   // parametrisations for error calculation
   std::vector<double> m_resParameters;

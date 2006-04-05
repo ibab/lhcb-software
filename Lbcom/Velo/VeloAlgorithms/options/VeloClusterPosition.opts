@@ -6,7 +6,7 @@ ToolSvc.clusTool.UseWeightedMean=true;
 ToolSvc.clusTool.UseEtaFit=false;
 // first parameter is im um second one is dimensionless
 // the order is important! the dimension is important!
-ToolSvc.clusTool.DefaultResolutionOneStrip={-2.31, 0.28};
-ToolSvc.clusTool.DefaultResolutionTwoStrip={-3., 0.22};
+ToolSvc.clusTool.DefaultRSensorResolution={-3.23, 0.23};
+ToolSvc.clusTool.DefaultPhiSensorResolution={-3., 0.28};
 ToolSvc.clusTool.ParaTypes={2., 5., 7., 10., 20., 30.};
 ToolSvc.clusTool.DefaultEtaPar={0.5, 0.25., -8.13};

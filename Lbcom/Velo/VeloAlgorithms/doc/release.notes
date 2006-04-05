@@ -3,6 +3,9 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r2 2006-03-28 =====================
+! 2006-04-05 - Tomasz Szumlak
+ - Update of resolution parametrisations
+
 ! 2006-03-28 - Marco Cattaneo
  - Backwards compatible fixes to compile with Gaudi v18r3
  - Various fixes for GaudiAlgorithm
