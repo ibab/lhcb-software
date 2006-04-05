@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.6 2006-02-16 16:01:19 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.7 2006-04-05 12:24:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -116,9 +116,9 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     RichPixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key() );
     if ( !props   )
     {
-      std::ostringstream mess;
-      mess << "ID " << (*iSumDep)->key() << " has no RichPixelProperties";
-      Warning( mess.str(), StatusCode::FAILURE, 0 );
+      //std::ostringstream mess;
+      //mess << "ID " << (*iSumDep)->key() << " has no RichPixelProperties";
+      //Warning( mess.str(), StatusCode::FAILURE, 0 );
       continue;
     }
 
