@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.16 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.17 2006-04-05 18:02:40 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -174,7 +174,7 @@ public:
   void cacheGeometry();
 
   /// Convert routing line to chip channel (1234 -> 0213)
-  unsigned int RoutingLineToChipChannel(unsigned int routLine){
+  unsigned int RoutingLineToChipChannel(unsigned int routLine) const {
     routLine = (2048-routLine);
     if(1 == routLine%4){
       routLine++;
@@ -184,7 +184,7 @@ public:
     return routLine;
   }
   /// Convert chip channel to routing line (0213 -> 1234)
-  unsigned int ChipChannelToRoutingLine(unsigned int chipChan){
+  unsigned int ChipChannelToRoutingLine(unsigned int chipChan) const {
     if(1 == chipChan%4){
       chipChan++;
     } else if(2 == chipChan%4) {
@@ -193,36 +193,40 @@ public:
     return (2048-chipChan);
   }  
   /// Convert chip channel to strip number
-  unsigned int ChipChannelToStrip(unsigned int chipChan){
+  unsigned int ChipChannelToStrip(unsigned int chipChan) const {
     return RoutingLineToStrip(ChipChannelToRoutingLine(chipChan));
   }
   /// Convert strip number to chip channel
-  unsigned int StripToChipChannel(unsigned int strip){
+  unsigned int StripToChipChannel(unsigned int strip) const {
     return RoutingLineToChipChannel(StripToRoutingLine(strip));
   }
 
   /// Convert routing line to strip number
-  unsigned int RoutingLineToStrip(unsigned int routLine){return m_mapRoutingLineToStrip[routLine];}
+  unsigned int RoutingLineToStrip(unsigned int routLine) const {
+    return m_mapRoutingLineToStrip[routLine];
+  }
   /// Convert strip number to routing line
-  unsigned int StripToRoutingLine(unsigned int strip){return m_mapStripToRoutingLine[strip];}
+  unsigned int StripToRoutingLine(unsigned int strip) const {return m_mapStripToRoutingLine[strip];}
 
   /// Get the chip number from the routing line
-  unsigned int ChipFromRoutingLine(unsigned int routLine){return ChipFromChipChannel(RoutingLineToChipChannel(routLine));};
+  unsigned int ChipFromRoutingLine(unsigned int routLine) const {
+    return ChipFromChipChannel(RoutingLineToChipChannel(routLine));
+  }
   /// Get the chip number from the chip channel
-  unsigned int ChipFromChipChannel(unsigned int chipChan){return static_cast<int>(chipChan/128);}
+  unsigned int ChipFromChipChannel(unsigned int chipChan) const {return static_cast<int>(chipChan/128);}
   /// Get the Chip from the Velo ChannelID
-  unsigned int ChipFromStrip(unsigned int strip){return ChipFromChipChannel(StripToChipChannel(strip));}
+  unsigned int ChipFromStrip(unsigned int strip) const {return ChipFromChipChannel(StripToChipChannel(strip));}
 
   /**  Return the validity of a strip
    *   Cince this method uses the condition cache, the result
    *   depends on CondDB.
    */
-  bool OKStrip(unsigned int strip){
+  bool OKStrip(unsigned int strip) const {
     return (strip<m_numberOfStrips && stripInfo(strip).stripIsReadOut());
   }
   
   /// Returns the validity of a given channel
-  bool OKChipChannel(unsigned int chipChan){
+  bool OKChipChannel(unsigned int chipChan) const {
     return (chipChan<m_numberOfStrips && OKStrip(ChipChannelToStrip(chipChan)));
   }
 
@@ -356,8 +360,8 @@ protected:
   unsigned int m_numberOfZones;
   static const unsigned int m_minRoutingLine=1;
   static const unsigned int m_maxRoutingLine=2048;
-  std::map<unsigned int, unsigned int> m_mapRoutingLineToStrip;//<Map of routing line to strips
-  std::map<unsigned int, unsigned int> m_mapStripToRoutingLine;//<Map of strips to routing line
+  mutable std::map<unsigned int, unsigned int> m_mapRoutingLineToStrip;//<Map of routing line to strips
+  mutable std::map<unsigned int, unsigned int> m_mapStripToRoutingLine;//<Map of strips to routing line
   
 private:
 

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.21 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.22 2006-04-05 18:02:40 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -437,11 +437,9 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
   if(0 == routArea){
     strip = (m_nChan1+routLine-1);
   } else if(1 == routArea) {
-    strip = (routLine-m_nChan0-1);
-    //    strip = (m_maxRoutingLine-2*m_nChan0-2*m_nChan3-routLine); // NEW!
+    strip = m_nChan0+m_nChan2-routLine;
   } else if(2 == routArea){
-    strip = (m_maxRoutingLine-m_nChan0-m_nChan1-m_nChan3-routLine);
-    //    strip = routLine-1; // NEW!
+    strip = routLine-1;
   } else if(3 == routArea){
     strip = (m_maxRoutingLine-m_nChan3-routLine);
   } else strip=9999;
