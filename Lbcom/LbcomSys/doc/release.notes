@@ -15,6 +15,9 @@ This version uses Gaudi v18r3 and LHCb v20r2.
 - In PuVeto v7r1p1, L0DU v7r1p1, CaloAssociators v6r0p1:
   . Backward compatible fixes to compile with Gaudi v18r3
 
+- In PuVeto v7r1p1
+  . Fix bug in initialise method caused in transition new DeVelo 
+
 - In OTMonitor v2r1:
   . Adapt to new OTDet interface
 
