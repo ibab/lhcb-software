@@ -3,15 +3,16 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2006-04-04 Phys v3r1 - Minimal Phys</A></H1><PRE>
 
- First minimal release of PHYS with DC06 event model.
+ Second minimal release of PHYS with DC06 event model.
  It compiles but is untested.
 
-  - Built against LHCb v20r1
+  - Built against LHCb v20r2
   - New event model
-  - ROOT vector classes 
-  - SMatrix matrices
+  - ROOT MathCore GenVector classes
+  - ROOT SVector classes, SMatrix classes 
+  - Using ROOT 5.10.00c with interface improvements and bug fixes to SMatrix.
   
 ##################################### PHYS #####################################
 !========================== DaVinciFilter v4r0 2006-03-28 ===================
