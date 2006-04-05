@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.11 2006-03-15 13:48:55 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.12 2006-04-05 14:56:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -229,10 +229,11 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
     const Particle& par = *(parPointer);
     const Gaudi::XYZPoint& point = par.referencePoint();
     const Gaudi::SymMatrix7x7& cov = par.covMatrix();
-    iMX = par.slopeX();
-    iMY = par.slopeY();
-    iX0 = point.x() - par.slopeX() * point.z();
-    iY0 = point.y() - par.slopeY() * point.z();
+    const Gaudi::XYZVector slopes = par.slopes();
+    iMX = slopes.X();
+    iMY = slopes.Y();
+    iX0 = point.x() - slopes.X() * point.z();
+    iY0 = point.y() - slopes.Y() * point.z();
     iInvSig2X = 1/cov(1,1);
     iInvSig2Y = 1/cov(2,2);
 

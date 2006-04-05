@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.2 2006-03-15 13:41:00 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.3 2006-04-05 14:55:23 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -106,7 +106,8 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
   const Gaudi::SymMatrix3x3& trackPointErr = part.posCovMatrix();
 
   // LHCb::Particle direction
-  Gaudi::XYZVector pNotNorm = Gaudi::XYZVector(part.slopeX(),part.slopeY(),1.);
+  Gaudi::XYZVector pNotNorm = Gaudi::XYZVector(part.slopes().X(),
+                                               part.slopes().Y(),1.);
   Gaudi::XYZVector uniDirPart = pNotNorm / pNotNorm.R();
   
   // LHCb::Vertex position and its error

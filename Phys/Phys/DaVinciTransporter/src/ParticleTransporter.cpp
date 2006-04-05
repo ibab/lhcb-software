@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.2 2006-03-15 13:40:59 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.3 2006-04-05 14:55:23 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -118,7 +118,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
 //=============================================================================
 StatusCode ParticleTransporter::makeState(const LHCb::Particle* P, LHCb::State& s) const { 
   s.setState(P->momentum().X(),P->momentum().Y(),P->momentum().Z(),
-             P->slopeX(),P->slopeY(),P->charge()/P->p());
+             P->slopes().X(),P->slopes().Y(),P->charge()/P->p());
   
   /// @todo Implement error matrix.
 

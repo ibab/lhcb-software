@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.49 2006-04-03 17:07:02 jpalac Exp $
+! $Id: release.notes,v 1.50 2006-04-05 14:56:48 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-04-05 - J. Palacios
+ - src/TrgVertexFitter: change calls to Particle::slopeX(), slopeY() for calls to Particle::slopes(), adapting to new Particle interface.
 
 ! 2006-04-03 - J. Palacios
  - Added src/OfflineVertexFitter.h and .cpp from Yuehong Xie.

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.22 2006-04-05 11:25:24 jpalac Exp $
+! $Id: release.notes,v 1.23 2006-04-05 14:55:23 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
-!=================================================================================
+!==============================================================================
 
+! 2006-04-05 - Juan PALACIOS
+  - src/ParticleTransporter.cpp and - src/TrgDispCalculator.cpp:
+        use new Particle::slopes() instead of Particle::slopeX(), slopeY().
+  
 ! 2006-04-04 - Juan PALACIOS
   - src/TrgDispCalculator change interface to calcImpactPar methods:
     now use SymMatrix3x3 instead of Matrix3x3.
