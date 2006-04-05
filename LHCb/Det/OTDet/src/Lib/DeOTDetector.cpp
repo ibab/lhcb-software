@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.20 2006-04-04 18:16:57 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.21 2006-04-05 20:03:56 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -202,15 +202,11 @@ DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) const {
 
 const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const {
   DeOTDetector* nonConstThis = const_cast<DeOTDetector*>(this);
-  DeOTModule* module = nonConstThis->findModule( aPoint );
-  if ( module == 0 ) {
-    MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at " 
-        << aPoint << endmsg;
-    return -1;
-  }
-  return module->elementID();
+  DeOTModule* m = nonConstThis->findModule(aPoint);
   
+  if (m==0) return -1;
+  
+  return m->elementID();
 }
 
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
