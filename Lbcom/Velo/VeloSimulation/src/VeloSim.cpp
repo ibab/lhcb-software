@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.12 2006-04-05 10:13:47 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.13 2006-04-05 14:15:41 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -62,8 +62,8 @@ static const double k_pulseShapePeakTime=30.7848;
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_sensorOn ( true ),
     m_veloDet ( 0 ),
+    m_sensorOn ( true ),
     m_fitParams( 7, 0. )
 {
   declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
