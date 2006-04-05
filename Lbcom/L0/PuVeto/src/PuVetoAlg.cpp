@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.28 2006-03-28 11:40:48 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.29 2006-04-05 08:59:05 mtobin Exp $
 // Include files
 #include <fstream>
 // from Gaudi
@@ -66,8 +66,8 @@ StatusCode PuVetoAlg::initialize() {
   m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
   
   unsigned int i=0;
-  for (std::vector<DeVeloRType*>::const_iterator iPU=m_velo->pileUpRSensorsBegin();
-       iPU != m_velo->pileUpRSensorsEnd(); ++iPU, ++i) {
+  for (std::vector<DeVeloSensor*>::const_iterator iPU=m_velo->pileUpSensorsBegin();
+       iPU != m_velo->pileUpSensorsEnd(); ++iPU, ++i) {
     m_zSensor[i] = (*iPU)->z(); 
     debug() << "Sensor " << i << " z = " << m_zSensor[i] << endreq;
   }

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.45 2006-03-28 11:40:48 cattanem Exp $
+! $Id: release.notes,v 1.46 2006-04-05 08:59:05 mtobin Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
+
+! 2006-04-05 - Mark Tobin
+ - Fix bug in initialise method caused in transition new DeVelo 
 
 !======================== PuVeto v7r1p1 2006-03-28 =======================
 ! 2006-03-28 - Marco Cattaneo
