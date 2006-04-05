@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.85 2006-04-03 07:42:03 cattanem Exp $
+! $Id: release.notes,v 1.86 2006-04-05 14:53:40 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+! 2006-04-05 - Juan PALACIOS
+ - Change to Particle interface: replace slopeX() and slopeY() by slopes(),
+   returning Gaudi::XYZVector.
 
 !======================= PhysEvent v9r2 2006-04-03 ==========================
 ! 2006-04-03 - Juan Palacios

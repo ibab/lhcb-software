@@ -22,6 +22,7 @@
        <import name="Event/ProtoParticle" soft="TRUE"/>
        <import name="GaudiKernel/VectorMap"/>
        <import name="Kernel/Point3DTypes.h"/>
+       <import name="Kernel/Vector3DTypes.h"/>
        <import name="Kernel/Vector4DTypes.h"/>
        <import name="Kernel/GenericMatrixTypes.h"/>
        <import name="Kernel/SymmetricMatrixTypes.h"/>
@@ -297,24 +298,15 @@
        </code>
        </method>
        <method 
-       type="double" 
-       name="slopeX" 
+       type="Gaudi::XYZVector" 
+       name="slopes" 
        const="TRUE" 
-       desc="slope in X at reference point"
+       desc="slopes (Px/Pz, Py/Pz. 1) at reference point"
        > 
         <code>
-<!--	  return m_momentum.vect().x()/m_momentum.vect().z() ; -->
-	  return m_momentum.X()/m_momentum.Z() ;
-        </code>
-       </method>
-       <method 
-       type="double" 
-       name="slopeY" 
-       const="TRUE" 
-       desc="slope in Y at reference point"
-       > 
-        <code>
-	  return m_momentum.Y()/m_momentum.X() ;
+	  return Gaudi::XYZVector(m_momentum.X()/m_momentum.Z(),
+                                  m_momentum.Y()/m_momentum.Z(),
+                                  1.);
         </code>
        </method>
 
