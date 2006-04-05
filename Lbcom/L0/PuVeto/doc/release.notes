@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.46 2006-04-05 08:59:05 mtobin Exp $
+! $Id: release.notes,v 1.47 2006-04-05 12:16:02 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
 
+!======================== PuVeto v7r1p1 2006-03-28 =======================
 ! 2006-04-05 - Mark Tobin
  - Fix bug in initialise method caused in transition new DeVelo 
 
-!======================== PuVeto v7r1p1 2006-03-28 =======================
 ! 2006-03-28 - Marco Cattaneo
  - Backwards compatible fixes to compile with Gaudi v18r3
 
