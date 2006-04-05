@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.12 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.13 2006-04-05 09:06:07 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -232,6 +232,7 @@ private:
   }
   /// Select routing line area
   /// (0) Chips 15 to 13, (1) Chip 12, (2) Chip 11 and (3) Chips 10 to 8
+  /// Pattern repeats for chips 7 to 0
   unsigned int RoutingLineArea(unsigned int routingLine);
   /// Return strip from routing line area
   unsigned int RoutLineToStrip(unsigned int routLine, unsigned int routArea);

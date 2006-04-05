@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.15 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.16 2006-04-05 09:06:07 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -105,8 +105,8 @@ public:
 
   /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal) const {
-    if(this->isDownstream()) phiLocal = -phiLocal;
-    if(this->isRight()) phiLocal += pi;
+    if(isDownstream()) phiLocal = -phiLocal;
+    if(isRight()) phiLocal += pi;
     return phiLocal;
   } 
 
@@ -146,6 +146,9 @@ public:
   /// The thickness of the sensor in mm
   inline double siliconThickness() const {return m_siliconThickness;}
   
+  /// Returns the module number
+  inline std::string module() const {return m_module;}
+
   /// Returns the sensor type
   inline std::string type() const {return m_type;}
   inline std::string fullType() const {return m_fullType;}
@@ -361,6 +364,7 @@ private:
   void initSensor();
 
   static const unsigned int m_numberOfStrips=2048;
+  std::string m_module;
   std::string m_type;
   std::string m_fullType;
   bool m_isLeft;

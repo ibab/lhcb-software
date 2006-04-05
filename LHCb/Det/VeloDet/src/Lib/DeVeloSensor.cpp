@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.15 2006-03-27 17:26:22 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.16 2006-04-05 09:06:07 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -72,17 +72,18 @@ StatusCode DeVeloSensor::initialize()
   }
 
   initSensor();
-  IGeometryInfo* geom = this->geometry();
+  IGeometryInfo* geom = geometry();
   m_geometry = geom;
   cacheGeometry();
   
-  msg << MSG::DEBUG << "Sensor full type " << m_fullType << " z= " << m_z
-      << " R " << this->isR() 
-      << " Phi " << this->isPhi()  
-      << " PU " << this->isPileUp()
+  msg << MSG::DEBUG << "Module " << m_module << " sensor " << m_sensorNumber 
+      << " full type " << m_fullType << " z= " << m_z
+      << " R " << isR() 
+      << " Phi " << isPhi()  
+      << " PU " << isPileUp()
       << " Left " << m_isLeft
-      << " Right " << this->isRight() 
-      << " Downstream " << this->isDownstream() << endreq;
+      << " Right " << isRight() 
+      << " Downstream " << isDownstream() << endreq;
 
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
@@ -143,7 +144,7 @@ StatusCode DeVeloSensor::channelDistance(const LHCb::VeloChannelID& start,
   unsigned int startStrip = start.strip();
   unsigned int endStrip = end.strip();
 
-  if(this->numberOfStrips()<startStrip || this->numberOfStrips()<endStrip) {
+  if(numberOfStrips()<startStrip || numberOfStrips()<endStrip) {
     return StatusCode::FAILURE;
   }
   // put in some checks for boundaries etc...
@@ -159,20 +160,22 @@ StatusCode DeVeloSensor::channelDistance(const LHCb::VeloChannelID& start,
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
-  m_sensorNumber=this->param<int>("SensorNumber");
+  m_sensorNumber=param<int>("SensorNumber");
 
-  m_innerRadius = this->param<double>("InnerRadius");
-  m_outerRadius = this->param<double>("OuterRadius");
-  m_siliconThickness = this->param<double>("SiThick");
+  m_innerRadius = param<double>("InnerRadius");
+  m_outerRadius = param<double>("OuterRadius");
+  m_siliconThickness = param<double>("SiThick");
 
-  m_type     = this->param<std::string>("Type");
+  m_module   = param<std::string>("Module");
+
+  m_type     = param<std::string>("Type");
   m_isPileUp = m_type.find("Veto")==0;
   m_isR      = m_type.find("R")==0;
   m_isPhi    = m_type.find("Phi")==0;
 
   if ( m_type == "R" || m_type == "Phi" || m_type == "Veto" ) {
-    m_isLeft = this->param<int>("Left");
-    m_isDownstream=this->param<int>("Downstream");
+    m_isLeft = param<int>("Left");
+    m_isDownstream=param<int>("Downstream");
     m_fullType = m_type + ( (m_isDownstream) ? "DnStrm" : "UpStrm" )
       + ( (m_isLeft) ? "Left" : "Right");
   } else {

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.19 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.20 2006-04-05 09:06:07 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -69,21 +69,21 @@ StatusCode DeVeloPhiType::initialize()
     return sc;
   }
   m_numberOfZones=2;
-  m_nbInner = this->param<int>("NbPhiInner");
+  m_nbInner = param<int>("NbPhiInner");
   m_stripsInZone.clear();
   m_stripsInZone.push_back(m_nbInner);
-  m_stripsInZone.push_back(this->numberOfStrips()-m_nbInner);
-  m_middleRadius = this->param<double>("PhiBoundRadius"); // PhiBound
+  m_stripsInZone.push_back(numberOfStrips()-m_nbInner);
+  m_middleRadius = param<double>("PhiBoundRadius"); // PhiBound
   // Point where strips of inner/outer regions cross
-  m_phiOrigin = this->param<double>("PhiOrigin");
+  m_phiOrigin = param<double>("PhiOrigin");
   m_phiOrigin -= halfpi;
   /* Inner strips (dist. to origin defined by angle between 
      extrapolated strip and phi)*/
-  m_innerDistToOrigin = this->param<double>("InnerDistToOrigin");
+  m_innerDistToOrigin = param<double>("InnerDistToOrigin");
   m_innerTilt = asin(m_innerDistToOrigin/innerRadius());
   m_innerTilt += m_phiOrigin;
   // Outer strips
-  m_outerDistToOrigin = this->param<double>("OuterDistToOrigin");
+  m_outerDistToOrigin = param<double>("OuterDistToOrigin");
   m_outerTilt = asin(m_outerDistToOrigin/m_middleRadius);
   double phiAtBoundary   = m_innerTilt - 
     asin( m_innerDistToOrigin / m_middleRadius );
@@ -95,20 +95,20 @@ StatusCode DeVeloPhiType::initialize()
       << endreq;
   
   // Angular coverage
-  m_innerCoverage = this->param<double>("InnerCoverage");
+  m_innerCoverage = param<double>("InnerCoverage");
   m_halfCoverage = 0.5*m_innerCoverage;
   m_innerPitch = m_innerCoverage / m_stripsInZone[0];
-  m_outerCoverage = this->param<double>("OuterCoverage");
+  m_outerCoverage = param<double>("OuterCoverage");
   m_outerPitch = m_outerCoverage / m_stripsInZone[1];
   
   // Dead region
-  m_rGap = this->param<double>("PhiRGap");
+  m_rGap = param<double>("PhiRGap");
   /// Corner cut offs
   cornerLimits();
 
   // the resolution of the sensor
-  m_resolution.first = this->param<double>("PhiResGrad");
-  m_resolution.second = this->param<double>("PhiResConst");
+  m_resolution.first = param<double>("PhiResGrad");
+  m_resolution.second = param<double>("PhiResConst");
   
   /// Parametrize strips as lines
   calcStripLines();
@@ -123,12 +123,13 @@ StatusCode DeVeloPhiType::initialize()
 //==============================================================================
 void DeVeloPhiType::calcStripLines()
 {
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
   m_stripLines.clear();
   double x1,y1,x2,y2;
   for(unsigned int strip=0; strip<numberOfStrips(); strip++){
     if(m_nbInner > strip) {
-      x1 = innerRadius() * cos(phiOfStrip(strip,0.,this->innerRadius()));
-      y1 = innerRadius() * sin(phiOfStrip(strip,0.,this->innerRadius()));
+      x1 = innerRadius() * cos(phiOfStrip(strip,0.,innerRadius()));
+      y1 = innerRadius() * sin(phiOfStrip(strip,0.,innerRadius()));
       x2 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
       y2 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
@@ -155,6 +156,7 @@ void DeVeloPhiType::calcStripLines()
     }
     Gaudi::XYZPoint begin(x1,y1,0);
     Gaudi::XYZPoint end(x2,y2,0);
+    msg << MSG::VERBOSE << "Sensor " << sensorNumber() << " " << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
     //Gaudi::XYZPoint begin;
     //Gaudi::XYZPoint end;
     //StatusCode sc=this->localToGlobal(Gaudi::XYZPoint(x1,y1,0),begin);
@@ -169,20 +171,20 @@ void DeVeloPhiType::cornerLimits()
 {
   m_cutOffs.clear();
   /// First corner
-  m_corner1X1 = this->param<double>("PhiCorner1X1");
-  m_corner1Y1 = this->param<double>("PhiCorner1Y1");
-  m_corner1X2 = this->param<double>("PhiCorner1X2");
-  m_corner1Y2 = this->param<double>("PhiCorner1Y2");
+  m_corner1X1 = param<double>("PhiCorner1X1");
+  m_corner1Y1 = param<double>("PhiCorner1Y1");
+  m_corner1X2 = param<double>("PhiCorner1X2");
+  m_corner1Y2 = param<double>("PhiCorner1Y2");
   double gradient;
   gradient = (m_corner1Y2 - m_corner1Y1) /  (m_corner1X2 - m_corner1X1);
   double intercept;
   intercept = m_corner1Y2 - (gradient*m_corner1X2);
   m_cutOffs.push_back(std::pair<double,double>(gradient,intercept));
   /// Second corner
-  m_corner2X1 = this->param<double>("PhiCorner2X1");
-  m_corner2Y1 = this->param<double>("PhiCorner2Y1");
-  m_corner2X2 = this->param<double>("PhiCorner2X2");
-  m_corner2Y2 = this->param<double>("PhiCorner2Y2");
+  m_corner2X1 = param<double>("PhiCorner2X1");
+  m_corner2Y1 = param<double>("PhiCorner2Y1");
+  m_corner2X2 = param<double>("PhiCorner2X2");
+  m_corner2Y2 = param<double>("PhiCorner2Y2");
   gradient = (m_corner2Y2 - m_corner2Y1) /  (m_corner2X2 - m_corner2X1);
   intercept = m_corner2Y2 - (gradient*m_corner2X2);
   m_cutOffs.push_back(std::pair<double,double>(gradient,intercept));
@@ -299,8 +301,8 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   //  if(m_isDownstream) y = -y;
   double x=point.x();
   double y=point.y();
-  bool isCutOff=this->isCutOff(x,y);
-  if(isCutOff) {
+  bool cutOff=isCutOff(x,y);
+  if(cutOff) {
     msg << MSG::VERBOSE << "Inner " << isInner << " Inside corner cut-off " 
         << x << "," << y << endreq;
     return StatusCode::FAILURE;

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.64 2006-04-04 14:24:51 ebos Exp $
+// $Id: DeVelo.cpp,v 1.65 2006-04-05 09:06:07 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -122,8 +122,8 @@ StatusCode DeVelo::initialize() {
     } else {
       msg << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
-    msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
-        << " pSensor " << (*iDESensor)->sensorNumber()
+    msg << MSG::DEBUG << "Module " << m_vpSensor[index]->module()
+        << " sensor " << m_vpSensor[index]->sensorNumber()
         << " type " << m_vpSensor[index]->fullType() 
         << " z = " << m_vpSensor[index]->z()
         << endreq;

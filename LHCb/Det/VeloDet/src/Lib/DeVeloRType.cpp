@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.20 2006-03-21 17:26:26 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.21 2006-04-05 09:06:07 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -73,14 +73,14 @@ StatusCode DeVeloRType::initialize()
   m_numberOfZones = 4;
   m_stripsInZone = numberOfStrips() / m_numberOfZones;
 
-  m_innerPitch = this->param<double>("InnerPitch");
-  m_outerPitch = this->param<double>("OuterPitch");
+  m_innerPitch = param<double>("InnerPitch");
+  m_outerPitch = param<double>("OuterPitch");
 
-  m_overlapInX = this->param<double>("ROverlapInX");
+  m_overlapInX = param<double>("ROverlapInX");
   
   // the resolution of the sensor
-  m_resolution.first = this->param<double>("RResGrad");
-  m_resolution.second = this->param<double>("RResConst");
+  m_resolution.first = param<double>("RResGrad");
+  m_resolution.second = param<double>("RResConst");
   
   /// Calculate the strip radii/phi limits 
   calcStripLimits();
@@ -157,8 +157,8 @@ StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
     return StatusCode::FAILURE;
   }
   // corner cut-offs
-  bool isCutOff=this->isCutOff(point.x(),point.y());
-  if(isCutOff) {
+  bool cutOff=isCutOff(point.x(),point.y());
+  if(cutOff) {
     msg << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
         << endreq;    
     return StatusCode::FAILURE;
@@ -266,7 +266,7 @@ void DeVeloRType::calcStripLimits()
     (m_outerR - m_innerR);
 
   /// Dead region from bias line
-  m_phiGap = this->param<double>("RPhiGap") / 2;
+  m_phiGap = param<double>("RPhiGap") / 2;
 
   /// Corner cut offs
   cornerLimits();
@@ -342,10 +342,10 @@ void DeVeloRType::calcStripLimits()
 //==============================================================================
 void DeVeloRType::cornerLimits()
 {
-  m_cornerX1 = this->param<double>("RCornerX1");
-  m_cornerY1 = this->param<double>("RCornerY1");
-  m_cornerX2 = this->param<double>("RCornerX2");
-  m_cornerY2 = this->param<double>("RCornerY2");
+  m_cornerX1 = param<double>("RCornerX1");
+  m_cornerY1 = param<double>("RCornerY1");
+  m_cornerX2 = param<double>("RCornerX2");
+  m_cornerY2 = param<double>("RCornerY2");
   
   m_corners.clear();
   double gradient;
@@ -395,20 +395,21 @@ void DeVeloRType::BuildRoutingLineMap(){
     // sector 3
     m_mapStripToRoutingLine[strip+1024]=routLine+1024;
     m_mapRoutingLineToStrip[routLine+1024]=strip+1024;
-    msg << MSG::DEBUG << "Routing line " << routLine 
+    msg << MSG::VERBOSE << "Routing line " << routLine 
+        << " area " << routArea
         << " strip " << m_mapRoutingLineToStrip[routLine]
         << " +1024 line " << routLine+1024
         << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
         << endreq;
-    /*    msg << MSG::DEBUG << "Routing line " << routLine 
+    msg << MSG::VERBOSE << "Routing line " << routLine 
         << " strip " << RoutingLineToStrip(routLine)
         << " chip channel " << RoutingLineToChipChannel(routLine)
         << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
-        << " from strip " << endreq;*/
+        << " from strip " << endreq;
   }
 }
 //=============================================================================
-// Select routing line area
+// Select routing line area (pattern repeats for chips 7 to 0)
 // (0) Chips 15 to 13 
 // (1) Chip 12
 // (2) Chip 11 
@@ -437,14 +438,15 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
     strip = (m_nChan1+routLine-1);
   } else if(1 == routArea) {
     strip = (routLine-m_nChan0-1);
+    //    strip = (m_maxRoutingLine-2*m_nChan0-2*m_nChan3-routLine); // NEW!
   } else if(2 == routArea){
     strip = (m_maxRoutingLine-m_nChan0-m_nChan1-m_nChan3-routLine);
+    //    strip = routLine-1; // NEW!
   } else if(3 == routArea){
     strip = (m_maxRoutingLine-m_nChan3-routLine);
   } else strip=9999;
   //  std::cout << "strip " << strip << " scram " << ScrambleStrip(strip) 
   //            << " rl " << routLine << " scram " << ScrambleStrip(routLine)
   //        << std::endl;
-  
   return ScrambleStrip(strip);
 }

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.14 2006-03-23 11:05:38 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.15 2006-04-05 09:06:07 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -227,9 +227,9 @@ private:
   std::vector<std::pair<unsigned int,unsigned int> > m_patternConfig;
   /// Return strip number for given routing line
   unsigned int strip(unsigned int routLine){
-    unsigned int patElem=this->patternElement(routLine);
-    unsigned int patternNumber=this->patternNumber(routLine);
-    return m_patternConfig[patElem].first+patternNumber*m_patternConfig[patElem].second;
+    unsigned int patElem=patternElement(routLine);
+    unsigned int patNum=patternNumber(routLine);
+    return m_patternConfig[patElem].first+patNum*m_patternConfig[patElem].second;
   };
 };
 #endif // VELODET_DEVELOPHITYPE_H

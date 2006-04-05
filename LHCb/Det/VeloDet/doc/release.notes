@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.107 2006-04-04 15:41:28 cattanem Exp $
+! $Id: release.notes,v 1.108 2006-04-05 09:06:07 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-04-05 - Mark Tobin
+ - Add module number method to DeVeloSensor
+ - Removed all instances of unecessary this->
 
 !========================= VeloDet v10r3 2006-04-04 ========================
 ! 2006-04-04 - Edwin Bos
