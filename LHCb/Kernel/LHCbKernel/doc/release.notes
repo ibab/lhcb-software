@@ -2,10 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r4 2006-04-04 =========================
 ! 2006-04-04 - Edwin Bos
  - added beginPoint() and endPoint() functions to Trajectory.h
 
-!===================== LHCbKernel v6r4 2006-03-29 =========================
 ! 2006-03-24 - Chris Jones
  - Modifications to RichSmartIDHashFuncs.h
 
