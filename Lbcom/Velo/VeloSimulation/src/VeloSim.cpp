@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.11 2006-03-28 15:19:27 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.12 2006-04-05 10:13:47 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -62,8 +62,9 @@ static const double k_pulseShapePeakTime=30.7848;
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-  m_veloDet ( 0 ),
-  m_fitParams( 7, 0. )
+    m_sensorOn ( true ),
+    m_veloDet ( 0 ),
+    m_fitParams( 7, 0. )
 {
   declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
   declareProperty("SpillOverInputData", m_spillOverInputContainer = "Prev/" + m_inputContainer );
@@ -85,7 +86,7 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("Threshold", m_threshold = 4500. );
   declareProperty("NoiseConstant", m_noiseConstant = 500. );
   declareProperty("kT", m_kT = 0.025 );
-  declareProperty("BiasVoltage", m_biasVoltage = 250. );
+  declareProperty("BiasVoltage", m_biasVoltage = 105. );
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6 );
   declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3 );
   declareProperty("ChargeUniform", m_chargeUniform = 70. );
@@ -151,8 +152,11 @@ StatusCode VeloSim::execute() {
   if (sc){
     // velo simulation
     m_hits = m_veloHits;
+    debug()<< "hits cont: " << m_veloHits <<endmsg;
     m_spillOverHits=NULL;
     if (0!=m_veloSpillOverHits) m_spillOverHits = m_veloSpillOverHits;
+    debug()<< "spill over cont: " << m_spillOverHits <<endmsg;
+    
     m_FEs  = m_veloFEs;
     m_simMode="velo";
     sc = simulation();
@@ -178,19 +182,21 @@ StatusCode VeloSim::simulation() {
   // simulate signals in strips from GEANT hits of current event
   if (m_chargeSim) sc= chargeSim(false); 
   // simulate signals in strips from GEANT hits of spillOver event
-  if (sc&&m_chargeSim&&m_spillOver) sc= chargeSim(true); 
-  // charge sharing from capacitive coupling of strips
-  if (sc&&m_coupling) sc=coupling(); 
-  // add noise
-  if (sc&&m_noiseSim) sc= noiseSim(); 
-  // add pedestals - not yet implemented
-  if (sc&&m_pedestalSim) sc= pedestalSim(); 
-  // common mode - not yet implemented
-  if (sc&&m_CMSim) sc=CMSim();
-  // dead strips / channels
-  if (sc&&(m_stripInefficiency>0.)) sc=deadStrips(); 
-  // remove any unwanted elements and sort
-  if (sc) sc=finalProcess(); 
+  if(m_sensorOn){
+    if (sc&&m_chargeSim&&m_spillOver) sc= chargeSim(true); 
+    // charge sharing from capacitive coupling of strips
+    if (sc&&m_coupling) sc=coupling(); 
+    // add noise
+    if (sc&&m_noiseSim) sc= noiseSim(); 
+    // add pedestals - not yet implemented
+    if (sc&&m_pedestalSim) sc= pedestalSim(); 
+    // common mode - not yet implemented
+    if (sc&&m_CMSim) sc=CMSim();
+    // dead strips / channels
+    if (sc&&(m_stripInefficiency>0.)) sc=deadStrips(); 
+    // remove any unwanted elements and sort
+    if (sc) sc=finalProcess();
+  }
   //
   return (sc);
 }
@@ -199,8 +205,9 @@ StatusCode VeloSim::getInputData() {
   //
   debug()<< " ==> getInputData() " <<endmsg;
   // get the velo input data
-  debug() << "Retrieving MCHits from " << m_inputContainer <<endmsg;
+  debug()<< "Retrieving MCHits from " << m_inputContainer <<endmsg;
   m_veloHits=get<LHCb::MCHits>( m_inputContainer );
+  debug()<< " Size of MCHits: " << m_veloHits->size() <<endmsg;
   //
   debug() << m_veloHits->size() << " hits retrieved" <<endmsg;
   // get the pile-up input data
@@ -215,12 +222,15 @@ StatusCode VeloSim::getInputData() {
   if (m_spillOver){
     debug() << "Retrieving MCHits of SpillOver Event from "
 			<< m_spillOverInputContainer <<endmsg;      
-    if(!exist<LHCb::MCHits>(m_spillOverInputContainer)){
+    if(!exist<LHCb::MCHits>( m_spillOverInputContainer )){
       debug()<<"Spill over event not present unable to retrieve input container="
 	          << m_spillOverInputContainer <<endmsg;
       m_veloSpillOverHits = 0;
     } else { 
-      m_veloSpillOverHits = get<LHCb::MCHits>(m_spillOverInputContainer);
+      //      m_veloSpillOverHits = get<LHCb::MCHits>( m_spillOverInputContainer );
+      SmartDataPtr<LHCb::MCHits> spillOverHits( eventSvc(),
+                                 m_spillOverInputContainer );
+      m_veloSpillOverHits=spillOverHits;
       //
       debug()<< m_veloSpillOverHits->size() << " spill over hits retrieved" 
              <<endmsg;
@@ -235,7 +245,9 @@ StatusCode VeloSim::getInputData() {
 	           << "input data container=" << m_spillOverInputContainer <<endmsg;
       m_pileUpSpillOverHits=0;
     }else{
-      m_pileUpSpillOverHits=get<LHCb::MCHits>(m_pileUpSpillOverInputContainer);
+      SmartDataPtr<LHCb::MCHits> pileUpSpillOverHits( eventSvc(),
+                                 m_pileUpSpillOverInputContainer );
+      m_pileUpSpillOverHits=pileUpSpillOverHits;
       debug()<< m_pileUpSpillOverHits->size()
 			       << " PileUp Spill over hits retrieved" <<endmsg;
     }
@@ -272,31 +284,37 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
   for(LHCb::MCHits::const_iterator hitIt = hits->begin();
       hits->end() != hitIt ; hitIt++ ){
     LHCb::MCHit* hit = (*hitIt);    
-    // degrade resolution for April 2003 Robustness Test
-    if (m_smearPosition>0) {
-      m_movePosition.SetX(m_gaussDist()*m_smearPosition);
-      m_movePosition.SetY(m_gaussDist()*m_smearPosition);  
-      m_movePosition.SetZ(0.);
-    } else{
-      m_movePosition.SetX(0.);
-      m_movePosition.SetY(0.);  
-      m_movePosition.SetZ(0.);
-    }
-    if(m_testSim){ testSim(hit,spillOver); }
-    else{
-      // calculate a set of points in the silicon
-      //with which the simulation will work
-      int NPoints = simPoints(hit);
-      verbose()<< "Simulating " << NPoints 
-               << " points in Si for this hit" <<endmsg;
-      if (NPoints>0){
-        // calculate charge to assign to each point
-        // taking account of delta ray inhomogeneities
-        std::vector<double> sPoints(NPoints);
-        chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
-        // diffuse charge from points to strips
-        diffusion(*hitIt,NPoints,sPoints,spillOver);
+    if(checkConditions(hit)){
+      m_sensorOn=true;
+      // degrade resolution for April 2003 Robustness Test
+      if (m_smearPosition>0) {
+        m_movePosition.SetX(m_gaussDist()*m_smearPosition);
+        m_movePosition.SetY(m_gaussDist()*m_smearPosition);  
+        m_movePosition.SetZ(0.);
+      }else{
+        m_movePosition.SetX(0.);
+        m_movePosition.SetY(0.);  
+        m_movePosition.SetZ(0.);
+     }
+     if(m_testSim){ testSim(hit,spillOver); }
+     else{
+       // calculate a set of points in the silicon
+       //with which the simulation will work
+       int NPoints = simPoints(hit);
+       verbose()<< "Simulating " << NPoints 
+                << " points in Si for this hit" <<endmsg;
+       if (NPoints>0){
+         // calculate charge to assign to each point
+         // taking account of delta ray inhomogeneities
+         std::vector<double> sPoints(NPoints);
+         chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
+         // diffuse charge from points to strips
+         diffusion(*hitIt,NPoints,sPoints,spillOver);
+        }
       }
+    }else{
+      debug()<< " the sensor is not read-out" <<endmsg;
+      m_sensorOn=false;
     }
   }
   debug()<< "Number of MCVeloFEs " << m_FEs->size() <<endmsg;
@@ -309,6 +327,7 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
 void VeloSim::testSim(LHCb::MCHit* hit, bool spillOver){
   //
   debug()<< " ==> testSim() " <<endmsg;
+  
   // test routine - simplest possible simulation.
   double EntryFraction;
   double pitch;
@@ -323,9 +342,13 @@ void VeloSim::testSim(LHCb::MCHit* hit, bool spillOver){
       sc=sens->pointToChannel(hit->exit(), entryChan, EntryFraction, pitch);
     }
     double charge=(hit->energy()/eV)/m_eVPerElectron;
-    if(spillOver) 
-      charge*=spillOverReminder(hit->time()/ns);
+    if(spillOver) charge*=spillOverReminder(hit->time()/ns);
     LHCb::MCVeloFE* myFE = findOrInsertFE(entryChan);
+    if(spillOver){
+      debug()<< " entry chan strip: " << entryChan.strip() <<endmsg;
+      debug()<< " fe strip: " << myFE->key().strip() <<endmsg;
+    }
+    
     fillFE(myFE,hit,charge);
   } else {
     verbose() << "testSim: No sensor from hit " << (hit->sensDetID()) << endreq;
@@ -396,6 +419,7 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
   debug()<< "Number of electron-hole pairs: " << charge <<endmsg;  
   if(spillOver){ 
     charge*=spillOverReminder(hit->time()/ns);
+    debug()<< " charge from spill-over: " << charge <<endmsg;
     //
     debug()<< "calculating charge per simulation point" <<endmsg;
     debug()<< "total charge " << charge << " in eV " 
@@ -578,6 +602,10 @@ void VeloSim::diffusion(LHCb::MCHit* hit,int Npoints,
           // update charge and MCHit list
           if (valid){
             LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
+            if(spillOver){
+              debug()<< " entry chan strip: " << entryChan.strip() <<endmsg;
+              debug()<< " fe strip: " << myFE->key().strip() <<endmsg;
+            }
             if (!spillOver) fillFE(myFE,hit,charge); // update and add MC link
             else fillFE(myFE,charge); // update, no MC link
           }
@@ -1003,7 +1031,10 @@ LHCb::MCVeloFE* VeloSim::findOrInsertFE(LHCb::VeloChannelID& stripKey){
     verbose()<< " -- Add FE " << stripKey.sensor() << ","
 		         << stripKey.strip() << endmsg;
     //
+    debug()<< "size of FEs: " << m_FEs->size() <<endmsg;
     m_FEs->insert(myFE);
+    debug()<< "size of FEs: " << m_FEs->size() <<endmsg;
+    
   }
   //
   return (myFE);
@@ -1136,19 +1167,25 @@ double VeloSim::spillOverReminder(double TOF)
   double chargeReminder=0.;
   // the time needed for light to travel distance of .75 m
   const double maxTOF=2.55; // ns
-  if(TOF<=0.) return (chargeReminder);
+  if(TOF<=0.) return ( chargeReminder );
   if(TOF>maxTOF) TOF=maxTOF;
   //
-  if(m_offPeakSamplingTime==0.){  // sample on peak
-    time=k_pulseShapePeakTime+k_spillOverTime-TOF;
-    chargeReminder=pulseShape(time, m_fitParams);
-  }else{
-    time=k_pulseShapePeakTime+k_spillOverTime+m_offPeakSamplingTime-TOF;
-    chargeReminder=pulseShape(time, m_fitParams);
-  }
+  time=k_pulseShapePeakTime+k_spillOverTime+m_offPeakSamplingTime-TOF;
+  chargeReminder=pulseShape(time, m_fitParams);
   //
   debug()<< "spillOverReminder= " << chargeReminder <<endmsg;
   //
-  return (chargeReminder);
+  return ( chargeReminder );
 }
 //==============================================================================
+bool VeloSim::checkConditions(LHCb::MCHit* aHit)
+{
+  debug()<< " ==> checkConditions(Hit) " <<endmsg;
+  //
+  const DeVeloSensor* sensor=m_veloDet->sensor(aHit->sensDetID());
+  // check the conditions
+  bool isReadOut=sensor->isReadOut();
+  //
+  return ( isReadOut );
+}
+//

@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !===================== VeloSimulation v2r1p1 2006-03-28 ======================
+! 2006-04-05 - Tomasz Szumlak
+ - clean-up the simulation code to DC06 release
+ - checking of the conditions data base if given sensor is read-out added
+ - fix pulseShape loop
+
 ! 2006-03-28 - Marco Cattaneo
  - Backwards compatible fixes to compile with Gaudi v18r3
 

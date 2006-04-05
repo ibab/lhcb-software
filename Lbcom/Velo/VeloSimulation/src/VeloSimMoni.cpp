@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.7 2006-03-21 17:33:16 mtobin Exp $
+// $Id: VeloSimMoni.cpp,v 1.8 2006-04-05 10:13:47 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -101,6 +101,7 @@ StatusCode VeloSimMoni::finalize() {
         << errnMCVeloFE <<endmsg;
   double allFEs=m_nMCVeloFEs+m_nMCVeloFEn+m_nMCVeloFEo;
   if(allFEs>0){
+    info().precision(2);
     info()<< "| FEs from signal:                      " 
           << (m_nMCVeloFEs/allFEs)*100
           << "%" <<endmsg;
@@ -152,6 +153,11 @@ StatusCode VeloSimMoni::VeloFEMonitor()
     if(Signal) { m_nMCVeloFEs++; }
     if(Noise) { m_nMCVeloFEn++; }
     if(Other) { m_nMCVeloFEo++; }
+    if(Other){
+    debug()<< " sig: " << Signal << ", noise: " << Noise
+          << ", so: " << Other <<endmsg;
+    debug()<< " local FE strip: " << localFE->strip() <<endmsg;
+    }
     // print some info if asked
     if(m_printInfo){
       info()<< " ==> MCVeloFE Monitor: "

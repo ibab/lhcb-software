@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.5 2006-02-23 12:58:16 cattanem Exp $
+#// $Id: VeloSim.h,v 1.6 2006-04-05 10:13:47 szumlat Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -76,6 +76,8 @@ private:
   StatusCode storeOutputData();
   LHCb::MCVeloFE* findOrInsertFE(LHCb::VeloChannelID& stripKey);
   double spillOverReminder(double TOF);
+  // check conditions Data Base
+  bool checkConditions(LHCb::MCHit* aHit);
   // data members
   std::string m_inputContainer;       ///< Name of input container  
   std::string m_spillOverInputContainer; ///< Name of spill Over event input container
@@ -99,6 +101,7 @@ private:
   //
   //  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
   // control simulation sections
+  bool m_sensorOn;   // check conditions for Velo
   bool m_chargeSim;
   bool m_inhomogeneousCharge;
   bool m_coupling;

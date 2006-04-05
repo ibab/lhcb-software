@@ -1,4 +1,4 @@
-// $Id: pulseShapeFunctor.h,v 1.1 2006-02-10 14:03:31 cattanem Exp $
+// $Id: pulseShapeFunctor.h,v 1.2 2006-04-05 10:13:47 szumlat Exp $
 #ifndef VELOSIMULATION_PULSESHAPEFUNCTOR_H 
 #define VELOSIMULATION_PULSESHAPEFUNCTOR_H 1
 
@@ -24,7 +24,7 @@ public:
     if(!size){
       return (value);
     }else{
-      for(int i=size; i>=0; i--){
+      for(int i=size-1; i>=0; i--){
         value=value*TDCTime+fitPar[i];
       }
     }

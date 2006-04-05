@@ -17,7 +17,7 @@ VeloSim.NoiseConstant=500.;
 // boltzmann Temp in eV
 VeloSim.kT=0.025;
 // in V, sensor assumed fully depleted
-VeloSim.BiasVoltage=100.;
+VeloSim.BiasVoltage=105.;
 // conversion factor between energy in eV and number of electron-hole pairs
 VeloSim.eVPerElectron=3.6;
 // fraction of charge from spillOver event left 25 ns later
@@ -48,4 +48,4 @@ VeloSim.FitParams={ 5.265199e-1,   // p0
                        -8.898185e-8,   // p5
                         2.726524e-10   // p6
                        };
-VeloSim.OffPeakSamplingTime=5.;     // ns
+VeloSim.OffPeakSamplingTime=0.;     // ns
