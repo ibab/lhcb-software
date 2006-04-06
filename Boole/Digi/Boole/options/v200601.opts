@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v24r0 or greater and   //
+//  Job options for Boole, for data produced by Gauss v24r3 or greater and   //
 //  geometry lhcb-200601 (DC06)                                              //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -31,8 +31,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files. 
 //---------------------------------------------------------------------------
 
-//HistogramPersistencySvc.OutputFile = "0601-11144100.root"; // Monitoring histos
-HistogramPersistencySvc.OutputFile = "0601-10000000.root"; // Monitoring histos
+HistogramPersistencySvc.OutputFile = "0601-11144100.root"; // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -44,21 +43,18 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r2/30000000.200ev.27Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Minimum bias events, with Gauss v24r2
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r3/30000000.200ev.05Apr.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Minimum bias events, with Gauss v24r3
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r2/10000000.100ev.27Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
-   //   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r2/11144100.100ev.24Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
-   //};  // B->J/Psi(mumu)Ks events with Gauss v24r2
-};  // Generic B events with Gauss v24r2
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r3/11144100.100ev.05Apr.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // B->J/Psi(mumu)Ks events with Gauss v24r3
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-//DigiWriter.Output = "DATAFILE='PFN:0601-11144100.100ev.24Mar.digi' TYP='POOL_ROOTTREE' OPT='REC'";
-DigiWriter.Output = "DATAFILE='PFN:0601-10000000.100ev.27Mar.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:0601-11144100.100ev.05Apr.digi' TYP='POOL_ROOTTREE' OPT='REC'";
