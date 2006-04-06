@@ -71,7 +71,7 @@ use LHCbAlgs              v2r0   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r0   Calo    # Olivier Deschamps
 use CaloUtils             v6r0p1 Calo    # Olivier Deschamps
 use RichRecBase           v2r1   Rich    # Chris Jones
-use TrackInterfaces       v2r1   Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces       v2r2   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 #use TrackPython           v1r1   Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond              v7r10p1 Det     # Marco Clemencic

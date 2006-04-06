@@ -54,7 +54,7 @@ This version uses Gaudi v18r3 and is for DC06 production
 - In VeloDet v10r3:
   . Add module number method to DeVeloSensor
 
-- In VeloDet v10r3, STDet v2r2, OTDet v6r1
+- In VeloDet v10r3, STDet v2r2, OTDet v6r1, TrackEvent v2r2, TrackInterfaces v2r2
   . trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 
 - In CaloDet v7r1:
