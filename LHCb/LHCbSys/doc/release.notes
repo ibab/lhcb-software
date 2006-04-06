@@ -11,11 +11,11 @@ This version uses Gaudi v18r3 and is for DC06 production
 - Packages added:    Gen/HepMC - Interface package to public HepMC release
 - Packages removed:  Sim/HepMC - Private version of HepMC
 - Packages modified: KernelSys v5r2, LHCbDefinitions v1r4, LHCbKernel v6r4,
-    EventSys v21r2, TrackEvent v2r2,PhysEvent v9r2,GenEvent v4r3,EventAssoc v3r1,
+    EventSys v21r2, TrackEvent v2r2,PhysEvent v9r2, GenEvent v4r3, RecEvent v1r2,
+    EventAssoc v3r1, GaudiConf v9r5, DAQSys v2r2, OTDAQ v4r1,  Relations v3r0p1,
     DetSys v8r2, RichDet v9r3,STDet v2r2,OTDet v6r1,CaloDet v7r1, VeloDet v10r3,
     DetCond v7r10p1, LoKiCore v1r1, LoKiGen v1r1, SimComponents v1r1p1,
-    CaloUtils v6r0p1, RichRecBase v2r1, Relations v3r0p1, GaudiConf v9r5,
-    DAQSys v2r2, OTDAQ v4r1
+    CaloUtils v6r0p1, RichRecBase v2r1
 
 - In LHCbDefinitions v1r4, TrackEvent v2r2, PhysEvent v9r2:
   . adaptations to new SMatrix-5.10.00b
@@ -23,7 +23,7 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In LHCbKernel v6r4:
   . Modifications to RichSmartIDHashFuncs.h
-  . added beginPoint() and endPoint() functions to Trajectory.h
+  . Various fixes and additions to trajectories
   . Fix IInAcceptance interface for LHCb namespace
 
 - In TrackEvent v2r2:
@@ -38,6 +38,10 @@ This version uses Gaudi v18r3 and is for DC06 production
   . Fixes for SMatrix in covariance matrix methods
   . Return ExtraInfo by const reference
 
+- In RecEvent v1r2:
+  . Make some Calo accessors non-const
+  . First iteration in improvements to ProtoParticle (not the last)
+
 - In RichDet v9r3:
   . Modifications to RichDAQDefinitions.h
 
@@ -45,6 +49,7 @@ This version uses Gaudi v18r3 and is for DC06 production
   . Added methods to DeSTDetector and DeSTSector: trajectoryFirstStrip and
     trajectoryLastStrip.
   . Removed bug in strip numbering (in DeSTSector::cacheTrajectory).
+  . Fix bug in trajectory method. Trajectory was assumed to start at s=0.
 
 - In OTDet v6r1:
   . New interface, similar to STDet (not backwards compatible)
@@ -53,6 +58,7 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In VeloDet v10r3:
   . Add module number method to DeVeloSensor
+  . Added method to get origin of phi sensors for measurement on track classes
 
 - In VeloDet v10r3, STDet v2r2, OTDet v6r1, TrackEvent v2r2, TrackInterfaces v2r2
   . trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
@@ -82,6 +88,9 @@ This version uses Gaudi v18r3 and is for DC06 production
 
 - In OTDAQ v4r1:
   . Adapt to new OTDet interface
+
+- In TrackInterfaces v2r2, TrackEvent v2r2
+  . Added errMeasure method
 
 </PRE><H1><A NAME=v20r1>2006-03-23 LHCbSys v20r1</A></H1><PRE>
 This version uses Gaudi v18r2 and is for commissioning of the software for DC06. 
