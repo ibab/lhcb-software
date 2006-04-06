@@ -4,10 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r2 2006-04-06 ========================
 ! 2006-04-06 - Jeroen van Tilburg
  - Added errMeasure data member to Node. This is needed by the track fit.
 
-!========================= TrackEvent v2r2 2006-04-06 ========================
 ! 2006-04-05 - Edwin Bos
  - created copy constructor in Measurement.xml
  - updated to auto_ptr
