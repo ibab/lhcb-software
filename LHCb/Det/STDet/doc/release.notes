@@ -2,11 +2,11 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r2 2006-04-06 =======================
 ! 2006-04-06 - Jeroen van Tilburg
  - DeSTSector: Fix bug in trajectory method. Trajectory was assumed to start
    at s=0.
 
-!========================= STDet v2r2 2006-04-04 =======================
 ! 2006-04-04 - Edwin Bos
  - trajectory() methods now return std::auto_ptr<LHCb::Trajectory>
 
