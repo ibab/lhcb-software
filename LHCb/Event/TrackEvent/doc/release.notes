@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-04-05 - Edwin Bos
+ - created copy constructor in Measurement.xml
+ - updated to auto_ptr
+
 !========================= TrackEvent v2r3 2006-04-03 ========================
 ! 2006-04-03 - Juan Palacios
  - Remove many unnecessary calls to MatrixManip::Standardize and fix filling
