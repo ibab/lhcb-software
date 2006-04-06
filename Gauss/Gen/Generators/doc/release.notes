@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.49 2006-04-04 15:09:05 robbep Exp $
+! $Id: release.notes,v 1.50 2006-04-06 11:49:01 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-04-05 - Patrick Robbe
+ - requirements: GENSER 1.3.0 compiles now LHAPDF with -O2, remove
+   -O in requirements
 
 ! 2006-04-04 - Patrick Robbe
  - ExternalGenerators.h/.cpp: add a switch (KeepOriginalProperties) in 
