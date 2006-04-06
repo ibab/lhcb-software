@@ -1,8 +1,13 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.11 2006-03-26 19:48:03 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.12 2006-04-06 12:01:30 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+// for std::auto_ptr
+//#include <memory>
+#include <boost/shared_ptr.hpp>
+
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -326,7 +331,8 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
 
   // Loop over the clusters and make a trajectory for each cluster
   // TODO: maybe put this functionality in STMeasurement and use projectors
-  typedef std::pair<STCluster*, Trajectory*> STClusterTrajectory;
+  typedef std::pair<STCluster*, boost::shared_ptr<LHCb::Trajectory> >
+    STClusterTrajectory;
   typedef std::vector<STClusterTrajectory> STClusterTrajectories;
   STClusterTrajectories clusterTrajectories;
   STClusters::iterator iClus = clusters -> begin();
@@ -338,16 +344,15 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     ISTClusterPosition::Info measVal =
       m_stPositionTool -> estimate( stCluster );
 
-    // Create a trajectory for this cluster
-    Trajectory* traj = m_ttTracker -> trajectory( LHCbID( stChan ), 
-                                                  measVal.fractionalPosition ) ;
-    // Add this combination to the vector
-    STClusterTrajectory thisClusTraj ;
+    // Create a trajectory for this cluster and add combination to the vector
+    STClusterTrajectory thisClusTraj;    
     thisClusTraj.first  = stCluster ;
-    thisClusTraj.second = traj ;
+    // explicitly transfer ownership from the auto_ptr returned by 'trajectory'
+    // to the shared_ptr thisClusTraj.second
+    thisClusTraj.second.reset( m_ttTracker -> trajectory( LHCbID( stChan ),
+                                       measVal.fractionalPosition).release() );
     clusterTrajectories.push_back( thisClusTraj ) ;
   }
-
 
   // Loop over matched tracks
   debug() << "Looping over the matches tracks ..." << endmsg;
@@ -400,7 +405,7 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
   
       STClusterTrajectories::iterator iClusTraj = clusterTrajectories.begin();
       for ( ; iClusTraj != clusterTrajectories.end(); ++iClusTraj ) {
-        Trajectory* measTraj = (*iClusTraj).second;
+        Trajectory* measTraj = ((*iClusTraj).second).get();
 
         // Determine the distance between track state and measurement
         double s1, s2;
@@ -481,12 +486,6 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     }    
 
   } // loop TrackMatches
-
-  // delete trajectories
-  STClusterTrajectories::iterator iClusTraj = clusterTrajectories.begin();
-  for ( ; iClusTraj != clusterTrajectories.end(); ++iClusTraj ) {
-    delete (*iClusTraj).second;
-  }
 
   return StatusCode::SUCCESS;
 }

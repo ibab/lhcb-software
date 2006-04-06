@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-04-06 - Jeroen van Tilburg
+ - Moved to auto_ptr and shared_ptr for Trajectory class.
+
 !======================= TrackMatching v2r0 2006-03-29 =======================
 ! 2006-03-26 - Eduardo Rodrigues
  - Backwards compatible adaptations to new Gaudi v18r3
