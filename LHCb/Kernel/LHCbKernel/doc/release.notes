@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-04-06 - David Hutchcroft
+ - Added const to IVeloClusterPosition interface methods
+   removed protected methods
+
 !===================== LHCbKernel v6r4 2006-04-05 =========================
 ! 2006-04-05 - Vanya BELYAEV
  - Kernel/IInAcceptance.h
