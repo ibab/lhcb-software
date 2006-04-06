@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.6 2006-03-17 10:49:38 erodrigu Exp $
+// $Id: StateTraj.h,v 1.7 2006-04-06 06:45:29 ebos Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -34,7 +34,7 @@ namespace LHCb
     enum { kSize = 5 };
 
     /// get me another one of these!
-    StateTraj *clone() const;
+    std::auto_ptr<Trajectory> clone() const;
     
     /// Default Destructor
     virtual ~StateTraj() {};
