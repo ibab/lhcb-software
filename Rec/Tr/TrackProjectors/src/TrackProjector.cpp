@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.10 2006-03-31 17:13:55 jvantilb Exp $
+// $Id: TrackProjector.cpp,v 1.11 2006-04-06 13:15:35 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -97,7 +97,9 @@ void TrackProjector::computeResidual( const State& state,
 void TrackProjector::computeErrorResidual( const State& state,
                                            const Measurement& meas )
 {
-  m_errResidual = sqrt( meas.resolution2( state.position(), state.slopes() ) + 
-                        ROOT::Math::Similarity<double,5>
+  double errMeasure2 = meas.resolution2( state.position(), state.slopes() );
+  m_errMeasure = sqrt( errMeasure2 );
+
+  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
                         ( m_H, state.covariance() ) );
 }

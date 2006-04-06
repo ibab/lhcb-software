@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-04-06 - Jeroen van Tilburg
+ - Added errMeasure method to TrackProjector. This is needed by the track fit.
+   The different projector implementations fill the corresponding data member.
+
 ! 2006-04-04 - Jan Amoraal
  - TrackOTProjector.cpp: Adapt to new OTDet interface
 

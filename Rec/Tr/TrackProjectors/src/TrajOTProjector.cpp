@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.8 2006-03-31 17:13:56 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.9 2006-04-06 13:15:35 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode TrajOTProjector::project( const State& state,
   int signDist = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
   // Get the distance to the readout
-  double distToReadout = measTraj.length() / 2. - s2;  
+  double distToReadout = measTraj.endRange() - s2;
 
   // Correct measure for the propagation along the wire
   double dDrift = meas.measure() - 
@@ -80,10 +80,13 @@ StatusCode TrajOTProjector::project( const State& state,
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
   m_H *= signDist; // Correct for the sign of the distance
   
+  // Set the error on the measurement so that it can be used in the fit
+  double errMeasure2 = meas.resolution2( refTraj.position(s1), 
+                                         refTraj.direction(s1) );
+  m_errMeasure = sqrt( errMeasure2 );
+
   // Calculate the error on the residual
-  m_errResidual = sqrt( meas.resolution2( refTraj.position(s1), 
-                                          refTraj.direction(s1) ) +
-                        ROOT::Math::Similarity<double,5>
+  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
                         ( m_H, state.covariance() ) );
 
 

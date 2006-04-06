@@ -1,4 +1,4 @@
-// $Id: TrajVeloRProjector.cpp,v 1.3 2006-03-31 17:13:57 jvantilb Exp $
+// $Id: TrajVeloRProjector.cpp,v 1.4 2006-04-06 13:15:35 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -67,10 +67,13 @@ StatusCode TrajVeloRProjector::project( const State& state,
   m_residual = - signDist * projDist ;  
   m_H *= signDist; // Correct for the sign of the distance 
 
+  // Set the error on the measurement so that it can be used in the fit
+  double errMeasure2 = meas.resolution2( refTraj.position(s1), 
+                                         refTraj.direction(s1));
+  m_errMeasure = sqrt( errMeasure2 );
+
   // Calculate the error on the residual
-  m_errResidual = sqrt( meas.resolution2( refTraj.position(s1), 
-                                          refTraj.direction(s1) ) +
-                        ROOT::Math::Similarity<double,5>
+  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
                         ( m_H, state.covariance() ) );
 
   return StatusCode::SUCCESS;

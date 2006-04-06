@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.cpp,v 1.8 2006-02-16 10:50:03 ebos Exp $
+// $Id: TrackMasterProjector.cpp,v 1.9 2006-04-06 13:15:34 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,14 @@ double TrackMasterProjector::errResidual() const
 {
   return m_selectedProjector -> errResidual();
 }
+
+/// Retrieve the error on the measure of the (last) projection
+//-----------------------------------------------------------------------------
+double TrackMasterProjector::errMeasure() const
+{
+  return m_selectedProjector -> errMeasure();
+}
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 /// Initialize

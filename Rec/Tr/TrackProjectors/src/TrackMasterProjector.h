@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.h,v 1.4 2006-02-16 10:50:09 ebos Exp $
+// $Id: TrackMasterProjector.h,v 1.5 2006-04-06 13:15:35 jvantilb Exp $
 #ifndef TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 1
 
@@ -48,6 +48,9 @@ public:
 
   /// Retrieve the error on the residual of the (last) projection
   double errResidual() const;
+
+  /// Retrieve the error on the measurement of the (last) projection
+  double errMeasure() const;
 
   /// Standard constructor
   TrackMasterProjector( const std::string& type, 

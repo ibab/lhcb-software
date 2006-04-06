@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.2 2006-02-16 10:50:31 ebos Exp $
+// $Id: TrackProjector.h,v 1.3 2006-04-06 13:15:35 jvantilb Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -49,6 +49,9 @@ public:
   /// Retrieve the error on the residual of the (last) projection
   double errResidual() const;
 
+  /// Retrieve the error on the measurement of the (last) projection
+  double errMeasure() const { return m_errMeasure; };
+
   /// Standard constructor
   TrackProjector( const std::string& type, 
                   const std::string& name,
@@ -65,6 +68,7 @@ protected:
 
   double  m_residual;
   double  m_errResidual;
+  double  m_errMeasure;
   TrackVector m_H;
 
 };
