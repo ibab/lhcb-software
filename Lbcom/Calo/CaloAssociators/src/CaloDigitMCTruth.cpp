@@ -1,8 +1,11 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.7 2006-03-28 14:44:36 cattanem Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.8 2006-04-06 13:26:11 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/03/28 14:44:36  cattanem
+// remove checks on return code from methods that only fail with exception
+//
 // Revision 1.6  2006/02/23 21:30:45  odescham
 // Standardize TES path + cleaning
 //
@@ -38,7 +41,9 @@
 //  CaloEvent 
 // ============================================================================
 #include "Event/CaloDataFunctor.h"
-#include "CaloMCTools.h"
+//CaloUtils
+#include "CaloUtils/CaloMCTools.h"
+#include "CaloUtils/Calo2MC.h"
 // ============================================================================
 // LHCbKernel
 // ============================================================================
@@ -54,7 +59,6 @@
 // ============================================================================
 #include "Kernel/CaloCellIDKeyTraits.h"
 //
-#include "Calo2MC.h"
 // ============================================================================
 
 /** @class CaloDigitMCTruth CaloDigitMCTruth.h

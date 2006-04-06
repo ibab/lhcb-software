@@ -1,8 +1,11 @@
-// $Id: CaloTrgClusterMTruth.cpp_,v 1.3 2006-02-23 21:30:45 odescham Exp $
+// $Id: CaloTrgClusterMTruth.cpp_,v 1.4 2006-04-06 13:26:11 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/23 21:30:45  odescham
+// Standardize TES path + cleaning
+//
 // Revision 1.2  2006/02/21 11:17:17  odescham
 // adapt to CaloDataFunctor moved to LHCb namespace
 //
@@ -37,9 +40,8 @@
 #include "Event/MCParticle.h"
 #include "Event/TrgCaloCluster.h"
 // ============================================================================
-#include "CaloMCTools.h"
-//
-#include "Calo2MC.h"
+#include "CaloUtils/CaloMCTools.h"
+#include "CaloUtils/Calo2MC.h"
 
 /** @class CaloTrgClusterMCTruth CaloTrgClusterMCTruth.cpp
  *  

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.27 2006-03-28 14:44:36 cattanem Exp $
+# $Id: requirements,v 1.28 2006-04-06 13:26:10 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.27 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.28 $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -20,6 +20,7 @@ use MCEvent       v*   Event
 use CaloDet       v*   Det
 use Relations	  v*   Kernel
 use LinkerEvent   v*   Event 
+use CaloUtils     v*   Calo
 
 
 # =============== own options =================================================
@@ -33,6 +34,9 @@ apply_pattern     component_library library=CaloAssociators
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.27  2006/03/28 14:44:36  cattanem
+# remove checks on return code from methods that only fail with exception
+#
 # Revision 1.26  2006/02/21 10:04:45  odescham
 # update for new Event Model
 #

@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.11 2006-03-28 14:44:36 cattanem Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.12 2006-04-06 13:26:11 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -30,9 +30,9 @@
 // CaloEvent/Event
 // ============================================================================
 #include "Event/CaloCluster.h"
-#include "CaloMCTools.h"
-//
-#include "Calo2MC.h"
+//CaloUtils
+#include "CaloUtils/CaloMCTools.h"
+#include "CaloUtils/Calo2MC.h"
 // ============================================================================
 
 /** @class CaloClustersMCTruthAlg CaloClustersMCTruthAlg.h

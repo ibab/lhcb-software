@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.5 2006-03-28 14:44:36 cattanem Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.6 2006-04-06 13:26:11 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/03/28 14:44:36  cattanem
+// remove checks on return code from methods that only fail with exception
+//
 // Revision 1.4  2006/02/23 21:30:45  odescham
 // Standardize TES path + cleaning
 //
@@ -32,10 +35,9 @@
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/MCParticle.h"
-// Local
-#include "CaloMCTools.h"
-//
-#include "Calo2MC.h"
+// CaloUtils
+#include "CaloUtils/CaloMCTools.h"
+#include "CaloUtils/Calo2MC.h"
 // ============================================================================
 
 /** @class CaloClusterMCTruth CaloClusterMCTruth.cpp
