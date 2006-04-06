@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.6 2006-04-04 16:04:04 ebos Exp $
+// $Id: CircleTraj.cpp,v 1.7 2006-04-06 14:06:26 ebos Exp $
 // Include files
 
 // local
@@ -13,18 +13,18 @@ using namespace Gaudi;
 
 std::auto_ptr<Trajectory> CircleTraj::clone() const
 {
-        return std::auto_ptr<Trajectory>(new CircleTraj(*this));
+  return std::auto_ptr<Trajectory>(new CircleTraj(*this));
 }
 
 CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
                         const Gaudi::XYZVector& dir1,
                         const Gaudi::XYZVector& dir2,
                         double radius)
-        :m_origin(origin),
-         m_normal(dir1.Cross(dir2).unit()),
-         m_dirStart(dir1.unit()),
-         m_range(0,radius*std::asin(m_dirStart.Cross(dir2.unit()).r())),
-         m_radius(radius)
+  : DifTraj<kSize>(0.,radius*std::asin((dir1.unit()).Cross(dir2.unit()).r())),
+    m_origin(origin),
+    m_normal(dir1.Cross(dir2).unit()),
+    m_dirStart(dir1.unit()),
+    m_radius(radius)
 {
 };
 
@@ -32,11 +32,11 @@ CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
                         const Gaudi::XYZVector& normal,
                         const Gaudi::XYZVector& origin2point,
                         const Range& range)
-        :m_origin(origin),
-         m_normal(normal.unit()),
-         m_dirStart(origin2point-origin2point.Dot(m_normal)*m_normal),
-         m_range(range),
-         m_radius(m_dirStart.r())
+  : DifTraj<kSize>(range.first,range.second),
+    m_origin(origin),
+    m_normal(normal.unit()),
+    m_dirStart(origin2point-origin2point.Dot(m_normal)*m_normal),
+    m_radius(m_dirStart.r())
 {
 };
 
@@ -50,7 +50,6 @@ Gaudi::XYZPoint CircleTraj::position( double s ) const
 Gaudi::XYZVector CircleTraj::direction( double s ) const
 {
   return m_normal.Cross(AxisAngle(m_normal,s/m_radius)(m_dirStart));
-   
 };
 
 /// Second derivative of the trajectory at arclength from the starting point
@@ -74,13 +73,13 @@ void CircleTraj::expansion( double s,
 
 /// Retrieve the derivative of point at fixed arclength 'arclenght'
 /// with respect to the circle parameters
-//CircleTraj::Derivative
-//CircleTraj::derivative( double/* arclength */) const
-//{
-  //Derivative deriv;  
-  //// FIXME: Not done yet!!!
-  //return deriv;       
-//};
+CircleTraj::Derivative
+CircleTraj::derivative( double/* arclength */) const
+{
+Derivative deriv;  
+//// FIXME: Not done yet!!!
+return deriv;       
+};
 
 /// Determine the closest point on the circle to a
 /// given point, and return the corresponding arclength
@@ -111,11 +110,4 @@ double CircleTraj::distTo2ndError( double /*arclen*/, double tolerance , int /*d
   // cbrt is in the C99 standard -- hope it is available on all platforms...
   // return cbrt(6*tolerance*m_radius*m_radius);
   return pow(6*tolerance*m_radius*m_radius,double(1)/3);
-};
-
-  /// Range in arclength w.r.t. the starting point
-  /// over which the trajectory is valid
-Trajectory::Range CircleTraj::range() const
-{
-  return m_range;
 };

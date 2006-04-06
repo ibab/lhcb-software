@@ -1,4 +1,4 @@
-// $Id: DifTraj.h,v 1.4 2006-02-13 11:00:51 graven Exp $
+// $Id: DifTraj.h,v 1.5 2006-04-06 14:06:09 ebos Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
@@ -25,6 +25,11 @@ namespace LHCb
     
   public:
     enum { kSize = N};
+
+    /// Constructor taking the values of arclength
+    /// at the begin and at the end of the trajectory
+    DifTraj(double begin, double end) : Trajectory(begin, end) {}
+    
     typedef ROOT::Math::SMatrix<double,3,N> Derivative;
     
     /// Retrieve the derivative of the point at fixed arclength 'arclength' 

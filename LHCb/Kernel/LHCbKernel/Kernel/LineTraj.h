@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.9 2006-04-04 16:03:48 ebos Exp $
+// $Id: LineTraj.h,v 1.10 2006-04-06 14:06:09 ebos Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -75,15 +75,10 @@ namespace LHCb
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
     
-    /// Range in arclength w.r.t. the starting point
-    /// over which the trajectory is valid
-    virtual Range range() const;
-    
   private:
     
     Gaudi::XYZVector m_dir;
     Gaudi::XYZPoint  m_pos;
-    Range            m_range;
     
   }; // class LineTraj
   

@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.10 2006-04-05 06:28:21 cattanem Exp $
+// $Id: Trajectory.h,v 1.11 2006-04-06 14:06:09 ebos Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -31,6 +31,13 @@ namespace LHCb
 
     /// Clone a trajectory...
     virtual std::auto_ptr<Trajectory> clone() const = 0;
+
+    /// Constructor taking the values of arclength
+    /// at the begin and at the end of the trajectory
+    Trajectory( double begin, double end ) 
+    {
+      m_range = Range(begin,end);
+    }
     
     /// Point on the trajectory at arclength from the starting point
     virtual Gaudi::XYZPoint position( double arclength ) const = 0;
@@ -72,7 +79,7 @@ namespace LHCb
     
     /// Range in arclength w.r.t. the starting point
     /// over which the trajectory is valid
-    virtual Range range() const = 0;
+    Range range() const { return m_range; }
     
     /// Maximal valid value of arclength according to range()
     double endRange() const { return range().second; }
@@ -89,6 +96,10 @@ namespace LHCb
     
     /// Length of trajectory
     double length() const { Range r = range(); return r.second-r.first; };
+
+  private:
+
+    Range m_range;
     
   }; // class Trajectory
   

@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-04-06 - Edwin Bos
+ - fixed factor of 2 bug in LineTraj length()
+ - moved range() to baseclass Trajectory.h, updated constructor
+ - initializationlists of trajectory classes
+
 ! 2006-04-06 - David Hutchcroft
  - Added const to IVeloClusterPosition interface methods
    removed protected methods

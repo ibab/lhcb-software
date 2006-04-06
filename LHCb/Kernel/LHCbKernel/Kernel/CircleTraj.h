@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.5 2006-04-04 16:03:48 ebos Exp $
+// $Id: CircleTraj.h,v 1.6 2006-04-06 14:06:09 ebos Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -16,11 +16,14 @@
 
 namespace LHCb
 {
-  
-  // class CircleTraj: public DifTraj<3> {
-  class CircleTraj: public Trajectory {
+
+  class CircleTraj : public DifTraj<3> {
     
   public:
+
+    /// Enum providing number of colums in derivative matrix
+    enum { kSize = 3 };
+
     /// Default Destructor
     virtual ~CircleTraj() {};
 
@@ -65,9 +68,8 @@ namespace LHCb
                             Gaudi::XYZVector& ddp ) const;
     
     /// Retrieve the derivative of the point at the fixed arclength 'arclength'
-    /// with respect to the parameters; when you implement this,
-    //  make this class inherit from DifTraj...
-    // virtual Derivative derivative( double arclength ) const;
+    /// with respect to the parameters
+    virtual Derivative derivative( double arclength ) const;
     
     /// Return arclen at which the trajectory is
     /// closest to the specified point
@@ -85,16 +87,13 @@ namespace LHCb
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
     
-    /// Range in arclength w.r.t. the starting point
-    /// over which the trajectory is valid
-    virtual Range range() const;
-    
-  private:
+  private :
+
     Gaudi::XYZPoint  m_origin;
     Gaudi::XYZVector m_normal;
     Gaudi::XYZVector m_dirStart;
-    Trajectory::Range m_range;
     double m_radius;  
+
   }; // class CircleTraj
   
 } // namespace LHCb

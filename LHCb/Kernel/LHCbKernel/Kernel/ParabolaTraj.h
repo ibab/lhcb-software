@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.8 2006-04-04 16:03:48 ebos Exp $
+// $Id: ParabolaTraj.h,v 1.9 2006-04-06 14:06:09 ebos Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -73,16 +73,11 @@ namespace LHCb
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
     
-    /// Range in arclength w.r.t. the starting point
-    /// over which the trajectory is valid
-    virtual Range range() const;
-    
   private:
     
     Gaudi::XYZPoint  m_pos;
     Gaudi::XYZVector m_dir;
     Gaudi::XYZVector m_curv;
-    Range m_range;
     
   }; // class ParabolaTraj
   

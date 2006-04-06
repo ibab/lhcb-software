@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.7 2006-04-04 16:04:04 ebos Exp $
+// $Id: LineTraj.cpp,v 1.8 2006-04-06 14:06:26 ebos Exp $
 // Include files
 
 // local
@@ -15,18 +15,19 @@ std::auto_ptr<Trajectory> LineTraj::clone() const
 LineTraj::LineTraj( const Gaudi::XYZPoint& middle,
                     const Gaudi::XYZVector& dir,
                     const Range& range ) 
-        : m_dir(dir.Unit()),m_pos(middle),m_range(range)
+  : DifTraj<kSize>(range.first,range.second),
+    m_dir(dir.Unit()),
+    m_pos(middle)
 {
 };
 
 /// Constructor from a begin and an end point
 LineTraj::LineTraj( const Gaudi::XYZPoint& begPoint,
                     const Gaudi::XYZPoint& endPoint )
-  : m_dir(endPoint-begPoint)
-  , m_pos(begPoint+0.5*m_dir)
+  : DifTraj<kSize>(-(XYZVector(endPoint-begPoint)).r()/2.,(XYZVector(endPoint-begPoint)).r()/2.),
+    m_dir(endPoint-begPoint),
+    m_pos(begPoint+0.5*m_dir)
 {
-  double d = m_dir.r();
-  m_range = Range(-d,d);
   m_dir = m_dir.Unit();
 };
 
@@ -88,11 +89,4 @@ double LineTraj::distTo1stError( double , double , int ) const
 double LineTraj::distTo2ndError( double , double , int ) const
 {
   return 10*km;
-};
-
-/// Range in arclength w.r.t. the starting point
-/// over which the trajectory is valid
-Trajectory::Range LineTraj::range() const
-{
-  return m_range;
 };

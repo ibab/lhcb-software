@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.6 2006-04-04 16:04:04 ebos Exp $
+// $Id: ParabolaTraj.cpp,v 1.7 2006-04-06 14:06:26 ebos Exp $
 // Include files
 
 // local
@@ -16,7 +16,10 @@ ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& point,
                             const Gaudi::XYZVector& dir,
                             const Gaudi::XYZVector& curv,
                             const Range& range)
-        :m_pos(point),m_dir(dir.unit()),m_curv(curv),m_range(range)
+  : DifTraj<kSize>(range.first,range.second),
+    m_pos(point),
+    m_dir(dir.unit()),
+    m_curv(curv)
 {
 };
 
@@ -98,11 +101,4 @@ double ParabolaTraj::distTo1stError( double , double tolerance , int ) const
 double ParabolaTraj::distTo2ndError( double , double , int ) const
 {
   return 10*km;  
-};
-
-/// Range in arclength w.r.t. the starting point
-/// over which the trajectory is valid
-Trajectory::Range ParabolaTraj::range() const
-{
-  return m_range;
 };
