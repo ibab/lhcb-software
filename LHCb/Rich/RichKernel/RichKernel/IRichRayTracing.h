@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.19 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.20 2006-04-06 14:13:54 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -113,7 +113,7 @@ public:
    *
    *  @return Status of the ray tracing
    *  @retval StatusCode::SUCCESS Ray tracing was successful
-   *  @retval StatusCode::FAILURE Something went wrong
+   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
    */
   virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                              const Gaudi::XYZVector& startDir,
@@ -132,7 +132,7 @@ public:
    *
    *  @return Status of the ray tracing
    *  @retval StatusCode::SUCCESS Ray tracing was successful
-   *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance
+   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
    */
   virtual StatusCode
   intersectPDPanel ( const Rich::DetectorType rich,
@@ -149,7 +149,7 @@ public:
    *
    *  @return Status of the ray tracing
    *  @retval StatusCode::SUCCESS Ray tracing was successful
-   *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
+   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
    */
   virtual StatusCode
   intersectPlane ( const Gaudi::XYZPoint& position,
@@ -165,6 +165,8 @@ public:
    *  @param radius     The radius of curvature of the spherical mirror
    *
    *  @return StatusCode indicating if the ray tracing was succesful
+   *  @retval StatusCode::SUCCESS Ray tracing was successful
+   *  @retval StatusCode::FAILURE Ray tracing was unsuccessful
    */
   virtual StatusCode
   reflectSpherical ( Gaudi::XYZPoint& position,
