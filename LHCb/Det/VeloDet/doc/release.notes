@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.110 2006-04-05 18:02:40 mtobin Exp $
+! $Id: release.notes,v 1.111 2006-04-06 06:31:51 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r3 2006-04-05 ========================
 ! 2006-04-05 - Mark Tobin
  - Fixed bug in channel mapping
  - Made all public methods in DeVeloSensor const
 
-!========================= VeloDet v10r3 2006-04-05 ========================
 ! 2006-04-05 - Mark Tobin
  - Add module number method to DeVeloSensor
  - Removed all instances of unecessary this->
