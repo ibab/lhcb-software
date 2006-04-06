@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.11 2006-03-31 12:26:25 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.12 2006-04-06 13:16:57 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // from LHCbDefinitions
 #include "Kernel/PhysicalConstants.h"
+#include "Kernel/MatrixManip.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -193,10 +194,12 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
     // calculate predicted residuals
     double res       = m_projector -> residual();
     double errorRes  = m_projector -> errResidual();
+    double errorMeas = m_projector -> errMeasure();
 
     aNode.setProjectionMatrix( H );
     aNode.setResidual( res ) ;
     aNode.setErrResidual( errorRes ) ;
+    aNode.setErrMeasure( errorMeas ) ;
   }
   
   return StatusCode::SUCCESS;
@@ -223,7 +226,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   // get the predicted residuals
   double res        = node.residual();
   double errorRes2  = node.errResidual2();
-  double errorMeas2 = meas.resolution2();
+  double errorMeas2 = node.errMeasure2();
 
   // calculate gain matrix K
   const TrackVector& H = node.projectionMatrix();
@@ -233,18 +236,11 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   tX += ( mK * res );
 
   // update the covariance matrix
-  //TODO: remove the work-around as soon as MathCore has something to replace
-  //HepMatrix B  = HepDiagMatrix(tC.num_row(), 1) - ( mK * H.T());
-  //tC.assign( B * tC * B.T() + ( mK * errorMeas2 * mK.T()));
-  //These 2 lines are equal to tC.assign( B * tC ) !
-  //BTW, from the above how does one get tC to be symmetric at the end?
-  TransportMatrix uniDiagMat = TransportMatrix( ROOT::Math::SMatrixIdentity() );
-
-  // hack to do the product (5x1) * (1x5) of TrackVectors
+  TransportMatrix uniDiagMat = TransportMatrix( ROOT::Math::SMatrixIdentity());
   TransportMatrix B = uniDiagMat - TrackVectorProd( mK, H );
-  tC.Place_at( B * tC, 0, 0 );
+  tC.Place_at( LHCb::MatrixManip::Symmetrize<TransportMatrix>( B * tC ), 0, 0);
 
-  //double HK = dot ( H, mK );
+  // update the residual and the error on the residual
   double HK = ROOT::Math::Dot( H, mK );
   res      *= (1 - HK);
   errorRes2 = (1 - HK) * ( errorMeas2 );
@@ -264,6 +260,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 TransportMatrix TrackKalmanFilter::TrackVectorProd( TrackVector& vec1,
                                                     const TrackVector& vec2 )
 {
+  // hack to do the product (5x1) * (1x5) of TrackVectors
   // this is really an ugly hack!
   TrackMatrix result = TrackMatrix();
   for ( unsigned int i = 0; i < vec1.Dim(); ++i ) {
