@@ -5,14 +5,12 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.3 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.4 2006-04-06 14:13:25 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
  *  @date   2002-05-31
  *
- *  @todo Make sure Gaudi::Rotation3D does what I think it does !
- *        Requires a working Brunel
  *  @todo Check if normalisation of axis vectors is really needed
  */
 //-----------------------------------------------------------------------------
@@ -47,8 +45,6 @@ namespace LHCb
    *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
    *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
    *  @date   2002-05-31
-   *
-   *  @todo Fix rotation matrices for new ROOT classes, once Brunel is running
    */
   //-----------------------------------------------------------------------------
 
