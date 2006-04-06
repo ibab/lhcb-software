@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloHypo.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  * $Id: CaloHypo.xml,v 1.2 2006-04-06 12:35:50 odescham Exp $
   *****************************************************************************
   * XML-description of CaloHypo class                                         *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -129,6 +129,7 @@
  type = "LHCb::CaloHypo::Position*" 
  init = "0"
  dictalias = "CaloPosition*"
+ nonconstaccessor = "TRUE"
 />
 
 <relation

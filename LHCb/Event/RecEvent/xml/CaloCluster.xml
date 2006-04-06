@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloCluster.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  * $Id: CaloCluster.xml,v 1.2 2006-04-06 12:35:50 odescham Exp $
   *****************************************************************************
   * XML-description of CaloCluster class                                      *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -101,6 +101,7 @@
  name = "entries"
  desc = "The cluster contents itself - entries : digits with their statuses"
  type = "std::vector&lt;LHCb::CaloClusterEntry&gt;"
+ nonconstaccessor="TRUE"
 />
                               
 <attribute
@@ -108,6 +109,7 @@
  desc = "Cluster parameters: the position and the spread"
  type = "LHCb::CaloCluster::Position"
  dictalias = "LHCb::CaloPosition"
+ nonconstaccessor="TRUE"
 />
 
 <method

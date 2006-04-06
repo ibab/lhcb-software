@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloPosition.xml,v 1.4 2006-03-22 18:29:15 odescham Exp $
+  * $Id: CaloPosition.xml,v 1.5 2006-04-06 12:35:50 odescham Exp $
   *****************************************************************************
   * XML-description of CaloPosition class                                     *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -66,6 +66,7 @@
  desc = "Z-position where cluster parameters are estimated"
  type = "double"
  init = "-1*km"
+ nonconstaccessor="TRUE"
 />
         
 <attribute
@@ -74,13 +75,16 @@
  type = "Parameters"
  init = "0., 0., 0."
  dictalias = "Gaudi::Vector3"
+ nonconstaccessor="TRUE"
 />
 
 <attribute
  name = "covariance"
  desc = "covariance matrix of major cluster parameters (3x3)"
  type = "Covariance"
- dictalias = "Gaudi::SymMatrix3x3"/>
+ dictalias = "Gaudi::SymMatrix3x3"
+ nonconstaccessor="TRUE"
+/>
 
 <attribute
  name = "center"
@@ -88,13 +92,16 @@
  type = "Center"
  init = "0., 0."
  dictalias = "Gaudi::Vector2"
+ nonconstaccessor="TRUE"
 />
 
 <attribute
  name = "spread"
  desc = "cluster spread matrix (2x2)"
  type = "Spread"
- dictalias = "Gaudi::SymMatrix2x2"/>
+ dictalias = "Gaudi::SymMatrix2x2"
+ nonconstaccessor="TRUE"
+/>
 
 <method
  desc   = "retrieve the x-position @attention alias method!"
