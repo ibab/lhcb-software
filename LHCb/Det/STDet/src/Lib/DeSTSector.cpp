@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.17 2006-04-04 14:26:09 ebos Exp $
+// $Id: DeSTSector.cpp,v 1.18 2006-04-06 08:22:24 jvantilb Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -223,15 +223,17 @@ bool DeSTSector::localInBox( const double u, const double v,
           ((v + uTol)<m_vMaxLocal) &&((v-vTol) > m_vMinLocal));
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectory( const STChannelID& aChan, 
-                                                        const double offset) const
+std::auto_ptr<LHCb::Trajectory> 
+DeSTSector::trajectory(const STChannelID& aChan, const double offset) const 
 {
   LineTraj* traj = 0;  
 
   if (contains(aChan) == true){
     double arclen = (offset + aChan.strip() - m_firstStrip)*m_pitch ;
-    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen );
-    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen );
+    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen - 
+                                                    m_lowerTraj->beginRange());
+    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen -
+                                                    m_upperTraj->beginRange());
     traj = new LineTraj(begPoint,endPoint);
   } 
   else {
