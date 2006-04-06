@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.51 2006-04-06 12:33:17 gcorti Exp $
+! $Id: release.notes,v 1.52 2006-04-06 16:34:34 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-04-05 - Patrick Robbe
+ - SignalForcedFragmentation: Fix counters.
+ - GenCounters: do not count Bc with D hadrons.
 
 !=================== Generators v5r0 2006-04-06 ===========================
 ! 2006-04-05 - Patrick Robbe

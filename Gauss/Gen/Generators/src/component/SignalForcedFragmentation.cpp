@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.7 2006-03-22 22:56:06 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.8 2006-04-06 16:34:34 robbep Exp $
 // Include files
 
 // local
@@ -147,7 +147,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
           
           // Give signal status
-          theSignal -> set_status( 889 ) ;
+          theSignal -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
           
           // Now boost signal at rest to frame of signal produced by 
           // production generator
@@ -166,6 +166,19 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           theGenEvent -> 
             set_signal_process_vertex( theSignal -> end_vertex() ) ;
           theGenCollision -> setIsSignal( true ) ;
+
+          // Count signal B and signal Bbar
+          if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
+          else ++m_nSigBar ;
+
+          // Update counters
+          GenCounters::updateHadronCounters( theGenEvent , m_bHadC ,
+                                             m_antibHadC , m_cHadC ,
+                                             m_anticHadC , m_bbCounter ,
+                                             m_ccCounter ) ;
+          GenCounters::updateExcitedStatesCounters( theGenEvent ,
+                                                    m_bExcitedC ,
+                                                    m_cExcitedC ) ;
           
           result = true ;
         }

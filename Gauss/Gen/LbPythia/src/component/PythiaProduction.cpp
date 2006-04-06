@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.12 2006-03-27 22:14:02 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.13 2006-04-06 16:35:51 robbep Exp $
 // Include files 
 
 // local
@@ -634,6 +634,7 @@ bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP )
 // Setup for forced fragmentation 
 //=============================================================================
 StatusCode PythiaProduction::setupForcedFragmentation( const int thePdgId ) {
+  Pythia::pydat1().mstj( 30 ) = 1 ;
   Pythia::pydat1().mstj( 31 ) = 100 ;
   Pythia::pydat1().mstj( 33 ) = thePdgId ;
   Pythia::pydat1().mstu( 150 ) = 1 ;
@@ -651,7 +652,7 @@ StatusCode PythiaProduction::setupForcedFragmentation( const int thePdgId ) {
   case -541:
   case 551:
     Pythia::pydat1().mstj( 32 ) = - thePdgId / 100 ;
-    Pythia::pydat1().mstj( 34 ) = thePdgId / 10 ;
+    Pythia::pydat1().mstj( 34 ) = ( thePdgId / 10 ) % 10 ;
     break ;
   case 5122:
   case -5122:
@@ -665,6 +666,7 @@ StatusCode PythiaProduction::setupForcedFragmentation( const int thePdgId ) {
     return StatusCode::FAILURE ;
     break ;
   }
+
   return StatusCode::SUCCESS ;  
 }
 

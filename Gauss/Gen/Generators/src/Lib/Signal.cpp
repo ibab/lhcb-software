@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.14 2006-04-04 11:57:22 gcorti Exp $
+// $Id: Signal.cpp,v 1.15 2006-04-06 16:34:34 robbep Exp $
 // Include files 
 
 // local
@@ -136,6 +136,13 @@ StatusCode Signal::initialize( ) {
 
   info() << endmsg ;  
   release( ppSvc ) ;
+
+  if ( 0. == m_signalBr ) 
+    warning() << "The signal decay mode is not defined in the main DECAY.DEC table"
+              << std::endl << "Please add it there !" << endmsg ;
+  else 
+    info() << "The signal decay mode has visible branching fractions of :"
+           << m_signalBr << endmsg ;
 
   return sc ;
 }

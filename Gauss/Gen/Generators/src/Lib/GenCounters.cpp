@@ -1,4 +1,4 @@
-// $Id: GenCounters.cpp,v 1.3 2006-02-22 22:13:19 robbep Exp $
+// $Id: GenCounters.cpp,v 1.4 2006-04-06 16:34:34 robbep Exp $
 // Include files
 
 // local
@@ -67,6 +67,7 @@ struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
     // Check if particle has a c quark
     LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasCharm() ) return false ;
+    if ( thePid.hasBottom() ) return false ;
 
     // Check if particle has a mother
     if ( 0 == part -> production_vertex() ) return true ;

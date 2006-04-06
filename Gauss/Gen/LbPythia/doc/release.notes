@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.26 2006-04-06 12:40:49 gcorti Exp $
+! $Id: release.notes,v 1.27 2006-04-06 16:36:38 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-04-05 - Patrick Robbe
+ - PythiaProduction: fix forced fragmentation setup.
 
 ! ==================== LbPythia v4r2 2006-04-06 ======================
 ! 2006-04-04 - Patrick Robbe
