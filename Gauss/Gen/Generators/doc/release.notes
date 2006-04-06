@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.50 2006-04-06 11:49:01 robbep Exp $
+! $Id: release.notes,v 1.51 2006-04-06 12:33:17 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v5r0 2006-04-06 ===========================
 ! 2006-04-05 - Patrick Robbe
  - requirements: GENSER 1.3.0 compiles now LHAPDF with -O2, remove
    -O in requirements
@@ -15,7 +16,6 @@
  - requirements: use "-O" flag to compile LHAPDF code instead of -O2.
  - Generation.cpp: improve counting of B hadrons
 
-!=================== Generators v5r0 2006-04-04 ===========================
 ! 2006-04-04 - Gloria CORTI
  - Adapt to changes in put method signature in GaudiAlgorithm base class
    . src/Lib/Signal.cpp
