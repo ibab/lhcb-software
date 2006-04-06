@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r3 2006-04-04 =============================
+!======================== Gauss v24r3 2006-04-06 =============================
+! 2006-04-06 - Gloria CORTI
+ - Use dynamic link libraries for generators: requires GENSER v1r130p1,
+   Generators v5r0 and LbPythia v4r2
+
 ! 2006-04-04 - Gloria CORTI
  - Use XmlConditions v1r6 for changes in CaloDet.
  - Adapt to changes in GaudiAlgorithm base class. Requires use of 

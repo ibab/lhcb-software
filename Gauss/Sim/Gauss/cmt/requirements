@@ -21,7 +21,7 @@ use Geant4Files		v71r0	      -no_auto_imports
 #-- Generator
 use ParticleGuns        v3r0    Gen
 use Generators          v5r0    Gen
-use LbPythia            v4r1    Gen
+use LbPythia            v4r2    Gen
 
 #-- Optional AcerMC : not yet ported
 macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
