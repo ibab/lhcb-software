@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.15 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.16 2006-04-06 13:45:19 dhcroft Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -176,7 +176,14 @@ public:
     sc=localToGlobal(m_stripLimits[strip].second,end);
     return sc;
   }
- 
+
+  /// Return the origin of the sensor in the global frame
+  StatusCode globalOrigin(Gaudi::XYZPoint& origin) const{
+    Gaudi::XYZPoint localOrig(0,0,0);  
+    return localToGlobal(localOrig,origin);
+  }
+    
+
 protected:
 
 private:

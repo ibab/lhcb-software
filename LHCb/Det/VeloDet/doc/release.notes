@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.111 2006-04-06 06:31:51 cattanem Exp $
+! $Id: release.notes,v 1.112 2006-04-06 13:45:19 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2004-04-06 - David Hutchcroft
+ - Added method to get origin of phi sensors for measuserment on track classes
 
 !========================= VeloDet v10r3 2006-04-05 ========================
 ! 2006-04-05 - Mark Tobin
