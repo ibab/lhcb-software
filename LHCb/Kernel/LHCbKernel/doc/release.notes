@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r4 2006-04-06 =========================
 ! 2006-04-06 - Edwin Bos
  - fixed factor of 2 bug in LineTraj length()
  - moved range() to baseclass Trajectory.h, updated constructor
@@ -11,7 +12,6 @@ Purpose: LHCb specific Kernel classes
  - Added const to IVeloClusterPosition interface methods
    removed protected methods
 
-!===================== LHCbKernel v6r4 2006-04-05 =========================
 ! 2006-04-05 - Vanya BELYAEV
  - Kernel/IInAcceptance.h
    src/IInAcceptance.cpp
