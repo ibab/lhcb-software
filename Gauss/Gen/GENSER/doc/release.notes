@@ -4,7 +4,8 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-! 2006-04-05 - Patrick Robbe
+!===================== GENSER v1r130p1 2006-04-06 ============================
+!! 2006-04-05 - Patrick Robbe
  - requirements - use "-O2" for LHAPDF because now GENSER 1.3.0 uses
                   -O2 instead of -O.
 
