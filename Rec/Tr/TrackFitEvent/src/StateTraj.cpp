@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.7 2006-04-06 06:43:28 ebos Exp $
+// $Id: StateTraj.cpp,v 1.8 2006-04-06 14:08:40 ebos Exp $
 // Include files
 
 // local
@@ -9,26 +9,28 @@ using namespace LHCb;
 
 StateTraj::StateTraj( const State& state,
                       const XYZVector& bField )
+  : DifTraj<kSize>(10*km,10*km),
+    m_pos(state.position()),
+    // True when approximating the trajectory as a straight line
+    m_dir(state.slopes().unit()),
+    m_qOverP(state.qOverP()),
+    m_bField(bField),
+    m_curv(TrackParameters::kappa*m_qOverP*(m_dir.Cross(bField)))
 {
-  m_pos = state.position();
-  // True when approximating the trajectory as a straight line
-  m_dir = state.slopes().unit();
-  m_qOverP = state.qOverP();
-  m_bField = bField;   
-  m_curv = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );
 };
 
 StateTraj::StateTraj( const TrackVector& stateVector,
                       double z,
                       const XYZVector& bField )
+  : DifTraj<kSize>(10*km,10*km),
+    m_pos(stateVector(0),stateVector(1),z),
+    m_qOverP(stateVector(4)),
+    m_bField(bField)
 {
   XYZVector slopes = XYZVector( stateVector(2), stateVector(3), 1. );
-  m_pos = XYZPoint( stateVector(0), stateVector(1), z );
   // True when approximating the trajectory as a straight line
-  m_dir    = slopes.unit();
-  m_qOverP = stateVector(4);
-  m_bField = bField;
-  m_curv   = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
+  m_dir  = slopes.unit();
+  m_curv = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
 };
 
 std::auto_ptr<Trajectory> StateTraj::clone() const
@@ -130,11 +132,4 @@ double StateTraj::distTo1stError( double , double , int ) const
 double StateTraj::distTo2ndError( double , double , int ) const
 {
   return 10*km;  
-};
-
-// Not yet implemented  
-Trajectory::Range StateTraj::range() const
-{
-        //FIXME: worry about this later...
-  return Trajectory::Range(-10*km,10*km);
 };

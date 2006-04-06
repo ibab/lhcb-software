@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.7 2006-04-06 06:45:29 ebos Exp $
+// $Id: StateTraj.h,v 1.8 2006-04-06 14:08:50 ebos Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -85,16 +85,13 @@ namespace LHCb
                                    double tolerance, 
                                    int pathDirection = +1 ) const;
     
-    /// Range in arclength over which the trajectory is valid
-    virtual Trajectory::Range range() const;
-    
   private:
     
     Gaudi::XYZPoint  m_pos;    ///< the position of the State
     Gaudi::XYZVector m_dir;    ///< the unit direction of the State
-    Gaudi::XYZVector m_curv;   ///< constant value of parabola's curvature
     double           m_qOverP; ///< the charge-over-momentum Q/P of the State
     Gaudi::XYZVector m_bField; ///< the magnetic field vector at the State position
+    Gaudi::XYZVector m_curv;   ///< constant value of parabola's curvature
     
   }; // class StateTraj
   
