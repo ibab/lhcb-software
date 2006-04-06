@@ -36,6 +36,21 @@
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC' />
 
+      <constructor 
+	desc     = "Copy constructor" 
+	argList  = "LHCb::Measurement other" >
+        <code>
+          m_mtype = other.m_mtype;
+          m_z = other.m_z;
+          m_measure = other.m_measure;
+          m_errMeasure = other.m_errMeasure;
+          m_trajectory = (other.m_trajectory)->clone();
+          m_lhcbID = other.m_lhcbID;
+          m_refVector = other.m_refVector;
+          m_refIsSet = other.m_refIsSet;
+        </code>
+      </constructor>
+
      <attribute
        type    = 'bitfield'
        name    = 'mtype'
@@ -72,11 +87,12 @@
         access  = 'PROTECTED' />
 
       <attribute
-        type    = 'LHCb::Trajectory*'
+        type    = 'std::auto_ptr &lt; LHCb::Trajectory &gt;'
         name    = 'trajectory'
         desc    = 'the trajectory representing the measurement (owner)'
         access  = 'PROTECTED'
-        getMeth = 'FALSE' />
+        getMeth = 'FALSE'
+        setMeth = 'FALSE' />
 
       <attribute
         type    = 'LHCb::LHCbID'
@@ -183,11 +199,10 @@
         desc    = 'Retrieve the trajectory representing the measurement'
         const   = 'TRUE'>
         <code>
-          return *m_trajectory;
+          LHCb::Trajectory* pTraj = m_trajectory.get();
+          return *pTraj;
         </code>
       </method>
-
- 
 
     </class>
 
