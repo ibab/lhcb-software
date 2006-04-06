@@ -22,7 +22,7 @@
       <constructor 
 	desc     = "Constructor from a State and a Measurement" 
 	argList  = "State* state, Measurement* meas"
-	initList = "m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
+	initList = "m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_errMeasure(0.0), m_projectionMatrix()">
         <code>
   m_state = state -> clone();
         </code>
@@ -57,6 +57,12 @@
         access  = 'PROTECTED' />
 
       <attribute
+        type    = 'double'
+        name    = 'errMeasure'
+        desc    = 'the measure error'
+        access  = 'PROTECTED' />
+
+      <attribute
         type    = 'Gaudi::TrackVector'
         name    = 'projectionMatrix'
         desc    = 'the projection matrix'
@@ -72,6 +78,7 @@
   m_state = 0;
   m_residual = 0.;
   m_errResidual = 0.;
+  m_errMeasure = 0.;
         </code>
       </method>
 
@@ -140,6 +147,8 @@
   LHCb::Node* me = new LHCb::Node(state().clone(), (LHCb::Measurement*) &amp;measurement()); 
   me->setResidual( residual() );
   me->setErrResidual( errResidual() );
+  me->setErrMeasure( errMeasure() );
+  me->setProjectionMatrix( projectionMatrix() );
   return me;
         </code>
       </method>
@@ -165,6 +174,16 @@
       </method>
 
       <method
+	type    = 'double'
+        name    = 'errMeasure2'
+	const   = 'TRUE'
+        desc    = 'Return the measure error squared'>
+        <code>
+  return m_errMeasure * m_errMeasure;
+        </code>
+      </method>
+
+      <method
 	type    = 'bool'
         name    = 'hasMeasurement'
 	const   = 'TRUE'
@@ -182,6 +201,7 @@
   // for a node without measurement the chi2 = 0 ;-)
   m_residual    = 0.;
   m_errResidual = 0.;
+  m_errMeasure  = 0.;
         </code>
       </method>
 
