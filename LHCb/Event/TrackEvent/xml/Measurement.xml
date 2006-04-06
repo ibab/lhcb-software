@@ -44,7 +44,7 @@
           m_z = other.m_z;
           m_measure = other.m_measure;
           m_errMeasure = other.m_errMeasure;
-          m_trajectory = (other.m_trajectory)->clone();
+          m_trajectory.reset( (other.m_trajectory)->clone().release());
           m_lhcbID = other.m_lhcbID;
           m_refVector = other.m_refVector;
           m_refIsSet = other.m_refIsSet;
