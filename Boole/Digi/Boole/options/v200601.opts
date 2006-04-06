@@ -43,8 +43,8 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r3/30000000.200ev.05Apr.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Minimum bias events, with Gauss v24r3
+   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r2/30000000.200ev.27Mar.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Minimum bias events, (should be with Gauss v24r3)
 
 
 //---------------------------------------------------------------------------
