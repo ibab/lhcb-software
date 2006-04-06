@@ -16,11 +16,13 @@
       <import name='Event/VeloCluster' />
       <import name='VeloDet/DeVelo'/>
       <import name='Kernel/TrackTypes.h'/>
+      <import name='Kernel/IVeloClusterPosition.h'/>
 
       <constructor
         desc = 'Constructor from an VeloPhiCluster and a refVector'>
         <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
         <arg type = 'Gaudi::TrackVector' name='refVector' const='TRUE'/>
       </constructor>
 
@@ -28,6 +30,7 @@
         desc = 'Constructor from an VeloPhiCluster without a refVector'>
         <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
       </constructor>
 
      <constructor
@@ -55,6 +58,7 @@
         access = 'PRIVATE'>
         <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
         <arg type = 'bool' name='refIsSet'/>
       </method>
 

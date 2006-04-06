@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-04-06 - David Hutchcroft
+ - Changed VeloPhiMeasurement and VeloRMeasurement to match new format 
+   for measurements
+
 ! 2006-04-04 - Juan Palacios (Jan Amoraal changes)
  - OTMeasurement.cpp: Adapt to new OTDet interface and include DeOTModule.h
 

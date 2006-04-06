@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.10 2006-04-06 06:43:28 ebos Exp $
+// $Id: VeloRMeasurement.cpp,v 1.11 2006-04-06 13:57:09 dhcroft Exp $
 // Include files
 
 // local
@@ -17,18 +17,20 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
                                     const DeVelo& det,
+				    const IVeloClusterPosition& clusPosTool,
                                     const Gaudi::TrackVector& refVector )
 {
   m_refVector = refVector; // reference trajectory
-  this->init( cluster, det, true );
+  this->init( cluster, det, clusPosTool, true );
 }
 
 /// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
-                                    const DeVelo& det ) 
+                                    const DeVelo& det, 
+				    const IVeloClusterPosition& clusPosTool) 
 {
   m_refVector = Gaudi::TrackVector(); // reference trajectory
-  this->init( cluster, det, false );
+  this->init( cluster, det, clusPosTool, false );
 }
 
 /// Copy constructor
@@ -39,7 +41,8 @@ VeloRMeasurement::VeloRMeasurement( const VeloRMeasurement& other )
 
 void VeloRMeasurement::init( const VeloCluster& cluster,
                              const DeVelo& det,
-                             bool refIsSet ) 
+                             const IVeloClusterPosition& clusPosTool,
+			     bool refIsSet ) 
 {
   // Fill the data members
   m_mtype = Measurement::VeloR;
@@ -50,30 +53,10 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
   m_z = rDet->z();
   m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
 
-  double sum   = 0.;
-  double sum2  = 0.;
-  double sums  = 0.;
-
-  std::vector < VeloChannelID > channels = m_cluster->channels();
-  std::vector< VeloChannelID >::const_iterator iChan;
-  for( iChan = channels.begin() ; iChan !=  channels.end() ; ++iChan ) {
-    double radius= rDet->rOfStrip( (*iChan).strip() );
-    double adc = static_cast<double>(m_cluster->
-				     adcValue(iChan-channels.begin()));
-    sum   += adc;
-    sum2  += adc * adc;
-    sums  += adc * radius ;
-  }
-  if ( 0 < sum ) {
-    m_measure = sums / sum;
-    // MM+
-    // m_measure    = ( pitch / sum ) * sqrt( sum2 / 12 );
-  // use center strip as representative
-    double pitch =   rDet->rPitch( m_cluster->channelID().strip() );
-    m_errMeasure    = 0.8 * ( pitch / sum ) * sqrt( sum2 / 12 );
-    // m_errMeasure = 0.254*pitch - 0.0049*mm;
-    // MM-
-  }
+  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position( &cluster );
+  m_measure = rDet->rOfStrip(clusInfo.strip) + 
+    rDet->rPitch(clusInfo.strip.strip()) * clusInfo.fractionalPosition;
+  m_errMeasure = rDet->rPitch(clusInfo.strip.strip()) * clusInfo.fractionalError;
 }
 
 
