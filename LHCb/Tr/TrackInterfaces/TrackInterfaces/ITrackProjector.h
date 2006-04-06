@@ -46,6 +46,9 @@ public:
   /// Retrieve the error on the residual of the (last) projection
   virtual double errResidual() const = 0;
 
+  /// Retrieve the error on the measure of the (last) projection
+  virtual double errMeasure() const = 0;
+
 };
 
 //==============================================================================
