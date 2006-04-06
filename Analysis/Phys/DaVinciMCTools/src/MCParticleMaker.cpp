@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.17 2006-04-04 06:29:06 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.18 2006-04-06 11:15:13 jpalac Exp $
 // Include files 
 
 #include <memory>
@@ -135,14 +135,13 @@ StatusCode MCParticleMaker::initialize() {
     fatal() << "Unable to locate RndmGenSvc Flat distribution" << endmsg;
     return StatusCode::FAILURE;
   }
-  /// @todo Restore MCDecayFinder
-  /*
-  m_pMCDecFinder = tool<IMCDecayFinder("MCDecayFinder", this);
+
+  m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
   if(!m_pMCDecFinder){
     fatal() << "Unable to retrieve MCDecayFinder tool" << endmsg;
     return StatusCode::FAILURE;
   }
-  */
+  
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {
     fatal() << "Instructed to use covariance matrix of"
