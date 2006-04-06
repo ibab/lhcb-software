@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.25 2006-04-04 15:31:38 robbep Exp $
+! $Id: release.notes,v 1.26 2006-04-06 12:40:49 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ==================== LbPythia v4r2 2006-04-06 ======================
 ! 2006-04-04 - Patrick Robbe
  - pykfdi.F: remove IMPLICITE declarations
  - upevnt.F: add block data to define default value of gauss user process
