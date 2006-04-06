@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-04-05 - Edwin Bos
+ - updated to using auto_ptr
+
 !====================== TrackInterfaces v2r1 2006-03-16 ======================
 ! 2006-03-16 - Marco Cattaneo
  - Add IPatForwardTool interface
