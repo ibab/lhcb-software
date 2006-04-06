@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2006-04-05 - Patrick Robbe
+ - requirements - use "-O2" for LHAPDF because now GENSER 1.3.0 uses
+                  -O2 instead of -O.
+
 ! 2006-04-04 - Patrick Robbe
  - requirements - use dynamic libraries for Pythia, LHAPDF and PHOTOS
                   build dynamic dummylhapdf library with lhaglue.F but

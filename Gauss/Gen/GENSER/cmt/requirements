@@ -34,5 +34,3 @@ library lhapdfdummy ../src/*.F
 macro_prepend lhapdf_linkopts " -L $(GENSERROOT)/$(BINDIR) -llhapdfdummy "
 
 macro GENSER_linkopts "$(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -lnsl -lcrypt -ldl -lg2c"
-
-macro_append lhaglue_fflags " -O "
