@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.9 2006-03-23 12:38:58 mtobin Exp $
+// $Id: VeloRMeasurement.cpp,v 1.10 2006-04-06 06:43:28 ebos Exp $
 // Include files
 
 // local
@@ -29,6 +29,12 @@ VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
 {
   m_refVector = Gaudi::TrackVector(); // reference trajectory
   this->init( cluster, det, false );
+}
+
+/// Copy constructor
+VeloRMeasurement::VeloRMeasurement( const VeloRMeasurement& other )
+  : Measurement(other) {
+  m_cluster = other.m_cluster;
 }
 
 void VeloRMeasurement::init( const VeloCluster& cluster,

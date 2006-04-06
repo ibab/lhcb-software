@@ -32,12 +32,10 @@
         <arg type='ISTClusterPosition' name='stClusPosTool' />
       </constructor>
 
-      <destructor
-        desc = 'Destructor to delete m_trajectory'>
-        <code>
-  delete m_trajectory;
-        </code>
-      </destructor>
+     <constructor
+        desc = 'Copy constructor'>
+        <arg type='LHCb::STMeasurement' name='other' const='TRUE'/>
+      </constructor>
 
       <attribute
         type = 'const LHCb::STCluster*'
@@ -72,11 +70,7 @@
         virtual = 'TRUE'
         const   = 'TRUE'>
         <code>
-  LHCb::STMeasurement* me = new LHCb::STMeasurement();
-  LHCb::Trajectory* traj  = m_trajectory -&gt; clone();
-  *me = *this;
-  me -&gt; setTrajectory( traj );
-  return me;
+          return new LHCb::STMeasurement(*this);
         </code>
       </method>
 

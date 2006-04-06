@@ -33,12 +33,10 @@
         <arg type='int' name='ambiguity = 0' />
       </constructor>
 
-      <destructor
-        desc = 'Destructor to delete m_trajectory'>
-        <code>
-  delete m_trajectory;
-        </code>
-      </destructor>
+     <constructor
+        desc = 'Copy constructor'>
+        <arg type='LHCb::OTMeasurement' name='other' const='TRUE'/>
+      </constructor>
 
       <attribute
         type = 'int'
@@ -83,11 +81,7 @@
         desc    = 'Clone the OTMeasurement'
         const   = 'TRUE'>
         <code>
-  LHCb::OTMeasurement* me = new LHCb::OTMeasurement();
-  LHCb::Trajectory* traj  = m_trajectory -&gt; clone();
-  *me = *this;
-  me -&gt; setTrajectory( traj );
-  return me;
+          return new LHCb::OTMeasurement(*this);
         </code>
       </method>
 

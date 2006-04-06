@@ -30,12 +30,10 @@
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
       </constructor>
 
-     <destructor
-        desc = 'Destructor to delete m_trajectory'>
-        <code>
-  delete m_trajectory;
-        </code>
-      </destructor>
+     <constructor
+        desc = 'Copy constructor'>
+        <arg type='LHCb::VeloPhiMeasurement' name='other' const='TRUE'/>
+      </constructor>
 
       <attribute
         type = 'const LHCb::VeloCluster*'
@@ -92,11 +90,7 @@
         desc    = 'Clone the VeloPhiMeasurement'
         const   = 'TRUE'>
         <code>
-  LHCb::VeloPhiMeasurement* me = new LHCb::VeloPhiMeasurement();
-  LHCb::Trajectory* traj       = m_trajectory -&gt; clone();
-  *me = *this;
-  me -&gt; setTrajectory( traj );
-  return me;
+          return new LHCb::VeloPhiMeasurement(*this);
         </code>
       </method>
 

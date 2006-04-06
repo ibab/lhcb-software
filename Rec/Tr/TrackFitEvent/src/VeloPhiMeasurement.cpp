@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.11 2006-03-31 17:13:14 jvantilb Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.12 2006-04-06 06:43:28 ebos Exp $
 // Include files 
 
 // local
@@ -29,6 +29,13 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
 {
   m_refVector = Gaudi::TrackVector(); // reference trajectory
   this->init( cluster, det, false );
+}
+
+/// Copy constructor
+VeloPhiMeasurement::VeloPhiMeasurement( const VeloPhiMeasurement& other )
+  : Measurement(other) {
+  m_cluster = other.m_cluster;
+  m_origin = other.m_origin;
 }
 
 void VeloPhiMeasurement::init( const VeloCluster& cluster,

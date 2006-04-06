@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.6 2006-03-17 10:49:38 erodrigu Exp $
+// $Id: StateTraj.cpp,v 1.7 2006-04-06 06:43:28 ebos Exp $
 // Include files
 
 // local
@@ -31,9 +31,9 @@ StateTraj::StateTraj( const TrackVector& stateVector,
   m_curv   = TrackParameters::kappa * m_qOverP * ( m_dir.Cross(m_bField) );   
 };
 
-StateTraj* StateTraj::clone() const
+std::auto_ptr<Trajectory> StateTraj::clone() const
 {
-        return new StateTraj(*this);
+        return std::auto_ptr<Trajectory>(new StateTraj(*this));
 }
 
 XYZPoint StateTraj::position( double arclength ) const

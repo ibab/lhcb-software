@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.5 2006-02-28 16:01:04 mneedham Exp $
+// $Id: STMeasurement.cpp,v 1.6 2006-04-06 06:43:28 ebos Exp $
 // Include files 
 
 // from STDet
@@ -35,6 +35,13 @@ STMeasurement::STMeasurement( const STCluster& stCluster,
   m_refVector = Gaudi::TrackVector(); // reference trajectory
   this->init(  stCluster, geom, stClusPosTool, false );
 }
+
+/// Copy constructor
+STMeasurement::STMeasurement( const STMeasurement& other ) 
+  : Measurement(other) {
+  m_cluster = other.m_cluster;
+}
+
 
 void STMeasurement::init( const STCluster& stCluster,
                           const DeSTDetector& geom,

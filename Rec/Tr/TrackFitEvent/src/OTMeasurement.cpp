@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.11 2006-04-04 16:29:07 jpalac Exp $
+// $Id: OTMeasurement.cpp,v 1.12 2006-04-06 06:43:28 ebos Exp $
 // Include files
 
 // OTDet
@@ -36,7 +36,15 @@ OTMeasurement::OTMeasurement( const LHCb::OTTime& otTime,
   m_refVector = Gaudi::TrackVector(); 
   this->init( otTime, geom, ambiguity, false );
 }
- 
+
+/// Copy constructor
+OTMeasurement::OTMeasurement( const OTMeasurement& other )
+  : Measurement(other) {
+  m_time = other.m_time;
+  m_ambiguity = other.m_ambiguity;
+  m_stereoAngle = other.m_stereoAngle;
+}
+
 void OTMeasurement::init( const LHCb::OTTime& otTime,
                           const DeOTDetector& geom,
                           int ambiguity,
@@ -59,7 +67,6 @@ void OTMeasurement::init( const LHCb::OTTime& otTime,
 
   // Get the z of the measurement (centre of the wire)
   OTChannelID otChan = m_time->channel();
-  //DeOTModule* module = geom.module( otChan );
   DeOTModule* module = geom.findModule( otChan );
   XYZPoint wirePos = module->centerOfStraw( otChan.straw() );
   m_z = wirePos.z();
