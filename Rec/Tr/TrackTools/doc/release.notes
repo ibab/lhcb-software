@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-04-05 - Edwin Bos
+ - adapted to using auto_ptr
+
 !======================== TrackTools v2r1 2006-03-31 =========================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher

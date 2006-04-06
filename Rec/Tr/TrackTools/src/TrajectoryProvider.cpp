@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.5 2006-03-08 14:48:11 erodrigu Exp $
+// $Id: TrajectoryProvider.cpp,v 1.6 2006-04-06 06:49:00 ebos Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -95,7 +95,9 @@ StatusCode TrajectoryProvider::initialize() {
 Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 {
   const Trajectory& traj = meas.trajectory();
-  return traj.clone();
+  Trajectory& aTraj = const_cast<Trajectory&>(traj);
+  return &aTraj;
+  
 };
 
 //=============================================================================
@@ -104,7 +106,7 @@ Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
                                             const double offset )
 {
-  Trajectory* traj = NULL;
+  std::auto_ptr<Trajectory> traj;
 
   //TODO: the following switch block could be replaced by this very simple
   //      and single line if the DetectorElement class had
@@ -132,39 +134,41 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
             << " -> do not know how to create a Trajectory!" << endreq;
 		return NULL;
   }
+
+  Trajectory* aTraj = traj.get();
   
-  if ( traj == NULL )
+  if ( aTraj == NULL )
     error() << "Unable to create the 'Measurement' Trajectory of type "
             << id.detectorType() << endreq;
   else
     debug() << "Created 'Measurement' Trajectory of type "
             << id.detectorType() << endreq;
-  
-  return traj;
+
+  return aTraj;
 };
 
 //=============================================================================
 // Return a "State trajectory" from a State
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( const State& state )
+std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const State& state )
 {
   XYZVector bField;
   m_magsvc -> fieldVector( state.position(), bField );
   
-  return new StateTraj( state, bField );
+  return std::auto_ptr<Trajectory>(new StateTraj( state, bField ));
 };
 
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( const TrackVector& stateVector,
-                                            const double z )
+std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const TrackVector& stateVector,
+                                                          const double z )
 {
   XYZVector bField;
   m_magsvc -> fieldVector( XYZPoint( stateVector(0),stateVector(1), z ),
                            bField );
   
-  return new StateTraj( stateVector, z, bField );
+  return std::auto_ptr<Trajectory>(new StateTraj( stateVector, z, bField ));
 };
 
 //=============================================================================

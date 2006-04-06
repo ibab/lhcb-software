@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.h,v 1.4 2006-03-03 10:57:23 erodrigu Exp $
+// $Id: TrajectoryProvider.h,v 1.5 2006-04-06 06:49:00 ebos Exp $
 #ifndef TRACKTOOLS_TRAJECTORYPROVIDER_H 
 #define TRACKTOOLS_TRAJECTORYPROVIDER_H 1
 
@@ -59,11 +59,11 @@ public:
                                         const double offset = 0 );
   
   /// Return a "State Trajectory" from a State
-  virtual LHCb::Trajectory* trajectory( const LHCb::State& state );
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::State& state );
   
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual LHCb::Trajectory* trajectory( const Gaudi::TrackVector& stateVector,
-                                        const double z );
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const Gaudi::TrackVector& stateVector,
+                                                      const double z );
   
 protected:
   // Geometry information
