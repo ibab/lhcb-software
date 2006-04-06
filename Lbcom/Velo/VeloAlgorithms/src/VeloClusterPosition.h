@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.4 2006-04-05 10:06:23 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.5 2006-04-06 13:49:43 dhcroft Exp $
 #ifndef VELOCLUSTERPOS_H 
 #define VELOCLUSTERPOS_H 1
 
@@ -53,42 +53,41 @@ public:
 
   virtual ~VeloClusterPosition( ); ///< Destructor
 
-  virtual toolInfo position(const LHCb::VeloCluster* cluster);
+  virtual toolInfo position(const LHCb::VeloCluster* cluster) const;
   virtual toolInfo position(const LHCb::VeloCluster* cluster,
-                            double radiusOfCluster);
+                            double radiusOfCluster) const;
   virtual toolInfo position(const LHCb::VeloCluster* cluster,
-                            Pair& userInfo);
+                            Pair& userInfo) const;
   virtual Pair fractionalPosMean(
-                   const LHCb::VeloCluster* cluster);
+                   const LHCb::VeloCluster* cluster) const;
   virtual Pair fractionalPosEta(
                    const LHCb::VeloCluster* cluster,
-                   double alphaOfTrack);
+                   double alphaOfTrack) const;
   virtual Pair etaFrac(
                    const LHCb::VeloCluster* cluster,
-                   double fracPosTrue=0.);
+                   double fracPosTrue=0.) const;
   
 protected:
 
   virtual toolInfo weightedMeanPos(
                    const LHCb::VeloCluster* cluster,
-                   Pair& userInfo);
+                   Pair& userInfo) const;
   virtual toolInfo etaFitPos(
                    const LHCb::VeloCluster* cluster,
-                   Pair& userInfo);
+                   Pair& userInfo) const;
   virtual void posAndError(
                const LHCb::VeloCluster* cluster,
                const LHCb::VeloChannelID& intDistanceID,
                const double& fractionalPos,
-               Pair& userInfo, Pair& toolInfo);
+               Pair& userInfo, Pair& toolInfo) const;
   virtual double resolution(const double& pitch,
-                            const Pair& resInfo);
+                            const Pair& resInfo) const;
   virtual void createResParTable();
   virtual void createEtaParTable();
   
 private:
 
   DeVelo* m_veloDet;
-  double m_RType;
   bool m_printInfo;
   bool m_useWeightedMean;
   bool m_useEtaFit;

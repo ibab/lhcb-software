@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-04-06 - David Hutchcroft
+ - Added const to VeloClusterPositon methods
+
 !===================== VeloAlgorithms v4r2 2006-04-05 =====================
 ! 2006-04-05 - Tomasz Szumlak
  - Update of resolution parametrisations

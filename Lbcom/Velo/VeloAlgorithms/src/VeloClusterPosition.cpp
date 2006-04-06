@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.6 2006-04-05 10:06:23 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.7 2006-04-06 13:49:43 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -68,7 +68,7 @@ VeloClusterPosition::~VeloClusterPosition() {};
 //=============================================================================
 toolInfo VeloClusterPosition::weightedMeanPos(
                          const LHCb::VeloCluster* cluster,
-                         Pair& userInfo)
+                         Pair& userInfo) const
 {
   debug()<< " ==> weightedMeanPos() " <<endmsg;
   //
@@ -108,7 +108,7 @@ toolInfo VeloClusterPosition::weightedMeanPos(
 //=========================================================================
 toolInfo VeloClusterPosition::etaFitPos(
                          const LHCb::VeloCluster* cluster,
-                         Pair& userInfo)
+                         Pair& userInfo) const
 {
   debug()<< " ==> VeloClusterPosition::etaFitPos" <<endmsg;
   //
@@ -145,7 +145,7 @@ toolInfo VeloClusterPosition::etaFitPos(
 }
 //=========================================================================
 double VeloClusterPosition::resolution(const double& pitch,
-                                       const Pair& resInfo)
+                                       const Pair& resInfo) const
 { 
   debug()<< " ==> resolution() " <<endmsg;
   //
@@ -175,7 +175,7 @@ double VeloClusterPosition::resolution(const double& pitch,
 //=========================================================================
 toolInfo VeloClusterPosition::position(
                          const LHCb::VeloCluster* cluster,
-                         Pair& userInfo)
+                         Pair& userInfo) const
 {
   debug()<< " ==> VeloClusterPosition::position" <<endmsg;
   
@@ -208,7 +208,7 @@ toolInfo VeloClusterPosition::position(
 }
 //=========================================================================
 Pair VeloClusterPosition::fractionalPosMean(
-                         const LHCb::VeloCluster* cluster)
+                         const LHCb::VeloCluster* cluster) const
 {
   debug()<< " ==> VeloClusterPosition::fractionalPosMean" <<endmsg;
   //
@@ -240,7 +240,7 @@ Pair VeloClusterPosition::fractionalPosMean(
 //
 Pair VeloClusterPosition::fractionalPosEta(
                          const LHCb::VeloCluster* cluster,
-                         double alphaOfTrack)
+                         double alphaOfTrack) const
 {
   debug()<< " ==> VeloClusterPosition::fractionalPosMean" <<endmsg;
   //
@@ -274,7 +274,7 @@ void VeloClusterPosition::posAndError(
                      const LHCb::VeloCluster* cluster,
                      const LHCb::VeloChannelID& intDistanceID,
                      const double& fractionalPos,
-                     Pair& userInfo, Pair& toolInfo)
+                     Pair& userInfo, Pair& toolInfo) const
 { 
   debug()<< "==> VeloClusterPosition::posAndError" <<endmsg;
   //  
@@ -291,8 +291,7 @@ void VeloClusterPosition::posAndError(
       info()<< " ==> The given cluster is on RType sensor" <<endmsg;
     clusterPos=clusterPos/cm;
     pitch=rSens->rPitch(intDistanceID.strip(), fractionalPos);
-    m_RType=1.;
-    userInfo.second=m_RType;
+    userInfo.second=1.; // RType
     errorPos=resolution(pitch/micrometer, resInfo);
     errorPos=errorPos/(pitch/micrometer);
     // return values for cluster position and position errorPos
@@ -326,8 +325,7 @@ void VeloClusterPosition::posAndError(
       }
       //
       pitch=phiSens->phiPitch(meanRadius);
-      m_RType=0.;
-      resInfo.second=m_RType;
+      resInfo.second=0.; // phi type
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(meanRadius/micrometer);
       double errorDeg=errorRad/degree;
@@ -347,8 +345,7 @@ void VeloClusterPosition::posAndError(
       //
       clusterPos=clusterPos/degree;
       pitch=phiSens->phiPitch(rOfPhiCluster);
-      m_RType=0.;
-      resInfo.second=m_RType;
+      resInfo.second=0.; //phi type
       errorPos=resolution(pitch/micrometer, resInfo);
       double errorRad=errorPos/(rOfPhiCluster/micrometer);
       double errorDeg=errorRad/degree;
@@ -364,7 +361,7 @@ void VeloClusterPosition::posAndError(
 }
 //=========================================================================
 Pair VeloClusterPosition::etaFrac(const LHCb::VeloCluster* cluster,
-                                 double fracPosTrue)
+                                 double fracPosTrue) const
 {
   //
   debug()<< " ==> etaFrac() " <<endmsg;
@@ -469,7 +466,7 @@ void VeloClusterPosition::createEtaParTable()
   }
 }
 //==============================================================================
-toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster)
+toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
 {
   //return position using default error parametrizations and radii
   Pair temp=std::make_pair(0., 0.);
@@ -477,7 +474,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster)
 }
 //==============================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
-                                       double radiusOfCluster)
+                                       double radiusOfCluster) const
 {
   Pair temp=std::make_pair(0., radiusOfCluster);
   return ( position(cluster, temp) );
