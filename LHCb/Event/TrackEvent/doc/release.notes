@@ -4,11 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r2 2006-04-06 ========================
 ! 2006-04-05 - Edwin Bos
  - created copy constructor in Measurement.xml
  - updated to auto_ptr
 
-!========================= TrackEvent v2r3 2006-04-03 ========================
 ! 2006-04-03 - Juan Palacios
  - Remove many unnecessary calls to MatrixManip::Standardize and fix filling
    and retrieving of submatrices to and from matrices, both symmetric and
@@ -23,7 +23,6 @@
  - SMatrix hack file Shacks.h file removed
  - last temporary SMatrix hacks use MatrixManip.h from Kernel/LHCbDefinitions
 
-!========================= TrackEvent v2r2 2006-03-28 ========================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
    (needed some temporary changes because of missing/buggy SMatrix functionality)
