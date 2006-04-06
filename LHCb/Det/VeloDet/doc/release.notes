@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.112 2006-04-06 13:45:19 dhcroft Exp $
+! $Id: release.notes,v 1.113 2006-04-06 16:07:24 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r3 2006-04-06 ========================
 ! 2004-04-06 - David Hutchcroft
- - Added method to get origin of phi sensors for measuserment on track classes
+ - Added method to get origin of phi sensors for measurement on track classes
 
-!========================= VeloDet v10r3 2006-04-05 ========================
 ! 2006-04-05 - Mark Tobin
  - Fixed bug in channel mapping
  - Made all public methods in DeVeloSensor const
