@@ -1,5 +1,4 @@
-// $Id: Simulation.opts,v 1.78 2006-04-04 13:53:39 gcorti Exp $ 
-#pragma print off
+// $Id: Simulation.opts,v 1.79 2006-04-07 09:35:41 gcorti Exp $ 
 
 /** @file 
  * 
@@ -21,7 +20,6 @@ ApplicationMgr.ExtSvc += {
 };
 EventPersistencySvc.CnvServices += { "GiGaKine" };
 
-#pragma print on
 // Data store configuration: request GiGaKine and GiGaHits (IGiGaCnvSvc) at
 // initialization and register leaves in store for each event,
 // Keep default configuration for 
@@ -49,48 +47,46 @@ Simulation.Members += { "G4HepMCToMCTruth" };         // With HEPMC internally
 G4HepMCToMCTruth.Particles = "MC/TestParticles";
 G4HepMCToMCTruth.Vertices = "MC/TestVertices";
 // Populate sensitive hits in the TES for 
+Simulation.Members += { "GaudiSequencer/DetectorsHits" };
+DetectorsHits.MeasureTime = true;
 // == Velo
-Simulation.Members += { "GetTrackerHitsAlg/GetVeloHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };
 GetVeloHits.CollectionName = "VeloSDet/Hits";
 GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
 GetVeloHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 // == PuVelo
-Simulation.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
 GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
 GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
 GetPuVetoHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 // == TT
-Simulation.Members += { "GetTrackerHitsAlg/GetTTHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };
 GetTTHits.CollectionName = "TTSDet/Hits";
 GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
 GetTTHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
 // == IT
-Simulation.Members += { "GetTrackerHitsAlg/GetITHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };
 GetITHits.CollectionName = "ITSDet/Hits";
 GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
 GetITHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
 // == OT
-Simulation.Members += { "GetTrackerHitsAlg/GetOTHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };
 GetOTHits.CollectionName = "OTSDet/Hits";
 GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
 GetOTHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
 // == Muon
-Simulation.Members += { "GetTrackerHitsAlg/GetMuonHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };
 GetMuonHits.CollectionName = "MuonSDet/Hits";
 GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
 GetMuonHits.Detector       = "/dd/Structure/LHCb/DownstreamRegion/Muon";
 // == Calorimeters
-Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" };
-Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" };
-Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" };
-Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
+DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };
+DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };
+DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };
+DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };
 // and for the RICHes
-Simulation.Members += { "GetMCRichHitsAlg" };
-// Uncomment lines below for switching on RICH extended info
-// Simulation.Members += { "GetMCRichOpticalPhotonsAlg",
-//                         "GetMCRichSegmentsAlg",
-//                         "GetMCRichTracksAlg" };
-// #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+DetectorsHits.Members += { "GetMCRichHitsAlg" };
+
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
@@ -145,7 +141,6 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 // all the subdetector specific actions should be added here:
 
 // specific RICH options
-#pragma print off
 #include "$GAUSSRICHROOT/options/Rich.opts"
 
 //////////////////////////////////////////////////////////////////////
@@ -183,3 +178,6 @@ GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 // uncomment the following to do low energy simulation in the Muon system
 // with special physics list
 //#include "$GAUSSOPTS/MuonLowEnergy.opts"
+
+// uncomment the following to simulate and write RICH extended information
+//#include "$GAUSSOPTS/RichExtendedInfo.opts"
