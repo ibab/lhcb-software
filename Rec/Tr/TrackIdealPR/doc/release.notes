@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
+! 2006-03-067- David Hutchcroft
+ - Changed Velo measurement interfaces to match new code
 
 !======================= TrackIdealPR v2r1 2006-03-31 ========================
 ! 2006-03-23 - Eduardo Rodrigues

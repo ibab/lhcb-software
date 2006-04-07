@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.15 2006-03-31 12:37:16 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.16 2006-04-07 14:55:40 dhcroft Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -87,6 +87,8 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
                    m_otTrackerPath = DeOTDetectorLocation::Default );
   declareProperty( "STPositionTool",
                    m_stPositionToolName = "STOfflinePosition" );
+  declareProperty( "VeloPositionTool",
+                   m_veloPositionToolName = "VeloClusterPosition" );
   declareProperty( "MinNHits", m_minNHits = 6     );
   declareProperty( "ErrorX2",  m_errorX2  = 4.0   );
   declareProperty( "ErrorY2",  m_errorY2  = 400.0 );
@@ -121,6 +123,9 @@ StatusCode IdealTracksCreator::initialize()
 
   // Retrieve the STClusterPosition tool
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
+
+  // Retrieve the VeloClusterPosition tool
+  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
 
   // Retrieve the TrackCriteriaSelector tool
   m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
@@ -508,14 +513,16 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
       // Check if VeloCluster is of type R or Phi
       if ( sensor -> isR() ) {
-        VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo );
+        VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
+						  *m_veloPositionTool );
         if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
         track -> addToLhcbIDs( meas.lhcbID() );
         track -> addToMeasurements( meas );
         ++nVeloRMeas;
       } else {
-        VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
-        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+        VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
+						      *m_veloPositionTool );
+     if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
         track -> addToLhcbIDs( meas.lhcbID() );
         track -> addToMeasurements( meas );
         ++nVeloPhiMeas;
