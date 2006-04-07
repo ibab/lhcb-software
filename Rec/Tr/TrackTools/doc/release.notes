@@ -4,13 +4,13 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r1 2006-04-07 =========================
 ! 2006-04-07 - David Hutchcroft
  - Modified code to use VeloClusterTool to get the Velo clusters positions
 
 ! 2006-04-05 - Edwin Bos
  - adapted to using auto_ptr
 
-!======================== TrackTools v2r1 2006-03-31 =========================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
 

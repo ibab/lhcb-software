@@ -3,12 +3,12 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r1 2006-04-06 ====================
 ! 2006-04-06 - Jeroen van Tilburg
  - TrackKalmanFilter: use Symmetrize function to regain a symmetric covariance
    matrix.
  - TrackKalmanFilter: get the measure error from the Node.
 
-!=========================== TrackFitter v2r1 2006-03-31 ====================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher, and new Gaudi
  - minor bugs corrected

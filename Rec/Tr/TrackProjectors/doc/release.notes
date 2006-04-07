@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r1 2006-04-06 ======================
 ! 2006-04-06 - Jeroen van Tilburg
  - Added errMeasure method to TrackProjector. This is needed by the track fit.
    The different projector implementations fill the corresponding data member.
@@ -14,7 +15,6 @@
 ! 2006-03-31 - Jeroen van Tilburg
  - Changed all ...Projectors to use the new resolution method.
 
-!====================== TrackProjectors v2r1 2006-03-31 ======================
 ! 2006-03-26 - Eduardo Rodrigues
  - adaptations to new SMatrix-5.10.00b and higher
 
