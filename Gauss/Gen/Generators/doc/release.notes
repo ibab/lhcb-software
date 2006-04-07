@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2006-04-07 08:59:47 gcorti Exp $
+! $Id: release.notes,v 1.54 2006-04-07 10:22:03 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
@@ -7,7 +7,6 @@
  - SignalForcedFragmentation: Fix counters.
  - GenCounters: do not count Bc with D hadrons.
 
-!=================== Generators v5r0 2006-04-06 ===========================
 ! 2006-04-05 - Patrick Robbe
  - requirements: GENSER 1.3.0 compiles now LHAPDF with -O2, remove
    -O in requirements
