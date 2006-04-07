@@ -15,15 +15,15 @@ use RecAlgs v1r0 Rec
 #use CaloReco            v3r0    Calo  # Olivier Deschamps
 
 # New tracking
-use TrackExtrapolators  v2r0    Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r0    Tr    # Eduardo Rodrigues
-use TrackFitEvent       v2r0    Tr    # Eduardo Rodrigues
-use TrackTools          v2r0    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r0    Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r0    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r1    Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r1    Tr    # Eduardo Rodrigues
+use TrackFitEvent       v2r1    Tr    # Eduardo Rodrigues
+use TrackTools          v2r1    Tr    # Eduardo Rodrigues
+use TrackFitter         v2r1    Tr    # Eduardo Rodrigues
+use TrackProjectors     v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackIdealPR        v2r1    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r0    Tr    # Eduardo Rodrigues
-use TrackMatching       v2r0    Tr    # Eduardo Rodrigues
+use TrackMatching       v2r1    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
 #use TrackCheckers       v2r0    Tr    # Eduardo Rodrigues
 #use TrackVeloTT         v1r0    Tr    # Eduardo Rodrigues
@@ -33,13 +33,13 @@ use TrackAssociators    v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
 
 # New pattern recognition
 #use PatSys              v1r5    Pat   # Olivier Callot
-use PatTools            v2r0    Pat   # Olivier Callot
+use PatTools            v2r0p1  Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
-use PatVelo             v2r0    Pat   # David Hutchcroft
+use PatVelo             v2r1    Pat   # David Hutchcroft
 #use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
-use PatForward          v2r0    Pat   # Olivier Callot
+use PatForward          v2r1    Pat   # Olivier Callot
 #use PatPV               v1r0p1  Pat   # Mariusz Witek
-use PatChecker          v2r0    Pat   # Olivier Callot
+use PatChecker          v2r1    Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r0    Pat   # Matt Needham
 #use PatKShort           v1r0    Pat   # Olivier Callot
 
