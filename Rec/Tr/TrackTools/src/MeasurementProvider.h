@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.9 2006-02-24 16:32:47 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.10 2006-04-07 13:25:56 dhcroft Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -10,6 +10,7 @@
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/ISTClusterPosition.h"
+#include "Kernel/IVeloClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IMeasurementProvider.h"
@@ -78,6 +79,9 @@ protected:
   // Interfaces
   ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
   std::string         m_stPositionToolName; ///< ST cluster position tool name
+
+  IVeloClusterPosition* m_veloPositionTool; ///< Velo cluster position tool
+  std::string  m_veloPositionToolName; ///< Velo cluster position tool name
 
   // Geometry information
   DeVelo*       m_veloDet;

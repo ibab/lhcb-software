@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.20 2006-03-26 20:16:30 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.21 2006-04-07 13:25:56 dhcroft Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -37,6 +37,9 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "STPositionTool",
                    m_stPositionToolName = "STOfflinePosition" );
 
+  declareProperty( "VeloPositionTool",
+                   m_veloPositionToolName = "VeloClusterPosition" );
+
   declareProperty( "VeloGeometryPath",
                    m_veloDetPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
 
@@ -71,6 +74,9 @@ StatusCode MeasurementProvider::initialize() {
   // Retrieve the STClusterPosition tool
   m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
 
+  // Retrieve the VeloClusterPosition tool
+  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
+
   // Retrieve the Velo, ST and OT detector elements
   if ( !m_ignoreVelo ) m_veloDet = getDet<DeVelo>( m_veloDetPath );
 
@@ -78,6 +84,7 @@ StatusCode MeasurementProvider::initialize() {
   if ( !m_ignoreIT ) m_itDet   = getDet<DeSTDetector>( m_itDetPath );
 
   if ( !m_ignoreOT ) m_otDet   = getDet<DeOTDetector>( m_otDetPath );
+  
 
   return StatusCode::SUCCESS;
 }
@@ -129,12 +136,12 @@ StatusCode MeasurementProvider::load( Track& track )
     const LHCbID& id = *it;
 	 // First look if the Measurement corresponding to this LHCbID
 	 // is already in the Track, i.e. whether it has already been loaded!
-	 if ( track.isMeasurementOnTrack( id ) ) {
-		warning() << "Measurement had already been loaded for the LHCbID"
-					 << " channelID, detectorType = "
-					 << id.channelID() << " , " << id.detectorType()
-					 << "  -> Measurement loading skipped for this LHCbID!"
-					 << endreq;
+    if ( track.isMeasurementOnTrack( id ) ) {
+      warning() << "Measurement had already been loaded for the LHCbID"
+		<< " channelID, detectorType = "
+		<< id.channelID() << " , " << id.detectorType()
+		<< "  -> Measurement loading skipped for this LHCbID!"
+		<< endreq;
 		continue;
     }
     Measurement* meas = measurement( id );
@@ -166,9 +173,9 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
       if (vid.isRType()) {
-        meas = new VeloRMeasurement( *clus, *m_veloDet );
+        meas = new VeloRMeasurement( *clus, *m_veloDet, *m_veloPositionTool );
       } else {
-        meas = new VeloPhiMeasurement( *clus, *m_veloDet );
+        meas = new VeloPhiMeasurement(*clus, *m_veloDet, *m_veloPositionTool );
       }
     }
     else {
