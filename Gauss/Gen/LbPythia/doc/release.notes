@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.27 2006-04-06 16:36:38 robbep Exp $
+! $Id: release.notes,v 1.28 2006-04-07 09:03:46 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
-! 2006-04-05 - Patrick Robbe
+! ==================== LbPythia v4r2 2006-04-07 ======================
+! 2006-04-06 - Patrick Robbe
  - PythiaProduction: fix forced fragmentation setup.
 
-! ==================== LbPythia v4r2 2006-04-06 ======================
 ! 2006-04-04 - Patrick Robbe
  - pykfdi.F: remove IMPLICITE declarations
  - upevnt.F: add block data to define default value of gauss user process
