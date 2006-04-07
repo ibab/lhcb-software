@@ -4,6 +4,140 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v24r3">2006-04-07 - GaussSys v24r3</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version for tests. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external), the package HepEvt has been REMOVED since
+   replaced by HepMCfio library distributed in LCG external
+   DecFiles v12r1, ParamFiles v4r1 
+   Geant4 v71r0p13 (based on geant4.7.1.p01a)
+   LHCb v20r2 (and Gaudi v18r3)
+   XmlDDDB v30r3, XmlConditions v1r6, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r3 2006-04-07 =============================
+! 2006-04-07 - Gloria CORTI
+ - Use latest version of DecFiles v12r1
+ - Introduce subsequence "DetectorsHits" in simulation sequence where the
+   retrieval of hits is specified. Allows to introduce RichExtended info
+   algorithms in this subsequence without distrurbing simulation monitor.
+   Make separate option file for Rich extended information that can be
+   included other simulation.
+   . Simulation.opts
+   . RichExtendedInfo.opts - NEW
+ - Modify GaussRead.opts to pick latest geometry
+ - Remove options for EvtType that are now available from DecFiles
+   . 30000000.opts, 10000000.opts, 12165100.opts, 13144000.opts,
+     24142000.opts
+ 
+! 2006-04-06 - Gloria CORTI
+ - Use dynamic link libraries for generators: requires GENSER v1r130p1,
+   Generators v5r0 and LbPythia v4r2
+ 
+! 2006-04-04 - Gloria CORTI
+ - Use XmlConditions v1r6 for changes in CaloDet.
+ - Adapt to changes in GaudiAlgorithm base class. Requires use of
+   GiGaCnv v16r2, GaussAlgs v2r1, GaussCalo v8r2
+ - Modify simulation settings for special muon low energy runs according
+   to new paths in "/dd"
+   . MuonLowEnergy.xml - from Emanuele SANTOVETTI
+ - Remove options no longer necessary for Rich simulation since already in
+   $GAUSSRICHROOT/options/Rich.opts or RichExtendedInfo.opts
+   . Simulation.opts
+ 
+! 2006-04-04 - Florence RANJARD
+ - Use HepMC from lcg/external, requires use of Generators v5r0 and
+   ParticleGuns v3r0 in addition to LHCb v20r3
+ 
+! 2006-04-03 - Gloria CORTI
+ - Adapt options for simulating geometry to beam pipe integrated in TT,
+   Rich1 and T. Requires XmlDDDB v30r3 or higher.
+   . SimGeometry.opts
+ - Adapt example options of particle gun to units now being MeV in
+   generator phase like in whole the rest of LHCb
+   . ParticleGun.opts
+ 
+!===================== GaussCalo v8r2 2006-04-04 =============================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to change in return type of put method in GaudiAlgorithm base class
+   . src/GetCaloHitsAlg.cpp
+ 
+!======================= GaussTracker v5r2 2006-04-04 ========================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to change in return type of method "put" in GaudiAlgorithm
+   . src/GetTrackerHitsAlg.cpp
+ 
+!===================== GaussAlgs v2r1 2006-04-04  =========================
+! 2006-04-04 - Gloria CORTI
+ - Introduce use of Boost no longer taken from GaudiAlgs
+ 
+!======================= GiGaCnv v16r2 2006-04-04 ==========================
+! 2006-03-30 - Gloria CORTI
+ - Fix bug of mispelled property in its name hence repeating existing one:
+   ZsizeOfWorldVolume instead of twice ZsizeOfWorldVolume
+   . GiGaGeo.cpp
+ 
+! ==================== ParticleGuns v3r0 2006-04-04 =======================
+! 2006-04-04 - Gloria CORTI
+ - Adapt to change in base class for put method that no longer returns
+   StatusCode
+   . src/ParticleGunBaseAlg.cpp
+ 
+! 2006-03-29 - Florence RANJARD
+ - remove use of HepEvt and CLHEP. GenEvent uses HepMC from lcg/external
+ 
+! ==================== LbPythia v4r2 2006-04-07 ======================
+! 2006-04-06 - Patrick Robbe
+ - PythiaProduction: fix forced fragmentation setup.
+ 
+! 2006-04-04 - Patrick Robbe
+ - pykfdi.F: remove IMPLICITE declarations
+ - upevnt.F: add block data to define default value of gauss user process
+ 
+!=================== Generators v5r0 2006-04-07 ===========================
+! 2006-04-06 - Patrick Robbe
+ - SignalForcedFragmentation: Fix counters.
+ - GenCounters: do not count Bc with D hadrons.
+
+! 2006-04-05 - Patrick Robbe
+ - requirements: GENSER 1.3.0 compiles now LHAPDF with -O2, remove
+   -O in requirements
+
+! 2006-04-04 - Patrick Robbe
+ - ExternalGenerators.h/.cpp: add a switch (KeepOriginalProperties) in 
+   options to be able to keep the original particle properties of the
+   external generator.
+ - StringParse.h/.cpp: returns a double instead of a float when decoding
+   job option commands.
+ - requirements: use "-O" flag to compile LHAPDF code instead of -O2.
+ - Generation.cpp: improve counting of B hadrons
+
+! 2006-04-04 - Gloria CORTI
+ - Adapt to changes in put method signature in GaudiAlgorithm base class
+   . src/Lib/Signal.cpp
+   . src/component/Generation.cpp
+
+! 2006-03-29 - Florence Ranjard
+ - use HepMC from lcg/external : link with HepMCfio
+
+!===================== GENSER v1r130p1 2006-04-06 ============================
+! 2006-04-05 - Patrick Robbe
+ - requirements - use "-O2" for LHAPDF because now GENSER 1.3.0 uses
+                  -O2 instead of -O.
+ 
+! 2006-04-04 - Patrick Robbe
+ - requirements - use dynamic libraries for Pythia, LHAPDF and PHOTOS
+                  build dynamic dummylhapdf library with lhaglue.F but
+                  uses "-O" compilation for it.
+                  re-order link order for dynamic libraries.
+                  add this bin directory to the LD_LIBRARY_PATH.
+ 
+! ==== HepEvt package REMOVED =================================================
+
+! ==== GDML v1r240p0 and GDMLG4Writer v2r0 Temporarly OFF ==================== 
+
+!=============================================================================
 <H1><A NAME="v24r2">2006-03-29 - GaussSys v24r2</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in previous v24rX. </A></H2>
