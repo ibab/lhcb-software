@@ -4,7 +4,21 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r3 2006-04-06 =============================
+!======================== Gauss v24r3 2006-04-07 =============================
+! 2006-04-07 - Gloria CORTI
+ - Use latest version of DecFiles v12r1
+ - Introduce subsequence "DetectorsHits" in simulation sequence where the
+   retrieval of hits is specified. Allows to introduce RichExtended info
+   algorithms in this subsequence without distrurbing simulation monitor.
+   Make separate option file for Rich extended information that can be
+   included other simulation.
+   . Simulation.opts
+   . RichExtendedInfo.opts - NEW
+ - Modify GaussRead.opts to pick latest geometry
+ - Remove options for EvtType that are now available from DecFiles
+   . 30000000.opts, 10000000.opts, 12165100.opts, 13144000.opts,
+     24142000.opts
+
 ! 2006-04-06 - Gloria CORTI
  - Use dynamic link libraries for generators: requires GENSER v1r130p1,
    Generators v5r0 and LbPythia v4r2
