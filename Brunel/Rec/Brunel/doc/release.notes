@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r1>2006-04-04 Brunel v30r1</A></H1><PRE>
+ - This version is for development and testing of Boole v11 output. It is far
+   from complete
+
 </PRE><H1><A NAME=v30r0>2006-03-28 Brunel v30r0</A></H1><PRE>
  - Major new version with changes for:
    . New event model, LHCb namespace, migration to MathCore

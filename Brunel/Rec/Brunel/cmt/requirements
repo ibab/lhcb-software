@@ -1,40 +1,39 @@
 package Brunel
-version v30r0
+version v30r1
 
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r22
+use GaudiPolicy v5r23
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r2)
-use GaudiKernel		v20r4
-use GaudiSvc 		v14r6        -no_auto_imports
-use GaudiAlg 		v9r4         -no_auto_imports
-use GaudiAud 	        v6r6         -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r3)
+use GaudiKernel		v20r5
+use GaudiSvc 		v14r7        -no_auto_imports
+use GaudiAlg 		v9r5         -no_auto_imports
+use GaudiAud 	        v7r0         -no_auto_imports
 use GaudiGSL		v6r4         -no_auto_imports
-use GaudiPoolDb		v2r2         -no_auto_imports
-use GaudiObjDesc 	v9r3         -no_auto_imports
-use RootHistCnv         v9r8         -no_auto_imports
+use GaudiPoolDb		v2r3         -no_auto_imports
+use GaudiObjDesc 	v9r4         -no_auto_imports
+use RootHistCnv         v9r9         -no_auto_imports
 
 #-- Database
-use XmlDDDB             v30r2   Det  -no_auto_imports
-use XmlConditions       v1r5    Det  -no_auto_imports
+use XmlDDDB             v30r3   Det  -no_auto_imports
+use XmlConditions       v1r6    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v4r0         -no_auto_imports
+use ParamFiles          v4r1         -no_auto_imports
 #use BrunelDQ           v1r0    DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r1)
-use LHCb	        v20r1        -no_auto_imports
-use SimComponents       v1r1    Sim  -no_auto_imports
+#-- LHCb libraries (from LHCB_v20r2)
+use LHCb	        v20r2        -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r1)
-use LbcomSys            v4r1         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r2)
+use LbcomSys            v4r2         -no_auto_imports
 
-#-- Rec packages (from REC_v3r0)
-use RecSys              v3r0         -no_auto_imports
+#-- Rec packages (from REC_v3r1)
+use RecSys              v3r1         -no_auto_imports
 
 #
 #===== build Brunel =========================

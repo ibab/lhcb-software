@@ -2,23 +2,24 @@
 <!-- Edited By POOL -->
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
-  <File ID="D600A417-3CBE-DA11-8A63-0002B3AFA9A3">
+
+  <File ID="F6AE48D3-1EC6-DA11-B050-000E0C4DE650">
     <physical>
-      <pfn filetype="ROOT_All" name="castor:/castor/cern.ch/user/c/cattanem/Boole/v11r1/0601-10000000.100ev.27Mar.digi"/>
+      <pfn filetype="ROOT_All" name="castor:/castor/cern.ch/user/c/cattanem/Boole/v11r2/0601-11144100.100ev.05Apr.digi"/>
     </physical>
     <logical/>
   </File>
 
-  <File ID="9CF28289-9DBD-DA11-BBBC-0007E9EDBD41">
+  <File ID="6E717A2E-81C4-DA11-ADC7-0007E9EDBD41">
     <physical>
-      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r2/30000000.1000ev.27Mar.sim"/>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r3/11144100.100ev.05Apr.sim"/>
     </physical>
     <logical/>
   </File>
 
-  <File ID="BA5B2D22-C4BD-DA11-A49F-0007E9EDBD41">
+  <File ID="2AB6C34C-9AC5-DA11-942C-0002B3AFA9A3">
     <physical>
-      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r2/10000000.100ev.27Mar.sim"/>
+      <pfn filetype="ROOT_All" name="/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r3/30000000.200ev.06Apr.sim"/>
     </physical>
     <logical/>
   </File>

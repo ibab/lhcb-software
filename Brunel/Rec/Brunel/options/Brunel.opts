@@ -47,6 +47,9 @@ InitBrunelSeq.Members += { "RecInit/Brunel" };
 // Reconstruction phase
 #include "$RECSYSROOT/options/Reco.opts"
 
+// PatForward broken!!
+RecoTrSeq.Members -= { "PatTCoordFromRaw", "PatForward" };
+
 // Monitoring phase (monitoring independent of MC truth)
 #include "$BRUNELOPTS/BrunelMoni.opts"
 
