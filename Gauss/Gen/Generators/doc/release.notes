@@ -1,6 +1,16 @@
-! $Id: release.notes,v 1.54 2006-04-07 10:22:03 gcorti Exp $
+! $Id: release.notes,v 1.55 2006-04-08 11:44:23 ibelyaev Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-04-08 - Vanya BELYAEV
+ - src/component/MuXMaxBias.cpp
+   new tool ("generator cut") for the 
+   selection of "maximum bias sample for Bs -> mu+ mu- backhround studies"
+ - src/component/Generators_entries.cpp
+   new tool is declared 
+ - cmt/requirement
+   add the usage of Phys/LoKiGen v* 
+
 
 !=================== Generators v5r0 2006-04-07 ===========================
 ! 2006-04-06 - Patrick Robbe
