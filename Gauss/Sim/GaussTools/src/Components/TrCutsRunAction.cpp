@@ -84,10 +84,13 @@ TrCutsRunAction::~TrCutsRunAction()
 // ============================================================================
 void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
 {
-  if( 0 == run ) 
-    { Warning("BeginOfRunAction:: G4Run* points to NULL!") ; }
+  if ( 0 == run ) 
+  { Warning ("BeginOfRunAction:: G4Run* points to NULL!") ; }
   
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  if ( 0 == particleTable ) 
+  { Error ( "G4ParticleTable points to NULL!; return! ") ; return ; }
+  
   int ii, ptbSiz = particleTable->size();
   
   for(ii = 0; ii < ptbSiz; ii++)

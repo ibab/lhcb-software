@@ -4,6 +4,13 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2006-04-08 - Vanya BELYAEV
+ - src/Components/TrCutsRunAction.cpp
+   add a check for non-null pointer to G4ParticleTable 
+   (prevents occasional segmentatiou fault at the finalisation of 
+   "pure generator" jobs)
+ 
+
 !======================== GaussTools v12r0 2006-01-31 =======================
 ! 2006-01-31 - Gloria CORTI
  - Adapt to change in interface of IMagneticFieldSvc now returning MathCore
