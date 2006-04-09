@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.8 2006-04-09 09:00:53 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.9 2006-04-09 10:16:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/04/09 09:00:53  ibelyaev
+//  regular update
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -193,9 +196,6 @@ private:
   double       m_vcut   ;
 };
 // ============================================================================
-
-
-// ============================================================================
 DECLARE_ALGORITHM_FACTORY(LoKi_HepMC2MCAlg);
 // ============================================================================
 
@@ -221,8 +221,7 @@ StatusCode LoKi_HepMC2MCAlg::execute()
   
   // create the relation table and register it into TES 
   Table* table = new Table() ;
-  StatusCode sc = put ( table , m_output ) ;
-  if ( sc.isFailure() ) { return sc ; }
+  put ( table , m_output ) ;
   
   HMCPs hmcps ;
   { 
@@ -239,16 +238,16 @@ StatusCode LoKi_HepMC2MCAlg::execute()
         const HepMC::GenEvent* event = evt->pGenEvt() ;
         if ( 0 == event || event->particles_empty() ) { continue ; }
         //
-        hmcps.reserve ( hmcps.size() + event->particles_size() ) ;
         // it does not work with current vesion of HepMC 
-        //hmcps.insert ( hmcps.end()               , 
-        //               event->particles_begin () ,
-        //               event->particles_end   () ) ;
+        hmcps.insert ( hmcps.end()               , 
+                       event->particles_begin () ,
+                       event->particles_end   () ) ;
         // make an explicit loop 
-        for ( HepMC::GenEvent::particle_const_iterator ip = 
-                event->particles_begin () ; 
-              event->particles_end()  != ip ; ++ip ) 
-        { hmcps.push_back( *ip ) ; }
+        //hmcps.reserve ( hmcps.size() + event->particles_size() ) ;
+        //for ( HepMC::GenEvent::particle_const_iterator ip = 
+        //        event->particles_begin () ; 
+        //      event->particles_end()  != ip ; ++ip ) 
+        //{ hmcps.push_back( *ip ) ; }
       }
     } // end of loop over HepMC data containers 
   };

@@ -1,11 +1,8 @@
-// $Id: HepMC2MC.h,v 1.5 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: HepMC2MC.h,v 1.6 2006-04-09 10:16:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/03/18 12:38:15  ibelyaev
-//  minor fix for Win32 + change in the table name/location
-//
 // ============================================================================
 #ifndef MCTOOLS_HEPMC2MC_H 
 #define MCTOOLS_HEPMC2MC_H 1
@@ -14,7 +11,7 @@
 // ============================================================================
 // GeneEvent
 // ============================================================================
-#include "Event/HepMCevent.h"
+#include "Event/HepMCEvent.h"
 // ============================================================================
 // forward declarations
 // ============================================================================
