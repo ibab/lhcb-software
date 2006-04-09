@@ -1,16 +1,17 @@
-// $Id: Algo.h,v 1.2 2006-03-22 17:12:38 ibelyaev Exp $
+// $Id: Algo.h,v 1.3 2006-04-09 08:51:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/03/18 10:39:21  ibelyaev
-// Phys/LoKiAlgo: new package with the basic LoKi functionality
-// 
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/HashMap.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -20,6 +21,12 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
+// ============================================================================
+// LoKiAlgo
+// ============================================================================
+#include "LoKi/AlgoTypes.h"
+#include "LoKi/Loop.h"
+#include "LoKi/LoopObj.h"
 // ============================================================================
 
 // ============================================================================
@@ -44,6 +51,8 @@
 
 namespace LoKi 
 {
+  class LoopObj ;
+  class Loop    ;  
   /** @class Algo Algo.h LoKi/Algo.h
    *  
    *
@@ -469,8 +478,381 @@ namespace LoKi
       return m_vselected ( name ) ;
     } ;
 
+  public:    
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  Loop Bs = loop ( "Ds pi+" , "B_s0" ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */
+    LoKi::Loop loop
+    ( const std::string&            formula      , 
+      const std::string&            pid          , 
+      const IParticleCombiner*      combiner = 0 ) ;
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  LHCb::ParticleID BS  = ... ;
+     *  Loop Bs = loop ( "Ds pi+" , BS ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */
+    LoKi::Loop loop 
+    ( const std::string&            formula      , 
+      const LHCb::ParticleID&       pid          , 
+      const IParticleCombiner*      combiner = 0 ) ;    
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  const ParticleProperty* BS = ... ;
+     *  Loop Bs = loop ( "Ds pi+" , BS ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */
+    LoKi::Loop loop
+    ( const std::string&            formula      , 
+      const ParticleProperty*       pid      = 0 , 
+      const IParticleCombiner*      combiner = 0 ) ;
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  Range Ds     = ... ;
+     *  Range piplus = ... ;
+     *
+     *  Loop Bs = loop ( Ds + piplus , "B_s0" ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */    
+    LoKi::Loop loop 
+    ( const LoKi::Types::RangeList& formula      , 
+      const std::string&            pid          , 
+      const IParticleCombiner*      combiner = 0 ) ;    
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  Range Ds     = ... ;
+     *  Range piplus = ... ;
+     *
+     *  Loop Bs = loop ( Ds + piplus , 531 ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */    
+    LoKi::Loop loop 
+    ( const LoKi::Types::RangeList& formula      , 
+      const LHCb::ParticleID&       pid          , 
+      const IParticleCombiner*      combiner = 0 ) ;
+    /** Create loop object 
+     *
+     *  @code
+     * 
+     *  Range Ds     = ... ;
+     *  Range piplus = ... ;
+     *
+     *  const ParticleProperty* BS = ... ; 
+     *  Loop Bs = loop ( Ds + piplus , BS ) ;
+     *
+     *  @endcode
+     *
+     *  @param formula  looping formula 
+     *  @param pid      effective particle ID
+     *  @param combiner the combiner tool to be used for creation of the particle
+     */    
+    LoKi::Loop loop 
+    ( const LoKi::Types::RangeList& formula      , 
+      const ParticleProperty*       pid      = 0 , 
+      const IParticleCombiner*      combiner = 0 ) ;
   public:
     
+    /**
+     *{
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   {
+     *     if ( 0 != fitter && loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     if ( !vcut ( loop ) ) { continue ; }
+     *     if ( ! cut ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * } ;
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag    , 
+      const LoKi::Loop&         loop   ,
+      const LoKi::Types::Cuts&  cut    , 
+      const LoKi::Types::VCuts& vcut   , 
+      const IParticleReFitter*  fitter ) ;
+    
+    /**
+     * { 
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   { 
+     *     if ( !vcut1 ( loop ) ) { continue ; }
+     *     if ( ! cut1 ( loop ) ) { continue ; }
+     *     if ( loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     if ( !vcut2 ( loop ) ) { continue ; }
+     *     if ( ! cut2 ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * }
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag    , 
+      const LoKi::Loop&         loop   ,
+      const LoKi::Types::Cuts&  cut1   , 
+      const LoKi::Types::VCuts& vcut1  , 
+      const IParticleReFitter*  fitter , 
+      const LoKi::Types::Cuts&  cut2   , 
+      const LoKi::Types::VCuts& vcut2  ) ;
+    
+    /** shortcut for following "standard" pattern:
+     *  
+     *  @code
+     *  
+     *  const std::string tag     = ... ; // "particle name 
+     *  const std::string formula = ... ; // combiner formula
+     *  const std::string pid     = ... ; // Particle ID 
+     *  const Cut         cut     = ... ; // particle cuts 
+     *  const Vcut        vcut    = ... ; // vertex   cuts 
+     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
+     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
+     *
+     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
+     *   {
+     *     if ( 0 != fitter && L->reFit( fitter  ).isFailure() ) { continue ; }
+     *     if ( !vcut ( L )  ) { continue ; }     
+     *     if ( !cut  ( L )  ) { continue ; }     
+     *     L->save ( tag ) ;
+     *   }
+     *  Range result = selected( tag ) ;
+     *  @endcode 
+     * 
+     *  These lines are equivalent to one call of "pattern":
+     *
+     *  @code 
+     *
+     *  Range result = pattern ( tag , formula, pid , cut , vcut , combiner , fitter ) ;
+     
+     *  @endcode 
+     *
+     */
+    LoKi::Types::Range pattern 
+    ( const std::string&        tag          , 
+      const std::string&        formula      ,
+      const std::string&        pid          , 
+      const LoKi::Types::Cuts&  cut          , 
+      const LoKi::Types::VCuts& vcut         , 
+      const IParticleCombiner*  combiner = 0 , 
+      const IParticleReFitter*  fitter   = 0 ) 
+    {
+      return pattern ( tag , loop ( formula , pid , combiner ) , 
+                       cut , vcut , fitter ) ;
+    } ;
+
+    /** shortcut for following "standard" pattern:
+     *  
+     *  @code
+     *  
+     *  const std::string tag     = ... ; // "particle name 
+     *  const std::string formula = ... ; // combiner formula
+     *  const std::string pid     = ... ; // Particle ID 
+     *  const Cut         cut1    = ... ; // particle cuts 
+     *  const Vcut        vcut1   = ... ; // vertex   cuts 
+     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
+     *  const Cut         cut2    = ... ; // particle cuts 
+     *  const Vcut        vcut2   = ... ; // vertex   cuts 
+     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
+     *
+     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
+     *   {
+     *     if ( !vcut1 ( L )  ) { continue ; }     
+     *     if ( !cut1  ( L )  ) { continue ; }     
+     *     if ( L->reFit( fitter  ).isFailure() ) { continue ; }
+     *     if ( !vcut2 ( L )  ) { continue ; }     
+     *     if ( !cut2  ( L )  ) { continue ; }     
+     *     L->save ( tag ) ;
+     *   }
+     *  Range result = selected( tag ) ;
+     *  @endcode 
+     * 
+     *  These lines are equivalent to one call of "pattern":
+     *
+     *  @code 
+     *
+     *  Range result = pattern ( tag    , formula, pid , 
+     *                           cut1   , vcut1 ,
+     *                           fitter , 
+     *                           cut2   , vcut2 , 
+     *                           combiner ) ;
+     *  @endcode 
+     *
+     */
+    LoKi::Types::Range pattern 
+    ( const std::string&        tag          , 
+      const std::string&        formula      ,
+      const std::string&        pid          , 
+      const LoKi::Types::Cuts&  cut1         , 
+      const LoKi::Types::VCuts& vcut1        , 
+      const IParticleReFitter*  fitter       ,
+      const LoKi::Types::Cuts&  cut2         , 
+      const LoKi::Types::VCuts& vcut2        , 
+      const IParticleCombiner*  combiner = 0 ) 
+    {
+      return pattern ( tag  , loop ( formula , pid , combiner ) , 
+                       cut1 , vcut1 , fitter , cut2 , vcut2 ) ;
+    } ;
+    
+    /** shortcut for following "standard" pattern:
+     *  
+     *  @code
+     *  
+     *  const std::string tag     = ... ; // "particle name 
+     *  const std::string formula = ... ; // combiner formula
+     *  const std::string pid     = ... ; // Particle ID 
+     *  const Cut         cut     = ... ; // particle cuts 
+     *  const Vcut        vcut    = ... ; // vertex   cuts 
+     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
+     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
+     *
+     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
+     *   {
+     *     if ( 0 != fitter && L->reFit( fitter  ).isFailure() ) { continue ; }
+     *     if ( !vcut ( L )  ) { continue ; }     
+     *     if ( !cut  ( L )  ) { continue ; }     
+     *     L->save ( tag ) ;
+     *   }
+     *  Range result = selected( tag ) ;
+     *  @endcode 
+     * 
+     *  These lines are equivalent to one call of "pattern":
+     *
+     *  @code 
+     *
+     *  Range result = pattern ( tag , formula, pid , cut , vcut , combiner , fitter ) ;
+     
+     *  @endcode 
+     *
+     */
+    LoKi::Types::Range pattern 
+    ( const std::string&            tag          , 
+      const LoKi::Types::RangeList& formula      ,
+      const std::string&            pid          , 
+      const LoKi::Types::Cuts&      cut          , 
+      const LoKi::Types::VCuts&     vcut         , 
+      const IParticleCombiner*      combiner = 0 , 
+      const IParticleReFitter*      fitter   = 0 ) 
+    {
+      return pattern ( tag , loop ( formula , pid , combiner ) , 
+                       cut , vcut , fitter ) ;
+    } ;
+
+    /** shortcut for following "standard" pattern:
+     *  
+     *  @code
+     *  
+     *  const std::string tag     = ... ; // "particle name 
+     *  const RangeList   formula = ... ; // combiner formula
+     *  const std::string pid     = ... ; // Particle ID 
+     *  const Cut         cut1    = ... ; // particle cuts 
+     *  const Vcut        vcut1   = ... ; // vertex   cuts 
+     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
+     *  const Cut         cut2    = ... ; // particle cuts 
+     *  const Vcut        vcut2   = ... ; // vertex   cuts 
+     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
+     *
+     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
+     *   {
+     *     if ( !vcut1 ( L )  ) { continue ; }     
+     *     if ( !cut1  ( L )  ) { continue ; }     
+     *     if ( L->reFit( fitter  ).isFailure() ) { continue ; }
+     *     if ( !vcut2 ( L )  ) { continue ; }     
+     *     if ( !cut2  ( L )  ) { continue ; }     
+     *     L->save ( tag ) ;
+     *   }
+     *  Range result = selected( tag ) ;
+     *  @endcode 
+     * 
+     *  These lines are equivalent to one call of "pattern":
+     *
+     *  @code 
+     *
+     *  Range result = pattern ( tag    , formula, pid , 
+     *                           cut1   , vcut1 ,
+     *                           fitter , 
+     *                           cut2   , vcut2 , 
+     *                           combiner ) ;
+     *  @endcode 
+     *
+     */
+    LoKi::Types::Range pattern 
+    ( const std::string&            tag          , 
+      const LoKi::Types::RangeList& formula      ,
+      const std::string&            pid          , 
+      const LoKi::Types::Cuts&      cut1         , 
+      const LoKi::Types::VCuts&     vcut1        , 
+      const IParticleReFitter*      fitter       ,
+      const LoKi::Types::Cuts&      cut2         , 
+      const LoKi::Types::VCuts&     vcut2        , 
+      const IParticleCombiner*      combiner = 0 ) 
+    {
+      return pattern ( tag  , loop ( formula , pid , combiner ) , 
+                       cut1 , vcut1 , fitter , cut2 , vcut2 ) ;
+    } ;
+
+  public:
+    
+    /** save the particle  into LoKi storage
+     *  The particle @c p will be saved to
+     *  LoKi storage with the tag/name @v tag
+     *  @param  tag particle tag (only for LoKi)
+     *  @param  particle particle to be saved
+     *  @return status code 
+     */
+    StatusCode  save 
+    ( const std::string& tag      , 
+      LHCb::Particle*    particle ) ;
+  public:
+    /// helper method to get a proper ParticleProperty for the given name  
+    const ParticleProperty* pid ( const std::string& name ) const 
+    {
+      const ParticleProperty* pp = ppSvc()->find( name ) ;
+      if ( 0 == pp ) 
+      { Error ( "pid('" + name + "') : invalid ParticleProperty!" ) ; }
+      return pp ;
+    } ;
+  public:
+    /// get the proper error reporter 
+    const LoKi::IReporter* reporter ( const std::string& name = "" ) const ;
   protected:
     /** standard constructor 
      *  @param name algorithm instance name 
@@ -493,7 +875,10 @@ namespace LoKi
     LoKi::PhysTypes::Selected  m_selected  ; ///< the actual storage of particles
     // the actual storage of selected vertices 
     LoKi::PhysTypes::VSelected m_vselected ; ///< the actual storage of vertices
-    
+  private:
+    /// collection of "error reporters"
+    mutable GaudiUtils::HashMap<std::string,
+                                const LoKi::IReporter*> m_reporters ;
   } ;  
 } ; // end of namespace LoKi
 

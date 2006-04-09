@@ -1,8 +1,11 @@
-// $Id: LoopObj.h,v 1.2 2006-03-22 17:12:38 ibelyaev Exp $
+// $Id: LoopObj.h,v 1.3 2006-04-09 08:51:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/22 17:12:38  ibelyaev
+//  add more functionality to LoopObj
+//
 // Revision 1.1.1.1  2006/03/18 10:39:21  ibelyaev
 // Phys/LoKiAlgo: new package with the basic LoKi functionality
 // 
@@ -15,6 +18,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/ParticleProperty.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -295,15 +299,30 @@ namespace LoKi
     LoopObj& setReFitter ( const IParticleReFitter* c ) 
     { m_reFit = c ; return *this ; }
   public:
+    /// get the associated vertex 
+    const LHCb::Vertex* pv () const { return m_pv ; }
+    /// set the associated vertex 
+    LoopObj& setPV ( const LHCb::Vertex* v ) { m_pv = v ; return *this ; }    
+  public:
+    /// add the component to the Loop obejcts
+    LoopObj& addComponent 
+    ( const std::string&     name  , 
+      const Combiner::Range& range ) ;
+  public:
     /// make 'effective' particle using IParticleCombiner tool
     StatusCode make  ( const IParticleCombiner* comb = 0 ) const ;
     /// refit the particle using IParticleReFitter tool
     StatusCode reFit ( const IParticleReFitter* fit  = 0 ) const ;
+    /// save the particle into LoKi storage
+    StatusCode save  ( const std::string& tag ) const ;
   public:
     /// backup the current state of the loop 
     LoopObj& backup  () ;
     /// restore the loop from the last backup state
     LoopObj& restore () ;
+  public:
+    /// advance to the next VALID combination 
+    LoopObj&   next     () ;    
   protected:    
     /// make 'effective' particle & vertex from the current configuration
     StatusCode create()  const 
@@ -312,8 +331,6 @@ namespace LoKi
       { return StatusCode::SUCCESS ; }
       return make() ;
     } ;
-    /// advance to the next VALID combination 
-    LoopObj&   next     () ;    
     /// estimate the validity of current combination
     bool isValid() ;
     /// reset all temporary caches 
@@ -334,7 +351,7 @@ namespace LoKi
      */
     LoopObj 
     ( const std::string&       name          , 
-      const IReporter*         reporter      ,
+      const LoKi::IReporter*   reporter      ,
       const LoKi::Algo*        algo          , 
       const IParticleCombiner* combiner  = 0 ,
       const IParticleReFitter* fitter    = 0 ) ;
@@ -378,8 +395,10 @@ namespace LoKi
     // Particle Property for effective particle
     const ParticleProperty*     m_pp       ; ///< Particle Property
     // Particle name for effective particle
-    std::string                 m_pidname  ;
-    
+    std::string                 m_pidname  ; ///< Particle name 
+    // Primary Vertex (nedded for some fits/refit)
+    const LHCb::Vertex*         m_pv       ; ///< Primary Vertex
+
     // the structure to avoid the multiple counts for 
     // combination of "the same" particle types
     // e.g  (K- (pi+ pi+) pi-) 
