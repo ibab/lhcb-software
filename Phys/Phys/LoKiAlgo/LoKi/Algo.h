@@ -1,6 +1,6 @@
-// $Id: Algo.h,v 1.3 2006-04-09 08:51:49 ibelyaev Exp $
+// $Id: Algo.h,v 1.4 2006-04-09 16:39:54 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -842,6 +842,9 @@ namespace LoKi
     ( const std::string& tag      , 
       LHCb::Particle*    particle ) ;
   public:
+    /// clear the internal LoKi storages 
+    virtual StatusCode clear() ;
+  public:
     /// helper method to get a proper ParticleProperty for the given name  
     const ParticleProperty* pid ( const std::string& name ) const 
     {
@@ -853,6 +856,15 @@ namespace LoKi
   public:
     /// get the proper error reporter 
     const LoKi::IReporter* reporter ( const std::string& name = "" ) const ;
+  public:
+    /// initialize the algorithm 
+    virtual StatusCode initialize () ;
+    /// make the execution of the algorithm 
+    virtual StatusCode execute    () ;
+    /// perform the real analysis 
+    virtual StatusCode analyse    () ;
+    /// finalize the algorithm 
+    virtual StatusCode finalize   () ;
   protected:
     /** standard constructor 
      *  @param name algorithm instance name 
@@ -881,6 +893,170 @@ namespace LoKi
                                 const LoKi::IReporter*> m_reporters ;
   } ;  
 } ; // end of namespace LoKi
+// ============================================================================
+/** @def LOKI_ALGORITHM_BODY 
+ *
+ *  Simple macros to avoid the typing of "standard" header file for 
+ *  arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *  
+ *  LOKI_ALGORITHM_BODY( BdJPsiPhiAlg );
+ *
+ *  @endcode 
+ *  
+ *  "Standard" LoKi-based algorithm contains only one essential 
+ *   <tt> virtual StatusCode analyse() </tt> method
+ * 
+ *  This macros could be used directly in implementation (*.cpp) file 
+ *  of the algorithm, there is no nesessity to put only 1 line with macro 
+ *  into the separate header file 
+ *
+ *  One need to implement factory, constructor & destructor of algorithm
+ *  and "analyse" method.
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+// ============================================================================
+#define LOKI_ALGORITHM_BODY( ALGNAME )                                         \
+class ALGNAME : public LoKi::Algo                                              \
+{                                                                              \
+  /** friend factory for instantiation      */                                 \
+  friend class AlgFactory<ALGNAME>        ;                                    \
+public:                                                                        \
+  /** standard method for event analysis    */                                 \
+  virtual StatusCode analyse  ()          ;                                    \
+protected:                                                                     \
+  /** standard constructor                  */                                 \
+  ALGNAME( const std::string& name ,                                           \
+             ISvcLocator*       svc  )    ;                                    \
+  /** virtual destructor                    */                                 \
+  virtual ~ALGNAME ()                   ;                                      \
+private:                                                                       \
+  /** default constructor  is private       */                                 \
+  ALGNAME             ()                  ;                                    \
+  /** copy constructor     is private       */                                 \
+  ALGNAME             ( const ALGNAME & ) ;                                    \
+  /** assignement operator is private       */                                 \
+  ALGNAME & operator= ( const ALGNAME & ) ;                                    \
+};
+// ============================================================================
+/** @def LOKI_ALGORITHM_IMPLEMENT 
+ *
+ *  Simple macros to avoid the typing of "standard" implementation 
+ *  of mandatory algorithm methods (constructors, destructors and factories) 
+ *  for arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_ALGORITHM_BODY_IMPLEMENT( BdJPsiPhiAlg );
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *
+ *  One need to implement only "analyse" method.
+ * 
+ *  This macro could be easily combined with LOKI_ALGORITHM_BODY macro
+ *
+ *  @code 
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_ALGORITHM_BODY           ( BdJPsiPhiAlg ) ;
+ *  LOKI_ALGORITHM_IMPLEMENTATION ( BdJPsiPhiAlg ) ;
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+#define LOKI_ALGORITHM_IMPLEMENT( ALGNAME )                                    \
+/* ======================================================================== */ \
+/** Declaration of the Algorithm Factory                                    */ \
+/* ======================================================================== */ \
+DECLARE_ALGORITHM_FACTORY( ALGNAME ) ;                                         \
+/* ======================================================================== */ \
+/** Standard constructor                                                    */ \
+/* ======================================================================== */ \
+ALGNAME::ALGNAME ( const std::string& name  ,                             \
+                   ISvcLocator*       svc   )                             \
+: LoKi::Algo( name , svc ) {} ; /* constructor for base class */               \
+/* ======================================================================== */ \
+/** destructor (empty)                                                      */ \
+/* ======================================================================== */ \
+ALGNAME ::~ALGNAME () {};
+// ============================================================================
+/** @def LOKI_ALGORITHM_FULLIMPLEMENT 
+ *
+ *  Simple macros to avoid the typing of "standard" implementation 
+ *  of mandatory algorithm methods (constructors, destructors and factories) 
+ *  for arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_ALGORITHM_FULLIMPLEMENT( BdJPsiPhiAlg );
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+// ============================================================================
+#define LOKI_ALGORITHM_FULLIMPLEMENT(   ALGNAME   )                            \
+        LOKI_ALGORITHM_BODY         (   ALGNAME   ) ;                          \
+        LOKI_ALGORITHM_IMPLEMENT    (   ALGNAME   ) ;
+// ============================================================================
+/** @def LOKI_ALGORITHM
+ * 
+ *  The most advanced macro to avoid the typeing of "standard" implementation
+ *  of all mandatory but tediouse and totoriouse lines and methods 
+ *  (algorithsm bidy, constructors, destructors factories etc)
+ *  
+ *  @code 
+ *  
+ *  #include "Loki/Macros.h"
+ *  
+ *  LOKI_ALGORITHM( MyAlg )
+ *  {
+ *    using namespace LoKi                ;  
+ *    using namespace LoKi::Cuts          ;  
+ *    using namespace LoKi::Fits          ;
+ *  
+ *    /// some implementation of algorithm
+ * 
+ *   return StatusCode::SUCCESS ;
+ *  };
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2003-03-11
+ *  
+ */
+// ============================================================================
+#define LOKI_ALGORITHM(   ALGNAME   )              \
+        LOKI_ALGORITHM_FULLIMPLEMENT ( ALGNAME ) ; \
+        StatusCode ALGNAME::analyse()                      
+// ============================================================================
+
+
 
 // ============================================================================
 // The END 

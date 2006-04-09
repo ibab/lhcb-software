@@ -1,11 +1,8 @@
-// $Id: ParticleCuts.h,v 1.6 2006-03-20 20:36:16 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.7 2006-04-09 16:40:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
-//  Revision 1.5  2006/03/08 14:14:50  ibelyaev
-//   add Particles14.h/.cpp
-//
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -711,7 +708,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                      M12(1,2) ;
+    const LoKi::Particles::InvariantMass                      M12(1,2) ;
     // ========================================================================
     
     // ========================================================================
@@ -732,7 +729,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                    M13(1.3) ;
+    const LoKi::Particles::InvariantMass                    M13(1,3) ;
     // ========================================================================
 
     // ========================================================================
@@ -753,7 +750,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                    M14(1.4)  ;
+    const LoKi::Particles::InvariantMass                    M14(1,4)  ;
     // ========================================================================
 
     // ========================================================================
@@ -774,7 +771,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                    M23(2,3) ;
+    const LoKi::Particles::InvariantMass                    M23(2,3) ;
     // ========================================================================
 
     // ========================================================================
@@ -795,7 +792,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                   M24(2,4) ;
+    const LoKi::Particles::InvariantMass                   M24(2,4) ;
     // ========================================================================
 
     // ========================================================================
@@ -816,7 +813,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    //const LoKi::Particles::InvariantMass                   M34(3,4) ;
+    const LoKi::Particles::InvariantMass                   M34(3,4) ;
     // ========================================================================
 
     // ========================================================================
@@ -3329,7 +3326,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const PPINFO PIDe =  PPINFO ( LHCb::ProtoParticle::LkhPIDe  , 0 , -1000 ) ;
+    // const PPINFO PIDe =  PPINFO ( LHCb::ProtoParticle::LkhPIDe  , 0 , -1000 ) ;
     // ========================================================================
 
     // ========================================================================
@@ -3355,7 +3352,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const PPINFO PIDmu = PPINFO ( LHCb::ProtoParticle::LkhPIDmu , 0 , -1000 ) ;
+    // const PPINFO PIDmu = PPINFO ( LHCb::ProtoParticle::LkhPIDmu , 0 , -1000 ) ;
     // ========================================================================
 
     // ========================================================================
@@ -3381,7 +3378,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const PPINFO PIDpi = PPINFO ( LHCb::ProtoParticle::LkhPIDpi , 0 , -1000 ) ;
+    // const PPINFO PIDpi = PPINFO ( LHCb::ProtoParticle::LkhPIDpi , 0 , -1000 ) ;
     // ========================================================================
 
     // ========================================================================
@@ -3407,7 +3404,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const PPINFO PIDK  = PPINFO ( LHCb::ProtoParticle::LkhPIDK  , 0 , -1000 ) ;
+    // const PPINFO PIDK  = PPINFO ( LHCb::ProtoParticle::LkhPIDK  , 0 , -1000 ) ;
     // ========================================================================
     
     // ========================================================================
@@ -3433,7 +3430,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    const PPINFO PIDp  = PPINFO ( LHCb::ProtoParticle::LkhPIDp  , 0 , -1000 ) ;
+    // const PPINFO PIDp  = PPINFO ( LHCb::ProtoParticle::LkhPIDp  , 0 , -1000 ) ;
     // ========================================================================
     
     // ========================================================================

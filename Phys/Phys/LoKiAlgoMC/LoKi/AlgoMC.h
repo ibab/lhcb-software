@@ -1,8 +1,8 @@
-// $Id: AlgoMC.h,v 1.1.1.1 2006-04-09 08:44:51 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.2 2006-04-09 16:43:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, Version $Revison:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -22,6 +22,8 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCFinder.h"
 #include "LoKi/MCFinderObj.h"
+#include "LoKi/MCMatch.h"
+#include "LoKi/MCMatchObj.h"
 // ============================================================================
 // LoKiPhysMC 
 // ============================================================================
@@ -407,9 +409,7 @@ namespace LoKi
     {
       return m_mcvselected.add ( name , first , last , cut ) ;
     } ;
-
-  public:
-    
+  public:    
     /** Extract the selected MC-particles from local LoKi storage  
      *   by their name/tag
      *  
@@ -425,7 +425,6 @@ namespace LoKi
     LoKi::Types::MCRange 
     mcselected 
     ( const std::string& tag ) const { return m_mcselected( tag ) ; } ;
-    
     /** Extract the selected MC-vertices from local LoKi storage  
      *  by their name/tag
      *  
@@ -447,7 +446,23 @@ namespace LoKi
     /// get LoKi::MCFinder object
     LoKi::MCFinder 
     mcFinder ( const std::string& name = "" ) const ;
+
+    // get LoKi::MCMatch obejct
+    LoKi::MCMatch 
+    mcTruth  ( const std::string& name = "" ) const ;
     
+  public:
+    /// clear the internal LoKi storages 
+    virtual StatusCode clear() ;
+  public:
+    /// initialize the algorithm 
+    virtual StatusCode initialize () ;
+    /// make the execution of the algorithm 
+    virtual StatusCode execute    () ;
+    /// perform the real analysis 
+    virtual StatusCode analyse    () ;
+    /// finalize the algorithm 
+    virtual StatusCode finalize   () ;
   protected:
     /** standard constructor 
      *  @param name algorithm instance name 
@@ -458,6 +473,15 @@ namespace LoKi
       ISvcLocator*       pSvc ) ;
     /// virtual and protected destructor 
     virtual ~AlgoMC() ;
+  protected:
+    /// the actual type for collection of TES address
+    typedef std::vector<std::string> Addresses ;
+  private:
+    /// helper fuction to feed LoKi::MCMatchObj object with the data 
+    template <class TABLE> 
+    StatusCode _feedIt 
+    ( LoKi::MCMatchObj* object    , 
+      const Addresses&  addresses ) const ;
   private:
     // the actual storage of selected MC-particles
     LoKi::MCTypes::MCSelected  m_mcselected  ; ///< the actual storage of MC-particles
@@ -465,19 +489,218 @@ namespace LoKi
     LoKi::MCTypes::MCVSelected m_mcvselected ; ///< the actual storage of MC-vertices
     // collection  of MCFinder objects
     typedef GaudiUtils::HashMap<std::string,LoKi::MCFinderObj*> MCfinders ;
-    mutable MCfinders  m_mcfinders  ;
+    mutable MCfinders  m_mcfinders   ;
     // collection  of IMCDecayFinder objects
-    typedef GaudiUtils::HashMap<std::string,IMCDecayFinder* > IMCfinders ;
+    typedef GaudiUtils::HashMap<std::string,IMCDecayFinder*>    IMCfinders ;
     mutable IMCfinders m_imcfinders  ;
-    /// the actual type for collection of TES address
-    typedef std::vector<std::string> Addresses ;
-    Addresses    m_P2MC  ;
-    Addresses    m_P2MCw ;
-    Addresses    m_PP2MC ;
-    Addresses    m_TR2MC ;
+    // collection of LoKi::MCMatchObj objects 
+    typedef GaudiUtils::HashMap<std::string,LoKi::MCMatchObj*>  MCmatchers ;
+    mutable MCmatchers m_mcmatchers  ;
+    //
+    Addresses    m_P2MC   ;
+    Addresses    m_WP2MC  ;
+    Addresses    m_WPP2MC ;
+    Addresses    m_T2MC   ;
+    Addresses    m_WDT2MC ;
+    Addresses    m_WIT2MC ;
   } ;
-  
+  //
 } ; /// end of namespace LoKi ;
+// ============================================================================
+/// helper fuction to feed LoKi::MCMatchObj object with the data 
+// ============================================================================
+template <class TABLE>
+inline StatusCode 
+LoKi::AlgoMC::_feedIt 
+( LoKi::MCMatchObj*              object    ,
+  const LoKi::AlgoMC::Addresses& addresses ) const
+{
+  if ( 0 == object ) { return StatusCode::FAILURE ; }
+  for ( Addresses::const_iterator item = 
+          addresses.begin() ; addresses.end() != item ; ++item ) 
+  {
+    const std::string& address = *item ;
+    // check the data 
+    if ( !exist<TABLE>( address ) )
+    { 
+      Warning ( " There is no valid data at '" + address + "'" ) ; 
+      continue ; 
+    }
+    // get the table from the Transient Store 
+    const TABLE* table = get<TABLE> ( address ) ;
+    // feed it! 
+    object -> addMatchInfo ( table ) ;
+  } ;
+  return StatusCode::SUCCESS ;
+};
+
+// ============================================================================
+/** @def LOKI_MCALGORITHM_BODY 
+ *
+ *  Simple macros to avoid the typing of "standard" header file for 
+ *  arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *  
+ *  LOKI_MCALGORITHM_BODY( BdJPsiPhiAlg );
+ *
+ *  @endcode 
+ *  
+ *  "Standard" LoKi-based algorithm contains only one essential 
+ *   <tt> virtual StatusCode analyse() </tt> method
+ * 
+ *  This macros could be used directly in implementation (*.cpp) file 
+ *  of the algorithm, there is no nesessity to put only 1 line with macro 
+ *  into the separate header file 
+ *
+ *  One need to implement factory, constructor & destructor of algorithm
+ *  and "analyse" method.
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+// ============================================================================
+#define LOKI_MCALGORITHM_BODY( ALGNAME )                                         \
+class ALGNAME : public LoKi::AlgoMC                                            \
+{                                                                              \
+  /** friend factory for instantiation      */                                 \
+  friend class AlgFactory<ALGNAME>        ;                                    \
+public:                                                                        \
+  /** standard method for event analysis    */                                 \
+  virtual StatusCode analyse  ()          ;                                    \
+protected:                                                                     \
+  /** standard constructor                  */                                 \
+  ALGNAME( const std::string& name ,                                           \
+             ISvcLocator*       svc  )    ;                                    \
+  /** virtual destructor                    */                                 \
+  virtual ~ALGNAME ()                   ;                                      \
+private:                                                                       \
+  /** default constructor  is private       */                                 \
+  ALGNAME             ()                  ;                                    \
+  /** copy constructor     is private       */                                 \
+  ALGNAME             ( const ALGNAME & ) ;                                    \
+  /** assignement operator is private       */                                 \
+  ALGNAME & operator= ( const ALGNAME & ) ;                                    \
+};
+// ============================================================================
+/** @def LOKI_MCALGORITHM_IMPLEMENT 
+ *
+ *  Simple macros to avoid the typing of "standard" implementation 
+ *  of mandatory algorithm methods (constructors, destructors and factories) 
+ *  for arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_ALGORITHM_BODY_IMPLEMENT( BdJPsiPhiAlg );
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *
+ *  One need to implement only "analyse" method.
+ * 
+ *  This macro could be easily combined with LOKI_ALGORITHM_BODY macro
+ *
+ *  @code 
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_ALGORITHM_BODY           ( BdJPsiPhiAlg ) ;
+ *  LOKI_ALGORITHM_IMPLEMENTATION ( BdJPsiPhiAlg ) ;
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+#define LOKI_MCALGORITHM_IMPLEMENT( ALGNAME )                                    \
+/* ======================================================================== */ \
+/** Declaration of the Algorithm Factory                                    */ \
+/* ======================================================================== */ \
+DECLARE_ALGORITHM_FACTORY( ALGNAME ) ;                                         \
+/* ======================================================================== */ \
+/** Standard constructor                                                    */ \
+/* ======================================================================== */ \
+ALGNAME::ALGNAME ( const std::string& name  ,                             \
+                   ISvcLocator*       svc   )                             \
+: LoKi::AlgoMC( name , svc ) {} ; /* constructor for base class */             \
+/* ======================================================================== */ \
+/** destructor (empty)                                                      */ \
+/* ======================================================================== */ \
+ALGNAME ::~ALGNAME () {};
+// ============================================================================
+/** @def LOKI_MCALGORITHM_FULLIMPLEMENT 
+ *
+ *  Simple macros to avoid the typing of "standard" implementation 
+ *  of mandatory algorithm methods (constructors, destructors and factories) 
+ *  for arbitrary LoKi-based alrorithm: 
+ * 
+ *  @code 
+ *
+ *  #include "LoKi/Macros.h"
+ *  
+ *  LOKI_MCALGORITHM_FULLIMPLEMENT( BdJPsiPhiAlg );
+ *
+ *  /// standard LoKi method for event analysis
+ *  StatusCode BdJPsiPhiAlg::analyse() {
+ *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
+ *  };
+ *
+ *  @endcode 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2003-01-18
+ */
+// ============================================================================
+#define LOKI_MCALGORITHM_FULLIMPLEMENT(   ALGNAME   )                            \
+        LOKI_MCALGORITHM_BODY         (   ALGNAME   ) ;                          \
+        LOKI_MCALGORITHM_IMPLEMENT    (   ALGNAME   ) ;
+// ============================================================================
+/** @def LOKI_MCALGORITHM
+ * 
+ *  The most advanced macro to avoid the typeing of "standard" implementation
+ *  of all mandatory but tediouse and totoriouse lines and methods 
+ *  (algorithsm bidy, constructors, destructors factories etc)
+ *  
+ *  @code 
+ *  
+ *  #include "Loki/Macros.h"
+ *  
+ *  LOKI_MCALGORITHM( MyAlg )
+ *  {
+ *    using namespace LoKi                ;  
+ *    using namespace LoKi::Cuts          ;  
+ *    using namespace LoKi::Fits          ;
+ *  
+ *    /// some implementation of algorithm
+ * 
+ *   return StatusCode::SUCCESS ;
+ *  };
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2003-03-11
+ *  
+ */
+// ============================================================================
+#define LOKI_MCALGORITHM(   ALGNAME   )              \
+        LOKI_MCALGORITHM_FULLIMPLEMENT ( ALGNAME ) ; \
+        StatusCode ALGNAME::analyse()                      
+// ============================================================================
+
+
+
+
+
 
 // ============================================================================
 /// The END 

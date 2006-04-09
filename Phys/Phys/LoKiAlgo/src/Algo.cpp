@@ -1,11 +1,8 @@
-// $Id: Algo.cpp,v 1.2 2006-04-09 08:51:49 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.3 2006-04-09 16:39:54 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/03/18 10:39:21  ibelyaev
-// Phys/LoKiAlgo: new package with the basic LoKi functionality
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,6 +11,7 @@
 #include "LoKi/Print.h"
 #include "LoKi/Tokens.h"
 #include "LoKi/IReporter.h"
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // LoKiAlgo
 // ============================================================================
@@ -324,10 +322,73 @@ LoKi::Types::Range LoKi::Algo::pattern
   loop->restore() ;
   return selected ( tag ) ;
 
-}
+} ;
 // ============================================================================
-
-
+/// clear the internal LoKi storages 
+// ============================================================================
+StatusCode LoKi::Algo::clear() 
+{
+  m_selected    .clear () ;
+  m_vselected   .clear () ;
+  //
+  return StatusCode::SUCCESS ;
+} ;
+// ============================================================================
+/// initialize the algorithm 
+// ============================================================================
+StatusCode LoKi::Algo::initialize () 
+{
+  StatusCode sc = DVAlgorithm::initialize() ;
+  if ( sc.isFailure() ) { return sc ; }
+  /// locate LoKi service 
+  svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+  /// get one global reporter
+  if ( 0 == m_reporters[""] ) 
+  {
+    LoKi::IReporter* rep = tool<LoKi::IReporter>("LoKi::Reporter") ;
+    m_reporters[""] = rep ;
+  }
+  //
+  return StatusCode::SUCCESS ;
+} ;
+// ============================================================================
+/// make the execution of the algorithm 
+// ============================================================================
+StatusCode LoKi::Algo::execute () 
+{
+  // reset the filter indicator  
+  setFilterPassed ( false );
+  desktop ()->getEventInput();
+  // clear all LoKi storages 
+  clear() ;
+  // call for actual analysis 
+  StatusCode sc = analyse() ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Error from 'analyse()' method" , sc ) ; }
+  /// save everything 
+  sc = desktop()->saveDesktop();
+  if ( sc.isFailure() ) 
+  { return Error ( "DeskTop is not saved"          , sc ) ;}
+  // clear all LoKi storages at the end 
+  clear() ;
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+/// perform the real analysis
+// ============================================================================
+StatusCode LoKi::Algo::analyse() 
+{
+  return Print ( "The default(empty) LoKi::Algo::analyse() method is invoked" , 
+                 StatusCode::SUCCESS , MSG::ALWAYS );
+};
+// ============================================================================
+/// finalize  the algorithm 
+// ============================================================================
+StatusCode LoKi::Algo::finalize () 
+{ 
+  clear() ;
+  return DVAlgorithm::finalize () ;
+} ;
 
 // ============================================================================
 // The END 

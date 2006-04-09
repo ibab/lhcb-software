@@ -1,6 +1,6 @@
-// $Id: MomentumCombiner.cpp,v 1.1 2006-04-09 08:51:50 ibelyaev Exp $
+// $Id: MomentumCombiner.cpp,v 1.2 2006-04-09 16:39:54 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -208,8 +208,8 @@ StatusCode MomentumCombiner::combine
     ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;                     
   vct /= mass ;
   //
-  //const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
-  const double massErr2 = ROOT::Math::Product( covariance , vct ) ;
+  const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
+  //const double massErr2 = ROOT::Math::Product( covariance , vct ) ;
   mother.setMeasuredMassErr ( sqrt( massErr2 ) ) ;
   //
   return StatusCode::SUCCESS ;
