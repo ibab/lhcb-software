@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.cpp,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: MCMatchObj.cpp,v 1.2 2006-04-09 20:14:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -126,8 +129,17 @@ bool LoKi::MCMatchObj::match
                  children              .end   () ) ;
 } ;
 // ============================================================================
-
-
+/// clear th einetrnal storage
+// ============================================================================
+void LoKi::MCMatchObj::clear() 
+{
+  m_tableP2MC   .clear() ;
+  m_tableWP2MC  .clear() ;
+  m_tableWPP2MC .clear() ;
+  m_tableT2MC   .clear() ;
+  m_tableWDT2MC .clear() ;
+  m_tableWIT2MC .clear() ;
+};
 // ============================================================================
 // The END 
 // ============================================================================
