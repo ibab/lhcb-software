@@ -1,11 +1,8 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.9 2006-04-09 10:16:08 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.10 2006-04-09 10:21:10 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2006/04/09 09:00:53  ibelyaev
-//  regular update
-//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -238,16 +235,9 @@ StatusCode LoKi_HepMC2MCAlg::execute()
         const HepMC::GenEvent* event = evt->pGenEvt() ;
         if ( 0 == event || event->particles_empty() ) { continue ; }
         //
-        // it does not work with current vesion of HepMC 
         hmcps.insert ( hmcps.end()               , 
                        event->particles_begin () ,
                        event->particles_end   () ) ;
-        // make an explicit loop 
-        //hmcps.reserve ( hmcps.size() + event->particles_size() ) ;
-        //for ( HepMC::GenEvent::particle_const_iterator ip = 
-        //        event->particles_begin () ; 
-        //      event->particles_end()  != ip ; ++ip ) 
-        //{ hmcps.push_back( *ip ) ; }
       }
     } // end of loop over HepMC data containers 
   };
@@ -301,7 +291,7 @@ StatusCode LoKi_HepMC2MCAlg::execute()
     {
       // The minimum is searched within MC  particles, which 
       // have the valid origin vertex within certain distance 
-      // from production vertex or have no vali dorigin vertex 
+      // from production vertex or have no valid origin vertex 
       // at all 
       const LoKi::Point3D pp ( pv->point3d()  ) ;
       MCCut mcCut1 = !MCOVALID ;
