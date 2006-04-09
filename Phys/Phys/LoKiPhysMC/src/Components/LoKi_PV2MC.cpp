@@ -1,8 +1,11 @@
-// $Id: LoKi_PV2MC.cpp,v 1.1 2006-03-19 12:12:25 ibelyaev Exp $
+// $Id: LoKi_PV2MC.cpp,v 1.2 2006-04-09 09:05:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/19 12:12:25  ibelyaev
+//  add PV <--> MC and PV <--> pp-Collision links
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,6 +33,10 @@
 #include "Event/PrimVertex.h"
 #include "Event/MCVertex.h"
 #include "Event/GenCollision.h"
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // Kernel? 
 // ============================================================================
@@ -238,6 +245,9 @@ public:
     IIncidentSvc* isvc = incSvc() ;
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
     isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
+    
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
     
     return StatusCode::SUCCESS ;
   };

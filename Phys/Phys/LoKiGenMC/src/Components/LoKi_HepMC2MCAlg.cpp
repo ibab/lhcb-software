@@ -1,11 +1,8 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.7 2006-03-19 12:13:09 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.8 2006-04-09 09:00:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/03/18 18:26:43  ibelyaev
-//  add (primary)MCVErtex->GenCollision links
-//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -140,6 +137,15 @@ class LoKi_HepMC2MCAlg
 {
   friend class AlgFactory<LoKi_HepMC2MCAlg>;
 public:
+  /// initialization of the algorithm
+  virtual StatusCode intialize () 
+  {
+    StatusCode sc = GaudiAlgorithm::initialize() ;
+    if ( sc.isFailure() ) { return sc ; }
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+    return StatusCode::SUCCESS ;
+  } ;
   /// execution of the algorithm
   virtual StatusCode execute() ;
 protected:

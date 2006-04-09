@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.5 2006-03-19 12:13:09 ibelyaev Exp $
+// $Id: LoKi_HepMC2MC.cpp,v 1.6 2006-04-09 09:00:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/03/19 12:13:09  ibelyaev
+//  minor update
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,10 +30,7 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/select.h"
-#include "LoKi/MCParticleCuts.h"
-#include "LoKi/MCVertexCuts.h"
-#include "LoKi/GenParticleCuts.h"
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // MCTools 
 // ============================================================================
@@ -161,6 +161,9 @@ public:
     IIncidentSvc* isvc = incSvc() ;
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
     isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
+    
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
     
     return StatusCode::SUCCESS ;
   };

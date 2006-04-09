@@ -1,8 +1,11 @@
-// $Id: LoKi_MC2Collision.cpp,v 1.1 2006-03-18 18:26:43 ibelyaev Exp $
+// $Id: LoKi_MC2Collision.cpp,v 1.2 2006-04-09 09:00:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/18 18:26:43  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,6 +27,10 @@
 // ============================================================================
 #include "Event/MCVertex.h"
 #include "Event/GenCollision.h"
+// ============================================================================
+// LoKiCore
+// ============================================================================
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // Kernel ?  
 // ============================================================================
@@ -113,6 +120,9 @@ public:
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
     isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
     
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+
     return StatusCode::SUCCESS ;
   };
   /// handle new incident 

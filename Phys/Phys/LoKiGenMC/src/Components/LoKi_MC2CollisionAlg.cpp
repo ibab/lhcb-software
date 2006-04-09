@@ -1,8 +1,11 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.1 2006-03-18 18:26:44 ibelyaev Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.2 2006-04-09 09:00:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/18 18:26:44  ibelyaev
+//  add (primary)MCVErtex->GenCollision links
+//
 // ============================================================================
 // Include file
 // ============================================================================
@@ -86,7 +89,16 @@ class LoKi_MC2CollisionAlg
 {
   friend class AlgFactory<LoKi_MC2CollisionAlg> ;
 public:
-  /// execution of the algorithm
+   /// initialization of the algorithm
+  virtual StatusCode intialize () 
+  {
+    StatusCode sc = GaudiAlgorithm::initialize() ;
+    if ( sc.isFailure() ) { return sc ; }
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+    return StatusCode::SUCCESS ;
+  } ;
+ /// execution of the algorithm
   virtual StatusCode execute() ;
 protected:
   /**standard constructor 

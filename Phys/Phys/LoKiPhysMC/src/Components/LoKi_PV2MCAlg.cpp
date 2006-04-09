@@ -1,8 +1,11 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.1 2006-03-19 12:12:25 ibelyaev Exp $
+// $Id: LoKi_PV2MCAlg.cpp,v 1.2 2006-04-09 09:05:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.1 $
+// CVS tag $NAame:$, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/19 12:12:25  ibelyaev
+//  add PV <--> MC and PV <--> pp-Collision links
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,6 +39,7 @@
 // ============================================================================
 // LoKi & LoKiMC
 // ============================================================================
+#include "LoKi/ILoKiSvc.h"
 #include "LoKi/Geometry.h"
 #include "LoKi/Geometry.h"
 #include "LoKi/select.h"
@@ -91,7 +95,16 @@ class LoKi_PV2MCAlg
 {
   friend class AlgFactory<LoKi_PV2MCAlg>;
 public:
-  /// execution of the algorithm
+  /// initialization of the algorithm
+  virtual StatusCode intialize () 
+  {
+    StatusCode sc = GaudiAlgorithm::initialize() ;
+    if ( sc.isFailure() ) { return sc ; }
+    // load LoKi service 
+    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+    return StatusCode::SUCCESS ;
+  } ;
+ /// execution of the algorithm
   virtual StatusCode execute() ;
 protected:
   /**standard constructor 
