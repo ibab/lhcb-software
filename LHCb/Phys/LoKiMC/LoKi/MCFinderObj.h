@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.h,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.2 2006-04-09 09:03:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/14 19:04:29  ibelyaev
+//  rename LoKi.cpp -> LoKiMC.cpp
+// 
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -226,7 +229,7 @@ namespace LoKi
     
     /// clear the internal storage of decays
     void clear() ;
-    
+
   private:
     /** templated decay extractor to eliminate code duplication 
      *  @paran decay decay descriptor
@@ -286,7 +289,7 @@ LoKi::MCFinderObj::_findDecays
   
   // prepare for member extraction 
   const bool members =  extractMembers( decay ) ;
-  LoKi::MCTypes::MCContainer mcVct ;
+  LHCb::MCParticle::Vector mcVct ;
   
   /// @see IMCDecayFinder 
   const LHCb::MCParticle* init   = 0 ;

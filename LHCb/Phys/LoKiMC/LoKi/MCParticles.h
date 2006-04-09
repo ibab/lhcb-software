@@ -1,8 +1,11 @@
-// $Id: MCParticles.h,v 1.4 2006-03-22 10:33:16 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.5 2006-04-09 09:03:14 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/03/22 10:33:16  ibelyaev
+//  Add MCFilter: adapter for IMCParticleSelector tool
+//
 // Revision 1.3  2006/02/18 18:10:57  ibelyaev
 //  fix a typo
 //
@@ -27,6 +30,11 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 // ============================================================================
+// Kernel
+// ============================================================================
+#include "Kernel/IMCDecayFinder.h"
+#include "Kernel/IMCParticleSelector.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Interface.h"
@@ -38,9 +46,6 @@
 #include "LoKi/MCPIDOperators.h"
 // ============================================================================
 // forward declarations 
-// ============================================================================
-class IMCDecayFinder ;
-class IMCParticleSelector;
 // ============================================================================
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.h,v 1.1 2006-03-14 19:04:29 ibelyaev Exp $
+// $Id: MCFinderObj.cpp,v 1.1 2006-04-09 09:03:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/14 19:04:29  ibelyaev
+//  rename LoKi.cpp -> LoKiMC.cpp
+// 
 // ============================================================================
 // Include files
 // ============================================================================
