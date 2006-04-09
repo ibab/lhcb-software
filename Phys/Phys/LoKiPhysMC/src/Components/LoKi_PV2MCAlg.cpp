@@ -1,11 +1,8 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.2 2006-04-09 09:05:09 ibelyaev Exp $
+// $Id: LoKi_PV2MCAlg.cpp,v 1.3 2006-04-09 10:33:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.2 $
+// CVS tag $NAame:$, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/03/19 12:12:25  ibelyaev
-//  add PV <--> MC and PV <--> pp-Collision links
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -156,9 +153,7 @@ private:
   std::string  m_output2   ; ///< TES location of output relation table 
 };
 // ============================================================================
-
 DECLARE_ALGORITHM_FACTORY( LoKi_PV2MCAlg ) ;
-
 // ============================================================================
 namespace Relations
 {
@@ -214,10 +209,8 @@ StatusCode LoKi_PV2MCAlg::execute()
   // create the relation tables and register them into TES 
   Table1* table1 = new Table1() ;
   Table2* table2 = new Table2() ;
-  StatusCode sc = put ( table1 , m_output1 ) ;
-  if ( sc.isFailure() ) { return sc ; }                          // RETURN 
-  sc            = put ( table2 , m_output2 ) ;
-  if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+  put ( table1 , m_output1 ) ;
+  put ( table2 , m_output2 ) ;
             
   // get the primary vertices from TES
   const LHCb::PrimVertices* primaries = get<LHCb::PrimVertices>( m_primaries ) ;
