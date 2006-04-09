@@ -1,8 +1,11 @@
-// $Id: Algs.h,v 1.3 2006-02-21 14:45:51 ibelyaev Exp $
+// $Id: Algs.h,v 1.4 2006-04-09 08:57:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/21 14:45:51  ibelyaev
+//  add LoKi::Keeepr class : safe pseudo-container of valid pointer
+//
 // Revision 1.2  2006/02/18 18:06:03  ibelyaev
 //  fix a typo
 //
@@ -47,7 +50,7 @@ namespace LoKi
   /** @namespace  Algs Algs.h LoKi/Algs.h
    *
    *  Helper namespace with auxillary 
-   *  functions/algoreitms of the general interest 
+   *  functions/algorithms of the general interest 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-10

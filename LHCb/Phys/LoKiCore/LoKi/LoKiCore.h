@@ -1,8 +1,11 @@
-// $Id: LoKiCore.h,v 1.11 2006-03-14 18:56:59 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.12 2006-04-09 08:57:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2006/03/14 18:56:59  ibelyaev
+//  v1r1 : add a lot of new utilities
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -47,6 +50,9 @@
 #include "LoKi/Release.h"
 #include "LoKi/Convertible.h"
 #include "LoKi/Base.h"
+#include "LoKi/Const.h"
+#include "LoKi/ConstIterator.h"
+#include "LoKi/ConstView.h"
 // ============================================================================
 
 // ============================================================================
