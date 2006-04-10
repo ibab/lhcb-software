@@ -45,16 +45,16 @@ public:
   virtual ~DVAlgorithm( ){ }; ///< Destructor
   
   /// Overridden from Gaudi Algo to produce a warning if not called by user
-  StatusCode setFilterPassed (bool state);  
+  virtual StatusCode setFilterPassed (bool state);  
 
   /// Overridden from Gaudi Algorithm
-  StatusCode sysExecute ();  
+  virtual StatusCode sysExecute ();  
 
   // Overridden from Gaudi Algorithm
-  StatusCode initialize ();  
+  virtual StatusCode initialize ();  
 
   // Overridden from Gaudi Algorithm
-  StatusCode finalize ();  
+  virtual StatusCode finalize ();  
 
   // Overridden from Gaudi Algorithm
   std::string getDecayDescriptor(){return m_decayDescriptor;};  

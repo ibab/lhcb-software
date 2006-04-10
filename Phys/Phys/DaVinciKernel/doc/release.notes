@@ -1,6 +1,14 @@
 ! Package     : DaVinciKernel
-! Responsible : P. Koppenburg
+! Responsible : P. Koppenburg, J.P. Palacios
 !============================================================================
+
+! 2006-04-10 - J.P. Palacios
+ - Kernel/DVAlgorithm.h
+   . Make the following GaudiAlg methods virtual:
+     StatusCode setFilterPassed (bool state);
+     StatusCode sysExecute ();
+     StatusCode initialize ();
+     StatusCode finalize ();
 
 ! 2006-04-04 - J.P. Palacios
  - Kernel/IGeomDispCalculator.h
