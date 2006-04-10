@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r2 2006-04-10 ==========================
 ! 2006-04-10 - Marco Clemencic
  - Fixed a bug in XmlGenericCnv. The environment variable in the href was
    expanded too late pratically not allowing to use a CONDITIONS_PATH like
