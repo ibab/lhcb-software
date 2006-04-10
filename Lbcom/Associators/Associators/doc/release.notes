@@ -2,8 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!====================== Associators v3r2 2006-04-10 ========================
 ! 2006-03-24 - Eduardo Rodrigues
- - small improvements to code
+ - small improvements to code, bug fix for Linker table paths
 
 !====================== Associators v3r1 2006-03-17 ========================
 ! 2006-03-17 - Eduardo Rodrigues
