@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.27 2006-03-16 15:07:44 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.28 2006-04-10 15:12:43 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -86,7 +86,7 @@ StatusCode DeRich2::initialize()
     Material::Tables::const_iterator matIter;
     for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
       if( (*matIter) ){
-        if ( (*matIter)->type() == "RINDEX" ) 
+        if ( (*matIter)->type() == "RINDEX" )
         {
           m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
           if ( !m_gasWinRefIndex->valid() )
@@ -96,7 +96,7 @@ StatusCode DeRich2::initialize()
             return StatusCode::FAILURE;
           }
         }
-        if ( (*matIter)->type() == "ABSLENGTH" ) 
+        if ( (*matIter)->type() == "ABSLENGTH" )
         {
           m_gasWinAbsLength = new Rich1DTabProperty( *matIter );
           if ( !m_gasWinAbsLength->valid() )
@@ -169,22 +169,28 @@ StatusCode DeRich2::initialize()
 
   // update mirror alignment
   IUpdateManagerSvc* ums = updMgrSvc();
-  
+
+  bool needUpdate( false );
   m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
-  if ( m_sphMirAlignCond )
+  if ( m_sphMirAlignCond ) {
     ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
+    needUpdate = true;
+  }
   else
     msg << MSG::WARNING << "Cannot load Condition Rich2SphMirrorAlign" << endmsg;
 
   m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
-  if ( m_secMirAlignCond )
+  if ( m_secMirAlignCond ) {
     ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
+    needUpdate = true;
+  }
   else
     msg << MSG::WARNING << "Cannot load Condition Rich2SecMirrorAlign" << endmsg;
 
-  StatusCode upsc = ums->update(this);
+  StatusCode upsc = StatusCode::SUCCESS;
+  if ( needUpdate ) upsc = ums->update(this);
 
-  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  msg << MSG::DEBUG << "Initialisation Complete. Update:" << upsc << endreq;
   return upsc;
 }
 

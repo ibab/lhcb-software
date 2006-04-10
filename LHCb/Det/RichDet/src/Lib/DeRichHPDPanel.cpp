@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.37 2006-03-15 15:57:05 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.38 2006-04-10 15:12:43 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -103,7 +103,7 @@ StatusCode DeRichHPDPanel::initialize()
   // prepare a smartID for this panel
   m_panelRichID.setRich( rich() );
   m_panelRichID.setPanel( side() );
-  
+
 
   std::string rich1Location;
   if ( name().find("Magnet") == std::string::npos )
@@ -371,7 +371,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   // find the HPD row/col of this point if not set
   if ( !id.hpdColIsSet() || !id.hpdNumInColIsSet() ) {
     if ( !findHPDColAndPos(inPanel, id) ) return StatusCode::FAILURE;
-  }  
+  }
 
   // check if the HPD is active or dead
   if ( !m_deRichS->hpdIsActive( id ) ) return StatusCode::FAILURE;
@@ -570,8 +570,9 @@ DeRichHPDPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
 {
 
   // Square of active radius
-  const double activeRadiusSq = gsl_pow_2
-    (m_activeRadius*(m_deMagFactor[0]+m_deMagFactor[1]*m_activeRadius) );
+  //const double activeRadiusSq = gsl_pow_2
+  //  (m_activeRadius*(m_deMagFactor[0]+m_deMagFactor[1]*m_activeRadius) );
+  const double activeRadiusSq = m_siliconHalfLengthX*m_siliconHalfLengthX;
 
   for ( unsigned int PD = 0; PD < m_HPDMax; ++PD )
   {
@@ -713,7 +714,7 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
 //=========================================================================
 //  sensitiveVolumeID
 //=========================================================================
-const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const 
+const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   LHCb::RichSmartID id( m_panelRichID );
   return ( smartID( globalPoint, id ) ) ? id : LHCb::RichSmartID();

@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-04-10 - Antonis Papanestis
+ - Changed DeRich to produce WARNING if alignment cond is not there, but not 
+   fail.
+ - Increased active radius on pixel chip in HPDPanel.
+
 ! 2006-04-03 - Chris Jones
  - Update to printing to suppress messaging during initialize, but for all
    subsequent updates print a message.
