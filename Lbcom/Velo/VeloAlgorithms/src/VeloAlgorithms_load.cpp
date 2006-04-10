@@ -18,6 +18,5 @@ DECLARE_FACTORY_ENTRIES(VeloAlgorithms) {
   DECLARE_ALGORITHM( VeloClusterMoni );
 
   DECLARE_TOOL( MCVeloFEType );
-  DECLARE_TOOL( VeloClusterPosition );
 }
 

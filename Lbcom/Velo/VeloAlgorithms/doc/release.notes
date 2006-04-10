@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+!===================== VeloAlgorithms v4r3 2006-04-10 =====================
+! 2006-04-10 - Marco Cattaneo
+ - Removed VeloClusterPosition tool, moved to VeloTools package
+
 !===================== VeloAlgorithms v4r2 2006-04-06 =====================
 ! 2006-04-06 - David Hutchcroft
  - Added const to VeloClusterPositon methods
