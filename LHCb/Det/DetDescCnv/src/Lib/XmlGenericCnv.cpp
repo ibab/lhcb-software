@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.15 2005-12-15 09:22:37 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.16 2006-04-10 13:52:21 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -423,6 +423,19 @@ XmlGenericCnv::createAddressForHref (std::string href,
                                      CLID clid,
                                      IOpaqueAddress* parent) const {
   MsgStream log( msgSvc(), "XmlGenericCnv" );
+  
+  // expand environment variables in href
+  std::string oldPath=href;
+  if (AddressTools::hasEnvironmentVariable(href) ) {
+    log << MSG::VERBOSE << "Found environment variable in path "
+        << href << endmsg;
+    if (!AddressTools::expandAddress(href)) {
+      throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
+                            StatusCode::FAILURE);
+    }
+    log << MSG::VERBOSE << "path expanded to " << href << std::endl;    
+  }
+  
   // Is it a CondDB address ?
   bool condDB = (0==href.find("conddb:/"));
   if (condDB) {
@@ -580,16 +593,6 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                                                  CLID clid) const {
 
   MsgStream log( msgSvc(), "XmlGenericCnv" );
-  std::string oldPath=location;
-  if (AddressTools::hasEnvironmentVariable(location) ) {
-    log << MSG::VERBOSE << "Found environment variable in path "
-        << location << endmsg;
-    if (!AddressTools::expandAddress(location)) {
-      throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
-                            StatusCode::FAILURE);
-    }
-    log << MSG::VERBOSE << "path expanded to " << location << std::endl;    
-  }
   
   const std::string par[2] = {location, entryName};
   const unsigned long isString = 0; // address: filename (0) or string (1)?

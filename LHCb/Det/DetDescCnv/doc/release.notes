@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2006-04-10 - Marco Clemencic
+ - Fixed a bug in XmlGenericCnv. The environment variable in the href was
+   expanded too late pratically not allowing to use a CONDITIONS_PATH like
+   "conddb:/...".
+
 !================ DetDescCnv v3r1 2006-03-17 ==========================
 ! 2006-03-17 - Marco Clemencic
  - Fixed a bug in XmlBaseDetElemCnv. If DetectorElement::initialize()
