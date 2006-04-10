@@ -2,6 +2,7 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r3 2006-04-10 =======================
 ! 2006-04-10 - Jeroen van Tilburg
  - Fixed bug in DeSTSector trajectory method. Changed minus into plus sign.
 
