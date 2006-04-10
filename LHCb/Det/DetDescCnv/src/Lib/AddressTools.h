@@ -1,4 +1,4 @@
-// $Id: AddressTools.h,v 1.1 2005-06-20 12:40:28 jpalac Exp $
+// $Id: AddressTools.h,v 1.2 2006-04-10 16:26:46 marcocle Exp $
 #ifndef STREAMS_ADDRESSTOOLS_H 
 #define STREAMS_ADDRESSTOOLS_H 1
 
@@ -13,7 +13,7 @@
  */
 
 static const std::string environmentKey("$");
-static const std::string delims(" \t,.;/");
+static const std::string delims(" \t,.;/#");
 static const std::string brackets("{}");
 class AddressTools {
 public: 
