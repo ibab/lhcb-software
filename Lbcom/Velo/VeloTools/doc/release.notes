@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Velo/VeloTools
+! Responsible : Tomasz Szumlak
+! Purpose     : Velo Tools for reconstruction
+!-----------------------------------------------------------------------------
+
+!============================= VeloAlgorithms v1r0 ===========================
+! 2006-04-10 - Marco Cattaneo
+ - New package, contains VeloClusterPosition tool, previously in VeloAlgorithms

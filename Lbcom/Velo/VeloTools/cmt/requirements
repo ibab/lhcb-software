@@ -1,0 +1,23 @@
+# Created    : 2006/04/10
+# Maintainer : Tomasz Szumlak
+#
+package           VeloTools
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use  LHCbKernel   v*  Kernel
+use  DigiEvent    v*  Event
+use  VeloDet      v*  Det
+use  GaudiAlg     v*
+
+# Component library building rule
+#============================================================================
+library          VeloTools      ../src/*.cpp
+apply_pattern component_library library=VeloTools
