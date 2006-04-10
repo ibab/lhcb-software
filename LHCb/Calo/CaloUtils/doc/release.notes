@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.43 2006-04-06 13:27:21 odescham Exp $
+! $Id: release.notes,v 1.44 2006-04-10 08:38:37 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!========================== CaloUtils v6r0p1 2006-03-28 =================
+!========================== CaloUtils v6r1 2006-04-10 =========================
+! 2006-04-10 - Marco Cattaneo
+ - Make Boost usage no_auto_imports (needed only in .cpp)
+
 ! 2006-04-06 - Olivier Deschamps
- - a bit of repackaging : CaloUtils/Calo2MC.h & CaloMCTools.h moved from CaloAssociators/src
+ - a bit of repackaging : CaloUtils/Calo2MC.h & CaloMCTools.h moved from
+   CaloAssociators/src
 
-
+!========================== CaloUtils v6r0p1 2006-03-28 =================
 ! 2006-03-28 - Marco Cattaneo
  - Add explicit dependency on Boost, needed for Gaudi v18r3
 
