@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.18 2006-04-06 08:22:24 jvantilb Exp $
+// $Id: DeSTSector.cpp,v 1.19 2006-04-10 10:27:33 jvantilb Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -230,9 +230,9 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
 
   if (contains(aChan) == true){
     double arclen = (offset + aChan.strip() - m_firstStrip)*m_pitch ;
-    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen - 
+    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen + 
                                                     m_lowerTraj->beginRange());
-    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen -
+    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen +
                                                     m_upperTraj->beginRange());
     traj = new LineTraj(begPoint,endPoint);
   } 
