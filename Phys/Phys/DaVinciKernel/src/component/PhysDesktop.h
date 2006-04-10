@@ -62,10 +62,10 @@ public:
   const LHCb::Vertex::ConstVector secondaryVertices() ;
 
   /// Add a particle to the DeskTop to which it belongs
-  LHCb::Particle* createParticle( LHCb::Particle* partToSave );
+  const LHCb::Particle* save( LHCb::Particle* partToSave );
   
   /// Add a vertex to the DeskTop
-  LHCb::Vertex* createVertex( LHCb::Vertex* vertToSave );
+  const LHCb::Vertex* save( LHCb::Vertex* vertToSave );
   
   /// Save all particles and vertices in the DeskTop to the TES
   StatusCode saveDesktop();

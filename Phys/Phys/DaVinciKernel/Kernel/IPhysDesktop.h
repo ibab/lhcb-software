@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.9 2006-03-16 14:54:28 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.10 2006-04-10 16:06:33 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -42,10 +42,10 @@ public:
   virtual const LHCb::Vertex::ConstVector secondaryVertices() = 0;
 
   /// Add the particles  to the Desktop
-  virtual LHCb::Particle* createParticle( LHCb::Particle* input=0 ) = 0;
+  virtual const LHCb::Particle* save( LHCb::Particle* input=0 ) = 0;
 
   /// Add the vertices  to the Desktop
-  virtual LHCb::Vertex* createVertex( LHCb::Vertex* input=0 ) = 0;
+  virtual const LHCb::Vertex* save( LHCb::Vertex* input=0 ) = 0;
 
   /// Save the particles to the TES
   virtual StatusCode saveDesktop() = 0;

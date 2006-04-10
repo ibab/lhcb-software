@@ -3,7 +3,18 @@
 !============================================================================
 
 ! 2006-04-10 - J.P. Palacios
+ - Kernel/IPhysiceDesktop.h
+   . Change createParticle and createVertex: return value is now const,
+     method names changed to "save".
+ - src/component/PhysDeskTop.h, .cpp
+   . Adapt to IPhysiceDesktop interface change.
  - Kernel/DVAlgorithm.h
+   . Add methods 
+      IParticleCombiner* particleCombiner(const std::string name = "") const 
+     and 
+      IParticleReFitter* particleReFitter(const std::string name = "") const
+   . Modify IGeomDispCalculator tool accessor and data storage to allow for
+     more than one.
    . Make the following GaudiAlg methods virtual:
      StatusCode setFilterPassed (bool state);
      StatusCode sysExecute ();

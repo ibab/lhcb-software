@@ -3,30 +3,37 @@
 
 /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
-  : GaudiTupleAlg ( name , pSvcLocator )
-  , m_desktop(0)
-  , m_desktopName("PhysDesktop")
-  , m_geomTool(0)
-  , m_checkOverlap(0)
-  , m_filterNames()
-  , m_algorithm2IDTool(0)
-  , m_algorithm2IDToolName("Algorithm2ID")
-  , m_taggingTool(0)
-  , m_taggingToolName("BTaggingTool")
-  , m_descendants(0)
-  , m_descendantsName("ParticleDescendants")
-  , m_ppSvc(0)
-  , m_setFilterCalled(false)
-  , m_countFilterWrite(0)
-  , m_countFilterPassed(0)
-  , m_algorithmID(-1)
+  : 
+  GaudiTupleAlg ( name , pSvcLocator ),
+  m_desktop(0),
+  m_desktopName("PhysDesktop"),
+  m_geomTools(),
+  m_checkOverlap(0),
+  m_filterNames(),
+  m_algorithm2IDTool(0),
+  m_algorithm2IDToolName("Algorithm2ID"),
+  m_particleCombiner(0),
+  m_particleCombinerName(""),
+  m_particleReFitter(0),
+  m_particleReFitterName(""),
+  m_taggingTool(0),
+  m_taggingToolName("BTaggingTool"),
+  m_descendants(0),
+  m_descendantsName("ParticleDescendants"),
+  m_ppSvc(0),
+  m_setFilterCalled(false),
+  m_countFilterWrite(0),
+  m_countFilterPassed(0),
+  m_algorithmID(-1)
 {
 
   declareProperty("VertexFitter", m_vertexFitNames );
-  declareProperty("GeomTool", m_geomToolName = "Default");
+  declareProperty("GeomTool", m_geomToolNames);
   declareProperty("CheckOverlapTool",m_checkOverlapName = "CheckOverlap");
   m_filterNames.push_back("ParticleFilter");
   declareProperty("ParticleFilter", m_filterNames );
+  declareProperty("ParticleCombiner", m_particleCombinerName);
+  declareProperty("ParticleReFitter", m_particleReFitterName);
 
   declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
@@ -83,16 +90,18 @@ StatusCode DVAlgorithm::loadTools() {
     m_vertexFitNames.push_back(onof->vertexFitter());
   }
   for ( size_t i = 0; i < m_vertexFitNames.size();++i) {
-    debug() << ">>> Preloading " << m_vertexFitNames.at(i) << " as IVertexFit " << i << endmsg;
+    debug() << ">>> Preloading " << m_vertexFitNames.at(i) << " as IVertexFit "
+            << i << endmsg;
     vertexFitter(i) ;
   }
   
   // geometry
-  if ( m_geomToolName == "Default" ){
+  if ( m_geomToolNames.empty() ){
     if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_geomToolName = onof->dispCalculator();
+    m_geomToolNames.push_back( onof->dispCalculator() );
   }
-  debug() << ">>> Preloading" << m_geomToolName << " as IGeomDispCalculator" << endmsg;
+  debug() << ">>> Preloading" << m_geomToolNames[0] 
+          << " as IGeomDispCalculator" << endmsg;
   geomDispCalculator();
 
   debug() << ">>> Preloading CheckOverlap Tool" << endmsg;

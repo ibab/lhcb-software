@@ -76,26 +76,84 @@ public:
     return getTool<IVertexFit>(index,m_vertexFitNames,m_vertexFit,this);
   }
 
-  /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* geomDispCalculator()const{
-    return getTool<IGeomDispCalculator>(m_geomToolName,m_geomTool,this);
+  /* @todo move to this signature when maps in job options become available
+  /// Accessor for Vertex Fitter Tool
+  inline IVertexFit* vertexFitter(const std::string & name="") const {
+    return getTool<IVertexFit>(m_vertexFitName.at(0),
+                               m_vertexFit.at(0), this);
   }
+  */
+
+  /// Accessor for Geometrical Displacement Calculation Tool
+  inline IGeomDispCalculator* geomDispCalculator(int index=0)const{
+    return getTool<IGeomDispCalculator>(index,m_geomToolNames, m_geomTools,
+                                        this);
+  }
+
+  /* @todo move to this signature when maps in job options become available
+  /// Accessor for Geometrical Displacement Calculation Tool
+  inline IGeomDispCalculator* geomDispCalculator(const std::string& name="") const
+  {
+    return getTool<IGeomDispCalculator>(m_geomToolNames.at(0),
+                                        m_geomTools.at(0), this);
+  }
+  */
 
   /// Accessor for Particle Filter Tool
   inline IParticleFilter* particleFilter(int index=0)const{
     info() << "Hello " << index << endmsg ;
-    return DVAlgorithm::getTool<IParticleFilter>(index,m_filterNames,m_filter,this);
+    return DVAlgorithm::getTool<IParticleFilter>(index,
+                                                 m_filterNames,
+                                                 m_filters,this);
   }
+
+  /* @todo move to this signature when maps in job options become available
+  /// Accessor for Particle Filter Tool
+  inline IParticleFilter* particleFilter(const std::string& name="")const{
+    info() << "Hello " << index << endmsg ;
+    return DVAlgorithm::getTool<IParticleFilter>(m_filterNames.at(0),
+                                                 m_filters.at(0), this);
+  }
+  */
 
   /// Accessor for CheckOverlap Tool
   inline ICheckOverlap* checkOverlap()const{
     return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
   }
 
+  /* @todo move to this signature when maps in job options become available
+  /// Accessor for CheckOverlap Tool
+  inline ICheckOverlap* checkOverlap(const std::string& name="") const{
+    return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
+  }
+  */
+
   /// Accessor for Algorithm2ID Tool
   inline IAlgorithm2ID* algorithmID()const{
     return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
   }
+
+  /* @todo move to this signature when maps in job options become available
+  /// Accessor for Algorithm2ID Tool
+  inline IAlgorithm2ID* algorithmID(const std::string& name="") const{
+    return getTool<IAlgorithm2ID>(m_algorithm2IDToolName,m_algorithm2IDTool);
+  }
+  */
+
+  /// Accessor for ParticleCombiner tool
+  inline IParticleCombiner* particleCombiner(const std::string name = "") const 
+  {
+    return getTool<IParticleCombiner>(m_particleCombinerName,
+                                      m_particleCombiner);
+  }
+  
+  inline IParticleReFitter* particleReFitter(const std::string name = "") const 
+  
+  {
+    return getTool<IParticleReFitter>(m_particleReFitterName,
+                                      m_particleReFitter); 
+  }
+  
 
   /// Tagging Tool
   inline IBTaggingTool* flavourTagging()const{
@@ -191,9 +249,9 @@ protected:
   std::vector<std::string> m_vertexFitNames;
 
   /// Reference to geometrical displacement Calculation.
-  mutable IGeomDispCalculator* m_geomTool;  
+  mutable std::vector<IGeomDispCalculator*> m_geomTools;  
   /// Concrete type of geom tool
-  std::string m_geomToolName;
+  std::vector<std::string> m_geomToolNames;
 
   /// Reference to CheckOverlap
   mutable ICheckOverlap* m_checkOverlap;
@@ -201,7 +259,7 @@ protected:
   std::string m_checkOverlapName;
 
   /// Reference to ParticleFilter
-  mutable std::vector<IParticleFilter*> m_filter;
+  mutable std::vector<IParticleFilter*> m_filters;
   /// Concrete Type of ParticleFilter tool
   std::vector<std::string> m_filterNames;  
 
@@ -209,6 +267,17 @@ protected:
   mutable IAlgorithm2ID* m_algorithm2IDTool;
   /// Concrete Type of IAlgorithm2ID tool
   std::string m_algorithm2IDToolName;
+
+  /// Reference to ParticleCombiner
+  mutable IParticleCombiner* m_particleCombiner;
+  /// Concrete Type of ParticleCombiner tool
+  std::string m_particleCombinerName;
+
+  /// Reference to ParticleReFitter
+  mutable IParticleReFitter* m_particleReFitter;
+  /// Concrete Type of ParticleReFitter tool
+  std::string m_particleReFitterName;
+
 
   /// Reference to FlavourTagging
   mutable IBTaggingTool* m_taggingTool;

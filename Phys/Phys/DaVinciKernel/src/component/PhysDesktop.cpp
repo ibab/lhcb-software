@@ -261,11 +261,11 @@ StatusCode PhysDesktop::finalize(){
   return GaudiTool::finalize() ;
 }
 //=============================================================================
-// Create a new particle in the DeskTop
+// Save a new particle in the DeskTop
 //=============================================================================
-LHCb::Particle* PhysDesktop::createParticle( LHCb::Particle* partToSave ){
+const LHCb::Particle* PhysDesktop::save( LHCb::Particle* partToSave ){
 
-  verbose() << "createLHCb::Particle in desktop" << endmsg;
+  verbose() << "save(LHCb::Particle) in desktop" << endmsg;
 
   // Input particle is given check if it already exist in the stack
   if( ( 0 != partToSave ) && ( inDesktop( partToSave ) )) {
@@ -294,10 +294,10 @@ LHCb::Particle* PhysDesktop::createParticle( LHCb::Particle* partToSave ){
               << saveP->momentum().pz() << endmsg;
     // Check if link to endProducts exist and set it
     if( 0 != partToSave->endVertex() ) {
-      LHCb::Vertex* saveV = createVertex( partToSave->endVertex() );
+      const LHCb::Vertex* saveV = save( partToSave->endVertex() );
       saveP->setEndVertex(saveV);
     }
-    // Link to outgoing particles is followed through the createVertex
+    // Link to outgoing particles is followed through the save(LHCb::Vertex)
     // Link to originators will be correct because they are in the heap
     // so their pointer is valid
   }
@@ -315,9 +315,9 @@ LHCb::Particle* PhysDesktop::createParticle( LHCb::Particle* partToSave ){
 //=============================================================================
 // Create a new vertex
 //=============================================================================
-LHCb::Vertex* PhysDesktop::createVertex( LHCb::Vertex* vtxToSave ){
+const LHCb::Vertex* PhysDesktop::save( LHCb::Vertex* vtxToSave ){
 
-  verbose() << "createVertex in desktop" << endmsg;
+  verbose() << "save (LHCb::Vertex) in desktop" << endmsg;
 
   // Input vertex is given check if it already exist in the stack
   if( ( 0 != vtxToSave ) && ( inDesktop( vtxToSave ) ) ) {
@@ -349,7 +349,7 @@ LHCb::Vertex* PhysDesktop::createVertex( LHCb::Vertex* vtxToSave ){
     SmartRefVector<LHCb::Particle> outP = vtxToSave->outgoingParticles();
     SmartRefVector<LHCb::Particle>::iterator ip;
     for( ip = outP.begin(); ip != outP.end(); ip++ ) {
-      LHCb::Particle* saveP = createParticle( *ip );
+      const LHCb::Particle* saveP = save( *ip );
       saveV->addToOutgoingParticles(saveP);
     }
   }
