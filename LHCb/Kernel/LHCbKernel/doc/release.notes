@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r5 2006-04-11 =========================
 ! 2006-04-11 - Chris Jones
  - Bug fix - Remove erroneous 'inline' from implementation of 
    Rich::text( const Rich::Side side ) in RichSide.cpp
