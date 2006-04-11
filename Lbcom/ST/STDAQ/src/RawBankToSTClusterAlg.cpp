@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.8 2006-03-06 12:54:19 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.9 2006-04-11 14:28:27 mneedham Exp $
 
 #include <algorithm>
 
@@ -182,12 +182,14 @@ unsigned int RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues
 {
  
   double sum = 0;
+  double totCharge = 0;
   // note the first is the neighbour sum..
   for (unsigned int i = 1; i < adcValues.size() ; ++i){
      sum += adcValues[i].adc()*i;
+     totCharge = 0.0;
   } // i
                                                                                         
-  return (unsigned int)(sum/adcValues.size());
+  return (unsigned int)(sum/totCharge);
 }
 
 
