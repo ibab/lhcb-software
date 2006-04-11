@@ -1,6 +1,10 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
+!==================== OTMonitor v2r2 2006-03-31 =====================
+! 2006-04-11 - Jan Amoraal
+ - Adapt to GaudiHistoAlg
+
 !==================== OTMonitor v2r1 2006-03-31 =====================
 ! 2006-03-30 - Jan Amoraal
  - Minor changes due to new OTDet

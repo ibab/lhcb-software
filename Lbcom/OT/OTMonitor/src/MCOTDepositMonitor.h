@@ -1,9 +1,12 @@
-// $Id: MCOTDepositMonitor.h,v 1.4 2006-03-30 21:51:27 janos Exp $
+// $Id: MCOTDepositMonitor.h,v 1.5 2006-04-11 19:23:16 janos Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
-// local
-#include "OTMonitorAlgorithm.h"
+/// STL
+#include <vector>
+
+/// Gaudi
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 /** @class MCOTDepositMonitor MCOTDepositMonitor.h \ 
  *         "OTMonitor/MCOTDepositMonitor.h"
@@ -27,7 +30,7 @@ namespace LHCb
   class MCOTDeposit;
 }
 
-class MCOTDepositMonitor : public OTMonitorAlgorithm {
+class MCOTDepositMonitor : public GaudiHistoAlg {
 
 public:
  
@@ -54,7 +57,7 @@ private:
 
   int m_nCrossTalkHits;  ///< count the number of XTalk hits
   int m_nStations;       ///< number of stations (from geometry)
-  int m_firstStation;  ///< first OT station   (from geometry)
+  int m_firstStation;    ///< first OT station   (from geometry)
 
   /// histograms
   AIDA::IHistogram1D* m_nDepositsHisto;       ///< Deposits distribution
@@ -62,8 +65,8 @@ private:
   AIDA::IHistogram1D* m_nHitsPerLayerHisto;   ///< Hits per layer
   /// drift time histo for each station
   std::vector<AIDA::IHistogram1D*> m_driftTimeHistos;
-  /// x vs y of hits for each station 
-  std::vector<AIDA::IHistogram2D*> m_xvsyHistos;
+  /// y vs x of hits for each station 
+  std::vector<AIDA::IHistogram2D*> m_yvsxHistos;
   AIDA::IHistogram1D* m_driftDistHisto;  ///< drift distance distribution
   AIDA::IHistogram1D* m_nCrossTalkHisto; ///< cross talk level
   

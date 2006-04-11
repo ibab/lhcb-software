@@ -1,8 +1,7 @@
-// $Id: OTTimeMonitor.cpp,v 1.6 2006-03-30 21:51:27 janos Exp $
+// $Id: OTTimeMonitor.cpp,v 1.7 2006-04-11 19:23:16 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -17,6 +16,9 @@
 // MathCore
 #include "Kernel/SystemOfUnits.h"
 
+/// BOOST
+#include "boost/lexical_cast.hpp"
+
 // local
 #include "OTTimeMonitor.h"
 
@@ -29,23 +31,28 @@
 
 using namespace LHCb;
 
-static const AlgFactory<OTTimeMonitor> s_Factory;
-const IAlgFactory& OTTimeMonitorFactory = s_Factory;
+/// Declaration of algorithm factory
+DECLARE_ALGORITHM_FACTORY( OTTimeMonitor );
 
 OTTimeMonitor::OTTimeMonitor(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
-  OTMonitorAlgorithm(name, pSvcLocator)
-{
+			     ISvcLocator* pSvcLocator) :
+  GaudiHistoAlg(name, pSvcLocator) {
   // constructor
 }
 
-OTTimeMonitor::~OTTimeMonitor()
-{
+OTTimeMonitor::~OTTimeMonitor() {
   // destructor
 }
 
-StatusCode OTTimeMonitor::initialize()
-{
+StatusCode OTTimeMonitor::initialize() {
+
+  StatusCode sc = GaudiHistoAlg::initialize();
+  if (sc.isFailure()) {
+    return Error("Failed to initialize", sc);
+  }
+
+  if("" == histoTopDir()) setHistoTopDir("OT/");
+
   // Get OT Geometry from XML
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_nStations = m_tracker->nStation();
@@ -61,188 +68,151 @@ StatusCode OTTimeMonitor::initialize()
   m_nChannelsPerLayer.resize(40, 0);
   m_nChannelsPerStation.resize(4, 0);
   std::vector<DeOTModule*> modules = m_tracker->modules();
-  std::vector<DeOTModule*>::const_iterator module;
-  for (module = modules.begin(); module != modules.end(); ++module) {
-    // int iStation = (*module)->stationID();
-    // int iLayer = (*module)->layerID();
-    int iStation = (*module)->elementID().station();
-    int iLayer = (*module)->elementID().layer();
+  std::vector<DeOTModule*>::const_iterator iM;
+  for (iM = modules.begin(); iM != modules.end(); ++iM) {
+    int iStation = (*iM)->elementID().station();
+    int iLayer = (*iM)->elementID().layer();
     int iUniqueLayerNum = 10*iStation+iLayer;
-    int nChannels = (*module)->nChannels();
-    int moduleID = (*module)->moduleID();
+    int nChannels = (*iM)->nChannels();
+    int moduleID = (*iM)->elementID().module();
     if ( moduleID == 9 ) m_nChannelsTopModule[iUniqueLayerNum] += nChannels;
     if ( moduleID == 8 ) m_nChannelsCornerModule[iUniqueLayerNum] += nChannels;
     if ( moduleID == 7 ) m_nChannelsSideModule[iUniqueLayerNum] += nChannels;
     m_nChannelsPerLayer[iUniqueLayerNum] += nChannels;
     m_nChannelsPerStation[iStation] += nChannels;
   }
-  
-  // Get the number of events to be processed. Needed for occupancy.
-  IProperty* appMgrP;
-  StatusCode sc = service("ApplicationMgr", appMgrP );
-  if ( !sc.isSuccess() )    {
-    return Error ("Unable to retrieve IProperty interface of ApplicationMgr");
-    m_evtMax = 1;
-  }
-  else {
-    IntegerProperty numEvt;
-    numEvt.assign( appMgrP->getProperty( "EvtMax" ) );
-    m_evtMax = numEvt;
-    appMgrP->release();
-  }
 
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode OTTimeMonitor::execute()
-{
-  // execute
+StatusCode OTTimeMonitor::execute() {
   
   // retrieve OTTimes
   OTTimes* times = get<OTTimes>( OTTimeLocation::Default );
  
   // number of times
-  m_nTimesHisto->fill( (double)times->size(), 1.0);
+  m_nTimesHisto->fill(double(times->size()), 1.0);
 
   // histos per time
-  OTTimes::const_iterator iterTime;
-  for(iterTime = times->begin(); iterTime != times->end(); iterTime++){
+  OTTimes::const_iterator iterTime = times->begin();
+  for( ; iterTime != times->end(); iterTime++){
     this->fillHistograms(*iterTime);
   } // loop iterDep
 
   
   return StatusCode::SUCCESS;
 }
-
-StatusCode OTTimeMonitor::initHistograms()
-{
+  
+StatusCode OTTimeMonitor::initHistograms() {
+ 
   // Intialize histograms
-  std::string tDirPath = this->histoDirPath();
-
   // number of Times in container
-  m_nTimesHisto= histoSvc()->book(tDirPath+"1","num Times",200,0.,20000.);
-    
-  // number of Times per station
-  if ( fullDetail() ) {
-    m_nTimesPerStationHisto = histoSvc()->book( tDirPath+"11",
-                                                "n Times per stat",
-                                                3, 0.5, 3.5);
-  }
-  
+  m_nTimesHisto = book(1, "nTimes", 0., 20000., 200);
   // number of Times per layer 
-  m_nTimesPerLayerHisto = histoSvc()->book( tDirPath+"12","n Times per layer",
-                                            25, 9.5, 34.5);
-  
-  // occupancy per station
-  if ( fullDetail() ) {
-    m_occPerStationHisto = histoSvc()->book( tDirPath+"21", 
-                                             "occupancy per station",
-                                             3, 0.5, 3.5);
-  }
-  
+  m_nTimesPerLayerHisto = book(12, "nTimes per layer", 9.5, 34.5, 25);
   // occupancy per layer
-  m_occPerLayerHisto = histoSvc()->book( tDirPath+"22", "occupancy per layer",
-                                         25, 9.5, 34.5);
-  
-  if ( fullDetail() ) {
-    // occupancy in top module per layer 
-    m_occTopPerLayerHisto = 
-      histoSvc()->book( tDirPath+"23", "occupancy in top module per layer", 
-                        25, 9.5, 34.5);
-  
-    // number of Times in corner module per layer 
-    m_occCornerPerLayerHisto = 
-      histoSvc()->book(tDirPath+"24", "occupancy in corner module per layer",
-                       25, 9.5, 34.5);
-    
-    // occupancy in side module per layer 
-    m_occSidePerLayerHisto = 
-      histoSvc()->book(tDirPath+"25", "occupancy in side module per layer",
-                       25, 9.5, 34.5);
-    
-    // occupancy versus x coordinate in T1 layer 1  
-    m_occVsxHisto = 
-      histoSvc()->book(tDirPath+"31", "occupancy in T1 layer 1 vs x", 
-                       50, 0.0, 2984.625);
-  }
+  m_occPerLayerHisto = book(22, "Occupancy per layer", 9.5, 34.5, 25);
   
   // histograms per station
-  int ID;
+  int id;
   IHistogram1D* aHisto1D;
-  for (int iStation = m_firstStation ;iStation <= m_nStations; ++iStation) {
-
-    if (fullDetail()) {
-      // Tdc time spectra
-      ID = 100 + iStation;
-      std::string aString= this->intToString(ID);
-      aHisto1D = histoSvc()->book(tDirPath+this->intToString(ID),
-                                  "Bin - time station "
-                                  +this->intToString(iStation),
-                                  250, -50.0*ns, 200.0*ns);
-      m_tdcTimeHistos.push_back(aHisto1D);
-    }
+  
+  for (unsigned int iStation = m_firstStation; 
+       iStation <= m_nStations; ++iStation) {
+    
+    std::string stationToString = boost::lexical_cast<std::string>(iStation);
+    
     // Calibrated time spectra
-    ID = 300 + iStation;
-    std::string aString = this->intToString(ID);
-    aHisto1D = histoSvc()->book(tDirPath+this->intToString(ID),
-                                "Calibrated time station "
-                                +this->intToString(iStation),
-                                250, -50.0*ns, 200.0*ns);
+    id = 300 + iStation;
+    aHisto1D = book(id, "Calibrated time station "+stationToString,
+		    -50.0*ns, 200.0*ns, 250);
     m_calTimeHistos.push_back(aHisto1D);
     
   } // loop station
   
+  if ( fullDetail() ) {
+    // number of Times per station
+    m_nTimesPerStationHisto = book(11, "nTimes per stat", 0.5, 3.5, 3);
+    // occupancy per station
+    m_occPerStationHisto = book(21, "Occupancy per station", 0.5, 3.5, 3);
+    // occupancy in top module per layer 
+    m_occTopPerLayerHisto = book(23, "Occupancy in top module per layer", 
+				 9.5, 34.5, 25);
+    // number of Times in corner module per layer 
+    m_occCornerPerLayerHisto = book(24, "Occupancy in corner module per layer",
+				    9.5, 34.5, 25);
+    // occupancy in side module per layer 
+    m_occSidePerLayerHisto = book(25, "Occupancy in side module per layer",
+				  9.5, 34.5, 25);
+    // occupancy versus x coordinate in T1 layer 1  
+    m_occVsxHisto = book(31, "Occupancy in T1 layer 1 vs x", 
+			 0.0, 2984.625, 50);
+    
+    // histograms per station
+    int id;
+    IHistogram1D* aHisto1D;
+    
+    for (unsigned int iStation = m_firstStation;
+	 iStation <= m_nStations; ++iStation) {
+      
+      std::string stationToString = boost::lexical_cast<std::string>(iStation);
+      
+      // Tdc time spectra
+      id = 100 + iStation;
+      aHisto1D = book(id, "Bin - TDC time station "+stationToString,
+		      -50.0*ns, 200.0*ns, 250);
+      m_tdcTimeHistos.push_back(aHisto1D);
+    }
+  }
+  
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime)
-{
-  // Initialize
 
+StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime) {
+  
   // Times and occupancy per station
   OTChannelID channel = aTime->channel();
   const int iStation = channel.station();
-  double weight = 100./(m_evtMax * m_nChannelsPerStation[iStation]);
-  if ( fullDetail() ) {
-    m_nTimesPerStationHisto->fill((double)iStation, 1.0);
-    m_occPerStationHisto->fill((double)iStation, weight);
-  }
-
+  
   // times and occupancies per layer (for all, top, corner and side modules)
   const int iLayer = channel.layer();
   int iUniqueLayerNum = 10*iStation + iLayer;
-  weight = 100./(m_evtMax * m_nChannelsPerLayer[iUniqueLayerNum]);
-  m_nTimesPerLayerHisto->fill((double)iUniqueLayerNum, 1.);
-  m_occPerLayerHisto->fill((double)iUniqueLayerNum, weight);
+  double weight = 100./(m_nChannelsPerLayer[iUniqueLayerNum]);
+  m_nTimesPerLayerHisto->fill(double(iUniqueLayerNum), 1.);
+  m_occPerLayerHisto->fill(double(iUniqueLayerNum), weight);
 
   if ( fullDetail() ) {
+
+    weight = 100./(m_nChannelsPerStation[iStation]);
+    m_nTimesPerStationHisto->fill(double(iStation), 1.0);
+    m_occPerStationHisto->fill(double(iStation), weight);
     unsigned int iModule = channel.module();
     if ( iModule == 9 ) {
-      weight = 100./(m_evtMax * m_nChannelsTopModule[iUniqueLayerNum] );
-      m_occTopPerLayerHisto->fill((double)iUniqueLayerNum, weight);
+      weight = 100./(m_nChannelsTopModule[iUniqueLayerNum] );
+      m_occTopPerLayerHisto->fill(double(iUniqueLayerNum), weight);
     }
     if (iModule == 8 ) {
-      weight = 100./(m_evtMax * m_nChannelsCornerModule[iUniqueLayerNum] );    
-      m_occCornerPerLayerHisto->fill((double)iUniqueLayerNum, weight);
+      weight = 100./(m_nChannelsCornerModule[iUniqueLayerNum] );    
+      m_occCornerPerLayerHisto->fill(double(iUniqueLayerNum), weight);
     }
     if ( iModule == 7 ) {
-      weight = 100./(m_evtMax * m_nChannelsSideModule[iUniqueLayerNum] );
-      m_occSidePerLayerHisto->fill((double)iUniqueLayerNum, weight);
+      weight = 100./(m_nChannelsSideModule[iUniqueLayerNum] );
+      m_occSidePerLayerHisto->fill(double(iUniqueLayerNum), weight);
     }
 
     // number of times versus x-coordinate for T1 layer 1.
     if (iStation == 3 && iLayer == 1) {
       DeOTModule* module = m_tracker->findModule(channel);
       double channelsPerBin = m_nChannelsPerLayer[iUniqueLayerNum]/50.;
-      weight = 100 / ( m_evtMax * channelsPerBin );
+      weight = 100. / (channelsPerBin );
       Gaudi::XYZPoint hit = module->centerOfStraw(channel.straw());
       m_occVsxHisto->fill(fabs(hit.x()), weight);
     }
   
     // Bin time for every station
     int tdcTime = channel.tdcTime();
-    double tdc = (double) (tdcTime);
+    double tdc = double(tdcTime);
     m_tdcTimeHistos[iStation-m_firstStation]->fill( tdc, 1.);
   }
   

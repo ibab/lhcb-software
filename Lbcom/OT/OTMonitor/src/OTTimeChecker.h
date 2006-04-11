@@ -1,12 +1,12 @@
-// $Id: OTTimeChecker.h,v 1.4 2006-01-30 13:42:55 janos Exp $
+// $Id: OTTimeChecker.h,v 1.5 2006-04-11 19:23:16 janos Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
+/// STL
+#include <vector>
 
-// base class
-#include "OTMonitorAlgorithm.h"
+/// Gaudi
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 /** @class OTTimeChecker OTTimeChecker.h "OTMonitor/OTTimeChecker.h"
  *
@@ -39,7 +39,7 @@ namespace LHCb
   class OTTime;
 }
 
-class OTTimeChecker : public OTMonitorAlgorithm {
+class OTTimeChecker : public GaudiHistoAlg {
 
 public:
 
@@ -76,7 +76,10 @@ private:
 
   /// typedef for a vector of PartMultiplicities
   typedef std::vector<PartMultiplicity> PartMultVec;
-  
+
+  /// Return my particle code
+  const unsigned int myParticleCode(const LHCb::MCParticle* aMCPart) const;
+
   DeOTDetector* m_tracker;               ///< pointer to geometry
   /// flag to cut on momentum used for resolution plot 
   bool m_doMomentumCut;
@@ -96,5 +99,20 @@ private:
   AIDA::IHistogram1D* m_partMultHisto;  ///< Number of times per MCParticle
 
 };
+
+inline const unsigned int OTTimeChecker::myParticleCode(const LHCb::MCParticle* aMCPart) const {
+  /// electron
+  if ((aMCPart->particleID()).abspid() == 11 ) return 1u;
+  /// muon
+  if ((aMCPart->particleID()).abspid() == 13 ) return 2u;
+  /// pion
+  if ((aMCPart->particleID()).abspid() == 211 ) return 3u;
+  /// kaon
+  if ((aMCPart->particleID()).abspid() == 321 ) return 4u;
+  /// proton
+  if ((aMCPart->particleID()).abspid() == 2212 ) return 5u;
+  /// other
+  return 6u;
+}
 
 #endif // OTMONITOR_OTTIMECHECKER_H

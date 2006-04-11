@@ -1,8 +1,7 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.7 2006-03-30 21:51:27 janos Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.8 2006-04-11 19:23:16 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -19,11 +18,12 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
 
+/// BOOST
+#include "boost/lexical_cast.hpp"
+
 // local
 #include "MCOTDepositMonitor.h"
 
-static const AlgFactory<MCOTDepositMonitor> s_Factory;
-const IAlgFactory& MCOTDepositMonitorFactory = s_Factory;
 
 /** @file MCOTDepositMonitor.cpp 
  *
@@ -35,24 +35,33 @@ const IAlgFactory& MCOTDepositMonitorFactory = s_Factory;
  *  @date   20-07-2004
  */
 
+/// Declaration of algorithm factory
+
+DECLARE_ALGORITHM_FACTORY( MCOTDepositMonitor );
+
 MCOTDepositMonitor::MCOTDepositMonitor( const std::string& name, 
 					ISvcLocator* pSvcLocator ) :
-  OTMonitorAlgorithm(name, pSvcLocator),
-  m_nCrossTalkHits(0)
-{
+  GaudiHistoAlg(name, pSvcLocator),
+  m_nCrossTalkHits(0) {
   // constructor
 }
 
-MCOTDepositMonitor::~MCOTDepositMonitor()
-{
+MCOTDepositMonitor::~MCOTDepositMonitor() {
   // destructor
 }
 
-StatusCode MCOTDepositMonitor::initialize()
-{
+StatusCode MCOTDepositMonitor::initialize() {
+  
+  if("" == histoTopDir()) setHistoTopDir("OT/");
+  
+  StatusCode sc = GaudiHistoAlg::initialize();
+  if (sc.isFailure()) {
+    return Error("Failed to initialize", sc);
+  }
+  
   // Get OT Geometry from XML
   DeOTDetector* tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
-
+  
   m_nStations = tracker->nStation();
   m_firstStation = tracker->firstStation();  
 
@@ -62,9 +71,7 @@ StatusCode MCOTDepositMonitor::initialize()
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode MCOTDepositMonitor::execute()
-{
+StatusCode MCOTDepositMonitor::execute() {
   // execute
   m_nCrossTalkHits = 0;
 
@@ -72,9 +79,8 @@ StatusCode MCOTDepositMonitor::execute()
   LHCb::MCOTDeposits* depCont = 
     get<LHCb::MCOTDeposits>( LHCb::MCOTDepositLocation::Default );
 
-
   // number of deposits
-  m_nDepositsHisto->fill((double)depCont->size(),1.0);
+  m_nDepositsHisto->fill((double)depCont->size(),1.);
 
   // histos per deposit
   LHCb::MCOTDeposits::iterator iterDep;
@@ -88,106 +94,79 @@ StatusCode MCOTDepositMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCOTDepositMonitor::initHistograms()
-{
-  // Intialize histograms
-  std::string tDirPath = this->histoDirPath();
-
+StatusCode MCOTDepositMonitor::initHistograms() {
+ 
   // number of deposits in container
-  m_nDepositsHisto= histoSvc()->book(tDirPath+"1","num deposits",200,0.,20000.);
-
-  // number of deposits per station
-  if ( fullDetail() ) {
-    m_nHitsPerStationHisto = histoSvc()->book(tDirPath+"2","n deposit per stat",
-                                              3, 0.5, 3.5);
-  }
-  
+  m_nDepositsHisto= book(1, "nDeposits",0., 20000., 200);
   // number of deposits per layer
-  m_nHitsPerLayerHisto = histoSvc()->book( tDirPath+"3","n deposit per layer",
-                                           25, 9.5, 34.5);
-  
+  m_nHitsPerLayerHisto = book(3, "nDeposits per layer", 9.5, 34.5, 25);
   // drift distance
-  m_driftDistHisto = histoSvc()->book( tDirPath+"6","drift distance", 
-                                       50, 0., 5.);
+  m_driftDistHisto = book(6, "Drift distance", 0., 5., 50);
   
   // number of crosstalk hits in container
   if ( fullDetail() ) {
-    m_nCrossTalkHisto= histoSvc()->book( tDirPath+"11",
-                                         "num XTalk and noise deposits",
-                                         100, 0., 1000.);
+    // number of deposits per station
+    m_nHitsPerStationHisto = book(2, "nDeposit per stat", 0.5, 3.5, 3);
+    m_nCrossTalkHisto= book(11, "Number XTalk and noise deposits", 0., 1000., 100);
 
     // histograms per station
-    int ID;
+    int id;
     AIDA::IHistogram1D* aHisto1D;
     AIDA::IHistogram2D* aHisto2D;
-    int iStation;
     // drift time spectra
-    for (iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
-      ID=100+iStation;
-      std::string aString= this->intToString(ID);
-      aHisto1D = histoSvc()->book( tDirPath+this->intToString(ID),
-                                  "deposit time station "+
-                                   this->intToString(iStation),
-                                   250, -50.0*ns, 200.0*ns );
+    for (int iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
+      std::string stationToString = boost::lexical_cast<std::string>(iStation);
+      id=100+iStation;
+      aHisto1D = book(id, "Deposit time per station "+stationToString,
+		      -50.0*ns, 200.0*ns, 250);
       m_driftTimeHistos.push_back(aHisto1D);
-    }
-    
-    // x vs y
-    for (iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
-      ID=200+iStation;
-      aHisto2D = histoSvc()->book(tDirPath+this->intToString(ID),
-                                  "x(cm) vs y(cm) station "+
-                                  this->intToString(iStation), 100,
-                                  -4000./cm,4000./cm, 100,-4000./cm,4000./cm);
-      m_xvsyHistos.push_back(aHisto2D);
+      
+      /// y vs x
+      id=200+iStation;
+      aHisto2D = book2D(id, "y(cm) vs x(cm) station "+stationToString, 
+			-4000./cm,4000./cm, 800, -4000./cm,4000./cm, 800);
+      m_yvsxHistos.push_back(aHisto2D);
     }
   }
 
   return StatusCode::SUCCESS;
-
 }
 
-StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit )
-{
-  // histogram by station
+StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
+
+  // histogram per station
   const int iStation = aDeposit->channel().station();
   if ( fullDetail() ) {
     m_nHitsPerStationHisto->fill((double)iStation,1.);
   }
   
-  // by layer
+  // per layer
   const int iLayer = aDeposit->channel().layer();
   int iUniqueLayerNum = 10 * iStation + iLayer;
   m_nHitsPerLayerHisto->fill( (double)iUniqueLayerNum, 1.);
 
-  if ( fullDetail() ) {
-    m_driftTimeHistos[iStation-m_firstStation]->fill(aDeposit->time(), 1.);
-  }
-  
   // reference to mctruth
   const LHCb::MCHit* aHit = aDeposit->mcHit();
 
   if (0 != aHit) {
-    // pointer valid hit deposit is real.....
-
-    if ( fullDetail() ) {
-      // retrieve entrance + exit points and take average
-      Gaudi::XYZPoint mcHitPoint = ( aHit->entry() ) - 0.5*(aHit->exit() - aHit->entry());
-
-      // fill x vs y scatter plots    
-      m_xvsyHistos[iStation-m_firstStation]->fill(mcHitPoint.x()/cm,
-                                                    mcHitPoint.y()/cm);
-    }
-    
-    // drift distance
+      // drift distance
     m_driftDistHisto->fill(aDeposit->driftDistance(),1.0);
     // aHit valid 
   } else {
     // crosstalk hit
     m_nCrossTalkHits++;
   }
-
-  // end
+  
+  if ( fullDetail() ) {
+    m_driftTimeHistos[iStation-m_firstStation]->fill(aDeposit->time(), 1.);
+    if (0 != aHit) {
+      // retrieve entrance + exit points and take average
+      Gaudi::XYZPoint mcHitPoint = aHit->midPoint();
+      // fill y vs x scatter plots    
+      m_yvsxHistos[iStation-m_firstStation]->fill(mcHitPoint.x()/cm,
+						  mcHitPoint.y()/cm);
+    }
+  }
+ 
   return StatusCode::SUCCESS;
-
 }

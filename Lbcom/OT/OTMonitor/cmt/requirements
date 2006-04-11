@@ -1,15 +1,15 @@
 package OTMonitor
-version v2r1
+version v2r2
 
 branches cmt doc src
 
 include_path none
 
-use LinkerEvent v*      Event
+use GaudiAlg    v*
+use OTDet       v*      Det
 use MCEvent     v*      Event
 use DigiEvent   v*      Event
-use OTDet       v*      Det
-use GaudiAlg    v*
+use LinkerEvent v*      Event
 
 # ================= component library ====================
 library OTMonitor ../src/*.cpp -import=AIDA
