@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.51 2006-04-05 20:03:56 janos Exp $
+! $Id: release.notes,v 1.52 2006-04-11 19:18:49 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+!========================== OTDet v6r2 2006-04-04 ==========================
+! 2006-04-11 - Jan Amoraal
+ - Minor bug fixes
 
 !========================== OTDet v6r1 2006-04-04 ==========================
 ! 2006-04-05 - Jan Amoraal

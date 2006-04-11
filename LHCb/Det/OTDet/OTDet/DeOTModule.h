@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.10 2006-04-04 14:22:47 ebos Exp $
+// $Id: DeOTModule.h,v 1.11 2006-04-11 19:18:49 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -348,6 +348,7 @@ inline unsigned int DeOTModule::nextRightStraw(const unsigned int aStraw) const 
   return (aStraw == m_nStraws || aStraw >= 2*m_nStraws) ? 0 : aStraw+1;
 }
 
+/// FIXME: This needs to be corrected for the inefficient region
 inline double DeOTModule::wireLength() const {
   return m_ySizeModule;
 };
@@ -389,16 +390,17 @@ inline int DeOTModule::hitStrawB(const double u) const {
   return strawB;
 }
 
+/// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-  return (m_longModule && this->bottomModule() &&
-          (0.5*m_ySizeModule - y) < m_inefficientRegion) ? false : true;
+  return !((m_longModule && this->topModule() &&
+	    (m_yHalfModule + y) < m_inefficientRegion));
 }
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-  return (m_longModule && this->topModule() &&
-          (0.5*m_ySizeModule + y) < m_inefficientRegion) ? false : true;
+  return !((m_longModule && this->bottomModule() &&
+	    (m_yHalfModule - y) < m_inefficientRegion));
 }
 
 #endif  // OTDET_DEOTMODULE_H

@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.10 2006-04-04 14:23:16 ebos Exp $
+// $Id: DeOTModule.cpp,v 1.11 2006-04-11 19:18:49 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -68,7 +68,8 @@ StatusCode DeOTModule::initialize()
   m_layerID = (unsigned int) layer->params()->param<int>("layerID");
   m_stationID = (unsigned int) station->params()->param<int>("stationID");
   m_nStraws = (unsigned int) param<int>("nStraws");
-  m_longModule = ((this->geometry())->lvolumeName() == "/dd/Geometry/OT/Modules/lvLModule");
+  m_longModule = ((this->geometry())->lvolumeName() 
+		  == "/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvLModule");
   m_stereoAngle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
@@ -125,7 +126,7 @@ StatusCode DeOTModule::findDocaParams(const Gaudi::XYZPoint& entryPoint,
   double e_pDote_w = pUnit.Dot(wUnit);
   
   double dnom = 1.0 - gsl_pow_2(e_pDote_w);
-  double eps = 0.001;
+  double eps = 0.0001;
   
   if ( dnom > eps ) {
     lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
@@ -182,7 +183,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   driftDistances.clear(); ///< This should erase all elements, if any.
   
   /// OK, so apparently the points are inside, so let's get the
-  /// the range of straws that might have hits. First we need to
+  /// the range of straws that might contain hits. First we need to
   /// convert the points to the local coordinate system of the module.
   const IGeometryInfo* gi = this->geometry();
   Gaudi::XYZPoint enP = gi->toLocal(entryPoint);
@@ -206,24 +207,24 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   double exY = exP.y();
   if (enY > exY) std::swap(enY,exY);
   double yMiddle = (enY + exY)/2;
-
+  
   /// Need this to check that enZ and exZ aren't sort of in the same plane,
   /// i.e. not a curly track. These are typically low momentum (50 MeV) 
   /// electrons.
   double enZ = enP.z();
   double exZ = exP.z();
-  bool samePlane = fabs(enZ-exZ) < 1.*m_cellRadius;
+  bool samePlane = std::abs(enZ-exZ) < 1.*m_cellRadius;
   
-
   Gaudi::XYZPoint wB;
   Gaudi::XYZPoint wT;
   Gaudi::XYZVector e_w; ///< Unit vector parallel to wire
   
-  wB.SetY(-m_yHalfModule);
-  wT.SetY(m_yHalfModule);
- 
-  MsgStream msg( msgSvc(), name() );
-  
+  /// See LHCb note: 2003-019
+  // If top long module wire length in monolayer A is 2.45m - 0.036m
+  isEfficientA(yMiddle)?wB.SetY(-m_yHalfModule+m_inefficientRegion):wB.SetY(-m_yHalfModule);
+  // If bottom long module wirelength in monolayer B is 2.45m - 0.036m
+  isEfficientB(yMiddle)?wT.SetY(m_yHalfModule-m_inefficientRegion):wT.SetY(m_yHalfModule);
+    
   if (!samePlane) { // Track in cell
   
     OTChannelID tmpChannel;
@@ -254,7 +255,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     }
 
     /// second layer
-    /// This should be wX.SetZ(m_zpitch)
     wB.SetZ(0.5*m_zPitch);
     wT.SetZ(0.5*m_zPitch);
     iStraw = rStraws.begin();
@@ -404,7 +404,7 @@ double DeOTModule::distanceAlongWire(const double xHit,
 
   // For the upper modules of the station the readout is above.
   return ( this->topModule() ) ? 
-    m_ySizeModule/2. - localPoint.y() : m_ySizeModule/2. + localPoint.y();
+    m_yHalfModule - localPoint.y() : m_yHalfModule + localPoint.y();
 }
 
 Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int straw) const {
@@ -427,12 +427,13 @@ double DeOTModule::z() const {
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
+/// FIXME: This needs to be corrected for the inefficient region
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory( const OTChannelID& aChan,
                                                         const double /*offset*/ ) const 
 {
   LineTraj* traj = 0;
   if( contains( aChan) == true ) {
-    double halfSizeModule = m_ySizeModule/2.;
+    double halfSizeModule = m_yHalfModule;
     // Trajectory points from beamline towards readout.
     if( bottomModule() ) halfSizeModule *= -1.;
     const unsigned int straw = aChan.straw();
