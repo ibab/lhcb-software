@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.cpp,v 1.1 2005-10-17 08:56:55 jonrob Exp $
+ *  $Id: RichSide.cpp,v 1.2 2006-04-11 14:13:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -16,7 +16,7 @@
 #include "Kernel/RichSide.h"
 
 // Text conversion for Rich::Side enumeration
-inline std::string Rich::text( const Rich::Side side )
+std::string Rich::text( const Rich::Side side )
 {
   switch( side ) 
   {
