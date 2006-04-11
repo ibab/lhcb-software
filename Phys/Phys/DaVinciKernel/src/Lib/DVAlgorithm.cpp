@@ -240,7 +240,7 @@ StatusCode DVAlgorithm::finalize () {
 }
  
 //=============================================================================
-void DVAlgorithm::imposeOutputLocation(std::string outputLocationString){
+void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString){
   if ( 0==desktop() ) {
     fatal() << "Desktop has not been created yet" << endmsg;
   }

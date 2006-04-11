@@ -62,10 +62,10 @@ public:
   const LHCb::Vertex::ConstVector secondaryVertices() ;
 
   /// Add a particle to the DeskTop to which it belongs
-  const LHCb::Particle* save( LHCb::Particle* partToSave );
+  const LHCb::Particle* save( const LHCb::Particle* partToSave );
   
   /// Add a vertex to the DeskTop
-  const LHCb::Vertex* save( LHCb::Vertex* vertToSave );
+  const LHCb::Vertex* save( const LHCb::Vertex* vertToSave );
   
   /// Save all particles and vertices in the DeskTop to the TES
   StatusCode saveDesktop();
@@ -73,11 +73,11 @@ public:
   /// Save a vector of Particles in TES.
   /// If a particle is composite its descendents are also saved, but the
   /// rest of the particles in the Desktop are not saved.
-  StatusCode saveTrees( LHCb::Particle::ConstVector& );
+  StatusCode saveTrees( const LHCb::Particle::ConstVector& );
   
   //Clone all particles given by a list. This duplicates information on the TES
   // and should be used only when necessary.
-  StatusCode cloneTrees( LHCb::Particle::ConstVector& );
+  StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
   
   /// Save all Particles and its descendent with a given particleID code,
   /// the rest of the particles in the Desktop are not saved.
@@ -85,7 +85,7 @@ public:
   
   /// Save all particles and vertices specified in the lists, this is
   /// used internally and no tree structure is propagated.
-  StatusCode saveDesktop( LHCb::Particle::ConstVector& pToSave, 
+  StatusCode saveDesktop( const LHCb::Particle::ConstVector& pToSave, 
                           LHCb::Vertex::ConstVector& vToSave);
   
   /// Find all particles & vertices in a tree. 
@@ -98,7 +98,7 @@ public:
   
   //hrp
   // Set output location
-  void imposeOutputLocation(std::string outputLocationString);
+  void imposeOutputLocation(const std::string& outputLocationString);
 
   std::string getOutputLocation(){ return m_outputLocn ;};
 

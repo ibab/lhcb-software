@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.10 2006-04-10 16:06:33 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.11 2006-04-11 09:46:06 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -42,31 +42,31 @@ public:
   virtual const LHCb::Vertex::ConstVector secondaryVertices() = 0;
 
   /// Add the particles  to the Desktop
-  virtual const LHCb::Particle* save( LHCb::Particle* input=0 ) = 0;
+  virtual const LHCb::Particle* save( const LHCb::Particle* input=0 ) = 0;
 
   /// Add the vertices  to the Desktop
-  virtual const LHCb::Vertex* save( LHCb::Vertex* input=0 ) = 0;
+  virtual const LHCb::Vertex* save( const LHCb::Vertex* input=0 ) = 0;
 
   /// Save the particles to the TES
   virtual StatusCode saveDesktop() = 0;
  
   /// Save the particles to the TES (used by HLT)
-  virtual StatusCode saveDesktop(LHCb::Particle::ConstVector&,
+  virtual StatusCode saveDesktop(const LHCb::Particle::ConstVector&,
                                  LHCb::Vertex::ConstVector& ) = 0;
  
   /// Save a vector of Particles
   /// If a particle is composite its descendents are also saved
-  virtual StatusCode saveTrees( LHCb::Particle::ConstVector& ) = 0;
+  virtual StatusCode saveTrees( const LHCb::Particle::ConstVector& ) = 0;
 
   /// Save all Particles with a given particleID code
   virtual StatusCode saveTrees( int pid ) = 0;
 
-  /// Clone all particles given by a list. This duplicates information on the TES
-  /// and should be used only when necessary. (Used by Filters)
-  virtual StatusCode cloneTrees( LHCb::Particle::ConstVector& ) = 0;
+  /// Clone all particles given by a list. This duplicates information 
+  /// on the TES and should be used only when necessary. (Used by Filters)
+  virtual StatusCode cloneTrees( const LHCb::Particle::ConstVector& ) = 0;
 
   /// Impose output location
-  virtual void imposeOutputLocation(std::string outputLocationString) = 0;
+  virtual void imposeOutputLocation(const std::string& outputLocationString) = 0;
 
   /// Get output location
   virtual std::string getOutputLocation() = 0 ;

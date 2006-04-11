@@ -263,9 +263,9 @@ StatusCode PhysDesktop::finalize(){
 //=============================================================================
 // Save a new particle in the DeskTop
 //=============================================================================
-const LHCb::Particle* PhysDesktop::save( LHCb::Particle* partToSave ){
+const LHCb::Particle* PhysDesktop::save( const LHCb::Particle* partToSave ){
 
-  verbose() << "save(LHCb::Particle) in desktop" << endmsg;
+  verbose() << "save(const LHCb::Particle) in desktop" << endmsg;
 
   // Input particle is given check if it already exist in the stack
   if( ( 0 != partToSave ) && ( inDesktop( partToSave ) )) {
@@ -315,7 +315,7 @@ const LHCb::Particle* PhysDesktop::save( LHCb::Particle* partToSave ){
 //=============================================================================
 // Create a new vertex
 //=============================================================================
-const LHCb::Vertex* PhysDesktop::save( LHCb::Vertex* vtxToSave ){
+const LHCb::Vertex* PhysDesktop::save( const LHCb::Vertex* vtxToSave ){
 
   verbose() << "save (LHCb::Vertex) in desktop" << endmsg;
 
@@ -378,8 +378,8 @@ StatusCode PhysDesktop::saveDesktop() {
 //=============================================================================
 // Save all specified particles & vertices in the Desktop to the TES
 //=============================================================================
-StatusCode PhysDesktop::saveDesktop( LHCb::Particle::ConstVector& pToSave,
-                                     LHCb::Vertex::ConstVector& vToSave) {
+StatusCode PhysDesktop::saveDesktop(const LHCb::Particle::ConstVector& pToSave,
+                                    LHCb::Vertex::ConstVector& vToSave) {
 
   verbose() << "Save specified particles and vertices " << endmsg;
 
@@ -433,7 +433,8 @@ StatusCode PhysDesktop::saveDesktop( LHCb::Particle::ConstVector& pToSave,
 // Save only this list of particles and their tree in TES
 // If bottom of trees is in TES it will be copied in the new location
 //=============================================================================
-StatusCode PhysDesktop::saveTrees(LHCb::Particle::ConstVector& pToSave) {
+StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave)
+{
 
   verbose() << " PhysDesktop SaveTrees(LHCb::Particle::ConstVector)" << endmsg;
 
@@ -480,7 +481,7 @@ StatusCode PhysDesktop::saveTrees( int partid ) {
 //=============================================================================
 // Clone selected particles
 //=============================================================================
-StatusCode PhysDesktop::cloneTrees( LHCb::Particle::ConstVector& pToSave ) {
+StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave ) {
 
   LHCb::Particle::ConstVector cloned;
   for (LHCb::Particle::ConstVector::const_iterator i=pToSave.begin();
@@ -687,7 +688,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
 //=============================================================================
 // Impose OutputLocation
 //=============================================================================
-void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
+void PhysDesktop::imposeOutputLocation(const std::string& outputLocationString){
   if (outputLocationString != m_outputLocn) {
     if (m_locationWarned)
     {

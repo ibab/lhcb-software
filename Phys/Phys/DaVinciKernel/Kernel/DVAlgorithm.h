@@ -61,7 +61,7 @@ public:
 
   /// Imposes an output location for desktop different from algo name
   /// Should be avoided!
-  void imposeOutputLocation (std::string outputLocationString);  
+  void imposeOutputLocation (const std::string& outputLocationString);  
 
   /// get algorithm ID
   int getAlgorithmID();

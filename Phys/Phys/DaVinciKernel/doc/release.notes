@@ -2,6 +2,12 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !============================================================================
 
+! 2006-04-11 - J.P.Palacios
+   Kernel/IPhysiceDesktop.h
+   . Add const qualifiers to return values and arguments of some methods.
+   . Changes propagated to PhysDesktop and DVAlgorithm.
+
+
 ! 2006-04-10 - J.P. Palacios
  - Kernel/IPhysiceDesktop.h
    . Change createParticle and createVertex: return value is now const,
