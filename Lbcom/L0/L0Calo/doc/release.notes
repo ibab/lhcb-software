@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2006-04-12 - Olivier Callot
+ - Split the Raw Bank produced by L0CaloCandidate into two banks, one for 
+   HCAL and one for the rest
+
 !========================= L0Calo v9r1 2006-03-22 =========================
 ! 2006-03-22 - Olivier Deschamps
  - Fix bug in L0CaloCandidateFromRaw.cpp : CaloCandidate type 

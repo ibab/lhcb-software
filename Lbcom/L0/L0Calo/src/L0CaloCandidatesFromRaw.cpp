@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.6 2006-03-22 23:57:04 odescham Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.7 2006-04-12 12:44:38 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -80,6 +80,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   for ( itBnk = data.begin() ; data.end() != itBnk ; itBnk++ ) {
     unsigned int* ptData = (*itBnk)->data();
     int bankSize = (*itBnk)->size()/4;  //== is in bytes...
+    debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
       int type = cand>>24 & 0xFF;

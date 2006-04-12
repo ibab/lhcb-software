@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.34 2006-03-24 15:09:13 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.35 2006-04-12 12:44:37 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -369,7 +369,8 @@ StatusCode L0CaloAlg::execute() {
   // Prepare the output container, register it and then fill it.
   //===========================================================================
 
-  m_rawOutput.clear();
+  m_rawOutput[0].clear();
+  m_rawOutput[1].clear();
     
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
   put( L0Calo, m_nameOfOutputDataContainer );
@@ -408,41 +409,44 @@ StatusCode L0CaloAlg::execute() {
   //=== Store the perValidation candidates, only in Raw Event
 
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloElectron, allElectrons[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloElectron, allElectrons[kk], 1 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk], 1 );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
-    saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron );
+    saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron, 0 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Local, allPi0Local[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Local, allPi0Local[kk], 1 );
   }
   for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
-    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Global, allPi0Global[kk] );
+    saveInRawEvent(  L0DUBase::Fiber::CaloPi0Global, allPi0Global[kk], 1 );
   }
 
   if ( 0 < sumEt ) {
     int word = ( L0DUBase::Fiber::CaloSumEt << 24 ) + sumEt;
-    m_rawOutput.push_back( word );
+    m_rawOutput[0].push_back( word );
   }
   int word = ( L0DUBase::Fiber::CaloSpdMult << 24 ) + m_spdMult;
-  m_rawOutput.push_back( word );
+  m_rawOutput[1].push_back( word );
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() <<"== L0CaloFullCandidate Summary: "
-            << m_rawOutput.size() << " entries." << endreq;
+    debug() <<"== L0CaloFullCandidate  Hcal: "
+            << m_rawOutput[0].size() 
+            << " Ecal " << m_rawOutput[1].size()
+            << " entries." << endreq;
   }  
 
   //== Store in the  RAW buffer if required.
 
   if ( m_storeFlag ) {
     m_nbEvents++;
-    m_totRawSize += m_rawOutput.size();
+    m_totRawSize = m_totRawSize + m_rawOutput[0].size() + m_rawOutput[1].size();
     LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-    raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput );
+    raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput[0] );
+    raw->addBank( 1, LHCb::RawBank::L0Calo, 0, m_rawOutput[1] );
   }
 
   return StatusCode::SUCCESS;
@@ -637,13 +641,13 @@ void L0CaloAlg::addSpdData( ) {
 //=========================================================================
 //  Save a candidate in the Raw buffer
 //=========================================================================
-void L0CaloAlg::saveInRawEvent ( int type, L0Candidate& cand ) {
+void L0CaloAlg::saveInRawEvent ( int type, L0Candidate& cand, unsigned int bank ) {
 
   //== Coding for Raw: type (upper 8 bits), id (next 16) and et (low 8 bits). 
   if ( 0 == cand.et() ) return;
 
   int word = ( type << 24 ) + (cand.ID().index() << 8 ) + cand.et();
-  m_rawOutput.push_back( word );
+  m_rawOutput[bank].push_back( word );
 }
 
 //=============================================================================

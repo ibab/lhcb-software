@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.16 2006-02-18 11:20:41 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.17 2006-04-12 12:44:37 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -97,7 +97,7 @@ protected:
   void addPrsData(  );  ///< process the Prs information
   void addSpdData(  );  ///< Produce the Spd data
 
-  void saveInRawEvent( int, L0Candidate& ); ///< Save in Raw Event.
+  void saveInRawEvent( int, L0Candidate&, unsigned int bank ); ///< Save in Raw Event.
   
 private:
 
@@ -123,7 +123,7 @@ private:
   // Validation
   int         m_nbValidation;
 
-  std::vector<unsigned int> m_rawOutput; ///< RAW output bank
+  std::vector<unsigned int> m_rawOutput[2]; ///< RAW output bank
 
   bool m_storeFlag;
 
