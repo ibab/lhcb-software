@@ -1,4 +1,4 @@
-// $Id: MCTruthMonitor.cpp,v 1.2 2005-12-16 20:13:50 gcorti Exp $
+// $Id: MCTruthMonitor.cpp,v 1.3 2006-04-12 18:40:02 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -95,7 +95,9 @@ StatusCode MCTruthMonitor::execute() {
   LHCb::MCParticles::const_iterator ip;
   for( ip = particles->begin(); particles->end() != ip; ++ip ) {
     m_hPOrigZ->fill((*ip)->originVertex()->position().z()/mm);
-    m_hPOrigT->fill((*ip)->originVertex()->type());
+    int vtype = (*ip)->originVertex()->type();
+    if( vtype >=100 ) { vtype = vtype - 100 + 10; }
+    m_hPOrigT->fill(vtype);
     m_hPMom->fill((*ip)->p()/GeV);
     if( (*ip)->originVertex()->type() == LHCb::MCVertex::ppCollision ) {
       m_hPPrimMom->fill((*ip)->p()/GeV);
@@ -144,7 +146,9 @@ StatusCode MCTruthMonitor::execute() {
   m_hNVert->fill(vertices->size());
   LHCb::MCVertices::const_iterator iv;
   for( iv = vertices->begin(); vertices->end()!= iv; ++iv ) {
-    m_hVType->fill((*iv)->type());
+    int vtype = (*iv)->type();
+    if( vtype >=100 ) { vtype = vtype - 100 + 10; }
+    m_hVType->fill(vtype);
     m_hVZpos->fill((*iv)->position().z()/mm);
     m_hVZpos2->fill((*iv)->position().z()/mm);
     m_hVTime->fill((*iv)->time()/ns);

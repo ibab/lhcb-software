@@ -4,13 +4,18 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
-!=================== GaussMonitor v3r1 2007-03-27 ============================
+!=================== GaussMonitor v3r2 2006-04-12 ============================
+! 2006-04-12 - Gloria CORTI
+ - To fit in hsiograms boundaries, scale down MCVertexType >= 100
+   . MCTruthMonitor.cpp
+
+!=================== GaussMonitor v3r1 2006-03-27 ============================
 ! 2006-03-23 - Juan PALACIOS
  - Change use of std::vector<LHCb::MCParticle*> to 
    LHCb::MCParticle::ConstVector in MCDecayCounter to match 
    new IMCDecayFinder interface.
 
-!=================== GaussMonitor v3r0 2007-01-27 ============================
+!=================== GaussMonitor v3r0 2006-01-27 ============================
 ! 2006-01-27 - Gloria CORTI
  - Fix bug resulting in not filling stable Pt histogram
 
