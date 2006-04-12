@@ -14,6 +14,9 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTo
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                          "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
 
+// pixel monitor
+CheckRICHSeq.Members += { "RichRecPixelQC" };
+
 // Reco QC
 // All tracks
 //CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
@@ -49,5 +52,3 @@ CheckRICHSeq.Members += { "RichRecoQC/RiCKResMCRichTrack" };
 RiCKResMCRichTrack.TrackSelection  = { "unique","positive","negative","MCRichTrack" };
 RiCKResMCRichTrack.HistoPrint      = true;
 
-// pixel monitor
-CheckRICHSeq.Members += { "RichRecPixelQC" };

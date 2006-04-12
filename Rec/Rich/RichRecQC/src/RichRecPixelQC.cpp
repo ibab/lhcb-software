@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.3 2006-03-22 10:02:29 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.4 2006-04-12 13:47:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -139,7 +139,6 @@ StatusCode RichRecPixelQC::execute()
       bool isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK;
       getHistories( (*iPixel)->smartID(), 
                     isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK );
-
       // count
       ++nHPDHits;
       ++pixels[rich];

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.1 2006-03-02 15:26:29 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.2 2006-04-12 13:46:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,6 +29,12 @@
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
+#include "RichKernel/IRichSmartIDTool.h"
+
+// Event
+#include "Event/MCRichHit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichPixelPositionMonitor RichPixelPositionMonitor.h
@@ -57,7 +63,14 @@ public:
 
 private: // data
 
-  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  /// Pointer to RichRecMCTruthTool interface
+  const IRichRecMCTruthTool* m_richRecMCTruth;
+
+  /// Pointer to MC truth tool
+  const IRichMCTruthTool * m_mcTool;
+  
+  /// Pointer to RichSmartID tool
+  const IRichSmartIDTool * m_idTool;
 
   // variables for average PD positions
   Rich::Map<LHCb::RichSmartID::KeyType, double> m_xHits;
