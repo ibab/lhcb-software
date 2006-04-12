@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.3 2006-04-12 14:30:25 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.4 2006-04-12 16:40:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -260,12 +260,13 @@ StatusCode RichPixelPositionMonitor::execute()
     // HPD
     const RichSmartID hpdID = (*iPD).first;
     const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpdID);
+    const RichDAQ::Level0ID l0ID        = m_richSys->level0ID(hpdID);
     // Centre point of HPD in local coords
     const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(hpdID);
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
     // create histo title
     std::ostringstream HPD;
-    HPD << hpdID << " " << hpdGlo;
+    HPD << hpdID << " L0ID=" << l0ID << " hardID=" << hardID << " pos=" << hpdGlo;
     // histo ID
     const std::string Hid = "hpds/"+(std::string)hardID ;
     for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPD).second.begin();
@@ -274,7 +275,8 @@ StatusCode RichPixelPositionMonitor::execute()
       // hit point on silicon in local coords
       const Gaudi::XYZVector hitP
         = m_idTool->globalToPDPanel( m_idTool->globalPosition(*iS) ) - hpdLoc;
-      plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*mm, 8*mm, -8*mm, 8*mm, 32, 32 );
+      verbose() << "Hit " << (*iS) << " " << hitP << endreq;
+      plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*mm, 40*mm, -40*mm, 40*mm, 32, 32 );
     }
   }
 
