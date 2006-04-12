@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.13 2006-04-06 13:57:09 dhcroft Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.14 2006-04-12 14:38:25 mtobin Exp $
 // Include files 
 
 // local
@@ -52,7 +52,7 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
   m_lhcbID = LHCbID( m_cluster->channelID() );
   const DeVeloPhiType* phiDet=det.phiSensor( m_cluster->channelID() );
   m_z = phiDet->z();
-  m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
+  m_trajectory = phiDet->trajectory( m_lhcbID.veloID() , m_cluster->interStripFraction() );
 
   // TODO: Get this from the VeloDet
   StatusCode sc = phiDet->globalOrigin(m_origin);

@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.11 2006-04-06 13:57:09 dhcroft Exp $
+// $Id: VeloRMeasurement.cpp,v 1.12 2006-04-12 14:38:25 mtobin Exp $
 // Include files
 
 // local
@@ -51,7 +51,7 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
   m_lhcbID = LHCbID( m_cluster->channelID() );
   const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
   m_z = rDet->z();
-  m_trajectory = det.trajectory( m_lhcbID, m_cluster->interStripFraction() );
+  m_trajectory = rDet->trajectory( m_lhcbID.veloID(), m_cluster->interStripFraction() );
 
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position( &cluster );
   m_measure = rDet->rOfStrip(clusInfo.strip) + 
