@@ -4,7 +4,7 @@ version v4r0
 branches src cmt doc options
 
 # include directory
-include_dirs $(MUONIDROOT)
+include_path none
 
 # add "use" statements
 use GaudiAlg           v*
