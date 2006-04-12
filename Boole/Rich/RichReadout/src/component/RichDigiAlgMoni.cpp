@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.8 2006-03-01 09:53:54 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.9 2006-04-12 13:46:09 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -112,9 +112,9 @@ StatusCode RichDigiAlgMoni::execute()
 
     // increment PD multiplicity count
     ++pdMult[id.hpdID()];
-    if ( (*iMcDigit)->history().hpdQuartzCK() ) 
-    { 
-      ++hpdCKMult[id.rich()]; 
+    if ( (*iMcDigit)->history().hpdQuartzCK() )
+    {
+      ++hpdCKMult[id.rich()];
       hasHPDQuartzCKBkg[id.hpdID()] = true;
     }
 
@@ -148,10 +148,28 @@ StatusCode RichDigiAlgMoni::execute()
       // Compare digit/hit err for signal hits only
       if ( !(*iHit)->isBackground() )
       {
+
         plot1D( point.x() - (*iHit)->entry().x(), hid(rich,"digErrX"), "digit-hit diff X", -10, 10 );
         plot1D( point.y() - (*iHit)->entry().y(), hid(rich,"digErrY"), "digit-hit diff Y", -10, 10 );
         plot1D( point.z() - (*iHit)->entry().z(), hid(rich,"digErrZ"), "digit-hit diff Z", -10, 10 );
         plot1D( sqrt((point-(*iHit)->entry()).Mag2()), hid(rich,"digErrR"), "digit-hit diff R", -10, 10 );
+
+        // Get MCRichOptical Photon
+        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
+        if ( mcPhot )
+        {
+          // Compare position on HPD entrance window
+          const Gaudi::XYZPoint & mcPoint = mcPhot->pdIncidencePoint();
+          plot1D( point.X()-mcPoint.X(), hid(rich,"pdImpX"),
+                  "dX on HPD entry window : CK signal only", -30, 30 );
+          plot1D( point.Y()-mcPoint.Y(), hid(rich,"pdImpY"),
+                  "dY on HPD entry window : CK signal only", -30, 30 );
+          plot1D( point.Z()-mcPoint.Z(), hid(rich,"pdImpZ"),
+                  "dZ on HPD entry window : CK signal only", -30, 30 );
+          plot1D( sqrt((point-mcPoint).Mag2()), hid(rich,"pdImpR"),
+                  "dR on HPD entry window : CK signal only",  0, 10 );
+        }
+
       }
 
       // Count beta=1 PEs
@@ -184,19 +202,19 @@ StatusCode RichDigiAlgMoni::execute()
   for ( PDMulti::const_iterator iOcc = pdMult.begin();
         iOcc != pdMult.end(); ++iOcc )
   {
-    plot1D( (*iOcc).second, hid(((*iOcc).first).rich(),"digPerPD"), "Digits per HPD (nDigits>0)", 
+    plot1D( (*iOcc).second, hid(((*iOcc).first).rich(),"digPerPD"), "Digits per HPD (nDigits>0)",
             -0.5, 200.5, 201 );
     std::ostringstream HPD;
-    HPD << (*iOcc).first; 
-    plot1D( (*iOcc).second, 
-            hid(((*iOcc).first).rich(),"hpdOcc/"+(std::string)m_richSys->hardwareID((*iOcc).first)), 
-            HPD.str() + " Digits (nDigits>0)", 
+    HPD << (*iOcc).first;
+    plot1D( (*iOcc).second,
+            hid(((*iOcc).first).rich(),"hpdOcc/"+(std::string)m_richSys->hardwareID((*iOcc).first)),
+            HPD.str() + " Digits (nDigits>0)",
             -0.5, 200.5, 201 );
     if ( hasHPDQuartzCKBkg[(*iOcc).first] )
     {
-      plot1D( (*iOcc).second, 
-              hid(((*iOcc).first).rich(),"hpdOccWithHPDQCK/"+(std::string)m_richSys->hardwareID((*iOcc).first)), 
-              HPD.str() + " Digits (nDigits>0 and nHPDQCK>0)", 
+      plot1D( (*iOcc).second,
+              hid(((*iOcc).first).rich(),"hpdOccWithHPDQCK/"+(std::string)m_richSys->hardwareID((*iOcc).first)),
+              HPD.str() + " Digits (nDigits>0 and nHPDQCK>0)",
               -0.5, 200.5, 201 );
     }
   }
@@ -338,41 +356,41 @@ StatusCode RichDigiAlgMoni::execute()
   // Loop over counted PES for MCRichHits
   {for ( PhotMap::iterator iPhot = ckPhotMapHit.begin();
          iPhot != ckPhotMapHit.end(); ++iPhot )
-    {
-      plot1D( (*iPhot).second, hid( ((*iPhot).first).second, "npesHit"),
-              "# MCRichHit p.e.s : beta=1", -0.5, 100.5, 101 );
-    }}
+  {
+    plot1D( (*iPhot).second, hid( ((*iPhot).first).second, "npesHit"),
+            "# MCRichHit p.e.s : beta=1", -0.5, 100.5, 101 );
+  }}
 
   // Loop over counted PES for MCRichDeposits
   {for ( PhotMap::iterator iPhot = ckPhotMapDep.begin();
          iPhot != ckPhotMapDep.end(); ++iPhot )
-    {
-      plot1D( (*iPhot).second, hid( ((*iPhot).first).second, "npesDep"),
-              "# MCRichDeposit p.e.s : beta=1", -0.5, 100.5, 101 );
-    }}
+  {
+    plot1D( (*iPhot).second, hid( ((*iPhot).first).second, "npesDep"),
+            "# MCRichDeposit p.e.s : beta=1", -0.5, 100.5, 101 );
+  }}
 
   // Loop over counted PES for MCRichDigits
   {for ( PhotMap::iterator iPhot = ckPhotMapDig.begin();
          iPhot != ckPhotMapDig.end(); ++iPhot ) {
 
-      const double digCount = (*iPhot).second;
-      plot1D( digCount, hid(((*iPhot).first).second,"npesDig"),
-              "# MCRichDigit p.e.s : beta=1", -0.5, 100.5, 101 );
+    const double digCount = (*iPhot).second;
+    plot1D( digCount, hid(((*iPhot).first).second,"npesDig"),
+            "# MCRichDigit p.e.s : beta=1", -0.5, 100.5, 101 );
 
-      // locate the entry for the MCRichDeps
-      const double depCount = ckPhotMapDep[ (*iPhot).first ];
+    // locate the entry for the MCRichDeps
+    const double depCount = ckPhotMapDep[ (*iPhot).first ];
 
-      const double frac = ( depCount != 0 ? digCount/depCount : 0 );
-      plot1D( frac, hid(((*iPhot).first).second,"npesRetained"),
-              "Retained p.e.s : beta=1", 0, 1 );
+    const double frac = ( depCount != 0 ? digCount/depCount : 0 );
+    plot1D( frac, hid(((*iPhot).first).second,"npesRetained"),
+            "Retained p.e.s : beta=1", 0, 1 );
 
-    }}
+  }}
 
   return StatusCode::SUCCESS;
 }
 
-void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap, 
-                                    const std::string & plotsDir, 
+void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
+                                    const std::string & plotsDir,
                                     const std::string & plotsName )
 {
   // histogramming
@@ -420,7 +438,7 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
     plot1D( uniqueIDs.size(), plotsDir+"/"+hid(hpdID.rich(),"/nDigsPerHPD"),
             "# digits per HPD from "+plotsName, 0.5, 200.5, 100 );
     // position of HPD
-    plot2D( hpdLoc.X(), hpdLoc.Y(), 
+    plot2D( hpdLoc.X(), hpdLoc.Y(),
             plotsDir+"/"+hid(hpdID.rich(),"hitHPDs"), "Location of hpd Quartz CK affect HPDs",
             xMinPDLoc[hpdID.rich()],xMaxPDLoc[hpdID.rich()],
             yMinPDLoc[hpdID.rich()],yMaxPDLoc[hpdID.rich()] );

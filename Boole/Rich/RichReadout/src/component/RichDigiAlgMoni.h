@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.9 2006-03-01 09:53:54 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.10 2006-04-12 13:46:09 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -17,6 +17,7 @@
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
+#include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichHit.h"
 #include "Kernel/RichParticleIDType.h"
 

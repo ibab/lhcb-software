@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2006-04-05 - Chris Jones
+ - Suppress confusing warning method
+
 !======================== RichReadout v2r0p1 2006-04-05 ======================
 ! 2006-04-05 - Chris Jones
  - Suppress warnings about missing RichPixelProperties 
