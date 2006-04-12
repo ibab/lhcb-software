@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.114 2006-04-12 14:23:22 mtobin Exp $
+! $Id: release.notes,v 1.115 2006-04-12 16:06:49 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r4 2006-04-12 ========================
 ! 2006-04-12 - Mark Tobin
  - Move trajectory method to sensor classes
  - Remove stripLimitsR/Phi methods from DeVelo
