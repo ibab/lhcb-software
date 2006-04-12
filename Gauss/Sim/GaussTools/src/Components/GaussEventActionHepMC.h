@@ -1,4 +1,4 @@
-// $Id: GaussEventActionHepMC.h,v 1.1 2005-10-31 09:31:08 gcorti Exp $
+// $Id: GaussEventActionHepMC.h,v 1.2 2006-04-12 19:32:08 gcorti Exp $
 #ifndef COMPONENTS_GAUSSEVENTACTIONHEPMC_H 
 #define COMPONENTS_GAUSSEVENTACTIONHEPMC_H 1
 
@@ -6,7 +6,9 @@
 #include "GiGa/GiGaEventActionBase.h"
 // HepMC
 #include "GaussTools/MCTruthManager.h"
+
 /// forward declarations
+class IParticlePropertySvc;
 template <class TYPE> class GiGaFactory;
 
 /** @class GaussEventActionHepMC GaussEventActionHepMC.h
@@ -25,6 +27,24 @@ class GaussEventActionHepMC: public GiGaEventActionBase
   friend class GiGaFactory<GaussEventActionHepMC>;
   
 public:
+
+  /** initialize the tool
+   *  @see GiGaEventActionBase
+   *  @see GiGaBase
+   *  @see AlgTool
+   *  @see IAlgTool
+   *  @return StatusCode
+   */
+  virtual StatusCode initialize();
+
+  /** finalize the tool
+   *  @see GiGaEventActionBase
+   *  @see GiGaBase
+   *  @see AlgTool
+   *  @see IAlgTool
+   *  @return StatusCode
+   */
+  virtual StatusCode finalize();
     
   /** performs the action at the begin of each event 
    *  @param event pointer to Geant4 event object 
@@ -64,8 +84,10 @@ private:
 
 private:
 
-  MCTruthManager* mcmanager;
-  void DumpTree(HepMC::GenParticle*, int);
+  void DumpTree(HepMC::GenParticle*, std::string);
+
+  MCTruthManager*        m_mcManager;
+  IParticlePropertySvc*  m_ppSvc;
   
 };
 

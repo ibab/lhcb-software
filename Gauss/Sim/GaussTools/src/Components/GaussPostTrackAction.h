@@ -160,7 +160,7 @@ private:
   bool m_storeByOwnProcess;
   /// container for own process names
   std::vector<std::string> m_ownStoredProcess;
-
+  
   /// for flags above beside primary, forced decays and marked store up
   /// to a certain z
   bool m_storeUpToZmax;
@@ -168,6 +168,8 @@ private:
   double m_zMaxToStore;
   /// bool to keep or not RICHPhotoelectrons
   bool m_rejectRICHphe;
+  /// bool to keep or not optical photons
+  bool m_rejectOptPhot;
 
 };
 

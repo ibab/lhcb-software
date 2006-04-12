@@ -4,19 +4,54 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v12r1 2006-04-12 =======================
+! 2006-04-12 - Gloria CORTI
+ - Import changes by Witek POKORSKI for more than one split in mother
+   particles for along the step processes (i.e. two Brems in a step)
+ - Move code to fill a new particle and associated vertices in HepMC structure
+   from GaussTrackActionHepMC to MCTruthManager.
+   All information is retrieved from G4 or LHCb utilities in GaussTrackAction
+   for a given particle and passed to the AddParticle method of the
+   MCTruthManager that handles the creation of dummy intermediate particles
+   if necessary and split of a mother when a process occurs along the step.
+ - Introduce map (and accessor method) of creator process for vertex 
+   codebars to be able to identify the vertex type. Use same numbering 
+   as LHCb MCVertexType enum
+ - Introduce map (and accessor method) of oscillated particles associated
+   to particles barcode to be able to identify them later on. 
+ - When pdg id is not provided by G4 use name and ParticlePropertySvc to 
+   get the LHCb extension.
+ - Change flag from noDirectParent to directParent
+ - Code modified: 
+   . GaussTools/MCTruthManager.h
+   . GaussTools/GaussTrackInformation.h
+   . src/Lib/MCTruthManager.cpp
+   . src/Lib/GaussTrackInformation.cpp
+   . src/Components/GaussTrackActionHepMC.{h,cpp} 
+ - Introduce option to not store optical photons neither in Trajectories
+   nor in HepMC structure. By default they are not stored now since not
+   necessary normally as MCParticles. A few of them were stored and are
+   causing problems when splitting the mother since they are produced along
+   the step.
+   . src/Components/GaussPostTrackAction.{h,cpp}
+ - Move retrieval of ParticlePropertySvc into initialize method from the
+   printing of the HepMC event, otherwise the code complains that the service
+   was already requested at each event. Modify the information printed.
+   . src/Components/GaussEventActionHepMC.{h,cpp}
+ - Change level of some messages to debug since not necessary in production
+   . src/Components/GiGaRegionsTool.cpp
+
 ! 2006-04-08 - Vanya BELYAEV
  - src/Components/TrCutsRunAction.cpp
    add a check for non-null pointer to G4ParticleTable 
    (prevents occasional segmentatiou fault at the finalisation of 
    "pure generator" jobs)
- 
 
 !======================== GaussTools v12r0 2006-01-31 =======================
 ! 2006-01-31 - Gloria CORTI
  - Adapt to change in interface of IMagneticFieldSvc now returning MathCore
    quantities while Geant4 expect CLHEP
    . src/Components/GiGaMagFieldGlobal.cpp
-
 
 !=========================== GaussTools v11r0 ===============================
 ! 2005-11-10 - Gloria CORTI

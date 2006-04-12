@@ -80,17 +80,17 @@ public:
   GaussTrackInformation& setCreatedHit ( const bool value )
   { m_createdHit = value ; return *this ; }
 
-  //
-  const bool noDirectParent() const {return m_noDirectParent;}
+  // Retrieve if direct parent particle has been stored or not
+  const bool directParent() const {return m_directParent;}
 
-  //
-  GaussTrackInformation& setNoDirectParent(const bool value)
-  { m_noDirectParent = value; return *this;}
+  // Set if direct parent particle has been stored or not
+  GaussTrackInformation& setDirectParent(const bool value)
+  { m_directParent = value; return *this;}
   
-  //
+  /// Get flag to store or not in internal HepMC structure
   const bool storeHepMC() const {return m_storeHepMC;}
 
-  //
+  /// Set value of flag to store or not in internal HepMC structure
   GaussTrackInformation& setStoreHepMC(const bool value)
   { m_storeHepMC = value; return *this;}
   
@@ -144,7 +144,7 @@ private:
   bool m_createdHit ;
   /// flag indicating that the direct parent particle was not stored 
   /// in HepMC event this will be represented by a special 'dummy' link
-  bool m_noDirectParent;
+  bool m_directParent;
   // flag indicating that the track should be stored in HepMC record
   bool m_storeHepMC;
 

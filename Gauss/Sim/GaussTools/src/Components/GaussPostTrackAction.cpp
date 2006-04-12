@@ -91,6 +91,7 @@ GaussPostTrackAction::GaussPostTrackAction
     , m_storeUpToZmax( true )
     , m_zMaxToStore(11290 * mm)
     , m_rejectRICHphe ( true )
+    , m_rejectOptPhot ( true )
 {
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
@@ -112,6 +113,7 @@ GaussPostTrackAction::GaussPostTrackAction
   declareProperty( "StoreUpToZ"            , m_storeUpToZmax);
   declareProperty( "ZmaxForStoring"        , m_zMaxToStore);
   declareProperty( "RejectRICHPhotoelectrons", m_rejectRICHphe );
+  declareProperty( "RejectOpticalPhotons"   , m_rejectOptPhot );
 
 };
 // ============================================================================
@@ -293,6 +295,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       } 
     }
   }
+  if( m_rejectOptPhot ) {
+    if ( track->GetDefinition()->GetParticleName() == "opticalphoton") {
+//       Warning ( "OpticalPhotons not kept", StatusCode::SUCCESS, 0 );
+      return;
+    }
+  }    
+
   // if reject rich photoelectrons check and store
   // (3) store  all     particles ? 
   if ( m_storeAll && zstore )                                        
@@ -751,7 +760,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           dti = new GaussTrackInformation(); 
           tr->SetUserInformation(dti);
         }   
-        dti->setNoDirectParent(true); 
+        dti->setDirectParent(false); 
         //
       }      
     }

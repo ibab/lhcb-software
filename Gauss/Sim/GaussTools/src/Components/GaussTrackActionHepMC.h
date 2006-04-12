@@ -1,16 +1,17 @@
-// $Id: GaussTrackActionHepMC.h,v 1.1 2005-10-31 09:30:55 gcorti Exp $
+// $Id: GaussTrackActionHepMC.h,v 1.2 2006-04-12 19:32:08 gcorti Exp $
 #ifndef COMPONENT_GAUSSTRACKACTIONHEPMC_H 
 #define COMPONENT_GAUSSTRACKACTIONHEPMC_H 1
 
 // STD & STL 
 #include <string>
 #include <vector>
-/// GiGa 
+// GiGa 
 #include "GiGa/GiGaTrackActionBase.h"
-//
+// Gauss
 #include "GaussTools/MCTruthManager.h"
-/// forward decalrations 
+// forward decalrations 
 template <class TYPE> class GiGaFactory;
+class IParticlePropertySvc;
 
 /** @class GaussTrackActionHepMC GaussTrackActionHepMC.h
  *
@@ -34,6 +35,15 @@ public:
    */
   virtual StatusCode initialize () ; 
   
+  /** initialize the track action  
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode finalize () ; 
+
   /** perform the pre-action
    *  @see G4UserTrackingAction
    *  @param track pointer to Geant4 track object 
@@ -74,9 +84,14 @@ private:
   GaussTrackActionHepMC& operator=( const GaussTrackActionHepMC& );
   
 private:  
+  
+  int processID(const G4VProcess* creator );
 
-  MCTruthManager* mcmgr;
-  HepLorentzVector fourmomentum;
+  MCTruthManager*        m_mcMgr;
+  IParticlePropertySvc*  m_ppSvc;
+  HepLorentzVector       fourmomentum;
+
+  std::vector<std::string> m_hadronicProcesses;  
 
 };
 

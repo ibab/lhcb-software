@@ -3,15 +3,21 @@
 #include <algorithm>
 // G4
 #include "G4TrackingManager.hh"
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
+// GiGa 
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaMACROs.h"
-/// local 
-#include "GaussTrackActionHepMC.h"
+#include "GiGaCnv/GiGaPrimaryParticleInformation.h"
+// LHCb
+#include "Event/MCVertex.h"
+// Gauss
 #include "GaussTools/GaussTrackInformation.h"
+// local 
+#include "GaussTrackActionHepMC.h"
 
 // ============================================================================
 /** @file 
@@ -43,7 +49,36 @@ GaussTrackActionHepMC::GaussTrackActionHepMC
   const IInterface*  parent ) 
   : GiGaTrackActionBase( type , name , parent  ) 
 {
-  mcmgr = MCTruthManager::GetInstance();
+  m_mcMgr = MCTruthManager::GetInstance();
+
+  m_hadronicProcesses.clear();
+  m_hadronicProcesses.push_back( "KaonPlusInelastic"             ) ;
+  m_hadronicProcesses.push_back( "PionMinusAbsorptionAtRest"     ) ;
+  m_hadronicProcesses.push_back( "KaonZeroLInelastic"            ) ;
+  m_hadronicProcesses.push_back( "KaonZeroSInelastic"            ) ;
+  m_hadronicProcesses.push_back( "MuonMinusCaptureAtRest"        ) ; 
+  m_hadronicProcesses.push_back( "TritonInelastic"               ) ;
+  m_hadronicProcesses.push_back( "KaonMinusAbsorption"           ) ;
+  m_hadronicProcesses.push_back( "LambdaInelastic"               ) ;
+  m_hadronicProcesses.push_back( "SigmaMinusInelastic"           ) ;
+  m_hadronicProcesses.push_back( "LCapture"                      ) ;
+  m_hadronicProcesses.push_back( "AntiNeutronAnnihilationAtRest" ) ;
+  m_hadronicProcesses.push_back( "AntiProtonAnnihilationAtRest"  ) ;  
+  m_hadronicProcesses.push_back( "AntiLambdaInelastic"           ) ;
+  m_hadronicProcesses.push_back( "AntiXiZeroInelastic"           ) ;
+  m_hadronicProcesses.push_back( "AntiSigmaPlusInelastic"        ) ;
+  m_hadronicProcesses.push_back( "SigmaPlusInelastic"            ) ;
+  m_hadronicProcesses.push_back( "XiMinusInelastic"              ) ;
+  m_hadronicProcesses.push_back( "XiZeroInelastic"               ) ;
+  m_hadronicProcesses.push_back( "AntiSigmaMinusInelastic"       ) ;
+  m_hadronicProcesses.push_back( "AntiXiMinusInelastic"          ) ;
+  m_hadronicProcesses.push_back( "OmegaMinusInelastic"           ) ;
+  m_hadronicProcesses.push_back( "AntiOmegaMinusInelastic"       ) ;
+  m_hadronicProcesses.push_back( "AlphaInelastic"                ) ;
+  
+  std::sort ( m_hadronicProcesses.begin () ,
+              m_hadronicProcesses.end   () ) ;
+  
 };
 // ============================================================================
 
@@ -63,11 +98,22 @@ StatusCode GaussTrackActionHepMC::initialize ()
   StatusCode sc = GiGaTrackActionBase::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class!", sc ); }
-  //
+
+  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE );
 };
+
 // ============================================================================
+// finalize
+// ============================================================================
+StatusCode GaussTrackActionHepMC::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return GiGaTrackActionBase::finalize();  // must be called after all other actions
+}
 
 // ============================================================================
 /** perform the pre-action
@@ -77,8 +123,15 @@ StatusCode GaussTrackActionHepMC::initialize ()
 void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
 {
   // new track is being started
-  // we record its initial momentum
-  fourmomentum = HepLorentzVector(track->GetTotalEnergy(), track->GetMomentum());
+  // we record its initial momentum 
+  fourmomentum = HepLorentzVector( track->GetMomentum(), track->GetTotalEnergy() );
+
+  // This should have been done in GaussPostTrackAction, but check here
+  if( !track->GetUserInformation() ) {    
+    GaussTrackInformation* mcinf = new GaussTrackInformation();
+    trackMgr()->SetUserTrackInformation(mcinf);
+  }
+  
 };
 // ============================================================================
 
@@ -89,141 +142,142 @@ void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
 // ============================================================================
 void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
 {
-  //
-  HepMC::GenEvent* genevt = mcmgr->GetCurrentEvent();
+  
+//   HepMC::GenEvent* genevt = m_mcMgr->GetCurrentEvent();
   
   // if track is to be stored, create new GenParticle, and its decay vertex
   // we check the flag (store or not store) in the GaussTrackInformation
-
-  //  G4VUserTrackInformation* uinf = track->GetUserInformation(); 
   GaussTrackInformation* ginf = (GaussTrackInformation*) track->GetUserInformation();
 
-  //  if(trackMgr()->GetStoreTrajectory())
-  if(ginf->storeHepMC())
-  {
-    // we create the corresponding GenParticle
-    HepMC::GenParticle* particle = 
-      new HepMC::GenParticle(fourmomentum, track->GetDefinition()->GetPDGEncoding());
-    
-    int trid = track->GetTrackID();
-    // we use the track ID to set the barcode
-    particle->suggest_barcode(trid);
-    
-    // we create the GenVertex corresponding to the end point of the track
-    HepMC::GenVertex* endvertex = 
-      new HepMC::GenVertex(HepLorentzVector(track->GetGlobalTime(), track->GetPosition()));
-    
-    // barcode of the endvertex = - barcode of the track
-    endvertex->suggest_barcode(-trid);
-    endvertex->add_particle_in(particle);
-    genevt->add_vertex(endvertex);
+  if( ginf->storeHepMC() ) {
+    HepLorentzVector prodpos(track->GetVertexPosition(),
+                             track->GetGlobalTime() - track->GetLocalTime());
+    HepLorentzVector endpos(track->GetPosition(), track->GetGlobalTime());
 
-    int parentid = track->GetParentID();
-    HepLorentzVector prodpos(track->GetGlobalTime() - track->GetLocalTime(),
-                             track->GetVertexPosition());
-
-    if(parentid) // not primary
-    {
-      // here we could try to improve speed by searching only through particles which 
-      // belong to the given primary tree
-      HepMC::GenParticle* mother = genevt->barcode_to_particle(track->GetParentID());
-      //
-      if(mother)
-      {
-        // we first check whether the mother's end vertex corresponds to the particle's
-        // production vertex
-        HepMC::GenVertex* motherendvtx = mother->end_vertex();
-        HepLorentzVector motherendpos = motherendvtx->position();
-
-        if( motherendpos.x() == prodpos.x() &&
-            motherendpos.y() == prodpos.y() &&
-            motherendpos.z() == prodpos.z() ) // if yes, we attach the particle
-        {
-          motherendvtx->add_particle_out(particle);
-        }
-        else // if not, we check whether the mother is biological or adopted
-        {            
-          if(ginf->noDirectParent()) // adopted
-          {  
-            bool found = false;
-            // first check if any of the dummy particles has the end vertex at the right place
-            for(HepMC::GenVertex::particles_out_const_iterator it=motherendvtx->particles_out_const_begin();
-                it!=motherendvtx->particles_out_const_end(); it++)
-            {
-              if((*it)->pdg_id()==-999999)
-              {
-                HepLorentzVector dummypos = (*it)->end_vertex()->position();
-
-                if( dummypos.x() == prodpos.x() &&
-                    dummypos.y() == prodpos.y() &&
-                    dummypos.z() == prodpos.z() ) 
-                {
-                  (*it)->end_vertex()->add_particle_out(particle);
-                  found = true;
-                  break;
-                }
-              }
-            }
-            // and if not, create a dummy particle connecting to the end vertex of the mother
-            if(!found)
-            {
-              HepMC::GenVertex* childvtx = new HepMC::GenVertex(prodpos);
-              childvtx->add_particle_out(particle);
-              // the dummy vertex gets the barcode -20000000 minus the daughter particle barcode
-              childvtx->suggest_barcode(-20000000-trid);
-              genevt->add_vertex(childvtx);
-              
-              HepMC::GenParticle* dummypart = new HepMC::GenParticle(HepLorentzVector(),-999999);
-              // the dummy particle gets the barcode 20000000 plus the daughter particle barcode
-              dummypart->suggest_barcode(20000000+trid);
-              childvtx->add_particle_in(dummypart);
-              motherendvtx->add_particle_out(dummypart);
-            }
-          }
-          else // biological
-          {
-            // we 'split' the mother into two particles and create a new vertex
-            HepMC::GenVertex* childvtx = new HepMC::GenVertex(prodpos);
-            childvtx->add_particle_out(particle);
-            genevt->add_vertex(childvtx);
-            // we first detach the mother from its original vertex 
-            motherendvtx->remove_particle(mother);
-            // and attach it to the new vertex
-            childvtx->add_particle_in(mother);
-            // now we create a new particle representing the mother after interaction
-            // the barcode of the new particle is 100000000 + the original barcode 
-            HepMC::GenParticle* mothertwo = new HepMC::GenParticle(*mother);
-            mothertwo->suggest_barcode(100000000 + mother->barcode());
-            // we also reset the barcodes of the vertices
-            motherendvtx->suggest_barcode(-100000000 - mother->barcode());
-            childvtx->suggest_barcode(- mother->barcode());
-            // we attach it to the new vertex where interaction took place
-            childvtx->add_particle_out(mothertwo);
-            // and we attach it to the original endvertex
-            motherendvtx->add_particle_in(mothertwo);
-          }
-        }
-      }
-      else 
-        // mother GenParticle is not there for some reason...
-        // if this happens, we need to revised the philosophy... 
-        // a solution would be to create HepMC particles at the begining of each track
-      {
-        std::cout << "mother not there "<< track->GetDefinition()->GetParticleName() << std::endl;
-        std::cout << "barcode " << track->GetParentID() << std::endl;
+    // Get the pdgID+LHCb extension
+    int pdgID = track->GetDefinition()->GetPDGEncoding();
+    if( 0 == pdgID ) {
+      ParticleProperty* pProp = m_ppSvc->find( track->GetDefinition()->GetParticleName() );
+      if( NULL != pProp ) {
+        pdgID = pProp->pdgID();
+      } else {
+        std::string message = "PDGEncoding does not exist, G4 name is ";
+        message += track->GetDefinition()->GetParticleName();
+        Warning( message, StatusCode::SUCCESS, 10 );
       }
     }
-    else // primary
-    {
-      // 
-      HepMC::GenVertex* primaryvtx = new HepMC::GenVertex(prodpos);
 
-      primaryvtx->add_particle_out(particle);
-      genevt->add_vertex(primaryvtx);
-      // add id to the list of primaries
-      mcmgr->GetPrimaryBarcodes().push_back(trid);
-    }    
+    // get the process type of the origin vertex
+    int creatorID = processID( track->GetCreatorProcess() );
+    if( creatorID == 0 ) {
+      std::cout << "id = 0 " << std::endl;
+    }
+
+    // Get User information from primary particle to set Vertex type 
+    // OscillatedAndDecay and pointer to HepMC event in generator and barcode
+    //    LHCb::HepMCEvent* genEvent = NULL;
+    bool hasOscillated = false;
+    if( NULL != track->GetDynamicParticle() ) {
+      if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
+        G4VUserPrimaryParticleInformation* g4uInf = 
+          track->GetDynamicParticle()->GetPrimaryParticle()->GetUserInformation();
+        if( g4uInf ) {
+          GiGaPrimaryParticleInformation* uInf = 
+            (GiGaPrimaryParticleInformation*) g4uInf;
+//           uInf->signalBarcode();
+//          genEvent = uInf->pHepMCEvent();
+          hasOscillated = uInf->hasOscillated();
+          if( uInf->hasOscillated() ) {
+            std::cout << "Particle has oscillated" << std::endl;
+          }
+        }
+      }
+    }
+
+
+    m_mcMgr->AddParticle( fourmomentum, prodpos, endpos,
+                          pdgID, track->GetTrackID(), track->GetParentID(), 
+                          ginf->directParent(), creatorID, hasOscillated );
   }
-};
-// ============================================================================
 
+  // For the moment the following is in GaussPostTrackAction
+//   else {
+//     // If track is not to be stored, propagate it's parent ID (stored) to its
+//     // secondaries.    
+//     G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ;
+//     //
+//     for( unsigned int index = 0 ; index < childrens->size() ; ++index )
+//     {
+//       G4Track* tr = (*childrens)[index] ;
+//       //
+//       tr->SetParentID( track->GetParentID() );
+//       // set the flag saying that the direct mother is not stored
+//       GaussTrackInformation* mcinf = (GaussTrackInformation*) tr->GetUserInformation();
+//       if(!mcinf) tr->SetUserInformation( mcinf = new GaussTrackInformation() );
+//       mcinf->setDirectParent( false ); 
+//       //
+//     }     
+//   }
+  
+};
+
+// ============================================================================
+// processID
+// ============================================================================
+int GaussTrackActionHepMC::processID(const G4VProcess* creator ) { 
+
+  int processID = LHCb::MCVertex::Unknown;
+  if( NULL == creator ) {
+    processID = LHCb::MCVertex::DecayVertex;
+    return processID;
+  }
+  
+  if( fDecay == creator->GetProcessType() ) {
+    processID = LHCb::MCVertex::DecayVertex;
+  }
+  else if ( fHadronic == creator->GetProcessType() ) { 
+    processID = LHCb::MCVertex::HadronicInteraction;
+  }
+  else {
+    const std::string& pname = creator->GetProcessName();
+    if( "conv"== pname ) { 
+      processID = LHCb::MCVertex::PairProduction;
+    } else if( "compt" == pname ) {
+      processID = LHCb::MCVertex::Compton;
+    } else if( "eBrem" == pname || "muBrems" == pname ) {
+      processID = LHCb::MCVertex::Bremsstrahlung;
+    } else if( "annihil" == pname ) {
+      processID = LHCb::MCVertex::Annihilation;
+    } else if( "phot" == pname ) {
+      processID = LHCb::MCVertex::PhotoElectric;
+    } else if( "RichHpdPhotoelectricProcess" == pname ) {
+      processID = LHCb::MCVertex::RICHPhotoElectric;
+    } else if( "RichG4Cerenkov" == pname ) {
+      processID = LHCb::MCVertex::Cerenkov;
+    } else if( "eIoni" == pname || "hIoni" == pname || "ionIoni" == pname ||
+               "muIoni" == pname ) {
+      processID = LHCb::MCVertex::DeltaRay;
+    } else {
+      const bool found = std::binary_search( m_hadronicProcesses.begin() , 
+                                             m_hadronicProcesses.end(), pname );
+      if( found ) { 
+        processID = LHCb::MCVertex::HadronicInteraction; 
+      }
+    }
+  }
+  
+  if( processID == 0 ) {
+    // here we have an intertsting situation
+    // the process is *KNOWN*, but the vertex type 
+    // is still 'Unknown'
+    std::string message = "The process is known '" + 
+      G4VProcess::GetProcessTypeName ( creator->GetProcessType() ) + "/" +
+      creator -> GetProcessName() + "', but vertex type is still 'Unknown'";
+    Warning( message, StatusCode::SUCCESS, 10 );
+  }        
+
+  return processID;
+  
+}
+
+// ============================================================================

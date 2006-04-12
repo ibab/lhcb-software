@@ -1,4 +1,4 @@
-// $Id: GiGaRegionsTool.cpp,v 1.2 2005-11-10 18:23:15 gcorti Exp $
+// $Id: GiGaRegionsTool.cpp,v 1.3 2006-04-12 19:32:08 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -129,7 +129,7 @@ StatusCode GiGaRegionsTool::process ( const std::string& region ) const
     {
       // all regions? or only selected region?
       if( !region.empty() && ireg->region() != region ) { continue ; }
-      info() << " Process the region '" << ireg->region() << "'" << endmsg;
+      debug() << " Process the region '" << ireg->region() << "'" << endmsg;
       //
       G4Region* reg = new G4Region( ireg->region() ) ;
       // add volumes to the region
@@ -155,7 +155,7 @@ StatusCode GiGaRegionsTool::process ( const std::string& region ) const
         } 
         else if ( 0 != volume->GetRegion() &&  m_overwrite ) {
           if( (volume->GetRegion()->GetName()) == "DefaultRegionForTheWorld" ) {
-            info() << "G4Region Change for  "<<" G4LogicalVolume '"
+            debug() << "G4Region Change for  "<<" G4LogicalVolume '"
                    << (*ivolume) <<" ' to "<< reg->GetName()  << endmsg;
           } else {      
             Warning ( " G4LogicalVolume '" + (*ivolume) + 
