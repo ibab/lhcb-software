@@ -115,6 +115,11 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // Now get the charged track (ie. photoelectron )  which created the
   // hit.
   G4Track* aTrack = aStep->GetTrack();
+  // Check that tracks are charged - GC & SE April 2006
+  if( aTrack->GetDefinition()->GetPDGCharge() == 0.0 ) {
+    return false;
+  }  
+
   G4ThreeVector CurPEOrigin;
   // log << MSG::VERBOSE <<" Track Def  and creator proc "
   // << aTrack->GetDefinition()
