@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.6 2006-04-06 06:49:00 ebos Exp $
+// $Id: TrajectoryProvider.cpp,v 1.7 2006-04-12 15:40:18 mtobin Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -117,7 +117,7 @@ Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
   switch ( id.detectorType() )
   {
   case LHCbID::Velo :
-		traj = m_veloDet -> trajectory( id, offset );
+		traj = m_veloDet->sensor(id.veloID()) -> trajectory( id.veloID(), offset );
 		break;
   case LHCbID::TT :
 		traj = m_ttDet -> trajectory( id, offset );

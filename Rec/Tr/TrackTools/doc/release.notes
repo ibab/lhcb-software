@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-04-12 - Mark Tobin
+ - Fix to work with new DeVelo interface
+
 !======================== TrackTools v2r1 2006-04-07 =========================
 ! 2006-04-07 - David Hutchcroft
  - Modified code to use VeloClusterTool to get the Velo clusters positions
