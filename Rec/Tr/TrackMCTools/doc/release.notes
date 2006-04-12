@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-04-12 - Jeroen van Tilburg
+ - Removed bug in IdealStateCreator. The momentum of the state was filled with
+   the mass of the MCParticle.
+
 !======================= TrackMCTools v2r1 2006-03-31 ========================
  ! 2006-04-04 - Jan Amoraal
  - TrackAcceptance.cpp: Adapt to new OTDet interface

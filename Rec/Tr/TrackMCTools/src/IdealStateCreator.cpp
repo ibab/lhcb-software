@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.4 2006-03-31 13:23:36 erodrigu Exp $
+// $Id: IdealStateCreator.cpp,v 1.5 2006-04-12 14:13:50 jvantilb Exp $
 // Include files
 
 // from Gaudi
@@ -309,7 +309,7 @@ void IdealStateCreator::findClosestHits( const MCParticle* mcPart,
 double IdealStateCreator::qOverP( const MCParticle* mcPart ) const
 {
   /// Determine Q/P for a MCParticle
-  double momentum = mcPart -> momentum().M();
+  double momentum = mcPart -> p();
   double charge = (mcPart -> particleID().threeCharge()) / 3.;
   if( momentum > TrackParameters::lowTolerance ) {
     return charge / momentum;
