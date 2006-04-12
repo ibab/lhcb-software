@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.3 2006-04-09 16:39:54 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.4 2006-04-12 12:57:25 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/04/09 16:39:54  ibelyaev
+//  v1r0
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -272,7 +275,7 @@ StatusCode LoKi::Algo::save
   if( 0 == particle ) 
   { return Error("save('"+tag+"'): invalid particle could not be saved!") ; }
   
-  const LHCb::Particle* saved = desktop()->createParticle( particle );
+  const LHCb::Particle* saved = desktop()->save( particle );
   
   if( 0 == saved ) { return Error("Particle '"+tag+"' is not saved! " ) ; }
   
