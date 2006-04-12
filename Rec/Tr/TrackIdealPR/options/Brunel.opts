@@ -33,10 +33,10 @@ BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 
 IdealTracksCreator.OutputLevel   = 3;
 
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNVeloRHits   = 3;
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNVeloPhiHits = 3;
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNTTHits = 1;
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT1Hits = 1;
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT2Hits = 1;
-//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT3Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNVeloRHits   = 3;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNVeloPhiHits = 3;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNTTHits = 1;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT1Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT2Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrackAcceptance.minNT3Hits = 1;
 

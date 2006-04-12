@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.16 2006-04-07 14:55:40 dhcroft Exp $
+// $Id: IdealTracksCreator.cpp,v 1.17 2006-04-12 14:13:36 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -159,6 +159,9 @@ StatusCode IdealTracksCreator::execute()
 
   // Make container for tracks
   Tracks* tracksCont = new Tracks();
+
+  // To store the Tracks in the TES
+  put( tracksCont, m_tracksOutContainer );
 
   // create the association (linker) table and register it in the TES
   LinkerWithKey<Track,MCParticle> linkTable( evtSvc(), msgSvc(),
@@ -362,10 +365,6 @@ StatusCode IdealTracksCreator::execute()
 
   debug() << "Created " << tracksCont -> size() << " tracks." << endreq;
 
-  // Store the Tracks in the TES
-  // ===========================
-  put( tracksCont, m_tracksOutContainer );
-
   return StatusCode::SUCCESS;
 };
 
@@ -512,22 +511,23 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       State* tempState;
       StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
       // Check if VeloCluster is of type R or Phi
-      if ( sensor -> isR() ) {
+      if ( sensor -> isR() || sensor -> isPileUp() ) {
         VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
-						  *m_veloPositionTool );
+                                                  *m_veloPositionTool );
         if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
         track -> addToLhcbIDs( meas.lhcbID() );
         track -> addToMeasurements( meas );
         ++nVeloRMeas;
       } else {
         VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
-						      *m_veloPositionTool );
-     if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
+                                                      *m_veloPositionTool );
+        if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() ); 
         track -> addToLhcbIDs( meas.lhcbID() );
         track -> addToMeasurements( meas );
         ++nVeloPhiMeas;
       }
       delete tempState;
+      aCluster = veloLink.next();
     }
   }
   
