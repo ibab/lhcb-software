@@ -1,4 +1,4 @@
-// $Id: L0Monitor.h,v 1.5 2006-02-18 11:29:37 ocallot Exp $
+// $Id: L0Monitor.h,v 1.6 2006-04-12 12:45:40 ocallot Exp $
 #ifndef L0MONITOR_H 
 #define L0MONITOR_H 1
 
@@ -29,7 +29,6 @@ protected:
 private:
   double m_totEvt;
   double m_goodL0;
-  double m_puVeto;
 
   double m_trigElec;
   double m_trigPhot;

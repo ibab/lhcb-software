@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.45 2006-03-28 11:40:15 cattanem Exp $
+$Id: release.notes,v 1.46 2006-04-12 12:45:40 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2006-04-12 - Olivier Callot
+ - Remove printing of PuVeto counter, was not filled.
 
 !========================== L0DU v7r1p1 2006-03-28 =======================
 ! 2006-03-28 - Marco Cattaneo

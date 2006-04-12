@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.7 2006-02-18 11:29:37 ocallot Exp $
+// $Id: L0Monitor.cpp,v 1.8 2006-04-12 12:45:40 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ StatusCode L0Monitor::initialize() {
 
   m_totEvt    = 0.;
   m_goodL0    = 0.;
-  m_puVeto    = 0.;
+
   m_trigElec  = 0.;
   m_trigPhot  = 0.;
   m_trigHadr  = 0.;
@@ -145,7 +145,6 @@ StatusCode L0Monitor::finalize() {
     fact = 100. / m_totEvt;
   }
   
-  info() << "PileUp Veto  : " << format( " %8.0f  %6.2f %%", m_puVeto, fact * m_puVeto ) << endreq;
   info() << "Accepted L0  : " << format( " %8.0f  %6.2f %%", m_goodL0, fact * m_goodL0 ) << endreq;
 
   info() << "  Electron   : " << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
