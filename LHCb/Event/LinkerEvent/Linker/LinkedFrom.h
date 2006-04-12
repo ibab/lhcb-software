@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.20 2006-03-27 12:53:38 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.21 2006-04-12 12:37:01 erodrigu Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -37,7 +37,7 @@ public:
     if ( 0 == links ) {
       if ( 0 != msgSvc ) {
         MsgStream msg( msgSvc, "LinkedFrom::"+containerName );
-        msg << MSG::ERROR << "*** Link container Link/" << name
+        msg << MSG::ERROR << "*** Link container " << name
             << " not found." << endreq;
       }
     } else {

@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2006-04-12 - Eduardo Rodrigues
+ - fixed typo in path printed out in LinkedFrom (was misleading)
+
 !====================== LinkerEvent v2r1 2006-03-27 ==========================
 ! 2006-03-27 - Olivier Callot
  - Fix warnings on Windows due to int -> short conversion. Make it explicit...
