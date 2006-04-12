@@ -4,6 +4,132 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v24r3=4">2006-04-07 - GaussSys v24r4</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r1, ParamFiles v4r2 
+   Geant4 v71r0p13 (based on geant4.7.1.p01a)
+   LHCb v20r2 (and Gaudi v18r3)
+   XmlDDDB v30r4, XmlConditions v1r6, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r4 2006-04-12 =============================
+! 2006-04-12 - Gloria CORTI
+ - Use ParamFiles v4r2 with definition of "Intermediate" particle for showers
+   missing links for new MCTruth
+ - Use new version of XmlDDDB v30r4
+ - Put in production new handling of MCTruth using HepMC to store information
+   Note that we still store trajectories in G4 because it is where we set
+   the conditions but we do not transform them anymore in
+   MCParticles/MCVertices. The algorithm filling the MCParticles/MCVertices
+   from G4HepMC is now called just after having check the integrity of the
+   G4event and fills the default TES location, hence the converters are not
+   triggered, although their code is still in GiGaCnv library.
+   GiGaGetEventAlg is now used only for monitoring purposes since called
+   later in the sequence. Options to write and check particles in
+   "TestMCParticle", "TestMCVertices" containers are removed.
+   . Simulation.opts
+   . GaussTape.opts
+   . Monitor.opts
+ - Adapt GaussRead.opts to changes in Monitor.opts
+ - Clean up options
+   . MonitorInDetail.opts
+   . SimGeometry.opts
+ - Switch off detailed monitors for production
+ - All event type options are commented to allow clean include in production:
+   poeple must uncomment one to run
+   . Gauss.opts
+ 
+!========================== GaussKine v1r2 2006-04-12 ========================
+! 2006-04-12 - Gloria CORTI
+ - Introduce filling of table with correspondece between MCParticle and
+   barcodes in HepMC (i.e. G4TrackID) held by GiGaKineSvc to allow algorithms
+   filling MCHits later in the sequence to set SmartRef.
+ - Retrieve priamries from G4 and update list help in MCHeader for primaries.
+   Attach primary particles having the same production position as one of
+   the primary vertices, since in HepMC they have different vertices even if
+   the position is the same.
+ - Set vertex type according to creator process associated to the corresponding
+   HepMC vertex, if a particle oscillated reset its decay vertex to be
+   of type OscillatedAndDecay.
+ - While primary HepMC particles are always in the same order that is not
+   true for the children of a given particle, so sort them before making
+   the MCParticle so that those are always in the same order.
+   . src/G4HepMCToMCTruth.{h,cpp}
+ 
+!===================== GaussAlgs v2r2 2006-04-12  =========================
+! 2006-04-12 - Gloria CORTI
+ - Clean up code and adapt better to debugging new event model MCTruth
+   structure
+   . src/PrintEventAlg.cpp
+ 
+!======================== GaussTools v12r1 2006-04-12 =======================
+! 2006-04-12 - Gloria CORTI
+ - Import changes by Witek POKORSKI for more than one split in mother
+   particles for along the step processes (i.e. two Brems in a step)
+ - Move code to fill a new particle and associated vertices in HepMC structure
+   from GaussTrackActionHepMC to MCTruthManager.
+   All information is retrieved from G4 or LHCb utilities in GaussTrackAction
+   for a given particle and passed to the AddParticle method of the
+   MCTruthManager that handles the creation of dummy intermediate particles
+   if necessary and split of a mother when a process occurs along the step.
+ - Introduce map (and accessor method) of creator process for vertex
+   codebars to be able to identify the vertex type. Use same numbering
+   as LHCb MCVertexType enum
+ - Introduce map (and accessor method) of oscillated particles associated
+   to particles barcode to be able to identify them later on.
+ - When pdg id is not provided by G4 use name and ParticlePropertySvc to
+   get the LHCb extension.
+ - Change flag from noDirectParent to directParent
+ - Code modified:
+   . GaussTools/MCTruthManager.h
+   . GaussTools/GaussTrackInformation.h
+   . src/Lib/MCTruthManager.cpp
+   . src/Lib/GaussTrackInformation.cpp
+   . src/Components/GaussTrackActionHepMC.{h,cpp}
+ - Introduce option to not store optical photons neither in Trajectories
+   nor in HepMC structure. By default they are not stored now since not
+   necessary normally as MCParticles. A few of them were stored and are
+   causing problems when splitting the mother since they are produced along
+   the step.
+   . src/Components/GaussPostTrackAction.{h,cpp}
+ - Move retrieval of ParticlePropertySvc into initialize method from the
+   printing of the HepMC event, otherwise the code complains that the service
+   was already requested at each event. Modify the information printed.
+   . src/Components/GaussEventActionHepMC.{h,cpp}
+ - Change level of some messages to debug since not necessary in production
+   . src/Components/GiGaRegionsTool.cpp
+ 
+! 2006-04-08 - Vanya BELYAEV
+ - src/Components/TrCutsRunAction.cpp
+   add a check for non-null pointer to G4ParticleTable
+   (prevents occasional segmentatiou fault at the finalisation of
+   "pure generator" jobs)
+ 
+!======================== GaussRICH v6r4 2006-04-12 ===========================
+ 2006-04-12 - Gloria CORTI and Sajan EASO
+ - Check is a track is neutral in which case return without doing anything
+
+!======================= GaussTracker v5r3 2006-04-12 ========================
+! 2006-04-12 - Gloria CORTI
+ - Move message at initialization specifying configuration for a given
+   detector in debug mode. Note necessary for production
+   . src/GetTrackerHitsAlg.cpp
+ 
+!=================== GaussMonitor v3r2 2006-04-12 ============================
+! 2006-04-12 - Gloria CORTI
+ - To fit in hsiograms boundaries, scale down MCVertexType >= 100
+   . MCTruthMonitor.cpp
+ 
+!====================== MuonMoniSim v2r1 2006-04-12  ========================
+ 2006-04-12 - Gloria CORTI
+ - Put message "Hello" in debug mode in execute method, not necessary in
+   production
+   . src/MuonHitChecker.cpp
+ 
+!=============================================================================
 <H1><A NAME="v24r3">2006-04-07 - GaussSys v24r3</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in previous v24rX. </A></H2>
