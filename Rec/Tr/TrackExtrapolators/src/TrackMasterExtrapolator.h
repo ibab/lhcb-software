@@ -22,9 +22,10 @@ using namespace LHCb;
  *  which calls the other extrapolators to do the extrapolating.
  *  It takes into account:
  *  @li Detector Material (multiple scattering , energy loss)
- *  @li Magnetic field (based on start/stop z)
- *  @li most of the work done by  m_freeFieldExtrapolator, \
- *       m_shortFieldExtrapolator, m_longFieldExtrapolator
+ *  @li Deals with electrons
+ *  @li Checks the input state vector
+ *  @li The actual extrapolation is chosen by the extrapolator selector \
+ *       m_extraSelector
  *
  *  @author Edwin Bos (added extrapolation methods)
  *  @date   05/07/2005
@@ -48,7 +49,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
   /// intialize
   virtual StatusCode initialize();
- 
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
@@ -58,61 +58,16 @@ class TrackMasterExtrapolator: public TrackExtrapolator
  private:
    
   /// apply thick scatter state
-  StatusCode thinScatter( State& state ,
-                          double radLength );
+  void thinScatter( State& state, double radLength );
 
   /// apply thick scatter state
-  StatusCode thickScatter( State& state ,
-                           double tWall, 
-                           double radLength );
+  void thickScatter( State& state, double tWall, double radLength );
 
   /// apply energy loss state
-  StatusCode energyLoss( State& state, 
-                         double tWall, 
-                         const Material* aMaterial );
+  void energyLoss( State& state, double tWall, const Material* aMaterial );
 
   ///  electron energy loss state
-  StatusCode electronEnergyLoss( State& state, 
-                                 double radLength );
-
-  bool m_upStream;
-  int  m_particleType;
-  double m_tMax ;     ///< max radiation length - avoid underflow on NT
-  double m_eMax;      /// max energy loss is dE/dx corr  
-  
-  ///job options
-  double m_zFieldStart;        ///< start of field
-  double m_zFieldStop;         ///< end of field
-  double m_shortDist;          ///< min distance to use RungaKutta
-
-  /// extra selector
-  std::string m_extraSelectorName;
-  /// extrapolator to use for short transport in mag field   
-  std::string m_shortFieldExtrapolatorName;
-  /// extrapolator to use for long transport in mag field 
-  std::string m_longFieldExtrapolatorName;
-
-  bool   m_applyMultScattCorr;  ///< turn on/off multiple scattering correction
-  double m_fms2;                ///< factor for inflating scattering errors
-  double m_thickWall;           ///< thick wall
-  bool   m_applyEnergyLossCorr; ///< turn on/off multiple scattering correction
-  double m_energyLoss;          ///< tuneable energy loss correction      
-  double m_maxStepSize;         ///< maximum length of a step
-  double m_minRadThreshold;     ///< minimal thickness of a wall
-
-  /// turn on/off electron energy loss correction
-  bool   m_applyElectronEnergyLossCorr;
-  double m_startElectronCorr;   ///< z start for electron energy loss
-  double m_stopElectronCorr;    ///< z start for electron energy loss
-
-  /// extrapolators
-  ITrackExtrapolator* m_shortFieldExtrapolator;
-  ITrackExtrapolator* m_longFieldExtrapolator;
- 
-  /// extra selector
-  ITrackExtraSelector* m_extraSelector;
-
-  ITransportSvc* m_transportSvc;  ///< Pointer to the transport service
+  void electronEnergyLoss( State& state, double radLength );
 
   /// update transport matrix
   void updateTransportMatrix( const TransportMatrix& newStepF );
@@ -121,9 +76,36 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double zScatter(const double z1,
 		  const double z2 ) const;
 
-
+  /// convert from transport service ticks to mm in the LHCb frame
   void transformToGlobal( const double zStep, const double zStart,
                          ILVolume::Intersections& intersept );
+
+  /// extra selector
+  ITrackExtraSelector* m_extraSelector;
+
+  /// Pointer to the transport service
+  ITransportSvc* m_transportSvc;
+
+  bool m_upStream;                 ///< Flag to distinguish between up/downstr.
+  double m_tMax ;                  ///< max rad length - avoid underflow on NT
+  double m_eMax;                   ///< max energy loss is dE/dx corr
+
+  // job options
+  std::string m_extraSelectorName; ///< extrapolator selector
+  bool   m_applyMultScattCorr;     ///< turn on/off multiple scattering correctn
+  double m_fms2;                   ///< factor for inflating scattering errors
+  double m_thickWall;              ///< thick wall
+  bool   m_applyEnergyLossCorr;    ///< turn on/off dE/dx correction
+  double m_energyLoss;             ///< tuneable energy loss correction      
+  double m_maxStepSize;            ///< maximum length of a step
+  double m_minRadThreshold;        ///< minimal thickness of a wall
+  double m_maxSlope;               ///< maximum slope of state vector
+  double m_maxTransverse;          ///< maximum x,y position of state vector  
+
+  /// turn on/off electron energy loss correction
+  bool   m_applyElectronEnergyLossCorr;
+  double m_startElectronCorr;   ///< z start for electron energy loss
+  double m_stopElectronCorr;    ///< z start for electron energy loss 
 
 };
 
@@ -134,15 +116,16 @@ inline void TrackMasterExtrapolator::updateTransportMatrix
   m_F = newStepF * m_F;
 }
 
-inline void TrackMasterExtrapolator::transformToGlobal( const double zStep,
-                                                        const double zStart,
-                                                        ILVolume::Intersections& intersept ) {
-
+inline void 
+TrackMasterExtrapolator::transformToGlobal( const double zStep,
+                                            const double zStart,
+                                            ILVolume::Intersections& intersept)
+{
   // convert from transport service ticks to mm in the LHCb frame
   for (unsigned int iW = 0 ;  intersept.size() > iW ; ++iW ) {
     intersept[iW].first.first  = (intersept[iW].first.first*zStep)+zStart;
     intersept[iW].first.second = (intersept[iW].first.second*zStep)+zStart;
-  } // iW
+  }
 }
 
 #endif // TRACKMASTEREXTRAPOLATOR_H
