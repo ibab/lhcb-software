@@ -1,5 +1,5 @@
 package MuonID
-version v3r11p1
+version v4r0
 
 branches src cmt doc options
 
@@ -7,8 +7,13 @@ branches src cmt doc options
 include_dirs $(MUONIDROOT)
 
 # add "use" statements
-use MuonEvent          v*  Event
-use MuonTools          v*  Muon
+use GaudiAlg           v*
+use RecEvent           v* Event
+use TrackEvent         v* Event
+use MuonDet            v* Det
+use ROOT               v* LCG_Interfaces -no_auto_imports
+
+
 
 # build a MuonID library
 library MuonID ../src/*.cpp

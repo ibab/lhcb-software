@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.44 2006-02-03 07:14:59 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
+!========================== MuonID v4r0 2006-04-10 ===================
+! 2006-04-10 - E. Polycarpo, M. Gandelman
+  - src/MuonID.cpp
+    . Made compatible to the new event model
+    . Include methods to calculate the DLL and the NSharedHits
 !========================== MuonID v3r11p1 2006-02-03 ===================
 ! 2006-01-26 - P. Koppenburg
   - options/MuonIDDLLTool.opts
@@ -14,9 +18,9 @@
     . Remove acess to eventSvc. Use get and put instead.
 ! 2005-12-07 - P. Koppenburg for Erica Polycarpo
   - src/MuIDDLLTool.cpp
-    . new tool MuiDDLLTool.cpp. It uses the average square distance of track 
+    . new tool MuonIDDLLTool.cpp. It uses the average square distance of track 
       extrapolation to hits in the Muon stations to build the DLL
-  - options/MuIDDLLTool.opts
+  - options/MuonIDDLLTool.opts
     . has the values for the distributions tuned with DC04 data, as for the FOI 
       in v3r10
 !========================== MuonID v3r10 2005-12-07 ====================
@@ -24,7 +28,7 @@
   - options/MuonIDFOI.opts
   - src/MuonIDFOI.cpp
   - src/MuonIDFOI.h
-    . New paramterization
+    . New FOI parameterization
 !========================== MuonID v3r9p1 2005-10-26 ===================
 ! 2005-10-26 - P. Koppenburg
   - src/MuonIDDLLTool.cpp
