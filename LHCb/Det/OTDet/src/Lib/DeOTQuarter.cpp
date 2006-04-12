@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.cpp,v 1.4 2006-03-30 21:45:34 janos Exp $
+// $Id: DeOTQuarter.cpp,v 1.5 2006-04-12 23:43:26 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -55,35 +55,36 @@ StatusCode DeOTQuarter::initialize() {
   IDetectorElement::IDEContainer::const_iterator iModule = this->childBegin();
   for ( ; iModule != this->childEnd(); ++iModule) {  
     DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
-    if (module) {
-      m_modules.push_back(module);
-      
-      /// Calculate cover box of quarter (this function should be in IVolume!)
-      const IGeometryInfo* gi = module->geometry();
-      const ISolid* solid = gi->lvolume()->solid();
-      const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
-      if ( mainBox ) {
-        double dx = mainBox->xHalfLength();
-        double dy = mainBox->yHalfLength();
-        double dz = mainBox->zHalfLength();
-        int i, j, k; 
-        for ( i = 0 ; i < 2 ; ++i ) {
-          for ( j = 0 ; j < 2 ; ++j ) {
-            for ( k = 0 ; k < 2 ; ++k ) {          
-              Gaudi::XYZPoint point( pow(-1.,i)*dx, pow(-1.,j)*dy, pow(-1.,k)*dz );
-              Gaudi::XYZPoint cornerPoint = gi->toGlobal( point );
-              if ( cornerPoint.x() < m_xMin ) m_xMin = cornerPoint.x();
-              if ( cornerPoint.y() < m_yMin ) m_yMin = cornerPoint.y();
-              if ( cornerPoint.z() < m_zMin ) m_zMin = cornerPoint.z();
-              if ( cornerPoint.x() > m_xMax ) m_xMax = cornerPoint.x();
-              if ( cornerPoint.y() > m_yMax ) m_yMax = cornerPoint.y();
-              if ( cornerPoint.z() > m_zMax ) m_zMax = cornerPoint.z();
-            } /// k
-          } /// j
-        } /// i
-      } /// if mainBox
-    } /// if otModule
+    if (module)  m_modules.push_back(module);
   } /// iModule
+  
+  /// Calculate cover box of quarter (this function should be in IVolume!)
+  //  const IGeometryInfo* gi = module->geometry();
+  //       const ISolid* solid = gi->lvolume()->solid();
+  //       const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
+  // FIXME: This doesn't seem to work for stereo layers
+  //  if ( mainBox ) {
+  //         double dx = mainBox->xHalfLength();
+  //         double dy = mainBox->yHalfLength();
+  //         double dz = mainBox->zHalfLength();
+  //         int i, j, k; 
+  //         for ( i = 0 ; i < 2 ; ++i ) {
+  //           for ( j = 0 ; j < 2 ; ++j ) {
+  //             for ( k = 0 ; k < 2 ; ++k ) {          
+  //               Gaudi::XYZPoint point( pow(-1.,i)*dx, pow(-1.,j)*dy, pow(-1.,k)*dz );
+  //               Gaudi::XYZPoint cornerPoint = gi->toGlobal( point );
+  //               if ( cornerPoint.x() < m_xMin ) m_xMin = cornerPoint.x();
+  //               if ( cornerPoint.y() < m_yMin ) m_yMin = cornerPoint.y();
+  //               if ( cornerPoint.z() < m_zMin ) m_zMin = cornerPoint.z();
+  //               if ( cornerPoint.x() > m_xMax ) m_xMax = cornerPoint.x();
+  //               if ( cornerPoint.y() > m_yMax ) m_yMax = cornerPoint.y();
+  //               if ( cornerPoint.z() > m_zMax ) m_zMax = cornerPoint.z();
+  //             } /// k
+  //           } /// j
+  //         } /// i
+  //       } /// if mainBox
+  //     } /// if otModule
+  //   } /// iModule
   
   IDetectorElement* layer = this->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();

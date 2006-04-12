@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.26 2006-04-04 18:16:57 janos Exp $
+// $Id: DeOTDetector.h,v 1.27 2006-04-12 23:43:26 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -234,9 +234,6 @@ private:
   /** set the first station */
   void setFirstStation(const unsigned int iStation);
 
-  /** make flat list of lowest descendents  and also layers*/
-  //void flatten();
-
   Stations m_stations;             ///< flat vector of stations
   Layers m_layers;                 ///< flat vector of layers
   Quarters m_quarters;             ///< flat vector of quarters
@@ -277,7 +274,7 @@ inline bool DeOTDetector::contains(const LHCb::OTChannelID aChannel) const{
 
 /* inline bool DeOTDetector::isValid(const LHCb::OTChannelID aChannel) { */
 /*   DeOTDetector::Modules::iterator iter = m_modules.begin(); */
-/*   while((iter != m_modules.end())&&((*iter)->contains(aChannel) == false)){ */
+/*   while((iter != m_modules.end()) && !((*iter)->contains(aChannel))) { */
 /*     ++iter; */
 /*   } // iter */
 /*   return (iter != m_modules.end() ? (*iter)->isWire(aChannel.wire()) : false ); */

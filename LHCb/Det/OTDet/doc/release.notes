@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.53 2006-04-12 14:11:56 janos Exp $
+! $Id: release.notes,v 1.54 2006-04-12 23:43:26 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r2 2006-04-04 ==========================
 ! 2006-04-12 - Jan Amoraal
- DeOTModule.*: removed bool m_longModule and added module type check methods  
+ - isInsideEfficient is really efficient in discarding hits in stereo layers
+
+! 2006-04-12 - Jan Amoraal
+ - DeOTModule.*: removed bool m_longModule and added module type check methods  
                  
 ! 2006-04-11 - Jan Amoraal
  - Minor bug fixes

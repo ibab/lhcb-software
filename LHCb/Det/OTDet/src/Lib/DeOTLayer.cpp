@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.6 2006-03-30 21:45:34 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.7 2006-04-12 23:43:26 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -69,24 +69,28 @@ DeOTQuarter* DeOTLayer::findQuarter(const OTChannelID aChannel)  const {
 
 /// Find the quarter for a given XYZ point
 DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {  
-  /// Find the layer and return a pointer to the layer from channel
+  /// Find the quarter and return a pointer to the quarter from channel
+  // FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
+  //        away good hits in the stereo layers :-(
+  // Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
+  // 					       bind(&DeOTQuarter::isInsideEfficient, _1, aPoint));
   Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
-					       bind(&DeOTQuarter::isInsideEfficient, _1, aPoint));
+   					       bind(&DetectorElement::isInside, _1, aPoint));
   return (iter != m_quarters.end() ? (*iter) : 0);
 }
 
 /// Find the module for a given XYZ point
 /// Slightly faster way to check if a point is inside a quarter
-DeOTModule* DeOTLayer::findModule(const Gaudi::XYZPoint& aPoint) const {
-  DeOTModule* module = 0;
-  bool found = false;
-  std::vector<DeOTQuarter*>::const_iterator iQuarter = m_quarters.begin();
-  while (iQuarter != m_quarters.end() && !found) {
-    if ((*iQuarter)->isInside(aPoint)) {
-      module = (*iQuarter)->findModule(aPoint );
-      if (!module) found = true;
-    }
-    ++iQuarter;
-  }
-  return module;
-}
+// DeOTModule* DeOTLayer::findModule(const Gaudi::XYZPoint& aPoint) const {
+//   DeOTModule* module = 0;
+//   bool found = false;
+//   std::vector<DeOTQuarter*>::const_iterator iQuarter = m_quarters.begin();
+//   while (iQuarter != m_quarters.end() && !found) {
+//     if ((*iQuarter)->isInside(aPoint)) {
+//       module = (*iQuarter)->findModule(aPoint );
+//       if (!module) found = true;
+//     }
+//     ++iQuarter;
+//   }
+//   return module;
+// }

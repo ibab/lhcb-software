@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.7 2006-03-31 14:22:39 janos Exp $
+// $Id: DeOTLayer.h,v 1.8 2006-04-12 23:43:26 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -58,7 +58,9 @@ class DeOTLayer : public DetectorElement {
    */
   virtual StatusCode initialize();
 
-  /** @return layerID */
+  /** Return layer id 
+   * @return layerID 
+   */
   unsigned int layerID() const;
   
   /** Element id */
@@ -84,7 +86,7 @@ class DeOTLayer : public DetectorElement {
   DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
 
   /** @return the module for a given XYZ point */
-  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
+  /*  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const; */
 
   /** flat vector of quarters
    * @return vector of quarters

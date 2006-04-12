@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.6 2006-04-12 14:11:56 janos Exp $
+// $Id: DeOTQuarter.h,v 1.7 2006-04-12 23:43:26 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -68,11 +68,13 @@ class DeOTQuarter : public DetectorElement {
    */
   bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;
   
+  // FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
+  //        away hits :-(
   /** Check if a point is inside the quarter 
    * @parma a point
    * @return bool
    */
-  bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const;
+  /*  bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const; */
 
   /** @return stereo angle of the layer */
   double angle() const;
@@ -125,14 +127,16 @@ inline bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const {
 }
 
 /// I'll keep this untill it's in DetDesc
-inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const {
-  double aPointX = aPoint.x();
-  double aPointY = aPoint.y();
-  double aPointZ = aPoint.z();
-  return (aPointX > m_xMin && aPointX < m_xMax &&
-	  aPointY > m_yMin && aPointY < m_yMax &&
-	  aPointZ > m_zMin && aPointZ < m_zMax);
-}
+// FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
+//        away hits :-(
+/* inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const { */
+/*   double aPointX = aPoint.x(); */
+/*   double aPointY = aPoint.y(); */
+/*   double aPointZ = aPoint.z(); */
+/*   return (aPointX > m_xMin && aPointX < m_xMax && */
+/* 	  aPointY > m_yMin && aPointY < m_yMax && */
+/* 	  aPointZ > m_zMin && aPointZ < m_zMax); */
+/* } */
 
 inline double DeOTQuarter::angle() const {
   return m_stereoAngle;
