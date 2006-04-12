@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.h,v 1.1.1.1 2006-01-31 11:03:51 gcorti Exp $
+// $Id: G4HepMCToMCTruth.h,v 1.2 2006-04-12 19:02:49 gcorti Exp $
 #ifndef G4HEPMCTOMCTRUTH_H 
 #define G4HEPMCTOMCTRUTH_H 1
  
@@ -8,6 +8,10 @@
 
 // from Gauss
 #include "GaussTools/MCTruthManager.h"
+
+// Forward declarations
+class IGiGaSvc;
+class IGiGaKineCnvSvc;
 
 /** @class G4HepMCToMCTruth G4HepMCToMCTruth.h 
  *
@@ -29,21 +33,40 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization  
   
+protected:
+
+  /** accessor to GiGa Service
+   *  @return pointer to GiGa Service
+   */
+  IGiGaSvc* gigaSvc() const { 
+    return m_gigaSvc; 
+  }
+
+  /** accessor to kinematics  conversion service 
+   *  @return pointer to kinematics conversion service 
+   */
+  IGiGaKineCnvSvc*      kineSvc   () const { 
+    return m_gigaKineCnvSvc;
+  } 
+
 private:
   
   void convert( HepMC::GenParticle* genpart, LHCb::MCVertex* prodvertex );
   
-  
+  LHCb::MCVertex::MCVertexType vertexType( int id );
+
 private:
+
+  std::string        m_gigaSvcName;      ///< Name of GiGa Service
+  std::string        m_kineSvcName;      ///< Name of GiGaCnv Service
+  IGiGaSvc*          m_gigaSvc;          ///< Pointer to GiGa Service
+  IGiGaKineCnvSvc*   m_gigaKineCnvSvc;   ///< Pointer to GiGaKine Service
 
   std::string m_particles;
   std::string m_vertices;
   
   LHCb::MCParticles* partcont;
   LHCb::MCVertices* vtxcont;
-
-  // map of barcodes to pointers of particles
-  std::map<int, LHCb::MCParticle*> particlemap;
 
   /// Reference to the particle property service
   IParticlePropertySvc* m_ppSvc;

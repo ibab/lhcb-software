@@ -4,6 +4,23 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== GaussKine v1r2 2006-04-12 ========================
+! 2006-04-12 - Gloria CORTI
+ - Introduce filling of table with correspondece between MCParticle and 
+   barcodes in HepMC (i.e. G4TrackID) held by GiGaKineSvc to allow algorithms
+   filling MCHits later in the sequence to set SmartRef.
+ - Retrieve priamries from G4 and update list help in MCHeader for primaries.
+   Attach primary particles having the same production position as one of
+   the primary vertices, since in HepMC they have different vertices even if
+   the position is the same.
+ - Set vertex type according to creator process associated to the corresponding
+   HepMC vertex, if a particle oscillated reset its decay vertex to be
+   of type OscillatedAndDecay.
+ - While primary HepMC particles are always in the same order that is not
+   true for the children of a given particle, so sort them before making 
+   the MCParticle so that those are always in the same order. 
+   . src/G4HepMCToMCTruth.{h,cpp}
+
 !========================== GaussKine v1r1 2006-03-27 ========================
 ! 2006-03-27 - Patrick Robbe
  - GeneratorToG4: switch MeV units in HepMC particles
