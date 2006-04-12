@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.17 2006-04-03 17:17:47 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.18 2006-04-12 19:49:46 gcorti Exp $
 
 /** @file
  *
@@ -30,18 +30,14 @@ ApplicationMgr.DLLs += { "GaussTracker" };
 ApplicationMgr.DLLs += { "GaussRICH"    };
 ApplicationMgr.DLLs += { "GaussCalo"    };
 
-
-// Geometry to be simulated as a whole
+// Geometry to be simulated
 //----------------------------------------------------------------------------
-// Geo.StreamItems      += {"/dd/Structure/LHCb"};  
-
-// Geometry to be simulated Region by region
-//----------------------------------------------------------------------------
-// Geo.StreamItems      += {"/dd/Structure/LHCb/UpstreamRegion"};  
-// Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion"};  
-// Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion"};
-// Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion"};
+// To set size of World/Universe i.e. the main mother volume (made of Air
+// and in which any LHCb detector is positioned)
+// Now it is half that is inconsistent with "XmlDDDB"
+//GiGaGeo.XsizeOfWorldVolume = 50.0*m;
+//GiGaGeo.YsizeOfWorldVolume = 50.0*m;
+//GiGaGeo.ZsizeOfWorldVolume = 50.0*m; 
 
 // Geometry to be simulated Detector by detector
 //----------------------------------------------------------------------------

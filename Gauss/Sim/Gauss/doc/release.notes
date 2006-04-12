@@ -4,6 +4,32 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r4 2006-04-12 =============================
+! 2006-04-12 - Gloria CORTI
+ - Use ParamFiles v4r2 with definition of "Intermediate" particle for showers
+   missing links for new MCTruth
+ - Put in production new handling of MCTruth using HepMC to store information
+   Note that we still store trajectories in G4 because it is where we set
+   the conditions but we do not transform them anymore in 
+   MCParticles/MCVertices. The algorithm filling the MCParticles/MCVertices
+   from G4HepMC is now called just after having check the integrity of the
+   G4event and fills the default TES location, hence the converters are not 
+   triggered, although their code is still in GiGaCnv library. 
+   GiGaGetEventAlg is now used only for monitoring purposes since called 
+   later in the sequence. Options to write and check particles in 
+   "TestMCParticle", "TestMCVertices" containers are removed.
+   . Simulation.opts
+   . GaussTape.opts
+   . Monitor.opts
+ - Adapt GaussRead.opts to changes in Monitor.opts
+ - Clean up options
+   . MonitorInDetail.opts
+   . SimGeometry.opts
+ - Switch off detailed monitors for production
+ - All event type options are commented to allow clean include in production:
+   poeple must uncomment one to run
+   . Gauss.opts
+
 !======================== Gauss v24r3 2006-04-07 =============================
 ! 2006-04-07 - Gloria CORTI
  - Use latest version of DecFiles v12r1

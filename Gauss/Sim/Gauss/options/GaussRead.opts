@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.11 2006-04-07 09:36:54 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.12 2006-04-12 19:50:58 gcorti Exp $ 
 
 /** @file 
  * 
@@ -35,8 +35,7 @@ GenHistos.OutputLevel   = 3;
 Monitor.MeasureTime = true;
 
 // Algorithm in User monitor
-UserMonitor.Members   += { "GiGaGetEventAlg" };
-UserMonitor.Members   += { "MCDecayCounter" };
+UserMonitor.Members     += { "MCDecayCounter" };
 MCDecayCounter.MCDecayFinder.Decay = "KS0 -> pi+ pi-";
 
 // If the file contains also Rich extended information you can uncomment below
@@ -70,8 +69,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 // Input file 
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-  //  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r3/30000000.200ev.05Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r3/11144100.100ev.05Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r4/11144100.50ev.12Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------

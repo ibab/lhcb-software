@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.24 2006-02-10 16:05:57 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.25 2006-04-12 19:50:40 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -57,10 +57,10 @@ GaussTape.ItemList += {
 };
   
 // Temporary
-GaussTape.ItemList += {
-  "/Event/MC/TestParticles#1"
-  ,"/Event/MC/TestVertices#1"
-};
+// GaussTape.ItemList += {
+//   "/Event/MC/TestParticles#1"
+//   ,"/Event/MC/TestVertices#1"
+// };
 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;

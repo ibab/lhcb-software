@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.4 2006-02-10 16:05:57 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.5 2006-04-12 19:50:03 gcorti Exp $ 
 
 /** @file 
  * 
@@ -36,11 +36,8 @@ MuonHitChecker.DetailedMonitor = true;
 //GenMonitor.Members += {"DumpMCDecay"};
 
 // Dump on screen content of MCParticles/MCVertices information
-// SimMonitor.Members += {"PrintEventAlg"};
-// SimMonitor.Members += {"PrintEventAlg/PrintEventTest"};
-// PrintEventTest.Particles = "MC/TestParticles";
-// PrintEventTest.Vertices = "MC/TestVertices";
-SimMonitor.Members += {"DumpMCEventAlg"};
+//SimMonitor.Members += {"PrintEventAlg"};
+//SimMonitor.Members += {"DumpMCEventAlg"};
 
 // GiGaGetHitsAlg.OutputLevel   = 1;
 // GiGaGetHitsAlg.VeloHits   = "";
