@@ -2,6 +2,7 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+!======================= STAssociators v1r2 2006-04-12 ========================
 ! 2006-04-12 M Needham
  - Change logic of cluster to hit associator (weight by charge)
  - change logic of cluster to particle associator
