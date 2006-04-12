@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.20 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.21 2006-04-12 14:23:23 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -20,6 +20,9 @@
 
 // From Velo
 #include "VeloDet/DeVeloPhiType.h"
+
+std::vector<std::pair<double,double> > DeVeloPhiType::m_stripLines;
+//std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > DeVeloPhiType::m_stripLimits;
 
 /** @file DeVeloPhiType.cpp
  *
@@ -367,11 +370,6 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 //==============================================================================
 bool DeVeloPhiType::isCutOff(double x, double y) const
 {
-  // Use symmetry to handle second stereo...
-  if(isDownstream()) {
-    //    y = -y;
-  }
-  // if(m_corner1X1 > x) return true;
   double radius=sqrt(x*x+y*y);
   if(m_middleRadius < radius) return false;
   if(0 < y) {
@@ -506,4 +504,46 @@ void DeVeloPhiType::BuildRoutingLineMap(){
     count++;
   }
 }
+//==============================================================================
+// Return a trajectory (for track fit) from strip + offset
+std::auto_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChannelID& id, 
+                                                          const double offset) const {
+  // Trajectory is a line
+  Gaudi::XYZPoint lEnd1, lEnd2;
+  unsigned int strip=id.strip();
+  //StatusCode sc = stripLimits(strip,lEnd1,lEnd2);
+  std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localCoords;
+  localCoords=localStripLimits(strip);
+  lEnd1 = localCoords.first;
+  lEnd2 = localCoords.second;
+  // need to also grab next strip in local frame to get offset effect
+  Gaudi::XYZPoint lNextEnd1, lNextEnd2;
+  // check direction of offset
+  if(offset >= 0.){
+    localCoords = localStripLimits(strip+1);
+    lNextEnd1 = localCoords.first;
+    lNextEnd2 = localCoords.second;
+    lEnd1 += (lNextEnd1-lEnd1)*offset;
+    lEnd2 += (lNextEnd2-lEnd2)*offset;
+  }else{
+    localCoords = localStripLimits(strip-1);
+    lNextEnd1 = localCoords.first;
+    lNextEnd2 = localCoords.second;
+    lEnd1 += (lEnd1-lNextEnd1)*offset;
+    lEnd2 += (lEnd2-lNextEnd2)*offset;
+  }
+  
+  Gaudi::XYZPoint gEnd1, gEnd2;
+  localToGlobal(lEnd1, gEnd1);
+  localToGlobal(lEnd2, gEnd2);
+
+  // put into trajectory
+  LHCb::Trajectory* tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
+
+  std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
+    
+  return autoTraj;  
+
+}
+
 

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.22 2006-04-05 18:02:40 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.23 2006-04-12 14:23:23 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -19,6 +19,11 @@
 
 // From Velo
 #include "VeloDet/DeVeloRType.h"
+std::vector<double> DeVeloRType::m_rStrips;
+std::vector<double> DeVeloRType::m_rPitch;
+std::vector<double> DeVeloRType::m_phiMin;
+std::vector<double> DeVeloRType::m_phiMax;
+std::vector<std::pair<double,double> > DeVeloRType::m_stripPhiLimits;
 
 /** @file DeVeloRType.cpp
  *
@@ -170,10 +175,11 @@ StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
 //==============================================================================
 bool DeVeloRType::isCutOff(double x, double y) const
 {
-  if(m_cornerX1 > x) return true;
-  y = fabs(y);
-  if(m_cornerX1 <= x && m_cornerX2 >= x) {
-    double yMax=m_corners[0]*x+m_corners[1];
+  double epsilon=1.E-9;
+  if(m_cornerX1 - epsilon > x) return true;
+  if(m_cornerX1 - epsilon <= x && x <= m_cornerX2 + epsilon) {
+    y = fabs(y);
+    double yMax=m_gradCutOff*x+m_intCutOff;
     if(yMax > y) {
       return true;
     }
@@ -276,7 +282,7 @@ void DeVeloRType::calcStripLimits()
 
   m_rStrips.clear();
   m_rPitch.clear();
-  m_stripLimits.clear();
+  m_stripPhiLimits.clear();
   double radius,pitch;
   for(unsigned int zone=0; zone<m_numberOfZones; zone++) {
     for(unsigned int istrip=0; istrip<m_stripsInZone; istrip++){
@@ -288,40 +294,31 @@ void DeVeloRType::calcStripLimits()
       m_rPitch.push_back(pitch);
       double phiMin=0;
       double phiMax=0;
-      double phiLimit=0;
-      double x=0,y=0;
+      double x1=0,y1=0,x2=0,y2=0;
       phiMin=phiMinZone(zone,radius);
       phiMax=phiMaxZone(zone,radius);
-      if(0 == zone){
-        phiLimit = phiMin;
-        x = radius*cos(phiMin);
-        y = radius*sin(phiMin);
-      } else if(3 == zone){
-        phiLimit = phiMax;
-        x = radius*cos(phiMax);
-        y = radius*sin(phiMax);
-      }
-      // Work out point where strip crosses cut off
-      if(zone == 0 || zone == 3){
-        if(isCutOff(x,y)){
-          double a = pow(m_corners[0],2)+1;
-          double b = 2*m_corners[0]*m_corners[1];
-          double c = pow(m_corners[1],2) - pow(radius,2);
-          double x1 = (-b + sqrt(b*b - (4*a*c))) / (2*a);
-          double x2 = (-b - sqrt(b*b - (4*a*c))) / (2*a);
-          if(m_cornerX1 <= x1 && m_cornerX2 >= x1) {
-            phiLimit = -acos(x1/radius);
-          } else if(m_cornerX1 <= x2 && m_cornerX2 >= x2) {
-            phiLimit = -acos(x2/radius);
-          }
-          if(zone == 0){
-            phiMin = phiLimit;
-          } else if(zone == 3){
-            if(phiMax != phiLimit) phiMax = -phiLimit;
-          }
+      x1 = radius*cos(phiMin);
+      y1 = radius*sin(phiMin);
+      x2 = radius*cos(phiMax);
+      y2 = radius*sin(phiMax);
+      bool cutOff=false;
+      if(zone == 0) cutOff = isCutOff(x1,y1);
+      else if(zone == 3) cutOff = isCutOff(x2,y2);
+      if(cutOff){
+        double x,y;
+        intersectCutOff(radius,x,y);
+        if(phiMin < 0 || phiMax < 0) y = -y;
+        double phiInt=atan2(y,x);
+        if(0 == zone) {
+          phiMin=phiInt;
+        } else if(3 == zone) {
+          phiMax=phiInt;
         }
       }
-      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+      m_stripPhiLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+      Gaudi::XYZPoint begin(radius*cos(phiMin),radius*sin(phiMin),0.);
+      Gaudi::XYZPoint end(radius*cos(phiMax),radius*sin(phiMax),0.);
+      m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
     }
   }
   for(unsigned int i=0; i < m_phiMin.size(); i++){
@@ -342,18 +339,54 @@ void DeVeloRType::calcStripLimits()
 //==============================================================================
 void DeVeloRType::cornerLimits()
 {
-  m_cornerX1 = param<double>("RCornerX1");
-  m_cornerY1 = param<double>("RCornerY1");
-  m_cornerX2 = param<double>("RCornerX2");
-  m_cornerY2 = param<double>("RCornerY2");
-  
-  m_corners.clear();
-  double gradient;
-  gradient = (m_cornerY2 - m_cornerY1) /  (m_cornerX2 - m_cornerX1);
-  m_corners.push_back(gradient);
-  double intercept;
-  intercept = m_cornerY2 - (gradient*m_cornerX2);
-  m_corners.push_back(intercept);
+  MsgStream msg( msgSvc(), "DeVeloRType" );
+  msg << MSG::VERBOSE << "cornerLimits" << endreq;
+  // Cut offs defined by line
+  m_cornerXInt = param<double>("RCornerXIntercept");
+  m_cornerYInt = param<double>("RCornerYIntercept");
+  double m = (m_cornerYInt) /  (-1.*m_cornerXInt);
+  m_gradCutOff = m;
+  double c = m_cornerYInt;
+  m_intCutOff = c;
+  m_cornerX1 = m_overlapInX;
+  m_cornerY1 = m*m_cornerX1+c;
+  intersectCutOff(innerRadius(),m_cornerX2,m_cornerY2);
+  msg << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
+      << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2 
+      << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
+}
+//==============================================================================
+// For a given radius, calculate point where circle crosses corner cut offs
+//==============================================================================
+void DeVeloRType::intersectCutOff(const double radius, double& x, double& y){
+  MsgStream msg( msgSvc(), "DeVeloRType" );
+  double m=m_gradCutOff;
+  double c=m_intCutOff;
+  double QuadA=(1+m*m);
+  double QuadB=(2*m*c);
+  double r=radius;
+  double QuadC=c*c-r*r;
+  double B2Minus4AC=QuadB*QuadB-4*QuadA*QuadC;
+  if(B2Minus4AC > 0) {
+    double x1 = ( -QuadB+sqrt(B2Minus4AC) ) / (2*QuadA);
+    double y1 = m*x1+c;
+    double x2 =  ( -QuadB-sqrt(B2Minus4AC) ) / (2*QuadA);
+    double y2 = m*x2+c;
+    if(x1 < x2) {
+      x=x1;
+      y=y1;
+    } else {
+      x=x2;
+      y=y2;
+    }
+    msg << MSG::VERBOSE << "a=" << QuadA << ",b=" << QuadB << ",c=" << QuadC 
+        << " Solution 1: x=" << x1 << " y=" << y1
+        << " Solution 2: x=" << x2 << " y=" << y2
+        << " Chose: x=" << x << " y=" << y
+        << endreq;
+  } else {
+    msg << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endreq;
+  }
 }
 //==============================================================================
 /// Store the angular limits of zones sensor at +ve x
@@ -437,7 +470,7 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
   if(0 == routArea){
     strip = (m_nChan1+routLine-1);
   } else if(1 == routArea) {
-    strip = m_nChan0+m_nChan2-routLine;
+    strip = m_nChan0+m_nChan1-routLine;
   } else if(2 == routArea){
     strip = routLine-1;
   } else if(3 == routArea){
@@ -447,4 +480,42 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
   //            << " rl " << routLine << " scram " << ScrambleStrip(routLine)
   //        << std::endl;
   return ScrambleStrip(strip);
+}
+//==============================================================================
+// Return a trajectory (for track fit) from strip + offset
+//==============================================================================
+std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelID& id, 
+                                                        const double offset) const {
+    // r type is a circle
+    double z = 0.;
+    double radius = 0.;
+    double phiMin = 0.;
+    double phiMax = 0.;
+    unsigned int strip = id.strip();
+    StatusCode sc = stripLimits( strip, radius, phiMin, phiMax );
+    if(!sc){
+      throw GaudiException( "The trajectory could not be made",
+                            "DeVELO.cpp",StatusCode::FAILURE );
+    }
+    // offset is offset on R
+    radius += rPitch(strip) * offset;
+    
+    // start with coords of center and both ends in local frame
+    Gaudi::XYZPoint lOrigin(0.,0.,0.);
+    Gaudi::XYZPoint lEnd1(radius*cos(phiMin),radius*sin(phiMin),z);
+    Gaudi::XYZPoint lEnd2(radius*cos(phiMax),radius*sin(phiMax),z);
+    
+    // move to global frame
+    Gaudi::XYZPoint gOrigin, gEnd1, gEnd2;
+    localToGlobal(lOrigin, gOrigin);
+    localToGlobal(lEnd1, gEnd1);
+    localToGlobal(lEnd2, gEnd2);
+    
+    // put into trajectory
+    LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gEnd1-gOrigin,gEnd2-gOrigin,radius);
+
+    std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
+    
+    return autoTraj;  
+
 }

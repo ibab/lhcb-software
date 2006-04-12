@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.65 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.66 2006-04-12 14:23:22 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -9,9 +9,6 @@
 // from Kernel
 #include "Kernel/SystemOfUnits.h"
 #include "Kernel/PhysicalConstants.h"
-// trajectory class from LHCbKernel
-#include "Kernel/CircleTraj.h"
-#include "Kernel/LineTraj.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -240,51 +237,6 @@ const DeVeloPhiType* DeVelo::phiSensor(unsigned int sensorNumber) const
   return dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensorNumber)]);
 }
 
-// Access to a strip's geometry, for Panoramix
-// from strip number and R sensor number, returns Z, R and a phi range.
-// in local frame 
-StatusCode DeVelo::stripLimitsR( unsigned int sensor, 
-                                 unsigned int strip,
-                                 double& z, 
-                                 double& radius, 
-                                 double& phiMin, 
-                                 double& phiMax )  const {
-  DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
-  if(rPtr){    
-    StatusCode sc=rPtr->stripLimits(strip,radius,phiMin,phiMax);
-    if(rPtr->isRight()){
-      phiMin += pi;
-      phiMax += pi;
-    }
-    z = rPtr->z();
-    return sc;
-  }else {
-      MsgStream msg( msgSvc(), "DeVelo" );
-      msg << MSG::ERROR 
-          << "Asked for phi type sensor as if r/pu type" << endreq;
-      return StatusCode::FAILURE;
-  }
-}
-  
-// from strip number and phi sensor number, returns the two end points
-// in local frame 
-StatusCode DeVelo::stripLimitsPhi( unsigned int sensor, 
-                                   unsigned int strip,
-                                   Gaudi::XYZPoint& begin, 
-                                   Gaudi::XYZPoint& end ) const {
-  DeVeloPhiType * phiPtr = 
-    dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
-  if(phiPtr){
-    StatusCode sc = phiPtr->stripLimits(strip, begin, end);
-   return sc;
-  } else {
-    MsgStream msg( msgSvc(), "DeVelo" );
-    msg << MSG::ERROR 
-        << "Asked for r/pu type sensor as if phi type" << endreq;
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
-}
 //=============================================================================
 std::vector<DeVeloSensor*> DeVelo::findVeloSensors()
 {
@@ -388,95 +340,95 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
   return StatusCode::SUCCESS;
 }
 
-std::auto_ptr<LHCb::Trajectory> DeVelo::trajectory(const LHCb::LHCbID& lID, 
-                                                   const double offset) const {
+// std::auto_ptr<LHCb::Trajectory> DeVelo::trajectory(const LHCb::LHCbID& lID, 
+//                                                    const double offset) const {
 
-  // look up the trajectory
+//   // look up the trajectory
  
-  LHCb::Trajectory* tTraj = 0;
+//   LHCb::Trajectory* tTraj = 0;
 
-  if ( !lID.isVelo()){
-     throw GaudiException( "The LHCbID is not of VELO type!",
-                           "DeVELO.cpp",StatusCode::FAILURE );
-  }
+//   if ( !lID.isVelo()){
+//      throw GaudiException( "The LHCbID is not of VELO type!",
+//                            "DeVELO.cpp",StatusCode::FAILURE );
+//   }
   
-  LHCb::VeloChannelID id = lID.veloID();
+//   LHCb::VeloChannelID id = lID.veloID();
 
-  if( id.isRType() || id.isPileUp() ){
-    // r type is a circle
-    double z = 0.;
-    double radius = 0.;
-    double phiMin = 0.;
-    double phiMax = 0.;
-    unsigned int rSensor=id.sensor();
-    unsigned int rStrip = id.strip();
-    DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(rSensor)]);
-    z = rPtr->z();
-    StatusCode sc = rPtr->stripLimits( rStrip, radius, phiMin, phiMax );
-    if(!sc){
-      throw GaudiException( "The trajectory could not be made",
-                            "DeVELO.cpp",StatusCode::FAILURE );
-    }
-    // offset is offset on R
-    radius += rPtr->rPitch(rStrip) * offset;
+//   if( id.isRType() || id.isPileUp() ){
+//     // r type is a circle
+//     double z = 0.;
+//     double radius = 0.;
+//     double phiMin = 0.;
+//     double phiMax = 0.;
+//     unsigned int rSensor=id.sensor();
+//     unsigned int rStrip = id.strip();
+//     DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(rSensor)]);
+//     z = rPtr->z();
+//     StatusCode sc = rPtr->stripLimits( rStrip, radius, phiMin, phiMax );
+//     if(!sc){
+//       throw GaudiException( "The trajectory could not be made",
+//                             "DeVELO.cpp",StatusCode::FAILURE );
+//     }
+//     // offset is offset on R
+//     radius += rPtr->rPitch(rStrip) * offset;
     
-    // start with coords of center and both ends in local frame
-    Gaudi::XYZPoint lOrigin(0.,0.,0.);
-    Gaudi::XYZPoint lEnd1(radius*cos(phiMin),radius*sin(phiMin),z);
-    Gaudi::XYZPoint lEnd2(radius*cos(phiMax),radius*sin(phiMax),z);
+//     // start with coords of center and both ends in local frame
+//     Gaudi::XYZPoint lOrigin(0.,0.,0.);
+//     Gaudi::XYZPoint lEnd1(radius*cos(phiMin),radius*sin(phiMin),z);
+//     Gaudi::XYZPoint lEnd2(radius*cos(phiMax),radius*sin(phiMax),z);
     
-    // move to global frame
-    Gaudi::XYZPoint gOrigin, gEnd1, gEnd2;
-    rPtr->localToGlobal(lOrigin, gOrigin);
-    rPtr->localToGlobal(lEnd1, gEnd1);
-    rPtr->localToGlobal(lEnd2, gEnd2);
+//     // move to global frame
+//     Gaudi::XYZPoint gOrigin, gEnd1, gEnd2;
+//     rPtr->localToGlobal(lOrigin, gOrigin);
+//     rPtr->localToGlobal(lEnd1, gEnd1);
+//     rPtr->localToGlobal(lEnd2, gEnd2);
     
-    // put into trajectory
-    tTraj = new LHCb::CircleTraj(gOrigin,gEnd1-gOrigin,gEnd2-gOrigin,radius);
+//     // put into trajectory
+//     tTraj = new LHCb::CircleTraj(gOrigin,gEnd1-gOrigin,gEnd2-gOrigin,radius);
     
-  }else{
+//   }else{
     
-    // phi type is a line
-    Gaudi::XYZPoint lEnd1, lEnd2;
-    unsigned int phiSensor=id.sensor();
-    unsigned int phiStrip=id.strip();
-    DeVeloPhiType * phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(phiSensor)]);
-    StatusCode sc = phiPtr->stripLimits(phiStrip,lEnd1,lEnd2);
-    if(!sc){
-      throw GaudiException( "The trajectory could not be made",
-                            "DeVELO.cpp",StatusCode::FAILURE );
-    }
+//     // phi type is a line
+//     Gaudi::XYZPoint lEnd1, lEnd2;
+//     unsigned int phiSensor=id.sensor();
+//     unsigned int phiStrip=id.strip();
+//     DeVeloPhiType * phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(phiSensor)]);
+//     StatusCode sc = phiPtr->stripLimits(phiStrip,lEnd1,lEnd2);
+//     if(!sc){
+//       throw GaudiException( "The trajectory could not be made",
+//                             "DeVELO.cpp",StatusCode::FAILURE );
+//     }
     
-    // need to also grab next strip in local frame to get offset effect
-    Gaudi::XYZPoint lNextEnd1, lNextEnd2;
-    // check direction of offset
-    if(offset >= 0.){
-      sc = phiPtr->stripLimits(phiStrip+1,lNextEnd1,lNextEnd2);
-      if(!sc){
-        throw GaudiException( "The trajectory could not be made",
-                              "DeVELO.cpp",StatusCode::FAILURE );
-      }
-      lEnd1 += (lNextEnd1-lEnd1)*offset;
-      lEnd2 += (lNextEnd2-lEnd2)*offset;
-    }else{
-      sc = phiPtr->stripLimits( phiStrip-1,lNextEnd1,lNextEnd2);
-      if(!sc){
-        throw GaudiException( "The trajectory could not be made",
-                              "DeVELO.cpp",StatusCode::FAILURE );
-      }
-      lEnd1 += (lEnd1-lNextEnd1)*offset;
-      lEnd2 += (lEnd2-lNextEnd2)*offset;
-    }
+//     // need to also grab next strip in local frame to get offset effect
+//     Gaudi::XYZPoint lNextEnd1, lNextEnd2;
+//     // check direction of offset
+//     if(offset >= 0.){
+//       sc = phiPtr->stripLimits(phiStrip+1,lNextEnd1,lNextEnd2);
+//       if(!sc){
+//         throw GaudiException( "The trajectory could not be made",
+//                               "DeVELO.cpp",StatusCode::FAILURE );
+//       }
+//       lEnd1 += (lNextEnd1-lEnd1)*offset;
+//       lEnd2 += (lNextEnd2-lEnd2)*offset;
+//     }else{
+//       sc = phiPtr->stripLimits( phiStrip-1,lNextEnd1,lNextEnd2);
+//       if(!sc){
+//         throw GaudiException( "The trajectory could not be made",
+//                               "DeVELO.cpp",StatusCode::FAILURE );
+//       }
+//       lEnd1 += (lEnd1-lNextEnd1)*offset;
+//       lEnd2 += (lEnd2-lNextEnd2)*offset;
+//     }
 
-    Gaudi::XYZPoint gEnd1, gEnd2;
-    phiPtr->localToGlobal(lEnd1, gEnd1);
-    phiPtr->localToGlobal(lEnd2, gEnd2);
+//     Gaudi::XYZPoint gEnd1, gEnd2;
+//     phiPtr->localToGlobal(lEnd1, gEnd1);
+//     phiPtr->localToGlobal(lEnd2, gEnd2);
 
-    // put into trajectory
-    tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
-  }
+//     // put into trajectory
+//     tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
+//   }
 
-  std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
+//   std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
     
-  return autoTraj;  
-}
+//   return autoTraj;  
+// }

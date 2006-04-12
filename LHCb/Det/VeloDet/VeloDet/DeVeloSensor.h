@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.17 2006-04-05 18:02:40 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.18 2006-04-12 14:23:22 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -17,6 +17,8 @@
 /// From LHCb Kernel
 #include "Kernel/VeloChannelID.h"
 
+// get LHCbID for trajectory
+#include "Kernel/Trajectory.h"
 
 // Unique class identifier
 static const CLID& CLID_DeVeloSensor = 1008101 ;
@@ -61,6 +63,9 @@ public:
                                      const LHCb::VeloChannelID& end,
                                      int& nOffset) const;
   
+  /// Return a trajectory (for track fit) from strip + offset
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const = 0;
+
   /// Residual of 3-d point to a VeloChannelID
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
                               const LHCb::VeloChannelID& channel,
@@ -103,6 +108,18 @@ public:
   StatusCode globalToLocal(const Gaudi::XYZPoint& global, 
                            Gaudi::XYZPoint& local) const;
 
+  /// Returns a pair of points which define the begin and end points of a strip in the local frame
+  inline std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localStripLimits(unsigned int strip) const {
+    return m_stripLimits[strip];
+  }
+ 
+  /// Returns a pair of points which define the begin and end points of a strip in the global frame
+  inline std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> globalStripLimits(unsigned int strip) const {
+    Gaudi::XYZPoint begin=m_geometry->toGlobal(m_stripLimits[strip].first);
+    Gaudi::XYZPoint end=m_geometry->toGlobal(m_stripLimits[strip].second);
+    return std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end);
+  }
+ 
   /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal) const {
     if(isDownstream()) phiLocal = -phiLocal;
@@ -110,7 +127,7 @@ public:
     return phiLocal;
   } 
 
-  /// Return the z position of the sensor
+  /// Return the z position of the sensor in the global frame
   inline double z() const {return m_z;}
   
   /// Return +1 for X>0 side of the detector (+ve x is Left/L)
@@ -154,7 +171,6 @@ public:
   inline std::string fullType() const {return m_fullType;}
 
   /// Set the sensor number
-  //void sensorNumber(unsigned int sensor);
   inline void sensorNumber(unsigned int sensor) {m_sensorNumber=sensor;}
 
   /// Returns the sensor number
@@ -214,8 +230,11 @@ public:
   }
   /// Get the chip number from the chip channel
   unsigned int ChipFromChipChannel(unsigned int chipChan) const {return static_cast<int>(chipChan/128);}
-  /// Get the Chip from the Velo ChannelID
-  unsigned int ChipFromStrip(unsigned int strip) const {return ChipFromChipChannel(StripToChipChannel(strip));}
+
+  /// Get the Chip from the strip
+  unsigned int ChipFromStrip(unsigned int strip) const {
+    return ChipFromChipChannel(StripToChipChannel(strip));
+  }
 
   /**  Return the validity of a strip
    *   Cince this method uses the condition cache, the result
@@ -360,8 +379,10 @@ protected:
   unsigned int m_numberOfZones;
   static const unsigned int m_minRoutingLine=1;
   static const unsigned int m_maxRoutingLine=2048;
+
   mutable std::map<unsigned int, unsigned int> m_mapRoutingLineToStrip;//<Map of routing line to strips
   mutable std::map<unsigned int, unsigned int> m_mapStripToRoutingLine;//<Map of strips to routing line
+  std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > m_stripLimits;//<Begin and end point of strips
   
 private:
 

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.40 2006-04-04 15:41:28 cattanem Exp $
+// $Id: DeVelo.h,v 1.41 2006-04-12 14:23:20 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -9,10 +9,6 @@
 #include "VeloDet/DeVeloSensor.h"
 #include "VeloDet/DeVeloRType.h"
 #include "VeloDet/DeVeloPhiType.h"
-
-// get LHCbID for trajectory
-#include "Kernel/LHCbID.h"
-#include "Kernel/Trajectory.h"
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
  *
@@ -201,26 +197,6 @@ public:
     return m_vpPUSensor.rend();
   }
   
-  
-  /** Access to a strip's geometry, for Panoramix
-      from strip number and R sensor number, returns Z, R and a phi range.
-      in local frame */
-  StatusCode stripLimitsR( unsigned int sensor, 
-                           unsigned int strip,
-                           double& z, 
-                           double& radius, 
-                           double& phiMin, 
-                           double& phiMax ) const ;  
-  
-  /** from strip number and phi sensor number, returns the two end points
-      in local frame */
-  StatusCode stripLimitsPhi( unsigned int sensor, 
-                             unsigned int strip,
-                             Gaudi::XYZPoint& begin, 
-                             Gaudi::XYZPoint& end ) const;
-
-  /// Return a trajectory (for track fit) from strip + offset
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const;
   
   /// give access to sensor for given sensor number
   const DeVeloSensor* sensor(unsigned int sensorNumber) const;

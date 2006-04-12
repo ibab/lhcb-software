@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.13 2006-04-05 09:06:07 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.14 2006-04-12 14:23:21 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -13,6 +13,8 @@
 /// From LHCb Kernel
 #include "Kernel/VeloChannelID.h"
 
+// get trajectory
+#include "Kernel/CircleTraj.h"
 
 // Unique class identifier
 static const CLID& CLID_DeVeloRType = 1008102 ;
@@ -52,6 +54,9 @@ public:
   virtual StatusCode neighbour(const LHCb::VeloChannelID& start, 
                                const int& nOffset, 
                                LHCb::VeloChannelID& channel) const;
+
+  /// Return a trajectory (for track fit) from strip + offset
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const;
 
   /// Residual of 3-d point to a VeloChannelID
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
@@ -169,12 +174,12 @@ public:
    
   /// The minimum phi of a strip
   double phiMinStrip(unsigned int strip) const {
-    return m_stripLimits[strip].first;
+    return m_stripPhiLimits[strip].first;
   }
   
   /// The maximum phi of a strip
   double phiMaxStrip(unsigned int strip) const {
-    return m_stripLimits[strip].second; 
+    return m_stripPhiLimits[strip].second; 
   }
 
   /// Return the strip limits for panoramix
@@ -196,18 +201,24 @@ private:
   /// Store the co-ordinates of the cut-offs
   void cornerLimits();
 
+  /// Return x and y position for the intersect of the cut-off line and a given radius
+  void intersectCutOff(const double radius, double& x, double& y);
+
   //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;
-  std::vector<double> m_rStrips;
-  std::vector<double> m_rPitch;
-  std::vector<double> m_phiMin;
-  std::vector<double> m_phiMax;
+  static std::vector<double> m_rStrips;
+  static std::vector<double> m_rPitch;
+  static std::vector<double> m_phiMin;
+  static std::vector<double> m_phiMax;
   double m_cornerX1;
   double m_cornerY1;
   double m_cornerX2;
   double m_cornerY2;  
-  std::vector<double> m_corners;// Equation of line for cutoffs
-  std::vector< std::pair<double,double> > m_stripLimits;//Min/Max phi of strips
+  double m_cornerXInt;//<X intercept for corner cut off
+  double m_cornerYInt;//<Y intercept for corner cut off
+  double m_gradCutOff;//<Gradient of line defining cut offs
+  double m_intCutOff;//<x intercept for line which defines cut offs
+  static std::vector< std::pair<double,double> > m_stripPhiLimits;//Min/Max phi of strips
   std::pair<double,double> m_resolution;//Resolution from LHCB??????
   double m_innerPitch;
   double m_outerPitch;

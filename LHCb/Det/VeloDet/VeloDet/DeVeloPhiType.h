@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.16 2006-04-06 13:45:19 dhcroft Exp $
+// $Id: DeVeloPhiType.h,v 1.17 2006-04-12 14:23:20 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -13,6 +13,8 @@
 /// From LHCb Kernel
 #include "Kernel/VeloChannelID.h"
 
+// get trajectory
+#include "Kernel/LineTraj.h"
 
 // Unique class identifier
 static const CLID& CLID_DeVeloPhiType = 1008103 ;
@@ -50,6 +52,9 @@ public:
   virtual StatusCode neighbour(const LHCb::VeloChannelID& start, 
                        const int& nOffset, 
                        LHCb::VeloChannelID& channel) const;
+
+  /// Return a trajectory (for track fit) from strip + offset
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const;
 
   /// Residual of 3-d point to a VeloChannelID
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
@@ -168,15 +173,6 @@ public:
     return (m_nbInner > strip) ? m_innerDistToOrigin : m_outerDistToOrigin;
   }
 
-  /// Return the strip geometry for panoramix
-  inline StatusCode stripLimits(unsigned int strip, Gaudi::XYZPoint& begin,
-                                Gaudi::XYZPoint& end){
-    StatusCode sc=localToGlobal(m_stripLimits[strip].first,begin);
-    if(!sc) return sc;
-    sc=localToGlobal(m_stripLimits[strip].second,end);
-    return sc;
-  }
-
   /// Return the origin of the sensor in the global frame
   StatusCode globalOrigin(Gaudi::XYZPoint& origin) const{
     Gaudi::XYZPoint localOrig(0,0,0);  
@@ -201,8 +197,8 @@ private:
   double m_innerPitch;
   double m_outerPitch;
   double m_rGap;
-  std::vector<int> m_stripsInZone;
-  std::vector<std::pair<double,double> > m_stripLines;
+  std::vector<unsigned int> m_stripsInZone;
+  static std::vector<std::pair<double,double> > m_stripLines;
   /// First corner
   double m_corner1X1;
   double m_corner1Y1;
@@ -217,7 +213,7 @@ private:
   std::pair<double,double> m_resolution;
   /// Define line for cutoffs (first is gradient, second is intercept)
   std::vector<std::pair<double,double> > m_cutOffs;
-  std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > m_stripLimits;
+  //  static std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > m_stripLimits;
   double m_innerCoverage;
   double m_outerCoverage;
   double m_halfCoverage;
