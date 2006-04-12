@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.11 2006-04-11 19:18:49 janos Exp $
+// $Id: DeOTModule.h,v 1.12 2006-04-12 14:11:56 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -120,6 +120,26 @@ public:
    * @return bool
    */
   bool bottomModule() const;
+
+  /** Check if module is long module (from 1-7)
+   * @return bool
+   */
+  bool longModule() const;
+  
+  /** Check if module is S1 module (8)
+   * @return bool
+   */
+  bool s1Module() const;
+
+  /** Check if module is S2 module (9 Left)
+   * @return bool
+   */
+  bool s2Module() const;
+  
+  /** Check if module is S3 module (9 right)
+   * @return bool
+   */
+  bool s3Module() const;
 
   /** @return the number of modules in a layer */
   unsigned int nModules() const;
@@ -264,7 +284,6 @@ private:
   LHCb::OTChannelID m_elementID; ///< element ID
   unsigned int m_uniqueModuleID; ///< module ID number
   unsigned int m_nStraws;        ///< half the number of straws inside module
-  bool m_longModule;             ///< is module a long module?
   double m_stereoAngle;          ///< stereo angle of the layer
   double m_sinAngle;             ///< sine of stereo angle
   double m_cosAngle;             ///< cosine of stereo angle
@@ -317,11 +336,28 @@ inline bool DeOTModule::contains(LHCb::OTChannelID channel) const {
 }
 
 inline bool DeOTModule::topModule() const {
-  return m_quarterID > 1;
+  return m_quarterID > 1u;
 }
 
 inline bool DeOTModule::bottomModule() const {
-  return m_quarterID < 2;
+  return m_quarterID < 2u;
+}
+
+/** Long modules go from 1-7 */
+inline bool DeOTModule::longModule() const {
+  return m_moduleID < 8u;
+}
+
+inline bool DeOTModule::s1Module() const {
+  return (m_moduleID == 8u);
+}
+
+inline bool DeOTModule::s2Module() const {
+  return ((m_quarterID == 1u || m_quarterID == 3u) && m_moduleID == 9u);
+}
+
+inline bool DeOTModule::s3Module() const {
+  return ((m_quarterID == 0u || m_quarterID == 2u) && m_moduleID == 9u);
 }
 
 inline unsigned int DeOTModule::nModules() const {
@@ -393,14 +429,14 @@ inline int DeOTModule::hitStrawB(const double u) const {
 /// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-  return !((m_longModule && this->topModule() &&
-	    (m_yHalfModule + y) < m_inefficientRegion));
+  return !(this->longModule() && this->topModule() &&
+	   ((m_yHalfModule + y) < m_inefficientRegion));
 }
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-  return !((m_longModule && this->bottomModule() &&
-	    (m_yHalfModule - y) < m_inefficientRegion));
+  return !(this->longModule() && this->bottomModule() &&
+	   ((m_yHalfModule - y) < m_inefficientRegion));
 }
 
 #endif  // OTDET_DEOTMODULE_H

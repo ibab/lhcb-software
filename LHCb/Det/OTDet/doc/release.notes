@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.52 2006-04-11 19:18:49 janos Exp $
+! $Id: release.notes,v 1.53 2006-04-12 14:11:56 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r2 2006-04-04 ==========================
+! 2006-04-12 - Jan Amoraal
+ DeOTModule.*: removed bool m_longModule and added module type check methods  
+                 
 ! 2006-04-11 - Jan Amoraal
  - Minor bug fixes
-
+ 
 !========================== OTDet v6r1 2006-04-04 ==========================
 ! 2006-04-05 - Jan Amoraal
  - removed error message in sensitiveVolumeID()

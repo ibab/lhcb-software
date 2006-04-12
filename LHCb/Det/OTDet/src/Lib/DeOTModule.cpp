@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.11 2006-04-11 19:18:49 janos Exp $
+// $Id: DeOTModule.cpp,v 1.12 2006-04-12 14:11:56 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -32,7 +32,6 @@ DeOTModule::DeOTModule( const std::string& name ) :
   m_elementID(0u),
   m_uniqueModuleID(0u),
   m_nStraws(0u),
-  m_longModule(true),
   m_stereoAngle(0.0),
   m_sinAngle(0.0),
   m_cosAngle(0.0),
@@ -68,8 +67,6 @@ StatusCode DeOTModule::initialize()
   m_layerID = (unsigned int) layer->params()->param<int>("layerID");
   m_stationID = (unsigned int) station->params()->param<int>("stationID");
   m_nStraws = (unsigned int) param<int>("nStraws");
-  m_longModule = ((this->geometry())->lvolumeName() 
-		  == "/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvLModule");
   m_stereoAngle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
@@ -429,8 +426,7 @@ double DeOTModule::z() const {
 /// The offset is zero for all OT Trajectories
 /// FIXME: This needs to be corrected for the inefficient region
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory( const OTChannelID& aChan,
-                                                        const double /*offset*/ ) const 
-{
+                                                        const double /*offset*/ ) const {
   LineTraj* traj = 0;
   if( contains( aChan) == true ) {
     double halfSizeModule = m_yHalfModule;

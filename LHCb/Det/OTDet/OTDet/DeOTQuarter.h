@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.5 2006-03-31 14:22:40 janos Exp $
+// $Id: DeOTQuarter.h,v 1.6 2006-04-12 14:11:56 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -131,7 +131,7 @@ inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const 
   double aPointZ = aPoint.z();
   return (aPointX > m_xMin && aPointX < m_xMax &&
 	  aPointY > m_yMin && aPointY < m_yMax &&
-	  aPointZ > m_zMin && aPointZ < m_zMax) ? true : false;
+	  aPointZ > m_zMin && aPointZ < m_zMax);
 }
 
 inline double DeOTQuarter::angle() const {
