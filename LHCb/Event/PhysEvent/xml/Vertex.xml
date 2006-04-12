@@ -38,15 +38,15 @@
             to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
        <location
         name="User"
-        place="/Event/Phys/User/Vertices"
+        place="Phys/User/Vertices"
        />
        <location
         name="Production"
-        place="/Event/Phys/Prod/Vertices"
+        place="Phys/Prod/Vertices"
        />       
        <location
         name="Primary"
-        place="/Event/Phys/PrimaryVertices"
+        place="Phys/PrimaryVertices"
        />
        <constructor
         argList="Vertex vert"

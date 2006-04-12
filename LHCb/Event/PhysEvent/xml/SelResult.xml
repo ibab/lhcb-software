@@ -17,7 +17,7 @@
       &KeyedObject;
       <location
        name="Default"
-       place="/Event/Phys/Selections"
+       place="Phys/Selections"
       />
       <attribute
        name="location"

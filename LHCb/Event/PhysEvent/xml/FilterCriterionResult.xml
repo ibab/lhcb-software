@@ -15,7 +15,7 @@
   <import name="Event/Particle"/>
   <location
       name="Default"
-      place="/Event/Phys/FilterCriteria"
+      place="Phys/FilterCriteria"
       />
   <attribute
       name="filterName"

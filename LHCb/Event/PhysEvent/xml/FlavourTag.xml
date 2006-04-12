@@ -26,7 +26,7 @@
 
       <location
         name ="Default"
-        place="/Event/Phys/Tagging"
+        place="Phys/Tagging"
       />
 
       <enum

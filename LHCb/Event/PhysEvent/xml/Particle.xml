@@ -35,7 +35,7 @@
        />
        <location
         name="User"
-        place="/Event/Phys/User/Particles"
+        place="Phys/User/Particles"
         />
        <enum
         desc="Additional information"
@@ -45,7 +45,7 @@
        />
        <location
         name="Production"
-        place="/Event/Phys/Prod/Particles"
+        place="Phys/Prod/Particles"
        />
        <constructor
         argList="Particle part"
@@ -239,12 +239,8 @@
 	const="TRUE"
 	>
 	<code>
-	 LHCb::Particle::ConstVector out;
-         for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_daughters.begin();
-	      i!=m_daughters.end();++i){
-	    out.push_back(*i);
-	 }
-	 return out;
+         return LHCb::Particle::ConstVector( m_daughters.begin() , 
+                                             m_daughters.end() );
 	</code>
        </method>
        <attribute

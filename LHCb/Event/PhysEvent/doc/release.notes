@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.86 2006-04-05 14:53:40 jpalac Exp $
+! $Id: release.notes,v 1.87 2006-04-12 11:57:30 jpalac Exp $
 ! Package     : PhysEvent 
-! Responsible : P. Koppenburg
+! Responsible : P. Koppenburg, J.P. Palacios
+
+! 2006-04-03 - Juan PALACIOS
+ - Remove leading "/Event/" from all PhysEvent default location definitions.
+ - Change implementation of LHCb::Particle::daughtersVector()
 
 ! 2006-04-05 - Juan PALACIOS
  - Change to Particle interface: replace slopeX() and slopeY() by slopes(),
