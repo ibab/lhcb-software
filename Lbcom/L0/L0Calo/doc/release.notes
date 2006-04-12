@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v9r2 2006-04-12 =========================
 ! 2006-04-12 - Olivier Callot
  - Split the Raw Bank produced by L0CaloCandidate into two banks, one for 
    HCAL and one for the rest
