@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.7 2006-04-04 12:53:03 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.8 2006-04-12 18:43:44 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -80,9 +80,9 @@ StatusCode GetTrackerHitsAlg::initialize() {
     return StatusCode::FAILURE;
   }
 
-  info() << " The hits " << m_hitsLocation  << endmsg;
-  info() << " will be taken from G4 collection " << m_colName  << endmsg;
-  info() << " for detector " << m_detName << endmsg;
+  debug() << " The hits " << m_hitsLocation  << endmsg;
+  debug() << " will be taken from G4 collection " << m_colName  << endmsg;
+  debug() << " for detector " << m_detName << endmsg;
 
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName ); // GiGa has to already exist!
 

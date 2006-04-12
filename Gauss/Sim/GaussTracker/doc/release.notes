@@ -5,6 +5,12 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r3 2006-04-12 ========================
+! 2006-04-12 - Gloria CORTI
+ - Move message at initialization specifying configuration for a given
+   detector in debug mode. Note necessary for production
+   . src/GetTrackerHitsAlg.cpp
+
 !======================= GaussTracker v5r2 2006-04-04 ========================
 ! 2006-04-04 - Gloria CORTI
  - Adapt to change in return type of method "put" in GaudiAlgorithm
