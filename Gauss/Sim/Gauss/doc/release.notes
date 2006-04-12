@@ -8,6 +8,7 @@
 ! 2006-04-12 - Gloria CORTI
  - Use ParamFiles v4r2 with definition of "Intermediate" particle for showers
    missing links for new MCTruth
+ - Use new version of XmlDDDB v30r4
  - Put in production new handling of MCTruth using HepMC to store information
    Note that we still store trajectories in G4 because it is where we set
    the conditions but we do not transform them anymore in 
