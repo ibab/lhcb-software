@@ -4,6 +4,12 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v2r2 2006-04-12  =========================
+! 2006-04-12 - Gloria CORTI
+ - Clean up code and adapt better to debugging new event model MCTruth
+   structure
+   . src/PrintEventAlg.cpp
+
 !===================== GaussAlgs v2r1 2006-04-04  =========================
 ! 2006-04-04 - Gloria CORTI
  - Introduce use of Boost no longer taken from GaudiAlgs

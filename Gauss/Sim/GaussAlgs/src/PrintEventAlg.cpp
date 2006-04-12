@@ -1,4 +1,4 @@
-// $Id: PrintEventAlg.cpp,v 1.3 2006-01-18 09:12:46 gcorti Exp $
+// $Id: PrintEventAlg.cpp,v 1.4 2006-04-12 18:50:35 gcorti Exp $
 // Include files 
 
 // from STL
@@ -8,13 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-// #include "GaudiKernel/ISvcLocator.h"
-// #include "GaudiKernel/AlgFactory.h"
-// #include "GaudiKernel/IDataProviderSvc.h"
-// #include "GaudiKernel/SmartDataPtr.h"
-// #include "GaudiKernel/DataObject.h"
-// #include "GaudiKernel/Stat.h"
-// #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -25,7 +18,6 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/MCHeader.h"
-//#include "Event/GenCollision.h"
 
 // local 
 #include "PrintEventAlg.h"
@@ -95,22 +87,22 @@ StatusCode PrintEventAlg::execute()
                                      LHCb::MCHeaderLocation::Default );  
   if( hobj ) { 
     info() << "Event number " << hobj->evtNumber() 
-           << "Event time " <<  hobj->evtTime() << endmsg;
-    info() << "Number of primary vertices (i.e. collisions) "
+           << " Event time " <<  hobj->evtTime() << endmsg;
+    info() << "Number of primary vertices from MCHeader "
            << (hobj->primaryVertices()).size() << endmsg;  
     for( SmartRefVector<LHCb::MCVertex>::const_iterator iv = 
            hobj->primaryVertices().begin();
          hobj->primaryVertices().end() != iv; ++iv ) {
       info() << " vertex " << (*iv)->position() << endmsg;
     }
-  }  
+  }
     
   // MCParticles
   if( !m_particles.empty() ) {
-    LHCb::MCParticles* obj = get<LHCb::MCParticles>( m_particles ) ;
+    const LHCb::MCParticles* obj = get<const LHCb::MCParticles>( m_particles );
     
-    LHCb::MCParticles::const_iterator ipart;
-    for( ipart = obj->begin(); ipart != obj->end(); ipart++ ) {
+    for( LHCb::MCParticles::const_iterator ipart = obj->begin();
+         ipart != obj->end(); ++ipart ) {
       if( !((*ipart)->mother())) {
         licz++;
         info() << " " << endmsg;
@@ -131,11 +123,22 @@ StatusCode PrintEventAlg::execute()
   
   // MCVertices
   if( !m_vertices.empty() ) {
-    LHCb::MCVertices* obj = get<LHCb::MCVertices>( m_vertices ) ;
+    const LHCb::MCVertices* obj = get<const LHCb::MCVertices>( m_vertices ) ;
     info() << "Number of extracted vertices  '"
            << m_vertices << "'  \t" 
            << obj->size() 
-           << endreq ;
+           << endmsg;
+    unsigned int nPV = 0;
+    for( LHCb::MCVertices::const_iterator iv = obj->begin(); obj->end() != iv;
+         ++iv ) {
+      if( (*iv)->isPrimary() ) {
+        nPV++;
+        info() << "Primary " << nPV << " outgoing particles " 
+               << (*iv)->products().size() << endmsg;
+        info() << "Primary position " << (*iv)->position() << endmsg;
+      }
+    } 
+    info() << "Number of extracted primary vertices " << nPV << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -174,48 +177,56 @@ void PrintEventAlg::printDecayTree(long depth, const std::string& prefix,
   }
 
   double x,y,z;
-  std::string vertype;
   
-  if(mother->originVertex()) {
+  if( mother->originVertex()) {
     x=mother->originVertex()->position().x();
     y=mother->originVertex()->position().y();
     z=mother->originVertex()->position().z();
-    vertype = mother->originVertex()->type();
   }
   else {
     x=-99999.9;
     y=-99999.9;
     z=-99999.9;
-    vertype = LHCb::MCVertex::Unknown;
-  }  
+  }
 
-//   if( mother->collision() ) { // May put back this when tool is provided
-  if( mother->primaryVertex() ) { 
-    info() << depth << prefix.substr(0, prefix.length()-1)
+  info() << depth << prefix.substr(0, prefix.length()-1)
          << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
          << name 
-         << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
-         << " x:" << std::setw(12) << x
-         << " y:" << std::setw(12) << y
-         << " z:" << std::setw(12) << z 
-         << " vertexType " << vertype << " process " 
-         << " primary vertex " 
-         << mother->primaryVertex()->position()
-//          << mother->collision()->processType() 
-//          << " signal " << mother->collision()->isSignal()
-         << endmsg;
+         << "    En(MeV):"   << std::setw(12) << mother->momentum().e();
+  
+  if( mother->originVertex() ) {
+    info() << " origin Vertex " << mother->originVertex()->position()
+           << " vertex Type " << mother->originVertex()->type();
   }
-  else {
-    info() << depth << prefix.substr(0, prefix.length()-1)
-           << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
-           << name 
-           << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
-           << " x:" << std::setw(12) << x
-           << " y:" << std::setw(12) << y
-           << " z:" << std::setw(12) << z << " no primary vertex!"
-//            << " z:" << std::setw(12) << z << " no collision!"
-           << endmsg;
+  if( mother->primaryVertex() ) {
+    info() << " - from primary vertex " << mother->primaryVertex()->position();
+  } else {
+    info() << " - no primary vertex!";
   }
+  info() << endmsg;  
+    
+//   if( mother->primaryVertex() ) { 
+//     info() << depth << prefix.substr(0, prefix.length()-1)
+//            << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
+//            << name 
+//            << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
+//            << " origin Vertex" << mother->originVertex()->position()
+//            << " y:" << std::setw(12) << mother->originVertex()->position().y()
+//            << " z:" << std::setw(12) << mother->originVertex()->position().z() 
+//            << " vertexType " << mother->originVertex()->type()
+//            << " primary vertex " << mother->primaryVertex()->position()
+//            << endmsg;
+//   }
+//   else {
+//     info() << depth << prefix.substr(0, prefix.length()-1)
+//            << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
+//            << name 
+//            << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
+//            << " x:" << std::setw(12) << x
+//            << " y:" << std::setw(12) << y
+//            << " z:" << std::setw(12) << z << " no primary vertex!"
+//            << endmsg;
+//   }
   
   if( depth < m_depth ) {
     SmartRefVector<LHCb::MCVertex>::const_iterator ivtx;
