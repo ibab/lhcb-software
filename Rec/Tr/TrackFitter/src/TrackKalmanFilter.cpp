@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.12 2006-04-06 13:16:57 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.13 2006-04-12 14:23:24 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -238,7 +238,8 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   // update the covariance matrix
   TransportMatrix uniDiagMat = TransportMatrix( ROOT::Math::SMatrixIdentity());
   TransportMatrix B = uniDiagMat - TrackVectorProd( mK, H );
-  tC.Place_at( LHCb::MatrixManip::Symmetrize<TransportMatrix>( B * tC ), 0, 0);
+  TransportMatrix bTimesC = B * tC;
+  tC = LHCb::MatrixManip::Symmetrize<TransportMatrix>( bTimesC );
 
   // update the residual and the error on the residual
   double HK = ROOT::Math::Dot( H, mK );
@@ -262,7 +263,7 @@ TransportMatrix TrackKalmanFilter::TrackVectorProd( TrackVector& vec1,
 {
   // hack to do the product (5x1) * (1x5) of TrackVectors
   // this is really an ugly hack!
-  TrackMatrix result = TrackMatrix();
+  TransportMatrix result = TrackMatrix();
   for ( unsigned int i = 0; i < vec1.Dim(); ++i ) {
     for ( unsigned int j = 0; j < vec2.Dim(); ++j ) {
       result(i,j) = vec1[i] * vec2[j];
