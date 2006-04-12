@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.2 2006-04-12 13:46:28 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.3 2006-04-12 14:30:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,7 +32,8 @@ RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
-    m_idTool         ( NULL )
+    m_idTool         ( NULL ),
+    m_richSys        ( NULL )
 {
 }
 
@@ -50,6 +51,9 @@ StatusCode RichPixelPositionMonitor::initialize()
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
   acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
   acquireTool( "RichSmartIDTool", m_idTool,   0, true );
+
+  // RichDet
+  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
   
   // initialise variables
   m_xHits.clear();
@@ -82,6 +86,8 @@ StatusCode RichPixelPositionMonitor::execute()
   PD_GLOBAL_POSITIONS;
   PD_LOCAL_POSITIONS;
 
+  RichDAQ::PDMap pdMap;
+
   // Iterate over pixels
   debug() << "All Pixels " << richPixels()->size() << " :-" << endreq;
   std::vector<unsigned int> nPixs( Rich::NRiches, 0 );
@@ -108,6 +114,9 @@ StatusCode RichPixelPositionMonitor::execute()
               << "     local C4F10   " << pixel->localPosition(Rich::C4F10) << endreq
               << "     local CF4     " << pixel->localPosition(Rich::CF4) << endreq;
     }
+
+    // map of hits in each HPD
+    pdMap[pixel->smartID().hpdID()].push_back( pixel->smartID() );
     
     // Position plots
     plot1D( gPos.x(), hid(rich,"obsXglo"), "Observed hits x global",
@@ -243,6 +252,32 @@ StatusCode RichPixelPositionMonitor::execute()
   }
   if ( nR2 != nPixs[Rich::Rich2] )
     Error("Mis-match in RICH2 pixels between full container and RICH2 iterators");
+
+  // HPD plots
+  for ( RichDAQ::PDMap::const_iterator iPD = pdMap.begin();
+        iPD != pdMap.end(); ++iPD )
+  {
+    // HPD
+    const RichSmartID hpdID = (*iPD).first;
+    const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpdID);
+    // Centre point of HPD in local coords
+    const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(hpdID);
+    const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
+    // create histo title
+    std::ostringstream HPD;
+    HPD << hpdID << " " << hpdGlo;
+    // histo ID
+    const std::string Hid = "hpds/"+(std::string)hardID ;
+    for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPD).second.begin();
+          iS != (*iPD).second.end(); ++iS )
+    {
+      // hit point on silicon in local coords
+      const Gaudi::XYZVector hitP
+        = m_idTool->globalToPDPanel( m_idTool->globalPosition(*iS) ) - hpdLoc;
+      plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*mm, 8*mm, -8*mm, 8*mm, 32, 32 );
+    }
+  }
+
 
   return StatusCode::SUCCESS;
 }
