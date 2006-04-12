@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.h,v 1.3 2006-02-09 16:41:32 cattanem Exp $
+// $Id: STCluster2MCHitLinker.h,v 1.4 2006-04-12 13:29:17 mneedham Exp $
 #ifndef STCLUSTER2MCHITALG_H
 #define STCLUSTER2MCHITALG_H 1
 
@@ -8,7 +8,7 @@
 #include <vector>
 
 // Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 //Event
 #include "Event/MCHit.h"
@@ -50,7 +50,6 @@ private:
 
   StatusCode refsToRelate(std::vector<hitPair>& selectedRefs,
                           const std::map<const LHCb::MCHit*,double>& hitMap,
-                          const double& totCharge,
                           LHCb::MCHits* hits) const;
 
   StatusCode associateToTruth(const LHCb::STCluster* aCluster,

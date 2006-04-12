@@ -2,6 +2,10 @@ Package         : S/STAssociators
 Package manager : M. Needham 
 !------------------------------------------------------------------------------
 
+! 2006-04-12 M Needham
+ - Change logic of cluster to hit associator (weight by charge)
+ - change logic of cluster to particle associator
+
 !======================= STAssociators v1r1 2006-03-17 ========================
 ! 2006-03-17  Eduardo Rodrigues
  - options file fixed as still using all names from old event model,

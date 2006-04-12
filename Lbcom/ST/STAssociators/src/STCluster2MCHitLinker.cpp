@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.7 2006-03-03 17:01:11 mneedham Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.8 2006-04-12 13:29:17 mneedham Exp $
 // Include files 
 
 #include "Event/STCluster.h"
@@ -91,19 +91,16 @@ StatusCode STCluster2MCHitLinker::execute() {
     StatusCode sc = associateToTruth(*iterClus,hitMap);
     if( sc.isFailure() ) return sc;  // error message printed in failed method
       
-    // total charge = cluster size due to norm
-    double tCharge = (*iterClus)->size();
 
     // select references to add to table
     std::vector<hitPair> selectedRefs;
-    refsToRelate(selectedRefs,hitMap,tCharge,mcHits);
+    refsToRelate(selectedRefs,hitMap,mcHits);
 
     if (selectedRefs.empty() == false){
       if (m_oneRef == false ){
         std::vector<hitPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){ 
           myLink.link(*iterClus,iterPair->first,iterPair->second);
-	  //std::cout << "Added links " << std::endl;
 	  ++iterPair;
         } //iterPair
       }
@@ -120,19 +117,15 @@ StatusCode STCluster2MCHitLinker::execute() {
 
 StatusCode STCluster2MCHitLinker::refsToRelate(std::vector<hitPair>& selectedRefs,
                                             const std::map<const LHCb::MCHit*,double>& hitMap,
-                                            const double& totCharge,
                                             LHCb::MCHits* hits) const{
+
   // iterate over map
   std::map<const LHCb::MCHit*,double>::const_iterator iterMap = hitMap.begin();
   while (iterMap != hitMap.end()){
     const LHCb::MCHit* aHit = iterMap->first;
-    double frac = -1.0;
-    if (totCharge >0.0){
-      frac = fabs(iterMap->second/totCharge);
-    }
-    if ((0 != aHit)&&(frac>m_minFrac)){
+    if ((0 != aHit)&&(iterMap->second>m_minFrac)){
       if ((m_addSpillOverHits == true)||(hits == aHit->parent())){
-	selectedRefs.push_back(std::make_pair(aHit,frac));
+	selectedRefs.push_back(std::make_pair(aHit,iterMap->second));
       }
     }
     ++iterMap;
@@ -155,27 +148,29 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const LHCb::STCluster* aClust
   if (!aTable) return Error( "Failed to find " + m_asctLocation + " table", 
                              StatusCode::FAILURE);
 
-  double foundCharge = 0.;
-
   std::vector<LHCb::STChannelID> chanVector = aCluster->channels();
   std::vector<LHCb::STChannelID>::iterator iterChan = chanVector.begin();
   while (iterChan != chanVector.end()){
     LHCb::STDigit* aDigit = m_digitCont->object(*iterChan);
+    double foundCharge = 0.;
     if (aDigit !=0){
       Range hitsCont = aTable->relations(aDigit);
       iterator iterHit = hitsCont.begin();   
       for ( ; iterHit != hitsCont.end(); ++iterHit){
         const LHCb::MCHit* aHit = iterHit->to();
-        hitMap[aHit] += iterHit->weight();
-        foundCharge += iterHit->weight();
+        hitMap[aHit] += iterHit->weight() * aDigit->depositedCharge() ;
+        foundCharge += iterHit->weight() * aDigit->depositedCharge();
       } // iterHit
+      hitMap[0] += aDigit->depositedCharge() - foundCharge;
     } // aDigit
     ++iterChan;
   } // Digit
 
-  // difference between depEnergy and total cluster size is noise
-  // This is due to the normalization !!!!
-  hitMap[0] = aCluster->size()-foundCharge;
+  // renormalize to 1
+  std::map<const LHCb::MCHit*,double>::iterator iterMap = hitMap.begin();
+  for ( ; iterMap != hitMap.end() ; ++iterMap){
+    iterMap->second /= aCluster->totalCharge();   
+  }
 
   return StatusCode::SUCCESS;
 }

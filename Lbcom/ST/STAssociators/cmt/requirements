@@ -11,6 +11,9 @@ use DigiEvent   v*     Event
 use MCEvent     v*     Event
 use LinkerEvent v*     Event
 use GaudiAlg    v*
+use GSL                 v*    LCG_Interfaces
+use Boost v1 LCG_Interfaces
+
 
 # =============== own options =================================================
 set STASSOCIATORSOPTS  ${STASSOCIATORSROOT}/options

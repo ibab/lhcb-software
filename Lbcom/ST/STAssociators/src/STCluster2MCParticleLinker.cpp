@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.7 2006-03-08 14:42:35 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.8 2006-04-12 13:29:17 mneedham Exp $
 // Include files 
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
@@ -19,6 +19,9 @@
 
 #include <algorithm>
 
+
+
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : STCluster2MCParticleChi2Alg
 //
@@ -37,7 +40,7 @@ STCluster2MCParticleLinker::STCluster2MCParticleLinker( const std::string& name,
   declareProperty("InputData" , m_inputData  = LHCb::STClusterLocation::TTClusters);
   declareProperty("OutputData", m_outputData = LHCb::STClusterLocation::TTClusters);
   declareProperty( "addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.3);
+  declareProperty("minfrac", m_minFrac = 0.2);
   declareProperty("oneRef",m_oneRef = false);
   declareProperty("detType", m_detType = "TT");
 
@@ -84,19 +87,18 @@ StatusCode STCluster2MCParticleLinker::execute() {
     std::map<const LHCb::MCParticle*,double> partMap;
     associateToTruth(*iterClus,partMap);
      
-    // total charge = cluster size due to norm
-    double tCharge = (*iterClus)->size();
-
     // select references to add to table
     std::vector<partPair> selectedRefs;
-    refsToRelate(selectedRefs,partMap,tCharge,mcParts);
+    refsToRelate(selectedRefs,partMap,mcParts);
 
     if (selectedRefs.empty() == false){
 
       if (m_oneRef == false){
+        double tWeight = 0;
         std::vector<partPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           aLinker.link(*iterClus,iterPair->first,iterPair->second);
+          if (iterPair->first != 0) tWeight += iterPair->second;
           ++iterPair;
         } //iterPair
       }
@@ -111,20 +113,15 @@ StatusCode STCluster2MCParticleLinker::execute() {
 };
 
 StatusCode STCluster2MCParticleLinker::refsToRelate(std::vector<partPair>& selectedRefs,
-                                            const std::map<const LHCb::MCParticle*,double>& partMap,
-                                            const double totCharge,
+						    const std::map<const LHCb::MCParticle*,double>& partMap,
                                             LHCb::MCParticles* particles) const{
   // iterate over map
   std::map<const LHCb::MCParticle*,double>::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
     const LHCb::MCParticle* aParticle = iterMap->first;
-    double frac = -1.0;
-    if (totCharge > 0.0){
-     frac = iterMap->second/totCharge;
-    }
-    if ((0 != aParticle)&&(frac>m_minFrac)){
+    if ((0 != aParticle)&&(iterMap->second>m_minFrac)){
       if ((m_addSpillOverHits == true)||(particles == aParticle->parent())){
-	selectedRefs.push_back(std::make_pair(aParticle,frac));
+	selectedRefs.push_back(std::make_pair(aParticle,iterMap->second));
       }
     }
     ++iterMap;
@@ -154,8 +151,9 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const LHCb::STCluster* a
     foundCharge += iterHit->weight();
   } // iterHit
 
-  // difference between depEnergy and total cluster charge is noise (due to norm)
-  particleMap[0] += aCluster->size()-foundCharge;
 
+  // difference between depEnergy and total cluster charge is noise (due to norm)
+  particleMap[0] += 1.0 - foundCharge;
+ 
   return StatusCode::SUCCESS;
 }

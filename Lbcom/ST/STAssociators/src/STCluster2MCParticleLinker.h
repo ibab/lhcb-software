@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.4 2006-03-03 17:01:11 mneedham Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.5 2006-04-12 13:29:17 mneedham Exp $
 #ifndef STCLUSTER2MCPARTICLEALG_H
 #define STCLUSTER2MCPARTICLEALG_H 1
 
@@ -17,7 +17,7 @@
  *  @author Matt Needham
  *  @date   26/11/2005
  */
-class STCluster2MCParticleLinker : public GaudiAlgorithm {
+class STCluster2MCParticleLinker : public GaudiAlgorithm{
 
   friend class AlgFactory<STCluster2MCParticleLinker>;
   
@@ -46,7 +46,6 @@ private:
 
   StatusCode refsToRelate(std::vector<partPair>& selectedRefs,
                           const std::map<const LHCb::MCParticle*,double>& hitMap,
-                          const double totCharge,
                           LHCb::MCParticles* particles) const;
 
   StatusCode associateToTruth(const LHCb::STCluster* aCluster,
