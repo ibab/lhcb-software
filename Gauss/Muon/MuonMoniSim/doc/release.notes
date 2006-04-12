@@ -1,6 +1,12 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
+!!====================== MuonMoniSim v2r1 2006-04-12  ========================
+ 2006-04-12 - Gloria CORTI
+ - Put message "Hello" in debug mode in execute method, not necessary in
+   production
+   . src/MuonHitChecker.cpp
+
 !====================== MuonMoniSim v2r0 2006-02-14  ========================
 ! 2006-02-14 - Gloria CORTI
  - Introduce necessary use of GaudiAlg, no longer gotten via LHCbKernel
