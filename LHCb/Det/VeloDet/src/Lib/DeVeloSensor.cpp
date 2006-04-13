@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.17 2006-04-12 14:23:23 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.18 2006-04-13 13:24:39 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -143,6 +143,11 @@ StatusCode DeVeloSensor::channelDistance(const LHCb::VeloChannelID& start,
   nOffset = 0;
   unsigned int startStrip = start.strip();
   unsigned int endStrip = end.strip();
+
+  if(start.sensor() != end.sensor()) {
+    nOffset=2048;
+    return StatusCode::FAILURE;
+  }
 
   if(numberOfStrips()<startStrip || numberOfStrips()<endStrip) {
     return StatusCode::FAILURE;

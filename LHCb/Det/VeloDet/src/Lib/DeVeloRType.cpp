@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.23 2006-04-12 14:23:23 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.24 2006-04-13 13:24:39 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -201,7 +201,7 @@ StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start,
   unsigned int endZone;
   endZone = zoneOfStrip(strip);
   // Check boundaries
-  if(numberOfStrips() < strip) return StatusCode::FAILURE;
+  if(numberOfStrips() <= strip) return StatusCode::FAILURE;
   if(startZone != endZone) {
     return StatusCode::FAILURE;
   }
