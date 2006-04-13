@@ -6,6 +6,38 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r3>2006-04-13 LbcomSys v4r3</A></H1><PRE>
+This version uses Gaudi v18r3 and LHCb v20r3.
+
+- Packages modified: CaloAssociators v6r1, Associators v3r2, STAssociators v1r2,
+    STDAQ v2r5, OTMonitor v2r2, L0Calo v9r2, L0DU v7r1p2, L0MuonTrigger v5r2
+
+- In CaloAssociators v6r1:
+  . Calo2MC.h, CaloMCTools.h moved to CaloUtils v6r1
+
+- In Associators v3r2:
+  . Small improvements to code, bug fix for Linker table paths
+
+- In STAssociators v1r2:
+  . Change logic of cluster to hit associator (weight by charge)
+  . Change logic of cluster to particle associator
+
+- In STDAQ v2r5
+  . Bug fix in decoding
+
+- In OTMonitor v2r2:
+  . Adapt to GaudiHistoAlg
+
+- In L0Calo v9r2:
+  . Split the Raw Bank produced by L0CaloCandidate into two banks, one for 
+    HCAL and one for the rest
+
+- In L0DU v7r1p2:
+  . Remove printing of PuVeto counter, was not filled.
+
+- In L0MuonTrigger v5r2:
+  . Split the raw event in 5 banks to match the 5 TELL1s output
+
 </PRE><H1><A NAME=v4r2>2006-03-31 LbcomSys v4r2</A></H1><PRE>
 This version uses Gaudi v18r3 and LHCb v20r2.
 

@@ -1,5 +1,5 @@
 package LbcomSys
-version v4r2
+version v4r3
 
 branches doc cmt
 
@@ -8,14 +8,14 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r1  L0          # Olivier Callot
-use L0DU            v7r1p1  L0          # Olivier Deschamps   
-use L0MuonTrigger     v5r1  L0          # Andrei Tsarogorodtsev, Julien Cogan
+use L0Calo            v9r2  L0          # Olivier Callot
+use L0DU            v7r1p2  L0          # Olivier Deschamps   
+use L0MuonTrigger     v5r2  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto          v7r1p1  L0          # Marko Zupan
 #use L0Checker         v3r2p1 L0         # Eduardo Rodrigues
 
 # Outer tracker
-use OTMonitor         v2r1  OT          # Jan Amoraal
+use OTMonitor         v2r2  OT          # Jan Amoraal
 use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
@@ -24,14 +24,14 @@ use RichTools         v2r3  Rich        # Chris Jones
 use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker
-use STDAQ             v2r4  ST          # Matt Needham
+use STDAQ             v2r5  ST          # Matt Needham
 use STTools           v2r1  ST          # Matt Needham
 use STAlgorithms      v1r1  ST          # Matt Needham
-use STAssociators     v1r1  ST          # Matt Needham
+use STAssociators     v1r2  ST          # Matt Needham
 use STCheckers        v1r1  ST          # Matt Needham
 
 # Calorimeter
-use CaloAssociators v6r0p1  Calo        # Olivier Deschamps
+use CaloAssociators   v6r1  Calo        # Olivier Deschamps
 #use KaliMisCalo       v1r0  Calo        # Ivan Belyaev
 
 # Velo
@@ -39,4 +39,4 @@ use VeloDAQ           v3r1  Velo        # Kurt Rinnert
 use VeloAssociators   v2r1  Velo        # Tomasz Szumlak
 
 # Common
-use Associators       v3r1  Associators # Matt Needham
+use Associators       v3r2  Associators # Matt Needham
