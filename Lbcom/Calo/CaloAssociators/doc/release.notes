@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.42 2006-04-06 13:26:10 odescham Exp $
+! $Id: release.notes,v 1.43 2006-04-13 08:48:24 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
 
-!===================== CaloAssociators v6r0p1 2006-02-28 ======================
+!===================== CaloAssociators v6r1 2006-04-10 ========================
 ! 2006-04-06 - Olivier Deschamps
  - a bit of repackaging : Calo2MC.h, CaloMCTools.h moved to CaloUtils
- -  CaloUtils dependency added in requirements.
+ - CaloUtils dependency added in requirements.
 
-
+!===================== CaloAssociators v6r0p1 2006-02-28 ======================
 ! 2006-03-28 - Marco Cattaneo
  - Backwards compatible fixes to compile with Gaudi v18r3
 
