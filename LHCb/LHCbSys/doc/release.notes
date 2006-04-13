@@ -5,6 +5,34 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v20r3>2006-04-13 LHCbSys v20r3</A></H1><PRE>
+This version uses Gaudi v18r3 and is fully compatible with DC06 production data
+
+- Packages modified: KernelSys v5r3, LHCbKernel v6r5, CaloUtils v6r1,
+    DetSys v8r3, STDet v2r3, OTDet v6r2, VeloDet v10r4, DetDescCnv v3r2
+
+- In LHCbKernel v6r5:
+  . Bug fix - Remove erroneous 'inline' from RichSide.cpp
+
+- In STDet v2r3:
+  . Fixed bug in DeSTSector trajectory method
+
+- In OTDet v6r2:
+  . Fix bug in isInsideEfficient that was discarding hits in stereo layers
+  . Other minor bug fixes
+
+- In VeloDet v10r4:
+  . Move trajectory method to sensor classes
+  . Remove stripLimitsR/Phi methods from DeVelo
+  . Add methods to sensors which provide start and end co-ordinates for strip in
+    local and global frames
+
+- In DetDescCnv v3r2:
+  . Fixed bug in XmlGenericCnv to allow proper decoding of CONDITIONS_PATH
+
+- In CaloUtils v6r1:
+  . Add some header files previously in CaloAssociators
+
 </PRE><H1><A NAME=v20r2>2006-04-04 LHCbSys v20r2</A></H1><PRE>
 This version uses Gaudi v18r3 and is for DC06 production
 
