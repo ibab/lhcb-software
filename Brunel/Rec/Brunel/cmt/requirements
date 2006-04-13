@@ -20,17 +20,17 @@ use GaudiObjDesc 	v9r4         -no_auto_imports
 use RootHistCnv         v9r9         -no_auto_imports
 
 #-- Database
-use XmlDDDB             v30r3   Det  -no_auto_imports
+use XmlDDDB             v30r4   Det  -no_auto_imports
 use XmlConditions       v1r6    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v4r1         -no_auto_imports
+use ParamFiles          v4r2         -no_auto_imports
 #use BrunelDQ           v1r0    DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r2)
-use LHCb	        v20r2        -no_auto_imports
+#-- LHCb libraries (from LHCB_v20r3)
+use LHCb	        v20r3        -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r2)
-use LbcomSys            v4r2         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r3)
+use LbcomSys            v4r3         -no_auto_imports
 
 #-- Rec packages (from REC_v3r1)
 use RecSys              v3r1         -no_auto_imports

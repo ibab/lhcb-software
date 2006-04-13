@@ -42,8 +42,8 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v11r2/0601-11144100.100ev.05Apr.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // B->J/Psi(mumu)Ks with Gauss v24r3, Boole v11r2
+  "DATAFILE='PFN:/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r3/0601-11144100.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // B->J/Psi(mumu)Ks with Gauss v24r3, Boole v11r3
 
 //---------------------------------------------------------------------------
 // Event output
