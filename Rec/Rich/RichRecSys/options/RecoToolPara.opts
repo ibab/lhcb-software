@@ -6,7 +6,7 @@
 // ============================ Track Creators - New Model ====================================
 
 // RichTrackCreator using full reconstructed information : New track model (Default)
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
+#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
 
 // RichTrackCreator using TrStoredTracks but cheating the tracking information by
 // using the associated MCRichTrack. In the include file below the cheating can be tuned
@@ -14,7 +14,7 @@
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedRecoTracks.opts"
 
 // RichTrackCreator using only MC information
-#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
 
 // ================================== Pixel Creators ==========================================
 
