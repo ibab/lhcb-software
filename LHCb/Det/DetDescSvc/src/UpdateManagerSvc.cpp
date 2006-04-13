@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.6 2006-02-03 10:44:45 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.7 2006-04-13 10:53:12 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -31,6 +31,10 @@ UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc)
   Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
   m_head_since(1),m_head_until(0)
 {
+#ifndef WIN32
+  pthread_mutex_t tmp_lock = PTHREAD_MUTEX_INITIALIZER;
+  m_busy = tmp_lock;
+#endif
   declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",      m_detDataSvcName);
 }
@@ -245,9 +249,26 @@ StatusCode UpdateManagerSvc::newEvent(){
 }
 StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   StatusCode sc = StatusCode::SUCCESS;
-  // Check head validity
-  if ( evtTime >= m_head_since && evtTime < m_head_until ) return sc; // no need to update
 
+#ifndef WIN32
+  MsgStream log(msgSvc(),name());
+  
+  log << MSG::VERBOSE << "newEvent(evtTime): acquiring mutex lock" << endmsg;
+  acquireLock();
+#endif
+
+  // Check head validity
+  if ( evtTime >= m_head_since && evtTime < m_head_until ) {
+#ifndef WIN32
+    log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
+    releaseLock();
+#endif  	
+  	return sc; // no need to update
+  }
+
+#ifndef WIN32
+  try {
+#endif
   Item::ItemList::iterator it;
 
   // The head list may change while updating, I'll loop until it's stable (or a problem occurs)
@@ -281,6 +302,17 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
     // check if we need to re-do the loop (success and a change in the head)
     head_has_changed = sc.isSuccess() && (head_copy != m_head_items);
   } while ( head_has_changed );
+
+#ifndef WIN32
+  } catch (...) {
+    log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock (exception occurred)" << endmsg;
+  	releaseLock();
+    throw;
+  }
+
+  log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
+  releaseLock();
+#endif
   
   return sc;
 }
@@ -463,4 +495,19 @@ void UpdateManagerSvc::handle(const Incident &inc) {
     }
   }
 }
+
+//=========================================================================
+//  Locking functionalities
+//=========================================================================
+void UpdateManagerSvc::acquireLock(){
+#ifndef WIN32
+  pthread_mutex_lock(&m_busy);
+#endif
+}
+void UpdateManagerSvc::releaseLock(){
+#ifndef WIN32
+  pthread_mutex_unlock(&m_busy);
+#endif
+}
+
 //=============================================================================

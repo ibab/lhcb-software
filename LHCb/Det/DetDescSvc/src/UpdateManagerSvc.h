@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.4 2006-02-01 19:40:26 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.5 2006-04-13 10:53:12 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -17,6 +17,10 @@
 #include <map>
 #include <exception>
 #include <algorithm>
+
+#ifndef WIN32
+#include <pthread.h>
+#endif
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -68,10 +72,15 @@ public:
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
   virtual void dump();
 
+  /// Force the update manager service to wait before entering the newEvent loop.
+  virtual void acquireLock();
+  /// Let the update manager service enter the newEvent loop.
+  virtual void releaseLock();
+
   // ---- Implement IIncidentListener interface ----
   /// Handle BeginEvent incident.
   virtual void handle(const Incident &inc);
-
+  
 protected:
 
   /// Register a condition for an object
@@ -142,6 +151,12 @@ private:
   Gaudi::Time       m_head_since;
   /// Higher bound of intersection of head IOVs.
   Gaudi::Time       m_head_until;
+  
+#ifndef WIN32
+  /// mutex lock used to avoid dependencies corruptions in a multi-thread environment.
+  pthread_mutex_t m_busy;
+#endif
+
 };
 
 #include "UpdateManagerSvc.icpp"
