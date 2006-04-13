@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.4 2006-01-22 16:13:45 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.5 2006-04-13 13:04:24 marcocle Exp $
 // Include files 
 
 
@@ -161,6 +161,8 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
   if (folder != m_cache.end()) {
     if ( ! folder->second.spec ) {
       // It's a FolderSet! no objects inside
+      since = cool::ValidityKeyMin;
+      until = cool::ValidityKeyMax;
       descr = folder->second.description;
       payload.reset();
       m_log << " FOUND (FolderSet)" << endmsg;
