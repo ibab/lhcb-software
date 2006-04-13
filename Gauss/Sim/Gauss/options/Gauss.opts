@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.85 2006-04-12 19:54:20 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.86 2006-04-13 06:57:30 gcorti Exp $ 
 
 /** @file 
  * 
@@ -53,7 +53,7 @@ Simulation.MeasureTime = true;
 Generator.Members       += { "GaudiSequencer/GenMonitor" };
 Simulation.Members      += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
-#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
+//#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 GenMonitor.MeasureTime = true;
 SimMonitor.MeasureTime = true;
 
