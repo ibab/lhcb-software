@@ -4,10 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r1 2006-04-13 ========================
 ! 2006-04-13 - Jeroen van Tilburg
  - Fix ambiguity calculation. The arclengths s1 and s2 were not initialized.
 
-!======================= TrackIdealPR v2r1 2006-04-12 ========================
 ! 2006-04-12 - Eduardo Rodrigues
  - fixed a couple of buglets in using linkers
 
