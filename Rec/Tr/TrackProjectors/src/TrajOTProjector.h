@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.5 2006-02-21 18:28:25 jvantilb Exp $
+// $Id: TrajOTProjector.h,v 1.6 2006-04-13 10:41:05 jvantilb Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -46,9 +46,12 @@ public:
 private:
 
   DeOTDetector*      m_det;
-  std::string        m_otTrackerPath; ///< Name of the OT XML geom path
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
+
+  // job options
+  std::string        m_otTrackerPath; ///< Name of the OT XML geom path
+  double             m_tolerance;     ///< Required accuracy of the projection
 
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

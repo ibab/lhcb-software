@@ -1,4 +1,4 @@
-// $Id: TrajVeloRProjector.cpp,v 1.4 2006-04-06 13:15:35 jvantilb Exp $
+// $Id: TrajVeloRProjector.cpp,v 1.5 2006-04-13 10:41:05 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -40,17 +40,15 @@ StatusCode TrajVeloRProjector::project( const State& state,
   const StateTraj refTraj = StateTraj( refVec, meas.z(), bfield ) ; 
 
   // Get the measurement trajectory representing the centre of gravity
-  const Trajectory& measTraj = meas.trajectory();  
-
-  double s1, s2;
-  XYZVector distance;
+  const Trajectory& measTraj = meas.trajectory();
 
   // Determine initial estimates of s1 and s2
-  s1 = 0.0; // Assume state is already close to the minimum
-  s2 = measTraj.arclength( refTraj.position(s1) );
+  double s1 = 0.0; // Assume state is already close to the minimum
+  double s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
+  XYZVector distance;
+  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
 
   // Calculate the projection matrix
   ROOT::Math::SVector< double, 3 > unitDistance;
@@ -102,6 +100,8 @@ TrajVeloRProjector::TrajVeloRProjector( const std::string& type,
   : TrackProjector( type, name , parent )
 {
   declareInterface<ITrackProjector>(this);
+
+  declareProperty( "tolerance", m_tolerance = 0.001*mm );
 }
 
 //-----------------------------------------------------------------------------

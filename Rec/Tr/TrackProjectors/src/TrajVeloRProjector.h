@@ -1,4 +1,4 @@
-// $Id: TrajVeloRProjector.h,v 1.1 2006-02-27 19:56:04 jvantilb Exp $
+// $Id: TrajVeloRProjector.h,v 1.2 2006-04-13 10:41:05 jvantilb Exp $
 #ifndef TRAJVELORPROJECTOR_H 
 #define TRAJVELORPROJECTOR_H 1
 
@@ -44,6 +44,9 @@ private:
 
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
   ITrajPoca*         m_poca; ///< Pointer to the ITrajPoca interface
+
+  // job option
+  double             m_tolerance;     ///< Required accuracy of the projection
 
 };
 #endif // TRAJVELORPROJECTOR_H

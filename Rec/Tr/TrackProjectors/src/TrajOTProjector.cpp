@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.9 2006-04-06 13:15:35 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.10 2006-04-13 10:41:05 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -47,15 +47,13 @@ StatusCode TrajOTProjector::project( const State& state,
   // Get the measurement trajectory
   const Trajectory& measTraj = meas.trajectory();
 
-  double s1, s2;
-  XYZVector distance;
-
   // Determine initial estimates of s1 and s2
-  s1 = 0.0; // Assume state is already close to the minimum
-  s2 = measTraj.arclength( refTraj.position(s1) );
+  double s1 = 0.0; // Assume state is already close to the minimum
+  double s2 = measTraj.arclength( refTraj.position(s1) );
 
   // Determine the actual minimum with the Poca tool
-  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, 20*mm );
+  XYZVector distance;
+  m_poca -> minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
 
   // Calculate the projection matrix
   ROOT::Math::SVector< double, 3 > unitDistance;
@@ -89,7 +87,6 @@ StatusCode TrajOTProjector::project( const State& state,
   m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
                         ( m_H, state.covariance() ) );
 
-
   return StatusCode::SUCCESS;
 }
 
@@ -120,6 +117,7 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
 
   declareProperty( "OTGeometryPath",
                    m_otTrackerPath = DeOTDetectorLocation::Default );
+  declareProperty( "tolerance", m_tolerance = 0.020*mm );
 }
 
 //-----------------------------------------------------------------------------
