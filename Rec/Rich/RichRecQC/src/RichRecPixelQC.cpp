@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.4 2006-04-12 13:47:07 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.5 2006-04-13 17:33:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -115,6 +115,7 @@ StatusCode RichRecPixelQC::execute()
     for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
           iR != rawIDs.end(); ++iR )
     {
+      verbose() << "Decoded hit " << *iR << endreq;
       // flags
       bool isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK;
       getHistories( *iR, isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK );
@@ -137,7 +138,7 @@ StatusCode RichRecPixelQC::execute()
     {
       // flags
       bool isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK;
-      getHistories( (*iPixel)->smartID(), 
+      getHistories( (*iPixel)->smartID(),
                     isBkg,isHPDQCK,isSignal,isAerogelCK,isC4F10CK,isCF4CK );
       // count
       ++nHPDHits;
@@ -157,7 +158,7 @@ StatusCode RichRecPixelQC::execute()
     plot1D( nHPDHits, hid(rich,"nPixsPerHPD"), "Average HPD occupancy (nHits>0)", 0, 150, 75 );
 
   } // loop over HPDs
-  
+
   plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nPixs"), "Overall occupancy (nHits>0)", 0, 5000, 100 );
   plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nPixs"), "Overall occupancy (nHits>0)", 0, 2000, 100 );
 
@@ -219,32 +220,32 @@ void RichRecPixelQC::printRICH( const Rich::DetectorType rich ) const
 {
   const RichStatDivFunctor     occ  ("%8.2f +-%7.2f");
   const RichPoissonEffFunctor  pois ("%7.2f +-%6.2f");
-  
-  info() << "  " << rich << " : All pixels         : " << occ(m_pixels[rich],m_nEvts) 
+
+  info() << "  " << rich << " : All pixels         : " << occ(m_pixels[rich],m_nEvts)
          << "   Eff. = " << pois(m_pixels[rich],m_pixelsRaw[rich]) << " %" << endreq;
 
-  info() << "        : Cherenkov Signal   : " << occ(m_signal[rich],m_nEvts) 
+  info() << "        : Cherenkov Signal   : " << occ(m_signal[rich],m_nEvts)
          << "   Eff. = " << pois(m_signal[rich],m_signalRaw[rich]) << " %" << endreq;
 
   if ( Rich::Rich1 == rich )
   {
-    info() << "        :     Aerogel        : " << occ(m_radHitsRaw[Rich::Aerogel],m_nEvts) 
-           << "   Eff. = " << pois(m_radHits[Rich::Aerogel],m_radHitsRaw[Rich::Aerogel]) 
+    info() << "        :     Aerogel        : " << occ(m_radHitsRaw[Rich::Aerogel],m_nEvts)
+           << "   Eff. = " << pois(m_radHits[Rich::Aerogel],m_radHitsRaw[Rich::Aerogel])
            << " %" << endreq;
-    info() << "        :     C4F10          : " << occ(m_radHitsRaw[Rich::C4F10],m_nEvts) 
-           << "   Eff. = " << pois(m_radHits[Rich::C4F10],m_radHitsRaw[Rich::C4F10]) 
+    info() << "        :     C4F10          : " << occ(m_radHitsRaw[Rich::C4F10],m_nEvts)
+           << "   Eff. = " << pois(m_radHits[Rich::C4F10],m_radHitsRaw[Rich::C4F10])
            << " %" << endreq;
   }
   else
   {
-    info() << "        :     CF4            : " << occ(m_radHitsRaw[Rich::CF4],m_nEvts) 
-           << "   Eff. = " << pois(m_radHits[Rich::CF4],m_radHitsRaw[Rich::CF4]) 
+    info() << "        :     CF4            : " << occ(m_radHitsRaw[Rich::CF4],m_nEvts)
+           << "   Eff. = " << pois(m_radHits[Rich::CF4],m_radHitsRaw[Rich::CF4])
            << " %" << endreq;
   }
 
-  info() << "        : All Backgrounds    : " << occ(m_bkgs[rich],m_nEvts) 
+  info() << "        : All Backgrounds    : " << occ(m_bkgs[rich],m_nEvts)
          << "   Eff. = " << pois(m_bkgs[rich],m_bkgsRaw[rich]) << " %" << endreq;
 
-  info() << "        :   - HPD Quartz CK  : " << occ(m_npdqcks[rich],m_nEvts) 
+  info() << "        :   - HPD Quartz CK  : " << occ(m_npdqcks[rich],m_nEvts)
          << "   Eff. = " << pois(m_npdqcks[rich],m_npdqcksRaw[rich]) << " %" << endreq;
 }
