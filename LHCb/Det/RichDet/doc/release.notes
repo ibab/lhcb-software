@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-04-13 - Chris Jones
+ - Add ALICE mode options to DAQ definitions
+
 ! 2006-04-10 - Antonis Papanestis
  - Changed DeRich to produce WARNING if alignment cond is not there, but not 
    fail.

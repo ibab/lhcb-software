@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.3 2006-03-24 10:42:04 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.4 2006-04-13 12:35:24 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -305,8 +305,11 @@ namespace RichDAQ
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
   typedef GaudiUtils::HashMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs >   L1ToHardIDs;
 
-  /// Maximum data block size
+  /// Maximum data block size (LHCb mode)
   static const RichDAQ::ShortType MaxDataSize = 32;
+
+  /// Maximum data block size (ALICE mode)
+  static const RichDAQ::ShortType MaxDataSizeALICE = 256;
 
   //---------------------------------------------------------------------------------
 
@@ -321,7 +324,8 @@ namespace RichDAQ
     {
       LHCb0  = 0, ///< First LHCb mode version. Compatible with DC04
       LHCb1  = 1, ///< Second LHCb mode version. Same as LHCb0 with new header + Level1 grouping
-      LHCb2  = 2  ///< Third LHCb mode version. Same as LHCb1 with new zero suppression format
+      LHCb2  = 2, ///< Third LHCb mode version. Same as LHCb1 with new zero suppression format
+      ALICE0 = 9  ///< First ALICE mode version. All non-zero suppressed with pixel 32x8 = 256 rows
     };
 
   //---------------------------------------------------------------------------------
