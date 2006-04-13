@@ -14,7 +14,10 @@ use RecAlgs v1r0 Rec
 #use CaloPIDs		v3r0    Calo  # Olivier Deschamps
 #use CaloReco            v3r0    Calo  # Olivier Deschamps
 
-# New tracking
+# Velo
+use VeloTools         v1r0  Velo        # Tomasz Szumlak
+
+# Tracking
 use TrackExtrapolators  v2r1    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r1    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v2r1    Tr    # Eduardo Rodrigues
@@ -50,7 +53,7 @@ use PatFitParams        v2r0    Pat   # Matt Needham
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonRec             v3r0    Muon  # Danilo Domenici
-#use MuonID              v3r9p1  Muon  # Erica Polycarpo
+use MuonID              v4r0    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
