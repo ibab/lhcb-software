@@ -1,12 +1,10 @@
-! $Id: release.notes,v 1.116 2006-04-12 16:26:26 mtobin Exp $
+! $Id: release.notes,v 1.117 2006-04-13 12:34:51 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-! 2006-04-12 - Mark Tobin
- - Add trajectory method in DeVelo
-
 !========================= VeloDet v10r4 2006-04-12 ========================
 ! 2006-04-12 - Mark Tobin
+ - Add trajectory method in DeVelo
  - Move implementation for trajectory method to sensor classes
  - Remove stripLimitsR/Phi methods from DeVelo
  - Add methods to sensors which provide start and end co-ordinates for strip in
