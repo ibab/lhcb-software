@@ -1,10 +1,10 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppData.cpp
+/** @file RichNonZeroSuppALICEData.cpp
  *
- *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
+ *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
  *
- *  $Id: RichNonZeroSuppData.cpp,v 1.9 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData.cpp,v 1.1 2006-04-13 12:37:10 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -12,22 +12,22 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichNonZeroSuppData.h"
+#include "RichNonZeroSuppALICEData.h"
 
 // namespaces
 using namespace LHCb; ///< LHCb general namespace
 
 // =================================================================================================
 
-namespace RichNonZeroSuppDataV1 
+namespace RichNonZeroSuppALICEDataV1
 {
 
-  void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Vector & ids,
-                                              const LHCb::RichSmartID hpdID ) const
+  void RichNonZeroSuppALICEData::fillRichSmartIDs( RichSmartID::Vector & ids,
+                                                   const LHCb::RichSmartID hpdID ) const
   {
 
     // Fill with active channels
-    for ( RichDAQ::ShortType iRow = 0; iRow < RichDAQ::MaxDataSize; ++iRow )
+    for ( RichDAQ::ShortType iRow = 0; iRow < RichDAQ::MaxDataSizeALICE; ++iRow )
     {
       for ( RichDAQ::ShortType iCol = 0; iCol < RichDAQ::MaxDataSize; ++iCol )
       {
@@ -37,24 +37,27 @@ namespace RichNonZeroSuppDataV1
                                       hpdID.panel(),
                                       hpdID.hpdNumInCol(),
                                       hpdID.hpdCol(),
-                                      iRow, iCol ) );
+                                      iRow/8,  // pixel row
+                                      iCol,    // pixel col
+                                      iRow%8 ) // pixel subrow
+                         );
         }
       }
     }
 
   }
 
-  RichDAQ::Level0ID RichNonZeroSuppData::level0ID() const
+  RichDAQ::Level0ID RichNonZeroSuppALICEData::level0ID() const
   {
     return Header(header()).l0ID();
   }
 
-  RichDAQ::ShortType RichNonZeroSuppData::hitCount() const
+  RichDAQ::ShortType RichNonZeroSuppALICEData::hitCount() const
   {
     return Header(header()).hitCount();
   }
 
-  void RichNonZeroSuppData::fillMsgStream( MsgStream & os ) const
+  void RichNonZeroSuppALICEData::fillMsgStream( MsgStream & os ) const
   {
 
     os << "======================================================================================================"

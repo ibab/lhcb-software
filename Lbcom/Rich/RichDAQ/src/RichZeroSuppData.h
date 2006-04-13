@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.9 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.10 2006-04-13 12:37:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -57,7 +57,7 @@ namespace RichZeroSuppDataV1
   public:
 
     /// Default constructor
-    RichZeroSuppData() : RichHPDDataBank(0,0,0) { }
+    RichZeroSuppData() : RichHPDDataBank(0,0,0,RichDAQ::MaxDataSize) { }
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
@@ -66,7 +66,7 @@ namespace RichZeroSuppDataV1
      */
     explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
                                const LHCb::RichSmartID::Vector & digits )
-      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 )
+      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0, RichDAQ::MaxDataSize )
     {
       buildData( digits );
     }
@@ -78,7 +78,7 @@ namespace RichZeroSuppDataV1
      */
     explicit RichZeroSuppData( const RichDAQ::LongType * data,
                                const RichDAQ::ShortType dataSize )
-      : RichHPDDataBank ( data, dataSize ) { }
+      : RichHPDDataBank ( data, dataSize, RichDAQ::MaxDataSize ) { }
 
     /// Destructor
     virtual ~RichZeroSuppData() { }
@@ -142,7 +142,7 @@ namespace RichZeroSuppDataV2
 
     /// Default constructor
     RichZeroSuppData()
-      : RichHPDDataBank ( 0, 0, 0 ),
+      : RichHPDDataBank ( 0, 0, 0, RichDAQ::MaxDataSize ),
         m_tooBig        ( false   ) { }
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -152,7 +152,7 @@ namespace RichZeroSuppDataV2
      */
     explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
                                const LHCb::RichSmartID::Vector & digits )
-      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 ),
+      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0, RichDAQ::MaxDataSize ),
         m_tooBig        ( false   )
     {
       buildData( digits );
@@ -165,7 +165,7 @@ namespace RichZeroSuppDataV2
      */
     explicit RichZeroSuppData( const RichDAQ::LongType * data,
                                const RichDAQ::ShortType dataSize )
-      : RichHPDDataBank ( data, dataSize ),
+      : RichHPDDataBank ( data, dataSize, RichDAQ::MaxDataSize ),
         m_tooBig        ( false          )
     { }
 

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.11 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.12 2006-04-13 12:37:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -46,11 +46,13 @@ public:
   */
   RichHPDDataBank( const RichDAQ::LongType  header,
                    const RichDAQ::ShortType dataSize,
-                   const RichDAQ::LongType  dataInit )
-    : m_header       ( header                                      ),
-      m_data         ( new RichDAQ::LongType[RichDAQ::MaxDataSize] ),
-      m_dataSize     ( dataSize                                    ),
-      m_internalData ( true                                        )
+                   const RichDAQ::LongType  dataInit,
+                   const RichDAQ::ShortType maxDataSize )
+    : m_header       ( header                             ),
+      m_data         ( new RichDAQ::LongType[maxDataSize] ),
+      m_dataSize     ( dataSize                           ),
+      m_maxDataSize  ( maxDataSize                        ),
+      m_internalData ( true                               )
   {
     for ( RichDAQ::ShortType i = 0; i < dataSize; ++i ) m_data[i] = dataInit;
   }
@@ -61,10 +63,12 @@ public:
    *  @param dataSize Initialisation size for data bank
    */
   RichHPDDataBank( const RichDAQ::LongType * data,
-                   const RichDAQ::ShortType dataSize )
+                   const RichDAQ::ShortType dataSize,
+                   const RichDAQ::ShortType maxDataSize )
     : m_header       ( *data                                     ),
       m_data         ( const_cast< RichDAQ::LongType * >(++data) ),
       m_dataSize     ( dataSize                                  ),
+      m_maxDataSize  ( maxDataSize                               ),
       m_internalData ( false                                     ) { }
 
   /// Destructor
@@ -139,7 +143,7 @@ protected: // methods
   /// Add data point
   inline void addData( const RichDAQ::LongType data )
   {
-    if ( m_dataSize > RichDAQ::MaxDataSize-1 )
+    if ( m_dataSize > maxDataSize()-1 )
     {
       throw GaudiException("Attempt to fill more than MAX data words",
                            "*RichHPDDataBank*", StatusCode::SUCCESS );
@@ -157,6 +161,12 @@ protected: // methods
   inline RichDAQ::ShortType dataSize() const
   {
     return m_dataSize;
+  }
+
+  /// Returns the max possible data size for the data block
+  inline RichDAQ::ShortType maxDataSize() const
+  {
+    return m_maxDataSize;
   }
 
   /// Test if a given bit in a word is set on
@@ -195,6 +205,9 @@ protected: // data
 
   /// Size of data block (excluding header)
   RichDAQ::ShortType m_dataSize;
+
+  /// Maximum data block size (excluding header, 32 LHCb mode, 256 ALICE mode)
+  RichDAQ::ShortType m_maxDataSize;
 
   /// Flag to indicate if data is external or internal
   bool m_internalData;

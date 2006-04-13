@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.23 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.24 2006-04-13 12:37:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -176,12 +176,12 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     return dataBank;
   }
 
+  // Level 0 ID
+  const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
+
   if ( RichDAQ::LHCb2 == version )
   {
     // Third iteration of bank format
-
-    // Level 0 ID
-    const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
 
     // First try the ZS format
     RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( l0ID, smartIDs );
@@ -202,9 +202,6 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
   {
     // Second iteration of bank format
 
-    // Level 0 ID
-    const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
-
     // Decide to zero suppress or not depending on number of hits
     if ( smartIDs.size() < m_zeroSuppresCut )
     {
@@ -214,6 +211,15 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
     {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( l0ID, smartIDs );
     }
+
+  }
+  else if ( RichDAQ::ALICE0 == version )
+  {
+    // Alice mode data
+
+    // Always non-zero suppressed
+    dataBank =
+      (RichHPDDataBank*) new RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData( l0ID, smartIDs );
 
   }
   else
@@ -247,20 +253,24 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
                                        const RichDAQ::BankVersion version ) const
 {
 
-  RichHPDDataBank * dataBank = 0;
+  RichHPDDataBank * dataBank = NULL;
+
+  // Get max data size
+  const RichDAQ::ShortType maxDataSize = 
+    ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
   // Check data size
-  if ( dataSize < 1 || dataSize > RichDAQ::MaxDataSize )
+  if ( dataSize < 1 || dataSize > maxDataSize )
   {
     Exception( "Invalid HPD data block size : " + boost::lexical_cast<std::string>(dataSize) );
   }
 
+  // Header word
+  const RichDAQHeaderPDBase header( *dataStart );
+
   if ( RichDAQ::LHCb2 == version )
   {
     // Third iteration of bank format
-
-    // Header word
-    const RichDAQHeaderPDBase header( *dataStart );
 
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
@@ -277,9 +287,6 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
   {
     // Second iteration of bank format
 
-    // Header word
-    const RichDAQHeaderPDBase header( *dataStart );
-
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
@@ -289,6 +296,15 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
+
+  }
+  else if ( RichDAQ::ALICE0 == version )
+  {
+    // Alice mode
+
+    // only non ZS data
+    dataBank = (RichHPDDataBank*) 
+      new RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData( dataStart );
 
   }
   else
@@ -315,7 +331,7 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
 
   // Loop over digits and sort according to L1 and HPD
   for ( RichSmartID::Vector::const_iterator iDigit = smartIDs.begin();
-        iDigit != smartIDs.end(); ++iDigit ) 
+        iDigit != smartIDs.end(); ++iDigit )
   {
 
     // Get Level 1 ID number
@@ -346,9 +362,16 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
 
         // Get raw data bank for this HPD, and fill into RAWBank
         const RichHPDDataBank * hpdData = createDataBank( (*iHPD).second, version );
-        hpdData->fillRAWBank( dataBank );
-        delete hpdData;
-        nHits += (*iHPD).second.size();
+        if ( hpdData )
+        {
+          hpdData->fillRAWBank( dataBank );
+          delete hpdData;
+          nHits += (*iHPD).second.size();
+        }
+        else
+        {
+          Warning( "No RICH Data Bank Created" );
+        }
 
       } // end photon detector loop
     }
@@ -393,6 +416,10 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   // Get bank version and ID
   const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.sourceID() );
   const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()  );
+
+  // Get max data size
+  const RichDAQ::ShortType maxDataSize = 
+    ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
   // HPD count
   unsigned int nHPDbanks(0), decodedHits(0);
@@ -459,8 +486,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         {
           // non-ZS blocks have fixed length, so skip straight to the end
 
-          lineC   += 1+RichDAQ::MaxDataSize; // data block + header
-          lineLast = lineC-1;
+          lineC   += 1 + maxDataSize; // data block + header
+          lineLast = lineC - 1;
 
           if ( msgLevel(MSG::VERBOSE) )
             verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endreq;

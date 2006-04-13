@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppData.h
+/** @file RichNonZeroSuppALICEData.h
  *
- *  Header file for RICH DAQ utility class : RichNonZeroSuppData
+ *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.20 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData.h,v 1.1 2006-04-13 12:37:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
-#define RICHDAQ_RICHNONZEROSUPPDATA_H 1
+#ifndef RICHDAQ_RICHNONZEROSUPPALICEDATA_H
+#define RICHDAQ_RICHNONZEROSUPPALICEDATA_H 1
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -28,27 +28,25 @@
 
 //===================================================================================
 
-/** @namespace RichNonZeroSuppDataV1
+/** @namespace RichNonZeroSuppALICEDataV1
  *
- *  Namespace for version 1 of the RichNonZeroSuppData object.
+ *  Namespace for version 1 of the RichNonZeroSuppALICEData object.
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichNonZeroSuppDataV1
+namespace RichNonZeroSuppALICEDataV1
 {
 
-  /** @class RichNonZeroSuppData RichNonZeroSuppData.h
+  /** @class RichNonZeroSuppALICEData RichNonZeroSuppALICEData.h
    *
-   *  The RICH HPD non zero suppressed data format.
-   *  Second iteration of the format. Identical to version 0
-   *  apart from a new header word format.
+   *  The RICH HPD non zero suppressed data format for ALICE mode.
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichNonZeroSuppData : public RichHPDDataBank,
-                              public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV1::RichNonZeroSuppData>
+  class RichNonZeroSuppALICEData : public RichHPDDataBank,
+                                   public Rich::BoostMemPoolAlloc<RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData>
   {
 
   public: // Definitions
@@ -59,23 +57,24 @@ namespace RichNonZeroSuppDataV1
   public:
 
     /// Default constructor
-    RichNonZeroSuppData() 
-      : RichHPDDataBank( 0, RichDAQ::MaxDataSize, 0, RichDAQ::MaxDataSize ) { }
+    RichNonZeroSuppALICEData() : 
+      RichHPDDataBank( 0, RichDAQ::MaxDataSizeALICE, 0, RichDAQ::MaxDataSizeALICE ) { }
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
      *  @param l0ID   L0 board hardware identifier
      *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
      */
-    explicit RichNonZeroSuppData( const RichDAQ::Level0ID l0ID,
-                                  const LHCb::RichSmartID::Vector & digits )
+    explicit RichNonZeroSuppALICEData( const RichDAQ::Level0ID l0ID,
+                                       const LHCb::RichSmartID::Vector & digits )
       : RichHPDDataBank ( Header( false, l0ID, digits.size() ),
-                          RichDAQ::MaxDataSize, 0, RichDAQ::MaxDataSize )
+                          RichDAQ::MaxDataSizeALICE, 0, RichDAQ::MaxDataSizeALICE )
     {
       for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
             iDig != digits.end(); ++ iDig )
       {
-        setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
+        const RichDAQ::ShortType row = 8*(*iDig).pixelRow() + (*iDig).pixelSubRow();
+        setPixelActive( row, (*iDig).pixelCol() );
       }
     }
 
@@ -83,11 +82,11 @@ namespace RichNonZeroSuppDataV1
      *
      *  @param data Pointer to the start of the data block
      */
-    explicit RichNonZeroSuppData( const RichDAQ::LongType * data )
-      : RichHPDDataBank ( data, RichDAQ::MaxDataSize, RichDAQ::MaxDataSize ) { }
+    explicit RichNonZeroSuppALICEData( const RichDAQ::LongType * data )
+      : RichHPDDataBank ( data, RichDAQ::MaxDataSizeALICE, RichDAQ::MaxDataSizeALICE ) { }
 
     /// Destructor
-    ~RichNonZeroSuppData() { }
+    ~RichNonZeroSuppALICEData() { }
 
     /// Returns the L0ID
     virtual RichDAQ::Level0ID level0ID() const;
@@ -122,6 +121,6 @@ namespace RichNonZeroSuppDataV1
 
   };
 
-} // RichNonZeroSuppDataV1 namespace
+} // RichNonZeroSuppALICEDataV1 namespace
 
-#endif // RICHDAQ_RICHNONZEROSUPPDATA_H
+#endif // RICHDAQ_RICHNONZEROSUPPALICEDATA_H

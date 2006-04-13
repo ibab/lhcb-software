@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.13 2006-03-01 09:56:12 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.14 2006-04-13 12:37:10 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -38,6 +38,7 @@
 
 // local
 #include "RichNonZeroSuppData.h"
+#include "RichNonZeroSuppALICEData.h"
 #include "RichZeroSuppData.h"
 
 // RichDet
