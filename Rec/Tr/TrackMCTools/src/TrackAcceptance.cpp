@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.8 2006-04-04 17:57:31 janos Exp $
+// $Id: TrackAcceptance.cpp,v 1.9 2006-04-13 15:49:33 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -94,7 +94,8 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
     mcp2mchLink( evtSvc(), msgSvc(),
                  MCParticleLocation::Default+"2MCVeloHits" );
   if( mcp2mchLink.notFound() ) {
-    error() << "Unable to retrieve MCParticle to Velo MCHit Linker table."
+    error() << "Unable to retrieve MCParticle to Velo MCHit Linker table "
+            << "at location " << MCParticleLocation::Default << "2MCVeloHits."
             << endreq;
   }
   else {
@@ -140,7 +141,8 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
     mcp2mchLink( evtSvc(), msgSvc(),
                  MCParticleLocation::Default+"2MCTTHits" );
   if( mcp2mchLink.notFound() ) {
-    error() << "Unable to retrieve MCParticle to TT MCHit Linker table."
+    error() << "Unable to retrieve MCParticle to TT MCHit Linker table "
+            << "at location " << MCParticleLocation::Default << "2MCTTHits."
             << endreq;
   }
   else {
@@ -183,7 +185,8 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
     mcp2ITmchLink( evtSvc(), msgSvc(),
                    MCParticleLocation::Default+"2MCITHits" );
   if( mcp2ITmchLink.notFound() ) {
-    error() << "Unable to retrieve MCParticle to IT MCHit Linker table."
+    error() << "Unable to retrieve MCParticle to IT MCHit Linker table "
+            << "at location " << MCParticleLocation::Default << "2MCITHits."
             << endreq;
   }
   else {
@@ -214,7 +217,8 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
     mcp2OTmchLink( evtSvc(), msgSvc(),
                    MCParticleLocation::Default+"2MCOTHits" );
   if( mcp2OTmchLink.notFound() ) {
-    error() << "Unable to retrieve MCParticle to IT MCHit Linker table."
+    error() << "Unable to retrieve MCParticle to OT MCHit Linker table "
+            << "at location " << MCParticleLocation::Default << "2MCOTHits."
             << endreq;
   }
   else {

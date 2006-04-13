@@ -4,12 +4,12 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r1 2006-04-13 ======================
 ! 2006-04-13 - Jeroen van Tilburg
  - Added tolerance job-option to specify the required precision of the
    TrajXxxProjector. Also set this to values smaller than the measurement
    error.
 
-!====================== TrackProjectors v2r1 2006-04-06 ======================
 ! 2006-04-06 - Jeroen van Tilburg
  - Added errMeasure method to TrackProjector. This is needed by the track fit.
    The different projector implementations fill the corresponding data member.
