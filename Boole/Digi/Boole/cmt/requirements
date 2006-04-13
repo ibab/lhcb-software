@@ -1,5 +1,5 @@
 package Boole
-version v11r2
+version v11r3
 
 branches doc cmt job options
 
@@ -22,17 +22,17 @@ use GaudiObjDesc 	 v9r4        -no_auto_imports
 use RootHistCnv          v9r9        -no_auto_imports
 
 #-- Databases
-use XmlDDDB             v30r3   Det  -no_auto_imports
+use XmlDDDB             v30r4   Det  -no_auto_imports
 use XmlConditions        v1r6   Det  -no_auto_imports
-use ParamFiles	         v4r1        -no_auto_imports
+use ParamFiles	         v4r2        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r2)
+#-- LHCb libraries (from LHCB_v20r3)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v9r5           -no_auto_imports
-use KernelSys        v5r2    Kernel -no_auto_imports
-use DetSys           v8r2    Det    -no_auto_imports
+use KernelSys        v5r3    Kernel -no_auto_imports
+use DetSys           v8r3    Det    -no_auto_imports
 
 use EventBase        v1r1    Event  -no_auto_imports
 use MCEvent          v1r2    Event  -no_auto_imports
@@ -50,10 +50,10 @@ use DAQSys           v2r2    DAQ    -no_auto_imports
 use LHCbAlgs         v2r0    Kernel -no_auto_imports
 use SimComponents    v1r1p1  Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r2)
-use LbcomSys             v4r2        -no_auto_imports
+#-- Lbcom packages (from LBCOM_v4r3)
+use LbcomSys             v4r3        -no_auto_imports
 
-#-- BooleSys v11r2 packages
+#-- BooleSys v11r3 packages
 use DigiAlg              v4r2   Digi -no_auto_imports
 
 # Calorimeter
@@ -62,7 +62,7 @@ use CaloDigit            v2r1p1 Calo -no_auto_imports
 
 # Velo
 use VeloSimulation       v2r2   Velo -no_auto_imports
-use VeloAlgorithms       v4r2   Velo -no_auto_imports
+use VeloAlgorithms       v4r3   Velo -no_auto_imports
 
 # Outer Tracker
 use OTSimulation         v3r2   OT   -no_auto_imports

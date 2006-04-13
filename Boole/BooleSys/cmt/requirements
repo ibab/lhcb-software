@@ -1,5 +1,5 @@
 package BooleSys
-version v11r2
+version v11r3
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole              v11r2    Digi  # Marco Cattaneo
+use Boole              v11r3    Digi  # Marco Cattaneo
 use DigiAlg             v4r2    Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -30,5 +30,5 @@ use RichMCAssociators   v2r0    Rich  # Chris Jones
 use RichReadout	        v2r0p1  Rich  # Chris Jones
 
 # Velo
-use VeloAlgorithms      v4r2    Velo  # Tomasz Szumlak
+use VeloAlgorithms      v4r3    Velo  # Tomasz Szumlak
 use VeloSimulation      v2r2    Velo  # Tomasz Szumlak
