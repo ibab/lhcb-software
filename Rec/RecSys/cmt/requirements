@@ -28,9 +28,9 @@ use TrackIdealPR        v2r1    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r0    Tr    # Eduardo Rodrigues
 use TrackMatching       v2r1    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackPython         v2r0    Tr    # Eduardo Rodrigues
 #use TrackCheckers       v2r0    Tr    # Eduardo Rodrigues
 #use TrackVeloTT         v1r0    Tr    # Eduardo Rodrigues
-#use TrackPython         v1r2    Tr    # Eduardo Rodrigues
 #use TrConverters        v1r5    Tr    # Eduardo Rodrigues, Jose Hernando
 #use TrgConverter        v1r0p1  Trg   # Eduardo Rodrigues, Jose Hernando
 
