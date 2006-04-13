@@ -4,11 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r1 2006-04-12 ====================
 ! 2006-04-12 - Mark Tobin
  - Adapted VeloPhiMeasurement and VeloRMeasurement to work with trajectory
- change in VeloDet
+   change in VeloDet
 
-!========================== TrackFitEvent v2r1 2006-03-31 ====================
 ! 2006-04-06 - Edwin Bos
  - moved range() to baseclass, updated constuctor initializationlist
 
