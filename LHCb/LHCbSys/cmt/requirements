@@ -56,7 +56,6 @@ use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v2r2    Event   # Eduardo Rodrigues, Jose Hernando
 use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
 #use EventUtils	           v1r0    Event   # Marco Cattaneo
-#use LinkerInstances       v2r1    Event   # Thomas Ruf
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v2r2    DAQ     # Marco Cattaneo
@@ -73,7 +72,7 @@ use CaloUtils             v6r1   Calo    # Olivier Deschamps
 use RichRecBase           v2r1   Rich    # Chris Jones
 use TrackInterfaces       v2r2   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
-#use TrackPython           v1r1   Tr      # Eduardo Rodrigues, Jose Hernando
+use LinkerInstances       v3r0   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond              v7r10p1 Det     # Marco Clemencic
 use CondDBEntityResolver  v1r1   Tools   # Marco Clemencic
 use LoKiCore              v1r1   Phys    # Ivan Belyaev

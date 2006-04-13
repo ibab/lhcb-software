@@ -8,6 +8,7 @@
 </PRE><H1><A NAME=v20r3>2006-04-13 LHCbSys v20r3</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
+- Packages added:    Event/LinkerInstances v3r0 - Python access to Linkers
 - Packages modified: KernelSys v5r3, LHCbKernel v6r5, CaloUtils v6r1,
     DetSys v8r3, STDet v2r3, OTDet v6r2, VeloDet v10r4, DetDescCnv v3r2
 
