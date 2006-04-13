@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.17 2006-04-12 14:13:36 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.18 2006-04-13 09:46:21 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -178,11 +178,11 @@ StatusCode IdealTracksCreator::execute()
     verbose() << "- MCParticle of type "
               << m_trackSelector -> trackType( mcParticle )
               << " , (key # " << mcParticle -> key() << ")" << endreq
-              << "    - vertex = " << mcParticle -> originVertex() -> position()
+              << "    - vertex = " << mcParticle -> originVertex() ->position()
               << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV" 
               << endreq
-              << "    - P        = " << mcParticle -> momentum().Vect().R()
+              << "    - P        = " << mcParticle -> p()
               << " MeV" <<endreq
               << "    - PID   = "
               << ( mcParticle -> particleID().pid() ) << endreq
@@ -195,7 +195,7 @@ StatusCode IdealTracksCreator::execute()
               << " , (key # " << mcParticle -> key() << ")" << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV"
               << endreq
-              << "    - P        = " << mcParticle -> momentum().Vect().R()
+              << "    - P        = " << mcParticle -> p()
               << " MeV" <<endreq
               << "    - charge   = "
               << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
@@ -398,16 +398,17 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
       track -> addToLhcbIDs( meas.lhcbID() );
       // Set the reference vector
       State* tempState;
-      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
       if ( sc.isSuccess() ) {
         meas.setRefVector( tempState -> stateVector() );
         // Get the ambiguity using the Poca tool
-        double s1, s2;
         XYZVector distance;
         XYZVector bfield;
         m_pIMF -> fieldVector( tempState->position(), bfield );
         StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
-        m_poca->minimize( stateTraj, s1, meas.trajectory(), s2, distance, 20*mm);
+        double s1 = 0.0;
+        double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
+        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance,20*mm);
         int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
         meas.setAmbiguity( ambiguity );
       }
@@ -447,7 +448,7 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
       track -> addToLhcbIDs( meas.lhcbID() );
       // Set the reference vector
       State* tempState;
-      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
       if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
       delete tempState;
 
@@ -472,7 +473,7 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
       track -> addToLhcbIDs( meas.lhcbID() );
       // Set the reference vector
       State* tempState;
-      StatusCode sc = m_stateCreator -> createState(mcPart, meas.z(), tempState);
+      StatusCode sc = m_stateCreator->createState(mcPart, meas.z(), tempState);
       if ( sc.isSuccess() ) meas.setRefVector( tempState -> stateVector() );
       delete tempState;
 
@@ -499,7 +500,7 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
   LinkedFrom<VeloCluster,MCParticle>
     veloLink( evtSvc(), msgSvc(), VeloClusterLocation::Default );
   if ( veloLink.notFound() ) {
-    return Error( "Unable to retrieve VeloCluster to MCParticle Linker table" );
+    return Error( "Unable to retrieve VeloCluster to MCParticle Linker table");
   }
   else {
     const VeloCluster* aCluster = veloLink.first( mcPart );
