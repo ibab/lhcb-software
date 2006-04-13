@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v8r3 2006-04-11 =========================
+! 2006-04-11 - Marco Cattaneo
+ - Use STDet v2r3, DetDescCnv v3r2, OTDet v6r2, VeloDet v10r4
+
 !========================= DetSys v8r2 2006-04-04 =========================
 ! 2006-04-04 - Marco Cattaneo
  - Use RichDet v9r3, STDet v2r2, OTDet v6r1, CaloDet v7r1, VeloDet v10r3
