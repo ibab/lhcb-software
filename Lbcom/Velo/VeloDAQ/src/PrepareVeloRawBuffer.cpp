@@ -1,7 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.17 2006-03-14 15:17:02 krinnert Exp $
-
-#include <vector>
-#include <algorithm>
+// $Id: PrepareVeloRawBuffer.cpp,v 1.18 2006-04-13 16:01:43 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -62,6 +59,16 @@ StatusCode PrepareVeloRawBuffer::initialize() {
 
   debug() << "==> Initialise" << endreq;
 
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
+
+  // get a list of sensor numbers to identify empty sensors
+  std::vector< DeVeloSensor* >::const_iterator 	sIter = m_velo->sensorsBegin();
+  std::vector< DeVeloSensor* >::const_iterator 	sEnd = m_velo->sensorsEnd();
+  for( ; sIter != sEnd ; ++sIter ){
+    m_sensorNumbers.push_back((*sIter)->sensorNumber());
+  }
+  std::sort( m_sensorNumbers.begin() , m_sensorNumbers.end() );
+
   return StatusCode::SUCCESS;
 };
 
@@ -107,36 +114,53 @@ StatusCode PrepareVeloRawBuffer::execute() {
     rawEvent = new LHCb::RawEvent();
     eventSvc()->registerObject(m_rawEventLoc, rawEvent);
   } 
- 
-  // loop over all clusters and write one bank per sensor
-  std::vector<const LHCb::InternalVeloCluster*>::const_iterator firstOnSensor, lastOnSensor;
-  int currentSensorNumber;
 
+
+  // loop over all clusters and write one bank per sensor
+  std::vector<const LHCb::InternalVeloCluster*>::const_iterator firstOnSensor,
+    lastOnSensor;
   lastOnSensor = firstOnSensor =  m_sortedClusters.begin();
+
+  int currentSensorNumber;  
+
+  int sensorIndex = -1; // index of current sensor in list
+  
   while (firstOnSensor != m_sortedClusters.end()) {
 
     currentSensorNumber = (*firstOnSensor)->sensor();
 
+    sensorIndex++; // move to next on list of expected sensors
+    // check there was not a missing sensor
+    while( currentSensorNumber != m_sensorNumbers[sensorIndex] ){
+      // store an empty bank
+      storeBank(m_sensorNumbers[sensorIndex],lastOnSensor, lastOnSensor,
+		rawEvent); 
+      if (isDebug) debug() << "Added empty bank for sensor " 
+			   << m_sensorNumbers[sensorIndex] << endreq;
+      sensorIndex++; // move to next on list, try again
+    }
+    
     while (lastOnSensor != m_sortedClusters.end() && 
            (*lastOnSensor)->sensor() == currentSensorNumber) {
       ++lastOnSensor;
     }
 
-    // create new raw buffer in raw data cache, old one is cleared
-    makeBank(firstOnSensor, lastOnSensor);
-
-    LHCb::RawBank* newBank = rawEvent->createBank(static_cast<SiDAQ::buffer_word>(currentSensorNumber),
-                                                  LHCb::RawBank::Velo,
-                                                  m_bankVersion,
-                                                  m_bankSizeInBytes, 
-                                                  &(m_rawData[0]));
-
-    // add new bank and pass memory ownership to raw event
-    rawEvent->adoptBank(newBank,true);
+    // make and store the bank
+    storeBank(currentSensorNumber, firstOnSensor, lastOnSensor, rawEvent);
 
     firstOnSensor = lastOnSensor;
   }
-
+  // add any empty banks from final sessor in the list
+  sensorIndex++;// move to next on list of expected sensors
+  while(sensorIndex < static_cast<int>(m_sensorNumbers.size())){
+    // store an empty bank
+    storeBank(m_sensorNumbers[sensorIndex],lastOnSensor, lastOnSensor,
+	      rawEvent); 
+    if (isDebug) debug() << "Added empty bank for sensor " 
+			 << m_sensorNumbers[sensorIndex] << endreq;
+    sensorIndex++; // move to next on list, try again
+  }
+  
   return StatusCode::SUCCESS;
 };
 
@@ -150,9 +174,29 @@ StatusCode PrepareVeloRawBuffer::finalize() {
   return StatusCode::SUCCESS;
 };
 
-unsigned int
-PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::const_iterator begin, 
-                                std::vector<const LHCb::InternalVeloCluster*>::const_iterator end) 
+
+void PrepareVeloRawBuffer::
+storeBank(int sensor,
+	  std::vector<const LHCb::InternalVeloCluster*>::const_iterator begin, 
+	  std::vector<const LHCb::InternalVeloCluster*>::const_iterator end,
+	  LHCb::RawEvent* rawEvent) {
+  // create new raw buffer in raw data cache, old one is cleared
+  makeBank(begin, end);
+
+  LHCb::RawBank* newBank = rawEvent->
+    createBank(static_cast<SiDAQ::buffer_word>(sensor),
+	       LHCb::RawBank::Velo,
+	       m_bankVersion,
+	       m_bankSizeInBytes, 
+	       &(m_rawData[0]));
+  
+  // add new bank and pass memory ownership to raw event
+  rawEvent->adoptBank(newBank,true);
+}
+
+unsigned int PrepareVeloRawBuffer::
+makeBank (std::vector<const LHCb::InternalVeloCluster*>::const_iterator begin, 
+	  std::vector<const LHCb::InternalVeloCluster*>::const_iterator end) 
 {
   bool isVerbose = msgLevel( MSG::VERBOSE );
 
@@ -210,12 +254,13 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
       VeloClusterWord vcw(clu->strip(0),0.0,1, highThresh);
       packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
       if ( isVerbose ) {
-	      verbose() <<"STRIP: " << clu->strip(0)
+	verbose() <<"STRIP: " << clu->strip(0)
                   << ",ADC: " << clu->adcValue( 0) << endmsg;
-	    }
+      }
 
       SiADCWord aw(adcCount,true);
-      rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
+      rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) 
+				 << VeloDAQ::adc_shift));
 
       ++nAdc;
       if (nAdc % VeloDAQ::adc_per_buffer == 0) {
@@ -231,7 +276,8 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
     } else {
       // multiple strip cluster
       // calculate weighted average position of cluster 
-      const std::vector< std::pair<long,double> >& stripSignals = clu->stripSignals();
+      const std::vector< std::pair<long,double> >& stripSignals = 
+	clu->stripSignals();
       double sumADC = 0.;
       double sumADCWeightedeStrip = 0.;
 
@@ -244,20 +290,21 @@ PrepareVeloRawBuffer::makeBank (std::vector<const LHCb::InternalVeloCluster*>::c
         if (adcCount > 127) {
           adcCount = 127;
         }
-	   
-	      if(isVerbose) {
-          verbose() << "ADC COUNT:" <<  adcCount << " STRIP:" << stripNumber
+	
+	if(isVerbose) {
+	  verbose() << "ADC COUNT:" <<  adcCount << " STRIP:" << stripNumber
                     << endmsg; 
         }
-	      // sum adc values and adc weighted strip numbers
-	      sumADC += adcCount;
-	      sumADCWeightedeStrip += static_cast<double>(stripNumber) * adcCount;
-
+	// sum adc values and adc weighted strip numbers
+	sumADC += adcCount;
+	sumADCWeightedeStrip += static_cast<double>(stripNumber) * adcCount;
+	
         // create new adc word
         bool endOfCluster = (stripSignals.size() == i+1);
         SiADCWord aw(adcCount,endOfCluster);
-
-        rowData |= (aw.value() << ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
+	
+        rowData |= (aw.value() << 
+		    ((nAdc % VeloDAQ::adc_per_buffer) << VeloDAQ::adc_shift));
 
         ++nAdc;
         if (nAdc % VeloDAQ::adc_per_buffer == 0) {

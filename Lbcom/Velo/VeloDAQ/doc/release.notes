@@ -2,6 +2,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-03-14 - David Hutchcroft
+ - Fixed code to always write a bank for every sensor, even the empty sensors
+
 ! 2006-03-14 - Kurt Rinnert
  - fixed bug in test code, does not affect standard operations
 
