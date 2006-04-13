@@ -169,9 +169,9 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
 
     // get the process type of the origin vertex
     int creatorID = processID( track->GetCreatorProcess() );
-    if( creatorID == 0 ) {
-      std::cout << "id = 0 " << std::endl;
-    }
+//     if( creatorID == 0 ) {
+//       std::cout << "id = 0 " << std::endl;
+//     }
 
     // Get User information from primary particle to set Vertex type 
     // OscillatedAndDecay and pointer to HepMC event in generator and barcode
@@ -187,9 +187,9 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
 //           uInf->signalBarcode();
 //          genEvent = uInf->pHepMCEvent();
           hasOscillated = uInf->hasOscillated();
-          if( uInf->hasOscillated() ) {
-            std::cout << "Particle has oscillated" << std::endl;
-          }
+//           if( uInf->hasOscillated() ) {
+//             std::cout << "Particle has oscillated" << std::endl;
+//           }
         }
       }
     }

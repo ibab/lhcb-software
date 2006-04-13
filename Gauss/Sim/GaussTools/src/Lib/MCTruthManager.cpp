@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.2 2006-04-12 19:32:08 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.3 2006-04-13 06:52:32 gcorti Exp $
 // Include files 
 
 // local
@@ -185,50 +185,27 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
         }
         else // biological
         {
-          // in case mother was already 'split' we need to look for the right 'segment' to add
-          // the new daugther
-          // we use Time coordinate to locate the place for the new vertex
-          int number_of_segments = segmentations[motherID];
-          int segment = 0;
-
-          // we loop through the segments          
-          while ( !((mother->end_vertex()->position().t() > prodpos.t()) && 
-                    (mother->production_vertex()->position().t() < prodpos.t())) ) 
-          {
-            segment++;
-            if (segment == number_of_segments ) {
-              std::cerr << "MCTruthManager Problem!!!! Time coordinates incompatible!" << std::endl;
-            }
-            mother = event->barcode_to_particle(segment*10000000 + motherID);
-          } 
-          
-          // now, we 'split' the appropriate 'segment' of the mother particle into two particles 
-          // and create a new vertex
+          // we 'split' the mother into two particles and create a new vertex
           HepMC::GenVertex* childvtx = new HepMC::GenVertex(prodpos);
           childvtx->add_particle_out(particle);
           event->add_vertex(childvtx);
           // we first detach the mother from its original vertex 
-          HepMC::GenVertex* orig_mother_end_vtx = mother->end_vertex();
-          orig_mother_end_vtx->remove_particle(mother);
+          motherendvtx->remove_particle(mother);
           // and attach it to the new vertex
           childvtx->add_particle_in(mother);
 
           // now we create a new particle representing the mother after interaction
           // the barcode of the new particle is 10000000 + the original barcode 
           HepMC::GenParticle* mothertwo = new HepMC::GenParticle(*mother);
-          mothertwo->suggest_barcode(segmentations[motherID]*10000000 + mother->barcode());
+          mothertwo->suggest_barcode(10000000 + mother->barcode());
           // we also reset the barcodes of the vertices
-          orig_mother_end_vtx->
-            suggest_barcode(-segmentations[motherID]*10000000 - mother->barcode());
+          motherendvtx->suggest_barcode(-100000000 - mother->barcode());
           childvtx->suggest_barcode(-mother->barcode());
-          creators[-segmentations[motherID]*10000000 - mother->barcode()] = creatorID;
           creators[-mother->barcode()] = creatorID;
           // we attach it to the new vertex where interaction took place
           childvtx->add_particle_out(mothertwo);
           // and we attach it to the original endvertex
-          orig_mother_end_vtx->add_particle_in(mothertwo);
-          // and finally ... the increase the 'segmentation counter'
-          segmentations[motherID] = segmentations[motherID]+1;
+          motherendvtx->add_particle_in(mothertwo);
         }
       }
     }
