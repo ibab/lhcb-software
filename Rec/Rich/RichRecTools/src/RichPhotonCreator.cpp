@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.30 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.31 2006-04-13 17:34:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,6 +75,11 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
     // give photon same smart ID as pixel
     geomPhoton->setSmartID( pixel->smartID() );
 
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Created photon " << *geomPhoton << endreq; 
+    }
+    
     // make new RichRecPhoton ( NB will own geomPhoton )
     newPhoton = new RichRecPhoton( geomPhoton, segment,
                                    segment->richRecTrack(), pixel );

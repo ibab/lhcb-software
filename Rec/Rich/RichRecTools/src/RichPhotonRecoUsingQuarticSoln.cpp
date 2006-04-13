@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.3 2006-03-14 14:43:02 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.4 2006-04-13 17:34:35 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -407,10 +407,6 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Created photon " << gPhoton << endreq; 
-  }
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;

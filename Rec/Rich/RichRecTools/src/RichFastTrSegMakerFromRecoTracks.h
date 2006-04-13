@@ -5,7 +5,7 @@
  *  Header file for tool : RichFastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.2 2006-03-02 15:29:19 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.3 2006-04-13 17:34:35 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -124,13 +124,13 @@ private: // data
   const IRichRayTracing* m_rayTracing;
 
   /// Nominal z positions of states at RICHes
-  double m_nomZstates[Rich::NRadiatorTypes];
+  std::vector<double> m_nomZstates;
 
   /// Allowable tolerance on state z positions
-  double m_zTolerance[Rich::NRadiatorTypes];
+  std::vector<double> m_zTolerance;
 
   // sanity checks on state information
-  double m_minStateDiff[Rich::NRadiatorTypes];
+  std::vector<double> m_minStateDiff;
 
   /// Flags to turn on/off individual radiators
   std::vector<bool> m_usedRads;
@@ -142,13 +142,13 @@ private: // data
   boost::array<Gaudi::Plane3D, Rich::NRadiatorTypes> m_exitPlanes;
 
   /// Maximum extent of the radiators in x
-  boost::array<double, Rich::NRadiatorTypes> m_maxX;
+  std::vector<double> m_maxX;
 
   /// maximum extent of the radiators in y
-  boost::array<double, Rich::NRadiatorTypes> m_maxY;
+  std::vector<double> m_maxY;
 
   /// Square of the radius of the hole in the radiator around the beampipe
-  boost::array<double, Rich::NRadiatorTypes> m_minR2;
+  std::vector<double> m_minR2;
 
   typedef std::vector< Rich::RadiatorType > Radiators;
   Radiators m_rads; ///< Vector of active radiators
@@ -176,7 +176,8 @@ RichFastTrSegMakerFromRecoTracks::checkBoundaries( const Gaudi::XYZPoint & point
 {
   return ( fabs(point.x()) < m_maxX[rad] &&
            fabs(point.y()) < m_maxY[rad] &&
-           (point.x()*point.x() + point.y()*point.y()) > m_minR2[rad] );
+           (m_minR2[rad]<0.01 || (point.x()*point.x() + point.y()*point.y()) > m_minR2[rad])
+           );
 }
 
 #endif // RICHRECTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H

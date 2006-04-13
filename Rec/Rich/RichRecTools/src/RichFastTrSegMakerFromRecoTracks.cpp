@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.1 2006-01-27 09:14:17 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.2 2006-04-13 17:34:35 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -29,16 +29,58 @@ RichFastTrSegMakerFromRecoTracks::
 RichFastTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent)
-  : RichToolBase ( type, name, parent         ),
-    m_rayTracing ( 0                          ),
-    m_usedRads   ( Rich::NRadiatorTypes, true )
+  : RichToolBase   ( type, name, parent         ),
+    m_rayTracing   ( 0                          ),
+    m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
+    m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
+    m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
+    m_usedRads     ( Rich::NRadiatorTypes, true ),
+    m_maxX         ( Rich::NRadiatorTypes, 0    ),
+    m_maxY         ( Rich::NRadiatorTypes, 0    ),
+    m_minR2        ( Rich::NRadiatorTypes, 0    )
 {
 
   // Interface
   declareInterface<IRichTrSegMaker>(this);
 
   // job options
+
   declareProperty( "UseRadiators", m_usedRads );
+
+  // Should get from XML instead of hardcode ?
+
+  // Nominal z positions of states at RICHes (only needs to be rough)
+  m_nomZstates[Rich::Aerogel] = 0*cm;
+  m_nomZstates[Rich::C4F10]   = 249.0*cm;
+  m_nomZstates[Rich::CF4]     = 951.0*cm;
+  declareProperty( "NominalZPositions", m_nomZstates );
+
+  // tolerances on z positions
+  m_zTolerance[Rich::Aerogel] = 800*mm;
+  m_zTolerance[Rich::C4F10]   = 800*mm;
+  m_zTolerance[Rich::CF4]     = 2000*mm;
+  declareProperty( "ZTolerances", m_zTolerance );
+
+  // sanity checks on state information
+  m_minStateDiff[Rich::Aerogel] = 5*mm;
+  m_minStateDiff[Rich::C4F10]   = 50*mm;
+  m_minStateDiff[Rich::CF4]     = 100*mm;
+  declareProperty( "MinStateDiff", m_minStateDiff );
+
+  m_maxX[Rich::Aerogel]        = 375;
+  m_maxX[Rich::C4F10]          = 500;
+  m_maxX[Rich::CF4]            = 3000;
+  declareProperty( "MaxX", m_maxX );
+
+  m_maxY[Rich::Aerogel]        = 375;
+  m_maxY[Rich::C4F10]          = 500;
+  m_maxY[Rich::CF4]            = 2500;
+  declareProperty( "MaxY", m_maxY );
+
+  m_minR2[Rich::Aerogel]       = 50*50;
+  m_minR2[Rich::C4F10]         = 50*50;
+  m_minR2[Rich::CF4]           = 100*100;
+  declareProperty( "MinRSq", m_minR2 );
 
 }
 
@@ -59,23 +101,6 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   // Get the ray tracing tool
   acquireTool( "RichRayTracing", m_rayTracing );
 
-  // Should get from XML instead of hardcode ?
-
-  // Nominal z positions of states at RICHes (only needs to be rough)
-  m_nomZstates[Rich::Aerogel] = 0*cm;
-  m_nomZstates[Rich::C4F10]   = 249.0*cm;
-  m_nomZstates[Rich::CF4]     = 951.0*cm;
-
-  // tolerances on z positions
-  m_zTolerance[Rich::Aerogel] = 800*mm;
-  m_zTolerance[Rich::C4F10]   = 800*mm;
-  m_zTolerance[Rich::CF4]     = 2000*mm;
-
-  // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel] = 5*mm;
-  m_minStateDiff[Rich::C4F10]   = 50*mm;
-  m_minStateDiff[Rich::CF4]     = 100*mm;
-
   // The following forms a simple radiator description
   // The values do not need to be very precise, but should still be eventually
   // obtained from the Detector elements
@@ -88,9 +113,6 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(Rich::Aerogel);
     m_entryPlanes[Rich::Aerogel] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1110) );
     m_exitPlanes[Rich::Aerogel]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
-    m_maxX[Rich::Aerogel]        = 375;
-    m_maxY[Rich::Aerogel]        = 375;
-    m_minR2[Rich::Aerogel]       = 50*50;
   }
   else
   {
@@ -102,9 +124,6 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(Rich::C4F10);
     m_entryPlanes[Rich::C4F10]   = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
     m_exitPlanes[Rich::C4F10]    = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1930) );
-    m_maxX[Rich::C4F10]          = 500;
-    m_maxY[Rich::C4F10]          = 500;
-    m_minR2[Rich::C4F10]         = 50*50;
   }
   else
   {
@@ -116,9 +135,6 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(Rich::CF4);
     m_entryPlanes[Rich::CF4]     = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,9500)  );
     m_exitPlanes[Rich::CF4]      = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,11340) );
-    m_maxX[Rich::CF4]            = 3000;
-    m_maxY[Rich::CF4]            = 2500;
-    m_minR2[Rich::CF4]           = 100*100;
   }
   else
   {
