@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.cpp,v 1.4 2006-02-02 12:38:20 ebos Exp $
+// $Id: TrackCriteriaSelector.cpp,v 1.5 2006-04-13 10:01:15 jvantilb Exp $
 // Include files
 
 // from Gaudi
@@ -78,7 +78,7 @@ bool TrackCriteriaSelector::select( MCParticle* mcParticle )
   bool selected = true;
 
   // Check the momentum of MCParticle
-  double momentum = mcParticle -> momentum().M();  
+  double momentum = mcParticle -> p();  
   if ( momentum < m_minP || momentum > m_maxP ) selected = false;
 
   // Check if the MCParticle is of the requested type
