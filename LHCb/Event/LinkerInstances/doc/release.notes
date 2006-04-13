@@ -2,6 +2,11 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+! 2006-04-13 - Eduardo Rodrigues
+ - changes for Reflex dictionaries and latest GaudiPython
+ - using LHCb namespaces
+ - LinkedFrom is now also available in Python
+
 ! 2006-03-06 - Eduardo Rodrigues
  - updated to MCEvent, DigiEvent and RecEvent (replace MuonEvent, OTEvent, etc.)
  - removed links to old track event model classes

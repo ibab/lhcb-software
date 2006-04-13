@@ -1,3 +1,4 @@
 <lcgdict>
   <class pattern="LinkedTo<*"/>
+  <class pattern="LinkedFrom<*"/>
 </lcgdict>

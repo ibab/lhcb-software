@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2006-03-06 13:54:36 erodrigu Exp $
+# $Id: requirements,v 1.8 2006-04-13 08:55:14 erodrigu Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
@@ -16,11 +16,10 @@ use TrackEvent   v*    Event
 
 # Produce lcg dictionary for instances of Linker classes
 #============================================================================
-apply_pattern lcg_dictionary                                             \
+apply_pattern reflex_dictionary                                             \
               dictionary=LinkerInstances                                 \
               headerfiles=$(LINKERINSTANCESROOT)/dict/linker_instances.h \
-              selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
-              options="--split --reflex"
+              selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml
 
 # Build libraries (including dictionary)
 #============================================================================
