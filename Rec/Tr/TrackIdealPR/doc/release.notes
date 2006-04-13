@@ -4,10 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r1 2006-04-12 ========================
 ! 2006-04-12 - Eduardo Rodrigues
  - fixed a couple of buglets in using linkers
 
-!======================= TrackIdealPR v2r1 2006-04-07 ========================
 ! 2006-04-07- David Hutchcroft
  - Changed Velo measurement interfaces to match new code
 

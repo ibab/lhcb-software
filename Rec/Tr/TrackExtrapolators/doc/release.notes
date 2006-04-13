@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!======================= TrackExtrapolators v2r1 2006-04-13 ==================
 ! 2006-04-12 - Jeroen van Tilburg
  - TrackMasterExtrapolator: 
    - Apply coding conventions
@@ -11,7 +12,6 @@
    - Thick scatterer is now also chosen when delta z == m_thickWall
    - Corrected bug: Virtual wall at target was not positioned at zEnd.
 
-!======================= TrackExtrapolators v2r1 2006-03-31 ==================
 ! 2006-03-31 - Eduardo Rodrigues
  - now using SMatrixIdentity
 

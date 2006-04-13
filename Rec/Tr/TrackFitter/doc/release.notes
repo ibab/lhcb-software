@@ -3,11 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r1 2006-04-12 ====================
 ! 2006-04-12 - Jeroen van Tilburg
  - TrackKalmanFilter: Replace Place_at with operator equal assignment. 
  - TrackKalmanFilter: Fix the return type for TrackVectorProd method.
 
-!=========================== TrackFitter v2r1 2006-04-06 ====================
 ! 2006-04-06 - Jeroen van Tilburg
  - TrackKalmanFilter: use Symmetrize function to regain a symmetric covariance
    matrix.
