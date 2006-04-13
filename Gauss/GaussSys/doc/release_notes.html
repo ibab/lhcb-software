@@ -4,7 +4,7 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
-<H1><A NAME="v24r3=4">2006-04-07 - GaussSys v24r4</A></H1><PRE>
+<H1><A NAME="v24r3=4">2006-04-13 - GaussSys v24r4</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -65,7 +65,14 @@ Purpose: LHCb Simulation program
    structure
    . src/PrintEventAlg.cpp
  
-!======================== GaussTools v12r1 2006-04-12 =======================
+!======================== GaussTools v12r1 2006-04-13 =======================
+! 2006-04-13 - Gloria CORTI
+ - Clean up messages
+   . src/Components/GaussTrackActionHepMC.cpp
+ - Remove changes for more tan one split since logic does not work in all
+   case and crash occurs.
+   . src/Lib/MCTruthManager.cpp
+ 
 ! 2006-04-12 - Gloria CORTI
  - Import changes by Witek POKORSKI for more than one split in mother
    particles for along the step processes (i.e. two Brems in a step)
