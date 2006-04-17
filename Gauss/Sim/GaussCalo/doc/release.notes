@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2006-04-17 - Patrick Robbe
+ - EcalSensDet: optimization of the non-uniformity calculations
+ - EcalSensDet, HcalSensDet, SpdPrsSensDet: store only sub-hits with at
+       least 10^-5 of the total energy. 
+
 !===================== GaussCalo v8r2 2006-04-04 =============================
 ! 2006-04-04 - Gloria CORTI
  - Adapt to change in return type of put method in GaudiAlgorithm base class

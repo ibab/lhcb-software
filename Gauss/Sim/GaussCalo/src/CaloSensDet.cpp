@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.18 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: CaloSensDet.cpp,v 1.19 2006-04-17 20:47:55 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.17  2004/10/08 15:06:54  ibelyaev
 //  fix a 'feature'
 //
@@ -492,14 +495,14 @@ double CaloSensDet::birkCorrection(const G4Step* step) const
     const double charge   = track->GetDefinition()->GetPDGCharge()  ;
     
     // Only charged tracks
-    if (abs(charge)>0.1) {
+    if ( fabs( charge ) > 0.1 ) {
       
       // Birk's law coefficients
       double C1       = birk_c1 () ;
       double C2       = birk_c2 () ;
       
       // Correction for charge 2 particles
-      if (abs(charge)>1.5) { C1 *= birk_c1cor () ; }
+      if ( fabs( charge ) > 1.5 ) C1 *= birk_c1cor () ;
       
       // Material
       const G4Material* mat = step->GetPreStepPoint()->GetMaterial() ;
@@ -514,8 +517,10 @@ double CaloSensDet::birkCorrection(const G4Step* step) const
         G4EnergyLossTables::GetDEDX( track->GetDefinition() ,
                                      track->GetKineticEnergy() ,
                                      aMaterialCut ) ;
+
+      double rdEdX = dEdx / density ;
       
-      result = 1./(1. + C1*dEdx/density + C2*dEdx*dEdx/density/density ) ;
+      result = 1./(1. + C1*rdEdX + C2*rdEdX*rdEdX ) ;
     }
   }
   

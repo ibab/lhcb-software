@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.6 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: HcalSensDet.cpp,v 1.7 2006-04-17 20:47:57 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.5  2004/02/22 13:13:42  ibelyaev
 //  update for new GiGa
 //
@@ -30,6 +33,8 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/AlgFactory.h"
+/// LHCb
+#include "Kernel/LHCbMath.h"
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
@@ -146,7 +151,7 @@ StatusCode    HcalSensDet::fillHitInfo
        fractions.end() != ifr ; ++ifr , ++slot ) 
     {
       const double fr = *ifr ;
-      if( fr > 1.e-6 ) { hit->add( slot , energy * fr ) ; }
+      if( fr > 1.e-5 ) { hit->add( slot , energy * fr ) ; }
     }
   
   return StatusCode::SUCCESS ;

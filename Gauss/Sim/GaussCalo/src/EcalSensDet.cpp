@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.cpp,v 1.7 2006-01-17 15:52:57 odescham Exp $ 
+// $Id: EcalSensDet.cpp,v 1.8 2006-04-17 20:47:55 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.6  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -37,6 +40,8 @@
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
+/// LHCb
+#include "Kernel/LHCbMath.h"
 /// GaussTools 
 #include "GaussTools/GaussTrackInformation.h"
 /// Geant4 
@@ -188,12 +193,9 @@ StatusCode    EcalSensDet::fillHitInfo
   }
   
   for ( Fractions::const_iterator ifr = fractions.begin() ;
-        fractions.end() != ifr ;
-        ++ifr ) {
+        fractions.end() != ifr ; ++ifr ) {
     const double fr = *ifr ;
-    if ( fr > 1E-6 ) {
-      hit->add( slot , ecorrected * fr ) ;
-    }
+    if ( fr > 1.e-5 ) hit->add( slot , ecorrected * fr ) ;
     slot++ ;
   }
   
@@ -247,30 +249,31 @@ double EcalSensDet::localNonUniformity( const HepPoint3D& prePoint ,
   // Local uniformity is product of x and y sine-like functions
   // The Amplitude of the sin-like function is a function of x and 
   // y
-  correction += 
-    A_local / 2. * 
-    ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
-    ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
+  if ( A_local > LHCbMath::lowTolerance ) 
+    correction += A_local / 2. * ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
+      ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
 
+  double rX(0.) , rY(0.) , hCell(0.) ;
+  
   // Global non uniformity
-
-  correction += 
-    A_global * ( x0 + cellSize / 2. - x ) * ( x - x0 + cellSize / 2. )
-    / ( cellSize * cellSize / 4. )
-    * ( y0 + cellSize / 2. - y ) * ( y - y0 + cellSize / 2. ) 
-    / ( cellSize * cellSize / 4. ) ;
-
-
+  if ( A_global > LHCbMath::lowTolerance ) {
+    rX = x - x0 ;
+    rY = y - y0 ;
+    hCell = cellSize / 2. ;
+    correction += 
+      A_global * ( hCell - rX ) * ( rX + hCell ) / ( hCell * hCell )
+      * ( hCell - rY ) * ( rY + hCell ) / ( hCell * hCell ) ;
+  }
+  
   // Light Reflexion on the edges
-  correction += 
-    m_a_reflection_height * 
-    exp( - fabs ( x - x0 + cellSize / 2. ) / m_a_reflection_width ) 
-    + m_a_reflection_height * 
-    exp( - fabs ( x - x0 - cellSize / 2. ) / m_a_reflection_width ) 
-    + m_a_reflection_height * 
-    exp( - fabs ( y - y0 + cellSize / 2. ) / m_a_reflection_width ) 
-    + m_a_reflection_height * 
-    exp( - fabs ( y - y0 - cellSize / 2. ) / m_a_reflection_width ) ;
+  if ( m_a_reflection_height > LHCbMath::lowTolerance ) {
+    rX = rX / m_a_reflection_width ;
+    rY = rY / m_a_reflection_width ;
+    hCell = hCell / m_a_reflection_width ;
+    correction += m_a_reflection_height * 
+      ( exp( - fabs ( rX + hCell ) ) + exp( - fabs ( rX - hCell ) )  
+        + exp( - fabs ( rY + hCell ) ) + exp( - fabs ( rY - hCell ) ) ) ;
+  }
   
   return correction ;
 };
