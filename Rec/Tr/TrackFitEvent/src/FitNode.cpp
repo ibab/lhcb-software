@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.10 2006-03-26 19:04:58 erodrigu Exp $
+// $Id: FitNode.cpp,v 1.11 2006-04-18 09:18:11 jvantilb Exp $
 // Include files
 
 // local
@@ -33,7 +33,7 @@ FitNode::FitNode()
   m_transportMatrix = TransportMatrix();
   m_transportVector = TrackVector();
   m_noiseMatrix     = TrackMatrix();
-  m_transportDeltaZ = 0.0;
+  m_transportIsSet  = false;
 }
 
 /// Constructor from a z position
@@ -43,7 +43,7 @@ FitNode::FitNode( double zPos )
   m_transportMatrix = TransportMatrix();
   m_transportVector = TrackVector();
   m_noiseMatrix     = TrackMatrix();
-  m_transportDeltaZ = 0.0;
+  m_transportIsSet  = false;
   State tempState = State();
   tempState.setZ( zPos );
   m_state = tempState.clone();
@@ -56,7 +56,7 @@ FitNode::FitNode(Measurement& aMeas)
   m_transportMatrix = TransportMatrix();
   m_transportVector = TrackVector();
   m_noiseMatrix     = TrackMatrix();
-  m_transportDeltaZ = 0.0;
+  m_transportIsSet  = false;
   m_measurement     = &aMeas;
   State tempState = State();
   tempState.setZ( aMeas.z() );
@@ -69,7 +69,7 @@ FitNode::FitNode( const FitNode& rhs ) : Node()
   m_transportMatrix = rhs.m_transportMatrix;
   m_transportVector = rhs.m_transportVector;
   m_noiseMatrix     = rhs.m_noiseMatrix;
-  m_transportDeltaZ = rhs.m_transportDeltaZ ;
+  m_transportIsSet  = rhs.m_transportIsSet ;
   m_measurement     = rhs.m_measurement;
   m_predictedState  = rhs.m_predictedState;
   m_residual        = rhs.m_residual;         
@@ -89,14 +89,4 @@ FitNode::~FitNode()
 void FitNode::setPredictedState( const State& predictedState )
 {  
   m_predictedState = predictedState ;
-}
-
-/// Add the transport transformation of prevNode to this node
-void FitNode::updateTransport( const FitNode& prevNode )
-{
-  // add the transport transformation of prevNode to this node
-  m_transportVector += m_transportMatrix * prevNode.transportVector() ;
-  m_noiseMatrix     += ROOT::Math::Similarity<double,5,5>( m_transportMatrix, prevNode.noiseMatrix() );
-  m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
-  m_transportDeltaZ += prevNode.transportDeltaZ();
 }

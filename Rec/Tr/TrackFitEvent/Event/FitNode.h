@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.8 2006-02-08 17:35:48 erodrigu Exp $
+// $Id: FitNode.h,v 1.9 2006-04-18 09:18:11 jvantilb Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -58,9 +58,6 @@ namespace LHCb
     /// retrieve noise matrix
     const TrackMatrix& noiseMatrix() const { return m_noiseMatrix; }
     
-    /// retrieve delta z transport
-    double transportDeltaZ() const { return m_transportDeltaZ; }
-    
     /// set transport matrix
     void setTransportMatrix( const TransportMatrix& transportMatrix ) {
       m_transportMatrix = transportMatrix;
@@ -76,15 +73,15 @@ namespace LHCb
       m_noiseMatrix = noiseMatrix;
     }  
     
-    /// set the transport delta z
-    void setTransportDeltaZ( double transportDeltaZ ) {
-      m_transportDeltaZ = transportDeltaZ;
+    /// set the transport flag
+    void setTransportIsSet( bool transportIsSet ) {
+      m_transportIsSet = transportIsSet;
     }  
     
     /// Check if the transport information is set correctly
-    bool transportIsSet( double deltaZ )
+    bool transportIsSet( )
     {  
-      return fabs(m_transportDeltaZ - deltaZ) < TrackParameters::lowTolerance;
+      return m_transportIsSet;
     }
     
     /// retrieve state predicted by the kalman filter step
@@ -98,15 +95,12 @@ namespace LHCb
     /// set state predicted by the kalman filter
     void setPredictedState( const State& predictedState );
     
-    /// add the transport transformation of prevNode to this node
-    void updateTransport( const FitNode& node );
-    
   private:
     
     TransportMatrix m_transportMatrix; ///< transport matrix
     TrackVector     m_transportVector; ///< transport vector
     TrackMatrix     m_noiseMatrix;     ///< noise matrix
-    double          m_transportDeltaZ; ///< transport delta z
+    bool            m_transportIsSet;  ///< Flag for transport parameters
     State           m_predictedState;  ///< predicted state from filter step
   };
 
