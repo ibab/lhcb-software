@@ -10,7 +10,8 @@
 This version uses Gaudi v18r3 and LHCb v20r3.
 
 - Packages modified: CaloAssociators v6r1, Associators v3r2, STAssociators v1r2,
-    STDAQ v2r5, OTMonitor v2r2, L0Calo v9r2, L0DU v7r1p2, L0MuonTrigger v5r2
+    STDAQ v2r5, OTMonitor v2r2, L0Calo v9r2, L0DU v7r1p2, L0MuonTrigger v5r2,
+    VeloDAQ v3r2
 
 - In CaloAssociators v6r1:
   . Calo2MC.h, CaloMCTools.h moved to CaloUtils v6r1
@@ -37,6 +38,9 @@ This version uses Gaudi v18r3 and LHCb v20r3.
 
 - In L0MuonTrigger v5r2:
   . Split the raw event in 5 banks to match the 5 TELL1s output
+
+- In VeloDAQ v3r2:
+  . Fixed code to always write a bank for every sensor, even the empty sensors
 
 </PRE><H1><A NAME=v4r2>2006-03-31 LbcomSys v4r2</A></H1><PRE>
 This version uses Gaudi v18r3 and LHCb v20r2.
