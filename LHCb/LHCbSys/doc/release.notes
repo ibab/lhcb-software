@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r3>2006-04-13 LHCbSys v20r3</A></H1><PRE>
+</PRE><H1><A NAME=v20r3>2006-04-18 LHCbSys v20r3</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
 - Packages added:    Event/LinkerInstances v3r0 - Python access to Linkers
@@ -27,6 +27,7 @@ This version uses Gaudi v18r3 and is fully compatible with DC06 production data
   . Remove stripLimitsR/Phi methods from DeVelo
   . Add methods to sensors which provide start and end co-ordinates for strip in
     local and global frames
+  . Fix bug in neighbour and channel distance methods
 
 - In DetDescCnv v3r2:
   . Fixed bug in XmlGenericCnv to allow proper decoding of CONDITIONS_PATH
