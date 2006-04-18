@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.16 2006-03-17 15:54:33 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.17 2006-04-18 16:43:37 papanest Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -163,6 +163,36 @@ StatusCode RichMirrorSegFinder::initialize( )
     }
 
   }}
+
+  if ( 0 == m_maxMirror[Rich::Rich1][Rich::left][sph] &&
+       0 == m_maxMirror[Rich::Rich1][Rich::right][sph] )
+    return Error( "No spherical mirrors in Rich1" );
+
+  if ( 0 == m_maxMirror[Rich::Rich2][Rich::left][sph] &&
+       0 == m_maxMirror[Rich::Rich2][Rich::right][sph] )
+    return Error( "No spherical mirrors in Rich2" );
+
+  if ( 0 == m_maxMirror[Rich::Rich2][Rich::left][sph] ) {
+    // copy mirrors from the other side
+    for (unsigned int smr=0; smr<m_maxMirror[Rich::Rich2][Rich::right][sph]; ++smr)
+      m_sphMirrors[Rich::Rich2][Rich::left][smr] =
+        m_sphMirrors[Rich::Rich2][Rich::right][smr];
+    m_maxMirror[Rich::Rich2][Rich::left][sph] =
+      m_maxMirror[Rich::Rich2][Rich::right][sph];
+    warning() << "No sph mirrors on left side of Rich2; copying from right side"
+              << endmsg;
+  }
+
+  if ( 0 == m_maxMirror[Rich::Rich2][Rich::right][sph] ) {
+    // copy mirrors from the other side
+    for (unsigned int smr=0; smr<m_maxMirror[Rich::Rich2][Rich::left][sph]; ++smr)
+      m_sphMirrors[Rich::Rich2][Rich::right][smr] =
+        m_sphMirrors[Rich::Rich2][Rich::left][smr];
+    m_maxMirror[Rich::Rich2][Rich::right][sph] =
+      m_maxMirror[Rich::Rich2][Rich::left][sph];
+    warning() << "No sph mirrors on right side of Rich2; copying from left side"
+              << endmsg;
+  }
 
   debug() << "Found " << m_maxMirror[Rich::Rich2][Rich::left][sph] +
     m_maxMirror[Rich::Rich2][Rich::right][sph] << " spherical and "

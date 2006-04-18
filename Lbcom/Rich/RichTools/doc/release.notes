@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-04-18 - Antonis Papanestis
+ - Allow RichMirrorSegFinder to operate with spherical mirrors only on
+	 one side of Rich2. Useful for testbeam.
+
 !=========================== RichTools v2r3 2006-03-24 =======================
 !=========================== RichTools v2r2 2006-03-07 =======================
 ! 2006-03-02 - Chris Jones
