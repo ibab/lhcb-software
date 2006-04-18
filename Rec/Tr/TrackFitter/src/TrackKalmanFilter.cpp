@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.13 2006-04-12 14:23:24 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.14 2006-04-18 09:18:38 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -85,11 +85,10 @@ StatusCode TrackKalmanFilter::failure(const std::string& comment) {
 //=========================================================================
 StatusCode TrackKalmanFilter::fit( Track& track )
 {
-  StatusCode sc;
- 
-  std::vector<Node*>& nodes = track.nodes();
+  StatusCode sc; 
  
   // First node must have a seed state
+  std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
 
@@ -144,12 +143,11 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
   TrackVector prevStateVec = aState.stateVector();
   TrackMatrix prevStateCov = aState.covariance();
   double z = aNode.z();
-  double deltaZ = z - aState.z();
 
-  if ( deltaZ != 0.0 ) { // only extrapolate when needed
+  if ( (z - aState.z()) != 0.0 ) { // only extrapolate when needed
     // first iteration only: need to call extrapolator to get 
     // the predicted state at measurement
-    if ( !(aNode.transportIsSet(deltaZ)) || !m_storeTransport ) {
+    if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
       StatusCode sc = m_extrapolator -> propagate( aState, z );
       if ( sc.isFailure() )
         return failure( "unable to predict state at next measurement" );
@@ -163,7 +161,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
         aNode.setNoiseMatrix( aState.covariance() -
                               ROOT::Math::Similarity<double,5,5>
                               ( F, prevStateCov ) );
-        aNode.setTransportDeltaZ( deltaZ );
+        aNode.setTransportIsSet( true );
       }
     }
     // next iterations: update node with transport information 

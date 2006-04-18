@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-04-18 - Jeroen van Tilburg
+ - TrackKalmanFilter: use new transportIsSet method.
+
 !=========================== TrackFitter v2r1 2006-04-12 ====================
 ! 2006-04-12 - Jeroen van Tilburg
  - TrackKalmanFilter: Replace Place_at with operator equal assignment. 
