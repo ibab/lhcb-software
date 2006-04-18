@@ -84,7 +84,7 @@ int Sensor::run()  {
   while(1)  {
     status = wtc_wait( &facility, &param, &substatus );  
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
-      printf (" exiting wt_wait status = %d param %p substat %d, fac %d \n",
+      lib_rtl_printf (" exiting wt_wait status = %d param %p substat %d, fac %d \n",
               status, param, substatus, facility);
     }
   } 

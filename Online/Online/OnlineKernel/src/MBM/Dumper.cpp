@@ -5,8 +5,6 @@
 #include "bm_struct.h"
 #include "Manager.h"
 
-#define writeln(a,b,c) printf(b)
-
 namespace MBM {
   struct Dumper : public Manager {
     int All;
@@ -55,7 +53,7 @@ int MBM::Dumper::optparse (const char* c)   {
   case 'i':      /*      buffer_id        */   
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )      {
-      writeln(2,"Error reading Buffer identifier parameter\n",80);
+      lib_rtl_printf("Error reading Buffer identifier parameter\n");
       exit(0);
     }
     bm_id = buff_id;
@@ -63,10 +61,10 @@ int MBM::Dumper::optparse (const char* c)   {
   case '?':
   default:
   case 'h':
-    writeln(2,"bm - Buffer Manager Monitor\n",80);
-    writeln(2,"Options:\n",80);
-    writeln(2,"    -i=<bm_name>   Select Buffer Identifier\n",80);
-    writeln(2,"    -a           Dumper all table entries\n",80);
+    lib_rtl_printf("bm - Buffer Manager Monitor\n");
+    lib_rtl_printf("Options:\n");
+    lib_rtl_printf("    -i=<bm_name>   Select Buffer Identifier\n");
+    lib_rtl_printf("    -a           Dumper all table entries\n");
     exit(0);
     break;
   }

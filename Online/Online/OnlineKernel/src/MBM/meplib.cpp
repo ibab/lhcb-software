@@ -27,7 +27,9 @@ struct MEPDESC : public _MEPID  {
   int             owner;
   lib_rtl_lock_t  lockid;
   char            mutexName[64];
-  MEPDESC() : owner(0), lockid(0) {
+  MEPDESC(const char* name, int partid) : owner(0), lockid(0) {
+    if ( name ) strncpy(processName,name,sizeof(processName));
+    partitionID = partid;
     resBuffer = MBM_INV_DESC;
     evtBuffer = MBM_INV_DESC;
     mepBuffer = MBM_INV_DESC; 
@@ -42,7 +44,7 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
     {
       RTL::Lock lock(dsc->lockid);
       if ( !lock )  {
-        ::printf("Failed to aquire lock:%s\n",dsc->mutexName);
+        ::lib_rtl_printf("Failed to aquire lock:%s\n",dsc->mutexName);
       }
       switch(change) {
       case 2:
@@ -56,24 +58,24 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
         cnt = --e->refCount;
         break;
       default:
-        ::printf("Unknown MEP change request:%d\n",change);
+        ::lib_rtl_printf("Unknown MEP change request:%d\n",change);
         break;
       }
     }
     //if ( (change < 0 && print_release) || (change>0 && print_addref) )  {
     if ( print_release )  {
-      ::printf("MEP RefCount[%d] [%d, %d] %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
+      ::lib_rtl_printf("MEP RefCount[%d] [%d, %d] %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
         ++counter, e->refCount, change, change > 0 ? "AddRef" : "DelRef", cnt, 
         (void*)evt, (void*)e, e->evID, evt->evID, e->magic);
     }
     if ( cnt < 1 || e->magic != MAGIC_PATTERN || e->valid != 1 )  {
-      ::printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
+      ::lib_rtl_printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d,%d] Pattern:%08X\n",
         change > 0 ? "AddRef" : "DelRef", cnt, 
         (void*)evt, (void*)e, e->evID, evt->evID, e->magic);
     }
     return MBM_NORMAL;
   }
-  ::printf("MEP RefCount ERROR ----------------------------- NO EVT -----------------------------\n");
+  ::lib_rtl_printf("MEP RefCount ERROR ----------------------------- NO EVT -----------------------------\n");
   // Error
   return MBM_ERROR;
 }
@@ -85,7 +87,7 @@ static int mep_free_mep(void* param)   {
   MEPEVENT* e = (MEPEVENT*)pars[2];
   MEPDESC* dsc = (MEPDESC*)pars[1];
   if ( e->refCount < 1 || e->magic != MAGIC_PATTERN )  {
-    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+    lib_rtl_printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
       e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
   }
   int cnt = 0;
@@ -96,14 +98,14 @@ static int mep_free_mep(void* param)   {
     lib_rtl_usleep(100);
 #endif
     {
-      printf(".");
+      lib_rtl_printf(".");
       if ( (++cnt%50)==0 )  {
-        printf("WAIT MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
+        lib_rtl_printf("WAIT MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
           e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
       }
       RTL::Lock lock(dsc->lockid);
       if ( e->refCount <=1 )    {
-        printf("MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
+        lib_rtl_printf("MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
           e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
         e->valid = 0;
         e->refCount = 0;
@@ -142,7 +144,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   std::string mep_buff_name("MEP");
   std::string evt_buff_name("EVENT");
   std::string res_buff_name("RESULT");
-  std::auto_ptr<MEPDESC> bm(new MEPDESC);
+  std::auto_ptr<MEPDESC> bm(new MEPDESC(name,partid));
   ::memset(bm.get(),0,sizeof(MEPDESC));
   ::strcpy(bm->mutexName,"MEP_Management");
   int status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
@@ -187,6 +189,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   bm->resStart = (int)bm->resBuffer->buffer_add;
   mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
   mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
+  bm->partitionID = partid;
   return bm.release();
 }
 
@@ -201,13 +204,25 @@ int mep_exclude (MEPID dsc)  {
   }
   return MBM_ILL_CONS;
 }
+
+int mep_cancel_request(MEPID dsc)  {
+  MEPDESC* bm = (MEPDESC*)dsc;
+  if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
+    if ( bm->selection&USE_RES_BUFFER ) mbm_cancel_request(bm->resBuffer);
+    if ( bm->selection&USE_EVT_BUFFER ) mbm_cancel_request(bm->evtBuffer);
+    if ( bm->selection&USE_MEP_BUFFER ) mbm_cancel_request(bm->mepBuffer);
+    return MBM_NORMAL;
+  }
+  return MBM_ILL_CONS;
+}
+
 int mep_decrement(MEPID dsc, MEPEVENT* e, int val)  {
   if ( val != 0 )  {
     MEPDESC* bm = (MEPDESC*)dsc;
     if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
       RTL::Lock lock(bm->lockid);
       if ( !lock )  {
-        ::printf("Failed to aquire lock:%s\n",bm->mutexName);
+        ::lib_rtl_printf("Failed to aquire lock:%s\n",bm->mutexName);
       }
       e->refCount -= val;
       return MBM_NORMAL;
@@ -222,7 +237,7 @@ int mep_increment(MEPID dsc, MEPEVENT* e, int val)  {
     if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
       RTL::Lock lock(bm->lockid);
       if ( !lock )  {
-        ::printf("Failed to aquire lock:%s\n",bm->mutexName);
+        ::lib_rtl_printf("Failed to aquire lock:%s\n",bm->mutexName);
       }
       e->refCount += val;
       return MBM_NORMAL;
@@ -234,7 +249,7 @@ int mep_increment(MEPID dsc, MEPEVENT* e, int val)  {
 int mep_check(MEPID dsc, MEPEVENT* e)  {
   MEPDESC* bm = (MEPDESC*)dsc;
   if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
-    printf("MEPCheck: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+    lib_rtl_printf("MEPCheck: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
       e->refCount, dsc->mepStart+e->begin, (void*)e, e->evID, e->magic);
     if ( e->refCount == 4 )  {
       RTL::Lock lock(bm->lockid);

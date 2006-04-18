@@ -2,11 +2,11 @@
 #include "MBM/Producer.h"
 
 static void help()  {
-  ::printf("mbm_prod -opt [-opt]\n");
-  ::printf("    -n=<name>      buffer member name\n");
-  ::printf("    -m=<number>    number of events\n");
-  ::printf("    -s=<number>    event size [bytes]\n");
-  ::printf("    -b=<name>      Buffer identifier \n");
+  ::lib_rtl_printf("mbm_prod -opt [-opt]\n");
+  ::lib_rtl_printf("    -n=<name>      buffer member name\n");
+  ::lib_rtl_printf("    -m=<number>    number of events\n");
+  ::lib_rtl_printf("    -s=<number>    event size [bytes]\n");
+  ::lib_rtl_printf("    -b=<name>      Buffer identifier \n");
 }
 
 extern "C" int mbm_prod(int argc,char **argv) {
@@ -18,7 +18,7 @@ extern "C" int mbm_prod(int argc,char **argv) {
   cli.getopt("size",1,len);
   cli.getopt("buffer",1,buffer);
   MBM::Producer p(buffer,name,0x103);
-  ::printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d nevt=%d\n",
+  ::lib_rtl_printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d nevt=%d\n",
       name.c_str(), MBM::Producer::pid(), buffer.c_str(), len, nevt);
   while(nevt--)  {
     if ( p.getSpace(len) == MBM_NORMAL ) {

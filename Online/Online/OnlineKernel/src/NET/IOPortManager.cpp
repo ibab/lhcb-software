@@ -21,12 +21,12 @@ extern "C" int console_read_test(int, char**)  {
   DWORD cNumRead, fdwMode, fdwSaveOldMode; 
   INPUT_RECORD irInBuf; 
   if (! GetConsoleMode(hStdin, &fdwSaveOldMode) ) 
-    printf("GetConsoleMode"); 
+    lib_rtl_printf("GetConsoleMode"); 
 
   // Enable the window and mouse input events. 
   fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT; 
   if (! SetConsoleMode(hStdin, fdwMode) ) 
-    printf("SetConsoleMode"); 
+    lib_rtl_printf("SetConsoleMode"); 
   while (1) {
     // Wait for the events. 
     if (! ReadConsoleInput( 
@@ -34,30 +34,30 @@ extern "C" int console_read_test(int, char**)  {
       &irInBuf,     // buffer to read into 
       1,         // size of read buffer 
       &cNumRead) ) // number of records read 
-      printf("ReadConsoleInput"); 
+      lib_rtl_printf("ReadConsoleInput"); 
     switch(irInBuf.EventType) 
     { 
     case KEY_EVENT: // keyboard input 
-      printf("KEY_EVENT\n");
+      lib_rtl_printf("KEY_EVENT\n");
       break; 
 
     case MOUSE_EVENT: // mouse input 
-      printf("MOUSE_EVENT\n");
+      lib_rtl_printf("MOUSE_EVENT\n");
       break; 
 
     case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing 
-      printf("WINDOW_BUFFER_SIZE_EVENT\n");
+      lib_rtl_printf("WINDOW_BUFFER_SIZE_EVENT\n");
       break; 
 
     case FOCUS_EVENT:  // disregard focus events 
-      printf("FOCUS_EVENT\n");
+      lib_rtl_printf("FOCUS_EVENT\n");
 
     case MENU_EVENT:   // disregard menu events 
-      printf("MENU_EVENT\n");
+      lib_rtl_printf("MENU_EVENT\n");
       break; 
 
     default: 
-      printf("unknown event type"); 
+      lib_rtl_printf("unknown event type"); 
       break; 
     } 
   }
@@ -65,17 +65,17 @@ extern "C" int console_read_test(int, char**)  {
 
 extern "C" int console_read_test2(int, char**)  {
   char c=0;
-  printf( "do not forget to execute: 'stty -icanon -echo'" );
+  lib_rtl_printf( "do not forget to execute: 'stty -icanon -echo'" );
   fflush(stdout);
   int fd = fileno(stdin);
-  printf("Get console IO...type q to quit\n\n\n");
+  lib_rtl_printf("Get console IO...type q to quit\n\n\n");
   fflush(stdout);
   while(c!='q') {
     read(fd,&c,1);
-    printf("Got char:%02X\n",c);
+    lib_rtl_printf("Got char:%02X\n",c);
     fflush(stdout);
   }
-  printf( "do not forget to execute: 'stty icanon echo'" );
+  lib_rtl_printf( "do not forget to execute: 'stty icanon echo'" );
   return 1;
 }
 #endif
@@ -119,9 +119,9 @@ namespace {
       ::read(fileno(stdin),&ch,1);
       write(s_fdPipe[1],&ch,1);
       s_fdPipeBytes++;
-      //printf("Wait for hit...\n");
+      //lib_rtl_printf("Wait for hit...\n");
       if ( ch == -1 ) continue;
-      // printf("Got hit:%02X !!\n",ch);
+      // lib_rtl_printf("Got hit:%02X !!\n",ch);
       for(iterator i=m->begin(); i != m->end(); ++i)  {
         PortEntry* e = (*i).second;
         if ( e && e->armed )  {
@@ -186,7 +186,7 @@ namespace {
             PortEntry* e = (*k).second;
             if ( e )  {
               int t = e->type, nb = IOPortManager(m_port).getAvailBytes(fd);
-              // ::printf("got read request: %d bytes!\n",nb);
+              // ::lib_rtl_printf("got read request: %d bytes!\n",nb);
               if ( e->callback )   {
                 if ( !(nb==0 && fd == fileno(stdin)) )
                   e->armed = 0;
@@ -225,13 +225,13 @@ namespace {
           break;
 #endif
         default: 
-          //printf("Installing thread call!\n");
+          //lib_rtl_printf("Installing thread call!\n");
           call = threadCall;
           break;
       }
       int sc = lib_rtl_start_thread(call, this, &m_thread);
       if ( !lib_rtl_is_success(sc) )  {
-        ::printf("Failed to create port-thread\n");
+        ::lib_rtl_printf("Failed to create port-thread\n");
         throw std::runtime_error("Failed to create port-thread");
       }
     }
@@ -273,7 +273,7 @@ int IOPortManager::getAvailBytes(int fd)  {
 int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param)  {
   EntryMap* em = portMap()[m_port];
   if ( !em ) {
-    //printf("Install port watcher for %d\n",m_port);
+    //lib_rtl_printf("Install port watcher for %d\n",m_port);
     portMap()[m_port] = em = new EntryMap(m_port);
   }
   em->setDirty();
@@ -281,7 +281,7 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
   {
     PortEntry* e = (*em)[c];
     if ( !e ) {
-      //printf("Install channel watcher for %d\n",c);
+      //lib_rtl_printf("Install channel watcher for %d\n",c);
       (*em)[c] = e = new PortEntry;
     }
     e->callback = callback;

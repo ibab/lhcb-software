@@ -39,7 +39,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
       std::string nn="/dev/shm/sem.";
       nn+=name;
       int scc = chmod(nn.c_str(),0666);
-      // printf("Settint protection of %s\n",nn.c_str());
+      // lib_rtl_printf("Settint protection of %s\n",nn.c_str());
       if ( 0 != scc ) ::perror("chmod.");
   }
   int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
@@ -206,8 +206,8 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
 }
 
 static void help_set_event()  {
-  ::printf("mbm_dumpbits -opt [-opt]\n");
-  ::printf("    -n=<name>      Event flag name \n");
+  ::lib_rtl_printf("mbm_dumpbits -opt [-opt]\n");
+  ::lib_rtl_printf("    -n=<name>      Event flag name \n");
 }
 extern "C" int rtl_set_event(int argc, char** argv)  {
   lib_rtl_event_t flag;

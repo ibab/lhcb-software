@@ -16,7 +16,6 @@
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPRxSvc)
 
 // Standard Constructor

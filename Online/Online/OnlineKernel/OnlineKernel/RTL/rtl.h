@@ -9,6 +9,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 
 #ifdef __cplusplus
 #include <cstdlib>
+#include <cstdarg>
 namespace RTL {}
 extern "C" {
 #else
@@ -150,6 +151,11 @@ extern "C" {
 
   /// System error message (from status)
   const char* lib_rtl_error_message(int status);
+  /// Printout redirection
+  size_t lib_rtl_printf(const char* fmt, ...);
+  /// Install RTL printer 
+  void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), void* param);
+
   /// Small helper function to properly retrun from main program.
   int lib_rtl_default_return();
 

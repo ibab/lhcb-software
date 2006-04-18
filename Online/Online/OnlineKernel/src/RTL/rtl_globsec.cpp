@@ -30,7 +30,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
   h->size = siz;
-  //::printf("Create global section %s of size:%d\n",h->name, h->size);
+  //::lib_rtl_printf("Create global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -62,7 +62,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   }
 #endif
   int err = lib_rtl_get_error();
-  ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   return 0;
 }
 
@@ -90,7 +90,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
   h->size = siz;
-  //::printf("Map global section %s of size:%d\n",h->name, h->size);
+  //::lib_rtl_printf("Map global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -111,7 +111,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   }
   int err = lib_rtl_get_error();
   ::shm_unlink(h->name);
-  ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   return 0;
 #elif defined(_WIN32)
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
@@ -123,7 +123,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
       return 1;
     }
     int err = lib_rtl_get_error();
-    ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+    ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   }
   return 0;
 #endif

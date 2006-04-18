@@ -101,8 +101,8 @@ int wtc_init()    {
 #ifdef WT_USE_PIPES
         status = pipe(pipe_desc);
         if ( 0 != pipe(pipe_desc) ) {
-	  printf("WT: failed to create pipe...\n");
-	}
+          lib_rtl_printf("WT: failed to create pipe...\n");
+        }
 #else
         int status = lib_rtl_create_event(0, &wt_EventFlag);
         if ( !lib_rtl_is_success(status) )  {
@@ -176,7 +176,7 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
       exit (WT_NOROOM);
     }
     int status  = insqti(e,wt_queue);
-    //printf("wtc_insert: Inserted entry: %d %p\n",facility,userpar1);
+    //lib_rtl_printf("wtc_insert: Inserted entry: %d %p\n",facility,userpar1);
     if (status == QUE_ONEENTQUE)  {
 #ifdef WT_USE_PIPES
       pipe_wr_bytes += write(pipe_desc[1],e,sizeof(e));
@@ -509,5 +509,5 @@ static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,
 }
 //----------------------------------------------------------------------
 void _wtc_print_entry(wt_queue_entry *e)  {
-  ::printf(" Entry facility: %8X  parameter:%p\n",e->facility, e->userpar1);
+  ::lib_rtl_printf(" Entry facility: %8X  parameter:%p\n",e->facility, e->userpar1);
 }

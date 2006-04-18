@@ -4,6 +4,8 @@
 // Framework includes
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiOnline/DimTaskFSM.h"
+#include "RTL/rtl.h"
+
 // Forward declarations:
 class IIncidentSvc;
 class IMessageSvc;
@@ -21,31 +23,36 @@ namespace LHCb  {
     */
   class GaudiTask : public DimTaskFSM, virtual public IIncidentListener  {
   protected:
+    /// Handle to second layer execution thread
+    lib_rtl_thread_t  m_handle;
     /// Property: name of runable object
-    std::string   m_runable;
+    std::string       m_runable;
     /// Property: name of event loop object
-    std::string   m_evtloop;
+    std::string       m_evtloop;
     /// Property: name of message service object
-    std::string   m_msgsvcType;
+    std::string       m_msgsvcType;
     /// Property: main jonb options
-    std::string   m_mainOptions;
+    std::string       m_mainOptions;
     /// Property: optional options
-    std::string   m_optOptions;
+    std::string       m_optOptions;
     /// Main appliation manager object
-    IAppMgrUI*    m_appMgr;
+    IAppMgrUI*        m_appMgr;
     /// Sub application manager object
-    IAppMgrUI*    m_subMgr;
+    IAppMgrUI*        m_subMgr;
     /// Reference to incident service
-    IIncidentSvc* m_incidentSvc;
+    IIncidentSvc*     m_incidentSvc;
     /// Pointer to message service
-    IMessageSvc*  m_msgSvc;
-
+    IMessageSvc*      m_msgSvc;
+    /// Counter for consecutive errors during event processing
+    int               m_nerr;
     /// Access to message service object
     IMessageSvc* msgSvc();
     /// Print overload
-    virtual void output(const char* s);
+    virtual void output(int level, const char* s);
     /// Set properties of application manager instance
     StatusCode setInstanceProperties(IAppMgrUI* inst);
+    /// Start 2nd layer runable
+    StatusCode startRunable(IRunable* runable);
   public:
     /// Standard constructor
     GaudiTask(IInterface* svc);
@@ -63,12 +70,14 @@ namespace LHCb  {
     virtual StatusCode configure();
     /// Callback on start transition
     virtual StatusCode initialize();
-    /// Callback to process event
-    virtual StatusCode nextEvent(int num_event);
     /// Callback on stop transition
     virtual StatusCode finalize();
     /// Callback on reset transition
     virtual StatusCode terminate();
+    /// Enable the event loop and event processing      (Ready      -> Running)
+    virtual StatusCode enable();
+    /// Callback to process event
+    virtual StatusCode nextEvent(int num_event);
   };
 }
 #endif // ONLINEKERNEL_GAUDITASK_H

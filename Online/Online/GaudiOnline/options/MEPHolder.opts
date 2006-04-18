@@ -1,0 +1,11 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
+ApplicationMgr.EventLoop             = "LHCb::DaemonRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPHolderSvc/Runable";
+ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "MEP" };
+Runable.Requirements         = {
+"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+};

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkReceiveAlg.cpp,v 1.1 2006-03-01 19:20:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkReceiveAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
 //	====================================================================
 //  MDFNetworkReceiveAlg.cpp
 //	--------------------------------------------------------------------
@@ -117,5 +117,5 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFNetworkReceiveAlg);

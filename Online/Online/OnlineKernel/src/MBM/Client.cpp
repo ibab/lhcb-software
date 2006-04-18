@@ -75,7 +75,7 @@ int MBM::Client::run() {
   for(;;)  {
     int sc = (m_blocking) ? runSynchronous() : runAsynchronous();
     if ( sc != MBM_NORMAL ) {
-      printf("Error executing MBM client sc=%d\n",sc);
+      lib_rtl_printf("Error executing MBM client sc=%d\n",sc);
     }
   }
   return MBM_NORMAL;
@@ -87,13 +87,13 @@ int MBM::Client::runAsynchronous() {
   void* userpar;
   unsigned int facility;
   int status = ::wtc_wait(&facility, &userpar, &sub_status);
-  ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
+  ::lib_rtl_printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
 	   facility, status, sub_status);
   return status;
 }
 
 // Run the application in synchonous mode
 int MBM::Client::runSynchronous() {
-  ::printf("MBM::Client::runSynchronous> This implementation MUST be overriden.\n");
+  ::lib_rtl_printf("MBM::Client::runSynchronous> This implementation MUST be overriden.\n");
   return MBM_ERROR;
 }

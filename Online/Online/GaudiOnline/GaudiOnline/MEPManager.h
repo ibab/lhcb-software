@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.2 2006-03-17 07:33:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.3 2006-04-18 08:11:54 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -61,14 +61,20 @@ namespace LHCb    {
     virtual StatusCode queryInterface(const InterfaceID& riid,
                                       void** ppvInterface);
 
-    /// Initialize MEP manager service
+    /// IService overload: Initialize MEP manager service
     virtual StatusCode initialize();
+
+    /// IService overload: Finalize MEP manager service
+    virtual StatusCode finalize();
 
     /// Initialize buffers for MEP usage
     StatusCode initializeBuffers();
 
     /// Connect to specified buffers
     StatusCode connectBuffers();
+
+    /// Cancel MBM connections
+    StatusCode cancel();
 
     /// Issues error message and return error
     StatusCode error(const std::string& msg)   const;

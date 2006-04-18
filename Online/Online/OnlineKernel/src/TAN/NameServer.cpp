@@ -188,7 +188,7 @@ NameService::NameService(NetworkConnection* ptr)
   ::fflush(stdout);
   if ( m_connection )  {
     if ( NetworkConnection::NETCONNECTION_SUCCESS != m_connection->Status() )  {
-      ::printf("NameService> Error initializing the network connection!\n");
+      ::lib_rtl_printf("NameService> Error initializing the network connection!\n");
       ::exit(ptr->Status());
     }
   }
@@ -222,37 +222,37 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   snd_msg.m_length = sizeof(snd_msg);
   switch ( func )  {
     case TanMessage::ALLOCATE:                                // Allocation service...
-      //::printf("handle message: ALLOCATE\n");
+      //::lib_rtl_printf("handle message: ALLOCATE\n");
       if ( (port = m_tandb.allocatePort(ent)) == 0 )
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DEALLOCATE:
-      //::printf("handle message: DEALLOCATE\n");
+      //::lib_rtl_printf("handle message: DEALLOCATE\n");
       if ( TAN_SS_SUCCESS != m_tandb.freePort(ent) ) 
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::ALIAS:
-      //::printf("handle message: ALIAS\n");
+      //::lib_rtl_printf("handle message: ALIAS\n");
       if ( TAN_SS_SUCCESS != m_tandb.insertAlias(ent) )
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DEALIAS:
-      //::printf("handle message: DEALIAS\n");
+      //::lib_rtl_printf("handle message: DEALIAS\n");
       if ( TAN_SS_SUCCESS != m_tandb.removeAlias(ent) )
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DUMP:
-      //::printf("handle message: DUMP\n");
+      //::lib_rtl_printf("handle message: DUMP\n");
       m_tandb.Dump(stdout);
       break;
     case TanMessage::INQUIRE:                                 // Inquire service...
-      //::printf("handle message: INQUIRE\n");
+      //::lib_rtl_printf("handle message: INQUIRE\n");
       if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
         snd_msg.m_error = m_tandb.Error();
       }
       break;
     default:
-      //::printf("handle message: TAN_SS_UNKNOWNMODE\n");
+      //::lib_rtl_printf("handle message: TAN_SS_UNKNOWNMODE\n");
       snd_msg.m_error = TAN_SS_UNKNOWNMODE;
       break;
   }
@@ -300,7 +300,7 @@ void UdpNameService::handle ()   {
 
   int status = conn.recvChannel().recv(&req,sizeof(req),0,0,&addr);
   if ( status != sizeof(req) )  {
-    printf("NameService::handle> Error receiving message\n");
+    lib_rtl_printf("NameService::handle> Error receiving message\n");
   }
   else  {      // handle the request....
     ent = 0;
@@ -310,10 +310,10 @@ void UdpNameService::handle ()   {
     // Swap port to reply connection
     addr.sin_port = htons(m_port+1);
 #endif
-    //printf("send to port:%04X\n",addr.sin_port);
+    //lib_rtl_printf("send to port:%04X\n",addr.sin_port);
     status = snd.send(&rep,sizeof(rep),0,0,&addr);
     if ( status != sizeof(rep) )  {
-      ::printf("NameService::handle> Error sending message to [%s] on port 0x%X\n",
+      ::lib_rtl_printf("NameService::handle> Error sending message to [%s] on port 0x%X\n",
         inet_ntoa(rep.address()), rep.port());
     }
   }
@@ -371,7 +371,7 @@ void TcpNameService::handle()   {
   unsigned int fac;
   int sub_status, status;
   status = wtc_wait( &fac, &par, &sub_status );
-  printf("Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
+  lib_rtl_printf("Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
 }
 
 // ----------------------------------------------------------------------------
@@ -395,7 +395,7 @@ int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   accept_error = m_pNetwork->error();                             //
   int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
-    printf("handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
+    lib_rtl_printf("handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
       m_pNetwork->error(),retry,                                  //
       m_pNetwork->errMsg());                                      //
   }                                                                //
@@ -449,7 +449,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
         if ( ntohl(reply.error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
           status = chan->queueReceive (m_port, hand);     // with success!
           if ( !lib_rtl_is_success(status) ) {
-            printf("Error rearming receive: %s",chan->errMsg());
+            lib_rtl_printf("Error rearming receive: %s",chan->errMsg());
           }
           return status;
         }
@@ -459,7 +459,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       }
     }
   }
-  //printf("handleReceiveRequest> Close receive on %d %s\n",chan, strerror(status));
+  //lib_rtl_printf("handleReceiveRequest> Close receive on %d %s\n",chan, strerror(status));
   hand->_Delete();
   return status;
 }
@@ -484,7 +484,7 @@ New_allocation:
   m_connection = m_tcp = new TcpConnection(m_port);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   if ( m_pNetwork->error() != 0 && ++retry < 5 )  {
-    printf("resume-Retry# %d> %s\n", retry, m_pNetwork->errMsg());
+    lib_rtl_printf("resume-Retry# %d> %s\n", retry, m_pNetwork->errMsg());
     goto New_allocation;
   }
   return m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );
@@ -507,12 +507,12 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
          case 'n':  nowait    = true;   break;
          default:
 Options:
-           printf("NameServer -<opt>\n");
-           printf("  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
-           printf("  -i(nqquirer)   listen and serve INQUIRE        requests\n");
-           printf("  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           printf("  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           printf("  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
+           lib_rtl_printf("NameServer -<opt>\n");
+           lib_rtl_printf("  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
+           lib_rtl_printf("  -i(nqquirer)   listen and serve INQUIRE        requests\n");
+           lib_rtl_printf("  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           lib_rtl_printf("  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
+           lib_rtl_printf("  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
            return 0x1;
       }
     }
@@ -526,7 +526,7 @@ Options:
   }
   else if ( allocator )   {
     if ( TanDataBase::initialize() != TAN_SS_SUCCESS )  {
-      printf("TcpNameService> Error initializing the DataBase!\n");
+      lib_rtl_printf("TcpNameService> Error initializing the DataBase!\n");
       return 1;
     }
     if ( udp ) srv = new UdpNameService();

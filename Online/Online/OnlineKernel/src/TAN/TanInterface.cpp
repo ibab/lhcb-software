@@ -83,7 +83,7 @@ TanInterface::TanInterface()  {
   if ( m_pLocalHost == 0 )                                           goto Error;
   dot  = strchr(m_pcHostName,'.');
   if ( dot != 0   )  *dot = 0;
-  //printf("Tan interface: Host=%s\n",m_pcHostName);
+  //lib_rtl_printf("Tan interface: Host=%s\n",m_pcHostName);
   setLocalAddress(m_sinudp);
   setLocalAddress(m_sintcp);
 #ifdef _SERVICE
@@ -271,7 +271,7 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
       int nbyte = snd.send(&msg,sizeof(msg),0,0,&sadd);
 #endif
       if ( nbyte == sizeof(msg) )  {
-        // printf("receive on port: %04X\n",radd.sin_port);
+        // lib_rtl_printf("receive on port: %04X\n",radd.sin_port);
         nbyte = rcv.recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
@@ -406,7 +406,7 @@ int TanInterface::dumpDB (const char* node)   {
       int nbyte = snd.send(&msg,sizeof(msg),0,0,&sadd);
 #endif
       if ( nbyte == sizeof(msg) )  {
-        //printf("receive on port: %04X\n",radd.sin_port);
+        //lib_rtl_printf("receive on port: %04X\n",radd.sin_port);
         nbyte = rcv.recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();

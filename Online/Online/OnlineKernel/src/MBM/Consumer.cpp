@@ -38,7 +38,7 @@ int MBM::Consumer::eventAst(void* param) {
 
 // Ast to be called on event receival (may be overloaded by clients)
 int MBM::Consumer::eventAst() {
-  //::printf("Consumer AST\n");
+  //::lib_rtl_printf("Consumer AST\n");
   int sc = ::mbm_get_event_ast((void*)m_bmid);
   if ( sc == MBM_NORMAL ) {
     if ( !m_blocking ) {
@@ -68,7 +68,7 @@ int MBM::Consumer::eventRearm(unsigned int facility, void* param) {
   if ( facility != cons->m_facility ) {
     // Error ?
   }
-  //::printf("Consumer Rearm\n");
+  //::lib_rtl_printf("Consumer Rearm\n");
   return cons->eventRearm();
 }
 
@@ -139,8 +139,8 @@ int MBM::Consumer::getEvent() {
   if ( m_bmid != (BMID)-1 ) {
     EventDesc& e = m_event;
     int status = ::mbm_get_event(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID);
-    if ( status == MBM_NORMAL )  {
-      return MBM_NORMAL;
+    if ( status == MBM_NORMAL || status == MBM_REQ_CANCEL )  {
+      return status;
     }
     throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Internal Error]");
   }

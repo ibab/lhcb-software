@@ -709,24 +709,24 @@ int PubArea::DumpSlot(void* slot)   {
       if (size==0) return PA_SUCCESS; //.......................... No slot size
 
       int k = 0, j=0, l=0;
-      printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
+      lib_rtl_printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
       for (j=0;j<(size);j++)
       {
-        if (*tmp<32) printf(".");
-        if ((*tmp>31)&&(*tmp<127)) printf("%c",*tmp);
-        if (*tmp>126) printf("*");
+        if (*tmp<32) lib_rtl_printf(".");
+        if ((*tmp>31)&&(*tmp<127)) lib_rtl_printf("%c",*tmp);
+        if (*tmp>126) lib_rtl_printf("*");
         k++;tmp++;
-        if (k>61) {printf("\n");k=0;}
+        if (k>61) {lib_rtl_printf("\n");k=0;}
       }
       k=0;l=0;
-      printf("\n *** Hexadecimal Dump ***\n");
+      lib_rtl_printf("\n *** Hexadecimal Dump ***\n");
       for (j=0;j<(size);j++)  {
-        printf("%02x",*tmp2);
+        lib_rtl_printf("%02x",*tmp2);
         k++; l++; tmp2++;
-        if (l>3) {printf(" ");l=0;} //.... Prints spaces 
-        if (k>31) {printf("\n");k=0;}
+        if (l>3) {lib_rtl_printf(" ");l=0;} //.... Prints spaces 
+        if (k>31) {lib_rtl_printf("\n");k=0;}
       }
-      printf("\n");
+      lib_rtl_printf("\n");
       return PA_SUCCESS;
     }      
   }
@@ -774,22 +774,22 @@ int PubArea::DumpSlot(int slot)  {
   if (size==0) return PA_SUCCESS; //.......................... No slot size
 
   int k = 0, j=0, l=0;
-  printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
+  lib_rtl_printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
   for (j=0;j<(size);j++)  {
-    if (*tmp<32) printf(".");
-    if ((*tmp>31)&&(*tmp<127)) printf("%c",*tmp);
-    if (*tmp>126) printf("*");
+    if (*tmp<32) lib_rtl_printf(".");
+    if ((*tmp>31)&&(*tmp<127)) lib_rtl_printf("%c",*tmp);
+    if (*tmp>126) lib_rtl_printf("*");
     k++;tmp++;
-    if (k>63) {printf("\n");k=0;}
+    if (k>63) {lib_rtl_printf("\n");k=0;}
   }
   k=0;l=0;
-  printf("\n *** Hexadecimal Dump ***\n");
+  lib_rtl_printf("\n *** Hexadecimal Dump ***\n");
   for (j=0;(j<size);j++)  {
-    printf("%02x",*tmp2);
+    lib_rtl_printf("%02x",*tmp2);
     k++; l++; tmp2++;
-    if (l>3) {printf(" ");l=0;} //.... Prints spaces 
-    if (k>31) {printf("\n");k=0;}
+    if (l>3) {lib_rtl_printf(" ");l=0;} //.... Prints spaces 
+    if (k>31) {lib_rtl_printf("\n");k=0;}
   }
-  printf("\n");
+  lib_rtl_printf("\n");
   return PA_SUCCESS;
 }      

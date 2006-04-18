@@ -10,13 +10,11 @@
 //	===========================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiOnline/AMSService.h"
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AMSService)
 
 // Standard Constructor

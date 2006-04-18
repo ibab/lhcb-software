@@ -4,12 +4,12 @@
 
 namespace {
    static void help()  {
-    ::printf("mbm_cons_a -opt [-opt]\n");
-    ::printf("    -n=<name>              buffer member name\n");
-    ::printf("    -s=<number>            sleep interval between events [milli seconds]\n");
-    ::printf("    -b=<name>              Buffer identifier \n");
-    ::printf("    -p(artition)=<number>  Partition ID\n");
-    ::printf("    -q                     Quiet mode (do not print trigger number mismatch)\n");
+    ::lib_rtl_printf("mbm_cons_a -opt [-opt]\n");
+    ::lib_rtl_printf("    -n=<name>              buffer member name\n");
+    ::lib_rtl_printf("    -s=<number>            sleep interval between events [milli seconds]\n");
+    ::lib_rtl_printf("    -b=<name>              Buffer identifier \n");
+    ::lib_rtl_printf("    -p(artition)=<number>  Partition ID\n");
+    ::lib_rtl_printf("    -q                     Quiet mode (do not print trigger number mismatch)\n");
   }
   struct Cons : public MBM::Consumer  {
     int nbad, trnumber, quiet;
@@ -27,7 +27,7 @@ namespace {
       }
       else if( trnumber != *e.data ) {
         if ( !quiet )  {
-          ::printf("======= Mismatch [%d] found %d %d [0x%p]\n",++nbad, trnumber, *e.data, (void*)e.data);
+          ::lib_rtl_printf("======= Mismatch [%d] found %d %d [0x%p]\n",++nbad, trnumber, *e.data, (void*)e.data);
         }
         trnumber = *e.data;
       }
@@ -47,6 +47,6 @@ extern "C" int mbm_cons_a(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::printf("Asynchronous Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",name.c_str(),Cons::pid(),buffer.c_str());
+  ::lib_rtl_printf("Asynchronous Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",name.c_str(),Cons::pid(),buffer.c_str());
   return Cons(buffer,name,partID,quiet).run();
 }

@@ -119,8 +119,8 @@ int MBM::Producer::spaceRearm(int new_length) {
     int status = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
     if ( status == MBM_NORMAL )  {
       status = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
-      if ( status == MBM_NORMAL )  {
-        return MBM_NORMAL;
+      if ( status == MBM_NORMAL || status == MBM_REQ_CANCEL )  {
+        return status;
       }
       throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
     }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.6 2006-04-04 08:10:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.7 2006-04-18 08:11:55 frankb Exp $
 //	====================================================================
 //  MEPCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/strcasecmp.h"

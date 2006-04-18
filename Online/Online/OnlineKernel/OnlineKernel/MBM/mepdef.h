@@ -52,6 +52,7 @@ extern "C"  {
   int mep_increment(MEPID dsc, MEPEVENT* e, int val);
   int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
   int mep_install(int argc , char** argv);
+  int mep_cancel_request(MEPID dsc);
 #ifdef __cplusplus
 }
 #endif
@@ -69,6 +70,5 @@ extern "C"  {
 #define mep_free_space          mbm_free_space
 #define mep_declare_event       mbm_declare_event
 #define mep_send_space          mbm_send_space
-#define mep_mep_cancel_request  mbm_cancel_request
 
 #endif // MBM_MEPDEF_H

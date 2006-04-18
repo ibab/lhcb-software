@@ -11,8 +11,8 @@ extern "C" int mep_install(int argc , char** argv) {
     opts.push_back(argv[i]);
     if ( (argv[i][0] == '-' || argv[i][0] == '/') && ::toupper(argv[i][1]) == 'C' ) {
       int sc = mbm_install(opts.size(), &opts[0]);
-      if ( sc != 1 )  {
-        ::printf("Unable to install MBM buffers...\n");
+      if ( sc != MBM_NORMAL )  {
+        ::lib_rtl_printf("Unable to install MBM buffers...\n");
         return sc;
       }
       opts.clear();

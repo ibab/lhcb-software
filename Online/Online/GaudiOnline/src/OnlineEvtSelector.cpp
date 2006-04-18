@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.9 2006-03-21 07:54:57 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.10 2006-04-18 08:11:55 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventDescriptor.h"
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineEvtSelector)
 
 using LHCb::RawBank;

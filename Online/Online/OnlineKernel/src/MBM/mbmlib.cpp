@@ -34,7 +34,7 @@
 
 #define _mbm_return_err(a)  { errno = a; return (a); }
 
-int mbm_error()  {  ::printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
+int mbm_error()  {  ::lib_rtl_printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
 #undef MBM_ERROR
 #define  MBM_ERROR mbm_error();
 #define  MBMQueue RTL::DoubleLinkedQueue
@@ -63,7 +63,7 @@ inline int _mbm_printf(const char* fmt, ...)  {
   va_list args;
   va_start(args, fmt);
   int len = vprintf(fmt, args);
-  printf("\n");
+  lib_rtl_printf("\n");
   return len;
 }
 #endif
@@ -85,12 +85,12 @@ void _mbm_check_memory(void* q,int c, size_t s)  {
   int bad = 0, *p = (int*)q;
   for(i=0; i<s/sizeof(int); ++i)  {
     if ( p[i] != c )  {
-      ::printf("Bad memory:%08X[%d]=%08X %08X\n",p,i,&p[i],p[i]);
+      ::lib_rtl_printf("Bad memory:%08X[%d]=%08X %08X\n",p,i,&p[i],p[i]);
       bad++;
     }
   }
   if ( bad )  {
-    printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
+    lib_rtl_printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
   }
   else  {
     _mbm_printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
@@ -106,7 +106,7 @@ void _mbm_instrument_lock(BMID bm)  {
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
-      ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+      ::lib_rtl_printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
 #endif
     if ( m_bm->_control()->spare1 != 0 )  {
@@ -125,7 +125,7 @@ void _mbm_deinstrument_lock(BMID bm)  {
     int val;
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
-      ::printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+      ::lib_rtl_printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
 #endif
 }
@@ -149,10 +149,10 @@ void _mbm_update_rusage(USER* us) {
 template <class T> void print_queue(const char* format,const T* ptr, int type)  {
   switch (type)  {
   case 0:
-    printf(format,*ptr,*ptr,add_ptr(ptr,*ptr));
+    lib_rtl_printf(format,*ptr,*ptr,add_ptr(ptr,*ptr));
     break;
   case 1:
-    printf(format,*ptr,*ptr,add_ptr(ptr,(*ptr-4)));
+    lib_rtl_printf(format,*ptr,*ptr,add_ptr(ptr,(*ptr-4)));
     break;
   }
 }
@@ -261,6 +261,10 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
     errno = MBM_NO_FREE_US;
     return MBM_INV_DESC;
   }
+  bm->pThread       = 0;
+  bm->cThread       = 0;
+  bm->pThreadState  = 0;
+  bm->cThreadState  = 0;
   bm->owner = us->uid;
   us->c_state = S_active;
   us->p_state = S_active;
@@ -274,7 +278,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->ev_actual     = 0;
   us->ev_seen       = 0;
   us->ev_freed      = 0;
-  us->held_eid      = -1;
+  us->held_eid      = EVTID_NONE;
   us->n_req         = 0;
   us->get_ev_calls  = 0;
   us->get_sp_calls  = 0;
@@ -425,7 +429,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int tr
       lib_rtl_signal_message(0,"Too many calls to mbm_get_event_a");
       return MBM_NORMAL;
     }
-    if (us->held_eid != -1)    {
+    if (us->held_eid != EVTID_NONE)    {
       _mbm_rel_event(bm, us);
     }
     if (us->c_state == S_pause)    {
@@ -467,7 +471,7 @@ int mbm_free_event (BMID bm) {
   UserLock user(bm, MBM_INTERNAL);
   USER* us = user.user();
   if ( us )  {
-    if (us->held_eid == -1)    {
+    if (us->held_eid == EVTID_NONE)    {
       _mbm_return_err (MBM_NO_EVENT);
     }
     _mbm_rel_event (bm, us);  /* release event held by him  */
@@ -479,7 +483,7 @@ int mbm_pause (BMID bm)  {
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
-    if (us->held_eid != -1)  {
+    if (us->held_eid != EVTID_NONE)  {
       _mbm_rel_event (bm, us);
     }
     us->c_state = S_pause;
@@ -631,12 +635,18 @@ int mbm_cancel_request (BMID bm)   {
   if ( us )  {
     if (us->c_state == S_wevent)    {
       _mbm_del_wev (bm, us);
+      us->c_state = S_active;
+      ::lib_rtl_set_event(bm->WEV_event_flag);
     }
     if (us->p_state == S_wspace)    {
       _mbm_del_wsp (bm, us);
+      us->p_state = S_active;
+      ::lib_rtl_set_event(bm->WSP_event_flag);
     }
     if (us->p_state == S_weslot)    {
       _mbm_del_wes (bm, us);
+      us->p_state = S_active;
+      ::lib_rtl_set_event(bm->WES_event_flag);
     }
   }
   return user.status();
@@ -763,7 +773,7 @@ int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMa
   us->we_trmask_add = trmask;
   us->c_astadd      = astadd;
   us->c_astpar      = astpar;
-  us->held_eid      = -1;
+  us->held_eid      = EVTID_NONE;
   _mbm_printf("WEV ADD> %d State:%d\n",calls++, us->c_state);
   insqti(&us->wenext, &bm->usDesc->wev_head);
   return MBM_NORMAL;
@@ -1017,7 +1027,7 @@ int _mbm_del_event(BMID bm, EVENT* e, int len)  {
 /// release event held by this user
 int _mbm_rel_event (BMID bm, USER* u)  {
   EVENT *e = bm->event + u->held_eid;
-  u->held_eid = -1;
+  u->held_eid = EVTID_NONE;
   e->umask0.clear(u->uid);
   e->umask1.clear(u->uid);
   e->umask2.clear(u->uid);
@@ -1042,13 +1052,13 @@ int _mbm_uclean (BMID bm)  {
     _mbm_del_wes (bm, u);
   }
 
-  if ( u->space_size )   {  /* free the held space */
+  if ( u->space_size )   {              // free the held space
     _mbm_sfree (bm, u->space_add, u->space_size);
     u->space_add = 0;
     u->space_size = 0;
   }
-  if ( u->held_eid != -1 )    { // free the held event
-    _mbm_rel_event (bm, u);   // release event
+  if ( u->held_eid != EVTID_NONE )    { // free the held event
+    _mbm_rel_event (bm, u);             // release event
   }
   MBMQueue<EVENT> que(bm->evDesc,-EVENT_next_off);
   for(EVENT* e=que.get(); e; e=que.get() )  {
@@ -1088,14 +1098,14 @@ int mbm_grant_update (BMID bm)   {
   UserLock user(bm);
   USER* u = user.user();
   if ( u )  {
-    if (u->held_eid == -1)  {
+    if (u->held_eid == EVTID_NONE)  {
       _mbm_return_err (MBM_NO_EVENT);
     }
     EVENT* e = bm->event + u->held_eid;  // convert event to space
     int held_eid = u->held_eid;
     int add = (int)e->ev_add ;
     int siz = e->ev_size;
-    u->held_eid = -1;
+    u->held_eid = EVTID_NONE;
     e->held_mask.clear(u->uid);
     e->umask0.clear(u->uid);
     e->umask1.clear(u->uid);
@@ -1291,7 +1301,7 @@ int  mbm_wait_event(BMID bm)    {
     _mbm_return_err (MBM_ILL_CONS);
   }
   USER* us = bm->_user();
-  if ( us->held_eid != -1 )  {
+  if ( us->held_eid != EVTID_NONE )  {
     Lock lock(bm);
     _mbm_printf("WEV: State=%d  %s\n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
     if ( us->c_state == S_wevent_ast_queued )  {
@@ -1311,7 +1321,10 @@ Again:
   if ( lib_rtl_is_success(sc) )  {
     lib_rtl_clear_event(bm->WEV_event_flag);
     Lock lock(bm);
-    if (us->held_eid == -1)    {
+    if ( us->held_eid == EVTID_NONE )    {
+      if ( us->c_state == S_active )  {
+        return MBM_REQ_CANCEL;
+      }
       goto Again;
     }
     us->reason = BM_K_INT_EVENT;
@@ -1352,10 +1365,16 @@ wait:
   else if ( us->p_state == S_weslot_ast_queued )  {
     lib_rtl_wait_for_event(bm->WES_event_flag);
     lib_rtl_clear_event(bm->WES_event_flag);
+    if ( us->p_state == S_active )   {
+      return MBM_REQ_CANCEL;
+    }
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
   else if ( us->p_state == S_wspace )    {
     lib_rtl_wait_for_event(bm->WSP_event_flag);
+    if ( us->p_state == S_active )  {
+      return MBM_REQ_CANCEL;
+    }
     lib_rtl_clear_event(bm->WSP_event_flag);
   }
   else if ( us->p_state == S_wspace_ast_queued )    {
@@ -1372,21 +1391,30 @@ int _mbm_wait_space_a(void* param)  {
   BMID bm = (BMID)param;
   for(;;)  {
     lib_rtl_clear_event(bm->WSPA_event_flag);
-    if ( mbm_wait_space(bm) != MBM_NORMAL )  {   
+    int sc = mbm_wait_space(bm);
+    if ( sc != MBM_NORMAL )  {
+      bm->pThreadState = 1;
+      return 1;
     }
     lib_rtl_wait_for_event(bm->WSPA_event_flag);
   }
+  return 1;
 }
 
 int  mbm_wait_space_a(BMID bm)    {
   UserLock user(bm);
   if ( user.user() )  {
+    if ( 0 != bm->pThread && 1 == bm->pThreadState )  {
+      lib_rtl_join_thread(bm->pThread);
+      bm->pThread = 0;
+    }
     if ( 0 == bm->pThread )  {
       int sc = lib_rtl_start_thread(_mbm_wait_space_a, bm, &bm->pThread);
       if ( !(sc & 1) )  {
         lib_rtl_signal_message(0,"Failed to manipulate producer BM thread");
         return MBM_INTERNAL;
       }
+      bm->pThreadState = 2;
     }
     lib_rtl_set_event(bm->WSPA_event_flag);
     return MBM_NORMAL;
@@ -1541,7 +1569,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
             lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
           }
           else  {
-            ::printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+            ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
           }
           if (us->p_state != S_active)   {
             _mbm_return_err (MBM_REQ_CANCEL); // other reasons
@@ -1561,7 +1589,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
           lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
         }
         else  {
-          ::printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+          ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
         }
         if (us->p_state != S_active)        {
           _mbm_return_err (MBM_REQ_CANCEL);  // other reasons
@@ -1731,10 +1759,10 @@ int _mbm_map_sections(BMID bm)  {
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  //::printf("Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
-  //::printf("User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
-  //::printf("Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
-  //::printf("Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
+  //::lib_rtl_printf("Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
+  //::lib_rtl_printf("User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
+  //::lib_rtl_printf("Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
+  //::lib_rtl_printf("Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
   bm->buffer_add  = (char*)bm->buff_add->address;
   bm->bitmap_size = bm->ctrl->bm_size;
   bm->buffer_size = bm->ctrl->buff_size;

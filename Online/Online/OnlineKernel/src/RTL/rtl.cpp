@@ -202,26 +202,26 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
     case LIB_RTL_ERRNO:
       err = errno;
       if ( err != 0 )  {
-        ::printf("RTL: %8d : %s\n",err, errorString(err));
-        ::printf("                ");
+        ::lib_rtl_printf("RTL: %8d : %s\n",err, errorString(err));
+        ::lib_rtl_printf("                ");
         ::vprintf(fmt, args);
-        ::printf("\n");
+        ::lib_rtl_printf("\n");
         return 0;
       }
       return 1;
     case LIB_RTL_DEFAULT:
-      ::printf("RTL: ");
+      ::lib_rtl_printf("RTL: ");
       ::vprintf(fmt, args);
-      ::printf("\n");
+      ::lib_rtl_printf("\n");
       break;
     case LIB_RTL_OS:
     default:
       err = lib_rtl_get_error();
       if ( err != ERROR_SUCCESS )   {
-        ::printf("RTL: %8d : %s\n",err, errorString(err));
-        ::printf("                ");
+        ::lib_rtl_printf("RTL: %8d : %s\n",err, errorString(err));
+        ::lib_rtl_printf("                ");
         ::vprintf(fmt, args);
-        ::printf("\n");
+        ::lib_rtl_printf("\n");
         return 0;
       }
       return 1;
@@ -350,6 +350,27 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
   return 1;
+}
+
+static size_t (*s_rtl_printer)(void*, const char*, va_list args) = 0;
+static void*    s_rtl_printer_arg = 0;
+
+/// Printout redirection
+size_t lib_rtl_printf(const char* format, ...)   {
+  size_t result;
+  va_list args;
+  va_start( args, format );
+  result = (s_rtl_printer != 0)
+    ? (*s_rtl_printer)(s_rtl_printer_arg, format, args)
+    : vfprintf(stdout, format, args);
+  va_end(args);
+  return result;
+}
+
+/// Install RTL printer 
+void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), void* param)  {
+  s_rtl_printer = func;
+  s_rtl_printer_arg = param;
 }
 
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {

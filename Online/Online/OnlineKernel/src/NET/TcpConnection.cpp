@@ -66,7 +66,7 @@ int TcpConnection::initialize( TcpConnection::Port port )  {
   ::memset(m_sin.m_addr.sin_zero,0,sizeof(m_sin.m_addr.sin_zero));
   //  Bind to that address...
   if ( m_channel.bind(m_sin.m_addr) < 0 ) {
-    printf("%s TcpConnection> Error BIND:%s\n",timestr(),m_channel.errMsg());
+    lib_rtl_printf("%s TcpConnection> Error BIND:%s\n",timestr(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return m_status = CONNECTION_SUCCESS;
@@ -99,7 +99,7 @@ int TcpConnection::receive(BasicRequest* req, NetworkAddress& org)  {
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
-    ::printf("%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
+    ::lib_rtl_printf("%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
       timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
@@ -117,7 +117,7 @@ int TcpConnection::send(BasicRequest* req, NetworkAddress& target)  {
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
-    ::printf("%s  TcpConnection::send> Bad IO status. Status=0x%X %s\n",
+    ::lib_rtl_printf("%s  TcpConnection::send> Bad IO status. Status=0x%X %s\n",
       timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
@@ -159,7 +159,7 @@ TcpConnection::Family TcpConnection::family () const {
 int TcpConnection::servicePort(const char* service)   {
   struct servent* se = ::getservbyname( service, "tcp");
   if ( se == 0 )   {
-    printf("%s TcpConnection> Error getting service %s!\n",timestr(),service);
+    lib_rtl_printf("%s TcpConnection> Error getting service %s!\n",timestr(),service);
     return -1;
   }
   return se->s_port;

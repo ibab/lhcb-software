@@ -2,11 +2,11 @@
 #include "MBM/Consumer.h"
 
 static void help()  {
-  ::printf("mbm_cons -opt [-opt]\n");
-  ::printf("    -n=<name>      buffer member name\n");
-  ::printf("    -s=<number>    sleep interval between events [milli seconds]\n");
-  ::printf("    -b=<name>      Buffer identifier \n");
-  ::printf("    -q             Quiet mode (do not print trigger number mismatch)\n");
+  ::lib_rtl_printf("mbm_cons -opt [-opt]\n");
+  ::lib_rtl_printf("    -n=<name>      buffer member name\n");
+  ::lib_rtl_printf("    -s=<number>    sleep interval between events [milli seconds]\n");
+  ::lib_rtl_printf("    -b=<name>      Buffer identifier \n");
+  ::lib_rtl_printf("    -q             Quiet mode (do not print trigger number mismatch)\n");
 }
 
 extern "C" int mbm_cons(int argc,char **argv) {
@@ -21,7 +21,7 @@ extern "C" int mbm_cons(int argc,char **argv) {
   cli.getopt("buffer",1,buffer);
 
   MBM::Consumer c(buffer,name,0x103);
-  ::printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),buffer.c_str());
+  ::lib_rtl_printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),buffer.c_str());
   c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
   while( c.getEvent() )  {
     const MBM::EventDesc& e = c.event();
@@ -30,7 +30,7 @@ extern "C" int mbm_cons(int argc,char **argv) {
     }
     else if( trnumber != *e.data ) {
       if ( !quiet )  {
-        ::printf("======= Mismatch [%d] found %d %d [0x%p]\n", 
+        ::lib_rtl_printf("======= Mismatch [%d] found %d %d [0x%p]\n", 
 	         nbad++, trnumber, *e.data, (void*)e.data);
       }
       trnumber = *e.data;

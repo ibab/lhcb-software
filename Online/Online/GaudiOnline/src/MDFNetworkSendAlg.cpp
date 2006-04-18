@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.1 2006-03-01 19:20:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
 //	====================================================================
 //  MDFNetworkSendAlg.h
 //	--------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace LHCb  {
   };
 }
 
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.1 2006-03-01 19:20:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
 //	====================================================================
 //  MDFNetworkSendAlg.cpp
 //	--------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace LHCb  {
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFNetworkSendAlg);
 
 using namespace MBM;

@@ -15,7 +15,6 @@
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 
 // Standard Constructor

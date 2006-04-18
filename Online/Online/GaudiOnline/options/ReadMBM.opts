@@ -2,6 +2,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiOnline"};
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg", "LHCb::DecisionSetterAlg/DecisionSetter" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
 EventDataSvc.RootCLID                = 1;

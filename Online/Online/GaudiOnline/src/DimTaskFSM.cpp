@@ -1,3 +1,4 @@
+#include "GaudiKernel/IMessageSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
@@ -27,16 +28,16 @@ namespace  {
     */
   class Command : public DimCommand  {
     /// Command target
-    Interactor* m_target;
+    LHCb::DimTaskFSM* m_target;
   public:
     /// Constructor
-    Command(const std::string& nam, Interactor* target) 
+    Command(const std::string& nam, LHCb::DimTaskFSM* target) 
     : DimCommand(nam.c_str(), "C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
-      std::cout << "Received DIM command:'" << cmd << "'" << std::endl;
+      m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "configure"  ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
       else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
@@ -44,6 +45,22 @@ namespace  {
       else if ( cmd == "unload"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
     }
   };
+
+  /// Static printer (RTL overload)
+  static size_t printout(void* context, const char* fmt, va_list args)  {
+    std::string format = fmt;
+    LHCb::DimTaskFSM* p = (LHCb::DimTaskFSM*)context;
+    char buffer[2048];
+    size_t len = ::vsprintf(buffer, format.substr(0,format.length()-1).c_str(), args);
+    if ( len > sizeof(buffer) )  {
+      // !! memory corruption !!
+      p->output(MSG::ERROR,"Memory corruption...");
+      p->output(MSG::WARNING,buffer);
+      exit(0);
+    }
+    p->output(MSG::WARNING,buffer);
+    return len;
+  }
 }
 
 LHCb::DimTaskFSM::DimTaskFSM(IInterface*) 
@@ -52,13 +69,13 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   m_propertyMgr  = new PropertyMgr(this);
   m_procName = RTL::processName();
   std::string svcname= m_procName+"/status";
-  //print("Task name:'%s'",m_procName.c_str());
   m_command = new Command(m_procName, this);
 	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   DimServer::start(m_procName.c_str());
   declareState(ST_NAME_NOT_READY);
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
+  ::lib_rtl_install_printer(printout,this);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
@@ -66,6 +83,7 @@ LHCb::DimTaskFSM::~DimTaskFSM()  {
   delete m_command;
   m_service = 0;
   m_command = 0;
+  ::lib_rtl_install_printer(0,0);
 }
 
 /// IInterface implementation: DimTaskFSM::addRef()
@@ -103,23 +121,7 @@ StatusCode LHCb::DimTaskFSM::run()  {
   return StatusCode::SUCCESS;
 }
 
-/// Printout overload
-size_t LHCb::DimTaskFSM::print(const char* format,...)   {
-  va_list args;
-  char buffer[1024];
-  va_start( args, format );
-  size_t len = ::vsprintf(buffer, format, args);
-  if ( len > sizeof(buffer) )  {
-    // !! memory corruption !!
-    output("Memory corruption...");
-    output(buffer);
-    exit(0);
-  }
-  output(buffer);
-  return len;
-}
-
-void LHCb::DimTaskFSM::output(const char* s)  {
+void LHCb::DimTaskFSM::output(int /* level */, const char* s)  {
   std::cout << s << std::endl;
 }
 
@@ -131,18 +133,18 @@ StatusCode LHCb::DimTaskFSM::printErr(int flag, const char* format, ...)  {
   size_t len = ::vsprintf(&buffer[7], format, args);
   if ( len > sizeof(buffer) )  {
     // !! memory corruption !!
-    output("Memory corruption...");
-    output(buffer);
+    output(MSG::ERROR,"Memory corruption...");
+    output(MSG::ERROR,buffer);
     exit(0);
   }
-  output(buffer);
+  output(MSG::ERROR,buffer);
   if ( flag ) error();
   return StatusCode::FAILURE;
 }
 
 StatusCode LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
   m_stateName = new_state;
-  output(std::string("Declare state:"+new_state).c_str());
+  output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
   m_service->updateService((char*)m_stateName.c_str());
   return StatusCode::SUCCESS;
 }

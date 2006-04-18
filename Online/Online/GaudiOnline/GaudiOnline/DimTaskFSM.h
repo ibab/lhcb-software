@@ -106,10 +106,6 @@ namespace LHCb  {
     StatusCode declareState(const std::string& new_state);
     /// Declare FSM state
     StatusCode declareState(State state);
-    /// Printout overload
-    size_t print(const char* fmt,...);
-    /// Print overload
-    virtual void output(const char* s);
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
 
@@ -118,6 +114,8 @@ namespace LHCb  {
     DimTaskFSM(IInterface*);
     /// Standard destructor
     virtual ~DimTaskFSM();
+    /// Print overload
+    virtual void output(int level, const char* s);
     /// Interactor overload: handle Sensor stimuli
     virtual void handle(const Event& ev);
     /// Cancel IO request

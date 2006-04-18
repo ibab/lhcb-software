@@ -1,8 +1,5 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "MinimalEventLoopMgr";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable";
-ApplicationMgr.DLLs                  = { "GaudiUPI", "GaudiOnline" };
-ApplicationMgr.TopAlg                = { };
-ApplicationMgr.ExtSvc                = {"Gaudi::UPIService/UPIService", "LHCb::MEPManager/MEPInit" };
-MEPInit.InitFlags                    = "-s=5000 -e=100 -u=20 -i=MEP -c -s=400 -e=400 -u=14 -i=EVENT -c -s=400 -e=400 -u=14 -i=RESULT -c";
+#pragma print off
+#include "$GAUDIONLINEROOT/options/Main.opts"
+ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
+MEPInit.InitFlags        = "-s=5000 -e=100 -u=20 -i=MEP -c -s=400 -e=400 -u=14 -i=EVENT -c -s=400 -e=400 -u=14 -i=RESULT -c";
+MessageSvc.OutputLevel   = 5;  // Minimum is Error

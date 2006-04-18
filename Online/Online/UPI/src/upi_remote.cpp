@@ -92,6 +92,9 @@ static Queue* upi_int_wait (int code)   {
       if (q->code == code) return q;
     }
     status = wtc_wait (&event, &dummy, &sub_status);
+    if ( status != WT_SUCCESS )  {
+      return 0;
+    }
   }
 }
 
@@ -886,7 +889,8 @@ static int rearm (int fac)    {
 void upir_init_remote ()    {
   //_asm int 3
   char* source;
-  Routine a, r;
+  Routine a = 0, r = 0;
+  memset(&Header,0,sizeof(Header));
   SendBuffer = UpiBufferNew ();
   GetBuffer = UpiBufferNew ();
   wtc_init();

@@ -143,7 +143,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
   while ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
     if ( status != PA_SUCCESS )       {
-      printf("--1-- Waiting for Publishing area beeing valid!\n");
+      lib_rtl_printf("--1-- Waiting for Publishing area beeing valid!\n");
       lib_rtl_sleep(1000);
     }
   }
@@ -152,7 +152,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
     int context = (-1);
     status = Pa.GetSlotofType(123,&context,slot);
     if ( status != PA_SUCCESS )       {
-      printf("--2-- Waiting for Publishing area beeing valid!\n");
+      lib_rtl_printf("--2-- Waiting for Publishing area beeing valid!\n");
       lib_rtl_sleep(1000);
     }
   }
@@ -160,7 +160,7 @@ TanDataBase::TanDataBase() : m_lock(0) {
   _pData = (TanPaSlot*)slot;
   status = lib_rtl_create_lock ("TANDB", &m_lock);
   if ( !lib_rtl_is_success(status) )  {
-    ::printf("Error creating TANDB lock!\n");
+    ::lib_rtl_printf("Error creating TANDB lock!\n");
   }
 }
 // ----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ int TanDataBase::initialize()  {
 #endif
     for ( int i = 0; i < TanPaSlot::NumEntries; i++ )
       data->_pEntry[i] = 0;
-    printf("Nameserver Publishing area successfully initialized!\n");
+    lib_rtl_printf("Nameserver Publishing area successfully initialized!\n");
     return TAN_SS_SUCCESS;
   }
   return TAN_SS_NOMEM;
@@ -297,14 +297,14 @@ Done:
       ports_availible = OS9_PORT_FLIP;
     }
     if ( numUsed == TanPaSlot::NumEntries )    {
-      printf("ALL Slots are used up....PROBLEM!!!!!\n");
+      lib_rtl_printf("ALL Slots are used up....PROBLEM!!!!!\n");
       first_free = 8;  // a guess
     }
     if ( ports_availible == 0 )     {
-      ::printf("NO free range availible.....PROBLEM!!!!!\n");
+      ::lib_rtl_printf("NO free range availible.....PROBLEM!!!!!\n");
       first_free = 8;  // a guess
     }
-    ::printf("New start port %d -> %X slots availible:%d\n",
+    ::lib_rtl_printf("New start port %d -> %X slots availible:%d\n",
       first_free, NAMESERVICE_BASE_PORT+first_free, 
       ports_availible);
     current_port     = first_free-1;
@@ -414,11 +414,11 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
       if ( getpeername( e->chan, (sockaddr *)&peer, &peerlen ) == 0 )
         e->m_iosb._pPort = peer.sin_port;
       else
-        ::printf("Cannot determine peer of socket %d\n", e->chan);
+        ::lib_rtl_printf("Cannot determine peer of socket %d\n", e->chan);
       if ( getsockname( e->m_chan, (sockaddr *)&peer, &peerlen ) == 0 )
         e->im_osb._lPort = peer.sin_port;
       else
-        ::printf("Cannot determine sock of socket %d\n", e->chan);
+        ::lib_rtl_printf("Cannot determine sock of socket %d\n", e->chan);
 #elif _VMS
       e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;

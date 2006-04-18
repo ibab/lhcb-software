@@ -28,6 +28,10 @@ namespace MBM  {
     S_weslot_ast_handled = 1
   };
 
+  enum EVTIDs {
+    EVTID_NONE = -1
+  };
+
   enum BIDs {
     BID_USER  = 0xfeed0001,
     BID_EVENT = 0xfeed0002
@@ -214,6 +218,8 @@ struct BMDESCRIPT : public qentry_t  {
   lib_rtl_event_t  WSPA_event_flag;
   lib_rtl_thread_t pThread;
   lib_rtl_thread_t cThread;
+  char             pThreadState;
+  char             cThreadState;
   inline USER* _user()  {
     return owner==-1 ? 0 : user + owner;
   }

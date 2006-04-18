@@ -23,11 +23,7 @@
 #include "bm_struct.h"
 #include "Manager.h"
 
-#define writeln(a,b,c) printf(b)
 #define E_MNF  221
-
-#define writeln(a,b,c) printf(b)
-#define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
 
 static int USER_next_off;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
@@ -277,7 +273,7 @@ int MBM::Monitor::optparse (const char* c)  {
   case 'i':        /*      buffer_id        */  
     iret = sscanf(c+1,"=%s",m_buffID);
     if( iret != 1 )      {
-      writeln(2,"Error reading Buffer identifier parameter\n",80);
+      lib_rtl_printf("Error reading Buffer identifier parameter\n");
       exit(0);
     }
     m_bmid = m_buffID;
@@ -285,10 +281,10 @@ int MBM::Monitor::optparse (const char* c)  {
   case '?':
   case 'h':
   default:
-    writeln(2,"mbm_mon - Buffer Manager Monitor\n",80);
-    writeln(2,"Options:\n",80);
-    writeln(2,"    -i=<bm_name>   Select Buffer Identifier\n",80);
-    writeln(2,"    -s             Single update \n",80);
+    lib_rtl_printf("mbm_mon - Buffer Manager Monitor\n");
+    lib_rtl_printf("Options:\n");
+    lib_rtl_printf("    -i=<bm_name>   Select Buffer Identifier\n");
+    lib_rtl_printf("    -s             Single update \n");
     exit(0);
   }
   return 1;

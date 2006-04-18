@@ -103,7 +103,10 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
       }
     }
 #else
-    upir_input (menu_id, item_id, param_id, list_index);
+    c = upir_input (menu_id, item_id, param_id, list_index);
+    if ( c != UPI_SS_NORMAL )  {
+      return UPI_K_USER;
+    }
     c = RETURN;
     Menu* m = upic_find_menu (*menu_id);
     if (!m) return UPI_SS_ABORTED;
@@ -163,7 +166,10 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
       }
     }
 #else
-    upir_input (menu_id, item_id, param_id, &list_index);
+    c = upir_input (menu_id, item_id, param_id, &list_index);
+    if ( c != UPI_SS_NORMAL )  {
+      return UPI_K_USER;
+    }
     c = RETURN;
     Menu* m = upic_find_menu (*menu_id);
     if (!m) return UPI_SS_ABORTED;

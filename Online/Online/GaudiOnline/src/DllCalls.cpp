@@ -7,6 +7,7 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/SmartIF.h"
 #include "CPP/IocSensor.h"
+#include "CPP/Interactor.h"
 #include "RTL/rtl.h"
 
 #include <iostream>
@@ -180,6 +181,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string runable = "LHCb::OnlineRunable";
   std::string evtloop = "MinimalEventLoopMgr";
   std::string msgsvc  = "OnlineMessageSvc";
+  bool autostart = cli.getopt("autostart",1) != 0;
   std::string opts    = "";
   std::string optopts = "";
   cli.getopt("dll",3,dll);
@@ -207,6 +209,16 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     if(cli.getopt("optoptions",6,optopts)) p->setProperty(StringProperty("OptionalOptions",optopts));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
+      if ( autostart )  {
+        Interactor* actor = dynamic_cast<Interactor*>(runner.pRef());
+        if ( actor )  {
+          IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
+          IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
+        }
+        else  {
+          std::cout << "Autostart failed: " << type << " is no Interactor!" << std::endl;
+        }
+      }
       return runner->run();
     }
   }

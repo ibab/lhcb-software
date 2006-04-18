@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.7 2006-04-03 17:03:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.8 2006-04-18 08:11:55 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -6,10 +6,11 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
+#include "MBM/bmdef.h"
 #include <stdexcept>
 #include <cctype>
 #include <cstdio>
@@ -32,7 +33,7 @@ LHCb::MEPManager::~MEPManager()    {
 
 StatusCode LHCb::MEPManager::error(const std::string& msg)   const {
   MsgStream err(msgSvc(), "MEPManager");
-  err << MSG::ERROR << msg << endmsg;
+  err << MSG::FATAL << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
@@ -107,9 +108,7 @@ StatusCode LHCb::MEPManager::initialize()  {
     return error("Failed to initialize base class RawDataCnvSvc.");
   }
   if ( m_procName.empty() )  {
-    char txt[64];
-    ::lib_rtl_get_process_name(txt, sizeof(txt));
-    m_procName = txt;
+    m_procName = RTL::processName();
   }
   if ( !initializeBuffers().isSuccess() )  {
     return error("Failed to initialize MEP buffers!");
@@ -119,5 +118,19 @@ StatusCode LHCb::MEPManager::initialize()  {
   }
   return StatusCode::SUCCESS;
 }
+
+StatusCode LHCb::MEPManager::finalize()  {
+  if ( m_mepID )  {
+    mep_exclude(m_mepID);
+  }
+  return Service::finalize();
+}
+
+/// Cancel connection to specified buffers
+StatusCode LHCb::MEPManager::cancel()  {
+  mep_cancel_request(m_mepID);
+  return StatusCode::SUCCESS;
+}
+
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPManager)

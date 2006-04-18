@@ -83,7 +83,7 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
       return status==0 ? 1 : 0;
     }
     else {
-      ::printf("Cannot cancel lock [%s]. Semaphore count is:%d\n",h->name, val);
+      ::lib_rtl_printf("Cannot cancel lock [%s]. Semaphore count is:%d\n",h->name, val);
     }
     return 0;
 #elif defined(_WIN32)
@@ -101,7 +101,7 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
       int val;
       lib_rtl_lock_value(h, &val);
       if ( val != 0 ) {
-        printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
+        lib_rtl_printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
       }
     }
     if ( sc != 0 )
@@ -152,7 +152,7 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
         h->name,h->handle,h->held);
     }
     else {
-      printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);
+      lib_rtl_printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);
     }
 #elif defined(_WIN32)
     if ( ::ReleaseMutex(h->handle) )    {

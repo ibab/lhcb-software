@@ -81,6 +81,6 @@ extern "C" {
   int _mbm_unmap_sections(BMID bm);
 };
 
-#define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
+#define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { lib_rtl_printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
 
 #endif // _MBM_INTERNALS_H
