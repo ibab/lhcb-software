@@ -1,6 +1,5 @@
-// $Id: MCParticleMaker.cpp,v 1.18 2006-04-06 11:15:13 jpalac Exp $
-// Include files 
-
+// $Id: MCParticleMaker.cpp,v 1.19 2006-04-18 13:22:14 jpalac Exp $
+// Include files
 #include <memory>
 
 // from Gaudi
@@ -11,13 +10,11 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "Event/Particle.h"
-
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/MatrixManip.h"
-
 // local
 #include "MCParticleMaker.h"
-
+//#include "Linker/LinkerWithKey.h"
 /*-----------------------------------------------------------------------------
  * Implementation file for class : MCParticleMaker
  *
@@ -27,12 +24,11 @@
  * 03/10/2002 : Gerhard Raven
  *-----------------------------------------------------------------------------
  */
-/// Returns false if is the MCPArticle is one of these stable particles (mu+/-,e+/-,pi+/-,K+/-,p, gamma); true otherwise 
+/// Returns false if is the MCPArticle is one of these stable particles (mu+/-,e+/-,pi+/-,K+/-,p/antip, gamma); true otherwise 
 struct IsUnstable : std::unary_function<LHCb::MCParticle*,bool> {   
   bool operator()(const LHCb::MCParticle *p) const
-  { int pid = p->particleID().pid();
-  return (pid!= 11 && pid!= 13 && pid!= 211 && pid!= 321 && pid!=2212 && 
-          pid!=-11 && pid!=-13 && pid!=-211 && pid!=-321 && pid!=22);
+  { int pid = p->particleID().abspid();
+  return (pid!= 11 && pid!= 13 && pid!= 211 && pid!= 321 && pid!=2212 && pid!=22);
   }
 };
 
@@ -56,16 +52,12 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   // Declaring implemented interface  
   declareInterface<IParticleMaker>(this);
 
-  std::vector < double > OneDefault,ZeroDefault;
-  for(int daino=0; daino<6; daino++){
-    OneDefault.push_back(1.);
-    ZeroDefault.push_back(0.);
-  }
+  std::vector< double > OneDefault(7,1.);
+  std::vector< double > ZeroDefault(7,0.);
   
   // Declare properties
   declareProperty( "InputLocation", m_input = LHCb::MCParticleLocation::Default);
   declareProperty( "ParticleNames", m_particleNames );
-  declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
   declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
   // if true also m_onlyDecayProducts HAS to be true
   declareProperty( "OnlyStableDecayProducts", m_onlyStableDecayProducts = false);
@@ -77,8 +69,9 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   declareProperty( "SmearParticle",   m_smearParticle = true );
   declareProperty( "IpErrorC0",   m_ipErrorC0 = 0.0173*mm );  
   declareProperty( "IpErrorC1",   m_ipErrorC1 = 0.0265*mm );
-  declareProperty( "SlopeError",  m_slopeError = 0.4*mrad ); //K*K* 0.20-0.35 mrad
-  declareProperty( "MomError",    m_momError = 0.004 );  // K*K* 0.0025-0.003
+  declareProperty( "IpErrorZ",   m_ipErrorZ = 0.01*mm );
+  declareProperty( "SlopeError",  m_slopeError = 0.4*mrad );
+  declareProperty( "MomError",    m_momError = 0.004 );  
 
   // if true smears the MC truth information at PointOnTrack (minimum distance from beam line) else smears  at origin vertex 
   declareProperty( "SmearATPoT", m_smearATPoT = false);
@@ -109,6 +102,13 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
 //=============================================================================
 MCParticleMaker::~MCParticleMaker( ) { };
 
+//=============================================================================
+// Finalisation. Check parameters
+//=============================================================================
+StatusCode MCParticleMaker::finalize() {
+  debug()<<"MCParticleMaker is finalising"<<endreq;
+return StatusCode::SUCCESS;
+}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
@@ -177,6 +177,25 @@ StatusCode MCParticleMaker::initialize() {
     debug() << " Particle Requested: Name = " << (*iName) 
             << " PID = " << partProp->jetsetID() << endmsg;
   }
+
+  m_rho=ROOT::Math::SMatrixIdentity();
+
+  m_rho(0,1)=m_rhoxy;
+  m_rho(0,2)=m_rhoxz;
+  m_rho(0,3)=m_rhoxtx;
+  m_rho(0,4)=m_rhoxty;
+  m_rho(0,5)=m_rhoxp;
+  m_rho(1,2)=m_rhoyz;
+  m_rho(1,3)=m_rhoytx;
+  m_rho(1,4)=m_rhoyty;
+  m_rho(1,5)=m_rhoyp;
+  m_rho(2,3)=m_rhoztx;
+  m_rho(2,4)=m_rhozty;
+  m_rho(2,5)=m_rhozp;
+  m_rho(3,4)=m_rhotxty;
+  m_rho(3,5)=m_rhotxp;
+  m_rho(4,5)=m_rhotyp;
+  debug()<< "Correlation matrix rho "<<m_rho<<endmsg;
   
   return StatusCode::SUCCESS;
   
@@ -187,14 +206,13 @@ StatusCode MCParticleMaker::initialize() {
 // Main execution
 //=============================================================================
 StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts ) {
-  
-  debug() 
-    << "==> MCParticleMaker::makeParticles() is running." 
-    << endmsg;
+
+  debug() << "==> MCParticleMaker::makeParticles() is running." << endmsg;
   
   LHCb::MCParticle::Container* candidates = get<LHCb::MCParticle::Container>( m_input);
-  if ( !candidates || (0 == candidates->size()) ) { 
-    debug() << "    No MCParticles retrieved from" << m_input << endmsg;
+  //  LHCb::Particle::Container* Part_candidates = get<LHCb::Particle::Container>(LHCb::MCParticleMakerLocation::Default);
+  if ( !candidates || (0 == candidates->size()) ){//|| !Part_candidates ) { 
+    debug() << "    No MCParticles retrieved from" << m_input << " or Particle contained error" << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -209,20 +227,25 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
       while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
     }
   } else {
-    LHCb::MCParticle::Container::const_iterator icand;
-    for(icand = candidates->begin(); icand != candidates->end(); icand++){
-      list.push_back(*icand);    
-    }
+    list.resize( candidates->size() );
+    std::copy(candidates->begin(), candidates->end(), list.begin() );
   }
 
   debug() << "    List contains   = " << list.size() << " MCParticles" << endmsg;
+
+  //  LinkerWithKey<LHCb::MCParticle,LHCb::Particle> myLink(evtSvc(), msgSvc(), Part_candidates);
+  // LinkerWithKey<LHCb::Particle,LHCb::MCParticle> myLink(evtSvc(), msgSvc(), LHCb::MCParticleLocation::Default);
       
   std::vector<const LHCb::MCParticle*>::const_iterator icand;
   for(icand = list.begin(); icand != list.end(); icand++){
+
     debug() << " New candidate of pid " << (*icand)->particleID().pid() << endmsg ;
+
     if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) == m_ids.end()) continue;
     if ( m_onlyReconstructible && !reconstructible(**icand) )  continue;
+
     // covariance is in (x,y,z,px,py,pz,m) order
+    debug()<< "Build Covariance Matrix "<<endmsg;
     Gaudi::SymMatrix7x7* covariance = NULL ;
     if ( m_onlyReconstructed) {
       const LHCb::Particle *measurement = reconstructed(**icand);
@@ -232,6 +255,7 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
       }
     }
     if (NULL==covariance){
+      debug()<<"Generate covariance"<<endmsg;
       covariance = generateCovariance((*icand)->momentum()) ;
     }
     debug() << "Got covariance matrix" << endmsg ;
@@ -240,7 +264,11 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
     if(sc.isFailure()) continue;
     parts.push_back(particle.release());
     debug() << "Done candidate of pid " << (*icand)->particleID().pid() << endmsg ;
+    //          myLink.link((*icand),particle, 1.);
+    //      myLink.link(particle,(*icand), 1.);
+    debug()<< " Created Linker MCParticle-Particle"<<endmsg;
   }
+
   debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endmsg;
   return StatusCode::SUCCESS;
     
@@ -269,24 +297,22 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
 
   // Definition of ScalingFactor and Bias (momentum and charge dependent)
   int sign=mc.particleID().pid()/mc.particleID().abspid();
-  double  BIAS[6], SFCov[6];   // Vector of Biases and SF (momentum and charge dependent)
+  double  BIAS[7], SFCov[7];   // Vector of Biases and SF (momentum and charge dependent)
 
-  for (int i=0;i<5;i++) {
-    BIAS[i]  = sign*(m_BIASsC0[i]  +  m_BIASsC1[i]*mom.Vect().R()/GeV);// chosen parametrization bias= q*(C0 + C1 * p) x,y,tx,ty
-    SFCov[i] = 1./(m_covSFsC0[i]   + m_covSFsC1[i]*mom.Vect().R()/GeV);// chosen parametrization SF= 1./(C0 + C1 * p)
+  for (int i=0;i<6;i++) {
+    BIAS[i]  = sign*(m_BIASsC0[i]  +  m_BIASsC1[i]*mom.P()/GeV);// chosen parametrization bias= q*(C0 + C1 * p) x,y,tx,ty
+    SFCov[i] = 1./(m_covSFsC0[i]   + m_covSFsC1[i]*mom.P()/GeV);// chosen parametrization SF= 1./(C0 + C1 * p)
   }
-  BIAS[5]  = (m_BIASsC0[5]     +  m_BIASsC1[5]*mom.Vect().R()/GeV); // chosen parametrization bias=  (C0 + C1 * p) momenta
-  SFCov[5] = 1./(m_covSFsC0[5] + m_covSFsC1[5]*mom.Vect().R()/GeV);
+  BIAS[6]  = (m_BIASsC0[6]     +  m_BIASsC1[6]*mom.P()/GeV); // chosen parametrization bias=  (C0 + C1 * p) momenta
+  SFCov[6] = 1./(m_covSFsC0[6] + m_covSFsC1[6]*mom.P()/GeV);
 
   verbose() << "... BIAS: " << BIAS[0] << " " << BIAS[1] << " "<< BIAS[2] << " "
-            << BIAS[3] << " "<< BIAS[4] << " "<< BIAS[5] << " " << endmsg ;
+            << BIAS[3] << " "<< BIAS[4] << " "<< BIAS[5] << " " << BIAS[6] <<endmsg ;
   verbose() << "... SFCov: " << SFCov[0] << " " << SFCov[1] << " " << SFCov[2] << " " 
-            << SFCov[3] << " " << SFCov[4] << " " << SFCov[5] << " " << endmsg ;
+            << SFCov[3] << " " << SFCov[4] << " " << SFCov[5] << " " << SFCov[6] <<endmsg ;
 
   const LHCb::MCVertex* vtx = mc.originVertex();
   Gaudi::XYZPoint pos = vtx->position();
-
-  verbose() << "... Position: " << pos << endmsg ;
 
   // Smearing at Point On Track   defined as minimum distance to the beam line
   if(m_smearATPoT){          
@@ -302,24 +328,27 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
     pos.SetY( yPoT );
     pos.SetZ( zPoT );
   }
-  verbose() << "... -> gets " << pos << endmsg ;
+  verbose() << "... MC truth Position: " << pos << endmsg ;
 
   Gaudi::SymMatrix7x7 covSF(cov);  
   if (m_smearParticle) {
     
-    verbose() << "... -> smearing by " << cov << endmsg ;
-
-    Gaudi::SymMatrix7x7 D(cov);    
-    //    Gaudi::Matrix6x6 U = diagonalize(&D);  /// @todo Diagonalize matrix
-    Gaudi::Matrix7x7 U = D;  /// @todo Diagonalize matrix
+    //    Gaudi::SymMatrix7x7 D(cov);      ///@todo commentout when diagonalization is done
+    Gaudi::SymMatrix7x7 D(0);              /// todo @cancel when diagonalization is done
+    for (int i=0;i<7;i++) D(i,i)=cov(i,i); /// todo @cancel when diagonalization is done
+    
+    //    Gaudi::Matrix7x7 U = diagonalize(&D);  /// @todo commentout when Diagonalize matrix
+    Gaudi::Matrix7x7 U(0);  /// @todo cancel when Diagonalize matrix
     Gaudi::Vector7 deviates; //  x,y,z,sx,sy,p
 
     for (int i=0;i<7;++i) {
       for (int j=0;j<7;++j) {
-        covSF(i,j) = cov(i,j)*SFCov[i]*SFCov[j];
+        covSF(i,j) = cov(i,j)*SFCov[i]*SFCov[j];        
       }
+      U(i,i)=1; /// @todo Remove when Diagonalization is implemented
     }
-    verbose()<<"covSF "<< covSF  <<endmsg;
+
+    verbose() << "... -> smearing by " << cov << endmsg ;
     
     for (int i=0;i<7;i++) {
       if (D(i,i)<0)  {
@@ -328,6 +357,8 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
       }
     }
 
+    /*    
+// Shuffling indexes////////////////////////////////////////////
     verbose() << "Inverting" << endmsg ;
     
     Gaudi::Matrix7x7 invU = U;
@@ -335,16 +366,36 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
       err() << "Could no invert " << U << endmsg ;
       return StatusCode::FAILURE;
   	}
+    debug()<< " Matrix U"<<endmsg;
+    debug()<< " Matrix invU"<<endmsg;
 
+    Gaudi::Matrux7x7 quadra(0);
+    for (int i=0;i<7;++i)  quadra(i,i)=i;	
     
+    
+    Gaudi::Matrix7x7 pip =U*(quadra*invU);	
+    int newindex[7];	
+    
+    for (int i=0;i<7;++i) {		
+      newindex[i]=(int)(rint(pip(i,i))); 
+      debug() << newindex[i] <<" ";
+    }
+    debug() << endreq;
+
+///////////////////////////////////////////////////////
+*/    
+    int newindex[7];	
+    for (int i=0;i<7;++i) newindex[i]=i; 
+
     // Random Generation according single or double Gaussian
     for (int i=0;i<7;++i) {      
+      int ii=newindex[i];
       double ranGauss= m_ranGauss.shoot();
-      if(m_dualGaussWeight[i]!=0) {
+      if(m_dualGaussWeight[ii]!=0) {
         double ranFlat = m_ranFlat.shoot();
-        if(ranFlat<m_dualGaussWeight[i]) deviates(i) = m_dualGaussSF[i]*ranGauss*sqrt(D(i,i));// double Gaussian smearing
+        if(ranFlat<m_dualGaussWeight[ii]) deviates(i) = m_dualGaussSF[ii]*ranGauss*sqrt(D(i,i));// double Gaussian smearing
       } else { 
-        deviates(i) = ranGauss*sqrt(D(i,i));// single Gaussian smearing
+        deviates(i) = ranGauss*sqrt(D(i,i));                        // single Gaussian smearing
       }
     }
     
@@ -352,14 +403,27 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
 
     pos.SetX(  pos.x()  + deviates(0) + BIAS[0]*sqrt(covSF(0,0)));  //smears and add the BIAS
     pos.SetY(  pos.y()  + deviates(1) + BIAS[1]*sqrt(covSF(1,1)));
-    //  pos.setZ(  pos.z()  + deviates(3) + BIAS[2]*sqrt(covSF(3,3)));  
-    pos.SetZ(  pos.z() );                                           // z unchanged
-    double sx = mom.px()/mom.pz() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
-    double sy = mom.py()/mom.pz() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
-    double  p = mom.Vect().R()  + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
-    double  m = mom.M();
-    double pz = p / sqrt(1+sx*sx+sy*sy);
-    mom = Gaudi::XYZTVector( sx*pz,sy*pz,pz,sqrt(m*m+p*p) );
+    pos.SetZ(  pos.z()  + deviates(2) + BIAS[2]*sqrt(covSF(2,2)));  
+    //pos.SetZ(  pos.z() );                                           // z unchanged
+
+    /*   Old Particle parametrization
+         double sx = mom.px()/mom.pz() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
+         double sy = mom.py()/mom.pz() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
+         double  p = mom.Vect().R()  + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
+         double  m = mom.M();
+         double pz = p / sqrt(1+sx*sx+sy*sy);
+         mom = Gaudi::XYZTVector( sx*pz,sy*pz,pz,sqrt(m*m+p*p) );
+    */
+    double px = mom.px() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
+    double py = mom.py() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
+    double pz = mom.pz() + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
+    //    double  E = mom.E() + deviates(6) + BIAS[6]*sqrt(covSF(6,6); //todo substitute for gamma
+    double  E = sqrt(px*px + py*py + pz*pz + m*m); 
+    verbose() << "... new position -> " << pos << endmsg ;
+    verbose() << "... MC momenta -> " << mom << endmsg ;
+    mom = Gaudi::XYZTVector( px, py, pz, E);
+    verbose() << "... new momenta -> " << mom << endmsg ;
+
   }
     
   // NOTE: must set position and momentum before covariance matrix
@@ -426,46 +490,73 @@ MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
   ///  @todo Replace sx,sy,p parameterization by px,py,pz
   ///  @todo Check what happens with lower column
 
-  Gaudi::SymMatrix7x7 *c = new Gaudi::SymMatrix7x7();
+  Gaudi::SymMatrix6x6 *c  = new Gaudi::SymMatrix6x6();    //(x,y,z,Sx,Sy,p)
+  Gaudi::SymMatrix7x7 *cc = new Gaudi::SymMatrix7x7();    //(x,y,z,px,py,pz,E)
   // Set Covariance Matrix based on the following parametrization
   double pperp = p.Pt();
   if (pperp<0.01*MeV) pperp = 0.01*MeV; // to avoid junk
 
   double sip = m_ipErrorC0 + m_ipErrorC1/(pperp/GeV);
+  double sZ = m_ipErrorZ ;
 
-  verbose() << "Generation covariance matrix based on " << p << " " << sip << endmsg ;
+  double PsuE=p.P()/p.E();
+  double Tx = p.Px()/p.Pz();
+  double Ty = p.Py()/p.Pz();
+  double Factor = sqrt(1.+Tx*Tx+Ty*Ty);
+  
+  debug() << "Generation covariance matrix based on " << p.P() << " " << sip << endmsg ;
 
   (*c)(0,0)= sip*sip/2;
   (*c)(1,1)= (*c)(0,0);
-  (*c)(2,2)= (*c)(0,0); 
+  (*c)(2,2)= sZ*sZ; 
   
-  (*c)(3,3)= m_slopeError*m_slopeError;
+  (*c)(3,3)= m_slopeError*m_slopeError;  // todo
   (*c)(4,4)= (*c)(3,3);
-  (*c)(5,5)= m_momError*m_momError*p.Vect().mag2();
+  (*c)(5,5)= m_momError*m_momError*p.P2();
+
   // account for correlation coefficient  
-  (*c)(0,1)=m_rhoxy*sqrt((*c)(0,0)*(*c)(1,1));
-  (*c)(0,2)=m_rhoxz*sqrt((*c)(0,0)*(*c)(2,2));
-  (*c)(3,0)=m_rhoxtx*sqrt((*c)(0,0)*(*c)(3,3));
-  (*c)(4,0)=m_rhoxty*sqrt((*c)(0,0)*(*c)(4,4));
-  (*c)(5,0)=m_rhoxp*sqrt((*c)(0,0)*(*c)(5,5));
-
-  (*c)(2,1)=m_rhoyz*sqrt((*c)(2,2)*(*c)(1,1));
-  (*c)(3,1)=m_rhoytx*sqrt((*c)(1,1)*(*c)(3,3));
-  (*c)(4,1)=m_rhoyty*sqrt((*c)(1,1)*(*c)(4,4));
-  (*c)(5,1)=m_rhoyp*sqrt((*c)(1,1)*(*c)(5,5));
-
-  (*c)(3,2)=m_rhoztx*sqrt((*c)(2,2)*(*c)(3,3));
-  (*c)(4,2)=m_rhozty*sqrt((*c)(2,2)*(*c)(4,4));
-  (*c)(5,2)=m_rhozp*sqrt((*c)(2,2)*(*c)(5,5));
-
-  (*c)(4,3)=m_rhotxty*sqrt((*c)(3,3)*(*c)(4,4));
-  (*c)(5,3)=m_rhotxp*sqrt((*c)(3,3)*(*c)(5,5));
-
-  (*c)(5,4)=m_rhotyp*sqrt((*c)(4,4)*(*c)(5,5));
-  verbose() << " Covariance Matrix generated:" << endmsg;
-  verbose() << (*c) << endmsg ;
+  for(int i=0;i<6;i++){
+    for(int j=i;j<6;j++){
+      (*c)(i,j)=m_rho(i,j)*sqrt((*c)(i,i)*(*c)(j,j));
+    }
+  }
+  debug()<< "Covariance matrix x,y,z,Sx,Sy,p done" <<endmsg;
+  ROOT::Math::SMatrix<double,7,6> *Jacob = new ROOT::Math::SMatrix<double,7,6>;
+  //Gaudi::Matrix7x6 *Jacob  = new Gaudi::Matrix7x6(0);    //(x,y,z,Sx,Sy,p,E)
   
-  return c;
+  (*Jacob)(0,0)=1;
+  (*Jacob)(1,1)=1;
+  (*Jacob)(2,2)=1;
+  (*Jacob)(3,3)= p.P()*(1.+Ty*Ty)/pow(Factor,3);
+  (*Jacob)(3,4)=-p.P()*Tx*Ty/pow(Factor,3);
+  (*Jacob)(3,5)= Tx/Factor;
+  (*Jacob)(4,3)=-p.P()*Tx*Ty/pow(Factor,3);
+  (*Jacob)(4,4)= p.P()*(1.+Tx*Tx)/pow(Factor,3);
+  (*Jacob)(4,5)= Ty/Factor;
+  (*Jacob)(5,3)=-p.P()*Tx/pow(Factor,3);
+  (*Jacob)(5,4)=-p.P()*Ty/pow(Factor,3);
+  (*Jacob)(5,5)= 1./Factor;
+  (*Jacob)(6,5)=PsuE;
+
+  for(int i=0;i<7;i++){
+    for(int j=0;j<6;j++){
+      for(int k=0;k<6;k++){
+        for(int l=i;l<7;l++){
+          (*cc)(i,l) += (*Jacob)(i,j)*(*c)(j,k)*(*Jacob)(l,k);
+        }
+      }
+    }
+  }
+  
+  
+  verbose() << " Covariance Matrix generated:" << endmsg;
+  
+  //  return cc;
+  //////// Temporary !!!! TO DEFINE A DIAGONAL MATRIX /////
+  Gaudi::SymMatrix7x7 *ccc = new Gaudi::SymMatrix7x7(0);    //(x,y,z,px,py,pz,E)
+  for(int i=0;i<7;i++) (*ccc)(i,i)=(*cc)(i,i);
+  return ccc;
+  
 }
 
 //=====================================================================
@@ -492,3 +583,4 @@ std::vector<const LHCb::MCParticle*> MCParticleMaker::getFinalState(const LHCb::
   }
   return pv;
 }
+

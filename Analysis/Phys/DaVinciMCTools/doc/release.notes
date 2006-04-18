@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.104 2006-04-06 11:15:13 jpalac Exp $
+! $Id: release.notes,v 1.105 2006-04-18 13:22:14 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-04-18 - J.P. Palacios
+ - First working version of MCParticleMaker from S. Vecchi.
 
 ! 2006-04-04 - J.P. Palacios
  - src/MCParticleMaker.cpp: Instantiate MCDecayFinder tool.

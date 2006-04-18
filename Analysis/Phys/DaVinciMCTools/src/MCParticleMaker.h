@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.7 2006-03-15 13:37:22 pkoppenb Exp $
+// $Id: MCParticleMaker.h,v 1.8 2006-04-18 13:22:14 jpalac Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -14,6 +14,7 @@
 
 // from DaVinciTools
 #include "Kernel/IParticleMaker.h"
+#include "Kernel/IMCDecayFinder.h"
 #include "DaVinciMCTools/IDebugTool.h"
 // Forward declarations
 class IParticlePropertySvc;
@@ -91,6 +92,8 @@ class ProtoParticle;
  *   @date   2002-10-08
  * 
  **/
+
+
 class MCParticleMaker : public GaudiTool,
                         virtual public IParticleMaker {
 public:
@@ -103,6 +106,8 @@ public:
 
   /// Initialize
   StatusCode initialize();
+  /// Finalize
+  StatusCode finalize();
   
   /// Functional method to make particles.
   virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts );
@@ -128,6 +133,7 @@ private:
   bool    m_smearParticle;                   ///< flag to Smear PArticles
   double  m_ipErrorC0;                       ///< C0 constant for Impact parameter error parametrization 
   double  m_ipErrorC1;                       ///< C1 constant for Impact parameter error parametrization 
+  double  m_ipErrorZ;                        ///< Error on Z 
   double  m_slopeError;                      ///< constant for Slope error parametrization
   double  m_momError;                        ///< constant for momentum error parametrization
   bool    m_smearATPoT;                      ///< flag to smeat particle at PointOnTrack (minimum distance to the beam line)
@@ -157,6 +163,7 @@ private:
   Rndm::Numbers m_ranGauss;   
   Rndm::Numbers m_ranFlat;
 
+  Gaudi::SymMatrix6x6 m_rho;
 
   /// internal method
   StatusCode fillParticle( const LHCb::MCParticle& mc, 
@@ -168,6 +175,7 @@ private:
   /// Generate covariance according realistic parametrization  
   Gaudi::SymMatrix7x7 * generateCovariance(const Gaudi::XYZTVector& p) const;
 
+  //====================================================================================
   
 };
 #endif // MCPARTICLEMAKER_H
