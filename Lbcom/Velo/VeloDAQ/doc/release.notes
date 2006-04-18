@@ -2,7 +2,8 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
-! 2006-03-14 - David Hutchcroft
+!=========================  VeloDAQ v3r2 2006-04-18 =======================
+! 2006-04-14 - David Hutchcroft
  - Fixed code to always write a bank for every sensor, even the empty sensors
 
 ! 2006-03-14 - Kurt Rinnert
