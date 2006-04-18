@@ -1,4 +1,4 @@
-// $Id: GaudiOnline.cpp,v 1.7 2006-04-18 08:11:54 frankb Exp $
+// $Id: GaudiOnline.cpp,v 1.8 2006-04-18 14:44:06 frankb Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -23,7 +23,6 @@ LOAD_FACTORY_ENTRIES(GaudiOnline)
 
 DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
   DECLARE_SERVICE(             OnlineMessageSvc);
-  DECLARE_NAMESPACE_SERVICE(   LHCb,DaemonRunable);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MBMCnvSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPCnvSvc);
   DECLARE_NAMESPACE_SERVICE(   LHCb,MEPManager);

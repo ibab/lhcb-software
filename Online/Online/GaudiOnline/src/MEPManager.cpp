@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.8 2006-04-18 08:11:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.9 2006-04-18 14:44:06 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -21,6 +21,7 @@ extern "C" int mep_install(int argc , char** argv);
 LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)    
 : Service(nam, loc), m_mepID(MEP_INV_DESC), m_partitionID(0x103)
 {
+  m_procName = RTL::processName();
   declareProperty("Buffers",     m_buffers);
   declareProperty("ProcessName", m_procName);
   declareProperty("PartitionID", m_partitionID);
@@ -106,9 +107,6 @@ StatusCode LHCb::MEPManager::initialize()  {
   StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() )  {
     return error("Failed to initialize base class RawDataCnvSvc.");
-  }
-  if ( m_procName.empty() )  {
-    m_procName = RTL::processName();
   }
   if ( !initializeBuffers().isSuccess() )  {
     return error("Failed to initialize MEP buffers!");

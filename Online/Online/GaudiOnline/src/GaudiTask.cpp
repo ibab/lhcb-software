@@ -24,7 +24,7 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
 : DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), m_nerr(0)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
-  propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::DaemonRunable/EmptyEventLoop");
+  propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
   propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");  propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
   m_haveEventLoop = false;

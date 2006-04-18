@@ -188,12 +188,12 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   cli.getopt("tasktype",8,type);
   if ( cli.getopt("help",4)   != 0 )  {
     std::cout << "usage: Gaudi.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
-    std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
-    std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
-    std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
-    std::cout << "    -options=<file-name>     Job options file name" << std::endl;
-    std::cout << "    -optoptions=<file-name>  2nd level job options file name" << std::endl;
-    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+    std::cout << "    -run[able]=<class-name>    Name of the gaudi runable to be executed" << std::endl;
+    std::cout << "    -evt[loop]=<class-name>    Name of the event loop manager to be invoked" << std::endl;
+    std::cout << "    -msg[svc]=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
+    std::cout << "    -mai[noptions]=<file-name> 1st job options file name (usually empty)" << std::endl;
+    std::cout << "    -opt[ions]=<file-name>     2nd level job options file name" << std::endl;
+    std::cout << "    -debug=yes                 Invoke debugger at startup (WIN32)" << std::endl;
     std::cout << "    " << std::endl;
     return 1;
   }
@@ -202,11 +202,11 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   }
   SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
   if ( p )  {
-    if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
-    if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
-    if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
-    if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
-    if(cli.getopt("optoptions",6,optopts)) p->setProperty(StringProperty("OptionalOptions",optopts));
+    if(cli.getopt("runable",3,runable)  ) p->setProperty(StringProperty("Runable",runable));
+    if(cli.getopt("evtloop",3,evtloop)  ) p->setProperty(StringProperty("EventLoop",evtloop));
+    if(cli.getopt("msgsvc", 3,msgsvc)   ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
+    if(cli.getopt("mainoptions",3,opts) ) p->setProperty(StringProperty("JobOptionsPath",opts));
+    if(cli.getopt("options",3,optopts)  ) p->setProperty(StringProperty("OptionalOptions",optopts));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       if ( autostart )  {

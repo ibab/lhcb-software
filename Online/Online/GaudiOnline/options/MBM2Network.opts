@@ -1,5 +1,6 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.ExtSvc                = {"LHCb::AMSService/AMS"};
 ApplicationMgr.Runable               = "LHCb::OnlineRunable";
 ApplicationMgr.DLLs                  = { "GaudiOnline"};
 ApplicationMgr.TopAlg                = { "LHCb::MDFNetworkSendAlg/Sender" };
@@ -32,7 +33,8 @@ Sender.Recipients                    = {
                                         ,"lxplus006::NetRead_1"
                                         ,"lxplus006::NetRead_2"
 };
-Sender.Buffer                        = "RAW";
+Sender.Recipients                    = { "lxplus062::NetRead_0" };
+Sender.Buffer                        = "RESULT";
 Sender.Requirements                  = {
-  "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+  "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };

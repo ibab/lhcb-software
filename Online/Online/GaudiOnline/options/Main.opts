@@ -1,5 +1,6 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "LHCb::DaemonRunable/EmptyEventLoop";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = true;
 ApplicationMgr.ExtSvc                = { };

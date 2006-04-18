@@ -188,10 +188,10 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       MsgStream log(msgSvc(), name());
       log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
     }
+    ev->packing = events.size();
     if ( declareSubEvents(e, events) != MBM_NORMAL )  {
       return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
     }
-    ev->packing = events.size();
     mep_decrement(id, ev, 2);
     if ( m_consumer->eventAction() != MBM_NORMAL ) {
       return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;

@@ -181,10 +181,10 @@ public:
 NameService::NameService(NetworkConnection* ptr) 
 : m_tandb(TanDataBase::Instance()), m_connection(ptr), m_port(NAME_SERVICE_PORT)
 {
-  ::fprintf(stdout,"+======================================================================+\n");
-  ::fprintf(stdout,"|         N A M E S E R V E R      S T A R T I N G                     |\n");
-  ::fprintf(stdout,"|         %32s                             |\n",timestr());
-  ::fprintf(stdout,"+======================================================================+\n");
+  ::lib_rtl_printf("+======================================================================+\n");
+  ::lib_rtl_printf("|         N A M E S E R V E R      S T A R T I N G                     |\n");
+  ::lib_rtl_printf("|         %32s                             |\n",timestr());
+  ::lib_rtl_printf("+======================================================================+\n");
   ::fflush(stdout);
   if ( m_connection )  {
     if ( NetworkConnection::NETCONNECTION_SUCCESS != m_connection->Status() )  {
@@ -276,10 +276,10 @@ UdpNameService::UdpNameService() : NameService(0)  {
 #ifdef SERVICE
   m_port = UdpConnection::servicePort(NAME_SERVICE_NAME);
 #endif
-  ::fprintf(stdout,"|         U D P         N A M E    S E R V I C E                       |\n");
-  ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+  ::lib_rtl_printf("|         U D P         N A M E    S E R V I C E                       |\n");
+  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
       m_port, m_port, htons(m_port), htons(m_port));
-  ::fprintf(stdout,"+======================================================================+\n");
+  ::lib_rtl_printf("+======================================================================+\n");
   ::fflush(stdout);
 }
 
@@ -329,11 +329,10 @@ TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERV
 #endif
 {
   m_port = m_tcp->port();
-  fprintf(stdout,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
-  ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+  ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
+  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
       m_port, m_port, htons(m_port), htons(m_port));
-  fprintf(stdout,"+======================================================================+\n");
-  fflush(stdout);
+  ::lib_rtl_printf("+======================================================================+\n");
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm
@@ -344,11 +343,10 @@ TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERV
 // ----------------------------------------------------------------------------
 TcpNameService::TcpNameService(int port) : NameService(m_tcp=new TcpConnection(port))  {
   m_port = m_tcp->port();
-  fprintf(stdout,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
-  ::fprintf(stdout,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+  ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
+  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
       m_port, m_port, htons(m_port), htons(m_port));
-  fprintf(stdout,"+======================================================================+\n");
-  fflush(stdout);
+  ::lib_rtl_printf("+======================================================================+\n");
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm

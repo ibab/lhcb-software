@@ -1,6 +1,6 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable";
-ApplicationMgr.TopAlg                = { };
-ApplicationMgr.ExtSvc                = {"LHCb::Nameserver/Allocator" };
-Allocator.InitFlags                  = "-a -tcp";
+//#pragma print off
+#include "$GAUDIONLINEROOT/options/Main.opts"
+Runable.Dll  = "OnlineKernel";
+Runable.Call = "tan_nameserver";
+Runable.InitFlags = "-a -tcp -n";
+MessageSvc.OutputLevel   = 1;  // Minimum is Error

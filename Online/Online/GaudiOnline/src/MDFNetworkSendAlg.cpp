@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.3 2006-04-18 14:44:06 frankb Exp $
 //	====================================================================
 //  MDFNetworkSendAlg.h
 //	--------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace LHCb  {
   };
 }
 
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkSendAlg.cpp,v 1.3 2006-04-18 14:44:06 frankb Exp $
 //	====================================================================
 //  MDFNetworkSendAlg.cpp
 //	--------------------------------------------------------------------
@@ -167,8 +167,9 @@ int LHCb::MDFNetworkSendAlg::handleEvent(const MBM::EventDesc& e)  {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Failed to send MDF record to " << (*m_current)
         << ". status:" << sc << ". " << endmsg;
-    ++m_current;
-    return handleEvent(e);
+//    ++m_current;
+//    return handleEvent(e);
+    return sc;
   }
   ++m_current;
   return WT_SUCCESS;

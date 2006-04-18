@@ -119,6 +119,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
   MsgStream log(msgSvc(),name());
   m_receiveEvts = true;
   MEPID id = m_mepMgr->mepID();
+  log << MSG::ALWAYS << "Starting event loop ...." << endmsg;
   for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
     const EventDesc& evt = m_consumer->event();
     MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
@@ -128,7 +129,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
     while ( 1 )  {
       if ( e->refCount <= 1 )    {
         if ( e->refCount != 1 )    {
-          log << MSG::ERROR << "MEP release [" << e->refCount 
+          log << MSG::ERROR << "MEP release [" << e->refCount << "]"
             << " Event at address " << std::hex << id->mepStart+e->begin
             << " MEP:" << std::hex << e << " [" << e->evID << "] Pattern:"
             << std::hex << e->magic << endmsg;
@@ -136,9 +137,9 @@ StatusCode LHCb::MEPHolderSvc::run()  {
         break;
       }
 #ifdef _WIN32
-      lib_rtl_sleep(1);
+      lib_rtl_sleep(10);
 #else
-      lib_rtl_usleep(10);
+      lib_rtl_usleep(100);
 #endif
       if ( !m_receiveEvts )  {
         if ( e->refCount > 1 )    {
@@ -149,5 +150,6 @@ StatusCode LHCb::MEPHolderSvc::run()  {
     }
     m_consumer->freeEvent();
   }
+  log << MSG::ALWAYS << "Leaving event loop ...." << endmsg;
   return StatusCode::SUCCESS;
 }
