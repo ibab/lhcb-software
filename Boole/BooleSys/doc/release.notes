@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v11r3>2006-04-13 Boole v11r3</A></H1><PRE>
+</PRE><H1><A NAME=v11r3>2006-04-18 Boole v11r3</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r3, Lbcom v4r3
   and databases XmlDDDB v30r4, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
@@ -11,13 +11,15 @@ Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 This is the release for DC06 production.
 
 Bug fixes:
-  . Change logic of ST cluster paricle and cluster to hit associators (weight by
+  . Change logic of ST cluster particle and cluster to hit associators (weight by
     charge) (STAssociators v1r2)
   . Split the raw bank produced by L0CaloCandidate into two banks, one for 
     HCAL and one for the rest (L0Calo v9r2)
   . Split the L0Muon raw bank into 5 banks to match the 5 TELL1s output
     (L0MuonTrigger v5r2)
   . isInsideEfficient was discarding hits in OT stereo layers (OTDet v6r2)
+  . Write a Velo bank for every sensor, even the empty sensors (VeloDAQ v3r2)
+  . Fix bug in neighbour and channel distance methods (VeloDet v10r4)
 
 Code cleanups:
   . Adapt to GaudiHistoAlg (OTMonitor v2r2)
