@@ -25,13 +25,13 @@
 
 #define E_MNF  221
 
-static int USER_next_off;
-static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
-
-int cont = 1;
-int end  = 1;
-
 namespace MBM {
+  static int USER_next_off;
+  static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
+
+  static int cont = 1;
+  static int end  = 1;
+
   struct Monitor {
     struct ManagerImp : public Manager {
       virtual int  optparse (const char*) {
@@ -157,7 +157,7 @@ int MBM::Monitor::monitor() {
   textcolor(YELLOW);              // change textcolor to YELLOW
   textbackground(BLUE);           // change backgroundcolor to BLUE
   if( cont )    {
-    while( end )    {
+    while( 0 != end )    {
       try {
         get_bm_list();    
         begin_update();
