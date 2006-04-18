@@ -124,11 +124,20 @@ StatusCode LHCb::MEPConverterSvc::finalize()  {
 
 int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& events)  {
   int evID = 0;
-  size_t numEvt = events.size();
-  for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
-    int sc = declareSubEvent(evt, ++evID, (*i).second);
-    if ( sc != MBM_NORMAL )  {
-      return sc;
+  size_t count = 0, numEvt = events.size();
+  for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i, ++count)  {
+    if ( count > numEvt ) {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Subevent iteration error: [found more events than declared]"
+          << endmsg;
+      // Continue without error...
+      return MBM_NORMAL;
+    }
+    else {
+      int sc = declareSubEvent(evt, ++evID, (*i).second);
+      if ( sc != MBM_NORMAL )  {
+        return sc;
+      }
     }
   }
   return MBM_NORMAL;

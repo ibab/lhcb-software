@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 #include "bm_struct.h"
 #include "Installer.h"
 

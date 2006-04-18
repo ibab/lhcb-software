@@ -21,7 +21,7 @@ static int execRunable(void* arg)  {
 }
 
 LHCb::GaudiTask::GaudiTask(IInterface*) 
-: DimTaskFSM(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), m_handle(0), m_nerr(0)
+: DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), m_nerr(0)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::DaemonRunable/EmptyEventLoop");
