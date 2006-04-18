@@ -1,4 +1,4 @@
-// $Id: DifTraj.h,v 1.5 2006-04-06 14:06:09 ebos Exp $
+// $Id: DifTraj.h,v 1.6 2006-04-18 16:01:15 erodrigu Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
@@ -9,7 +9,7 @@
 
 /** @class DifTraj DifTraj.h Kernel/DifTraj.h
  *  
- *  DifTraj is a templated class enheriting from Trajectory.h.
+ *  DifTraj is a templated class inheriting from Trajectory.h.
  *  It interfaces the derivative method, which can have
  *  different dimensions for different XxxTraj classes.
  *

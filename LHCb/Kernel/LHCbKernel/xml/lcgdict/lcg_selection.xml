@@ -20,4 +20,9 @@
   <class name="std::vector<std::pair<double,LHCb::CaloCellID> >"/>
   <class name="std::pair<LHCb::MuonTileID,int>"/>
   <class name="std::vector<std::pair<LHCb::MuonTileID,int> >"/>
+  <class name="LHCb::Trajectory"/>
+  <class name="LHCb::CircleTraj"/>
+  <class name="LHCb::LineTraj"/>
+  <class name="LHCb::ParabolaTraj"/>
+  <class name="std::auto_ptr<LHCb::Trajectory>"/>
 </lcgdict>

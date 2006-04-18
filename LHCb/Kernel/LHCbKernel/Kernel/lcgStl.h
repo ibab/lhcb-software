@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.17 2006-02-03 08:28:01 cattanem Exp $
+// $Id: lcgStl.h,v 1.18 2006-04-18 16:01:15 erodrigu Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -14,6 +14,10 @@
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
 #include "Kernel/MuonTileID.h"
+#include "Kernel/Trajectory.h"
+#include "Kernel/CircleTraj.h"
+#include "Kernel/LineTraj.h"
+#include "Kernel/ParabolaTraj.h"
 
 // end include files
 
@@ -41,6 +45,7 @@ namespace {
     std::vector<std::pair<LHCb::OTChannelID,int> >   m_std_vector_std_pair_OTChannelID_int;
     std::vector<std::pair<double,LHCb::CaloCellID> > m_std_vector_std_pair_double_CaloCellID;
     std::vector<std::pair<LHCb::MuonTileID,int> >    m_std_vector_std_pair_MuonTileID_int;
+    std::auto_ptr<LHCb::Trajectory>                  m_auto_ptr_Trajectory;
     // end instantiations
   };
 }

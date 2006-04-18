@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-04-18 - Eduardo Rodrigues
+ - added creation of dictionaries for all Trajectory-related classes
+   (-> available in Python)
+
 !===================== LHCbKernel v6r5 2006-04-11 =========================
 ! 2006-04-11 - Chris Jones
  - Bug fix - Remove erroneous 'inline' from implementation of 
