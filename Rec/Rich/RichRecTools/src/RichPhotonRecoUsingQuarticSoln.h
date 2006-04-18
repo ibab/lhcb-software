@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2006-03-02 15:29:20 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.3 2006-04-18 12:23:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -224,6 +224,12 @@ private: // data
    *  to account for the non-flat secondary mirrors.
    */
   std::vector<int> m_nQits;
+
+  /** Flag to turn on use of secondary mirrors (Default)
+   *
+   *  Set to false if processing test-beam data
+   */
+  bool m_useSecMirs;
 
 };
 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.4 2006-04-13 17:34:35 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.5 2006-04-18 12:23:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -35,7 +35,7 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
     m_rayTracing      ( 0 ),
     m_idTool          ( 0 ),
     m_refIndex        ( 0 ),
-    m_nQits           ( Rich::NRadiatorTypes )
+    m_nQits           ( Rich::NRadiatorTypes, 1 )
 {
 
   // declare interface
@@ -45,10 +45,8 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = false );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = true  );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
-  m_nQits[Rich::Aerogel] = 1;
-  m_nQits[Rich::C4F10]   = 1;
-  m_nQits[Rich::CF4]     = 1;
   declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
+  declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
 
 }
 
@@ -170,7 +168,10 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // At this we are assuming a flat nominal mirror common to all segments
   double distance = m_rich[rich]->nominalPlane(side).Distance(detectionPoint);
   Gaudi::XYZPoint virtDetPoint =
-    ( detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() );
+    ( m_useSecMirs ? 
+      detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() :
+      detectionPoint
+      );
 
   // --------------------------------------------------------------------------------------
   // For gas radiators, try start and end points to see if photon is unambiguous
@@ -243,7 +244,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // if aerogel (which hasn't yet been treated at all) or ambiguous gas photon, or if 
+  // if aerogel (which hasn't yet been treated at all) or ambiguous gas photon, or if
   // ambiguous photon check above has been skipped, try again
   // using best emission point and nominal mirror geometries to get the spherical and sec
   // mirrors. Also, force this reconstruction if the above unambiguous test was skipped
@@ -261,15 +262,18 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       //return StatusCode::FAILURE;
     }
 
-    // Get secondary mirror reflection point
-    m_rayTracing->intersectPlane( sphReflPoint,
-                                  virtDetPoint - sphReflPoint,
-                                  m_rich[rich]->nominalPlane(side),
-                                  secReflPoint);
+    if ( m_useSecMirs )
+    {
+      // Get secondary mirror reflection point
+      m_rayTracing->intersectPlane( sphReflPoint,
+                                    virtDetPoint - sphReflPoint,
+                                    m_rich[rich]->nominalPlane(side),
+                                    secReflPoint);
 
-    // Get pointers to the spherical and sec mirror detector objects
-    sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
-    secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
+      // Get pointers to the spherical and sec mirror detector objects
+      sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
+      secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
+    }
 
   }
   // --------------------------------------------------------------------------------------
