@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.5 2006-04-18 12:23:41 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.6 2006-04-18 12:58:04 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -90,6 +90,11 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   else
   {
     info() << "Will use nominal mirrors for reconstruction" << endreq;
+  }
+
+  if ( !m_useSecMirs )
+  {
+     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
   if ( m_forceFlatAssumption )
