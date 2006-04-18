@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-04-18 - Patrick Robbe
+ - options/Generators.opts: use DECAY.DEC as main EvtGen decay file instead
+   of DECAY-DC06.DEC.
+
 !======================== Gauss v24r4 2006-04-12 =============================
 ! 2006-04-12 - Gloria CORTI
  - Use ParamFiles v4r2 with definition of "Intermediate" particle for showers
