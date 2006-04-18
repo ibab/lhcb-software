@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.24 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.25 2006-04-18 11:07:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -255,7 +255,7 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
 
   RichHPDDataBank * dataBank = NULL;
 
-  // Get max data size
+  // Get max data size (32 words for LHCb mode, 8*32 words for ALICE mode)
   const RichDAQ::ShortType maxDataSize = 
     ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
@@ -417,7 +417,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.sourceID() );
   const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()  );
 
-  // Get max data size
+  // Get max data size (32 words for LHCb mode, 8*32 words for ALICE mode)
   const RichDAQ::ShortType maxDataSize = 
     ( version == RichDAQ::ALICE0 ? RichDAQ::MaxDataSizeALICE : RichDAQ::MaxDataSize );
 
