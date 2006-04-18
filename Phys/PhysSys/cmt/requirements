@@ -30,6 +30,24 @@ use  PhysSelSys      	v9r0   PhysSel
 #===================================================================
 use Bu2JpsiK                   v1r0p2   PhysSel
 
+####################################################################
+use  LoKiSys            v1r0
+#===================================================================
+use               LoKiAll       v1r0 Phys
+use               LoKi          v1r0 Phys
+use               LoKiAlgo      v1r0 Phys
+use               LoKiPhys      v1r0 Phys
+
+use               LoKiMC        v1r0 Phys
+use               LoKiGenMC     v1r0 Phys
+use               LoKiPhysMC    v1r0 Phys
+use               LoKiAlgoMC    v1r0 Phys
+
+use               LoKiCoreTest  v1r0 Tests 
+use               LoKiGenTest   v1r0 Tests 
+use               LoKiMCTest    v1r0 Tests 
+use               LoKiPhysTest  v1r0 Tests 
+use               LoKiTests     v1r0 Tests
 
 ####################################################################
 use  Stripping          v4r0    Tools

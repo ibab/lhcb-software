@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.17 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.18 2006-04-18 13:43:50 jpalac Exp $
 
 #include <algorithm>
 
@@ -368,9 +368,9 @@ StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Res
       verbose() << "Found a candidate with mass " << sum4.M() << endmsg ;
       // LF
       // vertex fit or make mother to n gammas!
-      LHCb::Particle* Mother;
-      StatusCode sc = makeMother(Mother,DaughterVector,d.getMotherPid());
-      if (!sc){
+      const LHCb::Particle* Mother = 
+        makeMother(DaughterVector,d.getMotherPid());
+      if (0==Mother){
         if(m_motherToNGammas) Warning("Something failed making mother to n gammas");
         else Warning("Something failed in vertex fitting");
       }
@@ -390,9 +390,8 @@ StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Res
 //=============================================================================
 //  Make Mother Vertex fit
 //=============================================================================
-StatusCode MakeResonances::makeMother(LHCb::Particle*& Mother,
-                                      const LHCb::Particle::ConstVector& Daughters,
-                                      const LHCb::ParticleID& motherPid){
+const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
+                                                 const LHCb::ParticleID& motherPid){
   verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS;
@@ -406,23 +405,24 @@ StatusCode MakeResonances::makeMother(LHCb::Particle*& Mother,
     sc = vertexFitter()->fit(Daughters,Candidate,CandidateVertex);
     if (!sc){
       Warning("Failed to fit vertex");
-      return sc ;
+      return 0;
     }
     debug() << "Fit vertex at " << CandidateVertex.position()
             << " with chi^2 " << CandidateVertex.chi2() << endmsg;
     // may add a chi^2 cut here
   } 
   
-  verbose() << "Calling desktop()->createParticle" << endmsg ;
-  Mother = desktop()->createParticle(&Candidate);
-  if (!Mother){
-    err() << "Cannot create particle with pid " << motherPid.pid() << endmsg ;
-    return StatusCode::FAILURE;
-  }
+  verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
+  return desktop()->save(&Candidate);
+
+//   if (!Mother){
+//     err() << "Cannot create particle with pid " << motherPid.pid() << endmsg ;
+//     return StatusCode::FAILURE;
+//   }
   
-  debug() << "Made Particle " << Mother->particleID().pid() << " with momentum "  
-          << Mother->momentum() << " m=" << Mother->measuredMass() << endmsg ;
-  return StatusCode::SUCCESS;
+//   debug() << "Made Particle " << Mother->particleID().pid() << " with momentum "  
+//           << Mother->momentum() << " m=" << Mother->measuredMass() << endmsg ;
+//   return StatusCode::SUCCESS;
 };
 //#############################################################################
 // Plotting
