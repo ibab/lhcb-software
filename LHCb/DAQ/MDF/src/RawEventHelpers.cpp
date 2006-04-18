@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.8 2006-03-21 07:55:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.9 2006-04-18 09:18:30 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -400,13 +400,13 @@ bool LHCb::checkFragment(const MEPFragment* f)  {
     size_t s = b->totalSize();
     if ( b->magic() != RawBank::MagicPattern )  {
       // Error: Bad magic pattern; needs handling
-      printf("Bad magic pattern in Tell1 bank %p: srcID=%d Size:%d Vsn:%d Magic:%X\n",
-        b, b->sourceID(), b->size(), b->version(), b->magic());
+      printf("Bad magic pattern in Tell1 bank %p: srcID=%d Size:%d [%d] Vsn:%d Magic:%X\n",
+        b, b->sourceID(), b->size(), s, b->version(), b->magic());
       res = false;
     }
     else  {
-//      printf("Tell1 bank OK %p: srcID=%d Size:%d Vsn:%d Magic:%X\n",
-//        b, b->sourceID(), b->size(), b->version(), b->magic());
+//      printf("Tell1 bank OK %p: srcID=%d Size:%d [%d] Vsn:%d Magic:%X\n",
+//        b, b->sourceID(), b->size(), s, b->version(), b->magic());
     }
   }
   return res;
