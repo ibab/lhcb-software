@@ -2,6 +2,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2004-04-18 - David Hutchcroft
+ - Fixed code to cope with a single cluster in a sensor in strip zero 
+   without crashing
+
 !=========================  VeloDAQ v3r2 2006-04-18 =======================
 ! 2006-04-14 - David Hutchcroft
  - Fixed code to always write a bank for every sensor, even the empty sensors

@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.18 2006-04-13 16:01:43 dhcroft Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.19 2006-04-18 15:54:43 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -340,12 +340,12 @@ makeBank (std::vector<const LHCb::InternalVeloCluster*>::const_iterator begin,
     }
   }
 
-  // if the cluster row isn't empty add the contents to the vector 
-  if ( cluRowData != 0x0 ) {
+  // if there were an odd number of clusters, sort the last cluster row
+  if (  nClu % VeloDAQ::clu_per_buffer != 0 ) {
     m_clusterPosBuffer.push_back ( cluRowData  );
   }
   // check row data is not empty, store remaining adcs
-  if ( rowData != 0x0 ) {
+  if ( nAdc % VeloDAQ::adc_per_buffer != 0 ) {
     m_clusterADCBuffer.push_back ( rowData );
   }
   
