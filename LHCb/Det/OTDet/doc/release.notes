@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.54 2006-04-12 23:43:26 janos Exp $
+! $Id: release.notes,v 1.55 2006-04-18 18:57:37 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r2 2006-04-04 ==========================
+! 2006-04-18 - Jan Amoraal
+ - Minor clean-ups in DeOTDetector and DeOTModule
+
 ! 2006-04-12 - Jan Amoraal
  - isInsideEfficient is really efficient in discarding hits in stereo layers
 

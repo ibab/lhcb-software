@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.7 2006-04-12 23:43:26 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.8 2006-04-18 18:57:37 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -23,7 +23,7 @@ using namespace boost::lambda;
 using namespace LHCb;
 
 DeOTLayer::DeOTLayer(const std::string& name) :
-  DetectorElement( name ),
+  DetectorElement(name),
   m_stationID(0u),
   m_layerID(0u),
   m_elementID(0u),
@@ -41,12 +41,11 @@ const CLID& DeOTLayer::clID() const {
 StatusCode DeOTLayer::initialize() {
   
   /// Loop over quarters
-  IDetectorElement::IDEContainer::const_iterator iQuarter;
-  for (iQuarter = this->childBegin(); iQuarter != this->childEnd();
-       ++iQuarter) {  
-    DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
+  IDetectorElement::IDEContainer::const_iterator iQ;
+  for (iQ = this->childBegin(); iQ != this->childEnd(); ++iQ) {  
+    DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
     if (quarter) m_quarters.push_back(quarter);
-  } /// iQuarter
+  } /// iQ
   
   IDetectorElement* station = this->parentIDetectorElement();
   m_stationID = (unsigned int) station->params()->param<int>("stationID");

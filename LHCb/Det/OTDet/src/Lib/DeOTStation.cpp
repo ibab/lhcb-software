@@ -1,4 +1,4 @@
-// $Id: DeOTStation.cpp,v 1.5 2006-03-30 21:45:34 janos Exp $
+// $Id: DeOTStation.cpp,v 1.6 2006-04-18 18:57:38 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -40,10 +40,9 @@ const CLID& DeOTStation::clID() const {
 StatusCode DeOTStation::initialize() {
   
   /// Loop over layers
-  IDetectorElement::IDEContainer::const_iterator iLayer;
-  for (iLayer = this->childBegin(); iLayer != this->childEnd();
-       ++iLayer) {  
-    DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iLayer);
+  IDetectorElement::IDEContainer::const_iterator iL;
+  for (iL = this->childBegin(); iL != this->childEnd(); ++iL) {  
+    DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iL);
     if (layer) m_layers.push_back(layer);
   }/// iLayer
   

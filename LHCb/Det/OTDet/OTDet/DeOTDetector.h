@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.27 2006-04-12 23:43:26 janos Exp $
+// $Id: DeOTDetector.h,v 1.28 2006-04-18 18:57:37 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -7,7 +7,7 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
-#include "Kernel/LHCbID.h"
+//#include "Kernel/LHCbID.h"
 
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
@@ -111,10 +111,8 @@ public:
   /** @return the layer for a given XYZ point */
   DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
   
-  // This also works.
-  /** @return the layer for a given t channelID/XYZ point */
-  /* template <typename T>  */
-  /*     DeOTLayer* DeOTDetector::layer(const T& t)  const; */
+  /** @return the layer for a given channelID/XYZ point */
+  /*  template <typename T> DeOTLayer* DeOTDetector::findLayer(const T& t)  const; */
 
   /** @return the quarter for a given channelID */
   DeOTQuarter* findQuarter(const LHCb::OTChannelID aChannel) const;
@@ -238,7 +236,6 @@ private:
   Layers m_layers;                 ///< flat vector of layers
   Quarters m_quarters;             ///< flat vector of quarters
   Modules m_modules;               ///< flat vector of modules 
-                                   ///<containing geometry
   unsigned int m_firstStation;     ///< number of first station
   unsigned int m_nChannels;        ///< total number of channels in OT
   unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module

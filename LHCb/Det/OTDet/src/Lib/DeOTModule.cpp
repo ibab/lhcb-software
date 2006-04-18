@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.12 2006-04-12 14:11:56 janos Exp $
+// $Id: DeOTModule.cpp,v 1.13 2006-04-18 18:57:37 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -23,8 +23,8 @@
 
 using namespace LHCb;
 
-DeOTModule::DeOTModule( const std::string& name ) :
-  DetectorElement( name ),
+DeOTModule::DeOTModule(const std::string& name) :
+  DetectorElement(name),
   m_stationID(0u),
   m_layerID(0u),
   m_quarterID(0u),
@@ -114,43 +114,30 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
   for (unsigned int i = strawLo; i <= strawHi; ++i) straws.push_back(i+1);
 }
 
-StatusCode DeOTModule::findDocaParams(const Gaudi::XYZPoint& entryPoint,
-                                      const Gaudi::XYZVector& pUnit,
-                                      const Gaudi::XYZPoint& wireBottom,
-                                      const Gaudi::XYZVector& wUnit,
-                                      double& lambda, double& mu) const { 
+StatusCode DeOTModule::findDoca(const Gaudi::XYZPoint& entryPoint,
+				const Gaudi::XYZVector& pUnit,
+				const Gaudi::XYZPoint& wireBottom,
+				const Gaudi::XYZVector& wUnit,
+				double& lambda, double& mu,
+				Gaudi::XYZVector& doca) const { 
   Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
   double e_pDote_w = pUnit.Dot(wUnit);
   
   double dnom = 1.0 - gsl_pow_2(e_pDote_w);
-  double eps = 0.0001;
+  static const double eps = 0.0001;
   
-  if ( dnom > eps ) {
-    lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
-    mu = (1/dnom)*(PenMinWb.Dot(wUnit) - PenMinWb.Dot(pUnit)*e_pDote_w);
-    return StatusCode::SUCCESS;
-  } else {
+  if ( dnom < eps ) {
     /// You never know :-)
     MsgStream msg( msgSvc(), name() );
     msg << MSG::WARNING << "Track is parallel to wire" << endreq;
     return StatusCode::FAILURE;
   }
-}
+  
+  lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
+  mu = (1/dnom)*(PenMinWb.Dot(wUnit) - PenMinWb.Dot(pUnit)*e_pDote_w);
+  doca = PenMinWb + lambda*pUnit - mu*wUnit;
 
-double DeOTModule::docaWire(const Gaudi::XYZPoint& entryPoint,
-                            const Gaudi::XYZVector& pUnit,
-                            const Gaudi::XYZPoint& wireBottom,
-                            const Gaudi::XYZVector& wUnit,
-                            double lambda,
-                            double mu) const {
-  
-  Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
-  Gaudi::XYZVector d = PenMinWb + lambda*pUnit - mu*wUnit;
-  
-  /// Right(Left) of straw -1(1)
-  double ambiguity = (d.x() > 0 ? 1 : -1);
-  
-  return ambiguity*d.r();
+  return StatusCode::SUCCESS;
 }
 
 /// This gives you the x position of the wire
@@ -193,18 +180,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   /// Unit vector parallel to entry and exit points
   Gaudi::XYZVector e_p = (exP - enP).unit();
 
-  /// Now, let's loop over the straws and check if they do contain hits
-  /// and asign OTChannelID's to those that do.
-  /// This going to be the same for monolayer A as well as monolayer B, except
-  /// for the channel numbering. So it makes sense to define a method
-  /// findHitStraws(...)
-
-  /// Need this to check if hits are in the inefficient regions
-  double enY = enP.y();
-  double exY = exP.y();
-  if (enY > exY) std::swap(enY,exY);
-  double yMiddle = (enY + exY)/2;
-  
   /// Need this to check that enZ and exZ aren't sort of in the same plane,
   /// i.e. not a curly track. These are typically low momentum (50 MeV) 
   /// electrons.
@@ -212,70 +187,67 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   double exZ = exP.z();
   bool samePlane = std::abs(enZ-exZ) < 1.*m_cellRadius;
   
+  /// Now, let's loop over the straws and check if they do contain hits
+  /// and asign OTChannelID's to those that do.
+  /// This going to be the same for monolayer A as well as monolayer B, except
+  /// for the channel numbering. So it makes sense to define a method
+  /// findHitStraws(...)
+    
   Gaudi::XYZPoint wB;
   Gaudi::XYZPoint wT;
-  Gaudi::XYZVector e_w; ///< Unit vector parallel to wire
   
-  /// See LHCb note: 2003-019
-  // If top long module wire length in monolayer A is 2.45m - 0.036m
-  isEfficientA(yMiddle)?wB.SetY(-m_yHalfModule+m_inefficientRegion):wB.SetY(-m_yHalfModule);
-  // If bottom long module wirelength in monolayer B is 2.45m - 0.036m
-  isEfficientB(yMiddle)?wT.SetY(m_yHalfModule-m_inefficientRegion):wT.SetY(m_yHalfModule);
-    
+  wB.SetY(-m_yHalfModule);
+  wT.SetY(m_yHalfModule);
+     
+  double mu;
+  double lambda;
+  Gaudi::XYZVector doca;
+  /// Need this to check if hits are in efficient regions
+  bool efficientY;
+  
   if (!samePlane) { // Track in cell
-  
-    OTChannelID tmpChannel;
-    
     /// first layer
     wB.SetZ(-0.5*m_zPitch);
     wT.SetZ(-0.5*m_zPitch);
-    std::vector<unsigned int>::iterator iStraw = rStraws.begin();
-    for ( ; iStraw != rStraws.end() ; ++iStraw) {
-      double mu;
-      double lambda;
+    std::vector<unsigned int>::iterator iStraw;
+    for (iStraw = rStraws.begin(); iStraw != rStraws.end(); ++iStraw) {
       /// Wire bottom
-      wB.SetX(localUOfStraw(*iStraw));
+      wB.SetX(localUOfStraw((*iStraw)));
       /// Wire top
-      wT.SetX(localUOfStraw(*iStraw)); 
-            
-      e_w = (wT - wB).unit();
-
-      findDocaParams(enP, e_p, wB, e_w, lambda, mu);
-      double dist = docaWire(enP, e_p, wB, e_w, lambda, mu);
-      /// Do we have a hit?
-      if (fabs(dist) < m_cellRadius && isEfficientA(yMiddle)) {
-        tmpChannel = OTChannelID(m_stationID, m_layerID,
-                                 m_quarterID, m_moduleID, *iStraw);
-        channels.push_back(tmpChannel);
-        driftDistances.push_back(dist);
+      wT.SetX(localUOfStraw((*iStraw))); 
+      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), lambda, mu, doca); 
+      if (sc == StatusCode::SUCCESS) {
+	double dist = driftDistance(doca);
+	efficientY = isEfficientA(-m_yHalfModule+mu); 
+    	/// Do we have a hit?
+    	if (fabs(dist) < m_cellRadius && efficientY) {
+    	  channels.push_back(OTChannelID(m_stationID, m_layerID,
+    					 m_quarterID, m_moduleID, (*iStraw)));
+    	  driftDistances.push_back(dist);
+    	}
       }
     }
-
+    
     /// second layer
     wB.SetZ(0.5*m_zPitch);
     wT.SetZ(0.5*m_zPitch);
-    iStraw = rStraws.begin();
-    for ( ; iStraw != rStraws.end() ; ++iStraw) {
-      double mu;
-      double lambda;
+    for (iStraw = rStraws.begin(); iStraw != rStraws.end(); ++iStraw) {
       /// Wire bottom
-      wB.SetX(localUOfStraw(*iStraw+m_nStraws));
+      wB.SetX(localUOfStraw((*iStraw)+m_nStraws));
       /// Wire top
-      wT.SetX(localUOfStraw(*iStraw+m_nStraws));
-    
-      e_w = (wT - wB).unit();
-      
-      findDocaParams(enP, e_p, wB, e_w, lambda, mu);
-      double dist = docaWire(enP, e_p, wB, e_w, lambda, mu);
+      wT.SetX(localUOfStraw((*iStraw)+m_nStraws));
+      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), lambda, mu, doca); 
       /// Do we have a hit?
-      if (fabs(dist) < m_cellRadius && isEfficientB(yMiddle)) {
-        tmpChannel = OTChannelID(m_stationID, m_layerID,
-                                 m_quarterID, m_moduleID, 
-                                 m_nStraws+*iStraw);
-        channels.push_back(tmpChannel);
-        driftDistances.push_back(dist);
+      if (sc == StatusCode::SUCCESS) {
+	double dist = driftDistance(doca);
+	efficientY = isEfficientB(-m_yHalfModule+mu);
+	if (fabs(dist) < m_cellRadius && efficientY) {
+	  channels.push_back(OTChannelID(m_stationID, m_layerID,
+					 m_quarterID, m_moduleID, m_nStraws+(*iStraw)));
+	  driftDistances.push_back(dist);
+	}
       }
-    }
+    } 
   } else { // curly track
     /// This is the old curly track code. I still need to figure out
     /// how to treat this better and make it more readable.
@@ -331,9 +303,8 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0 ) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
-                                          m_quarterID, m_moduleID, straw);
-        channels.push_back(tmpChan);
+	channels.push_back(OTChannelID(m_stationID, m_layerID, 
+				       m_quarterID, m_moduleID, straw));
         driftDistances.push_back(distTmp);
       }
       strawA = nextRightStraw(straw);
@@ -353,9 +324,8 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID( m_stationID, m_layerID, 
-                                           m_quarterID, m_moduleID, straw);
-        channels.push_back(tmpChan);
+        channels.push_back(OTChannelID( m_stationID, m_layerID, 
+					m_quarterID, m_moduleID, straw));
         driftDistances.push_back(distTmp);
       }
       strawB = nextRightStraw(straw);

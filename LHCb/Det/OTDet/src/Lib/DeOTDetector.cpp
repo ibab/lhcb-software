@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.21 2006-04-05 20:03:56 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.22 2006-04-18 18:57:37 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -70,39 +70,36 @@ StatusCode DeOTDetector::initialize()
   if( sc.isFailure() ) {
     msg << MSG::ERROR << "Failed to initialize DetectorElement" << endreq;
     return sc ;
-  } else {
-    // loop over stations
-    IDetectorElement::IDEContainer::const_iterator iStation = this->childBegin();
-    for ( ; this->childEnd() != iStation; ++iStation ) {
-      DeOTStation* station = dynamic_cast<DeOTStation*>(*iStation);
-      if (station) m_stations.push_back(station);
-      //loop over layers
-      IDetectorElement::IDEContainer::const_iterator iLayer = (*iStation)->childBegin();
-      for ( ; iLayer != (*iStation)->childEnd(); ++iLayer) {
-        DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iLayer);
-        if (layer) m_layers.push_back(layer);
-        // loop over quarters
-        IDetectorElement::IDEContainer::const_iterator iQuarter = (*iLayer)->childBegin();
-        for ( ; iQuarter != (*iLayer)->childEnd(); ++iQuarter) {
-          DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
-          if (quarter) m_quarters.push_back(quarter);
-          // loop over modules
-          IDetectorElement::IDEContainer::const_iterator iModule = (*iQuarter)->childBegin();
-          for ( ; iModule != (*iQuarter)->childEnd(); ++iModule) {
-            DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
-            if (module) {
-              unsigned int channels = module->nChannels();
-              m_nChannels += channels;
-              m_modules.push_back(module);
-              if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
-            }
-          } // modules
-        } // quarters
-      } // layers
-    } // stations
-
-    msg << MSG::DEBUG << "Successfully initialized DetectorElement !!!" << endreq;
   }
+   
+  // loop over stations
+  typedef IDetectorElement::IDEContainer::const_iterator Iter;
+  for (Iter iS = this->childBegin(); iS != this->childEnd(); ++iS) {
+    DeOTStation* station = dynamic_cast<DeOTStation*>(*iS);
+    if (station) m_stations.push_back(station);
+    //loop over layers
+    for (Iter iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
+      DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iL);
+      if (layer) m_layers.push_back(layer);
+      // loop over quarters
+      for (Iter iQ = (*iL)->childBegin(); iQ != (*iL)->childEnd(); ++iQ) {
+	DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
+	if (quarter) m_quarters.push_back(quarter);
+	// loop over modules
+	for (Iter iM = (*iQ)->childBegin(); iM != (*iQ)->childEnd(); ++iM) {
+	  DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
+	  if (module) {
+	    unsigned int channels = module->nChannels();
+	    m_nChannels += channels;
+	    m_modules.push_back(module);
+	    if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
+	  }
+	} // modules
+      } // quarters
+    } // layers
+  } // stations
+  
+  msg << MSG::DEBUG << "Successfully initialized DetectorElement !!!" << endreq;
   
   /// Set the first station
   setFirstStation(m_stations.front()->stationID());
@@ -258,8 +255,7 @@ OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
 std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory( const LHCb::LHCbID& id,
-                                                          const double /*offset*/ ) const
-{
+                                                          const double /*offset*/ ) const {
   std::auto_ptr<LHCb::Trajectory> traj;
   if( !id.isOT() ) {
     throw GaudiException( "The LHCbID is not of OT type!", "DeOTDetector.cpp",

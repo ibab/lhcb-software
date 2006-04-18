@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.cpp,v 1.5 2006-04-12 23:43:26 janos Exp $
+// $Id: DeOTQuarter.cpp,v 1.6 2006-04-18 18:57:38 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -25,20 +25,30 @@
 using namespace boost::lambda;
 using namespace LHCb;
 
+// DeOTQuarter::DeOTQuarter(const std::string& name) :
+//   DetectorElement(name),
+//   m_stationID(0u),
+//   m_layerID(0u),
+//   m_quarterID(0u),
+//   m_stereoAngle(0.0),
+//   m_xMin(10.0*km),
+//   m_yMin(10.0*km),
+//   m_zMin(10.0*km),
+//   m_xMax(-10.0*km),
+//   m_yMax(-10.0*km),
+//   m_zMax(-10.0*km),
+//   m_modules()
+// { 
+//   /// Constructor
+// }
+
 DeOTQuarter::DeOTQuarter(const std::string& name) :
-  DetectorElement( name ),
-  m_stationID( 0u ),
-  m_layerID( 0u ),
-  m_quarterID( 0u ),
-  m_stereoAngle( 0.0 ),
-  m_xMin(  10.0*km ),
-  m_yMin(  10.0*km ),
-  m_zMin(  10.0*km ),
-  m_xMax( -10.0*km ),
-  m_yMax( -10.0*km ),
-  m_zMax( -10.0*km ),
-  m_modules()
-{ 
+  DetectorElement(name),
+  m_stationID(0u),
+  m_layerID(0u),
+  m_quarterID(0u),
+  m_stereoAngle(0.0),
+  m_modules() { 
   /// Constructor
 }
 
@@ -52,9 +62,9 @@ const CLID& DeOTQuarter::clID() const {
 StatusCode DeOTQuarter::initialize() {
   
   /// Loop over modules
-  IDetectorElement::IDEContainer::const_iterator iModule = this->childBegin();
-  for ( ; iModule != this->childEnd(); ++iModule) {  
-    DeOTModule* module = dynamic_cast<DeOTModule*>(*iModule);
+  IDetectorElement::IDEContainer::const_iterator iM;
+  for  (iM = this->childBegin(); iM != this->childEnd(); ++iM) {  
+    DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
     if (module)  m_modules.push_back(module);
   } /// iModule
   

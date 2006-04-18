@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.12 2006-04-12 14:11:56 janos Exp $
+// $Id: DeOTModule.h,v 1.13 2006-04-18 18:57:37 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -226,23 +226,21 @@ private:
                   const Gaudi::XYZPoint& exitPoint, 
                   std::vector<unsigned int>& straws) const;
     
-  /** Find the DOCA paramters mu of a wire and lambda of a track. 
+  /** Find the DOCA paramters mu of a wire and lambda of a track,
+   * and the distance of closest approach
    * Where w = w_bottom + mu*e_w 
    * and p = p_entry + lambda*e_p.
    */
-  StatusCode findDocaParams(const Gaudi::XYZPoint& entryPoint,
-                            const Gaudi::XYZVector& pUnit,
-                            const Gaudi::XYZPoint& wireBottom,
-                            const Gaudi::XYZVector& wUnit,
-                            double& lambda, double& mu) const;
+  StatusCode findDoca(const Gaudi::XYZPoint& entryPoint,
+		      const Gaudi::XYZVector& pUnit,
+		      const Gaudi::XYZPoint& wireBottom,
+		      const Gaudi::XYZVector& wUnit,
+		      double& lambda, double& mu,
+		      Gaudi::XYZVector& doca) const;
 
-  /** Return distance of closest approach to wire */
-  double docaWire(const Gaudi::XYZPoint& entryPoint,
-                  const Gaudi::XYZVector& pUnit,
-                  const Gaudi::XYZPoint& wireBottom,
-                  const Gaudi::XYZVector& wUnit,
-                  double lambda,
-                  double mu ) const;
+  /** Return distance of closest approach to wire
+   * i.e. drift distance*/
+  double driftDistance(const Gaudi::XYZVector& doca) const;
 
   /** Find the straws that are hit */
   /* void findHitStraws(...) const; */
@@ -254,10 +252,10 @@ private:
   double localUOfStraw(const int aStraw) const;
   
   /** @return the straw in monolayer A closest to the hit */ 
-  int hitStrawA(const double u) const;
+  unsigned int hitStrawA(const double u) const;
   
   /** @return the straw in monolayer B closest to the hit */
-  int hitStrawB(const double u) const;  
+  unsigned int hitStrawB(const double u) const;  
 
   /** Check if Y is inside efficient region of monolayer A
    * @param Y coordinate
@@ -369,24 +367,25 @@ inline unsigned int DeOTModule::nChannels() const {
 }
 
 inline bool DeOTModule::monoLayerA(const int aStraw) const {
-  return (aStraw <= (int) m_nStraws);
+  return (aStraw <= int(m_nStraws));
 }
 
 inline bool DeOTModule::monoLayerB(const int aStraw) const {
-  return (aStraw > (int) m_nStraws);
+  return (aStraw > int(m_nStraws));
 }
 
 inline unsigned int DeOTModule::nextLeftStraw(const unsigned int aStraw) const {
-  return (aStraw <= 1 || aStraw == m_nStraws+1) ? 0 : aStraw-1;
+  return (aStraw <= 1u || aStraw == m_nStraws+1u) ? 0u : aStraw-1u;
 }
 
 inline unsigned int DeOTModule::nextRightStraw(const unsigned int aStraw) const {
-  return (aStraw == m_nStraws || aStraw >= 2*m_nStraws) ? 0 : aStraw+1;
+  return (aStraw == m_nStraws || aStraw >= 2*m_nStraws) ? 0u : aStraw+1u;
 }
 
-/// FIXME: This needs to be corrected for the inefficient region
 inline double DeOTModule::wireLength() const {
-  return m_ySizeModule;
+  //return m_ySizeModule;
+  /// If long module wireLength=ySizeModule-inefficient region
+  return (longModule()?(m_ySizeModule-m_inefficientRegion):m_ySizeModule);
 };
 
 inline double DeOTModule::cellRadius() const {
@@ -405,37 +404,37 @@ inline double DeOTModule::cosAngle() const {
   return m_cosAngle;
 }
 
+inline double DeOTModule::driftDistance(const Gaudi::XYZVector& doca) const {
+  int ambiguity = (doca.x() > 0 ? 1 : -1);
+  return ambiguity*doca.r();
+}
+  
 inline double DeOTModule::localZOfStraw(const int aStraw) const {
-  return (this->monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
+  return (monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
 }
 
-inline int DeOTModule::hitStrawA(const double u) const {
+inline unsigned int DeOTModule::hitStrawA(const double u) const {
   double dU = u - localUOfStraw(1);
-  int strawA = (int) ( dU/m_xPitch + 1.5 );
-  if (strawA < 1) strawA = 1;
-  if (strawA > (int) m_nStraws) strawA = m_nStraws;
-  return strawA;
+  int strawA = int((dU/m_xPitch + 1.5));
+  return std::min(std::max(1,strawA),int(m_nStraws));
 }
 
-inline int DeOTModule::hitStrawB(const double u) const {
+inline unsigned int DeOTModule::hitStrawB(const double u) const {
   double dU = u - localUOfStraw(m_nStraws+1);
-  int strawB = (int) ( dU/m_xPitch + 1.5);
-  strawB += m_nStraws;
-  if (strawB <= (int) m_nStraws) strawB = m_nStraws + 1;
-  if (strawB > (int) (2*m_nStraws)) strawB = 2*m_nStraws;
-  return strawB;
+  int strawB = m_nStraws + int(( dU/m_xPitch + 1.5));
+  return std::min(std::max(int(m_nStraws) + 1,strawB),2*int(m_nStraws));
 }
 
 /// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-  return !(this->longModule() && this->topModule() &&
+  return !(longModule() && topModule() && 
 	   ((m_yHalfModule + y) < m_inefficientRegion));
 }
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-  return !(this->longModule() && this->bottomModule() &&
+  return !(longModule() && bottomModule() && 
 	   ((m_yHalfModule - y) < m_inefficientRegion));
 }
 

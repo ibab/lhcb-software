@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.7 2006-04-12 23:43:26 janos Exp $
+// $Id: DeOTQuarter.h,v 1.8 2006-04-18 18:57:37 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -96,12 +96,12 @@ class DeOTQuarter : public DetectorElement {
   unsigned int m_quarterID;      ///< quarter ID number
   LHCb::OTChannelID m_elementID; ///< element id
   double m_stereoAngle;          ///< layer stereo angle 
-  double m_xMin;                 ///< Minimum x of the cover
-  double m_yMin;                 ///< Minimum y of the cover
-  double m_zMin;                 ///< Minimum z of the cover
-  double m_xMax;                 ///< Maximum x of the cover
-  double m_yMax;                 ///< Maximum y of the cover
-  double m_zMax;                 ///< Maximum z of the cover
+  /*   double m_xMin;                 ///< Minimum x of the cover */
+  /*   double m_yMin;                 ///< Minimum y of the cover */
+  /*   double m_zMin;                 ///< Minimum z of the cover */
+  /*   double m_xMax;                 ///< Maximum x of the cover */
+  /*   double m_yMax;                 ///< Maximum y of the cover */
+  /*   double m_zMax;                 ///< Maximum z of the cover */
   Modules m_modules;             ///< vector of modules
 
 };
