@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.306 2006-04-18 13:58:08 jpalac Exp $
+# $Id: requirements,v 1.307 2006-04-18 15:05:16 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -45,7 +45,7 @@ use LHCb	v20r3                -no_auto_imports
 use LbcomSys    v4r3                 -no_auto_imports
 
 #-- Rec packages (from REC_v3r1)
-#-- use RecSys      v3r1                 -no_auto_imports # TEMPORARY
+use RecSys      v3r1                 -no_auto_imports
 
 #-- Phys packages (from PHYS_v3r1)
 use PhysSys     v3r1
