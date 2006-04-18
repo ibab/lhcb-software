@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.87 2006-04-12 11:57:30 jpalac Exp $
+! $Id: release.notes,v 1.88 2006-04-18 15:05:31 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
-! 2006-04-03 - Juan PALACIOS
+!======================= PhysEvent v9r3 2006-04-18 ==========================
+! 2006-04-12 - Juan PALACIOS
  - Remove leading "/Event/" from all PhysEvent default location definitions.
  - Change implementation of LHCb::Particle::daughtersVector()
 
