@@ -5,7 +5,7 @@
  *  Header file for RICH geometrical utility functions : RichSide
  *
  *  CVS Log :-
- *  $Id: RichGeomFunctions.h,v 1.1 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: RichGeomFunctions.h,v 1.2 2006-04-18 15:04:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/01/2006
@@ -49,7 +49,7 @@ namespace Rich
                                 const Gaudi::XYZVector & b )
     {
       const double demon = sqrt( a.Mag2() * b.Mag2() );
-      return ( demon>0 ? asin(a.Dot(b)/demon) : -999 );
+      return ( demon>0 ? acos(a.Dot(b)/demon) : -999 );
     }
 
   }
