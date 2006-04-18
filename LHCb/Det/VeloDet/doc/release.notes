@@ -1,11 +1,10 @@
-! $Id: release.notes,v 1.118 2006-04-13 13:24:38 mtobin Exp $
+! $Id: release.notes,v 1.119 2006-04-18 07:40:57 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v10r4 2006-04-18 ========================
 ! 2006-04-13 - Mark Tobin
  - Fix bug in neighbour and channel distance methods
-
-!========================= VeloDet v10r4 2006-04-12 ========================
 
 ! 2006-04-12 - Mark Tobin
  - Add trajectory method in DeVelo
