@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2006-04-19 M. Needham
+ - Connect MCHit to geometry using sensDetID
+
 !======================= STAlgorithms v1r1 2006-03-22 ========================
 ! 2006-03-22 M Needham
  - round rather than floor ADC

@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-04-19 M. Needham
+ - Connect MCHit to geometry using sensDetID
+
 !============================ STCheckers v1r1 2006-03-16 =======================
 ! 2006-03-16
  - Minor tuning of STEffMonitor, STClusterResolution

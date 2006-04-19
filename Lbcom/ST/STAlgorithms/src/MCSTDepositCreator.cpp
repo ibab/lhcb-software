@@ -157,8 +157,8 @@ StatusCode MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
   for (; iterHit!=mcHitsCont->end();++iterHit){
 
     MCHit* aHit = *iterHit;
-
-    DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
+   
+    DeSTSector* aSector = m_tracker->findSector(aHit->sensDetID());
     if ((0 != aSector)&&(this->hitToDigitize(aHit))){           
 
       // global to local transformation
