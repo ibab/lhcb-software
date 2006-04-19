@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v11r3>2006-04-18 Boole v11r3</A></H1><PRE>
+</PRE><H1><A NAME=v11r3>2006-04-19 Boole v11r3</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r3, Lbcom v4r3
   and databases XmlDDDB v30r4, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
@@ -19,11 +19,16 @@ Bug fixes:
     (L0MuonTrigger v5r2)
   . isInsideEfficient was discarding hits in OT stereo layers (OTDet v6r2)
   . Write a Velo bank for every sensor, even the empty sensors (VeloDAQ v3r2)
+  . Fix to cope with a single cluster in a sensor in strip zero (VeloDAQ v3r2)
   . Fix bug in neighbour and channel distance methods (VeloDet v10r4)
 
 Code cleanups:
   . Adapt to GaudiHistoAlg (OTMonitor v2r2)
   . Remove printing of PuVeto counter, was not filled (L0DU v7r1p2)
+  . Minor clean-ups in DeOTDetector and DeOTModule (OTDet v6r2)
+  . Minor clean-ups in OTRandomDepositCreator (OTSimulation v3r3)
+  . Speed up in DeSTDetector findSector methods (STDet v2r3)
+  . Connect MCHit to geometry using sensDetID (STAlgorithms v1r2,STCheckers v1r2)
 
 </PRE><H1><A NAME=v11r2>2006-04-04 Boole v11r2</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r2, Lbcom v4r2
