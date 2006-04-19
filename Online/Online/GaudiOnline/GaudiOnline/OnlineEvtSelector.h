@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.6 2006-01-12 12:56:34 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.7 2006-04-19 11:43:19 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.6 2006-01-12 12:56:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.7 2006-04-19 11:43:19 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -133,6 +133,8 @@ namespace LHCb  {
 
     // Data Members
     LHCb::IMEPManager*            m_mepMgr;
+    /// Input buffer name (default="EVENT")
+    std::string                   m_input;
     std::string                   m_Rqs[8];
     mutable MBM::Requirement      m_Reqs[8];
     mutable int                   m_nreqs;

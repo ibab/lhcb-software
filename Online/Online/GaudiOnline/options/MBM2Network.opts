@@ -33,6 +33,7 @@ Sender.Recipients                    = {
                                         ,"lxplus006::NetRead_1"
                                         ,"lxplus006::NetRead_2"
 };
+Sender.PartitionID                   = 333;
 Sender.Recipients                    = { "lxplus062::NetRead_0" };
 Sender.Buffer                        = "RESULT";
 Sender.Requirements                  = {

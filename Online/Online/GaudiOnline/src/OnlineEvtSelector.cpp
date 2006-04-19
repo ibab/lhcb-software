@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.10 2006-04-18 08:11:55 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.11 2006-04-19 11:43:20 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -67,11 +67,22 @@ namespace LHCb  {
         }
         return StatusCode::FAILURE;
       }
-      StatusCode connect()  {
+      StatusCode connect(const std::string& input)  {
         MEPID mepID = m_sel->m_mepMgr->mepID();
         if ( mepID != MEP_INV_DESC )  {
           m_mepStart = (void*)mepID->mepStart;
-          m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
+          if ( input == "EVENT" )  {
+            m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
+          }
+          else if ( input == "MEP" )  {
+            m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
+          }
+          else if ( input == "RESULT" )  {
+            m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
+          }
+          else  {
+            return StatusCode::FAILURE;
+          }
           for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
             m_consumer->addRequest(m_sel->m_Reqs[i]);
           }
@@ -99,6 +110,7 @@ LHCb::OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* 
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
+  declareProperty("Input",m_input  = "EVENT");
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
   declareProperty("REQ3", m_Rqs[2] = "");
@@ -164,7 +176,7 @@ StatusCode LHCb::OnlineEvtSelector::error(const std::string& msg)  const {
 StatusCode LHCb::OnlineEvtSelector::createContext(Context*& refpCtxt) const  {
   OnlineContext* ctxt = new OnlineContext(this);
   refpCtxt = ctxt;
-  return ctxt->connect();
+  return ctxt->connect(m_input);
 }
 
 StatusCode LHCb::OnlineEvtSelector::next(Context& ctxt) const {
@@ -205,6 +217,7 @@ LHCb::OnlineEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAd
     unsigned long p0 = (unsigned long)&pctxt->descriptor();
     RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
     pA->setTriggerMask(dsc.triggerMask());
+    pA->setPartitionID(dsc.partitionID());
     pA->setEventType(dsc.eventType());
     pA->setFileOffset(0);
     pA->setBanks(&pctxt->banks());
@@ -234,7 +247,7 @@ LHCb::OnlineEvtSelector::resetCriteria(const std::string& crit, Context& context
   OnlineContext* ctxt = dynamic_cast<OnlineContext*>(&context);
   if ( ctxt )  {
     ctxt->close();
-    if ( ctxt->connect().isSuccess() )  {
+    if ( ctxt->connect(m_input).isSuccess() )  {
       return StatusCode::SUCCESS;
     }
     return error("Failed to connect to:"+crit);

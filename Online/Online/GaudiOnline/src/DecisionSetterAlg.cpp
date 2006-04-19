@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.14 2006-04-18 08:11:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.15 2006-04-19 11:43:20 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -76,6 +76,7 @@ namespace LHCb  {
         if ( reg )   {
           RawDataAddress* addr = dynamic_cast<RawDataAddress*>(reg->address());
           RawEventDescriptor* src = (RawEventDescriptor*)addr->ipar()[0];
+
           size_t len = sizeof(RawEventHeader)+(src->numberOfFragments()-1)*sizeof(int);
           if ( m_prod->getSpace(len) == MBM_NORMAL ) {
             EventDesc& e = m_prod->event();
