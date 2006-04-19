@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
  *
- *  $Id: RichNonZeroSuppALICEData.cpp,v 1.1 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData.cpp,v 1.2 2006-04-19 17:11:27 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -72,6 +72,47 @@ namespace RichNonZeroSuppALICEDataV1
     os << endreq;
 
     os << "======================================================================================================"
+       << endreq;
+
+  }
+
+  void RichNonZeroSuppALICEData::dumpAllBits( MsgStream & os ) const
+  {
+
+    os << "------------------------------------------------------------------------------------------------------"
+       << endreq;
+
+    // Bit numbers
+    os << " c   |";
+    for ( int iCol = 31; iCol >= 0; --iCol )
+    {
+      os << format("%3i",iCol);
+    }
+    os << endreq
+       << "------------------------------------------------------------------------------------------------------"
+       << endreq;
+
+    // Header
+    os << " h   |";
+    for ( int iCol = 31; iCol >= 0; --iCol )
+    {
+      os << "  " << isBitOn( header(), iCol );
+    }
+    os << endreq
+       << "------------------------------------------------------------------------------------------------------"
+       << endreq;
+
+    // Data bits
+    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )
+    {
+      os << format( " r%2i |", iRow );
+      for ( int iCol = 31; iCol >= 0; --iCol )
+      {
+        os << "  " << isPixelActive( iRow, iCol );
+      }
+      os << endreq;
+    }
+    os << "------------------------------------------------------------------------------------------------------"
        << endreq;
 
   }

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData.h,v 1.2 2006-04-19 17:05:04 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData.h,v 1.3 2006-04-19 17:11:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -57,7 +57,7 @@ namespace RichNonZeroSuppALICEDataV1
   public:
 
     /// Default constructor
-    RichNonZeroSuppALICEData() : 
+    RichNonZeroSuppALICEData() :
       RichHPDDataBank( 0, RichDAQ::MaxDataSizeALICE, 0, RichDAQ::MaxDataSizeALICE ) { }
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -103,20 +103,23 @@ namespace RichNonZeroSuppALICEDataV1
     // Print data bank to messager stream
     virtual void fillMsgStream( MsgStream & os ) const;
 
+    // Dump the raw header and data block to message stream
+    virtual void dumpAllBits( MsgStream & os ) const;
+
   private: // methods
 
     /// Set a pixel as active
     inline void setPixelActive( const RichDAQ::ShortType row,
                                 const RichDAQ::ShortType col )
     {
-      setBit( m_data[row], col );
+      setBit( m_data[maxDataSize()-(row+1)], col );
     }
 
     /// Is a given pixel active ?
     inline bool isPixelActive( const RichDAQ::ShortType row,
                                const RichDAQ::ShortType col ) const
     {
-      return isBitOn( m_data[row], col );
+      return isBitOn( m_data[maxDataSize()-(row+1)], col );
     }
 
   };
