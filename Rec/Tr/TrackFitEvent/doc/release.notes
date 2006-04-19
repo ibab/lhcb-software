@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-04-19 - Eduardo Rodrigues
+ - added creation of dictionary for StateTraj class (-> available in Python)
+
 ! 2006-04-18 - Jeroen van Tilburg
  - Removed obsolete update method in FitNode.
  - Added boolean flag to check whether the transport parameters are set.

@@ -34,6 +34,19 @@ use   LHCbDefinitions v*      Kernel
 #---- Produce Header-Files from XML description
 private
 document obj2doth TrackFitEventObj2Doth ../xml/*.xml
+
+# Declare fragment for adding custom dictionary to GOD generated ones
+#============================================================================
+make_fragment customdict -header=customdict_header -trailer=customdict_trailer
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict TrackFitEventCustomDict ../Event/lcgDict.h
+
+# Generate remaining dictionaries with lcgdict via GOD
+#============================================================================
+macro TrackFitEventObj2Dict_GODflags " -s ../Event/ " \
+      WIN32                          " -s ..\Event\ "
 document obj2dict TrackFitEventObj2Dict ../xml/*.xml
 
 public
@@ -45,6 +58,7 @@ library          TrackFitEventDict     ../$(tag)/dict/TrackFitEvent/*.cpp
 #============================================================================
 apply_pattern component_library library=TrackFitEventDict
 apply_pattern linker_library	library=TrackFitEvent
+
 macro_append TrackFitEvent_linkopts  "" WIN32 "/include:_TrackFitEvent_loadRef" 
 
 private

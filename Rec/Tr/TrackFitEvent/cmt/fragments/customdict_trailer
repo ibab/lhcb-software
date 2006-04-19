@@ -1,0 +1,10 @@
+clean :: ${CONSTITUENT}clean
+	@cd .
+
+${CONSTITUENT}clean ::
+	$(cleanup_echo) dictionaries and .customdict files
+	-$(cleanup_silent) rm -f $(dest)*.customdict
+	-$(cleanup_silent) rm -f $(dest)$(package)_dictionary.h
+	-$(cleanup_silent) rm -f $(dest)$(package)_selection.xml 
+
+ 

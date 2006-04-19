@@ -1,0 +1,6 @@
+$(dest)$(package).customdict :  ${FULLNAME}
+	@echo Producing custom dictionary file from ${FULLNAME}
+	@if not exist $(dest) mkdir $(dest) 
+	@copy $(FULLNAME) $(dest)\$(package)_dictionary.h
+        @copy ..\xml\lcgdict\lcg_selection.xml $(dest)\$(package)_selection.xml;
+	@echo "" > $(dest)$(package).customdict
