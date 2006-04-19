@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.27 2006-04-18 18:58:45 janos Exp $
+! $Id: release.notes,v 1.28 2006-04-19 07:23:46 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jan Amoraal
 
-!====================== OTSimulation v3r2 2006-03-31 ======================
+!====================== OTSimulation v3r3 2006-04-19 ======================
 ! 2006-04-18 - Jan Amoraal
  - Minor clean-ups in OTRandomDepositCreator.cpp
 
+!====================== OTSimulation v3r2 2006-03-31 ======================
 ! 2006-03-31 - Marco Cattaneo
  - Minor cleanups in OTrtRelation.cpp
 
