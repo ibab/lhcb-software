@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.44 2006-04-10 08:38:37 cattanem Exp $
+! $Id: release.notes,v 1.45 2006-04-19 16:33:20 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r1 2006-04-19 =========================
+! 2006-04-10 - Olivier Deschamps
+ -  Complete migration to LHCb v20/Gaudi v18 :
+    CaloUtils/Digit2ClustersConnector.h and CaloUtils/SharedCells.h updated
+
 
 !========================== CaloUtils v6r1 2006-04-10 =========================
 ! 2006-04-10 - Marco Cattaneo

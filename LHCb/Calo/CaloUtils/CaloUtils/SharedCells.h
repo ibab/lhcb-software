@@ -1,8 +1,11 @@
-// $Id: SharedCells.h,v 1.4 2005-11-07 11:57:13 odescham Exp $ 
+// $Id: SharedCells.h,v 1.5 2006-04-19 16:33:20 odescham Exp $ 
 // =========================================================================== 
 // CVS tag $Name: not supported by cvs2svn $
 // =========================================================================== 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 11:57:13  odescham
+// v5r0 - Adapt to the new Track Event Model
+//
 // Revision 1.3  2002/04/02 10:59:30  ibelyaev
 //  update for new event model
 //
@@ -21,7 +24,7 @@
 /// =========================================================================== 
 #include <cmath>
 // Include files
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Point3DTypes.h"
 
 /** @namespace SharedCells SharedCells.h CaloUtils/SharedCells.h
  *
@@ -31,6 +34,7 @@
  *  @date   04/07/2001
  */
 
+  
 namespace SharedCells
 {
 
@@ -50,12 +54,12 @@ namespace SharedCells
     /// redistribute the energy
     for( typename L::iterator iC = List.begin() ; List.end() != iC ; ++iC )
       {
-        const CaloCluster* cluster = iC->first ;
+        const LHCb::CaloCluster* cluster = iC->first ;
         /// ignore artificial zeros
         if( 0 == cluster ) { continue ; }     ///< CONTINUE !!!
         const unsigned index = iC - List.begin() ;
         const double   frac  = Weight[index] / wTot ;
-        iC->second->setFraction( frac )   ;
+        iC->second->setFraction( frac );
       }  
     ///
     return StatusCode::SUCCESS;
@@ -87,13 +91,13 @@ namespace SharedCells
     for( typename L::const_iterator iC = List.begin() ; 
          List.end() != iC ; ++iC )
       {
-        const CaloCluster* cluster = iC->first ;
+        const LHCb::CaloCluster* cluster = iC->first ;
         /// ignore artificial zeros 
         if( 0 == cluster ) { continue ; }     ///< CONTINUE !!!
         const unsigned index = iC - List.begin() ;
         /// calculate the energy of each cluster
         const double   eClu  = 
-          ClusterFunctors::energy( cluster->entries().begin() ,
+          LHCb::ClusterFunctors::energy( cluster->entries().begin() ,
                                    cluster->entries().end  () ) ;
         /// define the weight for this cluster 
         weight[index]  = eClu ;
@@ -130,17 +134,17 @@ namespace SharedCells
     for( typename L::const_iterator iC = List.begin() ; 
          List.end() != iC ; ++iC )
       {
-        const CaloCluster* cluster = iC->first ;
+        const LHCb::CaloCluster* cluster = iC->first ;
         /// ignore artificial zeroes
         if( 0 == cluster ) { continue ; }  
         /// locate (first) seed cell 
-        CaloCluster::Entries::const_iterator iSeed =
-          ClusterFunctors::locateDigit( cluster->entries().begin() ,
+        LHCb::CaloCluster::Entries::const_iterator iSeed =
+          LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                         cluster->entries().end  () ,
                                         type                      );
         /// success ???
         if( cluster->entries().end() == iSeed ) { return StatusCode(220) ; }
-        const CaloDigit* seed = iSeed->digit() ;
+        const LHCb::CaloDigit* seed = iSeed->digit() ;
         if( 0 == seed )                        { return StatusCode(221) ; }
         /// get the energy of the seed cell 
         const double     e  = seed->e() ;
@@ -177,7 +181,7 @@ namespace SharedCells
   inline StatusCode seedDistanceAlgorithm( L&                List , 
                                            const DE&         Det  ,
                                            const T&          type ,
-                                           const CaloCellID& ID   ,
+                                           const LHCb::CaloCellID& ID   ,
                                            const SIZE&       size )
   {
     /// valid detector information ??
@@ -186,28 +190,28 @@ namespace SharedCells
     if( 0 == List.size()     ) { return StatusCode::SUCCESS ; }
     /// prepare container of weights 
     std::vector<double> weight( List.size() , 1.0 );
-    const HepPoint3D position( Det->cellCenter( ID ) );
+    const Gaudi::XYZPoint position( Det->cellCenter( ID ) );
     /// collect the information
     for( typename L::const_iterator iC = List.begin() ; 
          List.end() != iC ; ++iC )
       {
-        const CaloCluster* cluster = iC->first ;
+        const LHCb::CaloCluster* cluster = iC->first ;
         /// ignore artificial zeroes
         if( 0 == cluster ) { continue ; }  
         /// locate (first) seed cell 
-        CaloCluster::Entries::const_iterator iSeed =
-          ClusterFunctors::locateDigit( cluster->entries().begin() ,
+        LHCb::CaloCluster::Entries::const_iterator iSeed =
+          LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                         cluster->entries().end  () ,
                                         type                      );
         /// success ???
         if( cluster->entries().end() == iSeed ) { return StatusCode(220) ; }
-        const CaloDigit* seed = iSeed->digit() ;
+        const LHCb::CaloDigit* seed = iSeed->digit() ;
         if( 0 == seed                        ) { return StatusCode(221) ; }
         /// get the energy of the seed cell
         const double     e  = seed->e() ;
         /// calculate the distance between seed cell and give cell 
         const double  dist  = 
-          ( position - Det->cellCenter( seed->cellID() ) ).mag() ;
+          ( position - Det->cellCenter( seed->cellID() ) ).R(); //mag->R
         /// set the weight 
         const unsigned index = iC - List.begin() ;
         /// calculate weight 
@@ -243,7 +247,7 @@ namespace SharedCells
   template <class L, class DE, class SIZE>
   inline StatusCode summedDistanceAlgorithm( L&                List , 
                                              const DE&         Det  ,
-                                             const CaloCellID& ID   ,
+                                             const LHCb::CaloCellID& ID   ,
                                              const SIZE&       size ,
                                              int               NiT  )
   {
@@ -255,17 +259,17 @@ namespace SharedCells
     if( 0 == List.size()     ) { return StatusCode::SUCCESS ; }
     /// prepare container of weights 
     std::vector<double> weight( List.size() , 1.0 );
-    const HepPoint3D pos( Det->cellCenter( ID ) );
+    const Gaudi::XYZPoint  pos( Det->cellCenter( ID ) );
     /// collect the information
     for( typename L::const_iterator iC = List.begin() ; 
          List.end() != iC ; ++iC )
       {
-        const CaloCluster* cluster = iC->first ;
+        const LHCb::CaloCluster* cluster = iC->first ;
         /// ignore artificial zeroes
         if( 0 == cluster ) { continue ; }
         double x , y , e ;
         StatusCode sc = 
-          ClusterFunctors::calculateEXY( cluster->entries().begin() ,
+          LHCb::ClusterFunctors::calculateEXY( cluster->entries().begin() ,
                                          cluster->entries().end  () ,
                                          Det , e , x , y           );
         /// success ???
@@ -290,6 +294,7 @@ namespace SharedCells
 
 
 }; ///< end of namespace 
+ 
 
 
 /// =========================================================================== 
