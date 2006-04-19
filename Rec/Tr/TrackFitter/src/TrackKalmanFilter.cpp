@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.14 2006-04-18 09:18:38 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.15 2006-04-19 13:11:07 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -170,7 +170,8 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
       const TransportMatrix& F = aNode.transportMatrix();
       TrackVector& stateVec = aState.stateVector();
       TrackMatrix& stateCov = aState.covariance();
-      stateVec = F * stateVec + aNode.transportVector();
+      TrackVector tempVec( stateVec );
+      stateVec = F * tempVec + aNode.transportVector();
       stateCov = ROOT::Math::Similarity<double,5,5>( F, stateCov )
                  + aNode.noiseMatrix();
       aState.setZ( z );

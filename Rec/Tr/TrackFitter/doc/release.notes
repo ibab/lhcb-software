@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-04-19 - Jeroen van Tilburg
+ - TrackKalmanFilter: introduced temporary vector in predict method. Needed
+   since SMatrix inlines the actual calculation.
+
 ! 2006-04-18 - Jeroen van Tilburg
  - TrackKalmanFilter: use new transportIsSet method.
 
