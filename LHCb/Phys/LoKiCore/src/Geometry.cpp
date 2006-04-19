@@ -1,8 +1,11 @@
-// $Id: Geometry.cpp,v 1.2 2006-03-24 16:39:56 ibelyaev Exp $
+// $Id: Geometry.cpp,v 1.3 2006-04-19 08:14:10 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/24 16:39:56  ibelyaev
+//  fix for Product->Similarity
+//
 // Revision 1.1  2006/02/17 19:12:53  ibelyaev
 //  add Cast and some other minor changes
 //
@@ -179,7 +182,7 @@ StatusCode LoKi::Geometry::chi2
   const Gaudi::SymMatrix3x3& cov1  ,
   const LoKi::Point3D&       p2    , 
   const Gaudi::SymMatrix3x3& cov2  , 
-  double                     value ) 
+  double&                    value ) 
 {
   const Gaudi::Vector3 delta 
     ( p1.x() - p2.x() , 
@@ -223,7 +226,7 @@ StatusCode LoKi::Geometry::chi2
 ( const LoKi::Point3D&       p1    , 
   const LoKi::Point3D&       p2    , 
   const Gaudi::SymMatrix3x3& c     , 
-  double                     value ) 
+  double&                    value ) 
 {
   const Gaudi::Vector3 delta 
     ( p1.x() - p2.x() , 

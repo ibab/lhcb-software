@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.12 2006-03-29 14:51:05 cattanem Exp $ 
+! $Id: release.notes,v 1.13 2006-04-19 08:14:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-04-19 - Vanya BELYAEV
+ - LoKi/Geometry.h
+   src/Geometry.cpp
+    - fix a bug in the method signature (It returns NOTHING!!!)
+ - LoKi/ConstIterator.h, 
+   LoKi/ConstView.h 
+    - fix some strange compilation error... 
+ - cmt/requirements 
+    - version increment to v1r2 
+
 
 !=========================== LoKiCore v1r1 2006-03-28 =========================
 ! 2006-03-14 - Vanya BELYAEV
@@ -103,6 +114,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.12  2006/03/29 14:51:05  cattanem
+! fix to link on Windows with Gaudi v18r3
+!
 ! Revision 1.11  2006/03/24 17:23:26  cattanem
 ! v1r1
 !

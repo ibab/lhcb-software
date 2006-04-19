@@ -1,8 +1,11 @@
-// $Id: ConstIterator.h,v 1.1 2006-04-09 08:57:27 ibelyaev Exp $
+// $Id: ConstIterator.h,v 1.2 2006-04-19 08:14:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/04/09 08:57:27  ibelyaev
+//  add 'const-iterator/view' concept
+// 
 // ============================================================================
 #ifndef LOKI_CONSTITERATOR_H 
 #define LOKI_CONSTITERATOR_H 1
@@ -63,17 +66,28 @@ namespace LoKi
     typename LoKi::Const<typename ITERATOR::reference>::Value     // Const!
   >
   {
+  protected:
+    /// One of the @link iterator_tags tag types@endlink.
+    typedef typename ITERATOR::iterator_category                iterator_category;
+    /// The type "pointed to" by the iterator.
+    typedef typename LoKi::Const<typename ITERATOR::value_type>::Value value_type;
+    /// Distance between iterators is represented as this type.
+    typedef typename ITERATOR::difference_type                    difference_type;
+    /// This type represents a pointer-to-value_type.
+    typedef typename LoKi::Const<typename ITERATOR::pointer>::Value       pointer;
+    /// This type represents a reference-to-value_type.
+    typedef typename LoKi::Const<typename ITERATOR::reference>::Value   reference;
   public:
     /// the default constructor : the base must be  default contrubctible!
-    ConstIterator() : m_it() {}
+    ConstIterator() : m_it() {} ;
     /// the constructor ftom the base 
-    ConstIterator( const ITERATOR& base  ) : m_it ( base ) {}
+    ConstIterator( const ITERATOR& base  ) : m_it ( base ) {} ;
     /// compiler generated copy and assignement are OK
     
     /// the magic starts here
-    typename reference operator* () const { return *m_it              ; }
+    pointer   operator->() const { return  m_it.operator->() ; } ;
     /// ... and it continues here
-    typename pointer   operator->() const { return  m_it.operator->() ; }
+    reference operator* () const { return *m_it              ; } ;
     
     // all other lines are just boring repetitions...
     
@@ -90,14 +104,14 @@ namespace LoKi
     ConstIterator  operator--( int ) 
     { ConstIterator tmp(*this) ; m_it-- ; return tmp ; }
     
-    ConstIterator& operator+=( typename difference_type offset ) 
+    ConstIterator& operator+=( const difference_type offset ) 
     { std::advance ( m_it ,      offset ) ; return *this ; } ;
-    ConstIterator& operator-=( typename difference_type offset ) 
+    ConstIterator& operator-=( const difference_type offset ) 
     { std::advance ( m_it , -1 * offset ) ; return *this ; } ;
     
-    typename difference_type operator-( const      ITERATOR& right ) const
+    difference_type operator-( const      ITERATOR& right ) const
     { return std::distance( m_it , right ) ; }
-    typename difference_type operator-( const ConstIterator& right ) const
+    difference_type operator-( const ConstIterator& right ) const
     { return (*this) - right.m_it          ; }
     
     bool operator== ( const      ITERATOR& right ) const 
@@ -110,12 +124,12 @@ namespace LoKi
     bool operator!= ( const ConstIterator& right ) const
     { return  !( *this == right )  ; }
     
-    ConstIterator  operator+( typename difference_type offset ) 
+    ConstIterator  operator+( const difference_type offset ) 
     {
       ConstIterator tmp(*this) ;
       return tmp += offset ;
     };
-    ConstIterator  operator-( typename difference_type offset ) 
+    ConstIterator  operator-( const difference_type offset ) 
     {
       ConstIterator tmp(*this) ;
       return tmp -= offset ;
@@ -123,10 +137,10 @@ namespace LoKi
     
     friend ConstIterator 
     operator+ 
-    ( const typename difference_type offset , 
-      const ConstIterator&           right  ) { return right + offset ; } ;
+    ( const difference_type offset , 
+      const ConstIterator&  right  ) { return right + offset ; } ;
     
-    friend typename difference_type
+    friend difference_type
     operator-
     ( const ITERATOR&      right , 
       const ConstIterator& left  ) 

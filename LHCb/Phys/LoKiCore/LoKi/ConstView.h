@@ -1,8 +1,11 @@
-// $Id: ConstView.h,v 1.1 2006-04-09 08:57:27 ibelyaev Exp $
+// $Id: ConstView.h,v 1.2 2006-04-19 08:14:10 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/04/09 08:57:27  ibelyaev
+//  add 'const-iterator/view' concept
+// 
 // ============================================================================
 #ifndef LOKI_CONSTVIEW_H 
 #define LOKI_CONSTVIEW_H 1
@@ -56,10 +59,10 @@ namespace LoKi
   {
   public:
     typedef LoKi::ConstIterator<typename CONTAINER::const_iterator> const_iterator ;
-    typedef typename const_iterator                                 iterator ;
+    typedef const_iterator                                          iterator ;
     typedef typename iterator::value_type                         value_type ;
     typedef typename iterator::reference                     const_reference ;
-    typedef typename const_reference                               reference ;
+    typedef const_reference                                        reference ;
     typedef typename iterator::pointer                               pointer ;
     typedef typename CONTAINER::size_type                          size_type ;
   protected:
