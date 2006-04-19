@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-04-19 - Chris Jones
+ - Add new DAQ bank versions where the pixel rows are inverted, to
+   match the electronics
+
 ! 2006-04-13 - Chris Jones
  - Add ALICE mode encoding and decoding options
 

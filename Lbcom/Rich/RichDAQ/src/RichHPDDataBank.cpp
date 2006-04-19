@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.cpp,v 1.5 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichHPDDataBank.cpp,v 1.6 2006-04-19 17:05:04 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -45,7 +45,7 @@ void RichHPDDataBank::dumpAllBits( MsgStream & os ) const
   os << endreq
      << "------------------------------------------------------------------------------------------------------"
      << endreq;
-  
+
   // Data bits
   for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )
   {
@@ -59,4 +59,15 @@ void RichHPDDataBank::dumpAllBits( MsgStream & os ) const
   os << "------------------------------------------------------------------------------------------------------"
      << endreq;
 
+}
+
+void RichHPDDataBank::fillRAWBank( RichDAQ::RAWBank & rawData ) const
+{
+  // fill with header word
+  rawData.push_back( header() );
+  // ... then data words
+  for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
+  {
+    rawData.push_back( m_data[iData] );
+  }
 }

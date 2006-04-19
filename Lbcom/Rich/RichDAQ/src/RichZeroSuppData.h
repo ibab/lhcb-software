@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.10 2006-04-13 12:37:11 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.11 2006-04-19 17:05:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -83,13 +83,13 @@ namespace RichZeroSuppDataV1
     /// Destructor
     virtual ~RichZeroSuppData() { }
 
-    /// Returns the L0ID
+    // Returns the L0ID
     virtual RichDAQ::Level0ID level0ID() const;
 
-    /// Returns the hit count for this HPD
-    RichDAQ::ShortType hitCount() const;
+    // Returns the hit count for this HPD
+    virtual RichDAQ::ShortType hitCount() const;
 
-    /// Fill a vector with RichSmartIDs for hit pixels
+    // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                    const LHCb::RichSmartID hpdID ) const;
 
@@ -175,14 +175,14 @@ namespace RichZeroSuppDataV2
     /// Returns the L0ID
     virtual RichDAQ::Level0ID level0ID() const;
 
-    /// Returns the hit count for this HPD
-    RichDAQ::ShortType hitCount() const;
+    // Returns the hit count for this HPD
+    virtual RichDAQ::ShortType hitCount() const;
 
-    /// Fill a vector with RichSmartIDs for hit pixels
+    // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                    const LHCb::RichSmartID hpdID ) const;
 
-    /// Test if this bank would be too big ( i.e. greater than 32 words )
+    // Test if this bank would be too big ( i.e. greater than 32 words )
     inline bool tooBig() const
     {
       return m_tooBig;

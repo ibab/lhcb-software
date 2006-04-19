@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData.h,v 1.1 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData.h,v 1.2 2006-04-19 17:05:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -88,13 +88,13 @@ namespace RichNonZeroSuppALICEDataV1
     /// Destructor
     ~RichNonZeroSuppALICEData() { }
 
-    /// Returns the L0ID
+    // Returns the L0ID
     virtual RichDAQ::Level0ID level0ID() const;
 
-    /// Returns the hit count for this HPD
-    RichDAQ::ShortType hitCount() const;
+    // Returns the hit count for this HPD
+    virtual RichDAQ::ShortType hitCount() const;
 
-    /// Fill a vector with RichSmartIDs for hit pixels
+    // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                    const LHCb::RichSmartID hpdID ) const;
 

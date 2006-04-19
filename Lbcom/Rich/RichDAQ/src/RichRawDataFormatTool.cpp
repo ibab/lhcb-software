@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.25 2006-04-18 11:07:28 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.26 2006-04-19 17:05:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -122,8 +122,8 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     info() << "========================================================================================================" << endreq
            << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
-    info() << "--------------------------------------------------------------------------------------------------------" << endreq;
     std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
+    Rich::DetectorType lastrich = Rich::InvalidDetector;
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
       const RichDAQ::Level1ID      L1ID   = (*iL1C).first.second;
@@ -135,6 +135,12 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
       totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
       totHits[rich]                      += hits;
+
+      if ( rich != lastrich )
+      {
+        lastrich = rich;
+        info() << "--------------------------------------------------------------------------------------------------------" << endreq;
+      }
 
       info() << " " << rich << " L1 " << format("%3i",L1ID.data()) << " V" << version << " | L1 size ="
              << occ1(nBanks,m_evtCount) << " hpds :"
@@ -179,7 +185,26 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Vector & smartIDs,
   // Level 0 ID
   const RichDAQ::Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
 
-  if ( RichDAQ::LHCb2 == version )
+  if ( RichDAQ::LHCb3 == version )
+  {
+    // Fourth iteration of bank format
+
+    // First try the ZS format
+    RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( l0ID, smartIDs );
+
+    // If too big, use non ZS instead
+    if ( zsData->tooBig() )
+    {
+      delete zsData;
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV2::RichNonZeroSuppData( l0ID, smartIDs );
+    }
+    else
+    {
+      dataBank = (RichHPDDataBank*)zsData;
+    }
+
+  }
+  else if ( RichDAQ::LHCb2 == version )
   {
     // Third iteration of bank format
 
@@ -268,7 +293,22 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
   // Header word
   const RichDAQHeaderPDBase header( *dataStart );
 
-  if ( RichDAQ::LHCb2 == version )
+  if ( RichDAQ::LHCb3 == version )
+  {
+    // Third iteration of bank format
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV2::RichZeroSuppData( dataStart, dataSize );
+    }
+    else
+    {
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV2::RichNonZeroSuppData( dataStart );
+    }
+
+  }
+  else if ( RichDAQ::LHCb2 == version )
   {
     // Third iteration of bank format
 

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.12 2006-04-13 12:37:10 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.13 2006-04-19 17:05:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -101,16 +101,7 @@ public:
    *
    *  @param rawData The raw data bank to fill
    */
-  inline void fillRAWBank( RichDAQ::RAWBank & rawData ) const
-  {
-    // fill with header word
-    rawData.push_back( header() );
-    // ... then data words
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
-    { 
-      rawData.push_back( m_data[iData] ); 
-    } 
-  }
+  virtual void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
 
   /** Overloaded output to message stream
    *
@@ -187,7 +178,7 @@ protected: // methods
    *
    *  @param os Stream to print to
    */
-  void dumpAllBits( MsgStream & os ) const;
+  virtual void dumpAllBits( MsgStream & os ) const;
 
   /** Print data bank to message stream
    *
