@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.5 2006-03-21 10:23:48 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.6 2006-04-19 11:44:48 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -174,6 +174,7 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
     if ( dsc.hasData() )  {
       RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
       pA->setTriggerMask(pctxt->triggerMask());
+      pA->setPartitionID(pctxt->partitionID());
       pA->setEventType(pctxt->eventType());
       pA->setFileOffset(pctxt->offset());
       pA->setBanks(&pctxt->banks());

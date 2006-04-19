@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.7 2006-03-21 07:55:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.8 2006-04-19 11:44:48 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -32,10 +32,12 @@ namespace LHCb  {
 
   /// Fill MDF header structure in given memory location
   void makeMDFHeader(void* const data, int len, int evtype, int hdrType, 
-                     long long trNumber, unsigned int trMask[4],
+                     long long trNumber, const unsigned int trMask[4],
                      int compression, int checksum);
   /// Determine length of the sequential buffer from RawEvent object
   size_t rawEventLength(const RawEvent* evt);
+  /// Determine length of the sequential buffer from vector of raw banks
+  size_t rawEventLength(const std::vector<RawBank*>& banks);
   /// Determine number of banks from rawEvent object
   size_t numberOfBanks(const RawEvent* evt);
   /// Determine number of bank types from rawEvent object

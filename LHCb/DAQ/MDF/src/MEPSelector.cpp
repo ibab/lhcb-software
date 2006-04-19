@@ -1,4 +1,4 @@
-// $Id: MEPSelector.cpp,v 1.5 2006-03-17 17:23:56 frankb Exp $
+// $Id: MEPSelector.cpp,v 1.6 2006-04-19 11:44:48 frankb Exp $
 //====================================================================
 //	MEPSelector.cpp
 //--------------------------------------------------------------------
@@ -25,10 +25,12 @@ namespace LHCb  {
     Banks  m_banks;
     Events m_events;
     unsigned m_mask[4];
+    unsigned int m_partitionID;
   public:
     /// Standard constructor
     MEPContext(const RawDataSelector* pSel) : RawDataSelector::LoopContext(pSel) {
       m_mask[0] = m_mask[1] = m_mask[2] = m_mask[3] = ~0x0;
+      m_partitionID = 0;
     }
     /// Standard destructor 
     virtual ~MEPContext()          {                      }
@@ -36,13 +38,12 @@ namespace LHCb  {
     StatusCode receiveData()  {
       m_banks.clear();
       if ( m_events.empty() )  {
-        unsigned int partitionID;
         StatusCode sc = readMEPrecord(m_descriptor, m_accessDsc);
         if ( !sc.isSuccess() )  {
           return sc;
         }
         MEPEvent* me = (MEPEvent*)m_descriptor.data();
-        decodeMEP2EventBanks(me,partitionID,m_events);
+        decodeMEP2EventBanks(me,m_partitionID,m_events);
       }
       if ( !m_events.empty() )  {
         Events::iterator i = m_events.begin();
@@ -52,14 +53,18 @@ namespace LHCb  {
       }
       return StatusCode::FAILURE;
     }
+    /// Access to RawBank array
     virtual const std::vector<RawBank*>& banks()  const { return m_banks;  }
-    std::vector<RawBank*>& banks()                      { return m_banks;  }
+    /// Access to RawBank array (NON const)
+    std::vector<RawBank*>& banks()                  { return m_banks;       }
     /// Accessor: event size
-    const unsigned int  size() const        { return 0;         }
+    virtual const unsigned int  size() const        { return 0;             }
     /// Accessor: event type identifier
-    const unsigned char eventType() const   { return 1;         }
+    virtual const unsigned char eventType() const   { return 1;             }
+    /// Accessor: event type identifier
+    virtual const unsigned int  partitionID() const { return m_partitionID; }
     /// Accessor: trigger mask
-    const unsigned int* triggerMask() const { return m_mask;    }
+    virtual const unsigned int* triggerMask() const { return m_mask;        }
   };
 
   /** @class MEPSelector

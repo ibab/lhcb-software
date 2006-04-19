@@ -1,4 +1,4 @@
-// $Id: RawDataAddress.h,v 1.2 2006-03-21 07:55:32 frankb Exp $
+// $Id: RawDataAddress.h,v 1.3 2006-04-19 11:44:47 frankb Exp $
 #ifndef MDF_RAWDATAADDRESS_H
 #define MDF_RAWDATAADDRESS_H
 
@@ -30,6 +30,8 @@ namespace LHCb  {
     unsigned int   m_size;
     /// Event type identifier
     unsigned char  m_evType;
+    /// Partition identifier
+    unsigned int   m_partitionID;
     /// Trigger mask used for event selection
     unsigned int   m_trMask[4];
     /// Pointer to vector of raw banks
@@ -38,11 +40,14 @@ namespace LHCb  {
     /// Dummy constructor
     RawDataAddress() : GenericAddress(), m_size(0), m_evType(0), m_banks(0)  {
       m_trMask[0]=m_trMask[1]=m_trMask[2]=m_trMask[3] = 0;
+      m_partitionID = 0;
       m_par[1] = "0 ";
     }
     /// Copy Constructor
     RawDataAddress( const RawDataAddress& c)
-    : GenericAddress(c), m_size(c.m_size), m_evType(c.m_evType), m_banks(c.m_banks)  {
+    : GenericAddress(c), m_size(c.m_size), m_evType(c.m_evType), 
+      m_partitionID(c.m_partitionID), m_banks(c.m_banks)  
+    {
       m_trMask[0] = c.m_trMask[0];
       m_trMask[1] = c.m_trMask[1];
       m_trMask[2] = c.m_trMask[2];
@@ -57,6 +62,7 @@ namespace LHCb  {
                     unsigned long ip2=0)  
     : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_size(0), m_evType(0), m_banks(0)  {
       m_trMask[0]=m_trMask[1]=m_trMask[2]=m_trMask[3] = 0;
+      m_partitionID = 0;
     }
     /// Standard Destructor
     virtual ~RawDataAddress()              {                      }
@@ -72,6 +78,10 @@ namespace LHCb  {
     unsigned char eventType() const        { return m_evType;     }
     /// Update the event type
     void setEventType(unsigned int val)    { m_evType = val;      }  
+    /// Accessor: partition identifier
+    unsigned int partitionID() const       { return m_partitionID;}
+    /// Update the event type
+    void setPartitionID(unsigned int val)  { m_partitionID = val; }  
     /// Accessor: trigger mask
     const unsigned int* triggerMask() const{ return m_trMask;     }
     /// Update the trigger mask of the event

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.5 2006-03-21 07:55:32 frankb Exp $
+// $Id: RawDataSelector.h,v 1.6 2006-04-19 11:44:47 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.5 2006-03-21 07:55:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.6 2006-04-19 11:44:47 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -83,6 +83,8 @@ namespace LHCb  {
       virtual const std::vector<LHCb::RawBank*>& banks()  const = 0;
       /// Accessor: event size
       virtual const unsigned int  size() const  = 0;
+      /// Accessor: event type identifier
+      virtual const unsigned int  partitionID() const = 0;
       /// Accessor: event type identifier
       virtual const unsigned char eventType() const  = 0;
       /// Accessor: trigger mask

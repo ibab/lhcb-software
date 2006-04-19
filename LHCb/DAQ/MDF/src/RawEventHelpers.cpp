@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.9 2006-04-18 09:18:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.10 2006-04-19 11:44:48 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -30,11 +30,16 @@ size_t LHCb::rawEventLength(const RawEvent* evt)    {
   size_t i, len;
   RawEvent* raw = const_cast<RawEvent*>(evt);
   for(len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-    typedef std::vector<RawBank*> _BankV;
-    const _BankV& banks = raw->banks(RawBank::BankType(i));
-    for(_BankV::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
-      len += (*j)->totalSize();
-    }
+    len += rawEventLength(raw->banks(RawBank::BankType(i)));
+  }
+  return len;
+}
+
+/// Determine length of the sequential buffer from RawEvent object
+size_t LHCb::rawEventLength(const std::vector<RawBank*>& banks)    {
+  size_t len = 0;
+  for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+    len += (*j)->totalSize();
   }
   return len;
 }
@@ -576,7 +581,7 @@ StatusCode LHCb::decodeDescriptors(const RawEventDescriptor* dsc, RawEvent* raw)
 }
 
 void LHCb::makeMDFHeader( void* const data, int len, int evtype, int hdrType, 
-                          long long trNumber, unsigned int trMask[4],
+                          long long trNumber, const unsigned int trMask[4],
                           int compression, int checksum)  
 {
   MDFHeader* header = (MDFHeader*)data;

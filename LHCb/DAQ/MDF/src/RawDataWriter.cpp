@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.1 2006-03-17 17:24:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataWriter.cpp,v 1.2 2006-04-19 11:44:48 frankb Exp $
 //	====================================================================
 //  RawDataWriter.cpp
 //	--------------------------------------------------------------------
@@ -21,6 +21,41 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawDataWriter)
 using namespace LHCb;
 enum { KBYTE=1024, MBYTE=1048576, GBYTE=1073741824 };
 const unsigned long long int TBYTE=1099511627776;
+#if 0
+#include <fstream>
+namespace LHCb  {
+  class RawDataFile  {
+    typedef LHCb::StreamDescriptor   Descriptor;
+    typedef Descriptor::Access       Access;
+
+    /// Property: Input parameters for connection parameters
+    std::string   m_connectParams;
+    /// Property: Compression algorithm identifier
+    int           m_compress;
+    /// Property: Flag to create checksum
+    int           m_checksum;
+
+    /// Stream descriptor (Initializes networking)
+    Access        m_connection;
+    /// Streambuffer to hold uncompressed data
+    StreamBuffer  m_data;
+    /// Streambuffer to hold compressed data
+    StreamBuffer  m_tmp;
+
+    long long int m_bytesWritten;
+    std::string   m_currStream;
+    RawDataFile(const std::string& fname, int comp, int checksum);
+
+    /// Write byte buffer to output stream
+    StatusCode writeBuffer(const void* data, size_t len);
+  };
+}
+
+LHCb::RawDataFile::RawDataFile(const std::string& fname)
+: m_bytesWritten(0)
+{
+}
+#endif
 
 /// Standard algorithm constructor
 LHCb::RawDataWriter::RawDataWriter(const std::string& name, ISvcLocator* pSvcLocator)
