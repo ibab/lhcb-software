@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.13 2006-04-19 08:14:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2006-04-19 11:41:00 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v1r2 2006-04-19 =========================
 ! 2006-04-19 - Vanya BELYAEV
  - LoKi/Geometry.h
    src/Geometry.cpp
@@ -26,7 +27,6 @@
     - fix some strange compilation error... 
  - cmt/requirements 
     - version increment to v1r2 
-
 
 !=========================== LoKiCore v1r1 2006-03-28 =========================
 ! 2006-03-14 - Vanya BELYAEV
@@ -114,6 +114,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.13  2006/04/19 08:14:10  ibelyaev
+!  fix a bug in Geometry + 'Const'
+!
 ! Revision 1.12  2006/03/29 14:51:05  cattanem
 ! fix to link on Windows with Gaudi v18r3
 !
