@@ -12,8 +12,7 @@
       id          = '10010'
       location    = 'Rec/Track/Best'
       keyedContTypeDef = "TRUE"
-      stdVectorTypeDef = "TRUE"
-      serializers = 'FALSE'>
+      stdVectorTypeDef = "TRUE">
 
       <location name="Ideal"   place="MC/Track/Ideal"/>
       <location name="Seed"    place="Rec/Track/Seed"/>
@@ -38,6 +37,7 @@
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
 
+      <import name ="GaudiKernel/MsgStream"/>
       <import name='GaudiKernel/GaudiException' />
       <import name='Event/State' />
       <import name='Event/Measurement' />
@@ -494,20 +494,20 @@
       <method
         type    = 'bool'
         name    = 'hasStateAt'
-        argList = 'unsigned int location'
+        argList = 'const LHCb::State::Location&amp; location'
         desc    = 'Check the existence of a state at a certain predefined location (see the Location enum in State.h)'
         const   = 'TRUE' />
 
       <method
         type    = 'LHCb::State &amp;'
         name    = 'stateAt'
-        argList = 'unsigned int location'
+        argList = 'const LHCb::State::Location&amp; location'
         desc    = 'Retrieve the state at a certain predefined location (see the Location enum in State.h)' />
 
       <method
         type    = 'const LHCb::State &amp;'
         name    = 'stateAt'
-        argList = 'unsigned int location'
+        argList = 'const LHCb::State::Location&amp; location'
         desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in State.h)'
         const   = 'TRUE' />
 
@@ -722,7 +722,29 @@
         type    = 'LHCb::Measurement&amp;'
         name    = 'measurement'
         argList = 'const LHCb::LHCbID value'
-        desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
+	desc    = 'Return the Measurement on the Track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
+      
+      <method
+	name      = "fillStream"
+	desc      = "printOut method to Gaudi message stream"
+	type      = "MsgStream&amp;"
+	virtual   = "TRUE"
+	const     = "TRUE" >
+	<arg name = "os" type = "MsgStream" inout = "BOTH"/>
+	<code>
+  os &lt;&lt; "{ "
+     &lt;&lt; "chi2PerDoF : " &lt;&lt; (float)m_chi2PerDoF &lt;&lt; std::endl
+     &lt;&lt; "nDoF : " &lt;&lt; m_nDoF &lt;&lt; std::endl
+     &lt;&lt; "flags : " &lt;&lt; m_flags &lt;&lt; std::endl
+     &lt;&lt; "lhcbIDs : " &lt;&lt; m_lhcbIDs &lt;&lt; std::endl
+     &lt;&lt; "states :	" &lt;&lt; m_states &lt;&lt; std::endl
+     &lt;&lt; "measurements : " &lt;&lt; m_measurements &lt;&lt; std::endl
+     &lt;&lt; "nodes :	" &lt;&lt; m_nodes &lt;&lt; std::endl
+     &lt;&lt; " }";
+  return os;
+	</code>
+      </method>
+
     </class>
 
   </package>

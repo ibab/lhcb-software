@@ -1,8 +1,16 @@
+
 !-----------------------------------------------------------------------------
 ! Package     : Event/TrackEvent
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+
+! 2006-04-18 - Eduardo Rodrigues
+ - State location bitfield defined with explicit enum type
+ - State enums now visible in Python
+ - corresponding changes propagated to Track class
+ - added fillStream methods for Track and State
+   (printOut method to Gaudi message stream)
 
 !========================= TrackEvent v2r2 2006-04-06 ========================
 ! 2006-04-06 - Jeroen van Tilburg

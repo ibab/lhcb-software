@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.24 2006-03-03 18:23:37 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.25 2006-04-19 14:57:14 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -148,24 +148,24 @@ const State & Track::closestState( const Plane3D& plane ) const
 //=============================================================================
 // check the existence of a state at a certain predefined location
 //=============================================================================
-bool Track::hasStateAt( unsigned int location ) const
+bool Track::hasStateAt( const LHCb::State::Location& location ) const
 {
   std::vector<State*>::const_iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
-                  std::bind2nd(std::mem_fun(&State::checkLocation),location) );
-  // the last line should be equivalent to:
-  //             TrackFunctor::HasKey<State>(&State::checkLocation,location));
+                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
+                  (&State::checkLocation,location) );
   return ( iter != m_states.end() );
 };
 
 //=============================================================================
 // Retrieve the pointer to the state closest to the given plane
 //=============================================================================
-State& Track::stateAt( unsigned int location )
+State& Track::stateAt( const LHCb::State::Location& location )
 {
   std::vector<State*>::iterator iter = 
     std::find_if( m_states.begin(),m_states.end(),
-                  TrackFunctor::HasKey<State>(&State::checkLocation,location) );
+                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
+                  (&State::checkLocation,location) );
   if ( iter == m_states.end() )
     throw GaudiException( "There is no state at requested location",
                           "Track.cpp",
@@ -176,11 +176,12 @@ State& Track::stateAt( unsigned int location )
 //=============================================================================
 // Retrieve the (const) pointer to the state at a given location
 //=============================================================================
-const State& Track::stateAt( unsigned int location ) const
+const State& Track::stateAt( const LHCb::State::Location& location ) const
 {
   std::vector<State*>::const_iterator iter = 
     std::find_if( m_states.begin(),m_states.end(),
-                  TrackFunctor::HasKey<State>(&State::checkLocation,location) );
+                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
+                  (&State::checkLocation,location) );
   if ( iter == m_states.end() )
     throw GaudiException( "There is no state at requested location",
                           "Track.cpp",

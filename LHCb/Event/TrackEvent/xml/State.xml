@@ -11,11 +11,10 @@
       desc             = 'State is the base class of offline and online track states.'
       id               = '10011'
       location         = 'Rec/Track/States'
-      serializers      = 'FALSE'
       stdVectorTypeDef = "TRUE"
       keyedContTypeDef = 'TRUE'>
 
-
+      <import name ="GaudiKernel/MsgStream"/>
        <import name="Kernel/Point3DTypes.h"/>
        <import name="Kernel/Vector3DTypes.h"/>
        <import name="Kernel/SymmetricMatrixTypes.h"/>
@@ -79,7 +78,7 @@
 	desc     = "Constructor with assigned key" 
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
                      const Gaudi::TrackMatrix&amp; cov, double z, 
-                     unsigned int location"
+                     const LHCb::State::Location&amp; location"
 	initList = "m_stateVector(stateVec), m_covariance(cov), m_z(z)">
        <code>
        setLocation(location);
@@ -89,10 +88,11 @@
      <attribute
        type    = 'bitfield'
        name    = 'flags'
-       desc    = 'the variety of state flags'
+       desc    = 'the variety of State flags'
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
+         type      = 'LHCb::State::Location'
          name      = 'location'
          length    = '16'
          desc      = 'state location'
@@ -453,12 +453,30 @@
       <method
         type    = 'bool'
         name    = 'checkLocation'
-        argList = 'unsigned int value'
+        argList = 'const LHCb::State::Location&amp; value'
         desc    = 'check if the state is of this location'
         const   = 'TRUE'>
         <code>
   return location() == value;
         </code>
+      </method>
+
+      <method
+	name      = "fillStream"
+	desc      = "printOut method to Gaudi message stream"
+	type      = "MsgStream&amp;"
+	virtual   = "TRUE"
+	const     = "TRUE" >
+	<arg name = "os" type = "MsgStream" inout = "BOTH"/>
+	<code>
+  os &lt;&lt; "{ " &lt;&lt; "flags :	"
+     &lt;&lt; m_flags &lt;&lt; std::endl
+     &lt;&lt; "stateVector :	" &lt;&lt; m_stateVector &lt;&lt; std::endl
+     &lt;&lt; "covariance :	" &lt;&lt; m_covariance &lt;&lt; std::endl
+     &lt;&lt; "z :	        " &lt;&lt; (float)m_z &lt;&lt; std::endl
+     &lt;&lt; " }";
+  return os;
+	</code>
       </method>
 
     </class>

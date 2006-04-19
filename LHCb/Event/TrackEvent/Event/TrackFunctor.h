@@ -140,19 +140,19 @@ namespace TrackFunctor
 //=============================================================================
 // Helper class for checking the existence of a value of a member function
 //=============================================================================
-  template <class T>
+  template <class T, typename E>
   class HasKey: public std::unary_function<T*, bool> {
   public:
     // A predicate (unary bool function):
     // example:
     // HasKey<Track> isBackward(&Track::checkFlag,Track::Backwards)
     // if (isBackward(track)) ...
-    typedef bool (T::* ptr_memfun) (unsigned int) const;
+    typedef bool (T::* ptr_memfun) (E) const;
   private:
     ptr_memfun m_pmf;
-    unsigned int m_key;
+    E m_key;
   public:
-    explicit HasKey(ptr_memfun check, unsigned int key ):
+    explicit HasKey(ptr_memfun check, E key ):
       m_pmf(check),m_key(key) {}
     bool operator()( const T* t ) const 
     {
