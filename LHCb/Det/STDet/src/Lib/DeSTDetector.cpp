@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.12 2006-04-04 14:26:08 ebos Exp $
+// $Id: DeSTDetector.cpp,v 1.13 2006-04-19 07:41:37 mneedham Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -118,14 +118,6 @@ DeSTLayer* DeSTDetector::findLayer(const STChannelID aChannel)
 DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
 
   // find the layer - slightly dirty and non-standard implementation for now
-/*
-  Layers::iterator iter = m_layers.begin();
-  while (iter != m_layers.end()&&((*iter)->isInside(point) == false )) {
-    ++iter;
-  }
-  return (iter != m_layers.end() ? *iter: 0 );
-*/
-
   // return pointer to the layer from point
   std::vector<DeSTLayer*>::iterator iter = 
     std::find_if( m_layers.begin(), m_layers.end(), 

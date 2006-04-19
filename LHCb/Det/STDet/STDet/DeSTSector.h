@@ -1,12 +1,16 @@
-// $Id: DeSTSector.h,v 1.9 2006-04-04 14:25:56 ebos Exp $
+// $Id: DeSTSector.h,v 1.10 2006-04-19 07:41:37 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTBaseElement.h"
+
+#include "Kernel/Plane3DTypes.h"
+
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"
  *
@@ -94,6 +98,12 @@ public:
   */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
+  /** plane corresponding to the sector 
+  * @return the plane 
+  */
+  Gaudi::Plane3D plane() const;  
+ 
+
   /** 
   * @param point in local frame
   * @param tolerance
@@ -175,10 +185,11 @@ private:
 
   void clear();
   void determineSense();
-  void cacheTrajectory();
-  Gaudi::XYZPoint globalPoint(const double x, 
-                              const double y, 
-                              const double z) const;
+  void cacheInfo();
+
+  Gaudi::Plane3D m_plane;
+  Gaudi::XYZVector m_direction;
+  std::pair<double,double> m_range;
 
   unsigned int m_firstStrip;
   unsigned int m_id;
@@ -193,8 +204,9 @@ private:
   double m_vMaxLocal;
 
 
-  LHCb::Trajectory* m_lowerTraj;
-  LHCb::Trajectory* m_upperTraj;
+
+  LHCb::Trajectory* m_midTraj;
+
 
   bool m_xInverted;
   bool m_yInverted;
@@ -239,6 +251,10 @@ inline double DeSTSector::stripLength() const {
 
 inline std::string DeSTSector::type() const {
   return m_type;
+}
+
+inline Gaudi::Plane3D DeSTSector::plane() const {
+  return m_plane;
 }
 
 /** ouput operator for class DeSTSector

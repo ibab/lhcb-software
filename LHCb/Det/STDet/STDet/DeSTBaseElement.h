@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.5 2006-02-06 10:24:18 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.6 2006-04-19 07:41:37 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -49,6 +49,18 @@ public:
   */
   Gaudi::XYZPoint globalCentre() const;
 
+
+  /** convert x,y,z in local frame to global frame
+  * @param local x
+  * @param local y
+  * @param local z
+  * @return point 
+  */
+  Gaudi::XYZPoint globalPoint(const double x, 
+                              const double y, 
+                              const double z) const;
+
+
   /** detector element id  - for experts only !*/
   LHCb::STChannelID elementID() const;
 
@@ -67,6 +79,7 @@ public:
   std::vector<typename STDetTraits<TYPE>::child*> getChildren();
 
 private:
+
 
   bool duplicate(const std::string& testString, 
                  const std::vector<std::string>& names) const;

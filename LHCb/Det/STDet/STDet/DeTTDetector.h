@@ -1,4 +1,4 @@
-// $Id: DeTTDetector.h,v 1.2 2006-02-13 10:18:24 mneedham Exp $
+// $Id: DeTTDetector.h,v 1.3 2006-04-19 07:41:37 mneedham Exp $
 #ifndef _DeTTDetector_H_
 #define _DeTTDetector_H_
 
@@ -55,7 +55,7 @@ public:
   * @param channel 
   * @return sector 
   */
-  virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
+  //virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
   
 private:
 

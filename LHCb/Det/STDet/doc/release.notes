@@ -2,6 +2,13 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-04-19 M. Needham
+ - Changes to findSector methods of DeSTDetector - factor 2 faster
+ - Changes to DeSTSector method to get trajectory - factor 2 faster
+ - Add methods to get plane in DeSTSector
+ - Plane method added to layer 
+ - Clean up what is cached after these changes
+
 !========================= STDet v2r3 2006-04-10 =======================
 ! 2006-04-10 - Jeroen van Tilburg
  - Fixed bug in DeSTSector trajectory method. Changed minus into plus sign.

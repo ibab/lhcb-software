@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.3 2006-04-03 14:48:25 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.4 2006-04-19 07:41:37 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -6,7 +6,7 @@
 
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTBaseElement.h"
-
+#include "Kernel/Plane3DTypes.h"
 
 /** @class DeSTLayer DeSTLayer.h "STDet/DeSTLayer.h"
  *
@@ -72,11 +72,20 @@ public:
   */
   const Sectors& sectors() const;
 
+  /** plane corresponding to the sector 
+  * @return the plane 
+  */
+  Gaudi::Plane3D plane() const; 
+
 protected:
 
   Sectors m_sectors;
 
 private:
+
+  void cachePlane();
+
+  Gaudi::Plane3D m_plane;
 
   unsigned int m_id;
   double m_angle;
@@ -103,6 +112,10 @@ inline double DeSTLayer::sinAngle() const{
 
 inline const DeSTLayer::Sectors& DeSTLayer::sectors() const{
   return m_sectors;
+}
+
+inline Gaudi::Plane3D DeSTLayer::plane() const {
+  return m_plane;
 }
 
 /** ouput operator for class DeSTLayer

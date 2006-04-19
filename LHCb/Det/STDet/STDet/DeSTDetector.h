@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.16 2006-04-04 14:25:56 ebos Exp $
+// $Id: DeSTDetector.h,v 1.17 2006-04-19 07:41:37 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -9,6 +9,8 @@
 #include "Kernel/LHCbID.h"
 
 #include "DetDesc/DetectorElement.h"
+
+#include "GaudiKernel/VectorMap.h"
 
 /** @class DeSTDetector DeSTDetector.h "STDet/DeSTDetector.h"
  *
@@ -127,7 +129,7 @@ public:
   * @param channel 
   * @return sector 
   */
-  virtual DeSTSector* findSector(const LHCb::STChannelID aChannel) = 0; 
+  DeSTSector* findSector(const LHCb::STChannelID aChannel); 
 
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
@@ -167,7 +169,11 @@ protected:
 
   Layers m_layers;
 
+  typedef GaudiUtils::VectorMap<unsigned int,DeSTSector*> SectorMap;
+  SectorMap m_sMap;
+
 private:
+
 
   unsigned int m_firstStation;
   unsigned int m_nStrip;
@@ -245,6 +251,11 @@ inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
     ++iter;
   } // iter
   return (iter != m_sectors.end() ? (*iter)->isStrip(aChannel.strip()) :false);
+}
+
+inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel){
+ SectorMap::iterator iter = m_sMap.find(aChannel.uniqueSector());
+ return (iter != m_sMap.end() ? iter->second : 0);
 }
 
 #endif // _DeSTDetector_H

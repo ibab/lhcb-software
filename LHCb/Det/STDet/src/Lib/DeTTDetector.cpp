@@ -45,7 +45,11 @@ StatusCode DeTTDetector::initialize() {
     // make a flat list of sectors
     flatten();
     if (!m_sectors.empty()) {
-     setNstrip(m_sectors.front()->nStrip()* m_sectors.size());
+      setNstrip(m_sectors.front()->nStrip()* m_sectors.size());
+      m_sMap.reserve(m_sectors.size());
+      for (Sectors::const_iterator iter = m_sectors.begin(); iter != m_sectors.end(); ++iter){
+         m_sMap.insert((*iter)->elementID().uniqueSector(),*iter);
+      } // iter
     }
   }
   return sc;
@@ -69,6 +73,7 @@ DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
   return aSector;
 }
 
+/*
 DeSTSector* DeTTDetector::findSector(const STChannelID aChannel){
 
   DeSTSector* aSector = 0;
@@ -85,6 +90,7 @@ DeSTSector* DeTTDetector::findSector(const STChannelID aChannel){
   }   // station
   return aSector;
 }
+*/
 
 void DeTTDetector::flatten(){
 

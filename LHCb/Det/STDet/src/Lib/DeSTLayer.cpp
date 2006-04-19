@@ -1,6 +1,9 @@
 
 #include "STDet/DeSTLayer.h"
+#include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/SolidBox.h"
 
+#include "Kernel/PhysicalConstants.h"
 
 /** @file DeSTLayer.cpp
 *
@@ -36,7 +39,10 @@ StatusCode DeSTLayer::initialize() {
     m_angle = param<double>("stereoangle");
     m_cosAngle = cos(m_angle);
     m_sinAngle = sin(m_angle);
+    cachePlane();
   }
+
+  cachePlane();
 
   return StatusCode::SUCCESS;
 }
@@ -60,3 +66,14 @@ MsgStream& DeSTLayer::printOut( MsgStream& os ) const{
 
   return os;
 }
+
+void DeSTLayer::cachePlane(){
+
+ Gaudi::XYZPoint p1 = globalPoint(0,0,0);
+ Gaudi::XYZPoint p2 = globalPoint(3*m,0,0);
+ Gaudi::XYZPoint p3 = globalPoint(0,3*cm,0);
+
+ m_plane = Gaudi::Plane3D(p1,p2,p3);
+
+}
+

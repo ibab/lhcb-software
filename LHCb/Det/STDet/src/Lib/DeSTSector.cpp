@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.19 2006-04-10 10:27:33 jvantilb Exp $
+// $Id: DeSTSector.cpp,v 1.20 2006-04-19 07:41:37 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -24,9 +24,8 @@ using namespace LHCb;
 
 DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
-  m_firstStrip(1), 
-  m_lowerTraj(0),
-  m_upperTraj(0),
+  m_firstStrip(1),
+  m_midTraj(0),
   m_xInverted(false),
   m_yInverted(false)
 { 
@@ -40,8 +39,7 @@ DeSTSector::~DeSTSector() {
 
 void DeSTSector::clear() {
   
-  if (m_lowerTraj !=0 ) delete m_lowerTraj;
-  if (m_upperTraj !=0 ) delete m_upperTraj;
+  if (m_midTraj !=0 ) delete m_midTraj;
 }
 
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
@@ -132,7 +130,7 @@ StatusCode DeSTSector::initialize() {
     determineSense();
 
     // cache trajectories
-    cacheTrajectory();    
+    cacheInfo();    
     
   }
 
@@ -230,11 +228,12 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
 
   if (contains(aChan) == true){
     double arclen = (offset + aChan.strip() - m_firstStrip)*m_pitch ;
-    Gaudi::XYZPoint begPoint = m_lowerTraj->position( arclen + 
-                                                    m_lowerTraj->beginRange());
-    Gaudi::XYZPoint endPoint = m_upperTraj->position( arclen +
-                                                    m_upperTraj->beginRange());
-    traj = new LineTraj(begPoint,endPoint);
+  
+    Gaudi::XYZPoint midPoint = m_midTraj->position( arclen + 
+                                                    m_midTraj->beginRange());
+  
+    traj = new LineTraj(midPoint,m_direction,m_range);
+
   } 
   else {
     MsgStream msg(msgSvc(), name() );
@@ -243,29 +242,24 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
     throw GaudiException( "Failed to make trajectory",
                            "DeSTSector.cpp", StatusCode::FAILURE );
   }
-  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
 
-  return autoTraj;
+  return std::auto_ptr<LHCb::Trajectory>(traj);
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const 
 {
   LineTraj* traj = 0;
-  Gaudi::XYZPoint begPoint = m_lowerTraj->position(m_lowerTraj->beginRange());
-  Gaudi::XYZPoint endPoint = m_upperTraj->position(m_lowerTraj->beginRange());
-  traj = new LineTraj(begPoint,endPoint);
-  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
-  return autoTraj;
+  Gaudi::XYZPoint begPoint = m_midTraj->position(m_midTraj->beginRange());
+  traj = new LineTraj(begPoint,m_direction,m_range);
+  return std::auto_ptr<LHCb::Trajectory>(traj);
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const 
 {
   LineTraj* traj = 0;  
-  Gaudi::XYZPoint begPoint = m_lowerTraj->position( m_lowerTraj->endRange() );
-  Gaudi::XYZPoint endPoint = m_upperTraj->position( m_lowerTraj->endRange() );
-  traj = new LineTraj(begPoint,endPoint);
-  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
-  return autoTraj;  
+   Gaudi::XYZPoint endPoint = m_midTraj->position( m_midTraj->endRange() );
+  traj = new LineTraj(endPoint,m_direction,m_range);
+  return std::auto_ptr<LHCb::Trajectory>(traj);
 }
 
 void DeSTSector::determineSense()
@@ -280,7 +274,7 @@ void DeSTSector::determineSense()
   if (g1.y() > g3.y()) {m_yInverted = true;}
 }
 
-void DeSTSector::cacheTrajectory()
+void DeSTSector::cacheInfo()
 {
   clear();
 
@@ -292,14 +286,23 @@ void DeSTSector::cacheTrajectory()
   double xLower =  m_uMinLocal + 0.5*m_pitch;
   if ( m_xInverted ) std::swap(xUpper,xLower);
 
-  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
-  Gaudi::XYZPoint g2 = globalPoint(xUpper, yLower, 0.);
-  m_lowerTraj = new LineTraj(g1,g2);
 
-  Gaudi::XYZPoint g3 = globalPoint(xLower, yUpper, 0.);
-  Gaudi::XYZPoint g4 = globalPoint(xUpper, yUpper, 0.);
-  m_upperTraj = new LineTraj(g3,g4);
-   
+  // direction
+  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
+  Gaudi::XYZPoint g2 = globalPoint(xLower, yUpper, 0.);
+  m_direction = g2 - g1;
+
+  // trajectory of middle  
+  Gaudi::XYZPoint g3 = globalPoint(xLower, 0., 0.);
+  Gaudi::XYZPoint g4 = globalPoint(xUpper, 0., 0.);
+  m_midTraj = new LineTraj(g3,g4);
+
+  // range ---> strip Length
+  m_range = std::make_pair(-0.5*m_stripLength,0.5*m_stripLength);
+
+  // plane
+  m_plane =  Gaudi::Plane3D(g1,g2,g4);
+
 }
 
 STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
@@ -333,10 +336,3 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
 }
 
 
-Gaudi::XYZPoint DeSTSector::globalPoint( const double x, const double y, 
-                                         const double z) const
-{
-  Gaudi::XYZPoint lPoint(x,y,z);
-  Gaudi::XYZPoint gPoint = toGlobal(lPoint);
-  return gPoint;
-}

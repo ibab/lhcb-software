@@ -12,6 +12,11 @@
 *    @author Matthew Needham
 */
 
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+using namespace boost::lambda;
+
 using namespace LHCb;
 
 DeITDetector::DeITDetector( const std::string& name ) :
@@ -40,6 +45,10 @@ StatusCode DeITDetector::initialize() {
   else {
     flatten();
     setNstrip(m_sectors.front()->nStrip()*m_sectors.size());
+    m_sMap.reserve(m_sectors.size());
+    for (Sectors::const_iterator iter = m_sectors.begin(); iter != m_sectors.end(); ++iter){
+      m_sMap.insert((*iter)->elementID().uniqueSector(),*iter);
+    } // iter
   }
   return sc;
   
@@ -65,8 +74,9 @@ DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
   return aSector;
 }
 
-DeSTSector* DeITDetector::findSector(const STChannelID aChannel){
+//DeSTSector* DeITDetector::findSector(const STChannelID aChannel){
 
+  /*
   DeSTSector* aSector = 0;
   DeSTStation* tStation = findStation(aChannel);
   if (0 != tStation){
@@ -79,8 +89,16 @@ DeSTSector* DeITDetector::findSector(const STChannelID aChannel){
       } // module   
     } // layer
   }   // station
-  return aSector;
-}
+
+  */
+  // return pointer to the station from channel
+  //  Sectors::iterator iter = std::lower_bound(m_sectors.begin() , m_sectors.end(),bind(&DeSTSector::contains, _1, aChannel));
+  //  return (iter != m_sectors.end() ? *iter: 0);
+  //return aSector;
+//  SectorMap::iterator iter = m_sMap.find(aChannel.uniqueSector());
+//  return (iter != m_sMap.end() ? iter->second : 0);
+
+//}
 
 void DeITDetector::flatten(){
 

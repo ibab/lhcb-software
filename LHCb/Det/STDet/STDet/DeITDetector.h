@@ -1,8 +1,9 @@
-// $Id: DeITDetector.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeITDetector.h,v 1.2 2006-04-19 07:41:36 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
 #include "STDet/DeSTDetector.h"
+#include "GaudiKernel/VectorMap.h"
 
 static const CLID& CLID_DeITDetector = 9201;
 
@@ -52,12 +53,15 @@ public:
   * @param channel 
   * @return sector 
   */
-  virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
+  // virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
 
 private:
 
   /** make flat list of lowest descendents  and also layers*/
   void flatten();
+
+  //  typedef GaudiUtils::VectorMap<unsigned int,DeSTSector*> SectorMap;
+  //SectorMap m_sMap;
 
 };
 
