@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.4 2006-04-19 13:10:31 jvantilb Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -46,4 +46,6 @@ void TrackFastParabolicExtrapolator::updateTransportMatrix( const double dz,
   m_F(0,4) = 0.5 * m_ax * eplus * c_light * dz * dz;
   m_F(1,3) = dz;
   m_F(2,4) = m_ax * eplus * c_light * dz;
+
+  return;
 }

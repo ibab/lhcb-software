@@ -113,7 +113,8 @@ inline void TrackMasterExtrapolator::updateTransportMatrix
 ( const TransportMatrix& newStepF )
 {
   // update F - after transport step
-  m_F = newStepF * m_F;
+  TransportMatrix tempF( m_F );
+  m_F = newStepF * tempF;
 }
 
 inline void 

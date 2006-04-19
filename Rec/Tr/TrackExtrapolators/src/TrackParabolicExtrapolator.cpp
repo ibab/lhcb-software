@@ -99,6 +99,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
                   tState[2] + m_ax*tState[4]*eplus*c_light*dz,
                   tState[3] + m_ay*tState[4]*eplus*c_light*dz,
                   tState[4] );
+
   state.setCovariance( ROOT::Math::Similarity<double,5,5>
                        ( m_F, state.covariance() ) );
 
@@ -117,7 +118,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   // Check whether not already at reference point
   XYZPoint P     = state.position();
   XYZVector diff = point - P;
-  if ( diff.R() < TrackParameters::hiTolerance ) { return StatusCode::SUCCESS; }
+  if ( diff.R() < TrackParameters::hiTolerance ) { return StatusCode::SUCCESS;}
   
   // The distance between the reference point and a point on the parabola
   // can be minimized by taking the derivative wrt Z and equal that to zero.
@@ -182,10 +183,12 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   double norm = sqrt(1.+gsl_pow_2(Tx)+gsl_pow_2(Ty));
   
   //calculate derivatives of Ax, Ay
-  double dAx_dTx = (Tx*m_ax/gsl_pow_2(norm)) + norm*(Ty*m_B.x()-(2.*Tx*m_B.y())); 
+  double dAx_dTx = (Tx*m_ax/gsl_pow_2(norm)) + 
+    norm*(Ty*m_B.x()-(2.*Tx*m_B.y())); 
   double dAx_dTy = (Ty*m_ax/gsl_pow_2(norm)) + norm*(Tx*m_B.x()+m_B.z());
   double dAy_dTx = (Tx*m_ay/gsl_pow_2(norm)) + norm*(-Ty*m_B.y()-m_B.z());
-  double dAy_dTy = (Ty*m_ay/gsl_pow_2(norm)) + norm*(-Tx*m_B.y()+(2.*Ty*m_B.x()));
+  double dAy_dTy = (Ty*m_ay/gsl_pow_2(norm)) + 
+    norm*(-Tx*m_B.y()+(2.*Ty*m_B.x()));
   
   // fill transport matrix 
   m_F(0,2) = dz + 0.5*dAx_dTx*state.qOverP() * eplus*c_light*gsl_pow_2(dz);
@@ -203,7 +206,8 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   m_F(3,2) = dAy_dTx*state.qOverP()*eplus*c_light*dz;
   m_F(3,3) = 1.0 + dAy_dTy*state.qOverP()*eplus*c_light*dz;
   m_F(3,4) = m_ay*eplus*c_light*dz;
-  
+
+  return;
 };
 
 //=============================================================================
