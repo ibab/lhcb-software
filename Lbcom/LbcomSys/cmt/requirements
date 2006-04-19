@@ -26,9 +26,9 @@ use RichMCTools       v3r0  Rich        # Chris Jones
 # Silicon Tracker
 use STDAQ             v2r5  ST          # Matt Needham
 use STTools           v2r1  ST          # Matt Needham
-use STAlgorithms      v1r1  ST          # Matt Needham
+use STAlgorithms      v1r2  ST          # Matt Needham
 use STAssociators     v1r2  ST          # Matt Needham
-use STCheckers        v1r1  ST          # Matt Needham
+use STCheckers        v1r2  ST          # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r1  Calo        # Olivier Deschamps
