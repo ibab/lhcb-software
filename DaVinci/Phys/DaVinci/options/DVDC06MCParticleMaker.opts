@@ -1,0 +1,100 @@
+/** @file 
+ * 
+ *  Test file for DC06 software using a SIM file
+ *  
+ *  @author P. Koppenburg
+ *  @date 2006-03-08
+ */
+
+// Everything that works can go in there
+#include "$DAVINCIROOT/options/DaVinci.opts"
+//////////////////////******************************* Stefania ADDED to run preliminary MCParticleMaker on tracks
+// Make some Particles from MCParticles
+ApplicationMgr.DLLs   += { "SimComponents" };
+ApplicationMgr.TopAlg += { 
+  "PreLoadParticles/PreLoadMCParticles"
+};
+
+PreLoadMCParticles.PhysDesktop.ParticleMakerType = "MCParticleMaker";
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.ParticleNames = { "mu+", "mu-","pi+","pi-","K+","K-" };  //list of particles to create
+//PreLoadMCParticles.PhysDesktop.MCParticleMaker.MCDecayFinder.Decay = "J/psi(1S) -> mu+ mu-";  //uncomment is specific channel is needed
+//PreLoadMCParticles.PhysDesktop.MCParticleMaker.OnlyDecayProducts = true;                      //.....like above.....
+//PreLoadMCParticles.PhysDesktop.MCParticleMaker.OnlyStableDecayProducts = true;                //.....like above
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.UseReconstructedCovariance = false;
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.SmearParticle = true;
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.SmearATPoT = false; //True se si vuole fare lo smearing al PoT
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.IpErrorC0 = 0.014; //Gerard
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.IpErrorC1 = 0.035;   //mm=1
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.IpErrorZ = 0.001;   //mm=1
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.SlopeError = 0.0004;  //mrad=0.001
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.MomError = 0.004;
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.rhoxtx = 0.;
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.rhoyty = 0.;
+/////////////////////////////////////////////////////  end of Stefania's modifications
+ApplicationMgr.TopAlg += { "MakeResonances/MakeJpsi" };
+
+//
+// Make loose J/psi
+//
+MakeJpsi.PhysDesktop.InputLocations = {"Phys/PreLoadMCParticles"};
+MakeJpsi.DecayDescriptor = "J/psi(1S) -> l+ l-";
+MakeJpsi.DecayDescriptors = {"J/psi(1S) -> mu+ mu-" , "J/psi(1S) -> e+ e-"}; // actually make both
+MakeJpsi.DaughterFilter.Selections = { "mu+ : KinFilterCriterion",
+                                       "e+ : KinFilterCriterion"};
+MakeJpsi.DaughterFilter.KinFilterCriterion.MinPt   = 1000 * MeV; //MeV //
+MakeJpsi.LowerWindow = 500.* MeV ; //MeV //
+MakeJpsi.UpperWindow = 300.* MeV ; //MeV //
+MakeJpsi.MotherFilter.Selections = { "J/psi(1S) : VtxFilterCriterion" };
+MakeJpsi.MotherFilter.VtxFilterCriterion.MaxChi2  =  9 ;
+
+//
+// Now filter them hard
+//
+ApplicationMgr.TopAlg += { "FilterDesktop/FilterJpsi" };
+FilterJpsi.PhysDesktop.InputLocations = { "Phys/MakeJpsi" };
+FilterJpsi.Filter.Selections = {"J/psi(1S) : MassFilterCriterion,
+                                                   FlightDistanceFilterCriterion,
+                                                   PVIPFilterCriterion/PsiPVIP,
+                                                   VtxFilterCriterion",
+                                      "mu+ : KinFilterCriterion/LKin,
+                                             PVIPFilterCriterion/LPVIP",
+				      "e+ : KinFilterCriterion/LKin,
+                                             PVIPFilterCriterion/LPVIP"};
+// Cuts for mu
+FilterJpsi.Filter.FilterByDescendents = true;
+FilterJpsi.Filter.LKin.MinPt = 500.0 * MeV; // hlt tuned: 500 MeV, hlt presel: -
+FilterJpsi.Filter.LPVIP.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: -
+                                                                                                                                                                      
+// Cuts for mother
+FilterJpsi.Filter.MassFilterCriterion.Window = 120.0 * MeV; // hlt tuned: 120 MeV, hlt presel: -, offline is 50 MeV
+FilterJpsi.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt tuned: 2, hlt presel: -
+FilterJpsi.Filter.FlightDistanceFilterCriterion.MinFPV = 2.5 * mm; // hlt tuned: 2.5 mm, hlt presel: -
+FilterJpsi.Filter.PsiPVIP.MinIPsignif = 3.0; // hlt tuned: 3, hlt presel: -
+FilterJpsi.Filter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt tuned: 25, hlt presel: -, offline is 9
+FilterJpsi.HistoProduce = true ;
+FilterJpsi.InputPlots.Variables =  { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
+FilterJpsi.OutputPlots.Variables = { "WM", "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
+FilterJpsi.InputPlotsPath  = "B2JpsiIn" ;
+FilterJpsi.OutputPlotsPath = "B2JpsiOut";
+MakeJpsi.OutputLevel   = 3 ;
+FilterJpsi.OutputLevel = 3 ;
+FilterJpsi.InputPlots.Minima = { 1, 2, 3, 4, 5e-304, 6.789e-303 };
+FilterJpsi.InputPlots.Maxima = { 1, 2, 3, 4, 5, 6 };
+
+// Track extrapolators are not there yet
+ToolSvc.ParticleStuffer.ParticleTransporter.TrackExtrapolator = "" ;
+ToolSvc.ParticleStuffer.ParticleTransporter.NeutralExtrapolator = "" ;
+ToolSvc.ParticleStuffer.ParticleTransporter.ChargedCompositeExtrapolator = "" ;
+
+PreLoadMCParticles.OutputLevel = 1 ;  // first DVAlgorithm
+
+ApplicationMgr.EvtMax  = 100;
+
+//--
+EventSelector.Input   = {
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r3/11144100.100ev.05Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+//"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r1/30000000.10ev.MCHit.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+//-- End of Data cards
+EventSelector.OutputLevel = 2 ;
+PreLoadParticles.OutputLevel = 1 ;
