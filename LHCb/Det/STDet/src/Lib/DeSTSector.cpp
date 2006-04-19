@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.20 2006-04-19 07:41:37 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.21 2006-04-19 08:13:56 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"

@@ -40,3 +40,11 @@ StatusCode DeSTBaseElement::initialize() {
 }
 
 
+Gaudi::XYZPoint DeSTBaseElement::globalPoint( const double x, const double y, 
+                                         const double z) const
+{
+  Gaudi::XYZPoint lPoint(x,y,z);
+  Gaudi::XYZPoint gPoint = toGlobal(lPoint);
+  return gPoint;
+}
+
