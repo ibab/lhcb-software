@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkReceiveAlg.cpp,v 1.2 2006-04-18 08:11:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFNetworkReceiveAlg.cpp,v 1.3 2006-04-19 06:31:25 frankb Exp $
 //	====================================================================
 //  MDFNetworkReceiveAlg.cpp
 //	--------------------------------------------------------------------
@@ -34,7 +34,9 @@ namespace LHCb  {
   public:
     /// Standard algorithm constructor
     MDFNetworkReceiveAlg(const std::string& name, ISvcLocator* pSvcLocator)
-    :	Algorithm(name, pSvcLocator), m_prod(0)  {
+    :	Algorithm(name, pSvcLocator), m_prod(0)  
+    {
+      m_procName = RTL::processName();
       declareProperty("Buffer",      m_buffer = "EVENT");
       declareProperty("ProcessName", m_procName);
       declareProperty("PartitionID", m_partitionID = 0x103);
@@ -93,11 +95,6 @@ namespace LHCb  {
         log << MSG::ERROR << "amsuc_subscribe(WT_FACILITY_DAQ_EVENT) Failed status:" 
             << sc << ". " << endmsg;
         return StatusCode::FAILURE;
-      }
-      if ( m_procName.empty() )  {
-        char txt[64];
-        ::lib_rtl_get_process_name(txt, sizeof(txt));
-        m_procName = txt;
       }
       m_prod = new Producer(m_buffer,m_procName,m_partitionID);
       return StatusCode::SUCCESS;

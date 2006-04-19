@@ -1,7 +1,12 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.ExtSvc                = { "LHCb::AMSService/AMS" };
+ApplicationMgr.ExtSvc               += { "IncidentSvc" };
+// ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager" };
 ApplicationMgr.Runable               = "LHCb::OnlineRunable";
 ApplicationMgr.DLLs                  = { "GaudiOnline"};
 ApplicationMgr.TopAlg                = { "LHCb::MDFNetworkReceiveAlg/Receiver" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "EVENT" };
 Receiver.Buffer                      = "EVENT";
-Receiver.PartitionID                 = 259;
+Receiver.PartitionID                 = 333;
