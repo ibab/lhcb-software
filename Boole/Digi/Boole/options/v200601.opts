@@ -39,22 +39,22 @@ PoolDbCacheSvc.Catalog = {
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
 
-// Input files below identical to http://lbnts3.cern.ch:8100/Select?jobid=5056230
+// Input files below identical to http://lbnts3.cern.ch:8100/Select?jobid=5067967
 
 //---------------------------------------------------------------------------
 // Spillover 
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_2.sim' TYP='POOL_ROOTTREE' OPT='READ'"
- ,"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // Minimum bias events with Gauss v24r3, XmlDDDB v30r3
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_2.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+ ,"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // Minimum bias events with Gauss v24r4, XmlDDDB v30r4
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // B->J/Psi(mumu)Ks events with Gauss v24r3, XmlDDDB v30r3
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // B->J/Psi(mumu)Ks events with Gauss v24r4, XmlDDDB v30r4
 
 //---------------------------------------------------------------------------
 // Output file
