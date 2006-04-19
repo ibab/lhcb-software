@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.1 2006-03-15 12:51:25 odescham Exp $ 
+// $Id: CaloZSupAlg.h,v 1.2 2006-04-19 16:37:46 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -41,10 +41,16 @@ protected:
 private:   
   std::string m_detectorName;       ///< Detector element name
   std::string m_inputToolName;
-  std::string m_outputData;         ///< Output container
+  std::string m_outputADCData;         ///< Output container for CaloAdc
+  std::string m_outputDigitData;       ///< Output container for CaloDigit
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
+  bool m_adcOnTES;
+  bool m_digitOnTES;
+  double m_pedShift;
+  std::string m_outputType;
+  
 
   DeCalorimeter*         m_calo;    ///< Detector element pointer
   ICaloEnergyFromRaw*    m_adcTool; ///< acces to adcs in Raw buffer

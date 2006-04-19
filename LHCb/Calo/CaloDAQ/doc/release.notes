@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== CaloDAQ v2r1 2006-03-15 ==========================
+! 2006-04-19 - Olivier Deschamps
+ - modification of CaloZsupAlg (option driven output : CaloDigits and/or CaloADCs)
+ - new algorithm : src/CaloTriggerAdcsFromRawAlg
+
+ 
 ! 2006-03-15 - Olivier Deschamps
  - CaloZSupAlg.{cpp,h} algorithm added (moved from CaloDigit)
  
