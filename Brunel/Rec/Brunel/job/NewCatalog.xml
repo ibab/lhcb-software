@@ -3,30 +3,30 @@
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
 
-  <File ID="8EC48746-CECA-DA11-8E49-003048836649">
+  <File ID="1688359D-ABCF-DA11-BFDD-003048836649">
     <physical>
-      <pfn filetype="ROOT_All" name="/afs/cern.ch/user/c/cattanem/w0/TESTS/BOOLE_v11r3/0601-11144100.digi"/>
+      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/user/c/cattanem/Boole/v11r3/0601-11144100.digi"/>
     </physical>
     <logical/>
   </File>
 
-  <File ID="98503D71-D4C6-DA11-A98B-001125756C56">
+  <File ID="00F45A3E-25CB-DA11-A600-0011D877C648">
     <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_1.sim"/>
+      <pfn filetype="ROOT_All" name="/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_1.sim"/>
     </physical>
     <logical/>
   </File>
 
-  <File ID="9CB00586-06C7-DA11-8511-001125756C56">
+  <File ID="5C221E4E-7CCB-DA11-8D32-0011D877C648">
     <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_2.sim"/>
+      <pfn filetype="ROOT_All" name="/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_2.sim"/>
     </physical>
     <logical/>
   </File>
 
-  <File ID="F2DB0BA0-19C7-DA11-B9C3-001125756C56">
+  <File ID="8473CEB6-9ECB-DA11-B122-0011D877C648">
     <physical>
-      <pfn filetype="ROOT_All" name="rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001274/SIM/00001274_00000003_3.sim"/>
+      <pfn filetype="ROOT_All" name="/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001284/SIM/00001284_00000001_3.sim"/>
     </physical>
     <logical/>
   </File>
