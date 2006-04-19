@@ -75,7 +75,7 @@ use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use LinkerInstances       v3r0   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond              v7r10p1 Det     # Marco Clemencic
 use CondDBEntityResolver  v1r1   Tools   # Marco Clemencic
-use LoKiCore              v1r1   Phys    # Ivan Belyaev
+use LoKiCore              v1r2   Phys    # Ivan Belyaev
 use LoKiGen               v1r1   Phys    # Ivan Belyaev
 use SimComponents         v1r1p1 Sim     # Gloria Corti
 
