@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v1r2 2006-04-19 ========================
 ! 2006-04-19 M. Needham
  - Connect MCHit to geometry using sensDetID
 
