@@ -1,7 +1,0 @@
-
-dest          = ..\$(tag)\dict\$(package)\
-
-${CONSTITUENT}_output = $(dest)
-
-${CONSTITUENT} :: $(dest)$(package).customdict
-	@echo "-----> ${CONSTITUENT} ok"

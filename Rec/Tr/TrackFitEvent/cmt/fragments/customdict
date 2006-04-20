@@ -1,5 +1,0 @@
-$(dest)$(package).customdict :  ${FULLNAME}
-	@echo Producing custom dictionary file from ${FULLNAME}
-	@if !(test -d $(dest)); then mkdir -p $(dest); fi 
-	cp $(FULLNAME) $(dest)$(package)_dictionary.h; cp ../xml/lcgdict/lcg_selection.xml $(dest)$(package)_selection.xml;
-	@echo /dev/null > $@
