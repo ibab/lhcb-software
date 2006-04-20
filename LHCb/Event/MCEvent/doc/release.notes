@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.37 2006-04-20 07:32:38 cattanem Exp $
+! $Id: release.notes,v 1.38 2006-04-20 13:40:41 ranjard Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
+
+
+! 2006-04-20 - Florence RANJARD
+ - requirements - add Kernel in branches
 
 !========================== MCEvent v1r2p1 2006-04-20 ========================
 ! 2006-04-20 - Marco Cattaneo

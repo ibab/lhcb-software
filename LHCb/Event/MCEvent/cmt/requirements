@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2006-04-20 07:32:38 cattanem Exp $
+# $Id: requirements,v 1.9 2006-04-20 13:40:41 ranjard Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -7,7 +7,7 @@ version           v1r2p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src xml Event
+branches          cmt doc src xml Event Kernel
 
 # Include directories
 #============================================================================
