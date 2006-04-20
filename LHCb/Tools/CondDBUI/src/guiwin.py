@@ -66,7 +66,7 @@ class myWindow(qt.QMainWindow):
             menuSU.setItemEnabled(menuSU.idAt(i), enableSuperUser)
 
         menuHelp = qt.QPopupMenu(self, 'menuHelp')
-        menuHelp.insertItem("&About", self.aboutCoolUI)
+        menuHelp.insertItem("&About", self.aboutconddbui)
 
         self.menuBar = qt.QMenuBar(self)
         self.menuBar.insertItem("&DataBase", menuDB)
@@ -178,7 +178,7 @@ class myWindow(qt.QMainWindow):
             self.dbTree.setSelected(treeElem, True)
             self.dbTree.ensureItemVisible(treeElem)
         else:
-            errorMsg = qt.QMessageBox('coolui.py',\
+            errorMsg = qt.QMessageBox('conddbui.py',\
                                       '%s\nUnknown path'%self.editLocation.text().ascii(),\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
@@ -211,7 +211,7 @@ class myWindow(qt.QMainWindow):
             self.unsetCursor()
         else:
             self.unsetCursor()
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                       "Impossible to write data:\n%s"%data_written,
                                       qt.QMessageBox.Critical,
                                       qt.QMessageBox.Ok,
@@ -250,7 +250,7 @@ class myWindow(qt.QMainWindow):
                 messageBoxText  = 'This Schema already exist.\n'
                 messageBoxText += 'If you REALLY want to override it, please delete the file\n'
                 messageBoxText += str(self.dialogConnectDB.editSchema.text())
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                         messageBoxText,
                                         qt.QMessageBox.Warning,
                                         qt.QMessageBox.Ok,
@@ -268,7 +268,7 @@ class myWindow(qt.QMainWindow):
                     self.editLocation.setEnabled(True)
                     self.buttonGo.setEnabled(True)
                 else:
-                    errorMsg = qt.QMessageBox('coolui.py',
+                    errorMsg = qt.QMessageBox('conddbui.py',
                                             'Unable to open the Database',
                                             qt.QMessageBox.Critical,
                                             qt.QMessageBox.Ok,
@@ -293,7 +293,7 @@ class myWindow(qt.QMainWindow):
         '''
         self.dialogCreateFolder.reset()
         if self.bridge is None:
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                        "No Database loaded\nPlease open a DB before trying to add something in it",
                                        qt.QMessageBox.Warning,
                                        qt.QMessageBox.Ok,
@@ -309,7 +309,7 @@ class myWindow(qt.QMainWindow):
                                                       self.dialogCreateFolder.is_singleVersion,
                                                       self.dialogCreateFolder.createParents)
             if folder_created <> True:
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                           "Impossible to create the folder:\n%s"%folder_created,
                                           qt.QMessageBox.Critical,
                                           qt.QMessageBox.Ok,
@@ -325,7 +325,7 @@ class myWindow(qt.QMainWindow):
         Create a new tag
         '''
         if self.bridge is None:
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                        "No Database loaded\nPlease open a DB before trying to tag something in it",
                                        qt.QMessageBox.Warning,
                                        qt.QMessageBox.Ok,
@@ -347,7 +347,7 @@ class myWindow(qt.QMainWindow):
             tag_created = self.bridge.createTag(tagName, folderName, isGlobal)
             if tag_created <> True:
                 self.unsetCursor()
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                           "Impossible to create the tag:\n%s"%tag_created,
                                           qt.QMessageBox.Critical,
                                           qt.QMessageBox.Ok,
@@ -378,7 +378,7 @@ class myWindow(qt.QMainWindow):
         '''
         self.dialogAddCondition.reset()
         if self.bridge is None:
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                        "No Database loaded\nPlease open a DB before trying to add something in it",
                                        qt.QMessageBox.Warning,
                                        qt.QMessageBox.Ok,
@@ -400,7 +400,7 @@ class myWindow(qt.QMainWindow):
                 self.dialogAddCondition.setDefaultChannelID(item.ID)
                 self.dialogAddCondition.setFolderName(item.parent().fullName)
             else:
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                           "No COOL folder selected\nInsertion in the CondDB can only be done in existing COOL folder",
                                           qt.QMessageBox.Warning,
                                           qt.QMessageBox.Ok,
@@ -422,7 +422,7 @@ class myWindow(qt.QMainWindow):
         ##
         self.dialogDeleteFolder.reset()
         if self.bridge is None:
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                        "No Database loaded\nPlease open a DB before trying to remove something from it",
                                        qt.QMessageBox.Warning,
                                        qt.QMessageBox.Ok,
@@ -434,7 +434,7 @@ class myWindow(qt.QMainWindow):
         if self.dialogDeleteFolder.exec_loop():
             folder_deleted = self.bridge.deleteFolder(self.dialogDeleteFolder.folderName)
             if folder_deleted <> True:
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                           "Impossible to remove the folder:\n%s"%folder_deleted,
                                           qt.QMessageBox.Critical,
                                           qt.QMessageBox.Ok,
@@ -452,7 +452,7 @@ class myWindow(qt.QMainWindow):
         change the content of the DB.
         '''
         if self.bridge is None:
-            errorMsg = qt.QMessageBox('coolui.py',
+            errorMsg = qt.QMessageBox('conddbui.py',
                                        "No Database loaded\nPlease open a DB before trying to tag something in it",
                                        qt.QMessageBox.Warning,
                                        qt.QMessageBox.Ok,
@@ -474,7 +474,7 @@ class myWindow(qt.QMainWindow):
             tag_deleted = self.bridge.deleteTag(tagName, folderName, self.dialogDeleteTag.checkBoxGlobal.isChecked())
             if tag_deleted <> True:
                 self.unsetCursor()
-                errorMsg = qt.QMessageBox('coolui.py',
+                errorMsg = qt.QMessageBox('conddbui.py',
                                           "Impossible to delete the tag:\n%s"%tag_deleted,
                                           qt.QMessageBox.Critical,
                                           qt.QMessageBox.Ok,
@@ -504,15 +504,15 @@ class myWindow(qt.QMainWindow):
     #-----------------------#
 
     #--- Menu Help ---#
-    def aboutCoolUI(self):
+    def aboutconddbui(self):
         message = '''
-        COOLUI %s
+        conddbui %s
 
         User Interface for browsing and editing a COOL Condition Database
         (with some LHCb bias ;-) )
 
         Nicolas Gilardi, %s'''%(versionNumber, versionDate)
-        aboutMsg = qt.QMessageBox('coolui.py', message, qt.QMessageBox.Information,
+        aboutMsg = qt.QMessageBox('conddbui.py', message, qt.QMessageBox.Information,
                                   qt.QMessageBox.Ok, qt.QMessageBox.NoButton, qt.QMessageBox.NoButton)
         aboutMsg.exec_loop()
         return

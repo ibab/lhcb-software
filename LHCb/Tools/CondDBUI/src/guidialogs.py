@@ -220,7 +220,7 @@ class createLHCbCondDialog(qt.QDialog):
         '''
         conditionName = str(self.editCondName.text())
         if conditionName == '':
-            errorMsg = qt.QMessageBox('coolui.py',\
+            errorMsg = qt.QMessageBox('conddbui.py',\
                                       "The condition's name is empty.\nPlease give a name to this condition",\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
@@ -232,7 +232,7 @@ class createLHCbCondDialog(qt.QDialog):
         try:
             classID = int(str(self.editClassID.text()))
         except:
-            errorMsg = qt.QMessageBox('coolui.py',\
+            errorMsg = qt.QMessageBox('conddbui.py',\
                                       "The class ID value is not valid.\nPlease give a correct class ID",\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
@@ -248,7 +248,7 @@ class createLHCbCondDialog(qt.QDialog):
             paramValue = str(self.tableParams.item(i, 2).textMemory)
 
             if paramName == '':
-                errorMsg = qt.QMessageBox('coolui.py',\
+                errorMsg = qt.QMessageBox('conddbui.py',\
                                       "The parameter's name is empty.\nPlease give a name to this parameter",\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
@@ -880,7 +880,7 @@ class addConditionDialog(qt.QDialog):
             self.objectList.append(newObject)
             self._fillTable()
         else:
-            errorMsg = qt.QMessageBox('coolui.py',\
+            errorMsg = qt.QMessageBox('conddbui.py',\
                                       'At least one field is empty\nPlease give all the necessary information to create a new object.',\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
@@ -1092,7 +1092,7 @@ class condDBConnectDialog(qt.QDialog):
                 self.editDBName.setText(dbname)
                 self.choseBackend.emit(qt.SIGNAL("activated"),(backendIndex,))
             else:
-                errorMsg = qt.QMessageBox('coolui.py',\
+                errorMsg = qt.QMessageBox('conddbui.py',\
                                           '%s is not recognised as a supported Backend'%backend,\
                                           qt.QMessageBox.Warning,\
                                           qt.QMessageBox.Ok,\
