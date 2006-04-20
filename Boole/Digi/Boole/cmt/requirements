@@ -35,10 +35,10 @@ use KernelSys        v5r3    Kernel -no_auto_imports
 use DetSys           v8r3    Det    -no_auto_imports
 
 use EventBase        v1r1    Event  -no_auto_imports
-use MCEvent          v1r2    Event  -no_auto_imports
+use MCEvent          v1r2p1  Event  -no_auto_imports
 use DigiEvent        v1r1    Event  -no_auto_imports
 use RecEvent         v1r2    Event  -no_auto_imports  # used by L0MuonTrigger!
-use TrackEvent       v2r2    Event  -no_auto_imports  # used by RecEvent
+use TrackEvent       v2r3    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v15r1   Event  -no_auto_imports
 use DAQEvent         v6r3    Event  -no_auto_imports
 use GenEvent         v4r3    Event  -no_auto_imports
@@ -46,7 +46,7 @@ use PackedEvent      v2r0    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
 
 use HepMC         v1r126p0   Gen    -no_auto_imports
-use DAQSys           v2r2    DAQ    -no_auto_imports
+use DAQSys           v2r3    DAQ    -no_auto_imports
 use LHCbAlgs         v2r0    Kernel -no_auto_imports
 use SimComponents    v1r1p1  Sim    -no_auto_imports
 
