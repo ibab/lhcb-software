@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.14 2006-04-19 11:41:00 cattanem Exp $ 
+! $Id: release.notes,v 1.15 2006-04-20 18:09:26 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-04-20 - Vanya BELYAEV
+ - src/Components/LoKiCvc.cpp
+     add the boolean flag to instantiate ToolSvc and ParticlePropertySvc 
+     if not done yet.. 
+ - cmt/requirements 
+     version increment to v1r3 
+
 
 !=========================== LoKiCore v1r2 2006-04-19 =========================
 ! 2006-04-19 - Vanya BELYAEV
@@ -114,6 +122,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.14  2006/04/19 11:41:00  cattanem
+! v1r2
+!
 ! Revision 1.13  2006/04/19 08:14:10  ibelyaev
 !  fix a bug in Geometry + 'Const'
 !

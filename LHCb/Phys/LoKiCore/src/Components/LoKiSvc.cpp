@@ -1,8 +1,11 @@
-// $Id: LoKiSvc.cpp,v 1.2 2006-02-18 18:06:04 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.3 2006-04-20 18:09:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:06:04  ibelyaev
+//  fix a typo
+//
 // Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
 // New Import: the core part of restructurized LoKi project
 // 
@@ -82,11 +85,11 @@ public:
   {
     if ( 0 != m_ppSvc ) { return m_ppSvc ; }
     // locate the service 
-    StatusCode sc = service ( "ParticlePropertySvc" , m_ppSvc ) ;
+    StatusCode sc = service ( "ParticlePropertySvc" , m_ppSvc , true ) ;
     if       ( sc.isFailure() ) 
-    { LOKI_EXCEPTION( "LoKiSvc: 'PPSvc' could not be located" , sc ) ; }
+    { LOKI_EXCEPTION ( "LoKiSvc: 'PPSvc' could not be located" , sc ) ; }
     else if  ( 0 == m_ppSvc ) 
-    { LOKI_EXCEPTION( "LoKiSvc: IPPSvc* points to NULL"       , sc ) ; }
+    { LOKI_EXCEPTION ( "LoKiSvc: IPPSvc* points to NULL"       , sc ) ; }
     //
     return m_ppSvc ;
   } ;
@@ -100,7 +103,7 @@ public:
   {
     if ( 0 != m_toolSvc ) { return m_toolSvc ; }
     // locate the service 
-    StatusCode sc = service ( "ToolSvc" , m_toolSvc ) ;
+    StatusCode sc = service ( "ToolSvc" , m_toolSvc , true ) ;
     if       ( sc.isFailure() ) 
     { LOKI_EXCEPTION( "LoKiSvc: 'ToolSvc' could nto be located" , sc ) ; }
     else if  ( 0 == m_toolSvc ) 
@@ -160,7 +163,7 @@ public:
       if ( 0 == m_reporter ) 
       {
         IToolSvc* svc = toolSvc()   ;
-        if ( 0 == svc       ) { return StatusCode::FAILURE ; }
+        if ( 0 == svc        ) { return StatusCode::FAILURE ; }
         sc = svc -> retrieveTool ( m_reporterName , 
                                    m_reporter     , this ) ;
         if ( sc.isFailure()  ) { return StatusCode::FAILURE ; }
@@ -168,10 +171,9 @@ public:
       } ;
       report.setReporter ( m_reporter ) ;
     }
-    //
     return StatusCode::SUCCESS ;
   } ;
-  
+
   /** general service finalizetion 
    *  @see IService 
    *  @return status code
