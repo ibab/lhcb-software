@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.45 2006-04-19 16:33:20 odescham Exp $
+! $Id: release.notes,v 1.46 2006-04-20 07:09:07 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
@@ -8,8 +8,6 @@
  -  Complete migration to LHCb v20/Gaudi v18 :
     CaloUtils/Digit2ClustersConnector.h and CaloUtils/SharedCells.h updated
 
-
-!========================== CaloUtils v6r1 2006-04-10 =========================
 ! 2006-04-10 - Marco Cattaneo
  - Make Boost usage no_auto_imports (needed only in .cpp)
 
