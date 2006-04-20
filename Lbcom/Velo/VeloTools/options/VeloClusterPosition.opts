@@ -1,12 +1,12 @@
-ToolSvc.clusTool.PrintInfo=false;
+ToolSvc.VeloClusterTool.PrintInfo=false;
 // these are default flags for the tool, if you want to use the EtaFit
 // to calculate position of a cluster set first flag to false and second 
 // one to true
-ToolSvc.clusTool.UseWeightedMean=true;
-ToolSvc.clusTool.UseEtaFit=false;
+ToolSvc.VeloClusterTool.UseWeightedMean=true;
+ToolSvc.VeloClusterTool.UseEtaFit=false;
 // first parameter is im um second one is dimensionless
 // the order is important! the dimension is important!
-ToolSvc.clusTool.DefaultRSensorResolution={-3.23, 0.23};
-ToolSvc.clusTool.DefaultPhiSensorResolution={-3., 0.28};
-ToolSvc.clusTool.ParaTypes={2., 5., 7., 10., 20., 30.};
-ToolSvc.clusTool.DefaultEtaPar={0.5, 0.25., -8.13};
+ToolSvc.VeloClusterTool.DefaultRSensorResolution={-3.23, 0.23};
+ToolSvc.VeloClusterTool.DefaultPhiSensorResolution={-3., 0.28};
+ToolSvc.VeloClusterTool.ParaTypes={2., 5., 7., 10., 20., 30.};
+ToolSvc.VeloClusterTool.DefaultEtaPar={0.5, 0.25, -8.13};

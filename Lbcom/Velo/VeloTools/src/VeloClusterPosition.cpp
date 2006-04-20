@@ -1,5 +1,8 @@
-// $Id: VeloClusterPosition.cpp,v 1.1.1.1 2006-04-10 11:21:30 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.2 2006-04-20 14:50:16 szumlat Exp $
 // Include files
+
+// stl
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -25,8 +28,6 @@
 DECLARE_TOOL_FACTORY( VeloClusterPosition );
 
 typedef std::pair<double, double> Pair;
-//typedef std::pair<LHCb::VeloChannelID, double> stripPair;
-//typedef std::pair<stripPair, double> toolPair;
 typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
 
 //=============================================================================
@@ -39,13 +40,16 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_veloDet ( getDet<DeVelo>( DeVeloLocation::Default ) ),
     m_printInfo ( false ),
     m_useWeightedMean ( false ),
-    m_useEtaFit ( false ),
-    m_paraTypes ( 6, 0. ),
-    m_defaultRSensorResolution ( 2, 0. ),
-    m_defaultPhiSensorResolution ( 2, 0. ),
-    m_defaultEtaPar ( 3, 0. ),
-    m_resParameters ( 12, 0. )
+    m_useEtaFit ( false )
 {
+  m_defaultRSensorResolution.push_back(-3.23);
+  m_defaultRSensorResolution.push_back(0.23);
+  m_defaultPhiSensorResolution.push_back(-3.);
+  m_defaultPhiSensorResolution.push_back(0.28);
+  m_defaultEtaPar.push_back(0.5);
+  m_defaultEtaPar.push_back(0.25);
+  m_defaultEtaPar.push_back(-8.13);
+  //
   declareInterface<IVeloClusterPosition>(this);
   declareProperty("PrintInfo", m_printInfo);
   declareProperty("UseWeightedMean", m_useWeightedMean);
@@ -55,10 +59,6 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
   declareProperty("DefaultPhiSensorResolution", m_defaultPhiSensorResolution);
   declareProperty("ResParameters", m_resParameters);
   declareProperty("DefaultEtaPar", m_defaultEtaPar);
-  //
-  //  createResParTable();
-  //  createEtaParTable();
-  //
 }
 //=============================================================================
 // Destructor

@@ -5,5 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !============================= VeloAlgorithms v1r0 ===========================
+! 2006-04-20 - Tomasz Szumlak
+ - default initialization of the tool provided as well inside constructor
+ 
 ! 2006-04-10 - Marco Cattaneo
  - New package, contains VeloClusterPosition tool, previously in VeloAlgorithms
