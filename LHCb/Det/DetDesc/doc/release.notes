@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.255 2006-04-20 14:39:56 ranjard Exp $ 
+! $Id: release.notes,v 1.256 2006-04-20 14:50:38 ranjard Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v16r4 2006-04-20 =========================
 ! 2006-04-20 - Florence RANJARD
  - move all *.h from src/Lib to DetDesc/. to use the InstallArea/include
    when building DetDict in DetSys
