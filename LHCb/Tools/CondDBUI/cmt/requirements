@@ -1,5 +1,5 @@
-# 2005/10/20 ngilardi
-package coolui
+# 2006/04/20 Nicolas Gilardi
+package CondDBUI
 
 version v0r3
 
@@ -22,6 +22,7 @@ macro Oracle_version "10.1.0.3-1"
 macro Oracle_base "$(LCG_external)/oracle"
 path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
 path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib" WIN32 ""
+
 # remove entries due to Windows Oracle installation
 path_remove PATH "" WIN32 "\Oracle\"
 path_remove PATH "" WIN32 "\oracle\"
@@ -55,7 +56,7 @@ path_prepend LD_LIBRARY_PATH "$(Qt_home)/slc3_ia32_gcc323/lib"
 # python path update
 macro        Pyqt_home       "/afs/cern.ch/sw/lcg/external/pyqt/3.13_python234"
 path_prepend PYTHONPATH      "$(Pyqt_home)/slc3_gcc323/lib/python2.3.4/site-packages"
-path_prepend PYTHONPATH      "${COOLUIROOT}/src"
+path_prepend PYTHONPATH      "${CONDDBUIROOT}/src"
 
 #=====================================================================
 private
