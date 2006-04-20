@@ -4,12 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-!========================== CaloDAQ v2r1 2006-03-15 ==========================
+!========================== CaloDAQ v2r2 2006-04-20 ==========================
 ! 2006-04-19 - Olivier Deschamps
- - modification of CaloZsupAlg (option driven output : CaloDigits and/or CaloADCs)
+ - modification of CaloZsupAlg (option driven output: CaloDigits and/or CaloADCs)
  - new algorithm : src/CaloTriggerAdcsFromRawAlg
 
- 
+!========================== CaloDAQ v2r1 2006-03-15 ==========================
 ! 2006-03-15 - Olivier Deschamps
  - CaloZSupAlg.{cpp,h} algorithm added (moved from CaloDigit)
  
