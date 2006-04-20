@@ -35,10 +35,6 @@ use   LHCbDefinitions v*      Kernel
 private
 document obj2doth TrackFitEventObj2Doth ../xml/*.xml
 
-# Declare fragment for adding custom dictionary to GOD generated ones
-#============================================================================
-make_fragment customdict -header=customdict_header -trailer=customdict_trailer
-
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
 document customdict TrackFitEventCustomDict ../Event/lcgDict.h
