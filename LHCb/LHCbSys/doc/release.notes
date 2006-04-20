@@ -5,13 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r3>2006-04-19 LHCbSys v20r3</A></H1><PRE>
+</PRE><H1><A NAME=v20r3>2006-04-20 LHCbSys v20r3</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
 - Packages added:    Event/LinkerInstances v3r0 - Python access to Linkers
 - Packages modified: KernelSys v5r3, LHCbKernel v6r5, CaloUtils v6r1,
     DetSys v8r3, STDet v2r3, OTDet v6r2, VeloDet v10r4, DetDescCnv v3r2,
-    EventSys v21r3, PhysEvent v9r3, LoKiCore v1r2
+    EventSys v21r3, MCEvent v1r2p1, TrackEvent v2r3, PhysEvent v9r3,LoKiCore v1r2
 
 - In LHCbKernel v6r5:
   . Bug fix - Remove erroneous 'inline' from RichSide.cpp
@@ -38,6 +38,16 @@ This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
 - In CaloUtils v6r1:
   . Add some header files previously in CaloAssociators
+  . Complete migration of some header files to LHCb v20
+
+- In MCEvent v1r2p1
+  . Remove a duplicate typedef
+
+- In TrackEvent v2r3:
+  . State location bitfield defined with explicit enum type
+  . State enums now visible in Python
+  . corresponding changes propagated to Track class
+  . added fillStream methods for Track and State
 
 - In PhysEvent v9r3:
   . Remove leading "/Event/" from all PhysEvent default location definitions.
