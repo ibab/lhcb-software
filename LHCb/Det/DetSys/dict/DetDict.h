@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.14 2006-03-23 17:09:50 cattanem Exp $
+// $Id: DetDict.h,v 1.15 2006-04-20 14:48:33 ranjard Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -63,15 +63,15 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidUnion.h"
 // ============================================================================
-#include "DetDesc/../src/Lib/PVolume.h"
-#include "DetDesc/../src/Lib/GeometryInfoPlus.h"
-#include "DetDesc/../src/Lib/AlignmentInfo.h"
-#include "DetDesc/../src/Lib/CalibrationInfo.h"
-#include "DetDesc/../src/Lib/ConditionInfo.h"
-#include "DetDesc/../src/Lib/FastControlInfo.h"
-#include "DetDesc/../src/Lib/ReadOutInfo.h"
-#include "DetDesc/../src/Lib/SlowControlInfo.h"
-#include "DetDesc/../src/Lib/SimpleValidity.h"
+#include "DetDesc/PVolume.h"
+#include "DetDesc/GeometryInfoPlus.h"
+#include "DetDesc/AlignmentInfo.h"
+#include "DetDesc/CalibrationInfo.h"
+#include "DetDesc/ConditionInfo.h"
+#include "DetDesc/FastControlInfo.h"
+#include "DetDesc/ReadOutInfo.h"
+#include "DetDesc/SlowControlInfo.h"
+#include "DetDesc/SimpleValidity.h"
 // ============================================================================
 // VeloDet
 // ============================================================================

@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!======================== DetSys v8r4 2006-04-20 =========================
+! 2006-04-20 - Florence RANJARD
+ - dict/DetDict.h - *.h are nolonger stored in DetDesc/../src/Lib but
+                    in DetDesc/
+
 !========================= DetSys v8r3 2006-04-11 =========================
 ! 2006-04-11 - Marco Cattaneo
  - Use STDet v2r3, DetDescCnv v3r2, OTDet v6r2, VeloDet v10r4
