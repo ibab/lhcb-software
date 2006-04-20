@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v2r1 2006-04-19 ====================
+!========================== TrackFitEvent v2r1 2006-04-20 ====================
+! 2006-04-20 - Marco Cattaneo
+ - Remove unnecessary cmt/fragments, these are picked up from LHCbKernel
+
 ! 2006-04-19 - Eduardo Rodrigues
  - added creation of dictionary for StateTraj class (-> available in Python)
 
