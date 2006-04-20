@@ -133,19 +133,11 @@
        </method>
 
         <typedef
-         type='KeyedContainer&lt;MCParticle, Containers::HashMap&gt;'
-         def='Container'
-         desc='MCParticle keyed container'
-         access='PUBLIC'
-        />
-
-        <typedef
          type='KeyedContainer&lt;const MCParticle, Containers::HashMap&gt;'
          def='ConstContainer'
          desc='const MCParticle keyed container'
          access='PUBLIC'
         />
-
 
      </class>
   </package>
