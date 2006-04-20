@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.16 2006-01-20 16:35:53 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.17 2006-04-20 14:39:56 ranjard Exp $
 // Include files 
 
 // GaudiKernel
@@ -17,8 +17,8 @@
 #include "DetDesc/AlignmentCondition.h"
 // STD and STL 
 #include <numeric> 
-// local
-#include "GeometryInfoPlus.h"
+
+#include "DetDesc/GeometryInfoPlus.h"
 
 
 //-----------------------------------------------------------------------------

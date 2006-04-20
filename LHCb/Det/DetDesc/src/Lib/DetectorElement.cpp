@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.34 2006-02-01 19:39:10 marcocle Exp $
+// $Id: DetectorElement.cpp,v 1.35 2006-04-20 14:39:56 ranjard Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -14,13 +14,12 @@
 
 #include "DetDesc/Condition.h"
 
-/// local !!!
-#include "GeoInfo.h"
-#include "AlignmentInfo.h"
-#include "CalibrationInfo.h"
-#include "ReadOutInfo.h"
-#include "SlowControlInfo.h"
-#include "FastControlInfo.h"
+#include "DetDesc/GeoInfo.h"
+#include "DetDesc/AlignmentInfo.h"
+#include "DetDesc/CalibrationInfo.h"
+#include "DetDesc/ReadOutInfo.h"
+#include "DetDesc/SlowControlInfo.h"
+#include "DetDesc/FastControlInfo.h"
 
 /** @file DetectorElement.cpp
  *  

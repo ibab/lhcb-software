@@ -1,8 +1,15 @@
-// $Id: GeoInfo.cpp,v 1.4 2005-07-05 13:28:34 jpalac Exp $
+// $Id: GeoInfo.cpp,v 1.5 2006-04-20 14:39:56 ranjard Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2005/07/05 13:28:34  jpalac
+///
+///
+/// ! 2005-07-05 - Juan Palacios
+///  - Remove GeometryInfo class.
+///  - Add methods to re-set AlignmentConditions to IGeometryInfo.
+///
 /// Revision 1.3  2005/06/03 10:19:44  jpalac
 ///
 ///
@@ -39,9 +46,8 @@
 /// ===========================================================================
 /// DetDesc 
 #include "DetDesc/IGeometryInfo.h"
-/// Local 
-#include "GeoInfo.h"
-#include "GeometryInfoPlus.h"
+#include "DetDesc/GeoInfo.h"
+#include "DetDesc/GeometryInfoPlus.h"
 
 // ============================================================================
 /** @file GeoInfo.cpp

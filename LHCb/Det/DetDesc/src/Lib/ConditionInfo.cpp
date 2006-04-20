@@ -1,6 +1,6 @@
-//$Id: ConditionInfo.cpp,v 1.3 2002-11-21 15:40:02 sponce Exp $
+//$Id: ConditionInfo.cpp,v 1.4 2006-04-20 14:39:56 ranjard Exp $
 
-#include "ConditionInfo.h"
+#include "DetDesc/ConditionInfo.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetDesc.h"

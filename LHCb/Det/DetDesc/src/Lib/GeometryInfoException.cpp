@@ -1,9 +1,8 @@
-// $Id: GeometryInfoException.cpp,v 1.5 2005-06-03 10:19:44 jpalac Exp $
+// $Id: GeometryInfoException.cpp,v 1.6 2006-04-20 14:39:56 ranjard Exp $
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-/// local 
 #include "DetDesc/IGeometryInfo.h" 
-#include "GeometryInfoException.h" 
+#include "DetDesc/GeometryInfoException.h" 
 ///
 
 

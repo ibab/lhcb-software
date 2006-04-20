@@ -1,6 +1,6 @@
-//$Id: AlignmentInfo.cpp,v 1.1 2001-12-13 19:19:14 andreav Exp $
+//$Id: AlignmentInfo.cpp,v 1.2 2006-04-20 14:39:56 ranjard Exp $
 
-#include "AlignmentInfo.h"
+#include "DetDesc/AlignmentInfo.h"
 
 //---------------------------------------------------------------------------
 

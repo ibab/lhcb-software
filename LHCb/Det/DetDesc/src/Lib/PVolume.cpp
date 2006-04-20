@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.21 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: PVolume.cpp,v 1.22 2006-04-20 14:39:56 ranjard Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -12,9 +12,8 @@
 #include "Kernel/Transform3DTypes.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
-/// local includes 
-#include "PVolume.h"
-#include "PVolumeException.h"
+#include "DetDesc/PVolume.h"
+#include "DetDesc/PVolumeException.h"
 
 // ============================================================================
 /** @file PVolume.cpp 

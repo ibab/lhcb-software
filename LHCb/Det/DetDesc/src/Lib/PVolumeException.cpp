@@ -1,10 +1,10 @@
-// $Id: PVolumeException.cpp,v 1.5 2003-04-25 08:52:24 sponce Exp $
+// $Id: PVolumeException.cpp,v 1.6 2006-04-20 14:39:56 ranjard Exp $
 
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-// local
-#include "PVolume.h"
-#include "PVolumeException.h"
+
+#include "DetDesc/PVolume.h"
+#include "DetDesc/PVolumeException.h"
  
 
 

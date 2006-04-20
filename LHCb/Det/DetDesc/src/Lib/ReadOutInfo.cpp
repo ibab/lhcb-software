@@ -1,6 +1,6 @@
-//$Id: ReadOutInfo.cpp,v 1.1 2001-12-13 19:19:15 andreav Exp $
+//$Id: ReadOutInfo.cpp,v 1.2 2006-04-20 14:39:56 ranjard Exp $
 
-#include "ReadOutInfo.h"
+#include "DetDesc/ReadOutInfo.h"
 
 //---------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.16 2006-02-01 19:39:10 marcocle Exp $
+// $Id: LogVolBase.cpp,v 1.17 2006-04-20 14:39:56 ranjard Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -9,8 +9,7 @@
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/VolumeIntersectionIntervals.h"
-// local 
-#include "PVolume.h"
+#include "DetDesc/PVolume.h"
 
 // ============================================================================
 /** @file LogVolBase.cpp
