@@ -1,0 +1,61 @@
+# 2005/10/20 ngilardi
+package coolui
+
+version v0r3
+
+branches python src cmt db
+ignore_pattern package_stamps
+
+# ============== Dependencies ========================================
+
+# library path needed for mysql backend
+use myodbc        v*    LCG_Interfaces
+use mysql         v*    LCG_Interfaces
+use unixodbc      v*    LCG_Interfaces
+
+# library path needed for sqlite backend
+use sqlite        v*    LCG_Interfaces
+set POOL_OUTMSG_LEVEL W
+ 
+# library path needed for oracle backend
+macro Oracle_version "10.1.0.3-1"
+macro Oracle_base "$(LCG_external)/oracle"
+path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
+path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib" WIN32 ""
+# remove entries due to Windows Oracle installation
+path_remove PATH "" WIN32 "\Oracle\"
+path_remove PATH "" WIN32 "\oracle\"
+path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\$(LCG_system)\bin"
+#set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
+
+# Needed for whatever reason...
+use COOL v* LCG_Interfaces
+use CORAL v* LCG_Interfaces
+use ROOT  v* LCG_Interfaces
+apply_tag    NEEDS_COOL_FACTORY
+apply_tag    NEEDS_PYCOOL
+
+use Python v* LCG_Interfaces
+
+# =============== patterns ====================================================
+apply_pattern     library_path    library=DetDict
+apply_pattern     ld_library_path
+
+# ============== Environment =========================================
+# ODBC installation location
+set  ODBCINST           $(unixodbc_home)
+
+# POOL authentication path
+set  POOL_AUTH_PATH     $(HOME)/private
+
+# Qt libraries access
+macro        Qt_home         "/afs/cern.ch/sw/lcg/external/qt/3.3.4"
+path_prepend LD_LIBRARY_PATH "$(Qt_home)/slc3_ia32_gcc323/lib"
+
+# python path update
+macro        Pyqt_home       "/afs/cern.ch/sw/lcg/external/pyqt/3.13_python234"
+path_prepend PYTHONPATH      "$(Pyqt_home)/slc3_gcc323/lib/python2.3.4/site-packages"
+path_prepend PYTHONPATH      "${COOLUIROOT}/src"
+
+#=====================================================================
+private
