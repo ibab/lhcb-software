@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r1 2006-04-19 ====================
 ! 2006-04-19 - Eduardo Rodrigues
  - added creation of dictionary for StateTraj class (-> available in Python)
 
@@ -12,7 +13,6 @@
  - Added boolean flag to check whether the transport parameters are set.
    Removed old delta z check.
 
-!========================== TrackFitEvent v2r1 2006-04-12 ====================
 ! 2006-04-12 - Mark Tobin
  - Adapted VeloPhiMeasurement and VeloRMeasurement to work with trajectory
    change in VeloDet
