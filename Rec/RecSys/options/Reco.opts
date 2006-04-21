@@ -2,13 +2,13 @@
 // Job options for Brunel Reco Phase
 //--------------------------------------------------------------
 Reco.DetectorList = { 
-                      "VELO", 
-                      "TT",
-                      "IT",
-                      "OT",
-                      "Tr"
-                     ,"RICH",
-                    , "CALO"
+                      "VELO" 
+                     ,"TT"
+                     ,"IT"
+                     ,"OT"
+                     ,"Tr"
+                     ,"RICH"
+                     ,"CALO"
                      // ,"MUON"
                     };
 
@@ -20,7 +20,6 @@ RecoVELOSeq.Members += { "PatInitEvent"
                         ,"PatVeloRTracking"
                         ,"PatVeloSpaceTracking"
 };
-PatVeloRTracking.ChargeThreshold = 0.75;
 RecoVeloSeq.context = "HLT";
 
 // Decode also VeloClusters, needed for track fit
@@ -61,14 +60,14 @@ ToolSvc.PatForwardTool.ValidateInTT = false;
 // Track fit
 ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackProjectors",
+                         "VeloTools",
                          "TrackTools",
                          "TrackFitter"
                        };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
-//RecoTrSeq.Members += { "TrackEventFitter/FitForward" }; 
+//RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.TracksOutContainer = "Rec/Track/Forward";
-
 
 // Seeding
 //ApplicationMgr.DLLs += { "Seeding" }; 
