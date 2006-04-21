@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.7 2006-03-14 15:17:02 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.8 2006-04-21 18:14:09 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -6,6 +6,9 @@
 #include "Event/RawBank.h"
 #include "Event/VeloLiteCluster.h"
 #include "Event/VeloCluster.h"
+
+#include "VeloDet/DeVelo.h"
+#include "VeloDet/DeVeloSensor.h"
 
 #include "DecodeRawBankToLiteClusters.h"
 #include "DecodeRawBankToClusters.h"
@@ -57,6 +60,8 @@ StatusCode DecodeVeloRawBuffer::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug () << "==> Initialise" << endreq;
+
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   return StatusCode::SUCCESS;
 };
@@ -114,13 +119,29 @@ StatusCode DecodeVeloRawBuffer::finalize() {
 
 StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const
 {
+  MsgStream  msg( msgSvc(), name() );
+
   LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
 
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); 
        bi != banks.end();
        ++bi) {
-    const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>((*bi)->data());
-    unsigned int sensorNumber = static_cast<unsigned int>((*bi)->sourceID());
+
+    const LHCb::RawBank* rb = *bi;
+
+    const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
+    if (!sensor) {
+      msg << MSG::ERROR 
+          << "Could not map source ID "          
+          << rb->sourceID()
+          << " to sensor number!"
+          << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    unsigned int sensorNumber = sensor->sensorNumber();
+
+    const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
    
     VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensorNumber,fastCont);
 
@@ -148,8 +169,19 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
     
     const LHCb::RawBank* rb = *bi;
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
-    unsigned int sensorNumber = static_cast<unsigned int>(rb->sourceID());
-   
+
+    const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
+    if (!sensor) {
+      msg << MSG::ERROR 
+          << "Could not map source ID "          
+          << rb->sourceID()
+          << " to sensor number!"
+          << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    unsigned int sensorNumber = sensor->sensorNumber();
+
     VeloDAQ::decodeRawBankToClusters(rawBank,sensorNumber,clusters,byteCount);
 
     if (rb->size() != byteCount) {

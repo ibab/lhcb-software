@@ -2,6 +2,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-04-21 - Kurt Rinnert
+ - added TELL1 source ID to sensor number mapping in decoding
+
 !=========================  VeloDAQ v3r2 2006-04-18 =======================
 ! 2004-04-18 - David Hutchcroft
  - Fixed code to cope with a single cluster in a sensor in strip zero 

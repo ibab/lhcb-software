@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.6 2006-03-13 18:58:46 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.7 2006-04-21 18:14:09 krinnert Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -12,6 +12,8 @@
 namespace LHCb {
   class RawBank;
 }
+
+class DeVelo;
 
 /** @class DecodeVeloRawBuffer DecodeVeloRawBuffer.h
  *  Decode the Velo data from the 1MHZ Raw buffer.
@@ -71,5 +73,8 @@ private:
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
 
+  // helpers
+
+  const DeVelo* m_velo;
 };
 #endif // DECODEVELORAWBUFFER_H
