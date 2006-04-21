@@ -1,4 +1,4 @@
-// $Id: RecInit.cpp,v 1.1.1.1 2006-03-15 16:25:05 cattanem Exp $
+// $Id: RecInit.cpp,v 1.2 2006-04-21 09:02:21 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ RecInit::~RecInit() {}
 // Initialization
 //=============================================================================
 StatusCode RecInit::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = LbAppInit::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;

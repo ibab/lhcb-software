@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r1 2006-04-01 ==========================
+! 2006-04-21 - Marco Cattaneo
+ - RecInit was not calling LbAppInit::initialize()
+
 !========================== RecAlgs v1r0 2006-03-15 ==========================
 ! 2006-03-15 - Marco Cattaneo
  - First release of package. Contains:
