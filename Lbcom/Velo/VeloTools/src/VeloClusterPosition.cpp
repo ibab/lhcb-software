@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.2 2006-04-20 14:50:16 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.3 2006-04-21 08:47:16 cattanem Exp $
 // Include files
 
 // stl
@@ -36,12 +36,9 @@ typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
 VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
-  : GaudiTool(type, name, parent),
-    m_veloDet ( getDet<DeVelo>( DeVeloLocation::Default ) ),
-    m_printInfo ( false ),
-    m_useWeightedMean ( false ),
-    m_useEtaFit ( false )
+  : GaudiTool(type, name, parent)
 {
+  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   m_defaultRSensorResolution.push_back(-3.23);
   m_defaultRSensorResolution.push_back(0.23);
   m_defaultPhiSensorResolution.push_back(-3.);
@@ -51,9 +48,9 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
   m_defaultEtaPar.push_back(-8.13);
   //
   declareInterface<IVeloClusterPosition>(this);
-  declareProperty("PrintInfo", m_printInfo);
-  declareProperty("UseWeightedMean", m_useWeightedMean);
-  declareProperty("UseEtaFit", m_useEtaFit);
+  declareProperty("PrintInfo", m_printInfo = false );
+  declareProperty("UseWeightedMean", m_useWeightedMean = true );
+  declareProperty("UseEtaFit", m_useEtaFit = false );
   declareProperty("ParaTypes", m_paraTypes);
   declareProperty("DefaultRSensorResolution", m_defaultRSensorResolution);
   declareProperty("DefaultPhiSensorResolution", m_defaultPhiSensorResolution);
