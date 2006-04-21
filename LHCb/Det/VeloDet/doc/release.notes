@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.119 2006-04-18 07:40:57 cattanem Exp $
+! $Id: release.notes,v 1.120 2006-04-21 19:43:18 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-04-21 - Kurt Rinnert
+ - Added consistency check in readout conditions update.  A sensor that is
+  marked as being read out in CondDB but lacks a mapping to a TELL1 Id now
+  triggers an exception.  This relies on the sensor readout conditions to be
+  always updated before the Velo readout conditions.  This is true true during
+  detector element initialization using the flat XML file CondDB.  In real life
+  we might need a new mechanism to ensure this without making the sensors aware 
+  of the DeVelo detector element.
 
 !========================= VeloDet v10r4 2006-04-18 ========================
 ! 2006-04-13 - Mark Tobin

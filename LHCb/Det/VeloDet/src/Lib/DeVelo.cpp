@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.67 2006-04-12 16:26:26 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.68 2006-04-21 19:43:18 krinnert Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -288,6 +288,19 @@ const DeVeloSensor* DeVelo::sensorByTell1Id(unsigned int tell1Id) const
   return (*mi).second;
 }
 
+bool DeVelo::tell1IdBySensorNumber(unsigned int sensorNumber, unsigned int& tell1Id) const
+{
+  std::map<unsigned int, unsigned int>::const_iterator mi;
+
+  mi =  m_tell1IdBySensorNumber.find(sensorNumber);
+
+  if (m_tell1IdBySensorNumber.end() == mi) return false;
+
+  tell1Id = (*mi).second;
+
+  return true;
+}
+
 StatusCode DeVelo::registerConditionCallBacks() 
 {
   StatusCode sc; 
@@ -311,6 +324,8 @@ StatusCode DeVelo::registerConditionCallBacks()
 
 StatusCode DeVelo::updateTell1ToSensorsCondition()
 {
+  MsgStream msg(msgSvc(), "DeVelo");
+
   m_tell1ToSensorsCondition = condition(m_tell1ToSensorsConditionName.c_str());
   const std::vector<int>& tell1Ids 
     = m_tell1ToSensorsCondition->paramAsIntVect("Tell1Id");
@@ -327,14 +342,30 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
     unsigned int sensorNumber = static_cast<unsigned int>(*j);
 
     m_sensorByTell1Id[tell1Id] = sensor(sensorNumber);
+    m_tell1IdBySensorNumber[sensorNumber] = tell1Id;
   }
 
+  // check for trivial size mismatch bug in CondDB
   if (i != tell1Ids.end() || j != sensorNumbers.end()) {
-    MsgStream msg(msgSvc(), "DeVelo");
     msg << MSG::ERROR 
         << "Number of TELL1 and sensor IDs do not match!"
         << endreq;
     return StatusCode::FAILURE;
+  }
+
+  // check consistency with sensor readout flags. this assumes the latter are updated first.
+  unsigned int tell1Id;
+  for (std::vector<DeVeloSensor*>::const_iterator si = m_vpSensor.begin();
+       si != m_vpSensor.end(); 
+       ++si) {
+    const DeVeloSensor* sensor = *si;
+    if (sensor->isReadOut() && !tell1IdBySensorNumber(sensor->sensorNumber(),tell1Id)) {
+      msg << MSG::ERROR 
+          << "Sensor " << sensor->sensorNumber()
+          << " is considered active but not mapped to a TELL1 source ID!"
+          << endreq;
+      return StatusCode::FAILURE;
+    }
   }
 
   return StatusCode::SUCCESS;

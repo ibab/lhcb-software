@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.42 2006-04-12 16:26:26 mtobin Exp $
+// $Id: DeVelo.h,v 1.43 2006-04-21 19:43:18 krinnert Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -241,6 +241,16 @@ public:
    */
   const DeVeloSensor* sensorByTell1Id(unsigned int tell1Id) const;
 
+  /** The TELL1 Id for a given sensor number (cached condition)
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   *
+   *  @param sensorNumber input, the sensor number for which you want to know the TELL1 Id
+   *  @param tell1Id output, the TELL1 Id associated with the sensor number, undefined if not mapped
+   *  @return true if mapping exists, false otherwise
+   */
+  bool tell1IdBySensorNumber(unsigned int sensorNumber, unsigned int& tell1Id) const;
+
   /// call back function for TELL1 to sensor mapping update
   StatusCode updateTell1ToSensorsCondition();
 
@@ -335,6 +345,7 @@ private:
   const Condition* m_tell1ToSensorsCondition;
 
   std::map<unsigned int, const DeVeloSensor*> m_sensorByTell1Id;
+  std::map<unsigned int, unsigned int> m_tell1IdBySensorNumber;
 };
 
 // ============================================================================
