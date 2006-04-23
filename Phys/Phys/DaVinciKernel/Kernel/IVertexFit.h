@@ -149,8 +149,7 @@ public:
     DAUGHTER         end       ,
     LHCb::Vertex&          vertex    ) const 
   {
-    const LHCb::Particle::ConstVector daughters = Daughters( begin , end ) ;
-    return fit ( daughters , vertex ) ;
+    return fit ( LHCb::Particle::ConstVector( begin , end ) , vertex ) ;
   };
 
   /** The vertex fitting method with creation of LHCb::Particle 
@@ -238,8 +237,7 @@ public:
     LHCb::Particle&        particle  ,
     LHCb::Vertex&          vertex    ) const 
   {
-    const LHCb::Particle::ConstVector daughters = Daughters( begin , end ) ;
-    return fit ( daughters , particle , vertex ) ;
+    return fit ( LHCb::Particle::ConstVector ( begin , end ) , particle , vertex ) ;
   };
   
   /** add the particle to the vertex and refit 

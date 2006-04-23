@@ -2,6 +2,11 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !============================================================================
 
+! 2006-04-23 - Vanya BELYAEV
+ - Kernel/IVertexFit.h
+    minor bug fixes into templated "fit"-methods 
+
+
 ! 2006-04-11 - J.P.Palacios
    Kernel/IPhysiceDesktop.h
    . Add const qualifiers to return values and arguments of some methods.
