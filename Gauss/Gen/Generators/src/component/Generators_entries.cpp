@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.9 2006-04-08 11:44:23 ibelyaev Exp $
+//  $Id: Generators_entries.cpp,v 1.10 2006-04-23 21:29:14 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -32,6 +32,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( SignalRepeatedHadronization ) ;
   DECLARE_TOOL( SignalForcedFragmentation ) ;
   DECLARE_TOOL( Special ) ;
+  DECLARE_TOOL( StandAloneDecayTool ) ;
 
   // Beam Tools
   DECLARE_TOOL( CollidingBeams ) ;
