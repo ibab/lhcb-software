@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.55 2006-04-08 11:44:23 ibelyaev Exp $
+! $Id: release.notes,v 1.56 2006-04-23 21:26:27 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-04-23 - Patrick Robbe
+ - Add new tool to use EvtGen in standalone mode: StandAloneDecayTool
 
 ! 2006-04-08 - Vanya BELYAEV
  - src/component/MuXMaxBias.cpp
