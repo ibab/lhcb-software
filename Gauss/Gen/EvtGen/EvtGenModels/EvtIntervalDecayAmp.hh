@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtIntervalDecayAmp.hh,v 1.2 2004-01-12 13:50:24 robbep Exp $
+//      $Id: EvtIntervalDecayAmp.hh,v 1.3 2006-04-23 20:36:33 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly

@@ -117,6 +117,8 @@
 //#include "EvtGenModels/EvtPycont.hh"
 #endif
 
+#include "EvtGenModels/EvtLambdaB2LambdaV.hh"
+
 #include "EvtGenModels/EvtModelReg.hh"
 
 EvtModelReg::EvtModelReg() {
@@ -199,6 +201,9 @@ EvtModelReg::EvtModelReg() {
   modelist.Register(new EvtPto3P);
 
   modelist.Register( new EvtBToDDalitzCPK ) ;
+  modelist.Register(new EvtLambdaB2LambdaV);
+  modelist.Register(new EvtLambda2PPiForLambdaB2LambdaV);  
+  modelist.Register(new EvtV2VpVmForLambdaB2LambdaV);  
 
 #ifndef EVTSTANDALONE
   modelist.Register(new EvtUclaII);
