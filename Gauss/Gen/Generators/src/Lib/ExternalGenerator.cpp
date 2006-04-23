@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.18 2006-04-04 14:57:17 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.19 2006-04-23 21:27:18 robbep Exp $
 // Include files 
 
 // local
@@ -111,19 +111,22 @@ StatusCode ExternalGenerator::initialize( ) {
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
 
   // obtain the Production Tool
-  m_productionTool = tool< IProductionTool >( m_productionToolName , this ) ;
+  if ( "" != m_productionToolName ) 
+    m_productionTool = tool< IProductionTool >( m_productionToolName , this ) ;
 
   // update the particle properties of the production tool
-  IParticlePropertySvc::const_iterator iter ;
-  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
-    if ( ( ! m_productionTool -> isSpecialParticle( *iter ) ) && 
-         ( ! m_keepOriginalProperties ) ) 
-      m_productionTool -> updateParticleProperties( *iter ) ;
-    // set stable in the Production generator all particles known to the
-    // decay tool
-    if ( 0 != m_decayTool )
-      if ( m_decayTool -> isKnownToDecayTool( (*iter)->pdgID() ) ) 
-        m_productionTool -> setStable( *iter ) ;    
+  if ( 0 != m_productionTool ) {
+    IParticlePropertySvc::const_iterator iter ;
+    for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
+      if ( ( ! m_productionTool -> isSpecialParticle( *iter ) ) && 
+           ( ! m_keepOriginalProperties ) ) 
+        m_productionTool -> updateParticleProperties( *iter ) ;
+      // set stable in the Production generator all particles known to the
+      // decay tool
+      if ( 0 != m_decayTool )
+        if ( m_decayTool -> isKnownToDecayTool( (*iter)->pdgID() ) ) 
+          m_productionTool -> setStable( *iter ) ;    
+    }
   }
 
   release( ppSvc ) ;
@@ -134,14 +137,18 @@ StatusCode ExternalGenerator::initialize( ) {
 
   // now debug printout of Production Tool 
   // has to be after all initializations to be sure correct values are printed
-  m_productionTool -> printRunningConditions( ) ;
+  if ( 0 != m_productionTool ) { 
+    m_productionTool -> printRunningConditions( ) ;  
+    
+    // set up the name to assign to HepMC events
+    seal::StringList strList = 
+      seal::StringOps::split( m_productionTool -> name() , "." ) ;
+    
+    m_hepMCName = seal::StringOps::remove( strList.back() , "Production" ) ;
+  } else {
+    m_hepMCName = "DecayAlone" ;
+  }
 
-  // set up the name to assign to HepMC events
-  seal::StringList strList = 
-    seal::StringOps::split( m_productionTool -> name() , "." ) ;
-
-  m_hepMCName = seal::StringOps::remove( strList.back() , "Production" ) ;
-  
   return StatusCode::SUCCESS ;
 }
 
@@ -331,7 +338,7 @@ StatusCode ExternalGenerator::finalize( ) {
   seal::Filename::remove( m_lhapdfTempFilename , false , true ) ;
 
   if ( 0 != m_decayTool ) release( m_decayTool ) ;
-  release( m_productionTool ) ;
+  if ( 0 != m_productionTool ) release( m_productionTool ) ;
   if ( 0 != m_cutTool ) release( m_cutTool ) ;
 
   return GaudiTool::finalize() ;
