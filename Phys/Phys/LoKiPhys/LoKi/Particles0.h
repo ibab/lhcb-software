@@ -1,6 +1,6 @@
-// $Id: Particles0.h,v 1.3 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles0.h,v 1.4 2006-04-23 10:06:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -16,6 +16,7 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/PIDOperators.h"
 // ============================================================================
 class IParticlePropertySvc ;
 class  ParticleProperty    ;
@@ -67,7 +68,7 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
-    
+
     /** @class Key 
      *  The trivial function, it relies on Particle::key method 
      *
@@ -164,6 +165,46 @@ namespace LoKi
     private:
       std::string m_location ;
       bool        m_fullpath  ;
+    } ;
+    
+    /** @struct Identifier
+     *  evaluator of the id of the particle 
+     *  @see LoKi::Cuts::ID
+     *  @see LHCb::ParticleID 
+     *  @see LHCb::Particle
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    struct Identifier : 
+      public LoKi::Function<const LHCb::Particle*>
+    {    
+      /// clone method (mandatory!)
+      virtual Identifier* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    } ;
+
+    /** @struct AbsIdentifier
+     *  evaluator of the id of the particle 
+     *  @see LoKi::Cuts::ABSID
+     *  @see LHCb::ParticleID 
+     *  @see LHCb::Particle
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    struct AbsIdentifier : 
+      public LoKi::Function<const LHCb::Particle*>
+    {      
+      /// clone method (mandatory!)
+      virtual AbsIdentifier* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
 
     /** @struct Momentum 

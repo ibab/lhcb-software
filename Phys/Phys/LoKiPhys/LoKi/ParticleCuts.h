@@ -1,6 +1,6 @@
-// $Id: ParticleCuts.h,v 1.7 2006-04-09 16:40:28 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.8 2006-04-23 10:06:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
 // ============================================================================
@@ -433,6 +433,48 @@ namespace LoKi
      *  @date 2006-02-15
      */
     typedef SAME                                            PSAME ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var ID 
+     *  evaluator of the id of the particle 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   int pid = (int) ID( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::Identifier
+     *  @see LHCb::ParticleID 
+     *  @see LHCb::Particle
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    const LoKi::Particles::Identifier                            ID ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var ABSID 
+     *  evaluator of the absoluyte valeu for the particle id 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   int pid = (int) ABSID( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsIdentifier 
+     *  @see LHCb::ParticleID 
+     *  @see LHCb::Particle
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    const LoKi::Particles::AbsIdentifier                      ABSID ;
     // ========================================================================
     
     // ========================================================================

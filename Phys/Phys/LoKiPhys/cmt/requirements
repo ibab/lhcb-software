@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2006-04-23 10:06:13 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v1r0
+version           v1r1
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi 

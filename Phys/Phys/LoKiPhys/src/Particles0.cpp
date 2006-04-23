@@ -1,6 +1,6 @@
-// $Id: Particles0.cpp,v 1.3 2006-02-23 21:14:09 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.4 2006-04-23 10:06:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -169,6 +169,50 @@ LoKi::Particles::InTES::fillStream ( std::ostream& s ) const
     s << "INTES['" << location()  << "'," 
       << LoKi::Print::print(fullpath())<< "]" ;
 } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::Particles::Identifier*
+LoKi::Particles::Identifier::clone() const 
+{ return new LoKi::Particles::Identifier(*this) ; }
+// ============================================================================
+LoKi::Particles::Identifier::result_type
+LoKi::Particles::Identifier::operator() 
+  ( LoKi::Particles::Identifier::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'InvalidID'" ) ;
+    return LoKi::Constants::InvalidID ;
+  } ;
+  return p->particleID().pid() ;
+} ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Identifier::fillStream ( std::ostream& s ) const 
+{ return s << "ID" ; } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::Particles::AbsIdentifier*
+LoKi::Particles::AbsIdentifier::clone() const 
+{ return new LoKi::Particles::AbsIdentifier(*this) ; }
+// ============================================================================
+LoKi::Particles::AbsIdentifier::result_type
+LoKi::Particles::AbsIdentifier::operator() 
+  ( LoKi::Particles::AbsIdentifier::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'InvalidID'" ) ;
+    return LoKi::Constants::InvalidID ;
+  } ;
+  return p->particleID().abspid() ;
+} ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::AbsIdentifier::fillStream ( std::ostream& s ) const 
+{ return s << "ABSID" ; } ;
 // ============================================================================
 
 

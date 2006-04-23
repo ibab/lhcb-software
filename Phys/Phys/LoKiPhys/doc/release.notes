@@ -1,18 +1,25 @@
-! $Id: release.notes,v 1.1.1.1 2006-02-17 19:17:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2006-04-23 10:06:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2006-04-23 - Vanya BELYAEV
+ - LoKi/PIDOperators.h
+   src/PIDOperators.cpp
+     '==' operator for ID and ABSID functions 
+ - cmt/requirements 
+     version increment to v1r1 
+
 ! 2006-02-17 - Vanya Belyaev
  - new package 
 
 
 ! -----------------------------------------------------------------------------
-! $Log: not supported by cvs2svn $ 
+! $Log: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------
