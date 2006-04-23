@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.19 2006-04-04 15:07:45 robbep Exp $
+// $Id: Generation.cpp,v 1.20 2006-04-23 21:28:11 robbep Exp $
 // Include files 
 
 // local
@@ -360,12 +360,14 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       if ( thePid.hasBottom() ) {
         // Count B from initial proton as a quark
         if ( 0 != (*iter) -> production_vertex() ) {
-          const HepMC::GenParticle * par = 
-            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
-          if ( 0 != par -> production_vertex() ) {
-            if ( 0 == par -> production_vertex() -> particles_in_size() )
-              ++bQuark ;
-          } else ++bQuark ;
+          if ( 0 != (*iter) -> production_vertex() -> particles_in_size() ) {
+            const HepMC::GenParticle * par = 
+              *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+            if ( 0 != par -> production_vertex() ) {
+              if ( 0 == par -> production_vertex() -> particles_in_size() )
+                ++bQuark ;
+            } else ++bQuark ;
+          }
         }
         ++bHadron ;
       } else if ( thePid.hasCharm() ) {
