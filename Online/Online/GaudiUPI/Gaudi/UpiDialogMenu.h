@@ -45,7 +45,7 @@ public:
   DialogStatus replCOM (int cmd,const char* fmt, ...);
   DialogStatus insertCOM (int pos_id,int com_id,const char* fmt, ...);
   DialogStatus deleteCOM (int line);
-  DisplayState State();
+  DisplayState state() const;
   static DialogStatus enableCursor();
   static DialogStatus disableCursor();
   DialogStatus installBackspaceCall();

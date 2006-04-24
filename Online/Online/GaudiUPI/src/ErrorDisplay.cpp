@@ -161,7 +161,6 @@ void LHCb::ErrorDisplay::reportMessage(int typ, const std::string& src, const st
 
 /// Interactor overload: handle menu interupts
 void LHCb::ErrorDisplay::handle (const Event& e)   {
-  StatusCode sc = StatusCode::SUCCESS;
   if ( e.eventtype == UpiEvent )  {
     switch ( e.eventtype )  {
     case UpiEvent:

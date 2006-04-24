@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_ERRORDISPLAY_H
 #define GAUDIUPI_ERRORDISPLAY_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.1 2006-04-24 13:45:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
 
 #include "GaudiOnline/DimErrorLogger.h"
 #include "CPP/Interactor.h"
@@ -66,8 +66,6 @@ namespace LHCb  {
     void handle (const Event& event);
     /// Show message in the message window
     void print(const char* fmt, ...);
-    /// Internal report of messages to error display
-    virtual void reportMessage(int typ, const std::string& src, const std::string& msg);
 
   public:
     /// Standard Constructor.

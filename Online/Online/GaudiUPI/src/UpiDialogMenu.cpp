@@ -62,7 +62,10 @@ DialogMenu* UpiDialogMenu::create (const std::string& title,const std::string& u
   return this;
 }
 
-DialogMenu* UpiDialogMenu::createDetached (const std::string& title,const std::string& utit,const std::string& ltit,int cmd,int father)
+DialogMenu* UpiDialogMenu::createDetached (const std::string& title,
+                                           const std::string& utit,
+                                           const std::string& ltit,
+                                           int /* cmd */, int /* father */ )
 {
   upic_open_detached_menu(m_id = __absID++,0,0,title.c_str(),utit.c_str(),ltit.c_str());
   UpiSensor::instance().add(this, m_id );
@@ -186,7 +189,7 @@ DialogStatus UpiDialogMenu::installBackspaceCall()  {
   int status = DIALOG_SUCCESS;  
   Interactor *target = (actor() != 0 ) ? actor() : this;
   if ( m_id > 0 )   {
-    status = upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)BackSpaceCallBack,(void*)target);
+    status = upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,(void*)target);
   }
   return ::lib_rtl_is_success(status) ? DIALOG_SUCCESS : DIALOG_ERROR;
 }
@@ -215,13 +218,11 @@ DialogStatus UpiDialogMenu::enableCMD (int cmd)
   return ::lib_rtl_is_success(status) ? DIALOG_SUCCESS : DIALOG_ERROR;
 }
 
-DisplayState UpiDialogMenu::State()
-{
+DisplayState UpiDialogMenu::state()  const  {
   return m_state;
 }
 
-DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem* p)
-{
+DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem* p)    {
   upic_set_param (p->buffer(),
     1,
     p->format().c_str(),
@@ -255,8 +256,7 @@ DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem** p)  {
   return DIALOG_SUCCESS;
 }
 
-DialogStatus UpiDialogMenu::replace (DialogItem* p)
-{
+DialogStatus UpiDialogMenu::replace (DialogItem* p)  {
   upic_set_param (p->buffer(),
     1,
     p->format().c_str(),
@@ -271,8 +271,7 @@ DialogStatus UpiDialogMenu::replace (DialogItem* p)
   return DIALOG_SUCCESS;
 }
 
-DialogStatus UpiDialogMenu::replace (DialogItem** p)
-{
+DialogStatus UpiDialogMenu::replace (DialogItem** p)  {
   std::string text;
   for ( int i = 0; p[i]; i++ )  {
     upic_set_param (p[i]->buffer(),
@@ -291,8 +290,7 @@ DialogStatus UpiDialogMenu::replace (DialogItem** p)
   return DIALOG_SUCCESS;
 }
 
-DialogStatus UpiDialogMenu::addButtonLine (int cmd,DialogItem* p)
-{
+DialogStatus UpiDialogMenu::addButtonLine (int cmd,DialogItem* p)   {
   for(int i=0; i < p->length(); i++ )
     upic_set_param (p->buffer(),i+1,p->format().c_str(),p->item(i),0,0,0,0,1);
   p->setID((ClientData)cmd);
@@ -311,7 +309,7 @@ DialogStatus UpiDialogMenu::replaceButtonLine (DialogItem* p) {
 
 DialogMenu* UpiDialogMenu::place (int row,int col)  {
   if ( m_id != 0 && row >= 0 && col >= 0 ) {
-    int status = upic_set_window_position ( m_id, row, col );
+    /* int status = */ ::upic_set_window_position ( m_id, row, col );
   }
   return this;
 }

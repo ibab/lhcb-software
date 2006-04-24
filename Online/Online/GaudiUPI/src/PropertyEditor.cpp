@@ -114,7 +114,6 @@ void Gaudi::PropertyEditor::retrieveParams()   {
   std::stringstream s;
   std::string w = "", v = "";
   m_property->nameAndValueAsStream(s);
-  size_t vlen = 16;
   while( s.get() != ':' && !s.fail() ) { }
   for ( char c=s.get(); !s.fail(); c=s.get() ) {
     switch(c)  {

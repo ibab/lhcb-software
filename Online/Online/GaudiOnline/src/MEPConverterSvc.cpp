@@ -181,7 +181,7 @@ StatusCode LHCb::MEPConverterSvc::run()  {
   m_receiveEvts = true;
   ulonglong mepCount = 0;
   ulonglong evtCount = 0;
-  ulonglong prtCount = fabs(m_freq) > 1./ULLONG_MAX ? ulonglong(1./m_freq) : ULLONG_MAX;
+  ulonglong prtCount = fabs(m_freq) > 1./ULONGLONG_MAX ? ulonglong(1./m_freq) : ULONGLONG_MAX;
   for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
     SubEvents events;
     MEPID id = m_mepMgr->mepID();

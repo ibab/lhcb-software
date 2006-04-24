@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.2 2006-04-24 12:18:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.3 2006-04-24 14:45:05 frankb Exp $
 //	====================================================================
 //  MEPFragmentSender.h
 //	--------------------------------------------------------------------
@@ -50,7 +50,7 @@ namespace LHCb  {
   };
 }
 
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.2 2006-04-24 12:18:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.3 2006-04-24 14:45:05 frankb Exp $
 //	====================================================================
 //  MEPFragmentSender.cpp
 //	--------------------------------------------------------------------
@@ -115,13 +115,13 @@ StatusCode LHCb::MEPFragmentSender::execute()  {
       RawDataAddress* addr = dynamic_cast<RawDataAddress*>(reg->address());
       if ( addr )  {
         int hdrType = 0;
-        unsigned int  partID = addr->partitionID();
+        // unsigned int  partID = addr->partitionID();
         unsigned char evtTyp = addr->eventType();
         unsigned int  trNumb = 0;
         const unsigned int* trMask = addr->triggerMask();
         const std::vector<RawBank*>* banks = addr->banks();
         size_t total_len, len = rawEventLength(*banks)+sizeof(MDFHeader);
-        ulonglong prtCount = fabs(m_freq) > 1./ULLONG_MAX ? ulonglong(1./m_freq) : ULLONG_MAX;
+        ulonglong prtCount = fabs(m_freq) > 1./ULONGLONG_MAX ? ulonglong(1./m_freq) : ULONGLONG_MAX;
 
         m_data.reserve(len);
         encodeRawBanks(*banks, m_data.data()+sizeof(MDFHeader),len, &total_len);

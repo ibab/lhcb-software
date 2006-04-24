@@ -71,7 +71,7 @@ namespace {
 #include "Gaudi/UpiSensor.h"
 #include "RTL/rtl.h"
 
-extern "C" GUPI_test1(int argc, char** argv)  {
+extern "C" int GUPI_test1(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
   if ( cli.getopt("debug",1) ) lib_rtl_start_debugger();
   Sensor& s = UpiSensor::instance();

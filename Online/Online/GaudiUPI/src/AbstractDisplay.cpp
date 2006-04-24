@@ -9,10 +9,10 @@ namespace {
   template <class Func, class Type> struct Apply   {
     Func m_pmf; 
     Apply ( Func f ) : m_pmf (f) { }
-    void operator ( ) ( Type* p ) const   {   (p->*m_pmf)(); }
+    void operator ( ) ( Type* p ) const    {   (p->*m_pmf)();                 }
   };
   template <class R, class T>
-  Apply<R (T::*)(),T> apply(R (T::*pmf)()) {  typedef  _F; return Apply<R (T::*)(),T>(pmf); }
+  Apply<R (T::*)(),T> apply(R (T::*pmf)()) { return Apply<R (T::*)(),T>(pmf); }
 }
 
 AbstractDisplayFactory* AbstractDisplayFactory::instance() {          
@@ -97,7 +97,7 @@ int AbstractMainDisplay::repaint() {
   return DISPLAY_SUCCESS;
 }
 
-int AbstractMainDisplay::SetOutOfBandAsts (int ast_map,AbstractMainDisplay::HandlerType handle,Interactor* actor) {
+int AbstractMainDisplay::SetOutOfBandAsts (int /* ast_map */, AbstractMainDisplay::HandlerType handle,Interactor* actor) {
   m_actor = actor;
   m_handler = handle;
   return DISPLAY_SUCCESS;

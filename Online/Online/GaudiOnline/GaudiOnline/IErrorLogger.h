@@ -1,4 +1,4 @@
-// $Id: IErrorLogger.h,v 1.1 2006-04-24 12:18:41 frankb Exp $
+// $Id: IErrorLogger.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
 #ifndef GAUDIONLINE_IERRORLOGGER_H
 #define GAUDIONLINE_IERRORLOGGER_H
 

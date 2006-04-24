@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.1 2006-04-24 12:18:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
 #ifndef GAUDIONLINE_DIMMESSAGESVC_H
 #define GAUDIONLINE_DIMMESSAGESVC_H
 
@@ -13,7 +13,7 @@ class DimService;
  *    LHCb namespace declaration
  */
 namespace LHCb  {
-  static const int SRCSIZE = 256;
+  static const size_t SRCSIZE = 256;
   struct DimMessage  {
     int typ, size;
     char src[SRCSIZE];

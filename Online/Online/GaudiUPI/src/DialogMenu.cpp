@@ -23,7 +23,7 @@ void DialogMenu::handle(const Event& event)  {
     printf("DialogMenu::handle> handle not connected to any interactor !\n");
 }
 
-long DialogMenu::BackSpaceCallBack (int menu,int cmd,int par,ClientData param)  {
+long DialogMenu::backSpaceCallBack (int menu,int /* cmd */,int par,ClientData param)  {
   Event ev;
   ev.target     = (Interactor*)param;
   ev.eventtype  = UpiEvent;
@@ -35,7 +35,7 @@ long DialogMenu::BackSpaceCallBack (int menu,int cmd,int par,ClientData param)  
   return 1;
 }
 
-DialogStatus DialogMenu::AccumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)  {
+DialogStatus DialogMenu::accumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)  {
   int status = DIALOG_SUCCESS;
   size_t width = 25;
   if ( display_text.length() > width )  {
@@ -47,7 +47,7 @@ DialogStatus DialogMenu::AccumulateComment (int pos_id,int& com_id,int max_lines
   return ::lib_rtl_is_success(status) ? DIALOG_SUCCESS : DIALOG_ERROR;
 }
 
-DialogStatus DialogMenu::FlushComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)
+DialogStatus DialogMenu::flushComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)
 {
   int status = DIALOG_SUCCESS;  
   size_t width = 25;

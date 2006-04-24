@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.5 2006-04-24 12:18:42 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.6 2006-04-24 14:45:05 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/OnlineMessageSvc.h"
@@ -237,7 +237,7 @@ int LHCb::OnlineMessageSvc::outputLevel()   const {
 // ---------------------------------------------------------------------------
 int LHCb::OnlineMessageSvc::outputLevel( const std::string& source )   const {
   ThresholdMap::const_iterator it = m_thresholdMap.find( source );
-  return it == m_thresholdMap.end() ? m_outputLevel : (*it).second;
+  return it == m_thresholdMap.end() ? int(m_outputLevel) : (*it).second;
 }
 
 // ---------------------------------------------------------------------------

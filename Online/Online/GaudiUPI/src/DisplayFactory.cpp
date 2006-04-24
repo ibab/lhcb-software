@@ -1,7 +1,7 @@
 #include "Gaudi/DisplayFactory.h"
-#include "Gaudi/DialogDisplayfactory.h"
+#include "Gaudi/DialogDisplayFactory.h"
 #include "Gaudi/AbstractDisplay.h"
-#include "Gaudi/upidialogmenu.h"
+#include "Gaudi/UpiDialogMenu.h"
 #include <string>
 
 DisplayFactory::DisplayFactory (const std::string& type) {

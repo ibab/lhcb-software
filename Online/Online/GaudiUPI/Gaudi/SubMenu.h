@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_SUBMENU_H
 #define GAUDIUPI_SUBMENU_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/SubMenu.h,v 1.1 2006-04-24 13:45:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/SubMenu.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
 
 // C++ include files
 #include <string>
@@ -34,10 +34,10 @@ namespace Gaudi  {
   protected:
     /// Main dialog window
     DialogMenu*    m_window;
-    /// Sub- dialog window
-    Interactor*    m_child;
     /// Parent to be notified on window close
     Interactor*    m_parent;
+    /// Sub- dialog window
+    Interactor*    m_child;
     /// Current cursor position
     int            m_cursor;
   public:

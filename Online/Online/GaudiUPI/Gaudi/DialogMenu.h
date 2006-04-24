@@ -40,49 +40,49 @@ public:
   DialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) 
     : m_actor(actor), m_parent(parent) {}
     virtual ~DialogMenu() {}
-    virtual int id() {return (-1);}
-    virtual void handle (const Event& event);
+    virtual int          id() {return (-1);}
+    virtual void         handle (const Event& event);
     virtual DialogStatus installBackspaceCall() {return DIALOG_SUCCESS;}
-    virtual Interactor* actor() {return m_actor;}
+    virtual Interactor*  actor() {return m_actor;}
     virtual DialogStatus window() {return DIALOG_ERROR;}
     virtual DialogStatus reOpen() {return DIALOG_SUCCESS;}
-    virtual DialogStatus replaceTitle (const std::string& a = "",const std::string& b = "",const std::string& c = "") {return DIALOG_SUCCESS;}
-    virtual DialogMenu* create (const std::string& title = "",const std::string& utit = "",const std::string& ltit = "",int cmd = 0,int father = 0) {return (DialogMenu*)NULL;}
-    virtual DialogMenu* createDetached (const std::string& title = "",const std::string& utit = "",const std::string& ltit = "",int cmd = 0,int father = 0) {
+    virtual DialogStatus replaceTitle (const std::string& = "",const std::string& = "",const std::string& = "") {return DIALOG_SUCCESS;}
+    virtual DialogMenu*  create (const std::string& = "",const std::string& = "",const std::string& = "",int = 0,int = 0) {return (DialogMenu*)NULL;}
+    virtual DialogMenu*  createDetached (const std::string& = "",const std::string& = "",const std::string& = "",int = 0,int = 0) {
       return (DialogMenu*)NULL;
     }
-    virtual DialogMenu* createSubMenu (const std::string& title = "",const std::string& utit = 0) {return (DialogMenu*)NULL;}
+    virtual DialogMenu*  createSubMenu (const std::string& = "",const std::string& = 0) {return (DialogMenu*)NULL;}
     virtual DialogStatus map() {return DIALOG_SUCCESS;}
     virtual DialogStatus destroy() {return DIALOG_SUCCESS;}
-    virtual DialogStatus addCMD (int cmd,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus replCMD (int cmd,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus addCOM (int cmd,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus replCOM (int cmd,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus insertCOM (int pos_id,int com_id,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus deleteCOM (int line) {return DIALOG_SUCCESS;}
-    virtual DialogStatus deleteCMD (int line) {return DIALOG_SUCCESS;}
-    virtual DialogStatus insertCMD (int pos_id,int cmd_id,const char* fmt, ...) {return DIALOG_SUCCESS;}
-    virtual DialogStatus setCursor (int cmd = (-1)) {return DIALOG_SUCCESS;}
-    virtual DialogStatus guideCursor (int cmd = (-1)) {return DIALOG_SUCCESS;}
-    static DialogStatus enableCursor() {return DIALOG_SUCCESS;}
-    static DialogStatus disableCursor() {return DIALOG_SUCCESS;}
-    virtual DisplayState State() {return DIALOG_DISP_ERROR;}
-    virtual DialogStatus AccumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text);
-    virtual DialogStatus FlushComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text);
-    virtual DialogStatus disableCMD (int cmd) {return DIALOG_SUCCESS;}
-    virtual DialogStatus enableCMD (int cmd) {return  DIALOG_SUCCESS;}
-    static long BackSpaceCallBack (int menu,int cmd,int par,ClientData param);
-    virtual DialogStatus addPAR (int cmd,DialogItem* par) {return DIALOG_SUCCESS;}
-    virtual DialogStatus addPAR (int cmd,DialogItem** par) {return DIALOG_SUCCESS;}
-    virtual DialogStatus replace (DialogItem* par) {return DIALOG_SUCCESS;}
-    virtual DialogStatus replace (DialogItem** par) {return DIALOG_SUCCESS;}
-    virtual DialogStatus addButtonLine (int cmd,DialogItem* par) {return DIALOG_SUCCESS;}
-    virtual DialogStatus replaceButtonLine (DialogItem* par) {return DIALOG_SUCCESS;}
-    virtual DialogMenu* place (int row = (-1),int col = (-1)) {return this;}
+    virtual DialogStatus addCMD (int,const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus replCMD (int,const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus addCOM (int,const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus replCOM (int,const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus insertCOM (int,int, const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus deleteCOM (int) {return DIALOG_SUCCESS;}
+    virtual DialogStatus deleteCMD (int) {return DIALOG_SUCCESS;}
+    virtual DialogStatus insertCMD (int,int,const char*, ...) {return DIALOG_SUCCESS;}
+    virtual DialogStatus setCursor (int = (-1)) {return DIALOG_SUCCESS;}
+    virtual DialogStatus guideCursor (int = (-1)) {return DIALOG_SUCCESS;}
+    static DialogStatus  enableCursor() {return DIALOG_SUCCESS;}
+    static DialogStatus  disableCursor() {return DIALOG_SUCCESS;}
+    virtual DisplayState state() const {return DIALOG_DISP_ERROR;}
+    virtual DialogStatus accumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text);
+    virtual DialogStatus flushComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text);
+    virtual DialogStatus disableCMD (int) {return DIALOG_SUCCESS;}
+    virtual DialogStatus enableCMD (int) {return  DIALOG_SUCCESS;}
+    static long          backSpaceCallBack (int,int,int,ClientData);
+    virtual DialogStatus addPAR (int,DialogItem* ) {return DIALOG_SUCCESS;}
+    virtual DialogStatus addPAR (int,DialogItem**) {return DIALOG_SUCCESS;}
+    virtual DialogStatus replace (DialogItem* ) {return DIALOG_SUCCESS;}
+    virtual DialogStatus replace (DialogItem**) {return DIALOG_SUCCESS;}
+    virtual DialogStatus addButtonLine (int,DialogItem*) {return DIALOG_SUCCESS;}
+    virtual DialogStatus replaceButtonLine (DialogItem*) {return DIALOG_SUCCESS;}
+    virtual DialogMenu*  place (int = (-1),int = (-1)) {return this;}
 protected:
-  Interactor* m_actor;
+  Interactor*  m_actor;
   DisplayState m_state;
-  DialogMenu* m_parent;
+  DialogMenu*  m_parent;
 };
 
 class DialogFactory   {

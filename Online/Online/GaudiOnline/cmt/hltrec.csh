@@ -16,3 +16,5 @@ setenv UTGID ALLOC_0; MINITERM "$EXEC tan_nameserver -a -tcp" &
 sleep 3
 setenv UTGID TANMON_0;  MINITERM "$EXEC tanmon -c" &
 setenv UTGID NetRead_0; WIDETERM "$GEXEC libMDF.so GaudiTask ../options/Network2MBM.opts" &
+# setenv UTGID NetRead_1; WIDETERM "$GEXEC libMDF.so GaudiTask ../options/Network2MBM.opts" &
+# setenv UTGID NetRead_2; WIDETERM "$GEXEC libMDF.so GaudiTask ../options/Network2MBM.opts" &

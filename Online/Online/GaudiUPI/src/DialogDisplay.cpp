@@ -34,7 +34,6 @@ int DialogSubDisplay::putString (const std::string& text,int video)   {
     return DISPLAY_ERROR;
   }
   else {
-    int w = width(), v = 0, loccol = 1, flag = 1;
     m_board[m_currLine++]->set(" " + text, video);
     return DISPLAY_SUCCESS;
   }
@@ -76,7 +75,6 @@ int DialogSubDisplay::endUpdate()  {
     text = buffer(line);
     if ( !buffer(line).changed() ) continue;
     int lin = line+1;
-    int video = buffer(line).video();
     const std::string& s = buffer(line).resetChange().pad();
     window()->replCOM ( lin, s.c_str() );
   }

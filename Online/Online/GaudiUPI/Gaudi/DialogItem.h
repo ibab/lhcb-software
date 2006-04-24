@@ -68,9 +68,9 @@ public:
   DialogItem (const std::string& fmt,const std::string& text,float def,float lo,float hi,bool list_only);
   virtual ~DialogItem();
   DialogItem& deleteList();
-  ItemStatus addList (const ClientData item);
-  ItemStatus setCurrent (const ClientData value);
-  ItemStatus removeList (const ClientData item);
+  ItemStatus addList (const void* item);
+  ItemStatus setCurrent (const void* value);
+  ItemStatus removeList (const void* item);
   int length()                const {   return m_listSize;          }
   const std::string& format() const {   return m_fmt;               }
   const std::string& text()   const {   return m_text;              }
@@ -85,8 +85,8 @@ public:
   operator char*();
   operator int();
   operator float();
-  DialogItemContainer* find (const ClientData entry);
-  DialogItemContainer create (const ClientData item);
+  DialogItemContainer* find (const void* entry);
+  DialogItemContainer create (const void* item);
   ItemStatus mark (ClientData entry);
   ItemStatus unmark (ClientData entry);
   ItemStatus markDelete();

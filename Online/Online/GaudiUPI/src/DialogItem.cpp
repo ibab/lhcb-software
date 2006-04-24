@@ -79,9 +79,9 @@ bool DialogItem::isEqual (DialogItemContainer* it1,DialogItemContainer* it2)  {
   return false;
 }
 
-ItemStatus DialogItem::addList (const ClientData item)    {
+ItemStatus DialogItem::addList (const void* item)    {
   // Check if this entry is already in the list:
-  if ( find(item) != 0 )      return ITEM_ERROR;
+  if ( find((void*)item) != 0 )      return ITEM_ERROR;
 
   DialogItemContainer *it = new DialogItemContainer;
   *it = create(item);
@@ -99,7 +99,7 @@ ItemStatus DialogItem::addList (const ClientData item)    {
   return ITEM_SUCCESS;
 }
 
-ItemStatus DialogItem::removeList (const ClientData item)   {
+ItemStatus DialogItem::removeList (const void* item)   {
   size_t i, j;
   for ( i = 0; i < m_listSize; i++ )  {
     bool found = 0;
@@ -114,7 +114,7 @@ ItemStatus DialogItem::removeList (const ClientData item)   {
   return ITEM_SUCCESS;
 }
 
-ItemStatus DialogItem::setCurrent (const ClientData v){
+ItemStatus DialogItem::setCurrent (const void* v){
   if      ( isString()  )    {
     const char* val = (const char*)v;
     char *tar = m_def.data()->_char;
@@ -126,7 +126,6 @@ ItemStatus DialogItem::setCurrent (const ClientData v){
     m_def.data()->_int[0]   = (int)v;
   }
   else if ( isReal()   )    {
-    unsigned int *ivalue = (unsigned int*)&v;
     m_def.data()->_float[0] = *(float*)v;
   }
   else  {
@@ -143,7 +142,6 @@ ClientData DialogItem::value (const DialogItemContainer* cont) const  {
     size_t siz = sizeof(display_container) - 1;
     // First do some Cleanup before actually returning the pointer
     sscanf(m_fmt.c_str(),"%%%dd",&siz);
-    int len = std::min(sizeof(display_container)-1,siz);
     ptr[std::min(siz,strlen(ptr))] = 0;
     str_trim(ptr,ptr,&siz);
     return (ClientData)ptr;
@@ -182,7 +180,7 @@ DialogItem& DialogItem::deleteList()  {
   return *this;
 }
 
-DialogItemContainer* DialogItem::find (const ClientData entry)  {
+DialogItemContainer* DialogItem::find (const void* entry)  {
   DialogItemContainer it = create(entry);
   for ( size_t i = 0; i < m_listSize; i++ )  {
     if ( isEqual(&it, m_list[i]) ) return m_list[i];
@@ -190,7 +188,7 @@ DialogItemContainer* DialogItem::find (const ClientData entry)  {
   return (DialogItemContainer*)ITEM_ERROR;
 }
 
-DialogItemContainer DialogItem::create (const ClientData item)   {
+DialogItemContainer DialogItem::create (const void* item)   {
   DialogItemContainer it;
   if      ( isString()  )    {
     const char* val = (const char*)item;
@@ -279,8 +277,9 @@ ItemStatus DialogItem::markDelete()    {
 }
 
 ItemStatus DialogItem::deleteMarked()  {
+  size_t i;
 Again:
-  for ( size_t i = 0; i < m_listSize; i++ )   {
+  for (i=0; i < m_listSize; i++ )   {
     if ( m_list[i]->isMarked() )    {
       removeList(value(m_list[i]));
       break;
