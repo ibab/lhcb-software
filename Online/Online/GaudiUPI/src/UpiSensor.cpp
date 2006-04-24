@@ -29,7 +29,7 @@ void UpiSensor::add(Interactor* interactor, long menu) {
 }
 
 //----------------------------------------------------------------------------
-void UpiSensor::remove( Interactor* interactor, long menu )   {
+void UpiSensor::remove( Interactor* /* interactor */, long menu )   {
   Table::iterator i=m_table.find(menu);
   if ( i != m_table.end() ) m_table.erase(i);
 }

@@ -37,7 +37,7 @@ typedef DialogMenu DialogSubMenu;
 class DialogMenu : public Interactor
 {
 public:
-  DialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) 
+  DialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData /* data */ = 0) 
     : m_actor(actor), m_parent(parent) {}
     virtual ~DialogMenu() {}
     virtual int          id() {return (-1);}
