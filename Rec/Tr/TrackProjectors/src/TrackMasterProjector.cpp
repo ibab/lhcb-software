@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.cpp,v 1.9 2006-04-06 13:15:34 jvantilb Exp $
+// $Id: TrackMasterProjector.cpp,v 1.10 2006-04-24 14:28:53 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -115,10 +115,10 @@ TrackMasterProjector::TrackMasterProjector( const std::string& type,
 {
   declareInterface<ITrackProjector>( this );
 
-  declareProperty( "OTProjector",      m_OTProjName = "TrackOTProjector" );
-  declareProperty( "STProjector",      m_STProjName = "TrackSTProjector" );
-  declareProperty( "VeloRProjector",   m_VeloRProjName = "TrackVeloRProjector" );
-  declareProperty( "VeloPhiProjector", m_VeloPhiProjName = "TrackVeloPhiProjector" );
+  declareProperty( "OTProjector",      m_OTProjName = "TrajOTProjector" );
+  declareProperty( "STProjector",      m_STProjName = "TrajSTProjector" );
+  declareProperty( "VeloRProjector",   m_VeloRProjName = "TrajVeloRProjector" );
+  declareProperty( "VeloPhiProjector", m_VeloPhiProjName = "TrajVeloPhiProjector" );
 
   m_projectors.clear();
   m_selectedProjector = NULL;

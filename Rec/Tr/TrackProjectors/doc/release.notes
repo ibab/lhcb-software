@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-04-24 - Eduardo Rodrigues
+ - TrackMasterProjector uses Trajectory projectors by default
+
 !====================== TrackProjectors v2r1 2006-04-13 ======================
 ! 2006-04-13 - Jeroen van Tilburg
  - Added tolerance job-option to specify the required precision of the
