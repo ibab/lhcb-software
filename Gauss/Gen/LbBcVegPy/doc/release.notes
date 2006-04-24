@@ -1,0 +1,9 @@
+! $Id: release.notes,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+! Package     : Gen/LbBcGen
+! Responsible : 
+
+! 2006-03-13 - Jibo He
+  -New Package: this package contains all functions related to the use
+   of BcGen (BCVEGPY 2.0) in LHCb, functions to access BCVEGPY fortran 
+   common block and to set the parameters required by BcGen.
+! ====================================================================

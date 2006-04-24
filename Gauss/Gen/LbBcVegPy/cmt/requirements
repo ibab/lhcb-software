@@ -1,0 +1,31 @@
+# $Id: requirements,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $ 
+#============================================================================
+package       LbBcVegPy
+version       v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches      LbBcGen doc cmt src
+include_dirs  $(LBBCVEGPYROOT)
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use           LbPythia        v*          Gen
+use           BcVegPy         v*          Gen
+
+#============================================================================
+# Linker and Component library building rule
+#============================================================================
+library       LbBcVegPyLib       Lib/*.cpp Lib/*.F
+library       LbBcVegPy          component/*.cpp
+
+#============================================================================
+# define component and linker library options (the order is essential!)
+#============================================================================
+apply_pattern component_library library=LbBcVegPy 
+apply_pattern linker_library    library=LbBcVegPyLib 
+apply_pattern library_stamps    library=LbBcVegPyLib 
+
+macro LbBcVegPy_fflags " -fno-second-underscore " WIN32 ""
