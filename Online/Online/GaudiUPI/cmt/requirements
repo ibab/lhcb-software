@@ -1,0 +1,20 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+package           GaudiUPI
+version           v1r0
+#============================================================================
+branches          cmt doc src Gaudi
+include_dirs      $(GAUDIUPIROOT)
+use GaudiOnline   v* Online
+use UPI           v* Online
+use GaudiKernel   v*
+
+# ==================== component libraries ==================================
+library GaudiUPI  *.cpp
+apply_pattern component_library library=GaudiUPI
+apply_pattern ld_library_path
+
+# ==================== private use only =====================================
+private
+use GaudiSvc    v*
