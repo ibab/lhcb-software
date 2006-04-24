@@ -136,17 +136,13 @@ int upic_declare_ast_handler (Routine /* handler */ )  {
 
 //---------------------------------------------------------------------------
 int upic_quit ()    {
-  Menu* m;
-  Item* i;
-  Async_line* a;
-
   if (Sys.id) Sys.id--;
   if (Sys.id) return UPI_SS_NORMAL;
   
-  while ((m = Sys.menu.first)) upic_drop_menu (m);
+  for(Menu* m=Sys.menu.first; m; m=Sys.menu.first) upic_drop_menu (m);
   upic_drop_params (Sys.param.first);
-  while ((i = Sys.item.first)) upic_drop_item (i);
-  while ((a = Sys.async.first)) upic_drop_async (a);
+  for(Item* i=Sys.item.first; i; i=Sys.item.first) upic_drop_item (i);
+  for(Async_line* a=Sys.async.first; a; a=Sys.async.first) upic_drop_async (a);
   
   Sys.id = 0;
 #ifdef SCREEN

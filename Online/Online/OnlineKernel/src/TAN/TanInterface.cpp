@@ -75,7 +75,7 @@ TanInterface& TanInterface::instance()   {
 TanInterface::TanInterface()  {
   char* dot;
   const char* tan_host = ::getenv("TAN_NODE");
-  int status = gethostname (m_pcHostName, sizeof (m_pcHostName));
+  int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof (m_pcHostName));
   m_portAllocated = 0;
   if ( status < 0 )                                                  goto Error;
   if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));

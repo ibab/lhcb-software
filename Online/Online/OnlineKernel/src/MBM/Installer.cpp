@@ -198,11 +198,11 @@ int MBM::Installer::install()  {
       buffs->buffers[i].used = 1;
       ::strcpy(buffs->buffers[i].name, m_bm->bm_name);
       buffs->nbuffer++;
-      ::lib_rtl_printf("++bm_init++ BM registration successful:%d buffers now \n",buffs->nbuffer);
+      ::lib_rtl_printf("++bm_init++ BM registration successful:%d buffers now\n",buffs->nbuffer);
       break;
     }
   }
-  ::lib_rtl_printf("++bm_init++ BM installation [%s] successfully. \n",m_bm->bm_name);
+  ::lib_rtl_printf("++bm_init++ BM installation [%s] finished successfully.\n",m_bm->bm_name);
   return MBM_NORMAL;
 }
 

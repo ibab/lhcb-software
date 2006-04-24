@@ -210,8 +210,7 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
 //---------------------------------------------------------------------------
 {
   Display* display = (Display*)d;
-  if (window && !Sys.pop_up)
-  {
+  if (window && !Sys.pop_up)  {
     /*  A menu is concerned  */
     Menu* m= upic_find_menu_on_window (window);
     Page* d;
@@ -219,14 +218,14 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
     Param* param;
     int p_id;
 
-    if (!m) return (ON_SCREEN);
+    if (!m) return (SCR::ON_SCREEN);
 
     if (!(d = m->page.cur)) return 0;
     if (row == 1)    {
-      return (ON_PAGE_UP);
+      return (SCR::ON_PAGE_UP);
     }
     else if ( row == size_t(d->lines+2) )    {
-      return (ON_PAGE_DOWN);
+      return (SCR::ON_PAGE_DOWN);
     }
     else    {
       if (row > 0)  {
@@ -238,32 +237,27 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
           if (!row) break;
           i = i->next;
         }
-        
-        if (!i) return (ON_SCREEN);
+        if (!i) return (SCR::ON_SCREEN);
 
         p_id = 0;
         param = i->param.first;
         while (param)   {
-          if (col < param->pos + param->chars || (param->next == 0))
-          {
+          if (col < param->pos + param->chars || (param->next == 0))   {
             p_id = param->id;
             break;
           }
           param = param->next;
         }
-
         if (upic_set_cursor (m->id, i->id, p_id) == UPI_SS_NORMAL)
-          return (ON_CONTENTS);
+          return (SCR::ON_CONTENTS);
       }
-      else
-      {
+      else      {
         if (upic_set_cursor (m->id, 0, 0) == UPI_SS_NORMAL)
-          return (ON_CONTENTS);
+          return (SCR::ON_CONTENTS);
       }
     }
   }
-  else
-  {
+  else  {
     /*-----------------------------------*/
     /*  Click in a non menu Scr display. */
     /*  it can be                        */
@@ -276,7 +270,7 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
       int num;
       if (display == Sys.pop_up->id)      {
         upic_act_on_pop_up (&num, 0, row);
-        return (ON_POP_UP);
+        return (SCR::ON_POP_UP);
       }
       else
       {
@@ -284,7 +278,7 @@ int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
       }
     }
   }
-  return (ON_SCREEN);
+  return (SCR::ON_SCREEN);
 }
 
 //---------------------------------------------------------------------------
@@ -301,9 +295,14 @@ void upic_init_screen ()    {
 }
 
 //---------------------------------------------------------------------------
-void upic_erase_screen ()
+int upic_get_screen_size(int* rows, int* cols)  {
+  *rows = Sys.pb_rows;
+  *cols = Sys.pb_cols;
+  return UPI_NORMAL;
+}
+
 //---------------------------------------------------------------------------
-{
+void upic_erase_screen () {
   scrc_delete_pasteboard (Sys.pb);
 }
 
@@ -311,8 +310,7 @@ void upic_erase_screen ()
 int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
   Sys.menu.cur = m;  
   if (!i->enabled)  {
-     Item* j;
-    
+    Item* j;
     if (!((j = upic_find_next_item (i, &line)) ||
           (j = upic_find_prev_item (i, &line)))) return (0);
     i = j;
@@ -324,7 +322,7 @@ int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
   Sys.param.cur = i->param.cur;
   d->item.cur  = i;
   d->cur_line  = line;
-  return (1);
+  return UPI_NORMAL;
 }
 
 //---------------------------------------------------------------------------
@@ -343,16 +341,14 @@ int upic_draw_cursor (FLAG mode)    {
       if (!m) break;
       upic_move_cursor (m, d, d->item.cur, d->cur_line);
     }
-    if (!(i = Sys.item.cur))
-    {
+    if (!(i = Sys.item.cur))   {
       d = m->page.cur;
       if (!d) break;
       i = d->item.cur;
       upic_move_cursor (m, d, i, d->cur_line);
       i = 0;
     }
-    else
-    {
+    else    {
       d = Page_address (i->father);
       if (d != m->page.cur)
       {
@@ -360,31 +356,25 @@ int upic_draw_cursor (FLAG mode)    {
         i = 0;
       }
     }
-    
-    row = d->cur_line;
-  
+    row = d->cur_line;  
     if (mode == ON)    {
-      attr = INVERSE | BOLD;
-      if (i && !i->enabled)
-      {
+      attr = SCR::INVERSE | SCR::BOLD;
+      if (i && !i->enabled)  {
         if (!upic_move_cursor (m, d, i, row)) upic_go_backward(m);
         i = 0;
       }
     }
-    else
-    {
-      attr = NORMAL;
-      if (i && i->enabled) attr = BOLD;
+    else   {
+      attr = SCR::NORMAL;
+      if (i && i->enabled) attr = SCR::BOLD;
     }
   } while (!i);
 
-  if (i)
-  {
+  if (i)  {
     row++;
     if (i->type == PARAM)
       upic_draw_param (d, i->param.cur, row, attr, 0);
-    else
-    {
+    else    {
       col = 1;
       scrc_put_chars (d->id, i->string, attr, row, col, 0);
     }
@@ -396,13 +386,12 @@ int upic_draw_cursor (FLAG mode)    {
 
 //---------------------------------------------------------------------------
 int upic_move_up (Menu* m)    {
-   Item* i;
+  Item* i;
   if (!m) return (0);
   Page* d = m->page.cur;
   int line = d->cur_line;
   if (!(i = upic_find_prev_item (d->item.cur, &line))) return 0;
   d = Page_address(i->father);
-  
   return (upic_move_cursor (m, d, i, line));
 }
 
@@ -504,8 +493,7 @@ int upic_move_right (Menu* m)   {
       i = d->item.cur;
     }
     if (!i) return 0;
-    if (i->enabled)
-    {
+    if (i->enabled)    {
       upic_move_cursor (m, d, i, d->cur_line);
       return 1;
     }

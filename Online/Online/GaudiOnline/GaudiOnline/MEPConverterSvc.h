@@ -57,10 +57,12 @@ namespace LHCb  {
     MBM::Producer*   m_producer;
     /// MBM Consumer pointer
     MBM::Consumer*   m_consumer;
-    /// Option: Request specification
-    Requirements     m_req;
     /// Flag indicating that MBM event retrieval is active
     bool             m_receiveEvts;
+    /// Property: printout frequence
+    float            m_freq;
+    /// Property: Request specification
+    Requirements     m_req;
     /// Property: MEP manager service name/type
     std::string      m_mepMgrName;
     /// Declare all subevents of a full MEP

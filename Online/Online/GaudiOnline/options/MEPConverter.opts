@@ -6,6 +6,7 @@ ApplicationMgr.Runable               = "LHCb::MEPConverterSvc/Runable";
 ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
 MEPManager.PartitionID               = 333;
 MEPManager.Buffers                   = { "MEP","EVENT" };
+Runable.PrintFreq                    = 0.001;
 Runable.Requirements         = {
 "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };

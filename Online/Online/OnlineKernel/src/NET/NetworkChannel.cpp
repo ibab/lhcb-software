@@ -4,23 +4,6 @@
 #include "RTL/rtl.h"
 #include "RTL/QIO.h"
 
-#if defined(_WIN32)
-#include "Winsock.h"
-#include <stdexcept>
-namespace {
-  struct __init__ {
-    __init__()  {
-      static WSADATA g_WSAData;
-      memset(&g_WSAData, 0, sizeof(WSADATA));
-      if (WSAStartup ( MAKEWORD(1,1), &g_WSAData) != 0)    {
-        throw std::runtime_error("NetworkChannel: WSAStartup failed!");
-      }
-    }
-  };
-  static __init__ g_init;
-}
-#endif
-
 // ----------------------------------------------------------------------------
 //  Default constructor
 //                                      M.Frank

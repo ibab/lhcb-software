@@ -32,30 +32,29 @@ int upic_scroll_message (int key)    {
       else break;
     }
     break;
-  case KPD_PREV :
+  case SCR::KPD_PREV :
     if (top && a->rows < a->entries)    {
       for (int i=0; i<a->rows-1 && top; i++)      {
         if (top->prev)    {
           top = top->prev;
           bottom = bottom->prev;
-          scrc_insert_line (a->id, top->text, INVERSE, 1, MOVE_DOWN);
+          scrc_insert_line (a->id, top->text, top->render, 1, SCR::MOVE_DOWN);
         }
       }
     }
     break;
-  case KPD_NEXT :
+  case SCR::KPD_NEXT :
     if (bottom && a->rows < a->entries)  {
       for (int i=0; i<a->rows-1 && bottom; i++)  {
         if (bottom->next)   {
           top = top->next;
           bottom = bottom->next;
-          scrc_insert_line (a->id, bottom->text, INVERSE, a->rows,
-            MOVE_UP);
+          scrc_insert_line (a->id, bottom->text, top->render, a->rows, SCR::MOVE_UP);
         }
       }
     }
     break;
-  case KPD_PF4 :
+  case SCR::KPD_PF4 :
     upic_paste_message();
     scrc_bring_display_to_back (a->id, Sys.pb);
   }
@@ -89,12 +88,12 @@ int upic_drag_message (Display* /* id */, int drow, int dcol) {
 //---------------------------------------------------------------------------
 void upic_draw_message ()   {
   int i;
-  Async_line* line;
   Async* a = &Sys.async;
   list_init (a);
   a->entries     = 1;
-  line = (Async_line*) list_add_entry (a, sizeof(Async_line));
+  Async_line* line = (Async_line*) list_add_entry (a, sizeof(Async_line));
   line->text = (char*) list_malloc (sizeof(Separator)+1);
+  line->render = SCR::INVERSE;
   strcpy (line->text, Separator);
 
   a->max_entries = MAX_MESSAGE_ENTRIES;
@@ -108,7 +107,7 @@ void upic_draw_message ()   {
   a->cols = Sys.pb_cols-2;
 
   scrc_begin_pasteboard_update (Sys.pb);
-  scrc_create_display (&a->id, a->rows, a->cols, NORMAL,ON, "Messages");
+  scrc_create_display (&a->id, a->rows, a->cols, SCR::NORMAL,ON, "Messages");
   scrc_enable_scroll (a->id, upic_scroll_message);
   scrc_enable_resize (a->id, upic_resize_message);
   scrc_enable_drag   (a->id, upic_drag_message);
@@ -129,14 +128,16 @@ void upic_refresh_message (Async* a)  {
   Async_line* line = a->last;
   const char *c, null = '\0';
   for (int i = a->rows; i > 0; i--)  {
+    int render = SCR::INVERSE;
     if (line)  {
       c = line->text;
+      render = line->render;
       line = line->prev;
     }
     else {
       c = &null;
     }
-    scrc_put_chars (a->id, c, INVERSE, i, 1, 1);
+    scrc_put_chars (a->id, c, render, i, 1, 1);
   }
 }
 
@@ -160,7 +161,6 @@ static int upic_filter_controls (char* line)    {
 int upic_write_message (const char* text1, const char* text2) {
 #ifdef SCREEN
   const char* t[2] = {text1, text2};
-  Async_line* line;
   Async* a = &Sys.async;
   scrc_begin_pasteboard_update (Sys.pb);
   for (int i=0; i<2; i++)  {
@@ -172,18 +172,50 @@ int upic_write_message (const char* text1, const char* text2) {
       }
       else a->entries++;
 
-      line = (Async_line*) list_add_entry (a, sizeof(Async_line));
+      Async_line* line = (Async_line*) list_add_entry (a, sizeof(Async_line));
       line->text = (char*) list_malloc (len+1);
+      line->render = SCR::INVERSE;
       strcpy (line->text, t[i]);
       if (upic_filter_controls (line->text)) scrc_ring_bell (a->id);
-
-      scrc_insert_line (a->id, line->text, INVERSE, a->rows, MOVE_UP);
+      scrc_insert_line (a->id, line->text, line->render, a->rows, SCR::MOVE_UP);
     }
   }
   upic_wakeup();
   scrc_end_pasteboard_update (Sys.pb);
 #else
   upir_write_message (text1, text2);
+#endif
+  return UPI_SS_NORMAL;
+}
+
+//---------------------------------------------------------------------------
+int upic_write_rendered_message (const char* text1, const char* text2, int render) {
+#ifdef SCREEN
+  const char* t[2] = {text1, text2};
+  Async* a = &Sys.async;
+  scrc_begin_pasteboard_update (Sys.pb);
+  for (int i=0; i<2; i++)  {
+    int len = strlen(t[i]);
+    if ( len )    {
+      if (a->entries == a->max_entries)    {
+        free (a->first->next->text);
+        list_remove_entry (a->first->next);
+      }
+      else  {
+        a->entries++;
+      }
+      Async_line* line = (Async_line*) list_add_entry (a, sizeof(Async_line));
+      line->render = render;
+      line->text = (char*) list_malloc (len+1);
+      strcpy (line->text, t[i]);
+      if (upic_filter_controls (line->text)) scrc_ring_bell (a->id);
+      scrc_insert_line (a->id, line->text, render, a->rows, SCR::MOVE_UP);
+    }
+  }
+  upic_wakeup();
+  scrc_end_pasteboard_update (Sys.pb);
+#else
+  upir_write_rendered_message (text1, text2, render);
 #endif
   return UPI_SS_NORMAL;
 }

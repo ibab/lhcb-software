@@ -397,7 +397,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
     }
     if (to_the_end) row++;
 
-    scrc_insert_line (d->id, " ", NORMAL, row+1, MOVE_DOWN);
+    scrc_insert_line (d->id, " ", SCR::NORMAL, row+1, SCR::MOVE_DOWN);
 
     if (!last)  {      /* There is another Page */
       if (!d->next)    {
@@ -549,13 +549,13 @@ void upic_draw_item (Item* i, int row)  {
   if (!disp) return;
 
   scrc_begin_pasteboard_update (Sys.pb);
-  int attr = (i->enabled) ? BOLD : NORMAL;
+  int attr = (i->enabled) ? SCR::BOLD : SCR::NORMAL;
   row++;
   scrc_put_chars (disp, i->string, attr, row, 1, 1);
   if (i->to)
     scrc_put_char (disp, '>', attr, row, strlen(i->string)+1);
   if (i->type == PARAM)  {
-    attr |= UNDERLINE;
+    attr |= SCR::UNDERLINE;
     Param* p = i->param.first;
     while (p)      {
       upic_draw_param (d, p, row, attr, 0);

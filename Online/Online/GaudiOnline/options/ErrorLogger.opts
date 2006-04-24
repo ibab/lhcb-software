@@ -1,7 +1,7 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-Runable.Wait                         = true;
+ApplicationMgr.Runable               = "LHCb::DimErrorLogger/Runable";
 ApplicationMgr.ExtSvc                = { };
-MessageSvc.OutputLevel               = 4;
+MessageSvc.OutputLevel   = 1;  // Minimum is Error
+MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";

@@ -113,6 +113,7 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   SmartIF<IProperty> ip(inst);
   if ( ip )  {
     ip->setProperty(StringProperty("AppName",""));
+    ip->setProperty(StringProperty("MessageSvcType", "LHCb::OnlineMessageSvc"));
     if ( m_optOptions.empty() )  {
       ip->setProperty(StringProperty("JobOptionsType","NONE"));
     }

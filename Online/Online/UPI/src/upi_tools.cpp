@@ -185,21 +185,21 @@ CALL_ON_MOVE_LEFT | CALL_ON_MOVE_RIGHT)
 int upic_valid_keypad (int key) {
   int menu, item;
   switch (key)  {
-    case KPD_PF1 :
+    case SCR::KPD_PF1 :
       menu = Sys.pf1.menu;
       item = 0;
       break;
-    case KPD_0 :
-    case KPD_1 :
-    case KPD_2 :
-    case KPD_3 :
-    case KPD_4 :
-    case KPD_5 :
-    case KPD_6 :
-    case KPD_7 :
-    case KPD_8 :
-    case KPD_9 :
-      key -= KPD_0;
+    case SCR::KPD_0 :
+    case SCR::KPD_1 :
+    case SCR::KPD_2 :
+    case SCR::KPD_3 :
+    case SCR::KPD_4 :
+    case SCR::KPD_5 :
+    case SCR::KPD_6 :
+    case SCR::KPD_7 :
+    case SCR::KPD_8 :
+    case SCR::KPD_9 :
+      key -= SCR::KPD_0;
       menu = Sys.keypad[key].menu;
       item = Sys.keypad[key].item;
       break;
@@ -217,20 +217,20 @@ int upic_valid_keypad (int key) {
 //---------------------------------------------------------------------------
 int upic_branch_on_keypad (int key)  {
   switch (key)  {
-    case KPD_PF1 :
+    case SCR::KPD_PF1 :
       upic_set_cursor (Sys.pf1.menu, 0, 0);
       break;
-    case KPD_0 :
-    case KPD_1 :
-    case KPD_2 :
-    case KPD_3 :
-    case KPD_4 :
-    case KPD_5 :
-    case KPD_6 :
-    case KPD_7 :
-    case KPD_8 :
-    case KPD_9 :
-      key -= KPD_0;
+    case SCR::KPD_0 :
+    case SCR::KPD_1 :
+    case SCR::KPD_2 :
+    case SCR::KPD_3 :
+    case SCR::KPD_4 :
+    case SCR::KPD_5 :
+    case SCR::KPD_6 :
+    case SCR::KPD_7 :
+    case SCR::KPD_8 :
+    case SCR::KPD_9 :
+      key -= SCR::KPD_0;
       upic_set_cursor (Sys.keypad[key].menu, Sys.keypad[key].item, 0);
       break;
   }

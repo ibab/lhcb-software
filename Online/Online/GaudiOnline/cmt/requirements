@@ -7,15 +7,14 @@ version           v1r2p1
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
 use DIM           v* Online
-# use SFCClient     v* Online
 use OnlineKernel  v* Online
 use DAQEvent      v* Event
 use GaudiKernel   v*
 use MDF           v* DAQ
-#use GaudiUPI      v* Online
 # ==================== component libraries ==================================
-library GaudiOnline  *.cpp
-apply_pattern component_library library=GaudiOnline 
+document install_includes install_includes
+library  GaudiOnline  *.cpp
+apply_pattern linker_library   library=GaudiOnline
 apply_pattern ld_library_path
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 

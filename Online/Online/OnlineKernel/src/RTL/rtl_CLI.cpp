@@ -29,9 +29,9 @@ const char* RTL::CLI::getopt(const char* name, int nchars)  {
         else if ( cptr[1] == '?' || cptr[1] == 'h' || cptr[1] == 'H' ) {
           if ( m_help ) {
             (*m_help)();
-            ::exit(0);
           }
-	}
+          ::exit(0);
+        }
       }
     }
     return 0;

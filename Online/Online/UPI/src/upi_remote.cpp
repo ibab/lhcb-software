@@ -192,6 +192,15 @@ void upir_write_message (const char* text1, const char* text2)  {
 }
 
 //--------------------------------------------------------------------------
+void upir_write_rendered_message (const char* text1, const char* text2, int render)  {
+  UpiBufferSetCommand (SendBuffer, UPIF_WRITE_MESSAGE_RENDERED);
+  UpiBufferPutText (SendBuffer, text1);
+  UpiBufferPutText (SendBuffer, text2);
+  UpiBufferPutInt  (SendBuffer, render);
+  UpiBufferSendAlways (SendBuffer);
+}
+
+//--------------------------------------------------------------------------
 void upir_set_message_window (int rows, int cols, int row, int col) {
   UpiBufferSetCommand (SendBuffer, UPIF_SET_MESSAGE_WINDOW);
   UpiBufferPutInt (SendBuffer, rows);

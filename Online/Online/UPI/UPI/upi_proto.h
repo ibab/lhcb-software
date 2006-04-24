@@ -139,6 +139,7 @@ void upic_draw_menu (Menu*);
 /*- From UPI_MESSAGE.C ------------------------------------------------*/
 
 int upic_write_message (const char*,const char*);
+int upic_write_rendered_message (const char*, const char*, int render);
 int upic_set_message_window (int,int,int,int);
 int upic_get_message_window (int*,int*,int*,int*);
 void upic_drop_async (Async_line*);
@@ -242,6 +243,7 @@ void upir_close_menu (Menu*,UpiConnect);
 void upir_delete_menu (int);
 void upir_erase_menu (int);
 void upir_write_message (const char*, const char*);
+void upir_write_rendered_message (const char*, const char*, int render);
 void upir_set_message_window (int,int,int,int);
 int upir_get_message_window (int*,int*,int*,int*);
 void upir_change_titles (Menu*);
@@ -258,34 +260,35 @@ void upir_quit (void);
 void upir_open_window (void);
 void upir_open_old_window (int);
 void upir_set_window_position (int,int,int);
-int upir_get_window_position (int,int*,int*);
-int upir_get_window_size (int menu_id, int* col, int* row);
+int  upir_get_window_position (int,int*,int*);
+int  upir_get_window_size (int menu_id, int* col, int* row);
+int  upir_get_screen_size(int* rows, int* cols);
 void upir_attach_pf1 (int);
 void upir_cancel_notice (void);
-int upir_get_items_per_page (int*);
+int  upir_get_items_per_page (int*);
 void upir_set_items_per_page (int);
-int upir_get_mode (int*);
+int  upir_get_mode (int*);
 void upir_set_mode (int);
 void upir_register_on_keypad (int,int,int);
 
 void upir_show_notice (const char*,int,const char**);
 
-int upir_show_warning (int,const char**);
+int  upir_show_warning (int,const char**);
 void upir_connect_process (const char*);
 void upir_disconnect_process (const char*);
-int upir_dldec (const char*,int,int*,int,int);
+int  upir_dldec (const char*,int,int*,int,int);
 void upir_dlend (void);
-int upir_dlhex (const char*,int,int*,int,int);
+int  upir_dlhex (const char*,int,int*,int,int);
 void upir_dlhead (const char*,int,int);
-int upir_dlkey (void);
-int upir_dlm32 (const char*,int,int*);
-int upir_dlmask (const char*,int,int*);
-int upir_dloct (const char*,int,int*,int,int);
-int upir_dltxt (const char*,const char*,char*,int,int*);
+int  upir_dlkey (void);
+int  upir_dlm32 (const char*,int,int*);
+int  upir_dlmask (const char*,int,int*);
+int  upir_dloct (const char*,int,int*,int,int);
+int  upir_dltxt (const char*,const char*,char*,int,int*);
 void upir_dlout (const char*,int,int,int);
 void upir_dlouto (const char*,int,int,int);
 void upir_dloutx (const char*,int,int,int);
-int upir_dlyeno (const char*,int,int*);
+int  upir_dlyeno (const char*,int,int*);
 void upir_lock_cursor (void);
 void upir_unlock_cursor (void);
 void upir_back_space (int);
@@ -381,9 +384,11 @@ int upic_open_window (void);
 int upic_open_pulldown_window (void);
 int upic_open_old_window (int);
 int upic_set_window_position (int,int,int);
-int upic_get_window_position (int,int*,int*);
+int upic_get_window_position (int,int* rols,int* cols);
+int upic_get_screen_size(int* rows, int* cols);
 int upic_open_detached_window (void);
 int upic_get_window_size(int menu_id, int* col, int* row);
+int upic_get_screen_size(int* rows, int* cols);
 
 /*- From --------------------------------------------------------------*/
 #ifdef __cplusplus

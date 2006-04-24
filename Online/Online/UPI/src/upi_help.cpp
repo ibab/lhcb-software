@@ -28,11 +28,11 @@ void upic_open_help  (Menu* m)  {
     if ((len = strlen(i->help)) > cols) cols = len;
   }
   d->cols = cols + 1;
-  scrc_create_display (&d->id, d->lines, d->cols + 1, INVERSE, ON, "");
+  scrc_create_display (&d->id, d->lines, d->cols + 1, SCR::INVERSE, ON, "");
 
   i = m->page.cur->item.first;
   for (int r=1; r<=d->lines; (r++, i = i->next))
-    scrc_put_chars (d->id, i->help, INVERSE, r, 2, 0);
+    scrc_put_chars (d->id, i->help, SCR::INVERSE, r, 2, 0);
   scrc_paste_display (d->id, Sys.pb, d->row, d->col);
   Sys.help = d;
 }

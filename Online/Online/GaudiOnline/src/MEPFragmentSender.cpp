@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.1 2006-04-19 11:44:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.2 2006-04-24 12:18:42 frankb Exp $
 //	====================================================================
 //  MEPFragmentSender.h
 //	--------------------------------------------------------------------
@@ -24,10 +24,18 @@ namespace LHCb  {
     */
   class MEPFragmentSender : public Algorithm  {
     typedef std::vector<std::string> Recipients;
-    Recipients           m_recipients;
-    Recipients::iterator m_current;
+    /// Property: Send target names
+    Recipients             m_recipients;
+    /// Property: printout frequence
+    float                  m_freq;
+    /// Round robing sending: current send target
+    Recipients::iterator   m_current;
     /// Streambuffer to hold uncompressed data
-    StreamBuffer  m_data;
+    StreamBuffer           m_data;
+    /// Counter of number of events sent
+    unsigned long long int m_evtSent;
+    /// Counter of number of bytes sent
+    unsigned long long int m_bytesSent;
   public:
     /// Standard algorithm constructor
     MEPFragmentSender(const std::string& name, ISvcLocator* pSvcLocator);
@@ -42,7 +50,7 @@ namespace LHCb  {
   };
 }
 
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.1 2006-04-19 11:44:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPFragmentSender.cpp,v 1.2 2006-04-24 12:18:42 frankb Exp $
 //	====================================================================
 //  MEPFragmentSender.cpp
 //	--------------------------------------------------------------------
@@ -62,14 +70,17 @@ namespace LHCb  {
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
 
+#include <cmath>
+
 #include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MEPFragmentSender);
 
 /// Standard algorithm constructor
 LHCb::MEPFragmentSender::MEPFragmentSender(const std::string& name, ISvcLocator* pSvcLocator)
-:	Algorithm(name, pSvcLocator)
+:	Algorithm(name, pSvcLocator), m_evtSent(0), m_bytesSent(0)
 {
-  declareProperty("Recipients",   m_recipients);
+  declareProperty("PrintFreq",   m_freq = 0.);
+  declareProperty("Recipients",  m_recipients);
   m_current = m_recipients.end();
   m_data.reserve(1024*64);        // 64 kB initial space (for 35 kB average event sized)
 }
@@ -110,6 +121,8 @@ StatusCode LHCb::MEPFragmentSender::execute()  {
         const unsigned int* trMask = addr->triggerMask();
         const std::vector<RawBank*>* banks = addr->banks();
         size_t total_len, len = rawEventLength(*banks)+sizeof(MDFHeader);
+        ulonglong prtCount = fabs(m_freq) > 1./ULLONG_MAX ? ulonglong(1./m_freq) : ULLONG_MAX;
+
         m_data.reserve(len);
         encodeRawBanks(*banks, m_data.data()+sizeof(MDFHeader),len, &total_len);
         makeMDFHeader(m_data.data(), total_len, evtTyp, hdrType, trNumb, trMask, 0, 0);
@@ -128,7 +141,14 @@ StatusCode LHCb::MEPFragmentSender::execute()  {
               << ". status:" << sc << ". " << endmsg;
           return StatusCode::FAILURE;
         }
+        m_bytesSent += total_len + sizeof(MDFHeader);
+        ++m_evtSent;
         ++m_current;
+        if ( 0 == (m_evtSent%prtCount) )  {
+          MsgStream log(msgSvc(),name());
+          log << MSG::INFO << "Sent " << m_evtSent 
+              << " Events with a total of " << m_bytesSent << " Bytes." << endmsg;
+        }
         return StatusCode::SUCCESS;
       }
     }

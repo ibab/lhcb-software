@@ -3,4 +3,4 @@
 Runable.Dll  = "OnlineKernel";
 Runable.Call = "tan_nameserver";
 Runable.InitFlags = "-a -tcp -n";
-MessageSvc.OutputLevel   = 1;  // Minimum is Error
+MessageSvc.OutputLevel   = 4;  // Minimum is Error

@@ -6,6 +6,7 @@
 #include "termios.h"
 static struct termios neu, alt; 
 #endif 
+using namespace SCR;
 
 void scrc_resetANSI()   {
 #define plain()            fputs("\033[0m",stdout)

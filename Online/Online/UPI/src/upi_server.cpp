@@ -176,6 +176,7 @@ void close_menu (SrvConnect* connect);
 void delete_menu (SrvConnect* connect);
 void erase_menu (SrvConnect* connect);
 void write_message (SrvConnect* connect);
+void write_message_rendered (SrvConnect* connect);
 void set_message_window (SrvConnect* connect);
 void get_message_window (SrvConnect* connect);
 void change_titles (SrvConnect* connect);
@@ -295,6 +296,7 @@ static SrvFunc Actions[] = {
     delete_menu,
     erase_menu,
     write_message,
+    write_message_rendered,
     set_message_window,
     get_message_window,
     change_titles,
@@ -1121,9 +1123,10 @@ void erase_menu (SrvConnect* connect)  {
 
 //--------------------------------------------------------------------------
 void write_message (SrvConnect* connect)  {
-  char *text1, *text2, *t1, *t2, *timestr;
+  char *text1, *text2, *t1, *t2;
   static char null[] = "";
-  time_t t;
+  time_t t = time (0);
+  char* timestr = ctime(&t);
   static const char format1[] = "[";
   static const char format2[] = " - ";
   static const char format3[] = "] ";
@@ -1131,8 +1134,6 @@ void write_message (SrvConnect* connect)  {
 
   UpiBufferGetText (GetBuffer, &text1);
   UpiBufferGetText (GetBuffer, &text2);
-  t = time (0);
-  timestr = ctime (&t);
   timestr[19] = 0;
   timestr += 4;
 
@@ -1160,12 +1161,57 @@ void write_message (SrvConnect* connect)  {
     strcat (t2, text2);
   }
   else t2 = null;
-
   upic_write_message (t1, t2);
   upic_end_update ();
-
   if (LogFile_active) log_message (t1, t2);
+  if (strlen(text1)) free (t1);
+  if (strlen(text2)) free (t2);
+}
 
+//--------------------------------------------------------------------------
+void write_message_rendered (SrvConnect* connect)  {
+  char *text1, *text2, *t1, *t2;
+  static char null[] = "";
+  time_t t = time (0);
+  char* timestr = ctime(&t);
+  static const char format1[] = "[";
+  static const char format2[] = " - ";
+  static const char format3[] = "] ";
+  int size_format, render = 0;
+
+  UpiBufferGetText (GetBuffer, &text1);
+  UpiBufferGetText (GetBuffer, &text2);
+  UpiBufferGetInt  (GetBuffer, &render);
+  timestr[19] = 0;
+  timestr += 4;
+
+  size_format = sizeof(format1) + strlen(timestr) + sizeof(format2) +
+    strlen(connect->source) + sizeof(format3);
+
+  if (strlen(text1))  {
+    t1 = list_malloc (size_format + strlen(text1) + 1);
+    strcpy (t1, format1);
+    strcat (t1, timestr);
+    strcat (t1, format2);
+    strcat (t1, connect->source);
+    strcat (t1, format3);
+    strcat (t1, text1);
+  }
+  else t1 = null;
+
+  if (strlen(text2))  {
+    t2 = list_malloc (size_format + strlen(text2) + 1);
+    strcpy (t2, format1);
+    strcat (t2, timestr);
+    strcat (t2, format2);
+    strcat (t2, connect->source);
+    strcat (t2, format3);
+    strcat (t2, text2);
+  }
+  else t2 = null;
+  upic_write_rendered_message (t1, t2, render);
+  upic_end_update ();
+  if (LogFile_active) log_message (t1, t2);
   if (strlen(text1)) free (t1);
   if (strlen(text2)) free (t2);
 }

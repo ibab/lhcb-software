@@ -66,10 +66,8 @@ StatusCode LHCb::OnlineRunable::run() {
             if ( ::strchr(items[i],' ') != 0 ) {
               *strchr(items[i],' ') = 0;
             }
-            log << MSG::ERROR << "arg[" << i << "]=" << items[i] << endmsg;
           }
         }
-        log << MSG::ERROR << "Narg=" << ikey << endmsg;
         sc = (*fun)(ikey, items);
         if ( sc.isSuccess() )  {
           return wait();

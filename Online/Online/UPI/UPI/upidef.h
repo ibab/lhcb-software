@@ -6,15 +6,15 @@
 
 
 /* function return codes */
-#define UPI_NORMAL 0
-#define UPI_ERROR (-1)
+#define UPI_NORMAL 1
+#define UPI_ERROR  0
  
 /* error codes */
 #define UPI_FACILITY      80*256
  
-#define UPI_NEXMENU      (UPI_FACILITY+1)      /* non existing menu id */
-#define UPI_NEXCOMM      (UPI_FACILITY+2)      /* non existing command id */
-#define UPI_DISCOMM      (UPI_FACILITY+3)      /* command disabled */
+#define UPI_NEXMENU      (UPI_FACILITY+2)      /* non existing menu id */
+#define UPI_NEXCOMM      (UPI_FACILITY+4)      /* non existing command id */
+#define UPI_DISCOMM      (UPI_FACILITY+6)      /* command disabled */
 
 #define UPI_SS_DTBFULL	 (UPI_FACILITY+0x4)
 #define UPI_SS_ABORTED	 (UPI_FACILITY+0x6)
@@ -28,7 +28,7 @@
 #define UPI_SS_INVPARAM   (UPI_FACILITY+0x18)
 #define UPI_SS_INVCOMMAND (UPI_FACILITY+0x1C)
 #define UPI_SS_INVMENU    (UPI_FACILITY+0x1E)
-#define UPI_SS_NORMAL     0
+#define UPI_SS_NORMAL     1
 
 /* Constants for building pages */
 #define PREV_PAGE	"<- "
@@ -282,7 +282,7 @@ struct ASYNC    {
 struct ASYNC_LINE
 {
   Async_line  Link_items;
-  
+  int         render;
   char       *text;
 };
 

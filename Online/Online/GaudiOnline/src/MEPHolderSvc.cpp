@@ -137,7 +137,7 @@ StatusCode LHCb::MEPHolderSvc::run()  {
         break;
       }
 #ifdef _WIN32
-      lib_rtl_sleep(10);
+      lib_rtl_sleep(1);
 #else
       lib_rtl_usleep(100);
 #endif

@@ -765,13 +765,11 @@ int upic_store_vars (int menu_id, int item_id, char** buffer, int *length)
       d = d->next;
     }
   }
-  else
-  {
+  else   {
     d = m->page.first;
     if (!d || !(i = upic_find_item (d->item.first, item_id)))
       return UPI_SS_INVCOMMAND;
-    if (i->type == PARAM && i->id != -1)
-    {
+    if (i->type == PARAM && i->id != -1)    {
       bytes = upic_count_store_bytes (i);
       buf = (char*) list_malloc (bytes);
       *buffer = buf;
@@ -796,16 +794,12 @@ int upic_retreive_vars (int menu_id, int item_id, char* buffer)
   int* n;
 
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
-  if (m->type == PARAMETER_PAGE || !item_id)
-  {
+  if (m->type == PARAMETER_PAGE || !item_id)  {
     d = m->page.first;
-    while (d)
-    {
+    while (d)    {
       i = d->item.first;
-      while (i)
-      {
-        if (i->type == PARAM && i->id != -1)
-        {
+      while (i)      {
+        if (i->type == PARAM && i->id != -1)   {
           n = (int*) buffer;
           if (*n != i->id) return (UPI_SS_INVCOMMAND);
           buffer += sizeof(int);
@@ -822,8 +816,7 @@ int upic_retreive_vars (int menu_id, int item_id, char* buffer)
     d = m->page.first;
     if (!d || !(i = upic_find_item (d->item.first, item_id)))
       return UPI_SS_INVCOMMAND;
-    if (i->type == PARAM && i->id != -1)
-    {
+    if (i->type == PARAM && i->id != -1)    {
       buffer = upic_retreive_params_of_line (i, buffer);
       if (!buffer) return (UPI_SS_INVPARAM);
     }
@@ -846,8 +839,7 @@ void upic_restore_params_in_page (Menu* m)    {
   Item* i;
   while (d)  {
     i = d->item.first;
-    while (i)
-    {
+    while (i)    {
       if (i->param.first) upic_restore_params_in_line (i);
       i = i->next;
     }
@@ -874,8 +866,7 @@ Unsigned upic_mtoi (char* buffer, int digits)   {
   Unsigned value = 0;
   digits--;
   i = 1 << digits;
-  for (; i; i >>= 1, buffer++)
-  {
+  for (; i; i >>= 1, buffer++)  {
     if (*buffer != '.') value |= i;
   }
   return value;
@@ -932,44 +923,26 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
   int list_size = p->list_size;
   if (!list_size) return (-1);
 
-  if (p->type == ASC_FMT)
-  {
-    char** q;
-    int i;
-    int len1, len2;
-    
-    len1 = upic_non_blanks (p->val.c);
-    q = (char **)p->list;
-    for (i=0; i<p->list_size; i++, q++)
-    {
-      if (*q)
-      {
-        len2 = upic_non_blanks (*q);
+  if (p->type == ASC_FMT)  {
+    int len1 = upic_non_blanks (p->val.c);
+    char** q = (char **)p->list;
+    for (int i=0; i<p->list_size; i++, q++)    {
+      if (*q)      {
+        int len2 = upic_non_blanks (*q);
         if ((len1 == len2) && !strncmp (*q, p->val.c, len1)) return (i);
       }
     }
   }
-  else if (p->type == REAL_FMT)
-  {
-    double* q;
-    double d;
-    int i;
-
-    q = (double *)p->list;
-    for (i=0; i<list_size; i++, q++)
-    {
-      d = *q;
+  else if (p->type == REAL_FMT)  {
+    double* q = (double *)p->list;
+    for (int i=0; i<list_size; i++, q++)    {
+      double d = *q;
       if (d == p->val.d) return (i);
     }
   }
-  else
-  {
-    int* q;
-    int i;
-
-    q = p->list;
-    for (i=0; i<list_size; i++, q++)
-    {
+  else  {
+    int* q = p->list;
+    for (int i=0; i<list_size; i++, q++)    {
       if (*q == p->val.i) return (i);
     }
   }
@@ -989,39 +962,30 @@ int upic_set_value_from_list (int menu_id, int item_id, int param_id, int elem) 
   if (!list_size && elem >= list_size) return (UPI_SS_INVPARAM);
 
   if (p->type == ASC_FMT)  {
-    char** q;
-    
-    q = (char **)p->list;
+    char** q = (char **)p->list;
     q += elem;
     strcpy (p->val.c, *q);
   }
-  else if (p->type == REAL_FMT)
-  {
-    double* q;
-
-    q = (double *)p->list;
+  else if (p->type == REAL_FMT)  {
+    double* q = (double *)p->list;
     q += elem;
     p->val.d = *q;
   }
-  else
-  {
-    int* q;
-
-    q = p->list;
+  else  {
+    int* q = p->list;
     q += elem;
     p->val.i = *q;
   }
   
   upic_update_var_of_param (p);
   upic_refresh_param (p);
-
   return (-1);
 }
 
 #ifdef SCREEN
 //---------------------------------------------------------------------------
 void upic_draw_param (Page*  page, Param* param, int row, int attrib, int /* offs */) {
-  int attr = attrib | UNDERLINE;
+  int attr = attrib | SCR::UNDERLINE;
   size_t col = param->pos;
   size_t pos = (param->buf_pos > param->chars) ? param->chars - 1 : param->buf_pos;
   size_t offset = (param->input) ? (param->buf_pos - pos) : 0;

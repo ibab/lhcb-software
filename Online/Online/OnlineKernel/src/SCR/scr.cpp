@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <cerrno>
 #endif
+
+using namespace SCR;
+
 #define BUFFER_GUARD 20
 
 #define belongs_to(d,r,c) (r >= d->row0+d->row-1 && \
@@ -92,10 +95,10 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
     if ( 1 != ::sscanf(::getenv("LINES"),"%d",&pb->rows) ) pb->rows = 24;
   }
 #endif
-  scrc_init_screen (pb, *rows, *cols);
-  int size = pb->rows * pb->cols;
   *rows = pb->rows;
   *cols = pb->cols;
+  scrc_init_screen (pb, *rows, *cols);
+  int size = pb->rows * pb->cols;
 
   list_init (&pb->paste);
 
@@ -404,7 +407,7 @@ int scrc_read_from_display (Display *disp, char *string, int maxlen, int row)   
 int scrc_set_border (Display *disp, const char *title, char attr)   {
   int cols = disp->cols;
   int len = (title) ? strlen(title) : 0;
-  if (disp->title) free (disp->title);
+  char * tmp = disp->title;
   disp->title = (char *) list_malloc (len + 1);
   strcpy (disp->title, (title) ? title : "");
   scrc_draw_box (disp, attr);
@@ -414,6 +417,7 @@ int scrc_set_border (Display *disp, const char *title, char attr)   {
     for (;len;len--,pos++)
       scrc_put_char_all (disp, pos, *title++, attr, 0, pos);
   }
+  if (tmp) free (tmp);
   return 1;
 }
 

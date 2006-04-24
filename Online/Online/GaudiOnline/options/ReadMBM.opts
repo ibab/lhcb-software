@@ -1,7 +1,7 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
-ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiOnline"};
-ApplicationMgr.TopAlg                = { "StoreExplorerAlg", "LHCb::DecisionSetterAlg/DecisionSetter" };
+ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiAlg", "GaudiOnline"};
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
@@ -9,5 +9,10 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-MEPManager.PartitionID           = 333;
-MEPManager.Buffers               = { "EVENT", "RESULT" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "EVENT", "RESULT" };
+// Prescale events declared to RESULT buffer
+ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
+SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::DecisionSetterAlg/DecisionSetter"};
+Prescaler.PercentPass                = 0.5;
+Prescaler.OutputLevel                = 4;

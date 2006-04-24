@@ -18,6 +18,8 @@
 #include "MBM/Producer.h"
 #include "MBM/Consumer.h"
 #include "MBM/Requirement.h"
+#include <climits>
+#include <cmath>
 
 using MBM::Producer;
 using MBM::Consumer;
@@ -31,6 +33,7 @@ LHCb::MEPConverterSvc::MEPConverterSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_mepMgr(0), m_incidentSvc(0),
   m_producer(0), m_consumer(0), m_receiveEvts(false)
 {
+  declareProperty("PrintFreq",   m_freq = 0.);
   declareProperty("Requirements",m_req);
   declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
 }
@@ -176,6 +179,9 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
 /// Process single event
 StatusCode LHCb::MEPConverterSvc::run()  {
   m_receiveEvts = true;
+  ulonglong mepCount = 0;
+  ulonglong evtCount = 0;
+  ulonglong prtCount = fabs(m_freq) > 1./ULLONG_MAX ? ulonglong(1./m_freq) : ULLONG_MAX;
   for(int sc=m_consumer->getEvent();sc==MBM_NORMAL && m_receiveEvts; sc=m_consumer->getEvent())  {
     SubEvents events;
     MEPID id = m_mepMgr->mepID();
@@ -189,12 +195,19 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       log << MSG::ERROR << "Bad MEP magic pattern!!!!" << endmsg;
     }
     ev->packing = events.size();
+    evtCount   += ev->packing;
+    mepCount++;
     if ( declareSubEvents(e, events) != MBM_NORMAL )  {
       return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
     }
-    mep_decrement(id, ev, 2);
+    mep_decrement(id, ev, 1);
     if ( m_consumer->eventAction() != MBM_NORMAL ) {
       return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
+    }
+    if ( 0 == ((evtCount+1)%prtCount) )  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::INFO << "Decoded " << mepCount 
+          << " MEPs leading to " << evtCount << " Events." << endmsg;
     }
   }
   return StatusCode::SUCCESS;

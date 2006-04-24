@@ -1,13 +1,26 @@
 #include "rtl_internal.h"
 #include <vector>
 #include <map>
-#include <string>
 #include <cerrno>
 #include <cstdarg>
 #include <iostream>
 #include <fcntl.h>
 #ifdef _WIN32
 #include <winsock.h>
+#include <stdexcept>
+namespace {
+  struct __init__ {
+    __init__()  {
+      static WSADATA g_WSAData;
+      memset(&g_WSAData, 0, sizeof(WSADATA));
+      if (WSAStartup ( MAKEWORD(1,1), &g_WSAData) != 0)    {
+        throw std::runtime_error("RTL: WSAStartup failed!");
+      }
+    }
+  };
+  static __init__ g_init;
+}
+
 #else
 #include <cstdlib>
 #include <unistd.h>
@@ -149,7 +162,7 @@ int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
   static bool first = true;
   if ( first )  {
     first = false;
-    atexit(RTL::ExitHandler::execute);
+    ::atexit(RTL::ExitHandler::execute);
   }
   RTL::EXHDEF h;
   h.exit_handler = hdlr;
@@ -316,18 +329,6 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
 #endif
 }
 
-namespace RTL {
-  const std::string& processName()  {
-    static std::string s;
-    if ( s.empty() )  {
-      char txt[64];
-      ::lib_rtl_get_process_name(txt, sizeof(txt));
-      s = txt;
-    }
-    return s;
-  }
-}
-
 int lib_rtl_get_node_name(char* node, size_t len)  {
 #ifdef __VMS
   short len;
@@ -340,12 +341,15 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
   }
   node[len]='\0';
 #else
+  char n[64];
 #if defined(_WIN32)
   const char *tmp = getenv("COMPUTERNAME");
+  if ( 0 == gethostname (n,sizeof(n)) ) tmp = n;
 #elif defined(_OSK)
   const char *tmp = getenv("NODE");
 #else
   const char *tmp = getenv("NODE");
+  if ( 0 == gethostname (n,sizeof(n)) ) tmp = n;
 #endif
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
@@ -376,4 +380,35 @@ void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), v
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
   std::cout << "Executing empty test action ..... finished ......" << std::endl;
   return 1;
+}
+
+namespace RTL {
+  const std::string& processName()  {
+    static std::string s;
+    if ( s.empty() )  {
+      char txt[64];
+      ::lib_rtl_get_process_name(txt, sizeof(txt));
+      s = txt;
+    }
+    return s;
+  }
+  const std::string& nodeName()  {
+    static std::string s;
+    if ( s.empty() )  {
+      char txt[64];
+      ::lib_rtl_get_node_name(txt, sizeof(txt));
+      s = txt;
+    }
+    return s;
+  }
+  const std::string& nodeNameShort()  {
+    static std::string s;
+    if ( s.empty() )  {
+      s = nodeName();
+      if ( s.find(".") != std::string::npos )  {
+        s = s.substr(0,s.find("."));
+      }
+    }
+    return s;
+  }
 }

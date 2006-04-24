@@ -22,9 +22,9 @@ Author:  Markus Frank
 
 !================== GaudiOnline v1r1 2005-06-10 =============================
 ! 11-06-2005 Markus Frank
-  Fix compiler warnings (unused vars & deprecated) in OnlineMessageSvc.
+  Fix compiler warnings (unused vars & deprecated) in DimMessageSvc.
 ! 10-06-2005 Markus Frank
-  Add OnlineMessageSvc component from Beat
+  Add DimMessageSvc component from Beat
 
 !================== GaudiOnline v1r0 2005-05-13 =============================
 ! 10-05-2005 Markus Frank

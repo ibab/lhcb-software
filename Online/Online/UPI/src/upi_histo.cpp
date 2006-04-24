@@ -21,7 +21,7 @@
 #define maxi(a,b) (a>b?a:b)
 
 #ifdef SCREEN
-#define put_char(hh,rr,cc) scrc_put_chars (d0, hh, GRAPHIC, rr, cc, 0)
+#define put_char(hh,rr,cc) scrc_put_chars (d0, hh, SCR::GRAPHIC, rr, cc, 0)
 #endif
 
 #define ROWS 21
@@ -328,7 +328,7 @@ void upic_display_histo (Histo* h, int row, int col)    {
 
   if (!h) return;
   if (!(d0 = h->disp))  {
-    scrc_create_display (&d0, h->rows, h->cols, NORMAL, ON, h->text);
+    scrc_create_display (&d0, h->rows, h->cols, SCR::NORMAL, ON, h->text);
     scrc_enable_drag (d0, upic_drag_histo);
     h->disp = d0;
     h->pasted = 0;
@@ -372,16 +372,16 @@ void upic_display_histo (Histo* h, int row, int col)    {
     }
   }
 
-  for (i=1; i<h->rows; i++) scrc_put_chars (d0, " ", NORMAL, i, 1, 1);
+  for (i=1; i<h->rows; i++) scrc_put_chars (d0, " ", SCR::NORMAL, i, 1, 1);
 
   sprintf (Max_text, " %f", bmax);
-  scrc_put_chars (d0, Max_text, NORMAL, 1, 1, 0);
+  scrc_put_chars (d0, Max_text, SCR::NORMAL, 1, 1, 0);
 
   /* Bottom scale */
-  scrc_put_chars (d0, "<", NORMAL, h->rows-1, 1, 0);
+  scrc_put_chars (d0, "<", SCR::NORMAL, h->rows-1, 1, 0);
   for (i=2; i<h->cols; i++)  {
     if ( !((i-2) % 5) )  {
-      scrc_put_chars (d0, "n", GRAPHIC, h->rows-1, i, 0);
+      scrc_put_chars (d0, "n", SCR::GRAPHIC, h->rows-1, i, 0);
       if ( !((i-2) % 10) )   {
         mark = h->min + ((h->max - h->min) * (double)(i-2) / h->bins);
         sprintf(str_mark,"%f",mark);
@@ -393,36 +393,32 @@ void upic_display_histo (Histo* h, int row, int col)    {
           if (*c == '.') break;
         }
         str_mark[l+1] = 0;
-        scrc_put_chars (d0, str_mark, NORMAL, h->rows, i-j, 0);
+        scrc_put_chars (d0, str_mark, SCR::NORMAL, h->rows, i-j, 0);
       }
     }
-    else scrc_put_chars (d0, "v", GRAPHIC, h->rows-1, i, 0);
+    else scrc_put_chars (d0, "v", SCR::GRAPHIC, h->rows-1, i, 0);
   }
-  scrc_put_chars (d0, ">", NORMAL, h->rows-1, h->cols, 0);
+  scrc_put_chars (d0, ">", SCR::NORMAL, h->rows-1, h->cols, 0);
 
 
-  for (i=row0-bin[0]; i<row0; i++) scrc_put_chars (d0, " ", INVERSE, i, 1, 0);
+  for (i=row0-bin[0]; i<row0; i++) scrc_put_chars (d0, " ", SCR::INVERSE, i, 1, 0);
 
   row = row0 - bin[1];
   col = 2;
   for (i=2; i<=row0; i++) put_char ("x", i, col);
   put_char ("t", row, col);
-  for (i=2,col=3; col<h->cols; i++,col++)
-  {
+  for (i=2,col=3; col<h->cols; i++,col++)  {
     dh = bin[i] - bin[i-1];
-    if (dh == 0)
-    {
+    if (dh == 0)    {
       put_char ("q", row, col);
     }
-    else if (dh > 0)
-    {
+    else if (dh > 0)    {
       put_char ("j", row--, col);
       for (j=0; j<(dh-1); j++, row--)
         put_char ("x", row, col);
       put_char ("l", row, col);
     }
-    else if (dh < 0)
-    {
+    else if (dh < 0)    {
       dh = -dh;
       put_char ("k", row++, col);
       for (j=0; j<(dh-1); j++, row++)
@@ -432,17 +428,15 @@ void upic_display_histo (Histo* h, int row, int col)    {
   }
 
   for (i=row0-bin[h->cols-1]; i<row0; i++)
-    scrc_put_chars (d0, " ", INVERSE, i, h->cols, 0);
+    scrc_put_chars (d0, " ", SCR::INVERSE, i, h->cols, 0);
 
   scrc_end_pasteboard_update (Pb);
 #else
-  if (h->pasted)
-  {
+  if (h->pasted)  {
     row = h->row;
     col = h->col;
   }
-  else
-  {
+  else  {
     h->pasted = 1;
     h->row = row;
     h->col = col;
@@ -454,16 +448,15 @@ void upic_display_histo (Histo* h, int row, int col)    {
 
 //---------------------------------------------------------------------------
 void upic_hide_histo (Histo* h)   {
-  if (!h) return;
-
-  if (h->pasted)
-  {
+  if ( h )  {
+    if (h->pasted)  {
 #ifdef SCREEN
-    scrc_unpaste_display (h->disp, Pb);
+      scrc_unpaste_display (h->disp, Pb);
 #else
-    upir_hide_histo (h);
+      upir_hide_histo (h);
 #endif
-    h->pasted = 0;
+      h->pasted = 0;
+    }
   }
 }
 
@@ -477,8 +470,7 @@ int upic_drag_histo (Display* /* id */, int row, int col)   {
 #ifdef SCREEN
   upic_move_histo (Current_histo, row, col);
 #else
-  if (Current_histo)
-  {
+  if (Current_histo)  {
     Current_histo->row = row;
     Current_histo->col = col;
   }

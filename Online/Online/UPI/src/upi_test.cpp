@@ -248,7 +248,7 @@ namespace  {
       init_timer (show_memory);
       scrc_create_display (&Show_mem_display, 2,  10, BOLD,   1, " Memory ");
       scrc_paste_display (Show_mem_display, Pb, 15, 65);
-      scrc_put_chars (Show_mem_display, "..........", NORMAL, 2, 1, 0);
+      scrc_put_chars (Show_mem_display, "..........", SCR::NORMAL, 2, 1, 0);
       */
       static int _cnt=0;
       while (item != 99)   {
@@ -355,8 +355,12 @@ namespace  {
             break;
         }
 
-        sprintf (buffer, " [%d] Menu %d Item %d Param %d ", ++_cnt, menu, item, param);
+        sprintf (buffer, "Unrendered:  [%d] Menu %d Item %d Param %d ", ++_cnt, menu, item, param);
         upic_write_message (buffer, "");
+        static int render = 0;
+        render = (++render)%8;
+        sprintf (buffer, "Rendered[%d]: [%d] Menu %d Item %d Param %d ", render, ++_cnt, menu, item, param);
+        upic_write_rendered_message (buffer, "", render);
       }
       upic_quit();
       return (0);
@@ -375,12 +379,12 @@ namespace  {
     memory = upic_show_memory() +
             scrc_memory_of_display (Show_mem_display);
     sprintf (text, "%d\0", memory);
-    scrc_put_chars (Show_mem_display, text, NORMAL, 1, 1, 1);
+    scrc_put_chars (Show_mem_display, text, SCR::NORMAL, 1, 1, 1);
 
-    if (n) scrc_change_rendition (Show_mem_display,  2, n, 1, 1, NORMAL);
+    if (n) scrc_change_rendition (Show_mem_display,  2, n, 1, 1, SCR::NORMAL);
     n++;
     if (n > 10) n = 1;
-    scrc_change_rendition (Show_mem_display,  2, n, 1, 1, INVERSE);
+    scrc_change_rendition (Show_mem_display,  2, n, 1, 1, SCR::INVERSE);
     
     scrc_end_pasteboard_update (Pb);
   }

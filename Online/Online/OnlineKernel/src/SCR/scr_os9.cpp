@@ -22,6 +22,7 @@ static int (*User_mouse_handler)(int,int) = 0;
 static int (*User_configure_handler)(int,int) = 0;
 
 extern int scr_ignore_input;
+using namespace SCR;
 
 //----------------------------------------------------------------------------
 #if 0

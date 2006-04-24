@@ -17,7 +17,7 @@ static int Window_id = 0;
 //---------------------------------------------------------------------------
 int upic_open_window () {
 #ifdef SCREEN
-  Sys.window = scrc_open_window (SEQUENTIAL_WINDOW);
+  Sys.window = scrc_open_window (SCR::SEQUENTIAL_WINDOW);
 #else
   Sys.window = (Window*)(int)++Window_id;
   /*  upir_open_window ();  */
@@ -28,7 +28,7 @@ int upic_open_window () {
 //---------------------------------------------------------------------------
 int upic_open_pulldown_window ()  {
 #ifdef SCREEN
-  Sys.window = scrc_open_window (PULLDOWN_WINDOW);
+  Sys.window = scrc_open_window (SCR::PULLDOWN_WINDOW);
 #else
 #endif
   return (UPI_SS_NORMAL);
@@ -85,7 +85,7 @@ int upic_get_window_size (int menu_id, int* width, int* height) {
 //---------------------------------------------------------------------------
 int upic_open_detached_window ()    {
 #ifdef SCREEN
-  Sys.detached_window = scrc_open_window (DETACHED_WINDOW);
+  Sys.detached_window = scrc_open_window (SCR::DETACHED_WINDOW);
 #else
 #endif
   return (UPI_SS_NORMAL);

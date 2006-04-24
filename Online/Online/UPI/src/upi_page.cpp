@@ -71,7 +71,7 @@ int upic_change_titles (int menu_id, const char* title_1, const char* title_2, c
     while (d)
     {
       upic_change_page (m, d, max_len);
-      if (d->id) scrc_set_border (d->id, m->mn_title, NORMAL);
+      if (d->id) scrc_set_border (d->id, m->mn_title, SCR::NORMAL);
       d = d->next;
     }
     m->width = max_len;
@@ -113,7 +113,7 @@ void upic_drop_page (Page* d)   {
 #ifdef SCREEN
 //---------------------------------------------------------------------------
 void upic_init_page (Menu* m, Page* d, int width) {
-  scrc_create_display (&d->id, d->lines+2, width, NORMAL, ON, m->mn_title);
+  scrc_create_display (&d->id, d->lines+2, width, SCR::NORMAL, ON, m->mn_title);
   
   Display* id = d->id;
   if (d->prev)
@@ -153,18 +153,18 @@ void upic_change_page (Menu* m, Page* d, int width)    {
 //---------------------------------------------------------------------------
 void upic_draw_title_bar (Display* d, const char* title, int width, int row, const char* head)  {
   if (row == 1)  {
-    scrc_put_chars (d, head, INVERSE, row, 1, 1);
-    scrc_put_chars (d, ONLY_PAGE, INVERSE,
+    scrc_put_chars (d, head, SCR::INVERSE, row, 1, 1);
+    scrc_put_chars (d, ONLY_PAGE, SCR::INVERSE,
     	            row, width - PAGE_MARKER_SIZE + 1, 0);
   }
   else  {
-    scrc_put_chars (d, ONLY_PAGE, INVERSE, row, 1, 1);
-    scrc_put_chars (d, head, INVERSE, row, width - PAGE_MARKER_SIZE + 1, 0);
+    scrc_put_chars (d, ONLY_PAGE, SCR::INVERSE, row, 1, 1);
+    scrc_put_chars (d, head, SCR::INVERSE, row, width - PAGE_MARKER_SIZE + 1, 0);
   }
   int ttl_len = strlen(title);
   if ( ttl_len )  {
     int margin = (width - 2*PAGE_MARKER_SIZE - ttl_len) >> 1;
-    scrc_put_chars (d, title, INVERSE, row, margin + PAGE_MARKER_SIZE + 1, 0);
+    scrc_put_chars (d, title, SCR::INVERSE, row, margin + PAGE_MARKER_SIZE + 1, 0);
   }
 }
 int upic_change_pasteboard(int width,int height)  {

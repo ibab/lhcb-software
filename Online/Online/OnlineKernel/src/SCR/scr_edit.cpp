@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "SCR/scr.h"
+using namespace SCR;
 
 //----------------------------------------------------------------------------
 int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, char attr)  {
@@ -80,24 +81,18 @@ int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col)  {
 
 //----------------------------------------------------------------------------
 int scrc_delete_line (Display *disp, int row)   {
-  int w, h;
-  char *m, *a;
-  int r, c;
-  int offset;
   Pasteboard *pb = disp->pb;
-
-  h = disp->rows;
-  w = disp->cols;
+  int h = disp->rows;
+  int w = disp->cols;
 
   if (row < 1 || row > h) return 0;
   level_up (pb);
-  if (row < h)
-  {
-    offset = (row + 1) * (w + 2) + 1;
-    m = disp->map + offset;
-    a = disp->attr + offset;
-    for (r = row; r < h; r++, m+=2, a+=2)
-      for (c = 1; c <= w; c++)
+  if (row < h)  {
+    int offset = (row + 1) * (w + 2) + 1;
+    char* m = disp->map + offset;
+    char* a = disp->attr + offset;
+    for (int r = row; r < h; r++, m+=2, a+=2)
+      for (int c = 1; c <= w; c++)
         scrc_put_char (disp, *m++, *a++, r, c);
   }
   scrc_erase_line (disp, h);
@@ -107,25 +102,18 @@ int scrc_delete_line (Display *disp, int row)   {
 
 //----------------------------------------------------------------------------
 int scrc_delete_char (Display *disp, int row, int col)  {
-  int w, h;
-  char *m, *a;
-  int r, c;
-  int offset;
   Pasteboard *pb = disp->pb;
-
-  h = disp->rows;
-  w = disp->cols;
+  int h = disp->rows;
+  int w = disp->cols;
 
   if (row < 1 || row > h) return 0;
   if (col < 1 || col > w) return 0;
   level_up (pb);
-  if (row != h || col != w)
-  {
-    offset = row * (w + 2) + col + 1;
-    m = disp->map + offset;
-    a = disp->attr + offset;
-    for (r = row; r <= h; r++)
-    {
+  if (row != h || col != w)  {
+    int offset = row * (w + 2) + col + 1;
+    char* m = disp->map + offset;
+    char* a = disp->attr + offset;
+    for (int c, r = row; r <= h; r++)  {
       for (c = col; c < w; c++)
         scrc_put_char (disp, *m++, *a++, r, c);
       m += 2;

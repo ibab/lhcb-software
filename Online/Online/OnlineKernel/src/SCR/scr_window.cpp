@@ -5,6 +5,7 @@
  
 #include <cstring>
 #include "SCR/scr.h"
+using namespace SCR;
 
 enum {
   SEQUENTIAL,

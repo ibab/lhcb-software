@@ -116,7 +116,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
   std::string runable = "AppMgrRunable";
   std::string evtloop = "EventLoopMgr";
-  std::string msgsvc  = "OnlineMessageSvc";
+  std::string msgsvc  = "LHCb::DimMessageSvc";
   std::string opts    = "jobOptions.txt";
   SmartIF<IProperty> p(Gaudi::createApplicationMgr());
   if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
@@ -180,7 +180,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string type    = "LHCb::GaudiTask";
   std::string runable = "LHCb::OnlineRunable";
   std::string evtloop = "MinimalEventLoopMgr";
-  std::string msgsvc  = "OnlineMessageSvc";
+  std::string msgsvc  = "LHCb::DimMessageSvc";
   bool autostart = cli.getopt("autostart",1) != 0;
   std::string opts    = "";
   std::string optopts = "";

@@ -1199,7 +1199,7 @@ int amsc_init (const char *inname)   {
   }
   status = lib_rtl_create_lock(0, &_ams.lockid);
   if ( !lib_rtl_is_success(status) )  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error deleting AMS lock. Status %d",status);
+    lib_rtl_signal_message(LIB_RTL_OS,"Error creating AMS lock. Status %d",status);
     _amsc_tcp_terminate (&_ams.me);
     wtc_remove(WT_FACILITY_TCPAMS);
     wtc_remove(WT_FACILITY_TIMEOUT);

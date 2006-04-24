@@ -87,7 +87,7 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
     if (!d || !(i = upic_find_item (d->item.first, *item_id)))
       return UPI_SS_INVMENU;
 
-    c = RETURN;
+    c = SCR::RETURN_KEY;
 
     if ((m = Sys.menu.cur))    {
       if ((d = m->page.cur))     {
@@ -107,7 +107,7 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
     if ( c != UPI_SS_NORMAL )  {
       return UPI_K_USER;
     }
-    c = RETURN;
+    c = SCR::RETURN_KEY;
     Menu* m = upic_find_menu (*menu_id);
     if (!m) return UPI_SS_ABORTED;
     Page* d = m->page.first;
@@ -118,7 +118,7 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
       (*action) (*menu_id, *item_id, *param_id, *list_index);
       c = 0;
     }
-  } while (c != RETURN);
+  } while (c != SCR::RETURN_KEY);
   return UPI_SS_NORMAL;
 }
 
@@ -150,7 +150,7 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
     if (!d || !(i = upic_find_item (d->item.first, *item_id)))
       return UPI_SS_INVMENU;
 
-    c = RETURN;
+    c = SCR::RETURN_KEY;
     if ((m = Sys.menu.cur))    {
       if ((d = m->page.cur))     {
         if ((i = d->item.cur))      {
@@ -170,7 +170,7 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
     if ( c != UPI_SS_NORMAL )  {
       return UPI_K_USER;
     }
-    c = RETURN;
+    c = SCR::RETURN_KEY;
     Menu* m = upic_find_menu (*menu_id);
     if (!m) return UPI_SS_ABORTED;
     Page* d = m->page.first;
@@ -181,7 +181,7 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
       (*action) (*menu_id, *item_id, *param_id, list_index);
       c = 0;
     }
-  } while (c != RETURN);
+  } while (c != SCR::RETURN_KEY);
   return UPI_SS_NORMAL;
 }
 
@@ -258,7 +258,7 @@ int upic_key_action (unsigned int /* event */, void*)
 /*    It is a valid keystroke.                                                */
 /*    It will eventually :                                                    */
 /*       Generate a WT_FAC_UPI event if a <RETURN> event occured.             */
-/*       Leave with NORMAL status.                                            */
+/*       Leave with SCR::NORMAL status.                                            */
 /*                                                                            */
 //---------------------------------------------------------------------------
 {
@@ -301,48 +301,46 @@ int upic_key_action (unsigned int /* event */, void*)
 
     if (Sys.pop_up)    {
       upic_act_on_pop_up (&list_pos, key, 0);
-      if (key == RETURN || key == ENTER)  {
+      if (key == SCR::RETURN_KEY || key == SCR::ENTER)  {
         if (type == REAL_FMT) list_elem.d  = *((double*) p->list + list_pos);
         else list_elem.i = *(p->list + list_pos);
         upic_print_param (p, buf, list_elem);
-        upic_draw_param (d, p, row, INVERSE, 0);
+        upic_draw_param (d, p, row, SCR::INVERSE, 0);
       }
-      else if (key != BACK_SPACE && key != F12) key = INVALID;
+      else if (key != SCR::BACK_SPACE && key != SCR::F12) key = SCR::INVALID;
     }
 
     switch (key)    {
-      case CTRL_A :
+      case SCR::CTRL_A :
         break;
-      case CTRL_E :
+      case SCR::CTRL_E :
         if (!p->flag)   {
           buf_pos = upic_non_blanks (p->buf);
           buf = p->buf + buf_pos;
           if (buf_pos > p->chars) pos = p->chars - 1;
           else pos = buf_pos;
           col = p->pos + pos;
-          upic_draw_param (d, p, row, INVERSE, buf_pos - pos);
+          upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
           input = 1;
         }
         break;
-      case DELETE :
+      case SCR::DELETE :
         if (input && buf_pos)    {
           strcpy (buf-1, buf);
           buf--;
           p->buf[p->size - 1] = ' ';
-
-          if (buf_pos > pos)   {
-            /* scroll to right */
+          if (buf_pos > pos)   {        /* scroll to right */
             pos++;
             col++;
           }
           buf_pos--;
           pos--;
           col--;
-          upic_draw_param (d, p, row, INVERSE, buf_pos - pos);
+          upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
         }
         else scrc_ring_bell (d->id);
         break;
-      case MOVE_LEFT :
+      case SCR::MOVE_LEFT :
         if (input)   {
           if (buf_pos)   {
             if (buf_pos > pos)    {
@@ -354,42 +352,38 @@ int upic_key_action (unsigned int /* event */, void*)
             buf--;
             pos--;
             col--;
-            upic_draw_param (d, p, row, INVERSE, buf_pos - pos);
+            upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
           }
-          key = INVALID;
+          key = SCR::INVALID;
         }
         else   {
           if (!p->prev) upic_restore_params_in_line (i);
         }
         break;
-      case MOVE_RIGHT :
-        if (input)
-        {
-          if (buf_pos < strlen(p->buf))
-          {
-            if ((pos == p->chars))
-            {
+      case SCR::MOVE_RIGHT :
+        if (input)   {
+          if (buf_pos < strlen(p->buf))   {
+            if ((pos == p->chars))   {
               /* scroll to left */
               pos--;
               col--;
-              upic_draw_param (d, p, row, INVERSE, buf_pos - pos);
+              upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
             }
-            if (pos < p->chars)
-            {
+            if (pos < p->chars)   {
               buf++;
               buf_pos++;
               pos++;
               col++;
             }
           }
-          key = INVALID;
+          key = SCR::INVALID;
         }
         else
         {
           if (!p->next) upic_restore_params_in_line (i);
         }
         break;
-      case KPD_PERIOD :
+      case SCR::KPD_PERIOD :
         if (Sys.pop_up) upic_close_pop_up ();
         else if (p->list_size > 1)
         {
@@ -400,45 +394,42 @@ int upic_key_action (unsigned int /* event */, void*)
           buf = p->buf;
         }
         break;
-      case PAGE_UP :
-      case PAGE_DOWN :
-      case MOVE_UP :
-      case MOVE_DOWN :
+      case SCR::PAGE_UP :
+      case SCR::PAGE_DOWN :
+      case SCR::MOVE_UP :
+      case SCR::MOVE_DOWN :
         upic_restore_params_in_line (i);
         /*
         if (!param_page) upic_restore_params_in_line (i);
         */
         if (input) input = 0;
         break;
-      case ENTER :
-        if (param_page || p->next) key = MOVE_RIGHT;
-        if ((m->condition & CALL_ON_ENTER))
-        {
+      case SCR::ENTER :
+        if (param_page || p->next) key = SCR::MOVE_RIGHT;
+        if ((m->condition & CALL_ON_ENTER))    {
           if (m->callback) (*m->callback)(m->id, i->id, CALL_ON_ENTER, m->arg);
         }
-      case RETURN :
-        if (type == ASC_FMT) strcpy (p->val.c, p->buf);
-        else
-        {
+      case SCR::RETURN_KEY :
+        if (type == ASC_FMT) 
+          strcpy (p->val.c, p->buf);
+        else    {
           if ( type == BIN_FMT ) val.i = upic_mtoi (p->buf, p->chars);
           else if ( type == LOG_FMT ) val.i = upic_ltoi (p->buf, p->chars);
           else sscanf (p->buf, p->convert, &val.d);
-          if ( type == REAL_FMT )
-          {
-            if (upic_check_double (val.d, p->min.d, p->max.d)) p->val.d = val.d;
-            else
-            {
+          if ( type == REAL_FMT )    {
+            if (upic_check_double (val.d, p->min.d, p->max.d)) 
+              p->val.d = val.d;
+            else     {
               scrc_ring_bell (d->id);
-              key = INVALID;
+              key = SCR::INVALID;
             }
           }
-          else
-          {
-            if (upic_check_int (val.i, p->min.i, p->max.i)) p->val.i = val.i;
-            else
-            {
+          else    {
+            if (upic_check_int (val.i, p->min.i, p->max.i))
+              p->val.i = val.i;
+            else  {
               scrc_ring_bell (d->id);
-              key = INVALID;
+              key = SCR::INVALID;
             }
           }
           upic_print_param (p, p->buf, p->val);
@@ -446,16 +437,15 @@ int upic_key_action (unsigned int /* event */, void*)
         input = 0;
         break;
       default :
-        if (key != TAB && (key < 32 || key > 127)) break;
+        if (key != SCR::TAB && (key < 32 || key > 127)) break;
         if (!p->flag)  {
           if (!input)    {
             buf = p->buf;
-            if (type != ASC_FMT && type != BIN_FMT && type != LOG_FMT)
-            {
+            if (type != ASC_FMT && type != BIN_FMT && type != LOG_FMT)    {
               for (size_t n = 0; n < p->size; n++) *buf++ = ' ';
               *buf = '\0';
             }
-            upic_draw_param (d, p, row, INVERSE, 0);
+            upic_draw_param (d, p, row, SCR::INVERSE, 0);
             input = 1;
             pos = 0;
             buf_pos = 0;
@@ -488,11 +478,11 @@ int upic_key_action (unsigned int /* event */, void*)
             /* scroll to left */
             pos--;
             col--;
-            upic_draw_param (d, p, row, INVERSE, buf_pos - pos);
+            upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
           }
           if (pos < p->chars)  {
             *buf = key;
-            scrc_put_char (d->id, key, INVERSE + UNDERLINE, row, col);
+            scrc_put_char (d->id, key, SCR::INVERSE + SCR::UNDERLINE, row, col);
             pos++;
             col++;
           }
@@ -500,15 +490,13 @@ int upic_key_action (unsigned int /* event */, void*)
             buf++;
             buf_pos++;
           }
-
           break;
         }
-      case TAB :
+      case SCR::TAB :
         pos = 0;
         input = 0;
         col = p->pos;
-        if (p->list_size)
-        {
+        if (p->list_size)   {
           list_pos++;
           if (list_pos >= p->list_size) list_pos = 0;
           if (type == REAL_FMT)
@@ -516,7 +504,7 @@ int upic_key_action (unsigned int /* event */, void*)
           else list_elem.i = *(p->list + list_pos);
           buf = p->buf;
           upic_print_param (p, p->buf, list_elem);
-          upic_draw_param (d, p, row, INVERSE, OFF);
+          upic_draw_param (d, p, row, SCR::INVERSE, OFF);
         }
         break;
     }
@@ -535,28 +523,28 @@ int upic_key_action (unsigned int /* event */, void*)
   upic_draw_cursor(OFF);
 
   switch (key)  {
-  case CTRL_Z :
+  case SCR::CTRL_Z :
     upic_spawn();
     break;
-  case KPD_PF1 :
+  case SCR::KPD_PF1 :
 #ifdef SCREEN
         if (Sys.PF1CallBack != 0) {
           if (Sys.PF1CallBack) (*Sys.PF1CallBack)(m->id, i->id,CALL_ON_PF1, Sys.PF1Arg);
         }
 #endif /* SCREEN */
-  case KPD_0 :
-  case KPD_1 :
-  case KPD_2 :
-  case KPD_3 :
-  case KPD_4 :
-  case KPD_5 :
-  case KPD_6 :
-  case KPD_7 :
-  case KPD_8 :
-  case KPD_9 :
+  case SCR::KPD_0 :
+  case SCR::KPD_1 :
+  case SCR::KPD_2 :
+  case SCR::KPD_3 :
+  case SCR::KPD_4 :
+  case SCR::KPD_5 :
+  case SCR::KPD_6 :
+  case SCR::KPD_7 :
+  case SCR::KPD_8 :
+  case SCR::KPD_9 :
     if (upic_valid_keypad (key)) upic_branch_on_keypad (key);
     break;
-  case RETURN :
+  case SCR::RETURN_KEY :
     if (m->type == PARAMETER_PAGE)    {
       if (i->id != -1)   {
         if ((action = i->action))     {
@@ -567,7 +555,7 @@ int upic_key_action (unsigned int /* event */, void*)
           (*action) (m->id, item_id, param_id, list_index);
         }
         upic_set_cursor (m->id, -1, ACCEPT_OPTION);
-        key = INVALID;
+        key = SCR::INVALID;
       }
       else switch (p->id)
       {
@@ -578,22 +566,22 @@ int upic_key_action (unsigned int /* event */, void*)
     upic_restore_params_in_page (m);
     break;
   case RESET_OPTION :
-    key = INVALID;
+    key = SCR::INVALID;
     upic_restore_params_in_page (m);
     break;
       }
     }
-    else if (i->param.first) upic_update_vars_of_line (i);
-    if (i->to)
-    {
+    else if (i->param.first) 
+      upic_update_vars_of_line (i);
+    if (i->to)   {
       Menu* m = i->to;
 
       upic_set_cursor (m->id, 0, 0);
-      key = INVALID;
+      key = SCR::INVALID;
     }
     break;
-  case F12 :
-  case BACK_SPACE :
+  case SCR::F12 :
+  case SCR::BACK_SPACE :
     {
       int status;
       if (m->type == PARAMETER_PAGE) upic_restore_params_in_page (m);
@@ -613,70 +601,65 @@ int upic_key_action (unsigned int /* event */, void*)
       }
     }
     break;
-  case MOVE_UP :
+  case SCR::MOVE_UP :
     upic_move_up (m);
     break;
-  case MOVE_DOWN :
+  case SCR::MOVE_DOWN :
     upic_move_down (m);
     break;
-  case MOVE_LEFT :
+  case SCR::MOVE_LEFT :
     upic_move_left (m);
     break;
-  case MOVE_RIGHT :
+  case SCR::MOVE_RIGHT :
     upic_move_right (m);
     break;
-  case PAGE_UP :
+  case SCR::PAGE_UP :
     upic_page_up (m);
     break;
-  case PAGE_DOWN :
+  case SCR::PAGE_DOWN :
     upic_page_down (m);
     break;
-  case UPDATE :
+  case SCR::UPDATE_KEY :
     scrc_repaint_screen (Sys.pb);
     break;
-  case KPD_PF2 :
+  case SCR::KPD_PF2 :
     upic_open_help (m);
     break;
-  case KPD_PF3 :
-    if (Moving_window)
-    {
+  case SCR::KPD_PF3 :
+    if (Moving_window)    {
       Moving_window = 0;
-      if ((m->condition & CALL_ON_DRAG))
-      {
+      if ((m->condition & CALL_ON_DRAG))  {
         if (m->callback) (*m->callback)(m->id, i->id,
           CALL_ON_DRAG, m->arg);
       }
     }
-    else
-    {
-      if (Resizing_display)
-      {
-        if (Moving_display) Moving_display = 0;
-        else
-        {
+    else   {
+      if (Resizing_display)   {
+        if (Moving_display)
+          Moving_display = 0;
+        else     {
           Moving_display = 1;
           scrc_moving_display (Sys.async.id);
         }
       }
-      else
-      {
+      else   {
         Moving_window = 1;
         scrc_moving_window (m->window);
       }
     }
     break;
-  case KPD_PF4 :
+  case SCR::KPD_PF4 :
     upic_scroll_message (0);
-    if (Resizing_display) Resizing_display = 0;
-    else
-    {
+    if (Resizing_display)
+      Resizing_display = 0;
+    else  {
       Resizing_display = 1;
       scrc_resizing_display (Sys.async.id);
     }
     /*      upic_scroll_message (key);  */
     break;
   }
-  if (key == RETURN)  {
+  if (key == SCR::RETURN_KEY)  {
     int menu_id, item_id, param_id, list_index;
     menu_id = m->id;
     item_id = i ? i->id : 0;

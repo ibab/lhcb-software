@@ -25,14 +25,14 @@ void upic_open_pop_up (Menu* m, Param* p, int row, int col)   {
   d->col   += col;
   d->cur_line = 1;
 
-  scrc_create_display (&d->id, d->lines, d->cols, NORMAL, ON, "List");
+  scrc_create_display (&d->id, d->lines, d->cols, SCR::NORMAL, ON, "List");
   for (int r=1; r<=d->lines; r++)  {
     if (p->type == REAL_FMT) val.d = *((double*) p->list + (r - 1));
     else val.i = *(p->list + (r - 1));
     upic_print_param (p, s, val);
-    scrc_put_chars (d->id, s, NORMAL, r, 1, 0);
+    scrc_put_chars (d->id, s, SCR::NORMAL, r, 1, 0);
   }
-  scrc_change_rendition (d->id, d->cur_line, 1, 1, d->cols, INVERSE);
+  scrc_change_rendition (d->id, d->cur_line, 1, 1, d->cols, SCR::INVERSE);
   scrc_paste_display (d->id, Sys.pb, d->row, d->col);
   if (s) free (s);
   Sys.pop_up = d;
@@ -55,21 +55,21 @@ void upic_act_on_pop_up (int *num, int key, int row)    {
   Page* d = Sys.pop_up;
   int delta, c = key, cur = d->cur_line;
 
-  if (cur) scrc_change_rendition (d->id, cur, 1, 1, d->cols, NORMAL);
+  if (cur) scrc_change_rendition (d->id, cur, 1, 1, d->cols, SCR::NORMAL);
   scrc_begin_pasteboard_update (Sys.pb);
   switch (c)  {
-    case PAGE_UP :
+    case SCR::PAGE_UP :
       delta = -12;
       if (delta < cur) delta = 1 - cur;
       break;
-    case MOVE_UP :
+    case SCR::MOVE_UP :
       delta = -1;
       break;
-    case PAGE_DOWN :
+    case SCR::PAGE_DOWN :
       delta = 12;
       if (delta >= d->lines - cur) delta = d->lines - cur - 1;
       break;
-    case MOVE_DOWN :
+    case SCR::MOVE_DOWN :
       delta = 1;
       break;
     case 0 :
@@ -90,7 +90,7 @@ void upic_act_on_pop_up (int *num, int key, int row)    {
       d->row -= delta;
       scrc_move_display (d->id, Sys.pb, -delta, 0);
     }
-    scrc_change_rendition (d->id, cur, 1, 1, d->cols, INVERSE);
+    scrc_change_rendition (d->id, cur, 1, 1, d->cols, SCR::INVERSE);
   }
   else   {
      d->cur_line = cur;

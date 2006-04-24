@@ -178,9 +178,20 @@ extern "C" {
  */
 namespace RTL  {
 
+  /// Process name (UTGID)
   const std::string& processName();
+  /// Fully qualified node name
+  const std::string& nodeName();
+  /// Short node name (=computer name without domain)
+  const std::string& nodeNameShort();
 
-
+  /**@class CLU rtl.h RTL/rtl.h
+    * 
+    * Small helper class to interprete command line options
+    *
+    * @author  M.Frank
+    * @version 1.0
+    */
   class CLI  {
   private:
     int    m_argc;
