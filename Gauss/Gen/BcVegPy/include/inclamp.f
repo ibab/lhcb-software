@@ -1,0 +1,1 @@
+      COMMON/amp/c(94,3)

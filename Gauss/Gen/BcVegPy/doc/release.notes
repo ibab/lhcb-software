@@ -1,0 +1,12 @@
+! $Id: release.notes,v 1.1.1.1 2006-04-24 21:54:40 robbep Exp $
+! Package     : Gen/LbBcVegPy
+! Responsible : 
+
+! 2006-03-13 - Jibo He
+  -New Package: this package is somehow a copy of BCVEGPY 2.0 (C. H. Chang,
+   J. X. Wang, X. G. Wu, Comp. Phys. Comm. 174 (2006) 241). We made it in
+   CMT format.
+  -To interface with LbBcVegPy and LbPythia easily, we made some modification
+   on the program structure.
+  -To generate both B_c+ and B_c-, we modified the color flow subroutine. 	  
+! =========================================================================

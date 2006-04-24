@@ -1,0 +1,22 @@
+# $Id: requirements,v 1.1.1.1 2006-04-24 21:54:40 robbep Exp $
+# =============================================================================
+package       BcVegPy
+version       v1r0
+
+# =========== structure =======================================================
+branches      cmt src include doc logo
+
+# =========== own includes ====================================================
+include_dirs $(BCVEGPYROOT)/include
+
+# =========== dependencies ====================================================
+use      GENSER            v*     Gen
+use      BcVegPyData       v*
+
+# =========== constituents ====================================================
+library BcVegPy   *.f *.F
+
+# =========== standard patterns ===============================================
+apply_pattern linker_library  library=BcVegPy
+apply_pattern linker_stamps   library=BcVegPy
+
