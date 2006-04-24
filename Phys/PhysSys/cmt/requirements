@@ -9,7 +9,7 @@ branches doc cmt
 use  PhysCoreSys      	v2r0   Phys
 #===================================================================
 use  DaVinciKernel      	v4r0     Phys
-use  DaVinciFilter      	v4r0     Phys
+use  DaVinciFilter      	v4r1     Phys
 use  DaVinciTools       	v13r0    Phys
 use  DaVinciTransporter 	v3r0     Phys
 use  ParticleMaker      	v2r0     Phys
@@ -36,7 +36,7 @@ use  LoKiSys            v1r0
 use               LoKiAll       v1r0 Phys
 use               LoKi          v1r0 Phys
 use               LoKiAlgo      v1r0 Phys
-use               LoKiPhys      v1r0 Phys
+use               LoKiPhys      v1r1 Phys
 
 use               LoKiMC        v1r0 Phys
 use               LoKiGenMC     v1r0 Phys
