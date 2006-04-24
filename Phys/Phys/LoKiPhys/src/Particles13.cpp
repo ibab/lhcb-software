@@ -1,8 +1,11 @@
-// $Id: Particles13.cpp,v 1.2 2006-03-08 14:14:52 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.3 2006-04-24 08:32:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:52  ibelyaev
+//  add Particles14.h/.cpp
+//
 // Revision 1.1  2006/02/23 21:14:09  ibelyaev
 //   add new fuctors/predicates
 //
@@ -119,7 +122,7 @@ LoKi::Particles::TrackChi2PerDoF::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
-( const int location ) 
+( const LHCb::State::Location location ) 
   : LoKi::Predicate<const LHCb::Particle*>()
   , m_location ( location ) 
 {};

@@ -1,8 +1,11 @@
-// $Id: Particles13.h,v 1.2 2006-03-08 14:14:51 ibelyaev Exp $
+// $Id: Particles13.h,v 1.3 2006-04-24 08:32:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/08 14:14:51  ibelyaev
+//  add Particles14.h/.cpp
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES13_H 
 #define LOKI_PARTICLES13_H 1
@@ -12,6 +15,7 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/State.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -116,7 +120,7 @@ namespace LoKi
     {
     public:
       /// constructor from the state location 
-      TrackHasState ( int location ) ;
+      TrackHasState ( const LHCb::State::Location location ) ;
       /// copy constructor
       TrackHasState ( const TrackHasState& right ) ;
       /// MANDATORY: virtual destructor 
@@ -135,7 +139,7 @@ namespace LoKi
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
       // location of the state 
-      int m_location ;
+      LHCb::State::Location m_location ;
     } ;
     
     /** @struct TrackType
