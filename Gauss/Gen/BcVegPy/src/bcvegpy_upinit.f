@@ -116,13 +116,13 @@ C*******************************************************************************
 C...Switch off aspects: initial and final state
 C...showers, multiple interactions, hadronization.
 C...Commented by hejb, 2006/03/21
-c      IF(ISHOWER.EQ.0) THEN
-c         MSTP(61) =0
-c         MSTP(71) =0
-c         MSTP(81) =0
+      IF(ISHOWER.EQ.0) THEN
+         MSTP(61) =0
+         MSTP(71) =0
+         MSTP(81) =0
 C..Commented by hejb, we need fragmentation here.
 C         MSTP(111)=0
-c      END IF
+      END IF
 
 C...Commented by hejb, it is not required here
 C...Expanded event listing (required for histogramming).
@@ -405,13 +405,14 @@ C	  WRITE(3,41)'GENERATE EVNTS', NEV,'TEVA ENERGY(GEV)',ECM
          WRITE(*,41)'GENERATE EVNTS', NEV,'TEVA ENERGY(GEV)',ECM
       ELSE                      !NPDFU=2
 C	  WRITE(3,41) 'GENERATE EVNTS', NEV,'LHC ENERGY(GEV)',ECM
-         WRITE(*,41) 'GENERATE EVNTS', NEV,'LHC ENERGY(GEV)',ECM
+         WRITE(*,41) 'GENERATE EVNTS',NEV,'LHC ENERGY(GEV)',ECM
       END IF
 
       WRITE(*,'(A)') '*************************************************'
 C      WRITE(3,'(A)') '*************************************************'
       IF(IQQBAR.EQ.0) THEN
-	 WRITE(*,'(A)')'*   USING SUBPROCESS: g+g->Bc+b+\bar{c}         *'
+	 WRITE(*,'(A)')'*   USING SUBPROCESS: 
+     &    g+g->Bc+b+bar{c}      *'
 C	 WRITE(3,'(A)')'*   USING SUBPROCESS: g+g->Bc+b+\bar{c}         *'
       ELSE
 	 IF(IQCODE.EQ.1) THEN
