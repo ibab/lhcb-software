@@ -1,4 +1,4 @@
-// $Id: BcVegPyProduction.cpp,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: BcVegPyProduction.cpp,v 1.2 2006-04-25 21:50:17 robbep Exp $
 // Include files 
 
 // local
@@ -45,8 +45,8 @@ BcVegPyProduction::BcVegPyProduction( const std::string& type,
   m_defaultBcVegPySettings.push_back( "mixevnt imixtype 1");
   m_defaultBcVegPySettings.push_back( "counter ibcstate 1");  //Bc state
   m_defaultBcVegPySettings.push_back( "upcom pmb 5.0");       //mass of b quark
-  m_defaultBcVegPySettings.push_back( "upcom pmc 1.7");   //mass of c quark 
-  m_defaultBcVegPySettings.push_back( "upcom pmbc 6.7");  
+  m_defaultBcVegPySettings.push_back( "upcom pmc 1.4");   //mass of c quark 
+  m_defaultBcVegPySettings.push_back( "upcom pmbc 6.4");  
   //mass of B_c, note that pmBc=pmB+pmC
   m_defaultBcVegPySettings.push_back( "upcom ecm 14000.0");   //E.C.M. of LHC
   m_defaultBcVegPySettings.push_back( "confine ptcut 0.0");
@@ -59,10 +59,10 @@ BcVegPyProduction::BcVegPyProduction( const std::string& type,
   m_defaultBcVegPySettings.push_back( "loggrade igrade 1");
   m_defaultBcVegPySettings.push_back( "subopen subenergy 100.0");
   m_defaultBcVegPySettings.push_back( "subopen isubonly 0");
-  m_defaultBcVegPySettings.push_back( "usertran ishower 0");
+  m_defaultBcVegPySettings.push_back( "usertran ishower 1");
   m_defaultBcVegPySettings.push_back( "usertran idpp 3");
-  m_defaultBcVegPySettings.push_back( "vegasinf number 100000");
-  m_defaultBcVegPySettings.push_back( "vegasinf nitmx 10");
+  m_defaultBcVegPySettings.push_back( "vegasinf number 1000000");
+  m_defaultBcVegPySettings.push_back( "vegasinf nitmx 20");
   m_defaultBcVegPySettings.push_back( "vegcross iveggrade 0"); 
   //should be fixed to 0
   m_defaultBcVegPySettings.push_back( "qqbar iqqbar 0");
