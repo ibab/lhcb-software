@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.12 2006-02-01 19:42:36 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.13 2006-04-25 17:20:20 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -8,8 +8,6 @@
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
-namespace pool { class AttributeListSpecification; }
-namespace cool { class ExtendedAttributeListSpecification; }
 
 class CondDBCache;
 
@@ -76,7 +74,7 @@ public:
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
   /// channel and when are ignored and data is set ot NULL.
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<pool::AttributeList> &data,
+                                boost::shared_ptr<coral::AttributeList> &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
 
   /// Retrieve the names of the children nodes of a FolderSet.
@@ -84,7 +82,7 @@ public:
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
-                                    const pool::AttributeListSpecification& spec);
+                                    const cool::ExtendedAttributeListSpecification& spec);
   
   /// Add a folder-set to the cache (bypass the DB)
   virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr);
@@ -94,7 +92,7 @@ public:
   
   ///Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                    const pool::AttributeList& payload, cool::ChannelId channel = 0);
+                                    const coral::AttributeList& payload, cool::ChannelId channel = 0);
   
   ///Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,

@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.4 2005-12-08 12:05:42 marcocle Exp $
+// $Id: CondDBCache.h,v 1.5 2006-04-25 17:20:20 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -15,8 +15,6 @@
 #include "CoolKernel/ValidityKey.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/IFolder.h"
-
-#include "AttributeList/AttributeValueAccessor.h"
 
 /** @class CondDBCache CondDBCache.h component/CondDBCache.h
  *  
@@ -41,13 +39,13 @@ public:
   /// \warning {no check performed}
   bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
 
-  bool addFolder(const std::string &path, const std::string &descr, const pool::AttributeListSpecification& spec);
+  bool addFolder(const std::string &path, const std::string &descr, const cool::ExtendedAttributeListSpecification& spec);
   bool addFolderSet(const std::string &path, const std::string &descr);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                 const pool::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before = NULL);
+                 const coral::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before = NULL);
   /// (version kept for backward compatibility)
   inline bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                        const pool::AttributeList& al, IOVType *iov_before = NULL)
+                        const coral::AttributeList& al, IOVType *iov_before = NULL)
   {
     return addObject(path,since,until,al,0,iov_before);
   }
@@ -57,13 +55,13 @@ public:
   bool get(const std::string &path, const cool::ValidityKey &when,
            const cool::ChannelId &channel,
            cool::ValidityKey &since, cool::ValidityKey &until,
-           std::string &descr, boost::shared_ptr<pool::AttributeList> &payload) ;
+           std::string &descr, boost::shared_ptr<coral::AttributeList> &payload) ;
 
   /// Search an entry in the cache and returns the data string or an empty string if no object is found.
   /// (version kept for backward compatibility)
   inline bool get(const std::string &path, const cool::ValidityKey &when,
                   cool::ValidityKey &since, cool::ValidityKey &until,
-                  std::string &descr, boost::shared_ptr<pool::AttributeList> &payload) {
+                  std::string &descr, boost::shared_ptr<coral::AttributeList> &payload) {
     return get(path,when,0,since,until,descr,payload);
   }
 
@@ -109,25 +107,14 @@ private:
   struct CondItem {
     /// Constructor.
     CondItem(CondFolder *myFolder, const cool::IObjectPtr &obj):
-      folder(myFolder),iov(obj->since(),obj->until()), data(new pool::AttributeList(folder->spec)),score(1.0) {
-      for(pool::AttributeListSpecification::const_iterator a = folder->spec->begin();
-          a != folder->spec->end(); ++a) {
-        pool::AttributeValueAccessor(obj->payload()[a->name()])
-          .copyData(pool::AttributeValueAccessor((*data)[a->name()]).getMemoryAddress());
-      }
-    }
+      folder(myFolder),iov(obj->since(),obj->until()),
+      data(new coral::AttributeList(obj->payload())),score(1.0) {}
     CondItem(CondFolder *myFolder, const cool::ValidityKey &since, const cool::ValidityKey &until,
-             const pool::AttributeList &al):
-      folder(myFolder),iov(since,until), data(new pool::AttributeList(folder->spec)),score(1.0) {
-      for(pool::AttributeListSpecification::const_iterator a = folder->spec->begin();
-          a != folder->spec->end(); ++a) {
-        pool::AttributeValueAccessor(al[a->name()])
-          .copyData(pool::AttributeValueAccessor((*data)[a->name()]).getMemoryAddress());
-      }
-    }
+             const coral::AttributeList &al):
+      folder(myFolder),iov(since,until), data(new coral::AttributeList(al)),score(1.0) {}
     CondFolder *folder;
     IOVType iov;
-    boost::shared_ptr<pool::AttributeList> data;
+    boost::shared_ptr<coral::AttributeList> data;
     float score;
     /// Check if the CondItem is valid at the given time.
     inline bool valid(const cool::ValidityKey &when) const {
@@ -141,25 +128,16 @@ private:
     typedef GaudiUtils::HashMap<cool::ChannelId,ItemListType> StorageType;
     
     CondFolder(const cool::IFolderPtr &fld):
-      description(fld->description()),spec(new pool::AttributeListSpecification),sticky(false) {
-      for (pool::AttributeListSpecification::const_iterator a = fld->payloadSpecification().begin();
-           a != fld->payloadSpecification().end(); ++a) {
-        spec->push_back(a->name(),a->type());
-      }
-      //spec->append_and_merge(fld->payloadSpecification());
-    }
-    CondFolder(const std::string &descr, const pool::AttributeListSpecification& new_spec):
-      description(descr),spec(new pool::AttributeListSpecification),sticky(true) {
-      for (pool::AttributeListSpecification::const_iterator a = new_spec.begin();
-           a != new_spec.end(); ++a) {
-        spec->push_back(a->name(),a->type());
-      }
-    }
+      description(fld->description()),
+      spec(new cool::ExtendedAttributeListSpecification(fld->extendedPayloadSpecification())),
+      sticky(false) {}
+    CondFolder(const std::string &descr, const cool::ExtendedAttributeListSpecification& new_spec):
+      description(descr),spec(new cool::ExtendedAttributeListSpecification(new_spec)),sticky(true) {}
     // for a folderset (FolderSets are identified by missing spec)
     CondFolder(const std::string &descr):
       description(descr),sticky(true) {}
     std::string description;
-    boost::shared_ptr<pool::AttributeListSpecification> spec;
+    boost::shared_ptr<cool::ExtendedAttributeListSpecification> spec;
     StorageType items;
     bool sticky;
     /// Search for the first item in the storage valid at the given time.

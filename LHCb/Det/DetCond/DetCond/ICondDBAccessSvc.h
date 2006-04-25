@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.10 2006-02-01 19:42:36 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.11 2006-04-25 17:20:19 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -18,11 +18,12 @@
 namespace Gaudi {
   class Time;
 }
-namespace pool {
+namespace coral {
   class AttributeList;
-  class AttributeListSpecification;
 }
-
+namespace cool {
+   class ExtendedAttributeListSpecification;
+}
 
 static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
 
@@ -89,7 +90,7 @@ public:
   /// Retrieve data from the condition database.
   /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<pool::AttributeList> &data,
+                                boost::shared_ptr<coral::AttributeList> &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0) = 0;
 
   /// Retrieve the names of the children nodes of a FolderSet.
@@ -97,7 +98,7 @@ public:
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
-                                    const pool::AttributeListSpecification& spec) = 0;
+                                    const cool::ExtendedAttributeListSpecification& spec) = 0;
   
   /// Add a folder-set to the cache (bypass the DB)
   virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr) = 0;
@@ -107,7 +108,7 @@ public:
 
   /// Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                    const pool::AttributeList& payload, cool::ChannelId channel = 0) = 0;
+                                    const coral::AttributeList& payload, cool::ChannelId channel = 0) = 0;
   
   /// Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,

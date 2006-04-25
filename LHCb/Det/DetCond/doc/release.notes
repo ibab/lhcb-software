@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.66 2006-04-13 13:04:24 marcocle Exp $
+# $Id: release.notes,v 1.67 2006-04-25 17:20:19 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!=========== Ex/DetCondExample v8r0 2006-04-25 ==============================
+! 2006-04-25 - Marco Clemencic
+ **** requires LCGCMT_43 ****
+ - Updated to COOL_1_3_x
 
 ! 2006-04-13 - Marco Clemencic
  - Fixed a problem with uninitialized variables just affecting the case of

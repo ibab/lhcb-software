@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.17 2006-02-01 19:42:36 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.18 2006-04-25 17:20:20 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -21,8 +21,7 @@
 
 #include "CoolApplication/DatabaseSvcFactory.h"
 
-#include "AttributeList/AttributeList.h"
-#include "AttributeList/AttributeValueAccessor.h"
+#include "CoralBase/AttributeList.h"
 
 // local
 #include "CondDBAccessSvc.h"
@@ -196,17 +195,18 @@ StatusCode CondDBAccessSvc::initialize(){
     {
       log << MSG::DEBUG << "Create Folder \"" << m_test_path << "\"" <<endmsg;
       cool::IFolderPtr folder =
-        m_db->createFolderExtended(m_test_path,BasicStringALSpec,
+        m_db->createFolder(m_test_path,BasicStringALSpec,
 				   "this is a test folder",
 				   cool::FolderVersioning::SINGLE_VERSION,
 				   true);
-      pool::AttributeList data(BasicStringALSpec.attributeListSpecification());
-      data["type"].setValue<int>(1);
-      data["str"].setValue<std::string>(std::string("Here is the data for ")
-                                        +m_test_path);
-      data.print(std::cout);
+      coral::AttributeList data;
+      data.extend("type","int");
+      data.extend("str","string");
+      
+      data["type"].data<int>() = 1;
+      data["str"].data<std::string>() = std::string("Here is the data for ")+m_test_path;
+      data.toOutputStream(std::cout);
       std::cout << std::endl;
-    
     
       folder->storeObject(cool::ValidityKeyMin,cool::ValidityKeyMax,data);
     }
@@ -235,28 +235,28 @@ StatusCode CondDBAccessSvc::initialize(){
       m_db->createFolderSet( rootName+"/Alignment/Ecal",
                              "this is a test folderset", true );
       
-      m_db->createFolderExtended( rootName+"/pippo", attListSpec,
+      m_db->createFolder( rootName+"/pippo", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/scLHCb", attListSpec,
+      m_db->createFolder( rootName+"/scLHCb", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
+      m_db->createFolder( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
+      m_db->createFolder( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/Geometry/LHCb", attListSpec,
+      m_db->createFolder( rootName+"/Geometry/LHCb", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/Geometry2/LHCb", attListSpec,
+      m_db->createFolder( rootName+"/Geometry2/LHCb", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/Geometry2/lvLHCb", attListSpec,
+      m_db->createFolder( rootName+"/Geometry2/lvLHCb", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
-      m_db->createFolderExtended( rootName+"/Alignment/Ecal/alEcal", attListSpec,
+      m_db->createFolder( rootName+"/Alignment/Ecal/alEcal", attListSpec,
 				  "this is a test folder",
 				  cool::FolderVersioning::SINGLE_VERSION, true );
     }
@@ -265,14 +265,14 @@ StatusCode CondDBAccessSvc::initialize(){
     try {
       cool::IFolderPtr folder = m_db->getFolder(m_test_path);
       cool::IObjectPtr object = folder->findObject(2000);
-      object->payload().print(std::cout);
+      object->payload().toOutputStream(std::cout);
     } catch (cool::FolderNotFound &e) {
       log << MSG::ERROR << "Folder \"" << m_test_path << "\" not found!" << endmsg;
-      log << MSG::ERROR << e << endmsg;
+      log << MSG::ERROR << e.what() << endmsg;
       return StatusCode::FAILURE;
     } catch (cool::ObjectNotFound &e) {
       log << MSG::ERROR << "Object \"" << m_test_path << "\" not found!" << endmsg;
-      log << MSG::ERROR << e << endmsg;
+      log << MSG::ERROR << e.what() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -318,7 +318,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
         log << MSG::INFO << "Recreating Database" << endmsg;
         
         log << MSG::DEBUG << "drop the database \"";
-	log << m_connectionString << "\"" << endmsg;
+        log << m_connectionString << "\"" << endmsg;
         dbSvc.dropDatabase(m_connectionString, false);
         log << MSG::DEBUG << "done" << endmsg;
         
@@ -341,7 +341,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
   //  catch ( cool::DatabaseDoesNotExist &e ) {
   catch ( cool::Exception &e ) {
     log << MSG::ERROR << "Problems opening database" << endmsg;
-    log << MSG::ERROR << e << endmsg;
+    log << MSG::ERROR << e.what() << endmsg;
     m_db.reset();
     return StatusCode::FAILURE;
   }
@@ -403,7 +403,7 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-        m_db->createFolderExtended(path,
+        m_db->createFolder(path,
 				   *s_XMLstorageAttListSpec,
 				   _descr.str(),
 				   (vers == SINGLE)
@@ -426,7 +426,7 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
   } catch(cool::Exception &e){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
-        << "\" (cool::Exception): " << e << endmsg;
+        << "\" (cool::Exception): " << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -450,20 +450,23 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
         path << '\"' << endmsg;
       return StatusCode::FAILURE;
     }
-    pool::AttributeList payload(s_XMLstorageAttListSpec->attributeListSpecification());
-    payload["data"].setValue<std::string>(data);
+    coral::AttributeList payload;
+    payload.extend("data","string");
+    payload["data"].data<std::string>() = data;
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
   } catch (cool::Exception &e){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the XML string into \"" << path
-        << "\" (cool::Exception): " << e << endmsg;
+        << "\" (cool::Exception): " << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
                                            const double since_s, const double until_s, cool::ChannelId channel) const {
-  return storeXMLString(path,data,Gaudi::Time((long long int)(since_s * 1e9)),Gaudi::Time((long long int)(until_s * 1e9)),channel);
+  return storeXMLString(path,data,
+                        Gaudi::Time((long long int)(since_s * 1e9)),Gaudi::Time((long long int)(until_s * 1e9)),
+                        channel);
 }
 
 cool::ValidityKey CondDBAccessSvc::timeToValKey(const Gaudi::Time &time) const {
@@ -523,14 +526,14 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
   } catch (cool::FolderNotFound &e) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
-    log << e << endmsg;
+    log << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
 
 StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time &when,
-                                      boost::shared_ptr<pool::AttributeList> &data,
+                                      boost::shared_ptr<coral::AttributeList> &data,
                                       std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel){
 
   try {
@@ -583,21 +586,8 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       }
     
       // deep copy of the attr. list
-      boost::shared_ptr<pool::AttributeListSpecification> spec(new pool::AttributeListSpecification);
-      for (pool::AttributeListSpecification::const_iterator a = folder->payloadSpecification().begin();
-           a != folder->payloadSpecification().end(); ++a) {
-        spec->push_back(a->name(),a->type());
-      }
-      // spec->append_and_merge(folder->payloadSpecification());
-    
-      data = boost::shared_ptr<pool::AttributeList>(new pool::AttributeList(spec));
-      for(pool::AttributeListSpecification::const_iterator a = spec->begin();
-          a != spec->end(); ++a) {
-        pool::AttributeValueAccessor(obj->payload()[a->name()])
-          .copyData(pool::AttributeValueAccessor((*data)[a->name()]).getMemoryAddress());
-      }
-      //data = obj->payload();
-    
+      data = boost::shared_ptr<coral::AttributeList>(new coral::AttributeList(obj->payload()));
+   
       since = valKeyToTime(obj->since());
       until = valKeyToTime(obj->until());
       
@@ -671,7 +661,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
 //  
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::string &descr,
-                                           const pool::AttributeListSpecification& spec) {
+                                           const cool::ExtendedAttributeListSpecification& spec) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cache not in use: I cannot add a folder to it." << endmsg;
@@ -698,14 +688,14 @@ StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
   std::ostringstream _descr;
   _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-  return cacheAddFolder(path,_descr.str(),s_XMLstorageAttListSpec->attributeListSpecification());
+  return cacheAddFolder(path,_descr.str(),*s_XMLstorageAttListSpec);
 }
 
 //=========================================================================
 //  
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                           const pool::AttributeList& payload, cool::ChannelId channel) {
+                                           const coral::AttributeList& payload, cool::ChannelId channel) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cache not in use: I cannot add an object to it." << endmsg;
@@ -721,8 +711,10 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi:
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                               const std::string &data, cool::ChannelId channel) {
-  pool::AttributeList payload(s_XMLstorageAttListSpec->attributeListSpecification());
-  payload["data"].setValue<std::string>(data);
+  /// @todo this is affected by the evolution in COOL API
+  coral::AttributeList payload;
+  payload.extend("data","string");
+  payload["data"].data<std::string>() = data;
   return cacheAddObject(path,since,until,payload,channel);
 }
 

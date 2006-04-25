@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.11 2006-02-01 19:42:36 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.12 2006-04-25 17:20:18 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -19,7 +19,7 @@ class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
 class ICondDBCnvSvc;
-namespace pool {
+namespace coral {
   class AttributeList;
 }
 
@@ -109,12 +109,12 @@ protected:
    * set to NULL.
    */
   StatusCode getObject(const std::string &path, const cool::ChannelId &channel,
-                       boost::shared_ptr<pool::AttributeList> &obj,
+                       boost::shared_ptr<coral::AttributeList> &obj,
                        std::string &descr, Gaudi::Time &since, Gaudi::Time &until);
 
   /// Method kept for backward compatibility
   inline StatusCode getObject(const std::string &path,
-                              boost::shared_ptr<pool::AttributeList> &obj,
+                              boost::shared_ptr<coral::AttributeList> &obj,
                               std::string &descr, Gaudi::Time &since, Gaudi::Time &until)
   {
     return getObject(path,0,obj,descr,since,until);

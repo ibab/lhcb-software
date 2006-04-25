@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.5 2006-04-13 13:04:24 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.6 2006-04-25 17:20:20 marcocle Exp $
 // Include files 
 
 
@@ -71,7 +71,7 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
 //  Add a new folder using the given specification and description. (Bypass the real DB)
 //=========================================================================
 bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
-                            const pool::AttributeListSpecification& spec) {
+                            const cool::ExtendedAttributeListSpecification& spec) {
   StorageType::iterator f = m_cache.find(path);
   if (f == m_cache.end()){
     f = m_cache.insert(StorageType::value_type(path,CondFolder(descr,spec))).first;
@@ -94,7 +94,7 @@ bool CondDBCache::addFolderSet(const std::string &path, const std::string &descr
 //  Add a new object to a given folder
 //=========================================================================
 bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                            const pool::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before) {
+                            const coral::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before) {
   // new objects cannot be already valid. check it!
   if ( m_lastRequestedTime != 0 && ( since <= m_lastRequestedTime && m_lastRequestedTime < until ) ) {
     m_log << MSG::WARNING << "New item IOV is compatible with last requested time: I cannot add it" << endmsg;
@@ -153,7 +153,7 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
 bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
                       const cool::ChannelId &channel,
                       cool::ValidityKey &since, cool::ValidityKey &until,
-                      std::string &descr, boost::shared_ptr<pool::AttributeList> &payload ) {
+                      std::string &descr, boost::shared_ptr<coral::AttributeList> &payload ) {
   m_log << MSG::DEBUG << "Request Folder '" << path 
         << "'  @ " << when << " channel " << channel;
   m_lastRequestedTime = when;
@@ -308,15 +308,17 @@ void CondDBCache::dump() {
     } else {
       m_log << MSG::DEBUG << "Folder '" << i->first << "' " << ((i->second.sticky)?"(sticky)":"") << endmsg;
     }
-    std::ostringstream type_spec;
-    i->second.spec->print(type_spec);
-    m_log << MSG::DEBUG << "     Type: " << type_spec.str() << endmsg;
+    
+    //  coral::AttributeListSpecification does not have a "print" function
+    //  std::ostringstream type_spec;
+    //  i->second.spec->attributeListSpecification().toOutputStream(type_spec);
+    //  m_log << MSG::DEBUG << "     Type: " << type_spec.str() << endmsg;
     for(CondFolder::StorageType::const_iterator ch = i->second.items.begin(); ch != i->second.items.end(); ++ch) {
       m_log << MSG::DEBUG << "  Channel " << ch->first << endmsg;
       size_t cnt = 0;
       for(ItemListType::const_iterator j = ch->second.begin(); j != ch->second.end(); ++j) {
         std::ostringstream data;
-        j->data->print(data);
+        j->data->toOutputStream(data);
         m_log << MSG::DEBUG << "  Object " << cnt++ << endmsg;
         m_log << MSG::DEBUG << "    Score: " << j->score << endmsg;
         m_log << MSG::DEBUG << "    Validity: " << j->iov.first << " - " << j->iov.second << endmsg;
