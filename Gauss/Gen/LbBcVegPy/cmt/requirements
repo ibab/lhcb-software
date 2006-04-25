@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $ 
+# $Id: requirements,v 1.2 2006-04-25 21:49:35 robbep Exp $ 
 #============================================================================
 package       LbBcVegPy
 version       v1r0
@@ -6,7 +6,7 @@ version       v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches      LbBcGen doc cmt src
+branches      LbBcVegPy doc cmt src
 include_dirs  $(LBBCVEGPYROOT)
 
 #============================================================================
