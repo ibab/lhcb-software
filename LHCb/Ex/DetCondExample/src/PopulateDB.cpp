@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.28 2006-02-01 19:50:30 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.29 2006-04-25 17:26:07 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -27,9 +27,8 @@
 #include "CoolKernel/IObjectIterator.h"
 #include "CoolKernel/types.h"
 
-// from POOL
-#include "AttributeList/AttributeListSpecification.h"
-#include "AttributeList/AttributeList.h"
+// from CORAL
+#include "CoralBase/AttributeList.h"
 
 // local
 #include "PopulateDB.h"
@@ -139,7 +138,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
                                "Dummy folderset used to sign the prepared database",
                                ICondDBAccessSvc::FOLDERSET);
     } catch (cool::Exception &e) {
-      error() << e << endmsg;
+      error() << e.what() << endmsg;
       return StatusCode::FAILURE;
     }
     info() << "Signature folderSet did not exist and was succesfully created" << endmsg;
@@ -443,7 +442,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
 
     error() << "Error in storing sample data into the CondDB" << endmsg;
     error() << "*** COOL exception caught: " << endmsg;
-    error() << "***   error message: " << e << endmsg;
+    error() << "***   error message: " << e.what() << endmsg;
     return StatusCode::FAILURE;
 
   }
@@ -554,12 +553,10 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
     
     info() << "    | " << objp->since() << " -> " << objp->until() << endmsg;
     info() << "      size = " << objp->payload().size() << endmsg;
-    
-    for (pool::AttributeList::const_iterator it = objp->payload().begin();
-         it!=objp->payload().end(); it++){
-      info() << "      " << it->spec().name()  << " (" <<  it->spec().type_name() << ") =" << endmsg;
-      info() << "        " << it->getValueAsString() << endmsg;
-    }
+
+    std::ostringstream pl_data;
+    objp->payload().toOutputStream(pl_data);
+    info() << "      " << pl_data.str() << endmsg;
   }
 
   return StatusCode::SUCCESS;

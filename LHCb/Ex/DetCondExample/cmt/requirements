@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.47 2006-02-03 11:20:50 cattanem Exp $
+# $Id: requirements,v 1.48 2006-04-25 17:26:07 marcocle Exp $
 package DetCondExample
-version v7r10
+version v8r0
 
 branches doc src job options cmt XMLDDDB python logs
 ignore_pattern package_stamps 
@@ -31,26 +31,13 @@ use Python v* LCG_Interfaces
 apply_tag NEEDS_PYCOOL
 
 # library path needed for mysql backend
-use myodbc   v* LCG_Interfaces
 use mysql    v* LCG_Interfaces
-use unixodbc v* LCG_Interfaces
-set ODBCINST $(unixodbc_home)
 
 # library path needed for sqlite backend
 use sqlite   v* LCG_Interfaces
-set POOL_OUTMSG_LEVEL W
 
 # library path needed for oracle backend
-macro Oracle_version "10.1.0.3-1"
-macro Oracle_base "$(LCG_external)/oracle"
-path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
-path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib" WIN32 ""
-# remove entries due to Windows Oracle installation
-path_remove PATH "" WIN32 "\Oracle\"
-path_remove PATH "" WIN32 "\oracle\"
-path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\$(LCG_system)\bin"
-#set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
-
+use oracle   v* LCG_Interfaces
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
@@ -89,6 +76,6 @@ set CONDDBNAME2   "CONDDB2"
 set CONDDBSCHEMA2 "CONDDB2.sqlite"
 
 macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
-macro_append POOL_linkopts ' -llcg_CollectionBase ' WIN32 ' lcg_CollectionBase.lib '
+#macro_append POOL_linkopts ' -llcg_CollectionBase ' WIN32 ' lcg_CollectionBase.lib '
 
 path JOBOPTSEARCHPATH ../options

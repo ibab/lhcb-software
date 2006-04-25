@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.11 2006-01-19 18:32:10 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.12 2006-04-25 17:26:07 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Timing.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "CoolKernel/Exception.h"
@@ -17,9 +18,9 @@
 #include "CoolKernel/types.h"
 #include "CoolKernel/ValidityKey.h"
 
-// from POOL
-#include "AttributeList/AttributeListSpecification.h"
-#include "AttributeList/AttributeList.h"
+// from CORAL
+//#include "CoralBase/AttributeListSpecification.h"
+#include "CoralBase/AttributeList.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 DECLARE_ALGORITHM_FACTORY( DAQCondDBAlgorithm );
@@ -78,36 +79,17 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 
     // Make sure that test folder name does not contain any "/"
     // TODO
-  
-    // Get a pointer to the DB to speed up a bit
-    cool::IDatabasePtr &db = m_dbAccSvc->database(); 
-
-    debug() << "Prepare the AttributeListSpecification" << endmsg;
-    m_payloadSpec = new pool::AttributeListSpecification();
-    m_payloadSpec->push_back("data","string");
-
-    // Check if DAQ CondDB folder exists
-    std::string daqFolderFullName = "/" + m_daqFolderName;
-    debug() << "Checking if DAQ CondDB folder `" << daqFolderFullName << "' already exists" << endmsg;
-    bool daqFolderExists = db->existsFolder( daqFolderFullName );
-
-    // If DAQ CondDB folder exists already then do nothing
-    // If DAQ CondDB folder does not exist then create it
-    if ( daqFolderExists ) {
-      debug() << "DAQ CondDB folder already exists: no need to create it" << endmsg;
-    } else {      
-      info() << "DAQ CondDB folder does not exist: create it" << endmsg;
-      try {
-        db->createFolder( daqFolderFullName, *m_payloadSpec,
-                          "DAQ folder for the ConditionsDB",
-                          cool::FolderVersioning::SINGLE_VERSION, true );
-      } catch (cool::Exception &e) {
-        error() << e << endmsg;
-        return StatusCode::FAILURE;
-      }
-    
-      debug() << "DAQ CondDB folder did not exist and was succesfully created" << endmsg;
+    try {
+      m_dbAccSvc->createFolder("/" + m_daqFolderName,
+                               "DAQ folder for the ConditionsDB",
+                               ICondDBAccessSvc::XML,
+                               ICondDBAccessSvc::SINGLE);
+    } catch (cool::Exception &e) {
+      error() << e.what() << endmsg;
+      return StatusCode::FAILURE;
     }
+
+    debug() << "DAQ CondDB folder succesfully created" << endmsg;
   
     m_nsInitialized = System::currentTime(System::nanoSec);
 
@@ -131,18 +113,12 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   m_nsExec -= System::currentTime(System::nanoSec);
 
   // At every event store a new condition
-  pool::AttributeList payload(*m_payloadSpec);
-  payload["data"].setValue<std::string>(m_daqRecord);
-
-  cool::IDatabasePtr &db = m_dbAccSvc->database();
-
-  std::string daqFolderFullName = "/" + m_daqFolderName;
-
   try {
     longlong startIO = System::currentTime(System::nanoSec);
-    db->getFolder(daqFolderFullName)
-      ->storeObject(System::currentTime(System::nanoSec)-m_nsInitialized,
-                    cool::ValidityKeyMax, payload);
+    m_dbAccSvc->storeXMLString("/" + m_daqFolderName,
+                               m_daqRecord,
+                               Gaudi::Time(System::currentTime(System::nanoSec)-m_nsInitialized),
+                               Gaudi::Time(cool::ValidityKeyMax));
     longlong endIO = System::currentTime(System::nanoSec);
     if ( m_daqShowProgress > 0 ) {
       if ( m_daqEventNumber == 
@@ -156,7 +132,7 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   } catch (cool::Exception &e) {
     error() << "Error in storing condition object in the CondDB" << endmsg;
     error() << "*** cool::Exception caught:" << endmsg;
-    error() << "*** " << e << endmsg;
+    error() << "*** " << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
   debug() << "Condition object written to the database " << endmsg;
