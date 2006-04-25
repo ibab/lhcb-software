@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.14 2006-04-12 14:38:25 mtobin Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.15 2006-04-25 16:12:15 erodrigu Exp $
 // Include files 
 
 // local
@@ -17,7 +17,7 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
                                         const DeVelo& det,
-					const IVeloClusterPosition& clusPosTool,
+                                        const IVeloClusterPosition& clusPosTool,
                                         const Gaudi::TrackVector& refVector )
 {
   m_refVector = refVector; // reference trajectory
@@ -27,7 +27,7 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,
 /// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& cluster,					
                                         const DeVelo& det,
-					const IVeloClusterPosition& clusPosTool)
+                                        const IVeloClusterPosition& clusPosTool)
 {
   m_refVector = Gaudi::TrackVector(); // reference trajectory
   this->init( cluster, det, clusPosTool, false );
@@ -42,37 +42,38 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloPhiMeasurement& other )
 
 void VeloPhiMeasurement::init( const VeloCluster& cluster,
                                const DeVelo& det,
-			       const IVeloClusterPosition& clusPosTool,
+                               const IVeloClusterPosition& clusPosTool,
                                bool refIsSet ) 
 {
   // Fill the data members
-  m_mtype = Measurement::VeloPhi;
-  m_refIsSet  = refIsSet;
-  m_cluster = &cluster;
-  m_lhcbID = LHCbID( m_cluster->channelID() );
-  const DeVeloPhiType* phiDet=det.phiSensor( m_cluster->channelID() );
-  m_z = phiDet->z();
-  m_trajectory = phiDet->trajectory( m_lhcbID.veloID() , m_cluster->interStripFraction() );
+  m_mtype    = Measurement::VeloPhi;
+  m_refIsSet = refIsSet;
+  m_cluster  = &cluster;
+  m_lhcbID   = LHCbID( m_cluster->channelID() );
 
+  const DeVeloPhiType* phiDet = det.phiSensor( m_cluster->channelID() );
+  m_z = phiDet->z();
+  m_trajectory = phiDet -> trajectory( m_lhcbID.veloID(),
+                                       m_cluster->interStripFraction() );
+  
   // TODO: Get this from the VeloDet
-  StatusCode sc = phiDet->globalOrigin(m_origin);
+  StatusCode sc = phiDet -> globalOrigin( m_origin );
   if(!sc){
     throw GaudiException( "The origin of the phi sensor was bad",
-			  "VeloPhiMeasurement.cpp",StatusCode::FAILURE );
+                          "VeloPhiMeasurement.cpp",StatusCode::FAILURE );
   }
-
+  
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
-  m_measure = phiDet->distToOrigin(  m_cluster->channelID().strip() );
+  m_measure = phiDet -> distToOrigin(  m_cluster->channelID().strip() );
   // fix sign convention of d0 of strip
-  if( ! phiDet->isDownstream() ) {
+  if( ! phiDet -> isDownstream() ) {
     m_measure = -m_measure;
   }
-
+  
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position( &cluster );
-  m_errMeasure  = clusInfo.fractionalError * 
-    phiDet->phiPitch( m_cluster->channelID().strip() );
-
+  m_errMeasure  = clusInfo.fractionalError *
+    phiDet -> phiPitch( m_cluster->channelID().strip() );  
 }
 
 double VeloPhiMeasurement::resolution( const Gaudi::XYZPoint& point,
