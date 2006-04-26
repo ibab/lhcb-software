@@ -431,12 +431,12 @@ class genClasses(genSrcUtils.genSrcUtils):
     classname =  godClass['attrs']['name']
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
       self.addInclude('KeyedContainer')
-      s += '// Definition of Keyed Container for %s\n' % classname
+      s += '/// Definition of Keyed Container for %s\n' % classname
       s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n' \
            % (classname, self.genClassnamePlurial(classname))
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
       self.addInclude('ObjectVector')
-      s += '// Definition of vector container type for %s\n' % classname
+      s += '/// Definition of vector container type for %s\n' % classname
       s += 'template <class TYPE> class ObjectVector;\n'
       s += 'typedef ::ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
     return s
@@ -446,16 +446,16 @@ class genClasses(genSrcUtils.genSrcUtils):
     classname = godClass['attrs']['name']
     if godClass['attrs']['stdVectorTypeDef'] == 'TRUE':
       self.addInclude('std::vector')
-      s += '  // typedef for std::vector of %s\n' % classname
+      s += '  /// typedef for std::vector of %s\n' % classname
       s += '  typedef std::vector<%s*> Vector;\n' % ( classname )
       s += '  typedef std::vector<const %s*> ConstVector;\n\n' % ( classname )
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
       self.addInclude('KeyedContainer')
-      s += '  // typedef for KeyedContainer of %s\n' % classname
+      s += '  /// typedef for KeyedContainer of %s\n' % classname
       s += '  typedef KeyedContainer<%s, Containers::HashMap> Container;\n' % (classname)
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
       self.addInclude('ObjectVector')
-      s += '// typedef for ObjectVector of %s\n' % classname
+      s += '/// typedef for ObjectVector of %s\n' % classname
       s += 'typedef ObjectVector<%s> Container;\n' % (classname)
     return s
 #--------------------------------------------------------------------------------
