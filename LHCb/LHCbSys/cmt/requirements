@@ -1,5 +1,5 @@
 package LHCbSys
-version v20r3
+version v20r4
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb                 v20r3
+use LHCb                 v20r4
 use GaudiConf	         v9r5
 
 #                                         Maintainer
@@ -26,11 +26,11 @@ use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v8r3    Det     # Marco Cattaneo
-use VeloDet               v10r4   Det     # Mark Tobin
-use DetDesc               v16r3   Det     # Marco Clemencic, Juan Palacios
+use DetSys                v8r4    Det     # Marco Cattaneo
+use VeloDet               v10r5   Det     # Mark Tobin
+use DetDesc               v16r4   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r2    Det     # Marco Clemencic, Juan Palacios
-use DetDescSvc            v1r3    Det     # Marco Clemencic, Matt Needham
+use DetDescSvc            v1r4    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r9    Tools   # Marco Clemencic
 use OTDet                 v6r2    Det     # Jan Amoraal
 use CaloDet               v7r1    Det     # Olivier Deschamps
