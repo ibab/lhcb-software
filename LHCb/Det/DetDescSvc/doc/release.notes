@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.9 2006-04-13 10:53:12 marcocle Exp $ 
+! $Id: release.notes,v 1.10 2006-04-27 14:58:30 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r4 2006-04-27 =========================
 ! 2006-04-13 - Marco Clemencic
  - Added a couple of methods using a mutex_lock to avoid different threads to
   step on each other toes. (the update loop inside newEvent() must not be
