@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.14 2006-04-12 14:23:21 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.15 2006-04-27 14:16:31 cattanem Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -206,10 +206,10 @@ private:
 
   //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;
-  static std::vector<double> m_rStrips;
-  static std::vector<double> m_rPitch;
-  static std::vector<double> m_phiMin;
-  static std::vector<double> m_phiMax;
+  std::vector<double> m_rStrips;
+  std::vector<double> m_rPitch;
+  std::vector<double> m_phiMin;
+  std::vector<double> m_phiMax;
   double m_cornerX1;
   double m_cornerY1;
   double m_cornerX2;
@@ -218,7 +218,7 @@ private:
   double m_cornerYInt;//<Y intercept for corner cut off
   double m_gradCutOff;//<Gradient of line defining cut offs
   double m_intCutOff;//<x intercept for line which defines cut offs
-  static std::vector< std::pair<double,double> > m_stripPhiLimits;//Min/Max phi of strips
+  std::vector< std::pair<double,double> > m_stripPhiLimits;//Min/Max phi of strips
   std::pair<double,double> m_resolution;//Resolution from LHCB??????
   double m_innerPitch;
   double m_outerPitch;

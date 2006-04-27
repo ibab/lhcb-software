@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.120 2006-04-21 19:43:18 krinnert Exp $
+! $Id: release.notes,v 1.121 2006-04-27 14:16:32 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v10r5 2006-04-26 ========================
+! 2006-04-26 - Marco Cattaneo
+ - Change static member variable in DeVeloRType back to non-static, due to
+   incompatibility with current default setting of VC++
 
 ! 2006-04-21 - Kurt Rinnert
  - Added consistency check in readout conditions update.  A sensor that is

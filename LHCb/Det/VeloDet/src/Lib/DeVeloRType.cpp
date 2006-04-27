@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.24 2006-04-13 13:24:39 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.25 2006-04-27 14:16:32 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -19,11 +19,6 @@
 
 // From Velo
 #include "VeloDet/DeVeloRType.h"
-std::vector<double> DeVeloRType::m_rStrips;
-std::vector<double> DeVeloRType::m_rPitch;
-std::vector<double> DeVeloRType::m_phiMin;
-std::vector<double> DeVeloRType::m_phiMax;
-std::vector<std::pair<double,double> > DeVeloRType::m_stripPhiLimits;
 
 /** @file DeVeloRType.cpp
  *
