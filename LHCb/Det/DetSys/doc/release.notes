@@ -1,10 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetSys
 ! Responsible : Marco Cattaneo
-! Purpose     : collect Det packages
+! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!======================== DetSys v8r4 2006-04-20 =========================
+!========================= DetSys v8r4 2006-04-27 =========================
+! 2006-04-27 - Marco Cattaneo
+ - Use DetDescSvc v1r4, VeloDet v10r5
+
 ! 2006-04-20 - Florence RANJARD
  - dict/DetDict.h - *.h are nolonger stored in DetDesc/../src/Lib but
                     in DetDesc/
