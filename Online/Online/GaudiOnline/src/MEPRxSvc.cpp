@@ -44,6 +44,9 @@ log << MSG::ERROR << x << errstr << " " << __FILE__ << ":" << __LINE__ << endmsg
 typedef struct iphdr ip_hdr_t;
 typedef std::vector<MEP::MEPRx *>::iterator RXIT;
 
+static u_int8_t mepreqbuf[0x40]; 
+static ip_hdr_t *mepreqiphdr = (ip_hdr_t *) mepreqbuf;
+static mepreq_t *mepreq = (mep_req_t *) &mepreqbuf[sizeof(ip_hdr_t)];
 
 static struct LHCb::MEPRx: public MEP::Producer {
   int m_spaceSize, m_refCount, m_age;
@@ -126,8 +129,8 @@ static struct LHCb::MEPRx: public MEP::Producer {
   int addMEP(mep_hdr_t *hdr, int srcid) {
     int len = 0;
  
-    if (seen[i]) multipleSrc();
-    seen[i] = 1;		   
+    if (seen[srcid]) multipleSrc();
+    seen[srcid] = 1;		   
     /* here a lot of tests should be done */
     if (m_nrx == 0) {
       MBM::EventDesc& dsc = event();
@@ -171,10 +174,27 @@ static struct LHCb::MEPRx: public MEP::Producer {
     return (m_nrx == m_nsrc) ? spaceAction() : MEP_ADDED;
   }  
   void multipleSrc() {
-    
+  }
+  void badPkt() {
+  }
+  inline void missingSrc() {
+  }
+  inline void DAQErrorBank() {
+    /* we create a MEP fragment with the required error bank */
+    DAQErrorBankEntry *e = (DAQErrorBankEntry *) m_errorBank; 
+    for (int i = 0; i < m_nSrc; ++i) {
+      if (m_seen[i] == 1) continue;
+      e->srcid = i;
+      e->srcipaddr = m_parent->m_srcAddr.getItem(i);
+      e->errorType = m_seen[i];
+      e->pktData = NULL;
+      e++;
+    }
+  }
 };
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPRxSvc)
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 
 // Standard Constructor
 LHCb::MEPRxSvc::MEPRxSvc(const std::string& nasm, ISvcLocator* svc)
@@ -188,7 +208,7 @@ LHCb::MEPRxSvc::MEPRxSvc(const std::string& nasm, ISvcLocator* svc)
   declareProperty("maxMsForGetSpace", m_maxMsForGetSpace);
   declareProperty("IPSrc", m_IPSrc);
   declareProperty("IPProtoIn", m_IPProtoIn = IP_PROTO_HLT);
-  declareProperty("sockBuf", m_sockBuf = 0x1000000);
+  declareProperty("sockBuf", m_sockBuf = 0x100000);
   declareProperty("partitionID", m_partitionID);
   declareProperty("refCount",m_refCount = 2);
   declareProperty("MEPBufSize", m_MEPBufSize = -1);
@@ -224,11 +244,88 @@ LHCb::MEPRxSvc::removePkt()
       errmsg("recvmsg");
   }
 }
+/* age all workDsc and return the oldest */
+RXIT
+LHCb::MEPRxSvc::ageRx() {
+  RXIT k, j;
+  if (m_workDsc.empty()) return NULL;
+  for (k = j = m_workDsc.begin(); j != m_workDsc.end(); ++j) 
+    if (--((*j)->m_age) <= 0) {
+      k = j;
+      (*j)->m_age = 0;
+    } else if ((*k)->m_age > (*j)->m_age) k = j;
+  return k;
+}
 
+inline int
+LHCb::MEPRxSvc::getMyAddr(u_int32_t &addr) {
+  
+}
+
+inline int
+LHCb::MEPRxSvc::setupMEPReq(string odinName) {
+  u_int32_t addr;
+
+  if (odinName.empty()) {
+    m_log << MSG::INFO << "No address for ODIN. Dynamic MEP requests disabled!"
+	  << endsmg;
+    m_dynamicMEPReq = false;
+    return 0;
+  }
+  if (parseAddr(odinName, addr) && addrFromName(odinName, addr)) {
+    m_log << MSG::ERROR << "invalid address for ODIN: " <<  odinName << endmsg;
+    return 1; 
+  } 
+  m_log << MSG::INFO << "Dynamic MEP requests will be sent to " << 
+    inet_ntoa(addr) << endmsg;
+  *mepreqiphdr = { .daddr = addr, .ttl = 5, .ihl = 5, .version = 4, }
+  
+  m_dynamicMEPReq = true;
+  return 0;
+}
+
+inline int
+LHCb::MEPRxSvc::sendMEPReq() {
+  if (!m_dynamicMEPRequest) return;
+  if ((int n = sendmsg(m_r, &m_MEPReqMsg, MSG_DONTWAIT | MSG_CONFIRM)) == 
+      m_MEPReqLen) return 0;
+  if (n == -1) {
+    errmsg("sendmsg");
+    return 1;
+  } else {
+    m_log << MSG::ERROR << "MEPRequest corrupted on send!" << endmsg;
+    return 1;
+  }
+}
+   
+ 
+void 
+LHCb::MEPRxSvc::freeRx() {
+  MEPRx *rx;
+
+  lib_rtl_lock(m_usedDscLock);
+  if (m_usedDsc.empty()) {
+    lib_rtl_unlock(m_usedDscLock);
+    return;
+  }
+  rx = *(--m_usedDsc.end());
+  m_usedDsc.pop_back();
+  lib_rtl_unlock(m_usedDscLock);
+  if (rx->spaceRearm(0) == MBM_NORMAL) {
+    lib_rtl_lock(m_freeDscLock);
+    m_freeDsc.push_back(rx);
+    lib_rtl_unlock(m_freeDscLock);
+    sendMEPReq();
+    return;
+  }
+  m_log << MSG::ERROR << "timeout on getting space" << endmsg;
+  return;
+}
+  
 int 
 LHCb::MEPRxSvc::execute() {
   MsgStream log(msgSvc(), name());
-c  fd_set fds;
+  fd_set fds;
   struct iovec mep_recv_vec[1];
   RXIT rx;
   struct msghdr msg; 
@@ -280,38 +377,35 @@ c  fd_set fds;
       rx = lower_bound(workdsc.begin(), workdsc.end(), mephdr->l01_id, 
 		       cmpL0ID);
       if (rx == workdsc.end() || (*rx)->m_l0id != mephdr->l01_id) {
-	/* not found */
-	RXIT k, j;
-	for (j = workdsc.begin(); j != workdsc.end(); ++j) 
-	  if (--((*j)->m_age) <= 0) {
-	    k = j;
-	    (*j)->m_age = 0;
-	  }
+	/* not found - get a new descriptor*/
+	RXIT oldest = ageRx();
 	try {
-	  if (freedsc.empty()) {
-	    (*k)->spaceAction();
-	    freedsc.push_back(*k);
-	    workdsc.erase(k);
+	  if (m_freeDsc.empty()) {
+	    forceEvent(oldest);
+	    freeRx(); /* only if not in separate thread */
 	  }
-	  j = lower_bound(workdsc.begin(), workdsc.end(), mephdr->l01_id, 
-			  MEP::cmpL0ID);
-	  rx = --freedsc.end(); 
-	  freedsc.pop_back();
-	  if ((*rx)->spaceRearm(0) != MBM_NORMAL) {
-	    fatal("spaceRearm(0)");
-	  }
-	  workdsc.insert(j, *rx);
-	  (*rx)->m_age = nmax;
-	  (*rx)->m_l0id = mephdr->l01_id;
+	  while (m_freeDsc.empty()) usleep(100); /* only necessary on 
+						    multithreading */
+	  lib_rtl_lock(m_freeDscLock);
+	  MEPRx *rx = *(--m_freeDsc.end());
+	  m_freeDsc.pop_back();
+	  lib_rtl_unlock(m_freeDscLock);
+	  RXIT j = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
+			       mephdr->l01_id, MEP::cmpL0ID);
+	  m_workDsc.insert(j, rx);
+	  rx->m_age = m_nMax;
+	  rx->m_l0id = mephdr->l01_id;
 	}
 	catch(std::exception& e) {
-	  log << MSG:ERROR << "Exeption " << e.what() << endmsg;
+	  log << MSG:ERROR << "Exception " << e.what() << endmsg;
 	}
       } 
     }
     if ((*rx)->addMEP(mephdr, srcid) == MEP_SENT) {
       m_workDsc.erase(rx);
-      m_freeDsc.push_back(*rx);
+      lib_rtl_lock(m_usedDscLock);
+      m_usedDsc.push_back(*rx);
+      lib_rtl_unlock(m_usedDscLock);
     }		   		   
   }
 //Incident incident(name(),"DAQ_ERROR");
@@ -388,8 +482,8 @@ LHCb::MEPRxSvc::checkProperties() {
     log << MSG::ERROR << "maxBadPktRatio must be > 0" << endmsg;
     return 1;
   }
-  if (m_sockBuf < 0x10000 || m_sockBuf > 0x40000000) {
-    log << MSG::ERROR << "sockBuf must be >= 64 kB and less than 1 GB" << endmsg;
+  if (m_sockBuf < 0x10000 || m_sockBuf > 0x4000000) {
+    log << MSG::ERROR << "sockBuf must be >= 64 kB and less than 64 MB" << endmsg;
     return 1;
   }
   if (m_IPProtoIn < 0 || m_IPProtoIn > 255) {
@@ -467,6 +561,16 @@ int LHCb::MEPRxSvc::openSock() {
 		 1 + strlen(netdev_name))) {
     errmsg("setsockopt SO_BINDTODEVICE");
     goto shut_out;
+  }
+  if (m_dynamicMEPReq) {
+    if (setsockopt(m_r, SOL_IP, IP_TTL, MEPREQTTL, 10)) {
+      errmsg("setsockopt SOL_IP TTL");
+      goto shut_out;
+    }
+    if (setsockopt(m_r, SOL_IP, IP_TOS, MEPREQTTL, 10)) {
+      errmsg("setsockopt SOL");
+      goto shut_out;
+    }
   }
   log << MSG::INFO << "listening on " << netdev_name << "for IP #" << 
     m_IPProtoIn <<  " socket buffer is " << m_sockBuf / 0x400 << 
