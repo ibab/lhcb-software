@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.25 2006-04-27 14:16:32 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.26 2006-04-28 14:22:50 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -182,6 +182,48 @@ bool DeVeloRType::isCutOff(double x, double y) const
   return false;
 }
 //==============================================================================
+/// Returns the minimum phi in a zone at given radius
+//==============================================================================
+double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
+    double phiMin;
+    if(0 == zone){
+      phiMin = -acos(m_overlapInX/radius);
+      double y=radius*sin(phiMin);
+      if(isCutOff(m_overlapInX,y)) {
+        double x,y;
+        intersectCutOff(radius,x,y);
+        y = -y;
+        phiMin=atan2(y,x);
+      }
+    } else if(2 == zone){
+      phiMin = asin(m_phiGap/radius);
+    } else {
+      phiMin = phiMinZone(zone);
+    }
+    return phiMin;
+  }
+//==============================================================================
+/// Returns the maximum phi in a zone at given radius
+//==============================================================================
+double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
+  double phiMax;
+  if(1 == zone){
+    phiMax = asin(-m_phiGap/radius);
+  } else if(3 == zone){
+    phiMax = acos(m_overlapInX/radius);
+    double y=radius*sin(phiMax);
+    if(isCutOff(m_overlapInX,y)) {
+      double x,y;
+      intersectCutOff(radius,x,y);
+      phiMax=atan2(y,x);
+      std::cout << "radius " << radius << " phiMax " << phiMax << std::endl;
+    }
+  } else {
+      phiMax = phiMaxZone(zone);
+  }
+  return phiMax;
+}
+//==============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
 //==============================================================================
 StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start, 
@@ -296,26 +338,16 @@ void DeVeloRType::calcStripLimits()
       y1 = radius*sin(phiMin);
       x2 = radius*cos(phiMax);
       y2 = radius*sin(phiMax);
-      bool cutOff=false;
-      if(zone == 0) cutOff = isCutOff(x1,y1);
-      else if(zone == 3) cutOff = isCutOff(x2,y2);
-      if(cutOff){
-        double x,y;
-        intersectCutOff(radius,x,y);
-        if(phiMin < 0 || phiMax < 0) y = -y;
-        double phiInt=atan2(y,x);
-        if(0 == zone) {
-          phiMin=phiInt;
-        } else if(3 == zone) {
-          phiMax=phiInt;
-        }
-      }
       m_stripPhiLimits.push_back(std::pair<double,double>(phiMin,phiMax));
-      Gaudi::XYZPoint begin(radius*cos(phiMin),radius*sin(phiMin),0.);
-      Gaudi::XYZPoint end(radius*cos(phiMax),radius*sin(phiMax),0.);
+      Gaudi::XYZPoint begin(x1,y1,0.);
+      Gaudi::XYZPoint end(x2,y2,0.);
       m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
+      std::cout << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
+      
     }
   }
+  bool debug=true;
+  if(debug) exit(1);
   for(unsigned int i=0; i < m_phiMin.size(); i++){
     msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
         << " max " << m_phiMax[i] << " phiMin " 
@@ -353,7 +385,7 @@ void DeVeloRType::cornerLimits()
 //==============================================================================
 // For a given radius, calculate point where circle crosses corner cut offs
 //==============================================================================
-void DeVeloRType::intersectCutOff(const double radius, double& x, double& y){
+void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) const {
   MsgStream msg( msgSvc(), "DeVeloRType" );
   double m=m_gradCutOff;
   double c=m_intCutOff;

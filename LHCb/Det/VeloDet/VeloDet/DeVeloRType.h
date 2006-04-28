@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.15 2006-04-27 14:16:31 cattanem Exp $
+// $Id: DeVeloRType.h,v 1.16 2006-04-28 14:22:50 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -140,37 +140,19 @@ public:
     return m_innerPitch + m_pitchSlope*(radius - innerRadius());
   }
 
-  /// The minimum phi for a zone
+  /** The minimum phi for a zone assuming the radius is not known.  
+      This is a constant value for zone 0 and should be used with caution **/
   inline double phiMinZone(unsigned int zone) const {return m_phiMin[zone];}
 
   /// Returns the minimum phi in a zone at given radius
-  inline double phiMinZone(unsigned int zone, double radius) const {
-    double phiMin;
-    if(0 == zone){
-      phiMin = -acos(m_overlapInX/radius);
-    } else if(2 == zone){
-      phiMin = asin(m_phiGap/radius);
-    } else {
-      phiMin = phiMinZone(zone);
-    }
-    return phiMin;
-  }
+  double phiMinZone(unsigned int zone, double radius) const;
   
   /// The maximum phi for a zone
   inline double phiMaxZone(unsigned int zone) const {return m_phiMax[zone];}
      
-  /// Returns the maximum phi in a zone at given radius
-  inline double phiMaxZone(unsigned int zone, double radius) const {
-    double phiMax;
-    if(1 == zone){
-      phiMax = asin(-m_phiGap/radius);
-    } else if(3 == zone){
-      phiMax = acos(m_overlapInX/radius);
-    } else {
-      phiMax = phiMaxZone(zone);
-    }
-    return phiMax;
-  }
+  /** The maximum phi for a zone assuming the radius is not known.  
+      This is a constant value for zone 2 and should be used with caution **/
+  double phiMaxZone(unsigned int zone, double radius) const;
    
   /// The minimum phi of a strip
   double phiMinStrip(unsigned int strip) const {
@@ -202,7 +184,7 @@ private:
   void cornerLimits();
 
   /// Return x and y position for the intersect of the cut-off line and a given radius
-  void intersectCutOff(const double radius, double& x, double& y);
+  void intersectCutOff(const double radius, double& x, double& y) const;
 
   //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;

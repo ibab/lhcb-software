@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.121 2006-04-27 14:16:32 cattanem Exp $
+! $Id: release.notes,v 1.122 2006-04-28 14:22:50 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-04-28 - Mark Tobin
+ - Bug fixes in the phi min/max of zone in DeVeloRType.
 
 !========================= VeloDet v10r5 2006-04-26 ========================
 ! 2006-04-26 - Marco Cattaneo
