@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.26 2006-04-28 14:22:50 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.27 2006-04-28 17:42:37 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -20,6 +20,102 @@
 // From Velo
 #include "VeloDet/DeVeloRType.h"
 
+namespace VeloDet {
+/** @function VeloDet::deVeloRTypeStaticRStrips
+ * 
+ *  This function simply provides access to a local static
+ *  data which is used to initialize references in each instance
+ *  of DeVeloRType.
+ *  The purpose of this function is to work around
+ *  a Microsoft(tm) specific extension in VC++ that makes
+ *  awkward to have static data mebers accessed by inline
+ *  funtions.
+ *
+ *  @see DeVeloRType
+ */
+  static std::vector<double>& deVeloRTypeStaticRStrips()
+  {
+    static std::vector<double> s_rStrips;
+    return s_rStrips;
+  }
+
+/** @function VeloDet::deVeloRTypeStaticRPitch
+ * 
+ *  This function simply provides access to a local static
+ *  data which is used to initialize references in each instance
+ *  of DeVeloRType.
+ *  The purpose of this function is to work around
+ *  a Microsoft(tm) specific extension in VC++ that makes
+ *  awkward to have static data mebers accessed by inline
+ *  funtions.
+ *
+ *  @see DeVeloRType
+ */
+  static std::vector<double>& deVeloRTypeStaticRPitch()
+  {
+    static std::vector<double> s_rPitch;
+    return s_rPitch;
+  }
+
+
+/** @function VeloDet::deVeloRTypeStaticPhiMin
+ * 
+ *  This function simply provides access to a local static
+ *  data which is used to initialize references in each instance
+ *  of DeVeloRType.
+ *  The purpose of this function is to work around
+ *  a Microsoft(tm) specific extension in VC++ that makes
+ *  awkward to have static data mebers accessed by inline
+ *  funtions.
+ *
+ *  @see DeVeloRType
+ */
+  static std::vector<double>& deVeloRTypeStaticPhiMin()
+  {
+    static std::vector<double> s_phiMin;
+    return s_phiMin;
+  }
+
+/** @function VeloDet::deVeloRTypeStaticPhiMax
+ * 
+ *  This function simply provides access to a local static
+ *  data which is used to initialize references in each instance
+ *  of DeVeloRType.
+ *  The purpose of this function is to work around
+ *  a Microsoft(tm) specific extension in VC++ that makes
+ *  awkward to have static data mebers accessed by inline
+ *  funtions.
+ *
+ *  @see DeVeloRType
+ */
+  static std::vector<double>& deVeloRTypeStaticPhiMax()
+  {
+    static std::vector<double> s_phiMax;
+    return s_phiMax;
+  }
+
+/** @function VeloDet::deVeloRTypeStaticStripPhiLimits
+ * 
+ *  This function simply provides access to a local static
+ *  data which is used to initialize references in each instance
+ *  of DeVeloRType.
+ *  The purpose of this function is to work around
+ *  a Microsoft(tm) specific extension in VC++ that makes
+ *  awkward to have static data mebers accessed by inline
+ *  funtions.
+ *
+ *  @see DeVeloRType
+ */
+  static std::vector<std::pair<double, double> >& deVeloRTypeStaticStripPhiLimits()
+  {
+    static std::vector<std::pair<double, double> > s_stripPhiLimits;
+    return s_stripPhiLimits;
+  }
+}
+
+// used to control initialization
+bool DeVeloRType::m_staticDataInvalid = true;
+
 /** @file DeVeloRType.cpp
  *
  *  Implementation of class : DeVeloRType
@@ -31,7 +127,15 @@
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloRType::DeVeloRType(const std::string& name) : DeVeloSensor(name)
+DeVeloRType::DeVeloRType(const std::string& name) : 
+  DeVeloSensor(name),
+  m_halfAngle(90.0 * degree),
+  m_quarterAngle(.5 * m_halfAngle),
+  m_rStrips(VeloDet::deVeloRTypeStaticRStrips()),
+  m_rPitch(VeloDet::deVeloRTypeStaticRPitch()),
+  m_phiMin(VeloDet::deVeloRTypeStaticPhiMin()),
+  m_phiMax(VeloDet::deVeloRTypeStaticPhiMax()),
+  m_stripPhiLimits(VeloDet::deVeloRTypeStaticStripPhiLimits())
 {
 }
 //==============================================================================
@@ -216,7 +320,6 @@ double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
       double x,y;
       intersectCutOff(radius,x,y);
       phiMax=atan2(y,x);
-      std::cout << "radius " << radius << " phiMax " << phiMax << std::endl;
     }
   } else {
       phiMax = phiMaxZone(zone);
@@ -314,40 +417,62 @@ void DeVeloRType::calcStripLimits()
   /// Corner cut offs
   cornerLimits();
   
-  /// Angular limits for zones...
-  phiZoneLimits();
 
-  m_rStrips.clear();
-  m_rPitch.clear();
-  m_stripPhiLimits.clear();
-  double radius,pitch;
-  for(unsigned int zone=0; zone<m_numberOfZones; zone++) {
-    for(unsigned int istrip=0; istrip<m_stripsInZone; istrip++){
-      radius = (exp(m_pitchSlope*istrip)*m_innerPitch - 
-                (m_innerPitch-m_pitchSlope*m_innerR)) /
-      m_pitchSlope;
-      m_rStrips.push_back(radius);
-      pitch = exp(m_pitchSlope*istrip)*m_innerPitch;
-      m_rPitch.push_back(pitch);
-      double phiMin=0;
-      double phiMax=0;
-      double x1=0,y1=0,x2=0,y2=0;
-      phiMin=phiMinZone(zone,radius);
-      phiMax=phiMaxZone(zone,radius);
-      x1 = radius*cos(phiMin);
-      y1 = radius*sin(phiMin);
-      x2 = radius*cos(phiMax);
-      y2 = radius*sin(phiMax);
-      m_stripPhiLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+  // we only have to do this once, strip radii pitches and phi
+  // limits are stored in statics, i.e. are technically the same
+  // for all instances of DeVeloRType
+  if (m_staticDataInvalid) {
+    /// Angular limits for zones...
+    phiZoneLimits();
+
+    m_rStrips.clear();
+    m_rPitch.clear();
+    m_stripPhiLimits.clear();
+    double radius,pitch;
+    for(unsigned int zone=0; zone<m_numberOfZones; zone++) {
+      for(unsigned int istrip=0; istrip<m_stripsInZone; istrip++){
+        radius = (exp(m_pitchSlope*istrip)*m_innerPitch - 
+                  (m_innerPitch-m_pitchSlope*m_innerR)) /
+          m_pitchSlope;
+        pitch = exp(m_pitchSlope*istrip)*m_innerPitch;
+        double phiMin=phiMinZone(zone,radius);
+        double phiMax=phiMaxZone(zone,radius);
+        double x1 = radius*cos(phiMin);
+        double y1 = radius*sin(phiMin);
+        double x2 = radius*cos(phiMax);
+        double y2 = radius*sin(phiMax);
+
+        m_rStrips.push_back(radius);
+        m_rPitch.push_back(pitch);
+        m_stripPhiLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+
+        // intialize base class members
+        Gaudi::XYZPoint begin(x1,y1,0.);
+        Gaudi::XYZPoint end(x2,y2,0.);
+        m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
+      }
+    }
+    m_staticDataInvalid = false;  // these are valid now for all instances
+  } else { // statics are valid, initialize base class member only
+
+    std::vector<double>::const_iterator ri = m_rStrips.begin();
+    std::vector< std::pair<double,double> >::const_iterator spli = m_stripPhiLimits.begin();
+    for ( ;
+          spli !=  m_stripPhiLimits.end() && ri != m_rStrips.end();
+          ++spli, ++ri) {
+      double phiMin = spli->first;
+      double phiMax = spli->second;
+      double radius = *ri;
+      double x1 = radius*cos(phiMin);
+      double y1 = radius*sin(phiMin);
+      double x2 = radius*cos(phiMax);
+      double y2 = radius*sin(phiMax);
       Gaudi::XYZPoint begin(x1,y1,0.);
       Gaudi::XYZPoint end(x2,y2,0.);
       m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
-      std::cout << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
-      
     }
   }
-  bool debug=true;
-  if(debug) exit(1);
+
   for(unsigned int i=0; i < m_phiMin.size(); i++){
     msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
         << " max " << m_phiMax[i] << " phiMin " 
@@ -420,9 +545,6 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
 //==============================================================================
 void DeVeloRType::phiZoneLimits()
 {
-  m_halfAngle     = 90.0 * degree;
-  m_quarterAngle  = .5 * m_halfAngle;
-
   double phi;
   phi = acos(m_overlapInX/outerRadius());
 

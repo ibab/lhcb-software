@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.122 2006-04-28 14:22:50 mtobin Exp $
+! $Id: release.notes,v 1.123 2006-04-28 17:42:37 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-04-28 - Kurt Rinnert
+ - Implemented workaround for Microsoft(tm) "extensions" that prevented
+static data members from being accessed consistently via inline dmethods
 
 ! 2006-04-28 - Mark Tobin
  - Bug fixes in the phi min/max of zone in DeVeloRType.

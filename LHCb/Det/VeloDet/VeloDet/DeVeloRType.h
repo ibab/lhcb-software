@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.16 2006-04-28 14:22:50 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.17 2006-04-28 17:42:37 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -186,12 +186,11 @@ private:
   /// Return x and y position for the intersect of the cut-off line and a given radius
   void intersectCutOff(const double radius, double& x, double& y) const;
 
+
+private:
+
   //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;
-  std::vector<double> m_rStrips;
-  std::vector<double> m_rPitch;
-  std::vector<double> m_phiMin;
-  std::vector<double> m_phiMax;
   double m_cornerX1;
   double m_cornerY1;
   double m_cornerX2;
@@ -200,7 +199,6 @@ private:
   double m_cornerYInt;//<Y intercept for corner cut off
   double m_gradCutOff;//<Gradient of line defining cut offs
   double m_intCutOff;//<x intercept for line which defines cut offs
-  std::vector< std::pair<double,double> > m_stripPhiLimits;//Min/Max phi of strips
   std::pair<double,double> m_resolution;//Resolution from LHCB??????
   double m_innerPitch;
   double m_outerPitch;
@@ -211,6 +209,25 @@ private:
   double m_halfAngle;
   double m_quarterAngle;
   double m_phiGap;
+
+  // These are references to local statics accessed via static functions
+  // implemented in DeVeloRType.cpp. I stree this because these are
+  // NOT ALLOWED TO BE INLINED!
+  // Sematically, these data menber should be statics, but this does not work with
+  // Windows(tm) DLLs in the CMT framework because they are accessed
+  // by inlined accessors. So we have to live with this detour.
+  // The staic bool m_staticDataInvalid is not (and never should be!)
+  // accessed by any inline function. It's sole purpose is to speed
+  // up the initialize() method when the information common to all sensors
+  // is already up to date.
+  std::vector<double>& m_rStrips;
+  std::vector<double>& m_rPitch;
+  std::vector<double>& m_phiMin;
+  std::vector<double>& m_phiMax;
+  std::vector< std::pair<double,double> >& m_stripPhiLimits;//Min/Max phi of strips
+
+  // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
+  static bool m_staticDataInvalid;
 
   /// Build up map of strip to routing line conversions
   void BuildRoutingLineMap();
