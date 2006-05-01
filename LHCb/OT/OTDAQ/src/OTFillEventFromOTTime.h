@@ -1,4 +1,4 @@
-// $Id: OTFillEventFromOTTime.h,v 1.1 2006-02-02 15:31:50 janos Exp $
+// $Id: OTFillEventFromOTTime.h,v 1.2 2006-05-01 17:04:25 janos Exp $
 #ifndef OTDAQ_OTFILLEVENTFROMOTTIME_H 
 #define OTDAQ_OTFILLEVENTFROMOTTIME_H 1
 
@@ -52,7 +52,7 @@ private:
   typedef std::vector<dataBank*> dataBuffer;
 
   // global pointer to vectors container
-  LHCb::OTTimes* m_Time;
+  LHCb::OTTimes* m_time;
   mBank* dataContainer;
   mGol* goldatacontainer;
   dataBuffer* finalBuf;
