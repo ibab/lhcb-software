@@ -38,13 +38,13 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
   declareProperty( "InclusionThreshold", m_inclusionThreshold = 0.1F );
   declareProperty( "DefaultSignalToNoiseCut", m_defaultSignalToNoiseCut = 3.0F );
   declareProperty( "DefaultClusterSignalToNoiseCut", 
-                   m_defaultClusterSignalToNoiseCut = 3.0F );
+                   m_defaultClusterSignalToNoiseCut = 4.5F );
   declareProperty( "NoiseConstant", m_noiseConstant=500. );
   declareProperty( "NoiseCapacitance", m_noiseCapacitance=50. );
   declareProperty( "StripCapacitance", m_stripCapacitance=20. );
   declareProperty( "ElectronsFullScale", m_electronsFullScale=200000. );
   declareProperty( "ADCFullScale", m_ADCFullScale=256. );
-  declareProperty( "HighThreshold", m_highThreshold= 15.0 );
+  declareProperty( "HighThreshold", m_highThreshold= 25.0 );
 }
 
 //=============================================================================
@@ -244,7 +244,7 @@ VeloClusterMaker::makeClusterFromDigit(LHCb::VeloDigit* currentDigit,
   for( int i = 0 ; i < currentCluster->size() ; ++i ){
     totalADC += currentCluster->adcValue(i);
   }
-  if( m_highThreshold < totalADC ){
+  if( m_highThreshold <= totalADC ){
     currentCluster->setHasHighThreshold(true);
   }else{
     currentCluster->setHasHighThreshold(false); 

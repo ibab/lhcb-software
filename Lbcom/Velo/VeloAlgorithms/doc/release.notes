@@ -2,6 +2,11 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2006-05-01 - David Hutchcroft
+ - Changed default noise cut to 4.5 S/N for clusters
+ - Changed default high threshold to 25 ADC counts
+ - Changed high threshold definition from > number in code to >=
+
 !===================== VeloAlgorithms v4r3 2006-04-10 =====================
 ! 2006-04-10 - Marco Cattaneo
  - Removed VeloClusterPosition tool, moved to VeloTools package
