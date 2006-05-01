@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.11 2006-04-18 18:58:45 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.12 2006-05-01 17:11:51 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -120,12 +120,9 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
                                           m_genDist->shoot())+1u;
 
     if (strawID <= aModule->nChannels()) {
-      //unsigned int stationID = aModule->stationID();
       unsigned int stationID = aModule->elementID().station();
       double time = m_windowOffSet[stationID-1u] 
         + (m_genDist->shoot() * m_windowSize);  
-      // OTChannelID aChan(stationID, aModule->layerID(), aModule->quarterID(),
-      //                         aModule->moduleID(), strawID);
       OTChannelID aChan(stationID, aModule->elementID().layer(), aModule->elementID().quarter(),
 			aModule->elementID().module(), strawID);
       MCOTDeposit* newDeposit = new MCOTDeposit(0, aChan, time, 0, 0);
