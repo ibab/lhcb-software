@@ -35,9 +35,9 @@ public:
    *  @param  chi2:         output chi2 distance between the two vectors
    */
   virtual StatusCode calculateChi2( const Gaudi::TrackVector& trackVector1,
-                                    const Gaudi::TrackMatrix& trackCov1,
+                                    const Gaudi::TrackSymMatrix& trackCov1,
                                     const Gaudi::TrackVector& trackVector2,
-                                    const Gaudi::TrackMatrix& trackCov2,
+                                    const Gaudi::TrackSymMatrix& trackCov2,
                                     double& chi2 ) const = 0;
 
 };

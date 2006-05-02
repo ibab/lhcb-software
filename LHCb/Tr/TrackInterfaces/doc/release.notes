@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+
 !====================== TrackInterfaces v2r2 2006-04-06 ======================
 ! 2006-04-06 - Jeroen van Tilburg
  - Added errMeasure method to ITrackProjector. This is needed by the track fit.

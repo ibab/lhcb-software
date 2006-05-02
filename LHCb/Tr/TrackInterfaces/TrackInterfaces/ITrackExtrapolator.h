@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.10 2006-02-17 15:34:05 erodrigu Exp $
+// $Id: ITrackExtrapolator.h,v 1.11 2006-05-02 13:04:44 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -132,7 +132,7 @@ public:
                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Getters & setters
-  virtual const Gaudi::TransportMatrix& transportMatrix() const = 0;
+  virtual const Gaudi::TrackMatrix& transportMatrix() const = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
