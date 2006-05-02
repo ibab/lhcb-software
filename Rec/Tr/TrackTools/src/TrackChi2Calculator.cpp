@@ -63,9 +63,9 @@ StatusCode TrackChi2Calculator::initialize() {
 //
 //=============================================================================
 StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
-                                               const TrackMatrix& trackCov1,
+                                               const TrackSymMatrix& trackCov1,
                                                const TrackVector& trackVector2,
-                                               const TrackMatrix& trackCov2,
+                                               const TrackSymMatrix& trackCov2,
                                                double& chi2 ) const
 {
   if ( !m_addMomentum ) { // then the dimension is 4
@@ -84,7 +84,7 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
   // copy tracks info
   TrackVector vec1      = TrackVector( trackVector1 );
   TrackVector vec2      = TrackVector( trackVector2 );
-  TrackMatrix trackCinv = trackCov1 + trackCov2;
+  TrackSymMatrix trackCinv = trackCov1 + trackCov2;
   
   // invert the matrix
   StatusCode sc = invertMatrix( trackCinv );
@@ -151,7 +151,7 @@ StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::invertMatrix( TrackMatrix& invC ) const
+StatusCode TrackChi2Calculator::invertMatrix( TrackSymMatrix& invC ) const
 {
   // This routine is taken from TrKalmanSmoother.cpp. It rescales
   // the matrix before it actually calls the DSINV wrapper.

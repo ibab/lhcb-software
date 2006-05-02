@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.2 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.3 2006-05-02 13:17:05 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -106,10 +106,10 @@ bool TrackCloneFinder::areClones( Track& track1,
 
   if ( setFlag && theyAreClones ) {
     if ( track1.nMeasurements() > track2.nMeasurements() ) {
-      track2.setFlag( Track::Unique, false );
+      track2.setFlag( Track::Clone, true );
     }
     else {
-      track1.setFlag( Track::Unique, false );
+      track1.setFlag( Track::Clone, true );
     }
   }
 

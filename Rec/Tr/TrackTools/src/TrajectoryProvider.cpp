@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.7 2006-04-12 15:40:18 mtobin Exp $
+// $Id: TrajectoryProvider.cpp,v 1.8 2006-05-02 13:17:05 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -94,10 +94,7 @@ StatusCode TrajectoryProvider::initialize() {
 //=============================================================================
 Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 {
-  const Trajectory& traj = meas.trajectory();
-  Trajectory& aTraj = const_cast<Trajectory&>(traj);
-  return &aTraj;
-  
+  return &meas.trajectory();
 };
 
 //=============================================================================

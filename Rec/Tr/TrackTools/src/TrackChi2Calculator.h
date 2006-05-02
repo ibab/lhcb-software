@@ -40,9 +40,9 @@ public:
    *  @param  chi2 output chi2 distance between the two vectors
    */
   virtual StatusCode calculateChi2( const Gaudi::TrackVector& trackVector1,
-                                    const Gaudi::TrackMatrix& trackCov1,
+                                    const Gaudi::TrackSymMatrix& trackCov1,
                                     const Gaudi::TrackVector& trackVector2,
-                                    const Gaudi::TrackMatrix& trackCov2,
+                                    const Gaudi::TrackSymMatrix& trackCov2,
                                     double& chi2 ) const;
 
 private:
@@ -52,7 +52,7 @@ private:
                             double& chi2 ) const;
 
   /// invert the 5x5 matrix
-  StatusCode invertMatrix( Gaudi::TrackMatrix& invC ) const;
+  StatusCode invertMatrix( Gaudi::TrackSymMatrix& invC ) const;
 
   /// invert the 4x4 matrix
   StatusCode invertMatrix( Gaudi::SymMatrix4x4& invC ) const;

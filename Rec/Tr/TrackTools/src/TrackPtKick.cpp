@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.3 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: TrackPtKick.cpp,v 1.4 2006-05-02 13:17:05 erodrigu Exp $
 // Include files
 // -------------
 
@@ -149,7 +149,7 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
   // set the state parameters
   state -> setQOverP( q / p );
   state -> setErrQOverP2( gsl_pow_2(m_MomentumError/p) );
-  Gaudi::TrackMatrix& cov = state -> covariance();
+  Gaudi::TrackSymMatrix& cov = state -> covariance();
   double errQOverP = m_MomentumError / p;
    cov(4,4) = errQOverP * errQOverP;
 
