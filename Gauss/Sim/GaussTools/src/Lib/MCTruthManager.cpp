@@ -1,9 +1,8 @@
-// $Id: MCTruthManager.cpp,v 1.4 2006-05-02 18:29:29 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.5 2006-05-02 18:56:03 gcorti Exp $
 // Include files 
 
 // local
 #include "GaussTools/MCTruthManager.h"
-#include "GaussTools/MCTruthBarCode.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCTruthManager
