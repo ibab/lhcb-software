@@ -4,6 +4,17 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v12r2 2006-05-02 =======================
+! 2006-05-02 - Gloria CORTI
+ - Fix bug showing up in an MCHit pointing to an intermediate particle, due
+   to offset too small: increase offset for intermediated dummy particle
+   from 500000 to 20000000. 
+   Also increase offset for split particle from to 100000000.
+   Set the offset values as enum in MCTruthManager header file.
+   Set the PDG value of dummy particle as enum as well.
+   . GaussTools/MCTruthManager.h
+   . src/Lib/MCTruthManager.cpp
+
 !======================== GaussTools v12r1 2006-04-13 =======================
 ! 2006-04-13 - Gloria CORTI
  - Clean up messages

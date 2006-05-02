@@ -1,8 +1,9 @@
-// $Id: MCTruthManager.cpp,v 1.3 2006-04-13 06:52:32 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.4 2006-05-02 18:29:29 gcorti Exp $
 // Include files 
 
 // local
 #include "GaussTools/MCTruthManager.h"
+#include "GaussTools/MCTruthBarCode.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCTruthManager
@@ -152,7 +153,7 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
                 it=motherendvtx->particles_out_const_begin();
               it!=motherendvtx->particles_out_const_end();it++)
           {
-            if((*it)->pdg_id()==-99000000)
+            if((*it)->pdg_id()==DummyPDGID)
             {
               HepLorentzVector dummypos = (*it)->end_vertex()->position();
               
@@ -171,14 +172,14 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
           {
             HepMC::GenVertex* childvtx = new HepMC::GenVertex(prodpos);
             childvtx->add_particle_out(particle);
-            // the dummy vertex gets the barcode -500000 minus the daughter particle barcode
-            childvtx->suggest_barcode(-500000-partID);
-            creators[-500000-partID] = creatorID;
+            // the dummy vertex gets the dummy barcode minus the daughter particle barcode
+            childvtx->suggest_barcode( -DummyBarCode - partID);
+            creators[-DummyBarCode - partID] = creatorID;
             event->add_vertex(childvtx);
             
-            HepMC::GenParticle* dummypart = new HepMC::GenParticle(HepLorentzVector(),-99000000);
-            // the dummy particle gets the barcode 500000 plus the daughter particle barcode
-            dummypart->suggest_barcode(500000+partID);
+            HepMC::GenParticle* dummypart = new HepMC::GenParticle(HepLorentzVector(),DummyPDGID);
+            // the dummy particle gets the dummy barcode plus the daughter particle barcode
+            dummypart->suggest_barcode(DummyBarCode+partID);
             childvtx->add_particle_in(dummypart);
             motherendvtx->add_particle_out(dummypart);
           }
@@ -195,11 +196,11 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
           childvtx->add_particle_in(mother);
 
           // now we create a new particle representing the mother after interaction
-          // the barcode of the new particle is 10000000 + the original barcode 
+          // the barcode of the new particle is split barcode  + the original barcode 
           HepMC::GenParticle* mothertwo = new HepMC::GenParticle(*mother);
-          mothertwo->suggest_barcode(10000000 + mother->barcode());
+          mothertwo->suggest_barcode(SplitBarCode + mother->barcode());
           // we also reset the barcodes of the vertices
-          motherendvtx->suggest_barcode(-100000000 - mother->barcode());
+          motherendvtx->suggest_barcode(-SplitBarCode - mother->barcode());
           childvtx->suggest_barcode(-mother->barcode());
           creators[-mother->barcode()] = creatorID;
           // we attach it to the new vertex where interaction took place

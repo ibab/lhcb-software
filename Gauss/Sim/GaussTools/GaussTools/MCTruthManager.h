@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.h,v 1.2 2006-04-12 19:32:08 gcorti Exp $
+// $Id: MCTruthManager.h,v 1.3 2006-05-02 18:29:29 gcorti Exp $
 #ifndef COMPONENTS_MCTRUTHMANAGER_H 
 #define COMPONENTS_MCTRUTHMANAGER_H 1
 
@@ -16,6 +16,17 @@
 class MCTruthManager 
 {
 public: 
+
+  // Offset value for intermediate dummy and split particles
+  enum MCTruthBarCode {
+    DummyBarCode =  20000000,
+    SplitBarCode = 100000000       
+  };
+  
+  /// PDG Id for dummy intermediate particle  
+  enum MCTruthPDGID {
+    DummyPDGID = -99000000 
+  };
 
   virtual ~MCTruthManager( ); 
 
