@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.3 2006-04-12 19:02:49 gcorti Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.4 2006-05-02 18:33:00 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -203,8 +203,7 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
 
   LHCb::MCParticle* mcpart = 0;
   
-  if(part->barcode()<100000000) { // normal case but the code should be one less zero
-  
+  if(part->barcode() < MCTruthManager::SplitBarCode ) { // normal case
     mcpart = new LHCb::MCParticle();
 
     // fill it the barcode to pointer map

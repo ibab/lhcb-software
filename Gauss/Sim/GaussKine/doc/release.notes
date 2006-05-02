@@ -4,6 +4,13 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== GaussKine v1r3 2006-05-02 ========================
+! 2006-05-02 - Gloria CORTI
+ - Use MCTruthManager::SplitBarCode to choose if to collapse a particle,
+   this should set behaviour as in DC04 for Brem electrons (before number 
+   checked was 10 times that set)
+   . G4HepMCToMCTruth.cpp 
+
 !========================== GaussKine v1r2 2006-04-12 ========================
 ! 2006-04-12 - Gloria CORTI
  - Introduce filling of table with correspondece between MCParticle and 
