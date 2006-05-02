@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.8 2006-05-02 13:17:05 erodrigu Exp $
+// $Id: TrajectoryProvider.cpp,v 1.9 2006-05-02 14:18:23 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -52,7 +52,7 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
   declareProperty( "MagneticFieldService",
                    m_magsvcname = "MagneticFieldSvc" );
 
-  m_dets.clear();
+  //m_dets.clear();
 };
 
 //=============================================================================
@@ -69,8 +69,6 @@ StatusCode TrajectoryProvider::initialize() {
   if ( sc.isFailure() ) return sc;
 
   // Retrieve the Velo, ST and OT detector elements
-  //TODO: useful in trajectory( const LHCbID& id, double offset )
-  //      once some new stuff is implemented (see comments in this method)
   //m_dets[LHCbID::Velo] = getDet<DeVelo>( m_veloDetPath );
   //m_dets[LHCbID::TT]   = getDet<DeSTDetector>( m_ttDetPath );
   //m_dets[LHCbID::IT]   = getDet<DeSTDetector>( m_itDetPath );
@@ -92,7 +90,7 @@ StatusCode TrajectoryProvider::initialize() {
 //=============================================================================
 // Return a "Measurement Trajectory" from a Measurement
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
+const Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 {
   return &meas.trajectory();
 };
@@ -100,48 +98,30 @@ Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 //=============================================================================
 // Return a "Measurement trajectory" from an LHCbID and an offset
 //=============================================================================
-Trajectory* TrajectoryProvider::trajectory( const LHCbID& id,
-                                            const double offset )
+std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
+                                                          const double offset )
 {
-  std::auto_ptr<Trajectory> traj;
-
   //TODO: the following switch block could be replaced by this very simple
   //      and single line if the DetectorElement class had
   // LHCb::Trajectory* trajectory( const LHCb::LHCbID& id, double offset);
-  // inline  conditionBegin() const
   //m_dets[ id.detectorType() ] -> trajectory( id, offset );
 
   switch ( id.detectorType() )
   {
   case LHCbID::Velo :
-		traj = m_veloDet->sensor(id.veloID()) -> trajectory( id.veloID(), offset );
-		break;
+    return m_veloDet -> trajectory( id, offset );
   case LHCbID::TT :
-		traj = m_ttDet -> trajectory( id, offset );
-		break;
+    return m_ttDet -> trajectory( id, offset );
   case LHCbID::IT :
-		traj = m_itDet -> trajectory( id, offset );
-		break;
+    return m_itDet -> trajectory( id, offset );
   case LHCbID::OT :
-		traj = m_otDet -> trajectory( id );
-		break;
+    return m_otDet -> trajectory( id, offset );
   default:
 		error() << "LHCbID is of unknown type!"
             << " (type is " << id.detectorType() << ")" << endreq
             << " -> do not know how to create a Trajectory!" << endreq;
-		return NULL;
+		return std::auto_ptr<Trajectory>( NULL );
   }
-
-  Trajectory* aTraj = traj.get();
-  
-  if ( aTraj == NULL )
-    error() << "Unable to create the 'Measurement' Trajectory of type "
-            << id.detectorType() << endreq;
-  else
-    debug() << "Created 'Measurement' Trajectory of type "
-            << id.detectorType() << endreq;
-
-  return aTraj;
 };
 
 //=============================================================================

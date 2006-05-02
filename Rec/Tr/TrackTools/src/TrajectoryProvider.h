@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.h,v 1.5 2006-04-06 06:49:00 ebos Exp $
+// $Id: TrajectoryProvider.h,v 1.6 2006-05-02 14:18:23 erodrigu Exp $
 #ifndef TRACKTOOLS_TRAJECTORYPROVIDER_H 
 #define TRACKTOOLS_TRAJECTORYPROVIDER_H 1
 
@@ -47,7 +47,7 @@ public:
   StatusCode initialize();
   
   /// Return a "Measurement Trajectory" from a Measurement
-  virtual LHCb::Trajectory* trajectory( const LHCb::Measurement& meas );
+  virtual const LHCb::Trajectory* trajectory( const LHCb::Measurement& meas );
   
   /** Return a "Measurement Trajectory" from an LHCbID
    *  Note: the meaning of the offset input depends on the sub-detector type
@@ -55,8 +55,8 @@ public:
    *  @param  id:     input LHCbID
    *  @param  offset: input offset
    */
-  virtual LHCb::Trajectory* trajectory( const LHCb::LHCbID& id,
-                                        const double offset = 0 );
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::LHCbID& id,
+                                                      const double offset = 0 );
   
   /// Return a "State Trajectory" from a State
   virtual std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::State& state );
@@ -72,7 +72,7 @@ protected:
   DeSTDetector* m_itDet;
   DeOTDetector* m_otDet;
 
-  std::map<unsigned int,DetectorElement*> m_dets;
+  //std::map<unsigned int,DetectorElement*> m_dets;
   
   std::string   m_veloDetPath;        ///< Name of the Velo XML geom path
   std::string   m_ttDetPath;          ///< Name of the TT XML geom path
