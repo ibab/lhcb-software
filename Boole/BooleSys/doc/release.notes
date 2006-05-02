@@ -3,6 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v11r4>2006-05-02 Boole v11r4</A></H1><PRE>
+This version uses projects Gaudi v18r3, LHCb v20r4, Lbcom v4r4
+  and databases XmlDDDB v30r5, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is the first bug fix release for DC06 production.
+
+New tuning:
+  . Changed radius of curvature of RICH1 secondary mirrors from 90*m to 1000*m
+    (XmlDDDB v30r5). Use v30r4 for data produced with Gauss v24r3 and v24r4
+  . OT RawEvent gone from 24 to 48 Tell1 boards. One per quarter
+    (OTSimulation v3r4, OTDAQ v4r2) 
+  . Changed Velo default noise cut to 4.5 S/N for clusters and high threshold
+    to 25 ADC counts. Changed high threshold definition from > number to >=
+    (VeloAlgorithms v4r4)
+  . Changed default ST thresholds to 4.0 cluster S/N and 10.0 high threshold
+    (STAlgorithms v1r3)
+
+Bug fixes:
+  . Workaround for Microsoft(tm) "extensions" that prevented static data members
+    from being accessed consistently via inlined methods (VeloDet v10r5)
+  . Bug fixes in the phi min/max of zone in DeVeloRType (VeloDet v10r5)
+
 </PRE><H1><A NAME=v11r3>2006-04-19 Boole v11r3</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r3, Lbcom v4r3
   and databases XmlDDDB v30r4, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
