@@ -31,14 +31,14 @@ use FieldMap	         v4r7        -no_auto_imports
 #-- LHCb libraries (from LHCB_v20r4)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v9r5           -no_auto_imports
-use KernelSys        v5r3    Kernel -no_auto_imports
+use KernelSys        v5r4    Kernel -no_auto_imports
 use DetSys           v8r4    Det    -no_auto_imports
 
 use EventBase        v1r1    Event  -no_auto_imports
 use MCEvent          v1r2p1  Event  -no_auto_imports
 use DigiEvent        v1r1    Event  -no_auto_imports
 use RecEvent         v1r2    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v2r3    Event  -no_auto_imports  # used by RecEvent
+use TrackEvent       v2r4    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v15r1   Event  -no_auto_imports
 use DAQEvent         v6r3    Event  -no_auto_imports
 use GenEvent         v4r3    Event  -no_auto_imports
