@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.30 2006-05-02 09:09:26 cattanem Exp $
+! $Id: release.notes,v 1.31 2006-05-02 14:39:56 janos Exp $
 Package         : OTSimulation
 Package manager : Jan Amoraal
 
 !====================== OTSimulation v3r4 2006-05-01 ======================
-! 2006-05-01 - Jan Amoraal
+! 2006-05-01 - Jan Amoraal 
+ - Fix debug in OTFillRawEvent.cpp
+ 
+! 2006-05-01 - Jan Amoraal 
  - Gone from 24 to 48 Tell1 boards. One per quarter.  
 
 !====================== OTSimulation v3r3 2006-04-19 ======================

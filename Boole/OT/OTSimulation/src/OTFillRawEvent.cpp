@@ -189,9 +189,10 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
   mGol::iterator iGol = m_goldatacontainer.begin();
   for ( ; iGol != m_goldatacontainer.end(); ++iGol) {
     
-    // We need to get the location
     vmcOTime* aGolMCTime = iGol->second;
+    // Valid gol
     if (!(aGolMCTime->empty())) {
+      // We need to get the location
       // One gol header per module
       // Get location of module; stored in header
       MCOTTime* firstMCTime = aGolMCTime->front();
@@ -290,9 +291,9 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
       aGolMCTime->clear();
 			   
     } else {
-      // module contains zero hits
+      // zero hits in module
       module = iGol->first;
-      debug() << " NO HIT IN MODULE " << module << " with Size " << size <<endmsg;
+      debug() << " NO HIT IN MODULE " << module <<endmsg;
     }
   
   } // GOL Loop
