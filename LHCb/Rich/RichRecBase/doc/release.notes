@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !====================== RichRecBase v2r1 2006-03-29 ========================
 ! 2006-03-22 - Chris Jones
  - In RichTrackSelector.h momentum cut is in GeV

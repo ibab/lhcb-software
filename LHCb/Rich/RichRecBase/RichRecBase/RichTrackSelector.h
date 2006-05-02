@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.16 2006-03-17 15:56:04 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.17 2006-05-02 12:34:02 erodrigu Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -202,7 +202,7 @@ inline bool RichTrackSelector::trackSelected( const LHCb::Track * track ) const
   return ( type != Rich::Track::Unknown &&          // track type is known
            type != Rich::Track::Unusable &&         // track type is usable
            track &&                                 // Track info OK
-           (!m_uniqueTrOnly || track->checkFlag(LHCb::Track::Unique)) &&  // Unique tracks
+           (!m_uniqueTrOnly || !track->checkFlag(LHCb::Track::Clone)) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
            ( track->p()/GeV > minMomentum(type) ) &&  // Momentum cuts

@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.21 2006-02-16 16:04:58 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.22 2006-05-02 12:34:02 erodrigu Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -183,7 +183,7 @@ public:
   explicit RichTrackID( const LHCb::Track * track )
     : m_tkType     ( Rich::Track::type(track)            ),
       m_parentType ( Rich::TrackParent::Track            ),
-      m_unique     ( track->checkFlag(LHCb::Track::Unique) ) { }
+      m_unique     ( !track->checkFlag(LHCb::Track::Clone) ) { }
 
   /** Constructor from an MCParticle
    *
@@ -289,7 +289,7 @@ inline void RichTrackID::initialiseFor( const LHCb::Track * track )
 {
   setParentType ( Rich::TrackParent::Track            );
   setTrackType  ( Rich::Track::type(track)            );
-  setUnique     ( track->checkFlag(LHCb::Track::Unique)   );
+  setUnique     ( !track->checkFlag(LHCb::Track::Clone)   );
 }
 
 inline void RichTrackID::initialiseFor( const LHCb::MCParticle * )
