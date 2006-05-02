@@ -6,6 +6,18 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r4>2006-05-02 LbcomSys v4r4</A></H1><PRE>
+This version uses Gaudi v18r3 and LHCb v20r4.
+
+- Packages modified: L0MuonTrigger v5r3, STAlgorithms v1r3
+
+- In L0MuonTrigger v5r3:
+  . Changes to allow running in DaVinci from RawBuffer without making MuonCoords
+  . Remove dependency on RecEvent
+
+- In STAlgorithms v1r3:
+  . Increase the thresholds for now, to be reviewed at the end of the year
+
 </PRE><H1><A NAME=v4r3>2006-04-19 LbcomSys v4r3</A></H1><PRE>
 This version uses Gaudi v18r3 and LHCb v20r3.
 
