@@ -9,7 +9,9 @@
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
 - Packages modified: DetSys v8r4, DetDesc v16r4, DetDescSvc v1r4, VeloDet v10r5,
-                     DAQSys v2r4, OTDAQ v4r2
+    DAQSys v2r4, OTDAQ v4r2, KernelSys v5r4, LHCbDefinitions v1r5, 
+    EventSys v21r4, TrackEvent v2r4, CaloUtils v6r2, RichRecBase v2r2,
+    TrackInterfaces v2r3, LoKiCore v1r3, LoKiGen v1r2
 
 - In DetSys v8r4, DetDesc v16r4:
   . Move header files needed by dict to DetDesc, rather than DetDesc/../src/Lib
@@ -25,6 +27,29 @@ This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
 - In OTDAQ v4r2:
   . Minor cleanups, and Tell1 updates in OTFillEventFromOTTime
+
+- In LHCbDefinitions v1r5:
+  . More natural names for the Track Event Model typedefs in TrackTypes.h
+
+- In TrackInterfaces v2r3, TrackEvent v2r4:
+  . Propagation of the renaming of the Track Event Model typedefs
+
+- In TrackEvent v2r4:
+  . Track::Unique flag renamed to Track::Clone
+  . bug fix in checkType method of Measurement
+
+- In CaloUtils v6r2, RichRecBase v2r2, TrackInterfaces v2r3:
+  . Propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
+- In TrackInterfaces v2r3:
+  . Consistent const arguments and return types in TrajectoryProvider
+
+- In LoKiCore v1r3, LoKiGen v1r2:
+  . Remove some unneccessary comments from file headers
+
+- In LoKiCore v1r3:
+  . Bug fix with creation/release of reporter 
+  . Add boolean flag to instantiate on demand ToolSvc and ParticlePropertySvc 
 
 </PRE><H1><A NAME=v20r3>2006-04-20 LHCbSys v20r3</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
