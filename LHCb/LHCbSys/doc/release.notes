@@ -5,19 +5,26 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v20r4>2006-04-27 LHCbSys v20r4</A></H1><PRE>
+</PRE><H1><A NAME=v20r4>2006-05-02 LHCbSys v20r4</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 
-- Packages modified: DetSys v8r4, DetDesc v16r4, DetDescSvc v1r4, VeloDet v10r5
+- Packages modified: DetSys v8r4, DetDesc v16r4, DetDescSvc v1r4, VeloDet v10r5,
+                     DAQSys v2r4, OTDAQ v4r2
 
-- In DetSys v8r4, DetDesc v16t4:
+- In DetSys v8r4, DetDesc v16r4:
   . Move header files needed by dict to DetDesc, rather than DetDesc/../src/Lib
 
 - In VeloDet v10r5:
-  . Change static member variables in DeVeloRType back to non-static
+  . Implemented workaround for Microsoft(tm) "extensions" that prevented
+    static data members from being accessed consistently via inline dmethods
+  . Bug fixes in the phi min/max of zone in DeVeloRType.
+  . Added consistency check in readout conditions update
 
 - In DetDescSvc v1r4:
   . Add locking methods for multithread support
+
+- In OTDAQ v4r2:
+  . Minor cleanups, and Tell1 updates in OTFillEventFromOTTime
 
 </PRE><H1><A NAME=v20r3>2006-04-20 LHCbSys v20r3</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
