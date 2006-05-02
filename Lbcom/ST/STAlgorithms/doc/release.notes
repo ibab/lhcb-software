@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 M. Needham
+ - Increase the thresholds for now, decision to 
+   be reviewed in detail at the end of the year
+
 !======================= STAlgorithms v1r2 2006-04-19 ========================
 ! 2006-04-19 M. Needham
  - Connect MCHit to geometry using sensDetID

@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.11 2006-03-22 13:56:47 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.12 2006-05-02 06:24:17 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -46,8 +46,8 @@ STClusterCreator::STClusterCreator(const std::string& name,
   //read in DataCard Value
  
   this->declareProperty("digitSignal2Noise",m_digitSig2NoiseThreshold = 3.0);
-  this->declareProperty("clusterSignal2Noise",m_clusterSig2NoiseThreshold = 3.6);
-  this->declareProperty("highSignal2Noise",m_highThreshold = 6.0);
+  this->declareProperty("clusterSignal2Noise",m_clusterSig2NoiseThreshold = 4.0);
+  this->declareProperty("highSignal2Noise",m_highThreshold = 10.0);
   this->declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   this->declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
 
