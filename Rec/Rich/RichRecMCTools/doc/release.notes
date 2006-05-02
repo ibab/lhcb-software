@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !====================== RichRecMCTools v2r0 2006-02-16 =====================
 ! 2006-02-16 - Chris Jones
  - Improvements to the usage of the Track->MCParticle linkers

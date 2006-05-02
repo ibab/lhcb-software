@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.45 2006-02-16 16:09:45 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.46 2006-05-02 12:35:55 erodrigu Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -580,7 +580,7 @@ void RichPIDQC::countTracks( const std::string & location )
   for ( Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
-    if ( (*iTrk)->checkFlag(::Track::Unique ) ) ++m_multiplicity;
+    if ( !(*iTrk)->checkFlag(::Track::Clone ) ) ++m_multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
     const State* state = &(*iTrk)->firstState();
     const double tkPtot = ( state ? state->p()/GeV : 0 );

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.3 2006-03-17 15:55:32 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.4 2006-05-02 12:35:11 erodrigu Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -168,7 +168,7 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
         newFake->addToStates( fakeState );
 
         // pretend these are forward unique tracks
-        newFake->setFlag    ( Track::Unique, true );
+        //newFake->setFlag    ( Track::Clone, false ); // Unique by default
         newFake->setType    ( Track::Long         );
         newFake->setHistory ( Track::CnvForward   );
 

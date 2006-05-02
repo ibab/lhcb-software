@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.8 2006-03-17 15:54:46 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.9 2006-05-02 12:36:27 erodrigu Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -152,7 +152,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // unique ?
-  const bool trUnique = trTrack->checkFlag(LHCb::Track::Unique);
+  const bool trUnique = !trTrack->checkFlag(LHCb::Track::Clone);
 
   if ( msgLevel(MSG::VERBOSE) )
   {
