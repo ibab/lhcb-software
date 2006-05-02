@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r6 2006-04-25 ========================
+! 2006-04-25 - Florence RANJARD
+ - cmt/requirements - add setting of STAGE_HOST and RFIO_USE_CASTOR_V2 for
+                      CMTSITE=CERN to use castor2
+
 !======================== GaudiConf v9r5 2006-03-30 ========================
 ! 2006-03-30 - Marco Cattaneo
  - In PoolSim.opts, remove dictionaries loaded from RELAX via rootmap mechanism

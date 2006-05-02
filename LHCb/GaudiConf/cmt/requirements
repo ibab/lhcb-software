@@ -1,10 +1,14 @@
 package GaudiConf
-version v9r5
+version v9r6
 
 branches doc cmt options src
 include_path none
 
 ignore_pattern package_stamps
 
-set STDOPTS    ${GAUDICONFROOT}/options
+set STDOPTS    $(GaudiConf_root)/options
+
+set STAGE_HOST "" CERN "castorlhcb"
+set RFIO_USE_CASTOR_V2 "" CERN "yes"
+
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
