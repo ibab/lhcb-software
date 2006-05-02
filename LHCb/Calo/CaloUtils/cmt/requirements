@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.29 2006-04-10 08:38:36 cattanem Exp $
+# $Id: requirements,v 1.30 2006-05-02 15:25:13 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.29 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v6r1
+version             v6r2
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -29,24 +29,15 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.29  2006/04/10 08:38:36  cattanem
+# v6r1
+#
 # Revision 1.28  2006/03/28 12:26:44  cattanem
 # add boost dependency
 #
 # Revision 1.27  2006/03/22 18:25:06  odescham
 # Migration to new Event Model
 #
-# Revision 1.26  2005/12/08 13:00:22  odescham
-# v5r1 - use Cnv tracks only in TrackUse.cpp
-#
-# Revision 1.25  2005/11/23 07:29:07  cattanem
-# cleanup requirements
-#
-# Revision 1.24  2005/11/07 11:57:13  odescham
-# v5r0 - Adapt to the new Track Event Model
-#
-# Revision 1.23  2005/05/06 17:48:33  ibelyaev
-#  add new base classes: Calo(Histo)TrackAlg
-# 
 # =============================================================================
 # The END 
 # =============================================================================
