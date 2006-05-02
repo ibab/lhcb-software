@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.29 2006-05-01 17:14:09 janos Exp $
+! $Id: release.notes,v 1.30 2006-05-02 09:09:26 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jan Amoraal
 
-!====================== OTSimulation v4r0 2006-05-01 ======================
+!====================== OTSimulation v3r4 2006-05-01 ======================
 ! 2006-05-01 - Jan Amoraal
  - Gone from 24 to 48 Tell1 boards. One per quarter.  
 
