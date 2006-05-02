@@ -20,6 +20,8 @@ New tuning:
     (VeloAlgorithms v4r4)
   . Changed default ST thresholds to 4.0 cluster S/N and 10.0 high threshold
     (STAlgorithms v1r3)
+  . Remove DAQ error bank from RawEvent, present only if errors from DAQ, e.g.
+    missing sources (DigiAlg v4r3)
 
 Bug fixes:
   . Workaround for Microsoft(tm) "extensions" that prevented static data members

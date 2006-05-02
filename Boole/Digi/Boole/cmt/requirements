@@ -54,7 +54,7 @@ use SimComponents    v1r1p1  Sim    -no_auto_imports
 use LbcomSys             v4r4        -no_auto_imports
 
 #-- BooleSys v11r3 packages
-use DigiAlg              v4r2   Digi -no_auto_imports
+use DigiAlg              v4r3   Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r1   Calo -no_auto_imports
