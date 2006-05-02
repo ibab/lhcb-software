@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.3 2006-03-09 14:40:13 ebos Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.4 2006-05-02 12:53:20 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode TrackVeloTTChecker::execute() {
   Tracks::iterator aTr;
   for( aTr = allTracks->begin(); allTracks->end() != aTr; ++aTr ) {
     Track* track = *aTr ;
-    if( !track->checkFlag( Track::Unique ) ) continue;
+    if( track->checkFlag( Track::Clone ) ) continue;
     if( !track->checkType( Track::Velo )
         && !track->checkType( Track::Upstream ) ) continue;
 

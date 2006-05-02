@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.3 2006-03-15 08:04:12 ebos Exp $
+// $Id: TrackChecker.cpp,v 1.4 2006-05-02 12:53:20 erodrigu Exp $
 // Include files 
 
 // local
@@ -256,7 +256,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
     if( !sc.isFailure() ) {
       // Update the vtxState
       TrackVector vec = vtxState.stateVector();
-      TrackMatrix cov = vtxState.covariance();
+      TrackSymMatrix cov = vtxState.covariance();
 
       // calculate impact parameter vector
       XYZVector dist( vec(0) - vertPos.x(), vec(1) - vertPos.y(), 0.0 );
@@ -295,7 +295,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
     if( sc.isSuccess() ) {
       TrackVector vec = stateAt1stMeas.stateVector();
       TrackVector trueVec = trueState->stateVector();
-      TrackMatrix cov = stateAt1stMeas.covariance();
+      TrackSymMatrix cov = stateAt1stMeas.covariance();
       double dx = vec(0) - trueVec(0);
       double dy = vec(1) - trueVec(1);
       double dtx = vec(2) - trueVec(2);
@@ -327,7 +327,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
       if( sc.isSuccess() ) {
         TrackVector vec = state.stateVector();
         TrackVector trueVec = trueState->stateVector();
-        TrackMatrix cov = state.covariance();
+        TrackSymMatrix cov = state.covariance();
         double dx = vec(0) - trueVec(0);
         double dy = vec(1) - trueVec(1);
         double dtx = vec(2) - trueVec(2);
