@@ -4,6 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !======================= TrackMatching v2r1 2006-04-06 =======================
 ! 2006-04-06 - Jeroen van Tilburg
  - Moved to auto_ptr and shared_ptr for Trajectory class.

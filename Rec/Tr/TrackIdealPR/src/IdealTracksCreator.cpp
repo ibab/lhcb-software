@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.18 2006-04-13 09:46:21 jvantilb Exp $
+// $Id: IdealTracksCreator.cpp,v 1.19 2006-05-02 13:03:16 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -280,7 +280,6 @@ StatusCode IdealTracksCreator::execute()
       // Set some of the track properties
       // --------------------------------
       track -> setStatus( Track::PatRecMeas );
-      track -> setFlag( Track::Unique, true );
       track -> setHistory( Track::TrackIdealPR );
 
       // Add true states at each measurement 
@@ -331,7 +330,7 @@ StatusCode IdealTracksCreator::execute()
         << "  * charge         = " << track -> charge() << endreq
         << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) 
         << endreq
-        << "  * is Unique      = " << track -> checkFlag( Track::Unique ) 
+        << "  * is Unique      = " << !track -> checkFlag( Track::Clone ) 
         << endreq
         << "  * is of type     = " << track -> type() << endreq
         << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
@@ -549,7 +548,7 @@ StatusCode IdealTracksCreator::initializeState( double z,
   StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
   if ( sc.isSuccess() ) {
     // set covariance matrix to a somewhat larger value for the fit
-    TrackMatrix& cov = state -> covariance();
+    TrackSymMatrix& cov = state -> covariance();
     cov(0,0) = m_errorX2;
     cov(1,1) = m_errorY2;
     cov(2,2) = m_errorTx2;

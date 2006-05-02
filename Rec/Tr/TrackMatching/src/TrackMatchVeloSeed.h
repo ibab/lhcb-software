@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.6 2006-02-22 14:34:24 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.7 2006-05-02 13:06:44 erodrigu Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -80,7 +80,7 @@ private:
                           ITrackExtrapolator* extrapolator,
                           double zpos,
                           TrackVector& trackVector,
-                          TrackMatrix& trackCov );
+                          TrackSymMatrix& trackCov );
 
   /// Calculate the new z
   StatusCode determineZ( double tX,

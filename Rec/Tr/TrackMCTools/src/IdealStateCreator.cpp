@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.5 2006-04-12 14:13:50 jvantilb Exp $
+// $Id: IdealStateCreator.cpp,v 1.6 2006-05-02 13:08:26 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -77,7 +77,7 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   if( mcPart == 0 ) return StatusCode::FAILURE;
   
   // First create the state
-  TrackMatrix stateCov = TrackMatrix();
+  TrackSymMatrix stateCov = TrackSymMatrix();
   for( int i=0; i<5; ++i ) { stateCov(i,i) = 0.; }
   LHCb::State* pState = new LHCb::State();
   pState -> setZ( zRec );
@@ -128,7 +128,7 @@ StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
   pState->setState( x, y, z, slopeX, slopeY, this->qOverP( mcPart ) );
 
   // set covariance matrix
-  TrackMatrix cov = TrackMatrix();
+  TrackSymMatrix cov = TrackSymMatrix();
   cov(0,0) = m_eX2;
   cov(1,1) = m_eY2;
   cov(2,2) = m_eTx2;
@@ -153,7 +153,7 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
                                                  LHCb::State*& state ) const
 {
   /// Create state at track vertex of MCParticle.
-  TrackMatrix stateCov = TrackMatrix();
+  TrackSymMatrix stateCov = TrackSymMatrix();
   for( int i=0; i<5; ++i ) { stateCov(i,i) = 0.; }
   LHCb::State* trueState = new State();
   trueState -> setCovariance( stateCov );  
@@ -190,7 +190,7 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
                        trueTx, trueTy, trueQdivP );
 
   // set covariance matrix
-  TrackMatrix cov = TrackMatrix();
+  TrackSymMatrix cov = TrackSymMatrix();
   cov(0,0) = m_eX2;
   cov(1,1) = m_eY2;
   cov(2,2) = m_eTx2;

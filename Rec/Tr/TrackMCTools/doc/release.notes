@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !======================= TrackMCTools v2r1 2006-04-13 ========================
 ! 2006-04-13 - Jeroen van Tilburg
  - Removed bug in TrackCriteriaSelector. The momentum of the state was filled

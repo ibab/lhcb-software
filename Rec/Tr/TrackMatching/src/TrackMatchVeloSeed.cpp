@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.12 2006-04-06 12:01:30 jvantilb Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.13 2006-05-02 13:06:44 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -213,7 +213,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 
     // Extrapolate seedTrack to the actual m_matchAtZPosition
     TrackVector trackVector1;
-    TrackMatrix trackCov1;
+    TrackSymMatrix trackCov1;
     sc = extrapolate( *iTrack1, m_extrapolatorSeed, 
                       m_matchAtZPosition, trackVector1, trackCov1 );
     if ( sc.isFailure() ) continue;
@@ -240,7 +240,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
 
       // Extrapolate veloTrack to the actual m_matchAtZPosition
       TrackVector trackVector2;
-      TrackMatrix trackCov2;
+      TrackSymMatrix trackCov2;
       sc = extrapolate( *iTrack2, m_extrapolatorVelo,
                         m_matchAtZPosition, trackVector2, trackCov2 );
       if ( sc.isFailure() ) continue;
@@ -366,7 +366,7 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     const State& seedState = seedTrack->closestState(9900.);
 
     TrackVector stateVec = veloState.stateVector();
-    TrackMatrix stateCov = veloState.covariance();
+    TrackSymMatrix stateCov = veloState.covariance();
     stateVec[4]          = seedState.qOverP();
     stateCov(4,4)        = gsl_pow_2( 0.015 * stateVec[4] );
 
@@ -582,7 +582,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
 
     debug() << "blow covariance matrix" << endreq;
     // Blow up covariance matrix
-    TrackMatrix newC;
+    TrackSymMatrix newC;
     newC(0,0) = m_errorX2;
     newC(1,1) = m_errorY2;
     newC(2,2) = m_errorTx2;
@@ -612,7 +612,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
         << "    * is Invalid    = "
         << aTrack -> checkFlag( Track::Invalid ) << endreq
         << "    * is Unique     = "
-        << aTrack -> checkFlag( Track::Unique ) << endreq
+        << !aTrack -> checkFlag( Track::Clone ) << endreq
         << "    * is Long       = "
         << aTrack -> checkType( Track::Long ) << endreq
         << "    * chi2, nDoF    = "
@@ -640,7 +640,7 @@ StatusCode TrackMatchVeloSeed::extrapolate( Track* track,
                                             ITrackExtrapolator* extrapolator,
                                             double zpos,
                                             TrackVector& trackVector,
-                                            TrackMatrix& trackCov )
+                                            TrackSymMatrix& trackCov )
 {
   State tmpState;
   StatusCode sc = extrapolator -> propagate( *track, zpos, tmpState );

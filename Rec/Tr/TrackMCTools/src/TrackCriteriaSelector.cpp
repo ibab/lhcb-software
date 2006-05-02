@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.cpp,v 1.5 2006-04-13 10:01:15 jvantilb Exp $
+// $Id: TrackCriteriaSelector.cpp,v 1.6 2006-05-02 13:08:26 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -93,7 +93,7 @@ bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
   bool selected = true;
 
   // Check the Unique flag
-  if ( m_uniqueFlag && !( track->checkFlag( Track::Unique ) ) )
+  if ( m_uniqueFlag && track->checkFlag( Track::Clone ) )
     selected = false;
 
   // Check the validity flag
