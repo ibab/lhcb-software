@@ -1,5 +1,5 @@
 package           GaussAlgs
-version           v2r2
+version           v2r3
 
 # =============== structure ==================================================
 branches          cmt doc src
