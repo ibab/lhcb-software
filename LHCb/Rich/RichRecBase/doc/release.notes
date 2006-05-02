@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r2 2006-05-02 ========================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
 
