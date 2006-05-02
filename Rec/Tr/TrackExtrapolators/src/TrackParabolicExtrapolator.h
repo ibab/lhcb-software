@@ -53,7 +53,7 @@ public:
 protected:
 
   /// update transport matrix
-  virtual void updateTransportMatrix( const double dz,
+  virtual void updateTrackMatrix( const double dz,
                                       State& State );
 
 protected:

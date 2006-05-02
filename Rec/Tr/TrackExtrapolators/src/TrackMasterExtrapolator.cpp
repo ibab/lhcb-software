@@ -89,7 +89,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
   StatusCode sc;
 
   // reset transport matrix
-  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
   //check if not already at required z position
   double zStart = state.z();
@@ -180,7 +180,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       }
 	 
       //update f
-      updateTransportMatrix( thisExtrapolator->transportMatrix() );  
+      updateTrackMatrix( thisExtrapolator->transportMatrix() );  
       
       // protect against vertical or looping tracks
       if (fabs(state.tx()) > m_maxSlope) {
@@ -251,14 +251,14 @@ void TrackMasterExtrapolator::thinScatter( State& state,
   double cnoise = m_fms2 * scatLength/gsl_pow_2(p);
 
   // multiple scattering covariance matrix - initialized to 0
-  TrackMatrix Q = TrackMatrix();
+  TrackSymMatrix Q = TrackSymMatrix();
 
   Q(2,2) = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
   Q(3,3) = norm2 * (1. + gsl_pow_2(state.ty())) * cnoise;
   Q(3,2) = norm2 * state.tx() * state.ty() * cnoise;
 
   // update covariance matrix C = C + Q
-  TrackMatrix& tC = state.covariance();
+  TrackSymMatrix& tC = state.covariance();
   tC += Q;
 
   return;
@@ -292,7 +292,7 @@ void TrackMasterExtrapolator::thickScatter( State& state,
   //D - depends on whether up or downstream
   double D = (m_upStream) ? -1. : 1. ;
 
-  TrackMatrix Q = TrackMatrix();
+  TrackSymMatrix Q = TrackSymMatrix();
 
   double tWall2 = gsl_pow_2(tWall);
 
@@ -311,7 +311,7 @@ void TrackMasterExtrapolator::thickScatter( State& state,
   Q(3,3) = covTyTy;
 
   // update covariance matrix C = C + Q
-  TrackMatrix& tC = state.covariance();
+  TrackSymMatrix& tC = state.covariance();
   tC += Q;
 
   return;
@@ -357,7 +357,7 @@ void TrackMasterExtrapolator::electronEnergyLoss( State& state,
 
   // apply correction
   TrackVector& tX = state.stateVector();
-  TrackMatrix& tC = state.covariance();
+  TrackSymMatrix& tC = state.covariance();
 
   tC(4,4) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
   tX[4] *= exp(-t);

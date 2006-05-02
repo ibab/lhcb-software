@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.6 2006-03-31 12:08:11 erodrigu Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.7 2006-05-02 12:59:36 erodrigu Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -71,7 +71,7 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
                                               ParticleID )
 {
   // create transport matrix
-  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
   // check current z-position
   double dz = fabs(zNew - state.z());

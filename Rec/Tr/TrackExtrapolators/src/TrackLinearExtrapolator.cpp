@@ -21,7 +21,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
                                                ParticleID pid )
 {
   // Reset and update the transport matrix
-  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
   double dz = zNew - state.z();
   m_F(0,2) = dz;
@@ -36,7 +36,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   state.setZ( zNew );
   
   // update covariance
-  TrackMatrix& tStateCov = state.covariance();
+  TrackSymMatrix& tStateCov = state.covariance();
   tStateCov = ROOT::Math::Similarity<double,5,5>( m_F, tStateCov ); // F*C*F.T()
 
   debug() << " z propagation " << zNew

@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.h,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
+// $Id: TrackFastParabolicExtrapolator.h,v 1.4 2006-05-02 12:59:36 erodrigu Exp $
 #ifndef TRACKFASTPARABOLICEXTRAPOLATOR_H
 #define TRACKFASTPARABOLICEXTRAPOLATOR_H 1
 
@@ -30,7 +30,7 @@ public:
 private:
 
   /// update tranport matrix (Q/p)
-  void updateTransportMatrix( const double dz, 
+  void updateTrackMatrix( const double dz, 
                               LHCb::State& pState);
 
 };

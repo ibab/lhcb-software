@@ -61,7 +61,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
                                                   ParticleID )
 {
   // Reset the transport matrix
-  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   
   // check current z-position
   double dz = zNew - state.z();
@@ -89,7 +89,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(gsl_pow_2(nTy)*m_B.x()));
    
   // set non-zero diagonal elements
-  updateTransportMatrix(dz, state); 
+  updateTrackMatrix(dz, state); 
 
   // Update the state parameters (exact extrapolation)
   const TrackVector& tState = state.stateVector();
@@ -171,7 +171,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 //=============================================================================
 // Update the transport matrix
 //=============================================================================
-void TrackParabolicExtrapolator::updateTransportMatrix( const double dz, 
+void TrackParabolicExtrapolator::updateTrackMatrix( const double dz, 
                                                         State& state )
 {
   //create the transport matrix dX/dX_0 for ptState's

@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.11 2006-04-18 09:18:11 jvantilb Exp $
+// $Id: FitNode.cpp,v 1.12 2006-05-02 12:58:04 erodrigu Exp $
 // Include files
 
 // local
@@ -30,9 +30,9 @@ using namespace LHCb;
 FitNode::FitNode()
 {
   // FitNode default constructor
-  m_transportMatrix = TransportMatrix();
+  m_transportMatrix = TrackMatrix();
   m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackMatrix();
+  m_noiseMatrix     = TrackSymMatrix();
   m_transportIsSet  = false;
 }
 
@@ -40,9 +40,9 @@ FitNode::FitNode()
 FitNode::FitNode( double zPos )
 {
   //FitNode constructer
-  m_transportMatrix = TransportMatrix();
+  m_transportMatrix = TrackMatrix();
   m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackMatrix();
+  m_noiseMatrix     = TrackSymMatrix();
   m_transportIsSet  = false;
   State tempState = State();
   tempState.setZ( zPos );
@@ -53,9 +53,9 @@ FitNode::FitNode( double zPos )
 FitNode::FitNode(Measurement& aMeas)
 {
   //FitNode constructer
-  m_transportMatrix = TransportMatrix();
+  m_transportMatrix = TrackMatrix();
   m_transportVector = TrackVector();
-  m_noiseMatrix     = TrackMatrix();
+  m_noiseMatrix     = TrackSymMatrix();
   m_transportIsSet  = false;
   m_measurement     = &aMeas;
   State tempState = State();

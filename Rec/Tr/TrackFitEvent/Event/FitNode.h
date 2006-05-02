@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.9 2006-04-18 09:18:11 jvantilb Exp $
+// $Id: FitNode.h,v 1.10 2006-05-02 12:58:04 erodrigu Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -50,16 +50,16 @@ namespace LHCb
     virtual ~FitNode();
     
     /// retrieve transport matrix
-    const TransportMatrix& transportMatrix() const { return m_transportMatrix; }
+    const TrackMatrix& transportMatrix() const { return m_transportMatrix; }
     
     /// retrieve transport vector
     const TrackVector& transportVector() const { return m_transportVector; }
     
     /// retrieve noise matrix
-    const TrackMatrix& noiseMatrix() const { return m_noiseMatrix; }
+    const TrackSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
     
     /// set transport matrix
-    void setTransportMatrix( const TransportMatrix& transportMatrix ) {
+    void setTrackMatrix( const TrackMatrix& transportMatrix ) {
       m_transportMatrix = transportMatrix;
     }
     
@@ -69,7 +69,7 @@ namespace LHCb
     }
     
     /// set noise matrix
-    void setNoiseMatrix( const TrackMatrix& noiseMatrix ) {
+    void setNoiseMatrix( const TrackSymMatrix& noiseMatrix ) {
       m_noiseMatrix = noiseMatrix;
     }  
     
@@ -97,9 +97,9 @@ namespace LHCb
     
   private:
     
-    TransportMatrix m_transportMatrix; ///< transport matrix
+    TrackMatrix m_transportMatrix; ///< transport matrix
     TrackVector     m_transportVector; ///< transport vector
-    TrackMatrix     m_noiseMatrix;     ///< noise matrix
+    TrackSymMatrix     m_noiseMatrix;     ///< noise matrix
     bool            m_transportIsSet;  ///< Flag for transport parameters
     State           m_predictedState;  ///< predicted state from filter step
   };

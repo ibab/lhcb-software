@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.8 2006-03-27 10:07:39 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.9 2006-05-02 13:01:58 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -346,7 +346,7 @@ StatusCode TrackMasterFitter::reSeed( State& seed, State& newSeed )
   }
 
   // use the large covariance matrix of the previous seed for new seed
-  TrackMatrix& tC = newSeed.covariance();
+  TrackSymMatrix& tC = newSeed.covariance();
   tC = seed.covariance();
   
   return StatusCode::SUCCESS;

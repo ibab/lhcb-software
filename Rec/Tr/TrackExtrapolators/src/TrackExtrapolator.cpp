@@ -261,7 +261,7 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
 //=============================================================================
 // Get reference to last used transport matrix
 //=============================================================================
-const TransportMatrix& TrackExtrapolator::transportMatrix() const
+const TrackMatrix& TrackExtrapolator::transportMatrix() const
 {
   return m_F;
 };
@@ -278,7 +278,7 @@ TrackExtrapolator::TrackExtrapolator( const std::string& type,
   declareInterface<ITrackExtrapolator>( this );
 
   // create transport matrix
-  m_F = TransportMatrix( ROOT::Math::SMatrixIdentity() );
+  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 }
 
 //=============================================================================

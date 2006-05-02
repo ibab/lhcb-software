@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+
 !=========================== TrackFitter v2r1 2006-04-19 ====================
 ! 2006-04-19 - Jeroen van Tilburg
  - TrackKalmanFilter: introduced temporary vector in predict method. Needed

@@ -124,7 +124,7 @@ public:
                                ParticleID pid = ParticleID(211) );
 
   /// retrieve transport matrix
-  virtual const TransportMatrix& transportMatrix() const;
+  virtual const TrackMatrix& transportMatrix() const;
 
   /// Standard constructor
   TrackExtrapolator( const std::string& type, 
@@ -136,7 +136,7 @@ public:
 
 protected:
   /// Transport matrix
-  TransportMatrix m_F; 
+  TrackMatrix m_F; 
 
 };
 #endif // TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H

@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.4 2006-04-19 13:10:31 jvantilb Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.5 2006-05-02 12:59:36 erodrigu Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -39,7 +39,7 @@ TrackFastParabolicExtrapolator::~TrackFastParabolicExtrapolator()
 }
 
 // Create the transport matrix dX/dX_0 for pState's
-void TrackFastParabolicExtrapolator::updateTransportMatrix( const double dz, 
+void TrackFastParabolicExtrapolator::updateTrackMatrix( const double dz, 
                                                             State& )
 {
   m_F(0,2) = dz;
