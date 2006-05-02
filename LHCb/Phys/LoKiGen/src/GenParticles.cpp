@@ -1,11 +1,8 @@
-// $Id: GenParticles.cpp,v 1.5 2006-03-07 14:11:43 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.6 2006-05-02 14:30:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/03/03 09:43:57  ibelyaev
-//  add GP<*> functions
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,10 +37,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 

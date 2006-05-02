@@ -1,14 +1,8 @@
-// $Id: Math.h,v 1.3 2006-03-17 12:37:56 ibelyaev Exp $
+// $Id: Math.h,v 1.4 2006-05-02 14:29:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:06:03  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/24 09:39:42  ibelyaev
-// New Import: the core part of restructurized LoKi project
-//
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -38,10 +32,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
@@ -51,8 +41,7 @@
 namespace LoKi 
 {
   
-  /** @fn exp 
-   *  exponential for LoKi function
+  /*  @fn exp 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */      
@@ -61,7 +50,7 @@ namespace LoKi
   exp ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE> ( std::exp , fun , "exp" ); }
 
-  /** @fn sin 
+  /*  @fn sin 
    *  sine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -71,7 +60,7 @@ namespace LoKi
   sin ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE> ( std::sin , fun , "sin" ) ; }
 
-  /** @fn sinh
+  /*  @fn sinh
    *  hypoerbolic sine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -81,7 +70,7 @@ namespace LoKi
   sinh ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE> ( std::sinh, fun , "sinh" ) ; }
 
-  /** @fn cos
+  /*  @fn cos
    *  cosine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -91,7 +80,7 @@ namespace LoKi
   cos ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::cos , fun , "cos" ) ; }
   
-  /** @fn cosh
+  /*  @fn cosh
    *  hyperbolic cosine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -101,7 +90,7 @@ namespace LoKi
   cosh ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::cosh , fun , "cosh" ) ; }
   
-  /** @fn tan
+  /*  @fn tan
    *  tan for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -111,7 +100,7 @@ namespace LoKi
   tan ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::tan , fun , "tan" ) ; }
 
-  /** @fn tanh
+  /*  @fn tanh
    *  hyperbolic tangent for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -121,7 +110,7 @@ namespace LoKi
   tanh ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::tanh , fun , "tanh" ) ; }
   
-  /** @fn sqrt
+  /*  @fn sqrt
    *  sqrt for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -131,7 +120,7 @@ namespace LoKi
   sqrt ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::sqrt , fun , "sqrt" ) ; }
 
-  /** @fn asin 
+  /*  @fn asin 
    *  asine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -141,7 +130,7 @@ namespace LoKi
   asin ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::asin , fun , "asin" ) ; }
   
-  /** @fn acos
+  /*  @fn acos
    *  acos for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -152,7 +141,7 @@ namespace LoKi
   acos ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::acos , fun , "acos" ) ; }
   
-  /** @fn atan
+  /*  @fn atan
    *  atan for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -162,7 +151,7 @@ namespace LoKi
   atan ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::atan , fun , "atan" ) ; }
   
-  /** @fn log
+  /*  @fn log
    *  log for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -172,7 +161,7 @@ namespace LoKi
   log ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::log , fun , "log" ) ; }
   
-  /** @fn log10
+  /*  @fn log10
    *  log10 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -182,7 +171,7 @@ namespace LoKi
   log10 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::log10 , fun , "log10" ) ; }
   
-  /** @fn fabs
+  /*  @fn fabs
    *  abs for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -192,7 +181,7 @@ namespace LoKi
   abs ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::fabs , fun , "abs" ) ; }
   
-  /** @fn abs
+  /*  @fn abs
    *  abs for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -202,7 +191,7 @@ namespace LoKi
   fabs ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::ComposeFunction<TYPE>( std::fabs , fun , "abs" ) ; }
   
-  /** @fn atan2
+  /*  @fn atan2
    *  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -213,7 +202,7 @@ namespace LoKi
           const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::atan2 , fun1 , fun2 , "atan2" ); }
   
-  /** @fn atan2
+  /*  @fn atan2
    *  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -224,7 +213,7 @@ namespace LoKi
           const double                val2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::atan2 , fun1 , val2 , "atan2" ) ; }
   
-  /** @fn atan2
+  /*  @fn atan2
    *  atan2 for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -235,7 +224,7 @@ namespace LoKi
           const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::atan2 , val1 , fun2  , "atan2" ) ; }
   
-  /** @fn pow
+  /*  @fn pow
    *  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -246,7 +235,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::pow , fun1 , fun2  , "pow" ) ; }
   
-  /** @fn pow
+  /*  @fn pow
    *  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -257,7 +246,7 @@ namespace LoKi
         const double                val2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::pow , fun1 , val2 , "pow" ) ; }
   
-  /** @fn pow
+  /*  @fn pow
    *  pow for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
@@ -268,7 +257,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::ComposeFunction2<TYPE>( std::pow , val1 , fun2 , "pow" ) ; }
   
-  /** @fn min 
+  /*  @fn min 
    *  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -279,7 +268,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::Min<TYPE>( fun1 , fun2 ) ; }
 
-  /** @fn min 
+  /*  @fn min 
    *  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -291,7 +280,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun3 ) 
   { return LoKi::Min<TYPE>( fun1 , fun2 , fun3 ) ; }
 
-  /** @fn min 
+  /*  @fn min 
    *  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -304,7 +293,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun4 ) 
   { return LoKi::Min<TYPE>( fun1 , fun2 , fun3 , fun4 ) ; }
 
-  /** @fn min 
+  /*  @fn min 
    *  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -315,7 +304,7 @@ namespace LoKi
         const double                fun2 ) 
   { return min ( fun1 , LoKi::Constant<TYPE>(fun2) ) ; }
 
-  /** @fn min 
+  /*  @fn min 
    *  minimum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -326,7 +315,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun2 ) 
   { return min ( LoKi::Constant<TYPE>(fun1) , fun2 ) ; }
 
-  /** @fn max 
+  /*  @fn max 
    *  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -337,7 +326,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun2 ) 
   { return LoKi::Max<TYPE>( fun1 , fun2 ) ; }
   
-  /** @fn max 
+  /*  @fn max 
    *  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -349,7 +338,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun3 ) 
   { return LoKi::Max<TYPE>( fun1 , fun2 , fun3 ) ; }
 
-  /** @fn max 
+  /*  @fn max 
    *  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -362,7 +351,7 @@ namespace LoKi
         const LoKi::Function<TYPE>& fun4 ) 
   { return LoKi::Max<TYPE>( fun1 , fun2 , fun3 , fun4 ) ; }
       
-  /** @fn max 
+  /*  @fn max 
    *  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 
@@ -373,7 +362,7 @@ namespace LoKi
         const double                fun2 ) 
   { return max ( fun1 , LoKi::Constant<TYPE>(fun2) ) ; }
 
-  /** @fn max
+  /*  @fn max
    *  maximum for LoKi functions 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2004-08-10 

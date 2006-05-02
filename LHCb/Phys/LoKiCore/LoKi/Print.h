@@ -1,14 +1,8 @@
-// $Id: Print.h,v 1.3 2006-02-23 21:10:31 ibelyaev Exp $
+// $Id: Print.h,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:06:04  ibelyaev
-//  fix a typo
-//
-// Revision 1.1  2006/02/16 18:09:37  ibelyaev
-//  add utilities for the easy printouts
-//
 // ============================================================================
 #ifndef LOKI_PRINT_H 
 #define LOKI_PRINT_H 1
@@ -41,10 +35,6 @@ template <class TYPE> class SmartRef       ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 

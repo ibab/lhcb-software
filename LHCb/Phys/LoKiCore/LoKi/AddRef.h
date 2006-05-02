@@ -1,8 +1,11 @@
-// $Id: AddRef.h,v 1.1 2006-03-14 18:56:59 ibelyaev Exp $
+// $Id: AddRef.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.1 $ 
+// CVS tag $NAme:$, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/03/14 18:56:59  ibelyaev
+//  v1r1 : add a lot of new utilities
+// 
 // ============================================================================
 #ifndef LOKI_ADDREF_H 
 #define LOKI_ADDREF_H 1
@@ -29,10 +32,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23 

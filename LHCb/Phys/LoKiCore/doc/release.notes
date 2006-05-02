@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.15 2006-04-20 18:09:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2006-05-02 14:29:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-05-02 - Vanya Belyaev
+  - src/Components/LoKiSvc.cpp 
+    bug fix with creation/release of reporter 
+ -  *ALL* files are modified (actually censored). 
+
 
 ! 2006-04-20 - Vanya BELYAEV
  - src/Components/LoKiCvc.cpp
@@ -122,6 +128,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2006/04/20 18:09:26  ibelyaev
+!  fix a bit LoKiSvc.cpp
+!
 ! Revision 1.14  2006/04/19 11:41:00  cattanem
 ! v1r2
 !

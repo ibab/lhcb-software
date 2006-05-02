@@ -1,14 +1,8 @@
-// $Id: LoKiSvc.cpp,v 1.3 2006-04-20 18:09:26 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.4 2006-05-02 14:29:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/18 18:06:04  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/24 09:39:41  ibelyaev
-// New Import: the core part of restructurized LoKi project
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,10 +37,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
@@ -104,10 +94,15 @@ public:
     if ( 0 != m_toolSvc ) { return m_toolSvc ; }
     // locate the service 
     StatusCode sc = service ( "ToolSvc" , m_toolSvc , true ) ;
-    if       ( sc.isFailure() ) 
-    { LOKI_EXCEPTION( "LoKiSvc: 'ToolSvc' could nto be located" , sc ) ; }
-    else if  ( 0 == m_toolSvc ) 
-    { LOKI_EXCEPTION( "LoKiSvc: IToolSvc* points to NULL"       , sc ) ; }
+    if ( sc.isFailure() ) 
+    { 
+      m_toolSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'ToolSvc' could nto be located" , sc ) ; 
+    }
+    if ( 0 == m_toolSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IToolSvc* points to NULL"       , sc ) ; 
+    }
     //
     return m_toolSvc ;
   } ;
@@ -127,10 +122,6 @@ public:
                                           this           ) ;
     if ( sc.isFailure()  ) { return 0 ; }             // RETURN 
     if ( 0 == m_reporter ) { return 0 ; }             // RETURN  
-    //
-    // take care about error reporter
-    LoKi::ErrorReport& report = LoKi::ErrorReport::instance() ;
-    if ( 0 == report.reporter() ) { report.setReporter ( m_reporter ) ; }
     //
     return m_reporter ;
   } ;
@@ -156,24 +147,22 @@ public:
     LoKi::Services& svc = LoKi::Services::instance() ;
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
     //
-    // take care about error reporter
-    LoKi::ErrorReport& report = LoKi::ErrorReport::instance() ;
-    if ( 0 == report.reporter() ) 
     {
-      if ( 0 == m_reporter ) 
-      {
-        IToolSvc* svc = toolSvc()   ;
-        if ( 0 == svc        ) { return StatusCode::FAILURE ; }
-        sc = svc -> retrieveTool ( m_reporterName , 
-                                   m_reporter     , this ) ;
-        if ( sc.isFailure()  ) { return StatusCode::FAILURE ; }
-        if ( 0 == m_reporter ) { return StatusCode::FAILURE ; }
-      } ;
-      report.setReporter ( m_reporter ) ;
+      IToolSvc* svc = toolSvc()   ;
+      if ( 0 == svc        ) { return StatusCode::FAILURE ; }
+      sc = svc -> retrieveTool ( m_reporterName , 
+                                 m_reporter     , this ) ;
+      if ( sc.isFailure()  ) { return StatusCode::FAILURE ; }
+      if ( 0 == m_reporter ) { return StatusCode::FAILURE ; }
     }
+    //
+    LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
+    if ( 0 == rep.reporter() && 0 != m_reporter ) 
+    { rep.setReporter ( m_reporter ) ; }
+    //
     return StatusCode::SUCCESS ;
   } ;
-
+  
   /** general service finalizetion 
    *  @see IService 
    *  @return status code
@@ -184,16 +173,14 @@ public:
     LoKi::Services& svc = LoKi::Services::instance() ;
     svc.releaseAll() ;
     //
-    // take care about error reporter
-    LoKi::ErrorReport& report = LoKi::ErrorReport::instance() ;
-    if ( 0 != m_reporter && m_reporter == report.reporter() ) 
-    { report.setReporter( 0 ) ; } ;
-    //
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
     { m_toolSvc -> releaseTool ( m_reporter ) ; }
     m_reporter = 0 ;
     if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
     if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; }    
+    //
+    LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
+    if ( 0 != rep.reporter() ) { rep.setReporter( 0 ) ; }
     //
     return Service::finalize() ;
   } ;
@@ -212,6 +199,9 @@ public:
     LoKi::Services& svc = LoKi::Services::instance() ;
     svc.releaseAll();
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
+    //
+    if ( 0 != m_toolSvc ) { m_toolSvc -> release() ; m_toolSvc = 0 ; }    
+    if ( 0 != m_ppSvc   ) { m_ppSvc   -> release() ; m_ppSvc   = 0 ; }
     //
     return StatusCode::SUCCESS ;
   } ;

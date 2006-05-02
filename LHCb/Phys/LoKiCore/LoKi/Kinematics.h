@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.8 2006-03-08 21:32:34 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.9 2006-05-02 14:29:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/03/08 21:32:34  ibelyaev
+//  add WrongMass.h(.cpp)
+//
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -27,10 +30,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
@@ -38,17 +37,16 @@
 
 namespace LoKi
 {
-  /// Lorentz vector 
+  // Lorentz vector 
   typedef Gaudi::LorentzVector LorentzVector ;
-  /// Lorentz vector 
+  // Lorentz vector 
   typedef LorentzVector        Vector4D      ;
-  /// 3D vector 
+  // 3D vector 
   typedef Gaudi::XYZVector     ThreeVector   ;
-  /// 3D vector 
+  // 3D vector 
   typedef ThreeVector          Vector3D      ;
-  /// 3D point
+  // 3D point
   typedef Gaudi::XYZPoint      Point3D       ;
-
 
   /** @namespace Kinematics 
    *  collection of few trivial functions for kinematical evaluations

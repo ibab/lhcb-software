@@ -1,11 +1,8 @@
-// $Id: GenAlgs.h,v 1.4 2006-02-18 17:13:53 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.5 2006-05-02 14:30:27 ibelyaev Exp $
 // ========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/17 19:13:57  ibelyaev
-//  few minopr fixes
-//
 // ========================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -35,10 +32,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement
- *  with the campain of Dr.O.Callot et al.:
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23

@@ -1,14 +1,8 @@
-// $Id: LoKiGen.h,v 1.3 2006-02-18 18:02:20 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.4 2006-05-02 14:30:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 09:54:49  ibelyaev
-//  add plenty of new (vertex&adapter)functions
-//
-// Revision 1.1.1.1  2006/01/24 09:54:23  ibelyaev
-// New Import: Generator/HepMC-dependent part of LoKi project
-// 
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
 #define LOKI_LOKIGEN_H 1
@@ -37,10 +31,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
