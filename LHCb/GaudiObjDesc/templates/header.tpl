@@ -51,6 +51,7 @@ namespace LHCb
   @@@getSetMethodDecls@@@
   @@@publicBitfieldEnums@@@
   @@@publicAttributes@@@
+  @@@allocatorOperators@@@
   protected:
 
   @@@protectedTypedefs@@@

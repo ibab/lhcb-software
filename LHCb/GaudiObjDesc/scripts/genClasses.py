@@ -525,8 +525,96 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '  return s;\n'
         s += '}\n\n'
     return s
-#--------------------------------------------------------------------------------
-  def doit(self,package,godClasses,outputDir,lname):
+##--------------------------------------------------------------------------------
+  def genAllocatorOperators(self, godClass,allocatorType):
+    s = ''
+    if allocatorType == "FROMXML":
+      allocatorType = godClass['attrs']['allocator']
+
+    data = {}
+    data['classname'] = godClass['attrs']['name']
+
+    if allocatorType == 'DEFAULT' or allocatorType == 'BOOST':
+      s ="""
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    return ( sizeof(%(classname)s) == size ? 
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+             ::operator new(size) );
+  }
+
+  /// placement operator new (not needed in the most recent Reflex)
+  static void* operator new ( size_t size, void*& pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
+  }"""%data
+      self.include.append("GaudiKernel/boost_allocator.h")
+      
+    elif allocatorType == 'BOOST2':
+      s ="""
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    return ( sizeof(%(classname)s) == size ? 
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+             ::operator new(size) );
+  }
+
+  /// placement operator new (not needed in the most recent Reflex)
+  static void* operator new ( size_t size, void*& pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
+    ::operator delete(p);
+  }"""%data
+      self.include.append("GaudiKernel/boost_allocator.h")
+      
+    elif allocatorType == 'DEBUG':
+      s = """
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    std::cout << "%(classname)s::new()" << std::endl;
+    return ( sizeof(%(classname)s) == size ? 
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+             ::operator new(size) );
+  }
+
+  /// placement operator new (not needed in the most recent Reflex)
+  static void* operator new ( size_t size, void*& pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    std::cout << "%(classname)s::delete() "
+              << boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p)
+              << std::endl;
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
+    ::operator delete(p);
+  }"""%data
+      self.include.append("GaudiKernel/boost_allocator.h")
+      self.stdIncludes.append("iostream")
+      
+    return s
+##--------------------------------------------------------------------------------
+  def doit(self,package,godClasses,outputDir,lname,allocatorType = 'FROMXML'):
 
     for godClass in godClasses:
 
@@ -555,6 +643,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['constructorDecls']             = self.genConstructors(godClass)
       classDict['destructorDecl']               = self.genDestructors(godClass)
       classDict['classIDDecl']                  = self.genClassIDFun(godClass)
+      classDict['allocatorOperators']           = self.genAllocatorOperators(godClass,allocatorType)
       for modifier in ['public','protected','private']:
         classDict[modifier+'Typedefs']          = self.genTypedefs(modifier,godClass)
         classDict[modifier+'Attributes']        = self.genAttributes(modifier,godClass)

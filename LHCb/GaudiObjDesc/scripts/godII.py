@@ -20,6 +20,7 @@ class godII:
     self.gClassDicts = 1
     self.gNamespaces = 1
     self.gAssocDicts = 1
+    self.allocatorType = 'FROMXML'
     self.parseArgs(args[1:])
 #--------------------------------------------------------------------------------
   def usage(self):
@@ -50,6 +51,15 @@ Produce c++ source files and dictionary files from xml descriptions
   -r <path>      define the root path to the GOD tools
                    -r <path>   use path
                    default     use environment variable $GAUDIOBJDESCROOT
+  --allocator=<type>
+                 chose the type of allocator to use. Allowed values are:
+                   FROMXML    use what is specified in the XML (default)
+                   NO         never overload operators "new" and "delete"
+                   BOOST      always use Boost singleton pool
+                   BOOST2     always use Boost singleton pool with a check on
+                              delete (slower)
+                   DEBUG      same as BOOST2 plus debug print-outs on std::cout
+                   DEFAULT    alias for BOOST
 
   xml-source(s):
   can be either one or more directories where all xml files will be parsed
@@ -57,7 +67,7 @@ Produce c++ source files and dictionary files from xml descriptions
   """ % (self.argv0, self.version, self.argv0)
 #--------------------------------------------------------------------------------
   def parseArgs(self,args):
-    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:',[])
+    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:',['allocator='])
     except getopt.GetoptError, (e):
       print '%s: ERROR: %s' % (self.argv0, e.msg)
       self.usage()
@@ -113,6 +123,15 @@ Produce c++ source files and dictionary files from xml descriptions
           error = 1
       if o in ('-r'):
         self.godRoot = a + os.sep
+      if o in ('--allocator'):
+        if len(a) == 0:
+          print '%s: ERROR: Option %s used without parameter' % (self.argv0,o)
+          error = 1
+        else:
+          self.allocatorType = a.upper()
+          if not self.allocatorType in ("FROMXML","NO","BOOST","BOOST2","DEBUG","DEFAULT"):
+            print '%s: ERROR: Allocator type \'%s\' unknown' % (self.argv0,a)
+            error = 1
       if o in ('-l'):
         print '%s: INFO: Option -l depricated and not used anymore' % (self.argv0)
     
@@ -190,7 +209,7 @@ Produce c++ source files and dictionary files from xml descriptions
       lname = self.findLongestName(godPackage)
 
       if godPackage.has_key('assoc') and self.gAssocDicts :
-        print '  Generating Dictioanries for Associations'
+        print '  Generating Dictionaries for Associations'
         gAssocDicts.doit(godPackage)
         print '  - Done'
 
@@ -202,7 +221,7 @@ Produce c++ source files and dictionary files from xml descriptions
       if godPackage.has_key('class'):
         if self.gClasses :
           print '  Generating Header Files'
-          gClasses.doit(package,godPackage['class'],self.srcOutput,lname)
+          gClasses.doit(package,godPackage['class'],self.srcOutput,lname,self.allocatorType)
           print '  - Done'
           
         if self.gClassDicts :
