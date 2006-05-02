@@ -1,5 +1,5 @@
 package OTDAQ
-version v4r1
+version v4r2
 
 branches OTDAQ cmt doc src options xml Event
 
@@ -9,13 +9,13 @@ use GaudiAlg    v*
 use DAQEvent	v*      Event
 use DigiEvent   v*      Event
 use OTDet	v*	Det
-use GSL         v*      LCG_Interfaces
+use GSL         v*      LCG_Interfaces -no_auto_imports
 
 #---- Produce Header-Files from XML description
 document obj2doth OTDAQObj2Doth ../xml/*.xml
 
 # ================= component library ====================
-library OTDAQ ../src/*.cpp
+library OTDAQ ../src/*.cpp -import=GSL
 
 apply_pattern component_library library=OTDAQ
 
