@@ -201,7 +201,7 @@ StatusCode MuonID::execute() {
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
     // in the clone killed output we want only 
     // unique && (matched || forward || downstream)
-    if((*iTrack)->checkFlag(LHCb::Track::Unique)  && 
+    if(!(*iTrack)->checkFlag(LHCb::Track::Clone)  && 
        ((*iTrack)->checkType(LHCb::Track::Long) || 
                           (*iTrack)->checkType(LHCb::Track::Downstream))){
 

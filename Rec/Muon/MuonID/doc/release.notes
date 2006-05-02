@@ -1,6 +1,9 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !========================== MuonID v4r0 2006-04-10 ===================
 ! 2006-04-10 - E. Polycarpo, M. Gandelman
   - src/MuonID.cpp
