@@ -1,12 +1,11 @@
-// $Id: LumiTool.cpp,v 1.4 2005-12-15 13:56:37 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.5 2006-05-02 14:16:15 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/GenHeader.h"
 #include "Kernel/SystemOfUnits.h"
 #include <fstream>

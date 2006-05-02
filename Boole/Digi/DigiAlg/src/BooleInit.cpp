@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.18 2006-03-23 09:36:55 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.19 2006-05-02 14:16:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -95,15 +95,6 @@ StatusCode BooleInit::execute() {
   // Create an empty RawEvent
   LHCb::RawEvent* raw = new LHCb::RawEvent();
   put( raw, LHCb::RawEventLocation::Default );
-
-  // Add the DAQ bank
-  unsigned int daq[3];
-  daq[0] = 0;  // Partition ID
-  daq[1] = evt->runNumber();
-  daq[2] = 0;  // Number of missing sources
-  
-  LHCb::RawBank* daqBank = raw->createBank(1, LHCb::RawBank::DAQ, 1, 8+12, daq);
-  raw->adoptBank(daqBank, true);
 
   // Add the ODIN bank (EDMS 704084 v2.0)
   unsigned int odin[9];
