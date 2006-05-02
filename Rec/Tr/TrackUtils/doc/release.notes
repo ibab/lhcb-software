@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
 !========================== TrackUtils v1r0 2006-03-13 =======================
 ! 2006-03-01 - Eduardo Rodrigues
  - first release of the package.

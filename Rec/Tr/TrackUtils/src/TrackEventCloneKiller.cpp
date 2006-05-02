@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.1.1.1 2006-03-01 14:02:12 erodrigu Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.2 2006-05-02 13:10:40 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -95,14 +95,14 @@ StatusCode TrackEventCloneKiller::execute() {
   bool cloneFound = false;
   for ( unsigned int i1 = 0; i1 < allTracks.size(); ++i1 ) {
     for ( unsigned int i2 = 1; i2 < allTracks.size(); ++i2 ) {
-      if ( ! allTracks[i1] -> checkFlag( Track::Unique ) ||
-           ! allTracks[i2] -> checkFlag( Track::Unique ) ) continue;
+      if ( allTracks[i1] -> checkFlag( Track::Clone ) ||
+           allTracks[i2] -> checkFlag( Track::Clone ) ) continue;
       // clones are flagged by the tool!
       cloneFound = m_cloneFinder -> areClones( *allTracks[i1], *allTracks[i2],
                                                true );
       if ( cloneFound ) ++nClonesFlagged;
     }
-    if ( !allTracks[i1] -> checkFlag( Track::Unique ) ) {
+    if ( allTracks[i1] -> checkFlag( Track::Clone ) ) {
       debug() << "- track " << allTracks[i1] -> key()
               << " in " <<allTracks[i1] -> parent() -> name()
               << " is a clone" << endreq;
@@ -120,14 +120,14 @@ StatusCode TrackEventCloneKiller::execute() {
   unsigned int nUnique   = 0;
   unsigned int nFiltered = 0;
   for ( unsigned int i = 0; i < allTracks.size(); ++i ) {
-    if ( allTracks[i] -> checkFlag( Track::Unique ) ) ++nUnique;
+    if ( !allTracks[i] -> checkFlag( Track::Clone ) ) ++nUnique;
     bool toStore = true;
     for ( unsigned int k = 0 ; m_ignoredTrackTypes.size() > k ; ++k ) {
       if ( m_ignoredTrackTypes[k] == allTracks[i] -> type() ) toStore = false;
     }
     if ( toStore &&
          ( m_storeCloneTracks ||
-           allTracks[i] -> checkFlag( Track::Unique ) ) ) {
+           !allTracks[i] -> checkFlag( Track::Clone ) ) ) {
       tracksOutCont -> add( allTracks[i] -> cloneWithKey() );
     }
     else {
