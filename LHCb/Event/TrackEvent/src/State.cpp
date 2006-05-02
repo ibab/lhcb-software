@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.18 2006-04-03 10:08:17 jpalac Exp $
+// $Id: State.cpp,v 1.19 2006-05-02 12:25:34 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -30,7 +30,7 @@ State::State() {
   setLocation( State::LocationUnknown );
   m_z           = 0.;
   m_stateVector = TrackVector();
-  m_covariance  = TrackMatrix();
+  m_covariance  = TrackSymMatrix();
 }
 
 //=============================================================================
@@ -69,7 +69,7 @@ SymMatrix6x6 State::posMomCovariance() const
 {
   // Transformation done in 2 steps:
   // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
-  const TrackMatrix cov5D = covariance();
+  const TrackSymMatrix cov5D = covariance();
 
   Matrix6x6 cov6Dtmp   = Matrix6x6();
 

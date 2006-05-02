@@ -164,7 +164,7 @@
    *
    *   Backward      : VELO track in the backward direction
    *   Invalid       : invalid track for physics
-   *   Unique        : unique track, i.e. with no (known) clones
+   *   Clone         : clone track (of a corresponding unique track)
    *   IPSelected    :
    *   PIDSelected   : 
    *
@@ -175,7 +175,7 @@
         desc   = 'Track general flags enumerations'
         value  = 'Backward=1,
                   Invalid=2,
-                  Unique=4,
+                  Clone=4,
                   IPSelected=8,
                   PIDSelected=16,
                   AlreadyUsed=32'

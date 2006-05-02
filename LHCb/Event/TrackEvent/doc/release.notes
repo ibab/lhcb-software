@@ -5,6 +5,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - Track::Unique flag renamed to Track::Clone
+
 ! 2006-04-24 - Eduardo Rodrigues
  - bug fix in checkType method of Measurement
 

@@ -77,7 +77,7 @@
         <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
-                     const Gaudi::TrackMatrix&amp; cov, double z, 
+                     const Gaudi::TrackSymMatrix&amp; cov, double z, 
                      const LHCb::State::Location&amp; location"
 	initList = "m_stateVector(stateVec), m_covariance(cov), m_z(z)">
        <code>
@@ -110,7 +110,7 @@
 	nonconstaccessor = 'TRUE' />
 
       <attribute
-        type    = 'Gaudi::TrackMatrix'
+        type    = 'Gaudi::TrackSymMatrix'
         name    = 'covariance'
         desc    = 'the state covariance matrix (indexes 1,...,5 for x, y, tx, ty, Q/p)'
         setMeth = 'FALSE'
@@ -386,7 +386,7 @@
 
       <method
         name    = 'setCovariance'
-        argList = 'Gaudi::TrackMatrix value'
+        argList = 'Gaudi::TrackSymMatrix value'
         desc    = 'Update the state covariance'>
         <code>
   m_covariance = value;

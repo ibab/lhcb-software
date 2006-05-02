@@ -22,7 +22,7 @@ namespace TrackUnitsConverters
   //===========================================================================
   // Change some units for better matrix invertability
   //===========================================================================
-  void convertToG3( Gaudi::TrackMatrix& C )
+  void convertToG3( Gaudi::TrackSymMatrix& C )
   {
     C(0,0) /= cm2;
     C(0,1) /= cm2; 
@@ -60,7 +60,7 @@ namespace TrackUnitsConverters
   //===========================================================================
   // Restore units after inversion. same as convertToG3 !
   //===========================================================================
-  void convertToG4( Gaudi::TrackMatrix& invC )
+  void convertToG4( Gaudi::TrackSymMatrix& invC )
   {
     invC(0,0) /= cm2;
     invC(0,1) /= cm2;
