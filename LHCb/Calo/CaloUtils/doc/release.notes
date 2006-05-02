@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.46 2006-04-20 07:09:07 cattanem Exp $
+! $Id: release.notes,v 1.47 2006-05-02 12:10:12 erodrigu Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
 
 !========================== CaloUtils v6r1 2006-04-19 =========================
 ! 2006-04-10 - Olivier Deschamps

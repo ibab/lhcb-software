@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.4 2006-03-22 18:25:06 odescham Exp $
+// $Id: TrackUse.cpp,v 1.5 2006-05-02 12:10:12 erodrigu Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -184,7 +184,7 @@ bool TrackUse::use  (  LHCb::Track* track ) const
 {
   if ( 0 == track ) { return false ; }
   // Flag ?
-  if ( uniqueOnly    () && !track -> checkFlag(LHCb::Track::Unique) ) { return false ; }
+  if ( uniqueOnly    () && track -> checkFlag(LHCb::Track::Clone) ) { return false ; }
   if ( !error        () && track -> checkFlag(LHCb::Track::Invalid) ) { return false ; }
   if ( !isBackward   () && track -> checkFlag(LHCb::Track::Backward) ) { return false ; }
   // Type ?
@@ -227,7 +227,7 @@ std::string TrackUse::bits (LHCb::Track* track ) const
   
   std::string msg( "bits: ") ;
   msg +=  "E:" + prnt ( track -> checkFlag(LHCb::Track::Invalid) ) ;
-  msg += "/U:" + prnt ( track -> checkFlag(LHCb::Track::Unique) ) ;
+  msg += "/U:" + prnt ( !track -> checkFlag(LHCb::Track::Clone) ) ;
   msg += "/H:" + prnt ( track -> history       () ) ;
   //
   msg += "/L:" + prnt ( track -> checkType (LHCb::Track::Long) ) ;
