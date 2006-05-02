@@ -5,6 +5,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r4 2006-05-02 ========================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs
    (in TrackTypes.h in Kernel/LHCbDefinitions)
