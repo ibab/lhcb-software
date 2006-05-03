@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.56 2006-04-23 21:26:27 robbep Exp $
+! $Id: release.notes,v 1.57 2006-05-03 08:15:12 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-05-02 - Patrick Robbe
+ - src/Lib/Signal.cpp: rename counters to be consistent with inclusive.
 
 ! 2006-04-23 - Patrick Robbe
  - Add new tool to use EvtGen in standalone mode: StandAloneDecayTool
