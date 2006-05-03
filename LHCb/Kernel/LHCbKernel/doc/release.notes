@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-05-03 - Gerhard Raven
+ - add generic typedef of Point and Vector to Trajectory, 
+   and default arguments to LineTraj::direction, LineTraj::curvature
+   and ParabolaTraj::curvature. All these are backwards compatible changes
+   to allow easier interchange with other geometry classes.
+
 !===================== LHCbKernel v6r5 2006-04-19 =========================
 ! 2006-04-18 - Eduardo Rodrigues
  - added creation of dictionaries for all Trajectory-related classes

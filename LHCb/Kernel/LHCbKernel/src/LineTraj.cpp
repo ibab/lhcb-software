@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.8 2006-04-06 14:06:26 ebos Exp $
+// $Id: LineTraj.cpp,v 1.9 2006-05-03 15:00:47 graven Exp $
 // Include files
 
 // local
@@ -12,8 +12,8 @@ std::auto_ptr<Trajectory> LineTraj::clone() const
 }
 
 /// Constructor from the middle point and a unit direction vector
-LineTraj::LineTraj( const Gaudi::XYZPoint& middle,
-                    const Gaudi::XYZVector& dir,
+LineTraj::LineTraj( const Point& middle,
+                    const Vector& dir,
                     const Range& range ) 
   : DifTraj<kSize>(range.first,range.second),
     m_dir(dir.Unit()),
@@ -22,8 +22,8 @@ LineTraj::LineTraj( const Gaudi::XYZPoint& middle,
 };
 
 /// Constructor from a begin and an end point
-LineTraj::LineTraj( const Gaudi::XYZPoint& begPoint,
-                    const Gaudi::XYZPoint& endPoint )
+LineTraj::LineTraj( const Point& begPoint,
+                    const Point& endPoint )
   : DifTraj<kSize>(-(XYZVector(endPoint-begPoint)).r()/2.,(XYZVector(endPoint-begPoint)).r()/2.),
     m_dir(endPoint-begPoint),
     m_pos(begPoint+0.5*m_dir)
@@ -32,31 +32,31 @@ LineTraj::LineTraj( const Gaudi::XYZPoint& begPoint,
 };
 
 /// Point on the trajectory at arclength from the starting point    
-Gaudi::XYZPoint LineTraj::position( double arclength ) const
+Trajectory::Point LineTraj::position( double arclength ) const
 {
   return m_pos + arclength * m_dir;
 };
 
 /// First derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector LineTraj::direction( double /* arclength*/ ) const
+Trajectory::Vector LineTraj::direction( double /* arclength*/ ) const
 {
   return m_dir;
 };
 
 /// Second derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector LineTraj::curvature( double /* arclength */ ) const 
+Trajectory::Vector LineTraj::curvature( double /* arclength */ ) const 
 {
-  return Gaudi::XYZVector(0,0,0);
+  return Vector(0,0,0);
 };
 
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
 void LineTraj::expansion( double arclength,
-                          Gaudi::XYZPoint& p,
-                          Gaudi::XYZVector& dp,
-                          Gaudi::XYZVector& ddp ) const
+                          Point& p,
+                          Vector& dp,
+                          Vector& ddp ) const
 {
-  ddp = Gaudi::XYZVector(0,0,0);
+  ddp = Vector(0,0,0);
   dp  = m_dir;
   p   = m_pos + arclength * m_dir;
 };
@@ -74,7 +74,7 @@ LineTraj::derivative( double arclength ) const
 
 /// Determine the distance in arclenghts to the
 /// closest point on the trajectory to a given point
-double LineTraj::arclength( const Gaudi::XYZPoint& point ) const
+double LineTraj::arclength( const Point& point ) const
 {
   return m_dir.Dot(point-m_pos);
 };

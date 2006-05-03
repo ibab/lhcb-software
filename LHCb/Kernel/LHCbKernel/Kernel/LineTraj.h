@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.10 2006-04-06 14:06:09 ebos Exp $
+// $Id: LineTraj.h,v 1.11 2006-05-03 15:00:47 graven Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -31,37 +31,37 @@ namespace LHCb
     virtual std::auto_ptr<Trajectory> clone() const;
     
     /// Constructor from the middle point and a (unit) direction vector
-    LineTraj( const Gaudi::XYZPoint& middle,
-              const Gaudi::XYZVector& dir,
+    LineTraj( const Point& middle,
+              const Vector& dir,
               const Range& range );
     
     /// Constructor from a begin and an end point
-    LineTraj( const Gaudi::XYZPoint& begPoint,
-              const Gaudi::XYZPoint& endPoint );
+    LineTraj( const Point& begPoint,
+              const Point& endPoint );
     
     /// Point on the trajectory at arclength from the starting point    
-    virtual Gaudi::XYZPoint position( double arclength ) const;
+    virtual Point position( double arclength ) const;
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( double arclength ) const;
+    virtual Vector direction( double arclength=0 ) const;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( double arclength ) const;
+    virtual Vector curvature( double arclength=0 ) const;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
     virtual void expansion( double arclength,
-                            Gaudi::XYZPoint& p,
-                            Gaudi::XYZVector& dp,
-                            Gaudi::XYZVector& ddp ) const;
+                            Point& p,
+                            Vector& dp,
+                            Vector& ddp ) const;
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
-    virtual Derivative derivative( double arclength ) const;
+    virtual Derivative derivative( double arclength=0 ) const;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double arclength( const Gaudi::XYZPoint& point ) const;
+    virtual double arclength( const Point& point ) const;
     
     /// Number of arclengths until deviation of the trajectory from the
     /// expansion reaches the given tolerance.
@@ -77,8 +77,8 @@ namespace LHCb
     
   private:
     
-    Gaudi::XYZVector m_dir;
-    Gaudi::XYZPoint  m_pos;
+    Vector m_dir;
+    Point  m_pos;
     
   }; // class LineTraj
   

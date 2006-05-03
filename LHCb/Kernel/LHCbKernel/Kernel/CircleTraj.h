@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.6 2006-04-06 14:06:09 ebos Exp $
+// $Id: CircleTraj.h,v 1.7 2006-05-03 15:00:46 graven Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -37,35 +37,35 @@ namespace LHCb
     /// rotate this point around the normal)
     /// Only the component of origin2point perpendicular to normal
     /// is considered!!!...
-    CircleTraj( const Gaudi::XYZPoint& origin,// center of circle
-                const Gaudi::XYZVector& normal, // direction of end
-                const Gaudi::XYZVector& origin2point, // direction of start
+    CircleTraj( const Point& origin,// center of circle
+                const Vector& normal, // direction of end
+                const Vector& origin2point, // direction of start
                 const Trajectory::Range& range); // valid range, in radius*deltaphi
     
     /// Constructor from a center, the directions of the
     /// start and end of the traj wrt. the center, and the radius.
     /// The Traj goes along the 'short' arc from origin+radius*dir1.unit()
     /// at arclength=0 to origin+radius*dir2.unit() at the arclen=length().
-    CircleTraj( const Gaudi::XYZPoint& origin,// center of circle
-                const Gaudi::XYZVector& dir1, // direction of start
-                const Gaudi::XYZVector& dir2, // direction of end
+    CircleTraj( const Point& origin,// center of circle
+                const Vector& dir1, // direction of start
+                const Vector& dir2, // direction of end
                 double radius);
     
     /// Point on the trajectory at arclength from the starting point    
-    virtual Gaudi::XYZPoint position( double arclength ) const;
+    virtual Point position( double arclength ) const;
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( double arclength ) const;
+    virtual Vector direction( double arclength ) const;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( double arclength ) const;
+    virtual Vector curvature( double arclength ) const;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
     virtual void expansion( double arclength,
-                            Gaudi::XYZPoint& p,
-                            Gaudi::XYZVector& dp,
-                            Gaudi::XYZVector& ddp ) const;
+                            Point& p,
+                            Vector& dp,
+                            Vector& ddp ) const;
     
     /// Retrieve the derivative of the point at the fixed arclength 'arclength'
     /// with respect to the parameters
@@ -73,7 +73,7 @@ namespace LHCb
     
     /// Return arclen at which the trajectory is
     /// closest to the specified point
-    virtual double arclength( const Gaudi::XYZPoint& point ) const;
+    virtual double arclength( const Point& point ) const;
     
     /// distance along the trajectory until deviation from the
     /// 1st order expansion reaches the given tolerance.
@@ -89,9 +89,9 @@ namespace LHCb
     
   private :
 
-    Gaudi::XYZPoint  m_origin;
-    Gaudi::XYZVector m_normal;
-    Gaudi::XYZVector m_dirStart;
+    Point  m_origin;
+    Vector m_normal;
+    Vector m_dirStart;
     double m_radius;  
 
   }; // class CircleTraj

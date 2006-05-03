@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.11 2006-04-06 14:06:09 ebos Exp $
+// $Id: Trajectory.h,v 1.12 2006-05-03 15:00:47 graven Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -28,6 +28,8 @@ namespace LHCb
     
   public:
     typedef std::pair<double,double> Range;
+    typedef Gaudi::XYZPoint          Point;
+    typedef Gaudi::XYZVector         Vector;
 
     /// Clone a trajectory...
     virtual std::auto_ptr<Trajectory> clone() const = 0;
@@ -40,30 +42,30 @@ namespace LHCb
     }
     
     /// Point on the trajectory at arclength from the starting point
-    virtual Gaudi::XYZPoint position( double arclength ) const = 0;
+    virtual Point position( double arclength ) const = 0;
 
     /// Beginpoint of the Trajectory
-    Gaudi::XYZPoint beginPoint() const { return position( beginRange() ); }
+    Point beginPoint() const { return position( beginRange() ); }
 
     /// Endpoint of the Trajectory
-    Gaudi::XYZPoint endPoint() const { return position( endRange() ); }
+    Point endPoint() const { return position( endRange() ); }
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( double arclength ) const = 0;
+    virtual Vector direction( double arclength ) const = 0;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( double arclength ) const = 0;
+    virtual Vector curvature( double arclength ) const = 0;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
     virtual void expansion( double arclength,
-                            Gaudi::XYZPoint& p,
-                            Gaudi::XYZVector& dp,
-                            Gaudi::XYZVector& ddp ) const = 0;
+                            Point& p,
+                            Vector& dp,
+                            Vector& ddp ) const = 0;
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double arclength( const Gaudi::XYZPoint& ) const = 0;
+    virtual double arclength( const Point& ) const = 0;
     
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.

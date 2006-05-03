@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.9 2006-04-06 14:06:09 ebos Exp $
+// $Id: ParabolaTraj.h,v 1.10 2006-05-03 15:00:47 graven Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -32,26 +32,26 @@ namespace LHCb
     
     /// Constructor from a (middle) point, a (unit) direction vector,
     /// a curvature vector and the pair of begin- and endpoints.
-    ParabolaTraj( const Gaudi::XYZPoint& middle,
-                  const Gaudi::XYZVector& dir,
-                  const Gaudi::XYZVector& curv,
+    ParabolaTraj( const Point& middle,
+                  const Vector& dir,
+                  const Vector& curv,
                   const Trajectory::Range& range );
     
     /// Point on the trajectory at arclength from the starting point    
-    virtual Gaudi::XYZPoint position( double arclength ) const;
+    virtual Point position( double arclength ) const;
     
     /// First derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector direction( double arclength ) const;
+    virtual Vector direction( double arclength ) const;
     
     /// Second derivative of the trajectory at arclength from the starting point
-    virtual Gaudi::XYZVector curvature( double arclength ) const;
+    virtual Vector curvature( double arclength=0 ) const;
     
     /// Create a parabolic approximation to the trajectory
     /// at arclength from the starting point
     virtual void expansion( double arclength,
-                            Gaudi::XYZPoint& p,
-                            Gaudi::XYZVector& dp,
-                            Gaudi::XYZVector& ddp ) const;
+                            Point& p,
+                            Vector& dp,
+                            Vector& ddp ) const;
     
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
@@ -59,7 +59,7 @@ namespace LHCb
     
     /// Determine the distance in arclenghts to the
     /// closest point on the trajectory to a given point
-    virtual double arclength( const Gaudi::XYZPoint& point ) const;
+    virtual double arclength( const Point& point ) const;
     
     /// Number of arclengths until deviation of the trajectory from the
     /// expansion reaches the given tolerance.
@@ -75,9 +75,9 @@ namespace LHCb
     
   private:
     
-    Gaudi::XYZPoint  m_pos;
-    Gaudi::XYZVector m_dir;
-    Gaudi::XYZVector m_curv;
+    Point  m_pos;
+    Vector m_dir;
+    Vector m_curv;
     
   }; // class ParabolaTraj
   

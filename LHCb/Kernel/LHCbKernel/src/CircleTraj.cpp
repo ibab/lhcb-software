@@ -1,4 +1,4 @@
-// $Id: CircleTraj.cpp,v 1.7 2006-04-06 14:06:26 ebos Exp $
+// $Id: CircleTraj.cpp,v 1.8 2006-05-03 15:00:47 graven Exp $
 // Include files
 
 // local
@@ -16,9 +16,9 @@ std::auto_ptr<Trajectory> CircleTraj::clone() const
   return std::auto_ptr<Trajectory>(new CircleTraj(*this));
 }
 
-CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
-                        const Gaudi::XYZVector& dir1,
-                        const Gaudi::XYZVector& dir2,
+CircleTraj::CircleTraj( const Point& origin,
+                        const Vector& dir1,
+                        const Vector& dir2,
                         double radius)
   : DifTraj<kSize>(0.,radius*std::asin((dir1.unit()).Cross(dir2.unit()).r())),
     m_origin(origin),
@@ -28,9 +28,9 @@ CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
 {
 };
 
-CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
-                        const Gaudi::XYZVector& normal,
-                        const Gaudi::XYZVector& origin2point,
+CircleTraj::CircleTraj( const Point& origin,
+                        const Vector& normal,
+                        const Vector& origin2point,
                         const Range& range)
   : DifTraj<kSize>(range.first,range.second),
     m_origin(origin),
@@ -41,19 +41,19 @@ CircleTraj::CircleTraj( const Gaudi::XYZPoint& origin,
 };
 
 /// Point on the trajectory at arclength from the starting point    
-Gaudi::XYZPoint CircleTraj::position( double s ) const
+Trajectory::Point CircleTraj::position( double s ) const
 {
   return m_origin+m_radius*AxisAngle(m_normal,s/m_radius)(m_dirStart);
 };
 
 /// First derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector CircleTraj::direction( double s ) const
+Trajectory::Vector CircleTraj::direction( double s ) const
 {
   return m_normal.Cross(AxisAngle(m_normal,s/m_radius)(m_dirStart));
 };
 
 /// Second derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector CircleTraj::curvature( double s ) const 
+Trajectory::Vector CircleTraj::curvature( double s ) const 
 {
   return (-1.0/m_radius)*AxisAngle(m_normal,s/m_radius)(m_dirStart);
 };
@@ -61,11 +61,11 @@ Gaudi::XYZVector CircleTraj::curvature( double s ) const
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
 void CircleTraj::expansion( double s,
-                            Gaudi::XYZPoint& p,
-                            Gaudi::XYZVector& dp,
-                            Gaudi::XYZVector& ddp ) const
+                            Point& p,
+                            Vector& dp,
+                            Vector& ddp ) const
 {
-  Gaudi::XYZVector r(  AxisAngle(m_normal,s/m_radius)(m_dirStart) );
+  Vector r(  AxisAngle(m_normal,s/m_radius)(m_dirStart) );
   ddp =  (-1.0/m_radius)*r;
   dp  = m_normal.Cross(r);
   p   = m_origin+m_radius*r;
@@ -83,12 +83,12 @@ return deriv;
 
 /// Determine the closest point on the circle to a
 /// given point, and return the corresponding arclength
-double CircleTraj::arclength( const Gaudi::XYZPoint& point ) const
+double CircleTraj::arclength( const Point& point ) const
 {
   // get vector from origin, to point after projecting it 
   // into the plane of the circle. (i.e. this vector is normal
   // to m_normal)
-  Gaudi::XYZVector r( (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin );
+  Vector r( (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin );
   // determine the delta-phi with the start direction, properly signed!!!
   double dphi=std::asin( m_dirStart.Cross(r.unit()).Dot(m_normal) );
   return m_radius*dphi;
@@ -109,5 +109,6 @@ double CircleTraj::distTo2ndError( double /*arclen*/, double tolerance , int /*d
   // require 3rd order term to be less than tolerance
   // cbrt is in the C99 standard -- hope it is available on all platforms...
   // return cbrt(6*tolerance*m_radius*m_radius);
+  // cbrt is NOT available on windows at this time...
   return pow(6*tolerance*m_radius*m_radius,double(1)/3);
 };

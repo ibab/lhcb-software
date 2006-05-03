@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.cpp,v 1.7 2006-04-06 14:06:26 ebos Exp $
+// $Id: ParabolaTraj.cpp,v 1.8 2006-05-03 15:00:47 graven Exp $
 // Include files
 
 // local
@@ -12,9 +12,9 @@ std::auto_ptr<Trajectory> ParabolaTraj::clone() const
 }
 
 /// Constructor from a (middle) point, a (unit) direction vector and a curvature
-ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& point,
-                            const Gaudi::XYZVector& dir,
-                            const Gaudi::XYZVector& curv,
+ParabolaTraj::ParabolaTraj( const Point& point,
+                            const Vector& dir,
+                            const Vector& curv,
                             const Range& range)
   : DifTraj<kSize>(range.first,range.second),
     m_pos(point),
@@ -24,19 +24,19 @@ ParabolaTraj::ParabolaTraj( const Gaudi::XYZPoint& point,
 };
 
 /// Point on the trajectory at arclength from the starting point    
-Gaudi::XYZPoint ParabolaTraj::position( double arclength ) const
+Trajectory::Point ParabolaTraj::position( double arclength ) const
 {
   return m_pos + arclength * (m_dir + 0.5 * arclength * m_curv);
 };
 
 /// First derivative of the trajectory at arclength from the starting point   
-Gaudi::XYZVector ParabolaTraj::direction( double arclength ) const
+Trajectory::Vector ParabolaTraj::direction( double arclength ) const
 {
   return m_dir + arclength * m_curv;
 };
 
 /// Second derivative of the trajectory at arclength from the starting point
-Gaudi::XYZVector ParabolaTraj::curvature( double /* arclength */) const 
+Trajectory::Vector ParabolaTraj::curvature( double /* arclength */) const 
 {
   return m_curv;
 };
@@ -44,9 +44,9 @@ Gaudi::XYZVector ParabolaTraj::curvature( double /* arclength */) const
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
 void ParabolaTraj::expansion( double arclength,
-                              Gaudi::XYZPoint& p,
-                              Gaudi::XYZVector& dp,
-                              Gaudi::XYZVector& ddp ) const
+                              Point& p,
+                              Vector& dp,
+                              Vector& ddp ) const
 {
   ddp = m_curv;
   dp  = m_dir + arclength*m_curv;
@@ -67,7 +67,7 @@ ParabolaTraj::derivative( double arclength ) const
 
   /// Determine the arclenghts of the
   /// closest point on this trajectory to a given point
-double ParabolaTraj::arclength( const Gaudi::XYZPoint& point ) const
+double ParabolaTraj::arclength( const Point& point ) const
 {
   // for now, return 0th order approximantion, i.e. assume |m_curv|<<|m_dir|
   return m_dir.Dot(point-m_pos);
@@ -75,8 +75,8 @@ double ParabolaTraj::arclength( const Gaudi::XYZPoint& point ) const
 // until we are sure that the code below is OK for |m_curv|<<|m_dir|!!
 //
 //  // get vector from m_pos to point projected into plane of parabola
-//  Gaudi::XYZVector normal = m_dir.Cross(m_curv).unit();
-//  Gaudi::XYZPoint r( ( point - normal.Dot(point-m_pos)*normal )-m_pos);
+//  Vector normal = m_dir.Cross(m_curv).unit();
+//  Point r( ( point - normal.Dot(point-m_pos)*normal )-m_pos);
 //  // get normalized 'x' and 'y' coordinates of this vector by projecting onto the
 //  // axis. In terms of these, the parabola is parameterized as (arclen, arclen^2/2)
 //  // (i.e. arclen is actually the distance along the 'x' coordinate!)
