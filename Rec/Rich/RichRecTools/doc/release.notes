@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r1 2006-05-03 =======================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
 
