@@ -4,7 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
-!======================== GaussTools v12r2 2006-05-02 =======================
+!======================== GaussTools v12r2 2006-05-03 =======================
+! 2006-05-03 - Gloria CORTI
+ - Reset mass of wide resonances of generator to fix problem of mass taken
+   from central value
+   . src/Components/GaussTrackActionHepMC.cpp
+
 ! 2006-05-02 - Gloria CORTI
  - Fix bug showing up in an MCHit pointing to an intermediate particle, due
    to offset too small: increase offset for intermediated dummy particle

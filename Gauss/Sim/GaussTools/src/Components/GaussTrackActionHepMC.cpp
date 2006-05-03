@@ -131,7 +131,25 @@ void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
     GaussTrackInformation* mcinf = new GaussTrackInformation();
     trackMgr()->SetUserTrackInformation(mcinf);
   }
-  
+
+  // Reset momentum in the case of short lived from HepMC
+  if( track->GetDefinition()->IsShortLived() ) {
+    if( NULL != track->GetDynamicParticle() ) {
+      if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
+        G4VUserPrimaryParticleInformation* g4uInf = 
+          track->GetDynamicParticle()->GetPrimaryParticle()->GetUserInformation();
+        if( g4uInf ) {
+          GiGaPrimaryParticleInformation* uInf = 
+            (GiGaPrimaryParticleInformation*) g4uInf;
+          HepMC::GenEvent* gEvt = uInf->pHepMCEvent()->pGenEvt();
+          HepMC::GenParticle* gPart = 
+            gEvt->barcode_to_particle( uInf->signalBarcode() );
+          fourmomentum = gPart->momentum();
+        }
+      }
+    }
+  }
+
 };
 // ============================================================================
 
@@ -169,13 +187,9 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
 
     // get the process type of the origin vertex
     int creatorID = processID( track->GetCreatorProcess() );
-//     if( creatorID == 0 ) {
-//       std::cout << "id = 0 " << std::endl;
-//     }
 
     // Get User information from primary particle to set Vertex type 
-    // OscillatedAndDecay and pointer to HepMC event in generator and barcode
-    //    LHCb::HepMCEvent* genEvent = NULL;
+    // OscillatedAndDecay
     bool hasOscillated = false;
     if( NULL != track->GetDynamicParticle() ) {
       if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
@@ -184,12 +198,7 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
         if( g4uInf ) {
           GiGaPrimaryParticleInformation* uInf = 
             (GiGaPrimaryParticleInformation*) g4uInf;
-//           uInf->signalBarcode();
-//          genEvent = uInf->pHepMCEvent();
           hasOscillated = uInf->hasOscillated();
-//           if( uInf->hasOscillated() ) {
-//             std::cout << "Particle has oscillated" << std::endl;
-//           }
         }
       }
     }
