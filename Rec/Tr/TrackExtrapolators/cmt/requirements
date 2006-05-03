@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackExtrapolators
-version           v2r1
+version           v2r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
