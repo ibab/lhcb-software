@@ -1,4 +1,4 @@
-C $Id: upevnt.F,v 1.3 2006-04-04 15:28:53 robbep Exp $  
+C $Id: upevnt.F,v 1.4 2006-05-03 08:19:31 robbep Exp $  
 C*********************************************************************
 
       BLOCK DATA GAUSSDATA
@@ -59,11 +59,17 @@ C...Else not implemented.
       	ENDIF
       ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 1 ) THEN
         CALL ACERMC_UPEVNT
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 2 ) THEN
+        CALL BCVEGPY_UPEVNT
       ENDIF
       
  999  RETURN
       END 
       
       SUBROUTINE ACERMC_UPEVNT
+      PRINT*, 'WARNING ..... Dummy Routine to redefine !'
+      END
+
+      SUBROUTINE BCVEGPY_UPEVNT
       PRINT*, 'WARNING ..... Dummy Routine to redefine !'
       END

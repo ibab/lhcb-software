@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.2 2005-11-04 11:01:12 robbep Exp $ 
+C $Id: upinit.F,v 1.3 2006-05-03 08:19:31 robbep Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -53,6 +53,9 @@ C...Else not implemented.
       ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 1 ) THEN
         CALL ACERMC_UPINIT( IISET )  
         GOTO 999
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 2 ) THEN
+        IF ( IISET .EQ. 1 ) CALL BCVEGPY_UPINIT
+        GOTO 999
       ENDIF
 
  5000 FORMAT(1X,'Error: UPINIT routine failed to read information'/
@@ -66,4 +69,6 @@ C...Else not implemented.
       PRINT*, 'WARNING... Dummy Routine !'
       END
 
-
+      SUBROUTINE BCVEGPY_UPINIT
+      PRINT*, 'WARNING... Dummy BCVEGPY_UPINIT Routine !'
+      END
