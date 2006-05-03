@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.19 2006-04-18 13:22:14 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.20 2006-05-03 18:29:56 pkoppenb Exp $
 // Include files
 #include <memory>
 
@@ -107,23 +107,21 @@ MCParticleMaker::~MCParticleMaker( ) { };
 //=============================================================================
 StatusCode MCParticleMaker::finalize() {
   debug()<<"MCParticleMaker is finalising"<<endreq;
-return StatusCode::SUCCESS;
+  return GaudiTool::finalize();
 }
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode MCParticleMaker::initialize() {
   
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc ;
   debug() << "==> MCParticleMaker:Initialising" << endmsg;
 
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   debug() << "Looking for Particle Property Service." << endmsg;
   
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true);
-  if( !m_ppSvc ) {
-    fatal() << "Unable to locate Particle Property Service"<< endmsg;
-    return StatusCode::FAILURE ;
-  }  
    
   IRndmGenSvc* r = svc<IRndmGenSvc>("RndmGenSvc",true);
   if( !r || m_ranGauss.initialize(r,Rndm::Gauss(0,1)).isFailure()){
@@ -137,10 +135,6 @@ StatusCode MCParticleMaker::initialize() {
   }
 
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
-  if(!m_pMCDecFinder){
-    fatal() << "Unable to retrieve MCDecayFinder tool" << endmsg;
-    return StatusCode::FAILURE;
-  }
   
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {

@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.105 2006-04-18 13:22:14 jpalac Exp $
+! $Id: release.notes,v 1.106 2006-05-03 18:29:56 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
-! Responsible : P. Koppenburg
+! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2006-05-03 - P. Koppenburg
+ - DaVinciTools/IVisPrimVertexTool.h
+ - src/VisPrimVertexTool.*
+   . Restored Christian's visible PV tool. Interface now takes MCVertex 
+     instead of Collision. Moved from dead package Phys/MCTools
+ - src/MCPrimVertexMaker.*
+   . New algorithm that produces a PrimVertex from all MCVertex primaries.
+ - src/MCParticleMaker.cpp
+   . Call GaudiTool::initialize(0 and finalize()
+   
 ! 2006-04-18 - J.P. Palacios
  - First working version of MCParticleMaker from S. Vecchi.
 
