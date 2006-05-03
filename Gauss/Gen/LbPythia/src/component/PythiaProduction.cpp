@@ -1,8 +1,8 @@
-// $Id: PythiaProduction.cpp,v 1.13 2006-04-06 16:35:51 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.14 2006-05-03 08:20:55 robbep Exp $
 // Include files 
 
 // local
-#include "PythiaProduction.h"
+#include "LbPythia/PythiaProduction.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -39,6 +39,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ) ,
+    m_userProcess( 0 ) ,
     m_frame( "3MOM" )  ,
     m_beam( "p+" )     ,
     m_target( "p+" )   ,
@@ -124,7 +125,7 @@ StatusCode PythiaProduction::initialize( ) {
 
   // Set User process to 0 for normal Pythia to be overriden for
   // specific generation
-  Pythia::SetUserProcess( 0 ) ;
+  Pythia::SetUserProcess( m_userProcess ) ;
 
   // Prepare the PYINIT call by setting the beam parameters if necessary
   std::transform( m_frame.begin() , m_frame.end() , m_frame.begin() , 
