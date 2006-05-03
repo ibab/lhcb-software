@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.1.1.1 2006-04-24 21:54:40 robbep Exp $
+# $Id: requirements,v 1.2 2006-05-03 08:12:01 robbep Exp $
 # =============================================================================
 package       BcVegPy
 version       v1r0
 
 # =========== structure =======================================================
-branches      cmt src include doc logo
+branches      cmt src include doc
 
 # =========== own includes ====================================================
 include_dirs $(BCVEGPYROOT)/include
