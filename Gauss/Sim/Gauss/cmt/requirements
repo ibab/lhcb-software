@@ -1,5 +1,5 @@
 package Gauss
-version v24r4
+version v24r5
 
 #=========================================================================
 #-- Structure
@@ -9,7 +9,7 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r4   Det   -no_auto_imports
+use XmlDDDB             v30r5   Det   -no_auto_imports
 use XmlConditions       v1r6    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v12r1   Gen   -no_auto_imports
@@ -34,9 +34,9 @@ use $(LbHerwig_use)
 #-- Simulation
 use GiGa                 v18r1   Sim
 use GiGaCnv              v16r2   Sim
-use GaussTools           v12r1 	 Sim
-use GaussAlgs		 v2r2    Sim
-use GaussKine            v1r2    Sim
+use GaussTools           v12r2 	 Sim
+use GaussAlgs		 v2r3    Sim
+use GaussKine            v1r3    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r3    Sim
 use GaussRICH            v6r4    Sim
