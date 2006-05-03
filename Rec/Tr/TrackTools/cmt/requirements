@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackTools
-version           v2r1
+version           v2r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -32,7 +32,6 @@ use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
 use   Relations       v*     Kernel
 
-######use   STTools         v*     ST
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
