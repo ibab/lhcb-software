@@ -1,7 +1,7 @@
-// $Id: Vegasinf.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Vegasinf.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_VEGASINF_H
-#define LBPYTHIA_VEGASINF_H 1
+#ifndef LBBCVEGPY_VEGASINF_H
+#define LBBCVEGPY_VEGASINF_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* vegasinf_address_(void) ;
+  void* vegasinf_address__(void) ;
 }
 #endif
 
@@ -44,8 +44,8 @@ void Vegasinf::init(void) {
 }
 #else
 void Vegasinf::init(void) {
-  if ( 0 == s_vegasinf ) s_vegasinf = static_cast<VEGASINF*>(vegasinf_address_());
+  if ( 0 == s_vegasinf ) s_vegasinf = static_cast<VEGASINF*>(vegasinf_address__());
 }
 #endif
-#endif // LBPYTHIA_VEGASINF_H
+#endif // LBBCVEGPY_VEGASINF_H
  

@@ -1,7 +1,7 @@
-// $Id: Octmatrix.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Octmatrix.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_OCTMATRIX_H
-#define LBPYTHIA_OCTMATRIX_H 1
+#ifndef LBBCVEGPY_OCTMATRIX_H
+#define LBBCVEGPY_OCTMATRIX_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* octmatrix_address_(void) ;
+  void* octmatrix_address__(void) ;
 }
 #endif
 
@@ -43,8 +43,8 @@ void Octmatrix::init(void) {
 }
 #else
 void Octmatrix::init(void) {
-  if ( 0 == s_octmatrix ) s_octmatrix = static_cast<OCTMATRIX*>(octmatrix_address_());
+  if ( 0 == s_octmatrix ) s_octmatrix = static_cast<OCTMATRIX*>(octmatrix_address__());
 }
 #endif
-#endif // LBPYTHIA_OCTMATRIX_H
+#endif // LBBCVEGPY_OCTMATRIX_H
  

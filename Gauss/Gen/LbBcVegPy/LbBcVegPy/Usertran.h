@@ -1,7 +1,7 @@
-// $Id: Usertran.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Usertran.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_USERTRAN_H
-#define LBPYTHIA_USERTRAN_H 1
+#ifndef LBBCVEGPY_USERTRAN_H
+#define LBBCVEGPY_USERTRAN_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* usertran_address_(void) ;
+  void* usertran_address__(void) ;
 }
 #endif
 
@@ -44,8 +44,8 @@ void Usertran::init(void) {
 }
 #else
 void Usertran::init(void) {
-  if ( 0 == s_usertran ) s_usertran = static_cast<USERTRAN*>(usertran_address_());
+  if ( 0 == s_usertran ) s_usertran = static_cast<USERTRAN*>(usertran_address__());
 }
 #endif
-#endif // LBPYTHIA_USERTRAN_H
+#endif // LBBCVEGPY_USERTRAN_H
  

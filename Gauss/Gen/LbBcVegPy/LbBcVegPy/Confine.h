@@ -1,4 +1,4 @@
-// $Id: Confine.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Confine.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
 #ifndef LBPYTHIA_CONFINE_H
 #define LBPYTHIA_CONFINE_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* confine_address_(void) ;
+  void* confine_address__(void) ;
 }
 #endif
 
@@ -44,7 +44,7 @@ void Confine::init(void) {
 }
 #else
 void Confine::init(void) {
-  if ( 0 == s_confine ) s_confine = static_cast<CONFINE*>(confine_address_());
+  if ( 0 == s_confine ) s_confine = static_cast<CONFINE*>(confine_address__());
 }
 #endif
 #endif // LBPYTHIA_CONFINE_H

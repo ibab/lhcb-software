@@ -1,7 +1,7 @@
-// $Id: Loggrade.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Loggrade.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
-#ifndef LBPYTHIA_LOGGRADE_H
-#define LBPYTHIA_LOGGRADE_H 1
+#ifndef LBBCVEGPY_LOGGRADE_H
+#define LBBCVEGPY_LOGGRADE_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* loggrade_address_(void) ;
+  void* loggrade_address__(void) ;
 }
 #endif
 
@@ -48,8 +48,8 @@ void Loggrade::init(void) {
 }
 #else
 void Loggrade::init(void) {
-  if ( 0 == s_loggrade ) s_loggrade = static_cast<LOGGRADE*>(loggrade_address_());
+  if ( 0 == s_loggrade ) s_loggrade = static_cast<LOGGRADE*>(loggrade_address__());
 }
 #endif
-#endif // LBPYTHIA_LOGGRADE_H
+#endif // LBBCVEGPY_LOGGRADE_H
  

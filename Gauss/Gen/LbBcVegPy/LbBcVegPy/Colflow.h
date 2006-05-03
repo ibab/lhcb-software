@@ -1,4 +1,4 @@
-// $Id: Colflow.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Colflow.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
 #ifndef LBBCVEGPY_COLFLOW_H
 #define LBBCVEGPY_COLFLOW_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* colflow_address_(void) ;
+  void* colflow_address__(void) ;
 }
 #endif
 
@@ -46,7 +46,7 @@ void Colflow::init(void) {
 }
 #else
 void Colflow::init(void) {
-  if ( 0 == s_colflow ) s_colflow = static_cast<COLFLOW*>(colflow_address_());
+  if ( 0 == s_colflow ) s_colflow = static_cast<COLFLOW*>(colflow_address__());
 }
 #endif
 #endif // LBBCVEGPY_COLFLOW_H

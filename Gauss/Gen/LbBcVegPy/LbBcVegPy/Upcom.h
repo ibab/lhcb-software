@@ -1,4 +1,4 @@
-// $Id: Upcom.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Upcom.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
 #include <complex>
 #ifndef LBBCVEGPY_UPCOM_H
@@ -10,7 +10,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* upcom_address_(void) ;
+  void* upcom_address__(void) ;
 }
 #endif
 
@@ -77,7 +77,7 @@ void Upcom::init(void) {
 }
 #else
 void Upcom::init(void) {
-  if ( 0 == s_upcom ) s_upcom = static_cast<UPCOM*>(upcom_address_());
+  if ( 0 == s_upcom ) s_upcom = static_cast<UPCOM*>(upcom_address__());
 }
 #endif
 #endif // LBBCVEGPY_UPCOM_H

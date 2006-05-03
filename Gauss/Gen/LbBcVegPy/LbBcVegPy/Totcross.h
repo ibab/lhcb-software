@@ -1,7 +1,7 @@
-// $Id: Totcross.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Totcross.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_TOTCROSS_H
-#define LBPYTHIA_TOTCROSS_H 1
+#ifndef LBBCVEGPY_TOTCROSS_H
+#define LBBCVEGPY_TOTCROSS_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* totcross_address_(void) ;
+  void* totcross_address__(void) ;
 }
 #endif
 
@@ -43,8 +43,8 @@ void Totcross::init(void) {
 }
 #else
 void Totcross::init(void) {
-  if ( 0 == s_totcross ) s_totcross = static_cast<TOTCROSS*>(totcross_address_());
+  if ( 0 == s_totcross ) s_totcross = static_cast<TOTCROSS*>(totcross_address__());
 }
 #endif
-#endif // LBPYTHIA_TOTCROSS_H
+#endif // LBBCVEGPY_TOTCROSS_H
  

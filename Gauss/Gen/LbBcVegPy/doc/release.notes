@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+! $Id: release.notes,v 1.2 2006-05-03 08:24:32 robbep Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : 
+
+! 2006-05-02 - Patrick Robbe
+  - requirements: remove -fno-second-underscore flag and add second
+    underscore where necessary.
 
 ! 2006-03-13 - Jibo He
   -New Package: this package contains all functions related to the use

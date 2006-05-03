@@ -1,7 +1,7 @@
-// $Id: Intinip.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Intinip.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
-#ifndef LBPYTHIA_INTINIP_H
-#define LBPYTHIA_INTINIP_H 1
+#ifndef LBBCVEGPY_INTINIP_H
+#define LBBCVEGPY_INTINIP_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* intinip_address_(void) ;
+  void* intinip_address__(void) ;
 }
 #endif
 
@@ -42,8 +42,8 @@ void Intinip::init(void) {
 }
 #else
 void Intinip::init(void) {
-  if ( 0 == s_intinip ) s_intinip = static_cast<INTINIP*>(intinip_address_());
+  if ( 0 == s_intinip ) s_intinip = static_cast<INTINIP*>(intinip_address__());
 }
 #endif
-#endif // LBPYTHIA_INTINIP_H
+#endif // LBBCVEGPY_INTINIP_H
  

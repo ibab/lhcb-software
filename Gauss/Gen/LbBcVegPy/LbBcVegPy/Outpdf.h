@@ -1,4 +1,4 @@
-// $Id: Outpdf.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Outpdf.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
 #ifndef LBBCVEGPY_OUTPDF_H
 #define LBBCVEGPY_OUTPDF_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* outpdf_address_(void) ;
+  void* outpdf_address__(void) ;
 }
 #endif
 
@@ -44,7 +44,7 @@ void Outpdf::init(void) {
 }
 #else
 void Outpdf::init(void) {
-  if ( 0 == s_outpdf ) s_outpdf = static_cast<OUTPDF*>(outpdf_address_());
+  if ( 0 == s_outpdf ) s_outpdf = static_cast<OUTPDF*>(outpdf_address__());
 }
 #endif
 #endif // LBBCVEGPY_OUTPDF_H

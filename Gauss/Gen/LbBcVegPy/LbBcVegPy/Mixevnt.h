@@ -1,7 +1,7 @@
-// $Id: Mixevnt.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Mixevnt.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_MIXEVNT_H
-#define LBPYTHIA_MIXEVNT_H 1
+#ifndef LBBCVEGPY_MIXEVNT_H
+#define LBBCVEGPY_MIXEVNT_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* mixevnt_address_(void) ;
+  void* mixevnt_address__(void) ;
 }
 #endif
 
@@ -50,8 +50,8 @@ void Mixevnt::init(void) {
 }
 #else
 void Mixevnt::init(void) {
-  if ( 0 == s_mixevnt ) s_mixevnt = static_cast<MIXEVNT*>(mixevnt_address_());
+  if ( 0 == s_mixevnt ) s_mixevnt = static_cast<MIXEVNT*>(mixevnt_address__());
 }
 #endif
-#endif // LBPYTHIA_MIXEVNT_H
+#endif // LBBCVEGPY_MIXEVNT_H
  

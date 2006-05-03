@@ -1,7 +1,7 @@
-// $Id: Genefull.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Genefull.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
-#ifndef LBPYTHIA_GENEFULL_H
-#define LBPYTHIA_GENEFULL_H 1
+#ifndef LBBCVEGPY_GENEFULL_H
+#define LBBCVEGPY_GENEFULL_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* genefull_address_(void) ;
+  void* genefull_address__(void) ;
 }
 #endif
 
@@ -43,8 +43,8 @@ void Genefull::init(void) {
 }
 #else
 void Genefull::init(void) {
-  if ( 0 == s_genefull ) s_genefull = static_cast<GENEFULL*>(genefull_address_());
+  if ( 0 == s_genefull ) s_genefull = static_cast<GENEFULL*>(genefull_address__());
 }
 #endif
-#endif // LBPYTHIA_GENEFULL_H
+#endif // LBBCVEGPY_GENEFULL_H
  

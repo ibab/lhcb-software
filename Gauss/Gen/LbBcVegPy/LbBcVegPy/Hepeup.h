@@ -1,7 +1,7 @@
-// $Id: Hepeup.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Hepeup.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
-#ifndef LBPYTHIA_HEPEUP_H
-#define LBPYTHIA_HEPEUP_H 1
+#ifndef LBBCVEGPY_HEPEUP_H
+#define LBBCVEGPY_HEPEUP_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* hepeup_address_(void) ;
+  void* hepeup_address__(void) ;
 }
 #endif
 
@@ -88,8 +88,8 @@ void Hepeup::init(void) {
 }
 #else
 void Hepeup::init(void) {
-  if ( 0 == s_hepeup ) s_hepeup = static_cast<HEPEUP*>(hepeup_address_());
+  if ( 0 == s_hepeup ) s_hepeup = static_cast<HEPEUP*>(hepeup_address__());
 }
 #endif
-#endif // LBPYTHIA_HEPEUP_H
+#endif // LBBCVEGPY_HEPEUP_H
  

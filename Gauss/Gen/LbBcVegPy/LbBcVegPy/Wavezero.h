@@ -1,7 +1,7 @@
-// $Id: Wavezero.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Wavezero.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_WAVEZERO_H
-#define LBPYTHIA_WAVEZERO_H 1
+#ifndef LBBCVEGPY_WAVEZERO_H
+#define LBBCVEGPY_WAVEZERO_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* wavezero_address_(void) ;
+  void* wavezero_address__(void) ;
 }
 #endif
 
@@ -43,8 +43,8 @@ void Wavezero::init(void) {
 }
 #else
 void Wavezero::init(void) {
-  if ( 0 == s_wavezero ) s_wavezero = static_cast<WAVEZERO*>(wavezero_address_());
+  if ( 0 == s_wavezero ) s_wavezero = static_cast<WAVEZERO*>(wavezero_address__());
 }
 #endif
-#endif // LBPYTHIA_WAVEZERO_H
+#endif // LBBCVEGPY_WAVEZERO_H
  

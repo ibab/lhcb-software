@@ -1,4 +1,4 @@
-// $Id: Counter.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Counter.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
 #ifndef LBBCVEGPY_COUNTER_H
 #define LBBCVEGPY_COUNTER_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* counter_address_(void) ;
+  void* counter_address__(void) ;
 }
 #endif
 
@@ -41,7 +41,7 @@ void Counter::init(void) {
 }
 #else
 void Counter::init(void) {
-  if ( 0 == s_counter ) s_counter = static_cast<COUNTER*>(counter_address_());
+  if ( 0 == s_counter ) s_counter = static_cast<COUNTER*>(counter_address__());
 }
 #endif
 #endif // LBBCVEGPY_COUNTER_H

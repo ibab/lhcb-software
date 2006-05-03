@@ -1,7 +1,7 @@
-// $Id: Qqbar.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Qqbar.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
-#ifndef LBPYTHIA_QQBAR_H
-#define LBPYTHIA_QQBAR_H 1
+#ifndef LBBCVEGPY_QQBAR_H
+#define LBBCVEGPY_QQBAR_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* qqbar_address_(void) ;
+  void* qqbar_address__(void) ;
 }
 #endif
 
@@ -44,8 +44,8 @@ void Qqbar::init(void) {
 }
 #else
 void Qqbar::init(void) {
-  if ( 0 == s_qqbar ) s_qqbar = static_cast<QQBAR*>(qqbar_address_());
+  if ( 0 == s_qqbar ) s_qqbar = static_cast<QQBAR*>(qqbar_address__());
 }
 #endif
-#endif // LBPYTHIA_QQBAR_H
+#endif // LBBCVEGPY_QQBAR_H
  

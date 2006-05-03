@@ -1,7 +1,7 @@
-// $Id: Funtrans.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Funtrans.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
-#ifndef LBPYTHIA_FUNTRANS_H
-#define LBPYTHIA_FUNTRANS_H 1
+#ifndef LBBCVEGPY_FUNTRANS_H
+#define LBBCVEGPY_FUNTRANS_H 1
 
 #ifdef WIN32
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* funtrans_address_(void) ;
+  void* funtrans_address__(void) ;
 }
 #endif
 
@@ -44,8 +44,8 @@ void Funtrans::init(void) {
 }
 #else
 void Funtrans::init(void) {
-  if ( 0 == s_funtrans ) s_funtrans = static_cast<FUNTRANS*>(funtrans_address_());
+  if ( 0 == s_funtrans ) s_funtrans = static_cast<FUNTRANS*>(funtrans_address__());
 }
 #endif
-#endif // LBPYTHIA_FUNTRANS_H
+#endif // LBBCVEGPY_FUNTRANS_H
  

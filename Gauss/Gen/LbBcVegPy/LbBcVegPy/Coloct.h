@@ -1,4 +1,4 @@
-// $Id: Coloct.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Coloct.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
 
 #ifndef LBPYTHIA_COLOCT_H
 #define LBPYTHIA_COLOCT_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* coloct_address_(void) ;
+  void* coloct_address__(void) ;
 }
 #endif
 
@@ -43,7 +43,7 @@ void Coloct::init(void) {
 }
 #else
 void Coloct::init(void) {
-  if ( 0 == s_coloct ) s_coloct = static_cast<COLOCT*>(coloct_address_());
+  if ( 0 == s_coloct ) s_coloct = static_cast<COLOCT*>(coloct_address__());
 }
 #endif
 #endif // LBPYTHIA_COLOCT_H

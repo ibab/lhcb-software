@@ -1,4 +1,4 @@
-// $Id: Rconst.h,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Rconst.h,v 1.2 2006-05-03 08:24:32 robbep Exp $
 
 #ifndef LBBCVEGPY_RCONST_H
 #define LBBCVEGPY_RCONST_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* rconst_address_(void) ;
+  void* rconst_address__(void) ;
 }
 #endif
 
@@ -40,7 +40,7 @@ void Rconst::init(void) {
 }
 #else
 void Rconst::init(void) {
-  if ( 0 == s_rconst ) s_rconst = static_cast<RCONST*>(rconst_address_());
+  if ( 0 == s_rconst ) s_rconst = static_cast<RCONST*>(rconst_address__());
 }
 #endif
 #endif // LBBCVEGPY_RCONST_H
