@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.80 2006-04-12 19:47:47 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.81 2006-05-03 19:12:06 gcorti Exp $ 
 
 /** @file 
  * 
@@ -146,18 +146,21 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 // ... and when a trajectory ends
 GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" } ;
 GiGa.TrackSeq.Members      += { "GaussTrackActionHepMC/HepMCTrack" } ;
-GiGa.TrackSeq.PostTrack.StoreAll  = false; 
-GiGa.TrackSeq.PostTrack.StorePrimaries = true;
+GiGa.TrackSeq.PostTrack.StoreAll          = false; 
+GiGa.TrackSeq.PostTrack.StorePrimaries    = true;
 GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
 GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
 // Store particle with Energy > 100 MeV, this include all
 // particles in any process that satisfy this, this is applied
-// only to particles which origin is before z=11290mm (i.e.PRS/SPD)
+// only to particles which origin is before z=12280mm (i.e.PRS/SPD)
 GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
 GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100 * MeV;        
 // For particles producing a cerenkov photon just store it
 GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true; 
 GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov"}; 
+// Store particles from a Decay
+GiGa.TrackSeq.PostTrack.StoreByOwnProcess  = true; 
+GiGa.TrackSeq.PostTrack.StoredOwnProcesses = {"Decay"}; 
 
 // mandatory stepping action   
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
