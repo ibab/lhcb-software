@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.195 2006-05-03 11:09:33 pkoppenb Exp $
+! $Id: release.notes,v 1.196 2006-05-03 18:33:48 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-23 - P. Koppenburg
+  - src/CheckOverlap.cpp
+  - src/CheckPV.cpp
+  - src/SimplePlotTool.cpp
+   . Read PVs as LHCb::PrimVertices
 
 ! 2006-05-03 - P. Koppenburg
   - CheckOverlap: 

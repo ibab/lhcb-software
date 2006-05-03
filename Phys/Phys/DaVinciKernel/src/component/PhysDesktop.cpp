@@ -657,10 +657,9 @@ StatusCode PhysDesktop::getPrimaryVertices(){
 
   verbose() << "Getting PV from " << primVtxLocn << endmsg;
 
-  if ( !exist<LHCb::Vertices>( primVtxLocn )){
+  if ( !exist<LHCb::PrimVertices>( primVtxLocn )){
     return StatusCode::SUCCESS; // no PV
   }
-
   LHCb::PrimVertices* verts = get<LHCb::PrimVertices>( primVtxLocn );
   if( ! verts ) {
     verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;

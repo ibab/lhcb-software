@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.9 2006-05-03 11:09:33 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.10 2006-05-03 18:33:49 pkoppenb Exp $
 
 // Include files 
 
@@ -27,7 +27,7 @@ CheckOverlap::CheckOverlap( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : GaudiTool( type, name , parent )  
-, m_ppSvc(0)
+  , m_ppSvc(0)
  {
   // Declaring implemented interfaces
   declareInterface<ICheckOverlap>(this);

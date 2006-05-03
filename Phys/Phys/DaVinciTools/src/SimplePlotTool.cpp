@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.12 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.13 2006-05-03 18:33:49 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -8,6 +8,7 @@
 
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IGeomDispCalculator.h"
+#include "Event/PrimVertex.h"
 // local
 #include "SimplePlotTool.h"
 
@@ -68,22 +69,8 @@ StatusCode SimplePlotTool::firstInitialize () {
   debug() << m_minima << endmsg ;
 
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-  if( !m_ppSvc ) {
-    err() << "Unable to locate Particle Property Service" << endreq;
-    return StatusCode::FAILURE;
-  }          
-
   m_onOfflineTool = tool<IOnOffline>("OnOfflineTool",this );
-  if( !m_onOfflineTool ) {
-    err() << "Unable to get OnOfflineTool" << endreq;
-    return StatusCode::FAILURE;
-  }
- 
   m_geomTool = tool<IGeomDispCalculator>(m_onOfflineTool->dispCalculator(),this);
-  if( !m_geomTool ) {
-    err() << "Unable to get GeomDispCalculator" << endreq;
-    return StatusCode::FAILURE;
-  }          
 
   m_isInitialised = true ; // don't re-do this
   return StatusCode::SUCCESS;
@@ -238,40 +225,37 @@ StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H,
   } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
     std::string PVContainer = m_onOfflineTool->getPVLocation() ;
     verbose() << "Getting PV from " << PVContainer << endreq ;
-    LHCb::Vertices* PV = get<LHCb::Vertices>(PVContainer);
-    if ( !PV ) {
-      err() << "Could not find primary vertex location " 
-            << PVContainer << endreq;
-      return false ;
-    }
-    double bestf = -1. , bestfe = -1., minip = 9999999.;
-    for (LHCb::Vertex::Vector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
-      double ip = -1 ,ipe = -1.;
-      StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
-      if (!sc) continue;
-      if ( var == "IP" ){
-        plot(ip,"IP of "+name,hmin,hmax);
-      } else if (( var == "IPs" ) && ( pp->mass() < 5*GeV )){ // not B's
-        if (ipe>0) plot(ip/ipe,"Any IP/err of "+name,hmin,hmax);       
-// DPV or FS, or B - to "best PV"
-      } else if ( (P->endVertex()) && ( ip/ipe < minip ) ) {
-        minip = ip/ipe ; // new best PV
-        StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), bestf ,bestfe );
-        if (!sc) continue;  // ignore
-      }
-    } // PV loop
-    if (minip < 9999999.){      
-      if ( var == "DPV" ){
-        plot(bestf,"PV distance of "+name,hmin,hmax);
-      } else if ( var == "FS" ){
-        if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
-      } else if (( var == "IPs" ) && ( pp->mass() >= 5*GeV )){
-        plot(minip,"Smallest IP/err of "+name,hmin,hmax); 
+    if ( exist<LHCb::PrimVertices>(PVContainer)){
+      LHCb::PrimVertices* PV = get<LHCb::PrimVertices>(PVContainer);
+      double bestf = -1. , bestfe = -1., minip = 9999999.;
+      for (LHCb::PrimVertex::Vector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
+        double ip = -1 ,ipe = -1.;
+        StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
+        if (!sc) continue;
+        if ( var == "IP" ){
+          plot(ip,"IP of "+name,hmin,hmax);
+        } else if (( var == "IPs" ) && ( pp->mass() < 5*GeV )){ // not B's
+          if (ipe>0) plot(ip/ipe,"Any IP/err of "+name,hmin,hmax);       
+          // DPV or FS, or B - to "best PV"
+        } else if ( (P->endVertex()) && ( ip/ipe < minip ) ) {
+          minip = ip/ipe ; // new best PV
+          StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), bestf ,bestfe );
+          if (!sc) continue;  // ignore
+        }
+      } // PV loop
+      if (minip < 9999999.){      
+        if ( var == "DPV" ){
+          plot(bestf,"PV distance of "+name,hmin,hmax);
+        } else if ( var == "FS" ){
+          if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
+        } else if (( var == "IPs" ) && ( pp->mass() >= 5*GeV )){
+          plot(minip,"Smallest IP/err of "+name,hmin,hmax); 
+        }
       }
     }
-  // -----------------------------------------
-  // Vertex
-  // -----------------------------------------
+    // -----------------------------------------
+    // Vertex
+    // -----------------------------------------
   } else if ( var == "Vz" ){
     if (P->endVertex()) plot(P->endVertex()->position().z(),"Vz of "+name,hmin,hmax);
   } else if ( var == "Vx" ){
@@ -280,7 +264,7 @@ StatusCode SimplePlotTool::doPlot(const LHCb::Particle* P, MyHisto& H,
     if (P->endVertex()) plot(P->endVertex()->position().y(),"Vy of "+name,hmin,hmax);
   } else if ( var == "Vr" ){
     if (P->endVertex()) plot(sqrt(P->endVertex()->position().Perp2()),"Vr of "+name,hmin,hmax);
- } else {
+  } else {
     err() << "Unknown variable " << var << endreq ;
     return  StatusCode::FAILURE;
   }
