@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.6 2005-12-31 17:35:36 robbep Exp $
+// $Id: PythiaProduction.h,v 1.1 2006-05-03 08:16:22 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -63,11 +63,13 @@ class PythiaProduction : public GaudiTool, virtual public IProductionTool {
   
   /// Retrieve hard process information
   void hardProcessInfo( LHCb::GenCollision * theCollision ) ;
-  
- private:
+
+  int m_userProcess ; ///< type of User process
   std::string m_frame   ;  ///< FRAME string
-  std::string m_beam    ;  ///< BEAM string
+  std::string m_beam    ;  ///< BEAM string  
   std::string m_target  ;  ///< TARGET string
+
+ private:
   double m_win          ;  ///< WIN
   
   CommandVector m_defaultSettings ;
