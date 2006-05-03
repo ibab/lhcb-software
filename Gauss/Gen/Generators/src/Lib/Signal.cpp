@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.15 2006-04-06 16:34:34 robbep Exp $
+// $Id: Signal.cpp,v 1.16 2006-05-03 08:14:14 robbep Exp $
 // Include files 
 
 // local
@@ -152,14 +152,17 @@ StatusCode Signal::initialize( ) {
 //=============================================================================
 void Signal::printCounters( ) const {
   using namespace GenCounters ;
+
   info() << "*************   Signal counters   ****************" << std::endl ;
+
   printEfficiency( info() , "generator level cut" , m_nEventsAfterCut , 
                    m_nEventsBeforeCut ) ;
   printCounter( info() , "z-inverted events" , m_nInvertedEvents ) ;
+  info() << std::endl ;
 
-  printEfficiency( info() , "particle generator level cut" , 
+  printEfficiency( info() , "generator particle level cut" , 
                    m_nParticlesAfterCut ,  m_nParticlesBeforeCut ) ;
-  printEfficiency( info() , "anti-particle generator level cut" ,
+  printEfficiency( info() , "generator anti-particle level cut" ,
                    m_nAntiParticlesAfterCut , m_nAntiParticlesBeforeCut ) ;
   info() << std::endl ;
 
@@ -172,22 +175,20 @@ void Signal::printCounters( ) const {
 
   info() << std::endl ;
 
-  printArray( info() , m_bHadC , m_bHadCNames , "accepted tag side" ) ;
-  printArray( info() , m_antibHadC , m_antibHadCNames , "accepted tag side" ) ;
-  printCounter( info() , "accepted tag side (bb)" , m_bbCounter ) ;
+  printArray( info() , m_bHadC , m_bHadCNames , "accepted" ) ;
+  printArray( info() , m_antibHadC , m_antibHadCNames , "accepted" ) ;
+  printCounter( info() , "accepted (bb)" , m_bbCounter ) ;
   info() << std::endl ;
   
-  printArray( info() , m_cHadC , m_cHadCNames , "accepted tag side" ) ;
-  printArray( info() , m_anticHadC , m_anticHadCNames , "accepted tag side" ) ;
-  printCounter( info() , "accepted tag side (cc)" , m_ccCounter ) ;
+  printArray( info() , m_cHadC , m_cHadCNames , "accepted" ) ;
+  printArray( info() , m_anticHadC , m_anticHadCNames , "accepted" ) ;
+  printCounter( info() , "accepted (cc)" , m_ccCounter ) ;
   info() << std::endl ;
   
-  printArray( info() , m_bExcitedC , m_bExcitedCNames , 
-              "accepted signal side" ) ;
+  printArray( info() , m_bExcitedC , m_bExcitedCNames , "accepted" ) ;
   info() << std::endl ;
   
-  printArray( info() , m_cExcitedC , m_cExcitedCNames , 
-              "accepted signal side" ) ;
+  printArray( info() , m_cExcitedC , m_cExcitedCNames , "accepted" ) ;
   info() << endmsg ;
 }
 
