@@ -89,7 +89,7 @@ GaussPostTrackAction::GaussPostTrackAction
     , m_storeByOwnProcess ( false )
     , m_ownStoredProcess()
     , m_storeUpToZmax( true )
-    , m_zMaxToStore(11290 * mm)
+    , m_zMaxToStore(12280.0 * mm)
     , m_rejectRICHphe ( true )
     , m_rejectOptPhot ( true )
 {

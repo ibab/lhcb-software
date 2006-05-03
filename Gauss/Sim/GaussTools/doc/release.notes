@@ -9,6 +9,9 @@
  - Reset mass of wide resonances of generator to fix problem of mass taken
    from central value
    . src/Components/GaussTrackActionHepMC.cpp
+ - Set maximum z to which to store particle from 11290 mm to 12280 mm to
+   store particles produced in M1.
+   . src/Components/GaussPostTrackAction.cpp 
 
 ! 2006-05-02 - Gloria CORTI
  - Fix bug showing up in an MCHit pointing to an intermediate particle, due
