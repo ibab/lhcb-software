@@ -1,5 +1,5 @@
 package GaussSys
-version v24r4
+version v24r5
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v24r4	  Sim
+use Gauss		v24r5	  Sim
 
 # Generator stuff ...
 use GENSER              v1r130p1  Gen
@@ -29,9 +29,9 @@ use VisSvc              v3r3      Vis
 use ClhepTools          v1r0      Tools
 
 # Gauss stuff...
-use GaussKine           v1r2      Sim
-use GaussAlgs		v2r2      Sim
-use GaussTools	        v12r1	  Sim
+use GaussKine           v1r3      Sim
+use GaussAlgs		v2r3      Sim
+use GaussTools	        v12r2	  Sim
 use GaussRICH		v6r4	  Sim
 use GaussTracker	v5r3	  Sim
 use GaussCalo		v8r2	  Sim

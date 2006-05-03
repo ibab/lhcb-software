@@ -12,6 +12,66 @@ Purpose: LHCb Simulation program
    HepMC 1.26 (via LCG external)
    DecFiles v12r1, ParamFiles v4r2 
    Geant4 v71r0p13 (based on geant4.7.1.p01a)
+   LHCb v20r4 (and Gaudi v18r3)
+   XmlDDDB v30r5, XmlConditions v1r6, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r5 2006-05-03 =============================
+! 2006-05-03 - Gloria CORTI
+ - Use new version of XmlDDDB v30r5 with different radius of curvature for
+   RICH1 secondary mirrors
+ - Use packages with fixes for MCTruth (GaussAlgs v2r3, GaussKine v1r3,
+   GaussTools v12r2)
+ - Reset optiosn to use DECAY-DC06.DEC since DecFiles v12r1 still needs that
+   and DecFiles head not ready yet
+   . options/Generators.opts
+ - Store also particles that are products of a decay in detecetor
+   (to have full decay info)
+   . options/Simulation.opts
+ 
+! 2006-04-18 - Patrick Robbe
+ - options/Generators.opts: use DECAY.DEC as main EvtGen decay file instead
+   of DECAY-DC06.DEC. 
+
+!===================== GaussAlgs v2r3 2006-05-02  =========================
+! 2006-05-02 - Gloria CORTI
+ - Fill vector of random numbers in MCHeader
+   . src/SimInit.cpp
+ 
+!========================== GaussKine v1r3 2006-05-02 ========================
+! 2006-05-02 - Gloria CORTI
+ - Use MCTruthManager::SplitBarCode to choose if to collapse a particle,
+   this should set behaviour as in DC04 for Brem electrons (before number
+   checked was 10 times that set)
+   . G4HepMCToMCTruth.cpp
+ 
+!======================== GaussTools v12r2 2006-05-03 =======================
+! 2006-05-03 - Gloria CORTI
+ - Reset mass of wide resonances of generator to fix problem of mass taken
+   from central value
+   . src/Components/GaussTrackActionHepMC.cpp
+ - Set maximum z to which to store particle from 11290 mm to 12280 mm to
+   store particles produced in M1.
+   . src/Components/GaussPostTrackAction.cpp
+ 
+! 2006-05-02 - Gloria CORTI
+ - Fix bug showing up in an MCHit pointing to an intermediate particle, due
+   to offset too small: increase offset for intermediated dummy particle
+   from 500000 to 20000000.
+   Also increase offset for split particle from to 100000000.
+   Set the offset values as enum in MCTruthManager header file.
+   Set the PDG value of dummy particle as enum as well.
+   . GaussTools/MCTruthManager.h
+   . src/Lib/MCTruthManager.cpp
+ 
+!=============================================================================
+<H1><A NAME="v24r3=4">2006-04-13 - GaussSys v24r4</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r1, ParamFiles v4r2 
+   Geant4 v71r0p13 (based on geant4.7.1.p01a)
    LHCb v20r2 (and Gaudi v18r3)
    XmlDDDB v30r4, XmlConditions v1r6, FieldMap v4r7 </A></H3>
 
