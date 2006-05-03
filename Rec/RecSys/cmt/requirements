@@ -1,5 +1,5 @@
 package RecSys
-version v3r0
+version v3r2
 
 branches cmt doc
  
@@ -7,7 +7,7 @@ branches cmt doc
 # LHCb reconstruction packages
 #=======================================================
 
-use RecAlgs v1r0 Rec 
+use RecAlgs v1r1 Rec 
 
 # Calorimeter                         # Maintainer
 #use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
@@ -18,32 +18,32 @@ use RecAlgs v1r0 Rec
 use VeloTools         v1r0  Velo        # Tomasz Szumlak
 
 # Tracking
-use TrackExtrapolators  v2r1    Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r1    Tr    # Eduardo Rodrigues
-use TrackFitEvent       v2r1    Tr    # Eduardo Rodrigues
-use TrackTools          v2r1    Tr    # Eduardo Rodrigues
-use TrackFitter         v2r1    Tr    # Eduardo Rodrigues
-use TrackProjectors     v2r1    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackIdealPR        v2r1    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r0    Tr    # Eduardo Rodrigues
-use TrackMatching       v2r1    Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r2    Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r2    Tr    # Eduardo Rodrigues
+use TrackFitEvent       v2r2    Tr    # Eduardo Rodrigues
+use TrackTools          v2r2    Tr    # Eduardo Rodrigues
+use TrackFitter         v2r2    Tr    # Eduardo Rodrigues
+use TrackProjectors     v2r2    Tr    # Eduardo Rodrigues, Edwin Bos
+use TrackIdealPR        v2r2    Tr    # Eduardo Rodrigues
+use TrackUtils          v1r1    Tr    # Eduardo Rodrigues
+use TrackMatching       v2r2    Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r0    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v2r0    Tr    # Eduardo Rodrigues
-#use TrackCheckers       v2r0    Tr    # Eduardo Rodrigues
+use TrackCheckers       v2r1    Tr    # Eduardo Rodrigues
 #use TrackVeloTT         v1r0    Tr    # Eduardo Rodrigues
 #use TrConverters        v1r5    Tr    # Eduardo Rodrigues, Jose Hernando
 #use TrgConverter        v1r0p1  Trg   # Eduardo Rodrigues, Jose Hernando
 
 # New pattern recognition
 #use PatSys              v1r5    Pat   # Olivier Callot
-use PatTools            v2r0p1  Pat   # Olivier Callot
+use PatTools            v2r1    Pat   # Olivier Callot
 use PatUtils            v1r2    Pat   # Olivier Callot
-use PatVelo             v2r1    Pat   # David Hutchcroft
+use PatVelo             v2r2    Pat   # David Hutchcroft
 #use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
-use PatForward          v2r1    Pat   # Olivier Callot
+use PatForward          v2r2    Pat   # Olivier Callot
 #use PatPV               v1r0p1  Pat   # Mariusz Witek
-use PatChecker          v2r1    Pat   # Olivier Callot, David Hutchcroft
-use PatFitParams        v2r0    Pat   # Matt Needham
+use PatChecker          v2r2    Pat   # Olivier Callot, David Hutchcroft
+use PatFitParams        v2r1    Pat   # Matt Needham
 #use PatKShort           v1r0    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
@@ -53,7 +53,7 @@ use PatFitParams        v2r0    Pat   # Matt Needham
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonRec             v3r0    Muon  # Danilo Domenici
-use MuonID              v4r0    Muon  # Erica Polycarpo
+use MuonID              v4r1    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
@@ -63,14 +63,14 @@ use RichLocalPID	v2r0    Rich  # Chris Jones
 use RichGlobalPID	v2r0    Rich  # Chris Jones
 use RichPIDMerge	v2r0    Rich  # Chris Jones
 use RichRecAlgorithms   v2r0    Rich  # Chris Jones
-use RichRecTools        v3r0    Rich  # Chris Jones
-use RichRecMCTools      v2r0    Rich  # Chris Jones
+use RichRecTools        v3r1    Rich  # Chris Jones
+use RichRecMCTools      v2r1    Rich  # Chris Jones
 use RichRecMonitors     v2r0    Rich  # Chris Jones
-use RichRecQC           v2r0    Rich  # Chris Jones
+use RichRecQC           v2r1    Rich  # Chris Jones
 #use RichHLTSys		v1r2    Rich  # Chris Jones
 use RichTrgGlobalPID	v3r0    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco
-#use PrimVtx             v2r1p1  Rec   # N.N.
+#use PrimVtx             v2r1p1  Rec   # Mariusz Witek
 #use GlobalReco		v5r1    Rec   # Patrick Koppenburg
