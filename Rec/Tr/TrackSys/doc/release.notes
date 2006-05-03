@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-05-03 - Eduardo Rodrigues
+ - requirements file updated for LHCb v20r4, Recv3r2, Brunel v30r2
+
 !============================ TrackSys v2r0 2006-04-20 ======================
 ! 2006-04-20 - Eduardo Rodrigues
  - requirements file updated: for LHCb v20r3, Rec v3r1 and Brunel v30r1
