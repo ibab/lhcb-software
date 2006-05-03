@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.194 2006-03-28 14:47:38 jpalac Exp $
+! $Id: release.notes,v 1.195 2006-05-03 11:09:33 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
-! Responsible : P. Koppenburg
+! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-03 - P. Koppenburg
+  - CheckOverlap: 
+       Issue a warning instead of an error when a particle has no 
+       proto() nor endVertex(). It could be from an MC-Particle.
 
 !========================== DaVinciTools v13r0 2006-03-28 ===================
 ! 2006-03-16 - J. Palacios

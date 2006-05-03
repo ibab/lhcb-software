@@ -1,9 +1,11 @@
-// $Id: CheckOverlap.cpp,v 1.8 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.9 2006-05-03 11:09:33 pkoppenb Exp $
 
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
 #include "CheckOverlap.h"
@@ -24,7 +26,9 @@ const        IToolFactory& CheckOverlapFactory = s_factory ;
 CheckOverlap::CheckOverlap( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool( type, name , parent ) {
+  : GaudiTool( type, name , parent )  
+, m_ppSvc(0)
+ {
   // Declaring implemented interfaces
   declareInterface<ICheckOverlap>(this);
   
@@ -167,8 +171,12 @@ StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
       StatusCode sc = addOrigins(dau, protos);
       if (!sc) return sc ;
     } else {
-      err() << "Particle " << (*c)->particleID().pid() << " has no origin nor endVertex" << endmsg ;
-      return StatusCode::FAILURE ;
+      if ( 0==m_ppSvc) m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+      ParticleProperty *pp = m_ppSvc->findByPythiaID((*c)->particleID().pid());
+      if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
+                         StatusCode::SUCCESS) ;
+      else err() << "Particle with unknown PID " << (*c)->particleID().pid() << " has no endVertex. " 
+                 <<  "Assuming it's from MC" << endmsg ;
     } 
   }
   verbose() << "addOrigins() left " << protos.size() << endmsg ;

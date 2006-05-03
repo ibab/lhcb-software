@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.8 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.9 2006-05-03 11:09:33 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -15,6 +15,8 @@
 
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
+
+class IParticlePropertySvc ;
 
 /** @class CheckOverlap CheckOverlap.h
  *  
@@ -82,6 +84,9 @@ protected:
   bool searchOverlap( std::vector<const LHCb::ProtoParticle* > & proto );
   
 private:
+
+  /// Accessor for ParticlePropertySvc
+  IParticlePropertySvc* m_ppSvc ;
   
 }; // End of class header. 
 
