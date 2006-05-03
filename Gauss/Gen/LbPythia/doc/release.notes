@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.28 2006-04-07 09:03:46 gcorti Exp $
+! $Id: release.notes,v 1.29 2006-05-03 08:21:25 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2006-05-02 - Patrick Robbe
+ - PythiaProduction.h: move to include directory
+ - requirements: remove -fno-second-underscore fortran compilation flag
+   and add the second underscore where necessary
+ - upevnt and upinit: add functions for BcVegPy generator.
 
 ! ==================== LbPythia v4r2 2006-04-07 ======================
 ! 2006-04-06 - Patrick Robbe
