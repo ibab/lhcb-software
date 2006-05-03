@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v30r2>2006-05-03 Brunel v30r2</A></H1><PRE>
+This version uses projects Gaudi v18r3, LHCb v20r4, Lbcom v4r4, Rec v3r2
+  and databases XmlDDDB v30r5, XmlConditions v1r6, ParamFiles v4r2, FieldMap v4r7
+Requires input from Boole v11r2 or greater. 
+
+This an incomplete release for commissioning of the software for DC06.
+
 </PRE><H1><A NAME=v30r1>2006-04-11 Brunel v30r1</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r3, Lbcom v4r3, Rec v3r1
   and databases XmlDDDB v30r4, XmlConditions v1r6, ParamFiles v4r2, FieldMap v4r7
