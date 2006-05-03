@@ -1,4 +1,4 @@
-// $Id: Pymssm.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pymssm.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYMSSM_H
 #define LBPYTHIA_PYMSSM_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pymssm_address_(void);
+  void* pymssm_address__(void);
 }
 #endif
 
@@ -62,7 +62,7 @@ void Pymssm::init(void) {
 }
 #else
 void Pymssm::init(void) {
-  if ( 0 == s_pymssm ) s_pymssm = static_cast<PYMSSM*>(pymssm_address_());
+  if ( 0 == s_pymssm ) s_pymssm = static_cast<PYMSSM*>(pymssm_address__());
 }
 #endif
 #endif // LBPYTHIA_PYMSSM_H

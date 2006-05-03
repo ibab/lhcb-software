@@ -1,4 +1,4 @@
-// $Id: Pyssmt.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pyssmt.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYSSMT_H
 #define LBPYTHIA_PYSSMT_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pyssmt_address_(void);
+  void* pyssmt_address__(void);
 }
 #endif
 
@@ -77,7 +77,7 @@ void Pyssmt::init(void) {
 }
 #else
 void Pyssmt::init(void) {
-  if ( 0 == s_pyssmt ) s_pyssmt = static_cast<PYSSMT*>(pyssmt_address_());
+  if ( 0 == s_pyssmt ) s_pyssmt = static_cast<PYSSMT*>(pyssmt_address__());
 }
 #endif
 #endif // LBPYTHIA_PYSSMT_H

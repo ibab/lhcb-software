@@ -1,4 +1,4 @@
-// $Id: Pysubs.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pysubs.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYSUBS_H
 #define LBPYTHIA_PYSUBS_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pysubs_address_(void);
+  void* pysubs_address__(void);
 }
 #endif
 
@@ -67,7 +67,7 @@ void Pysubs::init(void) {
 }
 #else
 void Pysubs::init(void) {
-  if ( 0 == s_pysubs ) s_pysubs = static_cast<PYSUBS*>(pysubs_address_());
+  if ( 0 == s_pysubs ) s_pysubs = static_cast<PYSUBS*>(pysubs_address__());
 }
 #endif
 #endif // LBPYTHIA_PYSUBS_H

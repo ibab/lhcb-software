@@ -1,4 +1,4 @@
-// $Id: Pypars.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pypars.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYPARS_H
 #define LBPYTHIA_PYPARS_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pypars_address_(void);
+  void* pypars_address__(void);
 }
 #endif
 
@@ -66,7 +66,7 @@ void Pypars::init(void) {
 }
 #else
 void Pypars::init(void) {
-  if ( 0 == s_pypars ) s_pypars = static_cast<PYPARS*>(pypars_address_());
+  if ( 0 == s_pypars ) s_pypars = static_cast<PYPARS*>(pypars_address__());
 }
 #endif
 #endif // LBPYTHIA_PYPARS_H

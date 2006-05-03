@@ -1,4 +1,4 @@
-// $Id: Pydat2.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pydat2.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 #ifndef LBPYTHIA_PYDAT2_H
 #define LBPYTHIA_PYDAT2_H 1
 
@@ -8,7 +8,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pydat2_address_(void);
+  void* pydat2_address__(void);
 }
 #endif
 
@@ -69,7 +69,7 @@ void Pydat2::init(void) {
 #else
 // initialise pointer
 void Pydat2::init(void) {
-  if ( 0 == s_pydat2 ) s_pydat2 = static_cast<PYDAT2*>(pydat2_address_());
+  if ( 0 == s_pydat2 ) s_pydat2 = static_cast<PYDAT2*>(pydat2_address__());
 }
 #endif
 #endif // LBPYTHIA_PYDAT2_H

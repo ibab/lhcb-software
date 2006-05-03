@@ -1,4 +1,4 @@
-// $Id: Pyint2.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pyint2.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYINT2_H
 #define LBPYTHIA_PYINT2_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pyint2_address_(void);
+  void* pyint2_address__(void);
 }
 #endif
 
@@ -75,7 +75,7 @@ void Pyint2::init(void) {
 }
 #else
 void Pyint2::init(void) {
-  if ( 0 == s_pyint2 ) s_pyint2 = static_cast<PYINT2*>(pyint2_address_());
+  if ( 0 == s_pyint2 ) s_pyint2 = static_cast<PYINT2*>(pyint2_address__());
 }
 #endif
 #endif // LBPYTHIA_PYINT2_H

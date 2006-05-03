@@ -1,4 +1,4 @@
-// $Id: Pydatr.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pydatr.h,v 1.2 2006-05-03 08:18:07 robbep Exp $
 
 #ifndef LBPYTHIA_PYDATR_H
 #define LBPYTHIA_PYDATR_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pydatr_address_(void);
+  void* pydatr_address__(void);
 }
 #endif
 
@@ -59,7 +59,7 @@ void Pydatr::init(void) {
 }
 #else 
 void Pydatr::init(void) {
-  if ( 0 == s_pydatr ) s_pydatr = static_cast<PYDATR*>(pydatr_address_());
+  if ( 0 == s_pydatr ) s_pydatr = static_cast<PYDATR*>(pydatr_address__());
 }
 #endif
 #endif // LBPYTHIA_PYDATR_H

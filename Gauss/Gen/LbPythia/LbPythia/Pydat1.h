@@ -1,4 +1,4 @@
-// $Id: Pydat1.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pydat1.h,v 1.2 2006-05-03 08:18:06 robbep Exp $
 
 #ifndef LBPYTHIA_PYDAT1_H
 #define LBPYTHIA_PYDAT1_H 1
@@ -9,7 +9,7 @@ extern "C" {
 }
 #else
 extern "C" {
-  void* pydat1_address_(void) ;
+  void* pydat1_address__(void) ;
 }
 #endif
 
@@ -67,7 +67,7 @@ void Pydat1::init(void) {
 }
 #else
 void Pydat1::init(void) {
-  if ( 0 == s_pydat1 ) s_pydat1 = static_cast<PYDAT1*>(pydat1_address_());
+  if ( 0 == s_pydat1 ) s_pydat1 = static_cast<PYDAT1*>(pydat1_address__());
 }
 #endif
 #endif // LBPYTHIA_PYDAT1_H
