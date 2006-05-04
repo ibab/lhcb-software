@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-
+! 2006-05-04 - Gloria CORTI
+ - Remove check of event types checker from ParticleGun example options, 
+   since in many cases will not be in DecFiles package.
+   . ParticleGuns.opts
 
 !======================== Gauss v24r5 2006-05-03 =============================
 ! 2006-05-03 - Gloria CORTI

@@ -5,6 +5,7 @@
 
 Generator.Members -= { "Generation", "GaudiSequencer/GenMonitor" };
 Generator.Members += { "ParticleGun", "GaudiSequencer/GenMonitor" };
+SimMonitor.Members -= { "EvtTypeChecker" };
 
 // Event type is set as described in LHCb-2005-034 : G=5!
 ParticleGun.EventType = 53210205;
