@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.49 2006-01-23 14:17:49 jonrob Exp $
+# $Id: requirements,v 1.50 2006-05-04 14:45:30 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
-version           v2r0
+version           v2r1
 
 # ================ structure ================================================
 branches          cmt doc options
