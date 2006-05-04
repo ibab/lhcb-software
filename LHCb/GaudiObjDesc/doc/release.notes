@@ -2,6 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+=============================GaudiObjDesc v9r5============================
 ! 2006-04-27 - Marco Clemencic
 - patch #716. Added support for custom allocators. The type ("NO" or
   "BOOST") can be chosen via an attribute of the XML tag class
