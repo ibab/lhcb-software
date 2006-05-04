@@ -57,7 +57,7 @@ use MuonID              v4r1    Muon  # Erica Polycarpo
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichRecSys          v2r0    Rich  # Chris Jones
+use RichRecSys          v2r1    Rich  # Chris Jones
 #use RichRingRefit       v1r11   Rich  # Chris Jones
 use RichLocalPID	v2r0    Rich  # Chris Jones
 use RichGlobalPID	v2r0    Rich  # Chris Jones

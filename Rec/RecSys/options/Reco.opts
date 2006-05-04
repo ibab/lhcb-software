@@ -9,7 +9,7 @@ Reco.DetectorList = {
                      ,"Tr"
                      ,"RICH"
                      ,"CALO"
-                     // ,"MUON"
+                     ,"MUON"
                     };
 
 // Velo tracking
@@ -65,7 +65,7 @@ ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackFitter"
                        };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
-//RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
+RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.TracksOutContainer = "Rec/Track/Forward";
 
@@ -116,9 +116,9 @@ StoreBestTrack.OutputTracks = "Rec/Track/Best";
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
-// Temporary, while waiting for tracks
-RecoRICHSeq.Members += { "RichRecInit" };
-//#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+// Temporary, while waiting for Best tracks
+ToolSvc.Offline.RichTrackCreator.TracksLocation = "Rec/Track/Forward";
 
 // Calorimeter reconstruction
 //ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
@@ -127,7 +127,10 @@ RecoRICHSeq.Members += { "RichRecInit" };
 //#include "$CALORECOOPTS/Filters.opts"
 //#include "$CALOPIDSOPTS/Brunel.opts"
 
-// Muon coordinate reconstruction, MuonID, cleaning
-//ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
-RecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
-//#include "$MUONIDROOT/options/MuonIDFOI.opts"
+// Muon ID
+ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
+RecoMUONSeq.Members += { "MuonRec" };
+//RecoMUONSeq.Members += { "MuonID" }; // Fails on first event
+#include "$MUONIDROOT/options/MuonID.opts"
+// Temporary, while waiting for Best tracks
+MuonID.TrackLocation = "Rec/Track/Forward";
