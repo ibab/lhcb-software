@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.6 2006-03-06 13:10:33 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.7 2006-05-04 12:44:44 jvantilb Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -10,23 +10,21 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-
-#include "STClusterChecker.h"
-
+// from DigiEvent
 #include "Kernel/ISTSignalToNoiseTool.h"
 
 // Event
 #include "Event/STCluster.h"
 
-// xml geometry
+// STDet
 #include "STDet/DeSTDetector.h"
 
+// from LHCbKernel
 #include "Kernel/STDetSwitch.h"
-
 #include "Kernel/STDataFunctor.h"
 
+// local
+#include "STClusterChecker.h"
 
 using namespace LHCb;
 
@@ -47,7 +45,8 @@ STClusterChecker::STClusterChecker(const std::string& name,
   // constructer
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("detType", m_detType = "TT"); 
-  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
+  declareProperty("clusterLocation", 
+                  m_clusterLocation = STClusterLocation::TTClusters);
 }
 
 STClusterChecker::~STClusterChecker(){
@@ -70,14 +69,15 @@ StatusCode STClusterChecker::initialize(){
   STDetSwitch::flip(m_detType,m_clusterLocation);
  
   // sig to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName,m_sigNoiseToolName + m_detType);
+  m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
+                                               m_sigNoiseToolName + m_detType);
  
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode STClusterChecker::execute(){
-
+StatusCode STClusterChecker::execute()
+{
   // execute once per event
 
   // retrieve clusters
@@ -95,8 +95,8 @@ StatusCode STClusterChecker::execute(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
-
+StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster)
+{
   // fill histos per digit
 
   // cluster Size 
@@ -104,15 +104,6 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
 
   // high threshold
   plot((double)aCluster->highThreshold(),"high threshold",-0.5,1.5,2);
-
-  // neighbour sum
-  plot(aCluster->neighbourSum(),"nSum", -16.5, 16.5, 33);
-  plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum", -1.02, 1.02, 51);
-
-  if (aCluster->size() < 3){
-    plot(aCluster->neighbourSum(),"nSum2", -16.5, 16.5, 33);
-    plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum2", -1.02, 1.02, 51);
-  }
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
@@ -124,36 +115,29 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster) {
 
   if (fullDetail() == true){
  
-    plot((double)aCluster->pseudoSize(),"pseudo size",-0.5,10.5,11);
-    //   std::cout << aCluster->pseudoSize() <<  " "<< aCluster->size() << std::endl;
-    plot((double)aCluster->interStripFraction(),"interstrip frac",-0.125,1.125,5);
+    plot( (double)aCluster->pseudoSize(), "pseudo size", -0.5, 10.5, 11 );
+    plot( (double)aCluster->interStripFraction(), "interstrip frac", -0.125, 
+         1.125, 5);
+
+    // neighbour sum
+    plot(aCluster->neighbourSum(),"nSum", -16.5, 16.5, 33);
+    plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum", 
+         -1.02, 1.02, 51);
+
+    if (aCluster->size() < 3){
+      plot(aCluster->neighbourSum(),"nSum2", -16.5, 16.5, 33);
+      plot(aCluster->neighbourSum()/aCluster->totalCharge(),"relSum2", 
+           -1.02, 1.02, 51);
+    }
 
     const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0){
       plot(aCluster->totalCharge(),aSector->type()+"_charge", 0., 200., 200);
-      plot(m_sigNoiseTool->signalToNoise(aCluster),aSector->type()+"_sn", 0., 200., 200);
-    }  
-
+      plot( m_sigNoiseTool->signalToNoise(aCluster), aSector->type()+"_sn", 
+            0., 200., 200);
+    }
   }
 
   // end
   return StatusCode::SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

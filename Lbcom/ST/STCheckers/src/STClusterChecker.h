@@ -1,10 +1,8 @@
-// $Id: STClusterChecker.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: STClusterChecker.h,v 1.2 2006-05-04 12:44:44 jvantilb Exp $
 #ifndef _STClusterChecker_H
 #define _STClusterChecker_H
 
-#include <vector>
 #include <string>
-#include <map>
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -29,7 +27,7 @@ public:
  
   /// constructer
   STClusterChecker(const std::string& name, 
-                 ISvcLocator *svcloc );
+                   ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STClusterChecker();
@@ -39,7 +37,6 @@ public:
 
   /// execute
   StatusCode execute();
-
 
 private:
 
@@ -57,17 +54,3 @@ private:
 };
 
 #endif // _MCSTDepositChecker_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-

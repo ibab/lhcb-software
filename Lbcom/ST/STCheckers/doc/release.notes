@@ -1,17 +1,20 @@
 ! Package         : ST/STCheckers
 ! Package manager : Matt Needham
-!-------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
 
-!============================ STCheckers v1r2 2006-04-19 =======================
+! 2006-05-04 - Jeroen van Tilburg
+ - STClusterChecker: moved neighbour sum histograms to fullDetail.
+
+!=========================== STCheckers v1r2 2006-04-19 =======================
 ! 2006-04-19 M. Needham
  - Connect MCHit to geometry using sensDetID
 
-!============================ STCheckers v1r1 2006-03-16 =======================
+!=========================== STCheckers v1r1 2006-03-16 =======================
 ! 2006-03-16
  - Minor tuning of STEffMonitor, STClusterResolution
  - Remove STNoiseClusterMonitor replace with STClusterClassification
 
-!============================ STCheckers v1r0 2006-03-06 =======================
+!=========================== STCheckers v1r0 2006-03-06 =======================
 ! 2006-03-06
  - Add possibility to switch between eff and ineff
 
@@ -53,4 +56,4 @@
 
 ! 2005-12-19 - M.Needham
   First official release of code (replaces STCheckers in IT hat)
-!===============================================================================
+!==============================================================================
