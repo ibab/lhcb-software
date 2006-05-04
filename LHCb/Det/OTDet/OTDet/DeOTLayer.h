@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.8 2006-04-12 23:43:26 janos Exp $
+// $Id: DeOTLayer.h,v 1.9 2006-05-04 16:50:31 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -7,6 +7,7 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
+#include "Kernel/Plane3DTypes.h"
 
 /// OTDet
 #include "OTDet/DeOTDetector.h"
@@ -84,7 +85,14 @@ class DeOTLayer : public DetectorElement {
   /** @return the quarter for a given XYZ point */
   /** This method was depracated but I need it for the sensitive volume ID */
   DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
+  
+   /** plane corresponding to the layer 
+  * @return the plane 
+  */
+  Gaudi::Plane3D plane() const;
 
+  void cachePlane();
+  
   /** @return the module for a given XYZ point */
   /*  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const; */
 
@@ -98,6 +106,7 @@ class DeOTLayer : public DetectorElement {
   unsigned int m_layerID;        ///< layer ID number
   LHCb::OTChannelID m_elementID; ///< element id
   double m_stereoAngle;          ///< layer stereo angle 
+  Gaudi::Plane3D m_plane;        ///< plane corresponding to the layer
   Quarters m_quarters;           ///< vector of quarters
 
 };
@@ -124,6 +133,10 @@ inline bool DeOTLayer::contains(const LHCb::OTChannelID aChannel) const {
 
 inline double DeOTLayer::angle() const {
   return m_stereoAngle;
+}
+
+inline Gaudi::Plane3D DeOTLayer::plane() const {
+  return m_plane;
 }
 
 inline const DeOTLayer::Quarters& DeOTLayer::quarters() const {

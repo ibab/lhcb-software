@@ -1,12 +1,14 @@
-// $Id: DeOTModule.h,v 1.13 2006-04-18 18:57:37 janos Exp $
+// $Id: DeOTModule.h,v 1.14 2006-05-04 16:50:31 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
 /// DetDesc
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
+#include "Kernel/Plane3DTypes.h"
 
 namespace LHCb
 {
@@ -210,17 +212,56 @@ public:
 
   /** @return Global XYZ of the center of a module */
   Gaudi::XYZPoint centerOfModule() const;
-  
+
+    /** @return local from global */
+  Gaudi::XYZPoint toLocal(const Gaudi::XYZPoint& aPoint) const;
+
+   /** @return local point from xyz */
+  Gaudi::XYZPoint localPoint(const double x, const double y, const double z) const;
+
+  /** @return global from local */
+  Gaudi::XYZPoint toGlobal(const Gaudi::XYZPoint& aPoint) const;
+
+  /** @return global point from xyz */
+  Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
+
   /** @return the global z-coordinate of a module */
   double z() const;
   
-  /// Returns a Trajectory representing the wire identified by the LHCbID
-  /// The offset is zero for all OT Trajectories
+    /** plane corresponding to the module
+  * @return the plane 
+  */
+  Gaudi::Plane3D plane() const; 
+
+  /** Get trajectory representing the most left wire in (first=0) monolayer
+   * @return trajectory
+   */
+  std::auto_ptr<LHCb::Trajectory> trajectoryFirstWire(int monolayer=0) const;
+  
+  /** Get trajectory representing the most right wire in (second=1) monolayer
+   * @return trajectory
+   */
+  std::auto_ptr<LHCb::Trajectory> trajectoryLastWire(int monolayer=1) const;
+  
+  /** Get trajectory representing the wire identified by the LHCbID.
+   * The offset is zero for all OT Trajectories
+   * @return trajectory
+   */
   std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::OTChannelID& aChan,
                                               const double = 0 /*offset*/ ) const;
 
 private:
   
+  /// Not allowed to copy
+  DeOTModule(const DeOTModule& rhs);
+  DeOTModule& operator=(const DeOTModule& rhs);
+  
+  void clear();
+
+  void determineSense();
+
+  void cacheInfo();
+
   /** Find range of straws that might contain hits */
   void findStraws(const Gaudi::XYZPoint& entryPoint, 
                   const Gaudi::XYZPoint& exitPoint, 
@@ -292,6 +333,16 @@ private:
   unsigned int m_nModules;       ///< half the number of read-out modules in layer
   double m_ySizeModule;          ///< size of the module in y
   double m_yHalfModule;          ///< size of the module in y
+  double m_xMinLocal;                           ///< local x min of module
+  double m_xMaxLocal;                           ///< local x max of module
+  double m_yMinLocal;                           ///< local y min of module
+  double m_yMaxLocal;                           ///< local y max of module
+  bool m_xInverted;                             ///< swap x min and x max 
+  bool m_yInverted;                             ///< swap y min and y max
+  std::pair<double,double> m_range[2];          ///< range -> wire length
+  std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
+  Gaudi::XYZVector m_dir;                       ///< points to readout
+  Gaudi::Plane3D m_plane;                       ///< plane through center of module
 };
 
 // -----------------------------------------------------------------------------
@@ -408,9 +459,29 @@ inline double DeOTModule::driftDistance(const Gaudi::XYZVector& doca) const {
   int ambiguity = (doca.x() > 0 ? 1 : -1);
   return ambiguity*doca.r();
 }
-  
+
 inline double DeOTModule::localZOfStraw(const int aStraw) const {
   return (monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
+}
+
+inline Gaudi::XYZPoint DeOTModule::toLocal(const Gaudi::XYZPoint& aPoint) const{
+  return this->geometry()->toLocal(aPoint);
+}
+
+inline Gaudi::XYZPoint DeOTModule::localPoint(const double x, const double y, const double z) const{
+  return toLocal(Gaudi::XYZPoint(x, y, z));
+}
+
+inline Gaudi::XYZPoint DeOTModule::toGlobal(const Gaudi::XYZPoint& aPoint) const{
+  return this->geometry()->toGlobal(aPoint);
+}
+
+inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x, const double y, const double z) const{
+  return toGlobal(Gaudi::XYZPoint(x, y, z));
+}
+
+inline Gaudi::Plane3D DeOTModule::plane() const {
+  return m_plane;
 }
 
 inline unsigned int DeOTModule::hitStrawA(const double u) const {

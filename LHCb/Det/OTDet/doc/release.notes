@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.55 2006-04-18 18:57:37 janos Exp $
+! $Id: release.notes,v 1.56 2006-05-04 16:50:31 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+
+!========================== OTDet v6r3 2006-05-03 ==========================
+! 2006-05-04 - Jan Amoraal
+ - Changes for Brunel:
+    - DeOTLayer and DeOTModule returns a plane that goes through the centre of 
+      a layer/module.
+    - Added trajectories for first and last wire. The first wire is by default
+      the most left wire in the first monolayer(=0). The last wire is by default 
+      the most right wire in the second monolayer(=1).
+    - Fixed trajectories representing wires in a long module, i.e. correct for 
+      inefficient regions.
 
 !========================== OTDet v6r2 2006-04-04 ==========================
 ! 2006-04-18 - Jan Amoraal

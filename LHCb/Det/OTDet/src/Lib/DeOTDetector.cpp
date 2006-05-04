@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.22 2006-04-18 18:57:37 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.23 2006-05-04 16:50:31 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -252,22 +252,53 @@ OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
 }
 
 
+std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LHCbID& id, 
+								  int monolayer) const {
+  if (!id.isOT()) {
+    throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
+  }
+  
+  DeOTModule* aModule = findModule(id.otID());
+  if (!aModule) {
+    throw GaudiException("Failed to find module", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
+  } 
+  
+  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectoryFirstWire(monolayer));
+}
+
+std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryLastWire(const LHCb::LHCbID& id, 
+								 int monolayer) const {
+  if (!id.isOT()) {
+    throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
+  }
+  
+  DeOTModule* aModule = findModule(id.otID());
+  if (!aModule) {
+    throw GaudiException("Failed to find module", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
+  }
+  
+  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectoryLastWire(monolayer));
+}
+
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
-std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory( const LHCb::LHCbID& id,
-                                                          const double /*offset*/ ) const {
-  std::auto_ptr<LHCb::Trajectory> traj;
-  if( !id.isOT() ) {
-    throw GaudiException( "The LHCbID is not of OT type!", "DeOTDetector.cpp",
-                          StatusCode::FAILURE );
+std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory(const LHCb::LHCbID& id,
+							 const double /*offset*/) const {
+  if (!id.isOT()) {
+    throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
   }
-  DeOTModule* aModule = findModule( id.otID() );
-  if( aModule != 0 ) {
-    // Offset hardcoded to 0. to eliminate warning about unused parameter
-    traj = aModule->trajectory( id.otID(), 0. );
-  } else {
-    throw GaudiException( "Failed to find module", "DeOTDetector.cpp",
-                          StatusCode::FAILURE );
+  
+  DeOTModule* aModule = findModule(id.otID());
+  if(!aModule) {
+    throw GaudiException("Failed to find module", "DeOTDetector.cpp",
+			 StatusCode::FAILURE);
   }
-  return traj;
+  
+  // Offset hardcoded to 0. to eliminate warning about unused parameter
+  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectory(id.otID(),0));
 }

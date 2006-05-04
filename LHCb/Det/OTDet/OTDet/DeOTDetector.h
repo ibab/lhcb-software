@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.28 2006-04-18 18:57:37 janos Exp $
+// $Id: DeOTDetector.h,v 1.29 2006-05-04 16:50:30 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -220,12 +220,24 @@ public:
   /** @return the maximum number of channels in a module */
   unsigned int nMaxChanInModule();
 
-  /** Returns a Trajectory representing the wire identified by the LHCbID
+  /** Get trajectory representing the most left wire in (first=0) monolayer  
+   * @return trajectory
+   */
+  std::auto_ptr<LHCb::Trajectory> trajectoryFirstWire(const LHCb::LHCbID& id, 
+						      int monolayer=0) const;
+  
+  /** Get trajectory representing the most right wire in (second=0) monolayer
+   * @return trajectory
+   */
+  std::auto_ptr<LHCb::Trajectory> trajectoryLastWire(const LHCb::LHCbID& id, 
+						     int monolayer=1) const;
+
+  /** Get trajectory representing the wire identified by the LHCbID
    * The offset is zero for all OT Trajectories
    * @return trajecory
    */ 
-  std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::LHCbID& id,
-                                              const double = 0 /*offset*/ ) const;
+  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
+					     const double =0 /** offset */) const;
   
 private:
 

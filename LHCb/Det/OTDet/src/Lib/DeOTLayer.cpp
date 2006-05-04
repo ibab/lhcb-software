@@ -1,4 +1,7 @@
-// $Id: DeOTLayer.cpp,v 1.8 2006-04-18 18:57:37 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.9 2006-05-04 16:50:31 janos Exp $
+
+/// Kernel
+#include "Kernel/SystemOfUnits.h"
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -55,6 +58,9 @@ StatusCode DeOTLayer::initialize() {
 
   m_stereoAngle = param<double>("stereoAngle");
 
+  /// cache planes
+  cachePlane();
+
   return StatusCode::SUCCESS;
 }
 
@@ -76,6 +82,14 @@ DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {
   Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
    					       bind(&DetectorElement::isInside, _1, aPoint));
   return (iter != m_quarters.end() ? (*iter) : 0);
+}
+
+void DeOTLayer::cachePlane() {
+  Gaudi::XYZPoint g1 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0));
+  Gaudi::XYZPoint g2 = this->geometry()->toGlobal(Gaudi::XYZPoint(3.5*m, 0.0, 0.0));
+  Gaudi::XYZPoint g3 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 2.5*m, 0.0));
+  
+  m_plane = Gaudi::Plane3D(g1, g2, g3);
 }
 
 /// Find the module for a given XYZ point
