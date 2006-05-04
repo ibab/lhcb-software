@@ -43,4 +43,4 @@ TrackAssociator.LinkerOutTable    = "Rec/Track/Best";
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
-//#include "$RICHRECQCOPTS/RecQC_Brunel.opts"
+#include "$RICHRECQCOPTS/RecQC_Brunel.opts"

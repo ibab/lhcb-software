@@ -9,7 +9,7 @@ RootHistCnv.ForceAlphaIds = true;
 // Detectors to monitor
 //--------------------------------------------------------------
 Moni.DetectorList = { 
-                     // ,"MUON"
+  //                      "MUON"
                     };
 
 //--------------------------------------------------------------
