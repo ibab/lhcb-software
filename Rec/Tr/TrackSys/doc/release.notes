@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v2r1 2006-05-05 ======================
+! 2006-05-05 - Eduardo Rodrigues
+ - added TrackPython (v2r0) to the requirements
+
 ! 2006-05-03 - Eduardo Rodrigues
  - requirements file updated for LHCb v20r4, Recv3r2, Brunel v30r2
 

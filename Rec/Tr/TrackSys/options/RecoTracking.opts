@@ -22,7 +22,6 @@ RecoTrSeq.Members += { "PatInitEvent"
                        ,"PatVeloRTracking"
                        ,"PatVeloSpaceTracking"
 };
-PatVeloRTracking.ChargeThreshold = 0.75;
 RecoTrSeq.context = "HLT";
 
 // Decode also VeloClusters, needed for track fit
@@ -32,17 +31,16 @@ DecodeVeloClusters.DecodeToVeloClusters = true;
 
 // Forward tracking
 ApplicationMgr.DLLs += { "PatForward" };
-RecoTrSeq.Members += { 
-                      ,"PatTCoordFromRaw"
-                      ,"PatForward"
+RecoTrSeq.Members += { "PatTCoordFromRaw"
+                       ,"PatForward"
 };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 // Next option to be removed when PatVeloTT is migrated and can run before
 ToolSvc.PatForwardTool.ValidateInTT = false;
 
-//RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
-//FitForward.TracksInContainer  = "Rec/Track/Forward";
-//FitForward.TracksOutContainer = "Rec/Track/Forward";
+RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
+FitForward.TracksInContainer  = "Rec/Track/Forward";
+FitForward.TracksOutContainer = "Rec/Track/Forward";
 
 // Seeding
 // -------

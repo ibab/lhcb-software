@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackSys
-version           v2r0
+version           v2r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -40,4 +40,5 @@ use   TrackIdealPR         v2r2    Tr
 use   TrackAssociators     v2r0    Tr
 use   TrackCheckers        v2r1    Tr
 
+use   TrackPython          v2r0    Tr
 #============================================================================
