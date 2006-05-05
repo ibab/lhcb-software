@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.10 2006-03-02 15:24:07 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.11 2006-05-05 10:41:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -49,23 +49,23 @@ RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
   declareProperty( "PhotonPredictor", m_photPredName );
 
   m_CKTol.push_back( 0.005 );   // aerogel
-  m_CKTol.push_back( 0.004 );      // c4f10
-  m_CKTol.push_back( 0.003 );      // cf4
+  m_CKTol.push_back( 0.004 );   // rich1Gas
+  m_CKTol.push_back( 0.003 );   // rich2Gas
   declareProperty( "CherenkovThetaTolerence", m_CKTol );
 
-  m_minCKtheta.push_back( 0 );   // aerogel
-  m_minCKtheta.push_back( 0 );      // c4f10
-  m_minCKtheta.push_back( 0 );      // cf4
+  m_minCKtheta.push_back( 0 );  // aerogel
+  m_minCKtheta.push_back( 0 );  // rich1Gas
+  m_minCKtheta.push_back( 0 );  // rich2Gas
   declareProperty( "MinAllowedCherenkovTheta", m_minCKtheta );
 
   m_maxCKtheta.push_back( 999 ); // aerogel
-  m_maxCKtheta.push_back( 999 ); // c4f10
-  m_maxCKtheta.push_back( 999 ); // cf4
+  m_maxCKtheta.push_back( 999 ); // rich1Gas
+  m_maxCKtheta.push_back( 999 ); // rich2Gas
   declareProperty( "MaxAllowedCherenkovTheta", m_maxCKtheta );
 
   m_minPhotonProb.push_back( 1e-15 ); // aerogel
-  m_minPhotonProb.push_back( 1e-15 ); // c4f10
-  m_minPhotonProb.push_back( 1e-15 ); // cf4
+  m_minPhotonProb.push_back( 1e-15 ); // rich1Gas
+  m_minPhotonProb.push_back( 1e-15 ); // rich2Gas
   declareProperty( "MinPhotonProbability", m_minPhotonProb );
 
   if      ( context() == "Offline" )
@@ -142,8 +142,8 @@ void RichPhotonCreatorBase::printStats() const
 
   if ( nEvents() > 0
        && !( m_photCount[Rich::Aerogel] == 0 &&
-             m_photCount[Rich::C4F10]   == 0 &&
-             m_photCount[Rich::CF4]     == 0  ) )
+             m_photCount[Rich::Rich1Gas]   == 0 &&
+             m_photCount[Rich::Rich2Gas]     == 0  ) )
   {
 
     // statistical tool
@@ -154,10 +154,10 @@ void RichPhotonCreatorBase::printStats() const
            << "  Photon candidate summary : " << nEvents() << " events :-" << endreq
            << "    Aerogel   : "
            << occ(m_photCount[Rich::Aerogel],nEvents()) << "  photons/event" << endreq
-           << "    C4F10     : "
-           << occ(m_photCount[Rich::C4F10],nEvents())   << "  photons/event" << endreq
-           << "    CF4       : "
-           << occ(m_photCount[Rich::CF4],nEvents())     << "  photons/event" << endreq
+           << "    Rich1Gas  : "
+           << occ(m_photCount[Rich::Rich1Gas],nEvents())   << "  photons/event" << endreq
+           << "    Rich2Gas  : "
+           << occ(m_photCount[Rich::Rich2Gas],nEvents())     << "  photons/event" << endreq
            << "=================================================================" << endreq;
 
   }
@@ -198,7 +198,7 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
       {
         RichRecSegment * segment = *iSegment;
 
-        verbose() << " -> Trying segment " << segment->key() << " " 
+        verbose() << " -> Trying segment " << segment->key() << " "
                   << segment->trackSegment().radiator() << endreq;
 
         if ( !segment->allPhotonsDone() )
@@ -209,7 +209,7 @@ StatusCode RichPhotonCreatorBase::reconstructPhotons() const
           RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
           for ( ; iPixel != endPix; ++iPixel )
           {
-            //verbose() << " -> Trying pixel " << (*iPixel)->key() 
+            //verbose() << " -> Trying pixel " << (*iPixel)->key()
             //         << " " << (*iPixel)->detector() << endreq;
             reconstructPhoton( segment, *iPixel );
           } // pixel loop
@@ -424,6 +424,71 @@ void RichPhotonCreatorBase::buildCrossReferences( RichRecPhoton * photon ) const
 
 }
 
+bool
+RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
+                                          const double ckTheta ) const
+{
+  bool ok = false;
+
+  // Just check overall absolute min - max range
+  if ( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Photon CK theta " << ckTheta << " outside absolute range "
+                << absMinCKTheta(segment) << "->" << absMaxCKTheta(segment) << endreq;
+    }
+  }
+  else
+  {
+    // Do detailed checks
+
+    // Finer grained check, to be within tolerence of any mass hypothesis
+    for ( int ihypo = 0; ihypo < Rich::NParticleTypes; ++ihypo )
+    {
+      const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(ihypo);
+      const double tmpT = m_ckAngle->avgCherenkovTheta( segment, id );
+      if ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) ) { ok = true; }
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> " << id << " expected CK theta = " << tmpT
+                  << " CK tolerance " << ckSearchRange(segment,id) << " status = " << ok
+                  << endreq;
+      }
+      if ( ok ) break;
+    }
+
+  }
+
+  return ok;
+}
+
+bool RichPhotonCreatorBase::checkPhotonProb( LHCb::RichRecPhoton * photon ) const
+{
+  // check photon has significant probability to be signal for any
+  // hypothesis. If not then reject
+  bool keepPhoton = false;
+  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+  {
+    const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(iHypo);
+    const double predPixSig = m_photonSignal->predictedPixelSignal( photon, id );
+    const double minPixSig  = m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ];
+    if ( predPixSig > minPixSig )
+    {
+      keepPhoton = true;
+    }
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> " << id << " predicted pixel signal = " << predPixSig
+                << " min acepted = " << minPixSig << " status = " << keepPhoton
+                << endreq;
+    }
+    if ( keepPhoton ) break;
+  }
+
+  return keepPhoton;
+}
+
 void RichPhotonCreatorBase::InitNewEvent()
 {
   m_hasBeenCalled = false;
@@ -439,7 +504,7 @@ void RichPhotonCreatorBase::FinishEvent()
   {
     debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel="
             << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
-            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
-            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
+            << " Rich1Gas=" << m_photCount[Rich::Rich1Gas]-m_photCountLast[Rich::Rich1Gas]
+            << " Rich2Gas=" << m_photCount[Rich::Rich2Gas]-m_photCountLast[Rich::Rich2Gas] << endreq;
   }
 }

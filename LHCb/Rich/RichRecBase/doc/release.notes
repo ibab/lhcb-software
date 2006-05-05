@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Chris Jones
+ - Adapt to radiator name changes + move a few methods around
+
 !====================== RichRecBase v2r2 2006-05-02 ========================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
