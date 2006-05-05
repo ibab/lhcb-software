@@ -1,5 +1,5 @@
 package Boole
-version v11r4
+version v11r5
 
 branches doc cmt job options
 
@@ -22,7 +22,7 @@ use GaudiObjDesc 	 v9r4        -no_auto_imports
 use RootHistCnv          v9r9        -no_auto_imports
 
 #-- Databases
-use XmlDDDB             v30r5   Det  -no_auto_imports
+use XmlDDDB             v30r6   Det  -no_auto_imports
 use XmlConditions        v1r6   Det  -no_auto_imports
 use ParamFiles	         v4r2        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports

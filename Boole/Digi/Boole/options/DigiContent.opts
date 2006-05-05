@@ -34,7 +34,9 @@ DigiWriter.ItemList =
 , "/Event/DAQ/RawEvent#1"
 
   // Digitization summaries
+, "/Event/MC/Rich#1"
 , "/Event/MC/Rich/DigitSummaries#1"
+, "/Event/MC/Muon#1"
 , "/Event/MC/Muon/DigitsInfo#1"
 
   // Links to MCParticles

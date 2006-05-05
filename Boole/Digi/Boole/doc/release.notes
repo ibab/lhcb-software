@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v11r5>2006-05-05 Boole v11r4</A></H1><PRE>
+ - Fix DigiContent.opts to write out missing intermediate directory nodes
+ - Use XmlDDDB v30r6
+
 </PRE><H1><A NAME=v11r4>2006-05-02 Boole v11r4</A></H1><PRE>
  - Adapt requirements to Lbcom v4r4, LHCb v20r4
  - Use XmlDDDB v30r5
