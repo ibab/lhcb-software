@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Eduardo Rodrigues
+ - transient attribute removed for LHCbIDs and States on Tracks
+ - removed tracks history enums related to converted tracks (obsolete)
+
 !========================= TrackEvent v2r4 2006-05-02 ========================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs

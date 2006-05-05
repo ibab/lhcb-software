@@ -60,15 +60,9 @@
    *   PatForward
    *   TrgForward
    *   TrackMatching
+   *   PatKShort
    *   TrackKShort
    *   TsaTrack
-   *   CnvSeed         : seed tracks converted from old Track Event Model tracks
-   *   CnvVelo         : velo tracks converted from old Track Event Model tracks
-   *   CnvVeloBack     : velo Backwards tracks converted from old Track Event Model tracks
-   *   CnvVeloTT       : veloTT tracks converted from old Track Event Model tracks
-   *   CnvForward      : forward tracks converted from old Track Event Model tracks
-   *   CnvMatch        : match tracks converted from old Track Event Model tracks
-   *   CnvKsTrack      :
    *
    */
 -->
@@ -86,14 +80,7 @@
                   TrackMatching,
                   PatKShort,
                   TrackKShort,
-                  TsaTrack,
-                  CnvSeed=24,
-                  CnvVelo,
-                  CnvVeloBack,
-                  CnvVeloTT,
-                  CnvForward,
-                  CnvMatch,
-                  CnvKsTrack'
+                  TsaTrack'
         access = 'PUBLIC' />
 
 <!--
@@ -265,16 +252,14 @@
         type      = 'std::vector&lt;LHCb::LHCbID&gt;'
         name      = 'lhcbIDs'
         desc      = 'container of LHCbIDs'
-        access    = 'PROTECTED'
-        transient = 'TRUE' />
+        access    = 'PROTECTED' />
 
       <attribute
         type      = 'std::vector&lt;LHCb::State*&gt;'
         name      = 'states'
         desc      = 'container with pointers to all the states'
         access    = 'PROTECTED'
-        setMeth   = 'FALSE' 
-        transient = 'TRUE' />
+        setMeth   = 'FALSE' />
 
       <attribute
         type      = 'std::vector&lt;LHCb::Measurement*&gt;'
