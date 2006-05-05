@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.20 2006-02-16 16:15:35 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.21 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -117,6 +117,14 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
     if ( ckTheta > 0 )
     {
 
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "Trying segment " << segment->key() << " CK theta = " << ckTheta
+                  << " track Dir "
+                  << segment->trackSegment().bestMomentum().Unit()
+                  << endreq;
+      }
+
       int nDetect(0), iPhot(0);
       for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
@@ -132,11 +140,9 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "CK angle " << ckTheta << " track Dir " 
-                    << segment->trackSegment().bestMomentum()
-                    << " fake photon " << photDir 
-                    << " testAng " 
-                    << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir ) 
+          verbose() << " -> fake photon " << photDir
+                    << " testAng "
+                    << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir )
                     << endreq;
         }
 
@@ -148,6 +154,10 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                photon,
                                                m_traceMode ) )
         {
+          if ( msgLevel(MSG::VERBOSE) )
+          {
+            verbose() << " -> photon was traced to detector" << endreq;
+          }
 
           // Check HPD status
           if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID()) ) continue;

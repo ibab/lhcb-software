@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.2 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.3 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,23 +49,23 @@ RichInterpCKResVthetaForRecoTracks ( const std::string& type,
   declareProperty( "AerogelVTTRes",      m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
   declareProperty( "AerogelVeloRes",     m_theerr[Rich::Aerogel][Rich::Track::Velo] );
 
-  declareProperty( "NC4F10ResBins",    m_thebin[Rich::C4F10] );
-  declareProperty( "C4F10ForwardRes",  m_theerr[Rich::C4F10][Rich::Track::Forward] );
-  declareProperty( "C4F10MatchRes",    m_theerr[Rich::C4F10][Rich::Track::Match] );
-  declareProperty( "C4F10FollowRes",   m_theerr[Rich::C4F10][Rich::Track::Follow] );
-  declareProperty( "C4F10KsTrackRes",  m_theerr[Rich::C4F10][Rich::Track::KsTrack] );
-  declareProperty( "C4F10SeedRes",     m_theerr[Rich::C4F10][Rich::Track::Seed] );
-  declareProperty( "C4F10VTTRes",      m_theerr[Rich::C4F10][Rich::Track::VeloTT] );
-  declareProperty( "C4F10VeloRes",     m_theerr[Rich::C4F10][Rich::Track::Velo] );
+  declareProperty( "NRich1GasResBins",    m_thebin[Rich::Rich1Gas] );
+  declareProperty( "Rich1GasForwardRes",  m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
+  declareProperty( "Rich1GasMatchRes",    m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
+  declareProperty( "Rich1GasFollowRes",   m_theerr[Rich::Rich1Gas][Rich::Track::Follow] );
+  declareProperty( "Rich1GasKsTrackRes",  m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
+  declareProperty( "Rich1GasSeedRes",     m_theerr[Rich::Rich1Gas][Rich::Track::Seed] );
+  declareProperty( "Rich1GasVTTRes",      m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
+  declareProperty( "Rich1GasVeloRes",     m_theerr[Rich::Rich1Gas][Rich::Track::Velo] );
 
-  declareProperty( "NCF4ResBins",    m_thebin[Rich::CF4] );
-  declareProperty( "CF4ForwardRes",  m_theerr[Rich::CF4][Rich::Track::Forward] );
-  declareProperty( "CF4MatchRes",    m_theerr[Rich::CF4][Rich::Track::Match] );
-  declareProperty( "CF4FollowRes",   m_theerr[Rich::CF4][Rich::Track::Follow] );
-  declareProperty( "CF4KsTrackRes",  m_theerr[Rich::CF4][Rich::Track::KsTrack] );
-  declareProperty( "CF4SeedRes",     m_theerr[Rich::CF4][Rich::Track::Seed] );
-  declareProperty( "CF4VTTRes",      m_theerr[Rich::CF4][Rich::Track::VeloTT] );
-  declareProperty( "CF4VeloRes",     m_theerr[Rich::CF4][Rich::Track::Velo] );
+  declareProperty( "NRich2GasResBins",    m_thebin[Rich::Rich2Gas] );
+  declareProperty( "Rich2GasForwardRes",  m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
+  declareProperty( "Rich2GasMatchRes",    m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
+  declareProperty( "Rich2GasFollowRes",   m_theerr[Rich::Rich2Gas][Rich::Track::Follow] );
+  declareProperty( "Rich2GasKsTrackRes",  m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
+  declareProperty( "Rich2GasSeedRes",     m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
+  declareProperty( "Rich2GasVTTRes",      m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT] );
+  declareProperty( "Rich2GasVeloRes",     m_theerr[Rich::Rich2Gas][Rich::Track::Velo] );
 
   // set interpolator pointers to NULL
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )

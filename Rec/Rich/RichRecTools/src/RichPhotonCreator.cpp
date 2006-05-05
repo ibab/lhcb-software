@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.31 2006-04-13 17:34:35 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.32 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -65,21 +65,14 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   RichGeomPhoton * geomPhoton = new RichGeomPhoton();
   if ( ( m_photonReco->reconstructPhoton( segment->trackSegment(),
                                           pixel->globalPosition(),
-                                          *geomPhoton ).isSuccess() ) &&
+                                          *geomPhoton,
+                                          pixel->smartID() ).isSuccess() ) &&
        // Check photon is OK
        ( ( geomPhoton->CherenkovTheta() > 0. ||
            geomPhoton->CherenkovPhi()   > 0. ) &&
          checkAngleInRange( segment, geomPhoton->CherenkovTheta() ) ) )
   {
 
-    // give photon same smart ID as pixel
-    geomPhoton->setSmartID( pixel->smartID() );
-
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Created photon " << *geomPhoton << endreq; 
-    }
-    
     // make new RichRecPhoton ( NB will own geomPhoton )
     newPhoton = new RichRecPhoton( geomPhoton, segment,
                                    segment->richRecTrack(), pixel );
@@ -87,6 +80,10 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
     // check photon signal probability
     if ( checkPhotonProb( newPhoton ) )
     {
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "  -> RichRecPhoton selected" << endreq;
+      }
       // save this photon to TES
       savePhoton( newPhoton, key );
 
@@ -95,6 +92,10 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
     }
     else
     {
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "  -> RichRecPhoton FAILED probability checks" << endreq;
+      }
       delete newPhoton; // also deletes geomPhoton
       newPhoton = NULL;
     }

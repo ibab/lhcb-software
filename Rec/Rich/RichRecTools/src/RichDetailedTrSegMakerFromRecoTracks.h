@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.5 2006-03-17 15:54:46 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.6 2006-05-05 11:01:39 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -101,14 +101,14 @@ private: // methods
                                     const Rich::RadiatorType rad,
                                     std::vector<RichRadIntersection>& intersections );
 
-  /** Correct the entrance point for the C4F10 radiators due to the fact the aerogel
-   *  is contained inside this medium. This means the start of the visable C4F10
-   *  segment is the aerogel exit point, and not the C4F10 entrance point.
+  /** Correct the entrance point for the Rich1Gas radiators due to the fact the aerogel
+   *  is contained inside this medium. This means the start of the visable Rich1Gas
+   *  segment is the aerogel exit point, and not the Rich1Gas entrance point.
    *
    *  @param state        State information to correct
    *  @param refState     Reference starting state.
    */
-  void fixC4F10EntryPoint( LHCb::State *& state,
+  void fixRich1GasEntryPoint( LHCb::State *& state,
                            const LHCb::State * refState = 0  ) const;
 
   /** Correct the exit state to the point where the track traverses the spherical mirror

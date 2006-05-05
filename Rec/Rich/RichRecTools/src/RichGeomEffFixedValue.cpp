@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.13 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.14 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,19 +31,21 @@ const        IToolFactory& RichGeomEffFixedValueFactory = s_factory ;
 RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
-  : RichRecToolBase  ( type, name, parent ),
-    m_ckAngle        ( 0 ),
-    m_geomTool       ( 0 ),
-    m_fixedValue     ( Rich::NRadiatorTypes, 0.7 ),
-    m_fixedScatValue ( 0.7 )
+  : RichRecToolBase   ( type, name, parent ),
+    m_ckAngle         ( 0 ),
+    m_geomTool        ( 0 ),
+    m_fixedValue      ( Rich::NRadiatorTypes, 0.7 ),
+    m_fixedScatValue  ( 0.7 ),
+    m_checkBoundaries ( false )
 {
 
   // interface
   declareInterface<IRichGeomEff>(this);
 
   // job options
-  declareProperty( "FixedSignalEfficiency",  m_fixedValue            );
-  declareProperty( "FixedScatterEfficiency", m_fixedScatValue = 0.73 );
+  declareProperty( "FixedSignalEfficiency",  m_fixedValue       );
+  declareProperty( "FixedScatterEfficiency", m_fixedScatValue   );
+  declareProperty( "CheckHPDPanelBoundaries", m_checkBoundaries );
 
 }
 
@@ -57,6 +59,17 @@ StatusCode RichGeomEffFixedValue::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
   acquireTool( "RichRecGeometry", m_geomTool   );
 
+  info() << "Fixed geometrical efficiencies (aero/rich1Gas/rich2Gas) : " << m_fixedValue << endreq
+         << "Fixed scattered efficiency                      : " << m_fixedScatValue << endreq;
+  if ( m_checkBoundaries )
+  {
+    info() << "Will take into account average HPD panel boundaries" << endreq;
+  }
+  else
+  {
+    info() << "Will assume infinite HPD panel boundaries" << endreq;
+  }
+
   return sc;
 }
 
@@ -67,19 +80,21 @@ StatusCode RichGeomEffFixedValue::finalize()
 }
 
 double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id ) const {
-
+                                               const Rich::ParticleIDType id ) const 
+{
+  
   if ( !segment->geomEfficiency().dataIsValid(id) )
   {
     double eff = 0;
-
+   
     // Cherenkov theta
     const double ckTh = m_ckAngle->avgCherenkovTheta( segment, id );
 
     if ( ckTh > 0 )
     {
       // First get the HPD panel acceptance (edges)
-      eff = m_geomTool->hpdPanelAcceptance(segment,id);
+      eff = ( m_checkBoundaries ? 
+              m_geomTool->hpdPanelAcceptance(segment,id) : 1 );
       // .. next, scale by the average panel acceptance (circular HPDs)
       eff *= m_fixedValue[segment->trackSegment().radiator()];
     }
@@ -109,9 +124,11 @@ double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
 }
 
 double RichGeomEffFixedValue::geomEfficiencyScat ( RichRecSegment * segment,
-                                                   const Rich::ParticleIDType id ) const {
+                                                   const Rich::ParticleIDType id ) const 
+{
 
-  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
+  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) 
+{
 
     double eff = 0;
     if ( segment->trackSegment().radiator() == Rich::Aerogel ) {

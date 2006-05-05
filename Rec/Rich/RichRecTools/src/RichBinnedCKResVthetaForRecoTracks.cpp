@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.2 2006-01-23 14:20:43 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.3 2006-05-05 11:01:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,67 +76,67 @@ RichBinnedCKResVthetaForRecoTracks ( const std::string& type,
   (m_theerr[Rich::Aerogel][Rich::Track::Velo]).push_back( 999 );
   (m_theerr[Rich::Aerogel][Rich::Track::Velo]).push_back( 999 );
 
-  (m_binEdges[Rich::C4F10]).push_back( 0.03 );
-  (m_binEdges[Rich::C4F10]).push_back( 0.05 );
-  declareProperty( "NC4F10ResBins", m_binEdges[Rich::C4F10] );
-  (m_theerr[Rich::C4F10][Rich::Track::Forward]).push_back( 0.00357 );
-  (m_theerr[Rich::C4F10][Rich::Track::Forward]).push_back( 0.00226 );
-  (m_theerr[Rich::C4F10][Rich::Track::Forward]).push_back( 0.00150 );
-  declareProperty( "C4F10ForwardRes", m_theerr[Rich::C4F10][Rich::Track::Forward] );
-  (m_theerr[Rich::C4F10][Rich::Track::Match]).push_back( 0.00385 );
-  (m_theerr[Rich::C4F10][Rich::Track::Match]).push_back( 0.00231 );
-  (m_theerr[Rich::C4F10][Rich::Track::Match]).push_back( 0.00180 );
-  declareProperty( "C4F10MatchRes", m_theerr[Rich::C4F10][Rich::Track::Match] );
-  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00393 );
-  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00242 );
-  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00242 );
-  declareProperty( "C4F10FollowRes", m_theerr[Rich::C4F10][Rich::Track::Follow] );
-  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00393 );
-  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00242 );
-  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00242 );
-  declareProperty( "C4F10KsTrackRes", m_theerr[Rich::C4F10][Rich::Track::KsTrack] );
-  (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
-  (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
-  declareProperty( "C4F10SeedRes", m_theerr[Rich::C4F10][Rich::Track::Seed] );
-  (m_theerr[Rich::C4F10][Rich::Track::VeloTT]).push_back( 0.00806 );
-  (m_theerr[Rich::C4F10][Rich::Track::VeloTT]).push_back( 0.00307 );
-  (m_theerr[Rich::C4F10][Rich::Track::VeloTT]).push_back( 0.00211 );
-  declareProperty( "C4F10VTTRes", m_theerr[Rich::C4F10][Rich::Track::VeloTT] );
-  (m_theerr[Rich::C4F10][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::C4F10][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::C4F10][Rich::Track::Velo]).push_back( 999 );
+  (m_binEdges[Rich::Rich1Gas]).push_back( 0.03 );
+  (m_binEdges[Rich::Rich1Gas]).push_back( 0.05 );
+  declareProperty( "NRich1GasResBins", m_binEdges[Rich::Rich1Gas] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00357 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00226 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Forward]).push_back( 0.00150 );
+  declareProperty( "Rich1GasForwardRes", m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00385 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00231 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Match]).push_back( 0.00180 );
+  declareProperty( "Rich1GasMatchRes", m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00393 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00242 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Follow]).push_back( 0.00242 );
+  declareProperty( "Rich1GasFollowRes", m_theerr[Rich::Rich1Gas][Rich::Track::Follow] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00393 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00242 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack]).push_back( 0.00242 );
+  declareProperty( "Rich1GasKsTrackRes", m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Seed]).push_back( 999 );
+  declareProperty( "Rich1GasSeedRes", m_theerr[Rich::Rich1Gas][Rich::Track::Seed] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00806 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00307 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT]).push_back( 0.00211 );
+  declareProperty( "Rich1GasVTTRes", m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
+  (m_theerr[Rich::Rich1Gas][Rich::Track::Velo]).push_back( 999 );
 
-  (m_binEdges[Rich::CF4]).push_back( 0.03 );
-  (m_binEdges[Rich::CF4]).push_back( 0.05 );
-  declareProperty( "NCF4ResBins", m_binEdges[Rich::CF4] );
-  (m_theerr[Rich::CF4][Rich::Track::Forward]).push_back( 0.00119 );
-  (m_theerr[Rich::CF4][Rich::Track::Forward]).push_back( 0.00122 );
-  (m_theerr[Rich::CF4][Rich::Track::Forward]).push_back( 0.00083 );
-  declareProperty( "CF4ForwardRes", m_theerr[Rich::CF4][Rich::Track::Forward] );
-  (m_theerr[Rich::CF4][Rich::Track::Match]).push_back( 0.00119 );
-  (m_theerr[Rich::CF4][Rich::Track::Match]).push_back( 0.00132 );
-  (m_theerr[Rich::CF4][Rich::Track::Match]).push_back( 0.00091 );
-  declareProperty( "CF4MatchRes", m_theerr[Rich::CF4][Rich::Track::Match] );
-  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00133 );
-  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00131 );
-  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00109 );
-  declareProperty( "CF4FollowRes", m_theerr[Rich::CF4][Rich::Track::Follow] );
-  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00133 );
-  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00131 );
-  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00109 );
-  declareProperty( "CF4KsTrackRes", m_theerr[Rich::CF4][Rich::Track::KsTrack] );
-  (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00138 );
-  (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00117 );
-  (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00099 );
-  declareProperty( "CF4SeedRes", m_theerr[Rich::CF4][Rich::Track::Seed] );
-  (m_theerr[Rich::CF4][Rich::Track::VeloTT]).push_back( 999 );
-  (m_theerr[Rich::CF4][Rich::Track::VeloTT]).push_back( 999 );
-  (m_theerr[Rich::CF4][Rich::Track::VeloTT]).push_back( 999 );
-  declareProperty( "CF4VTTRes", m_theerr[Rich::CF4][Rich::Track::VeloTT] );
-  (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
-  (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
+  (m_binEdges[Rich::Rich2Gas]).push_back( 0.03 );
+  (m_binEdges[Rich::Rich2Gas]).push_back( 0.05 );
+  declareProperty( "NRich2GasResBins", m_binEdges[Rich::Rich2Gas] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00119 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00122 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Forward]).push_back( 0.00083 );
+  declareProperty( "Rich2GasForwardRes", m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00119 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00132 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Match]).push_back( 0.00091 );
+  declareProperty( "Rich2GasMatchRes", m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00133 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00131 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Follow]).push_back( 0.00109 );
+  declareProperty( "Rich2GasFollowRes", m_theerr[Rich::Rich2Gas][Rich::Track::Follow] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00133 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00131 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack]).push_back( 0.00109 );
+  declareProperty( "Rich2GasKsTrackRes", m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00138 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00117 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Seed]).push_back( 0.00099 );
+  declareProperty( "Rich2GasSeedRes", m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT]).push_back( 999 );
+  declareProperty( "Rich2GasVTTRes", m_theerr[Rich::Rich2Gas][Rich::Track::VeloTT] );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
+  (m_theerr[Rich::Rich2Gas][Rich::Track::Velo]).push_back( 999 );
 
 }
 

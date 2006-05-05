@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.4 2006-03-17 15:54:46 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.5 2006-05-05 11:01:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -68,14 +68,14 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
 
   // tolerances on z positions
   m_zTolerance[Rich::Aerogel] = 800*mm;
-  m_zTolerance[Rich::C4F10]   = 800*mm;
-  m_zTolerance[Rich::CF4]     = 2000*mm;
+  m_zTolerance[Rich::Rich1Gas]   = 800*mm;
+  m_zTolerance[Rich::Rich2Gas]     = 2000*mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
   m_minStateDiff[Rich::Aerogel] = 1*mm;
-  m_minStateDiff[Rich::C4F10]   = 25*mm;
-  m_minStateDiff[Rich::CF4]     = 50*mm;
+  m_minStateDiff[Rich::Rich1Gas]   = 25*mm;
+  m_minStateDiff[Rich::Rich2Gas]     = 50*mm;
   declareProperty( "ZSanityChecks", m_minStateDiff );
 
   // shifts for mirror correction
@@ -113,19 +113,19 @@ StatusCode RichDetailedTrSegMakerFromRecoTracks::initialize()
 
   // get the radiators
   m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
-  m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
-  m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
+  m_radiators[Rich::Rich1Gas]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas   );
+  m_radiators[Rich::Rich2Gas]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas     );
   if ( !m_usedRads[Rich::Aerogel] )
   {
     Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
   }
-  if ( !m_usedRads[Rich::C4F10] )
+  if ( !m_usedRads[Rich::Rich1Gas] )
   {
-    Warning("Track segments for C4F10 are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
   }
-  if ( !m_usedRads[Rich::CF4] )
+  if ( !m_usedRads[Rich::Rich2Gas] )
   {
-    Warning("Track segments for CF4 are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
 
   return sc;
@@ -188,7 +188,7 @@ constructSegments( const ContainedObject * obj,
     }
 
     // choose appropriate z start position for initial track states for this radiator
-    const double zStart = ( Rich::CF4 == rad ? m_nomZstates[2] : m_nomZstates[0] );
+    const double zStart = ( Rich::Rich2Gas == rad ? m_nomZstates[2] : m_nomZstates[0] );
     // Get the track entry state points
     const State * entryPStateRaw = &(track->closestState(zStart));
     if ( !entryPStateRaw || fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) continue;
@@ -204,7 +204,7 @@ constructSegments( const ContainedObject * obj,
     }
 
     // choose appropriate z end position for initial track states for this radiator
-    const double zEnd   = ( Rich::CF4 == rad ? m_nomZstates[3] : m_nomZstates[1] );
+    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] : m_nomZstates[1] );
     // Get the track enrty state points
     const State * exitPStateRaw = &(track->closestState(zEnd));
     if ( !exitPStateRaw || fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] ) continue;
@@ -380,9 +380,9 @@ constructSegments( const ContainedObject * obj,
       continue;
     }
 
-    // a special hack for the C4F10 - since the aerogel volume
-    // is placed INSIDE the C4F10, the default entry point is wrong.
-    if ( Rich::C4F10 == rad ) fixC4F10EntryPoint( entryPState, entryPStateRaw );
+    // a special hack for the Rich1Gas - since the aerogel volume
+    // is placed INSIDE the Rich1Gas, the default entry point is wrong.
+    if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( entryPState, entryPStateRaw );
 
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
@@ -531,8 +531,8 @@ getRadIntersections( const Gaudi::XYZPoint& point,
 
 
 //====================================================================================================
-// fixup C4F10 entry point
-void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
+// fixup Rich1Gas entry point
+void RichDetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( State *& state,
                                                                const State * refState ) const
 {
 
@@ -544,7 +544,7 @@ void RichDetailedTrSegMakerFromRecoTracks::fixC4F10EntryPoint( State *& state,
   {
     if ( aerogelExitPoint.z() > state->z() )
     {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting C4F10 entry point" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endreq;
       moveState( state, aerogelExitPoint.z(), refState );
     }
   }

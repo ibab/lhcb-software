@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.9 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.10 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,8 +39,8 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
 
   // job options
   m_radScale[Rich::Aerogel] =  0.037;
-  m_radScale[Rich::C4F10]   =  0.0105;
-  m_radScale[Rich::CF4]     = -0.014;
+  m_radScale[Rich::Rich1Gas]   =  0.0105;
+  m_radScale[Rich::Rich2Gas]     = -0.014;
   declareProperty( "RadOpticalCorrections", m_radScale );
 
 }
@@ -57,8 +57,8 @@ StatusCode RichRecGeomTool::initialize()
 
   // Cache the acceptance data
   m_radOutLimLoc[Rich::Aerogel] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);
-  m_radOutLimLoc[Rich::C4F10]   = m_detParams->AvAcceptOuterLimitsLocal(Rich::C4F10);
-  m_radOutLimLoc[Rich::CF4]     = m_detParams->AvAcceptOuterLimitsLocal(Rich::CF4);
+  m_radOutLimLoc[Rich::Rich1Gas]   = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich1Gas);
+  m_radOutLimLoc[Rich::Rich2Gas]     = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich2Gas);
 
   // info printout
   info() << "Av. optical distortion correction parameters : " << m_radScale << endreq;

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.4 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.5 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -38,13 +38,13 @@ RichSimplePhotonPredictor( const std::string& type,
   declareInterface<IRichPhotonPredictor>(this);
 
   m_minROI.push_back( 130 ); // aerogel
-  m_minROI.push_back( 0 );   // c4f10
-  m_minROI.push_back( 0 );   // cf4
+  m_minROI.push_back( 0 );   // rich1Gas
+  m_minROI.push_back( 0 );   // rich2Gas
   declareProperty( "MinTrackROI", m_minROI );
 
   m_maxROI.push_back( 350 );   // aerogel
-  m_maxROI.push_back(  90 );   // c4f10
-  m_maxROI.push_back( 200 );   // cf4
+  m_maxROI.push_back(  90 );   // rich1Gas
+  m_maxROI.push_back( 200 );   // rich2Gas
   declareProperty( "MaxTrackROI", m_maxROI );
 
 }
@@ -80,26 +80,26 @@ StatusCode RichSimplePhotonPredictor::finalize()
 {
 
   if ( m_Nselected[Rich::Aerogel] > 0 ||
-       m_Nselected[Rich::C4F10]   > 0 ||
-       m_Nselected[Rich::CF4]     > 0 )
+       m_Nselected[Rich::Rich1Gas]   > 0 ||
+       m_Nselected[Rich::Rich2Gas]     > 0 )
   {
 
     // statistical tool
     RichPoissonEffFunctor occ("%10.2f +-%7.2f");
 
     // printout stats
-    info() << "=======================================================" << endreq
-           << "  Pixel/Segment combination selection summary : " << endreq
-           << "    Aerogel : Selected "
+    info() << "======================================================================" << endreq
+           << "           Pixel/Segment combination selection summary : " << endreq
+           << "  Aerogel   : Selected "
            << occ(m_Nselected[Rich::Aerogel],m_Nselected[Rich::Aerogel]+m_Nreject[Rich::Aerogel])
            << " % of possible candidates" << endreq
-           << "    C4F10   : Selected "
-           << occ(m_Nselected[Rich::C4F10],m_Nselected[Rich::C4F10]+m_Nreject[Rich::C4F10])
+           << "  Rich1Gas  : Selected "
+           << occ(m_Nselected[Rich::Rich1Gas],m_Nselected[Rich::Rich1Gas]+m_Nreject[Rich::Rich1Gas])
            << " % of possible candidates" << endreq
-           << "    CF4     : Selected "
-           << occ(m_Nselected[Rich::CF4],m_Nselected[Rich::CF4]+m_Nreject[Rich::CF4])
+           << "  Rich2Gas  : Selected "
+           << occ(m_Nselected[Rich::Rich2Gas],m_Nselected[Rich::Rich2Gas]+m_Nreject[Rich::Rich2Gas])
            << " % of possible candidates" << endreq
-           << "=======================================================" << endreq;
+           << "======================================================================" << endreq;
   }
 
   // Execute base class method

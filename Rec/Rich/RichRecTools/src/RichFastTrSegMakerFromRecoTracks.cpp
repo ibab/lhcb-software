@@ -5,7 +5,7 @@
  * Implementation file for class : RichFastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.2 2006-04-13 17:34:35 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.3 2006-05-05 11:01:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -51,35 +51,35 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
 
   // Nominal z positions of states at RICHes (only needs to be rough)
   m_nomZstates[Rich::Aerogel] = 0*cm;
-  m_nomZstates[Rich::C4F10]   = 249.0*cm;
-  m_nomZstates[Rich::CF4]     = 951.0*cm;
+  m_nomZstates[Rich::Rich1Gas]   = 249.0*cm;
+  m_nomZstates[Rich::Rich2Gas]     = 951.0*cm;
   declareProperty( "NominalZPositions", m_nomZstates );
 
   // tolerances on z positions
   m_zTolerance[Rich::Aerogel] = 800*mm;
-  m_zTolerance[Rich::C4F10]   = 800*mm;
-  m_zTolerance[Rich::CF4]     = 2000*mm;
+  m_zTolerance[Rich::Rich1Gas]   = 800*mm;
+  m_zTolerance[Rich::Rich2Gas]     = 2000*mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
   m_minStateDiff[Rich::Aerogel] = 5*mm;
-  m_minStateDiff[Rich::C4F10]   = 50*mm;
-  m_minStateDiff[Rich::CF4]     = 100*mm;
+  m_minStateDiff[Rich::Rich1Gas]   = 50*mm;
+  m_minStateDiff[Rich::Rich2Gas]     = 100*mm;
   declareProperty( "MinStateDiff", m_minStateDiff );
 
   m_maxX[Rich::Aerogel]        = 375;
-  m_maxX[Rich::C4F10]          = 500;
-  m_maxX[Rich::CF4]            = 3000;
+  m_maxX[Rich::Rich1Gas]          = 500;
+  m_maxX[Rich::Rich2Gas]            = 3000;
   declareProperty( "MaxX", m_maxX );
 
   m_maxY[Rich::Aerogel]        = 375;
-  m_maxY[Rich::C4F10]          = 500;
-  m_maxY[Rich::CF4]            = 2500;
+  m_maxY[Rich::Rich1Gas]          = 500;
+  m_maxY[Rich::Rich2Gas]            = 2500;
   declareProperty( "MaxY", m_maxY );
 
   m_minR2[Rich::Aerogel]       = 50*50;
-  m_minR2[Rich::C4F10]         = 50*50;
-  m_minR2[Rich::CF4]           = 100*100;
+  m_minR2[Rich::Rich1Gas]         = 50*50;
+  m_minR2[Rich::Rich2Gas]           = 100*100;
   declareProperty( "MinRSq", m_minR2 );
 
 }
@@ -118,27 +118,27 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   {
     Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
   }
-  // Make temporary C4F10 description
-  if ( m_usedRads[Rich::C4F10] )
+  // Make temporary Rich1Gas description
+  if ( m_usedRads[Rich::Rich1Gas] )
   {
-    m_rads.push_back(Rich::C4F10);
-    m_entryPlanes[Rich::C4F10]   = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
-    m_exitPlanes[Rich::C4F10]    = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1930) );
+    m_rads.push_back(Rich::Rich1Gas);
+    m_entryPlanes[Rich::Rich1Gas]   = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1160) );
+    m_exitPlanes[Rich::Rich1Gas]    = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,1930) );
   }
   else
   {
-    Warning("Track segments for C4F10 are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
   }
-  // Make temporary CF4 description
-  if ( m_usedRads[Rich::CF4] )
+  // Make temporary Rich2Gas description
+  if ( m_usedRads[Rich::Rich2Gas] )
   {
-    m_rads.push_back(Rich::CF4);
-    m_entryPlanes[Rich::CF4]     = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,9500)  );
-    m_exitPlanes[Rich::CF4]      = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,11340) );
+    m_rads.push_back(Rich::Rich2Gas);
+    m_entryPlanes[Rich::Rich2Gas]     = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,9500)  );
+    m_exitPlanes[Rich::Rich2Gas]      = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,11340) );
   }
   else
   {
-    Warning("Track segments for CF4 are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
   }
 
   return sc;
@@ -277,7 +277,7 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     {
 
       // Which RICH
-      const Rich::DetectorType rich = ( Rich::CF4 == *rad ? Rich::Rich2 : Rich::Rich1 );
+      const Rich::DetectorType rich = ( Rich::Rich2Gas == *rad ? Rich::Rich2 : Rich::Rich1 );
 
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
@@ -329,7 +329,7 @@ RichFastTrSegMakerFromRecoTracks::stateInfo( const Track * track,
     states[1] = state; // exit
 
   }
-  else if ( Rich::C4F10 == rad )
+  else if ( Rich::Rich1Gas == rad )
   {
 
     // Entry state is vertex
@@ -345,7 +345,7 @@ RichFastTrSegMakerFromRecoTracks::stateInfo( const Track * track,
     states[1] = exitState ; // exit
 
   }
-  else if ( Rich::CF4 == rad )
+  else if ( Rich::Rich2Gas == rad )
   {
 
     // Both entry and exit states are at T stations

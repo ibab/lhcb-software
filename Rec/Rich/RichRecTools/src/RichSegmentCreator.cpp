@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.22 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.23 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,11 +76,11 @@ StatusCode RichSegmentCreator::initialize()
   const IRichDetParameters * detParams;
   acquireTool( "RichDetParameters", detParams );
   m_maxPhotEn[Rich::Aerogel] = detParams->maxPhotonEnergy( Rich::Aerogel );
-  m_maxPhotEn[Rich::C4F10]   = detParams->maxPhotonEnergy( Rich::C4F10   );
-  m_maxPhotEn[Rich::CF4]     = detParams->maxPhotonEnergy( Rich::CF4     );
+  m_maxPhotEn[Rich::Rich1Gas]   = detParams->maxPhotonEnergy( Rich::Rich1Gas   );
+  m_maxPhotEn[Rich::Rich2Gas]     = detParams->maxPhotonEnergy( Rich::Rich2Gas     );
   m_minPhotEn[Rich::Aerogel] = detParams->minPhotonEnergy( Rich::Aerogel );
-  m_minPhotEn[Rich::C4F10]   = detParams->minPhotonEnergy( Rich::C4F10   );
-  m_minPhotEn[Rich::CF4]     = detParams->minPhotonEnergy( Rich::CF4     );
+  m_minPhotEn[Rich::Rich1Gas]   = detParams->minPhotonEnergy( Rich::Rich1Gas   );
+  m_minPhotEn[Rich::Rich2Gas]     = detParams->minPhotonEnergy( Rich::Rich2Gas     );
   releaseTool(detParams);
 
   return sc;
@@ -97,8 +97,8 @@ StatusCode RichSegmentCreator::finalize()
     // Print out final stats
     debug() << "-------------------------------------------------------------------------------" << endreq
             << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts) << "  Aerogel segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::C4F10],m_Nevts)   << "  C4F10   segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::CF4],m_Nevts)     << "  CF4     segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Rich1Gas],m_Nevts)   << "  Rich1Gas   segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Rich2Gas],m_Nevts)     << "  Rich2Gas     segments/event" << endreq
             << "-------------------------------------------------------------------------------" << endreq;
   }
 
@@ -123,8 +123,8 @@ void RichSegmentCreator::handle ( const Incident& incident )
       debug() << "Saved " << richSegments()->size()
               << " RichRecSegments : Aerogel="
               << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
-              << " C4F10=" << m_segCount[Rich::C4F10]-m_segCountLast[Rich::C4F10]
-              << " CF4=" << m_segCount[Rich::CF4]-m_segCountLast[Rich::CF4] << endreq;
+              << " Rich1Gas=" << m_segCount[Rich::Rich1Gas]-m_segCountLast[Rich::Rich1Gas]
+              << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endreq;
     }
   }
 }

@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.3 2006-04-18 12:23:41 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.4 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -74,7 +74,7 @@
  *  @author Antonis Papanestis  A.Papanestis@rl.ac.uk
  *  @date   2003-11-14
  *
- *  @todo Review if "Unit()" method is needed in secondary reflection 
+ *  @todo Review if "Unit()" method is needed in secondary reflection
  *        plane construction
  */
 //-----------------------------------------------------------------------------
@@ -103,14 +103,15 @@ public: // methods (and doxygen comments) inherited from interface
   // Reconstructs the geometrical photon candidate for a given RichTrackSegment
   // and RichSmartID channel identifier.
   virtual StatusCode reconstructPhoton( const LHCb::RichTrackSegment& trSeg,
-                                        const LHCb::RichSmartID& smartID,
+                                        const LHCb::RichSmartID smartID,
                                         LHCb::RichGeomPhoton& gPhoton ) const;
 
   // Reconstructs the geometrical photon candidate for a given RichTrackSegment
   // and hit position in global LHCb coordinates.
   virtual StatusCode reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                                          const Gaudi::XYZPoint& detectionPoint,
-                                         LHCb::RichGeomPhoton& gPhoton ) const;
+                                         LHCb::RichGeomPhoton& gPhoton,
+                                         const LHCb::RichSmartID smartID = LHCb::RichSmartID() ) const;
 
 private: // methods
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.18 2006-02-16 16:15:35 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.19 2006-05-05 11:01:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -59,13 +59,13 @@ StatusCode RichCherenkovAngle::initialize()
   if ( !(refAero>0) )  return Error( "Aerogel nominal refractive index < 0" );
   m_nomCK[Rich::Aerogel] = acos(1.0/refAero);
 
-  const double refC4F10  = m_refIndex->refractiveIndex( Rich::C4F10   );
-  if ( !(refC4F10>0) ) return Error( "C4F10 nominal refractive index < 0"   );
-  m_nomCK[Rich::C4F10]   = acos(1.0/refC4F10);
+  const double refRich1Gas  = m_refIndex->refractiveIndex( Rich::Rich1Gas   );
+  if ( !(refRich1Gas>0) ) return Error( "Rich1Gas nominal refractive index < 0"   );
+  m_nomCK[Rich::Rich1Gas]   = acos(1.0/refRich1Gas);
 
-  const double refCF4    = m_refIndex->refractiveIndex( Rich::CF4     );
-  if ( !(refCF4>0) )   return Error( "CF4 nominal refractive index < 0"     );
-  m_nomCK[Rich::CF4]     = acos(1.0/refCF4);
+  const double refRich2Gas    = m_refIndex->refractiveIndex( Rich::Rich2Gas     );
+  if ( !(refRich2Gas>0) )   return Error( "Rich2Gas nominal refractive index < 0"     );
+  m_nomCK[Rich::Rich2Gas]     = acos(1.0/refRich2Gas);
 
   return sc;
 }
@@ -206,8 +206,8 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
       const Gaudi::XYZPoint hitPointLocal = m_smartIDTool->globalToPDPanel(hitPointGlobal);
 
       // Only use photons that end up on the same side of the RICH as the track
-      if ( ( iRad != Rich::CF4 && hitPointLocal.y()*tkPoint.y() > 0. ) ||
-           ( iRad == Rich::CF4 && hitPointLocal.x()*tkPoint.x() > 0. ) )
+      if ( ( iRad != Rich::Rich2Gas && hitPointLocal.y()*tkPoint.y() > 0. ) ||
+           ( iRad == Rich::Rich2Gas && hitPointLocal.x()*tkPoint.x() > 0. ) )
       {
         rSum += sqrt( gsl_pow_2(hitPointLocal.x() - tkPoint.x()) +
                       gsl_pow_2(hitPointLocal.y() - tkPoint.y()) );

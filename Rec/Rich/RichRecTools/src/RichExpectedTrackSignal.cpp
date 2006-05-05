@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.17 2006-03-02 15:29:19 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.18 2006-05-05 11:01:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -423,20 +423,28 @@ RichExpectedTrackSignal::activeInRadiator( RichRecTrack * track,
 
 bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
 {
+  // default to no info
+  bool hasInfo = false;
   // above electron hypothesis ?
   if ( aboveThreshold( segment, Rich::Electron ) )
   {
+    if ( msgLevel(MSG::DEBUG) )
+    { 
+      debug() << "RichRecSegment is above threshold" << endreq;
+    }
+
     // see if any mass hypothesis is detectable
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
       if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 )
       {
-        return true;
+        hasInfo = true; break;
       }
     }
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "RichRecSegment has zero GeomEfficiency" << endreq;
+      const std::string & A = ( hasInfo ? "non-zero" : "zero" );
+      debug() << "RichRecSegment has " << A << " geometrical efficiency" << endreq;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -444,7 +452,7 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
     debug() << "RichRecSegment is below threshold" << endreq;
   }
 
-  return false;
+  return hasInfo;
 }
 
 bool RichExpectedTrackSignal::hasRichInfo( RichRecTrack * track ) const

@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.5 2006-02-16 16:15:35 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.6 2006-05-05 11:01:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -56,19 +56,19 @@ RichFunctionalCKResVpForRecoTracks ( const std::string& type,
   (m_asmpt[Rich::Aerogel])[Rich::Track::KsTrack] = 0.00189;
   declareProperty( "AerogelAsymptopicErr", m_asmpt[Rich::Aerogel] );
 
-  m_asmpt[Rich::C4F10]   = std::vector<double>( Rich::Track::NTrTypes, 0.00150 );
-  (m_asmpt[Rich::C4F10])[Rich::Track::Forward] = 0.00118;
-  (m_asmpt[Rich::C4F10])[Rich::Track::Match]   = 0.00130;
-  (m_asmpt[Rich::C4F10])[Rich::Track::VeloTT]  = 0.00178;
-  (m_asmpt[Rich::C4F10])[Rich::Track::KsTrack] = 0.00132;
-  declareProperty( "C4F10AsymptopicErr", m_asmpt[Rich::C4F10] );
+  m_asmpt[Rich::Rich1Gas]   = std::vector<double>( Rich::Track::NTrTypes, 0.00150 );
+  (m_asmpt[Rich::Rich1Gas])[Rich::Track::Forward] = 0.00118;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Track::Match]   = 0.00130;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Track::VeloTT]  = 0.00178;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Track::KsTrack] = 0.00132;
+  declareProperty( "Rich1GasAsymptopicErr", m_asmpt[Rich::Rich1Gas] );
 
-  m_asmpt[Rich::CF4]     = std::vector<double>( Rich::Track::NTrTypes, 0.000329 );
-  (m_asmpt[Rich::CF4])[Rich::Track::Forward] = 0.000319;
-  (m_asmpt[Rich::CF4])[Rich::Track::Match]   = 0.000457;
-  (m_asmpt[Rich::CF4])[Rich::Track::Seed]    = 0.000636;
-  (m_asmpt[Rich::CF4])[Rich::Track::KsTrack] = 0.000400;
-  declareProperty( "CF4AsymptopicErr", m_asmpt[Rich::CF4] );
+  m_asmpt[Rich::Rich2Gas]     = std::vector<double>( Rich::Track::NTrTypes, 0.000329 );
+  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Forward] = 0.000319;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Match]   = 0.000457;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Seed]    = 0.000636;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Track::KsTrack] = 0.000400;
+  declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
 }
 
@@ -89,10 +89,10 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   //-----------------------------------------------------------------------------------------------
   const double aeroI = m_refIndex->refractiveIndex(Rich::Aerogel);
   m_chromFact[Rich::Aerogel] = ( aeroI>0  ? m_refIndex->refractiveIndexRMS(Rich::Aerogel)/aeroI : 0 );
-  const double c4f10I = m_refIndex->refractiveIndex(Rich::C4F10);
-  m_chromFact[Rich::C4F10]   = ( c4f10I>0 ? m_refIndex->refractiveIndexRMS(Rich::C4F10)/c4f10I : 0 );
-  const double cf4I = m_refIndex->refractiveIndex(Rich::CF4);
-  m_chromFact[Rich::CF4]     = ( cf4I>0   ? m_refIndex->refractiveIndexRMS(Rich::CF4)/cf4I : 0 );
+  const double rich1GasI = m_refIndex->refractiveIndex(Rich::Rich1Gas);
+  m_chromFact[Rich::Rich1Gas]   = ( rich1GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich1Gas)/rich1GasI : 0 );
+  const double rich2GasI = m_refIndex->refractiveIndex(Rich::Rich2Gas);
+  m_chromFact[Rich::Rich2Gas]     = ( rich2GasI>0   ? m_refIndex->refractiveIndexRMS(Rich::Rich2Gas)/rich2GasI : 0 );
 
   // scattering factors
   // ---------------------------------------------------------------------------------------------
@@ -100,21 +100,21 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   // aero thickness
   m_matThickness[Rich::Aerogel] = m_scatt * sqrt(1e-2); // ?
 
-  // C4F10 thickness
-  m_matThickness[Rich::C4F10]   = m_scatt * sqrt(2e-2); // ?
+  // Rich1Gas thickness
+  m_matThickness[Rich::Rich1Gas]   = m_scatt * sqrt(2e-2); // ?
 
-  // CF4 thickness
-  const double thickWindowCF4 = 1.0e-2;   // rad length
-  const double thickCF4       = 2.04e-02; // rad length
+  // Rich2Gas thickness
+  const double thickWindowRich2Gas = 1.0e-2;   // rad length
+  const double thickRich2Gas       = 2.04e-02; // rad length
   const double thickT3        = 0; // rad length
-  m_matThickness[Rich::CF4] = thickWindowCF4 + thickCF4 + thickT3;
+  m_matThickness[Rich::Rich2Gas] = thickWindowRich2Gas + thickRich2Gas + thickT3;
 
   // Printouts
   //---------------------------------------------------------------------------------------------
 
   info() << "Aerogel Asymptopic Errors : " << m_asmpt[Rich::Aerogel] << endreq
-         << "C4F10 Asymptopic Errors   : " << m_asmpt[Rich::C4F10]   << endreq
-         << "CF4 Asymptopic Errors     : " << m_asmpt[Rich::CF4]     << endreq;
+         << "Rich1Gas Asymptopic Errors   : " << m_asmpt[Rich::Rich1Gas]   << endreq
+         << "Rich2Gas Asymptopic Errors     : " << m_asmpt[Rich::Rich2Gas]     << endreq;
 
   return sc;
 }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.9 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,13 +37,13 @@ RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string&
   declareInterface<IRichPhotonPredictor>(this);
 
   m_minROI.push_back( 130 ); // aerogel
-  m_minROI.push_back( 0 );   // c4f10
-  m_minROI.push_back( 0 );   // cf4
+  m_minROI.push_back( 0 );   // rich1Gas
+  m_minROI.push_back( 0 );   // rich2Gas
   declareProperty( "MinTrackROI", m_minROI );
 
   m_maxROI.push_back( 350 );   // aerogel
-  m_maxROI.push_back(  90 );   // c4f10
-  m_maxROI.push_back( 200 );   // cf4
+  m_maxROI.push_back(  90 );   // rich1Gas
+  m_maxROI.push_back( 200 );   // rich2Gas
   declareProperty( "MaxTrackROI", m_maxROI );
 
   // location in TES of rings to use

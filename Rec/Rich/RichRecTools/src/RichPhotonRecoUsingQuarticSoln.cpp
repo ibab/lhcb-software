@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.6 2006-04-18 12:58:04 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.7 2006-05-05 11:01:40 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -94,21 +94,25 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
 
   if ( !m_useSecMirs )
   {
-     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
-  }
-
-  if ( m_forceFlatAssumption )
-  {
-    Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS );
+    Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
+    // no point doing interations
+    m_forceFlatAssumption = true;
   }
   else
   {
-    // check iterations
-    if ( m_nQits[Rich::Aerogel] < 1 ) return Error( "# Aerogel iterations < 1" );
-    if ( m_nQits[Rich::C4F10]   < 1 ) return Error( "# C4F10   iterations < 1" );
-    if ( m_nQits[Rich::CF4]     < 1 ) return Error( "# CF4     iterations < 1" );
-    info() << "Assuming spherical secondary mirrors : # iterations (aero/C4F10/CF4) = "
-           << m_nQits << endreq;
+    if ( m_forceFlatAssumption )
+    {
+      Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS );
+    }
+    else
+    {
+      // check iterations
+      if ( m_nQits[Rich::Aerogel]  < 1 ) return Error( "# Aerogel  iterations < 1" );
+      if ( m_nQits[Rich::Rich1Gas] < 1 ) return Error( "# Rich1Gas iterations < 1" );
+      if ( m_nQits[Rich::Rich2Gas] < 1 ) return Error( "# Rich2Gas iterations < 1" );
+      info() << "Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = "
+             << m_nQits << endreq;
+    }
   }
 
   return sc;
@@ -127,10 +131,10 @@ StatusCode RichPhotonRecoUsingQuarticSoln::finalize()
 //=========================================================================
 StatusCode RichPhotonRecoUsingQuarticSoln::
 reconstructPhoton ( const RichTrackSegment& trSeg,
-                    const RichSmartID& smartID,
+                    const RichSmartID smartID,
                     RichGeomPhoton& gPhoton ) const
 {
-  return reconstructPhoton( trSeg, m_idTool->globalPosition(smartID), gPhoton );
+  return reconstructPhoton( trSeg, m_idTool->globalPosition(smartID), gPhoton, smartID );
 }
 
 //-------------------------------------------------------------------------
@@ -139,7 +143,8 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
 StatusCode RichPhotonRecoUsingQuarticSoln::
 reconstructPhoton ( const RichTrackSegment& trSeg,
                     const Gaudi::XYZPoint& detectionPoint,
-                    RichGeomPhoton& gPhoton ) const
+                    RichGeomPhoton& gPhoton,
+                    const LHCb::RichSmartID smartID ) const
 {
 
   // Detector information (RICH, radiator and HPD panel)
@@ -173,7 +178,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // At this we are assuming a flat nominal mirror common to all segments
   double distance = m_rich[rich]->nominalPlane(side).Distance(detectionPoint);
   Gaudi::XYZPoint virtDetPoint =
-    ( m_useSecMirs ? 
+    ( m_useSecMirs ?
       detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() :
       detectionPoint
       );
@@ -267,6 +272,9 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       //return StatusCode::FAILURE;
     }
 
+    // Get pointers to the spherical amirror detector object
+    sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
+
     if ( m_useSecMirs )
     {
       // Get secondary mirror reflection point
@@ -274,9 +282,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
                                     virtDetPoint - sphReflPoint,
                                     m_rich[rich]->nominalPlane(side),
                                     secReflPoint);
-
-      // Get pointers to the spherical and sec mirror detector objects
-      sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
+      // Get pointers to the secondary mirror detector objects
       secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
     }
 
@@ -293,8 +299,11 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
     {
       // assume secondary mirrors are perfectly flat
 
-      distance     = secSegment->centreNormalPlane().Distance(detectionPoint);
-      virtDetPoint = detectionPoint - 2.0 * distance * secSegment->centreNormal();
+      if ( m_useSecMirs )
+      {
+        distance     = secSegment->centreNormalPlane().Distance(detectionPoint);
+        virtDetPoint = detectionPoint - 2.0 * distance * secSegment->centreNormal();
+      }
 
       // solve the quartic
       if ( !solveQuarticEq( emissionPoint,
@@ -377,10 +386,10 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // If using alligned mirror segments, get the final sec mirror reflection
+  // If using aligned mirror segments, get the final sec mirror reflection
   // point using the best mirror segments available at this point
   // --------------------------------------------------------------------------------------
-  if ( m_useAlignedMirrSegs )
+  if ( m_useSecMirs && m_useAlignedMirrSegs )
   {
     m_rayTracing->intersectPlane( sphReflPoint,
                                   virtDetPoint - sphReflPoint,
@@ -413,9 +422,14 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
   gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)      );
   gPhoton.setDetectionPoint         ( detectionPoint );
+  gPhoton.setSmartID                ( smartID        );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "Created photon " << gPhoton << endreq;
+  }
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;
@@ -444,12 +458,15 @@ findMirrorData( const Rich::DetectorType rich,
   // find the spherical mirror segment
   sphSegment = m_mirrorSegFinder->findSphMirror(rich, side, sphReflPoint );
 
-  // find the sec mirror intersction point and secondary mirror segment
-  m_rayTracing->intersectPlane( sphReflPoint,
-                                virtDetPoint - sphReflPoint,
-                                m_rich[rich]->nominalPlane(side),
-                                secReflPoint);
-  secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
+  if ( m_useSecMirs )
+  {
+    // find the sec mirror intersction point and secondary mirror segment
+    m_rayTracing->intersectPlane( sphReflPoint,
+                                  virtDetPoint - sphReflPoint,
+                                  m_rich[rich]->nominalPlane(side),
+                                  secReflPoint);
+    secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
+  }
 
   return true;
 }
@@ -468,7 +485,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
                          double & fraction ) const
 {
 
-  if ( radiator == Rich::C4F10 )
+  if ( radiator == Rich::Rich1Gas )
   {
     // First reflection and hit point on same y side ?
     const bool sameSide1 = ( sphReflPoint1.y() * detectionPoint.y() > 0 );
@@ -489,12 +506,12 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else
     {
-      //Warning( "C4F10 : Both RICH hits opposite side to track hit" );
+      //Warning( "Rich1Gas : Both RICH hits opposite side to track hit" );
       return false;
     }
 
   }
-  else if ( radiator == Rich::CF4 )
+  else if ( radiator == Rich::Rich2Gas )
   {
     // First sphReflPoint and hit point on same x side ?
     const bool sameSide1 = ( sphReflPoint1.x() * detectionPoint.x() > 0 );
@@ -515,7 +532,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else
     {
-      //Warning( "CF4 : Both RICH hits opposite side to track hit" );
+      //Warning( "Rich2Gas : Both RICH hits opposite side to track hit" );
       return false;
     }
   }
@@ -535,12 +552,12 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
   // Normalise photon vector to magnitude one
   photonDirection = photonDirection.Unit();
 
-  // get refractive indices for aerogel and c4f10
+  // get refractive indices for aerogel and rich1Gas
   const double refAero
     = m_refIndex->refractiveIndex( Rich::Aerogel, trSeg.avPhotonEnergy() );
-  const double refc4f10
-    = m_refIndex->refractiveIndex( Rich::C4F10,   trSeg.avPhotonEnergy() );
-  const double RratioSq = (refAero*refAero)/(refc4f10*refc4f10);
+  const double refrich1Gas
+    = m_refIndex->refractiveIndex( Rich::Rich1Gas,   trSeg.avPhotonEnergy() );
+  const double RratioSq = (refAero*refAero)/(refrich1Gas*refrich1Gas);
 
   // Apply Snells law and update angle
   Gaudi::XYZVector newDir( 0, 0,

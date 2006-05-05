@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.9 2006-05-05 11:01:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,6 +77,9 @@ private: // Private data
 
   std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
   double m_fixedScatValue;           ///< vector of fixed radiator geometrical scatter efficiency
+
+  /// Flag to turn on checking of HPD panel boundaries
+  bool m_checkBoundaries;
 
 };
 
