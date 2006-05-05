@@ -5,7 +5,7 @@
 * Implementation file for algorithm ChargedProtoPAlg
 *
 * CVS Log :-
-* $Id: ChargedProtoPAlg.cpp,v 1.26 2006-03-30 20:46:47 jonrob Exp $
+* $Id: ChargedProtoPAlg.cpp,v 1.27 2006-05-05 08:57:42 jonrob Exp $
 *
 * @author Chris Jones   Christopher.Rob.Jones@cern.ch
 * @date 29/03/2006
@@ -134,6 +134,8 @@ StatusCode ChargedProtoPAlg::execute()
 
     // Add Velo dE/dx info (To do)
 
+    // Combined Likelihood info (To do)
+    
     // has any PID info been added ?
     if ( !hasPIDInfo ) { proto->addInfo(ProtoParticle::NoPID,1); }
 
