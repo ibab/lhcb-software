@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.3 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.4 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -70,7 +70,7 @@ StatusCode RichPhotonSignalMonitor::execute()
 
   // Histogramming
   const RichHistoID hid;
-  //            Radiator          Aerogel  C4F10    CF4
+  //            Radiator          Aerogel  Rich1Gas    Rich2Gas
   const double minPhotEn[]    = { 1.5,     1.5,     1.5     };
   const double maxPhotEn[]    = { 4,       7,       7.5     };
   const double minRefInd[]    = { 0.031,   0.0013,  0.00044 };

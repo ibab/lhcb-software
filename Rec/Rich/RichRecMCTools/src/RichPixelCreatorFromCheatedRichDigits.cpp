@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.19 2006-03-02 15:25:01 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.20 2006-05-05 10:45:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -54,8 +54,8 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
 
   // Check which radiators to use
   if ( !m_usedRads[Rich::Aerogel] ) Warning("Pixel data for Aerogel is disabled",StatusCode::SUCCESS);
-  if ( !m_usedRads[Rich::C4F10]   ) Warning("Pixel data for C4F10 is disabled",StatusCode::SUCCESS);
-  if ( !m_usedRads[Rich::CF4]     ) Warning("Pixel data for CF4 is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::Rich1Gas]   ) Warning("Pixel data for Rich1Gas is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::Rich2Gas]     ) Warning("Pixel data for Rich2Gas is disabled",StatusCode::SUCCESS);
 
   return sc;
 }

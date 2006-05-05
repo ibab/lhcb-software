@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.5 2006-03-02 15:26:29 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.6 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -45,13 +45,13 @@ RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
   declareProperty( "EventLocations", m_evtLocs );
 
   m_minCKtheta.push_back( 0.09 );   // aerogel
-  m_minCKtheta.push_back( 0 );      // c4f10
-  m_minCKtheta.push_back( 0 );      // cf4
+  m_minCKtheta.push_back( 0 );      // rich1Gas
+  m_minCKtheta.push_back( 0 );      // rich2Gas
   declareProperty( "MinCherenkovTheta", m_minCKtheta );
 
   m_maxCKtheta.push_back( 0.300 ); // aerogel
-  m_maxCKtheta.push_back( 0.080 ); // c4f10
-  m_maxCKtheta.push_back( 0.050 ); // cf4
+  m_maxCKtheta.push_back( 0.080 ); // rich1Gas
+  m_maxCKtheta.push_back( 0.050 ); // rich2Gas
   declareProperty( "MaxCherenkovTheta", m_maxCKtheta );
 
   // which radiators to use

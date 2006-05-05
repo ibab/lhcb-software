@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.8 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.9 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -69,7 +69,7 @@ StatusCode RichCherenkovResMoni::execute()
   // Histogramming
   const RichHistoID hid;
 
-  // Histo ranges               Aero   C4F10  CF4
+  // Histo ranges               Aero   Rich1Gas  Rich2Gas
   //const double ckResRange[] = { 0.015, 0.01,  0.005 };
   const double ckResMax[] =   { 0.011, 0.011, 0.003 };
   MAX_CKTHETA_RAD;

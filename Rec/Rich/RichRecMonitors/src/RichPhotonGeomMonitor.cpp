@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.4 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.5 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -82,7 +82,7 @@ StatusCode RichPhotonGeomMonitor::execute()
   const RichHistoID hid;
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
-  //            Radiator          Aerogel  C4F10    CF4
+  //            Radiator          Aerogel  Rich1Gas    Rich2Gas
   const double tkHitSepMin[]  = { 0.0,     0.0,     0.0     };
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
 

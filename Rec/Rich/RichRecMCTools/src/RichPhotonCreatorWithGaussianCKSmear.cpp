@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.4 2006-01-23 14:09:59 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.5 2006-05-05 10:45:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -107,12 +107,12 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
            << "    Aerogel   : "
            << occ(m_smearCount[Rich::Aerogel],nEvents()) << "  photons/event "
            << 1000*m_smearWid[Rich::Aerogel] << " mrad smear" << endreq
-           << "    C4F10     : "
-           << occ(m_smearCount[Rich::C4F10],nEvents())   << "  photons/event "
-           << 1000*m_smearWid[Rich::C4F10] << " mrad smear" << endreq
-           << "    CF4       : "
-           << occ(m_smearCount[Rich::CF4],nEvents())     << "  photons/event "
-           << 1000*m_smearWid[Rich::CF4] << " mrad smear" << endreq
+           << "    Rich1Gas     : "
+           << occ(m_smearCount[Rich::Rich1Gas],nEvents())   << "  photons/event "
+           << 1000*m_smearWid[Rich::Rich1Gas] << " mrad smear" << endreq
+           << "    Rich2Gas       : "
+           << occ(m_smearCount[Rich::Rich2Gas],nEvents())     << "  photons/event "
+           << 1000*m_smearWid[Rich::Rich2Gas] << " mrad smear" << endreq
            << "=================================================================" << endreq;
 
   }

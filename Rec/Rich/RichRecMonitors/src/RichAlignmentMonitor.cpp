@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.6 2006-01-23 14:10:48 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.7 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -83,10 +83,10 @@ StatusCode RichAlignmentMonitor::initialize()
   }
 
   m_saturatedAngle[0] = acos( 1/m_richRefIndexTool->
-                              refractiveIndex(Rich::C4F10) );
+                              refractiveIndex(Rich::Rich1Gas) );
 
   m_saturatedAngle[1] = acos( 1/m_richRefIndexTool->
-                              refractiveIndex(Rich::CF4) );
+                              refractiveIndex(Rich::Rich2Gas) );
 
   debug() << "Saturated angle for Rich1 " << m_saturatedAngle[0] <<  endmsg
           << "Saturated angle for Rich2 " << m_saturatedAngle[1] << endmsg;

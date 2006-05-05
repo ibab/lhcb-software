@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecPixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.2 2006-03-22 10:02:29 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.3 2006-05-05 10:51:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -75,8 +75,8 @@ private: // methods
                      bool & isHPDQCK,
                      bool & isSignal,
                      bool & isAerogelCK,
-                     bool & isC4F10CK,
-                     bool & isCF4CK ) const;
+                     bool & isRich1GasCK,
+                     bool & isRich2GasCK ) const;
 
   /// Print summary for given RICH
   void printRICH( const Rich::DetectorType rich ) const;

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPhotonRecoTestAlg
  *
- *  $Id: RichPhotonRecoTestAlg.cpp,v 1.1 2006-03-02 15:26:29 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.cpp,v 1.2 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -104,7 +104,7 @@ StatusCode RichPhotonRecoTestAlg::execute()
                                     Vector(193.824,725.782,17990.2),
                                     Point(22.1956,80.5884,1907.12),
                                     Vector(190.165,723.361,17986.1),
-                                    Rich::C4F10, Rich::Rich1,
+                                    Rich::Rich1Gas, Rich::Rich1,
                                     nullErrs, nullErrs, nullErrs ) );
   Segs.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
                                     Point(-37.1749,-8.16514,990),
@@ -113,7 +113,7 @@ StatusCode RichPhotonRecoTestAlg::execute()
                                     Vector(-652.395,-144.149,19349.2),
                                     Point(-67.6491,-14.2807,1886.02),
                                     Vector(-649.358,-132.183,19353.4),
-                                    Rich::C4F10, Rich::Rich1,
+                                    Rich::Rich1Gas, Rich::Rich1,
                                     nullErrs, nullErrs, nullErrs ) );
 
   // Cf4 segments
@@ -124,7 +124,7 @@ StatusCode RichPhotonRecoTestAlg::execute()
                                     Vector(-1033.78,719.67,17948.1),
                                     Point(-284.777,459.695,11344.3),
                                     Vector(-1038.67,719.252,17940.1),
-                                    Rich::CF4, Rich::Rich2,
+                                    Rich::Rich2Gas, Rich::Rich2,
                                     nullErrs, nullErrs, nullErrs ) );
   Segs.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
                                     Point(160.598,47.8836,9500.18),
@@ -133,7 +133,7 @@ StatusCode RichPhotonRecoTestAlg::execute()
                                     Vector(1278.51,154.37,35339.7),
                                     Point(227.559,55.8973,11334.7),
                                     Vector(1295.61,154.249,35312.6),
-                                    Rich::CF4, Rich::Rich2,
+                                    Rich::Rich2Gas, Rich::Rich2,
                                     nullErrs, nullErrs, nullErrs ) );
 
   // test photon reconstruction

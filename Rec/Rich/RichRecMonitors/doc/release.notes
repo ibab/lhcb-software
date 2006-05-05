@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Chris Jones
+ - Adapt to changes in radiator names
+
 !====================== RichRecMonitors v2r0 2006-03-07 ======================
 ! 2006-03-02 - Chris Jones
  - Update pixel monitors with new plots for suppression efficiencies etc.

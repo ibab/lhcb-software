@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.4 2006-04-12 16:40:33 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.5 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -111,8 +111,8 @@ StatusCode RichPixelPositionMonitor::execute()
               << "     global        " << gPos << endreq
               << "     local         " << lPos << endreq
               << "     local Aerogel " << pixel->localPosition(Rich::Aerogel) << endreq
-              << "     local C4F10   " << pixel->localPosition(Rich::C4F10) << endreq
-              << "     local CF4     " << pixel->localPosition(Rich::CF4) << endreq;
+              << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq
+              << "     local Rich2Gas     " << pixel->localPosition(Rich::Rich2Gas) << endreq;
     }
 
     // map of hits in each HPD

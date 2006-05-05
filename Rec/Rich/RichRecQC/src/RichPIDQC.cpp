@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.46 2006-05-02 12:35:55 erodrigu Exp $
+ *  $Id: RichPIDQC.cpp,v 1.47 2006-05-05 10:51:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -296,8 +296,8 @@ StatusCode RichPIDQC::execute()
                   << tkType << "' track, Ptot " << tkPtot << " GeV/c," << endreq
                   << "  Active rads =";
         if ( iPID->usedAerogel() ) { verbose() << " " << Rich::Aerogel; }
-        if ( iPID->usedC4F10()   ) { verbose() << " " << Rich::C4F10;   }
-        if ( iPID->usedCF4()     ) { verbose() << " " << Rich::CF4;     }
+        if ( iPID->usedRich1Gas()   ) { verbose() << " " << Rich::Rich1Gas;   }
+        if ( iPID->usedRich2Gas()     ) { verbose() << " " << Rich::Rich2Gas;     }
         verbose() << endreq
                   << "  Threshold   = ";
         {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {

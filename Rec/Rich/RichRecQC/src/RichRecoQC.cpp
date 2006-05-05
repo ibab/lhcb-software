@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.23 2006-03-02 15:27:39 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.24 2006-05-05 10:51:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -77,7 +77,7 @@ StatusCode RichRecoQC::execute()
   // Rich Histo ID
   const RichHistoID hid;
 
-  // Histo ranges               Aero   C4F10  CF4
+  // Histo ranges               Aero   Rich1Gas  Rich2Gas
   const double ckResRange[] = { 0.01, 0.005,  0.0025 };
 
   // Make sure all tracks and segments have been formed

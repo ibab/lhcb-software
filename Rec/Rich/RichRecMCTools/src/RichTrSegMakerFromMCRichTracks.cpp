@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.5 2006-03-17 15:55:32 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.6 2006-05-05 10:46:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -44,13 +44,13 @@ RichTrSegMakerFromMCRichTracks( const std::string& type,
   declareProperty( "UseRadiators", m_usedRads );
 
   m_minPathL[Rich::Aerogel] = 10*mm;
-  m_minPathL[Rich::C4F10]   = 500*mm;
-  m_minPathL[Rich::CF4]     = 500*mm;
+  m_minPathL[Rich::Rich1Gas]   = 500*mm;
+  m_minPathL[Rich::Rich2Gas]     = 500*mm;
   declareProperty( "MinPathLengths", m_minPathL );
 
   m_minPhots[Rich::Aerogel] = 3;
-  m_minPhots[Rich::C4F10]   = 5;
-  m_minPhots[Rich::CF4]     = 5;
+  m_minPhots[Rich::Rich1Gas]   = 5;
+  m_minPhots[Rich::Rich2Gas]     = 5;
   declareProperty( "MinNumPhotons", m_minPhots );
 
 }
@@ -75,11 +75,11 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
 
   // get the radiators
   m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
-  m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
-  m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
+  m_radiators[Rich::Rich1Gas]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas   );
+  m_radiators[Rich::Rich2Gas]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas     );
 
-  info() << "Min path lengths for aero/C4F10/CF4 segments = " << m_minPathL << endreq
-         << "Min # photons for aero/C4F10/CF4 segments    = " << m_minPhots << endreq;
+  info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq
+         << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;
 
   return sc;
 }

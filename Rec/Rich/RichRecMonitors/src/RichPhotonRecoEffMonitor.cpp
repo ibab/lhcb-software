@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.5 2006-02-16 16:07:48 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.6 2006-05-05 10:49:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -86,7 +86,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
   MIN_CKTHETA_RAD;
   PD_LOCAL_POSITIONS_X;
   PD_LOCAL_POSITIONS_Y;
-  //            Radiator          Aerogel  C4F10    CF4
+  //            Radiator          Aerogel  Rich1Gas    Rich2Gas
   const double ckRange[]      = { 0.015,   0.01,    0.005   };
   const double tkHitSepMin[]  = { 0.0,     0.0,     0.0     };
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
