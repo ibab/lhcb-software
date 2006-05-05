@@ -5,7 +5,7 @@
  *  Header file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.2 2006-03-16 15:48:13 jonrob Exp $
+ *  $Id: RichRadiatorTool.h,v 1.3 2006-05-05 09:32:42 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -18,7 +18,7 @@
 // base class
 #include "RichKernel/RichToolBase.h"
 
-#include "RichKernel/IRichRadiatorTool.h"            // Interface
+#include "RichKernel/IRichRadiatorTool.h"  // Interface
 
 #include "Kernel/RichRadiatorType.h"
 
@@ -59,11 +59,11 @@ public:
    * @return The number of intersections.
    * @retval Zero if there is no intersction.
    */
-  virtual unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
-                                      const Gaudi::XYZVector& globalVector,
-                                      const Rich::RadiatorType radiator,
-                                      std::vector<RichRadIntersection>&
-                                      intersections ) const;
+  unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
+                              const Gaudi::XYZVector& globalVector,
+                              const Rich::RadiatorType radiator,
+                              std::vector<RichRadIntersection>&
+                              intersections ) const;
 
 private:
 

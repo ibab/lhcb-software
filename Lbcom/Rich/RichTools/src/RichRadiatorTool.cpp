@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.3 2006-03-17 15:54:33 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.4 2006-05-05 09:32:42 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -37,7 +37,7 @@ DECLARE_TOOL_FACTORY( RichRadiatorTool );
 RichRadiatorTool::RichRadiatorTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : RichToolBase ( type, name , parent )
+  : RichToolBase ( type, name, parent )
 {
   declareInterface<IRichRadiatorTool>(this);
 }

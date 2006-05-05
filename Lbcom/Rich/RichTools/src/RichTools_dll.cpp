@@ -5,8 +5,7 @@
  * Dll file for RichTools Library
  *
  * CVS Log :-
- * $Id: RichTools_dll.cpp,v 1.2 2004-07-26 18:03:05 jonrob Exp $
- * $Log: not supported by cvs2svn $
+ * $Id: RichTools_dll.cpp,v 1.3 2006-05-05 09:32:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002

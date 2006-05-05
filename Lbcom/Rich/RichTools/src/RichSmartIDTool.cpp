@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.20 2006-03-01 09:58:45 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.21 2006-05-05 09:32:42 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -18,7 +18,6 @@
 // Declaration of the Tool Factory
 static const  ToolFactory<RichSmartIDTool>          s_factory ;
 const        IToolFactory& RichSmartIDToolFactory = s_factory ;
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -45,7 +44,7 @@ StatusCode RichSmartIDTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_richS = getDet<DeRichSystem>(DeRichLocation::RichSystem);
-  
+
   // HPD panel names
   const std::string pdPanelName[2][2]   ={{ DeRichHPDPanelLocation::Rich1Panel0,
                                             DeRichHPDPanelLocation::Rich1Panel1 },
@@ -64,7 +63,7 @@ StatusCode RichSmartIDTool::initialize()
       try {
         m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
       }
-      catch ( GaudiException& e ) {        
+      catch ( GaudiException& e ) {
         m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
       }
       debug() << "Stored photodetector panel "
@@ -134,7 +133,7 @@ StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
   if ( smartid.hpdColIsSet() && smartid.hpdNumInColIsSet() )
     if ( !m_richS->hpdIsActive( smartid ) )
       return StatusCode::FAILURE;
-  
+
   try
   {
     if (globalPoint.z() < 8000.0)
