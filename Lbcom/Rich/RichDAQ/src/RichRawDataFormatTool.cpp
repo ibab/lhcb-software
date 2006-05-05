@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.26 2006-04-19 17:05:05 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.27 2006-05-05 09:12:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -26,8 +26,8 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : RichToolBase    ( type, name , parent ),
-    m_richSys       ( 0                   ),
-    m_rawEvent      ( 0                   ),
+    m_richSys       ( NULL                ),
+    m_rawEvent      ( NULL                ),
     m_evtCount      ( 0                   ),
     m_hasBeenCalled ( false               ),
     m_maxHPDOc      ( 999999              )

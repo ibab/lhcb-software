@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDPixelClusterSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.7 2006-03-23 21:32:33 jonrob Exp $
+ *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.8 2006-05-05 09:12:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -22,14 +22,14 @@
 #include "RichKernel/BoostMemPoolAlloc.h"
 #include "RichKernel/RichSmartIDSorter.h"
 
-namespace PixelInfo
+namespace RichPixelClusterSuppressionInfo
 {
   static const int nPixelRowsOrCols = 32;
 }
 
 // namespaces
 using namespace LHCb; ///< LHCb general namespace
-using namespace PixelInfo;
+using namespace RichPixelClusterSuppressionInfo; ///< Namespace for local definitions
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDPixelClusterSuppressionTool RichHPDPixelClusterSuppressionTool.h
@@ -100,31 +100,49 @@ private: // utility classes
      *  @date   21/03/2006
      */
     //-----------------------------------------------------------------------------
-    class Cluster : 
+    class Cluster :
       public Rich::BoostMemPoolAlloc<RichHPDPixelClusterSuppressionTool::PixelData::Cluster>
     {
+
+    public: // definitions
+
+      /// data describing a single pixel
+      typedef std::pair<unsigned int,unsigned int> Pixel;
+
+      /// a vector of pixels
+      typedef std::vector< Pixel >                 Data;
+
 
     public: // methods
 
       /// Constructor
-      Cluster( const int id = -1 ) : m_size(0), m_clusterID(id) { }
-
-      /// Add a pixel (row,col) to this cluster
-      inline void addPixel() { ++m_size; }
+      Cluster( const int id = -1 ) : m_clusterID(id) 
+      { m_cluster.reserve(10); }
 
       /// Get cluster ID
       inline int id() const { return m_clusterID; }
 
-      /// read access to number of pixels in this cluster
-      inline const unsigned int size() const { return m_size; }
+      /// Add a pixel (row,col) to this cluster
+      inline void addPixel( const unsigned int row,
+                            const unsigned int col )
+      { m_cluster.push_back( Pixel(row,col) ); }
 
-      /// read access to number of pixels in this cluster
-      inline unsigned int & size() { return m_size; }
+      /// Add a pixel (row,col) to this cluster
+      inline void addPixel( const Pixel & pixel ) 
+      { m_cluster.push_back( pixel ); }
 
+      /// Get read access to cluster data
+      inline const Cluster::Data & pixels() const 
+      { return m_cluster; }
+
+      /// Return cluster size
+      inline unsigned int size() const 
+      { return pixels().size(); }
+      
     private:
 
-      unsigned int m_size;       ///< Number of pixels in this cluster
-      int          m_clusterID;  ///< Cluster ID
+      int  m_clusterID;  ///< Cluster ID
+      Data m_cluster;    ///< list of pixels in this cluster
 
     };
 
@@ -162,7 +180,8 @@ private: // utility classes
     MsgStream& fillStream( MsgStream& os ) const;
 
     /// Overload output to ostream
-    friend inline MsgStream& operator << ( MsgStream& os, const PixelData & data )
+    friend inline MsgStream& operator << ( MsgStream& os, 
+                                           const PixelData & data )
     { return data.fillStream(os); }
 
   private:
@@ -204,7 +223,7 @@ inline void RichHPDPixelClusterSuppressionTool::
 PixelData::setCluster( const int row, const int col, Cluster * clus )
 {
   (m_clusters[row])[col] = clus;
-  clus->addPixel();
+  clus->addPixel(row,col);
 }
 
 inline RichHPDPixelClusterSuppressionTool::
@@ -234,7 +253,12 @@ RichHPDPixelClusterSuppressionTool::
 PixelData::mergeClusters( Cluster * clus1, Cluster * clus2 )
 {
   // add pixels to clus1
-  clus1->size() += clus2->size();
+  for ( Cluster::Data::const_iterator i = clus2->pixels().begin();
+        i != clus2->pixels().end(); ++i )
+  {
+    clus1->addPixel( *i );
+    setCluster( (*i).first, (*i).second, clus1 );
+  }
   // return clus1 as merged cluster
   return clus1;
 }

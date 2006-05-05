@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.8 2006-03-23 21:32:33 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.9 2006-05-05 09:12:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -140,8 +140,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // Print out clustering results
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << hpdID << endreq
-              << pixelData << endreq;
+    verbose() << hpdID << endreq << pixelData << endreq;
   }
 
   // apply pixel cluster suppression
@@ -150,7 +149,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // was anything removed ?
   suppress = ( startSize != smartIDs.size() );
 
-  if ( suppress && m_sumPrint )
+  if ( m_sumPrint && suppress )
   {
     // Print message
     std::ostringstream hpd;
@@ -175,6 +174,7 @@ PixelData::fillStream ( MsgStream & os ) const
   }
   os << endreq;
 
+  // print out each row
   for ( int row = 0; row < nPixelRowsOrCols; ++row )
   {
     os << format( " r %2i | ", row );
@@ -199,9 +199,7 @@ PixelData::suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
-    const int row = (*iS).pixelRow();
-    const int col = (*iS).pixelCol();
-    if ( isOn(row,col) && getCluster(row,col)->size() <= maxSize )
+    if ( getCluster((*iS).pixelRow(),(*iS).pixelCol())->size() <= maxSize )
     {
       newSmartIDs.push_back(*iS);
     }
