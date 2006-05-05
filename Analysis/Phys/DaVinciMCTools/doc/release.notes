@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.106 2006-05-03 18:29:56 pkoppenb Exp $
+! $Id: release.notes,v 1.107 2006-05-05 17:48:22 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-05-05 - P. Koppenburg
+ - src/MCParticleMaker.cpp: 
+funny bug in MCParticleMaker. It's the line
+
+  double  E = sqrt(px*px + py*py + pz*pz + m*m); 
+
+well, m is not declared, so it takes the Gaudi units variable "m" for meter, 
+that has a value of 1000mm. The effect is that all created particles have a 
+mass of 1GeV! :-)
 
 ! 2006-05-03 - P. Koppenburg
  - DaVinciTools/IVisPrimVertexTool.h

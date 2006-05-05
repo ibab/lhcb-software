@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.20 2006-05-03 18:29:56 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.21 2006-05-05 17:48:23 pkoppenb Exp $
 // Include files
 #include <memory>
 
@@ -287,7 +287,9 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
   // Set pointOnTrackErr: take typical errors at vertex...
   Gaudi::XYZTVector mom = mc.momentum();
 
-  verbose() << "... and momentum " << mom << endmsg ;
+  double mass = mom.M() ;
+
+  verbose() << "... and momentum " << mom << " mass = " << mass << endmsg ;
 
   // Definition of ScalingFactor and Bias (momentum and charge dependent)
   int sign=mc.particleID().pid()/mc.particleID().abspid();
@@ -412,11 +414,11 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
     double py = mom.py() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
     double pz = mom.pz() + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
     //    double  E = mom.E() + deviates(6) + BIAS[6]*sqrt(covSF(6,6); //todo substitute for gamma
-    double  E = sqrt(px*px + py*py + pz*pz + m*m); 
+    double  E = sqrt(px*px + py*py + pz*pz + mass*mass); 
     verbose() << "... new position -> " << pos << endmsg ;
     verbose() << "... MC momenta -> " << mom << endmsg ;
     mom = Gaudi::XYZTVector( px, py, pz, E);
-    verbose() << "... new momenta -> " << mom << endmsg ;
+    verbose() << "... new momenta -> " << mom << "  New mass = " << mom.M() << endmsg ;
 
   }
     
