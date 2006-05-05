@@ -42,8 +42,6 @@ StatusCode DeSTLayer::initialize() {
     cachePlane();
   }
 
-  cachePlane();
-
   return StatusCode::SUCCESS;
 }
 

@@ -2,6 +2,9 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+! 2006-05-05 M. Needham
+ - only cache the plane in DeSTLayer once
+
 !========================= STDet v2r3 2006-04-19 =======================
 ! 2006-04-19 M. Needham
  - Changes to findSector methods of DeSTDetector - factor 2 faster
