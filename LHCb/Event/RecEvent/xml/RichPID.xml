@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.4 2006-02-06 10:43:49 jonrob Exp $
+  * $Id: RichPID.xml,v 1.5 2006-05-05 10:06:54 jonrob Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -181,8 +181,8 @@
                  type = "bitfield">
                 <bitfield desc="The best Particle ID, bit-packed into the history word. DO NOT access this field directly, instead use the provided accessor and setter methods" length="4" name="packedBestParticleID" getMeth="FALSE" setMeth="FALSE"  />
                 <bitfield desc="Information from aerogel was used to form this PID result"                   length="1" name="usedAerogel"            />
-                <bitfield desc="Information from C4F10 was used to form this PID result"                     length="1" name="usedC4F10"              />
-                <bitfield desc="Information from CF4 was used to form this PID result"                       length="1" name="usedCF4"                />
+                <bitfield desc="Information from Rich1 gas was used to form this PID result"                 length="1" name="usedRich1Gas"           />
+                <bitfield desc="Information from Rich2 gas was used to form this PID result"                 length="1" name="usedRich2Gas"           />
                 <bitfield desc="The electron hypothesis is above threshold in at least one active radiator"  length="1" name="electronHypoAboveThres" />
                 <bitfield desc="The muon hypothesis is above threshold in at least one active radiator"      length="1" name="muonHypoAboveThres"     />
                 <bitfield desc="The pion hypothesis is above threshold in at least one active radiator"      length="1" name="pionHypoAboveThres"     />
