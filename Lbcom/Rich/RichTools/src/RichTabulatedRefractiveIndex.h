@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.12 2006-03-02 15:29:52 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.13 2006-05-05 11:11:00 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -101,11 +101,11 @@ private: // methods
   /// UMS update method for Aerogel refractive index
   StatusCode updateAerogelRefIndex();
 
-  /// UMS update method for C4F10 refractive index
-  StatusCode updateC4F10RefIndex();
+  /// UMS update method for Rich1Gas refractive index
+  StatusCode updateRich1GasRefIndex();
 
-  /// UMS update method for CF4 refractive index
-  StatusCode updateCF4RefIndex();
+  /// UMS update method for Rich2Gas refractive index
+  StatusCode updateRich2GasRefIndex();
 
   /// Update refractive index for given radiator
   StatusCode updateRefIndex( const Rich::RadiatorType rad );

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Chris Jones
+ - Adapt to changes in radiator names
+
 ! 2006-04-18 - Antonis Papanestis
  - Allow RichMirrorSegFinder to operate with spherical mirrors only on
 	 one side of Rich2. Useful for testbeam.

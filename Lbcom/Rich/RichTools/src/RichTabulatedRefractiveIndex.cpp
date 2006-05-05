@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.11 2006-03-02 15:29:52 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.12 2006-05-05 11:11:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -46,8 +46,8 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   // for aero, get the "0" file, as the multisolid does not have any properties
   // this whole scheme needs reworking to cope properly with different aerogel tiles.
   m_deRads[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
-  m_deRads[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
-  m_deRads[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
+  m_deRads[Rich::Rich1Gas]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas   );
+  m_deRads[Rich::Rich2Gas]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas     );
 
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocation::Rich1 );
@@ -55,14 +55,14 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
 
   // Register dependencies on DeRichRadiator objects to UMS
 
-  // C4F10
+  // Rich1Gas
   updMgrSvc()->registerCondition( this,
-                                  DeRichRadiatorLocation::C4F10,
-                                  &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
-  // CF4
+                                  DeRichRadiatorLocation::Rich1Gas,
+                                  &RichTabulatedRefractiveIndex::updateRich1GasRefIndex );
+  // Rich2Gas
   updMgrSvc()->registerCondition( this,
-                                  DeRichRadiatorLocation::CF4,
-                                  &RichTabulatedRefractiveIndex::updateCF4RefIndex );
+                                  DeRichRadiatorLocation::Rich2Gas,
+                                  &RichTabulatedRefractiveIndex::updateRich2GasRefIndex );
   // aerogel
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::Aerogel,
@@ -82,17 +82,17 @@ StatusCode RichTabulatedRefractiveIndex::updateAerogelRefIndex()
   return sc;
 }
 
-StatusCode RichTabulatedRefractiveIndex::updateC4F10RefIndex()
+StatusCode RichTabulatedRefractiveIndex::updateRich1GasRefIndex()
 {
-  const StatusCode sc = updateRefIndex(Rich::C4F10);
-  m_refRMS[Rich::C4F10] = 0.393e-4; // temp fixup
+  const StatusCode sc = updateRefIndex(Rich::Rich1Gas);
+  m_refRMS[Rich::Rich1Gas] = 0.393e-4; // temp fixup
   return sc;
 }
 
-StatusCode RichTabulatedRefractiveIndex::updateCF4RefIndex()
+StatusCode RichTabulatedRefractiveIndex::updateRich2GasRefIndex()
 {
-  const StatusCode sc = updateRefIndex(Rich::CF4);
-  m_refRMS[Rich::CF4] = 0.123e-4; // temp fixup
+  const StatusCode sc = updateRefIndex(Rich::Rich2Gas);
+  m_refRMS[Rich::Rich2Gas] = 0.123e-4; // temp fixup
   return sc;
 }
 
@@ -138,7 +138,7 @@ double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType r
                                                       const double energyBot,
                                                       const double energyTop ) const
 {
-  const Rich::DetectorType rich = ( rad == Rich::CF4 ? Rich::Rich2 : Rich::Rich1 );
+  const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ? Rich::Rich2 : Rich::Rich1 );
   return refractiveIndex( rad, 
                           m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop)/eV );
 }
