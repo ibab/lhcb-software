@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.115 2006-03-23 10:10:44 cattanem Exp $
+! $Id: release.notes,v 1.116 2006-05-05 10:25:41 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-05-05 - Chris Jones
+ - Adapt to radiator name changes
 
 !======================= RichKernel v6r2 2006-03-23 =======================
 ! 2006-03-23 - Marco Cattaneo

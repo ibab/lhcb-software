@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.4 2006-04-06 14:13:25 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.5 2006-05-05 10:25:41 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -175,7 +175,7 @@ namespace LHCb
         m_radiator       ( rad  ),
         m_rich           ( rich ),
         m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( Rich::C4F10 == rad ? exitErrors : entryErrors ),
+        m_errorsMiddle   ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ),
         m_errorsExit     ( exitErrors   ),
         m_avPhotonEnergy ( 0 ),
         m_rotation       ( 0 ),
@@ -205,7 +205,7 @@ namespace LHCb
         m_radiator       ( rad  ),
         m_rich           ( rich ),
         m_errorsEntry    ( entryErrors  ),
-        m_errorsMiddle   ( Rich::C4F10 == rad ? exitErrors : entryErrors ),
+        m_errorsMiddle   ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ),
         m_errorsExit     ( exitErrors   ),
         m_avPhotonEnergy ( 0 ),
         m_rotation       ( 0 ),

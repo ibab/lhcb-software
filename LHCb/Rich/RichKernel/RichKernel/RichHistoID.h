@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichHistoID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.2 2006-01-17 13:57:02 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.3 2006-05-05 10:25:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -36,7 +36,7 @@
  *    RichHistoID hid;
  *
  *    // Create the histo ID for a histogram in a given radiator
- *    // id will be "[rad]/shortName" where [rad] is either aerogel, c4f10 or cf4.
+ *    // id will be "[rad]/shortName" where [rad] is either aerogel, rich1Gas or rich2Gas.
  *    std::string id = hid(rad,"shortName");
  *
  *    // Can also be used directly with GaudiHistos methods i.e.
