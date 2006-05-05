@@ -5,7 +5,7 @@
 package           STTools
 version           v2r1
 
-branches          cmt doc src
+branches          cmt doc src options
 include_path      none
 
 use DigiEvent   v* Event
