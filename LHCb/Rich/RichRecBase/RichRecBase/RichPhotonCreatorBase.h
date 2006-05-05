@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.7 2006-05-05 10:40:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -322,26 +322,6 @@ RichPhotonCreatorBase::minCKTheta( LHCb::RichRecSegment * segment,
   return ( m_ckAngle->avgCherenkovTheta(segment,id) - ckSearchRange(segment,id) );
 }
 
-inline bool
-RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
-                                          const double ckTheta ) const
-{
-  // Just check overall absolute min - max range
-  if ( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) ) return false;
-  // Check between eletron max and proton min around each track
-  //if ( ckTheta < minCKTheta(segment) || ckTheta > maxCKTheta(segment) ) return false;
-  //return true;
-  // Finer grained check, to be within tolerence of any mass hypothesis
-  bool ok = false;
-  for ( int ihypo = 0; ihypo < Rich::NParticleTypes; ++ihypo )
-  {
-    const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(ihypo);
-    const double tmpT = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) ) { ok = true; break; }
-  }
-  return ok;
-}
-
 inline bool RichPhotonCreatorBase::bookKeep() const
 {
   return m_bookKeep;
@@ -354,21 +334,6 @@ inline void RichPhotonCreatorBase::savePhoton( LHCb::RichRecPhoton * photon,
   richPhotons()->insert( photon, key );
   // count
   ++m_photCount[ photon->richRecSegment()->trackSegment().radiator() ];
-}
-
-inline bool RichPhotonCreatorBase::checkPhotonProb( LHCb::RichRecPhoton * photon ) const
-{
-  // check photon has significant probability to be signal for any
-  // hypothesis. If not then reject
-  bool keepPhoton = false;
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
-  {
-    if ( m_photonSignal->predictedPixelSignal( photon,
-                                               static_cast<Rich::ParticleIDType>(iHypo) )
-         > m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ] )
-    { keepPhoton = true; break; }
-  }
-  return keepPhoton;
 }
 
 #endif // RICHRECBASE_RICHPHOTONCREATORBASE_H
