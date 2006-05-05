@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.17 2006-04-18 16:43:37 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.18 2006-05-05 11:09:59 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -197,23 +197,23 @@ StatusCode RichMirrorSegFinder::initialize( )
   debug() << "Found " << m_maxMirror[Rich::Rich2][Rich::left][sph] +
     m_maxMirror[Rich::Rich2][Rich::right][sph] << " spherical and "
           << m_maxMirror[Rich::Rich2][Rich::left][sec] +
-    m_maxMirror[Rich::Rich2][Rich::right][sec] << " sec mirrors in Rich1"
+    m_maxMirror[Rich::Rich2][Rich::right][sec] << " sec mirrors in Rich2"
           << endmsg;
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    debug() << "Stored " << m_maxMirror[Rich::Rich1][Rich::top][sph]
-            << " and " << m_maxMirror[Rich::Rich1][Rich::bottom][sph]
-            << " spherical mirrors in the top and bottom of Rich1, and "
-            << m_maxMirror[Rich::Rich1][Rich::top][sec] << " and "
-            << m_maxMirror[Rich::Rich1][Rich::bottom][sec] << " secondary mirrors"
-            << endreq;
-    debug() << "Stored " << m_maxMirror[Rich::Rich2][Rich::left][sph]
-            << " and " << m_maxMirror[Rich::Rich2][Rich::right][sph]
-            << " spherical mirrors in the left and right of Rich2, and "
-            << m_maxMirror[Rich::Rich2][Rich::left][sec] << " and "
-            << m_maxMirror[Rich::Rich2][Rich::right][sec] << " secondary mirrors"
-            << endreq;
+    verbose() << "Stored " << m_maxMirror[Rich::Rich1][Rich::top][sph]
+              << " and " << m_maxMirror[Rich::Rich1][Rich::bottom][sph]
+              << " spherical mirrors in the top and bottom of Rich1, and "
+              << m_maxMirror[Rich::Rich1][Rich::top][sec] << " and "
+              << m_maxMirror[Rich::Rich1][Rich::bottom][sec] << " secondary mirrors"
+              << endreq;
+    verbose() << "Stored " << m_maxMirror[Rich::Rich2][Rich::left][sph]
+              << " and " << m_maxMirror[Rich::Rich2][Rich::right][sph]
+              << " spherical mirrors in the left and right of Rich2, and "
+              << m_maxMirror[Rich::Rich2][Rich::left][sec] << " and "
+              << m_maxMirror[Rich::Rich2][Rich::right][sec] << " secondary mirrors"
+              << endreq;
 
     {for ( unsigned int r=0; r<2; ++r )
       for ( unsigned int s=0; s<2; ++s )
@@ -278,6 +278,9 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 
   }
 
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Found primary mirror " << mirrorNum << endreq;
+
   // return found mirror
   return m_sphMirrors[rich][side][mirrorNum];
 }
@@ -318,6 +321,9 @@ RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
     m_lastFoundMirror[rich][side][sec] = mirrorNum;
 
   }
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Found secondary mirror " << mirrorNum << endreq;
 
   // return found mirror
   return m_secMirrors[rich][side][mirrorNum];
