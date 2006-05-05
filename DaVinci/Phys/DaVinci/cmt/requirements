@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.307 2006-04-18 15:05:16 jpalac Exp $
+# $Id: requirements,v 1.308 2006-05-05 13:18:45 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -39,13 +39,13 @@ use ParamFiles          v4r1         -no_auto_imports
 # use BrunelDQ		v1r0	DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v20r3)
-use LHCb	v20r3                -no_auto_imports
+use LHCb	v20r4                -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v4r3)
-use LbcomSys    v4r3                 -no_auto_imports
+use LbcomSys    v4r4                 -no_auto_imports
 
 #-- Rec packages (from REC_v3r1)
-use RecSys      v3r1                 -no_auto_imports
+use RecSys      v3r2                 -no_auto_imports
 
 #-- Phys packages (from PHYS_v3r1)
 use PhysSys     v3r1
