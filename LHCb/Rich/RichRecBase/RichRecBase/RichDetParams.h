@@ -5,7 +5,7 @@
  * A collection of general parameters for histogramming limits etc.
  *
  * CVS Log :-
- * $Id: RichDetParams.h,v 1.8 2005-06-17 14:48:57 jonrob Exp $
+ * $Id: RichDetParams.h,v 1.9 2006-05-05 10:39:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -17,7 +17,7 @@
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 
-#define RADIATOR_NAMES      const std::string radiator[] = { "aerogel", "C4F10", "CF4" }
+#define RADIATOR_NAMES      const std::string radiator[] = { "aerogel", "Rich1Gas", "Rich2Gas" }
 #define RICH_NAMES          const std::string rich[] =     { "Rich1", "Rich2" }
 #define HYPOTHESIS_NAMES    const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr", "X" }
 #define RICH_HISTO_OFFSET   const int richOffset = 100000
@@ -29,7 +29,7 @@
 #define RADIATOR_MAX_CKTHETA \
 const double ckThetaMax[] = { 0.3, 0.06, 0.06 }
 
-//                               Aerogel  C4F10    CF4
+//                               Aerogel  Rich1Gas    Rich2Gas
 #define RADIATOR_GLOBAL_POSITIONS_X \
 const double xRadEntGlo[]  = {  420.0,  1500.0,  3500.0 };\
 const double xRadExitGlo[] = {  420.0,  1500.0,  4000.0 }

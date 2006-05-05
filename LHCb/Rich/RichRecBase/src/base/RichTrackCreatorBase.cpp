@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.6 2006-02-16 16:04:59 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.7 2006-05-05 10:42:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -125,12 +125,12 @@ void RichTrackCreatorBase::printStats() const
       if ( (*i).second.aeroSegs>0 )
         info() << "                     :"
                << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endreq;
-      if ( (*i).second.c4f10Segs>0 )
+      if ( (*i).second.rich1GasSegs>0 )
         info() << "                     :"
-               << occ((*i).second.c4f10Segs,m_Nevts) << " C4F10    segments/event" << endreq;
-      if ( (*i).second.cf4Segs>0 )
+               << occ((*i).second.rich1GasSegs,m_Nevts) << " Rich1Gas segments/event" << endreq;
+      if ( (*i).second.rich2GasSegs>0 )
         info() << "                     :"
-               << occ((*i).second.cf4Segs,m_Nevts)   << " CF4      segments/event" << endreq;
+               << occ((*i).second.rich2GasSegs,m_Nevts)   << " Rich2Gas segments/event" << endreq;
     }
     info() << "=================================================================================" << endreq;
 

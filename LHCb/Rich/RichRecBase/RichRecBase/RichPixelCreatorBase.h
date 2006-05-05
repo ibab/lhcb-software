@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.8 2006-03-02 15:24:07 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.9 2006-05-05 10:40:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -338,11 +338,11 @@ RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel )
   if ( Rich::Rich1 == pixel->detector() )
   {
     pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::C4F10),Rich::C4F10);
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich1Gas),Rich::Rich1Gas);
   }
   else
   {
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::CF4),Rich::CF4);
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich2Gas),Rich::Rich2Gas);
   }
 }
 

@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.2 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.3 2006-05-05 10:41:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -92,18 +92,18 @@ protected: // helper classes
   {
   public:
     /// Default constructor
-    TrackCount() : triedTracks(0), selectedTracks(0), aeroSegs(0), c4f10Segs(0), cf4Segs(0) {}
+    TrackCount() : triedTracks(0), selectedTracks(0), aeroSegs(0), rich1GasSegs(0), rich2GasSegs(0) {}
     unsigned int triedTracks;    ///< Number of tracks passing track selection
     unsigned int selectedTracks; ///< Number of tracks selected for RICH analysis
     unsigned int aeroSegs;       ///< Number of aerogel segments created
-    unsigned int c4f10Segs;      ///< Number of C4F10 segments created
-    unsigned int cf4Segs;        ///< Number of CF4 segments created
+    unsigned int rich1GasSegs;      ///< Number of Rich1Gas segments created
+    unsigned int rich2GasSegs;        ///< Number of Rich2Gas segments created
     /** Increment segment count for given radiator
      *  @param rad Radiator type to increment count for */
     void countRadiator( const Rich::RadiatorType rad )
     {
-      if      ( Rich::C4F10   == rad ) { ++c4f10Segs; }
-      else if ( Rich::CF4     == rad ) { ++cf4Segs;   }
+      if      ( Rich::Rich1Gas   == rad ) { ++rich1GasSegs; }
+      else if ( Rich::Rich2Gas     == rad ) { ++rich2GasSegs;   }
       else if ( Rich::Aerogel == rad ) { ++aeroSegs;  }
     }
   };
