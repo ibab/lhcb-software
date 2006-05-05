@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichPhotonReconstruction
  *
- *  $Id: IRichPhotonReconstruction.h,v 1.1 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichPhotonReconstruction.h,v 1.2 2006-05-05 10:39:07 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -17,10 +17,13 @@
 // from MathCore
 #include "Kernel/Point3DTypes.h"
 
+// RichKernel
+#include "Kernel/RichSmartID.h"
+
 // forward decs
 namespace LHCb
 {
-  class RichSmartID;
+  //class RichSmartID;
   class RichGeomPhoton;
   class RichTrackSegment;
 }
@@ -59,7 +62,7 @@ public:
    */
   virtual StatusCode
   reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
-                      const LHCb::RichSmartID& smartID,
+                      const LHCb::RichSmartID smartID,
                       LHCb::RichGeomPhoton& gPhoton ) const = 0;
 
   /** Reconstructs the geometrical photon candidate for a given RichTrackSegment
@@ -67,7 +70,9 @@ public:
    *
    *  @param trSeg          The RichTrackSegment to reconstruct the photon against
    *  @param detectionPoint The hit position in global LHCb coordinates
-   *  @param gPhoton  The reconstructed photon
+   *  @param gPhoton        The reconstructed photon
+   *  @param smartID        The RichSmartID associated to the hit position 
+   *                        (optional, used to set the data member in reconstructed photon)
    *
    *  @return Status of the reconstruction
    *  @retval StatusCode::SUCCESS Photon reconstruction was successful
@@ -76,7 +81,8 @@ public:
   virtual StatusCode
   reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                       const Gaudi::XYZPoint& detectionPoint,
-                      LHCb::RichGeomPhoton& gPhoton ) const = 0;
+                      LHCb::RichGeomPhoton& gPhoton,
+                      const LHCb::RichSmartID smartID = LHCb::RichSmartID() ) const = 0;
 
 };
 
