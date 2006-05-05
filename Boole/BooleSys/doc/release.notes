@@ -3,6 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v11r5>2006-05-05 Boole v11r5</A></H1><PRE>
+This version uses projects Gaudi v18r3, LHCb v20r4, Lbcom v4r4
+  and databases XmlDDDB v30r6, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
+Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
+
+This is the second bug fix release for DC06 production.
+
+Bug fixes:
+  . MC/Rich/DigitSummaries and MC/Muon/DigitsInfo were not being saved correctly
+    to the output .digi file (fixed in DigiContent.opts)
+  . Fixed an overlap in Rich1 Aerogel volume (XmlDDDB v30r6)
+
 </PRE><H1><A NAME=v11r4>2006-05-02 Boole v11r4</A></H1><PRE>
 This version uses projects Gaudi v18r3, LHCb v20r4, Lbcom v4r4
   and databases XmlDDDB v30r5, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
