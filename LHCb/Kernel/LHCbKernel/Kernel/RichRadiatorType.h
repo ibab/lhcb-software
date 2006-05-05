@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.9 2006-03-01 09:41:45 jonrob Exp $
+ *  $Id: RichRadiatorType.h,v 1.10 2006-05-05 10:11:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -42,13 +42,11 @@ namespace Rich {
       Aerogel         = 0,  ///< Aerogel in RICH1
       Rich1Gas        = 1,  ///< Gaseous RICH1 radiator
       Rich2Gas        = 2,  ///< Gaseous RICH2 radiator
-      C4F10           = 1,  ///< Gaseous RICH1 radiator (kept for backwards compatibility)
-      CF4             = 2,  ///< Gaseous RICH2 radiator (kept for backwards compatibility)
       // background types
-      GasQuartzWin,         ///< Quartz windows to the gas radiator volumes
-      HPDQuartzWin,         ///< HPD Quartz windows
-      Nitrogen,             ///< Nitrogen volume
-      AerogelFilter         ///< Aerogel filter material
+      GasQuartzWin    = 3,  ///< Quartz windows to the gas radiator volumes
+      HPDQuartzWin    = 4,  ///< HPD Quartz windows
+      Nitrogen        = 5,  ///< Nitrogen volume
+      AerogelFilter   = 6   ///< Aerogel filter material
     };
 
   /** Text conversion for RadiatorType enumeration

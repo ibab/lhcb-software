@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-05-05 - Chris Jones
+ - Remove obsoleted Rich::C4F10 and Rich::CF4 enums
+
 ! 2006-05-03 - Gerhard Raven
  - add generic typedef of Point and Vector to Trajectory, 
    and default arguments to LineTraj::direction, LineTraj::curvature

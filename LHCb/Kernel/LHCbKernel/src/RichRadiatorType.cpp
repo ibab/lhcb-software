@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::RadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.cpp,v 1.7 2006-03-01 09:41:46 jonrob Exp $
+ *  $Id: RichRadiatorType.cpp,v 1.8 2006-05-05 10:11:21 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
@@ -23,9 +23,9 @@ std::string Rich::text( const Rich::RadiatorType radiator )
 {
   switch( radiator )
   {
-  case Rich::Aerogel:            return "aerogel";
-  case Rich::C4F10:              return "C4F10";
-  case Rich::CF4:                return "CF4";
+  case Rich::Aerogel:            return "Aerogel";
+  case Rich::Rich1Gas:           return "Rich1Gas";
+  case Rich::Rich2Gas:           return "Rich2Gas";
   case Rich::GasQuartzWin:       return "GasQuartzWin";
   case Rich::HPDQuartzWin:       return "HPDQuartzWin";
   case Rich::Nitrogen:           return "Nitrogen";
