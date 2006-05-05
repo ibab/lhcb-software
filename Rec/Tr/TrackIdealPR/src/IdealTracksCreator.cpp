@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.19 2006-05-02 13:03:16 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.20 2006-05-05 19:18:51 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -85,8 +85,10 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
                    m_itTrackerPath = DeSTDetLocation::location("IT") );
   declareProperty( "OTGeometryPath",
                    m_otTrackerPath = DeOTDetectorLocation::Default );
-  declareProperty( "STPositionTool",
-                   m_stPositionToolName = "STOfflinePosition" );
+  declareProperty( "TTClusterPositionTool",
+                   m_ttPositionToolName = "STOfflinePosition" );
+  declareProperty( "ITClusterPositionTool",
+                   m_itPositionToolName = "STOfflinePosition/ITClusterPosition" );
   declareProperty( "VeloPositionTool",
                    m_veloPositionToolName = "VeloClusterPosition" );
   declareProperty( "MinNHits", m_minNHits = 6     );
@@ -121,8 +123,9 @@ StatusCode IdealTracksCreator::initialize()
 
   m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
 
-  // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
+  // Retrieve the STClusterPosition tools
+  m_ttPositionTool = tool<ISTClusterPosition>( m_ttPositionToolName );
+  m_itPositionTool = tool<ISTClusterPosition>( m_itPositionToolName );
 
   // Retrieve the VeloClusterPosition tool
   m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
@@ -443,7 +446,7 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
     const STCluster* aCluster = ttLink.first( mcPart );
     while ( NULL != aCluster ) {
       STMeasurement meas =
-        STMeasurement( *aCluster, *m_ttTracker, *m_stPositionTool );
+        STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
       track -> addToLhcbIDs( meas.lhcbID() );
       // Set the reference vector
       State* tempState;
@@ -468,7 +471,7 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
     const STCluster* aCluster = itLink.first( mcPart );
     while ( NULL != aCluster ) {
       STMeasurement meas =
-        STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
+        STMeasurement( *aCluster, *m_itTracker, *m_itPositionTool );
       track -> addToLhcbIDs( meas.lhcbID() );
       // Set the reference vector
       State* tempState;

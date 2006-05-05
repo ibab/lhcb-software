@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Eduardo Rodrigues
+ - using separate STClusterPosition tools for TT and IT (different tunings)
+
 !======================= TrackIdealPR v2r2 2006-05-03 ========================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs

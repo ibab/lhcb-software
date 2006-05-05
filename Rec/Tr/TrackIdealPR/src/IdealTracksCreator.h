@@ -103,8 +103,9 @@ private:
 
 
   // Interfaces
-  ISTClusterPosition*     m_stPositionTool;///< ST cluster position tool
-  IVeloClusterPosition* m_veloPositionTool; ///< Velo cluster position tool
+  ISTClusterPosition*     m_ttPositionTool;///< ST cluster position tool for TT
+  ISTClusterPosition*     m_itPositionTool;///< ST cluster position tool for IT
+  IVeloClusterPosition* m_veloPositionTool;///< Velo cluster position tool
   ITrackCriteriaSelector* m_trackSelector; ///< Track selection tool
   IIdealStateCreator*     m_stateCreator;  ///< Create 'seed'state at last meas
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
@@ -117,7 +118,8 @@ private:
   bool m_initState;         ///< initialize seed state
   bool m_initStateUpstream; ///< seed state created upstream/downstream
   bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
-  std::string m_stPositionToolName;
+  std::string m_ttPositionToolName;
+  std::string m_itPositionToolName;
   std::string  m_veloPositionToolName; ///< Velo cluster position tool name
   std::string m_tracksOutContainer;///< Tracks output container path in the TES
   int    m_minNHits;      ///< Minimum number of hits on the track
