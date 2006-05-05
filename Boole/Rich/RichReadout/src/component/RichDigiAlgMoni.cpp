@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.9 2006-04-12 13:46:09 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.10 2006-05-05 09:13:58 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -17,9 +17,9 @@ const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
                                   ISvcLocator* pSvcLocator )
   : RichHistoAlgBase ( name, pSvcLocator ),
-    m_smartIDTool    ( 0   ),
-    m_mcTool         ( 0   ),
-    m_richSys        ( 0   ),
+    m_smartIDTool    ( NULL ),
+    m_mcTool         ( NULL ),
+    m_richSys        ( NULL ),
     m_ID             ( 0   ),
     m_maxID          ( 300 )
 {
