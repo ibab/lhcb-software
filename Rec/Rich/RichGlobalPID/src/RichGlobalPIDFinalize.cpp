@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.14 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.15 2006-05-05 10:23:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -83,8 +83,8 @@ StatusCode RichGlobalPIDFinalize::execute()
 
     // store used radiator information
     pid->setUsedAerogel ( rRTrack->inAerogel() );
-    pid->setUsedC4F10   ( rRTrack->inGas1()    );
-    pid->setUsedCF4     ( rRTrack->inGas2()    );
+    pid->setUsedRich1Gas   ( rRTrack->inGas1()    );
+    pid->setUsedRich2Gas     ( rRTrack->inGas2()    );
 
     // Finalise delta LL values
     std::vector<float> deltaLLs = pid->particleLLValues();

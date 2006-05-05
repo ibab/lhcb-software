@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-05-05 - Chris Jones
+ - Adapt to radiator name changes
+
 !====================== RichGlobalPID v2r0 2006-02-17 ========================
 ! 2006-02-16 - Chris Jones
  - Update for new TrackSelector interface
