@@ -3,6 +3,9 @@
 !--------------------------------------------------------------------------
 
 !===================== VeloAlgorithms v4r4 2006-05-02 =====================
+! 2006-05-08 - Tomasz Szumlak
+ - New cluster monitoring algorithm (VeloClusters and VeloLiteClusters)
+
 ! 2006-05-01 - David Hutchcroft
  - Changed default noise cut to 4.5 S/N for clusters
  - Changed default high threshold to 25 ADC counts

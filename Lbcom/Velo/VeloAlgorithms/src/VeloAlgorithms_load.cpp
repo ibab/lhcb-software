@@ -16,6 +16,7 @@ DECLARE_FACTORY_ENTRIES(VeloAlgorithms) {
   DECLARE_ALGORITHM( VeloClusterMaker );
   DECLARE_ALGORITHM( VeloDigiMoni );
   DECLARE_ALGORITHM( VeloClusterMoni );
+  DECLARE_ALGORITHM( VeloRawClustersMoni )
 
   DECLARE_TOOL( MCVeloFEType );
 }

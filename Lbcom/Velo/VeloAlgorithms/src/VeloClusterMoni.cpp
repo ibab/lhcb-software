@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.6 2006-03-21 17:32:20 mtobin Exp $
+// $Id: VeloClusterMoni.cpp,v 1.7 2006-05-08 14:11:49 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -80,6 +80,8 @@ StatusCode VeloClusterMoni::execute() {
 StatusCode VeloClusterMoni::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  // set value if there is no event processed
+  if(m_numberOfEvents==0) m_numberOfEvents=1;
   //
   m_nVeloClusters/=m_numberOfEvents;
   m_nVeloClusters2/=m_numberOfEvents;
@@ -92,48 +94,48 @@ StatusCode VeloClusterMoni::finalize() {
   m_nFourStrip/=m_numberOfEvents;
   double all=m_nOneStrip+m_nTwoStrip+m_nThreeStrip+m_nFourStrip;
   //
-  info()<< "======================================================" <<endmsg;
-  info()<< "              - VeloClusterMoni table -               " <<endmsg;
-  info()<< "------------------------------------------------------" <<endmsg;
-  info()<< "| Number of Clusters/Event: " << m_nVeloClusters << " +/- " 
+  debug()<< "======================================================" <<endmsg;
+  debug()<< "              - VeloClusterMoni table -               " <<endmsg;
+  debug()<< "------------------------------------------------------" <<endmsg;
+  debug()<< "| Number of Clusters/Event: " << m_nVeloClusters << " +/- " 
         << errnVeloClusters <<endmsg;
   double allClusters=m_nVeloClustersS+m_nVeloClustersN+m_nVeloClustersO;
   if(allClusters>0){
-    info().precision(4);
-    info()<< "| Clusters from signal:                      " 
+    debug().precision(4);
+    debug()<< "| Clusters from signal:                      " 
           << (m_nVeloClustersS/allClusters)*100
           << "%" <<endmsg;
-    info().precision(4);
-    info()<< "| Clusters from noise:                       " 
+    debug().precision(4);
+    debug()<< "| Clusters from noise:                       " 
           << (m_nVeloClustersN/allClusters)*100
           << "%" <<endmsg;
-    info().precision(4);
-    info()<< "| Clusters from other (spillover/coupling):  " 
+    debug().precision(4);
+    debug()<< "| Clusters from other (spillover/coupling):  " 
           << (m_nVeloClustersO/allClusters)*100
           << "%" <<endmsg;
-    info()<< "------------------------------------------------------" <<endmsg;
-    info()<< "              - Size of clusters (all)-               " <<endmsg;
-    info()<< "------------------------------------------------------" <<endmsg;
-    info().precision(4);
-    info()<< "| 1 strip clusters/event:     "
+    debug()<< "------------------------------------------------------" <<endmsg;
+    debug()<< "              - Size of clusters (all)-               " <<endmsg;
+    debug()<< "------------------------------------------------------" <<endmsg;
+    debug().precision(4);
+    debug()<< "| 1 strip clusters/event:     "
           << m_nOneStrip << " (" << (m_nOneStrip/all)*100 << "%)"
           <<endmsg;
-    info().precision(4);
-    info()<< "| 2 strip clusters/event:     "
+    debug().precision(4);
+    debug()<< "| 2 strip clusters/event:     "
           << m_nTwoStrip << " (" << (m_nTwoStrip/all)*100 << "%)"
           <<endmsg;
-    info().precision(3);
-    info()<< "| 3 strip clusters/event:     "
+    debug().precision(3);
+    debug()<< "| 3 strip clusters/event:     "
           << m_nThreeStrip << " (" << (m_nThreeStrip/all)*100 << "%)"
           <<endmsg;
-    info().precision(3);
-    info()<< "| 4 strip clusters/event:     "
+    debug().precision(3);
+    debug()<< "| 4 strip clusters/event:     "
           << m_nFourStrip << " (" << (m_nFourStrip/all)*100 << "%)"
           <<endmsg;
   }else{
-    info()<< "| ==> No VeloClusters found! " <<endmsg;
+    debug()<< "| ==> No VeloClusters found! " <<endmsg;
   }
-  info()<< "======================================================" <<endmsg;
+  debug()<< "======================================================" <<endmsg;
   //
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
