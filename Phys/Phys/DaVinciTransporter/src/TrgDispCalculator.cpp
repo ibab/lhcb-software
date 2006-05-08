@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.3 2006-04-05 14:55:23 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.4 2006-05-08 17:57:10 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -54,8 +54,12 @@ TrgDispCalculator::TrgDispCalculator(const std::string& type,
 // Return IP as a scalar and error, and vector and error matrix
 //==================================================================
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, double& ip, double& ipErr,
-                                             Gaudi::XYZVector& ipVector, Gaudi::SymMatrix3x3& errMatrix ) { 
+                                             const LHCb::Vertex& vertex, 
+                                             double& ip, 
+                                             double& ipErr,
+                                             Gaudi::XYZVector& ipVector, 
+                                             Gaudi::SymMatrix9x9& errMatrix ) const
+{ 
 
   StatusCode status;
   Gaudi::XYZVector errVector;
@@ -86,7 +90,9 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 // Return IP as a scalar and its error
 //==================================================================
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, double& ip, double& ipErr ) {
+                                             const LHCb::Vertex& vertex, 
+                                             double& ip, 
+                                             double& ipErr ) const {
   Gaudi::XYZVector ipVector;
   Gaudi::XYZVector errVector;
   return calcImpactPar( part, vertex, ip, ipErr,ipVector,errVector);
@@ -98,8 +104,12 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const LHCb::Vertex& vertex, double& ip, double& ipErr,
-                                             Gaudi::XYZVector& ipVector, Gaudi::XYZVector& errVector ) { 
+                                             const LHCb::Vertex& vertex, 
+                                             double& ip, 
+                                             double& ipErr,
+                                             Gaudi::XYZVector& ipVector, 
+                                             Gaudi::XYZVector& errVector ) const
+{ 
 
   // Point on track and its error
   const Gaudi::XYZPoint& trackPoint = part.referencePoint();
@@ -147,8 +157,12 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const Gaudi::XYZPoint& point, double& ip, double& ipErr,
-                                             Gaudi::XYZVector& ipVector, Gaudi::SymMatrix3x3& errMatrix ) {
+                                             const Gaudi::XYZPoint& point, 
+                                             double& ip, 
+                                             double& ipErr,
+                                             Gaudi::XYZVector& ipVector, 
+                                             Gaudi::SymMatrix9x9& errMatrix ) const
+{
 
   StatusCode status;
 
@@ -170,12 +184,14 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 
 StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
-                                             const Gaudi::XYZPoint& point, double& ip, double& ipErr ) {
+                                             const Gaudi::XYZPoint& point, 
+                                             double& ip, 
+                                             double& ipErr ) const {
 
   StatusCode status;
   
   Gaudi::XYZVector ipVector;
-  Gaudi::SymMatrix3x3 ipErrMatrix;
+  Gaudi::SymMatrix9x9 ipErrMatrix;
   status = calcImpactPar( part, point, ip, ipErr, ipVector, ipErrMatrix);
   if (!status){
     fatal() << "calcImpactPar( part, point, ip, ipErr, ipVector, ipErrVector) failed"<< endreq;
@@ -190,7 +206,8 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& part1,
                                              const LHCb::Particle& part2, 
-                                             double& dist, double& distErr ) {
+                                             double& dist, 
+                                             double& distErr ) const {
  
   //Flag to indicate parallel tracks
   int aux = 0;
@@ -230,8 +247,8 @@ StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& part1,
   /// @todo I'd like a constructor from XYZVector to Vector3 and back
   Gaudi::Vector3 perpUnit2 = Gaudi::Vector3(perpUnit.X(),perpUnit.Y(),perpUnit.Z());
 
-  double projTrackErr1 = fabs(ROOT::Math::Dot<double,3>(trackErr1*perpUnit2,perpUnit2));
-  double projTrackErr2 = fabs(ROOT::Math::Dot<double,3>(trackErr2*perpUnit2,perpUnit2));
+  double projTrackErr1 = fabs(ROOT::Math::Dot(trackErr1*perpUnit2,perpUnit2));
+  double projTrackErr2 = fabs(ROOT::Math::Dot(trackErr2*perpUnit2,perpUnit2));
   distErr = sqrt( projTrackErr1 + projTrackErr2 );
 
   return StatusCode::SUCCESS;
@@ -243,8 +260,10 @@ StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& part1,
 //==================================================================
 
 StatusCode TrgDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
-                                             const LHCb::Vertex& vertex2, double& dist, 
-                                             double& distErr ) {
+                                             const LHCb::Vertex& vertex2, 
+                                             double& dist, 
+                                             double& distErr ) const 
+{
 
   // Code copied from that of Sandra Amato in GeomDispCalculator
  
@@ -268,7 +287,7 @@ StatusCode TrgDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
   derivDist.Place_at(u,0);
   derivDist.Place_at(-u,3);
 
-  distErr = sqrt(fabs(ROOT::Math::Dot<double,6>(errMatrix*derivDist,derivDist)));
+  distErr = sqrt(fabs(ROOT::Math::Dot(errMatrix*derivDist,derivDist)));
   
   return StatusCode::SUCCESS;
 }

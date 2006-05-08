@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.23 2006-04-05 14:55:23 jpalac Exp $
+! $Id: release.notes,v 1.24 2006-05-08 17:57:10 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 !==============================================================================
+
+! 2006-05-08 - Juan PALACIOS
+ - src/TrgDispCalculator make all calc methods const. Use 9x9 matrices.
 
 ! 2006-04-05 - Juan PALACIOS
   - src/ParticleTransporter.cpp and - src/TrgDispCalculator.cpp:
