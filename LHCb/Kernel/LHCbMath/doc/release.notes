@@ -4,6 +4,8 @@
 ! Purpose     : A collection of simple generic geometry classes and functions 
 !-----------------------------------------------------------------------------
 
+!========================== LHCbMath v1r0 2006-05-08 ==========================
+
 ! 2006-05-08 - Juan Palacios
  - First release of Kernel/LHCbMath
 
