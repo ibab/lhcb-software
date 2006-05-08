@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.50 2006-04-05 14:56:48 jpalac Exp $
+! $Id: release.notes,v 1.51 2006-05-08 17:18:44 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-08 - Juan PALACIOS
+ - Added src/GeomDispCalculator. Re-implemented from DaVinciTransporter 
+   and restored.
 
 ! 2006-04-05 - J. Palacios
  - src/TrgVertexFitter: change calls to Particle::slopeX(), slopeY() for calls to Particle::slopes(), adapting to new Particle interface.

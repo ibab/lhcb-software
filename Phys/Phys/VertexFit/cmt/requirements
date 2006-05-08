@@ -15,7 +15,7 @@ branches          cmt doc src
 #============================================================================
 # use  DaVinciTransporter  v*  Phys
 use  DaVinciKernel  v*  Phys
-
+use  LHCbMath       v*  Kernel
 # Component library building rule
 #============================================================================
 library          VertexFit    ../src/*.cpp
