@@ -2,6 +2,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-05-08 - Juan PALACIOS  
+ - Kernel/IGeomDispCalculator.h: Make all calc methods const.
+
 ! 2006-05-23 - P. Koppenburg
  - src/component/PhysDesktop.cpp
    . Read PVs as LHCb::PrimVertices
