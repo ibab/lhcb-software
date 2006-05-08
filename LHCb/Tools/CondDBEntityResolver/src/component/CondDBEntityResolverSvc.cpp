@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.2 2006-02-01 19:49:06 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.3 2006-05-08 09:19:27 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -16,8 +16,8 @@
 
 #include "CoolKernel/IObject.h"
 
-#include "AttributeList/AttributeList.h"
-#include "AttributeList/AttributeExceptions.h"
+#include "CoralBase/AttributeList.h"
+#include "CoralBase/AttributeListException.h"
 
 // local
 #include "CondDBEntityResolverSvc.h"
@@ -171,7 +171,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
 
   // outputs
   std::string descr;
-  boost::shared_ptr<pool::AttributeList> data;
+  boost::shared_ptr<coral::AttributeList> data;
   Gaudi::Time since, until;
   
   bool found_object = false;
@@ -184,8 +184,8 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   if (found_object) {
     std::string xml_data;
     try {
-      (*data)["data"].getValue(xml_data);
-    } catch (pool::attribute_not_found &e) {
+      xml_data = (*data)["data"].data<std::string>();
+    } catch (coral::AttributeListException &e) {
       log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
       return NULL;
     }
