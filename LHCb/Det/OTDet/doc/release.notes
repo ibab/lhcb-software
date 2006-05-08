@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.56 2006-05-04 16:50:31 janos Exp $
+! $Id: release.notes,v 1.57 2006-05-08 12:59:54 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r3 2006-05-03 ==========================
+! 2006-05-08 - Jan Amoraal
+ - minor clean-ups
+ 
 ! 2006-05-04 - Jan Amoraal
  - Changes for Brunel:
     - DeOTLayer and DeOTModule returns a plane that goes through the centre of 

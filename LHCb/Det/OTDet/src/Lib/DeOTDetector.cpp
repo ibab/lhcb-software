@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.23 2006-05-04 16:50:31 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.24 2006-05-08 12:59:54 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -63,11 +63,10 @@ const CLID& DeOTDetector::clID () const {
 /// Initialise
 StatusCode DeOTDetector::initialize()
 {
-  MsgStream msg( msgSvc(), name() );
-
   StatusCode sc = DetectorElement::initialize();
 
   if( sc.isFailure() ) {
+    MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize DetectorElement" << endreq;
     return sc ;
   }
@@ -99,8 +98,6 @@ StatusCode DeOTDetector::initialize()
     } // layers
   } // stations
   
-  msg << MSG::DEBUG << "Successfully initialized DetectorElement !!!" << endreq;
-  
   /// Set the first station
   setFirstStation(m_stations.front()->stationID());
   
@@ -117,25 +114,6 @@ StatusCode DeOTDetector::initialize()
 
 void DeOTDetector::setFirstStation(const unsigned int iStation) {
   m_firstStation = iStation;
-}
-
-StatusCode DeOTDetector::calculateHits(const Gaudi::XYZPoint& entryPoint,
-                                       const Gaudi::XYZPoint& exitPoint,
-                                       std::vector<OTChannelID>& channels,
-                                       std::vector<double>& driftDistances) {
-  StatusCode sc = StatusCode::SUCCESS;
-
-  Gaudi::XYZPoint point = entryPoint + 0.5*(exitPoint - entryPoint);
-  DeOTModule* module = this->findModule(point);
-  if (module) {
-    sc = module->calculateHits(entryPoint, exitPoint, channels, driftDistances);
-  } else {
-    MsgStream msg(msgSvc(), name());
-    msg << "Module doesn't contain hit" << endmsg;
-    sc = StatusCode::FAILURE;
-  }
-
-  return sc;
 }
 
 /// Find the station for a given channelID
@@ -206,51 +184,62 @@ const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const
   return m->elementID();
 }
 
+StatusCode DeOTDetector::calculateHits(const Gaudi::XYZPoint& entryPoint,
+                                       const Gaudi::XYZPoint& exitPoint,
+                                       std::vector<OTChannelID>& channels,
+                                       std::vector<double>& driftDistances) {
+
+  Gaudi::XYZPoint point = entryPoint + 0.5*(exitPoint - entryPoint);
+
+  DeOTModule* aModule = findModule(point);
+  if (!aModule) {
+    MsgStream msg(msgSvc(), name());
+    msg << "Module doesn't contain hit" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  StatusCode sc = aModule->calculateHits(entryPoint, exitPoint, channels, driftDistances);
+  return sc;
+}
+
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
                                        double xHit, double yHit) const {
-  /// Distance along wire
-  double dist = 0.0;
-  DeOTModule* module = this->findModule(aChannel);
-  if (module == 0) {
+  DeOTModule* aModule = findModule(aChannel);
+  if (!aModule) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING
-        << "DistanceAlongWire requested for module that does not exist "
+    msg << MSG::WARNING << "DistanceAlongWire requested for module that does not exist "
         << endreq;
-  } else {
-    dist = module->distanceAlongWire(xHit, yHit);
+    return 0.0;
   }
-  return dist;
+  
+  return (aModule->distanceAlongWire(xHit, yHit));
 }
 
 double DeOTDetector::propagationTime(const OTChannelID aChannel,
                                      const double x, const double y ) const {
   /// Calculate the propagation delay along the wire
-  double distAlongWire = distanceAlongWire(aChannel, x, y);
-  return distAlongWire * propagationDelay();
+  return (distanceAlongWire(aChannel, x, y)*propagationDelay());
 }
 
 OTChannelID DeOTDetector::nextChannelLeft(const OTChannelID aChannel) const {
-  DeOTModule* module = this->findModule(aChannel);
-  int nextLeft = module->nextLeftStraw(aChannel.straw());
-  return (nextLeft == 0) ?
-    OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-                                     aChannel.layer(),
-                                     aChannel.quarter(),
-                                     aChannel.module(),
-                                     nextLeft );
+  DeOTModule* aModule = findModule(aChannel);
+  int nextLeft = aModule->nextLeftStraw(aChannel.straw());
+  return (nextLeft == 0) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
+							    aChannel.layer(),
+							    aChannel.quarter(),
+							    aChannel.module(),
+							    nextLeft );
 }
 
 OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
-  DeOTModule* module = this->findModule(aChannel);
-  int nextRight = module->nextRightStraw(aChannel.straw());
-  return (nextRight == 0) ?
-    OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-                                     aChannel.layer(),
-                                     aChannel.quarter(),
-                                     aChannel.module(),
-                                     nextRight );
+  DeOTModule* aModule = findModule(aChannel);
+  int nextRight = aModule->nextRightStraw(aChannel.straw());
+  return (nextRight == 0) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
+							     aChannel.layer(),
+							     aChannel.quarter(),
+							     aChannel.module(),
+							     nextRight );
 }
-
 
 std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LHCbID& id, 
 								  int monolayer) const {

@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.14 2006-05-04 16:50:31 janos Exp $
+// $Id: DeOTModule.h,v 1.15 2006-05-08 12:59:54 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -182,6 +182,18 @@ public:
   /** @return cosine of stereo angle */
   double cosAngle() const;
 
+  /** @return local from global */
+  Gaudi::XYZPoint toLocal(const Gaudi::XYZPoint& aPoint) const;
+
+   /** @return local point from xyz */
+  Gaudi::XYZPoint localPoint(const double x, const double y, const double z) const;
+
+  /** @return global from local */
+  Gaudi::XYZPoint toGlobal(const Gaudi::XYZPoint& aPoint) const;
+
+  /** @return global point from xyz */
+  Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
+
   /** Calculate straws which are hit 
    * @retrun status code
    */
@@ -197,11 +209,9 @@ public:
    * @param dy/dz
    * @return distance
    */
-  double distanceToWire(const unsigned int straw, 
+  double distanceToWire(const unsigned int aStraw, 
                         const Gaudi::XYZPoint& aPoint, 
                         const double tx, const double ty) const;
-  
-  
   
   /** @return distance to electronics along the wire */
   double distanceAlongWire(const double xHit, 
@@ -212,18 +222,6 @@ public:
 
   /** @return Global XYZ of the center of a module */
   Gaudi::XYZPoint centerOfModule() const;
-
-    /** @return local from global */
-  Gaudi::XYZPoint toLocal(const Gaudi::XYZPoint& aPoint) const;
-
-   /** @return local point from xyz */
-  Gaudi::XYZPoint localPoint(const double x, const double y, const double z) const;
-
-  /** @return global from local */
-  Gaudi::XYZPoint toGlobal(const Gaudi::XYZPoint& aPoint) const;
-
-  /** @return global point from xyz */
-  Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
 
   /** @return the global z-coordinate of a module */
   double z() const;
@@ -253,8 +251,8 @@ public:
 private:
   
   /// Not allowed to copy
-  DeOTModule(const DeOTModule& rhs);
-  DeOTModule& operator=(const DeOTModule& rhs);
+  DeOTModule(const DeOTModule&);
+  DeOTModule& operator=(const DeOTModule&);
   
   void clear();
 
@@ -460,24 +458,74 @@ inline double DeOTModule::driftDistance(const Gaudi::XYZVector& doca) const {
   return ambiguity*doca.r();
 }
 
+inline Gaudi::XYZPoint DeOTModule::toLocal(const Gaudi::XYZPoint& aPoint) const {
+  return this->geometry()->toLocal(aPoint);
+}
+
+inline Gaudi::XYZPoint DeOTModule::localPoint(const double x, 
+					      const double y, 
+					      const double z) const {
+  return toLocal(Gaudi::XYZPoint(x, y, z));
+}
+
+inline Gaudi::XYZPoint DeOTModule::toGlobal(const Gaudi::XYZPoint& aPoint) const {
+  return this->geometry()->toGlobal(aPoint);
+}
+
+inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x, 
+					       const double y, 
+					       const double z) const {
+  return toGlobal(Gaudi::XYZPoint(x, y, z));
+}
+
+/// This gives you the x position of the wire
+inline double DeOTModule::localUOfStraw(const int aStraw) const {
+  int tmpStraw = (!monoLayerB(aStraw)?aStraw-1:aStraw-m_nStraws-1);
+  double uLeftStraw = (!monoLayerB(aStraw)?-(0.5*m_nStraws-0.25)
+		       :(-(0.5*m_nStraws-0.25)+0.5))*m_xPitch;
+  return uLeftStraw + tmpStraw * m_xPitch;
+}
+
 inline double DeOTModule::localZOfStraw(const int aStraw) const {
   return (monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
 }
 
-inline Gaudi::XYZPoint DeOTModule::toLocal(const Gaudi::XYZPoint& aPoint) const{
-  return this->geometry()->toLocal(aPoint);
+inline double DeOTModule::distanceToWire(const unsigned int aStraw, 
+                                  const Gaudi::XYZPoint& aPoint, 
+                                  const double tx, const double ty) const {
+  // go to the local coordinate system
+  Gaudi::XYZVector vec(tx, ty, 1.);
+  Gaudi::XYZPoint localPoint = toLocal(aPoint);
+  Gaudi::XYZVector localVec = toLocal(aPoint+vec) - localPoint;
+
+  // calculate distance to the straw
+  double u = localPoint.x()+localVec.x()*(localZOfStraw(aStraw)-localPoint.z());
+  double cosU = 1.0/sqrt(1.0+ (localVec.x()/localVec.z())*(localVec.x()/localVec.z()));
+  
+  // return distance to straw
+  return (u-localUOfStraw(aStraw))*cosU;
 }
 
-inline Gaudi::XYZPoint DeOTModule::localPoint(const double x, const double y, const double z) const{
-  return toLocal(Gaudi::XYZPoint(x, y, z));
+inline double DeOTModule::distanceAlongWire(const double xHit, 
+					    const double yHit) const {
+  // For the upper modules of the station the readout is above.
+  return (topModule()?m_yHalfModule-localPoint(xHit, yHit, 0).y() 
+	  :m_yHalfModule+localPoint(xHit, yHit, 0).y());
 }
 
-inline Gaudi::XYZPoint DeOTModule::toGlobal(const Gaudi::XYZPoint& aPoint) const{
-  return this->geometry()->toGlobal(aPoint);
+inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
+  /// get the global coordinate of the middle of the channel
+  return globalPoint(localUOfStraw(aStraw), 0.0, localZOfStraw(aStraw));
 }
 
-inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x, const double y, const double z) const{
-  return toGlobal(Gaudi::XYZPoint(x, y, z));
+inline Gaudi::XYZPoint DeOTModule::centerOfModule() const {
+  /// get the global coordinate of the middle of the module
+  return globalPoint(0.0, 0.0 , 0.0);
+}
+
+inline double DeOTModule::z() const {
+  /// Get the global z-coordinate of the module
+  return centerOfModule().z();
 }
 
 inline Gaudi::Plane3D DeOTModule::plane() const {

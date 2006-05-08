@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.14 2006-05-04 16:50:31 janos Exp $
+// $Id: DeOTModule.cpp,v 1.15 2006-05-08 12:59:54 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -60,20 +60,18 @@ const CLID& DeOTModule::clID() const {
 }
 
 
-StatusCode DeOTModule::initialize() 
-{
- 
+StatusCode DeOTModule::initialize() {
   IDetectorElement* quarter = this->parentIDetectorElement();
   IDetectorElement* layer = quarter->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
   IDetectorElement* ot = station->parentIDetectorElement();
 
   // Get specific parameters from the module
-  m_moduleID = (unsigned int) param<int>("moduleID");
-  m_quarterID = (unsigned int) quarter->params()->param<int>("quarterID");
-  m_layerID = (unsigned int) layer->params()->param<int>("layerID");
-  m_stationID = (unsigned int) station->params()->param<int>("stationID");
-  m_nStraws = (unsigned int) param<int>("nStraws");
+  m_moduleID = (unsigned int)param<int>("moduleID");
+  m_quarterID = (unsigned int)quarter->params()->param<int>("quarterID");
+  m_layerID = (unsigned int)layer->params()->param<int>("layerID");
+  m_stationID = (unsigned int)station->params()->param<int>("stationID");
+  m_nStraws = (unsigned int)param<int>("nStraws");
   m_stereoAngle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
@@ -87,11 +85,11 @@ StatusCode DeOTModule::initialize()
   m_zPitch = ot->params()->param<double>("strawPitchZ");
   m_cellRadius = ot->params()->param<double>("cellRadius");
   m_inefficientRegion = ot->params()->param<double>("inefficientRegion");
-  m_nModules = (unsigned int) ot->params()->param<int>("nModules");
+  m_nModules = (unsigned int)ot->params()->param<int>("nModules");
 
   // Get the lenght of the module
-  const ILVolume* lv = (this->geometry())->lvolume();
-  const ISolid* solid = lv->solid();
+  //const ILVolume* lv = (this->geometry())->lvolume();
+  const ISolid* solid = this->geometry()->lvolume()->solid();
   const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
   m_ySizeModule = mainBox->ysize();
   m_yHalfModule = mainBox->yHalfLength();
@@ -157,19 +155,6 @@ StatusCode DeOTModule::findDoca(const Gaudi::XYZPoint& entryPoint,
   return StatusCode::SUCCESS;
 }
 
-/// This gives you the x position of the wire
-double DeOTModule::localUOfStraw(const int aStraw) const {
-  int tmpStraw = aStraw;
-  double uLeftStraw =  -(m_nStraws/2. - 0.25) * m_xPitch;
-  if (this->monoLayerB(aStraw)) { // monoLayer B
-    tmpStraw -= m_nStraws;
-    uLeftStraw += 0.5 * m_xPitch;
-  }
-  tmpStraw -= 1; // straw numbering starts at 1
-  
-  return uLeftStraw + tmpStraw * m_xPitch;
-}
-
 StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
                                      const Gaudi::XYZPoint& exitPoint,
                                      std::vector<OTChannelID>& channels,
@@ -186,9 +171,8 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
   /// OK, so apparently the points are inside, so let's get the
   /// the range of straws that might contain hits. First we need to
   /// convert the points to the local coordinate system of the module.
-  const IGeometryInfo* gi = this->geometry();
-  Gaudi::XYZPoint enP = gi->toLocal(entryPoint);
-  Gaudi::XYZPoint exP = gi->toLocal(exitPoint);
+  Gaudi::XYZPoint enP = toLocal(entryPoint);
+  Gaudi::XYZPoint exP = toLocal(exitPoint);
 
   /// Now let's get the range of straws
   std::vector<unsigned int> rStraws;
@@ -238,8 +222,11 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 	efficientY = isEfficientA(-m_yHalfModule+mu); 
     	/// Do we have a hit?
     	if (fabs(dist) < m_cellRadius && efficientY) {
+	  MsgStream msg( msgSvc(), name() );
+	  msg << MSG::WARNING << "Hit in straw " << (*iStraw) << ", x = " << wT.x() << endreq;
     	  channels.push_back(OTChannelID(m_stationID, m_layerID,
-    					 m_quarterID, m_moduleID, (*iStraw)));
+    					 m_quarterID, m_moduleID, 
+					 (*iStraw)));
     	  driftDistances.push_back(dist);
     	}
       }
@@ -259,8 +246,11 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 	double dist = driftDistance(doca);
 	efficientY = isEfficientB(-m_yHalfModule+mu);
 	if (fabs(dist) < m_cellRadius && efficientY) {
+	  MsgStream msg( msgSvc(), name() );
+	  msg << MSG::WARNING << "Hit in straw " <<m_nStraws+(*iStraw) << ", x = " << wT.x() << endreq;
 	  channels.push_back(OTChannelID(m_stationID, m_layerID,
-					 m_quarterID, m_moduleID, m_nStraws+(*iStraw)));
+					 m_quarterID, m_moduleID, 
+					 m_nStraws+(*iStraw)));
 	  driftDistances.push_back(dist);
 	}
       }
@@ -364,51 +354,6 @@ void DeOTModule::sCircle(const double z1, const double u1, const double z2,
   rc=fabs(zc-z3c);
 }
 
-double DeOTModule::distanceToWire(const unsigned int aStraw, 
-                                  const Gaudi::XYZPoint& aPoint, 
-                                  const double tx, const double ty) const {
-  // go to the local coordinate system
-  Gaudi::XYZVector vec(tx, ty, 1.);
-  Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(aPoint);
-  Gaudi::XYZVector localVec = (this->geometry())->toLocal(aPoint+vec) - localPoint;
-
-  // calculate distance to the straw
-  double z = this->localZOfStraw(aStraw);
-  double u = localPoint.x() + localVec.x() * (z - localPoint.z());
-  double cosU = 1./sqrt(1. + gsl_pow_2(localVec.x()/localVec.z()));
-  double dist = (u - localUOfStraw(aStraw)) * cosU;
-  
-  return dist;
-}
-
-double DeOTModule::distanceAlongWire(const double xHit, 
-                                     const double yHit) const { 
-  Gaudi::XYZPoint globalPoint(xHit, yHit, 0);
-  Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(globalPoint);
-
-  // For the upper modules of the station the readout is above.
-  return ( this->topModule() ) ? 
-    m_yHalfModule - localPoint.y() : m_yHalfModule + localPoint.y();
-}
-
-Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int straw) const {
-  /// get the global coordinate of the middle of the channel
-  Gaudi::XYZPoint localPoint(this->localUOfStraw(straw), 0., 
-                             this->localZOfStraw(straw));
-  return (this->geometry())->toGlobal(localPoint);
-}
-
-Gaudi::XYZPoint DeOTModule::centerOfModule() const {
-  /// get the global coordinate of the middle of the module
-  Gaudi::XYZPoint localPoint(0., 0., 0.);
-  return (this->geometry())->toGlobal(localPoint);
-}
-
-double DeOTModule::z() const {
-  /// Get the global z-coordinate of the module
-  return centerOfModule().z();
-}
-
 void DeOTModule::clear() {
   m_midTraj[0].reset();
   m_midTraj[1].reset();
@@ -486,7 +431,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 						       const double /*offset*/) const {
   if (!contains(aChan)) {
     throw GaudiException("Failed to make trajectory!", "DeOTModule.cpp",
-				StatusCode::FAILURE);
+			 StatusCode::FAILURE);
   }
   
   unsigned int aStraw = aChan.straw();
