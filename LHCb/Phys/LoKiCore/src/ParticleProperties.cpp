@@ -1,8 +1,11 @@
-// $Id: ParticleProperties.cpp,v 1.3 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: ParticleProperties.cpp,v 1.4 2006-05-08 09:04:27 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:11  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -10,14 +13,14 @@
 // ============================================================================
 #include "GaudiKernel/ParticleProperty.h"
 // ============================================================================
-// LHCbDefinitions
+// Gaudi Units (previously CLHEP)
 // ============================================================================
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // Kernel
 // ============================================================================
 #include "Kernel/ParticleID.h"
-#include "Kernel/SystemOfUnits.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -189,7 +192,7 @@ const double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   )
       ( " LoKi::Particles::massFromPID(" +
         boost::lexical_cast<std::string>( pid.pid() ) + 
         ") : ParticleProperty* points to NULL, return -1 * TeV " ) ;
-    return -1.0 * CLHEP::TeV  ;
+    return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
 };
@@ -211,7 +214,7 @@ const double LoKi::Particles::massFromName ( const std::string&  name )
       ( std::string(" LoKi::Particles::massFromName('") + 
         name + "')" + 
         "ParticleProperty* points to NULL, return -1 * TeV " ) ;
-    return -1.0 * CLHEP::TeV  ;
+    return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
 };
@@ -357,7 +360,7 @@ const double LoKi::Particles::lifeTime
     return LoKi::Constants::InvalidTime ;
   }
   //
-  return pp -> lifetime() * CLHEP::c_light ;
+  return pp -> lifetime() * Gaudi::Units::c_light ;
 } ;
 // ============================================================================
 
@@ -380,7 +383,7 @@ const double LoKi::Particles::lifeTime
     return LoKi::Constants::InvalidTime ;
   }
   //
-  return pp -> lifetime() * CLHEP::c_light ;
+  return pp -> lifetime() * Gaudi::Units::c_light ;
 } ;  
 // ============================================================================
 

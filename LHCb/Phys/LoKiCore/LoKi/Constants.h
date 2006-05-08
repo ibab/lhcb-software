@@ -1,8 +1,11 @@
-// $Id: Constants.h,v 1.7 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Constants.h,v 1.8 2006-05-08 09:04:27 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
@@ -13,10 +16,10 @@
 // ============================================================================
 #include <limits> 
 // ============================================================================
-// LHCbDEfinitions
+// Gaudi Units (previously CLHEP)
 // ============================================================================
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 // ============================================================================
 
 // ============================================================================
@@ -48,11 +51,11 @@ namespace LoKi
   {
     
     /// representation of invalid time 
-    const double InvalidTime         =  -1000 * CLHEP::ns ;
+    const double InvalidTime         =  -1000 * Gaudi::Units::ns ;
     /// representation of invalid/infinite time 
-    const double InfiniteTime        = 1.e+10 * CLHEP::ns ;
+    const double InfiniteTime        = 1.e+10 * Gaudi::Units::ns ;
     /// representation of invalid distance 
-    const double InvalidDistance     =  -1000 * CLHEP::km ;
+    const double InvalidDistance     =  -1000 * Gaudi::Units::km ;
     /// representation of invalid chi2 
     const double InvalidChi2         =  -1000      ;
     /// representation of invalid particle ID 
@@ -64,11 +67,11 @@ namespace LoKi
     /// representation of invalid confedence level   
     const double InvalidConfLevel    =  -1000      ;
     /// representation of invalid energy
-    const double InvalidEnergy       =  -100 * CLHEP::TeV ;
+    const double InvalidEnergy       =  -100 * Gaudi::Units::TeV ;
     /// representation of invalid momentum
-    const double InvalidMomentum     =  -100 * CLHEP::TeV ;
+    const double InvalidMomentum     =  -100 * Gaudi::Units::TeV ;
     /// representation of invalid mass 
-    const double InvalidMass         =  -100 * CLHEP::TeV ;    
+    const double InvalidMass         =  -100 * Gaudi::Units::TeV ;    
     /// representation of invalid sine/cosine/angle, etc 
     const double InvalidAngle        =  -1000      ;
     /// representation of HUGE chi2 
@@ -87,6 +90,3 @@ namespace LoKi
 // ============================================================================
 #endif // LOKI_CONSTANTS_H
 // ============================================================================
-
-
-
