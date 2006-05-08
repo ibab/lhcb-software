@@ -1,11 +1,10 @@
-// $Id: OnlineMessageSvc.cpp,v 1.6 2006-04-24 14:45:05 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.7 2006-05-08 18:14:27 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiOnline/OnlineMessageSvc.h"
 #include "GaudiOnline/IErrorLogger.h"
-
+#include "GaudiOnline/OnlineMessageSvc.h"
+#include "RTL/rtl.h"
 #include <sstream>
-#include <ctime>
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineMessageSvc);
 
@@ -29,6 +28,7 @@ LHCb::OnlineMessageSvc::OnlineMessageSvc( const std::string& name, ISvcLocator* 
   declareProperty( "setError",    m_thresholdProp[MSG::ERROR] );
   declareProperty( "setFatal",    m_thresholdProp[MSG::FATAL] );
   declareProperty( "setAlways",   m_thresholdProp[MSG::ALWAYS] );
+  declareProperty( "LoggerOnly",  m_loggerOnly = false );
 }
 
 
@@ -62,24 +62,24 @@ StatusCode LHCb::OnlineMessageSvc::finalize() {
 
 bool LHCb::OnlineMessageSvc::i_reportMessage(const Message& msg)  {
   bool reported = false;
-  time_t t = time (0);
-  char* timestr = ctime(&t);
   int key = msg.getType();
-  timestr[19] = ' ';
-  timestr[20] = 0;
   StreamMap::const_iterator first = m_streamMap.lower_bound( key );
   if ( first != m_streamMap.end() ) {
     StreamMap::const_iterator last = m_streamMap.upper_bound( key );
     while( first != last ) {
-      std::ostream& stream = *( (*first).second.second );
-      stream << timestr+4 << " " << msg << std::endl;
+      if ( !m_loggerOnly )  {
+        std::ostream& stream = *( (*first).second.second );
+        stream << ::lib_rtl_timestr() << msg << std::endl;
+      }
       first++;
       reported = true;
     }
   }
   else if ( key >= outputLevel(msg.getSource()) )   {
-    msg.setFormat(m_defaultFormat);
-    (*m_defaultStream) << timestr+4 << " " <<  msg << std::endl << std::flush;
+    if ( !m_loggerOnly )  {
+      msg.setFormat(m_defaultFormat);
+      (*m_defaultStream) << ::lib_rtl_timestr() <<  msg << std::endl << std::flush;
+    }
     reported = true;
   }
   return reported;

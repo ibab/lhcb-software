@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.1 2006-04-24 12:18:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.2 2006-05-08 18:14:27 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -121,12 +121,13 @@ namespace LHCb {
     static void setErrorLogger(IErrorLogger* logger);
 
   private:
+    bool          m_loggerOnly;         ///< Property to suppress local logging
     std::ostream* m_defaultStream;      ///< Pointer to the output stream.
-    Message m_defaultMessage;           ///< Default Message
-    StreamMap m_streamMap;              ///< Stream map
-    MessageMap m_messageMap;            ///< Message map
-    ThresholdMap m_thresholdMap;        ///< Output level threshold map
-    std::string m_defaultFormat;        ///< Default format for the messages
+    Message       m_defaultMessage;     ///< Default Message
+    StreamMap     m_streamMap;          ///< Stream map
+    MessageMap    m_messageMap;         ///< Message map
+    ThresholdMap  m_thresholdMap;       ///< Output level threshold map
+    std::string   m_defaultFormat;      ///< Default format for the messages
     std::vector<std::string> m_thresholdProp[MSG::NUM_LEVELS]; ///< Properties controling
   };
 } // End namespace LHCb

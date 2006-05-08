@@ -1,6 +1,7 @@
 #include "rtl_internal.h"
 #include <vector>
 #include <map>
+#include <ctime>
 #include <cerrno>
 #include <cstdarg>
 #include <iostream>
@@ -53,7 +54,6 @@ const char* errorString(int status)  {
 
 #elif _WIN32
 
-#define  _WIN32_WINNT 0x0401 
 #include <windows.h>
 #include <process.h>
 
@@ -80,23 +80,6 @@ const char* errorString(int status)  {
     sprintf(s,"RTL Error: Unknown error code: %08X",status);
   }
   return s;
-}
-
-#elif defined(_VMS)
-#include <ssdef.h>
-#include <descrip.h>
-
-const char* errorString(int status)  {
-  static char message[1024];
-  dsc$descriptor_s msg;
-  short len = sizeof(message) - 1;
-  msg.dsc$w_length  = sizeof(message) - 1;
-  msg.dsc$a_pointer = message;
-  msg.dsc$b_dtype   = DSC$K_DTYPE_T;
-  msg.dsc$b_class   = DSC$K_CLASS_S;
-  sys$getmsg (status, len, msg, 15, 0);
-  message[len] = '\0';
-  return message;
 }
 #endif
 
@@ -303,19 +286,6 @@ int lib_rtl_enable_intercept()    {
 }
 
 int lib_rtl_get_process_name(char* process, size_t len)  {
-#ifdef __VMS
-  int status;
-  short len;
-  int id = 0;
-  acpp_iosb theiosb;
-  item it[2] = { { 22, JPI$_PRCNAM, process , &len } , {0,0,0,0} };
-  status = sys$getjpiw(0, id, 0, it, &theiosb, 0, 0, 0) ;
-  if ( !SUCCESS(status) )   {
-    return status;
-  }
-  process[len]='\0';
-  return 1;
-#else
   const char *tmp;
   char buff[32], buff2[64];
   size_t resultant_length = sizeof(buff2);
@@ -326,25 +296,14 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   ::str_trim(tmp, buff2, &resultant_length);
   ::strncpy(process, buff2, len);
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
-#endif
 }
 
 int lib_rtl_get_node_name(char* node, size_t len)  {
-#ifdef __VMS
-  short len;
-  int id=0;
-  acpp_iosb theiosb;
-  item it[2] = { { 22, JPI$_NODENAME, node , &len } , {0,0,0,0} };
-  int status = sys$getjpiw(0, id, 0, it, &theiosb, 0, 0, 0) ;
-  if ( !SUCCESS(status) )   {
-    return status;
-  }
-  node[len]='\0';
-#else
   char n[64];
 #if defined(_WIN32)
-  const char *tmp = getenv("COMPUTERNAME");
-  if ( 0 == gethostname (n,sizeof(n)) ) tmp = n;
+  const char *tmp = getenv("NODE");
+  if ( !tmp ) tmp = getenv("COMPUTERNAME");
+  if ( !tmp && 0 == gethostname (n,sizeof(n)) ) tmp = n;
 #elif defined(_OSK)
   const char *tmp = getenv("NODE");
 #else
@@ -352,7 +311,6 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
   if ( 0 == gethostname (n,sizeof(n)) ) tmp = n;
 #endif
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
-#endif
   return 1;
 }
 
@@ -380,6 +338,15 @@ void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), v
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
   std::cout << "Executing empty test action ..... finished ......" << std::endl;
   return 1;
+}
+
+extern "C" const char* lib_rtl_timestr(const char* fmt)  {
+  static char timestr[256];
+  time_t t;
+  ::time(&t);
+  struct tm *now = ::localtime(&t);
+  ::strftime(timestr,sizeof(timestr),fmt,now);
+  return timestr;
 }
 
 namespace RTL {

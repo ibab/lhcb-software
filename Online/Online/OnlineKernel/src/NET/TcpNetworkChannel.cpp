@@ -79,14 +79,14 @@ NetworkChannel::Channel TcpNetworkChannel::accept ( Address& addr, int tmo )  {
     stopTimer();
     if ( !m_bCancel ) m_errno = (accepted <= 0) ? ::lib_rtl_socket_error() : 0;
     if ( accepted > 0 )   {
-      int status, on = 1;
       struct linger Linger;
+      int status, on  = 1;
       Linger.l_onoff  = 0;
       Linger.l_linger = 0;
-      status = ::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
-      status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
+      status = ::setsockopt( accepted, SOL_SOCKET, SO_REUSEADDR,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE,(const char*)&on, sizeof(on));
+      status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
     }
     return accepted;
   }

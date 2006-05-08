@@ -3,3 +3,6 @@
 ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
 MEPInit.InitFlags        = "-s=5000 -e=100 -u=20 -i=MEP -c -s=200 -e=100 -u=14 -i=EVENT -c -s=200 -e=100 -u=14 -i=RESULT -c";
 MessageSvc.OutputLevel   = 1;  // Minimum is Error
+Runable.Dll              = "OnlineKernel";
+Runable.Call             = "tan_nameserver";
+Runable.InitFlags        = "-a -tcp -n";

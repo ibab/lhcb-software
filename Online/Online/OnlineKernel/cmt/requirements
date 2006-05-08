@@ -4,6 +4,9 @@ branches  cmt doc src
 
 include_dirs $(ONLINEKERNELROOT)/OnlineKernel
 use GaudiPolicy v*
+
+document      install_includes install_includes
+
 library       pthread_extern  ../thread/pthread.cpp
 macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
 
@@ -26,7 +29,6 @@ apply_pattern linker_library   library=OnlineKernel
 apply_pattern linker_library   library=pthread_extern
 application   test ../main/wt.cpp
 application   gentest ../main/gentest.cpp
-document      install_includes install_includes
 macro_append  use_linkopts " -ldl " WIN32 ""
 
 private

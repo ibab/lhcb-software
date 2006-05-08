@@ -25,6 +25,7 @@
   };
 
 #elif defined(_WIN32)
+  #define _WIN32_WINNT 0x0500
   #include <windows.h>
   struct rtl_thread  {
     HANDLE    handle;
@@ -39,9 +40,11 @@
     char   name[32];
     int    held;
   };
+#if 0
   extern "C" __declspec(dllimport) BOOL  __stdcall CancelWaitableTimer(void*);
   extern "C" __declspec(dllimport) void* __stdcall CreateWaitableTimerA(void*, DWORD, void*);
   extern "C" __declspec(dllimport) BOOL  __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);
+#endif
 #endif
 
 typedef rtl_thread* lib_rtl_thread_t;

@@ -142,7 +142,7 @@ namespace {
       FD_ZERO(&read_fds);
       m_dirty = false;
       {
-	RTL::Lock lock(m_mutex_id);
+        RTL::Lock lock(m_mutex_id);
         for(iterator i=begin(); i != end(); ++i)  {
           if ( (*i).second->armed )  {
             __NetworkChannel__ fd = (*i).first;
@@ -157,24 +157,24 @@ namespace {
       if ( nsock > 0 )  {
         timeval tv = { 0, 10 };
         int res = 0;
-	//        while ( res == 0 && !m_dirty ) {
-	  res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
-          if ( res == 0 )  {
-            continue;
-          }
-          else if (res < 0)  {
-            return res;
-          }
-	  // }
-	  // if ( res == 0 && m_dirty ) {
-	  // continue;
-	  //}
+        //        while ( res == 0 && !m_dirty ) {
+        res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
+        if ( res == 0 )  {
+          continue;
+        }
+        else if (res < 0)  {
+          return res;
+        }
+        // }
+        // if ( res == 0 && m_dirty ) {
+        // continue;
+        //}
       }
       else  {        
         timeval tv = { 0, 10 };
         //while(!m_dirty) {
-          ::select(nsock, 0, 0, 0, &tv);
-	//}
+        ::select(nsock, 0, 0, 0, &tv);
+        //}
         continue;
       }
       for ( int j=0; j<nsock; ++j )  {
@@ -186,15 +186,15 @@ namespace {
             PortEntry* e = (*k).second;
             if ( e )  {
               int t = e->type, nb = IOPortManager(m_port).getAvailBytes(fd);
-              // ::lib_rtl_printf("got read request: %d bytes!\n",nb);
+              ::lib_rtl_printf("got read request: %d bytes!\n",nb);
               if ( e->callback )   {
                 if ( !(nb==0 && fd == fileno(stdin)) )
                   e->armed = 0;
-		int (*callback)(void*) = e->callback;
-		void* param = e->param;
-		RTL::Lock lock(m_mutex_id, true);
-		(*callback)(param);
-	      }
+                int (*callback)(void*) = e->callback;
+                void* param = e->param;
+                RTL::Lock lock(m_mutex_id, true);
+                (*callback)(param);
+              }
               if ( t == 1 && nb <= 0 )  {
                 k = find(fd);
                 if ( k != end() )  {

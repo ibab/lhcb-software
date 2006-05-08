@@ -5,4 +5,4 @@ ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 Runable.Wait                         = false;
 ApplicationMgr.ExtSvc                = {"IncidentSvc"};
-MessageSvc.OutputLevel               = 1;  // Minimum is Warning
+MessageSvc.OutputLevel               = 4;  // Minimum is Warning

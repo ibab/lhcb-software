@@ -335,7 +335,7 @@ TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERV
   ::lib_rtl_printf("+======================================================================+\n");
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
-  m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm
+  m_pNetwork->queueAccept ( m_port, m_pAccepthandler );              // Rearm
 }
 
 // ----------------------------------------------------------------------------
@@ -349,7 +349,7 @@ TcpNameService::TcpNameService(int port) : NameService(m_tcp=new TcpConnection(p
   ::lib_rtl_printf("+======================================================================+\n");
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
-  m_pNetwork->queueAccept ( m_tcp->port(), m_pAccepthandler );              // Rearm
+  m_pNetwork->queueAccept ( m_port, m_pAccepthandler );              // Rearm
 }
 
 TcpNameService::~TcpNameService()   {

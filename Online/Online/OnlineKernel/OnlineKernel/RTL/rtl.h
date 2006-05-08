@@ -10,10 +10,16 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 #ifdef __cplusplus
 #include <cstdlib>
 #include <cstdarg>
+#ifndef __CXX_CONST
+#define __CXX_CONST const
+#endif
 namespace RTL {}
 extern "C" {
 #else
 #include <stdio.h>
+#ifndef __CXX_CONST
+#define __CXX_CONST
+#endif
 #endif
   struct _IOSB {
     unsigned short condition;
@@ -88,7 +94,7 @@ extern "C" {
   int lib_rtl_suspend_thread(lib_rtl_thread_t handle);
 
   /// Create named lock. if the lock_name is 0 the lock is priovate to the currect process.
-  int lib_rtl_create_lock (const char* lock_name, lib_rtl_lock_t* lock_handle);
+  int lib_rtl_create_lock (__CXX_CONST char* lock_name, lib_rtl_lock_t* lock_handle);
   /// Delete lock
   int lib_rtl_delete_lock (lib_rtl_lock_t lock_handle);
   /// Cancle lock
@@ -101,13 +107,13 @@ extern "C" {
   int lib_rtl_lock_value  (lib_rtl_lock_t handle, int* value);
 
   /// Create named event for local process (name==0: event is unnamed)
-  int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag);
+  int lib_rtl_create_event (__CXX_CONST char* name, lib_rtl_event_t* event_flag);
   /// Delete event
   int lib_rtl_delete_event(lib_rtl_event_t event_flag);
   /// Set local event flag
   int lib_rtl_set_event(lib_rtl_event_t event_flag);
   /// Set global event flag
-  int lib_rtl_set_global_event(const char* name);
+  int lib_rtl_set_global_event(__CXX_CONST char* name);
   /// Clear event flag
   int lib_rtl_clear_event(lib_rtl_event_t event_flag);
   /// Wait for event flag
@@ -118,9 +124,9 @@ extern "C" {
   int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t action, void* param);
 
   /// Create named global section
-  int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* handle);
+  int lib_rtl_create_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* handle);
   /// Map global section a a specific address
-  int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address);
+  int lib_rtl_map_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* address);
   /// Delete named global section
   int lib_rtl_delete_section(lib_rtl_gbl_t handle);
   /// Unmap global section: address is quadword: void*[2]
@@ -138,24 +144,29 @@ extern "C" {
   /// Get tick count since image startup
   unsigned int lib_rtl_get_ticks();
 
-  int lib_rtl_ffc (int* start, int* len, const void* base, int* position);
-  int lib_rtl_ffs (int* start, int* len, const void* base, int* position);
+  int lib_rtl_ffc (int* start, int* len, __CXX_CONST void* base, int* position);
+  int lib_rtl_ffs (int* start, int* len, __CXX_CONST void* base, int* position);
   int lib_rtl_run_ast (RTL_ast_t astadd, void* bm, int);
 
   /// Issue system error message
-  int lib_rtl_signal_message(int, const char* fmt, ...);
+  int lib_rtl_signal_message(int, __CXX_CONST char* fmt, ...);
   /// Sleep specified time
   int lib_rtl_sleep(int millisecs);
   /// Sleep specified time (sub-millisecond range)
   int lib_rtl_usleep(int microsecs);
 
   /// System error message (from status)
-  const char* lib_rtl_error_message(int status);
+  __CXX_CONST char* lib_rtl_error_message(int status);
   /// Printout redirection
-  size_t lib_rtl_printf(const char* fmt, ...);
+  size_t lib_rtl_printf(__CXX_CONST char* fmt, ...);
   /// Install RTL printer 
-  void lib_rtl_install_printer(size_t (*func)(void*, const char*, va_list args), void* param);
-
+  void lib_rtl_install_printer(size_t (*func)(void*, __CXX_CONST char*, va_list args), void* param);
+  /// Formatted time string
+#ifdef __cplusplus
+  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt = "%b %d %H:%M:%S ");
+#else
+  __CXX_CONST char* lib_rtl_timestr(__CXX_CONST char* fmt);
+#endif
   /// Small helper function to properly retrun from main program.
   int lib_rtl_default_return();
 
@@ -216,4 +227,5 @@ namespace RTL  {
   };
 }
 #endif
+#undef __CXX_CONST
 #endif // _RTL_H

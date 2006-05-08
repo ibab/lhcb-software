@@ -1,10 +1,9 @@
-// $Id: DimErrorLogger.cpp,v 1.1 2006-04-24 12:18:42 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.2 2006-05-08 18:14:27 frankb Exp $
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/DimMessageSvc.h"
 #include "GaudiOnline/DimErrorLogger.h"
 #include "RTL/strdef.h"
 #include "RTL/Lock.h"
-#include <ctime>
 
 // Instantiation of a static factory class used by clients to create instances of this service
 
@@ -88,8 +87,12 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("AcceptErrorMessages",   m_errorMsg   = true);
   declareProperty("AcceptFatalMessages",   m_fatalMsg   = true);
   declareProperty("AcceptSuccessMessages", m_successMsg = true);
-  declareProperty("AcceptSources",         m_acceptSources);
-  m_acceptSources.push_back("*");
+  declareProperty("PrintService",          m_printSvc   = true);
+  declareProperty("AcceptedSources",       m_acceptedSources);
+  declareProperty("AcceptedClients",       m_acceptedClients);
+  declareProperty("RefusedClients",        m_refusedClients);
+  m_acceptedSources.push_back("*");
+  m_acceptedClients.push_back("*");
   int status = ::lib_rtl_create_lock(0, &m_lockid);
   if ( !lib_rtl_is_success(status) )  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error deleting AMS lock. Status %d",status);
@@ -114,15 +117,28 @@ StatusCode LHCb::DimErrorLogger::queryInterface(const InterfaceID& riid, void** 
 
 // Add handler for a given message source
 void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
-  RTL::Lock lock(m_lockid);
-  Clients::iterator i=m_clients.find(nam);
-  if ( i == m_clients.end() )  {
-	  char def[32];
-    memset(def,0,sizeof(def));
-    DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
-    // std::cout << "Create DimInfo:" << (void*)info << std::endl;
-    m_clients.insert(std::make_pair(nam, info));
-    msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
+  std::vector<std::string>::iterator i=m_refusedClients.begin();
+  for(; i != m_refusedClients.end(); ++i)  {
+    if ( ::str_match_wild(nam.c_str(), (*i).c_str()) )  {
+      msgSvc()->reportMessage(name(), MSG::INFO, "Messages from client "+nam+" denied.");
+      return;
+    }
+  }
+  std::vector<std::string>::iterator j=m_acceptedClients.begin();
+  for(; j != m_acceptedClients.end(); ++j)  {
+    if ( ::str_match_wild(nam.c_str(), (*j).c_str()) )  {
+      RTL::Lock lock(m_lockid);
+      Clients::iterator i=m_clients.find(nam);
+      if ( i == m_clients.end() )  {
+	      char def[32];
+        memset(def,0,sizeof(def));
+        DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
+        // std::cout << "Create DimInfo:" << (void*)info << std::endl;
+        m_clients.insert(std::make_pair(nam, info));
+        msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
+        return;
+      }
+    }
   }
 }
 
@@ -198,8 +214,8 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
     default:
       break;
   }
-  std::vector<std::string>::iterator i=m_acceptSources.begin();
-  for(; i != m_acceptSources.end(); ++i)  {
+  std::vector<std::string>::iterator i=m_acceptedSources.begin();
+  for(; i != m_acceptedSources.end(); ++i)  {
     if ( ::str_match_wild(src.c_str(), (*i).c_str()) )  {
       reportMessage(typ,src,msg);
       return;
@@ -210,11 +226,14 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
 void LHCb::DimErrorLogger::infoHandler() {
   DimMessage* m = (DimMessage*)getInfo()->getData();
   if ( m->size > 0 )  {
-    std::string task = getInfo()->getName()+1;
-    size_t idx = task.find_last_of("/");
-    task = task.substr(0,idx);
-    m->msg[m->size] = 0;
-    task += "::";
+    std::string task;
+    if ( m_printSvc )  {
+      task = getInfo()->getName()+1;
+      size_t idx = task.find_last_of("/");
+      task = task.substr(0,idx);
+      m->msg[m->size] = 0;
+      task += "::";
+    }
     task += m->src;
     //RTL::Lock lock(m_lockid);
     report(m->typ, task, m->msg);
