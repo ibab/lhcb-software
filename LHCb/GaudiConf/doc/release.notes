@@ -1,7 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r6 2006-04-25 ========================
+!======================== GaudiConf v9r6 2006-05-08 ========================
+! 2006-05-08 - Marco Cattaneo
+ - Add explicit loading of Reflex dictionaries in SimDicts.opts, until problems
+   with rootmap files are sorted out
+
 ! 2006-04-25 - Florence RANJARD
  - cmt/requirements - add setting of STAGE_HOST and RFIO_USE_CASTOR_V2 for
                       CMTSITE=CERN to use castor2
