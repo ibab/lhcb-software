@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v1r2 2006-05-08 ========================
+! 2006-05-08 - Marco Cattaneo
+ - Use explicitly Gaudi::Units namespace in MCParticleSelector.cpp
+
 !====================== SimComponents v1r1p1 2006-03-31 ======================
 ! 2006-03-31 - Marco Cattaneo
  - Add explicit dependency on Boost, needed with Gaudi v18r3
