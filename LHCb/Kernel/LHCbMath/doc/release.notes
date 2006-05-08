@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/LHCbMath
+! Responsible : Juan Palacios
+! Purpose     : A collection of simple generic geometry classes and functions 
+!-----------------------------------------------------------------------------
+
+! 2006-05-08 - Juan Palacios
+ - First release of Kernel/LHCbMath
+

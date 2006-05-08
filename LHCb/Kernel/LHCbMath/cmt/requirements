@@ -1,0 +1,32 @@
+#============================================================================
+# Created    : 19/04/2006
+# Maintainer : Juan Palacios
+#============================================================================
+
+package Kernel/LHCbMath
+version v1r0
+
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+
+branches cmt doc Kernel
+
+include_dirs $(LHCBMATHROOT)
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GaudiPolicy     v*
+use LHCbDefinitions v* Kernel        
+use GSL             v* LCG_Interfaces
+
+
+#============================================================================
+
+
+macro_remove LHCbDefinitions_linkopts "-lSmatrix"
+
+#============================================================================
