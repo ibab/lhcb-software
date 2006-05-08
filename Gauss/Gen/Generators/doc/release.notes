@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.57 2006-05-03 08:15:12 robbep Exp $
+! $Id: release.notes,v 1.58 2006-05-08 15:42:43 ibelyaev Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+
+! 2006-05-08 - Vanya BELYAEV
+
+ - src/component/MuXMaxBias.cpp
+    really commit new tool.. 
+ - cmt/requirement
+    (re)add the usage of Phys/LoKiGen v* 
+
 
 ! 2006-05-02 - Patrick Robbe
  - src/Lib/Signal.cpp: rename counters to be consistent with inclusive.

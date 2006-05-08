@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2006-05-03 08:15:12 robbep Exp $ 
+# $Id: requirements,v 1.19 2006-05-08 15:42:42 ibelyaev Exp $ 
 # =============================================================================
 package       Generators
 version       v5r0
@@ -14,7 +14,7 @@ use           SEAL              v*                LCG_Interfaces
 use           GaudiAlg          v*
 use           GenEvent          v*                Event
 use           EvtGen            v*                Gen
-#use           LoKiGen           v*                Phys 
+use           LoKiGen           v*                Phys 
 
 # =========== constituents ====================================================
 library       GeneratorsLib  Lib/*.cpp Lib/*.F
