@@ -1,5 +1,5 @@
 package DAQEvent
-version v6r3
+version v6r4
 
 use GaudiAlg  v*
 branches cmt doc Event src tests xml

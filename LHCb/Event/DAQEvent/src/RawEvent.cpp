@@ -1,14 +1,13 @@
-// $Id: RawEvent.cpp,v 1.10 2006-03-07 13:42:06 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.11 2006-05-08 14:58:26 cattanem Exp $
 #include "Event/RawEvent.h"
 
 namespace {
   inline LHCb::RawBank* allocateBank(size_t len)  {
     size_t mem_len = LHCb::RawEvent::paddedBankLength(len);
-    char* mem = (char*)::operator new(mem_len);
+    size_t new_len = mem_len/sizeof(unsigned int);
+    unsigned int* mem = new unsigned int[new_len];
     if ( mem_len != len )  {
-      // size_t l = sizeof(LHCb::RawBank)-sizeof(unsigned int);
-      *(unsigned int*)(mem+mem_len-sizeof(unsigned int)) = 0;
-      // above should be faster .... ::memset(mem+len+l,0,mem_len-len-l);
+      mem[new_len-1] = 0;
     }
     return (LHCb::RawBank*)mem;
   }
@@ -25,7 +24,7 @@ LHCb::RawEvent::~RawEvent() {
   for(std::vector<Bank>::iterator i=m_banks.begin(); i != m_banks.end(); ++i)  {
     Bank& b = *i;
     if ( b.ownsMemory() && b.buffer() )  {
-      ::operator delete(b.buffer());
+      delete [] b.buffer();
     }
   }
   m_banks.clear();
@@ -76,7 +75,7 @@ LHCb::RawBank* LHCb::RawEvent::createBank( int srcID,
 /// For offline use only: copy data into a bank, adding bank header internally.
 void LHCb::RawEvent::addBank(RawBank* data)     {
   size_t len = data->totalSize();
-  LHCb::RawBank* bank = (LHCb::RawBank*)::operator new(len);
+  LHCb::RawBank* bank = (LHCb::RawBank*)new unsigned int[len/sizeof(unsigned int)];
   ::memcpy(bank, data, len);
   adoptBank(bank, true);
 }
