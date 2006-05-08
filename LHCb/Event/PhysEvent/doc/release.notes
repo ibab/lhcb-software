@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.88 2006-04-18 15:05:31 cattanem Exp $
+! $Id: release.notes,v 1.89 2006-05-08 09:10:38 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
+
+! 2006-05-08 - Juan PALACIOS
+ - src/Particle.cpp: Fix bug in Particle::covMatrix. Erroneous assignment of
+                     off-diagonal position-momentum covariance blocks.
+                     Fill upper and lower off-diagonal blocks to be safe
+                     from MatrixManip::Symmetrize implementation.
 
 !======================= PhysEvent v9r3 2006-04-18 ==========================
 ! 2006-04-12 - Juan PALACIOS
