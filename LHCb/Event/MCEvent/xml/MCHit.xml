@@ -10,6 +10,7 @@
            author='Marco Cattaneo, revised by G.Corti' 
            desc='GEANT tracking hit' 
            id='230' >
+      <import name="GaudiKernel/SystemOfUnits.h"/>
       <import name="Kernel/Point3DTypes.h"/>
       <import name="Kernel/Vector3DTypes.h"/>
       <import name="MCParticle" soft="TRUE"/>
@@ -86,7 +87,7 @@
       >
          <code>
    double dxdz = 9999.;
-   if( 1.e-4*mm &lt; fabs(this->displacement().z()) ) {
+   if( 1.e-4*Gaudi::Units::mm &lt; fabs(this->displacement().z()) ) {
      dxdz = this->displacement().x() / this->displacement().z();
    }
    return dxdz;
@@ -100,7 +101,7 @@
       >
          <code>
    double dydz = 9999.;
-   if( 1.e-4*mm &lt; fabs(this->displacement().z()) ) {
+   if( 1.e-4*Gaudi::Units::mm &lt; fabs(this->displacement().z()) ) {
      dydz = this->displacement().y() / this->displacement().z();
    }
    return dydz;

@@ -15,7 +15,7 @@
       location="MC/Particles"
      >
        &KeyedObject;
-       <import name="Kernel/PhysicalConstants"/>
+       <import name="GaudiKernel/SystemOfUnits"/>
        <import name="Kernel/ParticleID"/>
        <import name="Kernel/Vector4DTypes"/>
        <import name="MCVertex" soft="TRUE"/>
@@ -24,7 +24,7 @@
         desc="4-momentum-vector"
         name="momentum"
         type="Gaudi::LorentzVector"
-        init="0.0, 0.0, 0.0, -1*GeV" 
+        init="0.0, 0.0, 0.0, -1*Gaudi::Units::GeV" 
        />
        <attribute
         desc="Particle ID"
