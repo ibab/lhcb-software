@@ -18,7 +18,5 @@ DECLARE_FACTORY_ENTRIES( DaVinciTransporter ) {
 
 
 //  Geometrical tools
-/// @todo Restore GeomDispCalculator
-//   DECLARE_TOOL( GeomDispCalculator );
    DECLARE_TOOL( TrgDispCalculator ); 
 }
