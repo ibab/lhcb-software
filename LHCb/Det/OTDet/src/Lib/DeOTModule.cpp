@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.15 2006-05-08 12:59:54 janos Exp $
+// $Id: DeOTModule.cpp,v 1.16 2006-05-08 16:42:32 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -222,9 +222,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 	efficientY = isEfficientA(-m_yHalfModule+mu); 
     	/// Do we have a hit?
     	if (fabs(dist) < m_cellRadius && efficientY) {
-	  MsgStream msg( msgSvc(), name() );
-	  msg << MSG::WARNING << "Hit in straw " << (*iStraw) << ", x = " << wT.x() << endreq;
-    	  channels.push_back(OTChannelID(m_stationID, m_layerID,
+	  channels.push_back(OTChannelID(m_stationID, m_layerID,
     					 m_quarterID, m_moduleID, 
 					 (*iStraw)));
     	  driftDistances.push_back(dist);
@@ -246,8 +244,6 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 	double dist = driftDistance(doca);
 	efficientY = isEfficientB(-m_yHalfModule+mu);
 	if (fabs(dist) < m_cellRadius && efficientY) {
-	  MsgStream msg( msgSvc(), name() );
-	  msg << MSG::WARNING << "Hit in straw " <<m_nStraws+(*iStraw) << ", x = " << wT.x() << endreq;
 	  channels.push_back(OTChannelID(m_stationID, m_layerID,
 					 m_quarterID, m_moduleID, 
 					 m_nStraws+(*iStraw)));

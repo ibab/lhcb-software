@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.57 2006-05-08 12:59:54 janos Exp $
+! $Id: release.notes,v 1.58 2006-05-08 16:42:32 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r3 2006-05-03 ==========================
 ! 2006-05-08 - Jan Amoraal
+ - Forgot to remove some debug msgs in DeOTModule.cpp 
  - minor clean-ups
  
 ! 2006-05-04 - Jan Amoraal
