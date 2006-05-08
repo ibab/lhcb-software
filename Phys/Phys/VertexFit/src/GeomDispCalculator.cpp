@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.7 2006-05-08 18:24:39 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.8 2006-05-08 18:32:12 jpalac Exp $
 
 // Include files
 
@@ -395,9 +395,9 @@ void GeomDispCalculator::calcDerivVectors(const Gaudi::XYZLine& part0,
                 dispPU*dispMom1*perpUnit + dispPU*dispPU*mom1 -
                 (disp.Cross(mom1)).Cross(perpUnit)*dispPU  );
 
-    u = perpUnit + fact*(mom1*dispMom1 - sqrt(mom1.mag2())*disp -
+    u = perpUnit + fact*(mom1*dispMom1 - mom1.mag2()*disp -
                          dispPU*perpUnit.Dot(mom1)*mom1 +
-                         sqrt(mom1.mag2())*dispPU*perpUnit           );
+                         mom1.mag2()*dispPU*perpUnit           );
   } else {
     u1 = ( fact*( dispPU*perpUnit - disp) ).Cross(mom1 );
     u2 = -(fact*( dispPU*perpUnit - disp) ).Cross(mom0 );
