@@ -1,5 +1,5 @@
 package LHCbSys
-version v20r4
+version v21r0
 
 branches doc cmt
 
@@ -7,17 +7,18 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb                 v20r4
-use GaudiConf	         v9r5
+use LHCb                 v21r0
+use GaudiConf	         v9r6
 
 #                                         Maintainer
 # Interface to external package used by GenEvent
 use HepMC                v1r126p0 Gen     # Florence Ranjard
 
 # Kernel packages
-use KernelSys             v5r4    Kernel  # Marco Cattaneo
-use LHCbDefinitions       v1r5    Kernel  # Juan Palacios
-use LHCbKernel            v6r5    Kernel  # Marco Cattaneo
+use KernelSys             v5r5    Kernel  # Marco Cattaneo
+use LHCbDefinitions       v1r6    Kernel  # Juan Palacios
+use LHCbKernel            v6r6    Kernel  # Marco Cattaneo
+use LHCbMath              v1r0    Kernel  # Juan Palacios
 use Relations             v3r1    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0    Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
@@ -26,13 +27,13 @@ use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v3r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v8r4    Det     # Marco Cattaneo
+use DetSys                v8r5    Det     # Marco Cattaneo
 use VeloDet               v10r5   Det     # Mark Tobin
 use DetDesc               v16r4   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r2    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r4    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r9    Tools   # Marco Clemencic
-use OTDet                 v6r2    Det     # Jan Amoraal
+use OTDet                 v6r3    Det     # Jan Amoraal
 use CaloDet               v7r1    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r2    Det     # Alessia Satta, Alessio Sarti
@@ -41,14 +42,14 @@ use RichDet               v9r3    Det     # Chris Jones
 use STDet                 v2r3    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
-use EventSys              v21r4   Event   # Marco Cattaneo
+use EventSys              v21r5   Event   # Marco Cattaneo
 use EventBase             v1r1    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v1r2p1  Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r1    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v1r2    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r1   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
-use PhysEvent             v9r3    Event   # Patrick Koppenburg, Juan Palacios
-use DAQEvent	          v6r3    Event   # Marco Cattaneo
+use PhysEvent             v9r4    Event   # Patrick Koppenburg, Juan Palacios
+use DAQEvent	          v6r4    Event   # Marco Cattaneo
 use GenEvent              v4r3    Event   # Gloria Corti
 use EventAssoc            v3r1    Event   # Ivan Belyaev
 use LinkerEvent           v2r1    Event   # Olivier Callot
@@ -72,14 +73,14 @@ use RichRecBase           v2r2   Rich    # Chris Jones
 use TrackInterfaces       v2r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use LinkerInstances       v3r0   Event   # Eduardo Rodrigues, Thomas Ruf
-use DetCond              v7r10p1 Det     # Marco Clemencic
-use CondDBEntityResolver  v1r1   Tools   # Marco Clemencic
-use LoKiCore              v1r3   Phys    # Ivan Belyaev
+use DetCond               v8r0   Det     # Marco Clemencic
+use CondDBEntityResolver  v2r0   Tools   # Marco Clemencic
+use LoKiCore              v1r4   Phys    # Ivan Belyaev
 use LoKiGen               v1r2   Phys    # Ivan Belyaev
-use SimComponents         v1r1p1 Sim     # Gloria Corti
+use SimComponents         v1r2   Sim     # Gloria Corti
 
 # LHCb  Examples
 use DetDescChecks         v3r0   Det     # Ivan Belyaev
 use DetDescExample        v7r0   Ex      # Marco Clemencic
 use IOExample             v2r0   Ex      # Marco Cattaneo
-use DetCondExample        v7r10  Ex      # Marco Clemencic
+use DetCondExample        v8r0   Ex      # Marco Clemencic

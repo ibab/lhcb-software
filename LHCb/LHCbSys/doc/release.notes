@@ -5,6 +5,56 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v21r0>2006-05-08 LHCbSys v21r0</A></H1><PRE>
+This version uses Gaudi v18r4 and is fully compatible with DC06 production data
+
+- Packages added:    LHCbMath v1r0
+- Packages modified: GaudiConf v9r6, KernelSys v5r5, LHCbDefinitions v1r6,
+    LHCbKernel v6r6, DetSys v8r5, OTDet v6r3, EventSys v21r5,
+    PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, LoKiCore v1r4, DetCond v8r0,
+    DetCondExample v8r0, CondDBEntityResolver v2r0, SimComponents v1r2
+
+- In GaudiConf v9r6
+  . Set environment variables to force usage of castor2 at CERN
+
+- In LHCbDefinitions v1r6
+  . SystemOfUnits.h and PhysicalConstants.h now point to corresponding 
+    GaudiKernel files, and use namespace Gaudi::Units for backwards compatibility
+  . Add definitions for 9x9 matrices and dimension 9 vectors
+
+- In LHCbKernel v6r6
+  . Add Boost dependency, needed for boost_allocators in event model
+  . Add generic typedef of Point and Vector to Trajectory, and default arguments
+    to LineTraj::direction, LineTraj::curvature and ParabolaTraj::curvature.
+
+- In OTDet v6r3
+  . DeOTLayer/DeOTModule return a plane going through the centre of layer/module.
+  . Added trajectories for first and last wire.
+  . Fixed trajectories representing wires in a long module
+
+- In PhysEvent v9r4
+  . Fix bug in Particle::covMatrix. Erroneous assignment of off-diagonal 
+    position-momentum covariance blocks.
+
+- in MCEvent v1r3, SimComponents v1r2
+  . Use explicitly Gaudi::Units in MCHit.h, MCParticle.h, MCParticleSelector.cpp
+
+- In DAQEvent v6r4
+  . Fix mismatch between new and delete in RawEvent.cpp
+
+- In LoKiCore v1r4
+  . Use Gaudi::Units namespace for units, instead of CLHEP::
+
+- In DetCond v8r0, CondDBEntityResolver v2r0, DetCondExample v8r0
+  . Updated to COOL_1_3_x
+
+- In DetCond v8r0
+  . Fixed a problem with uninitialized variables just affecting the case of
+    a FolderSet stored in the CondDB cache.
+
+- In DetCondExample v8r0
+  . Use "oracle" from LCG_Interfaces
+
 </PRE><H1><A NAME=v20r4>2006-05-02 LHCbSys v20r4</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
 

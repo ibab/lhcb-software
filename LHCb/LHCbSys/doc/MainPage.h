@@ -13,7 +13,14 @@
 
  * <p>See also:
  * \li \ref gaudidoxygenmain "Gaudi documentation (Framework packages)"
- * \li \ref externaldocs     "Related external libraries"
+ * \li \ref externaldocs     "Related external libraries used by Gaudi"
+ * \li "Additional external libraries used by CondDB"
+ * \htmlonly
+ <UL>
+  <LI> <a href="http://lcgapp.cern.ch/doxygen/COOL/$(COOLVERS)/doxygen/html/" target="_blank">$(COOLVERS)</A> (Conditions API)
+  <LI> <a href="http://lcgapp.cern.ch/doxygen/CORAL/$(CORALVERS)/doxygen/html/" target="_blank">$(CORALVERS)</A> (Database access layer)
+ </UL>
+\endhtmlonly
  * <hr>
  * \htmlinclude new_release.notes
  * <hr>
