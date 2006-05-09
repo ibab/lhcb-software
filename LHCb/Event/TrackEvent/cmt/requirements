@@ -22,6 +22,7 @@ include_dirs      $(TRACKEVENTROOT)
 #============================================================================
 use   LHCbKernel    v*    Kernel
 use   GSL           v*    LCG_Interfaces
+use   Boost         v*    LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files from XML description

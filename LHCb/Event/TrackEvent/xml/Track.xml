@@ -63,6 +63,13 @@
    *   PatKShort
    *   TrackKShort
    *   TsaTrack
+   *   CnvSeed         : seed tracks converted from old Track Event Model tracks
+   *   CnvVelo         : velo tracks converted from old Track Event Model tracks
+   *   CnvVeloBack     : velo Backwards tracks converted from old Track Event Model tracks
+   *   CnvVeloTT       : veloTT tracks converted from old Track Event Model tracks
+   *   CnvForward      : forward tracks converted from old Track Event Model tracks
+   *   CnvMatch        : match tracks converted from old Track Event Model tracks
+   *   CnvKsTrack      :
    *
    */
 -->
@@ -80,7 +87,14 @@
                   TrackMatching,
                   PatKShort,
                   TrackKShort,
-                  TsaTrack'
+                  TsaTrack,
+                  CnvSeed=24,
+                  CnvVelo,
+                  CnvVeloBack,
+                  CnvVeloTT,
+                  CnvForward,
+                  CnvMatch,
+                  CnvKsTrack'
         access = 'PUBLIC' />
 
 <!--

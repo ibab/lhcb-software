@@ -5,6 +5,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r5 2006-05-09 ========================
+! 2006-05-09 - Marco Cattaneo
+ - Add Boost dependency, needed for Boost allocators in event model
+ - Put back history enums for converted tracks, needed until CaloUtils and
+   RichRecBase are migrated to compile without them
+
 ! 2006-05-05 - Eduardo Rodrigues
  - transient attribute removed for LHCbIDs and States on Tracks
  - removed tracks history enums related to converted tracks (obsolete)
