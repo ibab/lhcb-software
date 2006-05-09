@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.31 2006-05-09 09:43:03 jpalac Exp $ 
+! $Id: release.notes,v 1.32 2006-05-09 23:33:47 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-05-10 - Juan PALACIOS
+ - src/NoPIDsParticleMaker.cpp: use state2Particle function from 
+   Kernel/state2Particle.h instead of deprecated 
+   IParticleStuffer::fillParticle(state, particle).
 
 ! 2006-05-09 - Juan PALACIOS
  - src/ParticleStuffer.cpp: Fix calculation of error on measured mass.

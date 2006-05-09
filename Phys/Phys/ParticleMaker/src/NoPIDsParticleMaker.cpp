@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.4 2006-03-15 13:47:30 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.5 2006-05-09 23:33:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "GaudiKernel/ParticleProperty.h" 
 
 #include "Kernel/IParticleStuffer.h" 
+#include "Kernel/state2Particle.h"
 // local
 #include "NoPIDsParticleMaker.h"
 
@@ -244,6 +245,6 @@ StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto  
   
   particle -> setProto( proto ) ;
   const LHCb::State& state = proto->track()->firstState() ;
-  return m_stuffer->fillParticle(state,*particle);
+  return state2Particle(state, *particle);
 };
 // ============================================================================
