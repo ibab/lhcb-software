@@ -1,8 +1,15 @@
-// $Id: MuonBasicGeometry.cpp,v 1.5 2006-01-30 10:58:29 asatta Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.6 2006-05-09 14:21:32 cattanem Exp $
+
 // Include files
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+// Detector description classes
+#include "DetDesc/DetectorElement.h"
+
 // local
 #include "MuonDet/MuonBasicGeometry.h"
-#include <cstdio>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBasicGeometry

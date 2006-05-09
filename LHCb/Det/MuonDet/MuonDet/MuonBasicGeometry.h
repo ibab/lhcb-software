@@ -1,33 +1,12 @@
-// $Id: MuonBasicGeometry.h,v 1.1 2002-10-21 20:38:03 asatta Exp $
+// $Id: MuonBasicGeometry.h,v 1.2 2006-05-09 14:21:32 cattanem Exp $
 #ifndef MUONDET_MUONBASICGEOMETRY_H 
 #define MUONDET_MUONBASICGEOMETRY_H 1
 
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
-#include <GaudiKernel/ObjectVector.h>  
-#include <GaudiKernel/IDataProviderSvc.h>
-#include "GaudiKernel/IHistogramSvc.h"
+#include <string>
+#include <vector>
 
-
-/// Detector description classes
-#include "DetDesc/ILVolume.h"
-#include "DetDesc/IPVolume.h"
-#include "DetDesc/Material.h"
-#include "DetDesc/IDetectorElement.h"
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/DetectorElementException.h"
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/ISolid.h"
-#include "DetDesc/SolidBox.h"
-#include "DetDesc/IReadOut.h"
-#include "MuonDet/DeMuonRegion.h"
-#include "MuonDet/DeMuonChamber.h"
-#include "MuonDet/MuonParameters.h"
-#include "MuonDet/DeMuonGasGap.h"
-#include "MuonDet/MuonReadoutCond.h"
-
-
+class IDataProviderSvc;
+class IMessageSvc;
 
 // Include files
 

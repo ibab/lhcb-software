@@ -1,33 +1,14 @@
-// $Id: DeMuonGasGap.h,v 1.5 2005-10-31 15:27:28 asarti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/10/25 06:55:46  asarti
-// New .h classes
-//
-// Revision 1.3  2002/02/21 16:38:30  dhcroft
-// Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
-// DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
-//
-// Revision 1.2  2002/01/31 10:00:09  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-//
+// $Id: DeMuonGasGap.h,v 1.6 2006-05-09 14:21:32 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONGASGAP_H
 #define MUONDET_DEMUONGASGAP_H 1
-
 
 // Include files
 #include <vector>
 #include <string>
 
 #include "DetDesc/DetectorElement.h"
-
-/// Gaudi interfaces
-#include "GaudiKernel/IService.h"
-#include "GaudiKernel/SmartDataPtr.h"
+#include "DetDesc/IGeometryInfo.h"
 
 /** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
  *  

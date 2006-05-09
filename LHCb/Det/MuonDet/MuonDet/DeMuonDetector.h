@@ -1,16 +1,16 @@
-// $Id: DeMuonDetector.h,v 1.15 2006-02-28 10:33:12 asatta Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: DeMuonDetector.h,v 1.16 2006-05-09 14:21:32 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
 
 //Det Desc
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/SolidBox.h"   // Not needed here but used by many algorithms
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/Packer.h"
+
 //Muon Detector
 #include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonFrontEndID.h"

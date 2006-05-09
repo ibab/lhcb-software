@@ -1,5 +1,8 @@
-// $Id: MuonChamberLayout.cpp,v 1.22 2006-03-03 11:22:02 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.23 2006-05-09 14:21:32 cattanem Exp $
 // Include files 
+
+// Gaudi
+#include "GaudiKernel/SmartDataPtr.h"
 
 //Muon
 #include "MuonDet/MuonChamberLayout.h"
