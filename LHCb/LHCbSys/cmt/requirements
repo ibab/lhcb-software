@@ -36,7 +36,7 @@ use XmlTools              v3r9    Tools   # Marco Clemencic
 use OTDet                 v6r3    Det     # Jan Amoraal
 use CaloDet               v7r1    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
-use MuonDet               v5r2    Det     # Alessia Satta, Alessio Sarti
+use MuonDet               v5r3    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r1    Det     # N.N.
 use RichDet               v9r3    Det     # Chris Jones
 use STDet                 v2r3    Det     # Jeroen van Tilburg, Matt Needham
@@ -72,7 +72,7 @@ use CaloUtils             v6r2   Calo    # Olivier Deschamps
 use RichRecBase           v2r3   Rich    # Chris Jones
 use TrackInterfaces       v2r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
-use LinkerInstances       v3r0   Event   # Eduardo Rodrigues, Thomas Ruf
+use LinkerInstances       v3r0p1 Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v8r0   Det     # Marco Clemencic
 use CondDBEntityResolver  v2r0   Tools   # Marco Clemencic
 use LoKiCore              v1r4   Phys    # Ivan Belyaev
