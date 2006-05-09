@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.20 2006-05-05 19:18:51 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.21 2006-05-09 17:51:14 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -69,9 +69,10 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   , m_stateCreator(0)
 {
   /// default job Options
-  declareProperty( "AddOTTimes",      m_addOTTimes      = true );
-  declareProperty( "AddSTClusters",   m_addSTClusters   = true );
   declareProperty( "AddVeloClusters", m_addVeloClusters = true );
+  declareProperty( "AddTTClusters",   m_addTTClusters   = true );
+  declareProperty( "AddITClusters",   m_addITClusters   = true );
+  declareProperty( "AddOTTimes",      m_addOTTimes      = true );
   declareProperty( "InitState",       m_initState       = true );
   declareProperty( "InitStateUpstream",    m_initStateUpstream = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
@@ -226,13 +227,24 @@ StatusCode IdealTracksCreator::execute()
         }
       }
 
-      // Add ST clusters
+      // Add TT clusters
       // ---------------
-      if ( m_addSTClusters == true ) {
-        debug() << "... adding STClusters" << endreq;
-        sc = addSTClusters( mcParticle, track );
+      if ( m_addTTClusters == true ) {
+        debug() << "... adding TTClusters" << endreq;
+        sc = addTTClusters( mcParticle, track );
         if ( sc.isFailure() ) {
-          error() << "Unable to add inner tracker clusters" << endreq;
+          error() << "Unable to add TT tracker clusters" << endreq;
+          return StatusCode::FAILURE;
+        }        
+      }
+
+      // Add IT clusters
+      // ---------------
+      if ( m_addITClusters == true ) {
+        debug() << "... adding ITClusters" << endreq;
+        sc = addITClusters( mcParticle, track );
+        if ( sc.isFailure() ) {
+          error() << "Unable to add IT tracker clusters" << endreq;
           return StatusCode::FAILURE;
         }        
       }
@@ -430,17 +442,15 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
 //=============================================================================
 //  
 //=============================================================================
-StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
+StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
                                               Track* track )
 {
-  unsigned int nSTMeas = 0;
+  unsigned int nTTMeas = 0;
 
-  // For TT
   LinkedFrom<STCluster,MCParticle>
     ttLink( evtSvc(), msgSvc(), STClusterLocation::TTClusters );
   if ( ttLink.notFound() ) {
-    error() << "Unable to retrieve STCluster-TT to MCParticle Linker table"
-            << endreq;
+    return Error( "Unable to retrieve STCluster-TT to MCParticle Linker table" );
   }
   else {
     const STCluster* aCluster = ttLink.first( mcPart );
@@ -455,17 +465,28 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
       delete tempState;
 
       track -> addToMeasurements( meas );
-      ++nSTMeas;      
+      ++nTTMeas;      
       aCluster = ttLink.next();
     }
   }
 
-  // For IT
+  debug() << "- " << nTTMeas << " STMeasurements in TT added" << endreq;
+
+  return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+//  
+//=============================================================================
+StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
+                                              Track* track )
+{
+  unsigned int nITMeas = 0;
+
   LinkedFrom<STCluster,MCParticle>
     itLink( evtSvc(), msgSvc(), STClusterLocation::ITClusters );
   if ( itLink.notFound() ) {
-    error() << "Unable to retrieve STCluster-IT to MCParticle Linker table"
-            << endreq;
+    return Error( "Unable to retrieve STCluster-IT to MCParticle Linker table" );
   }
   else {
     const STCluster* aCluster = itLink.first( mcPart );
@@ -480,12 +501,12 @@ StatusCode IdealTracksCreator::addSTClusters( MCParticle* mcPart,
       delete tempState;
 
       track -> addToMeasurements( meas );
-      ++nSTMeas;      
+      ++nITMeas;      
       aCluster = itLink.next();
     }
   }
 
-  debug() << "- " << nSTMeas << " STMeasurements added" << endreq;
+  debug() << "- " << nITMeas << " STMeasurements in IT added" << endreq;
 
   return StatusCode::SUCCESS;
 };

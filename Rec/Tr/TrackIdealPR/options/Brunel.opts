@@ -12,7 +12,8 @@ BrunelCheck.DetectorList    = { "Tr" };
 BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 
 //IdealTracksCreator.AddOTTimes      = true;
-//IdealTracksCreator.AddSTClusters   = true;
+//IdealTracksCreator.AddTTClusters   = true;
+//IdealTracksCreator.AddITClusters   = true;
 //IdealTracksCreator.AddVeloClusters = true;
 
 //IdealTracksCreator.InitState   = true;

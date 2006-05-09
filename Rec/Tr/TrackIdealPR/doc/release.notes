@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-05-08 - Eduardo Rodrigues
+ - algorithm can now create TT and IT STClusters separately, not just all
+   STClusters altogether. Controllable via job options
+
 ! 2006-05-05 - Eduardo Rodrigues
  - using separate STClusterPosition tools for TT and IT (different tunings)
 

@@ -39,7 +39,7 @@ class ITrajPoca;
  *  automatically filled.
  *  Currently the following types of measurements can be added:
  *   @li Outer Tracker OTTimes (OTMeasurement)
- *   @li Silicon Tracker clusters (STMeasurement)
+ *   @li Silicon Tracker clusters in TT and IT (STMeasurement)
  *   @li Velo r clusters (VeloRMeasurement)
  *   @li Velo phi clusters (VeloPhiMeasurement)
  *  For the OTTimes the relation table with MCHits is needed, since the
@@ -77,8 +77,11 @@ private:
   /// Add outer tracker clusters
   StatusCode addOTTimes( LHCb::MCParticle* mcPart, LHCb::Track* track );
 
-  /// Add silicon tracker (IT and TT) clusters
-  StatusCode addSTClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
+  /// Add silicon tracker clusters in TT
+  StatusCode addTTClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
+
+  /// Add silicon tracker clusters in IT
+  StatusCode addITClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
 
   /// Add velo r and phi clusters
   StatusCode addVeloClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
@@ -112,10 +115,11 @@ private:
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
 
   // job options
-  bool m_addOTTimes;        ///< true if OT clusters should be put on track
-  bool m_addSTClusters;     ///< true if ST clusters should be put on track
-  bool m_addVeloClusters;   ///< true if Velo R clusters should be put on track
-  bool m_initState;         ///< initialize seed state
+  bool m_addOTTimes;      ///< true if OT clusters should be put on track
+  bool m_addTTClusters;   ///< true if ST clusters in TT should be put on track
+  bool m_addITClusters;   ///< true if ST clusters in IT should be put on track
+  bool m_addVeloClusters; ///< true if Velo R clusters should be put on track
+  bool m_initState;       ///< initialize seed state
   bool m_initStateUpstream; ///< seed state created upstream/downstream
   bool m_trueStatesAtMeas;  ///< Store true states at each measurement position
   std::string m_ttPositionToolName;
