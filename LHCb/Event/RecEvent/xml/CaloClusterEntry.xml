@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloClusterEntry.xml,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+  * $Id: CaloClusterEntry.xml,v 1.2 2006-05-09 11:24:42 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloClusterEntry class                                 *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -14,6 +14,7 @@
  name   = "CaloClusterEntry"
  desc   = "@brief Cluster Entry: Digit and it's Status in the Cluster"
  author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+ allocator = "NO"
 >
   &StlVector;
 

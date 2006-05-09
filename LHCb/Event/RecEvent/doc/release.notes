@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.13 2006-04-06 16:09:00 cattanem Exp $
+! $Id: release.notes,v 1.14 2006-05-09 11:24:41 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+
+!========================== RecEvent v1r3 2006-05-09 =========================
+! 2006-05-09 - Marco Cattaneo
+ - Disable Boost allocator for CaloClusterEntry, breaks ProtoParticle compilation
+   on Windows
 
 !========================== RecEvent v1r2 2006-04-06 =========================
 ! 2006-04-06 - Olivier Deschamps

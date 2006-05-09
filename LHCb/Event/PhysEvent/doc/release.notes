@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.90 2006-05-08 15:00:38 cattanem Exp $
+! $Id: release.notes,v 1.91 2006-05-09 11:23:14 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
 !======================= PhysEvent v9r4 2006-05-08 ==========================
+! 2006-05-09 - Marco Cattaneo
+ - Disable Boost allocators for Particle, Tagger, FlavourTag as they do not
+   compile on Windows
+
 ! 2006-05-08 - Juan PALACIOS
  - src/Particle.cpp: Fix bug in Particle::covMatrix. Erroneous assignment of
                      off-diagonal position-momentum covariance blocks.

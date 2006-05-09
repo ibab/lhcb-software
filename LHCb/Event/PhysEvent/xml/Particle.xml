@@ -12,6 +12,7 @@
       author="Patrick Koppenburg"
       desc="Physics Analysis Particle. A chosen hypotesis for a possible candidate particle."
       name="Particle"
+      allocator = "NO"
       stdVectorTypeDef="TRUE"
       id="801"
      >

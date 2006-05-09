@@ -12,7 +12,8 @@
        desc  = "The result of the tagging algorithm" 
        name  = "FlavourTag"
        author= "Marco Musy"
-       id    = "805" 
+       id    = "805"
+       allocator = "NO"
        stdVectorTypeDef = "TRUE"
       >
 
