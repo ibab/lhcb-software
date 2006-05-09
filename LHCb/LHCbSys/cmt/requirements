@@ -68,7 +68,7 @@ use SiDAQ                 v1r1    Si      # Matt Needham
 # Other stuff
 use LHCbAlgs              v2r0   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r0   Calo    # Olivier Deschamps
-use CaloUtils             v6r2   Calo    # Olivier Deschamps
+use CaloUtils             v6r2p1 Calo    # Olivier Deschamps
 use RichRecBase           v2r3   Rich    # Chris Jones
 use TrackInterfaces       v2r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues

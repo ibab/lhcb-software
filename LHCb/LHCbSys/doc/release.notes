@@ -14,7 +14,8 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
     PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, LinkerEvent v2r2, L0Event v15r2,
     DigiEvent v1r2, RecEvent v1r3, TrackEvent v2r5, EventBase v1r2, 
     LinkerInstances v3r0p1, LoKiCore v1r4, DetCond v8r0, DetCondExample v8r0,
-    CondDBEntityResolver v2r0, SimComponents v1r2, RichRecBase v2r3
+    CondDBEntityResolver v2r0, SimComponents v1r2, RichRecBase v2r3,
+    CaloUtils v6r2p1
 
 - In GaudiConf v9r6
   . Set environment variables to force usage of castor2 on linux at CERN
@@ -88,6 +89,9 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 - In RichRecBase v2r3
   . Remove support for old converted Track types
   . Adapt to radiator name changes + move a few methods around
+
+- In CaloUtils v6r2p1
+  . Fix requirements for Windows
 
 </PRE><H1><A NAME=v20r4>2006-05-02 LHCbSys v20r4</A></H1><PRE>
 This version uses Gaudi v18r3 and is fully compatible with DC06 production data
