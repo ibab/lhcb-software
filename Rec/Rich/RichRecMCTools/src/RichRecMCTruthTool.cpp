@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.19 2006-02-16 16:06:42 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.20 2006-05-09 09:32:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -76,12 +76,15 @@ RichRecMCTruthTool::trackToMCPLinks() const
 {
   if ( !m_trToMCPLinks )
   {
-    debug() << "Loading TrackToMCP Linker for " << m_trLoc << endreq;
+    debug() << "Attempting to load TrackToMCP Linker for '" << m_trLoc << "'" << endreq;
     m_trToMCPLinks = new TrackToMCP( evtSvc(), m_trLoc );
     if ( !m_trToMCPLinks->direct() )
     {
       Warning( "Linker for Tracks to MCParticles not found for '" +
                m_trLoc + "'" );
+      // delete object and set to NULL, to force retrying next time this method is called.
+      delete m_trToMCPLinks;
+      m_trToMCPLinks = NULL;
     }
     else
     {
@@ -316,6 +319,7 @@ RichRecMCTruthTool::mcParticle( const RichRecSegment * richSegment ) const
   return ( richSegment ? mcParticle( richSegment->richRecTrack() ) : NULL );
 }
 
+// CRJ : Update to remove use of MCRichHits ?
 bool
 RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel,
                                          SmartRefVector<MCRichOpticalPhoton> & phots ) const
@@ -393,6 +397,7 @@ RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon ) const
   return NULL;
 }
 
+// CRJ : Update to avoid use of MCRichHits
 const MCRichOpticalPhoton *
 RichRecMCTruthTool::trueOpticalPhoton( const RichRecPhoton * photon ) const
 {
@@ -404,6 +409,7 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecPhoton * photon ) const
   return m_truth->mcOpticalPhoton( mchit );
 }
 
+// CRJ : Update to avoid use of MCRichHits
 const MCRichOpticalPhoton *
 RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
                                        const RichRecPixel * pixel ) const
@@ -417,6 +423,7 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
           iHit != hits.end(); ++iHit )
     {
+      // CRJ : Should check to find correct photon
       if ( *iHit &&
            (*iHit)->mcParticle() == mcPart ) return m_truth->mcOpticalPhoton(*iHit);
     }

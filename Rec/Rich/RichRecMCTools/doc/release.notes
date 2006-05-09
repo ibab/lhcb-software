@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-05-09 - Chris Jones
+ - Changes to track flags
+
 ! 2006-05-05 - Chris Jones
  - Adapt to changes in radiator names
 
