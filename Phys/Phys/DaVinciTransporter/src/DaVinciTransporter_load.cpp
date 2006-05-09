@@ -16,7 +16,4 @@ DECLARE_FACTORY_ENTRIES( DaVinciTransporter ) {
 //  DECLARE_TOOL( ParabolicTransporter );
 //  DECLARE_TOOL( TrTransporter );
 
-
-//  Geometrical tools
-   DECLARE_TOOL( TrgDispCalculator ); 
 }

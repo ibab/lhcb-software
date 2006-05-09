@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.2 2006-03-15 13:41:00 pkoppenb Exp $
+// $Id: ParticleTransporter.h,v 1.3 2006-05-09 16:29:27 pkoppenb Exp $
 #ifndef PARTICLETRANSPORTER_H 
 #define PARTICLETRANSPORTER_H 1
 
@@ -10,7 +10,7 @@
 
 class ITrackExtrapolator;
 class IParticleStuffer;
-
+class IParticlePropertySvc ;
 /** @class ParticleTransporter ParticleTransporter.h
  *  
  *  Particle transporter calling 
@@ -48,14 +48,17 @@ private:
   ITrackExtrapolator* m_tracks;        ///< Track extrapolator for particles from tracks
   ITrackExtrapolator* m_neutrals;      ///< Track extrapolator for neutrals
   ITrackExtrapolator* m_chargedComp;   ///< Track extrapolator for charged composite particles
-
-  IParticleStuffer* m_stuffer;    ///< Particle stuffer tool
-  
+  /// Track extrapolator for neutral composite particles, by default equal to the neutral extrapolator
+  ITrackExtrapolator* m_neutralComp;   
 
   std::string m_tracksName;            ///< Type of Track extrapolator for particles from tracks
   std::string m_neutralsName ;         ///< Type of Track extrapolator for neutrals
   std::string m_chargedCompName;       ///< Type of Track extrapolator for charged composite particles
+   /// Type of Track extrapolator for neutral composite particles, by default equal to the neutral extrapolator   
+  std::string m_neutralCompName;
   
+  /// Accessor for ParticlePropertySvc
+  IParticlePropertySvc* m_ppSvc ;
 
 };
 #endif // PARTICLETRANSPORTER_H

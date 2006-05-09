@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.24 2006-05-08 17:57:10 jpalac Exp $
+! $Id: release.notes,v 1.25 2006-05-09 16:29:26 pkoppenb Exp $
 ! Package     : DaVinciTransporter
-! Responsible : Yuehong Xie
+! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-05-09 - P. Koppenburg
+  Moved TrgDispCalculator to DaVinciTools
+  - src/ParticleTransporter.*
+  . Allow diffeernt treatment of neutrals and composite neutrals
 
 ! 2006-05-08 - Juan PALACIOS
  - src/TrgDispCalculator make all calc methods const. Use 9x9 matrices.
