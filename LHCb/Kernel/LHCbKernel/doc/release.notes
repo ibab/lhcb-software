@@ -2,9 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r6 2006-05-08 =========================
+!===================== LHCbKernel v6r6 2006-05-09 =========================
 ! 2006-05-08 - Marco Cattaneo
- - Add Boost dependency, needed for boost_allocators in event model
+ - Disable boost allocators for channelIDs, enabled by default in Gaudi v18r4
 
 ! 2006-05-03 - Gerhard Raven
  - add generic typedef of Point and Vector to Trajectory, 
