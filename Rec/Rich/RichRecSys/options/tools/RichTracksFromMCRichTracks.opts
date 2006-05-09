@@ -10,7 +10,7 @@ ToolSvc.Offline.RichTrackCreator.TrackSelection =
   {
     "unique","positive","negative","MCRichTrack"
   };
-ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "MCRichTrack/2/1e10" };
+ToolSvc.Offline.RichTrackCreator.TrackMomentumCuts = { "MCRichTrack/5/1e10" };
 
 // define the RichTrackSegment nickname to use
 ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";

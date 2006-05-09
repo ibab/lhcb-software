@@ -65,7 +65,8 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor = 4.5;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 */
 
-// Pixel rejection based on cluster finding
+// Pixel rejection based on cluster finding + 
+// Block HPD rejection based on fluctuations above average occupancy
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/PixelSuppress" };
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills            = 20;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor           = 20;
@@ -73,7 +74,7 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc      = 200;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor      = 6;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxPixelClusterSize    = 10;
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDOccForClustering = 10;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxAverageHPDOccForClustering = 20;
+ToolSvc.Offline.RichPixelCreator.PixelSuppress.MaxAverageHPDOccForClustering = 30;
 
 // Turn off XML printout 
 ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintXML = false;
@@ -99,6 +100,10 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintXML = false;
 // Photon reconstruction using full reconstructed information, but applying an additional
 // gaussian smear to the reconstructed theta values
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromRecoWithSmearing.opts"
+
+// Photon reconstruction using normal reconstruction tools, but cheated the track direction
+// at the photon emission point. Remove contribution from tracking errors to CK resolution
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromRecoWithCheatedTrackDir.opts"
 
 // =================================== Miscellaneous ===========================================
 
