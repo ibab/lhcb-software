@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.30 2006-05-02 15:25:13 cattanem Exp $
+# $Id: requirements,v 1.31 2006-05-09 15:30:45 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v6r2
+version             v6r2p1
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -19,16 +19,18 @@ include_dirs        $(CALOUTILSROOT)
 use CaloDet         v*      Det 
 use RecEvent        v*      Event
 use TrackEvent      v*      Event 
-use Boost           v*      LCG_Interfaces -no_auto_imports
 
 # ================= constituents: linker library ==============================
-library             CaloUtils    *.cpp -import=Boost
+library             CaloUtils    *.cpp
 
 # ================= patterns ==================================================
-apply_pattern       linker_library library=CaloUtils 
+apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.30  2006/05/02 15:25:13  cattanem
+# v6r2
+#
 # Revision 1.29  2006/04/10 08:38:36  cattanem
 # v6r1
 #

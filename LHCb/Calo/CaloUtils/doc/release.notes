@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.48 2006-05-02 15:25:13 cattanem Exp $
+! $Id: release.notes,v 1.49 2006-05-09 15:30:45 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r2p1 2006-05-09 =======================
+! 2006-05-09 - Marco Cattaneo
+ - Remove explicit usage of boost, to please Win32 with Gaudi v18r4
 
 !========================== CaloUtils v6r2 2006-05-02 =========================
 ! 2006-05-02 - Eduardo Rodrigues
