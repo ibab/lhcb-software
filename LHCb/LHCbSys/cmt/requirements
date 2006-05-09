@@ -43,18 +43,18 @@ use STDet                 v2r3    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
 use EventSys              v21r5   Event   # Marco Cattaneo
-use EventBase             v1r1    Event   # Marco Cattaneo, Gloria Corti
-use MCEvent               v1r2p1  Event   # Gloria Corti and sub-det experts
-use DigiEvent             v1r1    Event   # Marco Cattaneo and sub-det experts
+use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
+use MCEvent               v1r3    Event   # Gloria Corti and sub-det experts
+use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v1r2    Event   # Marco Cattaneo and sub-det experts
-use L0Event               v15r1   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
+use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v9r4    Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r4    Event   # Marco Cattaneo
 use GenEvent              v4r3    Event   # Gloria Corti
 use EventAssoc            v3r1    Event   # Ivan Belyaev
-use LinkerEvent           v2r1    Event   # Olivier Callot
+use LinkerEvent           v2r2    Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
-use TrackEvent            v2r4    Event   # Eduardo Rodrigues, Jose Hernando
+use TrackEvent            v2r5    Event   # Eduardo Rodrigues, Jose Hernando
 use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
 #use EventUtils	           v1r0    Event   # Marco Cattaneo
 
