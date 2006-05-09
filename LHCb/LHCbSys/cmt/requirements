@@ -46,7 +46,7 @@ use EventSys              v21r5   Event   # Marco Cattaneo
 use EventBase             v1r2    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v1r3    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v1r2    Event   # Marco Cattaneo and sub-det experts
-use RecEvent              v1r2    Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v1r3    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
 use PhysEvent             v9r4    Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r4    Event   # Marco Cattaneo
@@ -69,7 +69,7 @@ use SiDAQ                 v1r1    Si      # Matt Needham
 use LHCbAlgs              v2r0   Kernel  # Marco Cattaneo
 use CaloInterfaces        v6r0   Calo    # Olivier Deschamps
 use CaloUtils             v6r2   Calo    # Olivier Deschamps
-use RichRecBase           v2r2   Rich    # Chris Jones
+use RichRecBase           v2r3   Rich    # Chris Jones
 use TrackInterfaces       v2r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v1r0   Tr      # Eduardo Rodrigues
 use LinkerInstances       v3r0   Event   # Eduardo Rodrigues, Thomas Ruf
