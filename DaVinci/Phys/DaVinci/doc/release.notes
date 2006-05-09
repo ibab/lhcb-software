@@ -8,6 +8,7 @@
   - options/DVDC06MCParticleMaker.opts
     . Use MCPrimVertexMaker
     . Use new Gauss data
+    . Run DC06Test
 
 ! 2006-04-04 - Juan Palacios
   Version using Gaudi v18r3 and SMatrix interface and bug fixes (ROOT 5.10.00c)
