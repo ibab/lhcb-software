@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.11 2006-04-11 15:31:19 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.12 2006-05-09 14:02:17 mneedham Exp $
 
 #include <algorithm>
 
@@ -46,7 +46,8 @@ const IAlgFactory& RawBankToSTClusterAlgFactory = s_factory ;
 
 RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
-STDecodingBaseAlg (name , pSvcLocator){
+STDecodingBaseAlg (name , pSvcLocator),
+m_nBits(2){
  
  // Standard constructor, initializes variables
   declareProperty( "clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
@@ -152,8 +153,16 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     return StatusCode::FAILURE;
   }
 
-  // find the offset from nearest to first cluster...
-  unsigned int offset = mean(adcValues); 
+  // make a temporary vector to contain the ADC
+  std::vector<SiADCWord> tWords;
+  // std::vector<SiADCWord>::iterator start = adcValues.begin()+1;
+  tWords.insert(tWords.begin(), adcValues.begin()+1, adcValues.end());
+
+  // estimate the offset
+  double stripNum = mean(tWords); 
+  double interStripPos = stripFraction(stripNum - floor(stripNum));
+  if (interStripPos > 0.99) stripNum +=1; 
+  unsigned int offset = (unsigned int)stripNum; 
 
   // decode the channel
   STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID());
@@ -163,8 +172,8 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   }
 
   STCluster::ADCVector adcs ; 
-  for (unsigned int i = 1; i < adcValues.size() ; ++i){
-    adcs.push_back(std::make_pair(i-offset,(int)adcValues[i].adc()));
+  for (unsigned int i = 0; i < tWords.size() ; ++i){
+    adcs.push_back(std::make_pair(i-offset,(int)tWords[i].adc()));
   } // iDigit
 
   // make cluster +set things
@@ -178,18 +187,17 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 }
 
 
-unsigned int RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) const
+double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) const
 {
  
   double sum = 0;
   double totCharge = 0;
   // note the first is the neighbour sum..
-  for (unsigned int i = 1; i < adcValues.size() ; ++i){
+  for (unsigned int i = 0; i < adcValues.size() ; ++i){
      sum += adcValues[i].adc()*i;
      totCharge += adcValues[i].adc();
-  } // i
-                                                                                        
-  return (unsigned int)(sum/totCharge);
+  } // i                                                                                        
+  return (sum/totCharge);
 }
 
 
@@ -197,4 +205,9 @@ STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(STClusterWord aWord,
                                                       STChannelID chan) const{
   return STLiteCluster(aWord.fracStripBits(),aWord.pseudoSizeBits(),
                        aWord.hasHighThreshold() ,chan);
+}
+
+
+double RawBankToSTClusterAlg::stripFraction(const double interStripPos) const{
+  return (LHCbMath::round((1<<m_nBits)*interStripPos))/double(1<<m_nBits);
 }

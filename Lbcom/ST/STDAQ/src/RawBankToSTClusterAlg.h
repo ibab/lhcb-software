@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.2 2006-02-28 15:40:19 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.3 2006-05-09 14:02:17 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -51,13 +51,16 @@ private:
                            const std::vector<SiADCWord>& adcValues,
 		 	   LHCb::STClusters* clusCont) const;
  
-  unsigned int mean(const std::vector<SiADCWord>& adcValues) const;
- 
+  double mean(const std::vector<SiADCWord>& adcValues) const;
+   
   LHCb::STLiteCluster word2LiteCluster(STClusterWord aWord, LHCb::STChannelID chan) const;
+
+  double stripFraction(const double interStripPos) const;
 
   /// Output location for STClusters
   std::string m_clusterLocation;
- 
+
+  unsigned int m_nBits; 
 };
 
 #endif // RAWBUFFERTOSTDIGITALG_H 
