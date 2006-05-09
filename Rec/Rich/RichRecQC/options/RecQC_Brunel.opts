@@ -7,12 +7,12 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 
 // PID Monitors for all tracks combined
-//#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
-//#include "$RICHRECQCOPTS/pid/AllTracks_Para.opts"
+#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
+#include "$RICHRECQCOPTS/pid/AllTracks_Para.opts"
 
 // Suppress errors from Linker
-MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
-                         "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
+MessageSvc.setFatal += { "LinkedTo::MC/Particles2MCRichTracks",
+                         "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons" };
 
 // pixel monitor
 CheckRICHSeq.Members += { "RichRecPixelQC" };
@@ -48,7 +48,7 @@ RiCKResSeed.TrackSelection  = { "unique","positive","negative","seed" };
 RiCKResSeed.HistoPrint      = false;
 //RiCKResSeed.HistoProduce    = false;
 // MCRichTracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResMCRichTrack" };
-RiCKResMCRichTrack.TrackSelection  = { "unique","positive","negative","MCRichTrack" };
-RiCKResMCRichTrack.HistoPrint      = true;
+//CheckRICHSeq.Members += { "RichRecoQC/RiCKResMCRichTrack" };
+//RiCKResMCRichTrack.TrackSelection  = { "unique","positive","negative","MCRichTrack" };
+//RiCKResMCRichTrack.HistoPrint      = true;
 

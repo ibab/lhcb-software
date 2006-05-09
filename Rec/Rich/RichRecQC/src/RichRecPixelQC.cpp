@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichRecPixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.6 2006-05-05 10:51:38 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.7 2006-05-09 09:28:08 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -192,8 +192,11 @@ void RichRecPixelQC::getHistories( const RichSmartID id,
     if ( (*iS)->history().hpdQuartzCK()  ) { isHPDQCK = true; }
     if ( (*iS)->history().isSignal()     ) { isSignal = true; }
     if ( (*iS)->history().aerogelHit()   ) { isAerogelCK = true; }
-    if ( (*iS)->history().rich1GasHit()  ) { isRich1GasCK = true; }
-    if ( (*iS)->history().rich2GasHit()  ) { isRich2GasCK = true; }
+    if ( (*iS)->history().c4f10Hit()     ) { isRich1GasCK = true; }
+    if ( (*iS)->history().cf4Hit()       ) { isRich2GasCK = true; }
+    // requires new MCEvent
+    //if ( (*iS)->history().rich1GasHit()  ) { isRich1GasCK = true; }
+    //if ( (*iS)->history().rich2GasHit()  ) { isRich2GasCK = true; }
   }
 }
 

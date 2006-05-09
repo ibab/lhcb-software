@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2006-05-09 - Chris Jones
+ - Update to options for latest Brunel
+
 ! 2006-05-05 - Chris Jones
  - Adapt to changes in radiator names
 
