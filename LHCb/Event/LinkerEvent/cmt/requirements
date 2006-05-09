@@ -21,12 +21,12 @@ include_dirs $(LINKEREVENTROOT)
 #============================================================================
 
 use LHCbKernel	v*	Kernel	
-use Boost       v*      LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files and from XML description
 #============================================================================
 private
+macro LinkerEventObj2Doth_GODflags " --allocator=NO "
 document obj2doth LinkerEventObj2Doth ../xml/*.xml
 document obj2dict LinkerEventObj2Dict ../xml/*.xml    
 

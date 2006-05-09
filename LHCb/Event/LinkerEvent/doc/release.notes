@@ -6,7 +6,7 @@
 
 !====================== LinkerEvent v2r2 2006-05-09 ==========================
 ! 2006-05-09 - Marco Cattaneo
- - Add Boost dependency, needed for Boost allocators in event model
+ - Disable boost allocators for Linkers, enabled by default in Gaudi v18r4
 
 ! 2006-04-12 - Eduardo Rodrigues
  - fixed typo in path printed out in LinkedFrom (was misleading)
