@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.5 2006-04-04 06:37:04 jpalac Exp $
+// $Id: ParticleStuffer.h,v 1.6 2006-05-09 09:43:04 jpalac Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -41,13 +41,13 @@ public:
   
   /// Fill Composite Particle from Vertex
   StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
-                           const  LHCb::Vertex&,  
-                           const  LHCb::ParticleID&,
+                           const LHCb::Vertex&,  
+                           const LHCb::ParticleID&,
                            LHCb::Particle&);
 
   /// Fill Composite Particle from Vertex
   StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
-                           const  LHCb::Vertex&,  
+                           const LHCb::Vertex&,  
                            LHCb::Particle&);
 
   /// Fill Composite Particle from a state

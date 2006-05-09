@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.5 2006-04-04 06:37:04 jpalac Exp $
+// $Id: ParticleStuffer.cpp,v 1.6 2006-05-09 09:43:04 jpalac Exp $
 // Include files 
 
 // 
@@ -98,19 +98,16 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
   part.setMeasuredMass( part.momentum().mag() ); 
 
   // Set the error on the measured mass.
-  typedef ROOT::Math::SMatrix<double, 1, 4> Matrix1x4;
-  Matrix1x4 derivs;
-  derivs(0,0) = - part.momentum().X() / part.measuredMass();
-  derivs(0,1) = - part.momentum().Y() / part.measuredMass();
-  derivs(0,2) = - part.momentum().Z() / part.measuredMass();
-  derivs(0,3) =   part.momentum().E() / part.measuredMass();
-  //  massErrSqd = part.momentumErr().similarity( derivs );  
+  const Gaudi::Vector4 derivs(- part.momentum().X() / part.measuredMass(),
+                              - part.momentum().Y() / part.measuredMass(),
+                              - part.momentum().Z() / part.measuredMass(),
+                                part.momentum().E() / part.measuredMass()  );
 
-  // Stolen and adapted from SHacks
-  /// @todo Check that this is correct
-  Gaudi::SymMatrix1x1 massErrSqd = 
-    ROOT::Math::Similarity<double,1,4>(derivs,part.momCovMatrix());
-  double massErr = sqrt( massErrSqd(1,1) );
+  const double massErr2 = ROOT::Math::Similarity<double,4>(derivs, 
+                                                           part.momCovMatrix());
+  
+  const double massErr = sqrt(massErr2);
+  
   part.setMeasuredMassErr( massErr ); 
 
   // Set the point on track.
