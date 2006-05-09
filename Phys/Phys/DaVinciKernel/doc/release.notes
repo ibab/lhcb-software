@@ -2,10 +2,21 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-05-09 - P. Koppenburg
+ - Kernel/state2Particle.h
+ - Kernel/sumMomenta.h
+ - Kernel/IParticleStuffer.h
+   . Moved trivial methods from ParticleStuffer to dedicated functions
+         StatusCode state2Particle( const LHCb::State& state, LHCb::Particle& particle )
+	 Gaudi::XYZTVector sumMomenta( const LHCb::Particle::ConstVector& vP )
+         Gaudi::XYZTVector sumMomenta( const SmartRefVector<LHCb::Particle>& vP )
+ - Kernel/DVAlgorithm.h
+   . Removed info() level printout.
+
 ! 2006-05-08 - Juan PALACIOS  
  - Kernel/IGeomDispCalculator.h: Make all calc methods const.
 
-! 2006-05-23 - P. Koppenburg
+! 2006-04-23 - P. Koppenburg
  - src/component/PhysDesktop.cpp
    . Read PVs as LHCb::PrimVertices
 

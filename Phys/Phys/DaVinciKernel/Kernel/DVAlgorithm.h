@@ -101,7 +101,6 @@ public:
 
   /// Accessor for Particle Filter Tool
   inline IParticleFilter* particleFilter(int index=0)const{
-    info() << "Hello " << index << endmsg ;
     return DVAlgorithm::getTool<IParticleFilter>(index,
                                                  m_filterNames,
                                                  m_filters,this);
@@ -110,7 +109,6 @@ public:
   /* @todo move to this signature when maps in job options become available
   /// Accessor for Particle Filter Tool
   inline IParticleFilter* particleFilter(const std::string& name="")const{
-    info() << "Hello " << index << endmsg ;
     return DVAlgorithm::getTool<IParticleFilter>(m_filterNames.at(0),
                                                  m_filters.at(0), this);
   }
