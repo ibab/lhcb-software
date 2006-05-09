@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-05-09 - Chris Jones
+ - Remove support for old converted Track types
+
 ! 2006-05-05 - Chris Jones
  - Adapt to radiator name changes + move a few methods around
 

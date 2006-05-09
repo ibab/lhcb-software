@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.15 2006-02-16 16:04:59 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.16 2006-05-09 09:25:02 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -84,14 +84,15 @@ Rich::Track::Type Rich::Track::type( const LHCb::Track * track )
     // track algorithm type
     const LHCb::Track::History hist = (LHCb::Track::History)track->history();
     // check all known track types (order according to abundance)
-    // Convertered track types
-    if      ( LHCb::Track::CnvForward  == hist )  { return Rich::Track::Forward;  }
-    else if ( LHCb::Track::CnvMatch    == hist )  { return Rich::Track::Match;    }
-    else if ( LHCb::Track::CnvSeed     == hist )  { return Rich::Track::Seed;     }
-    else if ( LHCb::Track::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
-    else if ( LHCb::Track::CnvVeloTT   == hist )  { return Rich::Track::VeloTT;   }
-    else if ( LHCb::Track::CnvVelo     == hist )  { return Rich::Track::Velo;     }
-    else if ( LHCb::Track::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
+    if      ( LHCb::Track::PatForward  == hist )  { return Rich::Track::Forward;  }
+    // Old converted track types (removed)
+    //else if ( LHCb::Track::CnvForward  == hist )  { return Rich::Track::Forward;  }
+    //else if ( LHCb::Track::CnvMatch    == hist )  { return Rich::Track::Match;    }
+    //else if ( LHCb::Track::CnvSeed     == hist )  { return Rich::Track::Seed;     }
+    //else if ( LHCb::Track::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
+    //else if ( LHCb::Track::CnvVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    //else if ( LHCb::Track::CnvVelo     == hist )  { return Rich::Track::Velo;     }
+    //else if ( LHCb::Track::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
     else 
     { // Should not get here ...
       std::ostringstream mess;
