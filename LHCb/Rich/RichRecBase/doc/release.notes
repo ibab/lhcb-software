@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v2r3 2006-05-09 ========================
 ! 2006-05-09 - Chris Jones
  - Remove support for old converted Track types
 
