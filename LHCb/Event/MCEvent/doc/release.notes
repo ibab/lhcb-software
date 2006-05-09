@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.40 2006-05-08 15:01:22 cattanem Exp $
+! $Id: release.notes,v 1.41 2006-05-09 13:28:24 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
@@ -8,6 +8,8 @@
 ! 2006-05-08 - Marco Cattaneo
  - Use explicitly Gaudi::Units namespace in MCParticle.h and MCHit.h, to avoid 
    possible clash when also including the CLHEP files (e.g. in HepMC)
+ - Disable Boost allocators for MCEffParticle, MCMuonDigitInfo, MCMuonHitHistory
+   as they do not compile on WIN32
 
 !========================== MCEvent v1r2p1 2006-04-20 ========================
 ! 2006-04-20 - Florence RANJARD

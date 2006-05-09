@@ -10,6 +10,7 @@
        author="Christian Jacoby"
        desc="Access to MC particle information for efficiency algorithms"
        serializers = "FALSE"
+       allocator="NO"
       >
       &StlVector;
       
