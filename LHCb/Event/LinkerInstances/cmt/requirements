@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.9 2006-04-13 09:23:25 cattanem Exp $
+# $Id: requirements,v 1.10 2006-05-09 14:27:24 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version v3r0
+version v3r0p1
 
 include_dirs $(LINKERINSTANCESROOT)
 
@@ -19,7 +19,8 @@ use TrackEvent   v*    Event
 apply_pattern reflex_dictionary                                             \
               dictionary=LinkerInstances                                 \
               headerfiles=$(LINKERINSTANCESROOT)/dict/linker_instances.h \
-              selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml
+              selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
+              options="-U__MINGW32__"
 
 # Build libraries (including dictionary)
 #============================================================================
