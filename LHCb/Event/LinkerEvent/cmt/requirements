@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           LinkerEvent
-version           v2r1
+version           v2r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,6 +21,7 @@ include_dirs $(LINKEREVENTROOT)
 #============================================================================
 
 use LHCbKernel	v*	Kernel	
+use Boost       v*      LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files and from XML description

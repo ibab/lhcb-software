@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r2 2006-05-09 ==========================
+! 2006-05-09 - Marco Cattaneo
+ - Add Boost dependency, needed for Boost allocators in event model
+
 ! 2006-04-12 - Eduardo Rodrigues
  - fixed typo in path printed out in LinkedFrom (was misleading)
 

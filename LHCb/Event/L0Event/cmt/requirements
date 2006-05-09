@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           L0Event
-version           v15r1
+version           v15r2
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
@@ -20,6 +20,8 @@ include_dirs      $(L0EVENTROOT)
 #============================================================================
 use     LHCbKernel      v*      Kernel
 use     LHCbDefinitions v*      Kernel
+use     Boost           v*      LCG_Interfaces
+
 #============================================================================
 #---- Produce Header-Files from XML description
 private

@@ -1,10 +1,11 @@
-# $Id: requirements,v 1.2 2006-03-15 15:17:51 cattanem Exp $
+# $Id: requirements,v 1.3 2006-05-09 08:51:38 cattanem Exp $
 package DigiEvent
 version v1r1
 
 branches Event Kernel xml cmt doc
 
 use LHCbKernel   v* Kernel
+use Boost        v* LCG_Interfaces
 
 include_dirs	 $(DIGIEVENTROOT)
 

@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v1r2 2006-05-09 =========================
+! 2006-05-09 - Marco Cattaneo
+ - Add Boost dependency, needed for Boost allocators in event model
+
 !========================= DigiEvent v1r1 2006-03-22 =========================
 ! 2006-03-20 - M.Needham
  - Bug fix in STCluster.xml
