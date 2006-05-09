@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.51 2006-05-08 17:18:44 jpalac Exp $
+! $Id: release.notes,v 1.52 2006-05-09 16:26:09 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-09 - P. Koppenburg
+  Moved GeomDispCalculator to DaVinciTools
 
 ! 2006-05-08 - Juan PALACIOS
  - Added src/GeomDispCalculator. Re-implemented from DaVinciTransporter 

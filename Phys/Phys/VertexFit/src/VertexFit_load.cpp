@@ -14,7 +14,7 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
 //   DECLARE_TOOL( UnconstVertexFitter );  
 //   DECLARE_TOOL( KFFitTool );
   DECLARE_TOOL( TrgVertexFitter );  
-  DECLARE_TOOL ( GeomDispCalculator );
+  DECLARE_TOOL ( OfflineVertexFitter );
 /// @todo Restore all other fitters
 //   DECLARE_TOOL( LifetimeFitter );
 //   DECLARE_TOOL( NewDirectionFitter );
