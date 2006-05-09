@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.59 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.60 2006-05-09 16:32:18 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -22,10 +22,12 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   /// @todo: Get DecayFinder to compile (need stl expert), use tag v13r0df to restore it 
   //  DECLARE_TOOL( DecayFinder ); /     
   DECLARE_TOOL( DecodeSimpleDecayString );
+  DECLARE_TOOL( GeomDispCalculator ) ;
   DECLARE_TOOL( OnOfflineTool ) ;
   DECLARE_TOOL( ParticleDescendants ) ;
   DECLARE_TOOL( RecursivePlotTool ) ;
   DECLARE_TOOL( SimplePlotTool ) ;
+  DECLARE_TOOL( TrgDispCalculator ) ;
 
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  

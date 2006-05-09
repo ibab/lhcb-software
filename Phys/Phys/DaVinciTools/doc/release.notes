@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.196 2006-05-03 18:33:48 pkoppenb Exp $
+! $Id: release.notes,v 1.197 2006-05-09 16:32:18 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-09 - P. Koppenburg
+  - src/*DispCalculator.cpp
+   . Are now here
 
 ! 2006-05-23 - P. Koppenburg
   - src/CheckOverlap.cpp

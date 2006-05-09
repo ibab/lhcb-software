@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.4 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.5 2006-05-09 16:32:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -37,8 +37,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   //  declareProperty( "OfflineGeomTool", m_offlineGeomTool = "GeomDispCalculator" );
   declareProperty( "OfflineGeomTool", m_offlineGeomTool = "TrgDispCalculator" );
   declareProperty( "OnlineGeomTool", m_onlineGeomTool = "TrgDispCalculator" );
-  //  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "UnconstVertexFitter" );
-  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "TrgVertexFitter" );
+  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "OfflineVertexFitter" );
   declareProperty( "OnlineVertexFitter", m_onlineVertexFitter = "TrgVertexFitter" );
   
 }
