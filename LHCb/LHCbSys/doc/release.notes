@@ -43,8 +43,8 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
   . Disable Boost allocators for Particle, Tagger, FlavourTag as they do not
     compile on Windows
 
-- in MCEvent v1r3, SimComponents v1r2
-  . Use explicitly Gaudi::Units in MCHit.h, MCParticle.h, MCParticleSelector.cpp
+- In MCEvent v1r3
+  . Use explicitly Gaudi::Units in MCHit.h, MCParticle.h
   . Disable Boost allocators for MCEffParticle, MCMuonDigitInfo, MCMuonHitHistory
     as they do not compile on WIN32
 
@@ -68,6 +68,9 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
 - In LinkerInstances v3r0p1
   . Fix requirements to build dict on Windows in presence of Boost
+
+- In SimComponents v1r2
+  . Use explicitly Gaudi::Units in MCParticleSelector.cpp
 
 - In LoKiCore v1r4
   . Use Gaudi::Units namespace for units, instead of CLHEP::
