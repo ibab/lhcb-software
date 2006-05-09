@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-09 - Eduardo Rodrigues
+ - usage of STClusterPosition tool made explicit for TT
+ - added job option for controlling the STClusterPosition tool used
+
 !======================= TrackMatching v2r2 2006-05-03 =======================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs

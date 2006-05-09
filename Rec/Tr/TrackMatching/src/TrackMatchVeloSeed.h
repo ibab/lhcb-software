@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.7 2006-05-02 13:06:44 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.8 2006-05-09 08:48:12 erodrigu Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -157,7 +157,8 @@ private:
   // TT geometry
   DeTTDetector* m_ttTracker;             ///< Pointer to the TT XML geom
   std::string   m_ttTrackerPath;         ///< Name of the TT XML geom path
-  ISTClusterPosition* m_stPositionTool;  ///< STClusterPosition tool
+  ISTClusterPosition* m_ttPositionTool;  ///< STClusterPosition tool for TT
+  std::string m_ttPositionToolName;  ///< ST cluster position tool name for TT
   IMagneticFieldSvc* m_pIMF;             ///< Pointer to the magn. field service
   ITrajPoca*         m_poca;             ///< Pointer to the ITrajPoca interface
 };

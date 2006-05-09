@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.13 2006-05-02 13:06:44 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.14 2006-05-09 08:48:12 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -90,7 +90,8 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
 
   declareProperty( "TTGeometryPath",
                    m_ttTrackerPath = DeSTDetLocation::location("TT") );
-
+  declareProperty( "TTClusterPositionTool",
+                   m_ttPositionToolName = "STOfflinePosition" );
 }
 //=============================================================================
 // Destructor
@@ -121,8 +122,8 @@ StatusCode TrackMatchVeloSeed::initialize()
   // Get TT silicon tracker geometry
   m_ttTracker = getDet<DeTTDetector>( m_ttTrackerPath );
 
-  // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( "STOfflinePosition" );
+  // Retrieve the STClusterPosition tool for TT
+  m_ttPositionTool = tool<ISTClusterPosition>( m_ttPositionToolName );
 
   // Magnetic field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
@@ -342,7 +343,7 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     STCluster* stCluster = (*iClus) ;
     STChannelID stChan = stCluster -> channelID() ; 
     ISTClusterPosition::Info measVal =
-      m_stPositionTool -> estimate( stCluster );
+      m_ttPositionTool -> estimate( stCluster );
 
     // Create a trajectory for this cluster and add combination to the vector
     STClusterTrajectory thisClusTraj;    
