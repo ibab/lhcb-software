@@ -239,6 +239,7 @@ public:
   {
     return fit ( LHCb::Particle::ConstVector ( begin , end ) , particle , vertex ) ;
   };
+
   
   /** add the particle to the vertex and refit 
    * 
@@ -291,7 +292,122 @@ public:
   virtual StatusCode remove
   ( const LHCb::Particle*  particle , 
     LHCb::Vertex&          vertex   ) const = 0 ;
+
+
+  /** Creation a vertex from two particles without 
+   *  creation of an output  Particle 
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit(const LHCb::Particle& daughter0, 
+                         const LHCb::Particle& daughter1,  
+                         LHCb::Vertex&         vertex) const 
+  {
+    LHCb::Particle::ConstVector tmp(2);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    return fit ( tmp , vertex ) ;
+  }
+
+  /** Creation a vertex from three particles without 
+   *  creation of an output  Particle 
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param daughter2 third daughter particle  (input)
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit(const LHCb::Particle& daughter0, 
+                         const LHCb::Particle& daughter1,
+                         const LHCb::Particle& daughter2,  
+                         LHCb::Vertex&         vertex) const
+  {
+    LHCb::Particle::ConstVector tmp(3);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    tmp[2]=&daughter2;
+    return fit ( tmp , vertex ) ;
+  }  
+  /** Creation a Vertex and an output Particle from two Particles
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param particle result of vertex fit      (output) 
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit(const LHCb::Particle& daughter0, 
+                         const LHCb::Particle& daughter1,
+                         LHCb::Particle&       particle,
+                         LHCb::Vertex&         vertex) const
+  {
+    LHCb::Particle::ConstVector tmp(2);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    return fit( tmp, particle, vertex );
+  }
   
+  /** Creation a Vertex and an output Particle from three Particles
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param daughter2 third daughter particle  (input)
+   *  @param particle result of vertex fit      (output) 
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */  
+  virtual StatusCode fit(const LHCb::Particle& daughter0, 
+                         const LHCb::Particle& daughter1,
+                         const LHCb::Particle& daughter2,
+                         LHCb::Particle&       particle,
+                         LHCb::Vertex&         vertex) const
+  {
+    LHCb::Particle::ConstVector tmp(3);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    tmp[2]=&daughter2;
+    return fit( tmp, particle, vertex );    
+  }  
 public: 
   
   /// Return the interface ID
