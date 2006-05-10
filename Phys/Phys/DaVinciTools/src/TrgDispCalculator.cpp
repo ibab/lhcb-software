@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.2 2006-05-10 15:36:10 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.3 2006-05-10 19:24:06 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -9,9 +9,6 @@
 // from Event
 #include "Event/Particle.h"
 
-// from LHCb
-#include "Kernel/Line.h"
-#include "Kernel/GeomFun.h"
 // local
 #include "TrgDispCalculator.h"
 
@@ -119,33 +116,31 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
   const Gaudi::SymMatrix3x3& trackPointErr = part.posCovMatrix();
 
   // LHCb::Particle direction
-  const Gaudi::XYZVector pNotNorm = Gaudi::XYZVector(part.slopes().X(),
-                                                     part.slopes().Y(),1.);
-  const Gaudi::XYZVector uniDirPart = pNotNorm / pNotNorm.R();
+  Gaudi::XYZVector pNotNorm = Gaudi::XYZVector(part.slopes().X(),
+                                               part.slopes().Y(),1.);
+  Gaudi::XYZVector uniDirPart = pNotNorm / pNotNorm.R();
   
   // LHCb::Vertex position and its error
   const Gaudi::XYZPoint& vertexPosition = vertex.position();
   const Gaudi::SymMatrix3x3& vertexPositionErr = vertex.covMatrix();
 
   // Vector linking vertex and point on track
-  const Gaudi::XYZVector difference = vertexPosition - trackPoint;
+  Gaudi::XYZVector difference = vertexPosition - trackPoint;
 
   // Impact parameter vector and norm
   ipVector = uniDirPart.Cross(difference.Cross(uniDirPart));
   ip = ipVector.R();
-  const Gaudi::XYZVector ipUniVector = ipVector.Unit();
+  Gaudi::XYZVector ipUniVector = ipVector.Unit();
 
-  const Gaudi::Vector3 ipUniVector3 = Gaudi::Vector3(ipUniVector.X(),
-                                                     ipUniVector.Y(),
-                                                     ipUniVector.Z()); 
+  /// @todo I'd like a constructor from XYZVector to Vector3 and back
+  Gaudi::Vector3 ipUniVector3 = Gaudi::Vector3(ipUniVector.X(),ipUniVector.Y(),ipUniVector.Z()); 
 
   // Error on impact parameter
-  double projTrackErrIp = 
-    fabs(ROOT::Math::Dot(trackPointErr*ipUniVector3,ipUniVector3));
-  double projVertexErrIp = 
-    fabs(ROOT::Math::Dot(vertexPositionErr*ipUniVector3,ipUniVector3));
-
+  /// @todo Mabe have Gaudi:: shortcuts for Dot...
+  double projTrackErrIp = fabs(ROOT::Math::Dot<double,3>(trackPointErr*ipUniVector3,ipUniVector3));
+  double projVertexErrIp = fabs(ROOT::Math::Dot<double,3>(vertexPositionErr*ipUniVector3,ipUniVector3));
   ipErr = sqrt( projTrackErrIp + projVertexErrIp );
+
 
   // Error on impact parameter vector
   errVector = Gaudi::XYZVector ( sqrt ( trackPointErr(1,1) + vertexPositionErr(1,1)),
@@ -209,49 +204,51 @@ StatusCode TrgDispCalculator::calcImpactPar( const LHCb::Particle& part,
 //==================================================================
 // Distance of closest approach between two particles
 //==================================================================
-StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
-                                             const LHCb::Particle& particle2, 
+StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& part1,
+                                             const LHCb::Particle& part2, 
                                              double& dist, 
                                              double& distErr ) const {
  
-  typedef Gaudi::Line<Gaudi::XYZPoint, Gaudi::XYZVector> XYZLine;
-
-  const XYZLine part0(particle1.referencePoint(), 
-                      particle1.momentum().Vect());
-  const XYZLine part1(particle2.referencePoint(), 
-                      particle2.momentum().Vect());
-
-  dist = Gaudi::Math::distance(part0, part1);
+  //Flag to indicate parallel tracks
+  int aux = 0;
 
   // Get the direction perpendicular to both particle tracks:
-  const Gaudi::XYZVector mom1 = particle1.momentum().Vect();
-  const Gaudi::XYZVector mom2 = particle2.momentum().Vect();
+
+  /// Problem: The version we are using now does not take Vec() as const method
+  //  const Gaudi::XYZVector mom1 = (part1.momentum()).Vec();
+  //  const Gaudi::XYZVector mom2 = part2.momentum().Vec(); 
+  Gaudi::XYZTVector tmp1 = part1.momentum() ;
+  const Gaudi::XYZVector mom1 = tmp1.Vect();
+  Gaudi::XYZTVector tmp2 = part2.momentum() ;
+  const Gaudi::XYZVector mom2 = tmp2.Vect(); 
+
+  Gaudi::XYZVector perpDirection = mom1.Cross(mom2) ;
 
   // Get points on particles and the displacement vector between the two particles
-  const Gaudi::XYZVector disp = part0.beginPoint() - part0.beginPoint();
+  const Gaudi::XYZPoint& trackPoint1 = part1.referencePoint();
+  const Gaudi::XYZPoint& trackPoint2 = part2.referencePoint();
+  Gaudi::XYZVector disp = trackPoint1 - trackPoint2;
 
   // Calculate the perpendicular direction when the tracks are parallel:
-  Gaudi::XYZVector perpUnit;
-  
-  if ( Gaudi::Math::parallel(part0, part1) ) {
-    perpUnit = ( (disp.Cross(mom1)).Cross(mom1) ).Unit();
-  } else {
-    perpUnit = ( mom1.Cross(mom2) ).Unit() ;    
+  if (perpDirection.R() == 0.) {
+    aux = 1;
+    perpDirection = (disp.Cross(mom1)).Cross(mom1);
   }
+  Gaudi::XYZVector perpUnit = perpDirection/perpDirection.R();       
   
   // Calculate error on distance
-  const Gaudi::SymMatrix3x3& trackErr1 = particle1.posCovMatrix();
-  const Gaudi::SymMatrix3x3& trackErr2 = particle2.posCovMatrix();
+  const Gaudi::SymMatrix3x3& trackErr1 = part1.posCovMatrix();
+  const Gaudi::SymMatrix3x3& trackErr2 = part2.posCovMatrix();
 
-  const Gaudi::Vector3 perpUnit2 = Gaudi::Vector3(perpUnit.X(),
-                                                  perpUnit.Y(),
-                                                  perpUnit.Z());
+  // Calculate the distance of closest approach as the projection
+  // of this vector in the perpendicular direction:
+  dist = fabs(disp.Dot(perpUnit));
+  
+  /// @todo I'd like a constructor from XYZVector to Vector3 and back
+  Gaudi::Vector3 perpUnit2 = Gaudi::Vector3(perpUnit.X(),perpUnit.Y(),perpUnit.Z());
 
-  const double projTrackErr1 = 
-    fabs(ROOT::Math::Dot(trackErr1*perpUnit2,perpUnit2));
-  const double projTrackErr2 = 
-    fabs(ROOT::Math::Dot(trackErr2*perpUnit2,perpUnit2));
-
+  double projTrackErr1 = fabs(ROOT::Math::Dot(trackErr1*perpUnit2,perpUnit2));
+  double projTrackErr2 = fabs(ROOT::Math::Dot(trackErr2*perpUnit2,perpUnit2));
   distErr = sqrt( projTrackErr1 + projTrackErr2 );
 
   return StatusCode::SUCCESS;
@@ -275,14 +272,22 @@ StatusCode TrgDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
   dist = diff.R();
   if (dist == 0) return StatusCode::FAILURE;
 
+  //Calculate the error on the distance:  
+  Gaudi::SymMatrix3x3 v1Err = vertex1.covMatrix();
+  Gaudi::SymMatrix3x3 v2Err = vertex2.covMatrix();
+  //  Gaudi::SymMatrix3x3 errMatrix = dsum(v1Err,v2Err);
   Gaudi::SymMatrix6x6 errMatrix ;
-  errMatrix.Place_at(vertex1.covMatrix(),0,0);
-  errMatrix.Place_at(vertex2.covMatrix(),3,3);
-  const Gaudi::XYZVector u = diff.Unit();
-  const Gaudi::Vector6 derivDist( u.x(),  u.y(),  u.z(),
-                                 -u.x(), -u.y(), -u.z() );
+  errMatrix.Place_at(v1Err,0,0);
+  errMatrix.Place_at(v2Err,3,3);
 
-  distErr = sqrt(std::fabs(ROOT::Math::Dot(errMatrix*derivDist,derivDist)));
+  Gaudi::XYZVector unitario(diff/dist);
+  Gaudi::Vector3 u = Gaudi::Vector3(unitario.X(),unitario.Y(),unitario.X());
+  //  HepVector derivDist = dsum(u,-u);
+  Gaudi::Vector6 derivDist  ;
+  derivDist.Place_at(u,0);
+  derivDist.Place_at(-u,3);
+
+  distErr = sqrt(fabs(ROOT::Math::Dot(errMatrix*derivDist,derivDist)));
   
   return StatusCode::SUCCESS;
 }
