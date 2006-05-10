@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r6 2006-05-10 =============================
+! 2006-05-10 - Gloria CORTI
+ - Fix bug in options that was missing to specify to simulate the section
+   of beam pipe in the T area.
+   . SimGeometry.opts
+ - Use GaussCalo v8r3 and XmlDDDB v30r6
+
 ! 2006-05-04 - Gloria CORTI
  - Remove check of event types checker from ParticleGun example options, 
    since in many cases will not be in DecFiles package.

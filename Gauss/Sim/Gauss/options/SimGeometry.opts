@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.18 2006-04-12 19:49:46 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.19 2006-05-10 13:44:11 gcorti Exp $
 
 /** @file
  *
@@ -54,8 +54,10 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeInMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
 //
-Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
-Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
+// Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
 Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT"};

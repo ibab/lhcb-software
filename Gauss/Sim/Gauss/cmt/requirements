@@ -1,5 +1,5 @@
 package Gauss
-version v24r5
+version v24r6
 
 #=========================================================================
 #-- Structure
@@ -9,7 +9,7 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r5   Det   -no_auto_imports
+use XmlDDDB             v30r6   Det   -no_auto_imports
 use XmlConditions       v1r6    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v12r1   Gen   -no_auto_imports
@@ -40,7 +40,7 @@ use GaussKine            v1r3    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r3    Sim
 use GaussRICH            v6r4    Sim
-use GaussCalo            v8r2    Sim
+use GaussCalo            v8r3    Sim
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r1 Sim"
