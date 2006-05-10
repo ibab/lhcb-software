@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.27 2006-03-01 09:48:59 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.28 2006-05-10 09:00:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
@@ -246,8 +246,9 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
   return false;
 }
 
-bool RichMCTruthTool::getMcHistories( const RichSmartID id,
-                                      std::vector<const MCRichDigitSummary*> & histories ) const
+bool 
+RichMCTruthTool::getMcHistories( const RichSmartID id,
+                                 std::vector<const MCRichDigitSummary*> & histories ) const
 {
   // clear histories
   histories.clear();
