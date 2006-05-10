@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.4 2006-05-09 16:29:26 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.5 2006-05-10 17:13:03 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -92,6 +92,8 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
                                           const double znew,
                                           LHCb::Particle& transParticle){
   StatusCode sc = StatusCode::SUCCESS;
+  debug() << "Transport " << P->particleID().pid() << " " << P->momentum() << " from " 
+          << P->referencePoint()  << " to " << znew << endmsg ;
   
   LHCb::State s ; // state to extrapolate
   sc = state(P,znew,s);
@@ -102,7 +104,12 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
 
   transParticle = LHCb::Particle(*P);
   
-  return state2Particle(s,transParticle);
+  sc = state2Particle(s,transParticle);
+
+  debug() << "Transported " << P->particleID().pid() << " " << transParticle.momentum() << " to " 
+          << transParticle.referencePoint() << endmsg ;
+
+  return sc;
 }
 //=============================================================================
 // get a state from a Particle
@@ -132,8 +139,10 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
 // make a state from a Particle
 //=============================================================================
 StatusCode ParticleTransporter::makeState(const LHCb::Particle* P, LHCb::State& s) const { 
-  s.setState(P->momentum().X(),P->momentum().Y(),P->momentum().Z(),
+  s.setState(P->referencePoint().X(),P->referencePoint().Y(),P->referencePoint().Z(),
              P->slopes().X(),P->slopes().Y(),P->charge()/P->p());
+
+  debug() << "Produced state at " << s.position() << " " << s.momentum() << endmsg ;
   
   /// @todo Implement error matrix.
 
