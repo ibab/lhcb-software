@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r4 2006-05-09 =========================
+! 2006-05-09 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 !========================== DigiAlg v4r3 2006-05-02 =========================
 ! 2006-05-02 - Marco Cattaneo
  - Remove creation of DAQ error bank from BooleInit. This bank will only be 

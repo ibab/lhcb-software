@@ -1,4 +1,4 @@
-// $Id: LumiTool.cpp,v 1.5 2006-05-02 14:16:15 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.6 2006-05-10 15:54:54 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
@@ -7,7 +7,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SmartIF.h"
 #include "Event/GenHeader.h"
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include <fstream>
 
 //--------------------------------------------------------------------
@@ -67,7 +67,8 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
   // Get luminosity from generated event
   LHCb::GenHeader* pEvent = get<LHCb::GenHeader>( 
                                 LHCb::GenHeaderLocation::Default );
-  float currentLumi = pEvent->luminosity() * cm2 * s / 1.e32;
+  float currentLumi = pEvent->luminosity() * Gaudi::Units::cm2 
+                                           * Gaudi::Units::s / 1.e32;
 
   if( 0. < currentLumi ) {
     debug() << " Luminosity of main event: " << currentLumi << endmsg;
