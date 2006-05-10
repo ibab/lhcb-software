@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.14 2006-05-09 11:24:41 cattanem Exp $
+! $Id: release.notes,v 1.15 2006-05-10 08:37:19 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+
+! 2006-05-10 - Chris Jones
+ - Update RichPID for changes in radiator names
 
 !========================== RecEvent v1r3 2006-05-09 =========================
 ! 2006-05-09 - Marco Cattaneo
