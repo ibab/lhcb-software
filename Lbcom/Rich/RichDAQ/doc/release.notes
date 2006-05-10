@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2006-05-10 - Chris Jones
+ - Fix minor bug in reading beyond the end of the RawBank data block.
+
 ! 2006-04-19 - Chris Jones
  - Add new DAQ bank versions where the pixel rows are inverted, to
    match the electronics

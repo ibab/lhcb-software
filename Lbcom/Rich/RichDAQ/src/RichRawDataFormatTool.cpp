@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.27 2006-05-05 09:12:19 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.28 2006-05-10 12:45:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -509,9 +509,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
           while ( cont && lineC < bankSize )
           {
             ++lineC;
-            // Test if this is a new header
-            const RichDAQHeaderPDBase testheader ( bank.data()[lineC] );
-            if ( testheader.startPD() || lineC == bankSize )
+            // Test if this is the last line of data or a new header word
+            if ( lineC == bankSize || RichDAQHeaderPDBase(bank.data()[lineC]).startPD() )
             {
               lineLast = lineC-1;
               cont = false;
