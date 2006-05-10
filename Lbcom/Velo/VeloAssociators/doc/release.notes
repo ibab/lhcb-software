@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v2r2 2006-05-08 ===================
+! 2006-05-08 - Marco Cattaneo
+ - Pick up units from GaudiKernel
+
 !==================== VeloAssociators v2r1 2006-03-17 ===================
 ! 2006-03-17 - Marco Cattaneo
  - Add VeloCluster2MCHitLinker and VeloCluster2MCParticleLinker

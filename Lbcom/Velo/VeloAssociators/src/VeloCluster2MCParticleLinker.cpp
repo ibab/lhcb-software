@@ -1,8 +1,9 @@
-// $Id: VeloCluster2MCParticleLinker.cpp,v 1.2 2006-03-23 10:58:51 cattanem Exp $
+// $Id: VeloCluster2MCParticleLinker.cpp,v 1.3 2006-05-10 15:08:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 
 // event model
 #include "Event/VeloCluster.h"
@@ -90,7 +91,8 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
     for(asctIt=range1.begin(); asctIt!=range1.end(); asctIt++){
       const LHCb::MCHit* aHit=asctIt->to();
       const LHCb::MCParticle* aPart=aHit->mcParticle();
-      debug()<< "energy: " << aPart->momentum().e()/GeV << " [GeV]" <<endmsg;
+      debug()<< "energy: " << aPart->momentum().e()/Gaudi::Units::GeV
+             << " [GeV]" <<endmsg;
       //
       relations[aPart]+=asctIt->weight();
     }
