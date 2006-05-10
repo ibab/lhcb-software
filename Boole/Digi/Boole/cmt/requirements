@@ -1,5 +1,5 @@
 package Boole
-version v11r5
+version v12r0
 
 branches doc cmt job options
 
@@ -7,19 +7,19 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r23
+use GaudiPolicy v5r24
 
 #-- External libraries taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v18r3)
-use GaudiKernel		 v20r5
-use GaudiSvc 		 v14r7       -no_auto_imports
-use GaudiAlg 		 v9r5        -no_auto_imports
-use GaudiAud 		 v7r0        -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v18r4)
+use GaudiKernel		 v20r6
+use GaudiSvc 		 v14r8       -no_auto_imports
+use GaudiAlg 		 v9r6        -no_auto_imports
+use GaudiAud 		 v7r1        -no_auto_imports
 use GaudiPoolDb		 v2r3        -no_auto_imports
-use GaudiObjDesc 	 v9r4        -no_auto_imports
-use RootHistCnv          v9r9        -no_auto_imports
+use GaudiObjDesc 	 v9r5        -no_auto_imports
+use RootHistCnv          v9r10       -no_auto_imports
 
 #-- Databases
 use XmlDDDB             v30r6   Det  -no_auto_imports
@@ -28,19 +28,19 @@ use ParamFiles	         v4r2        -no_auto_imports
 use FieldMap	         v4r7        -no_auto_imports
 #use BooleDQ              v1r0   DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v20r4)
+#-- LHCb libraries (from LHCB_v21r0)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
-use GaudiConf        v9r5           -no_auto_imports
-use KernelSys        v5r4    Kernel -no_auto_imports
-use DetSys           v8r4    Det    -no_auto_imports
+use GaudiConf        v9r6           -no_auto_imports
+use KernelSys        v5r5    Kernel -no_auto_imports
+use DetSys           v8r5    Det    -no_auto_imports
 
-use EventBase        v1r1    Event  -no_auto_imports
-use MCEvent          v1r2p1  Event  -no_auto_imports
-use DigiEvent        v1r1    Event  -no_auto_imports
-use RecEvent         v1r2    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v2r4    Event  -no_auto_imports  # used by RecEvent
-use L0Event          v15r1   Event  -no_auto_imports
-use DAQEvent         v6r3    Event  -no_auto_imports
+use EventBase        v1r2    Event  -no_auto_imports
+use MCEvent          v1r3  Event  -no_auto_imports
+use DigiEvent        v1r2    Event  -no_auto_imports
+use RecEvent         v1r3    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use TrackEvent       v2r5    Event  -no_auto_imports  # used by RecEvent
+use L0Event          v15r2   Event  -no_auto_imports
+use DAQEvent         v6r4    Event  -no_auto_imports
 use GenEvent         v4r3    Event  -no_auto_imports
 use PackedEvent      v2r0    Event  -no_auto_imports
 use VeloEvent        v14r0   Event  -no_auto_imports
@@ -48,13 +48,13 @@ use VeloEvent        v14r0   Event  -no_auto_imports
 use HepMC         v1r126p0   Gen    -no_auto_imports
 use DAQSys           v2r4    DAQ    -no_auto_imports
 use LHCbAlgs         v2r0    Kernel -no_auto_imports
-use SimComponents    v1r1p1  Sim    -no_auto_imports
+use SimComponents    v1r2    Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v4r4)
-use LbcomSys             v4r4        -no_auto_imports
+#-- Lbcom packages (from LBCOM_v5r0)
+use LbcomSys             v5r0        -no_auto_imports
 
-#-- BooleSys v11r3 packages
-use DigiAlg              v4r3   Digi -no_auto_imports
+#-- BooleSys v12r0 packages
+use DigiAlg              v4r4   Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r1   Calo -no_auto_imports
@@ -62,10 +62,10 @@ use CaloDigit            v2r1p1 Calo -no_auto_imports
 
 # Velo
 use VeloSimulation       v2r2   Velo -no_auto_imports
-use VeloAlgorithms       v4r4   Velo -no_auto_imports
+use VeloAlgorithms       v4r5   Velo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation         v3r4   OT   -no_auto_imports
+use OTSimulation         v3r5   OT   -no_auto_imports
 
 # Muon
 use MuonAlgs             v6r0   Muon -no_auto_imports
@@ -75,7 +75,7 @@ use MuonAssociators      v2r0   Muon -no_auto_imports
 
 # Rich
 use RichDigiQC	         v3r1  	Rich -no_auto_imports
-use RichReadout		 v2r0p1 Rich -no_auto_imports
+use RichReadout		 v2r1   Rich -no_auto_imports
 use RichMCAssociators    v2r0   Rich -no_auto_imports
 
 #===== build Boole =========================

@@ -30,15 +30,13 @@ Boole.BooleMemory.HistoDir    = "MemoryTool";
 // L0 Trigger
 MoniL0Seq.Members += { "L0CaloMonit" };
 MoniL0Seq.Members += { "L0Monitor" };
-//ApplicationMgr.DLLs += {"L0Checker"};
-//MoniL0Seq.Members += { "L0Check" };   - no code
 
 // Velo
 MoniVELOSeq.Members += {
                          "VeloSimMoni",
                          "VeloDigit2MCHitLinker",
                          "VeloDigiMoni",
-                         "VeloClusterMoni"
+                         "VeloRawClustersMoni"
                         };
 
 // IT and TT
@@ -55,7 +53,6 @@ MoniTTSeq.Members += { "STDigitChecker/TTDigitChecker" };
 MoniTTSeq.Members += { "STClusterChecker/TTClusterChecker" };
 
 ApplicationMgr.DLLs   += { "Associators" };
-//#include "$ASSOCIATORSROOT/options/Brunel.opts"
 MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
 MCP2ITMCHitAlg.OutputData = "/Event/Relations/MC/Particles2MCITHits";
 MoniITSeq.Members += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
