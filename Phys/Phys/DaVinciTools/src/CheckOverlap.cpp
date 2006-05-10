@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.10 2006-05-03 18:33:49 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.11 2006-05-10 19:15:14 jpalac Exp $
 
 // Include files 
 
@@ -47,7 +47,8 @@ CheckOverlap::CheckOverlap( const std::string& type,
 //===========================================================================
 bool CheckOverlap::foundOverlap( const LHCb::Particle::ConstVector & parts, 
                                  std::vector<const LHCb::ProtoParticle* > & proto ) {
-  verbose() << "foundOverlap(parts, protos) " << parts.size() << " " << proto.size() << endmsg ;
+  verbose() << "foundOverlap(parts, protos) " << parts.size() << " " 
+            << proto.size() << endmsg ;
   StatusCode sc = addOrigins( parts, proto );
   if (!sc){
     Exception("Unable to get origin vector of particle vector");

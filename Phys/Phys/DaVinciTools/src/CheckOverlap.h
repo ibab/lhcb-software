@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.9 2006-05-03 11:09:33 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.10 2006-05-10 19:15:14 jpalac Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -50,9 +50,15 @@ public:
   ///  Call the real check method.
   
   bool foundOverlap( const LHCb::Particle* );
-  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle* );
-  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*);
-  bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*,const LHCb::Particle*);
+  bool foundOverlap( const LHCb::Particle*,
+                     const LHCb::Particle* );
+  bool foundOverlap( const LHCb::Particle*,
+                     const LHCb::Particle*,
+                     const LHCb::Particle*);
+  bool foundOverlap( const LHCb::Particle*,
+                     const LHCb::Particle*,
+                     const LHCb::Particle*,
+                     const LHCb::Particle*);
   
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
@@ -78,7 +84,8 @@ public:
 
 protected:
   
-  StatusCode addOrigins( const LHCb::Particle::ConstVector&, std::vector<const LHCb::ProtoParticle*>&);
+  StatusCode addOrigins( const LHCb::Particle::ConstVector&, 
+                         std::vector<const LHCb::ProtoParticle*>&);
 
   /// Only look at protoparticles
   bool searchOverlap( std::vector<const LHCb::ProtoParticle* > & proto );
