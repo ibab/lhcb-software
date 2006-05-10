@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.5 2006-05-09 23:33:47 jpalac Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.6 2006-05-10 12:27:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h" 
 
-#include "Kernel/IParticleStuffer.h" 
-#include "Kernel/state2Particle.h"
+#include "Kernel/state2Particle.h" 
 // local
 #include "NoPIDsParticleMaker.h"
 
@@ -38,7 +37,6 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_ppSvc  ( 0 ) 
-  , m_stuffer  ( 0 ) 
   , m_pid    ( "UNDEFINED" ) 
   , m_apid   (   ) 
   , m_pp     ( 0 ) 
@@ -74,8 +72,6 @@ StatusCode NoPIDsParticleMaker::initialize() {
   if (!sc) return sc;
   m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" , true ) ;
 
-  m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
-  
   std::sort( m_inputs.begin () , m_inputs.end () ) ;
   m_inputs.erase ( std::unique( m_inputs.begin () , 
                                 m_inputs.end   () ) , m_inputs.end () ) ;
@@ -245,6 +241,6 @@ StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto  
   
   particle -> setProto( proto ) ;
   const LHCb::State& state = proto->track()->firstState() ;
-  return state2Particle(state, *particle);
+  return state2Particle(state,*particle);
 };
 // ============================================================================

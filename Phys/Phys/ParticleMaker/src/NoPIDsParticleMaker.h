@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.h,v 1.5 2006-03-15 13:47:30 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.6 2006-05-10 12:27:37 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
@@ -9,9 +9,6 @@
 
 class ParticleProperty;
 class IParticlePropertySvc;
-class IParticleStuffer;
-
-
 /** @class NoPIDsParticleMaker NoPIDsParticleMaker.h
  *  
  *  The simplest possible particle maker.
@@ -64,9 +61,6 @@ private:
 
   // particle property service 
   IParticlePropertySvc* m_ppSvc   ;  
-  
-  // particle property service 
-  IParticleStuffer* m_stuffer   ;  
   
   // ID of the particle 
   std::string             m_pid   ;

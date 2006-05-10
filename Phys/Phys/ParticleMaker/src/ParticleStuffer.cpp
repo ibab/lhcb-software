@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.6 2006-05-09 09:43:04 jpalac Exp $
+// $Id: ParticleStuffer.cpp,v 1.7 2006-05-10 12:27:38 pkoppenb Exp $
 // Include files 
 
 // 
@@ -53,8 +53,6 @@ StatusCode ParticleStuffer::initialize() {
   return StatusCode::SUCCESS;
   
 }
-
-
 //=============================================================================
 // Stuffer
 //=============================================================================
@@ -128,63 +126,3 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
   
   return StatusCode::SUCCESS;
 }
-//=============================================================================
-/// Fill Composite Particle from a state
-//=============================================================================
-StatusCode ParticleStuffer::fillParticle( const LHCb::State& state,
-                                          LHCb::Particle& particle ){
-  
-  // point on the track and error 
-  particle.setReferencePoint( state.position() ) ;
-  particle.setPosCovMatrix( state.errPosition()  ) ;
-  
-  // momentum
-  Gaudi::XYZVector mom = state.momentum();
-  double mass = particle.measuredMass();
-  double e = sqrt( state.p()*state.p()+mass*mass );
-  particle.setMomentum(  Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
-
-  // momentum error
-  Gaudi::SymMatrix4x4 err ;
-  err.Place_at(state.errMomentum(),0,0); // no error on mass
-  particle.setMomCovMatrix(err);
-
-  Gaudi::Matrix4x3 posMomMatrix;
-  Gaudi::SymMatrix6x6 spm = state.posMomCovariance();
-  for ( unsigned int i = 0 ; i<3; ++i){
-    for ( unsigned int j = 0 ; j<3; ++j){
-      posMomMatrix(i,j) = spm(3+i,j);  /// @todo : Check this
-    }
-  }
-  particle.setPosMomCovMatrix(posMomMatrix);
-  
-  return StatusCode::SUCCESS ;
-  
-}
-//=============================================================================
-/// Sum 4-Momenta
-//=============================================================================
-Gaudi::XYZTVector ParticleStuffer::sumMomenta( const LHCb::Particle::ConstVector& vP ){
-  Gaudi::XYZTVector sum;
-  for ( LHCb::Particle::ConstVector::const_iterator i = vP.begin(); i != vP.end() ; ++i){
-    sum += (*i)->momentum();
-  }
-  return sum;
-}
-//=============================================================================
-/// Sum 4-Momenta
-//=============================================================================
-Gaudi::XYZTVector ParticleStuffer::sumMomenta( const SmartRefVector<LHCb::Particle>& vP ){
-  Gaudi::XYZTVector sum;
-  for ( SmartRefVector<LHCb::Particle>::const_iterator i = vP.begin(); i != vP.end() ; ++i){
-    sum += (*i)->momentum();
-  }
-  return sum;
-}
-
-
-
-
-
-
-

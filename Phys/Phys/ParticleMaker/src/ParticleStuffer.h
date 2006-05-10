@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.6 2006-05-09 09:43:04 jpalac Exp $
+// $Id: ParticleStuffer.h,v 1.7 2006-05-10 12:27:38 pkoppenb Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -49,16 +49,6 @@ public:
   StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
                            const LHCb::Vertex&,  
                            LHCb::Particle&);
-
-  /// Fill Composite Particle from a state
-  StatusCode fillParticle( const LHCb::State& state,
-                           LHCb::Particle& par);
-
-  /// Sum 4-vectors for a vector of daughters
-  Gaudi::XYZTVector sumMomenta( const LHCb::Particle::ConstVector& );
-
-  /// Sum 4-vectors for a vector of daughters
-  Gaudi::XYZTVector sumMomenta( const SmartRefVector<LHCb::Particle>& );
 
 private:
   IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc

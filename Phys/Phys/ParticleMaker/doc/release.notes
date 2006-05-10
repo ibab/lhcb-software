@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.32 2006-05-09 23:33:47 jpalac Exp $ 
+! $Id: release.notes,v 1.33 2006-05-10 12:27:37 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 !==============================================================================
 
-! 2006-05-10 - Juan PALACIOS
+! 2006-05-10 - Juan PALACIOS, P. Koppenburg
  - src/NoPIDsParticleMaker.cpp: use state2Particle function from 
    Kernel/state2Particle.h instead of deprecated 
    IParticleStuffer::fillParticle(state, particle).
+ - src/ParticleStuffer.*
+   . Remove fillParticle and sumMomenta methods moved to dedicated headers in 
+     $DAVINCIKERNELROOT/Kernel/
 
 ! 2006-05-09 - Juan PALACIOS
  - src/ParticleStuffer.cpp: Fix calculation of error on measured mass.
