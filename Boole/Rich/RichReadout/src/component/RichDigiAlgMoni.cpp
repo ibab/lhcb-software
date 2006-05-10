@@ -1,4 +1,7 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.10 2006-05-05 09:13:58 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.11 2006-05-10 15:53:19 cattanem Exp $
+
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -9,9 +12,7 @@
 // 2003-09-08 : Chris Jones   (Christopher.Rob.Jones@cern.ch)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichDigiAlgMoni>          s_factory ;
-const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichDigiAlgMoni );
 
 // Standard constructor, initializes variables
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
@@ -52,11 +53,11 @@ StatusCode RichDigiAlgMoni::initialize()
 
   // Retrieve particle masses
   m_particleMass[Rich::Unknown]  = 0;
-  m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/MeV;
-  m_particleMass[Rich::Muon]     = ppSvc->find("mu+")->mass()/MeV;
-  m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/MeV;
-  m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/MeV;
-  m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
+  m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Muon]     = ppSvc->find("mu+")->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/Gaudi::Units::MeV;
 
   // release particle property service
   release(ppSvc);
@@ -428,7 +429,8 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
         // hit point on silicon in local coords
         const Gaudi::XYZVector hitP
           = m_smartIDTool->globalToPDPanel((*iD)->parentHit()->entry()) - hpdLoc;
-        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*mm, 8*mm, -8*mm, 8*mm, 32, 32 );
+        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*Gaudi::Units::mm, 
+                8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );
       }
     }
     // plot number of hits
@@ -465,7 +467,7 @@ void RichDigiAlgMoni::countNPE( PhotMap & photMap,
   const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
 
   // Increment PES count for high beta tracks
-  if ( tkPtot > 1*GeV &&
+  if ( tkPtot > 1*Gaudi::Units::GeV &&
        mcid != Rich::Unknown &&
        mcid != Rich::Electron &&
        mcBeta( hit->mcParticle() ) > 0.99 &&

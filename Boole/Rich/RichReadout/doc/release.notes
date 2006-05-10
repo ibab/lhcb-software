@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r1 2006-05-09 ========================
+! 2006-05-09 - Marco Cattaneo
+ - Migrate to Gaudi::Units namespace for units
+
 ! 2006-04-05 - Chris Jones
  - Suppress confusing warning method
 
