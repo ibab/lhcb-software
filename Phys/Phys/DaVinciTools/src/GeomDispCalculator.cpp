@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.11 2006-05-10 15:36:10 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.12 2006-05-10 17:00:59 pkoppenb Exp $
 
 // Include files
 
@@ -43,7 +43,7 @@ GeomDispCalculator::GeomDispCalculator(const std::string& type,
   : 
   GaudiTool( type, name, parent),
   m_pTransporter(0),
-  m_transporterType("CombinedTransporter")
+  m_transporterType("ParticleTransporter")
 {
 
   declareInterface<IGeomDispCalculator>(this);
