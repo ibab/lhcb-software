@@ -1,5 +1,5 @@
 package LbcomSys
-version v4r4
+version v5r0
 
 branches doc cmt
 
@@ -18,12 +18,12 @@ use OTMonitor         v2r2  OT          # Jan Amoraal
 use OTAssociators     v4r0  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r3  Rich        # Chris Jones
-use RichTools         v2r3  Rich        # Chris Jones
+use RichDAQ           v3r4  Rich        # Chris Jones
+use RichTools         v2r4  Rich        # Chris Jones
 use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker
-use STDAQ             v2r5  ST          # Matt Needham
+use STDAQ             v2r6  ST          # Matt Needham
 use STTools           v2r1  ST          # Matt Needham
 use STAlgorithms      v1r3  ST          # Matt Needham
 use STAssociators     v1r2  ST          # Matt Needham
@@ -34,7 +34,7 @@ use CaloAssociators   v6r1  Calo        # Olivier Deschamps
 
 # Velo
 use VeloDAQ           v3r2  Velo        # Kurt Rinnert
-use VeloAssociators   v2r1  Velo        # Tomasz Szumlak
+use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 
 # Common
 use Associators       v3r2  Associators # Matt Needham
