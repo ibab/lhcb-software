@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.32 2006-05-02 15:33:57 cattanem Exp $
+! $Id: release.notes,v 1.33 2006-05-10 16:09:45 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jan Amoraal
+
+!====================== OTSimulation v3r5 2006-05-09 ======================
+! 2006-05-09 - Marco Cattaneo
+ - Migrate to Gaudi::Units and minor cleanups
 
 !====================== OTSimulation v3r4 2006-05-01 ======================
 ! 2006-05-01 - Jan Amoraal 

@@ -1,13 +1,10 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.12 2006-05-01 17:11:51 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.13 2006-05-10 16:09:45 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IService.h"
-
-// MathCore
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // MCEvent
 #include "Event/MCOTDeposit.h"
@@ -40,7 +37,7 @@ OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type,
 					       const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
-  this->declareProperty( "noiseRate", m_noiseRate = 10.0*kilohertz );
+  this->declareProperty( "noiseRate", m_noiseRate = 10.0*Gaudi::Units::kilohertz );
   this->declareProperty( "readOutWindowToolName",
 			 m_readoutWindowToolName ="OTReadOutWindow" ),
 

@@ -1,16 +1,14 @@
-// $Id: OTSmearer.cpp,v 1.8 2006-03-30 21:50:19 janos Exp $
+// $Id: OTSmearer.cpp,v 1.9 2006-05-10 16:09:45 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IService.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // MathCore
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
@@ -104,9 +102,7 @@ StatusCode OTSmearer::smear(MCOTDeposit* aDeposit)
   const MCHit* aMCHit = aDeposit->mcHit();
 
   // average entrance and exit to get point in cell 
-  const Gaudi::XYZPoint& entrancePoint = aMCHit->entry();
-  const Gaudi::XYZPoint& exitPoint = aMCHit->exit();
-  Gaudi::XYZPoint aPoint = entrancePoint + 0.5*(exitPoint - entrancePoint);
+  Gaudi::XYZPoint aPoint = aMCHit->midPoint();
 
   // get sigma (error on drift distance) for this point 
   double driftDistError = resolution(aPoint);

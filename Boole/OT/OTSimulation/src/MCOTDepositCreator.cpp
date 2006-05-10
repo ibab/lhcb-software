@@ -1,14 +1,11 @@
-// $Id: MCOTDepositCreator.cpp,v 1.14 2006-03-30 21:50:17 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.15 2006-05-10 16:09:45 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IService.h"
-
-// XML geometry
-#include "DetDesc/IGeometryInfo.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h" 
@@ -20,7 +17,6 @@
 // Kernel
 #include "Kernel/OTDataFunctor.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -61,11 +57,11 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   m_spillVector.push_back("/Next/");
   m_spillVector.push_back("/NextNext/");
 
-  m_spillTimes.push_back(-50.0*ns);
-  m_spillTimes.push_back(-25.0*ns);
-  m_spillTimes.push_back(0.0*ns);
-  m_spillTimes.push_back(25.0*ns);
-  m_spillTimes.push_back(50.0*ns);
+  m_spillTimes.push_back(-50.0*Gaudi::Units::ns);
+  m_spillTimes.push_back(-25.0*Gaudi::Units::ns);
+  m_spillTimes.push_back(0.0*Gaudi::Units::ns);
+  m_spillTimes.push_back(25.0*Gaudi::Units::ns);
+  m_spillTimes.push_back(50.0*Gaudi::Units::ns);
 
   declareProperty("spillVector", m_spillVector);
   declareProperty("spillTimes", m_spillTimes);

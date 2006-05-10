@@ -1,16 +1,14 @@
-// $Id: OTEffCalculator.cpp,v 1.8 2006-03-30 21:50:17 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.9 2006-05-10 16:09:45 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // MCEvent
 #include "Event/MCOTDeposit.h"
-
-// Kernel
-#include "Kernel/SystemOfUnits.h"
 
 /// GSL
 #include "gsl/gsl_math.h"
@@ -36,7 +34,7 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
                                  const IInterface* parent) : 
   GaudiTool( type, name, parent ),
   m_genEff(0),
-  m_cellRadius(2.5*mm) 
+  m_cellRadius(2.5*Gaudi::Units::mm) 
 { 
   // constructor
   // jobOptions
@@ -46,7 +44,7 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
   //declareProperty("rho", m_rho = 1.47/mm);
   
   // Test Beam 2005 Ar/Co2 : 70/30
-  declareProperty("rho", m_rho = 3.333/mm); 
+  declareProperty("rho", m_rho = 3.333/Gaudi::Units::mm); 
 
   declareInterface<IOTEffCalculator>(this);
 }

@@ -1,7 +1,8 @@
-// $Id: MCOTTimeCreator.cpp,v 1.9 2006-03-30 21:50:17 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.10 2006-05-10 16:09:45 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -33,10 +34,10 @@ MCOTTimeCreator::MCOTTimeCreator(const std::string& name,
 {
   // constructor 
   // jobOptions - defaults
-  declareProperty("DeadTime", m_deadTime = 25.0*ns);
+  declareProperty("DeadTime", m_deadTime = 25.0*Gaudi::Units::ns);
   declareProperty("countsPerBX", m_countsPerBX = 64);
   declareProperty("numberOfBX", m_numberOfBX = 3);
-  declareProperty("timePerBX", m_timePerBX = 25*ns);
+  declareProperty("timePerBX", m_timePerBX = 25*Gaudi::Units::ns);
   declareProperty("singleHitMode", m_singleHitMode = true);
 
   // container for temporary time storage 
