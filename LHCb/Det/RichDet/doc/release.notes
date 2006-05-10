@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v9r4 2006-05-10 =========================
 ! 2006-04-13 - Chris Jones
  - Add ALICE mode options to DAQ definitions
 
