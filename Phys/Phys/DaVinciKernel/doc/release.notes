@@ -2,6 +2,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-05-09 - P. Koppenburg
+ - src/Lib/DVAlgorithm.cpp
+   . Corrected a buglet the GeomTool option now refers to the
+     first geomTool while GeomTools allows to set them all.
+
 ! 2006-05-09 - Juan PALACIOS
  - Kernel/IVertexFit.h
    . Added methods for fitting two and three particles.

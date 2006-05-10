@@ -28,7 +28,8 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
 {
 
   declareProperty("VertexFitter", m_vertexFitNames );
-  declareProperty("GeomTool", m_geomToolNames);
+  declareProperty("GeomTool", m_geomToolNames[0] );
+  declareProperty("GeomTools", m_geomToolNames );
   declareProperty("CheckOverlapTool",m_checkOverlapName = "CheckOverlap");
   m_filterNames.push_back("ParticleFilter");
   declareProperty("ParticleFilter", m_filterNames );
@@ -100,7 +101,7 @@ StatusCode DVAlgorithm::loadTools() {
     if (0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
     m_geomToolNames.push_back( onof->dispCalculator() );
   }
-  debug() << ">>> Preloading" << m_geomToolNames[0] 
+  debug() << ">>> Preloading " << m_geomToolNames[0] 
           << " as IGeomDispCalculator" << endmsg;
   geomDispCalculator();
 
