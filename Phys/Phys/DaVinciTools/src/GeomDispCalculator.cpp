@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.10 2006-05-09 16:32:18 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.11 2006-05-10 15:36:10 jpalac Exp $
 
 // Include files
 
@@ -323,7 +323,7 @@ StatusCode GeomDispCalculator::calcVertexDis( const LHCb::Vertex& vertex1,
 {
   
   const Gaudi::XYZVector diff = vertex1.position() - vertex2.position();
-  dist = sqrt( diff.mag2() );
+  dist = diff.R();
 
   if (dist == 0) return StatusCode::FAILURE;
 

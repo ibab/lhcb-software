@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.197 2006-05-09 16:32:18 pkoppenb Exp $
+! $Id: release.notes,v 1.198 2006-05-10 15:36:08 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-10 - Juan Palacios
+ - src/TrgDispCalculator: simplify some of the code. Use Kernel/GeomFun.
 
 ! 2006-05-09 - P. Koppenburg
   - src/*DispCalculator.cpp

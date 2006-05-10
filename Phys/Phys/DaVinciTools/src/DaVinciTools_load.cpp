@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.60 2006-05-09 16:32:18 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.61 2006-05-10 15:36:10 jpalac Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -19,8 +19,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( CheckOverlap );
   /// @todo: Restore CheckVeloOverlap
   //  DECLARE_TOOL( CheckVeloOverlap );
-  /// @todo: Get DecayFinder to compile (need stl expert), use tag v13r0df to restore it 
-  //  DECLARE_TOOL( DecayFinder ); /     
+  DECLARE_TOOL( DecayFinder );     
   DECLARE_TOOL( DecodeSimpleDecayString );
   DECLARE_TOOL( GeomDispCalculator ) ;
   DECLARE_TOOL( OnOfflineTool ) ;
