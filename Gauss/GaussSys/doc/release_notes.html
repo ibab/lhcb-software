@@ -4,6 +4,36 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v24r5">2006-05-10 - GaussSys v24r6</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r1, ParamFiles v4r2 
+   Geant4 v71r0p13 (based on geant4.7.1.p01a)
+   LHCb v20r4 (and Gaudi v18r3)
+   XmlDDDB v30r3, XmlConditions v1r6, FieldMap v4r7 </A></H3>
+
+!======================== Gauss v24r6 2006-05-10 =============================
+! 2006-05-10 - Gloria CORTI
+ - Fix bug in options that was missing to specify to simulate the section
+   of beam pipe in the T area.
+   . SimGeometry.opts
+ - Use GaussCalo v8r3 and XmlDDDB v30r6
+ 
+! 2006-05-04 - Gloria CORTI
+ - Remove check of event types checker from ParticleGun example options,
+   since in many cases will not be in DecFiles package.
+   . ParticleGuns.opts
+ 
+!===================== GaussCalo v8r3 2006-05-10 =============================
+! 2006-04-17 - Patrick Robbe
+ - EcalSensDet: optimization of the non-uniformity calculations
+ - EcalSensDet, HcalSensDet, SpdPrsSensDet: store only sub-hits with at
+       least 10^-5 of the total energy.
+ 
+!=============================================================================
 <H1><A NAME="v24r5">2006-05-03 - GaussSys v24r5</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>

@@ -1,5 +1,5 @@
 package GaussSys
-version v24r5
+version v24r6
 
 branches cmt doc
 
@@ -8,16 +8,16 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v24r5	  Sim
+use Gauss		v24r6	  Sim
 
 # Generator stuff ...
 use GENSER              v1r130p1  Gen
 use EvtGen              v8r8      Gen
 use Generators          v5r0      Gen
 use LbPythia            v4r2      Gen
-#use LbHerwig            v2r0      Gen
 #use AcerMC              v1r23p0   Gen
 #use LbAcerMC            v1r3      Gen
+#use LbHerwig            v2r0      Gen
 use ParticleGuns	v3r0      Gen
 
 # GiGa stuff...
@@ -34,7 +34,7 @@ use GaussAlgs		v2r3      Sim
 use GaussTools	        v12r2	  Sim
 use GaussRICH		v6r4	  Sim
 use GaussTracker	v5r3	  Sim
-use GaussCalo		v8r2	  Sim
+use GaussCalo		v8r3	  Sim
 use GaussPhysics	v3r2	  Sim
 use GaussMonitor	v3r2	  Sim
 use CaloMoniSim         v2r1      Calo
