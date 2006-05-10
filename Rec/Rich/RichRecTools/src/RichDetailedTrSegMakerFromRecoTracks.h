@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.6 2006-05-05 11:01:39 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.7 2006-05-10 09:07:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -96,10 +96,10 @@ private: // methods
 
   /** Find intersections with the given radiator volume(s)
    */
-  unsigned int getRadIntersections( const Gaudi::XYZPoint& point,
-                                    const Gaudi::XYZVector& direction,
-                                    const Rich::RadiatorType rad,
-                                    std::vector<RichRadIntersection>& intersections );
+  //unsigned int getRadIntersections( const Gaudi::XYZPoint& point,
+  //                                  const Gaudi::XYZVector& direction,
+  //                                  const Rich::RadiatorType rad,
+  //                                 std::vector<RichRadIntersection>& intersections );
 
   /** Correct the entrance point for the Rich1Gas radiators due to the fact the aerogel
    *  is contained inside this medium. This means the start of the visable Rich1Gas

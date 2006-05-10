@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.6 2006-05-05 11:01:39 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.7 2006-05-10 09:07:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -101,20 +101,20 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
   m_matThickness[Rich::Aerogel] = m_scatt * sqrt(1e-2); // ?
 
   // Rich1Gas thickness
-  m_matThickness[Rich::Rich1Gas]   = m_scatt * sqrt(2e-2); // ?
+  m_matThickness[Rich::Rich1Gas] = m_scatt * sqrt(2e-2); // ?
 
   // Rich2Gas thickness
   const double thickWindowRich2Gas = 1.0e-2;   // rad length
   const double thickRich2Gas       = 2.04e-02; // rad length
-  const double thickT3        = 0; // rad length
+  const double thickT3             = 0; // rad length
   m_matThickness[Rich::Rich2Gas] = thickWindowRich2Gas + thickRich2Gas + thickT3;
 
   // Printouts
   //---------------------------------------------------------------------------------------------
 
-  info() << "Aerogel Asymptopic Errors : " << m_asmpt[Rich::Aerogel] << endreq
-         << "Rich1Gas Asymptopic Errors   : " << m_asmpt[Rich::Rich1Gas]   << endreq
-         << "Rich2Gas Asymptopic Errors     : " << m_asmpt[Rich::Rich2Gas]     << endreq;
+  info() << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endreq
+         << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endreq
+         << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endreq;
 
   return sc;
 }

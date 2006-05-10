@@ -5,7 +5,7 @@
  * Implementation file for class : RichDetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.5 2006-05-05 11:01:39 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.6 2006-05-10 09:07:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -67,15 +67,15 @@ RichDetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "NominalStateZ", m_nomZstates );
 
   // tolerances on z positions
-  m_zTolerance[Rich::Aerogel] = 800*mm;
-  m_zTolerance[Rich::Rich1Gas]   = 800*mm;
-  m_zTolerance[Rich::Rich2Gas]     = 2000*mm;
+  m_zTolerance[Rich::Aerogel]  = 800*mm;
+  m_zTolerance[Rich::Rich1Gas] = 800*mm;
+  m_zTolerance[Rich::Rich2Gas] = 2000*mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel] = 1*mm;
-  m_minStateDiff[Rich::Rich1Gas]   = 25*mm;
-  m_minStateDiff[Rich::Rich2Gas]     = 50*mm;
+  m_minStateDiff[Rich::Aerogel]  = 1*mm;
+  m_minStateDiff[Rich::Rich1Gas] = 25*mm;
+  m_minStateDiff[Rich::Rich2Gas] = 50*mm;
   declareProperty( "ZSanityChecks", m_minStateDiff );
 
   // shifts for mirror correction
@@ -517,6 +517,7 @@ constructSegments( const ContainedObject * obj,
 
 //====================================================================================================
 // Get radiator intersections
+/*
 unsigned int
 RichDetailedTrSegMakerFromRecoTracks::
 getRadIntersections( const Gaudi::XYZPoint& point,
@@ -527,6 +528,7 @@ getRadIntersections( const Gaudi::XYZPoint& point,
 
   return intersections.size();
 }
+*/
 //====================================================================================================
 
 
