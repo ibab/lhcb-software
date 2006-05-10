@@ -1,4 +1,4 @@
-// $Id: MCHitMonitor.cpp,v 1.2 2005-12-16 10:11:09 cattanem Exp $
+// $Id: MCHitMonitor.cpp,v 1.3 2006-05-10 14:55:00 cattanem Exp $
 //
 // This File contains the implementation of the TrMCHitMonitor
 // C++ code for 'LHCb Tracking package(s)'
@@ -24,8 +24,8 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Tools
 #include "Kernel/IMCParticleSelector.h"
@@ -34,8 +34,7 @@
 
 // Needed for the creation of TrMCHitMonitor objects.
 #include "GaudiKernel/AlgFactory.h"
-static const AlgFactory<MCHitMonitor>  s_factory;
-const IAlgFactory& MCHitMonitorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCHitMonitor );
 
 //_________________________________________________
 /// MCHitMonitor
@@ -50,10 +49,10 @@ MCHitMonitor::MCHitMonitor(const std::string& name,
 {
   /// MCHitMonitor constructor
   this->declareProperty("mcPathString", m_MCHitPath="");
-  this->declareProperty("zTolerance",m_ZTolerance = 20.0*cm);
+  this->declareProperty("zTolerance",m_ZTolerance = 20.0*Gaudi::Units::cm);
   this->declareProperty("zStations",m_Zstations);
-  this->declareProperty("xMax",m_Xmax =400.0*cm );
-  this->declareProperty("yMax",m_Ymax = 400.0*cm);
+  this->declareProperty("xMax",m_Xmax =400.0*Gaudi::Units::cm );
+  this->declareProperty("yMax",m_Ymax = 400.0*Gaudi::Units::cm);
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
 }
 
@@ -93,13 +92,15 @@ StatusCode MCHitMonitor::initHistograms()
 
    aHisto1D = book(100+iStation,
                    "time of Flight"+boost::lexical_cast<std::string>(100+iStation),
-                   0.0*ns,100.0*ns, 100);
+                   0.0*Gaudi::Units::ns,100.0*Gaudi::Units::ns, 100);
    m_timeOfFlightHistos.push_back(aHisto1D);
 
    // x vs y plots
-   aHisto2D = histoSvc()->book(tPath+boost::lexical_cast<std::string>(200+iStation),
-                          "x vs y"+boost::lexical_cast<std::string>(200+iStation),200,
-                          -m_Xmax/cm,m_Xmax/cm,200,-m_Ymax/cm,m_Ymax/cm);
+   aHisto2D = histoSvc()->book(
+                          tPath+boost::lexical_cast<std::string>(200+iStation),
+                       "x vs y"+boost::lexical_cast<std::string>(200+iStation),
+                          200, -m_Xmax/Gaudi::Units::cm,m_Xmax/Gaudi::Units::cm,
+                          200, -m_Ymax/Gaudi::Units::cm,m_Ymax/Gaudi::Units::cm);
    m_XvsYHistos.push_back(aHisto2D);
 
    aHisto1D  = book(300+iStation,"lossHisto"+boost::lexical_cast<std::string>(300+iStation),
@@ -153,7 +154,7 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
   }
 
   // p 
-  plot(aParticle->p()/GeV, 4, "pMag", 200,0.,50);
+  plot(aParticle->p()/Gaudi::Units::GeV, 4, "pMag", 200,0.,50);
 
 
   // average of entrance and exit...
@@ -175,10 +176,10 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
     m_EnergyLossHistos[iStation]->fill(aHit->energy(),1.0);
 
     // dE/dX
-    m_timeOfFlightHistos[iStation]->fill(aHit->time()/ns,1.0);
+    m_timeOfFlightHistos[iStation]->fill(aHit->time()/Gaudi::Units::ns,1.0);
    
     // path length
-    m_pathHistos[iStation]->fill(aHit->pathLength()/micrometer);
+    m_pathHistos[iStation]->fill(aHit->pathLength()/Gaudi::Units::micrometer);
 
     // BetaGamm
     m_betaGammaHistos[iStation]->fill(aParticle->beta()*aParticle->gamma());;
@@ -186,7 +187,8 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
   }
 
   // scatter plot of x-y of hit
-  m_XvsYHistos[iStation]->fill(mcHitPoint.x()/cm,mcHitPoint.y()/cm,1.0);
+  m_XvsYHistos[iStation]->fill( mcHitPoint.x()/Gaudi::Units::cm,
+                                mcHitPoint.y()/Gaudi::Units::cm, 1.0 );
   
   return StatusCode::SUCCESS;
 
@@ -211,4 +213,3 @@ int MCHitMonitor::getStationID(const double z) const {
 
   return iStation;
 }
-

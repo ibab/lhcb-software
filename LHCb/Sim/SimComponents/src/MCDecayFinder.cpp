@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.2 2006-03-16 12:59:36 pkoppenb Exp $
+// $Id: MCDecayFinder.cpp,v 1.3 2006-05-10 14:55:00 cattanem Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -9,7 +9,7 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "MCDecayFinder.h"
@@ -20,10 +20,7 @@
 // 20/04/2002 : Olivier Dormond
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<MCDecayFinder>          s_factory ;
-const        IToolFactory& MCDecayFinderFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( MCDecayFinder );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +44,8 @@ MCDecayFinder::MCDecayFinder( const std::string& type,
   declareInterface<IMCDecayFinder>(this);
 
   declareProperty( "Decay", m_source );
-  declareProperty( "ResonanceThreshold", m_resThreshold = 1e-15*second );
+  declareProperty( "ResonanceThreshold", 
+                   m_resThreshold = 1e-15*Gaudi::Units::second );
 }
 
 //=============================================================================

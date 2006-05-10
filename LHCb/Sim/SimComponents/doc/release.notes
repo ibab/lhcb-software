@@ -5,9 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
-!====================== SimComponents v1r2 2006-05-08 ========================
-! 2006-05-08 - Marco Cattaneo
+!====================== SimComponents v1r2 2006-05-10 ========================
+! 2006-05-10 - Marco Cattaneo
  - Use explicitly Gaudi::Units namespace in MCParticleSelector.cpp
+ - Replace include of CLHEP units with GaudiKernel
 
 !====================== SimComponents v1r1p1 2006-03-31 ======================
 ! 2006-03-31 - Marco Cattaneo
