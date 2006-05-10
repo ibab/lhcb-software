@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.14 2005-12-08 19:20:02 jpalac Exp $
+// $Id: SolidBase.cpp,v 1.15 2006-05-10 07:06:17 cattanem Exp $
 
 // Units
 #include "Kernel/SystemOfUnits.h"
@@ -158,28 +158,6 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
        << DetDesc::print(   zMax () / mm )  << "," 
        << DetDesc::print(   rMax () / mm )  << "," 
        << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
-};
-
-// ============================================================================
-/** return FALSE if doesn't accept Inspecetor so that diagnostic 
- *  message can be printed. Calls the inspect member function of 
- *  the Inspector on all the members it wants to inspect.
- */
-// ============================================================================
-bool SolidBase::acceptInspector( IInspector* pI )       
-{
-  return 0 != pI ? true : false ;
-};
-
-// ============================================================================
-/** return FALSE if doesn't accept Inspecetor so that diagnostic 
- *  message can be printed. Calls the inspect member function of 
- *  the Inspector on all the members it wants to inspect.
- */
-// ============================================================================
-bool SolidBase::acceptInspector( IInspector* pI ) const 
-{
-  return 0 != pI ? true : false ;
 };
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.19 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.20 2006-05-10 07:06:17 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -6,7 +6,6 @@
 #define  DETDESC_IGEOMETRYINFO_H 1
 /** GaudiKernel includes */
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/IInspectable.h"
 /** STD & STL includes */
 #include <functional>
 /// CLHEP includes 
@@ -34,8 +33,7 @@ static const InterfaceID IID_IGeometryInfo( 155 , 2 , 1 );
  *  @date xx/xx/xxxx
  */
 
-class IGeometryInfo : virtual public IInterface   ,
-                      virtual public IInspectable
+class IGeometryInfo : virtual public IInterface
 {
 public:
 

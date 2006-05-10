@@ -1,8 +1,7 @@
-// $Id: GeometryInfoPlus.cpp,v 1.17 2006-04-20 14:39:56 ranjard Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.18 2006-05-10 07:06:17 cattanem Exp $
 // Include files 
 
 // GaudiKernel
-#include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -1001,16 +1000,6 @@ std::string GeometryInfoPlus::lvolumePath( const std::string& start,
 // }
 //=============================================================================
 
-//=============================================================================
-bool GeometryInfoPlus::acceptInspector( IInspector* pInspector ) 
-{
-  return 0 != pInspector? true : false ;
-};
-//=============================================================================
-bool GeometryInfoPlus::acceptInspector( IInspector* pInspector ) const  
-{
-  return 0 != pInspector? true : false ;
-};
 //=============================================================================
 std::ostream& GeometryInfoPlus::printOut( std::ostream& os ) const
 {

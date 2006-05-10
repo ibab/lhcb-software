@@ -1,4 +1,4 @@
-// $Id: ISolid.h,v 1.11 2005-12-08 19:20:01 jpalac Exp $ 
+// $Id: ISolid.h,v 1.12 2006-05-10 07:06:17 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -9,8 +9,6 @@
 #include  <string>
 #include  <vector>
 /// Gaudi Kernel
-#include "GaudiKernel/IInspectable.h"
-#include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/MsgStream.h"
 /// CLHEP
 #include "Kernel/Vector3DTypes.h"
@@ -28,8 +26,7 @@ static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
  *  @date   xx/xx/xxxx 
  */
 
-class ISolid : public virtual IInterface   ,
-               public virtual IInspectable
+class ISolid : public virtual IInterface
 {
 public:
   

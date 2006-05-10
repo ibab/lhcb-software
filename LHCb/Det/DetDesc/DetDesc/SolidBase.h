@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.13 2005-12-08 19:20:01 jpalac Exp $
+// $Id: SolidBase.h,v 1.14 2006-05-10 07:06:17 cattanem Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -155,26 +155,6 @@ public:
    */
   virtual MsgStream&    printOut ( MsgStream&    st ) const ;
  
-  /** - accept the inspector 
-   *  - implementation of IInspectable abstract interface   
-   *  @see IInspectable
-   *  @see IInspector 
-   *  @see ISolid
-   *  @param pI pointer to Inspector 
-   *  @return FALSE if teh object doesn't accept the Inspector.
-   */
-  virtual bool acceptInspector( IInspector* pI )       ; 
-  
-  /** - accept the inspector (const version)
-   *  - implementation of IInspectable abstract interface   
-   *  @see IInspectable
-   *  @see IInspector 
-   *  @see ISolid
-   *  @param pI pointer to Inspector 
-   *  @return FALSE if teh object doesn't accept the Inspector.
-   */
-  virtual bool acceptInspector( IInspector* pI ) const ;
-
 public : 
   
   /// accessor to "minimal x" value of the solid   ("bounding box")

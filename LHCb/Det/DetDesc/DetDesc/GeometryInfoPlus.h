@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.1 2006-04-20 14:39:56 ranjard Exp $
+// $Id: GeometryInfoPlus.h,v 1.2 2006-05-10 07:06:17 cattanem Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -334,10 +334,6 @@ public:
     return m_gi_childrens.end(); 
   }
   
-
-  /// IInspectable interface
-  bool acceptInspector( IInspector* );
-  bool acceptInspector( IInspector* ) const ; 
   /// overloades printout to  std::ostream 
   std::ostream& printOut   ( std::ostream& ) const;
   /// overloaded printout to the MsgStream
