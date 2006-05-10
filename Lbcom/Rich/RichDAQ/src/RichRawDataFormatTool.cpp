@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.30 2006-05-10 13:29:19 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.31 2006-05-10 13:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -68,6 +68,7 @@ StatusCode RichRawDataFormatTool::initialize()
             << m_richSys->level1IDs() << endreq;
   }
 
+  // if suppression is less than max possible number of (ALICE) hits, print a message.
   if ( m_maxHPDOc < 32 * RichDAQ::MaxDataSizeALICE )
   {
     info() << "Will suppress HPDs with more than " << m_maxHPDOc << " digits" << endreq;
