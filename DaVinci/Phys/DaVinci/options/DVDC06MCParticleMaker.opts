@@ -87,8 +87,6 @@ FilterJpsi.InputPlotsPath  = "B2JpsiIn" ;
 FilterJpsi.OutputPlotsPath = "B2JpsiOut";
 MakeJpsi.OutputLevel   = 3 ;
 FilterJpsi.OutputLevel = 3 ;
-FilterJpsi.InputPlots.Minima = { 1, 2, 3, 4, 5e-304, 6.789e-303 };
-FilterJpsi.InputPlots.Maxima = { 1, 2, 3, 4, 5, 6 };
 
 PreLoadMCParticles.OutputLevel = 3 ;
 MCPrimVertexMaker.OutputLevel = 3 ;
@@ -107,6 +105,9 @@ DC06Tests.ParticleFilter.CriteriaNames = { "ByPIDFilterCriterion/Mu" } ;
 DC06Tests.ParticleFilter.Mu.Selections = { "mu+ : KinFilterCriterion/LKin"};
 DC06Tests.ParticleFilter.Mu.LKin.MinMomentum = 2*GeV ;
 DC06Tests.ParticleFilter.Mu.ExclusiveSelection = true ;
+DC06Tests.OnOfflineTool.OfflineGeomTool = "GeomDispCalculator"  ; // TMP
+//DC06Tests.GeomTool = "GeomDispCalculator"  ; // CHECK THIS!!
+DC06Tests.OutputLevel = 2 ;
 
 // DC06Tests.OfflineVertexFitter.OutputLevel = 1 ;
 
@@ -114,5 +115,6 @@ ApplicationMgr.EvtMax  = -1 ;
 
 //--
 EventSelector.Input   = {
-"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r4/11144100.200ev.13Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r5/11144100.500ev.03May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
+
