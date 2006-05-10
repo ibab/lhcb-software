@@ -5,7 +5,7 @@
 <gdd>
   <package name="DigiEvent">
 <!-- **************************************************************************
-  * $Id: CaloAdc.xml,v 1.1.1.1 2006-02-15 10:34:07 cattanem Exp $
+  * $Id: CaloAdc.xml,v 1.2 2006-05-10 07:04:37 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloAdc class                                          *
   * author: Olivier Callot                                                    *
@@ -17,6 +17,7 @@
   desc   = "@brief The ADC content for given cell"
   id     = "&CLID_CaloAdc;"
   author = "Olivier Callot"
+  allocator = "NO"
   >
   <desc> *
     *
