@@ -9,8 +9,9 @@
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
 - Packages added:    LHCbMath v1r0
-- Packages modified: GaudiConf v9r6, KernelSys v5r5, LHCbDefinitions v1r6,
-    LHCbKernel v6r6, DetSys v8r5, DetDesc v16r5, OTDet v6r3, MuonDet v5r3,
+- Packages modified: GaudiConf v9r6, 
+    KernelSys v5r5, LHCbDefinitions v1r6, LHCbKernel v6r6, RichKernel v6r3,
+    DetSys v8r5, DetDesc v16r5, OTDet v6r3, RichDet v9r4, MuonDet v5r3,
     EventSys v21r5, PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, L0Event v15r2, 
     LinkerEvent v2r2, DigiEvent v1r2, RecEvent v1r3, TrackEvent v2r5,
     EventBase v1r2, LinkerInstances v3r0p1, LoKiCore v1r4, DetCond v8r0,
@@ -30,6 +31,9 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
   . Add generic typedef of Point and Vector to Trajectory, and default arguments
     to LineTraj::direction, LineTraj::curvature and ParabolaTraj::curvature.
 
+- In RichKernel v6r3
+  . Adapt to radiator name changes
+
 - In DetDesc v16r5
   . Remove unused IInspectable interface from ISolid and IGeometryInfo
 
@@ -37,6 +41,10 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
   . DeOTLayer/DeOTModule return a plane going through the centre of layer/module.
   . Added trajectories for first and last wire.
   . Fixed trajectories representing wires in a long module
+
+- In RichDet v9r4
+  . Add ALICE mode options to DAQ definitions
+  . Increased active radius on pixel chip in HPDPanel.
 
 - In MuonDet v5r3
   . Cleanup includes in MuonBasicGeometry.h, to avoid unneccessary dependencies
