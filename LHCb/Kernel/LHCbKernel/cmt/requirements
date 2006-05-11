@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.100 2006-05-09 08:48:39 cattanem Exp $
+# $Id: requirements,v 1.101 2006-05-11 11:59:56 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -12,11 +12,12 @@ include_dirs $(LHCBKERNELROOT)
 
 use GaudiKernel     v*
 use LHCbDefinitions v* Kernel
+use Boost           v* LCG_Interfaces
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
-macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ --allocator=NO " \
-      WIN32                       " -s ..\Kernel\ --allocator=NO "
+macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
+      WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
 # Declare fragment for adding custom dictionary to GOD generated ones
