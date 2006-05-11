@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           VeloSimulation
-version           v2r2
+version           v2r2p1
 
 #============================================================================
 # This template is an example for a standard Algorithm package

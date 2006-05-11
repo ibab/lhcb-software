@@ -1,14 +1,10 @@
-// $Id: VeloSim.cpp,v 1.13 2006-04-05 14:15:41 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.14 2006-05-11 16:44:28 cattanem Exp $
 // Include files
 // STL
 #include <string>
-#include <stdio.h>
 #include <vector>
-#include <math.h>
 
 // Mathcore
-#include "Kernel/PhysicalConstants.h"
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
@@ -18,9 +14,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/Stat.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 // from LHCbKernel
 #include "Kernel/LHCbMath.h"
@@ -118,9 +111,9 @@ StatusCode VeloSim::initialize() {
   m_baseDiffuseSigma=sqrt(2*m_kT/m_biasVoltage);
   
   // random number initialisation
-  StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
-  StatusCode scr2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
-  if(!(scr1&scr2)){
+  StatusCode sc1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
+  StatusCode sc2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
+  if(!(sc1&sc2)){
     error() << "Random number init failure" << endmsg;
     return (StatusCode::FAILURE);
   }
