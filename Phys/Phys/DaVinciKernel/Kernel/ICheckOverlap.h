@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.8 2006-03-15 13:34:01 pkoppenb Exp $
+// $Id: ICheckOverlap.h,v 1.9 2006-05-11 13:34:00 jpalac Exp $
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
 
@@ -37,14 +37,19 @@ public:
   virtual bool foundOverlap( const LHCb::Particle* ) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const LHCb::Particle*, const LHCb::Particle* ) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*, 
+                             const LHCb::Particle* ) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const LHCb::Particle*, const LHCb::Particle*, const LHCb::Particle*) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*, 
+                             const LHCb::Particle*, 
+                             const LHCb::Particle*) = 0;
   
   /// Check for duplicate use of a protoparticle to produce particles.  
-  virtual bool foundOverlap( const LHCb::Particle*,const LHCb::Particle*,
-                             const LHCb::Particle*,const LHCb::Particle*) = 0;
+  virtual bool foundOverlap( const LHCb::Particle*,
+                             const LHCb::Particle*,
+                             const LHCb::Particle*,
+                             const LHCb::Particle*) = 0;
 
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Continue a previous check using the contents of the vector of pointers 
