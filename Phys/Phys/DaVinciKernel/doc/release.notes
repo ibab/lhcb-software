@@ -6,6 +6,12 @@
  - src/Lib/DVAlgorithm.cpp
    . Corrected a buglet the GeomTool option now refers to the
      first geomTool while GeomTools allows to set them all.
+   . Now the options are
+        DVAlgorithm.GeomTools
+	DVAlgorithm.VertexFitters
+	DVAlgorithm.ParticleFilters
+     to make it clear that one has to use the syntax
+        DVAlgorithm.VertexFitters { "OfflineVertexFitter", "TrgVertexFitter" };
 
 ! 2006-05-09 - Juan PALACIOS
  - Kernel/IVertexFit.h

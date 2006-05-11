@@ -27,12 +27,11 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   m_algorithmID(-1)
 {
 
-  declareProperty("VertexFitter", m_vertexFitNames );
-  declareProperty("GeomTool", m_geomToolNames[0] );
+  declareProperty("VertexFitters", m_vertexFitNames );
   declareProperty("GeomTools", m_geomToolNames );
   declareProperty("CheckOverlapTool",m_checkOverlapName = "CheckOverlap");
   m_filterNames.push_back("ParticleFilter");
-  declareProperty("ParticleFilter", m_filterNames );
+  declareProperty("ParticleFilters", m_filterNames );
   declareProperty("ParticleCombiner", m_particleCombinerName);
   declareProperty("ParticleReFitter", m_particleReFitterName);
 
