@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.1.1.1 2006-05-08 06:58:26 jpalac Exp $
+// $Id: GeomFun.h,v 1.2 2006-05-11 13:34:43 jpalac Exp $
 #ifndef _GeomFun_H_
 #define _GeomFun_H_
 
@@ -188,6 +188,22 @@ namespace Gaudi{
     bool closestPointParams(const aLine& line0,
                             const aLine& line1,
                             double& mu0, double& mu1);
+
+    /** Estimate whether two lines are parallel
+     *  Use dot product of line0.direction() and line1.direction() = 1
+     *
+     *  @author  Juan Palacios
+     *  @date    10/05/2006
+     *  @param   line0
+     *  @param   line1
+     *  @return  true if lines parallel
+    */
+
+    template <typename aLine>
+    bool parallel(const aLine& line0,
+                  const aLine& line1);
+
+
 
 
   }; // Math namespace

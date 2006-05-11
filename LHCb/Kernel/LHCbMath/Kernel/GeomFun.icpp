@@ -127,7 +127,7 @@ bool Gaudi::Math::closestPointParams(const aLine& line0,
     mu1 = (  1/dnom )*( PenMinWb.Dot(v1) - PenMinWb.Dot(v0)*e_pDote_w );
   } 
   else {
-    /// You never know :-)
+    /// parallel lines, any two points will do!
     canCalculate = false;
   }
   return canCalculate;
@@ -156,11 +156,24 @@ double Gaudi::Math::distance(const aLine& line0,
                              const aLine& line1)
 {
 
-  typename aLine::Point p0;
-  typename aLine::Point p1;
-  Gaudi::Math::closestPoints(line0, line1, p0, p1);
-  return sqrt( typename aLine::Vector(p1-p0).mag2() );
+  if (parallel(line0, line1) ) {
+    return impactParameter(line0.beginPoint(), line1);
+  } else {
+    typename aLine::Point p0;
+    typename aLine::Point p1;
+    Gaudi::Math::closestPoints(line0, line1, p0, p1);
+    return sqrt( typename aLine::Vector(p1-p0).mag2() );
+  }
   
 }
 
+template <typename aLine>
+bool Gaudi::Math::parallel(const aLine& line0,
+                           const aLine& line1)
+{
+
+  const typename aLine::Vector& v0 = line0.direction();
+  const typename aLine::Vector& v1 = line1.direction();
+  return 1. - std::fabs(v0.Dot(v1)) < 1e-10;
+}
 

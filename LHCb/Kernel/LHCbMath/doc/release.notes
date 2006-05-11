@@ -4,6 +4,11 @@
 ! Purpose     : A collection of simple generic geometry classes and functions 
 !-----------------------------------------------------------------------------
 
+! 2006-05-10 - Juan Palacios
+ - Kernel/GeomFun : Add bool parallel(aLine, aLine) method.
+ - Kernel/GeomFun.icpp : fix Gaudi::Math::distance for case when lines
+                         are parallel.
+
 !========================== LHCbMath v1r0 2006-05-08 ==========================
 
 ! 2006-05-08 - Juan Palacios
