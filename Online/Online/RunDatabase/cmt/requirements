@@ -1,0 +1,22 @@
+#============================================================================
+# Maintainer : Markus Frank
+package           RunDatabase
+version           v1r0
+#============================================================================
+branches          cmt doc src
+include_dirs      $(RUNDATABASEROOT)
+use GaudiKernel   v*
+use OnlineKernel  v* Online
+use DIM           v* Online
+use Boost         v* LCG_interfaces -no_auto_import
+use Python        v* LCG_interfaces -no_auto_import
+
+# ==================== component libraries ==================================
+document install_includes install_includes
+apply_pattern lcg_python_module name=DimRunDb files=*.cpp
+
+macro_append  RunDb_shlibflags ' $(Boost_linkopts_python) '
+path_append PYTHONPATH $(RUNDATABASEROOT)/python
+# ==================== private use only =====================================
+private
+use GaudiSvc    v*
