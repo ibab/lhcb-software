@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.3 2006-05-11 09:05:55 jpalac Exp $
+// $Id: CheckVeloOverlap.cpp,v 1.4 2006-05-11 12:50:54 jpalac Exp $
 
 // Include files 
 
@@ -147,6 +147,17 @@ StatusCode CheckVeloOverlap::removeOverlap( LHCb::Particle::ConstVector& PV){
   verbose() << "removeOverlap( ParticleVector)" << endmsg ;
   LHCb::Particle::ConstVector Out ;
   for ( LHCb::Particle::ConstVector::const_iterator i = PV.begin() ;
+        i!=PV.end() ; ++i){
+    if (!foundOverlap( *i )) Out.push_back(*i);
+  }
+  PV = Out ;
+  return StatusCode::SUCCESS ;
+}
+//===========================================================================
+StatusCode CheckVeloOverlap::removeOverlap( LHCb::Particle::Vector& PV){
+  verbose() << "removeOverlap( ParticleVector)" << endmsg ;
+  LHCb::Particle::Vector Out ;
+  for ( LHCb::Particle::Vector::const_iterator i = PV.begin() ;
         i!=PV.end() ; ++i){
     if (!foundOverlap( *i )) Out.push_back(*i);
   }

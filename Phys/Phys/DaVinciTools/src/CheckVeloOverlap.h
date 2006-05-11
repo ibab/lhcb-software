@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.h,v 1.3 2006-05-11 09:05:55 jpalac Exp $
+// $Id: CheckVeloOverlap.h,v 1.4 2006-05-11 12:50:57 jpalac Exp $
 #ifndef CHECKVELOOVERLAP_H 
 #define CHECKVELOOVERLAP_H 1
 
@@ -75,11 +75,11 @@ public:
   
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  StatusCode removeOverlap( LHCb::Particle::Vector& ) ;
+  StatusCode removeOverlap( LHCb::Particle::ConstVector& ) ;
 
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
-  StatusCode removeOverlap( LHCb::Particle::ConstVector& ) ;
+  StatusCode removeOverlap( LHCb::Particle::Vector& ) ;
 
 protected:
   
