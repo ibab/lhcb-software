@@ -545,7 +545,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void*& pObj )
+  static void* operator new ( size_t size, void* pObj )
   {
     return ::operator new (size,pObj);
   }
@@ -568,7 +568,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void*& pObj )
+  static void* operator new ( size_t size, void* pObj )
   {
     return ::operator new (size,pObj);
   }
@@ -594,7 +594,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void*& pObj )
+  static void* operator new ( size_t size, void* pObj )
   {
     return ::operator new (size,pObj);
   }

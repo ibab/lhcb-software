@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 =============================GaudiObjDesc v9r5============================
+! 2006-05-11 - Marco Clemencic
+ - Bugfix in custom allocators support (bad signature for placement new).
+
 ! 2006-04-27 - Marco Clemencic
 - patch #716. Added support for custom allocators. The type ("NO" or
   "BOOST") can be chosen via an attribute of the XML tag class
