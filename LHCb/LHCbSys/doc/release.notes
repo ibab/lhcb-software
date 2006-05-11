@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r0>2006-05-10 LHCbSys v21r0</A></H1><PRE>
+</PRE><H1><A NAME=v21r0>2006-05-11 LHCbSys v21r0</A></H1><PRE>
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
 - Packages added:    LHCbMath v1r0
@@ -27,7 +27,6 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
   . Add definitions for 9x9 matrices and dimension 9 vectors
 
 - In LHCbKernel v6r6
-  . Disable boost allocators for channelIDs, enabled by default in Gaudi v18r4
   . Add generic typedef of Point and Vector to Trajectory, and default arguments
     to LineTraj::direction, LineTraj::curvature and ParabolaTraj::curvature.
 
@@ -52,13 +51,9 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 - In PhysEvent v9r4
   . Fix bug in Particle::covMatrix. Erroneous assignment of off-diagonal 
     position-momentum covariance blocks.
-  . Disable Boost allocators for Particle, Tagger, FlavourTag as they do not
-    compile on Windows
 
 - In MCEvent v1r3
   . Use explicitly Gaudi::Units in MCHit.h, MCParticle.h
-  . Disable Boost allocators for MCEffParticle, MCMuonDigitInfo, MCMuonHitHistory
-    as they do not compile on WIN32
 
 - In DAQEvent v6r4
   . Fix mismatch between new and delete in RawEvent.cpp
@@ -66,17 +61,14 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 - In TrackEvent v2r5
   . Transient attribute removed for LHCbIDs and States on Tracks
 
-- In L0Event v15r2
+- In LinkerEvent v2r2
   . Fixed typo in path printed out in LinkedFrom (was misleading)
 
 - In DigiEvent v1r2
   . Disable Boost allocator for CaloDigit and CaloAdc, breaks WIN32 compilation
 
 - In RecEvent v1r3
-  . Disable Boost allocator for CaloClusterEntry, breaks WIN32 compilation
-
-- In LinkerEvent v2r2
-  . Disable boost allocators for Linkers, enabled by default in Gaudi v18r4
+  . Update RichPID for changes in radiator names
 
 - In L0Event v15r2, TrackEvent v2r5, DigiEvent v1r2, EventBase v1r2
   . Add Boost dependency, needed for Boost allocators in event model
