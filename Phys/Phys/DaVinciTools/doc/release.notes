@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.199 2006-05-10 19:15:14 jpalac Exp $
+! $Id: release.notes,v 1.200 2006-05-11 15:44:09 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-11 - Juan Palacios
+  - src/OnOfflineTool.cpp
+    . Restore GeomDispCalculator as offlineGeomTool.
 
 ! 2006-05-10 - Juan Palacios
   - re-write and restore CheckVeloOverlap. 
