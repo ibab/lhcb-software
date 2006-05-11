@@ -7,7 +7,6 @@
 !========================= DigiEvent v1r2 2006-05-10 =========================
 ! 2006-05-10 - Marco Cattaneo
  - Add Boost dependency, needed for Boost allocators in event model
- - Disable Boost allocator for CaloDigit and CaloAdc, breaks WIN32 compilation
 
 !========================= DigiEvent v1r1 2006-03-22 =========================
 ! 2006-03-20 - M.Needham

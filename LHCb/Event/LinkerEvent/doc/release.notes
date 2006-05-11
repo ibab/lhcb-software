@@ -4,10 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
-!====================== LinkerEvent v2r2 2006-05-09 ==========================
-! 2006-05-09 - Marco Cattaneo
- - Disable boost allocators for Linkers, enabled by default in Gaudi v18r4
-
+!====================== LinkerEvent v2r2 2006-05-11 ==========================
 ! 2006-04-12 - Eduardo Rodrigues
  - fixed typo in path printed out in LinkedFrom (was misleading)
 

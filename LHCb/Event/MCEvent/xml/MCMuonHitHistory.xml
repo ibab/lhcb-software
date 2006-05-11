@@ -6,7 +6,6 @@
       name="MCMuonHitHistory" 
       author="Alessia Satta" 
       desc="MC Muon Hit history info"
-      allocator="NO"
     >
       <import name="Kernel/Packer"/>
       <import name="Event/PackMCMuonDigitHistory"/>

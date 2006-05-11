@@ -13,7 +13,6 @@
        name  = "FlavourTag"
        author= "Marco Musy"
        id    = "805"
-       allocator = "NO"
        stdVectorTypeDef = "TRUE"
       >
 

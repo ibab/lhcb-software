@@ -8,7 +8,6 @@
       the digit was not fired (inefficiency, time resolution, deadtime etc.). 
       In the latter case the correspondig MuonDigit does not exist." 
       name="MCMuonDigitInfo"
-      allocator="NO"
     >
       &StlVector;
       <import name="Kernel/Packer"/>
