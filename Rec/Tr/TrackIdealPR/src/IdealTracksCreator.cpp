@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.21 2006-05-09 17:51:14 erodrigu Exp $
+// $Id: IdealTracksCreator.cpp,v 1.22 2006-05-11 19:38:06 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -300,8 +300,6 @@ StatusCode IdealTracksCreator::execute()
       // Add true states at each measurement 
       // ===================================
       if ( m_trueStatesAtMeas ) {
-        deleteStates( track );
-        sc = StatusCode::SUCCESS;
         std::vector<Measurement*>::const_iterator iMeas =
           track -> measurements().begin();
         std::vector<Measurement*>::const_iterator endM =
@@ -333,7 +331,7 @@ StatusCode IdealTracksCreator::execute()
       }
       debug() << endreq;
 
-      // Add the track to the Tracks container and fill the associatin table
+      // Add the track to the Tracks container and fill the association table
       // -------------------------------------------------------------------
       tracksCont -> add( track );
       linkTable.link( mcParticle, track, 1. );
@@ -598,18 +596,5 @@ StatusCode IdealTracksCreator::initializeState( double z,
   return sc;
 };
 
-//=============================================================================
-// Delete all states on the track
-//=============================================================================
-StatusCode IdealTracksCreator::deleteStates( Track* track )
-{
-  std::vector<State*> tmpStates = track -> states();
-  for ( std::vector<State*>::iterator it  = tmpStates.begin();
-        it != tmpStates.end(); ++it ) {
-    track -> removeFromStates( (*it) );
-  }
-  
-  return StatusCode::SUCCESS;
-};
 
 //=============================================================================

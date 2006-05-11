@@ -90,9 +90,6 @@ private:
   StatusCode initializeState( double z,
                               LHCb::Track* track, LHCb::MCParticle* mcPart );
 
-  /// Delete all states on the track
-  StatusCode deleteStates( LHCb::Track* track );
-
 private:
   // Geometry information
   DeVelo*       m_velo;            ///< Pointer to VELO detector element

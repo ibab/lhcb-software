@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-05-11 - Jeroen Van Tilburg
+ - Option to add true states at the measurement positions now doesn't delete
+   the seed state anymore.
+
 ! 2006-05-08 - Eduardo Rodrigues
  - algorithm can now create TT and IT STClusters separately, not just all
    STClusters altogether. Controllable via job options
