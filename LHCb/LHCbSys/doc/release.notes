@@ -64,9 +64,6 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 - In LinkerEvent v2r2
   . Fixed typo in path printed out in LinkedFrom (was misleading)
 
-- In DigiEvent v1r2
-  . Disable Boost allocator for CaloDigit and CaloAdc, breaks WIN32 compilation
-
 - In RecEvent v1r3
   . Update RichPID for changes in radiator names
 
