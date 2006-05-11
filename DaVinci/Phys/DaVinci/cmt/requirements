@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.308 2006-05-05 13:18:45 jpalac Exp $
+# $Id: requirements,v 1.309 2006-05-11 12:37:38 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -32,11 +32,11 @@ use GaudiSvc 		v*         -no_auto_imports
 use RootHistCnv         v*         -no_auto_imports
 
 #-- Database
-use XmlDDDB             v30r0   Det  -no_auto_imports
-use XmlConditions       v1r4    Det  -no_auto_imports
-use FieldMap		v4r6         -no_auto_imports
-use ParamFiles          v4r1         -no_auto_imports
-# use BrunelDQ		v1r0	DQ   -no_auto_imports
+use XmlDDDB             v30r5   Det  -no_auto_imports
+use XmlConditions       v1r6    Det  -no_auto_imports
+use FieldMap            v4r7         -no_auto_imports
+use ParamFiles          v4r2         -no_auto_imports
+#use BrunelDQ           v1r0    DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v20r3)
 use LHCb	v20r4                -no_auto_imports

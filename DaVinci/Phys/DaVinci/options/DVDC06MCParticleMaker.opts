@@ -105,9 +105,8 @@ DC06Tests.ParticleFilter.CriteriaNames = { "ByPIDFilterCriterion/Mu" } ;
 DC06Tests.ParticleFilter.Mu.Selections = { "mu+ : KinFilterCriterion/LKin"};
 DC06Tests.ParticleFilter.Mu.LKin.MinMomentum = 2*GeV ;
 DC06Tests.ParticleFilter.Mu.ExclusiveSelection = true ;
-DC06Tests.OnOfflineTool.OfflineGeomTool = "GeomDispCalculator"  ; // TMP
-//DC06Tests.GeomTool = "GeomDispCalculator"  ; // CHECK THIS!!
-DC06Tests.OutputLevel = 2 ;
+DC06Tests.GeomTools = { "GeomDispCalculator" }; // CHECK THIS!!
+DC06Tests.OutputLevel = 1 ;
 
 // DC06Tests.OfflineVertexFitter.OutputLevel = 1 ;
 
