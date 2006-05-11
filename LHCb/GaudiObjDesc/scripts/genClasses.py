@@ -554,6 +554,12 @@ class genClasses(genSrcUtils.genSrcUtils):
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
+  }
+
+  /// placement operator delete (needed to avoid a warning on win32)
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
       
@@ -579,6 +585,12 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
+  }
+
+  /// placement operator delete (needed to avoid a warning on win32)
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
       
@@ -608,6 +620,12 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
+  }
+
+  /// placement operator delete (needed to avoid a warning on win32)
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
       self.stdIncludes.append("iostream")
