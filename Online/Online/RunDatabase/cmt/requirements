@@ -15,7 +15,7 @@ use Python        v* LCG_interfaces -no_auto_import
 document install_includes install_includes
 apply_pattern lcg_python_module name=DimRunDb files=*.cpp
 
-macro_append  RunDb_shlibflags ' $(Boost_linkopts_python) '
+macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) '
 path_append PYTHONPATH $(RUNDATABASEROOT)/python
 # ==================== private use only =====================================
 private
