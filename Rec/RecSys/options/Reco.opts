@@ -27,7 +27,7 @@ RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters = true;
 
-ApplicationMgr.DLLs += { "STAlgorithms", "STTools" };
+ApplicationMgr.DLLs += { "STAlgorithms" };
 
 // TT clusters for pattern recognition and track fit
 RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
@@ -61,10 +61,14 @@ ToolSvc.PatForwardTool.ValidateInTT = false;
 ApplicationMgr.DLLs += { "TrackExtrapolators",
                          "TrackProjectors",
                          "VeloTools",
+                         "STTools",
                          "TrackTools",
                          "TrackFitter"
                        };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
+// Options for IT instance of STClusterPositionTool, needed by track fit
+#include "$STTOOLSROOT/options/Brunel.opts"
+
 RecoTrSeq.Members += { "TrackEventFitter/FitForward" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.TracksOutContainer = "Rec/Track/Forward";
