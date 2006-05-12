@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.16 2006-05-08 16:42:32 janos Exp $
+// $Id: DeOTModule.cpp,v 1.17 2006-05-12 12:57:28 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -382,14 +382,14 @@ void DeOTModule::cacheInfo() {
   /// trajs of middle of monolayers
   Gaudi::XYZPoint g3[2];
   /// 0 -> first monolayer
-  g3[0] = globalPoint(xLower, 0.0, -m_zPitch);
+  g3[0] = globalPoint(xLower, 0.0, -0.5*m_zPitch);
   /// 1 -> second monolayer
-  g3[1] = globalPoint(xLower, 0.0, +m_zPitch);
+  g3[1] = globalPoint(xLower, 0.0, +0.5*m_zPitch);
   Gaudi::XYZPoint g4[2]; 
   /// first monolayer
-  g4[0] = globalPoint(xUpper, 0.0, -m_zPitch);
+  g4[0] = globalPoint(xUpper, 0.0, -0.5*m_zPitch);
   /// second monolayer
-  g4[1] = globalPoint(xUpper, 0.0, +m_zPitch);
+  g4[1] = globalPoint(xUpper, 0.0, +0.5*m_zPitch);
   /// first monolayer
   m_midTraj[0].reset(new LineTraj(g3[0], g4[0]));
   /// second monolayer
