@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r2 2006-05-11 =========================
 ! 2006-05-09 - Chris Jones
  - Update to options for latest Brunel
 
