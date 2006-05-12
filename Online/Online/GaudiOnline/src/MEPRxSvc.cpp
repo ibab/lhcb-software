@@ -9,6 +9,7 @@
 //                  using code by B. Gaidioz and M. Frank
 //
 //	===========================================================
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -76,8 +77,11 @@ struct InAddr: public in_addr {
     s_addr = a;
   }
 };
-
-
+struct IOVec: public iovec {
+  IOVec(void *base, size_t len) {
+    iov_base = base; iov_len = len;
+  }
+};
 
 
 /* A MEP request is a minimal legal Ethernet packet
@@ -132,6 +136,7 @@ struct LHCb::MEPRx: public MEP::Producer {
       m_rawBufHdr = (class LHCb::RawBank *) new u_int8_t[sizeof(LHCb::RawBank)]; /* don't ask me, ask Markus! */
     }
   ~MEPRx()  {
+    delete[] (u_int8_t *) m_rawBufHdr;
   }    
   static int spaceTimeOut(void *p) {
     MEPRx *self = (MEPRx *) p;
@@ -269,17 +274,8 @@ struct LHCb::MEPRx: public MEP::Producer {
     if (m_pf != hdr->m_nEvt) badPkt(MEPRxSvc::WrongPackingFactor);
     
     //info("event 0x%08x src %d\n", hdr->l01_id, m_nrx);
-    struct iovec mep_recv_vec[1];
-    mep_recv_vec[0].iov_base = (char *) m_e->data + m_brx + 4; 
-    mep_recv_vec[0].iov_len = MAX_R_PACKET; 	
-    struct msghdr mep_recv_msg; 
-    mep_recv_msg.msg_name = 0;
-    mep_recv_msg.msg_namelen = 0; // sizeof(struct sockaddr_in),
-    mep_recv_msg.msg_iov = mep_recv_vec;
-    mep_recv_msg.msg_iovlen = 1;
-    mep_recv_msg.msg_flags = 0;
-    mep_recv_msg.msg_control = NULL;
-    mep_recv_msg.msg_controllen = 0;
+    IOVec mep_recv_vec((char *) m_e->data + m_brx + 4, MAX_R_PACKET);
+    MsgHdr mep_recv_msg(&mep_recv_vec, 1); 
     len = recvmsg(m_r, &mep_recv_msg, MSG_DONTWAIT);
     if (len < 0) {
       errmsg("failed to receive message");
@@ -441,8 +437,20 @@ LHCb::MEPRxSvc::freeRx() {
 
 void
 LHCb::MEPRxSvc::forceEvents() {
+  for (RXIT i = m_workDsc.begin(); i != m_workDsc.end(); ++i) {
+    forceEvent(i);
+  }
 }
-  
+
+void
+LHCb::MEPRxSvc::forceEvent(RXIT &dsc) {
+  (*dsc)->spaceAction();
+  m_workDsc.erase(dsc);
+  lib_rtl_lock(m_usedDscLock);
+  m_usedDsc.push_back(*dsc);
+  lib_rtl_unlock(m_usedDscLock);    
+}
+
 int 
 LHCb::MEPRxSvc::execute() {
   fd_set fds;
@@ -601,8 +609,8 @@ LHCb::MEPRxSvc::checkProperties() {
     log << MSG::ERROR << "IPProtoIn is an unsigned 8 bit quantity" << endmsg;
     return 1;
   }
-  if (parseAddr(m_IPNameOdin.c_str(), m_IPOdin)) {
-    log << MSG::ERROR << "Bad address IPOdin " << m_IPOdin << endmsg;
+  if (setupMEPReq(m_IPNameOdin)) {
+    log << MSG::ERROR << "Bad address IPNameOdin " << m_IPOdin << endmsg;
     return 1;
   }
   if ((m_IPSrc.size() % 2) != 0) {
@@ -725,7 +733,7 @@ LHCb::MEPRxSvc::clearCounters()
   m_notReqPkt = 0;
 } 
 
-void
+int
 LHCb::MEPRxSvc::setupCounters(int n) {
   m_rxOct  = new u_int64_t[n];
   m_rxPkt  = new u_int64_t[n];
@@ -733,6 +741,7 @@ LHCb::MEPRxSvc::setupCounters(int n) {
   m_misPkt = new u_int32_t[n];
   m_notReqPkt = 0;
   m_nCnt = n;
+  return 0;
 }
 
 StatusCode 
@@ -742,8 +751,8 @@ LHCb::MEPRxSvc::initialize()  {
   if ((sc = Service::initialize()) != StatusCode::SUCCESS) return sc;
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering initialize....." << endmsg;
-  if (checkProperties() || openSock() || allocRx()) return StatusCode::FAILURE;
-  
+  if (checkProperties() || openSock() || allocRx() || 
+      setupCounters(m_MEPBuffers)) return StatusCode::FAILURE;
   if (service("IncidentSvc", m_incidentSvc).isSuccess())  {
     int sc = lib_rtl_start_thread(MEPRxSvc::exec, this, &m_handle);
     if (lib_rtl_is_success(sc)) {
@@ -769,7 +778,10 @@ LHCb::MEPRxSvc::finalize()  {
 
 // IRunable implementation: Run the object
 StatusCode LHCb::MEPRxSvc::run() {
+  m_forceStop = false;
   m_receiveEvents = true;
   return StatusCode::SUCCESS;
 }
+
+#endif // _WIN32 
 
