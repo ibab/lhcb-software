@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r2 2006-05-11 =======================
 ! 2006-05-05 - Chris Jones
  - Adapt to changes in radiator names
  - Minor improvements inspired by test beam reco
