@@ -2,8 +2,9 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
-- 2006-05-05 M Needham
-- Add options file 
+!=========================== STTools v2r1p1 2006-05-12 =========================
+! 2006-05-05 M Needham
+- Add options file for Brunel
 
 !=========================== STTools v2r1 2006-03-22 ==========================
 ! 2006-03-22 M Needham

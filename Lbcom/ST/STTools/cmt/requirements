@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           STTools
-version           v2r1
+version           v2r1p1
 
 branches          cmt doc src options
 include_path      none
