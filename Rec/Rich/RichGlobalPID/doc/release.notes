@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!====================== RichGlobalPID v2r1 2006-05-11 ========================
 ! 2006-05-05 - Chris Jones
  - Adapt to radiator name changes
 
