@@ -24,7 +24,7 @@ use RichMCTools       v3r0  Rich        # Chris Jones
 
 # Silicon Tracker
 use STDAQ             v2r6  ST          # Matt Needham
-use STTools           v2r1  ST          # Matt Needham
+use STTools         v2r1p1  ST          # Matt Needham
 use STAlgorithms      v1r3  ST          # Matt Needham
 use STAssociators     v1r2  ST          # Matt Needham
 use STCheckers        v1r2  ST          # Matt Needham

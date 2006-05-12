@@ -6,10 +6,10 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r0>2006-05-10 LbcomSys v5r0</A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2006-05-12 LbcomSys v5r0</A></H1><PRE>
 This version uses Gaudi v18r4 and LHCb v21r0.
 
-- Packages modified: RichDAQ v3r4, RichTools v2r4, STDAQ v2r6, 
+- Packages modified: RichDAQ v3r4, RichTools v2r4, STDAQ v2r6, STTools v2r1p1,
                      VeloAssociators v2r2 
 
 - In RichDAQ v3r4:
@@ -25,6 +25,9 @@ This version uses Gaudi v18r4 and LHCb v21r0.
 
 - In STDAQ v2r6:
   . Bug fix in decoding ADC values
+
+- In STTools v2r1p1:
+  . Add options file for Brunel
 
 - In VeloAssociators v2r2:
   . Adapt to move of SystemOfUnits to GaudiKernel
