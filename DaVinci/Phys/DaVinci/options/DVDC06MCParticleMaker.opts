@@ -105,8 +105,9 @@ DC06Tests.ParticleFilter.CriteriaNames = { "ByPIDFilterCriterion/Mu" } ;
 DC06Tests.ParticleFilter.Mu.Selections = { "mu+ : KinFilterCriterion/LKin"};
 DC06Tests.ParticleFilter.Mu.LKin.MinMomentum = 2*GeV ;
 DC06Tests.ParticleFilter.Mu.ExclusiveSelection = true ;
-DC06Tests.GeomTools = { "GeomDispCalculator" }; // CHECK THIS!!
-DC06Tests.OutputLevel = 1 ;
+DC06Tests.GeomTools = { "GeomDispCalculator" }; 
+//DC06Tests.VertexFitters = { "TrgVertexFitter" };
+DC06Tests.GeomDispCalculator.OutputLevel = 3 ;
 
 // DC06Tests.OfflineVertexFitter.OutputLevel = 1 ;
 
@@ -116,4 +117,13 @@ ApplicationMgr.EvtMax  = -1 ;
 EventSelector.Input   = {
 "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r5/11144100.500ev.03May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+
+PreLoadMCParticles.PhysDesktop.MCParticleMaker.ParticleNames = { "mu+", "mu-", "pi-", "pi+"};  //list of particles to create
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+DC06Tests.OutputLevel = 4 ;
 
