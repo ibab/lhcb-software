@@ -27,7 +27,7 @@ RecoVeloSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters = true;
 
-ApplicationMgr.DLLs += { "STAlgorithms" };
+ApplicationMgr.DLLs += { "STAlgorithms", "STTools" };
 
 // TT clusters for pattern recognition and track fit
 RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
