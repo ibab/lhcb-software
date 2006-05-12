@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 // ST cluster monitoring, to be compared to identical montoring in Boole
-ApplicationMgr.DLLs += { "STCheckers", "STTools" };
+ApplicationMgr.DLLs += { "STCheckers" };
 Moni.DetectorList   += { "TT" };
 MoniTTSeq.Members   += { "STClusterChecker/TTClusterChecker" }; // Needs MCHits
 
