@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v2r2 2006-05-12 =======================
+! 2006-05-12 - Chris Jones
+ - Change some cuts
+
 !====================== RichRecSys v2r1 2006-05-04 =======================
 ! 2006-05-04 - Marco Cattaneo
  - New head revision tag for Rec v3r2 (with updated options)
