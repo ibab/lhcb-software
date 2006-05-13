@@ -6,8 +6,25 @@
  To run it:
 > c++ summaryof.cpp -o summaryof
 > ./summaryof mylogfile.txt 3 N
+*/
+//-----------------------------------------------------------------------------//
+//    Caveat (by Onuora Awunor):                                               //
+//                                                                             //
+//    Be aware that since this program is designed to read in the output       //
+//    from the BTagggingMonitor algorithm, its effectiveness is limited by     //
+//    the output of the BTaggingMonitor algorithm. Some event candidates are   //
+//    output twice by the Monitoring algorithm for cases where 2               //
+//    genuine B canditates are stored in TES. This leads to overcounting of    //
+//    right tags and wrong tags.                                               //
+//    When use with DoubleTagging,                                             //
+//    it can't distinguish between OSChecker output and AllChecker output.     //
+//    Therefore it counts all events twice, hence doubling the total number of //
+//    events.                                                                  //
+//     For genuine efficiency figures, look to the output of BTaggingTool,     //
+//     BTaggingMonitor & BTaggingInclusive algorithms                          //
+//                                                                             //
+//-----------------------------------------------------------------------------//
 
-*///----------------------------------------------------------------
 
 #include <iostream>
 #include <fstream>

@@ -112,6 +112,13 @@ DoubleTagCorrelation.TagsLocation   = "/Event/Phys/Tags";
 DoubleTagCorrelation.OSTagsLocation = "/Event/Phys/OSTags";
 DoubleTagCorrelation.OutputLevel = 3;
 
+/////////////////////////////////////////////////
+SeqTagging.Members += { "BTaggingInclusive" };
+BTaggingInclusive.TagsLocation   = "/Event/Phys/Tags";
+BTaggingInclusive.OSTagsLocation = "/Event/Phys/OSTags";
+BTaggingInclusive.OutputLevel = 3;
+
+/////////////////////////////////////////////////
 // Reset output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
 ToolSvc.OutputLevel                            = 4;
 XmlParserSvc.OutputLevel                       = 4;

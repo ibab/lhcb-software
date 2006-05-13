@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.3 2006-01-28 22:00:50 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.4 2006-05-13 16:06:41 musy Exp $
 // local
 #include "BTaggingChecker.h"
 
@@ -96,7 +96,7 @@ StatusCode BTaggingChecker::execute() {
 
     if( ! tagdecision ) continue;
 
-    //m_debug->printTree( (*ti)->taggedB() );
+    m_debug->printTree( (*ti)->taggedB() );
   }
 
   //count rights and wrongs
@@ -121,7 +121,8 @@ StatusCode BTaggingChecker::finalize(){
   double epsilerr, epsilerrtot=0;
 
   info()<<"======================================================="<<endreq;
-  info()<< "Summary : " <<endreq;
+ info()<< std::setw(40)<< "Summary: EXCLUSIVE BTAGGING PERFORMANCE " <<endmsg; 
+ info()<< "Summary : " <<endreq;
   info()<< " Category            EFF.          Etag         Wrong TF"
 	<< "      r       w       "<<endreq;
 
@@ -186,6 +187,7 @@ StatusCode BTaggingChecker::finalize(){
   info()<< "EFFECTIVE COMB. TE =  "
 	<<std::setprecision(2)<<std::setw(5)
 	<< effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
+  info()<<"==========END OF EXCLUSIVE BTAGGING PERFORMANCE ======="<<endmsg;
   info()<<"========================================================="<<endreq;
 
   return StatusCode::SUCCESS; 
