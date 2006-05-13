@@ -1,0 +1,26 @@
+// 
+// MEPRxSvc.opts
+// $Id: MEPRxSvc.opts,v 1.4 2006-05-13 16:47:07 niko Exp $
+// Sample options for the eventbuilder service MEPRxSvc
+// niko.neufeld@cern.ch
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
+ApplicationMgr.ExtSvc                = { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
+MEPManager.PartitionID               = 333;
+MEPManager.Buffers                   = { "MEP" };
+Runable.PrintFreq                    = 0.001;
+Runable.Requirements         = {
+"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+MEPRxSvc.MEPBuffers = 4;          // concurrently built events
+MEPRxSvc.ethInterface = 1;        // interface number for data input eth"0" eth"1" etc...
+MEPRxSvc.IPNameOdin = "";         // IPv4 address of the Readout Supervisor (ODIN) as a name or in dotted decimal notation, if not set
+		                  // no MEP requests will be sent 
+MEPRxSvc.maxBadPktRatio = 0.;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
+MEPRxSvc.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
+MEPRxSvc.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
+MEPRxSvc.partitionID = 101;       
+MEPRxSvc.IPSrc = { "192.168.10.1", "192.168.10.2", "192.168.10.3"  };        // IP addresses of the data sources (TELL1, UKL1, ODIN)  
