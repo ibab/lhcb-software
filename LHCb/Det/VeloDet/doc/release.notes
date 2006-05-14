@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.124 2006-05-02 09:01:24 cattanem Exp $
+! $Id: release.notes,v 1.125 2006-05-14 20:54:58 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-05-14 - David Hutchcroft
+ - Fixed bug in calculating trajectories for phi sensor and single strip 
+   clusters in last strip
 
 !========================= VeloDet v10r5 2006-05-02 ========================
 ! 2006-04-28 - Kurt Rinnert

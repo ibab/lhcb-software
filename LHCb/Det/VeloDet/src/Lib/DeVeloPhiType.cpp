@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.22 2006-04-13 13:24:39 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.23 2006-05-14 20:54:59 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -519,13 +519,14 @@ std::auto_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChanne
   // need to also grab next strip in local frame to get offset effect
   Gaudi::XYZPoint lNextEnd1, lNextEnd2;
   // check direction of offset
-  if(offset >= 0.){
+  // do nothing if offset == 0.
+  if(offset > 0. ){
     localCoords = localStripLimits(strip+1);
     lNextEnd1 = localCoords.first;
     lNextEnd2 = localCoords.second;
     lEnd1 += (lNextEnd1-lEnd1)*offset;
     lEnd2 += (lNextEnd2-lEnd2)*offset;
-  }else{
+  }else if(offset < 0.) {
     localCoords = localStripLimits(strip-1);
     lNextEnd1 = localCoords.first;
     lNextEnd2 = localCoords.second;
