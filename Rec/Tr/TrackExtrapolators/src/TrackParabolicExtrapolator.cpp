@@ -89,7 +89,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(gsl_pow_2(nTy)*m_B.x()));
    
   // set non-zero diagonal elements
-  updateTrackMatrix(dz, state); 
+  updateTransportMatrix(dz, state); 
 
   // Update the state parameters (exact extrapolation)
   const TrackVector& tState = state.stateVector();
@@ -171,7 +171,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 //=============================================================================
 // Update the transport matrix
 //=============================================================================
-void TrackParabolicExtrapolator::updateTrackMatrix( const double dz, 
+void TrackParabolicExtrapolator::updateTransportMatrix( const double dz, 
                                                         State& state )
 {
   //create the transport matrix dX/dX_0 for ptState's

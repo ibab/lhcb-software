@@ -70,7 +70,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   void electronEnergyLoss( State& state, double radLength );
 
   /// update transport matrix
-  void updateTrackMatrix( const TrackMatrix& newStepF );
+  void updateTransportMatrix( const TrackMatrix& newStepF );
 
   /// z scatter
   double zScatter(const double z1,
@@ -109,7 +109,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
 };
 
-inline void TrackMasterExtrapolator::updateTrackMatrix
+inline void TrackMasterExtrapolator::updateTransportMatrix
 ( const TrackMatrix& newStepF )
 {
   // update F - after transport step

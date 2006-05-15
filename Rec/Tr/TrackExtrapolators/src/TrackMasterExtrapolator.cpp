@@ -180,7 +180,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       }
 	 
       //update f
-      updateTrackMatrix( thisExtrapolator->transportMatrix() );  
+      updateTransportMatrix( thisExtrapolator->transportMatrix() );  
       
       // protect against vertical or looping tracks
       if (fabs(state.tx()) > m_maxSlope) {
