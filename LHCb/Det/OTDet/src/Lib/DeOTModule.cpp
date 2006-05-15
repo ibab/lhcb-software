@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.17 2006-05-12 12:57:28 janos Exp $
+// $Id: DeOTModule.cpp,v 1.18 2006-05-15 10:45:53 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -99,8 +99,6 @@ StatusCode DeOTModule::initialize() {
   m_yMaxLocal = m_yHalfModule;
   m_yMinLocal = -m_yMaxLocal;
   
-  determineSense();
-  
   /// cache trajectories/planes
   cacheInfo();
 
@@ -111,7 +109,7 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
                             const Gaudi::XYZPoint& exitPoint, 
                             std::vector<unsigned int>& straws) const {
   /// This is in local cooridinates of a module
-  double xOffset = -(m_nStraws/2. + 0.25) * m_xPitch;
+  double xOffset = -(0.5*m_nStraws + 0.25)*m_xPitch;
   double lo = (entryPoint.x()-xOffset)/m_xPitch; 
   double hi = (exitPoint.x()-xOffset)/m_xPitch;
   
@@ -279,7 +277,7 @@ StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     // to the z1 and z2 ( z1 is close to z2)
     double u1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.x() : entryPoint.x();
     double v1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.y() : entryPoint.y();
-    zfrac = modf( (fabs(u1)+fabs(v1))/2.7839542167, &zint);
+    zfrac = modf( (std::abs(u1)+std::abs(v1))/2.7839542167, &zint);
     if (distXY > 2.0 * m_xPitch ) {
       z3Circ = 2.0 * (zfrac-0.5)*m_zPitch;
     } else {
@@ -347,7 +345,7 @@ void DeOTModule::sCircle(const double z1, const double u1, const double z2,
   
   zc=0.5*(z3c*z3c-zw*zw-(u1-uw)*(u1-uw))/(z3c-zw);
   uc=uw;
-  rc=fabs(zc-z3c);
+  rc=std::abs(zc-z3c);
 }
 
 void DeOTModule::clear() {
@@ -355,28 +353,18 @@ void DeOTModule::clear() {
   m_midTraj[1].reset();
 }
 
-void DeOTModule::determineSense() {
-  Gaudi::XYZPoint g1 = globalPoint(m_xMinLocal, m_yMinLocal, 0.0);
-  Gaudi::XYZPoint g2 = globalPoint(m_xMaxLocal, m_yMinLocal, 0.0);
-  m_xInverted = (g1.x() > g2.x());
-  
-  Gaudi::XYZPoint g3 = globalPoint(m_xMinLocal, m_yMaxLocal, 0.0);
-  m_yInverted = (g1.y() > g3.y());
-}
-
 void DeOTModule::cacheInfo() {
   clear();
   
   double xUpper = m_xMaxLocal;
   double xLower = m_xMinLocal;
-  if (m_xInverted) std::swap(xUpper, xLower);
   double yUpper = m_yMaxLocal;
   double yLower = m_yMinLocal;
-  if (m_yInverted) std::swap(yUpper, yLower);
+  if (bottomModule()) std::swap(yUpper, yLower);
 
-  /// Direction, points to readout 
-  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.0);
-  Gaudi::XYZPoint g2 = globalPoint(xLower, yUpper, 0.0);
+  /// Direction; points to readout 
+  Gaudi::XYZPoint g1 = globalPoint(0.0, yLower, 0.0);
+  Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
   m_dir = g2 - g1;
   
   /// trajs of middle of monolayers
@@ -403,28 +391,30 @@ void DeOTModule::cacheInfo() {
   m_range[1] = std::make_pair(-m_yHalfModule, m_yHalfModule);
   // correct for inefficient regions in long modules
   if (longModule() && topModule()) m_range[0].first=-m_yHalfModule+m_inefficientRegion;
-  if (longModule() && bottomModule()) m_range[1].second=m_yHalfModule-m_inefficientRegion;
+  if (longModule() && bottomModule()) m_range[1].first=-m_yHalfModule+m_inefficientRegion;
   
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
-  double lUwire = (monolayer==0?localUOfStraw(1):(s3Module()?localUOfStraw(33):localUOfStraw(65)));
-  Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire+m_midTraj[monolayer]->beginRange());
+  double lUwire = (monolayer==0?localUOfStraw(1):
+                   (s3Module()?localUOfStraw(m_nStraws+1):localUOfStraw(m_nStraws+1)));
+  Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer]));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
-  double lUwire = (monolayer==1?(s3Module()?localUOfStraw(64):localUOfStraw(128)):localUOfStraw(64));
-  Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire+m_midTraj[monolayer]->beginRange());
+  double lUwire = (monolayer==1?(s3Module()?localUOfStraw(2*m_nStraws):localUOfStraw(2*m_nStraws)):
+                   localUOfStraw(m_nStraws));
+  Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer]));
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
-						       const double /*offset*/) const {
+                                                       const double /*offset*/) const {
   if (!contains(aChan)) {
     throw GaudiException("Failed to make trajectory!", "DeOTModule.cpp",
 			 StatusCode::FAILURE);
@@ -432,10 +422,9 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   
   unsigned int aStraw = aChan.straw();
   
-  int mono = (monoLayerA(aStraw)?0:1);
-  
-  double uLstraw = localUOfStraw(aChan.straw());
-  Gaudi::XYZPoint posWire = m_midTraj[mono]->position(uLstraw+m_midTraj[mono]->beginRange());
+  unsigned int mono = (monoLayerA(aStraw)?0u:1u);
+
+  Gaudi::XYZPoint posWire = m_midTraj[mono]->position(localUOfStraw(aStraw));
   
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono]));
 }

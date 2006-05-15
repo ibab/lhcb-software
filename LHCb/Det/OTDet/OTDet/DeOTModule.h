@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.15 2006-05-08 12:59:54 janos Exp $
+// $Id: DeOTModule.h,v 1.16 2006-05-15 10:45:53 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -255,8 +255,6 @@ private:
   DeOTModule& operator=(const DeOTModule&);
   
   void clear();
-
-  void determineSense();
 
   void cacheInfo();
 

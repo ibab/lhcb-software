@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.59 2006-05-12 12:57:27 janos Exp $
+! $Id: release.notes,v 1.60 2006-05-15 10:45:53 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r3 2006-05-03 ==========================
 ! 2006-05-08 - Jan Amoraal
+ - Fix x-coordinate of trajectory representing a wire 
  - Fix z-coordinate of middle trajectories  
  - Forgot to remove some debug msgs in DeOTModule.cpp 
  - minor clean-ups
