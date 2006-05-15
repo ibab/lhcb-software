@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.9 2006-05-02 13:01:58 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.10 2006-05-15 16:02:12 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -59,7 +59,12 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ZEndRich1"           , m_zEndRich1        =  2165.0*mm );
   declareProperty( "ZBegRich2"           , m_zBegRich2        =  9450.0*mm );
   declareProperty( "ZEndRich2"           , m_zEndRich2        = 11900.0*mm );
-
+  declareProperty( "IncreaseErrors"      , m_increaseErrors   =   true     );
+  declareProperty( "ErrorX2"             , m_errorX2          = 4.0*mm2    );
+  declareProperty( "ErrorY2"             , m_errorY2          = 400.0*mm2  );
+  declareProperty( "ErrorTx2"            , m_errorTx2         = 6.e-5      );
+  declareProperty( "ErrorTy2"            , m_errorTy2         = 1.e-4      );
+  declareProperty( "ErrorP"              , m_errorP           = 0.15       );
 }
 
 //=========================================================================
@@ -122,6 +127,16 @@ StatusCode TrackMasterFitter::fit( Track& track )
     return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
   State seed = seedState( track );
 
+  // set covariance matrix to a somewhat larger value for the fit
+  if ( m_increaseErrors ) {
+    TrackSymMatrix& cov = seed.covariance();
+    cov(0,0) = m_errorX2;
+    cov(1,1) = m_errorY2;
+    cov(2,2) = m_errorTx2;
+    cov(3,3) = m_errorTy2;
+    cov(4,4) = pow( m_errorP * seed.qOverP(), 2. );
+  }
+  
   debug() << "SeedState: z = " << seed.z()
           << " stateVector = " << seed.stateVector()
           << " covariance  = " << seed.covariance() << endreq;
@@ -400,8 +415,9 @@ double TrackMasterFitter::closestToBeamLine( State& state ) const
 //=========================================================================
 // Retrieve the number of nodes with a measurement
 //=========================================================================
-unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track ) const
-{
+unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track ) 
+  const 
+{ 
   unsigned int nMeas = 0;
   const std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::const_iterator iNode;

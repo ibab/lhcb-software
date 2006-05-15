@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.1 2005-11-21 11:20:58 jvantilb Exp $
+// $Id: TrackMasterFitter.h,v 1.2 2006-05-15 16:02:12 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -98,7 +98,12 @@ private:
   double m_zEndRich1;               ///< z position end of RICH1
   double m_zBegRich2;               ///< z position begin of RICH2
   double m_zEndRich2;               ///< z position end of RICH2
-
+  bool   m_increaseErrors;          ///< Increase errors on the initial cov. 
+  double m_errorX2;                 ///< Error^2 on x
+  double m_errorY2;                 ///< Error^2 on y
+  double m_errorTx2;                ///< Error^2 on slope x
+  double m_errorTy2;                ///< Error^2 on slope y
+  double m_errorP;                  ///< Error on dp/p
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment );
 
