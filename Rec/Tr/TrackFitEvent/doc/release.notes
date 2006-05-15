@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-08 - Eduardo Rodrigues
+ - fixed typo in method name in FitNode.h
+
 !========================== TrackFitEvent v2r2 2006-05-03 ====================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs

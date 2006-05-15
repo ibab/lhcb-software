@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.10 2006-05-02 12:58:04 erodrigu Exp $
+// $Id: FitNode.h,v 1.11 2006-05-15 14:15:32 erodrigu Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -59,7 +59,7 @@ namespace LHCb
     const TrackSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
     
     /// set transport matrix
-    void setTrackMatrix( const TrackMatrix& transportMatrix ) {
+    void setTransportMatrix( const TrackMatrix& transportMatrix ) {
       m_transportMatrix = transportMatrix;
     }
     
