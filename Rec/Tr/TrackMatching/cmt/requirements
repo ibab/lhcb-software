@@ -13,8 +13,10 @@ version           v2r2
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
-include_path      none
+branches          cmt doc src TrackMatching
+
+# =============== include directories =======================================
+include_dirs      $(TRACKMATCHINGROOT)
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'

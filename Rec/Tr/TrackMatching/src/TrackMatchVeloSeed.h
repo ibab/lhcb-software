@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.8 2006-05-09 08:48:12 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.9 2006-05-15 13:45:28 jvantilb Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -7,34 +7,18 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// from GaudiKernel
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-// from LHCbDefinitions
-#include "Kernel/TrackTypes.h"
-
-// from LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
-
-// from STDet
-#include "STDet/DeTTDetector.h"
-
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
-#include "TrackInterfaces/ITrajPoca.h"
 
 // from TrackEvent
 #include "Event/Track.h"
-#include "Event/State.h"
 #include "Event/Measurement.h"
 
 // local
+#include "TrackMatching/IAddTTClusterTool.h"
 #include "TrackMatch.h"
-
-using namespace Gaudi;
-using namespace LHCb;
 
 /** @class TrackMatchVeloSeed TrackMatchVeloSeed.h  
  *
@@ -44,9 +28,9 @@ using namespace LHCb;
  *  chi2-distance. Matched tracks with a chi2 higher than a certain maximum
  *  value are rejected.
  *
- *  @author:  Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
- *  @date:    16-05-2001
- *  @modified:14-01-2006
+ *  @author:   Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
+ *  @date:     16-05-2001
+ *  @modified: 14-01-2006
  */
 
 class TrackMatchVeloSeed : public GaudiAlgorithm {
@@ -64,23 +48,24 @@ protected:
 
 private:
   /// Match velo tracks with seed tracks
-  StatusCode matchTracks( Tracks* veloTracks,
-                          Tracks* seedTracks,
+  StatusCode matchTracks( LHCb::Tracks* veloTracks,
+                          LHCb::Tracks* seedTracks,
                           TrackMatches*& matchCont );
 
   /// Add TT clusters to matched tracks
-  StatusCode addTTClusters( TrackMatches*& matchCont );
+  StatusCode addTTClusters( const TrackMatch* matchedTrack, 
+                            LHCb::Track* track );
 
   /// Store the new tracks made from the seed- and velo track segments
   StatusCode storeTracks( TrackMatches*& matchCont );
 
   /// Extrapolate a Track to a z-position starting 
   /// with the closest State
-  StatusCode extrapolate( Track* track,
+  StatusCode extrapolate( LHCb::Track* track,
                           ITrackExtrapolator* extrapolator,
                           double zpos,
-                          TrackVector& trackVector,
-                          TrackSymMatrix& trackCov );
+                          Gaudi::TrackVector& trackVector,
+                          Gaudi::TrackSymMatrix& trackCov );
 
   /// Calculate the new z
   StatusCode determineZ( double tX,
@@ -130,19 +115,6 @@ private:
   double m_errorP;
   /// Determine whether to add TT clusters or not
   bool m_addTTClusters;
-  /// Chi2 cut to add the TT clusters (only the best in a wafer is taken)
-  double m_ttClusterCut;
-  /// Minimum number of TT clusters
-  unsigned int m_minTTHits;
-  /// maximum distance difference between TT clusters of different stations
-  double m_interStationCut;
-  /// maximum distance difference between TT clusters of same station
-  double m_intraStationCut;
-  /** The quality is defined as: |distance| + m_spreadWeight*spread   
-   *  The quality the the criterium to select the best TTCandidate (= set
-   *  of TT clusters.)
-   */
-  double m_spreadWeight;
 
   /// The extrapolators
   ITrackExtrapolator* m_extrapolatorVelo;
@@ -154,12 +126,8 @@ private:
   /// The measurement provider tool
   IMeasurementProvider* m_measProvider;
 
-  // TT geometry
-  DeTTDetector* m_ttTracker;             ///< Pointer to the TT XML geom
-  std::string   m_ttTrackerPath;         ///< Name of the TT XML geom path
-  ISTClusterPosition* m_ttPositionTool;  ///< STClusterPosition tool for TT
-  std::string m_ttPositionToolName;  ///< ST cluster position tool name for TT
-  IMagneticFieldSvc* m_pIMF;             ///< Pointer to the magn. field service
-  ITrajPoca*         m_poca;             ///< Pointer to the ITrajPoca interface
+  // The tool to add TT clusters
+  IAddTTClusterTool* m_addTTClusterTool;
+
 };
 #endif // TRACKMATCHVELOSEED_H

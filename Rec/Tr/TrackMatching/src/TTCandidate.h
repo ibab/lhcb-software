@@ -1,4 +1,4 @@
-// $Id: TTCandidate.h,v 1.2 2006-02-09 12:55:57 erodrigu Exp $
+// $Id: TTCandidate.h,v 1.3 2006-05-15 13:45:28 jvantilb Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
@@ -34,10 +34,11 @@ class TTCandidate: public KeyedObject<int>
 public: 
 
   /// constructor with arguments
-  TTCandidate( STCluster* cluster, double distance, unsigned int lastLayer);
+  TTCandidate( LHCb::STCluster* cluster, double distance, 
+               unsigned int lastLayer );
 
   /// constructor with arguments from an old TTCandidate
-  TTCandidate(TTCandidate* candidate, STCluster* cluster, 
+  TTCandidate(TTCandidate* candidate, LHCb::STCluster* cluster, 
               double distance, unsigned int lastLayer);
 
   /// Default Constructor 
@@ -51,7 +52,7 @@ public:
   virtual ~TTCandidate() {}
 
   /// get the vector of TT Clusters
-  const std::vector<STCluster*>& ttClusters() const;
+  const std::vector<LHCb::STCluster*>& ttClusters() const;
 
   /// get the number of TT Clusters
   unsigned int numTTClusters() const;
@@ -84,11 +85,11 @@ protected:
 
 private:
 
-  std::vector<STCluster*> m_ttClusters; ///< vector of TT clusters
-  std::vector<double> m_distances;      ///< vector of corresponding distances
-  double m_averageDistance;             ///< average distance
-  bool m_dead;                          ///< candidate is dead (will be removed)
-  unsigned int m_lastLayer;             ///< number of the last layer
+  std::vector<LHCb::STCluster*> m_ttClusters; ///< vector of TT clusters
+  std::vector<double> m_distances;            ///< vector of corresponding dist
+  double m_averageDistance;                   ///< average distance
+  bool m_dead;                                ///< candidate is dead
+  unsigned int m_lastLayer;                   ///< number of the last layer
   
 };
 
@@ -96,7 +97,7 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline TTCandidate::TTCandidate( STCluster* cluster, double distance, 
+inline TTCandidate::TTCandidate( LHCb::STCluster* cluster, double distance, 
                                  unsigned int lastLayer)
   : m_averageDistance( distance )
   , m_dead( false )
@@ -107,7 +108,7 @@ inline TTCandidate::TTCandidate( STCluster* cluster, double distance,
 }
 
 inline TTCandidate::TTCandidate( TTCandidate* candidate,
-                                 STCluster* cluster, double distance, 
+                                 LHCb::STCluster* cluster, double distance, 
                                  unsigned int lastLayer)
   : m_dead( false )
   , m_lastLayer( lastLayer )
@@ -121,7 +122,7 @@ inline TTCandidate::TTCandidate( TTCandidate* candidate,
     ( numClus + 1 );
 }  
 
-inline const std::vector<STCluster*>& TTCandidate::ttClusters() const 
+inline const std::vector<LHCb::STCluster*>& TTCandidate::ttClusters() const 
 {
   return m_ttClusters;
 }

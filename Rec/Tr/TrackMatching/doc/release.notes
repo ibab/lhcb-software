@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-15 - Jeroen van Tilburg
+ - Made from AddTTCluster method a seperate, generic tool: AddTTClusterTool.
+ - Major clean up.
+
 ! 2006-05-09 - Eduardo Rodrigues
  - usage of STClusterPosition tool made explicit for TT
  - added job option for controlling the STClusterPosition tool used
