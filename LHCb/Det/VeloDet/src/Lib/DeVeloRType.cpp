@@ -1,11 +1,8 @@
-// $Id: DeVeloRType.cpp,v 1.27 2006-04-28 17:42:37 krinnert Exp $
+// $Id: DeVeloRType.cpp,v 1.28 2006-05-15 06:59:52 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
 // Include files 
-
-// from Kernel
-#include "Kernel/SystemOfUnits.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"

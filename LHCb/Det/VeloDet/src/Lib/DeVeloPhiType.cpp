@@ -1,12 +1,8 @@
-// $Id: DeVeloPhiType.cpp,v 1.23 2006-05-14 20:54:59 dhcroft Exp $
+// $Id: DeVeloPhiType.cpp,v 1.24 2006-05-15 06:59:52 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
 // Include files 
-
-// from Kernel
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/PhysicalConstants.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"

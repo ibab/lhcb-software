@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.125 2006-05-14 20:54:58 dhcroft Exp $
+! $Id: release.notes,v 1.126 2006-05-15 06:59:52 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v10r6 2006-05-15 ========================
+! 2006-05-15 - Marco Cattaneo
+ - Remove unneccessary SystemOfUnits includes
 
 ! 2006-05-14 - David Hutchcroft
  - Fixed bug in calculating trajectories for phi sensor and single strip 

@@ -1,14 +1,10 @@
-// $Id: DeVelo.cpp,v 1.68 2006-04-21 19:43:18 krinnert Exp $
+// $Id: DeVelo.cpp,v 1.69 2006-05-15 06:59:52 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
 // ============================================================================
 // from STL (for std::sort)
 #include <algorithm>
-
-// from Kernel
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/PhysicalConstants.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
