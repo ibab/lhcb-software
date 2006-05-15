@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.12 2006-05-03 15:00:47 graven Exp $
+// $Id: Trajectory.h,v 1.13 2006-05-15 11:25:54 cattanem Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
@@ -8,7 +8,6 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/PhysicalConstants.h"
 #include <utility>
 #include <memory>
 

@@ -2,7 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r6 2006-05-11 =========================
+!===================== LHCbKernel v6r6 2006-05-15 =========================
+! 2006-05-15 - Marco Cattaneo
+ - Move SystemOfUnits.h out of Trajectory.h and into cpp's where is is needed
+   to avoid exporting this dependency to all the software
+
 ! 2006-05-11 - Marco Cattaneo
  - Add explicit Boost dependency, for allocators in GOD generated classes
 

@@ -1,8 +1,9 @@
-// $Id: ParabolaTraj.cpp,v 1.8 2006-05-03 15:00:47 graven Exp $
+// $Id: ParabolaTraj.cpp,v 1.9 2006-05-15 11:25:55 cattanem Exp $
 // Include files
 
 // local
 #include "Kernel/ParabolaTraj.h"
+#include "GaudiKernel/SystemOfUnits.h"
 using namespace LHCb;
 using namespace ROOT::Math;
 
@@ -100,5 +101,5 @@ double ParabolaTraj::distTo1stError( double , double tolerance , int ) const
 /// 2nd order is OK everywhere...
 double ParabolaTraj::distTo2ndError( double , double , int ) const
 {
-  return 10*km;  
+  return 10*Gaudi::Units::km;  
 };

@@ -1,8 +1,9 @@
-// $Id: LineTraj.cpp,v 1.9 2006-05-03 15:00:47 graven Exp $
+// $Id: LineTraj.cpp,v 1.10 2006-05-15 11:25:55 cattanem Exp $
 // Include files
 
 // local
 #include "Kernel/LineTraj.h"
+#include "GaudiKernel/SystemOfUnits.h"
 using namespace LHCb;
 using namespace ROOT::Math;
 
@@ -82,11 +83,11 @@ double LineTraj::arclength( const Point& point ) const
 // 1st order approx OK everywhere
 double LineTraj::distTo1stError( double , double , int ) const 
 {
-  return 10*km;
+  return 10*Gaudi::Units::km;
 };
 
 // 2nd order approx OK everywhere
 double LineTraj::distTo2ndError( double , double , int ) const
 {
-  return 10*km;
+  return 10*Gaudi::Units::km;
 };
