@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-05-08 - Eduardo Rodrigues
+ - using separate STClusterPosition tools for TT and IT (different tunings)
+ - consistency checks introduced in TrackCloneFinder
+
 !======================== TrackTools v2r2 2006-05-03 =========================
 ! 2006-05-02 - Eduardo Rodrigues
  - consistent const arguments and return types in TrajectoryProvider

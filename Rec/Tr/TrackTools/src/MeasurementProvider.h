@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.10 2006-04-07 13:25:56 dhcroft Exp $
+// $Id: MeasurementProvider.h,v 1.11 2006-05-15 16:14:40 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -18,7 +18,7 @@
 // from TrackEvent
 #include "Event/Track.h"
 
-// from XxxEvent
+// from DigiEvent
 #include "Event/VeloCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
@@ -77,8 +77,10 @@ public:
 
 protected:
   // Interfaces
-  ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
-  std::string         m_stPositionToolName; ///< ST cluster position tool name
+  ISTClusterPosition* m_ttPositionTool;  ///< ST cluster position tool for TT
+  ISTClusterPosition* m_itPositionTool;  ///< ST cluster position tool for IT
+  std::string m_ttPositionToolName; ///< ST cluster position tool name for TT
+  std::string m_itPositionToolName; ///< ST cluster position tool name for IT
 
   IVeloClusterPosition* m_veloPositionTool; ///< Velo cluster position tool
   std::string  m_veloPositionToolName; ///< Velo cluster position tool name

@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.2 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: TrackCloneFinder.h,v 1.3 2006-05-15 16:14:40 erodrigu Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -129,7 +129,12 @@ private:
     lhcbIDsOfType( const LHCb::Track& track,
                    unsigned int lhcbidType = 0 ) const;
 
+  bool areSettingsConsistent( const LHCb::Track& track1,
+                              const LHCb::Track& track2 ) const;
+
 private:
+  bool m_debugLevel;
+  
   // tool properties
   // ---------------
   /* fraction of hits in common that defines the overlap between the

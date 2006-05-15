@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.21 2006-04-07 13:25:56 dhcroft Exp $
+// $Id: MeasurementProvider.cpp,v 1.22 2006-05-15 16:14:40 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -34,8 +34,10 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 {
   declareInterface<IMeasurementProvider>(this);
 
-  declareProperty( "STPositionTool",
-                   m_stPositionToolName = "STOfflinePosition" );
+  declareProperty( "TTClusterPositionTool",
+                   m_ttPositionToolName = "STOfflinePosition" );
+  declareProperty( "ITClusterPositionTool",
+                   m_itPositionToolName = "STOfflinePosition/ITClusterPosition" );
 
   declareProperty( "VeloPositionTool",
                    m_veloPositionToolName = "VeloClusterPosition" );
@@ -71,8 +73,9 @@ StatusCode MeasurementProvider::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
-  // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
+  // Retrieve the STClusterPosition tools
+  m_ttPositionTool = tool<ISTClusterPosition>( m_ttPositionToolName );
+  m_itPositionTool = tool<ISTClusterPosition>( m_itPositionToolName );
 
   // Retrieve the VeloClusterPosition tool
   m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
@@ -189,7 +192,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     STChannelID sid = id.stID();
     STCluster* clus = m_ttClusters->object(sid);
     if (clus != NULL)
-      meas = new STMeasurement( *clus, *m_ttDet, *m_stPositionTool );
+      meas = new STMeasurement( *clus, *m_ttDet, *m_ttPositionTool );
     else {
       error() << "STCluster of type TT is NULL! No correspondence to "
               << "STChannelID = " << sid << endreq;
@@ -201,7 +204,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     STChannelID sid = id.stID();
     STCluster* clus = m_itClusters->object(sid);
     if (clus != NULL)
-      meas = new STMeasurement( *clus, *m_itDet, *m_stPositionTool );
+      meas = new STMeasurement( *clus, *m_itDet, *m_itPositionTool );
     else {
       error() << "STCluster of type IT is NULL! No correspondence to "
               << "STChannelID = " << sid << endreq;

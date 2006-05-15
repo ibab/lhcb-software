@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.3 2006-05-02 13:17:05 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.4 2006-05-15 16:14:40 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -50,7 +50,9 @@ StatusCode TrackCloneFinder::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
-
+  
+  m_debugLevel = msgLevel( MSG::DEBUG );
+  
   return StatusCode::SUCCESS;
 }
 
@@ -61,6 +63,8 @@ StatusCode TrackCloneFinder::initialize() {
 bool TrackCloneFinder::areClones( const Track& track1,
                                   const Track& track2 ) const
 {
+  if ( ! areSettingsConsistent( track1, track2 ) ) return false;
+
   // Determine the number of common Velo hits
   // ----------------------------------------
   unsigned int nVelo1, nVelo2 = 0;
@@ -104,8 +108,18 @@ bool TrackCloneFinder::areClones( Track& track1,
 {
   bool theyAreClones = areClones( track1, track2 );
 
+  unsigned int n1, n2 = 0;
+  if ( ! m_compareAtLHCbIDsLevel ) {
+    n1 = track1.nMeasurements();
+    n2 = track2.nMeasurements();
+  }
+  else {
+    n1 = track1.nLHCbIDs();
+    n2 = track2.nLHCbIDs();
+  }
+
   if ( setFlag && theyAreClones ) {
-    if ( track1.nMeasurements() > track2.nMeasurements() ) {
+    if ( n1 > n2 ) {
       track2.setFlag( Track::Clone, true );
     }
     else {
@@ -164,6 +178,20 @@ unsigned int TrackCloneFinder::nCommonLHCbIDs( const std::vector<LHCbID>& ids1,
                                                const std::vector<LHCbID>& ids2 ) const
 {
   unsigned int nCommon = 0;
+  
+  if ( m_debugLevel ) {
+    debug() << "LHCbIds track1: ";
+    unsigned int it;
+    for ( it = 0; it < ids1.size()-1; ++it ) {
+      debug() << ids1[it].channelID() << ", ";
+    }
+    debug() << ids1[it].channelID() << endreq
+            << "LHCbIds track2: ";
+    for ( it = 0; it < ids2.size()-1; ++it ) {
+      debug() << ids2[it].channelID() << ", ";
+    }
+    debug() << ids2[it].channelID() << endreq;
+  }
 
   // Calculate the number of common LHCbIDs
   for ( unsigned int it1 = 0; it1 < ids1.size(); ++it1 ) {
@@ -206,6 +234,29 @@ TrackCloneFinder::lhcbIDsOfType ( const Track& track,
   }
 
   return ids;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+bool TrackCloneFinder::areSettingsConsistent( const LHCb::Track& track1,
+                                              const LHCb::Track& track2 ) const
+{
+  if ( m_compareAtLHCbIDsLevel ) return true;
+
+  bool yesNo = true;
+
+  if (    track1.checkStatus( Track::PatRecIDs )
+       || ( track1.nMeasurements() == 0 ) ) yesNo = false;
+
+  if (    track2.checkStatus( Track::PatRecIDs )
+       || ( track2.nMeasurements() == 0 ) ) yesNo = false;
+
+  if ( ! yesNo )
+    error() << "Settings are not consistent. Check what you are doing!"
+            << endreq;
+
+  return yesNo;
 }
 
 //=============================================================================
