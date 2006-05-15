@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.22 2006-05-11 19:38:06 jvantilb Exp $
+// $Id: IdealTracksCreator.cpp,v 1.23 2006-05-15 15:59:10 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -89,15 +89,11 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "TTClusterPositionTool",
                    m_ttPositionToolName = "STOfflinePosition" );
   declareProperty( "ITClusterPositionTool",
-                   m_itPositionToolName = "STOfflinePosition/ITClusterPosition" );
+                   m_itPositionToolName ="STOfflinePosition/ITClusterPosition");
   declareProperty( "VeloPositionTool",
                    m_veloPositionToolName = "VeloClusterPosition" );
   declareProperty( "MinNHits", m_minNHits = 6     );
-  declareProperty( "ErrorX2",  m_errorX2  = 4.0   );
-  declareProperty( "ErrorY2",  m_errorY2  = 400.0 );
-  declareProperty( "ErrorTx2", m_errorTx2 = 6.e-5 );
-  declareProperty( "ErrorTy2", m_errorTy2 = 1.e-4 );
-  declareProperty( "ErrorP",   m_errorP   = 0.15  );
+
 };
 
 //=============================================================================
@@ -271,7 +267,7 @@ StatusCode IdealTracksCreator::execute()
 
       // Initialize a seed state
       // -----------------------
-      if ( m_initState ) {
+      if ( m_initState && !m_trueStatesAtMeas ) {
         if ( m_initStateUpstream ) {
           std::vector<Measurement*>::const_reverse_iterator rbeginM =
             track -> measurements().rbegin();
@@ -448,7 +444,7 @@ StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
   LinkedFrom<STCluster,MCParticle>
     ttLink( evtSvc(), msgSvc(), STClusterLocation::TTClusters );
   if ( ttLink.notFound() ) {
-    return Error( "Unable to retrieve STCluster-TT to MCParticle Linker table" );
+    return Error( "Unable to retrieve STCluster-TT to MCParticle Linker table");
   }
   else {
     const STCluster* aCluster = ttLink.first( mcPart );
@@ -484,7 +480,7 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
   LinkedFrom<STCluster,MCParticle>
     itLink( evtSvc(), msgSvc(), STClusterLocation::ITClusters );
   if ( itLink.notFound() ) {
-    return Error( "Unable to retrieve STCluster-IT to MCParticle Linker table" );
+    return Error( "Unable to retrieve STCluster-IT to MCParticle Linker table");
   }
   else {
     const STCluster* aCluster = itLink.first( mcPart );
@@ -569,16 +565,7 @@ StatusCode IdealTracksCreator::initializeState( double z,
   State* state;
   StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
   if ( sc.isSuccess() ) {
-    // set covariance matrix to a somewhat larger value for the fit
-    TrackSymMatrix& cov = state -> covariance();
-    cov(0,0) = m_errorX2;
-    cov(1,1) = m_errorY2;
-    cov(2,2) = m_errorTx2;
-    cov(3,3) = m_errorTy2;
-    cov(4,4) = pow( m_errorP * state->qOverP(), 2. );
-
     track -> addToStates( *state );
-
     double qP = state -> qOverP();
 
     debug() << "- State added:" << endreq

@@ -124,11 +124,6 @@ private:
   std::string  m_veloPositionToolName; ///< Velo cluster position tool name
   std::string m_tracksOutContainer;///< Tracks output container path in the TES
   int    m_minNHits;      ///< Minimum number of hits on the track
-  double m_errorX2;       ///< Error^2 on x
-  double m_errorY2;       ///< Error^2 on y
-  double m_errorTx2;      ///< Error^2 on slope x
-  double m_errorTy2;      ///< Error^2 on slope y
-  double m_errorP;        ///< dp/p
 };
 
 #endif // TRACKIDEALPR_IDEALTRACKSCREATOR_H
