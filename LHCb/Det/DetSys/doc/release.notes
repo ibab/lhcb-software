@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v8r5 2006-05-10 =========================
-! 2006-05-10 - Marco Cattaneo
- - Use OTDet v6r3, MuonDet v5r3, DetDesc v16r5, RichDet v9r4
+!========================= DetSys v8r5 2006-05-15 =========================
+! 2006-05-15 - Marco Cattaneo
+ - Use OTDet v6r3, MuonDet v5r3, DetDesc v16r5, RichDet v9r4, VeloDet v10r6
 
 !========================= DetSys v8r4 2006-04-27 =========================
 ! 2006-04-27 - Marco Cattaneo
