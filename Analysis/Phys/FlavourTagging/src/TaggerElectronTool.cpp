@@ -20,6 +20,7 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
   declareProperty( "TrVeloChargeName",m_veloChargeName = "TrVeloCharge" );
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.0 );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 );
@@ -45,7 +46,7 @@ StatusCode TaggerElectronTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -131,9 +132,19 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
       calcIP(iele, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
-    rnet = m_nnet->MLPe(B0p, B0the, vtags.size(), 100, 
-			iele->p()/GeV, iele->pt()/GeV, IP/IPerr, IPT);
-    pn = 1.0-pol4(rnet, 0.4933, -0.6766, 1.761, -1.587); 
+
+    std::vector<double> inputs(8);
+    inputs.at(0) = B0p;
+    inputs.at(1) = B0the;
+    inputs.at(2) = vtags.size();
+    inputs.at(3) = 100;
+    inputs.at(4) = iele->p()/GeV;
+    inputs.at(5) = iele->pt()/GeV;
+    inputs.at(6) = IP/IPerr;
+    inputs.at(7) = IPT;
+    
+    pn = m_nnet->MLPe( inputs );
+
   }
   tele.setOmega( 1-pn );
   tele.setType( Tagger::OS_Electron ); 
@@ -155,9 +166,6 @@ StatusCode TaggerElectronTool::calcIP( Particle* axp,
     iperr= iperr; 
   }
   return sc;
-}
-double TaggerElectronTool::pol4(double x, double a0, double a1, double a2, double a3){
-  return a0+a1*x+a2*x*x+a3*pow(x,3);
 }
 //====================================================================
 StatusCode TaggerElectronTool::finalize() { return StatusCode::SUCCESS; }

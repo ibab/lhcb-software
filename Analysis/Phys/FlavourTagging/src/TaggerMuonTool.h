@@ -1,4 +1,4 @@
-// $Id: TaggerMuonTool.h,v 1.5 2005-10-05 11:05:45 musy Exp $
+// $Id: TaggerMuonTool.h,v 1.6 2006-05-16 10:20:04 musy Exp $
 #ifndef USER_TAGGERMUONTOOL_H 
 #define USER_TAGGERMUONTOOL_H 1
 
@@ -53,8 +53,7 @@ private:
   /// Tool for number of track ssharing hits in the Muon System
   IMuonIDNSharedHitsTool*  m_muonIDnsh;
 
-  std::string m_CombinationTechnique;
-  double pol3(double x, double a0, double a1, double a2);
+  std::string m_CombinationTechnique, m_NeuralNetName;
   StatusCode calcIP( Particle* axp, 
 		     const Vertex* RecVert, 
 		     double& ip, double& iperr);

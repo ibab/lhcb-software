@@ -1,4 +1,4 @@
-// $Id: DoubleTagging.cpp,v 1.2 2006-02-02 09:14:33 pkoppenb Exp $
+// $Id: DoubleTagging.cpp,v 1.3 2006-05-16 10:20:04 musy Exp $
 // Include files 
 // local
 #include "DoubleTagging.h"
@@ -7,6 +7,7 @@
 // Implementation file for class : DoubleTagging
 //
 // 2006-01-28 : Christopher Peter Barnes
+// 2006-05-15 : Onuora Awunor
 //-----------------------------------------------------------------------------
 
 double efferr(double eff, int tot);

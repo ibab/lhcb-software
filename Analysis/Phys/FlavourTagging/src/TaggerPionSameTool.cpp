@@ -19,6 +19,7 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_v1" );
   declareProperty( "ProbMin", m_ProbMin = 0.52);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS = 0.2 );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS  = 2.0 );
@@ -39,7 +40,7 @@ StatusCode TaggerPionSameTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -130,11 +131,25 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0,
       calcIP(ipionS, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
-    rnet = m_nnet->MLPpS(B0p, B0the, vtags.size(), 100, 
-			 ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
-			 deta, dphi, dQ);
-    if( rnet > m_ProbMin ) pn = 1.0-pol2(rnet, 1.0772, -1.1632); 
-    else return tpionS;
+
+    std::vector<double> inputs(12);
+    inputs.at(0) = B0p;
+    inputs.at(1) = B0the;
+    inputs.at(2) = vtags.size();
+    inputs.at(3) = 100;
+    inputs.at(4) = ipionS->p()/GeV;
+    inputs.at(5) = ipionS->pt()/GeV;
+    inputs.at(6) = IP/IPerr;
+    inputs.at(7) = IPT;
+    inputs.at(8) = 0.;
+    inputs.at(9) = deta;
+    inputs.at(10)= dphi;
+    inputs.at(11)= dQ;
+    
+    rnet = m_nnet->MLPpS( inputs );
+
+    pn = 1.0-pol2(rnet, 1.0772, -1.1632); 
+    if( pn < m_ProbMin ) return tpionS;
   }
 
   int tagdecision = ipionS->charge()>0 ? 1: -1;

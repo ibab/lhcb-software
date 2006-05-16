@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 //inclusive secondary vtx type
-ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexTool";//"TDR" type
+ToolSvc.BTaggingTool.SecondaryVertexName  = "SVertexTool";//"TDR" type
 //ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
 //ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
 
@@ -15,6 +15,13 @@ ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersNNet";
 //force average estimates for omega of taggers
 //ToolSvc.BTaggingTool.TaggerMuonTool.CombTech = "none"; //defaut="NNet"
 //ToolSvc.BTaggingTool.TaggerMuonTool.AverageOmega = 0.33;
+
+//Choose neural net (comment these for new one). Default is new NNTool_v1.
+ToolSvc.BTaggingTool.TaggerMuonTool.NeuralNetName         = "NNetTool";
+ToolSvc.BTaggingTool.TaggerElectronTool.NeuralNetName     = "NNetTool";
+ToolSvc.BTaggingTool.TaggerKaonOppositeTool.NeuralNetName = "NNetTool";
+ToolSvc.BTaggingTool.TaggerKaonSameTool.NeuralNetName     = "NNetTool";
+ToolSvc.BTaggingTool.TaggerPionSameTool.NeuralNetName     = "NNetTool";
 
 //Other options
 //ToolSvc.BTaggingTool.RequireTrigger = true; //need to run trigger

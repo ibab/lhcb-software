@@ -1,4 +1,4 @@
-// $Id: NNetTool.cpp,v 1.7 2005-07-08 14:38:45 ranjard Exp $
+// $Id: NNetTool.cpp,v 1.8 2006-05-16 10:20:04 musy Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -40,51 +40,65 @@ double NNetTool::SIGMOID(double x){
 }
 
 //=============================================================================
-void NNetTool::normaliseOS(double& OUT1, double& OUT2, double& OUT3,
-			   double& OUT4, double& OUT5, double& OUT6,
-			   double& OUT7, double& OUT8) { 
-  OUT1 = std::min(OUT1/600., 1.);
-  OUT2 = std::min(OUT2/0.25, 1.);
-  OUT3 = OUT3/90.;
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+void NNetTool::normaliseOS(std::vector<double>& vect) { 
 
-  OUT5 = std::min(OUT5/150., 1.);
-  OUT6 = std::min(OUT6/10., 1.);
-  OUT7 = std::min(std::max(OUT7/100.,-1.),1.);
-  OUT8 = std::min(std::max(OUT8/12.,-1.),1.);
-}
-void NNetTool::normaliseSS(double& OUT1, double& OUT2, double& OUT3,
-			   double& OUT4, double& OUT5, double& OUT6,
-			   double& OUT7, double& OUT8, double& OUT10, 
-			   double& OUT11, double& OUT12) { 
-  OUT1 = std::min(OUT1/600., 1.);
-  OUT2 = std::min(OUT2/0.25, 1.);
-  OUT3 = OUT3/90.;
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+  vect.at(0) = std::min(vect.at(0)/600., 1.);
+  vect.at(1) = std::min(vect.at(1)/0.25, 1.);
+  vect.at(2) = vect.at(2)/90.;
+  if(vect.at(3) ==  10) vect.at(3)=0.;
+  else if(vect.at(3) == 100) vect.at(3)=0.33;
+  else if(vect.at(3) ==  11) vect.at(3)=0.66;
+  else if(vect.at(3) ==   1) vect.at(3)=0.99;
 
-  OUT5 = std::min(OUT5/150., 1.);
-  OUT6 = std::min(OUT6/10., 1.);
-  OUT7 = std::min(std::max(OUT7/100.,-1.),1.);
-  OUT8 = std::min(std::max(OUT8/12.,-1.),1.);
-  OUT10= OUT10/3.5;
-  OUT11= OUT11/3.2;
-  OUT12= std::min(OUT12/12.0, 1.);
+  vect.at(4) = std::min(vect.at(4)/150., 1.);
+  vect.at(5) = std::min(vect.at(5)/10., 1.);
+  vect.at(6) = std::min(std::max(vect.at(6)/100.,-1.),1.);
+  vect.at(7) = std::min(std::max(vect.at(7)/12.,-1.),1.);
 }
 
+void NNetTool::normaliseSS(std::vector<double>& vect) { 
+
+  vect.at(0) = std::min(vect.at(0)/600., 1.);
+  vect.at(1) = std::min(vect.at(1)/0.25, 1.);
+  vect.at(2) = vect.at(2)/90.;
+  if(vect.at(3) ==  10) vect.at(3)=0.;
+  else if(vect.at(3) == 100) vect.at(3)=0.33;
+  else if(vect.at(3) ==  11) vect.at(3)=0.66;
+  else if(vect.at(3) ==   1) vect.at(3)=0.99;
+
+  vect.at(4) = std::min(vect.at(4)/150., 1.);
+  vect.at(5) = std::min(vect.at(5)/10., 1.);
+  vect.at(6) = std::min(std::max(vect.at(6)/100.,-1.),1.);
+  vect.at(7) = std::min(std::max(vect.at(7)/12.,-1.),1.);
+  if(vect.size()>8){
+    vect.at(9) = vect.at(9)/3.5;
+    vect.at(10)= vect.at(10)/3.2;
+    vect.at(11)= std::min(vect.at(11)/12.0, 1.);
+  }
+}
+
+double NNetTool::pol2(double x, double a0, double a1) {
+  return a0+a1*x;
+}
+double NNetTool::pol3(double x, double a0, double a1, double a2) {
+  return a0+a1*x+a2*x*x;
+}
+double NNetTool::pol4(double x, double a0, double a1, double a2, double a3){
+  return a0+a1*x+a2*x*x+a3*x*x*x;
+}
 //=============================================================================
-double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
-		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8) { 
+double NNetTool::MLPm(std::vector<double>& vect) { 
 
-  normaliseOS( OUT1,  OUT2,  OUT3,
-	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
-  double OUT9 = 0.;
+  normaliseOS( vect );
+
+  double OUT1 = vect.at(0);
+  double OUT2 = vect.at(1);
+  double OUT3 = vect.at(2);
+  double OUT4 = vect.at(3);
+  double OUT5 = vect.at(4);
+  double OUT6 = vect.at(5);
+  double OUT7 = vect.at(6);
+  double OUT8 = vect.at(7);
 
   double RIN1 = 3.983911e-01
     +(-7.026953e-01) * OUT1
@@ -94,23 +108,30 @@ double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
     +(1.054646e+00) * OUT5
     +(1.810602e+00) * OUT6
     +(5.463738e-01) * OUT7
-    +(-3.098921e-01) * OUT8
-    +(6.636706e-02) * OUT9;
+    +(-3.098921e-01) * OUT8;
 
   OUT1 = SIGMOID(RIN1);
 
-  return 3.334001e-01
+  double rnet = 3.334001e-01
     +(5.451372e-01) * OUT1;
+
+  return 1 - pol3(rnet, 1.2939, -2.0406, 0.90781); //1-omega
+
 }; 
 
 //=============================================================================
-double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
-		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8) { 
+double NNetTool::MLPe(std::vector<double>& vect) { 
 
-  normaliseOS( OUT1,  OUT2,  OUT3,
-	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
-  double OUT9 = 0.;
+  normaliseOS( vect );
+
+  double OUT1 = vect.at(0);
+  double OUT2 = vect.at(1);
+  double OUT3 = vect.at(2);
+  double OUT4 = vect.at(3);
+  double OUT5 = vect.at(4);
+  double OUT6 = vect.at(5);
+  double OUT7 = vect.at(6);
+  double OUT8 = vect.at(7);
 
   double RIN1 = 1.645051e+00
     +(5.659825e-01) * OUT1
@@ -120,8 +141,7 @@ double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
     +(1.434648e+00) * OUT5
     +(5.218562e-02) * OUT6
     +(-2.601974e+00) * OUT7
-    +(9.479127e-01) * OUT8
-    +(3.571042e+00) * OUT9;
+    +(9.479127e-01) * OUT8;
   double RIN2 = 6.992168e-02
     +(5.187529e-01) * OUT1
     +(5.686077e-01) * OUT2
@@ -130,8 +150,7 @@ double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
     +(3.420101e-01) * OUT5
     +(3.229865e+00) * OUT6
     +(-2.142025e+00) * OUT7
-    +(3.548180e-01) * OUT8
-    +(1.462764e+00) * OUT9;
+    +(3.548180e-01) * OUT8;
   double RIN3 = -1.341696e+00
     +(-6.984814e-01) * OUT1
     +(-1.241993e+00) * OUT2
@@ -140,27 +159,34 @@ double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
     +(-1.061339e-01) * OUT5
     +(-2.995072e+00) * OUT6
     +(1.136272e+00) * OUT7
-    +(4.595882e-01) * OUT8
-    +(-1.349517e+00) * OUT9;
+    +(4.595882e-01) * OUT8;
 
   OUT1 = SIGMOID(RIN1);
   OUT2 = SIGMOID(RIN2);
   OUT3 = SIGMOID(RIN3);
 
-  return 1.339276e+00
+  double rnet = 1.339276e+00
     +(-1.705970e+00) * OUT1
     +(1.236691e+00) * OUT2
     +(-1.525095e+00) * OUT3;
+
+  return 1.0-pol4(rnet, 0.4933, -0.6766, 1.761, -1.587);
+
 }; 
 
 //=============================================================================
-double NNetTool::MLPk(double OUT1, double OUT2, double OUT3,
-		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8) { 
+double NNetTool::MLPk(std::vector<double>& vect) { 
 
-  normaliseOS( OUT1,  OUT2,  OUT3,
-	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
-  double OUT9 = 0.;
+  normaliseOS( vect );
+
+  double OUT1 = vect.at(0);
+  double OUT2 = vect.at(1);
+  double OUT3 = vect.at(2);
+  double OUT4 = vect.at(3);
+  double OUT5 = vect.at(4);
+  double OUT6 = vect.at(5);
+  double OUT7 = vect.at(6);
+  double OUT8 = vect.at(7);
 
   double  RIN1 = -2.548925e-01
     +(7.836971e-02) * OUT1
@@ -170,26 +196,36 @@ double NNetTool::MLPk(double OUT1, double OUT2, double OUT3,
     +(-1.701194e+00) * OUT5
     +(1.576454e+01) * OUT6
     +(2.416985e-01) * OUT7
-    +(4.765683e-01) * OUT8
-    +(1.182657e+00) * OUT9;
+    +(4.765683e-01) * OUT8;
 
   OUT1 = SIGMOID(RIN1);
 
   double mlpk = 4.675920e-01
     +(2.884447e-01) * OUT1;
 
-  return (mlpk-0.45)*3.0;
+  double rnet = (mlpk-0.45)*3.0;
+
+  return 1.0-pol2(rnet, 0.52144, -0.27136);
+
 }; 
 
 //=============================================================================
-double NNetTool::MLPkS(double OUT1, double OUT2, double OUT3,
-		       double OUT4, double OUT5, double OUT6,
-		       double OUT7, double OUT8,
-		       double OUT10, double OUT11, double OUT12) { 
+double NNetTool::MLPkS(std::vector<double>& vect) { 
 
-  normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
-	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
+  normaliseSS( vect );
+
+  double OUT1 = vect.at(0);
+  double OUT2 = vect.at(1);
+  double OUT3 = vect.at(2);
+  double OUT4 = vect.at(3);
+  double OUT5 = vect.at(4);
+  double OUT6 = vect.at(5);
+  double OUT7 = vect.at(6);
+  double OUT8 = vect.at(7);
   double OUT9 = 0.;
+  double OUT10 = vect.at(9);
+  double OUT11 = vect.at(10);
+  double OUT12 = vect.at(11);
 
   double RIN1 = 5.042735e-01
     +(-2.163759e-01) * OUT1
@@ -221,20 +257,31 @@ double NNetTool::MLPkS(double OUT1, double OUT2, double OUT3,
   OUT1 = SIGMOID(RIN1);
   OUT2 = SIGMOID(RIN2);
 
-  return 5.250314e-01
+  double rnet = 5.250314e-01
     +(-6.236218e-01) * OUT1
     +(1.547721e+00) * OUT2;
+
+  return 1.0-pol2(rnet, 1.0007, -1.0049);
+
 }; 
 
 //=============================================================================
-double NNetTool::MLPpS(double OUT1, double OUT2, double OUT3,
-		       double OUT4, double OUT5, double OUT6,
-		       double OUT7, double OUT8,
-		       double OUT10, double OUT11, double OUT12) { 
+double NNetTool::MLPpS(std::vector<double>& vect) { 
 
-  normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
-	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
+  normaliseSS( vect );
+
+  double OUT1 = vect.at(0);
+  double OUT2 = vect.at(1);
+  double OUT3 = vect.at(2);
+  double OUT4 = vect.at(3);
+  double OUT5 = vect.at(4);
+  double OUT6 = vect.at(5);
+  double OUT7 = vect.at(6);
+  double OUT8 = vect.at(7);
   double OUT9 = 0.;
+  double OUT10 = vect.at(9);
+  double OUT11 = vect.at(10);
+  double OUT12 = vect.at(11);
 
   double RIN1 = 6.777766e-01
     +(6.243266e-02) * OUT1

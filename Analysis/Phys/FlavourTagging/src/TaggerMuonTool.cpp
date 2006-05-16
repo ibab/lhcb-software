@@ -19,10 +19,11 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
 
   declareInterface<ITagger>(this);
 
-  declareProperty( "Muon_Pt_cut", m_Pt_cut_muon = 1.2 );
-  declareProperty( "Muon_P_cut",  m_P_cut_muon  = 5.0 );
   declareProperty( "CombTech",    m_CombinationTechnique = "NNet" );
-  declareProperty( "AverageOmega",m_AverageOmega= 0.33 );
+  declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_v1" );
+  declareProperty( "Muon_Pt_cut", m_Pt_cut_muon  = 1.2 );
+  declareProperty( "Muon_P_cut",  m_P_cut_muon   = 5.0 );
+  declareProperty( "AverageOmega",m_AverageOmega = 0.33 );
   declareProperty( "muonDLL_cut", m_muonDLL_cut  = -99. );
   declareProperty( "muonNSH_cut", m_muonNSH_cut  = 0 );
   m_nnet = 0;
@@ -52,7 +53,7 @@ StatusCode TaggerMuonTool::initialize() {
     fatal() << "Unable to retrieve MuonIDNSharedHitsTool"<< endreq;
     return StatusCode::FAILURE;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -143,25 +144,30 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
 
+    std::vector<double> inputs(8);
+    inputs.at(0) = B0p;
+    inputs.at(1) = B0the;
+    inputs.at(2) = vtags.size();
+    inputs.at(3) = 100;
+    inputs.at(4) = imuon->p()/GeV;
+    inputs.at(5) = imuon->pt()/GeV;
+    inputs.at(6) = IP/IPerr;
+    inputs.at(7) = IPT;
+    
     //calculate the result of neural net, the higher rnet is,
     //the more reliable is the tagger:
-    rnet = m_nnet->MLPm(B0p, B0the, vtags.size(), 100, 
-			imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr, IPT);
-
     //pn is the probability that the tagger is giving the
     //correct answer for the B flavour. the hard-coded numbers
     //are obtained by fitting the ratio of the 'rnet' distribution
     //for right muon tags and wrong muon tags:
-    pn = 1 - pol3(rnet, 1.2939, -2.0406, 0.90781); //1-omega
+
+    pn = m_nnet->MLPm( inputs );
+
   }
   tmu.setOmega( 1-pn );
   tmu.setType( Tagger::OS_Muon ); 
 
   return tmu;
-}
-//==========================================================================
-double TaggerMuonTool::pol3(double x, double a0, double a1, double a2) {
-  return a0+a1*x+a2*x*x;
 }
 //==========================================================================
 StatusCode TaggerMuonTool::calcIP( Particle* axp,

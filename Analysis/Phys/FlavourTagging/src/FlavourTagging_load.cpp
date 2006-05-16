@@ -24,6 +24,7 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(CombineTaggersTDR);
   DECLARE_TOOL(CombineTaggersOSTDR);  
   DECLARE_TOOL(NNetTool);
+  DECLARE_TOOL(NNetTool_v1);
   DECLARE_TOOL(SVertexTool);
   DECLARE_TOOL(SVertexNNTool);
   DECLARE_TOOL(SVertexABTool);

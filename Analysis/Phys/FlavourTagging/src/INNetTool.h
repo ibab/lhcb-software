@@ -1,4 +1,4 @@
-// $Id: INNetTool.h,v 1.4 2005-07-05 12:40:11 pkoppenb Exp $
+// $Id: INNetTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
 #ifndef NNETTOOL_INNETTOOL_H 
 #define NNETTOOL_INNETTOOL_H 1
 
@@ -22,23 +22,11 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_INNetTool; };
  
-  virtual double MLPm(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8)=0;
-  virtual double MLPe(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8)=0;
-  virtual double MLPk(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8)=0;
-  virtual double MLPkS(double x1,double x2,double x3,
-		       double x4,double x5,double x6,
-		       double x7,double x8,
-		       double x10,double x11,double x12)=0;
-  virtual double MLPpS(double x1,double x2,double x3,
-		       double x4,double x5,double x6,
-		       double x7,double x8,
-		       double x10,double x11,double x12)=0;
+  virtual double MLPm(std::vector<double>& )=0;
+  virtual double MLPe(std::vector<double>& )=0;
+  virtual double MLPk(std::vector<double>& )=0;
+  virtual double MLPkS(std::vector<double>&)=0;
+  virtual double MLPpS(std::vector<double>&)=0;
 
 };
 #endif // NNETTOOL_INNETTOOL_H

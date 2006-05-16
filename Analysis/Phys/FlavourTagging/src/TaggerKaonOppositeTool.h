@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.4 2005-07-08 11:32:06 pkoppenb Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -40,11 +40,10 @@ public:
 
 private:
   void calcIP( const Particle* , const Vertex* , double& , double& );
-  double pol2(double x, double a0, double a1);
 
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
-  std::string m_CombinationTechnique;
+  std::string m_CombinationTechnique, m_NeuralNetName;
 
   //properties 
   double m_Pt_cut_kaon;

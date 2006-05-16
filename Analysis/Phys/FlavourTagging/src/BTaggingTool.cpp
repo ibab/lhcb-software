@@ -318,8 +318,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   int sameside = kaonSTag.decision();
   if(!sameside) sameside = pionSTag.decision();
   info() << "BTAGGING TAG   " 
-	 << std::setw(7) << evt->runNum()
-         << std::setw(7) << evt->evtNum()
+	 << std::setw(7)  << evt->runNum()
+         << std::setw(14) << evt->evtNum()
          << std::setw(7) << trigger
          << std::setw(5) << theTag.decision()
          << std::setw(3) << category

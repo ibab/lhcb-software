@@ -18,6 +18,8 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   GaudiTool ( type, name, parent ) {
   declareInterface<ITagger>(this);
 
+  declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
   declareProperty( "Kaon_Pt_cut",  m_Pt_cut_kaon = 0.4 );
   declareProperty( "Kaon_P_cut",   m_P_cut_kaon  = 3.0 );
   declareProperty( "Kaon_IP_cut",  m_IP_cut_kaon   = 3.5 );
@@ -27,7 +29,6 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_forwardTrack_IP_cut",  m_IP_kf  = 2.0 );
   declareProperty( "Kaon_matchTrack_IP_cut",    m_IP_km  = 1.0 );
   declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 1.0 );
-  declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "AverageOmega", m_AverageOmega = 0.355 );
   m_Geom = 0;
   m_nnet = 0;
@@ -42,7 +43,7 @@ StatusCode TaggerKaonOppositeTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -128,9 +129,19 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
       calcIP(ikaon, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
-    rnet = m_nnet->MLPk(B0p, B0the, vtags.size(), 100, 
-			ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
-    pn = 1.0-pol2(rnet, 0.52144, -0.27136);
+
+    std::vector<double> inputs(8);
+    inputs.at(0) = B0p;
+    inputs.at(1) = B0the;
+    inputs.at(2) = vtags.size();
+    inputs.at(3) = 100;
+    inputs.at(4) = ikaon->p()/GeV;
+    inputs.at(5) = ikaon->pt()/GeV;
+    inputs.at(6) = IP/IPerr;
+    inputs.at(7) = IPT;
+    
+    pn = m_nnet->MLPk( inputs );
+
   }
   tkaon.setOmega( 1-pn );
   tkaon.setType( Tagger::OS_Kaon ); 
@@ -151,9 +162,6 @@ void TaggerKaonOppositeTool::calcIP( const Particle* axp,
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
   }
-}
-double TaggerKaonOppositeTool::pol2(double x, double a0, double a1) {
-  return a0+a1*x;
 }
 //==========================================================================
 StatusCode TaggerKaonOppositeTool::finalize() { return StatusCode::SUCCESS; }

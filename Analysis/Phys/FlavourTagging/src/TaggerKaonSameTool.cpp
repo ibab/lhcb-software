@@ -19,6 +19,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 2.5 );
@@ -40,7 +41,7 @@ StatusCode TaggerKaonSameTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -128,7 +129,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    double rnet, IP, IPerr, ip, iperr, IPT=0.;
+    double IP, IPerr, ip, iperr, IPT=0.;
     double B0p = ptotB.vect().mag()/GeV;
     double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
@@ -140,10 +141,25 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
       calcIP(ikaonS, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
-    rnet = m_nnet->MLPkS(B0p, B0the, vtags.size(), 100, 
-			 ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
-			 deta, dphi, dQ);
-    pn = 1.0-pol2(rnet, 1.0007, -1.0049);
+
+    //all NNets have same inputs here, so dont change
+    //the structure. Just add variables, if needed.
+    std::vector<double> inputs(12);
+    inputs.at(0) = B0p;
+    inputs.at(1) = B0the;
+    inputs.at(2) = vtags.size();
+    inputs.at(3) = 100;//tampering placeholder
+    inputs.at(4) = ikaonS->p()/GeV;
+    inputs.at(5) = ikaonS->pt()/GeV;
+    inputs.at(6) = IP/IPerr;
+    inputs.at(7) = IPT;
+    inputs.at(8) = 0.;
+    inputs.at(9) = deta;
+    inputs.at(10)= dphi;
+    inputs.at(11)= dQ;    
+   
+    pn = m_nnet->MLPkS( inputs );
+
   }
   tkaonS.setOmega( 1-pn );
   tkaonS.setType( Tagger::SS_Kaon ); 
@@ -164,9 +180,6 @@ void TaggerKaonSameTool::calcIP( const Particle* axp,
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
   }
-}
-double TaggerKaonSameTool::pol2(double x, double a0, double a1) { 
-  return a0+a1*x; 
 }
 //==========================================================================
 StatusCode TaggerKaonSameTool::finalize() { return StatusCode::SUCCESS; }

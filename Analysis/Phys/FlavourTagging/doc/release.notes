@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.91 2006-02-03 07:28:48 pkoppenb Exp $
+! $Id: release.notes,v 1.92 2006-05-16 10:20:04 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+
+! 2006-05-16 - Marco Musy
+ - added NNetTool_v1.cpp,h which is a new tool that uses the neural
+   net for new Root tuning. Neural nets are now put in src/NeuralNet folder
+   This thing is now disabled, so there is non difference in results
+   wrt before.
+   To activate the changes you should comment out lines in
+   BTaggingTool.opts :
+   ToolSvc.BTaggingTool.TaggerMuonTool.NeuralNetName = "NNetTool";
+   etc. for all taggers.
+   NNetTool is the old nnet tuning.
+   NNetTool_v1 is the new one. 
 
 !========================== FlavourTagging v6r5 2006-02-03 ===================
 ! 2006-01-27 - P. Koppenburg

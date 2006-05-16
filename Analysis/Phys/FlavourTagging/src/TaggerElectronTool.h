@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.4 2005-07-08 11:32:06 pkoppenb Exp $
+// $Id: TaggerElectronTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -42,9 +42,8 @@ private:
   ITrVeloCharge* m_veloCharge;
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
-  std::string m_CombinationTechnique;
+  std::string m_CombinationTechnique, m_NeuralNetName;
 
-  double pol4(double x, double a0, double a1, double a2, double a3);
   StatusCode calcIP( Particle* , const Vertex* , double&, double&);
 
   //properties 
