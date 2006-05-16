@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.42 2006-05-11 12:03:19 cattanem Exp $
+! $Id: release.notes,v 1.43 2006-05-16 08:29:41 mneedham Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2006-05-16 M. Needham
+ - Add ISiDepositedCharge interface
 
 !========================== MCEvent v1r3 2006-05-11 ==========================
 ! 2006-05-11 - Marco Cattaneo
