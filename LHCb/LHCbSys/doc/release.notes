@@ -29,6 +29,7 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 - In LHCbKernel v6r6
   . Add generic typedef of Point and Vector to Trajectory, and default arguments
     to LineTraj::direction, LineTraj::curvature and ParabolaTraj::curvature.
+  . Add ISiAmplifierResponse interface
 
 - In RichKernel v6r3
   . Adapt to radiator name changes
@@ -58,6 +59,7 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
 - In MCEvent v1r3
   . Use explicitly Gaudi::Units in MCHit.h, MCParticle.h
+  . Add ISiDepositedCharge interface
 
 - In DAQEvent v6r4
   . Fix mismatch between new and delete in RawEvent.cpp
