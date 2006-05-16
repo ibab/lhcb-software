@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsct.h,v 1.3 2006-03-15 18:55:55 jpalac Exp $
+// $Id: Particle2VertexAsct.h,v 1.4 2006-05-16 10:33:16 jpalac Exp $
 #ifndef ASSOCIATORS_Particle2VertexASCT_H 
 #define ASSOCIATORS_Particle2VertexASCT_H 1
 
@@ -34,8 +34,8 @@ public:
 protected:
   /// Standard constructor
   Particle2VertexAsct(const std::string& type,
-                  const std::string& name,
-                  const IInterface* parent )
+                      const std::string& name,
+                      const IInterface* parent )
     : Asct( type, name, parent) {
 
     setProperty( "Location", Particle2VertexAsctLocation );
