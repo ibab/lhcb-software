@@ -3,6 +3,19 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 =============================GaudiObjDesc v9r5============================
+! 2006-05-16 - Marco Clemencic
+ - patch #716. It appears that the new feature is not working as
+   expected when reading ObjectVector or KeyedContainer from a ROOT
+   file. The overloaded operator new is not called for the contained
+   objects, but the operator delete is called, causing a huge memory
+   leak.
+ - The patch changes the default allocator for contained objects,
+   using the one that is checking if the pointer is actually managed
+   by the allocator before deleting it (and calling the default
+   operator delete otherwise).
+ - The patch contains a small improvement in the "DEBUG" allocator
+   (better output).
+
 ! 2006-05-11 - Marco Clemencic
  - Bugfix in custom allocators support (bad signature for placement new).
 
