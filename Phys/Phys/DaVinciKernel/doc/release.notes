@@ -2,6 +2,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-05-16 - P. Koppenburg
+ - Kernel/IParticle2State.h
+   . New tool that allows to make a state from a Particle and back
+ - Kernel/state2Particle.h
+   . Becomes obsolete
+
 ! 2006-05-09 - P. Koppenburg
  - src/Lib/DVAlgorithm.cpp
    . Corrected a buglet the GeomTool option now refers to the

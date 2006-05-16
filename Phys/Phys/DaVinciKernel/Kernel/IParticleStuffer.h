@@ -1,4 +1,4 @@
-// $Id: IParticleStuffer.h,v 1.3 2006-05-09 16:21:27 pkoppenb Exp $
+// $Id: IParticleStuffer.h,v 1.4 2006-05-16 17:51:53 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPARTICLESTUFFER_H 
 #define DAVINCIKERNEL_IPARTICLESTUFFER_H 1
 
@@ -12,9 +12,9 @@
 static const InterfaceID IID_IParticleStuffer("IParticleStuffer", 1 , 0); 
 
 /** @class IParticleStuffer IParticleStuffer.h 
- *  Interface Class for Filling a Particle.
- *  Fill a particle given a vertex and list of daughters
- *  @author Paul colrain
+ *  Interface Class for Filling a Particle. For expert use.
+ *  Fill a particle given a vertex and list of daughters.
+ *  @author P. Koppenburg from P. Colrain
  *  @date   14/03/2002
  */
 
@@ -37,7 +37,6 @@ public:
                                    const LHCb::Vertex& vertex,
                                    const LHCb::ParticleID& pid,
                                    LHCb::Particle& part) = 0;
-
 };
 #endif // DAVINCIKERNEL_IPARTICLESTUFFER_H
 

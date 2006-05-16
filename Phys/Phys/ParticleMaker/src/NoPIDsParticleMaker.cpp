@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.6 2006-05-10 12:27:37 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.7 2006-05-16 17:59:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h" 
 
-#include "Kernel/state2Particle.h" 
+#include "Kernel/IParticle2State.h"
 // local
 #include "NoPIDsParticleMaker.h"
 
@@ -49,6 +49,7 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
   , m_longTracks ( true )
   , m_downstreamTracks ( true )  // set to false for HLT
   , m_vttTracks ( true )         // set to false for HLT
+  , m_p2s()
 {
   declareInterface<IParticleMaker>(this);
   declareProperty ( "Particle" , m_pid    ) ;
@@ -94,6 +95,7 @@ StatusCode NoPIDsParticleMaker::initialize() {
   else if ( "PROTON"    == Upper ) { m_pid = "p+"     ; }
   else if ( "P"         == Upper ) { m_pid = "p+"     ; }
   
+  m_p2s = tool<IParticle2State>("Particle2State"); // not private
 
   sc = setPPs( m_pid ) ;
   if ( sc.isFailure() ) 
@@ -241,6 +243,6 @@ StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto  
   
   particle -> setProto( proto ) ;
   const LHCb::State& state = proto->track()->firstState() ;
-  return state2Particle(state,*particle);
+  return m_p2s->state2Particle(state,*particle);
 };
 // ============================================================================

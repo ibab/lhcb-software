@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.h,v 1.6 2006-05-10 12:27:37 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.7 2006-05-16 17:59:02 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
@@ -9,6 +9,7 @@
 
 class ParticleProperty;
 class IParticlePropertySvc;
+class IParticle2State;
 /** @class NoPIDsParticleMaker NoPIDsParticleMaker.h
  *  
  *  The simplest possible particle maker.
@@ -99,5 +100,7 @@ private:
   // Job options to keep VTT tracks
   bool m_vttTracks;
 
+  /// Particle to state convertion tool
+  IParticle2State* m_p2s ;
 };
 #endif // NOPIDSPARTICLEMAKER_H

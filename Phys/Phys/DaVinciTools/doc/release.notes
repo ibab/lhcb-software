@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.200 2006-05-11 15:44:09 jpalac Exp $
+! $Id: release.notes,v 1.201 2006-05-16 17:54:38 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-05-09 - P. Koppenburg
+  - src/Particle2State.*
+   . New tool that allows to make a state from a Particle and back
 
 ! 2006-05-11 - Juan Palacios
   - src/OnOfflineTool.cpp
