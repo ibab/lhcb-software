@@ -2,10 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r6 2006-05-16 =========================
 ! 2006-05-16 M. Needham
  - Add ISiAmplifierResponse interface
 
-!===================== LHCbKernel v6r6 2006-05-15 =========================
 ! 2006-05-15 - Marco Cattaneo
  - Move SystemOfUnits.h out of Trajectory.h and into cpp's where is is needed
    to avoid exporting this dependency to all the software
