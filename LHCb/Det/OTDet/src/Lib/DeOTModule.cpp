@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.18 2006-05-15 10:45:53 janos Exp $
+// $Id: DeOTModule.cpp,v 1.19 2006-05-16 08:41:05 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/SystemOfUnits.h"
@@ -360,9 +360,9 @@ void DeOTModule::cacheInfo() {
   double xLower = m_xMinLocal;
   double yUpper = m_yMaxLocal;
   double yLower = m_yMinLocal;
-  if (bottomModule()) std::swap(yUpper, yLower);
 
   /// Direction; points to readout 
+  if (bottomModule()) std::swap(yUpper, yLower);
   Gaudi::XYZPoint g1 = globalPoint(0.0, yLower, 0.0);
   Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
   m_dir = g2 - g1;
@@ -398,15 +398,15 @@ void DeOTModule::cacheInfo() {
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
-  double lUwire = (monolayer==0?localUOfStraw(1):
-                   (s3Module()?localUOfStraw(m_nStraws+1):localUOfStraw(m_nStraws+1)));
+  /// Default is 0 -> straw 1
+  double lUwire = (monolayer==1?localUOfStraw(m_nStraws+1):localUOfStraw(1));
   Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer]));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
-  double lUwire = (monolayer==1?(s3Module()?localUOfStraw(2*m_nStraws):localUOfStraw(2*m_nStraws)):
-                   localUOfStraw(m_nStraws));
+  /// Default is 1 -> straw 64(s3)/128
+  double lUwire = (monolayer==0?localUOfStraw(m_nStraws):localUOfStraw(2*m_nStraws));
   Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer]));
 }

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.60 2006-05-15 10:45:53 janos Exp $
+! $Id: release.notes,v 1.61 2006-05-16 08:41:05 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
 !========================== OTDet v6r3 2006-05-03 ==========================
+! 2006-05-16 - Jan Amoraal
+ - Remove module check in traj representing first/last wire
+
 ! 2006-05-08 - Jan Amoraal
  - Fix x-coordinate of trajectory representing a wire 
  - Fix z-coordinate of middle trajectories  
