@@ -3,6 +3,8 @@
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+using namespace Gaudi::Units;
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -11,7 +13,6 @@
 // from LHCbDefinitions
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
@@ -19,9 +20,7 @@
 // Local 
 #include "TrackParabolicExtrapolator.h"
 
-// Needed for the creation of TrackParabolicExtrapolator objects.
-static const ToolFactory<TrackParabolicExtrapolator> s_factory;
-const IToolFactory& TrackParabolicExtrapolatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackParabolicExtrapolator );
 
 //=============================================================================
 // TrackParabolicExtrapolator constructor.

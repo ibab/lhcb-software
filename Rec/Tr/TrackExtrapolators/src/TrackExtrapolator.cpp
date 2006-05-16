@@ -7,10 +7,7 @@
 #include "TrackExtrapolator.h"
 #include "Event/TrackParameters.h"
 
-
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackExtrapolator>          s_factory ;
-const        IToolFactory& TrackExtrapolatorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackExtrapolator );
 
 //=============================================================================
 // Propagate a track to a given z-position

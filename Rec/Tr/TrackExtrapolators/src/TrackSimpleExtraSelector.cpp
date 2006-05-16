@@ -1,4 +1,4 @@
-// $Id: TrackSimpleExtraSelector.cpp,v 1.2 2005-12-14 14:16:48 erodrigu Exp $
+// $Id: TrackSimpleExtraSelector.cpp,v 1.3 2006-05-16 07:49:21 cattanem Exp $
 
 #include "TrackSimpleExtraSelector.h"
 
@@ -8,9 +8,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-// Declaration of the Tool Factory
-static const ToolFactory<TrackSimpleExtraSelector> s_factory;
-const IToolFactory& TrackSimpleExtraSelectorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackSimpleExtraSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables

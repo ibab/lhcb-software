@@ -1,22 +1,18 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.3 2006-02-02 14:28:53 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.4 2006-05-16 07:49:21 cattanem Exp $
 
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-// from LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
-
 // local
 #include "TrackDistanceExtraSelector.h" 
 
-// Declaration of the Tool Factory
-static const ToolFactory<TrackDistanceExtraSelector> s_factory;
-const IToolFactory& TrackDistanceExtraSelectorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackDistanceExtraSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,7 +26,7 @@ TrackDistanceExtraSelector::TrackDistanceExtraSelector(const std::string& type,
   declareInterface<ITrackExtraSelector>( this );
 
   declareProperty( "shortDist"
-                   , m_shortDist = 300.0*mm );
+                   , m_shortDist = 300.0*Gaudi::Units::mm );
   declareProperty( "ShortFieldExtrapolatorName",
                    m_shortFieldExtrapolatorName = "TrackFastParabolicExtrapolator" );
   declareProperty( "LongFieldExtrapolatorName",

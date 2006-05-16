@@ -1,17 +1,14 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.6 2006-05-15 14:13:30 erodrigu Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.7 2006-05-16 07:49:21 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
-
-// from LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/PhysicalConstants.h"
+using namespace Gaudi::Units;
 
 // local
 #include "TrackFastParabolicExtrapolator.h"
 
-// Needed for the creation of TrackFastParabolicExtrapolator objects.
-static const ToolFactory<TrackFastParabolicExtrapolator> s_factory;
-const IToolFactory& TrackFastParabolicExtrapolatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackFastParabolicExtrapolator );
 
 /** @file TrackFastParabolicExtrapolator.cpp
  *

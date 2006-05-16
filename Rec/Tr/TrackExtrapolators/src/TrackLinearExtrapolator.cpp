@@ -9,9 +9,7 @@
 // local
 #include "TrackLinearExtrapolator.h"
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackLinearExtrapolator>          s_factory ;
-const        IToolFactory& TrackLinearExtrapolatorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackLinearExtrapolator );
 
 //=============================================================================
 // Propagate a State to a given z-position

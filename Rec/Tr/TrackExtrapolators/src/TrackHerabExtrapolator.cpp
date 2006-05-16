@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.7 2006-05-02 12:59:36 erodrigu Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.8 2006-05-16 07:49:21 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -10,9 +10,7 @@
 // Local
 #include "TrackHerabExtrapolator.h"
 
-// Needed for the creation of TrackHerabExtrapolator objects.
-static const ToolFactory<TrackHerabExtrapolator> s_factory;
-const IToolFactory& TrackHerabExtrapolatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackHerabExtrapolator );
 
 /** @file TrackHerabExtrapolator.cpp
  *

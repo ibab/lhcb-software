@@ -2,7 +2,6 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IChronoStatSvc.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -20,9 +19,7 @@
 // Local 
 #include "TrackMasterExtrapolator.h"
 
-// Needed for the creation of TrackMasterExtrapolator objects.
-static const ToolFactory<TrackMasterExtrapolator> s_factory;
-const IToolFactory& TrackMasterExtrapolatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 
 //=============================================================================
 // Standard constructor, initializes variables
