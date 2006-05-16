@@ -55,7 +55,7 @@
        <constructor
         argList="int key"
         desc="create a vertex with a selected key"
-        initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*km),
+        initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*Gaudi::Units::km),
 m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
        />
        <constructor
@@ -88,7 +88,7 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         name="position"
         desc="Position in LHCb reference system"
         type="Gaudi::XYZPoint"
-        init="0.0, 0.0, -1*km"
+        init="0.0, 0.0, -1*Gaudi::Units::km"
        />
        <attribute
         name="covMatrix"

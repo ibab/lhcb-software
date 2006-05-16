@@ -140,13 +140,13 @@
         name="momentum"
         desc="Momentum four vector "
         type="Gaudi::LorentzVector"
-        init="0.0, 0.0, 0.0, -1*GeV"
+        init="0.0, 0.0, 0.0, -1*Gaudi::Units::GeV"
        />
        <attribute
         name="referencePoint"
         desc="Point at which the momentum is given in LHCb reference frame - convention: take the one that minimizes the extrapolations needs"
         type="Gaudi::XYZPoint"
-        init="0.0, 0.0, -1*km"
+        init="0.0, 0.0, -1*Gaudi::Units::km"
        />
        <relation
         name="endVertex"

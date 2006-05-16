@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-16 Juan Palacios
+  - Event/TrackParameters.h Add Gaudi::Units:: namespace prefix to units
+
 !========================= TrackEvent v2r5 2006-05-09 ========================
 ! 2006-05-09 - Marco Cattaneo
  - Add Boost dependency, needed for Boost allocators in event model

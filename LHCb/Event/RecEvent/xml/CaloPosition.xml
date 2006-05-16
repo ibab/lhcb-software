@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloPosition.xml,v 1.5 2006-04-06 12:35:50 odescham Exp $
+  * $Id: CaloPosition.xml,v 1.6 2006-05-16 18:41:34 jpalac Exp $
   *****************************************************************************
   * XML-description of CaloPosition class                                     *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -65,7 +65,7 @@
  name = "z"
  desc = "Z-position where cluster parameters are estimated"
  type = "double"
- init = "-1*km"
+ init = "-1*Gaudi::Units::km"
  nonconstaccessor="TRUE"
 />
         
