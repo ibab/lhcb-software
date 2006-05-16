@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v2r3 2006-05-16 ====================
+! 2006-05-16 - Marco Cattaneo
+ - Move include of PhysicalConstants.h from StateTraj.h to .cpp
+
 ! 2006-05-08 - Eduardo Rodrigues
  - fixed typo in method name in FitNode.h
 

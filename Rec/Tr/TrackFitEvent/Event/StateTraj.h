@@ -1,11 +1,9 @@
-// $Id: StateTraj.h,v 1.8 2006-04-06 14:08:50 ebos Exp $
+// $Id: StateTraj.h,v 1.9 2006-05-16 07:34:44 cattanem Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
 // Include files
 // -------------
-// from Kernel/LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
 
 // from LHCbKernel
 #include "Kernel/DifTraj.h"

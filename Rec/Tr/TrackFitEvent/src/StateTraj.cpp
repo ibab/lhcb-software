@@ -1,5 +1,8 @@
-// $Id: StateTraj.cpp,v 1.8 2006-04-06 14:08:40 ebos Exp $
+// $Id: StateTraj.cpp,v 1.9 2006-05-16 07:34:44 cattanem Exp $
 // Include files
+
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "Event/StateTraj.h"
@@ -9,7 +12,7 @@ using namespace LHCb;
 
 StateTraj::StateTraj( const State& state,
                       const XYZVector& bField )
-  : DifTraj<kSize>(10*km,10*km),
+  : DifTraj<kSize>(10*Gaudi::Units::km,10*Gaudi::Units::km),
     m_pos(state.position()),
     // True when approximating the trajectory as a straight line
     m_dir(state.slopes().unit()),
@@ -22,7 +25,7 @@ StateTraj::StateTraj( const State& state,
 StateTraj::StateTraj( const TrackVector& stateVector,
                       double z,
                       const XYZVector& bField )
-  : DifTraj<kSize>(10*km,10*km),
+  : DifTraj<kSize>(10*Gaudi::Units::km,10*Gaudi::Units::km),
     m_pos(stateVector(0),stateVector(1),z),
     m_qOverP(stateVector(4)),
     m_bField(bField)
@@ -125,11 +128,11 @@ double StateTraj::arclength( const Gaudi::XYZPoint& point) const
 // Not yet implemented
 double StateTraj::distTo1stError( double , double , int ) const 
 {
-  return 10*km;  
+  return 10*Gaudi::Units::km;  
 };
 
 // Not yet implemented
 double StateTraj::distTo2ndError( double , double , int ) const
 {
-  return 10*km;  
+  return 10*Gaudi::Units::km;  
 };
