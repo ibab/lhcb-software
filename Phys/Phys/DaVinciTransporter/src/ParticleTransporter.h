@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.3 2006-05-09 16:29:27 pkoppenb Exp $
+// $Id: ParticleTransporter.h,v 1.4 2006-05-16 17:53:37 pkoppenb Exp $
 #ifndef PARTICLETRANSPORTER_H 
 #define PARTICLETRANSPORTER_H 1
 
@@ -43,7 +43,6 @@ private:
   ITrackExtrapolator* extrapolator(const LHCb::Particle* P) const ;  ///< Get type of extrapolator
 
   StatusCode state(const LHCb::Particle* P,  const double znew, LHCb::State&) const ;   ///< Get or make a state from a Particle
-  StatusCode makeState(const LHCb::Particle* P, LHCb::State&) const ;   ///< Make a state from a Particle
 
   ITrackExtrapolator* m_tracks;        ///< Track extrapolator for particles from tracks
   ITrackExtrapolator* m_neutrals;      ///< Track extrapolator for neutrals
@@ -59,6 +58,10 @@ private:
   
   /// Accessor for ParticlePropertySvc
   IParticlePropertySvc* m_ppSvc ;
+  
+  /// Particle to state convertion tool
+  IParticle2State* m_p2s ;
+  
 
 };
 #endif // PARTICLETRANSPORTER_H

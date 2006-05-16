@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.5 2006-05-10 17:13:03 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.6 2006-05-16 17:53:37 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,8 @@
 
 #include "Kernel/TrackTypes.h" /// @todo temporary
 #include "TrackInterfaces/ITrackExtrapolator.h"        // TrackExtrapolator
-#include "Kernel/state2Particle.h"
+#include "Kernel/IParticle2State.h"
+#include "Kernel/MatrixManip.h"
 // local
 #include "ParticleTransporter.h"
 //-----------------------------------------------------------------------------
@@ -16,7 +17,6 @@
 //
 // 2006-01-20 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
-
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( ParticleTransporter );
 //=============================================================================
@@ -31,6 +31,7 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
   , m_chargedComp()
   , m_neutralComp()
   , m_ppSvc(0)
+  , m_p2s()
 {
   declareInterface<IParticleTransporter>(this);
 
@@ -83,6 +84,8 @@ StatusCode ParticleTransporter::initialize(){
 
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
 
+  m_p2s = tool<IParticle2State>("Particle2State"); // not private
+
   return sc;
 }
 //=============================================================================
@@ -95,6 +98,10 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   debug() << "Transport " << P->particleID().pid() << " " << P->momentum() << " from " 
           << P->referencePoint()  << " to " << znew << endmsg ;
   
+  if (msgLevel(MSG::VERBOSE)){
+    sc = m_p2s->test(*P);
+  }
+
   LHCb::State s ; // state to extrapolate
   sc = state(P,znew,s);
   if (!sc) return sc;
@@ -102,9 +109,14 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   if (NULL!=extra) extra->propagate(s,znew,P->particleID());
   else Warning("No extrapolator defined");
 
+  verbose() << "Extrapolated state is" << endmsg;
+  verbose() << s << endmsg ;
+
   transParticle = LHCb::Particle(*P);
-  
-  sc = state2Particle(s,transParticle);
+  sc = m_p2s->state2Particle(s,transParticle);
+
+  verbose() << "Obtained Particle " << transParticle.particleID().pid() << endmsg;
+  verbose() << transParticle << endmsg ;
 
   debug() << "Transported " << P->particleID().pid() << " " << transParticle.momentum() << " to " 
           << transParticle.referencePoint() << endmsg ;
@@ -116,6 +128,10 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
 //=============================================================================
 StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew, LHCb::State& s) const { 
   // charged basic: no need to make 
+  verbose() << "Starting from Particle \n " << *P << endmsg ;
+
+  StatusCode sc = StatusCode::SUCCESS ;
+  
   if (P->charge()!=0 && P->isBasicParticle()){
     if (NULL==P->proto()){
       ParticleProperty *pp = m_ppSvc->findByPythiaID(P->particleID().pid());
@@ -123,7 +139,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
                          StatusCode::SUCCESS) ;
       else err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. " 
                  <<  "Assuming it's from MC" << endmsg ;
-      return makeState(P,s);
+      sc = m_p2s->particle2State(*P,s);
     } else if (NULL==P->proto()->track()){
       err() << "Basic Particle of ID " << P->particleID().pid() << " has no track" << endmsg;
       return StatusCode::FAILURE; 
@@ -131,22 +147,11 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double znew
       s = P->proto()->track()->closestState(znew);
     }
   } else { // make a state
-    return makeState(P,s);
-  }  
-  return StatusCode::SUCCESS;
-}  
-//=============================================================================
-// make a state from a Particle
-//=============================================================================
-StatusCode ParticleTransporter::makeState(const LHCb::Particle* P, LHCb::State& s) const { 
-  s.setState(P->referencePoint().X(),P->referencePoint().Y(),P->referencePoint().Z(),
-             P->slopes().X(),P->slopes().Y(),P->charge()/P->p());
+    return m_p2s->particle2State(*P,s);
+  }
+  verbose() << "Got state: \n" << s << endmsg ;
 
-  debug() << "Produced state at " << s.position() << " " << s.momentum() << endmsg ;
-  
-  /// @todo Implement error matrix.
-
-  return StatusCode::SUCCESS;
+  return sc ;
 }  
 //=============================================================================
 // type of extrapolator
