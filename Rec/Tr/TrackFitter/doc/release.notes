@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-05-15 M. Needham
+ - correct name of setter for node 
+
 ! 2006-05-15 - Jeroen van Tilburg
  - TrackMasterFitter: Put in the functionality to automatically increase the
    cov. matrix to the initial value.

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.16 2006-05-02 13:01:58 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.17 2006-05-16 08:42:47 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -156,7 +156,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
       // store transport matrix F, noise matrix and vector for next iterations
       if ( m_storeTransport ) {
         const TrackMatrix& F = m_extrapolator -> transportMatrix();
-        aNode.setTrackMatrix( F );
+        aNode.setTransportMatrix( F );
         aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
         aNode.setNoiseMatrix( aState.covariance() -
                               ROOT::Math::Similarity<double,5,5>
