@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.22 2006-05-15 16:14:40 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.23 2006-05-16 08:14:48 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -19,10 +19,7 @@
 // 2005-04-14 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<MeasurementProvider>          s_factory ;
-const        IToolFactory& MeasurementProviderFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( MeasurementProvider );
 
 //=============================================================================
 // Standard constructor, initializes variables

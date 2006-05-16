@@ -4,7 +4,6 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // from LHCbDefinitions
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
 #include "Kernel/TrackTypes.h"
@@ -23,9 +22,7 @@ using namespace Gaudi;
 // 2003-09-18 : Jeroen van Tilburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackChi2Calculator>          s_factory ;
-const        IToolFactory& TrackChi2CalculatorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackChi2Calculator );
 
 //=============================================================================
 // Standard constructor, initializes variables

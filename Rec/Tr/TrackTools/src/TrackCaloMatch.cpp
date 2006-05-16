@@ -7,13 +7,9 @@
 #include "TrackCaloMatch.h"
 #include "Event/Track.h"
 
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
- 
 using namespace LHCb;
 
-static const ToolFactory<TrackCaloMatch>  s_factory;
-const IToolFactory& TrackCaloMatchFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackCaloMatch );
   
 TrackCaloMatch::TrackCaloMatch(const std::string& type,
                      const std::string& name,
@@ -29,7 +25,6 @@ m_configured(false)
   declareProperty("alpha", m_alpha = 8. );
   declareProperty("beta", m_beta = 1. );
   declareProperty("gamma", m_gamma = 1. );
-                                                                                              
 }
 
 TrackCaloMatch::~TrackCaloMatch(){
@@ -61,10 +56,10 @@ double TrackCaloMatch::energy(const Track& aTrack) const{
 
   Table::Range rEcal = m_ecalE->relations( &aTrack ) ;
   if ( !rEcal.empty() ) { eEcal += rEcal.front().to() ; }
-                                                                                               
+
   Table::Range rHcal = m_hcalE->relations( &aTrack ) ;
   if ( !rHcal.empty() ) { eHcal += rHcal.front().to() ; }
-                                                                                               
+
   Table::Range rPs = m_psE->relations( &aTrack ) ;
   if ( !rPs.empty() ) { ePrs += rPs.front().to() ; }
  
@@ -76,7 +71,7 @@ double TrackCaloMatch::energy(const Track& aTrack) const{
 
   double energy = (m_alpha * ePrs) + (m_beta * eEcal) + (m_gamma * eHcal) ;
   
-  return energy;                                                                                            
+  return energy;
 }
 
 void TrackCaloMatch::handle ( const Incident& incident )

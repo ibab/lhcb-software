@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.4 2006-05-15 16:14:40 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.5 2006-05-16 08:14:48 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -21,9 +21,7 @@ using namespace LHCb;
 // 2005-12-08 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackCloneFinder>          s_factory ;
-const        IToolFactory& TrackCloneFinderFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrackCloneFinder );
 
 //=============================================================================
 // Standard constructor, initializes variables

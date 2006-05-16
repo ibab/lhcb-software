@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.9 2006-05-02 14:18:23 erodrigu Exp $
+// $Id: TrajectoryProvider.cpp,v 1.10 2006-05-16 08:14:49 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -24,9 +24,7 @@ using namespace LHCb;
 // 2006-02-17 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrajectoryProvider>          s_factory ;
-const        IToolFactory& TrajectoryProviderFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( TrajectoryProvider );
 
 //=============================================================================
 // Standard constructor, initializes variables

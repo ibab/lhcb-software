@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r3 2006-05-16 =========================
+! 2006-05-16 - Marco Cattaneo
+ - Minor cleanups
+
 ! 2006-05-08 - Eduardo Rodrigues
  - using separate STClusterPosition tools for TT and IT (different tunings)
  - consistency checks introduced in TrackCloneFinder

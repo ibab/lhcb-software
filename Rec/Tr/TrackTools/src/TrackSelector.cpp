@@ -1,25 +1,22 @@
 
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
  
 // Tsa
 #include "TrackSelector.h"
 #include "Event/Track.h"
 
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
-
 using namespace LHCb; 
 
-static const ToolFactory<TrackSelector>  s_factory;
-const IToolFactory& TrackSelectorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackSelector );
   
 TrackSelector::TrackSelector(const std::string& type,
                      const std::string& name,
                      const IInterface* parent):
 GaudiTool(type, name, parent){
 
- declareProperty("pCut", m_pCut = 0.0*GeV);
- declareProperty("ptCut", m_ptCut = 0.0*GeV);
+ declareProperty("pCut",    m_pCut    = 0.0*Gaudi::Units::GeV );
+ declareProperty("ptCut",   m_ptCut   = 0.0*Gaudi::Units::GeV );
  declareProperty("chi2Cut", m_chi2Cut = 1000.);
  declareProperty("hitCut", m_hitCut = 5.);
  declareProperty("vWeight", m_vWeight = 1.);

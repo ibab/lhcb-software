@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.6 2006-02-28 19:12:14 jvantilb Exp $
+// $Id: TrajPoca.cpp,v 1.7 2006-05-16 08:14:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -17,9 +17,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrajPoca>          s_factory ;
-const        IToolFactory& TrajPocaFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( TrajPoca );
 
 //=============================================================================
 /// Standard constructor, initializes variables

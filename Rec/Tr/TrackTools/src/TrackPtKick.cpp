@@ -1,15 +1,15 @@
-// $Id: TrackPtKick.cpp,v 1.4 2006-05-02 13:17:05 erodrigu Exp $
+// $Id: TrackPtKick.cpp,v 1.5 2006-05-16 08:14:48 cattanem Exp $
 // Include files
 // -------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/SystemOfUnits.h" 
 
 // from GSL
 #include "gsl/gsl_math.h"
 
 // from LHCbDefinitions
-#include "Kernel/PhysicalConstants.h"
 #include "Kernel/TrackTypes.h"
 
 // from TrackEvent
@@ -26,10 +26,7 @@
 // 2005-05-13 : J. Nardulli (adaptations to new track event model)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrackPtKick>          s_factory ;
-const        IToolFactory& TrackPtKickFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( TrackPtKick );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,7 +43,7 @@ TrackPtKick::TrackPtKick( const std::string& type,
 
   declareProperty( "MomentumError",       m_MomentumError = 0.01 );
   declareProperty( "ParabolicCorrection", m_ParabolicCorrection  );
-  declareProperty( "ConstantCorrection",  m_Constant = 0.*MeV    );
+  declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
 
   m_ParabolicCorrection.push_back( -0.0092 );
   m_ParabolicCorrection.push_back( 0.0 );
@@ -98,7 +95,7 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
   m_bIntegrator -> calculateBdlAndCenter( begin, end, state->tx(), 
                                           state->ty(), zCenter, bdl );
   double q = 0.;
-  double p = 1e6 * MeV;
+  double p = 1e6 * Gaudi::Units::MeV;
 
   if ( fabs( bdl.x() ) > TrackParameters::hiTolerance ) {
     //can estimate momentum and charge
