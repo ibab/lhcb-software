@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== VeloSimulation v2r2p1 2006-05-11 ======================
+!===================== VeloSimulation v2r2p1 2006-05-17 ======================
+! 2006-05-17 - Marco Cattaneo
+ - Adapt to Gaudi::Units
+
 ! 2006-05-11 - Marco Cattaneo
  - Trivial fix in VeloSim.cpp to avoid a name clash with windows.h. Also, 
    remove some unneccessary includes.

@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.14 2006-05-11 16:44:28 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.15 2006-05-17 16:15:29 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -29,6 +29,8 @@
 
 // local
 #include "VeloSim.h"
+
+using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloSim

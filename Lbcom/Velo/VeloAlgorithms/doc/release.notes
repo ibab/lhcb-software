@@ -2,7 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
-!===================== VeloAlgorithms v4r5 2006-05-10 =====================
+!===================== VeloAlgorithms v4r5 2006-05-17 =====================
+! 2006-05-17 - Marco Cattaneo
+ - Adapt to Gaudi::Units
+
 ! 2006-05-08 - Tomasz Szumlak
  - New cluster monitoring algorithm (VeloClusters and VeloLiteClusters)
 

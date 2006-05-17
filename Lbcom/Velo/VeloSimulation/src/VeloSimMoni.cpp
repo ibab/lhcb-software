@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.8 2006-04-05 10:13:47 szumlat Exp $
+// $Id: VeloSimMoni.cpp,v 1.9 2006-05-17 16:15:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -15,15 +15,15 @@
 #include "Event/MCVeloFE.h"
 #include "Kernel/IMCVeloFEType.h"
 
+using namespace Gaudi::Units;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloSimMoni
 //
 // 2005-11-03 : Tomasz Szumlak & Chris Parkes
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<VeloSimMoni>          s_factory ;
-const        IAlgFactory& VeloSimMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( VeloSimMoni );
 
 //=============================================================================
 // Standard constructor, initializes variables

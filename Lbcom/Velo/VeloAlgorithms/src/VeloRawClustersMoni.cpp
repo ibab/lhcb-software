@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.1 2006-05-08 14:11:49 szumlat Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.2 2006-05-17 16:14:47 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -218,7 +218,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
     LHCb::VeloChannelID channel=cluster->channelID();
     unsigned int sensNumber=channel.sensor();
     const DeVeloSensor* sensor=m_veloDet->sensor(sensNumber);
-    plot2D(sensor->z()/cm, sensNumber, 101,
+    plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 101,
            "Z position and sensor number of the cluster",
            -50., 100., 0, 135, 150, 135);
     //
@@ -249,7 +249,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
       plot(tCharge, 105,
            "Signal dominated ADC sum",
            -0.5, 260.5, 261);
-      plot2D(sensor->z()/cm, sensNumber, 106,
+      plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 106,
              "Z position and sensor number for signal dominated clusters",
              -50., 100., 0, 135, 150, 135);
       plot(clusterSize, 107,
@@ -262,7 +262,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
       plot(tCharge, 108,
            "Noise dominated ADC sum",
            -0.5, 260.5, 261);
-      plot2D(sensor->z()/cm, sensNumber, 109,
+      plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 109,
              "Z position and sensor number for noise dominated clusters",
              -50., 100., 0, 135, 150, 135);
       plot(clusterSize, 110,
@@ -275,7 +275,7 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
       plot(tCharge, 111,
            "Other dominated ADC sum",
            -0.5, 260.5, 260);
-      plot2D(sensor->z()/cm, sensNumber, 112,
+      plot2D(sensor->z()/Gaudi::Units::cm, sensNumber, 112,
              "Z position and sensor number for other dominated clusters",
              -50., 100., 0, 135, 150, 135);
       plot(clusterSize, 113,

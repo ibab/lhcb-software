@@ -1,4 +1,4 @@
-// $Id: VeloClusterMoni.cpp,v 1.7 2006-05-08 14:11:49 szumlat Exp $
+// $Id: VeloClusterMoni.cpp,v 1.8 2006-05-17 16:14:46 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -233,7 +233,7 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
            "Signal dominated - ADC sum",
            -0.5, 255.5, 256);
       m_nVeloClustersS++;
-      plot2D(zPosOfClu/cm, sensor, 114,
+      plot2D(zPosOfClu/Gaudi::Units::cm, sensor, 114,
              "Z position and sensor number for signal dominated clusters",
              -50., 100., 0., 135, 150, 135);
     }
@@ -242,7 +242,7 @@ StatusCode VeloClusterMoni::veloClusterMonitor()
            "Noise dominated - ADC sum",
            -0.5, 255.5, 256);
       m_nVeloClustersN++;
-      plot2D(zPosOfClu/cm, sensor, 115,
+      plot2D(zPosOfClu/Gaudi::Units::cm, sensor, 115,
              "Z position and sensor number for noise dominated clusters",
              -50., 100., 0., 135, 150, 135);
     }
