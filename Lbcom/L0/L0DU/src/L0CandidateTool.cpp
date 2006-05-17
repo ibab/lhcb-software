@@ -1,4 +1,4 @@
-// $Id: L0CandidateTool.cpp,v 1.2 2006-02-20 11:11:28 cattanem Exp $
+// $Id: L0CandidateTool.cpp,v 1.3 2006-05-17 16:10:44 cattanem Exp $
 // ============================================================================
 
 // from Gaudi
@@ -29,8 +29,8 @@ L0CandidateTool::L0CandidateTool
   : GaudiTool ( type, name , parent )
   , m_dataLocation()
   , m_adcConvert(true)
-  , m_caloEtScale(20.*MeV)
-  , m_muonPtScale(40.*MeV)
+  , m_caloEtScale(20.*Gaudi::Units::MeV)
+  , m_muonPtScale(40.*Gaudi::Units::MeV)
 {
   declareProperty( "DataLocation"        , m_dataLocation );
   declareProperty( "adcConvert"          , m_adcConvert   );
@@ -54,7 +54,7 @@ StatusCode L0CandidateTool::initialize ()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_muonPtScale = 40.*MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
+  m_muonPtScale = 40.*Gaudi::Units::MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
   //  m_caloEtScale = 20.*MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
   DeCalorimeter* ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); 
     Condition* gain = ecal->condition( "Gain" );

@@ -1,9 +1,8 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.7 2006-04-12 12:44:38 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.8 2006-05-17 16:11:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "Event/L0DUBase.h"
 
 // local
@@ -15,10 +14,7 @@
 // 2003-12-15 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<L0CaloCandidatesFromRaw>          s_factory ;
-const        IAlgFactory& L0CaloCandidatesFromRawFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,7 +23,7 @@ L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  m_etScale = 20. * MeV;
+  m_etScale = 20. * Gaudi::Units::MeV;
 
   declareProperty( "Extension",      m_extension = "" );
 }

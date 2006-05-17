@@ -8,8 +8,8 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r2  L0          # Olivier Callot
-use L0DU            v7r1p2  L0          # Olivier Deschamps   
+use L0Calo            v9r3  L0          # Olivier Callot
+use L0DU              v7r2  L0          # Olivier Deschamps   
 use L0MuonTrigger     v5r3  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto          v7r1p1  L0          # Marko Zupan
 
@@ -30,7 +30,7 @@ use STAssociators     v1r2  ST          # Matt Needham
 use STCheckers        v1r2  ST          # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r1  Calo        # Olivier Deschamps
+use CaloAssociators   v6r2  Calo        # Olivier Deschamps
 
 # Velo
 use VeloDAQ           v3r2  Velo        # Kurt Rinnert

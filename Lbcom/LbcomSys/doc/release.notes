@@ -6,11 +6,11 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v5r0>2006-05-12 LbcomSys v5r0</A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2006-05-17 LbcomSys v5r0</A></H1><PRE>
 This version uses Gaudi v18r4 and LHCb v21r0.
 
 - Packages modified: RichDAQ v3r4, RichTools v2r4, STDAQ v2r6, STTools v2r1p1,
-                     VeloAssociators v2r2 
+    VeloAssociators v2r2, CaloAssociators v6r2, L0DU v7r2, L0Calo v9r3
 
 - In RichDAQ v3r4:
   . Fix minor bug in reading beyond the end of the RawBank data block
@@ -31,6 +31,9 @@ This version uses Gaudi v18r4 and LHCb v21r0.
 
 - In VeloAssociators v2r2:
   . Adapt to move of SystemOfUnits to GaudiKernel
+
+- In L0DU v7r2, L0Calo v9r3, CaloAssociators v6r2:
+  . Adapt to Gaudi::Units
 
 </PRE><H1><A NAME=v4r4>2006-05-02 LbcomSys v4r4</A></H1><PRE>
 This version uses Gaudi v18r3 and LHCb v20r4.

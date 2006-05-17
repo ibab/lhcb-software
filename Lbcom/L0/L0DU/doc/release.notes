@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.47 2006-04-12 14:03:08 cattanem Exp $
+$Id: release.notes,v 1.48 2006-05-17 16:10:44 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================== L0DU v7r2 2006-05-17 =========================
+! 2006-05-17 - Marco Cattaneo
+ - Adapt to Gaudi::Units
 
 !========================== L0DU v7r1p2 2006-04-12 =======================
 ! 2006-04-12 - Olivier Callot
