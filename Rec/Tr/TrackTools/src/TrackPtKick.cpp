@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.5 2006-05-16 08:14:48 cattanem Exp $
+// $Id: TrackPtKick.cpp,v 1.6 2006-05-17 16:20:42 cattanem Exp $
 // Include files
 // -------------
 
@@ -122,7 +122,7 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
     q = -1. * m_FieldPolarity*sign;
 
     // momentum
-    p = eplus * c_light *fabs(bdl.x()) 
+    p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdl.x()) 
         * sqrt((1.0 +tX*tX+gsl_pow_2(state->ty()))
                                            /(1.0 +gsl_pow_2(tX)))/fabs(curv);
 

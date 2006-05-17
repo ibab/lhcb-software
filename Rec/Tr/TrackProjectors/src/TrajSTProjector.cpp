@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.6 2006-04-13 10:41:05 jvantilb Exp $
+// $Id: TrajSTProjector.cpp,v 1.7 2006-05-17 16:23:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -19,9 +19,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrajSTProjector>          s_factory ;
-const        IToolFactory& TrajSTProjectorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrajSTProjector );
 
 //-----------------------------------------------------------------------------
 ///  Project a state onto a measurement
@@ -103,7 +101,7 @@ TrajSTProjector::TrajSTProjector( const std::string& type,
 {
   declareInterface<ITrackProjector>(this);
 
-  declareProperty( "tolerance", m_tolerance = 0.005*mm );
+  declareProperty( "tolerance", m_tolerance = 0.005*Gaudi::Units::mm );
 }
 
 //-----------------------------------------------------------------------------

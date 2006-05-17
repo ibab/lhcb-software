@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r3 2006-05-17 ======================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 !====================== TrackProjectors v2r2 2006-05-03 ======================
 ! 2006-04-24 - Eduardo Rodrigues
  - TrackMasterProjector uses Trajectory projectors by default

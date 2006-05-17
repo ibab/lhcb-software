@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.6 2006-05-02 13:08:26 erodrigu Exp $
+// $Id: IdealStateCreator.cpp,v 1.7 2006-05-17 16:21:09 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -31,8 +31,8 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool( type, name, parent )
-  , m_eX2(2.e-5*mm2)
-  , m_eY2(2.e-5*mm2)
+  , m_eX2(2.e-5*Gaudi::Units::mm2)
+  , m_eY2(2.e-5*Gaudi::Units::mm2)
   , m_eTx2(1.e-7)
   , m_eTy2(1.e-7)
   , m_eP(0.005)  

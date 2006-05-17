@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.9 2006-05-17 06:42:52 mneedham Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.10 2006-05-17 16:18:49 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -34,12 +34,12 @@ TrackHerabExtrapolator::TrackHerabExtrapolator(const std::string& type,
 {
   declareInterface<ITrackExtrapolator>( this );
 
-  m_stepMin    = 200.*mm;
-  m_stepMinRK5 = 20. * mm;
+  m_stepMin    = 200.* Gaudi::Units::mm;
+  m_stepMinRK5 = 20. * Gaudi::Units::mm;
   m_qpCurls    = 0.02 ;
 
   declareProperty( "extrapolatorID"    , m_extrapolatorID = 5);
-  declareProperty( "requiredPrecision" , m_error =  0.005*mm );
+  declareProperty( "requiredPrecision" , m_error =  0.005*Gaudi::Units::mm );
 
 }
 
@@ -221,7 +221,7 @@ void TrackHerabExtrapolator::rk5order(
   qp    = p_in[4];
   ierror = (fabs(qp) > m_qpCurls) ? 1 : 0;
   h = z_out - z_in;
-  hC   = h * c_light;
+  hC   = h * Gaudi::Units::c_light;
 
   x0[0] = p_in[0];
   x0[1] = p_in[1];
@@ -480,7 +480,7 @@ void TrackHerabExtrapolator::rk5fast(
   qp    = p_in[4];
   ierror = (fabs(qp) > m_qpCurls) ? 1 : 0;
   h = z_out - z_in;
-  hC   = h * c_light;
+  hC   = h * Gaudi::Units::c_light;
 
   x0[0] = p_in[0];
   x0[1] = p_in[1];
@@ -644,7 +644,7 @@ void TrackHerabExtrapolator::rk5fast(                 // Without derivatives
 
   qp    = p_in[4];
   h = z_out - z_in;
-  hC   =  h * c_light;
+  hC   =  h * Gaudi::Units::c_light;
 
   x0[0] = p_in[0];
   x0[1] = p_in[1];
@@ -829,7 +829,7 @@ void TrackHerabExtrapolator::rk4order(
   double qp    = p_in[4];
   ierror = (fabs(qp) > m_qpCurls) ? 1 : 0;
   double h = z_out - z_in;
-  double hC   = h * c_light;
+  double hC   = h * Gaudi::Units::c_light;
   x0[0] = p_in[0]; x0[1] = p_in[1];
   x0[2] = p_in[2]; x0[3] = p_in[3];
   //
@@ -1035,7 +1035,7 @@ void TrackHerabExtrapolator::rk4fast(
   qp    = p_in[4];
   ierror = (fabs(qp) > m_qpCurls) ? 1 : 0;
   h = z_out - z_in; 
-  hC   = h * c_light;
+  hC   = h * Gaudi::Units::c_light;
   x0[0] = p_in[0]; x0[1] = p_in[1];
   x0[2] = p_in[2]; x0[3] = p_in[3];
   //
@@ -1153,7 +1153,7 @@ void TrackHerabExtrapolator::rk4fast(                // Without derivatives
 
   qp    = p_in[4];
   h = z_out - z_in;
-  hC   = h * c_light;
+  hC   = h * Gaudi::Units::c_light;
 
   x0[0] = p_in[0];  x0[1] = p_in[1];
   x0[2] = p_in[2];  x0[3] = p_in[3];

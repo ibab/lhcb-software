@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r3 2006-05-17 ========================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 ! 2006-05-15 - Jeroen van Tilburg
  - Remove the increasing of the cov matrix since this is now done in the
    TrackMasterFitter.

@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.10 2006-04-13 10:41:05 jvantilb Exp $
+// $Id: TrajOTProjector.cpp,v 1.11 2006-05-17 16:23:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -23,9 +23,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// Declaration of the Tool Factory
-static const  ToolFactory<TrajOTProjector>          s_factory ;
-const        IToolFactory& TrajOTProjectorFactory = s_factory ;
+DECLARE_TOOL_FACTORY( TrajOTProjector );
 
 //-----------------------------------------------------------------------------
 ///  Project a state onto a measurement
@@ -117,7 +115,7 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
 
   declareProperty( "OTGeometryPath",
                    m_otTrackerPath = DeOTDetectorLocation::Default );
-  declareProperty( "tolerance", m_tolerance = 0.020*mm );
+  declareProperty( "tolerance", m_tolerance = 0.020*Gaudi::Units::mm );
 }
 
 //-----------------------------------------------------------------------------

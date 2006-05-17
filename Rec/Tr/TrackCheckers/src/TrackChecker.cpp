@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.4 2006-05-02 12:53:20 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.5 2006-05-17 16:23:04 cattanem Exp $
 // Include files 
 
 // local
@@ -26,11 +26,10 @@
 #include "Event/VeloPhiMeasurement.h"
 
 using namespace Gaudi;
+using namespace Gaudi::Units;
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackChecker>          s_factory;
-const        IAlgFactory& TrackCheckerFactory = s_factory; 
+DECLARE_ALGORITHM_FACTORY( TrackChecker );
 
 //=============================================================================
 // Standard constructor, initializes variables

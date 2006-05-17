@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.4 2006-05-02 12:53:20 erodrigu Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.5 2006-05-17 16:23:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -242,8 +242,8 @@ StatusCode TrackVeloTTChecker::execute() {
     if( matched ) {
       NTrecons.push_back( 1 );
       // was calculated from the closest state to z=0 in the past!
-      NTpdet.push_back( matchedTr->p() / GeV );
-      NTptdet.push_back( matchedTr->pt() / GeV );
+      NTpdet.push_back( matchedTr->p() / Gaudi::Units::GeV );
+      NTptdet.push_back( matchedTr->pt() / Gaudi::Units::GeV );
       NTqdet.push_back( matchedTr->charge() );
       NTqfit.push_back( matchedTr->charge() ); // seems redundant with qdet!
       NTchi2tt.push_back( matchedTr->chi2() );

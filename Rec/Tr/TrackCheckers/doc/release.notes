@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r2 2006-05-17 =======================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 !======================= TrackCheckers v2r1 2006-05-03 =======================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of the renaming of the Track Event Model typedefs

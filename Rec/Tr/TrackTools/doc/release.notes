@@ -6,7 +6,7 @@
 
 !======================== TrackTools v2r3 2006-05-16 =========================
 ! 2006-05-16 - Marco Cattaneo
- - Minor cleanups
+ - Adapt to Gaudi::Units, plus minor cleanups
 
 ! 2006-05-08 - Eduardo Rodrigues
  - using separate STClusterPosition tools for TT and IT (different tunings)

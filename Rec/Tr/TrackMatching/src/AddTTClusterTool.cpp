@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.1 2006-05-15 13:45:28 jvantilb Exp $
+// $Id: AddTTClusterTool.cpp,v 1.2 2006-05-17 16:20:03 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -194,7 +194,7 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track )
       XYZVector distance3D;
       s1 = 0.0;
       s2 = measTraj->arclength( stateTraj.position(s1) );
-      m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 50*mm );
+      m_poca -> minimize( stateTraj, s1, *measTraj, s2, distance3D, 50*Gaudi::Units::mm );
       int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
       double distance = signDist * distance3D.R();
       

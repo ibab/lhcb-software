@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.23 2006-05-15 15:59:10 jvantilb Exp $
+// $Id: IdealTracksCreator.cpp,v 1.24 2006-05-17 16:22:39 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -41,8 +41,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-static const AlgFactory<IdealTracksCreator>    s_factory;
-const IAlgFactory& IdealTracksCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( IdealTracksCreator );
 
 /** @file IdealTracksCreator.cpp
  *
@@ -416,7 +415,7 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
         StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
         double s1 = 0.0;
         double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance,20*mm);
+        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 20*Gaudi::Units::mm);
         int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
         meas.setAmbiguity( ambiguity );
       }

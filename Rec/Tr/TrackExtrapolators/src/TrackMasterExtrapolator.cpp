@@ -20,6 +20,7 @@
 #include "TrackMasterExtrapolator.h"
 
 using namespace Gaudi;
+using namespace Gaudi::Units;
 using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
