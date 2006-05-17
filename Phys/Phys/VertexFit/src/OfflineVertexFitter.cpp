@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.2 2006-05-17 16:27:53 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.3 2006-05-17 16:45:09 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -13,10 +13,6 @@
 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-
-//#include "gsl/gsl_vector.h"
-//#include "gsl/gsl_matrix.h"
-//#include "gsl/gsl_blas.h"
 
 // local
 #include "OfflineVertexFitter.h"
@@ -49,6 +45,9 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareProperty("useResonanceVertex", m_useResonanceVertex = true);
   declareProperty("applyDauMassConstraint", m_applyDauMassConstraint = true);
   declareProperty("widthThreshold", m_widthThreshold = 2.0 * MeV);
+  declareProperty( "maxIter", m_maxIter = 10);
+  declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
+  declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
 
 }
 
@@ -307,16 +306,11 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
     double chi2 = 0.;
     int NDoF = 0;
     getParticleInfo(*vertpart, V7, C7, chi2, NDoF);
-    if(m_applyDauMassConstraint && !vertpart->isBasicParticle()) {
-      int pid = vertpart->particleID().pid();
-      ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-      double hbar = 6.58211889*pow(10,-22);
-      double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
-      if(wid<m_widthThreshold) {
-        double nominalMass = partProp->mass();
-        sc=constrainMass(V7, C7, nominalMass);
-        if(sc.isFailure()) return StatusCode::FAILURE;
-      }
+    double nominalMass=0.0;
+    bool constrainM=requireMassConstraint(vertpart,nominalMass);
+    if(constrainM) {
+      sc=constrainMass(V7, C7, nominalMass);
+      if(sc.isFailure()) return StatusCode::FAILURE;
     }
     sc = updateParticle(part, V7, C7, chi2, NDoF);
 
@@ -360,16 +354,11 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   double dauchi2 = 0.;
   int dauNDoF = 0;
   getParticleInfo(*dau, daupara, daucov, dauchi2, dauNDoF);
-  if(m_applyDauMassConstraint && !dau->isBasicParticle()) {
-    int pid = dau->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-    double hbar = 6.58211889*pow(10,-22);
-    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    if(wid<m_widthThreshold) {
-      double nominalMass = partProp->mass();
-      sc=constrainMass(daupara, daucov, nominalMass);
-      if(sc.isFailure()) return StatusCode::FAILURE;
-    }
+  double nominalMass=0.0;
+  bool constrainM=requireMassConstraint(dau,nominalMass);
+  if(constrainM) {
+    sc=constrainMass(daupara, daucov, nominalMass);
+    if(sc.isFailure()) return StatusCode::FAILURE;
   }  
 
 
@@ -448,42 +437,251 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  //adding code 
+  double nominalM1=0.0;
+  bool constrainM1=requireMassConstraint(dau1,nominalM1);
 
-  Gaudi::Vector7 dau1para;
-  Gaudi::SymMatrix7x7 dau1cov;
-  double dau1chi2 = 0.;
-  int dau1NDoF = 0;
-  getParticleInfo(*dau1, dau1para, dau1cov, dau1chi2, dau1NDoF);
-  if(m_applyDauMassConstraint && !dau1->isBasicParticle()) {
-    int pid = dau1->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-    double hbar = 6.58211889*pow(10,-22);
-    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    if(wid<m_widthThreshold) {
-      double nominalMass = partProp->mass();
-      sc=constrainMass(dau1para, dau1cov, nominalMass);
+  double nominalM2=0.0;
+  bool constrainM2=requireMassConstraint(dau2,nominalM2);
+
+  double zfit=getZEstimate(dau1,dau2);
+  double zPreviousFit=-999999.;
+
+  int iterTransport=0;
+
+  while(fabs(zPreviousFit-zfit)>m_maxDeltaZ && iterTransport< m_maxIter)
+  {
+    zPreviousFit=zfit;
+    iterTransport++;
+
+    LHCb::Particle transParticle1;
+    sc = m_transporter->transport(dau1, zPreviousFit, transParticle1);
+     if( sc.isFailure ()) {
+       debug() << "transport of dau1 failed in fitTwo!" << endreq;
+       return sc;
+     }
+
+    LHCb::Particle transParticle2;
+    sc = m_transporter->transport(dau2, zPreviousFit, transParticle2);
+     if( sc.isFailure ()) {
+       debug() << "transport of dau2 failed in fitTwo!" << endreq;
+       return sc;
+     }
+
+    Gaudi::Vector7 dau1para;
+    Gaudi::SymMatrix7x7 dau1cov;
+    double dau1chi2 = 0.;
+    int dau1NDoF = 0;
+    getParticleInfo(transParticle1, dau1para, dau1cov, dau1chi2, dau1NDoF);
+    if(constrainM1) {
+      sc=constrainMass(dau1para, dau1cov, nominalM1);
       if(sc.isFailure()) return StatusCode::FAILURE;
     }
-  }
+    Gaudi::Vector7 dau1mpara;
+    Gaudi::SymMatrix7x7 dau1mcov;
+//    dau1cov=dau1->covMatrix()  ;  // trick
+    convertE2M(dau1para,dau1cov, dau1mpara, dau1mcov);
 
-  Gaudi::Vector7 dau2para;
-  Gaudi::SymMatrix7x7 dau2cov;
-  double dau2chi2 = 0.;
-  int dau2NDoF = 0;
-  getParticleInfo(*dau2, dau2para, dau2cov, dau2chi2, dau2NDoF);
-  if(m_applyDauMassConstraint && !dau2->isBasicParticle()) {
-    int pid = dau2->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-    double hbar = 6.58211889*pow(10,-22);
-    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    if(wid<m_widthThreshold) {
-      double nominalMass = partProp->mass();
-      sc=constrainMass(dau2para, dau2cov, nominalMass);
+    Gaudi::Vector7 dau2para;
+    Gaudi::SymMatrix7x7 dau2cov;
+    double dau2chi2 = 0.;
+    int dau2NDoF = 0;
+    getParticleInfo(transParticle2, dau2para, dau2cov, dau2chi2, dau2NDoF);
+    if(constrainM2) {
+      sc=constrainMass(dau2para, dau2cov, nominalM2);
       if(sc.isFailure()) return StatusCode::FAILURE;
     }
-  }
-                                                                                                                       
+    Gaudi::Vector7 dau2mpara;
+    Gaudi::SymMatrix7x7 dau2mcov;
+//    dau2cov=dau2->covMatrix()  ;  // trick
+    convertE2M(dau2para,dau2cov, dau2mpara, dau2mcov);
+
+    //temporary fix
+    for(int i=0;i<=6;i++) {dau1mcov(6,i)=0.0; dau2mcov(6,i)=0.0;}
+
+    ROOT::Math::SVector<double, 12> X;
+    X[0]=dau1mpara[0];
+    X[1]=dau1mpara[1];
+    X[2]=dau1mpara[3];
+    X[3]=dau1mpara[4];
+    X[4]=dau1mpara[5];
+    X[5]=dau1mpara[6];
+    X[6]=dau2mpara[0];
+    X[7]=dau2mpara[1];
+    X[8]=dau2mpara[3];
+    X[9]=dau2mpara[4];
+    X[10]=dau2mpara[5];
+    X[11]=dau2mpara[6];
+
+    Gaudi::SymMatrix6x6 newcov1;
+    Gaudi::SymMatrix6x6 newcov2;
+    for(int l1=0;l1<6;l1++) {
+      int n1=l1;
+      if(n1>=2) n1++;
+      for(int l2=0;l2<=l1;l2++) {
+        int n2=l2;
+        if(n2>=2) n2++;
+        newcov1(l1,l2)=dau1mcov(n1,n2);
+        newcov2(l1,l2)=dau2mcov(n1,n2);
+      }
+    }
+
+    SymMatrix12x12 Cx;
+    for(int l1=0;l1<6;l1++) {
+      for(int l2=0;l2<=l1;l2++) {
+        Cx(l1,l2)=newcov1(l1,l2);
+        Cx(l1+6,l2+6)=newcov2(l1,l2);
+        Cx(l1+6,l2)=0.0;
+      }
+    }
+
+    //(x1,y1,px1,py1,pz1,m1,x2,y2,px2,py2,pz2,m2) at the same z
+    ROOT::Math::SVector<double, 12> vfit=X;
+    SymMatrix12x12 cfit = Cx;
+
+    bool converged=false;
+    int iter=0;
+
+    double chi2Previous=9999.;
+    chi2=999.;
+
+    while(!converged && iter< m_maxIter)  {
+      iter++;
+      verbose() << ":-) Iteration   " << iter << endreq;
+
+      //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
+      ROOT::Math::SVector<double, 1> f;
+      f(0)=(vfit(6)-vfit(0))*(vfit(9)*vfit(4)-vfit(3)*vfit(10))-
+           (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+
+      verbose() << "constraint values   " << f << endreq;
+
+      //D is the derivative matrix
+      ROOT::Math::SMatrix<double, 1, 12> D;
+      D(0,0)=-(vfit(9)*vfit(4)-vfit(3)*vfit(10));
+      D(0,1)=(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+      D(0,2)=(vfit(7)-vfit(1))*vfit(10);
+      D(0,3)=-(vfit(6)-vfit(0))*vfit(10);
+      D(0,4)=(vfit(6)-vfit(0))*vfit(9)-(vfit(7)-vfit(1))*vfit(8);
+      D(0,5)=0.0;
+      D(0,6)=(vfit(9)*vfit(4)-vfit(3)*vfit(10));
+      D(0,7)=-(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+      D(0,8)=-(vfit(7)-vfit(1))*vfit(4);
+      D(0,9)=(vfit(6)-vfit(0))*vfit(4);
+      D(0,10)=-(vfit(6)-vfit(0))*vfit(3)+(vfit(7)-vfit(1))*vfit(2);
+      D(0,11)=0.0;
+
+      ROOT::Math::SVector<double, 1> d = f - D*vfit;
+
+      Gaudi::SymMatrix1x1 VD=ROOT::Math::Similarity<double,1,12>(D, Cx);
+
+      if(!VD.Invert()) {
+        debug() << "could not invert matrix VD in fitTwo! " <<endreq;
+        return StatusCode::FAILURE;
+      } 
+
+      ROOT::Math::SVector<double, 1> alpha=D*X+d;
+
+      ROOT::Math::SVector<double, 1> lambda=VD*alpha;
+
+      ROOT::Math::SMatrix<double, 12,1> DT = ROOT::Math::Transpose(D);
+      vfit=X-Cx*DT*lambda;      
+
+      SymMatrix12x12 delataC1=ROOT::Math::Similarity<double,12,1>(DT, VD);
+   
+      SymMatrix12x12 delataC2=ROOT::Math::Similarity<double,12,12>(Cx, delataC1);
+
+      cfit=Cx -delataC2;
+ 
+      chi2=ROOT::Math::Dot(alpha,lambda);
+      //chi2+= 2*ROOT::Math::Dot(lambda,f);
+
+      if(fabs(chi2-chi2Previous)<m_maxDeltaChi2) {
+        converged=true;
+      } else {
+        chi2Previous=chi2;
+      }
+
+    } // end chi2 minimization iteration
+    
+    if(!converged)  return StatusCode::FAILURE;
+
+    V7(0)=vfit(0)-vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    V7(1)=vfit(1)-vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10));
+    V7(2)=zPreviousFit-(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    V7(3)=vfit(2)+vfit(8);
+    V7(4)=vfit(3)+vfit(9);
+    V7(5)=vfit(4)+vfit(10);
+    double e1=sqrt(vfit(2)*vfit(2)+vfit(3)*vfit(3)+vfit(4)*vfit(4)+vfit(5)*vfit(5));
+    double e2=sqrt(vfit(8)*vfit(8)+vfit(9)*vfit(9)+vfit(10)*vfit(10)+vfit(11)*vfit(11));
+    V7(6)=e1+e2;
+
+    ROOT::Math::SMatrix<double, 7, 12> JA;
+    JA(0,0)=1.+vfit(2)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    JA(0,2)=-(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10)) 
+            -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
+    JA(0,4)=vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
+    JA(0,6)=-vfit(2)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    JA(0,8)=vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
+    JA(0,10)=-vfit(2)*(vfit(6)-vfit(0))/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+             -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+              /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
+
+    JA(1,1)=1.+vfit(3)*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10));
+    JA(1,3)=-(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+            -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+             /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(10);
+    JA(1,4)=vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+            /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(9);
+    JA(1,7)=-vfit(3)*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10));
+    JA(1,9)=vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+            /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(4);
+    JA(1,10)=-vfit(3)*(vfit(7)-vfit(1))/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+             -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+              /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(3);
+ 
+    JA(2,0)=vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    JA(2,2)=-(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
+    JA(2,4)=-(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+           +(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
+    JA(2,6)=-vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+    JA(2,8)=(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
+    JA(2,10)=-(vfit(6)-vfit(0))*vfit(4)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+            -(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
+    
+    JA(3,2)=1.;
+    JA(3,8)=1.;
+
+    JA(4,3)=1.;
+    JA(4,9)=1.;
+
+    JA(5,4)=1.;
+    JA(5,10)=1.;
+
+    JA(6,2)=vfit(2)/e1;
+    JA(6,3)=vfit(3)/e1;
+    JA(6,4)=vfit(4)/e1;
+    JA(6,5)=vfit(5)/e1;
+    JA(6,8)=vfit(8)/e2;
+    JA(6,9)=vfit(9)/e2;
+    JA(6,10)=vfit(10)/e2;
+    JA(6,11)=vfit(11)/e2;
+
+    C7=ROOT::Math::Similarity<double,7,12>(JA, cfit);
+
+    zfit=V7(2);
+
+  } // end transport iteration
+
+  if(fabs(zPreviousFit-zfit)>m_maxDeltaZ)  return StatusCode::FAILURE;
+  if(C7(2,2)<0)   return StatusCode::FAILURE;
+
   return sc;
 
 }
@@ -565,6 +763,9 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
   return sc;
 }
 
+//=============================================================================
+// retrieve partile information
+//=============================================================================
 void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
                                           Gaudi::Vector7& V7,
                                           Gaudi::SymMatrix7x7& C7,
@@ -596,6 +797,9 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
   }
 }
 
+//=============================================================================
+// conversion of of vector and matrix from energy basis to mass basis
+//=============================================================================
 void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7, 
                                      const Gaudi::SymMatrix7x7& C7,
                                      Gaudi::Vector7& Vm7, 
@@ -621,7 +825,9 @@ void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7,
     Vm7[6]= mass;
 }
 
-
+//=============================================================================
+// conversion of of vector and matrix from mass basis to energy basis
+//=============================================================================
 void OfflineVertexFitter::convertM2E(const Gaudi::Vector7& Vm7, 
                                      const Gaudi::SymMatrix7x7& Cm7,
                                      Gaudi::Vector7& V7, 
@@ -647,7 +853,9 @@ void OfflineVertexFitter::convertM2E(const Gaudi::Vector7& Vm7,
 }
 
 
-
+//=============================================================================
+// applying the mass constraint and updating the 7x7 matrix
+//=============================================================================
 StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7, 
                                               Gaudi::SymMatrix7x7& C7, 
                                               double& nominalMass) const
@@ -710,4 +918,74 @@ StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7,
   return sc;
 }
 
+//=============================================================================
+// check if a Particle should be mass constrained or not
+//=============================================================================
+bool OfflineVertexFitter::requireMassConstraint(const LHCb::Particle* part,
+                                                double& nominalMass ) const
+{
+  bool require=false;
+  nominalMass=0.0;
 
+  if(m_applyDauMassConstraint && !part->isBasicParticle()) {
+    int pid = part->particleID().pid();
+    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
+    double hbar = 6.58211889*pow(10,-22);
+    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    if(wid<m_widthThreshold) {
+      require=true;
+      nominalMass=partProp->mass();
+    }
+  }
+
+  return require;
+
+}
+
+//=============================================================================
+// first estimate of z of of two track vertex
+//=============================================================================
+double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
+                                         const LHCb::Particle* part2) const
+{
+  double tx1=part1->slopes().X();
+  double ty1=part1->slopes().Y();
+  double tx2=part2->slopes().X();
+  double ty2=part2->slopes().Y();
+                                                                                                           
+  const Gaudi::XYZPoint pos1=part1->referencePoint();
+  double x1= pos1.x();
+  double y1= pos1.y();
+  double z1= pos1.z();
+                                                                                                           
+  const Gaudi::XYZPoint pos2=part2->referencePoint();
+  double x2= pos2.x();
+  double y2= pos2.y();
+  double z2= pos2.z();
+
+  //return (y2-y1+ty1*z1-ty2*z2)/(ty1-ty2);
+                                                                                                           
+  double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
+  double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
+                              tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
+
+  double sumX=x1-tx1*z1 + x2-tx2*z2;
+  double sumY=y1-ty1*z1 + y2-ty2*z2;
+
+  double sumSlopeX= tx1+tx2;
+  double sumSlopeY= ty1+ty2;
+                                                                                                           
+  double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
+                                                                                                           
+  double zEstimate = 0;
+  if (det != 0) {
+    return zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
+                        - sumCrossedProduct) /det;
+  }
+  else {
+    err() << "Unable to make z estimate " << endreq;
+    if(z1<z2) return z1-.001;
+    else return z2-0.001;
+  }
+                                                                                                           
+}

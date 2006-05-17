@@ -9,6 +9,9 @@
 
 using namespace LHCb;
 
+typedef ROOT::Math::SMatrix<double, 12, 12,
+                              ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
+
 /** @class OfflineVertexFitter OfflineVertexFitter.h
  *  
  *  reimplementation of the KFFitTool to comply with
@@ -120,9 +123,13 @@ protected:
                     Gaudi::SymMatrix7x7& C7,
                     double& chi2) const;
 
+  double getZEstimate (const LHCb::Particle* part1,
+                       const LHCb::Particle* part2) const;
+
   StatusCode constrainMass(Gaudi::Vector7& V7, 
                            Gaudi::SymMatrix7x7& C7, 
                            double& nominalMass) const;
+  bool requireMassConstraint(const LHCb::Particle*, double& nominalMass) const;
  
 private:
       
@@ -137,6 +144,9 @@ private:
   bool m_useResonanceVertex;
   bool m_applyDauMassConstraint;
   double m_widthThreshold;
+  int m_maxIter;
+  double m_maxDeltaChi2;
+  double m_maxDeltaZ;
 
 };
 #endif // OFFLINEVERTEXFITTER_H
