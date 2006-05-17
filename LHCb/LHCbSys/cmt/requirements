@@ -34,7 +34,7 @@ use DetDescCnv            v3r2    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r4    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r9    Tools   # Marco Clemencic
 use OTDet                 v6r3    Det     # Jan Amoraal
-use CaloDet               v7r1    Det     # Olivier Deschamps
+use CaloDet               v7r2    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r3    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r1    Det     # N.N.
@@ -81,6 +81,6 @@ use SimComponents         v1r2   Sim     # Gloria Corti
 
 # LHCb  Examples
 use DetDescChecks         v3r0   Det     # Ivan Belyaev
-use DetDescExample        v7r0   Ex      # Marco Clemencic
+use DetDescExample        v7r1   Ex      # Marco Clemencic
 use IOExample             v2r0   Ex      # Marco Cattaneo
 use DetCondExample        v8r0   Ex      # Marco Clemencic

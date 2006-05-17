@@ -5,18 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r0>2006-05-15 LHCbSys v21r0</A></H1><PRE>
+</PRE><H1><A NAME=v21r0>2006-05-17 LHCbSys v21r0</A></H1><PRE>
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
 - Packages added:    LHCbMath v1r0
 - Packages modified: GaudiConf v9r6, 
     KernelSys v5r5, LHCbDefinitions v1r6, LHCbKernel v6r6, RichKernel v6r3,
-    DetSys v8r5,DetDesc v16r5,OTDet v6r3,RichDet v9r4,MuonDet v5r3,VeloDet v10r6,
+    DetSys v8r5, DetDesc v16r5, OTDet v6r3, RichDet v9r4, MuonDet v5r3,
+    VeloDet v10r6, CaloDet v7r2, DetCond v8r0, DetCondExample v8r0, 
     EventSys v21r5, PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, L0Event v15r2, 
     LinkerEvent v2r2, DigiEvent v1r2, RecEvent v1r3, TrackEvent v2r5,
-    EventBase v1r2, LinkerInstances v3r0p1, LoKiCore v1r4, DetCond v8r0,
-    DetCondExample v8r0, CondDBEntityResolver v2r0, SimComponents v1r2,
-    RichRecBase v2r3, CaloUtils v6r2p1
+    EventBase v1r2, LinkerInstances v3r0p1, LoKiCore v1r4, RichRecBase v2r3,
+    CaloUtils v6r2p1, CondDBEntityResolver v2r0, SimComponents v1r2,
+    DetDescExample v7r1
 
 - In GaudiConf v9r6
   . Set environment variables to force usage of castor2 on linux at CERN
@@ -25,6 +26,12 @@ This version uses Gaudi v18r4 and is fully compatible with DC06 production data
   . SystemOfUnits.h and PhysicalConstants.h now point to corresponding 
     GaudiKernel files, and use namespace Gaudi::Units for backwards compatibility
   . Add definitions for 9x9 matrices and dimension 9 vectors
+  . Transparent modification to LorentzVector typedef to please doxygen
+
+- In TrackEvent v2r5, RecEvent v1r3, PhysEvent v9r4, RichRecBase v2r3, 
+     CaloDet v7r2, DetDesc v16r5, VeloDet v10r6, RichDet v9r4,DetDescExample v7r1
+  . Migrate to Gaudi::Units. SystemOfUnits.h and PhysicalConstants.h in public
+    include files are taken directly from GaudiKernel
 
 - In LHCbKernel v6r6
   . Add generic typedef of Point and Vector to Trajectory, and default arguments
