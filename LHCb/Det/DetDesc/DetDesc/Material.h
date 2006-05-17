@@ -1,14 +1,13 @@
-// $Id: Material.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Material.h,v 1.11 2006-05-17 16:02:38 cattanem Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
 #include <string>
 #include <vector>
-/// Units
-#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/PhysicalConstants.h"
 ///
 class TabulatedProperty;
 class MsgStream;
@@ -100,8 +99,8 @@ protected:
             const double       dens  = 0 , 
             const double       rl    = 0 , 
             const double       al    = 0 ,
-            const double       temp  = STP_Temperature,
-            const double       press = STP_Pressure,
+            const double       temp  = Gaudi::Units::STP_Temperature,
+            const double       press = Gaudi::Units::STP_Pressure,
             const eState       s     = stateUndefined );
   
   /// Destructor

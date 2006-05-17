@@ -1,4 +1,4 @@
-// $Id: Isotope.h,v 1.10 2006-02-10 08:02:45 mneedham Exp $
+// $Id: Isotope.h,v 1.11 2006-05-17 16:02:38 cattanem Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -27,8 +27,8 @@ public:
            const double      density = 0               ,
            const double      rl      = 0               ,  
            const double      al      = 0               ,
-           const double      temp    = STP_Temperature , 
-           const double      press   = STP_Pressure    , 
+           const double      temp    = Gaudi::Units::STP_Temperature , 
+           const double      press   = Gaudi::Units::STP_Pressure    , 
            const eState      s       = stateUndefined  );
   // Destructor
   virtual ~Isotope();

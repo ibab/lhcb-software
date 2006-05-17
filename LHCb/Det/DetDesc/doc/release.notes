@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.257 2006-05-10 07:06:17 cattanem Exp $ 
+! $Id: release.notes,v 1.258 2006-05-17 16:02:39 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v16r5 2006-05-10 =========================
+!====================== DetDesc v16r5 2006-05-17 =========================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 ! 2006-05-10 - Marco Cattaneo
  - Remove unused IInspectable interface from ISolid and IGeometryInfo
 

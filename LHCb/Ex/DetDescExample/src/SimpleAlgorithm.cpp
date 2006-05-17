@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.19 2006-02-15 14:19:18 cattanem Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.20 2006-05-17 16:05:22 cattanem Exp $
 
 /// Include files
 #include <vector>
@@ -22,6 +22,8 @@
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
 #include "DetDataAgent.h"
+
+using namespace Gaudi::Units;
 
 DECLARE_ALGORITHM_FACTORY( SimpleAlgorithm );
 

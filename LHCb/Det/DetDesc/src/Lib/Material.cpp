@@ -1,4 +1,4 @@
-// $Id: Material.cpp,v 1.5 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: Material.cpp,v 1.6 2006-05-17 16:02:39 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -7,6 +7,8 @@
 /// DetDesc 
 #include "DetDesc/Material.h"
 #include "DetDesc/TabulatedProperty.h"
+
+using namespace Gaudi::Units;
 
 //////////////////////
 Material::Material( const std::string& /* name */  , 
@@ -102,14 +104,3 @@ std::ostream&     Material::fillStream ( std::ostream& s ) const
 // ============================================================================
 // End 
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-

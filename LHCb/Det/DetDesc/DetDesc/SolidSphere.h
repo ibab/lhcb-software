@@ -1,13 +1,13 @@
-// $Id: SolidSphere.h,v 1.14 2005-12-08 19:20:01 jpalac Exp $ 
+// $Id: SolidSphere.h,v 1.15 2006-05-17 16:02:38 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/SolidBase.h" 
-/// LHCbDefinitions
-#include "Kernel/PhysicalConstants.h" 
+// Units
+#include "GaudiKernel/SystemOfUnits.h" 
 
 template <class TYPE>
 class SolidFactory;
@@ -40,10 +40,10 @@ public:
   SolidSphere( const std::string& name                             ,
                const double       OuterRadius                      ,
                const double       InsideRadius    =   0.0          , 
-               const double       StartPhiAngle   =   0.0 * degree , 
-               const double       DeltaPhiAngle   = 360.0 * degree ,
-               const double       StartThetaAngle =   0.0 * degree , 
-               const double       DeltaThetaAngle = 180.0 * degree , 
+               const double       StartPhiAngle   =   0.0 * Gaudi::Units::degree,
+               const double       DeltaPhiAngle   = 360.0 * Gaudi::Units::degree,
+               const double       StartThetaAngle =   0.0 * Gaudi::Units::degree,
+               const double       DeltaThetaAngle = 180.0 * Gaudi::Units::degree,
                const int          CoverModel      =   0            );
 
   // destructor 
@@ -329,7 +329,7 @@ inline const bool SolidSphere::insidePhi( const aPoint& point ) const
   double phi = point.phi() ;   // [-180,180] 
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  phi += 360 * degree ;
+  phi += 360 * Gaudi::Units::degree ;
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
   // 
@@ -360,4 +360,3 @@ inline const bool SolidSphere::insideTheta( const aPoint& point ) const
 // ===========================================================================
 #endif ///<  DETDESC_SOLIDSPHERE_H
 // ===========================================================================
-

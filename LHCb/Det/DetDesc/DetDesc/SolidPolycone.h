@@ -1,23 +1,24 @@
-// $Id: SolidPolycone.h,v 1.8 2005-12-08 19:20:01 jpalac Exp $ 
+// $Id: SolidPolycone.h,v 1.9 2006-05-17 16:02:38 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
 // Include files
-/// STD and STL 
+// STD and STL 
 #include <cmath> 
 #include <iostream>
 #include <functional>
 #include <algorithm>
 #include <vector>
-/// LHCbDefinitions
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
+// LHCbDefinitions
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/SolidBase.h" 
-/// forward declarations 
+// forward declarations 
 template <class TYPE>
 class SolidFactory;
 
@@ -53,7 +54,7 @@ public:
   SolidPolycone( const std::string&  Name                       ,
                  const Triplets   &  Params                     ,
                  const double        StartPhiAngle = 0          ,
-                 const double        DeltaPhiAngle = 360*degree );
+                 const double        DeltaPhiAngle = 360*Gaudi::Units::degree );
 
   /// destructor 
   virtual ~SolidPolycone();
@@ -249,4 +250,3 @@ private:
 // ============================================================================
 #endif ///< DETDESC_SOLIDPOLYCONE_H
 // ============================================================================
-

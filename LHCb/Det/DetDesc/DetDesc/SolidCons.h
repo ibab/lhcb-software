@@ -1,19 +1,20 @@
-// $Id: SolidCons.h,v 1.15 2005-12-08 19:20:01 jpalac Exp $ 
+// $Id: SolidCons.h,v 1.16 2006-05-17 16:02:38 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
-/// STD and STL 
+// STD and STL 
 #include <cmath> 
 #include <iostream>
-/// LHCbDefinitions
+// Units
+#include "GaudiKernel/SystemOfUnits.h"
+// LHCbDefinitions
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/SolidBase.h" 
-/// forward declarations 
+// forward declarations 
 template <class TYPE>
 class SolidFactory;
 
@@ -51,8 +52,8 @@ public:
              const double       OuterRadiusAtPlusZ                    ,
              const double       InnerRadiusAtMinusZ  =   0.0          , 
              const double       InnerRadiusAtPlusZ   =   0.0          , 
-             const double       StartPhiAngle        =   0.0 * degree , 
-             const double       DeltaPhiAngle        = 360.0 * degree ,
+             const double       StartPhiAngle =   0.0 * Gaudi::Units::degree, 
+             const double       DeltaPhiAngle = 360.0 * Gaudi::Units::degree,
              const int          CoverModel           =   0            );
 
   /// destructor 
@@ -384,28 +385,15 @@ inline const bool SolidCons::insidePhi ( const aPoint& point ) const
   double phi = point.phi() ;   // [-180,180] 
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  phi += 360 * degree ;
+  phi += 360 * Gaudi::Units::degree ;
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
   // 
   return false ;
 };
 // ===========================================================================
-
-// ===========================================================================
-// The END 
-// ===========================================================================
 #endif ///<  DETDESC_SOLIDCONS_H
 // ===========================================================================
-
-
-
-
-
-
-
-
-
 
 
 

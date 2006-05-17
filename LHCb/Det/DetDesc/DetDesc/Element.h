@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $
-/// $Id: Element.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Element.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
+/// $Id: Element.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -36,8 +36,8 @@ public:
            const double        density  =  0   ,
            const double        rl       =  0   , 
            const double        al       =  0   ,  
-           const double        temp     =  STP_Temperature,
-           const double        press    =  STP_Pressure,
+           const double        temp     =  Gaudi::Units::STP_Temperature,
+           const double        press    =  Gaudi::Units::STP_Pressure,
            const eState        s        =  stateUndefined );
   // Destructor
   virtual ~Element();

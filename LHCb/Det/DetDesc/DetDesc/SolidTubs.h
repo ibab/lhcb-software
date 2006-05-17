@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.13 2005-12-08 19:20:01 jpalac Exp $
+// $Id: SolidTubs.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,10 +7,11 @@
 // STD and STL includes 
 #include <cmath>
 #include <iostream>
+// Units
+#include "GaudiKernel/SystemOfUnits.h" 
 // LHCbDefinitions includes 
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h"
-#include "Kernel/PhysicalConstants.h" 
 // DetDesc 
 #include "DetDesc/SolidBase.h" 
 // forward declarations
@@ -47,8 +48,8 @@ public:
              const double       ZHalfLength                      , 
              const double       OuterRadius                      ,
              const double       InnerRadius   =   0.0            , 
-             const double       StartPhiAngle =   0.0 * degree   , 
-             const double       DeltaPhiAngle = 360.0 * degree   ,
+             const double       StartPhiAngle =   0.0 * Gaudi::Units::degree, 
+             const double       DeltaPhiAngle = 360.0 * Gaudi::Units::degree,
              const int          CoverModel    =   0              );     
 
   /// destructor 
@@ -305,17 +306,14 @@ inline const bool SolidTubs::insidePhi ( const aPoint& point ) const
   double phi = point.phi() ;   // [-180,180] 
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
-  phi += 360 * degree ;
+  phi += 360 * Gaudi::Units::degree ;
   if( startPhiAngle ()                   <= phi &&
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
   // 
   return false ;
 };
 // ===========================================================================
-
-// ===========================================================================
 // The END 
 // ===========================================================================
 #endif ///<   DETDESC_SOLIDTUBS_H
 // ===========================================================================
-
