@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.4 2006-04-23 10:06:13 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.5 2006-05-17 16:24:14 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/04/23 10:06:13  ibelyaev
+//   add operators for ID and ABSID
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -581,7 +584,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 ( const std::string&    name   , 
   IParticlePropertySvc* ppsvc  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV ) 
+  , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
   if ( 0 == ppsvc ) 
@@ -599,7 +602,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const std::string&    name   )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV )
+  , m_mass ( 0 * Gaudi::Units::GeV )
   , m_eval ()
 {
   const ParticleProperty* pp = LoKi::Particles::ppFromName(  name ) ;
@@ -617,7 +620,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 ( const LHCb::ParticleID&     pid    , 
   IParticlePropertySvc* ppsvc  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV )  
+  , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
   if ( 0 == ppsvc ) 
@@ -636,7 +639,7 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const LHCb::ParticleID&     pid    )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV )  
+  , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
   const ParticleProperty* pp = LoKi::Particles::ppFromPID( pid.pid() ) ;
@@ -796,7 +799,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const std::string&    name   , 
   IParticlePropertySvc* ppsvc  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV ) 
+  , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
   if ( 0 == ppsvc ) 
@@ -815,7 +818,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const std::string&    name  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV ) 
+  , m_mass ( 0 * Gaudi::Units::GeV ) 
   , m_eval ()
 {
   IParticlePropertySvc* ppsvc = LoKi::Services::instance().ppSvc();
@@ -836,7 +839,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LHCb::ParticleID&  pid    , 
   IParticlePropertySvc*    ppsvc  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV )  
+  , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
   if( 0 == ppsvc ) 
@@ -855,7 +858,7 @@ LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
 ( const LHCb::ParticleID&     pid  )
   : LoKi::Function<const LHCb::Particle*> ()
-  , m_mass ( 0 * GeV )  
+  , m_mass ( 0 * Gaudi::Units::GeV )  
   , m_eval ()
 {
   IParticlePropertySvc* ppsvc = LoKi::Services::instance().ppSvc();

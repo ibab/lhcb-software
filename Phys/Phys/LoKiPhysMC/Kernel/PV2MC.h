@@ -1,8 +1,11 @@
-// $Id: PV2MC.h,v 1.1 2006-04-09 10:29:17 ibelyaev Exp $
+// $Id: PV2MC.h,v 1.2 2006-05-17 16:24:35 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/04/09 10:29:17  ibelyaev
+//  regular update
+//
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -11,9 +14,9 @@
 // ============================================================================
 // Event
 // ============================================================================
-#include "Event/PrimVertex.h"
-#include "Event/MCVertex.h"
 #include "Event/GenCollision.h"
+#include "Event/MCVertex.h"
+#include "Event/PrimVertex.h"
 // ============================================================================
 // Forward Declarations 
 // ============================================================================
