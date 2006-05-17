@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.18 2006-05-16 18:41:34 jpalac Exp $
+! $Id: release.notes,v 1.19 2006-05-17 15:51:28 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 
+!========================== RecEvent v1r3 2006-05-16 =========================
 ! 2006-05-16 - Juan Palacios
   - xml/CaloPosition.xml Add Gaudi::Units namespace prefix to units
 
-!========================== RecEvent v1r3 2006-05-10 =========================
 ! 2006-05-10 - Chris Jones
  - Update RichPID for changes in radiator names
 
