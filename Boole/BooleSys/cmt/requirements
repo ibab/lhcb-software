@@ -32,3 +32,6 @@ use RichReadout	        v2r1    Rich  # Chris Jones
 # Velo
 use VeloAlgorithms      v4r5    Velo  # Tomasz Szumlak
 use VeloSimulation      v2r2p1  Velo  # Tomasz Szumlak
+
+# Silicon trackers (not yet used by Boole application)
+use SiTools             v1r0    Si    # Matt Needham
