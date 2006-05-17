@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.17 2006-05-02 12:34:02 erodrigu Exp $
+ * $Id: RichTrackSelector.h,v 1.18 2006-05-17 15:59:28 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -205,8 +205,8 @@ inline bool RichTrackSelector::trackSelected( const LHCb::Track * track ) const
            (!m_uniqueTrOnly || !track->checkFlag(LHCb::Track::Clone)) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
-           ( track->p()/GeV > minMomentum(type) ) &&  // Momentum cuts
-           ( track->p()/GeV < maxMomentum(type) )     // Momentum cuts
+           ( track->p()/Gaudi::Units::GeV > minMomentum(type) ) &&  // Momentum cuts
+           ( track->p()/Gaudi::Units::GeV < maxMomentum(type) )     // Momentum cuts
            );
 }
 
@@ -219,8 +219,8 @@ inline bool RichTrackSelector::trackSelected( const LHCb::RichRecTrack * track )
            (!m_uniqueTrOnly || track->trackID().unique()) &&  // Unique tracks
            m_tkTypeSel[type] &&       // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 )  &&           // track charge
-           ( track->vertexMomentum()/GeV > minMomentum(type) ) &&  // Momentum cut
-           ( track->vertexMomentum()/GeV < maxMomentum(type) )     // Momentum cut
+           ( track->vertexMomentum()/Gaudi::Units::GeV > minMomentum(type) ) &&  // Momentum cut
+           ( track->vertexMomentum()/Gaudi::Units::GeV < maxMomentum(type) )     // Momentum cut
            );
 }
 
@@ -234,8 +234,8 @@ inline bool RichTrackSelector::trackSelected( const Rich::Track::Type type,
            (!m_uniqueTrOnly || unique)   &&         // Unique tracks
            m_tkTypeSel[type] &&       // tracking algorithm type
            ( m_chargeSel*charge >= 0 )  &&          // track charge
-           ( ptot/GeV > minMomentum(type) ) &&          // Momentum cut
-           ( ptot/GeV < maxMomentum(type) )             // Momentum cut
+           ( ptot/Gaudi::Units::GeV > minMomentum(type) ) && // Momentum cut
+           ( ptot/Gaudi::Units::GeV < maxMomentum(type) )    // Momentum cut
            );
 }
 

@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.11 2006-02-16 16:04:59 jonrob Exp $
+ *  $Id: RichTrackSelector.cpp,v 1.12 2006-05-17 15:59:28 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20
@@ -26,8 +26,8 @@ RichTrackSelector::RichTrackSelector() :
   m_trNames      (         ),
   m_uniqueTrOnly ( true    ),
   m_chargeSel    (  0      ),
-  m_minP         ( Rich::Track::NTrTypes,        0 * GeV ),
-  m_maxP         ( Rich::Track::NTrTypes,  9999999 * GeV )
+  m_minP         ( Rich::Track::NTrTypes,        0 * Gaudi::Units::GeV ),
+  m_maxP         ( Rich::Track::NTrTypes,  9999999 * Gaudi::Units::GeV )
 {
 
   // Setup default track selection criteria

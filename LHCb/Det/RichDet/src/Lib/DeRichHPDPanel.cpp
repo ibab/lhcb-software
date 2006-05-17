@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.38 2006-04-10 15:12:43 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.39 2006-05-17 16:04:06 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,11 +15,11 @@
 
 // Include files
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 #include "RichDet/DeRichHPDPanel.h"
 
 // MathCore files
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Transform3DTypes.h"
 
 // DetDesc
@@ -157,7 +157,7 @@ StatusCode DeRichHPDPanel::initialize()
 
   if ( m_HPDColPitch  < m_activeRadius*2) {
     msg << MSG::WARNING << "The active area is bigger by:"
-        << (m_activeRadius*2 - fabs(m_HPDColPitch))/mm
+        << (m_activeRadius*2 - fabs(m_HPDColPitch))/Gaudi::Units::mm
         << " mm than the column pitch.  There could be loss of photons"
         << endmsg;
   }
@@ -383,18 +383,18 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   double inSiliconX = inSilicon.x();
   double inSiliconY = inSilicon.y();
 
-  if ( (fabs(inSiliconX)+0.001*mm) > m_siliconHalfLengthX ) {
+  if ( (fabs(inSiliconX)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthX ) {
     const int signX = ( inSiliconX > 0.0 ? 1 : -1 );
-    inSiliconX -= signX*0.001*mm;
+    inSiliconX -= signX*0.001*Gaudi::Units::mm;
   }
 
-  if ( (fabs(inSiliconY)+0.001*mm) > m_siliconHalfLengthY ) {
+  if ( (fabs(inSiliconY)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthY ) {
     const int signY = ( inSiliconY > 0.0 ? 1 : -1 );
-    inSiliconY -= signY*0.001*mm;
+    inSiliconY -= signY*0.001*Gaudi::Units::mm;
   }
 
-  if ( (fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*mm) ||
-       (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*mm)   ) {
+  if ( (fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*Gaudi::Units::mm) ||
+       (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm)   ) {
     MsgStream msg ( msgSvc(), myName() );
     msg << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
         << m_pvHPDMaster[HPDNumber]->name() << endmsg;
@@ -436,14 +436,14 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
   const double inSiliconR = sqrt(inSiliconX*inSiliconX + inSiliconY*inSiliconY);
   double theta = acos( inSiliconX/inSiliconR );
   // keep the correct angle
-  if ( inSiliconY < 0.0 ) theta = pi*rad +( pi*rad - theta);
+  if ( inSiliconY < 0.0 ) theta = Gaudi::Units::twopi - theta;
 
   const double rInWindow = (-m_deMagFactor[0] +
                             sqrt(m_deMagFactor[0]*m_deMagFactor[0] +
                                  4*m_deMagFactor[1]*inSiliconR)) / (2*m_deMagFactor[1]);
 
   // add 180 degrees for the cross focussing
-  const double newTheta  = theta + pi*rad;
+  const double newTheta  = theta + Gaudi::Units::pi;
   const double inWindowX = rInWindow*cos(newTheta);
   const double inWindowY = rInWindow*sin(newTheta);
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);

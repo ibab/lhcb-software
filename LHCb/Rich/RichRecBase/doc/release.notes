@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!====================== RichRecBase v2r3 2006-05-09 ========================
+!====================== RichRecBase v2r3 2006-05-17 ========================
+! 2006-05-17 - Marco Cattaneo
+ - Use Gaudi::Units in header files
+
 ! 2006-05-09 - Chris Jones
  - Remove support for old converted Track types
 
