@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.47 2006-05-05 10:51:38 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.48 2006-05-17 16:21:47 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -20,9 +20,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichPIDQC>          s_factory ;
-const        IAlgFactory& RichPIDQCFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichPIDQC );
 
 // Standard constructor, initializes variables
 RichPIDQC::RichPIDQC( const std::string& name,
@@ -268,7 +266,7 @@ StatusCode RichPIDQC::execute()
 
       // Track momentum in GeV/C
       const State* state = &(track)->firstState();
-      const double tkPtot = ( state ? state->p()/GeV : 0 );
+      const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Track type
@@ -583,7 +581,7 @@ void RichPIDQC::countTracks( const std::string & location )
     if ( !(*iTrk)->checkFlag(::Track::Clone ) ) ++m_multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
     const State* state = &(*iTrk)->firstState();
-    const double tkPtot = ( state ? state->p()/GeV : 0 );
+    const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
     if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
     ++m_totalSelTracks;
   }
