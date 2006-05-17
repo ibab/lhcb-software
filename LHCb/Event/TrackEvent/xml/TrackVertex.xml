@@ -33,7 +33,7 @@
         desc="create a vertex with a selected key" 
         initList = "KeyedObject &lt;int&gt;( key )" >
         <code>
-          m_position = Gaudi::XYZPoint(0.0, 0.0, -1*km);
+          m_position = Gaudi::XYZPoint(0.0, 0.0, -1*Gaudi::Units::km);
           m_positionErr = Gaudi::SymMatrix3x3();
        </code>
        </constructor>
