@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.12 2006-04-06 13:26:11 odescham Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.13 2006-05-17 16:11:59 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -91,7 +91,7 @@ protected:
   ( const std::string& name , 
     ISvcLocator*       svc  )
     : GaudiAlgorithm    ( name , svc                  ) 
-    , m_threshold       ( 2 * perCent                 ) 
+    , m_threshold       ( 2 * Gaudi::Units::perCent   ) 
     // location(s) of clusters 
     , m_inputs          ()
     , m_output          ( "Relations/" + LHCb::CaloClusterLocation::Default + "CCs2MCPs")

@@ -1,26 +1,6 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.8 2006-04-06 13:26:11 odescham Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.9 2006-05-17 16:11:59 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2006/03/28 14:44:36  cattanem
-// remove checks on return code from methods that only fail with exception
-//
-// Revision 1.6  2006/02/23 21:30:45  odescham
-// Standardize TES path + cleaning
-//
-// Revision 1.5  2006/02/23 16:38:49  cattanem
-// fix warning and move tag
-//
-// Revision 1.4  2006/02/23 14:08:51  ibelyaev
-//  fiz to please MCTruth
-//
-// Revision 1.3  2006/02/21 11:17:17  odescham
-// adapt to CaloDataFunctor moved to LHCb namespace
-//
-// Revision 1.2  2006/02/21 10:04:46  odescham
-// update for new Event Model
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -121,14 +101,14 @@ protected:
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
     // Digit energy thresholds 
-    , m_cellET (   1 * MeV     ) 
-    , m_cellE  (  50 * MeV     ) 
+    , m_cellET (   1 * Gaudi::Units::MeV     ) 
+    , m_cellE  (  50 * Gaudi::Units::MeV     ) 
     // particle energy contribution thresholds 
-    , m_minET  (   1 * MeV     ) 
-    , m_minE   (  50 * MeV     ) 
-    , m_minFr  (   1 * perCent ) 
+    , m_minET  (   1 * Gaudi::Units::MeV     ) 
+    , m_minE   (  50 * Gaudi::Units::MeV     ) 
+    , m_minFr  (   1 * Gaudi::Units::perCent ) 
     // particle minimum energy
-    , m_minPE  (  50 * MeV     ) 
+    , m_minPE  (  50 * Gaudi::Units::MeV     ) 
     //
     , m_input     ( LHCb::CaloDigitLocation:: Ecal ) 
     , m_detector  ( DeCalorimeterLocation::   Ecal ) 
