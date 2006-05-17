@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.3 2005-12-14 14:16:47 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.h,v 1.4 2006-05-17 06:42:52 mneedham Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -26,7 +26,7 @@ public:
                              const std::string& name,
                              const IInterface* parent);
 
-  ~TrackDistanceExtraSelector();
+  virtual ~TrackDistanceExtraSelector();
 
   StatusCode initialize();
 

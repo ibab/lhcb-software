@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.8 2006-05-16 07:49:21 cattanem Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.9 2006-05-17 06:42:52 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -9,6 +9,9 @@
 
 // Local
 #include "TrackHerabExtrapolator.h"
+
+using namespace LHCb;
+using namespace Gaudi;
 
 DECLARE_TOOL_FACTORY( TrackHerabExtrapolator );
 

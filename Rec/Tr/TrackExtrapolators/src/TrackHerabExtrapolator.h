@@ -7,8 +7,7 @@
 // Forward declarations
 class IMagneticFieldSvc;
 
-using namespace Gaudi;
-using namespace LHCb;
+
 
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *
@@ -40,9 +39,9 @@ public:
 
 
   /// Propagate a state to a given z-position
-  virtual StatusCode propagate( State& pState, 
+  virtual StatusCode propagate( LHCb::State& pState, 
                                 double z,
-                                ParticleID partId = ParticleID(211) );
+                                LHCb::ParticleID partId = LHCb::ParticleID(211) );
 
 private:
  
@@ -114,8 +113,8 @@ private:
   int m_extrapolatorID;
 
   double             m_error;  ///< Error
-  XYZPoint           m_point;  ///< to compute the field
-  XYZVector          m_B;      ///< returned field
+  Gaudi::XYZPoint           m_point;  ///< to compute the field
+  Gaudi::XYZVector          m_B;      ///< returned field
   IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
 
   // Parameters for Runge-Kutta

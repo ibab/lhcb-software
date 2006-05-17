@@ -20,6 +20,9 @@ using namespace Gaudi::Units;
 // Local 
 #include "TrackParabolicExtrapolator.h"
 
+using namespace LHCb;
+using namespace Gaudi;
+
 DECLARE_TOOL_FACTORY( TrackParabolicExtrapolator );
 
 //=============================================================================

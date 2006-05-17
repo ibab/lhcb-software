@@ -19,6 +19,9 @@
 // Local 
 #include "TrackMasterExtrapolator.h"
 
+using namespace Gaudi;
+using namespace LHCb;
+
 DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 
 //=============================================================================

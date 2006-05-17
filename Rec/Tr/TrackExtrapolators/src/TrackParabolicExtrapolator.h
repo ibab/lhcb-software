@@ -7,8 +7,6 @@
 // Forward declaration
 class IMagneticFieldSvc;
 
-using namespace Gaudi;
-using namespace LHCb;
 
 /** @class TrackParabolicExtrapolator TrackParabolicExtrapolator.h \
  *         "TrackParabolicExtrapolator.h"
@@ -40,27 +38,27 @@ public:
   virtual StatusCode initialize();
   
   /// Propagate a state to a given z-position
-  virtual StatusCode propagate( State& state,
+  virtual StatusCode propagate( LHCb::State& state,
                                 double z,
-                                ParticleID pid = ParticleID(211) );
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
   
   /// Propagate a state to the closest position to the specified point
-  StatusCode propagate( State& state,
-                        const XYZPoint& point,
-                        ParticleID pid = ParticleID(211) );
+  StatusCode propagate( LHCb::State& state,
+                        const Gaudi::XYZPoint& point,
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
 protected:
 
   /// update transport matrix
   virtual void updateTransportMatrix( const double dz,
-                                      State& State );
+                                      LHCb::State& State );
 
 protected:
 
   double             m_ax;
   double             m_ay;
-  XYZVector          m_B;
+  Gaudi::XYZVector   m_B;
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service
 
 };

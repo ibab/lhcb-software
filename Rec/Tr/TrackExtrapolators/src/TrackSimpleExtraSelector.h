@@ -1,4 +1,4 @@
-// $Id: TrackSimpleExtraSelector.h,v 1.3 2005-12-14 14:16:48 erodrigu Exp $
+// $Id: TrackSimpleExtraSelector.h,v 1.4 2006-05-17 06:42:53 mneedham Exp $
 #ifndef TrackSimpleExtraSelector_H
 #define TrackSimpleExtraSelector_H 1
 
@@ -24,7 +24,7 @@ public:
                             const std::string& name,
                             const IInterface* parent );
 
-  ~TrackSimpleExtraSelector();
+  virtual ~TrackSimpleExtraSelector();
 
   StatusCode initialize();
 

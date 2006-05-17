@@ -1,4 +1,4 @@
-// $Id: TrackLongExtraSelector.h,v 1.3 2005-12-14 14:16:48 erodrigu Exp $
+// $Id: TrackLongExtraSelector.h,v 1.4 2006-05-17 06:42:52 mneedham Exp $
 #ifndef TrackLongExtraSelector_H
 #define TrackLongExtraSelector_H 1
 
@@ -24,7 +24,7 @@ public:
                          const std::string& name,
                          const IInterface* parent);
 
-  ~TrackLongExtraSelector();
+  virtual ~TrackLongExtraSelector();
 
   StatusCode initialize();
 

@@ -12,9 +12,6 @@ class ITransportSvc;
 class Material;
 class ITrackExtraSelector;
 
-using namespace Gaudi;
-using namespace LHCb;
-
 /** @class TrackMasterExtrapolator TrackMasterExtrapolator.h \
  *         "TrackMasterExtrapolator.h"
  *
@@ -51,26 +48,26 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   virtual StatusCode initialize();
 
   /// Propagate a state to a given z-position
-  virtual StatusCode propagate( State& state,
+  virtual StatusCode propagate( LHCb::State& state,
                                 double z,
-                                ParticleID partId = ParticleID(211) );
+                                LHCb::ParticleID partId = LHCb::ParticleID(211) );
 
  private:
    
   /// apply thick scatter state
-  void thinScatter( State& state, double radLength );
+  void thinScatter( LHCb::State& state, double radLength );
 
   /// apply thick scatter state
-  void thickScatter( State& state, double tWall, double radLength );
+  void thickScatter( LHCb::State& state, double tWall, double radLength );
 
   /// apply energy loss state
-  void energyLoss( State& state, double tWall, const Material* aMaterial );
+  void energyLoss( LHCb::State& state, double tWall, const Material* aMaterial );
 
   ///  electron energy loss state
-  void electronEnergyLoss( State& state, double radLength );
+  void electronEnergyLoss( LHCb::State& state, double radLength );
 
   /// update transport matrix
-  void updateTransportMatrix( const TrackMatrix& newStepF );
+  void updateTransportMatrix( const Gaudi::TrackMatrix& newStepF );
 
   /// z scatter
   double zScatter(const double z1,
@@ -110,10 +107,10 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 };
 
 inline void TrackMasterExtrapolator::updateTransportMatrix
-( const TrackMatrix& newStepF )
+( const Gaudi::TrackMatrix& newStepF )
 {
   // update F - after transport step
-  TrackMatrix tempF( m_F );
+  Gaudi::TrackMatrix tempF( m_F );
   m_F = newStepF * tempF;
 }
 

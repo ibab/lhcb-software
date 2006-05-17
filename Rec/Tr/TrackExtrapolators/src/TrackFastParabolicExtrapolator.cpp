@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.7 2006-05-16 07:49:21 cattanem Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.8 2006-05-17 06:42:52 mneedham Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -20,6 +20,9 @@ DECLARE_TOOL_FACTORY( TrackFastParabolicExtrapolator );
  *  @author Matt Needham
  *  @date   22-04-2000
  */
+
+using namespace LHCb;
+using namespace Gaudi;
 
 // TrackFastParabolicExtrapolator constructor.
 TrackFastParabolicExtrapolator::TrackFastParabolicExtrapolator

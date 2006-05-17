@@ -9,6 +9,9 @@
 // local
 #include "TrackLinearExtrapolator.h"
 
+using namespace LHCb;
+using namespace Gaudi;
+
 DECLARE_TOOL_FACTORY( TrackLinearExtrapolator );
 
 //=============================================================================

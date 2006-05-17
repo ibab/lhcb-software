@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-05-16 M. Needham
+ - Remove using namespace from header
+ - Make xxxExtraSelector destructers virtual (whoops)
+
 !======================= TrackExtrapolators v2r3 2006-05-16 ==================
 ! 2006-05-16 - Marco Cattaneo
  - Minor cleanups
