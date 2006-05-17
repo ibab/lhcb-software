@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.15 2006-03-16 13:35:56 pkoppenb Exp $
+// $Id: DecayFinder.cpp,v 1.16 2006-05-17 16:28:46 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -13,6 +13,8 @@
 
 // local
 #include "DecayFinder.h"
+
+using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DecayFinder

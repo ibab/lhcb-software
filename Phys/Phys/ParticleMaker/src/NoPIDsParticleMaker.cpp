@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.7 2006-05-16 17:59:02 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.8 2006-05-17 16:28:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "Kernel/IParticle2State.h"
 // local
 #include "NoPIDsParticleMaker.h"
+using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NoPIDsParticleMaker

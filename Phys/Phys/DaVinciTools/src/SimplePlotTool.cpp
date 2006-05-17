@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.13 2006-05-03 18:33:49 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.14 2006-05-17 16:28:46 jpalac Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -17,6 +17,9 @@
 //
 // 2005-01-05 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
+
+using namespace Gaudi::Units;
+
 
 // Declaration of the Tool Factory
 static const  ToolFactory<SimplePlotTool>          s_factory ;

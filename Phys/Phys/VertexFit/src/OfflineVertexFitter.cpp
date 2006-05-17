@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.1 2006-04-03 17:07:03 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.2 2006-05-17 16:27:53 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +22,7 @@
 #include "OfflineVertexFitter.h"
 
 using namespace LHCb ;
-
+using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 // Implementation file for class : OfflineVertexFitter
 //
