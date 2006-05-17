@@ -9,7 +9,7 @@ use DetDescSvc          v1r4    Det
 use XmlTools		v3r9    Tools
 use VeloDet        	v10r6   Det
 use OTDet               v6r3    Det
-use CaloDet	   	v7r1    Det
+use CaloDet	   	v7r2    Det
 use CaloDetXmlCnv  	v2r3p2	Det
 use MuonDet             v5r3    Det
 use Magnet              v3r1    Det
