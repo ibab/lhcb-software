@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.69 2006-05-15 06:59:52 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.70 2006-05-17 16:03:29 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -196,7 +196,7 @@ const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
     StatusCode sc=(*iDeVeloSensor)->globalToLocal(point,localPoint);
     if(sc.isSuccess()) {
       double z = localPoint.z();
-      if(0.20*mm > fabs(z)) {
+      if(0.20*Gaudi::Units::mm > fabs(z)) {
         return ((*iDeVeloSensor)->sensorNumber());
       }
     }

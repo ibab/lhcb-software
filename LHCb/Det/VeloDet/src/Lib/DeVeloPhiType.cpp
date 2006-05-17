@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.24 2006-05-15 06:59:52 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.25 2006-05-17 16:03:29 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -75,7 +75,7 @@ StatusCode DeVeloPhiType::initialize()
   m_middleRadius = param<double>("PhiBoundRadius"); // PhiBound
   // Point where strips of inner/outer regions cross
   m_phiOrigin = param<double>("PhiOrigin");
-  m_phiOrigin -= halfpi;
+  m_phiOrigin -= Gaudi::Units::halfpi;
   /* Inner strips (dist. to origin defined by angle between 
      extrapolated strip and phi)*/
   m_innerDistToOrigin = param<double>("InnerDistToOrigin");
@@ -88,9 +88,9 @@ StatusCode DeVeloPhiType::initialize()
     asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
   double phi = m_outerTilt - asin( m_outerDistToOrigin/outerRadius() );
-  msg << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/degree
-      << " at boundary " << phiAtBoundary/degree
-      << " and outside " << phi/degree
+  msg << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/Gaudi::Units::degree
+      << " at boundary " << phiAtBoundary/Gaudi::Units::degree
+      << " and outside " << phi/Gaudi::Units::degree
       << endreq;
   
   // Angular coverage
@@ -233,10 +233,10 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setStrip(closestStrip);
   channel.setType(LHCb::VeloChannelID::PhiType);
 
-  msg << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/degree
+  msg << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/Gaudi::Units::degree
       << " radius " << localPoint.Rho() 
-      << " phiOffset " << phiOffset(radius)/degree
-      << " phi corrected " << phi/degree << endreq;
+      << " phiOffset " << phiOffset(radius)/Gaudi::Units::degree
+      << " phi corrected " << phi/Gaudi::Units::degree << endreq;
   msg << MSG::VERBOSE << " strip " << strip << " closest strip " << closestStrip
       << " fraction " << fraction <<endreq;
   return StatusCode::SUCCESS;

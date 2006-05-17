@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.18 2006-04-12 14:23:22 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.19 2006-05-17 16:03:29 cattanem Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -8,7 +8,7 @@
 
 // from Kernel
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -123,7 +123,7 @@ public:
   /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal) const {
     if(isDownstream()) phiLocal = -phiLocal;
-    if(isRight()) phiLocal += pi;
+    if(isRight()) phiLocal += Gaudi::Units::pi;
     return phiLocal;
   } 
 

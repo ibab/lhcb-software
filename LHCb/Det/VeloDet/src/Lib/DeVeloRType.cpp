@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.28 2006-05-15 06:59:52 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.29 2006-05-17 16:03:29 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -126,7 +126,7 @@ bool DeVeloRType::m_staticDataInvalid = true;
 //==============================================================================
 DeVeloRType::DeVeloRType(const std::string& name) : 
   DeVeloSensor(name),
-  m_halfAngle(90.0 * degree),
+  m_halfAngle(90.0 * Gaudi::Units::degree),
   m_quarterAngle(.5 * m_halfAngle),
   m_rStrips(VeloDet::deVeloRTypeStaticRStrips()),
   m_rPitch(VeloDet::deVeloRTypeStaticRPitch()),
