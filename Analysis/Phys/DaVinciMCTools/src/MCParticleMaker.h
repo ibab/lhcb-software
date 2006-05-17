@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.8 2006-04-18 13:22:14 jpalac Exp $
+// $Id: MCParticleMaker.h,v 1.9 2006-05-17 16:26:45 jpalac Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -171,9 +171,9 @@ private:
                            const Gaudi::SymMatrix7x7& cov);  ///< fill Particle according generation criteria
   bool reconstructible(const LHCb::MCParticle& icand) const; 
   const LHCb::Particle *reconstructed(const LHCb::MCParticle& icand) const;
-  Gaudi::SymMatrix7x7 * fetchCovariance(const LHCb::Particle& p ) const;
+  StatusCode fetchCovariance(const LHCb::Particle& p , Gaudi::SymMatrix7x7 &c);
   /// Generate covariance according realistic parametrization  
-  Gaudi::SymMatrix7x7 * generateCovariance(const Gaudi::XYZTVector& p) const;
+  StatusCode generateCovariance(const Gaudi::XYZTVector& p,Gaudi::SymMatrix7x7 &ccc );
 
   //====================================================================================
   

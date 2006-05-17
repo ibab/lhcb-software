@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.cpp,v 1.1 2006-05-03 18:29:56 pkoppenb Exp $
+// $Id: MCPrimVertexMaker.cpp,v 1.2 2006-05-17 16:26:45 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -21,6 +21,9 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCPrimVertexMaker );
+//
+using namespace Gaudi::Units;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

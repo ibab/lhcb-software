@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.107 2006-05-05 17:48:22 pkoppenb Exp $
+! $Id: release.notes,v 1.108 2006-05-17 16:26:45 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-05-17 - Juan PALACIOS
+  - src/*cpp use Gaudi::Units namespace
+
+! 2006-05-17 - Juan PALACIOS for Stefania VECCHI	
+  - Fixes to MCParticleMaker memory leaks
 
 ! 2006-05-05 - P. Koppenburg
  - src/MCParticleMaker.cpp: 

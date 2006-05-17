@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.21 2006-05-05 17:48:23 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.22 2006-05-17 16:26:45 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -22,6 +22,7 @@
  * MCParticles and places it in the Transient Event Store
  *
  * 03/10/2002 : Gerhard Raven
+ * May 2006: Gabriele Balbi & Stefania Vecchi
  *-----------------------------------------------------------------------------
  */
 /// Returns false if is the MCPArticle is one of these stable particles (mu+/-,e+/-,pi+/-,K+/-,p/antip, gamma); true otherwise 
@@ -36,6 +37,9 @@ struct IsUnstable : std::unary_function<LHCb::MCParticle*,bool> {
 // Declaration of the Tool Factory
 static const  ToolFactory<MCParticleMaker>          s_factory ;
 const        IToolFactory& MCParticleMakerFactory = s_factory ;
+
+using namespace Gaudi::Units;
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -133,9 +137,8 @@ StatusCode MCParticleMaker::initialize() {
     fatal() << "Unable to locate RndmGenSvc Flat distribution" << endmsg;
     return StatusCode::FAILURE;
   }
-
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
-  
+
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {
     fatal() << "Instructed to use covariance matrix of"
@@ -229,6 +232,7 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
 
   //  LinkerWithKey<LHCb::MCParticle,LHCb::Particle> myLink(evtSvc(), msgSvc(), Part_candidates);
   // LinkerWithKey<LHCb::Particle,LHCb::MCParticle> myLink(evtSvc(), msgSvc(), LHCb::MCParticleLocation::Default);
+
       
   std::vector<const LHCb::MCParticle*>::const_iterator icand;
   for(icand = list.begin(); icand != list.end(); icand++){
@@ -240,27 +244,29 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
 
     // covariance is in (x,y,z,px,py,pz,m) order
     debug()<< "Build Covariance Matrix "<<endmsg;
-    Gaudi::SymMatrix7x7* covariance = NULL ;
+    Gaudi::SymMatrix7x7 covariance;
     if ( m_onlyReconstructed) {
       const LHCb::Particle *measurement = reconstructed(**icand);
-      if (measurement == 0)  continue;
-      if ( m_useReconstructedCovariance ) {
-        covariance = fetchCovariance(*measurement);
-      }
-    }
-    if (NULL==covariance){
-      debug()<<"Generate covariance"<<endmsg;
-      covariance = generateCovariance((*icand)->momentum()) ;
+      if ( m_useReconstructedCovariance && measurement !=0 ) {
+        fetchCovariance(*measurement,covariance);
+      }else{
+        generateCovariance((*icand)->momentum(),covariance);
+      } 
+    } else {
+      generateCovariance((*icand)->momentum(),covariance);
     }
     debug() << "Got covariance matrix" << endmsg ;
-    std::auto_ptr<LHCb::Particle> particle( new LHCb::Particle() );
-    StatusCode sc = fillParticle( **icand, *particle, *covariance);
+    //std::auto_ptr<LHCb::Particle> particle( new LHCb::Particle() );
+    LHCb::Particle* particle( new LHCb::Particle() );
+    StatusCode sc = fillParticle( **icand, *particle, covariance);
     if(sc.isFailure()) continue;
-    parts.push_back(particle.release());
+    //    parts.push_back(particle.release());
+    parts.push_back(particle);
     debug() << "Done candidate of pid " << (*icand)->particleID().pid() << endmsg ;
+
     //          myLink.link((*icand),particle, 1.);
     //      myLink.link(particle,(*icand), 1.);
-    debug()<< " Created Linker MCParticle-Particle"<<endmsg;
+    //    debug()<< " Created Linker MCParticle-Particle"<<endmsg;
   }
 
   debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endmsg;
@@ -365,13 +371,13 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
     debug()<< " Matrix U"<<endmsg;
     debug()<< " Matrix invU"<<endmsg;
 
+
     Gaudi::Matrux7x7 quadra(0);
     for (int i=0;i<7;++i)  quadra(i,i)=i;	
-    
-    
+
     Gaudi::Matrix7x7 pip =U*(quadra*invU);	
     int newindex[7];	
-    
+
     for (int i=0;i<7;++i) {		
       newindex[i]=(int)(rint(pip(i,i))); 
       debug() << newindex[i] <<" ";
@@ -402,11 +408,12 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
     pos.SetZ(  pos.z()  + deviates(2) + BIAS[2]*sqrt(covSF(2,2)));  
     //pos.SetZ(  pos.z() );                                           // z unchanged
 
+    double  m = mom.M();
+
     /*   Old Particle parametrization
          double sx = mom.px()/mom.pz() + deviates(3) + BIAS[3]*sqrt(covSF(3,3));
          double sy = mom.py()/mom.pz() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
          double  p = mom.Vect().R()  + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
-         double  m = mom.M();
          double pz = p / sqrt(1+sx*sx+sy*sy);
          mom = Gaudi::XYZTVector( sx*pz,sy*pz,pz,sqrt(m*m+p*p) );
     */
@@ -414,11 +421,11 @@ MCParticleMaker::fillParticle( const LHCb::MCParticle& mc,
     double py = mom.py() + deviates(4) + BIAS[4]*sqrt(covSF(4,4));
     double pz = mom.pz() + deviates(5) + BIAS[5]*sqrt(covSF(5,5));
     //    double  E = mom.E() + deviates(6) + BIAS[6]*sqrt(covSF(6,6); //todo substitute for gamma
-    double  E = sqrt(px*px + py*py + pz*pz + mass*mass); 
+    double  E = sqrt(px*px + py*py + pz*pz + m*m); 
     verbose() << "... new position -> " << pos << endmsg ;
     verbose() << "... MC momenta -> " << mom << endmsg ;
     mom = Gaudi::XYZTVector( px, py, pz, E);
-    verbose() << "... new momenta -> " << mom << "  New mass = " << mom.M() << endmsg ;
+    verbose() << "... new momenta -> " << mom << endmsg ;
 
   }
     
@@ -463,24 +470,23 @@ MCParticleMaker::reconstructed(const LHCb::MCParticle& icand) const
 //=====================================================================
 // fetchCovariance
 //=====================================================================
-Gaudi::SymMatrix7x7 *
-MCParticleMaker::fetchCovariance(const LHCb::Particle& p ) const{
+StatusCode MCParticleMaker::fetchCovariance(const LHCb::Particle& p ,Gaudi::SymMatrix7x7 &c) {
+  debug()<<"Fetch covariance"<<endmsg;
 
   Gaudi::Matrix7x7 cTmp = Gaudi::Matrix7x7();
   cTmp.Place_at(p.posCovMatrix(),0,0);
   cTmp.Place_at(p.momCovMatrix(),3,3);
   cTmp.Place_at(p.posMomCovMatrix(), 0, 3);
   cTmp.Place_at(ROOT::Math::Transpose(p.posMomCovMatrix()), 3, 0); /// @todo Check that this actually works!
-  Gaudi::SymMatrix7x7 *c = new Gaudi::SymMatrix7x7();
-  *c = LHCb::MatrixManip::Symmetrize(cTmp);
+  c = LHCb::MatrixManip::Symmetrize(cTmp);
 
-  return c;
+  return StatusCode::SUCCESS;
 }
 //=====================================================================
 // generateCovariance
 //=====================================================================
-Gaudi::SymMatrix7x7 *
-MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
+StatusCode MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p,Gaudi::SymMatrix7x7 &ccc ){
+  debug()<<"Generate covariance"<<endmsg;
 
   ///  @todo Take care of 7th column
   ///  @todo Replace sx,sy,p parameterization by px,py,pz
@@ -488,6 +494,7 @@ MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
 
   Gaudi::SymMatrix6x6 *c  = new Gaudi::SymMatrix6x6();    //(x,y,z,Sx,Sy,p)
   Gaudi::SymMatrix7x7 *cc = new Gaudi::SymMatrix7x7();    //(x,y,z,px,py,pz,E)
+
   // Set Covariance Matrix based on the following parametrization
   double pperp = p.Pt();
   if (pperp<0.01*MeV) pperp = 0.01*MeV; // to avoid junk
@@ -500,7 +507,7 @@ MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
   double Ty = p.Py()/p.Pz();
   double Factor = sqrt(1.+Tx*Tx+Ty*Ty);
   
-  debug() << "Generation covariance matrix based on " << p.P() << " " << sip << endmsg ;
+  debug() << "Generation covariance matrix based on " << p.P() << " momenta and " << sip << " impact parameter" << endmsg ;
 
   (*c)(0,0)= sip*sip/2;
   (*c)(1,1)= (*c)(0,0);
@@ -543,15 +550,16 @@ MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
       }
     }
   }
+  debug() << " Covariance Matrix generated:" << endmsg;
   
+
+  //////// Temporary !!!! TO DEFINE A DIAGONAL MATRIX ccc ///// otherwise return cc
+  for(int i=0;i<7;i++) ccc(i,i)=(*cc)(i,i);
+  delete Jacob;
+  delete c;
+  delete cc;
   
-  verbose() << " Covariance Matrix generated:" << endmsg;
-  
-  //  return cc;
-  //////// Temporary !!!! TO DEFINE A DIAGONAL MATRIX /////
-  Gaudi::SymMatrix7x7 *ccc = new Gaudi::SymMatrix7x7(0);    //(x,y,z,px,py,pz,E)
-  for(int i=0;i<7;i++) (*ccc)(i,i)=(*cc)(i,i);
-  return ccc;
+  return StatusCode::SUCCESS;
   
 }
 
@@ -559,7 +567,7 @@ MCParticleMaker::generateCovariance(const Gaudi::XYZTVector& p) const{
 // getFinalState
 //=====================================================================
 /// method to retrieve the list of the STABLE DECAY PRODUCTS of the decay channel defined in JobOption
-std::vector<const LHCb::MCParticle*> MCParticleMaker::getFinalState(const LHCb::MCParticle& m){
+  std::vector<const LHCb::MCParticle*> MCParticleMaker::getFinalState(const LHCb::MCParticle& m){
   typedef std::vector<const LHCb::MCParticle*> PV;
   PV pv;
   pv.push_back(&m);
