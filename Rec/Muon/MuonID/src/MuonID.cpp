@@ -5,7 +5,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // local
 #include "MuonID.h"
@@ -27,10 +26,7 @@
 // 14/12/2005 : Erica Polycarpo, Miriam Gandelman 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MuonID>          s_factory ;
-const        IAlgFactory& MuonIDFactory = s_factory ;
-
+DECLARE_ALGORITHM_FACTORY( MuonID );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -765,9 +761,9 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
 double MuonID::foiX(const int &station, const int &region, const double &p,
                        const double &dx){
   return ( m_xfoiParam1[ station * m_NRegion + region ] +
-           m_xfoiParam2[ station * m_NRegion + region ]*p/GeV +
+           m_xfoiParam2[ station * m_NRegion + region ]*p/Gaudi::Units::GeV +
            m_xfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/GeV ) )*dx;
+      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
   //then eliminates dx from function
@@ -777,9 +773,9 @@ double MuonID::foiX(const int &station, const int &region, const double &p,
 double MuonID::foiY(const int &station, const int &region, const double &p, 
                        const double &dy){
   return ( m_yfoiParam1[ station * m_NRegion + region ] +
-           m_yfoiParam2[ station * m_NRegion + region ]*p/GeV +
+           m_yfoiParam2[ station * m_NRegion + region ]*p/Gaudi::Units::GeV +
            m_yfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/GeV ) )*dy;
+      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
 }
 
 //=============================================================================

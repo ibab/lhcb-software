@@ -1,6 +1,10 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
+!========================== MuonID v4r2 2006-05-17 ===================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
 !========================== MuonID v4r1 2006-05-03 ===================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
