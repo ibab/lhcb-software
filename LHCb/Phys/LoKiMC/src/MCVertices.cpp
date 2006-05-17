@@ -1,8 +1,11 @@
-// $Id: MCVertices.cpp,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: MCVertices.cpp,v 1.4 2006-05-17 16:23:24 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/18 18:10:57  ibelyaev
+//  fix a typo
+//
 // Revision 1.2  2006/02/07 17:14:03  ibelyaev
 //  regular update
 //
@@ -79,7 +82,7 @@ LoKi::MCVertices::TimeOfFlight::operator()
   if ( 0 == v ) 
   { 
     Error (  " MCVertex* points to NULL, return -1000 * ms " ) ;
-    return -1000. * ms ;
+    return -1000. * Gaudi::Units::ms ;
   }
   return v->time() ;
 };
@@ -237,7 +240,9 @@ LoKi::MCVertices::MCVertexDistance::MCVertexDistance
   if ( 0 == point ) 
   { 
     Error ( "MCVertex* points to NULL!") ;
-    m_point = LoKi::Point3D( -1.0 * km , -1.0 * km , -1.0 * km ) ;
+    m_point = LoKi::Point3D( -1.0 * Gaudi::Units::km , 
+                             -1.0 * Gaudi::Units::km , 
+                             -1.0 * Gaudi::Units::km ) ;
   }
   else { m_point = point->position(); }
 }
@@ -261,7 +266,7 @@ LoKi::MCVertices::MCVertexDistance::operator()
   if ( 0 == v ) 
   {
     Error("MCVertex* points to NULL, return -1.0 * km " );
-    return -1.0 * km ;
+    return -1.0 * Gaudi::Units::km ;
   }
   return  ( v->position() - m_point ).R() ;
 };

@@ -1,8 +1,11 @@
-// $Id: MCParticles.cpp,v 1.5 2006-04-09 09:03:14 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.6 2006-05-17 16:23:24 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/04/09 09:03:14  ibelyaev
+//  regular update
+//
 // Revision 1.4  2006/03/22 10:33:16  ibelyaev
 //  Add MCFilter: adapter for IMCParticleSelector tool
 //
@@ -1230,8 +1233,8 @@ LoKi::MCParticles::DeltaPhi::operator()
   //
   double dphi = p->momentum().phi() - m_phi ;
   // adjust the value 
-  while ( dphi >   180 * degree ) { dphi -= 360 * degree ; }
-  while ( dphi <= -180 * degree ) { dphi += 360 * degree ; }
+  while ( dphi >   180 * Gaudi::Units::degree ) { dphi -= 360 * Gaudi::Units::degree ; }
+  while ( dphi <= -180 * Gaudi::Units::degree ) { dphi += 360 * Gaudi::Units::degree ; }
   //
   return dphi ;
 };
