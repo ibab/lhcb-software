@@ -1,23 +1,6 @@
-// $Id: DeCalorimeter.h,v 1.18 2006-04-03 16:18:42 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.19 2006-05-17 16:01:55 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.17  2006/03/31 20:50:18  odescham
-// introduce reference plane in DeCalirimeter  + ADAPT TO CHANGE IN XMLDDDB/CONDITIONS
-//
-// Revision 1.16  2006/01/17 18:44:17  odescham
-// v7r1 - adapt DeCalorimeterLocations to new path structure
-//
-// Revision 1.15  2005/12/16 17:12:40  odescham
-// v8r0 - LHCb v20 migration + cleaning
-//
-// Revision 1.14  2005/12/02 14:52:46  ocallot
-// Use conditions for gain and cards
-//
-// Revision 1.13  2005/07/06 15:30:24  ibelyaev
-//  minor fixes to please  LCGdict
-//
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -29,8 +12,6 @@
 #include "Kernel/Transform3DTypes.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// from Det/DetDesc
@@ -559,14 +540,6 @@ inline void DeCalorimeter::Assert( bool assertion ,
 // ============================================================================
 #endif  //    CALODET_DECALORIMETER_H
 // ============================================================================
-
-
-
-
-
-
-
-
 
 
 

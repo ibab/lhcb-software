@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.93 2006-05-16 18:40:02 jpalac Exp $
+! $Id: release.notes,v 1.94 2006-05-17 15:58:07 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
+!======================= PhysEvent v9r4 2006-05-16 ==========================
 ! 2006-05-16 - Juan PALACIOS
  - Add Gaudi::Units:: namespace prefix to some units used in header files.
 
-!======================= PhysEvent v9r4 2006-05-11 ==========================
 ! 2006-05-08 - Juan PALACIOS
  - src/Particle.cpp: Fix bug in Particle::covMatrix. Erroneous assignment of
                      off-diagonal position-momentum covariance blocks.

@@ -15,7 +15,7 @@
       stdVectorTypeDef="TRUE"
       id="802"
      >
-       <import name="Kernel/SystemOfUnits.h"/>
+       <import name="GaudiKernel/SystemOfUnits.h"/>
        <import name="GaudiKernel/VectorMap.h"/>
        <import name="Kernel/Point3DTypes.h"/>
        <import name="Kernel/SymmetricMatrixTypes.h"/>

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.55 2006-04-03 16:18:43 odescham Exp $ 
+! $Id: release.notes,v 1.56 2006-05-17 16:01:55 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
+
+!========================= CaloDet v7r2 2006-05-17 ============================
+! 2006-05-17 - Marco Cattaneo
+ - Move to Gaudi::Units
 
 !========================= CaloDet v7r1 2006-04-03 ============================
 ! 2006-04-03 - Olivier Deschamps

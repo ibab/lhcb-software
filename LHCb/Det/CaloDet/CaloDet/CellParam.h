@@ -1,17 +1,11 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2003/01/23 18:39:42  ocallot
-/// Fix unitialized variables in CellParam constructor
-///
-/// Revision 1.1  2001/07/02 17:17:58  ibelyaev
-/// improvements in readability of DeCalorimeter.h
-///
-/// ===========================================================================
+// $Id: CellParam.h,v 1.4 2006-05-17 16:01:55 cattanem Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
 
 // Include files
+#include "GaudiKernel/PhysicalConstants.h"
 
 class DeCalorimeter;
 
@@ -65,7 +59,7 @@ public:
     //    m_sine   = sqrt( (point.x()*point.x() + point.y()*point.y()) / 
     //                 point.mag2() ); 
     m_sine   = point.Rho()/point.R();  // MathCore methods (Cartesian3D)
-    m_time   = point.R() /c_light *ns; //R=sqrt(Mag2)
+    m_time   = point.R() /Gaudi::Units::c_light *Gaudi::Units::ns; //R=sqrt(Mag2)
   }
   
   void addZsupNeighbor( const LHCb::CaloCellID& ID) { 
