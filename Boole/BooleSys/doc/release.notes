@@ -3,9 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v12r0>2006-05-10 Boole v12r0</A></H1><PRE>
+</PRE><H1><A NAME=v12r0>2006-05-18 Boole v12r0</A></H1><PRE>
 This version uses projects Gaudi v18r4, LHCb v21r0, Lbcom v5r0
-  and databases XmlDDDB v30r6, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
+  and databases XmlDDDB v30r7, XmlConditions v1r6, ParamFiles v4r1, FieldMap v4r7
 Requires input from Gauss v24r3 or greater. Output needs Brunel v30r1 or greater
 
 This is the first "Post DC06" release. It is intended to keep the software in
@@ -22,6 +22,7 @@ Changes relative to v11r5:
   . Use Boost allocators in Event model classes. Speeds up Digi phase by 10%
     (EventSys v21r5, GaudiObjDesc v9r5)
   . Increased active radius on pixel chip in HPDPanel (RichDet v9r4)
+  . Fix an overlap in Rich1 HPDs (XmlDDDB v30r7)
 
 - Monitoring changes:
   . Replace VeloClusterMoni with VeloRawClusterMoni
