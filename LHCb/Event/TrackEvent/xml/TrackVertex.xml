@@ -23,7 +23,7 @@
 
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-      <import name="Kernel/SystemOfUnits"/>
+      <import name="GaudiKernel/SystemOfUnits"/>
 
       <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
       <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
