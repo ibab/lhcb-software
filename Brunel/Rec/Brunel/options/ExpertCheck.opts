@@ -46,9 +46,9 @@ OTTimeChecker.fullDetail = true;
 // Detailed RICH reconstruction monitors
 ApplicationMgr.DLLs += { "RichRecMonitors" };
 //#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
-//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
-#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
-#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
+#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
+//#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
+//#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
 
 // Calorimeters
 Check.DetectorList += { "CALO" };
