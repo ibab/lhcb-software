@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.43 2006-04-21 19:43:18 krinnert Exp $
+// $Id: DeVelo.h,v 1.44 2006-05-18 12:00:28 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -297,7 +297,7 @@ private:
   std::vector<DeVeloRType*> m_vpPUSensor;
   
   /// return the index of the sensor (assumes sensors are stored 
-  unsigned int sensorIndex(unsigned int sensor) const;
+  unsigned int sensorIndex(unsigned int sensor) const {return m_sensorIndices[sensor];}
 
   /// Number of R sensors
   unsigned int m_nRSensors;
@@ -315,9 +315,7 @@ private:
   std::vector< std::vector< unsigned int > > m_AssocSensors;
     
   /// Indices of R, Phi and Pile Up sensors in list of all sensors sorted by z
-  std::vector<unsigned int> m_RIndex;
-  std::vector<unsigned int> m_PhiIndex;
-  std::vector<unsigned int> m_PUIndex;
+  mutable std::map<unsigned int,unsigned int> m_sensorIndices;
 
   /// Custom operator for sorting sensors in terms of z position
   struct less_Z {

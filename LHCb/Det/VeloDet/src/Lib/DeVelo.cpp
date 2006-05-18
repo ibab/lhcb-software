@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.70 2006-05-17 16:03:29 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.71 2006-05-18 12:00:28 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -103,18 +103,16 @@ StatusCode DeVelo::initialize() {
     if((*iDESensor)->isR()){
       m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nRSensors++;
-      m_RIndex.push_back(index);
     } else if((*iDESensor)->isPhi()){
       m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
       m_nPhiSensors++;
-      m_PhiIndex.push_back(index);
     } else if((*iDESensor)->isPileUp()){
       m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nPileUpSensors++;
-      m_PUIndex.push_back(index);
     } else {
       msg << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
+    m_sensorIndices[m_vpSensor[index]->sensorNumber()]=index;
     msg << MSG::DEBUG << "Module " << m_vpSensor[index]->module()
         << " sensor " << m_vpSensor[index]->sensorNumber()
         << " type " << m_vpSensor[index]->fullType() 
@@ -123,18 +121,6 @@ StatusCode DeVelo::initialize() {
     detElemCount++;
   }
 
-  // Check indices are correct
-  if(msg.level() == MSG::VERBOSE) {
-    for(unsigned int i=0; m_RIndex.size()>i; i++){
-      msg << MSG::VERBOSE << "Index of R sensors " << i << " " 
-          <<  m_RIndex[i];
-      msg << " sensor number " << m_vpSensor[m_RIndex[i]]->sensorNumber()
-          << endmsg;
-    }
-    
-  }
-  
-  
   // Build a list of phi sensors associated to R
   // Dog leg shape requires both phi of the station
   // need to sort sensors into accending order in z
@@ -204,15 +190,6 @@ const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
       << point.z() << endmsg;
   return -999;
-}
-
-// Return the index of a sensor in the vector of pointers to the sensors 
-// which increase with sensor number
-unsigned int DeVelo::sensorIndex(unsigned int sensor) const
-{
-  if(64 > sensor) return m_RIndex[sensor];
-  else if(128 > sensor) return m_PhiIndex[sensor-64];
-  else return m_PUIndex[sensor-128];
 }
 
 // return pointer to sensor
