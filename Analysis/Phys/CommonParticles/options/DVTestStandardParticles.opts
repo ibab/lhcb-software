@@ -13,6 +13,8 @@ DaVinciMainSeq.Members += { "PrintTree/PrintD0" };
 PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KPi" } ;
 PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02PiPi" } ;
 PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KK" } ;
+PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KsPiPi" } ;
+PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KsKK" } ;
 
 DaVinciMainSeq.Members += { "PrintTree/PrintDs" };
 PrintDs.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDs2KKPi" } ;

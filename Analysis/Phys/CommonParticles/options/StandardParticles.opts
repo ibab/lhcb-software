@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
+// $Id: StandardParticles.opts,v 1.3 2006-05-18 10:44:42 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -32,6 +32,7 @@
  *    - Proton   : det='RICH' DLL(p/pi)  > -5 
  *    - Pion     : No requirements
  *    - VTT Pions: Made of VTT tracks
+ *    - Downstream Pions: Made of Downstream tracks
  *    - Leptons  : muons and electrons  
  *    - Mesons   : kaons and pions 
  *    - Hadrons  : kaons, protons and pions 
@@ -136,6 +137,9 @@ DataOnDemandSvc.Algorithms += {
   // Loose VTT pions  
   "DATA='/Event/Phys/StdLooseVTTPions/Particles'     TYPE='PreLoadParticles/StdLooseVTTPions'",
   "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='PreLoadParticles/StdLooseVTTPions'",
+  // Loose Downstream pions  
+  "DATA='/Event/Phys/StdLooseDownstreamPions/Particles'     TYPE='PreLoadParticles/StdLooseDownstreamPions'",
+  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'      TYPE='PreLoadParticles/StdLooseDownstreamPions'",
   // Loose mesons:  loose kaons + loose pions 
   "DATA='/Event/Phys/StdLooseMesons/Particles'    TYPE='PreLoadParticles/StdLooseMesons'",
   "DATA='/Event/Phys/StdLooseMesons/Vertices'     TYPE='PreLoadParticles/StdLooseMesons'",
@@ -232,6 +236,14 @@ StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.PionSelection = {} ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.UseVTTTracks = true ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
 StdLooseVTTPions.DecayDescriptor = "Pion" ;
+
+StdLooseDownstreamPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
+StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.PionSelection = {} ;
+StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.UseDownstreamTracks = true ;
+StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
+StdLooseDownstreamPions.DecayDescriptor = "Pion" ;
 
 StdLooseMesons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseMesons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;

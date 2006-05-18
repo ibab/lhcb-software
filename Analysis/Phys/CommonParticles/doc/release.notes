@@ -4,6 +4,16 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-18 - P. Koppenburg 
+  - options/StandardKs.opts
+    . Added options by Cristina Lazzeroni
+  - options/StandardD0.opts
+    . Added D0->KsPiPi and KsKK by Cristina Lazzeroni
+  - options/StandardParticles.opts
+    . Added StdLooseDownstreamPions for Ks
+  - options/DVTestStandardParticles.opts
+    . Test D0->KsHH
+
 !========================== CommonParticles v2r1 2006-04-28 ===================
 ! 2006-04-28 - P. Koppenburg 
   - options/StandardDstar.opts

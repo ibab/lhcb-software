@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.3 2006-05-18 10:44:42 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -31,6 +31,7 @@
  *  @see StandardJpsi.opts : The standard J/psi -> MuMu
  *  @see StandardKstar.opts : The standard K*
  *  @see StandardPhi.opts : The standard Phi
+ *  @see StandardKs.opts : The standard Ks
  *
  *  @author P. Koppenburg
  *  @date 2006-01-30
@@ -44,3 +45,4 @@
 #include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKstar.opts"
 #include "$COMMONPARTICLESROOT/options/StandardPhi.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKs.opts"

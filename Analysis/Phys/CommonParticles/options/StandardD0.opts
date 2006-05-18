@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.2 2006-02-03 09:32:20 pkoppenb Exp $
+// $Id: StandardD0.opts,v 1.3 2006-05-18 10:44:42 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -11,6 +11,7 @@
  *  @see StandardOptions.opts for other intermediate states
  *
  *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @author Cristina Lazzeroni
  *  @date 2006-01-30
  */
 DataOnDemandSvc.Algorithms += {
@@ -22,7 +23,13 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseD02PiPi/Vertices'     TYPE='MakeResonances/StdLooseD02PiPi'",
 // Loose D0->KK
   "DATA='/Event/Phys/StdLooseD02KK/Particles'      TYPE='MakeResonances/StdLooseD02KK'",
-  "DATA='/Event/Phys/StdLooseD02KK/Vertices'       TYPE='MakeResonances/StdLooseD02KK'"
+  "DATA='/Event/Phys/StdLooseD02KK/Vertices'       TYPE='MakeResonances/StdLooseD02KK'",
+// Loose D0->KsPiPi by Cristina Lazzeroni
+  "DATA='/Event/Phys/StdLooseD02KsPiPi/Particles'  TYPE='MakeResonances/StdLooseD02KsPiPi'",
+  "DATA='/Event/Phys/StdLooseD02KsPiPi/Vertices'   TYPE='MakeResonances/StdLooseD02KsPiPi'",
+// Loose D0->KsKK by Cristina Lazzeroni
+  "DATA='/Event/Phys/StdLooseD02KsKK/Particles'    TYPE='MakeResonances/StdLooseD02KsKK'",
+  "DATA='/Event/Phys/StdLooseD02KsKK/Vertices'     TYPE='MakeResonances/StdLooseD02KsKK'"
 };
 
 /*************************************************************************
@@ -76,3 +83,46 @@ StdLooseD02KK.MinPt  = 1000.0 * MeV; // hlt presel: 500 MeV
 // Cuts for mother
 StdLooseD02KK.MotherFilter.Selections = {"D0 : VtxFilterCriterion"}; 
 StdLooseD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
+
+/*************************************************************************
+*  Standard Loose D0->KsPiPi
+*  @author C. Lazzeroni
+*/
+StdLooseD02KsPiPi.PhysDesktop.InputLocations = {"Phys/StdLoosePions"};
+StdLooseD02KsPiPi.PhysDesktop.InputLocations += {"Phys/StdLooseKsLL","Phys/StdLooseKsDD"};
+StdLooseD02KsPiPi.DecayDescriptors = {"[D0 -> KS0 pi+ pi-]cc"}; // or D* gets confused
+StdLooseD02KsPiPi.DaughterFilter.Selections = {"pi+ :     KinFilterCriterion/PiKin",
+                                             "KS0 :     KinFilterCriterion/KS0Kin"};
+
+StdLooseD02KsPiPi.DaughterFilter.PiKin.MinPt = 0.4*GeV;
+StdLooseD02KsPiPi.DaughterFilter.KS0Kin.MinPt = 1.0*GeV;
+StdLooseD02KsPiPi.KillOverlap = true;
+StdLooseD02KsPiPi.Window = 120.*MeV ; // 
+StdLooseD02KsPiPi.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
+                                             PVIPFilterCriterion,
+                                             KinFilterCriterion " };
+StdLooseD02KsPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;  
+StdLooseD02KsPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 1.0;
+StdLooseD02KsPiPi.MotherFilter.KinFilterCriterion.MinPt = 1.8*GeV; // MeV
+
+/*************************************************************************
+*  Standard Loose D0->KsKK
+*  @author C. Lazzeroni
+*/
+StdLooseD02KsKK.PhysDesktop.InputLocations = {"Phys/StdLooseKaons"};
+StdLooseD02KsKK.PhysDesktop.InputLocations += {"Phys/StdLooseKsLL","Phys/StdLooseKsDD"};
+StdLooseD02KsKK.DecayDescriptors = {"[D0 -> KS0 K+ K-]cc"}; // or D* gets confused
+StdLooseD02KsKK.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
+                                            "KS0 :     KinFilterCriterion/KS0Kin"};
+
+StdLooseD02KsKK.DaughterFilter.KKin.MinPt = 0.3*GeV;
+StdLooseD02KsKK.DaughterFilter.KS0Kin.MinPt = 0.8*GeV;
+StdLooseD02KsKK.KillOverlap = true;
+StdLooseD02KsKK.Window = 120.*MeV ; // 
+StdLooseD02KsKK.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
+                                             PVIPFilterCriterion,
+                                             KinFilterCriterion " };
+StdLooseD02KsKK.MotherFilter.VtxFilterCriterion.MaxChi2 = 40.0;  
+StdLooseD02KsKK.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
+StdLooseD02KsKK.MotherFilter.KinFilterCriterion.MinPt = 1.5*GeV; // MeV
+

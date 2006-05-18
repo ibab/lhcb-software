@@ -1,0 +1,75 @@
+// $Id: StandardKs.opts,v 1.1 2006-05-18 10:44:42 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" Ks
+ * 
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardOptions.opts for other intermediate states
+ *
+ *  @author Cristina Lazzeroni
+ *  @date 2006-05-18
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose Long-Long Ks
+  "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsLL'",
+  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsLL'",
+// Loose Downstream-Downstream Ks
+  "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsDD'",
+  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsDD'",
+};
+
+/*************************************************************************
+/ Common Ks LongLong
+/ @autor: Cristina Lazzeroni
+*/
+
+StdLooseKsLL.PhysDesktop.InputLocations = {"/Event/Phys/StdLoosePions"};
+//StdLooseKsLL.PhysDesktop.InputLocations = {"/Event/Phys/StdNoPIDsPions"};
+//StdLooseKsLL.PhysDesktop.InputLocations = {"/Event/Phys/CombinedFromLong4Pion"};
+
+StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" ;
+
+StdLooseKsLL.DaughterFilter.Selections = {"pi+ : TrackQualityFilterCriterion,
+                                                KinFilterCriterion,
+                                                 PVIPFilterCriterion"};
+
+StdLooseKsLL.DaughterFilter.TrackTypeFilterCriterion ="RequireLong";
+StdLooseKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV; 
+StdLooseKsLL.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 4.0;
+StdLooseKsLL.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 3.0;
+
+StdLooseKsLL.KillOverlap = true;
+StdLooseKsLL.Window = 110*MeV ; // 
+
+StdLooseKsLL.MotherFilter.Selections = { "KS0 :         VtxFilterCriterion
+                                                     , KinFilterCriterion " };
+StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;  
+StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
+StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
+StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
+StdLooseKsLL.MotherFilter.KinFilterCriterion.MinPt = 50.; // MeV
+
+/*************************************************************************
+/ Common Ks DownstreamDownstream
+/ @autor: Cristina Lazzeroni
+*/
+
+StdLooseKsDD.PhysDesktop.InputLocations = {"/Event/Phys/StdLooseDownstreamPions"};
+
+StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" ;
+
+StdLooseKsDD.KillOverlap = true;
+StdLooseKsDD.Window = 110*MeV ; // 
+
+StdLooseKsDD.MotherFilter.Selections = { "KS0 : VtxFilterCriterion
+                                          , KinFilterCriterion " };
+StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 100.;  
+StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxZPos = 2500.*mm; //mm
+StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinZPos = -100.*mm;
+StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinRPos = 10.*mm;
+StdLooseKsDD.MotherFilter.KinFilterCriterion.MinPt = 300.*MeV; // MeV
+
