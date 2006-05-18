@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
-! Responsible : Richard Beneyton, Olivier Deschamps, P. Koppenburg
+! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2006-05-18 - P. Koppenburg for I. Belyaev
+  - options/StandardKstar.opts
+  - options/StandardPhi.opts
+    . Loosened. Removed Pt cuts.
+  - options/StandardRho0.opts
+    . New options.
 
 ! 2006-05-18 - P. Koppenburg 
   - options/StandardKs.opts

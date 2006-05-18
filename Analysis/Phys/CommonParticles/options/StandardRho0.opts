@@ -1,0 +1,38 @@
+// $Id: StandardRho0.opts,v 1.1 2006-05-18 15:27:53 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "standard" rho(770)0 -> pi+ pi- 
+ * 
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardOptions.opts for other intermediate states
+ *  
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-05-19
+ */
+DataOnDemandSvc.Algorithms += {
+  // Loose rho0 -> pi+ pi-
+  "DATA='/Event/Phys/StdLooseRho02PiPi/Particles' TYPE='MakeResonances/StdLooseRho02PiPi'",
+  "DATA='/Event/Phys/StdLooseRho02PiPi/Vertices'  TYPE='MakeResonances/StdLooseRho02PiPi'"
+};
+
+/*************************************************************************
+*  Standard Loose rho(770)0 -> pi+ pi-
+*/
+StdLooseRho02PiPi.PhysDesktop.InputLocations = { "Phys/StdLoosePions" };
+StdLooseRho02PiPi.DecayDescriptor = "rho(770)0 -> pi+ pi-";
+// Cuts for daughters
+StdLooseRho02PiPi.DaughterFilter.Selections = 
+  {"pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinPt        = 0.0 * MeV; 
+StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 0.0 * MeV; 
+StdLooseRho02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; 
+// Cuts for combination
+StdLooseRho02PiPi.Window = 250.0 * MeV; 
+StdLooseRho02PiPi.MinPt  =   0.0 * MeV; 
+// Cuts for mother
+StdLooseRho02PiPi.MotherFilter.Selections = { "rho(770)0 : VtxFilterCriterion" } ; 
+StdLooseRho02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
