@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.44 2006-05-18 12:00:28 mtobin Exp $
+// $Id: DeVelo.h,v 1.45 2006-05-18 12:22:21 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
