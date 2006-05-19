@@ -4,6 +4,13 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - update to TrackEvent v2r5, TrackCheckers v2r2, TrackExtrapolators v2r3,
+   TrackFitEvent v2r3, TrackFitter v2r3, TrackIdealPR v2r3,
+   TrackMCTools v2r3, TrackMatching v2r3, TrackProjectors v2r3,
+   TrackPython v2r1, TrackTools v2r3
+ - update to TrackAssociators.opts file: simplified
+
 !============================ TrackSys v2r1 2006-05-05 ======================
 ! 2006-05-05 - Eduardo Rodrigues
  - added TrackPython (v2r0) to the requirements

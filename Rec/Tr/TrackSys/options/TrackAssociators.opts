@@ -6,4 +6,3 @@ ApplicationMgr.DLLs += { "TrackAssociators" };
 CheckTrSeq.Members  += { "TrackAssociator" };
 
 TrackAssociator.TracksInContainer = "Rec/Track/Best";
-TrackAssociator.LinkerOutTable    = "Rec/Track/Best";
