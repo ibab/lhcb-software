@@ -20,6 +20,7 @@
 // Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
 
 // Forward declarations
@@ -48,11 +49,11 @@ namespace LHCb  {
     public:
     lib_rtl_thread_t m_handle;
     bool m_receiveEvents, m_forceStop;
-    int m_MEPBuffers, m_maxMsForGetSpace, m_pktSamplingCount, m_ethDevIn, 
+    int m_MEPBuffers, m_maxMsForGetSpace, m_pktSamplingCount, 
 	m_nSrc, m_sockBuf, m_IPProtoIn, m_refCount, m_MEPBufSize, m_r, m_ethInterface;
     bool m_dynamicMEPRequest;
     u_int32_t m_IPOdin;
-    std::string m_IPNameOdin, m_bufName;
+    std::string m_IPNameOdin, m_bufName, m_mepMgrName;
     std::vector<std::string> m_IPSrc;
     float m_maxBadPktRatio;
     std::map<u_int32_t, int> m_srcAddr;
@@ -66,10 +67,9 @@ namespace LHCb  {
     MsgStream *m_log;
     /// Thread execution routine.
     static int exec(void* arg);
-    /// Worker routine
-    int execute();
     int m_nCnt;
   public:
+    MEPManager *m_mepMgr;
     int m_sourceID;
     u_int32_t m_ownAddress;
     /* Counters */ 
