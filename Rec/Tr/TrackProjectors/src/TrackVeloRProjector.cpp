@@ -1,4 +1,4 @@
-// $Id: TrackVeloRProjector.cpp,v 1.7 2006-03-08 14:49:19 erodrigu Exp $
+// $Id: TrackVeloRProjector.cpp,v 1.8 2006-05-19 11:58:37 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,7 @@ TrackVeloRProjector::TrackVeloRProjector( const std::string& type,
   declareInterface<ITrackProjector>(this);
 
   declareProperty( "VeloGeometryPath",
-                   m_veloPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+                   m_veloPath = DeVeloLocation::Default );
 }
 
 //-----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.9 2006-04-13 15:49:33 erodrigu Exp $
+// $Id: TrackAcceptance.cpp,v 1.10 2006-05-19 11:56:43 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode TrackAcceptance::initialize()
   DeSTDetector* ttDet = getDet<DeSTDetector>( DeSTDetLocation::location("TT") );
   DeSTDetector* itDet = getDet<DeSTDetector>( DeSTDetLocation::location("IT") );
 
-  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   // get pointers to the stations
   std::vector<DeSTStation*> ttStations = ttDet->stations();
