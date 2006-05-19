@@ -1,5 +1,5 @@
 package Gauss
-version v24r6
+version v24r7
 
 #=========================================================================
 #-- Structure
@@ -12,6 +12,8 @@ branches src doc options cmt job
 use XmlDDDB             v30r6   Det   -no_auto_imports
 use XmlConditions       v1r6    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
+#use DecFiles            v13r0   Gen   -no_auto_imports
+#use ParamFiles          v4r3          -no_auto_imports
 use DecFiles            v12r1   Gen   -no_auto_imports
 use ParamFiles          v4r2          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
@@ -20,16 +22,20 @@ use Geant4Files		v71r0	      -no_auto_imports
 #========================================================================
 #-- Generator
 use ParticleGuns        v3r0    Gen
-use Generators          v5r0    Gen
-use LbPythia            v4r2    Gen
+use Generators          v5r1    Gen
+use LbPythia            v4r3    Gen
 
 #-- Optional AcerMC : not yet ported
 macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
 use $(LbAcerMC_use)
 
-#-- Optional Herwig : not yet ported
+#-- Optional Herwig
 macro LbHerwig_use "" Linux&Herwig "LbHerwig v2r0 Gen"
 use $(LbHerwig_use)
+
+#-- Optional BcVegPy
+macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r0 Gen"
+use $(LbBcVegPy_use)
 
 #-- Simulation
 use GiGa                 v18r1   Sim
@@ -98,11 +104,15 @@ set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 #-- Build Main Program 
 
 application Gauss "GaussMain.cpp"
+#application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
+
 application GaussAcerMC "GaussMain.cpp"
 application GaussHerwig "GaussMain.cpp"
+application GaussBcVegPy "GaussMain.cpp"
 
 macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss" 
 macro_remove constituents "GaussHerwig" Linux&Herwig "Gauss"
+macro_remove constituents "GaussBcVegPy" Linux&BcVegPy "Gauss"
 #========================================================================
 #-- Set macros
 apply_pattern application_path 
@@ -110,6 +120,7 @@ macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              Linux&AcerMC   " -Wl,-Map,LinuxAcerMC.map "\
              Linux&Herwig   " -Wl,-Map,LinuxHerwig.map "\
+             Linux&BcVegPy  " -Wl,-Map,LinuxBcVegPy.map "\
              WIN32          ""
 
 #-- Make just executable "visible" 
@@ -127,3 +138,4 @@ alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
 alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussherwig " ${GAUSSROOT}/${BINDIR}/GaussHerwig.exe ${GAUSSOPTS}/Gauss.opts "
+alias gaussbcvegy " ${GAUSSROOT}/${BINDIR}/GaussBcVeqPy.exe ${GAUSSOPTS}/Gauss.opts "

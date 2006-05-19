@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Gloria CORTI
+ - Introduce conditional use of LbBcVegBy, new generator for Bc production,
+   making a special Gauss executable
+   . requirements 
+   . 14900000.opts - TEST options
+   To use it do:
+     > source setup.csh -tag_add=BcVegPy
+     > make CMTEXTRATAGS=BcVegPy
+   and run GaussBcVegPy.exe
+ - Use Generators v5r1 and LbPythia v4r3
+
 !======================== Gauss v24r6 2006-05-10 =============================
 ! 2006-05-10 - Gloria CORTI
  - Fix bug in options that was missing to specify to simulate the section
