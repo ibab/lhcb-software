@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.h,v 1.2 2006-03-09 14:40:13 ebos Exp $
+// $Id: TrackVeloTTChecker.h,v 1.3 2006-05-19 13:13:16 erodrigu Exp $
 #ifndef TRACKCHECKERS_TRACKVELOTTCHECKER_H 
 #define TRACKCHECKERS_TRACKVELOTTCHECKER_H 1
 
@@ -10,8 +10,7 @@
 // From STDet
 #include "STDet/DeSTDetector.h"
 
-namespace LHCb
-{
+namespace LHCb {
   class Track;
 }
 
@@ -39,9 +38,9 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  MCParticle* VeloTrackMCTruth( Track* track );
+  MCParticle* VeloTrackMCTruth( LHCb::Track* track );
 
-  double CenterVeloTr( Track* track );
+  double CenterVeloTr( LHCb::Track* track );
 
 private:
 

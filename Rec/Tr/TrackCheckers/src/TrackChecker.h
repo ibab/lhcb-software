@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.2 2006-03-09 14:40:13 ebos Exp $
+// $Id: TrackChecker.h,v 1.3 2006-05-19 13:13:16 erodrigu Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -21,8 +21,6 @@ namespace LHCb
   class Track;
   class MCParticle;
 }
-
-using namespace LHCb;
 
 /** @class TrackChecker TrackChecker.h
  *  
@@ -71,8 +69,8 @@ public:
 private:
 
   // Helper function
-  StatusCode resolutionHistos( Track* track, MCParticle* mcPart );
-  StatusCode purityHistos( Track* track, MCParticle* mcPart );
+  StatusCode resolutionHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
+  StatusCode purityHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
 
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector
