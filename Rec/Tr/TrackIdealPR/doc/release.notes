@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - David Hutchcroft
+ - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
+
 !======================= TrackIdealPR v2r3 2006-05-17 ========================
 ! 2006-05-17 - Marco Cattaneo
  - Migrate to Gaudi::Units

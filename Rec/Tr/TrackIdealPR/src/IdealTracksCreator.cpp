@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.24 2006-05-17 16:22:39 cattanem Exp $
+// $Id: IdealTracksCreator.cpp,v 1.25 2006-05-19 11:46:30 dhcroft Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -78,7 +78,7 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "TracksOutContainer",
                    m_tracksOutContainer = TrackLocation::Ideal );
   declareProperty( "VeloGeometryPath",
-                   m_veloPath = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+                   m_veloPath = DeVeloLocation::Default );
   declareProperty( "TTGeometryPath",
                    m_ttTrackerPath = DeSTDetLocation::location("TT") );
   declareProperty( "ITGeometryPath",
