@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - removed redundant update method in Measurement
+ - Track enum AlreadyUsed renamed to Used
+
 !========================= TrackEvent v2r5 2006-05-16 ========================
 ! 2006-05-16 Juan Palacios, Marco Cattaneo
  - Migrate public header files to explicit use of Gaudi::Units 

@@ -120,7 +120,7 @@
         desc    = 'Retrieve const  the measurement error squared'
         const   = 'TRUE'>
         <code>
-          return m_errMeasure * m_errMeasure;
+  return m_errMeasure * m_errMeasure;
         </code>
       </method>
 
@@ -132,7 +132,7 @@
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
-          return m_errMeasure;
+  return m_errMeasure;
         </code>
       </method>
 
@@ -144,7 +144,7 @@
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
-          return m_errMeasure * m_errMeasure;
+  return m_errMeasure * m_errMeasure;
         </code>
       </method>
 
@@ -178,18 +178,8 @@
         desc    = 'Update the reference vector'
         argList = 'const Gaudi::TrackVector refVector'>
         <code>
-          m_refIsSet  = true;
-          m_refVector = refVector;
-        </code>
-      </method>
-
-      <method
-        name    = 'update'
-        desc    = 'Update measurement parameters'
-        argList = 'const Gaudi::TrackVector refVector'>
-        <code>
-          m_refIsSet  = true;
-          m_refVector = refVector;
+  m_refIsSet  = true;
+  m_refVector = refVector;
         </code>
       </method>
 
@@ -199,8 +189,8 @@
         desc    = 'Retrieve the trajectory representing the measurement'
         const   = 'TRUE'>
         <code>
-          LHCb::Trajectory* pTraj = m_trajectory.get();
-          return *pTraj;
+  LHCb::Trajectory* pTraj = m_trajectory.get();
+  return *pTraj;
         </code>
       </method>
 

@@ -177,9 +177,9 @@
         value  = 'Backward=1,
                   Invalid=2,
                   Clone=4,
-                  IPSelected=8,
-                  PIDSelected=16,
-                  AlreadyUsed=32'
+                  Used=8,
+                  IPSelected=16,
+                  PIDSelected=32'
         access = 'PUBLIC' />
 
       <constructor 
