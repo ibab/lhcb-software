@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.5 2006-05-19 11:13:02 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.6 2006-05-19 22:44:14 gligorov Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -27,6 +27,7 @@
  *
  *  @see StandardD0.opts : The standard D0 
  *  @see StandardDs.opts : The standard Ds
+ *  @see StandardDplus.opts : The standard Dplus
  *  @see StandardDstar.opts : The standard D*
  *  @see StandardJpsi.opts : The standard J/psi -> MuMu
  *  @see StandardKstar.opts : The standard K*
