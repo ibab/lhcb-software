@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!======================== EvtGen v8r9 2006-05-19  ==========================
 ! 2006-04-23 - Patrick Robbe for Eric Conte
  - add new model EvtLambdaB2LambdaV to generate Lambda_b decays.
 

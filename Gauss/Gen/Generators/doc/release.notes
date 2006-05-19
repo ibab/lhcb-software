@@ -1,15 +1,14 @@
-! $Id: release.notes,v 1.58 2006-05-08 15:42:43 ibelyaev Exp $
+! $Id: release.notes,v 1.59 2006-05-19 16:33:51 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
 
+!=================== Generators v5r1 2006-05-19 ===========================
 ! 2006-05-08 - Vanya BELYAEV
-
  - src/component/MuXMaxBias.cpp
     really commit new tool.. 
  - cmt/requirement
     (re)add the usage of Phys/LoKiGen v* 
-
 
 ! 2006-05-02 - Patrick Robbe
  - src/Lib/Signal.cpp: rename counters to be consistent with inclusive.
@@ -25,7 +24,6 @@
    new tool is declared 
  - cmt/requirement
    add the usage of Phys/LoKiGen v* 
-
 
 !=================== Generators v5r0 2006-04-07 ===========================
 ! 2006-04-06 - Patrick Robbe

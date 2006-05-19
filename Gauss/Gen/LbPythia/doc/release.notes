@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.29 2006-05-03 08:21:25 robbep Exp $
+! $Id: release.notes,v 1.30 2006-05-19 16:29:45 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ==================== LbPythia v4r3 2006-05-19 ======================
 ! 2006-05-02 - Patrick Robbe
  - PythiaProduction.h: move to include directory
  - requirements: remove -fno-second-underscore fortran compilation flag
