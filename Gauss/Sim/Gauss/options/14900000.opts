@@ -18,3 +18,5 @@ Generation.SignalPlain.BcVegPyProduction.BcVegPyCommands = {
   "loggrade ivegasopen 0",
   "loggrade igrade 1"
  } ;
+
+SimMonitor.Members -= { "EvtTypeChecker" };

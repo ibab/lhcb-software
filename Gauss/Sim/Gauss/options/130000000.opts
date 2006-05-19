@@ -10,3 +10,6 @@ Generation.EventType                  = 130000000;
 Generation.SampleGenerationTool       = "MinimumBias";
 Generation.MinimumBias.ProductionTool = "HerwigProduction";
 ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
+
+SimMonitor.Members -= { "EvtTypeChecker" };
+ 
