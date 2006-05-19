@@ -6,6 +6,7 @@
 
 ! 2006-05-19 - Eduardo Rodrigues
  - "using namespace ..." removed from header files
+ - unnecessary update method removed from STMeasurement
 
 !========================== TrackFitEvent v2r3 2006-05-16 ====================
 ! 2006-05-16 - Marco Cattaneo

@@ -74,16 +74,6 @@
         </code>
       </method>
 
-      <method
-        name    = 'update'
-        desc    = 'Update measurement parameters'
-        argList = 'const Gaudi::TrackVector refVector'
-        virtual = 'TRUE'>
-        <code>
-  this->setRefVector( refVector );
-        </code>
-      </method>
-
     </class>
 
   </package>

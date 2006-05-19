@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.12 2006-05-19 11:04:51 erodrigu Exp $
+// $Id: FitNode.h,v 1.13 2006-05-19 12:38:09 erodrigu Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -99,8 +99,8 @@ namespace LHCb
     Gaudi::TrackMatrix    m_transportMatrix; ///< transport matrix
     Gaudi::TrackVector    m_transportVector; ///< transport vector
     Gaudi::TrackSymMatrix m_noiseMatrix;     ///< noise matrix
-    bool            m_transportIsSet;  ///< Flag for transport parameters
-    State           m_predictedState;  ///< predicted state from filter step
+    bool                  m_transportIsSet;  ///< Flag for transport parameters
+    State                 m_predictedState;  ///< predicted state from filter step
   };
 
 } // namespace LHCb
