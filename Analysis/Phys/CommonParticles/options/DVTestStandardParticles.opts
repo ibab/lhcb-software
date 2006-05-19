@@ -17,7 +17,7 @@ PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KsPiPi" } ;
 PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD02KsKK" } ;
 
 DaVinciMainSeq.Members += { "PrintTree/PrintDplus" };
-PrintD0.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD2KPiPi" } ;
+PrintDplus.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseD2KPiPi" } ;
 
 DaVinciMainSeq.Members += { "PrintTree/PrintDs" };
 PrintDs.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseDs2KKPi" } ;
@@ -37,6 +37,9 @@ PrintJpsiUnbiased.PhysDesktop.InputLocations += { "/Event/Phys/StdUnbiasedJpsi2M
 DaVinciMainSeq.Members += { "PrintTree/PrintKstar" };
 PrintKstar.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseKstar2KPi" } ;
 
+DaVinciMainSeq.Members += { "PrintTree/PrintRho" };
+PrintRho.PhysDesktop.InputLocations += { "/Event/Phys/StdLooseRho02PiPi" } ;
+
 DaVinciMainSeq.Members += { "PrintTree/PrintPhi" };
 PrintPhi.PhysDesktop.InputLocations += { "/Event/Phys/StdLoosePhi2KK" } ;
 
@@ -44,14 +47,21 @@ PrintPhi.PhysDesktop.InputLocations += { "/Event/Phys/StdLoosePhi2KK" } ;
 ApplicationMgr.EvtMax    = 1000 ;
 //EventSelector.FirstEvent  = 616 ;
 
-//#include "$HLTSELECTIONSROOT/options/L0TDR-Bd2DstarPi.opts"
-
 DaVinciMainSeq.Members += { "SelResultCorrelations/CorrJpsi" };
 CorrJpsi.Algorithms = { "StdUnbiasedJpsi2MuMu", "StdLooseJpsi2MuMu"  } ;
                  
 DaVinciMainSeq.Members += { "SelResultCorrelations/CorrDstar" };
 CorrDstar.Algorithms = { "StdLooseD02KPi", "StdLooseD02KK", "StdLooseD02PiPi",
+                         "StdLooseD02KsPiPi", "StdLooseD02KsPiPi", "StdLooseD2KPiPi",
                           "StdLooseDstarWithD02KPi", "StdLooseDstarWithD02KK", 
-			  "StdLooseDstarWithD02PiPi",
-			   "D02KPiForTDRselBd2DstarPi",
-			   "Dstar2D0PiForTDRselBd2DstarPi" } ;
+			  "StdLooseDstarWithD02PiPi",} ;
+
+DaVinciMainSeq.Members += { "SelResultCorrelations/BroadResonances" };
+BroadResonances.Algorithms = { "StdLooseKstar2KPi", "StdLooseRho02PiPi", "StdLoosePhi2KK" } ;
+
+// the noisy ones
+PrintRho.OutputLevel = 4;
+PrintKstar.OutputLevel = 4;
+PrintPhi.OutputLevel = 4;
+PrintDplus.OutputLevel = 4;
+PrintD0.OutputLevel = 4;
