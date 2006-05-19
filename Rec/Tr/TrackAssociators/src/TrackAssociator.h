@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.6 2006-03-09 14:37:18 ebos Exp $
+// $Id: TrackAssociator.h,v 1.7 2006-05-19 13:09:44 erodrigu Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -9,9 +9,9 @@
 
 // Forward declarations
 
-namespace LHCb{ class MCParticle; }
-
-using namespace LHCb;
+namespace LHCb {
+  class MCParticle;
+}
 
 /** @class TrackAssociator TrackAssociator.h
  *  
@@ -51,7 +51,7 @@ public:
 private:
 
   // For counting # and type of Measurements associated to a MCParticle
-  void countMCPart( const MCParticle* part,
+  void countMCPart( const LHCb::MCParticle* part,
                     double incVelo,
                     double incTT1,
                     double incSeed );
@@ -63,7 +63,7 @@ private:
 
   // Vector containing the MCParticles which
   // have a Measurement of any type associated to them
-  std::vector< const MCParticle* > m_parts;
+  std::vector< const LHCb::MCParticle* > m_parts;
 
   // Number of Velo Measurements assigned to the MCParticle which
   // has the same vector index in m_parts

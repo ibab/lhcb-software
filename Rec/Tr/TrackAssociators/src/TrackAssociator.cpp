@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.7 2006-03-09 14:37:18 ebos Exp $
+// $Id: TrackAssociator.cpp,v 1.8 2006-05-19 13:09:44 erodrigu Exp $
 // Include files
 
 // local
@@ -52,12 +52,10 @@ TrackAssociator::TrackAssociator( const std::string& name,
   m_nTotTT1(0.),
   m_nTotSeed(0.)
 {
-  declareProperty( "TracksInContainer" ,
+  declareProperty( "TracksInContainer",
                    m_tracksInContainer = TrackLocation::Default );
-  declareProperty( "LinkerOutTable"    ,
-                   m_linkerOutTable = "Link/" + TrackLocation::Default );
-  declareProperty( "FractionOK"        ,
-                   m_fractionOK = 0.70 );
+  declareProperty( "LinkerOutTable", m_linkerOutTable = "" );
+  declareProperty( "FractionOK"    , m_fractionOK = 0.70 );
 }
 
 //=============================================================================
@@ -73,7 +71,10 @@ StatusCode TrackAssociator::initialize() {
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) { return sc; }
-
+  
+  // Set the path for the linker table Track - MCParticle
+  if ( m_linkerOutTable == "" ) m_linkerOutTable = m_tracksInContainer;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -91,18 +92,20 @@ StatusCode TrackAssociator::execute() {
   // Create the Linker table from Track to MCParticle
   // Linker table is stored in "Link/" + m_linkerOutTable
   // Sorted by decreasing weight, so first retrieved has highest weight
-  LinkerWithKey<MCParticle,Track> myLinker( evtSvc(),msgSvc(),m_linkerOutTable );
+  LinkerWithKey<MCParticle,Track>
+    myLinker( evtSvc(), msgSvc(), m_linkerOutTable );
 
   // Get the linker table VeloCluster => MCParticle
-  LinkedTo<MCParticle,VeloCluster> veloLink(evtSvc(),msgSvc(),
-                                            LHCb::VeloClusterLocation::Default);
+  LinkedTo<MCParticle,VeloCluster>
+    veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
   if( veloLink.notFound() ) {
     error() << "Unable to retrieve VeloCluster to MCParticle linker table." << endreq;
     return StatusCode::FAILURE;
   }
   
   // Get the linker table TTCluster => MCParticle
-  LinkedTo<MCParticle,STCluster> ttLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::TTClusters);
+  LinkedTo<MCParticle,STCluster>
+    ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters );
   if( ttLink.notFound() ) {
     error() << "Unable to retrieve TTCluster to MCParticle linker table." << endreq;
     return StatusCode::FAILURE;

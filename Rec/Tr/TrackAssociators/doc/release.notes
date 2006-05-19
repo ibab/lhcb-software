@@ -4,6 +4,11 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - path to linker table set by default to same path as input tracks
+   (no more need to set it explicitly via options for defaults)
+ - "using namespace ..." removed from header files
+
 !===================== TrackAssociators v2r0 2006-03-13 ====================
 ! 2006-03-09 - Edwin Bos
  - Moved to LHCb v20r0
