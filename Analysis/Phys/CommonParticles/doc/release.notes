@@ -4,6 +4,13 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-18 - P. Koppenburg
+  - options/DVTestStandardParticles.opts
+  - options/StandardOptions.opts
+    . Added StandardDplus
+  - options/StandardKstar.opts 
+    . Window widened to +/-300MeV
+
 ! 2006-05-19 - V. Gligorov
   - options/StandardDplus.opts added
   - options/StandardD0.opts
