@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.5 2006-05-17 16:23:04 cattanem Exp $
+// $Id: TrackChecker.cpp,v 1.6 2006-05-19 10:33:07 erodrigu Exp $
 // Include files 
 
 // local
@@ -45,9 +45,10 @@ TrackChecker::TrackChecker( const std::string& name,
   m_zPositions.push_back(  9450.0 );
   m_zPositions.push_back( 11900.0 );
 
-  declareProperty( "TracksInContainer", m_tracksInContainer = TrackLocation::Default );
-  declareProperty( "LinkerInTable", m_linkerInTable = "Link/" + TrackLocation::Default );
-  declareProperty( "ZPositions", m_zPositions );
+  declareProperty( "TracksInContainer",
+                   m_tracksInContainer = TrackLocation::Default );
+  declareProperty( "LinkerInTable", m_linkerInTable = "" );
+  declareProperty( "ZPositions",    m_zPositions         );
 }
 
 //=============================================================================
@@ -63,6 +64,9 @@ StatusCode TrackChecker::initialize() {
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiHistoAlg::initialize();
   if( sc.isFailure() ) { return sc; }
+
+  // Set the path for the linker table Track - MCParticle
+  if ( m_linkerInTable == "" ) m_linkerInTable = m_tracksInContainer;
 
   // Set counters
   m_nTracks = 0;

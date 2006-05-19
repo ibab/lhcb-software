@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - path to linker table set by default to same path as input tracks
+   (no more need to set it explicitly via options for defaults)
+
 !======================= TrackCheckers v2r2 2006-05-17 =======================
 ! 2006-05-17 - Marco Cattaneo
  - Migrate to Gaudi::Units
