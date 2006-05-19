@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - "using namespace ..." removed from header files
+
 !======================= TrackMatching v2r3 2006-05-17 =======================
 ! 2006-05-17 - Marco Cattaneo
  - Migrate to Gaudi::Units

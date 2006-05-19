@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.5 2006-03-31 13:23:36 erodrigu Exp $
+// $Id: IdealStateCreator.h,v 1.6 2006-05-19 12:58:10 erodrigu Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -19,8 +19,6 @@ namespace LHCb
   class MCParticle;
   class MCHit;
 }
-
-using namespace LHCb;
 
 /** @class IdealStateCreator IdealStateCreator.h "TrackMCTools/IdealStateCreator.h"
  * 
@@ -66,9 +64,9 @@ public:
    *  @param  zRec   The z-position at which the state will be created
    *  @param  pState The pointer to the State which is created.
    */
-  virtual StatusCode createState( const MCParticle* mcPart,
+  virtual StatusCode createState( const LHCb::MCParticle* mcPart,
                                   double zRec,
-                                  State*& pState ) const;
+                                  LHCb::State*& pState ) const;
 
   /** This method creates a state at the origin vertex from a MCParticle
    *  using the entry/exit points of the MCHits.
@@ -76,17 +74,17 @@ public:
    *  @param  mcPart The MCParticle from which the state will be created
    *  @param  pState The pointer to the State which is created.
    */
-  virtual StatusCode createStateVertex( const MCParticle* mcPart,
-                                        State*& pState ) const;
+  virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
+                                        LHCb::State*& pState ) const;
 
 private:
   /// Determine Q/P for a MCParticle
-  double qOverP( const MCParticle* mcPart ) const;
+  double qOverP( const LHCb::MCParticle* mcPart ) const;
 
-  void findClosestHits( const MCParticle* mcPart,
+  void findClosestHits( const LHCb::MCParticle* mcPart,
                         const double zRec,
-                        MCHit*& closestHit,
-                        MCHit*& secondClosestHit ) const;
+                        LHCb::MCHit*& closestHit,
+                        LHCb::MCHit*& secondClosestHit ) const;
   
 private:
   ITrackExtrapolator* m_extrapolator; ///< Extrapolator Tool

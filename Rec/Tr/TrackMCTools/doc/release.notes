@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - "using namespace ..." removed from header files
+
 ! 2006-05-19 - David Hutchcroft
  - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
 

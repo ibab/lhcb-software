@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.5 2006-03-13 16:26:46 erodrigu Exp $
+// $Id: TrackAcceptance.h,v 1.6 2006-05-19 12:58:10 erodrigu Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -20,8 +20,6 @@ namespace LHCb
   class MCParticle;
   class MCHit;
 }
-
-using namespace LHCb;
 
 /** @class TrackAcceptance TrackAcceptance.h "TrackMCTools/TrackAcceptance.h"
  *
@@ -67,25 +65,25 @@ public:
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasVelo        ( MCParticle* mcPart );
+  virtual bool hasVelo        ( LHCb::MCParticle* mcPart );
 
   /** This method checks if the MCParticle is in the TT acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasTT          ( MCParticle* mcPart );
+  virtual bool hasTT          ( LHCb::MCParticle* mcPart );
 
   /** This method checks if the MCParticle is in the T-station acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasSeed        ( MCParticle* mcPart );
+  virtual bool hasSeed        ( LHCb::MCParticle* mcPart );
 
   /** This method checks if the MCParticle is in the long track acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasVeloAndSeed ( MCParticle* mcPart );
+  virtual bool hasVeloAndSeed ( LHCb::MCParticle* mcPart );
 
 private:
   /// Velo Detector information

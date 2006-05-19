@@ -1,4 +1,4 @@
-// $Id: TrackMatchingDataFunctor.h,v 1.2 2006-02-09 12:55:57 erodrigu Exp $
+// $Id: TrackMatchingDataFunctor.h,v 1.3 2006-05-19 12:55:09 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H
 #define TRACKMATCHING_TRACKMATCHINGDATAFUNCTOR_H 1
 
@@ -40,11 +40,12 @@ namespace TrackMatchingDataFunctor {
 
   template <class TYPE>
   class compByLayer_LB
-    : public std::binary_function<const TYPE, const STChannelID, bool>
+    : public std::binary_function<const TYPE, const LHCb::STChannelID, bool>
   {
-    STChannelID testID;
+    LHCb::STChannelID testID;
   public:
-    inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
+    inline bool operator() ( const TYPE& obj,
+                             const LHCb::STChannelID& testID ) const {
       return ((!obj) ? false : 
               testID.uniqueLayer() > obj->channelID().uniqueLayer());
     }
@@ -52,11 +53,12 @@ namespace TrackMatchingDataFunctor {
   
   template <class TYPE>
   class compBySector_LB
-    : public std::binary_function<const TYPE, const STChannelID, bool>
+    : public std::binary_function<const TYPE, const LHCb::STChannelID, bool>
   {
-    STChannelID testID;
+    LHCb::STChannelID testID;
   public:
-    inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
+    inline bool operator() ( const TYPE& obj,
+                             const LHCb::STChannelID& testID ) const {
       return ((!obj) ? false : 
               testID.uniqueSector() > obj->channelID().uniqueSector());
     }
