@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.75 2006-05-09 14:21:32 cattanem Exp $
+! $Id: release.notes,v 1.76 2006-05-19 14:39:47 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+
 !========================= MuonDet v5r3 2006-05-09 =========================
+! 2006-05-19 - Alessio Sarti
+ - Added a method that returns Z station position in DeMuonDetector
+
 ! 2006-05-09 - Marco Cattaneo
  - Cleanup includes in MuonBasicGeometry.h, to avoid unneccessary dependencies
 

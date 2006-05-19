@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.27 2006-03-26 20:13:29 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.28 2006-05-19 14:39:47 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -336,7 +336,7 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
   Gaudi::XYZPoint hitPoint(x,y,z);   int sta = getStation(z);
-  msg<<MSG::DEBUG<<" qui "<<x<<" "<<y<<" "<<z<<" "<<sta<<endreq;
+
   sc = Hit2ChamberNumber(hitPoint,sta,chamberNumber,regNum);
 
   return sc;
@@ -573,16 +573,16 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   Gaudi::XYZPoint LL(-dx,-dy,0);
   Gaudi::XYZPoint LR(dx,-dy,0);
   Gaudi::XYZPoint UL(dx,dy,0);
-  Gaudi::XYZPoint UR(-dx,dy,0);
+  //  Gaudi::XYZPoint UR(-dx,dy,0);
   
   Gaudi::XYZPoint lowerleft = geoCh->toGlobal(LL);
   Gaudi::XYZPoint lowerright  = geoCh->toGlobal(LR);
   Gaudi::XYZPoint upperleft = geoCh->toGlobal(UL);
-  Gaudi::XYZPoint upperright  = geoCh->toGlobal(UR);
+  //  Gaudi::XYZPoint upperright  = geoCh->toGlobal(UR);
 
 
   //Define relative dimensions
-  float mod_xen, mod_yen, mod_xex, mod_yex;
+  float mod_xen(0), mod_yen(0), mod_xex(0), mod_yex(0);
   if( dx && dy ) {
     if((lowerleft.x()<lowerright.x())&&(lowerleft.y()<upperleft.y())){
       mod_xen = (new_entry.x()+dx)/(2*dx);
@@ -599,13 +599,13 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
       mod_yen = (-new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
       mod_yex = (-new_exit.y()+dy)/(2*dy);
-       msg<<MSG::INFO<<" qui non deve entrare mai 1 "<<endreq;
+       msg<<MSG::INFO<<" Should never enter here "<<endreq;
     }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()<upperleft.y())){
       mod_xen = (-new_entry.x()+dx)/(2*dx);
       mod_yen = (new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
       mod_yex = (new_exit.y()+dy)/(2*dy);  
-      msg<<MSG::INFO<<" qui non deve entrare mai 2 "<<endreq;
+      msg<<MSG::INFO<<" Should never enter here "<<endreq;
     }
   } else {
     msg << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<
@@ -719,8 +719,13 @@ StatusCode  DeMuonDetector::fillGeoInfo()
   IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   int station=0;
   int region=0;
-  
+
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+
+    IGeometryInfo*  geoSt=(*itSt)->geometry();
+    Gaudi::XYZPoint globSt= geoSt->toGlobal(Gaudi::XYZPoint(0,0,0));
+    m_stationZ[station] = globSt.z();    
+    
     IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
     region=0;      
     if(debug)msg<<MSG::INFO<<" station "<<station<<endreq;      
@@ -943,6 +948,7 @@ StatusCode  DeMuonDetector::fillGeoArray()
   
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
       //get the dimensions of the inner rectangular 
+
     double minX=100000;
     double minY=100000;
     for(unsigned int nx=0;nx<layoutInner.xGrid();nx++){
