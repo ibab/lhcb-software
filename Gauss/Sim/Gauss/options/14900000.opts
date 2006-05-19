@@ -1,0 +1,20 @@
+// Option file for B_c generation
+
+
+ApplicationMgr.DLLS += { "LbBcVegPy" } ;
+
+Generation.EventType                  = 14900000;
+Generation.SampleGenerationTool       = "SignalPlain";
+Generation.SignalPlain.ProductionTool = "BcVegPyProduction";
+Generation.SignalPlain.SignalPIDList  = { 541 , -541 };
+Generation.PileUpTool = "FixedNInteractions" ;
+ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/Bc_Jpsipi,mm.dec";
+Generation.SignalPlain.BcVegPyProduction.BcVegPyCommands = {
+  "mixevnt imix 1" ,
+  "mixevnt imixtype 1" ,
+  "counter ibcstate 1",
+  "vegasinf nitmx 20",
+  "vegasinf number 1000000",
+  "loggrade ivegasopen 0",
+  "loggrade igrade 1"
+ } ;
