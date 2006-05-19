@@ -1,13 +1,10 @@
-// $Id: FitNode.h,v 1.11 2006-05-15 14:15:32 erodrigu Exp $
+// $Id: FitNode.h,v 1.12 2006-05-19 11:04:51 erodrigu Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
 // from TrackEvent
 #include "Event/Node.h"
 #include "Event/Measurement.h"
-
-using namespace Gaudi;
-using namespace LHCb;
 
 /** @class FitNode FitNode.h
  *
@@ -50,26 +47,28 @@ namespace LHCb
     virtual ~FitNode();
     
     /// retrieve transport matrix
-    const TrackMatrix& transportMatrix() const { return m_transportMatrix; }
+    const Gaudi::TrackMatrix& transportMatrix() const
+    { return m_transportMatrix; }
     
     /// retrieve transport vector
-    const TrackVector& transportVector() const { return m_transportVector; }
+    const Gaudi::TrackVector& transportVector() const
+    { return m_transportVector; }
     
     /// retrieve noise matrix
-    const TrackSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
+    const Gaudi::TrackSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
     
     /// set transport matrix
-    void setTransportMatrix( const TrackMatrix& transportMatrix ) {
+    void setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix ) {
       m_transportMatrix = transportMatrix;
     }
     
     /// set transport vector
-    void setTransportVector( const TrackVector& transportVector ) {
+    void setTransportVector( const Gaudi::TrackVector& transportVector ) {
       m_transportVector = transportVector;
     }
     
     /// set noise matrix
-    void setNoiseMatrix( const TrackSymMatrix& noiseMatrix ) {
+    void setNoiseMatrix( const Gaudi::TrackSymMatrix& noiseMatrix ) {
       m_noiseMatrix = noiseMatrix;
     }  
     
@@ -97,9 +96,9 @@ namespace LHCb
     
   private:
     
-    TrackMatrix m_transportMatrix; ///< transport matrix
-    TrackVector     m_transportVector; ///< transport vector
-    TrackSymMatrix     m_noiseMatrix;     ///< noise matrix
+    Gaudi::TrackMatrix    m_transportMatrix; ///< transport matrix
+    Gaudi::TrackVector    m_transportVector; ///< transport vector
+    Gaudi::TrackSymMatrix m_noiseMatrix;     ///< noise matrix
     bool            m_transportIsSet;  ///< Flag for transport parameters
     State           m_predictedState;  ///< predicted state from filter step
   };

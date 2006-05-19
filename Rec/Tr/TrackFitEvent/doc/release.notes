@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - "using namespace ..." removed from header files
+
 !========================== TrackFitEvent v2r3 2006-05-16 ====================
 ! 2006-05-16 - Marco Cattaneo
  - Move include of PhysicalConstants.h from StateTraj.h to .cpp
