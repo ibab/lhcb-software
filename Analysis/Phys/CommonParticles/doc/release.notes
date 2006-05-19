@@ -4,6 +4,14 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - V. Gligorov
+  - options/StandardDplus.opts added
+  - options/StandardD0.opts
+    . Pt cuts loosened
+  - options/StandardDstar.opts
+    . sIPS cut on slow pion loosened
+    . Pt cuts loosened
+
 ! 2006-05-18 - P. Koppenburg for I. Belyaev
   - options/StandardKstar.opts
   - options/StandardPhi.opts

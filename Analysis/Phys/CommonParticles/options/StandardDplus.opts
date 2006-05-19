@@ -1,0 +1,37 @@
+/** @file 
+ *
+ *  Configuration file for "standard" D+
+ * 
+ *  @see StandardParticles.opts for basic particles
+ *  @see StandardOptions.opts for other intermediate states
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @author V. Gligorov  v.gligorov1@physics.ox.ac.uk
+ *   
+ *  @date 2006-05-19
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose D+ ->KPiPi
+  "DATA='/Event/Phys/StdLooseD2KPiPi/Particles'     TYPE='MakeResonances/StdLooseD2KPiPi'",
+  "DATA='/Event/Phys/StdLooseD2KPiPi/Vertices'      TYPE='MakeResonances/StdLooseD2KPiPi'",
+};
+
+/*************************************************************************
+*  Standard Loose D+ -> KPiPi
+*/
+StdLooseD2KPiPi.PhysDesktop.InputLocations = { "Phys/StdLooseKaons", "Phys/StdLoosePions" };
+// Cuts for daughters
+StdLooseD2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
+StdLooseD2KPiPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion", 
+                                             "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseD2KPiPi.DaughterFilter.KinFilterCriterion.MinPt = 300.0 * MeV; 
+StdLooseD2KPiPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; 
+StdLooseD2KPiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; 
+// Cuts for combination
+StdLooseD2KPiPi.Window = 50.0 * MeV; 
+StdLooseD2KPiPi.MinPt  = 500.0 * MeV; 
+// Cuts for mother
+StdLooseD2KPiPi.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"}; 
+StdLooseD2KPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 2.0;
+StdLooseD2KPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; 
+

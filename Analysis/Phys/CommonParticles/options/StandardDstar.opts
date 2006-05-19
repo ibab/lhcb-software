@@ -1,6 +1,6 @@
-// $Id: StandardDstar.opts,v 1.3 2006-04-28 14:54:46 pkoppenb Exp $
+// $Id: StandardDstar.opts,v 1.4 2006-05-19 10:29:56 gligorov Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 
 /** @file 
@@ -37,10 +37,10 @@ StdLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02KPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
 StdLooseDstarWithD02KPi.DaughterFilter.FilterByDescendents = false ; 
-StdLooseDstarWithD02KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+StdLooseDstarWithD02KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02KPi.Window = 50.0 * MeV; // hlt presel: 50 MeV
-StdLooseDstarWithD02KPi.MinPt  = 2000.0 * MeV; // hlt presel: 2000 MeV
+StdLooseDstarWithD02KPi.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
 StdLooseDstarWithD02KPi.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
 StdLooseDstarWithD02KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
@@ -56,10 +56,10 @@ StdLooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02PiPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
 StdLooseDstarWithD02PiPi.DaughterFilter.FilterByDescendents = false ; 
-StdLooseDstarWithD02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+StdLooseDstarWithD02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02PiPi.Window = 50.0 * MeV; // hlt presel: 50 MeV
-StdLooseDstarWithD02PiPi.MinPt  = 2000.0 * MeV; // hlt presel: 2000 MeV
+StdLooseDstarWithD02PiPi.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
 StdLooseDstarWithD02PiPi.MotherFilter.Selections = {"D*(2010)+  : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
 StdLooseDstarWithD02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
@@ -75,10 +75,10 @@ StdLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02KK.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
 StdLooseDstarWithD02KK.DaughterFilter.FilterByDescendents = false ; 
-StdLooseDstarWithD02KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+StdLooseDstarWithD02KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02KK.Window = 50.0 * MeV; // hlt presel: 50 MeV
-StdLooseDstarWithD02KK.MinPt  = 2000.0 * MeV; // hlt presel: 2000 MeV
+StdLooseDstarWithD02KK.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
 StdLooseDstarWithD02KK.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
 StdLooseDstarWithD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
