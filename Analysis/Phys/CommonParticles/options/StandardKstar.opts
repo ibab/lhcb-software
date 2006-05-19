@@ -1,6 +1,6 @@
-// $Id: StandardKstar.opts,v 1.4 2006-05-19 11:13:02 pkoppenb Exp $
+// $Id: StandardKstar.opts,v 1.5 2006-05-19 11:29:11 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -27,11 +27,11 @@ StdLooseKstar2KPi.PhysDesktop.InputLocations =
 StdLooseKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc";
 // Cuts for daughters
 StdLooseKstar2KPi.DaughterFilter.Selections = 
-  {"K+  : KinFilterCriterion, PVIPFilterCriterion", 
-   "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
-StdLooseKstar2KPi.DaughterFilter.KinFilterCriterion.MinPt        = 0.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
-StdLooseKstar2KPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 0.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
-StdLooseKstar2KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+  {"K+  : PVIPFilterCriterion", 
+   "pi+ : PVIPFilterCriterion"};
+//StdLooseKstar2KPi.DaughterFilter.KinFilterCriterion.MinPt        = 0.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+//StdLooseKstar2KPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 0.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdLooseKstar2KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.5 ; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseKstar2KPi.Window = 300.0 * MeV; // hlt presel: 160.0 * MeV;
 StdLooseKstar2KPi.MinPt  =   0.0 * MeV; // hlt presel: 500 MeV
