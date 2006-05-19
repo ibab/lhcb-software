@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.86 2006-04-13 06:57:30 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.87 2006-05-19 17:52:50 gcorti Exp $ 
 
 /** @file 
  * 
@@ -88,6 +88,9 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
+//#include "$GAUSSROOT/options/130000000.opts"  // Min Bias Herwig - TEST
+//#include "$GAUSSROOT/options/110000000.opts"  // Generic b-b~ Herwig - TEST
+//#include "$GAUSSROOT/options/14900000.opts"  // Bc - TEST
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b-b~ events
 //#include "$DECFILESROOT/options/13144000.opts"  // Bs->J/Psi(mumu)phi
