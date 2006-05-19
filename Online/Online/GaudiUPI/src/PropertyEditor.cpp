@@ -197,7 +197,7 @@ void Gaudi::PropertyEditor::setProperties()  {
   else  {
     value = (char*)*m_command;
   }
-  print("New value: \"%s\"",value.c_str());
+  print("New value: %s = \"%s\"",m_property->name().c_str(),value.c_str());
   std::stringstream s;
   s << value;
   m_property->valueFromStream(s);
@@ -212,7 +212,7 @@ Gaudi::PropertyEditor::~PropertyEditor()  {
 /// Interactor overload: handle menu interupts
 void Gaudi::PropertyEditor::handle (const Event& e)   {
   if ( e.eventtype == UpiEvent )  {
-    print("Menu:%d Command:%d Param:%d Item:%d",e.menu_id, e.command_id, e.param_id, e.index_id);
+    // print("Menu:%d Command:%d Param:%d Item:%d",e.menu_id, e.command_id, e.param_id, e.index_id);
     Lines::iterator i;
     if ( e.command_id == CMD_SET_PARAM )  {
       char* value = *m_command;

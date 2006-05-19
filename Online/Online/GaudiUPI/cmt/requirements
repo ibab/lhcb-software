@@ -11,10 +11,10 @@ use UPI           v* Online
 use GaudiKernel   v*
 
 # ==================== component libraries ==================================
+document install_includes install_includes
 library GaudiUPI  *.cpp
 apply_pattern component_library library=GaudiUPI
 apply_pattern ld_library_path
-
 # ==================== private use only =====================================
 private
 use GaudiSvc    v*

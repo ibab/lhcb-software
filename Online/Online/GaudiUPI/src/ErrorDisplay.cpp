@@ -14,7 +14,6 @@
 #include "SCR/scr.h"
 #include <sstream>
 #include <cstdarg>
-#include <ctime>
 
 extern "C"  {
   int upic_set_message_window (int,int,int,int);
@@ -47,14 +46,13 @@ LHCb::ErrorDisplay::Logger::~Logger ()    {
 /// Callback when filling the stream buffer 
 int LHCb::ErrorDisplay::Logger::overflow (int c)    {
   if (c == '\n')     {
-    m_logger.report(MSG::ALWAYS,"",_buf);
+    m_logger.print(_buf.c_str());
     _buf = ""; 
+    return c;
   } 
-  else     { 
-    _buf += c; 
-  } 
-  return (c); 
-} 
+  _buf += c; 
+  return c;
+}
 
 /// Callback on EOF
 int LHCb::ErrorDisplay::Logger::underflow ()  { 
@@ -63,8 +61,9 @@ int LHCb::ErrorDisplay::Logger::underflow ()  {
 
 /// Standard Constructor.
 LHCb::ErrorDisplay::ErrorDisplay( const std::string& nam, ISvcLocator* svc )
-: DimErrorLogger(nam, svc), m_window(0), m_child(0)
+: DimErrorLogger(nam, svc), m_window(0), m_child(0), m_log(0)
 {
+  declareProperty("MessageFormat", m_msgFormat = "% F%42W%S%7W%R%T %0W%M");
   m_cmd = new DialogItem("%5s","   ^^^^  ^^^^^ ","Exit");
   m_cmd->addList("Exit");
   m_cmd->addList("Setup");
@@ -79,16 +78,13 @@ LHCb::ErrorDisplay::~ErrorDisplay() {
 
 /// Initialize the service.
 StatusCode LHCb::ErrorDisplay::initialize() {
-  StatusCode sc = DimErrorLogger::initialize();
-  if ( sc.isSuccess() )  {
-    if ( 0 == m_log )  {
-      UpiSensor::instance();
-      DisplayFactory f("UPI");
-      m_log = new Logger(*this);
-    }
-    showTopMenu();
+  if ( 0 == m_log )  {
+    UpiSensor::instance();
+    DisplayFactory f("UPI");
+    m_log = new Logger(*this);
   }
-  return sc;
+  showTopMenu();
+  return DimErrorLogger::initialize();
 }
   
 /// Finalise the service.
@@ -129,16 +125,10 @@ void LHCb::ErrorDisplay::print(const char* fmt, ...)   {
 }
 
 void LHCb::ErrorDisplay::reportMessage(int typ, const std::string& src, const std::string& msg)  {
-  std::string buff;
   std::ostringstream os;
-  time_t t = time (0);
-  const char* fmt = "% F%42W%S%7W%R%T %0W%M";
-  char* timestr = ctime(&t);
-  timestr[19] = ' ';
-  timestr[20] = 0;
   Message m(src,typ,msg);
-  m.setFormat(fmt);
-  os << timestr+4 << " " << m;
+  m.setFormat(m_msgFormat);
+  os << ::lib_rtl_timestr() << m;
   switch(typ)  {
     case MSG::WARNING:
       ::upic_write_rendered_message(os.str().c_str(),"",SCR::BOLD);

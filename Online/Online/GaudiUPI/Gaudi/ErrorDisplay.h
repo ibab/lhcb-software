@@ -1,6 +1,6 @@
 #ifndef GAUDIUPI_ERRORDISPLAY_H
 #define GAUDIUPI_ERRORDISPLAY_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/Gaudi/ErrorDisplay.h,v 1.3 2006-05-19 12:24:40 frankb Exp $
 
 #include "GaudiOnline/DimErrorLogger.h"
 #include "CPP/Interactor.h"
@@ -58,6 +58,8 @@ namespace LHCb  {
     Interactor* m_child;
     /// Pointer to cout catcher
     Logger*     m_log;
+    /// Property Message format definition
+    std::string m_msgFormat;
     /// Set new child window and delete existing one
     void setNewChild(Interactor* c);
     /// Build top level menu
