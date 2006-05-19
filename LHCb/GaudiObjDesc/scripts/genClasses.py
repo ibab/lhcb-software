@@ -534,16 +534,6 @@ class genClasses(genSrcUtils.genSrcUtils):
     if allocatorType == 'DEFAULT' :
       # set the default allocator type
       allocatorType = 'BOOST'
-
-    # Marco Cl.: because of a bug in ROOT/Reflex 5.10, the overloaded operators new and delete
-    # are not used for contained objects, so contained objects read from a file are created with
-    # the standard new and deleted via the overloaded operator delete (no-operation), causing a
-    # memory leak. The allocator type BOOST2 allows to avoid the leak.
-    # The bug is fixed in ROOT 5.11
-    if ((allocatorType == 'BOOST' ) and 
-        ((self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE') or
-         (self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE'))):
-      allocatorType = 'BOOST2'
         
     data = {}
     data['classname'] = godClass['attrs']['name']

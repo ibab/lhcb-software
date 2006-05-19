@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 2006-05-19 - Marco Clemencic
+ - patch #726. Removed a work-aroud introduced with patch #716 that is
+   not needed with ROOT 5.11 (the change of default allocator for
+   contained objects).
+
 =============================GaudiObjDesc v9r5============================
 ! 2006-05-16 - Marco Clemencic
  - patch #716. It appears that the new feature is not working as
@@ -15,6 +20,10 @@ Package manager : Stefan Roiser
    operator delete otherwise).
  - The patch contains a small improvement in the "DEBUG" allocator
    (better output).
+ - The observed problem is due to a bug in ROOT/Reflex 5.10 which is
+   fixed in 5.11. We should use this patch in the version of Gaudi
+   based on LCG_43 and remove few lines in the version based on
+   LCG_44.
 
 ! 2006-05-11 - Marco Clemencic
  - Bugfix in custom allocators support (bad signature for placement new).
