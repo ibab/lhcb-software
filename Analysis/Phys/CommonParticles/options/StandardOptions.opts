@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.4 2006-05-18 15:27:53 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.5 2006-05-19 11:13:02 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -41,6 +41,7 @@
 #include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 
 #include "$COMMONPARTICLESROOT/options/StandardD0.opts"
+#include "$COMMONPARTICLESROOT/options/StandardDplus.opts"
 #include "$COMMONPARTICLESROOT/options/StandardDs.opts"
 #include "$COMMONPARTICLESROOT/options/StandardDstar.opts"
 #include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
