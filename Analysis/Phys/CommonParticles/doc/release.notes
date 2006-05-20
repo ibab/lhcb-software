@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-20 - V. Gligorov
+  - options/StandardD0.opts
+    . Restored pt cut on D0 to 1000 MeV 
+
 ! 2006-05-19 - P. Koppenburg
   - options/DVTestStandardParticles.opts
   - options/StandardOptions.opts

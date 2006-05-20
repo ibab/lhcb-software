@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.4 2006-05-19 10:29:56 gligorov Exp $
+// $Id: StandardD0.opts,v 1.5 2006-05-20 13:34:30 gligorov Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -45,7 +45,7 @@ StdLooseD02KPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // 
 StdLooseD02KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseD02KPi.Window = 50.0 * MeV; // hlt presel: 100 MeV
-StdLooseD02KPi.MinPt  = 900.0 * MeV; // hlt presel: 500 MeV
+StdLooseD02KPi.MinPt  = 1000.0 * MeV; // hlt presel: 500 MeV
 // Cuts for mother
 StdLooseD02KPi.MotherFilter.Selections = {"D0 : VtxFilterCriterion"}; 
 StdLooseD02KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
@@ -62,7 +62,7 @@ StdLooseD02PiPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; //
 StdLooseD02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseD02PiPi.Window = 50.0 * MeV; // hlt presel: 100 MeV
-StdLooseD02PiPi.MinPt  = 900.0 * MeV; // hlt presel: 500 MeV
+StdLooseD02PiPi.MinPt  = 1000.0 * MeV; // hlt presel: 500 MeV
 // Cuts for mother
 StdLooseD02PiPi.MotherFilter.Selections = {"D0 : VtxFilterCriterion"}; 
 StdLooseD02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
@@ -79,7 +79,7 @@ StdLooseD02KK.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // h
 StdLooseD02KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseD02KK.Window = 50.0 * MeV; // hlt presel: 100 MeV
-StdLooseD02KK.MinPt  = 900.0 * MeV; // hlt presel: 500 MeV
+StdLooseD02KK.MinPt  = 1000.0 * MeV; // hlt presel: 500 MeV
 // Cuts for mother
 StdLooseD02KK.MotherFilter.Selections = {"D0 : VtxFilterCriterion"}; 
 StdLooseD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
