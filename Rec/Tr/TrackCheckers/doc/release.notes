@@ -5,7 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-05-22 - Eduardo Rodrigues
+ - bug fixed in looping over OTTimes
+ - bugs in momentum calculations fixed (mass used instead of 3-momentum mag.)
+ - added separate computations for TT and IT and corresponding histograms
  - introduced "TrackSelector" option for tracks selector tool
+ - some clean-up
 
 ! 2006-05-19 - Eduardo Rodrigues
  - "using namespace ..." removed from header files

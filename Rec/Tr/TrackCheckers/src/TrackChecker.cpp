@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.7 2006-05-22 10:42:10 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.8 2006-05-22 17:06:32 erodrigu Exp $
 // Include files 
 
 // local
@@ -124,12 +124,11 @@ StatusCode TrackChecker::execute()
   Tracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ) {
     Track* track = *iTrack;
-    // Decde whether the Track will be checked
+    // Decide whether the Track will be checked
     if( m_trackSelector->select( track ) ) {
       ++nTracks;
       plot1D( track->type(), 12, "Track type", -0.5, 7.5, 8 );
-      double momentum = ( track->firstState() ).p();
-      plot1D( momentum/GeV, 30, "Momentum (GeV) at first state", -1.0, 101.0, 51 ); 
+      plot1D( track->p()/GeV, 30, "Momentum (GeV) at first state", -1.0, 101.0, 51 ); 
       // Get MCParticle linked by highest weight to Track
       MCParticle* mcPart = directLink.first( track );
       if( NULL != mcPart ) {
@@ -148,7 +147,7 @@ StatusCode TrackChecker::execute()
     if( m_trackSelector->select( particle ) ) {
       ++nMCTracks;
       // Fill the general histograms
-      plot1D( particle->momentum().mag() / GeV,
+      plot1D( particle->p() / GeV,
               33, "True momentum (GeV) for MCParticles", -1.0, 101.0, 51 );
       Track* track = reverseLink.first( particle );
       if( NULL != track ) {
@@ -252,44 +251,45 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
   const MCVertex* vOrigin = mcPart->originVertex();
   if( 0 != vOrigin ) {
     XYZPoint vertPos = vOrigin->position();
-    LorentzVector pVec = mcPart->momentum();
-    LorentzVector mcVec( pVec / pVec.z() );
+    double mcP          = mcPart -> p();
+    LorentzVector mcMom = mcPart -> momentum();
+    XYZVector mcSlp( mcMom.Px()/mcMom.Pz(), mcMom.Py()/mcMom.Pz(), 1. );
     
     // Find closest state to true vertex position
     State& vtxState = track->closestState( vertPos.z() );
     
     // Choose Extrapolator
     ITrackExtrapolator* extrap;
-    if( (vtxState.z() < 1000*mm) ) { extrap = m_extrapolatorL; }
+    if ( vtxState.z() < 1000*mm ) { extrap = m_extrapolatorL; }
     else { extrap = m_extrapolatorM; }
     
     // Extrapolate closest state to true vertex z-position
     StatusCode sc = extrap->propagate( vtxState, vertPos.z() );
     if( !sc.isFailure() ) {
-      // Update the vtxState
-      TrackVector vec = vtxState.stateVector();
+      double trkX = vtxState.x();
+      double trkY = vtxState.y();
+      double trkP = vtxState.p();
       TrackSymMatrix cov = vtxState.covariance();
-
       // calculate impact parameter vector
-      XYZVector dist( vec(0) - vertPos.x(), vec(1) - vertPos.y(), 0.0 );
-      XYZVector trackVec( vec(2), vec(3), 1 );
-      XYZVector ipVector = dist.Cross( trackVec ) / sqrt(trackVec.mag2());
+      XYZVector dist( trkX - vertPos.x(), trkY - vertPos.y(), 0.0 );
+      XYZVector trkSlp   = vtxState.slopes();
+      XYZVector ipVector = dist.Cross( trkSlp ) / trkSlp.R();
 
       // fill the histograms
       plot1D( dist.x(), 101, "X resolution at vertex", -0.5, 0.5, 50 );
       plot1D( dist.y(), 102, "Y resolution at vertex", -0.5, 0.5, 50 );
-      plot1D( vec(2) - mcVec.x(), 103, "Tx resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( vec(3) - mcVec.y(), 104, "Ty resolution at vertex", -0.01, 0.01, 50 );
-      plot1D( 1.0/( fabs(vec(4)) * pVec.mag() ) - 1.0,
+      plot1D( trkSlp.x() - mcSlp.x(), 103, "Tx resolution at vertex", -0.01, 0.01, 50 );
+      plot1D( trkSlp.y() - mcSlp.y(), 104, "Ty resolution at vertex", -0.01, 0.01, 50 );
+      plot1D( trkP / mcP - 1.0,
               105, "Momentum resolution dp/p at vertex", -0.05, 0.05, 50 );
-      plot1D( sqrt(ipVector.mag2()), 106, "Impact parameter at vertex", -0.01, 1.01, 51 );
+      plot1D( ipVector.R(), 106, "Impact parameter at vertex", -0.01, 1.01, 51 );
       plot1D( dist.x() / sqrt(cov(0,0)), 111, "X pull at vertex", -5.0, 5.0, 50 );
       plot1D( dist.y() / sqrt(cov(1,1)), 112, "Y pull at vertex", -5.0, 5.0, 50 );
-      plot1D( (vec(2) - mcVec.x()) / sqrt(cov(2,2)),
+      plot1D( (trkSlp.x() - mcSlp.x()) / sqrt(cov(2,2)),
               113, "Tx pull at vertex", -5.0, 5.0, 50 );
-      plot1D( (vec(3) - mcVec.y()) / sqrt(cov(3,3)),
+      plot1D( (trkSlp.y() - mcSlp.y()) / sqrt(cov(3,3)),
               114, "Ty pull at vertex", -5.0, 5.0, 50 );
-      plot1D( ( fabs(vec(4)) - 1.0/pVec.mag() ) / sqrt(cov(4,4)),
+      plot1D( ( fabs(vtxState.qOverP()) - 1.0/mcP ) / sqrt(cov(4,4)),
               115, "Momentum pull q/p at vertex", -5.0, 5.0, 50 );
     }
   }
@@ -303,13 +303,13 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
     // get the true state
     State* trueState;
     StatusCode sc =
-      m_stateCreator->createState( mcPart, stateAt1stMeas.z(), trueState );
+      m_stateCreator -> createState( mcPart, stateAt1stMeas.z(), trueState );
     if( sc.isSuccess() ) {
-      TrackVector vec = stateAt1stMeas.stateVector();
-      TrackVector trueVec = trueState->stateVector();
-      TrackSymMatrix cov = stateAt1stMeas.covariance();
-      double dx = vec(0) - trueVec(0);
-      double dy = vec(1) - trueVec(1);
+      TrackVector vec     = stateAt1stMeas.stateVector();
+      TrackVector trueVec = trueState -> stateVector();
+      TrackSymMatrix cov  = stateAt1stMeas.covariance();
+      double dx  = vec(0) - trueVec(0);
+      double dy  = vec(1) - trueVec(1);
       double dtx = vec(2) - trueVec(2);
       double dty = vec(3) - trueVec(3);
       // fill the histograms
@@ -335,26 +335,26 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
       // get the true state
       State* trueState;
       StatusCode sc =
-        m_stateCreator->createState( mcPart, state.z(), trueState );
+        m_stateCreator -> createState( mcPart, state.z(), trueState );
       if( sc.isSuccess() ) {
-        TrackVector vec = state.stateVector();
-        TrackVector trueVec = trueState->stateVector();
-        TrackSymMatrix cov = state.covariance();
-        double dx = vec(0) - trueVec(0);
-        double dy = vec(1) - trueVec(1);
+        TrackVector vec     = state.stateVector();
+        TrackVector trueVec = trueState -> stateVector();
+        TrackSymMatrix cov  = state.covariance();
+        double dx  = vec(0) - trueVec(0);
+        double dy  = vec(1) - trueVec(1);
         double dtx = vec(2) - trueVec(2);
         double dty = vec(3) - trueVec(3);
         // fill the histograms
         int ID = 300 + 100 * numPos;
         std::string title = format( " at z=%d mm", int( *iZpos ) );
-        plot1D( dx, ID+1, "x resolution"+title, -0.5, 0.5, 50 );
-        plot1D( dy, ID+2, "y resolution"+title, -0.5, 0.5, 50 );
-        plot1D( dtx, ID+3, "tx resolution"+title, -0.01, 0.01, 50 );
-        plot1D( dty, ID+4, "ty resolution"+title, -0.01, 0.01, 50 );
-        plot1D( dx / sqrt(cov(0,0)), ID+11,"x pull"+title, -5.0, 5.0, 50 );
-        plot1D( dy / sqrt(cov(1,1)), ID+12,"y pull"+title, -5.0, 5.0, 50 );
-        plot1D( dtx / sqrt(cov(2,2)), ID+13,"tx pull"+title, -5.0, 5.0, 50 );
-        plot1D( dty / sqrt(cov(3,3)), ID+14,"ty pull"+title, -5.0, 5.0, 50 );
+        plot1D( dx, ID+1, "X resolution"+title, -0.5, 0.5, 50 );
+        plot1D( dy, ID+2, "Y resolution"+title, -0.5, 0.5, 50 );
+        plot1D( dtx, ID+3, "Tx resolution"+title, -0.01, 0.01, 50 );
+        plot1D( dty, ID+4, "Ty resolution"+title, -0.01, 0.01, 50 );
+        plot1D( dx / sqrt(cov(0,0)), ID+11,"X pull"+title, -5.0, 5.0, 50 );
+        plot1D( dy / sqrt(cov(1,1)), ID+12,"Y pull"+title, -5.0, 5.0, 50 );
+        plot1D( dtx / sqrt(cov(2,2)), ID+13,"Tx pull"+title, -5.0, 5.0, 50 );
+        plot1D( dty / sqrt(cov(3,3)), ID+14,"Ty pull"+title, -5.0, 5.0, 50 );
       }
     }
     ++numPos;
@@ -371,18 +371,19 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   // fill hit purity and hit efficiency histograms
   // get VeloClusters and count correct and total number of clusters
 
-  // Count number of Measurements of types
+  // Count number of Measurements of the different types
   int nTotalVelo = 0;
-  int nTotalIT = 0;
-  int nTotalOT = 0;
-  std::vector<Measurement*>::const_iterator itm;
-  for( itm = track->measurements().begin();
-       track->measurements().end() != itm; ++itm ) {
-    if( (*itm)->type() == Measurement::VeloPhi ) { ++nTotalVelo; }
-    else if( (*itm)->type() == Measurement::VeloR ) { ++nTotalVelo; }
-    else if( (*itm)->type() == Measurement::TT ) { ++nTotalIT; }
-    else if( (*itm)->type() == Measurement::IT ) { ++nTotalIT; }
-    else if( (*itm)->type() == Measurement::OT ) { ++nTotalOT; }
+  int nTotalTT   = 0;
+  int nTotalIT   = 0;
+  int nTotalOT   = 0;
+  std::vector<Measurement*>::const_iterator itMeas = track->measurements().begin();
+  std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+  for( itMeas; itMeas != endMeas; ++itMeas ) {
+    if(      (*itMeas)->type() == Measurement::VeloPhi ) { ++nTotalVelo; }
+    else if( (*itMeas)->type() == Measurement::VeloR )   { ++nTotalVelo; }
+    else if( (*itMeas)->type() == Measurement::TT )      { ++nTotalTT;   }
+    else if( (*itMeas)->type() == Measurement::IT )      { ++nTotalIT;   }
+    else if( (*itMeas)->type() == Measurement::OT )      { ++nTotalOT;   }
   }
 
   // get VeloClusters and count correct and total number of clusters
@@ -394,15 +395,15 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
     return StatusCode::FAILURE;
   }
   
-  int nGoodVelo = 0;
+  int nGoodVelo    = 0;
   int nMCTotalVelo = 0;
-  
   const VeloCluster* veloCluster = veloLink.first( mcPart );
   bool found = false;
   while( 0 != veloCluster ) {
     ++nMCTotalVelo;
-    std::vector<Measurement*>::const_iterator iMeas = track->measurements().begin();
-    while( !found && iMeas != track->measurements().end() ) {
+    std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
+    std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    while( !found && ( iMeas != endMeas ) ) {
       if( (*iMeas)->type() == Measurement::VeloR ) {
         VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*>( *iMeas );
         found = ( veloCluster == meas->cluster() );
@@ -418,14 +419,14 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   }
 
   // get STClusters and count correct and total number of clusters
-  // Get the linker table MCParticle => TTCluster
+  // Get the linker table MCParticle => TT STCluster
   LinkedFrom<STCluster,MCParticle> ttLink(evtSvc(),msgSvc(),
                                           LHCb::STClusterLocation::TTClusters);
   if( ttLink.notFound() ) {
     error() << "Unable to retrieve MCParticle to TTCluster linker table." << endreq;
     return StatusCode::FAILURE;
   }
-  // Get the linker table MCParticle => ITCluster
+  // Get the linker table MCParticle => IT STCluster
   LinkedFrom<STCluster,MCParticle> itLink(evtSvc(),msgSvc(),
                                           LHCb::STClusterLocation::ITClusters);
   if( itLink.notFound() ) {
@@ -433,33 +434,36 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
     return StatusCode::FAILURE;
   }
 
-  int nGoodIT = 0;
-  int nMCTotalIT = 0;
-
   // TT
+  int nGoodTT    = 0;
+  int nMCTotalTT = 0;
   const STCluster* ttCluster = ttLink.first ( mcPart );
   found = false;
   while( 0 != ttCluster ) {
-    ++nMCTotalIT;
-    std::vector<Measurement*>::const_iterator iMeas = ( track->measurements() ).begin();
-    while(!found && iMeas != ( track->measurements() ).end()) {
+    ++nMCTotalTT;
+    std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
+    std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    while( !found && ( iMeas != endMeas ) ) {
       if( (*iMeas)->type() == Measurement::TT ) {
         STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
         found = ( ttCluster == meas->cluster() );
       }
       ++iMeas;
     }
-    if( found ) { ++nGoodIT; }
+    if( found ) { ++nGoodTT; }
     ttCluster = ttLink.next();
   }
 
   //IT
+  int nGoodIT    = 0;
+  int nMCTotalIT = 0;
   const STCluster* itCluster = itLink.first ( mcPart );
   found = false;
   while( 0 != itCluster ) {
     ++nMCTotalIT;
-    std::vector<Measurement*>::const_iterator iMeas = ( track->measurements() ).begin();
-    while(!found && iMeas != ( track->measurements() ).end()) {
+    std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
+    std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    while( !found && ( iMeas != endMeas ) ) {
       if( (*iMeas)->type() == Measurement::IT ) {
         STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
         found = ( itCluster == meas->cluster() );
@@ -479,15 +483,15 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
     return StatusCode::FAILURE;
   }
 
-  int nGoodOT = 0;
+  int nGoodOT    = 0;
   int nMCTotalOT = 0;
-  
   const OTTime* otTime = otLink.first( mcPart );
   found = false;
   while( 0 != otTime ) {
     ++nMCTotalOT;
-    std::vector<Measurement*>::const_iterator iMeas = track->measurements().begin();
-    while( !found && iMeas != track->measurements().end() ) {
+    std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
+    std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+    while( !found && ( iMeas != endMeas ) ) {
       if( (*iMeas)->type() == Measurement::OT ) {
         OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
         found = ( otTime == meas->time() );
@@ -495,33 +499,37 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
       ++iMeas;
     }
     if( found ) { ++nGoodOT; }
-    veloCluster = veloLink.next();
+    otTime = otLink.next();
   }
 
-  // Sum of Velo, IT and OT hits
-  int nTotalHits   = nTotalVelo   + nTotalIT   + nTotalOT;
-  int nMCTotalHits = nMCTotalVelo + nMCTotalIT + nMCTotalOT;
-  int nGoodHits    = nGoodVelo    + nGoodIT    + nGoodOT;
+  // Sum of Velo, TT, IT and OT hits
+  int nTotalHits   = nTotalVelo   + nTotalTT   + nTotalIT   + nTotalOT;
+  int nMCTotalHits = nMCTotalVelo + nMCTotalTT + nMCTotalIT + nMCTotalOT;
+  int nGoodHits    = nGoodVelo    + nGoodTT    + nGoodIT    + nGoodOT;
 
   // calculate hit purities and fill histograms
   if( nTotalHits != 0 ) { plot1D( float( nGoodHits ) / float( nTotalHits ),
                                   40, "Hit purity", -0.01, 1.01, 51 ); }
   if( nTotalVelo != 0 ) { plot1D( float( nGoodVelo ) / float( nTotalVelo ),
                                   41, "Velo hit purity", -0.01, 1.01, 51 ); }
-  if( nTotalIT != 0 )   { plot1D( float( nGoodIT ) / float( nTotalIT ), 42,
-                                  "IT hit purity", -0.01, 1.01, 51 ); }
+  if( nTotalTT != 0 )   { plot1D( float( nGoodTT ) / float( nTotalTT ),
+                                  42, "TT hit purity", -0.01, 1.01, 51 ); }
+  if( nTotalIT != 0 )   { plot1D( float( nGoodIT ) / float( nTotalIT ),
+                                  43, "IT hit purity", -0.01, 1.01, 51 ); }
   if( nTotalOT != 0 )   { plot1D( float( nGoodOT ) / float( nTotalOT ),
-                                  43, "OT hit purity", -0.01, 1.01, 51 ); }
+                                  44, "OT hit purity", -0.01, 1.01, 51 ); }
   
   // calculate hit efficiencies and fill histograms
   if( nMCTotalHits != 0 ) { plot1D( float( nGoodHits ) / float( nMCTotalHits ),
                                     50, "Hit efficiency", -0.01, 1.01, 51 ); }
   if( nMCTotalVelo != 0 ) { plot1D( float( nGoodVelo ) / float( nMCTotalVelo ),
                                     51, "Velo hit efficiency", -0.01, 1.01, 51 ); }
+  if( nMCTotalTT != 0 )   { plot1D( float( nGoodTT ) / float( nMCTotalTT ),
+                                    52, "TT hit efficiency", -0.01, 1.01, 51 ); }
   if( nMCTotalIT != 0 )   { plot1D( float( nGoodIT ) / float( nMCTotalIT ),
-                                    52, "IT hit efficiency", -0.01, 1.01, 51 ); }
+                                    53, "IT hit efficiency", -0.01, 1.01, 51 ); }
   if( nMCTotalOT != 0 )   { plot1D( float( nGoodOT ) / float( nMCTotalOT ),
-                                    53, "OT hit efficiency", -0.01, 1.01, 51 ); }
+                                    54, "OT hit efficiency", -0.01, 1.01, 51 ); }
   
   return StatusCode::SUCCESS;
 }
