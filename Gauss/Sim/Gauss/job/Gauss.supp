@@ -1,0 +1,17 @@
+##----------------------------------------------------------------------##
+
+# valgrind error suppression file for Gauss v24r6, gcc 3.2.3, valgrind 2.0.0
+# See also suppressions in $STDOPTS/Gaudi.supp
+
+# Format of this file is:
+# {
+#     name_of_suppression
+#     kind: one of Param Value1 Value2 Value4 Value8
+#                   Free Addr1 Addr2 Addr4 Addr8
+#                   Cond (previously known as Value0)
+#     (if Param: name of system call param, if Free: name of free-ing fn)
+#     caller0 name, or /name/of/so/file.so
+#     caller1 name, or ditto
+#     (optionally: caller2 name)
+#     (optionally: caller3 name) - according to doc. But valgrind dies...
+# }

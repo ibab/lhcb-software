@@ -1,0 +1,82 @@
+#!/bin/csh
+###########################################################
+#   Script for running Gauss in interactive and batch
+###########################################################
+#
+# in BATCH, output files are written in the BATCH machine
+# and copied at the end to your $MYWORKDIR output directory
+# in INTERACTIVE output files are written to the current directory
+#
+set MODE = $CMTCONFIG
+
+if ($#argv != 2 ) then
+  echo "\nUsage: valgrind.job <version> <options>"
+  echo " where:"
+  echo "  <version> (mandatory) is the Gauss version number (e.g. v24r7)"
+  echo "  <options> (mandatory) is name of options file (e.g. v200601)"
+  exit 0
+else
+  set Gversion = $1
+  set Dversion = $2 
+  shift
+endif
+#
+echo "----> Executing Gauss $Gversion using as options $Dversion"
+#
+
+if ($?LS_SUBCWD) then 
+# in BATCH, WORKDIR is set by the system
+# in BATCH, location of executable has to be given explicitly - e.g.:
+  setenv MYJOBROOT $HOME/cmtuser/Sim/Gauss/$Gversion
+else
+# in interactive set WORKDIR to submission directory
+  set WORKDIR = $PWD
+# in interactive, executable is under same root directory as this command file
+  cd `dirname $0` 
+  cd ..
+  set MYJOBROOT = $PWD
+endif
+
+# == set the program environment
+if ($?Gauss_release_area) then
+  source $Gauss_release_area/GaussEnv/$Gversion/cmt/setup.csh
+else
+  source $LHCBRELEASES/GaussEnv/$Gversion/cmt/setup.csh
+endif
+echo "----> MYJOBROOT is set to:"
+echo $MYJOBROOT
+echo "----> CMTPATH is set to:"
+echo $CMTPATH
+source $MYJOBROOT/cmt/setup.csh -tag=$MODE
+
+# Go to working directory
+cd $WORKDIR
+echo "----> Working in $PWD"
+
+set SuppFile = "./Gauss.supp"
+
+if ($?LS_SUBCWD) then
+# == in batch copy the executable and options files to $WORKDIR
+  cp $MYJOBROOT/$CMTDEB/Gauss.exe tmpjob.exe
+  cp $MYJOBROOT/options/*.opts .
+  cp $MYJOBROOT/job/$SuppFile $SuppFile
+  setenv GAUSSOPTS .
+else
+# == in interactive create a link to the executable
+  ln -fs $MYJOBROOT/$CMTDEB/Gauss.exe tmpjob_$Dversion.exe
+endif
+
+# == run the excutable ================================
+valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dversion.exe $GAUSSOPTS/$Dversion.opts >& addrcheck.log
+ 
+# == job is finished: remove temporary files ==========
+rm -f tmpjob.exe
+if ($?LS_SUBCWD) then
+# if in batch copy Gauss.sim file to permanent storage (example for CERN)
+#  rfcp Gauss.sim $CASTOR_HOME/Gauss/$Gversion/30000000.500ev.3.sim
+#  rm -f Gauss.sim
+# if in batch copy output files to user directories
+  ls *.* >! RETURN
+endif
+
+exit 0

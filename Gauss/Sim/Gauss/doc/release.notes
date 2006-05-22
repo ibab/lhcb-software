@@ -4,9 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-05-22 - Gloria CORTI
+ - Introduce scripts for running valgrind
+   . jobs/valgrind.job
+   . jobs/Gauss.supp
+
 ! 2006-05-19 - Gloria CORTI
- - Introduce conditional use of LbBcVegBy, new generator for Bc production,
-   making a special Gauss executable
+ - Introduce conditional use of LbBcVegBy (v1r0), new generator for Bc 
+   production, making a special Gauss executable
    . requirements 
    . 14900000.opts - TEST options
    To use it do:
