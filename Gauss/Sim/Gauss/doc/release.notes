@@ -8,6 +8,8 @@
  - Introduce scripts for running valgrind
    . jobs/valgrind.job
    . jobs/Gauss.supp
+ - Use XmlDDDB v30r7 fixing some rare problems in geometry of RICH HPDs
+   causing Gauss to crash (perceived overlaps)
 
 ! 2006-05-19 - Gloria CORTI
  - Introduce conditional use of LbBcVegBy (v1r0), new generator for Bc 
