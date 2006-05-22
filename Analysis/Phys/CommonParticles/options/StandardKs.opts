@@ -1,6 +1,6 @@
-// $Id: StandardKs.opts,v 1.1 2006-05-18 10:44:42 pkoppenb Exp $
+// $Id: StandardKs.opts,v 1.2 2006-05-22 18:03:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -18,8 +18,8 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsLL'",
   "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsLL'",
 // Loose Downstream-Downstream Ks
-  "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsDD'",
-  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsDD'",
+  "DATA='/Event/Phys/StdLooseKsDD/Particles'     TYPE='MakeResonances/StdLooseKsDD'",
+  "DATA='/Event/Phys/StdLooseKsDD/Vertices'      TYPE='MakeResonances/StdLooseKsDD'",
 };
 
 /*************************************************************************
