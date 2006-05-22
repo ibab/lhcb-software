@@ -1,5 +1,6 @@
 #!/bin/tcsh
 rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
+rm -f /dev/shm/*
 sudo killall -9 test.exe
 sudo killall -9 Gaudi.exe
 setenv TAN_PORT YES
@@ -16,8 +17,10 @@ xterm  -ls -132 -geometry 132x45 -e "setenv UTGID ErrServ   ; $gaudi_exe ../$CMT
 sleep 8
 xterm  -ls -132 -geometry 132x45 -e "setenv UTGID EvtProd   ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/MEPConverter.opts -msgsvc=MessageSvc -a"&
 xterm  -ls -132 -geometry 132x45 -e "setenv UTGID EvtHolder ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/MEPHolder.opts    -msgsvc=MessageSvc -a"&
-xterm  -ls -132 -geometry 132x45 -e "setenv UTGID Moore_0   ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/ReadMBM.opts      -msgsvc=MessageSvc -a"&
-xterm  -ls -132 -geometry 132x45 -e "setenv UTGID Moore_1   ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/ReadMBM.opts      -msgsvc=MessageSvc -a"&
+#xterm  -ls -132 -geometry 132x45 -e "setenv UTGID Moore_0   ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/ReadMBM.opts      -msgsvc=MessageSvc -a"&
+#xterm  -ls -132 -geometry 132x45 -e "setenv UTGID Moore_1   ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/ReadMBM.opts      -msgsvc=MessageSvc -a"&
 #xterm  -ls -132 -geometry 132x45 -e "setenv UTGID Sender    ; $gaudi_exe ../$CMTCONFIG/libGaudiOnline.so OnlineTask -opt=../options/FragmentSender.opts  -msgsvc=MessageSvc -a"&
-#
-# setenv UTGID prod_0; ../$CMTCONFIG/Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2
+xterm  -ls -132 -geometry 132x40 -e "$test_exe mbm_mon" &
+
+sleep 2
+setenv UTGID prod_0; ../$CMTCONFIG/Gaudi.exe libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
