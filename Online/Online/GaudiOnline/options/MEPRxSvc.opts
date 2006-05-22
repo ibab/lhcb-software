@@ -1,6 +1,6 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.5 2006-05-19 11:51:53 niko Exp $
+// $Id: MEPRxSvc.opts,v 1.6 2006-05-22 18:14:23 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -25,7 +25,7 @@ Runable.pktSamplingCount = 100;  // number of packets to sample to determine err
 Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
 Runable.partitionID = 333;       
 Runable.MEPBufSize = 1600000;
-Runable.refCount = 1;
+Runable.refCount = 2;
 Runable.IPSrc = { "192.168.212.44", "TELL1_1",
 		  "192.168.212.45", "TELL1_2",
 		  "192.168.212.46", "TELL1_3",

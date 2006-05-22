@@ -27,7 +27,6 @@
 #include <utility>
 #include <map>
 
-
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -41,6 +40,12 @@
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
 #include "GaudiOnline/MEPHdr.h"
+
+namespace LHCb {
+  class MEPEvent;
+  StatusCode RTTC2Current( const MEPEvent* me );
+}
+
  
 #define MAX_R_PACKET (0x10000 + 20)
 #define MEP_SENT  MBM_NORMAL
@@ -155,7 +160,7 @@ public:
     UINT timerID;
     
     m_eventType = EVENT_TYPE_MEP;
-    m_brx = m_nrx = 0; memset(m_seen, 0, m_nSrc);
+    m_brx = m_nrx = 0; memset(m_seen, 0, m_nSrc * sizeof(int));
 #if 0
     if (m_maxMsForGetSpace) {
       m_spaceRC = -100;
@@ -238,9 +243,10 @@ public:
     m_event.type    = m_eventType;    
     if (m_nrx != m_nSrc) incompleteEvent();
     *((int *) m_e->data) = m_brx;
+    LHCb::RTTC2Current((MEPEvent*)m_e->data);
     declareEvent();
     status = sendSpace();
-    std::cout << "bang " << id << std::endl;
+//    std::cout << "bang " << id << std::endl;
     return status;
   }
   // Run the application in synchonous mode
@@ -253,12 +259,14 @@ public:
   }
   void multipleSrc() {
     m_eventType = EVENT_TYPE_DAQBAD;
+    *m_log << MSG::ERROR << "Multiple event from source" << endmsg; 
   } 
   void badPkt(MEPRxSvc::DAQError type) {
     int x = type;
     m_eventType = EVENT_TYPE_DAQBAD;
+    *m_log << MSG::ERROR << "Bad event from source" << endmsg; 
   }
-  int addMEP(MEPHdr *hdr, int srcid) {
+  int addMEP(const MEPHdr *hdr, int srcid) {
     int len = 0;
  
     if (m_seen[srcid]) multipleSrc();
@@ -467,8 +475,8 @@ LHCb::MEPRxSvc::run() {
   m_receiveEvents = true;
   iovec mep_recv_vec[1];
   RXIT rx; 
-  ip_hdr_t *iphdr = (ip_hdr_t *) __hdr;
-  struct MEPHdr *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];
+  const ip_hdr_t *iphdr = (ip_hdr_t *) __hdr;
+  const struct MEPHdr *mephdr = (mep_hdr_t *) &__hdr[IP_HEADER_LEN];
   mep_recv_vec->iov_base = __hdr;
   mep_recv_vec->iov_len = HDR_LEN;
   int srcid;
@@ -499,13 +507,14 @@ LHCb::MEPRxSvc::run() {
       } 
       if (--ncrh == 0) {
 	*m_log << MSG::DEBUG << "crhhh..." <<  m_workDsc.size() << endmsg;
-	ncrh = 50;
+	ncrh = 100;
       }
       continue;
     }
     if (FD_ISSET(m_r, &fds)) {
 //      echohdr(hdr);
-      MsgHdr msg(mep_recv_vec, 1);
+      IOVec mep_recv_vec(__hdr, HDR_LEN);
+      MsgHdr msg(&mep_recv_vec, 1);
       int len = recvmsg(m_r, &msg, MSG_DONTWAIT | MSG_PEEK);
       if (len < 0) {
 	if (errno != EAGAIN) 
@@ -518,8 +527,8 @@ LHCb::MEPRxSvc::run() {
       removePkt();
       continue;
     }
-    ::fprintf(stdout, "\rpktin %d ", ++pktin);
-        ::fflush(stdout);
+//    ::fprintf(stdout, "\rpktin %d ", ++pktin);
+//        ::fflush(stdout);
     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
       rx = --m_workDsc.end();
     } else {

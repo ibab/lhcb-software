@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.11 2006-04-19 11:43:20 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.12 2006-05-22 18:14:24 niko Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -60,6 +60,10 @@ namespace LHCb  {
             m_evdesc.setHeader(e.data);
             m_evdesc.setSize(e.len);
             for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)  {
+              // LHCb::MEPFragment* f = m_evdesc.fragment(i);
+              // int off = int(int(f)-int(m_mepStart));
+              // printf("mep:%p fragment:%p %d offset:%d nbanks:%d\n",
+              //         m_mepStart,f,i,off,m_banks.size());
               LHCb::decodeFragment(m_evdesc.fragment(i), m_banks);
             }
             return StatusCode::SUCCESS;
