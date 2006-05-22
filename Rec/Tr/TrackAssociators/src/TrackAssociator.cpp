@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.8 2006-05-19 13:09:44 erodrigu Exp $
+// $Id: TrackAssociator.cpp,v 1.9 2006-05-22 10:28:09 erodrigu Exp $
 // Include files
 
 // local
@@ -74,7 +74,9 @@ StatusCode TrackAssociator::initialize() {
   
   // Set the path for the linker table Track - MCParticle
   if ( m_linkerOutTable == "" ) m_linkerOutTable = m_tracksInContainer;
-  
+
+  m_debugLevel = msgLevel( MSG::DEBUG );
+
   return StatusCode::SUCCESS;
 }
 
@@ -99,7 +101,8 @@ StatusCode TrackAssociator::execute() {
   LinkedTo<MCParticle,VeloCluster>
     veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
   if( veloLink.notFound() ) {
-    error() << "Unable to retrieve VeloCluster to MCParticle linker table." << endreq;
+    error() << "Unable to retrieve VeloCluster to MCParticle linker table."
+            << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -107,21 +110,24 @@ StatusCode TrackAssociator::execute() {
   LinkedTo<MCParticle,STCluster>
     ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters );
   if( ttLink.notFound() ) {
-    error() << "Unable to retrieve TTCluster to MCParticle linker table." << endreq;
+    error() << "Unable to retrieve TTCluster to MCParticle linker table."
+            << endreq;
     return StatusCode::FAILURE;
   }
 
   // Get the linker table ITCluster => MCParticle
   LinkedTo<MCParticle,STCluster> itLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::ITClusters);
   if( itLink.notFound() ) {
-    error() << "Unable to retrieve ITCluster to MCParticle linker table." << endreq;
+    error() << "Unable to retrieve ITCluster to MCParticle linker table."
+            << endreq;
     return StatusCode::FAILURE;
   }
 
   // Get the linker table OTCluster => MCParticle
   LinkedTo<MCParticle,OTTime> otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
   if( veloLink.notFound() ) {
-    error() << "Unable to retrieve OTCluster to MCParticle linker table." << endreq;
+    error() << "Unable to retrieve OTCluster to MCParticle linker table."
+            << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -130,7 +136,7 @@ StatusCode TrackAssociator::execute() {
   for( it = tracks->begin(); tracks->end() != it; ++it ) {
     const Track* tr = *it;
     m_nTotVelo = 0.;
-    m_nTotTT1 = 0.;
+    m_nTotTT1  = 0.;
     m_nTotSeed = 0.;
     m_parts.clear();
     m_nVelo.clear();
@@ -156,8 +162,9 @@ StatusCode TrackAssociator::execute() {
         m_nTotVelo += 1.;
         // Loop over the MCparticles linked to the VeloMeasurement
         MCParticle* mcParticle = veloLink.first( clu );
-        if( 0 == mcParticle ) {
-          error() << "No MCParticle linked with this VeloCluster." << endreq;
+        if( m_debugLevel && 0 == mcParticle ) {
+          debug() << "No MCParticle linked with VeloCluster " 
+                  << clu -> key() << endreq;
         }
         while( 0 != mcParticle ) {
           if( mcParts != mcParticle->parent() ) {
@@ -179,10 +186,11 @@ StatusCode TrackAssociator::execute() {
           // Count number of TT hits
           if( inTT1 ) {
             m_nTotTT1 += 1.;
-            // Loop over the MCparticles associated to the TTMeasurement
+            // Loop over the MCparticles associated to the TT STMeasurement
             MCParticle* mcParticle = ttLink.first( itCl );
-            if( 0 == mcParticle ) {
-              error() << "No MCParticle linked with this TTCluster." << endreq;
+            if( m_debugLevel && 0 == mcParticle ) {
+              debug() << "No MCParticle linked with TT STCluster "
+                      << itCl -> key() << endreq;
             }
             while( 0 != mcParticle ) {
               if( mcParts != mcParticle->parent() ) {
@@ -195,10 +203,11 @@ StatusCode TrackAssociator::execute() {
           // Count number of IT+OT hits
           else {
             m_nTotSeed += 1.;
-            // Loop over the MCparticles associated to the STMeasurement
+            // Loop over the MCparticles associated to the IT STMeasurement
             MCParticle* mcParticle = itLink.first( itCl );
-            if( 0 == mcParticle ) {
-              error() << "No MCParticle linked with this ITCluster." << endreq;
+            if( m_debugLevel && 0 == mcParticle ) {
+              debug() << "No MCParticle linked with IT STCluster "
+                      << itCl -> key() << endreq;
             }
             while( 0 != mcParticle ) {
               if( mcParts != mcParticle->parent() ) {
@@ -220,8 +229,9 @@ StatusCode TrackAssociator::execute() {
           m_nTotSeed += 1.;
           // Loop over the MCparticles associated to the STMeasurement
           MCParticle* mcParticle = otLink.first( otTim );
-          if( 0 == mcParticle ) {
-            error() << "No MCParticle linked with this OTTime." << endreq;
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with OTTime "
+                    << otTim -> key() << endreq;
           }
           while( 0 != mcParticle ) {
             if( mcParts != mcParticle->parent() ) {

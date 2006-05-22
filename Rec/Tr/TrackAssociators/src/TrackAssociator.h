@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.7 2006-05-19 13:09:44 erodrigu Exp $
+// $Id: TrackAssociator.h,v 1.8 2006-05-22 10:28:09 erodrigu Exp $
 #ifndef TRACKASSOCIATOR_H 
 #define TRACKASSOCIATOR_H 1
 
@@ -55,6 +55,8 @@ private:
                     double incVelo,
                     double incTT1,
                     double incSeed );
+
+  bool m_debugLevel;
 
   // jobOptions
   std::string m_tracksInContainer;  //< Name of the input Tracks container
