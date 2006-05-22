@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-05-22 - Eduardo Rodrigues
+ - introduced "TrackSelector" option for tracks selector tool
+
 ! 2006-05-19 - Eduardo Rodrigues
  - "using namespace ..." removed from header files
  - path to linker table set by default to same path as input tracks

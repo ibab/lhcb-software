@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.6 2006-05-19 10:33:07 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.7 2006-05-22 10:42:10 erodrigu Exp $
 // Include files 
 
 // local
@@ -49,6 +49,8 @@ TrackChecker::TrackChecker( const std::string& name,
                    m_tracksInContainer = TrackLocation::Default );
   declareProperty( "LinkerInTable", m_linkerInTable = "" );
   declareProperty( "ZPositions",    m_zPositions         );
+  declareProperty( "TrackSelector",
+                   m_trackSelectorName = "TrackCriteriaSelector" );
 }
 
 //=============================================================================
@@ -59,8 +61,8 @@ TrackChecker::~TrackChecker() {};
 //=============================================================================
 // Initialization. Check parameters
 //=============================================================================
-StatusCode TrackChecker::initialize() {
-
+StatusCode TrackChecker::initialize()
+{
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiHistoAlg::initialize();
   if( sc.isFailure() ) { return sc; }
@@ -69,32 +71,32 @@ StatusCode TrackChecker::initialize() {
   if ( m_linkerInTable == "" ) m_linkerInTable = m_tracksInContainer;
 
   // Set counters
-  m_nTracks = 0;
-  m_nMCTracks = 0;
-  m_nAsctTracks = 0;
-  m_nAsctMCTracks = 0;
-  m_evtAveEff = 0.;
-  m_err2EvtAveEff = 0.;
-  m_evtAveGhost = 0.;
+  m_nTracks         = 0;
+  m_nMCTracks       = 0;
+  m_nAsctTracks     = 0;
+  m_nAsctMCTracks   = 0;
+  m_evtAveEff       = 0.;
+  m_err2EvtAveEff   = 0.;
+  m_evtAveGhost     = 0.;
   m_err2EvtAveGhost = 0.;
-  m_nMCEvt = 0;
-  m_nEvt = 0;
+  m_nMCEvt          = 0;
+  m_nEvt            = 0;
 
-  m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
+  m_trackSelector = tool<ITrackCriteriaSelector>( m_trackSelectorName,
                                                   "TrackSelector", this );
-
-  m_stateCreator  = tool<IIdealStateCreator>( "IdealStateCreator" );
+  
+  m_stateCreator  = tool<IIdealStateCreator>( "IdealStateCreator"       );
   m_extrapolatorL = tool<ITrackExtrapolator>( "TrackLinearExtrapolator" );
   m_extrapolatorM = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
-
+  
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackChecker::execute() {
-  
+StatusCode TrackChecker::execute()
+{  
   // Set local counters
   int nTracks = 0;        //< # selected Tracks
   int nMCTracks = 0;      //< # selected MCParticles
@@ -122,7 +124,7 @@ StatusCode TrackChecker::execute() {
   Tracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ) {
     Track* track = *iTrack;
-    // Deceide whether the Track will be checked
+    // Decde whether the Track will be checked
     if( m_trackSelector->select( track ) ) {
       ++nTracks;
       plot1D( track->type(), 12, "Track type", -0.5, 7.5, 8 );
@@ -142,7 +144,7 @@ StatusCode TrackChecker::execute() {
   MCParticles::const_iterator iPart;
   for( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
     MCParticle* particle = *iPart;
-    // Deceide whether the MCParticle will be checked
+    // Decide whether the MCParticle will be checked
     if( m_trackSelector->select( particle ) ) {
       ++nMCTracks;
       // Fill the general histograms
@@ -207,8 +209,8 @@ StatusCode TrackChecker::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode TrackChecker::finalize() {
-
+StatusCode TrackChecker::finalize()
+{
   // Calculate the track averaged efficiency and ghost rate
   double trackAveEff = double( m_nAsctMCTracks ) / double( m_nMCTracks );
   double errTrackAveEff = sqrt( m_nAsctMCTracks * ( 1. - trackAveEff ) ) /
@@ -218,17 +220,24 @@ StatusCode TrackChecker::finalize() {
   
   // print out efficiency and ghost rate
   info() << "Track averaged:" << endreq;
-  info() << "Track efficiency = " << format( "%5.1f +/- %3.1f %%",
-                                             100.0 * trackAveEff, 100.0 * errTrackAveEff )
+  info() << "Track efficiency = "
+         << format( "%5.1f +/- %3.1f %%",
+                    100.0 * trackAveEff, 100.0 * errTrackAveEff )
          << "  (=" << m_nAsctMCTracks << "/" <<  m_nMCTracks << ")" << endreq;
-  info() << "Ghost rate =       " << format( "%5.1f +/- %3.1f %%",
-                                             100.0 * trackAveGhost, 100.0 * errTrackAveGhost )
-         << "  (=" << m_nTracks-m_nAsctTracks << "/" << m_nTracks << ")" << endreq;
+  info() << "Ghost rate =       "
+         << format( "%5.1f +/- %3.1f %%",
+                    100.0 * trackAveGhost, 100.0 * errTrackAveGhost )
+         << "  (=" << m_nTracks-m_nAsctTracks << "/" << m_nTracks << ")"
+         << endreq;
   info() << "Event averaged:" << endreq;
-  info() << "Track efficiency = " << format( "%5.1f +/- %3.1f %%",
-                                             100.0 * m_evtAveEff, 100. * sqrt(m_err2EvtAveEff) ) << endreq;
-  info() << "Ghost rate =       " << format( "%5.1f +/- %3.1f %%",
-                                             100.0*m_evtAveGhost, 100.*sqrt(m_err2EvtAveGhost) ) << endreq;
+  info() << "Track efficiency = "
+         << format( "%5.1f +/- %3.1f %%",
+                    100.0 * m_evtAveEff, 100. * sqrt(m_err2EvtAveEff) )
+         << endreq;
+  info() << "Ghost rate =       "
+         << format( "%5.1f +/- %3.1f %%",
+                    100.0*m_evtAveGhost, 100.*sqrt(m_err2EvtAveGhost) )
+         << endreq;
   
   return GaudiHistoAlg::finalize();
 }
@@ -236,8 +245,8 @@ StatusCode TrackChecker::finalize() {
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
-
+StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
+{
   // Resolutions and pulls at true vertex position
   // Get true values at vertex
   const MCVertex* vOrigin = mcPart->originVertex();
@@ -357,8 +366,8 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart ) {
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart ) {
-
+StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
+{
   // fill hit purity and hit efficiency histograms
   // get VeloClusters and count correct and total number of clusters
 

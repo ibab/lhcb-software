@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.3 2006-05-19 13:13:16 erodrigu Exp $
+// $Id: TrackChecker.h,v 1.4 2006-05-22 10:42:10 erodrigu Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -80,7 +80,9 @@ private:
 
   // jobOptions
   std::string m_tracksInContainer; // Input Tracks container location
-  std::string m_linkerInTable;     // Input Linker table location without "Link/"
+  std::string m_linkerInTable;     // Input Linker table location
+  std::string m_trackSelectorName; // Tracks selector tool name
+
   // Additional z-positions where to determine resolutions and pulls
   std::vector<double> m_zPositions;
 
