@@ -3,7 +3,7 @@
 # Maintainer : P. Koppenburg
 #============================================================================
 package           Analysis
-version           v5r0
+version           v6r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -13,7 +13,7 @@ branches          cmt doc src options solution1 solution2 solution3 solution4 so
 #============================================================================
 # Used packages.
 #============================================================================
-use DaVinci       v12r15  Phys
+use DaVinci       v16r1  Phys
 
 #============================================================================
 # Use MC
@@ -28,9 +28,4 @@ library          Analysis    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=Analysis

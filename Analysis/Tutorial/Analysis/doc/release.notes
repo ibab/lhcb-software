@@ -8,7 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
-!===================== Tutorial/Analysis v5 2006-01-12 ======================#
+! 2006-05-23 - Marco Cattaneo
+ - Bring requirements up to date with latest patterns and increment major
+   version in preparation for migration to DaVinci v16r*
+
 !===================== Tutorial/Analysis v5r0 2006-01-12 ======================#
 ! 2006-01-12 P. Koppenburg
   . corrected solution to exercises 2-6 
