@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.5 2006-05-05 10:49:27 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.6 2006-05-23 15:13:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -97,13 +97,16 @@ StatusCode RichPhotonGeomMonitor::execute()
 
     // MC type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
-    if ( mcType == Rich::Unknown ) continue;
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // Expected Cherenkov theta angle for true particle type
-    const double thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
+    // if MC type is not known, assume pion (maybe type should be a job option ??)
+    const double thetaExpTrue = ( mcType == Rich::Unknown ? 
+                                  m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
+                                  m_ckAngle->avgCherenkovTheta( segment, mcType ) );
+    
 
     // Get photons for this segment
     const RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
