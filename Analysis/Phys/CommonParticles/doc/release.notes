@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-22-3 - P. Koppenburg for Jeremie Borel
+  - options/StandardDs.opts
+    . Standard Ds
+
 ! 2006-05-20 - V. Gligorov
   - options/StandardD0.opts
     . Restored pt cut on D0 to 1000 MeV 
