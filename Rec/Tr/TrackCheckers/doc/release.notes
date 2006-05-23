@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r3 2006-05-23 =======================
 ! 2006-05-22 - Eduardo Rodrigues
  - bug fixed in looping over OTTimes
  - bugs in momentum calculations fixed (mass used instead of 3-momentum mag.)
