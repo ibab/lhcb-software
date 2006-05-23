@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.71 2006-05-18 12:00:28 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.72 2006-05-23 13:09:13 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -112,7 +112,7 @@ StatusCode DeVelo::initialize() {
     } else {
       msg << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
-    m_sensorIndices[m_vpSensor[index]->sensorNumber()]=index;
+    m_sensors[m_vpSensor[index]->sensorNumber()]= m_vpSensor[index];
     msg << MSG::DEBUG << "Module " << m_vpSensor[index]->module()
         << " sensor " << m_vpSensor[index]->sensorNumber()
         << " type " << m_vpSensor[index]->fullType() 
@@ -121,34 +121,14 @@ StatusCode DeVelo::initialize() {
     detElemCount++;
   }
 
-  // Build a list of phi sensors associated to R
-  // Dog leg shape requires both phi of the station
-  // need to sort sensors into accending order in z
-  // get cute and use the STL sort routine with a custom comparator
-  //  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_Z());
-
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
     unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
     msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
         << " is type " << m_vpSensor[iSensor]->fullType() 
         << " at global z = " << m_vpSensor[iSensor]->z()
         << " and in VELO frame " 
-        << geometry()->toLocal(Gaudi::XYZPoint(0,
-                                                0,
-                                                m_vpSensor[iSensor]->z())).z()
+        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensor[iSensor]->z())).z()
         << endreq;
-    // Find phi sensors associated to R in each station (group of 4 sensors)
-    int station=(iSensor-4)/4;
-    unsigned int firstInStation=0;
-    if(0 <= station) firstInStation= 4+4*static_cast<unsigned int>(station);
-    if(m_vpSensor[iSensor]->isR()){
-      for(unsigned int isens=firstInStation; isens<firstInStation+4; isens++){
-        unsigned int aSensor = m_vpSensor[isens]->sensorNumber();
-        if(m_vpSensor[isens]->isPhi()) {
-          m_vpSensor[iSensor]->associateSensor(aSensor);
-        }
-      }
-    }
   }
   
   msg << MSG::DEBUG 
@@ -195,19 +175,19 @@ const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 // return pointer to sensor
 const DeVeloSensor* DeVelo::sensor(unsigned int sensorNumber) const
 {
-  return m_vpSensor[sensorIndex(sensorNumber)];
+  return m_sensors[sensorNumber];
 }
 
 // return pointer to R sensor
 const DeVeloRType* DeVelo::rSensor(unsigned int sensorNumber) const
 {
-  return dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensorNumber)]);
+  return dynamic_cast<DeVeloRType*>(m_sensors[sensorNumber]);
 }
 
 // return pointer to Phi sensor
 const DeVeloPhiType* DeVelo::phiSensor(unsigned int sensorNumber) const
 {
-  return dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensorNumber)]);
+  return dynamic_cast<DeVeloPhiType*>(m_sensors[sensorNumber]);
 }
 
 //=============================================================================

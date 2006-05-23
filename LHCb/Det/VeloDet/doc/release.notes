@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.128 2006-05-18 12:00:28 mtobin Exp $
+! $Id: release.notes,v 1.129 2006-05-23 13:09:13 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-05-23 - Mark Tobin
+ - Replaced sensorIndex(sensor) by internal map which returns the pointer to
+ the sensor directly.
+ - Removed the unused associateSensor() and associatedSensors() code from DeVeloSensor.
 
 ! 2006-05-18 - Mark Tobin
  - Fixed bug in sensor indices: assumed all sensors are there which may not

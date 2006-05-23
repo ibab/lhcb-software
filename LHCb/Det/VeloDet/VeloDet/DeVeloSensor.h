@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.19 2006-05-17 16:03:29 cattanem Exp $
+// $Id: DeVeloSensor.h,v 1.20 2006-05-23 13:09:13 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -175,16 +175,6 @@ public:
 
   /// Returns the sensor number
   inline unsigned int sensorNumber() const {return m_sensorNumber;}
-  
-  /// Set the sensors associated with this sensor
-  inline void associateSensor(unsigned int sensor) {
-    m_associated.push_back(sensor);
-  }
-
-  /// Return the (phi) sensors associated with this (R) sensor
-  inline const std::vector<unsigned int>& associatedSensors() const {
-    return m_associated;
-  }
   
   /// Cache the geometry information after changes to position from alignment
   void cacheGeometry();
@@ -399,7 +389,6 @@ private:
   bool m_isPileUp;
   int m_xSide;
   unsigned int m_sensorNumber;
-  std::vector<unsigned int> m_associated;
   double m_siliconThickness;
   double m_z;
   double m_innerRadius;
