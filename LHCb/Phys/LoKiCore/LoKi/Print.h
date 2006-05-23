@@ -1,6 +1,6 @@
-// $Id: Print.h,v 1.4 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Print.h,v 1.5 2006-05-23 10:58:07 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -36,6 +36,8 @@ template <class TYPE> class SmartRef       ;
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  @todo many functions to be replaced from new GaudiKernel ToStream.h
+ *   
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
@@ -53,15 +55,18 @@ namespace LoKi
   namespace Print
   {
     /// convert double  value to string 
-    std::string print ( const double value ) ;
+    std::string        print ( const double value ) ;
     /// convert integer value to string 
-    std::string print ( const long   value ) ;
+    std::string        print ( const long   value ) ;
     /// convert boolean value to string 
-    std::string print ( const bool   value ) ;
+    std::string        print ( const bool   value ) ;
     /// convert integer value to string 
-    inline std::string print ( const int value ) 
+    inline std::string print ( const int    value ) 
     { return print( long(value) ) ; }
-
+    /// convert integer value to string 
+    inline std::string print ( const size_t value ) 
+    { return print( long(value) ) ; }
+    
     /** @fn toStream 
      *  Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
