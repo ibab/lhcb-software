@@ -305,7 +305,7 @@
                                   1.);
         </code>
        </method>
-
+<!--
        <typedef
          type='KeyedContainer&lt;Particle, Containers::HashMap&gt;'
          def='Container'
@@ -319,7 +319,7 @@
          desc='const Particle keyed container'
          access='PUBLIC'
        />
-
+-->
     </class>
   </package>
 

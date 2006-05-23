@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.94 2006-05-17 15:58:07 cattanem Exp $
+! $Id: release.notes,v 1.95 2006-05-23 16:17:25 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
+
+
+! 2006-05-23 - Juan PALACIOS
+ - xml/Particle.xml: Remove duplicate Container typedef. 
+                     Remove ConstContainer typedef
 
 !======================= PhysEvent v9r4 2006-05-16 ==========================
 ! 2006-05-16 - Juan PALACIOS
