@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.8 2006-04-23 10:06:13 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.9 2006-05-23 11:33:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.8  2006/04/23 10:06:13  ibelyaev
+//    add operators for ID and ABSID
+//
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -475,6 +478,51 @@ namespace LoKi
      *  @date   2002-07-15
      */
     const LoKi::Particles::AbsIdentifier                      ABSID ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var Q 
+     *  the trivial evaluator of particle charge 
+     *  it relies on LHCb::Particle::charge 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   int charge = (int) Q( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::Charge
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::charge
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2006-05-22
+     */
+    const LoKi::Particles::Charge                             Q     ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var SUMQ
+     *  the trivial evaluator of particle charge 
+     *  it relies on LoKi::Particles::Charge for the 
+     *  basic particles, and for recursive sum for 
+     *  non-basic particles 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *   int charge = (int) SUMQ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LoKi::Particles::SumCharge
+     *  @see LoKi::Particles::Charge
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2006-05-22
+     */
+    const LoKi::Particles::SumCharge                          SUMQ  ;
     // ========================================================================
     
     // ========================================================================

@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.4 2006-04-23 10:06:13 ibelyaev Exp $
+// $Id: Particles0.h,v 1.5 2006-05-23 11:33:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/04/23 10:06:13  ibelyaev
+//   add operators for ID and ABSID
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -207,6 +210,55 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     } ;
 
+    /** @struct Charge
+     *  the trivial evaluator of particle charge 
+     *  it relies on LHCb::Particle::charge 
+     *  @see LoKi::Cuts::Q
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::charge
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2006-05-22
+     */
+    struct Charge 
+      : public LoKi::Function<const LHCb::Particle*>
+    {      
+      /// clone method (mandatory!)
+      virtual Charge* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    } ;
+    
+    /** @class SumCharge
+     *  the trivial evaluator of particle charge 
+     *  it relies on LoKi::Particles::Charge for the 
+     *  basic particles, and for recursive sum for 
+     *  non-basic particles 
+     *  @see LoKi::Cuts::SUMQ
+     *  @see LoKi::Particles::Charge
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2006-05-22
+     */
+    class SumCharge 
+      : public LoKi::Function<const LHCb::Particle*>
+    {  
+    public:
+      /// clone method (mandatory!)
+      virtual SumCharge* clone() const ;
+      /// the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      /// the actual evaluator 
+      result_type _charge( argument p ) const ;
+    private:
+      // evaluator for basic particles 
+      LoKi::Particles::Charge m_charge ;
+    } ;
+    
     /** @struct Momentum 
      *  evaluator of the momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru

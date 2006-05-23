@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.5 2006-05-17 16:24:14 jpalac Exp $
+// $Id: Particles0.cpp,v 1.6 2006-05-23 11:33:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/17 16:24:14  jpalac
+// *** empty log message ***
+//
 // Revision 1.4  2006/04/23 10:06:13  ibelyaev
 //   add operators for ID and ABSID
 //
@@ -218,6 +221,67 @@ LoKi::Particles::AbsIdentifier::fillStream ( std::ostream& s ) const
 { return s << "ABSID" ; } ;
 // ============================================================================
 
+
+// ============================================================================
+LoKi::Particles::Charge*
+LoKi::Particles::Charge::clone() const 
+{ return new LoKi::Particles::Charge(*this) ; }
+// ============================================================================
+LoKi::Particles::Charge::result_type
+LoKi::Particles::Charge::operator() 
+  ( LoKi::Particles::Charge::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return -1000" ) ;
+    return -1000 ;
+  } ;
+  return p->charge();
+} ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Charge::fillStream ( std::ostream& s ) const 
+{ return s << "Q" ; } ;
+// ============================================================================
+
+// ============================================================================
+LoKi::Particles::SumCharge*
+LoKi::Particles::SumCharge::clone() const 
+{ return new LoKi::Particles::SumCharge(*this) ; }
+// ============================================================================
+LoKi::Particles::SumCharge::result_type
+LoKi::Particles::SumCharge::operator() 
+  ( LoKi::Particles::Charge::argument p ) const 
+{ return _charge( p ) ;}
+// ============================================================================
+LoKi::Particles::SumCharge::result_type
+LoKi::Particles::SumCharge::_charge 
+( LoKi::Particles::Charge::argument p ) const 
+{
+  if ( 0 == p ) 
+  { Error ( " Invalid Particle, return -1000" ) ; return -1000 ; } ; // RETURN 
+  if ( p->isBasicParticle() ) { return m_charge ( p ) ; }            // RETURN 
+  // 
+  typedef SmartRefVector<LHCb::Particle> DP;
+  const DP& daughters = p->daughters() ;
+  if ( daughters.empty() ) 
+  {
+    Warning ( "Empty list of daughters for '" + 
+              LoKi::Particles::nameFromPID ( p->particleID() ) + "'" ) ;
+    return m_charge ( p )  ;                                      // RETURN 
+  }
+  double charge = 0 ;
+  for ( DP::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  { charge += _charge ( *idau ) ; }                               // RECURSION 
+  ///
+  return charge ;
+} ;
+// ============================================================================
+std::ostream& 
+LoKi::Particles::SumCharge::fillStream ( std::ostream& s ) const 
+{ return s << "SUMQ" ; } ;
+// ============================================================================
 
 // ============================================================================
 LoKi::Particles::Momentum* 
