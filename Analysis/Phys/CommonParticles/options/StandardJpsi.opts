@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 
 /** @file 
@@ -13,59 +13,71 @@
  *  @date 2006-05-23
  */
 DataOnDemandSvc.Algorithms += {
-// Loose Jpsi->MuMu
+// Lifetime-unbiased very wide Jpsi->MuMu (2.7-10.1 GeV)
+  "DATA='/Event/Phys/StdUnbiasedHeavyDimuon/Particles'     TYPE='MakeResonances/StdUnbiasedHeavyDimuon'",
+  "DATA='/Event/Phys/StdUnbiasedHeavyDimuon/Vertices'      TYPE='MakeResonances/StdUnbiasedHeavyDimuon'",
+// Lifetime-unbiased Jpsi->MuMu
+  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Particles'     TYPE='FilterDesktop/StdUnbiasedJpsi2MuMu'",
+  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Vertices'      TYPE='FilterDesktop/StdUnbiasedJpsi2MuMu'",
+// Loose Biased Jpsi->MuMu
   "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2MuMu'",
   "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2MuMu'",
-// Loose Jpsi->ee
+// Loose Biased Jpsi->ee
   "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2ee'",
-  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2ee'",
-// Lifetime-unbiased Jpsi->MuMu
-  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Particles'     TYPE='MakeResonances/StdUnbiasedJpsi2MuMu'",
-  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Vertices'      TYPE='MakeResonances/StdUnbiasedJpsi2MuMu'"
+  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2ee'"
 };
 
 /*************************************************************************
 *  Standard Lifetime Unbiased J/psi->MuMu
 *  @author J. Amoraal
 */
-StdUnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
-StdUnbiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
-StdUnbiasedJpsi2MuMu.Window = 400. * MeV ;
-StdUnbiasedJpsi2MuMu.MotherFilter.Selections = { "J/psi(1S) : BooleanFilterCriterion/JpsiFilter" } ;
+StdUnbiasedHeavyDimuon.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+StdUnbiasedHeavyDimuon.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
+StdUnbiasedHeavyDimuon.LowerWindow = 400.* MeV ; // 400 MeV below the J/psi
+StdUnbiasedHeavyDimuon.UpperWindow = 7.0*GeV ; // over the Y(1S)
+StdUnbiasedHeavyDimuon.MotherFilter.Selections = { "J/psi(1S) : BooleanFilterCriterion/JpsiFilter" } ;
 /// A Boolean AND list of cuts (PID(DLL), Pt and Chi2 of the vertex)
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.andList = { "BooleanFilterCriterion/pidFilter" , 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.andList = { "BooleanFilterCriterion/pidFilter" , 
                                                       "BooleanFilterCriterion/ptFilter" , 
                                                       "VtxFilterCriterion" } ;
 
 /// Boolean OR PID(DLL) cuts; Reguire that the max PID of a di-muon pair is greater than 1, 
 /// i.e. maxPID(mu+,mu-) > -1
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.orList = { "ByPIDFilterCriterion/MupPID" , 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.orList = { "ByPIDFilterCriterion/MupPID" , 
                                                                "ByPIDFilterCriterion/MumPID" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MupPID.FilterByDescendents = true ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MumPID.FilterByDescendents = true ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MupPID.ApplyCC = false ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MumPID.ApplyCC = false ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MupPID.Selections = { "mu+ : DLLFilterCriterion/DLL" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MumPID.Selections = { "mu- : DLLFilterCriterion/DLL" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.DLLs = { "mu-pi" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.DLLs = { "mu-pi" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.minDLLs = { -1. } ;  
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.minDLLs = { -1. } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.FilterByDescendents = true ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.FilterByDescendents = true ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.ApplyCC = false ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.ApplyCC = false ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.Selections = { "mu+ : DLLFilterCriterion/DLL" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.Selections = { "mu- : DLLFilterCriterion/DLL" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.DLLs = { "mu-pi" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.DLLs = { "mu-pi" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MupPID.DLL.minDLLs = { -1. } ;  
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.pidFilter.MumPID.DLL.minDLLs = { -1. } ;
 
 /// Boolean OR Pt cuts; Reguire that the max Pt of a di-muon pair is greater than 500 MeV, 
 /// i.e. maxPt(mu+,mu-) > 500 MeV
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.orList = { "ByPIDFilterCriterion/MupPt" , 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.orList = { "ByPIDFilterCriterion/MupPt" , 
                                                               "ByPIDFilterCriterion/MumPt" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MupPt.FilterByDescendents = true ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MumPt.FilterByDescendents = true ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MupPt.ApplyCC = false ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MumPt.ApplyCC = false ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MupPt.Selections = { "mu+ : KinFilterCriterion" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MumPt.Selections = { "mu- : KinFilterCriterion" } ;
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500. * MeV ; 
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500. * MeV ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.FilterByDescendents = true ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.FilterByDescendents = true ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.ApplyCC = false ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.ApplyCC = false ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.Selections = { "mu+ : KinFilterCriterion" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.Selections = { "mu- : KinFilterCriterion" } ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500. * MeV ; 
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500. * MeV ;
 /// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 6
-StdUnbiasedJpsi2MuMu.MotherFilter.JpsiFilter.VtxFilterCriterion.MaxChi2 = 6. ;
+StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.VtxFilterCriterion.MaxChi2 = 6. ;
+
+/*************************************************************************
+*  Standard Lifetime Unbiased J/psi->MuMu
+*  @author P. Koppenburg
+*/
+StdUnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdUnbiasedHeavyDimuon" };
+StdUnbiasedJpsi2MuMu.Filter.Selections = { "J/psi(1S) : MassFilterCriterion" };
+StdUnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
 
 /*************************************************************************
 *  Standard Loose Biased Jpsi->MuMu
