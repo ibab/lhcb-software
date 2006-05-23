@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2006-05-22-3 - P. Koppenburg for Eric Conte
+  - options/StandardParticles.opts
+    . Added Downstream and VTT protons
+
 ! 2006-05-22-3 - P. Koppenburg for Jan Anoraal
   - options/StandardJpsi.opts
     . New unbiased J/psi and Standard heavy dimuon

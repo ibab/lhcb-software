@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.3 2006-05-18 10:44:42 pkoppenb Exp $
+// $Id: StandardParticles.opts,v 1.4 2006-05-23 16:44:46 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 
 /** @file 
@@ -146,6 +146,12 @@ DataOnDemandSvc.Algorithms += {
   // Loose protons:    RICH & DLL(p-pi)>-5
   "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='PreLoadParticles/StdLooseProtons'",
   "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='PreLoadParticles/StdLooseProtons'",
+  // Loose VTT protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdLooseVTTProtons/Particles'   TYPE='PreLoadParticles/StdLooseVTTProtons'",
+  "DATA='/Event/Phys/StdLooseVTTProtons/Vertices'    TYPE='PreLoadParticles/StdLooseVTTProtons'",
+  // Loose Downstream protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
   // Loose hadrons:  loose kaons + loose protons + loose pions 
   "DATA='/Event/Phys/StdLooseHadrons/Particles'   TYPE='PreLoadParticles/StdLooseHadrons'",
   "DATA='/Event/Phys/StdLooseHadrons/Vertices'    TYPE='PreLoadParticles/StdLooseHadrons'",
