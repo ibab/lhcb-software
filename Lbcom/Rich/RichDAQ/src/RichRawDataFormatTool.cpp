@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.31 2006-05-10 13:30:22 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.32 2006-05-23 14:52:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -367,9 +367,6 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
                                           const RichDAQ::BankVersion version ) const
 {
 
-  // Retrieve the RawEvent
-  RawEvent * rawEv = rawEvent();
-
   // new rich data map
   RichDAQ::L1Map L1Data = m_dummyMap;
 
@@ -390,7 +387,8 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
   }
 
   // Loop over Level1 board and make a RAWBank for each
-  for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 )
+  for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); 
+        iL1 != L1Data.end(); ++iL1 )
   {
 
     // Make a new data bank
@@ -421,7 +419,7 @@ void RichRawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smar
     }
 
     // Add this bank to the Raw buffer
-    rawEv->addBank( (*iL1).first.data(), RawBank::Rich, version, dataBank );
+    rawEvent()->addBank( (*iL1).first.data(), RawBank::Rich, version, dataBank );
 
     if ( m_summary )
     {
@@ -560,8 +558,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         }
         delete hpdBank;
 
-      }
-      else
+      } 
+      else // Not a data header line
       {
         ++lineC;
       }
