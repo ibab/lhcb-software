@@ -3,6 +3,7 @@
 DECLARE_FACTORY_ENTRIES( TrackUtils ) {
 
    DECLARE_ALGORITHM( TrackEventCloneKiller );
+   DECLARE_ALGORITHM( TrackContainerCleaner );
 
 }
 

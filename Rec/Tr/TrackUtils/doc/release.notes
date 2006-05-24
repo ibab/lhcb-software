@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-5-24 - M Needham
+ Add TrackContainerCleaner algorithm
+
 !========================== TrackUtils v1r1 2006-05-03 =======================
 ! 2006-05-02 - Eduardo Rodrigues
  - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
