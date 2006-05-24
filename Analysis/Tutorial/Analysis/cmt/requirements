@@ -13,7 +13,8 @@ branches          cmt doc src options solution1 solution2 solution3 solution4 so
 #============================================================================
 # Used packages.
 #============================================================================
-use DaVinci       v*  Phys
+use DaVinciKernel v*  Phys
+# DaVinciMCTools v* Phys
 
 #============================================================================
 # Use MC

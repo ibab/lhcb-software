@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2006-05-24 - P. Koppenburg
+ - Do not use DaVinci. DaVinciKernel should be enough for the moment
+
 ! 2006-05-23 - Marco Cattaneo
  - Bring requirements up to date with latest patterns and increment major
    version in preparation for migration to DaVinci v16r*
