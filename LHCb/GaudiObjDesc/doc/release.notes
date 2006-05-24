@@ -2,6 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+=============================GaudiObjDesc v9r6============================
 ! 2006-05-19 - Marco Clemencic
  - patch #726. Removed a work-aroud introduced with patch #716 that is
    not needed with ROOT 5.11 (the change of default allocator for
