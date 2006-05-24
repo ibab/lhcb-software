@@ -1,6 +1,6 @@
-// $Id: StandardParticles.opts,v 1.4 2006-05-23 16:44:46 pkoppenb Exp $
+// $Id: StandardParticles.opts,v 1.5 2006-05-24 09:03:25 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -263,6 +263,22 @@ StdLooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
 StdLooseProtons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='-5.0'" } ;
 StdLooseProtons.DecayDescriptor = "Proton" ;
+
+StdLooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='-5.0'" } ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.UseDownstreamTracks = true ;
+StdLooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
+StdLooseDownstreamProtons.DecayDescriptor = "Proton" ;
+
+StdLooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.ProtonSelection = {"det='RICH' p-pi='-5.0'" } ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.UseVTTTracks = true ;
+StdLooseVTTProtons.PhysDesktop.CombinedParticleMaker.UseLongTracks = false  ;
+StdLooseVTTProtons.DecayDescriptor = "Proton" ;
 
 StdLooseHadrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseHadrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
