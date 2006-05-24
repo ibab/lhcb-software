@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.312 2006-05-18 11:17:10 jpalac Exp $
+# $Id: requirements,v 1.313 2006-05-24 14:07:51 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -19,33 +19,33 @@ apply_pattern DaVinciVersion
 # Used packages. 
 #============================================================================
 #-- External libraries taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          -no_auto_imports
+use RELAX v* LCG_Interfaces          
 
 #-- Gaudi libraries (from GAUDI_v18r2)
-use GaudiAlg 		v*         -no_auto_imports
-use GaudiAud            v*         -no_auto_imports
-use GaudiGSL		v*         -no_auto_imports
+use GaudiAlg 		v*         
+use GaudiAud            v*         
+use GaudiGSL		v*         
 use GaudiKernel		v*
-use GaudiObjDesc 	v*         -no_auto_imports
-use GaudiPoolDb		v*         -no_auto_imports
-use GaudiSvc 		v*         -no_auto_imports
-use RootHistCnv         v*         -no_auto_imports
+use GaudiObjDesc 	v*         
+use GaudiPoolDb		v*         
+use GaudiSvc 		v*         
+use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r5   Det  -no_auto_imports
-use XmlConditions       v1r6    Det  -no_auto_imports
-use FieldMap            v4r7         -no_auto_imports
-use ParamFiles          v4r2         -no_auto_imports
-#use BrunelDQ           v1r0    DQ   -no_auto_imports
+use XmlDDDB             v30r5   Det  
+use XmlConditions       v1r6    Det  
+use FieldMap            v4r7         
+use ParamFiles          v4r2         
+#use BrunelDQ           v1r0    DQ   
 
 #-- LHCb libraries (from LHCB_v20r3)
-use LHCb	v21r0                -no_auto_imports
+use LHCb	v21r0                
 
 #-- Lbcom packages (from LBCOM_v4r3)
-use LbcomSys    v5r0                 -no_auto_imports
+use LbcomSys    v5r0                 
 
 #-- Rec packages (from REC_v3r3)
-use RecSys      v3r3                 -no_auto_imports
+use RecSys      v3r3                 
 
 #-- Phys packages (from PHYS_v3r1)
 use PhysSys     v3r1
