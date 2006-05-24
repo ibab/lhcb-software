@@ -1,6 +1,6 @@
-// $Id: StandardKs.opts,v 1.2 2006-05-22 18:03:10 pkoppenb Exp $
+// $Id: StandardKs.opts,v 1.3 2006-05-24 08:59:47 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -37,7 +37,6 @@ StdLooseKsLL.DaughterFilter.Selections = {"pi+ : TrackQualityFilterCriterion,
                                                 KinFilterCriterion,
                                                  PVIPFilterCriterion"};
 
-StdLooseKsLL.DaughterFilter.TrackTypeFilterCriterion ="RequireLong";
 StdLooseKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV; 
 StdLooseKsLL.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 4.0;
 StdLooseKsLL.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 3.0;

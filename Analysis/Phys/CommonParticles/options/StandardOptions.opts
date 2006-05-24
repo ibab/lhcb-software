@@ -1,6 +1,6 @@
-// $Id: StandardOptions.opts,v 1.6 2006-05-19 22:44:14 gligorov Exp $
+// $Id: StandardOptions.opts,v 1.7 2006-05-24 08:59:48 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 
 /** @file 
@@ -34,6 +34,7 @@
  *  @see StandardPhi.opts : The standard Phi
  *  @see StandardRho0.opts : The standard Rho0
  *  @see StandardKs.opts : The standard Ks
+ *  @see StandardLambda.opts : The standard Lambda
  *
  *  @author P. Koppenburg
  *  @date 2006-01-30
@@ -50,3 +51,4 @@
 #include "$COMMONPARTICLESROOT/options/StandardPhi.opts"
 #include "$COMMONPARTICLESROOT/options/StandardRho0.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKs.opts"
+#include "$COMMONPARTICLESROOT/options/StandardLambda.opts"
