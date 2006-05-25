@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.5 2006-05-20 13:34:30 gligorov Exp $
+// $Id: StandardD0.opts,v 1.6 2006-05-25 10:04:50 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -90,7 +90,7 @@ StdLooseD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
 */
 StdLooseD02KsPiPi.PhysDesktop.InputLocations = {"Phys/StdLoosePions"};
 StdLooseD02KsPiPi.PhysDesktop.InputLocations += {"Phys/StdLooseKsLL","Phys/StdLooseKsDD"};
-StdLooseD02KsPiPi.DecayDescriptors = {"[D0 -> KS0 pi+ pi-]cc"}; // or D* gets confused
+StdLooseD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc" ; // or D* gets confused
 StdLooseD02KsPiPi.DaughterFilter.Selections = {"pi+ :     KinFilterCriterion/PiKin",
                                              "KS0 :     KinFilterCriterion/KS0Kin"};
 
@@ -111,7 +111,7 @@ StdLooseD02KsPiPi.MotherFilter.KinFilterCriterion.MinPt = 1.8*GeV; // MeV
 */
 StdLooseD02KsKK.PhysDesktop.InputLocations = {"Phys/StdLooseKaons"};
 StdLooseD02KsKK.PhysDesktop.InputLocations += {"Phys/StdLooseKsLL","Phys/StdLooseKsDD"};
-StdLooseD02KsKK.DecayDescriptors = {"[D0 -> KS0 K+ K-]cc"}; // or D* gets confused
+StdLooseD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc"; // or D* gets confused
 StdLooseD02KsKK.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
                                             "KS0 :     KinFilterCriterion/KS0Kin"};
 
