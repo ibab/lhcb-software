@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.4 2006-05-22 10:42:10 erodrigu Exp $
+// $Id: TrackChecker.h,v 1.5 2006-05-25 14:16:04 erodrigu Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -68,21 +68,19 @@ public:
 
 private:
 
-  // Helper function
+  // Helper functions
   StatusCode resolutionHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
-  StatusCode purityHistos( LHCb::Track* track, LHCb::MCParticle* mcPart );
+  StatusCode purityHistos    ( LHCb::Track* track, LHCb::MCParticle* mcPart );
 
   // Interfaces
   ITrackCriteriaSelector* m_trackSelector; // Pointer to TrackCriteriaSelector
-  IIdealStateCreator* m_stateCreator;      // Pointer to IdealStateCreator
-  ITrackExtrapolator* m_extrapolatorL;     // Pointer to LinearExtrapolator
-  ITrackExtrapolator* m_extrapolatorM;     // Pointer to MasterExtrapolator
+  IIdealStateCreator*     m_stateCreator;  // Pointer to IdealStateCreator
+  ITrackExtrapolator*     m_extrapolator;  // Pointer to TrackMasterExtrapolator
 
   // jobOptions
   std::string m_tracksInContainer; // Input Tracks container location
   std::string m_linkerInTable;     // Input Linker table location
   std::string m_trackSelectorName; // Tracks selector tool name
-
   // Additional z-positions where to determine resolutions and pulls
   std::vector<double> m_zPositions;
 
