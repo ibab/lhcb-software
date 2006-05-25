@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2006-05-25 - P. Koppenburg
+ - Revise structure
+   exercises/  Contains exercises
+   solutions/XXX/ contains solutions
+   solutionX/ will become obsolete as well as doc/exercise
+   !! WAIT until all is done before removing these directories
+
 ! 2006-05-24 - P. Koppenburg
  - Do not use DaVinci. DaVinciKernel should be enough for the moment.
 

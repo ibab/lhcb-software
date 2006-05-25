@@ -1,16 +1,11 @@
-################################################################################
+###############################################################################
 #                                                                              #
-#                                   Exercise 1                                 #
+#                                   Exercise 2                                 #
 #                                                                              #
 ################################################################################
 
-Write a minimal selection for the decay J/Psi -> MuMu
-  - Put all your algorithms in a GaudiSequencer
-  - Use Standard particles as input
-  - Write a DVAlgorithm "TutorialAlgorithm" that makes J/psi->mumu
-    - Make sure you have the doxygen documentation of DVAlgorithm
-    - Use emacs to create the .cpp and .h files and tell it to make a DVAlgorithm
-    - Get the Particles from the desktop
+Extend TutorialAlgorithm to select J/psi->MuMu
+  - Continue the DVAlgorithm "TutorialAlgorithm" that makes J/psi->mumu
     - Use the ParticleFilter to extract positive and negative muons
     - Select dimuons in a reasonable mass window around the J/psi
     - Use the vertex fitter, cut on chi^2
@@ -21,7 +16,7 @@ Write a minimal selection for the decay J/Psi -> MuMu
 
 General tips:
     - Make sure all your global variables are initialised in the constructor
-    - Avoid hard-coding as much as possible
+    - Avoid hard-coding as much as possible. All cuts should be 
+      properties of your algorithm.
     - Avoid duplication of code. Make methods when necessary.
 
-The Tutorial package already provides a complete requirements file.

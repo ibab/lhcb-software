@@ -4,9 +4,13 @@
 ! Purpose     : Analysis tutorial
 !-----------------------------------------------------------------------------
  
-The exercises are to be found in the same directory.
+The exercises are to be found in the exercise/ directory
   
-  - exercise 1 asks you to write a basic DVAlgorithm doing J/psi -> mu mu
+  - exercise 1 asks you to write a basic DVAlgorithm
+  - exercise 2 asks you to write a basic DVAlgorithm doing J/psi -> mu mu
+
+
+
   - exercise 2 extends this algorithm to Phi->KK
   - exercise 3 completes the Bs->J/PsiPhi chain using generic code
   - exercise 4 shows some more nice utility algorithms
@@ -15,11 +19,11 @@ The exercises are to be found in the same directory.
 
 For those who want to cheat:
      
-    > DaVinciEnv v12r14   (or more if available)
+    > DaVinciEnv v16r1   (or more if available)
     > cd cmt/
     > cmt config
     > source setup.csh
-    > cp ../solution1/*.{cpp,h} ../src/
+    > cp ../solutions/DaVinci1/*.{cpp,h} ../src/
     > make
-    > DaVinci ../solution1/DVTutorial_1.opts
+    > DaVinci ../solutions/DaVinci1/DVTutorial_1.opts
   
