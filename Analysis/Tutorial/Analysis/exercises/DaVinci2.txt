@@ -18,5 +18,6 @@ General tips:
     - Make sure all your global variables are initialised in the constructor
     - Avoid hard-coding as much as possible. All cuts should be 
       properties of your algorithm.
-    - Avoid duplication of code. Make methods when necessary.
+    - Avoid duplication of code. Avoid too long methods. 
+      Make methods when necessary.
 

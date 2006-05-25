@@ -19,6 +19,9 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+Jpsi2MuMu.MassWindow = 50*MeV ;
+Jpsi2MuMu.MaxChi2 = 100 ;
+Jpsi2MuMu.OutputLevel = 3 ;
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
