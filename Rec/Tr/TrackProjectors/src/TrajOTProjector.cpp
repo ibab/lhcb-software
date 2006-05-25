@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.11 2006-05-17 16:23:28 cattanem Exp $
+// $Id: TrajOTProjector.cpp,v 1.12 2006-05-25 12:54:33 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -73,6 +73,10 @@ StatusCode TrajOTProjector::project( const State& state,
 
   // Calculate the residual
   OTMeasurement& otmeas = *( dynamic_cast<OTMeasurement*>(&meas) );
+
+  // set the ambiguity "on the fly"!
+  if ( otmeas.ambiguity() == 0 ) otmeas.setAmbiguity( signDist );
+
   m_residual = otmeas.ambiguity() * dDrift - signDist * distToWire ;  
   m_H *= signDist; // Correct for the sign of the distance
   

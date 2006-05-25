@@ -1,4 +1,4 @@
-// $Id: TrackOTProjector.h,v 1.3 2006-03-31 13:42:44 erodrigu Exp $
+// $Id: TrackOTProjector.h,v 1.4 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKOTPROJECTOR_H 1
 
@@ -12,8 +12,6 @@
 
 // local
 #include "TrackProjector.h"
-
-using namespace LHCb;
 
 /** @class TrackOTProjector TrackOTProjector.h TrackProjectors/TrackOTProjector.h
  *  
@@ -30,8 +28,8 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas );
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas );
 
   /// initialize
   virtual StatusCode initialize();

@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-05-19 - Eduardo Rodrigues
+ - OTMeasurement ambiguities set on the fly
+ - "using namespace ..." removed from header files
+
 ! 2006-05-19 - David Hutchcroft
  - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
 

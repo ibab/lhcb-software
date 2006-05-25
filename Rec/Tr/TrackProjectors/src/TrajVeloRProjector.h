@@ -1,4 +1,4 @@
-// $Id: TrajVeloRProjector.h,v 1.2 2006-04-13 10:41:05 jvantilb Exp $
+// $Id: TrajVeloRProjector.h,v 1.3 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRAJVELORPROJECTOR_H 
 #define TRAJVELORPROJECTOR_H 1
 
@@ -10,8 +10,6 @@
 
 class IMagneticFieldSvc;
 class ITrajPoca;
-
-using namespace LHCb;
 
 /** @class TrajVeloRProjector TrajVeloRProjector.h TrajVeloRProjector.h
  *  
@@ -27,8 +25,8 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas );
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas );
 
   /// initialize
   virtual StatusCode initialize();

@@ -1,4 +1,4 @@
-// $Id: TrackMasterProjector.h,v 1.5 2006-04-06 13:15:35 jvantilb Exp $
+// $Id: TrackMasterProjector.h,v 1.6 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 1
 
@@ -13,9 +13,6 @@
 // from TrackEvent
 #include "Event/State.h"
 #include "Event/Measurement.h"
-
-using namespace Gaudi;
-using namespace LHCb;
 
 /** @class TrackMasterProjector TrackMasterProjector.h TrackProjectors/TrackMasterProjector.h
  *
@@ -34,11 +31,11 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  StatusCode project( const State& state,
-                      Measurement& meas );
+  StatusCode project( const LHCb::State& state,
+                      LHCb::Measurement& meas );
   
   /// Retrieve the projection matrix H of the (last) projection
-  const TrackVector& projectionMatrix() const;
+  const Gaudi::TrackVector& projectionMatrix() const;
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;

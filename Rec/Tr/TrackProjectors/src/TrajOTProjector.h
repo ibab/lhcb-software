@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.6 2006-04-13 10:41:05 jvantilb Exp $
+// $Id: TrajOTProjector.h,v 1.7 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -15,8 +15,6 @@ class DeOTDetector;
 class IMagneticFieldSvc;
 class ITrajPoca;
 
-using namespace LHCb;
-
 /** @class TrajOTProjector TrajOTProjector.h TrajOTProjector.h
  *  
  *  @author Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
@@ -29,8 +27,8 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas );
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas );
 
   /// initialize
   virtual StatusCode initialize();

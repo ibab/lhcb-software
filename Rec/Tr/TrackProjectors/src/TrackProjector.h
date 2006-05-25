@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.3 2006-04-06 13:15:35 jvantilb Exp $
+// $Id: TrackProjector.h,v 1.4 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -13,9 +13,6 @@
 // from TrackEvent
 #include "Event/State.h"
 #include "Event/Measurement.h"
-
-using namespace Gaudi;
-using namespace LHCb;
 
 /** @class TrackProjector TrackProjector.h TrackProjectors/TrackProjector.h
  *
@@ -34,11 +31,11 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas );
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas );
   
   /// Retrieve the projection matrix H of the (last) projection
-  virtual const TrackVector& projectionMatrix() const;
+  virtual const Gaudi::TrackVector& projectionMatrix() const;
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;
@@ -62,14 +59,16 @@ public:
 
 protected:
 
-  void computeResidual( const State& state, const Measurement& meas );
+  void computeResidual( const LHCb::State& state,
+                        const LHCb::Measurement& meas );
 
-  void computeErrorResidual( const State& state, const Measurement& meas );
+  void computeErrorResidual( const LHCb::State& state,
+                             const LHCb::Measurement& meas );
 
   double  m_residual;
   double  m_errResidual;
   double  m_errMeasure;
-  TrackVector m_H;
+  Gaudi::TrackVector m_H;
 
 };
 #endif // TRACKPROJECTORS_TRACKPROJECTOR_H

@@ -1,4 +1,4 @@
-// $Id: TrackVeloPhiProjector.h,v 1.2 2006-02-16 10:50:53 ebos Exp $
+// $Id: TrackVeloPhiProjector.h,v 1.3 2006-05-25 12:54:33 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKVELOPHIPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKVELOPHIPROJECTOR_H 1
 
@@ -12,8 +12,6 @@
 
 // from VeloDet
 #include"VeloDet/DeVelo.h"
-
-using namespace LHCb;
 
 /** @class TrackVeloPhiProjector TrackVeloPhiProjector.h TrackProjectors/TrackVeloPhiProjector.h
  *  
@@ -30,8 +28,8 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas );
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas );
 
   /// initialize
   virtual StatusCode initialize();
