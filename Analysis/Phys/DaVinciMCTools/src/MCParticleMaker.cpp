@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.22 2006-05-17 16:26:45 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.23 2006-05-25 09:57:11 pkoppenb Exp $
 // Include files
 #include <memory>
 
@@ -11,6 +11,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "Event/Particle.h"
 #include "Kernel/IMCDecayFinder.h"
+#include "DaVinciMCTools/IMCReconstructible.h"
 #include "Kernel/MatrixManip.h"
 // local
 #include "MCParticleMaker.h"
@@ -52,6 +53,7 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   ,m_onlyReconstructed(false)
   ,m_ppSvc(0) 
   ,m_pMCDecFinder(0)
+  ,m_reco(0)
 {
   // Declaring implemented interface  
   declareInterface<IParticleMaker>(this);
@@ -100,6 +102,7 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   declareProperty( "ScaleFactorCovarianceC1", m_covSFsC1=ZeroDefault ); //rescaling factor of covariance matrix momentum dependent
   declareProperty( "MeasurementBiasC0",       m_BIASsC0=ZeroDefault );// biases in cov units
   declareProperty( "MeasurementBiasC1",       m_BIASsC1=ZeroDefault );// biases in cov units momentum dependent (GeV)
+  declareProperty( "OnlyReconstructible",m_requireReco = true  );// Only reconstructible
 }
 //=============================================================================
 // Destructor
@@ -139,6 +142,11 @@ StatusCode MCParticleMaker::initialize() {
   }
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
 
+  if ( m_requireReco ){
+    m_reco = tool<IMCReconstructible>("MCReconstructible");
+    info() << "Will only look at reconstructible particles" << endmsg ;
+  }
+  
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {
     fatal() << "Instructed to use covariance matrix of"
@@ -241,7 +249,11 @@ StatusCode MCParticleMaker::makeParticles( LHCb::Particle::ConstVector & parts )
 
     if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) == m_ids.end()) continue;
     if ( m_onlyReconstructible && !reconstructible(**icand) )  continue;
-
+    if (( m_requireReco ) && ( NULL!=m_reco ) && ( m_reco->reconstructible(*icand)==0)) {
+      if ( (*icand)->p() > 1000 ) debug() << (*icand)->particleID().pid() << " not reconstructible " << endmsg ;
+      continue ;
+    } else debug() << (*icand)->particleID().pid() << " reconstructible " << endmsg ;
+    
     // covariance is in (x,y,z,px,py,pz,m) order
     debug()<< "Build Covariance Matrix "<<endmsg;
     Gaudi::SymMatrix7x7 covariance;

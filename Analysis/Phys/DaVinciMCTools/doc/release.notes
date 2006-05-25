@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.108 2006-05-17 16:26:45 jpalac Exp $
+! $Id: release.notes,v 1.109 2006-05-25 09:57:11 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2006-05-25 - P. Koppenburg
+  - DaVinciTools/MCReconstructed.h
+  - src/MCReconstruced.*
+    . Restore Christian's tool MCEffReconstructed.
+    . Temporarily requires that all charged are within the calo acceptance,
+      which is hard coded and have P>1GeV (also hard-coded). 
+      Would be nice to call the MC TrackInfo and the geometry service.
+  - src/MCParticleMaker.cpp
+    . By default require that all Particles are reconstructible
 
 ! 2006-05-17 - Juan PALACIOS
   - src/*cpp use Gaudi::Units namespace

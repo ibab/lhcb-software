@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.9 2006-05-17 16:26:45 jpalac Exp $
+// $Id: MCParticleMaker.h,v 1.10 2006-05-25 09:57:11 pkoppenb Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -20,6 +20,7 @@
 class IParticlePropertySvc;
 class IRndmGenSvc;
 class IMCDecayFinder;
+class IMCReconstructible ;
 
 class ProtoParticle;
 
@@ -174,6 +175,11 @@ private:
   StatusCode fetchCovariance(const LHCb::Particle& p , Gaudi::SymMatrix7x7 &c);
   /// Generate covariance according realistic parametrization  
   StatusCode generateCovariance(const Gaudi::XYZTVector& p,Gaudi::SymMatrix7x7 &ccc );
+
+  IMCReconstructible* m_reco ; ///< Reconstructible?
+  bool m_requireReco ; ///< Require reconstructible
+  
+  
 
   //====================================================================================
   
