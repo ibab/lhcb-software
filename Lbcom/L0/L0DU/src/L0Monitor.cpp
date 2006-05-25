@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.8 2006-04-12 12:45:40 ocallot Exp $
+// $Id: L0Monitor.cpp,v 1.9 2006-05-25 22:37:17 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -24,8 +24,9 @@ DECLARE_ALGORITHM_FACTORY( L0Monitor );
 L0Monitor::L0Monitor( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_L0DUReportLocation ( LHCb::L0DUReportLocation::Default  ) 
 {
-
+  declareProperty( "ReportLocation"    , m_L0DUReportLocation );
 }
 //=============================================================================
 // Destructor
@@ -74,7 +75,7 @@ StatusCode L0Monitor::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  LHCb::L0DUReport* decision = get<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default );
+  LHCb::L0DUReport* decision = get<LHCb::L0DUReport>( m_L0DUReportLocation );
   
   debug() << "L0 decision : " << decision->decision()
           << " fired:";

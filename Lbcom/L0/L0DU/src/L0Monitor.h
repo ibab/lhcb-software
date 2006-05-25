@@ -1,4 +1,4 @@
-// $Id: L0Monitor.h,v 1.6 2006-04-12 12:45:40 ocallot Exp $
+// $Id: L0Monitor.h,v 1.7 2006-05-25 22:37:17 odescham Exp $
 #ifndef L0MONITOR_H 
 #define L0MONITOR_H 1
 
@@ -49,5 +49,7 @@ private:
   double m_exclSumMu;
 
   double m_minPeak2Veto;
+  std::string m_L0DUReportLocation;
+  
 };
 #endif // L0MONITOR_H
