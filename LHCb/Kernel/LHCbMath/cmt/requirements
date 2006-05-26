@@ -11,7 +11,7 @@ version v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 
-branches cmt doc Kernel
+branches cmt doc Kernel src
 
 include_dirs $(LHCBMATHROOT)
 
@@ -23,10 +23,5 @@ use GaudiPolicy     v*
 use LHCbDefinitions v* Kernel        
 use GSL             v* LCG_Interfaces
 
-
-#============================================================================
-
-
-macro_remove LHCbDefinitions_linkopts "-lSmatrix"
 
 #============================================================================

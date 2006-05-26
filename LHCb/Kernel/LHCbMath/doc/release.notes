@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Kernel/LHCbMath
 ! Responsible : Juan Palacios
-! Purpose     : A collection of simple generic geometry classes and functions 
+! Purpose     : A collection of simple generic classes and functions 
+!               for geometry and matrix algebra
 !-----------------------------------------------------------------------------
+
+! 2006-05-24 - Juan Palacios
+ - cmt/requirements: Delete removal of "-lSmatrix" in linkopts. This is needed
+   to get Python dictionaries for SMatrix.
 
 !========================== LHCbMath v1r0 2006-05-15 ==========================
 ! 2006-05-10 - Juan Palacios
