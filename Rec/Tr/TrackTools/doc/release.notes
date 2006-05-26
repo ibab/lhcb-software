@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-05-25
+ - Bug fix in LongTrackReferenceCreator
+
+! 2006-05-20 M Needham
+ - Add LongTrackReferenceCreator (a ITrackManipulator)
+
 ! 2006-05-19 - David Hutchcroft
  - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
 

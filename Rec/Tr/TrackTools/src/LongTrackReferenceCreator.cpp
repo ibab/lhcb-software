@@ -63,7 +63,7 @@ StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
   typedef std::vector<LHCb::Measurement*> MeasContainer;
   const MeasContainer& aCont = aTrack.measurements();
 
-  if (aCont.size() != 0){
+  if (aCont.size() == 0){
     return Warning("Tool called for track without measurements",StatusCode::FAILURE);
   }
 
