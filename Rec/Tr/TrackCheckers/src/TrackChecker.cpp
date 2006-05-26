@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.9 2006-05-25 14:16:04 erodrigu Exp $
+// $Id: TrackChecker.cpp,v 1.10 2006-05-26 15:50:18 erodrigu Exp $
 // Include files 
 
 // local
@@ -370,9 +370,9 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart )
   int nTotalTT   = 0;
   int nTotalIT   = 0;
   int nTotalOT   = 0;
-  std::vector<Measurement*>::const_iterator itMeas = track->measurements().begin();
+  std::vector<Measurement*>::const_iterator itMeas;
   std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
-  for ( itMeas; itMeas != endMeas; ++itMeas ) {
+  for ( itMeas = track->measurements().begin(); itMeas != endMeas; ++itMeas ) {
     if (      (*itMeas)->type() == Measurement::VeloPhi ) { ++nTotalVelo; }
     else if ( (*itMeas)->type() == Measurement::VeloR )   { ++nTotalVelo; }
     else if ( (*itMeas)->type() == Measurement::TT )      { ++nTotalTT;   }
