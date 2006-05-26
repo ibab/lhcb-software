@@ -1,8 +1,11 @@
-// $Id: Interface.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Interface.h,v 1.3 2006-05-26 07:07:04 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -54,11 +57,39 @@ namespace LoKi
     template <class OTHER>
     Interface ( const Interface<OTHER>& right ) 
       : m_object( right.m_object )            { LoKi::addRef ( m_object ) ; } ;
-    /// templated assignement
+    /// virtual destructor 
+    virtual ~Interface()  ///< Destructor
+    { LoKi::release ( m_object ) ; };
+    /// assignement from the raw pointer 
+    Interface& operator= ( const TYPE* obj ) 
+    {
+      if ( m_object == obj ) { return *this ; }
+      //
+      TYPE* tmp = m_object ;
+      m_object = const_cast<TYPE*> ( obj ) ;
+      //                           the order *DOES* matter 
+      LoKi::addRef  ( m_object ) ; // 1) increment the counter 
+      LoKi::release ( tmp      ) ; // 2) decrement the counter 
+      //
+      return *this ;
+    } ;
+    /// the regular assignement 
+    Interface& operator= ( const Interface<TYPE>& right ) 
+    {
+      if ( &right == this ) { return *this ; }
+      //
+      TYPE* tmp = m_object ;
+      m_object = right.m_object ;
+      //                           the order *DOES* matter 
+      LoKi::addRef  ( m_object ) ; // 1) increment the counter 
+      LoKi::release ( tmp      ) ; // 2) decrement the counter 
+      //
+      return *this ;      
+    } ;
+    /// the templated assignement
     template <class OTHER>
     Interface& operator= ( const Interface<OTHER>& right ) 
     {
-      if ( &right == *this ) { return *this ; }       // RETURN 
       TYPE* tmp = m_object ;
       m_object  = right.m_object ;
       //                           the order *DOES* matter! 
@@ -67,9 +98,6 @@ namespace LoKi
       //
       return *this ;                                  // RETURN 
     } ;
-    /// virtual destructor 
-    virtual ~Interface()  ///< Destructor
-    { LoKi::release ( m_object ) ; };
     /// valid pointer? 
     bool validPointer         () const { return 0 != m_object ; }
     /// conversion to underlying type 

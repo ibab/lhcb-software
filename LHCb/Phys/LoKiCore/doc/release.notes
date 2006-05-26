@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.19 2006-05-23 10:58:07 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2006-05-26 07:07:04 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.20 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,15 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2006-05-26 - Vanya BELYAEV
+ - LoKi/Interface.h 
+    fix the serious problem with the incorrect assignement from raw pointer 
+  
+      Bottom line: for any "smart pointer" ( and class LoKi::Interface *IS* a 
+      kind of "smart pointer") one *MUST* be very carefull with all 
+      copy&assigements - all cases must to be implemented explicitely, 
+      without the compiler generated defaults. 
+   
 ! 2006-05-23 - Vanya Belyaev
  - LoKi/Print.h 	
       minor fix for the printout of unsigned types 
@@ -138,6 +147,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.19  2006/05/23 10:58:07  ibelyaev
+!  minor fix in LoKi/Print.h
+!
 ! Revision 1.18  2006/05/08 09:04:27  cattanem
 ! Units now in Gaudi::Units namespace
 !
