@@ -1,5 +1,5 @@
 package GenEvent
-version v4r3
+version v4r4
 
 branches cmt doc src xml Event
 
@@ -11,10 +11,6 @@ include_dirs $(GENEVENTROOT)
 # Produce Header-Files from XML description
 #============================================================================
 document obj2doth GenEventObj2Doth ../xml/*.xml
-
-# Make custom dictionary. Must be before GOD generation
-#============================================================================
-document customdict GenEventCustomDict ../src/HepMC_dict.h
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================

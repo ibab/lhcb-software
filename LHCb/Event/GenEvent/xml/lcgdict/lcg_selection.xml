@@ -1,7 +1,0 @@
-<lcgdict>
-   <class name="std::pair<int,HepMC::GenParticle*>" />
-   <class name="std::pair<int,HepMC::GenVertex*>" />
-   <class name="std::map<int,HepMC::GenParticle*>" />
-   <class name="std::map<int,HepMC::GenVertex*,std::greater<int> >" />
-   <class name="std::set<HepMC::GenParticle*>" />
-</lcgdict>
