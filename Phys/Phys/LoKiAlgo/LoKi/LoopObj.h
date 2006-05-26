@@ -1,8 +1,11 @@
-// $Id: LoopObj.h,v 1.5 2006-05-26 15:24:54 jpalac Exp $
+// $Id: LoopObj.h,v 1.6 2006-05-26 15:35:46 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/26 15:24:54  jpalac
+// *** empty log message ***
+//
 // Revision 1.4  2006/05/26 12:14:19  ibelyaev
 //  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
 //
@@ -55,6 +58,8 @@
  */
 // ============================================================================
 
+
+/// @todo remove this once LoKiCore v1r5 is released in LHCb
 namespace LoKi 
 {
   namespace Print
