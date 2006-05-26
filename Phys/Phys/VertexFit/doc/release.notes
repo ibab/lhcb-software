@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.55 2006-05-26 12:50:25 jpalac Exp $
+! $Id: release.notes,v 1.56 2006-05-26 14:19:11 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-26 - Yuehong Xie
+ - OfflineVertexFitter version for anything excpet photons, which will be added later
+ - Only tested using Jpsi->mumu data from MCParticleMaker
 
 ! 2006-05-26 - Vanya BELYAEV
  - src/BlindVertexFitter.cpp

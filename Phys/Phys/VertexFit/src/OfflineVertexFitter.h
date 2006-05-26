@@ -12,6 +12,13 @@ using namespace LHCb;
 typedef ROOT::Math::SMatrix<double, 12, 12,
                               ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
 
+typedef ROOT::Math::SMatrix<double, 13, 13,
+                              ROOT::Math::MatRepSym<double,13> > SymMatrix13x13;
+
+typedef ROOT::Math::SMatrix<double, 14, 14,
+                              ROOT::Math::MatRepSym<double,14> > SymMatrix14x14;
+
+
 /** @class OfflineVertexFitter OfflineVertexFitter.h
  *  
  *  reimplementation of the KFFitTool to comply with

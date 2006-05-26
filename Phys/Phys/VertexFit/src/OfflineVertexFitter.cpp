@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.3 2006-05-17 16:45:09 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.4 2006-05-26 14:19:11 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -42,9 +42,9 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
 {
   declareInterface<IVertexFit>(this);
 
-  declareProperty("useResonanceVertex", m_useResonanceVertex = true);
-  declareProperty("applyDauMassConstraint", m_applyDauMassConstraint = true);
-  declareProperty("widthThreshold", m_widthThreshold = 2.0 * MeV);
+  declareProperty( "useResonanceVertex", m_useResonanceVertex = true);
+  declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = true);
+  declareProperty( "widthThreshold", m_widthThreshold = 2.0 * MeV);
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
@@ -349,20 +349,206 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   int NDoF = 0;
   getParticleInfo(part, V7, C7, chi2, NDoF);
 
+  Gaudi::Vector7 Vm7;
+  Gaudi::SymMatrix7x7 Cm7;
+  convertE2M(V7, C7, Vm7, Cm7);
+
+  double z2=Vm7[2];
+
+  double nominalMassDau=0.0;
+  bool constrainMDau=requireMassConstraint(dau,nominalMassDau);
+
+  LHCb::Particle transParticleDau;
+  sc = m_transporter->transport(dau, z2, transParticleDau);
+  if( sc.isFailure ()) {
+    debug() << "transport of dau failed in addFlying(" << endreq;
+    return sc;
+  }
+
+
   Gaudi::Vector7 daupara;
   Gaudi::SymMatrix7x7 daucov;
   double dauchi2 = 0.;
   int dauNDoF = 0;
-  getParticleInfo(*dau, daupara, daucov, dauchi2, dauNDoF);
-  double nominalMass=0.0;
-  bool constrainM=requireMassConstraint(dau,nominalMass);
-  if(constrainM) {
-    sc=constrainMass(daupara, daucov, nominalMass);
+  getParticleInfo(transParticleDau, daupara, daucov, dauchi2, dauNDoF);
+
+  if(constrainMDau) {
+    sc=constrainMass(daupara, daucov, nominalMassDau);
     if(sc.isFailure()) return StatusCode::FAILURE;
   }  
 
+  Gaudi::Vector7 daumpara;
+  Gaudi::SymMatrix7x7 daumcov;
+  convertE2M(daupara,daucov, daumpara, daumcov);
+
+  //temporary fix for MCParticleMaker
+  for(int i=0;i<=6;i++) daumcov(6,i)=0.0; 
+
+  ROOT::Math::SVector<double, 13> X;
+  for(int i=0;i<7;i++) {
+    X[i]=Vm7[i];
+  }
+  X[7]=daupara[0];
+  X[8]=daupara[1];
+  X[9]=daupara[3];
+  X[10]=daupara[4];
+  X[11]=daupara[5];
+  X[12]=daupara[6];
+
+  Gaudi::SymMatrix6x6 newcovdau;
+  for(int l1=0;l1<6;l1++) {
+    int n1=l1;
+    if(n1>=2) n1++;
+    for(int l2=0;l2<=l1;l2++) {
+      int n2=l2;
+      if(n2>=2) n2++;
+      newcovdau(l1,l2)=daumcov(n1,n2);
+    }
+  }
+
+  SymMatrix13x13 Cx;
+  for(int l1=0;l1<7;l1++) {
+    for(int l2=0;l2<=l1;l2++) {
+      Cx(l1,l2)=Cm7(l1,l2);
+    }
+  }
+  for(int l1=7;l1<13;l1++) {
+    for(int l2=7;l2<=l1;l2++) {
+      Cx(l1,l2)=newcovdau(l1,l2);
+    }
+  }
+  for(int l1=7;l1<13;l1++) {
+    for(int l2=0;l2<7;l2++) {
+      Cx(l1,l2)=0.0;
+    }
+  }
+
+  // x1,y1,z1, px1,py1,pz1,m1 and x2,y2,px2,py2,pz2,m2 at z2
+  ROOT::Math::SVector<double, 13> vfit=X;
+  SymMatrix13x13 cfit = Cx;
+
+  bool converged=false;
+  int iter=0;
+
+  double chi2PreviousFit=9999.;
+  double chi2Fit=999.;
+
+  while(!converged && iter< m_maxIter)  {
+    iter++;
+    verbose() << ":-) Iteration   " << iter << endreq;
+
+    //f(0)=(x2-x1)*pz2-(z2-z1)*px2
+    //f(1)=(y2-y1)*pz2-(z2-z1)*py2
+
+    ROOT::Math::SVector<double, 2> f;
+    f(0)= (vfit[7]-vfit[0])*vfit[11]- (z2-vfit[2])*vfit[9];
+    f(1)= (vfit[8]-vfit[1])*vfit[11]- (z2-vfit[2])*vfit[10];
+
+    //D is the derivative matrix
+    ROOT::Math::SMatrix<double, 2, 13> D;
+    D(0,0) = - vfit[11];
+    D(0,1) = 0.0;
+    D(0,2) = vfit[9];
+    D(0,3) = 0.0;
+    D(0,4) = 0.0;    
+    D(0,5) = 0.0;
+    D(0,6) = 0.0;
+    D(0,7) = vfit[11];
+    D(0,8) = 0.0;
+    D(0,9) =  - (z2-vfit[2]);
+    D(0,10) = 0.0;
+    D(0,11) = (vfit[7]-vfit[0]);
+    D(0,11) = 0.0;
+    D(1,0) = 0.0;
+    D(1,1) = - vfit[11];
+    D(1,2) = vfit[10];
+    D(1,3) = 0.0;
+    D(1,4) = 0.0;
+    D(1,5) = 0.0;
+    D(1,6) = 0.0;
+    D(1,7) = 0.0;
+    D(1,8) = vfit[11];
+    D(1,9) = 0.0;
+    D(1,10) = - (z2-vfit[2]);
+    D(1,11) =  (vfit[8]-vfit[1]);
+    D(1,12) = 0.0;
+
+    ROOT::Math::SVector<double, 2> d = f - D*vfit;
+
+    Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,13>(D, Cx);
+    if(!VD.Invert()) {
+      debug() << "could not invert matrix VD in addFlying! " <<endreq;
+      return StatusCode::FAILURE;
+    }
+
+    ROOT::Math::SVector<double, 2> alpha=D*X+d;
+
+    ROOT::Math::SVector<double, 2> lambda=VD*alpha;
+
+    ROOT::Math::SMatrix<double, 13,2> DT = ROOT::Math::Transpose(D);
+
+    vfit=X-Cx*DT*lambda;
+
+    SymMatrix13x13 delataC1=ROOT::Math::Similarity<double,13,2>(DT, VD);
+
+    SymMatrix13x13 delataC2=ROOT::Math::Similarity<double,13,13>(Cx, delataC1);
+
+    cfit=Cx -delataC2;
+
+    chi2Fit=ROOT::Math::Dot(alpha,lambda);
+    //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
+
+    if(fabs(chi2Fit-chi2PreviousFit)<m_maxDeltaChi2) {
+      converged=true;
+    } else {
+      chi2PreviousFit=chi2Fit;
+    }
+
+  } // end chi2 minimization iteration
+  
+  if(!converged)  return StatusCode::FAILURE;
+ 
+  Gaudi::Vector7 V7new;
+  Gaudi::SymMatrix7x7 C7new;
+  double chi2new = chi2 + chi2Fit ;
+  int NDoFnew = NDoF + 2;
+
+  V7new[0]=vfit[0];
+  V7new[1]=vfit[1];
+  V7new[2]=vfit[2];
+  V7new[3]=vfit[3] + vfit[9];
+  V7new[4]=vfit[4] + vfit[10];
+  V7new[5]=vfit[5] + vfit[11];
+
+  double e1= sqrt(vfit[3]*vfit[3]+vfit[4]*vfit[4]+vfit[5]*vfit[5]+vfit[6]*vfit[6]);
+  double e2= sqrt(vfit[9]*vfit[9]+vfit[10]*vfit[10]+vfit[11]*vfit[11]+vfit[12]*vfit[12]);
+  V7new[6]=e1 + e2;
+
+  ROOT::Math::SMatrix<double, 7, 13> JA;
+  JA(0,0) = 1.;
+  JA(1,1) = 1.;
+  JA(2,2) = 1.;
+  JA(3,3) = 1.;
+  JA(3,9) = 1.;
+  JA(4,4) = 1.;
+  JA(4,10) = 1.;
+  JA(5,5) = 1.;
+  JA(5,11) = 1.;
+  JA(6,3) = vfit[3]/e1;
+  JA(6,4) = vfit[4]/e1;
+  JA(6,5) = vfit[5]/e1;
+  JA(6,6) = vfit[6]/e1;
+  JA(6,9) = vfit[9]/e2;
+  JA(6,10) = vfit[10]/e2;
+  JA(6,11) = vfit[11]/e2;
+  JA(6,12) = vfit[12]/e2;
+
+  C7new=ROOT::Math::Similarity<double,7,13>(JA, cfit);
+
+  sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
 
   return sc;
+
 }
 
 //==================================================================
@@ -378,22 +564,155 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
   int NDoF = 0;
   getParticleInfo(part, V7, C7, chi2, NDoF);
 
+  Gaudi::Vector7 Vm7;
+  Gaudi::SymMatrix7x7 Cm7;
+  convertE2M(V7, C7, Vm7, Cm7);
+
+  double nominalMassDau=0.0;
+  bool constrainMDau=requireMassConstraint(dau,nominalMassDau);
+
   Gaudi::Vector7 daupara;
   Gaudi::SymMatrix7x7 daucov;
   double dauchi2 = 0.;
   int dauNDoF = 0;
   getParticleInfo(*dau, daupara, daucov, dauchi2, dauNDoF);
-  if(m_applyDauMassConstraint && !dau->isBasicParticle()) {
-    int pid = dau->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(pid  );
-    double hbar = 6.58211889*pow(10,-22);
-    double wid = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    if(wid<m_widthThreshold) {
-      double nominalMass = partProp->mass();
-      sc=constrainMass(daupara, daucov, nominalMass);
-      if(sc.isFailure()) return StatusCode::FAILURE;
-    }
+
+  if(constrainMDau) {
+    sc=constrainMass(daupara, daucov, nominalMassDau);
+    if(sc.isFailure()) return StatusCode::FAILURE;
   }
+
+  Gaudi::Vector7 daumpara;
+  Gaudi::SymMatrix7x7 daumcov;
+  convertE2M(daupara,daucov, daumpara, daumcov);
+
+  //temporary fix for MCParticleMaker
+  for(int i=0;i<=6;i++) daumcov(6,i)=0.0;
+
+  ROOT::Math::SVector<double, 14> X;
+  for(int i=0;i<7;i++) {
+    X[i]=Vm7[i];
+    X[i+7]=daumpara[i];
+  }
+
+  SymMatrix14x14 Cx;
+  for(int l1=0;l1<7;l1++) {
+    for(int l2=0;l2<=l1;l2++) {
+      Cx(l1,l2)=Cm7(l1,l2);
+      Cx(l1+7,l2+7)=daumcov(l1,l2);
+    }
+    for(int l2=0;l2<7;l2++) Cx(l1+7,l2)=0.0;
+  }
+
+  // x1,y1,z1, px1,py1,pz1,m1, x2,y2,z2,px1,py1,pz1,m2 
+  ROOT::Math::SVector<double, 14> vfit=X;
+  SymMatrix14x14 cfit = Cx;
+
+  bool converged=false;
+  int iter=0;
+
+  double chi2PreviousFit=9999.;
+  double chi2Fit=999.;
+
+  while(!converged && iter< m_maxIter)  {
+    iter++;
+    verbose() << ":-) Iteration   " << iter << endreq;
+
+    //f(0)=x2-x1;
+    //f(1)=y2-y1;
+    //f(2)=z2-z1;
+
+    ROOT::Math::SVector<double, 3> f;
+    f(0)=vfit(7)-vfit(0);
+    f(1)=vfit(8)-vfit(1);
+    f(2)=vfit(9)-vfit(2);
+
+    //D is the derivative matrix
+    ROOT::Math::SMatrix<double, 3, 14> D;
+
+    D(0,0) = - 1.0;
+    D(0,7) =   1.0;
+    D(1,1) = - 1.0;
+    D(1,8) =   1.0;
+    D(2,2) = - 1.0;
+    D(2,9) =   1.0;
+
+    ROOT::Math::SVector<double, 3> d = f - D*vfit;
+
+    Gaudi::SymMatrix3x3 VD=ROOT::Math::Similarity<double,3,14>(D, Cx);
+    if(!VD.Invert()) {
+      debug() << "could not invert matrix VD in addVertexed! " <<endreq;
+      return StatusCode::FAILURE;
+    }
+
+    ROOT::Math::SVector<double, 3> alpha=D*X+d;
+
+    ROOT::Math::SVector<double, 3> lambda=VD*alpha;
+
+    ROOT::Math::SMatrix<double, 14,3> DT = ROOT::Math::Transpose(D);
+
+    vfit=X-Cx*DT*lambda;
+
+    SymMatrix14x14 delataC1=ROOT::Math::Similarity<double,14,3>(DT, VD);
+
+    SymMatrix14x14 delataC2=ROOT::Math::Similarity<double,14,14>(Cx, delataC1);
+
+    cfit=Cx -delataC2;
+
+    chi2Fit=ROOT::Math::Dot(alpha,lambda);
+    //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
+
+    if(fabs(chi2Fit-chi2PreviousFit)<m_maxDeltaChi2) {
+      converged=true;
+    } else {
+      chi2PreviousFit=chi2Fit;
+    }
+
+  }  // end chi2 minimization iteration
+
+  if(!converged)  return StatusCode::FAILURE;
+  
+  Gaudi::Vector7 V7new;
+  Gaudi::SymMatrix7x7 C7new;
+  double chi2new = chi2 + chi2Fit ;
+  int NDoFnew = NDoF + 3;
+
+  V7new[0]=vfit[0];
+  V7new[1]=vfit[1];
+  V7new[2]=vfit[2];
+  V7new[3]=vfit[3]+vfit[10];
+  V7new[4]=vfit[4]+vfit[11];
+  V7new[5]=vfit[5]+vfit[12];
+
+  double e1= sqrt(vfit[3]*vfit[3]+vfit[4]*vfit[4]+vfit[5]*vfit[5]+vfit[6]*vfit[6]);
+  double e2= sqrt(vfit[10]*vfit[10]+vfit[11]*vfit[11]+vfit[12]*vfit[12]+vfit[13]*vfit[13]);
+  V7new[6]=e1+e2;
+
+  ROOT::Math::SMatrix<double, 7, 14> JA;
+  JA(0,0) = 1.;
+  JA(1,1) = 1.;
+  JA(2,2) = 1.;
+  JA(3,3) = 1.;
+  JA(3,10) = 1.;
+  JA(4,4) = 1.;
+  JA(4,11) = 1.;
+  JA(5,5) = 1.;
+  JA(5,12) = 1.;
+  JA(6,3) = vfit[3]/e1;
+  JA(6,4) = vfit[4]/e1;
+  JA(6,5) = vfit[5]/e1;
+  JA(6,6) = vfit[6]/e1;
+  JA(6,10) = vfit[10]/e2;
+  JA(6,11) = vfit[11]/e2;
+  JA(6,12) = vfit[12]/e2;
+  JA(6,13) = vfit[13]/e2;
+
+  C7new=ROOT::Math::Similarity<double,7,14>(JA, cfit);
+
+  sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
+
+  return sc;
+  
 
 
   return sc;
@@ -445,6 +764,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
   double zfit=getZEstimate(dau1,dau2);
   double zPreviousFit=-999999.;
+//  zfit=300.;
 
   int iterTransport=0;
 
@@ -495,7 +815,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 //    dau2cov=dau2->covMatrix()  ;  // trick
     convertE2M(dau2para,dau2cov, dau2mpara, dau2mcov);
 
-    //temporary fix
+    //temporary fix for MCParticleMaker
     for(int i=0;i<=6;i++) {dau1mcov(6,i)=0.0; dau2mcov(6,i)=0.0;}
 
     ROOT::Math::SVector<double, 12> X;
@@ -530,9 +850,10 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       for(int l2=0;l2<=l1;l2++) {
         Cx(l1,l2)=newcov1(l1,l2);
         Cx(l1+6,l2+6)=newcov2(l1,l2);
-        Cx(l1+6,l2)=0.0;
       }
+      for(int l2=0;l2<6;l2++)  Cx(l1+6,l2)=0.0;
     }
+
 
     //(x1,y1,px1,py1,pz1,m1,x2,y2,px2,py2,pz2,m2) at the same z
     ROOT::Math::SVector<double, 12> vfit=X;
