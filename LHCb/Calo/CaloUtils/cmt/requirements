@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.31 2006-05-09 15:30:45 cattanem Exp $
+# $Id: requirements,v 1.32 2006-05-26 12:49:17 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.32 $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v6r2p1
+version             v6r3
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -28,6 +28,9 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.31  2006/05/09 15:30:45  cattanem
+# remove explicit Boost dependency
+#
 # Revision 1.30  2006/05/02 15:25:13  cattanem
 # v6r2
 #

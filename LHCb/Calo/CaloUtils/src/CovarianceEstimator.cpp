@@ -1,14 +1,6 @@
-// $Id: CovarianceEstimator.cpp,v 1.13 2006-03-22 18:25:06 odescham Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.14 2006-05-26 12:49:17 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.12  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.11  2002/11/13 20:43:37  ibelyaev
-//  few bugs are fixed
-//
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
@@ -52,7 +44,7 @@ CovarianceEstimator::CovarianceEstimator
   const double         NoiseCo  ,
   const double         ResB     )
   : m_detector     ( Detector             ) 
-  , m_a2GeV        ( ResA    * ResA * GeV )
+  , m_a2GeV        ( ResA    * ResA * Gaudi::Units::GeV )
   , m_b2           ( ResB    * ResB       )
   , m_s2gain       ( GainS   * GainS      )
   , m_s2incoherent ( NoiseIn * NoiseIn    )  
@@ -193,9 +185,9 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const
   if( 0 >= eT ) 
     {
       LHCb::CaloPosition::Parameters parameters = cluster->position().parameters();
-      parameters( 1 ) =  -1 * TeV ;
-      parameters( 2 ) =  -1 * km  ;
-      parameters( 3 ) =  -1 * km  ;
+      parameters( 1 ) =  -1 * Gaudi::Units::TeV ;
+      parameters( 2 ) =  -1 * Gaudi::Units::km  ;
+      parameters( 3 ) =  -1 * Gaudi::Units::km  ;
       return StatusCode(223)     ; 
     }
   
@@ -255,7 +247,7 @@ MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
       << endreq 
-      << "   Resolution       is " << ( sqrt( a2GeV        () / GeV ) ) 
+      << "   Resolution       is " << ( sqrt( a2GeV() / Gaudi::Units::GeV ) ) 
       << endreq 
       << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
       << endreq 
@@ -281,7 +273,7 @@ std::ostream& CovarianceEstimator::printOut ( std::ostream& log ) const
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
       << std::endl 
-      << "   Resolution       is " << ( sqrt( a2GeV        () / GeV ) ) 
+      << "   Resolution       is " << ( sqrt( a2GeV() /  Gaudi::Units::GeV ) ) 
       << std::endl 
       << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
       << std::endl 

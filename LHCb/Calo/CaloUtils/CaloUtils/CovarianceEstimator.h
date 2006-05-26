@@ -1,18 +1,6 @@
-// $Id: CovarianceEstimator.h,v 1.7 2006-03-22 18:25:05 odescham Exp $ 
+// $Id: CovarianceEstimator.h,v 1.8 2006-05-26 12:49:17 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.5  2004/05/27 13:40:03  cattanem
-// v4r7
-//
-// Revision 1.4  2002/11/13 20:43:36  ibelyaev
-//  few bugs are fixed
-//
-// Revision 1.3  2002/04/02 10:59:30  ibelyaev
 // ===========================================================================
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
@@ -20,7 +8,7 @@
 // Include files
 #include <functional>
 #include <iostream>
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/StatusCode.h"
 
 // forward declaration
@@ -213,7 +201,7 @@ public:
    *  @param A calorimeter resolution 
    */
   inline void setA ( const double A ) 
-  { m_a2GeV = A * A * GeV ; }
+  { m_a2GeV = A * A * Gaudi::Units::GeV ; }
   
   /** calorimeter resolution (A*A*GeV)
    *  @return A*A*GeV resolution parameter 

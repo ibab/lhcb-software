@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.49 2006-05-09 15:30:45 cattanem Exp $
+! $Id: release.notes,v 1.50 2006-05-26 12:49:17 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloUtils v6r3 2006-05-26 =========================
+! 2006-05-26 - Marco Cattaneo
+ - Move to Gaudi::Units in header files
 
 !========================== CaloUtils v6r2p1 2006-05-09 =======================
 ! 2006-05-09 - Marco Cattaneo
