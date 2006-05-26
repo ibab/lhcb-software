@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2006-05-02 15:28:17 cattanem Exp $ 
+! $Id: release.notes,v 1.8 2006-05-26 17:32:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,15 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2006-05-26 - Vanya BELYAEV
+
+ - LoKi/GenParticles.h src/GenParticles.cpp
+   inclreade functionality of FromHepMCTree function.
+   now it can treat the list of trees.
+ - cmt/requirements 
+   version increment to v1r3 
+
 
 !=========================== LoKiGen v1r2 2006-05-02 ==========================
 ! 2006-05-02 - Vanya Belyaev

@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.6 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.7 2006-05-26 17:32:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -306,7 +309,7 @@ namespace LoKi
      *  @date 2005-03-26
      */
     const   LoKi::GenParticles::ValidEndVertex              GVEV     ;
-    
+
     /** the evaluator of euclidian distance with 
      *  respect to the given 4-momentum, useful 
      *  e.g. for trivial "kinematical matching". 

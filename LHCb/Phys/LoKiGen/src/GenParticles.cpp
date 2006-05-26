@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.6 2006-05-02 14:30:28 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.7 2006-05-26 17:32:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/02 14:30:28  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -780,8 +783,7 @@ LoKi::GenParticles::TransverseMomentumRel::fillStream
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenParticle* p ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
-  , m_vertex ( 0 ) 
-{ if ( 0 != p ) { m_vertex = p->end_vertex() ; } } ;
+  , m_vertices () { _add ( p ) ; }
 // ============================================================================
 
 // ============================================================================
@@ -792,10 +794,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenVertex* v ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
-    , m_vertex ( const_cast<HepMC::GenVertex*>( v )  ) 
-{};
-// ============================================================================
-
+  , m_vertices() { _add ( v ) ; } ;
 // ============================================================================
 /** copy constructor 
  *  @param right object to be copied 
@@ -804,16 +803,18 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::GenParticles::FromHepMCTree& right ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ( right )
-  , m_vertex ( right.m_vertex  ) 
+  , m_vertices( right.m_vertices ) 
 {};  
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::GenParticles::FromHepMCTree::~FromHepMCTree(){}
-// ============================================================================
-
+void LoKi::GenParticles::FromHepMCTree::_add 
+( const HepMC::GenParticle* p ) 
+{ if ( 0 != p ) { _add ( p->end_vertex() ) ; } }
+void LoKi::GenParticles::FromHepMCTree::_add 
+( const HepMC::GenVertex*   v ) 
+{
+  if ( 0 != v ) 
+  { m_vertices.push_back( const_cast<HepMC::GenVertex*> ( v ) ) ; }
+}
 // ============================================================================
 /// MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -834,17 +835,25 @@ LoKi::GenParticles::FromHepMCTree::operator()
     Error ( " HepMC::GenParticle* points to NULL, return 'false' " ) ;
     return false ;                                                  // RETURN 
   } 
-  if ( 0 == m_vertex ) 
+  if ( m_vertices.empty() ) 
   {
-    Error ( " HepMC::GenVertex* points to NULL, return 'false' " ) ;
+    Error ( " empty list of vertices , return 'false' " ) ;
     return false ;                                                  // RETURN 
   }
-  // explict loop over all descendants 
-  for ( HepMC::GenVertex::particle_iterator ip = 
-          m_vertex->particles_begin( HepMC::descendants ) ; 
-        m_vertex->particles_end( HepMC::descendants ) != ip ; ++ip )
-  { if ( p == (*ip) ) { return true ; } }                           // RETURN
-  //
+  // loop over vertices 
+  for ( VERTICES::const_iterator iv = m_vertices.begin() ; 
+        m_vertices.end() != iv ; ++iv ) 
+  {
+    HepMC::GenVertex* vertex = *iv ;
+    if ( 0 == vertex ) { Warning("NULL vertex is detected, skip") ; continue ; }
+    // explict loop over all descendants 
+    HepMC::GenVertex::particle_iterator begin = 
+      vertex->particles_begin ( HepMC::descendants ) ;
+    HepMC::GenVertex::particle_iterator end   = 
+      vertex->particles_end   ( HepMC::descendants ) ;
+    if ( std::find ( begin , end , p ) != end ) { return true ; }    // RETURN 
+    //
+  }
   return false ;                                                    // RETURN 
 };
 // ============================================================================

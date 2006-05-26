@@ -1,8 +1,11 @@
-// $Id: GenParticles.h,v 1.6 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.7 2006-05-26 17:32:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -371,7 +374,7 @@ namespace LoKi
       /// "SHORT" representation, see @LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
-    
+
     /** @class MomentumDistance 
      *  Trivial evaluator of euclidian distance 
      *  of 4-momentums useful e.g. for trivial 
@@ -565,8 +568,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class FromHepMCTree : 
-      public LoKi::Predicate<const HepMC::GenParticle*> 
+    class FromHepMCTree 
+      : public LoKi::Predicate<const HepMC::GenParticle*>
     {
     public:
       /** constructor from particle ("head")
@@ -579,24 +582,45 @@ namespace LoKi
        */
       FromHepMCTree 
       ( const HepMC::GenVertex*   v ) ;
+      /// templated constructor 
+      template <class ITERATOR>
+      FromHepMCTree 
+      ( ITERATOR first , ITERATOR last  ) 
+        : LoKi::Predicate<const HepMC::GenParticle*>()
+      { _add ( first , last ) ; }
       /** copy constructor 
        *  @param right object to be copied 
        */
       FromHepMCTree 
       ( const FromHepMCTree& right ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~FromHepMCTree() ;
+      virtual ~FromHepMCTree(){} ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  FromHepMCTree* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      template <class ITERATOR>
+      FromHepMCTree& add ( ITERATOR first , ITERATOR last  ) 
+      { _add ( first , last ) ; return *this ; }
+      FromHepMCTree& add ( const HepMC::GenParticle* p ) 
+      { _add ( p ) ; return *this  ; }
+      FromHepMCTree& add ( const HepMC::GenVertex*   p ) 
+      { _add ( p ) ; return *this  ; }
+    protected:
+      template <class ITERATOR>
+      void _add ( ITERATOR first , ITERATOR last  ) 
+      { for ( ; first != last ; ++first ) { _add ( *first ) ; } }
+      void _add ( const HepMC::GenParticle* p ) ;
+      void _add ( const HepMC::GenVertex*   v ) ;
     private:
       // defautl constructor is disabled 
       FromHepMCTree();
     private:
-      HepMC::GenVertex* m_vertex ;
+      typedef std::vector<HepMC::GenVertex*> VERTICES ;
+      VERTICES m_vertices ;
     };
     
     /** @class IsAnAncestor
