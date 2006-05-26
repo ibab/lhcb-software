@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.54 2006-05-26 10:54:02 ibelyaev Exp $
+! $Id: release.notes,v 1.55 2006-05-26 12:50:25 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
@@ -10,14 +10,10 @@
        current implementation works only for basic charged particles
  - src/FitterUtils.h - helper namespace for implementation of vertex fitter 
  - src/MatrixUtils.h - helper file with set of helper matrix utilities   
- 
 
-<<<<<<< release.notes
 ! 2006-05-17 - Yuehong Xie
  - first version that only fit two tarck vertex like Jpsi->mumu, more functionalities to be added
  
-
-=======
 ! 2006-05-09 - P. Koppenburg
   Moved GeomDispCalculator to DaVinciTools
 
@@ -25,7 +21,6 @@
  - Added src/GeomDispCalculator. Re-implemented from DaVinciTransporter 
    and restored.
 
->>>>>>> 1.52
 ! 2006-04-05 - J. Palacios
  - src/TrgVertexFitter: change calls to Particle::slopeX(), slopeY() for calls to Particle::slopes(), adapting to new Particle interface.
 
