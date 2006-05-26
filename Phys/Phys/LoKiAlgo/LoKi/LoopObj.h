@@ -1,8 +1,11 @@
-// $Id: LoopObj.h,v 1.4 2006-05-26 12:14:19 ibelyaev Exp $
+// $Id: LoopObj.h,v 1.5 2006-05-26 15:24:54 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/26 12:14:19  ibelyaev
+//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
+//
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
 #define LOKI_LOOPOBJ_H 1
@@ -51,6 +54,17 @@
  *  @date 2006-03-14 
  */
 // ============================================================================
+
+namespace LoKi 
+{
+  namespace Print
+  {
+    /// convert integer value to string 
+    inline std::string print ( const size_t value ) 
+    { return print( long(value) ) ; }
+  }
+}
+
 
 namespace LoKi 
 {
