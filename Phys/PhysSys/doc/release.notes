@@ -14,7 +14,8 @@ Purpose     : LHCb physics packages
   - ROOT SVector classes, SMatrix classes 
   - Using ROOT 5.10.00c with interface improvements and bug fixes to SMatrix.
   
-##################################### PHYS #####################################
+##################################### PHYS ####################################
+
 !========================== DaVinciFilter v4r0 2006-03-28 ===================
 ! 2006-03-28 - P. Koppenburg for C. Lazzeroni
   - src/VtxFilterCriterion.{cpp,h}

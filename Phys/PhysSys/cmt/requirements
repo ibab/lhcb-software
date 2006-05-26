@@ -26,7 +26,7 @@ use  PhysMCSys      	v2r0   Phys
 use  DaVinciMCTools     	v6r0  Phys
 
 ####################################################################
-use  PhysSelSys      	v9r0   PhysSel
+use  PhysSelSys      	v9r1   PhysSel
 #===================================================================
 use Bu2JpsiK                   v1r0p2   PhysSel
 
