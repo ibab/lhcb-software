@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.53 2006-05-17 16:45:09 xieyu Exp $
+! $Id: release.notes,v 1.54 2006-05-26 10:54:02 ibelyaev Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-26 - Vanya BELYAEV
+ - src/BlindVertexFitter.cpp
+     - simple Kalman-filter based vertex fitter, 
+       current implementation works only for basic charged particles
+ - src/FitterUtils.h - helper namespace for implementation of vertex fitter 
+ - src/MatrixUtils.h - helper file with set of helper matrix utilities   
+ 
 
 <<<<<<< release.notes
 ! 2006-05-17 - Yuehong Xie
