@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.56 2006-05-26 14:19:11 xieyu Exp $
+! $Id: release.notes,v 1.57 2006-05-26 15:29:44 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-26 Juan PALACIOS
+  src/VertexFit_load.cpp: declare BlindVertexFitter as tool
 
 ! 2006-05-26 - Yuehong Xie
  - OfflineVertexFitter version for anything excpet photons, which will be added later
