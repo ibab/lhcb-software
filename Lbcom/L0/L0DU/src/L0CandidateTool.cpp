@@ -1,9 +1,8 @@
-// $Id: L0CandidateTool.cpp,v 1.3 2006-05-17 16:10:44 cattanem Exp $
+// $Id: L0CandidateTool.cpp,v 1.4 2006-05-26 11:10:30 odescham Exp $
 // ============================================================================
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
 // Detector Element
 #include "CaloDet/DeCalorimeter.h"
 #include "DetDesc/Condition.h"
@@ -105,13 +104,15 @@ double L0CandidateTool::scale(const unsigned int data[L0DUBase::Index::Size] ) {
 unsigned int L0CandidateTool::digitValue( const unsigned int data[L0DUBase::Index::Size] ){
   
 
-  m_dataContainer = get<LHCb::L0ProcessorDatas>( m_dataLocation );
-
-
+  if( !exist<LHCb::L0ProcessorDatas>( m_dataLocation ) ){
+    warning() << "Data container not found at " << m_dataLocation << endreq;
+    return 0;
+  }else{
+    m_dataContainer = get<LHCb::L0ProcessorDatas>( m_dataLocation );
+  }
   LHCb::L0ProcessorData* fiber = m_dataContainer->object( data[ L0DUBase::Index::Fiber ]  )  ;
-  
   if( 0 == fiber ){ 
-    error() << "Data ( " << data << " ) not found in the container located at " << m_dataLocation << endreq;
+    warning() << "Data ( " << data << " ) not found in the container located at " << m_dataLocation << endreq;
     return 0;
   }
   

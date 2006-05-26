@@ -1,9 +1,11 @@
-$Id: release.notes,v 1.49 2006-05-25 22:37:17 odescham Exp $
+$Id: release.notes,v 1.50 2006-05-26 11:10:29 odescham Exp $
 Package		: L0/L0DU
 Package Manager : Olivier Deschamps
 
 !========================== L0DU v7r3 2006-05-26 =========================
 ! 2006-05-17 - Olivier Deschamps
+ - Protection added in src/L0CandidateTool.cpp : L0DU can run even if one L0ProcessorData 
+   container is not available
  - Add a simple algorithm (L0DUFromRaw) to extract the L0DUReport from rawEvent
  - Default options file L0DUFromRaw.opts added
  - L0Monitor modifed: report Location can be set via options.
