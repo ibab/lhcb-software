@@ -1,8 +1,11 @@
-// $Id: Algo.h,v 1.4 2006-04-09 16:39:54 ibelyaev Exp $
+// $Id: Algo.h,v 1.5 2006-05-26 12:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/04/09 16:39:54  ibelyaev
+//  v1r0
+//
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -21,6 +24,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
+#include "LoKi/ImpParBase.h"
 // ============================================================================
 // LoKiAlgo
 // ============================================================================
@@ -479,6 +483,7 @@ namespace LoKi
     } ;
 
   public:    
+    
     /** Create loop object 
      *
      *  @code
@@ -587,9 +592,8 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const ParticleProperty*       pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
-  public:
-    
-    /**
+  public:    
+    /** shortcut for the following expression:
      *{
      *  loop->backup()  ;
      *  for ( ; loop ; ++loop ) 
@@ -608,9 +612,8 @@ namespace LoKi
       const LoKi::Loop&         loop   ,
       const LoKi::Types::Cuts&  cut    , 
       const LoKi::Types::VCuts& vcut   , 
-      const IParticleReFitter*  fitter ) ;
-    
-    /**
+      const IParticleReFitter*  fitter ) ;    
+    /** shortcut for the following expression:
      * { 
      *  loop->backup()  ;
      *  for ( ; loop ; ++loop ) 
@@ -633,8 +636,7 @@ namespace LoKi
       const LoKi::Types::VCuts& vcut1  , 
       const IParticleReFitter*  fitter , 
       const LoKi::Types::Cuts&  cut2   , 
-      const LoKi::Types::VCuts& vcut2  ) ;
-    
+      const LoKi::Types::VCuts& vcut2  ) ;    
     /** shortcut for following "standard" pattern:
      *  
      *  @code
@@ -845,12 +847,60 @@ namespace LoKi
     /// clear the internal LoKi storages 
     virtual StatusCode clear() ;
   public:
+    /** get the helper "geometry" object
+     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  @param  vertex (input) vertex to ve used in the configuration
+     *  @return helper geometry object/tool 
+     *  @see LoKi::Vertices::ImpParBase 
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see IGeomDispCalculator
+     */
+    LoKi::Vertices::ImpParBase geo ( const LHCb::Vertex* vertex = 0 ) const ;
+    /** get the helper "geometry" object
+     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  @param  point (input) point to be used in the configuration
+     *  @return helper geometry object/tool 
+     *  @see LoKi::Vertices::ImpParBase 
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see IGeomDispCalculator
+     */
+    LoKi::Vertices::ImpParBase geo ( const LoKi::Point3D& point ) const ;
+    /** get the helper "geometry" object
+     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  @param  vertex (input) vertex to ve used in the configuration
+     *  @return helper geometry object/tool 
+     *  @see LoKi::Vertices::ImpParBase 
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see IGeomDispCalculator
+     */
+    inline LoKi::Vertices::ImpParBase 
+    point ( const LHCb::Vertex* vertex ) const { return geo ( vertex ) ; }
+    /** get the helper "geometry" object
+     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  @param  point (input) point to be used in the configuration
+     *  @return helper geometry object/tool 
+     *  @see LoKi::Vertices::ImpParBase 
+     *  @see LoKi::Vertices::ImpactParamTool
+     *  @see IGeomDispCalculator
+     */
+    inline LoKi::Vertices::ImpParBase 
+    point ( const LoKi::Point3D& point ) const { return geo ( point ) ; }
+  public:
     /// helper method to get a proper ParticleProperty for the given name  
     const ParticleProperty* pid ( const std::string& name ) const 
     {
       const ParticleProperty* pp = ppSvc()->find( name ) ;
       if ( 0 == pp ) 
       { Error ( "pid('" + name + "') : invalid ParticleProperty!" ) ; }
+      return pp ;
+    } ;
+    /// helper method to get a proper ParticleProperty for the given pid
+    inline const ParticleProperty* pid ( const LHCb::ParticleID& pid ) const 
+    {
+      const ParticleProperty* pp = ppSvc()->findByStdHepID( pid.pid() ) ;
+      if ( 0 == pp ) 
+      { Error ( "pid('" + LoKi::Print::print( pid.pid() ) 
+                + "') : invalid ParticleProperty!" ) ; }
       return pp ;
     } ;
   public:

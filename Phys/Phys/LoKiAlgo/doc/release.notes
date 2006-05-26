@@ -1,0 +1,17 @@
+! $Id: release.notes,v 1.1 2006-05-26 12:14:19 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiAlgo
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : LoKi-algorthm related stuff 
+! -----------------------------------------------------------------------------
+
+! 2006-05-26 - Vanya  BELYAEV ibelyaev@physics.syr.edu
+ - many fixes in LoKi::Algo & LoKi::LoopObj 
+ - cmt/requirements
+    version incrmenet to v1r1  
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

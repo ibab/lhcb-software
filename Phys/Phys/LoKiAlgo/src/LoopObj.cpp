@@ -1,6 +1,6 @@
-// $Id: LoopObj.cpp,v 1.1 2006-04-09 08:51:50 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.2 2006-05-26 12:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -17,6 +17,7 @@
 // LoKiAlgo
 // ============================================================================
 #include "LoKi/LoopObj.h"
+#include "LoKi/LoopObj.icpp"
 #include "LoKi/Algo.h"
 // ============================================================================
 
@@ -189,7 +190,8 @@ LoKi::LoopObj& LoKi::LoopObj::next      ()
   // advance the combiner at least once 
   ++m_combiner ;
   // combiner is over ? 
-  if (  m_combiner.end    () ) { m_valid = false ; return *this ; }
+  if (  m_combiner.end    () ) 
+  { resetCache() ; m_valid = false ; return *this ; }
   // combiner is still valid? 
   if ( !m_combiner.valid  () ) { return next () ; }
   // unique heap combination ? 
@@ -198,6 +200,7 @@ LoKi::LoopObj& LoKi::LoopObj::next      ()
   if ( !clonesOrdered     () ) { return next () ; }
   // local check 
   if ( !isValid()            ) { return next () ; }
+  //
   // clear all temporaries 
   resetCache();
   // set validity flag
@@ -342,15 +345,13 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
   if ( m_pOwner && 0 != m_particle ) { delete m_particle ; }
   m_particle = 0 ;
   if ( m_vOwner && 0 != m_vertex   ) { delete m_particle ; }
-  m_vertex   = 0 ;
-  
+  m_vertex   = 0 ; 
   // valid combination ?
   if ( !valid() ) 
   {
     m_status = StatusCode::FAILURE ;
     return Error("make(): invalid combination" , m_status ); 
   };
-  
   // the most trivial case 
   if ( 1 == dim() ) 
   {
@@ -368,16 +369,17 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     //
     return StatusCode::SUCCESS ;
   }
-  
   // do we have some tools? 
-  LoKi::Interface<IParticleCombiner> combiner ( comb ) ;
-  if ( !combiner.validPointer() ) { combiner = m_comb ; }
+  LoKi::Interface<IParticleCombiner> combiner ( comb ) ;   // as argument 
+  if ( !combiner.validPointer() ) { combiner = m_comb ; }  // form constructor 
+  if ( !combiner.validPointer() && m_algo.validPointer() ) // from algorithm
+  { combiner = m_algo->particleCombiner() ; }
   if ( !combiner.validPointer() ) 
   { 
     m_status = StatusCode::FAILURE ;
     return Error ( "make: no valid IParticlefCombiner tool is available " );
   } ;
-  
+
   // create new particle 
   m_particle = new LHCb::Particle () ;
   m_pOwner   = true ;
@@ -403,7 +405,7 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     //
     return Error( "Error from IParticleCombiner" , m_status );
   }
-
+  
   return StatusCode::SUCCESS  ;
 };
 // ============================================================================
@@ -450,12 +452,10 @@ LoKi::LoopObj&  LoKi::LoopObj::adaptToPID()
   else if ( m_pid == m_particle->particleID() ) {              return *this ; }
   // particle <--> antiparticle
   else if ( m_pid.abspid() == m_particle->particleID().pid() )
-  { m_particle->setParticleID( m_pid ) ;                       return *this ; }
-  
+  { m_particle->setParticleID( m_pid ) ;                       return *this ; } 
   /// the particle need to be remade
   StatusCode sc = make() ;
   if ( sc.isFailure() ) { Error("adaptToPID, error from make" , sc ) ; }
-  
   return *this ;
 };
 // ============================================================================
@@ -474,6 +474,8 @@ StatusCode LoKi::LoopObj::reFit
   //
   LoKi::Interface<IParticleReFitter> fitter ( fit ) ;
   if ( !fitter.validPointer() ) { fitter = m_reFit ; }
+  if ( !fitter.validPointer() && m_algo.validPointer() )
+  { fitter = m_algo->particleReFitter() ; }
   if ( !fitter.validPointer() ) 
   { 
     m_status = StatusCode::FAILURE ;
@@ -484,7 +486,7 @@ StatusCode LoKi::LoopObj::reFit
   if ( sc.isFailure() ) 
   {
     // delete particle and vertex ???
-    return Error("reFit(): error from IParticleReFitter", sc );
+    return Error ( "reFit(): error from IParticleReFitter", sc );
   }
   return StatusCode::SUCCESS ;
 } ;
@@ -508,6 +510,11 @@ LoKi::LoopObj& LoKi::LoopObj::addComponent
   while ( m_combiner.valid() && !isValid() ) { next(); }
   //
   m_valid = isValid() ;
+  if ( valid() ) 
+  {
+    m_combination  = LHCb::Particle::ConstVector( current().size() ) ;
+    deref_copy ( current().begin() , current().end() , m_combination.begin() ) ;
+  }
   // backup the state of combiner 
   m_combiner.backup();
   m_status = StatusCode::SUCCESS ;
@@ -527,7 +534,6 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
   m_status = m_algo->save( tag , p );
   if ( m_status.isFailure () ) 
   { return Error ( "save('"+tag+"'): Particle is not saved " , status() ) ; }
-  
   // few trivial and obvious checks 
   LoKi::Types::Range ps  = m_algo->selected( tag );
   if ( ps.empty     () ) 
@@ -535,7 +541,6 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
   LHCb::Particle* saved = const_cast<LHCb::Particle*>( ps.back() ) ;
   if ( 0 == saved      ) 
   { return Error ( "save('"+tag+"'): Saved Particle is invalid"     ) ; }
-  
   // replace the existing particle and vertex 
   if ( p != saved )  
   {
@@ -546,7 +551,7 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
     m_pOwner   = false ;
     m_vOwner   = false ;
   }
-  
+  //
   if ( 0 == m_particle || 0 == m_vertex ) 
   {
     m_status = StatusCode::FAILURE ;
@@ -555,10 +560,12 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
     if ( 0 == m_vertex   ) 
     { Error ( "save('"+tag+"'): Vertex*   is NULL", status ()  ) ; }
   };
-
+  //
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
+
+
 
 
 // ============================================================================

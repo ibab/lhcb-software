@@ -1,14 +1,8 @@
-// $Id: LoopObj.h,v 1.3 2006-04-09 08:51:49 ibelyaev Exp $
+// $Id: LoopObj.h,v 1.4 2006-05-26 12:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/03/22 17:12:38  ibelyaev
-//  add more functionality to LoopObj
-//
-// Revision 1.1.1.1  2006/03/18 10:39:21  ibelyaev
-// Phys/LoKiAlgo: new package with the basic LoKi functionality
-// 
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
 #define LOKI_LOOPOBJ_H 1
@@ -31,6 +25,7 @@
 #include "LoKi/Kinematics.h"
 #include "LoKi/Base.h"
 #include "LoKi/Combiner.h"
+#include "LoKi/Print.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -109,7 +104,7 @@ namespace LoKi
     const LHCb::Particle* operator () ( const size_t index ) const 
     { return particle ( index ) ; }
     /// get the access to the combination
-    const LHCb::Particle::ConstVector& combination() const
+    const LHCb::Particle::ConstVector& combination() const 
     { return m_combination ; }
     /** get  particle/daughter particle from the current combination.
      *  It is an alias to the previouse method 
@@ -117,24 +112,20 @@ namespace LoKi
      *  Indices start from 1 
      *  @param index index of the daughter 
      */ 
-    const LHCb::Particle* child   
-    ( const size_t index ) const  
-    { return particle ( index ); }    
+    inline const LHCb::Particle* child ( const size_t index ) const ;
     /** get  particle/daughter particle from the current combination.
      *  It is an alias to the previouse method 
      *  @attention <c>index==0</c> corresponds to the particle itself 
      *  Indices start from 1 
      *  @param index index of the daughter 
      */ 
-    const LHCb::Particle* daughter 
-    ( const size_t index ) const  
-    { return particle ( index ); }
+    inline const LHCb::Particle* daughter ( const size_t index ) const ;
     /** get lorentz vector of the particle/daugher particles 
      *  @param  index  index of the first  daugter particle
      *  @attention <c>index==0</c> corresponds to the particle 
      *  @return lorentz vector of the combination 
      */
-    LoKi::LorentzVector momentum ( const size_t index = 0 ) const ;
+    inline LoKi::LorentzVector momentum ( const size_t index = 0 ) const ;
     /** get lorentz vector of the particle/daugher particles 
      *  @param  index  index of the first  daugter particle
      *  @attention <c>index==0</c> corresponds to the particle
@@ -149,7 +140,7 @@ namespace LoKi
      *  @attention <c>index==0</c> corresponds to the particle 
      *  @return lorentz vector of the combination 
      */
-    LoKi::LorentzVector momentum 
+    inline LoKi::LorentzVector momentum 
     ( const size_t index1    , 
       const size_t index2    ) const ;
     /** get lorentz vector of combination of 2 daugher particles 
@@ -161,7 +152,7 @@ namespace LoKi
      */
     LoKi::LorentzVector p       
     ( const size_t index1    , 
-      const size_t index2    ) const     
+      const size_t index2    ) const 
     { return momentum ( index1 , index2 ) ; }
     /** get lorentz vector of combination of 3 daugher particles 
      *  @param  index1  index of the first  daugter particle
@@ -170,7 +161,7 @@ namespace LoKi
      *  @attention <c>index==0</c> corresponds to the particle 
      *  @return lorentz vector of the combination 
      */
-    LoKi::LorentzVector momentum 
+    inline LoKi::LorentzVector momentum 
     ( const size_t index1    , 
       const size_t index2    , 
       const size_t index3    ) const ;
@@ -195,7 +186,7 @@ namespace LoKi
      *  @attention <c>index==0</c> corresponds to the particle 
      *  @return lorentz vector of the combination 
      */
-    LoKi::LorentzVector momentum 
+    inline LoKi::LorentzVector momentum 
     ( const size_t index1    , 
       const size_t index2    , 
       const size_t index3    , 
@@ -249,34 +240,16 @@ namespace LoKi
       const size_t index3    , 
       const size_t index4    ) const 
     { return momentum ( index1 , index2 , index3 , index4 ).M() ; }
-
     /// get the effective particle of the combinations 
-    LHCb::Particle* particle() const 
-    {
-      if ( !valid()        ) { return 0 ; }
-      if ( 0 == m_particle ) { create() ; }
-      return m_particle ;
-    } ;
+    inline LHCb::Particle* particle ( const IParticleCombiner* c = 0 ) const ;
     /// get the effective vertex of the combiination 
-    LHCb::Vertex*   vertex  () const
-    {
-      if (!valid() ) { return 0 ; }
-      if ( 0 == m_vertex ) { create() ; }
-      return m_vertex ;      
-    }
+    inline LHCb::Vertex*   vertex   ( const IParticleCombiner* c = 0 ) const ;
     /** get  particle/daughter particle from the current combination 
      *  @attention <c>index==0</c> corresponds to the particle 
      *  Indices start from 1 
      *  @param index index of the daughter 
      */ 
-    const LHCb::Particle* particle ( const size_t index ) const  
-    {
-      if ( !valid()   ) { return 0          ; }
-      if ( 0 == index ) { return particle() ; }      
-      if ( index > current().size() )
-      { Error ( "particle(index): invalid index" );  return 0 ; }
-      return *(current()[index-1]) ;
-    };
+    inline const LHCb::Particle* particle ( const size_t index ) const ;
   public :
     /// get PID for the effective particle of the loop
     const LHCb::ParticleID& pid     () const { return m_pid     ; }
@@ -325,12 +298,7 @@ namespace LoKi
     LoopObj&   next     () ;    
   protected:    
     /// make 'effective' particle & vertex from the current configuration
-    StatusCode create()  const 
-    {
-      if ( valid() && 0 != m_particle && 0 != m_vertex ) 
-      { return StatusCode::SUCCESS ; }
-      return make() ;
-    } ;
+    inline StatusCode create ( const IParticleCombiner* c = 0 )  const ;
     /// estimate the validity of current combination
     bool isValid() ;
     /// reset all temporary caches 
@@ -365,6 +333,9 @@ namespace LoKi
     LoopObj           ( const LoopObj& right ) ;
     /// assignement operator is disabled 
     LoopObj& operator=( const LoopObj& right ) ;    
+  protected:
+    /// get the algorithm
+    const LoKi::Interface<LoKi::Algo>& algo() const { return m_algo ; }
   private:
     // the algorithm ("owner")
     LoKi::Interface<LoKi::Algo>        m_algo  ; ///< the algorithm ("owner")
@@ -410,9 +381,15 @@ namespace LoKi
   };
   
 } ; // end of the namespace LoKi
-  
-// ============================================================================
-// The END 
+
+
 // ============================================================================
 #endif // LOKI_LOOPOBJ_H
 // ============================================================================
+// pick-up the inlined implementation 
+// ============================================================================
+#include "LoKi/LoopObj.icpp"
+// ============================================================================
+// The END 
+// ============================================================================
+  

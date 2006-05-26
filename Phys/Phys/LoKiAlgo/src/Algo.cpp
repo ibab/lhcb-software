@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.4 2006-04-12 12:57:25 jpalac Exp $
+// $Id: Algo.cpp,v 1.5 2006-05-26 12:14:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/04/12 12:57:25  jpalac
+// *** empty log message ***
+//
 // Revision 1.3  2006/04/09 16:39:54  ibelyaev
 //  v1r0
 //
@@ -392,6 +395,27 @@ StatusCode LoKi::Algo::finalize ()
   clear() ;
   return DVAlgorithm::finalize () ;
 } ;
+// ============================================================================
+/// get the helper "geometry" object
+// ============================================================================
+LoKi::Vertices::ImpParBase 
+LoKi::Algo::geo ( const LHCb::Vertex* vertex ) const 
+{
+  IGeomDispCalculator* t = geomDispCalculator() ;
+  if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
+  return LoKi::Vertices::ImpParBase ( vertex , t ) ;
+} ;
+// ============================================================================
+/// get the helper "geometry" object
+// ============================================================================
+LoKi::Vertices::ImpParBase 
+LoKi::Algo::geo ( const LoKi::Point3D& point ) const 
+{
+  IGeomDispCalculator* t = geomDispCalculator() ;
+  if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
+  return LoKi::Vertices::ImpParBase ( point , t ) ;
+} ;
+// ============================================================================
 
 // ============================================================================
 // The END 
