@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.20 2006-05-26 07:07:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.21 2006-05-26 10:17:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.20 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v1r5 2006-05-26 =========================
 ! 2006-05-26 - Vanya BELYAEV
  - LoKi/Interface.h 
     fix the serious problem with the incorrect assignement from raw pointer 
@@ -147,6 +148,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.20  2006/05/26 07:07:04  ibelyaev
+!  important bug fix in LoKi::Interface
+!
 ! Revision 1.19  2006/05/23 10:58:07  ibelyaev
 !  minor fix in LoKi/Print.h
 !
