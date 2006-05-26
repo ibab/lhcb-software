@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r7 2006-05-26 =========================
+! 2006-05-26 - Marco Cattaneo
+ - Remove generation of dictionaries already provided by RELAX
+
 !===================== LHCbKernel v6r6 2006-05-16 =========================
 ! 2006-05-16 M. Needham
  - Add ISiAmplifierResponse interface
