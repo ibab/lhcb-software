@@ -1,8 +1,11 @@
-// $Id: LoKiPhysMC.h,v 1.1.1.1 2006-03-14 19:12:21 ibelyaev Exp $
+// $Id: LoKiPhysMC.h,v 1.2 2006-05-27 11:47:14 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
+// New package : RC <---> MC links for LoKi 
+// 
 // ============================================================================
 #ifndef LOKI_LOKIPHYSMC_H 
 #define LOKI_LOKIPHYSMC_H 1
@@ -16,6 +19,7 @@
 #include "LoKi/PhysMCTypes.h"
 #include "LoKi/PhysMCParticles.h"
 #include "LoKi/PhysMCParticleCuts.h"
+#include "LoKi/DecayChain.h"
 // ============================================================================
 
 // ============================================================================

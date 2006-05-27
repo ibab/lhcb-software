@@ -1,12 +1,18 @@
-! $Id: release.notes,v 1.2 2006-03-19 12:12:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.3 2006-05-27 11:47:14 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2006-05-27 - VanyaBELYAEV
+ - LoKi/DecayChain.h, src/DecayChain.cpp
+   nice utility for printout of  (Phys/MC/HepMC)-trees 
+ - cmt/requirments
+   versionincrement to v1r1 
+ 
 ! 2006-03-19 - Vanya BELYAEV
  - the major upgrade 
    add the code for making the links inbetween the recontructed 
