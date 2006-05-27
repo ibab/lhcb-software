@@ -1,8 +1,11 @@
-// $Id: Algo.cpp,v 1.5 2006-05-26 12:14:19 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.6 2006-05-27 11:48:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/26 12:14:19  ibelyaev
+//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
+//
 // Revision 1.4  2006/04/12 12:57:25  jpalac
 // *** empty log message ***
 //
@@ -364,7 +367,8 @@ StatusCode LoKi::Algo::execute ()
 {
   // reset the filter indicator  
   setFilterPassed ( false );
-  desktop ()->getEventInput();
+  // DONE in DVAlgorithm::sysExecute:
+  // desktop ()->getEventInput();
   // clear all LoKi storages 
   clear() ;
   // call for actual analysis 
