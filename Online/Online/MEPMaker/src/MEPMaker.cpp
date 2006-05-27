@@ -1,8 +1,8 @@
 //	====================================================================
-//  RawMEP.cpp
+//  MEPMaker.cpp
 //	--------------------------------------------------------------------
 //
-//	Package   : RawMEP
+//	Package   : MEPMaker
 //
 //	Author    : Niko Neufeld
 //
@@ -22,7 +22,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "RawMEP.h"
+#include "MEPMaker/MEPMaker.h"
 
 // Event Model related classes
 #include "Event/RawEvent.h"
@@ -31,8 +31,8 @@
 #include "GaudiKernel/System.h"
 #include <sys/types.h>
 
-static const AlgFactory<RawMEP>  Factory;
-const IFactory& RawMEPFactory = Factory;
+static const AlgFactory<MEPMaker>  Factory;
+const IFactory& MEPMakerFactory = Factory;
 
 using LHCb::RawBank;
 using LHCb::RawEvent;
@@ -73,7 +73,7 @@ int rawtyp2det[] = { 0,      1,      2,      3,      4,      2,
 
 
 int
-RawMEP::ignoreTELL1(int tell1id) {
+MEPMaker::ignoreTELL1(int tell1id) {
     switch (tell1id) {
 	//case (1 + 1 + 88 + 19 + 42 + 48 + 24 + 36 + 2 + 1): return 1; /*  HLT */
     default: return 0;
@@ -81,7 +81,7 @@ RawMEP::ignoreTELL1(int tell1id) {
 }
      
 int
-RawMEP::rawtell1id(int type, int src)
+MEPMaker::rawtell1id(int type, int src)
 {
 
   switch (type) {
@@ -398,7 +398,7 @@ typedef union {
 static u_int8_t frgbuf[RAW_MAX_SRC][0x10000];
 static int bankpresent[RAW_MAX_SRC];
 
-RawMEP::RawMEP(const std::string& name, ISvcLocator* pSvcLocator)  
+MEPMaker::MEPMaker(const std::string& name, ISvcLocator* pSvcLocator)  
   : Algorithm(name, pSvcLocator) { 
     memset(m_rawfd, 0, RAW_MAX_SRC * sizeof(void *));
     memset(m_rawhh, 0, RAW_MAX_SRC * sizeof(void *));
@@ -412,7 +412,7 @@ RawMEP::RawMEP(const std::string& name, ISvcLocator* pSvcLocator)
     m_nomep = 0;
 }
 
-StatusCode RawMEP::initialize() {
+StatusCode MEPMaker::initialize() {
     m_log = new MsgStream(msgSvc(), name());
     if (m_rawbufout.compare("")) {
 	if ((m_rmout = open(m_rawbufout.c_str(), O_RDWR | O_CREAT | O_TRUNC, 
@@ -423,12 +423,13 @@ StatusCode RawMEP::initialize() {
     }
     if (!m_rawpfx.compare("")) {
 	m_nomep = 1;
+
     }
     return StatusCode::SUCCESS;
 }
 
 StatusCode
-RawMEP::writeraw(const RawEvent * evt)
+MEPMaker::writeraw(const RawEvent * evt)
 {
     static int eventid = 0;
     static int first = 1;
@@ -537,7 +538,7 @@ RawMEP::writeraw(const RawEvent * evt)
 //--------------------------------------------------------------------
 // Execute
 //--------------------------------------------------------------------
-StatusCode RawMEP::execute() {
+StatusCode MEPMaker::execute() {
   SmartDataPtr<RawEvent> raw(eventSvc(), LHCb::RawEventLocation::Default);
 
   if ( raw != 0 )  {
@@ -549,7 +550,7 @@ StatusCode RawMEP::execute() {
 }
 
 StatusCode
-RawMEP::finalize() 
+MEPMaker::finalize() 
 {
     unsigned long long written;
     int locked = 0, err = 0;
