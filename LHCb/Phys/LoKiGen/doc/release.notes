@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2006-05-26 17:32:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2006-05-27 11:38:44 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,12 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2006-05-27 - Vanya BELYAEV
+ - LoKi/PrintHepMCDecay.h src/PrintHepMCDecay.cpp
+   set of new functions LoKi::pritnHepMCDecay and LoKi::printDecay 
+   for the printput of the HepMC decay tree 
+
 
 ! 2006-05-26 - Vanya BELYAEV
 

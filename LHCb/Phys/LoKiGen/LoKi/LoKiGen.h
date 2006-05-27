@@ -1,8 +1,11 @@
-// $Id: LoKiGen.h,v 1.4 2006-05-02 14:30:28 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.5 2006-05-27 11:38:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:30:28  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
 #define LOKI_LOKIGEN_H 1
@@ -17,6 +20,7 @@
 #include "LoKi/GenExtract.h"
 #include "LoKi/GenAlgs.h"
 #include "LoKi/GenKinematics.h"
+#include "LoKi/PrintHepMCDecay.h"
 // ============================================================================
 
 // ============================================================================

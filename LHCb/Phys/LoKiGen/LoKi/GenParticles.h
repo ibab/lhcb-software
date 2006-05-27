@@ -1,11 +1,8 @@
-// $Id: GenParticles.h,v 1.7 2006-05-26 17:32:11 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.8 2006-05-27 11:38:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/05/02 14:30:27  ibelyaev
-//  censored
-//
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
