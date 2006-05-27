@@ -1,8 +1,11 @@
-// $Id: LoKiPhys.h,v 1.6 2006-03-20 20:36:16 ibelyaev Exp $
+// $Id: LoKiPhys.h,v 1.7 2006-05-27 11:43:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/20 20:36:16  ibelyaev
+//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
+//
 // Revision 1.5  2006/02/22 20:53:46  ibelyaev
 //  add a lot of new functions (without fillStream)
 //
@@ -47,6 +50,8 @@
 #include "LoKi/Particles13.h"
 #include "LoKi/Particles14.h"
 #include "LoKi/Particles15.h"
+//
+#include "LoKi/PrintDecay.h"
 // ============================================================================
 
 // ============================================================================
