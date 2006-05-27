@@ -1,11 +1,8 @@
-// $Id: PrintMCDecay.cpp,v 1.3 2006-02-18 18:10:57 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.4 2006-05-27 11:40:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/02/09 15:42:07  ibelyaev
-//  add LoKi::MCAlgs namespace with algorithms
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -85,8 +82,6 @@ MsgStream& LoKi::printMCDecay
   return stream ;
 };
 // ============================================================================
-
-// ============================================================================
 /** @fn printMCDecay
  *  Simple function to print MC decay in more or less "readable" format 
  *
@@ -114,8 +109,6 @@ std::string LoKi::printMCDecay
   LoKi::printMCDecay ( particle , stream , cut , blank ) ;
   return stream.str() ;
 } ;
-// ============================================================================
-
 // ============================================================================
 /** @fn printMCDecay
  *  Simple function to print MC decay in more or less "readable" format 
