@@ -1,0 +1,40 @@
+////////////////////////////////////////////////////////////////
+// MEPMaker options file.
+////////////////////////////////////////////////////////////////
+//
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.EvtMax      = 1000; 
+ApplicationMgr.TopAlg = { "MEPMaker" };
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel     = 4;
+//
+EventSelector.OutputLevel  = 2;
+EventSelector.PrintFreq    = 100;
+EventSelector.FirstEvent   = 1;
+//--------------------------------------------------------------
+//
+//  Setup for ROOT I/O System
+//
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+PoolDbCacheSvc.Dlls          += {"STLRflx" };
+PoolDbCacheSvc.OutputLevel = 4;
+ApplicationMgr.DLLs += { "DAQEvent" };
+ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.DLLs += { "MEPMaker" };
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+ 
+#include "$STDOPTS/DigiDicts.opts"
+//--------------------------------------------------------------
+// Input File
+//--------------------------------------------------------------
+//#include "$PROJECTROOT/options/input.opt"
+EventSelector.Input   = {
+"DATAFILE='/net/lbondisk01/testbeamData/dc06/00001276_00000002_5.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000002_9.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
+MEPMaker.OutputLevel = 3;
+MEPMaker.rawpfx="/net/lbondisk01/testbeamData/mep/dc06/raw";
+MEPMaker.MarkusFile="/net/lbondisk01/testbeamData/mep/dc06/dc06-test.mf";
+// Histogram Output File
+RootHistSvc.OutputFile = "/net/lbondisk01/testbeamData/mep/dc06/evtsiz-histos-dc06.rt";
