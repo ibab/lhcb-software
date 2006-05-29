@@ -1,0 +1,18 @@
+//  Options for inclusive b events with Herwig and EvtGen
+//  Temporarily here. Will be generated automatically from incl_b.dec
+//
+// Event Type: 110000000
+//
+// ASCII Decay Descriptor: pp => [<Xb>]cc ...
+                    
+ApplicationMgr.Dlls += { "LbHerwig" };
+Generation.EventType                  = 110000000;
+Generation.SampleGenerationTool       = "Inclusive";
+Generation.Inclusive.ProductionTool   = "HerwigProduction";
+Generation.Inclusive.InclusivePIDList = {
+  521, -521, 511, -511, 531, -531, 541, -541,
+  5122, -5122, 5222, -5222, 5212, -5212, 5112, -5112,
+  5312, -5312, 5322, -5322, 5332, -5332, 5132, -5132, 5232, -5232
+};
+ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/incl_b.dec";
+Generation.Inclusive.HerwigProduction.Commands = { "iproc 1705" };
