@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.3 2006-05-27 11:40:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2006-05-29 12:29:26 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v1r0 2006-05-29 ===================
 
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PrintMCDecay.h, src/PrintMCDecay.cpp
@@ -166,6 +168,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.3  2006/05/27 11:40:51  ibelyaev
+!  add PrintMCDecay utilities
+!
 ! Revision 1.2  2006/02/09 15:42:06  ibelyaev
 !  add LoKi::MCAlgs namespace with algorithms
 !
