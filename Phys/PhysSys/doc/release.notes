@@ -1,21 +1,491 @@
 <PRE>
 Package     : PhysSys
-Package Coordinator : Patrick Koppenburg
+Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
 </PRE><H1><A NAME=v3r0>2006-04-04 Phys v3r1 - Minimal Phys</A></H1><PRE>
 
- Second minimal release of PHYS with DC06 event model.
- It compiles but is untested.
+ Second release of PHYS with DC06 event model.
+ It compiles and some simple jobs run but is largely untested.
 
   - Built against LHCb v20r2
   - New event model
   - ROOT MathCore GenVector classes
   - ROOT SVector classes, SMatrix classes 
   - Using ROOT 5.10.00c with interface improvements and bug fixes to SMatrix.
+  - New LoKi in testing phase
+  - New vertex fitters implemented and partially tested.
+  - DaVinciTransporter implemented and partially tested.
+  - Working MCParticleMaker
+  - Direct import of DC04-tuned DC06 options-based pre-selections. No testing
+    done yet.
   
 ##################################### PHYS ####################################
 
+!========================== DaVinciFilter v4r1 2006-05-29 ===================
+
+! 2006-05-29 - P. Koppenburg
+M src/DaVinciFilter_load.cpp
+A src/DaughterMomentumSumFilterCriterion.cpp
+A src/DaughterMomentumSumFilterCriterion.h
+A src/DaughterPVIPSumFilterCriterion.cpp
+A src/DaughterPVIPSumFilterCriterion.h
+A src/DaughterPtProductFilterCriterion.cpp
+A src/DaughterPtProductFilterCriterion.h
+A src/MomentumMotherFlightAngleFilterCriterion.cpp
+A src/MomentumMotherFlightAngleFilterCriterion.h
+A src/TwoDaughterCloseApprFilterCriterion.cpp
+A src/TwoDaughterCloseApprFilterCriterion.h
+A src/TwoDaughterDistanceVertexFilterCriterion.cpp
+A src/TwoDaughterDistanceVertexFilterCriterion.h
+  -> New filters added in DC04 adapted and committed to DC06.
+
+
+! 2006-05-23 - P. Koppenburg
+  - src/DaughterPVIPFilterCriterion.cpp
+  - src/FlightDistanceFilterCriterion.cpp
+  - src/Momentum2FlightAngleFilterCriterion.cpp
+  - src/PVIPFilterCriterion.cpp
+   . Read PVs as LHCb::PrimVertices
+
+! 2006-05-02 - P. Koppenburg for A. Carbone
+  - src/DaughterPVIPFilterCriterion.*
+    . New filter criterion that applies cuts on the IP of a daughter to the PV
+      that is the most relevant for the input Particle.s
+
+! 2006-04-24 - P. Koppenburg for M. Patel and C. Lazzeroni
+  - src/DLLFilterCiterion.cpp
+    . Bug fix: All cuts most pass, not only one of them.
+  - src/VtxFilterCriterion.{cpp,h}
+    . New option MinRPos allowing to cut on the R position of the vertex.
+
+! 2006-04-10 - J. Palacios
+ - src/DLLFilterCriterion.cpp
+   . Comment out lines using LHCb::ProtoParticle::LkhPIDxx enums. Await for
+     stable definition of ProtoParticle.
+
+
+
+!========================== DaVinciKernel v4r1 2006-05-29 ===================
+
+! 2006-05-16 - P. Koppenburg
+ - Kernel/IParticle2State.h
+   . New tool that allows to make a state from a Particle and back
+ - Kernel/state2Particle.h
+   . Becomes obsolete
+
+! 2006-05-09 - P. Koppenburg
+ - src/Lib/DVAlgorithm.cpp
+   . Corrected a buglet the GeomTool option now refers to the
+     first geomTool while GeomTools allows to set them all.
+   . Now the options are
+        DVAlgorithm.GeomTools
+	DVAlgorithm.VertexFitters
+	DVAlgorithm.ParticleFilters
+     to make it clear that one has to use the syntax
+        DVAlgorithm.VertexFitters { "OfflineVertexFitter", "TrgVertexFitter" };
+
+! 2006-05-09 - Juan PALACIOS
+ - Kernel/IVertexFit.h
+   . Added methods for fitting two and three particles.
+
+! 2006-05-09 - P. Koppenburg
+ - Kernel/state2Particle.h
+ - Kernel/sumMomenta.h
+ - Kernel/IParticleStuffer.h
+   . Moved trivial methods from ParticleStuffer to dedicated functions
+         StatusCode state2Particle( const LHCb::State& state, LHCb::Particle& particle )
+	 Gaudi::XYZTVector sumMomenta( const LHCb::Particle::ConstVector& vP )
+         Gaudi::XYZTVector sumMomenta( const SmartRefVector<LHCb::Particle>& vP )
+ - Kernel/DVAlgorithm.h
+   . Removed info() level printout.
+
+! 2006-05-08 - Juan PALACIOS  
+ - Kernel/IGeomDispCalculator.h: Make all calc methods const.
+
+! 2006-04-23 - P. Koppenburg
+ - src/component/PhysDesktop.cpp
+   . Read PVs as LHCb::PrimVertices
+
+! 2006-04-23 - Vanya BELYAEV
+ - Kernel/IVertexFit.h
+    minor bug fixes into templated "fit"-methods 
+
+! 2006-04-11 - J.P.Palacios
+   Kernel/IPhysiceDesktop.h
+   . Add const qualifiers to return values and arguments of some methods.
+   . Changes propagated to PhysDesktop and DVAlgorithm.
+
+
+! 2006-04-10 - J.P. Palacios
+ - Kernel/IPhysiceDesktop.h
+   . Change createParticle and createVertex: return value is now const,
+     method names changed to "save".
+ - src/component/PhysDeskTop.h, .cpp
+   . Adapt to IPhysiceDesktop interface change.
+ - Kernel/DVAlgorithm.h
+   . Add methods 
+      IParticleCombiner* particleCombiner(const std::string name = "") const 
+     and 
+      IParticleReFitter* particleReFitter(const std::string name = "") const
+   . Modify IGeomDispCalculator tool accessor and data storage to allow for
+     more than one.
+   . Make the following GaudiAlg methods virtual:
+     StatusCode setFilterPassed (bool state);
+     StatusCode sysExecute ();
+     StatusCode initialize ();
+     StatusCode finalize ();
+
+! 2006-04-04 - J.P. Palacios
+ - Kernel/IGeomDispCalculator.h
+   . Change calcImpactPar methods to use Gaudi::SymMatrix3x3 
+     instead of Gaudi::Matrix3x3.
+ - Kernel/DVAlgorithm.h, src/component/PhysDesktop.cpp
+   . include <boost/lexical_cast.hpp>
+ - src/Lib/DVAlgorithm.cpp
+   . GaudiAlg put no longer returns StatusCode. Fix accordingly.
+
+
+!========================== DaVinciMCTools v6r1 2006-05-29 ===================
+
+! 2006-05-25 - P. Koppenburg
+  - DaVinciTools/MCReconstructed.h
+  - src/MCReconstruced.*
+    . Restore Christian's tool MCEffReconstructed.
+    . Temporarily requires that all charged are within the calo acceptance,
+      which is hard coded and have P>1GeV (also hard-coded). 
+      Would be nice to call the MC TrackInfo and the geometry service.
+  - src/MCParticleMaker.cpp
+    . By default require that all Particles are reconstructible
+
+! 2006-05-17 - Juan PALACIOS
+  - src/*cpp use Gaudi::Units namespace
+
+! 2006-05-17 - Juan PALACIOS for Stefania VECCHI	
+  - Fixes to MCParticleMaker memory leaks
+
+! 2006-05-05 - P. Koppenburg
+ - src/MCParticleMaker.cpp: 
+funny bug in MCParticleMaker. It's the line
+
+  double  E = sqrt(px*px + py*py + pz*pz + m*m); 
+
+well, m is not declared, so it takes the Gaudi units variable "m" for meter, 
+that has a value of 1000mm. The effect is that all created particles have a 
+mass of 1GeV! :-)
+
+! 2006-05-03 - P. Koppenburg
+ - DaVinciTools/IVisPrimVertexTool.h
+ - src/VisPrimVertexTool.*
+   . Restored Christian's visible PV tool. Interface now takes MCVertex 
+     instead of Collision. Moved from dead package Phys/MCTools
+ - src/MCPrimVertexMaker.*
+   . New algorithm that produces a PrimVertex from all MCVertex primaries.
+ - src/MCParticleMaker.cpp
+   . Call GaudiTool::initialize(0 and finalize()
+   
+! 2006-04-18 - J.P. Palacios
+ - First working version of MCParticleMaker from S. Vecchi.
+
+! 2006-04-04 - J.P. Palacios
+ - src/MCParticleMaker.cpp: Instantiate MCDecayFinder tool.
+
+! 2006-04-04 - J.P. Palacios
+ - src/IsBEvent.cpp: adapt to void return value of put.
+ - src/MCParticleMaker.cpp: Adapt to new SMatrix interface (ROOT 5.10.00c)
+
+
+!========================== DaVinciTools v13r1 2006-05-29 ===================
+
+! 2006-05-09 - P. Koppenburg
+  - src/Particle2State.*
+   . New tool that allows to make a state from a Particle and back
+
+! 2006-05-11 - Juan Palacios
+  - src/OnOfflineTool.cpp
+    . Restore GeomDispCalculator as offlineGeomTool.
+
+! 2006-05-10 - Juan Palacios
+  - re-write and restore CheckVeloOverlap. 
+
+! 2006-05-10 - Juan Palacios
+  - src/TrgDispCalculator: simplify some of the code. Use Kernel/GeomFun.
+
+! 2006-05-09 - P. Koppenburg
+  - src/*DispCalculator.cpp
+   . Are now here
+
+! 2006-05-23 - P. Koppenburg
+  - src/CheckOverlap.cpp
+  - src/CheckPV.cpp
+  - src/SimplePlotTool.cpp
+   . Read PVs as LHCb::PrimVertices
+
+! 2006-05-03 - P. Koppenburg
+  - CheckOverlap: 
+       Issue a warning instead of an error when a particle has no 
+       proto() nor endVertex(). It could be from an MC-Particle.
+
+
+!========================== DaVinciTransporter v3r1 2006-05-29 ================
+
+! 2006-05-16 - P. Koppenburg
+  - src/ParticleTransporter.cpp
+    . First more or less functional version. Still conatins many 
+      approximations.
+
+! 2006-05-09 - P. Koppenburg
+  Moved TrgDispCalculator to DaVinciTools
+  - src/ParticleTransporter.*
+  . Allow diffeernt treatment of neutrals and composite neutrals
+
+! 2006-05-08 - Juan PALACIOS
+ - src/TrgDispCalculator make all calc methods const. Use 9x9 matrices.
+
+! 2006-04-05 - Juan PALACIOS
+  - src/ParticleTransporter.cpp and - src/TrgDispCalculator.cpp:
+        use new Particle::slopes() instead of Particle::slopeX(), slopeY().
+  
+! 2006-04-04 - Juan PALACIOS
+  - src/TrgDispCalculator change interface to calcImpactPar methods:
+    now use SymMatrix3x3 instead of Matrix3x3.
+
+
+!========================== DaVinciUser v6r1 2006-05-29 ===================
+
+! 2006-05-15 - P. Koppenburg
+ - src/DC06Tests.*
+   . Do not stop when fit fails (to be solved!)
+   . Test impact parameters of pions from PV
+   
+! 2006-05-09 - P. Koppenburg
+ - src/DC06Tests.*
+   . Now prints out all details about all muons and build J/psis
+   
+
+!========================== LoKiAlgoMC v1r0 2006-05-29 ===================
+
+! 2006-05-29 - Juan PALACIOS
+ - First release of new LoKiAlgoMC
+
+!========================== LoKiAlgo v1r1 2006-05-29 ===================
+
+! 2006-05-29 - Juan PALACIOS
+ - First release
+
+!========================== LoKiAll v1r0 2006-05-29 ===================
+
+! 2006-04-09 - Vanya BELYAEV
+ - new package 
+
+!========================== LoKiGenMC v1r0 2006-05-29 ===================
+
+  2006-03-18 - Vanya BELYAEV
+  
+  New functionality:
+  According to PEM, there should be some "tool" which allows basically
+  the navigation from MC-vertex to GenCollision. 
+  Now this tool is implemented.
+  See $LOKIGENMCROOT/doc/release.notes
+
+!========================== LoKiMC v1r1 2006-05-29 ===================
+
+! 2006-05-27 - Vanya BELYAEV
+ - LoKi/PrintMCDecay.h, src/PrintMCDecay.cpp
+   new utilities LoKi::printMCDecay and LoKi::printDecay 
+   for printout of MC-decay tree 
+ - cmt/requirements
+   versionincrement to v1r1 
+
+! 2006-02-09 - Vanya BELYAEV
+
+ - LoKi/MCAlgs.h
+
+   few trivial, but efficient highly recirsive pseudo-algorithms  
+   to counting/checking the particles from MC-decay trees: 
+
+   See $LOKIMCROOT/doc/release.notes
+
+!========================== LoKiPhys v1r1 2006-05-29 ===================
+
+! 2006-05-27 - VanyaBELYAEV
+ - LoKi/DecayChain.h, src/DecayChain.cpp
+   nice utility for printout of  (Phys/MC/HepMC)-trees 
+ - cmt/requirments
+   versionincrement to v1r1 
+ 
+! 2006-03-19 - Vanya BELYAEV
+ - the major upgrade 
+   add the code for making the links inbetween the recontructed 
+   primary vertices and (primary) MC-vertices and pp-collisions.
+  
+   The link attribute ("weight") is LHCb::PV2MCWeight, 
+     which is std::pair<size_t,float>.
+   The first component is  a number of true MC-tracks from the 
+   given (primary) vertez, used in the reconstruction of the PrimVertex
+   The second component is chi2-distance inbetween the reconstructed 
+   primary vertex and (primary) MC-vertex/pp-Collision 
+
+   Relation tables and builder algorithsm 
+    
+   Kernel/PV2MC.h 
+     the defintion of basic types & table locations
+     Types: 
+      RC           --> MC 
+     IRelationWeighted<LHCb::PrimVertex,LHCb::MCVertex,LHCb::PV2MCWeght> ,
+      MC           --> RC 
+     IRelationWeighted<LHCb::MCVertex,LHCb::PrimVertexLHCb::PV2MCWeght> ,
+      RC           --> pp-Collision
+     IRelationWeighted<LHCb::PrimVertex,LHCb::GenCollision,LHCb::PV2MCWeght> ,
+      pp-Collision --> RC 
+     IRelationWeighted<LHCb::GenCollision,LHCb::PrimVertexLHCb::PV2MCWeght> 
+
+  Locaions of 2D tables:
+    LHCb::PV2MCLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary 
+    LHCb::PV2CoillisonLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary + "2Collision"
+ 
+  Algorithm:
+   
+   src/Components/LoKi_PV2MCAlg.cpp
+     the algorithm to build the links
+
+  Run-time configuration  (using Data-on-Demand service) 
+
+     options/LoKiPhysMC.opts
+     options/PV2MC.opts
+    
+
+   OPTIONAL: (for those who likes to manipulate with tools)
+
+   Kernel/IPV2MC.h
+   src/Components/LoKi_PV2MC.cpp 
+     definition of the abstract interface to deal with the tables
+     and concrete tool  
+
+!========================== LoKi v1r0 2006-05-29 ===================
+
+! 2006-04-09 - Vanya BELYAEV
+ - new package
+
+!========================== ParticleMaker v2r1 2006-05-29 ===================
+
+! 2006-05-16 - P. Koppenburg
+ - src/NoPIDsParticleMaker.cpp: Use Particle2State tool instead
+
+! 2006-05-10 - Juan PALACIOS, P. Koppenburg
+ - src/NoPIDsParticleMaker.cpp: use state2Particle function from
+   Kernel/state2Particle.h instead of deprecated
+   IParticleStuffer::fillParticle(state, particle).
+ - src/ParticleStuffer.*
+   . Remove fillParticle and sumMomenta methods moved to dedicated headers in
+     $DAVINCIKERNELROOT/Kernel/
+
+! 2006-05-09 - Juan PALACIOS
+ - src/ParticleStuffer.cpp: Fix calculation of error on measured mass.
+
+! 2006-04-04 - Juan Palacios
+ - src/ParticleStuffer.cpp: use Similarity function from SMatrix.
+
+!========================== VertexFit v2r1 2006-05-29 ===================
+
+! 2006-05-26 Juan PALACIOS
+  src/VertexFit_load.cpp: declare BlindVertexFitter as tool
+
+! 2006-05-26 - Yuehong Xie
+ - OfflineVertexFitter version for anything excpet photons, which will be added later
+ - Only tested using Jpsi->mumu data from MCParticleMaker
+
+! 2006-05-26 - Vanya BELYAEV
+ - src/BlindVertexFitter.cpp
+     - simple Kalman-filter based vertex fitter, 
+       current implementation works only for basic charged particles
+ - src/FitterUtils.h - helper namespace for implementation of vertex fitter 
+ - src/MatrixUtils.h - helper file with set of helper matrix utilities   
+
+! 2006-05-17 - Yuehong Xie
+ - first version that only fit two tarck vertex like Jpsi->mumu, more functionalities to be added
+ 
+! 2006-05-09 - P. Koppenburg
+  Moved GeomDispCalculator to DaVinciTools
+
+! 2006-05-08 - Juan PALACIOS
+ - Added src/GeomDispCalculator. Re-implemented from DaVinciTransporter 
+   and restored.
+
+! 2006-04-05 - J. Palacios
+ - src/TrgVertexFitter: change calls to Particle::slopeX(), slopeY() for calls to Particle::slopes(), adapting to new Particle interface.
+
+! 2006-04-03 - J. Palacios
+ - Added src/OfflineVertexFitter.h and .cpp from Yuehong Xie.
+ - Modified src/OfflineVertexFitter.cpp:
+   . Translate all matrix and vector operations from CLHEP-like lingo to
+     SMatrix talk.
+
+!========================== PhysCoreSys v2r1 2006-05-29 ===================
+
+! 2005-05-24- P. Koppenburg
+  Added TrackExtrapolators DLL
+
+
+!========================== LoKiCoreTest v1r0 2006-05-29 ===================
+
+! 2006-01-24 - Vanya BELYAEV
+ - New import: few simple tetst of teh basic fcuntionality of 
+	 functions/cuts/combiners, error/exception handling 
+
+!========================== LoKiGenTest v1r0 2006-05-29 ===================
+
+! 2006-02-09 - Vanya Belyaev
+ - more tests for vertex functions and adapters 
+   are added into src/LoKiGenFunctors.cpp
+
+! 2006-02-08 - Vanya BELYAEV
+
+   New tests are added: 
+
+ - src/LoKiGenExtract.cpp
+ - src/LoKiGenAlgs.cpp
+
+
+! 2006-01-24 - Vanya BELYAEV
+ - New import: few simple tetst of teh basic fcuntionality of 
+	 functions/cuts/combiners, error/exception handling 
+
+!========================== LoKiMCTest v1r0 2006-05-29 ===================
+
+! 2006-02-09 - Vanya BELYAEV
+ - src/LoKiMCAlgs.cpp 
+	  The basic tests for the functions from LoKi::MCAlgs namespace 
+ - src/LoKiMCExtract.cpp 
+	  The basic tests for the functions from LoKi::Extract namespace 
+ - src/LoKiMCFunctions.cpp 
+	  The basic tests for the (MC)funtors 
+
+!========================== LoKiPhysTest v1r0 2006-05-29 ===================
+
+! 2006-05-29 - Juan PALACIOS
+ - New package
+
+!========================== LoKiTests v1r0 2006-05-29 ===================
+
+! 2006-05-29 - Juan PALACIOS
+ - New package
+
+
+
+</PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
+
+ First minimal release of PHYS with DC06 event model.
+ It compiles but is untested.
+
+  - Built against LHCb v20r1
+  - New event model
+  - ROOT vector classes 
+  - SMatrix matrices
+  
+##################################### PHYS #####################################
 !========================== DaVinciFilter v4r0 2006-03-28 ===================
 ! 2006-03-28 - P. Koppenburg for C. Lazzeroni
   - src/VtxFilterCriterion.{cpp,h}
@@ -258,7 +728,7 @@ FilterLongDs.Filter.DaughterVertexFilterCriterion.DaughterName = "D_s-" ;       
        Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
   - CheckPV.cpp: Prepend LHCb:: to Vertices.
 
-!========================== DaVinciTransporter v3r0 2006-03-28 ===================
+!========================== DaVinciTransporter v3r0 2006-03-28 ================
 ! 2006-02-16 - P. Koppenburg
   - src/TrgDispCalculator.{cpp,h}
     . Samll change in interface
@@ -321,6 +791,8 @@ FilterLongDs.Filter.DaughterVertexFilterCriterion.DaughterName = "D_s-" ;       
     . Adapted to DC06 event model
   - src/ParticleStuffer.{cpp,h}
     . Adapted to DC06 event model and new interface
+
+
 
 !========================== PhysCoreSys v2r0 2006-03-28 ===================
 ! 2005-02-16- P. Koppenburg
