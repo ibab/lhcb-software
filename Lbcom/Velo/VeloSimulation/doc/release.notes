@@ -4,7 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== VeloSimulation v2r2p1 2006-05-17 ======================
+!===================== VeloSimulation v2r3 2006-05-29 ======================
 ! 2006-05-29 - Tomasz Szumlak
   The version is able to produce non-zero suppressed simulated data
   needed for studies on TELL1 algorithms
@@ -14,6 +14,7 @@
  - simulation of noise and removal of MCVeloFEs with charge below 4500
    electrons is governed by m_makeNonZeroSuppressed flag
 
+!===================== VeloSimulation v2r2p1 2006-05-17 ======================
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units
 

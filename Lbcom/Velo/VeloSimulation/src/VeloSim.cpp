@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.15 2006-05-17 16:15:29 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.16 2006-05-29 11:55:23 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -29,6 +29,7 @@
 
 // local
 #include "VeloSim.h"
+#include "VeloChargeThreshold.h"
 
 using namespace Gaudi::Units;
 
@@ -41,13 +42,6 @@ using namespace Gaudi::Units;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VeloSim );
 
-struct chargeThreshold : public std::unary_function<LHCb::MCVeloFE*,  bool> {
-  bool operator()(LHCb::MCVeloFE* FE) {
-    // decide to cut out large -ve noise
-    return FE->charge() < 4500.; //m_threshold;
-  }
-};
-
 static const double k_spillOverTime=25.;
 static const double k_pulseShapePeakTime=30.7848;
 
@@ -58,8 +52,9 @@ VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_veloDet ( 0 ),
-    m_sensorOn ( true ),
-    m_fitParams( 7, 0. )
+    m_fitParams( 7, 0. ),
+    m_adc2Electrons ( 800000. ),
+    m_adcScale ( 1024. )
 {
   declareProperty("InputContainer", m_inputContainer = LHCb::MCHitLocation::Velo );
   declareProperty("SpillOverInputData", m_spillOverInputContainer = "Prev/" + m_inputContainer );
@@ -91,6 +86,9 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("NoiseCapacitance", m_noiseCapacitance = 50. );
   declareProperty("FitParams", m_fitParams );
   declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0. );
+  declareProperty("MakeNonZeroSuppressedData", m_makeNonZeroSuppressedData=false );
+  declareProperty("PedestalConst", m_pedestalConst=512);
+  declareProperty("PedestalVariation", m_pedestalVariation=0.05);
   
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -175,23 +173,23 @@ StatusCode VeloSim::simulation() {
   // perform simulation
   StatusCode sc;
   // simulate signals in strips from GEANT hits of current event
-  if (m_chargeSim) sc= chargeSim(false); 
-  // simulate signals in strips from GEANT hits of spillOver event
-  if(m_sensorOn){
+  if (m_chargeSim) sc=chargeSim(false);
+    // simulate signals in strips from GEANT hits of spillOver event
     if (sc&&m_chargeSim&&m_spillOver) sc= chargeSim(true); 
     // charge sharing from capacitive coupling of strips
     if (sc&&m_coupling) sc=coupling(); 
     // add noise
-    if (sc&&m_noiseSim) sc= noiseSim(); 
-    // add pedestals - not yet implemented
-    if (sc&&m_pedestalSim) sc= pedestalSim(); 
-    // common mode - not yet implemented
-    if (sc&&m_CMSim) sc=CMSim();
+    if (sc&&m_noiseSim) sc=noiseSim(); 
+      // add pedestals
+    if(m_makeNonZeroSuppressedData){
+      if (sc&&m_pedestalSim) sc= pedestalSim();
+      // common mode - not yet implemented
+      if (sc&&m_CMSim) sc=CMSim();
+    }
     // dead strips / channels
     if (sc&&(m_stripInefficiency>0.)) sc=deadStrips(); 
     // remove any unwanted elements and sort
     if (sc) sc=finalProcess();
-  }
   //
   return (sc);
 }
@@ -280,7 +278,6 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
       hits->end() != hitIt ; hitIt++ ){
     LHCb::MCHit* hit = (*hitIt);    
     if(checkConditions(hit)){
-      m_sensorOn=true;
       // degrade resolution for April 2003 Robustness Test
       if (m_smearPosition>0) {
         m_movePosition.SetX(m_gaussDist()*m_smearPosition);
@@ -309,7 +306,6 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
       }
     }else{
       debug()<< " the sensor is not read-out" <<endmsg;
-      m_sensorOn=false;
     }
   }
   debug()<< "Number of MCVeloFEs " << m_FEs->size() <<endmsg;
@@ -849,9 +845,22 @@ LHCb::MCVeloFE* VeloSim::findOrInsertNextStrip(
   return nextStrip;
 }
 //=========================================================================
-// add pedestal - not yet implemented
+// add pedestal
 //=========================================================================
 StatusCode VeloSim::pedestalSim(){
+  debug()<< " ==> pedestalSim() " <<endmsg;
+  // add pedestals to all created FEs
+  LHCb::MCVeloFEs::iterator FEIt;    
+  double pedestalValue=0.;
+  //
+  for(FEIt=m_FEs->begin(); m_FEs->end()!=FEIt; FEIt++){
+    // change adc counts to electrons
+    pedestalValue=m_uniformDist()*m_pedestalConst*m_pedestalVariation;
+    pedestalValue+=m_pedestalConst;
+    pedestalValue*=(m_adc2Electrons/m_adcScale);
+    (*FEIt)->setAddedPedestal(pedestalValue);
+  }
+  //
   return StatusCode::SUCCESS;
 }
 //=========================================================================
@@ -903,50 +912,65 @@ StatusCode VeloSim::noiseSim(){
       iSens != sensEnd;
       ++iSens) {
     const DeVeloSensor* sens = *iSens;
-    double noiseSig=noiseSigma(stripCapacitance);
-    // use average capacitance of sensor, should be adequate if variation in
-    // cap. not too large.
-    // number of hits to add noise to (i.e. fraction above threshold)
-    // add both large +ve and -ve noise.
-    int maxStrips= sens->numberOfStrips();
-    int hitNoiseTotal= 
-        int(LHCbMath::round(2.*gsl_sf_erf_Q(m_threshold/noiseSig)
-			  *float(maxStrips)));
-    Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
-    hitNoiseTotal = int(poisson());
-    //
-    unsigned int sensorNo=sens->sensorNumber();
-    verbose()<< "Number of strips to add noise to "
-		         << hitNoiseTotal
-             << " sensor Number " << sensorNo
-		         << " maxStrips " << maxStrips
-		         <<  " sigma of noise " << noiseSig
-		         << " threshold " << m_threshold
-             << " tail probability "
-         		 << gsl_sf_erf_Q(m_threshold/noiseSig)
-    		     << endmsg;
-    //
-    for(int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
-      // choose random hit to add noise to
-      // get strip number
-      int stripArrayIndex=int(LHCbMath::round(m_uniformDist()*(maxStrips-1)));
-      LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
-      // find strip in list.
-      LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
-      if (myFE->addedNoise()==0){
-        double noise=noiseValueTail(stripCapacitance);
-        myFE->setAddedNoise(noise);
-        //
-        verbose()<< "hit from tail of noise created "
-                 << myFE->addedNoise() << endmsg;
+    if(sens->isReadOut()){
+      double noiseSig=noiseSigma(stripCapacitance);
+      // use average capacitance of sensor, should be adequate if variation in
+      // cap. not too large.
+      // number of hits to add noise to (i.e. fraction above threshold)
+      // add both large +ve and -ve noise.
+      int hitNoiseTotal=-999;
+      int maxStrips= sens->numberOfStrips();
+      if(!m_makeNonZeroSuppressedData){
+        hitNoiseTotal= 
+          int(LHCbMath::round(2.*gsl_sf_erf_Q(m_threshold/noiseSig) *float(maxStrips)));
+        Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
+        hitNoiseTotal = int(poisson());
       }else{
-        // already added noise here - so generate another strip number
-        noiseHit--;
+        hitNoiseTotal=sens->numberOfStrips();
+      }
+      //
+      unsigned int sensorNo=sens->sensorNumber();
+      verbose()<< "Number of strips to add noise to "
+		           << hitNoiseTotal
+               << " sensor Number " << sensorNo
+               << " maxStrips " << maxStrips
+		           << " sigma of noise " << noiseSig
+		           << " threshold " << m_threshold
+               << " tail probability "
+           		 << gsl_sf_erf_Q(m_threshold/noiseSig)
+    		       << endmsg;
+      //
+      for(int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
+        if(!m_makeNonZeroSuppressedData){
+          // choose random hit to add noise to
+          // get strip number        
+          int stripArrayIndex=int(LHCbMath::round(m_uniformDist()*(maxStrips-1)));
+          LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
+          // find strip in list.
+          LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
+          if (myFE->addedNoise()==0){
+            double noise=noiseValueTail(stripCapacitance);
+            myFE->setAddedNoise(noise);
+            //
+            verbose()<< "hit from tail of noise created "
+                     << myFE->addedNoise() << endmsg;
+          }else{
+          // already added noise here - so generate another strip number
+            noiseHit--;
+          }
+        }else{
+          // generate noise for all strips, beside those ones with already added noise
+          LHCb::VeloChannelID stripKey(sensorNo, noiseHit);
+          LHCb::MCVeloFE* myFE=findOrInsertFE(stripKey);
+          if(myFE->addedNoise()==0){
+            double noise=noiseValueTail(stripCapacitance);
+            myFE->setAddedNoise(noise);
+            verbose()<< "hit from noise created " << myFE->addedNoise() <<endmsg;
+          }
+        }
       }
     }
   }
-  debug()<< "Number of FEs after noise simulation "
-         << m_FEs->size() <<endmsg;
   //
   return (StatusCode::SUCCESS);
 }
@@ -1042,15 +1066,19 @@ StatusCode VeloSim::finalProcess(){
   debug()<< " ==> finalProcess() " <<endmsg;
   // cannot do this by remove_if, erase as storing/erasing pointers.
   // instead sort whole container and erase.
-  std::sort(m_FEs->begin(), m_FEs->end(), 
-            VeloEventFunctor::Less_by_charge<const LHCb::MCVeloFE*>());
-  std::reverse(m_FEs->begin(),m_FEs->end());
-  LHCb::MCVeloFEs::iterator it1=std::find_if(m_FEs->begin(),
-                                         m_FEs->end(),
-                                         chargeThreshold());
-  LHCb::MCVeloFEs::iterator it2=m_FEs->end();
-  m_FEs->erase(it1, it2);
-  // sort FEs into order of ascending sensor + strip
+  // if want to produce the non-zero suppressed data set the flag
+  if(!m_makeNonZeroSuppressedData){
+    std::sort(m_FEs->begin(), m_FEs->end(), 
+              VeloEventFunctor::Less_by_charge<const LHCb::MCVeloFE*>());
+    std::reverse(m_FEs->begin(),m_FEs->end());
+    LHCb::MCVeloFEs::iterator
+    it1=std::find_if(m_FEs->begin(), m_FEs->end(),
+                     VeloChargeThreshold(m_threshold));
+    LHCb::MCVeloFEs::iterator it2=m_FEs->end();
+    m_FEs->erase(it1, it2);
+    // sort FEs into order of ascending sensor + strip
+  }
+  // sort according to sensor/strip number
   std::sort(m_FEs->begin(),m_FEs->end(),
             VeloEventFunctor::Less_by_key<const LHCb::MCVeloFE*>());
   //

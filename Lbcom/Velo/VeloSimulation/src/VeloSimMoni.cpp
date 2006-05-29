@@ -1,4 +1,4 @@
-// $Id: VeloSimMoni.cpp,v 1.9 2006-05-17 16:15:29 cattanem Exp $
+// $Id: VeloSimMoni.cpp,v 1.10 2006-05-29 11:55:23 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -101,7 +101,7 @@ StatusCode VeloSimMoni::finalize() {
         << errnMCVeloFE <<endmsg;
   double allFEs=m_nMCVeloFEs+m_nMCVeloFEn+m_nMCVeloFEo;
   if(allFEs>0){
-    info().precision(2);
+    info().precision(4);
     info()<< "| FEs from signal:                      " 
           << (m_nMCVeloFEs/allFEs)*100
           << "%" <<endmsg;
@@ -139,7 +139,7 @@ StatusCode VeloSimMoni::VeloFEMonitor()
   long size=m_mcVFEsCont->size();
   m_nMCVeloFE+=size;
   m_nMCVeloFE2+=double(size*size);
-  plot(size, 100, "Number of MCVeloFE/event", 0., 8000., 50);
+  plot(size, 100, "Number of MCVeloFE/event", 0., 10000., 50);
   // main loop over FEs container
   LHCb::MCVeloFEs::iterator ItFE;
   for(ItFE=m_mcVFEsCont->begin(); ItFE!=m_mcVFEsCont->end(); ItFE++){

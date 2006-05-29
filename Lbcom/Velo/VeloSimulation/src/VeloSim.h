@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.6 2006-04-05 10:13:47 szumlat Exp $
+#// $Id: VeloSim.h,v 1.7 2006-05-29 11:55:23 szumlat Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -42,6 +42,11 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+
+  bool isLess(LHCb::MCVeloFE* fe) const
+  {
+    return ( (fe->charge()<m_threshold)?true:false );
+  }
 
 protected:
 
@@ -101,7 +106,7 @@ private:
   //
   //  double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
   // control simulation sections
-  bool m_sensorOn;   // check conditions for Velo
+
   bool m_chargeSim;
   bool m_inhomogeneousCharge;
   bool m_coupling;
@@ -139,7 +144,12 @@ private:
   double m_noiseCapacitance;
   double m_baseDiffuseSigma;
   std::vector<double> m_fitParams;
+  double m_pedestalConst;
+  double m_pedestalVariation;
+  double m_adc2Electrons;
+  double m_adcScale;
   double m_offPeakSamplingTime;
+  bool m_makeNonZeroSuppressedData;
   
 };
 //
