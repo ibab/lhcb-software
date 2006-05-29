@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.26 2006-05-16 17:53:37 pkoppenb Exp $
+! $Id: release.notes,v 1.27 2006-05-29 11:47:03 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+!========================== DaVinciTransporter v3r1 2006-05-29 ================
 
 ! 2006-05-16 - P. Koppenburg
   - src/ParticleTransporter.cpp
@@ -24,7 +26,7 @@
   - src/TrgDispCalculator change interface to calcImpactPar methods:
     now use SymMatrix3x3 instead of Matrix3x3.
 
-!========================== DaVinciTransporter v3r0 2006-03-28 ===================
+!========================== DaVinciTransporter v3r0 2006-03-28 ================
 ! 2006-02-16 - P. Koppenburg
   - src/TrgDispCalculator.{cpp,h}
     . Samll change in interface
