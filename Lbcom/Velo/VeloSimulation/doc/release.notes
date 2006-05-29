@@ -5,6 +5,15 @@
 !-----------------------------------------------------------------------------
 
 !===================== VeloSimulation v2r2p1 2006-05-17 ======================
+! 2006-05-29 - Tomasz Szumlak
+  The version is able to produce non-zero suppressed simulated data
+  needed for studies on TELL1 algorithms
+ - predicate functor's been removed from VeloSim.cpp and implemented as
+   VeloChargeThreshold class
+ - routine for pedestal simulation in each Velo channel has been added
+ - simulation of noise and removal of MCVeloFEs with charge below 4500
+   electrons is governed by m_makeNonZeroSuppressed flag
+
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units
 
