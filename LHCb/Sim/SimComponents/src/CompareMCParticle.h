@@ -1,4 +1,4 @@
-// $Id: CompareMCParticle.h,v 1.1 2006-02-20 08:21:40 cattanem Exp $
+// $Id: CompareMCParticle.h,v 1.2 2006-05-29 16:10:24 cattanem Exp $
 #ifndef COMPAREMCPARTICLE_H 
 #define COMPAREMCPARTICLE_H 1
 
@@ -20,9 +20,7 @@ public:
 
   virtual ~CompareMCParticle( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

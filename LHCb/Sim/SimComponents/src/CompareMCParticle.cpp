@@ -1,4 +1,4 @@
-// $Id: CompareMCParticle.cpp,v 1.1 2006-02-20 08:21:40 cattanem Exp $
+// $Id: CompareMCParticle.cpp,v 1.2 2006-05-29 16:10:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -32,18 +32,6 @@ CompareMCParticle::CompareMCParticle( const std::string& name,
 CompareMCParticle::~CompareMCParticle() {}; 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode CompareMCParticle::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode CompareMCParticle::execute() {
@@ -54,9 +42,9 @@ StatusCode CompareMCParticle::execute() {
   LHCb::MCParticles* test = get<LHCb::MCParticles>( m_testName  );
 
   if ( old->size() != test->size() ) {
-    info() << "Old MCParticle size " << old->size()
-           << " differs form Test " << test->size()
-           << endreq;
+    err() << "Old MCParticle size " << old->size()
+          << " differs form Test " << test->size()
+          << endmsg;
     return StatusCode::FAILURE;
   }  
   LHCb::MCParticles::const_iterator itOld  = old->begin();
@@ -66,10 +54,9 @@ StatusCode CompareMCParticle::execute() {
     LHCb::MCParticle* oPart = (*itOld++);
     LHCb::MCParticle* tPart = (*itTest++);
     if ( oPart->key() != tPart->key() ) {
-      info() << "Wrong key : old " <<  oPart->key() << " test " << tPart->key() << endreq;
+      warning() << "Wrong key : old " <<  oPart->key() << " test " << tPart->key() << endmsg;
     }
     bool isOK = true;
-    if ( MSG::VERBOSE >= msgLevel() ) isOK = false; //== force printing
     if ( 5.e-3 < fabs( oPart->momentum().px() - tPart->momentum().px() ) ) isOK = false;
     if ( 5.e-3 < fabs( oPart->momentum().py() - tPart->momentum().py() ) ) isOK = false;
     if ( 5.e-3 < fabs( oPart->momentum().pz() - tPart->momentum().pz() ) ) isOK = false;
@@ -90,43 +77,32 @@ StatusCode CompareMCParticle::execute() {
       }
     }
     
-    if ( !isOK ) {
-      info() << "=== MCParticle key " << oPart->key() << endreq;
-      info() << format( "  old momentum %12.3f %12.3f %12.3f %12.4f",
+    if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
+      if( !isOK ) Warning( "Packed MCParticle info truncated. Set DEBUG OutputLevel for details" );
+      debug() << "=== MCParticle key " << oPart->key() << endmsg;
+      debug() << format( "  old momentum %12.3f %12.3f %12.3f %12.4f",
                         oPart->momentum().px(), oPart->momentum().py(),
                         oPart->momentum().pz(), oPart->momentum().M() )
-             << endreq;
-      info() << format( " test momentum %12.3f %12.3f %12.3f %12.4f",
+              << endmsg;
+      debug() << format( " test momentum %12.3f %12.3f %12.3f %12.4f",
                         tPart->momentum().px(), tPart->momentum().py(),
                         tPart->momentum().pz(), tPart->momentum().M() ) 
-             << endreq;
-      info() << format( "  old pid %6d ", oPart->particleID().pid())
-             << " endVert " << oPart->originVertex() 
-             << endreq;
-      info() << format( " test pid %6d ", tPart->particleID().pid() )
-             << " endVert " << tPart->originVertex()
-             << endreq << "  old endVertices ";
+              << endmsg;
+      debug() << format( "  old pid %6d ", oPart->particleID().pid())
+              << " endVert " << oPart->originVertex() 
+              << endmsg;
+      debug() << format( " test pid %6d ", tPart->particleID().pid() )
+              << " endVert " << tPart->originVertex()
+              << endmsg << "  old endVertices ";
       for ( kk = 0; oPart->endVertices().size() > kk; kk++ ) {
-        info() << " " << oPart->endVertices()[kk];
+        debug() << " " << oPart->endVertices()[kk];
       }
-      info() << endreq << " test endVertices ";
+      debug() << endmsg << " test endVertices ";
       for ( kk = 0; tPart->endVertices().size() > kk; kk++ ) {
-        info() << " " << tPart->endVertices()[kk];
+        debug() << " " << tPart->endVertices()[kk];
       }
-      info() << endreq;   
+      debug() << endmsg;   
     }
   }
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CompareMCParticle::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

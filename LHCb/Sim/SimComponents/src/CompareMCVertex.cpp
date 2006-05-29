@@ -1,4 +1,4 @@
-// $Id: CompareMCVertex.cpp,v 1.1 2006-02-20 08:21:40 cattanem Exp $
+// $Id: CompareMCVertex.cpp,v 1.2 2006-05-29 16:10:24 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -32,18 +32,6 @@ CompareMCVertex::CompareMCVertex( const std::string& name,
 CompareMCVertex::~CompareMCVertex() {}; 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode CompareMCVertex::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode CompareMCVertex::execute() {
@@ -54,9 +42,9 @@ StatusCode CompareMCVertex::execute() {
   LHCb::MCVertices* test = get<LHCb::MCVertices>( m_testName  );
 
   if ( old->size() != test->size() ) {
-    info() << "Old MCVertex size " << old->size()
-           << " differs form Test " << test->size()
-           << endreq;
+    err() << "Old MCVertex size " << old->size()
+          << " differs form Test " << test->size()
+          << endmsg;
     return StatusCode::FAILURE;
   }  
   LHCb::MCVertices::const_iterator itOld  = old->begin();
@@ -66,10 +54,9 @@ StatusCode CompareMCVertex::execute() {
     LHCb::MCVertex* oVert = (*itOld++);
     LHCb::MCVertex* tVert = (*itTest++);
     if ( oVert->key() != tVert->key() ) {
-      info() << "Wrong key : old " <<  oVert->key() << " test " << tVert->key() << endreq;
+      warning() << "Wrong key : old " <<  oVert->key() << " test " << tVert->key() << endmsg;
     }
     bool isOK = true;
-    if ( MSG::VERBOSE >= msgLevel() ) isOK = false; //== force printing
     if ( 5.e-5 < fabs( oVert->position().x() - tVert->position().x() ) ) isOK = false;
     if ( 5.e-5 < fabs( oVert->position().y() - tVert->position().y() ) ) isOK = false;
     if ( 5.e-5 < fabs( oVert->position().z() - tVert->position().z() ) ) isOK = false;
@@ -87,39 +74,30 @@ StatusCode CompareMCVertex::execute() {
         if ( dum != dum1 ) isOK = false;
       }
     }
-    if ( !isOK ) {
-      info() << "=== MCVertex key " << oVert->key() << endreq;
-      info() << format( "  old point %12.5f %12.5f %12.5f %12.4f %2d",
+    if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
+      if( !isOK ) Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details" );
+      
+      debug() << "=== MCVertex key " << oVert->key() << endmsg;
+      debug() << format( "  old point %12.5f %12.5f %12.5f %12.4f %2d",
                         oVert->position().x(), oVert->position().y(),
                         oVert->position().z(), oVert->time(), oVert->type() )
-             << " mother " << oVert->mother()
-             << endreq;
-      info() << format( " test point %12.5f %12.5f %12.5f %12.4f %2d",
+              << " mother " << oVert->mother()
+              << endmsg;
+      debug() << format( " test point %12.5f %12.5f %12.5f %12.4f %2d",
                         tVert->position().x(), tVert->position().y(),
                         tVert->position().z(), tVert->time(), tVert->type() )
              << " mother " << tVert->mother()
-             << endreq << "  old products ";
+             << endmsg << "  old products ";
       for ( kk = 0; oVert->products().size() > kk; kk++ ) {
-        info() << " " << oVert->products()[kk];
+        debug() << " " << oVert->products()[kk];
       }
-      info() << endreq << " test products ";
+      debug() << endmsg << " test products ";
       for ( kk = 0; tVert->products().size() > kk; kk++ ) {
-        info() << " " << tVert->products()[kk];
+        debug() << " " << tVert->products()[kk];
       }
-      info() << endreq; 
+      debug() << endmsg; 
     }
   }
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CompareMCVertex::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

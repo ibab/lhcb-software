@@ -1,4 +1,4 @@
-// $Id: CompareMCVertex.h,v 1.1 2006-02-20 08:21:40 cattanem Exp $
+// $Id: CompareMCVertex.h,v 1.2 2006-05-29 16:10:24 cattanem Exp $
 #ifndef COMPAREMCVERTEX_H 
 #define COMPAREMCVERTEX_H 1
 
@@ -20,9 +20,7 @@ public:
 
   virtual ~CompareMCVertex( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -5,6 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v1r2p1 2006-05-29 ======================
+! 2006-05-29 - Marco Cattaneo
+ - Change message levels of CompareMCVertex and CompareMCParticle, for use in
+   production inside Boole
+
 !====================== SimComponents v1r2 2006-05-10 ========================
 ! 2006-05-10 - Marco Cattaneo
  - Use explicitly Gaudi::Units namespace in MCParticleSelector.cpp
