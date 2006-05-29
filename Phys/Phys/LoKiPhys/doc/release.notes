@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.5 2006-05-27 11:43:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2006-05-29 13:39:46 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v1r1 2006-05-29 ===================
 
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PritDecay.h src/PrintDecay.cpp
@@ -37,6 +39,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.5  2006/05/27 11:43:40  ibelyaev
+!  add PrintDecay utilities
+!
 ! -----------------------------------------------------------------------------
 ! The END 
 ! -----------------------------------------------------------------------------
