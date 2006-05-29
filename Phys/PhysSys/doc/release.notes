@@ -493,9 +493,103 @@ use B2uds	        v1r0    PhysSel
 use JetsSel	      v1r0    PhysSel
 use Radiative   	v1r0    PhysSel
 
+!========================== Ccbar v1r0 2006-05-29 ===================
+! 2006-05-23 - P. Koppenburg
+ - Added Bs2EtacPhi
 
+! 2006-05-23 - P. Koppenburg
+ - Remove Psi', replace it by a heavy dimuon
+
+! 2006-05-23 - P. Koppenburg
+ - Change psi to Psip 
+
+! 2006-05-23 - Jan Amoraal
+ - Use StdLooseMuons
+
+! 2006-05-22 - Jan Amoraal
+ - Added J/psi(1S)2MuMu and psi(2S)2MuMu pre-selections
+  
+! 2006-05-22 - Patrick Koppenburg
+ - Imported empty director CCbar for J/psi and more
+
+!========================== B2Dilepton v1r0 2006-05-29 ===================
+! 2006-05-19 - Patrick Koppenburg for Jeremy Dickens
+ - Added preselection K*MuMu
+
+! 2006-05-17 - Patrick Koppenburg for Helder Lopes
+ - Imported package with preselection B2DiMuon
+ - Added preselection Bu2LLK
+
+!========================== B2D0X v1r0 2006-05-29 ===================
+! 2006-05-23 - Patrick Koppenburg for Andy Powell
+ - New preselection for B -> D0K with D0->4H
+
+! 2006-05-23 - Patrick Koppenburg for Vava
+ - New preselection for B -> D0Pi
+
+! 2006-05-22 - Patrick Koppenburg for Mitesh Patel
+ - New preselection for B+ -> D0K with D0->HH
+
+! 2006-05-19 - Patrick Koppenburg for Cristina Lazzeroni
+ - New preselection for B0 -> D0K* with D0->KsPiPi
+
+! 2006-05-18 - Patrick Koppenburg for Cristina Lazzeroni
+ - New preselections for B+ -> D0K with D0->KsPiPi
+
+! 2006-05-17 - Patrick Koppenburg for Olivier Leroy
+ - imported package with preselctions for D0MuNu and D0Pi
+
+!========================== B2DplusX v1r0 2006-05-29 ===================
+! 2006-05-22 - Vladimir Gligorov
+ - updated cuts to realign with Bs->DsK
+
+! 2006-05-22 - Patrick Koppenburg
+ - fist import with Bd->D-Pi+
+
+!========================== B2DsX v1r0 2006-05-29 ===================
+! 2006-05-23 - Patrick Koppenburg for Jeremie Borel
+ - Changed IP cuts in Bs2DsH
+
+! 2006-05-22 - Patrick Koppenburg
+ - imported with Yuehong's Bs->DsMu and Jeremie's Bs->DsPi
+
+!========================== B2DstarX v1r0 2006-05-29 ===================
+! 2006-05-23 - Vladimir Gligorov
+ - Fixed cuts for includive NoPID D*
+
+! 2006-05-23 - Patrick Koppenburg
+ - Added Vava's includive NoPID D*
+
+! 2006-05-22 - Patrick Koppenburg
+ - Added Vava's D*Pi
+
+! 2006-05-19 - Patrick Koppenburg
+ - Import of package with Bd2DstarMuNu preselection by Marta
+
+!========================== B2uds v1r0 2006-05-29 ===================
+! 2006-05-24 - Patrick Koppenburg
+ - B->HH: another Typo fix
+
+! 2006-05-23 - Patrick Koppenburg
+ - B->HH: Typo fix
+
+! 2006-05-23 - Patrick Koppenburg
+ - Added Lambdab->LambdaPhi
+
+! 2006-05-22 - Patrick Koppenburg
+ - Added B->HH
+
+! 2006-05-22 - Patrick Koppenburg
+ - First import with Bs->PhiPhi
+
+!========================== JetsSel v1r0 2006-05-29 ===================
+! 2006-05-23 - Patrick Koppenburg
+ - First import
+
+##################################### TOOLS ###################################
 
 ###############################################################################
+
 </PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
 
  First minimal release of PHYS with DC06 event model.
