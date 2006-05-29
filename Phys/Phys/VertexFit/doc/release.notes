@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.57 2006-05-26 15:29:44 jpalac Exp $
+! $Id: release.notes,v 1.58 2006-05-29 12:44:02 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+!========================== VertexFit v2r1 2006-05-29 ===================
 
 ! 2006-05-26 Juan PALACIOS
   src/VertexFit_load.cpp: declare BlindVertexFitter as tool
