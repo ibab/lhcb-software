@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.19 2006-05-10 13:44:11 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.20 2006-05-29 08:48:13 gcorti Exp $
 
 /** @file
  *
@@ -55,6 +55,7 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"}
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
 //
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T"};
+// The line above can be expanded to the following 3 lines 
 // Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
 // Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT"};
@@ -68,11 +69,12 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
-#include "$GAUSSCALOROOT/options/Calo.opts"           // Specific configuration
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
+// Specific configuration of sensitive detectors
+#include "$GAUSSCALOROOT/options/Calo.opts"
 
 // Magnetic field simulation
 // "Global Field Manager"
@@ -85,8 +87,7 @@ GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 //GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldUniform";
 //GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
 
-// declare external services needed MAGNETIC FIELD
+// Declare external services needed MAGNETIC FIELD
 ApplicationMgr.DLLs   += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
-//MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";

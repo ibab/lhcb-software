@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.20 2006-04-12 19:50:23 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.21 2006-05-29 08:48:13 gcorti Exp $ 
 
 /** @file 
  * 
@@ -11,9 +11,6 @@
 // ROOT is chosen as default for Histograms and ntuple persistency.
 ApplicationMgr.HistogramPersistency = "ROOT";
 
-// To change to HBook, uncomment the following line
-//#include "$STDOPTS/Hbook.opts"
-
 //---------------------------------------------------------------------
 // Generator Monitor Histograms: set of histograms from HepMC
 //---------------------------------------------------------------------
@@ -25,7 +22,7 @@ GenMonitorAlg.HistoProduce  = true;
 //---------------------------------------------------------------------
 // Check if event type and events produced correspond to what set
 //---------------------------------------------------------------------
-SimMonitor.Members += { "EvtTypeChecker" };
+//SimMonitor.Members += { "EvtTypeChecker" };
 
 //---------------------------------------------------------------------
 // Simulation Monitor Histograms: from MCParticles and MCHits
@@ -37,20 +34,24 @@ SimMonitor.Members   += { "MCTruthMonitor" };
 // MC(XXX)Hits summary
 SimMonitor.Members   += { "GiGaGetHitsAlg" };
 
+// Detectors monitors
+//---------------------------------------------------------------------
+SimMonitor.Members   += { "GaudiSequencer/DetectorsMonitor" };
+
 // VELO
-ApplicationMgr.DLLs += { "VeloGauss" };
-SimMonitor.Members  += { "VeloGaussMoni" };
+ApplicationMgr.DLLs      += { "VeloGauss" };
+DetectorsMonitor.Members += { "VeloGaussMoni" };
 
 // Silicon tracker
-SimMonitor.Members  += { "MCHitMonitor/TTHitMonitor" };
+DetectorsMonitor.Members += { "MCHitMonitor/TTHitMonitor" };
 TTHitMonitor.mcPathString = "/Event/MC/TT/Hits";
 TTHitMonitor.zStations    = { 2350.0, 2620.0 };
-SimMonitor.Members  += { "MCHitMonitor/ITHitMonitor" };
+DetectorsMonitor.Members += { "MCHitMonitor/ITHitMonitor" };
 ITHitMonitor.mcPathString = "/Event/MC/IT/Hits";
 ITHitMonitor.zStations    = { 7780.0, 8460.0, 9115.0 };
  
 // Outer tracker
-SimMonitor.Members  += { "MCHitMonitor/OTHitMonitor" };
+DetectorsMonitor.Members += { "MCHitMonitor/OTHitMonitor" };
 OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
 OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 
@@ -59,18 +60,18 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
 // Calorimeters
-SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
-SimMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
-SimMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
-SimMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
+DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
+DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
+DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
+DetectorsMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
 #include "$CALOMONISIMOPTS/MoniSim.opts"
-SpdMonitor.OutputLevel = 4;
-PrsMonitor.OutputLevel = 4;
+SpdMonitor.OutputLevel  = 4;
+PrsMonitor.OutputLevel  = 4;
 EcalMonitor.OutputLevel = 4;
 HcalMonitor.OutputLevel = 4;
 
 // Muon system
-ApplicationMgr.DLLs += { "MuonMoniSim" };
-SimMonitor.Members  += { "MuonHitChecker" };
+ApplicationMgr.DLLs      += { "MuonMoniSim" };
+DetectorsMonitor.Members += { "MuonHitChecker" };
 MuonHitChecker.FullDetail = true;
 
