@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.109 2006-05-25 09:57:11 pkoppenb Exp $
+! $Id: release.notes,v 1.110 2006-05-29 11:36:13 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v6r0 2006-05-29 ===================
 
 ! 2006-05-25 - P. Koppenburg
   - DaVinciTools/MCReconstructed.h
