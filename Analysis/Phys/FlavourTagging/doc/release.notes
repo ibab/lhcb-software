@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.92 2006-05-16 10:20:04 musy Exp $
+! $Id: release.notes,v 1.93 2006-05-29 06:26:07 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== FlavourTagging v6r6 2006-05-29 ===================
 ! 2006-05-16 - Marco Musy
  - added NNetTool_v1.cpp,h which is a new tool that uses the neural
    net for new Root tuning. Neural nets are now put in src/NeuralNet folder
