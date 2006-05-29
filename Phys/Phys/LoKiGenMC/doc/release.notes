@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.5 2006-03-18 19:15:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2006-05-29 12:20:54 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v1r0 2006-05-29 ===================
 
   2006-03-18 - Vanya BELYAEV
   
@@ -269,6 +271,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.5  2006/03/18 19:15:11  ibelyaev
+!  add (primary)MCVErtex->GenCollision links
+!
 ! Revision 1.3  2006/03/18 12:38:15  ibelyaev
 !  minor fix for Win32 + change in the table name/location
 !
