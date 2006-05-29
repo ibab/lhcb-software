@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.3 2006-01-28 22:00:49 musy Exp $
+! $Id: release.notes,v 1.4 2006-05-29 06:25:47 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (musy@cern.ch)
@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== FlavourTaggingChecker v1r1 2006-05-29 ===================
 ! 2006-01-28 - M. Musy
   - Addition of DoubleTagCorrelation algorithm.
 
