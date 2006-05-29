@@ -1,8 +1,11 @@
-// $Id: CaloHypotheses.h,v 1.1 2006-02-15 10:43:43 cattanem Exp $
+// $Id: CaloHypotheses.h,v 1.2 2006-05-29 15:26:09 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/02/15 10:43:43  cattanem
+// add classes
+//
 // Revision 1.1  2005/12/14 13:05:31  odescham
 // v14r0 - Reviewed CaloEvent Model
 //
@@ -16,8 +19,8 @@
 // update for new compiler, CaloHypotheses namespace is added
 //
 // ============================================================================
-#ifndef KERNEL_CALOHYPOTHESES_H 
-#define KERNEL_CALOHYPOTHESES_H 1
+#ifndef RECEVENT_CALOHYPOTHESES_H 
+#define RECEVENT_CALOHYPOTHESES_H 1
 
 // Include files
 
@@ -65,5 +68,5 @@ namespace CaloHypotheses
 // ============================================================================
 // The End 
 // ============================================================================
-#endif ///< CALOKERNEL_CALOHYPOTHESES_H
+#endif ///< RECEVENT_CALOHYPOTHESES_H
 // ============================================================================

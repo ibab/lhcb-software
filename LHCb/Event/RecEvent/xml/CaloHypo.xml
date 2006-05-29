@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloHypo.xml,v 1.2 2006-04-06 12:35:50 odescham Exp $
+  * $Id: CaloHypo.xml,v 1.3 2006-05-29 15:26:09 odescham Exp $
   *****************************************************************************
   * XML-description of CaloHypo class                                         *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -133,10 +133,11 @@
 />
 
 <relation
- name = "digits"
- desc = "References to the Calorimeter Digits"
- type = "LHCb::CaloDigit"
- multiplicity = "M"
+        name = "digits"
+        desc = "References to the Calorimeter Digits"
+        type = "LHCb::CaloDigit"
+        multiplicity = "M"
+        nonconstaccessor = "TRUE"
 />
 
 <relation
