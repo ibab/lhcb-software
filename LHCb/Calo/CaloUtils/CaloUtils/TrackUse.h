@@ -1,8 +1,11 @@
-// $Id: TrackUse.h,v 1.2 2006-03-22 18:25:06 odescham Exp $
+// $Id: TrackUse.h,v 1.3 2006-05-29 15:36:19 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/03/22 18:25:06  odescham
+// Migration to new Event Model
+//
 // Revision 1.1  2005/11/07 11:57:13  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -148,14 +151,17 @@ public:
   
   // by algorithm 
   
-  bool velo         () const { return m_velo         ; }
-  bool seed         () const { return m_seed         ; }
-  bool match        () const { return m_match        ; }
-  bool forward      () const { return m_forward      ; }
-  bool follow       () const { return m_follow       ; }
-  bool veloTT       () const { return m_veloTT       ; }
-  bool veloBack     () const { return m_veloBack     ; }
-  bool ksTrack      () const { return m_ksTrack      ; }
+  bool PatVelo         () const { return m_patvelo         ; }
+  bool PatVeloTT       () const { return m_patveloTT       ; }
+  bool PatForward      () const { return m_patforward      ; }
+  bool PatKShort       () const { return m_patkshort       ; }
+
+  bool TrackSeeding        () const { return m_seed         ; }
+  bool TrackMatching       () const { return m_match        ; }
+  bool TrackVeloTT         () const { return m_veloTT       ; }
+  bool TrackKShort         () const { return m_ksTrack      ; }
+  bool TsaTrack            () const { return m_tsa          ; }
+  bool TrgForward          () const { return m_trgforward   ; }
   
 public: 
   
@@ -167,48 +173,33 @@ public:
   
 private:
   
-  // track flags to be used
-  
-  // general (the top precedence) 
-  
-  // use *ONLY* 'unique' tracks 
+  // track flags to be used  
   bool               m_uniqueOnly ;  
-  // use 'error' tracks  
   bool               m_error      ;
+  bool               m_isBackward   ;
   
   // by category 
   
-  // use "isLong"       tracks 
+
   bool               m_isLong       ;
-  // use "isUpstream"   tracks 
   bool               m_isUpstream   ;
-  // use "isDownstream" tracks 
   bool               m_isDownstream ;
-  // use "isVelotrack"  tracks 
   bool               m_isVelotrack  ;
-  // use "isBackward"   tracks 
-  bool               m_isBackward   ;
-  // use "isTtrack"     tracks 
   bool               m_isTtrack     ;
   
-  // by algorithm 
-  
-  // use "velo"        tracks 
-  bool               m_velo      ;
-  // use "seed"        tracks 
+  // by algorithm
+
+  bool               m_patvelo      ;
+  bool               m_patforward   ;
+  bool               m_patveloTT      ;
+  bool               m_patkshort   ;
+
   bool               m_seed      ;
-  // use "match"       tracks 
   bool               m_match     ;
-  // use "forward"     tracks 
-  bool               m_forward   ;
-  // use "follow"      tracks 
-  bool               m_follow    ;
-  // use "veloTT"      tracks 
   bool               m_veloTT    ;
-  // use "veloBack"    tracks 
-  bool               m_veloBack  ;
-  // use "ksTrack"     tracks 
   bool               m_ksTrack   ;
+  bool               m_tsa   ;
+  bool               m_trgforward   ;
 
 };
 

@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.8 2006-03-22 18:25:06 odescham Exp $
+// $Id: SpreadEstimator.cpp,v 1.9 2006-05-29 15:36:19 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/03/22 18:25:06  odescham
+// Migration to new Event Model
+//
 // Revision 1.7  2005/11/07 11:57:13  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -143,7 +146,7 @@ StatusCode SpreadEstimator::operator()
   xmean /= etot ;
   ymean /= etot ;
   
-  LHCb::CaloPosition::Center center = cluster->position().center() ;
+  LHCb::CaloPosition::Center& center = cluster->position().center() ;
   center( LHCb::CaloPosition::X ) = xmean ;
   center( LHCb::CaloPosition::Y ) = ymean ;
   
@@ -181,7 +184,7 @@ StatusCode SpreadEstimator::operator()
   if( covxx < cut ) { covxx = uniform ; covyx = 0 ; }
   if( covyy < cut ) { covyy = uniform ; covyx = 0 ; }
   
-  LHCb::CaloPosition::Spread spread = cluster->position().spread() ;
+  LHCb::CaloPosition::Spread& spread = cluster->position().spread() ;
   spread( LHCb::CaloPosition::X , LHCb::CaloPosition::X ) = covxx ;
   spread( LHCb::CaloPosition::Y , LHCb::CaloPosition::X ) = covyx ;
   spread( LHCb::CaloPosition::Y , LHCb::CaloPosition::Y ) = covyy ;

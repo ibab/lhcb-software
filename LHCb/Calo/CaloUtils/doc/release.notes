@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.50 2006-05-26 12:49:17 cattanem Exp $
+! $Id: release.notes,v 1.51 2006-05-29 15:36:19 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
 !========================== CaloUtils v6r3 2006-05-26 =========================
+! 2006-05-29 - Olivier Deschamps
+ - Update TrackUse.{cpp,h} for New Track Model
+ - bug fix in src/SpreadEstimator.cpp
+
 ! 2006-05-26 - Marco Cattaneo
  - Move to Gaudi::Units in header files
 

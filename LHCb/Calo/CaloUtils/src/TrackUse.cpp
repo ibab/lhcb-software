@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.5 2006-05-02 12:10:12 erodrigu Exp $
+// $Id: TrackUse.cpp,v 1.6 2006-05-29 15:36:19 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -38,22 +38,26 @@
 TrackUse::TrackUse() 
   : m_uniqueOnly   ( false )  // match ALL tracks, including clones 
   , m_error        ( false )  // USE ERROR TRACKS ALSO  
+  , m_isBackward   ( true  ) 
   // 
   , m_isLong       ( true  ) 
   , m_isUpstream   ( true  ) 
   , m_isDownstream ( true  ) 
   , m_isVelotrack  ( true  ) 
-  , m_isBackward   ( true  ) 
   , m_isTtrack     ( true  ) 
+
   //
-  , m_velo         ( true  )
+  , m_patvelo      ( true  )
+  , m_patforward   ( true  )
+  , m_patveloTT    ( true  )
+  , m_patkshort    ( true  )
+
   , m_seed         ( true  )
   , m_match        ( true  ) 
-  , m_forward      ( true  ) 
-  , m_follow       ( true  ) 
   , m_veloTT       ( true  )
-  , m_veloBack     ( true  ) 
   , m_ksTrack      ( true  )
+  , m_tsa          ( true  ) 
+  , m_trgforward   ( true  ) 
 {};
 // ============================================================================
 
@@ -77,22 +81,25 @@ TrackUse::i_declareProperties ( TYPE* object )
   // 
   object -> declareProperty ( "UseUniqueOnly" , m_uniqueOnly ) ;
   object -> declareProperty ( "UseErrorAlso"  , m_error      ) ;
+  object -> declareProperty ( "isBackward"   , m_isBackward   ) ;
   //
   object -> declareProperty ( "isLong"       , m_isLong       ) ;
   object -> declareProperty ( "isUpstream"   , m_isUpstream   ) ;
   object -> declareProperty ( "isDownstream" , m_isDownstream ) ;
   object -> declareProperty ( "isVelotrack"  , m_isVelotrack  ) ;
-  object -> declareProperty ( "isBackward"   , m_isBackward   ) ;
   object -> declareProperty ( "isTtrack"     , m_isTtrack     ) ;
   //
-  object -> declareProperty ( "velo"         , m_velo         ) ;
-  object -> declareProperty ( "seed"         , m_seed         ) ;
-  object -> declareProperty ( "match"        , m_match        ) ;
-  object -> declareProperty ( "forward"      , m_forward      ) ;
-  object -> declareProperty ( "follow"       , m_follow       ) ;
-  object -> declareProperty ( "veloTT"       , m_veloTT       ) ;
-  object -> declareProperty ( "veloBack"     , m_veloBack     ) ;
-  object -> declareProperty ( "ksTrack"      , m_ksTrack      ) ;
+  object -> declareProperty ( "patVelo"         , m_patvelo         ) ;
+  object -> declareProperty ( "patForward"      , m_patforward      ) ;
+  object -> declareProperty ( "patVeloTT"       , m_patveloTT       ) ;
+  object -> declareProperty ( "patKshort"       , m_patkshort       ) ;
+
+  object -> declareProperty ( "trackSeeding"     , m_seed         ) ;
+  object -> declareProperty ( "trackMatching"    , m_match        ) ;
+  object -> declareProperty ( "trackVeloTT"      , m_veloTT       ) ;
+  object -> declareProperty ( "trackKshort"      , m_ksTrack      ) ;
+  object -> declareProperty ( "tsaTrack"         , m_tsa          ) ;
+  object -> declareProperty ( "trgForward"       , m_trgforward   ) ;
   //
   return StatusCode::SUCCESS ;
 };
@@ -184,23 +191,30 @@ bool TrackUse::use  (  LHCb::Track* track ) const
 {
   if ( 0 == track ) { return false ; }
   // Flag ?
-  if ( uniqueOnly    () && track -> checkFlag(LHCb::Track::Clone) ) { return false ; }
-  if ( !error        () && track -> checkFlag(LHCb::Track::Invalid) ) { return false ; }
+  if ( uniqueOnly    () && track -> checkFlag(LHCb::Track::Clone)    ) { return false ; }
+  if ( !error        () && track -> checkFlag(LHCb::Track::Invalid)  ) { return false ; }
   if ( !isBackward   () && track -> checkFlag(LHCb::Track::Backward) ) { return false ; }
   // Type ?
-  if ( !isLong       () && track -> checkType (LHCb::Track::Long) ) { return false ; }
-  if ( !isUpstream   () && track -> checkType (LHCb::Track::Upstream) ) { return false ; }
+  if ( !isLong       () && track -> checkType (LHCb::Track::Long)       ) { return false ; }
+  if ( !isUpstream   () && track -> checkType (LHCb::Track::Upstream)   ) { return false ; }
   if ( !isDownstream () && track -> checkType (LHCb::Track::Downstream) ) { return false ; }
-  if ( !isVelotrack  () && track -> checkType (LHCb::Track::Velo) ) { return false ; }
-  if ( !isTtrack     () && track -> checkType (LHCb::Track::Ttrack ) ) { return false ; }
-  // History : use Cnv track for the time being ...
-  if ( !veloBack     () && track -> checkHistory(LHCb::Track::CnvVeloBack) ) { return false ; }
-  if ( !velo         () && track -> checkHistory(LHCb::Track::CnvVelo) ) { return false ; }
-  if ( !seed         () && track -> checkHistory(LHCb::Track::CnvSeed) ) { return false ; }
-  if ( !match        () && track -> checkHistory(LHCb::Track::CnvMatch) ) { return false ; }
-  if ( !forward      () && track -> checkHistory(LHCb::Track::CnvForward) ) { return false ; }
-  if ( !veloTT       () && track -> checkHistory(LHCb::Track::CnvVeloTT) ) { return false ; }
-  if ( !ksTrack      () && track -> checkHistory(LHCb::Track::CnvKsTrack) ) { return false ; }
+  if ( !isVelotrack  () && track -> checkType (LHCb::Track::Velo)       ) { return false ; }
+  if ( !isTtrack     () && track -> checkType (LHCb::Track::Ttrack )    ) { return false ; }
+  // History ?
+  if ( !PatVelo     () && track -> checkHistory(LHCb::Track::PatVelo)    ) { return false ; }
+  if ( !PatVeloTT   () && track -> checkHistory(LHCb::Track::PatVeloTT)  ) { return false ; }
+  if ( !PatForward  () && track -> checkHistory(LHCb::Track::PatForward) ) { return false ; }
+  if ( !PatKShort   () && track -> checkHistory(LHCb::Track::PatKShort)  ) { return false ; }
+
+  if ( !TrackSeeding   () && track -> checkHistory(LHCb::Track::TrackSeeding) ) { return false ; }
+  if ( !TrackMatching  () && track -> checkHistory(LHCb::Track::TrackMatching)) { return false ; }
+  if ( !TrackVeloTT    () && track -> checkHistory(LHCb::Track::TrackVeloTT)  ) { return false ; }
+  if ( !TrackKShort    () && track -> checkHistory(LHCb::Track::TrackKShort)  ) { return false ; }
+
+  if ( !TsaTrack       () && track -> checkHistory(LHCb::Track::TsaTrack)     ) { return false ; }
+  if ( !TrgForward     () && track -> checkHistory(LHCb::Track::TrgForward)   ) { return false ; }
+
+
    return true ;  
 };
 // ============================================================================
@@ -228,22 +242,25 @@ std::string TrackUse::bits (LHCb::Track* track ) const
   std::string msg( "bits: ") ;
   msg +=  "E:" + prnt ( track -> checkFlag(LHCb::Track::Invalid) ) ;
   msg += "/U:" + prnt ( !track -> checkFlag(LHCb::Track::Clone) ) ;
-  msg += "/H:" + prnt ( track -> history       () ) ;
+  msg += "/B:" + prnt ( track -> checkFlag(LHCb::Track::Backward) ) ;
   //
   msg += "/L:" + prnt ( track -> checkType (LHCb::Track::Long) ) ;
   msg += "/U:" + prnt ( track -> checkType (LHCb::Track::Upstream) ) ;
   msg += "/D:" + prnt ( track -> checkType (LHCb::Track::Downstream) ) ;
   msg += "/V:" + prnt ( track -> checkType (LHCb::Track::Velo) ) ;
-  msg += "/B:" + prnt ( track -> checkFlag(LHCb::Track::Backward) ) ;
   msg += "/T:" + prnt ( track -> checkType (LHCb::Track::Ttrack ) ) ;
-  // History : use Cnv track for the time being ...
-  msg += "/b:" + prnt ( track -> checkHistory(LHCb::Track::CnvVeloBack) ) ;
-  msg += "/v:" + prnt ( track -> checkHistory(LHCb::Track::CnvVelo) ) ;
-  msg += "/s:" + prnt ( track -> checkHistory(LHCb::Track::CnvSeed) ) ;
-  msg += "/m:" + prnt ( track -> checkHistory(LHCb::Track::CnvMatch) ) ;
-  msg += "/f:" + prnt ( track -> checkHistory(LHCb::Track::CnvForward) ) ;
-  msg += "/v:" + prnt ( track -> checkHistory(LHCb::Track::CnvVeloTT) ) ;
-  msg += "/k:" + prnt ( track ->  checkHistory(LHCb::Track::CnvKsTrack) ) ;
+
+  msg += "/H:" + prnt ( track -> history       () ) ;
+  msg += "/pv:"  + prnt ( track -> checkHistory(LHCb::Track::PatVelo) ) ;
+  msg += "/pvTT:"+ prnt ( track -> checkHistory(LHCb::Track::PatVeloTT) ) ;
+  msg += "/pf:"  + prnt ( track -> checkHistory(LHCb::Track::PatForward) ) ;
+  msg += "/pks:" + prnt ( track -> checkHistory(LHCb::Track::PatKShort) ) ;
+  msg += "/ts:"  + prnt ( track -> checkHistory(LHCb::Track::TrackSeeding) ) ;
+  msg += "/tm:"  + prnt ( track ->  checkHistory(LHCb::Track::TrackMatching) ) ;
+  msg += "/tvTT:"+ prnt ( track ->  checkHistory(LHCb::Track::TrackVeloTT) ) ;
+  msg += "/tks:" + prnt ( track ->  checkHistory(LHCb::Track::TrackKShort) ) ;
+  msg += "/tsa:" + prnt ( track ->  checkHistory(LHCb::Track::TsaTrack) ) ;
+  msg += "/trg:" + prnt ( track ->  checkHistory(LHCb::Track::TrgForward) ) ;
   //
   return msg ;
 };
@@ -284,14 +301,16 @@ std::string TrackUse::rejectedCategories () const
 std::string  TrackUse::rejectedAlgorithms () const 
 {
   std::string names =  "" ;
-  if ( !velo()         ) { names += "'velo' "         ; }
-  if ( !seed()         ) { names += "'seed' "         ; }
-  if ( !match()        ) { names += "'match' "        ; }
-  if ( !forward()      ) { names += "'forward' "      ; }
-  if ( !follow()       ) { names += "'follow' "       ; }
-  if ( !veloTT()       ) { names += "'veloTT' "       ; }
-  if ( !veloBack()     ) { names += "'veloBack' "     ; }
-  if ( !ksTrack()      ) { names += "'ksTrack' "      ; }
+  if ( !PatVelo()     ) { names += "'PatVelo' "         ; }
+  if ( !PatVeloTT()   ) { names += "'PatVeloTT' "         ; }
+  if ( !PatForward()  ) { names += "'PatForward' "         ; }
+  if ( !PatKShort()   ) { names += "'PatKShort' "         ; }
+  if ( !TrackSeeding()  ) { names += "'TrackSeeding' "        ; }
+  if ( !TrackMatching() ) { names += "'TrackMatching' "      ; }
+  if ( !TrackVeloTT()   ) { names += "'TrackVeloTT' "       ; }
+  if ( !TrackKShort()   ) { names += "'TrackKShort' "       ; }
+  if ( !TsaTrack()      ) { names += "'TsaTrack' "     ; }
+  if ( !TrgForward()    ) { names += "'TrgForward' "      ; }
   return names ;
 };
 // ============================================================================
