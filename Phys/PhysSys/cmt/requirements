@@ -23,6 +23,16 @@ use  DaVinciUser      	        v6r1     Phys
 ####################################################################
 use  PhysMCSys      	v2r0   Phys
 #===================================================================
+use Ccbar	        v1r0    PhysSel
+use B2Dilepton		v1r0	PhysSel
+use B2D0X		v1r0	PhysSel
+use B2DplusX		v1r0	PhysSel
+use B2DsX		v1r0	PhysSel
+use B2DstarX		v1r0	PhysSel
+use B2uds	        v1r0    PhysSel
+use JetsSel	        v1r0    PhysSel
+
+####################################################################
 use  DaVinciMCTools     	v6r1  Phys
 
 ####################################################################
