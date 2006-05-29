@@ -473,8 +473,29 @@ mass of 1GeV! :-)
 ! 2006-05-29 - Juan PALACIOS
  - New package
 
+#################################### PHYSSEL ##################################
+
+!========================== PhysSelSys v9r1 2006-05-29 ===================
+
+! 2006-05-29 - P. Koppenburg
+  . Remove Radiative, not ready for DC06
 
 
+! 2006-05-23 - P. Koppenburg?? (note by J. Palacios)
+  - cmt/requirements: added the following pre-selection packages:
+use Ccbar	        v1r0    PhysSel
+use B2Dilepton		v1r0	  PhysSel
+use B2D0X		      v1r0	  PhysSel
+use B2DplusX		  v1r0	  PhysSel
+use B2DsX		      v1r0	  PhysSel
+use B2DstarX			v1r0		PhysSel
+use B2uds	        v1r0    PhysSel
+use JetsSel	      v1r0    PhysSel
+use Radiative   	v1r0    PhysSel
+
+
+
+###############################################################################
 </PRE><H1><A NAME=v3r0>2006-03-02 Phys v3r0 - Minimal Phys</A></H1><PRE>
 
  First minimal release of PHYS with DC06 event model.
