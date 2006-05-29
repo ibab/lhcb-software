@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.81 2006-05-03 19:12:06 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.82 2006-05-29 08:48:45 gcorti Exp $ 
 
 /** @file 
  * 
@@ -43,49 +43,24 @@ Simulation.Members += { "GiGaFlushAlgorithm" };
 Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES with HEPMC internally
 Simulation.Members += { "G4HepMCToMCTruth" };
-// Populate sensitive hits in the TES for 
+// Populate sensitive hits in the TES for all sub-detectors
 Simulation.Members += { "GaudiSequencer/DetectorsHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };   // Velo
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" }; // PuVeto
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };     // TT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };     // IT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };     // OT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };   // Muon
+DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };       // Calo - SPD
+DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };       // Calo - Prs
+DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };      // Calo - ECAL
+DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };      // Calo - HCAL
+DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
+#include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
 DetectorsHits.MeasureTime = true;
-// == Velo
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };
-GetVeloHits.CollectionName = "VeloSDet/Hits";
-GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
-GetVeloHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
-// == PuVelo
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
-GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
-GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
-GetPuVetoHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
-// == TT
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };
-GetTTHits.CollectionName = "TTSDet/Hits";
-GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
-GetTTHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
-// == IT
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };
-GetITHits.CollectionName = "ITSDet/Hits";
-GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
-GetITHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
-// == OT
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };
-GetOTHits.CollectionName = "OTSDet/Hits";
-GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
-GetOTHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
-// == Muon
-DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };
-GetMuonHits.CollectionName = "MuonSDet/Hits";
-GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
-GetMuonHits.Detector       = "/dd/Structure/LHCb/DownstreamRegion/Muon";
-// == Calorimeters
-DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };
-DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };
-DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };
-DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };
-// and for the RICHes
-DetectorsHits.Members += { "GetMCRichHitsAlg" };
-
 
 // Simulation configuration: Geant4 control
+//---------------------------------------------------------------------------
 // Physics list and the production cuts  
 ApplicationMgr.DLLs += { "GaussPhysics" }; 
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
@@ -154,7 +129,7 @@ GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
 // particles in any process that satisfy this, this is applied
 // only to particles which origin is before z=12280mm (i.e.PRS/SPD)
 GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
-GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100 * MeV;        
+GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100.0 * MeV;        
 // For particles producing a cerenkov photon just store it
 GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true; 
 GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov"}; 
