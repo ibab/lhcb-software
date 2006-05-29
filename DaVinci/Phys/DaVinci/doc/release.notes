@@ -4,6 +4,8 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v16r1 2006-05-29 ===================
+
 ! 2006-05-24 - Juan PALACIOS
 	- cmt/requirements remove all -no_auto_imports to ease use by LoKi
 
