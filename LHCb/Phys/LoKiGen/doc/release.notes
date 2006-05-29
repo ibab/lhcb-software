@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.9 2006-05-27 11:38:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2006-05-29 08:32:39 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,20 +14,19 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiGen v1r3 2006-05-29 ==========================
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PrintHepMCDecay.h src/PrintHepMCDecay.cpp
    set of new functions LoKi::pritnHepMCDecay and LoKi::printDecay 
-   for the printput of the HepMC decay tree 
-
+   for the printout of the HepMC decay tree 
 
 ! 2006-05-26 - Vanya BELYAEV
 
  - LoKi/GenParticles.h src/GenParticles.cpp
-   inclreade functionality of FromHepMCTree function.
+   increase functionality of FromHepMCTree function.
    now it can treat the list of trees.
  - cmt/requirements 
    version increment to v1r3 
-
 
 !=========================== LoKiGen v1r2 2006-05-02 ==========================
 ! 2006-05-02 - Vanya Belyaev
