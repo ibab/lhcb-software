@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.6 2006-01-31 18:34:09 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.7 2006-05-29 08:50:37 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -21,6 +21,7 @@ GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
 GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
 GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
 GiGa.EventSeq.OutputLevel = 1 ;
+ApplicationMgr.EvtMax = 1;
 
 GiGa.EventSeq.VisEvtCmd.EndOfEventCommands = 
   { "/vis/scene/add/volume"               , 
