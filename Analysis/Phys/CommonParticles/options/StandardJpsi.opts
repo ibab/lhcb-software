@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -20,11 +20,11 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Particles'     TYPE='FilterDesktop/StdUnbiasedJpsi2MuMu'",
   "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Vertices'      TYPE='FilterDesktop/StdUnbiasedJpsi2MuMu'",
 // Loose Biased Jpsi->MuMu
-  "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2MuMu'",
-  "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2MuMu'",
+  "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Particles'     TYPE='FilterDesktop/StdLooseBiasedJpsi2MuMu'",
+  "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='FilterDesktop/StdLooseBiasedJpsi2MuMu'"
 // Loose Biased Jpsi->ee
-  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2ee'",
-  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2ee'"
+//  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='MakeResonances/StdLooseBiasedJpsi2ee'",
+//  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='MakeResonances/StdLooseBiasedJpsi2ee'"
 };
 
 /*************************************************************************
@@ -83,35 +83,9 @@ StdUnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
 *  Standard Loose Biased Jpsi->MuMu
 *  @author P. Koppenburg
 */
-StdLooseBiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" };
+StdLooseBiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdUnbiasedJpsi2MuMu" };
 StdLooseBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
-// Cuts for daughters
-StdLooseBiasedJpsi2MuMu.DaughterFilter.Selections = {"mu+ : KinFilterCriterion, PVIPFilterCriterion"};
-StdLooseBiasedJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
-StdLooseBiasedJpsi2MuMu.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
-StdLooseBiasedJpsi2MuMu.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
-// Cuts for combination
-StdLooseBiasedJpsi2MuMu.Window = 100.0 * MeV; // hlt presel: 120 * MeV;
 // Cuts for mother
-StdLooseBiasedJpsi2MuMu.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"}; 
-StdLooseBiasedJpsi2MuMu.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 25
-StdLooseBiasedJpsi2MuMu.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
-
-/*************************************************************************
-*  Standard Loose Biased Jpsi->ee
-*  @author P. Koppenburg
-*/
-StdLooseBiasedJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseElectrons" };
-StdLooseBiasedJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
-// Cuts for daughters
-StdLooseBiasedJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion, PVIPFilterCriterion"};
-StdLooseBiasedJpsi2ee.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
-StdLooseBiasedJpsi2ee.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
-StdLooseBiasedJpsi2ee.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
-// Cuts for combination
-StdLooseBiasedJpsi2ee.Window = 100.0 * MeV; // hlt presel: 120 * MeV;
-// Cuts for mother
-StdLooseBiasedJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"}; 
-StdLooseBiasedJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 25
-StdLooseBiasedJpsi2ee.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
+StdLooseBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"}; 
+StdLooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
 
