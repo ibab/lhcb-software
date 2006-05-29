@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r7 2006-05-29 =============================
 ! 2006-05-29 - Gloria CORTI
  - Use options for configuring algorithm to get MCHits for tracker from
    the GaussTracker v5r4 package.
