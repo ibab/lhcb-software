@@ -6,10 +6,10 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package GaussTracker
-version v5r3
+version v5r4
 
 # =============== package structure ===========================================
-branches          cmt src doc
+branches          cmt src doc options
 
 # =============== explicit dependencies =======================================
 use GaussTools    v*     Sim

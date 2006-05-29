@@ -5,6 +5,13 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r4 2006-05-29 ========================
+! 2006-05-29 - Gloria CORTI
+ - Introduce file with options for configuration of GetTrackerHitsAlg for 
+   Velo, PuVeto, TT, IT, OT and Muon. Options moved from Simulation.opts in
+   Gauss package.
+   . options/TrackersHits.opts   
+
 !======================= GaussTracker v5r3 2006-04-12 ========================
 ! 2006-04-12 - Gloria CORTI
  - Move message at initialization specifying configuration for a given

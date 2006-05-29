@@ -1,0 +1,47 @@
+// $Id: TrackersHits.opts,v 1.1 2006-05-29 08:26:13 gcorti Exp $
+
+/** @file
+ *
+ *  File containing the seuqncing and configuration for the algorithms
+ *  to fill the MCHits from the G4 tracker hits
+ *
+ *  @author G.Corti
+ *  @date 2006-05-26
+ */
+
+// == Velo
+//    algorithm "GetTrackerHitsAlg/GetPuVetoHits"
+GetVeloHits.CollectionName = "VeloSDet/Hits";
+GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
+GetVeloHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+
+// == PuVelo
+//    algorithm "GetTrackerHitsAlg/GetPuVetoHits"
+GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
+GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
+GetPuVetoHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+
+// == TT
+//    algorithm "GetTrackerHitsAlg/GetTTHits"
+GetTTHits.CollectionName = "TTSDet/Hits";
+GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
+GetTTHits.Detector       = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
+
+// == IT
+//    algorithm "GetTrackerHitsAlg/GetITHits"
+GetITHits.CollectionName = "ITSDet/Hits";
+GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
+GetITHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
+
+// == OT
+//    algorithm "GetTrackerHitsAlg/GetOTHits"
+GetOTHits.CollectionName = "OTSDet/Hits";
+GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
+GetOTHits.Detector       = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
+
+// == Muon
+//    algorithm "GetTrackerHitsAlg/GetMuonHits"
+GetMuonHits.CollectionName = "MuonSDet/Hits";
+GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
+GetMuonHits.Detector       = "/dd/Structure/LHCb/DownstreamRegion/Muon";
+
