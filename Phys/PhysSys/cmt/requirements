@@ -8,7 +8,7 @@ branches doc cmt
 ####################################################################
 use  PhysCoreSys      	v2r0   Phys
 #===================================================================
-use  DaVinciKernel      	v4r0     Phys
+use  DaVinciKernel      	v4r1     Phys
 use  DaVinciFilter      	v4r1     Phys
 use  DaVinciTools       	v13r0    Phys
 use  DaVinciTransporter 	v3r0     Phys
