@@ -1,4 +1,4 @@
-// $Id: NNetTool_v1.cpp,v 1.1 2006-05-16 10:23:20 musy Exp $
+// $Id: NNetTool_v1.cpp,v 1.2 2006-05-29 09:25:43 pkoppenb Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -60,7 +60,7 @@ void NNetTool_v1::normaliseOS(std::vector<double>& par) {
     return;
   }
   double mult  = par.at(2) / 90.;
-  double ptB   = par.at(0)*std::sin(par.at(1)) /20.; //unused
+  double ptB   = par.at(0)*sin(par.at(1)) /20.; //unused
   double partP = std::min( par.at(4) /80., 1.);
   double partPt= std::min( par.at(5) /5. , 1.); 
   double IPPV  = par.at(6) /50.;
