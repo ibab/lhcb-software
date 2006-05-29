@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.12 2006-04-12 19:50:58 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.13 2006-05-29 17:09:13 gcorti Exp $ 
 
 /** @file 
  * 
@@ -27,10 +27,10 @@ Initialize.Members    = { "LbAppInit/GaussRead" };
 //                can be commented separately
 //---------------------------------------------------------------------------
 Monitor.Members         += { "GaudiSequencer/GenMonitor" };
-Monitor.Members         += { "GaudiSequencer/UserMonitor" };
 Monitor.Members         += { "GaudiSequencer/SimMonitor" };     
+Monitor.Members         += { "GaudiSequencer/UserMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
-#include "$GAUSSOPTS/MonitorInDetail.opts"
+//#include "$GAUSSOPTS/MonitorInDetail.opts"
 GenHistos.OutputLevel   = 3;
 Monitor.MeasureTime = true;
 
@@ -69,7 +69,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 // Input file 
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r4/11144100.50ev.12Apr.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/11144100.500ev.17May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------
