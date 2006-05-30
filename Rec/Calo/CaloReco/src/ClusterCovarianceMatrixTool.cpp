@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.3 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -13,15 +16,10 @@
 // Include files
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IProperty.h"
-#include "GaudiKernel/Property.h"
-// CaloKernel
-#include "CaloKernel/CaloPrint.h"     
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
+//Event
+#include "Event/CaloCluster.h"
 // CaloUtil
 #include "CaloUtils/CovarianceEstimator.h"
 // local
@@ -56,12 +54,13 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : CaloTool( type , name , parent )
-  , m_estimator (      ) 
-  , m_a         ( 0.09 )
-  , m_gainErr   ( 0    )
-  , m_noiseIn   ( 0    ) 
-  , m_noiseCo   ( 0    )
+  : GaudiTool( type , name , parent )
+    , m_estimator (      ) 
+    , m_a         ( 0.09 )
+    , m_gainErr   ( 0    )
+    , m_noiseIn   ( 0    ) 
+    , m_noiseCo   ( 0    )
+    , m_detData   ( DeCalorimeterLocation::Ecal )
 {
   // interface!
   declareInterface<ICaloClusterTool> (this);
@@ -70,6 +69,7 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   DoubleProperty gainError       ( "GainError"       , m_gainErr ) ;
   DoubleProperty noiseIncoherent ( "NoiseIncoherent" , m_noiseIn ) ;
   DoubleProperty noiseCoherent   ( "NoiseCoherent"   , m_noiseCo ) ;
+  StringProperty detData         ( "Detector"        , m_detData ) ;
   ///
   if( 0 != parent )
     {
@@ -81,6 +81,7 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
           prop->getProperty( &gainError       );
           prop->getProperty( &noiseIncoherent );
           prop->getProperty( &noiseCoherent   );
+          prop->getProperty( &detData         );
         }
     }
   ///
@@ -88,22 +89,20 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   m_gainErr = gainError       .value() ;
   m_noiseIn = noiseIncoherent .value() ;
   m_noiseCo = noiseCoherent   .value() ;
+  m_detData = detData         .value() ;
   ///
   declareProperty( "Resolution"       , m_a       );
   declareProperty( "GainError"        , m_gainErr );
   declareProperty( "NoiseIncoherent"  , m_noiseIn );
   declareProperty( "NoiseCoherent"    , m_noiseCo );
+  declareProperty( "Detector"        , m_detData  );
 };
-
 // ============================================================================
 /** destructor, virtual and protected 
  */
 // ============================================================================
 ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool()
 {
-  /// remove detector 
-  setDet( (const DeCalorimeter*) 0 );
-  ///
 };
 
 // ============================================================================
@@ -113,46 +112,26 @@ ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool()
 // ============================================================================
 StatusCode ClusterCovarianceMatrixTool::initialize ()
 {
-  MsgStream log( msgSvc() , name() );
-  /// initialize the base class
-  StatusCode sc = CaloTool::initialize ();
+  StatusCode sc = GaudiTool::initialize ();
   /// 
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!") ; }
   ///
-  if( 0 == det() ) 
-    {
-      if( 0 == detSvc() )
-        { return Error("Detector Data Service is ivnalid!"); }
-      /// 
-      SmartDataPtr<DeCalorimeter> calo( detSvc() , detName() );
-      if( !calo )
-        { return Error("Could not locate detector='"+detName()+"'"); }
-      /// set detector
-      setDet( calo );
-    }
-  ///
-  if( 0 == det() ) 
-    { return Error("DeCalorimeter* points to NULL!");  }
-  ///
-  {  /// configure the estimator 
-    m_estimator.setDetector( det()     ) ;
-    m_estimator.setA       ( m_a       ) ;
-    m_estimator.setGainS   ( m_gainErr ) ;
-    m_estimator.setNoiseIn ( m_noiseIn ) ;
-    m_estimator.setNoiseCo ( m_noiseCo ) ;
-  }
-  ///
-  CaloPrint Print;
-  log << MSG::INFO
-      << " Has initialized with parameters: "                       << endreq 
-      << " \t 'Detector'         = '" << detName()          << "'"  << endreq 
-      << " \t 'Resolution'       = '" << Print( m_a       ) << "'"  << endreq 
-      << " \t 'GainError'        = '" << Print( m_gainErr ) << "'"  << endreq 
-      << " \t 'NoiseIncoherent'  = '" << Print( m_noiseIn ) << "'"  << endreq 
-      << " \t 'NoiseCoherent'    = '" << Print( m_noiseCo ) << "'"  << endreq 
-      << " \t Estimator is          " << m_estimator                << endreq ;
-  ///
+  m_det = getDet<DeCalorimeter>( m_detData) ;
+  
+  m_estimator.setDetector( m_det     ) ;
+  m_estimator.setA       ( m_a       ) ;
+  m_estimator.setGainS   ( m_gainErr ) ;
+  m_estimator.setNoiseIn ( m_noiseIn ) ;
+  m_estimator.setNoiseCo ( m_noiseCo ) ;
+  
+  info()      << " Has initialized with parameters: "              << endreq 
+              << " \t 'Detector'         = '" << m_detData << "'"  << endreq 
+              << " \t 'Resolution'       = '" << m_a       << "'"  << endreq 
+              << " \t 'GainError'        = '" << m_gainErr << "'"  << endreq 
+              << " \t 'NoiseIncoherent'  = '" << m_noiseIn << "'"  << endreq 
+              << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << endreq 
+              << " \t Estimator is          " << m_estimator       << endreq ;
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -164,10 +143,7 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
 // ============================================================================
 StatusCode ClusterCovarianceMatrixTool::finalize   ()
 {  
-  /// remove detector 
-  setDet( (const DeCalorimeter*) 0 );
-  /// finalize the  the base class
-  return CaloTool::finalize ();
+  return GaudiTool::finalize ();
 };
 // ============================================================================
 
@@ -178,7 +154,7 @@ StatusCode ClusterCovarianceMatrixTool::finalize   ()
  */  
 // ============================================================================
 StatusCode 
-ClusterCovarianceMatrixTool::operator() ( CaloCluster* cluster ) const 
+ClusterCovarianceMatrixTool::operator() ( LHCb::CaloCluster* cluster ) const 
 {
   /// check the argument 
   if( 0 == cluster                ) 
@@ -197,7 +173,7 @@ ClusterCovarianceMatrixTool::operator() ( CaloCluster* cluster ) const
  */  
 // ============================================================================
 StatusCode 
-ClusterCovarianceMatrixTool::process ( CaloCluster* cluster ) const 
+ClusterCovarianceMatrixTool::process ( LHCb::CaloCluster* cluster ) const 
 { return (*this)( cluster ); };
 // ============================================================================
 

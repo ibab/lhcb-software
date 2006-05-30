@@ -1,8 +1,11 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.4 2005-11-07 12:12:41 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.5 2006-05-30 09:42:01 odescham Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:41  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/02/17 12:08:06  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -13,12 +16,11 @@
 // new package 
 //
 // ===========================================================================
-#define CALOALGS_CALOCLUSTERCOVARIANCEALG_CPP 1 
+#define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
 // Include files
 // from Gaudi
 #include  "GaudiKernel/AlgFactory.h"
-#include  "GaudiKernel/MsgStream.h" 
 #include  "GaudiKernel/SmartDataPtr.h" 
 #include  "GaudiKernel/SmartRef.h" 
 #include  "GaudiKernel/IToolSvc.h" 
@@ -66,7 +68,7 @@ const        IAlgFactory&CaloClusterCovarianceAlgFactory = s_Factory ;
 CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
 ( const std::string& name,
   ISvcLocator* pSvcLocator)
-  : CaloAlgorithm        ( name , pSvcLocator            ) 
+  : GaudiAlgorithm        ( name , pSvcLocator            ) 
   , m_copy               ( false                         )
   , m_a                  ( 0.10                          )
   , m_gainErr            ( 0.01                          )
@@ -81,6 +83,8 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   , m_spreadType         ( "ClusterSpreadTool"           )
   , m_spreadName         ( "EcalSpreadTool"              )
   , m_spread             ( 0                             )
+  , m_inputData (LHCb::CaloClusterLocation::Ecal)
+  , m_detData  (DeCalorimeterLocation::Ecal)
 {
   declareProperty( "Resolution"       , m_a            ) ;
   declareProperty( "GainError"        , m_gainErr      ) ;
@@ -95,11 +99,11 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   ///
   declareProperty( "SpreadType"       , m_spreadType   ) ;
   declareProperty( "SpreadName"       , m_spreadName   ) ;
+  declareProperty ( "InputData"       , m_inputData    ) ;  
+  declareProperty ( "OutputData"      , m_outputData   ) ;  
+  declareProperty ( "Detector"        , m_detData     ) ;  
 
-  // set the appropriate default for input     data 
-  setInputData   ( CaloClusterLocation::   Ecal        ) ;
-  // set the appropriate default for detector  data 
-  setDetData     ( DeCalorimeterLocation:: Ecal        ) ;
+
 };
 // ===========================================================================
 
@@ -111,7 +115,7 @@ CaloClusterCovarianceAlg::~CaloClusterCovarianceAlg() {};
 
 // ===========================================================================
 /** standard initialization method 
- *  @see CaloAlgorithm
+ *  @see GaudiAlgorithm
  *  @see     Algorithm 
  *  @see    IAlgorithm
  *  @return status code 
@@ -119,12 +123,11 @@ CaloClusterCovarianceAlg::~CaloClusterCovarianceAlg() {};
 // ===========================================================================
 StatusCode CaloClusterCovarianceAlg::initialize() 
 {  
-  MsgStream log(msgSvc(), name());
   
   // try to initialize base class   
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() )
-    { return Error("Could not initialize the base class CaloAlgorithm"); }
+    { return Error("Could not initialize the base class GaudiAlgorithm"); }
   
   // locate the tool for covariance matrix calculations 
   m_cov    = m_covName.empty() ?
@@ -143,8 +146,8 @@ StatusCode CaloClusterCovarianceAlg::initialize()
   
   // copy flag
   m_copy = 
-    outputData().empty()        ?  false :
-    outputData() == inputData() ?  false : true ;
+    m_outputData.empty()        ?  false :
+    m_outputData == m_inputData ?  false : true ;
 
   return StatusCode::SUCCESS;
 };
@@ -152,7 +155,7 @@ StatusCode CaloClusterCovarianceAlg::initialize()
 
 // ===========================================================================
 /** standard finalization method 
- *  @see CaloAlgorithm
+ *  @see GaudiAlgorithm
  *  @see     Algorithm 
  *  @see    IAlgorithm
  *  @return status code 
@@ -161,13 +164,13 @@ StatusCode CaloClusterCovarianceAlg::initialize()
 StatusCode CaloClusterCovarianceAlg::finalize() 
 {
   // finalize the base class 
-  return CaloAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 };
 // ===========================================================================
 
 // ===========================================================================
 /** standard execution method 
- *  @see CaloAlgorithm
+ *  @see GaudiAlgorithm
  *  @see     Algorithm 
  *  @see    IAlgorithm
  *  @return status code 
@@ -176,19 +179,18 @@ StatusCode CaloClusterCovarianceAlg::finalize()
 StatusCode CaloClusterCovarianceAlg::execute() 
 {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endreq;
   
   // useful typedefs
-  typedef CaloClusters        Clusters ;
+  typedef LHCb::CaloClusters        Clusters ;
   typedef const DeCalorimeter Detector ;
   
   // locate input data
-  Clusters* clusters =    get<Clusters> ( inputData() );
+  Clusters* clusters =    get<Clusters> ( m_inputData );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   //
-  Detector* detector = getDet<Detector> ( detData()   );
+  Detector* detector = getDet<Detector> ( m_detData   );
   if( 0 == detector ) { return StatusCode::FAILURE ; }
   
   // define the output data 
@@ -196,9 +198,7 @@ StatusCode CaloClusterCovarianceAlg::execute()
   if( m_copy )     // make a copy of container 
   {
     output = new Clusters();
-    StatusCode sc = put( output , outputData() );
-    if( sc.isFailure() ) 
-    { return Error("Could not register '"+outputData()+"'");}
+    put( output , m_outputData );
     // make a copy 
     for( Clusters::const_iterator i = clusters->begin() ;
          clusters->end() != i ; ++i )
@@ -215,29 +215,27 @@ StatusCode CaloClusterCovarianceAlg::execute()
     if( sc.isFailure() ) 
     {    
       Error("Error from tagger, skip cluster ", sc ) ; 
-      log << MSG::DEBUG << *cluster << endreq ;
+      debug() << *cluster << endreq ;
       continue ; 
     }
     if( sc.isSuccess() )     { sc = cov    () -> process( *cluster ) ; }
     else 
     { 
       Error("Error from cov,    skip cluster ", sc ) ; 
-      log << MSG::DEBUG << *cluster << endreq ;
+      debug() << *cluster << endreq ;
       continue ; 
     }
-    if( sc.isSuccess() )     { sc = spread () -> process( *cluster ) ; }
-    else 
-    { 
+    if( sc.isSuccess() )     {
+      sc = spread () -> process( *cluster ) ;
+    }
+    else { 
       Error("Error from spread, skip cluster ", sc ) ; 
-      log << MSG::DEBUG << *cluster << endreq ;
+      debug() << *cluster << endreq ;
       continue ; 
     }
   }
   
   return StatusCode::SUCCESS ;
 };
-// ===========================================================================
 
-// The End 
-// ===========================================================================
 

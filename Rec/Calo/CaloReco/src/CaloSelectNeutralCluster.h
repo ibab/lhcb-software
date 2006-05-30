@@ -1,41 +1,30 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.3 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelectNeutralCluster.h,v 1.4 2006-05-30 09:42:05 odescham Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/12/10 17:12:29  ibelyaev
 //  steps towards 'Fast' Calo recontruction
 //
 // ============================================================================
-#ifndef CALOREC_CALOSELECTNeutralCLUSTER_H 
-#define CALOREC_CALOSELECTNeutralCLUSTER_H 1
+#ifndef CALORECO_CALOSELECTNeutralCLUSTER_H 
+#define CALORECO_CALOSELECTNeutralCLUSTER_H 1
 // ============================================================================
 // Include files
-// ============================================================================
 #include "Relations/IRelationWeighted.h"
-// ============================================================================
 // from STL
-// ============================================================================
 #include <string>
-// ============================================================================
 // GaudiKernel
-// ============================================================================
 #include "GaudiKernel/IIncidentListener.h"
-// ============================================================================
 // CaloInterfaces 
-// ============================================================================
 #include "CaloInterfaces/ICaloClusterSelector.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloTool.h"
-// ============================================================================
-// Event/CaloEvent 
-// ============================================================================
+// GaudiAlg
+#include "GaudiAlg/GaudiTool.h"
+//Event
 #include "Event/CaloCluster.h"
-// ============================================================================
-// Event/TrEvent 
-// ============================================================================
 #include "Event/Track.h"
 // ============================================================================
 
@@ -55,14 +44,14 @@
 class CaloSelectNeutralCluster : 
   public virtual ICaloClusterSelector ,
   public virtual IIncidentListener    ,
-  public          CaloTool
+  public          GaudiTool
 {
   /// friend factory for instantiation
   friend class ToolFactory<CaloSelectNeutralCluster>;
 public:
   
   /// associator used to extract the relations from transient store 
-  typedef IRelationWeighted<CaloCluster,Track,float> ITable;
+  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,float> ITable;
   
 public:
   
@@ -77,7 +66,7 @@ public:
    *  @return true if cluster is selected
    */
   virtual bool select     
-  ( const CaloCluster* cluster ) const ;
+  ( const LHCb::CaloCluster* cluster ) const ;
   
   /** @brief "select"  method (functor interface)
    *
@@ -90,10 +79,10 @@ public:
    *  @return true if cluster is selected
    */
   virtual bool operator() 
-    ( const CaloCluster* cluster ) const ;
+    ( const LHCb::CaloCluster* cluster ) const ;
   
   /** standard initialization method 
-   *  @see CaloTool
+   *  @see GaudiTool
    *  @see  AlgTool
    *  @see IAlgTool
    *  @return status code
@@ -111,7 +100,7 @@ public:
 protected:
   
   /** Standard constructor
-   *  @see  CaloTool
+   *  @see  GaudiTool
    *  @see   AlgTool
    *  @see  IAlgTool 
    *  @param type tool type (?)
@@ -146,9 +135,4 @@ private:
 
 };
 // ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
-#endif // CALOREC_CALOSELECTNeutralCLUSTER_H
-// ============================================================================
+#endif // CALORECO_CALOSELECTNeutralCLUSTER_H

@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.75 2005-11-22 16:15:57 cattanem Exp $
+! $Id: release.notes,v 1.76 2006-05-30 09:41:58 odescham Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.75 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.76 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+!========================== CaloReco v4r0 2006-05-29 ===================
+! 2006-05-29
+ - first step of the migration towards DC06 software.
+  - package adapted to new Event Models, new MathLib, 1MHW DAQ, ...
+  - Cleaning of obsolete tools/algorithms
 
 !========================== CaloReco v3r0 2005-11-04 ===================
 ! 2005-11-04 - Olivier Deschamps

@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.7 2005-11-07 12:12:43 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.8 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.6  2004/10/22 19:08:03  ibelyaev
 //  small technical improvements in matching tool base
 //
@@ -12,43 +15,19 @@
 // Revision 1.4  2004/09/05 20:23:48  ibelyaev
 //  trivial modification to obtain 20-25% CPU gain
 //
-// ============================================================================ 
-#define CALOCA_CELLULARAUTOMATON_CPP 1 
 // ============================================================================
-// STL
-// ============================================================================
-#include <algorithm>
-// ============================================================================
-// CLHEP 
-// ============================================================================
-#include "CLHEP/Units/SystemOfUnits.h"
-// ============================================================================
-// Gaudi 
-// ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/Chrono.h"
 // ============================================================================
-// DetDesc
-// ============================================================================
 #include "DetDesc/IGeometryInfo.h"
-// ============================================================================
-// CaloEvent
 // ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
+#include "GaudiKernel/SystemOfUnits.h"
 #include "CaloKernel/CaloUtil.h"
-// ============================================================================
-// CaloUtils
 // ============================================================================
 #include "CaloUtils/ClusterFunctors.h"
 // ============================================================================
@@ -56,7 +35,6 @@
 // ============================================================================
 #include "CellularAutomaton.h"
 #include "TaggedCellFunctor.h"
-
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -76,13 +54,12 @@
  *  @date    27 Feb 2001
  */ 
 // ============================================================================
-
-static const AlgFactory<CellularAutomaton>    Factory;
-const IAlgFactory& CellularAutomatonFactory = Factory;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CellularAutomaton );
 
 // ============================================================================
 inline bool CellularAutomaton::isLocMax
-( const CaloDigit*                      digit ,
+( const LHCb::CaloDigit*                      digit ,
   const CellularAutomaton::DirVector&   hits  ,
   const DeCalorimeter*                  det   ) 
 {
@@ -92,7 +69,7 @@ inline bool CellularAutomaton::isLocMax
   {
     const CelAutoTaggedCell* cell = hits[*iN];
     if ( 0 == cell   ) { continue     ; }  
-    const CaloDigit* nd = cell->digit() ;
+    const LHCb::CaloDigit* nd = cell->digit() ;
     if ( 0 == nd     ) { continue     ; }
     if ( nd->e() > e ) { return false ; }
   }   
@@ -115,14 +92,14 @@ CellularAutomaton::appliRulesTagger
 {
   
   // Find in the neighbors cells tagged before, the clustered neighbors cells
-  const CaloCellID&    cellID = cell->cellID() ;
+  const LHCb::CaloCellID&    cellID = cell->cellID() ;
   const CaloNeighbors& ns     = det->neighborCells ( cellID ) ;
   for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ) 
   {
     const CelAutoTaggedCell* nei = hits[ *iN ] ;
     if ( 0 == nei                 ) { continue ; }
     if ( !nei->isClustered()      ) { continue ; }
-    const CaloCellID& seed = nei->seedForClustered() ;
+    const LHCb::CaloCellID& seed = nei->seedForClustered() ;
     if ( cell->isWithSeed( seed ) ) { continue ; }
     cell->addSeed ( seed ) ;
   }
@@ -144,29 +121,28 @@ CellularAutomaton::appliRulesTagger
 
 // ============================================================================
 inline void CellularAutomaton::setEXYCluster
-( CaloCluster* cluster,
+( LHCb::CaloCluster* cluster,
   const DeCalorimeter* detector ) 
 {
   ///
   double E, X, Y;
   ///
-  StatusCode sc = ClusterFunctors::calculateEXY
+  StatusCode sc = LHCb::ClusterFunctors::calculateEXY
     ( cluster->entries().begin() ,
       cluster->entries().end  () ,
       detector , E , X , Y      );
   ///
   if( sc.isSuccess() )
   {
-    cluster->position().parameters()( CaloPosition::E ) = E ;
-    cluster->position().parameters()( CaloPosition::X ) = X ;
-    cluster->position().parameters()( CaloPosition::Y ) = Y ;
+    cluster->position().parameters()( LHCb::CaloPosition::E ) = E ;
+    cluster->position().parameters()( LHCb::CaloPosition::X ) = X ;
+    cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
   }
   else 
   { Error( " E,X and Y of cluster could not be evaluated!",sc); }
   ///
 };
 // ============================================================================
-
 
 // ============================================================================
 /** standard constructor
@@ -180,19 +156,15 @@ inline void CellularAutomaton::setEXYCluster
 CellularAutomaton::CellularAutomaton
 ( const std::string& name,
   ISvcLocator* pSvcLocator )
-  : CaloAlgorithm      ( name, pSvcLocator )
+  : GaudiAlgorithm      ( name, pSvcLocator )
   , m_sort             ( true  )
   , m_sortByET         ( false )
 {
-  // set the appropriate defaults for detector data 
-  setInputData  ( CaloDigitLocation::     Ecal ) ;
-  // set the appropriate defaults for output data 
-  setOutputData ( CaloClusterLocation::   Ecal ) ;
-  // set the appropriate defaults for detector data
-  setDetData    ( DeCalorimeterLocation:: Ecal ) ;
+  declareProperty("InputData" , m_inputData=   LHCb::CaloDigitLocation::Ecal);
+  declareProperty("OutputData", m_outputData=  LHCb::CaloClusterLocation::Ecal);  
+  declareProperty("Detector"   , m_detData= DeCalorimeterLocation::Ecal ) ;
   // sort the clusters ? 
   declareProperty ( "Sort"     , m_sort     ) ;
-  // using ET sort versus E sort 
   declareProperty ( "SortByET" , m_sortByET ) ;
 };
 // ============================================================================
@@ -214,19 +186,19 @@ CellularAutomaton::~CellularAutomaton(){};
 StatusCode CellularAutomaton::initialize() 
 {
   
-  StatusCode sc = CaloAlgorithm::initialize() ;
+  StatusCode sc = GaudiAlgorithm::initialize() ;
   if( sc.isFailure() ) 
     { return Error("Could not initialize base class CaloAlgorithm",sc);}
   
-  if ( inputData().empty() || outputData().empty() || detData().empty() ) 
+  if (m_inputData.empty() || m_outputData.empty() || m_detData.empty() ) 
     {
       return Error("Path hits, path geom, path clusters must"
                    + std::string(" be defined in job options file!") );
     }
 
   /// Retrieve geometry of detector
-  const DeCalorimeter* detector = getDet<DeCalorimeter>( detData() );
-  if( 0 == detector ) { return StatusCode::FAILURE; }
+  m_detector = getDet<DeCalorimeter>( m_detData );
+  if( 0 == m_detector ) { return StatusCode::FAILURE; }
   
   return StatusCode::SUCCESS;
 };
@@ -242,27 +214,20 @@ StatusCode CellularAutomaton::initialize()
 // ============================================================================
 StatusCode CellularAutomaton::execute() 
 {
-  // get the detector 
-  const DeCalorimeter* detector = getDet<DeCalorimeter>( detData() );
-  if( 0 == detector ) { return StatusCode::FAILURE; }
   
   // z-position of cluster 
-  ClusterFunctors::ZPosition zPosition( detector );
+  LHCb::ClusterFunctors::ZPosition zPosition( m_detector );
   
   // get input data (sequential and simultaneously direct access!)  
-  CaloDigits* hits = get<CaloDigits>( inputData() );
-  if( 0 == hits ) { return StatusCode::FAILURE ; }
+  LHCb::CaloDigits* hits = get<LHCb::CaloDigits>( m_inputData );
 
   /** Create the container of clusters and  
    *  register it into the event data store
    */ 
-  CaloClusters* output = new CaloClusters();
-  // update the version number (needed for seriazalition)
+  LHCb::CaloClusters* output = new LHCb::CaloClusters();
+  // update the version number (needed for serialization)
   output -> setVersion( 2 ) ;
-  
-  StatusCode sc = put( output , outputData() );
-  
-  if ( sc.isFailure() ) { return sc ; }
+  put( output , m_outputData );
   
   // Create access direct and sequential on the tagged cells  
   DirVector taggedCellsDirect( (CelAutoTaggedCell*) 0 ) ;
@@ -276,10 +241,10 @@ StatusCode CellularAutomaton::execute()
   
   { // fill with the data
     size_t index = 0 ;
-    for( CaloDigits::const_iterator ihit = 
+    for( LHCb::CaloDigits::const_iterator ihit = 
            hits->begin() ; hits->end() != ihit ; ++ihit , ++index )
     {
-      const CaloDigit* digit   = *ihit ;
+      const LHCb::CaloDigit* digit   = *ihit ;
       if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
       taggedCell = digit ;
@@ -292,7 +257,7 @@ StatusCode CellularAutomaton::execute()
   for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag )
   { if ( isLocMax ( (*itTag)->digit() , 
                     taggedCellsDirect , 
-                    detector          ) ) { (*itTag)->setIsSeed(); } }
+                    m_detector          ) ) { (*itTag)->setIsSeed(); } }
   
   /// Tag the cells which are not seeds
   SeqVector::iterator itTagLastSeed = std::stable_partition 
@@ -308,7 +273,7 @@ StatusCode CellularAutomaton::execute()
     // Apply rules tagger for all not tagged cells
     for ( SeqVector::iterator itTag = itTagLastClustered ; 
           taggedCellsSeq.end() != itTag ; ++itTag ) 
-    { appliRulesTagger( (*itTag),  taggedCellsDirect , detector ); }
+    { appliRulesTagger( (*itTag),  taggedCellsDirect , m_detector ); }
     
     // Valid result
     std::for_each ( itTagFirst, taggedCellsSeq.end(), TaggedCellFunctor::setStatus() );
@@ -340,30 +305,30 @@ StatusCode CellularAutomaton::execute()
   
   // Create cluster data and store in output
   
-  CaloClusters* clustersSeq = output;  // V.B.!!
+  LHCb::CaloClusters* clustersSeq = output;  // V.B.!!
   SeqVector::iterator itTagSeed = taggedCellsSeq.begin();
   SeqVector::iterator itTagClustered1;
   SeqVector::iterator itTagClustered2;
   itTagClustered1 = itTagLastSeed;
   
-  const CaloDigitStatus::Status seed   = 
-    CaloDigitStatus::SeedCell          | CaloDigitStatus::LocalMaximum      | 
-    CaloDigitStatus::UseForEnergy      | CaloDigitStatus::UseForPosition    | 
-    CaloDigitStatus::UseForCovariance  ;
+  const LHCb::CaloDigitStatus::Status seed   = 
+    LHCb::CaloDigitStatus::SeedCell          | LHCb::CaloDigitStatus::LocalMaximum      | 
+    LHCb::CaloDigitStatus::UseForEnergy      | LHCb::CaloDigitStatus::UseForPosition    | 
+    LHCb::CaloDigitStatus::UseForCovariance  ;
 
-  const CaloDigitStatus::Status owned  = 
-    CaloDigitStatus::OwnedCell         | CaloDigitStatus::UseForEnergy      | 
-    CaloDigitStatus::UseForPosition    | CaloDigitStatus::UseForCovariance  ;
+  const LHCb::CaloDigitStatus::Status owned  = 
+    LHCb::CaloDigitStatus::OwnedCell         | LHCb::CaloDigitStatus::UseForEnergy      | 
+    LHCb::CaloDigitStatus::UseForPosition    | LHCb::CaloDigitStatus::UseForCovariance  ;
   
-  const CaloDigitStatus::Status shared = 
-    CaloDigitStatus::SharedCell        | CaloDigitStatus::UseForEnergy      | 
-    CaloDigitStatus::UseForPosition    | CaloDigitStatus::UseForCovariance  ;
+  const LHCb::CaloDigitStatus::Status shared = 
+    LHCb::CaloDigitStatus::SharedCell        | LHCb::CaloDigitStatus::UseForEnergy      | 
+    LHCb::CaloDigitStatus::UseForPosition    | LHCb::CaloDigitStatus::UseForCovariance  ;
   
   while ( itTagSeed != itTagLastSeed ) 
   {
-    CaloCluster* cluster = new  CaloCluster();
-    const CaloDigit* digit = (*itTagSeed)->digit() ;
-    cluster->entries(). push_back( CaloClusterEntry( digit , seed ) );
+    LHCb::CaloCluster* cluster = new  LHCb::CaloCluster();
+    const LHCb::CaloDigit* digit = (*itTagSeed)->digit() ;
+    cluster->entries().push_back( LHCb::CaloClusterEntry( digit , seed ) );
     // set seed for cluster! (I.B.)
     cluster->setSeed( digit->cellID() );
     
@@ -373,8 +338,8 @@ StatusCode CellularAutomaton::execute()
         TaggedCellFunctor::isWithSeed( (*itTagSeed)->cellID()) ) ;
     for (  ; itTagClustered1 != itTagClustered2 ; ++itTagClustered1 ) 
     {
-      const CaloDigit* digit = (*itTagClustered1)->digit() ;
-      cluster->entries().push_back( CaloClusterEntry( digit , owned ) );
+      const LHCb::CaloDigit* digit = (*itTagClustered1)->digit() ;
+      cluster->entries().push_back( LHCb::CaloClusterEntry( digit , owned ) );
     }
     /// corrections from N.B. 9/11/2001
     SeqVector::iterator itTagFirstEdge = itTagLastClustered ;
@@ -384,13 +349,13 @@ StatusCode CellularAutomaton::execute()
         TaggedCellFunctor::isWithSeed ( (*itTagSeed)->cellID() ) ) ;
     for(  ; itTagFirstEdge != itTagLastEdge ; ++itTagFirstEdge  ) 
     {
-      const CaloDigit* digit = (*itTagFirstEdge)->digit() ;
-      cluster->entries().push_back( CaloClusterEntry( digit , shared ) );
+      const LHCb::CaloDigit* digit = (*itTagFirstEdge)->digit() ;
+      cluster->entries().push_back( LHCb::CaloClusterEntry( digit , shared ) );
     }
     
-    setEXYCluster ( cluster, detector );
+    setEXYCluster ( cluster, m_detector );
     
-    cluster->setStatus( 1 ) ;
+    cluster->setType( LHCb::CaloClusterType::CellularAutomaton ) ;
     cluster->position().setZ( zPosition( cluster )  );
     clustersSeq->insert( cluster );
     itTagClustered1 = itTagClustered2;
@@ -406,23 +371,23 @@ StatusCode CellularAutomaton::execute()
     if ( !m_sortByET ) 
     {
       // sorting criteria: Energy
-      CaloDataFunctor::Less_by_Energy<const CaloCluster*> Cmp;
+      LHCb::CaloDataFunctor::Less_by_Energy<const LHCb::CaloCluster*> Cmp;
       // perform the sorting 
       std::stable_sort
         ( clustersSeq->begin()            ,
           clustersSeq->end  ()            ,
-          CaloDataFunctor::inverse( Cmp ) ) ;
+          LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
     }
     else 
     {
       // sorting criteria : Transverse Energy
-      CaloDataFunctor::Less_by_TransverseEnergy<const CaloCluster*,
-        const DeCalorimeter*> Cmp ( detector ) ;
+      LHCb::CaloDataFunctor::Less_by_TransverseEnergy<const LHCb::CaloCluster*,
+        const DeCalorimeter*> Cmp ( m_detector ) ;
       // perform the sorting 
       std::stable_sort
         ( clustersSeq->begin()            ,
           clustersSeq->end  ()            ,
-          CaloDataFunctor::inverse( Cmp ) ) ;    
+          LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
     }
     
   };
@@ -437,3 +402,9 @@ StatusCode CellularAutomaton::execute()
   
 
 // ==========================================================================
+StatusCode CellularAutomaton::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}

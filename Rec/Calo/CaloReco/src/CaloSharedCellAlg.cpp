@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:10  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -10,7 +13,7 @@
 // new package 
 //
 // ============================================================================
-#define  CALOALGS_CALOSHAREDECELLALG_CPP 1 
+#define  CALORECO_CALOSHAREDECELLALG_CPP 1 
 // ============================================================================
 // Include files
 // from GaudiKernel
@@ -21,6 +24,8 @@
 #include "GaudiKernel/SmartRef.h" 
 // CaloGen 
 #include "CaloKernel/CaloException.h"
+//LHCb Kernel
+#include "GaudiKernel/SystemOfUnits.h"
 // CaloEvent 
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"
@@ -54,26 +59,29 @@ const        IAlgFactory& CaloSharedCellAlgFactory = s_Factory ;
 // ============================================================================
 CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : CaloAlgorithm ( name , pSvcLocator )
-  , m_copy    ( true )
-  , m_useSumEnergy  ( true  ) 
-  , m_numIterations ( 5     )
-  , m_useDistance   ( false )
-  , m_showerSizes   ()
+  : GaudiAlgorithm ( name , pSvcLocator )
+    , m_copy    ( true )
+    , m_useSumEnergy  ( true  ) 
+    , m_numIterations ( 5     )
+    , m_useDistance   ( false )
+    , m_showerSizes   ()
+    , m_outputData    ()
+    , m_inputData (LHCb::CaloClusterLocation::Ecal)
+    , m_detData  (DeCalorimeterLocation::Ecal)
+
 {
-  m_showerSizes.push_back( 0.1090 * 121.50 * mm );
-  m_showerSizes.push_back( 0.1326 *  60.75 * mm );
-  m_showerSizes.push_back( 0.1462 *  40.50 * mm );
+  m_showerSizes.push_back( 0.1090 * 121.50 * Gaudi::Units::mm );
+  m_showerSizes.push_back( 0.1326 *  60.75 * Gaudi::Units::mm );
+  m_showerSizes.push_back( 0.1462 *  40.50 * Gaudi::Units::mm );
 
   declareProperty ( "ShareDistance"     , m_useDistance   ) ;
   declareProperty ( "ShareSumEnergy"    , m_useSumEnergy  ) ;
   declareProperty ( "Iterations"        , m_numIterations ) ;
   declareProperty ( "ShowerSizes"       , m_showerSizes   ) ;  
+  declareProperty ( "InputData"         , m_inputData     ) ;  
+  declareProperty ( "OutputData"        , m_outputData     ) ;  
+  declareProperty ( "Detector"          , m_detData      ) ;  
 
-  // set the appropriate default for input data  
-  setInputData    ( CaloClusterLocation::   Ecal ) ;
-  // set the appropriate default for input data  
-  setDetData      ( DeCalorimeterLocation:: Ecal ) ;
 };
 
 // ============================================================================
@@ -89,15 +97,15 @@ StatusCode CaloSharedCellAlg::initialize()
   MsgStream log( msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
   ///
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   ///
   if( sc.isFailure() ) 
-    { return Error("could not initialize base class CaloAlgorithm!");}
+    { return Error("could not initialize base class GaudiAlgorithm!");}
   
   /// copy mode ? 
   m_copy = 
-    outputData().empty()        ? false :
-    outputData() == inputData() ? false : true ;
+    m_outputData.empty()        ? false :
+    m_outputData == m_inputData ? false : true ;
   ///
   return StatusCode::SUCCESS;
 };
@@ -107,27 +115,27 @@ StatusCode CaloSharedCellAlg::initialize()
 // ============================================================================
 StatusCode CaloSharedCellAlg::execute() 
 {
-  // avoid long names 
+  // avoid long names
   using namespace SharedCells     ;
-  using namespace CaloDigitStatus ;
+  using namespace LHCb::CaloDigitStatus ;
   
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
   //
 
   // useful typedefs
-  typedef CaloClusters        Clusters ;
+  typedef LHCb::CaloClusters        Clusters ;
   typedef const DeCalorimeter Detector ;
   
   // locate input data
-  Clusters* clusters = get<Clusters>( inputData() );
+  Clusters* clusters = get<Clusters>( m_inputData );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   // locate geometry (if needed) 
   Detector* detector = 0;
   if( m_useDistance )
   {    
-    detector = getDet<DeCalorimeter> ( detData() );
+    detector = getDet<DeCalorimeter> ( m_detData );
     if( 0 == detector ){ return StatusCode::FAILURE ;}
   }
   
@@ -135,8 +143,7 @@ StatusCode CaloSharedCellAlg::execute()
   if( m_copy ) ///< make a new container 
   {
     output = new Clusters();
-    StatusCode sc = put( output , outputData() );
-    if( sc.isFailure() ) { return StatusCode::FAILURE ; }
+    put( output , m_outputData );
     // make a copy 
     for( Clusters::const_iterator i = clusters->begin() ;
          clusters->end() != i ; ++i )
@@ -157,7 +164,7 @@ StatusCode CaloSharedCellAlg::execute()
   for( Table::Map::iterator entry = table.map().begin() ; 
        table.map().end() != entry ; ++entry ) 
   {
-    const CaloDigit* dig = entry->first ;
+    const LHCb::CaloDigit* dig = entry->first ;
     /// ignore  artificial zeros  
     if( 0 == dig ) { continue; }
     
@@ -200,6 +207,11 @@ StatusCode CaloSharedCellAlg::execute()
   ///  
 };
 
-// ============================================================================
-// The End 
-// ============================================================================
+StatusCode CaloSharedCellAlg::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+
+

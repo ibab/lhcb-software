@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.10 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.11 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.9  2004/10/26 20:35:58  ibelyaev
 //  improve properties of all Track-related algorithms
 // 
@@ -10,26 +13,15 @@
 // Include files
 // ============================================================================
 #include <functional>
-// ============================================================================
 // GaudiKernel
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
-// ============================================================================
 // Track
-// ============================================================================
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
-// ============================================================================
-// Calo 
-// ============================================================================
-#include "Kernel/CaloPrint.h"
-// ============================================================================
 // local
-// ============================================================================
 #include "CaloTrackMatchBase.h"
-// ============================================================================
 
 // ============================================================================
 /** @file CaloTrackMatchBase.cpp
@@ -54,25 +46,25 @@ CaloTrackMatchBase::CaloTrackMatchBase
 ( const std::string& type   ,
   const std::string& name   , 
   const IInterface*  parent )
-  : CaloTool ( type , name , parent ) 
+  : GaudiTool ( type , name , parent ) 
   //
   , m_state        ( 0          )
   , m_prevTrack    ( 0          )
   , m_bad          ( 1.0e+10    )
   , m_optimized    ( false      ) 
   //
-  , m_zmin         ( -1 * meter )   
-  , m_zmax         ( 30 * meter )
+  , m_zmin         ( -1 * Gaudi::Units::meter )   
+  , m_zmax         ( 30 * Gaudi::Units::meter )
   , m_pdgID        ( 211        )
   , m_pid          ( 211        )
   , m_extrapolator ( 0          )
-    , m_extrapolatorName("TrFirstCleverExtrapolator")//Default to be modified
+  , m_extrapolatorName("TrFirstCleverExtrapolator")//Default to be modified
   //
   , m_precision    ( 0.1        ) 
-  , m_tolerance    ( 10 * mm    ) 
+  , m_tolerance    ( 10 * Gaudi::Units::mm    ) 
   //
-  , m_aux_sym      ( 3 , 0 )
-  , m_aux_diag     ( 3 , 0 )
+  , m_aux_sym2D ( )
+  , m_aux_sym3D ( )
 { 
   // interfaces 
   declareInterface<ICaloTrackMatch>   ( this ) ;
@@ -97,9 +89,9 @@ CaloTrackMatchBase::CaloTrackMatchBase
 StatusCode CaloTrackMatchBase::initialize()
 {
   /// initialize the base class
-  StatusCode sc = CaloTool::initialize();
+  StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() )
-  { return Error ( "Could not initialize the base class CaloTool!" , sc ) ; }
+  { return Error ( "Could not initialize the base class GaudiTool!" , sc ) ; }
   
   if ( m_tolerance <= 0.0  ) 
   { return Error ( " Non-positive 'Tolerance' is set! " ) ; }
@@ -115,7 +107,7 @@ StatusCode CaloTrackMatchBase::initialize()
   incSvc() -> addListener( this , IncidentType::EndEvent , 10 );
   
   // set particle ID 
-  m_pid =  ParticleID( m_pdgID );
+  m_pid =  LHCb::ParticleID( m_pdgID );
   
   return StatusCode::SUCCESS;
 };
@@ -133,7 +125,7 @@ StatusCode CaloTrackMatchBase::finalize()
   // reset track 
   m_prevTrack = 0 ;
   // finalize  the base class
-  return CaloTool::finalize();
+  return GaudiTool::finalize();
 };
 // ============================================================================
 
@@ -169,7 +161,7 @@ CaloTrackMatchBase::~CaloTrackMatchBase(){};
  */
 // ============================================================================
 StatusCode CaloTrackMatchBase::findState
-( const Track* trObj , 
+( const LHCb::Track* trObj , 
   const double         Z     , 
   const double         Zext  , 
   const double         covX  ,
@@ -185,19 +177,16 @@ StatusCode CaloTrackMatchBase::findState
     // get new state 
     if ( 0 != m_state ) { delete m_state ; m_state = 0 ; }
     
-    const State st = trObj -> closestState( Z ) ;
+    const LHCb::State st = trObj -> closestState( Z ) ;
     //OD if ( 0 == st ) 
     //{ return Error ( "Error from 'closestState', track=" + bits ( trObj ) ) ; }
     
     // check the state
     if ( st.z() < m_zmin || st.z() > m_zmax ) 
     { 
-      if ( msgLevel( MSG::DEBUG ) ) 
-      {
-        debug() << " Problems: " << " Allowed : "  << m_zmin << "/" << m_zmax 
-                << " Closest : " << Z << " Found : " << st.z() 
-                << " Track "     << bits ( trObj ) << endreq ;
-      }
+      debug() << " Problems: " << " Allowed : "  << m_zmin << "/" << m_zmax 
+              << " Closest : " << Z << " Found : " << st.z() 
+              << " Track "     << bits ( trObj ) << endreq ;
       return Error ( "Closest z is outside of allowed region, track=" + bits ( trObj ) ) ;
     }    
     // clone the state!
@@ -206,11 +195,11 @@ StatusCode CaloTrackMatchBase::findState
   }
   
   const double dZ = fabs ( Zext - m_state->z()              ) ;
-  const double dX = fabs (   dZ * m_state->stateVector()(3) ) ;
-  const double dY = fabs (   dZ * m_state->stateVector()(4) ) ;
+  const double dX = fabs (   dZ * m_state->stateVector()(2) ) ;
+  const double dY = fabs (   dZ * m_state->stateVector()(3) ) ;
   
-  const double sX = covX + m_state->covariance().fast(1,1)  ;
-  const double sY = covY + m_state->covariance().fast(2,2)  ;
+  const double sX = covX + m_state->covariance()(0,0)  ;
+  const double sY = covY + m_state->covariance()(1,1)  ;
   
   if (  ( dX * dX > m_precision * sX   || 
           dY * dY > m_precision * sY ) && 
@@ -241,7 +230,7 @@ StatusCode CaloTrackMatchBase::findState
  */
 // ============================================================================
 StatusCode CaloTrackMatchBase::findState
-( const Track* trObj ,
+( const LHCb::Track* trObj ,
   const double         Z     , 
   const double         Zext  ) const 
 {
@@ -255,19 +244,14 @@ StatusCode CaloTrackMatchBase::findState
     // get new state 
     if ( 0 != m_state ) { delete m_state ; m_state = 0 ; }
     
-    const State st = trObj -> closestState( Z ) ;
-    //OD if ( 0 == st ) 
-    //{ return Error ( "Error from 'closestState', tarck=" + bits ( trObj ) ); }
+    const LHCb::State st = trObj -> closestState( Z ) ;
     
     // check the state
     if ( st.z() < m_zmin || st.z() > m_zmax ) 
     { 
-      if ( msgLevel( MSG::DEBUG ) ) 
-      {
-        debug() << " Problems: "  << " Allowed : "  << m_zmin << "/" << m_zmax 
-                << " Closest : "  << Z << " Found : "    << st.z() 
-                << " Track "      << bits ( trObj ) << endreq ;
-      }
+      debug() << " Problems: "  << " Allowed : "  << m_zmin << "/" << m_zmax 
+              << " Closest : "  << Z << " Found : "    << st.z() 
+              << " Track "      << bits ( trObj ) << endreq ;
       return Error ( "Closest z is outside of allowed region, track="  
                      + bits( trObj )  ) ;
     }    
@@ -301,29 +285,20 @@ StatusCode CaloTrackMatchBase::findState
  */
 // ============================================================================
 std::string CaloTrackMatchBase::bits 
-( const Track* trObj ) const 
+( const LHCb::Track* trObj ) const 
 { 
   if ( 0 == trObj ) { return std::string("<invalid>") ; }
   
-  CaloPrint print;  
   std::string msg( "bits: ") ;
-  msg +=  "E:" + print ( (int) trObj -> checkFlag(Track::Invalid) ) ;
-  msg += "/U:" + print ( (int) trObj -> checkFlag(Track::Unique) ) ;
-  msg += "/H:" + print ( (int) trObj -> history       () ) ;
-  msg += "/L:" + print ( (int) trObj -> checkType (Track::Long) ) ;
-  msg += "/U:" + print ( (int) trObj -> checkType (Track::Upstream) ) ;
-  msg += "/D:" + print ( (int) trObj -> checkType (Track::Downstream) ) ;
-  msg += "/V:" + print ( (int) trObj -> checkType (Track::Velo) ) ;
-  msg += "/B:" + print ( (int) trObj -> checkFlag(Track::Backward) ) ;
-  msg += "/T:" + print ( (int) trObj -> checkType (Track::Ttrack ) ) ;
-  msg += "/v:" + print ( (int) trObj -> checkHistory(Track::PatVelo) ) ;
-  msg += "/s:" + print ( (int) trObj -> checkHistory(Track::TrackSeeding) ) ;
-  msg += "/m:" + print ( (int) trObj -> checkHistory(Track::TrackMatching) ) ;
-  msg += "/f:" + print ( (int) trObj -> checkHistory(Track::TrgForward) ) ;
-  //OD? msg += "/f:" + print ( (int) trObj -> follow        () ) ;
-  msg += "/v:" + print ( (int) trObj -> checkHistory(Track::TrackVeloTT) ) ;
-  msg += "/b:" + print ( (int) trObj -> checkType (Track::Velo) && trObj ->checkFlag(Track::Backward) ) ;
-  msg += "/k:" + print ( (int) trObj -> checkHistory(Track::TrackKShort) ) ;
+  msg +=  "E:" +  ( (int) trObj -> checkFlag(LHCb::Track::Invalid) ) ;
+  msg += "/U:" +  ( (int) !trObj -> checkFlag(LHCb::Track::Clone) ) ;
+  msg += "/B:" +  ( (int) trObj -> checkFlag(LHCb::Track::Backward) ) ;
+  msg += "/H:" +  ( (int) trObj -> history       () ) ;
+  msg += "/L:" +  ( (int) trObj -> checkType (LHCb::Track::Long) ) ;
+  msg += "/U:" +  ( (int) trObj -> checkType (LHCb::Track::Upstream) ) ;
+  msg += "/D:" +  ( (int) trObj -> checkType (LHCb::Track::Downstream) ) ;
+  msg += "/V:" +  ( (int) trObj -> checkType (LHCb::Track::Velo) ) ;
+  msg += "/T:" +  ( (int) trObj -> checkType (LHCb::Track::Ttrack ) ) ;
   //  
   return msg ;
 };

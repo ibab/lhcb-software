@@ -1,8 +1,11 @@
-// $Id: CaloSelector.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelector.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:09  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -10,7 +13,7 @@
 // new package 
 //
 // Revision 1.2  2002/04/26 13:36:40  ibelyaev
-//  update for change in ICaloLikelyhood interface
+//  update for change in ICaloLikelihood interface
 //
 // Revision 1.1  2002/04/07 18:15:01  ibelyaev
 //  preliminary version ('omega'-release)
@@ -19,12 +22,10 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-// from LHCbKernel
-#include "Kernel/CaloHypotheses.h"
 // CaloInterfaces 
+#include "Event/CaloHypotheses.h"
 #include "CaloInterfaces/ICaloLikelihood.h"
 // local
 #include "CaloSelector.h"
@@ -55,7 +56,7 @@ const        IToolFactory&CaloSelectorFactory = s_factory ;
 CaloSelector::CaloSelector( const std::string&  type   ,
                             const std::string&  name   ,
                             const IInterface*   parent )
-  : CaloTool ( type, name , parent ) 
+  : GaudiTool ( type, name , parent ) 
   , m_lhType     (        ) 
   , m_lhName     (        ) 
   , m_likelihood ( 0      )
@@ -64,9 +65,9 @@ CaloSelector::CaloSelector( const std::string&  type   ,
   // interfaces  
   declareInterface<ICaloClusterSelector> (this);
   // properties 
-  declareProperty( "LikelyhoodType" , m_lhType ) ;
-  declareProperty( "LikelyhoodName" , m_lhType ) ;
-  declareProperty( "LikelyhoodCut"  , m_cut    ) ;
+  declareProperty( "LikelihoodType" , m_lhType ) ;
+  declareProperty( "LikelihoodName" , m_lhType ) ;
+  declareProperty( "LikelihoodCut"  , m_cut    ) ;
 };
 
 // ============================================================================
@@ -80,16 +81,16 @@ CaloSelector::~CaloSelector()
 /** standard initialization of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
- *  @see CaloTool 
+ *  @see GaudiTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode CaloSelector::initialize() 
 {
   // initialialize the base class 
-  StatusCode sc = CaloTool::initialize() ;
+  StatusCode sc = GaudiTool::initialize() ;
   if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class CaloTool!",sc);}
+  { return Error("Could not initialize the base class GaudiTool!",sc);}
   /// locate the tool 
   m_likelihood = m_lhName.empty() ?
     tool<ICaloLikelihood>( m_lhType            ) :
@@ -103,14 +104,14 @@ StatusCode CaloSelector::initialize()
 /** standard finalization  of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
- *  @see CaloTool 
+ *  @see GaudiTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode CaloSelector::finalize() 
 {
   ///finalize the base class 
-  return CaloTool::finalize() ;
+  return GaudiTool::finalize() ;
 };
 
 // ============================================================================
@@ -120,7 +121,7 @@ StatusCode CaloSelector::finalize()
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelector::operator() ( const CaloCluster* cluster ) const
+bool CaloSelector::operator() ( const LHCb::CaloCluster* cluster ) const
 {
   if( 0 == cluster ) {  return false ; }
   return  m_cut <= (*m_likelihood) (cluster) ;
@@ -133,7 +134,7 @@ bool CaloSelector::operator() ( const CaloCluster* cluster ) const
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelector::select     ( const CaloCluster* cluster ) const 
+bool CaloSelector::select     ( const LHCb::CaloCluster* cluster ) const 
 { return (*this) ( cluster ); }
 
 // ============================================================================

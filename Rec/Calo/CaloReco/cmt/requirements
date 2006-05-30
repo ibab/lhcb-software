@@ -1,19 +1,20 @@
-# $Id: requirements,v 1.39 2005-11-07 12:12:40 odescham Exp $
+# $Id: requirements,v 1.40 2006-05-30 09:41:58 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.39 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.40 $
 # =============================================================================
 package            CaloReco
-version            v3r0
+version            v4r0
 
 # ================ structure ==================================================
 branches           cmt doc src options 
 
 # ================ dependencies ===============================================
-use TrackEvent     v*     Event 
-use CaloInterfaces v*	  Calo 
-use CaloUtils      v*     Calo 
-use Relations      v*     Kernel 
-use TrackInterfaces v*    Tr
+use TrackEvent      v*     Event 
+use CaloInterfaces  v*	   Calo 
+use CaloUtils       v*     Calo 
+use CaloDAQ         v*     Calo 
+use Relations       v*     Kernel 
+use TrackInterfaces v*     Tr
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
@@ -26,6 +27,9 @@ apply_pattern      component_library library=CaloReco
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.39  2005/11/07 12:12:40  odescham
+# v3r0 : adapt to the new Track Event Model
+#
 # Revision 1.38  2005/14/10 12:37:03  odescham
 # adapt to new track model (CaloInterfaces/Utils v5r*)
 #
@@ -41,6 +45,3 @@ apply_pattern      component_library library=CaloReco
 # Revision 1.35  2005/05/08 09:45:56  ibelyaev
 #  remove all *associators*
 #
-# =============================================================================
-# The END
-# =============================================================================

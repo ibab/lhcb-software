@@ -1,8 +1,11 @@
-// $Id: CaloSelectorNOT.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelectorNOT.cpp,v 1.4 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:10  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -17,8 +20,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-
 // local
 #include "CaloSelectorNOT.h"
 
@@ -44,7 +45,7 @@ const        IToolFactory&CaloSelectorNOTFactory = s_factory ;
 
 // ============================================================================
 /** StNOTard constructor
- *  @see CaloTool
+ *  @see GaudiTool
  *  @see  AlgTool 
  *  @see IAlgTool 
  *  @param type   tool type (?)
@@ -56,7 +57,7 @@ CaloSelectorNOT::CaloSelectorNOT
 ( const std::string& type,
   const std::string& name,
   const IInterface* parent )
-  : CaloTool ( type, name , parent ) 
+  : GaudiTool ( type, name , parent ) 
   , m_selectorsTypeNames ()
   , m_selectors          () 
 {
@@ -75,16 +76,16 @@ CaloSelectorNOT::~CaloSelectorNOT(){} ;
 /** stNOTard initialization of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
- *  @see CaloTool 
+ *  @see GaudiTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode CaloSelectorNOT::initialize () 
 {
   // initialize the base class
-  StatusCode sc = CaloTool::initialize() ;
+  StatusCode sc = GaudiTool::initialize() ;
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloTool",sc);}
+    { return Error("Could not initialize the base class GaudiTool",sc);}
   // locate selectors 
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
@@ -101,7 +102,7 @@ StatusCode CaloSelectorNOT::initialize ()
 /** stNOTard finalization  of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
- *  @see CaloTool 
+ *  @see GaudiTool 
  *  @return status code 
  */
 // ============================================================================
@@ -111,7 +112,7 @@ StatusCode CaloSelectorNOT::finalize   ()
   m_selectors          .clear() ;
   m_selectorsTypeNames .clear() ;
   // finalize the base class 
-  return CaloTool::finalize () ;
+  return GaudiTool::finalize () ;
 };
 // ============================================================================
 
@@ -123,7 +124,7 @@ StatusCode CaloSelectorNOT::finalize   ()
  */
 // ============================================================================
 bool CaloSelectorNOT::select     
-( const CaloCluster* cluster ) const { return (*this) ( cluster ) ; }
+( const LHCb::CaloCluster* cluster ) const { return (*this) ( cluster ) ; }
 // ============================================================================
 
 // ============================================================================
@@ -133,7 +134,7 @@ bool CaloSelectorNOT::select
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelectorNOT::operator() ( const CaloCluster* cluster ) const
+bool CaloSelectorNOT::operator() ( const LHCb::CaloCluster* cluster ) const
 {
   bool select = false ;  
   for( Selectors::const_iterator selector = m_selectors.begin() ;
@@ -145,8 +146,5 @@ bool CaloSelectorNOT::operator() ( const CaloCluster* cluster ) const
 // ============================================================================
 
 
-// ============================================================================
-// The END 
-// ============================================================================
 
 

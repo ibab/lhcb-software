@@ -1,8 +1,11 @@
-// $Id: SubClusterSelector3x3.cpp,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: SubClusterSelector3x3.cpp,v 1.3 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -19,9 +22,7 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartRef.h"
-// CaloEvent 
+// Event 
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"
 // CaloUtils 
@@ -79,7 +80,7 @@ StatusCode SubClusterSelector3x3::initialize()
   StatusCode sc = SubClusterSelectorBase::initialize() ;
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc); }
-  if( 0 != det ()    )
+  if( 0 != det() )
     { m_matrix.setDet( det() ) ; }
   else 
     { return Error("DeCalorimeter* ponts to NULL!"); }
@@ -93,14 +94,14 @@ StatusCode SubClusterSelector3x3::initialize()
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelector3x3::tag ( CaloCluster* cluster ) const 
+StatusCode SubClusterSelector3x3::tag ( LHCb::CaloCluster* cluster ) const 
 {
   StatusCode sc = 
-    ClusterFunctors::
+    LHCb::ClusterFunctors::
     tagTheSubCluster( cluster  , 
                       m_matrix , 
                       modify() , 
-                      CaloDigitStatus::ModifiedBy3x3Tagger ) ;
+                      LHCb::CaloDigitStatus::ModifiedBy3x3Tagger ) ;
   //
   if( sc.isFailure() ) 
     { return Error( "Error from 'tagTheSubCluster()'" , sc ); }
@@ -114,13 +115,13 @@ StatusCode SubClusterSelector3x3::tag ( CaloCluster* cluster ) const
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelector3x3::untag ( CaloCluster* cluster ) const 
+StatusCode SubClusterSelector3x3::untag ( LHCb::CaloCluster* cluster ) const 
 {
   StatusCode sc = 
-    ClusterFunctors::
+    LHCb::ClusterFunctors::
     untagTheSubCluster( cluster  , 
                         m_matrix , 
-                        CaloDigitStatus::ModifiedBy3x3Tagger );
+                        LHCb::CaloDigitStatus::ModifiedBy3x3Tagger );
   //
   if( sc.isFailure() ) 
     { return Error( "Error from 'untagTheSubCluster()'" , sc ); }

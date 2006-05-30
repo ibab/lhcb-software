@@ -1,9 +1,9 @@
-// $Id: CaloTrackMatchBremm.h,v 1.8 2005-11-22 16:15:57 cattanem Exp $
+// $Id: CaloTrackMatchBremm.h,v 1.9 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-#ifndef CALOTRACKTOOLS_CALOTRACKMATCHBremm_H
-#define CALOTRACKTOOLS_CALOTRACKMATCHBremm_H 1
+#ifndef CALORECO_CALOTRACKMATCHBremm_H
+#define CALORECO_CALOTRACKMATCHBremm_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -52,8 +52,8 @@ public:
    *  @return status code for matching procedure
    */
   StatusCode match 
-  ( const CaloPosition*  caloObj ,
-    const Track* trObj   ,
+  ( const LHCb::CaloPosition*  caloObj ,
+    const LHCb::Track* trObj   ,
     double&              chi2    );
   
   
@@ -96,16 +96,16 @@ private:
    * @param  cluster data object
    * @return internal type struct with data
    */
-  inline const MatchType1& 
-  prepareCluster ( const CaloPosition *cluster )
+  inline const Match2D& 
+  prepareCluster ( const LHCb::CaloPosition *cluster )
   { 
-    const HepVector&    center = cluster->parameters () ;
-    const HepSymMatrix& spread = cluster->covariance () ;
+    const LHCb::CaloPosition::Parameters& center = cluster->parameters () ;
+    const LHCb::CaloPosition::Covariance& spread  = cluster->covariance () ;
+    m_matchCalo.params  (0)   = center(0)              ;
     m_matchCalo.params  (1)   = center(1)              ;
-    m_matchCalo.params  (2)   = center(2)              ;
-    m_matchCalo.cov.fast(1,1) = spread.fast(1,1)       ;
-    m_matchCalo.cov.fast(2,1) = spread.fast(2,1)       ;
-    m_matchCalo.cov.fast(2,2) = spread.fast(2,2)       ;
+    m_matchCalo.cov(0,0) = spread(0,0)       ;
+    m_matchCalo.cov(1,0) = spread(1,0)       ;
+    m_matchCalo.cov(1,1) = spread(1,1)       ;
 
     m_matchCalo.error    =   0   ;
     m_matchCalo.inverted = false ;
@@ -122,55 +122,27 @@ private:
    * @param  trState Track data object
    * @return internal type struct with data
    */
-  inline const MatchType1& 
-  prepareTrack ( State *state )
+  inline const Match2D& 
+  prepareTrack ( LHCb::State *state )
   { 
-    const HepSymMatrix &stCov = state->covariance();
-    m_matchTrk1.params  (1)   = state->stateVector()[0];
-    m_matchTrk1.params  (2)   = state->stateVector()[1];
-    m_matchTrk1.cov.fast(1,1) = stCov.fast(1, 1);
-    m_matchTrk1.cov.fast(2,1) = stCov.fast(2, 1);
-    m_matchTrk1.cov.fast(2,2) = stCov.fast(2, 2); 
+    const Gaudi::TrackSymMatrix &stCov = state->covariance();
+    m_matchTrack.params  (0)   = state->stateVector()[0];
+    m_matchTrack.params  (1)   = state->stateVector()[1];
+    m_matchTrack.cov(0,0) = stCov(0, 0);
+    m_matchTrack.cov(1,0) = stCov(1, 0);
+    m_matchTrack.cov(1,1) = stCov(1, 1); 
 
-    m_matchTrk1.error    =   0   ;
-    m_matchTrk1.inverted = false ;
-    m_matchTrk1.invert() ;
+    m_matchTrack.error    =   0   ;
+    m_matchTrack.inverted = false ;
+    m_matchTrack.invert() ;
     
-    return m_matchTrk1   ;
+    return m_matchTrack   ;
   };
 
-  /** Makes struct with vector and covariance
-   * with Track data.
-   * Returned format is the same as for Cluster.
-   * Input format of Track is quite different:
-   *   TrStateP: (x, y, tx, ty, q/p);
-   *   TrStateL: (x, y, tx, ty),
-   * so the function performs vector and matrix remake.
-   * @param  state    Track data object
-   * @param  z        Not used!!
-   * @return internal type struct with data
-   */
-  inline const MatchType2& 
-  prepareTrack ( const State* state ,
-                 const double    z        )
-  { 
-    m_matchTrk2.params  (1)   = state -> x     () ;//OD was x(z)
-    m_matchTrk2.params  (2)   = state -> y     () ;//OD was x(z)
-    m_matchTrk2.cov.fast(1,1) = state -> errX2 ( ) ;
-    m_matchTrk2.cov.fast(2,2) = state -> errY2 ( ) ; 
-
-    m_matchTrk2.error    =   0   ;
-    m_matchTrk2.inverted = false ;
-    m_matchTrk2.invert() ;
-
-    return m_matchTrk2   ;
-  };
-  
 private:
   
-  MatchType1 m_matchCalo ;  
-  MatchType1 m_matchTrk1 ;  
-  MatchType2 m_matchTrk2 ;
+  Match2D m_matchCalo ;  
+  Match2D m_matchTrack ;  
 
 private:
   
@@ -178,7 +150,4 @@ private:
   double        m_bremZ    ;   
 };
 // ============================================================================
-// The End
-// ============================================================================
-#endif // CALOTRACKTOOLS_CALOTRACKMATCHBremm_H
-// ============================================================================
+#endif // CALORECO_CALOTRACKMATCHBremm_H

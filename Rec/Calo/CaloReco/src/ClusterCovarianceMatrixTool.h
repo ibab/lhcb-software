@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: ClusterCovarianceMatrixTool.h,v 1.3 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -32,8 +35,8 @@
 #include "GaudiKernel/Property.h"
 // CaloInterfaces
 #include  "CaloInterfaces/ICaloClusterTool.h"
-// CaloKernel
-#include  "CaloKernel/CaloTool.h"
+// GaudiAlg
+#include  "GaudiAlg/GaudiTool.h"
 // CaloUtil 
 #include  "CaloUtils/CovarianceEstimator.h"
 
@@ -51,7 +54,7 @@ class CovarianceEstimator;
 
 class ClusterCovarianceMatrixTool:
   public virtual ICaloClusterTool ,
-  public                 CaloTool
+  public                 GaudiTool
 {
   /// friend class for instantiation
   friend class ToolFactory<ClusterCovarianceMatrixTool>;
@@ -73,13 +76,13 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloCluster* cluster ) const ;
+  virtual StatusCode process    ( LHCb::CaloCluster* cluster ) const ;
   
   /** The main processing method (functor interface) 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const ;
+  virtual StatusCode operator() ( LHCb::CaloCluster* cluster ) const ;
   
 protected:
 
@@ -117,12 +120,9 @@ private:
   SimpleProperty<double>  m_noiseIn   ;
   SimpleProperty<double>  m_noiseCo   ;
   ///
+  std::string m_detData;
+  const DeCalorimeter* m_det;
   
-}; ///< end of class ClusterCovarianceMatrixTool
-
-
-// ============================================================================
-// The End 
+  }; ///< end of class ClusterCovarianceMatrixTool
 // ============================================================================
 #endif // CLUSTERCOVARIANCEMATRIXTOOL_H
-// ============================================================================

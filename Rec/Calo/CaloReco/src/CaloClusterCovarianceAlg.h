@@ -1,8 +1,11 @@
-// $Id: CaloClusterCovarianceAlg.h,v 1.3 2005-11-07 12:12:41 odescham Exp $
+// $Id: CaloClusterCovarianceAlg.h,v 1.4 2006-05-30 09:42:01 odescham Exp $
 // ===========================================================================
 // $CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:41  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2003/06/23 13:11:54  ibelyaev
 //  fix for gcc3.2
 //
@@ -19,14 +22,13 @@
 //  update for newer CaloKernel package
 //
 // ===========================================================================
-#ifndef COMPONENT_CALOCLUSTERCOVARIANCEALG_H 
-#define COMPONENT_CALOCLUSTERCOVARIANCEALG_H 1
+#ifndef CALORECO_CALOCLUSTERCOVARIANCEALG_H 
+#define CALORECO_CALOCLUSTERCOVARIANCEALG_H 1
 /// ===========================================================================
 // Include files
 // from STL
 #include <string>
-// from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 class ICaloClusterTool   ;
 class ICaloSubClusterTag ;
@@ -40,7 +42,7 @@ class ICaloSubClusterTag ;
  *  @date   04/07/2001
  */
 
-class CaloClusterCovarianceAlg : public CaloAlgorithm 
+class CaloClusterCovarianceAlg : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloClusterCovarianceAlg>;
@@ -61,7 +63,7 @@ protected:
 public:
   
   /** standard initialization method 
-   *  @see CaloAlgorithm
+   *  @see GaudiAlgorithm
    *  @see     Algorithm 
    *  @see    IAlgorithm
    *  @return status code 
@@ -69,7 +71,7 @@ public:
   virtual StatusCode initialize () ;
   
   /** standard execution method 
-   *  @see CaloAlgorithm
+   *  @see GaudiAlgorithm
    *  @see     Algorithm 
    *  @see    IAlgorithm
    *  @return status code 
@@ -77,7 +79,7 @@ public:
   virtual StatusCode execute    () ;
   
   /** standard finalization method 
-   *  @see CaloAlgorithm
+   *  @see GaudiAlgorithm
    *  @see     Algorithm 
    *  @see    IAlgorithm
    *  @return status code 
@@ -133,9 +135,13 @@ private:
   std::string          m_spreadType  ;  ///< type 
   std::string          m_spreadName  ;  ///< name 
   ICaloClusterTool*    m_spread      ;  ///< tool 
+
+  std::string m_outputData;
+  std::string m_inputData;
+  std::string m_detData;
   
 };
 
 /// ===========================================================================
-#endif // COMPONENT_CALOCLUSTERCOVARIANCEALG_H
+#endif // CALORECO_CALOCLUSTERCOVARIANCEALG_H
 /// ===========================================================================

@@ -1,31 +1,26 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.4 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelectNeutralCluster.cpp,v 1.5 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/12/10 17:12:29  ibelyaev
 //  steps towards 'Fast' Calo recontruction
 //
 // ============================================================================
 // Relations
-// ============================================================================
 #include "Relations/IRelationWeighted.h"
-// ============================================================================
 // GaudiKernel
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-// ============================================================================
 // GaudiKernel
-// ============================================================================
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
-// ============================================================================
 // local 
-// ============================================================================
 #include "CaloSelectNeutralCluster.h"
-// ============================================================================
 
 // ============================================================================
 /** @file 
@@ -48,7 +43,7 @@ const       IToolFactory&CaloSelectNeutralClusterFactory = s_Factory ;
 
 // ============================================================================
 /** Standard constructor
- *  @see  CaloTool
+ *  @see  GaudiTool
  *  @see   AlgTool
  *  @see  IAlgTool 
  *  @param type tool type (?)
@@ -60,8 +55,8 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent )
-  : CaloTool ( type , name , parent )
-  , m_tableLocation ("Rec/Calo/PhotonMatch") 
+  : GaudiTool ( type , name , parent )
+  , m_tableLocation ("Rec/Calo/ClusterMatch") 
   , m_table              (    0 ) 
   , m_chi2cut             ( -100 )
 {
@@ -82,7 +77,7 @@ CaloSelectNeutralCluster::~CaloSelectNeutralCluster() {};
 
 // ============================================================================
 /** standard initialization method 
- *  @see CaloTool
+ *  @see GaudiTool
  *  @see  AlgTool
  *  @see IAlgTool
  *  @return status code
@@ -92,9 +87,9 @@ StatusCode
 CaloSelectNeutralCluster::initialize ()
 {  
   // initialize the base class 
-  StatusCode sc = CaloTool::initialize () ;
+  StatusCode sc = GaudiTool::initialize () ;
   if( sc.isFailure() )
-  {return Error("Could not initialize the base class CaloTool!",sc); }
+  {return Error("Could not initialize the base class GaudiTool!",sc); }
   // 
   // subscribe the incident 
   IIncidentSvc* iSvc = incSvc() ;
@@ -128,7 +123,7 @@ void CaloSelectNeutralCluster::handle ( const Incident& /* inc */ )
  */
 // ============================================================================
 bool CaloSelectNeutralCluster::select     
-( const CaloCluster* cluster ) const 
+( const LHCb::CaloCluster* cluster ) const 
 { return (*this) ( cluster ); };
 // ============================================================================
 
@@ -145,7 +140,7 @@ bool CaloSelectNeutralCluster::select
  */
 // ============================================================================
 bool CaloSelectNeutralCluster::operator() 
-  ( const CaloCluster* cluster   ) const 
+  ( const LHCb::CaloCluster* cluster   ) const 
 {
   // check the cluster 
   if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }

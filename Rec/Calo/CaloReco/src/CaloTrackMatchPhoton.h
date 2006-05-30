@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchPhoton.h,v 1.7 2005-11-22 16:15:57 cattanem Exp $
+// $Id: CaloTrackMatchPhoton.h,v 1.8 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -49,8 +49,8 @@ public:
    *  @return status code for matching procedure
    */
   StatusCode match 
-  ( const CaloPosition  *caloObj ,
-    const Track *trObj   ,
+  ( const LHCb::CaloPosition  *caloObj ,
+    const LHCb::Track *trObj   ,
     double&              chi2    ) ;
   
   
@@ -93,17 +93,17 @@ private:
    *  @param  cluster data object
    *  @return internal type struct with data
    */
-  inline const MatchType1& 
-  prepareCluster ( const CaloPosition *cluster )
+  inline const Match2D& 
+  prepareCluster ( const LHCb::CaloPosition *cluster )
   { 
-    const HepVector&    center = cluster->center() ;
-    const HepSymMatrix& spread = cluster->spread() ;
+    const LHCb::CaloPosition::Center& center = cluster->center() ;
+    const LHCb::CaloPosition::Spread& spread = cluster->spread() ;
     
+    m_matchCalo.params  (0)   = center     (0)    ;
     m_matchCalo.params  (1)   = center     (1)    ;
-    m_matchCalo.params  (2)   = center     (2)    ;
-    m_matchCalo.cov.fast(1,1) = spread.fast(1,1)  ;
-    m_matchCalo.cov.fast(2,1) = spread.fast(2,1)  ;
-    m_matchCalo.cov.fast(2,2) = spread.fast(2,2)  ;
+    m_matchCalo.cov(0,0) = spread(0,0)  ;
+    m_matchCalo.cov(1,0) = spread(1,0)  ;
+    m_matchCalo.cov(1,1) = spread(1,1)  ;
     
     m_matchCalo.error    =   0   ;
     m_matchCalo.inverted = false ;
@@ -121,64 +121,29 @@ private:
    * @param  State Track data object
    * @return internal type struct with data
    */
-  inline const MatchType1& 
-  prepareTrack ( State *state )
+  inline const Match2D& 
+  prepareTrack ( LHCb::State *state )
   { 
-    const HepVector&    params = state->stateVector() ;
-    const HepSymMatrix& cov    = state->covariance() ;
+    const Gaudi::TrackVector&    params = state->stateVector() ;
+    const Gaudi::TrackSymMatrix& cov    = state->covariance() ;
     
-    m_matchTrk1.params  (1)    = params(1);
-    m_matchTrk1.params  (2)    = params(2);
-    m_matchTrk1.cov.fast(1,1) = cov.fast(1, 1);
-    m_matchTrk1.cov.fast(2,1) = cov.fast(2, 1);
-    m_matchTrk1.cov.fast(2,2) = cov.fast(2, 2); 
+    m_matchTrack.params  (0)    = params(0);
+    m_matchTrack.params  (1)    = params(1);
+    m_matchTrack.cov(0,0) = cov(0, 0);
+    m_matchTrack.cov(1,0) = cov(1, 0);
+    m_matchTrack.cov(1,1) = cov(1, 1); 
 
-    m_matchTrk1.error    =   0   ;
-    m_matchTrk1.inverted = false ;
-    m_matchTrk1.invert() ;
-    return m_matchTrk1   ;
+    m_matchTrack.error    =   0   ;
+    m_matchTrack.inverted = false ;
+    m_matchTrack.invert() ;
+    return m_matchTrack   ;
   };
   
-  /** Makes struct with vector and covariance
-   * with Track data.
-   * Returned format is the same as for Cluster.
-   * Input format of Track is quite different:
-   *   TrState 6D (x, y, z,px,py,pz)
-   * so the function performs vector and matrix remake.
-   * @param  state    Track data object
-   * @param  z        Z position for returned covariance matrix
-   * @return internal type struct with data
-   */
-  inline const MatchType2& 
-  prepareTrack ( const State& state ,
-                 const double    z        )
-  { 
-
-    // OD NEED TO EXTRAPOLATE TO z 
-    m_matchTrk2.params (1)    = state.x() ; //was x(z)
-    m_matchTrk2.params (2)    = state.y() ; //was y(z)
-    
-    
-    const double dz = z - state.z() ;
-    
-    const HepSymMatrix& cov = state.covariance() ;
-    m_matchTrk2.cov.fast(1,1) = 
-      cov.fast(1,1) + 2.0 * dz * cov.fast(3,1) + dz * dz * cov.fast(3,3) ;
-    m_matchTrk2.cov.fast(2,2) = 
-      cov.fast(2,2) + 2.0 * dz * cov.fast(4,2) + dz * dz * cov.fast(4,4) ;
-    
-    m_matchTrk2.error    =   0   ;
-    m_matchTrk2.inverted = false ;
-    m_matchTrk2.invert() ;
-
-    return m_matchTrk2   ;
-  };
   
 private:
   
-  MatchType1 m_matchCalo ;  
-  MatchType1 m_matchTrk1 ;  
-  MatchType2 m_matchTrk2 ;
+  Match2D m_matchCalo ;  
+  Match2D m_matchTrack ;  
 
 };
 // ============================================================================

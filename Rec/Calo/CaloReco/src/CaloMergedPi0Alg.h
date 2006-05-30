@@ -1,14 +1,17 @@
-// $Id: CaloMergedPi0Alg.h,v 1.4 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloMergedPi0Alg.h,v 1.5 2006-05-30 09:42:03 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/10/27 12:40:08  ibelyaev
 //  update for new Calo/CaloUtils + MergedPi0 'optimization'
 //
 // ============================================================================
-#ifndef CALOEX_CaloMergedPi0Alg_H 
-#define CALOEX_CaloMergedPi0Alg_H 1
+#ifndef CALORECO_CaloMergedPi0Alg_H 
+#define CALORECO_CaloMergedPi0Alg_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,17 +20,12 @@
 #include <string>
 #include <vector>
 // ============================================================================
-// From GaudiKernel
-// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/NTuple.h"
-// ============================================================================
-// from   CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
 // ============================================================================
 // forward declarations
 // ============================================================================
-class    CaloCluster   ;
+namespace LHCb {class   CaloCluster    ;}
 class   ICaloHypoTool  ;
 // ============================================================================
 
@@ -39,7 +37,7 @@ class   ICaloHypoTool  ;
  *  @date   05/10/2002
  */
 
-class CaloMergedPi0Alg : public CaloAlgorithm 
+class CaloMergedPi0Alg : public GaudiAlgorithm
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloMergedPi0Alg>;
@@ -83,8 +81,8 @@ protected:
    *  @return number of digits with given status.
    *       In the case of errors it returns -1
    */
-  long numberOfDigits ( const CaloCluster*             cluster ,
-                        const CaloDigitStatus::Status& status  ) const ;
+  long numberOfDigits ( const LHCb::CaloCluster*             cluster ,
+                        const LHCb::CaloDigitStatus::Status& status  ) const ;
 
   // L-correction
   double BarZ ( const double e,
@@ -108,6 +106,10 @@ protected:
   
     
 private:
+  std::string m_inputData ;
+  std::string m_outputData;
+  std::string m_detData   ;
+  
   /** NTuple 
    */
   INTuple*            m_ntuple    ; ///< pointer to NTuple 
@@ -148,9 +150,5 @@ private:
   double m_eT_Cut  ;
   int    m_mX_Iter ;
 };
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CaloMergedPi0Alg_H
-// ============================================================================

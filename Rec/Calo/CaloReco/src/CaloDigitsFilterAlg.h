@@ -1,8 +1,11 @@
-// $Id: CaloDigitsFilterAlg.h,v 1.3 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloDigitsFilterAlg.h,v 1.4 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:06  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -10,15 +13,15 @@
 // new package 
 //
 // ============================================================================
-#ifndef CALOALGS_CALODIGITSFILTERALG_H 
-#define CALOALGS_CALODIGITSFILTERALG_H 1
+#ifndef CALORECO_CALODIGITSFILTERALG_H 
+#define CALORECO_CALODIGITSFILTERALG_H 1
 // Include files
 // from STL
 #include <string>
 #include <vector>
 
-// from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 
 /** @class CaloDigitsFilterAlg CaloDigitsFilterAlg.h
@@ -29,14 +32,14 @@
  *  @date   2002-06-11
  */
 class CaloDigitsFilterAlg : 
-  public CaloAlgorithm 
+  public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloDigitsFilterAlg>;
 public:
   
   /** standard algorithm execution 
-   *  @see CaloAlgorithm
+   *  @see GaudiAlgorithm
    *  @see     Algorithm
    *  @see    IAlgorithm
    *  @return status code 
@@ -44,7 +47,7 @@ public:
   virtual StatusCode execute   ();   
   
   /** standard algorithm finalization 
-   *  @see CaloAlgorithm
+   *  @see GaudiAlgorithm
    *  @see     Algorithm
    *  @see    IAlgorithm
    *  @return status code 
@@ -84,12 +87,9 @@ private:
   Addresses                        m_clusters ;
 
   Statuses                         m_statuses ;
+  std::string m_inputData;
+  
   
 };
 // ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
-#endif // CALOALGS_CALODIGITSFILTERALG_H
-// ============================================================================
+#endif // CALORECO_CALODIGITSFILTERALG_H

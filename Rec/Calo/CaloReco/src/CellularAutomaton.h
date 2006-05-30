@@ -3,12 +3,15 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.5  2004/10/22 16:33:53  ibelyaev
 //  update CellularAutomaton and remove obsolete algs
 //
 // ============================================================================
-#ifndef CALOCA_CELLULARAUTOMATON_H
-#define CALOCA_CELLULARAUTOMATON_H 1
+#ifndef CALORECO_CELLULARAUTOMATON_H
+#define CALORECO_CELLULARAUTOMATON_H 1
 // ============================================================================
 // STD and STL 
 // ============================================================================
@@ -17,15 +20,11 @@
 // ============================================================================
 /// GaudiKernel
 // ============================================================================
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 /// CaloKernel 
 // ============================================================================
 #include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloAlgorithm.h"
 // ============================================================================
 /// CaloDet 
 // ============================================================================
@@ -43,7 +42,7 @@
  *  @author  Nicole Brun 
  *  @date    27/02/2001
  */
-class CellularAutomaton : public CaloAlgorithm 
+class CellularAutomaton : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CellularAutomaton>;
@@ -56,22 +55,9 @@ public:
   
 public:  
   
-  /** standard  initialization  method 
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
   virtual StatusCode initialize () ;
-  
-  /** standard  execution  method 
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
   virtual StatusCode execute    () ;
-  
+  virtual StatusCode finalize  ();  
 protected:
   
   /** standard constructor
@@ -101,7 +87,7 @@ protected:
   
   
   inline bool isLocMax
-  ( const CaloDigit*     digit ,
+  ( const LHCb::CaloDigit*     digit ,
     const DirVector&     hits  ,
     const DeCalorimeter* det   ) ;
   
@@ -120,20 +106,21 @@ protected:
     const DeCalorimeter* detector );
   
   inline void setEXYCluster
-  ( CaloCluster*         cluster,
+  ( LHCb::CaloCluster*         cluster,
     const DeCalorimeter* detector );
 
 private :
+  std::string m_inputData;
+  std::string m_outputData;
+  std::string m_detData;
+  const DeCalorimeter* m_detector;
   
   bool m_sort     ;
   bool m_sortByET ;
   
 };
-
 // ============================================================================
-// The End 
-// ============================================================================
-#endif  // CALOCA_CELLULARAUTOMATON_H
+#endif  // CALORECO_CELLULARAUTOMATON_H
 // ============================================================================
 
 

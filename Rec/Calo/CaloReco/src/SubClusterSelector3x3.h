@@ -1,8 +1,11 @@
-// $Id: SubClusterSelector3x3.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: SubClusterSelector3x3.h,v 1.3 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -16,8 +19,8 @@
 //  new tools are added for selection of subclusters within the cluster
 // 
 // ============================================================================
-#ifndef CALOTOOLS_SUBCLUSTERSELECTOR3x3_H 
-#define CALOTOOLS_SUBCLUSTERSELECTOR3x3_H 1
+#ifndef CALORECO_SUBCLUSTERSELECTOR3x3_H 
+#define CALORECO_SUBCLUSTERSELECTOR3x3_H 1
 // Include files
 // CaloTools 
 #include "SubClusterSelectorBase.h"
@@ -67,14 +70,14 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode tag        ( CaloCluster* cluster ) const ;
+  virtual StatusCode tag        ( LHCb::CaloCluster* cluster ) const ;
   
   /** The main method - "undo" of tagging from "tag" method  
    *  @see ICaloSubClusterTag
    *  @param cluster pointer to ClaoCluster object to be untagged 
    *  @return status code 
    */
-  virtual StatusCode untag      ( CaloCluster* cluster ) const ;
+  virtual StatusCode untag      ( LHCb::CaloCluster* cluster ) const ;
   
 protected:
   

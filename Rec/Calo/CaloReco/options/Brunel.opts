@@ -1,48 +1,53 @@
-// $Id: Brunel.opts,v 1.11 2005-11-22 22:41:27 cattanem Exp $ 
+// $Id: Brunel.opts,v 1.12 2006-05-30 09:41:58 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ 
 // ============================================================================
 
 /** @file
  *  The job-options file to run  Calorimeter Reconstruction in Brunel
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date 2002-10-31
+ *  @author    Olivier Deschamps odescham@in2p3.fr
+ *  @date 2006-26-05
  */
 
-/// The first pass of CALOrimeter reconstruction - track independent 
-RecoCALOSeq.Members += 
-  { 
-    // Cellular Automaton clusterisation 
-    "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
-    // Shared energy redistribution 
-    "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
-    // Evaluation of covariances 
-    "CaloClusterCovarianceAlg/EcalCovar" , /// Evaluation of covariances 
-    // Reconstruction of merged pi0s
-    "CaloMergedPi0Alg/Pi0Rec"              /// Reconstruction of merged pi0s
-  };
-
-/// The second pass of CALOrimeter reconstruction: track dependent 
-RecoCALOSeq.Members += 
-  {
-    "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
-    //
-    "CaloHypoAlg/PhotonFromMergedCalibration" ,/// E/S/L-corrections  
-    //
-    "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
-    "CaloHypoAlg/PhotonCalibration"      , /// E/S/L-corrections 
-    //
-    "CaloElectronAlg/ElectronRec"        , /// Reconstruction of electrons  
-    "CaloHypo2TrackAlg/ElectronMatch"    , /// 3D     track-hypo match (e+/e- ID) 
-    "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
-    "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle
-  };
-
-//PhotonMatch.OutputLevel=2;
-//ElectronMatch.OutputLevel=2;
-//CaloHypo2TrackAlg.OutputLevel=2;
 
 
-// ============================================================================
-// The END 
-// ============================================================================
+
+//------ Unpack the rawBanks & create CaloDigit on TES 
+RecoCaloSeq.Members = {  "CaloZSupAlg/EcalZSup",                 
+                         "CaloZSupAlg/HcalZSup",                  
+                         "CaloDigitsFromRaw/PrsFromRaw",        
+                         "CaloDigitsFromRaw/SpdFromRaw"};
+   
+//------ Clusterize & clean & compute cluster parameters 
+RecoCaloSeq.Members += { "CellularAutomaton/EcalClust",
+                         "CaloSharedCellAlg/EcalShare",
+                         "CaloClusterCovarianceAlg/EcalCovar",
+                         "CaloClusterCorrect3x3Position"};
+
+
+
+//------ Track-Cluster 2D matching for Neutral/Charged cluster selection
+RecoCaloSeq.Members +=   { "CaloCluster2TrackAlg/ClusterMatch" };
+
+//------ Merged Pi0, Single Photon & Electron reconstruction
+RecoCaloSeq.Members += {"CaloMergedPi0Alg/MergedPi0Rec", 
+                        "CaloHypoAlg/PhotonFromMergedRec",
+                        "CaloSinglePhotonAlg/SinglePhotonRec",
+                        "CaloElectronAlg/ElectronRec"};
+
+#include "$CALORECOOPTS/MergedPi0Rec.opts"
+#include "$CALORECOOPTS/PhotonFromMergedRec.opts"
+#include "$CALORECOOPTS/SinglePhotonRec.opts" 
+#include "$CALORECOOPTS/ElectronRec.opts" 
+// Configure Tools
+#include "$CALORECOOPTS/ExtraDigits.opts"
+#include "$CALORECOOPTS/CaloECorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloLCorrectionParam.opts"
+
+//------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
+RecoCaloSeq.Members += { "CaloHypo2TrackAlg/ElectronMatch",
+                        "CaloHypo2TrackAlg/BremMatch"};
+#include "$CALORECOOPTS/ElectronMatch.opts"
+#include "$CALORECOOPTS/BremMatch.opts"
+

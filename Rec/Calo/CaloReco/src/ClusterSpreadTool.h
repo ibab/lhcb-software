@@ -1,8 +1,11 @@
-// $Id: ClusterSpreadTool.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: ClusterSpreadTool.h,v 1.3 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -19,15 +22,15 @@
 //  new tool for calculation of cluster spread
 // 
 // ============================================================================
-#ifndef CALOTOOLS_CLUSTERSPREADTOOL_H 
-#define CALOTOOLS_CLUSTERSPREADTOOL_H 1
+#ifndef CALORECO_CLUSTERSPREADTOOL_H 
+#define CALORECO_CLUSTERSPREADTOOL_H 1
 // Include files
 // GaudiKernel
 #include "GaudiKernel/Property.h"
 // CaloInterfaces
 #include  "CaloInterfaces/ICaloClusterTool.h"
-// CaloKernel
-#include  "CaloKernel/CaloTool.h"
+// GaudiAlg
+#include  "GaudiAlg/GaudiTool.h"
 // CaloUtil 
 #include  "CaloUtils/SpreadEstimator.h"
 
@@ -42,7 +45,7 @@
 
 class ClusterSpreadTool:
   public virtual ICaloClusterTool ,
-  public                 CaloTool 
+  public                 GaudiTool 
 {
   /// friend class for instantiation
   friend class ToolFactory<ClusterSpreadTool>;
@@ -63,13 +66,13 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloCluster* cluster ) const ;
+  virtual StatusCode process    ( LHCb::CaloCluster* cluster ) const ;
   
   /** The main processing method (functor interface) 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const ;
+  virtual StatusCode operator() ( LHCb::CaloCluster* cluster ) const ;
   
 protected:
   
@@ -85,7 +88,9 @@ protected:
   
   /// destructor, virtual and protected 
   virtual ~ClusterSpreadTool();
-
+  
+    
+    
 private:
   
   /// default constructor   is private
@@ -100,11 +105,12 @@ private:
 private:
   
   SpreadEstimator    m_estimator ;
-  
+  std::string m_detData;
+  const DeCalorimeter* m_det;
 };
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // CALOTOOLS_CLUSTERSPREADTOOL_H
+#endif // CALORECO_CLUSTERSPREADTOOL_H
 // ============================================================================

@@ -1,17 +1,15 @@
-// $Id: CaloClusterCorrect3x3Position.h,v 1.3 2005-11-07 12:12:41 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.h,v 1.4 2006-05-30 09:42:01 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-#ifndef CALOEX_CaloClusterCorrect3x3Position_H 
-#define CALOEX_CaloClusterCorrect3x3Position_H 1
+#ifndef CALORECO_CaloClusterCorrect3x3Position_H 
+#define CALORECO_CaloClusterCorrect3x3Position_H 1
 // Include files
 // from STL
 #include <string>
 #include <vector>
-// From GaudiKernel
-#include "GaudiKernel/NTuple.h"
-// from   CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+//
+#include "GaudiAlg/GaudiAlgorithm.h"
 //CaloUtils
 #include "CaloUtils/CellMatrix3x3.h"
 #include "CaloUtils/CellNeighbour.h"
@@ -27,7 +25,7 @@ class   ICaloHypoTool  ;
  *  @date   05/10/2002
  */
 
-class CaloClusterCorrect3x3Position : public CaloAlgorithm 
+class CaloClusterCorrect3x3Position : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloClusterCorrect3x3Position>;
@@ -71,16 +69,16 @@ protected:
    *  @return number of digits with given status.
    *       In the case of errors it returns -1
    */
-  long numberOfDigits ( const CaloCluster*             cluster ,
-                        const CaloDigitStatus::Status& status  ) const ;
+  long numberOfDigits ( const LHCb::CaloCluster*             cluster ,
+                        const LHCb::CaloDigitStatus::Status& status  ) const ;
   
  private:    
- CellMatrix3x3 m_cell3x3 ;
- CellNeighbour m_neighbour;
+  CellMatrix3x3 m_cell3x3 ;
+  CellNeighbour m_neighbour;
+  std::string m_inputData ;
+  std::string m_outputData;
+  std::string m_detData   ;
 };
 
 // ============================================================================
-// The End 
-// ============================================================================
 #endif // CaloClusterCorrect3x3Position_H
-// ============================================================================

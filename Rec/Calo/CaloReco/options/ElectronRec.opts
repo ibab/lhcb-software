@@ -1,8 +1,11 @@
-// $Id: ElectronRec.opts,v 1.4 2005-11-07 12:12:40 odescham Exp $
+// $Id: ElectronRec.opts,v 1.5 2006-05-30 09:41:59 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:40  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2002/12/09 17:43:08  cattanem
 // bug fixes
 //
@@ -17,27 +20,16 @@
  *  @date 2002-10-31
  */
 
-// The defualt value 
-// ElectronRec.Input           = "Rec/Calo/EcalClusters"   ;
-// The default value 
-// ElectronRec.Output          = "Rec/Calo/Electrons"      ;
-// The defalut value 
-// ElectronRec.Detector        = "/dd/Structure/LHCb/Ecal" ;
+// Selector
+ElectronRec.SelectionTools           =  { "CaloSelectorNOT/ElectronSelect"     }; 
+ToolSvc.ElectronSelect.SelectorTools =  { "CaloSelectNeutralCluster/ChargedCluster"} ;
+ToolSvc.ChargedCluster.Cut        = 25 ;
 
-ElectronRec.SelectionTools   =  { "CaloSelectorNOT/ElectronSelect"     } ;
-
-///ElectronRec.CorrectionTools  = { "CaloSCorrectionSequence/CaloSPhoton" } ;
-ElectronRec.CorrectionTools  = { "CaloSShape/SShape2Tanh"                  } ;
-ElectronRec.CorrectionTools += { "CaloLCorrectionSimple/CaloLPhoton"   } ;
-
+// Tools and correctors
 ElectronRec.HypoTools        = { "CaloExtraDigits/SpdExtraE"           } ;
 ElectronRec.HypoTools       += { "CaloExtraDigits/PrsExtraE"           } ;
 
-// Prs correction 
-ElectronRec.CorrectionTools2 = { "CaloPrsCorrection/PrsCorrE"          } ;
+ElectronRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
+ElectronRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
+ElectronRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;
 
-
-
-// ============================================================================
-// The END 
-// ============================================================================

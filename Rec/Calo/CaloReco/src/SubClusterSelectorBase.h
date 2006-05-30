@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.2 2005-11-07 12:12:44 odescham Exp $
+// $Id: SubClusterSelectorBase.h,v 1.3 2006-05-30 09:42:07 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:44  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -25,14 +28,14 @@
 //  new tools are added for selection of subclusters within the cluster
 // 
 // ============================================================================
-#ifndef CALOTOOLS_SUBCLUSTERSELECTORBASE_H 
-#define CALOTOOLS_SUBCLUSTERSELECTORBASE_H 1
+#ifndef CALORECO_SUBCLUSTERSELECTORBASE_H 
+#define CALORECO_SUBCLUSTERSELECTORBASE_H 1
 // Include files
 // from STL
 // from CaloInterfaces 
 #include "CaloInterfaces/ICaloSubClusterTag.h"
-// from CaloKernel
-#include "CaloKernel/CaloTool.h"
+//
+#include "GaudiAlg/GaudiTool.h"
 // forwarde declaration 
 class    CaloCluster   ; ///< from CaloEvent package
 
@@ -47,13 +50,13 @@ class    CaloCluster   ; ///< from CaloEvent package
 
 class SubClusterSelectorBase : 
   public virtual  ICaloSubClusterTag ,
-  public                  CaloTool 
+  public                  GaudiTool 
 {
   
 public:
   
   /** standard initialization method 
-   *  @see CaloTool
+   *  @see GaudiTool
    *  @see  AlgTool
    *  @see IAlgTool
    *  @return status code 
@@ -61,7 +64,7 @@ public:
   virtual StatusCode initialize ();
   
   /** standard finalization method 
-   *  @see CaloTool
+   *  @see GaudiTool
    *  @see  AlgTool
    *  @see IAlgTool
    *  @return status code 
@@ -74,7 +77,7 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloCluster* cluster ) const  ;
+  virtual StatusCode process    ( LHCb::CaloCluster* cluster ) const  ;
   
   /** The main processing method (functor interface) 
    *  @see ICaloClusterTool 
@@ -82,8 +85,9 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const  ;
-
+  virtual StatusCode operator() ( LHCb::CaloCluster* cluster ) const  ;
+  
+    
 protected: 
   
   /**  return  flag to modify the fractions 
@@ -95,8 +99,9 @@ protected:
    *  @param value new value of modify parameter 
    */
   inline void setModify( const bool value ) const { m_modify = value ; }
-  
-protected:
+
+  inline const DeCalorimeter* det()  {return m_det; }
+  protected:
   
   /** Standard Tool Constructor
    *  @param type type of the tool (useless ? )
@@ -121,11 +126,8 @@ private:
 private:
   
   mutable bool m_modify ;
-  
+  std::string m_detData;
+  const DeCalorimeter* m_det;
 };
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // SUBCLUSTERSELECTORBASE_H
-// ============================================================================

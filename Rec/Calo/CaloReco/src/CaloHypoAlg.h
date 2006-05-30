@@ -1,8 +1,11 @@
-// $Id: CaloHypoAlg.h,v 1.2 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloHypoAlg.h,v 1.3 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -13,15 +16,15 @@
 //  version update
 //
 // ============================================================================
-#ifndef CaloAlgs_CaloHypoAlg_H 
-#define CaloAlgs_CaloHypoAlg_H 1
+#ifndef CaloReco_CaloHypoAlg_H 
+#define CaloReco_CaloHypoAlg_H 1
 // Include files
 // from STL
 #include <string>
 #include <vector>
-// from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
-// forward decclaration
+
+#include "GaudiAlg/GaudiAlgorithm.h"
+// forward declaration
 class ICaloHypoTool ;
 
 /** @class CaloHypoAlg CaloHypoAlg.h
@@ -39,7 +42,7 @@ class ICaloHypoTool ;
  *  @date   02/09/2002
  */
 
-class CaloHypoAlg : public CaloAlgorithm 
+class CaloHypoAlg : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloHypoAlg>;
@@ -102,11 +105,8 @@ private:
   Names   m_names ;
   /// list of tools 
   Tools   m_tools ;
+  std::string m_inputData;
 
 };
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CaloHypoAlg_H
-// ============================================================================

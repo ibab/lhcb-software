@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.7 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.8 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.7  2005/17/10 09:45:56  odescham
 // adapt to new track model
 //
@@ -114,11 +117,10 @@ private:
   std::string        m_matchType    ;
   std::string        m_matchName    ;
   ICaloTrackMatch*   m_match        ;
+  std::string   m_inputData;
+  std::string   m_outputData;
   
 };
 
 // ============================================================================
-// The End 
-// ============================================================================
 #endif // CALOHypo2TrackAlg_H
-// ============================================================================

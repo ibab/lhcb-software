@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.h,v 1.4 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSharedCellAlg.h,v 1.5 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/02/17 12:08:10  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -22,16 +25,16 @@
 //  update for newer CaloKernel package
 //
 // ============================================================================
-#ifndef CALOALGS_CALOSHAREDCELLALG_H 
-#define CALOALGS_CALOSHAREDCELLALG_H 1
+#ifndef CALORECO_CALOSHAREDCELLALG_H 
+#define CALORECO_CALOSHAREDCELLALG_H 1
 // ============================================================================
 // Include files
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // CaloEvent/Event 
 #include "Event/CaloCluster.h"
-// from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class  CaloSharedCellAlg CaloSharedCellAlg.h
  *   
@@ -43,7 +46,7 @@
  *  @date   30/06/2001
  */
 
-class CaloSharedCellAlg : public CaloAlgorithm 
+class CaloSharedCellAlg : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloSharedCellAlg>;
@@ -56,6 +59,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode initialize () ;
+  virtual StatusCode finalize () ;
   
   /** standard execution method 
    *  @see CaloAlgorithm
@@ -102,13 +106,12 @@ private:
   bool                m_useDistance  ;
   /// shower size parameters (for different areas) 
   std::vector<double> m_showerSizes ;
-
+  std::string m_outputData;
+  std::string m_inputData;
+  std::string m_detData;
+  
   
 };
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOSHAREDCELLALG_H 
-// ============================================================================
 

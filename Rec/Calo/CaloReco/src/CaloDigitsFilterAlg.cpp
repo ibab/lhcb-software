@@ -1,8 +1,11 @@
-// $Id: CaloDigitsFilterAlg.cpp,v 1.3 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloDigitsFilterAlg.cpp,v 1.4 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:06  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -14,7 +17,6 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/SmartRef.h" 
 // Event 
@@ -52,19 +54,21 @@ const        IAlgFactory&CaloDigitsFilterAlgFactory = s_Factory ;
 CaloDigitsFilterAlg::CaloDigitsFilterAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
-  , m_hypos    ()
-  , m_clusters ()
-  , m_statuses () 
+  : GaudiAlgorithm ( name , svcloc ) 
+    , m_hypos    ()
+    , m_clusters ()
+    , m_statuses () 
+    , m_inputData()
 {
   //
-  m_statuses .push_back ( CaloDigitStatus::SeedCell       ) ;
-  m_statuses .push_back ( CaloDigitStatus::LocalMaximum   ) ;
-  m_statuses .push_back ( CaloDigitStatus::CentralCell    ) ;
+  m_statuses .push_back ( LHCb::CaloDigitStatus::SeedCell       ) ;
+  m_statuses .push_back ( LHCb::CaloDigitStatus::LocalMaximum   ) ;
+  m_statuses .push_back ( LHCb::CaloDigitStatus::CentralCell    ) ;
 
   declareProperty       ( "Hypotheses"  ,  m_hypos        ) ;
   declareProperty       ( "Clusters"    ,  m_clusters     ) ;
   declareProperty       ( "Statuses"    ,  m_statuses     ) ;  
+  declareProperty       ( "InputData"   ,  m_inputData    ) ;  
 };
 // ============================================================================
 
@@ -77,7 +81,7 @@ CaloDigitsFilterAlg::~CaloDigitsFilterAlg() {};
 
 // ============================================================================
 /** standard algorithm finalization 
- *  @see CaloAlgorithm
+ *  @see GaudiAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
  *  @return status code 
@@ -88,13 +92,13 @@ StatusCode CaloDigitsFilterAlg::finalize()
   /// clear container 
   m_hypos.clear();
   /// finalize the base class 
-  return CaloAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 };
 // ============================================================================
 
 // ============================================================================
 /** standard algorithm execution 
- *  @see CaloAlgorithm
+ *  @see GaudiAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
  *  @return status code 
@@ -103,22 +107,22 @@ StatusCode CaloDigitsFilterAlg::finalize()
 StatusCode CaloDigitsFilterAlg::execute() 
 {  
   /// avoid long names and types 
-  typedef  CaloHypos                     Hypos    ;
-  typedef  CaloHypo::Digits              Digs     ;
-  typedef  CaloDigits                    Digits   ;
-  typedef  CaloClusters                  Clusters ;
-  typedef  CaloCluster::Entries          Entries  ;
-  typedef  const CaloDigitStatus::Status Status   ;
+  typedef  LHCb::CaloHypos                     Hypos    ;
+  typedef  LHCb::CaloHypo::Digits              Digs     ;
+  typedef  LHCb::CaloDigits                    Digits   ;
+  typedef  LHCb::CaloClusters                  Clusters ;
+  typedef  LHCb::CaloCluster::Entries          Entries  ;
+  typedef  const LHCb::CaloDigitStatus::Status Status   ;
   
   // get digits
-  Digits*  digits = get<Digits>( inputData() );
+  Digits*  digits = get<Digits>( m_inputData );
   if( 0 == digits ) { return StatusCode::FAILURE ; }
   
   // create new digits 
   Digits  filter;
   
   // auxillary container of "used" IDs 
-  typedef std::vector<CaloDigit*> Tmp;
+  typedef std::vector<LHCb::CaloDigit*> Tmp;
   Tmp used;
   
   // loop over containers of hypos 
@@ -137,7 +141,7 @@ StatusCode CaloDigitsFilterAlg::execute()
       for( Digs::iterator digit = digs.begin() ; 
            digs.end() != digit ; ++digit )
       {
-        CaloDigit* dig = *digit ;
+        LHCb::CaloDigit* dig = *digit ;
         if( 0 == dig ) { continue ; }
         if( dig->parent() == digits ) { used.push_back( dig ); }
       } // end of loop over all "extra" digits
@@ -157,13 +161,13 @@ StatusCode CaloDigitsFilterAlg::execute()
       for( Clusters::iterator cluster = clusters->begin() ;
            clusters->end() != cluster ; ++cluster ) 
       {
-        CaloCluster* cl = *cluster ;
+        LHCb::CaloCluster* cl = *cluster ;
         if( 0 == cl ) { continue ; }
         Entries& entries = cl->entries() ;
         for( Entries::iterator entry = entries.begin() ;
              entries.end() != entry ; ++entry ) 
         {
-          CaloDigit* digit = entry->digit();
+          LHCb::CaloDigit* digit = entry->digit();
           if( 0 == digit                ) { continue ; }
           // correct parent ?
           if( digits != digit->parent() ) { continue ; }
@@ -175,7 +179,7 @@ StatusCode CaloDigitsFilterAlg::execute()
             { keep = true ; break; }
           }
           if( keep ) { used.push_back  ( digit          ) ; }
-          else       { entry->setDigit ( (CaloDigit*) 0 ) ; }
+          else       { entry->setDigit ( (LHCb::CaloDigit*) 0 ) ; }
         }
       }
     }
@@ -201,7 +205,7 @@ StatusCode CaloDigitsFilterAlg::execute()
   
   const unsigned int kept = digits->size() ;
   
-  debug () << "'"        << inputData() << "' : "
+  debug () << "'"        << m_inputData << "' : "
            << " Kept  "  << kept        << " digits from " 
            << all        << endreq ;
   
@@ -209,6 +213,3 @@ StatusCode CaloDigitsFilterAlg::execute()
 };
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

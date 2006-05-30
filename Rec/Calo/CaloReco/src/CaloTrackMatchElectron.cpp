@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.7 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchElectron.cpp,v 1.8 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.6  2004/10/26 17:51:42  ibelyaev
 //  add 'photon' matching for Trg Tracks
 //
@@ -15,23 +18,13 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GaudiException.h"
-// ============================================================================
-// CaloInterfaces
-// ============================================================================
-#include "CaloKernel/CaloPrint.h"
-// ============================================================================
 // Calo related
-// ============================================================================
 #include "Event/CaloCluster.h"
-// ============================================================================
 // track related
-// ============================================================================
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
-// ============================================================================
 // local
-// ============================================================================
 #include "CaloTrackMatchElectron.h"
 // ============================================================================
 
@@ -65,9 +58,8 @@ CaloTrackMatchElectron::CaloTrackMatchElectron( const std::string &type,
                                                 const std::string &name,
                                                 const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent ) 
-  , m_matchCalo ( HepVector ( 3 , 0 ) , HepSymMatrix  ( 3 , 0 ) ) 
-  , m_matchTrk1 ( HepVector ( 3 , 0 ) , HepSymMatrix  ( 3 , 0 ) ) 
-  , m_matchTrk2 ( HepVector ( 3 , 0 ) , HepDiagMatrix ( 3 , 0 ) ) 
+  , m_matchCalo ( Gaudi::Vector3() , Gaudi::SymMatrix3x3() ) 
+  , m_matchTrack ( Gaudi::Vector3() , Gaudi::SymMatrix3x3() ) 
 {
   setProperty ( "Extrapolator" ,  "TrackLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
@@ -92,8 +84,8 @@ CaloTrackMatchElectron::~CaloTrackMatchElectron() {}
  */
 // ============================================================================
 StatusCode CaloTrackMatchElectron::match 
-( const CaloPosition*  caloObj     ,
-  const Track* trObj       ,
+( const LHCb::CaloPosition*  caloObj     ,
+  const LHCb::Track* trObj       ,
   double&              chi2_result )
 {
   // set 'bad' value 
@@ -111,8 +103,8 @@ StatusCode CaloTrackMatchElectron::match
   }
   else 
   {
-    const double covXX = caloObj->covariance().fast(1,1) ;
-    const double covYY = caloObj->covariance().fast(2,2) ;  
+    const double covXX = caloObj->covariance()(0,0) ;
+    const double covYY = caloObj->covariance()(1,1) ;  
     sc = findState ( trObj        , 
                      caloObj->z() , 
                      caloObj->z() , 
@@ -122,22 +114,19 @@ StatusCode CaloTrackMatchElectron::match
   if ( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
   
   // State ?
-  const State *state = dynamic_cast<State*>( m_state );
+  const LHCb::State *state = dynamic_cast<LHCb::State*>( m_state );
   if ( 0 == state ) { return Error( "Closest state is not 'State'"); }
   
   { // some trivial checks 
-    const HepSymMatrix& cov = state->covariance() ;
-    if ( 0 >= cov.fast( 1 , 1 ) || 
-         0 >= cov.fast( 2 , 2 ) || 
-         0 >= cov.fast( 5 , 5 ) ) 
+    const Gaudi::TrackSymMatrix& cov = state->covariance() ;
+    if ( 0 >= cov( 0 , 0 ) || 
+         0 >= cov( 1 , 1 ) || 
+         0 >= cov( 4 , 4 ) ) 
     {
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        debug() 
-          << " Problems with state covarinace matrix: "
-          << bits( trObj ) << endreq ;
-        Warning("Negative diagonal elements of track covariance matrix "); 
-      } 
+      debug() 
+        << " Problems with state covariance matrix: "
+        << bits( trObj ) << endreq ;
+      Warning("Negative diagonal elements of track covariance matrix "); 
     }
   }
   

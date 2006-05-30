@@ -1,9 +1,9 @@
-// $Id: CaloTrackMatchBase.h,v 1.10 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchBase.h,v 1.11 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 
-#define CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 1
+#ifndef CALORECO_CALOTRACKMATCHBASE_H 
+#define CALORECO_CALOTRACKMATCHBASE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -11,36 +11,31 @@
 // ============================================================================
 #include <functional>
 // ============================================================================
-// CLHEP 
-// ============================================================================
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/DiagMatrix.h"
-// ============================================================================
+// Kernel
+#include "GaudiKernel/SystemOfUnits.h"
+#include "Kernel/TrackTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/SymmetricMatrixTypes.h"
 // GaudiKernel 
-// ============================================================================
 #include "GaudiKernel/IIncidentListener.h"
-// ============================================================================
 // CaloInterfaces 
-// ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
-// ============================================================================
-// CaloKernel
-// ============================================================================
-#include "CaloKernel/CaloTool.h"
-// ============================================================================
-// ============================================================================
+// GaudiAlg
+#include "GaudiAlg/GaudiTool.h"
+// Event
 #include "Event/State.h"
+#include "Event/CaloPosition.h"
 // ============================================================================
 template <class TOOL>
 class ToolFactory     ; ///< from GaudiKernel
 class IIncidentSvc    ; ///< from GaudiKernel  
 class ITrackExtrapolator ; ///< from TrackInterfaces
 // ============================================================================
-class CaloPosition  ;
-class Track ;
-class State       ;
+namespace LHCb{
+  class CaloPosition ;
+  class Track ;
+  class State ;
+}
 // ============================================================================
 /** @class CaloTrackMatchBase CaloTrackMatchBase.h
  *  
@@ -56,7 +51,7 @@ class State       ;
 class CaloTrackMatchBase: 
   virtual public IIncidentListener ,
   virtual public ICaloTrackMatch   , 
-  public          CaloTool      
+  public         GaudiTool      
 {  
 public:
   
@@ -96,8 +91,8 @@ public:
    *  @return pair of status code/chi2  for matching procedure 
    */
   virtual MatchingPair    operator() 
-    ( const CaloPosition*  caloObj  ,
-      const Track* trObj    )
+    ( const LHCb::CaloPosition*  caloObj  ,
+      const LHCb::Track* trObj    )
   {
     double     c2 = m_bad ;
     StatusCode sc = match ( caloObj , trObj , c2 ) ;
@@ -108,7 +103,7 @@ public:
    *  @see ICaloTrackMatch 
    *  @return the last used state 
    */
-  virtual const State* state() const { return m_state; }
+  virtual const LHCb::State* state() const { return m_state; }
   
   /** handle the incident
    *  @see IIncidentListener 
@@ -125,7 +120,7 @@ protected:
    *  @return standard status code
    */
   StatusCode findState
-  ( const Track* trObj , 
+  ( const LHCb::Track* trObj , 
     const double         Z     , 
     const double         zExtr ) const ;
 
@@ -138,7 +133,7 @@ protected:
    *  @return standard status code
    */
   StatusCode findState
-  ( const Track* trObj , 
+  ( const LHCb::Track* trObj , 
     const double         Z     , 
     const double         zExtr , 
     const double         covX  ,
@@ -147,26 +142,26 @@ protected:
 protected: 
   
   /// internal type type of parameters for mathematical functions
-  struct MatchStruct1
+  struct Match3D
   { 
-    // parametrs x,y, (e) 
-    HepVector    params   ;
-    // covarinace matrix x,y,(e)
-    HepSymMatrix cov      ;    
+    // parameters x,y, (e)
+    Gaudi::Vector3 params   ;
+    // covariance matrix x,y,(e)
+    Gaudi::SymMatrix3x3 cov      ;    
     // error flag 
     int          error    ;
     // inversion flag 
     bool         inverted ;
     // constructor 
-    MatchStruct1 
-    ( const HepVector    & p , 
-      const HepSymMatrix & m ) 
+    Match3D 
+    ( const Gaudi::Vector3  & p , 
+      const Gaudi::SymMatrix3x3 & m ) 
       : params   (   p   )
       , cov      (   m   ) 
       , error    (   0   ) 
       , inverted ( false ) {} ;
     // constructor 
-    MatchStruct1 () 
+    Match3D () 
       : params   (       ) 
       , cov      (       ) 
       , error    (   0   ) 
@@ -176,33 +171,34 @@ protected:
     {
       if ( inverted ) { return error ; }
       error    = 0 ;
-      cov.invert ( error ) ;
+      bool ok = cov.Sinvert ( ) ;
+      if(!ok)error=1;
       inverted = true ;
       return error    ;
     };
   };
   
-  /// internal type for type of parameters for mathematical functions
-  struct MatchStruct2
+
+  struct Match2D
   { 
-    // parametrs x,y, (e) 
-    HepVector     params  ;
-    // covarinace matrix x,y,(e)
-    HepDiagMatrix cov     ;    
+    // parameters x,y, (e)
+    Gaudi::Vector2 params   ;
+    // covariance matrix x,y,(e)
+    Gaudi::SymMatrix2x2 cov      ;    
     // error flag 
-    int           error   ;
+    int          error    ;
     // inversion flag 
     bool         inverted ;
     // constructor 
-    MatchStruct2 
-    ( const HepVector     & p , 
-      const HepDiagMatrix & m ) 
+    Match2D
+    ( const Gaudi::Vector2  & p , 
+      const Gaudi::SymMatrix2x2 & m ) 
       : params   (   p   )
       , cov      (   m   ) 
       , error    (   0   ) 
       , inverted ( false ) {} ;
     // constructor 
-    MatchStruct2 () 
+    Match2D () 
       : params   (       ) 
       , cov      (       ) 
       , error    (   0   ) 
@@ -212,19 +208,14 @@ protected:
     {
       if ( inverted ) { return error ; }
       error    = 0 ;
-      cov.invert ( error ) ;
+      bool ok = cov.Sinvert ( ) ;
+      if(!ok)error=1;
       inverted = true ;
       return error    ;
     };
   };
   
-  /// internal type for mathematical functions 
-  typedef MatchStruct1 MatchType1 ;  
-  /// internal type for mathematical functions 
-  typedef MatchType1   MatchType  ;  
   
-  /// internal type for mathematical functions 
-  typedef MatchStruct2 MatchType2;
   
   // ==========================================================================
   /** chi2 method \n
@@ -237,154 +228,70 @@ protected:
    * @param mt2 struct with second vector and its covariance
    * @return result chi2
    */
+
+  // 3D
   inline double chi2
-  ( const MatchType& mt1 , 
-    const MatchType& mt2 ) const 
+  ( const Match3D& mt1 , 
+    const Match3D& mt2 ) const 
+  {
+    Assert ( mt1.inverted    && mt2.inverted                && 
+             0 == mt1.error  &&  0 == mt2.error             && 
+             "Matrix/Vector mismatch!" ) ;
+    
+    const Gaudi::SymMatrix3x3& icov1 = mt1.cov   ;
+    const Gaudi::SymMatrix3x3& icov2 = mt2.cov   ;
+    Gaudi::SymMatrix3x3&       cov   = m_aux_sym3D ;
+    
+    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
+    Assert ( 0 == ifail  , "Can not invert the matrix !" );
+    
+    const Gaudi::Vector3 vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
+    
+    return 
+      Similarity(icov1, vmean - mt1.params) + Similarity(icov2, vmean - mt2.params);
+  };
+
+  // 2D
+  inline double chi2
+  ( const Match2D& mt1 , 
+    const Match2D& mt2 ) const 
   {
     
     Assert ( mt1.inverted    && mt2.inverted                && 
              0 == mt1.error  &&  0 == mt2.error             && 
-             mt1.cov    .num_row() == mt2.cov    .num_row() && 
-             mt1.params .num_row() == mt2.params .num_row() , 
              "Matrix/Vector mismatch!" ) ;
     
-    const HepSymMatrix& icov1 = mt1.cov   ;
-    const HepSymMatrix& icov2 = mt2.cov   ;
-    HepSymMatrix&       cov   = m_aux_sym ;
+    const Gaudi::SymMatrix2x2& icov1 = mt1.cov   ;
+    const Gaudi::SymMatrix2x2& icov2 = mt2.cov   ;
+    Gaudi::SymMatrix2x2&       cov   = m_aux_sym2D ;
     
     const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
     Assert ( 0 == ifail  , "Can not invert the matrix !" );
-    
-    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
-    
+    const Gaudi::Vector2 vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
     return 
-      icov1.similarity ( vmean - mt1.params ) + 
-      icov2.similarity ( vmean - mt2.params ) ;
-    
+      Similarity(icov1, vmean - mt1.params) + Similarity(icov2, vmean - mt2.params);
   };
-  // ==========================================================================
   
   // ==========================================================================
-  /** chi2 method \n
-   * implements a formula:
-   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
-   * where dpi = pi - mean. \n
-   * Ci(-1) is the inverted covariance. \n
-   * In case of failure throws a CaloException.
-   * @param mt1 struct with first vector and its covariance
-   * @param mt2 struct with second vector and its covariance
-   * @return result chi2
-   */
-  inline double chi2 
-  ( const MatchType2& mt1 , 
-    const MatchType2& mt2 ) const 
-  {
-    
-    Assert ( mt1.inverted          && mt1.inverted          && 
-             0 == mt1.error        &&  0 == mt2.error       && 
-             mt1.cov    .num_row() == mt2.cov    .num_row() && 
-             mt1.params .num_row() == mt2.params .num_row() , 
-             "Matrix/Vector mismatch!" ) ;
-    
-    const HepDiagMatrix& icov1 = mt1.cov    ;
-    const HepDiagMatrix& icov2 = mt2.cov    ;
-    HepDiagMatrix&       cov   = m_aux_diag ;
-    
-    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
-    Assert ( 0 == ifail  , "Can not invert the matrix !" );
-    
-    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
-    
-    return 
-      icov1.similarity ( vmean - mt1.params ) + 
-      icov2.similarity ( vmean - mt2.params ) ;
-  };
-  // ==========================================================================
   
-  // ==========================================================================
-  /** chi2 method \n
-   * implements a formula:
-   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
-   * where dpi = pi - mean. \n
-   * Ci(-1) is the inverted covariance. \n
-   * In case of failure throws a CaloException.
-   * @param mt1 struct with first vector and its covariance
-   * @param mt2 struct with second vector and its covariance
-   * @return result chi2
-   */
-  inline double chi2 
-  ( const MatchType1& mt1 , 
-    const MatchType2& mt2 ) const 
-  {
-    Assert ( mt1.inverted          && mt2.inverted          && 
-             0 == mt1.error        &&  0 == mt2.error       && 
-             mt1.cov    .num_row() == mt2.cov    .num_row() && 
-             mt1.params .num_row() == mt2.params .num_row() , 
-             "Matrix/Vector mismatch!" ) ;
-    
-    const HepSymMatrix&  icov1 = mt1.cov   ;
-    const HepDiagMatrix& icov2 = mt2.cov   ;
-    HepSymMatrix&        cov   = m_aux_sym ;
-    
-    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
-    Assert ( 0 == ifail  , "Can not invert the matrix !" );
-    
-    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
-    
-    return 
-      icov1.similarity ( vmean - mt1.params ) + 
-      icov2.similarity ( vmean - mt2.params ) ;
-  };
-  // ==========================================================================
-  
-  // ==========================================================================
-  /** chi2 method \n
-   * implements a formula:
-   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
-   * where dpi = pi - mean. \n
-   * Ci(-1) is the inverted covariance. \n
-   * In case of failure throws a CaloException.
-   * @param mt1 struct with first vector and its covariance
-   * @param mt2 struct with second vector and its covariance
-   * @return result chi2
-   */
-  inline double chi2 
-  ( const MatchType2& mt1 , 
-    const MatchType1& mt2 ) const 
-  { return chi2 ( mt2 , mt1 ) ; }
-  // ==========================================================================
-  
+  // 3D
   inline int mtrxOp
-  ( HepSymMatrix&       cov ,
-    const HepSymMatrix& mx1 , 
-    const HepSymMatrix& mx2 ) const 
+  ( Gaudi::SymMatrix3x3&       cov ,
+    const Gaudi::SymMatrix3x3& mx1 , 
+    const Gaudi::SymMatrix3x3& mx2 ) const 
   {
     cov = mx1 + mx2 ;
-    int ifail = 0 ;
-    cov.invert ( ifail ) ;
-    return ifail ; 
+    return cov.Sinvert ( )  ? 0 : 1  ; 
   };
-  
-  inline int mtrxOp 
-  ( HepDiagMatrix&       cov ,
-    const HepDiagMatrix& mx1 , 
-    const HepDiagMatrix& mx2 ) const 
-  {
-    cov = mx1 + mx2 ; 
-    int ifail = 0 ;
-    cov.invert ( ifail ) ;
-    return ifail ; 
-  };
-  
-  inline int mtrxOp 
-  ( HepSymMatrix&        cov ,
-    const HepSymMatrix&  mx1 , 
-    const HepDiagMatrix& mx2 ) const 
+
+  // 2D
+  inline int mtrxOp
+  ( Gaudi::SymMatrix2x2&       cov ,
+    const Gaudi::SymMatrix2x2& mx1 , 
+    const Gaudi::SymMatrix2x2& mx2 ) const 
   {
     cov = mx1 + mx2 ;
-    int ifail = 0 ;
-    cov.invert ( ifail ) ;
-    return ifail ; 
+    return cov.Sinvert ( )  ? 0 : 1  ; 
   };
 
 protected:
@@ -393,7 +300,7 @@ protected:
    *  @param track track objects 
    *  @return track bits pattern 
    */
-  std::string bits ( const Track* track ) const ;
+  std::string bits ( const LHCb::Track* track ) const ;
   
 protected:
   
@@ -436,10 +343,10 @@ private:
 protected:
   
   // track state used for matching
-  mutable State*             m_state     ;
+  mutable LHCb::State*             m_state     ;
   
   // the previous stored track   
-  mutable const Track* m_prevTrack ;  
+  mutable const LHCb::Track* m_prevTrack ;  
   
   // default 'bad' value 
   double                       m_bad           ;
@@ -455,7 +362,7 @@ private:
   
   // particle ID to be used for extrapolation 
   int                          m_pdgID     ;
-  mutable ParticleID           m_pid       ;
+  mutable LHCb::ParticleID           m_pid       ;
   
   // interface to track extrapolator
   
@@ -470,14 +377,8 @@ private:
   double                       m_tolerance         ;
 
   // local storages 
-  mutable HepSymMatrix         m_aux_sym  ;
-  mutable HepDiagMatrix        m_aux_diag ;
-  
+  mutable Gaudi::SymMatrix2x2  m_aux_sym2D  ;
+  mutable Gaudi::SymMatrix3x3  m_aux_sym3D  ;
 };
 // ============================================================================
-
-// ============================================================================
-// The End 
-// ============================================================================
-#endif // CALOTRACKTOOLS_CALOTRACKMATCHBASE_H
-// ============================================================================
+#endif // CALORECO_CALOTRACKMATCHBASE_H

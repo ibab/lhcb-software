@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/09/05 20:23:48  ibelyaev
 //  trivial modification to obtain 20-25% CPU gain
 //
@@ -11,9 +14,8 @@
 #define CALOCA_CELAUTOTAGGEDCEL_H 1 
 // Include files
 #include <vector>
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-// CaloKernel 
+// Kernel
+#include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/CaloCellID.h"
 
 /** @class CelAutoTaggedCell CelAutoTaggedCell.h CaloCA/CelAutoTaggedCell.h
@@ -45,7 +47,7 @@ public:
 public:
   
   // Constructor
-  CelAutoTaggedCell ( const CaloCellID& id = CaloCellID()  )
+  CelAutoTaggedCell ( const LHCb::CaloCellID& id = LHCb::CaloCellID()  )
     : m_tag      ( DefaultFlag )
     , m_status   ( NotTagged )
     , m_digit    ( 0 )
@@ -55,8 +57,8 @@ public:
   ~CelAutoTaggedCell() {}
   
   // Retrieve data 
-  const CaloDigit*  digit () const { return m_digit              ; }
-  const CaloCellID& cellID() const { return digit() -> cellID () ; }
+  const LHCb::CaloDigit*  digit () const { return m_digit              ; }
+  const LHCb::CaloCellID& cellID() const { return digit() -> cellID () ; }
   double            e     () const { return digit() -> e      () ; }
   
   
@@ -66,16 +68,16 @@ public:
   bool isClustered() const 
   { return ( ( Tagged == m_status ) && ( Clustered == m_tag ) ); }
   
-  const CaloCellID&   seedForClustered() const { return m_seeds[0]; }
+  const LHCb::CaloCellID&   seedForClustered() const { return m_seeds[0]; }
   
-  const std::vector<CaloCellID>& seeds() const { return m_seeds; } 
+  const std::vector<LHCb::CaloCellID>& seeds() const { return m_seeds; } 
   
   size_t numberSeeds() const { return m_seeds.size(); }
   
   bool isSeed() const 
   { return ( ( m_seeds.size() != 1 ) ? false : cellID() ==  m_seeds [0] ); }
   
-  bool isWithSeed ( const CaloCellID& seed ) 
+  bool isWithSeed ( const LHCb::CaloCellID& seed ) 
   { return m_seeds.end() != std::find( m_seeds.begin() , m_seeds.end() , seed ) ; }
   
   // Updata data
@@ -93,9 +95,9 @@ public:
   void setStatus    () 
   { if ( ( Edge == m_tag ) || ( Clustered == m_tag ) ) { m_status = Tagged; } }
   
-  void addSeed ( const CaloCellID& seed ) { m_seeds.push_back ( seed ); }  
+  void addSeed ( const LHCb::CaloCellID& seed ) { m_seeds.push_back ( seed ); }  
   
-  CelAutoTaggedCell& operator=( const CaloDigit* digit ) 
+  CelAutoTaggedCell& operator=( const LHCb::CaloDigit* digit ) 
   {
     reset() ;
     m_digit    = digit ;    
@@ -118,15 +120,13 @@ private:
   Tag              m_tag      ;
   FlagState        m_status   ;
   double           m_e        ;
-  const CaloDigit* m_digit    ;
+  const LHCb::CaloDigit* m_digit    ;
   
   // Ident.seed(s)  
-  std::vector<CaloCellID> m_seeds;
+  std::vector<LHCb::CaloCellID> m_seeds;
 
 };
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOCA_CELAUTOTAGGEDCELL_H
 // ============================================================================

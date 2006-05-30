@@ -1,8 +1,11 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.7 2005-11-07 12:12:41 odescham Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.8 2006-05-30 09:42:01 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:12:41  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.6  2005/05/08 09:45:56  ibelyaev
 //  remove all *associators*
 // revision 1.7 2005/14/10 odescham
@@ -15,7 +18,6 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 // ============================================================================
 // Event 
 // ============================================================================
@@ -80,17 +82,20 @@ protected:
   ( const std::string& name   , 
     ISvcLocator*       svcloc )
     : CaloTrackAlg  ( name , svcloc ) 
-    , m_tracks      ( TrackLocation::Default )
-    , m_cut         ( 100        )
-    //
-    , m_matchType   ( "CaloTrackMatchPhoton" ) 
-    , m_matchName   ( ""         ) 
-    , m_match       ( 0          ) 
+      , m_tracks    ( LHCb::TrackLocation::Default )
+      , m_cut       ( 100        )
+      , m_matchType ( "CaloTrackMatchPhoton" ) 
+      , m_matchName ( ""         ) 
+      , m_match     ( 0          ) 
+      , m_inputData (LHCb::CaloClusterLocation::Ecal)
+      , m_outputData( "Rec/Calo/ClusterMatch")  
   {
     declareProperty ( "Tracks"         , m_tracks    ) ;
     declareProperty ( "MatchType"      , m_matchType ) ;
     declareProperty ( "MatchName"      , m_matchName ) ;
     declareProperty ( "Cut"            , m_cut       ) ;
+    declareProperty ( "InputData"      , m_inputData ) ;  
+    declareProperty ( "OutputData"     , m_outputData) ;  
     // 
     setProperty     ( "UseUniqueOnly"  , "true"      ) ;
     setProperty     ( "UseErrorAlso"   , "false"     ) ;
@@ -101,10 +106,6 @@ protected:
     setProperty     ( "isVelotrack"    , "false"     ) ;
     setProperty     ( "isBackward"     , "false"     ) ;
     setProperty     ( "isTtrack"       , "true"      ) ;
-    // set the approproate default value for input  data 
-    setInputData    ( CaloClusterLocation::  Ecal      ) ;
-    // set the approproate default value for output data 
-    setOutputData   ( "Rec/Calo/PhotonMatch"      ) ;
   };
   /// destructor (virtual and protected)
   virtual ~CaloCluster2TrackAlg(){};
@@ -126,6 +127,9 @@ private:
   std::string        m_matchType ;
   std::string        m_matchName ;
   ICaloTrackMatch*   m_match     ;
+  std::string   m_inputData;
+  std::string   m_outputData;
+  
 
 };
 // ============================================================================
@@ -171,32 +175,31 @@ StatusCode CaloCluster2TrackAlg::initialize()
 StatusCode CaloCluster2TrackAlg::execute() 
 {
   // avoid long names 
-  typedef const CaloCluster                                    Cluster  ;
-  typedef const CaloClusters                                   Clusters ;
-  typedef RelationWeighted2D<CaloCluster,Track,float>  Table    ;
+  typedef const LHCb::CaloCluster                                    Cluster  ;
+  typedef const LHCb::CaloClusters                                   Clusters ;
+  typedef LHCb::RelationWeighted2D<LHCb::CaloCluster,LHCb::Track,float> Table    ;
 
   const StatusCode OK = StatusCode::SUCCESS ;
   
   // get clusters from Transient Store  
-  const Clusters* clusters = get<Clusters> ( inputData() ) ;
+  const Clusters* clusters = get<Clusters> ( m_inputData ) ;
   if ( 0 ==  clusters           )     { return StatusCode::FAILURE ; }
   
   // get tracks   from Transient Store  
-  const Tracks*   tracks   = get<Tracks>   (  m_tracks   ) ;
+  const LHCb::Tracks*   tracks   = get<LHCb::Tracks>   (  m_tracks   ) ;
   if ( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
   
   // create relation table and register it in the store
   Table*    table    = new Table( clusters->size() * 10 ) ;
-  StatusCode sc      = put( table , outputData() );
-  if ( sc.isFailure()           )     { return StatusCode::FAILURE ; }
-
+  put( table , m_outputData );
+  
   if ( 0 == tracks   -> size () )
   { return Warning ( "Empty container of Tracks   " , OK ) ; }
   if ( 0 == clusters -> size () )
   { return Warning ( "Empty container of Clusters " , OK ) ; }
   
   // loop over all tracks 
-  for ( Tracks::const_iterator track = tracks->begin() ; 
+  for ( LHCb::Tracks::const_iterator track = tracks->begin() ; 
         tracks->end() != track ; ++track )
   {  
     // skip NULLs 
@@ -232,13 +235,9 @@ StatusCode CaloCluster2TrackAlg::execute()
   // NB: call for "i_sort" is mandatory after "i_push"
   table -> i_sort() ;                                  // NB: "i_sort"
   
-  if ( msgLevel( MSG::DEBUG ) ) 
-  { debug() << "Entries in the table " << table->relations().size() << endreq ; }
+  debug() << "Entries in the table " << table->relations().size() << endreq ; 
   
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

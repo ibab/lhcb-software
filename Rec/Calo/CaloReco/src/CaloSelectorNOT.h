@@ -1,8 +1,11 @@
-// $Id: CaloSelectorNOT.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelectorNOT.h,v 1.3 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
 // new package 
 //
@@ -10,13 +13,13 @@
 //  several 'technical' tools are added
 //
 // ============================================================================
-#ifndef CALOTOOLS_CALOSELECTORNOT_H 
-#define CALOTOOLS_CALOSELECTORNOT_H 1
+#ifndef CALORECO_CALOSELECTORNOT_H 
+#define CALORECO_CALOSELECTORNOT_H 1
 // Include files
 // from STL
 #include <string>
-// from CaloKernel
-#include "CaloKernel/CaloTool.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiTool.h"
 // From CaloInterfaces
 #include "CaloInterfaces/ICaloClusterSelector.h"
 
@@ -31,7 +34,7 @@
  */
 class CaloSelectorNOT : 
   public virtual ICaloClusterSelector ,
-  public          CaloTool 
+  public          GaudiTool 
 {
   /// friend factory for instantiation
   friend class ToolFactory<CaloSelectorNOT>;
@@ -49,7 +52,7 @@ public:
    *  @return true if cluster is selected
    */
   virtual bool select     
-  ( const CaloCluster* cluster ) const  ;
+  ( const LHCb::CaloCluster* cluster ) const  ;
 
   /** "select"/"preselect" method (functor interface)
    *  @see ICaloClusterSelector
@@ -57,12 +60,12 @@ public:
    *  @return true if cluster is selected
    */
   virtual bool operator () 
-    ( const CaloCluster* cluster ) const  ;
+    ( const LHCb::CaloCluster* cluster ) const  ;
   
   /** stNOTard initialization of the tool 
    *  @see IAlgTool 
    *  @see AlgTool 
-   *  @see CaloTool 
+   *  @see GaudiTool 
    *  @return status code 
    */
   virtual StatusCode initialize () ;
@@ -70,7 +73,7 @@ public:
   /** stNOTard finalization  of the tool 
    *  @see IAlgTool 
    *  @see AlgTool 
-   *  @see CaloTool 
+   *  @see GaudiTool 
    *  @return status code 
    */
   virtual StatusCode finalize   () ;
@@ -78,7 +81,7 @@ public:
 protected:
   
   /** StNOTard constructor
-   *  @see CaloTool
+   *  @see GaudiTool
    *  @see  AlgTool 
    *  @see IAlgTool 
    *  @param type   tool type (?)
@@ -110,9 +113,5 @@ private:
   Selectors m_selectors          ;
   
 };
-
 // ============================================================================
-// The END 
-// ============================================================================
-#endif // CALOTOOLS_CALOSELECTORNOT_H
-// ============================================================================
+#endif // CALORECO_CALOSELECTORNOT_H

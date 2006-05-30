@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.7 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.8 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,7 +9,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/MsgStream.h"
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // Event/CaloEvent 
@@ -51,7 +50,7 @@ const        IAlgFactory&CaloElectronAlgFactory = s_Factory ;
 CaloElectronAlg::CaloElectronAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
-  : CaloAlgorithm ( name , pSvc )  
+  : GaudiAlgorithm ( name , pSvc )  
   , m_selectorsTypeNames    () 
   , m_selectors             ()
   , m_correctionsTypeNames  () 
@@ -62,18 +61,18 @@ CaloElectronAlg::CaloElectronAlg
   , m_corrections2          () 
   , m_hypotoolsTypeNames2   ()
   , m_hypotools2            () 
+  , m_inputData  (LHCb::CaloClusterLocation::Ecal)
+  , m_outputData (LHCb::CaloHypoLocation::Electrons)
+  , m_detData    (DeCalorimeterLocation::Ecal)
 {
   declareProperty ( "SelectionTools"   , m_selectorsTypeNames    ) ;
   declareProperty ( "CorrectionTools"  , m_correctionsTypeNames  ) ;
   declareProperty ( "HypoTools"        , m_hypotoolsTypeNames    ) ;
   declareProperty ( "CorrectionTools2" , m_correctionsTypeNames2 ) ;
   declareProperty ( "HypoTools2"       , m_hypotoolsTypeNames2   ) ;
-  // set the appropriate default value for input data 
-  setInputData    ( CaloClusterLocation::   Ecal                 ) ;
-  // set the appropriate default value for output data 
-  setOutputData   ( CaloHypoLocation::      Electrons            ) ;
-  // set the appropriate default value for detector data 
-  setDetData      ( DeCalorimeterLocation:: Ecal                 ) ;  
+  declareProperty ( "InputData"        , m_inputData             ) ;  
+  declareProperty ( "OutputData"       , m_outputData            ) ;  
+  declareProperty ( "Detector"         , m_detData               ) ;  
 };
 // ============================================================================
 
@@ -92,11 +91,11 @@ StatusCode
 CaloElectronAlg::initialize() 
 {
   // initialize  the base class 
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class CaloAlgorithm!",sc);}
+  { return Error("Could not initialize the base class GaudiAlgorithm!",sc);}
   // check the geometry information 
-  const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ;
+  const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData ) ;
   if( 0 == det ) { return Error("Detector information is not available!");}
   { // locate selector tools
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
@@ -151,7 +150,7 @@ CaloElectronAlg::initialize()
  *  @date 31/03/2002 
  */
 class DigitFromCalo 
-  : public std::unary_function<const CaloDigit*,bool>
+  : public std::unary_function<const LHCb::CaloDigit*,bool>
 { 
 public:
 
@@ -171,7 +170,7 @@ public:
    *  @param digit pointer to CaloDigit object 
    *  @return true if digit belongs to the predefined calorimeter 
    */
-  inline bool operator() ( const CaloDigit* digit ) const 
+  inline bool operator() ( const LHCb::CaloDigit* digit ) const 
   {
     if( 0 == digit ) { return false ; }
     return (int) digit->cellID().calo() == m_calo ;
@@ -197,7 +196,8 @@ private:
 StatusCode 
 CaloElectronAlg::finalize() 
 {
-  Print( " == > Finalize  " , StatusCode::SUCCESS , MSG::DEBUG );  
+  debug()<<"Finalize"<<endreq;
+  
   // clear containers
   m_selectors             .clear () ;
   m_corrections           .clear () ;
@@ -210,7 +210,7 @@ CaloElectronAlg::finalize()
   m_correctionsTypeNames2 .clear () ;
   m_hypotoolsTypeNames2   .clear () ;
   // finalize the base class 
-  return CaloAlgorithm::finalize() ; 
+  return GaudiAlgorithm::finalize() ; 
 };
 // ============================================================================
 
@@ -223,16 +223,16 @@ StatusCode
 CaloElectronAlg::execute() 
 {
   // avoid long names 
-  typedef CaloClusters             Clusters ;
-  typedef CaloHypos                Hypos    ;
-  typedef Clusters::iterator       iterator ;
+  typedef LHCb::CaloClusters             Clusters ;
+  typedef LHCb::CaloHypos                Hypos    ;
+  typedef Clusters::iterator             iterator ;
   
   // get input clusters
-  Clusters* clusters = get<Clusters>( inputData() );
+  Clusters* clusters = get<Clusters>( m_inputData );
   
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
-  put( hypos , outputData() );
+  put( hypos , m_outputData );
   
   DigitFromCalo prs( "Prs" );
   DigitFromCalo spd( "Spd" );
@@ -253,9 +253,9 @@ CaloElectronAlg::execute()
       if( !select ) { continue ; }
  
       // create "Hypo"/"Photon" object
-      CaloHypo* hypo = new CaloHypo() ;
+      LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
       // set parameters of newly created hypo 
-      hypo->setHypothesis( CaloHypotheses::Photon ); /// temporary!      
+      hypo->setHypothesis( LHCb::CaloHypotheses::Photon ); /// temporary!      
       hypo->addToClusters( *cluster );
       
       StatusCode sc( StatusCode::SUCCESS );
@@ -330,7 +330,7 @@ CaloElectronAlg::execute()
         }
 
       // set "correct" hypothesis
-      hypo->setHypothesis( CaloHypotheses::EmCharged ); /// final!
+      hypo->setHypothesis( LHCb::CaloHypotheses::EmCharged ); /// final!
 
       /// set new Z 
       /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      
@@ -347,8 +347,5 @@ CaloElectronAlg::execute()
 // ============================================================================
 
 
-// ============================================================================
-// The End 
-// ============================================================================
 
 

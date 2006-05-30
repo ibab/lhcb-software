@@ -1,18 +1,18 @@
-// $Id: CaloSelector.h,v 1.5 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSelector.h,v 1.6 2006-05-30 09:42:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // #Log:$
 // ============================================================================
-#ifndef CALOTOOLS_CALOSELECTOR_H 
-#define CALOTOOLS_CALOSELECTOR_H 1
+#ifndef CALORECO_CALOSELECTOR_H 
+#define CALORECO_CALOSELECTOR_H 1
 // Include files
 // from STL
 #include <string>
-// from LHCbKernel
-#include "Kernel/CaloHypotheses.h"
-// from CaloKernel
-#include "CaloKernel/CaloTool.h"
+// from Event
+#include "Event/CaloHypotheses.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiTool.h"
 // from CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterSelector.h"
 // forward declaratiosn 
@@ -33,7 +33,7 @@ class ICaloLikelihood ; // from CaloInterfaces ;
  */
 class CaloSelector : 
   public virtual   ICaloClusterSelector , 
-  public                       CaloTool 
+  public                       GaudiTool 
 {
   /// friend factory for instantiation`
   friend class ToolFactory<CaloSelector>;
@@ -44,19 +44,19 @@ public:
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool select     ( const CaloCluster* cluster ) const ;
+  virtual bool select     ( const LHCb::CaloCluster* cluster ) const ;
   
   /** "select"/"preselect" method (functor interface)
    *  @see ICaloClusterSelector 
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const CaloCluster* cluster ) const ;
+  virtual bool operator() ( const LHCb::CaloCluster* cluster ) const ;
   
   /** standard initialization of the tool 
    *  @see IAlgTool 
    *  @see AlgTool 
-   *  @see CaloTool 
+   *  @see GaudiTool 
    *  @return status code 
    */
   virtual StatusCode initialize () ;
@@ -64,7 +64,7 @@ public:
   /** standard finalization  of the tool 
    *  @see IAlgTool 
    *  @see AlgTool 
-   *  @see CaloTool 
+   *  @see GaudiTool 
    *  @return status code 
    */
   virtual StatusCode finalize   () ;
@@ -111,5 +111,5 @@ private:
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-#endif // CALOTOOLS_CALOSELECTOR_H
+#endif // CALORECO_CALOSELECTOR_H
 // ============================================================================

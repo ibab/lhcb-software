@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.h,v 1.6 2005-11-22 16:15:57 cattanem Exp $
+// $Id: CaloTrackMatchElectron.h,v 1.7 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/22 16:15:57  cattanem
+// fix doxygen warnings
+//
 // Revision 1.5  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -13,8 +16,8 @@
 //  add 'photon' matching for Trg Tracks
 //
 // ============================================================================
-#ifndef CALOTRACKTOOLS_CALOTRACKMATCHELECTRON_H
-#define CALOTRACKTOOLS_CALOTRACKMATCHELECTRON_H 1
+#ifndef CALORECO_CALOTRACKMATCHELECTRON_H
+#define CALORECO_CALOTRACKMATCHELECTRON_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -61,8 +64,8 @@ public:
    *  @return status code for matching procedure
    */
   StatusCode match 
-  ( const CaloPosition  *caloObj,
-    const Track *trObj,
+  ( const LHCb::CaloPosition  *caloObj,
+    const LHCb::Track *trObj,
     double              &chi2 );
   
 
@@ -103,8 +106,8 @@ private:
    * @param  cluster data object
    * @return internal type struct with data
    */
-  inline const MatchType1&
-  prepareCluster( const CaloPosition *cluster )
+  inline const Match3D&
+  prepareCluster( const LHCb::CaloPosition *cluster )
   {
     m_matchCalo.params = cluster->parameters() ;
     m_matchCalo.cov    = cluster->covariance() ;
@@ -124,90 +127,43 @@ private:
    * @param  trState Track data object
    * @return internal type struct with data
    */
-  inline const MatchType1&
-  prepareTrack( const State *state )  
+  inline const Match3D&
+  prepareTrack( const LHCb::State *state )  
   { 
-    const HepSymMatrix& stCov = state -> covariance();
+    const Gaudi::TrackSymMatrix stCov = state -> covariance();
 
     /// Make the vector of the format needed
-    m_matchTrk1.params (1) = state->x() ;
-    m_matchTrk1.params (2) = state->y() ;
+    m_matchTrack.params (0) = state->x() ;
+    m_matchTrack.params (1) = state->y() ;
+    m_matchTrack.params (2) = state->p() ;
 
     const double p = state->p() ;
-    
-    m_matchTrk1.params (3) = p ;
-    
     const double q = state->qOverP() < 0 ? -1. : 1. ; // Q sign
-    
     // to convert sigma(Q/P)->sigma(P)
     const double coeff = q * p * p ;
     
     // make the matrix. Recalculate elements concerned with momentum
     // since we need P and the original matrix contains Q/P
-    m_matchTrk1.cov.fast(1, 1) = stCov.fast(1, 1);
-    m_matchTrk1.cov.fast(2, 1) = stCov.fast(2, 1);
-    m_matchTrk1.cov.fast(2, 2) = stCov.fast(2, 2);
-    m_matchTrk1.cov.fast(3, 1) = stCov.fast(5, 1) * coeff;
-    m_matchTrk1.cov.fast(3, 2) = stCov.fast(5, 2) * coeff;
-    m_matchTrk1.cov.fast(3, 3) = stCov.fast(5, 5) * coeff * coeff;
+    m_matchTrack.cov(0, 0) = stCov(0, 0);
+    m_matchTrack.cov(1, 0) = stCov(1, 0);
+    m_matchTrack.cov(1, 1) = stCov(1, 1);
+    m_matchTrack.cov(2, 0) = stCov(4, 0) * coeff;
+    m_matchTrack.cov(2, 1) = stCov(4, 2) * coeff;
+    m_matchTrack.cov(2, 2) = stCov(4, 4) * coeff * coeff;
     
-    m_matchTrk1.error    =   0   ;
-    m_matchTrk1.inverted = false ;
-    m_matchTrk1.invert() ;
+    m_matchTrack.error    =   0   ;
+    m_matchTrack.inverted = false ;
+    m_matchTrack.invert() ;
     
-    return m_matchTrk1 ;
+    return m_matchTrack ;
   };
   
 
-  /** Makes struct with vector and covariance
-   * with Track data.
-   * Returned format is the same as for Cluster.
-   * Input format of Track is quite different: (x, y, tx, ty, e),
-   * so the function performs vector and matrix remake
-   * @param  state    Track data object
-   * @param  z        Not used!!
-   * @return internal type struct with data
-   */
-  inline const MatchType2&
-  prepareTrack( const State *state , 
-                const double    z        )  
-  { 
-    
-    /// Make the vector of the format needed
-    m_matchTrk2.params (1) =       state->x() ;
-    m_matchTrk2.params (2) =       state->y() ;
-    
-    const double p = state->p() ;
-    
-    m_matchTrk2.params (3) = fabs( p ) ;
-    
-    const double sign = state->qOverP() < 0 ? -1 : 1 ; // Q sign
-    
-    // to convert sigma(Q/P)->sigma(P)
-    const double coeff = sign * p * p ;
-    
-    // make the matrix. Recalculate elements concerned with momentum
-    // since we need P and the original matrix contains Q/P
-    m_matchTrk2.cov.fast(1, 1) = state->errX2() ;
-    m_matchTrk2.cov.fast(2, 2) = state->errY2() ;    
-    m_matchTrk2.cov.fast(3, 3) = state->errQOverP2() * coeff * coeff ;
-
-    m_matchTrk2.error    =   0   ;
-    m_matchTrk2.inverted = false ;
-    m_matchTrk2.invert() ;
-    
-    return m_matchTrk2 ;
-  };
-  
 private:
   
-  MatchType1 m_matchCalo ;  
-  MatchType1 m_matchTrk1 ;  
-  MatchType2 m_matchTrk2 ;
+  Match3D m_matchCalo ;  
+  Match3D m_matchTrack ;  
   
 };
 // ============================================================================
-// The End
-// ============================================================================
-#endif // CALOTRACKTOOLS_CALOTRACKMATCHELECTRON_H
-// ============================================================================
+#endif // CALORECO_CALOTRACKMATCHELECTRON

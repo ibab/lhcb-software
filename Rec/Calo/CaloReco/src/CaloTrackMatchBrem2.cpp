@@ -1,39 +1,30 @@
-// $Id: CaloTrackMatchBrem2.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchBrem2.cpp,v 1.4 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/10/26 17:51:42  ibelyaev
 //  add 'photon' matching for Trg Tracks
 //
 // ============================================================================
 // Include files
 // ============================================================================
-// CLHEP 
-// ============================================================================
-#include "CLHEP/Matrix/Matrix.h"
-// ============================================================================
 // GaudiKernel
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GaudiException.h"
-// ============================================================================
 // Calo related
-// ============================================================================
 #include "Event/CaloCluster.h"
-#include "CaloKernel/CaloPrint.h"
-// ============================================================================
 // track related
 // ============================================================================
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
-// ============================================================================
 // local
-// ============================================================================
 #include "CaloTrackMatchBrem2.h"
-// ============================================================================
 
 
 // ============================================================================
@@ -68,11 +59,10 @@ CaloTrackMatchBrem2::CaloTrackMatchBrem2
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
   //
-  , m_matchCalo ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk1 ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk2 ( HepVector ( 2 , 0 ) , HepDiagMatrix ( 2 , 0 ) )
+  , m_matchCalo  ( Gaudi::Vector2() , Gaudi::SymMatrix2x2() ) 
+  , m_matchTrack ( Gaudi::Vector2() , Gaudi::SymMatrix2x2() ) 
   //
-  , m_bremZ  ( 2.165 * meter )
+  , m_bremZ  ( 2.165 * Gaudi::Units::meter )
 {
   declareProperty ( "BremZ"       , m_bremZ  ) ;
   
@@ -102,8 +92,8 @@ CaloTrackMatchBrem2::~CaloTrackMatchBrem2() {};
  */
 // ============================================================================
 StatusCode CaloTrackMatchBrem2::match
-( const CaloPosition  *caloObj,
-  const Track *trObj,
+( const LHCb::CaloPosition  *caloObj,
+  const LHCb::Track *trObj,
   double              &chi2_result )
 {
   // set 'bad' value 
@@ -120,8 +110,8 @@ StatusCode CaloTrackMatchBrem2::match
   }
   else 
   {
-    const double covXX = caloObj->spread().fast(1,1) ;
-    const double covYY = caloObj->spread().fast(2,2) ;  
+    const double covXX = caloObj->spread()(0,0) ;
+    const double covYY = caloObj->spread()(1,1) ;  
     sc = findState ( trObj        , 
                      m_bremZ      , 
                      caloObj->z() , 
@@ -147,6 +137,3 @@ StatusCode CaloTrackMatchBrem2::match
 
 
 
-// ============================================================================
-// The End
-// ============================================================================

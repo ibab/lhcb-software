@@ -1,11 +1,10 @@
-// $Id: ClusterSpreadTool.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $
+// $Id: ClusterSpreadTool.cpp,v 1.4 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // local
@@ -39,9 +38,11 @@ ClusterSpreadTool::ClusterSpreadTool
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : CaloTool    ( type , name , parent )
+  : GaudiTool    ( type , name , parent )
   , m_estimator (      )
+  , m_detData   ( DeCalorimeterLocation::Ecal )
 {
+  declareProperty( "Detector"        , m_detData  );
   /// declare available interafces 
   declareInterface<ICaloClusterTool>(this);
 };
@@ -51,7 +52,7 @@ ClusterSpreadTool::ClusterSpreadTool
  */
 // ============================================================================
 ClusterSpreadTool::~ClusterSpreadTool()
-{ setDet( (const DeCalorimeter*) 0 ); };
+{ };
 
  
 // ============================================================================
@@ -62,25 +63,13 @@ ClusterSpreadTool::~ClusterSpreadTool()
 StatusCode ClusterSpreadTool::initialize ()
 {
   /// initialize the base class 
-  StatusCode sc = CaloTool::initialize();
+  StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class ",sc);}
   ///  
-  if( 0 == det() ) 
-    {
-      if( 0 == detSvc() )
-        { return Error("Detector Data Service is ivnalid!"); }
-      /// 
-      SmartDataPtr<DeCalorimeter> calo( detSvc() , detName() );
-      if( !calo )
-        { return Error("Could not locate detector='"+detName()+"'"); }
-      /// set detector
-      setDet( calo );
-    }
-  if( 0 == det() ) 
-    { return Error("DeCalorimeter* points to NULL!");  }
+  m_det = getDet<DeCalorimeter>( m_detData) ;
   /// configure the estimator 
-  m_estimator.setDetector( det() ) ;
+  m_estimator.setDetector( m_det ) ;
   ///
   return StatusCode::SUCCESS;
 };
@@ -92,10 +81,8 @@ StatusCode ClusterSpreadTool::initialize ()
 // ============================================================================
 StatusCode ClusterSpreadTool::finalize   ()
 {  
-  /// remove detector 
-  setDet( (const DeCalorimeter*) 0 );
   /// finalize the  the base class
-  return CaloTool::finalize ();
+  return GaudiTool::finalize ();
 };
 
 // ============================================================================
@@ -105,7 +92,7 @@ StatusCode ClusterSpreadTool::finalize   ()
  */  
 // ============================================================================
 StatusCode ClusterSpreadTool::process    
-( CaloCluster* cluster ) const 
+( LHCb::CaloCluster* cluster ) const 
 { return (*this)( cluster ); };
 
 // ============================================================================
@@ -115,7 +102,7 @@ StatusCode ClusterSpreadTool::process
  */  
 // ============================================================================
 StatusCode ClusterSpreadTool::operator() 
-  ( CaloCluster* cluster ) const
+  ( LHCb::CaloCluster* cluster ) const
 {
   /// check the argument 
   if( 0 == cluster                ) 
@@ -125,7 +112,4 @@ StatusCode ClusterSpreadTool::operator()
   /// apply the estimator 
   return m_estimator( cluster );
 };
-
-// ============================================================================
-// The End 
-// ============================================================================
+  

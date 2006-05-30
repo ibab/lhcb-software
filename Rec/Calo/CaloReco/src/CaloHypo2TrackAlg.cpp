@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.cpp,v 1.5 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloHypo2TrackAlg.cpp,v 1.6 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 //
 // Revision 1.5  2005/17/10 09:45:56  odescham
 // adapt to new track model
@@ -20,7 +23,6 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 // ============================================================================
 // Event 
 // ============================================================================
@@ -65,17 +67,21 @@ CaloHypo2TrackAlg::CaloHypo2TrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
   : CaloTrackAlg  ( name , svcloc ) 
-  , m_tracks      ( TrackLocation::Default )
+  , m_tracks      ( LHCb::TrackLocation::Default )
   , m_cut         ( 1.e+30     )
   //
   , m_matchType   ( "SomeType" ) 
   , m_matchName   ( ""         ) 
-  , m_match       ( 0      ) 
+  , m_match       ( 0      )
+  , m_inputData ()
+  , m_outputData()  
 {
   declareProperty( "Tracks"     , m_tracks     ) ;
   declareProperty( "MatchType"  , m_matchType  ) ;
   declareProperty( "MatchName"  , m_matchName  ) ;
   declareProperty( "Cut"        , m_cut        ) ;
+  declareProperty ( "InputData"      , m_inputData ) ;
+  declareProperty ( "OutputData"     , m_outputData) ;  
   // 
   // 'electron'-match configuration 
   setProperty     ( "UseUniqueOnly"  , "true"      ) ;
@@ -131,22 +137,19 @@ StatusCode CaloHypo2TrackAlg::initialize()
 StatusCode CaloHypo2TrackAlg::execute() 
 {
   // avoid long names 
-  typedef const CaloHypos                                   Hypos    ;
-  typedef const CaloHypo                                    Hypo     ;
-  typedef RelationWeighted2D<CaloHypo,Track,float>  Table    ;
+  typedef const LHCb::CaloHypos                                         Hypos    ;
+  typedef const LHCb::CaloHypo                                          Hypo     ;
+  typedef LHCb::RelationWeighted2D<LHCb::CaloHypo,LHCb::Track,float>    Table    ;
   
   // get Hypos from Transient Store  
-  Hypos*    hypos    = get<Hypos>    ( inputData() ) ;
-  if ( 0 ==  hypos              )     { return StatusCode::FAILURE ; }
+  Hypos*    hypos    = get<Hypos>    ( m_inputData ) ;
   
   // get tracks   from Transient Store  
-  Tracks*   tracks   = get<Tracks>   ( m_tracks    );
-  if ( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
+  LHCb::Tracks*   tracks   = get<LHCb::Tracks>   ( m_tracks    );
   
   // create relation table and register it in the store
   Table*    table = new Table();
-  StatusCode sc = put( table , outputData() );
-  if ( sc.isFailure()           )     { return StatusCode::FAILURE ; }
+  put( table , m_outputData );
   
   if ( 0 == tracks   -> size () )
   { Warning ( "Empty container of Tracks " , StatusCode::SUCCESS ) ; }
@@ -157,7 +160,7 @@ StatusCode CaloHypo2TrackAlg::execute()
       0 == hypos    -> size () )     { return StatusCode::SUCCESS ; }
   
   // loop over tracks  
-  for ( Tracks::const_iterator track = tracks->begin() ; 
+  for ( LHCb::Tracks::const_iterator track = tracks->begin() ; 
         tracks->end() != track ; ++track )
   {  
     // skip NULLS 
@@ -204,6 +207,3 @@ StatusCode CaloHypo2TrackAlg::execute()
 };
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

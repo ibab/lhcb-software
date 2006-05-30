@@ -1,5 +1,5 @@
-#ifndef CALOCA_TAGGEDCELLFUNCTOR_H
-#define CALOCA_TAGGEDCELLFUNCTOR_H 1 
+#ifndef CALORECO_TAGGEDCELLFUNCTOR_H
+#define CALORECO_TAGGEDCELLFUNCTOR_H 1 
 // STL
 #include <functional>
 #include <vector>
@@ -127,7 +127,7 @@ public std::unary_function<CelAutoTaggedCell*, bool> {
  
   // Constructor
 
-  isWithSeed( const CaloCellID& seed ) :
+  isWithSeed( const LHCb::CaloCellID& seed ) :
     m_seed ( seed ) {};
 
   // Destructor
@@ -142,7 +142,7 @@ public std::unary_function<CelAutoTaggedCell*, bool> {
   
   private:
  
-  CaloCellID m_seed; 
+  LHCb::CaloCellID m_seed; 
 
 };
 
@@ -167,7 +167,7 @@ public std::unary_function<CelAutoTaggedCell*, void > {
   
 };
 
-#endif // CALOCA_TAGGEDCELLFUNCTOR_H
+#endif // CALORECO_TAGGEDCELLFUNCTOR_H
 
 
 

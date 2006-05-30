@@ -1,17 +1,16 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.8 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.9 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.7  2004/10/26 17:51:42  ibelyaev
 //  add 'photon' matching for Trg Tracks
 //
 // ============================================================================
 // Include files
-// ============================================================================
-// CLHEP 
-// ============================================================================
-#include "CLHEP/Matrix/Matrix.h"
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -22,7 +21,6 @@
 // Calo related
 // ============================================================================
 #include "Event/CaloCluster.h"
-#include "CaloKernel/CaloPrint.h"
 // ============================================================================
 // track related
 // ============================================================================
@@ -68,11 +66,10 @@ CaloTrackMatchBremm::CaloTrackMatchBremm
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
   //
-  , m_matchCalo ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk1 ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk2 ( HepVector ( 2 , 0 ) , HepDiagMatrix ( 2 , 0 ) )
+  , m_matchCalo  ( Gaudi::Vector2 ( ) , Gaudi::SymMatrix2x2  ( ) ) 
+  , m_matchTrack ( Gaudi::Vector2 ( ) , Gaudi::SymMatrix2x2  ( ) ) 
   //
-  , m_bremZ  ( 2.165 * meter )
+  , m_bremZ  ( 2.165 * Gaudi::Units::meter )
 {
   declareProperty ( "BremZ"       , m_bremZ  ) ;
   setProperty ( "Extrapolator" ,  "TrackLinearExtrapolator" ) ;
@@ -100,8 +97,8 @@ CaloTrackMatchBremm::~CaloTrackMatchBremm() {};
  */
 // ============================================================================
 StatusCode CaloTrackMatchBremm::match
-( const CaloPosition  *caloObj,
-  const Track *trObj,
+( const LHCb::CaloPosition  *caloObj,
+  const LHCb::Track *trObj,
   double              &chi2_result )
 {
   // set 'bad' value 
@@ -118,8 +115,8 @@ StatusCode CaloTrackMatchBremm::match
   }
   else 
   {
-    const double covXX = caloObj->covariance().fast(1,1) ;
-    const double covYY = caloObj->covariance().fast(2,2) ;  
+    const double covXX = caloObj->covariance()(1,1) ;
+    const double covYY = caloObj->covariance()(2,2) ;  
     sc = findState ( trObj        , 
                      m_bremZ      , 
                      caloObj->z() , 

@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.h,v 1.5 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSinglePhotonAlg.h,v 1.6 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.4  2004/12/10 17:12:29  ibelyaev
 //  steps towards 'Fast' Calo recontruction
 //
@@ -18,7 +21,7 @@
 // ============================================================================
 // from CaloKernel
 // ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // forward delcarations 
 // ============================================================================
@@ -37,7 +40,7 @@ class ICaloHypoTool        ;
  *  @date   31/03/2002
  */
 class CaloSinglePhotonAlg : 
-  public CaloAlgorithm
+  public GaudiAlgorithm
 {  
   /// friend factory for instantiation 
   friend class AlgFactory<CaloSinglePhotonAlg>; 
@@ -115,10 +118,10 @@ private:
   Names        m_hypotoolsTypeNames2        ;
   HypoTools    m_hypotools2                 ;
 
-};
+  std::string m_inputData ;
+  std::string m_outputData;
+  std::string m_detData   ;
 
-// ============================================================================
-// The END 
+};
 // ============================================================================
 #endif // CALOSINGLEPHOTONALG_H
-// ============================================================================

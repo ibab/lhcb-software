@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.6 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloExtraDigits.cpp,v 1.7 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.5  2004/02/17 12:08:06  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -11,11 +14,8 @@
 // STL 
 #include <cmath>
 #include <algorithm>
-// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/Stat.h" 
 #include "GaudiKernel/IChronoStatSvc.h" 
@@ -36,16 +36,16 @@
 #ifdef WIN32
 
 template<>
-bool std::less<SmartRef<CaloDigit>       >::operator() 
- ( const SmartRef<CaloDigit>& ref1 , 
-   const SmartRef<CaloDigit>& ref2 ) const 
-{ return (const CaloDigit*) ref1 < (const CaloDigit*) ref2 ; };
+bool std::less<SmartRef<LHCb::CaloDigit>       >::operator() 
+ ( const SmartRef<LHCb::CaloDigit>& ref1 , 
+   const SmartRef<LHCb::CaloDigit>& ref2 ) const 
+{ return (const LHCb::CaloDigit*) ref1 < (const LHCb::CaloDigit*) ref2 ; };
 
 template<>
-bool std::less<const SmartRef<CaloDigit> >::operator() 
- ( const SmartRef<CaloDigit>& ref1 , 
-   const SmartRef<CaloDigit>& ref2 ) const 
-{  return (const CaloDigit*) ref1 < (const CaloDigit*) ref2 ; };
+bool std::less<const SmartRef<LHCb::CaloDigit> >::operator() 
+ ( const SmartRef<LHCb::CaloDigit>& ref1 , 
+   const SmartRef<LHCb::CaloDigit>& ref2 ) const 
+{  return (const CLHCb::aloDigit*) ref1 < (const LHCb::CaloDigit*) ref2 ; };
 #endif 
 
 // ============================================================================
@@ -78,16 +78,17 @@ const        IToolFactory&CaloExtraDigitsFactory = s_factory ;
 CaloExtraDigits::CaloExtraDigits( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : CaloTool            ( type, name , parent ) 
+  : GaudiTool            ( type, name , parent ) 
   , m_inputData         ( ""       )
   , m_digits            ( 0        )
-  , m_z                 ( -10 * km ) 
+  , m_z                 ( -10 * Gaudi::Units::km ) 
   , m_xTol              ( 0        ) 
   , m_yTol              ( 0        )
   , m_vertex            (          )
   , m_addSeed           ( true     )
   , m_addSeedNeighbours ( true     ) 
   , m_selector          ( "Ecal"   )
+  , m_detData()
 {
   declareInterface<ICaloHypoTool>     (this);
   declareInterface<IIncidentListener> (this);  
@@ -96,8 +97,8 @@ CaloExtraDigits::CaloExtraDigits( const std::string& type,
   declareProperty ( "AddNeighbours" , m_addSeedNeighbours ) ;
   declareProperty ( "xTol"          , m_xTol              ) ;
   declareProperty ( "yTol"          , m_yTol              ) ;
+  declareProperty ( "Detector"      , m_detData           ) ;
 };
-// ============================================================================
 
 // ============================================================================
 /// Destructor (virtual and protected)
@@ -109,27 +110,26 @@ CaloExtraDigits::~CaloExtraDigits(){};
 /** standard initialization of the tool
  *  @see IAlgTool
  *  @see  AlgTool
- *  @see CaloTool
+ *  @see GaudiTool
  *  @return status code 
  */
 // ============================================================================
 StatusCode CaloExtraDigits::initialize () 
 {
   // initilaize the base class 
-  StatusCode sc = CaloTool::initialize ();
+  StatusCode sc = GaudiTool::initialize ();
   if( sc.isFailure() ) 
-  { return Error( "Could not initialize the base class CaloTool!", sc ) ; }
+  { return Error( "Could not initialize the base class GaudiTool!", sc ) ; }
   
   // check the detector data 
-  const DeCalorimeter* detector = getDet<DeCalorimeter>( detName() );
-  if( 0 == detector ) { return Error("DeCalorimeter* points to NULL!");}
-  setDet( detector );
+  m_det = getDet<DeCalorimeter>( m_detData );
+  if( 0 == m_det ) { return Error("DeCalorimeter* points to NULL!");}
 
-  const IGeometryInfo* geoinf = det()->geometry() ;
+  const IGeometryInfo* geoinf = m_det->geometry() ;
   if( 0 == geoinf ) { return Error("IGeometryInfo is not available!"); }
   // center of the detector in mother reference frame 
-  HepPoint3D center = geoinf->toGlobal( HepPoint3D() );
-  m_z = center.z() + det()->zShowerMax ();
+  Gaudi::XYZPoint center = geoinf->toGlobal( Gaudi::XYZPoint() );
+  m_z = center.z() + m_det->zShowerMax ();
   //  subscribe the incidents 
   incSvc()->addListener( this , IncidentType::EndEvent   , 10 );
   incSvc()->addListener( this , IncidentType::BeginEvent , 10 );
@@ -160,7 +160,7 @@ void CaloExtraDigits::handle( const Incident& /* incident */  )
  *  @return status code 
  */  
 // ============================================================================
-StatusCode CaloExtraDigits::process    ( CaloHypo* hypo  ) const 
+StatusCode CaloExtraDigits::process    ( LHCb::CaloHypo* hypo  ) const 
 { return (*this) ( hypo ); };
 // ============================================================================
 
@@ -183,87 +183,94 @@ StatusCode CaloExtraDigits::process    ( CaloHypo* hypo  ) const
  *  @return status code 
  */  
 // ============================================================================
-StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const 
+StatusCode CaloExtraDigits::operator() ( LHCb::CaloHypo* hypo  ) const 
 { 
   
   // valid hypo?
   if( 0 == hypo        ) { return Error("CaloHypo* points to NULL!" , 200 ) ; }
-  const CaloPosition* position = hypo->position() ;
+  const LHCb::CaloPosition* position = hypo->position() ;
   if( 0 == position    ) { return Error("CaloPosition* is invalid!" , 201 ) ; }
 
   // locate digits 
-  if( 0 == m_digits ) { m_digits = get<CaloDigits>( m_inputData  ) ; }
+  if( 0 == m_digits ) { m_digits = get<LHCb::CaloDigits>( m_inputData  ) ; }
   
   // add the digits in front of seed digit of Ecal cluster
   if( m_addSeed ) 
   {
     // find ecal cluster 
-    const CaloHypo::Clusters& clusters = hypo->clusters();
+    const LHCb::CaloHypo::Clusters& clusters = hypo->clusters();
     if( clusters.empty() ) 
     {                  return Error("No clusters are found!"    , 202 ) ; }
     // get clusters from 'Ecal'
-    CaloHypo::Clusters::const_iterator ecalCl = 
+    LHCb::CaloHypo::Clusters::const_iterator ecalCl = 
       std::find_if( clusters.begin() , clusters.end() , m_selector );
     if( clusters.end() == ecalCl ) 
     {                  return Error("No valid 'Ecal' cluster!"  , 203 ) ; }
-    const CaloCluster::Entries& entries = (*ecalCl)->entries();
-      CaloCluster::Entries::const_iterator seed = 
-        ClusterFunctors::
+    const LHCb::CaloCluster::Entries& entries = (*ecalCl)->entries();
+      LHCb::CaloCluster::Entries::const_iterator seed = 
+        LHCb::ClusterFunctors::
         locateDigit( entries.begin ()          , 
                      entries.end   ()          ,
-                     CaloDigitStatus::SeedCell ) ;
+                     LHCb::CaloDigitStatus::SeedCell ) ;
       if( entries.end() == seed ) 
       {                  return Error("No 'Seed' in cluster!"     , 204 ) ; }
-      const CaloDigit* seedD = seed->digit() ;
+      const LHCb::CaloDigit* seedD = seed->digit() ;
       if( 0 == seedD ) {   return Error("'Seed' points to NULL!"    , 205 ) ; }
-      CaloDigit* digit = m_digits->object( seedD->cellID() );
+      LHCb::CaloDigit* digit = m_digits->object( seedD->cellID() );
       if( 0 != digit ) { hypo->addToDigits( digit ); }
       // add neighbours of the seed 
       if( m_addSeedNeighbours )
       {
         const CaloNeighbors& neighbors = 
-          det()->neighborCells( seedD->cellID() );
+          m_det->neighborCells( seedD->cellID() );
         for( CaloNeighbors::const_iterator nei = neighbors.begin() ; 
              neighbors.end() != nei ; ++nei )
         {
-          CaloDigit* digit = m_digits->object( *nei );
+          LHCb::CaloDigit* digit = m_digits->object( *nei );
           if( 0 != digit ) { hypo->addToDigits( digit ); }
         }     
       }    
   }
   
   // line along the photon flight 
-  const  HepPoint3D pos( position->x() ,
-                         position->y() ,
-                         position->z() );
+  const  Gaudi::XYZPoint pos( position->x() ,
+                              position->y() ,
+                              position->z() );
   
   // point in the detector 
-  HepPoint3D newPoint ( pos - m_vertex );
+
+  Gaudi::XYZVector vec ( pos - m_vertex );
+  vec *=  ( m_z - m_vertex.z() ) / ( pos.z() - m_vertex.z() );
+  Gaudi::XYZPoint newPoint =   m_vertex + vec;
+
+  /*
+  Gaudi::XYZPoint newPoint ( pos - m_vertex );
   newPoint *=  ( m_z - m_vertex.z() ) / ( pos.z() - m_vertex.z() );
-  newPoint +=          m_vertex ;
+  newPoint +=    m_vertex ;
+  */
+
+  const LHCb::CaloCellID cell = m_det->Cell( newPoint );
   
-  const CaloCellID cell = det()->Cell( newPoint );
-  
-  if( !(CaloCellID() == cell) )  // valid cell! 
+  if( !(LHCb::CaloCellID() == cell) )  // valid cell! 
   {    
-    CaloDigit* digit = m_digits->object( cell );
+    LHCb::CaloDigit* digit = m_digits->object( cell );
     if( 0 != digit ) { hypo->addToDigits( digit ); }
   }
   
   // loop over neighbour cells 
-  if( (  0 < m_xTol || 0 < m_yTol ) && !(CaloCellID() == cell) )
+  if( (  0 < m_xTol || 0 < m_yTol ) && !(LHCb::CaloCellID() == cell) )
   {
-    const CaloNeighbors& neighbors = det()->neighborCells( cell );
+    const CaloNeighbors& neighbors = m_det->neighborCells( cell );
     for( CaloNeighbors::const_iterator nei = neighbors.begin() ; 
          neighbors.end() != nei ; ++nei )
     {
-      const double      cellHalf   = 0.5 * det() -> cellSize   ( *nei ) ;
+      const double      cellHalf   = 0.5 * m_det -> cellSize   ( *nei ) ;
       if( 0 >= cellHalf ) { continue ; }               // CONTINUE ! 
-      const HepPoint3D& cellCenter =       det() -> cellCenter ( *nei ) ;
+      const Gaudi::XYZPoint& cellCenter =       m_det -> cellCenter ( *nei ) ;
       if( ( fabs( cellCenter.x() - newPoint.x() ) < cellHalf + m_xTol ) && 
           ( fabs( cellCenter.y() - newPoint.y() ) < cellHalf + m_yTol )  ) 
       {
-        CaloDigit* digit = m_digits->object( *nei );
+        LHCb::CaloDigit* digit = m_digits->object( *nei );
         if( 0 != digit ) { hypo->addToDigits( digit ); }
       }    
     }
@@ -271,10 +278,10 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   
   {
     // remove duplicates (if any)
-    CaloHypo::Digits& digits = hypo->digits() ;
+    LHCb::CaloHypo::Digits& digits = hypo->digits() ;
     std::sort( digits.begin() , digits.end() , 
-               std::less<const SmartRef<CaloDigit> >() );
-    CaloHypo::Digits::iterator i = 
+               std::less<const SmartRef<LHCb::CaloDigit> >() );
+    LHCb::CaloHypo::Digits::iterator i = 
       std::unique( digits.begin() , digits.end() );
     if( digits.end() != i ) { digits.erase( i , digits.end() ) ; }
   }
@@ -283,6 +290,3 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
 };
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

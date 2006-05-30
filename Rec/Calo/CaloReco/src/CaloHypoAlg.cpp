@@ -1,8 +1,11 @@
-// $Id: CaloHypoAlg.cpp,v 1.4 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloHypoAlg.cpp,v 1.5 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/03/17 16:32:21  ibelyaev
 //  add new (04) Photon calibrations from Olivier Deschamps
 //
@@ -52,11 +55,13 @@ const        IAlgFactory&CaloHypoAlgFactory = s_Factory ;
 CaloHypoAlg::CaloHypoAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
-  , m_names () // default empty list of tools  
+  : GaudiAlgorithm ( name , svcloc ) 
+    , m_names () // default empty list of tools  
+    , m_inputData()
 {
   // list of tools to be applied 
   declareProperty( "Tools" , m_names );
+  declareProperty( "InputData" , m_inputData);
 };
 // ============================================================================
 
@@ -76,9 +81,9 @@ CaloHypoAlg::~CaloHypoAlg() {};
 // ============================================================================
 StatusCode CaloHypoAlg::initialize() 
 {  
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class CaloAlgorithm",sc);}
+  { return Error("CouGld not initialize the base class CaloAlgorithm",sc);}
   
   for( Names::const_iterator it = m_names.begin() ; 
        m_names.end() != it ; ++it ) 
@@ -105,7 +110,7 @@ StatusCode CaloHypoAlg::finalize()
   // clear the container 
   m_tools.clear();  
   /// finalize the base class 
-  return CaloAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 };
 // ============================================================================
 
@@ -120,9 +125,9 @@ StatusCode CaloHypoAlg::finalize()
 StatusCode CaloHypoAlg::execute() 
 {
   // avoid long name and types 
-  typedef CaloHypos  Hypos;
+  typedef LHCb::CaloHypos  Hypos;
   
-  Hypos* hypos = get<Hypos>( inputData() ) ;
+  Hypos* hypos = get<Hypos>( m_inputData ) ;
   if( 0 == hypos ) { return StatusCode::FAILURE ; }
   
   for( Hypos::const_iterator hypo = hypos->begin() ; 
@@ -143,6 +148,3 @@ StatusCode CaloHypoAlg::execute()
 };
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

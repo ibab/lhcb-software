@@ -1,4 +1,4 @@
-// $Id: CaloLCorrection.cpp,v 1.3 2006-05-30 09:42:03 odescham Exp $
+// $Id: CaloECorrection.cpp,v 1.1 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -15,39 +15,38 @@
 // Revision 1.2  2003/05/16 08:19:11  cattanem
 // remove unused variables
 //
-// Revision 1.1  2003/04/11 09:33:37  ibelyaev
+// Revision 1.1  2003/04/11 09:33:35  ibelyaev
 //  add new E-,S- and L-corrections from Olivier Deschamps
 //
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+//
+#include "GaudiKernel/SystemOfUnits.h"
 // Event 
 #include "Event/CaloHypo.h"
-// Kernel
-#include "GaudiKernel/SystemOfUnits.h"
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
 // local
-#include "CaloLCorrection.h"
+#include "CaloECorrection.h"
 
 /** @file 
- *  Implementation file for class : CaloLCorrection
+ *  Implementation file for class : CaloECorrection
  *  
  *  @date 2003-03-10 
- *  @author Xxxx XXXXX xxx@xxx.com 
+ *  @author Deschamps Olivier
  */
 
 
 // ============================================================================
 /*
- *  Declaration of the Tool Factory, needed for instantiation
+ *   Declaration of the Tool Factory, needed for instantiation
  */
 // ============================================================================
-static const  ToolFactory<CaloLCorrection>         s_Factory ;
-const        IToolFactory&CaloLCorrectionFactory = s_Factory ; 
+static const  ToolFactory<CaloECorrection>         s_Factory ;
+const        IToolFactory&CaloECorrectionFactory = s_Factory ; 
 // ============================================================================
-
 // ============================================================================
 /** Standard constructor
  *  @see GaudiTool 
@@ -57,7 +56,7 @@ const        IToolFactory&CaloLCorrectionFactory = s_Factory ;
  *  @param parent  tool parent 
  */
 // ============================================================================
-CaloLCorrection::CaloLCorrection 
+CaloECorrection::CaloECorrection 
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent ) 
@@ -65,20 +64,23 @@ CaloLCorrection::CaloLCorrection
   , m_hypos  () 
   , m_hypos_ () 
   /// 
-  , Par_Al1 ()
-  , Par_Al2 ()
-  , Par_Al3 ()
-  , Par_Be1 ()
-  , Par_Be2 ()
-  , Par_Be3 ()
-  , Par_z0  ()
+  , A1_a ()
+  , A1_b ()
+  , A2_a ()
+  , A2_b ()
+  , SlopeX()
+  , SlopeY()
+  , Beta()
+  , GlobalFactor()
+  , Level ()   
   ///
-  , m_area     ()
-  , m_calo       ( DeCalorimeterLocation::Ecal )
-  , m_spd        ( DeCalorimeterLocation::Spd  )
-  , m_prs        ( DeCalorimeterLocation::Prs  )
-  , m_detData    ( DeCalorimeterLocation::Ecal )
-{
+  , m_area   ()
+  , m_calo       (DeCalorimeterLocation::Ecal )
+  , m_spd        (DeCalorimeterLocation::Spd  )
+  , m_prs        (DeCalorimeterLocation::Prs  )
+  , m_detData    (DeCalorimeterLocation::Ecal ){
+  
+
   /// properties
   /// acceptable hypotheses 
   m_hypos_.push_back ( (int) LHCb::CaloHypotheses::Photon               ) ;
@@ -86,13 +88,21 @@ CaloLCorrection::CaloLCorrection
   m_hypos_.push_back ( (int) LHCb::CaloHypotheses::BremmstrahlungPhoton ) ;
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
-  declareProperty    ( "Par_Al1" , Par_Al1 ) ;
-  declareProperty    ( "Par_Al2" , Par_Al2 ) ;
-  declareProperty    ( "Par_Al3" , Par_Al3 ) ;
-  declareProperty    ( "Par_Be1" , Par_Be1 ) ;
-  declareProperty    ( "Par_Be2" , Par_Be2 ) ;
-  declareProperty    ( "Par_Be3" , Par_Be3 ) ;
-  declareProperty    ( "Par_z0"  , Par_z0  ) ;
+  declareProperty    ( "Corr1_constant" , A1_a ) ;
+  declareProperty    ( "Corr1_slope"    , A1_b ) ;
+  declareProperty    ( "Corr2_constant" , A2_a ) ;
+  declareProperty    ( "Corr2_slope"    , A2_b ) ;
+  declareProperty    ( "Corr3_slopeX"   , SlopeX ) ;
+  declareProperty    ( "Corr3_slopeY"   , SlopeY ) ;
+  declareProperty    ( "CorrPrs"        , Beta   ) ;
+  declareProperty    ( "GlobalFactor"   , GlobalFactor ) ;
+  declareProperty    ( "CorrectionLevel", Level ) ;
+  Level.push_back ( true);
+  Level.push_back ( true);
+  Level.push_back ( true);
+  Level.push_back ( true);
+  Level.push_back ( true);
+  Level.push_back ( true);
 
   /// interafces 
   declareInterface<ICaloHypoTool> ( this ) ;  
@@ -102,7 +112,7 @@ CaloLCorrection::CaloLCorrection
 // ============================================================================
 /// destructor
 // ============================================================================
-CaloLCorrection::~CaloLCorrection () {} ;
+CaloECorrection::~CaloECorrection () {} ;
 // ============================================================================
 
 // ============================================================================
@@ -113,7 +123,7 @@ CaloLCorrection::~CaloLCorrection () {} ;
  *  @return status code 
  */
 // ============================================================================
-StatusCode CaloLCorrection::finalize   () 
+StatusCode CaloECorrection::finalize   () 
 {
   m_hypos.clear();
   /// finalize the base class 
@@ -129,12 +139,12 @@ StatusCode CaloLCorrection::finalize   ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode CaloLCorrection::initialize () 
+StatusCode CaloECorrection::initialize () 
 {
   /// first initialize the base class 
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) 
-    { return Error ( "Unable initialize the base class GaudiTool!" , sc ) ; }
+  { return Error ( "Unable initialize the base class GaudiTool!" , sc ) ; }
   
   // transform vector of accepted hypos
   m_hypos.clear () ;
@@ -151,34 +161,37 @@ StatusCode CaloLCorrection::initialize ()
   // locate and set and configure the Detector 
   m_det = getDet<DeCalorimeter>( m_detData ) ;
   if( 0 == m_det ) { return StatusCode::FAILURE ; }
-  m_calo.setCalo( m_detData );
+  m_calo.setCalo( m_detData);
   
   // check vectors of paramters 
-  if( 3 != Par_Al1.size() ) 
+  if( 3 != A1_a.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Al2.size() ) 
+  if( 3 != A1_b.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Al3.size() ) 
+  if( 3 != A2_a.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be1.size() ) 
+  if( 3 != A2_b.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be2.size() ) 
+  if( 3 != SlopeX.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be3.size() ) 
+  if( 3 != SlopeY.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
-  if( 1 != Par_z0.size() ) 
+  if( 3 != GlobalFactor.size() ) 
+    { return Error ( "Invalid number of parameters" ) ; }
+  if( 7 != Level.size() ) 
     { return Error ( "Invalid number of parameters" ) ; }
 
+
+  
   if( m_hypos.empty() ) 
     { return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; }
   
   // debug printout of all allowed hypos 
   debug() << " List of allowed hypotheses : " << endreq;
   for( Hypotheses::const_iterator it = m_hypos.begin() ; 
-       m_hypos.end() != it ; ++it ) {
-    debug() << "--> " << *it << endreq ;
-  };
-
+       m_hypos.end() != it ; ++it ) 
+  { debug ()  <<  " -->" << *it  << endreq ; };
+  
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -190,7 +203,7 @@ StatusCode CaloLCorrection::initialize ()
  *  @return status code 
  */  
 // ============================================================================
-StatusCode CaloLCorrection::operator() ( LHCb::CaloHypo* hypo  ) const 
+StatusCode CaloECorrection::operator() ( LHCb::CaloHypo* hypo  ) const 
 { return process( hypo ); };
 // ============================================================================
 
@@ -201,7 +214,7 @@ StatusCode CaloLCorrection::operator() ( LHCb::CaloHypo* hypo  ) const
  *  @return status code 
  */  
 // ============================================================================
-StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const 
+StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const 
 {
   // avoid long names 
   typedef const LHCb::CaloHypo::Digits   Digits   ;
@@ -210,6 +223,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
   using namespace LHCb::ClusterFunctors ;
   using namespace LHCb::CaloDataFunctor ;
   
+  
   // check arguments 
   if( 0 == hypo ) { return Error ( " CaloHypo* points to NULL!" ) ; }
 
@@ -217,8 +231,6 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
   Hypotheses::const_iterator h = 
     std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
   if( m_hypos.end() == h ) { return Error ( "Invalid hypothesis!" ) ; }
-  
-
 
   // get all clusters from the hypo 
   const Clusters& clusters = hypo->clusters() ;
@@ -231,6 +243,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
   Clusters::const_iterator icl  = iclu;
   if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis() 
        &&  2 == clusters.size() ){icl = iclu+1;}
+
   /*
     Cluster information (e/x/y  and Prs/Spd digit)
   */
@@ -245,10 +258,11 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
       else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
       else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; } 
     }
-   const LHCb::CaloPosition& position = cluster->position();
+  const LHCb::CaloPosition& position = cluster->position();
   const double eEcal = position. e () ;
-  //  const double xBar  = position. x () ;
-  //  const double yBar  = position. y () ;
+  const double xBar  = position. x () ;
+  const double yBar  = position. y () ;
+
 
 
   /*
@@ -277,7 +291,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
     double  x = pos->x();
     double  y = pos->y();
     double  z = seedPos.z();
-    const Gaudi::XYZPoint point   ( x , y , z ) ;
+    const Gaudi::XYZPoint   point   ( x , y , z ) ;
     cellID  =  m_det->Cell( point );
     if( LHCb::CaloCellID() == cellID ){ return Error ( "Cell does not exist !") ; }
     seedPos =  m_det->cellCenter( cellID );
@@ -289,55 +303,101 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
    *  (2) Prs and Spd energies   :    ePrs, eSpd 
    *  (3) weighted barycenter    :    xBar, yBar 
    *  (4) Zone/Area in Ecal      :    area   
-   *  (5) SEED digit             :    seed   (NOT FOR SPLITPHOTONS !!)
-   *  (6) CellID of seed digit   :    cellID
-   *  (7) Position of seed cell  :    seedPos 
+   *  (5) SEED digit             :    seed    (NO for split!)
+   *  (6) CellID of seed digit   :    cellID  (OK for split!)
+   *  (7) Position of seed cell  :    seedPos (OK for split!)
+   *
    */
 
-  //  double CellSize =  m_det->cellSize( cellID  );
+  const int ShiftCol[3] = {  0 ,  0 ,  8 };
+  const int ShiftRow[3] = {  6 , 12 , 14 };
+   
+
+
+  // Digit not available for 2nd cluster (avoid double Eprs counting)
+  LHCb::CaloCellID MainID = seed->cellID() ;
+  Gaudi::XYZPoint MainPos = m_det->cellCenter( MainID );
+  double WhereX =seedPos.x()-MainPos.x();
+  double WhereY =seedPos.y()-MainPos.y();
+  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis() 
+       &&        ( 0 != WhereX ||  0 != WhereY) 
+       ){
+    ePrs = 0 ;
+    eSpd = 0 ;
+    // if(0 != WhereX ||  0 != WhereY){ eSpd = 0. ;}
+  }
+  /////////////////////////////////////////////////////////
+
   
-  //  double z0 = seedPos.z();
-  double z0 = Par_z0[0] ;// Parameter tuned wrt to z0  12566 mm !!
-  double Zvtx = 0.   ;// Origin vertex (z) set to 0 !!
-  const LHCb::CaloPosition* pos = hypo->position() ;
-  double  xg = pos->x();
-  double  yg = pos->y();
-  double  zg = z0 - Zvtx;
-    
+  double CellSize =  m_det->cellSize( cellID  );
+  double Asx   = ( xBar - seedPos.x() ) / CellSize ;
+  double Asy   = ( yBar - seedPos.y() ) / CellSize ;
+  unsigned int    Col   = cellID.col()  - ShiftCol[area] +1;
+  unsigned int    Row   = cellID.row()  - ShiftRow[area] +1;
 
-  // Uncorrected angle
-  double tth   = sqrt ( pow(xg,2) + pow(yg,2) ) / zg ;
-  double cth   = cos  ( atan( tth ) ) ;
 
-  // Corrected angle
-  int zon = 2 - area;
-  double alpha = Par_Al1[zon] - exp( Par_Al2[zon] - Par_Al3[zon] * ePrs/Gaudi::Units::MeV );
-  double beta  = Par_Be1[zon] + exp( Par_Be2[zon] - Par_Be3[zon] * ePrs/Gaudi::Units::MeV  );
-  double tgfps = alpha * log(eEcal/Gaudi::Units::GeV) +beta ;
-  tth = tth / ( 1. + tgfps * cth / zg ) ;
-  cth= cos( atan( tth ) ) ;
-  double dzfps = cth * tgfps ;
-// Recompute Z position and fill CaloPosition
-  double zCor = z0 + dzfps;
+  // Deconvolute Asx/Asy  from previous corrections for SPLIT (temporarly)
+  if(  LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
+    double bold[3]  = {  0.1093 ,  0.1326 ,  0.1462 }; 
+    double Delta =0.5;
+    Asx = Delta * sinh ( Asx / bold[area] ) / sinh ( Delta / bold[area] );
+    Asy = Delta * sinh ( Asy / bold[area] ) / sinh ( Delta / bold[area] );
+  }
+  double bDist = sqrt( Asx*Asx + Asy*Asy) * sqrt ( 2. ) ;
+  
+  double A1=1;
+  double A2=1;
+  double A3=1;
+  
+  // Longitudinal leakage
+  if( Level[0] ){ A1 = 1. / (A1_a[area] + A1_b[area] * eEcal / Gaudi::Units::GeV) ;}
+  // Lateral leakage
+  if( Level[1] ){A2 = 1. / (A2_a[area] + A2_b[area] * bDist) ;}
 
-  debug()     << " ENE  " << hypo->position ()->e()/Gaudi::Units::GeV <<  " "
-              << "xg "   << xg <<  " "
-              << "yg "   << yg <<  " "
-              << "zg "   << pos->z() <<  " "
-              << "z0 "   << z0 <<  " "
-              << "DeltaZ "   << dzfps <<  " "
-              << "zCor "   << zCor <<  " "
-              << endreq ;
+  // leakage induced by Ecal module frame 
+  double signX = 0;
+  if( 1 == Col % (area+1) )  {signX  = +1.;}
+  if( 0 == Col % (area+1) )  {signX  = -1.;}
+  double signY = 0;
+  if( 1 == Row % (area+1) )  {signY  = +1.;}
+  if( 0 == Row % (area+1) )  {signY  = -1.;}
+  double CorrX = signX * SlopeX[area] / 100. ;
+  double CorrY = signY * SlopeY[area] / 100. ;
+  double A3x = 1. + CorrX * Asx ;
+  double A3y = 1. + CorrY * Asy ;
+  if( Level[2] ){A3  = 1. / A3x / A3y ;}
+
+  // Apply Ecal leakage corrections
+  double Alpha = A1 * A2 * A3;
+  double Ecor  = Alpha * eEcal ;
+
+  // Apply Preshower corrections
+  if( Level[3] ){Ecor  += Beta[area] * ePrs ;}
+ 
+ // Apply global rescaling for No Spd case or Spd
+  if( Level[4] ){Ecor = Ecor / GlobalFactor[0] ;} 
+  if( 0 <  eSpd && Level[5] ){Ecor = Ecor / GlobalFactor[1]; }
+  if( Level[6] && LHCb::CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
+    Ecor = Ecor / GlobalFactor[2]; }
+
+  debug()
+     << " Main Cluster " << Maincluster->position().e()/Gaudi::Units::GeV    <<  " "
+     << "area "  << area  <<  " "
+     << "Row "  << Row <<  " "
+     << "Col "  << Col <<  " "
+     << "Asx "  << Asx <<  " "
+     << "Asy "  << Asy <<  " "
+     << "eSpd "  << eSpd <<  " "
+     << "ePrs "  << ePrs  <<  " "
+     << "eEcal " << eEcal/Gaudi::Units::GeV <<  " "
+     << "Ecor "  <<  Ecor/Gaudi::Units::GeV <<  " "
+     << endreq;
   
 
-  /** At the end: 
-   */
-  
-  hypo -> position() -> setZ( zCor ) ;
+  LHCb::CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
+  parameters ( LHCb::CaloPosition::E ) = Ecor ;
+  //  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
 
-  debug() << " ENE  " << hypo->position ()->e() <<  " "
-          << "New zg "   << pos->z() <<  " "
-          << endreq ;
 
   
   return StatusCode::SUCCESS ;

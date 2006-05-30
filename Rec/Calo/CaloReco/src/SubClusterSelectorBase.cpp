@@ -1,9 +1,12 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.3 2005-11-07 12:12:44 odescham Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.4 2006-05-30 09:42:06 odescham Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:12:44  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.2  2004/02/17 12:08:11  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -14,10 +17,6 @@
 // ============================================================================
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 // CaloInterfaces
 #include "CaloInterfaces/ICaloClusterTool.h"
 // CaloDet 
@@ -47,14 +46,16 @@
 SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : CaloTool  ( type, name , parent ) 
+  : GaudiTool  ( type, name , parent ) 
   , m_modify  ( false               )
+  , m_detData   ( DeCalorimeterLocation::Ecal )
 {
   /// declare the available interfaces
   declareInterface<ICaloClusterTool>   ( this )    ;
   declareInterface<ICaloSubClusterTag> ( this )    ;
   /// 
   declareProperty ( "ModifyFractions" , m_modify ) ;
+  declareProperty( "Detector"         , m_detData  );
 };
 // ============================================================================
 
@@ -70,7 +71,7 @@ SubClusterSelectorBase::~SubClusterSelectorBase() {};
  */
 // ============================================================================
 StatusCode SubClusterSelectorBase::finalize   ()
-{ return CaloTool::finalize(); }
+{ return GaudiTool::finalize(); }
 // ============================================================================
 
 // ============================================================================
@@ -81,11 +82,11 @@ StatusCode SubClusterSelectorBase::finalize   ()
 StatusCode SubClusterSelectorBase::initialize ()
 {
   // initialize the base class
-  StatusCode sc = CaloTool::initialize() ;
+  StatusCode sc = GaudiTool::initialize() ;
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc);}
   // load and set the  detector
-  setDet( getDet<DeCalorimeter>( detName() ) );
+  m_det = getDet<DeCalorimeter>( m_detData ) ;
   // 
   return StatusCode::SUCCESS;
 };
@@ -97,7 +98,7 @@ StatusCode SubClusterSelectorBase::initialize ()
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::process     ( CaloCluster* cluster ) const 
+StatusCode SubClusterSelectorBase::process     ( LHCb::CaloCluster* cluster ) const 
 { return tag ( cluster ) ; }  
 // ============================================================================
 
@@ -109,10 +110,7 @@ StatusCode SubClusterSelectorBase::process     ( CaloCluster* cluster ) const
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::operator() ( CaloCluster* cluster ) const  
+StatusCode SubClusterSelectorBase::operator() ( LHCb::CaloCluster* cluster ) const  
 { return tag ( cluster ) ; }  
 // ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================

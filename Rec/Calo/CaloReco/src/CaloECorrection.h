@@ -1,9 +1,9 @@
-// $Id: CaloLCorrection.h,v 1.3 2006-05-30 09:42:03 odescham Exp $
+// $Id: CaloECorrection.h,v 1.1 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-#ifndef CALORECO_CALOLCORRECTION_H 
-#define CALORECO_CALOLCORRECTION_H 1
+#ifndef CALORECO_CALOECORRECTION_H 
+#define CALORECO_CALOECORRECTION_H 1
 // Include files
 // from STL
 #include <string>
@@ -16,12 +16,12 @@
 #include "Event/CaloHypo.h"
 // from CaloUtils 
 #include "CaloUtils/ClusterFunctors.h"
-// Kernel
+// from Kernel
 #include "Kernel/Point3DTypes.h"
 
-/** @namespace CaloLCorrection_Local
+/** @namespace CaloECorrection_Local
  */
-namespace CaloLCorrection_Local
+namespace CaloECorrection_Local
 {
   /** @class DigitFromCalo 
    *  simple utility to count digits from certain calorimeter 
@@ -60,18 +60,19 @@ namespace CaloLCorrection_Local
 // ============================================================================
 
 
-/** @class CaloLCorrection CaloLCorrection.h
+/** @class CaloECorrection CaloECorrection.h
  *  
  *
- *  @author XXX-XXX xxx@xxx.com 
+ *  @author Deschamps Olivier
+
  *  @date   2003-03-10
  */
-class CaloLCorrection : 
+class CaloECorrection : 
   public virtual ICaloHypoTool ,
   public              GaudiTool 
 {
   /// friend factory for instantiation 
-  friend class ToolFactory<CaloLCorrection>;
+  friend class ToolFactory<CaloECorrection>;
   
 public:
   
@@ -116,21 +117,21 @@ protected:
    *  @param name tool name 
    *  @param parent  tool parent 
    */
-  CaloLCorrection ( const std::string& type   , 
+  CaloECorrection ( const std::string& type   , 
                          const std::string& name   ,
                          const IInterface*  parent ) ;
   
   /// destructor
-  virtual ~CaloLCorrection () ;
+  virtual ~CaloECorrection () ;
   
 private:
   
   /// default constructor is private 
-  CaloLCorrection () ;
+  CaloECorrection () ;
   /// copy constructor is private 
-  CaloLCorrection           ( const CaloLCorrection& ) ;
+  CaloECorrection           ( const CaloECorrection& ) ;
   /// assignement operator is private 
-  CaloLCorrection& operator=( const CaloLCorrection& ) ;
+  CaloECorrection& operator=( const CaloECorrection& ) ;
   
 private:
   
@@ -138,32 +139,34 @@ private:
   typedef std::vector<LHCb::CaloHypotheses::Hypothesis>   Hypotheses  ;
   typedef std::vector<int>                          Hypotheses_ ;
   typedef std::vector<double>                       Parameters  ;
+  typedef std::vector<bool>                         BoolParameters  ;
   
   /// list of allowed hypos
   Hypotheses                                        m_hypos     ;
   Hypotheses_                                       m_hypos_    ;
 
-  Parameters                                        Par_Al1 ;
-  Parameters                                        Par_Al2 ;
-  Parameters                                        Par_Al3 ;
-  Parameters                                        Par_Be1 ;
-  Parameters                                        Par_Be2 ;
-  Parameters                                        Par_Be3 ;
-  Parameters                                        Par_z0  ;
+  Parameters                                        A1_a ;
+  Parameters                                        A1_b ;
+  Parameters                                        A2_a ;
+  Parameters                                        A2_b ;
+  Parameters                                        SlopeX ;
+  Parameters                                        SlopeY ;
+  Parameters                                        Beta ;
+  Parameters                                        GlobalFactor ;
+  BoolParameters                                    Level ;
 
   /// evaluator of "cluster area"
   LHCb::ClusterFunctors::ClusterArea                      m_area      ;
   /// evaluator of "cluster calorimeter 
   LHCb::ClusterFunctors::ClusterFromCalo                  m_calo      ;
   /// evaluator of calorimeter for digit 
-  CaloLCorrection_Local::DigitFromCalo              m_spd       ;
+  CaloECorrection_Local::DigitFromCalo         m_spd       ;
   /// evaluator of calorimeter for digit 
-  CaloLCorrection_Local::DigitFromCalo              m_prs       ;
-  
+  CaloECorrection_Local::DigitFromCalo         m_prs       ;
   std::string m_detData;
   const DeCalorimeter* m_det;
   
-
+  
 };
 // ============================================================================
-#endif // CALORECO_CALOLCORRECTION_H
+#endif // CALORECO_CALOECORRECTION_H

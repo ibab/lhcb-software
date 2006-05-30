@@ -1,8 +1,11 @@
-// $Id: BremMatch.opts,v 1.6 2005-11-07 12:12:40 odescham Exp $ 
+// $Id: BremMatch.opts,v 1.7 2006-05-30 09:41:58 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:12:40  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.5  2004/10/26 20:35:58  ibelyaev
 //  improve properties of all Track-related algorithms
 //
@@ -16,17 +19,15 @@
  */
 
 /// associator 
-ToolSvc.BremMatch.Location      = "Rec/Calo/BremMatch" ;
-ToolSvc.BremMatch.AlgorithmType = "CaloHypo2TrackAlg"  ;
-ToolSvc.BremMatch.AlgorithmName = "BremMatch"          ;
+//ToolSvc.BremMatch.Location      = "Rec/Calo/BremMatch" ;
+//ToolSvc.BremMatch.AlgorithmType = "CaloHypo2TrackAlg"  ;
+//ToolSvc.BremMatch.AlgorithmName = "BremMatch"          ;
 
 /// algorithm
-BremMatch.Input     = "Rec/Calo/Photons"      ;
-BremMatch.Output    = "Rec/Calo/BremMatch"    ;
+BremMatch.InputData = "Rec/Calo/Photons"      ;
+BremMatch.OutputData= "Rec/Calo/BremMatch"    ;
 BremMatch.MatchType = "CaloTrackMatchBremm"   ;
 BremMatch.Cut       = 1000.0                  ;
-// The default value 
-// BremMatch.Tracks      = *TrStoredTrackLocation::Default* ;
 //
 BremMatch.IsLong       = true  ;
 BremMatch.IsUpstream   = true  ;
@@ -35,8 +36,6 @@ BremMatch.IsVeloTrack  = false ;
 BremMatch.IsBackward   = false ;
 BremMatch.IsTtrack     = false ;
 
-/// include file for 'new' (in test phase) Bremstrahlung match
-#include "$CALORECOOPTS/Brem2Match.opts"
 
 // ============================================================================
 // The END 

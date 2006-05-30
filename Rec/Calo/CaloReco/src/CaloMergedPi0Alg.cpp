@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.12 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.13 2006-05-30 09:42:03 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.11  2004/10/27 12:40:08  ibelyaev
 //  update for new Calo/CaloUtils + MergedPi0 'optimization'
 // 
@@ -26,30 +29,20 @@
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/Stat.h"
 // ============================================================================
-// Kernel
-// ============================================================================
-#include "Kernel/CaloHypotheses.h"
-// ============================================================================
-// CaloInterfaces 
-// ============================================================================
 #include "CaloInterfaces/ICaloClusterTool.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
 // ============================================================================
-// CaloDet
-// ============================================================================
 #include "CaloDet/DeCalorimeter.h" 
-// ============================================================================
-// CaloEvent 
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+#include "Event/CaloHypotheses.h"
 #include "Event/CaloPosition.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
 // ============================================================================
-// Kernel
-// ============================================================================
-#include "CaloKernel/CaloCellID.h"
+#include "Kernel/CaloCellID.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -85,12 +78,15 @@ const        IAlgFactory&CaloMergedPi0AlgFactory = s_Factory ;
 // ============================================================================
 CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
                                     ISvcLocator*       svcloc  )
-  : CaloAlgorithm ( name , svcloc ) 
+  : GaudiAlgorithm ( name , svcloc ) 
   //
-  , m_ntuple              ( 0                                   ) 
+  , m_inputData  (LHCb::CaloClusterLocation::Ecal   )
+  , m_outputData (LHCb::CaloHypoLocation::MergedPi0s)
+  , m_detData    (DeCalorimeterLocation::Ecal       )
+  , m_ntuple              ( 0               ) 
   , m_ntupleLUN           ( "FILE1"                             )
-  , m_nameOfSplitPhotons  ( CaloHypoLocation::    SplitPhotons  )
-  , m_nameOfSplitClusters ( CaloClusterLocation:: EcalSplit     )
+  , m_nameOfSplitPhotons  ( LHCb::CaloHypoLocation::    SplitPhotons  )
+  , m_nameOfSplitClusters ( LHCb::CaloClusterLocation:: EcalSplit     )
   , m_toolTypeNames       ()
   , m_tools               ()
   , TrShOut_nospd ()
@@ -101,7 +97,7 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , TrShInn_spd ()
   , SPar ()
   //
-  , m_eT_Cut  ( -100 * GeV )
+    , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
   , m_mX_Iter ( 16         )
 {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
@@ -133,13 +129,10 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "EtCut"                 , m_eT_Cut  ) ;
   declareProperty ( "MaxIterations"         , m_mX_Iter ) ;
 
+  declareProperty ( "InputData"         , m_inputData    ) ;  
+  declareProperty ( "OutputData"        , m_outputData   ) ;  
+  declareProperty ( "Detector"          , m_detData      ) ;  
  
- // set the appropriate defaults for input    data 
-  setInputData    ( CaloClusterLocation::   Ecal       ) ;
-  // set the appropriate defaults for output   data 
-  setOutputData   ( CaloHypoLocation::      MergedPi0s ) ;
-  // set the appropriate defaults for detector data 
-  setDetData      ( DeCalorimeterLocation:: Ecal       ) ;
 };
 
 // ============================================================================
@@ -160,7 +153,7 @@ StatusCode CaloMergedPi0Alg::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
   
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class!",sc);}
   
@@ -201,7 +194,7 @@ StatusCode CaloMergedPi0Alg::finalize()
 {  
   m_tools.clear() ;
   /// finalize the base class 
-  return CaloAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 };
 
 // ============================================================================
@@ -214,16 +207,16 @@ StatusCode CaloMergedPi0Alg::finalize()
  */
 // ============================================================================
 long CaloMergedPi0Alg::numberOfDigits 
-( const CaloCluster*             cluster ,
-  const CaloDigitStatus::Status& status  ) const 
+( const LHCb::CaloCluster*             cluster ,
+  const LHCb::CaloDigitStatus::Status& status  ) const 
 {
   /// check arguments 
   if( 0 == cluster ) 
   { Error(" numberOfDigits! CaloCluster* points to NULL!"); return -1;}
   ///
   long num = 0 ;
-  for( CaloCluster::Entries::const_iterator entry = 
-         cluster->entries().begin() ;
+  for( LHCb::CaloCluster::Entries::const_iterator entry = 
+       cluster->entries().begin() ;
        cluster->entries().end() != entry ; ++entry )
   {
     if( entry->status() & status ) { ++num ; }
@@ -307,7 +300,7 @@ double CaloMergedPi0Alg::BarZ
   double beta  = 
     LPar_Be1[area] + LPar_Be2[area]*eprs + LPar_Be3[area] * eprs*eprs;
   if(0 >= eprs ){beta = LPar_Be0[area]; }
-  double tgfps = alpha * log(e/GeV) + beta ;
+  double tgfps = alpha * log(e/Gaudi::Units::GeV) + beta ;
   tth = tth / ( 1. + tgfps * cth / z0 ) ;
   cth= cos( atan( tth ) ) ;
   double dzfps = cth * tgfps ;
@@ -386,43 +379,30 @@ StatusCode CaloMergedPi0Alg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
 
   /// avoid long names
-  using namespace  CaloDataFunctor;
-  typedef CaloClusters              Clusters;
-  typedef Clusters::iterator        Iterator;
   
-  /// load data 
-  SmartDataPtr<DeCalorimeter> detector( detSvc() , detData() );
-  if( !detector )
-    { return Error("could not locate calorimeter '"+detData()+"'");}
+  using namespace  LHCb::CaloDataFunctor;
+  typedef LHCb::CaloClusters              Clusters;
+  typedef Clusters::iterator        Iterator;
 
-  SmartDataPtr<Clusters>  clusters( eventSvc() , inputData() );
-  if( 0 == clusters )
-    { return Error("Could not load input data ='"+inputData()+"'");}
-
-  //StatusCode sc = StatusCode::SUCCESS ;
+  /// load data
+  SmartDataPtr<DeCalorimeter> detector( detSvc() , m_detData );
+  if( !detector ){ return Error("could not locate calorimeter '"+m_detData+"'");}
+  SmartDataPtr<Clusters>  clusters( eventSvc() , m_inputData );
+  if( 0 == clusters ){ return Error("Could not load input data ='"+m_inputData+"'");}
 
   // create the container of pi0s 
   // (used "Proprerty" 'Output' of the algorithm)
-  CaloHypos* pi0s = new CaloHypos();
-  {  
-    StatusCode status = put( pi0s , outputData() );
-    if( status.isFailure() ) { return status ; }
-  }
-  
+  LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
+  put( pi0s , m_outputData );
+    
   // create the container of split photons 
-  CaloHypos* phots = new CaloHypos();
-  {  
-    StatusCode status = put( phots , m_nameOfSplitPhotons);
-    if( status.isFailure() ) { return status ; }
-  }
-
-  // create the container of split clusters 
-  CaloClusters* clusts = new CaloClusters();
-  {  
-    StatusCode status = put( clusts , m_nameOfSplitClusters);
-    if( status.isFailure() ) { return status ; }
-  }
+  LHCb::CaloHypos* phots = new LHCb::CaloHypos();
+  put( phots , m_nameOfSplitPhotons);
   
+  // create the container of split clusters 
+  LHCb::CaloClusters* clusts = new LHCb::CaloClusters();
+  put( clusts , m_nameOfSplitClusters);
+    
 
   // count all clusters 
   // modified by V.B. 2004-10-27
@@ -431,22 +411,22 @@ StatusCode CaloMergedPi0Alg::execute()
   
   // SpdHit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
-  CaloDigits* spds = get<CaloDigits>( CaloDigitLocation::Spd );
+  LHCb::CaloDigits* spds = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Spd );
   if( 0 == spds ) { return StatusCode::FAILURE ;}
   
   // Prs deposit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
-  CaloDigits* prss = get<CaloDigits>( CaloDigitLocation::Prs );
+  LHCb::CaloDigits* prss = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Prs );
   if( 0 == prss ) { return StatusCode::FAILURE ;}
   
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
-  CaloDataFunctor::EnergyTransverse<const CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
+  LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
   
   /// loop over all clusters 
   for( Iterator icluster = clusters->begin() ;
        clusters->end() != icluster ; ++icluster )
   {
-    CaloCluster* cluster = *icluster ;
+    LHCb::CaloCluster* cluster = *icluster ;
     if( 0 == cluster )                { continue ; }   ///< CONTINUE!
     
     // added by V.B. 2004-10-27
@@ -463,22 +443,22 @@ StatusCode CaloMergedPi0Alg::execute()
 
 
       /// Find Cluster Seed 
-      const CaloCluster::Digits::const_iterator iSeed = 
+      const LHCb::CaloCluster::Digits::const_iterator iSeed = 
         clusterLocateDigit( cluster->entries().begin() ,
                             cluster->entries().end  () ,
-                            CaloDigitStatus::SeedCell     );
-      const CaloDigit* seed = iSeed->digit() ;
+                            LHCb::CaloDigitStatus::SeedCell     );
+      const LHCb::CaloDigit* seed = iSeed->digit() ;
       if( 0 == seed) { continue ; }   ///< CONTINUE!
-      const CaloCellID  idseed = seed->cellID() ;
+      const LHCb::CaloCellID  idseed = seed->cellID() ;
       double seede  = seed->e();
       int seedrow  = idseed.row();
       int seedcol  = idseed.col();
       
       double SpdHit = 0 ;
-      const CaloDigit* spddigit = spds->object( seed->key() );
+      const LHCb::CaloDigit* spddigit = spds->object( seed->key() );
       if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
       double PrsDep = 0 ;
-      const CaloDigit* prsdigit = prss->object( seed->key() );
+      const LHCb::CaloDigit* prsdigit = prss->object( seed->key() );
       if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
       
 
@@ -489,17 +469,17 @@ StatusCode CaloMergedPi0Alg::execute()
       // double sube=-99; commented by I.B 2004-08-20
       // int subrow=0;
       // int subcol=0;
-      double sube   = -1 * TeV ;
+      double sube   = -1 * Gaudi::Units::TeV ;
       int    subrow = -1000    ;
       int    subcol = -1000    ;
       
-      for( CaloCluster::Digits::const_iterator it1 =
-             cluster->entries().begin() ;
+      for( LHCb::CaloCluster::Digits::const_iterator it1 =
+           cluster->entries().begin() ;
            cluster->entries().end() != it1 ; ++it1 ) 
-        {
-          const CaloDigit* dig = it1->digit() ;    // CaloDigit
+      {
+          const LHCb::CaloDigit* dig = it1->digit() ;    // CaloDigit
           if( 0 == dig) { continue ; }   ///< CONTINUE!
-          const CaloCellID  id = dig->cellID() ;
+          const LHCb::CaloCellID  id = dig->cellID() ;
           int cellrow  = id.row();
           int cellcol  = id.col();
           double ecel = dig->e()*it1->fraction();
@@ -531,7 +511,7 @@ StatusCode CaloMergedPi0Alg::execute()
     
       double SubClusEne[2][3][3];
       int SubClusMask[2][3][3];
-      const CaloDigit* SubClus[2][3][3];
+      const LHCb::CaloDigit* SubClus[2][3][3];
       for(int iss=0;iss<2;++iss){
         for(int irr=0;irr<3;++irr){  
           for(int icc=0;icc<3;++icc){  
@@ -543,13 +523,13 @@ StatusCode CaloMergedPi0Alg::execute()
       }
 
       int ir,ic;
-      for( CaloCluster::Digits::const_iterator it2 =
-              cluster->entries().begin() ;
+      for( LHCb::CaloCluster::Digits::const_iterator it2 =
+           cluster->entries().begin() ;
            cluster->entries().end() != it2 ; ++it2 ) 
         {
-          const CaloDigit* dig = it2->digit() ;    
+          const LHCb::CaloDigit* dig = it2->digit() ;    
           if( 0 == dig) { continue ; }   ///< CONTINUE!
-          const CaloCellID  id = dig->cellID() ;
+          const LHCb::CaloCellID  id = dig->cellID() ;
           int cellrow  = id.row();
           int cellcol  = id.col();
           double ecel = dig->e()*it2->fraction();
@@ -670,9 +650,9 @@ StatusCode CaloMergedPi0Alg::execute()
         double Ene3x3[2];
         {
           for(int is=0;is<2;++is){
-            const CaloDigit* digit   = SubClus[is][1][1];
+            const LHCb::CaloDigit* digit   = SubClus[is][1][1];
             if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
-            const CaloCellID  idigit = digit->cellID() ;
+            const LHCb::CaloCellID  idigit = digit->cellID() ;
             SubSize[is] = detector->cellSize( idigit ) ;
             SubX[is]    = detector->cellX   ( idigit ) ;
             SubY[is]    = detector->cellY   ( idigit ) ;
@@ -703,12 +683,12 @@ StatusCode CaloMergedPi0Alg::execute()
             for(int ir=0;ir<3;++ir){
               for(int ic=0;ic<3;++ic){
                 if(1 == SubClusMask[js][ir][ic] ) {
-                  const CaloDigit* seed    = SubClus[is][1][1];;
+                  const LHCb::CaloDigit* seed    = SubClus[is][1][1];;
                   if( 0 == seed) { continue ; }   ///< CONTINUE!
-                  const CaloCellID  idseed = seed->cellID() ;
-                  const CaloDigit* cel      = SubClus[js][ir][ic];;
+                  const LHCb::CaloCellID  idseed = seed->cellID() ;
+                  const LHCb::CaloDigit* cel      = SubClus[js][ir][ic];;
                   if( 0 == cel) { continue ; }   ///< CONTINUE!
-                  const CaloCellID  idcel   = cel->cellID() ;
+                  const LHCb::CaloCellID  idcel   = cel->cellID() ;
                   unsigned int area = idcel.area();
                   int rowc = idcel.row();
                   int colc = idcel.col();
@@ -764,9 +744,9 @@ StatusCode CaloMergedPi0Alg::execute()
       double PosY[2];
       {
         for(int is=0;is<2;++is){
-          const CaloDigit* digit   = SubClus[is][1][1];;
+          const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
           if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
-          const CaloCellID  idigit = digit->cellID() ;
+          const LHCb::CaloCellID  idigit = digit->cellID() ;
           unsigned int area = idigit.area();
           SubSize[is] = detector->cellSize( idigit ) ;
           SubX[is]    = detector->cellX   ( idigit ) ;
@@ -835,8 +815,8 @@ StatusCode CaloMergedPi0Alg::execute()
       }
   
 
-      const CaloDigit*  seedig   = SubClus[0][1][1];;
-      const CaloCellID  idig     = seedig->cellID() ;
+      const LHCb::CaloDigit*  seedig   = SubClus[0][1][1];;
+      const LHCb::CaloCellID  idig     = seedig->cellID() ;
       // commented by I.B. 2004-08-20
       // double zpos                = detector->cellZ   ( idig ) ;
       // double csiz                = detector->cellSize( idig ) ;
@@ -874,61 +854,61 @@ StatusCode CaloMergedPi0Alg::execute()
         
         //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
         
-        CaloCluster* cl1 = new CaloCluster();
-        CaloCluster* cl2 = new CaloCluster();
+        LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
+        LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
         
         // Init the 2 new CaloClusters 
         // with the original cluster digits, owned-status'ed and  0-weighted
-        for( CaloCluster::Digits::const_iterator it3 =
-               cluster->entries().begin() ;
+        for( LHCb::CaloCluster::Digits::const_iterator it3 =
+             cluster->entries().begin() ;
              cluster->entries().end() != it3 ; ++it3 ){
-          const CaloDigit* d = it3->digit() ;   
-          CaloDigitStatus::Status s1   = CaloDigitStatus::OwnedCell    ;
-          CaloDigitStatus::Status s2   = CaloDigitStatus::OwnedCell    ;
+          const LHCb::CaloDigit* d = it3->digit() ;   
+          LHCb::CaloDigitStatus::Status s1   = LHCb::CaloDigitStatus::OwnedCell    ;
+          LHCb::CaloDigitStatus::Status s2   = LHCb::CaloDigitStatus::OwnedCell    ;
           double     w1=0;
           double     w2=0;
           // Then fill correctly the 3x3 matrix cells around seed and subseed
           for(int ir=0;ir<3;++ir){
             for(int ic=0;ic<3;++ic){
-              const CaloDigit* d1 = SubClus[0][ir][ic];
+              const LHCb::CaloDigit* d1 = SubClus[0][ir][ic];
               if (d == d1 ) {
                 w1 = Weight[0][ir][ic] ;      
-                s1   = CaloDigitStatus::OwnedCell      | 
-                  CaloDigitStatus::UseForEnergy   | 
-                  CaloDigitStatus::UseForPosition | 
-                  CaloDigitStatus::UseForCovariance  ;
+                s1   = LHCb::CaloDigitStatus::OwnedCell      | 
+                  LHCb::CaloDigitStatus::UseForEnergy   | 
+                  LHCb::CaloDigitStatus::UseForPosition | 
+                  LHCb::CaloDigitStatus::UseForCovariance  ;
                 if(1 == ir && 1==ic){
-                  s1   =  CaloDigitStatus::SeedCell       | 
-                    CaloDigitStatus::LocalMaximum   | 
-                    CaloDigitStatus::UseForEnergy   | 
-                    CaloDigitStatus::UseForPosition | 
-                    CaloDigitStatus::UseForCovariance  ;
+                  s1   =  LHCb::CaloDigitStatus::SeedCell       | 
+                    LHCb::CaloDigitStatus::LocalMaximum   | 
+                    LHCb::CaloDigitStatus::UseForEnergy   | 
+                    LHCb::CaloDigitStatus::UseForPosition | 
+                    LHCb::CaloDigitStatus::UseForCovariance  ;
                 }
               }
             }
           }
           for(int ir=0;ir<3;++ir){
             for(int ic=0;ic<3;++ic){
-              const CaloDigit* d2 = SubClus[1][ir][ic];
+              const LHCb::CaloDigit* d2 = SubClus[1][ir][ic];
               if (d == d2 ) {
                 w2 = Weight[1][ir][ic] ;      
-                s2   =  CaloDigitStatus::OwnedCell      | 
-                  CaloDigitStatus::LocalMaximum   | 
-                  CaloDigitStatus::UseForEnergy   | 
-                  CaloDigitStatus::UseForPosition | 
-                  CaloDigitStatus::UseForCovariance  ;
+                s2   =  LHCb::CaloDigitStatus::OwnedCell      | 
+                  LHCb::CaloDigitStatus::LocalMaximum   | 
+                  LHCb::CaloDigitStatus::UseForEnergy   | 
+                  LHCb::CaloDigitStatus::UseForPosition | 
+                  LHCb::CaloDigitStatus::UseForCovariance  ;
                 if(1 == ir && 1==ic){
-                  s2   = CaloDigitStatus::SeedCell       | 
-                    CaloDigitStatus::UseForEnergy   | 
-                    CaloDigitStatus::UseForPosition | 
-                    CaloDigitStatus::UseForCovariance  ;
+                  s2   = LHCb::CaloDigitStatus::SeedCell       | 
+                    LHCb::CaloDigitStatus::UseForEnergy   | 
+                    LHCb::CaloDigitStatus::UseForPosition | 
+                    LHCb::CaloDigitStatus::UseForCovariance  ;
                 }
               }
             }
           }
-          CaloClusterEntry entry1( d , s1 , w1 );
+          LHCb::CaloClusterEntry entry1( d , s1 , w1 );
           cl1->entries().push_back( entry1 );
-          CaloClusterEntry entry2( d , s2 , w2 );
+          LHCb::CaloClusterEntry entry2( d , s2 , w2 );
           cl2->entries().push_back( entry2 );
           log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
         }
@@ -938,66 +918,46 @@ StatusCode CaloMergedPi0Alg::execute()
         clusts->insert( cl2 ) ;
         
         // now CaloHypo for pi0      
-        CaloHypo* pi0 = new CaloHypo();
+        LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();
         
-        pi0 -> setHypothesis( CaloHypotheses::Pi0Merged ) ;
-        pi0 -> addToClusters( *icluster )                 ;
-        CaloMomentum* mom = new CaloMomentum();
-        pi0 -> setMomentum ( mom )                        ;
-        mom -> setMomentum ( HepLorentzVector( xp1 + xp2 , 
-                                               yp1 + yp2 , 
-                                               zp1 + zp2 ,
-                                               ep1 + ep2 ) );
+        pi0 -> setHypothesis( LHCb::CaloHypotheses::Pi0Merged ) ;
+        pi0 -> addToClusters( *icluster );
+
         // now CaloHypo for gamma's
-        CaloHypo* g1   = new CaloHypo() ;
-        g1 -> setHypothesis( CaloHypotheses::PhotonFromMergedPi0 ) ;
+        LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
+        g1 -> setHypothesis( LHCb::CaloHypotheses::PhotonFromMergedPi0 ) ;
         g1 -> addToClusters( *icluster )                ;
         g1 -> addToClusters( cl1       )                ;
-        CaloMomentum* m1 = new CaloMomentum();
-        g1 -> setMomentum ( m1 )                        ;
-        m1 -> setMomentum ( HepLorentzVector( xp1 , 
-                                              yp1 , 
-                                              zp1 ,
-                                              ep1 ) );
-        CaloPosition* p1 = new CaloPosition();
-        p1 ->parameters()( CaloPosition::X ) = PosX[0];
-        p1 ->parameters()( CaloPosition::Y ) = PosY[0];
+
+        LHCb::CaloPosition* p1 = new LHCb::CaloPosition();
+        p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
+        p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
         p1 ->setZ( SubZ[0] ) ;
-        p1 ->parameters()( CaloPosition::E ) = ep1    ;
-        
-        p1 ->center()( CaloPosition::X ) = 
+        p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
+        p1 ->center()( LHCb::CaloPosition::X ) = 
           detector->cellX( SubClus[0][1][1]->cellID() ) ;
-        p1 ->center()( CaloPosition::Y ) = 
+        p1 ->center()( LHCb::CaloPosition::Y ) = 
           detector->cellY( SubClus[0][1][1]->cellID() ) ;
         g1 -> setPosition( p1);
-        pi0 -> addToHypos ( g1 );
-        
+         pi0 -> addToHypos ( g1 );
         cl1->setPosition( *p1 );
         
         
-        CaloHypo* g2   = new CaloHypo() ;
-        g2 -> setHypothesis( CaloHypotheses::PhotonFromMergedPi0 ) ;
+        LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
+        g2 -> setHypothesis( LHCb::CaloHypotheses::PhotonFromMergedPi0 ) ;
         g2 -> addToClusters( *icluster )                ;
         g2 -> addToClusters( cl2       )                ;
-        CaloMomentum* m2 = new CaloMomentum();
-        g2 -> setMomentum ( m2 )                        ;
-        m2 -> setMomentum ( HepLorentzVector( xp2 , 
-                                              yp2 , 
-                                              zp2 ,
-                                              ep2 ) );
-        CaloPosition* p2 = new CaloPosition();
-        p2 ->parameters()( CaloPosition::X ) = PosX[1];
-        p2 ->parameters()( CaloPosition::Y ) = PosY[1];
+        LHCb::CaloPosition* p2 = new LHCb::CaloPosition();
+        p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
+        p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
         p2 ->setZ( SubZ[1] ) ;
-        p2 ->parameters()( CaloPosition::E ) = ep2    ;
-
-        p2 ->center()( CaloPosition::X ) = 
+        p2 ->parameters()( LHCb::CaloPosition::E ) = ep2    ;
+        p2 ->center()( LHCb::CaloPosition::X ) = 
           detector->cellX( SubClus[1][1][1]->cellID() );
-        p2 ->center()( CaloPosition::Y ) = 
+        p2 ->center()( LHCb::CaloPosition::Y ) = 
           detector->cellY( SubClus[1][1][1]->cellID() );
         g2 -> setPosition( p2);
         pi0 -> addToHypos ( g2 );
-        
         cl2 -> setPosition( *p2 );
         
         
@@ -1042,7 +1002,3 @@ StatusCode CaloMergedPi0Alg::execute()
        
   return StatusCode::SUCCESS;
 };
-
-// ============================================================================
-// The End 
-// ============================================================================

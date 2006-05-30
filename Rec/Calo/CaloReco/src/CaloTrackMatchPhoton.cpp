@@ -1,37 +1,26 @@
-// $Id: CaloTrackMatchPhoton.cpp,v 1.7 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchPhoton.cpp,v 1.8 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.6  2004/10/26 20:35:58  ibelyaev
 //  improve properties of all Track-related algorithms
 //
 // ============================================================================
 // Include files
 // ============================================================================
-// GaudiKernel
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/GaudiException.h"
-// ============================================================================
 // Calo related
-// ============================================================================
 #include "Event/CaloCluster.h"
-#include "CaloKernel/CaloPrint.h"
-// ============================================================================
 // track related
-// ============================================================================
 #include "Event/Track.h"
 #include "Event/State.h"
-// ============================================================================
 #include "TrackInterfaces/ITrackExtrapolator.h"
-// ============================================================================
-// ============================================================================
 // local
-// ============================================================================
 #include "CaloTrackMatchPhoton.h"
-// ============================================================================
 
 // ============================================================================
 /** @file CaloTrackMatchPhoton.cpp
@@ -65,9 +54,9 @@ CaloTrackMatchPhoton::CaloTrackMatchPhoton
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
   // optimization variables 
-    , m_matchCalo ( HepVector( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk1 ( HepVector( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
-  , m_matchTrk2 ( HepVector( 2 , 0 ) , HepDiagMatrix ( 2 , 0 ) ) 
+  , m_matchCalo   ( Gaudi::Vector2() , Gaudi::SymMatrix2x2()  ) 
+  , m_matchTrack  ( Gaudi::Vector2() , Gaudi::SymMatrix2x2()  ) 
+
   //
 {
   setProperty ( "Extrapolator" ,  "TrackLinearExtrapolator" ) ;
@@ -92,8 +81,8 @@ CaloTrackMatchPhoton::~CaloTrackMatchPhoton() {}
  */
 // ============================================================================
 StatusCode CaloTrackMatchPhoton::match
-( const CaloPosition  *caloObj,
-  const Track *trObj,
+( const LHCb::CaloPosition  *caloObj,
+  const LHCb::Track *trObj,
   double              &chi2_result )
 { 
   // set 'bad' value 
@@ -110,8 +99,8 @@ StatusCode CaloTrackMatchPhoton::match
   }
   else 
   {  
-    const double covXX = caloObj->spread().fast(1,1) ;
-    const double covYY = caloObj->spread().fast(2,2) ;  
+    const double covXX = caloObj->spread()(0,0) ;
+    const double covYY = caloObj->spread()(1,1) ;  
     sc = findState ( trObj        , 
                      caloObj->z() , 
                      caloObj->z() , 
@@ -123,6 +112,8 @@ StatusCode CaloTrackMatchPhoton::match
   
   if ( 0 == m_state   ) { return Error ( "State* points to NULL"       ) ; }
   
+  
+
   // the resulting function can throw an exception in case of failure,
   // catch it.
   try
@@ -135,11 +126,4 @@ StatusCode CaloTrackMatchPhoton::match
   
   return StatusCode::SUCCESS;
 };
-// ============================================================================
-
-
-// ============================================================================
-
-// ============================================================================
-// The End
 // ============================================================================

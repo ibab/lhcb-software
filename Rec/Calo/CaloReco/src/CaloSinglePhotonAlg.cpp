@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.6 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.7 2006-05-30 09:42:06 odescham Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.5  2004/12/10 17:12:29  ibelyaev
 //  steps towards 'Fast' Calo recontruction
 //
@@ -17,7 +20,6 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/Stat.h"
 // ============================================================================
@@ -31,6 +33,8 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
+//Kernel
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // CaloInterfaces
 // ============================================================================
@@ -77,9 +81,9 @@ const        IAlgFactory&CaloSinglePhotonAlgFactory = s_Factory ;
 CaloSinglePhotonAlg::CaloSinglePhotonAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
-  : CaloAlgorithm ( name , pSvc )  
+  : GaudiAlgorithm ( name , pSvc )  
   //
-  , m_eTcut ( -10 * GeV )
+  , m_eTcut ( -10 * Gaudi::Units::GeV )
   //
   , m_selectorsTypeNames    () 
   , m_selectors             ()
@@ -91,7 +95,10 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   , m_corrections2          () 
   , m_hypotoolsTypeNames2   ()
   , m_hypotools2            () 
-{
+  , m_inputData    ( LHCb::CaloClusterLocation::Ecal   ) 
+  , m_outputData   ( LHCb::CaloHypoLocation::Photons   ) 
+  , m_detData      ( DeCalorimeterLocation:: Ecal      ) 
+{    
   declareProperty ( "SelectionTools"   , m_selectorsTypeNames    ) ;
   declareProperty ( "CorrectionTools"  , m_correctionsTypeNames  ) ;
   declareProperty ( "HypoTools"        , m_hypotoolsTypeNames    ) ;
@@ -100,12 +107,9 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   //
   declareProperty ( "EtCut"            , m_eTcut                 ) ;
   //
-  // set the appropriate default values for input data
-  setInputData    ( CaloClusterLocation::   Ecal                 ) ;
-  // set the appropriate default values for output data
-  setOutputData   ( CaloHypoLocation::      Photons              ) ;
-  // set the appropriate default values for input data
-  setDetData      ( DeCalorimeterLocation:: Ecal                 ) ;
+  declareProperty ( "InputData"         , m_inputData     ) ;  
+  declareProperty ( "OutputData"        , m_outputData     ) ;  
+  declareProperty ( "Detector"          , m_detData      ) ;  
 };
 // ============================================================================
 
@@ -124,18 +128,16 @@ CaloSinglePhotonAlg::~CaloSinglePhotonAlg() {};
 StatusCode
 CaloSinglePhotonAlg::initialize() 
 {
-  Print( " == > Initialize " , StatusCode::SUCCESS , MSG::DEBUG );  
-  // initialize  the base class 
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class CaloAlgorithm!",sc);}
+  { return Error("Could not initialize the base class GaudiAlgorithm!",sc);}
   // check the geometry information 
-  const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ;
+  const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData) ;
   if( 0 == det ) { return Error("Detector information is not available!");}
   
   if ( 0 < m_eTcut ) 
   { Warning ( " Et Cut of " + 
-              boost::lexical_cast<std::string>( m_eTcut / GeV )  +
+              boost::lexical_cast<std::string>( m_eTcut / Gaudi::Units::GeV )  +
               " GeV is applied " ) ; }
   
   { // locate selector tools
@@ -191,7 +193,6 @@ CaloSinglePhotonAlg::initialize()
 StatusCode 
 CaloSinglePhotonAlg::finalize() 
 {
-  Print( " == > Finalize  " , StatusCode::SUCCESS , MSG::DEBUG );  
   // clear containers
   m_selectors             .clear () ;
   m_corrections           .clear () ;
@@ -204,7 +205,7 @@ CaloSinglePhotonAlg::finalize()
   m_correctionsTypeNames2 .clear () ;
   m_hypotoolsTypeNames2   .clear () ;
   // finalize the base class 
-  return CaloAlgorithm::finalize() ; 
+  return GaudiAlgorithm::finalize() ; 
 };
 // ============================================================================
 
@@ -216,20 +217,21 @@ CaloSinglePhotonAlg::finalize()
 StatusCode 
 CaloSinglePhotonAlg::execute() 
 {
+  using namespace  LHCb::CaloDataFunctor;
   // avoid long names 
-  typedef CaloClusters             Clusters ;
-  typedef CaloHypos                Hypos    ;
+  typedef LHCb::CaloClusters             Clusters ;
+  typedef LHCb::CaloHypos                Hypos    ;
   typedef Clusters::iterator       iterator ;
   
   // get input clusters
-  Clusters* clusters = get<Clusters>( inputData() );
+  Clusters* clusters = get<Clusters>( m_inputData );
   
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
-  put( hypos , outputData() );
+  put( hypos , m_outputData );
 
-  const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ; 
-  CaloDataFunctor::EnergyTransverse<const CaloCluster*,const DeCalorimeter*> eT ( det ) ;
+  const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData ) ; 
+  LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( det ) ;
 
   // loop over clusters 
   for( iterator cluster = clusters->begin() ; 
@@ -249,9 +251,9 @@ CaloSinglePhotonAlg::execute()
     if( !select ) { continue ; }
     
     // create "Hypo"/"Photon" object
-    CaloHypo* hypo = new CaloHypo() ;
+    LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
     // set parameters of newly created hypo 
-    hypo->setHypothesis( CaloHypotheses::Photon );      
+    hypo->setHypothesis( LHCb::CaloHypotheses::Photon );      
     hypo->addToClusters( *cluster );
     
     StatusCode sc( StatusCode::SUCCESS );
@@ -310,20 +312,14 @@ CaloSinglePhotonAlg::execute()
     
   } // end of the loop over all clusters
   
-  if ( msgLevel( MSG::DEBUG ) ) 
-    { 
-      debug() << " # of created Photon  Hypos is  " 
-              << hypos->size()  << "/" << clusters->size()
-              << endreq ;
-    }
+  debug() << " # of created Photon  Hypos is  " 
+          << hypos->size()  << "/" << clusters->size()
+          << endreq ;
 
   return StatusCode::SUCCESS;
 };
 // ============================================================================
 
 
-// ============================================================================
-// The End 
-// ============================================================================
 
 

@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.h,v 1.4 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloElectronAlg.h,v 1.5 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2003/06/23 13:11:54  ibelyaev
 //  fix for gcc3.2
 //
@@ -16,13 +19,13 @@
 //  new algorithms and new options
 //
 // ============================================================================
-#ifndef CALOALGS_CALOElectronALG_H 
-#define CALOALGS_CALOElectronALG_H 1
+#ifndef CALORECO_CALOElectronALG_H 
+#define CALORECO_CALOElectronALG_H 1
 // Include files
 // from STL
 #include <string>
-// from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiAlgorithm.h"
 // forward delcarations 
 class ICaloClusterSelector ;
 class ICaloHypoTool        ;
@@ -36,7 +39,7 @@ class ICaloHypoTool        ;
  *  @date   31/03/2002
  */
 class CaloElectronAlg : 
-  public CaloAlgorithm
+  public GaudiAlgorithm
 {  
   /// friend factory for instantiation 
   friend class AlgFactory<CaloElectronAlg>; 
@@ -111,10 +114,10 @@ private:
   Names        m_hypotoolsTypeNames2   ;
   HypoTools    m_hypotools2            ;
 
+  std::string m_inputData ;
+  std::string m_outputData;
+  std::string m_detData   ;
 };
 
 // ============================================================================
-// The END 
-// ============================================================================
 #endif // CALOElectronALG_H
-// ============================================================================

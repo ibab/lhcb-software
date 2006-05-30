@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.h,v 1.4 2005-11-07 12:12:42 odescham Exp $
+// $Id: CaloExtraDigits.h,v 1.5 2006-05-30 09:42:02 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:12:42  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.3  2004/02/17 12:08:06  ibelyaev
 //  update for new CaloKernel and CaloInterfaces
 //
@@ -19,19 +22,21 @@
 //  preliminary version ('omega'-release)
 //
 // ============================================================================
-#ifndef CALOTOOLS_CALOEXTRADIGITS_H 
-#define CALOTOOLS_CALOEXTRADIGITS_H 1
+#ifndef CALORECO_CALOEXTRADIGITS_H 
+#define CALORECO_CALOEXTRADIGITS_H 1
 // Include files
 // from STL
 #include <string>
-// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
+// Kernel 
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 // from CaloInterfaces
 #include "CaloInterfaces/ICaloHypoTool.h"
-// from CaloKernel
-#include "CaloKernel/CaloTool.h"
+// from GaudiAlg
+#include "GaudiAlg/GaudiTool.h"
 // from CaloEvent/Event
 #include "Event/CaloDigit.h"
 // from CaloUtils
@@ -48,7 +53,7 @@ class IIncidentSvc ;   // from GaudiKernel
 class CaloExtraDigits : 
   public virtual IIncidentListener ,
   public virtual     ICaloHypoTool ,
-  public                  CaloTool 
+  public                  GaudiTool 
 {
   /// friend factory for instantiation 
   friend class ToolFactory<CaloExtraDigits>;
@@ -58,7 +63,7 @@ public:
   /** standard initialization of the tool
    *  @see IAlgTool
    *  @see  AlgTool
-   *  @see CaloTool
+   *  @see GaudiTool
    *  @return status code 
    */
   virtual StatusCode initialize () ;
@@ -68,14 +73,14 @@ public:
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( CaloHypo* hypo  ) const ;
+  virtual StatusCode process    ( LHCb::CaloHypo* hypo  ) const ;
   
   /** The main processing method (functor interface)
    *  @see ICaloHypoTool 
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloHypo* hypo  ) const ;
+  virtual StatusCode operator() ( LHCb::CaloHypo* hypo  ) const ;
   
   /** handle the incident 
    *  @see Incident 
@@ -111,26 +116,23 @@ private:
 private:
   
   std::string                      m_inputData         ;
-  mutable CaloDigits*              m_digits            ;
+  mutable LHCb::CaloDigits*        m_digits            ;
   
   double                           m_z                 ;
   
   double                           m_xTol              ;
   double                           m_yTol              ;
-  HepPoint3D                       m_vertex            ;
+  Gaudi::XYZPoint                  m_vertex            ;
   
   bool                             m_addSeed           ;
 
   bool                             m_addSeedNeighbours ;
 
   // 'Ecal' cluster selector 
-  ClusterFunctors::ClusterFromCalo m_selector          ;
+  LHCb::ClusterFunctors::ClusterFromCalo m_selector          ;
 
-  
+  std::string m_detData;
+  const DeCalorimeter* m_det;
 };
-
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // CALOEXTRADIGITS_H
-// ============================================================================
