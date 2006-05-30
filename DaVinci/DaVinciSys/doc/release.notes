@@ -3,15 +3,30 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v16r0>2006-03-29 DaVinci v16r0 - Compiling development version</A></H1><PRE>
-Based on Phys v3r0, NO Rec, Lbcom v4r1, LHCb v20r1, Gaudi v18r2.
+</PRE><H1><A NAME=v16r0>2006-05-30 DaVinci v16r1 - Streamlined development version</A></H1><PRE>
+Based on Phys v3r1, Rec v3r3, Lbcom v5r0, LHCb v21r0, Gaudi v18r4.
 
-Another small step towards DC06. Everything uses the DC06 event model.
-This version compiles, initializes and finalizes nicely, 
-but does not run
-  - There is no DST data yet
-  - One can read sim files, but the MCParticleMaker needs to be adapted to be able
-    to test anything.
+
+Limited set of packages available and no Brunel-output data yet. 
+This release is essentially here to allow developers to compile their 
+packages against DC06 software. Moderate testing using Gauss data is possible:
+
+$DAVINCIROOT/options/DVDC06MCParticlemaker.opts runs on Gauss events and calls the MCParticleMaker to produce Particles. Then some test algorithms are called.
+
+
+!========================== DaVinci v16r1 2006-05-29 ===================
+
+! 2006-05-24 - Juan PALACIOS
+        - cmt/requirements remove all -no_auto_imports to ease use by LoKi
+
+! 2006-05-03 - P. Koppenburg
+  - options/DVDC06MCParticleMaker.opts
+    . Use MCPrimVertexMaker
+    . Use new Gauss data
+    . Run DC06Test
+
+! 2006-04-04 - Juan Palacios
+  Version using Gaudi v18r3 and SMatrix interface and bug fixes (ROOT 5.10.00c)
 
 !========================== DaVinci v16r0 2006-03-29 ===================
 ! 2006-03-16 - P. Koppenburg
