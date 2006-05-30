@@ -6,6 +6,17 @@
 
 #define Max(a,b) (a>b)?a:b;
 #define Min(a,b) (a>b)?b:a;
+#define BITS_PER_BYTE 8
+#define BITS_PER_SHORT 16
+
+namespace {
+  const unsigned char bit_mask[]={
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80
+  };
+  const unsigned char inv_mask[]={
+    ~0x01, ~0x02, ~0x04, ~0x08, ~0x10, ~0x20, ~0x40, ~0x80
+  };
+}
 
 int mask_and2 (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size)   {
   int result=0;
@@ -84,23 +95,40 @@ int mask_summ(const unsigned int* mask, int mask_size)   {
 }
 
 int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
-  bool set = false;
-  for(int i=0, j=0, pos=0, len=0, nb=(bf_size/8); i < nb; ++i, j=0)  {
-    for(int nbit=(i<nb) ? 8 : bf_size%8; j< nbit; ++j )  {
-      if ( 0 == (base[i] & (1<<j)) )  {
-        ++len;
-        if ( set && len >= size_wanted )  {
-          *pos_found = pos;
-          return BF_set(base, pos, size_wanted);
-        }
-        else if ( !set )  {
-          len = 1;
-          set = true;
-          pos = (i*8) + j;
-        }
+  bool set      = false;
+  int nbytes    = bf_size/BITS_PER_BYTE;
+  int fld_size  = bf_size%BITS_PER_BYTE;
+  for(int i=0, j=0, pos=0, len=0; i < nbytes; ++i, j=0)  {
+    const int c = base[i];
+    if ( !set && 0xFF == c )  {
+      continue;
+    }
+    else if ( set && 0 == c )  {
+      len += BITS_PER_BYTE;
+      if ( len < size_wanted )  {
         continue;
       }
-      set = false;
+      *pos_found = pos;
+      return BF_set(base, pos, size_wanted);
+    }
+    else {
+      const unsigned char* msk = bit_mask+j;
+      for(int nbit=(i<nbytes) ? BITS_PER_BYTE : fld_size; j< nbit; ++j, ++msk )  {
+        if ( 0 == (c & *msk) )  {
+          ++len;
+          if ( set && len >= size_wanted )  {
+            *pos_found = pos;
+            return BF_set(base, pos, size_wanted);
+          }
+          else if ( !set )  {
+            len = 1;
+            set = true;
+            pos = (i*BITS_PER_BYTE) + j;
+          }
+          continue;
+        }
+        set = false;
+      }
     }
   }
   *pos_found = bf_size;
@@ -109,34 +137,36 @@ int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
 
 int BF_count(const char* base,int bf_size,int* pos,int* size) {
   bool set = false;  
+  const unsigned char* msk = bit_mask;
   int max_pos = bf_size, max_len = 0, len = 0, start_pos = 0;
-  for(int i=0, j=0; i < bf_size/8; ++i, j=0)  {
-    if ( base[i] )  {
-      for( ;j<8; ++j)  {
-        if ( 0 == (base[i] & (1<<j)) )  {
-          if ( !set )  {
-            set = true;
-            start_pos = (i*8) + j;
-            len = 0;
-          }
-          ++len;
-          continue;
-        }
-        if ( len > max_len )  {
-          max_pos = start_pos;
-          max_len = len;
-        }
-        len = 0;
-        start_pos = (i*8) + j;
-        set = false;
-      }
-    }
-    else if ( set )  {
-      len += 8;
+  for(int i=0, j=0, c=*base; i < bf_size/BITS_PER_BYTE; ++i, j=0, c=*(base+i))  {
+    if ( !set && (c == 0xFF || (c != 0 && max_len > BITS_PER_BYTE)) ) {
       continue;
     }
-    start_pos = 8*i;
-    len = 8;
+    else if ( set && c == 0 )  {
+      len += BITS_PER_BYTE;
+      continue;
+    }
+    for( msk=bit_mask+j; j<BITS_PER_BYTE; ++j, ++msk)  {
+      if ( 0 == (c & *msk) )  {
+        if ( !set )  {
+          set = true;
+          start_pos = (i*BITS_PER_BYTE) + j;
+          len = 0;
+        }
+        ++len;
+        continue;
+      }
+      if ( len > max_len )  {
+        max_pos = start_pos;
+        max_len = len;
+      }
+      len = 0;
+      start_pos = (i*BITS_PER_BYTE) + j;
+      set = false;
+    }
+    start_pos = BITS_PER_BYTE*i;
+    len = BITS_PER_BYTE;
     set = true;
   }
   if ( len > max_len )  {
@@ -147,56 +177,46 @@ int BF_count(const char* base,int bf_size,int* pos,int* size) {
   *size   = max_len;
   return 1;
 }
-static unsigned char bit_mask[] = {
-  0x01, 0x02, 0x04, 0x08,
-  0x10, 0x20, 0x40, 0x80
-};
-static unsigned char inv_mask[] = {
-  ~0x01, ~0x02, ~0x04, ~0x08,
-  ~0x10, ~0x20, ~0x40, ~0x80
-};
 
 int BF_set(char* base, int pos, int len)   {
-  unsigned char* msk;
-  int j, k, bit = pos%8;
-  base += pos/8;
-  // printf("Set bits: %p   %d -> %d [%d]\n",(void*)base,pos,pos+len,len);
+  const unsigned char* msk;
+  int j, k, bit = pos%BITS_PER_BYTE;
+  base += pos/BITS_PER_BYTE;
   if ( bit > 0 )  {
     msk = bit_mask+bit;
-    j=(len>=8-bit) ? 8 : len+bit;
-    //int j=(len-bit>=8) ? 8 : len+bit;
-    for(k=bit; k<j; ++k, ++msk)
+    j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
+    for ( k=bit; k<j; ++k, ++msk)
       *base |= *msk;
     len -= j-bit;
     ++base;
   }
-  if ( len/8 )  {
-    j = len/8;
-    len   -= j*8;
+  if ( len/BITS_PER_BYTE )  {
+    j = len/BITS_PER_BYTE;
+    len   -= j*BITS_PER_BYTE;
     ::memset(base,0xFF,j);
     base += j;
   }
-  for(k=0, msk=bit_mask; k<len; ++k,++msk)
+  for ( k=0, msk=bit_mask; k<len; ++k,++msk )
     *base |= *msk;
   return 1;
 }
 
 int BF_free(char* base,int pos, int len) {
-  unsigned char* msk;
-  int j, k, bit = pos%8;
-  base += pos/8;
+  const unsigned char* msk;
+  int j, k, bit = pos%BITS_PER_BYTE;
+  base += pos/BITS_PER_BYTE;
   if ( bit > 0 )  {
     msk = inv_mask+bit;
-    j=(len>=8-bit) ? 8 : len+bit;
+    j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
     for(k=bit; k<j; ++k, ++msk)  {
       *base &= *msk;
     }
     len -= j-bit;
     ++base;
   }
-  if ( len/8 )  {
-    j = len/8;
-    len -=  j*8;
+  if ( len/BITS_PER_BYTE )  {
+    j = len/BITS_PER_BYTE;
+    len -=  j*BITS_PER_BYTE;
     ::memset(base,0x0,j);
     base += j;
   }
@@ -248,11 +268,11 @@ void Bits::dumpWords(const void* field, int len, std::vector<std::string>& words
   word[32] = 0;
   len += len%sizeof(int) ? 1 : 0;
   for(int i = 0; i < len; i += sizeof(int) )  {
-    for (int k = 0; k<8; ++k)  {
+    for (int k = 0; k<BITS_PER_BYTE; ++k)  {
       word[k]    = (txt[i]&(1<<k))   ? '1' : '0';
-      word[k+8]  = i+1<len ? (txt[i+1]&(1<<k)) ? '1' : '0' : 0;
-      word[k+16] = i+2<len ? (txt[i+2]&(1<<k)) ? '1' : '0' : 0;
-      word[k+24] = i+3<len ? (txt[i+3]&(1<<k)) ? '1' : '0' : 0;
+      word[k+BITS_PER_BYTE]   = i+1<len ? (txt[i+1]&(1<<k)) ? '1' : '0' : 0;
+      word[k+2*BITS_PER_BYTE] = i+2<len ? (txt[i+2]&(1<<k)) ? '1' : '0' : 0;
+      word[k+3*BITS_PER_BYTE] = i+3<len ? (txt[i+3]&(1<<k)) ? '1' : '0' : 0;
     }
     words.push_back(word);
   }
@@ -328,7 +348,7 @@ static unsigned int mask[] = {
 
 int lib_rtl_ffc (int* start, int* len, const void* base, int* position)  {
   unsigned int i, j, v;
-  char* b = ((char*)base) + ((*start)/8);
+  char* b = ((char*)base) + ((*start)/BITS_PER_BYTE);
   for (i=*start, j=i+*len, v=*(unsigned int*)b; i<j; ++i)  {
     if ( (v & mask[i%32]) == 0 )  {
       *position = i;
@@ -362,7 +382,7 @@ int lib_rtl_ffs (int* pos, int* size, const void* base, int* ret)  {
   *ret=retval;
   return 1;
 #if 0
-  char* b = ((char*)base) + ((*start)/8);
+  char* b = ((char*)base) + ((*start)/BITS_PER_BYTE);
   for (unsigned int i=*start, j=i+*len, v=*(unsigned int*)b; i<j; ++i)  {
     if ( (v & mask[i%32]) != 0 )  {
       *position = i;
