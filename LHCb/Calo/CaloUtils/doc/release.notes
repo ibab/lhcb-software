@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.51 2006-05-29 15:36:19 odescham Exp $
+! $Id: release.notes,v 1.52 2006-05-30 08:45:25 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!========================== CaloUtils v6r3 2006-05-26 =========================
+!========================== CaloUtils v6r3 2006-05-30 =========================
 ! 2006-05-29 - Olivier Deschamps
  - Update TrackUse.{cpp,h} for New Track Model
  - bug fix in src/SpreadEstimator.cpp
