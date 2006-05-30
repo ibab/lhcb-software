@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.1.1.1 2006-04-24 21:54:40 robbep Exp $
-! Package     : Gen/LbBcVegPy
+! $Id: release.notes,v 1.2 2006-05-30 17:32:26 gcorti Exp $
+! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! ======================BcVegPy v1r0 2006-06-31 ===========================
 ! 2006-03-13 - Jibo He
   -New Package: this package is somehow a copy of BCVEGPY 2.0 (C. H. Chang,
    J. X. Wang, X. G. Wu, Comp. Phys. Comm. 174 (2006) 241). We made it in
