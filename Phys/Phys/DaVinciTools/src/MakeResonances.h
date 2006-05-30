@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.10 2006-04-18 13:43:50 jpalac Exp $
+// $Id: MakeResonances.h,v 1.11 2006-05-30 12:46:53 jpalac Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -39,7 +39,9 @@ protected:
   typedef std::vector<std::string> strings;
   StatusCode createDecays();
   StatusCode createDecay(const std::string&,const strings&);
-  StatusCode applyFilter(const LHCb::Particle::ConstVector&, LHCb::Particle::ConstVector&, IFilterCriterion*) const;
+  StatusCode applyFilter(const LHCb::Particle::ConstVector&, 
+                         LHCb::Particle::ConstVector&, 
+                         IFilterCriterion*) const;
   StatusCode applyDecay(Decay&,LHCb::Particle::ConstVector& );
   const LHCb::Particle* makeMother(const LHCb::Particle::ConstVector&,
                                    const LHCb::ParticleID&);

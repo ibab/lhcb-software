@@ -3,12 +3,12 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v3r0>2006-04-04 Phys v3r1 - Minimal Phys</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2006-05-30 Phys v3r1 - Minimal Phys</A></H1><PRE>
 
  Second release of PHYS with DC06 event model.
  It compiles and some simple jobs run but is largely untested.
 
-  - Built against LHCb v20r2
+  - Built against LHCb v21r0
   - New event model
   - ROOT MathCore GenVector classes
   - ROOT SVector classes, SMatrix classes 

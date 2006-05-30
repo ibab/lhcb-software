@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.18 2006-04-18 13:43:50 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.19 2006-05-30 12:46:53 jpalac Exp $
 
 #include <algorithm>
 
@@ -305,26 +305,38 @@ StatusCode MakeResonances::execute() {
 //=============================================================================
 // Filter particles
 //=============================================================================
-StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& IN, LHCb::Particle::ConstVector& OUT, 
+StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& vIn, 
+                                       LHCb::Particle::ConstVector& vOut, 
                                        IFilterCriterion* fc) const{
   if (fc==NULL) { // not possible yet
     debug() << "Null filter criterion" << endmsg ;
-    OUT = IN ;
+    vOut = vIn ;
     return StatusCode::SUCCESS;
   }
-  for ( LHCb::Particle::ConstVector::const_iterator p = IN.begin() ; p!=IN.end(); ++p){
+  ///@todo write some Print function for LHCb::Particle.
+  for ( LHCb::Particle::ConstVector::const_iterator p = vIn.begin() ; 
+        p!=vIn.end(); ++p){
     if ( consideredPID((*p)->particleID().pid() )){
       if (fc->isSatisfied(*p)) {
-        OUT.push_back(*p);
-        debug() << "Particle " << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " << 
-          (*p)->momentum() << " m=" << (*p)->measuredMass() << " passes cuts" << endmsg ;
+        vOut.push_back(*p);
+        debug() << "Particle " << (*p)->key() 
+                << " ID=" << (*p)->particleID().pid() 
+                << " with momentum " << (*p)->momentum() 
+                << " m=" << (*p)->measuredMass() 
+                << " passes cuts" << endmsg ;
       } else {    
-        verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
-                  << (*p)->momentum() << " m=" << (*p)->measuredMass() << " fails cuts" << endmsg ;
+        verbose() << "Particle "  << (*p)->key() 
+                  << " ID=" << (*p)->particleID().pid() 
+                  << " with momentum " 
+                  << (*p)->momentum() << " m=" << (*p)->measuredMass() 
+                  << " fails cuts" << endmsg ;
       }
     } else {
-      verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
-                << (*p)->momentum() << " m=" << (*p)->measuredMass() << " is discarded" << endmsg ;
+      verbose() << "Particle "  << (*p)->key() 
+                << " ID=" << (*p)->particleID().pid() 
+                << " with momentum " << (*p)->momentum() 
+                << " m=" << (*p)->measuredMass() 
+                << " is discarded" << endmsg ;
     }
     
   }
