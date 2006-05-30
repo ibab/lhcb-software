@@ -335,7 +335,7 @@ int PubArea::CreatePubArea(int Size /* in bytes */)   {
   m_ptr = hdl->address;
   // Header formatting 
   InitPubArea(Size);
-  PrintHeader();
+  //PrintHeader();
   return PA_SUCCESS;
 }
 

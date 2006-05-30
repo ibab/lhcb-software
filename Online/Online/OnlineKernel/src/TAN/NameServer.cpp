@@ -77,7 +77,7 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor
-  NameService( NetworkConnection* ptr = 0);
+  NameService( NetworkConnection* ptr = 0, bool verbose = false);
   /// Standard destructor
   virtual ~NameService();
   /// handle Tan request
@@ -114,7 +114,7 @@ class UdpNameService : public NameService {
 public:
   //@Man Public member functions
   /// Standard constructor
-  UdpNameService();
+  UdpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~UdpNameService()   {
   }
@@ -156,9 +156,9 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor with initialization
-  TcpNameService(int port);
+  TcpNameService(int port, bool verbose = false);
   /// Standard constructor
-  TcpNameService();
+  TcpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~TcpNameService();
   /// Overloaded abstract member function: Act on Nameservice requests
@@ -178,14 +178,16 @@ public:
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NameService::NameService(NetworkConnection* ptr) 
+NameService::NameService(NetworkConnection* ptr, bool verbose) 
 : m_tandb(TanDataBase::Instance()), m_connection(ptr), m_port(NAME_SERVICE_PORT)
 {
-  ::lib_rtl_printf("+======================================================================+\n");
-  ::lib_rtl_printf("|         N A M E S E R V E R      S T A R T I N G                     |\n");
-  ::lib_rtl_printf("|         %32s                             |\n",timestr());
-  ::lib_rtl_printf("+======================================================================+\n");
-  ::fflush(stdout);
+  if ( verbose )  {
+    ::lib_rtl_printf("+======================================================================+\n");
+    ::lib_rtl_printf("|         N A M E S E R V E R      S T A R T I N G                     |\n");
+    ::lib_rtl_printf("|         %32s                             |\n",timestr());
+    ::lib_rtl_printf("+======================================================================+\n");
+    ::fflush(stdout);
+  }
   if ( m_connection )  {
     if ( NetworkConnection::NETCONNECTION_SUCCESS != m_connection->Status() )  {
       ::lib_rtl_printf("NameService> Error initializing the network connection!\n");
@@ -272,15 +274,17 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-UdpNameService::UdpNameService() : NameService(0)  {
+UdpNameService::UdpNameService(bool verbose) : NameService(0)  {
 #ifdef SERVICE
   m_port = UdpConnection::servicePort(NAME_SERVICE_NAME);
 #endif
-  ::lib_rtl_printf("|         U D P         N A M E    S E R V I C E                       |\n");
-  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-      m_port, m_port, htons(m_port), htons(m_port));
-  ::lib_rtl_printf("+======================================================================+\n");
-  ::fflush(stdout);
+  if ( verbose )  {
+    ::lib_rtl_printf("|         U D P         N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+        m_port, m_port, htons(m_port), htons(m_port));
+    ::lib_rtl_printf("+======================================================================+\n");
+    ::fflush(stdout);
+  }
 }
 
 void UdpNameService::handle ()   {
@@ -323,16 +327,18 @@ void UdpNameService::handle ()   {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 #ifdef SERVICE
-TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERVICE_NAME))
+TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnection(NAME_SERVICE_NAME),verbose)
 #else
-TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERVICE_PORT))
+TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnection(NAME_SERVICE_PORT),verbose)
 #endif
 {
   m_port = m_tcp->port();
-  ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
-  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-      m_port, m_port, htons(m_port), htons(m_port));
-  ::lib_rtl_printf("+======================================================================+\n");
+  if ( verbose )  {
+    ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+        m_port, m_port, htons(m_port), htons(m_port));
+    ::lib_rtl_printf("+======================================================================+\n");
+  }
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   m_pNetwork->queueAccept ( m_port, m_pAccepthandler );              // Rearm
@@ -341,12 +347,14 @@ TcpNameService::TcpNameService() : NameService(m_tcp=new TcpConnection(NAME_SERV
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-TcpNameService::TcpNameService(int port) : NameService(m_tcp=new TcpConnection(port))  {
+TcpNameService::TcpNameService(int port, bool verbose) : NameService(m_tcp=new TcpConnection(port), verbose)  {
   m_port = m_tcp->port();
-  ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
-  ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-      m_port, m_port, htons(m_port), htons(m_port));
-  ::lib_rtl_printf("+======================================================================+\n");
+  if ( verbose )  {
+    ::lib_rtl_printf("|         T C P / I P   N A M E    S E R V I C E                       |\n");
+    ::lib_rtl_printf("|         Port(local): %6d %04X Network:%6d %04X                 |\n",
+        m_port, m_port, htons(m_port), htons(m_port));
+    ::lib_rtl_printf("+======================================================================+\n");
+  }
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
   m_pNetwork->queueAccept ( m_port, m_pAccepthandler );              // Rearm
@@ -494,7 +502,7 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
   // ----------------------------------------------------------------------------
   char *c;
   NameService *srv = 0;
-  bool inquirer = false, allocator = false, tcp = false, udp = false, nowait = false;
+  bool inquirer = false, allocator = false, tcp = false, udp = false, nowait = false, verbose = false;
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {
@@ -503,6 +511,7 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
          case 't':  tcp       = true;   break;
          case 'u':  udp       = true;   break;
          case 'n':  nowait    = true;   break;
+         case 'v':  verbose   = true;   break;
          default:
 Options:
            lib_rtl_printf("NameServer -<opt>\n");
@@ -511,6 +520,7 @@ Options:
            lib_rtl_printf("  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
            lib_rtl_printf("  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
            lib_rtl_printf("  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
+           lib_rtl_printf("  -v(erbose)     Print header at startup.\n");
            return 0x1;
       }
     }
@@ -519,16 +529,16 @@ Options:
     goto Options;
   }
   else if ( inquirer )   {
-    if ( tcp ) srv = new TcpNameService(NAME_SERVICE_PORT+1);
-    else       srv = new UdpNameService();
+    if ( tcp ) srv = new TcpNameService(NAME_SERVICE_PORT+1, verbose);
+    else       srv = new UdpNameService(verbose);
   }
   else if ( allocator )   {
     if ( TanDataBase::initialize() != TAN_SS_SUCCESS )  {
       lib_rtl_printf("TcpNameService> Error initializing the DataBase!\n");
       return 1;
     }
-    if ( udp ) srv = new UdpNameService();
-    else       srv = new TcpNameService();
+    if ( udp ) srv = new UdpNameService(verbose);
+    else       srv = new TcpNameService(verbose);
   }
   if ( !srv ) goto Options;
   if ( !nowait )  {
