@@ -27,7 +27,7 @@ macro LbHerwig_use "" Linux&Herwig "LbHerwig v2r1 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
-macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r0 Gen"
+macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r1 Gen"
 use $(LbBcVegPy_use)
 
 #-- Generator
