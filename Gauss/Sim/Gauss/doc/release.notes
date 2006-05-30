@@ -4,7 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v24r7 2006-05-29 =============================
+!======================== Gauss v24r7 2006-05-30 =============================
+! 2006-05-30 - Gloria Corti
+ - Introduce new options to read in generator events from a file and do the
+   detector simulation
+   . options/v200601-SimPhase.opts
+   . options/GaussSimPhase.opts
+
 ! 2006-05-29 - Gloria CORTI
  - Use options for configuring algorithm to get MCHits for tracker from
    the GaussTracker v5r4 package.

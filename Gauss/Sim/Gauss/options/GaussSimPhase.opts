@@ -1,9 +1,10 @@
-#printOptions 
-// $Id: Gauss.opts,v 1.89 2006-05-30 12:09:13 gcorti Exp $ 
+//#printOptions 
+// $Id: GaussSimPhase.opts,v 1.1 2006-05-30 12:09:13 gcorti Exp $ 
 
 /** @file 
  * 
- *  Default Gauss job Options.
+ *  Options for a Gauss with simulation phase where generator event is read
+ *  from a file.
  *  This file defines, sequences and configures the algorithms to be executed
  *
  */
@@ -11,37 +12,16 @@
 #include "$GAUSSOPTS/Common.opts"    // Necessary for any Gauss executable
 
 //---------------------------------------------------------------------------
-// Phases to be executed: comment unwanted phases
-//                        i.e. Simulation if running generator in stand-alone
-//                        in which case comment also Simulation.opts below
-//                        and switch on Generator-StandAlone for writing to
-//                        tape
+// Phases to be executed
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
 
 //---------------------------------------------------------------------------
-// Initialize the Phases: set run and first event number,
-//                        hence setting random numbers to start with
+// Initialization
 //---------------------------------------------------------------------------
-Generator.Members         = { "GenInit/GaussGen" };
 Simulation.Members        = { "SimInit/GaussSim" };
-GaussGen.FirstEventNumber = 1;
-GaussGen.RunNumber        = 1;
 EventClockSvc.StartTime   = 0;
 EventClockSvc.TimeStep    = 25*ns;
-
-//---------------------------------------------------------------------------
-// Generator phase: see there how to modify to run generator 
-//                  for different luminosity or fixed interactions
-//                  for particle gun see options in ParticleGun.opts
-//                  and include it as for EVENTTYPE at the bottom
-//---------------------------------------------------------------------------
-#include "$GAUSSOPTS/Generator.opts"
-Generator.MeasureTime = true;
-// When running Generator stand-alone uncomment the following
-// to write on tape only Generator objects
-//#include "$GAUSSOPTS/GenStandAlone.opts"
 
 //---------------------------------------------------------------------------
 // Simulation phase: configuration for full detector simulation,
@@ -52,15 +32,19 @@ Generator.MeasureTime = true;
 Simulation.MeasureTime = true;
 
 //---------------------------------------------------------------------------
-// Monitor phase: two separate phase for Generator and Simulation
-//                can be commented separately
+// Monitor sub-phase
 //---------------------------------------------------------------------------
-Generator.Members       += { "GaudiSequencer/GenMonitor" };
 Simulation.Members      += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 //#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
-GenMonitor.MeasureTime = true;
 SimMonitor.MeasureTime = true;
+
+//---------------------------------------------------------------------------
+// Must read events (overwrite property of no events input set for
+// "normal" Gauss jobs)
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtSel = "";
+EventDataSvc.RootCLID = 1;
 
 //---------------------------------------------------------------------------
 // Write an output file (contents listed in GaussTape.opts)
@@ -75,29 +59,21 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 10;
+ApplicationMgr.EvtMax     = 5;
 
+//---------------------------------------------------------------------------
+// Input file
+//---------------------------------------------------------------------------
+EventSelector.Input   = {
+  "DATAFILE='PFN:$GAUSSROOT/job/Gauss.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+  
 //---------------------------------------------------------------------------
 // Output files. 
 //---------------------------------------------------------------------------
-GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+GaussTape.Output = "DATAFILE='PFN:GaussSim.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 //NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
 
-//---------------------------------------------------------------------------
-// Event type to simulate: for <evttype> put a line similar to the following
-//                         or use ParticleGun.opts
-//---------------------------------------------------------------------------
-//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
-//#include "$DECFILESROOT/options/10000000.opts"  // Generic b-b~ events
-//#include "$DECFILESROOT/options/13144000.opts"  // Bs->J/Psi(mumu)phi
-//#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
-
-//#include "$GAUSSROOT/options/130000000.opts"  // Min Bias Herwig - TEST
-//#include "$GAUSSROOT/options/110000000.opts"  // Generic b-b~ Herwig - TEST
-//#include "$GAUSSROOT/options/14900000.opts"   // BcVegPy - TEST
-
-//#include "$GAUSSOPTS/ParticleGun.opts"  // ParticleGun example
- 

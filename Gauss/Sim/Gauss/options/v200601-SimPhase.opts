@@ -1,16 +1,16 @@
-#printOptions 
+//#printOptions 
 
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version
- *  lhcb-200601.opts (DC06)
+ *  lhcb-200601.opts (DC06), reading in a generator event from a file
  *
  */
 
 //--------------------------------------------------------------------------
-// Execute a standard production Gauss job
+// Execute a Gauss job reading in a Generator file
 //--------------------------------------------------------------------------
-#include "$GAUSSOPTS/Gauss.opts"
+#include "$GAUSSOPTS/GaussSimPhase.opts"
 
 //--------------------------------------------------------------------------
 // Geometry database dependent options
