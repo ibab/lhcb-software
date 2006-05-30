@@ -5,6 +5,9 @@
 !               for geometry and matrix algebra
 !-----------------------------------------------------------------------------
 
+! 2006-05-30 - Juan Palacios
+  - Kernel/GeomFun.h: Fix typo in line - plane intersection method declaration.
+
 ! 2006-05-24 - Juan Palacios
  - cmt/requirements: Delete removal of "-lSmatrix" in linkopts. This is needed
    to get Python dictionaries for SMatrix.

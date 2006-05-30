@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.2 2006-05-11 13:34:43 jpalac Exp $
+// $Id: GeomFun.h,v 1.3 2006-05-30 10:06:40 jpalac Exp $
 #ifndef _GeomFun_H_
 #define _GeomFun_H_
 
@@ -26,7 +26,7 @@ namespace Gaudi{
      */
     template<typename aLine, typename aPlane, typename aPoint>
     bool intersection(const aLine& line,
-                      const aPlane plane,
+                      const aPlane& plane,
                       aPoint& intersect,
                       double& mu);
 
