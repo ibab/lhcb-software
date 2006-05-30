@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.58 2006-05-29 12:44:02 jpalac Exp $
+! $Id: release.notes,v 1.59 2006-05-30 09:44:37 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-30 Juan PALACIOS for Vanya BELYAEV
+  src/MatrixUtils.h: Fix errouneous namespace for LorentzVector bug.
 
 !========================== VertexFit v2r1 2006-05-29 ===================
 
