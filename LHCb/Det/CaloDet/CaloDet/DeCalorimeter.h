@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.19 2006-05-17 16:01:55 cattanem Exp $ 
+// $Id: DeCalorimeter.h,v 1.20 2006-05-30 17:03:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,6 +16,7 @@
 #include "GaudiKernel/MsgStream.h"
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
 // LHCbKernel
 #include "Kernel/CaloCellID.h"
 /// from CaloKernel
@@ -85,12 +86,14 @@ public:
 
   ///  set function for coding 
   void setCoding        ( const unsigned int nb     );
-
+  
   // reference plane in the global frame 
-  const Gaudi::Plane3D plane(double zLocal);
-  const Gaudi::Plane3D plane(CaloPlane::Plane pos);
-
-
+  Gaudi::Plane3D plane ( const double           zLocal ) const ;
+  inline 
+  Gaudi::Plane3D plane ( const Gaudi::XYZPoint& point  ) const ;
+  inline 
+  Gaudi::Plane3D plane ( const CaloPlane::Plane pos    ) const ;
+  
   ///  set function for maxEt 
   void setEtInCenter    ( const double maxEt        ) 
   { m_maxEtInCenter = maxEt; }
@@ -534,6 +537,28 @@ inline void DeCalorimeter::Assert( bool assertion ,
     throw CaloException( msg += message  );  
   }
 };
+// ============================================================================
+/// Return a reference (tilted) plane
+// ============================================================================
+inline Gaudi::Plane3D DeCalorimeter::plane
+( const CaloPlane::Plane pos) const
+{
+  switch(pos){
+  case CaloPlane::Front     : return plane(-m_zSize/2. );
+  case CaloPlane::ShowerMax : return plane(m_zShowerMax);
+  case CaloPlane::Middle    : return plane(0.);
+  case CaloPlane::Back      : return plane(+m_zSize/2.);
+  default : return plane(0.); 
+  }
+};
+// ============================================================================
+/// return a 3D-plane, which contain the given 3D-point in the global system
+// ============================================================================
+inline Gaudi::Plane3D DeCalorimeter::plane
+( const Gaudi::XYZPoint& global ) const 
+{ return plane ( geometry()->toLocal( global ).Z() ) ; }
+// ============================================================================
+
 
 // ============================================================================
 // The End 

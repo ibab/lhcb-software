@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.56 2006-05-17 16:01:55 cattanem Exp $ 
+! $Id: release.notes,v 1.57 2006-05-30 17:03:45 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
+
+! 2006-05-30 - Vanya BELYAEV
+ - CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
+     a) add one more method plane (for 3D plane whch pass through 
+        given 3D-point in global reference system 
+     b) add "inline" and "const" qualifiers for DeCalorimeter::plane
+ - cmt/requirement
+     versionincrement to v7r3 
 
 !========================= CaloDet v7r2 2006-05-17 ============================
 ! 2006-05-17 - Marco Cattaneo

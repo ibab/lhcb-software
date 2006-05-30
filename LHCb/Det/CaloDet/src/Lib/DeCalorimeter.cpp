@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.27 2006-04-03 16:18:45 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.28 2006-05-30 17:03:45 ibelyaev Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -138,37 +138,22 @@ StatusCode DeCalorimeter::initialize() {
 
   return sc;
 };
-
-//----------------------------------------------------------------------------
-// ** Return a reference (tilted) plane
-//----------------------------------------------------------------------------
-const Gaudi::Plane3D DeCalorimeter::plane(CaloPlane::Plane pos){
-  switch(pos){
-  case CaloPlane::Front     : return plane(-m_zSize/2. );
-  case CaloPlane::ShowerMax : return plane(m_zShowerMax);
-  case CaloPlane::Middle    : return plane(0.);
-  case CaloPlane::Back      : return plane(+m_zSize/2.);
-  default : return plane(0.); 
-  }
-};
-
-
-const Gaudi::Plane3D DeCalorimeter::plane(double dz){
-  IGeometryInfo* geometry = this->geometry() ;
+// ============================================================================
+/// Return a reference (tilted) plane
+// ============================================================================
+Gaudi::Plane3D DeCalorimeter::plane( const double dz) const 
+{
+  const IGeometryInfo* geometry = this->geometry() ;
   Gaudi::XYZPoint local(0. , 0. , dz);
-  if( fabs(dz) > m_zSize/2. ) {  
+  if ( fabs(dz) > m_zSize/2. ) {  
     MsgStream msg( msgSvc(), "DeCalorimeter Plane "+ name () );
     msg << MSG::WARNING << " THE REQUESTED PLANE IS OUTSIDE THE  " 
         << name() << " VOLUME : dz/size = " <<dz <<"/"<<m_zSize<< endreq ;
   }
-  
   Gaudi::XYZPoint loff(0. , 0. , dz-1.); //arbitrary but non-0 z-offset
   Gaudi::XYZPoint  point = geometry->toGlobal(local);
   Gaudi::XYZPoint  goff = geometry->toGlobal(loff);
-  Gaudi::XYZVector vect = point-goff;
-  Gaudi::Plane3D plane3D(vect , point );
- return plane3D;
- 
+  return Gaudi::Plane3D ( point - goff , point );
 };
 //----------------------------------------------------------------------------
 // ** Builds the cells from the geometry of the Detector Element
