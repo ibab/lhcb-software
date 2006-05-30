@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.2 2006-05-30 16:17:25 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.1 2006-05-30 16:17:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -25,13 +25,14 @@ DECLARE_ALGORITHM_FACTORY( TutorialAlgorithm );
 TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_jPsiID(0)
-    , m_jPsiMass(0.)
-    , m_nJPsis(0)
+    , m_motherID(0)
+    , m_motherMass(0.)
+    , m_nMothers(0)
     , m_nEvents(0)
 {
-  declareProperty("MassWindow", m_jPsiMassWin = 10.*GeV);
-  declareProperty("MaxChi2",    m_jPsiChi2 = 1000.);
+  declareProperty("Particle",   m_motherName );
+  declareProperty("MassWindow", m_motherMassWin = 10.*GeV);
+  declareProperty("MaxChi2",    m_motherChi2 = 1000.);
 }
 //=============================================================================
 // Destructor
@@ -48,17 +49,17 @@ StatusCode TutorialAlgorithm::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  ParticleProperty* mother = ppSvc()->find( "J/psi(1S)" );
+  ParticleProperty* mother = ppSvc()->find( m_motherName );
   if ( !mother ) { //
-    err() << "Cannot find particle property for J/psi(1S)" << endmsg ;
+    err() << "Cannot find particle property for " << m_motherName << endmsg ;
     return StatusCode::FAILURE;
   }
-  m_jPsiID = mother->pdgID();
-  m_jPsiMass = mother->mass();
-  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_jPsiID
-         << ") with mass " << m_jPsiMass << endmsg ;
-  info() << "Mass window is " << m_jPsiMassWin << " MeV" << endmsg ;
-  info() << "Max chi^2 is " << m_jPsiChi2 << endmsg ;
+  m_motherID = mother->pdgID();
+  m_motherMass = mother->mass();
+  info() << "Will reconstruct " << mother->particle() << " (ID=" << m_motherID
+         << ") with mass " << m_motherMass << endmsg ;
+  info() << "Mass window is " << m_motherMassWin << " MeV" << endmsg ;
+  info() << "Max chi^2 is " << m_motherChi2 << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -73,92 +74,92 @@ StatusCode TutorialAlgorithm::execute() {
   ++m_nEvents;
 
   // code goes here  
-  LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
-  sc = loopOnMuons(muons);
+  LHCb::Particle::ConstVector daughters = desktop()->particles(); // get particles
+  sc = loopOnDaughters(daughters);
   if (!sc) return sc;
-  sc = makeJpsi(muons);
+  sc = makeMother(daughters);
   if (!sc) return sc;
 
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-// makeJpsi
+// makeMother
 //=============================================================================
-StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons){
+StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daughters){
   StatusCode sc = StatusCode::SUCCESS ;
 
-  LHCb::Particle::ConstVector MuPlus, MuMinus;
-  sc = particleFilter()->filterNegative(muons,MuMinus);
-  if (sc) sc = particleFilter()->filterPositive(muons,MuPlus);
+  LHCb::Particle::ConstVector DaPlus, DaMinus;
+  sc = particleFilter()->filterNegative(daughters,DaMinus);
+  if (sc) sc = particleFilter()->filterPositive(daughters,DaPlus);
   if (!sc) {
     err() << "Error while filtering" << endmsg ;
     return sc ;
   }
-  for ( LHCb::Particle::ConstVector::const_iterator imp =  MuPlus.begin() ;
-        imp != MuPlus.end() ; ++imp ){
-    for ( LHCb::Particle::ConstVector::const_iterator imm =  MuMinus.begin() ;
-          imm != MuMinus.end() ; ++imm ){
+  for ( LHCb::Particle::ConstVector::const_iterator imp =  DaPlus.begin() ;
+        imp != DaPlus.end() ; ++imp ){
+    for ( LHCb::Particle::ConstVector::const_iterator imm =  DaMinus.begin() ;
+          imm != DaMinus.end() ; ++imm ){
       // mass
-      Gaudi::LorentzVector twoMu = (*imp)->momentum() + (*imm)->momentum() ;
-      verbose() << "Two muon mass is " << twoMu.M()/GeV << endmsg ;
-      plot(twoMu.M(),"DiMu mass",2.*GeV,4.*GeV);
-      if ( fabs ( twoMu.M() - m_jPsiMass ) > m_jPsiMassWin ) continue ; // mass cuts
+      Gaudi::LorentzVector twoDa = (*imp)->momentum() + (*imm)->momentum() ;
+      verbose() << "Two daughter mass is " << twoDa.M()/GeV << endmsg ;
+      plot(twoDa.M(),"TwoP mass",2.*GeV,4.*GeV);
+      if ( fabs ( twoDa.M() - m_motherMass ) > m_motherMassWin ) continue ; // mass cuts
       // vertex 
-      LHCb::Vertex MuMuVertex;
-      LHCb::Particle Jpsi(m_jPsiID);
-      StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Jpsi,MuMuVertex);
+      LHCb::Vertex DaDaVertex;
+      LHCb::Particle Mother(m_motherID);
+      StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Mother,DaDaVertex);
       if (!scFit) {
         Warning("Fit error");
         continue;
       }
-      debug() << "Vertex fit at " << MuMuVertex.position()/cm
-              << " with chi2 " << MuMuVertex.chi2() << endmsg;
-      plot(MuMuVertex.chi2(),"DiMu Chi^2",0.,200.);
-      if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
+      debug() << "Vertex fit at " << DaDaVertex.position()/cm
+              << " with chi2 " << DaDaVertex.chi2() << endmsg;
+      plot(DaDaVertex.chi2(),"TwoP Chi^2",0.,200.);
+      if ( DaDaVertex.chi2() > m_motherChi2 ) continue ; // chi2 cut
       // happy -> save
-      plot(twoMu.M(),"Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
+      plot(twoDa.M(),"Selected TwoP mass",m_motherMass-m_motherMassWin,m_motherMass+m_motherMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
-      desktop()->save(&Jpsi);
-      plotMuon(*imp,"Selected ");
-      plotMuon(*imm,"Selected ");
-      ++m_nJPsis ;
+      desktop()->save(&Mother);
+      plotDaughter(*imp,"Selected ");
+      plotDaughter(*imm,"Selected ");
+      ++m_nMothers ;
     }
   }
   return sc ;
 }
 //=============================================================================
-// loop on muons
+// loop on daughters
 //=============================================================================
-StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muons)const {
+StatusCode TutorialAlgorithm::loopOnDaughters(const LHCb::Particle::ConstVector& daughters)const {
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
-        im != muons.end() ; ++im ){
-    sc = plotMuon(*im,"All");
+  for ( LHCb::Particle::ConstVector::const_iterator im =  daughters.begin() ;
+        im != daughters.end() ; ++im ){
+    sc = plotDaughter(*im,"All");
     if (!sc) return sc;
   }
 
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-// plot muons
+// plot daughters
 //=============================================================================
-StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::string& head )const {
+StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::string& head )const {
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  plot(mu->p(),  head+" Muon P",  0., 50.*GeV);    // momentum
-  plot(mu->pt(), head+" Muon Pt", 0., 5.*GeV );  // Pt
-  debug() << mu->momentum() << endmsg ;
+  plot(da->p(),  head+" Daughter P",  0., 50.*GeV);    // momentum
+  plot(da->pt(), head+" Daughter Pt", 0., 5.*GeV );  // Pt
+  debug() << da->momentum() << endmsg ;
   for ( LHCb::PrimVertex::ConstVector::const_iterator ipv = desktop()->primaryVertices().begin() ;
         ipv != desktop()->primaryVertices().end() ; ++ipv ){
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
-    sc = geomDispCalculator()->calcImpactPar(*mu, *(*ipv), IP, IPE);
+    sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);
     if (sc){
-      plot(IP, head+" Muon IP", 0., 10.*mm);
-      if (IPE>0.) plot(IP/IPE,  head+" Muon IP/error", 0., 10.);
+      plot(IP, head+" Daughter IP", 0., 10.*mm);
+      if (IPE>0.) plot(IP/IPE,  head+" Daughter IP/error", 0., 10.);
     } 
   }
 
@@ -171,7 +172,7 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
 StatusCode TutorialAlgorithm::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Found " << m_nJPsis << " J/psi in " << m_nEvents << " events" << endmsg;
+  info() << "Found " << m_nMothers << " " << m_motherName << " in " << m_nEvents << " events" << endmsg;
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 } 

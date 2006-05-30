@@ -19,9 +19,22 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+Jpsi2MuMu.Particle = "J/psi(1S)" ;
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 Jpsi2MuMu.MassWindow = 50*MeV ;
 Jpsi2MuMu.MaxChi2 = 100 ;
 Jpsi2MuMu.OutputLevel = 3 ;
+//
+// Phi->KK selection
+//
+TutorialSeq.Members += { "TutorialAlgorithm/Phi2KK" };
+Phi2KK.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
+Phi2KK.Particle =  "phi(1020)" ;
+Phi2KK.MassWindow = 50*MeV ;
+Phi2KK.MaxChi2 = 100 ;
+Phi2KK.OutputLevel = 3 ;
+
+TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
