@@ -713,11 +713,11 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
   CONTROL *ctrl = bm->ctrl;
   char *bitmap = bm->bitmap;
   ctrl->last_alloc = 0;
-  int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),nbit,&bit);
-  if (!lib_rtl_is_success(status))  {
-    ctrl->last_alloc = 0;
-    status = BF_alloc(bitmap,ctrl->bm_size,nbit,&bit);
-  }
+  //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),nbit,&bit);
+  //if (!lib_rtl_is_success(status))  {
+    //ctrl->last_alloc = 0;
+    int status = BF_alloc(bitmap,ctrl->bm_size,nbit,&bit);
+  //}
   if (lib_rtl_is_success(status))  {
     _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
     bit += ctrl->last_alloc<<3 ;
@@ -854,14 +854,14 @@ int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
     if ( u->p_state == S_wspace && u->ws_size <= size)      {
       int ubit = (u->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
       ctrl->last_alloc = 0;
-      int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
-      if (!lib_rtl_is_success(status))      {
-        ctrl->last_alloc = 0;
-        status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
-      }
+      //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
+      //if (!lib_rtl_is_success(status))      {
+        //ctrl->last_alloc = 0;
+        int status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
+      //}
       if (lib_rtl_is_success(status))       {
         _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
-        bit += ctrl->last_alloc<<3 ;
+        bit += ctrl->last_alloc<<3;
         _mbm_printf(" [%d] \n", bit);
         ctrl->last_alloc = (bit+ubit)>>3;
         ctrl->last_bit   = bit;

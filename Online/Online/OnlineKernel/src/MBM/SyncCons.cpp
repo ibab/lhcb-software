@@ -30,8 +30,15 @@ extern "C" int mbm_cons(int argc,char **argv) {
     }
     else if( trnumber != *e.data ) {
       if ( !quiet )  {
-        ::lib_rtl_printf("======= Mismatch [%d] found %d %d [0x%p]\n", 
+        ::lib_rtl_printf("======= Mismatch (1) [%d] found %d %d [0x%p]\n", 
 	         nbad++, trnumber, *e.data, (void*)e.data);
+      }
+      trnumber = *e.data;
+    }
+    else if( trnumber != *(int*)((char*)e.data+e.len-sizeof(int)) ) {
+      if ( !quiet )  {
+        ::lib_rtl_printf("======= Mismatch (2) [%d] found %d %d [0x%p]\n", 
+	         nbad++, trnumber, *(int*)((char*)e.data+e.len-sizeof(int)), (void*)e.data);
       }
       trnumber = *e.data;
     }

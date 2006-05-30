@@ -147,46 +147,62 @@ int BF_count(const char* base,int bf_size,int* pos,int* size) {
   *size   = max_len;
   return 1;
 }
+static unsigned char bit_mask[] = {
+  0x01, 0x02, 0x04, 0x08,
+  0x10, 0x20, 0x40, 0x80
+};
+static unsigned char inv_mask[] = {
+  ~0x01, ~0x02, ~0x04, ~0x08,
+  ~0x10, ~0x20, ~0x40, ~0x80
+};
 
 int BF_set(char* base, int pos, int len)   {
+  unsigned char* msk;
+  int j, k, bit = pos%8;
   base += pos/8;
-  int bit = pos%8;
+  // printf("Set bits: %p   %d -> %d [%d]\n",(void*)base,pos,pos+len,len);
   if ( bit > 0 )  {
-    int j=(len-bit>=8) ? 8 : len+bit;
-    for(int k=bit; k<j; ++k)
-      *base |= (1<<k);
+    msk = bit_mask+bit;
+    j=(len>=8-bit) ? 8 : len+bit;
+    //int j=(len-bit>=8) ? 8 : len+bit;
+    for(k=bit; k<j; ++k, ++msk)
+      *base |= *msk;
     len -= j-bit;
     ++base;
   }
   if ( len/8 )  {
-    int nb = len/8;
-    len   -= nb*8;
-    ::memset(base,0xFF,nb);
-    base += nb;
+    j = len/8;
+    len   -= j*8;
+    ::memset(base,0xFF,j);
+    base += j;
   }
-  for(int m=0; m<len;++m)
-    *base |= (1<<m);
+  for(k=0, msk=bit_mask; k<len; ++k,++msk)
+    *base |= *msk;
   return 1;
 }
 
 int BF_free(char* base,int pos, int len) {
+  unsigned char* msk;
+  int j, k, bit = pos%8;
   base += pos/8;
-  int bit = pos%8;
   if ( bit > 0 )  {
-    int j=(len-bit>=8) ? 8 : len+bit;
-    for(int k=bit; k<j; ++k)
-      *base &= ~(1<<k);
+    msk = inv_mask+bit;
+    j=(len>=8-bit) ? 8 : len+bit;
+    for(k=bit; k<j; ++k, ++msk)  {
+      *base &= *msk;
+    }
     len -= j-bit;
     ++base;
   }
   if ( len/8 )  {
-    int nb = len/8;
-    len -=  nb*8;
-    ::memset(base,0x0,nb);
-    base += nb;
+    j = len/8;
+    len -=  j*8;
+    ::memset(base,0x0,j);
+    base += j;
   }
-  for(int m=0; m<len;++m)
-    *base &= ~(1<<m);
+  for(k=0, msk = inv_mask; k<len; ++k,++msk)  {
+    *base &= *msk;
+  }
   return 1;
 }
 

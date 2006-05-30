@@ -9,7 +9,7 @@
 
 namespace {
   void help()  {
-    ::printf("mbm_dumpbits -opt [-opt]\n");
+    ::printf("mep_dump_bitmap -opt [-opt]\n");
     ::printf("    -b=<name>      Buffer identifier \n");
     ::printf("    -c(continuous) Continues display\n");
   }
