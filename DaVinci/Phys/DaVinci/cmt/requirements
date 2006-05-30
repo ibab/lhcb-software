@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.313 2006-05-24 14:07:51 jpalac Exp $
+# $Id: requirements,v 1.314 2006-05-30 16:17:14 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
 
 #============================================================================
 package           DaVinci
-version           v16r1
+version           v16r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,8 +47,8 @@ use LbcomSys    v5r0
 #-- Rec packages (from REC_v3r3)
 use RecSys      v3r3                 
 
-#-- Phys packages (from PHYS_v3r1)
-use PhysSys     v3r1
+#-- Phys packages (from PHYS_v3r2)
+use PhysSys     v3r2
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
