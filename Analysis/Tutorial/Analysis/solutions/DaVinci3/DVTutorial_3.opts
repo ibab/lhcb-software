@@ -1,9 +1,9 @@
-/** @file 
+31/** @file 
  * 
- *  Options for exercise 1 
+ *  Options for exercise 3
  *
  *  @author P. Koppenburg
- *  @date 2006-05-24
+ *  @date 2006-05-30
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$ANALYSISROOT/options/BolognaOptions.opts"
@@ -20,7 +20,6 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 Jpsi2MuMu.Particle = "J/psi(1S)" ;
-Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 Jpsi2MuMu.MassWindow = 50*MeV ;
 Jpsi2MuMu.MaxChi2 = 100 ;
 Jpsi2MuMu.OutputLevel = 3 ;

@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.2 2006-05-30 16:17:25 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.3 2006-05-31 13:44:51 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       ++m_nJPsis ;
     }
   }
-  return sc ;
+  return desktop()->saveDesktop() ;
 }
 //=============================================================================
 // loop on muons

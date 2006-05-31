@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.1 2006-05-30 16:17:25 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.2 2006-05-31 13:44:51 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
