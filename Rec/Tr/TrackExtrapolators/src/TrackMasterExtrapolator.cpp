@@ -72,7 +72,7 @@ StatusCode TrackMasterExtrapolator::initialize()
   if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
  
   // selector
-  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName );
+  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName, "selector",this );
 
   // initialize transport service
   m_transportSvc = svc<ITransportSvc>( "TransportSvc",true );

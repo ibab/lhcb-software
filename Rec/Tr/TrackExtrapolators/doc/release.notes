@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-05-31 M Needham
+  - selector in master should be private tool
+
+! 2006-05-31 M Needham
  - initialize startT variable in TrackLongDistanceExtrapolator (not used anyway)
 
 ! 2006-05-31 - Eduardo Rodrigues
