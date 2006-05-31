@@ -23,7 +23,7 @@ UpiFactory::~UpiFactory() {
 }
 
 DialogFactory* UpiFactory::instance()  {
-  static DialogFactory *factory = instance();
+  static DialogFactory *factory = 0;
   if ( factory == NULL ) factory = new UpiFactory();
   return factory;
 }
