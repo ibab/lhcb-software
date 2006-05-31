@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.130 2006-05-31 12:50:27 krinnert Exp $
+! $Id: release.notes,v 1.131 2006-05-31 12:55:20 krinnert Exp $
 package VeloDet
 package manager : Velo Group
 
-! 2006-05-31 Kurt Rinnert
+! 2006-05-31 - Kurt Rinnert
  - Add new condition 'Tell1WithoutSensor' to Velo sensor readout conditions.
  This feature was requested by the AC/DC group in order to facilitate 
  the proper simulation of all possible test beam setups.
