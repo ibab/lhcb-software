@@ -28,3 +28,4 @@ HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 
 ApplicationMgr.EvtMax = 500 ;
 
+#include "$ANALYSISROOT/options/JpsiKs.opts"

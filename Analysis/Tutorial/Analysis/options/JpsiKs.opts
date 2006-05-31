@@ -1,0 +1,4 @@
+EventSelector.Input   = {
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/11144100.500ev.17May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
