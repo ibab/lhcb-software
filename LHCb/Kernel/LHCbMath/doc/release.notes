@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2006-05-31 - Juan PALACIOS
+
+  - Import LHCbMath/MatrixManip.h from Kernel/LHCbDefinitions. Change namespace
+    to Gaudi::Math for consistency.
+
   - Remove Kernel, move everything to new LHCbMath directory.
 
   - Kernel: Add MatrixManip.h from Vanya Belyaev. Various useful matrix 
