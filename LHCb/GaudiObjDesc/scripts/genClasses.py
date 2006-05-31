@@ -437,8 +437,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
       self.addInclude('ObjectVector')
       s += '/// Definition of vector container type for %s\n' % classname
-      s += 'template <class TYPE> class ObjectVector;\n'
-      s += 'typedef ::ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
+      s += 'typedef ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
     return s
 #--------------------------------------------------------------------------------
   def genClassContainerTypedefs(self, godClass):
