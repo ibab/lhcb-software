@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.10 2006-04-19 11:44:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.11 2006-05-31 08:00:09 niko Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -24,6 +24,22 @@ using LHCb::RawBank;
 using LHCb::MEPEvent;
 extern "C" void R__zip (int cxlevel, int *nin, const char *bufin, int *lout, char *bufout, int *nout);
 extern "C" void R__unzip(int *nin, const char *bufin, int *lout, char *bufout, int *nout);
+
+namespace LHCb {
+  // Decode MEP into banks event by event
+  StatusCode LHCb::RTTC2Current( const MEPEvent* me )  {
+    for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
+      for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
+	const RawBank* l = f->last();
+	for(RawBank* b=f->first(); b<l; b=f->next(b)) {
+	  int s = (b->size()+b->hdrSize())*sizeof(int) - b->hdrSize();
+	  b->setSize(s);
+	}
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+}
 
 /// Determine length of the sequential buffer from RawEvent object
 size_t LHCb::rawEventLength(const RawEvent* evt)    {
@@ -105,7 +121,7 @@ public:
 };
 
 // Only works for word aligned data and assumes that the data is an exact number of words
-// Copyright © 1993 Richard Black. All rights are reserved. 
+// Copyright  1993 Richard Black. All rights are reserved. 
 static unsigned int crc32Checksum(const unsigned char *data, size_t len)    {  
   static CRC32Table table;
   const unsigned int *crctab = table.data();
