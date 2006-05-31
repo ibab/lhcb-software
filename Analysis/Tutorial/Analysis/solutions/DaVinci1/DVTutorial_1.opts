@@ -17,8 +17,8 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
 // J/spi->mumu selection
 //
-TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
-Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+TutorialSeq.Members += { "TutorialAlgorithm" };
+TutorialAlgorithm.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
