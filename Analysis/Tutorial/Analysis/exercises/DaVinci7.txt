@@ -4,6 +4,8 @@
 #                                                                              #
 ################################################################################
 
+NOT YET AVAILABLE IN DC06:
+
 Let's add MC truth to our nTuple. We start again from the algorithm
 created in exercise 5, but one could as well start a new algorithm.
 
@@ -11,7 +13,7 @@ created in exercise 5, but one could as well start a new algorithm.
     the access to MC truth. You don't want to waste time looking for
     association of Bs in minimum bias...
   - get a Particle2MCLink* associator with Particle2MCMethod::Composite
-  - Associate your B to a MCParticle and fill its pid and momentum in the 
+  - Associate your B to a MCParticle and fill its pid and momentum in the
     nTuple
   - You can also associate all the daughters to MC. The IParticleDescendants
     tool (you get from the descendants() method in DVAlgorithm) can help.

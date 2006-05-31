@@ -54,8 +54,8 @@ Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5
 Bs2JpsiPhi.HistoProduce=true;
 Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
 Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
-Bs2JpsiPhi.DaughterPlotsPath={"Bin"};
-Bs2JpsiPhi.MotherPlotsPath={"Bout"};
+Bs2JpsiPhi.DaughterPlotsPath= "Bin" ;
+Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
 
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
