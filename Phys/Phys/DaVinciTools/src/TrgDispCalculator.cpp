@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.4 2006-05-11 14:11:33 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.5 2006-05-31 14:17:31 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -10,8 +10,8 @@
 #include "Event/Particle.h"
 
 // from LHCb
-#include "Kernel/Line.h"
-#include "Kernel/GeomFun.h"
+#include "LHCbMath/Line.h"
+#include "LHCbMath/GeomFun.h"
 // local
 #include "TrgDispCalculator.h"
 

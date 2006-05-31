@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.12 2006-05-10 17:00:59 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.13 2006-05-31 14:17:31 jpalac Exp $
 
 // Include files
 
@@ -9,7 +9,7 @@
 // From LHCb
 
 
-#include "Kernel/GeomFun.h"
+#include "LHCbMath/GeomFun.h"
 // from Event
 #include "Event/Particle.h"
 

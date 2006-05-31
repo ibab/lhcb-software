@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.7 2006-05-09 16:32:19 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.8 2006-05-31 14:17:31 jpalac Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -13,7 +13,7 @@
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/Line.h"
+#include "LHCbMath/Line.h"
 // from DaVinciKernel
 #include "Kernel/IGeomDispCalculator.h"
 

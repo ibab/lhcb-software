@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.203 2006-05-30 12:46:53 jpalac Exp $
+! $Id: release.notes,v 1.204 2006-05-31 14:17:31 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-31-05 - Juan PALACIOS
+  src/TrgDispCalculator.* and src/GeomDispCalculator.*: Change include
+  directory for Kernel/LHCbMath packages from Kernel to LHCbMath
 
 !========================== DaVinciTools v13r1 2006-05-30 ===================
 
