@@ -1,8 +1,11 @@
-// $Id: BlindVertexFitter.cpp,v 1.1 2006-05-26 10:54:02 ibelyaev Exp $
+// $Id: BlindVertexFitter.cpp,v 1.2 2006-05-31 13:14:37 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/26 10:54:02  ibelyaev
+//  add BlindVertexFitter
+// 
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -35,7 +38,7 @@
 // Local 
 // ============================================================================
 #include "FitterUtils.h"
-#include "MatrixUtils.h"
+#include "Kernel/MatrixUtils.h"
 // ============================================================================
 
 /// anonymous namespace to hide few technical constants

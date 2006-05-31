@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.60 2006-05-30 12:48:04 jpalac Exp $
+! $Id: release.notes,v 1.61 2006-05-31 13:14:37 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-05-31 Juan PALACIOS
+  Remove src/MatrixUtils.h (moved to LHCbMath v1r1)
+  src/BlindVertexFitter.cpp: Add Kernel to include path of MatrixUtils.h
 
 !========================== VertexFit v2r1 2006-05-29 ===================
 
