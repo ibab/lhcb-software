@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.20 2006-05-23 13:09:13 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.21 2006-05-31 12:50:27 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -315,6 +315,12 @@ public:
    */
   bool isReadOut() const { return m_isReadOut; }
 
+  /** Check whether this sensor exists or is TELL1 w/o sensor (cached condition).
+   *  This information is based on CondDB, i.e. it can change
+   *  with time.
+   */
+  bool tell1WithoutSensor() const { return m_tell1WithoutSensor; }
+
   /** The capacitance of a strip (cached condition).
    *  This information is based on CondDB, i.e. it can change
    *  with time.
@@ -408,5 +414,6 @@ private:
   std::vector<double> m_stripCapacitance;
   std::vector<StripInfo> m_stripInfos;
   bool m_isReadOut;
+  bool m_tell1WithoutSensor;
 };
 #endif // VELODET_DEVELOSENSOR_H

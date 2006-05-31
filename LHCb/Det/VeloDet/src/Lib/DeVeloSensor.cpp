@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.18 2006-04-13 13:24:39 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.19 2006-05-31 12:50:27 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -278,6 +278,8 @@ StatusCode DeVeloSensor::updateReadoutCondition () {
   m_readoutCondition = condition(m_readoutConditionName.c_str());
   m_isReadOut = 
     static_cast<bool>(m_readoutCondition->paramAsInt("ReadoutFlag"));
+  m_tell1WithoutSensor = 
+    static_cast<bool>(m_readoutCondition->paramAsInt("Tell1WithoutSensor"));
 
   return StatusCode::SUCCESS;
 }
