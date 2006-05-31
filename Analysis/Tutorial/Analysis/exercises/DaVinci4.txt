@@ -5,7 +5,7 @@
 ################################################################################
 
 Complete the Bs -> J/psi Phi decay chain by adding a third algorithm that
-combined the J/psi and the Phi into a Bs. This time we suggest to use the
+combines the J/psi and the Phi into a Bs. This time we suggest to use the
 MakeResonances algorithm. 
   - The description is in http://cdsweb.cern.ch/search.py?recid=837193&ln=en
   - You need to declare:
