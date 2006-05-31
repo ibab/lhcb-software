@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.131 2006-05-31 12:55:20 krinnert Exp $
+! $Id: release.notes,v 1.132 2006-05-31 13:03:44 krinnert Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2006-05-31 - Kurt Rinnert
+- the 'TELL1 without sensor' flag is now initialized to false in the
+  DeVelo constructor.  This should not change the behaviour since it is
+  always updated from the CondDB.  This change simply ensures consistent
+  treatment of all conditions in DeVeloSensor.
 
 ! 2006-05-31 - Kurt Rinnert
  - Add new condition 'Tell1WithoutSensor' to Velo sensor readout conditions.

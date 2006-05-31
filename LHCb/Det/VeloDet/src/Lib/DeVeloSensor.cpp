@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.19 2006-05-31 12:50:27 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.20 2006-05-31 13:03:44 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -33,7 +33,8 @@ DeVeloSensor::DeVeloSensor(const std::string& name) :
   m_stripCapacitanceConditionName("StripCapacitance"),
   m_stripInfoConditionName("StripInfo"),
   m_readoutConditionName("Readout"),
-  m_isReadOut(true)
+  m_isReadOut(true),
+  m_tell1WithoutSensor(false)
 
 {
   ;
