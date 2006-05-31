@@ -2,7 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-! 2006-05-19 - Marco Clemencic
+! 2006-05-31 - Marco Clemencic
  - patch #729. for classes inheriting from ContainedObject, G.O.D. is
    generating the forward declaration template <class TYPE> class
    ObjectVector;inside the namespace LHCb even if it is not needed
