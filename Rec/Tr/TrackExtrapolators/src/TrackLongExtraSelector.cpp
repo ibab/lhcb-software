@@ -1,4 +1,4 @@
-// $Id: TrackLongExtraSelector.cpp,v 1.5 2006-05-31 12:50:57 erodrigu Exp $
+// $Id: TrackLongExtraSelector.cpp,v 1.6 2006-05-31 14:50:04 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -18,7 +18,8 @@ DECLARE_TOOL_FACTORY( TrackLongExtraSelector );
 TrackLongExtraSelector::TrackLongExtraSelector( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent ):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_startT(7.5*Gaudi::Units::m)
 {
   declareProperty( "ShortDist",
                    m_shortDist = 100.0*Gaudi::Units::mm );
@@ -65,7 +66,7 @@ StatusCode TrackLongExtraSelector::initialize()
 ITrackExtrapolator* TrackLongExtraSelector::select( const double zStart,
                                                     const double zEnd ) const
 {
-  ITrackExtrapolator* tExtra;
+  ITrackExtrapolator* tExtra = 0;
   if ( zEnd < m_startT ){ 
     tExtra = m_shortFieldExtrapolator;
   }

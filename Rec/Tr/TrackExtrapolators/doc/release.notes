@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-05-31 M Needham
+ - initialize startT variable in TrackLongDistanceExtrapolator (not used anyway)
+
 ! 2006-05-31 - Eduardo Rodrigues
  - fix: extrapolator selectors were set to use by default the
    TrackFastParabolicExtrapolator rather than the TrackParabolicExtrapolator
