@@ -6,7 +6,12 @@
 !               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================== LHCbMath v1r1 2006-05-31 ==========================
+
 ! 2006-05-31 - Juan PALACIOS
+
+  - Add LHCbMath/EigenSystem.h, .icpp and src/EigenSystem.cpp from 
+    Vanya Belyaev. Make linker library LHCbMath
 
   - Import LHCbMath/MatrixManip.h from Kernel/LHCbDefinitions. Change namespace
     to Gaudi::Math for consistency.

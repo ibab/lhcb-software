@@ -1,0 +1,166 @@
+// $Id: EigenSystem.icpp,v 1.1 2006-05-31 14:49:53 jpalac Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+#ifndef EIGENSYSTEM_ICPP
+#define EIGENSYSTEM_ICPP 1
+// ============================================================================
+// Include files
+// ============================================================================
+#include "EigenSystem.h"
+// ============================================================================
+
+// ============================================================================
+// (fast) copy GSL vector into MathLib vector 
+// ============================================================================
+template <class T, unsigned int D>
+inline void Gaudi::Math::GSL::_copy 
+( const gsl_vector*         input  , 
+  ROOT::Math::SVector<T,D>& output ) 
+{
+  for ( unsigned int i = 0 ; i < D ; ++i ) 
+  { output[i] = gsl_vector_get ( input , i ) ; }
+} ;
+// ============================================================================
+// (fast) copy of symmetric MathLib matrix into GSL matrix 
+// ============================================================================
+template < class T, unsigned int D> 
+inline void Gaudi::Math::GSL::_copy 
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& input , 
+  gsl_matrix* output ) 
+{
+  // fill GSL matrix 
+  for ( unsigned int i = 0 ; i < D ; ++i ) 
+  { 
+    const double _val = input( i , i ) ;
+    gsl_matrix_set ( output , i , i , _val ) ;
+    for ( unsigned int j = i + 1 ; j < D ; ++j ) 
+    { 
+      const double _val = input(i,j) ;
+      gsl_matrix_set ( output , i , j , _val ) ; 
+      gsl_matrix_set ( output , j , i , _val ) ; 
+    } 
+  }
+} ;
+// ======================================================================
+// (fast) copy of GSL matrix into MathLib matrix into GSL  
+// ======================================================================
+template < class T, unsigned int D> 
+inline void 
+Gaudi::Math::GSL::_copy 
+( const gsl_matrix*           input  ,
+  ROOT::Math::SMatrix<T,D,D>& output ) 
+{
+  for ( unsigned int i = 0 ; i < D ; ++i ) 
+  {
+    for ( unsigned int j = 0 ; j < D ; ++j  ) 
+    { output ( i , j ) = gsl_matrix_get ( input , i , j ) ; } 
+  } 
+} ;
+// ============================================================================
+// evaluate the eigenvalues of symmetrical matrix 
+// ============================================================================
+template <class T,unsigned int D>
+inline ROOT::Math::SVector<T,D>
+Gaudi::Math::GSL::EigenSystem::eigenValues
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx , 
+  const bool sorted ) const 
+{
+  ROOT::Math::SVector<T,D> result ;
+  StatusCode sc = eigenValues ( mtrx , result , sorted ) ;
+  if ( sc.isFailure() ) { Exception ( sc ) ; }
+  return result ;
+} ;
+// ============================================================================
+// evaluate the eigenvalues of symmetrical matrix 
+// ============================================================================
+template <class T,unsigned int D>
+inline StatusCode
+Gaudi::Math::GSL::EigenSystem::eigenValues
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
+  ROOT::Math::SVector<T,D>&                                     vals , 
+  const bool sorted ) const 
+{
+  StatusCode sc = _fill ( mtrx ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  // find eigenvalues (&sort them if needed)
+  sc = _fun1 ( sorted ) ;
+  if ( sc.isFailure() ) { return sc ; }                      // RETUEN 
+  // copy the vector 
+  _copy ( m_vector , vals ) ;
+  return StatusCode::SUCCESS ;                               // RETURN 
+} ;
+// ============================================================================
+// evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
+// ============================================================================
+template <class T, unsigned int D>
+inline StatusCode 
+Gaudi::Math::GSL::EigenSystem::eigenVectors 
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
+  ROOT::Math::SVector<T,D>&                                     vals , 
+  ROOT::Math::SMatrix<T,D,D>&                                   vecs , 
+  const bool sorted ) const
+{
+  StatusCode sc = _fill ( mtrx ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  // find the eigenvalues and eigenvectors (&sort them if needed) 
+  sc = _fun2 ( sorted ) ;
+  if ( sc.isFailure() ) { return sc ; }                      // RETUEN 
+  // copy the vector 
+  _copy ( m_vector , vals ) ;
+  // copy the matrix 
+  _copy ( m_evec   , vecs ) ;
+  return StatusCode::SUCCESS ;
+} 
+// ============================================================================
+// evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
+// ============================================================================
+template <class T, unsigned int D>
+inline StatusCode 
+Gaudi::Math::GSL::EigenSystem::eigenVectors 
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
+  ROOT::Math::SVector<T,D>&                                     vals , 
+  std::vector<ROOT::Math::SVector<T,D> >&                       vecs , 
+  const bool sorted ) const
+{
+  StatusCode sc = _fill ( mtrx ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  // find the eigenvalues and eigenvectors (&sort them if needed) 
+  sc = _fun2 ( sorted ) ;
+  if ( sc.isFailure() ) { return sc ; }                      // RETUEN 
+  // copy the vector 
+  _copy ( m_vector , vals ) ;
+  // copy the matrix 
+  vecs.resize( D ) ;
+  for ( unsigned int i = 0 ; i < D ; ++i ) 
+  {
+    for ( unsigned int j = 0 ; j < D ; ++j  ) 
+    { (vecs[i])[j] = gsl_matrix_get ( m_evec , j , i ) ; } 
+  } 
+  return StatusCode::SUCCESS ;  
+} ;
+// ============================================================================
+// fill the internal structures with the input data 
+// ============================================================================
+template <class T,unsigned int D>
+inline StatusCode 
+Gaudi::Math::GSL::EigenSystem::_fill
+( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ) const  
+{
+  // check/adjust the internal structures 
+  StatusCode sc = _check ( D ) ;  
+  if ( sc.isFailure() ) { return sc ; }                      // RETURN   
+  // fill input GSL matrix 
+  _copy ( mtrx , m_matrix ) ;
+  //
+  return StatusCode::SUCCESS ;                               // RETURN 
+} ;
+// ============================================================================
+
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // EIGENSYSTEM_ICPP
+// ============================================================================
