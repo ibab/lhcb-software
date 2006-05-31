@@ -185,7 +185,8 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   draw_line(NORMAL,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
     txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
   draw_line(NORMAL,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
-    "",ctr->bm_size/2, ctr->i_space/2, ctr->i_users, ctr->p_umax);
+    "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
+    ctr->i_users, ctr->p_umax);
 
   draw_line(NORMAL,"  Occupancy [Events]:");
   float f1=float(ctr->i_events)/float(ctr->p_emax);

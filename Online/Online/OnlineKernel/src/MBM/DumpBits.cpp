@@ -56,7 +56,7 @@ namespace MBM {
           draw_line(NORMAL,"");
         }
         s = " ";
-        bool compress = words.size()/4 > 40;
+        bool compress = words.size()/4 > 24;
         int line_mod = compress ? 32 : 4;
         for(std::vector<std::string>::iterator i=words.begin(); i < words.end(); ++i, cnt++)  {
           if ( compress )  {

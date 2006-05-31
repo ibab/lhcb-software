@@ -68,13 +68,13 @@ inline int _mbm_printf(const char* fmt, ...)  {
 }
 #endif
 #ifndef MBM_CHECK_MEMORY
-#define _mbm_reset_memory(q,c,s)
+#define _mbm_reset_memory(ctrl,q,c,s)
 #define _mbm_check_memory(q,c,s)
 #else
-static void _mbm_reset_memory(void* q,int c, size_t s)  {
+static void _mbm_reset_memory(CONTROL* ctrl, void* q,int c, size_t s)  {
   size_t i;
   int *p = (int*)q;
-  size_t siz = ((s + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
+  size_t siz = ((s + ctrl->bytes_p_Bit) >> ctrl->shift_p_Bit) << ctrl->shift_p_Bit;
   _mbm_printf("Reset %d bytes from %p to %p to %X\n", siz, p, ((char*)p)+siz, c);
   for(i=0; i<siz/sizeof(int); ++i)  {
     p[i] = c;
@@ -107,7 +107,7 @@ void _mbm_instrument_lock(BMID bm)  {
     lib_rtl_lock_value(bm->lockid,&val);
     if ( val != 0 ) {
       ::lib_rtl_printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
-    }
+\    }
 #endif
     if ( m_bm->_control()->spare1 != 0 )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
@@ -269,8 +269,8 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->c_state = S_active;
   us->p_state = S_active;
   us->partid  = partid;
-  ::strncpy (us->name, name, NAME_LENGTH);
-  us->name[NAME_LENGTH] = 0;
+  ::strncpy (us->name, name, sizeof(us->name));
+  us->name[sizeof(us->name)-1] = 0;
   us->pid = lib_rtl_pid ();
   us->space_add     = 0;
   us->space_size    = 0;
@@ -709,9 +709,10 @@ int _mbm_check_freqmode (BMID bm)  {
 
 /// try to get space ...
 int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
-  int bit, nbit = (size + Bytes_p_Bit) >> Shift_p_Bit;  // round size to block
   CONTROL *ctrl = bm->ctrl;
   char *bitmap = bm->bitmap;
+  int shift = ctrl->shift_p_Bit;
+  int bit, nbit = (size + ctrl->bytes_p_Bit) >> shift;  // round size to block
   ctrl->last_alloc = 0;
   //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),nbit,&bit);
   //if (!lib_rtl_is_success(status))  {
@@ -725,10 +726,10 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
     ctrl->last_alloc  = (bit+nbit)>>3;
     ctrl->last_bit = bit;
     ctrl->i_space -= nbit;
-    us->ws_ptr = (bit << Shift_p_Bit);
-    *ptr = (int*)(bm->buffer_add + (bit << Shift_p_Bit));
-    us->space_add  = (bit<<Shift_p_Bit);    // keep space info
-    us->space_size = nbit << Shift_p_Bit;
+    us->ws_ptr = (bit << ctrl->shift_p_Bit);
+    *ptr = (int*)(bm->buffer_add + (bit << shift));
+    us->space_add  = bit  << shift;    // keep space info
+    us->space_size = nbit << shift;
     _mbm_printf("Got space: %08X %d Bytes\n",us->ws_ptr, size);
     return MBM_NORMAL;
   }
@@ -846,13 +847,14 @@ int _mbm_del_wsp (BMID /* bm */, USER* us) {
 int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
   CONTROL *ctrl   = bm->ctrl;
   char    *bitmap = bm->bitmap;
-  int      size   = nbit << Shift_p_Bit;
+  int      shift  = ctrl->shift_p_Bit;
+  int      size   = nbit << shift;
   MBMQueue<USER> que(&bm->usDesc->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
     _mbm_printf("WSP: User %s\n",u->name);
     if ( u->p_state == S_wspace && u->ws_size <= size)      {
-      int ubit = (u->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
+      int ubit = (u->ws_size + ctrl->bytes_p_Bit) >> shift;
       ctrl->last_alloc = 0;
       //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
       //if (!lib_rtl_is_success(status))      {
@@ -866,9 +868,9 @@ int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
         ctrl->last_alloc = (bit+ubit)>>3;
         ctrl->last_bit   = bit;
         ctrl->i_space   -= ubit;
-        u->ws_ptr        = (bit << Shift_p_Bit);
+        u->ws_ptr        = bit << shift;
+        u->space_size    = ubit << shift;
         u->space_add     = u->ws_ptr;
-        u->space_size    = ubit << Shift_p_Bit;
         _mbm_del_wsp (bm, u);
         _mbm_wake_process(BM_K_INT_SPACE, u);
         break;
@@ -929,7 +931,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
 int _mbm_findnam (BMID bm, const char* name) {
   MBMQueue<USER> que(bm->usDesc,-USER_next_off);
   for(USER* u=que.get(); u; u=que.get())  {
-    if ( u->isValid() && ::strncmp(u->name, name, NAME_LENGTH) == 0 )  {
+    if ( u->isValid() && ::strncmp(u->name, name, sizeof(u->name)) == 0 )  {
       return u->uid;
     }
   }
@@ -1008,7 +1010,7 @@ int _mbm_efree (BMID bm, EVENT* e)  {
     u->free_calls++;
     (*bm->free_event)(pars);
   }
-  _mbm_reset_memory(evadd,0xDDDDDDDD,e->ev_size);
+  _mbm_reset_memory(bm->ctrl,evadd,0xDDDDDDDD,e->ev_size);
   e->busy = 0;
   u->ev_freed++;
   remqent(e);
@@ -1079,8 +1081,8 @@ int _mbm_uclean (BMID bm)  {
 /// deallocate space
 int _mbm_sfree (BMID bm, int add, int size)  {
   CONTROL *ctrl = bm->ctrl;
-  int bit  =  add >> Shift_p_Bit;
-  int nbit = (size + Bytes_p_Bit) >> Shift_p_Bit;
+  int bit   =  add >> ctrl->shift_p_Bit;
+  int nbit  = (size + ctrl->bytes_p_Bit) >> ctrl->shift_p_Bit;
   BF_free(bm->bitmap,bit,nbit);
   ctrl->last_alloc = 0;
   ctrl->i_space += nbit;
@@ -1274,11 +1276,11 @@ int mbm_space_in_buffer (BMID bm, int* total, int* large)  {
   if ( lock )  {
     CONTROL *ctrl = bm->_control();
     if ( ctrl )  {
-      int s,l;
-      *total = ctrl->i_space << Shift_p_Bit;
+      int s,l, shift = ctrl->shift_p_Bit;
+      *total = ctrl->i_space << shift;
       /* find largest block */
       BF_count(bm->bitmap, ctrl->bm_size, &s, &l);
-      *large = l << Shift_p_Bit;
+      *large = l << shift;
       return MBM_NORMAL;
     }
     _mbm_return_err (MBM_ILL_CONS);
@@ -1542,7 +1544,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
   if (len > us->space_size)  {
     _mbm_return_err (MBM_EV_TOO_BIG);
   }
-  int   rlen = ((len + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
+  int   rlen = ((len + ctrl->bytes_p_Bit) >> ctrl->shift_p_Bit) << ctrl->shift_p_Bit;
   char* add  = us->space_add+bm->buffer_add;
   if (dest)  {                       // find all destinations 
     int uid = _mbm_findnam (bm, dest);
@@ -1742,7 +1744,7 @@ int _mbm_map_sections(BMID bm)  {
   bm->usDesc = (USERDesc*)bm->user_add->address;
   bm->user   = &bm->usDesc->users[0];
   sprintf(text, "bm_bitmap_%s", bm_name);
-  len = ((bm->ctrl->bm_size/Bits_p_kByte)<<Bits_p_kByte)>>3;
+  len = bm->ctrl->bm_size>>3;
   status  = lib_rtl_map_section(text, len, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",

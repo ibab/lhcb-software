@@ -7,16 +7,17 @@
 #include "Installer.h"
 
 static void help()  {
-  ::lib_rtl_printf("Syntax: mbm_install/mbm_deinstall [<-opt>]\n");
-  ::lib_rtl_printf("Function: Buffer Manager Installation\n");
-  ::lib_rtl_printf("Options:\n");
-  ::lib_rtl_printf("    -s=<size> [10]      Buffer size (kbytes)\n");
-  ::lib_rtl_printf("    -e=<max>  [32]      Maximum number of events\n");
-  ::lib_rtl_printf("    -u=<max>  [5]       Maximum number of users\n");
-  ::lib_rtl_printf("    -i=<id>   [ ]       Buffer Identifier \n");
-  ::lib_rtl_printf("    -f        [ ]       force deinstall\n");
-  ::lib_rtl_printf("    -m        [ ]       Start monitor after installer\n");
-  ::lib_rtl_printf("    -c        [ ]       Do not keep process alive; continue execution\n");
+  ::lib_rtl_printf("Syntax: mbm_install/mbm_deinstall [<-opt>]                            \n");
+  ::lib_rtl_printf("Function: Buffer Manager Installation                                 \n");
+  ::lib_rtl_printf("Options:                                                              \n");
+  ::lib_rtl_printf("    -s=<size> [10]      Buffer size (kbytes)                          \n");
+  ::lib_rtl_printf("    -e=<max>  [32]      Maximum number of events                      \n");
+  ::lib_rtl_printf("    -u=<max>  [5]       Maximum number of users                       \n");
+  ::lib_rtl_printf("    -i=<id>   [ ]       Buffer Identifier                             \n");
+  ::lib_rtl_printf("    -b=<nbits>[10]      2**nbits block size                           \n");
+  ::lib_rtl_printf("    -f        [ ]       force deinstall                               \n");
+  ::lib_rtl_printf("    -m        [ ]       Start monitor after installer                 \n");
+  ::lib_rtl_printf("    -c        [ ]       Do not keep process alive; continue execution \n");
 }
 
 MBM::Installer::Installer(int argc, char **argv)  {
@@ -26,6 +27,7 @@ MBM::Installer::Installer(int argc, char **argv)  {
   p_umax   = 5;
   p_size   = 10;
   p_force  = 0;
+  p_bits   = 10;
   m_bm = new BMDESCRIPT;
   ::memset(m_bm,0,sizeof(BMDESCRIPT));
   getOptions(argc, argv);
@@ -58,6 +60,17 @@ int MBM::Installer::optparse (const char* c)  {
     if( p_umax > 128 )    {
       ::lib_rtl_printf("Maximum users exeeded maximum (128)\n");
       throw std::runtime_error("Maximum users exeeded maximum (128)");
+    }
+    break;
+  case 'b':            /*      block size          */   
+    iret = sscanf(c+1,"=%d",&p_bits);
+    if( iret != 1 )  {
+      ::lib_rtl_printf("Error reading block size parameter\n");
+      throw std::runtime_error("Error reading  block size parameter");
+    }
+    if( p_bits > 20 )    {
+      ::lib_rtl_printf("Block size exeeded maximum (20)\n");
+      throw std::runtime_error("Block size exeeded maximum (20)");
     }
     break;
   case 'i':            /*      maximum users        */   
@@ -100,6 +113,8 @@ int MBM::Installer::install()  {
   }
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
   ::memset(m_bm->ctrl,0,sizeof(CONTROL));
+  m_bm->ctrl->shift_p_Bit = p_bits;
+  m_bm->ctrl->bytes_p_Bit = (1<<p_bits)-1;
   ::lib_rtl_printf("Control: %p  %08X             [%d Bytes]\n",(void*)m_bm->ctrl,
            ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
 
@@ -131,7 +146,7 @@ int MBM::Installer::install()  {
   ::lib_rtl_printf("Event:   %p  %08X  %p   [%d Bytes]\n",(void*)m_bm->event,
            ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
 
-  len = (p_size<<Bits_p_kByte)>>3;
+  len = ((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3;
   status = ::lib_rtl_create_section(bitmap_mod,len,&m_bm->bitm_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
@@ -170,10 +185,10 @@ int MBM::Installer::install()  {
   ctrl->tot_actual   = 0;
   ctrl->tot_seen     = 0;
   ctrl->i_events     = 0;
-  ctrl->i_space      = p_size*Bits_p_kByte; /*in Bits*/
+  ctrl->i_space      = (p_size<<10)/ctrl->bytes_p_Bit; /*in Bits*/
   ctrl->last_bit     = 0;
   ctrl->last_alloc   = 0;
-  ctrl->bm_size      = p_size*Bits_p_kByte; /*in bits*/
+  ctrl->bm_size      = (p_size<<10)/ctrl->bytes_p_Bit; /*in bits*/
   ctrl->spare1       = 0;
   for (int i=0;i<p_umax;i++)  {
     user[i].block_id = BID_USER;

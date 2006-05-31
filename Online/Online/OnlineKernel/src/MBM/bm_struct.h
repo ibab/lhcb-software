@@ -44,10 +44,14 @@ namespace MBM  {
   };
 };
 #define TOPTYP    1
-#define NAME_LENGTH 11
-#define Bits_p_kByte  2
-#define Shift_p_Bit  (10-Bits_p_kByte+1)    // = 9
-#define Bytes_p_Bit  ((1<<Shift_p_Bit)-1)   // = 511
+
+//#define Shift_p_Bit  12  // = (20-Bits_p_MegaByte+1)
+// Bytes_p_Bit = 8191 [Shift_p_Bit=13]
+//               4095 [Shift_p_Bit=12]
+//               2047 [Shift_p_Bit=11]
+//               1023 [Shift_p_Bit=10]
+//                511 [Shift_p_Bit=9]
+//#define Bytes_p_Bit  ((1<<Shift_p_Bit)-1)
 
 struct REQ  {                //requirements structures xx bytes each   
   int           ev_type;     // event type         
@@ -175,6 +179,8 @@ struct CONTROL  {
   int last_bit;           // last bit on the bipmap
   int bm_size;            // size of bit map in bytes
   int last_alloc;         // Byte Offset of last allocation
+  int shift_p_Bit;        // Shifts per Bit to obtain size in bytes
+  int bytes_p_Bit;        // Number of bytes per bit in bitmap.
   int spare1;
 };
 
