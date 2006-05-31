@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-05-31 - Eduardo Rodrigues
+ - fix: extrapolator selectors were set to use by default the
+   TrackFastParabolicExtrapolator rather than the TrackParabolicExtrapolator
+
 !======================= TrackExtrapolators v2r3 2006-05-16 ==================
 ! 2006-05-16 M. Needham
  - Remove using namespace from header

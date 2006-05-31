@@ -1,4 +1,4 @@
-// $Id: TrackLongExtraSelector.cpp,v 1.4 2006-05-16 07:49:21 cattanem Exp $
+// $Id: TrackLongExtraSelector.cpp,v 1.5 2006-05-31 12:50:57 erodrigu Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -23,11 +23,11 @@ TrackLongExtraSelector::TrackLongExtraSelector( const std::string& type,
   declareProperty( "ShortDist",
                    m_shortDist = 100.0*Gaudi::Units::mm );
   declareProperty( "ShortFieldExtrapolatorName",
-                   m_shortFieldExtrapolatorName = "TrackFastParabolicExtrapolator ");
+                   m_shortFieldExtrapolatorName = "TrackParabolicExtrapolator ");
   declareProperty( "LongFieldExtrapolatorName",
                    m_longFieldExtrapolatorName  = "TrackHerabExtrapolator" );
   declareProperty( "ShortFieldExtrapolatorType",
-                   m_shortFieldExtrapolatorType = "TrackFastParabolicExtrapolator") ;
+                   m_shortFieldExtrapolatorType = "TrackParabolicExtrapolator") ;
   declareProperty( "LongFieldExtrapolatorType",
                    m_longFieldExtrapolatorType  = "TrackHerabExtrapolator" );
 

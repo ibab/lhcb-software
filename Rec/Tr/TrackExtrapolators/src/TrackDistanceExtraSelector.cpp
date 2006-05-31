@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.4 2006-05-16 07:49:21 cattanem Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.5 2006-05-31 12:50:57 erodrigu Exp $
 
 // Include files
 
@@ -26,13 +26,13 @@ TrackDistanceExtraSelector::TrackDistanceExtraSelector(const std::string& type,
   declareInterface<ITrackExtraSelector>( this );
 
   declareProperty( "shortDist"
-                   , m_shortDist = 300.0*Gaudi::Units::mm );
+                   , m_shortDist = 100.0*Gaudi::Units::mm );
   declareProperty( "ShortFieldExtrapolatorName",
-                   m_shortFieldExtrapolatorName = "TrackFastParabolicExtrapolator" );
+                   m_shortFieldExtrapolatorName = "TrackParabolicExtrapolator" );
   declareProperty( "LongFieldExtrapolatorName",
                    m_longFieldExtrapolatorName  = "TrackHerabExtrapolator" );
   declareProperty( "ShortFieldExtrapolatorType",
-                   m_shortFieldExtrapolatorType = "TrackFastParabolicExtrapolator" );
+                   m_shortFieldExtrapolatorType = "TrackParabolicExtrapolator" );
   declareProperty( "LongFieldExtrapolatorType",
                    m_longFieldExtrapolatorType  = "TrackHerabExtrapolator" ); 
 }
