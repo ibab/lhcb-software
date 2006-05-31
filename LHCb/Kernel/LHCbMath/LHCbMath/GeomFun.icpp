@@ -1,0 +1,179 @@
+#include "Kernel/Vector3DTypes.h"
+#include "gsl/gsl_math.h"
+
+template<typename aLine, typename aPlane, typename aPoint>
+bool Gaudi::Math::intersection(const aLine& line,
+                               const aPlane& plane,
+                               aPoint& intersect,
+                               double& mu){
+
+  bool canCalculate = true;
+  
+  const double scalar = line.direction().Dot( plane.Normal() );
+  if ( scalar < 1e-20 ) {
+    canCalculate = false;
+  }
+  else { 
+    mu = -( plane.Distance( line.beginPoint() ) ) / scalar;
+    intersect = line.position(mu); 
+  }
+  return canCalculate;
+}
+
+template<typename aLine, typename aPlane>
+bool Gaudi::Math::intersection(const aPlane& plane0,
+                               const aPlane& plane1,
+                               aLine& intersect)
+{
+
+  typename aLine::Vector  n0 = plane0.Normal();
+  typename aLine::Vector  n1 = plane1.Normal();
+  typename aPlane::Scalar d0 = -1*plane0.HesseDistance();
+  typename aPlane::Scalar d1 = -1*plane1.HesseDistance();
+  typename aLine::Vector  direction = n0.Cross(n1);
+
+  // do something to check if the planes are parallel.
+
+  typename aPlane::Scalar det = n0.mag2()*n1.mag2() - gsl_pow_2( n0.Dot(n1) );
+
+  typename aPlane::Scalar c0 = ( d0*n1.mag2() - d1*n0.Dot(n1)  )  / det;
+  typename aPlane::Scalar c1 = ( d1*n0.mag2() - d0*n0.Dot(n1)  )  / det;
+
+  typename aLine::Point point0 = 
+    typename aLine::Point(c0*n0 + c1*n1);
+
+  intersect = aLine(point0, direction);
+
+  return true;
+  
+}
+
+template<typename aPoint, typename aPlane>
+bool Gaudi::Math::intersection(const aPlane& plane0,
+                               const aPlane& plane1,
+                               const aPlane& plane2,
+                               aPoint& intersect)
+{
+
+  ///@todo Revert to aPlane::Vector when available in MathCore
+
+//   typename aPlane::Vector n0 = plane0.Normal();
+//   typename aPlane::Vector n1 = plane1.Normal();
+//   typename aPlane::Vector n2 = plane2.Normal();
+//   typename aPlane::Vector::Scalar denom = n0.Dot( n1.Cross(n2) );
+
+  Gaudi::XYZVector n0 = plane0.Normal();
+  Gaudi::XYZVector n1 = plane1.Normal();
+  Gaudi::XYZVector n2 = plane2.Normal();
+  Gaudi::XYZVector::Scalar denom = n0.Dot( n1.Cross(n2) );
+
+  typename aPlane::Scalar   d0 = -1*plane0.HesseDistance();
+  typename aPlane::Scalar   d1 = -1*plane1.HesseDistance();
+  typename aPlane::Scalar   d2 = -1*plane2.HesseDistance();
+
+
+
+  if ( std::fabs(denom) < 1e-20 ) return false;
+
+  intersect = (d0*(n1.Cross(n2)) + d1*(n2.Cross(n0)) + 
+               d2*(n0.Cross(n1)))/denom;
+  return true;
+  
+}
+
+
+
+template <typename aLine, typename aPoint>
+aPoint Gaudi::Math::closestPoint(const aPoint&  point ,
+                                 const aLine& line)
+{
+  return line.position( line.direction().Dot( point-line.beginPoint() ) );
+
+}
+
+template <typename aLine, typename aPoint>
+double Gaudi::Math::closestPointParam(const aPoint&  point ,
+                                      const aLine& line)
+{
+  return line.direction().Dot(point - line.beginPoint() );
+}
+
+
+template<typename aPoint, typename aLine>
+double Gaudi::Math::impactParameter(const aPoint&  point ,
+                                    const aLine& line)
+{
+
+  const typename aLine::Vector v0 = point - Gaudi::Math::closestPoint(point, line);
+  return sqrt( v0.mag2() );
+}
+
+template <typename aLine>
+bool Gaudi::Math::closestPointParams(const aLine& line0,
+                                     const aLine& line1,
+                                     double& mu0, double& mu1) {
+
+  const typename aLine::Point&  p0 = line0.beginPoint();
+  const typename aLine::Vector& v0 = line0.direction();
+  const typename aLine::Point&  p1 = line1.beginPoint();
+  const typename aLine::Vector& v1 = line1.direction();
+  bool canCalculate = true; 
+
+  const double e_pDote_w = v0.Dot(v1);
+  const double dnom = 1.0 - gsl_pow_2(e_pDote_w);
+  if ( dnom > 1e-10 ) {
+    typename aLine::Vector PenMinWb = (p0 - p1);
+    mu0 = ( -1/dnom )*( PenMinWb.Dot(v0) - PenMinWb.Dot(v1)*e_pDote_w );
+    mu1 = (  1/dnom )*( PenMinWb.Dot(v1) - PenMinWb.Dot(v0)*e_pDote_w );
+  } 
+  else {
+    /// parallel lines, any two points will do!
+    canCalculate = false;
+  }
+  return canCalculate;
+}
+
+template <typename aLine, typename aPoint>
+bool Gaudi::Math::closestPoints(const aLine& line0,
+                                const aLine& line1,
+                                aPoint& p0,
+                                aPoint& p1)
+{
+  double mu0(0.);
+  double mu1(0.);
+
+  if (!Gaudi::Math::closestPointParams(line0, line1, mu0, mu1) ) return false;
+
+  p0 = line0.position(mu0);
+  p1 = line1.position(mu1);
+
+  return true;
+  
+}
+
+template <typename aLine>
+double Gaudi::Math::distance(const aLine& line0,
+                             const aLine& line1)
+{
+
+  if (parallel(line0, line1) ) {
+    return impactParameter(line0.beginPoint(), line1);
+  } else {
+    typename aLine::Point p0;
+    typename aLine::Point p1;
+    Gaudi::Math::closestPoints(line0, line1, p0, p1);
+    return sqrt( typename aLine::Vector(p1-p0).mag2() );
+  }
+  
+}
+
+template <typename aLine>
+bool Gaudi::Math::parallel(const aLine& line0,
+                           const aLine& line1)
+{
+
+  const typename aLine::Vector& v0 = line0.direction();
+  const typename aLine::Vector& v1 = line1.direction();
+  return 1. - std::fabs(v0.Dot(v1)) < 1e-10;
+}
+

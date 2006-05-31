@@ -3,7 +3,18 @@
 ! Responsible : Juan Palacios
 ! Purpose     : A collection of simple generic classes and functions 
 !               for geometry and matrix algebra
+!               All headers uncluded indirectory LHCbMath
 !-----------------------------------------------------------------------------
+
+! 2006-05-31 - Juan PALACIOS
+  - Remove Kernel, move everything to new LHCbMath directory.
+
+  - Kernel: Add MatrixManip.h from Vanya Belyaev. Various useful matrix 
+            and vector utilities. Includes linking to 3D and 4D MathCore 
+            vectors and points,  scaling on all elements of matrices
+            and vectors, setting already existing matrix to unit matrix,
+            comparison functions, max and minimum elements, various counting,
+            checking and equal methods.
 
 !========================== LHCbMath v1r0p1 2006-05-30 ========================
 
