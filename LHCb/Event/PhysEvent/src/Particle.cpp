@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.17 2006-05-08 09:10:41 jpalac Exp $
+// $Id: Particle.cpp,v 1.18 2006-05-31 14:43:24 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -7,7 +7,7 @@
 // local
 #include "Event/Particle.h"
 
-#include "Kernel/MatrixManip.h"
+#include "LHCbMath/MatrixManip.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle
@@ -65,7 +65,7 @@ Gaudi::SymMatrix7x7 LHCb::Particle::covMatrix() const
   full.Place_at(m_posMomCovMatrix,3,0);
   full.Place_at(ROOT::Math::Transpose(m_posMomCovMatrix), 0,3);
 
-  return LHCb::MatrixManip::Symmetrize(full);
+  return Gaudi::Math::Symmetrize(full);
 	
 }
 

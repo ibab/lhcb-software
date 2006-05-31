@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.62 2006-05-26 10:13:50 cattanem Exp $
+# $Id: requirements,v 1.63 2006-05-31 14:43:24 jpalac Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -18,6 +18,7 @@ include_dirs $(PHYSEVENTROOT)
 use RecEvent        v*  Event
 use LHCbKernel      v*  Kernel
 use LHCbDefinitions v*  Kernel
+use LHCbMath        v*  Kernel
 use GaudiKernel     v*  
 
 # Produce Header-Files & dictionary from XML description
