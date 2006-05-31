@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.1 2006-05-31 13:38:31 jpalac Exp $
+// $Id: GeomFun.h,v 1.2 2006-05-31 14:18:19 jpalac Exp $
 #ifndef _GeomFun_H_
 #define _GeomFun_H_
 
@@ -210,6 +210,6 @@ namespace Gaudi{
 
 }; // Gaudi namespace
 
-#include "Kernel/GeomFun.icpp"
+#include "LHCbMath/GeomFun.icpp"
 
 #endif
