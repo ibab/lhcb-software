@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v21r6 2006-06-01 ========================
+! 2006-06-01 - Marco Cattaneo
+ - Use GenEvent v4r4, PhysEvent v9r5, RecEvent v1r4, TrackEvent v2r6
+
 !======================== EventSys v21r5 2006-05-09 ========================
 ! 2006-05-09 - Marco Cattaneo
  - Use PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, LinkerEvent v2r2, 
