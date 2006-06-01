@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.1 2006-05-16 17:54:38 pkoppenb Exp $
+// $Id: Particle2State.cpp,v 1.2 2006-06-01 08:33:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 
 // LHCb
 #include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/MatrixManip.h"
+#include "LHCbMath/MatrixManip.h"
 
 // local
 #include "Particle2State.h"
@@ -107,7 +107,7 @@ StatusCode Particle2State::particle2State(const LHCb::Particle& part, LHCb::Stat
   cov5Dtmp.Place_at( part.covMatrix().Sub<Gaudi::Matrix2x3>( 0, 3 ), 0, 2 );    // 2x3 for pos and mom
   cov5Dtmp.Place_at( part.covMatrix().Sub<Gaudi::SymMatrix3x3>( 3, 3 ), 2, 2 ); // 3x3 for pos
 
-  Gaudi::SymMatrix5x5 cov5DtmpSym = LHCb::MatrixManip::Symmetrize(cov5Dtmp);  
+  Gaudi::SymMatrix5x5 cov5DtmpSym = Gaudi::Math::Symmetrize(cov5Dtmp);  
 
   verbose() << "Getting \n" << cov5DtmpSym << "\n"<< endmsg ;
   // 5x5 Jacobian

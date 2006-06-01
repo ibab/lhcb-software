@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.27 2006-05-29 11:47:03 jpalac Exp $
+! $Id: release.notes,v 1.28 2006-06-01 08:35:58 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg
 !==============================================================================
+
+! 2006-06-01 - Juan PALACIOS
+  -src/ParticleTransporter.cpp
+   . Change include path of MatrixManip.h from Kernel to LHCbMath.
 
 !========================== DaVinciTransporter v3r1 2006-05-29 ================
 

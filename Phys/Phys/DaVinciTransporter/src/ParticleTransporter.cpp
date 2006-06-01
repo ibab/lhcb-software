@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.6 2006-05-16 17:53:37 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.7 2006-06-01 08:35:58 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Kernel/TrackTypes.h" /// @todo temporary
 #include "TrackInterfaces/ITrackExtrapolator.h"        // TrackExtrapolator
 #include "Kernel/IParticle2State.h"
-#include "Kernel/MatrixManip.h"
+#include "LHCbMath/MatrixManip.h"
 // local
 #include "ParticleTransporter.h"
 //-----------------------------------------------------------------------------

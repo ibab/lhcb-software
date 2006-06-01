@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.204 2006-05-31 14:17:31 jpalac Exp $
+! $Id: release.notes,v 1.205 2006-06-01 08:33:57 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-06-01 - Juan PALACIOS
+  src/Particle2State.cpp
+  . Adapt to new path and namespace for Symmertize function.
 
 ! 2006-31-05 - Juan PALACIOS
   src/TrgDispCalculator.* and src/GeomDispCalculator.*: Change include
