@@ -20,9 +20,10 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 TutorialSeq.Members += { "TutorialAlgorithm" };
 TutorialAlgorithm.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 
-ApplicationMgr.HistogramPersistency = "ROOT";
+//ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = 1000 ;
 
 #include "$ANALYSISROOT/options/BB.opts"
+//#include "$ANALYSISROOT/options/JpsiKs.opts"
