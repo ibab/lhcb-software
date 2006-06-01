@@ -5,6 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r6 2006-06-01 ========================
+! 2006-06-01 - Marco Cattaneo
+ - Adapt to move of MatrixManip.h to LHCbMath
+
 ! 2006-05-19 - Eduardo Rodrigues
  - removed redundant update method in Measurement
  - Track enum AlreadyUsed renamed to Used

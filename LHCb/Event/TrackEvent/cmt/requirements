@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackEvent
-version           v2r4
+version           v2r6
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -20,9 +20,11 @@ include_dirs      $(TRACKEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   LHCbKernel    v*    Kernel
-use   GSL           v*    LCG_Interfaces
-use   Boost         v*    LCG_Interfaces
+use   LHCbKernel      v*    Kernel
+use   LHCbDefinitions v*    Kernel
+use   LHCbMath        v*    Kernel
+use   GSL             v*    LCG_Interfaces
+use   Boost           v*    LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files from XML description

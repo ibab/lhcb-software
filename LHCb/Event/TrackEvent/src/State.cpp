@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.19 2006-05-02 12:25:34 erodrigu Exp $
+// $Id: State.cpp,v 1.20 2006-06-01 07:01:01 cattanem Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -8,7 +8,9 @@
 #include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/GenericVectorTypes.h"
 #include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/MatrixManip.h"
+
+// from LHCbMath
+#include "LHCbMath/MatrixManip.h"
 
 // local
 #include "Event/State.h"
@@ -78,7 +80,7 @@ SymMatrix6x6 State::posMomCovariance() const
   cov6Dtmp.Place_at( cov5D.Sub<Matrix3x3>( 2, 0 ), 3, 0 );
   cov6Dtmp.Place_at( cov5D.Sub<SymMatrix3x3>( 2, 2 ), 3, 3 );
 
-  SymMatrix6x6 cov6DSymTmp = MatrixManip::Symmetrize(cov6Dtmp);
+  SymMatrix6x6 cov6DSymTmp = Gaudi::Math::Symmetrize(cov6Dtmp);
   
 
   // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
