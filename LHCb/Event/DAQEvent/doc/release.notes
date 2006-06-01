@@ -2,6 +2,10 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+!================ DAQEvent v6r4p1 2006-06-01 ==========================
+! 2006-06-01 - Marco Cattaneo
+ - Add VeloProcFull as RawBank type
+
 !================ DAQEvent v6r4 2006-05-08 ============================
 ! 2006-05-08 - Markus Frank
  - Fix mismatch between new and delete in RawEvent.cpp
