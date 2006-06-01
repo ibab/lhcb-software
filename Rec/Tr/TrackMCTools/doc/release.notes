@@ -4,6 +4,12 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-06-01 - Eduardo Rodrigues
+ - rewrite of the IdealStateCreator:
+   - use the closest hit rather than the 2 closest hits
+   - use more precise momentum information on the hit rather than momentum
+     from the corresponding MC particle (takes into account energy losses)
+
 ! 2006-05-19 - Eduardo Rodrigues
  - "using namespace ..." removed from header files
 

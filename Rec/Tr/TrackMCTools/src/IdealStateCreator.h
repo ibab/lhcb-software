@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.6 2006-05-19 12:58:10 erodrigu Exp $
+// $Id: IdealStateCreator.h,v 1.7 2006-06-01 16:26:40 erodrigu Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -78,16 +78,26 @@ public:
                                         LHCb::State*& pState ) const;
 
 private:
-  /// Determine Q/P for a MCParticle
-  double qOverP( const LHCb::MCParticle* mcPart ) const;
+  /** Find the z-closest MCHit associated to an MCParticle
+      looping over the hits in all the tracking detectors
+  */
+  void findClosestHit( const LHCb::MCParticle* mcPart,
+                       const double zRec,
+                       LHCb::MCHit*& closestHit ) const;
+  
+  // Find the z-closest MCHit of type Xxx associated to an MCParticle
+  void findClosestXxxHit( const LHCb::MCParticle* mcPart,
+                          const double zRec,
+                          std::string linkPath,
+                          LHCb::MCHit*& closestHit ) const;
 
-  void findClosestHits( const LHCb::MCParticle* mcPart,
-                        const double zRec,
-                        LHCb::MCHit*& closestHit,
-                        LHCb::MCHit*& secondClosestHit ) const;
+  /// Determine Q/P for a MCParticle using the P from the MCHit if available
+  double qOverP( const LHCb::MCParticle* mcPart,
+                 const LHCb::MCHit* mcHit = NULL ) const;
   
 private:
-  ITrackExtrapolator* m_extrapolator; ///< Extrapolator Tool
+  ITrackExtrapolator*      m_extrapolator; ///< Extrapolator Tool
+  std::vector<std::string> m_dets;
 
   // Job options:
   std::string m_extrapolatorName;  ///< Name of track state extrapolator.

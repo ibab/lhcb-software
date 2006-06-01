@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.7 2006-05-17 16:21:09 cattanem Exp $
+// $Id: IdealStateCreator.cpp,v 1.8 2006-06-01 16:26:40 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -26,34 +26,40 @@ using namespace LHCb;
 static const  ToolFactory<IdealStateCreator>          s_factory;
 const        IToolFactory& IdealStateCreatorFactory = s_factory;
 
-/// Standard constructor, initializes variables
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 IdealStateCreator::IdealStateCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool( type, name, parent )
-  , m_eX2(2.e-5*Gaudi::Units::mm2)
-  , m_eY2(2.e-5*Gaudi::Units::mm2)
-  , m_eTx2(1.e-7)
-  , m_eTy2(1.e-7)
-  , m_eP(0.005)  
 {  
   // interfaces
   declareInterface<IIdealStateCreator>(this);
 
   // declare properties
-  declareProperty( "extrapolatorName", 
-                   m_extrapolatorName = "TrackHerabExtrapolator" );
-  declareProperty( "eX2",  m_eX2 );
-  declareProperty( "eY2",  m_eY2 );
-  declareProperty( "eTx2", m_eTx2 );
-  declareProperty( "eTy2", m_eTy2 );
-  declareProperty( "eP",   m_eP );  // dp/p
+  declareProperty( "Extrapolator",
+                   m_extrapolatorName = "TrackMasterExtrapolator" );
+  declareProperty( "ErrorX2",  m_eX2  = 2.e-5*Gaudi::Units::mm2 );
+  declareProperty( "ErrorY2",  m_eY2  = 2.e-5*Gaudi::Units::mm2 );
+  declareProperty( "ErrorTx2", m_eTx2 = 1.e-7                   );
+  declareProperty( "ErrorTy2", m_eTy2 = 1.e-7                   );
+  declareProperty( "ErrorP",   m_eP   = 0.005                   );  // dp/p
+
+  m_dets.push_back( "Velo" );
+  m_dets.push_back( "TT"   );
+  m_dets.push_back( "IT"   );
+  m_dets.push_back( "OT"   );
 }
 
-/// Destructor
+//=============================================================================
+// Destructor
+//=============================================================================
 IdealStateCreator::~IdealStateCreator() {};
 
-/// Initialization
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode IdealStateCreator::initialize()
 {
   debug() << "==> Initialize" << endreq;
@@ -67,95 +73,73 @@ StatusCode IdealStateCreator::initialize()
   return StatusCode::SUCCESS;
 }
 
-/// Creates a state at a z position,
-/// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
+// Creates a state at a z position,
+// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
 StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
                                            double zRec,
-                                           LHCb::State*& state ) const
+                                           State*& state ) const
 {
   // Check if MCParticle exists
   if( mcPart == 0 ) return StatusCode::FAILURE;
   
   // First create the state
   TrackSymMatrix stateCov = TrackSymMatrix();
-  for( int i=0; i<5; ++i ) { stateCov(i,i) = 0.; }
-  LHCb::State* pState = new LHCb::State();
+  State* pState = new State();
   pState -> setZ( zRec );
   pState -> setCovariance( stateCov );
   state = pState;
 
-
   MCHit* closestHit;
-  MCHit* secondClosestHit;
-
-  findClosestHits( mcPart, zRec, closestHit, secondClosestHit );
-
-  if( !closestHit || !secondClosestHit ) {
-    warning() << "No two closest MCHits found!!" << endreq;
+  findClosestHit( mcPart, zRec, closestHit );
+  if( !closestHit ) {
+    warning() << "No closest MCHit found!!" << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // Find beginPoint (smallest z-value)
-  XYZPoint beginPoint = closestHit->entry();
+
+  XYZPoint beginPoint = closestHit -> entry();
   if( beginPoint.z() > closestHit->exit().z() )
-    beginPoint = closestHit->exit();
-  if( beginPoint.z() > secondClosestHit->entry().z() )
-    beginPoint = secondClosestHit->entry();
-  if( beginPoint.z() > secondClosestHit->exit().z() )
-    beginPoint = secondClosestHit->exit();
+    beginPoint = closestHit -> exit();
+  double z = beginPoint.z();
 
-  // Find endPoint (highest z-value)
-  XYZPoint endPoint = secondClosestHit->exit();
-  if( endPoint.z() < secondClosestHit->entry().z() )
-    endPoint = secondClosestHit->entry();
-  if( endPoint.z() < closestHit->entry().z() )
-    endPoint = closestHit->entry();
-  if( endPoint.z() < closestHit->exit().z() )
-    endPoint = closestHit->exit();
-
-  double dz = ( beginPoint.z() - endPoint.z() );
-  if( dz == 0. ) {
-    warning() << "Delta z between two hits equals zero." << endreq;
-    return StatusCode::FAILURE;
-  }
-  double slopeX = ( beginPoint.x() - endPoint.x() ) / dz;
-  double slopeY = ( beginPoint.y() - endPoint.y() ) / dz;
-  double x = ( beginPoint.x() ); 
-  double y = ( beginPoint.y() );
-  double z = ( beginPoint.z() );
+  // determine Q/P
+  double trueQOverP = qOverP( mcPart, closestHit );
 
   // set the state parameters
-  pState->setState( x, y, z, slopeX, slopeY, this->qOverP( mcPart ) );
-
+  pState -> setState(  beginPoint.x(),  beginPoint.y(), z,
+                       closestHit -> dxdz(), closestHit -> dydz(),
+                       trueQOverP );
+  
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
   cov(0,0) = m_eX2;
   cov(1,1) = m_eY2;
   cov(2,2) = m_eTx2;
   cov(3,3) = m_eTy2;
-  cov(4,4) = pow(m_eP * pState->qOverP(), 2.);
+  cov(4,4) = pow( m_eP * pState->qOverP(), 2. );
   pState -> setCovariance( cov );
 
   // extrapolate state to exact z position
-  ParticleID partID = 211; // pion
-  StatusCode sc = m_extrapolator -> propagate( *pState, zRec, partID );
+  StatusCode sc = m_extrapolator -> propagate( *pState, zRec );
   if( sc.isFailure() ) {
-    debug() << "Extrapolation of True State from z = "
-            << z << " to z = " << zRec << " failed!" << endreq;
+    warning() << "Extrapolation of True State from z = "
+              << z << " to z = " << zRec << " failed!" << endreq;
   }
 
   return sc;
 }
 
-/// Creates a state at the origin vertex
-/// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
+// Creates a state at the origin vertex
+// from a MCParticle using the entry/exit points of the MCHits
+//=============================================================================
 StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
-                                                 LHCb::State*& state ) const
+                                                 State*& state ) const
 {
   /// Create state at track vertex of MCParticle.
   TrackSymMatrix stateCov = TrackSymMatrix();
-  for( int i=0; i<5; ++i ) { stateCov(i,i) = 0.; }
-  LHCb::State* trueState = new State();
+  State* trueState = new State();
   trueState -> setCovariance( stateCov );  
   state = trueState;
 
@@ -163,12 +147,13 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   if( mcParticle == 0 ) return StatusCode::FAILURE;
 
   // retrieve true MC particle info
-  const MCVertex* mcVertex = mcParticle -> originVertex();
-  const XYZPoint mcPos = mcVertex -> position();
+  const MCVertex* mcVertex   = mcParticle -> originVertex();
   const LorentzVector mc4Mom = mcParticle -> momentum();
+  const XYZPoint mcPos       = mcVertex   -> position();
 
-  // determine QdivP
-  double trueQdivP = this -> qOverP( mcParticle );
+
+  // determine Q/P
+  double trueQOverP = qOverP( mcParticle );
 
   // determine slopes
   double trueTx = 99999999;
@@ -186,8 +171,8 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   }
 
   // construct true State
-  trueState->setState( mcPos.x(), mcPos.y(), mcPos.z(),
-                       trueTx, trueTy, trueQdivP );
+  trueState -> setState( mcPos.x(), mcPos.y(), mcPos.z(),
+                         trueTx, trueTy, trueQOverP );
 
   // set covariance matrix
   TrackSymMatrix cov = TrackSymMatrix();
@@ -195,124 +180,75 @@ StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
   cov(1,1) = m_eY2;
   cov(2,2) = m_eTx2;
   cov(3,3) = m_eTy2;
-  cov(4,4) = pow(m_eP * trueState->qOverP(), 2.);
+  cov(4,4) = pow( m_eP * trueState->qOverP(), 2. );
   trueState -> setCovariance( cov );
 
   return StatusCode::SUCCESS;
 }
 
-void IdealStateCreator::findClosestHits( const MCParticle* mcPart,
-                                         const double zRec,
-                                         MCHit*& closestHit,
-                                         MCHit*& secondClosestHit ) const
+//=============================================================================
+// Find the z-closest MCHit associated to an MCParticle
+// looping over the hits in all the tracking detectors
+//=============================================================================
+void IdealStateCreator::findClosestHit( const MCParticle* mcPart,
+                                        const double zRec,
+                                        MCHit*& closestHit ) const
 {
-//TODO: clean-up/beautify as code does 4 times the same!
+  MCHit* tmpClosestHit;
+  std::vector<std::string>::const_iterator itDets;
 
-  // Retrieve MCParticle to MCHit linker tables
-  LinkedFrom<MCHit,MCParticle>
-    mcp2VelomchLink( evtSvc(), msgSvc(),
-                     MCParticleLocation::Default+"2MCVeloHits" );
-  LinkedFrom<MCHit,MCParticle>
-    mcp2TTmchLink( evtSvc(), msgSvc(),
-                   MCParticleLocation::Default+"2MCTTHits" );
-  LinkedFrom<MCHit,MCParticle>
-    mcp2ITmchLink( evtSvc(), msgSvc(),
-                   MCParticleLocation::Default+"2MCITHits" );
-  LinkedFrom<MCHit,MCParticle>
-    mcp2OTmchLink( evtSvc(), msgSvc(),
-                   MCParticleLocation::Default+"2MCOTHits" );
-
-  //LinkedTo<MCHit,MCParticle>
-  //  mcp2mchLink( evtSvc(), msgSvc(), MCParticleLocation::Default+"2MCHits" );
-
-  double closestZ = 10000;
-  double secondClosestZ = 10000;
-
-  MCHit* aMCHit = mcp2VelomchLink.first( mcPart );
-  while( 0 != aMCHit ) {
-    // calculate center point
-    XYZPoint midPoint = aMCHit->midPoint();
-
-    // get the closest and second closest hits
-    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
-      secondClosestHit = closestHit;
-      secondClosestZ   = closestZ;
-      closestHit       = aMCHit;
-      closestZ         = fabs( midPoint.z()- zRec );
+  for( itDets = m_dets.begin(); itDets < m_dets.end(); ++itDets ) {
+    findClosestXxxHit( mcPart, zRec,
+                       MCParticleLocation::Default + "2MC" + *itDets + "Hits",
+                       tmpClosestHit );
+    if ( itDets == m_dets.begin() ) closestHit = tmpClosestHit;
+    if ( fabs( tmpClosestHit -> midPoint().z() - zRec ) <
+         fabs( closestHit -> midPoint().z() - zRec ) ) {
+      closestHit = tmpClosestHit;
     }
-    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
-      secondClosestHit = aMCHit;
-      secondClosestZ   = fabs( midPoint.z()- zRec );
-    }
-    aMCHit = mcp2VelomchLink.next();
-  }
-
-  aMCHit = mcp2TTmchLink.first( mcPart );
-  while( 0 != aMCHit ) {
-    // calculate center point
-    XYZPoint midPoint = aMCHit->midPoint();
-
-    // get the closest and second closest hits
-    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
-      secondClosestHit = closestHit;
-      secondClosestZ   = closestZ;
-      closestHit       = aMCHit;
-      closestZ         = fabs( midPoint.z()- zRec );
-    }
-    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
-      secondClosestHit = aMCHit;
-      secondClosestZ   = fabs( midPoint.z()- zRec );
-    }
-    aMCHit = mcp2TTmchLink.next();
-  }
-
-  aMCHit = mcp2ITmchLink.first( mcPart );
-  while( 0 != aMCHit ) {
-    // calculate center point
-    XYZPoint midPoint = aMCHit->midPoint();
-
-    // get the closest and second closest hits
-    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
-      secondClosestHit = closestHit;
-      secondClosestZ   = closestZ;
-      closestHit       = aMCHit;
-      closestZ         = fabs( midPoint.z()- zRec );
-    }
-    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
-      secondClosestHit = aMCHit;
-      secondClosestZ   = fabs( midPoint.z()- zRec );
-    }
-    aMCHit = mcp2ITmchLink.next();
-  }
-
-  aMCHit = mcp2OTmchLink.first( mcPart );
-  while( 0 != aMCHit ) {
-    // calculate center point
-    XYZPoint midPoint = aMCHit->midPoint();
-
-    // get the closest and second closest hits
-    if ( fabs( midPoint.z() - zRec ) < closestZ ) {
-      secondClosestHit = closestHit;
-      secondClosestZ   = closestZ;
-      closestHit       = aMCHit;
-      closestZ         = fabs( midPoint.z()- zRec );
-    }
-    else if ( fabs( midPoint.z()- zRec ) < secondClosestZ ) {
-      secondClosestHit = aMCHit;
-      secondClosestZ   = fabs( midPoint.z()- zRec );
-    }
-    aMCHit = mcp2OTmchLink.next();
   }
 }
 
-/// Determine Q/P for a MCParticle
-double IdealStateCreator::qOverP( const MCParticle* mcPart ) const
+//=============================================================================
+// Find the z-closest MCHit of type Xxx associated to an MCParticle
+//=============================================================================
+void IdealStateCreator::findClosestXxxHit( const MCParticle* mcPart,
+                                           const double zRec,
+                                           std::string linkPath,
+                                           MCHit*& closestHit ) const
 {
-  /// Determine Q/P for a MCParticle
+  // Retrieve MCParticle to MCHit linker tables
+  LinkedFrom<MCHit,MCParticle> mcp2mchitLink( evtSvc(), msgSvc(), linkPath );
+
+  double closestZ = 10000;
+
+  MCHit* aMCHit = mcp2mchitLink.first( mcPart );
+  while( 0 != aMCHit ) {
+    double ZOfMidPoint = aMCHit -> midPoint().z();
+    // get the closest hit
+    if ( fabs( ZOfMidPoint - zRec ) < closestZ ) {
+      closestHit = aMCHit;
+      closestZ   = fabs( ZOfMidPoint - zRec );
+    }
+    aMCHit = mcp2mchitLink.next();
+  }
+}
+
+//=============================================================================
+// Determine Q/P for a MCParticle using the P from the MCHit if available
+//=============================================================================
+double IdealStateCreator::qOverP( const MCParticle* mcPart,
+                                  const LHCb::MCHit* mcHit ) const
+{
   double momentum = mcPart -> p();
-  double charge = (mcPart -> particleID().threeCharge()) / 3.;
+  if ( mcHit != NULL ) momentum = mcHit -> p();
+  double charge = ( mcPart -> particleID().threeCharge() ) / 3.;
+  // TODO: hack as it happens that some MCHits have p = 0!
+  if ( mcHit != NULL &&  mcHit -> p() == 0. ) momentum = mcPart -> p();
   if( momentum > TrackParameters::lowTolerance ) {
     return charge / momentum;
   }
-  else { return 0.0; }
+  else { return 0.; }
 }
+
+//=============================================================================
