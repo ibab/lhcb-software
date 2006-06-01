@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.11 2006-05-31 08:00:09 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.12 2006-06-01 06:36:56 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -27,7 +27,7 @@ extern "C" void R__unzip(int *nin, const char *bufin, int *lout, char *bufout, i
 
 namespace LHCb {
   // Decode MEP into banks event by event
-  StatusCode LHCb::RTTC2Current( const MEPEvent* me )  {
+  StatusCode RTTC2Current( const MEPEvent* me )  {
     for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
       for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
 	const RawBank* l = f->last();
