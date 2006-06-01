@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.15 2006-04-20 14:48:33 ranjard Exp $
+// $Id: DetDict.h,v 1.16 2006-06-01 09:04:11 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -154,7 +154,6 @@ namespace DetDescPython
   //--- Templace instantiations
   struct __Instantiations 
   {
-    std::vector<double>     i0 ;
     ILVolume::PVolumes      i1 ;
     ILVolume::ReplicaPath   i2 ;
     ILVolume::PVolumePath   i3 ;
@@ -164,7 +163,6 @@ namespace DetDescPython
     ISolid::Ticks           i7 ;
     
     SmartRef<Condition> sref_inst1;
-    
   };
   
 };
