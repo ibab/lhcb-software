@@ -5,6 +5,84 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v21r1>2006-06-01 LHCbSys v21r1</A></H1><PRE>
+This version uses Gaudi v18r5 and is fully compatible with DC06 production data
+
+- Packages modified: DetSys v8r6, CaloDet v7r3, MuonDet v5r4, VeloDet v10r7,
+    EventSys v21r6, GenEvent v4r4, PhysEvent v9r5, RecEvent v1r4,TrackEvent v2r6,
+    KernelSys v5r6, LHCbDefinitions v1r7, LHCbKernel v6r7, LHCbMath v1r1,
+    CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3
+
+- In DetSys v8r6
+  . Remove std::vector<double> from dictionary, already in RELAX dictionaries
+
+- In CaloDet v7r3
+  . CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
+     a) add one more method plane (for 3D plane whch pass through
+        given 3D-point in global reference system
+     b) add "inline" and "const" qualifiers for DeCalorimeter::plane
+
+- In MuonDet v5r4
+  . Added a method that returns Z station position in DeMuonDetector
+
+- In VeloDet v10r7
+  . Replaced sensorIndex(sensor) by internal map which returns the pointer to
+    the sensor directly
+  . Removed unused associateSensor() and associatedSensors() from DeVeloSensor
+  . Fixed bug in sensor indices: assumed all sensors are there which may not
+    always be the case
+
+- In GenEvent v4r4
+  . Remove custom dictionary for HepMC, since all classes are now in RELAX
+
+- In PhysEvent v9r5
+  . Adapt to changes in MatrixManip.h location and namespace
+  . Particle.xml: Remove ConstContainer typedef and duplicate Container typedef
+
+- In RecEvent v1r4
+  . nonconstaccessors added in CaloHypo.xml and CaloClusterEntry.xml
+
+- In TrackEvent v2r6
+  . Adapt to changes in MatrixManip.h location and namespace
+  . Removed redundant update method in Measurement
+  . Track enum AlreadyUsed renamed to Used
+
+- In LHCbDefinitions v1r7
+  . Remove Kernel/MatrixManip.h (moved to Kernel/LHCbMath v1r1 or higher)
+
+- In LHCbKernel v6r7
+  . Remove generation of dictionaries already provided by RELAX
+
+- In LHCbMath v1r1
+  . Add LHCbMath/MatrixUtils.h: various matrix and vector utilities. Includes
+    linking to 3D and 4D MathCore vectors and points, scaling on all elements of
+    matrices and vectors, setting already existing matrix to unit matrix,
+    comparison functions, max and minimum elements, various counting, checking 
+    and equal methods.
+  . Add LHCbMath/EigenSystem.h, .icpp, src/EigenSystem.cpp. 
+  . Import LHCbMath/MatrixManip.h from Kernel/LHCbDefinitions. Change namespace
+    to Gaudi::Math for consistency.
+  . Make linker library LHCbMath
+  . Remove Kernel, move everything to new LHCbMath directory.
+
+- In CaloUtils v6r3
+  . Update TrackUse.{cpp,h} for New Track Model
+  . bug fix in src/SpreadEstimator.cpp
+  . Move to Gaudi::Units in header files
+
+- In SimComponents v1r2p1
+  . Change message levels of CompareMCVertex and CompareMCParticle
+
+- In LoKiCore v1r5
+  . LoKi/Interface.h: fix problem with incorrect assignement from raw pointer
+  . LoKi/Print.h: minor fix for the printout of unsigned types
+
+- In LoKiGen v1r3
+  . Set of new functions LoKi::printHepMCDecay and LoKi::printDecay for printout
+    of the HepMC decay tree
+  . LoKi/GenParticles.h: increase functionality of FromHepMCTree function.
+    Now it can treat the list of trees.
+
 </PRE><H1><A NAME=v21r0>2006-05-17 LHCbSys v21r0</A></H1><PRE>
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data
 
