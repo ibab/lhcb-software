@@ -15,10 +15,13 @@
  * \li \ref lhcbdoxygenmain    "LHCbSys documentation (LHCb core packages)"
  * \li \ref gaudidoxygenmain   "Gaudi documentation (Framework packages)"
  * \li \ref geant4doxygenmain  "Geant4 documentation (Simulation toolkit)"
- * \li <a href="http://mdobbs.home.cern.ch/mdobbs/HepMC/html_reference/index.html">HepMC (Generator event format)</a>
+ * \li <a href="http://mdobbs.home.cern.ch/mdobbs/HepMC/html_reference/index.html"> HepMC (Generator event format)</a>
+ * \li <a href="http://www.thep.lu.se/~torbjorn/Pythia.html"> Pythia </a>
+ * \li <a href="http://lhcb-comp.web.cern.ch/lhcb-comp/Simulation/evtgen.htm"> EvtGen in LHCb </a>
  * \li \ref externaldocs       "Related external libraries"
  *
  * <hr>
+ * \htmlinclude new_release.notes
  * <b> See also: </b><a href="_gauss_tape_8opts-source.html"><b>Sim content</b></a>, <a href="requirements-source.html"><b>Constituent packages</b></a><p>
  * <hr>
  *

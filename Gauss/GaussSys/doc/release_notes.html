@@ -2,9 +2,156 @@
 Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
-</PRE>
 
-<H1><A NAME="v24r5">2006-05-10 - GaussSys v24r6</A></H1><PRE>
+</PRE><H1><A NAME="v24r7">2006-05-31 - GaussSys v24r7</A></H1><PRE>
+<H2><A NAME="Note"> DC06 version. 
+   Includes also changes described in previous v24rX. </A></H2>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2, hapdf 4.2 (via GENSER 1_3_0)
+   HepMC 1.26 (via LCG external)
+   DecFiles v12r1, ParamFiles v4r2 
+   Geant4 v71r0p14 (based on geant4.7.1.p01a)
+   LHCb v20r4 (and Gaudi v18r3)
+   XmlDDDB v30r6, XmlConditions v1r6, FieldMap v4r7 
+   It introduce the optional use of Herwig and of BcVegPy</A></H3>
+
+!======================== Gauss v24r7 2006-05-30 =============================
+! 2006-05-30 - Gloria Corti
+ - Introduce new options to read in generator events from a file and do the
+   detector simulation
+   . options/v200601-SimPhase.opts
+   . options/GaussSimPhase.opts
+ 
+! 2006-05-29 - Gloria CORTI
+ - Use options for configuring algorithm to get MCHits for tracker from
+   the GaussTracker v5r4 package.
+   . cmt/requirements
+   . options/Simulation.opts
+ - Move monitors of detectors in dedicated sub-phase of SimMonitor and
+   switch off checking of EventType by default.
+   . options/Monitor.opts
+   . options/v200601.opts
+ - Introduce example options for generation of generic b events with Herwig
+   . options/110000000.opts
+              
+! 2006-05-22 - Gloria CORTI
+ - Introduce scripts for running valgrind
+   . jobs/valgrind.job
+   . jobs/Gauss.supp
+ - Use XmlDDDB v30r7 fixing some rare problems in geometry of RICH HPDs
+   causing Gauss to crash (G4 perceived overlaps)
+ 
+! 2006-05-19 - Gloria CORTI
+ - Introduce conditional use of LbBcVegBy (v1r1), new generator for Bc
+   production, making a special Gauss executable
+   . cmt/requirements
+   . options/14900000.opts - TEST options
+   To use it do:
+     > source setup.csh -tag_add=BcVegPy
+     > make CMTEXTRATAGS=BcVegPy
+   and run GaussBcVegPy.exe
+ - Use Generators v5r1 and LbPythia v4r3
+ 
+!======================== EvtGen v8r9 2006-05-19  ==========================
+! 2006-04-23 - Patrick Robbe for Eric Conte
+ - add new model EvtLambdaB2LambdaV to generate Lambda_b decays.
+ 
+!=================== Generators v5r1 2006-05-19 ===========================
+! 2006-05-08 - Vanya BELYAEV
+ - src/component/MuXMaxBias.cpp
+    really commit new tool..
+ - cmt/requirement
+    (re)add the usage of Phys/LoKiGen v*
+ 
+! 2006-05-02 - Patrick Robbe
+ - src/Lib/Signal.cpp: rename counters to be consistent with inclusive.
+ 
+! 2006-04-23 - Patrick Robbe
+ - Add new tool to use EvtGen in standalone mode: StandAloneDecayTool
+ 
+! 2006-04-08 - Vanya BELYAEV
+ - src/component/MuXMaxBias.cpp
+   new tool ("generator cut") for the
+   selection of "maximum bias sample for Bs -> mu+ mu- backhround studies"
+ - src/component/Generators_entries.cpp
+   new tool is declared
+ - cmt/requirement
+   add the usage of Phys/LoKiGen v*
+ 
+! ==================== LbPythia v4r3 2006-05-19 ======================
+! 2006-05-02 - Patrick Robbe
+ - PythiaProduction.h: move to include directory
+ - requirements: remove -fno-second-underscore fortran compilation flag
+   and add the second underscore where necessary
+ - upevnt and upinit: add functions for BcVegPy generator.
+ 
+!====================== LbBcGen v1r1 2006-05-31 ======================
+! 2006-05-02 - Patrick Robbe
+  - requirements: remove -fno-second-underscore flag and add second
+    underscore where necessary.
+ 
+! 2006-03-13 - Jibo He
+  -New Package: this package contains all functions related to the use
+   of BcGen (BCVEGPY 2.0) in LHCb, functions to access BCVEGPY fortran
+   common block and to set the parameters required by BcGen.
+
+! ======================BcVegPy v1r0 2006-06-31 ===========================
+! 2006-03-13 - Jibo He
+  -New Package: this package is somehow a copy of BCVEGPY 2.0 (C. H. Chang,
+   J. X. Wang, X. G. Wu, Comp. Phys. Comm. 174 (2006) 241). We made it in
+   CMT format.
+  -To interface with LbBcVegPy and LbPythia easily, we made some modification
+   on the program structure.
+  -To generate both B_c+ and B_c-, we modified the color flow subroutine.
+
+!======================== LbHerwig v2r1 2006-05-29 ==========================
+! 2006-05-29 - Gloria CORTI
+ - Change link options to append, otherwise Gauss does not run due to
+   photos symbols "called but not linked"
+   . cmt/requirements
+ 
+!======================== LbHerwig v2r0 2006-05-19 ==========================
+! 2006-04-21 - Karl Harrison
+- src/component/HerwigProduction.cpp modified
+  => Generation repeated in HerwigProduction::generateEvent
+     until Herwig error code is 0
+ 
+! 2006-04-06 - Karl Harrison
+- src/component/HerwigProduction.h modified
+  so that particle momenta stored in HepMC are in MeV
+ 
+! 2006-03-24 - Karl Harrison
+ - Updated to Gauss v24r1 (new event model)
+ - src/component/HerwigProduction.h reorganised to be more
+   similar to PythiaProduction.h
+ - Modified initialisation procedure
+   => Default Herwig parameters set in src/component/HerwigProduction.cpp
+   => Allow modifications at level of job options via Commands property
+ - Implemented HerwigProduction methods setStable and printRunningConditions
+   methods (previously dummy)
+   => Modifications to:
+      src/component/HerwigProdution.cpp
+      src/Lib/Herwig.cpp
+      LbHerwig/Herwig.h
+   => Addition of src/Lib/hwusta.F with messages suppressed
+ - Mapping from Herwig common blocks to C++ structures rechecked, updated
+   and partly rewritten
+   => LbHerwig/herwig6510.h substituted for LbHerwig/herwig6505.h
+ - References to Jimmy removed
+   => Removed LbHerwig/jimmy.inc
+   => Modifications to:
+      src/Lib/Herwig.cpp
+      src/Lib/herwig_common_block_address_65.F
+ 
+!======================= GaussTracker v5r4 2006-05-29 ========================
+! 2006-05-29 - Gloria CORTI
+ - Introduce file with options for configuration of GetTrackerHitsAlg for
+   Velo, PuVeto, TT, IT, OT and Muon. Options moved from Simulation.opts in
+   Gauss package.
+   . options/TrackersHits.opts
+ 
+!=============================================================================
+</PRE><H1><A NAME="v24r6">2006-05-10 - GaussSys v24r6</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -13,7 +160,7 @@ Purpose: LHCb Simulation program
    DecFiles v12r1, ParamFiles v4r2 
    Geant4 v71r0p13 (based on geant4.7.1.p01a)
    LHCb v20r4 (and Gaudi v18r3)
-   XmlDDDB v30r3, XmlConditions v1r6, FieldMap v4r7 </A></H3>
+   XmlDDDB v30r6, XmlConditions v1r6, FieldMap v4r7 </A></H3>
 
 !======================== Gauss v24r6 2006-05-10 =============================
 ! 2006-05-10 - Gloria CORTI
@@ -34,7 +181,7 @@ Purpose: LHCb Simulation program
        least 10^-5 of the total energy.
  
 !=============================================================================
-<H1><A NAME="v24r5">2006-05-03 - GaussSys v24r5</A></H1><PRE>
+</PRE><H1><A NAME="v24r5">2006-05-03 - GaussSys v24r5</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -94,7 +241,7 @@ Purpose: LHCb Simulation program
    . src/Lib/MCTruthManager.cpp
  
 !=============================================================================
-<H1><A NAME="v24r4">2006-04-13 - GaussSys v24r4</A></H1><PRE>
+</PRE><H1><A NAME="v24r4">2006-04-13 - GaussSys v24r4</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -227,7 +374,7 @@ Purpose: LHCb Simulation program
    . src/MuonHitChecker.cpp
  
 !=============================================================================
-<H1><A NAME="v24r3">2006-04-07 - GaussSys v24r3</A></H1><PRE>
+</PRE><H1><A NAME="v24r3">2006-04-07 - GaussSys v24r3</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -361,7 +508,7 @@ Purpose: LHCb Simulation program
 ! ==== GDML v1r240p0 and GDMLG4Writer v2r0 Temporarly OFF ==================== 
 
 !=============================================================================
-<H1><A NAME="v24r2">2006-03-29 - GaussSys v24r2</A></H1><PRE>
+</PRE><H1><A NAME="v24r2">2006-03-29 - GaussSys v24r2</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in previous v24rX. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -458,7 +605,7 @@ Purpose: LHCb Simulation program
                   use GENSER_1_3_0
 
 !=============================================================================
-<H1><A NAME="v24r1">2006-03-15 - GaussSys v24r1</A></H1><PRE>
+</PRE><H1><A NAME="v24r1">2006-03-15 - GaussSys v24r1</A></H1><PRE>
 <H2><A NAME="Note"> DC06 version for tests. 
    Includes also changes described in v24r0. </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -728,7 +875,7 @@ Purpose: LHCb Simulation program
  
 !=============================================================================
 
-<H1><A NAME="v24r0">2006-02-06 - GaussSys v24r0</A></H1><PRE>
+</PRE><H1><A NAME="v24r0">2006-02-06 - GaussSys v24r0</A></H1><PRE>
 <H2><A NAME="Note"> Preliminary DC06 version.
    This version works only with modified XmlDDDB v27r1 (for sensdet). 
    It is only available as CVS tag. </A></H2>
