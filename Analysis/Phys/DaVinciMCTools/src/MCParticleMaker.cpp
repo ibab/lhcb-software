@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.23 2006-05-25 09:57:11 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.24 2006-06-01 08:34:28 jpalac Exp $
 // Include files
 #include <memory>
 
@@ -12,7 +12,7 @@
 #include "Event/Particle.h"
 #include "Kernel/IMCDecayFinder.h"
 #include "DaVinciMCTools/IMCReconstructible.h"
-#include "Kernel/MatrixManip.h"
+#include "LHCbMath/MatrixManip.h"
 // local
 #include "MCParticleMaker.h"
 //#include "Linker/LinkerWithKey.h"
@@ -490,7 +490,7 @@ StatusCode MCParticleMaker::fetchCovariance(const LHCb::Particle& p ,Gaudi::SymM
   cTmp.Place_at(p.momCovMatrix(),3,3);
   cTmp.Place_at(p.posMomCovMatrix(), 0, 3);
   cTmp.Place_at(ROOT::Math::Transpose(p.posMomCovMatrix()), 3, 0); /// @todo Check that this actually works!
-  c = LHCb::MatrixManip::Symmetrize(cTmp);
+  c = Gaudi::Math::Symmetrize(cTmp);
 
   return StatusCode::SUCCESS;
 }
