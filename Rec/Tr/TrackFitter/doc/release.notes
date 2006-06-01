@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r4 2006-06-01 ====================
+! 2006-06-01 M.Cattaneo
+ - Adapt to move of MatrixManip.h to LHCbMath
+ - Adapt to removal of Measurement::update method
+
 !=========================== TrackFitter v2r3 2006-05-15 ====================
 ! 2006-05-15 M. Needham
  - correct name of setter for node 

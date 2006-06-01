@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.8 2006-05-16 08:46:53 cattanem Exp $
+# $Id: requirements,v 1.9 2006-06-01 08:27:08 cattanem Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
 package           TrackFitter
-version           v2r3
+version           v2r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,6 +14,8 @@ branches          cmt doc src
 use     TrackEvent      v*      Event
 use     TrackFitEvent	v*      Tr
 use     TrackInterfaces	v*      Tr
+use     LHCbMath        v*      Kernel
+use     LHCbDefinitions v*      Kernel
 use     GaudiAlg        v*
 
 # Component library building rule

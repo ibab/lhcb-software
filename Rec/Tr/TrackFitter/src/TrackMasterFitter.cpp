@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.10 2006-05-15 16:02:12 jvantilb Exp $
+// $Id: TrackMasterFitter.cpp,v 1.11 2006-06-01 08:27:08 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -22,9 +22,7 @@
 //  Adapted: 15-04-2005  Jose A. Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const   ToolFactory<TrackMasterFitter>  s_factory;
-const IToolFactory& TrackMasterFitterFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackMasterFitter );
 
 //=========================================================================
 // Standard Constructor, initializes variables
@@ -377,7 +375,7 @@ void TrackMasterFitter::update( Track& track )
   for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {    
     if ( (*iNode)->hasMeasurement() ) {
       Measurement& meas = (*iNode) -> measurement();
-      meas.update( (*iNode)->state().stateVector() );
+      meas.setRefVector( (*iNode)->state().stateVector() );
     }
   }
 }

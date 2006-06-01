@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.17 2006-05-16 08:42:47 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.18 2006-06-01 08:27:08 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,7 +6,9 @@
 
 // from LHCbDefinitions
 #include "Kernel/PhysicalConstants.h"
-#include "Kernel/MatrixManip.h"
+
+// From LHCbMath
+#include "LHCbMath/MatrixManip.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -27,9 +29,7 @@ using namespace LHCb;
 //  Adapted: 15-04-2005  Jose A. Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const   ToolFactory<TrackKalmanFilter>  s_factory;
-const IToolFactory& TrackKalmanFilterFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrackKalmanFilter );
 
 //=========================================================================
 // Standard Constructor, initializes variables
@@ -238,7 +238,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   TrackMatrix uniDiagMat = TrackMatrix( ROOT::Math::SMatrixIdentity());
   TrackMatrix B = uniDiagMat - TrackVectorProd( mK, H );
   TrackMatrix bTimesC = B * tC;
-  tC = LHCb::MatrixManip::Symmetrize<TrackMatrix>( bTimesC );
+  tC = Gaudi::Math::Symmetrize<TrackMatrix>( bTimesC );
 
   // update the residual and the error on the residual
   double HK = ROOT::Math::Dot( H, mK );
