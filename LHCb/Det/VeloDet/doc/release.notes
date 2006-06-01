@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.134 2006-05-31 13:06:23 krinnert Exp $
+! $Id: release.notes,v 1.135 2006-06-01 09:22:29 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
@@ -14,6 +14,7 @@ package manager : Velo Group
  the proper simulation of all possible test beam setups.
  The configuration can be accessed via bool DeVeloSensor::tell1WithoutSensor()
 
+!========================= VeloDet v10r7 2006-05-25 ========================
 ! 2006-05-23 - Mark Tobin
  - Replaced sensorIndex(sensor) by internal map which returns the pointer to
  the sensor directly.
