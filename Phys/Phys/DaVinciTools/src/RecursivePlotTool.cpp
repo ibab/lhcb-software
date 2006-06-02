@@ -1,4 +1,4 @@
-// $Id: RecursivePlotTool.cpp,v 1.3 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: RecursivePlotTool.cpp,v 1.4 2006-06-02 15:05:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -107,8 +107,11 @@ StatusCode RecursivePlotTool::fillPlots(const LHCb::Particle* p,
   debug() << "Filling plots for particle " << p->particleID().pid() 
           << " " << p->momentum() << endmsg ;
   StatusCode sc = m_simplePlotTool->fillPlots(p,trailer);
+  debug() << "Filled plots for particle " << p->particleID().pid() 
+          << " with " << sc << endmsg ;
   if (!sc) return sc;
   if (!p->isBasicParticle()){
+    debug() << "Particle has " << p->daughtersVector().size() << " daughters" << endmsg ;
     const LHCb::Particle::ConstVector pv = p->daughtersVector();
     debug() << "This particle has " << pv.size() << " daughters!" << endmsg ;
     std::string newtrailer ;
@@ -120,7 +123,7 @@ StatusCode RecursivePlotTool::fillPlots(const LHCb::Particle* p,
       StatusCode sc = this->fillPlots(*ip,newtrailer); // call this recursively
       if (!sc) return StatusCode::FAILURE;
     } 
-  }
+  } else debug() << p->particleID() << " is basic" << endmsg ;
   return StatusCode::SUCCESS;
 }; 
 

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.205 2006-06-01 08:33:57 jpalac Exp $
+! $Id: release.notes,v 1.206 2006-06-02 15:05:53 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-06-02 - P. Koppenburg
+  src/RecursivePlotTool.cpp
+  . Aa little more debugging
 
 ! 2006-06-01 - Juan PALACIOS
   src/Particle2State.cpp
