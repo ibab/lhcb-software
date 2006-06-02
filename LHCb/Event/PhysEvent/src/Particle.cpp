@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.19 2006-06-02 10:45:58 jpalac Exp $
+// $Id: Particle.cpp,v 1.20 2006-06-02 15:30:24 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -32,6 +32,8 @@ LHCb::Particle::Particle(const LHCb::Particle& part)
   m_posCovMatrix( part.posCovMatrix() ),
   m_posMomCovMatrix( part.posMomCovMatrix() ),
   m_extraInfo( part.extraInfo() ),
+  m_endVertex( part.endVertex() ),
+  m_proto(part.proto() ),
   m_daughters( part.daughters() )
 {
 }
@@ -43,15 +45,19 @@ LHCb::Particle& LHCb::Particle::operator=(const LHCb::Particle& orig) {
   
   // protect against self assignement
   if( this != &orig ) {
-    m_particleID = orig.particleID();
-    m_momentum = orig.momentum();
-    m_referencePoint = orig.referencePoint();
-    m_measuredMass = orig.measuredMass();
+    m_particleID      = orig.particleID();
+    m_momentum        = orig.momentum();
+    m_referencePoint  = orig.referencePoint();
+    m_measuredMass    = orig.measuredMass();
     m_measuredMassErr = orig.measuredMassErr();  
-    m_posCovMatrix = orig.posCovMatrix();
-    m_momCovMatrix = orig.momCovMatrix();
+    m_posCovMatrix    = orig.posCovMatrix();
+    m_momCovMatrix    = orig.momCovMatrix();
     m_posMomCovMatrix = orig.posMomCovMatrix();
-    m_daughters = orig.daughters();
+    m_extraInfo       = orig.extraInfo();
+    m_endVertex       = orig.endVertex();
+    m_proto           = orig.proto();
+    m_daughters       = orig.daughters();
+    
   }
   return *this;
 }
