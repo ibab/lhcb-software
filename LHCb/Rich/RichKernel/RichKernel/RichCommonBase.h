@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.3 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.4 2006-06-02 16:17:39 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -105,7 +105,7 @@ public:
     // Check consistency
     if ( parent && commonTool )
     {
-      Error( "Tool " + tName + " cannot be common and private !" );
+      this -> Error( "Tool " + tName + " cannot be common and private !" );
       return NULL;
     }
 
@@ -117,7 +117,7 @@ public:
     {
       if ( !setContext( toolRegistry()->toolName(tName) ) )
       {
-        Error( "Problem setting Context for '"+fullname+"'" );
+        this -> Error( "Problem setting Context for '"+fullname+"'" );
         return NULL;
       }
     }
@@ -126,10 +126,10 @@ public:
       this -> template tool<TOOL>( toolRegistry()->toolType(tName),
                                    fullname,
                                    parent );
-    if ( msgLevel(MSG::DEBUG) )
+    if ( this -> msgLevel(MSG::DEBUG) )
     {
-      debug() << " Acquired tool '" << pTool->name()
-              << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
+      this -> debug() << " Acquired tool '" << pTool->name()
+                      << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
     }
     return pTool;
   }
@@ -146,16 +146,16 @@ public:
   {
     if ( pTool )
     {
-      if ( msgLevel(MSG::DEBUG) )
+      if ( this -> msgLevel(MSG::DEBUG) )
       {
-        debug() << " Forced release for tool '" << pTool->name() << "'" << endreq;
+        this -> debug() << " Forced release for tool '" << pTool->name() << "'" << endreq;
       }
       release( pTool );
       pTool = NULL;
     }
     else
     {
-      Warning ( "Attempt to release a NULL Tool pointer" );
+      this -> Warning ( "Attempt to release a NULL Tool pointer" );
     }
   }
 

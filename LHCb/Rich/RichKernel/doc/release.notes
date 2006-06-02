@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.117 2006-05-10 13:58:39 cattanem Exp $
+! $Id: release.notes,v 1.118 2006-06-02 16:17:39 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-06-02 - Chris Jones
+ - Add fixes for compilation errors with gcc 3.4.5 on SLC4.
 
 !======================= RichKernel v6r3 2006-05-08 =======================
 ! 2006-05-05 - Chris Jones

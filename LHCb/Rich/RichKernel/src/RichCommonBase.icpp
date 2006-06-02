@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.5 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.6 2006-06-02 16:17:39 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -33,7 +33,7 @@ StatusCode RichCommonBase<PBASE>::initialize()
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
   if ( sc.isFailure() )
-  { return Error( "Failed to initialise Gaudi Base class", sc ); }
+  { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
 
   return sc;
 }
@@ -46,7 +46,8 @@ template <class PBASE>
 StatusCode RichCommonBase<PBASE>::finalize()
 {
   // Printout from finalization
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Finalize" << endreq;
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Finalize" << endreq;
 
   // Finalise base class and return
   return PBASE::finalize();
@@ -93,8 +94,8 @@ StatusCode RichCommonBase<PBASE>::setContext( const std::string & name ) const
         {
           if ( "Context" == (*itProp)->name() )
           {
-            if ( msgLevel(MSG::DEBUG) )
-            { debug() << "Found Context " << *sp << " for " << fullname << endreq; }
+            if ( this -> msgLevel(MSG::DEBUG) )
+            { this -> debug() << "Found Context " << *sp << " for " << fullname << endreq; }
             found = true;
             break;
           }
@@ -105,8 +106,9 @@ StatusCode RichCommonBase<PBASE>::setContext( const std::string & name ) const
     // If Context not set, set it
     if ( !found )
     {
-      if ( msgLevel(MSG::DEBUG) )
-      { debug() << "Setting Context '" << newContext << "' for " << fullname << endreq; }
+      if ( this -> msgLevel(MSG::DEBUG) )
+      { this -> debug() << "Setting Context '"
+                        << newContext << "' for " << fullname << endreq; }
       joSvc()->addPropertyToCatalogue( fullname,
                                        new StringProperty( "Context",
                                                            '"'+ newContext +'"' ) );
