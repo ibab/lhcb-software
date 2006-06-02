@@ -1,8 +1,11 @@
-// $Id: ObjectTypeTraits.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: ObjectTypeTraits.h,v 1.2 2006-06-02 16:18:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/07/21 07:57:25  cattanem
+// first import of Kernel/Relations
+//
 // Revision 1.10  2002/05/10 12:29:42  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
 //
@@ -17,9 +20,7 @@
 #include <algorithm>
 // Relations 
 #include "Relations/TypeConversion.h"
-#include "Relations/TypeSerializer.h"
 #include "Relations/TypePersistent.h"
-#include "Relations/TypeApply.h"
 #include "Relations/TypeId.h"
 #include "Relations/Less.h"
 #include "Relations/ObjectTypeTraitsStripped.h"
@@ -30,10 +31,6 @@ namespace Relations
 {  
   /// forward declaration
   template <class OBJECT> struct TypePersistent ;  
-  /// forward declaration
-  template <class OBJECT> struct TypeSerializer ;  
-  /// forward declaration
-  template <class OBJECT> struct TypeApply      ;
   /// forward declaration
   template <class OBJECT> struct TypeId         ;
   
@@ -54,10 +51,6 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>                Traits     ;
     /// actual "stored" type 
     typedef typename TypePersistent<TYPE>::Result   Type       ;
-    /// serializer 
-    typedef TypeSerializer<TYPE>                    Serializer ;
-    /// "apply"
-    typedef TypeApply<TYPE>                         Apply      ;
     /// comparison (strict ordering criteria)
     typedef std::less<Type>                         Less       ;
     /// the unique class identification

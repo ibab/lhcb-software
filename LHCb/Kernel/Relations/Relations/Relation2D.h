@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.7 2006-06-02 16:18:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/07 09:22:24  ibelyaev
+//  update for Win32
+//
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
@@ -132,10 +135,14 @@ namespace LHCb
      */
     Relation2D 
     ( const OwnType& copy  )
-      : DataObject ( copy         ) 
-      , Relations::BaseTable  ( copy         ) 
-      , IBase      ( copy         ) 
-      , m_base     ( copy.m_base  )
+      : IInterface    ( copy ) 
+      , IUpdateable   ( copy ) 
+      , IRelationBase ( copy )
+      , DirectType    ( copy ) 
+      , DataObject    ( copy          ) 
+      , Relations::BaseTable  ( copy  ) 
+      , IBase         ( copy          ) 
+      , m_base        (  copy.m_base  )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
@@ -173,70 +180,6 @@ namespace LHCb
      *  @return the unique class identifier 
      */ 
     virtual const CLID& clID()     const { return classID() ; }
-    
-    /** object serialization for writing
-     *  only direct relations are serialized 
-     *  @see DataObject 
-     *  @param  s reference to the output stream
-     *  @return   reference to the output stream 
-     */
-    virtual StreamBuffer& serialize ( StreamBuffer& s ) const 
-    {
-      typedef typename FromTypeTraits::Apply      ApplyF     ;
-      typedef typename ToTypeTraits::Apply        ApplyT     ;
-      typedef typename FromTypeTraits::Serializer SerializeF ;
-      typedef typename ToTypeTraits::Serializer   SerializeT ;
-      // serialize the base class
-      DataObject::serialize( s );
-      // get all relations 
-      typename Relation2D<FROM, TO>::Range range = 
-        i_relations() ;
-      // serialize the number of relations 
-      unsigned long _size = range.size() ;
-      s << _size ;
-      // serialise all relations
-      for( typename Relation2D<FROM, TO>::iterator entry = range.begin() ;
-           range.end() != entry ; ++entry ) 
-      {
-        SerializeF::serialize 
-          ( s , ApplyF::apply ( (*entry).first   , this ) );
-        SerializeT::serialize 
-          ( s , ApplyT::apply ( (*entry).second  , this ) );
-      };
-      ///
-      return s ;
-    };
-    
-    /** object serialization for reading
-     *  @see DataObject 
-     *  @param  s reference to the input  stream
-     *  @return   reference to the input  stream 
-     */
-    virtual StreamBuffer& serialize ( StreamBuffer& s )       
-    {
-      typedef typename FromTypeTraits::Apply      ApplyF     ;
-      typedef typename ToTypeTraits::Apply        ApplyT     ;
-      typedef typename FromTypeTraits::Serializer SerializeF ;
-      typedef typename ToTypeTraits::Serializer   SerializeT ;
-      // clear all existing relations 
-      i_clear();
-      // serialize the base class
-      DataObject::serialize( s );
-      unsigned long _size ;
-      s >> _size ;
-      typename IBase::From from ;
-      typename IBase::To   to ;
-      m_base.reserve( _size ) ;
-      while( _size-- > 0 )
-      {
-        //
-        SerializeF::serialize ( s , ApplyF::apply ( from   , this ) ) ;
-        SerializeT::serialize ( s , ApplyT::apply ( to     , this ) ) ;
-        //
-        i_relate( from , to ) ;
-      }
-      return s ;
-    };
     
   public:  // major functional methods (fast, 100% inline)
     

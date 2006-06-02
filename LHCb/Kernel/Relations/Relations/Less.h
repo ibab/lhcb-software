@@ -1,18 +1,26 @@
-// $Id: Less.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
+// $Id: Less.h,v 1.3 2006-06-02 16:18:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2004/12/08 17:46:22  ibelyaev
+//  Win adaptation: VisualC++ 6.0 -> VisualC++ 7.1
+// 
 // ============================================================================
 #ifndef RELATIONS_LESS_H 
 #define RELATIONS_LESS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SmartRef.h"
+// ============================================================================
 // STD & STL 
 // ============================================================================
 #include <functional>
 // ============================================================================
+
 
 /** @file 
  *  
@@ -37,8 +45,8 @@ namespace std
    *  @date   08/05/2002
    */  
   template<class TYPE> 
-  struct std::less<SmartRef<TYPE> >
-    : public std::binary_function<const SmartRef<TYPE>,const SmartRef<TYPE>,bool>
+  struct less< SmartRef<TYPE> >
+    : std::binary_function<const SmartRef<TYPE>,const SmartRef<TYPE>,bool>
   {
     /** the only one essential method 
      *  comparison of smart references through 
@@ -54,7 +62,7 @@ namespace std
   
   // remove "const" qualifier
   template<class TYPE> 
-  struct std::less<const SmartRef<TYPE> > 
+  struct less<const SmartRef<TYPE> > 
     : public std::less<SmartRef<TYPE> > {};
   
 }; // end of namespace std 

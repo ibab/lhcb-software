@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.8 2006-02-07 13:42:53 ibelyaev Exp $
+// $Id: Relation.h,v 1.9 2006-06-02 16:18:38 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/02/07 13:42:53  ibelyaev
+//  many new changed : see relese.notes
+//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -130,7 +133,10 @@ namespace Relations
      */
     Relation 
     ( const OwnType& copy   ) 
-      : BaseTable     ( copy          ) 
+      : IInterface    ( copy ) 
+      , IUpdateable   ( copy ) 
+      , IRelationBase ( copy ) 
+      , BaseTable     ( copy          ) 
       , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )
       , m_inverse_aux ( 0             ) 

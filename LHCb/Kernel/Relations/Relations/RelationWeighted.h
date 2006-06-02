@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.8 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.9 2006-06-02 16:18:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/02/07 09:22:24  ibelyaev
+//  update for Win32
+//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted_H 
 #define RELATIONS_RelationWeighted_H 1
@@ -117,7 +120,10 @@ namespace Relations
      */
     RelationWeighted 
     ( const OwnType& copy   ) 
-      : BaseWeightedTable ( copy ) 
+      : IInterface     ( copy ) 
+      , IUpdateable    ( copy ) 
+      , IRelationBase  ( copy )
+      , BaseWeightedTable ( copy ) 
       , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )
       , m_inverse_aux ( 0             ) 

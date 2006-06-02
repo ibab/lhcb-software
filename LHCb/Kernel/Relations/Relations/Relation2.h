@@ -1,8 +1,11 @@
-// $Id: Relation2.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: Relation2.h,v 1.7 2006-06-02 16:18:38 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/07 09:22:24  ibelyaev
+//  update for Win32
+//
 // =============================================================================
 #ifndef RELATIONS_Relation2_H 
 #define RELATIONS_Relation2_H 1
@@ -143,10 +146,14 @@ namespace Relations
      */
     Relation2 
     ( const OwnType& copy ) 
-      : BaseTable ( copy           )  
-      , IBase     ( copy           ) 
-      , m_direct  ( copy.m_direct  )
-      , m_inverse ( copy.m_inverse ) 
+      : IInterface    ( copy ) 
+      , IUpdateable   ( copy ) 
+      , IRelationBase ( copy ) 
+      , DirectType    ( copy ) 
+      , BaseTable     ( copy           )  
+      , IBase         ( copy           ) 
+      , m_direct      ( copy.m_direct  )
+      , m_inverse     ( copy.m_inverse ) 
     {
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
