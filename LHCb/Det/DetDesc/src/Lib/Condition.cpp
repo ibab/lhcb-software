@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.10 2006-02-01 19:39:10 marcocle Exp $
+//$Id: Condition.cpp,v 1.11 2006-06-02 06:59:01 cattanem Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -15,7 +15,7 @@ Condition::Condition() : ParamValidDataObject() {};
 
 /// Copy constructor
 Condition::Condition (Condition& obj)
-  : ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
+  : IValidity(), ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
 
 //---------------------------------------------------------------------------
 

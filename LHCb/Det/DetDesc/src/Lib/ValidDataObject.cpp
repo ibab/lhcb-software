@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.7 2006-02-01 19:39:10 marcocle Exp $
+//$Id: ValidDataObject.cpp,v 1.8 2006-06-02 06:59:02 cattanem Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -15,7 +15,8 @@ static Gaudi::Time local_time_max   = Gaudi::Time::max();
 
 /// Default constructor 
 ValidDataObject::ValidDataObject()
-  : IValidity(), DataObject()
+  : IValidity()
+  , DataObject()
   , m_validSince (Gaudi::Time::epoch())
   , m_validUntil (Gaudi::Time::max())
   , m_updateMode (DEFAULT)
@@ -25,7 +26,8 @@ ValidDataObject::ValidDataObject()
 
 /// Copy constructor
 ValidDataObject::ValidDataObject( ValidDataObject& obj )
-  : DataObject( (DataObject&)obj ), IValidity()
+  : IValidity()
+  , DataObject( (DataObject&)obj )
   , m_validSince (obj.validSince()) 
   , m_validUntil (obj.validTill())
   , m_updateMode (obj.updateMode())

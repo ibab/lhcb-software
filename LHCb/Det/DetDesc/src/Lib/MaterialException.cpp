@@ -1,4 +1,4 @@
-// $Id: MaterialException.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
+// $Id: MaterialException.cpp,v 1.7 2006-06-02 06:59:01 cattanem Exp $
 ///
 /// GaudiKernbel
 #include "GaudiKernel/MsgStream.h"
@@ -23,7 +23,7 @@ MaterialException::MaterialException( const std::string   &  message      ,
 {};
 ////////////////////////////////////////////////////////////////////////////////////////
 MaterialException::MaterialException( const MaterialException& right )
-  : GaudiException( right          )
+  : std::exception(), GaudiException( right          )
   , m_me_mat      ( right.m_me_mat )
 {};
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: SolidTrap.cpp,v 1.18 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.19 2006-06-02 06:59:02 cattanem Exp $
 // ===========================================================================
 
 // LHCbDefinitions
@@ -51,8 +51,8 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
                       const double        DxAtPlusZMinusY  , 
                       const double        DxAtPlusZPlusY   ,
                       const double        AlphaAtPlusZ    )
-  : SolidPolyHedronHelper   ( Name             ) 
-  , SolidBase               ( Name             ) 
+  : SolidBase               ( Name             ) 
+  , SolidPolyHedronHelper   ( Name             ) 
   , m_trap_zHalfLength      ( ZHalfLength      ) 
   , m_trap_theta            ( Theta            ) 
   , m_trap_phi              ( Phi              ) 
@@ -92,8 +92,8 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
  */
 // ============================================================================
 SolidTrap::SolidTrap( const std::string& Name )
-  : SolidPolyHedronHelper   ( Name ) 
-  , SolidBase               ( Name ) 
+  : SolidBase               ( Name ) 
+  , SolidPolyHedronHelper   ( Name ) 
   , m_trap_zHalfLength      ( 100  ) 
   , m_trap_theta            ( 0    ) 
   , m_trap_phi              ( 0    ) 

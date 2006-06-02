@@ -1,24 +1,6 @@
-// $Id: SimpleValidity.cpp,v 1.6 2006-04-20 14:39:56 ranjard Exp $
+// $Id: SimpleValidity.cpp,v 1.7 2006-06-02 06:59:02 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/02/01 19:39:10  marcocle
-// use Gaudi::Time instead of ITime+TimePoint
-//
-// Revision 1.4  2005/04/22 13:10:41  marcocle
-// Follow (pending) change in GaudiKernel/IValidity.
-// Improvements in ValidDataObject and LogVolBase. (see doc/release.notes)
-//
-// Revision 1.3  2003/06/16 13:42:36  sponce
-// fixes for gcc 3.2 and 3.3
-//
-// Revision 1.2  2002/01/21 14:46:46  sponce
-// Remove all warnings + some bug fixes
-//
-// Revision 1.1  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -65,7 +47,8 @@ SimpleValidity::SimpleValidity( const Gaudi::Time& since ,
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const IValidity& copy )
-  : m_since ( copy.validSince() ) 
+  : IValidity()
+  , m_since ( copy.validSince() ) 
   , m_till  ( copy.validTill() ) 
 {}
 

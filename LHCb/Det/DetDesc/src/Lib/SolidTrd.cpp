@@ -1,4 +1,4 @@
-// $Id: SolidTrd.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidTrd.cpp,v 1.17 2006-06-02 06:59:02 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -41,8 +41,8 @@ SolidTrd::SolidTrd
   const double       YHalfLength1      , 
   const double       XHalfLength2      , 
   const double       YHalfLength2      ) 
-  : SolidPolyHedronHelper ( name         ) 
-  , SolidBase             ( name         ) 
+  : SolidBase             ( name         ) 
+  , SolidPolyHedronHelper ( name         ) 
   , m_trd_zHalfLength     ( ZHalfLength  )
   , m_trd_xHalfLength1    ( XHalfLength1 )
   , m_trd_xHalfLength2    ( XHalfLength2 )
@@ -77,8 +77,8 @@ SolidTrd::SolidTrd
  */
 // ============================================================================
 SolidTrd::SolidTrd( const std::string& name )
-  : SolidPolyHedronHelper ( name          )
-  , SolidBase             ( name          ) 
+  : SolidBase             ( name          )
+  , SolidPolyHedronHelper ( name          ) 
   , m_trd_zHalfLength     ( 10000000      )
   , m_trd_xHalfLength1    ( 10000         )
   , m_trd_xHalfLength2    ( 10000         )

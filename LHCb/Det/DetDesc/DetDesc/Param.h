@@ -1,4 +1,4 @@
-// $Id: Param.h,v 1.4 2005-11-17 16:30:17 marcocle Exp $
+// $Id: Param.h,v 1.5 2006-06-02 06:59:01 cattanem Exp $
 #ifndef DETDESC_PARAM_H 
 #define DETDESC_PARAM_H 1
 
@@ -68,7 +68,7 @@ public:
   inline const T &get() const { return m_val; }
 
   /// String representation for printout
-  virtual std::string toStr() {
+  inline virtual std::string toStr() {
     std::ostringstream o;
     o << m_val;
     return o.str();
@@ -92,7 +92,7 @@ private:
 
 };
 
-std::string Param<double>::toStr() {
+inline std::string Param<double>::toStr() {
   std::ostringstream o;
   o.precision(16);
   o << m_val;
