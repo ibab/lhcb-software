@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.6 2006-04-03 08:57:11 jonrob Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.7 2006-06-02 10:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -175,13 +175,14 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   const double GasMolWeight   = param<double>("GasMolWeightParam");
   double GasRhoCur( 0.0 );
 
-  if ( Rich::Rich2Gas == radiatorID() )
-    GasRhoCur = RhoEffectiveSellDefault*(curPressure/STP_Pressure)*
-      (STP_Temperature/curTemp);
-  else if ( Rich::Rich1Gas == radiatorID() ) {
+  if ( material()->name().find("C4F10") != std::string::npos ) {
     const double RefTemperature = param<double>("C4F10ReferenceTemp");
     GasRhoCur = RhoEffectiveSellDefault*(curPressure/STP_Pressure) *
       ( RefTemperature/curTemp );
+  }
+  else {
+    GasRhoCur = RhoEffectiveSellDefault*(curPressure/STP_Pressure)*
+      (STP_Temperature/curTemp);
   }
 
   // calculate ref index

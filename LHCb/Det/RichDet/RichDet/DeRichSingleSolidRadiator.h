@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.12 2006-03-16 14:57:21 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.13 2006-06-02 10:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -31,7 +31,7 @@ extern const CLID& CLID_DeRichSingleSolidRadiator;
  */
 //----------------------------------------------------------------------------
 
-class DeRichSingleSolidRadiator: public DeRichRadiator 
+class DeRichSingleSolidRadiator: public DeRichRadiator
 {
 
 public:
@@ -110,6 +110,17 @@ public:
                                       const Gaudi::XYZVector& vGlobal,
                                       std::vector<RichRadIntersection>& intersections ) const;
 
+  /**
+   * Returns a pointer to the material of this radiator
+   *
+   * @return Pointer to the material
+   */
+  inline const Material* material() const
+  {
+    return m_material;
+  }
+
+
 protected:
 
   /// prepare the momentum vector for the calculation of the
@@ -125,7 +136,7 @@ protected:
 private:
 
   const ISolid* m_solid;  ///< topmost solid of the radiator
-
+  const Material* m_material; ///< pointer to the radiator material
 };
 
 #endif    // RICHDET_DERICHSINGLESOLIDRADIATOR_H

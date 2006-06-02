@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.31 2006-02-22 14:29:46 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.32 2006-06-02 10:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -152,6 +152,13 @@ public:
    * @return The detection point in global coordinates
    */
   virtual Gaudi::XYZPoint detectionPoint( const LHCb::RichSmartID& smartID ) const;
+
+  /**
+   * Converts a RichSmartID to a point on the anode in global coordinates.
+   *
+   * @return The detection anode point in global coordinates
+   */
+  virtual Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID& smartID ) const;
 
   /**
    * Returns the intersection point with an HPD window given a vector

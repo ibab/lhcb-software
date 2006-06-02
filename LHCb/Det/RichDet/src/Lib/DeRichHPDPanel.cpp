@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.39 2006-05-17 16:04:06 cattanem Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.40 2006-06-02 10:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -451,6 +451,27 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
   return (m_trans1[HPDNumber] * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ));
 }
 
+
+//=========================================================================
+//  convert a SmartID to a point on the anode (global coord system)
+//=========================================================================
+Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const 
+{
+
+  const unsigned int HPDNumber = smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
+
+  // convert pixel number to silicon coordinates
+  const double inSiliconX =
+    smartID.pixelCol()*m_pixelSize + m_pixelSize/2.0 - m_siliconHalfLengthX;
+  const double inSiliconY =
+    m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
+
+  Gaudi::XYZPoint inSilicon( inSiliconX, inSiliconY, 0.0 );
+  
+  return(geometry()->toGlobal(m_pvHPDMaster[HPDNumber]->toMother(m_pvHPDSMaster[HPDNumber]->
+         toMother(m_pvSilicon[HPDNumber]->toMother(inSilicon )))));
+  
+}
 
 //=========================================================================
 //  convert a point from the global to the panel coodinate system

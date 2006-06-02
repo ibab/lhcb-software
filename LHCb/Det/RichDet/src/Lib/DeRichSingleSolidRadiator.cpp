@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.17 2006-03-16 14:57:22 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.18 2006-06-02 10:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -57,7 +57,8 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 
   m_solid = geometry()->lvolume()->solid();
 
-  const Material::Tables& myTabProp = geometry()->lvolume()->material()->tabulatedProperties();
+  m_material = geometry()->lvolume()->material();
+  const Material::Tables& myTabProp = m_material->tabulatedProperties();
   Material::Tables::const_iterator matIter;
   for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter )
   {

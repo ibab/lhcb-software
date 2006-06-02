@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-06-02 - Antonis Papanestis
+ - Added method detPointOnAnode in DeRichHPDPanel
+ - Minor change in DeRichGasRadiator
+
 !========================= RichDet v9r4 2006-05-17 =========================
 ! 2006-05-17 - Marco Cattaneo
  - Adapt to Gaudi::Units
