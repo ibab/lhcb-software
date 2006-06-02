@@ -9,7 +9,8 @@
       name        = 'Node'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'Node is a base class for classes linking track states to measurements.'
-      serializers = 'FALSE'>
+      serializers = 'FALSE'
+      allocator   = 'NO' >
 
       <import name='gsl/gsl_math' />
       <import name='Event/State' />
