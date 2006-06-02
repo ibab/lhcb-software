@@ -1,11 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.259 2006-06-02 06:59:01 cattanem Exp $ 
+! $Id: release.notes,v 1.260 2006-06-02 08:52:47 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v16r6 2006-06-01 =========================
+!====================== DetDesc v16r5p1 2006-06-01 =========================
 ! 2006-06-01 - Marco Cattaneo
  - Backward compatible fixes for gcc345 compilation errors and warnings 
 
