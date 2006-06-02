@@ -1,8 +1,8 @@
 #ifndef    DETDESCCNV_XMLCNVEXCEPTION_ICPP
 #define    DETDESCCNV_XMLCNVEXCEPTION_ICPP 1 
-/// detdesc 
+ 
 #include "DetDescCnv/XmlCnvException.h"
-///
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const std::string& message , 
@@ -17,7 +17,7 @@ inline XmlCnvException::XmlCnvException( const std::string    & message ,
 {};
 ////////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const XmlCnvException& right )
-  : GaudiException( right )
+  : std::exception(), GaudiException( right )
 {};
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::~XmlCnvException() throw() {}; 
