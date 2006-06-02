@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.5 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Keeper.h,v 1.6 2006-06-02 17:03:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_KEEPER_H 
 #define LOKI_KEEPER_H 1
@@ -243,7 +246,7 @@ namespace LoKi
     {
       sort ( cmp ) ;
       m_objects.erase 
-        ( std::unique ( m_object.begin () , 
+        ( std::unique ( m_objects.begin () , 
                         m_objects.end  () , cmp ) , m_objects.end() ) ;
       return size() ;
     } ;
@@ -252,7 +255,7 @@ namespace LoKi
     {
       sort () ;
       m_objects.erase 
-        ( std::unique ( m_object.begin () , 
+        ( std::unique ( m_objects.begin () , 
                         m_objects.end  () ) , m_objects.end() ) ;
       return size() ;
     } ;

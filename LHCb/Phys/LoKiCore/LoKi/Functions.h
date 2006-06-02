@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.8 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Functions.h,v 1.9 2006-06-02 17:03:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
 #define LOKI_FUNCTIONS_H 1
@@ -730,10 +733,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return  pr1( object ) ? pr2( object ) : false ;}  
+    { return this->pr1( object ) ? this->pr2( object ) : false ;}  
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << pr1() << "&" << pr2() << ")" ; };
+    { return s << "("  << this->pr1() << "&" << this->pr2() << ")" ; };
   };
   
   /** @struct Or 
@@ -769,10 +772,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return  pr1( object )  ? true : pr2( object ) ; }
+    { return this->pr1( object )  ? true : this->pr2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << pr1() << "|" << pr2() << ")" ; };
+    { return s << "("  << this->pr1() << "|" << this->pr2() << ")" ; };
   };
   
   /** @struct Not
@@ -843,6 +846,7 @@ namespace LoKi
   template<class TYPE> 
   struct Less : public PredicateFromTwoFunctions<TYPE> 
   {
+    typedef PredicateFromTwoFunctions<TYPE> _B ;
     /// define all nesessary types 
     _LOKI_PREDICATE_TYPES_( Less , TYPE ) ;    
     typedef Function<TYPE> func ;
@@ -853,10 +857,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }     
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) < fun2( object ) ; }
+    { return _B::fun1( object ) < _B::fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "<" << fun2() << ")" ; };
+    { return s << "("  << _B::fun1() << "<" << _B::fun2() << ")" ; };
   };
   
   /** @struct Equal 
@@ -895,10 +899,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }    
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) == fun2( object ) ; }
+    { return this->fun1( object ) == this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "==" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "==" << this->fun2() << ")" ; };
   };
 
   /** @struct LessOrEqual 
@@ -936,10 +940,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }     
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) <= fun2( object ) ; }
+    { return this->fun1( object ) <= this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "<=" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "<=" << this->fun2() << ")" ; };
   };
   
   /** @struct Plus 
@@ -976,10 +980,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }    
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) + fun2( object ) ; }
+    { return this->fun1( object ) + this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "+" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "+" << this->fun2() << ")" ; };
   };
   
   /** @struct Minus 
@@ -1017,10 +1021,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }    
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) - fun2( object ) ; }
+    { return this->fun1( object ) - this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "-" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "-" << this->fun2() << ")" ; };
   };
   
   /** @struct Divide
@@ -1058,10 +1062,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }    
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) / fun2( object ) ; }
+    { return this->fun1( object ) / this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "/" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "/" << this->fun2() << ")" ; };
   };
   
   /** @struct Multiply
@@ -1099,10 +1103,10 @@ namespace LoKi
     virtual Self* clone() const { return new Self( *this ); }    
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return fun1( object ) * fun2( object ) ; }
+    { return this->fun1( object ) * this->fun2( object ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "("  << fun1() << "*" << fun2() << ")" ; };
+    { return s << "("  << this->fun1() << "*" << this->fun2() << ")" ; };
   };
   
 
@@ -1149,13 +1153,13 @@ namespace LoKi
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
     { 
-      const result_type val1 = fun1 ( object ) ;
-      const result_type val2 = fun2 ( object ) ;      
+      const result_type val1 = this->fun1 ( object ) ;
+      const result_type val2 = this->fun2 ( object ) ;      
       return val1 < val2 ? val1 : val2 ;
     }    
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "min("  << fun1() << "," << fun2() << ")" ; };
+    { return s << "min("  << this->fun1() << "," << this->fun2() << ")" ; };
   private:
     Min () ;
   };
@@ -1204,13 +1208,13 @@ namespace LoKi
     /// the only one essential method ("function")      
     virtual double operator() ( argument object ) const 
     { 
-      const double val1 = fun1 ( object ) ;
-      const double val2 = fun2 ( object ) ;      
+      const double val1 = this->fun1 ( object ) ;
+      const double val2 = this->fun2 ( object ) ;      
       return val1 < val2 ? val2 : val1 ;
     }    
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << "max("  << fun1() << "," << fun2() << ")" ; };
+    { return s << "max("  << this->fun1() << "," << this->fun2() << ")" ; };
   private:
     Max () ;
   };
@@ -1329,15 +1333,15 @@ namespace LoKi
                        const double       val2            ,
                        const std::string& desc  = "'fun'" ) 
       : FunctionFromTwoFunctions<TYPE> ( constant( val1 ) ,  constant( val2 ) ) 
-        , m_func ( func ) , m_desc ( desk ) {};    
+        , m_func ( func ) , m_desc ( desc ) {};    
     /// clone method (mandatory!)
     virtual Self*  clone   () const { return new Self( *this ); }
     /// the only one essential method ("function")      
     virtual result_type operator() ( argument object ) const 
-    { return (*m_func) ( ( fun1 () )( object )  , ( fun2 () )( object) ) ; }
+    { return (*m_func) ( ( this->fun1 () )( object )  , ( this->fun2 () )( object) ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << m_desc << "("  << fun1() << "," << fun2() << ")" ; };
+    { return s << m_desc << "("  << this->fun1() << "," << this->fun2() << ")" ; };
   private:
     Func m_func        ;
     std::string m_desc ;
@@ -1548,7 +1552,7 @@ namespace LoKi
       : FunB   (      ) 
       , m_cut  ( cut  ) 
       , m_fun1 ( LoKi::Constant<TYPE>( val1 )  )
-      , m_fun2 ( fun3 ) 
+      , m_fun2 ( fun2 ) 
     {};
     
     /** constructor from predicate and 2 constants 
@@ -1724,10 +1728,10 @@ namespace LoKi
     virtual  EqualToValue* clone() const { return new EqualToValue(*this); }
     /// MANDATORY: the only one essential method :
     virtual  result_type operator() ( argument a ) const
-    { return value() == fun( a )  ; }
+    { return this->value() == this->fun( a )  ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << "(" << fun() << "==" << value() << ")" ; }
+    { return s << "(" << this->fun() << "==" << this->value() << ")" ; }
   private:
     /// The default constructor is disabled 
     EqualToValue();

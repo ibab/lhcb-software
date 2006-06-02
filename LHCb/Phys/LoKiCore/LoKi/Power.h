@@ -1,8 +1,11 @@
-// $Id: Power.h,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Power.h,v 1.4 2006-06-02 17:03:12 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
@@ -79,7 +82,7 @@ namespace LoKi
       // evaluate the result
       if ( 0 <  m_val ) { return LoKi::cpower ( value ,  m_val ) ; }
       if ( 0 == value ) 
-      { Error( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
+      { this->Error( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
       //
       return LoKi::cpower ( 1.0/value , -m_val ) ; 
     };

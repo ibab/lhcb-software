@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.21 2006-05-26 10:17:16 cattanem Exp $ 
+! $Id: release.notes,v 1.22 2006-06-02 17:03:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-02 - Vanya BELYAEV
+ - many minor fixex for new compiler (gcc3.4.5)
+   and some of them has real sence! (bugs have been detected nad fixed)
 
 !=========================== LoKiCore v1r5 2006-05-26 =========================
 ! 2006-05-26 - Vanya BELYAEV
@@ -148,6 +152,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.21  2006/05/26 10:17:16  cattanem
+! v1r5
+!
 ! Revision 1.20  2006/05/26 07:07:04  ibelyaev
 !  important bug fix in LoKi::Interface
 !
