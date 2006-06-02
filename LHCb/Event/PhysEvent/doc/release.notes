@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.100 2006-06-02 15:30:24 jpalac Exp $
+! $Id: release.notes,v 1.101 2006-06-02 16:38:38 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
@@ -7,6 +7,8 @@
   - src/Particle.cpp: 
     . Fix copy constructor and assignment operator to copy vector of daughters,
       and SmartRefs to end vertex and protoparticle.
+  - xml/Vertex.xml, src/Vertex.cpp
+    . Fix copy constructor. Add assignment operator. Inline clone() method.
 
 !======================= PhysEvent v9r5 2006-05-31 ==========================
 ! 2006-05-31 - Juan PALACIOS

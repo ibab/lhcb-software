@@ -67,7 +67,7 @@
         const="TRUE"
       >
        <code>
-  return new Particle(*this);
+          return new Particle(*this);
        </code>
        </method>
        <method

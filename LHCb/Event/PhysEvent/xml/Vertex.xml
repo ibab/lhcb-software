@@ -67,12 +67,26 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
 	 return;
 	</code>
        </constructor>
+
        <method
         name="clone"
         desc="Clone vertex"
-        type="Vertex*"
+        type="LHCb::Vertex*"
         const="TRUE"
-       />
+       >
+       <code>
+          return new Vertex(*this);
+       </code>
+       </method>
+
+       <method
+        desc="Assignment operator"
+        name="operator="
+        type="LHCb::Vertex&amp;"
+       >
+       <arg name="rhs" type="Vertex" const='TRUE'/>
+       </method>
+
        <method
         name="isPrimary"
         desc="is a primary vertex ?"

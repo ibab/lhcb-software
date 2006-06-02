@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.7 2006-01-17 10:13:29 pkoppenb Exp $
+// $Id: Vertex.cpp,v 1.8 2006-06-02 16:38:38 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -19,30 +19,34 @@
 // Copy constructor
 //=============================================================================
 LHCb::Vertex::Vertex(const LHCb::Vertex& vert)
-  : KeyedObject<int>()
-  , m_position( vert.position() )
-  , m_covMatrix( vert.covMatrix() )
-  , m_chi2( vert.chi2() )
-  , m_nDoF( vert.nDoF() )
-  , m_technique ( vert.technique() )
-  , m_extraInfo( vert.extraInfo() )
-  , m_outgoingParticles( vert.outgoingParticles() )  
+  : 
+  KeyedObject<int>(),
+  m_position( vert.m_position ),
+  m_covMatrix( vert.m_covMatrix ),
+  m_chi2( vert.m_chi2 ),
+  m_nDoF( vert.m_nDoF ),
+  m_technique ( vert.m_technique ),
+  m_extraInfo( vert.m_extraInfo ),
+  m_outgoingParticles( vert.m_outgoingParticles )  
 {
+}
+//=============================================================================
+// Assignment operator
+//=============================================================================
+LHCb::Vertex& LHCb::Vertex::operator=(const LHCb::Vertex& rhs) {
+
+  // protect against self assignement
+  if( this != &rhs ) {
+    m_position          = rhs.m_position;
+    m_covMatrix         = rhs.m_covMatrix;
+    m_chi2              = rhs.m_chi2;
+    m_nDoF              = rhs.m_nDoF;
+    m_technique         = rhs.m_technique;
+    m_extraInfo         = rhs.m_extraInfo;
+    m_outgoingParticles = rhs.m_outgoingParticles;
+    
+  }
+  return *this;
 }
 
 //=============================================================================
-// Clone 
-//=============================================================================
-LHCb::Vertex* LHCb::Vertex::clone() const
-{
-//    Vertex* newVtx = new Vertex(*this);
-//    // clone the end particles
-//    SmartRefVector<Particle>::const_iterator ip = vert.outgoingParticles().begin();
-//    while( ip != vert.outgoingParticles().end() ) {
-//      m_outgoingParticles.push_back((*ip)->clone());
-//      ip++;
-//    }  
-//    return newVtx;
-  return new LHCb::Vertex(*this);
-}
-

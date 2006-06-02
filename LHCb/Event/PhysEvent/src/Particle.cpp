@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.20 2006-06-02 15:30:24 jpalac Exp $
+// $Id: Particle.cpp,v 1.21 2006-06-02 16:38:38 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -23,18 +23,18 @@
 LHCb::Particle::Particle(const LHCb::Particle& part)
   : 
   KeyedObject<int>(),
-  m_particleID( part.particleID() ),
-  m_measuredMass( part.measuredMass() ),
-  m_measuredMassErr( part.measuredMassErr() ),
-  m_momentum( part.momentum() ),
-  m_referencePoint( part.referencePoint() ),
-  m_momCovMatrix( part.momCovMatrix() ),
-  m_posCovMatrix( part.posCovMatrix() ),
-  m_posMomCovMatrix( part.posMomCovMatrix() ),
-  m_extraInfo( part.extraInfo() ),
-  m_endVertex( part.endVertex() ),
-  m_proto(part.proto() ),
-  m_daughters( part.daughters() )
+  m_particleID( part.m_particleID ),
+  m_measuredMass( part.m_measuredMass ),
+  m_measuredMassErr( part.m_measuredMassErr ),
+  m_momentum( part.m_momentum ),
+  m_referencePoint( part.m_referencePoint ),
+  m_momCovMatrix( part.m_momCovMatrix ),
+  m_posCovMatrix( part.m_posCovMatrix ),
+  m_posMomCovMatrix( part.m_posMomCovMatrix ),
+  m_extraInfo( part.m_extraInfo ),
+  m_endVertex( part.m_endVertex ),
+  m_proto(part.m_proto ),
+  m_daughters( part.m_daughters )
 {
 }
 
@@ -45,18 +45,18 @@ LHCb::Particle& LHCb::Particle::operator=(const LHCb::Particle& orig) {
   
   // protect against self assignement
   if( this != &orig ) {
-    m_particleID      = orig.particleID();
-    m_momentum        = orig.momentum();
-    m_referencePoint  = orig.referencePoint();
-    m_measuredMass    = orig.measuredMass();
-    m_measuredMassErr = orig.measuredMassErr();  
-    m_posCovMatrix    = orig.posCovMatrix();
-    m_momCovMatrix    = orig.momCovMatrix();
-    m_posMomCovMatrix = orig.posMomCovMatrix();
-    m_extraInfo       = orig.extraInfo();
-    m_endVertex       = orig.endVertex();
-    m_proto           = orig.proto();
-    m_daughters       = orig.daughters();
+    m_particleID      = orig.m_particleID;
+    m_momentum        = orig.m_momentum;
+    m_referencePoint  = orig.m_referencePoint;
+    m_measuredMass    = orig.m_measuredMass;
+    m_measuredMassErr = orig.m_measuredMassErr;  
+    m_posCovMatrix    = orig.m_posCovMatrix;
+    m_momCovMatrix    = orig.m_momCovMatrix;
+    m_posMomCovMatrix = orig.m_posMomCovMatrix;
+    m_extraInfo       = orig.m_extraInfo;
+    m_endVertex       = orig.m_endVertex;
+    m_proto           = orig.m_proto;
+    m_daughters       = orig.m_daughters;
     
   }
   return *this;
