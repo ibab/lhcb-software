@@ -41,6 +41,7 @@ Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
 Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
 Bs2JpsiPhi.DaughterFilter.Selections = { " K+ : PVIPFilterCriterion"  }; // Refine Kaons
 Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1 ; // 1 sigma IP for kaons from Phi
+Bs2JpsiPhi.DaughterFilter.FilterByDescendants = true ; /// to get the 1 sigma cut
 Bs2JpsiPhi.Window =  100 * MeV; // MeV
 Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion,
                                                 VtxFilterCriterion,
@@ -58,9 +59,9 @@ Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos1.root";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = 50 ;
 
 /*
 //
@@ -78,4 +79,5 @@ Bs2JpsiPhi.OutputLevel = 3 ;
 
 TutorialSeq.IgnoreFilterPassed = false ; // get all Phis
 */
+
 #include "$ANALYSISROOT/options/JpsiKs.opts"

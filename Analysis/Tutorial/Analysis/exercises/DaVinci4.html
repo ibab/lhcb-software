@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-Bologna Software Training</title>
+    
+    
+    <link rel="stylesheet" media="screen" type="text/css" 
+      href="http://www.hep.phy.cam.ac.uk/lhcb/LHCbSoftTraining/documents/lhcb-cambridge-blue.css">
+
+      <link rel="stylesheet" media="print" type="text/css" 
+	href="http://www.hep.phy.cam.ac.uk/lhcb/LHCbSoftTraining/documents/lhcb-cambridge-print.css"></head><body>
+
+  <body>
+
+    <table id="titlebar">
+      <tbody>
+	<tr style="vertical-align: bottom;">
+	  <td style="padding-bottom: 15px;">
+	    <h1>LHCb Software Training: DaVinci</h1></td>
+	  <td id="lhcblogo" style="text-align: right;">
+	    <a href="http://cern.ch/lhcb">
+	      <img src="http://lhcb.web.cern.ch/lhcb/lhcblogo.gif"></a></td>
+	</tr>
+      </tbody>
+    </table>
+    
+    <div id="content">
+      
+      <h1><span lang="en-gb">Exercises linked to DaVinci session 3</span></h1>
+      
+      <p>
+	The purpose of these exercises is to allow you to write a complete
+	though simple selection algorithms for a typical decay: Bs->J/psiPhi.
+	Now that we have the J/psi and the Phi, let's do the Bs using options.
+
+		<h2>1. Add a Bs maker</h2>
+		<ul>
+			<li>Add a <code>MakeResonances</code> instance to your
+			sequence. Let's call it <code>Bs2psiPhi</code>.</li>
+			<li>Feed the <code>PhysDesktop</code> with
+			your J/psi and Phi candidates.</li>
+			<li>Define the Decay Descriptor</li>
+<code class="display">Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)";</code>
+			<li>Define the mass window.</li>
+<code class="display">Bs2JpsiPhi.Window =  100 * MeV;</code>
+			<li>Add a vertex cut for the Bs</li>
+<code class="display">Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : VtxFilterCriterion"};</code>
+			<li>And configure it</li>
+<code class="display">Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30 ; </code>
+			<p>With this we are already at the same level 
+			as with our C++ code for the J/psi!</p>
+			<li>Now you can add an impact paramter cut (the Bs should be 
+			pointing to the IP!) and a flight distance cut.</li>
+			<li>You could also cut on the daughters.
+			For instance: Cut on the IP of the kaons in the Phi.
+			Remember how to do that?</li>
+			<li>Now let's add some plots</li>
+<code class="display">Bs2JpsiPhi.HistoProduce=true;
+Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
+Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
+Bs2JpsiPhi.DaughterPlotsPath= "Bin" ;
+Bs2JpsiPhi.MotherPlotsPath= "Bout" ;
+</code>
+			<p>That's all!</p>
+	        </ul>
+		<h2>2. Run</h2>
+		<ul>
+			<li>Run it.</li>
+			<p>Unfortunately you will not select any Bs
+			because of a bug found last week in 
+			<code>LHCb::Particle</code>.</p>
+			<li>To get it running properly you need DaVinci 
+			v16r2 that is not yet released, but already available
+			on the development area. Here's the recipe:</li>
+<code class="display">setenv DaVinci_release_area $LHCBDEV
+setenv Phys_release_area $LHCBDEV
+DaVinciEnv v16r2
+cd $HOME/cmtuser
+getpack Phys/DaVinci head
+cd Phys/DaVinci/v16r2/cmt
+cmt br make
+source setup.csh
+cd $ANLYSISROOT
+</code>
+                <p>The two first lines tell cmt to get the DaVinci and 
+		Phys code on the development area instead of the
+		release area. Have a look at the default values of these
+		environment variables.</p>
+		<p>Get getpack the head revision of the package 
+		Phys/DaVinci in this case. This is usually left to 
+		developpers.</p>	
+		<p>All the rest you should understand.</p>	
+		<p>Remember, you are the DC06-Guinea-pigs!</p>	
+	        </ul>
+
+</p>
+<hr>
+<p><span lang="en-gb">Last modified by P. Koppenburg, June 2 2006
+</div>
+</body></html>

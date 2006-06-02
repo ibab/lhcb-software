@@ -1,4 +1,20 @@
+//-- GAUDI data cards generated on Jun 1, 2006 11:26:55 AM
+//-- For Event Type = 11144100 / Data type = SIM 1
+//--     Configuration = DC06 - v1-lumi2
+//--     SIM 1 datasets produced by Gauss - v24r5
+//--     Database version = ANY
+//--     Cards content = physical
+//--     
+//-- Datasets replicated at CERN
+//-- 6 dataset(s) - NbEvents = 2981
+//-- 
 EventSelector.Input   = {
-"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/11144100.500ev.17May.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000007_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000025_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000039_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000040_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000044_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001305/SIM/00001305_00000046_1.sim' TYP='POOL_ROOTTREE' OPT='READ'" 
 };
-
+//-- End of Data cards 
+//

@@ -36,7 +36,7 @@ Phi2KK.OutputLevel = 3 ;
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos1.root";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 ApplicationMgr.EvtMax = 500 ;
 
