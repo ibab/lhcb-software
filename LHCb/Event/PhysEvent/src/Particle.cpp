@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.18 2006-05-31 14:43:24 jpalac Exp $
+// $Id: Particle.cpp,v 1.19 2006-06-02 10:45:58 jpalac Exp $
 // Include files 
 
 // STD and STL
@@ -21,16 +21,18 @@
 // Copy constructor
 //=============================================================================
 LHCb::Particle::Particle(const LHCb::Particle& part)
-  : KeyedObject<int>()
-  , m_particleID( part.particleID() )
-  , m_measuredMass( part.measuredMass() )
-  , m_measuredMassErr( part.measuredMassErr() )
-  , m_momentum( part.momentum() )
-  , m_referencePoint( part.referencePoint() )
-  , m_momCovMatrix( part.momCovMatrix() )
-  , m_posCovMatrix( part.posCovMatrix() )
-  , m_posMomCovMatrix( part.posMomCovMatrix() )
-  , m_extraInfo( part.extraInfo() )
+  : 
+  KeyedObject<int>(),
+  m_particleID( part.particleID() ),
+  m_measuredMass( part.measuredMass() ),
+  m_measuredMassErr( part.measuredMassErr() ),
+  m_momentum( part.momentum() ),
+  m_referencePoint( part.referencePoint() ),
+  m_momCovMatrix( part.momCovMatrix() ),
+  m_posCovMatrix( part.posCovMatrix() ),
+  m_posMomCovMatrix( part.posMomCovMatrix() ),
+  m_extraInfo( part.extraInfo() ),
+  m_daughters( part.daughters() )
 {
 }
 
@@ -49,6 +51,7 @@ LHCb::Particle& LHCb::Particle::operator=(const LHCb::Particle& orig) {
     m_posCovMatrix = orig.posCovMatrix();
     m_momCovMatrix = orig.momCovMatrix();
     m_posMomCovMatrix = orig.posMomCovMatrix();
+    m_daughters = orig.daughters();
   }
   return *this;
 }

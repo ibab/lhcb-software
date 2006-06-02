@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.98 2006-06-01 06:26:56 cattanem Exp $
+! $Id: release.notes,v 1.99 2006-06-02 10:45:58 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
+
+
+! 2006-06-02 - Juan PALACIOS
+  - src/Particle.cpp: 
+    . Fix copy constructor and assignment operator to copy vector of daughters.
 
 
 !======================= PhysEvent v9r5 2006-05-31 ==========================
