@@ -1,11 +1,11 @@
-// $Id: MCParticleMaker.h,v 1.11 2006-06-02 11:07:39 jpalac Exp $
+// $Id: MCParticleMakerBase.h,v 1.1 2006-06-02 11:07:39 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+// CVS tag $NAme:$, version $Revision: 1.1 $
 // ============================================================================
 // $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef MCPARTICLEMAKER_H 
-#define MCPARTICLEMAKER_H 1
+#ifndef MCPARTICLEMAKERBASE_H 
+#define MCPARTICLEMAKERBASE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,27 +17,13 @@
 // ============================================================================
 // from Gaudi
 // ============================================================================
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 // ============================================================================
-// from DaVinciTools
-// ============================================================================
-#include "Kernel/IParticleMaker.h"
-#include "Kernel/IMCDecayFinder.h"
-#include "DaVinciMCTools/IDebugTool.h"
-// ============================================================================
-// local 
-// ============================================================================
-#include "MCParticleMakerBase.h"
-// Forward declarations
-class IParticlePropertySvc;
-class IRndmGenSvc;
-class IMCDecayFinder;
-class IMCReconstructible ;
 
-class ProtoParticle;
-
-/** @class MCParticleMaker MCParticleMaker.h
+/** @class MCParticleMakerBase MCParticleMakerBase.h
+ *
  * This tool fills the particle class with information from MCParticles and places it in the Transient Event Store. 
  * 
  * It allows several utilities:
@@ -105,65 +91,76 @@ class ProtoParticle;
  *   @author Gerhard Raven with minor contributions from G.Balbi & S.Vecchi
  *   @date   2002-10-08
  * 
- **/
-
-
-class MCParticleMaker 
-  : public MCParticleMakerBase
-  , public virtual IParticleMaker 
+ */
+class MCParticleMakerBase : public GaudiTool
 {
 public:
-  /// Standard constructor
-  MCParticleMaker( const std::string& type, 
-                   const std::string& name,
-                   const IInterface* parent);
-
-  virtual ~MCParticleMaker( ); ///< Destructor
-
   /// Initialize
-  StatusCode initialize();
-  
-  /// Functional method to make particles.
-  virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts );
-  
- 
+  virtual StatusCode initialize() ;
+  /// Finalize
+  virtual StatusCode finalize  () ;
 protected:
-  /// The Particle property service.
-  IParticlePropertySvc* ppSvc() const;
-  std::vector<const LHCb::MCParticle*> getFinalState(const LHCb::MCParticle& m);
-  
-private:
-  
-  std::vector<std::string>  m_particleNames; ///< Names of Particles to make
-  std::vector< int > m_ids;                  ///< PDGid of Particles to make
-  std::string m_input;
-  bool    m_onlyDecayProducts;               ///< flag to select only specific decay products 
-  bool    m_onlyStableDecayProducts;        ///<flag to select only STABLE products of a given Decay Channel(defined in JobOption)
-  bool    m_onlyReconstructible;             ///< flag to use only Reconstructible MCparticles
-  bool    m_onlyReconstructed;               ///< flag to use only Reconstruced MCparticles
-  bool    m_useReconstructedCovariance;      ///< flag to use only Reconstructed Covariance matrix
-
-  IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
-  IMCDecayFinder* m_pMCDecFinder;
-  
   /// internal method
-  StatusCode fillParticle( const LHCb::MCParticle& mc, 
-                           LHCb::Particle& particle,
-                           const Gaudi::SymMatrix7x7& cov);  ///< fill Particle according generation criteria
-  bool reconstructible(const LHCb::MCParticle& icand) const; 
-  const LHCb::Particle *reconstructed(const LHCb::MCParticle& icand) const;
-  StatusCode fetchCovariance(const LHCb::Particle& p , Gaudi::SymMatrix7x7 &c);
-  
-  IMCReconstructible* m_reco ; ///< Reconstructible?
-  bool m_requireReco ; ///< Require reconstructible  
-  
-  //====================================================================================
-  
+  StatusCode fillParticle
+  ( const Gaudi::LorentzVector&  mom      ,
+    const Gaudi::XYZPoint&       point    ,
+    const LHCb::ParticleID&      pid      ,
+    const Gaudi::SymMatrix7x7&   cov      , 
+    LHCb::Particle&              particle ) ;
+  /// Generate covariance according realistic parametrization  
+  StatusCode generateCovariance 
+  ( const Gaudi::LorentzVector&  momentum ,
+    Gaudi::SymMatrix7x7&         ccc      ) ;
+  /// get correlation matrix 
+  inline const Gaudi::SymMatrix6x6& rho() const { return m_rho ; }
+public:
+  /// Standard constructor
+  MCParticleMakerBase
+  ( const std::string& type, 
+    const std::string& name,
+    const IInterface* parent);
+  /// protected and virtual destructor 
+  virtual ~MCParticleMakerBase(){}; ///< Destructor
+public:
+  enum 
+    { 
+      _X  = 0 , 
+      _Y  = 1 , 
+      _Z  = 2 , 
+      _TX = 3 , 
+      _TY = 4 , 
+      _P  = 5 
+    } ;
+private:
+  // default constructor is disabled 
+  MCParticleMakerBase () ;
+  // copy constructor is disabled 
+  MCParticleMakerBase ( const MCParticleMakerBase& ) ;
+  // assignement operator is disabled 
+  MCParticleMakerBase& operator=( const MCParticleMakerBase& ) ;
+private:
+  bool    m_smearParticle; ///< flag to Smear Particles
+  bool    m_smearATPoT;    ///< flag to smeat particle at PointOnTrack (minimum distance to the beam line)
+  double  m_ipErrorC0;     ///< C0 constant for IP error parametrization 
+  double  m_ipErrorC1;     ///< C1 constant for IP error parametrization 
+  double  m_ipErrorZ;      ///< Error on Z 
+  double  m_slopeError;     ///< constant for Slope error parametrization
+  double  m_momError;       ///< constant for momentum error parametrization
+  //
+  Gaudi::SymMatrix6x6 m_rho;
+  //
+  std::vector< double >  m_covSFsC0, m_covSFsC1; ///< vector for SF parametrization of Scaling Factors on errors 1./(C0+C1*p[GeV])
+  std::vector< double >  m_BIASsC0,  m_BIASsC1; ///< vector for BIAS parametrization q*(C0+C1*p[GeV])
+  std::vector< double > m_dualGaussSF; ///<vector of Second Gaussian relative sigma (sigma2/sigma1) FOR Double Gaussian Generation
+  std::vector< double > m_dualGaussWeight;      ///<  vector of Second Gaussian Weights FOR Double Gaussian Generation
+  //
+  Rndm::Numbers m_ranGauss;   
+  Rndm::Numbers m_ranFlat;  
 };
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // MCPARTICLEMAKER_H
+#endif // MCPARTICLEMAKERBASE_H
 // ============================================================================
 

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.112 2006-06-01 08:34:28 jpalac Exp $
+! $Id: release.notes,v 1.113 2006-06-02 11:07:39 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 3006-06-02 - Juan PALACIOS for Ivan BELYAEV
+  -src
+  . Re-structuring of MCParticleMaker. Now MCParticleMaker derived from
+    new base class MCParticleMakerBase.
 
 ! 2006-06-01 - Juan PALACIOS
     -src/MCParticleMaker.cpp: Use new include path and namespace for Symmertise()
