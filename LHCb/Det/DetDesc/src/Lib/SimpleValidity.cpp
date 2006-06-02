@@ -1,4 +1,4 @@
-// $Id: SimpleValidity.cpp,v 1.7 2006-06-02 06:59:02 cattanem Exp $
+// $Id: SimpleValidity.cpp,v 1.8 2006-06-02 14:33:10 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -47,8 +47,7 @@ SimpleValidity::SimpleValidity( const Gaudi::Time& since ,
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const IValidity& copy )
-  : IValidity()
-  , m_since ( copy.validSince() ) 
+  : m_since ( copy.validSince() ) 
   , m_till  ( copy.validTill() ) 
 {}
 
@@ -58,7 +57,8 @@ SimpleValidity::SimpleValidity( const IValidity& copy )
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const SimpleValidity& copy )
-  : m_since ( copy.m_since )
+  : IValidity()
+  , m_since ( copy.m_since )
   , m_till  ( copy.m_till  )
 {}
 
