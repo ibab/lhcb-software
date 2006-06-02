@@ -183,7 +183,7 @@ namespace TrackFunctor
     const std::vector<LHCb::State*>& allstates = track.states();
     std::vector<LHCb::State*>::iterator iter = 
       std::min_element( allstates.begin(), allstates.end(), t );
-    if ( iter == m_states.end() )
+    if ( iter == allstates.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
     return *(*iter);
@@ -198,7 +198,7 @@ namespace TrackFunctor
     const std::vector<LHCb::State*>& allstates = track.states();
     std::vector<LHCb::State*>::const_iterator iter = 
       std::min_element( allstates.begin(), allstates.end(), t );
-    if ( iter == m_states.end() )
+    if ( iter == allstates.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
     return *(*iter);
