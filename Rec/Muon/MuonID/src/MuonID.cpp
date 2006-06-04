@@ -26,6 +26,7 @@
 // 14/12/2005 : Erica Polycarpo, Miriam Gandelman 
 //-----------------------------------------------------------------------------
 
+// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MuonID );
 
 //=============================================================================
@@ -43,8 +44,6 @@ MuonID::MuonID( const std::string& name,
   declareProperty("MuonIDLocation",
                   m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
 
-  // >>>> this is not being read correctly from the DaVinci.opts
-  // >>>> it is hardwired  later  
   // Pre-selection momentum
   declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
@@ -52,7 +51,7 @@ MuonID::MuonID( const std::string& name,
   declareProperty( "MomentumCuts", m_MomentumCuts );
 
   // function that defines the field of interest size
-  // here momentum is scaled to GeV....
+  // here momentum is scaled to Gaudi::Units::GeV....
   // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
 
   declareProperty( "XFOIParameter1", m_xfoiParam1 );
@@ -79,11 +78,12 @@ MuonID::~MuonID() {};
 //=============================================================================
 StatusCode MuonID::initialize() {
 
-  info()  << " MuonID v4r0 - New Event Model" << endreq;
+  info()  << " MuonID v4r3 - new event model" << endreq;
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
   debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endreq;
 
+  m_ntotmu=0;
   m_NStation = 0;
   m_NRegion = 0;
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
@@ -103,7 +103,6 @@ StatusCode MuonID::initialize() {
   m_regionOuterX.resize(m_NStation);
   m_regionInnerY.resize(m_NStation);
   m_regionOuterY.resize(m_NStation);
-  m_stationZ.resize(m_NStation * m_NRegion);
 
   // fill local arrays of pad sizes and region sizes
   m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
@@ -113,10 +112,11 @@ StatusCode MuonID::initialize() {
     m_regionOuterX[station] = m_mudet->getOuterX(station);
     m_regionInnerY[station] = m_mudet->getInnerY(station);
     m_regionOuterY[station] = m_mudet->getOuterY(station);
+    m_stationZ[station] = m_mudet->getStationZ(station);
     for(region = 0 ; region < m_NRegion ; region++ ){
       m_padSizeX[station * m_NRegion + region]=m_mudet->getPadSizeX(station,region);
       m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
-      m_stationZ[station * m_NRegion + region]=m_mudet->getSensAreaZ(station,region);
+
       if(m_padSizeX[station * m_NRegion + region]==0){
 	error() << "Muon Chamber Pad Size could not be retrieved !!!" <<  endreq;
         return StatusCode::FAILURE;
@@ -124,6 +124,7 @@ StatusCode MuonID::initialize() {
     }
   }
   
+  debug()  << "-Geometry information ----------------"<< endreq;       
   debug()  << "Outer X M1 = " << m_regionOuterX[0] << endreq;       
   debug()  << "Outer Y M1 = " << m_regionOuterY[0] << endreq;
   debug()  << "Outer X M5 = " << m_regionOuterX[4] << endreq;
@@ -132,7 +133,13 @@ StatusCode MuonID::initialize() {
   debug()  << "Inner Y M1 = " << m_regionInnerY[0] << endreq;
   debug()  << "Inner X M5 = " << m_regionInnerX[4] << endreq;
   debug()  << "Inner Y M5 = " << m_regionInnerY[4] << endreq;
-  
+  debug()  << "stationZ M1 = " << m_stationZ[0] << endreq;
+  debug()  << "stationZ M2 = " << m_stationZ[1] << endreq;
+  debug()  << "stationZ M3 = " << m_stationZ[2] << endreq;
+  debug()  << "stationZ M4 = " << m_stationZ[3] << endreq;
+  debug()  << "stationZ M5 = " << m_stationZ[4] << endreq;
+  debug()  << "--------------------------------------"<< endreq;       
+
   if( m_MomentumCuts.empty() || 
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
@@ -182,6 +189,7 @@ StatusCode MuonID::initialize() {
 StatusCode MuonID::execute() {
 
   debug()  << "==> Execute" << endreq;
+  m_nmu = 0;
 
   StatusCode sc = fillCoordVectors();
   if(sc.isFailure()){
@@ -189,10 +197,13 @@ StatusCode MuonID::execute() {
   }
 
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
-  debug()  << "Number of input tracks " << trTracks->size() << endreq;
+  if ( trTracks==0 ){
+    err() << " Cannot retrieve Tracks " << endreq;
+    return StatusCode::FAILURE;
+  }
+  debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endreq;
 
   LHCb::MuonPIDs * pMuids = new LHCb::MuonPIDs;
-
   LHCb::Tracks::const_iterator iTrack;
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
     // in the clone killed output we want only 
@@ -204,34 +215,39 @@ StatusCode MuonID::execute() {
       // do the track extrapolations
       const LHCb::Track* cTrack=*iTrack;
       StatusCode sc = trackExtrapolate(cTrack);
-      
+      if ( sc.isFailure() ){ 
+	warning() << " trackExtrapolate failed for track " << *iTrack << endreq;
+	continue;
+      }
+
+      // Do the complete ID, calculating IsMuon and likelihoods
       LHCb::MuonPID * pMuid = new LHCb::MuonPID;
       pMuid->setIDTrack(*iTrack);
       sc = doID(pMuid);
       if(sc.isFailure()){
-        return sc;
+	warning() << " doID failed for track " << *iTrack << endreq;
+        continue;
       }
+
       pMuids->insert( pMuid );
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
-        return sc;
+	warning() << " calcSharedHits failed for track " << *iTrack << endreq;
+        continue;
       }
 
     }
   }
 
   // Debug : muon identification event summary
-  debug()  << "Number of MuonPID objects created " << pMuids->size()
+  info()  << "Number of MuonPID objects created: " << pMuids->size()
       << endreq;
+  info()  << "Number of tracks with IsMuon = True : " << m_nmu 
+      << endreq;
+  m_ntotmu += m_nmu;
 
   // Register the MuonIDs container to the TES
-
   put(pMuids,m_MuonPIDsPath); 
-  if(sc.isFailure()){
-    err() << "TES rejected the muonPIDs into location "
-        << m_MuonPIDsPath << endreq;
-    return sc;
-  }
 
   clearCoordVectors();
 
@@ -244,6 +260,8 @@ StatusCode MuonID::execute() {
 StatusCode MuonID::finalize() {
 
   debug()  << "==> Finalize" << endreq;
+  debug()  << "==> Total number of tracks with IsMuon=1 : " << 
+                m_ntotmu << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -255,22 +273,24 @@ StatusCode MuonID::fillCoordVectors(){
 
   clearCoordVectors(); // sets up Coord vectors of vectors
 
-
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
+  if ( coords==0 ) {
+   err() << " Cannot retrieve MuonCoords " << endreq;
+   return StatusCode::FAILURE;
+  }
 
   // loop over the coords
   LHCb::MuonCoords::const_iterator iCoord;
-  for( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
+  for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
       int region = (*iCoord)->key().region();
       int station = (*iCoord)->key().station();
       double x,dx,y,dy,z,dz;
       LHCb::MuonTileID tile=(*iCoord)->key();
       StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-      if(sc.isFailure()){
-        err() << "Failed to get x,y,z of tile " << (*iCoord)->key()
-            << endreq;
-        return sc;
+      if (sc.isFailure()){
+        warning() << "Failed to get x,y,z of tile " << tile << endreq; 
+        continue; 
       }
       m_coordPos[station*m_NRegion+region].
       push_back(coordExtent_(x,dx,y,dy,*iCoord));
@@ -298,6 +318,7 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   bool passed;
   StatusCode sc = preSelection( pMuid,passed );
   if(sc.isFailure()){
+    warning() <<" preSelection failed to MuonPID object" << pMuid << endreq;
     return sc;
   }
 
@@ -310,6 +331,7 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   // find the coordinates in the fields of interest
   sc = setCoords( pMuid );
   if(sc.isFailure()){
+    warning() <<" setCoords failed to MuonPID object" << pMuid << endreq;
     return sc;
   }
 
@@ -353,11 +375,14 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   // calculate Muon DLL
   sc = calcMuonLL( pMuid );
   if(sc.isFailure()){
-    return sc;
+    warning() << " calcMuonLL failed to MuonPID object " << pMuid << endreq;
   }
 
   // Initialize the number of shared hits to zero
   pMuid->setNShared(0);
+
+  //increment number of IsMuon=true tracks for monitoring
+  if(pMuid->IsMuon()) m_nmu++;
 
   debug()  << "IsMuon = " << pMuid->IsMuon() 
 	<< " bin = "   << momentumBin <<" " << " p = " << m_Momentum << endreq; 
@@ -410,15 +435,16 @@ float MuonID::calcMuProb(LHCb::MuonPID * pMuid){
 StatusCode MuonID::calcMuonLL(LHCb::MuonPID * muonid){
 
   if ( !muonid->IsMuon() ) {
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
 
   const LHCb::Track* pTrack = muonid->idTrack();
   // do the track extrapolations
   StatusCode sc = trackExtrapolate(pTrack);
-
   if (!sc){
-    err() << "stopped in trackExtrapolate"  << endreq;
+    warning() << "trackExtrapolate fails for track" << pTrack << endreq;
+    muonid->setMuonLLMu(-10000.);
+    muonid->setMuonLLBg(-10000.);
     return StatusCode::FAILURE;
   }
 
@@ -432,10 +458,9 @@ StatusCode MuonID::calcMuonLL(LHCb::MuonPID * muonid){
     LHCb::MuonTileID tile=(*iCoord)->key();
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-         
     if (sc.isFailure()){
-      err() << "Failed to get x,y,z of tile " << (*iCoord)->key() << endreq;
-      return sc;
+      warning() << "Failed to get x,y,z of tile " << tile << endreq; 
+      continue; 
     }
 
     int station = (*iCoord)->key().station();
@@ -466,10 +491,14 @@ StatusCode MuonID::calcMuonLL(LHCb::MuonPID * muonid){
 //=============================================================================
 StatusCode MuonID::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pMuids ) {
 
+  // if not a muon candidate do nothing
+  if ( !muonid->IsMuon() ) return StatusCode::SUCCESS;
+    
   // calculate the distance from the hit to the extrapolated position
   StatusCode sc = calcDist(muonid);
   if( sc.isFailure() ) {
-    fatal() << " failed in calcDist 1" << endreq;
+    warning() << " calcDist 1 failure" << endreq;
+    muonid->setNShared(100);
     return sc;
   }
 
@@ -489,8 +518,8 @@ StatusCode MuonID::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pMuid
       // get dist for this muonID
       StatusCode sc = calcDist(*iMuon);
       if( sc.isFailure() ) {
-        fatal() << " failed in calcDist 2 " << endreq;
-        return sc;
+	warning() << " calcDist 2 failure" << endreq;
+	continue;
       }
 
       double dist2 = m_dist;
@@ -543,14 +572,13 @@ StatusCode MuonID::calcDist( LHCb::MuonPID* muonid ){
   m_dist = 0.;
 
   if ( !muonid->IsMuon() ) {
-    err() << "stopped: not a muon "  << endreq;
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
   const LHCb::Track* pTrack = muonid->idTrack();
   // do the track extrapolations
   StatusCode sc = trackExtrapolate(pTrack);
   if(!sc){
-    err() << "stopped in trackExtrapolate"  << endreq;
+    warning() << " trackExtrapolate fails for track " <<  pTrack << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -566,8 +594,8 @@ StatusCode MuonID::calcDist( LHCb::MuonPID* muonid ){
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if(sc.isFailure()){
-      err() << "Failed to get x,y,z of tile " << (*iCoord)->key() << endreq;
-      return sc;
+      warning()<< "Failed to get x,y,z of tile " << tile << endreq; 
+      continue; 
     }
     int station = (*iCoord)->key().station();
     if(mCoordX[station] == 0) {
@@ -625,6 +653,10 @@ StatusCode MuonID::preSelection(LHCb::MuonPID * pMuid, bool &passed){
   }
   pMuid->setInAcceptance(1);
   // in first and last station acceptance
+  debug()  << "trackX0 = " << m_trackX[0] << endreq;
+  debug()  << "trackX4 = " << m_trackX[4] << endreq;
+  debug()  << "trackY0 = " << m_trackY[0] << endreq;
+  debug()  << "trackY4 = " << m_trackY[4] << endreq;
   if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[0] && 
           fabs(m_trackY[0]) <  m_regionOuterY[0] )  ||  
        ! (fabs(m_trackX[m_NStation-1]) < 
@@ -637,7 +669,7 @@ StatusCode MuonID::preSelection(LHCb::MuonPID * pMuid, bool &passed){
     passed = false;
   }
 
-  // >>>>>>  the inner values were coming with bad values 
+  // Inner acceptance
   if(   (fabs(m_trackX[0]) <  m_regionInnerX[0] && 
             fabs(m_trackY[0]) <  m_regionInnerY[0] )  ||  
           (fabs(m_trackX[m_NStation-1]) < 
@@ -645,12 +677,6 @@ StatusCode MuonID::preSelection(LHCb::MuonPID * pMuid, bool &passed){
             fabs(m_trackY[m_NStation-1]) <  
             m_regionInnerY[m_NStation-1] ) ) {
   
-  /* if(   (fabs(m_trackX[0]) <  240.0 && 
-          fabs(m_trackY[0]) < 200.0 )  ||  
-        (fabs(m_trackX[m_NStation-1]) < 376.0 &&
-          fabs(m_trackY[m_NStation-1]) < 313.0 ) 
-       ) { 
-  */
     // inside M1 - M5 chamber hole
     pMuid->setInAcceptance(0);
     passed = false;

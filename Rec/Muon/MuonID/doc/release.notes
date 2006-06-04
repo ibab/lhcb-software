@@ -1,5 +1,13 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
+!========================== MuonID v4r3 2006-05-30 ===================
+! 2006-05-30 - Erica Polycarpo
+ - Better handling of errors
+ - Correct z position of Muon stations
+
+!========================== MuonID v4r2 2006-05-17 ===================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
 
 !========================== MuonID v4r2 2006-05-17 ===================
 ! 2006-05-17 - Marco Cattaneo

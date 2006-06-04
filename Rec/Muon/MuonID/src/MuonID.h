@@ -121,6 +121,9 @@ private:
   std::vector< double >     m_yfoiParam3;
   std::vector< double >     m_yfoiParam4;
 
+  // Number of tracks with IsMuon = True (monitoring)
+  int m_nmu;
+  int m_ntotmu;
   // Number of stations
   int m_NStation;
   // Number of regions
@@ -143,7 +146,8 @@ private:
   std::vector<double> m_regionOuterY; // outer edge in abs(y) 
   
   // These are indexed [station]
-  std::vector<double> m_stationZ; // station position
+  //std::vector<double> m_stationZ; // station position
+  double m_stationZ[5]; // station position
 
   // local track parameters: momentum and linear extrapolation to each station
   double m_dist;

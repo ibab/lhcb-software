@@ -13,7 +13,7 @@
 // 3GeV -> 6GeV : station M2.and.M3, 6->10 GeV M2.and.M3.and.M4.or.M5
 // , >10GeV M2.and.M3.and.M4.and.M5
 // MuonID preselection momentum (MeV/c)
-MuonID.PreSelMomentum = { 3000. };
+MuonID.PreSelMomentum = 3000.;
 // MuonID momentum cut ranges (MeV/c)
 MuonID.MomentumCuts = { 6000. , 10000. };
 

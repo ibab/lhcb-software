@@ -1,5 +1,5 @@
 package MuonID
-version v4r2
+version v4r3
 
 branches src cmt doc options
 
@@ -10,7 +10,7 @@ include_path none
 use GaudiAlg           v*
 use RecEvent           v* Event
 use TrackEvent         v* Event
-use MuonDet            v* Det
+use MuonDet            v5r4 Det
 use ROOT               v* LCG_Interfaces
 
 
