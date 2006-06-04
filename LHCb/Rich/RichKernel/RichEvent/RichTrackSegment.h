@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.5 2006-05-05 10:25:41 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.6 2006-06-04 16:57:24 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -154,7 +154,7 @@ namespace LHCb
     /// Two state, rich and radiator constructor. Uses the average of the entry and exit
     /// momenta and points as the middle (best) point
     /// Uses supplied momentum vectors at entrance and exit
-    RichTrackSegment( const UseAllStateVectors tag,  ///< Tag to indentify this constructor
+    RichTrackSegment( const UseAllStateVectors,      ///< Tag to indentify this constructor
                       const Gaudi::XYZPoint& entrP,  ///< The entry point to the radiator
                       const Gaudi::XYZVector& entrV, ///< The momentum vector at entry to the radiator
                       const Gaudi::XYZPoint& exitP,  ///< The exit point from the radiator
@@ -184,7 +184,7 @@ namespace LHCb
     /// Two state, rich and radiator constructor. Uses the average of the entry and exit
     /// momenta and points as the middle (best) point
     /// Uses the vector between the entry and exit points as the track direction
-    RichTrackSegment( const UseChordBetweenStates tag, ///< Tag to indentify this constructor
+    RichTrackSegment( const UseChordBetweenStates,     ///< Tag to indentify this constructor
                       const Gaudi::XYZPoint& entrP,    ///< The entry point to the radiator
                       const Gaudi::XYZVector& entrV,   ///< The momentum vector at entry to the radiator
                       const Gaudi::XYZPoint& exitP,    ///< The exit point from the radiator
@@ -228,7 +228,7 @@ namespace LHCb
 
     /// Three state, rich and radiator constructor
     /// Uses supplied momentum vectors at entrance and exit points
-    RichTrackSegment( const UseAllStateVectors tag,  ///< Tag to indentify this constructor
+    RichTrackSegment( const UseAllStateVectors,      ///< Tag to indentify this constructor
                       const Gaudi::XYZPoint& entrP,  ///< The entry point to the radiator
                       const Gaudi::XYZVector& entrV, ///< The momentum vector at entry to the radiator
                       const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
