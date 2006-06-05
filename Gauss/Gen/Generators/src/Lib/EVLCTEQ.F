@@ -216,7 +216,15 @@
 	ishow = 0		!set to no display
 	if(ientry .eq. 1) then
 	   ishow = 1		!turn display on
+           DO I=0, MXX
+             xvsave( I ) = 0.D0
+           ENDDO
+           DO I=0, MXQ
+             qvsave( I ) = 0.D0
+             TVSAVE( I ) = 0.D0 
+           ENDDO
 	endif
+
    11 IRET = 0
       IF (IHDN .LE. 4) THEN
         MXVAL = 2
@@ -921,7 +929,7 @@ c enforce threshold early to improve speed...
 	ii = iabs(IPRTN)
 	if(ii .ne. 0) then
 	   if(QQ .lt. VALQMS(ii) ) then
-	      pardis = 0.d0
+	      CtLhPARDIS = 0.d0
 	      return
 	   endif
 	endif
