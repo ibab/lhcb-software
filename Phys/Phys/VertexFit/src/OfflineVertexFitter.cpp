@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.4 2006-05-26 14:19:11 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.5 2006-06-05 15:21:04 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,24 @@ using namespace Gaudi::Units;
 // Declaration of the Tool Factory
 static const  ToolFactory<OfflineVertexFitter>          s_factory ;
 const        IToolFactory& OfflineVertexFitterFactory = s_factory ; 
+
+// ===========================================================================
+namespace PhotonParametersLocal
+{
+  class IsHypo : public std::unary_function<const CaloHypo*,bool> {
+    public:
+      /// constructor
+      IsHypo( CaloHypotheses::Hypothesis hypo ): m_hypo ( hypo ) {};
+      /// functor interface
+      bool operator() ( const CaloHypo* hypo ) const
+      { return 0 != hypo && m_hypo == hypo->hypothesis() ? true : false ; }
+    private:
+      IsHypo();
+    private:
+      CaloHypotheses::Hypothesis m_hypo ;
+  };
+};
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -725,8 +743,84 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
              const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
-  //adding code
-  err() << "sorry, not implemented yet"<<endreq;
+  Gaudi::Vector7 V7;
+  Gaudi::SymMatrix7x7 C7;
+  double chi2 = 0.;
+  int NDoF = 0;
+  getParticleInfo(part, V7, C7, chi2, NDoF);
+
+  double zg=-9999.;
+  Gaudi::Vector3 gammapara;
+  Gaudi::SymMatrix3x3 gammacov;
+
+  sc=getPhotonParameter(*dau, zg, gammapara, gammacov);
+  if(sc.isFailure()) {
+    debug() << "Fail to getPhotonParameter in  addPhoton" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  Gaudi::Vector7 V7new;
+  Gaudi::SymMatrix7x7 C7new;
+  double chi2new = chi2 ;
+  int NDoFnew = NDoF;
+
+  double dx= gammapara[0] - V7[0];
+  double dy= gammapara[1] - V7[1];
+  double dz= zg; - V7[2];
+  double r= sqrt(dx*dx+dy*dy+dz*dz);
+  double eg= gammapara[2];
+  double pxg= eg*dx/r;
+  double pyg= eg*dy/r;
+  double pzg= eg*dz/r;
+
+  V7new[0]= V7[0];
+  V7new[1]= V7[1];
+  V7new[2]= V7[2];
+  V7new[3]= V7[3] + pxg;
+  V7new[4]= V7[4] + pyg;
+  V7new[5]= V7[5] + pzg;
+  V7new[6]= V7[6] + eg;
+
+  SymMatrix10x10 Cold;
+
+  for(int l1=0; l1<=6; l1++) 
+    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(1l,l2);
+
+  for(int l1=0; l1<=2; l1++)
+    for (int l2=0; l2<=l1; l2++) Cold(l1+7,l2+7) = gammacov(1l,l2);
+
+  for(int l1=7; l1<=9;l1++) 
+    for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
+  
+  ROOT::Math::SMatrix<double, 7, 10> JA;
+  for(int i=0; i<7 ;i++) JA(i,i)=1.;
+  
+  JA(3,0) = eg*(dx*dx/r/r/r-1./r);
+  JA(3,1) = eg*(dx*dy/r/r/r);
+  JA(3,2) = eg*(dx*dz/r/r/r);
+  JA(3,7)=eg*(-dx*dx/r/r/r+1./r);
+  JA(3,8)=eg*(-dx*dy/r/r/r);
+
+  JA(4,0)=eg*(dy*dx/r/r/r);
+  JA(4,1)=eg*(dy*dy/r/r/r-1./r);
+  JA(4,2)=eg*(dy*dz/r/r/r);
+  JA(4,7)=eg*(-dy*dx/r/r/r);
+  JA(4,8)=eg*(-dy*dy/r/r/r+1./r);
+
+  JA(5,0)=eg*(dz*dx/r/r/r);
+  JA(5,1)=eg*(dz*dy/r/r/r);
+  JA(5,2)=eg*(dz*dz/r/r/r-1./r);
+  JA(5,7)=eg*(-dz*dx/r/r/r);
+  JA(5,8)=eg*(-dz*dy/r/r/r);
+
+  JA(3,9)=dx/r;
+  JA(4,9)=dy/r;
+  JA(5,9)=dz/r;
+  JA(6,9)=1.;
+
+  C7new=ROOT::Math::Similarity<double,7,10>(JA, Cold);
+
+  sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
 
   return sc;
 }
@@ -1309,4 +1403,64 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
     else return z2-0.001;
   }
                                                                                                            
+}
+
+//=============================================================================
+// get photon (x,y,E) and covariance matrix at zg
+//=============================================================================
+StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
+                                                   double& zg,
+                                                   Gaudi::Vector3& para ,
+                                                   Gaudi::SymMatrix3x3& cov ) const 
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
+  // access to local utilities
+  using namespace PhotonParametersLocal ;
+  using namespace CaloHypotheses        ;
+
+  int pid=photon.particleID().pid();
+  if(pid!=22) {
+    err() <<"Particle is not a photon!"<<endreq;
+    return StatusCode::FAILURE;
+  }
+
+  const LHCb::ProtoParticle*   proto  = photon.proto() ;
+  if( 0 == proto  ) {
+    err() <<"ProtoParticle points to NULL!"<<endreq;
+    return StatusCode::FAILURE;
+  }
+
+  if( proto->calo().empty() ) {
+    err() <<"ProtoParticle has no CaloHypos "<<endreq;
+    return StatusCode::FAILURE;
+  }
+
+  typedef const SmartRefVector<CaloHypo> Hypos;
+  const Hypos& hypos = proto->calo();
+  Hypos::const_iterator ihypo =
+    std::find_if( hypos.begin () , hypos.end () , IsHypo( Photon ) ) ;
+
+  if( hypos.end() == ihypo )  {
+    err() <<" CaloHypothesis 'Photon' is not found ";
+    return StatusCode::FAILURE;
+  }
+  const CaloHypo* hypo = *ihypo ;
+
+  // get the position
+  const CaloPosition* pos = hypo->position() ;
+  if( 0 == pos    ) {
+    err() <<"CaloPosition* points to NULL! "<<endreq;
+    return StatusCode::FAILURE;
+  }
+
+  zg=pos->z();
+  para(0)=pos->x();
+  para(1)=pos->y();
+  para(2)=pos->e();
+  cov=pos -> covariance();
+  verbose() <<"Photon parameters: " <<para<<endreq;
+  verbose() <<"Photon cov : " <<cov<<endreq;
+
+  return sc;
 }

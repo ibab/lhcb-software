@@ -9,6 +9,9 @@
 
 using namespace LHCb;
 
+typedef ROOT::Math::SMatrix<double, 10, 10,
+                              ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
+
 typedef ROOT::Math::SMatrix<double, 12, 12,
                               ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
 
@@ -137,6 +140,11 @@ protected:
                            Gaudi::SymMatrix7x7& C7, 
                            double& nominalMass) const;
   bool requireMassConstraint(const LHCb::Particle*, double& nominalMass) const;
+
+  StatusCode getPhotonParameter(const LHCb::Particle& part, 
+                                double& zg,
+                                Gaudi::Vector3& para , 
+                                Gaudi::SymMatrix3x3& cov ) const;
  
 private:
       
