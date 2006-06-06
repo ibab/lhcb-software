@@ -7,10 +7,7 @@
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$ANALYSISROOT/options/BolognaOptions.opts"
-//
-// Don't forget the DLL
-ApplicationMgr.DLLs   += { "Analysis" };
-//
+/
 // Let's make it a sequence
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
