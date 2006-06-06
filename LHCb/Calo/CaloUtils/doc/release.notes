@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.52 2006-05-30 08:45:25 cattanem Exp $
+! $Id: release.notes,v 1.53 2006-06-06 11:59:52 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-06-06 - Vanya BELYAEV
+ - few base classed for CaloPIDs implementation
+    CaloTrackTool &  CaloTrackMatch
+ - rewritten class TrackUse 
+ - cmt/requirements
+     add LHCbMath & TrackInterfaces
+     version inctrement to v6r4 
+
+
 
 !========================== CaloUtils v6r3 2006-05-30 =========================
 ! 2006-05-29 - Olivier Deschamps

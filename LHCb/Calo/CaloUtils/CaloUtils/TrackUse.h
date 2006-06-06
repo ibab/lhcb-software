@@ -1,18 +1,8 @@
-// $Id: TrackUse.h,v 1.3 2006-05-29 15:36:19 odescham Exp $
+// $Id: TrackUse.h,v 1.4 2006-06-06 11:59:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/03/22 18:25:06  odescham
-// Migration to new Event Model
-//
-// Revision 1.1  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.1  2004/10/27 11:58:09  ibelyaev
-//  ad dnew class TrackUse
-// 
-// ============================================================================
 // ============================================================================
 #ifndef CALOUTILS_TRACKUSE_H 
 #define CALOUTILS_TRACKUSE_H 1
@@ -40,9 +30,11 @@ class AlgTool   ;
  *  @date   2004-10-27
  */
 class TrackUse 
+  : public std::unary_function<const LHCb::Tracks,bool>
 {
+public: 
+  typedef std::vector<int> Types ;
 public:
-  
   /** declare 'own' properties for the algorithm 
    * 
    *  @code 
@@ -62,7 +54,6 @@ public:
    *  @return status code 
    */
    StatusCode declareProperties ( Algorithm* alg ) ;
-
   /** declare 'own' properties for the service 
    * 
    *
@@ -83,7 +74,6 @@ public:
    *  @return status code 
    */
   StatusCode declareProperties ( Service*  svc ) ;
-  
   /** declare 'own' properties for the tool 
    * 
    *
@@ -104,104 +94,129 @@ public:
    *  @param tool tool
    *  @return status code 
    */
-  StatusCode declareProperties ( AlgTool*  tool ) ;
-  
+  StatusCode declareProperties ( AlgTool*  tool ) ;  
   /** the basic methdod which defines if track selected fro furtehr processing
    *  @param track pointer to TrStoiredTrack object 
    *  @return decsion
    */
-  bool        use  ( LHCb::Track* track ) const ;
-  
-  /// 'bit'-representation of track flags/types/categories/algorithms
-  std::string bits ( LHCb::Track* track ) const ;
-  
-  /// get the list of rejected track types 
-  std::string  rejectedTypes      () const ;
-  
-  /// get the list of rejected track categories 
-  std::string  rejectedCategories () const ;
-  
-  /// get the list of rejected track algorithms  
-  std::string  rejectedAlgorithms () const ;
-  
+  inline bool use  ( const LHCb::Track* track ) const ;  
+  /** the main method (STL functor interface) 
+   *  @param track pointer to TrStoiredTrack object 
+   *  @return decsion
+   */  
+  inline bool operator() ( const LHCb::Track* track ) const
+  { return use ( track ) ; }
+public:
+  //
+  inline bool check        () const  { return m_check ; }
+  inline bool skipClones   () const  { return m_skipClones   ; }
+  inline bool skipInvalid  () const  { return m_skipInvalid  ; }
+  inline bool skipBackward () const  { return m_skipBackward ; }
+  /// get the list of accepted status
+  size_t acceptedStatus    ( std::vector<LHCb::Track::Status>&  s ) const ;
+  /// get the list of accepted types  
+  size_t acceptedType      ( std::vector<LHCb::Track::Types>&   t ) const ;
+  /// get the list of rejected history
+  size_t rejectedHistory   ( std::vector<LHCb::Track::History>& h ) const ;
+public:
+  inline bool acceptedStatus  ( const LHCb::Track::Status  v ) const ;
+  inline bool acceptedType    ( const LHCb::Track::Types   v ) const ;
+  inline bool rejectedHistory ( const LHCb::Track::History v ) const ;
+public:
+  /// printout to MsgStream 
+  MsgStream&    fillStream ( MsgStream&    stream ) const ;
+  /// printout of the track into the staream 
+  MsgStream&    print      ( MsgStream&         stream , 
+                             const LHCb::Track* track  ) const ;
 protected:
-  
   /** the basic method for delegation of properties 
    *  @param object property manager 
    *  @return statsu code 
    */
   template <class TYPE>
   inline StatusCode i_declareProperties( TYPE* object ) ;
-  
 public:
-  
-  // by type 
-  
-  bool uniqueOnly   () const { return m_uniqueOnly   ; }
-  bool error        () const { return m_error        ; }
-  
-  // by category 
-  
-  bool isLong       () const { return m_isLong       ; }
-  bool isUpstream   () const { return m_isUpstream   ; }
-  bool isDownstream () const { return m_isDownstream ; }
-  bool isVelotrack  () const { return m_isVelotrack  ; }
-  bool isBackward   () const { return m_isBackward   ; }
-  bool isTtrack     () const { return m_isTtrack     ; }
-  
-  // by algorithm 
-  
-  bool PatVelo         () const { return m_patvelo         ; }
-  bool PatVeloTT       () const { return m_patveloTT       ; }
-  bool PatForward      () const { return m_patforward      ; }
-  bool PatKShort       () const { return m_patkshort       ; }
-
-  bool TrackSeeding        () const { return m_seed         ; }
-  bool TrackMatching       () const { return m_match        ; }
-  bool TrackVeloTT         () const { return m_veloTT       ; }
-  bool TrackKShort         () const { return m_ksTrack      ; }
-  bool TsaTrack            () const { return m_tsa          ; }
-  bool TrgForward          () const { return m_trgforward   ; }
-  
-public: 
-  
   /// Standard constructor
-  TrackUse( );
-  
+  TrackUse( );  
   /// destructor 
   virtual ~TrackUse() ;
-  
 private:
-  
-  // track flags to be used  
-  bool               m_uniqueOnly ;  
-  bool               m_error      ;
-  bool               m_isBackward   ;
-  
-  // by category 
-  
-
-  bool               m_isLong       ;
-  bool               m_isUpstream   ;
-  bool               m_isDownstream ;
-  bool               m_isVelotrack  ;
-  bool               m_isTtrack     ;
-  
-  // by algorithm
-
-  bool               m_patvelo      ;
-  bool               m_patforward   ;
-  bool               m_patveloTT      ;
-  bool               m_patkshort   ;
-
-  bool               m_seed      ;
-  bool               m_match     ;
-  bool               m_veloTT    ;
-  bool               m_ksTrack   ;
-  bool               m_tsa   ;
-  bool               m_trgforward   ;
-
+  // check the track
+  bool               m_check        ;
+  // reject clones 
+  bool               m_skipClones   ;  
+  // reject invalid 
+  bool               m_skipInvalid  ;
+  // reject backward 
+  bool               m_skipBackward ;
+  //
+  typedef std::vector<int> Shorts ;
+  /// accepted status 
+  Shorts m_status  ;
+  /// accepted type 
+  Shorts m_type    ;
+  /// rejected history 
+  Shorts m_history ;
 };
+// ============================================================================
+/// status to be accepted
+// ============================================================================
+inline bool TrackUse::acceptedStatus  ( const LHCb::Track::Status v ) const 
+{
+  return 
+    m_status.end() != std::find( m_status.begin() , m_status.end() , v ) ;  
+} ;
+// ============================================================================
+/// type to be accepted
+// ============================================================================
+inline bool TrackUse::acceptedType    ( const LHCb::Track::Types  v ) const 
+{
+  return 
+    m_type.end() != std::find( m_type.begin() , m_type.end() , v ) ;  
+} ;
+// ============================================================================
+/// history to be rejected 
+// ============================================================================
+inline bool TrackUse::rejectedHistory ( const LHCb::Track::History v ) const 
+{
+  return 
+    m_history.end() != std::find( m_history.begin() , m_history.end() , v ) ;  
+} ;
+// ============================================================================
+/** the basic methdod which defines if track selected fro furtehr processing
+ *  @param track pointer to TrStoiredTrack object 
+ *  @return decsion
+ */
+// ============================================================================
+inline bool
+TrackUse::use  ( const LHCb::Track* track ) const 
+{
+  if ( 0 == track ) { return false ; }                              // RETURN 
+  if ( !check()   ) { return true  ; }                              // RETURN 
+  /// check for flags 
+  if ( skipClones  ()  && 
+       track->checkFlag ( LHCb::Track::Clone    ) )   { return false ; }
+  /// check for flags 
+  if ( skipInvalid ()  && 
+       track->checkFlag ( LHCb::Track::Invalid  ) )   { return false ; }
+  /// check for flags 
+  if ( skipBackward()  && 
+       track->checkFlag ( LHCb::Track::Backward ) )   { return false ; }
+  /// accepted status ?
+  if ( !acceptedStatus  ( track -> status  () )   )   { return false ; }
+  /// accepted type   ?
+  if ( !acceptedType    ( track -> type    () )   )   { return false ; }
+  /// rejected history ?
+  if (  rejectedHistory ( track -> history () )   )   { return false ; }
+  // end! 
+  return true ;
+} ;
+// ============================================================================
+inline MsgStream&    
+operator<<( MsgStream&      stream , 
+            const TrackUse& trUse  ) 
+{ return trUse.fillStream ( stream ) ; }
+// ============================================================================
 
 // ============================================================================
 // The END
