@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.61 2006-05-31 13:14:37 jpalac Exp $
+! $Id: release.notes,v 1.62 2006-06-06 15:06:51 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-06-07 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: implement addPhotonPair. Now it should work with pi0/eta.
+
+! 2006-06-06 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: implement addPhoton. Now it should work with photons.     
 
 ! 2006-05-31 Juan PALACIOS
   Remove src/MatrixUtils.h (moved to LHCbMath v1r1)

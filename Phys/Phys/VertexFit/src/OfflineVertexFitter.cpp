@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.5 2006-06-05 15:21:04 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.6 2006-06-06 15:06:51 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -766,7 +766,7 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 
   double dx= gammapara[0] - V7[0];
   double dy= gammapara[1] - V7[1];
-  double dz= zg; - V7[2];
+  double dz= zg - V7[2];
   double r= sqrt(dx*dx+dy*dy+dz*dz);
   double eg= gammapara[2];
   double pxg= eg*dx/r;
@@ -832,8 +832,232 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
              const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
-  //adding code
-  err() << "sorry, not implemented yet"<<endreq;
+  Gaudi::Vector7 V7;
+  Gaudi::SymMatrix7x7 C7;
+  double chi2 = 0.;
+  int NDoF = 0;
+  getParticleInfo(part, V7, C7, chi2, NDoF);
+
+ //get "pair" daughters
+ const Particle* gamma1 =0;
+ const Particle* gamma2 =0;  
+  Particle::ConstVector Prods =dau->daughtersVector();
+  int ig=0;
+  for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
+     const Particle* daughter = *iProd;
+     if( daughter->particleID().pid()!=m_photonID ) return StatusCode::FAILURE;
+     ig++;
+     if(ig==1) gamma1 = daughter;
+     else gamma2 = daughter;     
+  }
+  if(ig!=2) return StatusCode::FAILURE;
+
+  double zg1=-9999.;
+  Gaudi::Vector3 gamma1para;
+  Gaudi::SymMatrix3x3 gamma1cov;
+
+  sc=getPhotonParameter(*gamma1, zg1, gamma1para, gamma1cov);
+  if(sc.isFailure()) {
+    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  double zg2=-9999.;
+  Gaudi::Vector3 gamma2para;
+  Gaudi::SymMatrix3x3 gamma2cov;
+
+  sc=getPhotonParameter(*gamma2, zg2, gamma2para, gamma2cov);
+  if(sc.isFailure()) {
+    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  Gaudi::Vector8 Vnew;
+  Gaudi::SymMatrix8x8 Cnew;
+
+  double dx1= gamma1para[0] - V7[0];
+  double dy1= gamma1para[1] - V7[1];
+  double dz1= zg1 - V7[2];
+  double r1= sqrt(dx1*dx1+dy1*dy1+dz1*dz1);
+  double eg1= gamma1para[2];
+  double pxg1= eg1*dx1/r1;
+  double pyg1= eg1*dy1/r1;
+  double pzg1= eg1*dz1/r1;
+
+  double dx2= gamma2para[0] - V7[0];
+  double dy2= gamma2para[1] - V7[1];
+  double dz2= zg2 - V7[2];
+  double r2= sqrt(dx2*dx2+dy2*dy2+dz2*dz2);
+  double eg2= gamma2para[2];
+  double pxg2= eg2*dx2/r2;
+  double pyg2= eg2*dy2/r2;
+  double pzg2= eg2*dz2/r2;
+
+  double mpair= sqrt((eg1+eg2)*(eg1+eg2)-(pxg1+pxg2)*(pxg1+pxg2)-(pyg1+pyg2)*(pyg1+pyg2)-(pzg1+pzg2)*(pzg1+pzg2));
+
+  Vnew[0]= V7[0];
+  Vnew[1]= V7[1];
+  Vnew[2]= V7[2];
+  Vnew[3]= V7[3] + pxg1 + pxg2;
+  Vnew[4]= V7[4] + pyg1 + pyg2;
+  Vnew[5]= V7[5] + pzg1 + pzg2;
+  Vnew[6]= V7[6] + eg1  + eg2;
+  Vnew[7]= mpair;
+
+  SymMatrix13x13 Cold;
+
+  for(int l1=0; l1<=6; l1++)
+    for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(1l,l2);
+
+  for(int l1=0; l1<=2; l1++)
+    for (int l2=0; l2<=l1; l2++) {
+      Cold(l1+7,l2+7) = gamma1cov(1l,l2);
+      Cold(l1+10,l2+10) = gamma2cov(1l,l2);
+    }
+
+  for(int l1=7; l1<=9;l1++)
+    for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
+
+  for(int l1=10; l1<=12;l1++)
+    for(int l2=0; l2<13; l2++) Cold(l1,l2)=0.0;
+
+  ROOT::Math::SMatrix<double, 8, 13> JA;
+  for(int i=0;i<7;i++) JA(i,i)=1.;
+  
+  double dinvr1_dx1=-1./(r1*r1)*(-dx1/r1);
+  double dinvr1_dy1=-1./(r1*r1)*(-dy1/r1);
+  double dinvr1_dz1=-1./(r1*r1)*(-dz1/r1);
+  double dinvr1_dxg1=-1./(r1*r1)*(dx1/r1);
+  double dinvr1_dyg1=-1./(r1*r1)*(dy1/r1);
+
+  double dinvr2_dx1=-1./(r2*r2)*(-dx2/r2);
+  double dinvr2_dy1=-1./(r2*r2)*(-dy2/r2);
+  double dinvr2_dz1=-1./(r2*r2)*(-dz2/r2);
+  double dinvr2_dxg2=-1./(r2*r2)*(dx2/r2);
+  double dinvr2_dyg2=-1./(r2*r2)*(dy2/r2);
+
+  double dpxg1_dx1=eg1*(-1./r1+dx1*dinvr1_dx1);
+  double dpyg1_dx1=eg1*dy1*dinvr1_dx1;
+  double dpzg1_dx1=eg1*dz1*dinvr1_dx1;
+  double dpxg2_dx1=eg2*(-1./r2+dx2*dinvr2_dx1);
+  double dpyg2_dx1=eg2*dy2*dinvr2_dx1;
+  double dpzg2_dx1=eg2*dz2*dinvr2_dx1;
+
+  double dpxg1_dy1=eg1*dx1*dinvr1_dy1;
+  double dpyg1_dy1=eg1*(-1./r1+dy1*dinvr1_dy1);
+  double dpzg1_dy1=eg1*dz1*dinvr1_dy1;
+  double dpxg2_dy1=eg2*dx2*dinvr2_dy1;
+  double dpyg2_dy1=eg2*(-1./r2+dy2*dinvr2_dy1);
+  double dpzg2_dy1=eg2*dz2*dinvr2_dy1;
+
+  double dpxg1_dz1=eg1*dx1*dinvr1_dz1;
+  double dpyg1_dz1=eg1*dy1*dinvr1_dz1;
+  double dpzg1_dz1=eg1*(-1./r1+dz1*dinvr1_dz1);
+  double dpxg2_dz1=eg2*dx2*dinvr2_dz1;
+  double dpyg2_dz1=eg2*dy2*dinvr2_dz1;
+  double dpzg2_dz1=eg2*(-1./r2+dz2*dinvr2_dz1);
+
+  double dpxg1_dxg1=eg1*(1./r1+dx1*dinvr1_dxg1);
+  double dpyg1_dxg1=eg1*dy1*dinvr1_dxg1;
+  double dpzg1_dxg1=eg1*dz1*dinvr1_dxg1;
+
+  double dpxg1_dyg1=eg1*dx1*dinvr1_dyg1;
+  double dpyg1_dyg1=eg1*(1./r1+dy1*dinvr1_dyg1);
+  double dpzg1_dyg1=eg1*dz1*dinvr1_dyg1;
+
+  double dpxg2_dxg2=eg2*(1./r2+dx2*dinvr2_dxg2);
+  double dpyg2_dxg2=eg2*dy2*dinvr2_dxg2;
+  double dpzg2_dxg2=eg2*dz2*dinvr2_dxg2;
+
+  double dpxg2_dyg2=eg2*dx2*dinvr2_dyg2;
+  double dpyg2_dyg2=eg2*(1./r2+dy2*dinvr2_dyg2);
+  double dpzg2_dyg2=eg2*dz2*dinvr2_dyg2;
+
+  JA(3,0)=dpxg1_dx1+dpxg2_dx1;
+  JA(3,1)=dpxg1_dy1+dpxg2_dy1;
+  JA(3,2)=dpxg1_dz1+dpxg2_dz1;
+  JA(3,7)=dpxg1_dxg1;
+  JA(3,8)=dpxg1_dyg1;
+  JA(3,9)=dx1/r1;
+  JA(3,10)=dpxg2_dxg2;
+  JA(3,11)=dpxg2_dyg2;
+  JA(3,12)=dx2/r2;
+
+  JA(4,0)=dpyg1_dx1+dpyg2_dx1;
+  JA(4,1)=dpyg1_dy1+dpyg2_dy1;
+  JA(4,2)=dpyg1_dz1+dpyg2_dz1;
+  JA(4,7)=dpyg1_dxg1;
+  JA(4,8)=dpyg1_dyg1;
+  JA(4,9)=dy1/r1;
+  JA(4,10)=dpyg2_dxg2;
+  JA(4,11)=dpyg2_dyg2;
+  JA(4,12)=dy2/r2;
+
+  JA(5,0)=dpzg1_dx1+dpzg2_dx1;
+  JA(5,1)=dpzg1_dy1+dpzg2_dy1;
+  JA(5,2)=dpzg1_dz1+dpzg2_dz1;
+  JA(5,7)=dpzg1_dxg1;
+  JA(5,8)=dpzg1_dyg1;
+  JA(5,9)=dz1/r1;
+  JA(5,10)=dpzg2_dxg2;
+  JA(5,11)=dpzg2_dyg2;
+  JA(5,12)=dz2/r2;
+
+  JA(6,9)=1.;
+  JA(6,12)=1.;
+
+  JA(7,0)=-(pxg1+pxg2)/mpair*dpxg1_dx1 -(pyg1+pyg2)/mpair*dpyg1_dx1 -(pzg1+pzg2)/mpair*dpzg1_dx1
+          -(pxg1+pxg2)/mpair*dpxg2_dx1 -(pyg1+pyg2)/mpair*dpyg2_dx1 -(pzg1+pzg2)/mpair*dpzg2_dx1;
+  JA(7,1)=-(pxg1+pxg2)/mpair*dpxg1_dy1 -(pyg1+pyg2)/mpair*dpyg1_dy1 -(pzg1+pzg2)/mpair*dpzg1_dy1
+          -(pxg1+pxg2)/mpair*dpxg2_dy1 -(pyg1+pyg2)/mpair*dpyg2_dy1 -(pzg1+pzg2)/mpair*dpzg2_dy1;
+  JA(7,2)=-(pxg1+pxg2)/mpair*dpxg1_dz1 -(pyg1+pyg2)/mpair*dpyg1_dz1 -(pzg1+pzg2)/mpair*dpzg1_dz1
+          -(pxg1+pxg2)/mpair*dpxg2_dz1 -(pyg1+pyg2)/mpair*dpyg2_dz1 -(pzg1+pzg2)/mpair*dpzg2_dz1;
+
+  JA(7,7)=-(pxg1+pxg2)/mpair*dpxg1_dxg1 -(pyg1+pyg2)/mpair*dpyg1_dxg1 -(pzg1+pzg2)/mpair*dpzg1_dxg1;
+  JA(7,8)=-(pxg1+pxg2)/mpair*dpxg1_dyg1 -(pyg1+pyg2)/mpair*dpyg1_dyg1 -(pzg1+pzg2)/mpair*dpzg1_dyg1;
+  JA(7,9)=(eg1+eg2)/mpair-(pxg1+pxg2)/mpair*dx1/r1-(pyg1+pyg2)/mpair*dy1/r1-(pzg1+pzg2)/mpair*dz1/r1;
+
+  JA(7,10)=-(pxg1+pxg2)/mpair*dpxg2_dxg2 -(pyg1+pyg2)/mpair*dpyg2_dxg2 -(pzg1+pzg2)/mpair*dpzg2_dxg2;
+  JA(7,11)=-(pxg1+pxg2)/mpair*dpxg2_dyg2 -(pyg1+pyg2)/mpair*dpyg2_dyg2 -(pzg1+pzg2)/mpair*dpzg2_dyg2;
+  JA(7,12)=(eg1+eg2)/mpair-(pxg1+pxg2)/mpair*dx2/r2-(pyg1+pyg2)/mpair*dy2/r2-(pzg1+pzg2)/mpair*dz2/r2;
+
+  Cnew=ROOT::Math::Similarity<double,8,13>(JA, Cold);
+
+  //not allowed becasue pair is const LHCb::Particle
+  //dau->setMeasuredMass(mpair);
+  //dau->measuredMassErr(sqrt(Cnew(7,7)));
+
+  double nominalMass=0.0;
+  bool constrainM=requireMassConstraint(dau, nominalMass);
+
+  if(constrainM) {
+    ROOT::Math::SMatrix<double,1,8> DD;
+    Gaudi::Vector1 dd;
+    DD(0,7)=1.;
+    dd[0]=-nominalMass;
+    Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 8>(DD,Cnew);
+    if ( !Cd.Invert() ) {
+      debug() << "could not invert matrix Cd in addPhotonPair" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    Vnew-= Cnew*ROOT::Math::Transpose(DD)*Cd*(DD*Vnew+dd);
+    Gaudi::SymMatrix8x8 deltaCnew1=ROOT::Math::SimilarityT<double,1,8>(DD,Cd);
+    Gaudi::SymMatrix8x8 deltaCnew2=ROOT::Math::Similarity<double,8,8>(Cnew,deltaCnew1);
+    Cnew -= deltaCnew2;
+
+    for(int i=0;i<=7;i++) Cnew(7,i)=0.0;
+  }
+
+  Gaudi::Vector7 V7final;
+  Gaudi::SymMatrix7x7 C7final;
+  double chi2final = chi2 ;
+  int NDoFfinal = NDoF;
+
+  for(int i=0;i<7;i++) V7final(i)=Vnew(i);
+  for(int l1=0; l1<7; l1++)
+    for(int l2=0; l2<=l1; l2++) C7final(l1,l2) = Cnew(l1,l2);
+
+  sc = updateParticle(part, V7final, C7final, chi2final, NDoFfinal);
 
   return sc;
 }
