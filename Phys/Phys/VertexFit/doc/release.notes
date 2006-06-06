@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.63 2006-06-06 15:13:40 xieyu Exp $
+! $Id: release.notes,v 1.64 2006-06-06 16:01:47 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-06-06 Juan PALACIOS 
+  - src/OfflineVertexFitter.h: Fix a few compilation warnings to do with 
+                               unimplemented methods
 
 ! 2006-06-07 Yuehong Xie
   - src/OfflineVertexFitter.cpp: set default value of applyDauMassConstraint to false.

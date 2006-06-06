@@ -10,16 +10,16 @@
 using namespace LHCb;
 
 typedef ROOT::Math::SMatrix<double, 10, 10,
-                              ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
+                            ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
 
 typedef ROOT::Math::SMatrix<double, 12, 12,
-                              ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
+                            ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
 
 typedef ROOT::Math::SMatrix<double, 13, 13,
-                              ROOT::Math::MatRepSym<double,13> > SymMatrix13x13;
+                            ROOT::Math::MatRepSym<double,13> > SymMatrix13x13;
 
 typedef ROOT::Math::SMatrix<double, 14, 14,
-                              ROOT::Math::MatRepSym<double,14> > SymMatrix14x14;
+                            ROOT::Math::MatRepSym<double,14> > SymMatrix14x14;
 
 
 /** @class OfflineVertexFitter OfflineVertexFitter.h
@@ -40,10 +40,13 @@ public:
   StatusCode initialize();
 
   /// Method to fit a vertex 
-  StatusCode fit( const LHCb::Particle::ConstVector&,  LHCb::Vertex& ) const ;  
+  StatusCode fit( const LHCb::Particle::ConstVector&,  
+                  LHCb::Vertex& ) const ;  
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
-  StatusCode fit( const LHCb::Particle::ConstVector&,  LHCb::Particle&, LHCb::Vertex& ) const ; 
+  StatusCode fit( const LHCb::Particle::ConstVector&,  
+                  LHCb::Particle&, 
+                  LHCb::Vertex& ) const ; 
 
   virtual ~OfflineVertexFitter( ); ///< Destructor
 
@@ -54,20 +57,22 @@ public:
                  particle , *vertex         ) ;
   }
 
-  StatusCode combine( const LHCb::Particle::ConstVector& daughters , 
-                      LHCb::Particle&        mother   , 
-                      LHCb::Vertex&          vertex   ) const {
+  StatusCode combine( const LHCb::Particle::ConstVector&, 
+                      LHCb::Particle&, 
+                      LHCb::Vertex&   ) const {
     Error("combine is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
   }
 
 
-  StatusCode add(const LHCb::Particle* p,LHCb::Vertex& v) const {
+  StatusCode add(const LHCb::Particle*, 
+                 LHCb::Vertex& ) const {
     Error("add is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
   }
 
-  StatusCode remove(const LHCb::Particle* p,LHCb::Vertex& v) const {
+  StatusCode remove(const LHCb::Particle*, 
+                    LHCb::Vertex& ) const {
     Error("remove is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
   }
@@ -139,7 +144,9 @@ protected:
   StatusCode constrainMass(Gaudi::Vector7& V7, 
                            Gaudi::SymMatrix7x7& C7, 
                            double& nominalMass) const;
-  bool requireMassConstraint(const LHCb::Particle*, double& nominalMass) const;
+
+  bool requireMassConstraint(const LHCb::Particle*, 
+                             double& nominalMass) const;
 
   StatusCode getPhotonParameter(const LHCb::Particle& part, 
                                 double& zg,
