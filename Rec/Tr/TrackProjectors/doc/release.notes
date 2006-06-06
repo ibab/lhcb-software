@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-06-06 - Eduardo Rodrigues
+ - removed explicit 5-dimension number from code
+
 ! 2006-05-19 - Eduardo Rodrigues
  - OTMeasurement ambiguities set on the fly
  - "using namespace ..." removed from header files

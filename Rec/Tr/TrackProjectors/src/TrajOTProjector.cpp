@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.12 2006-05-25 12:54:33 erodrigu Exp $
+// $Id: TrajOTProjector.cpp,v 1.13 2006-06-06 14:20:55 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode TrajOTProjector::project( const State& state,
   m_errMeasure = sqrt( errMeasure2 );
 
   // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
+  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,m_H.kSize>
                         ( m_H, state.covariance() ) );
 
   return StatusCode::SUCCESS;

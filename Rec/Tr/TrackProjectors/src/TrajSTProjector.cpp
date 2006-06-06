@@ -1,4 +1,4 @@
-// $Id: TrajSTProjector.cpp,v 1.7 2006-05-17 16:23:28 cattanem Exp $
+// $Id: TrajSTProjector.cpp,v 1.8 2006-06-06 14:20:55 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ StatusCode TrajSTProjector::project( const State& state,
   m_errMeasure = sqrt( errMeasure2 );
 
   // Calculate the error on the residual
-  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,5>
+  m_errResidual = sqrt( errMeasure2 + ROOT::Math::Similarity<double,m_H.kSize>
                         ( m_H, state.covariance() ) );
 
   return StatusCode::SUCCESS;
