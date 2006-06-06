@@ -80,4 +80,4 @@ Bs2JpsiPhi.OutputLevel = 3 ;
 TutorialSeq.IgnoreFilterPassed = false ; // get all Phis
 */
 
-#include "$ANALYSISROOT/options/JpsiKs.opts"
+#include "$ANALYSISROOT/options/JpsiPhi.opts"

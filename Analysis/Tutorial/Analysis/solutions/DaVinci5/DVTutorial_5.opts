@@ -57,6 +57,7 @@ Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
 Bs2JpsiPhi.DaughterPlotsPath={"Bin"};
 Bs2JpsiPhi.MotherPlotsPath={"Bout"};
 
+/*
 //
 // WARNING: Does not work yet (DaVinci v16r1)
 //
@@ -79,6 +80,7 @@ PrintTrueBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
+*/
 
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
@@ -87,4 +89,4 @@ HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 
 ApplicationMgr.EvtMax = 500 ;
 
-#include "$ANALYSISROOT/options/JpsiKs.opts"
+#include "$ANALYSISROOT/options/JpsiPhi.opts"
