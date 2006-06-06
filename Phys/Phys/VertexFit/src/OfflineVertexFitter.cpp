@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.6 2006-06-06 15:06:51 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.7 2006-06-06 15:13:40 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareInterface<IVertexFit>(this);
 
   declareProperty( "useResonanceVertex", m_useResonanceVertex = true);
-  declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = true);
+  declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = false);
   declareProperty( "widthThreshold", m_widthThreshold = 2.0 * MeV);
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
