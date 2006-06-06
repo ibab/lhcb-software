@@ -35,12 +35,32 @@
         value = "b = -1, bbar = 1, none = 0" 
         access= "PUBLIC"
       />
+
       <constructor
         desc = "Copy constructor hack for windows..."
         argList  = "const FlavourTag&amp; c"
         initList = "KeyedObject&lt;int&gt;(), m_decision(c.m_decision), m_category(c.m_category), m_omega(c.m_omega), m_taggers(c.m_taggers), m_taggedB(c.m_taggedB)">
-    <code/>
-    </constructor>
+        <code/>
+      </constructor>
+
+      <method
+        name="operator="
+        desc="Assignment operator"
+        type="LHCb::FlavourTag&amp;"
+        >
+        <arg name="rhs" type="FlavourTag" const='TRUE'/>
+        <code>
+          if (this != &amp;rhs) {
+             m_decision = rhs.m_decision;
+             m_category = rhs.m_category;
+             m_omega    = rhs.m_omega;
+             m_taggers  = rhs.m_taggers;
+             m_taggedB  = rhs.m_taggedB;
+          }
+          return *this;
+        </code>
+      </method>
+
 
       <attribute
         desc = "The result of the tagging algorithm"

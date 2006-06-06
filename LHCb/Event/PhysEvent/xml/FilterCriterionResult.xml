@@ -4,35 +4,65 @@
 <gdd>
 
   <package name="PhysEvent">
-<class
-    author="C.Lazzeroni"
-    desc="Store the result of a filter criterion selection"
-    name="FilterCriterionResult"
-    id="861"
-    >
-  <base name="KeyedObject&lt;int&gt;"/>
-  &KeyedObject;
-  <import name="Event/Particle"/>
-  <location
-      name="Default"
-      place="Phys/FilterCriteria"
-      />
-  <attribute
-      name="filterName"
-      desc="Name of the filter crition tool that produced this result"
-      type="std::string"
-      />
-  <relation
-      name="filterParticle"
-      desc="Particle the filter was run on"
-      type="LHCb::Particle"
-      />
-  <attribute
-      name="filterResult"
-      desc="The result of the filter criterion"
-      type="bool"
-      />
-</class>
+    <class
+      author="C.Lazzeroni"
+      desc="Store the result of a filter criterion selection"
+      name="FilterCriterionResult"
+      id="861"
+      >
+
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+
+      <import name="Event/Particle"/>
+
+      <location
+        name="Default"
+        place="Phys/FilterCriteria"
+        />
+
+      <constructor
+        argList="const FilterCriterionResult&amp; rhs"
+        desc="Copy constructor"
+        initList="KeyedObject&lt;int&gt;(), m_filterName(rhs.m_filterName), m_filterResult(rhs.m_filterResult), m_filterParticle(rhs.m_filterParticle)"
+        />
+
+      <method
+        name="operator="
+        desc="Assignment operator"
+        type="LHCb::FilterCriterionResult&amp;"
+        >
+        <arg name="rhs" type="FilterCriterionResult" const='TRUE'/>
+        <code>
+          if (this != &amp;rhs) {
+             m_filterName     = rhs.m_filterName;
+             m_filterResult   = rhs.m_filterResult;
+             m_filterParticle = rhs.m_filterParticle;
+          }
+          return *this;
+        </code>
+      </method>
+
+      <attribute
+        name="filterName"
+        desc="Name of the filter crition tool that produced this result"
+        type="std::string"
+        />
+
+      <relation
+        name="filterParticle"
+        desc="Particle the filter was run on"
+        type="LHCb::Particle"
+        />
+
+      <attribute
+        name="filterResult"
+        desc="The result of the filter criterion"
+        type="bool"
+        />
+
+    </class>
+
   </package>
 
 </gdd>

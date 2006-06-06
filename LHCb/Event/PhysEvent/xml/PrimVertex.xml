@@ -8,35 +8,38 @@
      * PrimVertex                                                   *
      ****************************************************************-->
 
-     <class 
+    <class 
       author="P. Koppenburg"
       desc="Physics analysis Primary Vertex. Inherits from Vertex plus Track information"
       name="PrimVertex"
       id="804"
       stdVectorTypeDef="TRUE"
       keyedContTypeDef="TRUE"
-     >
-       <base name="LHCb::Vertex"/>
-       &KeyedObject;
-       <import name="Event/Track" soft="TRUE"/>
-       <import name="Event/Vertex"/>
-       <method
+      >
+      <base name="LHCb::Vertex"/>
+      &KeyedObject;
+
+      <import name="Event/Track" soft="TRUE"/>
+      <import name="Event/Vertex"/>
+
+      <method
         name="isPrimary"
         desc="is a primary vertex ?"
         type="bool"
 	virtual="TRUE"
         const="TRUE"
-       >
-       <code>
-         return true;
-       </code>
-       </method> 
-        <relation
+        >
+        <code>
+          return true;
+        </code>
+
+      </method> 
+      <relation
         name="tracks"
         desc="Reference to tracks composing the vertex"
         multiplicity="N"
         type="LHCb::Track"
-       />
-     </class>
+        />
+    </class>
   </package>
 </gdd>

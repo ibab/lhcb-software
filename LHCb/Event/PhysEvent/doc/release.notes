@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.101 2006-06-02 16:38:38 jpalac Exp $
+! $Id: release.notes,v 1.102 2006-06-06 11:43:19 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 
+
+! 2006-06-06 - Juan PALACIOS
+  - xml/FilterCriterionResult.xml: Add copy constructor + assignment operator
+    xml/FlavourTag.xml: Add assignment operator
+    xml/SelResult.xml: Add copy constructor + assignment operator
 
 ! 2006-06-02 - Juan PALACIOS
   - src/Particle.cpp: 
