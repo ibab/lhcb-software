@@ -1,11 +1,14 @@
-// $Id: EigenSystem.h,v 1.1 2006-05-31 14:49:53 jpalac Exp $
+// $Id: EigenSystem.h,v 1.2 2006-06-06 12:36:46 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/31 14:49:53  jpalac
+// Add EigenSystem, make into link library, tag as v1r1
+// 
 // ============================================================================
-#ifndef EIGENSYSTEM_H 
-#define EIGENSYSTEM_H 1
+#ifndef LHCBMATH_EIGENSYSTEM_H 
+#define LHCBMATH_EIGENSYSTEM_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -261,7 +264,7 @@ namespace Gaudi
 } // end of namespace Gaudi
 
 // ============================================================================
-#endif // EIGENSYSTEM_H
+#endif // LHCBMATH_EIGENSYSTEM_H
 // ============================================================================
 #include "EigenSystem.icpp"  
 // ============================================================================

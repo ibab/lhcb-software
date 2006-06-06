@@ -1,6 +1,6 @@
-// $Id: GeomFun.h,v 1.2 2006-05-31 14:18:19 jpalac Exp $
-#ifndef _GeomFun_H_
-#define _GeomFun_H_
+// $Id: GeomFun.h,v 1.3 2006-06-06 12:36:46 jpalac Exp $
+#ifndef LHCBMATH_GEOMFUN_H
+#define LHCBMATH_GEOMFUN_H 1
 
 
 namespace Gaudi{

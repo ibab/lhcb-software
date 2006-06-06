@@ -1,6 +1,6 @@
-// $Id: Line.h,v 1.1 2006-05-31 13:38:31 jpalac Exp $
-#ifndef KERNEL_LINE_H 
-#define KERNEL_LINE_H 1
+// $Id: Line.h,v 1.2 2006-06-06 12:36:46 jpalac Exp $
+#ifndef LHCBMATH_LINE_H 
+#define LHCBMATH_LINE_H 1
 
 // Include files
 
@@ -89,4 +89,4 @@ namespace Gaudi{
 
 
 }; // Gaudi namespace
-#endif // KERNEL_LINE_H
+#endif // LHCBMATH_LINE_H
