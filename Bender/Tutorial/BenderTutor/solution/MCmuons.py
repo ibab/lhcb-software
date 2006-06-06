@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCmuons.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: MCmuons.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # =============================================================================
 """ 'Solution'-file for 'MCmuons.py' example (Bender Tutorial) """
 # =============================================================================

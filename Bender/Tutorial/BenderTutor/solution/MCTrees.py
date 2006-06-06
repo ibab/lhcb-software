@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: MCTrees.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 # =============================================================================
 """ 'Solution'-file for 'MCTrees.py' example (Bender Tutorial) """
 # =============================================================================
@@ -69,9 +69,9 @@ class MCTrees( Algo ) :
 # =============================================================================
 def configure() :
     
-    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ,
+    gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts',
                             '$STDOPTS/Hbook.opts'] )
-
+    
     # 1) create the algorithm
     alg = MCTrees( 'McTree' )
 
@@ -93,7 +93,7 @@ def configure() :
     # configure my own algorithm
     myAlg = gaudi.algorithm('McTree')
     myAlg.NTupleLUN = 'MC'
-    myAlg.MCppAssociators = []
+    myAlg.PP2MC = []
     
     # redefine input files 
     evtsel = gaudi.evtSel()

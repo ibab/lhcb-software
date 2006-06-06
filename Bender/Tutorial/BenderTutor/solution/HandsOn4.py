@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn4.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: HandsOn4.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
+# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 # =============================================================================
 """ 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial) """ 
 # =============================================================================
@@ -74,7 +74,7 @@ class RCKaons(Algo):
             tup.column( name = 'mc'     , value = mcCutPhi ( phi ) )
             #   the first kaon is true 
             tup.column( name = 'mck1'   , value = mcCutK   ( kaon1 ) )
-            #   the seons kaon is true   
+            #   the second kaon is true   
             tup.column( name = 'mck2'   , value = mcCutK   ( kaon2 ) )
             tup.write()
             
@@ -87,12 +87,15 @@ class RCKaons(Algo):
 def configure() :
     
     gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
-        '$DAVINCIROOT/options/DaVinciReco.opts'     ,
-        '$DAVINCIROOT/options/DaVinciNeutrals.opts' ] )
-    
+        '$DAVINCIROOT/options/DaVinci.opts'   ,
+        '$STDOPTS/Hbook.opts'                       ] )
+        
     # modify/update the configuration:
     
+    # suppress printout form DaVinci
+    dv = gaudi.algorithm('DaVinci')
+    dv.doHistos = False
+
     # Preload all charged particles 
     gaudi.addAlgorithm( 'LoKiPreLoad/Charged' )
     
@@ -118,17 +121,10 @@ def configure() :
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
     
-    # configure the N-Tuples:
-    ntsvc = gaudi.nTupleSvc()
-    ntsvc.defineOutput( { 'RC' : 'rckaontuples.hbook' } , 'HBOOK' )
-    
     myAlg = gaudi.algorithm('RCKaons')
-    myAlg.NTupleLUN = 'RC'
+    myAlg.NTupleLUN = 'FILE1'
+    myAlg.PP2MC = ['/Event/Rec/Relations/ChargedPP2MC'] # only charged 
     
-    # suppress printout form DaVinci
-    dv = gaudi.algorithm('DaVinci')
-    dv.doHistos = False
-
     # redefine input files 
     evtsel = gaudi.evtSel()
     evtsel.PrintFreq = 50 
@@ -166,7 +162,7 @@ def configure() :
         'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000031_5.dst' ,
         'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000032_5.dst' ,
         'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000033_5.dst' ] )
-    
+
     return SUCCESS
 # =============================================================================
 

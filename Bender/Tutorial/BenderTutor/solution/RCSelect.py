@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: RCSelect.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # =============================================================================
 """ 'Solution'-file for 'RCselect.py' example (Bender Tutorial) """ 
 # =============================================================================
@@ -99,11 +99,17 @@ class RCSelect(Algo):
 def configure() :
     
     gaudi.config ( files =
-                   [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
-                     '$DAVINCIROOT/options/DaVinciReco.opts'     ] )
+                   [ '$DAVINCIROOT/options/DaVinci.opts' ,
+                     '$STDOPTS/Hbook.opts'     ] )
     
     # modify/update the configuration:
     
+    #gaudi.DLLs   += ['GaudiSiteSvc']
+    #gaudi.ExtSvc += ['StagerSvc']
+    #stager = gaudi.service('StagerSvc')
+    #stager.BlockSize    = 10
+    #stager.InitialStage =  5
+
     # Preload all charged particles 
     gaudi.addAlgorithm( 'LoKiPreLoad/Charged' )
     
@@ -190,6 +196,8 @@ if __name__ == '__main__' :
     # event loop 
     gaudi.run(500)
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

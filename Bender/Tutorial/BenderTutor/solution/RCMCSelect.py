@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCMCSelect.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: RCMCSelect.py,v 1.7 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 # =============================================================================
 """ 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial) """
 # =============================================================================
@@ -128,8 +128,8 @@ class RCSelect(Algo):
 def configure() :
     
     gaudi.config ( files =
-                   [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
-                     '$DAVINCIROOT/options/DaVinciReco.opts'     ] )
+                   [ '$DAVINCIROOT/options/DaVinci.opts'   ,
+                     '$STDOPTS/Hbook.opts'     ] )
     
     # modify/update the configuration:
     
@@ -166,9 +166,8 @@ def configure() :
     dv.doHistos = False
     
     myAlg = gaudi.algorithm('RCSelect')
-    myAlg.MCppAssociators = [
-        'AssociatorWeighted<ProtoParticle,MCParticle,double>/ChargedPP2MCAsct' ]
-    
+    myAlg.PP2MC =['/Event/Rec/Relations/ChargedPP2MC']  # charged only
+        
     # redefine input files 
     evtsel = gaudi.evtSel()
     evtsel.PrintFreq = 20 

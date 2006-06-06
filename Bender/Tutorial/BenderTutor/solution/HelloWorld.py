@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HelloWorld.py,v 1.5 2005-08-01 16:04:24 ibelyaev Exp $
+# $Id: HelloWorld.py,v 1.6 2006-06-06 20:03:27 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 # =============================================================================
 """
 Standard 'Hello, world!' example. No way to avoid it!
