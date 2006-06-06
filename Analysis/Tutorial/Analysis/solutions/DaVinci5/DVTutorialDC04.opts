@@ -1,15 +1,15 @@
 /** @file 
  * 
- *  Options for exercise 5
+ *  Options for exercise 5 - Compatible with DC04 data
  *
  *  @author P. Koppenburg
  *  @date 2006-05-31
  */
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$ANALYSISROOT/options/BolognaOptions.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
 //
 // Don't forget the DLL
-ApplicationMgr.DLLs   += { "Analysis" };
+// ApplicationMgr.DLLs   += { "Analysis" };
 //
 // Let's make it a sequence
 //
@@ -55,11 +55,6 @@ Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
 Bs2JpsiPhi.DaughterPlotsPath={"Bin"};
 Bs2JpsiPhi.MotherPlotsPath={"Bout"};
 
-/*
-//
-// WARNING: Does not work yet (DaVinci v16r1, v16r2)
-//
-
 // Print reco Bs
 TutorialSeq.Members += { "PrintTree/PrintFoundBs" };
 PrintFoundBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
@@ -78,7 +73,6 @@ PrintTrueBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
-*/
 
 //TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
@@ -87,4 +81,9 @@ HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 ApplicationMgr.EvtMax = -1 ;
 
-#include "$ANALYSISROOT/options/JpsiPhi.opts"
+//-- 
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+} ;
