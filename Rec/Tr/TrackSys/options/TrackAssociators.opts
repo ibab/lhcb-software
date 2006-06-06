@@ -1,8 +1,6 @@
 //==============================================================
 // Build the Track - MCParticle associations
+// for the Tracks in the "best" container
 //==============================================================
 ApplicationMgr.DLLs += { "TrackAssociators" };
-
 CheckTrSeq.Members  += { "TrackAssociator" };
-
-TrackAssociator.TracksInContainer = "Rec/Track/Best";
