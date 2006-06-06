@@ -1,6 +1,7 @@
 //-- 
 EventSelector.Input   = {
 "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/13144000.500ev.02Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r7/13144000.500ev.05Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //-- End of Data cards 
 //
