@@ -87,6 +87,14 @@ TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = -1 ;
 
 #include "$ANALYSISROOT/options/JpsiPhi.opts"
+
+
+//Very loose cuts
+
+Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 0 ;  // Require 30 maximal B vertex Chi2
+Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 0 ; // Require 4 maximal B IP/IPE on best PV
+Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 0 ; // Require 5 minimal B flight distance significance
+
