@@ -38,7 +38,8 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   
   // update covariance
   TrackSymMatrix& tStateCov = state.covariance();
-  tStateCov = ROOT::Math::Similarity<double,5,5>( m_F, tStateCov ); // F*C*F.T()
+  tStateCov =
+    ROOT::Math::Similarity<double,m_F.kRows,m_F.kCols>( m_F, tStateCov );
 
   debug() << " z propagation " << zNew
           << " propagated state " << state.stateVector()

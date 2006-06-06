@@ -102,7 +102,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
                   tState[3] + m_ay*tState[4]*eplus*c_light*dz,
                   tState[4] );
 
-  state.setCovariance( ROOT::Math::Similarity<double,5,5>
+  state.setCovariance( ROOT::Math::Similarity<double,m_F.kRows,m_F.kCols>
                        ( m_F, state.covariance() ) );
 
   return StatusCode::SUCCESS;

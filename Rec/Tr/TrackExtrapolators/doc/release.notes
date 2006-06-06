@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-06-06 - Eduardo Rodrigues
+ - removed explicit 5-dimension number from code
+
 ! 2006-05-31 M Needham
   - selector in master should be private tool
 
