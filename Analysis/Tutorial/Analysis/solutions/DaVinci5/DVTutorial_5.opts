@@ -44,13 +44,11 @@ Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
 Bs2JpsiPhi.DaughterFilter.Selections = { " K+ : PVIPFilterCriterion"  }; // Refine Kaons
 Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1 ; // 1 sigma IP for kaons from Phi
 Bs2JpsiPhi.Window =  100 * MeV; // MeV
-Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion,
-                                                VtxFilterCriterion,
+Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : VtxFilterCriterion,
                                                 FlightDistanceFilterCriterion"  };
 Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30 ;  // Require 30 maximal B vertex Chi2
-Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 4 ; // Require 4 maximal B IP/IPE on best PV
 Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5 minimal B flight distance significance
-//Bs2JpsiPhi.MakePlots=true;
+
 Bs2JpsiPhi.HistoProduce=true;
 Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
 Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
@@ -59,7 +57,7 @@ Bs2JpsiPhi.MotherPlotsPath={"Bout"};
 
 /*
 //
-// WARNING: Does not work yet (DaVinci v16r1)
+// WARNING: Does not work yet (DaVinci v16r1, v16r2)
 //
 
 // Print reco Bs
@@ -82,7 +80,7 @@ PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
 */
 
-TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
+//TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos1.root";
@@ -90,11 +88,3 @@ HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 ApplicationMgr.EvtMax = -1 ;
 
 #include "$ANALYSISROOT/options/JpsiPhi.opts"
-
-
-//Very loose cuts
-
-Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 0 ;  // Require 30 maximal B vertex Chi2
-Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 0 ; // Require 4 maximal B IP/IPE on best PV
-Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 0 ; // Require 5 minimal B flight distance significance
-
