@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.7 2006-05-02 13:01:58 erodrigu Exp $
+// $Id: TrackKalmanFilter.h,v 1.8 2006-06-06 13:35:00 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -63,7 +63,7 @@ protected:
   StatusCode checkPositiveMatrix( Gaudi::TrackSymMatrix& mat );
 
   // ! invert this matrix
-  StatusCode invertMatrix( TrackSymMatrix& mat );
+  StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat );
 
   //! extrapolator
   ITrackExtrapolator* m_extrapolator;
@@ -71,8 +71,9 @@ protected:
   //! projector
   ITrackProjector* m_projector;
 
-  TrackMatrix TrackVectorProd( TrackVector& vec1, const TrackVector& vec2 );
-
+  Gaudi::TrackMatrix TrackVectorProd( Gaudi::TrackVector& vec1,
+                                      const Gaudi::TrackVector& vec2 );
+  
 private:
 
   // job options

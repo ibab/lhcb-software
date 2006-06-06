@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.7 2006-03-27 10:07:39 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.8 2006-06-06 13:34:59 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -36,10 +36,10 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
   , m_makeNewContainer(true)
 {
   declareProperty( "TracksInContainer", 
-                   m_tracksInContainer  = "Rec/Track/Ideal" );
+                   m_tracksInContainer  = TrackLocation::Default );
   declareProperty( "TracksOutContainer", 
-                   m_tracksOutContainer = "Rec/Track/Ideal" );
-  declareProperty( "FitterName"      ,
+                   m_tracksOutContainer = ""                  );
+  declareProperty( "Fitter",
                    m_fitterName         = "TrackMasterFitter" );
 }
 
@@ -59,6 +59,11 @@ StatusCode TrackEventFitter::initialize() {
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
+  if ( m_tracksOutContainer == "" ) {
+    m_tracksOutContainer = m_tracksInContainer;
+    m_makeNewContainer   = false;
+  }
+
   // Print out the user-defined settings
   // -----------------------------------
   info()
@@ -72,7 +77,6 @@ StatusCode TrackEventFitter::initialize() {
     << endmsg
     << " " << endmsg;
 
-  if ( m_tracksInContainer == m_tracksOutContainer ) m_makeNewContainer = false;
 
   // Initialize global counters
   // --------------------------
@@ -113,12 +117,15 @@ StatusCode TrackEventFitter::execute() {
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << "#### Fitting Track # " << track.key() << " ####" << endmsg
               << "  # of states before fit:" << track.nStates() << endmsg
-              << "  States at z-positions: ";
+              << "  States are: " << endreq;
       const std::vector<State*>& allstates = track.states();
       for ( unsigned int it = 0; it < allstates.size(); it++ ) {
-        debug() << allstates[it]->z() << " ";
+        debug() << "  - z = " << allstates[it]->z() << endreq
+                << "  - stateVector = "
+                << allstates[it]->stateVector() << endreq
+                << "  - covariance = " << endreq
+                << allstates[it]->covariance() << endreq;
       }
-      debug() << endmsg;
     }
 
     sc = m_tracksFitter -> fit( track );

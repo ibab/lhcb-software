@@ -3,6 +3,14 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-06 - Eduardo Rodrigues
+ - removed explicit 5-dimension number from code
+ - migration to Gaudi::Units
+ - no z-check when adding state closest to beam-line
+ - TracksOutContainer option in TrackEventFitter set to same as input
+   by default (no more need to set it explicitly for default config.)
+ - modifications from removing all "using namespace..." in header files
+
 !=========================== TrackFitter v2r4 2006-06-01 ====================
 ! 2006-06-01 M.Cattaneo
  - Adapt to move of MatrixManip.h to LHCbMath

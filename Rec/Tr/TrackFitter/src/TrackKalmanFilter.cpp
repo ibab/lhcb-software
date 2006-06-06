@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.18 2006-06-01 08:27:08 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.19 2006-06-06 13:35:00 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -99,18 +99,18 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
     // Prediction step
     sc = predict( node, state );
-    if ( sc.isFailure() ) return failure( "Unable to predict at a node" );
+    if ( sc.isFailure() ) return failure( "unable to predict at a node" );
 
     // Filter step
-    if ( node.hasMeasurement() ) { 
+    if ( node.hasMeasurement() ) {
       sc = filter( node, state );
-      if ( sc.isFailure() ) return failure( "Unable to filter node " );
+      if ( sc.isFailure() ) return failure( "unable to filter node " );
     }
 
     // save filtered state
     node.setState( state );
-  }
-  
+  } // end of prediction and filter
+
   // Loop in opposite direction for the smoother
   std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
   std::vector<Node*>::reverse_iterator ithisNode = iPrevNode;
@@ -120,7 +120,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     FitNode& thisNode = *(dynamic_cast<FitNode*>(*ithisNode));
     // Smoother step
     sc = smooth( thisNode, prevNode );
-    if ( sc.isFailure() ) return failure( "Unable to smooth node!" );  
+    if ( sc.isFailure() ) return failure( "unable to smooth node!" );
     ++ithisNode;
     ++iPrevNode;
   }
@@ -133,7 +133,6 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
   return sc;
 }
-
 
 //=========================================================================
 // Predict the state to this node
@@ -149,8 +148,11 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
     // the predicted state at measurement
     if ( !(aNode.transportIsSet()) || !m_storeTransport ) {
       StatusCode sc = m_extrapolator -> propagate( aState, z );
-      if ( sc.isFailure() )
-        return failure( "unable to predict state at next measurement" );
+      if ( sc.isFailure() ) {
+        std::ostringstream mess;
+        mess << "unable to predict state at next measurement at z = " << z;
+        return failure( mess.str() );
+      }
       aState.setLocation( (aNode.state()).location() );
 
       // store transport matrix F, noise matrix and vector for next iterations
@@ -159,7 +161,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
         aNode.setTransportMatrix( F );
         aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
         aNode.setNoiseMatrix( aState.covariance() -
-                              ROOT::Math::Similarity<double,5,5>
+                              ROOT::Math::Similarity<double,F.kRows,F.kCols>
                               ( F, prevStateCov ) );
         aNode.setTransportIsSet( true );
       }
@@ -172,7 +174,7 @@ StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState)
       TrackSymMatrix& stateCov = aState.covariance();
       TrackVector tempVec( stateVec );
       stateVec = F * tempVec + aNode.transportVector();
-      stateCov = ROOT::Math::Similarity<double,5,5>( F, stateCov )
+      stateCov = ROOT::Math::Similarity<double,F.kRows,F.kCols>( F, stateCov )
                  + aNode.noiseMatrix();
       aState.setZ( z );
       aState.setLocation( (aNode.state()).location() );
@@ -219,7 +221,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   }
 
   // get reference to the state vector and cov
-  TrackVector& tX = state.stateVector();
+  TrackVector&    tX = state.stateVector();
   TrackSymMatrix& tC = state.covariance();
 
   // get the predicted residuals
@@ -235,10 +237,13 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   tX += ( mK * res );
 
   // update the covariance matrix
-  TrackMatrix uniDiagMat = TrackMatrix( ROOT::Math::SMatrixIdentity());
+  TrackMatrix uniDiagMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   TrackMatrix B = uniDiagMat - TrackVectorProd( mK, H );
-  TrackMatrix bTimesC = B * tC;
-  tC = Gaudi::Math::Symmetrize<TrackMatrix>( bTimesC );
+  //TrackMatrix bTimesC = B * tC;
+  //tC = Gaudi::Math::Symmetrize<TrackMatrix>( bTimesC );
+  TrackMatrix newtC = ROOT::Math::Similarity<double,B.kRows,B.kCols>( B, tC )
+                      + errorMeas2 * TrackVectorProd( mK, mK );
+  tC = Gaudi::Math::Symmetrize<TrackMatrix>( newtC );
 
   // update the residual and the error on the residual
   double HK = ROOT::Math::Dot( H, mK );
@@ -248,9 +253,6 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
   node.setResidual( res );
   node.setErrResidual( sqrt(errorRes2) );
 
-  if ( m_debugLevel ) verbose() << "filter z = " << node.z()
-                                << " chi2 = " << node.chi2() << endmsg;
-
   return StatusCode::SUCCESS;
 }
 
@@ -258,10 +260,10 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 // 
 //=========================================================================
 TrackMatrix TrackKalmanFilter::TrackVectorProd( TrackVector& vec1,
-                                                    const TrackVector& vec2 )
+                                                const TrackVector& vec2 )
 {
-  // hack to do the product (5x1) * (1x5) of TrackVectors
-  // this is really an ugly hack!
+  //TODO: remove this hack to do the product (Dimx1) * (1xDim)
+  // of TrackVectors of dimension Dim as soon as possible
   TrackMatrix result = TrackSymMatrix();
   for ( unsigned int i = 0; i < vec1.Dim(); ++i ) {
     for ( unsigned int j = 0; j < vec2.Dim(); ++j ) {
@@ -287,23 +289,21 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 
   // check that the elements are not too large else dsinv will crash
   StatusCode sc = checkInvertMatrix( prevNodeC );
-  if ( sc.isFailure() ) return failure("not valid matrix in smoother"); 
+  if ( sc.isFailure() ) return failure( "not valid matrix in smoother" );
 
   // invert the covariance matrix
   TrackSymMatrix invPrevNodeC = prevNodeC;
   sc = invertMatrix( invPrevNodeC );
   if ( sc.isFailure() ) {
-    debug() << "invPrevNodeC = " << invPrevNodeC << endreq;
     return failure( "inverting matrix in smoother" );
   }
-  
 
   // references to _predicted_ state + cov of this node from the first step
   TrackVector& thisNodeX = thisNode.state().stateVector();
   TrackSymMatrix& thisNodeC = thisNode.state().covariance();
 
   // Save filtered state vector
-  TrackVector oldNodeX = thisNodeX ;
+  TrackVector oldNodeX = thisNodeX;
 
   // transport
   const TrackMatrix& F = prevNode.transportMatrix();
@@ -312,22 +312,30 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   TrackMatrix A = thisNodeC * ROOT::Math::Transpose( F ) * invPrevNodeC;
 
   // best = smoothed state at prev Node
-  const TrackVector& prevNodeSmoothedX = prevNode.state().stateVector();
-  const TrackSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
+  ////const TrackVector& prevNodeSmoothedX = prevNode.state().stateVector();
+  ////const TrackSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
 
   // smooth state
-  thisNodeX += A * (prevNodeSmoothedX - prevNodeX);
+  thisNodeX += A * ( prevNode.state().stateVector() - prevNodeX );
 
-  // smooth covariance  matrix
-  TrackSymMatrix covDiff = prevNodeSmoothedC - prevNodeC;
+  // smooth covariance matrix
+  TrackSymMatrix covDiff = prevNode.state().covariance() - prevNodeC;
   TrackSymMatrix covUpDate =
-    ROOT::Math::Similarity<double,5,5>( A, covDiff );
+    ROOT::Math::Similarity<double,A.kRows,A.kCols>( A, covDiff );
 
   thisNodeC += covUpDate;
 
   // check that the cov matrix is positive
   sc = checkPositiveMatrix( thisNodeC ) ;
-  if ( sc.isFailure() ) return Warning("non-positive Matrix in smoother");
+  if ( sc.isFailure() ) {
+    std::ostringstream mess;
+    mess << "Non-positive cov. matrix in smoother for z = "
+         << thisNode.z() << " thisNodeC = "
+         << thisNodeC;
+    //return Warning( mess.str() );
+    error() <<  mess.str() << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // No need to update residuals for node w/o measurement
   if ( thisNode.hasMeasurement() ) {
@@ -338,16 +346,13 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     thisNode.setResidual( res );
     double errRes2 =
       thisNode.errResidual2()
-      - ROOT::Math::Similarity<double,5>( H, covUpDate );
+      - ROOT::Math::Similarity<double,H.kSize>( H, covUpDate );
     if ( errRes2 < 0.) {
       return Warning( "Negative residual error in smoother!" );
     }
-    thisNode.setErrResidual( sqrt(errRes2) );    
-
-    if ( m_debugLevel ) verbose() << "smoother z = " << thisNode.z()
-                                  << " chi2 = " << thisNode.chi2() << endmsg;
+    thisNode.setErrResidual( sqrt(errRes2) );
   }
-       
+
   return StatusCode::SUCCESS;
 }
 
@@ -393,8 +398,7 @@ StatusCode TrackKalmanFilter::checkInvertMatrix( const TrackSymMatrix& mat )
 //=========================================================================
 StatusCode TrackKalmanFilter::checkPositiveMatrix( TrackSymMatrix& mat ) 
 {
-  unsigned int nParams = (unsigned int) mat.kRows;
-  for ( unsigned int i=0; i < nParams; ++i ) {
+  for ( unsigned int i=0; i < mat.kRows; ++i ) {
     if ( mat(i,i) <= 0. )
       return Warning( "Covariance matrix has non-positive elements!" );
   }
