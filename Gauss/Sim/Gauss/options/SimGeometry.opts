@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.20 2006-05-29 08:48:13 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.21 2006-06-06 09:44:03 gcorti Exp $
 
 /** @file
  *
@@ -66,6 +66,7 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfter
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeBakeoutAfterMagnet"};
 //
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};

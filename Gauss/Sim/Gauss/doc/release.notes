@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-06-06 - Gloria Corti
+ - Introduce Converter in geometry stream, since it is positioned directly in
+   the Downstream region
+
 !======================== Gauss v24r7 2006-05-30 =============================
 ! 2006-05-30 - Gloria Corti
  - Introduce new options to read in generator events from a file and do the
