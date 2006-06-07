@@ -1,6 +1,6 @@
-// $Id: DV_LoKi_Bs2PhiMM.opts,v 1.1 2005-02-16 11:16:57 ibelyaev Exp $ 
+// $Id: DV_LoKi_Bs2PhiMM.opts,v 1.2 2006-06-07 13:52:22 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -24,17 +24,14 @@
 ApplicationMgr.DLLs    += {"LoKi" , "LoKiExample"        } ;
 
 ApplicationMgr.TopAlg  += { "GaudiSequencer/Bs2PhiMMSeq" } ;
-Bs2PhiMMSeq.Members     = { "LoKiPreLoad/Charged"        ,
-                            "LoKi_Bs2PhiMM/Bs2PhiMM"     } ;
+Bs2PhiMMSeq.Members     = { "LoKi_Bs2PhiMM/Bs2PhiMM"     } ;
 Bs2PhiMMSeq.MeasureTime = true                             ;
 
-Charged.PhysDesktop.ParticleMakerType               = "CombinedParticleMaker" ;
-Charged.PhysDesktop.CombinedMakerType.Particles     = { "muon" , "kaon" }     ;
-Charged.PhysDesktop.CombinedMakerType.ExclusiveSelection = false ;
-Charged.PhysDesktop.CombinedMakerType.MuonSelection = { "det='MUON' mu-pi='-10'" } ;
-Charged.PhysDesktop.CombinedMakerType.KaonSelection = { "det='RICH'  K-pi='-10'" } ;
-
-Bs2PhiMM.PhysDesktop.InputLocations = { "/Event/Phys/Charged" } ;
+Bs2PhiMM.PhysDesktop.InputLocations = 
+  { 
+    "/Event/Phys/StdLooseKaons",
+    "/Event/Phys/StdLooseMuons"
+  } ;
 Bs2PhiMM.NTupleLUN = "PHIMM" ;
 
 
@@ -65,6 +62,7 @@ ApplicationMgr.EvtMax    =   500 ;
 EventSelector.FirstEvent =     1 ;
 EventSelector.PrintFreq  =    10 ;
 
+#include "$STDOPTS/Hbook.opts"
 
 // ============================================================================
 // The END 

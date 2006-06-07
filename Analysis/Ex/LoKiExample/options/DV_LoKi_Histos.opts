@@ -1,11 +1,8 @@
-// $Id: DV_LoKi_Histos.opts,v 1.4 2004-08-05 09:54:12 ibelyaev Exp $
+// $Id: DV_LoKi_Histos.opts,v 1.5 2006-06-07 13:52:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/03/11 21:41:04  ibelyaev
-//  few algorithms updated fro LoKi v2r0
-//
 // ============================================================================
 // include 
 // ============================================================================
@@ -31,30 +28,21 @@ ApplicationMgr.DLLs    += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
 ApplicationMgr.TopAlg   += {
-  "LoKiPreLoad/Charged"  ,   // create and put into TES charged particles
   "LoKi_Histos/Histos"       // execute the algorithm itsels  
 };
 
-// configuration of algorithm 'Charged' 
-Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker" ;
-Charged.PhysDesktop.CombinedParticleMaker.Particles   = 
-  { "kaon" , "muon" , "pion" } ;
-
 // configuration of algorithm 'Histos' 
-Histos.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
+Histos.PhysDesktop.InputLocations = 
+  { "/Event/Phys/StdLooseCharged" } ;
 
 // the output file for histograms 
 HistogramPersistencySvc.OutputFile = "Histos.hbook";
-
-
 
 // control for printout 
 MessageSvc.OutputLevel       =  3 ;  // "INFO" printout level
 EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
 RootEvtCnvSvc.OutputLevel    =  4 ;
 ChargedProtoPAlg.OutputLevel =  4 ;
-
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
 #pragma   print off 
 // input data set: DC04 Bs -> phi phi 
@@ -67,8 +55,10 @@ PoolDbCacheSvc.Catalog =
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
   };
 
+HbookHistSvc.PrintHistos            = true    ;
+
 // The number of events to process 
-ApplicationMgr.EvtMax  = 5000 ;
+ApplicationMgr.EvtMax  = 100  ;
 
 // ============================================================================
 // The END 

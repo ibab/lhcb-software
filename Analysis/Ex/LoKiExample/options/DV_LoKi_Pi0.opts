@@ -1,8 +1,8 @@
-// $Id: DV_LoKi_Pi0.opts,v 1.1 2005-02-08 11:23:11 ibelyaev Exp $ 
+// $Id: DV_LoKi_Pi0.opts,v 1.2 2006-06-07 13:52:22 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 /** @file 
@@ -23,24 +23,19 @@ ApplicationMgr.DLLs   += { "LoKi" , "LoKiExample"} ;
 
 // the main 
 ApplicationMgr.TopAlg += { "GaudiSequencer/LoKiPi0"  } ;
-LoKiPi0.Members        = {  "LoKiPreLoad/Photons"    ,
-                            "LoKiPreLoad/CnvPhotons" ,
-                            "LoKi_Pi0/Pi0"           } ;
+LoKiPi0.Members        = { "LoKi_Pi0/Pi0"           } ;
 LoKiPi0.MeasureTime    = true ;
 
-Photons.PhysDesktop.ParticleMakerType                 = "PhotonParticleMaker" ;
-Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = false ; 
-CnvPhotons.PhysDesktop.ParticleMakerType              = "CnvPhotonParticleMaker" ;
-
-Pi0.PhysDesktop.InputLocations =  { "/Event/Phys/Photons"    , 
-                                    "/Event/Phys/CnvPhotons" }; 
+Pi0.PhysDesktop.InputLocations =  { "/Event/Phys/StdLooseAllPhotons" }; 
 Pi0.NTupleLUN = "PI0" ;
+Pi0.PP2MC = {"/Event/Rec/Relations/NeutralPP2MC" } ;
 
 // Histogram persistency 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile  = "pi0histos.hbook";
 HbookHistSvc.PrintHistos            = true  ;
 DaVinci.doHistos                    = false ;
+StdLooseAllPhotons.OutputLevel = 5 ;
 
 // NTuples 
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -54,11 +49,12 @@ XmlParserSvc.OutputLevel                = 4;
 ChargedProtoPAlg.OutputLevel            = 3;
 
 // Number of events to process, skip and printing frequency
-ApplicationMgr.EvtMax    = 5000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 50 ;
+ApplicationMgr.EvtMax    = 1000;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
+#include "$STDOPTS/Hbook.opts"
 
 // ============================================================================
 // The END 

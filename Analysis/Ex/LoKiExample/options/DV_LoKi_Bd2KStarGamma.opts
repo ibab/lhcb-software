@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.6 2005-02-05 19:13:25 ibelyaev Exp $
+// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.7 2006-06-07 13:52:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/02/05 19:13:25  ibelyaev
+//  add the histograms
+//
 // ============================================================================
 // Standard Gaudi configuration and additional DLLs
 // ============================================================================
@@ -30,22 +33,15 @@ ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
 ApplicationMgr.TopAlg +=  {
-  "LoKiPreLoad/Photons"            , // create and put into TES neutral particles  
-  "LoKiPreLoad/Charged"            , // create and put into TES charged particles
   "LoKi_Bd2KStarGamma/KStarGamma"    // execute the algorithm itsels  
 };
 
-// configuration of algorithm 'Charged' 
-Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
-
-// configuration of algorithm 'Neutrals' 
-Photons.PhysDesktop.ParticleMakerType   =  "PhotonParticleMaker";
-Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true ;
-Photons.OutputLocation                  = "/Event/Phys/Photons" ;
-
 // configuration of algorithm 'KStarGamma' 
-KStarGamma.PhysDesktop.InputLocations  = {"/Event/Phys/Charged" ,
-                                          "/Event/Phys/Photons" } ;
+KStarGamma.PhysDesktop.InputLocations  = {
+  "/Event/Phys/StdLooseKaons",
+  "/Event/Phys/StdLoosePions",
+  "/Event/Phys/StdLooseAllPhotons"
+} ;
 KStarGamma.OutputLocation  = "/Event/Phys/Bd2KStarGamma" ;
 KStarGamma.NTupleLUN       = "TUPLES"  ; // logical file unit 
 KStarGamma.DecayDescriptor = " [B0 -> ( K*(892)0 -> K+ pi- ) gamma]cc " ;
@@ -63,8 +59,8 @@ ChargedProtoPAlg.OutputLevel     = 4 ;
 PrimVtxFinder.OutputLevel        = 4 ; 
 RootEvtCnvSvc.OutputLevel        = 4 ;
 NeutralPPsFromCPsAlg.OutputLevel = 4 ;
+StdLooseAllPhotons.OutputLevel   = 4 ;
 
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
 #pragma   print off 
 // input data set:  DC04 Bd -> K* gamma
@@ -78,9 +74,10 @@ PoolDbCacheSvc.Catalog =
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 5000 ;
+ApplicationMgr.EvtMax  = 500 ;
 
-// ApplicationMgr.HistogramPersistency = "ROOT";
+#include "$STDOPTS/Hbook.opts"
+
 ApplicationMgr.HistogramPersistency = "HBOOK" ;
 HbookHistSvc.PrintHistos            = true    ;
 HistogramPersistencySvc.OutputFile  = "BdKStarGamma_hist.hbook" ;

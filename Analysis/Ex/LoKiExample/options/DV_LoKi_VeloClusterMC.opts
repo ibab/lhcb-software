@@ -1,6 +1,6 @@
-// $Id: DV_LoKi_VeloClusterMC.opts,v 1.3 2005-02-08 20:29:46 ibelyaev Exp $
+// $Id: DV_LoKi_VeloClusterMC.opts,v 1.4 2006-06-07 13:52:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -8,7 +8,6 @@
 // ============================================================================
 #pragma   print off 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$STDOPTS/RootHist.opts"
 #include "$STDOPTS/Hbook.opts"
 #pragma   print on 
@@ -28,6 +27,15 @@
 ApplicationMgr.DLLs   += { "VeloDAQ"     , "VeloAssociators" } ;
 ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi"            } ;
 
+DataOnDemandSvc.Nodes += { 
+  "DATA='/Event'                TYPE='DataObject'",
+  "DATA='/Event/Phys'           TYPE='DataObject'",
+  "DATA='/Event/Rec'            TYPE='DataObject'",
+  "DATA='/Event/Rec/Relations'  TYPE='DataObject'",
+  "DATA='/Event/Raw'            TYPE='DataObject'",
+  "DATA='/Event/Raw/Velo'       TYPE='DataObject'"
+};
+
 DataOnDemandSvc.Algorithms += 
   { 
     "DATA='/Event/Raw/Velo/Clusters' TYPE='DecodeVeloRawBuffer' " ,
@@ -39,6 +47,7 @@ ApplicationMgr.TopAlg  = { "LoKi_VeloClusterMC/MCVelo"  } ; // execute the algor
 
 // configuration of algorithm 'MCVelo' 
 MCVelo.NTupleLUN                        = "TUPLES"  ; // logical file unit 
+MCVelo.PP2MC = {} ;
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -54,8 +63,6 @@ MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
 EventSelector.PrintFreq      = 50 ;  // make a print only each 10th event 
 ChargedProtoPAlg.OutputLevel =  4 ;
 RootEvtCnvSvc.OutputLevel    =  4 ;
-
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
 // input data 
 #pragma   print off 

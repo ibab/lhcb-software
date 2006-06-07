@@ -1,11 +1,8 @@
-// $Id: DV_LoKi_Bs2PhiPhi.opts,v 1.6 2005-02-18 09:33:44 ibelyaev Exp $
+// $Id: DV_LoKi_Bs2PhiPhi.opts,v 1.7 2006-06-07 13:52:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2005/02/17 10:22:43  ibelyaev
-//  update Bs-> Phi Phi example
-//
 // ============================================================================
 // include files 
 // ============================================================================
@@ -32,24 +29,18 @@
 ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
-ApplicationMgr.TopAlg +=  {
-  "LoKiPreLoad/Charged"   ,  // create and put into TES charged particles
+ApplicationMgr.TopAlg +=  {"GaudiSequencer/SeqPhiPhi" } ;
+SeqPhiPhi.MeasureTime = true ;
+SeqPhiPhi.Members = { 
   "LoKi_Bs2PhiPhi/PhiPhi"    // execute the algorithm itsels  
 };
 
-// configuration of algorithm 'Charged' 
-Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
-Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-Charged.PhysDesktop.CombinedParticleMaker.Particles = 
-  { "kaon" };
-Charged.PhysDesktop.CombinedParticleMaker.KaonSelection = 
-  { "det='RICH' k-pi='-10.0' k-p='-10.0'" } ;
-
 // configuration of algorithm 'PhiPhi' 
-PhiPhi.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
+PhiPhi.PhysDesktop.InputLocations       = { "/Event/Phys/StdLooseKaons" };
 PhiPhi.NTupleLUN                        = "TUPLES"  ; // logical file unit 
 PhiPhi.DecayDescriptor =  " Bs -> phi(1020) phi(1020) " ;
 PhiPhi.OutputLocation  = "/Event/Phys/Bs2PhiPhi"        ;
+PhiPhi.PP2MC = {"/Event/Rec/Relations/ChargedPP2MC" } ;
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -65,8 +56,6 @@ ChargedProtoPAlg.OutputLevel     = 4 ;
 PrimVtxFinder.OutputLevel        = 4 ; 
 RootEvtCnvSvc.OutputLevel        = 4 ;
 
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
-
 #pragma   print off 
 // input data set: DC04 Bs -> phi phi 
 #include "$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts"
@@ -79,7 +68,7 @@ PoolDbCacheSvc.Catalog =
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 50 ;
+ApplicationMgr.EvtMax  = 500 ;
 
 // ============================================================================
 // The END 

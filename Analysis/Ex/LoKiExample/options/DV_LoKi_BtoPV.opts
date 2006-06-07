@@ -1,4 +1,4 @@
-// $Id: DV_LoKi_BtoPV.opts,v 1.1 2005-06-02 10:02:55 ibelyaev Exp $
+// $Id: DV_LoKi_BtoPV.opts,v 1.2 2006-06-07 13:52:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -52,8 +52,7 @@ BtoPV.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
 BtoPV.NTupleLUN                        = "BTOPV"  ; // logical file unit 
 BtoPV.DecayDescriptor                  =  " Bs -> phi(1020) phi(1020) " ;
 BtoPV.OutputLocation                   = "/Event/Phys/BtoPV"        ;
-BtoPV.MCppAssociators                  = 
-  { "AssociatorWeighted<ProtoParticle,MCParticle,double>/ChargedPP2MCAsct" } ;
+BtoPV.PP2MC = { "/Event/Rec/Relations/ChargedPP2MC" } ; // only charged 
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -68,8 +67,6 @@ EventSelector.PrintFreq  =   50 ;  // make a print only each 10th event
 ChargedProtoPAlg.OutputLevel     = 4 ; 
 PrimVtxFinder.OutputLevel        = 4 ; 
 RootEvtCnvSvc.OutputLevel        = 4 ;
-
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
 #pragma   print off 
 // input data set: DC04 Bs -> phi phi 

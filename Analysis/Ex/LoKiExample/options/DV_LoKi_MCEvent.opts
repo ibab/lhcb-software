@@ -1,4 +1,4 @@
-// $Id: DV_LoKi_MCEvent.opts,v 1.2 2004-08-05 09:54:12 ibelyaev Exp $
+// $Id: DV_LoKi_MCEvent.opts,v 1.3 2006-06-07 13:52:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -45,8 +45,6 @@ ApplicationMgr.EvtMax  = 1000 ;
 MessageSvc.OutputLevel       =   3 ;  // "WARNING" printout level
 EventSelector.PrintFreq      = 100 ;  // make a print only each 10th event 
 
-ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
-
 // input data set: DC04 mixture of bb-inclusive + minbias  
 #pragma   print off 
 #include "$LOKIEXAMPLEOPTS/Mixture_DC04.opts"
@@ -59,7 +57,7 @@ PoolDbCacheSvc.Catalog =
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 1000 ;
+ApplicationMgr.EvtMax  = 500 ;
 
 
 // ============================================================================
