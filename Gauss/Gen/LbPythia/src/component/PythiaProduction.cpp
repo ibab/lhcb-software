@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.14 2006-05-03 08:20:55 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.15 2006-06-07 12:54:59 robbep Exp $
 // Include files 
 
 // local
@@ -208,6 +208,17 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) 
     (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+  
+  for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
+        v != theEvent -> vertices_end() ; ++v ) {
+    CLHEP::HepLorentzVector newPos ;
+    newPos.setX( (*v) -> position() . x() ) ;
+    newPos.setY( (*v) -> position() . y() ) ;
+    newPos.setZ( (*v) -> position() . z() ) ;
+    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    
+    (*v) -> set_position( newPos ) ;
+  }
   
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
