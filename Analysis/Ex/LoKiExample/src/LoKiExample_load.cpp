@@ -1,8 +1,11 @@
-// $Id: LoKiExample_load.cpp,v 1.8 2005-02-16 11:16:58 ibelyaev Exp $
+// $Id: LoKiExample_load.cpp,v 1.9 2006-06-07 13:53:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/02/16 11:16:58  ibelyaev
+//  add new exmaples: H->bb and Bs -> phi mu+ mu-
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -36,9 +39,6 @@ DECLARE_FACTORY_ENTRIES( LoKiExample )
   
   // LoKi DEMO
   DECLARE_ALGORITHM( LoKi_Demo1           ) ;
- 
-  // charge conjugated loop 
-  DECLARE_ALGORITHM( LoKiLoopCC           ) ;
 
   DECLARE_ALGORITHM( LoKi_MCEvent         ) ;
   DECLARE_ALGORITHM( LoKi_MCMuon          ) ;

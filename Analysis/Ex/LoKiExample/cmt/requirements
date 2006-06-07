@@ -1,41 +1,32 @@
-# $Id: requirements,v 1.28 2005-07-18 09:55:12 pkoppenb Exp $ 
+# $Id: requirements,v 1.29 2006-06-07 13:53:31 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.28 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.29 $
 # =============================================================================
 package         LoKiExample
-version         v3r14
+version         v3r14p1
 
 # ============= structure =====================================================
-branches        cmt doc src jobs options 
+branches        cmt doc src options 
 
 # ============= environment ===================================================
 set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc 
-set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
-set LOKIEXAMPLEJOBS   $(LOKIEXAMPLEROOT)/options
+set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/option
 
 # ============= dependencies  =================================================
 use             Python   v* LCG_Interfaces -no_auto_imports 
 use             LoKi     v* Tools
 use             LoKiJets v* Tools
 use             LoKiGen  v* Tools
- 
+use             HbookCnv v* 
+  
 # ============= constituents ==================================================
 library         LoKiExample  *.cpp 
 
 # ============= patterns ======================================================
 apply_pattern component_library library=LoKiExample 
 
-# ============= paths =========================================================
-path_remove PYTHONPATH  "LoKiExample" 
-path_append PYTHONPATH  ${LOKIEXAMPLEJOBS}
-path_remove PATH        "LoKiExample" 
-path_append PATH        ${LOKIEXAMPLEJOBS}
-
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.27  2005/06/02 10:02:55  ibelyaev
-#  add example for B->PV associations
-#
 # =============================================================================
 # The END 
 # =============================================================================
