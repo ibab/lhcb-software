@@ -1,4 +1,4 @@
-// $Id: GeneratorToG4.cpp,v 1.3 2006-04-12 19:02:49 gcorti Exp $
+// $Id: GeneratorToG4.cpp,v 1.4 2006-06-07 12:43:18 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -160,7 +160,7 @@ StatusCode GeneratorToG4::execute() {
       ( (*(outParts.begin()))->production_vertex()->position().x(),
         (*(outParts.begin()))->production_vertex()->position().y(),
         (*(outParts.begin()))->production_vertex()->position().z(),
-        ((*(outParts.begin()))->production_vertex()->position().t())/c_light );
+        (*(outParts.begin()))->production_vertex()->position().t() );
     
     for( std::vector<HepMC::GenParticle*>::iterator iOut = outParts.begin();
          outParts.end() != iOut; ++iOut ) {
@@ -217,9 +217,14 @@ G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
     // assign decay time
     HepLorentzVector theLorentzV = (genPart->end_vertex()->position()
                                     - genPart->production_vertex()->position());
+    // switch units for time to distance (mm)
+    theLorentzV.setT( theLorentzV.t() * CLHEP::c_light ) ;
+
     Hep3Vector theBoost = genPart->momentum().boostVector();
-    
-    g4Particle->SetProperTime((theLorentzV.boost(-theBoost)).t()/c_light);
+
+    // switch again to time from distance (ns)
+    g4Particle->SetProperTime((theLorentzV.boost(-theBoost)).t()/
+                              CLHEP::c_light);
     
     // Better to use print here instead of verbose because
 //     verbose() << "assigning time " 

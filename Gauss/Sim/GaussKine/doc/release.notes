@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2006-06-07 - Patrick Robbe
+ - GeneratorToG4: HepMC event units for time are ns, so do the boost
+   correctly with mm for position and ns for time.
+
 !========================== GaussKine v1r3 2006-05-02 ========================
 ! 2006-05-02 - Gloria CORTI
  - Use MCTruthManager::SplitBarCode to choose if to collapse a particle,
