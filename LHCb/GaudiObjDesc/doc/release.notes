@@ -2,6 +2,16 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+
+=============================GaudiObjDesc v9r6============================
+! 2006-06-06 - Marco Clemencic
+ patch #733:
+ - Disabled boost allocators on Windows (problems with static storage)
+ - Changed the default allocator to the one with the check in
+   operator delete (to avoid possible memory leaks)
+ - Removed dummy implementations of "operator new(size_t,void*)" and
+   "operator delete(void*,void*)" which are not needed with ROOT 5.11
+
 ! 2006-05-31 - Marco Clemencic
  - patch #729. for classes inheriting from ContainedObject, G.O.D. is
    generating the forward declaration template <class TYPE> class
@@ -9,9 +19,8 @@ Package manager : Stefan Roiser
    (the equivalent is not generated for KeyedObject). This may create
    problems. This fixes the bug.
 
-=============================GaudiObjDesc v9r6============================
 ! 2006-05-19 - Marco Clemencic
- - patch #726. Removed a work-aroud introduced with patch #716 that is
+ - patch #726. Removed a work-around introduced with patch #716 that is
    not needed with ROOT 5.11 (the change of default allocator for
    contained objects).
 

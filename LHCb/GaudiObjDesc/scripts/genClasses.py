@@ -537,49 +537,15 @@ class genClasses(genSrcUtils.genSrcUtils):
     data = {}
     data['classname'] = godClass['attrs']['name']
 
-    if allocatorType == 'BOOST': # Boost allocator without check on delete
+    if allocatorType == 'BOOST': # Boost allocator with check on delete
       s ="""
+#ifndef _WIN32
   /// operator new
   static void* operator new ( size_t size )
   {
     return ( sizeof(%(classname)s) == size ? 
              boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
              ::operator new(size) );
-  }
-
-  /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void* pObj )
-  {
-    return ::operator new (size,pObj);
-  }
-
-  /// operator delete
-  static void operator delete ( void* p )
-  {
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
-  }
-
-  /// placement operator delete (needed to avoid a warning on win32)
-  static void operator delete ( void* p, void* pObj )
-  {
-    ::operator delete (p, pObj);
-  }"""%data
-      self.include.append("GaudiKernel/boost_allocator.h")
-      
-    elif allocatorType == 'BOOST2': # Boost allocator with check on delete
-      s ="""
-  /// operator new
-  static void* operator new ( size_t size )
-  {
-    return ( sizeof(%(classname)s) == size ? 
-             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
-             ::operator new(size) );
-  }
-
-  /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void* pObj )
-  {
-    return ::operator new (size,pObj);
   }
 
   /// operator delete
@@ -589,16 +555,31 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
   }
-
-  /// placement operator delete (needed to avoid a warning on win32)
-  static void operator delete ( void* p, void* pObj )
+#endif"""%data
+      self.include.append("GaudiKernel/boost_allocator.h")
+      
+    elif allocatorType == 'BOOST2': # Boost allocator without check on delete
+      s ="""
+#ifndef _WIN32
+  /// operator new
+  static void* operator new ( size_t size )
   {
-    ::operator delete (p, pObj);
-  }"""%data
+    return ( sizeof(%(classname)s) == size ? 
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+             ::operator new(size) );
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
+  }
+#endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
       
     elif allocatorType == 'DEBUG': # Boost allocator with check on delete and debug print-out
       s = """
+#ifndef _WIN32
   /// operator new
   static void* operator new ( size_t size )
   {
@@ -607,13 +588,6 @@ class genClasses(genSrcUtils.genSrcUtils):
       ::operator new(size);
     std::cout << "%(classname)s::new() -> " << ptr << std::endl;
     return ( ptr );
-  }
-
-  /// placement operator new (not needed in the most recent Reflex)
-  static void* operator new ( size_t size, void* pObj )
-  {
-    std::cout << "%(classname)s::new(" << pObj << ")" << std::endl;
-    return ::operator new (size,pObj);
   }
 
   /// operator delete
@@ -626,13 +600,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
   }
-
-  /// placement operator delete (needed to avoid a warning on win32)
-  static void operator delete ( void* p, void* pObj )
-  {
-    std::cout << "%(classname)s::delete(" << p << "," << pObj << ") " << std::endl;
-    ::operator delete (p, pObj);
-  }"""%data
+#endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
       self.stdIncludes.append("iostream")
       
