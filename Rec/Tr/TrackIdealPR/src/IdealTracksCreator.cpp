@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.25 2006-05-19 11:46:30 dhcroft Exp $
+// $Id: IdealTracksCreator.cpp,v 1.26 2006-06-07 15:55:54 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -163,7 +163,7 @@ StatusCode IdealTracksCreator::execute()
   put( tracksCont, m_tracksOutContainer );
 
   // create the association (linker) table and register it in the TES
-  LinkerWithKey<Track,MCParticle> linkTable( evtSvc(), msgSvc(),
+  LinkerWithKey<MCParticle,Track> linkTable( evtSvc(), msgSvc(),
                                              m_tracksOutContainer );
 
   debug() << "Starting loop over the "
@@ -329,7 +329,7 @@ StatusCode IdealTracksCreator::execute()
       // Add the track to the Tracks container and fill the association table
       // -------------------------------------------------------------------
       tracksCont -> add( track );
-      linkTable.link( mcParticle, track, 1. );
+      linkTable.link( track, mcParticle, 1. );
 
       // debugging Track ...
       // -------------------
@@ -415,7 +415,8 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
         StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
         double s1 = 0.0;
         double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
-        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 20*Gaudi::Units::mm);
+        m_poca->minimize(stateTraj, s1, meas.trajectory(), s2, distance, 
+                         20*Gaudi::Units::mm);
         int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
         meas.setAmbiguity( ambiguity );
       }

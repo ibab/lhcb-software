@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-06-07 - Jeroen van Tilburg
+ - Changed order in Linker table such that it is consistent with
+   TrackAssociator.cpp
+
 ! 2006-05-19 - David Hutchcroft
  - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
 
