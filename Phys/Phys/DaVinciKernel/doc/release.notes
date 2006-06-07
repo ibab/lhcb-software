@@ -4,6 +4,9 @@
 
 !========================== DaVinciKernel v4r1 2006-05-29 ===================
 
+! 2006-06-07 - Juan PALACIOS
+  - Remove Kernel/IKFFitTool.h
+
 ! 2006-05-16 - P. Koppenburg
  - Kernel/IParticle2State.h
    . New tool that allows to make a state from a Particle and back
