@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2006-06-07 - Antonis Papanestis
+ - Fixed bug in HPD demagnification
+
 ! 2006-06-02 - Antonis Papanestis
  - Added method detPointOnAnode in DeRichHPDPanel
  - Minor change in DeRichGasRadiator

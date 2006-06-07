@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.40 2006-06-02 10:56:25 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.41 2006-06-07 14:16:00 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -417,8 +417,6 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   return StatusCode::SUCCESS;
 }
 
-
-
 //=========================================================================
 //  convert a smartID to a point on the inside of the HPD window
 //=========================================================================
@@ -432,20 +430,22 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
   const double inSiliconY =
     m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
 
-  // find the radius and use 2nd order term to convert to radius in window
   const double inSiliconR = sqrt(inSiliconX*inSiliconX + inSiliconY*inSiliconY);
-  double theta = acos( inSiliconX/inSiliconR );
-  // keep the correct angle
-  if ( inSiliconY < 0.0 ) theta = Gaudi::Units::twopi - theta;
 
-  const double rInWindow = (-m_deMagFactor[0] +
-                            sqrt(m_deMagFactor[0]*m_deMagFactor[0] +
-                                 4*m_deMagFactor[1]*inSiliconR)) / (2*m_deMagFactor[1]);
+  // Now calculate the radius at the cathode.
+  // To go from the cathode to the anode Ra = Rc*(-d0 + d1*Rc)
+  // The minus sign in d0 is for the cross-focussing effect
+  // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
+  // The difference is that Ra is now possitive.
+  // Chose the solution with the minus sign
+  const double rInWindow = ( m_deMagFactor[0] -
+                             sqrt(gsl_pow_2( m_deMagFactor[0] ) -
+                                  4*m_deMagFactor[1]*inSiliconR)) / (2*m_deMagFactor[1]);
 
-  // add 180 degrees for the cross focussing
-  const double newTheta  = theta + Gaudi::Units::pi;
-  const double inWindowX = rInWindow*cos(newTheta);
-  const double inWindowY = rInWindow*sin(newTheta);
+  // the minus sign is for the cross-focussing
+  const double scaleUp = -rInWindow/inSiliconR;
+  const double inWindowX = scaleUp*inSiliconX;
+  const double inWindowY = scaleUp*inSiliconY;
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
 
   return (m_trans1[HPDNumber] * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ));
@@ -455,7 +455,7 @@ Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartI
 //=========================================================================
 //  convert a SmartID to a point on the anode (global coord system)
 //=========================================================================
-Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const 
+Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
 {
 
   const unsigned int HPDNumber = smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
@@ -467,10 +467,12 @@ Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartI
     m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
 
   Gaudi::XYZPoint inSilicon( inSiliconX, inSiliconY, 0.0 );
-  
-  return(geometry()->toGlobal(m_pvHPDMaster[HPDNumber]->toMother(m_pvHPDSMaster[HPDNumber]->
-         toMother(m_pvSilicon[HPDNumber]->toMother(inSilicon )))));
-  
+
+  return(geometry()->toGlobal(m_pvHPDMaster[HPDNumber]->
+                              toMother(m_pvHPDSMaster[HPDNumber]->
+                                       toMother(m_pvSilicon[HPDNumber]->
+                                                toMother(inSilicon )))));
+
 }
 
 //=========================================================================
@@ -531,12 +533,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     return StatusCode::SUCCESS;
   }
 
-  Gaudi::XYZPoint pInWindow;
-  Gaudi::XYZVector vInHPDMaster;
-
-  ISolid::Ticks HPDWindowTicks;
-  unsigned int noTicks(0);
-
   // Overwise slow
 
   // find the correct HPD and quartz window inside it
@@ -552,18 +548,26 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     return StatusCode::FAILURE;
   }
 
+  Gaudi::XYZPoint pInHPD( m_pvHPDMaster[HPDNumber]->toLocal( pInPanel ));
+  Gaudi::XYZVector vInHPD( m_pvHPDMaster[HPDNumber]->matrix()*vInPanel );
+  ISolid::Ticks kaptonTicks;
+  if ( 0 != m_kaptonSolid->intersectionTicks(pInHPD, vInHPD, kaptonTicks) )
+    return StatusCode::FAILURE;
+
   const IPVolume* pvHPDSMaster = m_pvHPDSMaster[HPDNumber];
   const IPVolume* pvWindow     = m_pvWindow[HPDNumber];
   const ISolid* windowSolid  = pvWindow->lvolume()->solid();
 
   // convert point to local coordinate systems
-  pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->toLocal(pInPanel)));
+  Gaudi::XYZPoint pInWindow( pvWindow->toLocal(pvHPDSMaster->
+                                               toLocal(pvHPDMaster->toLocal(pInPanel))) );
 
   // convert local vector assuming that only the HPD can be rotated
-  vInHPDMaster = pvHPDMaster->matrix()*vInPanel;
+  Gaudi::XYZVector vInHPDMaster( pvHPDMaster->matrix()*vInPanel );
 
-  noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
-                                           HPDWindowTicks );
+  ISolid::Ticks HPDWindowTicks;
+  unsigned int noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
+                                                        HPDWindowTicks );
   if ( 0 == noTicks ) return StatusCode::FAILURE;
 
   Gaudi::XYZPoint windowPoint( pInWindow + HPDWindowTicks[1]*vInHPDMaster );
