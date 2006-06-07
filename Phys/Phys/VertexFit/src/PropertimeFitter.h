@@ -14,7 +14,7 @@ typedef ROOT::Math::SMatrix<double, 10, 10,
 
 /** @class PropertimeFitter PropertimeFitter.h
  *  
- *  reimplementation of the PropertimeFitter for DC06
+ *  reimplementation of the LifetimeFitter for DC06
  *
  *  @author Yuehong Xie
  *  @date   2006-06-07

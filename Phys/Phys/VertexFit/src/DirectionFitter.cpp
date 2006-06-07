@@ -1,4 +1,4 @@
-// $Id: PropertimeFitter.cpp,v 1.3 2006-06-07 16:23:17 xieyu Exp $
+// $Id: DirectionFitter.cpp,v 1.1 2006-06-07 16:23:17 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -11,29 +11,29 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 // local
-#include "PropertimeFitter.h"
+#include "DirectionFitter.h"
 
 using namespace LHCb ;
 using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
-// Implementation file for class : PropertimeFitter
+// Implementation file for class : DirectionFitter
 //
 // 2006-06-07 : Yuehong Xie
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PropertimeFitter>          s_factory ;
-const        IToolFactory& PropertimeFitterFactory = s_factory ; 
+static const  ToolFactory<DirectionFitter>          s_factory ;
+const        IToolFactory& DirectionFitterFactory = s_factory ; 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PropertimeFitter::PropertimeFitter( const std::string& type,
+DirectionFitter::DirectionFitter( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<ILifetimeFitter>(this);
+  declareInterface<IDirectionFit>(this);
 
   declareProperty( "applyBMassConstraint", m_applyBMassConstraint = false);
   declareProperty( "maxIter", m_maxIter = 10);
@@ -44,12 +44,12 @@ PropertimeFitter::PropertimeFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PropertimeFitter::~PropertimeFitter() {};
+DirectionFitter::~DirectionFitter() {};
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode PropertimeFitter::initialize(){
+StatusCode DirectionFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
@@ -59,14 +59,11 @@ StatusCode PropertimeFitter::initialize(){
 };
 
 //=============================================================================
-// Get propertime
 // inputs: Vertex corresponding to the assumed production point
 //         LHCb::Particle itself
-// output: resulting propertime and error, chisq.
+// output: modified particle
 //=============================================================================
-StatusCode PropertimeFitter::fit( const LHCb::Vertex& PV, const LHCb::Particle& B,
-                                  double& propertime, double& error,
-                                  double& chisq) const 
+StatusCode DirectionFitter::fit( const LHCb::Vertex& PV, LHCb::Particle& B ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -214,30 +211,37 @@ StatusCode PropertimeFitter::fit( const LHCb::Vertex& PV, const LHCb::Particle& 
 
   }
 
-  //propertime = (xb-xpv)*mb/pxb ;
-  propertime =  (vfit[3]-vfit[0])*vfit[9]/vfit[6];  
+  Gaudi::XYZPoint refPoint(vfit[3], vfit[4], vfit[5]);
 
-  ROOT::Math::SMatrix<double, 1, 10> JA;
-  JA(0,0) = -vfit[9]/vfit[6];
-  JA(0,1) = 0.0;
-  JA(0,2) = 0.0; 
-  JA(0,3) = vfit[9]/vfit[6];
-  JA(0,4) = 0.0;
-  JA(0,5) = 0.0;
-  JA(0,6) = -(vfit[3]-vfit[0])*vfit[9]/vfit[6]/vfit[6];
-  JA(0,7) = 0.0;
-  JA(0,8) = 0.0;
-  JA(0,9) = (vfit[3]-vfit[0])/vfit[6];
+  double Eb = sqrt(vfit[6]*vfit[6]+vfit[7]*vfit[7]+vfit[8]*vfit[8]+vfit[9]*vfit[9]);
+  Gaudi::LorentzVector lmom(vfit[6], vfit[7], vfit[8], Eb);
 
-  Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
+  Gaudi::SymMatrix7x7 Cm7 = cfit.Sub<Gaudi::SymMatrix7x7>(3,3);
+  Gaudi::Matrix7x7 Tm2e = ROOT::Math::SMatrixIdentity();
+  Tm2e(6,3)=vfit[6]/Eb;
+  Tm2e(6,4)=vfit[7]/Eb;
+  Tm2e(6,5)=vfit[8]/Eb;
+  Tm2e(6,6)=vfit[9]/Eb;
 
-  error = CovTau(0,0);
+  Gaudi::SymMatrix7x7 C7 = ROOT::Math::Similarity<double,7,7>( Tm2e, Cm7);
 
-  // convert to fs  
-  propertime /=  mm*c_light;   
-  error /= mm*c_light;
+  Gaudi::SymMatrix3x3 posCov    = C7.Sub<Gaudi::SymMatrix3x3>(0,0);
+  Gaudi::SymMatrix4x4 momCov    = C7.Sub<Gaudi::SymMatrix4x4>(3,3);
+  Gaudi::Matrix4x3    posMomCov = C7.Sub<Gaudi::Matrix4x3>(0,4);
 
-  chisq =  chi2Fit;
+  double measuredMass= vfit[9];
+  double measuredMassErr=cfit(9,9);
+
+  if(measuredMassErr>0) measuredMassErr=sqrt(measuredMassErr);
+
+  B.setReferencePoint(refPoint);
+  B.setPosCovMatrix(posCov);
+  B.setMomentum(lmom);
+  B.setMomCovMatrix(momCov);
+  B.setPosMomCovMatrix(posMomCov);
+
+  B.setMeasuredMass(measuredMass);
+  B.setMeasuredMassErr(measuredMassErr);
 
   return sc;
 }
