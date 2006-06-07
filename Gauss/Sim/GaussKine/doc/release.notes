@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== GaussKine v1r4 2006-06-07 ========================
 ! 2006-06-07 - Patrick Robbe
  - GeneratorToG4: HepMC event units for time are ns, so do the boost
    correctly with mm for position and ns for time.

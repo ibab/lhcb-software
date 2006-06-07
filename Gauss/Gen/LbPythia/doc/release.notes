@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.31 2006-06-07 12:54:59 robbep Exp $
+! $Id: release.notes,v 1.32 2006-06-07 16:13:22 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ==================== LbPythia v4r4 2006-06-07 ======================
 ! 2006-06-07 - Patrick Robbe
  - PythiaProduction: put time in ns
 
