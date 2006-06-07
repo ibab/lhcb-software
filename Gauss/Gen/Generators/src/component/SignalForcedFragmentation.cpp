@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.8 2006-04-06 16:34:34 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.9 2006-06-07 12:49:48 robbep Exp $
 // Include files
 
 // local
@@ -152,9 +152,8 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           // Now boost signal at rest to frame of signal produced by 
           // production generator
           Gaudi::LorentzVector mom( theSignal -> momentum() ) ;
-          ROOT::Math::Boost pureBoost ;
-          pureBoost.SetComponents( mom.BoostToCM() ) ;
-          Gaudi::LorentzRotation theBoost( pureBoost ) ;
+          ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
+          
           sc = boostTree( theSignal , theSignalAtRest , theBoost ) ;
           if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
 
@@ -197,7 +196,7 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
                                                  theSignal ,
                                                  const HepMC::GenParticle * 
                                                  theSignalAtRest ,
-                                                 const Gaudi::LorentzRotation& 
+                                                 const ROOT::Math::Boost& 
                                                  theBoost )
   const {
   if ( 0 == theSignalAtRest -> end_vertex() ) return StatusCode::SUCCESS ;
@@ -209,23 +208,37 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
     return Error( "The particle has no production vertex !" ) ;
   
   // Displacement in original frame
-  Gaudi::LorentzVector
-    positionEnd( theSignalAtRest -> end_vertex() -> position() ) ;
-  Gaudi::LorentzVector
-    positionBegin( theSignalAtRest -> production_vertex() -> position() ) ;
+  Gaudi::LorentzVector positionEnd , positionBegin ;
+  positionEnd.SetXYZT( theSignalAtRest -> end_vertex() -> position() . x() ,
+                       theSignalAtRest -> end_vertex() -> position() . y() ,
+                       theSignalAtRest -> end_vertex() -> position() . z() ,
+                       theSignalAtRest -> end_vertex() -> position() . t() *
+                       CLHEP::c_light ) ;
+  
+  positionBegin.SetXYZT( theSignalAtRest -> production_vertex() -> position() . x() ,
+                         theSignalAtRest -> production_vertex() -> position() . y() ,
+                         theSignalAtRest -> production_vertex() -> position() . z() ,
+                         theSignalAtRest -> production_vertex() -> position() . t() * CLHEP::c_light ) ;
+
   Gaudi::LorentzVector position = positionEnd - positionBegin ;
   
   // Displacement in new frame after boost.
   Gaudi::LorentzVector newPosition = theBoost( position ) ;
+
+  // LHCb Units
+  Gaudi::LorentzVector newP ;
+  newP.SetXYZT( newPosition.X() , newPosition.Y() , newPosition.Z() ,
+                newPosition.T() / CLHEP::c_light ) ;
+  
   // Add original position
   Gaudi::LorentzVector 
     originalPosition( theSignal -> production_vertex() -> position() ) ;
-  newPosition += originalPosition ;
+  newP += originalPosition ;
 
   // Create new HepMC vertex after boost and add it to the current event    
   HepMC::GenVertex * newVertex = 
-    new HepMC::GenVertex( HepLorentzVector(newPosition.X(), newPosition.Y() ,
-                                           newPosition.Z(), newPosition.T()));
+    new HepMC::GenVertex( HepLorentzVector(newP.X(), newP.Y() , newP.Z() , 
+                                           newP.T()));
   
   theSignal -> parent_event() -> add_vertex( newVertex ) ;
   newVertex -> add_particle_in( theSignal ) ;
