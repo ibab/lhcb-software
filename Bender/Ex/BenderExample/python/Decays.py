@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Decays.py,v 1.5 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: Decays.py,v 1.6 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -70,25 +70,29 @@ class Decays(Algo):
 # job configuration 
 # =============================================================================
 def configure () :    
-    # Generic job configuration     
+    # Generic job configuration
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,  # common options
+                    '$STDOPTS/Hbook.opts'                       ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     # create analysis algorithm and add it to the list of
     alg       = Decays('Decays')
-    gaudi.setAlgorithms( [ alg ] )
-    
+    gaudi.TopAlg = ['Decays']
+
     alg = gaudi.algorithm('Decays')
     alg.OutputLevel = 5
-    alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
+    alg.PP2MC = []
     
     # add 'similar' C++ algorithm from LoKiExample package
     gaudi.DLLs   += [ 'LoKiExample'            ]
     gaudi.topAlg += [ 'LoKi_MCDecays/MCDecays' ]
-    
+
+    alg = gaudi.algorithm('MCDecays')
+    alg.OutputLevel = 5
+    alg.PP2MC = []
+
     # output histogram file 
     hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'Decays.hbook'

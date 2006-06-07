@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Dstar.py,v 1.13 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: Dstar.py,v 1.14 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -102,15 +102,15 @@ class Dstar(Algo):
 def configure() :
     # Generic job configuration 
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,  # common options
+                    '$STDOPTS/Hbook.opts'                       ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     # preload algorithm(s)
     gaudi.addAlgorithm( 'LoKiPreLoad/Hadrons' ) 
     preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
-
+    
     # create analysis algorithm and add it to the list of
     alg = Dstar( 'Dstar' )
     gaudi.addAlgorithm( alg )
@@ -122,7 +122,7 @@ def configure() :
     
     desktop = gaudi.tool('Dstar.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
-
+    
     # output histogram file 
     hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'dstar.hbook'
@@ -144,7 +144,7 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 100 )
+    gaudi.run  ( 500 )
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hybrids.py,v 1.5 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: Hybrids.py,v 1.6 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.5 $ 
+# CVS version $Revision: 1.6 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -43,8 +43,8 @@ def configure() :
     
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,  # common options
+                    '$STDOPTS/Hbook.opts'                       ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 

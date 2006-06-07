@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0.py,v 1.3 2005-05-19 17:36:54 ibelyaev Exp $
+# $Id: Pi0.py,v 1.4 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $; version $Revision: 1.3 $
+# CVS tag     $Name: not supported by cvs2svn $; version $Revision: 1.4 $
 # =============================================================================
 # @file 
 # "Demo" algorithm for pi0 -> gamma gamma reconstruction "
@@ -258,7 +258,8 @@ class Pi0(Algo):
 def configure() :
     
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,   # general options 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,   # general options
+                    '$STDOPTS/Hbook.opts' ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) # input data 
     
     # specific job configuration 

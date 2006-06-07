@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.28 2006-02-02 10:49:28 ibelyaev Exp $ 
+# $Id: requirements,v 1.29 2006-06-07 09:22:11 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.28 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.29 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v5r3
+version          v4r8p5
 
 # ============== structure ===================================================
 branches         cmt doc src test python options jobs 
@@ -17,15 +17,14 @@ set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
 set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
 set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs 
 
-# use XmlDDDB             v24r2     Det
-
 # ============== dependencies ================================================
-use              Bender      v* Phys 
-use              BenderVis   v* Vis  
-use              LoKiExample v* Ex 
+use              Bender       v* Phys 
+use              BenderVis    v* Vis  
+use              LoKiExample  v* Ex 
 
-use              LoKiHybrid  v* Tools 
-use              LoKiHlt     v* Tools 
+use              LoKiHybrid   v* Tools 
+use              LoKiHlt      v* Tools 
+use              GaudiSiteSvc v*  
 
 # to use it with Panoramix
 #use	Panoramix	v*	Vis
@@ -44,15 +43,6 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.27  2005/09/21 13:40:59  ranjard
-# v5r2 - add comments to show how to use Panoramix or HippoDraw
-#
-# Revision 1.26  2005/09/19 16:10:44  ibelyaev
-#  remove the explicit dependency on XmlDDDB
-#
-# Revision 1.25  2005/08/01 09:50:19  ibelyaev
-#  update for v5r2
-#
 # ============================================================================
 # The END 
 # ============================================================================

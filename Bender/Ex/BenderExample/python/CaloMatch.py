@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: CaloMatch.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: CaloMatch.py,v 1.3 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 # =============================================================================
 # @file
 # Simple script to test the CaloCLuster -> TrStoredTrack matching
@@ -69,14 +69,14 @@ class CaloMatch(Algo):
 def configure () :    
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,  # common options
+                    '$STDOPTS/Hbook.opts'                       ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
-
+    
     # specific job configuration 
     # create analysis algorithm and add it to the list of
     alg       = CaloMatch()
-    gaudi.setAlgorithms( [ alg ] )
+    gaudi.TopAlg += ['CaloMatch']
     
     # output histogram file 
     hsvc = gaudi.histoSvc()
@@ -92,7 +92,7 @@ def configure () :
     
     # switch off native DaVinci histograms
     dv = gaudi.algorithm('DaVinci')
-    dv.HistoProduce = False
+    dv.doHistos = False
     
     return SUCCESS 
 
@@ -109,6 +109,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2005/08/01 09:50:19  ibelyaev
+#  update for v5r2
+#
 # =============================================================================
 # The END 
 # =============================================================================

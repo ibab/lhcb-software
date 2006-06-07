@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MuFromBeauty.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: MuFromBeauty.py,v 1.3 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 # =============================================================================
 # @file
 # Simple script to select muons from beauty 
@@ -75,15 +75,17 @@ class MuFromB(Algo):
 def configure () :    
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,  # common options
+                    '$STDOPTS/Hbook.opts'                       ,
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
-    
+
     # specific job configuration 
     # create analysis algorithm and add it to the list of
     alg       = MuFromB()
-    gaudi.setAlgorithms( [ alg ] )
-
+    gaudi.TopAlg = [ 'MuFromB' ]
+    alg = gaudi.algorithm('MuFromB')
+    alg.PP2MC = []
+    
     return SUCCESS 
 
 # =============================================================================

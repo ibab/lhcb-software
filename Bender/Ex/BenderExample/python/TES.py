@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TES.py,v 1.5 2005-01-24 17:33:00 ibelyaev Exp $
+# $Id: TES.py,v 1.6 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -48,7 +48,7 @@ class TES(Algo):
 # =============================================================================
 def configure() :
     
-    gaudi.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,
+    gaudi.config( files   = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ,
                               '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,
                               '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] )
     
@@ -57,7 +57,11 @@ def configure() :
     alg = TES('TES')
     alg = TES('TES1')
     gaudi.setAlgorithms ( [ 'TES' , 'TES1' ] ) 
-
+    alg = gaudi.algorithm('TES')
+    alg.PP2MC = []
+    alg = gaudi.algorithm('TES1')
+    alg.PP2MC = []
+    
     return SUCCESS 
 
 # =============================================================================

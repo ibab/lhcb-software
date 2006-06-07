@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi.py,v 1.4 2005-01-24 17:33:00 ibelyaev Exp $
+# $Id: Bs2PhiPhi.py,v 1.5 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -79,7 +79,8 @@ def configure () :
     gaudi.config( files   =
                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
+                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ,   # input data
+                    '$STDOPTS/Hbook.opts'                   ] ,
                   options =
                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                     'HcalPIDmu.OutputLevel     =   5  ' ,
@@ -127,7 +128,7 @@ if __name__ == '__main__' :
     # configure the job 
     configure()
     # execute 
-    gaudi.run( 100  )
+    gaudi.run( 499  )
     # terminate 
     gaudi.exit()
   

@@ -1,12 +1,17 @@
-! $Id: release.notes,v 1.9 2005-09-21 13:40:59 ranjard Exp $
+! $Id: release.notes,v 1.10 2006-06-07 09:22:12 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2006-06-07 - Vanya BELYAEV
+ - update for Bender v4r8p5 
+   essentially check all examples and remove all which do not work.
+
 
 ! 2005-09-21 - Florence RANJARD
  - requirements - add comments to show how to use Panoramix and HippoDraw

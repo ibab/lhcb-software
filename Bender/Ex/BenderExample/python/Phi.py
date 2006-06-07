@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.12 2006-02-02 13:09:25 ibelyaev Exp $
+# $Id: Phi.py,v 1.13 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.12 $
+# CVS version $Revision: 1.13 $
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
@@ -52,8 +52,8 @@ class Phi(Algo):
 # =============================================================================
 def configure() :
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'   ,   # common options
+                    '$STDOPTS/Hbook.opts' , 
                     '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
@@ -82,7 +82,7 @@ def configure() :
 
     # switch off native DaVinci histograms
     dv = gaudi.algorithm('DaVinci')
-    dv.HistoProduce = False
+    dv.doHistos = False
     
     return SUCCESS
 
@@ -99,9 +99,6 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.11  2005/08/01 09:50:19  ibelyaev
-#  update for v5r2
-#
 # =============================================================================
 # The END 
 # =============================================================================

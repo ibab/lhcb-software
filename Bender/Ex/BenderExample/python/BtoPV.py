@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: BtoPV.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
+# $Id: BtoPV.py,v 1.3 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 # =============================================================================
 # @file 
 # "Demo" algorithm for B -> PV association 
@@ -68,9 +68,9 @@ class BtoPV(Algo):
 def configure () :
     # Generic job configuration & input data 
     gaudi.config( files   =
-                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'      , # general options 
-                    '$DAVINCIROOT/options/DaVinciReco.opts'        , # general options 
-                    '$DAVINCIROOT/options/DaVinciTestData.opts'  ] ) # input data 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'      , # general options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts'  , # input data
+                    '$STDOPTS/Hbook.opts' ] ) 
     
     # specific job configuration 
     # preload algorithm(s)
@@ -106,7 +106,7 @@ if __name__ == '__main__' :
     # configure the job 
     configure()
     # execute 
-    gaudi.run( 20  )
+    gaudi.run( 10  )
   
 # =============================================================================
 # $Log: not supported by cvs2svn $

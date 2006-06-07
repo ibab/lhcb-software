@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiMM.py,v 1.1 2005-02-16 10:14:45 ibelyaev Exp $
+# $Id: Bs2PhiMM.py,v 1.2 2006-06-07 09:22:12 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.1 $
+# CVS version $Revision: 1.2 $
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
@@ -168,9 +168,10 @@ class Bs2PhiMM(Algo):
 # =============================================================================
 def configure() :
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_phimumu_DC04.opts' ] , # input data 
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,  # general options 
+                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,  # pool catalogs
+                    '$LOKIEXAMPLEOPTS/Bs_phimumu_DC04.opts' ,  # input data
+                    '$STDOPTS/Hbook.opts'                   ] ,
                   options =
                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                     'HcalPIDmu.OutputLevel     =   5  ' ,
