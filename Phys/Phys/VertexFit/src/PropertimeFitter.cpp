@@ -1,4 +1,4 @@
-// $Id: PropertimeFitter.cpp,v 1.1 2006-06-07 14:34:41 xieyu Exp $
+// $Id: PropertimeFitter.cpp,v 1.2 2006-06-07 14:40:06 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -157,8 +157,40 @@ StatusCode PropertimeFitter::fit( const LHCb::Vertex& PV, const LHCb::Particle& 
     D(1,7) = -(vfit[5]-vfit[2]);
     D(1,8) = (vfit[4]-vfit[1]);
     D(1,9) = 0.0;
- 
-  }
+
+    ROOT::Math::SVector<double, 2> d = f - D*vfit;
+
+    Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,10>(D, Cx);
+    if(!VD.Invert()) {
+      debug() << "could not invert matrix VD in fit! " <<endreq;
+      return StatusCode::FAILURE;
+    }
+
+    ROOT::Math::SVector<double, 2> alpha=D*X+d;
+                                                                                                                               
+    ROOT::Math::SVector<double, 2> lambda=VD*alpha;
+                                                                                                                               
+    ROOT::Math::SMatrix<double, 10,2> DT = ROOT::Math::Transpose(D);
+                                                                                                                               
+    vfit=X-Cx*DT*lambda;
+
+    SymMatrix10x10 delataC1=ROOT::Math::Similarity<double,10,2>(DT, VD);
+                                                                                                                               
+    SymMatrix10x10 delataC2=ROOT::Math::Similarity<double,10,10>(Cx, delataC1);
+                                                                                                                               
+    cfit=Cx -delataC2;
+                                                                                                                               
+    chi2Fit=ROOT::Math::Dot(alpha,lambda);
+    //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
+
+    if(fabs(chi2Fit-chi2PreviousFit)<m_maxDeltaChi2) {
+      converged=true;
+    } else {
+      chi2PreviousFit=chi2Fit;
+    } 
+  }  // end chi2 minimization iteration
+
+  if(!converged)  return StatusCode::FAILURE;
 
   if(m_applyBMassConstraint) {
     int Bpid = B.particleID().pid();
