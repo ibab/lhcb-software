@@ -1,5 +1,5 @@
 package Gauss
-version v24r7
+version v24r8
 
 #=========================================================================
 #-- Structure
@@ -9,11 +9,11 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v30r7   Det   -no_auto_imports
+use XmlDDDB             v30r8   Det   -no_auto_imports
 use XmlConditions       v1r6    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v12r1   Gen   -no_auto_imports
-use ParamFiles          v4r2          -no_auto_imports
+use DecFiles            v13r0   Gen   -no_auto_imports
+use ParamFiles          v4r3          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 
@@ -32,15 +32,15 @@ use $(LbBcVegPy_use)
 
 #-- Generator
 use ParticleGuns         v3r0    Gen
-use LbPythia             v4r3    Gen
-use Generators           v5r1    Gen
+use LbPythia             v4r4    Gen
+use Generators           v5r2    Gen
 
 #-- Simulation
 use GiGa                 v18r1   Sim
 use GiGaCnv              v16r2   Sim
 use GaussTools           v12r2 	 Sim
 use GaussAlgs		 v2r3    Sim
-use GaussKine            v1r3    Sim
+use GaussKine            v1r4    Sim
 use GaussPhysics         v3r2    Sim
 use GaussTracker         v5r4    Sim
 use GaussRICH            v6r4    Sim

@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r8 2006-06-08 =============================
+! 2006-06-07 - Gloria Corti
+ - Introduce new version of Generators v5r2, LbPythia v4r4 and GaussKine v1r4
+   to correctly handle units in nsec of 4th Lorentz vector in HepMC.
+ - Use latest XmlDDDB v30r8 to allow simulation of Converter with given options
+ - Use latest version of ParamFiles and DecFiles with changes for unknown
+   particles in EvtGen and additional atoms in ParticleTable.txt
+ - Modify options to read DECAY.DEC and no longer DECAY-DC06.DEC that has been
+   removed
+
 ! 2006-06-06 - Gloria Corti
  - Introduce Converter in geometry stream, since it is positioned directly in
    the Downstream region
