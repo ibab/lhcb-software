@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.59 2006-05-19 16:33:51 gcorti Exp $
+! $Id: release.notes,v 1.60 2006-06-07 12:49:09 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+! 2006-06-05 - Patrick Robbe
+ - src/Lib/EVLCTEQ.F: Fix use of uninitialized value.
+ - src/component/BiasedBB.h/.cpp : new cut tool to implement maximum
+   bias b/bbar sample for DC06.
+ - src/component/Generators_entries.cpp: declare new cut tol BiasedBB.
+ - src/component/SignalForcedFragmentation: Use ns for HepMC unit
 
 !=================== Generators v5r1 2006-05-19 ===========================
 ! 2006-05-08 - Vanya BELYAEV

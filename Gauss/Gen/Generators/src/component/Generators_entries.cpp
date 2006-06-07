@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.10 2006-04-23 21:29:14 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.11 2006-06-07 12:49:09 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -43,6 +43,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
 
   // Cut Tools
   DECLARE_TOOL( LHCbAcceptance ) ;
+  DECLARE_TOOL( BiasedBB       ) ;
 
   // Full event cut tools
   DECLARE_TOOL( LeptonInAcceptance ) ;
