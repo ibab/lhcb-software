@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.7 2006-06-06 15:13:40 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.8 2006-06-07 14:28:38 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -728,10 +728,6 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
   C7new=ROOT::Math::Similarity<double,7,14>(JA, cfit);
 
   sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
-
-  return sc;
-  
-
 
   return sc;
 }
@@ -1472,7 +1468,7 @@ void OfflineVertexFitter::convertM2E(const Gaudi::Vector7& Vm7,
                                      Gaudi::Vector7& V7, 
                                      Gaudi::SymMatrix7x7& C7) const
 {
-    Gaudi::Matrix7x7 Tm2e = ROOT::Math::SMatrixIdentity();;
+    Gaudi::Matrix7x7 Tm2e = ROOT::Math::SMatrixIdentity();
 
     double px   = Vm7[3];
     double py   = Vm7[4];

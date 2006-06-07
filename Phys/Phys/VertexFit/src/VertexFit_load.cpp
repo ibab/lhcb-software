@@ -16,9 +16,10 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
   DECLARE_TOOL( TrgVertexFitter );  
   DECLARE_TOOL ( OfflineVertexFitter );
   DECLARE_TOOL ( BlindVertexFitter );
+  DECLARE_TOOL ( PropertimeFitter );
+
   /// @todo move src/MatrixUtils.h to LHCbMath and fix BlindVertexFitter accordingly
 /// @todo Restore all other fitters
-//   DECLARE_TOOL( LifetimeFitter );
 //   DECLARE_TOOL( NewDirectionFitter );
 //  DECLARE_TOOL( LagrangeGlobalFitter );
 }
