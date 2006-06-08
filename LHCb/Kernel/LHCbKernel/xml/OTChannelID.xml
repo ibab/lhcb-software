@@ -52,7 +52,7 @@
       </method>
       <method type='unsigned' name='geometry' const='TRUE'
               desc='returns the geometrical part of the channelID'>
-        <code> return (m_channelID &amp; uniqueModuleMask); </code>
+        <code> return (m_channelID &amp; uniqueStrawMask); </code>
       </method> 
 
       <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
@@ -68,6 +68,8 @@
                   desc='Unique quarter' setMeth='FALSE'/>
         <bitfield name='uniqueModule' length='module, quarter, layer, station' 
                   desc='Unique layer' setMeth='FALSE'/>
+        <bitfield name='uniqueStraw' length='straw, module, quarter, layer, station'
+                  desc='Unique straw' setMeth='FALSE'/>
       </attribute>
     </class>
   </package>

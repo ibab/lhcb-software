@@ -3,6 +3,8 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 ! 2006-06-08 Jan Amoraal
+ - Fix OTChannelID::geoemtry. Should return station, layer, quarter, 
+   module and straw. 
  - Fix LineTraj::derivative. Returns derivative w.r.t. x, y, z, stereo angle 
    and tilt.
 
