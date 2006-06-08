@@ -23,7 +23,7 @@ DECLARE_DATAOBJECT_FACTORY( Particle2VertexTable);
 DECLARE_FACTORY_ENTRIES( DaVinciKernel ) {
 
   DECLARE_TOOL( PhysDesktop ); 
-//  DECLARE_TOOL( Particle2VertexAsct );
+  DECLARE_TOOL( Particle2VertexIPSAsct );
 //  DECLARE_DATAOBJECT( Particle2VertexTable );
   
 }

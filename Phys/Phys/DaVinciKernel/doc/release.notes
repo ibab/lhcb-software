@@ -4,6 +4,12 @@
 
 !========================== DaVinciKernel v4r1 2006-05-29 ===================
 
+! 2006-06-08 - Juan PALACIOS
+  - Add Kernel/IParticle2VertexAsct.h, interface to simple tool to make 
+		relations table from ranges or containers of LHCb::Particles and 
+    LHCb::Vertices.
+  - Add src/Lib/Particle2VertexIPSAsct.h, .cpp: implementations.
+
 ! 2006-06-07 - Juan PALACIOS
   - Remove Kernel/IKFFitTool.h
 

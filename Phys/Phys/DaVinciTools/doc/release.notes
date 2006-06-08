@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.206 2006-06-02 15:05:53 pkoppenb Exp $
+! $Id: release.notes,v 1.207 2006-06-08 16:08:38 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-06-08 - Juan PALACIOS	
+  - Add src/Particle2VertexAsctAlg.h, .cpp
+    . Simple algorithm that uses an IParticle2VertexAsct tool to generate 
+      relations tables between particles in TES locations and primary vertices.
+      In charge of retrieving particles and vertices, and storing relations 
+      tables to TES. Location of particles and tables given by options.
 
 ! 2006-06-02 - P. Koppenburg
   src/RecursivePlotTool.cpp
