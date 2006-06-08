@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.8 2006-06-07 14:28:38 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.9 2006-06-08 17:10:20 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -342,7 +342,7 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
     Gaudi::Vector7 V7;
     Gaudi::SymMatrix7x7 C7;
     double chi2;
-    int NDoF;
+    int NDoF = 1;
 
     sc =  fitTwo(flypart1, flypart2, V7, C7, chi2);
     if(sc.isFailure()) return StatusCode::FAILURE;

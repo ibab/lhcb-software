@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.66 2006-06-07 16:23:17 xieyu Exp $
+! $Id: release.notes,v 1.67 2006-06-08 17:10:20 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2006-06-08 Yuehong Xie
+  - src/OfflineVertexFitter.cpp: fix a small bug 
+  - add src/PVReFitter.cpp. Not finished yet.
 
 ! 2006-06-07 Yuehong Xie
   - add src/DirectionFitter.cpp. Uses IDirectionFit.h.
