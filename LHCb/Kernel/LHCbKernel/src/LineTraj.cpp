@@ -1,4 +1,4 @@
-// $Id: LineTraj.cpp,v 1.10 2006-05-15 11:25:55 cattanem Exp $
+// $Id: LineTraj.cpp,v 1.11 2006-06-08 12:22:19 janos Exp $
 // Include files
 
 // local
@@ -9,7 +9,7 @@ using namespace ROOT::Math;
 
 std::auto_ptr<Trajectory> LineTraj::clone() const
 {
-        return std::auto_ptr<Trajectory>(new LineTraj(*this));
+  return std::auto_ptr<Trajectory>(new LineTraj(*this));
 }
 
 /// Constructor from the middle point and a unit direction vector
@@ -68,8 +68,18 @@ LineTraj::Derivative
 LineTraj::derivative( double arclength ) const
 {
   Derivative deriv;
+  double dir_x(m_dir.x());
+  double dir_y(m_dir.y());
+  double dir_z(m_dir.z());
+  double magDirXe_z(m_dir.Cross(Vector(0.0,0.0,1.0)).R());
+  
   deriv(0,0) = deriv(1,1) = deriv(2,2) = 1.0;
-  deriv(0,3) = deriv(1,4) = deriv(2,5) = arclength;
+  deriv(0,3) = arclength*dir_y;
+  deriv(0,4) = -arclength*dir_x*magDirXe_z/dir_z;
+  deriv(1,3) = -arclength*dir_x;
+  deriv(1,4) = -arclength*dir_y*magDirXe_z/dir_z;
+  deriv(2,4) = arclength*magDirXe_z;
+  
   return deriv;
 };
 

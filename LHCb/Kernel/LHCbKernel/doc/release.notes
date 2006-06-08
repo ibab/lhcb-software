@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-06-08 Jan Amoraal
+ - Fix LineTraj::derivative. Returns derivative w.r.t. x, y, z, stereo angle 
+   and tilt.
+
 !===================== LHCbKernel v6r7 2006-05-26 =========================
 ! 2006-05-26 - Marco Cattaneo
  - Remove generation of dictionaries already provided by RELAX

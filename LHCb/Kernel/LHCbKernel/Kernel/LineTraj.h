@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.11 2006-05-03 15:00:47 graven Exp $
+// $Id: LineTraj.h,v 1.12 2006-06-08 12:22:19 janos Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -17,12 +17,12 @@
 namespace LHCb
 {
 
-  class LineTraj: public DifTraj<6> {
+  class LineTraj: public DifTraj<5> {
     
   public:
     
     /// Enum providing number of colums in derivative matrix
-    enum { kSize = 6 };
+    enum { kSize = 5 };
     
     /// Destructor
     virtual ~LineTraj() {};
