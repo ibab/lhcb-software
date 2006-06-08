@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from PyCool import cool,pool
+from PyCool import cool, coral
 
 from optparse import OptionParser
 import os
@@ -80,7 +80,8 @@ def main():
     folderspec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
     folderdesc = "<storage_type=7>"
 
-    payload = pool.AttributeList(folderspec.attributeListSpecification())
+    payload = coral.AttributeList()
+    payload.extend("data","string")
     payload["data"] = "XML stuff" # dummy value, just to start
     
     #### initialize COOL
