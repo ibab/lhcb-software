@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!2006-6-8 M Needham
+ - Add algorithm to make T tracks from forward
+
 ! 2006-5-24 - M Needham
  Add TrackContainerCleaner algorithm
 
