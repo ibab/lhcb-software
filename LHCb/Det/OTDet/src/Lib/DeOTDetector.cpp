@@ -1,9 +1,12 @@
-// $Id: DeOTDetector.cpp,v 1.24 2006-05-08 12:59:54 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.25 2006-06-08 12:24:03 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
+#include "Kernel/Trajectory.h"
+
+// GaudiKernel
+#include "GaudiKernel/GaudiException.h"
 
 /// OTDet
 #include "OTDet/DeOTDetector.h"
@@ -16,11 +19,8 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 
-// GaudiKernel
-#include "GaudiKernel/GaudiException.h"
-
 // Kernel/LHCbKernel
-#include "Kernel/Trajectory.h"
+
 
 /** @file DeOTDetector.cpp
  *
@@ -207,8 +207,7 @@ double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
   DeOTModule* aModule = findModule(aChannel);
   if (!aModule) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "DistanceAlongWire requested for module that does not exist "
-        << endreq;
+    msg << MSG::WARNING << "DistanceAlongWire requested for module that does not exist " << endreq;
     return 0.0;
   }
   

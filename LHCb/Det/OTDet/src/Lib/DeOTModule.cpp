@@ -1,7 +1,6 @@
-// $Id: DeOTModule.cpp,v 1.19 2006-05-16 08:41:05 janos Exp $
+// $Id: DeOTModule.cpp,v 1.20 2006-06-08 12:24:03 janos Exp $
 /// Kernel
 #include "Kernel/Point3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/LineTraj.h"
 
 /// DetDesc
@@ -39,6 +38,7 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_zPitch(0.0),
   m_cellRadius(0.0),
   m_inefficientRegion(0.0),
+  m_sensThickness(0.0),
   m_nModules(0),
   m_ySizeModule(0.0),
   m_yHalfModule(0.0), 
@@ -85,6 +85,7 @@ StatusCode DeOTModule::initialize() {
   m_zPitch = ot->params()->param<double>("strawPitchZ");
   m_cellRadius = ot->params()->param<double>("cellRadius");
   m_inefficientRegion = ot->params()->param<double>("inefficientRegion");
+  m_sensThickness = ot->params()->param<double>("sensThickness");
   m_nModules = (unsigned int)ot->params()->param<int>("nModules");
 
   // Get the lenght of the module
@@ -425,6 +426,6 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   unsigned int mono = (monoLayerA(aStraw)?0u:1u);
 
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position(localUOfStraw(aStraw));
-  
+    
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono]));
 }

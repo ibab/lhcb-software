@@ -1,11 +1,11 @@
-// $Id: DeOTQuarter.cpp,v 1.6 2006-04-18 18:57:38 janos Exp $
+// $Id: DeOTQuarter.cpp,v 1.7 2006-06-08 12:24:03 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-/// Kernel
-#include "Kernel/SystemOfUnits.h"
+/// GaudiKernel
+//#include "GaudiKernel/SystemOfUnits.h"
 
 /// OTDet
 #include "OTDet/DeOTQuarter.h"

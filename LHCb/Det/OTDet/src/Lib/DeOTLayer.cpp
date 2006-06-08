@@ -1,7 +1,7 @@
-// $Id: DeOTLayer.cpp,v 1.9 2006-05-04 16:50:31 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.10 2006-06-08 12:24:03 janos Exp $
 
-/// Kernel
-#include "Kernel/SystemOfUnits.h"
+/// GaudiKernel
+#include "GaudiKernel/SystemOfUnits.h"
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -86,8 +86,8 @@ DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {
 
 void DeOTLayer::cachePlane() {
   Gaudi::XYZPoint g1 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0));
-  Gaudi::XYZPoint g2 = this->geometry()->toGlobal(Gaudi::XYZPoint(3.5*m, 0.0, 0.0));
-  Gaudi::XYZPoint g3 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 2.5*m, 0.0));
+  Gaudi::XYZPoint g2 = this->geometry()->toGlobal(Gaudi::XYZPoint(3.5*Gaudi::Units::m, 0.0, 0.0));
+  Gaudi::XYZPoint g3 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 2.5*Gaudi::Units::m, 0.0));
   
   m_plane = Gaudi::Plane3D(g1, g2, g3);
 }

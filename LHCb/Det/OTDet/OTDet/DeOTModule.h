@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.16 2006-05-15 10:45:53 janos Exp $
+// $Id: DeOTModule.h,v 1.17 2006-06-08 12:24:02 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -167,6 +167,9 @@ public:
   /** @return the straw to the right of a given straw */
   unsigned int nextRightStraw(const unsigned int aStraw) const;  
 
+  /** @return thickness of sensitive volume */
+  double sensThickness() const;
+  
   /** @return wire length */
   double wireLength() const;
 
@@ -326,6 +329,7 @@ private:
   double m_zPitch;               ///< pitch in z bewteen straws
   double m_cellRadius;           ///< radius of a cell
   double m_inefficientRegion;    ///< size of the inefficient region
+  double m_sensThickness;        ///< Thickness of sensitive volume
   unsigned int m_nModules;       ///< half the number of read-out modules in layer
   double m_ySizeModule;          ///< size of the module in y
   double m_yHalfModule;          ///< size of the module in y
@@ -429,11 +433,15 @@ inline unsigned int DeOTModule::nextRightStraw(const unsigned int aStraw) const 
   return (aStraw == m_nStraws || aStraw >= 2*m_nStraws) ? 0u : aStraw+1u;
 }
 
+inline double DeOTModule::sensThickness() const {
+  return m_sensThickness;
+}
+
 inline double DeOTModule::wireLength() const {
   //return m_ySizeModule;
   /// If long module wireLength=ySizeModule-inefficient region
   return (longModule()?(m_ySizeModule-m_inefficientRegion):m_ySizeModule);
-};
+}
 
 inline double DeOTModule::cellRadius() const {
   return m_cellRadius;

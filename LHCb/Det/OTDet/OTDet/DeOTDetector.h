@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.29 2006-05-04 16:50:30 janos Exp $
+// $Id: DeOTDetector.h,v 1.30 2006-06-08 12:24:01 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -7,7 +7,6 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
-//#include "Kernel/LHCbID.h"
 
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
