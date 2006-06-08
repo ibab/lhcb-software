@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.20 2006-05-30 17:03:45 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.21 2006-06-08 13:42:14 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -107,10 +107,12 @@ public:
   void setActiveToTotal ( const double actToTotal   ) 
   { m_activeToTotal = actToTotal; }
   ///  set function for ZshowerMax 
-  void setZShowerMax    ( const double ZShowerMax   ) 
-  { m_zShowerMax    = ZShowerMax; }
-  void setZSize ( const double ZSize ) 
-  { m_zSize = ZSize; }
+  void setZShowerMax    ( const double zShowerMax   ) 
+  { m_zShowerMax    = zShowerMax; }
+  void setZSize ( const double zSize ) 
+  { m_zSize = zSize; }
+  void setZOffset ( const double zOffset ) 
+  { m_zOffset = zOffset; }
 
   ///  retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
@@ -123,6 +125,7 @@ public:
   ///  retrieve position of shower max 
   double        zShowerMax    () const { return m_zShowerMax    ; };
   double        zSize         () const { return m_zSize         ; };
+  double        zOffset       () const { return m_zOffset       ; };
   
   
   ///  validity flag for the cell 
@@ -257,6 +260,7 @@ private:
   int    m_centralHoleY;
 
   double   m_zSize;
+  double   m_zOffset;
   
 };
 
@@ -544,11 +548,11 @@ inline Gaudi::Plane3D DeCalorimeter::plane
 ( const CaloPlane::Plane pos) const
 {
   switch(pos){
-  case CaloPlane::Front     : return plane(-m_zSize/2. );
+  case CaloPlane::Front     : return plane(m_zOffset-m_zSize/2. );
   case CaloPlane::ShowerMax : return plane(m_zShowerMax);
-  case CaloPlane::Middle    : return plane(0.);
-  case CaloPlane::Back      : return plane(+m_zSize/2.);
-  default : return plane(0.); 
+  case CaloPlane::Middle    : return plane(m_zOffset);
+  case CaloPlane::Back      : return plane(m_zOffset+m_zSize/2.);
+  default : return plane(m_zOffset); 
   }
 };
 // ============================================================================
@@ -558,13 +562,7 @@ inline Gaudi::Plane3D DeCalorimeter::plane
 ( const Gaudi::XYZPoint& global ) const 
 { return plane ( geometry()->toLocal( global ).Z() ) ; }
 // ============================================================================
-
-
-// ============================================================================
-// The End 
-// ============================================================================
 #endif  //    CALODET_DECALORIMETER_H
-// ============================================================================
 
 
 

@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.28 2006-05-30 17:03:45 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.29 2006-06-08 13:42:14 odescham Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -85,13 +85,23 @@ StatusCode DeCalorimeter::initialize() {
     pars.erase( it );
   }
 
-  //Zsize
+
+
+  
+  //ZOffset
+  it = std::find( pars.begin() , pars.end () , std::string("ZOffset") );
+  if( pars.end() != it ) {
+    m_zOffset = param<double>( *it ) ;
+    pars.erase( it );
+  }
+
+ //Zsize
   it = std::find( pars.begin() , pars.end () , std::string("ZSize") );
   if( pars.end() != it ) {
     m_zSize = param<double>( *it ) ;
     pars.erase( it );
   }
-
+  
   //== Get other information from the condition database
   Condition* gain = condition( "Gain" );
   if ( 0 == gain ) {
@@ -145,10 +155,14 @@ Gaudi::Plane3D DeCalorimeter::plane( const double dz) const
 {
   const IGeometryInfo* geometry = this->geometry() ;
   Gaudi::XYZPoint local(0. , 0. , dz);
-  if ( fabs(dz) > m_zSize/2. ) {  
+  if ( fabs(dz-m_zOffset) > m_zSize/2. ) {  
     MsgStream msg( msgSvc(), "DeCalorimeter Plane "+ name () );
-    msg << MSG::WARNING << " THE REQUESTED PLANE IS OUTSIDE THE  " 
-        << name() << " VOLUME : dz/size = " <<dz <<"/"<<m_zSize<< endreq ;
+    msg << MSG::WARNING 
+        << " THE REQUESTED PLANE IS OUTSIDE THE ACTIVE VOLUME of : " << name()
+        << " dz = " << dz
+        << " z-enveloppe of the active area = ["<< m_zOffset-m_zSize/2. << " ; " 
+        << m_zOffset+m_zSize/2. << " ] "
+        << endreq ; 
   }
   Gaudi::XYZPoint loff(0. , 0. , dz-1.); //arbitrary but non-0 z-offset
   Gaudi::XYZPoint  point = geometry->toGlobal(local);
