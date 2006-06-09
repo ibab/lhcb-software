@@ -14,7 +14,7 @@ use PhysEvent   v9r5    Event
 use DAQEvent    v6r4p1  Event
 use GenEvent    v4r4    Event
 use EventAssoc  v3r1    Event
-use LinkerEvent v2r2    Event
+use LinkerEvent v2r2p1  Event
 use TrackEvent  v2r6    Event
 use PackedEvent v2r0    Event
 use VeloEvent   v14r0   Event
