@@ -1,6 +1,6 @@
-// $Id: Relation2Weighted.h,v 1.6 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.7 2006-06-09 14:14:51 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
@@ -144,7 +144,12 @@ namespace Relations
      */
     Relation2Weighted 
     ( const OwnType& copy ) 
-      : BaseWeightedTable ( copy   ) 
+      : IInterface            ( copy ) 
+      , IUpdateable           ( copy ) 
+      , IRelationBase         ( copy ) 
+      , IRelationWeightedBase ( copy )
+      , DirectType            ( copy ) 
+      , BaseWeightedTable     ( copy ) 
       , IBase     ( copy           ) 
       , m_direct  ( copy.m_direct  )
       , m_inverse ( copy.m_inverse ) 

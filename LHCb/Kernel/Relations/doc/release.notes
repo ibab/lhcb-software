@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.36 2006-06-09 08:41:03 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2006-06-09 14:14:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.36 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.37 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-06-09 - Vanya BELYAEV
+ - fix the compilation warnings for gcc345 (SLC4) 
+     Relations/Relation2.h
+     Relations/Relation2Weighted.h
+     Relations/RelationWeighted.h
+     Relations/RelationWeighted1D.h
+     Relations/RelationWeighted2D.h
 
 ! ====================== Relations v3r2 2006-06-09 ============================
 ! 2006-06-09 - Marco Cattaneo

@@ -1,11 +1,8 @@
-// $Id: RelationWeighted1D.h,v 1.7 2006-06-02 16:18:39 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.8 2006-06-09 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/02/07 09:22:24  ibelyaev
-//  update for Win32
-//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -126,10 +123,14 @@ namespace LHCb
      */
     RelationWeighted1D 
     ( const OwnType& copy  )
-      : DataObject ( copy         ) 
-      , Relations::BaseWeightedTable ( copy   ) 
-      , IBase      ( copy         ) 
-      , m_base     ( copy.m_base  )
+      : IInterface            ( copy ) 
+      , IUpdateable           ( copy )
+      , IRelationBase         ( copy ) 
+      , IRelationWeightedBase ( copy ) 
+      , DataObject            ( copy ) 
+      , Relations::BaseWeightedTable ( copy   )
+      , IBase                 ( copy ) 
+      , m_base        ( copy.m_base  )
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.9 2006-06-02 16:18:39 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.10 2006-06-09 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/02 16:18:39  ibelyaev
+//  fix for new compiler + remove Apply/Serializer
+//
 // Revision 1.8  2006/02/07 09:22:24  ibelyaev
 //  update for Win32
 //
@@ -123,6 +126,7 @@ namespace Relations
       : IInterface     ( copy ) 
       , IUpdateable    ( copy ) 
       , IRelationBase  ( copy )
+      , IRelationWeightedBase  ( copy )
       , BaseWeightedTable ( copy ) 
       , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )

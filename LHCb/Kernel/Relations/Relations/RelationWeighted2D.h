@@ -1,11 +1,8 @@
-// $Id: RelationWeighted2D.h,v 1.7 2006-06-02 16:18:39 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.8 2006-06-09 14:14:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/02/07 09:22:24  ibelyaev
-//  update for Win32
-// 
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
@@ -141,7 +138,12 @@ namespace LHCb
      */
     RelationWeighted2D 
     ( const OwnType& copy  )
-      : DataObject ( copy         ) 
+      : IInterface    ( copy ) 
+      , IUpdateable   ( copy ) 
+      , IRelationBase ( copy ) 
+      , IRelationWeightedBase ( copy ) 
+      , DirectType    ( copy )
+      , DataObject    ( copy ) 
       , Relations::BaseWeightedTable ( copy  ) 
       , IBase      ( copy         ) 
       , m_base     ( copy.m_base  )
