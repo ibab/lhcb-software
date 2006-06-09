@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.10 2006-05-29 08:32:39 cattanem Exp $ 
+! $Id: release.notes,v 1.11 2006-06-09 09:01:46 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,7 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-!=========================== LoKiGen v1r3 2006-05-29 ==========================
+!=========================== LoKiGen v1r3 2006-06-09 ==========================
+! 2006-06-09 - Marco Cattaneo
+ - Fix typo in GenExtract.h
+
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PrintHepMCDecay.h src/PrintHepMCDecay.cpp
    set of new functions LoKi::pritnHepMCDecay and LoKi::printDecay 

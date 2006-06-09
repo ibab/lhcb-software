@@ -1,8 +1,11 @@
-// $Id: GenExtract.h,v 1.4 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenExtract.h,v 1.5 2006-06-09 09:01:46 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENEXTRACT_H 
 #define LOKI_GENEXTRACT_H 1
@@ -186,7 +189,7 @@ namespace LoKi
       OUTPUT                  output    , 
       PREDICATE               predicate ) 
     {
-      if ( 0 == verter ) { return output ; }            // RETURN
+      if ( 0 == vertex ) { return output ; }            // RETURN
       HepMC::GenVertex* v = const_cast<HepMC::GenVertex*> ( vertex ) ;
       if ( 0 == v      ) { return output ; }            // RETURN
       //
