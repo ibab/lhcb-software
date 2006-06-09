@@ -240,9 +240,9 @@ StatusCode MuonID::execute() {
   }
 
   // Debug : muon identification event summary
-  info()  << "Number of MuonPID objects created: " << pMuids->size()
+  debug()  << "Number of MuonPID objects created: " << pMuids->size()
       << endreq;
-  info()  << "Number of tracks with IsMuon = True : " << m_nmu 
+  debug()  << "Number of tracks with IsMuon = True : " << m_nmu 
       << endreq;
   m_ntotmu += m_nmu;
 
