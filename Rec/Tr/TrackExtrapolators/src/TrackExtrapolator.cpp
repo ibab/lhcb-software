@@ -60,6 +60,39 @@ StatusCode TrackExtrapolator::propagate( State& state,
   return sc;
 }
 
+//=============================================================================
+// Propagate a state to within tolerance of a plane (default = 10 microns)
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( State& state,
+                                         Plane3D& plane,
+                                         double tolerance,
+                                         ParticleID pid )
+{
+  StatusCode sc = StatusCode::FAILURE;
+
+  double distance = plane.Distance( state.position() );
+  if( distance < tolerance ) { return StatusCode::SUCCESS; }
+
+  for( int iter = 0; iter < m_maxIter; ++iter ) {
+    distance = plane.Distance( state.position() );
+    XYZPoint inPlane( plane.ProjectOntoPlane( state.position() ) ); 
+    sc = propagate( state, inPlane.z(), pid );
+    if( sc.isFailure() ) {
+      error() << "Failed to propagate to z = " << inPlane.z() << endreq;
+      return sc;
+    }
+    if( distance < tolerance ) {
+      debug() << "Succes in iter = " << iter << endreq; 
+      return StatusCode::SUCCESS;
+    }
+  }
+  if( sc.isFailure() ) {
+    error() << "Failed to propagate to plane within tolerance." << endreq;
+  }
+  
+  return sc;
+}
+
 //--------------------------------------------------------------------------
 //  ACCESS METHODS
 //--------------------------------------------------------------------------
@@ -276,6 +309,8 @@ TrackExtrapolator::TrackExtrapolator( const std::string& type,
   , m_F()
 {
   declareInterface<ITrackExtrapolator>( this );
+
+  declareProperty( "Iterations", m_maxIter = 5 );
 
   // create transport matrix
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );

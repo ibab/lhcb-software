@@ -44,6 +44,12 @@ public:
                                 const Gaudi::XYZPoint& point,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
+  /// Propagate a state to within tolerance of a plane (default = 10 microns)
+  virtual StatusCode propagate( LHCb::State& state,
+                                Gaudi::Plane3D& plane,
+                                double tolerance = 0.01,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+  
   //--------- ACCESS METHOD ---------------------------------------
 
   /** Retrieve the position and momentum vectors and the corresponding
@@ -132,8 +138,14 @@ public:
   virtual ~TrackExtrapolator( );
 
 protected:
+  
   /// Transport matrix
   Gaudi::TrackMatrix m_F; 
-
+  
+private :
+  
+  /// Maximum number of steps in propagation to a plane
+  int m_maxIter;
+  
 };
 #endif // TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H

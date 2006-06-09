@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2006-06-09 - Edwin Bos
+ - Added extrapolate-to-plane method, with a default tolerance of 10 microns
+
 ! 2006-06-06 - Eduardo Rodrigues
  - removed explicit 5-dimension number from code
 
