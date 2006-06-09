@@ -4,7 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-! 2006-06-20 M Needham
+! 2006-06-09 - Edwin Bos
+ - Added extrapolate-to-plane method, with a default tolerance of 10 microns
+
+! 2006-05-20 - M Needham
  - Add the ITrackManipulator interface
 
 !====================== TrackInterfaces v2r3 2006-05-02 ======================

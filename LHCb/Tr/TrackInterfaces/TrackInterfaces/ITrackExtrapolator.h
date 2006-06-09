@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.11 2006-05-02 13:04:44 erodrigu Exp $
+// $Id: ITrackExtrapolator.h,v 1.12 2006-06-09 12:30:30 ebos Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -14,6 +14,7 @@
 #include "Kernel/SymmetricMatrixTypes.h"
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 #include "Kernel/TrackTypes.h"
 
 // Forward declarations
@@ -61,7 +62,13 @@ public:
   virtual StatusCode propagate( LHCb::State& state,
                                 const Gaudi::XYZPoint& point,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
-
+  
+  /// Propagate a state to within tolerance of a plane (default = 10 microns)
+  virtual StatusCode propagate( LHCb::State& state,
+                                Gaudi::Plane3D& plane,
+                                double tolerance = 0.01,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+  
   //--------- ACCESS METHODS ---------------------------------------
 
   /// Retrieve the position and momentum vectors and the corresponding
