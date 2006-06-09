@@ -1,16 +1,19 @@
-! $Id: release.notes,v 1.35 2006-06-02 16:18:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.36 2006-06-09 08:41:03 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.35 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.36 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v3r2 2006-06-09 ============================
+! 2006-06-09 - Marco Cattaneo
+ - Remove from requirements temporary fix needed for previous ROOT version
+
 ! 2006-06-02 - Vanya BELYAEV
   - fixes for the new compiler (SLC4) 
   - remove the obsolete Apply&Serializer 
-
 
 ! ====================== Relations v3r1 2006-02-29 ============================
 ! 2006-03-29 - Marco Cattaneo

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.15 2006-03-29 16:44:43 cattanem Exp $
+# $Id: requirements,v 1.16 2006-06-09 08:41:03 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v3r1
+version v3r2
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
@@ -24,11 +24,7 @@ use              Boost       v* LCG_Interfaces
 apply_pattern     reflex_dictionary                                 \
                   dictionary=Relations                              \
                   headerfiles=$(RELATIONSROOT)/dict/selection.h     \
-                  selectionfile=$(RELATIONSROOT)/dict/selection.xml \
-                  options="-U__MINGW32__"
-
-#---Added temporary the following macro until ROOT gets fixed-----------------
-macro Relations_reflex_options " --select=$(RELATIONSROOT)/dict/selection.xml --gccxmlpath=$(GCCXML_home)/bin"
+                  selectionfile=$(RELATIONSROOT)/dict/selection.xml
 
 # ============== constituents =================================================
 library          RelationsLib *.cpp
