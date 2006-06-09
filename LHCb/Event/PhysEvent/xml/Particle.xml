@@ -8,186 +8,194 @@
      * Particle                                                     *
      ****************************************************************-->
 
-     <class
+    <class
       author="Patrick Koppenburg"
       desc="Physics Analysis Particle. A chosen hypotesis for a possible candidate particle."
       name="Particle"
       stdVectorTypeDef="TRUE"
       id="801"
-     >
-       <base name="KeyedObject&lt;int&gt;"/>
-       &KeyedObject;
-       <import name="GaudiKernel/SystemOfUnits.h"/>
-       <import name="Event/Vertex" soft="TRUE"/>
-       <import name="Event/ProtoParticle" soft="TRUE"/>
-       <import name="GaudiKernel/VectorMap"/>
-       <import name="Kernel/Point3DTypes.h"/>
-       <import name="Kernel/Vector3DTypes.h"/>
-       <import name="Kernel/Vector4DTypes.h"/>
-       <import name="Kernel/GenericMatrixTypes.h"/>
-       <import name="Kernel/SymmetricMatrixTypes.h"/>
-       <import name="Kernel/ParticleID"/>
-       <typedef
+      >
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <import name="GaudiKernel/SystemOfUnits.h"/>
+      <import name="Event/Vertex" soft="TRUE"/>
+      <import name="Event/ProtoParticle" soft="TRUE"/>
+      <import name="GaudiKernel/VectorMap"/>
+      <import name="Kernel/Point3DTypes.h"/>
+      <import name="Kernel/Vector3DTypes.h"/>
+      <import name="Kernel/Vector4DTypes.h"/>
+      <import name="Kernel/GenericMatrixTypes.h"/>
+      <import name="Kernel/SymmetricMatrixTypes.h"/>
+      <import name="Kernel/ParticleID"/>
+      <typedef
         type="GaudiUtils::VectorMap&lt;int,double&gt;"
         def="ExtraInfo"
         desc="Vector of information for combined PIDs"
         access="PUBLIC"
-       />
-       <location
+        />
+      <location
         name="User"
         place="Phys/User/Particles"
         />
-       <enum
+      <enum
         desc="Additional information"
         name="additionalInfo"
         value="ConfLevel, Weight, LastGlobal=10000"
         access="PUBLIC"
-       />
-       <location
+        />
+      <location
         name="Production"
         place="Phys/Prod/Particles"
-       />
-       <constructor
+        />
+      <constructor
         argList="Particle part"
         desc="Copy constructor"
-       />          
-       <constructor
+        />          
+      <constructor
+        explicit = "TRUE"
         argList="const LHCb::ParticleID&amp; pid"
         desc="Constructor from ParticleID"
-       >
+        initList = "m_particleID(),m_measuredMass(-1.0),m_measuredMassErr(0.0),m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV),m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km),m_momCovMatrix(),m_posCovMatrix(),m_posMomCovMatrix(),m_extraInfo()"
+        >
 	<code>
-         setParticleID(pid);
-	 return;
+          setParticleID(pid);
+          return;
 	</code>
-       </constructor>
-       <method
+      </constructor>
+      <constructor
+        explicit = "TRUE"
+        argList="int key"
+        desc="create a Particle with a selected key"
+        initList = "KeyedObject&lt;int&gt;( key ),m_particleID(),m_measuredMass(-1.0),m_measuredMassErr(0.0),m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV),m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km),m_momCovMatrix(),m_posCovMatrix(),m_posMomCovMatrix(),m_extraInfo()"
+        />
+      <method
         name="clone"
         desc="Clone particle"
         type="LHCb::Particle*"
         const="TRUE"
-      >
-       <code>
+        >
+        <code>
           return new Particle(*this);
-       </code>
-       </method>
-       <method
+        </code>
+      </method>
+      <method
         desc="Assignment operator, note that the original vertex and protoParticle are kept"
         name="operator="
         type="LHCb::Particle&amp;"
-       >
-       <arg name="orig" type="Particle" const='TRUE'/>
-       </method>
-       <attribute
+        >
+        <arg name="orig" type="Particle" const='TRUE'/>
+      </method>
+      <attribute
         name="particleID"
         desc="PDG code"
         type="LHCb::ParticleID"
-       />
-       <method
+        />
+      <method
         name="confLevel"
         desc="Confidence Level of the particleID. If not set the default is -1."
         type="double"
         const="TRUE"
-       >
-       <code>
-        return info( LHCb::Particle::ConfLevel, -1. ) ;
-       </code>
-       </method>
-       <method
+        >
+        <code>
+          return info( LHCb::Particle::ConfLevel, -1. ) ;
+        </code>
+      </method>
+      <method
         name="setConfLevel"
         desc="set confidence Level of the particleID."
         type="void"
 	argList="double cl"
         const="FALSE"
-       >
-       <code>
-        addInfo( LHCb::Particle::ConfLevel, cl ) ;
-       </code>
-       </method>
-       <method
+        >
+        <code>
+          addInfo( LHCb::Particle::ConfLevel, cl ) ;
+        </code>
+      </method>
+      <method
         name="weight"
         desc="Weight of the particle, whatever that means. If not set the default is 1."
         type="double"
         const="TRUE"
-       >
-       <code>
-        return info( LHCb::Particle::Weight, 1. ) ;
-       </code>
-       </method>
-       <method
+        >
+        <code>
+          return info( LHCb::Particle::Weight, 1. ) ;
+        </code>
+      </method>
+      <method
         name="setWeight"
         desc="set Weight of the particle, whatever that means."
         type="void"
 	argList="double w"
         const="FALSE"
-       >
-       <code>
-        addInfo( LHCb::Particle::Weight, w ) ;
-       </code>
-       </method>
-       <attribute
+        >
+        <code>
+          addInfo( LHCb::Particle::Weight, w ) ;
+        </code>
+      </method>
+      <attribute
         name="measuredMass"
         desc="Measured Mass"
         type="double"
         init="-1.0"
-       />
-       <attribute
+        />
+      <attribute
         name="measuredMassErr"
         desc="Error on measured mass"
         type="double"
         init="0.0"
-       />
-       <attribute
+        />
+      <attribute
         name="momentum"
         desc="Momentum four vector "
         type="Gaudi::LorentzVector"
         init="0.0, 0.0, 0.0, -1*Gaudi::Units::GeV"
-       />
-       <attribute
+        />
+      <attribute
         name="referencePoint"
         desc="Point at which the momentum is given in LHCb reference frame - convention: take the one that minimizes the extrapolations needs"
         type="Gaudi::XYZPoint"
         init="0.0, 0.0, -1*Gaudi::Units::km"
-       />
-       <relation
+        />
+      <relation
         name="endVertex"
         desc="Reference to end vertex (ex. decay)"
         type="LHCb::Vertex"
 	nonconstaccessor="TRUE"
-       />
-       <relation
+        />
+      <relation
         name="proto"
         desc="Reference to original ProtoParticle"
         type="LHCb::ProtoParticle"
-       />
-       <method
+        />
+      <method
         name="charge"
         const="TRUE"
         desc="Charge in units of +e (i.e. electron charge = -1)"
         type="int"
-       >
-       <code>
-  return particleID().threeCharge()/3 ;
-       </code>
-       </method>
-       <method
+        >
+        <code>
+          return particleID().threeCharge()/3 ;
+        </code>
+      </method>
+      <method
         name="pt"
         const="TRUE"
         desc="short cut for transerve momentum"
         type="double"
-       >
+        >
         <code> return m_momentum.Pt(); </code> 
 <!---         <code> return m_momentum.perp(); </code> -->
-       </method>
-       <method
+      </method>
+      <method
         name="p"
         const="TRUE"
         desc="short cut for |P|" 
         type="double"
-       > 
-         <code> return m_momentum.R(); </code> 
-<!---         <code> return m_momentum.vect().mag(); </code> -->
-       </method>
-       <method
+        > 
+        <code> return m_momentum.R(); </code> 
+        <!---         <code> return m_momentum.vect().mag(); </code> -->
+      </method>
+      <method
         const="TRUE"
         name="covMatrix"
         desc="full error matrix on position, 4-momentum. @todo Check the maths of this"
@@ -202,36 +210,36 @@
 	  return full;
 	</code>
 -->
-       </method>
-       <attribute
+      </method>
+      <attribute
         name="momCovMatrix"
         desc="Covariance matrix relative to momentum (4x4)"
         type="Gaudi::SymMatrix4x4"
-       />
-       <attribute
+        />
+      <attribute
         name="posCovMatrix"
         desc="Covariance matrix relative to point at which the momentum is given (3x3)"
         type="Gaudi::SymMatrix3x3"
-       />
-       <method
+        />
+      <method
         name="isBasicParticle"
 	const="TRUE" 
         desc="a basic particle has no daughters" 
         type="bool"
-       >
+        >
 	<code> return m_daughters.empty(); </code>
-       </method>
-       <attribute
+      </method>
+      <attribute
         name="posMomCovMatrix"
         desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
         type="Gaudi::Matrix4x3"
-       />
-       <relation
+        />
+      <relation
         name="daughters"
         desc="Reference to daughter particles. Users are strongly discouraged to use setDaughters method." 
         multiplicity="N"
         type="LHCb::Particle"
-       />
+        />
       <method
         name="daughtersVector"
 	desc="Get daughters as a ConstVector"
@@ -239,72 +247,72 @@
 	const="TRUE"
 	>
 	<code>
-         return LHCb::Particle::ConstVector( m_daughters.begin() , 
-                                             m_daughters.end() );
+          return LHCb::Particle::ConstVector( m_daughters.begin() , 
+          m_daughters.end() );
 	</code>
-       </method>
-       <attribute
+      </method>
+      <attribute
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."
         type="ExtraInfo"
         setMeth="FALSE"
         getMeth="TRUE"
-       />
-       <method
+        />
+      <method
         name="hasInfo"
         const="TRUE"
         desc="has information for specified key"
         argList="int key"
         type="bool"
-       > 
-       <code>
-  return m_extraInfo.end() != m_extraInfo.find( key ) ;
-       </code>
-       </method>
-       <method
+        > 
+        <code>
+          return m_extraInfo.end() != m_extraInfo.find( key ) ;
+        </code>
+      </method>
+      <method
         name="addInfo"
         desc=" add/replace new information, associated with the key"
         argList="int key, double info"
         type="bool"
-       > 
-       <code>
-  return m_extraInfo.insert( key , info ).second ;
-       </code>
-       </method>
-       <method
+        > 
+        <code>
+          return m_extraInfo.insert( key , info ).second ;
+        </code>
+      </method>
+      <method
         name="info"
         desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
         argList="int key, double def"
         type="double"
         const="TRUE"
-       > 
-       <code>
-  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
-  return m_extraInfo.end() == i ? def : i->second ;
-       </code>
-       </method>
-       <method
+        > 
+        <code>
+          ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+          return m_extraInfo.end() == i ? def : i->second ;
+        </code>
+      </method>
+      <method
         name="eraseInfo"
         desc="erase the information associated with the given key"
         argList="int key"
         type="unsigned long"
-       > 
-       <code>
-  return m_extraInfo.erase( key ) ; 
-       </code>
-       </method>
-       <method 
-       type="Gaudi::XYZVector" 
-       name="slopes" 
-       const="TRUE" 
-       desc="slopes (Px/Pz, Py/Pz. 1) at reference point"
-       > 
+        > 
+        <code>
+          return m_extraInfo.erase( key ) ; 
+        </code>
+      </method>
+      <method 
+        type="Gaudi::XYZVector" 
+        name="slopes" 
+        const="TRUE" 
+        desc="slopes (Px/Pz, Py/Pz. 1) at reference point"
+        > 
         <code>
 	  return Gaudi::XYZVector(m_momentum.X()/m_momentum.Z(),
                                   m_momentum.Y()/m_momentum.Z(),
                                   1.);
         </code>
-       </method>
+      </method>
 <!--
        <typedef
          type='KeyedContainer&lt;Particle, Containers::HashMap&gt;'
