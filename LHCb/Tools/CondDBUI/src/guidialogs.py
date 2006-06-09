@@ -276,6 +276,28 @@ class createLHCbCondDialog(qt.QDialog):
         return self.xmlString
 
 #=============================================#
+#               SELECTTAGDIALOG               #
+#=============================================#
+class selectTagDialog(qt.QDialog):
+    '''
+    Open a dialog showing the tag relations for the given folder.
+    User can then select which version to display.
+    '''
+    def __init__(self, parent, name = 'selectTagDialog'):
+        '''
+        initialisation of the dialog window
+        '''
+        qt.QDialog.__init__(self, parent, name)
+
+        #--- Layout ---#
+        self.layoutDialog = qt.QVBoxLayout(self)
+        self.tagTree = guiextras.HVSTree(self.layoutDialog)
+        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+
+        #--- Tag tree ---#
+
+
+#=============================================#
 #               CREATETAGDIALOG               #
 #=============================================#
 class createTagDialog(qt.QDialog):
@@ -449,9 +471,9 @@ class deleteTagDialog(qt.QDialog):
 
 
 #=============================================#
-#              CREATEFOLDERDIALOG             #
+#               CREATENODEDIALOG              #
 #=============================================#
-class createFolderDialog(qt.QDialog):
+class createNodeDialog(qt.QDialog):
     '''
     This dialog allows to create a new folder or a new folderset in the database
     '''
@@ -461,21 +483,21 @@ class createFolderDialog(qt.QDialog):
         '''
         qt.QDialog.__init__(self, parent, name)
 
-        self.folderName   = ''
+        self.nodeName   = ''
         self.is_folderset = False
         self.description  = ''
         self.is_singleVersion = False
-        self.createParents = False
+        self.createParents = True
 
         #--- Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutFolder = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutNode   = qt.QHBoxLayout(self.layoutDialog)
         self.layoutCheck  = qt.QHBoxLayout(self.layoutDialog)
         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
 
-        #--- Folder info ---#
-        self.labelFolder = qt.QLabel('Folder Name:', self, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self, 'editFolder')
+        #--- Node info ---#
+        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
+        self.editNode  = qt.QLineEdit(self, 'editNode')
         self.labelDescription = qt.QLabel('Description:', self, 'labelDescription')
         self.editDescription = qt.QLineEdit(self, 'editDescription')
 
@@ -483,16 +505,17 @@ class createFolderDialog(qt.QDialog):
         self.checkFolderset = qt.QCheckBox('Folderset', self, 'checkFolderset')
         self.checkSingleVersion = qt.QCheckBox('Single Version', self, 'checkSingleVersion')
         self.checkCreateParents = qt.QCheckBox('Create parents', self, 'checkCreateParents')
+        self.checkCreateParents.setChecked(True)
 
         #--- Exit buttons ---#
         self.buttonCreate = qt.QPushButton('Create', self, 'buttonCreate')
         self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
-        self.layoutFolder.addWidget(self.labelFolder)
-        self.layoutFolder.addWidget(self.editFolder)
-        self.layoutFolder.addWidget(self.labelDescription)
-        self.layoutFolder.addWidget(self.editDescription)
+        self.layoutNode.addWidget(self.labelNode)
+        self.layoutNode.addWidget(self.editNode)
+        self.layoutNode.addWidget(self.labelDescription)
+        self.layoutNode.addWidget(self.editDescription)
 
         self.layoutCheck.addWidget(self.checkFolderset)
         self.layoutCheck.addWidget(self.checkSingleVersion)
@@ -509,19 +532,19 @@ class createFolderDialog(qt.QDialog):
         '''
         reset the dialog
         '''
-        self.folderName = ''
-        self.editFolder.setText('')
+        self.nodeName = ''
+        self.editNode.setText('')
         self.description = ''
         self.editDescription.setText('')
         self.is_folderset = False
         self.checkFolderset.setChecked(False)
         self.is_singleVersion = False
         self.checkSingleVersion.setChecked(False)
-        self.createParents = False
-        self.checkCreateParents.setChecked(False)
+        self.createParents = True
+        self.checkCreateParents.setChecked(True)
         
     def accept(self):
-        self.folderName = str(self.editFolder.text())
+        self.nodeName = str(self.editNode.text())
         self.description = str(self.editDescription.text())
         self.is_folderset = self.checkFolderset.isChecked()
         self.is_singleVersion = self.checkSingleVersion.isChecked()
@@ -533,13 +556,13 @@ class createFolderDialog(qt.QDialog):
         return qt.QDialog.reject(self)
 
 #=============================================#
-#              DELETEFOLDERDIALOG             #
+#               DELETENODEDIALOG              #
 #=============================================#
-class deleteFolderDialog(qt.QDialog):
+class deleteNodeDialog(qt.QDialog):
     '''
     This dialog allows to delete an existing folder or a folderset from the database
     '''
-    def __init__(self, parent, name = 'deleteFolderDialog'):
+    def __init__(self, parent, name = 'deleteNodeDialog'):
         '''
         initialisation of the dialog window.
         '''
@@ -548,15 +571,15 @@ class deleteFolderDialog(qt.QDialog):
         self.folderName   = ''
 
         #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
+        self.layoutDialog  = qt.QVBoxLayout(self)
         self.layoutWarning = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutFolder = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutNode    = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutExit    = qt.QHBoxLayout(self.layoutDialog)
 
         #--- Folder info ---#
         self.labelWarning = qt.QLabel('WARNING: removal can not be undone !!', self, 'labelWarning')
-        self.labelFolder = qt.QLabel('Folder(set) Name:', self, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self, 'editFolder')
+        self.labelNode = qt.QLabel('Node name:', self, 'labelNode')
+        self.editNode  = qt.QLineEdit(self, 'editFolder')
 
         #--- Exit buttons ---#
         self.buttonDelete = qt.QPushButton('Delete', self, 'buttonDelete')
@@ -565,8 +588,8 @@ class deleteFolderDialog(qt.QDialog):
         #--- Dialog Window Layout ---#
         self.layoutWarning.addWidget(self.labelWarning)
 
-        self.layoutFolder.addWidget(self.labelFolder)
-        self.layoutFolder.addWidget(self.editFolder)
+        self.layoutNode.addWidget(self.labelNode)
+        self.layoutNode.addWidget(self.editNode)
 
         self.layoutExit.addWidget(self.buttonDelete)
         self.layoutExit.addWidget(self.buttonCancel)
@@ -575,15 +598,15 @@ class deleteFolderDialog(qt.QDialog):
         self.connect(self.buttonDelete,     qt.SIGNAL("clicked()"), self.accept)
         self.connect(self.buttonCancel,     qt.SIGNAL("clicked()"), self.reject)
 
-    def reset(self):
+    def reset(self, defaultNodeName = ''):
         '''
         reset the dialog
         '''
-        self.folderName = ''
-        self.editFolder.setText('')
+        self.nodeName = defaultNodeName
+        self.editNode.setText(defaultNodeName)
 
     def accept(self):
-        self.folderName = str(self.editFolder.text())
+        self.nodeName = str(self.editNode.text())
         return qt.QDialog.accept(self)
 
     def reject(self):
@@ -664,7 +687,7 @@ class addConditionDialog(qt.QDialog):
 
         #--- Condition object list ---#
         self.tableCondObjects = qttable.QTable(0, 4, self, 'tableCondObjects')
-        self.tableCondObjects.setColumnLabels(qt.QStringList.fromStrList(['ChannelID', 'Since', 'Until', 'Payload']))
+        self.tableCondObjects.setColumnLabels(qt.QStringList.fromStrList(['Payload', 'Since', 'Until', 'ChannelID']))
         self.tableCondObjects.setReadOnly(True)
         self.movePad = guiextras.movePad(self, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
         
@@ -755,15 +778,14 @@ class addConditionDialog(qt.QDialog):
         for i in range(self.tableCondObjects.numCols()):
             self.tableCondObjects.adjustColumn(i)      
 
-    def reset(self):
+    def reset(self, defaultFolder = '', defaultChannelID = 0):
         '''
         Reset everything to initial values.
         '''
         self.objectList = []
-        self.editFolder.setText('')
-        self.editChannelID.setText('0')
-        self.editSince.setText(str(self.timeValidator.valKeyMin))
-        self.editUntil.setText(str(self.timeValidator.valKeyMax))
+        self.setFolderName(defaultFolder)
+        self.setDefaultChannelID(defaultChannelID)
+        self.setIoV(self.timeValidator.valKeyMin, self.timeValidator.valKeyMax)
         self.clearXml()
         self._fillTable()
         
@@ -876,7 +898,8 @@ class addConditionDialog(qt.QDialog):
         payload   = str(self.editPayload.text())
 
         if '' not in [channelID, since, until, payload]:
-            newObject = [int(channelID), long(since), long(until), payload]
+            # the order must be compatible with the one given in conddbui.storeXMLStringList()
+            newObject = [payload, long(since), long(until), int(channelID)]
             self.objectList.append(newObject)
             self._fillTable()
         else:

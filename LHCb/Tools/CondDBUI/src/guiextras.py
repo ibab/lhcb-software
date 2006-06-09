@@ -1,5 +1,5 @@
 import qt, qttable
-import guibridge
+import conddbui
 
 #=============================================#
 #               MEMORYTABLEITEM               #
@@ -33,8 +33,8 @@ class valKeyValidator(qt.QValidator):
     '''
     def __init__(self, parent, name = 'valKeyValidator'):
         qt.QValidator.__init__(self, parent, name)
-        self.valKeyMin = long(guibridge.cool.ValidityKeyMin)
-        self.valKeyMax = long(guibridge.cool.ValidityKeyMax)
+        self.valKeyMin = long(conddbui.cool.ValidityKeyMin)
+        self.valKeyMax = long(conddbui.cool.ValidityKeyMax)
 
     def validate(self, inputString, cursorPos):
         '''
@@ -184,7 +184,7 @@ class myDBTable(qt.QVBox):
         
         self.activeChannel = None
         self.timeModified  = False
-        
+
         self.navBox = qt.QHBox(self, 'navBox')
         #--- Contents of the navigation box ---#
         self.validatorTime = valKeyValidator(self)
@@ -217,7 +217,7 @@ class myDBTable(qt.QVBox):
         #--- Contents of the splitter ---#
         self.tableDB = qttable.QTable(0,0,self.splitterDB, 'tableDB')
         self.tableDB.setReadOnly(True)
-        
+
         self.textDB = qt.QTextEdit(self.splitterDB, 'textDB')
         self.textDB.setTextFormat(qt.Qt.PlainText)
         self.textDB.setFont(qt.QFont("Courier", 10))
@@ -381,5 +381,49 @@ class myDBTable(qt.QVBox):
         self.editTimeFrom.setText(str(self.validatorTime.valKeyMin))
         self.editTimeTo.setText(str(self.validatorTime.valKeyMax))
         self.setEnabled(False)
+
+
+#=============================================#
+#                   HVSTREE                   #
+#=============================================#
+
+class HVSTree(qt.QVBox):
+    '''
+    Widget displaying a list of tags, from leaf tags to ancestor tags. An option
+    allows to hide the automatically generated ancestor tag names.
+    '''
+
+    def __init__(self, parent, name = 'HVSTree', flags = 0):
+        '''
+        Initialise the elements of the HVS tree.
+        '''
+        qt.QVBox.__init__(self, parent, name, flag)
+        
+        #--- Contents of the box ---#
+        self.tree       = qt.QListView(self)
+        self.checkAuto  = qt.QCheckBox('Hide _auto_ tags', self, 'checkAuto')
+        #---------------------------#
+
+        #--- signal connection --#
+        self.connect(self.checkAuto, qt.SIGNAL("toggled(bool)"), self.hideAutoTags)
+
+    def hideAutoTags(self, hide = False):
+        '''
+        If "hide" is True, search all tree items starting with '_auto_' and hide
+        them. Otherwise, hides nothing.
+        '''
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
 
 

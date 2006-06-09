@@ -77,7 +77,7 @@ class dbTree(qt.QListView):
         '''
         Build the tree elements based on the list of nodes of the CondDB
         '''
-        nodes = self.bridge.db.listAllNodes()
+        nodes = self.bridge.getAllNodes()
         for nodeName in nodes:
             if nodeName == '/':
                 guiFolderSet(self, '')
@@ -223,25 +223,16 @@ class guiChannel(guiTreeElement):
             tag = tagName
             
         self.condDBCache[tagName] = []
-        folder = self.listView().bridge.db.getFolder(self.parent().fullName)
-        objIter = folder.browseObjects(fromTime, toTime, self.ID, tag)
+        objList = self.listView().bridge.getXMLStringList(self.parent().fullName, fromTime, toTime, self.ID, tag)
 
-        for i in range(objIter.size()):
-            obj = objIter.next()
-            payload = obj.payload()
-            since = obj.since()
-            until = obj.until()
-            insert = obj.insertionTime()
+        for obj in objList:
+            payload = obj[0]
+            since = obj[1]
+            until = obj[2]
+            insert = obj[4]
             # If something changes here, be careful to update the table display
             # as well. A convention is that the last element of a row is the payload.
-            # BY THE WAY: I'm supposing that the payload is defined under the key 'data'
-            #             which is not necessarily true !! I'll modify this as soon as
-            #             I understand how AttributeList are to be used.
-            self.condDBCache[tagName].append((insert.format(True, "%Y.%m.%d; %H:%M:%S"),\
-                                              since.value(),\
-                                              until.value(),\
-                                              payload.typeName('data'),\
-                                              payload['data']))
+            self.condDBCache[tagName].append((insert.format(True, "%Y.%m.%d; %H:%M:%S"), since, until, 'string', payload))
 
             
 class guiFolder(guiTreeElement):

@@ -1,0 +1,14 @@
+! =============================================================================
+! $Id: release.notes,v 1.1 2006-06-09 07:21:02 ngilardi Exp $
+! =============================================================================
+! package Tools/CondDBUI
+! package manager : Nicolas Gilardi
+! =============================================================================
+
+! 2006-06-09 - Nicolas Gilardi
+ **** requires LCGCMT 43b  ****
+ - renamed python/conddbui.py to python/browser.py
+ - added src/conddbui.py: user API to LHCb COOL
+ - documentation isn't up to date
+
+

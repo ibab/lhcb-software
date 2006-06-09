@@ -1,7 +1,7 @@
-# 2006/04/20 Nicolas Gilardi
+# $Id: requirements,v 1.3 2006-06-09 07:21:02 ngilardi Exp $
 package CondDBUI
 
-version v0r3
+version v0r4
 
 branches python src cmt db
 ignore_pattern package_stamps
@@ -9,24 +9,14 @@ ignore_pattern package_stamps
 # ============== Dependencies ========================================
 
 # library path needed for mysql backend
-use myodbc        v*    LCG_Interfaces
 use mysql         v*    LCG_Interfaces
-use unixodbc      v*    LCG_Interfaces
 
 # library path needed for sqlite backend
 use sqlite        v*    LCG_Interfaces
-set POOL_OUTMSG_LEVEL W
- 
-# library path needed for oracle backend
-macro Oracle_version "10.1.0.3-1"
-macro Oracle_base "$(LCG_external)/oracle"
-path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
-path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib" WIN32 ""
 
-# remove entries due to Windows Oracle installation
-path_remove PATH "" WIN32 "\Oracle\"
-path_remove PATH "" WIN32 "\oracle\"
-path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\$(LCG_system)\bin"
+# library path needed for oracle backend
+use oracle        v*    LCG_Interfaces
+ 
 #set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
 
 # Needed for whatever reason...
@@ -38,16 +28,11 @@ apply_tag    NEEDS_PYCOOL
 
 use Python v* LCG_Interfaces
 
-# =============== patterns ====================================================
-apply_pattern     library_path    library=DetDict
-apply_pattern     ld_library_path
-
 # ============== Environment =========================================
-# ODBC installation location
-set  ODBCINST           $(unixodbc_home)
 
-# POOL authentication path
-set  POOL_AUTH_PATH     $(HOME)/private
+# CORAL path
+set  CORAL_AUTH_PATH       ${HOME}/private
+set  CORAL_DBLOOKUP_PATH   ${CONDBUIROOT}/cmt
 
 # Qt libraries access
 macro        Qt_home         "/afs/cern.ch/sw/lcg/external/qt/3.3.4"
