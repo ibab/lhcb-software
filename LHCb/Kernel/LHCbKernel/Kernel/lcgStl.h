@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.19 2006-05-26 12:39:29 cattanem Exp $
+// $Id: lcgStl.h,v 1.20 2006-06-09 14:15:59 erodrigu Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -22,11 +22,11 @@
 namespace {
   struct _Instantiations {
     // begin instantiations
-    std::pair<LHCb::VeloChannelID,int>         m_std_pair_VeloChannelID_int;
-    std::pair<LHCb::STChannelID,int>           m_std_pair_STChannelID_int;
-    std::pair<LHCb::OTChannelID,int>           m_std_pair_OTChannelID_int;
+    std::pair<LHCb::VeloChannelID,int>               m_std_pair_VeloChannelID_int;
+    std::pair<LHCb::STChannelID,int>                 m_std_pair_STChannelID_int;
+    std::pair<LHCb::OTChannelID,int>                 m_std_pair_OTChannelID_int;
     std::pair<double,LHCb::CaloCellID>               m_std_pair_double_CaloCellID;
-    std::pair<LHCb::MuonTileID,int>           m_std_pair_MuonTileID_int;
+    std::pair<LHCb::MuonTileID,int>                  m_std_pair_MuonTileID_int;
     std::vector<std::pair<LHCb::VeloChannelID,int> > m_std_vector_std_pair_VeloChannelID_int;
     std::vector<std::pair<LHCb::STChannelID,int> >   m_std_vector_std_pair_STChannelID_int;
     std::vector<std::pair<LHCb::OTChannelID,int> >   m_std_vector_std_pair_OTChannelID_int;
@@ -34,6 +34,12 @@ namespace {
     std::vector<std::pair<LHCb::MuonTileID,int> >    m_std_vector_std_pair_MuonTileID_int;
     std::auto_ptr<LHCb::Trajectory>                  m_auto_ptr_Trajectory;
     // end instantiations
+  };
+}
+
+namespace { // Anonymous namespace 
+  struct _instances {
+    LHCb::CircleTraj m_CircleTraj; // class gets instantiated  
   };
 }
 

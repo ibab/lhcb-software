@@ -14,4 +14,5 @@
   <class name="LHCb::LineTraj"/>
   <class name="LHCb::ParabolaTraj"/>
   <class name="std::auto_ptr<LHCb::Trajectory>"/>
+  <class pattern ="LHCb::DifTraj<*"/>
 </lcgdict>
