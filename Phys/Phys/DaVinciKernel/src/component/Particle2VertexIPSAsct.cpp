@@ -1,4 +1,4 @@
-// $Id: Particle2VertexIPSAsct.cpp,v 1.1 2006-06-08 16:05:22 jpalac Exp $
+// $Id: Particle2VertexIPSAsct.cpp,v 1.1 2006-06-09 14:11:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
