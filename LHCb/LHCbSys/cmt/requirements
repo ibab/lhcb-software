@@ -19,12 +19,12 @@ use KernelSys             v5r6    Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r7    Kernel  # Juan Palacios
 use LHCbKernel            v6r7    Kernel  # Marco Cattaneo
 use LHCbMath              v1r1    Kernel  # Juan Palacios
-use Relations             v3r1    Kernel  # Ivan Belyaev
+use Relations             v3r2    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0    Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v6r3    Rich    # Chris Jones
+use RichKernel            v6r4    Rich    # Chris Jones
 use L0MuonKernel          v5r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
-use ProcessorKernel       v3r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
+use ProcessorKernel       v3r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v8r6    Det     # Marco Cattaneo
@@ -52,7 +52,7 @@ use PhysEvent             v9r5    Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r4p1  Event   # Marco Cattaneo
 use GenEvent              v4r4    Event   # Gloria Corti
 use EventAssoc            v3r1    Event   # Ivan Belyaev
-use LinkerEvent           v2r2    Event   # Olivier Callot
+use LinkerEvent           v2r2p1  Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v2r6    Event   # Eduardo Rodrigues, Jose Hernando
 use VeloEvent             v14r0   Event   # Tomasz Szumlak, Chris Parkes
@@ -81,6 +81,6 @@ use SimComponents         v1r2p1 Sim     # Gloria Corti, Marco Cattaneo
 
 # LHCb  Examples
 use DetDescChecks         v3r0   Det     # Ivan Belyaev
-use DetDescExample        v7r1   Ex      # Marco Clemencic
+use DetDescExample        v7r2   Ex      # Marco Clemencic
 use IOExample             v2r0   Ex      # Marco Cattaneo
 use DetCondExample        v8r0   Ex      # Marco Clemencic

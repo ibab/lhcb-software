@@ -5,14 +5,21 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r1>2006-06-02 LHCbSys v21r1</A></H1><PRE>
+</PRE><H1><A NAME=v21r1>2006-06-09 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
+It is the first release supporting also slc4_ia32_gcc345 platform
 
 - Packages modified: DetSys v8r6, CaloDet v7r3, MuonDet v5r4, VeloDet v10r7,
-    EventSys v21r6, GenEvent v4r4, PhysEvent v9r5, RecEvent v1r4,TrackEvent v2r6,
-    KernelSys v5r6, LHCbDefinitions v1r7, LHCbKernel v6r7, LHCbMath v1r1,
+    DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6, GenEvent v4r4,
+    PhysEvent v9r5, RecEvent v1r4, TrackEvent v2r6, DAQEvent v6r4p1,
+    LinkerEvent v2r2p1, KernelSys v5r6, LHCbDefinitions v1r7, LHCbKernel v6r7,
+    LHCbMath v1r1, Relations v3r2, RichKernel v6r4, ProcessorKernel v3r1,
     CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3,
-    DAQEvent v6r4p1, DetDesc v16r5p1, DetDescCnv v3r2p1,
+    DetDescExample v7r2
+
+- In DetDesc v16r5p1, DetDescCnv v3r2p1, Relations v3r2, LoKiCore v1r5,
+     LoKiGen v1r3, LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1
+  . Backwards compatible fixes for compilation with gcc 3.4.5
 
 - In DetSys v8r6
   . Remove std::vector<double> from dictionary, already in RELAX dictionaries
@@ -35,9 +42,6 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Add 'Tell1WithoutSensor' flag. Backwards compatible, but requires
     XmlConditions v1r7 or greater
 
-- In DetDesc v16r5p1, DetDescCnv v3r2p1
-  . Backwards compatible fixes for compilation with gcc 3.4.5
-
 - In GenEvent v4r4
   . Remove custom dictionary for HepMC, since all classes are now in RELAX
 
@@ -54,6 +58,7 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Track enum AlreadyUsed renamed to Used
   . Disabled the boost allocator for LHCb::Node because it was causing a huge
     memory leak in Brunel.
+  . Bug fix in TrackFunctor.h
 
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
@@ -76,6 +81,9 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
   . Make linker library LHCbMath
   . Remove Kernel, move everything to new LHCbMath directory.
 
+- In ProcessorKernel v3r1
+  . Add an accessor method to the m_units data in class Unit
+
 - In CaloUtils v6r3
   . Update TrackUse.{cpp,h} for New Track Model
   . bug fix in src/SpreadEstimator.cpp
@@ -93,6 +101,9 @@ This version uses Gaudi v18r5 and is fully compatible with DC06 production data
     of the HepMC decay tree
   . LoKi/GenParticles.h: increase functionality of FromHepMCTree function.
     Now it can treat the list of trees.
+
+- In DetDescExample v7r2
+  . Add use XmlConditions v* for compatibility with XmlDDDB v30r*
 
 </PRE><H1><A NAME=v21r0>2006-05-17 LHCbSys v21r0</A></H1><PRE>
 This version uses Gaudi v18r4 and is fully compatible with DC06 production data
