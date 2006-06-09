@@ -5,10 +5,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v2r6 2006-06-09 ========================
 ! 2006-06-02 - Eduardo Rodrigues
  - fixed bug in TrackFunctor.h
 
-!========================= TrackEvent v2r6 2006-06-02 ========================
 ! 2006-06-02 - Marco Clemencic
  - Disabled the boost allocator for LHCb::Node because it was causing a huge
    memory leak in Brunel. Anyway, it is not needed for that class becuse it is
