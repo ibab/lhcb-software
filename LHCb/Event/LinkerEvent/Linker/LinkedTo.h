@@ -1,10 +1,11 @@
-// $Id: LinkedTo.h,v 1.15 2006-03-23 12:55:39 ocallot Exp $
+// $Id: LinkedTo.h,v 1.16 2006-06-09 09:22:15 cattanem Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
