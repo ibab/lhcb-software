@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.8 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.9 2006-06-11 19:37:02 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // =============================================================================
 #ifndef RELATIONS_Relation2Weighted_H 
 #define RELATIONS_Relation2Weighted_H 1
@@ -47,7 +50,7 @@ namespace Relations
   template<class FROM,class TO,class WEIGHT>
   class Relation2Weighted
     : public BaseWeightedTable 
-      , public IRelationWeighted2D<FROM,TO,WEIGHT> 
+    , public IRelationWeighted2D<FROM,TO,WEIGHT> 
   {  
   public:
     /// short cut for own     type
@@ -122,12 +125,7 @@ namespace Relations
     /// copy constructor is publc @attention it is not recommended for normal usage 
     Relation2Weighted 
     ( const OwnType& copy ) 
-      : IInterface            ( copy ) 
-      , IUpdateable           ( copy ) 
-      , IRelationBase         ( copy ) 
-      , IRelationWeightedBase ( copy )
-      , DirectType            ( copy ) 
-      , BaseWeightedTable     ( copy ) 
+      : BaseWeightedTable     ( copy ) 
       , IBase     ( copy           ) 
       , m_direct  ( copy.m_direct  )
       , m_inverse ( copy.m_inverse ) 

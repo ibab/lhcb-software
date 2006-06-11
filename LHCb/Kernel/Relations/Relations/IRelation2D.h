@@ -1,8 +1,11 @@
-// $Id: IRelation2D.h,v 1.3 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: IRelation2D.h,v 1.4 2006-06-11 19:37:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/06/11 15:23:45  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_IRELATION2D_H 
 #define RELATIONS_IRELATION2D_H 1
@@ -28,7 +31,7 @@
  *  @date   23/03/2002
  */
 template< class FROM, class TO>
-class IRelation2D : public virtual IRelation<FROM,TO>
+class IRelation2D : public IRelation<FROM,TO>
 {
 public: 
   /// shortcut to own type

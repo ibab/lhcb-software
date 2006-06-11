@@ -1,8 +1,11 @@
-// $Id: IRelationWeighted.h,v 1.4 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.5 2006-06-11 19:37:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/11 15:23:45  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -26,8 +29,7 @@
  */
 
 template< class FROM , class TO , class WEIGHT>
-class IRelationWeighted :
-  public virtual IRelationWeightedBase
+class IRelationWeighted : public IRelationWeightedBase
 {
 public:
   /// the type traits structure

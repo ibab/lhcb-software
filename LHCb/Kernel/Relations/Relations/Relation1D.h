@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.8 2006-06-11 17:46:06 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.9 2006-06-11 19:37:02 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/06/11 17:46:06  ibelyaev
+//  fix for OLD gcc
+//
 // Revision 1.7  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -58,9 +61,9 @@ namespace LHCb
   
   template<class FROM,class TO>
   class Relation1D 
-    : public  DataObject
-    , public  Relations::BaseTable 
-    , public  IRelation<FROM,TO>
+    : public DataObject
+    , public Relations::BaseTable 
+    , public IRelation<FROM,TO>
   {    
   public: 
     /// short cut for own     type
@@ -130,10 +133,7 @@ namespace LHCb
     /// copy constructor 
     Relation1D 
     ( const OwnType& copy  )
-      : IInterface    ( copy         )
-      , IUpdateable   ( copy         )
-      , IRelationBase ( copy         )
-      , DataObject    ( copy         )
+      : DataObject    ( copy         )
       , Relations::BaseTable ( copy  )  
       , IBase         ( copy         ) 
       , m_base        ( copy.m_base  )

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.9 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.10 2006-06-11 19:37:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -113,11 +116,7 @@ namespace LHCb
     /// copy constructor 
     RelationWeighted1D 
     ( const OwnType& copy  )
-      : IInterface            ( copy ) 
-      , IUpdateable           ( copy )
-      , IRelationBase         ( copy ) 
-      , IRelationWeightedBase ( copy ) 
-      , DataObject            ( copy ) 
+      : DataObject            ( copy ) 
       , Relations::BaseWeightedTable ( copy   )
       , IBase                 ( copy ) 
       , m_base        ( copy.m_base  )

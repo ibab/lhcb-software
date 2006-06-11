@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $
+# $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/06/11 15:23:47  ibelyaev
+#  The major  upgrade: see doc/release.notes
+#
 # =============================================================================
 
 import sys,os,os.path,datetime  
@@ -166,7 +169,7 @@ class RelW2D ( Rel ) :
         entry   = "Relations::WEntry_<%s,%s,%s>"                    % triplet
         entries = "std::vector<%s>"                                 % entry
         range   = "Relations::Range_<%s>"                           % entries 
-        return ( table , [ ibas1 , ibas2   , base0 , base1 , base2 ,
+        return ( table , [ ibas1  , ibas2   , base0 , base1 , base2 ,
                            entry , entries , range ] ) 
     def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
@@ -174,9 +177,9 @@ class RelW2D ( Rel ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.7 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.8 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -232,9 +235,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']

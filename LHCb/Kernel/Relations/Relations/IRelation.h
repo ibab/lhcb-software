@@ -1,8 +1,11 @@
-// $Id: IRelation.h,v 1.4 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: IRelation.h,v 1.5 2006-06-11 19:37:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/11 15:23:45  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_IRELATION_H
 #define RELATIONS_IRELATION_H 1
@@ -22,7 +25,7 @@
  *  @date   2006-06-09
  */
 template<class FROM, class TO>
-class IRelation : public virtual IRelationBase
+class IRelation : public IRelationBase
 {
 public:
   /// the type traits structure

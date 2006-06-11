@@ -1,6 +1,6 @@
-// $Id: Entry.h,v 1.1 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: Entry.h,v 1.2 2006-06-11 19:37:02 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 #ifndef RELATIONS_ENTRY_H 
 #define RELATIONS_ENTRY_H 1
@@ -40,7 +40,7 @@ namespace Relations
     typedef typename ToTypes::Input           To_        ;
     typedef typename ToTypes::Output          To         ;
     typedef typename ToTypes::Inner           ToInner    ;
-  public:
+  public: 
     /// "less" function object for "From" objects 
     typedef typename FromTypes::Less          LessF  ;
     /// "less" function object for "To" objects 

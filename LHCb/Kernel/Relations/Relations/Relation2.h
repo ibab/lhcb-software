@@ -1,8 +1,11 @@
-// $Id: Relation2.h,v 1.9 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: Relation2.h,v 1.10 2006-06-11 19:37:02 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // =============================================================================
 #ifndef RELATIONS_Relation2_H 
 #define RELATIONS_Relation2_H 1
@@ -56,7 +59,7 @@ namespace Relations
   template<class FROM,class TO>
   class Relation2 
     : public BaseTable 
-    , public  IRelation2D<FROM,TO> 
+    , public IRelation2D<FROM,TO> 
   {  
   public:
     /// short cut for own     type
@@ -134,11 +137,7 @@ namespace Relations
      */
     Relation2 
     ( const OwnType& copy ) 
-      : IInterface    ( copy ) 
-      , IUpdateable   ( copy ) 
-      , IRelationBase ( copy ) 
-      , DirectType    ( copy ) 
-      , BaseTable     ( copy           )  
+      : BaseTable     ( copy           )  
       , IBase         ( copy           ) 
       , m_direct      ( copy.m_direct  )
       , m_inverse     ( copy.m_inverse ) 
