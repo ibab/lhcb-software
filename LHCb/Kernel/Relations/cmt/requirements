@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.17 2006-06-11 15:23:47 ibelyaev Exp $
+# $Id: requirements,v 1.18 2006-06-11 17:00:32 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -15,7 +15,7 @@ branches      Relations doc cmt src dict python
 include_dirs     $(RELATIONSROOT)
 
 # ============== dependencies =================================================
-use              GaudiAlg    v*
+use              GaudiKernel v*
 use              Python      v* LCG_Interfaces -no_auto_imports
 use              Reflex      v* LCG_Interfaces -no_auto_imports
 use              Boost       v* LCG_Interfaces
