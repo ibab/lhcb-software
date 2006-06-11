@@ -1,13 +1,11 @@
-// $Id: RelationUtils.h,v 1.4 2006-02-07 13:42:53 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.5 2006-06-11 15:23:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-#include "Relations/PragmaWarnings.h"
 // ============================================================================
 // STD & STL
 // ============================================================================

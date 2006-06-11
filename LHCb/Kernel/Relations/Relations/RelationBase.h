@@ -1,6 +1,6 @@
-// $Id: RelationBase.h,v 1.7 2006-02-07 09:22:24 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.8 2006-06-11 15:23:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -8,8 +8,6 @@
 #define RELATIONS_RELATIONBASE_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-#include "Relations/PragmaWarnings.h"
 // ============================================================================
 // STD & STL 
 // ============================================================================
@@ -46,7 +44,6 @@ namespace Relations
   class RelationBase : BaseTable 
   {  
   public:
-    
     /// short cut to own type 
     typedef RelationBase<FROM,TO>                           OwnType     ;
     /// short cut to type of inverse relations 
@@ -58,9 +55,9 @@ namespace Relations
     /// shortcut for "inverse" interface 
     typedef IRelation<TO,FROM>                              IInverse    ;    
     /// actual "FROM" type 
-    typedef typename TypeTraits::From                       From        ;
+    typedef typename TypeTraits::From_                      From_       ;
     /// actual "TO"   type 
-    typedef typename TypeTraits::To                         To          ;  
+    typedef typename TypeTraits::To_                        To_         ;  
     /// Entry type  
     typedef typename TypeTraits::Entry                      Entry       ;
     /// container  type  
@@ -75,215 +72,91 @@ namespace Relations
     typedef typename TypeTraits::CIT                        CIT         ;
     /// size_type 
     typedef typename Entries::size_type                     size_type   ;
-    
-  protected: 
-    
+  protected:
     /// comparison criteria for sorting 
     typedef typename TypeTraits::Less                       Less        ;
     /// comparison criteria ( "less" by "From" field )
     typedef typename TypeTraits::LessByFrom                 Less1       ;
     /// equality criteria   ( "equal" by "To" field ) 
     typedef typename TypeTraits::EqualByTo                  Equal       ;
-    
-  public:
-    
-    /** retrive all relations 
-     *
-     *  @see IRelation 
-     *  @return the pair of iterators for output relations   
-     */
+  public:    
+    /// retrive all relations 
     inline  IP    i_relations () const 
     { return IP( m_entries.begin() , m_entries.end() ) ;};
-    
-    /** retrive all relations from the object
-     *
-     *   - the CPU performance is proportional to log(N), 
-     *     where N is the total number of relations
-     *
-     *  @see IRelation 
-     *  @param  object  smart reference to the object
-     *  @return the pair of iterators for output relations   
-     */
-    inline  IP    i_relations
-    ( const From& object      ) const
-    { return std::equal_range( m_entries.begin() , 
-                               m_entries.end  () , 
-                               Entry ( object  ) , 
-                               Less1()           ) ;};
-    
-    /** make the relation between 2 objects
-     * 
-     *   - StatusCode::FAILURE is returned if the relation
-     *     between the given objects  is already set
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operation, which is more or less constant for 
-     *     std::deque implementation of the underlying relation 
-     *     store and proportional to N for std::vector implementation, 
-     *     where N is the total number of relations 
-     *
-     *  @see IRelation 
-     *  @see RelationTypeTraits
-     *  @param object1  the first object
-     *  @param object2  the second object 
-     *  @return status code 
-     */
-    inline  StatusCode i_relate 
-    ( const From&      object1 , 
-      const To&        object2 ) 
+    /// retrive all relations from the object
+    inline  IP    i_relations ( From_  object ) const
+    { return std::equal_range ( m_entries.begin() , m_entries.end  () , 
+                                Entry ( object  ) , Less1()           ) ;};
+    /// make the relation between 2 objects
+    inline  StatusCode i_relate ( From_ object1 , To_ object2 ) 
     {
-      Less _less_ = Less() ;
+      static const Less _less_ = Less() ;
       // look for existing relations 
       const Entry ent ( object1 , object2 ) ;
-      iterator it = std::lower_bound( m_entries.begin () , 
-                                      m_entries.end   () , ent , _less_ ) ;
+      iterator it = std::lower_bound
+        ( m_entries.begin () , m_entries.end   () , ent , _less_ ) ;
       // the relation does exist ! 
       if( m_entries.end () != it && !_less_( ent , *it ) ) 
-        { return StatusCode::FAILURE; }
+      { return StatusCode::FAILURE; }
       // insert new relation !
       m_entries.insert( it , ent ) ;
       return StatusCode::SUCCESS ;
     };
-    
-    /** remove the concrete relation between objects
-     *
-     *   - StatusCode::FAILURE is returned if the relation
-     *     between the given objects  is already set
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operations, which is more or less constant for 
-     *     std::deque (or std::list) implementation of the 
-     *     underlying relation store and proportional to N
-     *     for std::vector implementation, where N is the 
-     *     total number of relations 
-     *
-     *  @see IRelation 
-     *  @see RelationTypeTraits
-     *  @param object1  the first object
-     *  @param object2  to the second object 
-     *  @return status code 
-     */
-    inline  StatusCode i_remove 
-    ( const From&      object1 , 
-      const To&        object2 ) 
+    /// remove the concrete relation between objects
+    inline  StatusCode i_remove ( From_ object1 , To_ object2 ) 
     {
-      const Less _less = Less() ;
+      static const Less _less = Less() ;
       // look for existing relations 
       const Entry ent ( object1 , object2 );
-      iterator it  = std::lower_bound( m_entries.begin() , 
-                                       m_entries.end  () , ent , _less ) ;
+      iterator it  = std::lower_bound
+        ( m_entries.begin() , m_entries.end  () , ent , _less ) ;
       // the relation does not exist ! 
       if( m_entries.end() == it || _less( ent , *it ) ) 
-        { return StatusCode::FAILURE ; }
+      { return StatusCode::FAILURE ; }
       // remove existing relation     
       m_entries.erase( it );
       return StatusCode::SUCCESS ; 
     };
-    
-    /** remove all relations FROM the defined object
-     *
-     *   - StatusCode::FAILURE is returned if there are no relations
-     *     from the given object
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operations, which is more or less constant for 
-     *     std::deque (or std::list) implementation of the 
-     *     underlying relation store and proportional to N
-     *     for std::vector implementation, where N is the 
-     *     total number of relations 
-     *
-     *  @see    IRelation 
-     *  @param  object  to the object
-     *  @return status code 
-     */
-    inline  StatusCode i_removeFrom 
-    ( const From&      object  )
+    /// remove all relations FROM the defined object
+    inline  StatusCode i_removeFrom ( From_ object  )
     {
       // look for all existing relations from the given object  
       IP ip  = i_relations( object ) ;
       // there are no relations 
-      if( ip.second == ip.first ) { return StatusCode::FAILURE ; }// RETURN !!!
+      if ( ip.second == ip.first ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase relations 
       m_entries.erase( ip.first , ip.second ) ;
       return StatusCode::SUCCESS ;
     };
-    
-    /** remove all relations TO the defined object
-     *  @attention the method is relatively "slow"
-     *
-     *   - StatusCode::FAILURE is returned if there are no relations
-     *     from the given object
-     *
-     *   - the CPU performance is proportional to 
-     *     the total number of relations 
-     *
-     *  @see    IRelation 
-     *  @param  object the object
-     *  @return status code 
-     */
-    inline  StatusCode i_removeTo 
-    ( const To&        object  ) 
+    /// remove all relations TO the defined object
+    inline  StatusCode i_removeTo ( To_ object ) 
     {
+      // create the artificial entry 
+      Entry entry ;
+      entry.m_to = object ;
       // use the predicate "Equal"
-      iterator it = std::remove_if
-        ( m_entries.begin () , 
-          m_entries.end   () , 
-          std::bind2nd( Equal() , Entry( From() , object ) ) ) ;
+      iterator it = std::remove_if ( m_entries.begin () , m_entries.end () , 
+                                     std::bind2nd( Equal() , entry ) ) ;
       // no relations are found!
       if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase the relations 
       m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
     };
-
-    /** remove ALL relations from ALL  object to ALL objects
-     *
-     *  @see    IRelation 
-     *  @return status code 
-     */
+    /// remove ALL relations from ALL  object to ALL objects
     inline  StatusCode i_clear() 
     { m_entries.clear() ; return StatusCode::SUCCESS ; }
-
-    /** reserve the space for relations 
-     *  @param   num number of relation to be reserved 
-     *  @return  status code 
-     */
+    /// reserve the space for relations 
     inline StatusCode i_reserve ( const size_t num  )
-    { m_entries.reserve( num ) ; return StatusCode::SUCCESS ; }
-
-
-    /** make the relation between 2 objects
-     * 
-     *   - StatusCode::FAILURE is returned if the relation
-     *     between the given objects  is already set
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operation, which is more or less constant for 
-     *     std::deque implementation of the underlying relation 
-     *     store and proportional to N for std::vector implementation, 
-     *     where N is the total number of relations 
-     *
-     *  @see IRelation 
-     *  @see RelationTypeTraits
-     *  @param object1  the first object
-     *  @param object2  the second object 
-     *  @return status code 
-     */
-    inline  void       i_push   
-    ( const From&      object1 , 
-      const To&        object2 ) 
+    { Relations::reserve ( m_entries ,  num ) ; return StatusCode::SUCCESS ; }
+    /// make the relation between 2 objects
+    inline  void i_push ( From_ object1 , To_ object2 ) 
     { m_entries.push_back( Entry( object1 , object2 ) ) ; }
-    
     /** (re)sort the whole underlying container 
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
     { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; };
-    
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
      */ 
@@ -292,10 +165,7 @@ namespace Relations
       : BaseTable () 
       , m_entries () 
     { if ( 0 < reserve ) { i_reserve( reserve ) ; } ; };
-    
-    /** constructor from any "direct" interface 
-     *  @param copy object to be copied  
-     */
+    /// constructor from any "direct" interface 
     RelationBase
     ( const IDirect& copy ) 
       : BaseTable () 
@@ -304,7 +174,6 @@ namespace Relations
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
     } ;
-    
     /** constructor from any "inverse" interface  
      *  @param inv object to be inverted
      *  @param int artificial agument to make the difference 
@@ -314,7 +183,7 @@ namespace Relations
     (  const IInverse&   inv     , 
        const int      /* flag */ ) 
       : BaseTable ()  
-      , m_entries ()
+        , m_entries ()
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
@@ -327,25 +196,17 @@ namespace Relations
       // final sort 
       i_sort() ;      
     };
-    
-    /** copy constructor
-     *  @param copy object to be copied  
-     */
+    /// copy constructor
     RelationBase
     ( const OwnType& copy ) 
       : BaseTable ( copy ) 
       , m_entries ( copy.m_entries ) 
     {} ;
-    
   private:
-    
     // the actual storage of references 
-    mutable Entries m_entries ; ///< the actual storage of references 
-    
-  };
-  
-}; // End of name space Relations 
-
+    mutable Entries m_entries ; ///< the actual storage of references
+  } ;
+}  // End of name space Relations
 
 // ============================================================================
 // The End

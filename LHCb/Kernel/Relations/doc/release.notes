@@ -1,12 +1,93 @@
-! $Id: release.notes,v 1.38 2006-06-09 14:37:54 cattanem Exp $ 
+! $Id: release.notes,v 1.39 2006-06-11 15:23:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.38 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.39 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+
+! 2006-06-11 - Vanya BELYAEV
+ - significant simplification in Relations 
+    only BASIC types are appear in interfaces now 
+    (good for python-interactivity, since no weird lines 
+     SmartRef <--> Object conversion are required now. 
+     bad fro code readability (e.g.instead of one "From"
+     type now "From_" and "From" and "FromInner" are appears in the code.
+
+    The general rule:
+
+      TYPE_     (=="From_", "To_", "Weight_" ) is "input" type (usually 'const')
+      TYPE      (=="From","To","Weight") is "output" type (usually 'const-away')
+      TYPEInner (=="FromInner","ToInner","WeightInner") is the 
+                  internal representation
+    The overall number of classes for dictionaries is reduced.   
+    The lines are reshuffled to reduce a bit the duplication.
+
+  New files:
+    Relations/Entry.h
+    Relations/IRelations.h
+    Relations/IsConvertible.h
+    Relations/Range.h
+    Relations/Reference.h
+    Relations/WEntry.h
+  Removed files: 
+    Relations/ObjectTypeTraitsStripped.h
+    Relations/PragmaWarnings.h
+    Relations/TypeContainedObject.h
+    Relations/TypeConversion.h
+    Relations/TypeDataObject.h
+    Relations/TypeId.h
+    Relations/TypeIdAux.h
+    Relations/TypePersistent.h
+    Relations/TypeSelect.h
+    Relations/TypeStorable.h
+  Modified files:
+    Relations/Get.h
+    Relations/IRelation.h
+    Relations/IRelation2D.h
+    Relations/IRelationWeighted.h
+    Relations/IRelationWeighted2D.h
+    Relations/ObjectTypeTraits.h
+    Relations/Pointer.h
+    Relations/Relation.h
+    Relations/Relation1D.h
+    Relations/Relation2.h
+    Relations/Relation2D.h
+    Relations/Relation2Weighted.h
+    Relations/RelationBase.h
+    Relations/RelationTypeTraits.h
+    Relations/RelationUtils.h
+    Relations/RelationWeighted.h
+    Relations/RelationWeighted1D.h
+    Relations/RelationWeighted2D.h
+    Relations/RelationWeightedBase.h
+    Relations/RelationWeightedTypeTraits.h
+    Relations/Relations.h
+    Relations/RelationsDict.h
+    Relations/Reserve.h
+    src/Relations.cpp
+
+  The dictionary 'RelationsDict' contains only the basic base classes 
+    dict/selection.h
+    dict/selection.xml
+  
+  python/Relations.py 
+    The python script to produce the proper selection.h(.xml) files 
+    has been updated to the new class structure. The size of generated 
+    dictionaries is reduced by factor of 2 
+
+ -  cmt/requirements
+     a) add the option "-U__MINGW32__"
+     b) version incrmeent to v4r0 
+
+
+ python/Relations.py
+
+
+
+  
 ! ====================== Relations v3r2 2006-06-09 ============================
 ! 2006-06-09 - Vanya BELYAEV
  - fix the compilation warnings for gcc345 (SLC4) 

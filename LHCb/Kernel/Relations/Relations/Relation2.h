@@ -1,6 +1,6 @@
-// $Id: Relation2.h,v 1.8 2006-06-09 14:14:51 ibelyaev Exp $
+// $Id: Relation2.h,v 1.9 2006-06-11 15:23:46 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
@@ -8,8 +8,6 @@
 #define RELATIONS_Relation2_H 1
 // =============================================================================
 // Include files
-// =============================================================================
-#include "Relations/PragmaWarnings.h"
 // =============================================================================
 // STD & STL
 // =============================================================================
@@ -20,8 +18,6 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
 // =============================================================================
 // From Relations
 // =============================================================================
@@ -81,17 +77,17 @@ namespace Relations
     typedef typename IBase::DirectType       DirectType     ;
     /// shortcut for inverse subinterface 
     typedef typename IBase::InverseType      InverseType    ;
-    
     /// import "Range" type from interface 
     typedef typename IBase::Range            Range          ;
     /// import "From"  type from interface 
     typedef typename IBase::From             From           ;
+    /// import "From"  type from interface 
+    typedef typename IBase::From_            From_          ;
     /// import "To"    type from interface 
     typedef typename IBase::To               To             ;
-    
+    /// import "To"    type from interface 
+    typedef typename IBase::To_              To_            ;    
   public:
-    
-
     /// the default constructor
     Relation2
     ( const size_t reserve = 0  )
@@ -104,10 +100,7 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     };
-
-    /** constructor from any "direct" interface 
-     *  @param copy object to be copied
-     */
+    /// constructor from any "direct" interface 
     Relation2 
     ( const DirectType& copy ) 
       : BaseTable (          ) 
@@ -118,8 +111,7 @@ namespace Relations
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
-    }
-    
+    }    
     /** constructor from any "inverse" interface 
      *  @param copy object to be copied
      *  @param flag artificial argument, to distinguish from copy constructor
@@ -136,7 +128,6 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     }
-    
     /** copy constructor is publc, 
      *  @attention it is not recommended for normal usage 
      *  @param copy object to be copied 
@@ -156,250 +147,91 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
       m_inverse .setInverseBase ( m_direct   .directBase () );
     };
-
     /// destructor (virtual)
     virtual ~Relation2() {} ;
-    
   public:  // major functional methods (fast, 100% inline)
-    
     /// retrive all relations from the object (fast,100% inline)
-    inline   Range       i_relations
-    ( const  From&       object    ) const
+    inline   Range i_relations ( From_ object ) const
     { return m_direct.i_relations ( object ) ; }
-    
     /// retrive all relations from ALL objects (fast,100% inline)
     inline   Range        i_relations () const
     { return m_direct.i_relations () ; }
-    
     /// make the relation between 2 objects (fast,100% inline method) 
-    inline   StatusCode i_relate
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    inline   StatusCode i_relate ( From_ object1 , To_ object2 )
     { return m_direct.i_relate   ( object1 , object2 ) ; }
-    
     /// remove the concrete relation between objects (fast,100% inline method)
-    inline   StatusCode i_remove 
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    inline   StatusCode i_remove ( From_ object1 , To_ object2 )
     { return m_direct.i_remove ( object1 , object2 ) ; }
-    
     /// remove all relations FROM the defined object (fast,100% inline method)
-    inline   StatusCode i_removeFrom 
-    ( const  From&      object )
-    { return m_direct.i_removeFrom ( object ) ; }    
-    
+    inline   StatusCode i_removeFrom ( From_ object )
+    { return m_direct.i_removeFrom ( object ) ; }
     /// remove all relations TO the defined object (fast,100% inline method)
-    inline   StatusCode i_removeTo
-    ( const  To&        object )
+    inline   StatusCode i_removeTo ( To_ object )
     { return m_direct.i_removeTo( object ) ; }
-    
     /// remove ALL relations form ALL  object to ALL objects  (fast,100% inline)
-    inline  StatusCode i_clear() 
-    { return m_direct.i_clear() ; };
-
+    inline  StatusCode i_clear() { return m_direct.i_clear() ; };
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
-    inline  StatusCode i_rebuild() 
-    { return m_direct.i_rebuild() ; };
-    
+    inline  StatusCode i_rebuild() { return m_direct.i_rebuild() ; };
     /** make the relation between 2 objects (fast,100% inline method) 
      *  - Call for i_sort() is mandatory!
      */
-    inline   void       i_push   
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    inline   void       i_push ( From_ object1 , To_ object2 )
     { m_direct.i_push   ( object1 , object2 ) ; }
-
     /** (re)sort the table 
      *   mandatory to use after i_push
      */
     inline  void i_sort() { m_direct.i_sort() ; }
-    
   public:  // abstract methods from interface
-    
-    /** retrive all relations from the object
-     *
-     *   - the CPU performance is proportional to log(N), 
-     *     where N is the total number of relations
-     *
-     *  @see IRelation
-     *  @see RelationBase
-     *  @param object  smart reference to the object
-     *  @return pair of iterators for output relations
-     */
-    virtual  Range       relations
-    ( const  From&       object    ) const 
+    /// retrive all relations from the object
+    virtual  Range       relations ( From_ object ) const 
     { return i_relations( object ) ; }
-    
-    /** retrive all relations from ALL objects 
-     *
-     *  @see IRelation
-     *  @see RelationBase
-     *  @return pair of iterators for output relations
-     */
-    virtual  Range        relations () const
-    { return i_relations () ; }
-    
-    /** make the relation between 2 objects
-     *
-     *   - StatusCode::FAILURE is returned if the relation
-     *     between the given objects  is already set
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operations, which is more or less constant for 
-     *     std::deque implementation of the underlying relation 
-     *     store and proportional to N for std::vector implementation, 
-     *     where N is the total number of relations 
-     *
-     *  @see IRelation
-     *  @see RelationTypeTraits
-     *  @see RelationBase
-     *  @param object1  the first object
-     *  @param object2  the second object
-     *  @return status code
-     */
-    virtual  StatusCode relate
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    /// retrive all relations from ALL objects
+    virtual  Range        relations () const { return i_relations () ; }
+    /// make the relation between 2 objects
+    virtual  StatusCode relate ( From_ object1 , To_ object2 )
     { return i_relate ( object1 , object2 ) ; }
-    
-    /** remove the concrete relation between objects
-     *
-     *   - StatusCode::FAILURE is returned if the relation
-     *     between the given objects  is already set
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operations, which is more or less constant for 
-     *     std::deque implementation of the underlying relation 
-     *     store and proportional to N for std::vector implementation, 
-     *     where N is the total number of relations 
-     *
-     *  @see IRelation
-     *  @see RelationTypeTraits
-     *  @see RelationBase
-     *  @param object1  smart reference to the first object
-     *  @param object2  smart reference to the second object
-     *  @return status code
-     */
-    virtual  StatusCode remove 
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    /// remove the concrete relation between objects
+    virtual  StatusCode remove ( From_ object1 , To_ object2 )
     { return i_remove ( object1 , object2 ) ; }
-    
-    /** remove all relations FROM the defined object
-     *
-     *   - StatusCode::FAILURE is returned if there are no relations
-     *     from the given object
-     *
-     *   - the CPU performance is proportional to log(N)
-     *     for location of the object plus some overhead for 
-     *     list operations, which is more or less constant for 
-     *     std::deque (or std::list) implementation of the 
-     *     underlying relation store and proportional to N
-     *     for std::vector implementation, where N is the 
-     *     total number of relations 
-     *
-     *  @see IRelation
-     *  @see RelationBase
-     *  @param object  smart reference to the object
-     *  @return status code
-     */
-    virtual  StatusCode removeFrom 
-    ( const  From&      object )
-    { return i_removeFrom ( object ) ; }
-    
-    /** remove all relations TO the defined object
-     *
-     *   - StatusCode::FAILURE is returned if there are no relations
-     *     from the given object
-     *
-     *   - the CPU performance is proportional to 
-     *     the total number of relations 
-     *   
-     *  @see IRelation
-     *  @see RelationBase
-     *  @param object  smart reference to the object
-     *  @return status code
-     */
-    virtual  StatusCode removeTo
-    ( const  To&        object ) { return i_removeTo( object ) ; }
-    
-    /** remove ALL relations from ALL  object to ALL objects 
-     *
-     *  @see IRelationBase 
-     *  @return status code
-     */
+    /// remove all relations FROM the defined object
+    virtual  StatusCode removeFrom ( From_ object )
+    { return i_removeFrom ( object ) ; }    
+    /// remove all relations TO the defined object
+    virtual  StatusCode removeTo ( To_ object ) 
+    { return i_removeTo( object ) ; }
+    /// remove ALL relations from ALL  object to ALL objects
     virtual  StatusCode clear() { return i_clear () ; };
-
-    /** rebuild ALL relations from ALL  object to ALL objects 
-     *
-     *  @see IRelationBase 
-     *  @return status code
-     */
-    virtual  StatusCode rebuild() { return i_rebuild () ; };
-    
-    /** update the object after POOL/ROOT reading 
-     *  @see IUpdateable 
-     *  @param flag    0 - update after read, 1 - update before write 
-     *  @return status code
-     */
+    /// rebuild ALL relations from ALL  object to ALL objects 
+    virtual  StatusCode rebuild() { return i_rebuild () ; };    
+    /// update the object after POOL/ROOT reading
     virtual StatusCode update( int flag ) 
     {
-      if( 0 == flag ) { return i_rebuild() ; }
+      /// update the cross-links 
+      m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct   .directBase () );
+      if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     };
-
   public:
-    
     /// get the "direct" interface 
     inline       Direct*  i_direct  ()       { return &m_direct ; }
-    
     /// get the "direct" interface  (const-version)
     inline const Direct*  i_direct  () const { return &m_direct ; }
-    
     /// get the "inverse" interface 
     inline       Inverse* i_inverse ()       { return &m_inverse ; }
-    
     /// get the "inverse" interface  (const version)
     inline const Inverse* i_inverse () const { return &m_inverse ; }
-    
   public:  // abstract methods from interface
-    
-    /** get the "direct" interface 
-     *  @see IRelation2D
-     *  @return pointer to the 'direct' interface 
-     */
-    virtual       DirectType*  direct ()        { return i_direct () ; }
-    
-    /** get the "direct" interface  (const-version)
-     *  @see IRelation2D
-     *  @return pointer to the 'direct' interface 
-     */
-    virtual const DirectType*  direct () const  { return i_direct () ; }
-    
-    /** get the "inverse" interface 
-     *  @see IRelation2D
-     *  @return pointer to the 'inverse' interface 
-     */
-    virtual       InverseType* inverse ()       { return i_inverse() ; }
-    
-    /** get the "inverse" interface  (const version)
-     *  @see IRelation2D
-     *  @return pointer to the 'inverse' interface 
-     */
-    virtual const InverseType* inverse () const { return i_inverse() ;  }
-    
+    /// get the "direct" interface 
+    virtual       DirectType*  direct ()        { return i_direct () ; }    
+    /// get the "direct" interface  (const-version)
+    virtual const DirectType*  direct () const  { return i_direct () ; }    
+    /// get the "inverse" interface 
+    virtual       InverseType* inverse ()       { return i_inverse() ; }    
+    /// get the "inverse" interface  (const version)
+    virtual const InverseType* inverse () const { return i_inverse() ;  }    
   public:
-    
-    /** query the interface
-     *  @see    IRelation
-     *  @see    IRelation2D
-     *  @see    IInterface
-     *  @param  id  interface identifier
-     *  @param  ret placeholder for returned interface 
-     *  @return status code
-     */
+    /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
     {
@@ -415,45 +247,21 @@ namespace Relations
       addRef() ;
       return StatusCode::SUCCESS ;
     };
-    
-    /** increase the reference counter (artificial)
-     *  @see    IInterface
-     *  @see    DataObject
-     *  @return current number of references
-     */
-    virtual unsigned long addRef  () { return 1 ; }
-    
-    /** release the reference counter (artificial)
-     *  @see    IInterface
-     *  @see    DataObject
-     *  @return current number of references
-     */
-    virtual unsigned long release () { return 1 ; }
-    
-  public: // other methods 
-    
-    /** reserve the relations (for efficiency reasons)
-     *  @param num number of relations to be reserved
-     *  @return status code
-     */
+    /// increase the reference counter (artificial)
+    virtual unsigned long addRef  () { return 1 ; }    
+    /// release the reference counter (artificial)
+    virtual unsigned long release () { return 1 ; }    
+  public: // other methods
+    /// reserve the relations (for efficiency reasons)
     inline StatusCode reserve ( const size_t num ) 
-    { return m_direct.reserve( num ) ; };
-    
-  private:
-    
-    /** assignement operator is private!
-     *  @param copy object to be copied 
-     */
+    { return m_direct.reserve( num ) ; };    
+  private:    
+    /// assignement operator is private!
     Relation2& operator=( const OwnType& copy );
-
   private:
-    
     Direct    m_direct  ;  ///< direct table 
     Inverse   m_inverse ;  ///< the "inverse table"
-    
   };
-  
-  
 }; // end of namespace Relations
 
 // ============================================================================

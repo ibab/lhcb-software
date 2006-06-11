@@ -1,11 +1,8 @@
-// $Id: Get.h,v 1.2 2006-02-22 19:19:44 ibelyaev Exp $
+// $Id: Get.h,v 1.3 2006-06-11 15:23:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/02/22 18:45:58  ibelyaev
-//  add Relations/Get.h file, see release.notes
-// 
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -236,8 +233,9 @@ namespace Relations
     LINK   last   ,
     WEIGHT weight ) 
   {
+    static const std::plus<WEIGHT> _plus ;
     for ( ; first != last ; ++first )   
-    { weight += first->weight() ; }     // ACCUMULATE the weight 
+    { weight = _plus( weight , first->weight() ) ; }     // ACCUMULATE the weight 
     return weight ;
   } ;
 
@@ -274,7 +272,7 @@ namespace Relations
    * // ///////////////////////////////////////////////////////////////////////
    * // IMPORTANT!!!
    * // This utility/function/algorihtm is not very efficient for 
-   * // "std::vector" conatiners. but it is efficient for std::set 
+   * // "std::vector" containers. but it is efficient for std::set 
    * // containers:
    * // //////////////////////////////////////////////////////////////////////
    *
@@ -307,7 +305,6 @@ namespace Relations
     // return the new container size 
     return cont.size() - size ;
   } ;
-  
   /** @fn getUniqueTo
    *
    *  simple function to extract all *UNIQUE* values of "TO" 
@@ -358,8 +355,6 @@ namespace Relations
     // return number of newly added elements 
     return cont.size() - size ;
   } ;
-  
-
   /** @fn getUniqueTo
    *
    *  simple function to extract all *UNIQUE* values of "TO" 
@@ -401,8 +396,6 @@ namespace Relations
   ( LINKS      links  , 
     CONTAINER& cont   ) 
   { return getUniqueTo ( links.begin() , links.end() , cont ) ; } ;
-  
-
   /** @fn sumWeight 
    *
    *  Trivial algorithm whcih allow to accumulate the

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.16 2006-06-09 08:41:03 cattanem Exp $
+# $Id: requirements,v 1.17 2006-06-11 15:23:47 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v3r2
+version v4r0
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python
@@ -24,10 +24,11 @@ use              Boost       v* LCG_Interfaces
 apply_pattern     reflex_dictionary                                 \
                   dictionary=Relations                              \
                   headerfiles=$(RELATIONSROOT)/dict/selection.h     \
-                  selectionfile=$(RELATIONSROOT)/dict/selection.xml
+                  selectionfile=$(RELATIONSROOT)/dict/selection.xml \
+	          options=" -U__MINGW32__ "
 
 # ============== constituents =================================================
-library          RelationsLib *.cpp
+library          RelationsLib  *.cpp
 
 # ============== patterns =====================================================
 apply_pattern    component_library library=RelationsDict

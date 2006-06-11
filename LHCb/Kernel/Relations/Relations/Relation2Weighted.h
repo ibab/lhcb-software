@@ -1,6 +1,6 @@
-// $Id: Relation2Weighted.h,v 1.7 2006-06-09 14:14:51 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.8 2006-06-11 15:23:46 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
@@ -9,19 +9,9 @@
 // =============================================================================
 // Include files
 // =============================================================================
-#include "Relations/PragmaWarnings.h"
-// =============================================================================
 // STD & STL
 // =============================================================================
 #include <algorithm>
-// =============================================================================
-// from Gaudi
-// =============================================================================
-#include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
 // =============================================================================
 // From Relations
 // =============================================================================
@@ -31,14 +21,13 @@
 // =============================================================================
 
 namespace Relations
-{
-  
+{  
   /** @class Relation2Weighted Relation2Weighted.h Relations/Relation2Weighted.h
    *  
    *  @brief Implementation of weighted bidirectional relations 
    * 
    *  Implementation of weighed bidirectional relations 
-   *  from objects of type "FROM" to objects of type "TO" withweight "WEIGHT"
+   *  from objects of type "FROM" to objects of type "TO" with weight "WEIGHT"
    *  
    *  Data types for "FROM", "TO" and "WEIGHT"
    *
@@ -48,21 +37,17 @@ namespace Relations
    *     to/from StreamBuffer class 
    *  
    *  @see ObjectTypeTraits 
-   *  @see StreamBuffer 
    *  @see IRelationWeihted
    *  @see IRelationWeihted2D
    *  @warning for the current implementation the actual type of 
    *           FROM should differ from the actual type of TO
-   *  
-   *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @date   23/03/2002
-   */
-  
+   */  
   template<class FROM,class TO,class WEIGHT>
   class Relation2Weighted
     : public BaseWeightedTable 
-    , public IRelationWeighted2D<FROM,TO,WEIGHT> 
+      , public IRelationWeighted2D<FROM,TO,WEIGHT> 
   {  
   public:
     /// short cut for own     type
@@ -83,16 +68,17 @@ namespace Relations
     typedef typename IBase::DirectType                      DirectType  ;
     /// shortcut for inverse subinterface 
     typedef typename IBase::InverseType                     InverseType ;
-    
     /// import basic types from Interface 
     typedef typename IBase::Range                           Range       ;
     /// import basic types from Interface 
     typedef typename IBase::From                            From        ;
+    typedef typename IBase::From_                           From_       ;
     /// import basic types from Interface 
     typedef typename IBase::To                              To          ;
+    typedef typename IBase::To_                             To_         ;
     /// import basic types from Interface 
     typedef typename IBase::Weight                          Weight      ;    
-    
+    typedef typename IBase::Weight_                         Weight_     ;    
     /// the default constructor
     Relation2Weighted
     ( const size_t reserve = 0  )
@@ -105,10 +91,7 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     };
-    
-    /** constructor from any "direct" interface 
-     *  @param copy object to be copied
-     */
+    /// constructor from any "direct" interface 
     Relation2Weighted 
     ( const DirectType& copy ) 
       : BaseWeightedTable () 
@@ -120,7 +103,6 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     }
-    
     /** constructor from any "inverse" interface 
      *  @param copy object to be copied
      *  @param flag artificial argument, to distinguish from copy constructor
@@ -137,11 +119,7 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     }
-    
-    /** copy constructor is publc, 
-     *  @attention it is not recommended for normal usage 
-     *  @param copy object to be copied 
-     */
+    /// copy constructor is publc @attention it is not recommended for normal usage 
     Relation2Weighted 
     ( const OwnType& copy ) 
       : IInterface            ( copy ) 
@@ -158,368 +136,169 @@ namespace Relations
       m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
       m_inverse .setInverseBase ( m_direct   .directBase () );
     };
-    
     /// destructor (virtual)
     virtual ~Relation2Weighted() {} ;
-    
   public:  // major functional methods (fast, 100% inline)
-    
     /// retrive all relations from the object (fast,100% inline)
-    inline  Range i_relations
-    ( const From& object) const
+    inline  Range i_relations ( From_ object ) const
     { return m_direct.i_relations( object ) ; }
-    
     /// retrive ALL relations from ALL objects (fast,100% inline)
-    inline  Range i_relations() const
-    { return m_direct.i_relations() ; }
-    
+    inline  Range i_relations() const { return m_direct.i_relations() ; }
     /// retrive all relations from the object (fast,100% inline)
     inline   Range      i_relations
-    ( const  From&      object,
-      const  Weight&    threshold ,
-      const  bool       flag      ) const 
+    ( From_ object, Weight_ threshold , const bool flag ) const 
     { return m_direct.i_relations( object, threshold , flag ) ; }
-
     /// retrive all relations from the object (fast,100% inline)
     inline   Range      i_inRange 
-    ( const  From&      object ,
-      const  Weight&    low    ,
-      const  Weight&    high   ) const 
+    ( From_ object , Weight_ low , Weight_ high ) const 
     { return m_direct.i_inRange ( object, low , high ) ; }
-
     /// make the relation between 2 objects (fast,100% inline)
     inline   StatusCode i_relate 
-    ( const  From&      object1 , 
-      const  To&        object2 ,
-      const  Weight&    weight  ) 
+    ( From_ object1 , To_ object2 , Weight_ weight  ) 
     { return m_direct.i_relate ( object1 , object2 , weight ) ; }
-    
     /// remove the concrete relation between objects (fast,100% inline)
     inline   StatusCode i_remove 
-    ( const  From&      object1 , 
-      const  To&        object2 ) 
+    ( From_ object1 , To_ object2 ) 
     { return m_direct.i_remove ( object1 , object2 ) ; }
-    
     /// remove all relations FROM the defined object (fast,100% inline)
-    inline   StatusCode i_removeFrom 
-    ( const  From&      object )
+    inline   StatusCode i_removeFrom ( From_ object )
     { return m_direct.i_removeFrom ( object ) ; }
-    
     /// remove all relations TO the defined object (fast,100% inline)
-    inline   StatusCode i_removeTo 
-    ( const  To&        object )
+    inline   StatusCode i_removeTo ( To_ object )
     { return m_direct.i_removeTo ( object ) ; }
-    
     /// filter out the relations FROM the defined object (fast,100% inline)
     inline   StatusCode i_filterFrom 
-    ( const  From&      object    ,
-      const  Weight&    threshold ,
-      const  bool       flag      )  
+    ( From_ object , Weight_ threshold , const bool flag )  
     { return m_direct.i_filterFrom ( object , threshold , flag ) ; }
-    
     /// filter out the relations TO the defined object (fast,100% inline)
     inline   StatusCode i_filterTo 
-    ( const  To&        object    ,
-      const  Weight&    threshold ,
-      const  bool       flag      )  
+    ( const To_ object , Weight_ threshold , const bool flag )  
     { return m_direct.i_filterTo ( object , threshold , flag ) ; }
-    
     /// filter out all relations (fast,100% inline)
-    inline   StatusCode i_filter 
-    ( const  Weight&    threshold ,
-      const  bool       flag      )  
+    inline   StatusCode i_filter ( Weight_ threshold , const bool flag )  
     { return m_direct.i_filter ( threshold , flag ) ; }
-    
     /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
     inline  StatusCode i_clear () { return m_direct.i_clear() ; }
-
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
-    inline  StatusCode i_rebuild() 
-    { return m_direct.i_rebuild() ; };
-    
+    inline  StatusCode i_rebuild() { return m_direct.i_rebuild() ; };
     /** make the relation between 2 objects (fast,100% inline)
      *  call for i_sort() is mandatory!
      */
-    inline   void i_push
-    ( const  From&      object1 , 
-      const  To&        object2 ,
-      const  Weight&    weight  ) 
+    inline   void i_push ( From_ object1 , To_ object2 , Weight_ weight  ) 
     { m_direct.i_push ( object1 , object2 , weight ) ; }
-        
     /** (re)sort of the table 
      *   mandatory to use after i_push 
      */
     inline void i_sort() { m_direct.i_sort() ; }
-    
   public:  // abstract methods from interface
-    
-    /** retrive all relations from the object
-     *  
-     *  - relations are returned in the form of iterator pair:
-     *     \n IRelation<FROM,TO,WEIGHT>* irel   = ... ;
-     *     \n From                       object = ... ; 
-     *     \n Range r = irel->relations( object );
-     *  
-     *  - the number of related object is:
-     *     \n    const unsigned nRel = r.end()  - r.begin() ;
-     *     \n // const unsigned nRel = r.second - r.first   ; // the same!
-     *
-     *  - the related elements could be retrieved using the iterations:
-     *     \n for( iterator it = r.begin() ; r.end() != it ; ++it ){
-     *     \n /// extract and use the relation
-     *     \n To     to     = it->to()     ; // get the "to" object  
-     *     \n // To  to     = *it          ; // the same   
-     *     \n Weight weight = it->weight() ; // get the weight 
-     *     \n From   from   = it->weight() ; // again get the "from" object
-     *     \n };
-     *
-     *  @see    IRelationWeighted1D 
-     *  @see    RelationWeighted1DBase
-     *  @see    RelationWeighted1DTypeTraits
-     *  @param  object  the object
-     *  @return pair of iterators for output relations   
-     */
-    virtual Range relations
-    ( const From& object) const { return i_relations ( object ) ; }
-    
-    /** retrive ALL relations from ALL objects
-     *  
-     *  @see    IRelationWeighted1D 
-     *  @see    RelationWeighted1DBase
-     *  @see    RelationWeighted1DTypeTraits
-     *  @return pair of iterators for output relations   
-     */
-    virtual Range relations() const { return i_relations () ; }
-    
+    /// retrive all relations from the object
+    virtual Range relations ( From_ object) const 
+    { return i_relations ( object ) ; }
+    /// retrive ALL relations from ALL objects
+    virtual Range relations() const { return i_relations () ; } 
     /** retrive all relations from the object which has weigth 
      *  larger/smaller than the threshold value 
-     *  @param  object    the object
-     *  @param  threshold threshold value for the weight 
-     *  @param  flag      flag for larger/smaller
-     *  @return pair of iterators for output relations   
      */
-    virtual  Range      relations
-    ( const  From&      object,
-      const  Weight&    threshold ,
-      const  bool       flag      ) const 
+    virtual  Range relations
+    ( From_ object, Weight_ threshold , const bool flag ) const 
     { return i_relations ( object , threshold , flag ) ; }
-    
     /** retrive all relations from the object which has weigth 
      *  withing the specified range 
-     *  @param  object  the object
-     *  @param  low     low  threshold value for the weight 
-     *  @param  high    high threshold value for the weight 
-     *  @return pair of iterators for output relations   
      */
-    virtual  Range      inRange 
-    ( const  From&      object ,
-      const  Weight&    low    ,
-      const  Weight&    high   ) const 
+    virtual  Range inRange ( From_ object , Weight_ low , Weight_ high ) const 
     { return i_inRange ( object , low , high ) ; }
-    
-    /** make the relation between 2 objects 
-     *  @param  object1 the first object
-     *  @param  object2 the second object 
-     *  @param  weight  the weigth for the relation 
-     *  @return status  code 
-     */
-    virtual  StatusCode relate 
-    ( const  From&      object1 , 
-      const  To&        object2 ,
-      const  Weight&    weight  ) 
+    /// make the relation between 2 objects 
+    virtual  StatusCode relate ( From_ object1 , To_ object2 , Weight_ weight  ) 
     { return i_relate( object1 , object2 , weight ) ; }
-    
-    /** remove the concrete relation between objects
-     *  @param  object1 the first object
-     *  @param  object2 the second object 
-     *  @return status  code 
-     */
-    virtual  StatusCode remove 
-    ( const  From&      object1 , 
-      const  To&        object2 ) 
+    /// remove the concrete relation between objects
+    virtual  StatusCode remove ( From_ object1 , To_ object2 ) 
     { return i_remove ( object1 , object2 ) ; }
-    
-    /** remove all relations FROM the defined object
-     *  @param  object  smart reference to the object
-     *  @return status code 
-     */
-    virtual  StatusCode removeFrom 
-    ( const  From&      object )
+    /// remove all relations FROM the defined object
+    virtual  StatusCode removeFrom ( From_ object )
     { return i_removeFrom ( object ) ; }
-
-    /** remove all relations TO the defined object
-     *  @param object  smart reference to the object
-     *  @return status code 
-     */
-    virtual  StatusCode removeTo 
-    ( const  To&        object )
-    { return i_removeTo( object ) ; }
-    
+    /// remove all relations TO the defined object
+    virtual  StatusCode removeTo ( To_ object ) { return i_removeTo( object ) ; }
     /** filter out the relations FROM the defined object, which
      *  have a weight larger(smaller)than the threshold weight 
-     *  @param  object    the object
-     *  @param  threshold threshold value for the weight 
-     *  @param  flag      flag for larger/smaller
-     *  @return status code 
      */
     virtual  StatusCode filterFrom 
-    ( const  From&      object    ,
-      const  Weight&    threshold ,
-      const  bool       flag      )  
+    ( From_ object , Weight_ threshold , const bool flag )  
     { return i_filterFrom ( object , threshold , flag ) ; }
-    
     /** filter out the relations TO the defined object, which
      *  have a weight larger/smaller than the threshold weight 
-     *  @param  object    the object
-     *  @param  threshold threshold value for the weight 
-     *  @param  flag      flag for larger/smaller
-     *  @return status code 
      */
     virtual  StatusCode filterTo 
-    ( const  To&        object    ,
-      const  Weight&    threshold ,
-      const  bool       flag      )  
+    ( To_ object , Weight_ threshold , const bool flag )  
     { return i_filterTo ( object , threshold , flag ) ; }
-    
     /** filter out all relations which
      *  have a weight larger/smaller than the threshold weight 
-     *  @param  threshold  threshold value for the weight 
-     *  @param  flag       flag for larger/smaller
-     *  @return status code 
      */
-    virtual  StatusCode filter 
-    ( const  Weight&    threshold ,
-      const  bool       flag      )  
+    virtual  StatusCode filter ( Weight_ threshold , const bool flag )  
     { return i_filter ( threshold , flag ) ; }
-    
-    /** remove ALL relations from ALL objects to ALL objects 
-     *  @return status code 
-     */
-    virtual  StatusCode clear () { return i_clear () ; }
-    
-    /** rebuild ALL relations from ALL  object to ALL objects 
-     *
-     *  @see IRelationBase 
-     *  @return status code
-     */
+    /// remove ALL relations from ALL objects to ALL objects 
+    virtual  StatusCode clear () { return i_clear () ; }    
+    /// rebuild ALL relations from ALL  object to ALL objects 
     virtual  StatusCode rebuild() { return i_rebuild () ; };
-
-    /** update the object after POOL/ROOT reading 
-     *  @see IUpdateable 
-     *  @param flag    0 - update after read, 1 - update before write 
-     *  @return status code
-     */
+    /// update the object after POOL/ROOT reading 
     virtual StatusCode update( int flag ) 
     {
-      if( 0 == flag ) { return i_rebuild() ; }
+      /// update/reset cross-links 
+      m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct   .directBase () );
+      if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     };
   public:
-    
     /// get the "direct" interface 
     inline       Direct*  i_direct  ()       { return &m_direct ; }
-    
     /// get the "direct" interface  (const-version)
     inline const Direct*  i_direct  () const { return &m_direct ; }
-    
     /// get the "inverse" interface 
     inline       Inverse* i_inverse ()       { return &m_inverse ; }
-    
     /// get the "inverse" interface  (const version)
     inline const Inverse* i_inverse () const { return &m_inverse ; }
-    
   public:
-    
-    /** get the "direct" interface 
-     *  @see IRelationWeighted2D
-     *  @return pointer to the 'direct' interface 
-     */
-    virtual       DirectType*  direct ()        { return i_direct () ; }
-    
-    /** get the "direct" interface  (const-version)
-     *  @see IRelationWeighted2D
-     *  @return pointer to the 'direct' interface 
-     */
+    /// get the "direct" interface 
+    virtual       DirectType*  direct ()        { return i_direct () ; }    
+    /// get the "direct" interface  (const-version)
     virtual const DirectType*  direct () const  { return i_direct () ; }
-    
-    /** get the "inverse" interface 
-     *  @see IRelationWeighted2D
-     *  @return pointer to the 'inverse' interface 
-     */
+    /// get the "inverse" interface 
     virtual       InverseType* inverse ()       { return i_inverse() ; }
-    
-    /** get the "inverse" interface  (const version)
-     *  @see IRelationWeighted2D
-     *  @return pointer to the 'inverse' interface 
-     */
+    /// get the "inverse" interface  (const version)
     virtual const InverseType* inverse () const { return i_inverse() ;  }
-
-  public:
-    
-    /** query the interface
-     *  @see    IRelation
-     *  @see    IRelation2D
-     *  @see    IInterface
-     *  @param  id  interface identifier
-     *  @param  ret placeholder for returned interface 
-     *  @return status code
-     */
+  public:    
+    /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
     {
-      if( 0 == ret  )          { return StatusCode::FAILURE ; } // RETURN !!!
-      if( IInterface::interfaceID()             == id )
-        { *ret = static_cast<IInterface*>        ( this ); }
-      else if( IBase::interfaceID()             == id )
-        { *ret = static_cast<IBase*>             ( this ); }
-      else if( IBase::DirectType::interfaceID() == id )
-        { *ret = static_cast<typename IBase::DirectType*> ( this ); }
+      if ( 0 == ret  )          { return StatusCode::FAILURE ; } // RETURN !!!
+      if ( IInterface::interfaceID()             == id )
+      { *ret = static_cast<IInterface*>        ( this ); }
+      else if ( IBase::interfaceID()             == id )
+      { *ret = static_cast<IBase*>             ( this ); }
+      else if ( IBase::DirectType::interfaceID() == id )
+      { *ret = static_cast<typename IBase::DirectType*> ( this ); }
       else                     { return StatusCode::FAILURE ; } //  RETURN !!!
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
     };
-    
   public: // other methods 
-    /** increase the reference counter (artificial)
-     *  @see    IInterface
-     *  @see    DataObject
-     *  @return current number of references
-     */
-    virtual unsigned long addRef  () { return 1 ; }
-    
-    /** release the reference counter (artificial)
-     *  @see    IInterface
-     *  @see    DataObject
-     *  @return current number of references
-     */
-    virtual unsigned long release () { return 1 ; }
-    
-      
-    /** reserve the relations (for efficiency reasons)
-     *  @param num number of relations to be reserved
-     *  @return status code
-     */
+    /// increase the reference counter (artificial)
+    virtual unsigned long addRef  () { return 1 ; }    
+    /// release the reference counter (artificial)
+    virtual unsigned long release () { return 1 ; }      
+    /// reserve the relations (for efficiency reasons)
     inline StatusCode reserve ( const size_t num ) 
     { return m_direct.reserve( num ) ; };
-
   private:
-    
-    /** assignement operator is private!
-     *  @param copy object to be copied 
-     */
+    /// assignement operator is private!
     Relation2Weighted& operator=( const OwnType& copy );
-    
-  private:
-    
+  private:  
     Direct    m_direct  ;  ///< the direct table 
     Inverse   m_inverse ;  ///< the "inverse table"
-    
   };
-  
-};
-
-
+} // end of namespace Relations 
 
 // =============================================================================
 // The End 

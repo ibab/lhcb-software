@@ -1,38 +1,43 @@
-// $Id: ObjectTypeTraits.h,v 1.2 2006-06-02 16:18:38 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.3 2006-06-11 15:23:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2004/07/21 07:57:25  cattanem
-// first import of Kernel/Relations
-//
-// Revision 1.10  2002/05/10 12:29:42  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
+// ============================================================================
 // Include files
-#include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
-#include "GaudiKernel/SmartRefBase.h"
+// ============================================================================
 #include <functional>
-#include <algorithm>
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/type_traits/is_convertible.hpp"
+#include "boost/call_traits.hpp"
+#include "boost/static_assert.hpp"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/SmartRef.h"
+// ============================================================================
 // Relations 
-#include "Relations/TypeConversion.h"
-#include "Relations/TypePersistent.h"
-#include "Relations/TypeId.h"
-#include "Relations/Less.h"
-#include "Relations/ObjectTypeTraitsStripped.h"
-// forward declarations
-template <class TYPE> class SmartRef ; // from GaudiKernel package
+// ============================================================================
+#include "Relations/Pointer.h"
+#include "Relations/Reference.h"
+#include "Relations/IsConvertible.h"
+// ============================================================================
 
 namespace Relations
 {  
   /// forward declaration
-  template <class OBJECT> struct TypePersistent ;  
-  /// forward declaration
-  template <class OBJECT> struct TypeId         ;
+  template <class OBJECT> class  Pointer   ;
+  template <class OBJECT> class  Reference ;
+  template <class OBJECT> struct Types     ;
   
   /** @struct ObjectTypeTraits
    *
@@ -45,17 +50,88 @@ namespace Relations
   template <class OBJECT>
   struct ObjectTypeTraits
   {
-    /// true type (never used)
-    typedef OBJECT                                  TYPE       ;
+    /// true type ( almost never used)
+    typedef OBJECT                                  Type   ;
     /// 'type'-provider, here it is own type  
-    typedef ObjectTypeTraits<OBJECT>                Traits     ;
-    /// actual "stored" type 
-    typedef typename TypePersistent<TYPE>::Result   Type       ;
+    typedef ObjectTypeTraits<OBJECT>                Traits ;
+    /// 'in'-type 
+    typedef typename Types<Type>::Input             Input  ;
+    /// 'out'-type
+    typedef typename Types<Type>::Output            Output ;
+    /// 'storable' type 
+    typedef typename Types<Type>::Inner             Inner  ;
     /// comparison (strict ordering criteria)
-    typedef std::less<Type>                         Less       ;
-    /// the unique class identification
-    static  const CLID& id()   { return TypeId<TYPE>::id() ; } ;
-  };
+    typedef std::less<Inner>                        Less   ;
+  } ;
+  
+  namespace detail 
+  {
+    template <bool,class TYPE>
+    struct _Types
+    {
+      typedef typename boost::call_traits<TYPE>::param_type Input ;
+      typedef const TYPE&       Output ;
+      typedef       TYPE        Inner  ;
+    } ;
+    template <bool value,class TYPE>
+    struct _Types<value,TYPE*>
+    {
+      typedef const TYPE* const Input  ;
+      typedef       TYPE*       Output ;
+      typedef Pointer<TYPE>     Inner  ;
+    } ;
+    template <bool value ,class TYPE>
+    struct _Types<value,const TYPE*>
+    {
+      typedef const TYPE* const Input  ;
+      typedef       TYPE*       Output ;
+      typedef Pointer<TYPE>     Inner  ; 
+    } ;
+    template <bool value,class TYPE>
+    struct _Types<value,TYPE&>
+    {
+      typedef const TYPE&       Input  ;
+      typedef       TYPE&       Output ;
+      typedef Reference<TYPE>   Inner  ;
+    } ;
+    template <bool value,class TYPE>
+    struct _Types<value,const TYPE&>
+    {
+      typedef const TYPE&       Input  ;
+      typedef const TYPE&       Output ;
+      typedef Reference<TYPE>   Inner  ;
+    } ;
+    template <class TYPE>
+    struct _Types<true,TYPE> 
+    {
+      typedef const TYPE* const Input   ;
+      typedef       TYPE*       Output  ;
+      typedef SmartRef<TYPE>    Inner   ;  
+    } ;
+    template <class TYPE>
+    struct _Types<true,TYPE*> 
+    {
+      BOOST_STATIC_ASSERT( sizeof(TYPE) == 0 )  ;
+    } ;
+    template <class TYPE>
+    struct _Types<true,TYPE&> 
+    {
+      BOOST_STATIC_ASSERT( sizeof(TYPE) == 0 )  ;
+    } ;
+  } ;
+  
+  template <class TYPE>
+  struct Types 
+  {
+    enum {
+      value = 
+      Relations::IsConvertible<const TYPE*,const DataObject*>      :: value ||
+      Relations::IsConvertible<const TYPE*,const ContainedObject*> :: value  
+    } ;
+    typedef typename detail::_Types<value,TYPE>::Input  Input  ;
+    typedef typename detail::_Types<value,TYPE>::Output Output ;
+    typedef typename detail::_Types<value,TYPE>::Inner  Inner  ;
+  } ;
   
 }; // end of namespace Relations
 

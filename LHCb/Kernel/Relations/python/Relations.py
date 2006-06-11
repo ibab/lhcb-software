@@ -1,19 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.6 2006-02-22 19:51:47 ibelyaev Exp $
+# $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.5  2006/02/22 18:52:31  ibelyaev
-#  small improvements with iterators
-#
-# Revision 1.4  2006/02/07 14:42:16  ibelyaev
-#  fix for Win32
-#
-# Revision 1.3  2006/02/07 14:34:25  ibelyaev
-#  fix type
-#
 # =============================================================================
 
 import sys,os,os.path,datetime  
@@ -33,75 +24,159 @@ _gbl=PyCintex.makeNamespace('')
 _range = _gbl.Relations.BaseRange
 
 def _range_iter_ ( self ) :
-    """
-    Iterator function which allows the sequential iteration over the range 
-    """
-    _r = self
-    _n = _r.size()
+    """ Iterator function which allows the sequential iteration over the range """
+    _r   = self
+    _num = _r.size()
+    _i   = 0 
     while _i < _num :
         yield _r.at(_i)
         _i += 1
 
 def _range_len_ ( self ) :
-    """
-    helper function which allows to ise len(range) fucntions 
-    """
+    """ helper function which allows to use len(range) functions """
     return self.size()
 
-def _range_getitem_ ( self , index ) :
-    if index < self.size() : return self.at(index)
-    raise IndexError 
-    
 _range.__iter__    = _range_iter_
 _range.__len__     = _range_len_  
-_range.__getitem__ = _range_getitem_ 
 
-class Rel1D ( object ) :
+def _entry_ ( _from , _to , _weight = None ) :
+    """ get the correspoonding entry type from the types """
+    if _weight :
+        name = "Relations::WEntry_<%s,%s,%s>" % ( _from , _to , _weight )
+    else       :
+        name = "Relations::Entry_<%s,%s>"     % ( _from , _to )
+    return PyCintex.makeClass ( name )
+
+def _range_ ( _from , _to , _weight = None ) :
+    """ get the correspoonding range type from the types """
+    entry = _entry_ ( _from  , _to , _weight )
+    entries = _gbl.std.vector( entry )
+    return _gbl.Relations.Range_( entries ) 
+    
+def __unique_and_sort__ ( lst ) :
+    """ LOCAL: return the unique elements of sorted list """ 
+    _dct=  {}
+    for item in lst : _dct[item] = item
+    _lst = _dct.keys()
+    _lst.sort()
+    return _lst  
+
+def _writeLines_ ( klass ) :
+    good1 = 0 == klass.find( 'Relations::Relation<' )
+    good2 = 0 == klass.find( 'Relations::RelationWeighted<' )
+    good3 = 0 == klass.find( 'Relations::Range_<' )
+    if good1 or good2 : 
+        lines  = [ ' <class name="%s" >' % klass ]
+        lines += [ '    <field name="m_inverse_aux" transient="true" />' ]
+        lines += [ ' </class> ' ]
+        return lines 
+    elif good3 :
+        lines  = [ ' <class name="%s" >' % klass ]
+        lines += [ '    <field name="m_begin" transient="true" />' ]
+        lines += [ '    <field name="m_end"   transient="true" />' ]
+        lines += [ ' </class> ' ]
+        return lines     
+    return [ ' <class name="%s" /> ' % klass ]
+    
+class Rel   ( object ) :
+    def __hash__ ( self ) : return hash (                self.name() )
+    def __repr__ ( self ) : return                       self.name()
+    def   guid   ( self ) : return _gbl.Relations.guid ( self.name() )
+    def __cmp__  ( self , other ) : return cmp( self.name() , other.name() ) 
+    
+class Rel1D ( Rel ) :
     def __init__ ( self , From , To ) :
         self.From = From
         self.To   = To
-    def name     ( self ) :
-        return "LHCb::Relation1D<%s,%s>"          % ( self.From , self.To )
+    def related ( self ) : return [] # Rel1D( self.To , self.From ) ] 
+    def types ( self ) :
+        pair = ( self.From , self.To ) 
+        table   = "LHCb::Relation1D<%s,%s>"              % pair
+        ibase   = "IRelation<%s,%s>"                     % pair
+        base0   = "Relations::RelationBase<%s,%s>"       % pair
+        base1   = "Relations::Relation<%s,%s>"           % pair
+        entry   = "Relations::Entry_<%s,%s>"             % pair
+        entries = "std::vector<%s>"                      % entry
+        range   = "Relations::Range_<%s>"                % entries 
+        return ( table , [ ibase , base0   , base1 ,
+                           entry , entries , range ] )
+    def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
         return "GaudiDict::Relation1DDict<%s,%s>" % ( self.From , self.To )
-    def guid     ( self ) :
-        return _gbl.Relations.guid( self.name() )
-
-class Rel2D ( object ) :
+        
+class Rel2D ( Rel ) :
     def __init__ ( self , From , To ) :
         self.From = From
         self.To   = To
-    def name     ( self ) :
-        return "LHCb::Relation2D<%s,%s>" % ( self.From , self.To )
+    def related ( self ) : return [ Rel2D( self.To   , self.From ) ]
+    def types  ( self ) :
+        pair    = ( self.From , self.To ) 
+        table   = "LHCb::Relation2D<%s,%s>"              % pair
+        ibas1   = "IRelation<%s,%s>"                     % pair
+        ibas2   = "IRelation2D<%s,%s>"                   % pair
+        base0   = "Relations::RelationBase<%s,%s>"       % pair
+        base1   = "Relations::Relation<%s,%s>"           % pair 
+        base2   = "Relations::Relation2<%s,%s>"          % pair 
+        entry   = "Relations::Entry_<%s,%s>"             % pair
+        entries = "std::vector<%s>"                      % entry
+        range   = "Relations::Range_<%s>"                % entries 
+        return ( table , [ ibas1 , ibas2   , base0 , base1 , base2 ,
+                           entry , entries , range ] )
+    def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
         return "GaudiDict::Relation2DDict<%s,%s>" % ( self.From , self.To )
-    def guid     ( self ) :
-        return _gbl.Relations.guid( self.name() )
 
-
-class RelW1D ( Rel1D ) :
+class RelW1D ( Rel ) :
     def __init__ ( self , From , To , Weight ) :
-        Rel1D.__init__( self , From , To ) 
+        self.From   = From
+        self.To     = To
         self.Weight = Weight
-    def name     ( self ) :
-        return "LHCb::RelationWeighted1D<%s,%s,%s>" % ( self.From , self.To , self.Weight )
+    def related ( self ) : return [] # RelW1D( self.To , self.From , self.Weight ) ]
+    def types   ( self ) :
+        triplet = ( self.From , self.To , self.Weight ) 
+        table   = "LHCb::RelationWeighted1D<%s,%s,%s>"              % triplet  
+        ibase   = "IRelationWeighted<%s,%s,%s>"                     % triplet
+        base0   = "Relations::RelationWeightedBase<%s,%s,%s>"       % triplet
+        base1   = "Relations::RelationWeighted<%s,%s,%s>"           % triplet 
+        entry   = "Relations::WEntry_<%s,%s,%s>"                    % triplet
+        entries = "std::vector<%s>"                                 % entry
+        range   = "Relations::Range_<%s>"                           % entries 
+        return ( table , [ ibase , base0   , base1 ,
+                           entry , entries , range ] )
+    def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
         return "GaudiDict::RelationWeighted1DDict<%s,%s,%s>" % ( self.From , self.To , self.Weight )
 
-class RelW2D ( Rel2D ) :
+class RelW2D ( Rel ) :
     def __init__ ( self , From , To , Weight ) :
-        Rel2D.__init__( self , From , To ) 
+        self.From   = From
+        self.To     = To
         self.Weight = Weight
-    def name     ( self ) :
-        return "LHCb::RelationWeighted2D<%s,%s,%s>" % ( self.From , self.To , self.Weight )
+    def related ( self ) :
+        lst = [ RelW2D( self.To   , self.From , self.Weight ) ]
+        return lst 
+    def types  ( self ) :
+        triplet = ( self.From , self.To , self.Weight )
+        table   = "LHCb::RelationWeighted2D<%s,%s,%s>"              % triplet
+        ibas1   = "IRelationWeighted<%s,%s,%s>"                     % triplet
+        ibas2   = "IRelationWeighted2D<%s,%s,%s>"                   % triplet
+        base0   = "Relations::RelationWeightedBase<%s,%s,%s>"       % triplet
+        base1   = "Relations::RelationWeighted<%s,%s,%s>"           % triplet
+        base2   = "Relations::Relation2Weighted<%s,%s,%s>"          % triplet
+        entry   = "Relations::WEntry_<%s,%s,%s>"                    % triplet
+        entries = "std::vector<%s>"                                 % entry
+        range   = "Relations::Range_<%s>"                           % entries 
+        return ( table , [ ibas1 , ibas2   , base0 , base1 , base2 ,
+                           entry , entries , range ] ) 
+    def name     ( self ) : return self.types()[0] 
     def Dict     ( self ) :
         return "GaudiDict::RelationWeighted2DDict<%s,%s,%s>" % ( self.From , self.To , self.Weight )
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.6 2006-02-22 19:51:47 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.6 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.7 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -127,35 +202,25 @@ def _write_xml_( lines , lst ) :
     #
     lines += ['<lcgdict>']
     lines += ['']
-    lines += ['   <class pattern="Relations::RelationBase<*>"         />']
-    lines += ['   <class pattern="Relations::RelationWeightedBase<*>" />']
-    lines += ['']
-    lines += ['   <class pattern="Relations::Relation2<*>"            />']
-    lines += ['   <class pattern="Relations::Relation2Weighted<*>"    />']
-    lines += ['']    
-    lines += ['   <class pattern="IRelatio*"        />']
-    lines += ['   <class pattern="Relations:*Range" />']
-    lines += ['   <class pattern="Relations:*Entry" />']
-    lines += ['']
-    lines += ['   <class pattern="std::vector<*Relation*Entry*>" />           ']
-    lines += ['   <class pattern="std::pair<*std::vector<*Relation*>" />      ']
-    lines += ['   <class pattern="*std::vector<*Relation*Entry*>*iterator" /> ']
-    lines += ['   <class pattern="*iterator*Relation*Entry*" />               ']
-    lines += ['']
-    lines += ['   <class pattern="Relations::Relation<*>" >']    
-    lines += ['         <field name="m_inverse_aux" transient="true" />']    
-    lines += ['   </class>']    
-    lines += ['']
-    lines += ['   <class pattern="Relations::RelationWeighted<*>" >']    
-    lines += ['         <field name="m_inverse_aux" transient="true" />']    
-    lines += ['   </class>']    
-    lines += ['']
+
+    classes = []
+    for o in lst : classes += o.types()[1]
+    classes = __unique_and_sort__ ( classes )
+    
     for o in lst :
-        lines += ['']    
-        lines += ['    <class name="%s" ' % o.name() ]
-        lines += ['           id="%s" />' % o.guid() ]
+        lines += ['']
+        types = o.types()
+        klass = types[0]
+        lines     += ['    <class name="%s" '  % klass    ]
+        lines     += ['           id="%s" />'  % o.guid() ]
+    lines += ['']
+    for o in classes :
+        lines     += _writeLines_ ( o ) 
         
-    lines += ['']    
+    lines += ['']
+    lines += [' <class pattern="Relations::Pointer<*>"   /> ']
+    lines += [' <class pattern="Relations::Reference<*>" /> ']
+    lines += ['']
     lines += ['</lcgdict>']    
     lines += ['']
     lines += ['<!-- * ===================================================================== -->']
@@ -167,9 +232,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.6 2006-02-22 19:51:47 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.7 2006-06-11 15:23:47 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
@@ -247,9 +312,20 @@ def prepare ( classes                    ,
               xmlname  = "selection.xml" ,
               cppname  = "selection.h"   ) :
 
+    def _helper_ ( lst , num = 10 ) :
+        _lst = lst 
+        for i in range(0,num) :
+            _tmp = []
+            for o in _lst :
+                _tmp += [ o ]
+                _tmp += o.related()
+            _lst = __unique_and_sort__ ( _tmp )
+        return _lst
+    classes = _helper_ ( classes )
+    
     for o in classes :
         print " Prepare Reflex dictionaries for class %s"% o .name()
-        
+
     xmllines = _write_xml_ ( [] , classes )
     hlines   = _write_cpp_ ( [] , classes , includes )
 
@@ -270,8 +346,8 @@ def prepare ( classes                    ,
 if "__main__" == __name__ :
 
     classes  = []
-    classes += [ Rel1D('int'        ,'int') ] 
-    classes += [ Rel2D('std::string','int') ]
+    #classes += [ Rel1D('int'        ,'int') ] 
+    classes += [ Rel1D('std::string','int') ]
 
     # make XML and C++ selction files:
     prepare ( classes ) 
