@@ -1,12 +1,20 @@
-! $Id: release.notes,v 1.39 2006-06-11 15:23:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2006-06-11 17:46:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.39 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.40 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-11 - Vanya BELYAEV
+ - surprizingly new structure do not work on OLD gcc compiler..
+    boost is Ok for all version GCC but not for hom-made checker 
+    home-made chacker is OK for Win32 anfd gcc3.45
+    final solution: 
+       Win32 : home-made checker 
+       GCC   : boost 
+ 
 
 ! 2006-06-11 - Vanya BELYAEV
  - significant simplification in Relations 

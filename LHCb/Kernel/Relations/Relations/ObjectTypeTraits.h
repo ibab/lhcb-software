@@ -1,4 +1,4 @@
-// $Id: ObjectTypeTraits.h,v 1.3 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.4 2006-06-11 17:46:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -35,37 +35,15 @@
 namespace Relations
 {  
   /// forward declaration
-  template <class OBJECT> class  Pointer   ;
-  template <class OBJECT> class  Reference ;
-  template <class OBJECT> struct Types     ;
-  
-  /** @struct ObjectTypeTraits
-   *
-   *  A helper structure to define the Object Type Traits
-   * 
-   *
-   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   06/02/2002
-   */
-  template <class OBJECT>
-  struct ObjectTypeTraits
-  {
-    /// true type ( almost never used)
-    typedef OBJECT                                  Type   ;
-    /// 'type'-provider, here it is own type  
-    typedef ObjectTypeTraits<OBJECT>                Traits ;
-    /// 'in'-type 
-    typedef typename Types<Type>::Input             Input  ;
-    /// 'out'-type
-    typedef typename Types<Type>::Output            Output ;
-    /// 'storable' type 
-    typedef typename Types<Type>::Inner             Inner  ;
-    /// comparison (strict ordering criteria)
-    typedef std::less<Inner>                        Less   ;
-  } ;
+  template <class OBJECT>      class  Pointer   ;
+  template <class OBJECT>      class  Reference ;
+  template <class OBJECT>      struct Types     ;
+  template <class T1,class T2> struct InConvertible ;
   
   namespace detail 
   {
+    template <class T1,class T2> struct Conversion ;
+    
     template <bool,class TYPE>
     struct _Types
     {
@@ -131,6 +109,31 @@ namespace Relations
     typedef typename detail::_Types<value,TYPE>::Input  Input  ;
     typedef typename detail::_Types<value,TYPE>::Output Output ;
     typedef typename detail::_Types<value,TYPE>::Inner  Inner  ;
+  } ;
+
+  /** @struct ObjectTypeTraits
+   *
+   *  A helper structure to define the Object Type Traits
+   * 
+   *
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */
+  template <class OBJECT>
+  struct ObjectTypeTraits
+  {
+    /// true type ( almost never used)
+    typedef OBJECT                                  Type   ;
+    /// 'type'-provider, here it is own type  
+    typedef ObjectTypeTraits<OBJECT>                Traits ;
+    /// 'in'-type 
+    typedef typename Types<Type>::Input             Input  ;
+    /// 'out'-type
+    typedef typename Types<Type>::Output            Output ;
+    /// 'storable' type 
+    typedef typename Types<Type>::Inner             Inner  ;
+    /// comparison (strict ordering criteria)
+    typedef std::less<Inner>                        Less   ;
   } ;
   
 }; // end of namespace Relations

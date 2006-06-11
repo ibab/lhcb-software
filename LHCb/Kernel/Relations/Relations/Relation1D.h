@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.7 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.8 2006-06-11 17:46:06 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_Relation1D_H
 #define RELATIONS_Relation1D_H 1
@@ -194,7 +197,7 @@ namespace LHCb
     inline  void i_sort() { m_base.i_sort() ; }
   public: // abstract methods from interface
     /// retrive all relations from the given object object
-    virtual Range      relations ( const From_ object ) const 
+    virtual Range      relations ( From_ object ) const 
     { return i_relations( object ) ; }
     /// retrive ALL relations from ALL objects  
     virtual Range      relations () const { return i_relations() ; }    
