@@ -1,6 +1,6 @@
-<!-- * $Id: selection.xml,v 1.3 2006-06-11 15:36:15 ibelyaev Exp $
+<!-- * $Id: selection.xml,v 1.4 2006-06-11 20:43:14 ibelyaev Exp $
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.3 $ 
+     * $CVS tag:$, version $Revision: 1.4 $ 
      * ========================================================================
 -->
 
@@ -8,7 +8,7 @@
      *
      * The basic selection file to build the Reflex dictionaries
      * @author ibelyaev 
-     * @date  2006-06-11 17:28:49.866563 
+     * @date  2006-06-11 22:17:54.557118 
      * ========================================================================
 --> 
 
@@ -85,10 +85,18 @@
     <field name="m_begin" transient="true" />
     <field name="m_end"   transient="true" />
  </class> 
- <class name="Relations::Relation2Weighted<LHCb::CaloCluster,LHCb::Track,float>" /> 
- <class name="Relations::Relation2Weighted<LHCb::CaloHypo,LHCb::Track,float>" /> 
- <class name="Relations::Relation2Weighted<LHCb::Track,LHCb::CaloCluster,float>" /> 
- <class name="Relations::Relation2Weighted<LHCb::Track,LHCb::CaloHypo,float>" /> 
+ <class name="Relations::Relation2Weighted<LHCb::CaloCluster,LHCb::Track,float>" >
+    <field name="m_inverse" transient="true" />
+ </class> 
+ <class name="Relations::Relation2Weighted<LHCb::CaloHypo,LHCb::Track,float>" >
+    <field name="m_inverse" transient="true" />
+ </class> 
+ <class name="Relations::Relation2Weighted<LHCb::Track,LHCb::CaloCluster,float>" >
+    <field name="m_inverse" transient="true" />
+ </class> 
+ <class name="Relations::Relation2Weighted<LHCb::Track,LHCb::CaloHypo,float>" >
+    <field name="m_inverse" transient="true" />
+ </class> 
  <class name="Relations::Relation<LHCb::Track,float>" >
     <field name="m_inverse_aux" transient="true" />
  </class> 

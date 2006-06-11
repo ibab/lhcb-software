@@ -1,6 +1,6 @@
-// $Id: selection.h,v 1.4 2006-06-11 15:36:15 ibelyaev Exp $
+// $Id: selection.h,v 1.5 2006-06-11 20:43:14 ibelyaev Exp $
 // ====================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ====================================================================
 // Incldue files
 // ====================================================================
@@ -33,7 +33,7 @@
   *       
   * Helper file for building Reflex dictionaries for Relations 
    * @author ibelyaev 
-  * @date  2006-06-11 17:28:49.868737 
+  * @date  2006-06-11 22:17:54.560281 
   *       
   */      
 
