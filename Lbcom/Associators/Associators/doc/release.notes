@@ -2,6 +2,10 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!====================== Associators v3r2p1 2006-06-12 ======================
+! 2006-06-12 - Marco Cattaneo
+ - Add missing use GaudiAlg
+
 !====================== Associators v3r2 2006-04-10 ========================
 ! 2006-03-24 - Eduardo Rodrigues
  - small improvements to code, bug fix for Linker table paths
