@@ -54,7 +54,7 @@ class Tag:
             print s
         return
 
-    def getAncestors(self, currentBranche = [], brancheList = None):
+    def getAncestorsBranches(self, currentBranche = [], brancheList = None):
         '''
         Recursive function returning the list of ancestor branchs of the tag.
         inputs:
@@ -75,10 +75,30 @@ class Tag:
         b.append(self.name)
         if self.parents:
             for p in self.parents:
-                p.getAncestors(b, brancheList)
+                p.getAncestorsBranches(b, brancheList)
         else:
             brancheList.append(b)
         return brancheList
+
+    def getAncestors(self):
+        '''
+        Return the names of the ancestor tags.
+        inputs:
+            none
+        outputs:
+            ancestors: list of strings; the names of all the ancestor
+                       tags of the current tag. This is equivalent to
+                       a list of aliases for this tag.
+        '''
+        ancestors = []
+        branches = self.getAncestorsBranches()
+        for b in branches:
+            for tagName in b:
+                if tagName not in ancestors:
+                    ancestors.append(tagName)
+        if self.name in ancestors:
+            ancestors.remove(self.name)
+        return ancestors
 
 
     def __str__(self):
@@ -96,15 +116,21 @@ class Tag:
         output = ' name = %s\n path = %s\n child = %s\n'%(self.name, self.path, str(self.child))
 
         # display the parents
-        output += ' parents = '
-        for p in self.parents:
-            output += '%s, '%str(p)
-        # Remove the last comma and space. I don't like this,
-        # but adding '\b\b' doesn't work.
-        output = output[:-2] + '\n'
+        if self.parents:
+            output += ' parents = '
+            for p in self.parents:
+                output += '%s, '%str(p)
+            # Remove the last comma and space. I don't like this,
+            # but adding '\b\b' doesn't work.
+            output = output[:-2] + '\n'
+        else:
+            output += ' parents = []\n'
+
+        # display all the ancestors
+        output += ' ancestors = %s\n'%str(self.getAncestors())
 
         # display the relations with ancestors
-        output += ' relations = %s\n'%str(self.getAncestors())
+        output += ' relations = %s\n'%str(self.getAncestorsBranches())
 
         return output
 
@@ -431,39 +457,47 @@ class CondDB:
         '''
         assert self.db <> None, "CONDDBUI: no database connected !"
         if self.db.existsFolder(path):
-            # we get all the nodes objects of the given path, and retrieve all the
-            # tags defined for them.
-            nodeDict = {}
-            tagDict  = {}
-            nodeNameList = path.split('/')
-            nodePath = '/'
-            for nodeName in nodeNameList:
-                nodePath = os.path.join(nodePath, nodeName)
-                if self.db.existsFolderSet(nodePath):
-                    nodeDict[nodePath] = self.db.getFolderSet(nodePath)
-                else:
-                    nodeDict[nodePath] = self.db.getFolder(nodePath)
-                for tagName in list(nodeDict[nodePath].listTags()):
-                    tagDict[tagName] = Tag(tagName, nodePath)
-            # We look for the parents of all the retrieved tags.
-            for tagName in tagDict.keys():
-                tag = tagDict[tagName]
-                if tag.path == '/':
-                    # The tags of the root node have no parents.
-                    continue
-                else:
-                    node = nodeDict[tag.path]
-                    parentNode = nodeDict[os.path.dirname(tag.path)]
-                    for parentTagName in parentNode.listTags():
-                        if tagDict[parentTagName].child:
-                            continue
-                        elif tag.name == node.findTagRelation(parentTagName):
-                            tagDict[parentTagName].connectChild(tag)
-            # We return the list of ancestors of the tags defined for the given node
             tagList = []
-            for tagName in nodeDict[path].listTags():
-                tagList.append(tagDict[tagName])
+            headTag = Tag('HEAD', path)
+            tagList.append(headTag)
+            folder = self.db.getFolder(path)
+            if folder.versioningMode() <> cool.FolderVersioning.SINGLE_VERSION:
+                # we get all the nodes objects of the given path, and retrieve all the
+                # tags defined for them.
+                nodeDict = {}
+                tagDict  = {}
+                nodeNameList = path.split('/')
+                nodePath = '/'
+                for nodeName in nodeNameList:
+                    nodePath = os.path.join(nodePath, nodeName)
+                    if self.db.existsFolderSet(nodePath):
+                        nodeDict[nodePath] = self.db.getFolderSet(nodePath)
+                    else:
+                        nodeDict[nodePath] = self.db.getFolder(nodePath)
+                    for tagName in list(nodeDict[nodePath].listTags()):
+                        tagDict[tagName] = Tag(tagName, nodePath)
+                # We look for the parents of all the retrieved tags.
+                for tagName in tagDict.keys():
+                    tag = tagDict[tagName]
+                    if tag.path == '/':
+                        # The tags of the root node have no parents.
+                        continue
+                    else:
+                        node = nodeDict[tag.path]
+                        parentNode = nodeDict[os.path.dirname(tag.path)]
+                        for parentTagName in parentNode.listTags():
+                            if tagDict[parentTagName].child:
+                                continue
+                            elif tag.name == node.findTagRelation(parentTagName):
+                                tagDict[parentTagName].connectChild(tag)
+                # We return the list of the tags defined for the given node
+                for tagName in nodeDict[path].listTags():
+                    tagList.append(tagDict[tagName])
+            else:
+                pass
             return tagList
+        else:
+            raise cool.NodeNotFound, "CONDDBUI: node %s was not found in the database"%path
 
 
     def createTagRelation(self, path, parentTag, tag):

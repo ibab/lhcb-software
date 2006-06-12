@@ -211,6 +211,7 @@ class myDBTable(qt.QVBox):
         self.choseTagName.setInsertionPolicy(qt.QComboBox.NoInsertion)
         self.choseTagName.setEnabled(False)
         self.choseTagName.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
+        self.defaultTagIndex = 0
         #--------------------------------------#
         
         self.splitterDB = qt.QSplitter(qt.Qt.Vertical, self, 'splitterDB')
@@ -255,21 +256,26 @@ class myDBTable(qt.QVBox):
     def setTagList(self, tagList):
         '''
         Fill the tag list with the tags given. Set default
-        to "HEAD". If not found, set default to the first tag given.
+        to "HEAD".
         '''
-        if tagList == [] or tagList == ['HEAD']:
+        if len(tagList) <= 1:
             self.choseTagName.clear()
             self.choseTagName.insertItem('HEAD')
             self.choseTagName.setEnabled(False)
         else:
-            try:
-                defaultIndex = tagList.index('HEAD')
-            except ValueError:
-                defaultIndex = 0
-            
             self.choseTagName.clear()
-            self.choseTagName.insertStringList(qt.QStringList.fromStrList(tagList))
-            self.choseTagName.setCurrentItem(defaultIndex)
+            for tag in tagList:
+                if self.choseTagName.count() > 0:
+                    self.choseTagName.insertItem('---')
+                ancestors = tag.getAncestors()
+                self.choseTagName.insertItem(tag.name)
+                if tag.name == 'HEAD':
+                    self.defaultTagIndex = self.choseTagName.count() - 1
+                else:
+                    for a in ancestors:
+                        self.choseTagName.insertItem(a)
+
+            self.choseTagName.setCurrentItem(self.defaultTagIndex)
             if self.activeChannel:
                 self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
 
@@ -285,6 +291,11 @@ class myDBTable(qt.QVBox):
             tagName  = str(tag)
             fromTime = long(str(self.editTimeFrom.text()))
             toTime   = long(str(self.editTimeTo.text()))
+
+            if tagName == '---':
+                self.choseTagName.setCurrentItem(self.defaultTagIndex)
+                self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+                return
 
             if fromTime > toTime:
                 toTime = fromTime
@@ -338,7 +349,7 @@ class myDBTable(qt.QVBox):
         nbLines = 0
         nbCols  = self.tableDB.numCols()
                 
-        for data in self.activeChannel.condDBCache[tagName]:
+        for data in self.activeChannel.getCondDBCache(tagName):
             self.tableDB.insertRows(nbLines,1)
             for i in range(nbCols - 1):
                 self.tableDB.setText(nbLines,i, str(data[i]))
@@ -378,6 +389,7 @@ class myDBTable(qt.QVBox):
         Return to the initial state when no DB was open
         '''
         self.clearTable()
+        self.choseTagName.clear()
         self.editTimeFrom.setText(str(self.validatorTime.valKeyMin))
         self.editTimeTo.setText(str(self.validatorTime.valKeyMax))
         self.setEnabled(False)

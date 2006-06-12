@@ -217,12 +217,15 @@ class guiChannel(guiTreeElement):
         '''
         # special case of the 'HEAD' or empty tag.
         if tagName == '' or tagName == 'HEAD':
-            tag = ''
-            tagName = 'HEAD'
+            tag = 'HEAD'
         else:
-            tag = tagName
+            folder = self.listView().bridge.db.getFolder(self.parent().fullName)
+            try:
+                tag = folder.resolveTag(tagName)
+            except Exception, details:
+                raise Exception, details
             
-        self.condDBCache[tagName] = []
+        self.condDBCache[tag] = []
         objList = self.listView().bridge.getXMLStringList(self.parent().fullName, fromTime, toTime, self.ID, tag)
 
         for obj in objList:
@@ -232,8 +235,23 @@ class guiChannel(guiTreeElement):
             insert = obj[4]
             # If something changes here, be careful to update the table display
             # as well. A convention is that the last element of a row is the payload.
-            self.condDBCache[tagName].append((insert.format(True, "%Y.%m.%d; %H:%M:%S"), since, until, 'string', payload))
+            self.condDBCache[tag].append((insert.format(True, "%Y.%m.%d; %H:%M:%S"), since, until, 'string', payload))
 
+    def getCondDBCache(self, tagName):
+        '''
+        Retrieve the contents of the channel's CondDBCache for the given tag name. If the
+        tag is an ancestor, the real tag name is automatically resolved.
+        '''
+        # special case of the 'HEAD' or empty tag.
+        if tagName == '' or tagName == 'HEAD':
+            tag = 'HEAD'
+        else:
+            folder = self.listView().bridge.db.getFolder(self.parent().fullName)
+            try:
+                tag = folder.resolveTag(tagName)
+            except Exception, details:
+                raise Exception, details
+        return self.condDBCache[tag]
             
 class guiFolder(guiTreeElement):
         '''
@@ -257,10 +275,8 @@ class guiFolder(guiTreeElement):
             '''
             if not self.tag_loaded:
                 folder = self.listView().bridge.db.getFolder(self.fullName)
+                self.tagList = self.listView().bridge.getTagList(self.fullName)
                 self.setVersioning(folder.versioningMode())
-                if self.versioning > 0:
-                    self.tagList = list(folder.listTags())
-                self.tagList.insert(0, 'HEAD')
                 self.tag_loaded = True
 
         def fillFolder(self):

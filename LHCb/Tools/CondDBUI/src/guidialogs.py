@@ -278,23 +278,23 @@ class createLHCbCondDialog(qt.QDialog):
 #=============================================#
 #               SELECTTAGDIALOG               #
 #=============================================#
-class selectTagDialog(qt.QDialog):
-    '''
-    Open a dialog showing the tag relations for the given folder.
-    User can then select which version to display.
-    '''
-    def __init__(self, parent, name = 'selectTagDialog'):
-        '''
-        initialisation of the dialog window
-        '''
-        qt.QDialog.__init__(self, parent, name)
-
-        #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
-        self.tagTree = guiextras.HVSTree(self.layoutDialog)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
-
-        #--- Tag tree ---#
+# class selectTagDialog(qt.QDialog):
+#     '''
+#     Open a dialog showing the tag relations for the given folder.
+#     User can then select which version to display.
+#     '''
+#     def __init__(self, parent, name = 'selectTagDialog'):
+#         '''
+#         initialisation of the dialog window
+#         '''
+#         qt.QDialog.__init__(self, parent, name)
+# 
+#         #--- Layout ---#
+#         self.layoutDialog = qt.QVBoxLayout(self)
+#         self.tagTree = guiextras.HVSTree(self.layoutDialog)
+#         self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+# 
+#         #--- Tag tree ---#
 
 
 #=============================================#
@@ -935,8 +935,8 @@ class addConditionDialog(qt.QDialog):
         '''
         Sets the editSince and editUntil values.
         '''
-        self.editSince.setText(since)
-        self.editUntil.setText(until)
+        self.editSince.setText(str(since))
+        self.editUntil.setText(str(until))
 
     def cancel(self):
         '''

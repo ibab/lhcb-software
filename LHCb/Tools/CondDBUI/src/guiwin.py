@@ -6,7 +6,7 @@ import os.path
 #     General Variables     #
 #############################
 versionNumber = 'v0r4'
-versionDate   = '2006.05.10'
+versionDate   = '2006.06.12'
 enableSuperUser = True
 
 ####################################################
@@ -67,6 +67,9 @@ class myWindow(qt.QMainWindow):
         menuSU.insertItem("Delete &Database", self.deleteDatabase)
         for i in range(menuSU.count()):
             menuSU.setItemEnabled(menuSU.idAt(i), enableSuperUser)
+
+        # Disable tag deletion as it is not yet implemented
+        menuSU.setItemEnabled(menuSU.idAt(1), False)
 
         menuHelp = qt.QPopupMenu(self, 'menuHelp')
         menuHelp.insertItem("&About", self.aboutconddbui)
@@ -142,7 +145,7 @@ class myWindow(qt.QMainWindow):
             self.dbTable.setEnabled(True)
             if not treeElem.parent().tag_loaded:
                 treeElem.parent().loadTagList()
-                self.dbTable.setTagList(treeElem.parent().tagList[:])
+            self.dbTable.setTagList(treeElem.parent().tagList[:])
             self.dbTable.setActiveChannel(treeElem)
         else:
             self.dbTable.clearTable()
@@ -151,7 +154,7 @@ class myWindow(qt.QMainWindow):
                 self.dbTable.setEnabled(True)
                 if not treeElem.tag_loaded:
                     treeElem.loadTagList()
-                    self.dbTable.setTagList(treeElem.tagList[:])
+                self.dbTable.setTagList(treeElem.tagList[:])
             elif isinstance(treeElem, guitree.guiFolderSet):
                 self.dbTable.setEnabled(False)
 
@@ -517,13 +520,17 @@ class myWindow(qt.QMainWindow):
     #--- Menu Help ---#
     def aboutconddbui(self):
         message = '''
-        conddbui %s
+        CondDB Browser %s
 
-        User Interface for browsing and editing a COOL Condition Database
-        (with some LHCb bias ;-) )
+        Browser for the LHCb-COOL condition database.
+
+        This is build on top of the Python API to LHCb-COOL: conddbui,
+        and the Python API to COOL: PyCool.
+
+        The Graphical Library is PyQt, based on Qt 3.3
 
         Nicolas Gilardi, %s'''%(versionNumber, versionDate)
-        aboutMsg = qt.QMessageBox('conddbui.py', message, qt.QMessageBox.Information,
+        aboutMsg = qt.QMessageBox('browser.py', message, qt.QMessageBox.Information,
                                   qt.QMessageBox.Ok, qt.QMessageBox.NoButton, qt.QMessageBox.NoButton)
         aboutMsg.exec_loop()
         return
