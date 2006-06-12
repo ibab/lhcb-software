@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.11 2006-04-25 17:20:19 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.12 2006-06-12 13:42:19 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -55,7 +55,14 @@ public:
   /// Known types of leaf nodes (aka Folders).
   enum VersionMode { SINGLE, MULTI };
   
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet)
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  virtual StatusCode createNode(const std::string &path,
+                                  const std::string &descr,
+                                  StorageType storage = XML,
+                                  VersionMode vers = MULTI) const = 0;
+ 
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  /// @warning Obsolete method: use createNode instead.
   virtual StatusCode createFolder(const std::string &path,
                                   const std::string &descr,
                                   StorageType storage = XML,
@@ -64,11 +71,6 @@ public:
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
                                     const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const = 0;
-
-  /// Utility function that simplifies the storage of an XML string.
-  /// (Useful for Python, the times are in seconds)
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const double since_s, const double until_s, cool::ChannelId channel = 0) const = 0;
   
   /// Convert from Gaudi::Time class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const = 0;
@@ -82,10 +84,14 @@ public:
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag) = 0;
 
-  /// Tag the given folder with the given tag-name. If the requested folder is
-  /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
-  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
-                               const std::string &description = "", cool::ChannelId channel = 0) = 0;
+  /// Tag the given leaf node with the given tag-name.
+  virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
+                                 const std::string &description = "") = 0;
+
+  /// Tag the given middle node with the given tag-name, recursively tagging the head
+  /// of child nodes with automatically generated tag-names.
+  virtual StatusCode recursiveTag(const std::string &path, const std::string &tagName,
+                                  const std::string &description = "") = 0;
 
   /// Retrieve data from the condition database.
   /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.

@@ -1,9 +1,23 @@
-# $Id: release.notes,v 1.67 2006-04-25 17:20:19 marcocle Exp $
+# $Id: release.notes,v 1.68 2006-06-12 13:42:19 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2006-06-12 - Marco CLEMENCIC
+ - Many API changes
+   - remamed ICondDBAccessSvc::createFolder to ICondDBAccessSvc::createNode
+   - removed the version of ICondDBAccessSvc::storeXMLString taking two doubles
+     because it was obsolete and confunding
+   - replaced ICondDBAccessSvc::tagFolder with the two functions
+     ICondDBAccessSvc::tagLeafNode and ICondDBAccessSvc::recursiveTag
+     (the first for Folders, the second for sub-trees)
+   - removed obsolete properties: HostName, User, Password, HidePassword,
+     Database, Schema, BackEnd
+   - property TAG renamed to DefaultTAG
+   - default value for property UseCache set to true (it was false)
+ - Enabled tagging functionalities (based on COOL HVS)
 
 !=========== Ex/DetCondExample v8r0 2006-04-25 ==============================
 ! 2006-04-25 - Marco Clemencic

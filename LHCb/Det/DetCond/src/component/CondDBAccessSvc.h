@@ -1,10 +1,11 @@
-// $Id: CondDBAccessSvc.h,v 1.13 2006-04-25 17:20:20 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.14 2006-06-12 13:42:19 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "DetCond/ICondDBAccessSvc.h"
+#include <set>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -39,7 +40,14 @@ public:
   /// Used to obtain direct access to the database.
   virtual cool::IDatabasePtr& database() { return m_db; }
   
-  /// Create a CondDB node in the hierarchy (Folder or FolderSet)
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  virtual StatusCode createNode(const std::string &path,
+                                const std::string &descr,
+                                StorageType storage = XML,
+                                VersionMode vers = MULTI) const;
+  
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet).
+  /// @warning Obsolete method: use createNode instead.
   virtual StatusCode createFolder(const std::string &path,
                                   const std::string &descr,
                                   StorageType storage = XML,
@@ -47,12 +55,7 @@ public:
   
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;
-  
-  /// Utility function that simplifies the storage of an XML string.
-  /// (Useful for Python, the times are in seconds)
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const double since_s, const double until_s, cool::ChannelId channel = 0) const;
+                                    const Gaudi::Time &since, const Gaudi::Time &until, cool::ChannelId channel = 0) const;  
   
   /// Convert from Gaudi::Time class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const;
@@ -66,10 +69,14 @@ public:
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag);
 
-  /// Tag the given folder with the given tag-name. If the requested folder is
-  /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
-  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
-                               const std::string &description, cool::ChannelId channel = 0);
+  /// Tag the given leaf node with the given tag-name.
+  virtual StatusCode tagLeafNode(const std::string &path, const std::string &tagName,
+                                 const std::string &description = "");
+
+  /// Tag the given inner node with the given tag-name, recursively tagging the head
+  /// of child nodes with automatically generated tag-names.
+  virtual StatusCode recursiveTag(const std::string &path, const std::string &tagName,
+                                  const std::string &description = "");
 
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
   /// channel and when are ignored and data is set ot NULL.
@@ -112,33 +119,11 @@ private:
 
   /// Property CondDBAccessSvc.ConnectionString: full connection string to open database access.
   /// Format is: "<BackEnd>://<HostName>;schema=<Schema>;dbname=<Database>;[user=<User>;][password=<Password>;]"
-  /// This will eventually replace the HostName, User, Schema, Database and Password properties.
+  /// or "<HostAlias>/<Database>".
   std::string m_connectionString;
-
-  /// Property CondDBAccessSvc.HostName: name of the database server
-  std::string m_dbHostName;
-  
-  /** Property CondDBAccessSvc.User: name of the user needed to connect
-      to the database server */
-  std::string m_dbUser;
-
-  /// Property CondDBAccessSvc.Password: password needed to connect to the DB server
-  std::string m_dbPassword;
-  
-  /// Property CondDBAccessSvc.HidePassword: hide password in log output (default = true)
-  bool m_hidePasswd;
-  
-  /// Property CondDBAccessSvc.Database: name of the database to use
-  std::string m_dbName;
-
-  /// Property CondDBAccessSvc.Schema: schema to use
-  std::string m_dbSchema;
 
   /// Property CondDBAccessSvc.DefaultTAG: which tag to use if none is specified
   std::string m_dbTAG;
-
-  /** Property CondDBAccessSvc.BackEnd: which db technology to use (oracle|mysql|sqlite) */
-  std::string m_dbBackEnd;
 
   /** Property CondDBAccessSvc.PurgeDB: Drop and recreate the database during initialization.
       (FIX-ME: There is no way to test if the database is there or in a good shape) */
@@ -157,11 +142,14 @@ private:
   /// Property CondDBAccessSvc.CacheHighLevel: maximum fill of the cache.
   size_t m_cacheHL;
   
-  /** Property CondDBAccessSvc.NoDB: do not use the database (cache must be on). */
+  /// Property CondDBAccessSvc.NoDB: do not use the database (cache must be on).
   bool m_noDB;
 
   /// Shared pointer to the COOL database instance
   cool::IDatabasePtr m_db;
+
+  /// Shared pointer to the COOL database instance
+  cool::IFolderSetPtr   m_rootFolderSet;
 
   /// Pointer to the cache manager
   CondDBCache *m_cache;
@@ -175,6 +163,20 @@ private:
   /// Check if the given TAG exists in the DB.
   StatusCode i_checkTag(const std::string &tag) const;
 
+  /// Generate a tag name that do not create conflicts in the DB.
+  /// Tagnames generated by this mthod will start with "_auto_".
+  /// If base value is passed to the method, the result will have
+  /// a "_auto_`base`-" prefix.
+  std::string generateUniqueTagName(const std::string &base,
+                                    const std::set<std::string> &reserved) const;
+
+  /// Function used by recursiveTag to do the real work.
+  StatusCode i_recursiveTag(const std::string &path,
+                            const std::string &base,
+                            const std::string &description,
+                            const std::string &tagName,
+                            std::set<std::string> &reserved);
+
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBAccessSvc>;
 
@@ -184,5 +186,6 @@ private:
   /// Counter used to know how many instances of CondDBAccessSvc are around
   /// (and needing the AttributeListSpecification pointers).
   static unsigned long long s_instances;
+
 };
 #endif // COMPONENT_CONDDBACCESSSVC_H

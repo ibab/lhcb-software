@@ -1,9 +1,8 @@
-// $Id: CondDBAccessSvc.cpp,v 1.18 2006-04-25 17:20:20 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.19 2006-06-12 13:42:19 marcocle Exp $
 // Include files 
 #include <sstream>
-
-// needed to sleep (ORA-01466 work-around)
-#include "SealBase/TimeInfo.h"
+#include <cstdlib>
+#include <ctime>
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -48,37 +47,15 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc)
 {
 
-  declareProperty("ConnectionString", m_connectionString);
-  declareProperty("HostName",         m_dbHostName);
-  declareProperty("User",             m_dbUser);
-  declareProperty("Password",         m_dbPassword);
-  declareProperty("HidePassword",     m_hidePasswd);
-  declareProperty("Database",         m_dbName);
-  declareProperty("Schema",           m_dbSchema);
-  declareProperty("TAG",              m_dbTAG);
-  declareProperty("BackEnd",          m_dbBackEnd);
-  declareProperty("RecreateDB",       m_recreateDB);
-  declareProperty("RunTest",          m_test);
-  declareProperty("UseCache",         m_useCache);
-  declareProperty("CacheLowLevel",    m_cacheLL=10);
-  declareProperty("CacheHighLevel",   m_cacheHL=100);
+  declareProperty("ConnectionString", m_connectionString = ""    );
+  declareProperty("DefaultTAG",       m_dbTAG            = ""    );
+  declareProperty("RecreateDB",       m_recreateDB       = false );
+  declareProperty("RunTest",          m_test             = false );
+  declareProperty("NoDB",             m_noDB             = false );
+  declareProperty("UseCache",         m_useCache         = true  );
+  declareProperty("CacheLowLevel",    m_cacheLL          = 10    );
+  declareProperty("CacheHighLevel",   m_cacheHL          = 100   );
   //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
-  declareProperty("NoDB",             m_noDB);
-
-  // default for properties:
-  m_connectionString = "";
-  m_dbHostName = "";
-  m_dbUser     = "";
-  m_dbPassword = "";
-  m_hidePasswd = true;
-  m_dbName     = "";
-  m_dbSchema   = "";
-  m_dbTAG      = "";
-  m_dbBackEnd  = "mysql";
-  m_recreateDB = false;
-  m_test       = false;
-  m_useCache   = false;
-  m_noDB       = false;
   
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
@@ -129,31 +106,14 @@ StatusCode CondDBAccessSvc::initialize(){
   }
   
   if ( !m_noDB ) {
-    // user, name and password can be specified via authentication.xml
-    if (m_connectionString == ""){
-      if (m_dbHostName == "" ||
-	  // m_dbUser == "" ||
-	  m_dbName == "" ||
-	  m_dbSchema == "" ||
-	  m_dbBackEnd == "" ){
-	log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
-	log << MSG::ERROR << "Check that the option 'ConnectionString' is set." << endmsg;
-	return StatusCode::FAILURE;
-      }
-      else{
-	log << MSG::WARNING << "Properties 'HostName', 'Schema', 'Database' and 'BackEnd' are deprecated." << endmsg;
-	log << MSG::WARNING << "Please use 'ConnectionString' instead." << endmsg;
-	m_connectionString = m_dbBackEnd + 
-	                     "://"        + m_dbHostName + 
-	                     ";schema="   + m_dbSchema + 
-                             ";user="     + m_dbUser + 
-                             ";password=" + m_dbPassword + 
-	                     ";dbname="   + m_dbName;
-      }
+    if ( m_connectionString == "" ) {
+      // we need a connection string to connect to the DB
+      log << MSG::ERROR << "Connection to database requested and no connection string provided." << endmsg;
+      log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
+      return StatusCode::FAILURE;
     }
-    log << MSG::DEBUG << "Connection string = \"" ;
-    log << m_connectionString << "\"" << endmsg;
-
+    log << MSG::DEBUG << "Connection string = \""  << m_connectionString << "\"" << endmsg;
+    
     sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
   } 
@@ -174,13 +134,12 @@ StatusCode CondDBAccessSvc::initialize(){
     m_cache = NULL;
   }
 
-  /* TODO: this piece of code must be reintroduced when HVS is functional
-     sc = i_checkTag();
-     if (sc.isFailure()){
-     log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
-     return sc;
-     }
-  */
+  sc = i_checkTag();
+  if (!sc.isSuccess()){
+    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
+    return sc;
+  }
+
   if ( !m_test ) {
     return sc;
   } else  if ( !m_noDB ) { // do the test
@@ -306,37 +265,33 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 
   try {
     if (! m_db) { // The database is not yet opened
-      log << MSG::DEBUG << "Get DatabaseSvc" << endmsg;
+      log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
       cool::IDatabaseSvc &dbSvc = cool::DatabaseSvcFactory::databaseService();
-      if ( ! &dbSvc ) {
-        log << MSG::ERROR << "unable to get the Database Service" << endmsg;
-        return StatusCode::FAILURE;
-      }
-      log << MSG::DEBUG << "got service" << endmsg;
+      log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
       
-      if (m_recreateDB) { // Recreate the DB if requested
+      if (!m_recreateDB) { // open the database
+
+        log << MSG::DEBUG << "Opening connection" << endmsg;
+        m_db = dbSvc.openDatabase(m_connectionString);
+
+      } else { // Recreate the DB if requested
+
         log << MSG::INFO << "Recreating Database" << endmsg;
         
         log << MSG::DEBUG << "drop the database \"";
         log << m_connectionString << "\"" << endmsg;
-        dbSvc.dropDatabase(m_connectionString, false);
+        dbSvc.dropDatabase(m_connectionString);
         log << MSG::DEBUG << "done" << endmsg;
         
         log << MSG::DEBUG << "create empty the database " << endmsg;
         m_db = dbSvc.createDatabase(m_connectionString);
         
-        if (m_dbBackEnd == "oracle"){
-          // ORA-01466: work-around
-          log << MSG::INFO << "ORA-01466: work-around" << endmsg;
-          seal::TimeInfo::sleep(1);
-        }
-      } else { // if !recreate => just open
-        log << MSG::DEBUG << "Opening connection" << endmsg;
-	m_db = dbSvc.openDatabase(m_connectionString);
       }
     } else {
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
     }
+    log << MSG::DEBUG << "Retrieve the root folderset." << endmsg;
+    m_rootFolderSet = m_db->getFolderSet("/");
   }
   //  catch ( cool::DatabaseDoesNotExist &e ) {
   catch ( cool::Exception &e ) {
@@ -351,7 +306,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 //=============================================================================
 // TAG handling
 //=============================================================================
-const std::string &CondDBAccessSvc::tag() const{ return m_dbTAG; }
+const std::string &CondDBAccessSvc::tag() const { return m_dbTAG; }
 StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
 
   if (m_dbTAG == _tag) return StatusCode::SUCCESS; // no need to change
@@ -371,8 +326,33 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
   return sc;
 }
 StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
-  if (m_db) {
-    if ( (tag == "") || (tag == "HEAD") || m_db->existsTag(tag) ) return StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name() );
+  log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
+  if (m_rootFolderSet) {
+    // HEAD tags are always good
+    //if ( (tag.empty()) || (tag == "HEAD") ) return StatusCode::SUCCESS;
+    if ( m_rootFolderSet->isHeadTag(tag) ) {
+      log << MSG::VERBOSE << "\"" << tag << "\" is a HEAD tag: OK" << endmsg;
+      return StatusCode::SUCCESS;
+    }
+    // try to resolve the tag (it cannot be checked)
+    try {
+      m_rootFolderSet->resolveTag(tag);
+      log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
+      return StatusCode::SUCCESS;
+    } catch (cool::TagNotFound) {
+      log << MSG::ERROR << "\"" << tag << "\" NOT found" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    catch (cool::TagRelationNotFound &e) {
+      log << MSG::ERROR << "got a cool::TagRelationNotFound : " << e.what() << endmsg;
+      return StatusCode::FAILURE;
+    }
+    catch (std::exception &e) {
+      log << MSG::ERROR << "got a std::exception : " << e.what() << endmsg;
+      return StatusCode::FAILURE;
+    }
+  
   }
   return StatusCode::FAILURE;
 }
@@ -381,11 +361,17 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
 //=============================================================================
 // Utilities
 //=============================================================================
-
 StatusCode CondDBAccessSvc::createFolder(const std::string &path,
                                          const std::string &descr,
                                          StorageType storage,
                                          VersionMode vers) const {
+  return  createNode(path,descr,storage,vers);
+}
+
+StatusCode CondDBAccessSvc::createNode(const std::string &path,
+                                       const std::string &descr,
+                                       StorageType storage,
+                                       VersionMode vers) const {
   if ( !m_db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
@@ -404,12 +390,12 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
         m_db->createFolder(path,
-				   *s_XMLstorageAttListSpec,
-				   _descr.str(),
-				   (vers == SINGLE)
-				   ?cool::FolderVersioning::SINGLE_VERSION
-				   :cool::FolderVersioning::MULTI_VERSION,
-				   true);
+                           *s_XMLstorageAttListSpec,
+                           _descr.str(),
+                           (vers == SINGLE)
+                           ?cool::FolderVersioning::SINGLE_VERSION
+                           :cool::FolderVersioning::MULTI_VERSION,
+                           true);
       }
       break;
     default:
@@ -444,29 +430,31 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
-    if (!folder->isLeaf()) {
-      MsgStream log(msgSvc(), name() );
-      log << MSG::ERROR << "Trying to store data into the non-leaf folder \"" <<
-        path << '\"' << endmsg;
-      return StatusCode::FAILURE;
-    }
     coral::AttributeList payload;
+    /// @todo This will probably change with newer COOL
     payload.extend("data","string");
     payload["data"].data<std::string>() = data;
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
+
+  } catch (cool::FolderNotFound &e) {
+
+    MsgStream log(msgSvc(), name() );
+    if (m_db->existsFolderSet(path))
+      log << MSG::ERROR << "Trying to store data into the non-leaf folder \"" <<
+        path << '\"' << endmsg;
+    else
+      log << MSG::ERROR << "Cannot find folder \"" << path << '\"' << endmsg;
+    return StatusCode::FAILURE;
+
   } catch (cool::Exception &e){
+
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the XML string into \"" << path
         << "\" (cool::Exception): " << e.what() << endmsg;
     return StatusCode::FAILURE;
+
   }
   return StatusCode::SUCCESS;
-}
-StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const double since_s, const double until_s, cool::ChannelId channel) const {
-  return storeXMLString(path,data,
-                        Gaudi::Time((long long int)(since_s * 1e9)),Gaudi::Time((long long int)(until_s * 1e9)),
-                        channel);
 }
 
 cool::ValidityKey CondDBAccessSvc::timeToValKey(const Gaudi::Time &time) const {
@@ -479,56 +467,143 @@ Gaudi::Time CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
   return Gaudi::Time(key);
 }
 
-StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
-                                      const std::string &description, cool::ChannelId /* channel */){
+StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::string &tagName,
+                                        const std::string &description) {
   MsgStream log(msgSvc(),name());
 
   if ( !m_db ) {
-    log << MSG::ERROR << "Unable to tag the folder \"" << path
+    log << MSG::ERROR << "Unable to tag the leaf node \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
 
   try {
-    log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
-    // retrieve folder pointer
-    StatusCode sc;
-    //
-    if (m_db->existsFolderSet(path)) { // FolderSet
-      cool::IFolderSetPtr folderSet = m_db->getFolderSet(path);
-      log << MSG::DEBUG << "it is a folderset" << endmsg;
-      // discover child folders
-      std::vector<std::string> folderSet_names = folderSet->listFolderSets();
-      std::vector<std::string> folder_names    = folderSet->listFolders();
-      std::vector<std::string>::iterator i;
-      for ( i = folderSet_names.begin(); i != folderSet_names.end(); ++i ){
-        sc = tagFolder(*i, tagName, description); // recursion!
-      }
-      for ( i = folder_names.begin(); i != folder_names.end(); ++i ){
-        sc = tagFolder(*i, tagName, description); // recursion again. Might be merged with above...
-      }
+    log << MSG::DEBUG << "entering tagLeafNode: \"" << path << '"' << endmsg;
+
+    cool::IFolderPtr folder = m_db->getFolder(path);
+    if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
+      log << MSG::WARNING << "Not tagging leaf node \"" << path << "\": single-version" << endmsg;
     } else {
-      if (m_db->existsFolder(path)) {
-        cool::IFolderPtr folder = m_db->getFolder(path);
-        log << MSG::DEBUG << "it is a folder" << endmsg;
-        if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
-          log << MSG::WARNING << "Not tagging folder \"" << path << "\": single-version" << endmsg;
-        } else {
-          log << MSG::DEBUG << "Tagging folder \"" << path << "\": " << tagName << endmsg;
-          folder->tagCurrentHead(folder->fullPath() + "-" + tagName, description);
-        }
-      } else {
-        MsgStream log(msgSvc(),name());
-        log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
-        return StatusCode::FAILURE;
-      }
+      log << MSG::DEBUG << "Tagging leaf node \"" << path << "\": " << tagName << endmsg;
+      folder->tagCurrentHead(tagName, description);
     }
+
   } catch (cool::FolderNotFound &e) {
-    MsgStream log(msgSvc(),name());
-    log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
-    log << e.what() << endmsg;
+
+    if (m_db->existsFolderSet(path))
+      log << MSG::ERROR << "Node \"" << path << "\" is not leaf." << endmsg;
+    else
+      log << MSG::ERROR << "Cannot find node \"" << path << '\"' << endmsg;
+    return StatusCode::FAILURE;
+    
+  } catch (cool::Exception &e){
+
+    log << MSG::ERROR << "Unable tag leaf node \"" << path
+        << "\" (cool::Exception): " << e.what() << endmsg;
+    return StatusCode::FAILURE;
+
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
+                                                   const std::set<std::string> &reserved) const {
+  static bool first_time = true;
+  if (first_time) {
+    // initialize the random generator
+    srandom(std::time(NULL));
+    first_time = false;
+  }
+  
+  std::string tag = "";
+  do {
+    // start with the signature
+    tag = "_auto_";
+    // add the base, if any
+    if (!base.empty()) tag += base + "-";
+    // append 6 randomly chosen chars in set [0-9A-Za-z]
+    for ( int i = 0; i<6; ++i ) {
+      char c=(char) (62.0*random()/(RAND_MAX+1.0));
+      // if ( c > 61 ) c %= 62;
+      if ( c >= 36 ) tag += c + 61;
+      else if ( c >= 10 ) tag += c + 55;
+      else tag += c + 48;
+    }
+    // check if the random name already exists or is reserved
+  } while ( m_db->existsTag(tag) || (reserved.find(tag) != reserved.end()) );
+
+  return tag;
+}
+
+
+StatusCode CondDBAccessSvc::recursiveTag(const std::string &path, const std::string &tagName,
+                                         const std::string &description) {
+  std::set<std::string> reserved;
+  return i_recursiveTag(path,tagName,description,tagName,reserved);
+}
+
+StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::string &base,
+                                           const std::string &description,
+                                           const std::string &tagName,
+                                           std::set<std::string> &reserved) {
+  MsgStream log(msgSvc(),name());
+
+  if ( !m_db ) {
+    log << MSG::ERROR << "Unable to tag the inner node \"" << path
+        << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
+
+  try {
+    // start reserving the tag name we want to apply to the current folderset
+    reserved.insert(tagName);
+
+    // get the list of child nodes (both types)
+    cool::IFolderSetPtr this_folderset = m_db->getFolderSet(path);    
+    std::vector<std::string> folders = this_folderset->listFolders();
+    std::vector<std::string> foldersets = this_folderset->listFolderSets();
+    
+    // loop over leaf nodes and apply the tags
+    std::vector<std::string>::iterator f;
+    for ( f = folders.begin(); f != folders.end(); ++f ) {
+
+      std::string auto_tag = generateUniqueTagName(base,reserved);
+      cool::IFolderPtr child_folder = m_db->getFolder(*f);
+
+      if (child_folder->versioningMode() == cool::FolderVersioning::MULTI_VERSION) {
+        // only multi-version folders can be tagged
+        child_folder->tagCurrentHead(auto_tag, description);
+        // associate the child folder tag with the parent one
+        child_folder->createTagRelation(tagName, auto_tag);
+      }
+
+    }
+
+    // loop over inner nodes and recurse
+    for ( f = foldersets.begin(); f != foldersets.end(); ++f ) {
+
+      std::string auto_tag = generateUniqueTagName(base,reserved);
+      StatusCode sc = i_recursiveTag(*f,base,description,auto_tag,reserved);
+      if (!sc.isSuccess()) return sc;
+
+      cool::IFolderSetPtr child_folderset = m_db->getFolderSet(*f);
+      child_folderset->createTagRelation(tagName, auto_tag);
+      
+    }
+  }
+  catch (cool::FolderSetNotFound &e) {
+    if (m_db->existsFolder(path))
+      log << MSG::ERROR << "Node \"" << path << "\" is a leaf." << endmsg;
+    else
+      log << MSG::ERROR << "Cannot find node \"" << path << '\"' << endmsg;
+    return StatusCode::FAILURE;
+  }
+  catch (cool::Exception &e) {
+    
+    return StatusCode::FAILURE;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -552,10 +627,11 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
           // go to the database
           cool::IFolderPtr folder = database()->getFolder(path);
           cool::IObjectPtr obj;
-          if (tag() == "HEAD" || tag() == ""){
+          if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+              || tag().empty() || tag() == "HEAD" ){
             obj = folder->findObject(vk_when,channel);
           } else {
-            obj = folder->findObject(vk_when,channel,folder->fullPath()+"-"+tag());
+            obj = folder->findObject(vk_when,channel,folder->resolveTag(tag()));
           }
           m_cache->insert(folder,obj,channel);
           // now the object is in the cache
@@ -579,10 +655,11 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       descr = folder->description();
 
       cool::IObjectPtr obj;
-      if (tag() == "HEAD" || tag() == ""){
+      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+          || tag().empty() || tag() == "HEAD"){
         obj = folder->findObject(timeToValKey(when),channel);
       } else {
-        obj = folder->findObject(timeToValKey(when),channel,folder->fullPath()+"-"+tag());
+        obj = folder->findObject(timeToValKey(when),channel,folder->resolveTag(tag()));
       }
     
       // deep copy of the attr. list
