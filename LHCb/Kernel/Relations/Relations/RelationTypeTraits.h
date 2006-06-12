@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.4 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.5 2006-06-12 15:27:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -19,18 +22,11 @@
 #include "Relations/ObjectTypeTraits.h"
 #include "Relations/Entry.h"
 #include "Relations/Range.h"
+#include "Relations/Bases.h"
 // ============================================================================
 
 namespace Relations
 {  
-  /** @struct BaseTable
-   *  helper structure to make easy interacyive manipulations
-   *  with Reflex dictionaries 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-02-06
-   */
-  struct BaseTable {} ;
-  
   /** @struct RelationTypeTraits RelationTypeTraits.h
    *
    *  Type traits structure for definition of 

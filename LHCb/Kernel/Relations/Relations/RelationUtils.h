@@ -1,6 +1,6 @@
-// $Id: RelationUtils.h,v 1.5 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.6 2006-06-12 15:27:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
@@ -131,8 +131,7 @@ namespace Relations
   private:
     mutable Counters m_counters ;
   };
-
-
+  
 }; // end of namespace Relations
 
 // ============================================================================

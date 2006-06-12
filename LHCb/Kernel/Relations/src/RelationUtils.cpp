@@ -1,6 +1,6 @@
-// $Id: RelationUtils.cpp,v 1.5 2006-02-07 13:42:53 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.6 2006-06-12 15:27:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -104,6 +104,7 @@ std::string Relations::guid ( const CLID& clID )
 // ============================================================================
 std::string Relations::guid ( const std::string& name  )
 { return Relations::guid( Relations::clid( name ) ) ; } ;
+
 
 // ============================================================================
 // The End 

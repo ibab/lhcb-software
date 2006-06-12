@@ -1,25 +1,24 @@
-// $Id: Range.h,v 1.1 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: Range.h,v 1.2 2006-06-12 15:27:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/11 15:23:45  ibelyaev
+//  The major  upgrade: see doc/release.notes
+// 
 // ============================================================================
 #ifndef RELATIONS_RANGE_H 
 #define RELATIONS_RANGE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// Relations 
+// ============================================================================
+#include "Relations/Bases.h"
+// ============================================================================
 
 namespace Relations 
 {
-  /** @struct BaseRange
-   *  helper structure to make easy interactive manipulations
-   *  with Reflex dictionaries 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-02-06
-   */
-  struct BaseRange {} ;
-  
   /** @struct Range_
    *
    *  An auxillary structure to provide a little bit

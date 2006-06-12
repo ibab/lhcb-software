@@ -1,6 +1,6 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.4 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.5 2006-06-12 15:27:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -18,18 +18,11 @@
 #include "Relations/ObjectTypeTraits.h"
 #include "Relations/WEntry.h"
 #include "Relations/Range.h"
+#include "Relations/Bases.h"
 // ============================================================================
 
 namespace Relations
 {
-  /** @struct BaseWeightedTable
-   *  helper structure to make easy interacyive manipulations
-   *  with Reflex dictionaries 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-02-06
-   */
-  struct BaseWeightedTable  : public BaseTable {} ;
-  
   /** @struct RelationWeightedTypeTraits RelationWeightedTypeTraits.h
    *
    *  Type traits for relations with the weight ("link attributes") 

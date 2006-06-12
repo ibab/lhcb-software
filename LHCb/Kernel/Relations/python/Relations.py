@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $
+# $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2006/06/11 19:37:02  ibelyaev
+#  remove some extra classes + fix all virtual bases
+#
 # Revision 1.7  2006/06/11 15:23:47  ibelyaev
 #  The major  upgrade: see doc/release.notes
 #
@@ -67,13 +70,20 @@ def __unique_and_sort__ ( lst ) :
 def _writeLines_ ( klass ) :
     good1 = 0 == klass.find( 'Relations::Relation<' )
     good2 = 0 == klass.find( 'Relations::RelationWeighted<' )
-    good3 = 0 == klass.find( 'Relations::Range_<' )
+    good3 = 0 == klass.find( 'Relations::Relation2<' )
+    good4 = 0 == klass.find( 'Relations::Relation2Weighted<' )
+    good5 = 0 == klass.find( 'Relations::Range_<' )
     if good1 or good2 : 
         lines  = [ ' <class name="%s" >' % klass ]
         lines += [ '    <field name="m_inverse_aux" transient="true" />' ]
         lines += [ ' </class> ' ]
         return lines 
-    elif good3 :
+    elif good3 or good4 : 
+        lines  = [ ' <class name="%s" >' % klass ]
+        lines += [ '    <field name="m_inverse" transient="true" />' ]
+        lines += [ ' </class> ' ]
+        return lines 
+    elif good5 :
         lines  = [ ' <class name="%s" >' % klass ]
         lines += [ '    <field name="m_begin" transient="true" />' ]
         lines += [ '    <field name="m_end"   transient="true" />' ]
@@ -177,9 +187,9 @@ class RelW2D ( Rel ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $'] 
+    lines += ['<!-- * $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $'] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.8 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.9 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -235,9 +245,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Relations.py,v 1.8 2006-06-11 19:37:02 ibelyaev Exp $' ] 
+    lines += ['// $Id: Relations.py,v 1.9 2006-06-12 15:27:28 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']

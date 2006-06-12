@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.40 2006-06-11 17:46:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.41 2006-06-12 15:27:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.40 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.41 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2006-06-12 - Ivan BELYAEV
+ - [ I've got too much success in reducing thr interdependencies 
+     inbetween fdifferent files, in particular for relatison with   
+     and without the weight. roll back the system]
+   - put all *Base* into sepearate file to be included 
+   - Relations/Bases.h - new file 
+   MOIDIFIED: 
+   - Relations/Range.h, 
+     Relations/RelationTypeTraghts.h, 
+     Relations/RelationWeightedTypeTraghts.h
 
 ! 2006-06-11 - Vanya BELYAEV
  - surprizingly new structure do not work on OLD gcc compiler..
