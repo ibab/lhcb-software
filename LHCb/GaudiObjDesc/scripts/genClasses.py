@@ -548,12 +548,27 @@ class genClasses(genSrcUtils.genSrcUtils):
              ::operator new(size) );
   }
 
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
   /// operator delete
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
+  }
+
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }
 #endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
@@ -569,10 +584,25 @@ class genClasses(genSrcUtils.genSrcUtils):
              ::operator new(size) );
   }
 
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
   /// operator delete
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
+  }
+
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }
 #endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")
@@ -590,6 +620,15 @@ class genClasses(genSrcUtils.genSrcUtils):
     return ( ptr );
   }
 
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    std::cout << "%(classname)s::new(" << pObj << ")" << std::endl;
+    return ::operator new (size,pObj);
+  }
+
   /// operator delete
   static void operator delete ( void* p )
   {
@@ -599,6 +638,14 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
+  }
+
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    std::cout << "%(classname)s::delete(" << p << "," << pObj << ") " << std::endl;
+    ::operator delete (p, pObj);
   }
 #endif"""%data
       self.include.append("GaudiKernel/boost_allocator.h")

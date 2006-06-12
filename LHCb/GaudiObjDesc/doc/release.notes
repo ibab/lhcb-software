@@ -2,8 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-
 =============================GaudiObjDesc v9r6============================
+! 2006-06-11 - Marco Clemencic
+ - patch #744. Reintroduced "operator new(size_t,void*)" and "operator
+   delete(void*,void*)" because they are needed by libstdc++ 3.2.3 (at
+   least in std::vector).
+
 ! 2006-06-06 - Marco Clemencic
  patch #733:
  - Disabled boost allocators on Windows (problems with static storage)
