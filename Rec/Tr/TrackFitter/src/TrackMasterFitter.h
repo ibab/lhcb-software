@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.3 2006-06-06 13:35:00 erodrigu Exp $
+// $Id: TrackMasterFitter.h,v 1.4 2006-06-12 14:43:26 mneedham Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -25,6 +25,8 @@
  *  @author Rutger van der Eijk  07-04-1999
  *  @author Matthew Needham 
  */
+
+class ITrackManipulator;
 
 class TrackMasterFitter : public GaudiTool,
                           virtual public ITrackFitter {
@@ -108,6 +110,9 @@ private:
   StatusCode failure( const std::string& comment );
 
   bool m_debugLevel;
+
+  bool m_setRefInfo;
+  ITrackManipulator* m_refTool;
   
-  };
+};
 #endif // TRACKFITTER_TRACKKALMANFILTER_H

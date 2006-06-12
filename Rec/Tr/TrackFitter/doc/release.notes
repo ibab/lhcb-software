@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-06-12 M. Needham
+ - Add possibility to set reference information to fitter
+
 ! 2006-06-06 - Eduardo Rodrigues
  - removed explicit 5-dimension number from code
  - migration to Gaudi::Units

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.12 2006-06-06 13:35:00 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.13 2006-06-12 14:43:26 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -12,6 +12,8 @@
 
 // local
 #include "TrackMasterFitter.h"
+
+#include "TrackInterfaces/ITrackManipulator.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -37,6 +39,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   , m_extrapolator(0)
   , m_trackNodeFitter(0)
   , m_measProvider(0)
+  , m_refTool(0)
 {
   declareInterface<ITrackFitter>( this );
 
@@ -70,6 +73,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTx2"       , m_errorTx2 = 6.e-5                  );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 1.e-4                  );
   declareProperty( "ErrorP"         , m_errorP   = 0.15                   );
+
+  declareProperty("setRefInfo", m_setRefInfo = false);
+
 }
 
 //=========================================================================
@@ -91,6 +97,12 @@ StatusCode TrackMasterFitter::initialize()
                                           "NodeFitter", this ) ;
   m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
                                                   "MeasProvider", this );
+
+  if (m_setRefInfo == true){ 
+    m_refTool = tool<ITrackManipulator>("LongTrackReferenceCreator",
+                                        "refTool", this);
+  }
+
   m_debugLevel   = msgLevel( MSG::DEBUG );  
 
   info() << " " << endmsg
@@ -451,6 +463,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   // Clear the nodes
   std::vector<Node*>& nodes = track.nodes();
   clearNodes( nodes );
+
+  if (m_setRefInfo == true) m_refTool->execute(track);
 
   // Check if it is needed to populate the track with measurements
   if ( track.status() == Track::PatRecIDs ) {
