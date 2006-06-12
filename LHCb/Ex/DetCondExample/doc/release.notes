@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.72 2006-04-25 17:26:07 marcocle Exp $
+! $Id: release.notes,v 1.73 2006-06-12 13:45:33 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-06-08 - Marco Clemencic
+ - Updated the Python script copy_files_to_db.py to COOL_1_3_x
+   (I forgot to do it at the right time)
 
 !=========== Ex/DetCondExample v8r0 2006-04-25 ==============================
 ! 2006-04-25 - Marco Clemencic
