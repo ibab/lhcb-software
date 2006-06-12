@@ -7,10 +7,16 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IPVReFitter.h"            // Interface
 
+class ITrackExtrapolator;
+
 using namespace LHCb;
 
 typedef ROOT::Math::SMatrix<double, 10, 10,
                             ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
+
+typedef ROOT::Math::SMatrix<double, 8, 8,
+                            ROOT::Math::MatRepSym<double,8> > SymMatrix8x8;
+
 
 /** @class PVReFitter PVReFitter.h
  *  
@@ -46,11 +52,18 @@ protected:
                     LHCb::Track* );
   StatusCode  addTr(LHCb::Vertex*,
                     LHCb::Track* );
+  LHCb::State stateAtFirstMeas(LHCb::Track*);
 
 private:
       
   int m_maxIter;
   double m_maxDeltaChi2;
+  double m_maxDeltaZ;
+  
+  ITrackExtrapolator* m_fullExtrapolator;
+  std::string m_fullExtrapolatorName;
+  ITrackExtrapolator* m_veloExtrapolator;
+  std::string m_veloExtrapolatorName;
 
 };
 #endif // PVREFITTER_H

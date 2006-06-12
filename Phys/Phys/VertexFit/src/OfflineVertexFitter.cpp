@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.9 2006-06-08 17:10:20 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.10 2006-06-12 16:43:10 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,7 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = false);
   declareProperty( "widthThreshold", m_widthThreshold = 2.0 * MeV);
   declareProperty( "maxIter", m_maxIter = 10);
-  declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
+  declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
 
 }

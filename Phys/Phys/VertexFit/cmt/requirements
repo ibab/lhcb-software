@@ -13,6 +13,9 @@ branches          cmt doc src
 
 # Used packages. 
 #============================================================================
+
+use     TrackInterfaces v*     Tr
+
 # use  DaVinciTransporter  v*  Phys
 use  DaVinciKernel  v*  Phys
 use  LHCbMath       v*  Kernel

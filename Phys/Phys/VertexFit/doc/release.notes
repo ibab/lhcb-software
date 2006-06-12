@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.67 2006-06-08 17:10:20 xieyu Exp $
+! $Id: release.notes,v 1.68 2006-06-12 16:43:09 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+! 2006-06-12 Yuehong Xie
+  - src/PVReFitter.cpp is completed now.
 
 ! 2006-06-08 Yuehong Xie
   - src/OfflineVertexFitter.cpp: fix a small bug 
