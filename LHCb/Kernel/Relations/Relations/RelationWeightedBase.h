@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.9 2006-06-11 15:23:46 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.10 2006-06-12 16:02:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/11 15:23:46  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -19,6 +22,7 @@
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeightedTypeTraits.h"
+#include "Relations/Reserve.h"
 // ============================================================================
 
 namespace Relations
