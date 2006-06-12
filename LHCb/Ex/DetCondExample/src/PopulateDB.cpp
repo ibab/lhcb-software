@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.29 2006-04-25 17:26:07 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.30 2006-06-12 13:53:02 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -120,335 +120,367 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
   cool::IDatabasePtr &db = m_dbAccSvc->database();
 
   // Check for signature (a folderset called "/_"+name())
-  std::string signature_folderset = "/_";
-  signature_folderset += name();
+  std::string signature_folderset = "/_" + name();
   info() << "Checking if CondDB tree has been already filled" << endmsg;
   bool signatureFolderSetExists = db->existsFolderSet(signature_folderset);
 
-  // If root folderSet exists already then return
-  // If root folderSet does not exist then create it and store sample data
+  // If signature folderSet exists already then return
+  // If signature folderSet does not exist then create it and store sample data
   if (signatureFolderSetExists) {
     info() << "Signature folderSet already exists: no need to store sample data" << endmsg; 
     info() << "============= condDBStoreSampleData() ending =======================" << endmsg;
     return StatusCode::SUCCESS;
-  } else {      
-    info() << "Signature folderSet does not exist: create it" << endmsg;
-    try {
-      m_dbAccSvc->createFolder(signature_folderset,
-                               "Dummy folderset used to sign the prepared database",
-                               ICondDBAccessSvc::FOLDERSET);
-    } catch (cool::Exception &e) {
-      error() << e.what() << endmsg;
-      return StatusCode::FAILURE;
-    }
-    info() << "Signature folderSet did not exist and was succesfully created" << endmsg;
   }
+
   // Store sample data
   info() << "Now store sample data into the CondDB" << endmsg;
-
   try {
-    
-    StatusCode sc;
+    if ( i_createHierarchy().isSuccess() &&
+         i_createCOLDVersion().isSuccess() &&
+         i_createHOTVersion().isSuccess() &&
+         i_createHEADVersion() )
+    { // if everything went fine mark the DB as ready
+      
+      info() << "Creating signature folderSet" << endmsg;
+      
+      m_dbAccSvc->createNode(signature_folderset,
+                             "Dummy folderset used to sign the prepared database",
+                             ICondDBAccessSvc::FOLDERSET);
+      info() << "Signature folderSet created" << endmsg;
 
-    // Create new CondDBFolderSets
-
-    typedef std::pair<std::string,std::string> str_pair;
-    typedef std::vector<str_pair> vec_str_pair;
-    vec_str_pair foldersets;
-    foldersets.reserve(10);
-    foldersets.push_back(str_pair("/SlowControl",     "Main SlowControl folderSet"));
-    foldersets.push_back(str_pair("/SlowControl/LHCb","SlowControl folderSet for the LHCb detector"));
-    foldersets.push_back(str_pair("/SlowControl/Hcal","SlowControl folderSet for the Hcal detector"));
-    foldersets.push_back(str_pair("/ReadOut",         "Main ReadOut folderSet"));
-    foldersets.push_back(str_pair("/Properties",      "FolderSet for tabulated properties"));
-    foldersets.push_back(str_pair("/Geometry",        "Main Geometry folderSet"));
-    foldersets.push_back(str_pair("/Geometry2",       "Test Geometry folderSet"));
-    foldersets.push_back(str_pair("/Alignment",       "Main Alignment folderSet"));
-    foldersets.push_back(str_pair("/Alignment/Velo",  "Velo Alignment folderSet"));
-    foldersets.push_back(str_pair("/OnLine/Cave",     "Measurements for the cave"));
-
-    debug() << "Create foldersets" << endmsg;
-    for(vec_str_pair::iterator f = foldersets.begin(); f != foldersets.end(); ++f ){
-      sc = m_dbAccSvc->createFolder(f->first,f->second,ICondDBAccessSvc::FOLDERSET);
-      if (!sc.isSuccess()){
-        error() << "Unable to create folderset \"" << f->first << '"' << endmsg;
-        return sc;
-      }
+    } else {
+      return StatusCode::FAILURE;  
     }
 
-    vec_str_pair xmlfolders;
-    xmlfolders.reserve(10);
-    xmlfolders.push_back(str_pair("/SlowControl/LHCb/scLHCb",""));
-    xmlfolders.push_back(str_pair("/SlowControl/Hcal/scHcal",""));
-    xmlfolders.push_back(str_pair("/Geometry/LHCb",""));
-    xmlfolders.push_back(str_pair("/Geometry2/LHCb",""));
-    xmlfolders.push_back(str_pair("/Geometry2/lvLHCb",""));
-    xmlfolders.push_back(str_pair("/Alignment/Velo/Modules",""));
-    xmlfolders.push_back(str_pair("/SlowControl/DummyDE",""));
-    xmlfolders.push_back(str_pair("/ReadOut/DummyDE",""));
-    xmlfolders.push_back(str_pair("/Properties/TestFunction",""));
-
-    xmlfolders.push_back(str_pair("/TestFolder",""));
-
-    debug() << "Create folders (multi-version)" << endmsg;
-    for(vec_str_pair::iterator f = xmlfolders.begin(); f != xmlfolders.end(); ++f ){
-      sc = m_dbAccSvc->createFolder(f->first,f->second,ICondDBAccessSvc::XML);
-      if (!sc.isSuccess()){
-        error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
-        return sc;
-      }
-    }
-
-    vec_str_pair xmlfolders_online;
-    xmlfolders_online.reserve(3);
-    xmlfolders_online.push_back(str_pair("/OnLine/Cave/T1","Temperature 1"));
-    xmlfolders_online.push_back(str_pair("/OnLine/Cave/T2","Temperature 2"));
-    xmlfolders_online.push_back(str_pair("/OnLine/Cave/P1","Pressure 1"));
-    
-    debug() << "Create folders (single-version)" << endmsg;
-    for(vec_str_pair::iterator f = xmlfolders_online.begin(); f != xmlfolders_online.end(); ++f ){
-      sc = m_dbAccSvc->createFolder(f->first,f->second,ICondDBAccessSvc::XML,ICondDBAccessSvc::SINGLE);
-      if (!sc.isSuccess()){
-        error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
-        return sc;
-      }
-    }
-    
-    // Create new COLD temperature CondDBObjects
-    debug() << "Create COLD objects in /SlowControl/LHCb/scLHCb and /SlowControl/Hcal/scHcal" << endmsg;
-    int i;
-    for ( i=0; i<3; i++ ) {
-
-      // LHCb
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
-                                 i_encodeXmlTemperature( (double)i*10+5, "scLHCb" ),
-                                 Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
-      // Hcal
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
-                                 i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal"),
-                                 Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
-    }
-
-    debug() << "Apply tag COLD" << endmsg;
-    m_dbAccSvc->tagFolder("/SlowControl","COLD");
-    debug() << "Apply tag PRODUCTION to /SlowControl/LHCb/scLHCb" << endmsg; 
-    m_dbAccSvc->tagFolder("/SlowControl/LHCb/scLHCb","PRODUCTION");
-
-    // Create new HOT temperature CondDBObjects
-    debug() << "Create HOT objects in /SlowControl/LHCb/scLHCb"
-            << " and /SlowControl/Hcal/scHcal" << endmsg;
-    for ( i=0; i<3; i++ ) {
-
-      // LHCb
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
-                                 i_encodeXmlTemperature( (double)i*10+105, "scLHCb" ),
-                                 Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
-      // Hcal
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
-                                 i_encodeXmlTemperature( (double)i*10+105, "scHcal"),
-                                 Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
-    }
-
-    debug() << "Apply tag HOT" << endmsg;
-    m_dbAccSvc->tagFolder("/SlowControl","HOT");
-    debug() << "Apply tag PRODUCTION to /SlowControl/Hcal" << endmsg; 
-    m_dbAccSvc->tagFolder("/SlowControl/Hcal","PRODUCTION");
-
-    // Create new geometry CondDBObjects
-    debug() << "Create objects in folder /Geometry/LHCb" << endmsg;
-    {
-      // Copy XML data from a file to a string
-      char* fileName;      
-      fileName = "../XMLDDDB/LHCb/geometry.xml";
-      debug() << "Reading XML data from file: " << endmsg;
-      debug() << fileName << endmsg;
-      std::ifstream inputFile ( fileName );
-      std::string xmlString = ""; 
-      char ch;
-      while ( inputFile.get(ch) ) {
-        xmlString = xmlString + ch;
-      }     
-      if( xmlString == "" ) {
-        error() << "File is empty" << endmsg;
-        return StatusCode::FAILURE;
-      }
-      // Change the DTD relative path location to "file.dtd"
-      // This can be correctly interpreted by the XmlCnvSvc
-      unsigned int dtdPos = xmlString.find( ".dtd" );
-      if( dtdPos < xmlString.length() ) {
-        verbose() << "Remove DTD relative path in the XML" << endmsg;
-        unsigned int slashPos = xmlString.substr(0,dtdPos).rfind("/");
-        if( slashPos < dtdPos ) {
-          unsigned int quotePos;
-          if( xmlString[dtdPos+4] == '\'' ) {
-            quotePos = xmlString.substr(0,dtdPos).rfind("\'");
-            verbose() << "DTD literal was: " 
-                      << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
-            if( quotePos < slashPos ) 
-              xmlString.replace( quotePos+1, slashPos-quotePos, "" );
-            verbose() << "DTD literal is now: " 
-                      << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
-          } else if( xmlString[dtdPos+4] == '\"' ) {
-            quotePos = xmlString.substr(0,dtdPos).rfind("\"");
-            verbose() << "DTD literal was: " 
-                      << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
-            if( quotePos < slashPos ) 
-              xmlString.replace( quotePos+1, slashPos-quotePos, "" );
-            verbose() << "DTD literal is now: " 
-                      << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
-          } else {
-            error() << "Bad DTD literal in the string to be parsed" << endmsg;
-            return StatusCode::FAILURE;
-          }
-        }
-      }
-      // Now store the XML string in the CondDB
-      verbose() << "XML data is:" << std::endl << xmlString << endmsg;
-      verbose() << "Store it in the database with [-inf,+inf] validity range" << endmsg;
-      verbose() << "Folder name: /Geometry/LHCb" << endmsg;
-      verbose() << "Create object with validity range: [" << cool::ValidityKeyMin
-                << "(0x" << std::hex << cool::ValidityKeyMin << std::dec << ")" 
-                << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endmsg;
-
-      m_dbAccSvc->storeXMLString("/Geometry/LHCb",xmlString,Gaudi::Time::epoch(),Gaudi::Time::max());
-    }
-
-    debug() << "Apply tag PRODUCTION to /Geometry/LHCb" << endmsg;
-    m_dbAccSvc->tagFolder("/Geometry/LHCb","PRODUCTION");
-
-    debug() << "Put in a new HEAD" << endmsg;
-    for ( i=0; i<2; i++ ) {
-      // LHCb
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
-                                 i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb" ),
-                                 Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
-    }
-    for ( i=0; i<10; i++ ) {
-      // Hcal
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
-                                 i_encodeXmlTemperature( (double)i*5.4+9, "scHcal" ),
-                                 Gaudi::Time(i*10), Gaudi::Time((i+1)*10));
-    }
-
-    /// ------------ DummyDE conditions
-    for ( i=0; i<3; ++i ) {
-      m_dbAccSvc->storeXMLString("/SlowControl/DummyDE",
-                                 i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE" ),
-                                 Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
-    }
-    for ( i=0; i<3; ++i ) {
-      Condition temp;
-      std::vector<double> temps;
-      std::vector<std::string> temps_str;
-      for ( int j=0; j<10; ++j ) {
-        temps.push_back((double)i*4.17+20.16-(double)j*0.92);
-      }
-      temp.addParam("CrateTemps",temps);
-      temp.addParam("NChannels",(int)10);
-      std::vector<int> chnls;
-      for ( int j=0; j<10; j += 1+i ) {
-        chnls.push_back(j);
-      }
-      temp.addParam("Channels",chnls);
-      std::string s = temp.toXml("DummyDE");
-      verbose() << "/ReadOut/DummyDE: " << s << endmsg;
-      m_dbAccSvc->storeXMLString("/ReadOut/DummyDE",s,Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
-    }
-
-    /// test alignment condition
-    std::vector<double> pos(3);
-    std::vector<double> rot(3);
-    
-    AlignmentCondition align(pos,rot);
-
-    // store null alignment (for 42 modules)
-    for ( i = 0; i < 42; ++i ) {
-      std::ostringstream obj_name;
-      obj_name << "Module";
-      obj_name.width(2);
-      obj_name.fill('0');
-      obj_name << i;
-      m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
-                                 align.toXml(obj_name.str()),
-                                 Gaudi::Time::epoch(), Gaudi::Time::max(), i);
-    }
-
-    // change placement of one of the modules
-    pos[2] = 2*cm;
-    AlignmentCondition align2(pos,rot);
-    m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
-                               align2.toXml("Module12"),
-                               Gaudi::Time(30), Gaudi::Time(50), 12);
-
-    std::string s;
-
-    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
-    s += "<DDDB><catalog name=\"LHCb\"><logvolref href=\"conddb:";
-    s += "/Geometry2/lvLHCb#lvLHCb\"/></catalog></DDDB>";
-    
-    m_dbAccSvc->storeXMLString("/Geometry2/LHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
-
-    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
-    s += "<DDDB><logvol material=\"Vacuum\" name=\"lvLHCb\">";
-    s += "<box name=\"caveBox\" sizeX=\"50000*mm\" sizeY=\"50000*mm\" sizeZ=\"50000*mm\"/>";
-    s += "<physvol logvol=\"/dd/Geometry/Ecal/lvEcal\" name=\"EcalSubsystem\"><posXYZ x=\"0*mm\" y=\"0*mm\" z=\"12907.5*mm\"/>";
-    s += "</physvol><physvol logvol=\"/dd/Geometry/Hcal/lvHcal\" name=\"HcalSubsystem\">";
-    s += "<posXYZ x=\"0*mm\" y=\"0*mm\" z=\"14162.5*mm\"/></physvol></logvol></DDDB>";
-
-    m_dbAccSvc->storeXMLString("/Geometry2/lvLHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
-    
-    debug() << "Tagging /Geometry2" << endmsg;
-    m_dbAccSvc->tagFolder("/Geometry2","COLD");
-    m_dbAccSvc->tagFolder("/Geometry2","HOT");
-    m_dbAccSvc->tagFolder("/Geometry2","PRODUCTION");
-
-    // ---- Add a tabulated property
-    debug() << "Add a TabulatedProperty from 0 to 30" << endmsg;
-    TabulatedProperty tp1;
-    for(double x = 0. ; x < 2. ; x += 0.2){
-      double y = x*x;
-      tp1.table().push_back(TabulatedProperty::Entry(x,y));
-    }
-    m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(0), Gaudi::Time(30));
-
-    debug() << "Add a second TabulatedProperty from 30 to +inf" << endmsg;
-    tp1.table().clear();
-    for(double x = 0. ; x < 2. ; x += 0.2){
-      double y = x*x*0.5;
-      tp1.table().push_back(TabulatedProperty::Entry(x,y));
-    }
-    m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(30), Gaudi::Time::max());
-    
-    // Let's try to put an XML string with self referencing
-    std::string test_self_referenced_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-      "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
-      "<DDDB>"
-      "<catalog name=\"TestFolder\">"
-      "<catalog name=\"TestSubFolder\">"
-      "<conditionref href=\"#TestCondition\"/>"
-      "</catalog>"
-      "</catalog>"
-      "<condition name=\"TestCondition\">"
-      "<paramVector name=\"ChannelMap\" type=\"int\">1 2 3 4</paramVector>"
-      "</condition>"
-      "</DDDB>";
-    
-    m_dbAccSvc->storeXMLString("/TestFolder",test_self_referenced_xml,Gaudi::Time(0), Gaudi::Time::max());
-
-    debug() << "Tagging everything (FORFUN)" << endmsg;
-    m_dbAccSvc->tagFolder("/","FORFUN");
-    
   } catch (cool::Exception &e) {
-
     error() << "Error in storing sample data into the CondDB" << endmsg;
     error() << "*** COOL exception caught: " << endmsg;
     error() << "***   error message: " << e.what() << endmsg;
-    return StatusCode::FAILURE;
 
+    return StatusCode::FAILURE;
   }
   info() << "============= condDBStoreSampleData() ending =======================" << endmsg;
 
   return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Prepare all folders and foldersets
+//=========================================================================
+StatusCode PopulateDB::i_createHierarchy() {
+
+  StatusCode sc;
+  
+  // Create new CondDBFolderSets
+  
+  typedef std::pair<std::string,std::string> str_pair;
+  typedef std::vector<str_pair> vec_str_pair;
+  vec_str_pair foldersets;
+  foldersets.reserve(11);
+  foldersets.push_back(str_pair("/SlowControl",     "Main SlowControl folderSet"));
+  foldersets.push_back(str_pair("/SlowControl/LHCb","SlowControl folderSet for the LHCb detector"));
+  foldersets.push_back(str_pair("/SlowControl/Hcal","SlowControl folderSet for the Hcal detector"));
+  foldersets.push_back(str_pair("/ReadOut",         "Main ReadOut folderSet"));
+  foldersets.push_back(str_pair("/Properties",      "FolderSet for tabulated properties"));
+  foldersets.push_back(str_pair("/Geometry",        "Main Geometry folderSet"));
+  foldersets.push_back(str_pair("/Geometry2",       "Test Geometry folderSet"));
+  foldersets.push_back(str_pair("/Alignment",       "Main Alignment folderSet"));
+  foldersets.push_back(str_pair("/Alignment/Velo",  "Velo Alignment folderSet"));
+  foldersets.push_back(str_pair("/OnLine",          "On-line folderSet"));
+  foldersets.push_back(str_pair("/OnLine/Cave",     "Measurements for the cave"));
+  
+  debug() << "Create foldersets" << endmsg;
+  for(vec_str_pair::iterator f = foldersets.begin(); f != foldersets.end(); ++f ){
+    sc = m_dbAccSvc->createNode(f->first,f->second,ICondDBAccessSvc::FOLDERSET);
+    if (!sc.isSuccess()){
+      error() << "Unable to create folderset \"" << f->first << '"' << endmsg;
+      return sc;
+    }
+  }
+
+  vec_str_pair xmlfolders;
+  xmlfolders.reserve(10);
+  xmlfolders.push_back(str_pair("/SlowControl/LHCb/scLHCb",""));
+  xmlfolders.push_back(str_pair("/SlowControl/Hcal/scHcal",""));
+  xmlfolders.push_back(str_pair("/Geometry/LHCb",""));
+  xmlfolders.push_back(str_pair("/Geometry2/LHCb",""));
+  xmlfolders.push_back(str_pair("/Geometry2/lvLHCb",""));
+  xmlfolders.push_back(str_pair("/Alignment/Velo/Modules",""));
+  xmlfolders.push_back(str_pair("/SlowControl/DummyDE",""));
+  xmlfolders.push_back(str_pair("/ReadOut/DummyDE",""));
+  xmlfolders.push_back(str_pair("/Properties/TestFunction",""));
+
+  xmlfolders.push_back(str_pair("/TestFolder",""));
+  
+  debug() << "Create folders (multi-version)" << endmsg;
+  for(vec_str_pair::iterator f = xmlfolders.begin(); f != xmlfolders.end(); ++f ){
+    sc = m_dbAccSvc->createNode(f->first,f->second,ICondDBAccessSvc::XML);
+    if (!sc.isSuccess()){
+      error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
+      return sc;
+    }
+  }
+  
+  vec_str_pair xmlfolders_online;
+  xmlfolders_online.reserve(3);
+  xmlfolders_online.push_back(str_pair("/OnLine/Cave/T1","Temperature 1"));
+  xmlfolders_online.push_back(str_pair("/OnLine/Cave/T2","Temperature 2"));
+  xmlfolders_online.push_back(str_pair("/OnLine/Cave/P1","Pressure 1"));
+  
+  debug() << "Create folders (single-version)" << endmsg;
+  for(vec_str_pair::iterator f = xmlfolders_online.begin(); f != xmlfolders_online.end(); ++f ){
+    sc = m_dbAccSvc->createNode(f->first,f->second,ICondDBAccessSvc::XML,ICondDBAccessSvc::SINGLE);
+    if (!sc.isSuccess()){
+      error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
+      return sc;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode PopulateDB::i_createCOLDVersion ( ) {
+  debug() << "Create COLD version data" << endmsg;
+
+  // ---------- /SlowControl/LHCb/scLHCb --------------------
+  // ---------- /SlowControl/Hcal/scHcal --------------------
+  int i;
+  for ( i=0; i<3; i++ ) {
+    
+    // LHCb
+    m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                               i_encodeXmlTemperature( (double)i*10+5, "scLHCb" ),
+                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    // Hcal
+    m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                               i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal"),
+                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+  }
+
+  // ---------- /SlowControl/DummyDE --------------------
+  // ---------- /ReaadOut/DummyDE --------------------
+  for ( i=0; i<3; ++i ) {
+    m_dbAccSvc->storeXMLString("/SlowControl/DummyDE",
+                               i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE" ),
+                               Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+  }
+  for ( i=0; i<3; ++i ) {
+    Condition temp;
+    std::vector<double> temps;
+    std::vector<std::string> temps_str;
+    for ( int j=0; j<10; ++j ) {
+      temps.push_back((double)i*4.17+20.16-(double)j*0.92);
+    }
+    temp.addParam("CrateTemps",temps);
+    temp.addParam("NChannels",(int)10);
+    std::vector<int> chnls;
+    for ( int j=0; j<10; j += 1+i ) {
+      chnls.push_back(j);
+    }
+    temp.addParam("Channels",chnls);
+    std::string s = temp.toXml("DummyDE");
+    verbose() << "/ReadOut/DummyDE: " << s << endmsg;
+    m_dbAccSvc->storeXMLString("/ReadOut/DummyDE",s,Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+  }
+  
+  // ---------- /Alignment/Velo/Modules --------------------
+  /// test alignment condition
+  std::vector<double> pos(3);
+  std::vector<double> rot(3);
+  
+  AlignmentCondition align(pos,rot);
+  
+  // store null alignment (for 42 modules)
+  for ( i = 0; i < 42; ++i ) {
+    std::ostringstream obj_name;
+    obj_name << "Module";
+    obj_name.width(2);
+    obj_name.fill('0');
+    obj_name << i;
+    m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
+                               align.toXml(obj_name.str()),
+                               Gaudi::Time::epoch(), Gaudi::Time::max(), i);
+  }
+  
+  // change placement of one of the modules
+  pos[2] = 2*cm;
+  AlignmentCondition align2(pos,rot);
+  m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
+                             align2.toXml("Module12"),
+                             Gaudi::Time(30), Gaudi::Time(50), 12);
+  
+  // ---------- /Geometry/LHCb --------------------
+  // Create new geometry CondDBObjects
+  debug() << "Create objects in folder /Geometry/LHCb" << endmsg;
+  {
+    // Copy XML data from a file to a string
+    char* fileName;      
+    fileName = "../XMLDDDB/LHCb/geometry.xml";
+    debug() << "Reading XML data from file: " << endmsg;
+    debug() << fileName << endmsg;
+    std::ifstream inputFile ( fileName );
+    std::string xmlString = ""; 
+    char ch;
+    while ( inputFile.get(ch) ) {
+      xmlString = xmlString + ch;
+    }     
+    if( xmlString == "" ) {
+      error() << "File is empty" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    // Change the DTD relative path location to "file.dtd"
+    // This can be correctly interpreted by the XmlCnvSvc
+    unsigned int dtdPos = xmlString.find( ".dtd" );
+    if( dtdPos < xmlString.length() ) {
+      verbose() << "Remove DTD relative path in the XML" << endmsg;
+      unsigned int slashPos = xmlString.substr(0,dtdPos).rfind("/");
+      if( slashPos < dtdPos ) {
+        unsigned int quotePos;
+        if( xmlString[dtdPos+4] == '\'' ) {
+          quotePos = xmlString.substr(0,dtdPos).rfind("\'");
+          verbose() << "DTD literal was: " 
+                    << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
+          if( quotePos < slashPos ) 
+            xmlString.replace( quotePos+1, slashPos-quotePos, "" );
+          verbose() << "DTD literal is now: " 
+                    << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
+        } else if( xmlString[dtdPos+4] == '\"' ) {
+          quotePos = xmlString.substr(0,dtdPos).rfind("\"");
+          verbose() << "DTD literal was: " 
+                    << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
+          if( quotePos < slashPos ) 
+            xmlString.replace( quotePos+1, slashPos-quotePos, "" );
+          verbose() << "DTD literal is now: " 
+                    << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
+        } else {
+          error() << "Bad DTD literal in the string to be parsed" << endmsg;
+          return StatusCode::FAILURE;
+        }
+      }
+    }
+    // Now store the XML string in the CondDB
+    verbose() << "XML data is:" << std::endl << xmlString << endmsg;
+    verbose() << "Store it in the database with [-inf,+inf] validity range" << endmsg;
+    verbose() << "Folder name: /Geometry/LHCb" << endmsg;
+    verbose() << "Create object with validity range: [" << cool::ValidityKeyMin
+              << "(0x" << std::hex << cool::ValidityKeyMin << std::dec << ")" 
+              << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endmsg;
+      
+    m_dbAccSvc->storeXMLString("/Geometry/LHCb",xmlString,Gaudi::Time::epoch(),Gaudi::Time::max());
+  }
+
+  std::string s;  
+  // ---------- /Geometry2/LHCb --------------------
+  s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
+  s += "<DDDB><catalog name=\"LHCb\"><logvolref href=\"conddb:";
+  s += "/Geometry2/lvLHCb#lvLHCb\"/></catalog></DDDB>";
+  
+  m_dbAccSvc->storeXMLString("/Geometry2/LHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
+
+  // ---------- /Geometry2/lvLHCb --------------------
+  s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
+  s += "<DDDB><logvol material=\"Vacuum\" name=\"lvLHCb\">";
+  s += "<box name=\"caveBox\" sizeX=\"50000*mm\" sizeY=\"50000*mm\" sizeZ=\"50000*mm\"/>";
+  s += "<physvol logvol=\"/dd/Geometry/Ecal/lvEcal\" name=\"EcalSubsystem\"><posXYZ x=\"0*mm\" y=\"0*mm\" z=\"12907.5*mm\"/>";
+  s += "</physvol><physvol logvol=\"/dd/Geometry/Hcal/lvHcal\" name=\"HcalSubsystem\">";
+  s += "<posXYZ x=\"0*mm\" y=\"0*mm\" z=\"14162.5*mm\"/></physvol></logvol></DDDB>";
+  
+  m_dbAccSvc->storeXMLString("/Geometry2/lvLHCb",s,Gaudi::Time::epoch(),Gaudi::Time::max());
+  
+  // ---------- /Properties/TestFunction --------------------
+  // ---- Add a tabulated property
+  debug() << "Add a TabulatedProperty from 0 to 30" << endmsg;
+  TabulatedProperty tp1;
+  for(double x = 0. ; x < 2. ; x += 0.2){
+    double y = x*x;
+    tp1.table().push_back(TabulatedProperty::Entry(x,y));
+  }
+  m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(0), Gaudi::Time(30));
+  
+  debug() << "Add a second TabulatedProperty from 30 to +inf" << endmsg;
+  tp1.table().clear();
+  for(double x = 0. ; x < 2. ; x += 0.2){
+    double y = x*x*0.5;
+    tp1.table().push_back(TabulatedProperty::Entry(x,y));
+  }
+  m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),Gaudi::Time(30), Gaudi::Time::max());
+
+  // ---------- /TestFolder --------------------
+  // Let's try to put an XML string with self referencing
+  std::string test_self_referenced_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
+    "<DDDB>"
+    "<catalog name=\"TestFolder\">"
+    "<catalog name=\"TestSubFolder\">"
+    "<conditionref href=\"#TestCondition\"/>"
+    "</catalog>"
+    "</catalog>"
+    "<condition name=\"TestCondition\">"
+    "<paramVector name=\"ChannelMap\" type=\"int\">1 2 3 4</paramVector>"
+    "</condition>"
+    "</DDDB>";
+  
+  m_dbAccSvc->storeXMLString("/TestFolder",test_self_referenced_xml,Gaudi::Time(0), Gaudi::Time::max());
+
+  // ---------- APPLY TAG COLD --------------------
+  debug() << "Apply (global) tag \"COLD\"" << endmsg;
+  return m_dbAccSvc->recursiveTag("/","COLD");
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode PopulateDB::i_createHOTVersion ( ) {
+  debug() << "Create HOT version data" << endmsg;
+
+  // ---------- /SlowControl/LHCb/scLHCb --------------------
+  // ---------- /SlowControl/Hcal/scHcal --------------------
+  int i;
+  for ( i=0; i<3; i++ ) {
+    
+    // LHCb
+    m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                               i_encodeXmlTemperature( (double)i*10+105, "scLHCb" ),
+                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+    // Hcal
+    m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                               i_encodeXmlTemperature( (double)i*10+105, "scHcal"),
+                               Gaudi::Time(i*16), Gaudi::Time((i+1)*16));
+  }
+  
+  // ---------- APPLY TAG HOT --------------------
+  debug() << "Apply (global) tag \"HOT\"" << endmsg;
+  return m_dbAccSvc->recursiveTag("/","HOT");
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode PopulateDB::i_createHEADVersion ( ) {
+  debug() << "Create new HEAD version data" << endmsg;
+
+  // ---------- /SlowControl/LHCb/scLHCb --------------------
+  // ---------- /SlowControl/Hcal/scHcal --------------------
+  int i;
+  debug() << "Put in a new HEAD" << endmsg;
+  for ( i=0; i<2; i++ ) {
+    // LHCb
+    m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                               i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb" ),
+                               Gaudi::Time(i*24), Gaudi::Time((i+1)*24));
+  }
+  for ( i=0; i<10; i++ ) {
+    // Hcal
+    m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                               i_encodeXmlTemperature( (double)i*5.4+9, "scHcal" ),
+                               Gaudi::Time(i*10), Gaudi::Time((i+1)*10));
+  }
+  
+  // ---------- APPLY TAG FORFUN --------------------
+  debug() << "Apply (global) tag \"FORFUN\"" << endmsg;
+  return m_dbAccSvc->recursiveTag("/","FORFUN");
 }
 
 //=========================================================================
@@ -463,7 +495,7 @@ StatusCode PopulateDB::i_condDBDumpSampleData() {
   std::vector<std::string> tags; tags.reserve(5);
   tags.push_back("COLD");
   tags.push_back("HOT");
-  tags.push_back("PRODUCTION");
+  //tags.push_back("PRODUCTION");
   tags.push_back("HEAD");
   tags.push_back("FORFUN");
 
@@ -532,7 +564,7 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
   if ( folder->versioningMode() != cool::FolderVersioning::SINGLE_VERSION ) {
     if ( tagName != "" && tagName != "HEAD" ) {
       objs = folder->browseObjects(cool::ValidityKeyMin,cool::ValidityKeyMax,
-                                   0,folder->fullPath()+"-"+tagName);
+                                   0,folder->resolveTag(tagName));
     } else {
       objs = folder->browseObjects(cool::ValidityKeyMin,cool::ValidityKeyMax,0,tagName);
     }

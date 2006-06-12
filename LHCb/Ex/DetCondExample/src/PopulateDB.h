@@ -1,4 +1,4 @@
-// $Id: PopulateDB.h,v 1.8 2005-06-23 09:33:37 marcocle Exp $
+// $Id: PopulateDB.h,v 1.9 2006-06-12 13:53:02 marcocle Exp $
 #ifndef POPULATEDB_H 
 #define POPULATEDB_H 1
 
@@ -34,6 +34,11 @@ protected:
 private:
   /// Store sample data
   StatusCode i_condDBStoreSampleData();
+  
+  StatusCode i_createHierarchy();
+  StatusCode i_createCOLDVersion();
+  StatusCode i_createHOTVersion();
+  StatusCode i_createHEADVersion();
 
   /// Dump sample data
   StatusCode i_condDBDumpSampleData();

@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.73 2006-06-12 13:45:33 marcocle Exp $
+! $Id: release.notes,v 1.74 2006-06-12 13:53:02 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-06-12 - Marco Clemencic
+ - Updated to latest changes in Det/DetCond head version.
+   In two words changes in API and tagging (based on COOL CVS).
+  (see release.notes in DetCond for more details)
 
 ! 2006-06-08 - Marco Clemencic
  - Updated the Python script copy_files_to_db.py to COOL_1_3_x
