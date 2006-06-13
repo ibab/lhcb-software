@@ -5,6 +5,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-13 
+ - fix memory leak in node
+
 !========================= TrackEvent v2r6 2006-06-09 ========================
 ! 2006-06-02 - Eduardo Rodrigues
  - fixed bug in TrackFunctor.h

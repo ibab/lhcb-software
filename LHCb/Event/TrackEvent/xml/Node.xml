@@ -28,6 +28,14 @@
   m_state = state -> clone();
         </code>
       </constructor>
+
+      <constructor 
+         desc = "copy constructor"
+         argList = "const LHCb::Node&amp; aNode" >
+      </constructor>
+
+      <destructor virtual = 'TRUE' desc='destructer'>
+      </destructor>
  
       <attribute
         type    = 'LHCb::State*'
@@ -144,14 +152,6 @@
         desc    = 'Clone the Node'
         const   = 'TRUE'
         virtual = 'TRUE'>
-        <code>
-  LHCb::Node* me = new LHCb::Node(state().clone(), (LHCb::Measurement*) &amp;measurement()); 
-  me->setResidual( residual() );
-  me->setErrResidual( errResidual() );
-  me->setErrMeasure( errMeasure() );
-  me->setProjectionMatrix( projectionMatrix() );
-  return me;
-        </code>
       </method>
 
       <method
@@ -159,7 +159,7 @@
         argList = 'State state'
         desc    = 'Update the state'>
         <code>
-  delete m_state;
+  if (m_state !=0) delete m_state;
   m_state = state.clone();
         </code>
       </method>
