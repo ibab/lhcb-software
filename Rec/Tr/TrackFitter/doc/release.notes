@@ -3,6 +3,7 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r4 2006-06-13 ====================
 ! 2006-06-12 M. Needham
  - Add possibility to set reference information to fitter
 
@@ -14,7 +15,6 @@
    by default (no more need to set it explicitly for default config.)
  - modifications from removing all "using namespace..." in header files
 
-!=========================== TrackFitter v2r4 2006-06-01 ====================
 ! 2006-06-01 M.Cattaneo
  - Adapt to move of MatrixManip.h to LHCbMath
  - Adapt to removal of Measurement::update method
