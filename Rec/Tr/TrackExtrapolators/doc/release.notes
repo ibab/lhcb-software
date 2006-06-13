@@ -5,17 +5,16 @@
 !-----------------------------------------------------------------------------
 
 
+!======================= TrackExtrapolators v2r4 2006-06-13 ==================
 ! 2006-06-07 M Needham
  - Add Kisel extrapolator that integrates field
    Based on work + code of Ivan Kisel in CBM context
-
 
 ! 2006-06-09 - Edwin Bos
  - Added extrapolate-to-plane method, with a default tolerance of 10 microns
 
 ! 2006-06-06 - Eduardo Rodrigues
  - removed explicit 5-dimension number from code
-
 
 ! 2006-05-31 M Needham
   - selector in master should be private tool
