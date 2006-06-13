@@ -1,16 +1,11 @@
 #============================================================================
 # Created    : 2005-02-22
 # Maintainer : Eduardo Rodrigues
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackIdealPR
-version           v2r3
+version           v2r4
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src

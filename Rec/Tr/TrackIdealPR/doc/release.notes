@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r4 2006-06-13 ========================
 ! 2006-06-07 - Jeroen van Tilburg
  - Changed order in Linker table such that it is consistent with
    TrackAssociator.cpp

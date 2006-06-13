@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r4 2006-06-13 ======================
 ! 2006-06-06 - Eduardo Rodrigues
  - removed explicit 5-dimension number from code
 

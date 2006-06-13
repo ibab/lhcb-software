@@ -1,16 +1,11 @@
 #============================================================================
 # Created    : 2005-03-10
 # Maintainer : Jose Hernando, Eduardo Rodrigues
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackProjectors
-version           v2r3
+version           v2r4
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
