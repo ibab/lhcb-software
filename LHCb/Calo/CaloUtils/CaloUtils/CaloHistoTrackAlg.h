@@ -1,8 +1,11 @@
-// $Id: CaloHistoTrackAlg.h,v 1.4 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: CaloHistoTrackAlg.h,v 1.5 2006-06-13 14:13:52 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/06 11:59:52  ibelyaev
+//  new base classes for PIDs & rewritten TrackUse
+//
 // ============================================================================
 #ifndef CALOUTILS_CALOHistoTrackAlg_H 
 #define CALOUTILS_CALOHistoTrackAlg_H 1
@@ -17,9 +20,9 @@
 // ============================================================================
 #include "GaudiAlg/GaudiHistoAlg.h"
 // ============================================================================
-// CaloUtils 
+// Track Event 
 // ============================================================================
-#include "CaloUtils/TrackUse.h"
+#include "Event/TrackUse.h"
 // ============================================================================
 
 // ============================================================================
