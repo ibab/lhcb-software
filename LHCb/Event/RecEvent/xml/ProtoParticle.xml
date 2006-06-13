@@ -149,12 +149,16 @@
         </code>
        </method>
 
-       <!--method
-        name  = "referencePoint"
-        desc  = "Point at which the momentum is given in LHCb reference frame"
-        type  = "LHCb::Point3D"
-        const = "TRUE"
-       /-->
+        <method 
+          name    = "fillStream" 
+          desc    = "Print this ProtoParticle in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+        </method>
 
     </class>
   </package>

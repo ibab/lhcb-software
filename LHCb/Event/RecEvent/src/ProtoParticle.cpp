@@ -1,10 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.2 2006-03-30 13:53:33 jonrob Exp $
-// Include files 
-
-// STD and STL
-#include <iostream> 
-// from Gaudi
-//#include "GaudiKernel/Kernel.h"
+// $Id: ProtoParticle.cpp,v 1.3 2006-06-13 13:13:50 jonrob Exp $
 
 // local
 #include "Event/ProtoParticle.h"
@@ -144,4 +138,19 @@ LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::eraseInfo( const int key )
 { 
   return m_extraInfo.erase( key ) ; 
+}
+
+// fillstream method
+std::ostream& LHCb::ProtoParticle::fillStream(std::ostream& s) const
+{
+  s << "{ " << "extraInfo :";
+  for ( ExtraInfo::const_iterator i = extraInfo().begin();
+        i != extraInfo().end(); ++i )
+  {
+    const LHCb::ProtoParticle::additionalInfo info = 
+      static_cast<LHCb::ProtoParticle::additionalInfo>(i->first);
+    s << " " << info << "=" << i->second;
+  }
+  s << std::endl << " }";
+  return s;
 }
