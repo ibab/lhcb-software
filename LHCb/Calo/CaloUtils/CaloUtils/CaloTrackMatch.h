@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatch.h,v 1.1 2006-06-06 11:59:52 ibelyaev Exp $
+// $Id: CaloTrackMatch.h,v 1.2 2006-06-13 08:40:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/06 11:59:52  ibelyaev
+//  new base classes for PIDs & rewritten TrackUse
+//
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -79,7 +82,7 @@ protected:
         const unsigned int ind2  ) { return m_matrix ( ind1 , ind2 ) ; }
   public:
     Match_& set         ( const Matrix& m ) { m_matrix   = m ; return *this ; }
-    Match_& set         ( const Vector& v ) { m_vector   = v ; return *this ; }
+    Match_& set         ( const Vector& v ) { m_params   = v ; return *this ; }
     Match_& setError    ( const bool    e ) { m_error    = e ; return *this ; }
     Match_& setInverted ( const bool    i ) { m_inverted = i ; return *this ; }
   public:
