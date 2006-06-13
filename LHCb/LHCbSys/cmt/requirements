@@ -19,7 +19,7 @@ use KernelSys             v5r6    Kernel  # Marco Cattaneo
 use LHCbDefinitions       v1r7    Kernel  # Juan Palacios
 use LHCbKernel            v6r7    Kernel  # Marco Cattaneo
 use LHCbMath              v1r1    Kernel  # Juan Palacios
-use Relations             v3r2    Kernel  # Ivan Belyaev
+use Relations             v4r0    Kernel  # Ivan Belyaev
 use CaloKernel            v4r0    Calo    # Olivier Deschamps
 use MuonKernel            v3r1    Muon    # Andrei Tsaregorodtsev
 use RichKernel            v6r4    Rich    # Chris Jones
@@ -33,7 +33,7 @@ use DetDesc               v16r5p1 Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v3r2p1  Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r4    Det     # Marco Clemencic, Matt Needham
 use XmlTools              v3r9    Tools   # Marco Clemencic
-use OTDet                 v6r3    Det     # Jan Amoraal
+use OTDet                 v6r4    Det     # Jan Amoraal
 use CaloDet               v7r3    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v2r3p2  Det     # Olivier Deschamps
 use MuonDet               v5r4    Det     # Alessia Satta, Alessio Sarti
@@ -51,7 +51,7 @@ use L0Event               v15r2   Event   # O.Callot,O.Deschamps,A.Tsaregorodtse
 use PhysEvent             v9r5    Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v6r4p1  Event   # Marco Cattaneo
 use GenEvent              v4r4    Event   # Gloria Corti
-use EventAssoc            v3r1    Event   # Ivan Belyaev
+use EventAssoc            v3r2    Event   # Ivan Belyaev
 use LinkerEvent           v2r2p1  Event   # Olivier Callot
 use PackedEvent           v2r0    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v2r6    Event   # Eduardo Rodrigues, Jose Hernando

@@ -5,20 +5,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v21r1>2006-06-09 LHCbSys v21r1</A></H1><PRE>
+</PRE><H1><A NAME=v21r1>2006-06-12 LHCbSys v21r1</A></H1><PRE>
 This version uses Gaudi v18r5 and is fully compatible with DC06 production data
 It is the first release supporting also slc4_ia32_gcc345 platform
 
 - Packages modified: DetSys v8r6, CaloDet v7r3, MuonDet v5r4, VeloDet v10r7,
-    DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6, GenEvent v4r4,
+    OTDet v6r4,DetDesc v16r5p1, DetDescCnv v3r2p1, EventSys v21r6, GenEvent v4r4,
     PhysEvent v9r5, RecEvent v1r4, TrackEvent v2r6, DAQEvent v6r4p1,
-    LinkerEvent v2r2p1, KernelSys v5r6, LHCbDefinitions v1r7, LHCbKernel v6r7,
-    LHCbMath v1r1, Relations v3r2, RichKernel v6r4, ProcessorKernel v3r1,
-    CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5, LoKiGen v1r3,
-    DetDescExample v7r2
+    LinkerEvent v2r2p1, EventAssoc v3r2, KernelSys v5r6, LHCbDefinitions v1r7,
+    LHCbKernel v6r7, LHCbMath v1r1, Relations v4r0, RichKernel v6r4,
+    ProcessorKernel v3r1, CaloUtils v6r3, SimComponents v1r2p1, LoKiCore v1r5,
+    LoKiGen v1r3, DetDescExample v7r2
 
-- In DetDesc v16r5p1, DetDescCnv v3r2p1, Relations v3r2, LoKiCore v1r5,
-     LoKiGen v1r3, LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1
+- In DetDesc v16r5p1, DetDescCnv v3r2p1, LoKiCore v1r5, LoKiGen v1r3, 
+     LinkerEvent v2r2p1, RichKernel v6r4, ProcessorKernel v3r1
   . Backwards compatible fixes for compilation with gcc 3.4.5
 
 - In DetSys v8r6
@@ -26,12 +26,19 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 
 - In CaloDet v7r3
   . CaloDet/DeCalorimeter.h, src/Lib/DeCalorimeetr.cpp
-     a) add one more method plane (for 3D plane whch pass through
-        given 3D-point in global reference system
-     b) add "inline" and "const" qualifiers for DeCalorimeter::plane
+    + the main plane() method updated in order the predefined plane3D positions 
+      match the boundary of the active calo 
+    + 2 parameters from DDDB : zOffset (new) & zSize (redefined in DDDB)
+    + require xmlDDDB > v30r8 
+    + add one more method plane (for 3D plane which pass through
+      given 3D-point in global reference system
+    + add "inline" and "const" qualifiers for DeCalorimeter::plane
 
 - In MuonDet v5r4
   . Added a method that returns Z station position in DeMuonDetector
+
+- In OTDet v6r4
+  . Added method to return the thickness of the sensitive volume of module.
 
 - In VeloDet v10r7
   . Replaced sensorIndex(sensor) by internal map which returns the pointer to
@@ -63,11 +70,21 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 - In DAQEvent v6r4p1
   . Add VeloProcFull bank type
 
+- In EventAssoc v3r2
+  . enable dictionaries on Windows (requires Kernel/Relations v4r0) 
+  . dict/selection.py
+     new script to generate properly selection.h and selection.xml files. 
+  . Updated selection files 
+
 - In LHCbDefinitions v1r7
   . Remove Kernel/MatrixManip.h (moved to Kernel/LHCbMath v1r1 or higher)
 
 - In LHCbKernel v6r7
-  . Remove generation of dictionaries already provided by RELAX
+  . Fix OTChannelID::geometry. Returns station, layer, quarter, module and straw.
+  . Fix LineTraj::derivative. Returns derivative w.r.t. x, y, z, stereo angle 
+                              and tilt.
+  . Added creation of dictionary for templated CircleTraj class
+  . Removed generation of dictionaries already provided by RELAX
 
 - In LHCbMath v1r1
   . Add LHCbMath/MatrixUtils.h: various matrix and vector utilities. Includes
@@ -84,8 +101,14 @@ It is the first release supporting also slc4_ia32_gcc345 platform
 - In ProcessorKernel v3r1
   . Add an accessor method to the m_units data in class Unit
 
+- In Relations v4r0
+  . Major simplification, only basic types now appear in interface
+  . Reduction in dictionary size
+  . Fixes for compilation on gcc 3.2.3, gcc 3.4.5, vc 7.1
+
 - In CaloUtils v6r3
-  . Update TrackUse.{cpp,h} for New Track Model
+  . Few base classes for CaloPIDs implementation: CaloTrackTool & CaloTrackMatch
+  . Rewrote class TrackUse 
   . bug fix in src/SpreadEstimator.cpp
   . Move to Gaudi::Units in header files
 
