@@ -4,13 +4,13 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r3 2006-06-13 =======================
 ! 2006-05-25 - Eduardo Rodrigues
  - plots at first measurement position now use the track extrapolation
    to obtain a track state at the z-position of the first measurement
  - use the master extrapolator everywhere
  - extrapolate track rather than via closest state
 
-!======================= TrackCheckers v2r3 2006-05-23 =======================
 ! 2006-05-22 - Eduardo Rodrigues
  - bug fixed in looping over OTTimes
  - bugs in momentum calculations fixed (mass used instead of 3-momentum mag.)
